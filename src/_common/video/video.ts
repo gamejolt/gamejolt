@@ -2,25 +2,14 @@ import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../utils/vue';
 import AppLoading from '../loading/loading.vue';
-import {
-	PlayerController,
-	setPlayerControllerDuration,
-	setPlayerControllerTimestamp,
-	setPlayerControllerVideo,
-} from '../player/controller';
-import AppVideoPlayer from './player/player.vue';
 
 // We have to not use Vue for video embed stuff!
 // https://forum.ionicframework.com/t/ionic-2-video-video-memory-leak-garbage-collection-solved/52333
 // Massive memory leaks if we don't keep this out of Vue and finely tuned.
 
-// Sync up with the scrubber transition-right timing in the scrubber.vue styling
-const SCRUBBER_REFRESH_RATE = 250;
-
 @Component({
 	components: {
 		AppLoading,
-		AppVideoPlayer,
 	},
 })
 export default class AppVideo extends Vue {
@@ -29,40 +18,17 @@ export default class AppVideo extends Vue {
 	@Prop(propRequired(String)) mp4!: string;
 	@Prop(propOptional(Boolean, false)) showLoading!: boolean;
 	@Prop(propOptional(Boolean, true)) shouldPlay!: boolean;
-	@Prop(propOptional(Boolean, false)) disableControls!: boolean;
 
 	isLoaded = false;
 
-	private timer?: NodeJS.Timer;
 	private video!: HTMLVideoElement;
-	player = new PlayerController();
 
 	@Watch('shouldPlay')
 	onShouldPlayChange() {
-		if (this.shouldPlay && (!this.isLoaded || this.player.shouldPlay)) {
-			// only make the video play when we're initializing or if it was already playing previously.
+		if (this.shouldPlay) {
 			this.video.play();
 		} else {
 			this.video.pause();
-		}
-	}
-
-	private setWatcher() {
-		this.timer = setInterval(() => {
-			if (this.video.ended) {
-				setPlayerControllerTimestamp(this.player, this.video.duration);
-				this.clearWatcher();
-			} else if (this.shouldPlay && this.player.shouldPlay) {
-				setPlayerControllerTimestamp(this.player, this.video.currentTime);
-				setPlayerControllerDuration(this.player, this.video.duration);
-			}
-		}, SCRUBBER_REFRESH_RATE);
-	}
-
-	private clearWatcher() {
-		if (this.timer) {
-			clearInterval(this.timer);
-			this.timer = undefined;
 		}
 	}
 
@@ -90,19 +56,11 @@ export default class AppVideo extends Vue {
 		// of autoplay, or when switching from paused state to playing. We only
 		// use it to know if it's loaded in enough to begin the playing, so we
 		// can clear it after.
-		const onPlay = async () => {
-			this.clearWatcher();
+		const onPlay = () => {
 			this.isLoaded = true;
-
-			await this.$nextTick();
-
-			this.player.shouldPlay = true; // JODO: better management for autoplaying
-			this.setWatcher();
 			this.video.removeEventListener('play', onPlay);
 		};
 		this.video.addEventListener('play', onPlay);
-
-		setPlayerControllerVideo(this.player, this.video);
 
 		// As soon as we append, it'll actually load into view and start
 		// playing.

@@ -1,22 +1,25 @@
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Prop, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../utils/vue';
-import {
-	PlayerController,
-	setPlayerControllerVolume,
-	togglePlayerControllerPlayback,
-} from '../../player/controller';
-import AppPlayerFullscreen from '../../player/fullscreen/fullscreen.vue';
-import AppPlayerPlayback from '../../player/playback/playback.vue';
-import AppPlayerScrubber from '../../player/scrubber/scrubber.vue';
-import AppPlayerVolume from '../../player/volume/volume.vue';
 import AppShortkey from '../../shortkey/shortkey.vue';
+import {
+	queueVideoTimeChange,
+	setVideoVolume,
+	toggleVideoPlayback,
+	VideoPlayerController
+} from './controller';
+import AppPlayerFullscreen from './fullscreen/fullscreen.vue';
+import AppPlayerPlayback from './playback/playback.vue';
+import AppPlayerScrubber from './scrubber/scrubber.vue';
+import AppVideoPlayerShaka from './shaka.vue';
+import AppPlayerVolume from './volume/volume.vue';
 
 const KeyShortcutsList = ['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft', 'm', ' '];
 type KEY_SHORTCUTS = 'ArrowUp' | 'ArrowRight' | 'ArrowDown' | 'ArrowLeft' | 'm' | ' ';
 
 @Component({
 	components: {
+		AppVideoPlayerShaka,
 		AppPlayerPlayback,
 		AppPlayerVolume,
 		AppPlayerScrubber,
@@ -25,23 +28,13 @@ type KEY_SHORTCUTS = 'ArrowUp' | 'ArrowRight' | 'ArrowDown' | 'ArrowLeft' | 'm' 
 	},
 })
 export default class AppVideoPlayer extends Vue {
-	@Prop(propRequired(PlayerController)) player!: PlayerController;
+	@Prop(propRequired(String)) poster!: string;
+	@Prop(propRequired(String)) manifest!: string;
 
-	onScrub(timestamp: number) {
-		if (!this.player.video.paused) {
-			this.player.video.pause();
-		}
+	player = new VideoPlayerController(this.manifest, this.poster);
 
-		this.player.video.currentTime = timestamp;
-	}
-
-	onScrubFinish(timestamp: number) {
-		this.onScrub(timestamp);
-		this.player.currentTime = timestamp;
-
-		if (this.player.shouldPlay) {
-			this.player.video.play();
-		}
+	onFullscreenChange() {
+		this.player.isFullscreen = document.fullscreenElement === this.$el;
 	}
 
 	onKeypress(event: KeyboardEvent) {
@@ -54,7 +47,7 @@ export default class AppVideoPlayer extends Vue {
 
 		switch (key as KEY_SHORTCUTS) {
 			case ' ':
-				togglePlayerControllerPlayback(this.player);
+				toggleVideoPlayback(this.player);
 				break;
 			// case 'm': // JODO: This might need to be done through some kind of shortkey, as it conflicts with the playlists menu.
 			// 	togglePlayerMuted(this.player);
@@ -75,31 +68,36 @@ export default class AppVideoPlayer extends Vue {
 	}
 
 	triggerScrubLeft() {
-		this.onScrubFinish(
-			Math.max(this.player.currentTime - Math.min(this.player.duration / 4, 5), 0)
+		queueVideoTimeChange(
+			this.player,
+			this.player.currentTime - Math.min(this.player.duration / 4, 5000)
 		);
 	}
 
 	triggerScrubRight() {
-		this.onScrubFinish(
-			Math.min(
-				this.player.currentTime + Math.min(this.player.duration / 4, 5),
-				this.player.duration
-			)
+		queueVideoTimeChange(
+			this.player,
+			this.player.currentTime + Math.min(this.player.duration / 4, 5000)
 		);
 	}
 
 	triggerVolumeDown() {
-		setPlayerControllerVolume(
-			this.player,
-			Math.round(Math.max(this.player.video.volume - 0.1, 0) * 100) / 100
-		);
+		setVideoVolume(this.player, Math.round(Math.max(this.player.volume - 0.1, 0) * 100) / 100);
 	}
 
 	triggerVolumeUp() {
-		setPlayerControllerVolume(
-			this.player,
-			Math.round(Math.min(this.player.video.volume + 0.1, 1) * 100) / 100
-		);
+		setVideoVolume(this.player, Math.round(Math.min(this.player.volume + 0.1, 1) * 100) / 100);
+	}
+
+	@Watch('player.queuedFullScreenChange')
+	syncWithState() {
+		if (this.player.queuedFullScreenChange !== null) {
+			if (this.player.queuedFullScreenChange) {
+				this.$el.requestFullscreen();
+			} else {
+				document.exitFullscreen();
+			}
+			this.player.queuedFullScreenChange = null;
+		}
 	}
 }

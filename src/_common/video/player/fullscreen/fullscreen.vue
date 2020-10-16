@@ -2,7 +2,7 @@
 
 <template>
 	<div class="player-control-button" @click="toggleFullscreen">
-		<app-jolticon icon="fullscreen" />
+		<app-jolticon :icon="!player.isFullscreen ? 'fullscreen' : 'unfullscreen'" />
 	</div>
 </template>
 

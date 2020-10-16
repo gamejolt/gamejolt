@@ -8,6 +8,7 @@ import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
 import { AppScrollTo } from '../../../_common/scroll/to/to.directive';
 import AppThemeSvgStyleguide from '../../../_common/theme/svg/svg-styleguide.vue';
 import { User } from '../../../_common/user/user.model';
+import AppVideoPlayerStyleguide from '../../../_common/video/player/player-styleguide.vue';
 import AppStyleguideColor from './color/color.vue';
 
 @Component({
@@ -20,6 +21,7 @@ import AppStyleguideColor from './color/color.vue';
 		AppStyleguideColor,
 		AppThemeSvgStyleguide,
 		AppJolticonsStyleguide,
+		AppVideoPlayerStyleguide,
 	},
 	directives: {
 		AppScrollTo,
@@ -42,11 +44,13 @@ export default class RouteStyleguide extends BaseRouteComponent {
 			colors: 'Colors',
 			'theme-svg': 'Theme SVG',
 			jolticons: 'Jolticons',
+			'video-player': 'Video Player',
 		};
 	}
 
 	get components() {
 		return [
+			AppVideoPlayerStyleguide,
 			AppButtonStyleguide,
 			AppListGroupStyleguide,
 			AppProgressBarStyleguide,

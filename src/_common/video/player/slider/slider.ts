@@ -1,17 +1,17 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { propOptional } from '../../../utils/vue';
-import { Ruler } from '../../ruler/ruler-service';
-import { AppTooltip } from '../../tooltip/tooltip-directive';
-import { PlayerController, setPlayerControllerVolume } from '../controller';
+import { propOptional } from '../../../../utils/vue';
+import { Ruler } from '../../../ruler/ruler-service';
+import { AppTooltip } from '../../../tooltip/tooltip-directive';
+import { setVideoVolume, VideoPlayerController } from '../controller';
 
 @Component({
 	directives: {
 		AppTooltip,
 	},
 })
-export default class AppPlayerSlider extends Vue {
-	@Prop(propOptional(PlayerController, null)) player!: PlayerController | null;
+export default class AppVideoPlayerSlider extends Vue {
+	@Prop(propOptional(VideoPlayerController, null)) player!: VideoPlayerController | null;
 	@Prop(propOptional(Boolean, false)) vertical!: boolean;
 
 	isDragging = false;
@@ -135,7 +135,7 @@ export default class AppPlayerSlider extends Vue {
 
 		if (this.player) {
 			// set the controller volume with a scale of 0 to 1
-			setPlayerControllerVolume(this.player, this.percentFull / scale);
+			setVideoVolume(this.player, this.percentFull / scale);
 		}
 	}
 

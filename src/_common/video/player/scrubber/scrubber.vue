@@ -10,7 +10,7 @@
 		@tap="tap"
 		@click.native.capture.prevent
 	>
-		<div ref="timebar" class="-timebar" :class="{ '-dragging': isDragging }">
+		<div ref="timebar" class="-timebar" :class="{ '-dragging': player.isScrubbing }">
 			<div
 				v-app-tooltip="readableScrubberTime"
 				class="-timebar-handle"

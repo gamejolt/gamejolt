@@ -2,8 +2,6 @@
 
 <template>
 	<div class="video">
-		<app-video-player v-if="!disableControls && player" :player="player" />
-
 		<template v-if="!GJ_IS_SSR">
 			<div v-if="!isLoaded && showLoading" class="video-loader">
 				<app-loading :hide-label="true" :no-color="true" :stationary="true" />

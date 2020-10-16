@@ -117,6 +117,7 @@
 		"qs": "6.9.3",
 		"resize-observer-polyfill": "1.5.1",
 		"sanitize-html": "1.19.1",
+		"shaka-player": "3.0.5",
 		"shell-escape": "0.2.0",
 		"smoothscroll-polyfill": "0.4.4",
 		"spectrum-colorpicker": "1.8.0",

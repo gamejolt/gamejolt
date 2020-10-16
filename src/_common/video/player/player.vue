@@ -1,35 +1,27 @@
 <script lang="ts" src="./player"></script>
 
 <template>
-	<div class="-controls" tabindex="0" @keydown="onKeypress">
-		<!-- <app-shortkey shortkey="c" @press="toggleLeftPane('chat')" />
-		<app-shortkey shortkey="m" @press="toggleLeftPane('library')" />
-		<app-shortkey shortkey="y" @press="toggleLeftPane('context')" /> -->
-
-		<div class="-top">
-			<div
-				class="-top-temp"
-				style="height: 24px; width: 24px; background-color: red; border-radius: 8px;"
-			/>
+	<div class="-player" @fullscreenchange="onFullscreenChange">
+		<div class="-video">
+			<app-video-player-shaka :player="player" />
 		</div>
 
-		<div class="-bottom-gradient">
-			<div class="-bottom-controls">
-				<app-player-scrubber
-					class="-scrubber"
-					:player="player"
-					@scrub="onScrub"
-					@scrub-finish="onScrubFinish"
-				/>
+		<div class="-controls" tabindex="0" @keydown="onKeypress">
+			<div class="-top" />
 
-				<div class="-row">
-					<app-player-playback :player="player" />
-					<app-player-volume
-						:player="player"
-						@volume-down="triggerVolumeDown"
-						@volume-up="triggerVolumeUp"
-					/>
-					<app-player-fullscreen class="-fullscreen" :player="player" />
+			<div class="-bottom-gradient">
+				<div class="-bottom-controls">
+					<app-player-scrubber class="-scrubber" :player="player" />
+
+					<div class="-row">
+						<app-player-playback :player="player" />
+						<app-player-volume
+							:player="player"
+							@volume-down="triggerVolumeDown"
+							@volume-up="triggerVolumeUp"
+						/>
+						<app-player-fullscreen class="-fullscreen" :player="player" />
+					</div>
 				</div>
 			</div>
 		</div>
@@ -38,6 +30,12 @@
 
 <style lang="stylus" scoped>
 @import '~styles/variables'
+@import '~styles-lib/mixins'
+
+.-player
+	rounded-corners-lg()
+	position: relative
+	overflow: hidden
 
 .-controls
 	position: absolute
