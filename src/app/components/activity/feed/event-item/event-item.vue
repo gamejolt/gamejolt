@@ -123,10 +123,11 @@
 
 				<app-sticker-target
 					ref="stickerTarget"
-					:stickers="post.stickers"
+					:model="post"
 					:show-stickers="stickersVisible"
 					:no-animate-in="!animateStickers"
 					@hide-all="onAllStickersHidden"
+					@stickers-visibility-change="onPostStickersVisibilityChange"
 				>
 					<!--
 						This shouldn't ever really show a collapser. It's for the jokers that think it would
@@ -173,7 +174,7 @@
 					<app-sticker-reactions
 						v-if="post.sticker_counts"
 						class="-controls-buffer"
-						:reference-item="post"
+						:model="post"
 					/>
 				</app-event-item-controls-overlay>
 			</template>

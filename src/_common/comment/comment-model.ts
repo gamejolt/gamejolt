@@ -4,7 +4,9 @@ import { Environment } from '../environment/environment.service';
 import { FiresidePost } from '../fireside/post/post-model';
 import { Game } from '../game/game.model';
 import { Growls } from '../growls/growls.service';
+import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
+import { ValidStickerResource } from '../sticker/target/target';
 import { Subscription } from '../subscription/subscription.model';
 import { User } from '../user/user.model';
 import { CommentVideo } from './video/video-model';
@@ -53,6 +55,17 @@ export function getCommentModelResourceName(model: Model) {
 		return 'Fireside_Post';
 	}
 	throw new Error('Model cannot contain comments');
+}
+
+export function getStickerModelResourceName(model: Model): ValidStickerResource {
+	if (model instanceof Comment) {
+		return 'Comment';
+	} else if (model instanceof MediaItem) {
+		return 'Media_Item';
+	} else if (model instanceof FiresidePost) {
+		return 'Fireside_Post';
+	}
+	throw new Error('Stickers targets cannot attach to that type of model');
 }
 
 export function getCanCommentOnModel(model: Model) {

@@ -21,7 +21,7 @@
 
 			<div class="-mount">
 				<div ref="mount" class="-mount-inner">
-					<app-sticker-target :stickers="model.stickers" show-stickers>
+					<app-sticker-target :model="model" show-stickers>
 						<app-content-viewer :source="postLeadContent" />
 					</app-sticker-target>
 				</div>

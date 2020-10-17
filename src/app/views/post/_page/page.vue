@@ -147,7 +147,7 @@
 							</div>
 						</template>
 
-						<app-sticker-reactions v-if="post.sticker_counts" :reference-item="post" />
+						<app-sticker-reactions v-if="post.sticker_counts" :model="post" />
 
 						<br />
 					</app-event-item-controls-overlay>

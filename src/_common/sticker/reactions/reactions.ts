@@ -3,6 +3,7 @@ import { Component, Inject, Prop, Watch } from 'vue-property-decorator';
 import { numberSort } from '../../../utils/array';
 import { propRequired } from '../../../utils/vue';
 import { DrawerStore, DrawerStoreKey } from '../../drawer/drawer-store';
+import { Model } from '../../model/model.service';
 import AppStickerReactionItem from './_item/item.vue';
 
 type ReactionCount = {
@@ -18,7 +19,7 @@ type ReactionCount = {
 })
 export default class AppStickerReactions extends Vue {
 	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
-	@Prop(propRequired(Object)) referenceItem!: Record<'sticker_counts', string>;
+	@Prop(propRequired(Model)) model!: Model;
 
 	reactionsList: ReactionCount[] = [];
 
@@ -29,11 +30,11 @@ export default class AppStickerReactions extends Vue {
 	@Watch('referenceItem.sticker_counts')
 	onStickersChange() {
 		this.reactionsList = [];
-		if (!this.referenceItem.sticker_counts) {
+		if (!this.model.sticker_counts) {
 			return;
 		}
 
-		const stickerCounts = JSON.parse(this.referenceItem.sticker_counts);
+		const stickerCounts = JSON.parse(this.model.sticker_counts);
 
 		for (const [key, value] of Object.entries(stickerCounts)) {
 			this.reactionsList.push({
