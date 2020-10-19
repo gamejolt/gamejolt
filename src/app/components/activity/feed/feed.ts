@@ -11,11 +11,15 @@ import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import AppIllustration from '../../../../_common/illustration/illustration.vue';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
+import { ScrollInviewConfig } from '../../../../_common/scroll/inview/config';
 import { AppScrollInview } from '../../../../_common/scroll/inview/inview';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppActivityFeedItem from './item/item.vue';
 import AppActivityFeedNewButton from './new-button/new-button.vue';
-import { ActivityFeedView } from './view';
+import { ActivityFeedKey, ActivityFeedView } from './view';
+
+const InviewConfigShowNew = new ScrollInviewConfig({ margin: `-${Scroll.offsetTop}px` });
+const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height * 1.5}px` });
 
 @Component({
 	components: {
@@ -29,11 +33,13 @@ import { ActivityFeedView } from './view';
 	},
 })
 export default class AppActivityFeed extends Vue {
-	@Provide('feed')
 	@Prop(propRequired(ActivityFeedView))
+	@Provide(ActivityFeedKey)
 	feed!: ActivityFeedView;
 
 	@Prop(propOptional(Boolean, false)) showAds!: boolean;
+
+	isNewButtonInview = false;
 
 	/**
 	 * We save the scroll position every time it changes. When clicking back to
@@ -41,16 +47,10 @@ export default class AppActivityFeed extends Vue {
 	 * set a default so that vue doesn't watch it.
 	 */
 	private scroll!: number;
-
+	readonly InviewConfigShowNew = InviewConfigShowNew;
+	readonly InviewConfigLoadMore = InviewConfigLoadMore;
 	readonly number = number;
 	readonly Scroll = Scroll;
-	isNewButtonInview = false;
-
-	/**
-	 * The distance from the bottom of the feed that we should start loading
-	 * more.
-	 */
-	readonly loadMoreMargin = `${Screen.height * 1.5}px`;
 
 	$el!: HTMLDivElement;
 

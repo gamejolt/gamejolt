@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { findRequiredVueParent } from '../../../../../utils/vue';
+import { findRequiredVueParent, propRequired } from '../../../../../utils/vue';
 import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { CommentVideoModal } from '../../../../../_common/comment/video/modal/modal.service';
 import { CommentVideo } from '../../../../../_common/comment/video/video-model';
@@ -40,7 +40,7 @@ import AppActivityFeedTS from '../feed';
 import { feedShouldBlockPost, feedShouldBlockVideo } from '../feed-service';
 import AppActivityFeed from '../feed.vue';
 import { ActivityFeedItem } from '../item-service';
-import { ActivityFeedView } from '../view';
+import { ActivityFeedKey, ActivityFeedView } from '../view';
 import AppActivityFeedEventItemBlocked from './blocked/blocked.vue';
 import AppActivityFeedEventItemTime from './time/time.vue';
 
@@ -74,14 +74,11 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 	},
 })
 export default class AppActivityFeedEventItem extends Vue {
-	@Inject()
-	feed!: ActivityFeedView;
+	@Prop(propRequired(ActivityFeedItem)) item!: ActivityFeedItem;
 
-	@Prop(ActivityFeedItem)
-	item!: ActivityFeedItem;
+	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
-	@State
-	app!: Store['app'];
+	@State app!: Store['app'];
 
 	canToggleLead = false;
 	hasBypassedBlock = false;

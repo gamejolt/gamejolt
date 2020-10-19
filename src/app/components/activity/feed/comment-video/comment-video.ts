@@ -1,29 +1,26 @@
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
+import { propRequired } from '../../../../../utils/vue';
 import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { CommentVideo } from '../../../../../_common/comment/video/video-model';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
 import { ActivityFeedItem } from '../item-service';
-import { ActivityFeedView } from '../view';
-import AppActivityFeedVideo from '../_video/video.vue';
+import { ActivityFeedKey, ActivityFeedView } from '../view';
+import AppActivityFeedVideoEmbed from '../_video-embed/video-embed.vue';
 
 @Component({
 	components: {
-		AppActivityFeedVideo,
+		AppActivityFeedVideoEmbed,
 		AppFadeCollapse,
 		AppContentViewer,
 	},
 })
 export default class AppActivityFeedCommentVideo extends Vue {
-	@Inject()
-	feed!: ActivityFeedView;
+	@Prop(propRequired(ActivityFeedItem)) item!: ActivityFeedItem;
+	@Prop(propRequired(CommentVideo)) video!: CommentVideo;
 
-	@Prop(ActivityFeedItem)
-	item!: ActivityFeedItem;
-
-	@Prop(CommentVideo)
-	video!: CommentVideo;
+	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
 	canToggleContent = false;
 	contentBootstrapped = false;

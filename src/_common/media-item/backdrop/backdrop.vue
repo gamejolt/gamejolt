@@ -1,3 +1,5 @@
+<script lang="ts" src="./backdrop"></script>
+
 <template>
 	<div class="media-item-backdrop" :class="radiusClass">
 		<div class="-color" :class="radiusClass" :style="wrapperStyling" />
@@ -6,9 +8,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .media-item-backdrop
 	position: relative
@@ -27,18 +28,19 @@
 		left: 1px
 		width: auto
 
-	&.-sm, .-color.-sm
+	&.-sm
+	.-color.-sm
 		rounded-corners-sm()
 
-	&.-md, .-color.-md
+	&.-md
+	.-color.-md
 		rounded-corners()
 
-	&.-lg, .-color.-lg
+	&.-lg
+	.-color.-lg
 		rounded-corners-lg()
 
-	&.-full, .-color.-full
+	&.-full
+	.-color.-full
 		img-circle()
-
 </style>
-
-<script lang="ts" src="./backdrop"></script>

@@ -1,11 +1,12 @@
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
+import { propRequired } from '../../../../../../utils/vue';
 import { Analytics } from '../../../../../../_common/analytics/analytics.service';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
 import { AppResponsiveDimensions } from '../../../../../../_common/responsive-dimensions/responsive-dimensions';
 import AppSketchfabEmbed from '../../../../../../_common/sketchfab/embed/embed.vue';
 import { ActivityFeedItem } from '../../item-service';
-import { ActivityFeedView } from '../../view';
+import { ActivityFeedKey, ActivityFeedView } from '../../view';
 
 @Component({
 	components: {
@@ -14,14 +15,10 @@ import { ActivityFeedView } from '../../view';
 	},
 })
 export default class AppActivityFeedDevlogPostSketchfab extends Vue {
-	@Inject()
-	feed!: ActivityFeedView;
+	@Prop(propRequired(ActivityFeedItem)) item!: ActivityFeedItem;
+	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
 
-	@Prop(ActivityFeedItem)
-	item!: ActivityFeedItem;
-
-	@Prop(FiresidePost)
-	post!: FiresidePost;
+	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
 	isShowing = GJ_IS_SSR;
 	contentBootstrapped = false;

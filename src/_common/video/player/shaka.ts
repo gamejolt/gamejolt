@@ -1,34 +1,46 @@
-import * as shaka from 'shaka-player';
+import { Player as ShakaPlayer, polyfill } from 'shaka-player';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { propRequired } from '../../../utils/vue';
+import { propOptional, propRequired } from '../../../utils/vue';
 import { VideoPlayerController } from './controller';
 
 @Component({})
 export default class AppVideoPlayerShaka extends Vue {
 	@Prop(propRequired(VideoPlayerController)) player!: VideoPlayerController;
+	@Prop(propOptional(Boolean, false)) autoplay!: boolean;
+
+	shakaPlayer?: ShakaPlayer;
 
 	$refs!: {
 		video: HTMLVideoElement;
 	};
 
 	mounted() {
-		shaka.polyfill.installAll();
-		if (shaka.Player.isBrowserSupported()) {
-			this.initShaka();
-			this.syncWithState();
-		} else {
-			// DODO: Do something, ignore?
-			console.error('Browser not supported.');
+		this.init();
+	}
+
+	beforeDestroy() {
+		if (this.shakaPlayer) {
+			console.log('DESTROY');
+			this.shakaPlayer.destroy();
+			this.shakaPlayer = undefined;
 		}
 	}
 
-	private async initShaka() {
-		const shakaPlayer = new shaka.Player(this.$refs.video);
-		shakaPlayer.addEventListener('error', onErrorEvent);
+	private async init() {
+		polyfill.installAll();
+		if (!ShakaPlayer.isBrowserSupported()) {
+			console.error('Browser not supported for video streaming.');
+			return;
+		}
+
+		this.syncWithState();
+
+		this.shakaPlayer = new ShakaPlayer(this.$refs.video);
+		this.shakaPlayer.addEventListener('error', onErrorEvent);
 
 		try {
-			await shakaPlayer.load(this.player.manifest);
+			await this.shakaPlayer.load(this.player.manifest);
 			this.setupEvents();
 		} catch (e) {
 			onError(e);

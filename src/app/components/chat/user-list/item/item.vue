@@ -4,7 +4,7 @@
 	<app-scroll-inview
 		tag="li"
 		class="-container"
-		:margin="`${Screen.height / 2}px`"
+		:config="InviewConfig"
 		@inview="isInview = true"
 		@outview="isInview = false"
 	>

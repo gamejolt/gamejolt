@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
+import { propRequired } from '../../../../../../utils/vue';
 import { Analytics } from '../../../../../../_common/analytics/analytics.service';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
 import AppLightboxTS from '../../../../../../_common/lightbox/lightbox';
@@ -12,7 +13,7 @@ import AppMediaItemPost from '../../../../../../_common/media-item/post/post.vue
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppEventItemMediaIndicator from '../../../../event-item/media-indicator/media-indicator.vue';
 import { ActivityFeedItem } from '../../item-service';
-import { ActivityFeedView } from '../../view';
+import { ActivityFeedKey, ActivityFeedView } from '../../view';
 
 if (!GJ_IS_SSR) {
 	const VueTouch = require('vue-touch');
@@ -26,14 +27,10 @@ if (!GJ_IS_SSR) {
 	},
 })
 export default class AppActivityFeedDevlogPostMedia extends Vue implements LightboxMediaSource {
-	@Inject()
-	feed!: ActivityFeedView;
+	@Prop(propRequired(ActivityFeedItem)) item!: ActivityFeedItem;
+	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
 
-	@Prop(ActivityFeedItem)
-	item!: ActivityFeedItem;
-
-	@Prop(FiresidePost)
-	post!: FiresidePost;
+	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
 	page = 1;
 	activeMediaItem: MediaItem | null = null;
@@ -41,7 +38,6 @@ export default class AppActivityFeedDevlogPostMedia extends Vue implements Light
 	isWaitingForFrame = false;
 	contentBootstrapped = false;
 	private lightbox?: AppLightboxTS;
-
 	readonly Screen = Screen;
 
 	get isHydrated() {

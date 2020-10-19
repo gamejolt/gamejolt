@@ -15,7 +15,7 @@
 			}"
 			@click="onVideoClick"
 		>
-			<app-video-player-shaka :player="player" />
+			<app-video-player-shaka :player="player" :autoplay="autoplay" />
 		</div>
 
 		<transition>
@@ -31,7 +31,7 @@
 			<div v-if="shouldShowUI" class="-bottom -ui anim-fade-enter-up anim-fade-leave-down">
 				<div class="-bottom-gradient">
 					<div class="-bottom-controls">
-						<app-player-scrubber :player="player" />
+						<app-player-scrubber v-if="!hideScrubber" :player="player" />
 
 						<div class="-row">
 							<app-player-playback :player="player" />

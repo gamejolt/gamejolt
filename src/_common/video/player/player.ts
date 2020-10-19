@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { propRequired } from '../../../utils/vue';
+import { propOptional, propRequired } from '../../../utils/vue';
 import AppShortkey from '../../shortkey/shortkey.vue';
 import {
 	queueVideoTimeChange,
@@ -43,14 +43,19 @@ const UIHideTimeoutMovement = 1500;
 export default class AppVideoPlayer extends Vue {
 	@Prop(propRequired(String)) poster!: string;
 	@Prop(propRequired(String)) manifest!: string;
+	@Prop(propOptional(Boolean, false)) autoplay!: boolean;
+	@Prop(propOptional(Boolean, false)) hideScrubber!: boolean;
 
+	player = new VideoPlayerController(this.manifest, this.poster);
 	isHovered = false;
 	private _hideUITimer?: NodeJS.Timer;
 
-	player = new VideoPlayerController(this.manifest, this.poster);
-
 	get shouldShowUI() {
 		return this.isHovered || this.player.state === 'paused';
+	}
+
+	beforeDestroy() {
+		this.clearHideUITimer();
 	}
 
 	onMouseOut() {
