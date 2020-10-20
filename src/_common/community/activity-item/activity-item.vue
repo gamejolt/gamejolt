@@ -188,7 +188,7 @@
 							newName: getExtraData('new-name'),
 						}"
 					>
-						<em>Renamed</em> a channel from #%{ oldName } to #%{ newName }.
+						<em>Renamed</em> a channel from <i>%{ oldName }</i> to <i>%{ newName }</i>.
 					</span>
 
 					<span
