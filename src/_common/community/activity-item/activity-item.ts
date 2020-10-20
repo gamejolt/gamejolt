@@ -99,7 +99,7 @@ export default class AppCommunityActivityItem extends Vue {
 				reason: this.item.action_resource.reason,
 			});
 		} else if (this.item.action_resource instanceof CommunityChannel) {
-			return '#' + this.item.action_resource.title;
+			return this.item.action_resource.title;
 		} else if (this.item.action_resource instanceof Game) {
 			return this.item.action_resource.title;
 		}
