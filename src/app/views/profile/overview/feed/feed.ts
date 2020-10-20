@@ -64,6 +64,7 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 			{
 				type: 'EventItem',
 				url: getFetchUrl(this.$route),
+				itemsPerPage: $payload.perPage,
 			},
 			$payload.items,
 			fromCache

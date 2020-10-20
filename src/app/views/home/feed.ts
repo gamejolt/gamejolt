@@ -145,6 +145,7 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 				url: `/web/dash/activity/more/activity`,
 				shouldShowFollow: true,
 				notificationWatermark: feedPayload.unreadWatermark,
+				itemsPerPage: feedPayload.perPage,
 			},
 			feedPayload.items,
 			fromCache

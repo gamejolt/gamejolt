@@ -59,6 +59,7 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 			{
 				type: 'EventItem',
 				url: getFetchUrl(this.$route),
+				itemsPerPage: $payload.perPage,
 			},
 			$payload.items,
 			fromCache

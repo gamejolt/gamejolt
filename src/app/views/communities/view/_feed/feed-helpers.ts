@@ -37,6 +37,7 @@ export function resolveFeedChannelPayload(
 			mainCommunity,
 			shouldShowFollow: true,
 			notificationWatermark: payload.unreadWatermark,
+			itemsPerPage: payload.perPage,
 		},
 		payload.items,
 		fromCache

@@ -13,7 +13,10 @@ import {
 	setCommentCount,
 } from '../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../_common/comment/modal/modal.service';
-import { CommentThreadModal } from '../../../../_common/comment/thread/modal.service';
+import {
+	CommentThreadModal,
+	CommentThreadModalPermalinkDeregister,
+} from '../../../../_common/comment/thread/modal.service';
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
 import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/verified-tick.vue';
@@ -151,7 +154,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	knownFollowers: User[] = [];
 	knownFollowerCount = 0;
 
-	permalinkWatchDeregister?: Function;
+	permalinkWatchDeregister?: CommentThreadModalPermalinkDeregister;
 
 	readonly User = User;
 	readonly UserFriendship = UserFriendship;
