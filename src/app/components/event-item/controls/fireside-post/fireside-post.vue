@@ -1,3 +1,5 @@
+<script lang="ts" src="./fireside-post"></script>
+
 <template>
 	<div class="event-item-controls-fireside-post">
 		<div class="-row">
@@ -6,11 +8,11 @@
 
 				<div v-if="shouldShowCommentsButton" class="-inline-button">
 					<app-button
+						v-app-tooltip="$gettext('View Comments')"
 						icon="comment"
 						circle
 						trans
 						@click="openComments()"
-						v-app-tooltip="$gettext('View Comments')"
 					/>
 
 					<a
@@ -19,19 +21,19 @@
 						:class="{ mobile: Screen.isXs }"
 						@click="openComments()"
 					>
-						{{ commentsCount | fuzzynumber }}
+						{{ fuzzynumber(commentsCount) }}
 					</a>
 					<span v-else class="blip-missing" />
 				</div>
 
 				<template v-if="shouldShowStickersButton">
 					<app-button
+						v-app-tooltip="$gettext('Place Sticker')"
+						v-app-auth-required
 						icon="sticker"
 						circle
 						trans
 						@click="placeSticker()"
-						v-app-tooltip="$gettext('Place Sticker')"
-						v-app-auth-required
 					/>
 
 					&nbsp;
@@ -39,19 +41,19 @@
 
 				<div
 					v-if="shouldShowStickersBar"
+					v-app-tooltip="$gettext(`Toggle Stickers`)"
 					class="-stickers"
 					:class="{ '-showing': showStickers }"
 					@click.stop="onClickShowStickers"
-					v-app-tooltip="$gettext(`Toggle Stickers`)"
 				>
-					<span class="-caret"></span>
+					<span class="-caret" />
 
 					<span v-for="sticker of previewStickers" :key="sticker.id" class="-sticker">
 						<img :src="sticker.img_url" />
 					</span>
 
 					<small class="-stickers-count text-muted">
-						{{ post.stickers.length | number }}
+						{{ number(post.stickers.length) }}
 					</small>
 				</div>
 			</div>
@@ -81,7 +83,11 @@
 		</div>
 
 		<div class="-row small" :class="{ '-spacing-top': shouldShowEdit, tiny: Screen.isXs }">
-			<app-event-item-controls-fireside-post-stats :key="'stats'" class="text-muted" :post="post" />
+			<app-event-item-controls-fireside-post-stats
+				:key="'stats'"
+				class="text-muted"
+				:post="post"
+			/>
 
 			<span v-if="shouldShowEdit && showUserControls" class="-extra">
 				<app-button v-if="canPublish" class="-inline-button" primary @click="publish()">
@@ -96,8 +102,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .event-item-controls-fireside-post
 	display: flex
@@ -146,7 +152,6 @@
 			small
 				color: var(--theme-bi-fg)
 
-
 		.-caret
 			caret(direction: left, color: $trans, size: 5px)
 			left: -3px
@@ -173,9 +178,7 @@
 	.-spacing
 		&-top
 			margin-top: 12px
+
 		&-right
 			margin-right: 8px
-
 </style>
-
-<script lang="ts" src="./fireside-post"></script>

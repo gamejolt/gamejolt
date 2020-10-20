@@ -4,6 +4,7 @@ export const isSecure = typeof window !== 'undefined' && window.location.protoco
 interface SsrContext {
 	ua: string;
 	url: string;
+	accept: string;
 	meta: any;
 	errorCode?: number;
 	redirect?: string;
@@ -18,6 +19,7 @@ export class Environment {
 	static ssrContext: SsrContext = {
 		ua: '',
 		url: '',
+		accept: '',
 		meta: {},
 	};
 

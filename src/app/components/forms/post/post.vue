@@ -178,6 +178,7 @@
 						:model-id="model.id"
 						:rules="{
 							content_no_media_uploads: true,
+							max_content_length: [articleLengthLimit],
 						}"
 						:max-height="0"
 					/>

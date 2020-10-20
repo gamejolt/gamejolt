@@ -1,4 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
+import { propRequired } from '../../../utils/vue';
 import AppContentViewer from '../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../_common/environment/environment.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
@@ -28,10 +29,10 @@ import AppPollVoting from '../poll/voting/voting.vue';
 	},
 })
 export default class AppBroadcastModal extends BaseModal {
-	@Prop({ type: Array, default: () => [] })
-	posts!: FiresidePost[];
+	@Prop(propRequired(Array)) posts!: FiresidePost[];
 
-	post: FiresidePost | null = null;
+	// Will get assigned in created() immediately.
+	post: FiresidePost = null as any;
 	stickersVisible = false;
 
 	readonly Environment = Environment;

@@ -54,7 +54,10 @@
 								</div>
 
 								<router-link :to="displayUser.url" class="-name link-unstyled">
-									<strong>{{ displayUser.display_name }}</strong>
+									<span>
+										<strong>{{ displayUser.display_name }}</strong>
+										<app-user-verified-tick :user="displayUser" />
+									</span>
 									<span class="tiny text-muted">
 										@{{ displayUser.username }}
 									</span>
@@ -168,6 +171,7 @@
 						show-comments
 						should-show-follow
 						:show-stickers="stickersVisible"
+						event-label="page"
 						@post-remove="onPostRemoved"
 						@post-publish="onPostPublished"
 						@post-stickers-visibility-change="onPostStickersVisibilityChange"

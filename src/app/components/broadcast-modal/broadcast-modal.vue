@@ -1,3 +1,5 @@
+<script lang="ts" src="./broadcast-modal"></script>
+
 <template>
 	<app-modal ref="modal">
 		<div class="modal-controls">
@@ -23,9 +25,9 @@
 				<div class="col-sm-4 col-sm-push-8">
 					<div class="list-group">
 						<a
-							class="list-group-item has-icon"
 							v-for="_post of posts"
 							:key="_post.id"
+							class="list-group-item has-icon"
 							@click="post = _post"
 						>
 							<h5 class="list-group-item-heading">
@@ -48,8 +50,8 @@
 								:ratio="item.width / item.height"
 							>
 								<app-img-responsive
-									class="-img"
 									v-if="!item.is_animated"
+									class="-img"
 									:src="item.mediaserver_url"
 									alt=""
 								/>
@@ -85,9 +87,9 @@
 					</div>
 
 					<app-sticker-target
+						ref="stickerTarget"
 						:stickers="post.stickers"
 						:show-stickers="stickersVisible"
-						ref="stickerTarget"
 						@hide-all="onAllStickersHidden"
 					>
 						<app-content-viewer :source="post.lead_content" />
@@ -106,10 +108,11 @@
 					</template>
 
 					<app-event-item-controls
+						ref="stickerTarget"
 						show-comments
 						:post="post"
 						:show-stickers="stickersVisible"
-						ref="stickerTarget"
+						event-label="broadcast"
 						@post-stickers-visibility-change="onPostStickersVisibilityChange"
 					/>
 				</div>
@@ -117,5 +120,3 @@
 		</div>
 	</app-modal>
 </template>
-
-<script lang="ts" src="./broadcast-modal"></script>

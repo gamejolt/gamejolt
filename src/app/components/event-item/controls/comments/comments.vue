@@ -14,7 +14,6 @@
 			@submit="onSubmitNewComment"
 		/>
 	</div>
-
 	<div v-else-if="showFeed">
 		<br />
 		<br />
