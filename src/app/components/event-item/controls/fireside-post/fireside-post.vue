@@ -4,7 +4,12 @@
 	<div class="event-item-controls-fireside-post">
 		<div class="-row">
 			<div v-if="showUserControls" class="-row">
-				<app-fireside-post-like-widget :post="post" trans @change="emitLikeChange" />
+				<app-fireside-post-like-widget
+					v-if="shouldShowLike"
+					:post="post"
+					trans
+					@change="emitLikeChange"
+				/>
 
 				<div v-if="shouldShowCommentsButton" class="-inline-button">
 					<app-button

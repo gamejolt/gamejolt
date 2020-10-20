@@ -244,6 +244,19 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return this.canComment;
 	}
 
+	get canLike() {
+		let postOwner = this.user;
+		if (this.game && this.as_game_owner) {
+			postOwner = this.game.developer;
+		}
+
+		if (postOwner.blocked_you || postOwner.is_blocked) {
+			return false;
+		}
+
+		return true;
+	}
+
 	getContent(context: ContentContext) {
 		if (context === 'fireside-post-lead') {
 			return this.lead_content;
