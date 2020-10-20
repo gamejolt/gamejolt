@@ -31,7 +31,7 @@
 			<div v-if="shouldShowUI" class="-bottom -ui anim-fade-enter-up anim-fade-leave-down">
 				<div class="-bottom-gradient">
 					<div class="-bottom-controls">
-						<app-player-scrubber v-if="!hideScrubber" :player="player" />
+						<app-player-scrubber :player="player" />
 
 						<div class="-row">
 							<app-player-playback :player="player" />

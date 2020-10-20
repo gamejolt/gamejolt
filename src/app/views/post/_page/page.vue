@@ -5,10 +5,11 @@
 		<div class="container-xl">
 			<template v-if="video">
 				<div v-if="video" class="full-bleed-xs">
-					<!-- :poster="mediaItem.mediaserver_url" -->
 					<app-video-player
 						v-if="video.provider === 'gamejolt'"
+						poster="https://m.gjcdn.net/fireside-post-image/900/4300116-ll-zd9ds2jh-v4.webp"
 						manifest="https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd"
+						:start-time="videoStartTime"
 						autoplay
 						@play="onVideoPlay"
 					/>

@@ -44,7 +44,7 @@ export default class AppVideoPlayer extends Vue {
 	@Prop(propRequired(String)) poster!: string;
 	@Prop(propRequired(String)) manifest!: string;
 	@Prop(propOptional(Boolean, false)) autoplay!: boolean;
-	@Prop(propOptional(Boolean, false)) hideScrubber!: boolean;
+	@Prop(propOptional(Number, 0)) startTime!: number;
 
 	player = new VideoPlayerController(this.manifest, this.poster);
 	isHovered = false;
@@ -56,6 +56,12 @@ export default class AppVideoPlayer extends Vue {
 
 	@Emit('play')
 	emitPlay() {}
+
+	mounted() {
+		if (this.startTime) {
+			queueVideoTimeChange(this.player, this.startTime);
+		}
+	}
 
 	beforeDestroy() {
 		this.clearHideUITimer();

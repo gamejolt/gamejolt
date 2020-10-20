@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { RawLocation } from 'vue-router';
 import { propRequired } from '../../../../utils/vue';
 import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
@@ -72,6 +73,7 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 
 	stickersVisible = false;
 	activeImageIndex = 0;
+	videoStartTime = 0;
 	private lightbox?: AppLightboxTS;
 
 	$refs!: {
@@ -104,8 +106,25 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 	}
 
 	created() {
-		if (!GJ_IS_SSR) {
-			this.stickersVisible = SettingAlwaysShowStickers.get();
+		if (GJ_IS_SSR) {
+			return;
+		}
+
+		this.stickersVisible = SettingAlwaysShowStickers.get();
+
+		if (typeof this.$route.query.t === 'string') {
+			if (this.video) {
+				// DODO: Set the max val to the video end time.
+				this.videoStartTime =
+					Math.floor(Math.max(0, parseInt(this.$route.query.t, 10))) * 1000;
+			}
+
+			// Get rid of the time from the URL so that it doesn't pollute
+			// shared addresses.
+			this.$router.replace({
+				...this.$route,
+				query: { ...this.$route.query, t: undefined },
+			} as RawLocation);
 		}
 	}
 
