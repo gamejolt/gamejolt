@@ -4,7 +4,7 @@ import { propRequired } from '../../../../utils/vue';
 import AppPopper from '../../../popper/popper.vue';
 import { Screen } from '../../../screen/screen-service';
 import { AppTooltip } from '../../../tooltip/tooltip-directive';
-import { VideoPlayerController } from '../controller';
+import { setVideoVolume, VideoPlayerController } from '../controller';
 import AppPlayerSlider from '../slider/slider.vue';
 
 @Component({
@@ -22,7 +22,10 @@ export default class AppPlayerVolume extends Vue {
 	readonly Screen = Screen;
 
 	onClickMute() {
-		// JODO: implement mute
-		console.log('toggle mute');
+		if (this.player.volume > 0) {
+			setVideoVolume(this.player, 0);
+		} else {
+			setVideoVolume(this.player, 100);
+		}
 	}
 }

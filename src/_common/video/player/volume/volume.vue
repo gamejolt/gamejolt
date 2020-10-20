@@ -3,7 +3,7 @@
 <template>
 	<div class="-container">
 		<div class="player-control-button" @click="onClickMute">
-			<app-jolticon icon="audio" />
+			<app-jolticon :icon="player.volume > 0 ? 'audio' : 'audio-mute'" />
 		</div>
 
 		<app-player-slider v-if="!Screen.isMobile" :player="player" />
