@@ -36,7 +36,7 @@ export default class FormComment extends BaseForm<Comment> implements FormOnInit
 
 	modelClass = Comment;
 	resetOnSubmit = true;
-	lengthLimit = 1000;
+	lengthLimit = 5_000;
 
 	get loadUrl() {
 		return `/comments/save`;

@@ -32,7 +32,7 @@ export default class FormProfile extends BaseForm<User> implements FormOnLoad, F
 	usernameTimeLeft = 0;
 	usernameDuration = '';
 	isBioLocked = false;
-	bioLengthLimit = 2000;
+	bioLengthLimit = 5_000;
 
 	Environment = Environment;
 

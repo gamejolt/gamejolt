@@ -34,7 +34,7 @@ export default class FormGameDescription extends BaseForm<DescriptionFormModel>
 
 	isFnafDetected = false;
 	isDisabled = false;
-	lengthLimit = 8000;
+	lengthLimit = 50_000;
 
 	$refs!: {
 		form: AppForm;
