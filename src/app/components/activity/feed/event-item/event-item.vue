@@ -91,7 +91,6 @@
 				v-if="eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD"
 				:item="item"
 				:video="video"
-				@expanded="emitExpanded"
 				@content-bootstrapped="onContentBootstrapped"
 			/>
 			<template v-if="post">
@@ -100,7 +99,6 @@
 					:item="item"
 					:post="post"
 					@click.native.stop
-					@expanded="emitExpanded"
 					@content-bootstrapped="onContentBootstrapped"
 				/>
 
@@ -109,7 +107,6 @@
 					:item="item"
 					:post="post"
 					@click.native.stop
-					@expanded="emitExpanded"
 					@content-bootstrapped="onContentBootstrapped"
 				/>
 
@@ -117,7 +114,6 @@
 					v-if="post.hasMedia"
 					:item="item"
 					:post="post"
-					@expanded="emitExpanded"
 					@content-bootstrapped="onContentBootstrapped"
 				/>
 
@@ -152,7 +148,6 @@
 						v-if="post.has_article"
 						:item="item"
 						:post="post"
-						@expanded="emitExpanded"
 						@content-bootstrapped="onContentBootstrapped"
 					/>
 

@@ -18,7 +18,6 @@ import { CommentableModel, Model, ModelSaveRequestOptions } from '../../model/mo
 import { Poll } from '../../poll/poll.model';
 import { Registry } from '../../registry/registry.service';
 import { StickerPlacement } from '../../sticker/placement/placement.model';
-import { appStore } from '../../store/app-store';
 import { Translate } from '../../translate/translate.service';
 import { User } from '../../user/user.model';
 import { FiresidePostCommunity } from './community/community.model';
@@ -61,7 +60,6 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	subline!: string;
 	url!: string;
 	view_count?: number;
-	expand_count?: number;
 	is_pinned!: boolean;
 
 	/**
@@ -428,20 +426,6 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return payload;
 	}
 
-	$viewed() {
-		// TODO(collaborators) block collaborators from logging ticks on posts they own
-		if (!appStore.state.user || this.user.id !== appStore.state.user.id) {
-			HistoryTick.sendBeacon('fireside-post', this.id);
-		}
-	}
-
-	$expanded() {
-		// TODO(collaborators) block collaborators from logging ticks on posts they own
-		if (!appStore.state.user || this.user.id !== appStore.state.user.id) {
-			HistoryTick.sendBeacon('fireside-post-expand', this.id);
-		}
-	}
-
 	$feature(community: Community) {
 		const c = this.getTaggedCommunity(community);
 		if (!c) {
@@ -528,4 +512,8 @@ export async function loadArticleIntoPost(post: FiresidePost) {
 	const payload = await Api.sendRequest(`/web/posts/article/${post.id}`);
 	post.article_content = payload.article;
 	return post;
+}
+
+export function $viewPost(post: FiresidePost) {
+	HistoryTick.sendBeacon('fireside-post', post.id);
 }

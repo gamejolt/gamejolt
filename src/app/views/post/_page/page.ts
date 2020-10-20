@@ -8,7 +8,7 @@ import AppEventItemControlsOverlay from '../../../../_common/event-item/controls
 import { number } from '../../../../_common/filters/number';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import {
-	$viewFiresidePostVideo,
+	$viewPostVideo,
 	FiresidePostVideo,
 } from '../../../../_common/fireside/post/video/video-model';
 import { Growls } from '../../../../_common/growls/growls.service';
@@ -172,7 +172,7 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 
 	onVideoPlay() {
 		if (this.video) {
-			$viewFiresidePostVideo(this.video);
+			$viewPostVideo(this.video);
 		}
 	}
 

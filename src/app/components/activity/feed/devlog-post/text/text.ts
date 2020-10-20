@@ -6,7 +6,7 @@ import AppContentViewer from '../../../../../../_common/content/content-viewer/c
 import AppFadeCollapse from '../../../../../../_common/fade-collapse/fade-collapse.vue';
 import {
 	FiresidePost,
-	loadArticleIntoPost,
+	loadArticleIntoPost
 } from '../../../../../../_common/fireside/post/post-model';
 import AppLoading from '../../../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../../../_common/screen/screen-service';
@@ -33,7 +33,6 @@ export default class AppActivityFeedDevlogPostText extends Vue {
 	$el!: HTMLDivElement;
 
 	@Emit('content-bootstrapped') emitContentBootstrapped() {}
-	@Emit('expanded') emitExpanded() {}
 
 	get isHydrated() {
 		return this.feed.isItemHydrated(this.item);
@@ -58,7 +57,6 @@ export default class AppActivityFeedDevlogPostText extends Vue {
 		}
 
 		this.isToggling = true;
-		this.emitExpanded();
 
 		if (!this.isOpen) {
 			Analytics.trackEvent('activity-feed', 'article-open');

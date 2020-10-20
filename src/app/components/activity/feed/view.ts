@@ -238,10 +238,6 @@ export class ActivityFeedView {
 		return this.state.markItemViewed(item);
 	}
 
-	setItemExpanded(item: ActivityFeedItem) {
-		return this.state.markItemExpanded(item);
-	}
-
 	setItemHydration(item: ActivityFeedItem, visible: boolean) {
 		const itemState = this.getItemState(item);
 

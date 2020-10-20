@@ -99,7 +99,6 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	@Emit('resize') emitResize(_height: number) {}
 	@Emit('clicked') emitClicked() {}
-	@Emit('expanded') emitExpanded() {}
 
 	get isNew() {
 		return this.feed.isItemUnread(this.item);
@@ -334,7 +333,6 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	toggleLead() {
 		this.feed.toggleItemLeadOpen(this.item);
-		this.emitExpanded();
 		Analytics.trackEvent('activity-feed', 'toggle-lead');
 	}
 

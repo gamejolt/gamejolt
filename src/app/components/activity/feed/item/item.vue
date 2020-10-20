@@ -18,7 +18,6 @@
 				<app-activity-feed-event-item
 					v-if="item.type === 'event-item'"
 					:item="item"
-					@expanded="onExpanded"
 					@resize="onResize"
 				/>
 				<app-activity-feed-notification

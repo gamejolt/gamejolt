@@ -14,6 +14,6 @@ export class FiresidePostVideo extends Model {
 
 Model.create(FiresidePostVideo);
 
-export function $viewFiresidePostVideo(video: FiresidePostVideo) {
+export function $viewPostVideo(video: FiresidePostVideo) {
 	return HistoryTick.sendBeacon('fireside-post-video', video.id);
 }

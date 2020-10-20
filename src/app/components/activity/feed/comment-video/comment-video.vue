@@ -7,7 +7,7 @@
 			:thumbnail="video.img_thumbnail"
 			:is-hydrated="isHydrated"
 			@bootstrap="$emit('content-bootstrapped')"
-			@play="$emit('expanded')"
+			@play="onPlay"
 		/>
 
 		<br />

@@ -42,7 +42,6 @@ export default class AppActivityFeedDevlogPostSketchfab extends Vue {
 
 	play() {
 		this.isShowing = true;
-		this.$emit('expanded');
 		Analytics.trackEvent('activity-feed', 'sketchfab-play');
 	}
 }

@@ -59,10 +59,6 @@ export default class AppActivityFeedItem extends Vue {
 		}
 	}
 
-	onExpanded() {
-		this.feed.setItemExpanded(this.item);
-	}
-
 	onInviewHydrationChange(visible: boolean) {
 		this.feed.setItemHydration(this.item, visible);
 	}
