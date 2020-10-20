@@ -27,6 +27,7 @@ import { AppTimeAgo } from '../../../../_common/time/ago/ago';
 import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
 import AppUserFollowWidget from '../../../../_common/user/follow/widget.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
+import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
 import AppVideoEmbed from '../../../../_common/video/embed/embed.vue';
 import AppVideo from '../../../../_common/video/video.vue';
 import AppEventItemControls from '../../../components/event-item/controls/controls.vue';
@@ -57,6 +58,7 @@ import AppPollVoting from '../../../components/poll/voting/voting.vue';
 		AppMediaItemPost,
 		AppScrollScroller,
 		AppGameBadge,
+		AppUserVerifiedTick,
 	},
 })
 export default class AppPostPage extends Vue implements LightboxMediaSource {
