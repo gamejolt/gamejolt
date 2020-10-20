@@ -24,11 +24,11 @@ $-item-padding-container = $-item-padding - $-border-width
 -activity-feed-item()
 	-activity-feed-item-padding()
 	change-bg('bg')
+	elevate-xs()
 	margin-left: -($grid-gutter-width-xs / 2)
 	margin-right: -($grid-gutter-width-xs / 2)
 	// Overwrites the default box shadow animation that is not needed on this element
 	transition: border-color 200ms ease !important
-	elevate-xs()
 
 	@media $media-sm-up
 		rounded-corners-lg()
@@ -40,3 +40,5 @@ $-item-padding-container = $-item-padding - $-border-width
 		&:hover
 			border-color: var(--theme-link)
 			cursor: pointer
+			// This will immediately show the border and then transition out.
+			transition: none !important

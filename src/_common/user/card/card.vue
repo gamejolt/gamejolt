@@ -1,5 +1,11 @@
+<script lang="ts" src="./card"></script>
+
 <template>
-	<app-theme class="user-card sheet sheet-full sheet-no-full-bleed" :theme="user.theme">
+	<app-theme
+		class="user-card sheet sheet-full sheet-no-full-bleed"
+		:class="{ 'sheet-elevate': elevate }"
+		:theme="user.theme"
+	>
 		<div class="-user-info">
 			<div
 				class="-header"
@@ -27,17 +33,19 @@
 				</div>
 
 				<div class="-username">
-					<router-link :to="user.url" class="link-unstyled">@{{ user.username }}</router-link>
+					<router-link :to="user.url" class="link-unstyled">
+						@{{ user.username }}
+					</router-link>
 				</div>
 
 				<div class="-follow-counts small">
 					<router-link
+						v-translate="{ count: number(followingCount || 0) }"
 						:to="{
 							name: 'profile.following',
 							params: { username: user.username },
 						}"
 						:translate-n="followingCount"
-						v-translate="{ count: number(followingCount || 0) }"
 						translate-plural="<b>%{count}</b> following"
 					>
 						<b>1</b>
@@ -45,12 +53,12 @@
 					</router-link>
 					<span class="dot-separator" />
 					<router-link
+						v-translate="{ count: number(followerCount) }"
 						:to="{
 							name: 'profile.followers',
 							params: { username: user.username },
 						}"
 						:translate-n="followerCount"
-						v-translate="{ count: number(followerCount) }"
 						translate-plural="<b>%{count}</b> followers"
 					>
 						<b>1</b>
@@ -58,7 +66,7 @@
 					</router-link>
 				</div>
 
-				<div class="-follow" v-if="app.user">
+				<div v-if="app.user" class="-follow">
 					<app-user-follow-widget
 						v-if="user.id !== app.user.id"
 						:user="user"
@@ -82,7 +90,7 @@
 
 		<div class="-stats -well">
 			<app-loading v-if="isLoading" class="sans-margin" centered />
-			<ul class="stat-list" v-else>
+			<ul v-else class="stat-list">
 				<li class="stat-big stat-big-smaller">
 					<router-link
 						class="link-unstyled"
@@ -95,11 +103,11 @@
 							<translate>Posts</translate>
 						</div>
 						<div class="stat-big-digit">
-							{{ postCount | number }}
+							{{ number(postCount) }}
 						</div>
 					</router-link>
 				</li>
-				<li class="stat-big stat-big-smaller" v-if="gameCount">
+				<li v-if="gameCount" class="stat-big stat-big-smaller">
 					<router-link
 						class="link-unstyled"
 						:to="{
@@ -111,11 +119,11 @@
 							<translate>Games</translate>
 						</div>
 						<div class="stat-big-digit">
-							{{ gameCount | number }}
+							{{ number(gameCount) }}
 						</div>
 					</router-link>
 				</li>
-				<li class="stat-big stat-big-smaller" v-if="videoCount">
+				<li v-if="videoCount" class="stat-big stat-big-smaller">
 					<router-link
 						class="link-unstyled"
 						:to="{
@@ -127,7 +135,7 @@
 							<translate>Videos</translate>
 						</div>
 						<div class="stat-big-digit">
-							{{ videoCount | number }}
+							{{ number(videoCount) }}
 						</div>
 					</router-link>
 				</li>
@@ -137,5 +145,3 @@
 </template>
 
 <style lang="stylus" src="./card.styl" scoped></style>
-
-<script lang="ts" src="./card"></script>
