@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Inject, Prop, Provide } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
+import { ContentFocus } from '../../content-focus/content-focus.service';
 import {
 	DrawerStore,
 	DrawerStoreKey,
@@ -25,6 +26,8 @@ export default class AppStickerLayer extends Vue {
 
 	@Prop(propOptional(Boolean, false)) hasFixedParent!: boolean;
 
+	private focusWatcherDeregister!: () => void;
+
 	get isActiveLayer() {
 		return this.drawer.activeLayer === this.layer;
 	}
@@ -34,6 +37,10 @@ export default class AppStickerLayer extends Vue {
 	}
 
 	created() {
+		registerStickerLayer(this.drawer, this.layer);
+	}
+
+	mounted() {
 		if (this.hasFixedParent) {
 			// The layer controllers relativeScrollTop defaults to 0,
 			// but any layers that have a fixed (different scroll-context)
@@ -41,10 +48,13 @@ export default class AppStickerLayer extends Vue {
 			this.layer.relativeScrollTop = document.documentElement.scrollTop;
 		}
 
-		registerStickerLayer(this.drawer, this.layer);
+		// We tell the ContentFocus service that content is unfocused when the
+		// mask is active.
+		this.focusWatcherDeregister = ContentFocus.registerWatcher(() => !this.isShowingMask);
 	}
 
 	beforeDestroy() {
 		unregisterStickerLayer(this.drawer, this.layer);
+		this.focusWatcherDeregister();
 	}
 }

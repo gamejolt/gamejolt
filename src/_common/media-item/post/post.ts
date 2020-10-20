@@ -8,6 +8,8 @@ import {
 	AppResponsiveDimensionsChangeEvent,
 } from '../../responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../screen/screen-service';
+import AppStickerReactions from '../../sticker/reactions/reactions.vue';
+import AppStickerTarget from '../../sticker/target/target.vue';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 import AppVideo from '../../video/video.vue';
 import AppMediaItemBackdrop from '../backdrop/backdrop.vue';
@@ -19,6 +21,9 @@ import { MediaItem } from '../media-item-model';
 		AppMediaItemBackdrop,
 		AppVideo,
 		AppResponsiveDimensions,
+		AppStickerTarget,
+		// JODO: Not sure how we want to attach the reactions to the item yet.
+		AppStickerReactions,
 	},
 	directives: {
 		AppTooltip,

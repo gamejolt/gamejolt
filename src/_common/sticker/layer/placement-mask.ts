@@ -8,10 +8,12 @@ import AppScrollScrollerTS from '../../scroll/scroller/scroller';
 import AppScrollScroller from '../../scroll/scroller/scroller.vue';
 import { calculateStickerTargetRects, StickerLayerController } from './layer-controller';
 import AppStickerLayerPlacementMaskItem from './placement-mask-item.vue';
+import AppStickerLayerPlacementMaskTarget from './placement-mask-target.vue';
 
 @Component({
 	components: {
 		AppStickerLayerPlacementMaskItem,
+		AppStickerLayerPlacementMaskTarget,
 	},
 	directives: {
 		AppObserveDimensions,
@@ -21,7 +23,7 @@ export default class AppStickerLayerPlacementMask extends Vue {
 	@Inject(DrawerStoreKey) drawer!: DrawerStore;
 	@Prop(propRequired(StickerLayerController)) layer!: StickerLayerController;
 
-	regenKey = 0;
+	hasCalculated = false;
 	private width = 0;
 	private height = 0;
 
@@ -34,10 +36,7 @@ export default class AppStickerLayerPlacementMask extends Vue {
 			contentRect: { width, height },
 		},
 	]: ResizeObserverEntry[]) {
-		// When dimensions of the page change we want to recalculate everything.
-		// Incrementing the key will ensure that this component and all
-		// sub-components will properly re-render from new data.
-		++this.regenKey;
+		this.hasCalculated = true;
 		this.width = width;
 		this.height = height;
 

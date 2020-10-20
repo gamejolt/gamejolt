@@ -1,3 +1,4 @@
+import { arrayRemove } from '../../utils/array';
 import { makeObservableService } from '../../utils/vue';
 import { Modal } from '../modal/modal.service';
 
@@ -7,9 +8,8 @@ if (typeof window !== 'undefined') {
 }
 
 export class ContentFocus {
-	static isWindowFocused = typeof document !== 'undefined' && document.hasFocus
-		? document.hasFocus()
-		: true;
+	static isWindowFocused =
+		typeof document !== 'undefined' && document.hasFocus ? document.hasFocus() : true;
 
 	/**
 	 * Watchers are functions that we call to check to see if we have focus. They can be used to say
@@ -19,6 +19,11 @@ export class ContentFocus {
 
 	static registerWatcher(cb: () => boolean) {
 		this.watchers.push(cb);
+
+		// This is a deregistration function.
+		return () => {
+			arrayRemove(this.watchers, i => i === cb);
+		};
 	}
 
 	static get hasFocus() {
