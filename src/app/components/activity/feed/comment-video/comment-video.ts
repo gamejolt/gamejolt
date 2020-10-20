@@ -1,8 +1,9 @@
+import Vue from 'vue';
+import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { CommentVideo } from '../../../../../_common/comment/video/video-model';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
-import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
 import { ActivityFeedItem } from '../item-service';
 import { ActivityFeedView } from '../view';
 import AppActivityFeedVideo from '../_video/video.vue';
@@ -38,6 +39,7 @@ export default class AppActivityFeedCommentVideo extends Vue {
 	toggleFull() {
 		this.feed.toggleItemOpen(this.item);
 		this.$emit('expanded');
+		Analytics.trackEvent('activity-feed', 'comment-video-toggle-lead');
 	}
 
 	// We wait for the fade collapse component to bootstrap in and potentially

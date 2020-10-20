@@ -1,8 +1,7 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-@require 'variables'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+@import './variables'
 
-$-button-size = 90px
 $-controls-padding = 10px
 
 .media-bar-lightbox
@@ -31,58 +30,79 @@ $-controls-padding = 10px
 		background-color: rgba(0, 0, 0, 0.85)
 
 .-controls
+	z-index: 1
 	flex: 0 0 auto
 	height: $-controls-height
 	line-height: $-controls-height
-	text-align: center
+	transition: right 300ms ease
+	display: flex
+	align-items: center
+	justify-content: space-between
 
-	@media only screen and (orientation: landscape)
+	@media $media-xs
 		position: absolute
-		right: $-controls-padding
 		bottom: 0
-		z-index: 10
+		left: 0
+		right: 0
 
 	@media $media-sm-up
-		text-align: right
-		position: static
+		justify-content: flex-end
 		padding-right: $-controls-padding
 
-.-next, .-prev
-	rounded-corners-lg()
-	display: none
-	position: absolute
-	top: 50%
-	width: $-button-size
-	height: $-button-size
+.-next
+.-prev
 	line-height: $-button-size
-	margin-top: -(@height / 2)
 	z-index: 1
 	background-color: rgba($black, 0.5)
-	text-align: center
+	display: flex
+	justify-content: center
+	align-items: center
+
+	@media $media-xs
+		flex: 1
+		height: 100%
 
 	@media $media-sm-up
-		display: block
+		position: absolute
+		rounded-corners-lg()
+		top: 50%
+		width: $-button-size
+		height: $-button-size
+		margin-top: -(@height / 2)
 
-	> .jolticon
-		vertical-align: middle
-		font-size: 16px * 3
-		color: $white
-
-	&:hover
-		background-color: $white
+		&.-hideable
+			display: none
 
 		> .jolticon
-			color: $black
+			font-size: 16px * 3
+
+		&:hover
+			background-color: $white
+
+			> .jolticon
+				color: $black
+
+	> .jolticon
+		font-size: 16px * 1.5
+		color: $white
 
 .-next
-	right: 0
-	border-top-right-radius: 0
-	border-bottom-right-radius: 0
+	@media $media-xs
+		margin-left: 16px
+
+	@media $media-sm-up
+		right: 0
+		border-top-right-radius: 0
+		border-bottom-right-radius: 0
 
 .-prev
-	left: 0
-	border-top-left-radius: 0
-	border-bottom-left-radius: 0
+	@media $media-xs
+		margin-right: 16px
+
+	@media $media-sm-up
+		left: 0
+		border-top-left-radius: 0
+		border-bottom-left-radius: 0
 
 // http://stackoverflow.com/questions/10269290/how-to-arrange-many-div-elements-side-by-side-with-no-wrap
 .-slider

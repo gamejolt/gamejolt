@@ -1,14 +1,14 @@
 import { Component, Watch } from 'vue-property-decorator';
-import { Action, Mutation, State } from 'vuex-class';
+import { Action, State } from 'vuex-class';
 import { Api } from '../../../_common/api/api.service';
 import { HistoryCache } from '../../../_common/history/cache/cache.service';
 import { Notification } from '../../../_common/notification/notification-model';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
-import { Store, store } from '../../store';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import AppActivityFeed from '../../components/activity/feed/feed.vue';
 import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../components/activity/feed/view';
+import { Store } from '../../store';
 
 const HistoryCacheFeedTag = 'notifications-feed';
 
@@ -24,19 +24,6 @@ const HistoryCacheFeedTag = 'notifications-feed';
 	deps: { query: ['feed_last_id'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(ActivityFeedService.makeFeedUrl(route, '/web/dash/activity/notifications')),
-	resolveStore({ payload, fromCache }) {
-		// Don't set if from cache, otherwise it could reset to the cached count
-		// when switching between tabs.
-		if (!fromCache) {
-			// We clear the notifications for the tab we are on, and load in
-			// counts for the other tab.
-			store.commit('setNotificationCount', { type: 'notifications', count: 0 });
-			store.commit('setNotificationCount', {
-				type: 'activity',
-				count: payload.activityUnreadCount,
-			});
-		}
-	},
 })
 export default class RouteNotifications extends BaseRouteComponent {
 	@State
@@ -45,11 +32,11 @@ export default class RouteNotifications extends BaseRouteComponent {
 	@State
 	unreadNotificationsCount!: Store['unreadNotificationsCount'];
 
-	@Mutation
-	setNotificationCount!: Store['setNotificationCount'];
-
 	@Action
 	markNotificationsAsRead!: Store['markNotificationsAsRead'];
+
+	@State
+	grid!: Store['grid'];
 
 	feed: ActivityFeedView | null = null;
 
@@ -72,7 +59,14 @@ export default class RouteNotifications extends BaseRouteComponent {
 		}
 	}
 
-	routeResolved($payload: any) {
+	@Watch('unreadNotificationsCount', { immediate: true })
+	onUnreadNotificationsCountChange() {
+		if (this.feed && this.unreadNotificationsCount > this.feed.newCount) {
+			this.feed.newCount = this.unreadNotificationsCount;
+		}
+	}
+
+	routeResolved($payload: any, fromCache: boolean) {
 		// We mark in the history cache whether this route is a historical view
 		// or a new view. If it's new, we want to load fresh. If it's old, we
 		// want to use current feed data, just so we can try to go back to the
@@ -82,9 +76,15 @@ export default class RouteNotifications extends BaseRouteComponent {
 			this.feed.append(Notification.populate($payload.items));
 			HistoryCache.store(this.$route, true, HistoryCacheFeedTag);
 		}
+
+		if (!fromCache) {
+			this.grid?.pushViewNotifications('notifications');
+		}
 	}
 
-	loadedNew() {
-		this.setNotificationCount({ type: 'notifications', count: 0 });
+	onLoadedNew() {
+		if (this.unreadNotificationsCount > 0) {
+			this.grid?.pushViewNotifications('notifications');
+		}
 	}
 }

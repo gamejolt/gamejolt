@@ -1,3 +1,5 @@
+<script lang="ts" src="./notification-popover"></script>
+
 <template>
 	<app-popper
 		v-if="!Connection.isClientOffline"
@@ -8,13 +10,16 @@
 		@hide="onHide()"
 	>
 		<a
+			v-app-tooltip.bottom="$gettext(`Notifications`)"
+			v-app-track-event="`top-nav:notifications:toggle`"
 			class="navbar-item"
 			:class="{ active: isNavbarItemActive }"
 			@click.capture="onNavbarItemClick"
-			v-app-tooltip.bottom="$gettext(`Notifications`)"
-			v-app-track-event="`top-nav:notifications:toggle`"
 		>
-			<span class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave" v-if="count">
+			<span
+				v-if="count"
+				class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
+			>
 				{{ count }}
 			</span>
 			<app-jolticon icon="notifications" />
@@ -37,7 +42,7 @@
 					</div>
 				</template>
 				<template v-else>
-					<app-activity-feed :feed="feed" :new-count="0" @load-new="loadedNew()" />
+					<app-activity-feed :feed="feed" />
 				</template>
 			</div>
 			<div class="fill-darker" slot="footer">
@@ -50,8 +55,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 >>> .timeline-list-item-split
 	full-bleed()
@@ -64,5 +69,3 @@
 	padding: $popover-spacing
 	text-align: right
 </style>
-
-<script lang="ts" src="./notification-popover"></script>

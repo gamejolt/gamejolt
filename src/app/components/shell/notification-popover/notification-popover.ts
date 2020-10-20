@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
-import { Action, Mutation, State } from 'vuex-class';
+import { Action, State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import { Connection } from '../../../../_common/connection/connection-service';
 import AppLoading from '../../../../_common/loading/loading.vue';
@@ -29,11 +29,11 @@ export default class AppShellNotificationPopover extends Vue {
 	@State
 	unreadNotificationsCount!: Store['unreadNotificationsCount'];
 
-	@Mutation
-	setNotificationCount!: Store['setNotificationCount'];
-
 	@Action
 	markNotificationsAsRead!: Store['markNotificationsAsRead'];
+
+	@State
+	grid!: Store['grid'];
 
 	isShowing = false;
 	isLoading = true;
@@ -92,13 +92,15 @@ export default class AppShellNotificationPopover extends Vue {
 
 				const items = Notification.populate($payload.items);
 				this.feed.append(items);
-				this.setNotificationCount({ type: 'notifications', count: 0 });
 			}
 			// If it is already bootstrapped, we just want to load new items if
 			// there is any.
-			else {
+			else if (this.unreadNotificationsCount > 0) {
 				await this.feed.loadNew(this.unreadNotificationsCount);
-				this.setNotificationCount({ type: 'notifications', count: 0 });
+			}
+
+			if (this.unreadNotificationsCount > 0) {
+				this.grid?.pushViewNotifications('notifications');
 			}
 		}
 
@@ -107,5 +109,10 @@ export default class AppShellNotificationPopover extends Vue {
 
 	onHide() {
 		this.isShowing = false;
+	}
+
+	reset() {
+		this.feed?.clear();
+		this.isLoading = true;
 	}
 }

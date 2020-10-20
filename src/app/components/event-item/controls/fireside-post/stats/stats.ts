@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { propRequired } from '../../../../../../utils/vue';
 import { number } from '../../../../../../_common/filters/number';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
 import { AppState, AppStore } from '../../../../../../_common/store/app-store';
@@ -11,11 +12,9 @@ import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive'
 	},
 })
 export default class AppEventItemControlsFiresidePostStats extends Vue {
-	@Prop(FiresidePost)
-	post!: FiresidePost;
+	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
 
-	@AppState
-	user!: AppStore['user'];
+	@AppState user!: AppStore['user'];
 
 	readonly number = number;
 

@@ -39,9 +39,15 @@ export default class AppVideoEmbed extends Vue {
 		}
 
 		let url: string;
+		const queryParams = [];
 
 		if (this.videoProvider === 'youtube') {
 			url = 'https://www.youtube.com/embed/' + this.videoId;
+
+			// Youtube forcefully displays recommended videos on their widgets.
+			// Using rel=0 makes it at least only show other videos from the same channel.
+			// https://developers.google.com/youtube/player_parameters#release_notes_08_23_2018
+			queryParams.push('rel=0');
 		} else if (this.videoProvider === 'vimeo') {
 			url = 'https://player.vimeo.com/video/' + this.videoId;
 		} else {
@@ -49,7 +55,11 @@ export default class AppVideoEmbed extends Vue {
 		}
 
 		if (this.autoplay) {
-			url += '?autoplay=1';
+			queryParams.push('autoplay=1');
+		}
+
+		if (queryParams.length > 0) {
+			url += '?' + queryParams.join('&');
 		}
 
 		this.embedUrl = url;

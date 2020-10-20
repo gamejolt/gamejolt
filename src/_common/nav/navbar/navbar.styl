@@ -1,4 +1,5 @@
-$navbar-height = $shell-top-nav-height is defined ? $shell-top-nav-height : 50px
+$navbar-height = $shell-top-nav-height is defined ? $shell-top-nav-height : 56px
+$-navbar-item-padding = 15px
 
 .navbar
 	@extend .clearfix
@@ -22,22 +23,25 @@ $navbar-height = $shell-top-nav-height is defined ? $shell-top-nav-height : 50px
 .navbar-items
 	@extend .list-unstyled
 
-.navbar-items, .navbar-items > li
+.navbar-items
+.navbar-items > li
 	display: inline-block
 	vertical-align: top
 	margin-bottom: 0
 
-.navbar-items > li > a, .navbar-item
+.navbar-items > li > a
+.navbar-item
+.navbar-avatar
 	display: inline-block
 	vertical-align: top
 	overflow: hidden
 	height: $navbar-height
-	line-height: 20px
+	line-height: 26px
 	user-select: none
-	padding: 15px 10px
 
-	@media $media-sm-up
-		padding: 15px
+.navbar-items > li > a
+.navbar-item
+	padding: $-navbar-item-padding
 
 	> .notification-tag
 		position: absolute
@@ -57,14 +61,7 @@ $navbar-height = $shell-top-nav-height is defined ? $shell-top-nav-height : 50px
 	top: ($navbar-height - @height) * 0.5
 
 .navbar-avatar
-	display: inline-block
-	vertical-align: top
-	overflow: hidden
-	padding: 10px
-	line-height: 30px
-	width: 30px + (@padding * 2)
-	height: @width
-	user-select: none
+	padding: 13px $-navbar-item-padding
 
 	img
 		width: 30px
@@ -92,7 +89,9 @@ $navbar-height = $shell-top-nav-height is defined ? $shell-top-nav-height : 50px
 /**
  * Hover/active state underline.
  */
-.navbar-items > li > a, .navbar-item, .navbar-avatar
+.navbar-items > li > a
+.navbar-item
+.navbar-avatar
 	position: relative
 
 	&::before
@@ -111,7 +110,8 @@ $navbar-height = $shell-top-nav-height is defined ? $shell-top-nav-height : 50px
 			transform: translate(0, 0)
 
 	&.active
-		&, &:hover
+		&
+		&:hover
 			&::before
 				change-bg('highlight')
 				transform: translate(0, 0)

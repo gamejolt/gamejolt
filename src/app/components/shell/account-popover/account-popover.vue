@@ -1,27 +1,30 @@
+<script lang="ts" src="./account-popover"></script>
+
 <template>
 	<app-popper
+		v-if="app.user"
+		v-app-track-event="`top-nav:user-menu:toggle`"
 		popover-class="fill-darkest"
 		fixed
 		hide-on-state-change
 		@show="onShow()"
 		@hide="onHide()"
-		v-app-track-event="`top-nav:user-menu:toggle`"
 	>
 		<a class="navbar-item navbar-avatar" :class="{ active: isShowing }">
 			<app-user-avatar-img :user="app.user" />
 			<div
 				v-if="shouldShowNew"
 				class="-new-tag -new-tag-account anim-fade-enter anim-fade-leave"
-			></div>
+			/>
 		</a>
 
-		<template v-if="isShowing">
-			<div class="account-popover fill-darkest" slot="popover">
+		<template v-if="isShowing" #popover>
+			<div class="account-popover fill-darkest">
 				<div class="list-group-dark">
 					<router-link
+						v-app-track-event="`account-popover:profile`"
 						class="list-group-item offline-disable"
 						:to="{ name: 'profile.overview', params: { username: app.user.username } }"
-						v-app-track-event="`account-popover:profile`"
 					>
 						<h4 class="account-popover-heading" :title="$gettext(`View Profile`)">
 							{{ app.user.display_name }}
@@ -30,50 +33,50 @@
 					</router-link>
 				</div>
 
-				<div class="account-popover-separator"></div>
+				<div class="account-popover-separator" />
 
 				<div class="list-group-dark">
 					<router-link
+						v-app-track-event="`account-popover:library`"
 						class="list-group-item"
 						:to="{ name: GJ_IS_CLIENT ? 'library.installed' : 'library.overview' }"
-						v-app-track-event="`account-popover:library`"
 					>
 						<translate>Game Library</translate>
 					</router-link>
 					<router-link
+						v-app-track-event="`account-popover:account`"
 						class="list-group-item offline-disable"
 						:to="{
 							name: Screen.isXs ? 'dash.account-mobile-nav' : 'dash.account.edit',
 						}"
-						v-app-track-event="`account-popover:account`"
 					>
 						<translate>Edit Account</translate>
 					</router-link>
 					<router-link
+						v-app-track-event="`account-popover:stickers`"
 						class="list-group-item offline-disable"
 						:to="{ name: 'dash.stickers.overview' }"
-						v-app-track-event="`account-popover:stickers`"
 					>
 						<translate>Stickers</translate>
-						<span v-if="shouldShowNewStickers" class="-new-tag -new-tag-list"></span>
+						<span v-if="shouldShowNewStickers" class="-new-tag -new-tag-list" />
 					</router-link>
 					<a
+						v-app-track-event="`account-popover:token`"
 						class="list-group-item offline-disable"
 						@click="showToken"
-						v-app-track-event="`account-popover:token`"
 					>
 						<translate>Game Token</translate>
 					</a>
 					<router-link
+						v-app-track-event="`account-popover:settings`"
 						class="list-group-item"
 						:to="{ name: 'settings' }"
-						v-app-track-event="`account-popover:settings`"
 					>
 						<translate>Settings</translate>
 					</router-link>
 					<a
-						class="list-group-item"
 						v-app-track-event="`account-popover:dark`"
+						class="list-group-item"
 						@click="toggleDark()"
 					>
 						<small class="pull-right text-muted">
@@ -86,23 +89,23 @@
 
 				<div class="account-popover-button offline-disable">
 					<app-button
-						block
 						v-app-track-event="`account-popover:add-game`"
+						block
 						:to="{ name: 'dash.games.add' }"
 					>
 						<translate>Add Game</translate>
 					</app-button>
 				</div>
 
-				<div class="account-popover-separator"></div>
+				<div class="account-popover-separator" />
 
-				<app-shell-user-box></app-shell-user-box>
+				<app-shell-user-box />
 
 				<!--
 					We don't know if they have revenue until we do the call.
 				-->
 				<template v-if="walletAmount === false || walletAmount > 0">
-					<div class="account-popover-separator"></div>
+					<div class="account-popover-separator" />
 
 					<div class="list-group-dark">
 						<div v-if="walletAmount === false" class="list-group-item small">
@@ -114,11 +117,13 @@
 							:to="{ name: 'dash.account.withdraw-funds' }"
 						>
 							<app-jolticon
+								v-app-tooltip.touchable="
+									$gettext(
+										`These are your available funds to either buy games with or withdraw.`
+									)
+								"
 								class="pull-right"
 								icon="help-circle"
-								v-app-tooltip.touchable="
-									$gettext(`These are your available funds to either buy games with or withdraw.`)
-								"
 							/>
 
 							<translate>Wallet Balance</translate>
@@ -135,13 +140,13 @@
 				Enough changes to require different markup.
 			-->
 				<template v-if="!GJ_IS_CLIENT">
-					<div class="account-popover-separator"></div>
+					<div class="account-popover-separator" />
 
 					<div class="list-group-dark">
 						<a
+							v-app-track-event="`account-popover:logout`"
 							class="list-group-item text-right"
 							@click="logout"
-							v-app-track-event="`account-popover:logout`"
 						>
 							<app-jolticon icon="logout" notice />
 							<translate>Logout</translate>
@@ -149,7 +154,7 @@
 					</div>
 				</template>
 				<template v-else>
-					<div class="account-popover-separator"></div>
+					<div class="account-popover-separator" />
 
 					<div class="clearfix">
 						<div
@@ -159,9 +164,9 @@
 						>
 							<div class="list-group-dark">
 								<a
+									v-app-track-event="`account-popover:logout`"
 									class="list-group-item"
 									@click="logout"
-									v-app-track-event="`account-popover:logout`"
 								>
 									<app-jolticon icon="logout" notice />
 									<translate>Logout</translate>
@@ -184,8 +189,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .account-popover
 	min-width: 250px
@@ -222,8 +227,8 @@
 
 	&-account
 		position: absolute
-		bottom: 8px
-		right: 8px
+		bottom: 10px
+		right: 13px
 		display: block
 		border-color: var(--theme-darkest)
 		border-width: 2px
@@ -233,5 +238,3 @@
 		float: right
 		margin-top: 4px
 </style>
-
-<script lang="ts" src="./account-popover"></script>

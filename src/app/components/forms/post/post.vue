@@ -1,7 +1,7 @@
 <template>
-	<app-form v-if="model" name="postForm" ref="form">
+	<app-form v-if="model" ref="form" name="postForm">
 		<!-- Attachments -->
-		<div class="-attachment-controls" v-if="!enabledAttachments">
+		<div v-if="!enabledAttachments" class="-attachment-controls">
 			<app-button
 				trans
 				:primary="enabledImages"
@@ -32,7 +32,7 @@
 				Sketchfab
 			</app-button>
 		</div>
-		<div class="well fill-offset full-bleed" v-else>
+		<div v-else class="well fill-offset full-bleed">
 			<!-- Images -->
 			<fieldset v-if="enabledImages">
 				<app-form-legend compact deletable @delete="disableAttachments()">
@@ -60,10 +60,10 @@
 				</app-form-legend>
 
 				<app-form-group
+					v-app-focus-when="!wasPublished"
 					name="video_url"
 					hide-label
 					:label="$gettext(`YouTube Video URL`)"
-					v-app-focus-when="!wasPublished"
 				>
 					<p class="help-block">
 						<translate>Enter the URL of your YouTube video. For example:</translate>
@@ -93,10 +93,10 @@
 				</app-form-legend>
 
 				<app-form-group
+					v-app-focus-when="!wasPublished"
 					name="sketchfab_id"
 					hide-label
 					:label="$gettext(`Sketchfab Model URL`)"
-					v-app-focus-when="!wasPublished"
 				>
 					<p class="help-block">
 						<translate>Enter your Sketchfab model's URL or ID. For example:</translate>
@@ -149,13 +149,9 @@
 			<div class="-hp">
 				<div class="-hp-label">HP</div>
 				<div class="-hp-bar">
-					<app-progress-bar
-						thin
-						:percent="leadLengthPercent"
-						:animate="false"
-					></app-progress-bar>
+					<app-progress-bar thin :percent="leadLengthPercent" :animate="false" />
 				</div>
-				<div class="-hp-count" v-if="leadLengthPercent <= 10">
+				<div v-if="leadLengthPercent <= 10" class="-hp-count">
 					{{ leadLengthLimit - formModel.leadLength }}
 				</div>
 			</div>
@@ -164,7 +160,7 @@
 		</app-form-group>
 
 		<!-- Post body (long) -->
-		<div class="well fill-offset full-bleed" v-if="longEnabled">
+		<div v-if="longEnabled" class="well fill-offset full-bleed">
 			<fieldset>
 				<app-form-legend compact deletable @delete="toggleLong()">
 					<translate>Article content</translate>
@@ -193,14 +189,14 @@
 		</div>
 
 		<!-- Poll -->
-		<div class="well fill-offset full-bleed" v-if="hasPoll">
+		<div v-if="hasPoll" class="well fill-offset full-bleed">
 			<fieldset>
 				<app-form-legend compact :deletable="isPollEditable" @delete="removePoll()">
 					<translate>Set up poll</translate>
 				</app-form-legend>
 
 				<!-- i starts from 1 -->
-				<div class="-poll-option" v-for="i of formModel.poll_item_count" :key="i">
+				<div v-for="i of formModel.poll_item_count" :key="i" class="-poll-option">
 					<app-form-group :name="'poll_item' + i" :label="$gettext(`choice`)" hide-label>
 						<app-form-control
 							type="text"
@@ -216,8 +212,8 @@
 
 					<!-- Can't have less than 2 poll items -->
 					<a
-						class="-poll-option-remove link-muted"
 						v-if="formModel.poll_item_count > 2 && isPollEditable"
+						class="-poll-option-remove link-muted"
 						@click="removePollItem(i)"
 					>
 						<app-jolticon icon="remove" />
@@ -293,14 +289,14 @@
 				</div>
 
 				<p v-if="pollDuration < MIN_POLL_DURATION" class="help-block error">
-					<translate
-						>Too short! Polls must be between 5 minutes and 14 days long.</translate
-					>
+					<translate>
+						Too short! Polls must be between 5 minutes and 14 days long.
+					</translate>
 				</p>
 				<p v-else-if="pollDuration > MAX_POLL_DURATION" class="help-block error">
-					<translate
-						>Too long! Polls must be between 5 minutes and 14 days long.</translate
-					>
+					<translate>
+						Too long! Polls must be between 5 minutes and 14 days long.
+					</translate>
 				</p>
 				<br v-else />
 			</fieldset>
@@ -319,10 +315,9 @@
 					<app-form-group name="poll_is_private" :label="$gettext(`Private results?`)">
 						<app-form-control-toggle class="pull-right" />
 						<p class="help-block sans-margin-top">
-							<translate
-								>The poll's results will be kept hidden if this is turned
-								on.</translate
-							>
+							<translate>
+								The poll's results will be kept hidden if this is turned on.
+							</translate>
 						</p>
 					</app-form-group>
 				</div>
@@ -330,7 +325,7 @@
 		</div>
 
 		<!-- Scheduling -->
-		<div class="well fill-offset full-bleed" v-if="!wasPublished && isScheduling && timezones">
+		<div v-if="!wasPublished && isScheduling && timezones" class="well fill-offset full-bleed">
 			<fieldset>
 				<app-form-legend compact deletable @delete="removeSchedule()">
 					<translate>Schedule publishing of post</translate>
@@ -352,13 +347,13 @@
 					<app-form-control-select>
 						<optgroup
 							v-for="(timezones, region) of timezones"
-							:label="region"
 							:key="region"
+							:label="region"
 						>
 							<option
 								v-for="timezone of timezones"
-								:value="timezone.i"
 								:key="timezone.i"
+								:value="timezone.i"
 							>
 								{{ timezone.label }}
 							</option>
@@ -382,7 +377,7 @@
 
 		<!-- Access permissions -->
 		<template v-if="accessPermissionsEnabled">
-			<div class="well fill-offset full-bleed" v-if="!wasPublished">
+			<div v-if="!wasPublished" class="well fill-offset full-bleed">
 				<fieldset>
 					<app-form-legend compact deletable @delete="disableAccessPermissions()">
 						<translate>Access permissions</translate>
@@ -393,7 +388,7 @@
 						:label="$gettext(`Access Permissions`)"
 						hide-label
 					>
-						<div class="alert" v-if="!keyGroups.length">
+						<div v-if="!keyGroups.length" class="alert">
 							<translate>
 								You can make this post available to only the users within a key
 								group. For example, this is useful for sending news updates to
@@ -410,7 +405,7 @@
 								</translate>
 							</p>
 
-							<div class="checkbox" v-for="keyGroup of keyGroups" :key="keyGroup.id">
+							<div v-for="keyGroup of keyGroups" :key="keyGroup.id" class="checkbox">
 								<label>
 									<app-form-control-checkbox :value="keyGroup.id" />
 									{{ keyGroup.name }}
@@ -420,7 +415,7 @@
 					</app-form-group>
 				</fieldset>
 			</div>
-			<div class="form-group well fill-offset full-bleed" v-else>
+			<div v-else class="form-group well fill-offset full-bleed">
 				<label class="control-label">
 					<translate>Access Permissions</translate>
 				</label>
@@ -431,7 +426,7 @@
 					</translate>
 				</div>
 				<div>
-					<span class="tag" v-for="keyGroup of model.key_groups" :key="keyGroup.id">
+					<span v-for="keyGroup of model.key_groups" :key="keyGroup.id" class="tag">
 						{{ keyGroup.name }}
 					</span>
 				</div>
@@ -439,13 +434,13 @@
 		</template>
 
 		<!-- Other platforms -->
-		<div class="well fill-offset full-bleed" v-if="isPublishingToPlatforms">
+		<div v-if="isPublishingToPlatforms" class="well fill-offset full-bleed">
 			<fieldset>
 				<app-form-legend compact deletable @delete="removePublishingToPlatforms()">
 					<translate>Publish your post to other platforms</translate>
 				</app-form-legend>
 
-				<div class="alert" v-if="!linkedAccounts.length">
+				<div v-if="!linkedAccounts.length" class="alert">
 					<translate>You can publish this post to other platforms!</translate>
 					<translate v-if="!model.game">
 						Set up your linked accounts in your user account.
@@ -455,7 +450,7 @@
 						account.
 					</translate>
 				</div>
-				<div class="-linked-accounts" v-else>
+				<div v-else class="-linked-accounts">
 					<app-form-group
 						v-for="account of linkedAccounts"
 						:key="account.id"
@@ -487,7 +482,7 @@
 			</fieldset>
 		</div>
 
-		<div class="alert" v-if="hasPublishedToPlatforms">
+		<div v-if="hasPublishedToPlatforms" class="alert">
 			<strong>
 				<translate>This post has been published to other platforms.</translate>
 			</strong>
@@ -514,17 +509,17 @@
 				<transition-group class="-communities-list" tag="div">
 					<app-form-post-community-pill-incomplete
 						v-if="incompleteDefaultCommunity"
-						class="-community-pill anim-fade-in-enlarge no-animate-leave"
 						key="incomplete"
+						class="-community-pill anim-fade-in-enlarge no-animate-leave"
 						:communities="possibleCommunities"
 						:community="incompleteDefaultCommunity"
 						@add="attachIncompleteCommunity"
 					/>
 
 					<app-form-post-community-pill
-						class="-community-pill anim-fade-in-enlarge no-animate-leave"
 						v-for="{ community, channel } of attachedCommunities"
 						:key="community.id"
+						class="-community-pill anim-fade-in-enlarge no-animate-leave"
 						:community="community"
 						:channel="channel"
 						:removable="!wasPublished"
@@ -533,11 +528,11 @@
 
 					<template v-if="!wasPublished && canAddCommunity">
 						<app-form-post-community-pill-add
-							class="-community-pill anim-fade-in-enlarge no-animate-leave"
 							key="add"
+							v-app-scroll-when="scrollingKey"
+							class="-community-pill anim-fade-in-enlarge no-animate-leave"
 							:communities="possibleCommunities"
 							@add="attachCommunity"
-							v-app-scroll-when="scrollingKey"
 						/>
 					</template>
 				</transition-group>
@@ -580,11 +575,11 @@
 					<app-form-control-toggle class="pull-right" />
 					<div
 						v-if="formModel.as_game_owner"
-						class="-author-avatar pull-right"
 						v-app-tooltip.touchable="
 							model.game.developer.display_name +
 								` (@${model.game.developer.username})`
 						"
+						class="-author-avatar pull-right"
 					>
 						<app-user-avatar-img :user="model.game.developer" />
 					</div>
@@ -607,51 +602,51 @@
 			<div class="-controls-attachments">
 				<app-button
 					v-if="!longEnabled"
+					v-app-tooltip="$gettext(`Add Article`)"
 					sparse
 					trans
 					circle
 					icon="blog-article"
-					v-app-tooltip="$gettext(`Add Article`)"
 					@click="toggleLong()"
 				/>
 
 				<app-button
 					v-if="!hasPoll"
+					v-app-tooltip="$gettext(`Add Poll`)"
 					sparse
 					trans
 					circle
 					icon="pedestals-numbers"
-					v-app-tooltip="$gettext(`Add Poll`)"
 					@click="createPoll()"
 				/>
 
 				<app-button
 					v-if="!wasPublished && !isScheduling"
+					v-app-tooltip="$gettext(`Schedule Post`)"
 					sparse
 					trans
 					circle
 					icon="calendar-grid"
-					v-app-tooltip="$gettext(`Schedule Post`)"
 					@click="addSchedule()"
 				/>
 
 				<app-button
 					v-if="!accessPermissionsEnabled && !wasPublished && model.game"
+					v-app-tooltip="$gettext(`Access Permissions`)"
 					sparse
 					trans
 					circle
 					icon="key-diagonal"
-					v-app-tooltip="$gettext(`Access Permissions`)"
 					@click="enableAccessPermissions()"
 				/>
 
 				<app-button
 					v-if="!wasPublished && !isPublishingToPlatforms"
+					v-app-tooltip="$gettext(`Publish to Other Platforms`)"
 					sparse
 					trans
 					circle
 					icon="share-airplane"
-					v-app-tooltip="$gettext(`Publish to Other Platforms`)"
 					@click="addPublishingToPlatforms()"
 				/>
 			</div>

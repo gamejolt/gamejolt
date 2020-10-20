@@ -524,11 +524,15 @@ async function getPayload(
 	const resolverFunc = resolverOptions.resolver || (() => Promise.resolve());
 
 	function resolveStore(route_: Route, payload: any, fromCache: boolean) {
-		if (resolverOptions.resolveStore) {
-			const ret = resolverOptions.resolveStore({ route: route_, payload, fromCache });
-			if ((ret as any) instanceof Promise) {
-				throw new Error(`resolveStore function can't be async.`);
-			}
+		// We never resolve the store if the payload was a redirect. It'll
+		// eventually get handled in the `resolveRoute` function.
+		if (!resolverOptions.resolveStore || payload instanceof LocationRedirect) {
+			return;
+		}
+
+		const ret = resolverOptions.resolveStore({ route: route_, payload, fromCache });
+		if ((ret as any) instanceof Promise) {
+			throw new Error(`resolveStore function can't be async.`);
 		}
 	}
 

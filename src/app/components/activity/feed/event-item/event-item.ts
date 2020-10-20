@@ -1,7 +1,8 @@
 import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { findRequiredVueParent } from '../../../../../utils/vue';
+import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { CommentVideoModal } from '../../../../../_common/comment/video/modal/modal.service';
 import { CommentVideo } from '../../../../../_common/comment/video/video-model';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
@@ -20,7 +21,7 @@ import AppPill from '../../../../../_common/pill/pill.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
-import { Settings } from '../../../../../_common/settings/settings.service';
+import { SettingAlwaysShowStickers } from '../../../../../_common/settings/settings.service';
 import AppStickerTargetTS from '../../../../../_common/sticker/target/target';
 import AppStickerTarget from '../../../../../_common/sticker/target/target.vue';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
@@ -51,10 +52,10 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppUserAvatar,
 		AppUserFollowWidget,
 		AppActivityFeedCommentVideo,
-		AppActivityFeedDevlogPostText,
 		AppActivityFeedDevlogPostMedia,
 		AppActivityFeedDevlogPostSketchfab,
 		AppActivityFeedDevlogPostVideo,
+		AppActivityFeedDevlogPostText,
 		AppEventItemControls,
 		AppEventItemControlsOverlay,
 		AppPollVoting,
@@ -98,6 +99,10 @@ export default class AppActivityFeedEventItem extends Vue {
 	$refs!: {
 		stickerTarget: AppStickerTargetTS;
 	};
+
+	@Emit('resize') emitResize(_height: number) {}
+	@Emit('clicked') emitClicked() {}
+	@Emit('expanded') emitExpanded() {}
 
 	get isNew() {
 		return this.feed.isItemUnread(this.item);
@@ -238,7 +243,7 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	created() {
 		if (!GJ_IS_SSR) {
-			this.stickersVisible = Settings.get('always-show-stickers');
+			this.stickersVisible = SettingAlwaysShowStickers.get();
 			if (this.stickersVisible) {
 				this.animateStickers = false;
 			}
@@ -259,16 +264,13 @@ export default class AppActivityFeedEventItem extends Vue {
 	 * the DOM and we hopefully know the height and true content.
 	 */
 	onContentBootstrapped() {
-		this.$emit('resize', this.$el.offsetHeight);
+		this.emitResize(this.$el.offsetHeight);
+
 		this.resizeSensor =
 			this.resizeSensor ||
 			new ResizeSensor(this.$el, () => {
-				this.$emit('resize', this.$el.offsetHeight);
+				this.emitResize(this.$el.offsetHeight);
 			});
-	}
-
-	onExpand() {
-		this.$emit('expanded');
 	}
 
 	/**
@@ -276,7 +278,7 @@ export default class AppActivityFeedEventItem extends Vue {
 	 * capture phase.
 	 */
 	onClickCapture() {
-		this.$emit('clicked');
+		this.emitClicked();
 	}
 
 	/**
@@ -312,12 +314,14 @@ export default class AppActivityFeedEventItem extends Vue {
 		}
 
 		if (this.video) {
+			Analytics.trackEvent('activity-feed', 'click');
 			CommentVideoModal.show(this.video);
 		} else {
 			if (!this.link) {
 				return;
 			}
 
+			Analytics.trackEvent('activity-feed', 'click');
 			if (e.ctrlKey || e.shiftKey) {
 				Navigate.newWindow(Environment.wttfBaseUrl + this.linkResolved);
 				return;
@@ -333,7 +337,8 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	toggleLead() {
 		this.feed.toggleItemLeadOpen(this.item);
-		this.$emit('expanded');
+		this.emitExpanded();
+		Analytics.trackEvent('activity-feed', 'toggle-lead');
 	}
 
 	canToggleLeadChanged(canToggle: boolean) {

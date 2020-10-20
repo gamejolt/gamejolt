@@ -14,6 +14,7 @@ export class CommunityHeaderModal {
 				community,
 			},
 			size: 'sm',
+			noBackdropClose: true,
 		});
 	}
 }

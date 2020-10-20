@@ -1,19 +1,23 @@
 import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Component, Inject, Prop, Watch } from 'vue-property-decorator';
+import { propOptional, propRequired } from '../../../../../utils/vue';
 import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
 import FormComment from '../../../../../_common/comment/add/add.vue';
 import { Comment } from '../../../../../_common/comment/comment-model';
 import {
-	CommentAction,
-	CommentMutation,
-	CommentStore,
+	CommentStoreManager,
+	CommentStoreManagerKey,
 	CommentStoreModel,
+	lockCommentStore,
+	releaseCommentStore,
+	setCommentCount,
 } from '../../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../../_common/comment/modal/modal.service';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Model } from '../../../../../_common/model/model.service';
 import { AppCommentWidgetLazy } from '../../../lazy';
+import { hasInlineCommentsSplitTest } from '../../../split-test/split-test-service';
 import AppEventItemControlsCommentsAddPlaceholder from './add-placeholder/add-placeholder.vue';
 
 @Component({
@@ -27,20 +31,11 @@ import AppEventItemControlsCommentsAddPlaceholder from './add-placeholder/add-pl
 	},
 })
 export default class AppEventItemControlsComments extends Vue {
-	@Prop(Model)
-	model!: Model;
+	@Inject(CommentStoreManagerKey) commentManager!: CommentStoreManager;
 
-	@Prop(Boolean)
-	showFeed?: boolean;
-
-	@CommentAction
-	lockCommentStore!: CommentStore['lockCommentStore'];
-
-	@CommentMutation
-	releaseCommentStore!: CommentStore['releaseCommentStore'];
-
-	@CommentMutation
-	setCommentCount!: CommentStore['setCommentCount'];
+	@Prop(propRequired(Model)) model!: Model;
+	@Prop(propOptional(Boolean, false)) showFeed!: boolean;
+	@Prop(propRequired(String)) eventLabel!: string;
 
 	commentStore: CommentStoreModel | null = null;
 	clickedComment = false;
@@ -75,25 +70,25 @@ export default class AppEventItemControlsComments extends Vue {
 	}
 
 	get shouldShowInlineComment() {
+		if (!hasInlineCommentsSplitTest()) {
+			return false;
+		}
 		if (this.model instanceof FiresidePost && !this.model.canComment) {
 			return false;
 		}
 		return !this.showFeed;
 	}
 
-	async created() {
-		this.commentStore = await this.lockCommentStore({
-			resource: this.resource,
-			resourceId: this.resourceId,
-		});
+	created() {
+		this.commentStore = lockCommentStore(this.commentManager, this.resource, this.resourceId);
 
 		// Bootstrap it with the post comment count since that's all we have.
-		this.setCommentCount({ store: this.commentStore, count: this.resourceCommentCount });
+		setCommentCount(this.commentStore, this.resourceCommentCount);
 	}
 
 	destroyed() {
 		if (this.commentStore) {
-			this.releaseCommentStore(this.commentStore);
+			releaseCommentStore(this.commentManager, this.commentStore);
 			this.commentStore = null;
 		}
 	}
@@ -112,12 +107,13 @@ export default class AppEventItemControlsComments extends Vue {
 	}
 
 	onClickCommentAddPlaceholder(type: string) {
-		Analytics.trackEvent('inline-comment-form', 'click', type);
+		Analytics.trackEvent('post-controls', `comment-${type ?? 'focus'}`, this.eventLabel);
 		this.clickedCommentType = type;
 		this.clickedComment = true;
 	}
 
 	onSubmitNewComment() {
+		Analytics.trackEvent('post-controls', 'comment-add', this.eventLabel);
 		this.clickedComment = false; // Unloading the editor after submitting
 		this.openComments();
 	}

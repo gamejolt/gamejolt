@@ -22,6 +22,7 @@
 			:single-line-mode="singleLineMode"
 			:max-height="maxHeight"
 			:display-rules="displayRules"
+			:focus-end="focusEnd"
 			v-validate="{ rules: validationRules }"
 			@input="onChange"
 			@editor-focus="onFocus"

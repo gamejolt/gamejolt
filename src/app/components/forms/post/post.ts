@@ -8,8 +8,6 @@ import { CommunityChannel } from '../../../../_common/community/channel/channel.
 import AppCommunityChannelSelect from '../../../../_common/community/channel/select/select.vue';
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
-import { ContentDocument } from '../../../../_common/content/content-document';
-import { ContentWriter } from '../../../../_common/content/content-writer';
 import { FiresidePostCommunity } from '../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import {
@@ -226,19 +224,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 		return this.longEnabled;
 	}
 
-	get tagContentDocuments() {
-		const documents = [] as ContentDocument[];
-		if (this.formModel.hasLead) {
-			const leadDoc = ContentDocument.fromJson(this.formModel.lead_content);
-			documents.push(leadDoc);
-			if (this.formModel.hasArticle) {
-				const articleDoc = ContentDocument.fromJson(this.formModel.article_content);
-				documents.push(articleDoc);
-			}
-		}
-		return documents;
-	}
-
 	get hasPoll() {
 		return this.formModel.poll_item_count > 0;
 	}
@@ -356,14 +341,14 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 	@Watch('formModel.post_to_user_profile')
 	onPostToUserProfileToggle() {
-		if (!!this.formModel.post_to_user_profile) {
+		if (this.formModel.post_to_user_profile) {
 			this.setField('as_game_owner', false);
 		}
 	}
 
 	@Watch('formModel.as_game_owner')
 	onPostAsGameOwnerToggle() {
-		if (!!this.formModel.as_game_owner) {
+		if (this.formModel.as_game_owner) {
 			this.setField('post_to_user_profile', false);
 		}
 	}
@@ -388,16 +373,19 @@ export default class FormPost extends BaseForm<FormPostModel>
 	async onInit() {
 		const model = this.model!;
 
-		// save if the post was a saved draft post (not a new draft post)
+		// Store if the post was a saved draft post (not a new draft post)
 		if (model.status === FiresidePost.STATUS_DRAFT && model.hasLead) {
 			this.isSavedDraftPost = true;
+		}
+
+		// Don't overwrite setting on a draft post because the user has already made a choice for this setting.
+		if (model.status !== FiresidePost.STATUS_DRAFT) {
+			this.setField('post_to_user_profile', true);
 		}
 
 		this.setField('status', FiresidePost.STATUS_ACTIVE);
 
 		this.setField('attached_communities', []);
-
-		this.setField('post_to_user_profile', true);
 
 		if (model.videos.length) {
 			this.setField(
@@ -438,7 +426,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 			this.accessPermissionsEnabled = true;
 		}
 
-		if (model.hasArticle) {
+		if (model.has_article) {
 			this.longEnabled = true;
 		}
 
@@ -446,6 +434,9 @@ export default class FormPost extends BaseForm<FormPostModel>
 	}
 
 	onLoad(payload: any) {
+		// Pull any post information that may not already be loaded in.
+		this.setField('article_content', payload.post.article_content);
+
 		this.keyGroups = KeyGroup.populate(payload.keyGroups);
 		this.wasPublished = payload.wasPublished;
 		this.maxFilesize = payload.maxFilesize;
@@ -685,18 +676,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 		this.longEnabled = !this.longEnabled;
 	}
 
-	async addTag(tag: string) {
-		const doc = ContentDocument.fromJson(this.formModel.lead_content);
-		const writer = new ContentWriter(doc);
-		writer.appendTag(tag);
-		this.setField('lead_content', doc.toJson());
-
-		if (this.updateAutosize) {
-			await this.$nextTick();
-			this.updateAutosize();
-		}
-	}
-
 	createPoll() {
 		// Initialize default poll
 		this.setField('poll_days', 1);
@@ -837,7 +816,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 	}
 
 	timezoneByName(timezone: string) {
-		for (let region in this.timezones) {
+		for (const region in this.timezones) {
 			const tz = this.timezones[region].find(_tz => _tz.i === timezone);
 			if (tz) {
 				return tz;
@@ -849,8 +828,8 @@ export default class FormPost extends BaseForm<FormPostModel>
 	async fetchTimezones() {
 		// Get timezones list.
 		this.timezones = await Timezone.getGroupedTimezones();
-		for (let region in this.timezones) {
-			for (let tz of this.timezones[region]) {
+		for (const region in this.timezones) {
+			for (const tz of this.timezones[region]) {
 				let offset = '';
 				if (tz.o > 0) {
 					offset = `+${tz.o / 3600}:00`;

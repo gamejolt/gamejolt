@@ -245,6 +245,10 @@ export class Theme extends Model {
 		return readableColor('#' + this.highlight_).substr(1);
 	}
 
+	get backlightFg_() {
+		return readableColor('#' + this.backlight_).substr(1);
+	}
+
 	get noticeFg_() {
 		return readableColor('#' + this.notice_).substr(1);
 	}

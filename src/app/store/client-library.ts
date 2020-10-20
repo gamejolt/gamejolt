@@ -31,7 +31,12 @@ import { GamePackage } from '../../_common/game/package/package.model';
 import { GameRelease } from '../../_common/game/release/release.model';
 import { Growls } from '../../_common/growls/growls.service';
 import { HistoryTick } from '../../_common/history-tick/history-tick-service';
-import { Settings } from '../../_common/settings/settings.service';
+import {
+	SettingGameInstallDir,
+	SettingMaxDownloadCount,
+	SettingMaxExtractCount,
+	SettingQueueWhenPlaying,
+} from '../../_common/settings/settings.service';
 import { Translate } from '../../_common/translate/translate.service';
 import { ClientAntiVirusModal } from '../components/client/anti-virus-modal/anti-virus-modal.service';
 import { LocalDbGame } from '../components/client/local-db/game/game.model';
@@ -172,7 +177,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 		let currentProgress = 0;
 		let numPatching = this.numPatching;
-		for (let packageId in this.currentlyPatching) {
+		for (const packageId in this.currentlyPatching) {
 			const progress = this.packagesById[packageId].patchProgress;
 
 			// If the progress is null, we don't count that package progress as part of the total
@@ -249,7 +254,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			return null;
 		}
 
-		for (let localPackage of localPackages) {
+		for (const localPackage of localPackages) {
 			if (localPackage.install_state) {
 				return localPackage;
 			}
@@ -303,11 +308,11 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	@VuexMutation
 	checkQueueSettings() {
 		Queue.faster = {
-			downloads: Settings.get('max-download-count'),
-			extractions: Settings.get('max-extract-count'),
+			downloads: SettingMaxDownloadCount.get(),
+			extractions: SettingMaxExtractCount.get(),
 		};
 
-		if (Settings.get('queue-when-playing')) {
+		if (SettingQueueWhenPlaying.get()) {
 			Queue.slower = {
 				downloads: 0,
 				extractions: 0,
@@ -327,7 +332,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	private retryAllInstallations() {
 		const promises = [];
 		// This will retry to install anything that was installing before client was closed.
-		for (let packageId in this.packages) {
+		for (const packageId in this.packages) {
 			const localPackage = this.packages[packageId];
 			if (localPackage.isPatching && !localPackage.isPatchPaused) {
 				promises.push(this.installerRetry(localPackage));
@@ -409,7 +414,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 				await this.setPackageInstallDir([
 					localPackage,
 					path.join(
-						Settings.get('game-install-dir'),
+						SettingGameInstallDir.get(),
 						`${localGame.slug}-${localGame.id}`,
 						`${title}-${packageId}`
 					),
@@ -450,7 +455,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 					// while trying to remove the package model from indexeddb. reciving a message
 					// will attempt to update the localdb model but since updates are basically upserts
 					// it might re-add a package we just removed!
-					for (let i_event in listeners) {
+					for (const i_event in listeners) {
 						const event: keyof PatchEvents = i_event as any;
 						patchInstance.removeListener(event, listeners[event]!);
 						delete listeners[event];
