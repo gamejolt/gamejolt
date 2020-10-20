@@ -7,6 +7,10 @@ import AppContentViewer from '../../../../_common/content/content-viewer/content
 import AppEventItemControlsOverlay from '../../../../_common/event-item/controls-overlay/controls-overlay.vue';
 import { number } from '../../../../_common/filters/number';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import {
+	$viewFiresidePostVideo,
+	FiresidePostVideo,
+} from '../../../../_common/fireside/post/video/video-model';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { AppImgResponsive } from '../../../../_common/img/responsive/responsive';
 import AppLightboxTS from '../../../../_common/lightbox/lightbox';
@@ -28,6 +32,7 @@ import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
 import AppUserFollowWidget from '../../../../_common/user/follow/widget.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
 import AppVideoEmbed from '../../../../_common/video/embed/embed.vue';
+import AppVideoPlayer from '../../../../_common/video/player/player.vue';
 import AppVideo from '../../../../_common/video/video.vue';
 import AppEventItemControls from '../../../components/event-item/controls/controls.vue';
 import AppGameBadge from '../../../components/game/badge/badge.vue';
@@ -40,6 +45,7 @@ import AppPollVoting from '../../../components/poll/voting/voting.vue';
 		AppResponsiveDimensions,
 		AppImgResponsive,
 		AppVideo,
+		AppVideoPlayer,
 		AppVideoEmbed,
 		AppSketchfabEmbed,
 		AppEventItemControls,
@@ -91,6 +97,10 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 		return (
 			this.post.status === FiresidePost.STATUS_DRAFT && !this.post.canPublishToCommunities()
 		);
+	}
+
+	get video(): null | FiresidePostVideo {
+		return this.post.videos[0] ?? null;
 	}
 
 	created() {
@@ -158,6 +168,12 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 	onClickFullscreen(mediaItem: MediaItem) {
 		this.activeImageIndex = this.post.media.findIndex(i => i.id === mediaItem.id);
 		this.createLightbox();
+	}
+
+	onVideoPlay() {
+		if (this.video) {
+			$viewFiresidePostVideo(this.video);
+		}
 	}
 
 	private createLightbox() {

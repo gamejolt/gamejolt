@@ -54,9 +54,11 @@
 @import '~styles-lib/mixins'
 
 .-player
-	rounded-corners-lg()
 	position: relative
 	overflow: hidden
+
+	@media $media-sm-up
+		rounded-corners-lg()
 
 .-paused-cursor
 	cursor: pointer

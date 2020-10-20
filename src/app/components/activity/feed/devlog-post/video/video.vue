@@ -22,6 +22,7 @@
 					manifest="https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd"
 					hide-scrubber
 					autoplay
+					@play="onVideoPlay"
 				/>
 			</app-media-item-backdrop>
 		</app-responsive-dimensions>

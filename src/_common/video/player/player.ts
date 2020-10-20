@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
 import AppShortkey from '../../shortkey/shortkey.vue';
 import {
@@ -53,6 +53,9 @@ export default class AppVideoPlayer extends Vue {
 	get shouldShowUI() {
 		return this.isHovered || this.player.state === 'paused';
 	}
+
+	@Emit('play')
+	emitPlay() {}
 
 	beforeDestroy() {
 		this.clearHideUITimer();
@@ -156,6 +159,13 @@ export default class AppVideoPlayer extends Vue {
 				document.exitFullscreen();
 			}
 			this.player.queuedFullScreenChange = null;
+		}
+	}
+
+	@Watch('player.state')
+	onStateChange() {
+		if (this.player.state === 'playing') {
+			this.emitPlay();
 		}
 	}
 }

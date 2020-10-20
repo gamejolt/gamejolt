@@ -2,6 +2,7 @@ import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../utils/vue';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
+import { $viewFiresidePostVideo } from '../../../../../../_common/fireside/post/video/video-model';
 import { AppImgResponsive } from '../../../../../../_common/img/responsive/responsive';
 import AppMediaItemBackdrop from '../../../../../../_common/media-item/backdrop/backdrop.vue';
 import { MediaItem } from '../../../../../../_common/media-item/media-item-model';
@@ -64,5 +65,9 @@ export default class AppActivityFeedDevlogPostVideo extends Vue {
 
 	get video() {
 		return this.post.videos[0];
+	}
+
+	onVideoPlay() {
+		$viewFiresidePostVideo(this.video);
 	}
 }

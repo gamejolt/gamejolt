@@ -1,3 +1,4 @@
+import { HistoryTick } from '../../../history-tick/history-tick-service';
 import { Model } from '../../../model/model.service';
 
 export class FiresidePostVideo extends Model {
@@ -8,6 +9,11 @@ export class FiresidePostVideo extends Model {
 	provider!: 'youtube' | 'gamejolt';
 	video_id!: string;
 	thumbnail_url!: string;
+	view_count!: number;
 }
 
 Model.create(FiresidePostVideo);
+
+export function $viewFiresidePostVideo(video: FiresidePostVideo) {
+	return HistoryTick.sendBeacon('fireside-post-video', video.id);
+}

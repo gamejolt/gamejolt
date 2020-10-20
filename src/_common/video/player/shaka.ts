@@ -21,7 +21,6 @@ export default class AppVideoPlayerShaka extends Vue {
 
 	beforeDestroy() {
 		if (this.shakaPlayer) {
-			console.log('DESTROY');
 			this.shakaPlayer.destroy();
 			this.shakaPlayer = undefined;
 		}

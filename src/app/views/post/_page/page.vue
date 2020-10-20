@@ -3,14 +3,28 @@
 <template>
 	<section class="-section section-thin">
 		<div class="container-xl">
-			<div v-if="post.hasVideo" class="full-bleed-xs">
-				<app-video-embed
-					class="-video"
-					video-provider="youtube"
-					:video-id="post.videos[0].video_id"
-					autoplay
-				/>
-			</div>
+			<template v-if="video">
+				<div v-if="video" class="full-bleed-xs">
+					<!-- :poster="mediaItem.mediaserver_url" -->
+					<app-video-player
+						v-if="video.provider === 'gamejolt'"
+						manifest="https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd"
+						autoplay
+						@play="onVideoPlay"
+					/>
+					<app-video-embed
+						v-else
+						class="-video"
+						video-provider="youtube"
+						:video-id="video.video_id"
+						autoplay
+					/>
+				</div>
+				<div class="-video-stats">
+					<app-jolticon icon="play" />
+					<span class="-video-stats-label">{{ number(video.view_count) }}</span>
+				</div>
+			</template>
 
 			<div class="-row">
 				<!-- Left Sidebar -->
@@ -191,8 +205,15 @@
 			flex-shrink: 1
 			flex-basis: $-center-col-max-width
 
-.-left-controls
-	transition: opacity 500ms $weak-ease-out
+.-video-stats
+	display: flex
+	align-items: center
+	justify-content: flex-end
+	margin-top: 8px
+	font-weight: bold
+
+	&-label
+		margin-left: 4px
 
 .-game-badge
 	margin-top: $-spacing
