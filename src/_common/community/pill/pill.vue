@@ -19,7 +19,7 @@
 			<app-jolticon
 				v-if="communityLink.isFeatured"
 				class="-featured"
-				icon="fireside"
+				icon="star"
 				v-app-tooltip="$gettext(`Featured`)"
 			/>
 		</template>
@@ -31,7 +31,7 @@
 	margin-left: 5px
 
 .-featured
-	margin: 0 0 0 5px
+	margin: 0 0 3px 5px
 	font-size: 12px
 </style>
 

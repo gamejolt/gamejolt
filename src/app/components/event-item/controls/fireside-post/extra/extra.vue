@@ -78,7 +78,7 @@
 						</h5>
 						<app-community-perms :community="i.community" required="community-features">
 							<a class="list-group-item has-icon" @click.stop="toggleFeatured(i)">
-								<app-jolticon icon="tag" />
+								<app-jolticon icon="star" />
 								<template v-if="i.isFeatured">
 									<translate :translate-params="{ community: i.community.name }">
 										Unfeature from %{ community }
