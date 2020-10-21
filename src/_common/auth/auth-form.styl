@@ -1,5 +1,5 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 $-fb-color = #4267b2
 $-twitter-color = #38A1F3
@@ -21,7 +21,8 @@ $-twitch-color = #6441A4
 	&:hover
 		background-color: $-color !important
 
-	&, &:hover
+	&
+	&:hover
 		color: white !important
 
 -social-button-block()
@@ -62,7 +63,8 @@ $-twitch-color = #6441A4
 	width: 100%
 	text-align: center
 
-	&::before, &::after
+	&::before
+	&::after
 		content: ''
 		position: absolute
 		top: 50%
@@ -95,6 +97,7 @@ $-twitch-color = #6441A4
 	padding-left: 0
 
 	img
+		margin-left: 2px
 		width: 40px
 		height: 40px
 
