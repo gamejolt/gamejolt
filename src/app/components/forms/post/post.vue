@@ -56,43 +56,19 @@
 			</fieldset>
 
 			<!-- Video -->
-			<fieldset v-else-if="enabledVideo">
-				<!-- <app-form-legend compact deletable @delete="disableAttachments()">
-					<translate>YouTube video URL</translate>
-				</app-form-legend>
-
-				<app-form-group
-					v-app-focus-when="!wasPublished"
-					name="video_url"
-					hide-label
-					:label="$gettext(`YouTube Video URL`)"
-				>
-					<p class="help-block">
-						<translate>Enter the URL of your YouTube video. For example:</translate>
-						<code>https://www.youtube.com/watch?v=dQw4w9WgXcQ</code>
-					</p>
-
-					<app-form-control
-						type="text"
-						:rules="{
-							pattern: YOUTUBE_URL_REGEX,
-						}"
-					/>
-
-					<app-form-control-errors />
-
-					<template v-if="hasValidYouTubeUrl">
-						<br />
-						<app-video-embed video-provider="youtube" :video-id="youtubeVideoId" />
-					</template>
-				</app-form-group> -->
-
+			<template v-else-if="enabledVideo">
 				<app-form-post-video
+					v-if="!formModel.hasVideo"
 					:post="formModel"
+					:was-published="wasPublished"
 					@close="disableAttachments()"
 					@uploading-change="onUploadingVideoChanged"
+					@video-upload="onVideoUploaded"
 				/>
-			</fieldset>
+				<template v-else>
+					(Put preview of uploaded video right here.)
+				</template>
+			</template>
 
 			<!-- Sketchfab -->
 			<fieldset v-else-if="enabledSketchfab">

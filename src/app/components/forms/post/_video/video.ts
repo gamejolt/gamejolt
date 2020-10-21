@@ -1,10 +1,11 @@
 import Component from 'vue-class-component';
-import { Emit, Prop } from 'vue-property-decorator';
+import { Emit, Prop, Watch } from 'vue-property-decorator';
 import { sleep } from '../../../../../utils/utils';
 import { propRequired } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
 import { number } from '../../../../../_common/filters/number';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import { FiresidePostVideo } from '../../../../../_common/fireside/post/video/video-model';
 import AppFormControlUploadTS from '../../../../../_common/form-vue/control/upload/upload';
 import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
 import AppFormTS from '../../../../../_common/form-vue/form';
@@ -18,14 +19,17 @@ import {
 import AppFormLegend from '../../../../../_common/form-vue/legend/legend.vue';
 import AppLoadingFade from '../../../../../_common/loading/fade/fade.vue';
 import AppProgressBar from '../../../../../_common/progress/bar/bar.vue';
+import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
 
 interface FormModel {
 	video: File | null;
+	video_url: string | null;
 	_progress: ProgressEvent | null;
 }
 
 const enum ProcessingProgress {
 	UNKNOWN = 'unknown',
+	COMPLETE = 'complete',
 }
 
 @Component({
@@ -34,6 +38,7 @@ const enum ProcessingProgress {
 		AppFormControlUpload,
 		AppProgressBar,
 		AppFormLegend,
+		AppVideoEmbed,
 	},
 	filters: {
 		number,
@@ -42,17 +47,24 @@ const enum ProcessingProgress {
 export default class AppFormPostVideo extends BaseForm<FormModel>
 	implements FormOnSubmit, FormOnLoad, FormOnSubmitError, FormOnSubmitSuccess {
 	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
+	@Prop(propRequired(Boolean)) wasPublished!: boolean;
 
+	readonly YOUTUBE_URL_REGEX = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:&.+)*$/i;
+
+	// These fields are populated through the form load.
 	maxFilesize = 1000;
 	maxDuration = 60;
 	maxAspect = 2;
 	minAspect = 0.5;
 
+	videoProvider = FiresidePostVideo.PROVIDER_GAMEJOLT;
 	isDropActive = false;
 	/** `true` while the video is uploading or processing. */
 	isUploadingOrProcessing = false;
 	/** Current video processing progress returned from backend. */
 	processingProgress = ProcessingProgress.UNKNOWN;
+
+	readonly FiresidePostVideo = FiresidePostVideo;
 
 	$refs!: {
 		form: AppFormTS;
@@ -64,6 +76,12 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 
 	@Emit('uploading-change')
 	emitUploadingChange(_uploading: boolean) {}
+
+	@Emit('video-upload')
+	emitVideoUpload(_video: FiresidePostVideo) {}
+
+	@Emit('video-url-change')
+	emitVideoUrlChange(_url: string | null) {}
 
 	get loadUrl() {
 		return `/web/posts/manage/add-video/0`;
@@ -90,6 +108,22 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 	set isUploading(value: boolean) {
 		this.isUploadingOrProcessing = value;
 		this.emitUploadingChange(this.isUploadingOrProcessing);
+	}
+
+	get hasValidYouTubeUrl() {
+		return this.formModel.video_url && this.formModel.video_url.match(this.YOUTUBE_URL_REGEX);
+	}
+
+	get youtubeVideoId() {
+		const url = this.formModel.video_url;
+		if (url) {
+			// extract video id from url
+			const matches = url.match(this.YOUTUBE_URL_REGEX);
+			if (matches && matches.length > 1) {
+				const videoId = matches[1];
+				return videoId;
+			}
+		}
 	}
 
 	videoSelected() {
@@ -123,20 +157,20 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 	}
 
 	onSubmitSuccess($payload: any) {
-		// TODO: the payload will include the fireside post video which we can then emit.
-		// That will disable this form and instead show a video preview in the post form.
-		this.isUploading = false;
+		if (!$payload.video) {
+			// TODO: error message for no video.
+			this.cancelUpload();
+			return;
+		}
+
+		// Once the video file is fully submitted, start polling for processing progress.
+		this.pollVideoProcessing();
 	}
 
 	onProgressUpdate(e: ProgressEvent | null) {
 		if (e) {
 			console.log(e.loaded, e.total, e.loaded / e.total);
 			this.setField('_progress', e);
-
-			// After the file is uploaded, start polling for processing updates.
-			if (this.uploadComplete) {
-				this.pollVideoProcessing();
-			}
 		}
 	}
 
@@ -189,13 +223,18 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		// Falsy success indicates the processing failed.
 		// The initial add-video request should return with a form error, so we just stop
 		// polling here.
-		if (!payload.success) {
+		if (!payload.success || !this.isUploading) {
 			console.log('stop polling');
 			return;
 		}
 
 		if (payload.progress) {
+			console.log('progress report', payload.progress);
 			this.processingProgress = payload.progress;
+			if (this.processingProgress === ProcessingProgress.COMPLETE) {
+				this.emitVideoUpload(new FiresidePostVideo(payload.video));
+				return;
+			}
 		}
 
 		// Wait 1s after receiving an update to poll for progress again.
@@ -203,13 +242,18 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		this.pollVideoProcessing();
 	}
 
-	onDisableVideo() {
-		this.emitClose();
-	}
-
 	cancelUpload() {
 		this.setField('_progress', null);
 		this.setField('video', null);
 		this.isUploading = false;
+	}
+
+	setVideoProvider(provider: string) {
+		this.videoProvider = provider;
+	}
+
+	@Watch('formModel.video_url')
+	onVideoUrlChanged() {
+		this.emitVideoUrlChange(this.formModel.video_url);
 	}
 }

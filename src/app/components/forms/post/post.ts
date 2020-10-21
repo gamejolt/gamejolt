@@ -10,10 +10,7 @@ import { Community } from '../../../../_common/community/community.model';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import { FiresidePostCommunity } from '../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
-import {
-	AppFormAutosize,
-	AutosizeBootstrap,
-} from '../../../../_common/form-vue/autosize.directive';
+import { FiresidePostVideo } from '../../../../_common/fireside/post/video/video-model';
 import AppFormControlCheckbox from '../../../../_common/form-vue/control/checkbox/checkbox.vue';
 import AppFormControlContent from '../../../../_common/form-vue/control/content/content.vue';
 import AppFormControlDate from '../../../../_common/form-vue/control/date/date.vue';
@@ -108,7 +105,6 @@ type FormPostModel = FiresidePost & {
 		AppFocusWhen,
 		AppScrollWhen,
 		AppTooltip,
-		AppFormAutosize,
 	},
 })
 export default class FormPost extends BaseForm<FormPostModel>
@@ -128,7 +124,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 		form: AppForm;
 	};
 
-	readonly YOUTUBE_URL_REGEX = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:&.+)*$/i;
 	readonly SKETCHFAB_FIELD_REGEX = SKETCHFAB_FIELD_VALIDATION_REGEX;
 
 	readonly MAX_POLL_ITEMS = 10;
@@ -159,10 +154,9 @@ export default class FormPost extends BaseForm<FormPostModel>
 	scrollingKey = 1;
 	isUploadingVideo = false;
 
-	private updateAutosize?: () => void;
-
 	readonly GameVideo = GameVideo;
 	readonly Screen = Screen;
+	readonly FiresidePostVideo = FiresidePostVideo;
 
 	get loadUrl() {
 		return `/web/posts/manage/save/${this.model!.id}`;
@@ -205,22 +199,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 	get sketchfabId() {
 		return getSketchfabIdFromInput(this.formModel.sketchfab_id);
-	}
-
-	get hasValidYouTubeUrl() {
-		return this.formModel.video_url && this.formModel.video_url.match(this.YOUTUBE_URL_REGEX);
-	}
-
-	get youtubeVideoId() {
-		const url = this.formModel.video_url;
-		if (url) {
-			// extract video id from url
-			const matches = url.match(this.YOUTUBE_URL_REGEX);
-			if (matches && matches.length > 1) {
-				const videoId = matches[1];
-				return videoId;
-			}
-		}
 	}
 
 	get hasOptionalData() {
@@ -607,14 +585,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 		}
 	}
 
-	/**
-	 * This is called when the autosize directive is bootstrapped. It passes us
-	 * some hooks that we can call to modify it.
-	 */
-	bootstrapAutosize({ updater }: AutosizeBootstrap) {
-		this.updateAutosize = updater;
-	}
-
 	enableImages() {
 		this.enabledAttachments = true;
 		this.attachmentType = FiresidePost.TYPE_MEDIA;
@@ -677,6 +647,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 		this.setField('video_url', '');
 		this.setField('sketchfab_id', '');
 		this.setField('media', []);
+		this.setField('videos', []);
 	}
 
 	toggleLong() {
@@ -914,5 +885,13 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 	onUploadingVideoChanged(uploading: boolean) {
 		this.isUploadingVideo = uploading;
+	}
+
+	onVideoUploaded(video: FiresidePostVideo) {
+		this.setField('videos', [video]);
+	}
+
+	onVideoUrlChanged(url: string) {
+		this.setField('video_url', url);
 	}
 }
