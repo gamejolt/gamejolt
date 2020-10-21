@@ -54,8 +54,7 @@ export default class AppVideoPlayer extends Vue {
 		return this.isHovered || this.player.state === 'paused';
 	}
 
-	@Emit('play')
-	emitPlay() {}
+	@Emit('play') emitPlay() {}
 
 	mounted() {
 		if (this.startTime) {

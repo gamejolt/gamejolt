@@ -2,7 +2,6 @@ import { assertNever } from '../../../utils/utils';
 import { SettingVideoPlayerVolume } from '../../settings/settings.service';
 
 export class VideoPlayerController {
-	shouldPlay = false;
 	volume = SettingVideoPlayerVolume.get();
 	duration = 0;
 	state: 'paused' | 'playing' = 'paused';
