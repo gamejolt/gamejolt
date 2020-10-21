@@ -44,19 +44,20 @@ export class Backdrop {
 	}
 
 	static checkBackdrops() {
-		const active = this.backdrops.filter(i => i.active);
-		if (active.length === 0) {
-			document.body.classList.remove('backdrop-active');
-
-			// Now we have to remove the spacing that we took up when we pushed
-			// the backdrop onto the page.
-			document.body.style.marginRight = '';
-			document.querySelectorAll('.backdrop-affected').forEach(i => {
-				if (i instanceof HTMLElement) {
-					i.style.paddingRight = '';
-				}
-			});
+		if (this.backdrops.length !== 0) {
+			return;
 		}
+
+		document.body.classList.remove('backdrop-active');
+
+		// Now we have to remove the spacing that we took up when we pushed
+		// the backdrop onto the page.
+		document.body.style.marginRight = '';
+		document.querySelectorAll('.backdrop-affected').forEach(i => {
+			if (i instanceof HTMLElement) {
+				i.style.paddingRight = '';
+			}
+		});
 	}
 
 	static remove(backdrop: AppBackdrop) {
