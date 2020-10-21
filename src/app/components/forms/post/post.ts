@@ -54,6 +54,7 @@ import AppFormPostCommunityPillAdd from './_community-pill/add/add.vue';
 import AppFormPostCommunityPill from './_community-pill/community-pill.vue';
 import AppFormPostCommunityPillIncomplete from './_community-pill/incomplete/incomplete.vue';
 import AppFormPostMedia from './_media/media.vue';
+import AppFormPostVideo from './_video/video.vue';
 
 type FormPostModel = FiresidePost & {
 	mediaItemIds: number[];
@@ -101,6 +102,7 @@ type FormPostModel = FiresidePost & {
 		AppCommunityChannelSelect,
 		AppFormControlContent,
 		AppScrollScroller,
+		AppFormPostVideo,
 	},
 	directives: {
 		AppFocusWhen,
@@ -155,6 +157,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 	attachedCommunities: { community: Community; channel: CommunityChannel }[] = [];
 	targetableCommunities: Community[] = [];
 	scrollingKey = 1;
+	isUploadingVideo = false;
 
 	private updateAutosize?: () => void;
 
@@ -337,6 +340,10 @@ export default class FormPost extends BaseForm<FormPostModel>
 		}
 
 		return this.defaultCommunity;
+	}
+
+	get submitButtonsEnabled() {
+		return this.valid && !this.isUploadingVideo;
 	}
 
 	@Watch('formModel.post_to_user_profile')
@@ -903,5 +910,9 @@ export default class FormPost extends BaseForm<FormPostModel>
 		} else {
 			this.onMediaUploadFailed($payload.reason);
 		}
+	}
+
+	onUploadingVideoChanged(uploading: boolean) {
+		this.isUploadingVideo = uploading;
 	}
 }

@@ -1,3 +1,5 @@
+<script lang="ts" src="./post"></script>
+
 <template>
 	<app-form v-if="model" ref="form" name="postForm">
 		<!-- Attachments -->
@@ -55,7 +57,7 @@
 
 			<!-- Video -->
 			<fieldset v-else-if="enabledVideo">
-				<app-form-legend compact deletable @delete="disableAttachments()">
+				<!-- <app-form-legend compact deletable @delete="disableAttachments()">
 					<translate>YouTube video URL</translate>
 				</app-form-legend>
 
@@ -83,7 +85,13 @@
 						<br />
 						<app-video-embed video-provider="youtube" :video-id="youtubeVideoId" />
 					</template>
-				</app-form-group>
+				</app-form-group> -->
+
+				<app-form-post-video
+					:post="formModel"
+					@close="disableAttachments()"
+					@uploading-change="onUploadingVideoChanged"
+				/>
 			</fieldset>
 
 			<!-- Sketchfab -->
@@ -655,7 +663,7 @@
 				<div class="-controls-submit-button">
 					<app-form-button
 						v-if="!wasPublished && !isScheduling"
-						:disabled="!valid"
+						:disabled="!submitButtonsEnabled"
 						:solid="false"
 						:primary="false"
 						trans
@@ -667,7 +675,12 @@
 				</div>
 
 				<div class="-controls-submit-button">
-					<app-form-button :disabled="!valid" primary solid :block="Screen.isXs">
+					<app-form-button
+						:disabled="!submitButtonsEnabled"
+						primary
+						solid
+						:block="Screen.isXs"
+					>
 						{{ mainActionText }}
 					</app-form-button>
 				</div>
@@ -677,5 +690,3 @@
 </template>
 
 <style lang="stylus" src="./post.styl" scoped></style>
-
-<script lang="ts" src="./post"></script>
