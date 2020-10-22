@@ -1,7 +1,12 @@
 <script lang="ts" src="./video-player"></script>
 
 <template>
-	<div class="-player theme-dark" @mouseleave="onMouseOut" @mouseenter="onMouseIn">
+	<div
+		class="-player theme-dark"
+		@mouseleave="onMouseOut"
+		@mouseenter="onMouseIn"
+		@click="onClickVideo"
+	>
 		<app-video-player-shaka-lazy :player="player" :autoplay="autoplay" />
 
 		<div class="-bottom">

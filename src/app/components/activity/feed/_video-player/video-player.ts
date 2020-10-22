@@ -4,7 +4,7 @@ import { propOptional, propRequired } from '../../../../../utils/vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import {
 	SettingVideoPlayerFeedAutoplay,
-	SettingVideoPlayerFeedForceMute,
+	SettingVideoPlayerFeedVolume,
 } from '../../../../../_common/settings/settings.service';
 import {
 	queueVideoTimeChange,
@@ -22,10 +22,10 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	@Prop(propRequired(String)) poster!: string;
 	@Prop(propRequired(String)) manifest!: string;
 	@Prop(propOptional(Boolean, false)) isFocused!: boolean;
-	@Prop(propOptional(Boolean, false)) autoplay!: boolean;
 	@Prop(propOptional(Number, 0)) startTime!: number;
 
-	player = new VideoPlayerController(this.manifest, this.poster);
+	autoplay = SettingVideoPlayerFeedAutoplay.get();
+	player = new VideoPlayerController(this.manifest, this.poster, 'feed');
 	isHovered = false;
 
 	readonly Screen = Screen;
@@ -42,6 +42,7 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	}
 
 	@Emit('play') emitPlay() {}
+	@Emit('click-video-player') emitClickVideoPlayer(_event: MouseEvent, _timestamp: number) {}
 
 	mounted() {
 		if (this.startTime) {
@@ -69,11 +70,21 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 
 	onClickMute() {
 		if (this.player.volume === 0) {
-			SettingVideoPlayerFeedForceMute.set(false);
 			setVideoVolume(this.player, 100);
 		} else {
-			SettingVideoPlayerFeedForceMute.set(true);
 			setVideoVolume(this.player, 0);
+		}
+	}
+
+	onClickVideo(event: MouseEvent) {
+		// JODO: Do we want to compare local storage keys for both the feed and page volume,
+		// and determine whether or not we should restart the video based on that?
+		if (this.player.volume > 0) {
+			// Resume from the current timestamp if the video was playing with audio.
+			this.emitClickVideoPlayer(event, this.player.currentTime / 1000);
+		} else {
+			// Otherwise, restart the video from the beginning
+			this.emitClickVideoPlayer(event, 0);
 		}
 	}
 
@@ -97,10 +108,6 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 			this.player.state = 'paused';
 		}
 
-		if (SettingVideoPlayerFeedForceMute.get()) {
-			this.player.volume = 0;
-		} else {
-			this.player.volume = 1;
-		}
+		this.player.volume = SettingVideoPlayerFeedVolume.get();
 	}
 }

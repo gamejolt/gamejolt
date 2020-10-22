@@ -99,6 +99,7 @@
 					:item="item"
 					:post="post"
 					@click.native.stop
+					@click-video-player="onClickVideoPlayer"
 					@content-bootstrapped="onContentBootstrapped"
 				/>
 

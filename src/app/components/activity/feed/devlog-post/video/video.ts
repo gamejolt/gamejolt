@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../utils/vue';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
 import { $viewPostVideo } from '../../../../../../_common/fireside/post/video/video-model';
@@ -19,6 +19,8 @@ export default class AppActivityFeedDevlogPostVideo extends Vue {
 	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
 
 	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
+
+	@Emit('click-video-player') emitClickVideoPlayer(_event: MouseEvent, _timestamp: number) {}
 
 	get isHydrated() {
 		return this.feed.isItemHydrated(this.item);

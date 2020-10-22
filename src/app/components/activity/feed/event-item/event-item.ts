@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
+import { Location } from 'vue-router';
 import { State } from 'vuex-class';
 import { findRequiredVueParent, propRequired } from '../../../../../utils/vue';
 import { Analytics } from '../../../../../_common/analytics/analytics.service';
@@ -157,7 +158,7 @@ export default class AppActivityFeedEventItem extends Vue {
 		return communities;
 	}
 
-	get link() {
+	get link(): null | Location {
 		if (this.eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD) {
 			return null;
 		}
@@ -176,7 +177,14 @@ export default class AppActivityFeedEventItem extends Vue {
 			};
 		} else if (this.eventItem.type === EventItem.TYPE_POST_ADD) {
 			const post = this.post!;
-			return post.routeLocation;
+			return {
+				...post.routeLocation,
+				// JODO: use session storage to trigger timestamp navigation
+				// query: {
+				// 	...(post.routeLocation.query ?? {}),
+				// 	t: `$`
+				// },
+			};
 		}
 
 		return null;
@@ -281,7 +289,7 @@ export default class AppActivityFeedEventItem extends Vue {
 	 * Called when bubbling back up the click for the item. Any links within the item can cancel
 	 * this.
 	 */
-	onClick(e: MouseEvent) {
+	onClick(e: MouseEvent, playerTimestamp = '') {
 		const ignoreList = ['a', 'button'];
 
 		// This mess is because we have to search the parent chain to see if one of the elements is
@@ -319,12 +327,26 @@ export default class AppActivityFeedEventItem extends Vue {
 
 			Analytics.trackEvent('activity-feed', 'click');
 			if (e.ctrlKey || e.shiftKey) {
-				Navigate.newWindow(Environment.wttfBaseUrl + this.linkResolved);
+				Navigate.newWindow(
+					Environment.wttfBaseUrl +
+						this.linkResolved +
+						(playerTimestamp ? `?t=${playerTimestamp}` : '')
+				);
 				return;
 			}
 
-			this.$router.push(this.link);
+			this.$router.push({
+				...this.link,
+				query: {
+					...(this.link.query ?? {}),
+					t: `${playerTimestamp}`,
+				},
+			});
 		}
+	}
+
+	onClickVideoPlayer(event: MouseEvent, timestamp: number) {
+		this.onClick(event, timestamp + '');
 	}
 
 	onUnhideBlock() {

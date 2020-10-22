@@ -46,7 +46,7 @@ export default class AppVideoPlayer extends Vue {
 	@Prop(propOptional(Boolean, false)) autoplay!: boolean;
 	@Prop(propOptional(Number, 0)) startTime!: number;
 
-	player = new VideoPlayerController(this.manifest, this.poster);
+	player = new VideoPlayerController(this.manifest, this.poster, 'page');
 	isHovered = false;
 	private _hideUITimer?: NodeJS.Timer;
 
@@ -106,6 +106,8 @@ export default class AppVideoPlayer extends Vue {
 		} else {
 			return;
 		}
+
+		this.scheduleUIHide(UIHideTimeoutMovement);
 
 		switch (key as KEY_SHORTCUTS) {
 			case ' ':

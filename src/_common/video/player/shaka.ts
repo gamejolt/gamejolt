@@ -9,6 +9,7 @@ export default class AppVideoPlayerShaka extends Vue {
 	@Prop(propRequired(VideoPlayerController)) player!: VideoPlayerController;
 	@Prop(propOptional(Boolean, false)) autoplay!: boolean;
 
+	private tempVolume = 0;
 	shakaPlayer?: ShakaPlayer;
 
 	$refs!: {
@@ -78,20 +79,41 @@ export default class AppVideoPlayerShaka extends Vue {
 		});
 	}
 
+	private tryPlayingVideo() {
+		const { video } = this.$refs;
+		video.play().catch(() => {
+			// If autoplaying the video failed, first try setting the volume of the video to 0.
+			if (this.player.volume > 0) {
+				this.tempVolume = this.player.volume;
+				this.player.volume = 0;
+				// Changing the volume will automatically trigger this function, attempting to play the video again.
+				return;
+			}
+
+			// If the autoplaying is still blocked with the volume set to 0,
+			// pause the video in the player controller and reset the player volume to the initial setting.
+			if (this.player.state === 'playing') {
+				this.player.state = 'paused';
+				this.player.volume = this.tempVolume;
+				return;
+			}
+		});
+	}
+
 	@Watch('player.state')
 	@Watch('player.volume')
 	@Watch('player.queuedTimeChange')
 	syncWithState() {
 		const { video } = this.$refs;
 
+		if (this.player.volume !== video.volume) {
+			video.volume = this.player.volume;
+		}
+
 		if (this.player.state === 'paused' && !video.paused) {
 			video.pause();
 		} else if (this.player.state === 'playing' && video.paused) {
-			video.play();
-		}
-
-		if (this.player.volume !== video.volume) {
-			video.volume = this.player.volume;
+			this.tryPlayingVideo();
 		}
 
 		if (this.player.queuedTimeChange !== null) {

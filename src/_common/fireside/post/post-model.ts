@@ -1,5 +1,4 @@
-import { RawLocation } from 'vue-router';
-import { Route } from 'vue-router/types/router';
+import { Location, Route } from 'vue-router/types/router';
 import { Api } from '../../api/api.service';
 import { Perm } from '../../collaborator/collaboratable';
 import { COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING } from '../../community/channel/channel-permissions';
@@ -213,7 +212,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return FiresidePostLike.populate(response.likes);
 	}
 
-	get routeLocation(): RawLocation {
+	get routeLocation(): Location {
 		return {
 			name: 'post',
 			params: {
