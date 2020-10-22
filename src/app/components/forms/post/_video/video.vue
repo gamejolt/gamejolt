@@ -69,7 +69,7 @@
 				<app-progress-bar :percent="uploadProgress * 100" />
 
 				<translate>Uploading…</translate>
-				{{ uploadProgress | number({ style: 'percent' }) }}
+				{{ number(uploadProgress, { style: 'percent' }) }}
 
 				<app-button class="pull-right" @click="cancelUpload">
 					<translate>Cancel Upload</translate>
@@ -81,14 +81,15 @@
 
 				<span>{{ processingStepDisplay }}</span>
 
-				{{ processingProgress | number({ style: 'percent' }) }}
+				{{ number(processingProgress, { style: 'percent' }) }}
 			</div>
 
 			<div v-else-if="videoStatus === 'complete'">
 				Video upload and processing complete!
-				<br />Show video preview here!
+				<br />
+				Show video preview here!
 
-				<app-video-player :poster="videoPoster" :manifest="videoManifest" />
+				<app-video-player :poster="videoPoster" :manifests="videoManifestUrls" />
 			</div>
 		</template>
 		<template v-else-if="videoProvider === FiresidePostVideo.PROVIDER_YOUTUBE">

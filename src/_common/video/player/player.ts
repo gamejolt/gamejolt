@@ -42,11 +42,11 @@ const UIHideTimeoutMovement = 1500;
 })
 export default class AppVideoPlayer extends Vue {
 	@Prop(propRequired(String)) poster!: string;
-	@Prop(propRequired(String)) manifest!: string;
+	@Prop(propRequired(Array)) manifests!: string[];
 	@Prop(propOptional(Boolean, false)) autoplay!: boolean;
 	@Prop(propOptional(Number, 0)) startTime!: number;
 
-	player = new VideoPlayerController(this.manifest, this.poster, 'page');
+	player = new VideoPlayerController(this.poster, this.manifests, 'page');
 	isHovered = false;
 	private _hideUITimer?: NodeJS.Timer;
 

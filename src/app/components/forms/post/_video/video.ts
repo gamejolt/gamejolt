@@ -66,9 +66,6 @@ type ProcessingProgress = {
 	directives: {
 		AppFocusWhen,
 	},
-	filters: {
-		number,
-	},
 })
 export default class AppFormPostVideo extends BaseForm<FormModel>
 	implements FormOnSubmit, FormOnLoad, FormOnSubmitError, FormOnSubmitSuccess, FormOnInit {
@@ -95,6 +92,7 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 	};
 
 	readonly FiresidePostVideo = FiresidePostVideo;
+	readonly number = number;
 
 	$refs!: {
 		form: AppFormTS;
@@ -173,20 +171,17 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		}
 	}
 
-	get videoManifest() {
-		const video = this.post.videos.length ? this.post.videos[0] : undefined;
-		if (video) {
-			console.log(video.media[0]);
-			return video.media[0].img_url;
-		}
+	get uploadedVideo() {
+		const video = this.post.videos[0];
+		return video && video.provider !== 'gamejolt' ? video : null;
+	}
+
+	get videoManifestUrls() {
+		return this.uploadedVideo?.manifestUrls ?? [];
 	}
 
 	get videoPoster() {
-		return 'https://m.gjcdn.net/user-header/1600/78378-ll-ufuupdeb-v4.webp';
-		const video = this.post.videos.length ? this.post.videos[0] : undefined;
-		if (video) {
-			return video.media[0].img_thumbnail;
-		}
+		return this.uploadedVideo?.posterUrl;
 	}
 
 	destroyed() {

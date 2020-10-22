@@ -20,12 +20,12 @@ import { AppVideoPlayerShakaLazy } from '../../../lazy';
 })
 export default class AppActivityFeedVideoPlayer extends Vue {
 	@Prop(propRequired(String)) poster!: string;
-	@Prop(propRequired(String)) manifest!: string;
+	@Prop(propRequired(Array)) manifests!: string[];
 	@Prop(propOptional(Boolean, false)) isFocused!: boolean;
 	@Prop(propOptional(Number, 0)) startTime!: number;
 
 	autoplay = SettingVideoPlayerFeedAutoplay.get();
-	player = new VideoPlayerController(this.manifest, this.poster, 'feed');
+	player = new VideoPlayerController(this.poster, this.manifests, 'feed');
 	isHovered = false;
 
 	readonly Screen = Screen;

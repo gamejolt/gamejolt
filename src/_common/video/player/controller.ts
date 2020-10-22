@@ -21,8 +21,8 @@ export class VideoPlayerController {
 	queuedFullScreenChange: null | boolean = null;
 
 	constructor(
-		public manifest: string,
 		public poster: string,
+		public manifests: string[],
 		public context: VideoPlayerControllerContext
 	) {
 		// Assign volume level from the proper local storage context.

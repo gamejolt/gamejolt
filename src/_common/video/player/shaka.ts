@@ -10,7 +10,8 @@ export default class AppVideoPlayerShaka extends Vue {
 	@Prop(propOptional(Boolean, false)) autoplay!: boolean;
 
 	private tempVolume = 0;
-	shakaPlayer?: ShakaPlayer;
+	private shakaPlayer?: ShakaPlayer;
+	private isDestroyed = false;
 
 	$refs!: {
 		video: HTMLVideoElement;
@@ -21,6 +22,7 @@ export default class AppVideoPlayerShaka extends Vue {
 	}
 
 	beforeDestroy() {
+		this.isDestroyed = true;
 		if (this.shakaPlayer) {
 			this.shakaPlayer.destroy();
 			this.shakaPlayer = undefined;
@@ -37,13 +39,41 @@ export default class AppVideoPlayerShaka extends Vue {
 		this.syncWithState();
 
 		this.shakaPlayer = new ShakaPlayer(this.$refs.video);
+
+		console.log('Shaka Configuration', this.shakaPlayer.getConfiguration());
+		this.shakaPlayer.configure({
+			abr: {
+				// The goal is to select the 720p format by default.
+				defaultBandwidthEstimate: 2_000_000,
+			},
+			manifest: {
+				dash: {
+					ignoreMinBufferTime: true,
+				},
+			},
+		});
+
 		this.shakaPlayer.addEventListener('error', onErrorEvent);
 
-		try {
-			await this.shakaPlayer.load(this.player.manifest);
-			this.setupEvents();
-		} catch (e) {
-			onError(e);
+		if (this.player.manifests.length === 0) {
+			throw new Error(`No manifests to load.`);
+		}
+
+		// We go with the first one that loads in properly. This way if DASH is
+		// unsupported in the browser, we fallback to HLS.
+		for (const manifest of this.player.manifests) {
+			if (this.isDestroyed) {
+				return;
+			}
+
+			try {
+				await this.shakaPlayer.load(manifest);
+
+				// Don't attempt to load next manifest, this one worked.
+				break;
+			} catch (e) {
+				onError(e);
+			}
 		}
 
 		function onErrorEvent(event: any) {
@@ -53,6 +83,8 @@ export default class AppVideoPlayerShaka extends Vue {
 		function onError(error: any) {
 			console.error('Error code', error.code, 'object', error);
 		}
+
+		this.setupEvents();
 	}
 
 	private setupEvents() {

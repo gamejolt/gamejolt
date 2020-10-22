@@ -6,7 +6,7 @@
 
 		<app-video-player
 			poster="https://m.gjcdn.net/fireside-post-image/1300/4180951-ll-krxqej8j-v4.webp"
-			manifest="https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd"
+			:manifests="['https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd']"
 		/>
 	</section>
 </template>
