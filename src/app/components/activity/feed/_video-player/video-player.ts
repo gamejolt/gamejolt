@@ -37,6 +37,10 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 		);
 	}
 
+	get remainingTime() {
+		return Math.ceil((this.player.duration - this.player.currentTime) / 1000) + 's';
+	}
+
 	@Emit('play') emitPlay() {}
 
 	mounted() {

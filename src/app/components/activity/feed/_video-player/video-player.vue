@@ -1,7 +1,7 @@
 <script lang="ts" src="./video-player"></script>
 
 <template>
-	<div class="-player" @mouseleave="onMouseOut" @mouseenter="onMouseIn">
+	<div class="-player theme-dark" @mouseleave="onMouseOut" @mouseenter="onMouseIn">
 		<app-video-player-shaka :player="player" :autoplay="autoplay" />
 
 		<div class="-bottom">
@@ -15,11 +15,20 @@
 
 					<transition-group name="fade" class="-transitions-group">
 						<div
-							v-for="control of ['bars', 'volume']"
+							v-for="control of ['time', 'bars', 'volume']"
 							:key="control"
 							class="-transitions"
 						>
-							<template v-if="control === 'bars'">
+							<template v-if="control === 'time'">
+								<transition name="fade">
+									<div v-if="player.state === 'playing'" class="-time">
+										<div class="-time-inner">
+											{{ remainingTime }}
+										</div>
+									</div>
+								</transition>
+							</template>
+							<template v-else-if="control === 'bars'">
 								<transition name="fade">
 									<div v-if="player.state === 'playing'" class="-bars">
 										<div class="-bar -bar-1" />
@@ -50,16 +59,32 @@
 @import '../../../../_common/video/player/common'
 
 $-controls-height = 64px
+$-controls-spacing = 8px
 
 .-control
-	display: flex
-	width: $-controls-height
-	height: @width
+	display: inline-flex
 	justify-content: center
 	align-items: center
+	width: $-controls-height
+	height: @width
 
 	>>> .jolticon
 		font-size: $jolticon-size * 1.5
+		color: $white
+
+.-time
+	display: inline-flex
+	justify-content: center
+	align-items: center
+	margin-right: $-controls-spacing
+	height: $-controls-height
+
+	&-inner
+		rounded-corners-lg()
+		background-color: rgba($black, 0.5)
+		color: $white
+		padding: 4px 8px
+		font-size: $font-size-small
 
 .fade
 	&-enter
@@ -107,7 +132,7 @@ $-controls-height = 64px
 .-bars
 	display: inline-flex
 	align-items: center
-	margin-right: 8px
+	margin-right: $-controls-spacing
 	height: $-controls-height
 	padding: ($-controls-height / 3) 0
 
