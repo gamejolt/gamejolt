@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
+import { AppVideoPlayerShakaLazy } from '../../../app/components/lazy';
 import { propOptional, propRequired } from '../../../utils/vue';
 import AppShortkey from '../../shortkey/shortkey.vue';
 import {
@@ -11,7 +12,6 @@ import {
 import AppPlayerFullscreen from './fullscreen/fullscreen.vue';
 import AppPlayerPlayback from './playback/playback.vue';
 import AppPlayerScrubber from './scrubber/scrubber.vue';
-import AppVideoPlayerShaka from './shaka.vue';
 import AppPlayerVolume from './volume/volume.vue';
 
 const KeyShortcutsList = ['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft', 'm', ' '];
@@ -32,7 +32,7 @@ const UIHideTimeoutMovement = 1500;
 
 @Component({
 	components: {
-		AppVideoPlayerShaka,
+		AppVideoPlayerShakaLazy,
 		AppPlayerPlayback,
 		AppPlayerVolume,
 		AppPlayerScrubber,

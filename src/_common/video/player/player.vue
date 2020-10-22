@@ -15,7 +15,7 @@
 			}"
 			@click="onVideoClick"
 		>
-			<app-video-player-shaka :player="player" :autoplay="autoplay" />
+			<app-video-player-shaka-lazy :player="player" :autoplay="autoplay" />
 		</div>
 
 		<transition>

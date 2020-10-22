@@ -2,7 +2,7 @@
 
 <template>
 	<div class="-player theme-dark" @mouseleave="onMouseOut" @mouseenter="onMouseIn">
-		<app-video-player-shaka :player="player" :autoplay="autoplay" />
+		<app-video-player-shaka-lazy :player="player" :autoplay="autoplay" />
 
 		<div class="-bottom">
 			<div class="-bottom-gradient">

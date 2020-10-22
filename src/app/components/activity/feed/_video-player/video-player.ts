@@ -11,11 +11,11 @@ import {
 	setVideoVolume,
 	VideoPlayerController,
 } from '../../../../../_common/video/player/controller';
-import AppVideoPlayerShaka from '../../../../../_common/video/player/shaka.vue';
+import { AppVideoPlayerShakaLazy } from '../../../lazy';
 
 @Component({
 	components: {
-		AppVideoPlayerShaka,
+		AppVideoPlayerShakaLazy,
 	},
 })
 export default class AppActivityFeedVideoPlayer extends Vue {
