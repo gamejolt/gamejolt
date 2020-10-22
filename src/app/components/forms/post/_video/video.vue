@@ -3,11 +3,11 @@
 <template>
 	<app-loading-fade :is-loading="!isLoaded">
 		<template v-if="videoProvider === FiresidePostVideo.PROVIDER_GAMEJOLT">
-			<app-form-legend compact :deletable="!isUploading" @delete="emitClose">
+			<app-form-legend compact :deletable="canRemoveUploadingVideo" @delete="onDeleteUpload">
 				<translate>Select Video</translate>
 			</app-form-legend>
 
-			<template v-if="!isUploading">
+			<template v-if="videoStatus === 'idle'">
 				<app-form ref="form" name="postVideoGameJoltForm">
 					<app-form-group
 						name="video"
@@ -64,26 +64,33 @@
 					<translate>Link YouTube Video instead</translate>
 				</a>
 			</template>
-			<div v-else>
-				<app-progress-bar
-					:percent="progress * 100"
-					:thin="uploadComplete"
-					:indeterminate="uploadComplete"
-					active
-				/>
 
-				<template v-if="!uploadComplete">
-					<translate>Uploading…</translate>
-					{{ progress | number({ style: 'percent' }) }}
+			<div v-else-if="videoStatus === 'uploading'">
+				<app-progress-bar :percent="uploadProgress * 100" />
 
-					<app-button class="pull-right" @click="cancelUpload">
-						<translate>Cancel Upload</translate>
-					</app-button>
-				</template>
+				<translate>Uploading…</translate>
+				{{ uploadProgress | number({ style: 'percent' }) }}
+
+				<app-button class="pull-right" @click="cancelUpload">
+					<translate>Cancel Upload</translate>
+				</app-button>
+			</div>
+
+			<div v-else-if="videoStatus === 'processing'">
+				<app-progress-bar :percent="processingProgress * 100" thin indeterminate active />
+
+				<span>{{ processingStepDisplay }}</span>
+
+				{{ processingProgress | number({ style: 'percent' }) }}
+			</div>
+
+			<div v-else-if="videoStatus === 'complete'">
+				Video upload and processing complete!
+				<br />Show video preview here!
 			</div>
 		</template>
 		<template v-else-if="videoProvider === FiresidePostVideo.PROVIDER_YOUTUBE">
-			<app-form-legend compact deletable @delete="emitClose">
+			<app-form-legend compact deletable @delete="emitDelete">
 				<translate>YouTube video URL</translate>
 			</app-form-legend>
 

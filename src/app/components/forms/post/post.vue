@@ -56,19 +56,16 @@
 			</fieldset>
 
 			<!-- Video -->
-			<template v-else-if="enabledVideo">
-				<app-form-post-video
-					v-if="!formModel.hasVideo"
-					:post="formModel"
-					:was-published="wasPublished"
-					@close="disableAttachments()"
-					@uploading-change="onUploadingVideoChanged"
-					@video-upload="onVideoUploaded"
-				/>
-				<template v-else>
-					(Put preview of uploaded video right here.)
-				</template>
-			</template>
+			<app-form-post-video
+				v-else-if="enabledVideo"
+				:post="formModel"
+				:was-published="wasPublished"
+				@delete="disableAttachments()"
+				@video-change="onVideoChanged"
+				@video-url-change="onVideoUrlChanged"
+				@video-status-change="onUploadingVideoStatusChanged"
+				@video-provider-change="onVideoProviderChanged"
+			/>
 
 			<!-- Sketchfab -->
 			<fieldset v-else-if="enabledSketchfab">

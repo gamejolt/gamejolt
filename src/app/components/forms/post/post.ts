@@ -51,6 +51,7 @@ import AppFormPostCommunityPillAdd from './_community-pill/add/add.vue';
 import AppFormPostCommunityPill from './_community-pill/community-pill.vue';
 import AppFormPostCommunityPillIncomplete from './_community-pill/incomplete/incomplete.vue';
 import AppFormPostMedia from './_media/media.vue';
+import { VideoStatus } from './_video/video';
 import AppFormPostVideo from './_video/video.vue';
 
 type FormPostModel = FiresidePost & {
@@ -58,6 +59,7 @@ type FormPostModel = FiresidePost & {
 	publishToPlatforms: number[] | null;
 	key_group_ids: number[];
 	video_url: string;
+	video_id: string;
 	sketchfab_id: string;
 	attached_communities: { community_id: number; channel_id: number }[];
 
@@ -152,7 +154,8 @@ export default class FormPost extends BaseForm<FormPostModel>
 	attachedCommunities: { community: Community; channel: CommunityChannel }[] = [];
 	targetableCommunities: Community[] = [];
 	scrollingKey = 1;
-	isUploadingVideo = false;
+	uploadingVideoStatus = VideoStatus.IDLE;
+	videoProvider = FiresidePostVideo.PROVIDER_GAMEJOLT;
 
 	readonly GameVideo = GameVideo;
 	readonly Screen = Screen;
@@ -321,7 +324,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 	}
 
 	get submitButtonsEnabled() {
-		return this.valid && !this.isUploadingVideo;
+		return this.valid && this.uploadingVideoStatus !== VideoStatus.UPLOADING;
 	}
 
 	@Watch('formModel.post_to_user_profile')
@@ -373,10 +376,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 		this.setField('attached_communities', []);
 
 		if (model.videos.length) {
-			this.setField(
-				'video_url',
-				'https://www.youtube.com/watch?v=' + model.videos[0].video_id
-			);
 			this.enableVideo();
 		} else if (model.sketchfabs.length) {
 			this.setField('sketchfab_id', model.sketchfabs[0].sketchfab_id);
@@ -546,8 +545,22 @@ export default class FormPost extends BaseForm<FormPostModel>
 			this.setField('mediaItemIds', []);
 		}
 
-		if (this.attachmentType !== FiresidePost.TYPE_VIDEO || !this.formModel.video_url) {
+		if (this.attachmentType === FiresidePost.TYPE_VIDEO) {
+			if (this.videoProvider === FiresidePostVideo.PROVIDER_GAMEJOLT) {
+				// Unset the video url for linked videos and set the video id for uploaded videos
+				// to signal to the backend that the attached video should be kept.
+				this.setField('video_url', '');
+				this.setField('video_id', this.formModel.videos[0].id.toString());
+			} else if (this.videoProvider === FiresidePostVideo.PROVIDER_YOUTUBE) {
+				// Make sure to unset the video id for uploaded videos.
+				this.setField('video_id', '');
+			} else {
+				this.setField('video_url', '');
+				this.setField('video_id', '');
+			}
+		} else {
 			this.setField('video_url', '');
+			this.setField('video_id', '');
 		}
 
 		if (this.attachmentType === FiresidePost.TYPE_SKETCHFAB && this.formModel.sketchfab_id) {
@@ -883,15 +896,23 @@ export default class FormPost extends BaseForm<FormPostModel>
 		}
 	}
 
-	onUploadingVideoChanged(uploading: boolean) {
-		this.isUploadingVideo = uploading;
-	}
-
-	onVideoUploaded(video: FiresidePostVideo) {
-		this.setField('videos', [video]);
+	onVideoChanged(video: FiresidePostVideo | null) {
+		if (video === null) {
+			this.setField('videos', []);
+		} else {
+			this.setField('videos', [video]);
+		}
 	}
 
 	onVideoUrlChanged(url: string) {
 		this.setField('video_url', url);
+	}
+
+	onUploadingVideoStatusChanged(status: VideoStatus) {
+		this.uploadingVideoStatus = status;
+	}
+
+	onVideoProviderChanged(provider: string) {
+		this.videoProvider = provider;
 	}
 }
