@@ -53,7 +53,7 @@
 
 			<div class="shell-nav-label">
 				<span v-if="isOwner" v-app-tooltip="`Room Owner`">
-					👑
+					<app-jolticon icon="crown" />
 				</span>
 				{{ title }}
 				<span v-if="meta" class="tiny">{{ meta }}</span>
