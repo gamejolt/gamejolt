@@ -107,6 +107,17 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 		return this.post.videos[0] ?? null;
 	}
 
+	get deviceMaxHeight() {
+		if (GJ_IS_SSR) {
+			return;
+		}
+
+		if (Screen.isMobile) {
+			return window.screen.height - 150;
+		}
+		return Screen.height - 150;
+	}
+
 	created() {
 		if (GJ_IS_SSR) {
 			return;

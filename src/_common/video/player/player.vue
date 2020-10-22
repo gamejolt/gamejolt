@@ -58,6 +58,8 @@
 .-player
 	position: relative
 	overflow: hidden
+	display: flex
+	height: 100%
 
 	&:focus
 		outline: none
@@ -67,6 +69,9 @@
 
 .-paused-cursor
 	cursor: pointer
+
+.-video
+	margin: auto
 
 .-ui
 	z-index: 1

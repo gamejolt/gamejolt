@@ -5,14 +5,26 @@
 		<div class="container-xl">
 			<template v-if="video">
 				<div class="full-bleed-xs">
-					<app-video-player
-						v-if="video.provider === 'gamejolt'"
-						:poster="video.posterUrl"
-						:manifests="video.manifestUrls"
-						:start-time="videoStartTime"
-						autoplay
-						@play="onVideoPlay"
-					/>
+					<template v-if="video.provider === 'gamejolt'">
+						<app-responsive-dimensions
+							v-if="video.posterMediaItem"
+							:ratio="video.posterMediaItem.width / video.posterMediaItem.height"
+							:max-width="video.posterMediaItem.width"
+							:max-height="deviceMaxHeight"
+							style="margin: 0 auto;"
+						>
+							<app-video-player
+								:poster="video.posterUrl"
+								:manifests="video.manifestUrls"
+								:start-time="videoStartTime"
+								autoplay
+								@play="onVideoPlay"
+							/>
+						</app-responsive-dimensions>
+						<template v-else>
+							<!-- JODO: Placeholder? -->
+						</template>
+					</template>
 					<app-video-embed
 						v-else
 						class="-video"

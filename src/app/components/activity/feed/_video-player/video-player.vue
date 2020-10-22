@@ -110,14 +110,11 @@ $-controls-spacing = 8px
 .-player
 	position: relative
 	overflow: hidden
+	height: 100%
 	margin-top: $-item-padding-xs-v
-	margin-left: -($-item-padding-xs)
-	margin-right: -($-item-padding-xs)
 
 	@media $media-sm-up
 		margin-top: $-item-padding-v
-		margin-left: -($-item-padding-container)
-		margin-right: -($-item-padding-container)
 
 .-bottom
 	position: absolute

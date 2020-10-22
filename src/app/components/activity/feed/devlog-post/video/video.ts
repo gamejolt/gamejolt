@@ -3,6 +3,7 @@ import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../utils/vue';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
 import { $viewPostVideo } from '../../../../../../_common/fireside/post/video/video-model';
+import { AppResponsiveDimensions } from '../../../../../../_common/responsive-dimensions/responsive-dimensions';
 import { ActivityFeedItem } from '../../item-service';
 import { ActivityFeedKey, ActivityFeedView } from '../../view';
 import AppActivityFeedVideoEmbed from '../../_video-embed/video-embed.vue';
@@ -12,6 +13,7 @@ import AppActivityFeedVideoPlayer from '../../_video-player/video-player.vue';
 	components: {
 		AppActivityFeedVideoPlayer,
 		AppActivityFeedVideoEmbed,
+		AppResponsiveDimensions,
 	},
 })
 export default class AppActivityFeedDevlogPostVideo extends Vue {
@@ -20,6 +22,7 @@ export default class AppActivityFeedDevlogPostVideo extends Vue {
 
 	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
+	@Emit('content-bootstrapped') emitContentBootstrapped() {}
 	@Emit('click-video-player') emitClickVideoPlayer(_event: MouseEvent, _timestamp: number) {}
 
 	get isHydrated() {
