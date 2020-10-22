@@ -179,7 +179,7 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 
 	get uploadedVideo() {
 		const video = this.post.videos[0];
-		return video && video.provider !== 'gamejolt' ? video : null;
+		return video && video.provider === FiresidePostVideo.PROVIDER_GAMEJOLT ? video : null;
 	}
 
 	get videoManifestUrls() {
