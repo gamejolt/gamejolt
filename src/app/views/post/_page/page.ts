@@ -107,6 +107,10 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 		return this.post.videos[0] ?? null;
 	}
 
+	get videoManifest(): null | MediaItem {
+		return this.video?.media[0] ?? null;
+	}
+
 	created() {
 		if (GJ_IS_SSR) {
 			return;

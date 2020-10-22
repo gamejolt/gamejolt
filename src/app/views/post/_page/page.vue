@@ -3,12 +3,12 @@
 <template>
 	<section class="-section section-thin">
 		<div class="container-xl">
-			<template v-if="video">
-				<div v-if="video" class="full-bleed-xs">
+			<template v-if="video && videoManifest">
+				<div class="full-bleed-xs">
 					<app-video-player
 						v-if="video.provider === 'gamejolt'"
 						poster="https://m.gjcdn.net/fireside-post-image/900/4300116-ll-zd9ds2jh-v4.webp"
-						manifest="https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd"
+						:manifest="videoManifest.img_url"
 						:start-time="videoStartTime"
 						autoplay
 						@play="onVideoPlay"
