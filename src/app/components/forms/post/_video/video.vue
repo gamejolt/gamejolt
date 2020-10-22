@@ -87,6 +87,8 @@
 			<div v-else-if="videoStatus === 'complete'">
 				Video upload and processing complete!
 				<br />Show video preview here!
+
+				<app-video-player :poster="videoPoster" :manifest="videoManifest" />
 			</div>
 		</template>
 		<template v-else-if="videoProvider === FiresidePostVideo.PROVIDER_YOUTUBE">
@@ -149,6 +151,7 @@
 	border-width: 2px
 	border-style: dashed
 	margin-right: $-padding
+	transition: border-color 0.1s ease
 
 	&:hover
 	&.-drop-active

@@ -19,9 +19,11 @@ import {
 	FormOnSubmitSuccess,
 } from '../../../../../_common/form-vue/form.service';
 import AppFormLegend from '../../../../../_common/form-vue/legend/legend.vue';
+import { Growls } from '../../../../../_common/growls/growls.service';
 import AppLoadingFade from '../../../../../_common/loading/fade/fade.vue';
 import AppProgressBar from '../../../../../_common/progress/bar/bar.vue';
 import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
+import AppVideoPlayer from '../../../../../_common/video/player/player.vue';
 
 interface FormModel {
 	video: File | null;
@@ -59,6 +61,7 @@ type ProcessingProgress = {
 		AppProgressBar,
 		AppFormLegend,
 		AppVideoEmbed,
+		AppVideoPlayer,
 	},
 	directives: {
 		AppFocusWhen,
@@ -170,13 +173,25 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		}
 	}
 
-	videoSelected() {
-		if (this.formModel.video !== null) {
-			this.$refs.form.submit();
-			this.videoStatus = VideoStatus.UPLOADING;
-			// Reset the video url here to indicate to the backend that we are now uploading a video.
-			this.setField('video_url', '');
+	get videoManifest() {
+		const video = this.post.videos.length ? this.post.videos[0] : undefined;
+		if (video) {
+			console.log(video.media[0]);
+			return video.media[0].img_url;
 		}
+	}
+
+	get videoPoster() {
+		return 'https://m.gjcdn.net/user-header/1600/78378-ll-ufuupdeb-v4.webp';
+		const video = this.post.videos.length ? this.post.videos[0] : undefined;
+		if (video) {
+			return video.media[0].img_thumbnail;
+		}
+	}
+
+	destroyed() {
+		// Set this so it stops polling. Don't want to emit anymore though.
+		this.m_videoStatus = VideoStatus.IDLE;
 	}
 
 	onInit() {
@@ -226,14 +241,15 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		);
 	}
 
-	onSubmitError($payload: any) {
+	onSubmitError(_$payload: any) {
+		Growls.error(this.$gettext('Your video was not submitted successfully.'));
 		this.cancelUpload();
-		// TODO: show error message.
 	}
 
 	onSubmitSuccess($payload: any) {
 		if (!$payload.video) {
-			// TODO: error message for no video.
+			Growls.error(this.$gettext('Your video was not submitted successfully.'));
+
 			this.cancelUpload();
 			return;
 		}
@@ -245,9 +261,17 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		this.pollVideoProcessing();
 	}
 
+	videoSelected() {
+		if (this.formModel.video !== null) {
+			this.$refs.form.submit();
+			this.videoStatus = VideoStatus.UPLOADING;
+			// Reset the video url here to indicate to the backend that we are now uploading a video.
+			this.setField('video_url', '');
+		}
+	}
+
 	onProgressUpdate(e: ProgressEvent | null) {
 		if (e) {
-			console.log(e.loaded, e.total, e.loaded / e.total);
 			this.setField('_progress', e);
 		}
 	}
@@ -302,6 +326,27 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		// The initial add-video request should return with a form error, so we just stop
 		// polling here.
 		if (!payload.success || this.videoStatus !== VideoStatus.PROCESSING) {
+			if (payload.reason) {
+				Growls.error(
+					this.$gettextInterpolate(
+						'The server was unable to finish processing your video. Status: %{ reason }',
+						{ reason: (payload.reason as string).toUpperCase().replace('-', '_') }
+					)
+				);
+			} else {
+				Growls.error(
+					this.$gettext(
+						'The server was unable to finish processing your video. Status: GENERIC_FAILURE'
+					)
+				);
+			}
+			this.cancelUpload();
+			return;
+		}
+
+		// When the provider was switched off of Game Jolt, cancel polling.
+		if (this.videoProvider !== FiresidePostVideo.PROVIDER_GAMEJOLT) {
+			this.cancelUpload();
 			return;
 		}
 
@@ -309,6 +354,23 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 			this.processingProgressData = payload.progress;
 
 			if (this.processingProgressData.step === ProcessingProgressStepName.COMPLETE) {
+				// Final progress update must have the result video set.
+				if (!payload.video) {
+					Growls.error(this.$gettext('The server did not return the processed video.'));
+					this.cancelUpload();
+					return;
+				}
+
+				Growls.success({
+					title: this.$gettext('📽 Video uploaded!'),
+					message: this.$gettext(
+						'Your video was successfully uploaded and processed. The post can now be published.'
+					),
+					// Send as system notification because the user might tab away from the window
+					// since the uploading/processing can take a while.
+					system: true,
+				});
+
 				this.videoStatus = VideoStatus.COMPLETE;
 				this.emitVideoChange(new FiresidePostVideo(payload.video));
 				return;
@@ -317,6 +379,15 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 
 		// Wait 1s after receiving an update to poll for progress again.
 		await sleep(1000);
+
+		// Check again to make sure we are still processing a Game Jolt video before polling again.
+		if (
+			this.videoStatus !== VideoStatus.PROCESSING ||
+			this.videoProvider !== FiresidePostVideo.PROVIDER_GAMEJOLT
+		) {
+			return;
+		}
+
 		this.pollVideoProcessing();
 	}
 
