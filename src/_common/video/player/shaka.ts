@@ -9,7 +9,9 @@ export default class AppVideoPlayerShaka extends Vue {
 	@Prop(propRequired(VideoPlayerController)) player!: VideoPlayerController;
 	@Prop(propOptional(Boolean, false)) autoplay!: boolean;
 
-	shakaPlayer?: ShakaPlayer;
+	private tempVolume = 0;
+	private shakaPlayer?: ShakaPlayer;
+	private isDestroyed = false;
 
 	$refs!: {
 		video: HTMLVideoElement;
@@ -20,6 +22,7 @@ export default class AppVideoPlayerShaka extends Vue {
 	}
 
 	beforeDestroy() {
+		this.isDestroyed = true;
 		if (this.shakaPlayer) {
 			this.shakaPlayer.destroy();
 			this.shakaPlayer = undefined;
@@ -36,13 +39,41 @@ export default class AppVideoPlayerShaka extends Vue {
 		this.syncWithState();
 
 		this.shakaPlayer = new ShakaPlayer(this.$refs.video);
+
+		console.log('Shaka Configuration', this.shakaPlayer.getConfiguration());
+		this.shakaPlayer.configure({
+			abr: {
+				// The goal is to select the 720p format by default.
+				defaultBandwidthEstimate: 2_000_000,
+			},
+			manifest: {
+				dash: {
+					ignoreMinBufferTime: true,
+				},
+			},
+		});
+
 		this.shakaPlayer.addEventListener('error', onErrorEvent);
 
-		try {
-			await this.shakaPlayer.load(this.player.manifest);
-			this.setupEvents();
-		} catch (e) {
-			onError(e);
+		if (this.player.manifests.length === 0) {
+			throw new Error(`No manifests to load.`);
+		}
+
+		// We go with the first one that loads in properly. This way if DASH is
+		// unsupported in the browser, we fallback to HLS.
+		for (const manifest of this.player.manifests) {
+			if (this.isDestroyed) {
+				return;
+			}
+
+			try {
+				await this.shakaPlayer.load(manifest);
+
+				// Don't attempt to load next manifest, this one worked.
+				break;
+			} catch (e) {
+				onError(e);
+			}
 		}
 
 		function onErrorEvent(event: any) {
@@ -52,6 +83,8 @@ export default class AppVideoPlayerShaka extends Vue {
 		function onError(error: any) {
 			console.error('Error code', error.code, 'object', error);
 		}
+
+		this.setupEvents();
 	}
 
 	private setupEvents() {
@@ -78,20 +111,41 @@ export default class AppVideoPlayerShaka extends Vue {
 		});
 	}
 
+	private tryPlayingVideo() {
+		const { video } = this.$refs;
+		video.play().catch(() => {
+			// If autoplaying the video failed, first try setting the volume of the video to 0.
+			if (this.player.volume > 0) {
+				this.tempVolume = this.player.volume;
+				this.player.volume = 0;
+				// Changing the volume will automatically trigger this function, attempting to play the video again.
+				return;
+			}
+
+			// If the autoplaying is still blocked with the volume set to 0,
+			// pause the video in the player controller and reset the player volume to the initial setting.
+			if (this.player.state === 'playing') {
+				this.player.state = 'paused';
+				this.player.volume = this.tempVolume;
+				return;
+			}
+		});
+	}
+
 	@Watch('player.state')
 	@Watch('player.volume')
 	@Watch('player.queuedTimeChange')
 	syncWithState() {
 		const { video } = this.$refs;
 
+		if (this.player.volume !== video.volume) {
+			video.volume = this.player.volume;
+		}
+
 		if (this.player.state === 'paused' && !video.paused) {
 			video.pause();
 		} else if (this.player.state === 'playing' && video.paused) {
-			video.play();
-		}
-
-		if (this.player.volume !== video.volume) {
-			video.volume = this.player.volume;
+			this.tryPlayingVideo();
 		}
 
 		if (this.player.queuedTimeChange !== null) {

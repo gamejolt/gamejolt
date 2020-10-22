@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
+import { AppVideoPlayerShakaLazy } from '../../../app/components/lazy';
 import { propOptional, propRequired } from '../../../utils/vue';
 import AppShortkey from '../../shortkey/shortkey.vue';
 import {
@@ -11,7 +12,6 @@ import {
 import AppPlayerFullscreen from './fullscreen/fullscreen.vue';
 import AppPlayerPlayback from './playback/playback.vue';
 import AppPlayerScrubber from './scrubber/scrubber.vue';
-import AppVideoPlayerShaka from './shaka.vue';
 import AppPlayerVolume from './volume/volume.vue';
 
 const KeyShortcutsList = ['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft', 'm', ' '];
@@ -32,7 +32,7 @@ const UIHideTimeoutMovement = 1500;
 
 @Component({
 	components: {
-		AppVideoPlayerShaka,
+		AppVideoPlayerShakaLazy,
 		AppPlayerPlayback,
 		AppPlayerVolume,
 		AppPlayerScrubber,
@@ -42,11 +42,11 @@ const UIHideTimeoutMovement = 1500;
 })
 export default class AppVideoPlayer extends Vue {
 	@Prop(propRequired(String)) poster!: string;
-	@Prop(propRequired(String)) manifest!: string;
+	@Prop(propRequired(Array)) manifests!: string[];
 	@Prop(propOptional(Boolean, false)) autoplay!: boolean;
 	@Prop(propOptional(Number, 0)) startTime!: number;
 
-	player = new VideoPlayerController(this.manifest, this.poster);
+	player = new VideoPlayerController(this.poster, this.manifests, 'page');
 	isHovered = false;
 	private _hideUITimer?: NodeJS.Timer;
 
@@ -106,6 +106,8 @@ export default class AppVideoPlayer extends Vue {
 		} else {
 			return;
 		}
+
+		this.scheduleUIHide(UIHideTimeoutMovement);
 
 		switch (key as KEY_SHORTCUTS) {
 			case ' ':

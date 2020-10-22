@@ -50,13 +50,13 @@ export default class RouteStyleguide extends BaseRouteComponent {
 
 	get components() {
 		return [
-			AppVideoPlayerStyleguide,
 			AppButtonStyleguide,
 			AppListGroupStyleguide,
 			AppProgressBarStyleguide,
 			AppStyleguideColor,
 			AppThemeSvgStyleguide,
 			AppJolticonsStyleguide,
+			AppVideoPlayerStyleguide,
 		];
 	}
 }

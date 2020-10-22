@@ -3,6 +3,7 @@
 <template>
 	<div
 		class="-player"
+		tabindex="-1"
 		@fullscreenchange="onFullscreenChange"
 		@mouseleave="onMouseOut"
 		@mousemove="onMouseMove"
@@ -15,7 +16,7 @@
 			}"
 			@click="onVideoClick"
 		>
-			<app-video-player-shaka :player="player" :autoplay="autoplay" />
+			<app-video-player-shaka-lazy :player="player" :autoplay="autoplay" />
 		</div>
 
 		<transition>
@@ -57,6 +58,9 @@
 .-player
 	position: relative
 	overflow: hidden
+
+	&:focus
+		outline: none
 
 	@media $media-sm-up
 		rounded-corners-lg()

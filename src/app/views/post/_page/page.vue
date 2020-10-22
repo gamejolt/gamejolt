@@ -3,12 +3,12 @@
 <template>
 	<section class="-section section-thin">
 		<div class="container-xl">
-			<template v-if="video && videoManifest">
+			<template v-if="video">
 				<div class="full-bleed-xs">
 					<app-video-player
 						v-if="video.provider === 'gamejolt'"
-						poster="https://m.gjcdn.net/fireside-post-image/900/4300116-ll-zd9ds2jh-v4.webp"
-						:manifest="videoManifest.img_url"
+						:poster="video.posterUrl"
+						:manifests="video.manifestUrls"
 						:start-time="videoStartTime"
 						autoplay
 						@play="onVideoPlay"
