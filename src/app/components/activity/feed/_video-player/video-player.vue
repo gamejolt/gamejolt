@@ -85,11 +85,12 @@ $-controls-spacing = 8px
 	height: $-controls-height
 
 	&-inner
-		rounded-corners-lg()
-		background-color: rgba($black, 0.5)
-		color: $white
+		rounded-corners()
+		background-color: var(--dark-theme-bg-offset)
+		color: var(--dark-theme-fg)
 		padding: 4px 8px
 		font-size: $font-size-small
+		opacity: 0.8
 
 .fade
 	&-enter
