@@ -157,10 +157,13 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 
 		try {
 			await this.post.$reject(postCommunity.community);
-			this.emitReject(postCommunity.community);
 		} catch (err) {
 			console.warn('Failed to eject post');
-			return;
+		} finally {
+			// Reject the post from the community anyway when an error occurs.
+			// This most likely happens when the user ejects the post on one tab
+			// and then tries again for the same post on another tab.
+			this.emitReject(postCommunity.community);
 		}
 	}
 

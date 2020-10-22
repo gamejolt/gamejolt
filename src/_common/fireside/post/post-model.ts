@@ -466,7 +466,9 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 			throw new Error('Cannot reject a post to a community it is not tagged in');
 		}
 
-		return this.$_save(`/web/communities/manage/reject/${c.id}`, 'post');
+		return this.$_save(`/web/communities/manage/reject/${c.id}`, 'post', {
+			noErrorRedirect: true,
+		});
 	}
 
 	$moveChannel(community: Community, channel: CommunityChannel) {
