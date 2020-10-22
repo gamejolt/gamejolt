@@ -21,14 +21,16 @@ export class FiresidePostVideo extends Model {
 		}
 	}
 
+	get posterMediaItem() {
+		return this.media.find(i => i.type === MediaItem.TYPE_VIDEO_POSTER);
+	}
+
 	get posterUrl() {
-		// DODO: Use the correct mediaserver URL for the poster.
-		// return 'https://m.gjcdn.net/user-header/1600/78378-ll-ufuupdeb-v4.webp';
-		return this.thumbnail_url;
+		return this.posterMediaItem?.mediaserver_url;
 	}
 
 	get manifestUrls() {
-		return this.media.map(i => i.img_url);
+		return this.media.filter(i => i.type === MediaItem.TYPE_TRANSCODED).map(i => i.img_url);
 	}
 }
 
