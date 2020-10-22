@@ -1,3 +1,5 @@
+<script lang="ts" src="./search"></script>
+
 <template>
 	<div>
 		<app-page-header should-affix-nav :hide-nav="!hasSearch">
@@ -34,7 +36,7 @@
 				</template>
 			</template>
 
-			<nav slot="nav" class="platform-list inline" v-if="hasSearch">
+			<nav v-if="hasSearch" slot="nav" class="platform-list inline">
 				<ul>
 					<li>
 						<router-link
@@ -46,13 +48,19 @@
 						</router-link>
 					</li>
 					<li v-if="searchPayload.usersCount">
-						<router-link :to="{ name: 'search.users', query: { q: query } }" active-class="active">
+						<router-link
+							:to="{ name: 'search.users', query: { q: query } }"
+							active-class="active"
+						>
 							<translate>search.results.users_tab</translate>
 							<span class="badge">{{ searchPayload.usersCount | number }}</span>
 						</router-link>
 					</li>
 					<li v-if="searchPayload.gamesCount">
-						<router-link :to="{ name: 'search.games', query: { q: query } }" active-class="active">
+						<router-link
+							:to="{ name: 'search.games', query: { q: query } }"
+							active-class="active"
+						>
 							<translate>search.results.games_tab</translate>
 							<span class="badge">{{ searchPayload.gamesCount | number }}</span>
 						</router-link>
@@ -75,8 +83,8 @@
 			<br />
 
 			<app-pagination
-				class="text-center"
 				v-if="searchPayload.perPage && searchPayload.count"
+				class="text-center"
 				:items-per-page="searchPayload.perPage"
 				:total-items="searchPayload.count"
 				:current-page="searchPayload.page"
@@ -85,5 +93,3 @@
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./search"></script>

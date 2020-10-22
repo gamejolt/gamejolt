@@ -209,6 +209,9 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		if ($payload.progress) {
 			this.processingProgressData = $payload.progress;
 			this.videoStatus = VideoStatus.PROCESSING;
+
+			// Start polling now.
+			this.pollVideoProcessing();
 		}
 	}
 
@@ -235,6 +238,7 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 			return;
 		}
 
+		this.emitVideoChange(new FiresidePostVideo($payload.video));
 		this.videoStatus = VideoStatus.PROCESSING;
 
 		// Once the video file is fully submitted, start polling for processing progress.
