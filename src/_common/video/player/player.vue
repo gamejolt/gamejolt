@@ -28,7 +28,7 @@
 		</transition>
 
 		<transition>
-			<div v-if="shouldShowUI" class="-bottom -ui anim-fade-enter-up anim-fade-leave-down">
+			<div v-if="shouldShowUI" class="-bottom -ui anim-fade-enter anim-fade-leave-down">
 				<div class="-bottom-gradient">
 					<div class="-bottom-controls">
 						<app-player-scrubber :player="player" />
