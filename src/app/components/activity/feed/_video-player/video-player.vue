@@ -8,11 +8,7 @@
 			<div class="-bottom-gradient">
 				<div class="-bottom-controls" @click.stop>
 					<transition name="fade">
-						<div
-							v-if="shouldShowUI"
-							class="player-control-button"
-							@click="onClickPlayback"
-						>
+						<div v-if="shouldShowUI" class="-control" @click="onClickPlayback">
 							<app-jolticon :icon="player.state === 'playing' ? 'pause' : 'play'" />
 						</div>
 					</transition>
@@ -33,11 +29,7 @@
 								</transition>
 							</template>
 							<template v-else-if="control === 'volume'">
-								<div
-									v-if="shouldShowUI"
-									class="player-control-button"
-									@click="onClickMute"
-								>
+								<div v-if="shouldShowUI" class="-control" @click="onClickMute">
 									<app-jolticon
 										:icon="player.volume > 0 ? 'audio' : 'audio-mute'"
 									/>
@@ -57,15 +49,17 @@
 @import '../variables'
 @import '../../../../_common/video/player/common'
 
+$-controls-height = 64px
+
 .-control
 	display: flex
-	width: 40px
+	width: $-controls-height
 	height: @width
 	justify-content: center
 	align-items: center
 
 	>>> .jolticon
-		font-size: $jolticon-size * 1.25
+		font-size: $jolticon-size * 1.5
 
 .fade
 	&-enter
@@ -113,9 +107,9 @@
 .-bars
 	display: inline-flex
 	align-items: center
-	height: 40px
 	margin-right: 8px
-	padding: 8px 0
+	height: $-controls-height
+	padding: ($-controls-height / 3) 0
 
 	.-bar
 		rounded-corners()

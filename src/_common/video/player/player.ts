@@ -111,9 +111,6 @@ export default class AppVideoPlayer extends Vue {
 			case ' ':
 				toggleVideoPlayback(this.player);
 				break;
-			// case 'm': // JODO: This might need to be done through some kind of shortkey, as it conflicts with the playlists menu.
-			// 	togglePlayerMuted(this.player);
-			// 	break;
 			case 'ArrowLeft':
 				this.triggerScrubLeft();
 				break;

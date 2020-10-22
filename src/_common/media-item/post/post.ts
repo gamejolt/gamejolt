@@ -54,11 +54,7 @@ export default class AppMediaItemPost extends Vue {
 		return (
 			this.restrictDeviceMaxHeight &&
 			this.mediaItem.height >= 100 &&
-			this.mediaItem.width >= 100 &&
-			// JODO: remove?
-			// Videos will have their own fullscreen controls, so we only want to show for regular images
-			(!this.isPostHydrated || !this.mediaItem.is_animated) &&
-			this.isActive
+			this.mediaItem.width >= 100
 		);
 	}
 

@@ -50,9 +50,6 @@ class NumberSetting extends SettingBase<number> {
 
 	get() {
 		const val = this._get();
-		// JODO: video players use their volume control with a decimal,
-		// so we probably need to change this to support float values
-		// (assuming that doesn't break anything)
 		return typeof val === 'string' ? parseFloat(val) : val ?? 0;
 	}
 }
