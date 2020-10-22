@@ -6,7 +6,7 @@
 			<app-jolticon :icon="player.volume > 0 ? 'audio' : 'audio-mute'" />
 		</div>
 
-		<app-player-slider v-if="!Screen.isMobile" :player="player" />
+		<app-player-slider v-if="!Screen.isMobile && hasSlider" :player="player" />
 	</div>
 </template>
 

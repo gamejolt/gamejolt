@@ -37,6 +37,7 @@
 							<app-player-playback :player="player" />
 							<app-player-volume
 								:player="player"
+								has-slider
 								@volume-down="triggerVolumeDown"
 								@volume-up="triggerVolumeUp"
 							/>

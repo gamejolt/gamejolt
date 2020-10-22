@@ -87,3 +87,11 @@ export const SettingBroadcastModal = new BooleanSetting('broadcast-modal', true)
 export const SettingAnimatedThumbnails = new BooleanSetting('animated-thumbnails', true);
 export const SettingFeedNotifications = new BooleanSetting('feed-notifications', true);
 export const SettingVideoPlayerVolume = new NumberSetting('video-player-volume', 1);
+export const SettingVideoPlayerFeedForceMute = new BooleanSetting(
+	'video-player-feed-force-mute',
+	true
+);
+export const SettingVideoPlayerFeedAutoplay = new BooleanSetting(
+	'video-player-feed-autoplay',
+	true
+);

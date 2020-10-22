@@ -7,7 +7,7 @@ export class ScrollInviewController {
 	isFocused: null | boolean = null;
 
 	/**
-	 * The Y position of the elment on the page.
+	 * The Y position of the element on the page.
 	 */
 	y = 0;
 
