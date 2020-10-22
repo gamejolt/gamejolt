@@ -23,7 +23,7 @@ export class FiresidePostVideo extends Model {
 
 	get posterUrl() {
 		// DODO: Use the correct mediaserver URL for the poster.
-		return 'https://m.gjcdn.net/user-header/1600/78378-ll-ufuupdeb-v4.webp';
+		// return 'https://m.gjcdn.net/user-header/1600/78378-ll-ufuupdeb-v4.webp';
 		return this.thumbnail_url;
 	}
 
