@@ -69,7 +69,7 @@
 				<app-progress-bar :percent="uploadProgress * 100" />
 
 				<translate>Uploading…</translate>
-				{{ uploadProgress | number({ style: 'percent' }) }}
+				{{ number(uploadProgress, { style: 'percent' }) }}
 
 				<app-button class="pull-right" @click="cancelUpload">
 					<translate>Cancel Upload</translate>
@@ -79,16 +79,36 @@
 			<div v-else-if="videoStatus === 'processing'">
 				<app-progress-bar :percent="processingProgress * 100" thin indeterminate active />
 
-				<span>{{ processingStepDisplay }}</span>
+				<span>
+					{{ processingStepDisplay }}
+					{{ number(processingProgress, { style: 'percent' }) }}
+				</span>
 
-				{{ processingProgress | number({ style: 'percent' }) }}
+				<div v-if="processingProgressData.videoPosterImgUrl" class="-video-poster-preview">
+					<!-- <app-img-responsive
+						:src="processingProgressData.videoPosterImgUrl"
+						:style="{
+							filter: videoPosterFilterValue,
+						}"
+					/> -->
+					<img
+						:src="processingProgressData.videoPosterImgUrl"
+						:style="{
+							filter: videoPosterFilterValue,
+						}"
+					/>
+
+					<div class="-video-poster-preview-icon-container">
+						<app-jolticon icon="video" big class="-poster-icon" />
+					</div>
+				</div>
+				<div v-else class="-video-poster-preview -no-poster">
+					<app-jolticon icon="video" big class="-poster-icon" />
+				</div>
 			</div>
 
 			<div v-else-if="videoStatus === 'complete'">
-				Video upload and processing complete!
-				<br />Show video preview here!
-
-				<app-video-player :poster="videoPoster" :manifest="videoManifest" />
+				<app-video-player :poster="videoPoster" :manifests="videoManifestUrls" />
 			</div>
 		</template>
 		<template v-else-if="videoProvider === FiresidePostVideo.PROVIDER_YOUTUBE">
@@ -174,4 +194,34 @@
 .-video-embed
 	rounded-corners-lg()
 	overflow: hidden
+
+.-video-poster-preview
+	change-bg('bg-subtle')
+	rounded-corners-lg()
+	overflow: hidden
+	margin-top: 16px
+	position: relative
+
+	img
+		transition: filter 0.5s ease
+
+	&-icon-container
+		position: absolute
+		left: 0
+		top: 0
+		right: 0
+		bottom: 0
+		display: flex
+		justify-content: center
+		align-items: center
+
+.-no-poster
+	height: 240px
+	filter: none
+	display: flex
+	justify-content: center
+	align-items: center
+
+.-poster-icon
+	filter: drop-shadow(0 0 5px rgba(0, 0, 0, 1))
 </style>

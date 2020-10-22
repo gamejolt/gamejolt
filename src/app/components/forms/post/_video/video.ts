@@ -20,6 +20,7 @@ import {
 } from '../../../../../_common/form-vue/form.service';
 import AppFormLegend from '../../../../../_common/form-vue/legend/legend.vue';
 import { Growls } from '../../../../../_common/growls/growls.service';
+import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
 import AppLoadingFade from '../../../../../_common/loading/fade/fade.vue';
 import AppProgressBar from '../../../../../_common/progress/bar/bar.vue';
 import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
@@ -52,6 +53,9 @@ type ProcessingProgress = {
 	step: ProcessingProgressStepName;
 	stepNum: number;
 	totalSteps: number;
+	// One of the first things during processing is generating a poster.
+	// We can show that poster once it's returned as a preview for the video.
+	videoPosterImgUrl: string | null;
 };
 
 @Component({
@@ -62,12 +66,10 @@ type ProcessingProgress = {
 		AppFormLegend,
 		AppVideoEmbed,
 		AppVideoPlayer,
+		AppImgResponsive,
 	},
 	directives: {
 		AppFocusWhen,
-	},
-	filters: {
-		number,
 	},
 })
 export default class AppFormPostVideo extends BaseForm<FormModel>
@@ -92,9 +94,11 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		step: ProcessingProgressStepName.INITIALIZING,
 		stepNum: 0,
 		totalSteps: 100,
+		videoPosterImgUrl: null,
 	};
 
 	readonly FiresidePostVideo = FiresidePostVideo;
+	readonly number = number;
 
 	$refs!: {
 		form: AppFormTS;
@@ -173,20 +177,33 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		}
 	}
 
-	get videoManifest() {
-		const video = this.post.videos.length ? this.post.videos[0] : undefined;
-		if (video) {
-			console.log(video.media[0]);
-			return video.media[0].img_url;
-		}
+	get uploadedVideo() {
+		const video = this.post.videos[0];
+		return video && video.provider !== 'gamejolt' ? video : null;
+	}
+
+	get videoManifestUrls() {
+		return this.uploadedVideo?.manifestUrls ?? [];
 	}
 
 	get videoPoster() {
-		return 'https://m.gjcdn.net/user-header/1600/78378-ll-ufuupdeb-v4.webp';
-		const video = this.post.videos.length ? this.post.videos[0] : undefined;
-		if (video) {
-			return video.media[0].img_thumbnail;
-		}
+		return this.uploadedVideo?.posterUrl;
+	}
+
+	get videoPosterFilterValue() {
+		return (
+			`brightness(${0.7 + this.processingProgress * 0.3}) ` +
+			`grayscale(${1 - this.processingProgress}) ` +
+			`blur(${Math.max(1, 3 - this.processingProgress * 4)}px)`
+		);
+	}
+
+	get shouldPoll() {
+		return (
+			this.videoProvider === FiresidePostVideo.PROVIDER_GAMEJOLT &&
+			this.videoStatus === VideoStatus.PROCESSING &&
+			this.$el.isConnected
+		);
 	}
 
 	destroyed() {
@@ -325,7 +342,7 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		// Falsy success indicates the processing failed.
 		// The initial add-video request should return with a form error, so we just stop
 		// polling here.
-		if (!payload.success || this.videoStatus !== VideoStatus.PROCESSING) {
+		if (!payload.success) {
 			if (payload.reason) {
 				Growls.error(
 					this.$gettextInterpolate(
@@ -344,14 +361,16 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 			return;
 		}
 
-		// When the provider was switched off of Game Jolt, cancel polling.
-		if (this.videoProvider !== FiresidePostVideo.PROVIDER_GAMEJOLT) {
+		if (!this.shouldPoll) {
 			this.cancelUpload();
 			return;
 		}
 
 		if (payload.progress) {
 			this.processingProgressData = payload.progress;
+			if (this.processingProgressData.videoPosterImgUrl === '') {
+				this.processingProgressData.videoPosterImgUrl = null;
+			}
 
 			if (this.processingProgressData.step === ProcessingProgressStepName.COMPLETE) {
 				// Final progress update must have the result video set.
@@ -380,11 +399,9 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		// Wait 1s after receiving an update to poll for progress again.
 		await sleep(1000);
 
-		// Check again to make sure we are still processing a Game Jolt video before polling again.
-		if (
-			this.videoStatus !== VideoStatus.PROCESSING ||
-			this.videoProvider !== FiresidePostVideo.PROVIDER_GAMEJOLT
-		) {
+		// Check again if we should still poll after waiting.
+		if (!this.shouldPoll) {
+			this.cancelUpload();
 			return;
 		}
 
