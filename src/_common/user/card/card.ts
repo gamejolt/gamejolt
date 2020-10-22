@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { propOptional, propRequired } from '../../../utils/vue';
 import { number } from '../../filters/number';
 import AppLoading from '../../loading/loading.vue';
 import { AppStore } from '../../store/app-store';
@@ -23,19 +24,13 @@ import './card-global.styl';
 	directives: {
 		AppTooltip,
 	},
-	filters: {
-		number,
-	},
 })
 export default class AppUserCard extends Vue {
-	@Prop(User)
-	user!: User;
+	@Prop(propRequired(User)) user!: User;
+	@Prop(propOptional(Boolean, false)) isLoading!: boolean;
+	@Prop(propOptional(Boolean, false)) elevate!: boolean;
 
-	@Prop(Boolean)
-	isLoading?: boolean;
-
-	@State
-	app!: AppStore;
+	@State app!: AppStore;
 
 	readonly number = number;
 

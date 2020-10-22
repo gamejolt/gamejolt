@@ -84,13 +84,7 @@ export default class AppStyleguideColor extends Vue {
 	get themeBackgroundColors(): Palette {
 		return {
 			label: 'Theme Background Colors',
-			colors: [
-				'theme-bg',
-				'theme-bg-offset',
-				'theme-bg-backdrop',
-				'theme-bg-backdrop-xs',
-				'theme-bg-subtle',
-			],
+			colors: ['theme-bg', 'theme-bg-offset', 'theme-bg-backdrop', 'theme-bg-subtle'],
 		};
 	}
 
