@@ -88,6 +88,10 @@ export default class AppVideoPlayerShaka extends Vue {
 	}
 
 	private setupEvents() {
+		if (this.isDestroyed) {
+			return;
+		}
+
 		const { video } = this.$refs;
 
 		video.addEventListener('play', () => (this.player.state = 'playing'));

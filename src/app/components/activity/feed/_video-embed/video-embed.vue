@@ -2,7 +2,7 @@
 
 <template>
 	<div class="-video-embed">
-		<app-responsive-dimensions :ratio="16 / 9" @change="onDimensionsChange()">
+		<app-responsive-dimensions :ratio="16 / 9">
 			<app-video-embed v-if="isHydrated" video-provider="youtube" :video-id="videoId" />
 		</app-responsive-dimensions>
 	</div>

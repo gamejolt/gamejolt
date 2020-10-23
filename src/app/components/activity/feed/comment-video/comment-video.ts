@@ -23,7 +23,6 @@ export default class AppActivityFeedCommentVideo extends Vue {
 	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
 	canToggleContent = false;
-	contentBootstrapped = false;
 
 	get isHydrated() {
 		return this.feed.isItemHydrated(this.item);
@@ -42,18 +41,7 @@ export default class AppActivityFeedCommentVideo extends Vue {
 		$viewCommentVideo(this.video);
 	}
 
-	// We wait for the fade collapse component to bootstrap in and potentially
-	// restrict the content size before saying we're bootstrapped.
 	async canToggleChanged(canToggle: boolean) {
 		this.canToggleContent = canToggle;
-
-		if (!this.contentBootstrapped) {
-			this.contentBootstrapped = true;
-
-			// Wait for the fade to restrict content now before emitting the
-			// event.
-			await this.$nextTick();
-			this.$emit('content-bootstrapped');
-		}
 	}
 }

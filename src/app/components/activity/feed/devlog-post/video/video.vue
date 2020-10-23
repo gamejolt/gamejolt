@@ -8,7 +8,7 @@
 			:ratio="video.posterMediaItem.width / video.posterMediaItem.height"
 		>
 			<app-activity-feed-video-player
-				v-if="isFocused"
+				v-if="shouldLoadVideo"
 				class="-video"
 				:poster="video.posterUrl"
 				:manifests="video.manifestUrls"
@@ -37,20 +37,22 @@
 		:video-id="video.video_id"
 		:thumbnail="video.thumbnail_url"
 		:is-hydrated="isHydrated"
-		@bootstrap="emitContentBootstrapped()"
 	/>
 </template>
 
 <style lang="stylus" scoped>
 @import '~styles/variables'
+@import '../../variables'
 
 .-responsive
 	margin-left: -($grid-gutter-width-xs / 2)
 	margin-right: @margin-left
+	margin-top: $-item-padding-xs-v
 
 	@media $media-sm-up
 		margin-left: -($grid-gutter-width / 2) + $border-width-base
 		margin-right: @margin-left
+		margin-top: $-item-padding-v
 
 .-video-container
 	position: relative

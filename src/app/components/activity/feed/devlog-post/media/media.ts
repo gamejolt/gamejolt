@@ -36,7 +36,6 @@ export default class AppActivityFeedDevlogPostMedia extends Vue implements Light
 	activeMediaItem: MediaItem | null = null;
 	isDragging = false;
 	isWaitingForFrame = false;
-	contentBootstrapped = false;
 	private lightbox?: AppLightboxTS;
 	readonly Screen = Screen;
 
@@ -87,13 +86,6 @@ export default class AppActivityFeedDevlogPostMedia extends Vue implements Light
 	}
 
 	async onItemBootstrapped() {
-		if (!this.contentBootstrapped) {
-			this.contentBootstrapped = true;
-
-			await this.$nextTick();
-			this.$emit('content-bootstrapped');
-		}
-
 		this._updateSliderOffset();
 	}
 

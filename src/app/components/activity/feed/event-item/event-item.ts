@@ -18,6 +18,7 @@ import { number } from '../../../../../_common/filters/number';
 import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
+import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppPill from '../../../../../_common/pill/pill.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
@@ -45,8 +46,6 @@ import { ActivityFeedKey, ActivityFeedView } from '../view';
 import AppActivityFeedEventItemBlocked from './blocked/blocked.vue';
 import AppActivityFeedEventItemTime from './time/time.vue';
 
-const ResizeSensor = require('css-element-queries/src/ResizeSensor');
-
 @Component({
 	components: {
 		AppActivityFeedEventItemTime,
@@ -70,6 +69,9 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppStickerTarget,
 		AppScrollScroller,
 	},
+	directives: {
+		AppObserveDimensions,
+	},
 	filters: {
 		number,
 	},
@@ -86,7 +88,6 @@ export default class AppActivityFeedEventItem extends Vue {
 	stickersVisible = false;
 	animateStickers = true;
 
-	private resizeSensor?: any;
 	private feedComponent!: AppActivityFeedTS;
 
 	readonly Screen = Screen;
@@ -260,21 +261,10 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	destroyed() {
 		this.feedComponent = undefined as any;
-		this.resizeSensor = undefined;
 	}
 
-	/**
-	 * Callback for when the component's content has finished bootstrapping into
-	 * the DOM and we hopefully know the height and true content.
-	 */
-	onContentBootstrapped() {
+	onResize() {
 		this.emitResize(this.$el.offsetHeight);
-
-		this.resizeSensor =
-			this.resizeSensor ||
-			new ResizeSensor(this.$el, () => {
-				this.emitResize(this.$el.offsetHeight);
-			});
 	}
 
 	/**

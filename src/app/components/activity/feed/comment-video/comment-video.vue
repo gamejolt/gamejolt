@@ -6,7 +6,6 @@
 			:video-id="video.video_id"
 			:thumbnail="video.img_thumbnail"
 			:is-hydrated="isHydrated"
-			@bootstrap="$emit('content-bootstrapped')"
 			@play="onPlay"
 		/>
 

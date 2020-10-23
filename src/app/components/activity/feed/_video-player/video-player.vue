@@ -111,10 +111,6 @@ $-controls-spacing = 8px
 	position: relative
 	overflow: hidden
 	height: 100%
-	margin-top: $-item-padding-xs-v
-
-	@media $media-sm-up
-		margin-top: $-item-padding-v
 
 .-bottom
 	position: absolute

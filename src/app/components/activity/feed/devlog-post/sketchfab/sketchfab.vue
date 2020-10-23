@@ -2,7 +2,7 @@
 
 <template>
 	<div class="devlog-post-sketchfab-embed">
-		<app-responsive-dimensions :ratio="16 / 9" @change="onDimensionsChange()">
+		<app-responsive-dimensions :ratio="16 / 9">
 			<a v-if="!isHydrated || !isShowing" @click="play">
 				<div class="play-button-overlay">
 					<app-jolticon icon="play" />

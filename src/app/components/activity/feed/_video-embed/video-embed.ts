@@ -18,18 +18,8 @@ export default class AppActivityFeedVideoEmbed extends Vue {
 
 	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
-	contentBootstrapped = false;
 	isShowingVideo = GJ_IS_SSR;
 	shouldAutoplay = !GJ_IS_SSR;
-
-	async onDimensionsChange() {
-		if (!this.contentBootstrapped) {
-			this.contentBootstrapped = true;
-
-			await this.$nextTick();
-			this.$emit('bootstrap');
-		}
-	}
 
 	play() {
 		this.isShowingVideo = true;

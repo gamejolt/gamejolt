@@ -21,7 +21,6 @@ export default class AppActivityFeedDevlogPostSketchfab extends Vue {
 	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
 	isShowing = GJ_IS_SSR;
-	contentBootstrapped = false;
 
 	get isHydrated() {
 		return this.feed.isItemHydrated(this.item);
@@ -29,15 +28,6 @@ export default class AppActivityFeedDevlogPostSketchfab extends Vue {
 
 	get sketchfab() {
 		return this.post.sketchfabs[0];
-	}
-
-	async onDimensionsChange() {
-		if (!this.contentBootstrapped) {
-			this.contentBootstrapped = true;
-
-			await this.$nextTick();
-			this.$emit('content-bootstrapped');
-		}
 	}
 
 	play() {
