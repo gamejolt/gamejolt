@@ -72,6 +72,10 @@ export default class AppActivityFeedDevlogPostMedia extends Vue implements Light
 	}
 
 	goNext() {
+		if (this.page >= this.post.media.length) {
+			return;
+		}
+
 		this.page = Math.min(this.page + 1, this.post.media.length);
 		this.activeMediaItem = this.post.media[this.page - 1];
 		this._updateSliderOffset();
@@ -79,6 +83,10 @@ export default class AppActivityFeedDevlogPostMedia extends Vue implements Light
 	}
 
 	goPrev() {
+		if (this.page <= 1) {
+			return;
+		}
+
 		this.page = Math.max(this.page - 1, 1);
 		this.activeMediaItem = this.post.media[this.page - 1];
 		this._updateSliderOffset();
