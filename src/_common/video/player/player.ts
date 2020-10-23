@@ -11,6 +11,7 @@ import {
 } from './controller';
 import AppPlayerFullscreen from './fullscreen/fullscreen.vue';
 import AppPlayerPlayback from './playback/playback.vue';
+import { createReadableTimestamp } from './scrubber/scrubber';
 import AppPlayerScrubber from './scrubber/scrubber.vue';
 import AppPlayerVolume from './volume/volume.vue';
 
@@ -50,11 +51,19 @@ export default class AppVideoPlayer extends Vue {
 	isHovered = false;
 	private _hideUITimer?: NodeJS.Timer;
 
+	@Emit('play') emitPlay() {}
+
 	get shouldShowUI() {
 		return this.isHovered || this.player.state === 'paused';
 	}
 
-	@Emit('play') emitPlay() {}
+	get readableTime() {
+		return (
+			createReadableTimestamp(this.player.currentTime) +
+			' / ' +
+			createReadableTimestamp(this.player.duration)
+		);
+	}
 
 	mounted() {
 		if (this.startTime) {
