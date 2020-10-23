@@ -1,4 +1,5 @@
 import { assertNever } from '../../../utils/utils';
+import { Analytics } from '../../analytics/analytics.service';
 import {
 	SettingVideoPlayerFeedVolume,
 	SettingVideoPlayerVolume,
@@ -80,4 +81,32 @@ export function scrubVideo(player: VideoPlayerController, position: number, isFi
 
 export function queueVideoFullscreenChange(player: VideoPlayerController, fullscreen: boolean) {
 	player.queuedFullScreenChange = fullscreen;
+}
+
+type VideoPlayerAction =
+	| 'play'
+	| 'pause'
+	| 'mute'
+	| 'unmute'
+	| 'fullscreen'
+	| 'un-fullscreen'
+	| 'scrub-left'
+	| 'scrub-right'
+	| 'volume-down'
+	| 'volume-up';
+
+type VideoPlayerLabel = 'click-control' | 'click-video' | 'keybind';
+
+export function trackVideoPlayerEvent(
+	player: VideoPlayerController,
+	action: VideoPlayerAction,
+	label?: VideoPlayerLabel,
+	value?: string
+) {
+	Analytics.trackEvent(
+		'video-player' + (player.context ? `-${player.context}` : ''),
+		action,
+		label,
+		value
+	);
 }

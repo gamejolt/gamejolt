@@ -2,7 +2,7 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { assertNever } from '../../../../utils/utils';
 import { propRequired } from '../../../../utils/vue';
-import { toggleVideoPlayback, VideoPlayerController } from '../controller';
+import { toggleVideoPlayback, trackVideoPlayerEvent, VideoPlayerController } from '../controller';
 
 @Component({})
 export default class AppVideoPlayerPlayback extends Vue {
@@ -21,5 +21,10 @@ export default class AppVideoPlayerPlayback extends Vue {
 
 	onClickPlayback() {
 		toggleVideoPlayback(this.player);
+		trackVideoPlayerEvent(
+			this.player,
+			this.player.state === 'playing' ? 'play' : 'pause',
+			'click-control'
+		);
 	}
 }

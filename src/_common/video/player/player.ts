@@ -7,6 +7,7 @@ import {
 	queueVideoTimeChange,
 	setVideoVolume,
 	toggleVideoPlayback,
+	trackVideoPlayerEvent,
 	VideoPlayerController,
 	VideoPlayerControllerContext,
 } from './controller';
@@ -108,6 +109,11 @@ export default class AppVideoPlayer extends Vue {
 		if (this.player.state === 'playing') {
 			this.scheduleUIHide(UIHideTimeout);
 		}
+		trackVideoPlayerEvent(
+			this.player,
+			this.player.state === 'playing' ? 'play' : 'pause',
+			'click-video'
+		);
 	}
 
 	onKeypress(event: KeyboardEvent) {
@@ -123,6 +129,11 @@ export default class AppVideoPlayer extends Vue {
 		switch (key as KEY_SHORTCUTS) {
 			case ' ':
 				toggleVideoPlayback(this.player);
+				trackVideoPlayerEvent(
+					this.player,
+					this.player.state === 'playing' ? 'play' : 'pause',
+					'keybind'
+				);
 				break;
 			case 'ArrowLeft':
 				this.triggerScrubLeft();
@@ -144,6 +155,7 @@ export default class AppVideoPlayer extends Vue {
 			this.player,
 			this.player.currentTime - Math.min(this.player.duration / 4, 5000)
 		);
+		trackVideoPlayerEvent(this.player, 'scrub-left', 'keybind');
 	}
 
 	triggerScrubRight() {
@@ -151,14 +163,17 @@ export default class AppVideoPlayer extends Vue {
 			this.player,
 			this.player.currentTime + Math.min(this.player.duration / 4, 5000)
 		);
+		trackVideoPlayerEvent(this.player, 'scrub-right', 'keybind');
 	}
 
 	triggerVolumeDown() {
 		setVideoVolume(this.player, Math.round(Math.max(this.player.volume - 0.1, 0) * 100) / 100);
+		trackVideoPlayerEvent(this.player, 'volume-down', 'keybind');
 	}
 
 	triggerVolumeUp() {
 		setVideoVolume(this.player, Math.round(Math.min(this.player.volume + 0.1, 1) * 100) / 100);
+		trackVideoPlayerEvent(this.player, 'volume-up', 'keybind');
 	}
 
 	onFullscreenChange() {
