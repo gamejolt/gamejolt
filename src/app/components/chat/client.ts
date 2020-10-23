@@ -694,6 +694,15 @@ export function editMessage(chat: ChatClient, message: ChatMessage) {
 	}
 }
 
+export function editTitle(chat: ChatClient, title: string) {
+	const room = chat.room;
+	if (room) {
+		chat.roomChannels[room.id].push('update_title', {
+			title,
+		});
+	}
+}
+
 export function startTyping(chat: ChatClient) {
 	const room = chat.room;
 	if (room) {
