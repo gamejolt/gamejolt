@@ -59,7 +59,7 @@ type FormPostModel = FiresidePost & {
 	publishToPlatforms: number[] | null;
 	key_group_ids: number[];
 	video_url: string;
-	video_id: string;
+	video_id: number;
 	sketchfab_id: string;
 	attached_communities: { community_id: number; channel_id: number }[];
 
@@ -554,17 +554,17 @@ export default class FormPost extends BaseForm<FormPostModel>
 				// Unset the video url for linked videos and set the video id for uploaded videos
 				// to signal to the backend that the attached video should be kept.
 				this.setField('video_url', '');
-				this.setField('video_id', this.formModel.videos[0].id.toString());
+				this.setField('video_id', this.formModel.videos[0].id);
 			} else if (this.videoProvider === FiresidePostVideo.PROVIDER_YOUTUBE) {
 				// Make sure to unset the video id for uploaded videos.
-				this.setField('video_id', '');
+				this.setField('video_id', 0);
 			} else {
 				this.setField('video_url', '');
-				this.setField('video_id', '');
+				this.setField('video_id', 0);
 			}
 		} else {
 			this.setField('video_url', '');
-			this.setField('video_id', '');
+			this.setField('video_id', 0);
 		}
 
 		if (this.attachmentType === FiresidePost.TYPE_SKETCHFAB && this.formModel.sketchfab_id) {

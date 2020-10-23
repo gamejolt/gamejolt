@@ -257,6 +257,8 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 				// Set to complete for now, we get processing info in onLoad in case the video is still processing.
 				this.videoStatus = VideoStatus.COMPLETE;
 			}
+		} else {
+			this.setVideoProvider(FiresidePostVideo.PROVIDER_GAMEJOLT);
 		}
 	}
 
