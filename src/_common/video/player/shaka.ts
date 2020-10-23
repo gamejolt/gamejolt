@@ -85,6 +85,17 @@ export default class AppVideoPlayerShaka extends Vue {
 		}
 
 		this.setupEvents();
+
+		// If their browser settings block autoplaying with audio, then the
+		// browser will never autoplay the video since it's not set to be muted.
+		// Once the player is all ready, we want to try to autoplay just in case
+		// this was the case. We only want to do this for the feed, because if
+		// they're on the post page and it couldn't autoplay with their chosen
+		// volume setting, we want them to have to click explicitly to play the
+		// video, which will always play since they interacted with the page.
+		if (this.autoplay && this.player.context === 'feed') {
+			this.tryPlayingVideo();
+		}
 	}
 
 	private setupEvents() {
