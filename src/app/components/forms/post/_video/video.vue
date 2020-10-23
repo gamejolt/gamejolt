@@ -2,7 +2,7 @@
 
 <template>
 	<app-loading-fade :is-loading="!isLoaded">
-		<template v-if="showFormPlaceholder">
+		<template v-if="shouldShowFormPlaceholder">
 			<app-form-legend compact :deletable="canRemoveUploadingVideo">
 				<span class="-placeholder-small" style="width: 100px" />
 			</app-form-legend>
@@ -97,31 +97,35 @@
 			</div>
 
 			<div v-else-if="videoStatus === 'processing'">
-				<app-progress-bar :percent="processingProgress * 100" thin indeterminate active />
+				<app-progress-bar
+					:percent="shouldShowDetailedProgress ? processingProgress * 100 : 100"
+					thin
+					indeterminate
+					active
+				/>
 
 				<span>
 					{{ processingStepDisplay }}
-					{{ number(processingProgress, { style: 'percent' }) }}
+					<template v-if="shouldShowDetailedProgress">
+						{{ number(processingProgress, { style: 'percent' }) }}
+					</template>
 				</span>
 
 				<app-responsive-dimensions :ratio="16 / 9">
-					<div
-						v-if="processingProgressData.videoPosterImgUrl"
-						class="-video-poster-preview"
-					>
-						<app-img-responsive
-							:src="processingProgressData.videoPosterImgUrl"
-							:style="{
-								filter: videoPosterFilterValue,
-							}"
-						/>
+					<div class="-video-poster-preview">
+						<template v-if="processingProgressData.videoPosterImgUrl">
+							<app-img-responsive
+								:src="processingProgressData.videoPosterImgUrl"
+								:style="{
+									filter: videoPosterFilterValue,
+								}"
+							/>
 
-						<div class="-video-poster-preview-icon-container">
-							<app-jolticon icon="video" big class="-poster-icon" />
-						</div>
-					</div>
-					<div v-else class="-video-poster-preview -no-poster">
-						<app-jolticon icon="video" big class="-poster-icon" />
+							<div class="-video-poster-preview-icon-container">
+								<app-jolticon icon="video" big class="-poster-icon" />
+							</div>
+						</template>
+						<app-jolticon v-else icon="video" big class="-poster-icon" />
 					</div>
 				</app-responsive-dimensions>
 			</div>
@@ -257,9 +261,6 @@
 		display: flex
 		justify-content: center
 		align-items: center
-
-.-no-poster
-	filter: none
 
 .-poster-icon
 	filter: drop-shadow(0 0 5px rgba(0, 0, 0, 1))

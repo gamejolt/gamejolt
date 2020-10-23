@@ -60,6 +60,11 @@ type ProcessingProgress = {
 	// One of the first things during processing is generating a poster.
 	// We can show that poster once it's returned as a preview for the video.
 	videoPosterImgUrl: string | null;
+	/**
+	 * Indicates whether or not the backend is confident in the progress to show
+	 * a detailed progress indicator (percentage and progress bar).
+	 */
+	showDetailedProgress?: boolean;
 };
 
 @Component({
@@ -198,10 +203,19 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 	}
 
 	get videoPosterFilterValue() {
+		// When the video is "done" processing and has no detailed progress,
+		// don't have any blur on the image.
+		// When we have more detailed progress, we can keep a slight blur since when the video
+		// finishes processing, the video player will show instead.
+		const blur =
+			!this.shouldShowDetailedProgress && this.processingProgress === 1
+				? 0
+				: Math.max(1, 3 - this.processingProgress * 4);
+
 		return (
 			`brightness(${0.7 + this.processingProgress * 0.3}) ` +
 			`grayscale(${1 - this.processingProgress}) ` +
-			`blur(${Math.max(1, 3 - this.processingProgress * 4)}px)`
+			`blur(${blur}px)`
 		);
 	}
 
@@ -213,8 +227,12 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		);
 	}
 
-	get showFormPlaceholder() {
+	get shouldShowFormPlaceholder() {
 		return !this.isLoaded && !this.wasPublished;
+	}
+
+	get shouldShowDetailedProgress() {
+		return this.processingProgressData.showDetailedProgress === true;
 	}
 
 	beforeDestroy() {
