@@ -21,7 +21,10 @@
 						>
 							<template v-if="control === 'time'">
 								<transition name="fade">
-									<div v-if="player.state === 'playing'" class="-time">
+									<div
+										v-if="player.state === 'playing' && player.duration > 0"
+										class="-time"
+									>
 										<div class="-time-inner">
 											{{ remainingTime }}
 										</div>

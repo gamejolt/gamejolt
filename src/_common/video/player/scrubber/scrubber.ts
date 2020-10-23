@@ -9,16 +9,6 @@ if (!GJ_IS_SSR) {
 	Vue.use(VueTouch);
 }
 
-export function createReadableTimestamp(time: number) {
-	time /= 1000;
-	const minutes = Math.floor(time / 60);
-	const seconds = Math.floor(time % 60)
-		.toString()
-		.padStart(2, '0');
-
-	return `${minutes}:${seconds}`;
-}
-
 @Component({})
 export default class AppVideoPlayerScrubber extends Vue {
 	@Prop(propRequired(VideoPlayerController)) player!: VideoPlayerController;
@@ -30,10 +20,6 @@ export default class AppVideoPlayerScrubber extends Vue {
 	$refs!: {
 		timebar: HTMLDivElement;
 	};
-
-	get readableScrubberTime() {
-		return createReadableTimestamp(this.player.currentTime);
-	}
 
 	get currentPos() {
 		return (this.player.queuedTimeChange ?? this.player.currentTime) / this.player.duration;

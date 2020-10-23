@@ -45,7 +45,7 @@
 
 							<div style="flex: auto" />
 
-							<div class="-time">
+							<div v-if="player.duration > 0" class="-time anim-fade-in-enlarge">
 								<div class="-time-inner">
 									{{ readableTime }}
 								</div>

@@ -13,7 +13,6 @@ import {
 } from './controller';
 import AppPlayerFullscreen from './fullscreen/fullscreen.vue';
 import AppPlayerPlayback from './playback/playback.vue';
-import { createReadableTimestamp } from './scrubber/scrubber';
 import AppPlayerScrubber from './scrubber/scrubber.vue';
 import AppPlayerVolume from './volume/volume.vue';
 
@@ -32,6 +31,16 @@ const UIHideTimeout = 400;
  * mouse essentially.
  */
 const UIHideTimeoutMovement = 2000;
+
+function createReadableTimestamp(time: number) {
+	time /= 1000;
+	const minutes = Math.floor(time / 60);
+	const seconds = Math.floor(time % 60)
+		.toString()
+		.padStart(2, '0');
+
+	return `${minutes}:${seconds}`;
+}
 
 @Component({
 	components: {
