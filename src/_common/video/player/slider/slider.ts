@@ -27,6 +27,24 @@ export default class AppVideoPlayerSlider extends Vue {
 		thumb: HTMLDivElement;
 	};
 
+	get sliderFilledStyling() {
+		if (this.vertical) {
+			return {
+				top: this.sliderSize - this.thumbOffset + 'px',
+				right: 0,
+				bottom: 0,
+				left: 0,
+			};
+		}
+
+		return {
+			top: 0,
+			right: this.sliderSize - this.thumbOffset + 'px',
+			bottom: 0,
+			left: 0,
+		};
+	}
+
 	get thumbStyling() {
 		return {
 			top: this.vertical ? this.thumbOffset + 'px' : '',
