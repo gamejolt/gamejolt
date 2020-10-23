@@ -215,11 +215,9 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		return !this.isLoaded && !this.wasPublished;
 	}
 
-	destroyed() {
-		console.log('destroy', this.videoStatus);
+	beforeDestroy() {
 		// Set this so it stops polling.
 		this.videoStatus = VideoStatus.IDLE;
-		console.log('destroyed', this.videoStatus);
 	}
 
 	onInit() {
