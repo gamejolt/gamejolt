@@ -1,13 +1,9 @@
 import Vue from 'vue';
 import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../../utils/vue';
+import { propRequired } from '../../../../../utils/vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
+import { SettingVideoPlayerFeedAutoplay } from '../../../../../_common/settings/settings.service';
 import {
-	SettingVideoPlayerFeedAutoplay,
-	SettingVideoPlayerFeedVolume,
-} from '../../../../../_common/settings/settings.service';
-import {
-	queueVideoTimeChange,
 	setVideoVolume,
 	VideoPlayerController,
 } from '../../../../../_common/video/player/controller';
@@ -21,8 +17,6 @@ import { AppVideoPlayerShakaLazy } from '../../../lazy';
 export default class AppActivityFeedVideoPlayer extends Vue {
 	@Prop(propRequired(String)) poster!: string;
 	@Prop(propRequired(Array)) manifests!: string[];
-	@Prop(propOptional(Boolean, false)) isFocused!: boolean;
-	@Prop(propOptional(Number, 0)) startTime!: number;
 
 	autoplay = SettingVideoPlayerFeedAutoplay.get();
 	player = new VideoPlayerController(this.poster, this.manifests, 'feed');
@@ -31,10 +25,7 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	readonly Screen = Screen;
 
 	get shouldShowUI() {
-		return (
-			Screen.isMobile ||
-			(this.isFocused && (this.isHovered || this.player.state === 'paused'))
-		);
+		return Screen.isMobile || this.isHovered || this.player.state === 'paused';
 	}
 
 	get remainingTime() {
@@ -43,12 +34,6 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 
 	@Emit('play') emitPlay() {}
 	@Emit('click-video-player') emitClickVideoPlayer(_event: MouseEvent, _timestamp: number) {}
-
-	mounted() {
-		if (this.startTime) {
-			queueVideoTimeChange(this.player, this.startTime);
-		}
-	}
 
 	onMouseOut() {
 		this.isHovered = false;
@@ -93,21 +78,5 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 		if (this.player.state === 'playing') {
 			this.emitPlay();
 		}
-	}
-
-	@Watch('isFocused')
-	onFocusChange() {
-		if (!this.isFocused) {
-			this.player.state = 'paused';
-			return;
-		}
-
-		if (SettingVideoPlayerFeedAutoplay.get()) {
-			this.player.state = 'playing';
-		} else {
-			this.player.state = 'paused';
-		}
-
-		this.player.volume = SettingVideoPlayerFeedVolume.get();
 	}
 }

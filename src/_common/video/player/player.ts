@@ -28,7 +28,7 @@ const UIHideTimeout = 400;
  * player. We want the cursor to eventually hide away if they stop moving their
  * mouse essentially.
  */
-const UIHideTimeoutMovement = 1500;
+const UIHideTimeoutMovement = 2000;
 
 @Component({
 	components: {
