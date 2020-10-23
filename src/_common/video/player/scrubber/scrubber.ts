@@ -2,7 +2,6 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../utils/vue';
 import { Ruler } from '../../../ruler/ruler-service';
-import { AppTooltip } from '../../../tooltip/tooltip-directive';
 import { scrubVideo, VideoPlayerController } from '../controller';
 
 if (!GJ_IS_SSR) {
@@ -10,23 +9,30 @@ if (!GJ_IS_SSR) {
 	Vue.use(VueTouch);
 }
 
-@Component({
-	directives: {
-		AppTooltip,
-	},
-})
+export function createReadableTimestamp(time: number) {
+	time /= 1000;
+	const minutes = Math.floor(time / 60);
+	const seconds = Math.floor(time % 60)
+		.toString()
+		.padStart(2, '0');
+
+	return `${minutes}:${seconds}`;
+}
+
+@Component({})
 export default class AppVideoPlayerScrubber extends Vue {
 	@Prop(propRequired(VideoPlayerController)) player!: VideoPlayerController;
 
 	private timebarLeft = 0;
 	private timebarWidth = 0;
+	timestampOffset = 0;
 
 	$refs!: {
 		timebar: HTMLDivElement;
 	};
 
 	get readableScrubberTime() {
-		return this._createReadableTimestamp(this.player.currentTime);
+		return createReadableTimestamp(this.player.currentTime);
 	}
 
 	get currentPos() {
@@ -48,16 +54,6 @@ export default class AppVideoPlayerScrubber extends Vue {
 
 		const bufferedPos = this.player.bufferedTo / this.player.duration;
 		return 100 - bufferedPos * 100 + '%';
-	}
-
-	private _createReadableTimestamp(time: number) {
-		time /= 1000;
-		const minutes = Math.floor(time / 60);
-		const seconds = Math.floor(time % 60)
-			.toString()
-			.padStart(2, '0');
-
-		return `${minutes}:${seconds}`;
 	}
 
 	tap(event: HammerInput) {

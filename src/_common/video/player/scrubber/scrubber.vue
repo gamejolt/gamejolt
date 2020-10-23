@@ -11,11 +11,11 @@
 		@click.native.capture.prevent
 	>
 		<div ref="timebar" class="-timebar" :class="{ '-dragging': player.isScrubbing }">
-			<div
-				v-app-tooltip="readableScrubberTime"
-				class="-timebar-handle"
-				:style="{ right: filledRight }"
-			/>
+			<div class="-timebar-handle" :style="{ right: filledRight }">
+				<div class="-timestamp">
+					{{ readableScrubberTime }}
+				</div>
+			</div>
 
 			<div class="-timebar-unfilled">
 				<div class="-timebar-buffered" :style="{ right: bufferedRight }" />
@@ -36,7 +36,19 @@ $-transition-right = right $-right-timing linear
 $-handle-transition-base = width 200ms, height 200ms, margin-top 200ms, margin-right 200ms
 
 .player-control
+	position: relative
 	padding: 8px 12px
+
+.-timestamp
+	rounded-corners()
+	position: absolute
+	padding: 4px 6px
+	background-color: var(--dark-theme-bg-offset)
+	bottom: calc(100% + 8px)
+	pointer-events: none
+	user-select: none
+	opacity: 0
+	transition: opacity 1s $strong-ease-out
 
 .-timebar
 	position: relative
@@ -80,6 +92,12 @@ $-handle-transition-base = width 200ms, height 200ms, margin-top 200ms, margin-r
 		cursor: pointer
 		transition: $-handle-transition-base, $-transition-right
 		z-index: 11
+		display: flex
+		justify-content: center
+
+		&:hover
+			.-timestamp
+				opacity: 0.9
 
 .-dragging
 	.-timebar

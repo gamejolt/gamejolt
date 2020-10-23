@@ -10,6 +10,8 @@
 			:class="{ '-dragging': isDragging }"
 			:style="sliderStyling"
 		>
+			<div class="-slider-filled" :style="sliderFilledStyling" />
+
 			<div
 				ref="thumb"
 				v-app-tooltip="readableSliderPercentage"
@@ -44,11 +46,15 @@
 	border-radius: $border-radius-small
 	position: relative
 	margin: auto
-	background-color: var(--theme-lighter)
+	background-color: rgba($white, 0.5)
 	box-shadow: 0 0 2px var(--theme-light)
 	display: flex
 	justify-content: center
 	align-items: center
+
+	&-filled
+		position: absolute
+		background-color: $white
 
 .-slider-thumb
 	position: absolute

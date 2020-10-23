@@ -42,7 +42,15 @@
 								@volume-down="triggerVolumeDown"
 								@volume-up="triggerVolumeUp"
 							/>
-							<app-player-fullscreen class="-fullscreen" :player="player" />
+
+							<div style="flex: auto" />
+
+							<div class="-time">
+								<div class="-time-inner">
+									{{ readableTime }}
+								</div>
+							</div>
+							<app-player-fullscreen :player="player" />
 						</div>
 					</div>
 				</div>
@@ -111,6 +119,17 @@
 .-row
 	display: flex
 
-.-fullscreen
-	margin-left: auto
+.-time
+	display: inline-flex
+	align-items: center
+	margin-right: 8px
+
+	&-inner
+		rounded-corners()
+		padding: 4px 6px
+		background-color: var(--dark-theme-bg-offset)
+		font-size: $font-size-small
+		pointer-events: none
+		user-select: none
+		opacity: 0.8
 </style>
