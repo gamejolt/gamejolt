@@ -156,6 +156,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 	scrollingKey = 1;
 	uploadingVideoStatus = VideoStatus.IDLE;
 	videoProvider = FiresidePostVideo.PROVIDER_GAMEJOLT;
+	canContinueProcessingUploadedVideo = true;
 
 	readonly GameVideo = GameVideo;
 	readonly Screen = Screen;
@@ -918,5 +919,10 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 	onVideoProviderChanged(provider: string) {
 		this.videoProvider = provider;
+	}
+
+	onDisableVideoAttachment() {
+		this.disableAttachments();
+		this.canContinueProcessingUploadedVideo = false;
 	}
 }

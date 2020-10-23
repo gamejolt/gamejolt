@@ -23,6 +23,7 @@ import AppFormLegend from '../../../../../_common/form-vue/legend/legend.vue';
 import { Growls } from '../../../../../_common/growls/growls.service';
 import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
 import AppLoadingFade from '../../../../../_common/loading/fade/fade.vue';
+import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { Payload } from '../../../../../_common/payload/payload-service';
 import AppProgressBar from '../../../../../_common/progress/bar/bar.vue';
 import { AppResponsiveDimensions } from '../../../../../_common/responsive-dimensions/responsive-dimensions';
@@ -80,6 +81,7 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 	implements FormOnSubmit, FormOnLoad, FormOnSubmitError, FormOnSubmitSuccess, FormOnInit {
 	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
 	@Prop(propRequired(Boolean)) wasPublished!: boolean;
+	@Prop(propRequired(Boolean)) canContinueProcessing!: boolean;
 
 	readonly YOUTUBE_URL_REGEX = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:&.+)*$/i;
 
@@ -247,7 +249,10 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		this.minAspect = $payload.minAspect;
 
 		// If backend sends progress info, it means the attached uploaded video is being processed.
-		if ($payload.progress) {
+		// However, if the user previously quit out of the video attaching, their previous video might
+		// still be processing in the background. We want to allow them to upload a new video instead.
+		// If they close and reopen the form without saving the post, their video from before will reappear.
+		if (this.canContinueProcessing && $payload.progress) {
 			this.processingProgressData = $payload.progress;
 			this.videoStatus = VideoStatus.PROCESSING;
 
@@ -449,7 +454,21 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		this.emitVideoUrlChange(this.formModel.video_url);
 	}
 
-	onDeleteUpload() {
+	async onDeleteUpload() {
+		if (this.videoStatus !== VideoStatus.IDLE) {
+			const result = await ModalConfirm.show(
+				this.$gettext(
+					'When you remove your video, you can upload a new one later or link a YouTube video instead.'
+				),
+				this.$gettext('Remove uploaded video?'),
+				'yes'
+			);
+
+			if (!result) {
+				return;
+			}
+		}
+
 		this.cancelUpload();
 		this.emitDelete();
 	}
