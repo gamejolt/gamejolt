@@ -63,7 +63,7 @@
 @import '../variables'
 @import '../../../../_common/video/player/common'
 
-$-controls-height = 64px
+$-controls-height = 48px
 $-controls-spacing = 8px
 
 .-control
