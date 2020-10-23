@@ -36,7 +36,7 @@ export default class AppActivityFeedDevlogPostVideo extends Vue {
 	shouldLoadVideo = false;
 	shouldLoadVideoTimer: null | NodeJS.Timer = null;
 
-	@Emit('click-video-player') emitClickVideoPlayer(_event: MouseEvent, _timestamp: number) {}
+	@Emit('query-param') emitQueryParam(_params: Record<string, string>) {}
 
 	get isHydrated() {
 		return this.feed.isItemHydrated(this.item);
@@ -48,6 +48,10 @@ export default class AppActivityFeedDevlogPostVideo extends Vue {
 
 	get video() {
 		return this.post.videos[0];
+	}
+
+	mounted() {
+		this.onIsFocusedChange();
 	}
 
 	beforeDestroy() {
@@ -76,6 +80,10 @@ export default class AppActivityFeedDevlogPostVideo extends Vue {
 		this.shouldLoadVideoTimer = setTimeout(() => {
 			this.shouldLoadVideo = true;
 		}, LoadDelay);
+	}
+
+	onTimeChange(time: number) {
+		this.emitQueryParam({ t: `${time}` });
 	}
 
 	onVideoPlay() {

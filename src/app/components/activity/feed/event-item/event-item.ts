@@ -89,6 +89,7 @@ export default class AppActivityFeedEventItem extends Vue {
 	animateStickers = true;
 
 	private feedComponent!: AppActivityFeedTS;
+	private queryParams: Record<string, string> = {};
 
 	readonly Screen = Screen;
 	readonly EventItem = EventItem;
@@ -164,28 +165,28 @@ export default class AppActivityFeedEventItem extends Vue {
 			return null;
 		}
 
+		const withQueryParams = (location: Location): Location => {
+			return {
+				...location,
+				query: Object.assign({}, location.query ?? {}, this.queryParams),
+			};
+		};
+
 		if (this.eventItem.type === EventItem.TYPE_GAME_PUBLISH) {
 			const game = this.game!;
 
-			const params: { [key: string]: string } = {
+			const params: Record<string, string> = {
 				slug: game.slug,
 				id: game.id + '',
 			};
 
-			return {
+			return withQueryParams({
 				name: 'discover.games.view.overview',
 				params: params,
-			};
+			});
 		} else if (this.eventItem.type === EventItem.TYPE_POST_ADD) {
 			const post = this.post!;
-			return {
-				...post.routeLocation,
-				// JODO: use session storage to trigger timestamp navigation
-				// query: {
-				// 	...(post.routeLocation.query ?? {}),
-				// 	t: `$`
-				// },
-			};
+			return withQueryParams(post.routeLocation);
 		}
 
 		return null;
@@ -267,6 +268,10 @@ export default class AppActivityFeedEventItem extends Vue {
 		this.emitResize(this.$el.offsetHeight);
 	}
 
+	onQueryParam(params: Record<string, string>) {
+		this.queryParams = Object.assign({}, this.queryParams, params);
+	}
+
 	/**
 	 * Called when clicking on the item, before running through any other click events--in the
 	 * capture phase.
@@ -279,7 +284,7 @@ export default class AppActivityFeedEventItem extends Vue {
 	 * Called when bubbling back up the click for the item. Any links within the item can cancel
 	 * this.
 	 */
-	onClick(e: MouseEvent, playerTimestamp = '') {
+	onClick(e: MouseEvent) {
 		const ignoreList = ['a', 'button'];
 
 		// This mess is because we have to search the parent chain to see if one of the elements is
@@ -317,26 +322,12 @@ export default class AppActivityFeedEventItem extends Vue {
 
 			Analytics.trackEvent('activity-feed', 'click');
 			if (e.ctrlKey || e.shiftKey) {
-				Navigate.newWindow(
-					Environment.wttfBaseUrl +
-						this.linkResolved +
-						(playerTimestamp ? `?t=${playerTimestamp}` : '')
-				);
+				Navigate.newWindow(Environment.wttfBaseUrl + this.linkResolved);
 				return;
 			}
 
-			this.$router.push({
-				...this.link,
-				query: {
-					...(this.link.query ?? {}),
-					t: `${playerTimestamp}`,
-				},
-			});
+			this.$router.push(this.link);
 		}
-	}
-
-	onClickVideoPlayer(event: MouseEvent, timestamp: number) {
-		this.onClick(event, timestamp + '');
 	}
 
 	onUnhideBlock() {

@@ -32,8 +32,20 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 		return Math.ceil((this.player.duration - this.player.currentTime) / 1000) + 's';
 	}
 
+	get currentTime() {
+		return Math.floor(this.player.currentTime / 1000);
+	}
+
 	@Emit('play') emitPlay() {}
-	@Emit('click-video-player') emitClickVideoPlayer(_event: MouseEvent, _timestamp: number) {}
+	@Emit('time') emitTime(_timestamp: number) {}
+
+	@Watch('currentTime')
+	onCurrentTimeChange() {
+		// We only emit the current time if they're watching it unmuted.
+		if (this.player.volume !== 0) {
+			this.emitTime(this.currentTime);
+		}
+	}
 
 	onMouseOut() {
 		this.isHovered = false;
@@ -58,18 +70,6 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 			setVideoVolume(this.player, 100);
 		} else {
 			setVideoVolume(this.player, 0);
-		}
-	}
-
-	onClickVideo(event: MouseEvent) {
-		// JODO: Do we want to compare local storage keys for both the feed and page volume,
-		// and determine whether or not we should restart the video based on that?
-		if (this.player.volume > 0) {
-			// Resume from the current timestamp if the video was playing with audio.
-			this.emitClickVideoPlayer(event, this.player.currentTime / 1000);
-		} else {
-			// Otherwise, restart the video from the beginning
-			this.emitClickVideoPlayer(event, 0);
 		}
 	}
 

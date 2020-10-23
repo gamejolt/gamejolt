@@ -13,7 +13,7 @@
 				:poster="video.posterUrl"
 				:manifests="video.manifestUrls"
 				@play="onVideoPlay"
-				@click-video-player="emitClickVideoPlayer"
+				@time="onTimeChange"
 			/>
 
 			<!--

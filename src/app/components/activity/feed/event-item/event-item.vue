@@ -97,8 +97,7 @@
 					v-if="post.hasVideo"
 					:item="item"
 					:post="post"
-					@click.native.stop
-					@click-video-player="onClickVideoPlayer"
+					@query-param="onQueryParam"
 				/>
 
 				<app-activity-feed-devlog-post-sketchfab
