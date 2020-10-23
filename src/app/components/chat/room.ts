@@ -10,6 +10,7 @@ export class ChatRoom {
 	static readonly ROOM_VIRAL_GROUP = 'viral_group';
 
 	id!: number;
+	title!: string;
 	type!: ChatRoomType;
 	user?: ChatUser;
 	members!: ChatUser[];
@@ -42,8 +43,11 @@ export class ChatRoom {
 }
 
 export function getChatRoomTitle(room: ChatRoom, chat: ChatClient) {
-	return room.members
-		.filter(member => member.id !== chat.currentUser?.id)
-		.map(member => member.display_name)
-		.join(', ');
+	return (
+		room.title ||
+		room.members
+			.filter(member => member.id !== chat.currentUser?.id)
+			.map(member => member.display_name)
+			.join(', ')
+	);
 }
