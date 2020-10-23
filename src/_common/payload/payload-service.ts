@@ -107,12 +107,24 @@ export class Payload {
 
 			this.checkPayloadUser(response, options);
 
+			// Do not do error redirects when the user cancelled the upload file request.
+			if (this.isCancelledUpload(error)) {
+				throw error;
+			}
+
 			if (!options.noErrorRedirect) {
 				throw this.handlePayloadError(PayloadError.fromAxiosError(error));
 			} else {
 				throw error;
 			}
 		}
+	}
+
+	/**
+	 * Indicates an axios cancel token cancelled the request.
+	 */
+	static isCancelledUpload(payload: any) {
+		return payload.__CANCEL__ === true;
 	}
 
 	private static checkPayloadVersion(data: any, options: RequestOptions) {

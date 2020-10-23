@@ -1,6 +1,6 @@
 import { addWeeks, startOfDay } from 'date-fns';
 import { determine } from 'jstimezonedetect';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../utils/array';
 import { propOptional } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
@@ -160,6 +160,9 @@ export default class FormPost extends BaseForm<FormPostModel>
 	readonly GameVideo = GameVideo;
 	readonly Screen = Screen;
 	readonly FiresidePostVideo = FiresidePostVideo;
+
+	@Emit('video-upload-status-change')
+	emitVideoUploadStatusChange(_status: VideoStatus) {}
 
 	get loadUrl() {
 		return `/web/posts/manage/save/${this.model!.id}`;
@@ -910,6 +913,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 	onUploadingVideoStatusChanged(status: VideoStatus) {
 		this.uploadingVideoStatus = status;
+		this.emitVideoUploadStatusChange(this.uploadingVideoStatus);
 	}
 
 	onVideoProviderChanged(provider: string) {

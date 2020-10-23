@@ -1,3 +1,4 @@
+import { CancelTokenSource } from 'axios';
 import Component from 'vue-class-component';
 import { Emit, Prop, Watch } from 'vue-property-decorator';
 import { sleep } from '../../../../../utils/utils';
@@ -22,7 +23,9 @@ import AppFormLegend from '../../../../../_common/form-vue/legend/legend.vue';
 import { Growls } from '../../../../../_common/growls/growls.service';
 import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
 import AppLoadingFade from '../../../../../_common/loading/fade/fade.vue';
+import { Payload } from '../../../../../_common/payload/payload-service';
 import AppProgressBar from '../../../../../_common/progress/bar/bar.vue';
+import { AppResponsiveDimensions } from '../../../../../_common/responsive-dimensions/responsive-dimensions';
 import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
 import AppVideoPlayer from '../../../../../_common/video/player/player.vue';
 
@@ -67,6 +70,7 @@ type ProcessingProgress = {
 		AppVideoEmbed,
 		AppVideoPlayer,
 		AppImgResponsive,
+		AppResponsiveDimensions,
 	},
 	directives: {
 		AppFocusWhen,
@@ -88,6 +92,7 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 	videoProvider = FiresidePostVideo.PROVIDER_GAMEJOLT;
 	isDropActive = false;
 	m_videoStatus = VideoStatus.IDLE;
+	uploadCancelToken: CancelTokenSource | null = null;
 
 	/** Current video processing progress returned from backend. */
 	processingProgressData: ProcessingProgress = {
@@ -163,7 +168,7 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 	}
 
 	get canRemoveUploadingVideo() {
-		return this.videoStatus !== VideoStatus.UPLOADING;
+		return !this.wasPublished && this.videoStatus !== VideoStatus.UPLOADING;
 	}
 
 	get processingStepDisplay() {
@@ -206,9 +211,15 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		);
 	}
 
+	get showFormPlaceholder() {
+		return !this.isLoaded && !this.wasPublished;
+	}
+
 	destroyed() {
-		// Set this so it stops polling. Don't want to emit anymore though.
-		this.m_videoStatus = VideoStatus.IDLE;
+		console.log('destroy', this.videoStatus);
+		// Set this so it stops polling.
+		this.videoStatus = VideoStatus.IDLE;
+		console.log('destroyed', this.videoStatus);
 	}
 
 	onInit() {
@@ -248,19 +259,25 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 	}
 
 	async onSubmit() {
+		this.uploadCancelToken = Api.createCancelToken();
 		return Api.sendRequest(
 			`/web/posts/manage/add-video/${this.post.id}`,
 			{},
 			{
 				file: this.formModel.video,
 				progress: e => this.onProgressUpdate(e),
+				fileCancelToken: this.uploadCancelToken,
 			}
 		);
 	}
 
-	onSubmitError(_$payload: any) {
-		Growls.error(this.$gettext('Your video was not submitted successfully.'));
-		this.cancelUpload();
+	onSubmitError($payload: any) {
+		// We receive an error when the upload was cancelled, but we do not want to show an error message.
+		// It's also useless to cancel the upload again, since it was just cancelled.
+		if (!Payload.isCancelledUpload($payload)) {
+			Growls.error(this.$gettext('Your video was not submitted successfully.'));
+			this.cancelUpload();
+		}
 	}
 
 	onSubmitSuccess($payload: any) {
@@ -290,6 +307,9 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 	onProgressUpdate(e: ProgressEvent | null) {
 		if (e) {
 			this.setField('_progress', e);
+		} else {
+			// The event is null when the file is done uploading, discard cancel token now.
+			this.uploadCancelToken = null;
 		}
 	}
 
@@ -409,6 +429,12 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 	}
 
 	cancelUpload() {
+		// Cancel the file upload now.
+		if (this.uploadCancelToken) {
+			this.uploadCancelToken.cancel();
+			this.uploadCancelToken = null;
+		}
+
 		this.setField('_progress', null);
 		this.setField('video', null);
 		this.videoStatus = VideoStatus.IDLE;

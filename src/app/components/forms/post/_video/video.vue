@@ -2,7 +2,19 @@
 
 <template>
 	<app-loading-fade :is-loading="!isLoaded">
-		<template v-if="videoProvider === FiresidePostVideo.PROVIDER_GAMEJOLT">
+		<template v-if="showFormPlaceholder">
+			<app-form-legend compact :deletable="canRemoveUploadingVideo">
+				<span class="-placeholder-small" style="width: 100px" />
+			</app-form-legend>
+			<p class="help-block">
+				<span class="-placeholder-small" style="width: 230px" /><br />
+				<span class="-placeholder-small" style="width: 310px" />
+			</p>
+			<span class="-placeholder-add" />
+			<br />
+			<span class="-placeholder-small pull-right" style="width: 180px" />
+		</template>
+		<template v-else-if="videoProvider === FiresidePostVideo.PROVIDER_GAMEJOLT">
 			<app-form-legend compact :deletable="canRemoveUploadingVideo" @delete="onDeleteUpload">
 				<translate>Select Video</translate>
 			</app-form-legend>
@@ -17,7 +29,8 @@
 						:label="$gettext(`Video`)"
 					>
 						<p class="help-block">
-							<translate>Your video must be a real deal.</translate>
+							<translate>Your video must be an MP4 or WebM.</translate><br />
+							<translate>The maximum length of your video is 60 seconds.</translate>
 						</p>
 
 						<div
@@ -50,19 +63,21 @@
 							:rules="{
 								filesize: maxFilesize,
 							}"
-							accept=".mp4"
+							accept=".mp4,.webm"
 							@changed="videoSelected()"
 						/>
 					</app-form-group>
 				</app-form>
 
-				<br />
-				<a
-					class="small pull-right"
-					@click="setVideoProvider(FiresidePostVideo.PROVIDER_YOUTUBE)"
-				>
-					<translate>Link YouTube Video instead</translate>
-				</a>
+				<template v-if="!wasPublished">
+					<br />
+					<a
+						class="small pull-right"
+						@click="setVideoProvider(FiresidePostVideo.PROVIDER_YOUTUBE)"
+					>
+						<translate>Link YouTube Video instead</translate>
+					</a>
+				</template>
 			</template>
 
 			<div v-else-if="videoStatus === 'uploading'">
@@ -71,7 +86,12 @@
 				<translate>Uploading…</translate>
 				{{ number(uploadProgress, { style: 'percent' }) }}
 
-				<app-button class="pull-right" @click="cancelUpload">
+				<app-button
+					class="pull-right"
+					trans
+					:disabled="uploadProgress === 1"
+					@click="cancelUpload"
+				>
 					<translate>Cancel Upload</translate>
 				</app-button>
 			</div>
@@ -84,31 +104,36 @@
 					{{ number(processingProgress, { style: 'percent' }) }}
 				</span>
 
-				<div v-if="processingProgressData.videoPosterImgUrl" class="-video-poster-preview">
-					<!-- <app-img-responsive
-						:src="processingProgressData.videoPosterImgUrl"
-						:style="{
-							filter: videoPosterFilterValue,
-						}"
-					/> -->
-					<img
-						:src="processingProgressData.videoPosterImgUrl"
-						:style="{
-							filter: videoPosterFilterValue,
-						}"
-					/>
+				<app-responsive-dimensions :ratio="16 / 9">
+					<div
+						v-if="processingProgressData.videoPosterImgUrl"
+						class="-video-poster-preview"
+					>
+						<app-img-responsive
+							:src="processingProgressData.videoPosterImgUrl"
+							:style="{
+								filter: videoPosterFilterValue,
+							}"
+						/>
 
-					<div class="-video-poster-preview-icon-container">
+						<div class="-video-poster-preview-icon-container">
+							<app-jolticon icon="video" big class="-poster-icon" />
+						</div>
+					</div>
+					<div v-else class="-video-poster-preview -no-poster">
 						<app-jolticon icon="video" big class="-poster-icon" />
 					</div>
-				</div>
-				<div v-else class="-video-poster-preview -no-poster">
-					<app-jolticon icon="video" big class="-poster-icon" />
-				</div>
+				</app-responsive-dimensions>
 			</div>
 
 			<div v-else-if="videoStatus === 'complete'">
-				<app-video-player :poster="videoPoster" :manifests="videoManifestUrls" />
+				<app-responsive-dimensions :ratio="16 / 9">
+					<app-video-player
+						class="-video-player"
+						:poster="videoPoster"
+						:manifests="videoManifestUrls"
+					/>
+				</app-responsive-dimensions>
 			</div>
 		</template>
 		<template v-else-if="videoProvider === FiresidePostVideo.PROVIDER_YOUTUBE">
@@ -149,6 +174,7 @@
 			</app-form>
 
 			<a
+				v-if="!wasPublished"
 				class="small pull-right"
 				@click="setVideoProvider(FiresidePostVideo.PROVIDER_GAMEJOLT)"
 			>
@@ -161,6 +187,14 @@
 <style lang="stylus" scoped>
 @import '../_media/variables'
 @import '~styles-lib/mixins'
+
+.-placeholder-small
+	lazy-placeholder-inline()
+
+.-placeholder-add
+	lazy-placeholder-block()
+	width: $-height
+	height: $-height
 
 .-add
 	rounded-corners-lg()
@@ -196,13 +230,22 @@
 	overflow: hidden
 
 .-video-poster-preview
-	change-bg('bg-subtle')
+	change-bg('bg-offset')
 	rounded-corners-lg()
 	overflow: hidden
 	margin-top: 16px
 	position: relative
+	height: 100%
+	display: flex
+	justify-content: center
+	align-items: center
 
 	img
+		display: block
+		position: relative
+		max-width: 100%
+		max-height: 100%
+		rounded-corners()
 		transition: filter 0.5s ease
 
 	&-icon-container
@@ -216,11 +259,7 @@
 		align-items: center
 
 .-no-poster
-	height: 240px
 	filter: none
-	display: flex
-	justify-content: center
-	align-items: center
 
 .-poster-icon
 	filter: drop-shadow(0 0 5px rgba(0, 0, 0, 1))
