@@ -5,6 +5,7 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import { SettingVideoPlayerFeedAutoplay } from '../../../../../_common/settings/settings.service';
 import {
 	setVideoVolume,
+	toggleVideoPlayback,
 	VideoPlayerController,
 } from '../../../../../_common/video/player/controller';
 import { AppVideoPlayerShakaLazy } from '../../../lazy';
@@ -56,12 +57,12 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	}
 
 	onClickPlayback() {
+		toggleVideoPlayback(this.player);
+
 		if (this.player.state === 'playing') {
-			this.player.state = 'paused';
-			SettingVideoPlayerFeedAutoplay.set(false);
-		} else {
-			this.player.state = 'playing';
 			SettingVideoPlayerFeedAutoplay.set(true);
+		} else {
+			SettingVideoPlayerFeedAutoplay.set(false);
 		}
 	}
 

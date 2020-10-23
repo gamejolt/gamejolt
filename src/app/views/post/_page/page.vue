@@ -14,6 +14,7 @@
 							style="margin: 0 auto;"
 						>
 							<app-video-player
+								context="page"
 								:poster="video.posterUrl"
 								:manifests="video.manifestUrls"
 								:start-time="videoStartTime"

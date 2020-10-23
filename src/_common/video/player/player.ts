@@ -8,6 +8,7 @@ import {
 	setVideoVolume,
 	toggleVideoPlayback,
 	VideoPlayerController,
+	VideoPlayerControllerContext,
 } from './controller';
 import AppPlayerFullscreen from './fullscreen/fullscreen.vue';
 import AppPlayerPlayback from './playback/playback.vue';
@@ -46,8 +47,9 @@ export default class AppVideoPlayer extends Vue {
 	@Prop(propRequired(Array)) manifests!: string[];
 	@Prop(propOptional(Boolean, false)) autoplay!: boolean;
 	@Prop(propOptional(Number, 0)) startTime!: number;
+	@Prop(propOptional(String, null)) context!: VideoPlayerControllerContext;
 
-	player = new VideoPlayerController(this.poster, this.manifests, 'page');
+	player = new VideoPlayerController(this.poster, this.manifests, this.context);
 	isHovered = false;
 	private _hideUITimer?: NodeJS.Timer;
 

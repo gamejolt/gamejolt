@@ -31,8 +31,10 @@ export class VideoPlayerController {
 				this.volume = SettingVideoPlayerFeedVolume.get();
 				break;
 			case 'page':
-			case null:
 				this.volume = SettingVideoPlayerVolume.get();
+				break;
+			default:
+				this.volume = 1;
 				break;
 		}
 	}
