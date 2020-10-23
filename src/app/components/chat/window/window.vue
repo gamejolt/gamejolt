@@ -95,6 +95,16 @@
 								<br />
 								<small>@{{ room.user.username }}</small>
 							</h3>
+
+							<app-button
+								v-if="!room.isPmRoom && isOwner"
+								v-app-tooltip="$gettext('Edit Title')"
+								class="anim-fade-in"
+								circle
+								trans
+								icon="edit"
+								@click="editTitle()"
+							/>
 						</div>
 					</div>
 				</div>

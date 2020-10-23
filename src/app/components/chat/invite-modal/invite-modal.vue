@@ -16,6 +16,7 @@
 			</div>
 
 			<div class="modal-body">
+				<input class="-filter form-control" placeholder="Title" />
 				<div class="friend-select-widget">
 					<input
 						v-model="filterQuery"

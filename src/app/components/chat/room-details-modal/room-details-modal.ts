@@ -1,8 +1,22 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, InjectReactive, Prop } from 'vue-property-decorator';
 import { BaseModal } from '../../../../_common/modal/base';
+import { ChatClient, ChatKey, editTitle } from '../client';
 import { ChatRoom } from '../room';
+import { FormModel } from './form/form';
+import FormRoomDetails from './form/form.vue';
 
-@Component({})
+@Component({
+	components: {
+		FormRoomDetails,
+	},
+})
 export default class AppChatRoomDetailsModal extends BaseModal {
 	@Prop(ChatRoom) room!: ChatRoom;
+	@InjectReactive(ChatKey) chat!: ChatClient;
+
+	onSubmit(room: FormModel) {
+		editTitle(this.chat, room.title);
+
+		this.modal.dismiss();
+	}
 }
