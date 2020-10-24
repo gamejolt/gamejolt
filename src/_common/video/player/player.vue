@@ -128,6 +128,7 @@
 		rounded-corners()
 		padding: 4px 6px
 		background-color: var(--dark-theme-bg-offset)
+		color: var(--dark-theme-fg)
 		font-size: $font-size-small
 		pointer-events: none
 		user-select: none

@@ -93,14 +93,13 @@ type VideoPlayerAction =
 	| 'scrub-left'
 	| 'scrub-right'
 	| 'volume-down'
-	| 'volume-up';
-
-type VideoPlayerLabel = 'click-control' | 'click-video' | 'keybind';
+	| 'volume-up'
+	| 'load-manifest';
 
 export function trackVideoPlayerEvent(
 	player: VideoPlayerController,
 	action: VideoPlayerAction,
-	label?: VideoPlayerLabel,
+	label?: string,
 	value?: string
 ) {
 	Analytics.trackEvent(
