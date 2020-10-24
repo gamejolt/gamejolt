@@ -74,6 +74,7 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 	maxDuration = 60;
 	maxAspect = 2;
 	minAspect = 0.5;
+	allowedFiletypes: string[] = [];
 
 	videoProvider = FiresidePostVideo.PROVIDER_GAMEJOLT;
 	isDropActive = false;
@@ -162,6 +163,10 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		return !this.isLoaded && !this.wasPublished;
 	}
 
+	get allowedFiletypesString() {
+		return this.allowedFiletypes.map(i => `.${i}`).join(',');
+	}
+
 	onInit() {
 		// Set the video_url field based on the input post.
 		// This is important when opening this form for editing.
@@ -190,6 +195,7 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		this.maxDuration = $payload.maxDuration;
 		this.maxAspect = $payload.maxAspect;
 		this.minAspect = $payload.minAspect;
+		this.allowedFiletypes = $payload.allowedFiletypes;
 
 		// If backend sends progress info, it means the attached uploaded video
 		// is being processed. However, if the user previously quit out of the

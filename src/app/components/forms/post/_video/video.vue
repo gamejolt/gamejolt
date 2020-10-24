@@ -4,15 +4,17 @@
 	<app-loading-fade :is-loading="!isLoaded">
 		<template v-if="shouldShowFormPlaceholder">
 			<app-form-legend compact :deletable="canRemoveUploadingVideo">
-				<span class="-placeholder-small" style="width: 100px" />
+				<span class="lazy-placeholder" style="width: 100px" />
 			</app-form-legend>
 			<p class="help-block">
-				<span class="-placeholder-small" style="width: 230px" /><br />
-				<span class="-placeholder-small" style="width: 310px" />
+				<span class="lazy-placeholder" style="width: 230px" />
+				<br />
+				<span class="lazy-placeholder" style="width: 310px" />
 			</p>
 			<span class="-placeholder-add" />
-			<br />
-			<span class="-placeholder-small pull-right" style="width: 180px" />
+			<div class="text-right">
+				<span class="-placeholder-button" style="width: 180px" />
+			</div>
 		</template>
 		<template v-else-if="videoProvider === FiresidePostVideo.PROVIDER_GAMEJOLT">
 			<app-form-legend compact :deletable="canRemoveUploadingVideo" @delete="onDeleteUpload">
@@ -29,8 +31,20 @@
 						:label="$gettext(`Video`)"
 					>
 						<p class="help-block">
-							<translate>Your video must be an MP4 or WebM.</translate><br />
-							<translate>The maximum length of your video is 60 seconds.</translate>
+							<translate>
+								Only short videos of 60 seconds or less are allowed at this time.
+							</translate>
+							<br />
+							<translate>
+								Video filetypes currently supported:
+							</translate>
+							<span
+								v-for="filetype of allowedFiletypes"
+								:key="filetype"
+								style="margin-right: 2px"
+							>
+								<code>{{ filetype }}</code>
+							</span>
 						</p>
 
 						<div
@@ -63,21 +77,17 @@
 							:rules="{
 								filesize: maxFilesize,
 							}"
-							accept=".mp4,.webm"
+							:accept="allowedFiletypesString"
 							@changed="videoSelected()"
 						/>
 					</app-form-group>
 				</app-form>
 
-				<template v-if="!wasPublished">
-					<br />
-					<a
-						class="small pull-right"
-						@click="setVideoProvider(FiresidePostVideo.PROVIDER_YOUTUBE)"
-					>
+				<div v-if="!wasPublished" class="text-right">
+					<app-button trans @click="setVideoProvider(FiresidePostVideo.PROVIDER_YOUTUBE)">
 						<translate>Add YouTube video instead</translate>
-					</a>
-				</template>
+					</app-button>
+				</div>
 			</template>
 			<template v-else-if="videoStatus === 'uploading'">
 				<app-progress-bar :percent="uploadProgress * 100" />
@@ -148,13 +158,11 @@
 				</app-form-group>
 			</app-form>
 
-			<a
-				v-if="!wasPublished"
-				class="small pull-right"
-				@click="setVideoProvider(FiresidePostVideo.PROVIDER_GAMEJOLT)"
-			>
-				<translate>Upload video instead</translate>
-			</a>
+			<div v-if="!wasPublished" class="text-right">
+				<app-button trans @click="setVideoProvider(FiresidePostVideo.PROVIDER_GAMEJOLT)">
+					<translate>Upload video instead</translate>
+				</app-button>
+			</div>
 		</template>
 	</app-loading-fade>
 </template>
@@ -163,13 +171,14 @@
 @import '../_media/variables'
 @import '~styles-lib/mixins'
 
-.-placeholder-small
-	lazy-placeholder-inline()
-
 .-placeholder-add
 	lazy-placeholder-block()
-	width: $-height
-	height: $-height
+	width: $-height + $border-width-large
+	height: $-height + $border-width-large
+
+.-placeholder-button
+	lazy-placeholder-inline()
+	height: $button-md-line-height
 
 .-add
 	rounded-corners-lg()
@@ -177,7 +186,7 @@
 	display: inline-block
 	vertical-align: top
 	text-align: center
-	border-width: 2px
+	border-width: $border-width-large
 	border-style: dashed
 	margin-right: $-padding
 	transition: border-color 0.1s ease

@@ -31,7 +31,9 @@ export class FiresidePostVideo extends Model {
 	}
 
 	get manifestUrls() {
-		return this.media.filter(i => i.type === MediaItem.TYPE_TRANSCODED).map(i => i.img_url);
+		return this.media
+			.filter(i => i.type === MediaItem.TYPE_TRANSCODED && i.filename.endsWith('.mpd'))
+			.map(i => i.img_url);
 	}
 }
 
