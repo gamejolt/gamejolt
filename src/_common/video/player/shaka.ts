@@ -4,6 +4,14 @@ import { Component, Prop, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
 import { trackVideoPlayerEvent, VideoPlayerController } from './controller';
 
+type ShakaTrack = {
+	active: boolean;
+	// bandwidth: number;
+	id: number;
+	// audioBandwidth: number;
+	videoBandwidth: number;
+};
+
 @Component({})
 export default class AppVideoPlayerShaka extends Vue {
 	@Prop(propRequired(VideoPlayerController)) player!: VideoPlayerController;
@@ -12,6 +20,8 @@ export default class AppVideoPlayerShaka extends Vue {
 	private tempVolume = 0;
 	private shakaPlayer?: ShakaPlayer;
 	private isDestroyed = false;
+	private previousState: ShakaTrack | null = null;
+	private currentState: ShakaTrack | null = null;
 
 	$refs!: {
 		video: HTMLVideoElement;
@@ -54,6 +64,39 @@ export default class AppVideoPlayerShaka extends Vue {
 		});
 
 		this.shakaPlayer.addEventListener('error', onErrorEvent);
+		this.shakaPlayer.addEventListener('adaptation', () => {
+			const tracks: ShakaTrack[] = this.shakaPlayer!.getVariantTracks();
+
+			if (this.currentState) {
+				this.previousState = this.currentState;
+			}
+
+			this.currentState = tracks.find(i => i.active) || null;
+
+			if (this.previousState && this.currentState) {
+				const prev = this.previousState;
+				const next = this.currentState;
+
+				if (prev === next) {
+					return;
+				}
+
+				let eventAction =
+					prev.videoBandwidth < next.videoBandwidth ? 'increase-' : 'decrease-';
+				eventAction += Math.abs(prev.id - next.id);
+
+				if (!eventAction) {
+					return;
+				}
+
+				trackVideoPlayerEvent(
+					this.player,
+					'bitrate-change',
+					eventAction,
+					`${next.videoBandwidth}`
+				);
+			}
+		});
 
 		if (this.player.manifests.length === 0) {
 			throw new Error(`No manifests to load.`);

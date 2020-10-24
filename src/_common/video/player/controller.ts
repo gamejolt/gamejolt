@@ -83,22 +83,9 @@ export function queueVideoFullscreenChange(player: VideoPlayerController, fullsc
 	player.queuedFullScreenChange = fullscreen;
 }
 
-type VideoPlayerAction =
-	| 'play'
-	| 'pause'
-	| 'mute'
-	| 'unmute'
-	| 'fullscreen'
-	| 'un-fullscreen'
-	| 'scrub-left'
-	| 'scrub-right'
-	| 'volume-down'
-	| 'volume-up'
-	| 'load-manifest';
-
 export function trackVideoPlayerEvent(
 	player: VideoPlayerController,
-	action: VideoPlayerAction,
+	action: string,
 	label?: string,
 	value?: string
 ) {
