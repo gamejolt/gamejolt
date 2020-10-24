@@ -22,7 +22,7 @@
 					/>
 
 					<div class="-preview-icon-container">
-						<app-jolticon icon="video" big class="-poster-icon" />
+						<app-jolticon icon="video" big class="-poster-icon -overlay-icon" />
 					</div>
 				</template>
 				<app-jolticon v-else icon="video" big class="-poster-icon" />
@@ -80,4 +80,7 @@
 
 .-poster-icon
 	filter: drop-shadow(0 0 5px rgba(0, 0, 0, 1))
+
+.-overlay-icon
+	color: white
 </style>

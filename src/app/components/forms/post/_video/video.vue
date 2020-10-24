@@ -4,7 +4,7 @@
 	<app-loading-fade :is-loading="!isLoaded">
 		<template v-if="shouldShowFormPlaceholder">
 			<app-form-legend compact :deletable="canRemoveUploadingVideo">
-				<span class="-placeholder-small" style="width: 100px" />
+				<span class="-placeholder-small" style="width: 60px" />
 			</app-form-legend>
 			<p class="help-block">
 				<span class="-placeholder-small" style="width: 230px" /><br />
@@ -203,36 +203,4 @@
 .-video-embed
 	rounded-corners-lg()
 	overflow: hidden
-
-.-video-poster-preview
-	change-bg('bg-offset')
-	rounded-corners-lg()
-	overflow: hidden
-	margin-top: 16px
-	position: relative
-	height: 100%
-	display: flex
-	justify-content: center
-	align-items: center
-
-	img
-		display: block
-		position: relative
-		max-width: 100%
-		max-height: 100%
-		rounded-corners()
-		transition: filter 0.5s ease
-
-	&-icon-container
-		position: absolute
-		left: 0
-		top: 0
-		right: 0
-		bottom: 0
-		display: flex
-		justify-content: center
-		align-items: center
-
-.-poster-icon
-	filter: drop-shadow(0 0 5px rgba(0, 0, 0, 1))
 </style>
