@@ -30,7 +30,13 @@
 		</app-responsive-dimensions>
 
 		<br />
-		<app-progress-bar :percent="progress" :indeterminate="isIndeterminate" thin />
+		<app-progress-bar
+			:percent="progress"
+			:indeterminate="isIndeterminate"
+			thin
+			animate
+			active
+		/>
 
 		<div>
 			<translate>Your video is currently being processed.</translate>
