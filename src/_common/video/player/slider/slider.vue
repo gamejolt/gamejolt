@@ -47,7 +47,6 @@
 	position: relative
 	margin: auto
 	background-color: rgba($white, 0.5)
-	box-shadow: 0 0 2px var(--theme-light)
 	display: flex
 	justify-content: center
 	align-items: center
@@ -55,12 +54,12 @@
 	&-filled
 		position: absolute
 		background-color: $white
+		border-radius: $border-radius-small
 
 .-slider-thumb
 	position: absolute
 	border-radius: 50%
-	background-color: var(--theme-lightest)
-	border: 1px solid var(--theme-lighter)
+	background-color: $white
 	z-index: 2
 	cursor: pointer
 

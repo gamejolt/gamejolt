@@ -40,7 +40,7 @@ export default class AppVideoPlayerShaka extends Vue {
 
 		this.shakaPlayer = new ShakaPlayer(this.$refs.video);
 
-		console.log('Shaka Configuration', this.shakaPlayer.getConfiguration());
+		// console.log('Shaka Configuration', this.shakaPlayer.getConfiguration());
 		this.shakaPlayer.configure({
 			abr: {
 				// The goal is to select the 720p format by default.
