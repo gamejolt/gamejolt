@@ -8,7 +8,11 @@
 			<div class="-bottom-gradient">
 				<div class="-bottom-controls" @click.stop>
 					<transition name="fade">
-						<div v-if="shouldShowUI" class="-control" @click="onClickPlayback">
+						<div
+							v-if="shouldShowPlaybackControl"
+							class="-control"
+							@click="onClickPlayback"
+						>
 							<app-jolticon :icon="player.state === 'playing' ? 'pause' : 'play'" />
 						</div>
 					</transition>
@@ -41,7 +45,11 @@
 								</transition>
 							</template>
 							<template v-else-if="control === 'volume'">
-								<div v-if="shouldShowUI" class="-control" @click="onClickMute">
+								<div
+									v-if="shouldShowMuteControl"
+									class="-control"
+									@click="onClickMute"
+								>
 									<app-jolticon
 										:icon="player.volume > 0 ? 'audio' : 'audio-mute'"
 									/>

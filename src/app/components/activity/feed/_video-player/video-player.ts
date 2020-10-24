@@ -26,8 +26,12 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 
 	readonly Screen = Screen;
 
-	get shouldShowUI() {
+	get shouldShowPlaybackControl() {
 		return Screen.isMobile || this.isHovered || this.player.state === 'paused';
+	}
+
+	get shouldShowMuteControl() {
+		return Screen.isMobile || this.isHovered || this.player.volume === 0;
 	}
 
 	get remainingTime() {
