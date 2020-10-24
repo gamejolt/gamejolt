@@ -37,10 +37,12 @@
 						autoplay
 					/>
 				</div>
-				<div class="-video-stats">
-					<app-jolticon icon="play" />
-					<span class="-video-stats-label">{{ number(video.view_count) }}</span>
-				</div>
+				<template v-if="video.provider === 'gamejolt'">
+					<div class="-video-stats">
+						<app-jolticon icon="play" />
+						<span class="-video-stats-label">{{ number(video.view_count) }}</span>
+					</div>
+				</template>
 			</template>
 
 			<div class="-row">
