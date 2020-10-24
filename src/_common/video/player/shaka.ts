@@ -2,7 +2,7 @@ import { Player as ShakaPlayer, polyfill } from 'shaka-player';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
-import { VideoPlayerController } from './controller';
+import { trackVideoPlayerEvent, VideoPlayerController } from './controller';
 
 @Component({})
 export default class AppVideoPlayerShaka extends Vue {
@@ -59,6 +59,8 @@ export default class AppVideoPlayerShaka extends Vue {
 			throw new Error(`No manifests to load.`);
 		}
 
+		let manifestType: string | undefined;
+
 		// We go with the first one that loads in properly. This way if DASH is
 		// unsupported in the browser, we fallback to HLS.
 		for (const manifest of this.player.manifests) {
@@ -68,12 +70,16 @@ export default class AppVideoPlayerShaka extends Vue {
 
 			try {
 				await this.shakaPlayer.load(manifest);
-
+				manifestType = manifest.split('.').pop();
 				// Don't attempt to load next manifest, this one worked.
 				break;
 			} catch (e) {
 				onError(e);
 			}
+		}
+
+		if (manifestType) {
+			trackVideoPlayerEvent(this.player, 'load-manifest', manifestType);
 		}
 
 		function onErrorEvent(event: any) {
