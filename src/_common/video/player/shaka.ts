@@ -22,6 +22,7 @@ export default class AppVideoPlayerShaka extends Vue {
 	private isDestroyed = false;
 	private previousState: ShakaTrack | null = null;
 	private currentState: ShakaTrack | null = null;
+	private videoStartTime = 0;
 
 	$refs!: {
 		video: HTMLVideoElement;
@@ -32,6 +33,7 @@ export default class AppVideoPlayerShaka extends Vue {
 	}
 
 	beforeDestroy() {
+		this.trackPlaytime();
 		this.isDestroyed = true;
 		if (this.shakaPlayer) {
 			this.shakaPlayer.destroy();
@@ -154,8 +156,14 @@ export default class AppVideoPlayerShaka extends Vue {
 
 		const { video } = this.$refs;
 
-		video.addEventListener('play', () => (this.player.state = 'playing'));
-		video.addEventListener('pause', () => (this.player.state = 'paused'));
+		video.addEventListener('play', () => {
+			this.player.state = 'playing';
+			this.videoStartTime = Date.now();
+		});
+		video.addEventListener('pause', () => {
+			this.player.state = 'paused';
+			this.trackPlaytime();
+		});
 		video.addEventListener('volumechange', () => (this.player.volume = video.volume));
 		video.addEventListener('durationchange', () => {
 			if (video.duration) {
@@ -173,6 +181,18 @@ export default class AppVideoPlayerShaka extends Vue {
 			}
 			this.player.bufferedTo = time;
 		});
+	}
+
+	private trackPlaytime() {
+		if (!this.videoStartTime) {
+			return;
+		}
+
+		const playtime = Date.now() - this.videoStartTime;
+		const loops = Math.floor(playtime / this.player.duration);
+		trackVideoPlayerEvent(this.player, 'watched', 'playtime', `${Math.ceil(playtime / 1000)}`);
+		trackVideoPlayerEvent(this.player, 'watched', 'loops', `${loops}`);
+		this.videoStartTime = 0;
 	}
 
 	private tryPlayingVideo() {
