@@ -654,6 +654,7 @@
 						primary
 						solid
 						:block="Screen.isXs"
+						@before-submit="onPublishSubmit()"
 					>
 						{{ mainActionText }}
 					</app-form-button>

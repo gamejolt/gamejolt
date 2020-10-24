@@ -16,7 +16,7 @@
 		</template>
 		<template v-else-if="videoProvider === FiresidePostVideo.PROVIDER_GAMEJOLT">
 			<app-form-legend compact :deletable="canRemoveUploadingVideo" @delete="onDeleteUpload">
-				<translate>Select Video</translate>
+				<translate>Video</translate>
 			</app-form-legend>
 
 			<template v-if="videoStatus === 'idle'">
@@ -75,15 +75,14 @@
 						class="small pull-right"
 						@click="setVideoProvider(FiresidePostVideo.PROVIDER_YOUTUBE)"
 					>
-						<translate>Link YouTube Video instead</translate>
+						<translate>Add YouTube video instead</translate>
 					</a>
 				</template>
 			</template>
-
-			<div v-else-if="videoStatus === 'uploading'">
+			<template v-else-if="videoStatus === 'uploading'">
 				<app-progress-bar :percent="uploadProgress * 100" />
 
-				<translate>Uploading…</translate>
+				<translate>Uploading...</translate>
 				{{ number(uploadProgress, { style: 'percent' }) }}
 
 				<app-button
@@ -94,43 +93,15 @@
 				>
 					<translate>Cancel Upload</translate>
 				</app-button>
-			</div>
-
-			<div v-else-if="videoStatus === 'processing'">
-				<app-progress-bar
-					:percent="shouldShowDetailedProgress ? processingProgress * 100 : 100"
-					thin
-					indeterminate
-					active
+			</template>
+			<template v-else-if="videoStatus === 'processing'">
+				<app-video-processing-progress
+					:post="post"
+					@complete="onProcessingComplete"
+					@error="onProcessingError"
 				/>
-
-				<span>
-					{{ processingStepDisplay }}
-					<template v-if="shouldShowDetailedProgress">
-						{{ number(processingProgress, { style: 'percent' }) }}
-					</template>
-				</span>
-
-				<app-responsive-dimensions :ratio="16 / 9">
-					<div class="-video-poster-preview">
-						<template v-if="processingProgressData.videoPosterImgUrl">
-							<app-img-responsive
-								:src="processingProgressData.videoPosterImgUrl"
-								:style="{
-									filter: videoPosterFilterValue,
-								}"
-							/>
-
-							<div class="-video-poster-preview-icon-container">
-								<app-jolticon icon="video" big class="-poster-icon" />
-							</div>
-						</template>
-						<app-jolticon v-else icon="video" big class="-poster-icon" />
-					</div>
-				</app-responsive-dimensions>
-			</div>
-
-			<div v-else-if="videoStatus === 'complete'">
+			</template>
+			<template v-else-if="videoStatus === 'complete'">
 				<app-responsive-dimensions :ratio="16 / 9">
 					<app-video-player
 						class="-video-player"
@@ -138,7 +109,7 @@
 						:manifests="videoManifestUrls"
 					/>
 				</app-responsive-dimensions>
-			</div>
+			</template>
 		</template>
 		<template v-else-if="videoProvider === FiresidePostVideo.PROVIDER_YOUTUBE">
 			<app-form-legend compact deletable @delete="emitDelete">
@@ -182,7 +153,7 @@
 				class="small pull-right"
 				@click="setVideoProvider(FiresidePostVideo.PROVIDER_GAMEJOLT)"
 			>
-				<translate>Upload Video instead</translate>
+				<translate>Upload video instead</translate>
 			</a>
 		</template>
 	</app-loading-fade>

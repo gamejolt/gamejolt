@@ -1,7 +1,6 @@
 import { CancelTokenSource } from 'axios';
 import Component from 'vue-class-component';
 import { Emit, Prop, Watch } from 'vue-property-decorator';
-import { sleep } from '../../../../../utils/utils';
 import { propRequired } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
 import { number } from '../../../../../_common/filters/number';
@@ -21,7 +20,6 @@ import {
 } from '../../../../../_common/form-vue/form.service';
 import AppFormLegend from '../../../../../_common/form-vue/legend/legend.vue';
 import { Growls } from '../../../../../_common/growls/growls.service';
-import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
 import AppLoadingFade from '../../../../../_common/loading/fade/fade.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { Payload } from '../../../../../_common/payload/payload-service';
@@ -29,6 +27,7 @@ import AppProgressBar from '../../../../../_common/progress/bar/bar.vue';
 import { AppResponsiveDimensions } from '../../../../../_common/responsive-dimensions/responsive-dimensions';
 import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
 import AppVideoPlayer from '../../../../../_common/video/player/player.vue';
+import AppVideoProcessingProgress from '../../../../../_common/video/processing-progress/processing-progress.vue';
 
 interface FormModel {
 	video: File | null;
@@ -47,26 +46,6 @@ export const enum VideoStatus {
 	COMPLETE = 'complete',
 }
 
-const enum ProcessingProgressStepName {
-	INITIALIZING = 'initializing',
-	PROCESSING = 'processing',
-	COMPLETE = 'complete',
-}
-
-type ProcessingProgress = {
-	step: ProcessingProgressStepName;
-	stepNum: number;
-	totalSteps: number;
-	// One of the first things during processing is generating a poster.
-	// We can show that poster once it's returned as a preview for the video.
-	videoPosterImgUrl: string | null;
-	/**
-	 * Indicates whether or not the backend is confident in the progress to show
-	 * a detailed progress indicator (percentage and progress bar).
-	 */
-	showDetailedProgress?: boolean;
-};
-
 @Component({
 	components: {
 		AppLoadingFade,
@@ -75,7 +54,7 @@ type ProcessingProgress = {
 		AppFormLegend,
 		AppVideoEmbed,
 		AppVideoPlayer,
-		AppImgResponsive,
+		AppVideoProcessingProgress,
 		AppResponsiveDimensions,
 	},
 	directives: {
@@ -100,14 +79,6 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 	isDropActive = false;
 	m_videoStatus = VideoStatus.IDLE;
 	uploadCancelToken: CancelTokenSource | null = null;
-
-	/** Current video processing progress returned from backend. */
-	processingProgressData: ProcessingProgress = {
-		step: ProcessingProgressStepName.INITIALIZING,
-		stepNum: 0,
-		totalSteps: 100,
-		videoPosterImgUrl: null,
-	};
 
 	readonly FiresidePostVideo = FiresidePostVideo;
 	readonly number = number;
@@ -145,10 +116,6 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		return progressEvent.loaded / progressEvent.total;
 	}
 
-	get processingProgress() {
-		return this.processingProgressData.stepNum / this.processingProgressData.totalSteps;
-	}
-
 	get videoStatus() {
 		return this.m_videoStatus;
 	}
@@ -178,17 +145,6 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		return !this.wasPublished && this.videoStatus !== VideoStatus.UPLOADING;
 	}
 
-	get processingStepDisplay() {
-		switch (this.processingProgressData.step) {
-			case ProcessingProgressStepName.INITIALIZING:
-				return this.$gettext('Initializing...');
-			case ProcessingProgressStepName.PROCESSING:
-				return this.$gettext('Processing...');
-			case ProcessingProgressStepName.COMPLETE:
-				return this.$gettext('Finalizing...');
-		}
-	}
-
 	get uploadedVideo() {
 		const video = this.post.videos[0];
 		return video && video.provider === FiresidePostVideo.PROVIDER_GAMEJOLT ? video : null;
@@ -202,42 +158,8 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		return this.uploadedVideo?.posterUrl;
 	}
 
-	get videoPosterFilterValue() {
-		// When the video is "done" processing and has no detailed progress,
-		// don't have any blur on the image.
-		// When we have more detailed progress, we can keep a slight blur since when the video
-		// finishes processing, the video player will show instead.
-		const blur =
-			!this.shouldShowDetailedProgress && this.processingProgress === 1
-				? 0
-				: Math.max(1, 3 - this.processingProgress * 4);
-
-		return (
-			`brightness(${0.7 + this.processingProgress * 0.3}) ` +
-			`grayscale(${1 - this.processingProgress}) ` +
-			`blur(${blur}px)`
-		);
-	}
-
-	get shouldPoll() {
-		return (
-			this.videoProvider === FiresidePostVideo.PROVIDER_GAMEJOLT &&
-			this.videoStatus === VideoStatus.PROCESSING &&
-			this.$el.isConnected
-		);
-	}
-
 	get shouldShowFormPlaceholder() {
 		return !this.isLoaded && !this.wasPublished;
-	}
-
-	get shouldShowDetailedProgress() {
-		return this.processingProgressData.showDetailedProgress === true;
-	}
-
-	beforeDestroy() {
-		// Set this so it stops polling.
-		this.videoStatus = VideoStatus.IDLE;
 	}
 
 	onInit() {
@@ -254,7 +176,8 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 			} else if (video.provider === FiresidePostVideo.PROVIDER_GAMEJOLT) {
 				this.setField('video_url', '');
 				this.setVideoProvider(FiresidePostVideo.PROVIDER_GAMEJOLT);
-				// Set to complete for now, we get processing info in onLoad in case the video is still processing.
+				// Set to complete for now, we get processing info in onLoad in
+				// case the video is still processing.
 				this.videoStatus = VideoStatus.COMPLETE;
 			}
 		} else {
@@ -268,16 +191,14 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		this.maxAspect = $payload.maxAspect;
 		this.minAspect = $payload.minAspect;
 
-		// If backend sends progress info, it means the attached uploaded video is being processed.
-		// However, if the user previously quit out of the video attaching, their previous video might
-		// still be processing in the background. We want to allow them to upload a new video instead.
-		// If they close and reopen the form without saving the post, their video from before will reappear.
+		// If backend sends progress info, it means the attached uploaded video
+		// is being processed. However, if the user previously quit out of the
+		// video attaching, their previous video might still be processing in
+		// the background. We want to allow them to upload a new video instead.
+		// If they close and reopen the form without saving the post, their
+		// video from before will reappear.
 		if (this.canContinueProcessing && $payload.progress) {
-			this.processingProgressData = $payload.progress;
 			this.videoStatus = VideoStatus.PROCESSING;
-
-			// Start polling now.
-			this.pollVideoProcessing();
 		}
 	}
 
@@ -295,8 +216,9 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 	}
 
 	onSubmitError($payload: any) {
-		// We receive an error when the upload was cancelled, but we do not want to show an error message.
-		// It's also useless to cancel the upload again, since it was just cancelled.
+		// We receive an error when the upload was cancelled, but we do not want
+		// to show an error message. It's also useless to cancel the upload
+		// again, since it was just cancelled.
 		if (!Payload.isCancelledUpload($payload)) {
 			Growls.error(this.$gettext('Your video was not submitted successfully.'));
 			this.cancelUpload();
@@ -313,16 +235,14 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 
 		this.emitVideoChange(new FiresidePostVideo($payload.video));
 		this.videoStatus = VideoStatus.PROCESSING;
-
-		// Once the video file is fully submitted, start polling for processing progress.
-		this.pollVideoProcessing();
 	}
 
 	videoSelected() {
 		if (this.formModel.video !== null) {
 			this.$refs.form.submit();
 			this.videoStatus = VideoStatus.UPLOADING;
-			// Reset the video url here to indicate to the backend that we are now uploading a video.
+			// Reset the video url here to indicate to the backend that we are
+			// now uploading a video.
 			this.setField('video_url', '');
 		}
 	}
@@ -331,7 +251,8 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		if (e) {
 			this.setField('_progress', e);
 		} else {
-			// The event is null when the file is done uploading, discard cancel token now.
+			// The event is null when the file is done uploading, discard cancel
+			// token now.
 			this.uploadCancelToken = null;
 		}
 	}
@@ -375,80 +296,45 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		this.$refs.upload.showFileSelect();
 	}
 
-	async pollVideoProcessing() {
-		const payload = await Api.sendRequest(
-			`/web/posts/manage/add-video-progress/${this.post.id}`,
-			undefined,
-			{ detach: true }
-		);
-
-		// Falsy success indicates the processing failed.
-		// The initial add-video request should return with a form error, so we just stop
-		// polling here.
-		if (!payload.success) {
-			if (payload.reason) {
-				Growls.error(
-					this.$gettextInterpolate(
-						'The server was unable to finish processing your video. Status: %{ reason }',
-						{ reason: (payload.reason as string).toUpperCase().replace('-', '_') }
-					)
-				);
-			} else {
-				Growls.error(
-					this.$gettext(
-						'The server was unable to finish processing your video. Status: GENERIC_FAILURE'
-					)
-				);
-			}
+	onProcessingComplete({ video }: any) {
+		// Final progress update must have the result video set.
+		if (!video) {
+			Growls.error(this.$gettext('The server did not return the processed video.'));
 			this.cancelUpload();
 			return;
 		}
 
-		if (!this.shouldPoll) {
-			this.cancelUpload();
-			return;
+		Growls.success({
+			title: this.$gettext('📽 Video uploaded!'),
+			message: this.$gettext(
+				'Your video was successfully processed. The post can now be published.'
+			),
+			// Send as system notification because the user might tab away from the window
+			// since the uploading/processing can take a while.
+			system: true,
+		});
+
+		this.videoStatus = VideoStatus.COMPLETE;
+		this.emitVideoChange(new FiresidePostVideo(video));
+	}
+
+	onProcessingError(payload: any) {
+		if (payload.reason) {
+			Growls.error(
+				this.$gettextInterpolate(
+					'The server was unable to finish processing your video. Status: %{ reason }',
+					{ reason: (payload.reason as string).toUpperCase().replace('-', '_') }
+				)
+			);
+		} else {
+			Growls.error(
+				this.$gettext(
+					'The server was unable to finish processing your video. Status: GENERIC_FAILURE'
+				)
+			);
 		}
 
-		if (payload.progress) {
-			this.processingProgressData = payload.progress;
-			if (this.processingProgressData.videoPosterImgUrl === '') {
-				this.processingProgressData.videoPosterImgUrl = null;
-			}
-
-			if (this.processingProgressData.step === ProcessingProgressStepName.COMPLETE) {
-				// Final progress update must have the result video set.
-				if (!payload.video) {
-					Growls.error(this.$gettext('The server did not return the processed video.'));
-					this.cancelUpload();
-					return;
-				}
-
-				Growls.success({
-					title: this.$gettext('📽 Video uploaded!'),
-					message: this.$gettext(
-						'Your video was successfully uploaded and processed. The post can now be published.'
-					),
-					// Send as system notification because the user might tab away from the window
-					// since the uploading/processing can take a while.
-					system: true,
-				});
-
-				this.videoStatus = VideoStatus.COMPLETE;
-				this.emitVideoChange(new FiresidePostVideo(payload.video));
-				return;
-			}
-		}
-
-		// Wait 1s after receiving an update to poll for progress again.
-		await sleep(1000);
-
-		// Check again if we should still poll after waiting.
-		if (!this.shouldPoll) {
-			this.cancelUpload();
-			return;
-		}
-
-		this.pollVideoProcessing();
+		this.cancelUpload();
 	}
 
 	cancelUpload() {
@@ -461,7 +347,6 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		this.setField('_progress', null);
 		this.setField('video', null);
 		this.videoStatus = VideoStatus.IDLE;
-		this.processingProgressData.step = ProcessingProgressStepName.INITIALIZING;
 	}
 
 	setVideoProvider(provider: string) {

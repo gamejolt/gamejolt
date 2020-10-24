@@ -375,8 +375,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 			this.setField('post_to_user_profile', true);
 		}
 
-		this.setField('status', FiresidePost.STATUS_ACTIVE);
-
 		this.setField('attached_communities', []);
 
 		if (model.videos.length) {
@@ -521,6 +519,10 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 	onDraftSubmit() {
 		this.setField('status', FiresidePost.STATUS_DRAFT);
+	}
+
+	onPublishSubmit() {
+		this.setField('status', FiresidePost.STATUS_ACTIVE);
 	}
 
 	async onSubmit() {

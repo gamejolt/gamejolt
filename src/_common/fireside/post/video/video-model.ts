@@ -12,6 +12,7 @@ export class FiresidePostVideo extends Model {
 	thumbnail_url!: string;
 	view_count!: number;
 	media: MediaItem[] = [];
+	is_processing!: boolean;
 
 	constructor(data: any = {}) {
 		super(data);

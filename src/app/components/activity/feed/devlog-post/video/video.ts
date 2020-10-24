@@ -6,6 +6,7 @@ import { $viewPostVideo } from '../../../../../../_common/fireside/post/video/vi
 import { AppImgResponsive } from '../../../../../../_common/img/responsive/responsive';
 import AppMediaItemBackdrop from '../../../../../../_common/media-item/backdrop/backdrop.vue';
 import { AppResponsiveDimensions } from '../../../../../../_common/responsive-dimensions/responsive-dimensions';
+import AppVideoProcessingProgress from '../../../../../../_common/video/processing-progress/processing-progress.vue';
 import { ActivityFeedItem } from '../../item-service';
 import { ActivityFeedKey, ActivityFeedView } from '../../view';
 import AppActivityFeedVideoEmbed from '../../_video-embed/video-embed.vue';
@@ -25,6 +26,7 @@ const LoadDelay = 500;
 		AppResponsiveDimensions,
 		AppMediaItemBackdrop,
 		AppImgResponsive,
+		AppVideoProcessingProgress,
 	},
 })
 export default class AppActivityFeedDevlogPostVideo extends Vue {
@@ -88,5 +90,11 @@ export default class AppActivityFeedDevlogPostVideo extends Vue {
 
 	onVideoPlay() {
 		$viewPostVideo(this.video);
+	}
+
+	onProcessingComplete(payload: any) {
+		if (payload.video && this.video) {
+			this.video.assign(payload.video);
+		}
 	}
 }

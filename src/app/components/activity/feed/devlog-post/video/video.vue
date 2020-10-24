@@ -3,7 +3,7 @@
 <template>
 	<div v-if="video.provider === 'gamejolt'" class="-responsive">
 		<app-responsive-dimensions
-			v-if="video.posterMediaItem"
+			v-if="!video.is_processing && video.posterMediaItem"
 			class="-video-container"
 			:ratio="video.posterMediaItem.width / video.posterMediaItem.height"
 		>
@@ -28,9 +28,9 @@
 				/>
 			</app-media-item-backdrop>
 		</app-responsive-dimensions>
-		<template v-else>
-			<!-- JODO: Placeholder? -->
-		</template>
+		<div v-else class="well sans-rounded fill-offset">
+			<app-video-processing-progress :post="post" @complete="onProcessingComplete" />
+		</div>
 	</div>
 	<app-activity-feed-video-embed
 		v-else

@@ -7,7 +7,7 @@
 				<div class="full-bleed-xs">
 					<template v-if="video.provider === 'gamejolt'">
 						<app-responsive-dimensions
-							v-if="video.posterMediaItem"
+							v-if="!video.is_processing && video.posterMediaItem"
 							:ratio="video.posterMediaItem.width / video.posterMediaItem.height"
 							:max-width="video.posterMediaItem.width"
 							:max-height="deviceMaxHeight"
@@ -23,7 +23,10 @@
 							/>
 						</app-responsive-dimensions>
 						<template v-else>
-							<!-- JODO: Placeholder? -->
+							<app-video-processing-progress
+								:post="post"
+								@complete="onProcessingComplete"
+							/>
 						</template>
 					</template>
 					<app-video-embed

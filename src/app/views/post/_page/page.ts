@@ -35,6 +35,7 @@ import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue'
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
 import AppVideoEmbed from '../../../../_common/video/embed/embed.vue';
 import AppVideoPlayer from '../../../../_common/video/player/player.vue';
+import AppVideoProcessingProgress from '../../../../_common/video/processing-progress/processing-progress.vue';
 import AppVideo from '../../../../_common/video/video.vue';
 import AppEventItemControls from '../../../components/event-item/controls/controls.vue';
 import AppGameBadge from '../../../components/game/badge/badge.vue';
@@ -66,6 +67,7 @@ import AppPollVoting from '../../../components/poll/voting/voting.vue';
 		AppScrollScroller,
 		AppGameBadge,
 		AppUserVerifiedTick,
+		AppVideoProcessingProgress,
 	},
 })
 export default class AppPostPage extends Vue implements LightboxMediaSource {
@@ -171,6 +173,12 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 
 	goPrev() {
 		this.activeImageIndex = Math.max(this.activeImageIndex - 1, 0);
+	}
+
+	onProcessingComplete(payload: any) {
+		if (payload.video && this.video) {
+			this.video.assign(payload.video);
+		}
 	}
 
 	onPostRemoved() {
