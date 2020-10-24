@@ -197,6 +197,10 @@ export default class AppVideoPlayerShaka extends Vue {
 
 	private tryPlayingVideo() {
 		const { video } = this.$refs;
+		if (!video) {
+			return;
+		}
+
 		video.play().catch(() => {
 			// If autoplaying the video failed, first try setting the volume of the video to 0.
 			if (this.player.volume > 0) {
