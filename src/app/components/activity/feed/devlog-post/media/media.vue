@@ -26,15 +26,15 @@
 			</div>
 
 			<template v-if="post.media.length > 1">
-				<div
-					class="-prev"
-					:class="{ '-hide': page < post.media.length }"
-					@click.stop="goPrev"
-				>
+				<div class="-prev" :class="{ '-hide': page === 1 }" @click.stop="goPrev">
 					<app-jolticon icon="chevron-left" />
 				</div>
 
-				<div class="-next" :class="{ '-hide': page > 1 }" @click.stop="goNext">
+				<div
+					class="-next"
+					:class="{ '-hide': page === post.media.length }"
+					@click.stop="goNext"
+				>
 					<app-jolticon icon="chevron-right" />
 				</div>
 			</template>
