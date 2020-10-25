@@ -6,7 +6,7 @@ image: Visual Studio 2015
 environment:
   GOPATH: C:\gopath
   GOROOT: C:\go110-x86
-  nodejs_version: '14.14.0'
+  nodejs_version: '10.13.0'
 
 stack: go 1.10
 
@@ -16,7 +16,7 @@ branches:
 
 install:
   # Software we need - provided by Appveyor's VS2015 image:
-  # Node 14.14.0
+  # Node 10.13.0
   # Yarn 1.9.4
   # Go 1.10.8
   # InnoSetup 5.x Unicode
@@ -27,6 +27,8 @@ install:
       $fileContent += $env:SSH_KEY.Replace(' ', "`n")
       $fileContent += "`n-----END RSA PRIVATE KEY-----`n"
       Set-Content C:\Users\appveyor\.ssh\id_rsa $fileContent
+
+  - ps: Install-Product node $env:nodejs_version
 
   # Enable VS2015 toolset
   - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
