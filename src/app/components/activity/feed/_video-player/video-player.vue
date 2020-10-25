@@ -26,14 +26,12 @@
 					:style="{ height, width }"
 					:media-item="mediaItem"
 				>
-					<!-- <div class="-border" /> -->
 					<app-img-responsive
 						class="-img"
 						:style="{ width }"
 						:src="mediaItem.mediaserver_url"
 						alt=""
 					/>
-					<!-- <div class="-border" /> -->
 				</app-media-item-backdrop>
 			</div>
 		</app-responsive-dimensions>

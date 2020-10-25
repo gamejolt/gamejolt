@@ -24,9 +24,11 @@
 								@play="onVideoPlay"
 							/>
 							<div class="-video-stats">
-								<app-jolticon icon="play" />
-								<span class="-video-stats-label">
-									{{ number(video.view_count) }}
+								<span v-app-tooltip.touchable="$gettext(`Plays`)">
+									<app-jolticon icon="play" />
+									<span class="-video-stats-label">
+										{{ number(video.view_count) }}
+									</span>
 								</span>
 							</div>
 						</app-responsive-dimensions>
@@ -238,10 +240,13 @@
 
 .-video-stats
 	display: flex
-	align-items: center
 	justify-content: flex-end
 	margin-top: 8px
 	font-weight: bold
+
+	> span
+		display: inline-flex
+		align-items: center
 
 	&-label
 		margin-left: 4px

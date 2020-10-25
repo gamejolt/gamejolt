@@ -32,6 +32,7 @@ import AppStickerTargetTS from '../../../../_common/sticker/target/target';
 import AppStickerTarget from '../../../../_common/sticker/target/target.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
 import AppUserFollowWidget from '../../../../_common/user/follow/widget.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
@@ -71,6 +72,9 @@ import AppPollVoting from '../../../components/poll/voting/voting.vue';
 		AppGameBadge,
 		AppUserVerifiedTick,
 		AppVideoProcessingProgress,
+	},
+	directives: {
+		AppTooltip,
 	},
 })
 export default class AppPostPage extends Vue implements LightboxMediaSource {
