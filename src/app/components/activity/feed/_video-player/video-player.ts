@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
+import { propOptional, propRequired } from '../../../../../utils/vue';
 import { ContentFocus } from '../../../../../_common/content-focus/content-focus.service';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { SettingVideoPlayerFeedAutoplay } from '../../../../../_common/settings/settings.service';
@@ -18,8 +18,8 @@ import { AppVideoPlayerShakaLazy } from '../../../lazy';
 	},
 })
 export default class AppActivityFeedVideoPlayer extends Vue {
-	@Prop(propRequired(String)) poster!: string;
 	@Prop(propRequired(Array)) manifests!: string[];
+	@Prop(propOptional(String, '')) poster!: string;
 
 	autoplay = SettingVideoPlayerFeedAutoplay.get();
 	player = new VideoPlayerController(this.poster, this.manifests, 'feed');

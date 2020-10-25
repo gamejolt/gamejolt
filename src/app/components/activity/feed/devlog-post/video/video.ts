@@ -5,7 +5,11 @@ import { FiresidePost } from '../../../../../../_common/fireside/post/post-model
 import { $viewPostVideo } from '../../../../../../_common/fireside/post/video/video-model';
 import { AppImgResponsive } from '../../../../../../_common/img/responsive/responsive';
 import AppMediaItemBackdrop from '../../../../../../_common/media-item/backdrop/backdrop.vue';
-import { AppResponsiveDimensions } from '../../../../../../_common/responsive-dimensions/responsive-dimensions';
+import {
+	AppResponsiveDimensions,
+	AppResponsiveDimensionsChangeEvent,
+} from '../../../../../../_common/responsive-dimensions/responsive-dimensions';
+import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppVideoProcessingProgress from '../../../../../../_common/video/processing-progress/processing-progress.vue';
 import { ActivityFeedItem } from '../../item-service';
 import { ActivityFeedKey, ActivityFeedView } from '../../view';
@@ -37,6 +41,8 @@ export default class AppActivityFeedDevlogPostVideo extends Vue {
 
 	shouldLoadVideo = false;
 	shouldLoadVideoTimer: null | NodeJS.Timer = null;
+	height = '';
+	width = '';
 
 	@Emit('query-param') emitQueryParam(_params: Record<string, string>) {}
 
@@ -52,12 +58,21 @@ export default class AppActivityFeedDevlogPostVideo extends Vue {
 		return this.post.videos[0];
 	}
 
+	get maxPlayerHeight() {
+		return Screen.height * 0.45;
+	}
+
 	mounted() {
 		this.onIsFocusedChange();
 	}
 
 	beforeDestroy() {
 		this.clearVideoShouldLoadTimer();
+	}
+
+	onChangeDimensions(event: AppResponsiveDimensionsChangeEvent) {
+		this.height = event.height + 'px';
+		this.width = event.containerWidth + 'px';
 	}
 
 	@Watch('isFocused')
