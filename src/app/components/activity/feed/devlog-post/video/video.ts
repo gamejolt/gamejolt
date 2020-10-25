@@ -59,6 +59,13 @@ export default class AppActivityFeedDevlogPostVideo extends Vue {
 	}
 
 	get maxPlayerHeight() {
+		if (GJ_IS_SSR) {
+			return;
+		}
+
+		if (Screen.isMobile) {
+			window.screen.height * 0.45;
+		}
 		return Screen.height * 0.45;
 	}
 
