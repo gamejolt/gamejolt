@@ -102,9 +102,10 @@ $-controls-spacing = 8px
 	&-enter
 	&-leave-to
 		opacity: 0
+		visibility: hidden
 
 	&-leave-active
-		transition: opacity 250ms $strong-ease-out
+		transition: opacity 250ms $strong-ease-out, visibility 250ms
 
 .-transitions
 	transition: transform 250ms $strong-ease-out, opacity 1s

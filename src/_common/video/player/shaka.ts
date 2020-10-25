@@ -28,6 +28,10 @@ export default class AppVideoPlayerShaka extends Vue {
 		video: HTMLVideoElement;
 	};
 
+	get shouldAutoplay() {
+		return this.autoplay && !this.player.forceState;
+	}
+
 	mounted() {
 		this.init();
 	}
@@ -144,7 +148,7 @@ export default class AppVideoPlayerShaka extends Vue {
 		// they're on the post page and it couldn't autoplay with their chosen
 		// volume setting, we want them to have to click explicitly to play the
 		// video, which will always play since they interacted with the page.
-		if (this.autoplay && this.player.context === 'feed') {
+		if (this.shouldAutoplay && this.player.context === 'feed') {
 			this.tryPlayingVideo();
 		}
 	}

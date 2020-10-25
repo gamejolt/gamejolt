@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
+import { ContentFocus } from '../../../../../_common/content-focus/content-focus.service';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { SettingVideoPlayerFeedAutoplay } from '../../../../../_common/settings/settings.service';
 import {
@@ -27,6 +28,9 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	readonly Screen = Screen;
 
 	get shouldShowPlaybackControl() {
+		if (this.shouldForcePause) {
+			return false;
+		}
 		return Screen.isMobile || this.isHovered || this.player.state === 'paused';
 	}
 
@@ -42,8 +46,23 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 		return Math.floor(this.player.currentTime / 1000);
 	}
 
+	get shouldForcePause() {
+		return !ContentFocus.hasFocus;
+	}
+
 	@Emit('play') emitPlay() {}
 	@Emit('time') emitTime(_timestamp: number) {}
+
+	@Watch('shouldForcePause', { immediate: true })
+	onWindowFocusChange() {
+		if (this.shouldForcePause) {
+			this.player.state = 'paused';
+			this.player.forceState = true;
+		} else if (SettingVideoPlayerFeedAutoplay.get()) {
+			this.player.forceState = false;
+			this.player.state = 'playing';
+		}
+	}
 
 	@Watch('currentTime')
 	onCurrentTimeChange() {
