@@ -106,6 +106,7 @@ $-button-size = 60px
 		display: none
 
 	> .jolticon
+		color: var(--dark-theme-fg)
 		font-size: ($-button-size / 2)
 
 	&:hover
