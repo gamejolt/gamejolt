@@ -14,6 +14,7 @@ import AppSearch from '../../components/search/search.vue';
 import { Store, store } from '../../store/index';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './search.store';
 import './search.styl';
+import AppSearchSuggestion from './_suggestion/suggestion.vue';
 
 @Component({
 	name: 'RouteSearch',
@@ -22,6 +23,7 @@ import './search.styl';
 		AppExpand,
 		AppSearch,
 		AppPagination,
+		AppSearchSuggestion,
 	},
 	filters: {
 		number,
@@ -66,8 +68,13 @@ export default class RouteSearch extends BaseRouteComponent {
 			this.hasSearch &&
 			!this.searchPayload.gamesCount &&
 			!this.searchPayload.usersCount &&
-			!this.searchPayload.postsCount
+			!this.searchPayload.postsCount &&
+			this.searchPayload.suggestions.length === 0
 		);
+	}
+
+	get hasSuggestion() {
+		return this.hasSearch && this.searchPayload.suggestions.length > 0;
 	}
 
 	routeCreated() {

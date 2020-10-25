@@ -78,6 +78,8 @@
 		</app-expand>
 
 		<div id="search-results" class="fill-backdrop">
+			<app-search-suggestion v-if="hasSuggestion" :data="searchPayload.suggestions" />
+
 			<router-view />
 
 			<br />

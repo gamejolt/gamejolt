@@ -3,11 +3,17 @@ import { Game } from '../../../_common/game/game.model';
 import { User } from '../../../_common/user/user.model';
 import { LocalDbGame } from '../client/local-db/game/game.model';
 
+export interface SuggestionData {
+	type: string;
+	data: any;
+}
+
 export class SearchPayload {
 	page: number;
 	perPage: number;
 	count: number;
 	isAdultSearch: boolean;
+	suggestions: SuggestionData[];
 
 	users: User[];
 	usersCount: number;
@@ -22,6 +28,7 @@ export class SearchPayload {
 		this.perPage = data.perPage || 24;
 		this.count = data.count || 0;
 		this.isAdultSearch = data.isAdultSearch || false;
+		this.suggestions = data.suggestions || [];
 
 		this.usersCount = data.usersCount || 0;
 		this.users = User.populate(data.users);
