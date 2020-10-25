@@ -17,7 +17,7 @@
 				}"
 			>
 				<app-scroll-inview
-					:margin="`${inviewMargin}px`"
+					:config="InviewConfig"
 					@inview="onInviewChange(true)"
 					@outview="onInviewChange(false)"
 				>

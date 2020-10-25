@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { RawLocation } from 'vue-router';
 import { propRequired } from '../../../../utils/vue';
 import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
@@ -7,6 +8,10 @@ import AppContentViewer from '../../../../_common/content/content-viewer/content
 import AppEventItemControlsOverlay from '../../../../_common/event-item/controls-overlay/controls-overlay.vue';
 import { number } from '../../../../_common/filters/number';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import {
+	$viewPostVideo,
+	FiresidePostVideo,
+} from '../../../../_common/fireside/post/video/video-model';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { AppImgResponsive } from '../../../../_common/img/responsive/responsive';
 import AppLightboxTS from '../../../../_common/lightbox/lightbox';
@@ -14,7 +19,10 @@ import { createLightbox, LightboxMediaSource } from '../../../../_common/lightbo
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/backdrop.vue';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppMediaItemPost from '../../../../_common/media-item/post/post.vue';
-import { AppResponsiveDimensions } from '../../../../_common/responsive-dimensions/responsive-dimensions';
+import {
+	AppResponsiveDimensions,
+	AppResponsiveDimensionsChangeEvent,
+} from '../../../../_common/responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
@@ -29,6 +37,8 @@ import AppUserFollowWidget from '../../../../_common/user/follow/widget.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
 import AppVideoEmbed from '../../../../_common/video/embed/embed.vue';
+import AppVideoPlayer from '../../../../_common/video/player/player.vue';
+import AppVideoProcessingProgress from '../../../../_common/video/processing-progress/processing-progress.vue';
 import AppVideo from '../../../../_common/video/video.vue';
 import AppEventItemControls from '../../../components/event-item/controls/controls.vue';
 import AppGameBadge from '../../../components/game/badge/badge.vue';
@@ -41,6 +51,7 @@ import AppPollVoting from '../../../components/poll/voting/voting.vue';
 		AppResponsiveDimensions,
 		AppImgResponsive,
 		AppVideo,
+		AppVideoPlayer,
 		AppVideoEmbed,
 		AppSketchfabEmbed,
 		AppEventItemControls,
@@ -59,6 +70,7 @@ import AppPollVoting from '../../../components/poll/voting/voting.vue';
 		AppScrollScroller,
 		AppGameBadge,
 		AppUserVerifiedTick,
+		AppVideoProcessingProgress,
 	},
 })
 export default class AppPostPage extends Vue implements LightboxMediaSource {
@@ -68,7 +80,9 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 
 	stickersVisible = false;
 	activeImageIndex = 0;
+	videoStartTime = 0;
 	private lightbox?: AppLightboxTS;
+	isPlayerFilled = false;
 
 	$refs!: {
 		stickerTarget: AppStickerTargetTS;
@@ -95,9 +109,45 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 		);
 	}
 
+	get video(): null | FiresidePostVideo {
+		return this.post.videos[0] ?? null;
+	}
+
+	get deviceMaxHeight() {
+		if (GJ_IS_SSR) {
+			return;
+		}
+
+		if (Screen.isMobile) {
+			return window.screen.height - 150;
+		}
+		return Screen.height - 150;
+	}
+
+	onPlayerSizeChange(event: AppResponsiveDimensionsChangeEvent) {
+		this.isPlayerFilled = event.isFilled;
+	}
+
 	created() {
-		if (!GJ_IS_SSR) {
-			this.stickersVisible = SettingAlwaysShowStickers.get();
+		if (GJ_IS_SSR) {
+			return;
+		}
+
+		this.stickersVisible = SettingAlwaysShowStickers.get();
+
+		if (typeof this.$route.query.t === 'string') {
+			if (this.video) {
+				// DODO: Set the max val to the video end time.
+				this.videoStartTime =
+					Math.floor(Math.max(0, parseInt(this.$route.query.t, 10))) * 1000;
+			}
+
+			// Get rid of the time from the URL so that it doesn't pollute
+			// shared addresses.
+			this.$router.replace({
+				...this.$route,
+				query: { ...this.$route.query, t: undefined },
+			} as RawLocation);
 		}
 	}
 
@@ -133,6 +183,12 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 		this.activeImageIndex = Math.max(this.activeImageIndex - 1, 0);
 	}
 
+	onProcessingComplete(payload: any) {
+		if (payload.video && this.video) {
+			this.video.assign(payload.video);
+		}
+	}
+
 	onPostRemoved() {
 		this.$router.replace({ name: 'home' });
 		Growls.info(this.$gettext('Your post has been removed'));
@@ -160,6 +216,12 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 	onClickFullscreen(mediaItem: MediaItem) {
 		this.activeImageIndex = this.post.media.findIndex(i => i.id === mediaItem.id);
 		this.createLightbox();
+	}
+
+	onVideoPlay() {
+		if (this.video) {
+			$viewPostVideo(this.video);
+		}
 	}
 
 	private createLightbox() {

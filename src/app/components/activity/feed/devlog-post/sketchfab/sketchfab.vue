@@ -1,6 +1,8 @@
+<script lang="ts" src="./sketchfab"></script>
+
 <template>
 	<div class="devlog-post-sketchfab-embed">
-		<app-responsive-dimensions :ratio="16 / 9" @change="onDimensionsChange()">
+		<app-responsive-dimensions :ratio="16 / 9">
 			<a v-if="!isHydrated || !isShowing" @click="play">
 				<div class="play-button-overlay">
 					<app-jolticon icon="play" />
@@ -9,7 +11,7 @@
 				<div
 					class="devlog-post-sketchfab-embed-thumb"
 					:style="{ 'background-image': `url( '${sketchfab.thumbnail_url}')` }"
-				></div>
+				/>
 			</a>
 			<app-sketchfab-embed v-else :sketchfab-id="sketchfab.sketchfab_id" autoplay />
 		</app-responsive-dimensions>
@@ -17,8 +19,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '../../variables'
-@require '~styles-lib/mixins'
+@import '../../variables'
+@import '~styles-lib/mixins'
 
 .devlog-post-sketchfab
 	&-embed
@@ -47,5 +49,3 @@
 			background-position: center center
 			background-size: cover
 </style>
-
-<script lang="ts" src="./sketchfab"></script>

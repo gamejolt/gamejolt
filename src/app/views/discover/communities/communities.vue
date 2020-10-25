@@ -38,7 +38,11 @@
 					</div>
 				</div>
 
-				<app-scroll-inview ref="inview" :margin="loadMoreMargin" @inview="onScrollLoadMore">
+				<app-scroll-inview
+					:config="InviewConfigLoadMore"
+					:controller="loadMoreInviewController"
+					@inview="onScrollLoadMore"
+				>
 					<app-loading v-if="isLoadingMore" class="-loading-more" centered />
 				</app-scroll-inview>
 			</template>

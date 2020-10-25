@@ -5,7 +5,7 @@ import {
 	CommentThreadModal,
 	CommentThreadModalPermalinkDeregister,
 } from '../../../_common/comment/thread/modal.service';
-import { FiresidePost } from '../../../_common/fireside/post/post-model';
+import { $viewPost, FiresidePost } from '../../../_common/fireside/post/post-model';
 import { Meta } from '../../../_common/meta/meta-service';
 import { Registry } from '../../../_common/registry/registry.service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
@@ -111,8 +111,7 @@ export default class RoutePost extends BaseRouteComponent {
 			'comments'
 		);
 
-		this.post.$viewed();
-		this.post.$expanded();
+		$viewPost(this.post);
 
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb;
