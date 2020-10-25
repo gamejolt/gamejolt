@@ -19,7 +19,10 @@ import { createLightbox, LightboxMediaSource } from '../../../../_common/lightbo
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/backdrop.vue';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppMediaItemPost from '../../../../_common/media-item/post/post.vue';
-import { AppResponsiveDimensions } from '../../../../_common/responsive-dimensions/responsive-dimensions';
+import {
+	AppResponsiveDimensions,
+	AppResponsiveDimensionsChangeEvent,
+} from '../../../../_common/responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
@@ -79,6 +82,7 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 	activeImageIndex = 0;
 	videoStartTime = 0;
 	private lightbox?: AppLightboxTS;
+	isPlayerFilled = false;
 
 	$refs!: {
 		stickerTarget: AppStickerTargetTS;
@@ -118,6 +122,10 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 			return window.screen.height - 150;
 		}
 		return Screen.height - 150;
+	}
+
+	onPlayerSizeChange(event: AppResponsiveDimensionsChangeEvent) {
+		this.isPlayerFilled = event.isFilled;
 	}
 
 	created() {

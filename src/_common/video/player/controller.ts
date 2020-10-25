@@ -10,8 +10,7 @@ export type VideoPlayerControllerContext = 'feed' | 'page' | null;
 export class VideoPlayerController {
 	volume: number;
 	duration = 0;
-	private _state: 'paused' | 'playing' = 'paused';
-	forceState = false;
+	state: 'paused' | 'playing' = 'paused';
 	isScrubbing = false;
 
 	currentTime = 0;
@@ -23,7 +22,7 @@ export class VideoPlayerController {
 	queuedFullScreenChange: null | boolean = null;
 
 	constructor(
-		public poster: string,
+		public poster: undefined | string,
 		public manifests: string[],
 		public context: VideoPlayerControllerContext
 	) {
@@ -40,22 +39,9 @@ export class VideoPlayerController {
 				break;
 		}
 	}
-
-	get state() {
-		return this._state;
-	}
-
-	set state(val) {
-		if (this.forceState) {
-			return;
-		}
-		this._state = val;
-	}
 }
 
 export function toggleVideoPlayback(player: VideoPlayerController) {
-	player.forceState = false;
-
 	if (player.state === 'playing') {
 		player.state = 'paused';
 	} else if (player.state === 'paused') {

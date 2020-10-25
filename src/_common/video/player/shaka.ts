@@ -36,7 +36,7 @@ export default class AppVideoPlayerShaka extends Vue {
 	};
 
 	get shouldAutoplay() {
-		return this.autoplay && !this.player.forceState;
+		return this.autoplay;
 	}
 
 	mounted() {

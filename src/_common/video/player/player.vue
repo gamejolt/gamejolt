@@ -64,6 +64,7 @@
 @import '~styles-lib/mixins'
 
 .-player
+	rounded-corners-lg()
 	position: relative
 	overflow: hidden
 	display: flex
@@ -71,9 +72,6 @@
 
 	&:focus
 		outline: none
-
-	@media $media-sm-up
-		rounded-corners-lg()
 
 .-paused-cursor
 	cursor: pointer

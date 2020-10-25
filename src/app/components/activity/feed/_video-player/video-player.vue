@@ -2,13 +2,43 @@
 
 <template>
 	<div class="-player theme-dark" @mouseleave="onMouseOut" @mouseenter="onMouseIn">
-		<app-video-player-shaka-lazy
-			:player="player"
-			:autoplay="autoplay"
-			allow-degraded-autoplay
-		/>
+		<app-responsive-dimensions
+			class="-video-container"
+			:ratio="mediaItem.width / mediaItem.height"
+			:max-height="maxPlayerHeight"
+			@change="onChangeDimensions"
+		>
+			<div class="-content-container">
+				<app-video-player-shaka-lazy
+					v-if="player"
+					class="-video"
+					:player="player"
+					:autoplay="shouldAutoplay"
+					allow-degraded-autoplay
+				/>
 
-		<div class="-bottom">
+				<!--
+				This will show behind the video so that we can switch to it while
+				the video is loading and when it's unfocused/not active.
+				-->
+				<app-media-item-backdrop
+					class="-backdrop"
+					:style="{ height, width }"
+					:media-item="mediaItem"
+				>
+					<!-- <div class="-border" /> -->
+					<app-img-responsive
+						class="-img"
+						:style="{ width }"
+						:src="mediaItem.mediaserver_url"
+						alt=""
+					/>
+					<!-- <div class="-border" /> -->
+				</app-media-item-backdrop>
+			</div>
+		</app-responsive-dimensions>
+
+		<div v-if="player" class="-bottom">
 			<div class="-bottom-gradient">
 				<div class="-bottom-controls" @click.stop>
 					<transition name="fade">
@@ -27,37 +57,39 @@
 							:key="control"
 							class="-transitions"
 						>
-							<template v-if="control === 'time'">
-								<transition name="fade">
-									<div
-										v-if="player.state === 'playing' && player.duration > 0"
-										class="-time"
-									>
-										<div class="-time-inner">
-											{{ remainingTime }}
+							<template v-if="player">
+								<template v-if="control === 'time'">
+									<transition name="fade">
+										<div
+											v-if="player.state === 'playing' && player.duration > 0"
+											class="-time"
+										>
+											<div class="-time-inner">
+												{{ remainingTime }}
+											</div>
 										</div>
+									</transition>
+								</template>
+								<template v-else-if="control === 'bars'">
+									<transition name="fade">
+										<div v-if="player.state === 'playing'" class="-bars">
+											<div class="-bar -bar-1" />
+											<div class="-bar -bar-2" />
+											<div class="-bar -bar-3" />
+										</div>
+									</transition>
+								</template>
+								<template v-else-if="control === 'volume'">
+									<div
+										v-if="shouldShowMuteControl"
+										class="-control"
+										@click="onClickMute"
+									>
+										<app-jolticon
+											:icon="player.volume > 0 ? 'audio' : 'audio-mute'"
+										/>
 									</div>
-								</transition>
-							</template>
-							<template v-else-if="control === 'bars'">
-								<transition name="fade">
-									<div v-if="player.state === 'playing'" class="-bars">
-										<div class="-bar -bar-1" />
-										<div class="-bar -bar-2" />
-										<div class="-bar -bar-3" />
-									</div>
-								</transition>
-							</template>
-							<template v-else-if="control === 'volume'">
-								<div
-									v-if="shouldShowMuteControl"
-									class="-control"
-									@click="onClickMute"
-								>
-									<app-jolticon
-										:icon="player.volume > 0 ? 'audio' : 'audio-mute'"
-									/>
-								</div>
+								</template>
 							</template>
 						</div>
 					</transition-group>
@@ -75,6 +107,28 @@
 
 $-controls-height = 48px
 $-controls-spacing = 8px
+
+.-video-container
+	position: relative
+	// Overrides the 'width' styling, allowing us to add borders to the sides of videos and image placeholders.
+	min-width: 100%
+
+.-content-container
+	height: 100%
+	background-color: $black
+	display: flex
+	justify-content: center
+
+.-video
+	z-index: 1
+
+.-backdrop
+	position: absolute
+	top: 0
+	z-index: 0
+
+.-img
+	max-height: 100%
 
 .-control
 	display: inline-flex
@@ -122,6 +176,7 @@ $-controls-spacing = 8px
 	position: relative
 	overflow: hidden
 	height: 100%
+	width: 100%
 
 .-bottom
 	position: absolute

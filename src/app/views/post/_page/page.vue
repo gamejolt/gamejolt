@@ -8,12 +8,14 @@
 					<template v-if="video.provider === 'gamejolt'">
 						<app-responsive-dimensions
 							v-if="!video.is_processing && video.posterMediaItem"
+							class="-responsive"
 							:ratio="video.posterMediaItem.width / video.posterMediaItem.height"
 							:max-width="video.posterMediaItem.width"
 							:max-height="deviceMaxHeight"
-							style="margin: 0 auto;"
+							@change="onPlayerSizeChange"
 						>
 							<app-video-player
+								:class="{ '-filled': isPlayerFilled }"
 								context="page"
 								:poster="video.posterUrl"
 								:manifests="video.manifestUrls"
@@ -21,6 +23,12 @@
 								autoplay
 								@play="onVideoPlay"
 							/>
+							<div class="-video-stats">
+								<app-jolticon icon="play" />
+								<span class="-video-stats-label">
+									{{ number(video.view_count) }}
+								</span>
+							</div>
 						</app-responsive-dimensions>
 						<template v-else>
 							<app-video-processing-progress
@@ -37,12 +45,6 @@
 						autoplay
 					/>
 				</div>
-				<template v-if="video.provider === 'gamejolt'">
-					<div class="-video-stats">
-						<app-jolticon icon="play" />
-						<span class="-video-stats-label">{{ number(video.view_count) }}</span>
-					</div>
-				</template>
 			</template>
 
 			<div class="-row">
@@ -227,6 +229,12 @@
 			margin: 0 $grid-gutter-width
 			flex-shrink: 1
 			flex-basis: $-center-col-max-width
+
+.-responsive
+	margin: 0 auto 8px + $line-height-computed
+
+.-filled
+	border-radius: 0 !important
 
 .-video-stats
 	display: flex
