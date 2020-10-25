@@ -1,5 +1,5 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 // Sync with the JS so we know how long hides take.
 $-transition-time = 200ms
@@ -93,14 +93,15 @@ $-transition-time = 200ms
 
 	&.-track-trigger-width
 		max-width: none
-		min-width: none
+		min-width: unset
 
 	&.-force-max-width
-		min-width: none
+		min-width: unset
 		width: calc(100vw - 10px)
 		max-width: $popover-size
 
-	> nav.pills > ul, > .button
+	> nav.pills > ul
+	> .button
 		margin-bottom: $popover-spacing !important
 
 	> nav.platform-list

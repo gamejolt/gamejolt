@@ -114,6 +114,10 @@ export default class AppPopper extends Vue {
 	@Prop(propOptional(Boolean, false))
 	block!: boolean;
 
+	// Allows removal of the popper arrow.
+	@Prop(propOptional(Boolean, false))
+	sansArrow!: boolean;
+
 	// Delay for showing a hover-based popper.
 	@Prop(propOptional(Number, 0))
 	showDelay!: number;
@@ -164,7 +168,7 @@ export default class AppPopper extends Vue {
 	}
 
 	get contentClass() {
-		let classes = [this.popoverClass];
+		const classes = [this.popoverClass];
 
 		if (this.trackTriggerWidth) {
 			classes.push('-track-trigger-width');
