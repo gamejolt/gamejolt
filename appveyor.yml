@@ -6,7 +6,7 @@ image: Visual Studio 2015
 environment:
   GOPATH: C:\gopath
   GOROOT: C:\go110-x86
-  nodejs_version: '10.13.0'
+  nodejs_version: 'LTS'
 
 stack: go 1.10
 
