@@ -15,7 +15,7 @@
 							@change="onPlayerSizeChange"
 						>
 							<app-video-player
-								:class="{ '-filled': isPlayerFilled }"
+								:class="{ '-filled': Screen.isXs && isPlayerFilled }"
 								context="page"
 								:poster="video.posterUrl"
 								:manifests="video.manifestUrls"
