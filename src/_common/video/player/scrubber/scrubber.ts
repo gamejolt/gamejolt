@@ -15,7 +15,6 @@ export default class AppVideoPlayerScrubber extends Vue {
 
 	private timebarLeft = 0;
 	private timebarWidth = 0;
-	private playAfterScrub = this.player.state === 'playing' ? true : false;
 	timestampOffset = 0;
 
 	$refs!: {
@@ -50,20 +49,18 @@ export default class AppVideoPlayerScrubber extends Vue {
 
 	panStart(event: HammerInput) {
 		this.initTimebarData();
-
-		// Forward off to the normal pan event handler.
-		this.pan(event);
-	}
-
-	pan(event: HammerInput) {
-		scrubVideo(this.player, this.calcScrubPos(event), false);
+		scrubVideo(this.player, this.calcScrubPos(event), 'start');
 
 		// Will tell the browser to not select text while dragging.
 		event.preventDefault();
 	}
 
+	pan(event: HammerInput) {
+		scrubVideo(this.player, this.calcScrubPos(event), 'scrub');
+	}
+
 	panEnd(event: HammerInput) {
-		scrubVideo(this.player, this.calcScrubPos(event), true, this.playAfterScrub);
+		scrubVideo(this.player, this.calcScrubPos(event), 'end');
 	}
 
 	private initTimebarData() {
@@ -71,7 +68,6 @@ export default class AppVideoPlayerScrubber extends Vue {
 		const { width, left } = Ruler.offset(timebar);
 		this.timebarWidth = width;
 		this.timebarLeft = left;
-		this.playAfterScrub = this.player.state === 'playing' ? true : false;
 	}
 
 	private calcScrubPos(event: HammerInput) {

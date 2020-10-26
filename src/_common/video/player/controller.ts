@@ -11,7 +11,9 @@ export class VideoPlayerController {
 	volume: number;
 	duration = 0;
 	state: 'paused' | 'playing' = 'paused';
+
 	isScrubbing = false;
+	stateBeforeScrubbing: null | VideoPlayerController['state'] = null;
 
 	currentTime = 0;
 	queuedTimeChange: null | number = null;
@@ -74,16 +76,17 @@ export function queueVideoTimeChange(player: VideoPlayerController, time: number
 export function scrubVideo(
 	player: VideoPlayerController,
 	position: number,
-	isFinalized: boolean,
-	shouldPlay?: boolean
+	stage: 'start' | 'scrub' | 'end'
 ) {
-	player.isScrubbing = !isFinalized;
+	player.isScrubbing = stage !== 'end';
 
 	// Pause the video while scrubbing.
-	if (!isFinalized) {
+	if (stage === 'start') {
+		player.stateBeforeScrubbing = player.state;
 		player.state = 'paused';
-	} else if (shouldPlay) {
-		player.state = 'playing';
+	} else if (stage === 'end' && player.stateBeforeScrubbing) {
+		player.state = player.stateBeforeScrubbing;
+		player.stateBeforeScrubbing = null;
 	}
 
 	queueVideoTimeChange(player, position * player.duration);
