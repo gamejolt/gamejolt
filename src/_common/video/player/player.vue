@@ -73,6 +73,10 @@
 	&:focus
 		outline: none
 
+	&:hover
+		.-time-inner
+			background-color: rgba($black, 1)
+
 .-paused-cursor
 	cursor: pointer
 
@@ -125,10 +129,10 @@
 	&-inner
 		rounded-corners()
 		padding: 4px 6px
-		background-color: var(--dark-theme-bg-offset)
+		background-color: rgba($black, 0.4)
 		color: var(--dark-theme-fg)
 		font-size: $font-size-small
 		pointer-events: none
 		user-select: none
-		opacity: 0.8
+		transition: background-color 250ms $strong-ease-out
 </style>

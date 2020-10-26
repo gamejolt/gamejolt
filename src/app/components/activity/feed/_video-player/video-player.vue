@@ -106,6 +106,16 @@
 $-controls-height = 48px
 $-controls-spacing = 8px
 
+.-player
+	position: relative
+	overflow: hidden
+	height: 100%
+	width: 100%
+
+	&:hover
+		.-time-inner
+			background-color: rgba($black, 1)
+
 .-video-container
 	position: relative
 	// Overrides the 'width' styling, allowing us to add borders to the sides of videos and image placeholders.
@@ -148,11 +158,11 @@ $-controls-spacing = 8px
 
 	&-inner
 		rounded-corners()
-		background-color: var(--dark-theme-bg-offset)
+		background-color: rgba($black, 0.4)
 		color: var(--dark-theme-fg)
 		padding: 4px 8px
 		font-size: $font-size-small
-		opacity: 0.8
+		transition: background-color 250ms $strong-ease-out
 
 .fade
 	&-enter
@@ -169,12 +179,6 @@ $-controls-spacing = 8px
 	&-group
 		display: inline-flex
 		margin-left: auto
-
-.-player
-	position: relative
-	overflow: hidden
-	height: 100%
-	width: 100%
 
 .-bottom
 	position: absolute
