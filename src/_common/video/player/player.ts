@@ -61,6 +61,7 @@ export default class AppVideoPlayer extends Vue {
 
 	player = new VideoPlayerController(this.poster, this.manifests, this.context);
 	isHovered = false;
+	isHoveringControls = false;
 	private _hideUITimer?: NodeJS.Timer;
 
 	$el!: HTMLDivElement;
@@ -68,7 +69,7 @@ export default class AppVideoPlayer extends Vue {
 	@Emit('play') emitPlay() {}
 
 	get shouldShowUI() {
-		return this.isHovered || this.player.state === 'paused';
+		return this.isHoveringControls || this.isHovered || this.player.state === 'paused';
 	}
 
 	get readableTime() {
