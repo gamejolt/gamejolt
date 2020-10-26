@@ -65,7 +65,6 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 	implements FormOnSubmit, FormOnLoad, FormOnSubmitError, FormOnSubmitSuccess, FormOnInit {
 	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
 	@Prop(propRequired(Boolean)) wasPublished!: boolean;
-	@Prop(propRequired(Boolean)) canContinueProcessing!: boolean;
 
 	readonly YOUTUBE_URL_REGEX = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:&.+)*$/i;
 
@@ -239,7 +238,7 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		this.emitVideoChange(new FiresidePostVideo($payload.video));
 	}
 
-	async videoSelected() {
+	videoSelected() {
 		if (this.formModel.video !== null) {
 			this.$refs.form.submit();
 
