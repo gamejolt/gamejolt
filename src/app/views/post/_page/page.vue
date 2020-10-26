@@ -249,7 +249,7 @@
 		align-items: center
 
 		@media $media-xs
-			margin-right: 8px
+			margin-right: ($grid-gutter-width-xs / 2)
 
 	&-label
 		margin-left: 4px
