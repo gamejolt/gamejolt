@@ -92,10 +92,14 @@ export class ScrollInviewContainer {
 
 	private trackFocused() {
 		let focusedItem: ScrollInviewController | null = null;
+
+		// Loop over trying to find the new active.
 		for (const i of this.controllers) {
-			// Loop over trying to find the new active.
 			focusedItem =
-				!focusedItem || i.latestThreshold > focusedItem.latestThreshold ? i : focusedItem;
+				i.latestThreshold !== 0 &&
+				(!focusedItem || i.latestThreshold > focusedItem.latestThreshold)
+					? i
+					: focusedItem;
 
 			// Reset the active state of any ones currently marked as active.
 			// There should only ever be one.
