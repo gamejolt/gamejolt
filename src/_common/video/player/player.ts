@@ -63,6 +63,8 @@ export default class AppVideoPlayer extends Vue {
 	isHovered = false;
 	private _hideUITimer?: NodeJS.Timer;
 
+	$el!: HTMLDivElement;
+
 	@Emit('play') emitPlay() {}
 
 	get shouldShowUI() {
@@ -81,6 +83,8 @@ export default class AppVideoPlayer extends Vue {
 		if (this.startTime) {
 			queueVideoTimeChange(this.player, this.startTime);
 		}
+
+		this.$el.focus();
 	}
 
 	beforeDestroy() {
