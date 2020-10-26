@@ -248,6 +248,9 @@
 		display: inline-flex
 		align-items: center
 
+		@media $media-xs
+			margin-right: ($grid-gutter-width-xs / 2)
+
 	&-label
 		margin-left: 4px
 
