@@ -15,6 +15,7 @@ export default class AppVideoPlayerScrubber extends Vue {
 
 	private timebarLeft = 0;
 	private timebarWidth = 0;
+	private playAfterScrub = this.player.state === 'playing' ? true : false;
 	timestampOffset = 0;
 
 	$refs!: {
@@ -62,7 +63,7 @@ export default class AppVideoPlayerScrubber extends Vue {
 	}
 
 	panEnd(event: HammerInput) {
-		scrubVideo(this.player, this.calcScrubPos(event), true);
+		scrubVideo(this.player, this.calcScrubPos(event), true, this.playAfterScrub);
 	}
 
 	private initTimebarData() {
@@ -70,6 +71,7 @@ export default class AppVideoPlayerScrubber extends Vue {
 		const { width, left } = Ruler.offset(timebar);
 		this.timebarWidth = width;
 		this.timebarLeft = left;
+		this.playAfterScrub = this.player.state === 'playing' ? true : false;
 	}
 
 	private calcScrubPos(event: HammerInput) {

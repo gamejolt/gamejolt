@@ -71,11 +71,21 @@ export function queueVideoTimeChange(player: VideoPlayerController, time: number
 	player.queuedTimeChange = time;
 }
 
-export function scrubVideo(player: VideoPlayerController, position: number, isFinalized: boolean) {
+export function scrubVideo(
+	player: VideoPlayerController,
+	position: number,
+	isFinalized: boolean,
+	shouldPlay?: boolean
+) {
 	player.isScrubbing = !isFinalized;
 
-	// Pause the video while scrubbing and play when finalized.
-	player.state = isFinalized ? 'playing' : 'paused';
+	// Pause the video while scrubbing.
+	if (!isFinalized) {
+		player.state = 'paused';
+	} else if (shouldPlay) {
+		player.state = 'playing';
+	}
+
 	queueVideoTimeChange(player, position * player.duration);
 }
 
