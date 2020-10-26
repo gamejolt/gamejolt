@@ -1,4 +1,5 @@
 <script lang="ts" src="./room-details-modal"></script>
+
 <template>
 	<app-modal>
 		<div class="modal-controls">

@@ -694,7 +694,7 @@ export function editMessage(chat: ChatClient, message: ChatMessage) {
 	}
 }
 
-export function editTitle(chat: ChatClient, title: string) {
+export function editChatRoomTitle(chat: ChatClient, title: string) {
 	const room = chat.room;
 	if (room) {
 		chat.roomChannels[room.id].push('update_title', {
