@@ -1,6 +1,6 @@
-import { PartnerReferral } from '../partner-referral/partner-referral-service';
-import { Environment } from '../environment/environment.service';
 import { Device } from '../device/device.service';
+import { Environment } from '../environment/environment.service';
+import { PartnerReferral } from '../partner-referral/partner-referral-service';
 import { Referrer } from '../referrer/referrer.service';
 
 export interface BeaconOptions {
@@ -10,7 +10,7 @@ export interface BeaconOptions {
 }
 
 export class HistoryTick {
-	private static _sources: { [key: string]: string | undefined } = {};
+	private static _sources: Record<string, string | undefined> = {};
 
 	/**
 	 * You can track a source for a particular parent resource.
@@ -59,7 +59,10 @@ export class HistoryTick {
 					queryParams.push('source=' + source);
 				}
 
-				const ref = PartnerReferral.getReferrer(options.sourceResource, options.sourceResourceId);
+				const ref = PartnerReferral.getReferrer(
+					options.sourceResource,
+					options.sourceResourceId
+				);
 				if (ref) {
 					queryParams.push('ref=' + ref);
 				}
@@ -90,7 +93,7 @@ export class HistoryTick {
 				resolve();
 			};
 
-			if (Environment.env === 'development') {
+			if (GJ_ENVIRONMENT === 'development') {
 				console.log('Tracking history tick.', {
 					type: type,
 					resourceId: resourceId,

@@ -1,10 +1,7 @@
+<script lang="ts" src="./completion"></script>
+
 <template>
-	<div
-		class="trophy-completion alert"
-		:class="{
-			'alert-dark': achieved > 0,
-		}"
-	>
+	<app-card class="trophy-completion">
 		<template v-if="achieved > 0">
 			<p>
 				<span
@@ -41,7 +38,7 @@
 			<div class="clearfix">
 				<div class="pull-left">
 					<div class="stat-big stat-big-smaller" style="margin-bottom: 0">
-						<div class="stat-big-digit">{{ completionRate | number }}%</div>
+						<div class="stat-big-digit">{{ number(completionRate) }}%</div>
 						<div class="stat-big-label">
 							<translate>trophies.completion.completion_label</translate>
 						</div>
@@ -51,7 +48,7 @@
 					<div class="stat-big stat-big-smaller text-right" style="margin-bottom: 0">
 						<div class="stat-big-digit">
 							<app-jolticon icon="exp" class="text-muted" />
-							{{ experience | number }}
+							{{ number(experience) }}
 						</div>
 						<div class="stat-big-label">
 							<translate>trophies.completion.exp_gained_label</translate>
@@ -63,7 +60,5 @@
 		<template v-else>
 			<translate>You haven't achieved any trophies for this game yet!</translate>
 		</template>
-	</div>
+	</app-card>
 </template>
-
-<script lang="ts" src="./completion"></script>

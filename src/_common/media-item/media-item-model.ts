@@ -11,6 +11,9 @@ export class MediaItem extends Model implements LightboxMediaModel {
 	static readonly TYPE_FIRESIDE_POST_HEADER = 'fireside-post-header';
 	static readonly TYPE_FIRESIDE_POST_IMAGE = 'fireside-post-image';
 	static readonly TYPE_FIRESIDE_POST_ARTICLE_IMAGE = 'fireside-post-article-image';
+	static readonly TYPE_FIRESIDE_POST_VIDEO = 'fireside-post-video';
+
+	static readonly TYPE_VIDEO_POSTER = 'video-poster';
 
 	static readonly TYPE_FEATURED_HEADER = 'featured-header';
 
@@ -21,6 +24,8 @@ export class MediaItem extends Model implements LightboxMediaModel {
 	static readonly TYPE_COMMUNITY_DESCRIPTION = 'community-description';
 
 	static readonly TYPE_CHAT_MESSAGE = 'chat-message';
+
+	static readonly TYPE_TRANSCODED = 'transcoded';
 
 	static readonly STATUS_ACTIVE = 'active';
 	static readonly STATUS_REMOVED = 'removed';

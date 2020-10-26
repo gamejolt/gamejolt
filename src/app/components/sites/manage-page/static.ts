@@ -20,6 +20,12 @@ export default class AppSitesManagePageStatic extends Vue {
 	@Prop(Boolean) enabled?: boolean;
 	@Prop(Boolean) templateEnabled?: boolean;
 
+	get enableTooltip() {
+		return this.templateEnabled
+			? this.$gettext('This will disable your template and use your static build instead.')
+			: undefined;
+	}
+
 	onBuildAdded(_model: SiteBuild, response: any) {
 		if (!this.site) {
 			Growls.error(this.$gettext(`Site is not active`));

@@ -3,14 +3,51 @@
 <template>
 	<section class="-section section-thin">
 		<div class="container-xl">
-			<div v-if="post.hasVideo" class="full-bleed-xs">
-				<app-video-embed
-					class="-video"
-					video-provider="youtube"
-					:video-id="post.videos[0].video_id"
-					autoplay
-				/>
-			</div>
+			<template v-if="video">
+				<div class="full-bleed-xs">
+					<template v-if="video.provider === 'gamejolt'">
+						<app-responsive-dimensions
+							v-if="!video.is_processing && video.posterMediaItem"
+							class="-responsive"
+							:ratio="video.posterMediaItem.width / video.posterMediaItem.height"
+							:max-width="video.posterMediaItem.width"
+							:max-height="deviceMaxHeight"
+							@change="onPlayerSizeChange"
+						>
+							<app-video-player
+								:class="{ '-filled': Screen.isXs && isPlayerFilled }"
+								context="page"
+								:poster="video.posterUrl"
+								:manifests="video.manifestUrls"
+								:start-time="videoStartTime"
+								autoplay
+								@play="onVideoPlay"
+							/>
+							<div class="-video-stats">
+								<span v-app-tooltip.touchable="$gettext(`Plays`)">
+									<app-jolticon icon="play" />
+									<span class="-video-stats-label">
+										{{ number(video.view_count) }}
+									</span>
+								</span>
+							</div>
+						</app-responsive-dimensions>
+						<template v-else>
+							<app-video-processing-progress
+								:post="post"
+								@complete="onProcessingComplete"
+							/>
+						</template>
+					</template>
+					<app-video-embed
+						v-else
+						class="-video"
+						video-provider="youtube"
+						:video-id="video.video_id"
+						autoplay
+					/>
+				</div>
+			</template>
 
 			<div class="-row">
 				<!-- Left Sidebar -->
@@ -39,7 +76,10 @@
 								</div>
 
 								<router-link :to="displayUser.url" class="-name link-unstyled">
-									<strong>{{ displayUser.display_name }}</strong>
+									<span>
+										<strong>{{ displayUser.display_name }}</strong>
+										<app-user-verified-tick :user="displayUser" />
+									</span>
 									<span class="tiny text-muted">
 										@{{ displayUser.username }}
 									</span>
@@ -196,8 +236,24 @@
 			flex-shrink: 1
 			flex-basis: $-center-col-max-width
 
-.-left-controls
-	transition: opacity 500ms $weak-ease-out
+.-responsive
+	margin: 0 auto 8px + $line-height-computed
+
+.-filled
+	border-radius: 0 !important
+
+.-video-stats
+	display: flex
+	justify-content: flex-end
+	margin-top: 8px
+	font-weight: bold
+
+	> span
+		display: inline-flex
+		align-items: center
+
+	&-label
+		margin-left: 4px
 
 .-game-badge
 	margin-top: $-spacing

@@ -24,36 +24,39 @@ export class AppProgressPoller extends Vue {
 	emitError(_response: unknown) {}
 
 	mounted() {
-		this.intervalHandle = setInterval(async () => {
-			if (!this.url) {
+		this.check();
+		this.intervalHandle = setInterval(() => this.check(), this.interval || PollInterval);
+	}
+
+	async check() {
+		if (!this.url) {
+			return;
+		}
+
+		try {
+			const response = await Api.sendRequest(this.url, undefined, {
+				detach: true,
+			});
+
+			if (response.status === 'progress') {
+				const indeterminate = typeof response.progress !== 'number';
+				const progress = indeterminate ? 100 : response.progress;
+				this.emitProgress(response, progress, indeterminate);
 				return;
 			}
 
-			try {
-				const response = await Api.sendRequest(this.url, undefined, {
-					detach: true,
-				});
-
-				if (response.status === 'progress') {
-					const indeterminate = typeof response.progress !== 'number';
-					const progress = indeterminate ? 100 : response.progress;
-					this.emitProgress(response, progress, indeterminate);
-					return;
+			if (response.status === 'complete' || response.status === 'error') {
+				if (response.status === 'complete') {
+					this.emitComplete(response);
+				} else if (response.status === 'error') {
+					this.emitError(response);
 				}
 
-				if (response.status === 'complete' || response.status === 'error') {
-					if (response.status === 'complete') {
-						this.emitComplete(response);
-					} else if (response.status === 'error') {
-						this.emitError(response);
-					}
-
-					this.clearInterval();
-				}
-			} catch (e) {
-				this.$emit('error', e);
+				this.clearInterval();
 			}
-		}, this.interval || PollInterval);
+		} catch (e) {
+			this.$emit('error', e);
+		}
 	}
 
 	destroyed() {

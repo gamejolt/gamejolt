@@ -54,6 +54,20 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 
+.-video
+	&:after
+		content: 'GIF'
+		rounded-corners()
+		position: absolute
+		right: 8px
+		bottom: 8px
+		padding: 4px 6px
+		background-color: var(--dark-theme-bg-offset)
+		color: var(--dark-theme-fg)
+		font-size: $font-size-small
+		font-weight: bold
+		opacity: 0.8
+
 .media-item-post
 	position: relative
 	display: block
@@ -63,6 +77,10 @@
 
 	&.-inline
 		display: inline-block
+
+	&:not(.-inline)
+		.-img
+			cursor: zoom-in
 
 	.-media
 		margin-left: auto

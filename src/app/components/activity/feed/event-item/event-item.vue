@@ -1,7 +1,7 @@
 <script lang="ts" src="./event-item"></script>
 
 <template>
-	<div class="-container">
+	<div v-app-observe-dimensions="onResize" class="-container">
 		<app-activity-feed-event-item-blocked
 			v-if="shouldBlock"
 			:username="user.username"
@@ -91,17 +91,13 @@
 				v-if="eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD"
 				:item="item"
 				:video="video"
-				@expanded="emitExpanded"
-				@content-bootstrapped="onContentBootstrapped"
 			/>
 			<template v-if="post">
 				<app-activity-feed-devlog-post-video
 					v-if="post.hasVideo"
 					:item="item"
 					:post="post"
-					@click.native.stop
-					@expanded="emitExpanded"
-					@content-bootstrapped="onContentBootstrapped"
+					@query-param="onQueryParam"
 				/>
 
 				<app-activity-feed-devlog-post-sketchfab
@@ -109,16 +105,12 @@
 					:item="item"
 					:post="post"
 					@click.native.stop
-					@expanded="emitExpanded"
-					@content-bootstrapped="onContentBootstrapped"
 				/>
 
 				<app-activity-feed-devlog-post-media
 					v-if="post.hasMedia"
 					:item="item"
 					:post="post"
-					@expanded="emitExpanded"
-					@content-bootstrapped="onContentBootstrapped"
 				/>
 
 				<app-sticker-target
@@ -153,8 +145,6 @@
 						v-if="post.has_article"
 						:item="item"
 						:post="post"
-						@expanded="emitExpanded"
-						@content-bootstrapped="onContentBootstrapped"
 					/>
 
 					<div v-if="post.hasPoll" class="-poll" @click.stop>

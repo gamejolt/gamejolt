@@ -1,3 +1,5 @@
+<script lang="ts" src="./post"></script>
+
 <template>
 	<app-form v-if="model" ref="form" name="postForm">
 		<!-- Attachments -->
@@ -54,37 +56,17 @@
 			</fieldset>
 
 			<!-- Video -->
-			<fieldset v-else-if="enabledVideo">
-				<app-form-legend compact deletable @delete="disableAttachments()">
-					<translate>YouTube video URL</translate>
-				</app-form-legend>
-
-				<app-form-group
-					v-app-focus-when="!wasPublished"
-					name="video_url"
-					hide-label
-					:label="$gettext(`YouTube Video URL`)"
-				>
-					<p class="help-block">
-						<translate>Enter the URL of your YouTube video. For example:</translate>
-						<code>https://www.youtube.com/watch?v=dQw4w9WgXcQ</code>
-					</p>
-
-					<app-form-control
-						type="text"
-						:rules="{
-							pattern: YOUTUBE_URL_REGEX,
-						}"
-					/>
-
-					<app-form-control-errors />
-
-					<template v-if="hasValidYouTubeUrl">
-						<br />
-						<app-video-embed video-provider="youtube" :video-id="youtubeVideoId" />
-					</template>
-				</app-form-group>
-			</fieldset>
+			<app-form-post-video
+				v-else-if="enabledVideo"
+				:post="formModel"
+				:was-published="wasPublished"
+				:can-continue-processing="canContinueProcessingUploadedVideo"
+				@delete="onDisableVideoAttachment"
+				@video-change="onVideoChanged"
+				@video-url-change="onVideoUrlChanged"
+				@video-status-change="onUploadingVideoStatusChanged"
+				@video-provider-change="onVideoProviderChanged"
+			/>
 
 			<!-- Sketchfab -->
 			<fieldset v-else-if="enabledSketchfab">
@@ -178,6 +160,7 @@
 						:model-id="model.id"
 						:rules="{
 							content_no_media_uploads: true,
+							max_content_length: [articleLengthLimit],
 						}"
 						:max-height="0"
 					/>
@@ -654,7 +637,7 @@
 				<div class="-controls-submit-button">
 					<app-form-button
 						v-if="!wasPublished && !isScheduling"
-						:disabled="!valid"
+						:disabled="!submitButtonsEnabled"
 						:solid="false"
 						:primary="false"
 						trans
@@ -666,7 +649,13 @@
 				</div>
 
 				<div class="-controls-submit-button">
-					<app-form-button :disabled="!valid" primary solid :block="Screen.isXs">
+					<app-form-button
+						:disabled="!submitButtonsEnabled"
+						primary
+						solid
+						:block="Screen.isXs"
+						@before-submit="onPublishSubmit()"
+					>
 						{{ mainActionText }}
 					</app-form-button>
 				</div>
@@ -676,5 +665,3 @@
 </template>
 
 <style lang="stylus" src="./post.styl" scoped></style>
-
-<script lang="ts" src="./post"></script>

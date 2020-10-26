@@ -81,6 +81,7 @@ if (cluster.isMaster) {
 		const context = {
 			url: req.url,
 			ua: req.headers['user-agent'],
+			accept: req.headers['accept'] || '',
 		};
 
 		const s = Date.now();

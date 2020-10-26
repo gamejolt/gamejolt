@@ -1,14 +1,16 @@
+<script lang="ts" src="./video-embed"></script>
+
 <template>
 	<div class="-video-embed">
-		<app-responsive-dimensions :ratio="16 / 9" @change="onDimensionsChange()">
+		<app-responsive-dimensions :ratio="16 / 9">
 			<app-video-embed v-if="isHydrated" video-provider="youtube" :video-id="videoId" />
 		</app-responsive-dimensions>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '../variables'
-@require '~styles-lib/mixins'
+@import '../variables'
+@import '~styles-lib/mixins'
 
 .-video-embed
 	change-bg('bg-offset')
@@ -21,5 +23,3 @@
 		margin-left: -($-item-padding-container)
 		margin-right: -($-item-padding-container)
 </style>
-
-<script lang="ts" src="./video"></script>

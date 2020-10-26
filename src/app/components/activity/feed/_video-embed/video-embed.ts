@@ -1,8 +1,9 @@
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
+import { propRequired } from '../../../../../utils/vue';
 import { AppResponsiveDimensions } from '../../../../../_common/responsive-dimensions/responsive-dimensions';
 import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
-import { ActivityFeedView } from '../view';
+import { ActivityFeedKey, ActivityFeedView } from '../view';
 
 @Component({
 	components: {
@@ -10,31 +11,15 @@ import { ActivityFeedView } from '../view';
 		AppResponsiveDimensions,
 	},
 })
-export default class AppActivityFeedVideo extends Vue {
-	@Inject()
-	feed!: ActivityFeedView;
+export default class AppActivityFeedVideoEmbed extends Vue {
+	@Prop(propRequired(String)) videoId!: string;
+	@Prop(propRequired(String)) thumbnail!: string;
+	@Prop(propRequired(Boolean)) isHydrated!: boolean;
 
-	@Prop(String)
-	videoId!: string;
+	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
-	@Prop(String)
-	thumbnail!: string;
-
-	@Prop(Boolean)
-	isHydrated?: boolean;
-
-	contentBootstrapped = false;
 	isShowingVideo = GJ_IS_SSR;
 	shouldAutoplay = !GJ_IS_SSR;
-
-	async onDimensionsChange() {
-		if (!this.contentBootstrapped) {
-			this.contentBootstrapped = true;
-
-			await this.$nextTick();
-			this.$emit('bootstrap');
-		}
-	}
 
 	play() {
 		this.isShowingVideo = true;
