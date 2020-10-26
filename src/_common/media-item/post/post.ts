@@ -9,6 +9,7 @@ import {
 } from '../../responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../screen/screen-service';
 import AppStickerReactions from '../../sticker/reactions/reactions.vue';
+import { StickerTargetController } from '../../sticker/target/target-controller';
 import AppStickerTarget from '../../sticker/target/target.vue';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 import AppVideo from '../../video/video.vue';
@@ -30,30 +31,19 @@ import { MediaItem } from '../media-item-model';
 	},
 })
 export default class AppMediaItemPost extends Vue {
-	@Prop(propRequired(MediaItem))
-	mediaItem!: MediaItem;
-
-	@Prop(propOptional(Boolean, true))
-	isPostHydrated!: boolean;
-
-	@Prop(propOptional(Boolean, false))
-	isActive!: boolean;
-
-	@Prop(propOptional(Boolean, false))
-	restrictDeviceMaxHeight!: boolean;
-
-	@Prop(propOptional(Boolean, false))
-	inline!: boolean;
+	@Prop(propRequired(MediaItem)) mediaItem!: MediaItem;
+	@Prop(propOptional(Boolean, true)) isPostHydrated!: boolean;
+	@Prop(propOptional(Boolean, false)) isActive!: boolean;
+	@Prop(propOptional(Boolean, false)) restrictDeviceMaxHeight!: boolean;
+	@Prop(propOptional(Boolean, false)) inline!: boolean;
 
 	isFilled = false;
+	stickerTargetController = new StickerTargetController(this.mediaItem);
 
 	readonly Screen = Screen;
 
-	@Emit('bootstrap')
-	emitBootstrap() {}
-
-	@Emit('fullscreen')
-	emitFullscreen(_mediaItem: MediaItem) {}
+	@Emit('bootstrap') emitBootstrap() {}
+	@Emit('fullscreen') emitFullscreen(_mediaItem: MediaItem) {}
 
 	get shouldShowFullscreenOption() {
 		return (

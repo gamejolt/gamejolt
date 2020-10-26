@@ -17,14 +17,11 @@
 
 .-item
 	rounded-corners()
-	border: $border-width-base solid
-	border-color: var(--theme-bg-subtle)
 	background-color: var(--theme-bg-offset)
 	display: inline-flex
 	align-items: center
 	padding: 0px 4px
-	margin-right: 8px
-	margin-bottom: 4px
+	margin: 2px 4px
 	user-select: none
 
 .-sticker

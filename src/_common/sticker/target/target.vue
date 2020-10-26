@@ -3,17 +3,16 @@
 <template>
 	<div class="sticker-target">
 		<transition name="-fade">
-			<div v-if="showStickers">
+			<div v-if="controller.isShowing">
 				<app-sticker
-					v-for="sticker of sorted"
+					v-for="sticker of stickers"
 					:key="sticker.id"
+					class="-sticker-animate"
 					:class="{
-						'-sticker-animate': !noAnimateIn,
 						'-faded': drawerStore.isDrawerOpen,
 					}"
 					:style="{ 'animation-delay': getStickerAnimationDelay(sticker) }"
 					:sticker="sticker"
-					@click="onStickersRemoved"
 				/>
 			</div>
 		</transition>
@@ -34,10 +33,6 @@
 	position: relative
 	// Needs to be lower than the z-index of elements we want above the stickers.
 	z-index: 0
-
-	&-border
-		position: absolute
-		z-index: -1
 
 .-sticker-animate
 	animation-name: sticker-animate-in

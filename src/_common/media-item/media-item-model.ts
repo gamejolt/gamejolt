@@ -1,5 +1,6 @@
 import { LightboxMediaModel, LightboxMediaType } from '../lightbox/lightbox-helpers';
 import { Model } from '../model/model.service';
+import { constructStickerCounts, StickerCount } from '../sticker/sticker-count';
 
 export class MediaItem extends Model implements LightboxMediaModel {
 	static readonly TYPE_GAME_THUMBNAIL = 'game-thumbnail';
@@ -52,8 +53,17 @@ export class MediaItem extends Model implements LightboxMediaModel {
 	mediaserver_url!: string;
 	avg_img_color!: null | string;
 	img_has_transparency!: boolean;
+	sticker_counts: StickerCount[] = [];
 
 	post_id?: number;
+
+	constructor(data: any = {}) {
+		super(data);
+
+		if (data.sticker_counts) {
+			this.sticker_counts = constructStickerCounts(data.sticker_counts);
+		}
+	}
 
 	get croppedWidth() {
 		const crop = this.getCrop();

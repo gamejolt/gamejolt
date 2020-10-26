@@ -1,5 +1,4 @@
 import { Api, RequestOptions } from '../api/api.service';
-import { StickerPlacement } from '../sticker/placement/placement.model';
 
 export type ModelSaveRequestOptions = RequestOptions & { data?: any };
 
@@ -11,9 +10,6 @@ export class Model {
 	file: File | File[] | null = null;
 	_removed = false;
 	_progress: ProgressEvent | null = null;
-	// JODO: Not sure how we want to attach this information to the stickable models.
-	sticker_counts?: string | null;
-	stickers?: StickerPlacement[] | null;
 
 	// We need to create some methods dynamically on the model.
 	static populate: (rows: any[]) => any[];

@@ -2,7 +2,7 @@
 
 <template>
 	<div>
-		<app-sticker-target :model="comment">
+		<app-sticker-target :controller="stickerTargetController">
 			<app-fade-collapse
 				:collapse-height="375"
 				:is-open="showFullContent"
@@ -14,7 +14,7 @@
 				<p v-if="comment.modified_on" class="text-muted small">
 					<b><translate>Last modified on</translate></b>
 					<span :title="date(comment.modified_on, 'medium')">
-						{{ comment.modified_on | date('longDate') }}
+						{{ date(comment.modified_on, 'longDate') }}
 					</span>
 				</p>
 			</app-fade-collapse>
@@ -55,7 +55,10 @@
 			</div>
 		</app-sticker-target>
 
-		<app-sticker-reactions v-if="comment.sticker_counts" :model="comment" />
+		<app-sticker-reactions
+			v-if="comment.sticker_counts"
+			:controller="stickerTargetController"
+		/>
 	</div>
 </template>
 

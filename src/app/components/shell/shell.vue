@@ -12,12 +12,6 @@
 			'has-banner': hasBanner && !isShellHidden,
 		}"
 	>
-		<!-- JODO: Remove -->
-		<app-button
-			style="height: 50px; width: 50px; position: fixed; top: 54px; left: 70px; z-index: 5000;"
-			@click="testOpenDrawer()"
-		/>
-
 		<app-sticker-layer>
 			<template v-if="isShellHidden">
 				<slot />

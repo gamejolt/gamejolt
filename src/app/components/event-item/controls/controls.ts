@@ -33,7 +33,6 @@ export default class AppEventItemControls extends Vue {
 	@Prop(propOptional(ActivityFeedItem)) item?: ActivityFeedItem;
 	@Prop(propOptional(Boolean, false)) shouldShowFollow!: boolean;
 	@Prop(propOptional(Boolean, false)) showComments!: boolean;
-	@Prop(propOptional(Boolean, false)) showStickers!: boolean;
 	@Prop(propOptional(String, '')) eventLabel!: string;
 
 	@State app!: Store['app'];
@@ -50,7 +49,6 @@ export default class AppEventItemControls extends Vue {
 	@Emit('post-reject') emitPostReject(_community: Community) {}
 	@Emit('post-pin') emitPostPin() {}
 	@Emit('post-unpin') emitPostUnpin() {}
-	@Emit('post-stickers-visibility-change') emitStickersVisibilityChange(_visible: boolean) {}
 
 	created() {
 		// The 'feed' and 'item' props will be included when this is used in the

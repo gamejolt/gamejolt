@@ -23,7 +23,7 @@
 				/>
 			</div>
 			<app-media-item-backdrop class="-backdrop" :media-item="mediaItem" :radius="itemRadius">
-				<app-sticker-target :model="mediaItem">
+				<app-sticker-target :controller="stickerTargetController">
 					<app-img-responsive
 						v-if="!isPostHydrated || !mediaItem.is_animated"
 						class="-img"
@@ -46,7 +46,10 @@
 			</app-media-item-backdrop>
 		</app-responsive-dimensions>
 
-		<app-sticker-reactions v-if="mediaItem.sticker_counts" :model="mediaItem" />
+		<app-sticker-reactions
+			v-if="mediaItem.sticker_counts"
+			:controller="stickerTargetController"
+		/>
 	</div>
 </template>
 

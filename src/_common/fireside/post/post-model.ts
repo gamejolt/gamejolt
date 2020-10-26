@@ -17,6 +17,7 @@ import { CommentableModel, Model, ModelSaveRequestOptions } from '../../model/mo
 import { Poll } from '../../poll/poll.model';
 import { Registry } from '../../registry/registry.service';
 import { StickerPlacement } from '../../sticker/placement/placement.model';
+import { constructStickerCounts, StickerCount } from '../../sticker/sticker-count';
 import { Translate } from '../../translate/translate.service';
 import { User } from '../../user/user.model';
 import { FiresidePostCommunity } from './community/community.model';
@@ -80,7 +81,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	poll!: Poll | null;
 	platforms_published_to: FiresidePostPublishedPlatform[] = [];
 	stickers: StickerPlacement[] = [];
-	sticker_counts!: string;
+	sticker_counts: StickerCount[] = [];
 
 	// Used for forms and saving.
 	key_group_ids: number[] = [];
@@ -141,8 +142,8 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 			this.platforms_published_to = data.platforms_published_to;
 		}
 
-		if (data.stickers) {
-			this.stickers = StickerPlacement.populate(data.stickers);
+		if (data.sticker_counts) {
+			this.sticker_counts = constructStickerCounts(data.sticker_counts);
 		}
 
 		Registry.store('FiresidePost', this);

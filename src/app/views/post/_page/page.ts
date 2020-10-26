@@ -24,12 +24,10 @@ import {
 	AppResponsiveDimensionsChangeEvent,
 } from '../../../../_common/responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
-import { SettingAlwaysShowStickers } from '../../../../_common/settings/settings.service';
 import AppSketchfabEmbed from '../../../../_common/sketchfab/embed/embed.vue';
 import AppStickerReactions from '../../../../_common/sticker/reactions/reactions.vue';
-import AppStickerTargetTS from '../../../../_common/sticker/target/target';
+import { StickerTargetController } from '../../../../_common/sticker/target/target-controller';
 import AppStickerTarget from '../../../../_common/sticker/target/target.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
@@ -84,15 +82,11 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 
 	@AppState user!: AppStore['user'];
 
-	stickersVisible = false;
 	activeImageIndex = 0;
 	videoStartTime = 0;
-	private lightbox?: AppLightboxTS;
 	isPlayerFilled = false;
-
-	$refs!: {
-		stickerTarget: AppStickerTargetTS;
-	};
+	stickerTargetController = new StickerTargetController(this.post);
+	private lightbox?: AppLightboxTS;
 
 	readonly Screen = Screen;
 	readonly number = number;
@@ -138,8 +132,6 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 		if (GJ_IS_SSR) {
 			return;
 		}
-
-		this.stickersVisible = SettingAlwaysShowStickers.get();
 
 		if (typeof this.$route.query.t === 'string') {
 			if (this.video) {
@@ -205,18 +197,6 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 			title: this.$gettext('Huzzah!'),
 			message: this.$gettext('Your post has been published.'),
 		});
-	}
-
-	onPostStickersVisibilityChange(visible: boolean) {
-		this.stickersVisible = visible;
-		// Scroll to the sticker target to show stickers.
-		if (visible) {
-			Scroll.to(this.$refs.stickerTarget.$el as HTMLElement, { preventDirections: ['down'] });
-		}
-	}
-
-	onAllStickersHidden() {
-		this.stickersVisible = false;
 	}
 
 	onClickFullscreen(mediaItem: MediaItem) {

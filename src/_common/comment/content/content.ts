@@ -5,6 +5,7 @@ import AppContentViewer from '../../content/content-viewer/content-viewer.vue';
 import AppFadeCollapse from '../../fade-collapse/fade-collapse.vue';
 import { date } from '../../filters/date';
 import AppStickerReactions from '../../sticker/reactions/reactions.vue';
+import { StickerTargetController } from '../../sticker/target/target-controller';
 import AppStickerTarget from '../../sticker/target/target.vue';
 import { Comment } from '../comment-model';
 import '../comment.styl';
@@ -29,6 +30,7 @@ export default class AppCommentContent extends Vue {
 	canToggleContent = false;
 	showFullContent = false;
 	showAllVideos = false;
+	stickerTargetController = new StickerTargetController(this.comment);
 
 	readonly date = date;
 }

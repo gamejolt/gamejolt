@@ -1,9 +1,8 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { Emit, Inject, Prop } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../utils/vue';
+import { Inject, Prop } from 'vue-property-decorator';
+import { propRequired } from '../../../utils/vue';
 import { Api } from '../../api/api.service';
-import { getStickerModelResourceName } from '../../comment/comment-model';
 import {
 	assignDrawerStoreItem,
 	DrawerStore,
@@ -11,10 +10,7 @@ import {
 	getPointerPosition,
 	StickableTarget,
 } from '../../drawer/drawer-store';
-import { FiresidePost } from '../../fireside/post/post-model';
 import { Growls } from '../../growls/growls.service';
-import { MediaItem } from '../../media-item/media-item-model';
-import { Model } from '../../model/model.service';
 import { Ruler } from '../../ruler/ruler-service';
 import {
 	registerStickerTarget,
@@ -24,6 +20,7 @@ import {
 import { StickerPlacement } from '../placement/placement.model';
 import AppStickerReactions from '../reactions/reactions.vue';
 import AppSticker from '../sticker.vue';
+import { getStickerModelResourceName, StickerTargetController } from './target-controller';
 
 export type ValidStickerResource = 'Comment' | 'Fireside_Post' | 'Media_Item';
 
@@ -34,29 +31,25 @@ export type ValidStickerResource = 'Comment' | 'Fireside_Post' | 'Media_Item';
 	},
 })
 export default class AppStickerTarget extends Vue implements StickableTarget {
+	@Prop(propRequired(StickerTargetController)) controller!: StickerTargetController;
+
 	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
 	@Inject(StickerLayerKey) layer!: StickerLayerController;
-	// JODO: make work
-	@Prop(propRequired(Model)) model!: Model;
-	@Prop(propOptional(Boolean, true)) showStickers!: boolean;
-	@Prop(propOptional(Boolean, false)) noAnimateIn!: boolean;
 
 	$el!: HTMLDivElement;
 
-	@Emit('hide-all') emitHideAll() {}
-	@Emit('stickers-visibility-change') emitStickersVisibilityChange(_visible: boolean) {}
-
-	get stickers() {
-		return this.model.stickers || [];
-	}
+	// DODO: Scroll to the sticker target to show stickers.
+	// if (visible) {
+	// 	Scroll.to(this.$refs.stickerTarget.$el as HTMLElement, { preventDirections: ['down'] });
+	// }
 
 	get shouldIndicateStickable() {
 		return this.drawerStore.isDrawerOpen;
 	}
 
 	// Sort so that the newer stickers go on top of the older ones.
-	get sorted() {
-		return [...this.stickers].sort((a, b) => a.id - b.id);
+	get stickers() {
+		return [...this.controller.stickers].sort((a, b) => a.id - b.id);
 	}
 
 	created() {
@@ -68,7 +61,7 @@ export default class AppStickerTarget extends Vue implements StickableTarget {
 	}
 
 	onPlaceDrawerSticker(event: MouseEvent | TouchEvent) {
-		const { isDragging, sticker, stickerSize } = this.drawerStore;
+		const { isDragging, sticker } = this.drawerStore;
 		if (!isDragging || !sticker) {
 			return;
 		}
@@ -103,8 +96,10 @@ export default class AppStickerTarget extends Vue implements StickableTarget {
 			return;
 		}
 
-		const resourceType = getStickerModelResourceName(this.model);
-		const result = await Api.sendRequest(
+		const { model } = this.controller;
+
+		const resourceType = getStickerModelResourceName(model);
+		const { success, resource } = await Api.sendRequest(
 			'/web/stickers/place',
 			{
 				stickerId: sticker.sticker.id,
@@ -112,41 +107,19 @@ export default class AppStickerTarget extends Vue implements StickableTarget {
 				positionY: sticker.position_y,
 				rotation: sticker.rotation,
 				resource: resourceType,
-				resourceId: this.model.id,
+				resourceId: model.id,
 			},
 			{ detach: true }
 		);
 
-		if (result.success) {
-			const model = this._createNewModelResource(resourceType, result.resource);
-			this.model.assign(model);
-			this.emitStickersVisibilityChange(true);
+		if (success) {
+			model.assign(resource);
 		} else {
 			Growls.error(this.$gettext(`Failed to place sticker.`));
 		}
 	}
 
-	private _createNewModelResource(type: ValidStickerResource, resource: any) {
-		if (type === 'Comment') {
-			return new Comment(resource);
-		}
-
-		if (type === 'Fireside_Post') {
-			return new FiresidePost(resource);
-		}
-
-		if (type === 'Media_Item') {
-			return new MediaItem(resource);
-		}
-
-		return this.model;
-	}
-
 	getStickerAnimationDelay(placement: StickerPlacement) {
-		return this.sorted.indexOf(placement) * 0.05 + 's';
-	}
-
-	onStickersRemoved() {
-		this.emitHideAll();
+		return this.stickers.indexOf(placement) * 0.05 + 's';
 	}
 }

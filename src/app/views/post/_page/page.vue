@@ -133,12 +133,7 @@
 							</span>
 						</div>
 
-						<app-sticker-target
-							ref="stickerTarget"
-							:stickers="post.stickers"
-							:show-stickers="stickersVisible"
-							@hide-all="onAllStickersHidden"
-						>
+						<app-sticker-target :controller="stickerTargetController">
 							<app-content-viewer :source="post.lead_content" />
 						</app-sticker-target>
 
@@ -187,7 +182,10 @@
 							</div>
 						</template>
 
-						<app-sticker-reactions v-if="post.sticker_counts" :model="post" />
+						<app-sticker-reactions
+							v-if="post.sticker_counts"
+							:controller="stickerTargetController"
+						/>
 
 						<br />
 					</app-event-item-controls-overlay>
@@ -196,11 +194,9 @@
 						:post="post"
 						show-comments
 						should-show-follow
-						:show-stickers="stickersVisible"
 						event-label="page"
 						@post-remove="onPostRemoved"
 						@post-publish="onPostPublished"
-						@post-stickers-visibility-change="onPostStickersVisibilityChange"
 					/>
 				</div>
 

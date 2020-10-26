@@ -113,14 +113,7 @@
 					:post="post"
 				/>
 
-				<app-sticker-target
-					ref="stickerTarget"
-					:model="post"
-					:show-stickers="stickersVisible"
-					:no-animate-in="!animateStickers"
-					@hide-all="onAllStickersHidden"
-					@stickers-visibility-change="onPostStickersVisibilityChange"
-				>
+				<app-sticker-target ref="stickerTarget" :controller="stickerTargetController">
 					<!--
 						This shouldn't ever really show a collapser. It's for the jokers that think it would
 						be fun to make a post with a bunch of new lines.
@@ -164,7 +157,7 @@
 					<app-sticker-reactions
 						v-if="post.sticker_counts"
 						class="-controls-buffer"
-						:model="post"
+						:controller="stickerTargetController"
 					/>
 				</app-event-item-controls-overlay>
 			</template>
@@ -178,7 +171,7 @@
 				:feed="feed"
 				:item="item"
 				:video="video"
-				:show-stickers="stickersVisible"
+				:sticker-target-controller="stickerTargetController"
 				event-label="feed"
 				@post-edit="onPostEdited(eventItem)"
 				@post-publish="onPostPublished(eventItem)"
@@ -189,7 +182,6 @@
 				@post-reject="onPostRejected(eventItem, $event)"
 				@post-pin="onPostPinned(eventItem)"
 				@post-unpin="onPostUnpinned(eventItem)"
-				@post-stickers-visibility-change="onPostStickersVisibilityChange"
 			/>
 		</div>
 	</div>

@@ -21,11 +21,10 @@ import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppPill from '../../../../../_common/pill/pill.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
-import { SettingAlwaysShowStickers } from '../../../../../_common/settings/settings.service';
 import AppStickerReactions from '../../../../../_common/sticker/reactions/reactions.vue';
 import AppStickerTargetTS from '../../../../../_common/sticker/target/target';
+import { StickerTargetController } from '../../../../../_common/sticker/target/target-controller';
 import AppStickerTarget from '../../../../../_common/sticker/target/target.vue';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
 import AppUserFollowWidget from '../../../../../_common/user/follow/widget.vue';
@@ -87,8 +86,7 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	canToggleLead = false;
 	hasBypassedBlock = false;
-	stickersVisible = false;
-	animateStickers = true;
+	stickerTargetController: null | StickerTargetController = null;
 
 	private feedComponent!: AppActivityFeedTS;
 	private queryParams: Record<string, string> = {};
@@ -250,11 +248,8 @@ export default class AppActivityFeedEventItem extends Vue {
 	}
 
 	created() {
-		if (!GJ_IS_SSR) {
-			this.stickersVisible = SettingAlwaysShowStickers.get();
-			if (this.stickersVisible) {
-				this.animateStickers = false;
-			}
+		if (this.post) {
+			this.stickerTargetController = new StickerTargetController(this.post);
 		}
 	}
 
@@ -381,15 +376,6 @@ export default class AppActivityFeedEventItem extends Vue {
 		this.feedComponent.onPostUnpinned(item);
 	}
 
-	onPostStickersVisibilityChange(visible: boolean) {
-		this.animateStickers = true;
-		this.stickersVisible = visible;
-		// Scroll to the sticker target to show stickers.
-		if (visible) {
-			Scroll.to(this.$refs.stickerTarget.$el as HTMLElement, { preventDirections: ['down'] });
-		}
-	}
-
 	getChannelRoute(postCommunity: FiresidePostCommunity) {
 		if (!postCommunity.channel) {
 			return undefined;
@@ -400,9 +386,5 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	getChannelTitle(postCommunity: FiresidePostCommunity) {
 		return postCommunity.channel ? postCommunity.channel.title : '';
-	}
-
-	onAllStickersHidden() {
-		this.stickersVisible = false;
 	}
 }

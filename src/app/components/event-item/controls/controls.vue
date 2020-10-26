@@ -8,7 +8,6 @@
 					:post="post"
 					:show-comments-button="!showCommentFeed"
 					:comments-count="commentsCount"
-					:show-stickers="showStickers"
 					:event-label="eventLabel"
 					@edit="emitPostEdit"
 					@publish="emitPostPublish"
@@ -20,7 +19,6 @@
 					@pin="emitPostPin"
 					@unpin="emitPostUnpin"
 					@like-change="setUserFollow"
-					@stickers-visibility-change="emitStickersVisibilityChange"
 				/>
 			</template>
 			<template v-else-if="video">
