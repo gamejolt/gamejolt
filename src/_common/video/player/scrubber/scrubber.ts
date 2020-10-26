@@ -49,20 +49,18 @@ export default class AppVideoPlayerScrubber extends Vue {
 
 	panStart(event: HammerInput) {
 		this.initTimebarData();
-
-		// Forward off to the normal pan event handler.
-		this.pan(event);
-	}
-
-	pan(event: HammerInput) {
-		scrubVideo(this.player, this.calcScrubPos(event), false);
+		scrubVideo(this.player, this.calcScrubPos(event), 'start');
 
 		// Will tell the browser to not select text while dragging.
 		event.preventDefault();
 	}
 
+	pan(event: HammerInput) {
+		scrubVideo(this.player, this.calcScrubPos(event), 'scrub');
+	}
+
 	panEnd(event: HammerInput) {
-		scrubVideo(this.player, this.calcScrubPos(event), true);
+		scrubVideo(this.player, this.calcScrubPos(event), 'end');
 	}
 
 	private initTimebarData() {
