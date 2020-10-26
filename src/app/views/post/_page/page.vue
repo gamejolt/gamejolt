@@ -248,6 +248,9 @@
 		display: inline-flex
 		align-items: center
 
+		@media $media-xs
+			margin-right: 8px
+
 	&-label
 		margin-left: 4px
 
