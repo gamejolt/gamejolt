@@ -121,11 +121,11 @@
 					@hide-all="onAllStickersHidden"
 				>
 					<!--
-						This shouldn't ever really show a collapser. It's for the jokers that think it would
-						be fun to make a post with a bunch of new lines.
+					This shouldn't ever really show a collapser. It's for the jokers that think it would
+					be fun to make a post with a bunch of new lines.
 					-->
 					<app-fade-collapse
-						:collapse-height="600"
+						:collapse-height="400"
 						:is-open="isLeadOpen"
 						:animate="false"
 						@require-change="canToggleLeadChanged"
