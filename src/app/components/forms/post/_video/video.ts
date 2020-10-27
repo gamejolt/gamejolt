@@ -260,10 +260,7 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 
 	private validateDataTransfer(e: DragEvent) {
 		return (
-			!e.dataTransfer ||
-			!e.dataTransfer.items.length ||
-			e.dataTransfer.items[0].kind !== 'file' ||
-			!e.dataTransfer.items[0].type.includes('video')
+			e.dataTransfer && e.dataTransfer.items.length && e.dataTransfer.items[0].kind === 'file'
 		);
 	}
 
