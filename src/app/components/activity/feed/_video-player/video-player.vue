@@ -1,7 +1,13 @@
 <script lang="ts" src="./video-player"></script>
 
 <template>
-	<div class="-player theme-dark" @mouseleave="onMouseOut" @mouseenter="onMouseIn">
+	<app-scroll-inview
+		class="-player theme-dark"
+		:config="InviewConfigFocused"
+		:controller="focusedController"
+		@mouseleave="onMouseOut"
+		@mouseenter="onMouseIn"
+	>
 		<app-responsive-dimensions
 			class="-video-container"
 			:ratio="mediaItem.width / mediaItem.height"
@@ -94,7 +100,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</app-scroll-inview>
 </template>
 
 <style lang="stylus" scoped>

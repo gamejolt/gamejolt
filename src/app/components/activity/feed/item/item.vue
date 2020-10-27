@@ -1,11 +1,10 @@
 <script lang="ts" src="./item"></script>
 
 <template>
-	<component
-		:is="InviewConfigFocused ? 'app-scroll-inview' : 'div'"
-		v-bind="
-			InviewConfigFocused ? { config: InviewConfigFocused, controller: inviewController } : {}
-		"
+	<app-scroll-inview
+		:config="InviewConfig"
+		@inview="onInviewChange(true)"
+		@outview="onInviewChange(false)"
 	>
 		<app-scroll-inview
 			:config="InviewConfigHydration"
@@ -31,5 +30,5 @@
 				/>
 			</template>
 		</app-scroll-inview>
-	</component>
+	</app-scroll-inview>
 </template>

@@ -26,7 +26,6 @@ let globalIndex = 0;
 class ActivityFeedViewItemState {
 	isBootstrapped = true;
 	isHydrated = false;
-	isFocused = false;
 	isOpen = false;
 	isLeadOpen = false;
 	isShowingFollow = false;
@@ -184,10 +183,6 @@ export class ActivityFeedView {
 		return GJ_IS_SSR || this.getItemState(item).isHydrated;
 	}
 
-	isItemFocused(item: ActivityFeedItem) {
-		return this.getItemState(item).isFocused;
-	}
-
 	setItemHeight(item: ActivityFeedItem, height: string | null) {
 		this.getItemState(item).height = height;
 	}
@@ -247,11 +242,6 @@ export class ActivityFeedView {
 		} else {
 			itemState.isHydrated = false;
 		}
-	}
-
-	setItemFocused(item: ActivityFeedItem, focused: boolean) {
-		const itemState = this.getItemState(item);
-		itemState.isFocused = focused;
 	}
 
 	async loadMore() {
