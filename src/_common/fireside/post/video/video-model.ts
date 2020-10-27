@@ -42,7 +42,7 @@ export class FiresidePostVideo extends Model {
 		};
 
 		return this.media
-			.filter(i => i.type === MediaItem.TYPE_TRANSCODED)
+			.filter(i => i.type === MediaItem.TYPE_VIDEO_MANIFEST)
 			.sort((a, b) => getManifestPreference(a) - getManifestPreference(b))
 			.map(i => i.img_url);
 	}
