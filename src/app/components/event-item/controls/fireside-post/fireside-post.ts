@@ -1,8 +1,16 @@
 import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../../utils/vue';
 import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
+import {
+	CommentStoreManager,
+	CommentStoreManagerKey,
+	CommentStoreModel,
+	lockCommentStore,
+	releaseCommentStore,
+	setCommentCount,
+} from '../../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../../_common/comment/modal/modal.service';
 import AppCommentVideoLikeWidget from '../../../../../_common/comment/video/like-widget/like-widget.vue';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
@@ -39,12 +47,14 @@ import AppEventItemControlsFiresidePostStats from './stats/stats.vue';
 export default class AppEventItemControlsFiresidePost extends Vue {
 	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
 	@Prop(propRequired(Boolean)) showCommentsButton!: boolean;
-	@Prop(propOptional(Number, 0)) commentsCount!: number;
 	@Prop(propOptional(Boolean, false)) showStickers!: boolean;
 	@Prop(propRequired(String)) eventLabel!: string;
 
-	@AppState
-	user!: AppStore['user'];
+	@Inject(CommentStoreManagerKey) commentManager!: CommentStoreManager;
+
+	@AppState user!: AppStore['user'];
+
+	private commentStore: null | CommentStoreModel = null;
 
 	readonly GJ_IS_CLIENT!: boolean;
 	readonly Screen = Screen;
@@ -62,6 +72,10 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 	@Emit('unpin') emitUnpin() {}
 	@Emit('like-change') emitLikeChange(_value: boolean) {}
 	@Emit('stickers-visibility-change') emitStickersVisibilityChange(_visible: boolean) {}
+
+	get commentsCount() {
+		return this.commentStore ? this.commentStore.totalCount : 0;
+	}
 
 	get canPublish() {
 		return (
@@ -127,6 +141,18 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 		}
 
 		return uniqueStickers.reverse();
+	}
+
+	created() {
+		this.commentStore = lockCommentStore(this.commentManager, 'Fireside_Post', this.post.id);
+		setCommentCount(this.commentStore, this.post.comment_count);
+	}
+
+	destroyed() {
+		if (this.commentStore) {
+			releaseCommentStore(this.commentManager, this.commentStore);
+			this.commentStore = null;
+		}
 	}
 
 	openComments() {

@@ -190,7 +190,6 @@
 
 					<app-event-item-controls
 						:post="post"
-						show-comments
 						should-show-follow
 						:show-stickers="stickersVisible"
 						event-label="page"
@@ -198,6 +197,10 @@
 						@post-publish="onPostPublished"
 						@post-stickers-visibility-change="onPostStickersVisibilityChange"
 					/>
+
+					<br />
+					<br />
+					<app-comment-widget-lazy :model="post" display-mode="comments" />
 				</div>
 
 				<!-- Right Sidebar -->

@@ -172,6 +172,7 @@
 				:item="item"
 				:video="video"
 				:show-stickers="stickersVisible"
+				show-comments
 				event-label="feed"
 				@post-edit="onPostEdited(eventItem)"
 				@post-publish="onPostPublished(eventItem)"

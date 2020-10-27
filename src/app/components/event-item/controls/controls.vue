@@ -6,8 +6,7 @@
 			<template v-if="post">
 				<app-event-item-controls-fireside-post
 					:post="post"
-					:show-comments-button="!showCommentFeed"
-					:comments-count="commentsCount"
+					:show-comments-button="showComments"
 					:show-stickers="showStickers"
 					:event-label="eventLabel"
 					@edit="emitPostEdit"
@@ -39,14 +38,5 @@
 			:should-show="isShowingFollow"
 			@close="onUserFollowDismissal"
 		/>
-		<span @click.stop>
-			<app-event-item-controls-comments
-				v-if="post"
-				:model="post"
-				:show-feed="showCommentFeed"
-				:event-label="eventLabel"
-				@count="commentsCount = $event"
-			/>
-		</span>
 	</div>
 </template>

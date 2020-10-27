@@ -13,6 +13,7 @@ import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import AppVideoEmbed from '../../../_common/video/embed/embed.vue';
 import AppVideo from '../../../_common/video/video.vue';
 import AppEventItemControls from '../event-item/controls/controls.vue';
+import { AppCommentWidgetLazy } from '../lazy';
 import AppPollVoting from '../poll/voting/voting.vue';
 
 @Component({
@@ -26,6 +27,7 @@ import AppPollVoting from '../poll/voting/voting.vue';
 		AppEventItemControls,
 		AppContentViewer,
 		AppStickerTarget,
+		AppCommentWidgetLazy,
 	},
 })
 export default class AppBroadcastModal extends BaseModal {
