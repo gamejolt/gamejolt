@@ -52,7 +52,7 @@ export class DrawerStore {
 	reset() {
 		_removeEventListeners(this);
 		_removeDrawerStoreActiveItem(this);
-		_setDraggingState(this, false);
+		// _setDraggingState(this, false);
 
 		this.drawerItems = [];
 		this.targetComponent = null;

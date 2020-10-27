@@ -23,7 +23,7 @@
 				/>
 			</div>
 			<app-media-item-backdrop class="-backdrop" :media-item="mediaItem" :radius="itemRadius">
-				<app-sticker-target :controller="stickerTargetController">
+				<app-sticker-target :controller="stickerTargetController" :disabled="!isActive">
 					<app-img-responsive
 						v-if="!isPostHydrated || !mediaItem.is_animated"
 						class="-img"

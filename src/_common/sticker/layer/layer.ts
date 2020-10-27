@@ -21,20 +21,13 @@ import AppStickerLayerPlacementMask from './placement-mask.vue';
 	},
 })
 export default class AppStickerLayer extends Vue {
-	@Provide(StickerLayerKey) layer = new StickerLayerController();
-	@Inject(DrawerStoreKey) drawer!: DrawerStore;
-
 	@Prop(propOptional(Boolean, false)) hasFixedParent!: boolean;
 
+	@Inject(DrawerStoreKey) drawer!: DrawerStore;
+
+	@Provide(StickerLayerKey) layer = new StickerLayerController(this.drawer);
+
 	private focusWatcherDeregister!: () => void;
-
-	get isActiveLayer() {
-		return this.drawer.activeLayer === this.layer;
-	}
-
-	get isShowingMask() {
-		return this.drawer.isDrawerOpen && this.isActiveLayer;
-	}
 
 	created() {
 		registerStickerLayer(this.drawer, this.layer);
@@ -50,7 +43,9 @@ export default class AppStickerLayer extends Vue {
 
 		// We tell the ContentFocus service that content is unfocused when the
 		// mask is active.
-		this.focusWatcherDeregister = ContentFocus.registerWatcher(() => !this.isShowingMask);
+		this.focusWatcherDeregister = ContentFocus.registerWatcher(
+			() => !this.layer.isShowingDrawer
+		);
 	}
 
 	beforeDestroy() {

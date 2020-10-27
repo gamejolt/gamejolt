@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Inject, Prop, Watch } from 'vue-property-decorator';
-import { propRequired } from '../../../utils/vue';
+import { propOptional, propRequired } from '../../../utils/vue';
 import { Api } from '../../api/api.service';
 import {
 	assignDrawerStoreItem,
@@ -18,6 +18,7 @@ import {
 	registerStickerTarget,
 	StickerLayerController,
 	StickerLayerKey,
+	unregisterStickerTarget,
 } from '../layer/layer-controller';
 import { StickerPlacement } from '../placement/placement.model';
 import AppStickerReactions from '../reactions/reactions.vue';
@@ -37,6 +38,7 @@ const InviewConfig = new ScrollInviewConfig();
 })
 export default class AppStickerTarget extends Vue implements StickableTarget {
 	@Prop(propRequired(StickerTargetController)) controller!: StickerTargetController;
+	@Prop(propOptional(Boolean, false)) disabled!: boolean;
 
 	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
 	@Inject(StickerLayerKey) layer!: StickerLayerController;
@@ -49,21 +51,26 @@ export default class AppStickerTarget extends Vue implements StickableTarget {
 	// 	Scroll.to(this.$refs.stickerTarget.$el as HTMLElement, { preventDirections: ['down'] });
 	// }
 
-	get shouldIndicateStickable() {
-		return this.drawerStore.isDrawerOpen;
-	}
-
 	// Sort so that the newer stickers go on top of the older ones.
 	get stickers() {
 		return [...this.controller.stickers].sort((a, b) => a.id - b.id);
 	}
 
 	created() {
-		registerStickerTarget(this.layer, this);
+		this.checkDisabledState();
+	}
+
+	@Watch('disabled')
+	checkDisabledState() {
+		if (this.disabled) {
+			unregisterStickerTarget(this.layer, this, this.controller);
+		} else {
+			registerStickerTarget(this.layer, this, this.controller);
+		}
 	}
 
 	beforeDestroy() {
-		registerStickerTarget(this.layer, this);
+		unregisterStickerTarget(this.layer, this, this.controller);
 	}
 
 	@Watch('controller.shouldLoad')
@@ -72,7 +79,7 @@ export default class AppStickerTarget extends Vue implements StickableTarget {
 	}
 
 	private async loadStickers() {
-		this.controller.hasInitialized = true;
+		this.controller.hasLoadedStickers = true;
 
 		const resourceName = getStickerModelResourceName(this.controller.model);
 		const resourceId = this.controller.model.id;

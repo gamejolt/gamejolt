@@ -23,7 +23,6 @@ import AppPill from '../../../../../_common/pill/pill.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
 import AppStickerReactions from '../../../../../_common/sticker/reactions/reactions.vue';
-import AppStickerTargetTS from '../../../../../_common/sticker/target/target';
 import {
 	StickerTargetController,
 	StickerTargetParentControllerKey,
@@ -100,10 +99,6 @@ export default class AppActivityFeedEventItem extends Vue {
 	readonly EventItem = EventItem;
 
 	$el!: HTMLDivElement;
-
-	$refs!: {
-		stickerTarget: AppStickerTargetTS;
-	};
 
 	@Emit('resize') emitResize(_height: number) {}
 	@Emit('clicked') emitClicked() {}

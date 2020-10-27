@@ -3,13 +3,13 @@
 <template>
 	<div class="-layer" :class="{ '-dragging': drawer.isDragging }">
 		<app-sticker-layer-placement-mask
-			v-if="isShowingMask"
+			v-if="layer.isShowingDrawer"
 			class="-placement-mask"
 			:layer="layer"
 		/>
 		<slot />
-		<app-sticker-drawer-ghost v-if="isShowingMask && drawer.sticker" class="-ghost" />
-		<app-sticker-drawer v-if="isActiveLayer" class="-sticker-drawer" />
+		<app-sticker-drawer-ghost v-if="layer.isShowingDrawer && drawer.sticker" class="-ghost" />
+		<app-sticker-drawer v-if="layer.isActive" class="-sticker-drawer" />
 	</div>
 </template>
 

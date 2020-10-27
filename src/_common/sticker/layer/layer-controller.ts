@@ -1,5 +1,7 @@
 import { arrayRemove } from '../../../utils/array';
+import { DrawerStore } from '../../drawer/drawer-store';
 import AppStickerTarget from '../target/target';
+import { StickerTargetController } from '../target/target-controller';
 
 export const StickerLayerKey = Symbol('sticker-layer');
 
@@ -8,6 +10,16 @@ export class StickerLayerController {
 	targets: AppStickerTarget[] = [];
 	hoveredTarget: AppStickerTarget | null = null;
 	rects = new WeakMap<AppStickerTarget, StickerLayerTargetRect>();
+
+	constructor(public readonly drawer: DrawerStore) {}
+
+	get isActive() {
+		return this.drawer.activeLayer === this;
+	}
+
+	get isShowingDrawer() {
+		return this.drawer.isDrawerOpen && this.isActive;
+	}
 }
 
 export class StickerLayerTargetRect {
@@ -20,18 +32,22 @@ export class StickerLayerTargetRect {
 }
 
 export function registerStickerTarget(
-	{ targets }: StickerLayerController,
-	target: AppStickerTarget
+	controller: StickerLayerController,
+	target: AppStickerTarget,
+	targetController: StickerTargetController
 ) {
-	targets.push(target);
+	targetController.layer = controller;
+	controller.targets.push(target);
 }
 
 export function unregisterStickerTarget(
 	controller: StickerLayerController,
-	target: AppStickerTarget
+	target: AppStickerTarget,
+	targetController: StickerTargetController
 ) {
 	const { targets, hoveredTarget } = controller;
 
+	targetController.layer = null;
 	arrayRemove(targets, i => i === target);
 	if (hoveredTarget === target) {
 		controller.hoveredTarget = null;

@@ -2,6 +2,7 @@ import { Comment } from '../../comment/comment-model';
 import { FiresidePost } from '../../fireside/post/post-model';
 import { MediaItem } from '../../media-item/media-item-model';
 import { Model } from '../../model/model.service';
+import { StickerLayerController } from '../layer/layer-controller';
 import { StickerPlacement } from '../placement/placement.model';
 import { ValidStickerResource } from './target';
 
@@ -10,7 +11,13 @@ export const StickerTargetParentControllerKey = Symbol('sticker-target-parent');
 export class StickerTargetController {
 	isInview = false;
 	stickers: StickerPlacement[] = [];
-	hasInitialized = false;
+	hasLoadedStickers = false;
+
+	/**
+	 * This is the layer that this target lives within. It gets set when the
+	 * AppStickerTarget registers the target to the layer.
+	 */
+	layer: null | StickerLayerController = null;
 
 	parent: null | StickerTargetController = null;
 	children: StickerTargetController[] = [];
@@ -18,7 +25,10 @@ export class StickerTargetController {
 	private _shouldShow = false;
 
 	get shouldShow() {
-		return Boolean(this._shouldShow || this.parent?.shouldShow);
+		const shouldShow = Boolean(
+			this._shouldShow || this.parent?.shouldShow || this.layer?.isShowingDrawer
+		);
+		return shouldShow && this.isInview;
 	}
 
 	set shouldShow(shouldShow: boolean) {
@@ -30,7 +40,7 @@ export class StickerTargetController {
 	 * in based on this state.
 	 */
 	get shouldLoad() {
-		return this.shouldShow && this.isInview && !this.hasInitialized;
+		return this.shouldShow && !this.hasLoadedStickers;
 	}
 
 	constructor(
