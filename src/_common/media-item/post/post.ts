@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
 import { ContentFocus } from '../../content-focus/content-focus.service';
 import { AppImgResponsive } from '../../img/responsive/responsive';
@@ -9,7 +9,10 @@ import {
 } from '../../responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../screen/screen-service';
 import AppStickerReactions from '../../sticker/reactions/reactions.vue';
-import { StickerTargetController } from '../../sticker/target/target-controller';
+import {
+	StickerTargetController,
+	StickerTargetParentControllerKey,
+} from '../../sticker/target/target-controller';
 import AppStickerTarget from '../../sticker/target/target.vue';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 import AppVideo from '../../video/video.vue';
@@ -23,7 +26,6 @@ import { MediaItem } from '../media-item-model';
 		AppVideo,
 		AppResponsiveDimensions,
 		AppStickerTarget,
-		// JODO: Not sure how we want to attach the reactions to the item yet.
 		AppStickerReactions,
 	},
 	directives: {
@@ -37,8 +39,14 @@ export default class AppMediaItemPost extends Vue {
 	@Prop(propOptional(Boolean, false)) restrictDeviceMaxHeight!: boolean;
 	@Prop(propOptional(Boolean, false)) inline!: boolean;
 
+	@Inject(StickerTargetParentControllerKey) parentStickerTarget!: StickerTargetController;
+
 	isFilled = false;
-	stickerTargetController = new StickerTargetController(this.mediaItem);
+
+	// We pass the parent sticker target controller in as the parent for this
+	// one. This will link them up so that when the parent is showing, we also
+	// try showing stickers on this target.
+	stickerTargetController = new StickerTargetController(this.mediaItem, this.parentStickerTarget);
 
 	readonly Screen = Screen;
 

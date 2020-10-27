@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Prop, Provide } from 'vue-property-decorator';
 import { RawLocation } from 'vue-router';
 import { propRequired } from '../../../../utils/vue';
 import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
@@ -27,7 +27,10 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import AppSketchfabEmbed from '../../../../_common/sketchfab/embed/embed.vue';
 import AppStickerReactions from '../../../../_common/sticker/reactions/reactions.vue';
-import { StickerTargetController } from '../../../../_common/sticker/target/target-controller';
+import {
+	StickerTargetController,
+	StickerTargetParentControllerKey,
+} from '../../../../_common/sticker/target/target-controller';
 import AppStickerTarget from '../../../../_common/sticker/target/target.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
@@ -84,10 +87,12 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 
 	@AppState user!: AppStore['user'];
 
+	@Provide(StickerTargetParentControllerKey)
+	stickerTargetController = new StickerTargetController(this.post);
+
 	activeImageIndex = 0;
 	videoStartTime = 0;
 	isPlayerFilled = false;
-	stickerTargetController = new StickerTargetController(this.post);
 	private lightbox?: AppLightboxTS;
 
 	readonly Screen = Screen;

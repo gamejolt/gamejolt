@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
+import { Component, Emit, Inject, Prop, Provide } from 'vue-property-decorator';
 import { Location } from 'vue-router';
 import { State } from 'vuex-class';
 import { findRequiredVueParent, propRequired } from '../../../../../utils/vue';
@@ -24,7 +24,10 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
 import AppStickerReactions from '../../../../../_common/sticker/reactions/reactions.vue';
 import AppStickerTargetTS from '../../../../../_common/sticker/target/target';
-import { StickerTargetController } from '../../../../../_common/sticker/target/target-controller';
+import {
+	StickerTargetController,
+	StickerTargetParentControllerKey,
+} from '../../../../../_common/sticker/target/target-controller';
 import AppStickerTarget from '../../../../../_common/sticker/target/target.vue';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
 import AppUserFollowWidget from '../../../../../_common/user/follow/widget.vue';
@@ -82,11 +85,13 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
+	@Provide(StickerTargetParentControllerKey)
+	stickerTargetController = this.post ? new StickerTargetController(this.post) : null;
+
 	@State app!: Store['app'];
 
 	canToggleLead = false;
 	hasBypassedBlock = false;
-	stickerTargetController: null | StickerTargetController = null;
 
 	private feedComponent!: AppActivityFeedTS;
 	private queryParams: Record<string, string> = {};
@@ -245,12 +250,6 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	get shouldBlock() {
 		return !this.hasBypassedBlock && this.isBlocked;
-	}
-
-	created() {
-		if (this.post) {
-			this.stickerTargetController = new StickerTargetController(this.post);
-		}
 	}
 
 	mounted() {

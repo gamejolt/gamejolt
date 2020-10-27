@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { Inject, Prop } from 'vue-property-decorator';
+import { Inject, Prop, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../utils/vue';
 import { Api } from '../../api/api.service';
 import {
@@ -12,6 +12,8 @@ import {
 } from '../../drawer/drawer-store';
 import { Growls } from '../../growls/growls.service';
 import { Ruler } from '../../ruler/ruler-service';
+import { ScrollInviewConfig } from '../../scroll/inview/config';
+import { AppScrollInview } from '../../scroll/inview/inview';
 import {
 	registerStickerTarget,
 	StickerLayerController,
@@ -22,12 +24,15 @@ import AppStickerReactions from '../reactions/reactions.vue';
 import AppSticker from '../sticker.vue';
 import { getStickerModelResourceName, StickerTargetController } from './target-controller';
 
-export type ValidStickerResource = 'Comment' | 'Fireside_Post' | 'Media_Item';
+export type ValidStickerResource = 'Comment' | 'Fireside_Post' | 'MediaItem';
+
+const InviewConfig = new ScrollInviewConfig();
 
 @Component({
 	components: {
 		AppSticker,
 		AppStickerReactions,
+		AppScrollInview,
 	},
 })
 export default class AppStickerTarget extends Vue implements StickableTarget {
@@ -37,6 +42,7 @@ export default class AppStickerTarget extends Vue implements StickableTarget {
 	@Inject(StickerLayerKey) layer!: StickerLayerController;
 
 	$el!: HTMLDivElement;
+	readonly InviewConfig = InviewConfig;
 
 	// DODO: Scroll to the sticker target to show stickers.
 	// if (visible) {
@@ -58,6 +64,32 @@ export default class AppStickerTarget extends Vue implements StickableTarget {
 
 	beforeDestroy() {
 		registerStickerTarget(this.layer, this);
+	}
+
+	@Watch('controller.shouldLoad')
+	onShouldShowStickersChange() {
+		this.loadStickers();
+	}
+
+	private async loadStickers() {
+		this.controller.hasInitialized = true;
+
+		const resourceName = getStickerModelResourceName(this.controller.model);
+		const resourceId = this.controller.model.id;
+
+		const { stickers } = await Api.sendRequest(
+			`/web/stickers/fetch/${resourceName}/${resourceId}`
+		);
+
+		this.controller.stickers = StickerPlacement.populate(stickers);
+	}
+
+	onInview() {
+		this.controller.isInview = true;
+	}
+
+	onOutview() {
+		this.controller.isInview = false;
 	}
 
 	onPlaceDrawerSticker(event: MouseEvent | TouchEvent) {

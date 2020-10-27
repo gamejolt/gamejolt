@@ -4,7 +4,7 @@ import { numberSort } from '../../../utils/array';
 import { propRequired } from '../../../utils/vue';
 import { DrawerStore, DrawerStoreKey } from '../../drawer/drawer-store';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
-import { StickerTargetController, toggleStickersShowing } from '../target/target-controller';
+import { StickerTargetController, toggleStickersShouldShow } from '../target/target-controller';
 import AppStickerReactionsItem from './item.vue';
 
 @Component({
@@ -27,6 +27,6 @@ export default class AppStickerReactions extends Vue {
 	}
 
 	onClick() {
-		toggleStickersShowing(this.controller);
+		toggleStickersShouldShow(this.controller);
 	}
 }

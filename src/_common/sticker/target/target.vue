@@ -1,9 +1,14 @@
 <script lang="ts" src="./target"></script>
 
 <template>
-	<div class="sticker-target">
+	<app-scroll-inview
+		:config="InviewConfig"
+		class="sticker-target"
+		@inview="onInview"
+		@outview="onOutview"
+	>
 		<transition name="-fade">
-			<div v-if="controller.isShowing">
+			<div v-if="controller.shouldShow && stickers.length > 0">
 				<app-sticker
 					v-for="sticker of stickers"
 					:key="sticker.id"
@@ -18,7 +23,7 @@
 		</transition>
 
 		<slot />
-	</div>
+	</app-scroll-inview>
 </template>
 
 <style lang="stylus" scoped>

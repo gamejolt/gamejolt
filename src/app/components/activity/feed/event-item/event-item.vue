@@ -154,11 +154,9 @@
 						</app-scroll-scroller>
 					</div>
 
-					<app-sticker-reactions
-						v-if="post.sticker_counts"
-						class="-controls-buffer"
-						:controller="stickerTargetController"
-					/>
+					<div v-if="post.sticker_counts" class="-controls-buffer">
+						<app-sticker-reactions :controller="stickerTargetController" />
+					</div>
 				</app-event-item-controls-overlay>
 			</template>
 
