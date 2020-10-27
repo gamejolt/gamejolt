@@ -1,14 +1,19 @@
 import { assertNever } from '../../../utils/utils';
 import { Analytics } from '../../analytics/analytics.service';
 import {
+	SettingVideoPlayerFeedMuted,
 	SettingVideoPlayerFeedVolume,
+	SettingVideoPlayerMuted,
 	SettingVideoPlayerVolume,
 } from '../../settings/settings.service';
 
 export type VideoPlayerControllerContext = 'feed' | 'page' | null;
+type ScrubberStage = 'start' | 'scrub' | 'end';
 
 export class VideoPlayerController {
 	volume: number;
+	mutedFallbackVolume: number;
+	isMuted: boolean;
 	duration = 0;
 	state: 'paused' | 'playing' = 'paused';
 
@@ -32,14 +37,18 @@ export class VideoPlayerController {
 		switch (context) {
 			case 'feed':
 				this.volume = SettingVideoPlayerFeedVolume.get();
+				this.isMuted = SettingVideoPlayerFeedMuted.get();
 				break;
 			case 'page':
 				this.volume = SettingVideoPlayerVolume.get();
+				this.isMuted = SettingVideoPlayerMuted.get();
 				break;
 			default:
 				this.volume = 1;
+				this.isMuted = false;
 				break;
 		}
+		this.mutedFallbackVolume = this.volume;
 	}
 }
 
@@ -53,31 +62,56 @@ export function toggleVideoPlayback(player: VideoPlayerController) {
 	}
 }
 
-export function setVideoVolume(player: VideoPlayerController, level: number) {
+export function setVideoVolume(
+	player: VideoPlayerController,
+	level: number,
+	storeLevel: boolean,
+	forceUnmute = true
+) {
 	const volume = Math.min(1, Math.max(0, Math.round(level * 100) / 100));
+	if (volume && storeLevel) {
+		player.mutedFallbackVolume = volume;
+	}
 
-	// Assign volume level to the proper local storage context.
-	switch (player.context) {
-		case 'feed':
-			SettingVideoPlayerFeedVolume.set(volume);
-			break;
-		case 'page':
-			SettingVideoPlayerVolume.set(volume);
-			break;
+	if (player.context === 'feed') {
+		SettingVideoPlayerFeedVolume.set(volume);
+	} else if (player.context === 'page') {
+		SettingVideoPlayerVolume.set(volume);
 	}
 
 	player.volume = volume;
+
+	if (volume && player.isMuted && forceUnmute) {
+		toggleVideoMuted(player);
+	}
+
+	if (!volume && !player.isMuted) {
+		toggleVideoMuted(player);
+	}
+}
+
+export function toggleVideoMuted(player: VideoPlayerController) {
+	player.isMuted = !player.isMuted;
+	if (!player.isMuted && player.mutedFallbackVolume !== null) {
+		setVideoVolume(player, player.mutedFallbackVolume, false);
+	}
+
+	if (player.context === 'feed') {
+		SettingVideoPlayerFeedMuted.set(player.isMuted);
+		// Feed videos don't have a volume slider, so if the video element volume was somehow changed we want to set it back to 100%.
+		if (!player.isMuted) {
+			setVideoVolume(player, 100, true);
+		}
+	} else if (player.context === 'page') {
+		SettingVideoPlayerMuted.set(player.isMuted);
+	}
 }
 
 export function queueVideoTimeChange(player: VideoPlayerController, time: number) {
 	player.queuedTimeChange = time;
 }
 
-export function scrubVideo(
-	player: VideoPlayerController,
-	position: number,
-	stage: 'start' | 'scrub' | 'end'
-) {
+export function scrubVideo(player: VideoPlayerController, position: number, stage: ScrubberStage) {
 	player.isScrubbing = stage !== 'end';
 
 	// Pause the video while scrubbing.

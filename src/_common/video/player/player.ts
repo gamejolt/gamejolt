@@ -181,12 +181,20 @@ export default class AppVideoPlayer extends Vue {
 	}
 
 	triggerVolumeDown() {
-		setVideoVolume(this.player, Math.round(Math.max(this.player.volume - 0.1, 0) * 100) / 100);
+		setVideoVolume(
+			this.player,
+			Math.round(Math.max(this.player.volume - 0.1, 0) * 100) / 100,
+			true
+		);
 		trackVideoPlayerEvent(this.player, 'volume-down', 'keybind');
 	}
 
 	triggerVolumeUp() {
-		setVideoVolume(this.player, Math.round(Math.min(this.player.volume + 0.1, 1) * 100) / 100);
+		setVideoVolume(
+			this.player,
+			Math.round(Math.min(this.player.volume + 0.1, 1) * 100) / 100,
+			true
+		);
 		trackVideoPlayerEvent(this.player, 'volume-up', 'keybind');
 	}
 

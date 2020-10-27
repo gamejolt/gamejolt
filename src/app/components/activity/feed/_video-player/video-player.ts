@@ -12,7 +12,7 @@ import {
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { SettingVideoPlayerFeedAutoplay } from '../../../../../_common/settings/settings.service';
 import {
-	setVideoVolume,
+	toggleVideoMuted,
 	toggleVideoPlayback,
 	trackVideoPlayerEvent,
 	VideoPlayerController,
@@ -140,12 +140,7 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 		if (!this.player) {
 			return;
 		}
-		if (this.player.volume === 0) {
-			setVideoVolume(this.player, 100);
-		} else {
-			setVideoVolume(this.player, 0);
-		}
-
+		toggleVideoMuted(this.player);
 		trackVideoPlayerEvent(
 			this.player,
 			!this.player.volume ? 'mute' : 'unmute',
