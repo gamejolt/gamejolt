@@ -11,7 +11,6 @@
 					max_content_length: [lengthLimit],
 				}"
 				:validate-on="['blur']"
-				:startup-activity="editorStartupActivity"
 				:max-height="maxHeight"
 				:display-rules="displayRules"
 				focus-end
