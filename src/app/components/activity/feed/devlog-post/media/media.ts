@@ -73,6 +73,7 @@ export default class AppActivityFeedDevlogPostMedia extends Vue implements Light
 
 	goNext() {
 		if (this.page >= this.post.media.length) {
+			this._updateSliderOffset();
 			return;
 		}
 
@@ -84,6 +85,7 @@ export default class AppActivityFeedDevlogPostMedia extends Vue implements Light
 
 	goPrev() {
 		if (this.page <= 1) {
+			this._updateSliderOffset();
 			return;
 		}
 
