@@ -12,7 +12,6 @@ import { getTranslationLang } from '../_common/translate/translate.service';
 import { ChatClient, ChatKey } from './components/chat/client';
 import { ChatClientLazy } from './components/lazy';
 import AppShell from './components/shell/shell.vue';
-import { trackInlineCommentsSplitTest } from './components/split-test/split-test-service';
 import { Store } from './store';
 
 @Component({
@@ -47,9 +46,6 @@ export default class App extends Vue {
 				Analytics.trackEvent('translations', 'loaded', lang);
 			}
 		}
-
-		// Since this is a split test that is basically global.
-		trackInlineCommentsSplitTest();
 	}
 
 	mounted() {

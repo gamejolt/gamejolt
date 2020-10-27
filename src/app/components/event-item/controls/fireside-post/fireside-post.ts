@@ -1,8 +1,16 @@
 import Vue from 'vue';
 import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../../utils/vue';
+import { propRequired } from '../../../../../utils/vue';
 import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
+import {
+	CommentStoreManager,
+	CommentStoreManagerKey,
+	CommentStoreModel,
+	lockCommentStore,
+	releaseCommentStore,
+	setCommentCount,
+} from '../../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../../_common/comment/modal/modal.service';
 import AppCommentVideoLikeWidget from '../../../../../_common/comment/video/like-widget/like-widget.vue';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
@@ -41,13 +49,14 @@ import AppEventItemControlsFiresidePostStats from './stats/stats.vue';
 export default class AppEventItemControlsFiresidePost extends Vue {
 	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
 	@Prop(propRequired(Boolean)) showCommentsButton!: boolean;
-	@Prop(propOptional(Number, 0)) commentsCount!: number;
 	@Prop(propRequired(String)) eventLabel!: string;
 
+	@Inject(CommentStoreManagerKey) commentManager!: CommentStoreManager;
 	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
 
-	@AppState
-	user!: AppStore['user'];
+	@AppState user!: AppStore['user'];
+
+	private commentStore: null | CommentStoreModel = null;
 
 	readonly GJ_IS_CLIENT!: boolean;
 	readonly Screen = Screen;
@@ -64,6 +73,10 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 	@Emit('pin') emitPin() {}
 	@Emit('unpin') emitUnpin() {}
 	@Emit('like-change') emitLikeChange(_value: boolean) {}
+
+	get commentsCount() {
+		return this.commentStore ? this.commentStore.totalCount : 0;
+	}
 
 	get canPublish() {
 		return (
@@ -103,6 +116,18 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 
 	get shouldShowStatsInNewLine() {
 		return Screen.isXs;
+	}
+
+	created() {
+		this.commentStore = lockCommentStore(this.commentManager, 'Fireside_Post', this.post.id);
+		setCommentCount(this.commentStore, this.post.comment_count);
+	}
+
+	destroyed() {
+		if (this.commentStore) {
+			releaseCommentStore(this.commentManager, this.commentStore);
+			this.commentStore = null;
+		}
 	}
 
 	openComments() {

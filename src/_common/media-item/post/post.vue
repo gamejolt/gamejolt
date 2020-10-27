@@ -65,11 +65,11 @@
 		right: 8px
 		bottom: 8px
 		padding: 4px 6px
-		background-color: var(--dark-theme-bg-offset)
+		background-color: rgba($black, 0.4)
 		color: var(--dark-theme-fg)
 		font-size: $font-size-small
 		font-weight: bold
-		opacity: 0.8
+		transition: opacity 250ms $strong-ease-out
 
 .media-item-post
 	position: relative
@@ -116,4 +116,8 @@
 	&:hover
 		.-toolbar
 			opacity: 1
+
+		@media $media-pointer-mouse
+			.-video:after
+				opacity: 0
 </style>

@@ -60,7 +60,6 @@
 				v-else-if="enabledVideo"
 				:post="formModel"
 				:was-published="wasPublished"
-				:can-continue-processing="canContinueProcessingUploadedVideo"
 				@delete="onDisableVideoAttachment"
 				@video-change="onVideoChanged"
 				@video-url-change="onVideoUrlChanged"

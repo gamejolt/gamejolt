@@ -172,6 +172,7 @@
 				:item="item"
 				:video="video"
 				:sticker-target-controller="stickerTargetController"
+				show-comments
 				event-label="feed"
 				@post-edit="onPostEdited(eventItem)"
 				@post-publish="onPostPublished(eventItem)"

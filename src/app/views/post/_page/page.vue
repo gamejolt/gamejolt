@@ -192,12 +192,15 @@
 
 					<app-event-item-controls
 						:post="post"
-						show-comments
 						should-show-follow
 						event-label="page"
 						@post-remove="onPostRemoved"
 						@post-publish="onPostPublished"
 					/>
+
+					<br />
+					<br />
+					<app-comment-widget-lazy :model="post" display-mode="comments" />
 				</div>
 
 				<!-- Right Sidebar -->
@@ -247,6 +250,9 @@
 	> span
 		display: inline-flex
 		align-items: center
+
+		@media $media-xs
+			margin-right: ($grid-gutter-width-xs / 2)
 
 	&-label
 		margin-left: 4px

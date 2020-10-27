@@ -13,7 +13,6 @@ import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { UserFollowSuggestion } from '../../../../_common/user/follow/suggestion.service';
 import { ActivityFeedItem } from '../../activity/feed/item-service';
 import { ActivityFeedView } from '../../activity/feed/view';
-import AppEventItemControlsComments from './comments/comments.vue';
 import AppEventItemControlsFiresidePost from './fireside-post/fireside-post.vue';
 import AppEventItemControlsUserFollow from './user-follow/user-follow.vue';
 
@@ -21,7 +20,6 @@ import AppEventItemControlsUserFollow from './user-follow/user-follow.vue';
 	components: {
 		AppCommentVideoLikeWidget,
 		AppEventItemControlsFiresidePost,
-		AppEventItemControlsComments,
 		AppEventItemControlsUserFollow,
 		AppEventItemControlsOverlay,
 	},
@@ -37,7 +35,6 @@ export default class AppEventItemControls extends Vue {
 
 	@State app!: Store['app'];
 
-	commentsCount = 0;
 	shouldShowFollowState = false;
 
 	@Emit('post-edit') emitPostEdit() {}
@@ -62,10 +59,6 @@ export default class AppEventItemControls extends Vue {
 
 	get hasActivePost() {
 		return this.post && this.post.status === FiresidePost.STATUS_ACTIVE;
-	}
-
-	get showCommentFeed() {
-		return !!this.showComments;
 	}
 
 	get isShowingFollow() {

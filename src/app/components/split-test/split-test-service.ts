@@ -1,18 +1,17 @@
 import { Route } from 'vue-router';
-import { Analytics } from '../../../_common/analytics/analytics.service';
 
-const ExperimentInlineComments = 'split:inline-comments';
+// const ExperimentInlineComments = 'split:inline-comments';
 
-export function hasInlineCommentsSplitTest() {
-	return getClientSideVariation(ExperimentInlineComments) === 1;
-}
+// // export function hasInlineCommentsSplitTest() {
+// // 	return getClientSideVariation(ExperimentInlineComments) === 1;
+// // }
 
-export function trackInlineCommentsSplitTest() {
-	Analytics.trackEvent(
-		ExperimentInlineComments,
-		'variation-' + getClientSideVariation(ExperimentInlineComments)
-	);
-}
+// // export function trackInlineCommentsSplitTest() {
+// // 	Analytics.trackEvent(
+// // 		ExperimentInlineComments,
+// // 		'variation-' + getClientSideVariation(ExperimentInlineComments)
+// // 	);
+// // }
 
 // function getPayloadVariation(payload: any, experiment: string, route?: Route): number {
 // 	const variation = checkHardcoded(experiment, route);

@@ -65,7 +65,6 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 	implements FormOnSubmit, FormOnLoad, FormOnSubmitError, FormOnSubmitSuccess, FormOnInit {
 	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
 	@Prop(propRequired(Boolean)) wasPublished!: boolean;
-	@Prop(propRequired(Boolean)) canContinueProcessing!: boolean;
 
 	readonly YOUTUBE_URL_REGEX = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:&.+)*$/i;
 
@@ -78,7 +77,6 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 
 	videoProvider = FiresidePostVideo.PROVIDER_GAMEJOLT;
 	isDropActive = false;
-	m_videoStatus = VideoStatus.IDLE;
 	uploadCancelToken: CancelTokenSource | null = null;
 
 	readonly FiresidePostVideo = FiresidePostVideo;
@@ -115,15 +113,6 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		}
 
 		return progressEvent.loaded / progressEvent.total;
-	}
-
-	get videoStatus() {
-		return this.m_videoStatus;
-	}
-
-	set videoStatus(value: VideoStatus) {
-		this.m_videoStatus = value;
-		this.emitVideoStatusChange(value);
 	}
 
 	get hasValidYouTubeUrl() {
@@ -167,6 +156,26 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		return this.allowedFiletypes.map(i => `.${i}`).join(',');
 	}
 
+	get videoStatus() {
+		if (this.uploadedVideo) {
+			if (this.uploadedVideo.is_processing) {
+				return VideoStatus.PROCESSING;
+			}
+			return VideoStatus.COMPLETE;
+		}
+
+		if (this.state.isProcessing) {
+			return VideoStatus.UPLOADING;
+		}
+
+		return VideoStatus.IDLE;
+	}
+
+	@Watch('videoStatus')
+	onVideoStatusChange() {
+		this.emitVideoStatusChange(this.videoStatus);
+	}
+
 	onInit() {
 		// Set the video_url field based on the input post.
 		// This is important when opening this form for editing.
@@ -181,9 +190,6 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 			} else if (video.provider === FiresidePostVideo.PROVIDER_GAMEJOLT) {
 				this.setField('video_url', '');
 				this.setVideoProvider(FiresidePostVideo.PROVIDER_GAMEJOLT);
-				// Set to complete for now, we get processing info in onLoad in
-				// case the video is still processing.
-				this.videoStatus = VideoStatus.COMPLETE;
 			}
 		} else {
 			this.setVideoProvider(FiresidePostVideo.PROVIDER_GAMEJOLT);
@@ -196,16 +202,6 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		this.maxAspect = $payload.maxAspect;
 		this.minAspect = $payload.minAspect;
 		this.allowedFiletypes = $payload.allowedFiletypes;
-
-		// If backend sends progress info, it means the attached uploaded video
-		// is being processed. However, if the user previously quit out of the
-		// video attaching, their previous video might still be processing in
-		// the background. We want to allow them to upload a new video instead.
-		// If they close and reopen the form without saving the post, their
-		// video from before will reappear.
-		if (this.canContinueProcessing && $payload.progress) {
-			this.videoStatus = VideoStatus.PROCESSING;
-		}
 	}
 
 	async onSubmit() {
@@ -240,13 +236,12 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		}
 
 		this.emitVideoChange(new FiresidePostVideo($payload.video));
-		this.videoStatus = VideoStatus.PROCESSING;
 	}
 
 	videoSelected() {
 		if (this.formModel.video !== null) {
 			this.$refs.form.submit();
-			this.videoStatus = VideoStatus.UPLOADING;
+
 			// Reset the video url here to indicate to the backend that we are
 			// now uploading a video.
 			this.setField('video_url', '');
@@ -287,7 +282,7 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 	}
 
 	// File select resulting from a drop onto the input.
-	async onDrop(e: DragEvent) {
+	onDrop(e: DragEvent) {
 		// Don't do anything if not a file drop.
 		if (!this.validateDataTransfer(e)) {
 			return;
@@ -320,7 +315,6 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 			system: true,
 		});
 
-		this.videoStatus = VideoStatus.COMPLETE;
 		this.emitVideoChange(new FiresidePostVideo(video));
 	}
 
@@ -352,7 +346,6 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 
 		this.setField('_progress', null);
 		this.setField('video', null);
-		this.videoStatus = VideoStatus.IDLE;
 	}
 
 	setVideoProvider(provider: string) {

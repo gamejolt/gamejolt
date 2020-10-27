@@ -102,7 +102,11 @@
 						<br />
 					</template>
 
-					<app-event-item-controls show-comments :post="post" event-label="broadcast" />
+					<app-event-item-controls :post="post" event-label="broadcast" />
+
+					<br />
+					<br />
+					<app-comment-widget-lazy :model="post" display-mode="comments" />
 				</div>
 			</div>
 		</div>

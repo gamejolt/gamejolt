@@ -80,6 +80,8 @@
 							:accept="allowedFiletypesString"
 							@changed="videoSelected()"
 						/>
+
+						<app-form-control-errors />
 					</app-form-group>
 				</app-form>
 
