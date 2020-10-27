@@ -44,6 +44,7 @@ import AppVideo from '../../../../_common/video/video.vue';
 import AppEventItemControls from '../../../components/event-item/controls/controls.vue';
 import AppGameBadge from '../../../components/game/badge/badge.vue';
 import AppGameListItem from '../../../components/game/list/item/item.vue';
+import { AppCommentWidgetLazy } from '../../../components/lazy';
 import AppPollVoting from '../../../components/poll/voting/voting.vue';
 
 @Component({
@@ -72,6 +73,7 @@ import AppPollVoting from '../../../components/poll/voting/voting.vue';
 		AppGameBadge,
 		AppUserVerifiedTick,
 		AppVideoProcessingProgress,
+		AppCommentWidgetLazy,
 	},
 	directives: {
 		AppTooltip,

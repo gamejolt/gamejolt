@@ -109,12 +109,15 @@
 
 					<app-event-item-controls
 						ref="stickerTarget"
-						show-comments
 						:post="post"
 						:show-stickers="stickersVisible"
 						event-label="broadcast"
 						@post-stickers-visibility-change="onPostStickersVisibilityChange"
 					/>
+
+					<br />
+					<br />
+					<app-comment-widget-lazy :model="post" display-mode="comments" />
 				</div>
 			</div>
 		</div>
