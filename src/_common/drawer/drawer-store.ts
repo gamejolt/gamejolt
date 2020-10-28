@@ -40,37 +40,23 @@ export class DrawerStore {
 		// The active layer is always the last to be added to the stack.
 		return this.layers[this.layers.length - 1];
 	}
+}
 
-	/** Reset the DrawerStore state to their initial values */
-	// commented out === handled by function calls
-	reset() {
-		_removeEventListeners(this);
-		_removeDrawerStoreActiveItem(this);
-		// _setDraggingState(this, false);
-
-		this.drawerItems = [];
-		this.targetController = null;
-		this.placedItem = null;
-		// this.sticker = null;
-		this.isDrawerOpen = false;
-		// this.isDragging = false;
-		this.hasValidTarget = false;
-		this.isHoveringDrawer = false;
-		this.drawerHeight = 0;
-
-		this._waitingForFrame = false;
-		// this._onPointerMove = null;
-		// this._onPointerUp = null;
-		this._updateGhostPosition = null;
+/**
+ * Toggle the shell drawer, initializing the state when opening or resetting it
+ * when closing.
+ */
+export function setDrawerOpen(store: DrawerStore, isOpen: boolean) {
+	if (isOpen === store.isDrawerOpen) {
+		return;
 	}
-}
 
-export function registerStickerLayer(store: DrawerStore, layer: StickerLayerController) {
-	store.layers.push(layer);
-}
-
-export function unregisterStickerLayer(store: DrawerStore, layer: StickerLayerController) {
-	arrayRemove(store.layers, i => i === layer);
+	if (isOpen) {
+		store.isDrawerOpen = true;
+		_initializeDrawerContent(store);
+	} else {
+		_resetDrawerStore(store);
+	}
 }
 
 /**
@@ -98,17 +84,31 @@ async function _initializeDrawerContent(store: DrawerStore) {
 }
 
 /**
- * Toggle the shell drawer, initializing the state when opening or resetting it
- * when closing.
+ * Reset the DrawerStore state to their initial values. Will also close the
+ * drawer.
  */
-export function toggleShellDrawer(store: DrawerStore) {
-	store.isDrawerOpen = !store.isDrawerOpen;
+function _resetDrawerStore(store: DrawerStore) {
+	_removeEventListeners(store);
+	_removeDrawerStoreActiveItem(store);
 
-	if (store.isDrawerOpen) {
-		_initializeDrawerContent(store);
-	} else {
-		store.reset();
-	}
+	store.drawerItems = [];
+	store.targetController = null;
+	store.placedItem = null;
+	store.isDrawerOpen = false;
+	store.hasValidTarget = false;
+	store.isHoveringDrawer = false;
+	store.drawerHeight = 0;
+
+	store._waitingForFrame = false;
+	store._updateGhostPosition = null;
+}
+
+export function registerStickerLayer(store: DrawerStore, layer: StickerLayerController) {
+	store.layers.push(layer);
+}
+
+export function unregisterStickerLayer(store: DrawerStore, layer: StickerLayerController) {
+	arrayRemove(store.layers, i => i === layer);
 }
 
 export function setDrawerStoreHeight(store: DrawerStore, height: number) {
@@ -201,7 +201,7 @@ export async function commitDrawerStoreItemPlacement(store: DrawerStore) {
 			targetController.parent.model.assign(parent);
 		}
 
-		toggleShellDrawer(store);
+		setDrawerOpen(store, false);
 
 		// DODO: Get this working
 		// if (newSticker) {

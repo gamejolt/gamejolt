@@ -79,9 +79,4 @@ export default class AppStickerDrawer extends Vue {
 			setDrawerStoreHeight(this.drawerStore, this.placeholderHeight);
 		}
 	}
-
-	beforeDestroy() {
-		// JODO: Not sure if needed, but recompiling has been leaving lingering stickers sometimes.
-		this.drawerStore.reset();
-	}
 }

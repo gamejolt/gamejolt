@@ -3,7 +3,7 @@ import { Component, Inject, InjectReactive, Watch } from 'vue-property-decorator
 import { Action, State } from 'vuex-class';
 import { Connection } from '../../../_common/connection/connection-service';
 import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
-import { DrawerStore, DrawerStoreKey } from '../../../_common/drawer/drawer-store';
+import { DrawerStore, DrawerStoreKey, setDrawerOpen } from '../../../_common/drawer/drawer-store';
 import { Meta } from '../../../_common/meta/meta-service';
 import AppMinbar from '../../../_common/minbar/minbar.vue';
 import { Screen } from '../../../_common/screen/screen-service';
@@ -130,7 +130,7 @@ export default class AppShell extends Vue {
 			/*
 				DrawerStore
 			*/
-			this.drawerStore.reset();
+			setDrawerOpen(this.drawerStore, false);
 		});
 
 		this.$watch(

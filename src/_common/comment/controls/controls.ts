@@ -3,7 +3,7 @@ import { Component, Inject, Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
-import { DrawerStore, DrawerStoreKey, toggleShellDrawer } from '../../drawer/drawer-store';
+import { DrawerStore, DrawerStoreKey, setDrawerOpen } from '../../drawer/drawer-store';
 import { fuzzynumber } from '../../filters/fuzzynumber';
 import { LikersModal } from '../../likers/modal.service';
 import { Model } from '../../model/model.service';
@@ -113,6 +113,6 @@ export default class AppCommentControls extends Vue {
 
 	async placeSticker() {
 		Analytics.trackEvent('post-controls', 'sticker-place', 'comments');
-		toggleShellDrawer(this.drawerStore);
+		setDrawerOpen(this.drawerStore, true);
 	}
 }

@@ -18,7 +18,7 @@ import { Community } from '../../../../../_common/community/community.model';
 import {
 	DrawerStore,
 	DrawerStoreKey,
-	toggleShellDrawer,
+	setDrawerOpen,
 } from '../../../../../_common/drawer/drawer-store';
 import { fuzzynumber } from '../../../../../_common/filters/fuzzynumber';
 import { number } from '../../../../../_common/filters/number';
@@ -153,6 +153,6 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 
 	async placeSticker() {
 		Analytics.trackEvent('post-controls', 'sticker-place', this.eventLabel);
-		toggleShellDrawer(this.drawerStore);
+		setDrawerOpen(this.drawerStore, true);
 	}
 }

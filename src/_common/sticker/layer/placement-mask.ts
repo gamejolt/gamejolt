@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
 import { findVueParent, propRequired } from '../../../utils/vue';
-import { DrawerStore, DrawerStoreKey } from '../../drawer/drawer-store';
+import { DrawerStore, DrawerStoreKey, setDrawerOpen } from '../../drawer/drawer-store';
 import { AppObserveDimensions } from '../../observe-dimensions/observe-dimensions.directive';
 import { Scroll } from '../../scroll/scroll.service';
 import AppScrollScrollerTS from '../../scroll/scroller/scroller';
@@ -54,6 +54,6 @@ export default class AppStickerLayerPlacementMask extends Vue {
 	}
 
 	onClickMask() {
-		this.drawer.reset();
+		setDrawerOpen(this.drawer, false);
 	}
 }
