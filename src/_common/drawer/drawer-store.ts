@@ -107,6 +107,8 @@ function _resetDrawerStore(store: DrawerStore) {
 
 	store._waitingForFrame = false;
 	store._updateGhostPosition = null;
+
+	store.activeLayer.hoveredTarget = null;
 }
 
 export function registerStickerLayer(store: DrawerStore, layer: StickerLayerController) {
