@@ -4,7 +4,7 @@ import { Api } from '../../../../../../_common/api/api.service';
 import AppCard from '../../../../../../_common/card/card.vue';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
 import AppCommentAddButton from '../../../../../../_common/comment/add-button/add-button.vue';
-import { Comment, getCanCommentOnModel } from '../../../../../../_common/comment/comment-model';
+import { Comment, canCommentOnModel } from '../../../../../../_common/comment/comment-model';
 import {
 	CommentStoreManager,
 	CommentStoreManagerKey,
@@ -233,7 +233,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	}
 
 	get shouldShowCommentAdd() {
-		return getCanCommentOnModel(this.game);
+		return canCommentOnModel(this.game);
 	}
 
 	routeCreated() {

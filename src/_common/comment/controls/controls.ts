@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
+import { propOptional, propRequired } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { DrawerStore, DrawerStoreKey, toggleShellDrawer } from '../../drawer/drawer-store';
@@ -9,7 +10,7 @@ import { Model } from '../../model/model.service';
 import { Screen } from '../../screen/screen-service';
 import { handleNewStickerNotification } from '../../sticker/sticker.model';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
-import { Comment } from '../comment-model';
+import { canCommentOnModel, Comment } from '../comment-model';
 import { CommentThreadModal } from '../thread/modal.service';
 import { CommentVote } from '../vote/vote-model';
 
@@ -20,10 +21,11 @@ import { CommentVote } from '../vote/vote-model';
 	},
 })
 export default class AppCommentControls extends Vue {
-	@Prop(Model) model!: Model;
-	@Prop(Comment) comment!: Comment;
-	@Prop(Array) children?: Comment[];
-	@Prop(Boolean) showReply?: boolean;
+	@Prop(propRequired(Model)) model!: Model;
+	@Prop(propRequired(Comment)) comment!: Comment;
+	@Prop(propOptional(Comment)) parent!: undefined | Comment;
+	@Prop(propOptional(Array, () => [])) children!: Comment[];
+	@Prop(propOptional(Boolean, false)) showReply!: boolean;
 
 	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
 
@@ -59,6 +61,10 @@ export default class AppCommentControls extends Vue {
 				{ count }
 			);
 		}
+	}
+
+	get canComment() {
+		return canCommentOnModel(this.model, this.parent);
 	}
 
 	get hasUpvote() {

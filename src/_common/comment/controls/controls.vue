@@ -35,8 +35,8 @@
 				@click="onDownvoteClick()"
 			/>
 
-			<!-- v-if="shouldShowStickersButton" -->
 			<app-button
+				v-if="canComment"
 				v-app-tooltip="$gettext('Place Sticker')"
 				v-app-track-event="`comment-widget:place-sticker`"
 				v-app-auth-required
@@ -61,7 +61,7 @@
 				/>
 			</span>
 
-			<app-button v-if="children && children.length" trans @click="onReplyClick(false)">
+			<app-button v-if="children.length" trans @click="onReplyClick(false)">
 				<translate
 					:translate-n="children.length"
 					:translate-params="{ count: children.length }"
