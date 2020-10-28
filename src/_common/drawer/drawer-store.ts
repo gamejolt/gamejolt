@@ -333,7 +333,10 @@ function _removeEventListeners(store: DrawerStore) {
 }
 
 export function getPointerPosition(event: MouseEvent | TouchEvent, relativeScrollTop = 0) {
-	if (!(event instanceof MouseEvent) && !(event instanceof TouchEvent)) {
+	if (
+		!(event instanceof MouseEvent) &&
+		!(typeof window.TouchEvent !== 'undefined' && event instanceof TouchEvent)
+	) {
 		return null;
 	}
 
