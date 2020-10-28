@@ -54,7 +54,7 @@ export default class AppStickerDrawerGhost extends Vue {
 			classes.push('-dragging');
 		}
 
-		if (this.drawer.targetComponent) {
+		if (this.drawer.targetController) {
 			classes.push('-uncommitted');
 		}
 

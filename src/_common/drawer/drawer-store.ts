@@ -1,33 +1,27 @@
 import { StickerCount } from '../../app/views/dashboard/stickers/stickers';
 import { arrayRemove, numberSort } from '../../utils/array';
+import { Analytics } from '../analytics/analytics.service';
 import { Api } from '../api/api.service';
+import { Growls } from '../growls/growls.service';
 import {
 	getCollidingStickerTarget,
 	StickerLayerController,
 } from '../sticker/layer/layer-controller';
 import { StickerPlacement } from '../sticker/placement/placement.model';
 import { Sticker } from '../sticker/sticker.model';
+import {
+	addStickerToTarget,
+	getStickerModelResourceName,
+	StickerTargetController,
+} from '../sticker/target/target-controller';
+import { Translate } from '../translate/translate.service';
 
 export const DrawerStoreKey = Symbol('drawer-store');
-
-export interface StickableTarget {
-	/**
-	 * DrawerStore will manually trigger a 'mouseup' event when there's a
-	 * 'touchend' event that happens above applicable targets.
-	 */
-	onPlaceDrawerSticker(event?: any): void;
-
-	/**
-	 * Function to redeem the sticker for placement through the
-	 * 'targetComponent' in the DrawerStore.
-	 */
-	onRedeemSticker(): void;
-}
 
 export class DrawerStore {
 	layers: StickerLayerController[] = [];
 	drawerItems: StickerCount[] = [];
-	targetComponent: StickableTarget | null = null;
+	targetController: StickerTargetController | null = null;
 	placedItem: StickerPlacement | null = null;
 	sticker: Sticker | null = null;
 	isDrawerOpen = false;
@@ -55,7 +49,7 @@ export class DrawerStore {
 		// _setDraggingState(this, false);
 
 		this.drawerItems = [];
-		this.targetComponent = null;
+		this.targetController = null;
 		this.placedItem = null;
 		// this.sticker = null;
 		this.isDrawerOpen = false;
@@ -69,14 +63,6 @@ export class DrawerStore {
 		// this._onPointerUp = null;
 		this._updateGhostPosition = null;
 	}
-}
-
-export function commitDrawerStoreItemPlacement(store: DrawerStore) {
-	if (!store.placedItem || !store.targetComponent) {
-		return;
-	}
-
-	store.targetComponent.onRedeemSticker();
 }
 
 export function registerStickerLayer(store: DrawerStore, layer: StickerLayerController) {
@@ -168,15 +154,66 @@ export function setDrawerStoreActiveItem(
 }
 
 /**
- * Assigns the placed item and target component of the store.
+ * Assigns the placed item and target controller of the store.
  */
 export function assignDrawerStoreItem(
 	store: DrawerStore,
 	item: StickerPlacement | null,
-	component: StickableTarget | null
+	controller: StickerTargetController | null
 ) {
 	store.placedItem = item;
-	store.targetComponent = component;
+	store.targetController = controller;
+}
+
+export async function commitDrawerStoreItemPlacement(store: DrawerStore) {
+	if (!store.placedItem || !store.targetController) {
+		return;
+	}
+
+	const sticker = store.placedItem;
+	if (!sticker) {
+		return;
+	}
+
+	Analytics.trackEvent('stickers', 'place-sticker');
+
+	const { targetController } = store;
+	const { model } = targetController;
+	const resourceType = getStickerModelResourceName(model);
+	const { success, resource, parent, stickerPlacement, newSticker } = await Api.sendRequest(
+		'/web/stickers/place',
+		{
+			stickerId: sticker.sticker.id,
+			positionX: sticker.position_x,
+			positionY: sticker.position_y,
+			rotation: sticker.rotation,
+			resource: resourceType,
+			resourceId: model.id,
+		},
+		{ detach: true }
+	);
+
+	if (success) {
+		addStickerToTarget(targetController, new StickerPlacement(stickerPlacement));
+
+		model.assign(resource);
+		if (parent && targetController.parent) {
+			targetController.parent.model.assign(parent);
+		}
+
+		toggleShellDrawer(store);
+
+		// DODO: Get this working
+		// if (newSticker) {
+		// 	handleNewStickerNotification(
+		// 		Translate.$gettext(`You can unlock a new sticker!`),
+		// 		Translate.$gettext(`Click this message to unlock right away.`),
+		// 		mainStore
+		// 	);
+		// }
+	} else {
+		Growls.error(Translate.$gettext(`Failed to place sticker.`));
+	}
 }
 
 /**
@@ -333,15 +370,20 @@ function _removeEventListeners(store: DrawerStore) {
 }
 
 export function getPointerPosition(event: MouseEvent | TouchEvent, relativeScrollTop = 0) {
-	if (
-		!(event instanceof MouseEvent) &&
-		!(typeof window.TouchEvent !== 'undefined' && event instanceof TouchEvent)
-	) {
+	const pointerEvent = getPointerEvent(event);
+	if (!pointerEvent) {
 		return null;
 	}
 
-	const eventPointer = event instanceof TouchEvent ? event.changedTouches[0] : event;
-	const { pageX, pageY, clientX, clientY } = eventPointer;
-
+	const { pageX, pageY, clientX, clientY } = pointerEvent;
 	return { x: pageX, y: pageY - relativeScrollTop, clientX, clientY };
+}
+
+function getPointerEvent(event: MouseEvent | TouchEvent): null | MouseEvent | Touch {
+	if (typeof window.TouchEvent !== 'undefined' && event instanceof TouchEvent) {
+		return event.changedTouches[0];
+	} else if (event instanceof MouseEvent) {
+		return event;
+	}
+	return null;
 }

@@ -1,7 +1,12 @@
 <script lang="ts" src="./reactions"></script>
 
 <template>
-	<div v-app-tooltip="$gettext(`View Stickers`)" class="sticker-reactions" @click.stop="onClick">
+	<div
+		v-app-tooltip="$gettext(`View Stickers`)"
+		class="sticker-reactions"
+		:class="{ '-active': controller.shouldShow }"
+		@click.stop="onClick"
+	>
 		<app-sticker-reactions-item
 			v-for="{ stickerId, imgUrl, count } of reactions"
 			:key="stickerId"
@@ -24,4 +29,8 @@
 	&:hover
 		rounded-corners()
 		background-color: var(--theme-bg-offset)
+
+.-active
+	rounded-corners()
+	background-color: var(--theme-bg-offset)
 </style>

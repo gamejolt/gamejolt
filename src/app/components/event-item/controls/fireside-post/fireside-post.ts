@@ -153,11 +153,6 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 
 	async placeSticker() {
 		Analytics.trackEvent('post-controls', 'sticker-place', this.eventLabel);
-
 		toggleShellDrawer(this.drawerStore);
-
-		// this.post.assign(post);
-		// this.setStickersVisibility(true);
-		Analytics.trackEvent('stickers', 'place-sticker', 'fireside-post');
 	}
 }

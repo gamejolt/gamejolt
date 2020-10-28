@@ -11,6 +11,8 @@ export const StickerTargetParentControllerKey = Symbol('sticker-target-parent');
 export class StickerTargetController {
 	isInview = false;
 	stickers: StickerPlacement[] = [];
+	/** The stickers that have been added since the last time freshly rendered the target. */
+	newStickers: StickerPlacement[] = [];
 	hasLoadedStickers = false;
 
 	/**
@@ -25,10 +27,7 @@ export class StickerTargetController {
 	private _shouldShow = false;
 
 	get shouldShow() {
-		const shouldShow = Boolean(
-			this._shouldShow || this.parent?.shouldShow || this.layer?.isShowingDrawer
-		);
-		return shouldShow && this.isInview;
+		return Boolean(this._shouldShow || this.parent?.shouldShow || this.layer?.isShowingDrawer);
 	}
 
 	set shouldShow(shouldShow: boolean) {
@@ -40,7 +39,7 @@ export class StickerTargetController {
 	 * in based on this state.
 	 */
 	get shouldLoad() {
-		return this.shouldShow && !this.hasLoadedStickers;
+		return this.shouldShow && this.isInview && !this.hasLoadedStickers;
 	}
 
 	constructor(
@@ -58,8 +57,11 @@ export function toggleStickersShouldShow(
 	controller: StickerTargetController,
 	shouldShow?: boolean
 ) {
+	// The parent is the one that gets the state for should showing. All
+	// children follow along within the getter.
 	if (controller.parent) {
-		throw new Error(`Can't directly show stickers for a target with a parent.`);
+		toggleStickersShouldShow(controller.parent, shouldShow);
+		return;
 	}
 
 	shouldShow = shouldShow ?? !controller.shouldShow;
@@ -75,4 +77,12 @@ export function getStickerModelResourceName(model: Model): ValidStickerResource 
 		return 'Fireside_Post';
 	}
 	throw new Error('Stickers targets cannot attach to that type of model');
+}
+
+export function addStickerToTarget(controller: StickerTargetController, sticker: StickerPlacement) {
+	controller.stickers.push(sticker);
+	controller.newStickers.push(sticker);
+
+	// Anytime we add new stickers to the target, show all the stickers again.
+	toggleStickersShouldShow(controller, true);
 }

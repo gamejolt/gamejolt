@@ -8,11 +8,11 @@
 		@outview="onOutview"
 	>
 		<transition name="-fade">
-			<div v-if="controller.shouldShow && stickers.length > 0">
+			<div v-if="isShowingStickers">
 				<app-sticker
 					v-for="sticker of stickers"
 					:key="sticker.id"
-					class="-sticker-animate"
+					class="-sticker -sticker-animate"
 					:class="{
 						'-faded': drawerStore.isDrawerOpen,
 					}"
@@ -30,14 +30,16 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 
-.-faded
-	filter: grayscale(1) opacity(0.6)
-	transition: filter 1s !important
-
 .sticker-target
 	position: relative
 	// Needs to be lower than the z-index of elements we want above the stickers.
 	z-index: 0
+
+.-faded
+	filter: grayscale(1) opacity(0.6)
+
+.-sticker
+	transition: filter 1s !important
 
 .-sticker-animate
 	animation-name: sticker-animate-in

@@ -1,49 +1,63 @@
+<script lang="ts" src="./controls"></script>
+
 <template>
 	<span class="comment-controls">
 		<span v-app-auth-required>
 			<app-button
+				v-app-tooltip="votingTooltip"
+				v-app-track-event="`comment-widget:vote-click`"
 				icon="thumbs-up"
 				circle
 				trans
 				:primary="hasUpvote"
 				:solid="hasUpvote"
 				@click="onUpvoteClick()"
-				v-app-tooltip="votingTooltip"
-				v-app-track-event="`comment-widget:vote-click`"
 			/>
 
 			<a
 				v-if="comment.votes > 0"
+				v-app-tooltip="$gettext(`View all people that liked this comment`)"
 				class="blip"
 				:class="{ 'blip-active': comment.user_vote, mobile: Screen.isXs }"
 				@click="showLikers()"
-				v-app-tooltip="$gettext(`View all people that liked this comment`)"
 			>
-				{{ comment.votes | fuzzynumber }}
+				{{ fuzzynumber(comment.votes) }}
 			</a>
 			<span v-else class="blip-missing" />
 
 			<app-button
+				v-app-track-event="`comment-widget:vote-click`"
 				icon="thumbs-down"
 				circle
 				trans
 				:primary="hasDownvote"
 				:solid="hasDownvote"
 				@click="onDownvoteClick()"
-				v-app-track-event="`comment-widget:vote-click`"
+			/>
+
+			<!-- v-if="shouldShowStickersButton" -->
+			<app-button
+				v-app-tooltip="$gettext('Place Sticker')"
+				v-app-track-event="`comment-widget:place-sticker`"
+				v-app-auth-required
+				class="-control-margin"
+				icon="sticker"
+				circle
+				trans
+				@click="placeSticker()"
 			/>
 		</span>
 
 		<template v-if="showReply">
 			<span v-app-auth-required>
 				<app-button
-					class="comment-controls-reply"
+					v-app-tooltip="$gettext(`Reply`)"
+					v-app-track-event="`comment-widget:reply-click`"
+					class="-control-margin"
 					icon="reply"
 					circle
 					trans
 					@click="onReplyClick(true)"
-					v-app-tooltip="$gettext(`Reply`)"
-					v-app-track-event="`comment-widget:reply-click`"
 				/>
 			</span>
 
@@ -60,10 +74,7 @@
 	</span>
 </template>
 
-<script lang="ts" src="./controls"></script>
-
 <style lang="stylus" scoped>
-.comment-controls
-	&-reply
-		margin-left: 8px
+.-control-margin
+	margin-left: 8px
 </style>

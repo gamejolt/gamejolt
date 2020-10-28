@@ -7,9 +7,15 @@
 			class="-placement-mask"
 			:layer="layer"
 		/>
-		<slot />
 		<app-sticker-drawer-ghost v-if="layer.isShowingDrawer && drawer.sticker" class="-ghost" />
 		<app-sticker-drawer v-if="layer.isActive" class="-sticker-drawer" />
+
+		<!--
+		I don't know why, but DO NOT PUT ELEMENTS AFTER THIS SLOT. For some
+		reason vue was having a hard time not-rerendering everything on certain
+		changes to drawer store.
+		-->
+		<slot />
 	</div>
 </template>
 

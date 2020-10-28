@@ -8,9 +8,7 @@ import {
 	DrawerStore,
 	DrawerStoreKey,
 	getPointerPosition,
-	StickableTarget,
 } from '../../drawer/drawer-store';
-import { Growls } from '../../growls/growls.service';
 import { Ruler } from '../../ruler/ruler-service';
 import { ScrollInviewConfig } from '../../scroll/inview/config';
 import { AppScrollInview } from '../../scroll/inview/inview';
@@ -36,7 +34,7 @@ const InviewConfig = new ScrollInviewConfig();
 		AppScrollInview,
 	},
 })
-export default class AppStickerTarget extends Vue implements StickableTarget {
+export default class AppStickerTarget extends Vue {
 	@Prop(propRequired(StickerTargetController)) controller!: StickerTargetController;
 	@Prop(propOptional(Boolean, false)) disabled!: boolean;
 
@@ -51,13 +49,21 @@ export default class AppStickerTarget extends Vue implements StickableTarget {
 	// 	Scroll.to(this.$refs.stickerTarget.$el as HTMLElement, { preventDirections: ['down'] });
 	// }
 
-	// Sort so that the newer stickers go on top of the older ones.
 	get stickers() {
+		// Sort so that the newer stickers go on top of the older ones.
 		return [...this.controller.stickers].sort((a, b) => a.id - b.id);
+	}
+
+	get isShowingStickers() {
+		return this.controller.shouldShow && this.controller.isInview && this.stickers.length > 0;
 	}
 
 	created() {
 		this.checkDisabledState();
+	}
+
+	beforeDestroy() {
+		unregisterStickerTarget(this.layer, this, this.controller);
 	}
 
 	@Watch('disabled')
@@ -69,13 +75,18 @@ export default class AppStickerTarget extends Vue implements StickableTarget {
 		}
 	}
 
-	beforeDestroy() {
-		unregisterStickerTarget(this.layer, this, this.controller);
-	}
-
 	@Watch('controller.shouldLoad')
 	onShouldShowStickersChange() {
 		this.loadStickers();
+	}
+
+	@Watch('isShowingStickers')
+	async onIsShowingStickersChange() {
+		await this.$nextTick();
+
+		if (this.isShowingStickers) {
+			this.controller.newStickers = [];
+		}
 	}
 
 	private async loadStickers() {
@@ -112,53 +123,28 @@ export default class AppStickerTarget extends Vue implements StickableTarget {
 
 		const bounds = Ruler.offset(this.$el);
 
-		/** JODO:
-		 * The sticker placement is trending towards the middle of the page
-		 * when it's actually mounted to the target. Need to figure out how to
-		 * have it placed exactly where the ghost is, and if we want to modify
-		 * the ghost position to make sure the sticker is always "in bounds" of the target.
-		 */
 		// Sticker placement is in percentage of container
 		const stickerPlacement = new StickerPlacement({
-			position_x: (pointer.x - bounds.left) / 0.9 / bounds.width,
-			position_y: (pointer.y - bounds.top) / 0.9 / bounds.height,
+			position_x: (pointer.x - bounds.left) / bounds.width,
+			position_y: (pointer.y - bounds.top) / bounds.height,
 			rotation: Math.random(),
-			sticker: sticker,
+			sticker,
 		});
 
-		assignDrawerStoreItem(this.drawerStore, stickerPlacement, this);
-	}
-
-	async onRedeemSticker() {
-		const sticker = this.drawerStore.placedItem;
-		if (!sticker) {
-			return;
-		}
-
-		const { model } = this.controller;
-
-		const resourceType = getStickerModelResourceName(model);
-		const { success, resource } = await Api.sendRequest(
-			'/web/stickers/place',
-			{
-				stickerId: sticker.sticker.id,
-				positionX: sticker.position_x,
-				positionY: sticker.position_y,
-				rotation: sticker.rotation,
-				resource: resourceType,
-				resourceId: model.id,
-			},
-			{ detach: true }
-		);
-
-		if (success) {
-			model.assign(resource);
-		} else {
-			Growls.error(this.$gettext(`Failed to place sticker.`));
-		}
+		assignDrawerStoreItem(this.drawerStore, stickerPlacement, this.controller);
 	}
 
 	getStickerAnimationDelay(placement: StickerPlacement) {
-		return this.stickers.indexOf(placement) * 0.05 + 's';
+		// If the sticker was placed since we last rendered the stickers, we
+		// don't want it to delay or it'll feel broken/slow. We wait a little
+		// bit just because it looks a bit later after placing to wait.
+		if (this.controller.newStickers.includes(placement)) {
+			return '0.1s';
+		}
+
+		// This will make it take at most 500ms to load all the stickers in. We
+		// do a max dealy of 50ms so that it doesn't look frozen when there's
+		// only a small amount of items.
+		return Math.max(50, this.stickers.indexOf(placement) * (500 / this.stickers.length)) + 'ms';
 	}
 }

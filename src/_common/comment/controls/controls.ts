@@ -1,6 +1,8 @@
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Analytics } from '../../analytics/analytics.service';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
+import { DrawerStore, DrawerStoreKey, toggleShellDrawer } from '../../drawer/drawer-store';
 import { fuzzynumber } from '../../filters/fuzzynumber';
 import { LikersModal } from '../../likers/modal.service';
 import { Model } from '../../model/model.service';
@@ -16,24 +18,17 @@ import { CommentVote } from '../vote/vote-model';
 		AppAuthRequired,
 		AppTooltip,
 	},
-	filters: {
-		fuzzynumber,
-	},
 })
 export default class AppCommentControls extends Vue {
-	@Prop(Model)
-	model!: Model;
+	@Prop(Model) model!: Model;
+	@Prop(Comment) comment!: Comment;
+	@Prop(Array) children?: Comment[];
+	@Prop(Boolean) showReply?: boolean;
 
-	@Prop(Comment)
-	comment!: Comment;
-
-	@Prop(Array)
-	children?: Comment[];
-
-	@Prop(Boolean)
-	showReply?: boolean;
+	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
 
 	readonly Screen = Screen;
+	readonly fuzzynumber = fuzzynumber;
 
 	get votingTooltip() {
 		const userHasVoted = !!this.comment.user_vote;
@@ -108,5 +103,10 @@ export default class AppCommentControls extends Vue {
 
 	showLikers() {
 		LikersModal.show({ count: this.comment.votes, resource: this.comment });
+	}
+
+	async placeSticker() {
+		Analytics.trackEvent('post-controls', 'sticker-place', 'comments');
+		toggleShellDrawer(this.drawerStore);
 	}
 }
