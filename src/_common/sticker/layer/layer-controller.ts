@@ -1,5 +1,6 @@
 import { arrayRemove } from '../../../utils/array';
 import { DrawerStore } from '../../drawer/drawer-store';
+import AppScrollScroller from '../../scroll/scroller/scroller';
 import AppStickerTarget from '../target/target';
 import { StickerTargetController } from '../target/target-controller';
 
@@ -7,8 +8,9 @@ export const StickerLayerKey = Symbol('sticker-layer');
 
 export class StickerLayerController {
 	relativeScrollTop = 0;
+	scroller: null | AppScrollScroller = null;
 	targets: AppStickerTarget[] = [];
-	hoveredTarget: AppStickerTarget | null = null;
+	hoveredTarget: null | AppStickerTarget = null;
 	rects = new WeakMap<AppStickerTarget, StickerLayerTargetRect>();
 
 	constructor(public readonly drawer: DrawerStore) {}

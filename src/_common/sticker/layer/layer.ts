@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Inject, Prop, Provide } from 'vue-property-decorator';
-import { propOptional } from '../../../utils/vue';
+import { findVueParent, propOptional } from '../../../utils/vue';
 import { ContentFocus } from '../../content-focus/content-focus.service';
 import {
 	DrawerStore,
@@ -8,6 +8,8 @@ import {
 	registerStickerLayer,
 	unregisterStickerLayer,
 } from '../../drawer/drawer-store';
+import AppScrollScrollerTS from '../../scroll/scroller/scroller';
+import AppScrollScroller from '../../scroll/scroller/scroller.vue';
 import AppStickerDrawer from '../drawer/drawer.vue';
 import AppStickerDrawerGhost from '../drawer/_ghost/ghost.vue';
 import { StickerLayerController, StickerLayerKey } from './layer-controller';
@@ -34,12 +36,7 @@ export default class AppStickerLayer extends Vue {
 	}
 
 	mounted() {
-		if (this.hasFixedParent) {
-			// The layer controllers relativeScrollTop defaults to 0,
-			// but any layers that have a fixed (different scroll-context)
-			// parent should have a reference value set for future calculations.
-			this.layer.relativeScrollTop = document.documentElement.scrollTop;
-		}
+		this.layer.scroller = findVueParent<AppScrollScrollerTS>(this, AppScrollScroller) ?? null;
 
 		// We tell the ContentFocus service that content is unfocused when the
 		// mask is active.

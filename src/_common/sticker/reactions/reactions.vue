@@ -23,8 +23,9 @@
 .sticker-reactions
 	display: inline-flex
 	flex-wrap: wrap
-	margin: 4px -4px 8px -4px
+	margin: 4px 0 8px 0
 	cursor: pointer
+	border: $border-width-small solid transparent
 
 	&:hover
 		rounded-corners()
@@ -33,4 +34,5 @@
 .-active
 	rounded-corners()
 	background-color: var(--theme-bg-offset)
+	border-color: var(--theme-backlight)
 </style>

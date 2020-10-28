@@ -7,12 +7,12 @@ import {
 	assignDrawerStoreItem,
 	DrawerStore,
 	DrawerStoreKey,
-	getPointerPosition,
+	PointerPosition,
 } from '../../drawer/drawer-store';
-import { Ruler } from '../../ruler/ruler-service';
 import { ScrollInviewConfig } from '../../scroll/inview/config';
 import { AppScrollInview } from '../../scroll/inview/inview';
 import {
+	getRectForStickerTarget,
 	registerStickerTarget,
 	StickerLayerController,
 	StickerLayerKey,
@@ -110,23 +110,21 @@ export default class AppStickerTarget extends Vue {
 		this.controller.isInview = false;
 	}
 
-	onPlaceDrawerSticker(event: MouseEvent | TouchEvent) {
+	onPlaceDrawerSticker(pointer: PointerPosition) {
 		const { isDragging, sticker } = this.drawerStore;
 		if (!isDragging || !sticker) {
 			return;
 		}
 
-		const pointer = getPointerPosition(event);
-		if (!pointer) {
+		const rect = getRectForStickerTarget(this.layer, this);
+		if (!rect) {
 			return;
 		}
 
-		const bounds = Ruler.offset(this.$el);
-
 		// Sticker placement is in percentage of container
 		const stickerPlacement = new StickerPlacement({
-			position_x: (pointer.x - bounds.left) / bounds.width,
-			position_y: (pointer.y - bounds.top) / bounds.height,
+			position_x: (pointer.x - rect.x) / rect.width,
+			position_y: (pointer.y - rect.y) / rect.height,
 			rotation: Math.random(),
 			sticker,
 		});
@@ -143,7 +141,7 @@ export default class AppStickerTarget extends Vue {
 		}
 
 		// This will make it take at most 500ms to load all the stickers in. We
-		// do a max dealy of 50ms so that it doesn't look frozen when there's
+		// do a max delay of 50ms so that it doesn't look frozen when there's
 		// only a small amount of items.
 		return Math.max(50, this.stickers.indexOf(placement) * (500 / this.stickers.length)) + 'ms';
 	}

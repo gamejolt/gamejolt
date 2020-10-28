@@ -45,11 +45,6 @@
 				</app-sticker-target>
 			</app-media-item-backdrop>
 		</app-responsive-dimensions>
-
-		<app-sticker-reactions
-			v-if="mediaItem.sticker_counts"
-			:controller="stickerTargetController"
-		/>
 	</div>
 </template>
 

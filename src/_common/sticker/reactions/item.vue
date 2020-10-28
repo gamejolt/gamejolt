@@ -21,8 +21,11 @@
 	display: inline-flex
 	align-items: center
 	padding: 0px 4px
-	margin: 2px 4px
+	margin: 2px 4px 2px 0
 	user-select: none
+
+	&:last-child
+		margin-right: 0
 
 .-sticker
 	width: 20px

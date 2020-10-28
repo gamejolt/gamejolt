@@ -260,7 +260,7 @@ function _onDragItem(store: DrawerStore, event: MouseEvent | TouchEvent) {
 		return;
 	}
 
-	const pointer = getPointerPosition(event, store.activeLayer.relativeScrollTop);
+	const pointer = getPointerPosition(store, event);
 	if (!pointer) {
 		return;
 	}
@@ -305,14 +305,14 @@ const _onPointerUp = (store: DrawerStore) => (event: MouseEvent | TouchEvent) =>
 		return;
 	}
 
-	const pointer = getPointerPosition(event, store.activeLayer.relativeScrollTop);
+	const pointer = getPointerPosition(store, event);
 	if (!pointer) {
 		return;
 	}
 
 	const target = getCollidingStickerTarget(store.activeLayer, pointer.x, pointer.y);
 	if (target) {
-		target.onPlaceDrawerSticker(event);
+		target.onPlaceDrawerSticker(pointer);
 	} else if (store.sticker) {
 		alterDrawerStoreItemCount(store, store.sticker, true);
 	}
@@ -369,14 +369,38 @@ function _removeEventListeners(store: DrawerStore) {
 	store._onPointerUp = null;
 }
 
-export function getPointerPosition(event: MouseEvent | TouchEvent, relativeScrollTop = 0) {
+export interface PointerPosition {
+	x: number;
+	y: number;
+	clientX: number;
+	clientY: number;
+}
+
+export function getPointerPosition(
+	store: DrawerStore,
+	event: MouseEvent | TouchEvent
+): null | PointerPosition {
+	// If the active layer is within a scroller, we need to remove both the
+	// document scroll offset from the pointer position as well as the current
+	// scroller's offset. That'll convert it from page X/Y into the layer's X/Y.
+	const layer = store.activeLayer;
+	let scrollTop = 0;
+	let scrollLeft = 0;
+	if (layer.scroller) {
+		scrollTop = document.documentElement.scrollTop;
+		scrollTop -= layer.scroller.scrollElement?.scrollTop ?? 0;
+
+		scrollLeft = document.documentElement.scrollLeft;
+		scrollLeft -= layer.scroller.scrollElement?.scrollLeft ?? 0;
+	}
+
 	const pointerEvent = getPointerEvent(event);
 	if (!pointerEvent) {
 		return null;
 	}
 
 	const { pageX, pageY, clientX, clientY } = pointerEvent;
-	return { x: pageX, y: pageY - relativeScrollTop, clientX, clientY };
+	return { x: pageX - scrollLeft, y: pageY - scrollTop, clientX, clientY };
 }
 
 function getPointerEvent(event: MouseEvent | TouchEvent): null | MouseEvent | Touch {

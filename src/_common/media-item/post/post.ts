@@ -8,7 +8,6 @@ import {
 	AppResponsiveDimensionsChangeEvent,
 } from '../../responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../screen/screen-service';
-import AppStickerReactions from '../../sticker/reactions/reactions.vue';
 import {
 	StickerTargetController,
 	StickerTargetParentControllerKey,
@@ -26,7 +25,6 @@ import { MediaItem } from '../media-item-model';
 		AppVideo,
 		AppResponsiveDimensions,
 		AppStickerTarget,
-		AppStickerReactions,
 	},
 	directives: {
 		AppTooltip,
