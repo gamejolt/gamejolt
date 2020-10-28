@@ -3,7 +3,6 @@ import * as _ClientAutoStartMod from '../../../../_common/client/autostart/autos
 import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
 import { BaseForm, FormOnInit } from '../../../../_common/form-vue/form.service';
 import {
-	SettingAlwaysShowStickers,
 	SettingAnimatedThumbnails,
 	SettingAutostartClient,
 	SettingBroadcastModal,
@@ -38,7 +37,6 @@ type FormModel = {
 	autostart_client: boolean;
 	theme_dark: boolean;
 	theme_always_ours: boolean;
-	always_show_stickers: boolean;
 };
 
 @Component({
@@ -67,7 +65,6 @@ export default class FormSettings extends BaseForm<FormModel> implements FormOnI
 		this.setField('broadcast_modal', SettingBroadcastModal.get());
 		this.setField('animated_thumbnails', SettingAnimatedThumbnails.get());
 		this.setField('feed_notifications', SettingFeedNotifications.get());
-		this.setField('always_show_stickers', SettingAlwaysShowStickers.get());
 		this.setField('theme_dark', SettingThemeDark.get());
 		this.setField('theme_always_ours', SettingThemeAlwaysOurs.get());
 
@@ -124,7 +121,6 @@ export default class FormSettings extends BaseForm<FormModel> implements FormOnI
 		SettingFeedNotifications.set(this.formModel.feed_notifications);
 		SettingThemeDark.set(this.formModel.theme_dark);
 		SettingThemeAlwaysOurs.set(this.formModel.theme_always_ours);
-		SettingAlwaysShowStickers.set(this.formModel.always_show_stickers);
 
 		this.setDark(this.formModel.theme_dark);
 		this.setAlwaysOurs(this.formModel.theme_always_ours);
