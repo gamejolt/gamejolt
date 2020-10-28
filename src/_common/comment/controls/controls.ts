@@ -3,12 +3,16 @@ import { Component, Inject, Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
-import { DrawerStore, DrawerStoreKey, setDrawerOpen } from '../../drawer/drawer-store';
+import {
+	DrawerStore,
+	DrawerStoreKey,
+	handleNewStickerNotification,
+	setDrawerOpen,
+} from '../../drawer/drawer-store';
 import { fuzzynumber } from '../../filters/fuzzynumber';
 import { LikersModal } from '../../likers/modal.service';
 import { Model } from '../../model/model.service';
 import { Screen } from '../../screen/screen-service';
-import { handleNewStickerNotification } from '../../sticker/sticker.model';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 import { canCommentOnModel, Comment } from '../comment-model';
 import { CommentThreadModal } from '../thread/modal.service';
@@ -27,7 +31,7 @@ export default class AppCommentControls extends Vue {
 	@Prop(propOptional(Array, () => [])) children!: Comment[];
 	@Prop(propOptional(Boolean, false)) showReply!: boolean;
 
-	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
+	@Inject(DrawerStoreKey) drawer!: DrawerStore;
 
 	readonly Screen = Screen;
 	readonly fuzzynumber = fuzzynumber;
@@ -78,11 +82,7 @@ export default class AppCommentControls extends Vue {
 	async onUpvoteClick() {
 		const payload = await this.voteComment(CommentVote.VOTE_UPVOTE);
 		if (payload.success && payload.newSticker) {
-			handleNewStickerNotification(
-				this.$gettext(`You can unlock a new sticker!`),
-				this.$gettext(`Click this message to unlock right away.`),
-				this.$store
-			);
+			handleNewStickerNotification(this.drawer);
 		}
 	}
 
@@ -113,6 +113,6 @@ export default class AppCommentControls extends Vue {
 
 	async placeSticker() {
 		Analytics.trackEvent('post-controls', 'sticker-place', 'comments');
-		setDrawerOpen(this.drawerStore, true);
+		setDrawerOpen(this.drawer, true);
 	}
 }

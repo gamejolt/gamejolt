@@ -1,13 +1,18 @@
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Inject, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../utils/vue';
 import { Api } from '../../../api/api.service';
 import AppContentViewer from '../../../content/content-viewer/content-viewer.vue';
+import {
+	DrawerStore,
+	DrawerStoreKey,
+	handleNewStickerNotification,
+} from '../../../drawer/drawer-store';
 import { FiresidePost } from '../../../fireside/post/post-model';
 import { Growls } from '../../../growls/growls.service';
 import { BaseModal } from '../../../modal/base';
 import { Model } from '../../../model/model.service';
-import { handleNewStickerNotification, Sticker } from '../../sticker.model';
+import { Sticker } from '../../sticker.model';
 import AppSticker from '../../sticker.vue';
 import AppStickerTarget from '../../target/target.vue';
 import { StickerPlacement } from '../placement.model';
@@ -27,6 +32,8 @@ if (!GJ_IS_SSR) {
 export default class AppStickerPlacementModal extends BaseModal {
 	@Prop(propRequired(Model)) model!: Model;
 	@Prop(propRequired(Sticker)) sticker!: Sticker;
+
+	@Inject(DrawerStoreKey) drawer!: DrawerStore;
 
 	$el!: HTMLDivElement;
 	$refs!: {
@@ -136,11 +143,7 @@ export default class AppStickerPlacementModal extends BaseModal {
 			this.modal.resolve(post);
 
 			if (payload.newSticker) {
-				handleNewStickerNotification(
-					this.$gettext(`You can unlock a new sticker!`),
-					this.$gettext(`Click this message to unlock right away.`),
-					this.$store
-				);
+				handleNewStickerNotification(this.drawer);
 			}
 		} else {
 			Growls.error(this.$gettext(`Failed to place sticker.`));

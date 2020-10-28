@@ -1,13 +1,17 @@
 import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Store } from '../../../../../auth/store/index';
 import { AppAuthRequired } from '../../../../auth/auth-required-directive';
+import {
+	DrawerStore,
+	DrawerStoreKey,
+	handleNewStickerNotification,
+} from '../../../../drawer/drawer-store';
 import { fuzzynumber } from '../../../../filters/fuzzynumber';
 import { Growls } from '../../../../growls/growls.service';
 import { LikersModal } from '../../../../likers/modal.service';
 import { Screen } from '../../../../screen/screen-service';
-import { handleNewStickerNotification } from '../../../../sticker/sticker.model';
 import { AppTooltip } from '../../../../tooltip/tooltip-directive';
 import AppUserFollowWidget from '../../../../user/follow/widget.vue';
 import { FiresidePost } from '../../post-model';
@@ -23,20 +27,14 @@ import { FiresidePostLike } from '../like-model';
 	},
 })
 export default class AppFiresidePostLikeWidget extends Vue {
-	@Prop(FiresidePost)
-	post!: FiresidePost;
+	@Prop(FiresidePost) post!: FiresidePost;
+	@Prop(Boolean) overlay?: boolean;
+	@Prop(Boolean) trans?: boolean;
+	@Prop(Boolean) block?: boolean;
 
-	@Prop(Boolean)
-	overlay?: boolean;
+	@Inject(DrawerStoreKey) drawer!: DrawerStore;
 
-	@Prop(Boolean)
-	trans?: boolean;
-
-	@Prop(Boolean)
-	block?: boolean;
-
-	@State
-	app!: Store['app'];
+	@State app!: Store['app'];
 
 	showLikeAnim = false;
 	showDislikeAnim = false;
@@ -79,11 +77,7 @@ export default class AppFiresidePostLikeWidget extends Vue {
 			try {
 				const payload = await newLike.$save();
 				if (payload.success && payload.newSticker) {
-					handleNewStickerNotification(
-						this.$gettext(`You can unlock a new sticker!`),
-						this.$gettext(`Click this message to unlock right away.`),
-						this.$store
-					);
+					handleNewStickerNotification(this.drawer);
 				}
 			} catch (e) {
 				this.post.user_like = null;

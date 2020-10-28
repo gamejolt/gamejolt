@@ -3,6 +3,7 @@ import { arrayRemove, numberSort } from '../../utils/array';
 import { Analytics } from '../analytics/analytics.service';
 import { Api } from '../api/api.service';
 import { Growls } from '../growls/growls.service';
+import { StickerCollectModal } from '../sticker/collect/modal/modal.service';
 import {
 	getCollidingStickerTarget,
 	StickerLayerController,
@@ -18,6 +19,8 @@ import { Translate } from '../translate/translate.service';
 
 export const DrawerStoreKey = Symbol('drawer-store');
 
+const CAN_UNLOCK_NEW_STICKERS_STORAGE_KEY = 'gj-stickers-new-2';
+
 export class DrawerStore {
 	layers: StickerLayerController[] = [];
 	drawerItems: StickerCount[] = [];
@@ -30,6 +33,9 @@ export class DrawerStore {
 	isHoveringDrawer = false;
 	drawerHeight = 0;
 	stickerSize = 64;
+	canUnlockNewStickers = GJ_IS_SSR
+		? false
+		: localStorage.getItem(CAN_UNLOCK_NEW_STICKERS_STORAGE_KEY);
 
 	_waitingForFrame = false;
 	_onPointerMove: ((event: MouseEvent | TouchEvent) => void) | null = null;
@@ -201,16 +207,11 @@ export async function commitDrawerStoreItemPlacement(store: DrawerStore) {
 			targetController.parent.model.assign(parent);
 		}
 
-		setDrawerOpen(store, false);
+		if (newSticker) {
+			handleNewStickerNotification(store);
+		}
 
-		// DODO: Get this working
-		// if (newSticker) {
-		// 	handleNewStickerNotification(
-		// 		Translate.$gettext(`You can unlock a new sticker!`),
-		// 		Translate.$gettext(`Click this message to unlock right away.`),
-		// 		mainStore
-		// 	);
-		// }
+		setDrawerOpen(store, false);
 	} else {
 		Growls.error(Translate.$gettext(`Failed to place sticker.`));
 	}
@@ -410,4 +411,27 @@ function getPointerEvent(event: MouseEvent | TouchEvent): null | MouseEvent | To
 		return event;
 	}
 	return null;
+}
+
+export function setCanUnlockNewStickers(store: DrawerStore, canUnlock: boolean) {
+	store.canUnlockNewStickers = canUnlock;
+	localStorage.setItem(CAN_UNLOCK_NEW_STICKERS_STORAGE_KEY, canUnlock ? '1' : '0');
+}
+
+export function handleNewStickerNotification(store: DrawerStore) {
+	// Only show the growl when we haven't already notified the user of a new sticker.
+	if (store.canUnlockNewStickers) {
+		return;
+	}
+
+	Growls.success({
+		title: Translate.$gettext(`You can unlock a new sticker!`),
+		message: Translate.$gettext(`Click this message to unlock right away.`),
+		onclick: () => {
+			setCanUnlockNewStickers(store, false);
+			StickerCollectModal.show();
+		},
+	});
+
+	setCanUnlockNewStickers(store, true);
 }

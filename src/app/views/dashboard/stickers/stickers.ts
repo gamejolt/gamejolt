@@ -1,8 +1,13 @@
 import Component from 'vue-class-component';
+import { Inject } from 'vue-property-decorator';
+import {
+	DrawerStore,
+	DrawerStoreKey,
+	setCanUnlockNewStickers,
+} from '../../../../_common/drawer/drawer-store';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
 import { Sticker } from '../../../../_common/sticker/sticker.model';
-import { AppMutation, AppStore } from '../../../../_common/store/app-store';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 
 export type InitPayload = {
@@ -30,11 +35,10 @@ export type StickerCount = {
 	},
 })
 export default class RouteDashStickers extends BaseRouteComponent {
-	@AppMutation
-	setHasNewStickers!: AppStore['setHasNewStickers'];
+	@Inject(DrawerStoreKey) drawer!: DrawerStore;
 
 	created() {
-		this.setHasNewStickers(false);
+		setCanUnlockNewStickers(this.drawer, false);
 	}
 
 	get coverMediaItem() {
