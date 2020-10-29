@@ -1,7 +1,7 @@
 <script lang="ts" src="./layer"></script>
 
 <template>
-	<div class="-layer" :class="{ '-dragging': drawer.isDragging }">
+	<div class="-layer" :class="{ '-dragging': drawer.isDragging }" @contextmenu.prevent>
 		<app-sticker-layer-placement-mask
 			v-if="layer.isShowingDrawer"
 			class="-placement-mask"

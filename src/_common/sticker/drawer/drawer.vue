@@ -1,7 +1,12 @@
 <script lang="ts" src="./drawer"></script>
 
 <template>
-	<div class="sticker-drawer" :class="{ '-cbar-shifted': hasCbar }" :style="drawerStyling">
+	<div
+		class="sticker-drawer"
+		:class="{ '-cbar-shifted': hasCbar }"
+		:style="drawerStyling"
+		@contextmenu.prevent
+	>
 		<div class="-drawer-outer">
 			<app-scroll-scroller class="-scroller">
 				<div class="-drawer-inner">
