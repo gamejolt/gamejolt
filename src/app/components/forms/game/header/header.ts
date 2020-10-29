@@ -1,3 +1,4 @@
+import { Component, Watch } from 'vue-property-decorator';
 import AppFormControlCrop from '../../../../../_common/form-vue/control/crop/crop.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
 import AppForm from '../../../../../_common/form-vue/form';
@@ -8,7 +9,6 @@ import {
 } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
-import { Component, Watch } from 'vue-property-decorator';
 
 type FormModel = Game & {
 	header_crop: any;
@@ -75,7 +75,11 @@ export default class FormGameHeader extends BaseForm<FormModel>
 		);
 
 		if (result) {
-			this.formModel.$clearHeader();
+			const payload = await this.formModel.$clearHeader();
+			// Overwrite the base model's header media item here.
+			// This needs to be done because this form does not resolve (and may never resolve)
+			// after clearning a header. Need to ensure that the base model's header gets cleared.
+			(this.model as any).header_media_item = payload.game.header_media_item;
 		}
 	}
 
