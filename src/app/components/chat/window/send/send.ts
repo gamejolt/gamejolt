@@ -2,7 +2,7 @@ import Vue from 'vue';
 import { Component, InjectReactive, Prop, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { ContentDocument } from '../../../../../_common/content/content-document';
-import AppContentEditor from '../../../../../_common/content/content-editor/content-editor.vue';
+import { AppContentEditorLazy } from '../../../../../_common/content/content-editor/content-editor-lazy';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import {
 	ChatClient,
@@ -17,7 +17,7 @@ import AppChatWindowSendForm from './form/form.vue';
 
 @Component({
 	components: {
-		AppContentEditor,
+		AppContentEditor: AppContentEditorLazy,
 		AppChatWindowSendForm,
 	},
 })

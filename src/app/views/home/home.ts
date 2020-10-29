@@ -1,3 +1,6 @@
+import { CreateElement } from 'vue';
+import { Component } from 'vue-property-decorator';
+import { router } from '..';
 import { Api } from '../../../_common/api/api.service';
 import {
 	asyncRouteLoader,
@@ -5,9 +8,6 @@ import {
 	RouteResolver,
 } from '../../../_common/route/route-component';
 import { AppState, AppStore } from '../../../_common/store/app-store';
-import { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
-import { router } from '..';
 
 @Component({
 	name: 'RouteHome',
@@ -32,6 +32,6 @@ export default class RouteHome extends BaseRouteComponent {
 			return h('div');
 		}
 
-		return h(!!this.user ? 'RouteHomeFeed' : 'RouteDiscoverHome');
+		return h(this.user ? 'RouteHomeFeed' : 'RouteDiscoverHome');
 	}
 }

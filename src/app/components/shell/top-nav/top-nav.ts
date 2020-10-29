@@ -11,15 +11,13 @@ import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../store/index';
 import { ChatClient, ChatKey } from '../../chat/client';
 import AppSearch from '../../search/search.vue';
-import AppShellAccountPopover from '../account-popover/account-popover.vue';
-import AppShellFriendRequestPopover from '../friend-request-popover/friend-request-popover.vue';
-import AppShellNotificationPopover from '../notification-popover/notification-popover.vue';
 
 const components: any = {
 	AppPopper,
-	AppShellAccountPopover,
-	AppShellFriendRequestPopover,
-	AppShellNotificationPopover,
+	AppShellAccountPopover: () => import('../account-popover/account-popover.vue'),
+	AppShellFriendRequestPopover: () =>
+		import('../friend-request-popover/friend-request-popover.vue'),
+	AppShellNotificationPopover: () => import('../notification-popover/notification-popover.vue'),
 	AppSearch,
 	AppThemeSvg,
 };
