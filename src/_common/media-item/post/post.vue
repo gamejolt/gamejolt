@@ -23,7 +23,11 @@
 				/>
 			</div>
 			<app-media-item-backdrop class="-backdrop" :media-item="mediaItem" :radius="itemRadius">
-				<app-sticker-target :controller="stickerTargetController" :disabled="!isActive">
+				<app-sticker-target
+					class="-stickers"
+					:controller="stickerTargetController"
+					:disabled="!isActive"
+				>
 					<app-img-responsive
 						v-if="!isPostHydrated || !mediaItem.is_animated"
 						class="-img"
@@ -51,6 +55,10 @@
 <style lang="stylus" scoped>
 @import '~styles/variables'
 @import '~styles-lib/mixins'
+
+.-stickers
+	width: 100%
+	height: 100%
 
 .-video
 	&:after
