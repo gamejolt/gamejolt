@@ -60,17 +60,10 @@ class DashGame {
 		]),
 })
 export default class RouteActivityFeed extends BaseRouteComponent {
-	@State
-	app!: Store['app'];
-
-	@State
-	communities!: Store['communities'];
-
-	@State
-	unreadActivityCount!: Store['unreadActivityCount'];
-
-	@State
-	grid!: Store['grid'];
+	@State app!: Store['app'];
+	@State communities!: Store['communities'];
+	@State unreadActivityCount!: Store['unreadActivityCount'];
+	@State grid!: Store['grid'];
 
 	feed: ActivityFeedView | null = null;
 	games: DashGame[] = [];
@@ -78,6 +71,9 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	isShowingAllGames = false;
 	loadingRecommendedUsers = true;
 	recommendedUsers: User[] = [];
+
+	// TODO(HALLOWEEN2020): remove after
+	shouldShowBasement = false;
 
 	readonly Screen = Screen;
 
@@ -158,6 +154,8 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 		if (!fromCache) {
 			this.grid?.pushViewNotifications('activity');
 		}
+
+		this.shouldShowBasement = homePayload.receivedCandy;
 	}
 
 	mounted() {
