@@ -56,6 +56,4 @@
 	right: 0
 	bottom: 0
 	left: 0
-	// DODO: JODO: Do better
-	z-index: $zindex-shell-drawer - 2
 </style>
