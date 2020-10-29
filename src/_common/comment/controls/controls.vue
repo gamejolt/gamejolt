@@ -60,8 +60,7 @@
 					@click="onReplyClick(true)"
 				/>
 			</span>
-
-			<app-button v-if="children.length" trans @click="onReplyClick(false)">
+			<app-button v-if="children.length" class="-replies" trans @click="onReplyClick(false)">
 				<translate
 					:translate-n="children.length"
 					:translate-params="{ count: children.length }"
@@ -75,6 +74,14 @@
 </template>
 
 <style lang="stylus" scoped>
+@import '~styles/variables'
+
 .-control-margin
 	margin-left: 8px
+
+.-replies
+	@media $media-xs
+		margin-top: 8px
+		margin-left: -6px
+		display: block
 </style>
