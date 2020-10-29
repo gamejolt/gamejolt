@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Inject, Prop, Watch } from 'vue-property-decorator';
+import { sleep } from '../../../utils/utils';
 import { propOptional, propRequired } from '../../../utils/vue';
 import { Api } from '../../api/api.service';
 import {
@@ -43,6 +44,7 @@ export default class AppStickerTarget extends Vue {
 
 	$el!: HTMLDivElement;
 	readonly InviewConfig = InviewConfig;
+	private queuedInview = false;
 
 	// DODO: Scroll to the sticker target to show stickers.
 	// if (visible) {
@@ -76,8 +78,10 @@ export default class AppStickerTarget extends Vue {
 	}
 
 	@Watch('controller.shouldLoad')
-	onShouldShowStickersChange() {
-		this.loadStickers();
+	async onShouldShowStickersChange() {
+		if (this.controller.shouldLoad) {
+			this.loadStickers();
+		}
 	}
 
 	@Watch('isShowingStickers')
@@ -96,17 +100,32 @@ export default class AppStickerTarget extends Vue {
 		const resourceId = this.controller.model.id;
 
 		const { stickers } = await Api.sendRequest(
-			`/web/stickers/fetch/${resourceName}/${resourceId}`
+			`/web/stickers/fetch/${resourceName}/${resourceId}`,
+			undefined,
+			{
+				detach: true,
+			}
 		);
 
 		this.controller.stickers = StickerPlacement.populate(stickers);
 	}
 
-	onInview() {
-		this.controller.isInview = true;
+	async onInview() {
+		// We queue up the inview change to happen. If we haven't changed to
+		// "out of view" within the wait, we then set ourselves as inview. This
+		// helps to make sure we don't end up loading stickers when they're
+		// scrolling super fast through the page.
+		this.queuedInview = true;
+		await sleep(500);
+
+		if (this.queuedInview) {
+			this.controller.isInview = true;
+			this.queuedInview = false;
+		}
 	}
 
 	onOutview() {
+		this.queuedInview = false;
 		this.controller.isInview = false;
 	}
 
