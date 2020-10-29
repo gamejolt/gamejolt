@@ -46,11 +46,6 @@ export default class AppStickerTarget extends Vue {
 	readonly InviewConfig = InviewConfig;
 	private queuedInview = false;
 
-	// DODO: Scroll to the sticker target to show stickers.
-	// if (visible) {
-	// 	Scroll.to(this.$refs.stickerTarget.$el as HTMLElement, { preventDirections: ['down'] });
-	// }
-
 	get stickers() {
 		// Sort so that the newer stickers go on top of the older ones.
 		return [...this.controller.stickers].sort((a, b) => a.id - b.id);

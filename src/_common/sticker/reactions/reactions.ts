@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import { numberSort } from '../../../utils/array';
 import { propRequired } from '../../../utils/vue';
 import { DrawerStore, DrawerStoreKey } from '../../drawer/drawer-store';
@@ -20,6 +20,8 @@ export default class AppStickerReactions extends Vue {
 
 	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
 
+	@Emit('show') emitShow() {}
+
 	get reactions() {
 		return [...this.controller.model.sticker_counts].sort((a, b) =>
 			numberSort(b.count, a.count)
@@ -28,5 +30,9 @@ export default class AppStickerReactions extends Vue {
 
 	onClick() {
 		toggleStickersShouldShow(this.controller);
+
+		if (this.controller.shouldShow) {
+			this.emitShow();
+		}
 	}
 }

@@ -158,7 +158,7 @@
 
 					<div v-if="post.sticker_counts.length" class="-controls-buffer">
 						<div class="-controls-buffer-inner" @click.stop>
-							<app-sticker-reactions :controller="stickerTargetController" />
+							<app-sticker-reactions :controller="stickerTargetController" @show="onShowStickers()" />
 						</div>
 					</div>
 				</app-sticker-controls-overlay>

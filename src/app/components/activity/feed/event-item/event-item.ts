@@ -20,6 +20,7 @@ import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppPill from '../../../../../_common/pill/pill.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
+import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
 import AppStickerControlsOverlay from '../../../../../_common/sticker/controls-overlay/controls-overlay.vue';
 import AppStickerReactions from '../../../../../_common/sticker/reactions/reactions.vue';
@@ -282,6 +283,7 @@ export default class AppActivityFeedEventItem extends Vue {
 		// in our ignored list.
 		let target = e.target as HTMLElement;
 		if (target instanceof HTMLElement) {
+			// eslint-disable-next-line no-constant-condition
 			while (true) {
 				const nodeName = target.nodeName.toLowerCase();
 
@@ -332,6 +334,13 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	canToggleLeadChanged(canToggle: boolean) {
 		this.canToggleLead = canToggle;
+	}
+
+	onShowStickers() {
+		// Only scroll up if they've expanded the item.
+		if (this.feed.isItemOpen(this.item)) {
+			Scroll.to(this.$el, { preventDirections: ['down'] });
+		}
 	}
 
 	onPostEdited(item: EventItem) {

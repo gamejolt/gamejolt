@@ -96,6 +96,12 @@
 							</div>
 						</div>
 
+						<!--
+						Indicates where sticker placements may begin for scrolling when they show
+						stickers.
+						-->
+						<div ref="stickers-start" />
+
 						<div v-if="post.hasMedia" class="-media-items">
 							<div v-for="item of post.media" :key="item.id">
 								<app-media-item-post
@@ -157,9 +163,7 @@
 						<br />
 					</app-sticker-controls-overlay>
 
-					<app-sticker-controls-overlay
-						v-if="communities.length || post.sticker_counts"
-					>
+					<app-sticker-controls-overlay v-if="communities.length || post.sticker_counts">
 						<app-scroll-scroller class="-communities" horizontal thin>
 							<app-community-pill
 								v-for="postCommunity of communities"
@@ -185,6 +189,7 @@
 						<app-sticker-reactions
 							v-if="post.sticker_counts.length"
 							:controller="stickerTargetController"
+							@show="onShowStickers()"
 						/>
 
 						<br />

@@ -23,6 +23,7 @@ import {
 	AppResponsiveDimensionsChangeEvent,
 } from '../../../../_common/responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../../../_common/screen/screen-service';
+import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import AppSketchfabEmbed from '../../../../_common/sketchfab/embed/embed.vue';
 import AppStickerControlsOverlay from '../../../../_common/sticker/controls-overlay/controls-overlay.vue';
@@ -97,6 +98,10 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 
 	readonly Screen = Screen;
 	readonly number = number;
+
+	$refs!: {
+		'stickers-start': HTMLDivElement;
+	};
 
 	get displayUser() {
 		return this.post.displayUser;
@@ -215,6 +220,10 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 		if (this.video) {
 			$viewPostVideo(this.video);
 		}
+	}
+
+	onShowStickers() {
+		Scroll.to(this.$refs['stickers-start'], { preventDirections: ['down'] });
 	}
 
 	private createLightbox() {
