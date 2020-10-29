@@ -39,7 +39,6 @@ $-min-drawer-height = ($-drawer-padding + $-grid-margin) * 2 + $-item-size
 	left: 0
 	right: 0
 	bottom: 0
-	z-index: $zindex-shell-drawer
 	transition: bottom 250ms $strong-ease-out
 	display: flex
 	justify-content: center

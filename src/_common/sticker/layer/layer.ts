@@ -10,16 +10,14 @@ import {
 } from '../../drawer/drawer-store';
 import AppScrollScrollerTS from '../../scroll/scroller/scroller';
 import AppScrollScroller from '../../scroll/scroller/scroller.vue';
-import AppStickerDrawer from '../drawer/drawer.vue';
-import AppStickerDrawerGhost from '../drawer/_ghost/ghost.vue';
 import { StickerLayerController, StickerLayerKey } from './layer-controller';
-import AppStickerLayerPlacementMask from './placement-mask.vue';
 
 @Component({
 	components: {
-		AppStickerLayerPlacementMask,
-		AppStickerDrawer,
-		AppStickerDrawerGhost,
+		// Lazy load all of this since we only need it when the drawer is showing.
+		AppStickerLayerPlacementMask: () => import('./placement-mask.vue'),
+		AppStickerDrawer: () => import('../drawer/drawer.vue'),
+		AppStickerDrawerGhost: () => import('../drawer/_ghost/ghost.vue'),
 	},
 })
 export default class AppStickerLayer extends Vue {

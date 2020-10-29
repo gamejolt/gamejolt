@@ -26,19 +26,19 @@
 	min-height: 100vh
 
 .-placement-mask
-	z-index: $zindex-sticker-layer-mask
+	z-index: $zindex-sticker-layer
 
 .-ghost
 	// top and left get assigned through a DrawerStore callback.
 	position: absolute
-	z-index: $zindex-sticker-layer-mask + 1
+	z-index: $zindex-sticker-layer + 1
 
 .-sticker-drawer
-	z-index: $zindex-sticker-layer-mask + 2
+	z-index: $zindex-sticker-layer + 2
 
 .-dragging
 	cursor: grabbing !important
 
 	.-ghost
-		z-index: $zindex-sticker-layer-mask + 3
+		z-index: $zindex-sticker-layer + 3
 </style>
