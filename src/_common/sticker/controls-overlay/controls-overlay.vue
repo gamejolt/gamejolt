@@ -1,17 +1,17 @@
+<script lang="ts" src="./controls-overlay"></script>
+
 <template>
-	<div class="event-item-controls-overlay">
+	<div class="sticker-controls-overlay">
 		<div class="-overlay" :class="{ '-end': end }" />
 		<slot />
 	</div>
 </template>
 
-<script lang="ts" src="./controls-overlay"></script>
-
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
-.event-item-controls-overlay
+.sticker-controls-overlay
 	position: relative
 	// Needs to be higher than the z-index of AppStickerTarget
 	z-index: 1

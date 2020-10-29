@@ -151,13 +151,13 @@
 						</div>
 					</div>
 
-					<app-event-item-controls-overlay v-if="post.hasPoll">
+					<app-sticker-controls-overlay v-if="post.hasPoll">
 						<app-poll-voting :poll="post.poll" :game="post.game" :user="post.user" />
 
 						<br />
-					</app-event-item-controls-overlay>
+					</app-sticker-controls-overlay>
 
-					<app-event-item-controls-overlay
+					<app-sticker-controls-overlay
 						v-if="communities.length || post.sticker_counts"
 					>
 						<app-scroll-scroller class="-communities" horizontal thin>
@@ -183,12 +183,12 @@
 						</template>
 
 						<app-sticker-reactions
-							v-if="post.sticker_counts"
+							v-if="post.sticker_counts.length"
 							:controller="stickerTargetController"
 						/>
 
 						<br />
-					</app-event-item-controls-overlay>
+					</app-sticker-controls-overlay>
 
 					<app-event-item-controls
 						:post="post"

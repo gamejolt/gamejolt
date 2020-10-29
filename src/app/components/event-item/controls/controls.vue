@@ -2,7 +2,7 @@
 
 <template>
 	<div>
-		<app-event-item-controls-overlay class="event-item-controls" end>
+		<app-sticker-controls-overlay class="event-item-controls" end>
 			<template v-if="post">
 				<app-event-item-controls-fireside-post
 					:post="post"
@@ -28,7 +28,7 @@
 					<app-comment-video-like-widget :video="video" trans />
 				</span>
 			</template>
-		</app-event-item-controls-overlay>
+		</app-sticker-controls-overlay>
 
 		<app-event-item-controls-user-follow
 			v-if="post"

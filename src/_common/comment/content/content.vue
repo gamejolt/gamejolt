@@ -55,16 +55,21 @@
 			</div>
 		</app-sticker-target>
 
-		<app-sticker-reactions
-			v-if="comment.sticker_counts"
-			:controller="stickerTargetController"
-		/>
+		<app-sticker-controls-overlay
+			v-if="comment.sticker_counts.length"
+			class="-reactions-container"
+		>
+			<app-sticker-reactions :controller="stickerTargetController" />
+		</app-sticker-controls-overlay>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
 @import '~styles/variables'
 @import '~styles-lib/mixins'
+
+$-reactions-padding = ($grid-gutter-width / 2) * 0.75
+$-reactions-padding-xs = ($grid-gutter-width-xs / 2) * 0.75
 
 .hidden-text-expander
 	margin-bottom: $font-size-base
@@ -74,4 +79,10 @@
 
 .comment-video-thumbnail
 	margin-bottom: $line-height-computed !important
+
+.-reactions-container
+	padding-bottom: $-reactions-padding-xs
+
+	@media $media-sm-up
+		padding-bottom: $-reactions-padding
 </style>

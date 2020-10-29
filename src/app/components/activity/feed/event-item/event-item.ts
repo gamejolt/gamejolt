@@ -11,7 +11,6 @@ import { Community } from '../../../../../_common/community/community.model';
 import AppCommunityPill from '../../../../../_common/community/pill/pill.vue';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
-import AppEventItemControlsOverlay from '../../../../../_common/event-item/controls-overlay/controls-overlay.vue';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
 import { number } from '../../../../../_common/filters/number';
@@ -22,6 +21,7 @@ import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/
 import AppPill from '../../../../../_common/pill/pill.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
+import AppStickerControlsOverlay from '../../../../../_common/sticker/controls-overlay/controls-overlay.vue';
 import AppStickerReactions from '../../../../../_common/sticker/reactions/reactions.vue';
 import {
 	StickerTargetController,
@@ -59,7 +59,7 @@ import AppActivityFeedEventItemTime from './time/time.vue';
 		AppActivityFeedDevlogPostVideo,
 		AppActivityFeedDevlogPostText,
 		AppEventItemControls,
-		AppEventItemControlsOverlay,
+		AppStickerControlsOverlay,
 		AppPollVoting,
 		AppUserCardHover,
 		AppFadeCollapse,

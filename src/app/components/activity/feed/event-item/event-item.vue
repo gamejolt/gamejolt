@@ -133,7 +133,7 @@
 
 				<a v-if="canToggleLead" class="hidden-text-expander" @click="toggleLead()" />
 
-				<app-event-item-controls-overlay>
+				<app-sticker-controls-overlay>
 					<app-activity-feed-devlog-post-text
 						v-if="post.has_article"
 						:item="item"
@@ -145,19 +145,23 @@
 					</div>
 
 					<div v-if="shouldShowCommunities" class="-controls-buffer">
-						<app-scroll-scroller class="-communities" horizontal>
-							<app-community-pill
-								v-for="postCommunity of communities"
-								:key="postCommunity.id"
-								:community-link="postCommunity"
-							/>
-						</app-scroll-scroller>
+						<div class="-controls-buffer-inner" @click.stop>
+							<app-scroll-scroller class="-communities" horizontal>
+								<app-community-pill
+									v-for="postCommunity of communities"
+									:key="postCommunity.id"
+									:community-link="postCommunity"
+								/>
+							</app-scroll-scroller>
+						</div>
 					</div>
 
-					<div v-if="post.sticker_counts" class="-controls-buffer">
-						<app-sticker-reactions :controller="stickerTargetController" />
+					<div v-if="post.sticker_counts.length" class="-controls-buffer">
+						<div class="-controls-buffer-inner" @click.stop>
+							<app-sticker-reactions :controller="stickerTargetController" />
+						</div>
 					</div>
-				</app-event-item-controls-overlay>
+				</app-sticker-controls-overlay>
 			</template>
 
 			<app-event-item-controls
@@ -169,7 +173,6 @@
 				:feed="feed"
 				:item="item"
 				:video="video"
-				:sticker-target-controller="stickerTargetController"
 				show-comments
 				event-label="feed"
 				@post-edit="onPostEdited(eventItem)"

@@ -5,7 +5,6 @@ import { propRequired } from '../../../../utils/vue';
 import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
-import AppEventItemControlsOverlay from '../../../../_common/event-item/controls-overlay/controls-overlay.vue';
 import { number } from '../../../../_common/filters/number';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import {
@@ -26,6 +25,7 @@ import {
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import AppSketchfabEmbed from '../../../../_common/sketchfab/embed/embed.vue';
+import AppStickerControlsOverlay from '../../../../_common/sticker/controls-overlay/controls-overlay.vue';
 import AppStickerReactions from '../../../../_common/sticker/reactions/reactions.vue';
 import {
 	StickerTargetController,
@@ -59,7 +59,7 @@ import AppPollVoting from '../../../components/poll/voting/voting.vue';
 		AppVideoEmbed,
 		AppSketchfabEmbed,
 		AppEventItemControls,
-		AppEventItemControlsOverlay,
+		AppStickerControlsOverlay,
 		AppPollVoting,
 		AppAdWidget,
 		AppCommunityPill,
