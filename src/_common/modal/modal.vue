@@ -20,7 +20,7 @@
 					'modal-full': modal.size === 'full',
 				}"
 			>
-				<app-sticker-layer class="modal-sticker-layer" has-fixed-parent>
+				<component :is="!drawer ? 'div' : 'app-sticker-layer'" class="modal-sticker-layer">
 					<app-theme
 						class="modal-content"
 						:theme="theme"
@@ -35,7 +35,7 @@
 							</div>
 						</app-scroll-affix>
 					</app-theme>
-				</app-sticker-layer>
+				</component>
 			</app-scroll-scroller>
 		</div>
 	</transition>

@@ -24,12 +24,10 @@ import { Modal } from './modal.service';
 	},
 })
 export default class AppModal extends Vue {
-	@Inject(DrawerStoreKey) drawer!: DrawerStore;
-	@Prop(Number)
-	index!: number;
+	@Prop(Number) index!: number;
+	@Prop(Object) theme?: any;
 
-	@Prop(Object)
-	theme?: any;
+	@Inject({ from: DrawerStoreKey, default: null }) drawer!: null | DrawerStore;
 
 	modal: Modal = null as any;
 	isHoveringContent = false;
@@ -110,7 +108,7 @@ export default class AppModal extends Vue {
 			Screen.isMobile ||
 			this.modal.noBackdropClose ||
 			this.isHoveringContent ||
-			this.drawer.isDrawerOpen
+			this.drawer?.isDrawerOpen
 		) {
 			return;
 		}

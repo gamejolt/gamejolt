@@ -32,7 +32,7 @@ export default class AppFiresidePostLikeWidget extends Vue {
 	@Prop(Boolean) trans?: boolean;
 	@Prop(Boolean) block?: boolean;
 
-	@Inject(DrawerStoreKey) drawer!: DrawerStore;
+	@Inject({ from: DrawerStoreKey, default: null }) drawer!: null | DrawerStore;
 
 	@State app!: Store['app'];
 
@@ -76,7 +76,7 @@ export default class AppFiresidePostLikeWidget extends Vue {
 
 			try {
 				const payload = await newLike.$save();
-				if (payload.success && payload.newSticker) {
+				if (payload.success && payload.newSticker && this.drawer) {
 					handleNewStickerNotification(this.drawer);
 				}
 			} catch (e) {
