@@ -2,6 +2,8 @@
 
 <template>
 	<div class="theme-dark">
+		<app-flashlight />
+
 		<section v-if="isRouteBootstrapped" class="section fill-backdrop">
 			<div class="container">
 				<div class="-page">

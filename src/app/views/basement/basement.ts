@@ -5,6 +5,7 @@ import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-
 import { AppTheme } from '../../../_common/theme/theme';
 import { Theme } from '../../../_common/theme/theme.model';
 import { store } from '../../store';
+import AppFlashlight from './_flashlight.vue';
 
 export const BasementThemeKey = 'basement';
 
@@ -15,6 +16,7 @@ const BasementTheme = new Theme({ highlight: 'acaee6', backlight: '293749' });
 	components: {
 		AppTheme,
 		AppProgressBar,
+		AppFlashlight,
 	},
 })
 @RouteResolver({
