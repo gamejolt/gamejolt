@@ -3,13 +3,18 @@
 <template>
 	<div
 		class="sticker-drawer"
-		:class="{ '-cbar-shifted': hasCbar }"
+		:class="{ '-cbar-shifted': hasCbar, '-touch': !Screen.isPointerMouse }"
 		:style="styles.shell"
 		@contextmenu.prevent
-		@touchend="onTouchEnd"
+		@mousemove="onMouseMove"
+		@mouseup="resetTouchedSticker()"
+		@touchend="resetTouchedSticker()"
 	>
-		<div class="-drawer-outer anim-fade-in-up" :style="styles.outer">
-			<app-scroll-scroller :style="styles.dimensions">
+		<div ref="content" class="-drawer-outer anim-fade-in-up" :style="styles.outer">
+			<component
+				:is="Screen.isPointerMouse ? 'app-scroll-scroller' : 'div'"
+				:style="styles.dimensions"
+			>
 				<app-loading-fade :is-loading="isLoading">
 					<template v-if="hasHalloweenStickers">
 						<div class="-halloween-text" :style="styles.halloweenText">
@@ -24,11 +29,7 @@
 						@pan="pan"
 						@panend="panEnd"
 					>
-						<div
-							ref="slider"
-							class="-drawer-inner"
-							:class="{ '-touch': !Screen.isPointerMouse }"
-						>
+						<div ref="slider" class="-drawer-inner">
 							<template v-if="hasStickers">
 								<template v-for="(sheet, index) in stickerSheets">
 									<div :key="index" class="-sheet" :style="styles.sheet">
@@ -39,8 +40,8 @@
 											:sticker="item.sticker"
 											:count="item.count"
 											:size="drawerStore.stickerSize"
-											@mousedown.native="onMouseDown($event, item)"
-											@touchstart.native="onTouchStart(item)"
+											@mousedown.native="assignTouchedSticker(item)"
+											@touchstart.native="assignTouchedSticker(item)"
 										/>
 									</div>
 								</template>
@@ -79,7 +80,7 @@
 						/>
 					</div>
 				</app-loading-fade>
-			</app-scroll-scroller>
+			</component>
 		</div>
 	</div>
 </template>
@@ -87,6 +88,13 @@
 <style lang="stylus" scoped>
 @import '~styles/variables'
 @import '~styles-lib/mixins'
+
+.-touch
+	.-drawer-inner
+		white-space: nowrap
+
+	.-sheet
+		display: inline-flex
 
 .-loading
 	margin: auto
@@ -130,11 +138,8 @@
 	&-inner
 		transition: transform 300ms $strong-ease-out
 
-		&.-touch
-			white-space: nowrap
-
 .-sheet
-	display: inline-flex
+	display: flex
 	justify-content: center
 	flex-wrap: wrap
 </style>

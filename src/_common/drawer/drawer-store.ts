@@ -150,7 +150,6 @@ export function setDrawerStoreActiveItem(
 	event?: MouseEvent | TouchEvent,
 	fromTarget?: boolean
 ) {
-	// JODO: This might feel cleaner by having the drawer set a separate field - not sure yet.
 	if (fromTarget) {
 		assignDrawerStoreItem(store, null, null);
 	}

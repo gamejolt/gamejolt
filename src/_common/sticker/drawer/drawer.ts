@@ -19,6 +19,7 @@ import { Screen } from '../../screen/screen-service';
 import AppScrollScroller from '../../scroll/scroller/scroller.vue';
 import AppStickerCard from '../card/card.vue';
 import { StickerCollectModal } from '../collect/modal/modal.service';
+import { Sticker } from '../sticker.model';
 import AppSticker from '../sticker.vue';
 import AppShellBottomDrawerItem from './item/item.vue';
 
@@ -45,7 +46,7 @@ export default class AppStickerDrawer extends Vue {
 	isSwiping = false;
 	private stickersPerRow = 5;
 	private isWaitingForFrame = false;
-	private touchedSticker: StickerCount | null = null;
+	private touchedSticker: Sticker | null = null;
 	private resize$: EventSubscription | undefined;
 
 	private readonly drawerPadding = 8;
@@ -56,6 +57,7 @@ export default class AppStickerDrawer extends Vue {
 	$el!: HTMLDivElement;
 
 	$refs!: {
+		content: HTMLDivElement;
 		slider: HTMLDivElement;
 	};
 
@@ -124,7 +126,8 @@ export default class AppStickerDrawer extends Vue {
 
 	get maxStickersPerSheet() {
 		if (Screen.isPointerMouse) {
-			return this.drawerStore.drawerItems.length;
+			// Don't worry, this is SAFE.
+			return Number.MAX_SAFE_INTEGER;
 		}
 
 		const rows = 2;
@@ -145,9 +148,11 @@ export default class AppStickerDrawer extends Vue {
 					// Max-width is unset when Xs (so it can bleed and span the whole width), with margins of 64px on other breakpoints.
 					maxWidth: Screen.isXs ? 'unset' : `calc(100% - 64px)`,
 					// Max-height of 2 sticker rows
-					maxHeight: `${this.drawerPadding * 2 +
-						this.stickerSize * numRowsShowing +
-						HalloweenTextHeight}px`,
+					maxHeight: Screen.isPointerMouse
+						? `${this.drawerPadding * 2 +
+								this.stickerSize * numRowsShowing +
+								HalloweenTextHeight}px`
+						: null,
 				},
 				// Shift the drawer down when there's an item being dragged and the drawer container is not being hovered.
 				this.drawerStore.sticker && !this.drawerStore.isHoveringDrawer
@@ -163,20 +168,22 @@ export default class AppStickerDrawer extends Vue {
 				// Max-width is unset when Xs (so it can bleed and span the whole width), with margins of 64px on other breakpoints.
 				maxWidth: Screen.isXs ? 'unset' : `calc(100% - 64px)`,
 				// Max-height of 2 sticker rows
-				maxHeight:
-					this.drawerPadding * 2 +
-					this.stickerSize * numRowsShowing +
-					HalloweenTextHeight +
-					'px',
+				maxHeight: Screen.isPointerMouse
+					? this.drawerPadding * 2 +
+					  this.stickerSize * numRowsShowing +
+					  HalloweenTextHeight +
+					  'px'
+					: null,
 			},
 			dimensions: {
 				minWidth: Screen.isXs ? 'unset' : '400px',
 				minHeight: `${this.stickerSize}px`,
-				maxHeight:
-					this.drawerPadding +
-					this.stickerSize * numRowsShowing +
-					HalloweenTextHeight +
-					'px',
+				maxHeight: Screen.isPointerMouse
+					? this.drawerPadding +
+					  this.stickerSize * numRowsShowing +
+					  HalloweenTextHeight +
+					  'px'
+					: undefined,
 				paddingBottom: `${this.drawerPadding}px`,
 			},
 			sheet: {
@@ -221,19 +228,26 @@ export default class AppStickerDrawer extends Vue {
 		this._updateSliderOffset();
 	}
 
-	onMouseDown(event: MouseEvent, stickerCount: StickerCount) {
-		if (!this.drawerStore.isDrawerOpen || this.drawerStore.sticker || stickerCount.count <= 0) {
+	assignTouchedSticker(sticker: StickerCount) {
+		if (!this.drawerStore.isDrawerOpen || this.drawerStore.sticker || sticker.count <= 0) {
 			return;
 		}
 
-		setDrawerStoreActiveItem(this.drawerStore, stickerCount.sticker, event);
+		this.touchedSticker = sticker.sticker;
 	}
 
-	onTouchStart(sticker: StickerCount) {
-		this.touchedSticker = sticker;
+	onMouseMove(event: MouseEvent) {
+		if (!this.touchedSticker) {
+			return;
+		}
+
+		setDrawerStoreActiveItem(this.drawerStore, this.touchedSticker, event);
+		this.resetTouchedSticker();
 	}
 
-	onTouchEnd() {
+	resetTouchedSticker() {
+		console.log('resetTouchedSticker');
+
 		this.touchedSticker = null;
 	}
 
@@ -248,7 +262,7 @@ export default class AppStickerDrawer extends Vue {
 		} else {
 			setDrawerStoreActiveItem(
 				this.drawerStore,
-				this.touchedSticker.sticker,
+				this.touchedSticker,
 				event.changedPointers[0]
 			);
 		}
@@ -321,7 +335,7 @@ export default class AppStickerDrawer extends Vue {
 
 	calculateStickersPerRow() {
 		this.stickersPerRow = Math.floor(
-			(Ruler.width(this.$el) - this.drawerPadding * 2) / this.stickerSize
+			(Ruler.width(this.$refs.content) - this.drawerPadding * 2) / this.stickerSize
 		);
 	}
 
@@ -346,6 +360,7 @@ export default class AppStickerDrawer extends Vue {
 		await this.$nextTick();
 		if (!this.drawerStore.isLoading) {
 			setDrawerStoreHeight(this.drawerStore, this.$el.offsetHeight);
+			this.calculateStickersPerRow();
 		}
 	}
 }
