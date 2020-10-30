@@ -66,21 +66,36 @@ export default class AppStickerDrawer extends Vue {
 		}
 	}
 
-	get stickerSheets(): StickerCount[][] {
+	get hasHalloweenStickers() {
+		return this.drawerStore.drawerItems.some(i => i.sticker.is_type_halloween_candy);
+	}
+
+	get stickerSheets() {
+		return [
+			...this.chunkStickers(
+				this.drawerStore.drawerItems.filter(i => i.sticker.is_type_halloween_candy)
+			),
+			...this.chunkStickers(
+				this.drawerStore.drawerItems.filter(i => !i.sticker.is_type_halloween_candy)
+			),
+		];
+	}
+
+	private chunkStickers(stickers: StickerCount[]) {
 		const sheets = [];
 
 		let current: StickerCount[] = [];
-		for (const i of this.drawerStore.drawerItems) {
+		for (const i of stickers) {
 			current.push(i);
 
-			if (
-				current.length >= this.maxStickersPerSheet ||
-				i.sticker.id ===
-					this.drawerStore.drawerItems[this.drawerStore.drawerItems.length - 1].sticker.id
-			) {
+			if (current.length >= this.maxStickersPerSheet) {
 				sheets.push(current);
 				current = [];
 			}
+		}
+
+		if (current.length > 0) {
+			sheets.push(current);
 		}
 
 		return sheets;
@@ -104,7 +119,13 @@ export default class AppStickerDrawer extends Vue {
 	}
 
 	get styles() {
+		const HalloweenTextHeight = 25;
+		const numRowsShowing = Screen.isPointerMouse ? 2.3 : 2;
+
 		return {
+			halloweenText: {
+				height: `${HalloweenTextHeight}px`,
+			},
 			outer: [
 				{
 					cursor: this.drawerStore.isDragging ? 'grabbing' : 'default',
@@ -113,7 +134,9 @@ export default class AppStickerDrawer extends Vue {
 					// Max-width is unset when Xs (so it can bleed and span the whole width), with margins of 64px on other breakpoints.
 					maxWidth: Screen.isXs ? 'unset' : `calc(100% - 64px)`,
 					// Max-height of 2 sticker rows
-					maxHeight: this.drawerPadding * 2 + this.stickerSize * 2 + 'px',
+					maxHeight: `${this.drawerPadding * 2 +
+						this.stickerSize * numRowsShowing +
+						HalloweenTextHeight}px`,
 				},
 
 				// Shift the drawer down when there's an item being dragged and the drawer container is not being hovered.
