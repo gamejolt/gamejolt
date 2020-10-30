@@ -423,7 +423,7 @@ export function queueChatMessage(chat: ChatClient, content: string, roomId: numb
 	const tempId = Math.floor(Math.random() * Date.now());
 	const message = new ChatMessage({
 		id: tempId,
-		type: ChatMessage.TypeNormal,
+		type: ChatMessage.TypeMessage,
 		user_id: chat.currentUser.id,
 		user: chat.currentUser,
 		room_id: roomId,
