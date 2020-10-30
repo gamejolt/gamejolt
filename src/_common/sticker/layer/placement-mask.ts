@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
 import { findVueParent, propRequired } from '../../../utils/vue';
+import { Analytics } from '../../analytics/analytics.service';
 import { DrawerStore, DrawerStoreKey, setDrawerOpen } from '../../drawer/drawer-store';
 import { AppObserveDimensions } from '../../observe-dimensions/observe-dimensions.directive';
 import { Scroll } from '../../scroll/scroll.service';
@@ -54,6 +55,7 @@ export default class AppStickerLayerPlacementMask extends Vue {
 	}
 
 	onClickMask() {
+		Analytics.trackEvent('sticker-drawer', 'click-mask-hide');
 		setDrawerOpen(this.drawer, false);
 	}
 }

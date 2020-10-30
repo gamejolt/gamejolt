@@ -5,6 +5,7 @@ import AppEventItemMediaIndicator from '../../../app/components/event-item/media
 import { Store } from '../../../app/store/index';
 import { StickerCount } from '../../../app/views/dashboard/stickers/stickers';
 import { EventSubscription } from '../../../system/event/event-topic';
+import { Analytics } from '../../analytics/analytics.service';
 import {
 	DrawerStore,
 	DrawerStoreKey,
@@ -227,6 +228,7 @@ export default class AppStickerDrawer extends Vue {
 		}
 
 		this.sheetPage = Math.min(this.sheetPage + 1, this.stickerSheets.length);
+		Analytics.trackEvent('sticker-drawer', 'swipe-next');
 		this._updateSliderOffset();
 	}
 
@@ -237,6 +239,7 @@ export default class AppStickerDrawer extends Vue {
 		}
 
 		this.sheetPage = Math.max(this.sheetPage - 1, 1);
+		Analytics.trackEvent('sticker-drawer', 'swipe-previous');
 		this._updateSliderOffset();
 	}
 
@@ -316,6 +319,8 @@ export default class AppStickerDrawer extends Vue {
 				this.goNext();
 			}
 			return;
+		} else {
+			Analytics.trackEvent('sticker-drawer', 'swipe-cancel');
 		}
 
 		this._updateSliderOffset();
@@ -345,6 +350,8 @@ export default class AppStickerDrawer extends Vue {
 		if (!this.drawerStore.stickerCurrency) {
 			return;
 		}
+
+		Analytics.trackEvent('sticker-drawer', 'purchase-stickers');
 		setDrawerHidden(this.drawerStore, true);
 
 		const remainingBalance = await StickerCollectModal.show();

@@ -317,6 +317,7 @@ const _onPointerMove = (store: DrawerStore) => (event: MouseEvent | TouchEvent) 
  */
 const _onPointerUp = (store: DrawerStore) => (event: MouseEvent | TouchEvent) => {
 	if (store.isHoveringDrawer && store.sticker) {
+		Analytics.trackEvent('sticker-drawer', 'drop-drawer');
 		alterDrawerStoreItemCount(store, store.sticker, true);
 		_removeEventListeners(store);
 		return;
@@ -329,8 +330,10 @@ const _onPointerUp = (store: DrawerStore) => (event: MouseEvent | TouchEvent) =>
 
 	const target = getCollidingStickerTarget(store.activeLayer, pointer.x, pointer.y);
 	if (target) {
+		Analytics.trackEvent('sticker-drawer', 'drop-target');
 		target.onPlaceDrawerSticker(pointer);
 	} else if (store.sticker) {
+		Analytics.trackEvent('sticker-drawer', 'drop-mask');
 		alterDrawerStoreItemCount(store, store.sticker, true);
 	}
 

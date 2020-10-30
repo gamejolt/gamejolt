@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Inject } from 'vue-property-decorator';
+import { Analytics } from '../../../analytics/analytics.service';
 import {
 	assignDrawerStoreGhostCallback as assignDrawerStoreMoveCallback,
 	commitDrawerStoreItemPlacement,
@@ -66,18 +67,17 @@ export default class AppStickerDrawerGhost extends Vue {
 	}
 
 	onConfirmPlacement() {
+		Analytics.trackEvent('sticker-drawer', 'confirm-placement');
 		commitDrawerStoreItemPlacement(this.drawer);
 	}
 
 	onStartDrag(event: MouseEvent | TouchEvent) {
+		Analytics.trackEvent('sticker-drawer', 'start-drag');
 		setDrawerStoreActiveItem(this.drawer, this.sticker, event, true);
 	}
 
 	updateGhostPosition(pos: { left: number; top: number }) {
 		const { left, top } = pos;
-
-		// JODO: Doesn't currently update the initial position properly. Works fine once the pointer is moved.
-
 		this.$el.style.transform = `translate3d(${left}px, ${top}px, 0)`;
 	}
 }
