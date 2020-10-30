@@ -72,6 +72,10 @@ export function setDrawerOpen(store: DrawerStore, isOpen: boolean) {
 
 export function setDrawerHidden(store: DrawerStore, shouldHide: boolean) {
 	store.hideDrawer = shouldHide;
+
+	if (!shouldHide) {
+		_initializeDrawerContent(store);
+	}
 }
 
 /**
