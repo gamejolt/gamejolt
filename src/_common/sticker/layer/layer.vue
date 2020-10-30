@@ -8,8 +8,8 @@
 			:layer="layer"
 		/>
 		<template v-if="layer.isShowingDrawer">
-			<app-sticker-drawer-ghost v-if="drawer.sticker" class="-ghost" />
-			<app-sticker-drawer class="-sticker-drawer" />
+			<app-sticker-layer-ghost v-if="drawer.sticker" class="-ghost" />
+			<app-sticker-layer-drawer class="-drawer" />
 		</template>
 
 		<!--
@@ -35,7 +35,7 @@
 	position: absolute
 	z-index: $zindex-sticker-layer + 1
 
-.-sticker-drawer
+.-drawer
 	z-index: $zindex-sticker-layer + 2
 
 .-dragging

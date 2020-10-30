@@ -1,4 +1,4 @@
-<script lang="ts" src="./item"></script>
+<script lang="ts" src="./drawer-item"></script>
 
 <template>
 	<div class="-item" draggable="false" @contextmenu.prevent>

@@ -21,7 +21,7 @@ import AppStickerCard from '../card/card.vue';
 import { StickerCollectModal } from '../collect/modal/modal.service';
 import { Sticker } from '../sticker.model';
 import AppSticker from '../sticker.vue';
-import AppShellBottomDrawerItem from './item/item.vue';
+import AppStickerLayerDrawerItem from './drawer-item.vue';
 
 if (!GJ_IS_SSR) {
 	const VueTouch = require('vue-touch');
@@ -33,12 +33,12 @@ if (!GJ_IS_SSR) {
 		AppScrollScroller,
 		AppStickerCard,
 		AppSticker,
-		AppShellBottomDrawerItem,
+		AppStickerLayerDrawerItem,
 		AppLoadingFade,
 		AppEventItemMediaIndicator,
 	},
 })
-export default class AppStickerDrawer extends Vue {
+export default class AppStickerLayerDrawer extends Vue {
 	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
 	@State hasCbar!: Store['hasCbar'];
 
