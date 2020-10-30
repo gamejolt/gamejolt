@@ -13,6 +13,8 @@ import {
 export default class AppStickerLayerGhost extends Vue {
 	@Inject(DrawerStoreKey) drawer!: DrawerStore;
 
+	private isConfirmingPlacement = false;
+
 	$el!: HTMLDivElement;
 
 	get sticker() {
@@ -67,6 +69,10 @@ export default class AppStickerLayerGhost extends Vue {
 	}
 
 	onConfirmPlacement() {
+		if (this.isConfirmingPlacement) {
+			return;
+		}
+		this.isConfirmingPlacement = true;
 		Analytics.trackEvent('sticker-drawer', 'confirm-placement');
 		commitDrawerStoreItemPlacement(this.drawer);
 	}
