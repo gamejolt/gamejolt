@@ -98,7 +98,7 @@
 					posts, you might get some more.
 				</translate>
 			</p>
-			<app-button :to="{ name: 'dash.stickers.overview' }">
+			<app-button :to="{ name: 'dash.stickers' }">
 				<translate>View Collection</translate>
 			</app-button>
 		</div>
