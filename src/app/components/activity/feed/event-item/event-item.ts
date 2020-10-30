@@ -101,6 +101,10 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	$el!: HTMLDivElement;
 
+	$refs!: {
+		'sticker-scroll': HTMLDivElement;
+	};
+
 	@Emit('resize') emitResize(_height: number) {}
 	@Emit('clicked') emitClicked() {}
 
@@ -336,10 +340,10 @@ export default class AppActivityFeedEventItem extends Vue {
 		this.canToggleLead = canToggle;
 	}
 
-	onShowStickers() {
+	scrollToStickers() {
 		// Only scroll up if they've expanded the item.
 		if (this.feed.isItemOpen(this.item)) {
-			Scroll.to(this.$el, { preventDirections: ['down'] });
+			Scroll.to(this.$refs['sticker-scroll'], { preventDirections: ['down'] });
 		}
 	}
 

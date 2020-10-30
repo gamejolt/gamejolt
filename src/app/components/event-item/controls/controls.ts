@@ -46,6 +46,7 @@ export default class AppEventItemControls extends Vue {
 	@Emit('post-reject') emitPostReject(_community: Community) {}
 	@Emit('post-pin') emitPostPin() {}
 	@Emit('post-unpin') emitPostUnpin() {}
+	@Emit('sticker') emitSticker() {}
 
 	created() {
 		// The 'feed' and 'item' props will be included when this is used in the

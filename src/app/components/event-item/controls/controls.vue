@@ -18,6 +18,7 @@
 					@pin="emitPostPin"
 					@unpin="emitPostUnpin"
 					@like-change="setUserFollow"
+					@sticker="emitSticker"
 				/>
 			</template>
 			<template v-else-if="video">

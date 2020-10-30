@@ -73,6 +73,7 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 	@Emit('pin') emitPin() {}
 	@Emit('unpin') emitUnpin() {}
 	@Emit('like-change') emitLikeChange(_value: boolean) {}
+	@Emit('sticker') emitSticker() {}
 
 	get commentsCount() {
 		return this.commentStore ? this.commentStore.totalCount : 0;
@@ -154,5 +155,6 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 	async placeSticker() {
 		Analytics.trackEvent('post-controls', 'sticker-place', this.eventLabel);
 		setDrawerOpen(this.drawerStore, true);
+		this.emitSticker();
 	}
 }

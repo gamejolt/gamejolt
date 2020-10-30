@@ -100,7 +100,7 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 	readonly number = number;
 
 	$refs!: {
-		'stickers-start': HTMLDivElement;
+		'sticker-scroll': HTMLDivElement;
 	};
 
 	get displayUser() {
@@ -222,8 +222,8 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 		}
 	}
 
-	onShowStickers() {
-		Scroll.to(this.$refs['stickers-start'], { preventDirections: ['down'] });
+	scrollToStickers() {
+		Scroll.to(this.$refs['sticker-scroll'], { preventDirections: ['down'] });
 	}
 
 	private createLightbox() {

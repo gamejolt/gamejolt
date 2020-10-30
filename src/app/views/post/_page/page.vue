@@ -100,7 +100,7 @@
 						Indicates where sticker placements may begin for scrolling when they show
 						stickers.
 						-->
-						<div ref="stickers-start" />
+						<div ref="sticker-scroll" />
 
 						<div v-if="post.hasMedia" class="-media-items">
 							<div v-for="item of post.media" :key="item.id">
@@ -189,7 +189,7 @@
 						<app-sticker-reactions
 							v-if="post.sticker_counts.length"
 							:controller="stickerTargetController"
-							@show="onShowStickers()"
+							@show="scrollToStickers()"
 						/>
 
 						<div class="-controls-spacing" />
@@ -201,6 +201,7 @@
 						event-label="page"
 						@post-remove="onPostRemoved"
 						@post-publish="onPostPublished"
+						@sticker="scrollToStickers()"
 					/>
 
 					<br />

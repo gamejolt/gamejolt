@@ -113,6 +113,8 @@
 					:post="post"
 				/>
 
+				<div ref="sticker-scroll" />
+
 				<app-sticker-target :controller="stickerTargetController">
 					<!--
 					This shouldn't ever really show a collapser. It's for the jokers that think it would
@@ -163,7 +165,7 @@
 					>
 						<app-sticker-reactions
 							:controller="stickerTargetController"
-							@show="onShowStickers()"
+							@show="scrollToStickers()"
 						/>
 					</div>
 				</app-sticker-controls-overlay>
@@ -189,6 +191,7 @@
 				@post-reject="onPostRejected(eventItem, $event)"
 				@post-pin="onPostPinned(eventItem)"
 				@post-unpin="onPostUnpinned(eventItem)"
+				@sticker="scrollToStickers()"
 			/>
 		</div>
 	</div>
