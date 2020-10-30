@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Inject, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import AppEventItemMediaIndicator from '../../../app/components/event-item/media-indicator/media-indicator.vue';
 import { Store } from '../../../app/store/index';
 import { StickerCount } from '../../../app/views/dashboard/stickers/stickers';
 import { EventSubscription } from '../../../system/event/event-topic';
@@ -33,6 +34,7 @@ if (!GJ_IS_SSR) {
 		AppSticker,
 		AppShellBottomDrawerItem,
 		AppLoadingFade,
+		AppEventItemMediaIndicator,
 	},
 })
 export default class AppStickerDrawer extends Vue {
@@ -57,12 +59,19 @@ export default class AppStickerDrawer extends Vue {
 		slider: HTMLDivElement;
 	};
 
-	// JODO: Set up pages for v-touch
 	get drawerNavigationComponent() {
 		if (Screen.isPointerMouse) {
-			return 'app-scroll-scroller';
+			return 'div';
 		} else {
 			return 'v-touch';
+		}
+	}
+
+	get drawerNavigationProps() {
+		if (!Screen.isPointerMouse) {
+			return {
+				'pan-options': { threshold: 16 },
+			};
 		}
 	}
 
@@ -114,22 +123,24 @@ export default class AppStickerDrawer extends Vue {
 	}
 
 	get maxStickersPerSheet() {
+		if (Screen.isPointerMouse) {
+			return this.drawerStore.drawerItems.length;
+		}
+
 		const rows = 2;
 		return this.stickersPerRow * rows;
 	}
 
 	get styles() {
-		const HalloweenTextHeight = 25;
+		const HalloweenTextHeight = this.hasHalloweenStickers ? 25 : 0;
 		const numRowsShowing = Screen.isPointerMouse ? 2.3 : 2;
 
 		return {
 			halloweenText: {
 				height: `${HalloweenTextHeight}px`,
 			},
-			outer: [
+			shell: [
 				{
-					cursor: this.drawerStore.isDragging ? 'grabbing' : 'default',
-					padding: `${this.drawerPadding}px 0`,
 					transform: `translateY(0)`,
 					// Max-width is unset when Xs (so it can bleed and span the whole width), with margins of 64px on other breakpoints.
 					maxWidth: Screen.isXs ? 'unset' : `calc(100% - 64px)`,
@@ -138,7 +149,6 @@ export default class AppStickerDrawer extends Vue {
 						this.stickerSize * numRowsShowing +
 						HalloweenTextHeight}px`,
 				},
-
 				// Shift the drawer down when there's an item being dragged and the drawer container is not being hovered.
 				this.drawerStore.sticker && !this.drawerStore.isHoveringDrawer
 					? {
@@ -147,9 +157,27 @@ export default class AppStickerDrawer extends Vue {
 					  }
 					: null,
 			],
+			outer: {
+				cursor: this.drawerStore.isDragging ? 'grabbing' : 'default',
+				paddingTop: `${this.drawerPadding}px`,
+				// Max-width is unset when Xs (so it can bleed and span the whole width), with margins of 64px on other breakpoints.
+				maxWidth: Screen.isXs ? 'unset' : `calc(100% - 64px)`,
+				// Max-height of 2 sticker rows
+				maxHeight:
+					this.drawerPadding * 2 +
+					this.stickerSize * numRowsShowing +
+					HalloweenTextHeight +
+					'px',
+			},
 			dimensions: {
 				minWidth: Screen.isXs ? 'unset' : '400px',
-				minHeight: this.stickerSize + 'px',
+				minHeight: `${this.stickerSize}px`,
+				maxHeight:
+					this.drawerPadding +
+					this.stickerSize * numRowsShowing +
+					HalloweenTextHeight +
+					'px',
+				paddingBottom: `${this.drawerPadding}px`,
 			},
 			sheet: {
 				padding: `0 ${this.drawerPadding}px`,
@@ -203,6 +231,10 @@ export default class AppStickerDrawer extends Vue {
 
 	onTouchStart(sticker: StickerCount) {
 		this.touchedSticker = sticker;
+	}
+
+	onTouchEnd() {
+		this.touchedSticker = null;
 	}
 
 	panStart(event: HammerInput) {
