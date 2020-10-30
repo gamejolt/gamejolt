@@ -50,6 +50,20 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 
+.-video
+	&:after
+		content: 'GIF'
+		rounded-corners()
+		position: absolute
+		right: 8px
+		bottom: 8px
+		padding: 4px 6px
+		background-color: rgba($black, 0.4)
+		color: var(--dark-theme-fg)
+		font-size: $font-size-small
+		font-weight: bold
+		transition: opacity 250ms $strong-ease-out
+
 .media-item-post
 	position: relative
 	display: block
@@ -59,6 +73,10 @@
 
 	&.-inline
 		display: inline-block
+
+	&:not(.-inline)
+		.-img
+			cursor: zoom-in
 
 	.-media
 		margin-left: auto
@@ -91,4 +109,8 @@
 	&:hover
 		.-toolbar
 			opacity: 1
+
+		@media $media-pointer-mouse
+			.-video:after
+				opacity: 0
 </style>

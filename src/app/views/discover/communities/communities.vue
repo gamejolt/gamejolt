@@ -1,7 +1,7 @@
 <script lang="ts" src="./communities"></script>
 
 <template>
-	<div>
+	<section class="section fill-backdrop">
 		<div class="container">
 			<div class="row">
 				<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
@@ -34,11 +34,15 @@
 						:key="community.id"
 						class="-item col-sm-6 col-md-4 col-lg-3 anim-fade-in"
 					>
-						<app-community-card :community="community" />
+						<app-community-card :community="community" elevate />
 					</div>
 				</div>
 
-				<app-scroll-inview ref="inview" :margin="loadMoreMargin" @inview="onScrollLoadMore">
+				<app-scroll-inview
+					:config="InviewConfigLoadMore"
+					:controller="loadMoreInviewController"
+					@inview="onScrollLoadMore"
+				>
 					<app-loading v-if="isLoadingMore" class="-loading-more" centered />
 				</app-scroll-inview>
 			</template>
@@ -69,7 +73,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</section>
 </template>
 
 <style lang="stylus" scoped>

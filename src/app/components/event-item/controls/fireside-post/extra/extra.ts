@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { Mutation } from 'vuex-class';
+import { propRequired } from '../../../../../../utils/vue';
 import { Api } from '../../../../../../_common/api/api.service';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
@@ -29,35 +30,18 @@ import { AppCommunityPerms } from '../../../../community/perms/perms';
 	},
 })
 export default class AppEventItemControlsFiresidePostExtra extends Vue {
-	@Prop(FiresidePost)
-	post!: FiresidePost;
+	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
 
-	@AppState
-	user!: AppStore['user'];
+	@AppState user!: AppStore['user'];
+	@Mutation featuredPost!: Store['featuredPost'];
 
-	@Mutation
-	featuredPost!: Store['featuredPost'];
-
-	@Emit('remove')
-	emitRemove() {}
-
-	@Emit('feature')
-	emitFeature(_community: Community) {}
-
-	@Emit('unfeature')
-	emitUnfeature(_community: Community) {}
-
-	@Emit('move-channel')
-	emitMoveChannel(_movedTo: CommunityChannel) {}
-
-	@Emit('reject')
-	emitReject(_community: Community) {}
-
-	@Emit('pin')
-	emitPin() {}
-
-	@Emit('unpin')
-	emitUnpin() {}
+	@Emit('remove') emitRemove() {}
+	@Emit('feature') emitFeature(_community: Community) {}
+	@Emit('unfeature') emitUnfeature(_community: Community) {}
+	@Emit('move-channel') emitMoveChannel(_movedTo: CommunityChannel) {}
+	@Emit('reject') emitReject(_community: Community) {}
+	@Emit('pin') emitPin() {}
+	@Emit('unpin') emitUnpin() {}
 
 	get canEdit() {
 		return this.post.isEditableByUser(this.user);

@@ -15,6 +15,7 @@
 				:rules="{
 					content_required: true,
 					content_no_media_uploads: true,
+					max_content_length: [lengthLimit],
 				}"
 				:max-height="0"
 				:validate-on="['blur']"
@@ -77,8 +78,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '../../../../../_styles/common/forms'
+@import '~styles/variables'
+@import '../../../../../_styles/common/forms'
 
 .-label
 	margin-bottom: $form-common-spacing

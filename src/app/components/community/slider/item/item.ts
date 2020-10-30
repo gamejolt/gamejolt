@@ -27,17 +27,6 @@ export default class AppCommunitySliderItem extends Vue {
 		return this.communityState.isUnread;
 	}
 
-	get featureCount() {
-		return this.communityState.unreadFeatureCount;
-	}
-
-	get featureCountText() {
-		if (this.featureCount > 99) {
-			return '99+';
-		}
-		return this.featureCount.toString();
-	}
-
 	get gradient() {
 		let begin = 'var(--theme-bi-bg)';
 		let end = 'var(--theme-bi-fg)';

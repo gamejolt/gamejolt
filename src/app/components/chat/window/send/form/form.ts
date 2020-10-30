@@ -140,6 +140,10 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		return !!this.chat.messageEditing || false;
 	}
 
+	get editorModelId() {
+		return this.formModel.id || null;
+	}
+
 	@Watch('chat.messageEditing')
 	async onMessageEditing(message: ChatMessage | null) {
 		if (message) {

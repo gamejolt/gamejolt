@@ -18,7 +18,6 @@
 					:is-active="isActive"
 					:is-unread="isUnread"
 					:highlight="highlight"
-					:notification-count="featureCount"
 				>
 					<router-link
 						v-app-tooltip.right="tooltip"

@@ -87,6 +87,20 @@ let bootstrapResolver: (() => void) | null = null;
 let backdrop: AppBackdrop | null = null;
 export let tillStoreBootstrapped = new Promise(resolve => (bootstrapResolver = resolve));
 
+let gridBootstrapResolvers: ((client: GridClient) => void)[] = [];
+/**
+ * Returns a promise that resolves once the Grid client is available.
+ */
+export function tillGridBootstrapped() {
+	return new Promise<GridClient>(resolve => {
+		if (store.state.grid) {
+			resolve(store.state.grid);
+		} else {
+			gridBootstrapResolvers.push(resolve);
+		}
+	});
+}
+
 const modules: any = {
 	app: appStore,
 	theme: new ThemeStore(),
@@ -135,8 +149,8 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	mobileCbarShowing = false;
 	lastOpenLeftPane: Exclude<TogglableLeftPane, 'context'> = 'library';
-	private overlayedLeftPane: TogglableLeftPane = '';
-	private overlayedRightPane = '';
+	overlayedLeftPane: TogglableLeftPane = '';
+	overlayedRightPane = '';
 	hasContentSidebar = false;
 
 	/** Will be set to the community they're currently viewing (if any). */
@@ -502,7 +516,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	@VuexMutation
 	viewCommunity(community: Mutations['viewCommunity']) {
 		const communityState = this.communityStates.getCommunityState(community);
-		communityState.unreadFeatureCount = 0;
+		communityState.hasUnreadFeaturedPosts = false;
 
 		const idx = this.communities.findIndex(c => c.id === community.id);
 		if (idx === -1) {
@@ -522,6 +536,13 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexMutation
 	private _setGrid(grid: GridClient | null) {
+		if (grid !== null) {
+			for (const resolver of gridBootstrapResolvers) {
+				resolver(grid);
+			}
+			gridBootstrapResolvers = [];
+		}
+
 		this.grid = grid;
 	}
 
@@ -609,7 +630,12 @@ export const store = new Store();
 sync(store, router, { moduleName: 'route' });
 
 // Sync with the ContentFocus service.
-ContentFocus.registerWatcher(() => !store.state.visibleLeftPane && !store.state.visibleRightPane);
+ContentFocus.registerWatcher(
+	// We only care if the panes are overlaying, not if they're visible in the
+	// page without overlaying. Example is that context panes show in-page on
+	// large displays.
+	() => !store.state.overlayedLeftPane && !store.state.overlayedRightPane
+);
 
 // If we were offline, but we're online now, make sure our library is bootstrapped. Remember we
 // always have an app user even if we were offline.

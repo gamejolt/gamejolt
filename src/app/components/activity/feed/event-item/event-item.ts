@@ -1,7 +1,8 @@
 import Vue from 'vue';
 import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
+import { Location } from 'vue-router';
 import { State } from 'vuex-class';
-import { findRequiredVueParent } from '../../../../../utils/vue';
+import { findRequiredVueParent, propRequired } from '../../../../../utils/vue';
 import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { CommentVideoModal } from '../../../../../_common/comment/video/modal/modal.service';
 import { CommentVideo } from '../../../../../_common/comment/video/video-model';
@@ -17,11 +18,12 @@ import { number } from '../../../../../_common/filters/number';
 import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
+import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppPill from '../../../../../_common/pill/pill.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
-import { Settings } from '../../../../../_common/settings/settings.service';
+import { SettingAlwaysShowStickers } from '../../../../../_common/settings/settings.service';
 import AppStickerTargetTS from '../../../../../_common/sticker/target/target';
 import AppStickerTarget from '../../../../../_common/sticker/target/target.vue';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
@@ -40,11 +42,9 @@ import AppActivityFeedTS from '../feed';
 import { feedShouldBlockPost, feedShouldBlockVideo } from '../feed-service';
 import AppActivityFeed from '../feed.vue';
 import { ActivityFeedItem } from '../item-service';
-import { ActivityFeedView } from '../view';
+import { ActivityFeedKey, ActivityFeedView } from '../view';
 import AppActivityFeedEventItemBlocked from './blocked/blocked.vue';
 import AppActivityFeedEventItemTime from './time/time.vue';
-
-const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 
 @Component({
 	components: {
@@ -69,27 +69,27 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppStickerTarget,
 		AppScrollScroller,
 	},
+	directives: {
+		AppObserveDimensions,
+	},
 	filters: {
 		number,
 	},
 })
 export default class AppActivityFeedEventItem extends Vue {
-	@Inject()
-	feed!: ActivityFeedView;
+	@Prop(propRequired(ActivityFeedItem)) item!: ActivityFeedItem;
 
-	@Prop(ActivityFeedItem)
-	item!: ActivityFeedItem;
+	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
-	@State
-	app!: Store['app'];
+	@State app!: Store['app'];
 
 	canToggleLead = false;
 	hasBypassedBlock = false;
 	stickersVisible = false;
 	animateStickers = true;
 
-	private resizeSensor?: any;
 	private feedComponent!: AppActivityFeedTS;
+	private queryParams: Record<string, string> = {};
 
 	readonly Screen = Screen;
 	readonly EventItem = EventItem;
@@ -102,7 +102,6 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	@Emit('resize') emitResize(_height: number) {}
 	@Emit('clicked') emitClicked() {}
-	@Emit('expanded') emitExpanded() {}
 
 	get isNew() {
 		return this.feed.isItemUnread(this.item);
@@ -161,26 +160,33 @@ export default class AppActivityFeedEventItem extends Vue {
 		return communities;
 	}
 
-	get link() {
+	get link(): null | Location {
 		if (this.eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD) {
 			return null;
 		}
 
+		const withQueryParams = (location: Location): Location => {
+			return {
+				...location,
+				query: Object.assign({}, location.query ?? {}, this.queryParams),
+			};
+		};
+
 		if (this.eventItem.type === EventItem.TYPE_GAME_PUBLISH) {
 			const game = this.game!;
 
-			const params: { [key: string]: string } = {
+			const params: Record<string, string> = {
 				slug: game.slug,
 				id: game.id + '',
 			};
 
-			return {
+			return withQueryParams({
 				name: 'discover.games.view.overview',
 				params: params,
-			};
+			});
 		} else if (this.eventItem.type === EventItem.TYPE_POST_ADD) {
 			const post = this.post!;
-			return post.routeLocation;
+			return withQueryParams(post.routeLocation);
 		}
 
 		return null;
@@ -243,7 +249,7 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	created() {
 		if (!GJ_IS_SSR) {
-			this.stickersVisible = Settings.get('always-show-stickers');
+			this.stickersVisible = SettingAlwaysShowStickers.get();
 			if (this.stickersVisible) {
 				this.animateStickers = false;
 			}
@@ -256,21 +262,14 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	destroyed() {
 		this.feedComponent = undefined as any;
-		this.resizeSensor = undefined;
 	}
 
-	/**
-	 * Callback for when the component's content has finished bootstrapping into
-	 * the DOM and we hopefully know the height and true content.
-	 */
-	onContentBootstrapped() {
+	onResize() {
 		this.emitResize(this.$el.offsetHeight);
+	}
 
-		this.resizeSensor =
-			this.resizeSensor ||
-			new ResizeSensor(this.$el, () => {
-				this.emitResize(this.$el.offsetHeight);
-			});
+	onQueryParam(params: Record<string, string>) {
+		this.queryParams = Object.assign({}, this.queryParams, params);
 	}
 
 	/**
@@ -337,7 +336,6 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	toggleLead() {
 		this.feed.toggleItemLeadOpen(this.item);
-		this.emitExpanded();
 		Analytics.trackEvent('activity-feed', 'toggle-lead');
 	}
 

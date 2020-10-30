@@ -1,8 +1,16 @@
 import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../../utils/vue';
 import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
+import {
+	CommentStoreManager,
+	CommentStoreManagerKey,
+	CommentStoreModel,
+	lockCommentStore,
+	releaseCommentStore,
+	setCommentCount,
+} from '../../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../../_common/comment/modal/modal.service';
 import AppCommentVideoLikeWidget from '../../../../../_common/comment/video/like-widget/like-widget.vue';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
@@ -35,57 +43,38 @@ import AppEventItemControlsFiresidePostStats from './stats/stats.vue';
 		AppTooltip,
 		AppAuthRequired,
 	},
-	filters: {
-		number,
-		fuzzynumber,
-	},
 })
 export default class AppEventItemControlsFiresidePost extends Vue {
 	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
 	@Prop(propRequired(Boolean)) showCommentsButton!: boolean;
-	@Prop(propOptional(Number, 0)) commentsCount!: number;
 	@Prop(propOptional(Boolean, false)) showStickers!: boolean;
+	@Prop(propRequired(String)) eventLabel!: string;
 
-	@AppState
-	user!: AppStore['user'];
+	@Inject(CommentStoreManagerKey) commentManager!: CommentStoreManager;
+
+	@AppState user!: AppStore['user'];
+
+	private commentStore: null | CommentStoreModel = null;
 
 	readonly GJ_IS_CLIENT!: boolean;
 	readonly Screen = Screen;
+	readonly fuzzynumber = fuzzynumber;
+	readonly number = number;
 
-	@Emit('edit')
-	emitEdit() {}
+	@Emit('edit') emitEdit() {}
+	@Emit('publish') emitPublish() {}
+	@Emit('remove') emitRemove() {}
+	@Emit('feature') emitFeature(_community: Community) {}
+	@Emit('unfeature') emitUnfeature(_community: Community) {}
+	@Emit('move-channel') emitMoveChannel(_movedTo: CommunityChannel) {}
+	@Emit('reject') emitReject(_community: Community) {}
+	@Emit('pin') emitPin() {}
+	@Emit('unpin') emitUnpin() {}
+	@Emit('like-change') emitLikeChange(_value: boolean) {}
+	@Emit('stickers-visibility-change') emitStickersVisibilityChange(_visible: boolean) {}
 
-	@Emit('publish')
-	emitPublish() {}
-
-	@Emit('remove')
-	emitRemove() {}
-
-	@Emit('feature')
-	emitFeature(_community: Community) {}
-
-	@Emit('unfeature')
-	emitUnfeature(_community: Community) {}
-
-	@Emit('move-channel')
-	emitMoveChannel(_movedTo: CommunityChannel) {}
-
-	@Emit('reject')
-	emitReject(_community: Community) {}
-
-	@Emit('pin')
-	emitPin() {}
-
-	@Emit('unpin')
-	emitUnpin() {}
-
-	@Emit('like-change')
-	emitLikeChange(_value: boolean) {}
-
-	emitStickersVisibilityChange(visible: boolean) {
-		if (this.showStickers !== visible) {
-			this.$emit('stickers-visibility-change', visible);
-		}
+	get commentsCount() {
+		return this.commentStore ? this.commentStore.totalCount : 0;
 	}
 
 	get canPublish() {
@@ -154,7 +143,20 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 		return uniqueStickers.reverse();
 	}
 
+	created() {
+		this.commentStore = lockCommentStore(this.commentManager, 'Fireside_Post', this.post.id);
+		setCommentCount(this.commentStore, this.post.comment_count);
+	}
+
+	destroyed() {
+		if (this.commentStore) {
+			releaseCommentStore(this.commentManager, this.commentStore);
+			this.commentStore = null;
+		}
+	}
+
 	openComments() {
+		Analytics.trackEvent('post-controls', 'comments', this.eventLabel);
 		CommentModal.show({
 			model: this.post,
 			displayMode: 'comments',
@@ -162,29 +164,46 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 	}
 
 	async openEdit() {
+		Analytics.trackEvent('post-controls', 'edit', this.eventLabel);
 		if (await PostEditModal.show(this.post)) {
 			this.emitEdit();
 		}
 	}
 
 	async publish() {
+		Analytics.trackEvent('post-controls', 'publish', this.eventLabel);
 		await this.post.$publish();
 		this.emitPublish();
 	}
 
 	async placeSticker() {
+		Analytics.trackEvent('post-controls', 'sticker-place', this.eventLabel);
+
 		const sticker = await StickerSelectModal.show(this.post);
-		if (sticker) {
-			const post = await StickerPlacementModal.show(this.post, sticker);
-			if (post) {
-				Object.assign(this.post, post);
-				this.emitStickersVisibilityChange(true);
-				Analytics.trackEvent('stickers', 'place-sticker', 'fireside-post');
-			}
+		if (!sticker) {
+			return;
 		}
+
+		const post = await StickerPlacementModal.show(this.post, sticker);
+		if (!post) {
+			return;
+		}
+
+		this.post.assign(post);
+		this.setStickersVisibility(true);
+		Analytics.trackEvent('stickers', 'place-sticker', 'fireside-post');
 	}
 
 	onClickShowStickers() {
-		this.emitStickersVisibilityChange(!this.showStickers);
+		this.setStickersVisibility(!this.showStickers);
+	}
+
+	private setStickersVisibility(visible: boolean) {
+		if (this.showStickers === visible) {
+			return;
+		}
+
+		Analytics.trackEvent('post-controls', 'sticker-toggle', this.eventLabel);
+		this.emitStickersVisibilityChange(visible);
 	}
 }

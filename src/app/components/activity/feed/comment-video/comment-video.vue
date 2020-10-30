@@ -1,11 +1,12 @@
+<script lang="ts" src="./comment-video"></script>
+
 <template>
 	<div>
-		<app-activity-feed-video
+		<app-activity-feed-video-embed
 			:video-id="video.video_id"
 			:thumbnail="video.img_thumbnail"
 			:is-hydrated="isHydrated"
-			@bootstrap="$emit('content-bootstrapped')"
-			@play="$emit('expanded')"
+			@play="onPlay"
 		/>
 
 		<br />
@@ -20,5 +21,3 @@
 		</app-fade-collapse>
 	</div>
 </template>
-
-<script lang="ts" src="./comment-video"></script>

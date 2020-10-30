@@ -4,6 +4,7 @@ export const isSecure = typeof window !== 'undefined' && window.location.protoco
 interface SsrContext {
 	ua: string;
 	url: string;
+	accept: string;
 	meta: any;
 	errorCode?: number;
 	redirect?: string;
@@ -18,6 +19,7 @@ export class Environment {
 	static ssrContext: SsrContext = {
 		ua: '',
 		url: '',
+		accept: '',
 		meta: {},
 	};
 
@@ -72,9 +74,7 @@ if (GJ_ENVIRONMENT === 'development') {
 
 if (GJ_IS_CLIENT) {
 	// When it gets packaged up for production, the URL changes.
-	if (
-		window.location.href.search(/^chrome\-extension\:\/\/game\-jolt\-client\/package\//) !== -1
-	) {
+	if (window.location.href.search(/^chrome-extension:\/\/game-jolt-client\/package\//) !== -1) {
 		Environment.wttfBaseUrl = 'chrome-extension://game-jolt-client/package/index.html#';
 		Environment.authBaseUrl = 'chrome-extension://game-jolt-client/package/auth.html#';
 		Environment.checkoutBaseUrl = 'chrome-extension://game-jolt-client/package/checkout.html#';

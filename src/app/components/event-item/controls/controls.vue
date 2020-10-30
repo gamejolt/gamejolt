@@ -1,12 +1,14 @@
+<script lang="ts" src="./controls"></script>
+
 <template>
 	<div>
 		<app-event-item-controls-overlay class="event-item-controls" end>
 			<template v-if="post">
 				<app-event-item-controls-fireside-post
 					:post="post"
-					:show-comments-button="!showCommentFeed"
-					:comments-count="commentsCount"
+					:show-comments-button="showComments"
 					:show-stickers="showStickers"
+					:event-label="eventLabel"
 					@edit="emitPostEdit"
 					@publish="emitPostPublish"
 					@remove="emitPostRemove"
@@ -36,15 +38,5 @@
 			:should-show="isShowingFollow"
 			@close="onUserFollowDismissal"
 		/>
-		<span @click.stop>
-			<app-event-item-controls-comments
-				v-if="post"
-				:model="post"
-				:show-feed="showCommentFeed"
-				@count="commentsCount = $event"
-			/>
-		</span>
 	</div>
 </template>
-
-<script lang="ts" src="./controls"></script>

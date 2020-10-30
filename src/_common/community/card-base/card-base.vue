@@ -1,5 +1,11 @@
+<script lang="ts" src="./card-base"></script>
+
 <template>
-	<app-theme class="community-card sheet sheet-full sheet-no-full-bleed" :theme="community.theme">
+	<app-theme
+		class="community-card sheet sheet-full sheet-no-full-bleed"
+		:class="{ 'sheet-elevate': elevate }"
+		:theme="community.theme"
+	>
 		<div class="-info">
 			<div
 				class="-header"
@@ -74,5 +80,3 @@
 </template>
 
 <style lang="stylus" src="./card-base.styl" scoped></style>
-
-<script lang="ts" src="./card-base"></script>

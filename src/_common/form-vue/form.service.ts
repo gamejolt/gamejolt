@@ -80,7 +80,7 @@ export class BaseForm<T> extends Vue {
 
 	private changeDeregister?: Function;
 
-	state: { [k: string]: any } = {
+	state = {
 		isProcessing: false,
 		isShowingSuccess: false,
 	};
@@ -187,10 +187,6 @@ export class BaseForm<T> extends Vue {
 	 */
 	setField<K extends keyof T>(key: K, value: T[K]) {
 		Vue.set(this.formModel as any, key as any, value);
-	}
-
-	setState(key: string, value: any) {
-		Vue.set(this.state, key, value);
 	}
 
 	setCustomError(error: string) {

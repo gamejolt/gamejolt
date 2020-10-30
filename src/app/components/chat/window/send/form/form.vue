@@ -42,6 +42,7 @@
 					:display-rules="displayRules"
 					:compact="Screen.isXs"
 					:autofocus="!Screen.isMobile"
+					:model-id="editorModelId"
 					focus-end
 					@submit="onSubmit"
 					@insert-block-node="onEditorInsertBlockNode"

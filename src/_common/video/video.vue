@@ -4,7 +4,7 @@
 	<div class="video">
 		<template v-if="!GJ_IS_SSR">
 			<div v-if="!isLoaded && showLoading" class="video-loader">
-				<app-loading :hide-label="true" :no-color="true" :stationary="true" />
+				<app-loading hide-label no-color stationary />
 			</div>
 		</template>
 		<template v-else>
@@ -17,6 +17,8 @@
 </template>
 
 <style lang="stylus" scoped>
+@import '~styles/variables'
+
 .video
 	position: relative
 
@@ -26,7 +28,7 @@
 		right: 0
 		bottom: 0
 		left: 0
-		background-color: rgba(black, 0.5)
+		background-color: rgba($black, 0.5)
 		z-index: 2
 		display: flex
 		align-items: center

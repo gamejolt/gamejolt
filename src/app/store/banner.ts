@@ -1,10 +1,10 @@
+import { namespace } from 'vuex-class';
+import { VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
 import { Analytics } from '../../_common/analytics/analytics.service';
 import { Connection } from '../../_common/connection/connection-service';
 import { Screen } from '../../_common/screen/screen-service';
+import { SettingFeedNotifications } from '../../_common/settings/settings.service';
 import { Translate } from '../../_common/translate/translate.service';
-import { VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
-import { namespace } from 'vuex-class';
-import { Settings } from '../../_common/settings/settings.service';
 import { store } from './index';
 
 export const BannerStoreNamespace = 'banner';
@@ -52,7 +52,7 @@ class NotificationsBanner extends Banner {
 			(store.state.route.name === 'home' || store.state.route.name === 'notifications') &&
 			'Notification' in window &&
 			(Notification as any).permission === 'default' &&
-			Settings.get('feed-notifications')
+			SettingFeedNotifications.get()
 		);
 	}
 
@@ -62,16 +62,16 @@ class NotificationsBanner extends Banner {
 		const result = await Notification.requestPermission();
 		if (result === 'denied') {
 			Analytics.trackEvent('notifications', 'denied');
-			Settings.set('feed-notifications', false);
+			SettingFeedNotifications.set(false);
 		} else if (result === 'default') {
 			Analytics.trackEvent('notifications', 'accepted');
-			Settings.set('feed-notifications', true);
+			SettingFeedNotifications.set(true);
 			return;
 		}
 	}
 
 	onClose() {
-		Settings.set('feed-notifications', false);
+		SettingFeedNotifications.set(false);
 	}
 }
 

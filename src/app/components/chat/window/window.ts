@@ -6,7 +6,7 @@ import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue
 import { number } from '../../../../_common/filters/number';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
-import { Settings } from '../../../../_common/settings/settings.service';
+import { SettingChatGroupShowMembers } from '../../../../_common/settings/settings.service';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../store/index';
 import { ChatClient, ChatKey, leaveChatRoom } from '../client';
@@ -40,7 +40,7 @@ export default class AppChatWindow extends Vue {
 
 	@Action toggleLeftPane!: Store['toggleLeftPane'];
 
-	isShowingUsers = Screen.isXs ? false : Settings.get('chat-group-show-members');
+	isShowingUsers = Screen.isXs ? false : SettingChatGroupShowMembers.get();
 	isDescriptionCollapsed = false;
 	friendAddJolticonVersion = 1;
 
@@ -97,7 +97,7 @@ export default class AppChatWindow extends Vue {
 		this.isShowingUsers = !this.isShowingUsers;
 
 		if (!Screen.isXs) {
-			Settings.set('chat-group-show-members', this.isShowingUsers);
+			SettingChatGroupShowMembers.set(this.isShowingUsers);
 		}
 	}
 }

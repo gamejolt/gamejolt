@@ -1,4 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
+import { propRequired } from '../../../utils/vue';
 import AppContentViewer from '../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../_common/environment/environment.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
@@ -12,6 +13,7 @@ import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import AppVideoEmbed from '../../../_common/video/embed/embed.vue';
 import AppVideo from '../../../_common/video/video.vue';
 import AppEventItemControls from '../event-item/controls/controls.vue';
+import { AppCommentWidgetLazy } from '../lazy';
 import AppPollVoting from '../poll/voting/voting.vue';
 
 @Component({
@@ -25,13 +27,14 @@ import AppPollVoting from '../poll/voting/voting.vue';
 		AppEventItemControls,
 		AppContentViewer,
 		AppStickerTarget,
+		AppCommentWidgetLazy,
 	},
 })
 export default class AppBroadcastModal extends BaseModal {
-	@Prop({ type: Array, default: () => [] })
-	posts!: FiresidePost[];
+	@Prop(propRequired(Array)) posts!: FiresidePost[];
 
-	post: FiresidePost | null = null;
+	// Will get assigned in created() immediately.
+	post: FiresidePost = null as any;
 	stickersVisible = false;
 
 	readonly Environment = Environment;

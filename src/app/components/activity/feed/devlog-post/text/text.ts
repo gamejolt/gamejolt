@@ -1,5 +1,6 @@
 import Vue from 'vue';
-import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
+import { Component, Inject, Prop } from 'vue-property-decorator';
+import { propRequired } from '../../../../../../utils/vue';
 import { Analytics } from '../../../../../../_common/analytics/analytics.service';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
 import AppFadeCollapse from '../../../../../../_common/fade-collapse/fade-collapse.vue';
@@ -11,7 +12,7 @@ import AppLoading from '../../../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../../_common/scroll/scroll.service';
 import { ActivityFeedItem } from '../../item-service';
-import { ActivityFeedView } from '../../view';
+import { ActivityFeedKey, ActivityFeedView } from '../../view';
 
 @Component({
 	components: {
@@ -21,18 +22,15 @@ import { ActivityFeedView } from '../../view';
 	},
 })
 export default class AppActivityFeedDevlogPostText extends Vue {
-	@Inject() feed!: ActivityFeedView;
+	@Prop(propRequired(ActivityFeedItem)) item!: ActivityFeedItem;
+	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
 
-	@Prop(ActivityFeedItem) item!: ActivityFeedItem;
-	@Prop(FiresidePost) post!: FiresidePost;
+	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
 	isToggling = false;
 	isLoaded = !!this.post.article_content;
 
 	$el!: HTMLDivElement;
-
-	@Emit('content-bootstrapped') emitContentBootstrapped() {}
-	@Emit('expanded') emitExpanded() {}
 
 	get isHydrated() {
 		return this.feed.isItemHydrated(this.item);
@@ -46,18 +44,12 @@ export default class AppActivityFeedDevlogPostText extends Vue {
 		return this.feed.isItemOpen(this.item);
 	}
 
-	async mounted() {
-		await this.$nextTick();
-		this.emitContentBootstrapped();
-	}
-
 	async toggleFull() {
 		if (this.isToggling) {
 			return;
 		}
 
 		this.isToggling = true;
-		this.emitExpanded();
 
 		if (!this.isOpen) {
 			Analytics.trackEvent('activity-feed', 'article-open');

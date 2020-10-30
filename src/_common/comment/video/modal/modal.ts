@@ -13,7 +13,7 @@ import AppUserAvatar from '../../../user/user-avatar/user-avatar.vue';
 import AppVideoEmbed from '../../../video/embed/embed.vue';
 import { CommentVote } from '../../vote/vote-model';
 import AppCommentVideoLikeWidget from '../like-widget/like-widget.vue';
-import { CommentVideo } from '../video-model';
+import { $viewCommentVideo, CommentVideo } from '../video-model';
 
 @Component({
 	components: {
@@ -40,7 +40,7 @@ export default class AppCommentVideoModal extends BaseModal {
 	readonly Screen = Screen;
 
 	created() {
-		this.video.$viewed();
+		$viewCommentVideo(this.video);
 	}
 
 	get comment() {

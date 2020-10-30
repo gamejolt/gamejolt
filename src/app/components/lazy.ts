@@ -29,3 +29,7 @@ export async function AppActivityFeedLazy() {
 export async function ChatClientLazy() {
 	return await import(/* webpackChunkName: "chat" */ './chat/client');
 }
+
+export async function AppVideoPlayerShakaLazy() {
+	return await import(/* webpackChunkName: "video" */ '../../_common/video/player/shaka.vue');
+}

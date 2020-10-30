@@ -5,11 +5,14 @@ import { propRequired } from '../../../../utils/vue';
 import { ContentFocus } from '../../../content-focus/content-focus.service';
 import { AppObserveDimensions } from '../../../observe-dimensions/observe-dimensions.directive';
 import { Screen } from '../../../screen/screen-service';
+import { ScrollInviewConfig } from '../../../scroll/inview/config';
 import { AppScrollInview } from '../../../scroll/inview/inview';
 import AppVideo from '../../../video/video.vue';
 import { ContentOwner } from '../../content-owner';
 import AppBaseContentComponent from '../base/base-content-component.vue';
 import { computeSize } from '../media-item/media-item';
+
+const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.windowHeight * 0.25}px` });
 
 @Component({
 	components: {
@@ -38,7 +41,7 @@ export default class AppContentGif extends Vue {
 	computedHeight = this.height;
 	computedWidth = this.width;
 	isInview = false;
-	inviewMargin = Screen.windowHeight * 0.25;
+	readonly InviewConfig = InviewConfig;
 
 	get containerWidth() {
 		// Always have SSR fullwidth the image. We never let SSR calculate the height of the container based on the width.
