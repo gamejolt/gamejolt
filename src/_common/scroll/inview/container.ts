@@ -96,7 +96,7 @@ export class ScrollInviewContainer {
 		// Loop over trying to find the new active.
 		for (const i of this.controllers) {
 			focusedItem =
-				i.latestThreshold !== 0 &&
+				i.latestThreshold >= 0.5 &&
 				(!focusedItem || i.latestThreshold > focusedItem.latestThreshold)
 					? i
 					: focusedItem;
