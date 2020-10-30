@@ -262,19 +262,17 @@ export default class AppStickerDrawer extends Vue {
 	}
 
 	panStart(event: HammerInput) {
-		if (!this.touchedSticker) {
-			return false;
-		}
-
 		const { deltaX, deltaY } = event;
 		if (Math.abs(deltaX) > Math.abs(deltaY)) {
 			this.isSwiping = true;
-		} else {
+		} else if (this.touchedSticker) {
 			setDrawerStoreActiveItem(
 				this.drawerStore,
 				this.touchedSticker,
 				event.changedPointers[0]
 			);
+		} else {
+			return false;
 		}
 	}
 
