@@ -29,13 +29,14 @@ export default class RouteBasement extends BaseRouteComponent {
 	totalCount = 0;
 	levelCount = 0;
 	monsterImage = '';
+	isMax = false;
 
 	get routeTitle() {
 		return 'The Basement';
 	}
 
 	get currentProgress() {
-		if (this.level === 3) {
+		if (this.isMax) {
 			return 100;
 		}
 
@@ -48,6 +49,7 @@ export default class RouteBasement extends BaseRouteComponent {
 		this.totalCount = $payload.totalCount;
 		this.levelCount = $payload.levelCount;
 		this.monsterImage = $payload.monsterImage;
+		this.isMax = $payload.isMax;
 
 		store.commit('theme/setPageTheme', { key: BasementThemeKey, theme: BasementTheme });
 	}

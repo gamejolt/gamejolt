@@ -31,8 +31,8 @@
 						<app-progress-bar
 							style="width: 100%"
 							:percent="currentProgress"
-							:indeterminate="level === 3"
-							:active="level === 3"
+							:indeterminate="isMax"
+							:active="isMax"
 						>
 							<b>Mysterious Progress Bar</b>
 						</app-progress-bar>
