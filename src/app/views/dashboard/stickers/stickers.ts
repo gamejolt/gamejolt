@@ -1,8 +1,20 @@
 import Component from 'vue-class-component';
+import { Inject } from 'vue-property-decorator';
+import { numberSort } from '../../../../utils/array';
+import { Api } from '../../../../_common/api/api.service';
+import {
+	DrawerStore,
+	DrawerStoreKey,
+	setCanUnlockNewStickers,
+} from '../../../../_common/drawer/drawer-store';
+import { number } from '../../../../_common/filters/number';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
-import { BaseRouteComponent } from '../../../../_common/route/route-component';
+import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
+import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { Screen } from '../../../../_common/screen/screen-service';
+import AppStickerCard from '../../../../_common/sticker/card/card.vue';
+import { StickerCollectModal } from '../../../../_common/sticker/collect/modal/modal.service';
 import { Sticker } from '../../../../_common/sticker/sticker.model';
-import { AppMutation, AppStore } from '../../../../_common/store/app-store';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 
 export type InitPayload = {
@@ -27,14 +39,47 @@ export type StickerCount = {
 	name: 'RouteDashStickers',
 	components: {
 		AppPageHeader,
+		AppStickerCard,
+		AppProgressBar,
 	},
 })
+@RouteResolver({
+	deps: {},
+	resolver: () => Api.sendRequest('/web/stickers/dash'),
+})
 export default class RouteDashStickers extends BaseRouteComponent {
-	@AppMutation
-	setHasNewStickers!: AppStore['setHasNewStickers'];
+	@Inject(DrawerStoreKey) drawer!: DrawerStore;
 
-	created() {
-		this.setHasNewStickers(false);
+	readonly Screen = Screen;
+	readonly number = number;
+
+	balance = 0;
+	stickerCollection: StickerCount[] = [];
+	stickerCost = 10;
+
+	get routeTitle() {
+		return this.$gettext(`Your Stickers`);
+	}
+
+	get hasStickersInCollection() {
+		return this.stickerCollection.length > 0;
+	}
+
+	get normalStickers() {
+		return this.stickerCollection.filter(i => !i.sticker.is_type_halloween_candy);
+	}
+
+	get halloweenStickers() {
+		return this.stickerCollection.filter(i => i.sticker.is_type_halloween_candy);
+	}
+
+	get stickerProgress() {
+		const progress = this.balance % this.stickerCost;
+		return (progress / this.stickerCost) * 100;
+	}
+
+	get stickersBuyableAmount() {
+		return Math.floor(this.balance / this.stickerCost);
 	}
 
 	get coverMediaItem() {
@@ -47,5 +92,33 @@ export default class RouteDashStickers extends BaseRouteComponent {
 			img_url: url,
 			mediaserver_url: url,
 		});
+	}
+
+	routeCreated() {
+		setCanUnlockNewStickers(this.drawer, false);
+	}
+
+	routeResolved($payload: InitPayload) {
+		this.balance = $payload.balance;
+		this.stickerCost = $payload.stickerCost;
+
+		this.stickerCollection = [];
+		for (const stickerCountPayload of $payload.stickerCounts) {
+			const stickerData = $payload.stickers.find(
+				i => i.id === stickerCountPayload.sticker_id
+			);
+			const stickerCount = {
+				count: stickerCountPayload.count,
+				sticker_id: stickerCountPayload.sticker_id,
+				sticker: new Sticker(stickerData),
+			} as StickerCount;
+			this.stickerCollection.push(stickerCount);
+		}
+		this.stickerCollection.sort((a, b) => numberSort(b.sticker.rarity, a.sticker.rarity));
+	}
+
+	async onCollect() {
+		const remainingBalance = await StickerCollectModal.show();
+		this.balance = remainingBalance ?? 0;
 	}
 }

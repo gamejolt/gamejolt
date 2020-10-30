@@ -8,8 +8,8 @@ import { Growls } from '../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../_common/modal/confirm/confirm-service';
 import { Navigate } from '../../../_common/navigate/navigate.service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
-import { Store } from '../../store/index';
 import AppInvalidKey from '../../components/invalid-key/invalid-key.vue';
+import { Store } from '../../store/index';
 import AppKeyBundle from './_bundle/bundle.vue';
 import AppKeyGame from './_game/game.vue';
 
@@ -45,7 +45,9 @@ export default class RouteKey extends BaseRouteComponent {
 	}
 
 	get loginUrl() {
-		return Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath);
+		return (
+			Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath)
+		);
 	}
 
 	get component() {
@@ -92,7 +94,6 @@ export default class RouteKey extends BaseRouteComponent {
 	}
 
 	async claim(resource: Game | GameBundle) {
-		console.log('claim', resource);
 		const resourceName = resource instanceof GameBundle ? 'bundle' : 'game';
 
 		const result = await ModalConfirm.show(
@@ -123,7 +124,8 @@ export default class RouteKey extends BaseRouteComponent {
 			let location = '';
 			if (resource instanceof GameBundle) {
 				location =
-					Environment.wttfBaseUrl + `/library/bundle/${resource.slug}/${resource.id}/games`;
+					Environment.wttfBaseUrl +
+					`/library/bundle/${resource.slug}/${resource.id}/games`;
 			} else if (resource instanceof Game) {
 				location = Environment.wttfBaseUrl + `/profile/${user.slug}/${user.id}/owned`;
 			}
@@ -132,7 +134,9 @@ export default class RouteKey extends BaseRouteComponent {
 				Navigate.goto(location);
 			}
 		} catch (_e) {
-			Growls.error(this.$gettext(`For some reason we couldn't claim this into your account!`));
+			Growls.error(
+				this.$gettext(`For some reason we couldn't claim this into your account!`)
+			);
 		}
 	}
 }

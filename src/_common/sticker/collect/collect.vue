@@ -6,6 +6,8 @@
 			<div v-if="!canReveal">
 				<app-sticker-card-hidden
 					v-app-tooltip.touchable="$gettext(`Not enough progress to unlock stickers`)"
+					:count="1"
+					disabled
 				/>
 			</div>
 			<div v-else-if="isRevealing" class="-card-revealing-outer">
@@ -98,7 +100,7 @@
 					posts, you might get some more.
 				</translate>
 			</p>
-			<app-button :to="{ name: 'dash.stickers.overview' }">
+			<app-button :to="{ name: 'dash.stickers' }">
 				<translate>View Collection</translate>
 			</app-button>
 		</div>

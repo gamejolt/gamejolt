@@ -86,12 +86,7 @@
 						<app-time-ago v-if="post.isActive" :date="post.published_on" />
 					</div>
 
-					<app-sticker-target
-						ref="stickerTarget"
-						:stickers="post.stickers"
-						:show-stickers="stickersVisible"
-						@hide-all="onAllStickersHidden"
-					>
+					<app-sticker-target :controller="stickerTargetController">
 						<app-content-viewer :source="post.lead_content" />
 					</app-sticker-target>
 
@@ -107,13 +102,7 @@
 						<br />
 					</template>
 
-					<app-event-item-controls
-						ref="stickerTarget"
-						:post="post"
-						:show-stickers="stickersVisible"
-						event-label="broadcast"
-						@post-stickers-visibility-change="onPostStickersVisibilityChange"
-					/>
+					<app-event-item-controls :post="post" event-label="broadcast" />
 
 					<br />
 					<br />

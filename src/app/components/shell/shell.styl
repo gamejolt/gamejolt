@@ -25,7 +25,7 @@ body
 	bottom: 0
 
 #shell-body
-	margin-top: $shell-top-nav-height
+	padding-top: $shell-top-nav-height
 
 #shell-banner
 	top: 0
@@ -60,6 +60,8 @@ body
 	margin-top: $shell-top-nav-height + $-scroll-affixed-spacing
 
 #shell
+	position: relative
+
 	&.has-banner
 		#shell-top-nav
 			top: $shell-top-nav-height
@@ -69,7 +71,7 @@ body
 			top: $shell-top-nav-height * 2
 
 		#shell-body
-			margin-top: $shell-top-nav-height * 2
+			padding-top: $shell-top-nav-height * 2
 
 		@media $media-sm-up
 			.chat-window-wrap
@@ -80,7 +82,7 @@ body
 
 	&.has-cbar
 		#shell-body
-			margin-left: $shell-cbar-width
+			padding-left: $shell-cbar-width
 
 	&.has-cbar
 	&.has-cbar-mobile
@@ -93,7 +95,7 @@ body
 
 body.has-hot-bottom
 	#shell-body
-		margin-bottom: $status-bar-height
+		padding-bottom: $status-bar-height
 
 	.shell-pane
 	#shell-cbar

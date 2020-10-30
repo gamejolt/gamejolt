@@ -55,7 +55,7 @@
 					<router-link
 						v-app-track-event="`account-popover:stickers`"
 						class="list-group-item offline-disable"
-						:to="{ name: 'dash.stickers.overview' }"
+						:to="{ name: 'dash.stickers' }"
 					>
 						<translate>Stickers</translate>
 						<span v-if="shouldShowNewStickers" class="-new-tag -new-tag-list" />

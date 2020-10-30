@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
+import { Component, Emit, Inject, Prop, Provide } from 'vue-property-decorator';
 import { Location } from 'vue-router';
 import { State } from 'vuex-class';
 import { findRequiredVueParent, propRequired } from '../../../../../utils/vue';
@@ -11,7 +11,6 @@ import { Community } from '../../../../../_common/community/community.model';
 import AppCommunityPill from '../../../../../_common/community/pill/pill.vue';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
-import AppEventItemControlsOverlay from '../../../../../_common/event-item/controls-overlay/controls-overlay.vue';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
 import { number } from '../../../../../_common/filters/number';
@@ -23,8 +22,12 @@ import AppPill from '../../../../../_common/pill/pill.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
-import { SettingAlwaysShowStickers } from '../../../../../_common/settings/settings.service';
-import AppStickerTargetTS from '../../../../../_common/sticker/target/target';
+import AppStickerControlsOverlay from '../../../../../_common/sticker/controls-overlay/controls-overlay.vue';
+import AppStickerReactions from '../../../../../_common/sticker/reactions/reactions.vue';
+import {
+	StickerTargetController,
+	StickerTargetParentControllerKey,
+} from '../../../../../_common/sticker/target/target-controller';
 import AppStickerTarget from '../../../../../_common/sticker/target/target.vue';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
 import AppUserFollowWidget from '../../../../../_common/user/follow/widget.vue';
@@ -57,7 +60,7 @@ import AppActivityFeedEventItemTime from './time/time.vue';
 		AppActivityFeedDevlogPostVideo,
 		AppActivityFeedDevlogPostText,
 		AppEventItemControls,
-		AppEventItemControlsOverlay,
+		AppStickerControlsOverlay,
 		AppPollVoting,
 		AppUserCardHover,
 		AppFadeCollapse,
@@ -67,6 +70,7 @@ import AppActivityFeedEventItemTime from './time/time.vue';
 		AppUserVerifiedTick,
 		AppActivityFeedEventItemBlocked,
 		AppStickerTarget,
+		AppStickerReactions,
 		AppScrollScroller,
 	},
 	directives: {
@@ -81,12 +85,13 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
+	@Provide(StickerTargetParentControllerKey)
+	stickerTargetController = this.post ? new StickerTargetController(this.post) : null;
+
 	@State app!: Store['app'];
 
 	canToggleLead = false;
 	hasBypassedBlock = false;
-	stickersVisible = false;
-	animateStickers = true;
 
 	private feedComponent!: AppActivityFeedTS;
 	private queryParams: Record<string, string> = {};
@@ -97,7 +102,7 @@ export default class AppActivityFeedEventItem extends Vue {
 	$el!: HTMLDivElement;
 
 	$refs!: {
-		stickerTarget: AppStickerTargetTS;
+		'sticker-scroll': HTMLDivElement;
 	};
 
 	@Emit('resize') emitResize(_height: number) {}
@@ -247,15 +252,6 @@ export default class AppActivityFeedEventItem extends Vue {
 		return !this.hasBypassedBlock && this.isBlocked;
 	}
 
-	created() {
-		if (!GJ_IS_SSR) {
-			this.stickersVisible = SettingAlwaysShowStickers.get();
-			if (this.stickersVisible) {
-				this.animateStickers = false;
-			}
-		}
-	}
-
 	mounted() {
 		this.feedComponent = findRequiredVueParent(this, AppActivityFeed) as AppActivityFeedTS;
 	}
@@ -291,6 +287,7 @@ export default class AppActivityFeedEventItem extends Vue {
 		// in our ignored list.
 		let target = e.target as HTMLElement;
 		if (target instanceof HTMLElement) {
+			// eslint-disable-next-line no-constant-condition
 			while (true) {
 				const nodeName = target.nodeName.toLowerCase();
 
@@ -343,6 +340,13 @@ export default class AppActivityFeedEventItem extends Vue {
 		this.canToggleLead = canToggle;
 	}
 
+	scrollToStickers() {
+		// Only scroll up if they've expanded the item.
+		if (this.feed.isItemOpen(this.item)) {
+			Scroll.to(this.$refs['sticker-scroll'], { preventDirections: ['down'] });
+		}
+	}
+
 	onPostEdited(item: EventItem) {
 		this.feedComponent.onPostEdited(item);
 	}
@@ -379,15 +383,6 @@ export default class AppActivityFeedEventItem extends Vue {
 		this.feedComponent.onPostUnpinned(item);
 	}
 
-	onPostStickersVisibilityChange(visible: boolean) {
-		this.animateStickers = true;
-		this.stickersVisible = visible;
-		// Scroll to the sticker target to show stickers.
-		if (visible) {
-			Scroll.to(this.$refs.stickerTarget.$el as HTMLElement, { preventDirections: ['down'] });
-		}
-	}
-
 	getChannelRoute(postCommunity: FiresidePostCommunity) {
 		if (!postCommunity.channel) {
 			return undefined;
@@ -398,9 +393,5 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	getChannelTitle(postCommunity: FiresidePostCommunity) {
 		return postCommunity.channel ? postCommunity.channel.title : '';
-	}
-
-	onAllStickersHidden() {
-		this.stickersVisible = false;
 	}
 }
