@@ -39,7 +39,7 @@
 											:style="styles.stickers"
 											:sticker="item.sticker"
 											:count="item.count"
-											:size="drawerStore.stickerSize"
+											:size="drawerStore.stickerSize - 8"
 											@mousedown.native="assignTouchedSticker(item)"
 											@touchstart.native="assignTouchedSticker(item)"
 										/>

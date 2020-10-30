@@ -192,6 +192,7 @@ export default class AppStickerDrawer extends Vue {
 				height: `100%`,
 			},
 			stickers: {
+				padding: '4px',
 				marginRight: this.stickerSpacing + 'px',
 				marginBottom: this.stickerSpacing + 'px',
 			},
@@ -205,6 +206,18 @@ export default class AppStickerDrawer extends Vue {
 		}
 
 		return stickerCurrency > stickerCost;
+	}
+
+	mounted() {
+		this.calculateStickersPerRow();
+		this.resize$ = Screen.resizeChanges.subscribe(() => this.calculateStickersPerRow());
+	}
+
+	beforeDestory() {
+		if (this.resize$) {
+			this.resize$.unsubscribe();
+			this.resize$ = undefined;
+		}
 	}
 
 	// VueTouch things - START
@@ -246,8 +259,6 @@ export default class AppStickerDrawer extends Vue {
 	}
 
 	resetTouchedSticker() {
-		console.log('resetTouchedSticker');
-
 		this.touchedSticker = null;
 	}
 
@@ -321,19 +332,13 @@ export default class AppStickerDrawer extends Vue {
 	}
 	// VueTouch things - END
 
-	mounted() {
-		this.calculateStickersPerRow();
-		this.resize$ = Screen.resizeChanges.subscribe(() => this.calculateStickersPerRow());
-	}
+	async calculateStickersPerRow() {
+		await this.$nextTick();
 
-	beforeDestory() {
-		if (this.resize$) {
-			this.resize$.unsubscribe();
-			this.resize$ = undefined;
+		if (!this.$refs.content) {
+			return;
 		}
-	}
 
-	calculateStickersPerRow() {
 		this.stickersPerRow = Math.floor(
 			(Ruler.width(this.$refs.content) - this.drawerPadding * 2) / this.stickerSize
 		);
@@ -356,8 +361,7 @@ export default class AppStickerDrawer extends Vue {
 	}
 
 	@Watch('isLoading')
-	async onIsLoadingChange() {
-		await this.$nextTick();
+	onIsLoadingChange() {
 		if (!this.drawerStore.isLoading) {
 			setDrawerStoreHeight(this.drawerStore, this.$el.offsetHeight);
 			this.calculateStickersPerRow();
