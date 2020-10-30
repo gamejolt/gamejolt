@@ -14,7 +14,6 @@ import {
 	setDrawerStoreHeight,
 } from '../../drawer/drawer-store';
 import AppLoadingFade from '../../loading/fade/fade.vue';
-import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
 import AppScrollScroller from '../../scroll/scroller/scroller.vue';
 import AppStickerCard from '../card/card.vue';
@@ -340,7 +339,7 @@ export default class AppStickerDrawer extends Vue {
 		}
 
 		this.stickersPerRow = Math.floor(
-			(Ruler.width(this.$refs.content) - this.drawerPadding * 2) / this.stickerSize
+			(this.$refs.content.offsetWidth - this.drawerPadding * 2) / this.stickerSize
 		);
 	}
 
@@ -361,7 +360,9 @@ export default class AppStickerDrawer extends Vue {
 	}
 
 	@Watch('isLoading')
-	onIsLoadingChange() {
+	async onIsLoadingChange() {
+		await this.$nextTick();
+
 		if (!this.drawerStore.isLoading) {
 			setDrawerStoreHeight(this.drawerStore, this.$el.offsetHeight);
 			this.calculateStickersPerRow();
