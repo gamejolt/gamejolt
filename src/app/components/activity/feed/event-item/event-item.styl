@@ -1,16 +1,15 @@
 @import '../variables'
 @import '~styles-lib/mixins'
 
+.-reactions-container
+	display: inline-block
+
 .-controls-buffer
-	display: flex
-	justify-content: flex-start
-
 	&:last-of-type
-		> .-controls-buffer-inner
-			padding-bottom: $-item-padding-xs-v
+		padding-bottom: $-item-padding-xs-v
 
-			@media $media-sm-up
-				padding-bottom: $-item-padding-v
+		@media $media-sm-up
+			padding-bottom: $-item-padding-v
 
 .page-cut
 	@media $media-sm-up

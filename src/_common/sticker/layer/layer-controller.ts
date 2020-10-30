@@ -20,7 +20,7 @@ export class StickerLayerController {
 	}
 
 	get isShowingDrawer() {
-		return this.drawer.isDrawerOpen && this.isActive;
+		return this.drawer.isDrawerOpen && !this.drawer.hideDrawer && this.isActive;
 	}
 }
 

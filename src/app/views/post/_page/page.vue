@@ -192,7 +192,7 @@
 							@show="onShowStickers()"
 						/>
 
-						<br />
+						<div class="-controls-spacing" />
 					</app-sticker-controls-overlay>
 
 					<app-event-item-controls
@@ -220,6 +220,12 @@
 @import '~styles-lib/mixins'
 @import '../variables'
 @import '../common'
+
+.-controls-spacing
+	padding-bottom: $-controls-spacing-xs
+
+	@media $media-sm-up
+		padding-bottom: $-controls-spacing
 
 .-row
 	display: flex

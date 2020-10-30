@@ -2,11 +2,29 @@ import Vue from 'vue';
 import { Component, Inject, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Store } from '../../../app/store/index';
-import { DrawerStore, DrawerStoreKey, setDrawerStoreHeight } from '../../drawer/drawer-store';
+import { StickerCount } from '../../../app/views/dashboard/stickers/stickers';
+import { EventSubscription } from '../../../system/event/event-topic';
+import {
+	DrawerStore,
+	DrawerStoreKey,
+	setDrawerHidden,
+	setDrawerOpen,
+	setDrawerStoreActiveItem,
+	setDrawerStoreHeight,
+} from '../../drawer/drawer-store';
+import AppLoadingFade from '../../loading/fade/fade.vue';
+import { Ruler } from '../../ruler/ruler-service';
+import { Screen } from '../../screen/screen-service';
 import AppScrollScroller from '../../scroll/scroller/scroller.vue';
 import AppStickerCard from '../card/card.vue';
+import { StickerCollectModal } from '../collect/modal/modal.service';
 import AppSticker from '../sticker.vue';
 import AppShellBottomDrawerItem from './item/item.vue';
+
+if (!GJ_IS_SSR) {
+	const VueTouch = require('vue-touch');
+	Vue.use(VueTouch);
+}
 
 @Component({
 	components: {
@@ -14,69 +32,265 @@ import AppShellBottomDrawerItem from './item/item.vue';
 		AppStickerCard,
 		AppSticker,
 		AppShellBottomDrawerItem,
+		AppLoadingFade,
 	},
 })
 export default class AppStickerDrawer extends Vue {
 	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
 	@State hasCbar!: Store['hasCbar'];
 
-	private placeholderHeight = 100;
+	sheetPage = 1;
+	isSwiping = false;
+	private stickersPerRow = 5;
+	private isWaitingForFrame = false;
+	private touchedSticker: StickerCount | null = null;
+	private resize$: EventSubscription | undefined;
+
+	private readonly drawerPadding = 8;
+	private readonly stickerSpacing = 8;
+	private readonly stickerSize = this.drawerStore.stickerSize + this.stickerSpacing;
+	readonly Screen = Screen;
 
 	$el!: HTMLDivElement;
+
+	$refs!: {
+		slider: HTMLDivElement;
+	};
+
+	// JODO: Set up pages for v-touch
+	get drawerNavigationComponent() {
+		if (Screen.isPointerMouse) {
+			return 'app-scroll-scroller';
+		} else {
+			return 'v-touch';
+		}
+	}
+
+	get stickerSheets(): StickerCount[][] {
+		const sheets = [];
+
+		let current: StickerCount[] = [];
+		for (const i of this.drawerStore.drawerItems) {
+			current.push(i);
+
+			if (
+				current.length >= this.maxStickersPerSheet ||
+				i.sticker.id ===
+					this.drawerStore.drawerItems[this.drawerStore.drawerItems.length - 1].sticker.id
+			) {
+				sheets.push(current);
+				current = [];
+			}
+		}
+
+		return sheets;
+	}
+
+	get isLoading() {
+		return this.drawerStore.isLoading;
+	}
 
 	get items() {
 		return this.drawerStore.drawerItems;
 	}
 
-	get drawerStyling() {
+	get hasStickers() {
+		return !!this.items.length;
+	}
+
+	get maxStickersPerSheet() {
+		const rows = 2;
+		return this.stickersPerRow * rows;
+	}
+
+	get styles() {
 		return {
-			height: this.drawerHeight ? this.drawerHeight + 'px' : 'unset',
-			bottom: this.drawerBottom + 'px',
-			cursor: this.drawerStore.isDragging ? 'grabbing' : 'default',
+			outer: [
+				{
+					cursor: this.drawerStore.isDragging ? 'grabbing' : 'default',
+					padding: `${this.drawerPadding}px 0`,
+					transform: `translateY(0)`,
+					// Max-width is unset when Xs (so it can bleed and span the whole width), with margins of 64px on other breakpoints.
+					maxWidth: Screen.isXs ? 'unset' : `calc(100% - 64px)`,
+					// Max-height of 2 sticker rows
+					maxHeight: this.drawerPadding * 2 + this.stickerSize * 2 + 'px',
+				},
+
+				// Shift the drawer down when there's an item being dragged and the drawer container is not being hovered.
+				this.drawerStore.sticker && !this.drawerStore.isHoveringDrawer
+					? {
+							transform: `translateY(${this.drawerStore.drawerHeight -
+								this.drawerStore.stickerSize / 2}px)`,
+					  }
+					: null,
+			],
+			dimensions: {
+				minWidth: Screen.isXs ? 'unset' : '400px',
+				minHeight: this.stickerSize + 'px',
+			},
+			sheet: {
+				padding: `0 ${this.drawerPadding}px`,
+				width: `100%`,
+				height: `100%`,
+			},
+			stickers: {
+				marginRight: this.stickerSpacing + 'px',
+				marginBottom: this.stickerSpacing + 'px',
+			},
 		};
 	}
 
-	private get drawerHeight() {
-		return this.placeholderHeight;
-	}
-
-	private get drawerBottom() {
-		if (!this.drawerStore.isDrawerOpen) {
-			// Drawer item is placed on a valid target - hide drawer.
-			return -this.drawerHeight;
+	get canPurchaseStickers() {
+		const { stickerCurrency, stickerCost } = this.drawerStore;
+		if (!stickerCurrency || !stickerCost) {
+			return false;
 		}
 
-		if (this.drawerStore.placedItem || this.drawerStore.isDragging) {
-			if (this.drawerStore.isHoveringDrawer) {
-				// Drawer item is being hovered over drawer - show full drawer.
-				return 0;
+		return stickerCurrency > stickerCost;
+	}
+
+	// VueTouch things - START
+	goNext() {
+		if (this.sheetPage >= this.stickerSheets.length) {
+			this._updateSliderOffset();
+			return;
+		}
+
+		this.sheetPage = Math.min(this.sheetPage + 1, this.stickerSheets.length);
+		this._updateSliderOffset();
+	}
+
+	goPrev() {
+		if (this.sheetPage <= 1) {
+			this._updateSliderOffset();
+			return;
+		}
+
+		this.sheetPage = Math.max(this.sheetPage - 1, 1);
+		this._updateSliderOffset();
+	}
+
+	onMouseDown(event: MouseEvent, stickerCount: StickerCount) {
+		if (!this.drawerStore.isDrawerOpen || this.drawerStore.sticker || stickerCount.count <= 0) {
+			return;
+		}
+
+		setDrawerStoreActiveItem(this.drawerStore, stickerCount.sticker, event);
+	}
+
+	onTouchStart(sticker: StickerCount) {
+		this.touchedSticker = sticker;
+	}
+
+	panStart(event: HammerInput) {
+		if (!this.touchedSticker) {
+			return false;
+		}
+
+		const { deltaX, deltaY } = event;
+		if (Math.abs(deltaX) > Math.abs(deltaY)) {
+			this.isSwiping = true;
+		} else {
+			setDrawerStoreActiveItem(
+				this.drawerStore,
+				this.touchedSticker.sticker,
+				event.changedPointers[0]
+			);
+		}
+	}
+
+	pan(event: HammerInput) {
+		if (this.drawerStore.isDragging) {
+			this.isSwiping = false;
+			return;
+		}
+		if (!this.isWaitingForFrame) {
+			this.isWaitingForFrame = true;
+			window.requestAnimationFrame(() => this._panTick(event));
+		}
+	}
+
+	private _panTick(event: HammerInput) {
+		this.isWaitingForFrame = false;
+
+		// In case the animation frame was retrieved after we stopped dragging.
+		if (!this.isSwiping) {
+			return;
+		}
+
+		this._updateSliderOffset(event.deltaX);
+	}
+
+	panEnd(event: HammerInput) {
+		this.isSwiping = false;
+
+		// Make sure we moved at a high enough velocity and/or distance to register the "swipe".
+		const { velocityX, deltaX, distance } = event;
+
+		if (
+			// Check if it was a fast flick,
+			(Math.abs(velocityX) > 0.55 && distance > 10) ||
+			// or if the pan distance was at least ~1/3 of the content area.
+			Math.abs(deltaX) >= this.$el.clientWidth / 3
+		) {
+			if (velocityX > 0 || deltaX > 0) {
+				this.goPrev();
+			} else {
+				this.goNext();
 			}
-
-			// Drawer item is being dragged away from the drawer - show top-half of first sticker row.
-			return -this.drawerHeight + 40;
+			return;
 		}
 
-		// Fully show drawer.
-		return 0;
+		this._updateSliderOffset();
 	}
+
+	private _updateSliderOffset(extraOffsetPx = 0) {
+		const pagePercent = this.sheetPage - 1;
+		const pagePx = (this.$refs.slider as HTMLElement).offsetWidth * -pagePercent;
+		(this.$refs.slider as HTMLElement).style.transform = `translate3d( ${pagePx +
+			extraOffsetPx}px, 0, 0 )`;
+	}
+	// VueTouch things - END
 
 	mounted() {
-		// JODO: I'm not sure I like how this looks. Thinking I should add circular placeholders for stickers
-		// and only have the drawer be 1 row high until we get the proper placeholder height.
-		this.placeholderHeight = window.innerHeight * 0.25;
+		this.calculateStickersPerRow();
+		this.resize$ = Screen.resizeChanges.subscribe(() => this.calculateStickersPerRow());
 	}
 
-	@Watch('drawerStore.drawerItems.length')
-	async onDrawerItemsChange() {
-		if (this.drawerStore.isDrawerOpen) {
-			// Set the height to 0 (Vue template is changing to 'unset').
-			this.placeholderHeight = 0;
-			// Wait for the flex container to properly size based on content.
-			await this.$nextTick();
-			// Assign the container height to placeholderHeight,
-			// preventing drawer resizes when items disappear through closing the drawer.
-			this.placeholderHeight = this.$el.offsetHeight;
-			setDrawerStoreHeight(this.drawerStore, this.placeholderHeight);
+	beforeDestory() {
+		if (this.resize$) {
+			this.resize$.unsubscribe();
+			this.resize$ = undefined;
+		}
+	}
+
+	calculateStickersPerRow() {
+		this.stickersPerRow = Math.floor(
+			(Ruler.width(this.$el) - this.drawerPadding * 2) / this.stickerSize
+		);
+	}
+
+	async onClickPurchase() {
+		if (!this.drawerStore.stickerCurrency) {
+			return;
+		}
+		setDrawerHidden(this.drawerStore, true);
+
+		const remainingBalance = await StickerCollectModal.show();
+		if (remainingBalance !== undefined && remainingBalance < this.drawerStore.stickerCurrency) {
+			// If stickers were redeemed, un-hide the drawer so we can start placing stickers.
+			setDrawerHidden(this.drawerStore, false);
+		} else {
+			// otherwise, hide and clear the drawer.
+			setDrawerOpen(this.drawerStore, false);
+		}
+	}
+
+	@Watch('isLoading')
+	async onIsLoadingChange() {
+		await this.$nextTick();
+		if (!this.drawerStore.isLoading) {
+			setDrawerStoreHeight(this.drawerStore, this.$el.offsetHeight);
 		}
 	}
 }

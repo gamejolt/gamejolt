@@ -1,14 +1,16 @@
 <script lang="ts" src="./layer"></script>
 
 <template>
-	<div class="-layer" :class="{ '-dragging': drawer.isDragging }" @contextmenu.prevent>
+	<div class="-layer" :class="{ '-dragging': drawer.isDragging }" @contextmenu="onContextMenu">
 		<app-sticker-layer-placement-mask
 			v-if="layer.isShowingDrawer"
 			class="-placement-mask"
 			:layer="layer"
 		/>
-		<app-sticker-drawer-ghost v-if="layer.isShowingDrawer && drawer.sticker" class="-ghost" />
-		<app-sticker-drawer v-if="layer.isActive" class="-sticker-drawer" />
+		<template v-if="layer.isShowingDrawer">
+			<app-sticker-drawer-ghost v-if="drawer.sticker" class="-ghost" />
+			<app-sticker-drawer class="-sticker-drawer" />
+		</template>
 
 		<!--
 		I don't know why, but DO NOT PUT ELEMENTS AFTER THIS SLOT. For some

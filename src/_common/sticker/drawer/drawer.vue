@@ -2,23 +2,69 @@
 
 <template>
 	<div
-		class="sticker-drawer"
+		class="sticker-drawer anim-fade-in-up"
 		:class="{ '-cbar-shifted': hasCbar }"
-		:style="drawerStyling"
 		@contextmenu.prevent
 	>
-		<div class="-drawer-outer">
-			<app-scroll-scroller class="-scroller">
-				<div class="-drawer-inner">
-					<app-shell-bottom-drawer-item
-						v-for="{ sticker, count } of items"
-						:key="sticker.id"
-						:sticker="sticker"
-						:count="count"
-						:size="64"
-					/>
-				</div>
-			</app-scroll-scroller>
+		<div class="-drawer-outer" :style="styles.outer">
+			<app-loading-fade :is-loading="isLoading">
+				<component
+					:is="drawerNavigationComponent"
+					class="-scroller"
+					:style="styles.dimensions"
+					:pan-options="{ threshold: 16 }"
+					@panstart="panStart"
+					@pan="pan"
+					@panend="panEnd"
+				>
+					<div
+						ref="slider"
+						class="-drawer-inner"
+						:class="{ '-touch': !Screen.isPointerMouse }"
+					>
+						<template v-if="hasStickers">
+							<template v-for="(sheet, index) in stickerSheets">
+								<div :key="index" class="-sheet" :style="styles.sheet">
+									<app-shell-bottom-drawer-item
+										v-for="item of sheet"
+										:key="item.sticker.id"
+										:style="styles.stickers"
+										:sticker="item.sticker"
+										:count="item.count"
+										:size="drawerStore.stickerSize"
+										@mousedown.native="onMouseDown($event, item)"
+										@touchstart.native="onTouchStart(item)"
+									/>
+								</div>
+							</template>
+						</template>
+						<template v-else-if="drawerStore.hasLoaded">
+							<div class="-no-stckers text-center">
+								<p class="lead" style="padding: 0 16px">
+									<translate>
+										Oh no! Looks like you don't have any stickers.
+									</translate>
+								</p>
+								<template v-if="drawerStore.hasLoaded">
+									<template v-if="canPurchaseStickers">
+										<app-button solid primary @click="onClickPurchase()">
+											Get Stickers
+										</app-button>
+									</template>
+									<p v-else>
+										<translate>
+											Use Game Jolt, like some posts, and you might get some.
+										</translate>
+									</p>
+								</template>
+							</div>
+						</template>
+						<template v-else>
+							<div />
+						</template>
+					</div>
+				</component>
+			</app-loading-fade>
 		</div>
 	</div>
 </template>
@@ -27,19 +73,15 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 
-$-item-size = 64px
-$-drawer-padding = 8px
-$-grid-margin = 4px
-$-min-drawer-height = ($-drawer-padding + $-grid-margin) * 2 + $-item-size
+.-loading
+	margin: auto
+	padding: 16px 0
 
 .sticker-drawer
 	position: fixed
-	max-height: 25vh
-	min-height: $-min-drawer-height
 	left: 0
 	right: 0
 	bottom: 0
-	transition: bottom 250ms $strong-ease-out
 	display: flex
 	justify-content: center
 
@@ -53,20 +95,26 @@ $-min-drawer-height = ($-drawer-padding + $-grid-margin) * 2 + $-item-size
 	&-outer
 		elevate-2()
 		change-bg('bg')
-		width: 100%
 		margin: 0 auto
 		height: 100%
-		padding: $-drawer-padding
-		border-top-left-radius: $border-radius-large
-		border-top-right-radius: $border-radius-large
+		overflow: hidden
+		transition: transform 250ms $strong-ease-out
+
+		@media $media-xs
+			width: 100%
 
 		@media $media-sm-up
-			width: calc(100% - 32px)
+			border-top-left-radius: $border-radius-large
+			border-top-right-radius: $border-radius-large
 
 	&-inner
-		display: grid
-		grid-template-columns: repeat(auto-fit, $-item-size)
-		grid-gap: 8px
-		justify-content: center
-		margin: $-grid-margin 0
+		transition: transform 300ms $strong-ease-out
+
+		&.-touch
+			white-space: nowrap
+
+.-sheet
+	display: inline-flex
+	justify-content: center
+	flex-wrap: wrap
 </style>

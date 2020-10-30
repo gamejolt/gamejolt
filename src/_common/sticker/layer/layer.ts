@@ -47,4 +47,11 @@ export default class AppStickerLayer extends Vue {
 		unregisterStickerLayer(this.drawer, this.layer);
 		this.focusWatcherDeregister();
 	}
+
+	onContextMenu(e: MouseEvent) {
+		if (!this.layer.isShowingDrawer) {
+			return;
+		}
+		e.preventDefault();
+	}
 }

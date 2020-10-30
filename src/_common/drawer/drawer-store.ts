@@ -36,6 +36,11 @@ export class DrawerStore {
 	canUnlockNewStickers = GJ_IS_SSR
 		? false
 		: localStorage.getItem(CAN_UNLOCK_NEW_STICKERS_STORAGE_KEY);
+	hideDrawer = false;
+	stickerCurrency: number | null = null;
+	stickerCost: number | null = null;
+	isLoading = false;
+	hasLoaded = false;
 
 	_waitingForFrame = false;
 	_onPointerMove: ((event: MouseEvent | TouchEvent) => void) | null = null;
@@ -65,28 +70,34 @@ export function setDrawerOpen(store: DrawerStore, isOpen: boolean) {
 	}
 }
 
+export function setDrawerHidden(store: DrawerStore, shouldHide: boolean) {
+	store.hideDrawer = shouldHide;
+}
+
 /**
  * Send an API request to get the user stickers.
  */
 async function _initializeDrawerContent(store: DrawerStore) {
+	store.isLoading = true;
 	const payload = await Api.sendRequest('/web/stickers/dash');
 
-	store.drawerItems = [];
-	for (const stickerCountPayload of payload.stickerCounts) {
+	store.stickerCost = payload.stickerCost;
+	store.stickerCurrency = payload.balance;
+	store.drawerItems = payload.stickerCounts.map((stickerCountPayload: any) => {
 		const stickerData = payload.stickers.find(
 			(i: Sticker) => i.id === stickerCountPayload.sticker_id
 		);
 
-		const stickerCount: StickerCount = {
+		return {
 			count: stickerCountPayload.count,
 			sticker_id: stickerCountPayload.sticker_id,
 			sticker: new Sticker(stickerData),
-		};
-
-		store.drawerItems.push(stickerCount);
-	}
+		} as StickerCount;
+	});
 
 	store.drawerItems.sort((a, b) => numberSort(b.sticker.rarity, a.sticker.rarity));
+	store.isLoading = false;
+	store.hasLoaded = true;
 }
 
 /**
@@ -97,13 +108,13 @@ function _resetDrawerStore(store: DrawerStore) {
 	_removeEventListeners(store);
 	_removeDrawerStoreActiveItem(store);
 
-	store.drawerItems = [];
 	store.targetController = null;
 	store.placedItem = null;
 	store.isDrawerOpen = false;
 	store.hasValidTarget = false;
 	store.isHoveringDrawer = false;
 	store.drawerHeight = 0;
+	store.hideDrawer = false;
 
 	store._waitingForFrame = false;
 	store._updateGhostPosition = null;

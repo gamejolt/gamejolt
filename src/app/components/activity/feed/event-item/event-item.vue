@@ -144,22 +144,27 @@
 						<app-poll-voting :poll="post.poll" :game="post.game" :user="post.user" />
 					</div>
 
-					<div v-if="shouldShowCommunities" class="-controls-buffer">
-						<div class="-controls-buffer-inner" @click.stop>
-							<app-scroll-scroller class="-communities" horizontal>
-								<app-community-pill
-									v-for="postCommunity of communities"
-									:key="postCommunity.id"
-									:community-link="postCommunity"
-								/>
-							</app-scroll-scroller>
-						</div>
-					</div>
+					<app-scroll-scroller
+						v-if="shouldShowCommunities"
+						class="-communities -controls-buffer"
+						horizontal
+					>
+						<app-community-pill
+							v-for="postCommunity of communities"
+							:key="postCommunity.id"
+							:community-link="postCommunity"
+						/>
+					</app-scroll-scroller>
 
-					<div v-if="post.sticker_counts.length" class="-controls-buffer">
-						<div class="-controls-buffer-inner" @click.stop>
-							<app-sticker-reactions :controller="stickerTargetController" @show="onShowStickers()" />
-						</div>
+					<div
+						v-if="post.sticker_counts.length"
+						class="-reactions-container -controls-buffer"
+						@click.stop
+					>
+						<app-sticker-reactions
+							:controller="stickerTargetController"
+							@show="onShowStickers()"
+						/>
 					</div>
 				</app-sticker-controls-overlay>
 			</template>

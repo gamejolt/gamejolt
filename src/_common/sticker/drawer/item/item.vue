@@ -8,10 +8,6 @@
 				class="-img"
 				:style="itemStyling"
 				:src="sticker.img_url"
-				@mousedown="onMouseDown"
-				@touchstart="onTouchStart"
-				@touchmove="onTouchMove"
-				@touchend="onTouchEnd"
 				@dragstart.prevent
 			/>
 		</div>
