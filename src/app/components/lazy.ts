@@ -1,3 +1,4 @@
+import { AsyncComponentFactory } from 'vue/types/options';
 import AppActivityFeedPlaceholder from './activity/feed/placeholder/placeholder.vue';
 
 export async function GridClientLazy() {
@@ -24,9 +25,8 @@ export async function FormCommentLazy() {
 	);
 }
 
-export const AppActivityFeedLazy = () => ({
-	component: async () =>
-		await import(/* webpackChunkName: "activityFeed" */ './activity/feed/feed.vue'),
+export const AppActivityFeedLazy: AsyncComponentFactory = () => ({
+	component: import(/* webpackChunkName: "activityFeed" */ './activity/feed/feed.vue') as any,
 	loading: AppActivityFeedPlaceholder,
 });
 
