@@ -284,8 +284,11 @@ function _onDragItem(store: DrawerStore, event: MouseEvent | TouchEvent) {
 		top: pointer.y - store.stickerSize / 2,
 	});
 
-	// This is a little larger of a target than the "hidden" sticker sheet.
-	if (pointer.clientY > window.innerHeight - store.stickerSize) {
+	const drawerTop = store.isHoveringDrawer
+		? window.innerHeight - store.drawerHeight
+		: window.innerHeight - store.stickerSize;
+
+	if (pointer.clientY > drawerTop) {
 		store.isHoveringDrawer = true;
 	} else {
 		store.isHoveringDrawer = false;

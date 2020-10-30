@@ -13,7 +13,7 @@
 				<app-loading-fade :is-loading="isLoading">
 					<template v-if="hasHalloweenStickers">
 						<div class="-halloween-text" :style="styles.halloweenText">
-							Trick or treat on Game Jolt with candy stickers!
+							<b>Trick or treat on Game Jolt with candy stickers!</b>
 						</div>
 					</template>
 					<component
