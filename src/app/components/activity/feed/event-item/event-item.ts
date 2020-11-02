@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Emit, Inject, Prop, Provide } from 'vue-property-decorator';
+import { Component, Emit, Inject, Prop, ProvideReactive } from 'vue-property-decorator';
 import { Location } from 'vue-router';
 import { State } from 'vuex-class';
 import { findRequiredVueParent, propRequired } from '../../../../../utils/vue';
@@ -85,7 +85,7 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
-	@Provide(StickerTargetParentControllerKey)
+	@ProvideReactive(StickerTargetParentControllerKey)
 	stickerTargetController = this.post ? new StickerTargetController(this.post) : null;
 
 	@State app!: Store['app'];

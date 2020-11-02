@@ -102,7 +102,7 @@
 						-->
 						<div ref="sticker-scroll" />
 
-						<div v-if="post.hasMedia" class="-media-items">
+						<div v-if="post.hasMedia" :key="`media-${post.id}`" class="-media-items">
 							<div v-for="item of post.media" :key="item.id">
 								<app-media-item-post
 									class="-media-item"
@@ -139,7 +139,10 @@
 							</span>
 						</div>
 
-						<app-sticker-target :controller="stickerTargetController">
+						<app-sticker-target
+							:key="`lead-${post.id}`"
+							:controller="stickerTargetController"
+						>
 							<app-content-viewer :source="post.lead_content" />
 						</app-sticker-target>
 

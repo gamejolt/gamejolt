@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Prop, Provide } from 'vue-property-decorator';
+import { Component, Prop, ProvideReactive, Watch } from 'vue-property-decorator';
 import { RawLocation } from 'vue-router';
 import { propRequired } from '../../../../utils/vue';
 import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
@@ -88,7 +88,7 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 
 	@AppState user!: AppStore['user'];
 
-	@Provide(StickerTargetParentControllerKey)
+	@ProvideReactive(StickerTargetParentControllerKey)
 	stickerTargetController = new StickerTargetController(this.post);
 
 	activeImageIndex = 0;
@@ -239,5 +239,12 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 		}
 		this.lightbox.close();
 		this.lightbox = undefined;
+	}
+
+	@Watch('post.id')
+	onPostIdChange() {
+		if (this.stickerTargetController.model.id !== this.post.id) {
+			this.stickerTargetController = new StickerTargetController(this.post);
+		}
 	}
 }
