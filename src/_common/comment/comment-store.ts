@@ -219,6 +219,7 @@ export function onCommentAdd(manager: CommentStoreManager, comment: Comment) {
 		);
 	} else if (store && !store.contains(comment)) {
 		// insert the new comment at the beginning
+		console.log(store, comment);
 		if (store.sort === Comment.SORT_YOU || comment.parent_id) {
 			++store.count;
 			store.comments.unshift(comment);

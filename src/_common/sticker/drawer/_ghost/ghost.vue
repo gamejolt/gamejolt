@@ -14,7 +14,19 @@
 		</div>
 		<transition name="-fade">
 			<div v-if="shouldShowStickerControls" class="-controls" :style="controlsStyling">
+				<template v-if="!isCommentOpen">
+					<app-button
+						v-app-tooltip.bottom="this.$gettext(`Add Comment`)"
+						icon="comment"
+						solid
+						sparse
+						circle
+						@click.capture="onOpenComment"
+					/>
+					&nbsp;&nbsp;
+				</template>
 				<app-button
+					v-app-tooltip.bottom="this.$gettext(`Place`)"
 					icon="check"
 					primary
 					solid
@@ -24,6 +36,16 @@
 				/>
 			</div>
 		</transition>
+		<div v-if="shouldShowComment" class="-comment" :style="commentStyle">
+			<form-comment
+				:placeholder="$gettext(`Annotate your Sticker`)"
+				:comment-model="commentParentModel"
+				:model="comment"
+				slim
+				is-sticker
+				@changed="onCommentContentChanged"
+			/>
+		</div>
 	</div>
 </template>
 
@@ -74,4 +96,22 @@
 	position: absolute
 	top: calc(100% + 8px)
 	z-index: 1
+
+.-comment
+	position: absolute
+	width: 300px
+	z-index: -1
+	animation-name: comment-intro
+	animation-duration: 0.25s
+	animation-iteration-count: 1
+	animation-direction: normal
+
+@keyframes comment-intro
+	0%
+		transform: scale(110%)
+		opacity: 0
+
+	100%
+		transform: scale(100%)
+		opacity: 1
 </style>

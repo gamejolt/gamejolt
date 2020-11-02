@@ -112,6 +112,10 @@
 			-->
 			<div ref="scrollTarget" class="-scroll-target" />
 
+			<div v-if="comment.sticker_placement" class="-sticker-placement">
+				<img class="-sticker" :src="comment.sticker_placement.sticker.img_url" />
+			</div>
+
 			<template v-if="!isEditing">
 				<app-comment-content :comment="comment" :content="comment.comment_content" />
 			</template>
@@ -161,4 +165,15 @@
 .-scroll-target
 	position: absolute
 	top: -100px
+
+.-sticker-placement
+	position: absolute
+	top: 60px
+	left: 8px
+
+.-sticker
+	filter: drop-shadow(2px 2px 0 white) drop-shadow(-2px 2px 0 white) drop-shadow(2px -2px 0 white) drop-shadow(-2px -2px 0 white)
+	width: 32px
+	height: 32px
+	display: block
 </style>

@@ -194,7 +194,8 @@ export async function commitDrawerStoreItemPlacement(store: DrawerStore) {
 	);
 
 	if (success) {
-		addStickerToTarget(targetController, new StickerPlacement(stickerPlacement));
+		const placement = new StickerPlacement(stickerPlacement);
+		addStickerToTarget(targetController, placement);
 
 		model.assign(resource);
 		if (parent && targetController.parent) {
@@ -211,6 +212,8 @@ export async function commitDrawerStoreItemPlacement(store: DrawerStore) {
 		// 		mainStore
 		// 	);
 		// }
+
+		return placement;
 	} else {
 		Growls.error(Translate.$gettext(`Failed to place sticker.`));
 	}
