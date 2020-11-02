@@ -16,6 +16,7 @@
 				focus-end
 				@focus="onFocusEditor"
 				@blur="onBlurEditor"
+				@changed="onContentChanged"
 			/>
 
 			<app-form-control-errors label="comment" />
@@ -25,7 +26,7 @@
 			Remember to be respectful and follow our
 			<app-link-help page="guidelines">Site Guidelines</app-link-help>.
 		</p>
-		<div v-else class="-buttons">
+		<div v-else-if="!slim" class="-buttons">
 			<app-button v-if="method === 'edit'" trans @click="onCancel">
 				<translate>Cancel</translate>
 			</app-button>

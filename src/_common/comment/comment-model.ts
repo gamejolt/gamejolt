@@ -5,6 +5,7 @@ import { FiresidePost } from '../fireside/post/post-model';
 import { Game } from '../game/game.model';
 import { Growls } from '../growls/growls.service';
 import { Model } from '../model/model.service';
+import { StickerPlacement } from '../sticker/placement/placement.model';
 import { constructStickerCounts, StickerCount } from '../sticker/sticker-count';
 import { Subscription } from '../subscription/subscription.model';
 import { User } from '../user/user.model';
@@ -26,16 +27,19 @@ export class Comment extends Model {
 	resource_id!: number;
 	user!: User;
 	votes!: number;
-	user_vote?: CommentVote;
 	status!: number;
 	posted_on!: number;
 	modified_on?: number;
 	lang!: string;
-	videos: CommentVideo[] = [];
-	subscription?: Subscription;
 	is_pinned!: boolean;
 	comment_content!: string;
+
+	user_vote?: CommentVote;
+	videos: CommentVideo[] = [];
+	subscription?: Subscription;
 	sticker_counts: StickerCount[] = [];
+	/** The sticker placed with this comment. */
+	sticker_placement?: StickerPlacement;
 
 	isFollowPending = false;
 
@@ -64,6 +68,10 @@ export class Comment extends Model {
 
 		if (data.sticker_counts) {
 			this.sticker_counts = constructStickerCounts(data.sticker_counts);
+		}
+
+		if (data.sticker_placement) {
+			this.sticker_placement = new StickerPlacement(data.sticker_placement);
 		}
 	}
 
