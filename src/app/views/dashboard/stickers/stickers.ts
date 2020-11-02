@@ -35,6 +35,8 @@ export type StickerCount = {
 	sticker: Sticker;
 };
 
+const FETCH_STICKERS = '/web/stickers/dash';
+
 @Component({
 	name: 'RouteDashStickers',
 	components: {
@@ -45,7 +47,7 @@ export type StickerCount = {
 })
 @RouteResolver({
 	deps: {},
-	resolver: () => Api.sendRequest('/web/stickers/dash'),
+	resolver: () => Api.sendRequest(FETCH_STICKERS),
 })
 export default class RouteDashStickers extends BaseRouteComponent {
 	@Inject(DrawerStoreKey) drawer!: DrawerStore;
@@ -99,14 +101,26 @@ export default class RouteDashStickers extends BaseRouteComponent {
 	}
 
 	routeResolved($payload: InitPayload) {
-		this.balance = $payload.balance;
-		this.stickerCost = $payload.stickerCost;
+		this.fetchStickers($payload);
+	}
+
+	async onCollect() {
+		const remainingBalance = await StickerCollectModal.show();
+		if (remainingBalance === this.balance) {
+			return;
+		}
+		// Fetch the updated sticker list after collecting more.
+		const payload = await Api.sendRequest(FETCH_STICKERS);
+		this.fetchStickers(payload);
+	}
+
+	private async fetchStickers(payload: InitPayload) {
+		this.balance = payload.balance;
+		this.stickerCost = payload.stickerCost;
 
 		this.stickerCollection = [];
-		for (const stickerCountPayload of $payload.stickerCounts) {
-			const stickerData = $payload.stickers.find(
-				i => i.id === stickerCountPayload.sticker_id
-			);
+		for (const stickerCountPayload of payload.stickerCounts) {
+			const stickerData = payload.stickers.find(i => i.id === stickerCountPayload.sticker_id);
 			const stickerCount = {
 				count: stickerCountPayload.count,
 				sticker_id: stickerCountPayload.sticker_id,
@@ -115,10 +129,5 @@ export default class RouteDashStickers extends BaseRouteComponent {
 			this.stickerCollection.push(stickerCount);
 		}
 		this.stickerCollection.sort((a, b) => numberSort(b.sticker.rarity, a.sticker.rarity));
-	}
-
-	async onCollect() {
-		const remainingBalance = await StickerCollectModal.show();
-		this.balance = remainingBalance ?? 0;
 	}
 }
