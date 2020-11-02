@@ -166,7 +166,15 @@
 						<br />
 					</app-sticker-controls-overlay>
 
-					<app-sticker-controls-overlay v-if="communities.length || post.sticker_counts">
+					<app-sticker-controls-overlay
+						v-if="communities.length || post.sticker_counts.length"
+					>
+						<app-sticker-reactions
+							v-if="post.sticker_counts.length"
+							:controller="stickerTargetController"
+							@show="scrollToStickers()"
+						/>
+
 						<app-scroll-scroller class="-communities" horizontal thin>
 							<app-community-pill
 								v-for="postCommunity of communities"
@@ -188,12 +196,6 @@
 								</span>
 							</div>
 						</template>
-
-						<app-sticker-reactions
-							v-if="post.sticker_counts.length"
-							:controller="stickerTargetController"
-							@show="scrollToStickers()"
-						/>
 
 						<div class="-controls-spacing" />
 					</app-sticker-controls-overlay>

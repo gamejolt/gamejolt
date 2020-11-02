@@ -146,6 +146,17 @@
 						<app-poll-voting :poll="post.poll" :game="post.game" :user="post.user" />
 					</div>
 
+					<div
+						v-if="post.sticker_counts.length"
+						class="-reactions-container -controls-buffer"
+						@click.stop
+					>
+						<app-sticker-reactions
+							:controller="stickerTargetController"
+							@show="scrollToStickers()"
+						/>
+					</div>
+
 					<app-scroll-scroller
 						v-if="shouldShowCommunities"
 						class="-communities -controls-buffer"
@@ -157,17 +168,6 @@
 							:community-link="postCommunity"
 						/>
 					</app-scroll-scroller>
-
-					<div
-						v-if="post.sticker_counts.length"
-						class="-reactions-container -controls-buffer"
-						@click.stop
-					>
-						<app-sticker-reactions
-							:controller="stickerTargetController"
-							@show="scrollToStickers()"
-						/>
-					</div>
 				</app-sticker-controls-overlay>
 			</template>
 
