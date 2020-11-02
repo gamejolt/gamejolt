@@ -16,8 +16,6 @@ import { StickerLayerController, StickerLayerKey } from './layer-controller';
 	components: {
 		// Lazy load all of this since we only need it when the drawer is showing.
 		AppStickerLayerPlacementMask: () => import('./placement-mask.vue'),
-		AppStickerLayerDrawer: () => import('./drawer.vue'),
-		AppStickerLayerGhost: () => import('./ghost.vue'),
 	},
 })
 export default class AppStickerLayer extends Vue {

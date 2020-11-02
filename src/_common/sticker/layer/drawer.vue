@@ -10,6 +10,7 @@
 		@mouseup="resetTouchedSticker()"
 		@touchend="resetTouchedSticker()"
 	>
+		<div class="-margin" @click="onClickMargin" />
 		<div ref="content" class="-drawer-outer anim-fade-in-up" :style="styles.outer">
 			<component
 				:is="Screen.isPointerMouse ? 'app-scroll-scroller' : 'div'"
@@ -82,6 +83,7 @@
 				</app-loading-fade>
 			</component>
 		</div>
+		<div class="-margin" @click="onClickMargin()" />
 	</div>
 </template>
 
@@ -111,6 +113,9 @@
 
 	&.-cbar-shifted
 		left: $shell-cbar-width
+
+.-margin
+	flex: auto
 
 .-scroller
 	height: 100%

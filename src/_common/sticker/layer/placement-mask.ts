@@ -15,6 +15,8 @@ import AppStickerLayerPlacementMaskTarget from './placement-mask-target.vue';
 	components: {
 		AppStickerLayerPlacementMaskItem,
 		AppStickerLayerPlacementMaskTarget,
+		AppStickerLayerGhost: () => import('./ghost.vue'),
+		AppStickerLayerDrawer: () => import('./drawer.vue'),
 	},
 	directives: {
 		AppObserveDimensions,

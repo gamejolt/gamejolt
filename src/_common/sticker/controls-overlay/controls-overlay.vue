@@ -18,16 +18,17 @@
 
 	.-overlay
 		change-bg('bg')
-		position: absolute
-		top: -4px
-		right: 0
-		bottom: 4px
-		left: 0
-		opacity: 0.9
-		z-index: -1
 		// We want to expand the overlay out to the edges of the post container.
 		margin-left: -($grid-gutter-width-xs / 2)
 		margin-right: -($grid-gutter-width-xs / 2)
+		position: absolute
+		top: -4px
+		bottom: 4px
+		// Bleed a little bit extra to account for any invisible borders.
+		left: -4px
+		right: @left
+		opacity: 0.9
+		z-index: -1
 
 		@media $media-sm-up
 			margin-left: -($grid-gutter-width / 2) + $border-width-base + 0.5px

@@ -3,7 +3,7 @@ import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../utils/vue';
 import AppBackdrop from '../backdrop/backdrop';
 import { Backdrop } from '../backdrop/backdrop.service';
-import { DrawerStore, DrawerStoreKey } from '../drawer/drawer-store';
+import { DrawerStore, DrawerStoreKey, setDrawerOpen } from '../drawer/drawer-store';
 import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
 import { Screen } from '../screen/screen-service';
 import AppScrollAffix from '../scroll/affix/affix.vue';
@@ -90,6 +90,10 @@ export default class AppModal extends Vue {
 			EscapeStack.deregister(this.escapeCallback);
 			this.escapeCallback = undefined;
 		}
+
+		if (this.drawer?.isDrawerOpen) {
+			setDrawerOpen(this.drawer, false);
+		}
 	}
 
 	dismissRouteChange() {
@@ -100,7 +104,12 @@ export default class AppModal extends Vue {
 		if (this.modal.noEscClose) {
 			return;
 		}
-		this.dismiss();
+
+		if (this.drawer?.isDrawerOpen) {
+			setDrawerOpen(this.drawer, false);
+		} else {
+			this.dismiss();
+		}
 	}
 
 	dismissBackdrop() {

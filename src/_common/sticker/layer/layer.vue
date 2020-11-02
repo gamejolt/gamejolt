@@ -7,10 +7,6 @@
 			class="-placement-mask"
 			:layer="layer"
 		/>
-		<template v-if="layer.isShowingDrawer">
-			<app-sticker-layer-ghost v-if="drawer.sticker" class="-ghost" />
-			<app-sticker-layer-drawer class="-drawer" />
-		</template>
 
 		<!--
 		I don't know why, but DO NOT PUT ELEMENTS AFTER THIS SLOT. For some
@@ -24,23 +20,6 @@
 <style lang="stylus" scoped>
 @import '~styles/variables'
 
-.-layer
-	min-height: 100vh
-
 .-placement-mask
 	z-index: $zindex-sticker-layer
-
-.-ghost
-	// top and left get assigned through a DrawerStore callback.
-	position: absolute
-	z-index: $zindex-sticker-layer + 1
-
-.-drawer
-	z-index: $zindex-sticker-layer + 2
-
-.-dragging
-	cursor: grabbing !important
-
-	.-ghost
-		z-index: $zindex-sticker-layer + 3
 </style>

@@ -220,6 +220,10 @@ export default class AppStickerLayerDrawer extends Vue {
 		}
 	}
 
+	onClickMargin() {
+		setDrawerOpen(this.drawerStore, false);
+	}
+
 	// VueTouch things - START
 	goNext() {
 		if (this.sheetPage >= this.stickerSheets.length) {
