@@ -314,6 +314,7 @@ const _onPointerMove = (store: DrawerStore) => (event: MouseEvent | TouchEvent) 
 		store._waitingForFrame = true;
 		window.requestAnimationFrame(() => _onDragItem(store, event));
 	}
+	event.preventDefault();
 };
 
 /**
@@ -367,9 +368,13 @@ function _addEventListeners(
 	store._onPointerMove = onPointerMove;
 	store._onPointerUp = onPointerUp;
 
-	window.addEventListener('mousemove', onPointerMove);
+	window.addEventListener('mousemove', onPointerMove, {
+		passive: false,
+	});
+	window.addEventListener('touchmove', onPointerMove, {
+		passive: false,
+	});
 	window.addEventListener('mouseup', onPointerUp);
-	window.addEventListener('touchmove', onPointerMove);
 	window.addEventListener('touchend', onPointerUp);
 }
 
