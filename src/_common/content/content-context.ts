@@ -10,7 +10,8 @@ export type ContentContext =
 	| 'user-bio'
 	| 'forum-post'
 	| 'community-description'
-	| 'chat-message';
+	| 'chat-message'
+	| 'sticker-comment';
 
 enum ContextCapabilityType {
 	TextBold,
@@ -212,6 +213,15 @@ export class ContextCapabilities {
 					ContextCapabilityType.Mention,
 					ContextCapabilityType.Gif,
 				]);
+			case 'sticker-comment':
+				return new ContextCapabilities([
+					ContextCapabilityType.TextLink,
+					ContextCapabilityType.TextBold,
+					ContextCapabilityType.TextItalic,
+					ContextCapabilityType.Tag,
+					ContextCapabilityType.Mention,
+					ContextCapabilityType.Emoji,
+				]);
 			case 'user-bio':
 				return new ContextCapabilities([
 					ContextCapabilityType.TextBold,
@@ -260,6 +270,7 @@ export function getMediaItemTypeForContext(context: ContentContext) {
 		case 'fireside-post-comment':
 		case 'game-comment':
 		case 'user-comment':
+		case 'sticker-comment':
 			return MediaItem.TYPE_COMMENT;
 		case 'forum-post':
 			return MediaItem.TYPE_FORUM_POST;

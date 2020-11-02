@@ -1,4 +1,5 @@
 import { Component, Emit, Prop } from 'vue-property-decorator';
+import { propOptional } from '../../../utils/vue';
 import { ContentContext } from '../../content/content-context';
 import { ContentRules } from '../../content/content-editor/content-rules';
 import AppFormControlContent from '../../form-vue/control/content/content.vue';
@@ -27,6 +28,9 @@ export default class FormComment extends BaseForm<Comment> implements FormOnInit
 	@Prop(String)
 	placeholder?: string;
 
+	@Prop(propOptional(Boolean, false)) isSticker!: boolean;
+	@Prop(propOptional(Boolean, false)) slim!: boolean;
+
 	$refs!: {
 		form: AppForm;
 	};
@@ -36,7 +40,9 @@ export default class FormComment extends BaseForm<Comment> implements FormOnInit
 	lengthLimit = 5_000;
 
 	get loadUrl() {
-		return `/comments/save`;
+		let url = `/comments/save`;
+		url += `?type=` + this.contentContext;
+		return url;
 	}
 
 	get displayRules() {
@@ -56,6 +62,9 @@ export default class FormComment extends BaseForm<Comment> implements FormOnInit
 	}
 
 	get contentContext(): ContentContext {
+		if (this.isSticker) {
+			return 'sticker-comment';
+		}
 		switch (getCommentModelResourceName(this.commentModel)) {
 			case 'Fireside_Post':
 				return 'fireside-post-comment';
@@ -67,7 +76,9 @@ export default class FormComment extends BaseForm<Comment> implements FormOnInit
 	}
 
 	get shouldShowGuidelines() {
-		return !this.formModel.comment_content && !this.changed && this.method !== 'edit';
+		return (
+			!this.slim && !this.formModel.comment_content && !this.changed && this.method !== 'edit'
+		);
 	}
 
 	async onInit() {
@@ -96,7 +107,14 @@ export default class FormComment extends BaseForm<Comment> implements FormOnInit
 	@Emit('editor-blur')
 	onBlurEditor() {}
 
+	@Emit('changed')
+	onChanged(_content: string) {}
+
 	onCancel() {
 		this.$emit('cancel');
+	}
+
+	onContentChanged() {
+		this.onChanged(this.formModel.comment_content);
 	}
 }

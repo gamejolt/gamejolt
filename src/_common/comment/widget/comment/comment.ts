@@ -202,6 +202,10 @@ export default class AppCommentWidgetComment extends Vue {
 		return this.blockReason !== false;
 	}
 
+	get hasSticker() {
+		return !!this.comment.sticker_placement;
+	}
+
 	startEdit() {
 		this.isEditing = true;
 		Popper.hideAll();
