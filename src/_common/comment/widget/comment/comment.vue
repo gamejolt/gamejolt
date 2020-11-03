@@ -113,7 +113,11 @@
 			<div ref="scrollTarget" class="-scroll-target" />
 
 			<template v-if="!isEditing">
-				<app-comment-content :comment="comment" :content="comment.comment_content" />
+				<app-comment-content
+					:comment="comment"
+					:content="comment.comment_content"
+					:can-place-stickers="canPlaceStickers"
+				/>
 			</template>
 			<template v-else>
 				<form-comment
@@ -130,7 +134,9 @@
 				:comment="comment"
 				:children="children"
 				:parent="parent"
-				:show-reply="!parent && !showChildren"
+				:show-reply="showReplies"
+				:can-reply="canReply"
+				:can-place-stickers="canPlaceStickers"
 				:model="model"
 			/>
 		</template>

@@ -102,7 +102,11 @@
 						-->
 						<div ref="sticker-scroll" />
 
-						<div v-if="post.hasMedia" class="-media-items">
+						<!--
+						Key the media-item container here so that we don't reuse components going from one post page to another,
+						allowing the components to properly fetch the stickers that are assigned to them.
+						-->
+						<div v-if="post.hasMedia" :key="`media-${post.id}`" class="-media-items">
 							<div v-for="item of post.media" :key="item.id">
 								<app-media-item-post
 									class="-media-item"
@@ -139,7 +143,13 @@
 							</span>
 						</div>
 
-						<app-sticker-target :controller="stickerTargetController">
+						<!--
+						Key the sticker target so it doesn't get reused if going from one post page to another one.
+						-->
+						<app-sticker-target
+							:key="`lead-${post.id}`"
+							:controller="stickerTargetController"
+						>
 							<app-content-viewer :source="post.lead_content" />
 						</app-sticker-target>
 
@@ -163,7 +173,15 @@
 						<br />
 					</app-sticker-controls-overlay>
 
-					<app-sticker-controls-overlay v-if="communities.length || post.sticker_counts">
+					<app-sticker-controls-overlay
+						v-if="communities.length || post.sticker_counts.length"
+					>
+						<app-sticker-reactions
+							v-if="post.sticker_counts.length"
+							:controller="stickerTargetController"
+							@show="scrollToStickers()"
+						/>
+
 						<app-scroll-scroller class="-communities" horizontal thin>
 							<app-community-pill
 								v-for="postCommunity of communities"
@@ -185,12 +203,6 @@
 								</span>
 							</div>
 						</template>
-
-						<app-sticker-reactions
-							v-if="post.sticker_counts.length"
-							:controller="stickerTargetController"
-							@show="scrollToStickers()"
-						/>
 
 						<div class="-controls-spacing" />
 					</app-sticker-controls-overlay>

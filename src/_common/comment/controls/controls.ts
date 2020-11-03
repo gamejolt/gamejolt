@@ -30,6 +30,8 @@ export default class AppCommentControls extends Vue {
 	@Prop(propOptional(Comment)) parent!: undefined | Comment;
 	@Prop(propOptional(Array, () => [])) children!: Comment[];
 	@Prop(propOptional(Boolean, false)) showReply!: boolean;
+	@Prop(propOptional(Boolean, false)) canReply!: boolean;
+	@Prop(propOptional(Boolean, false)) canPlaceStickers!: boolean;
 
 	@Inject(DrawerStoreKey) drawer!: DrawerStore;
 

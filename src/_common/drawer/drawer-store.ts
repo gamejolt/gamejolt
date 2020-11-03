@@ -72,6 +72,11 @@ export function setDrawerOpen(store: DrawerStore, isOpen: boolean) {
 
 export function setDrawerHidden(store: DrawerStore, shouldHide: boolean) {
 	store.hideDrawer = shouldHide;
+
+	// Everytime we un-hide the drawer we want to fetch their new stickers since they may have unlocked more.
+	if (!shouldHide) {
+		_initializeDrawerContent(store);
+	}
 }
 
 /**
@@ -310,6 +315,9 @@ const _onPointerMove = (store: DrawerStore) => (event: MouseEvent | TouchEvent) 
 		store._waitingForFrame = true;
 		window.requestAnimationFrame(() => _onDragItem(store, event));
 	}
+
+	// Older iOS devices seem to need this. It will prevent scrolling while dragging a ghost item around the page.
+	event.preventDefault();
 };
 
 /**
@@ -363,9 +371,13 @@ function _addEventListeners(
 	store._onPointerMove = onPointerMove;
 	store._onPointerUp = onPointerUp;
 
-	window.addEventListener('mousemove', onPointerMove);
+	window.addEventListener('mousemove', onPointerMove, {
+		passive: false,
+	});
+	window.addEventListener('touchmove', onPointerMove, {
+		passive: false,
+	});
 	window.addEventListener('mouseup', onPointerUp);
-	window.addEventListener('touchmove', onPointerMove);
 	window.addEventListener('touchend', onPointerUp);
 }
 

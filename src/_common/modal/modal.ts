@@ -100,6 +100,7 @@ export default class AppModal extends Vue {
 		if (this.modal.noEscClose) {
 			return;
 		}
+
 		this.dismiss();
 	}
 

@@ -111,11 +111,15 @@
 					v-if="post.hasMedia"
 					:item="item"
 					:post="post"
+					:can-place-sticker="canPlaceSticker"
 				/>
 
 				<div ref="sticker-scroll" />
 
-				<app-sticker-target :controller="stickerTargetController">
+				<app-sticker-target
+					:controller="stickerTargetController"
+					:disabled="!canPlaceSticker"
+				>
 					<!--
 					This shouldn't ever really show a collapser. It's for the jokers that think it would
 					be fun to make a post with a bunch of new lines.
@@ -146,6 +150,17 @@
 						<app-poll-voting :poll="post.poll" :game="post.game" :user="post.user" />
 					</div>
 
+					<div
+						v-if="post.sticker_counts.length"
+						class="-reactions-container -controls-buffer"
+						@click.stop
+					>
+						<app-sticker-reactions
+							:controller="stickerTargetController"
+							@show="scrollToStickers()"
+						/>
+					</div>
+
 					<app-scroll-scroller
 						v-if="shouldShowCommunities"
 						class="-communities -controls-buffer"
@@ -157,17 +172,6 @@
 							:community-link="postCommunity"
 						/>
 					</app-scroll-scroller>
-
-					<div
-						v-if="post.sticker_counts.length"
-						class="-reactions-container -controls-buffer"
-						@click.stop
-					>
-						<app-sticker-reactions
-							:controller="stickerTargetController"
-							@show="scrollToStickers()"
-						/>
-					</div>
 				</app-sticker-controls-overlay>
 			</template>
 

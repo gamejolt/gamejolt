@@ -17,6 +17,7 @@
 						:media-item="mediaItem"
 						:is-post-hydrated="isHydrated"
 						:is-active="getIsActiveMediaItem(mediaItem)"
+						:can-place-sticker="canPlaceSticker"
 						restrict-device-max-height
 						inline
 						@bootstrap="onItemBootstrapped()"

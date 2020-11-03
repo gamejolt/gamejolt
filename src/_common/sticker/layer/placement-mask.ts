@@ -7,6 +7,8 @@ import { AppObserveDimensions } from '../../observe-dimensions/observe-dimension
 import { Scroll } from '../../scroll/scroll.service';
 import AppScrollScrollerTS from '../../scroll/scroller/scroller';
 import AppScrollScroller from '../../scroll/scroller/scroller.vue';
+import AppStickerLayerDrawer from './drawer.vue';
+import AppStickerLayerGhost from './ghost.vue';
 import { calculateStickerTargetRects, StickerLayerController } from './layer-controller';
 import AppStickerLayerPlacementMaskItem from './placement-mask-item.vue';
 import AppStickerLayerPlacementMaskTarget from './placement-mask-target.vue';
@@ -15,6 +17,8 @@ import AppStickerLayerPlacementMaskTarget from './placement-mask-target.vue';
 	components: {
 		AppStickerLayerPlacementMaskItem,
 		AppStickerLayerPlacementMaskTarget,
+		AppStickerLayerGhost,
+		AppStickerLayerDrawer,
 	},
 	directives: {
 		AppObserveDimensions,
