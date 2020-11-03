@@ -69,6 +69,7 @@ export default class AppStickerLayerGhost extends Vue {
 	}
 
 	onConfirmPlacement() {
+		// Only allow 1 placement request through at a time for each sticker ghost. This component will be v-if'd away after placement.
 		if (this.isConfirmingPlacement) {
 			return;
 		}

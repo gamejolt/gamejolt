@@ -243,8 +243,6 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 
 	@Watch('post.id')
 	onPostIdChange() {
-		if (this.stickerTargetController.model.id !== this.post.id) {
-			this.stickerTargetController = new StickerTargetController(this.post);
-		}
+		this.stickerTargetController = new StickerTargetController(this.post);
 	}
 }

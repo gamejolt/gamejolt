@@ -10,7 +10,7 @@
 		@mouseup="resetTouchedSticker()"
 		@touchend="resetTouchedSticker()"
 	>
-		<div class="-margin" @click="onClickMargin" />
+		<div class="-margin" @click="onClickMargin()" />
 		<div ref="content" class="-drawer-outer anim-fade-in-up" :style="styles.outer">
 			<component
 				:is="Screen.isPointerMouse ? 'app-scroll-scroller' : 'div'"

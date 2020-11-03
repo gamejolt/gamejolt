@@ -25,7 +25,6 @@
 							:key="`${viewbox}-${i}`"
 							:target="target"
 							:layer="layer"
-							as-mask
 						/>
 					</template>
 				</mask>
