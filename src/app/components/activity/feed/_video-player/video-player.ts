@@ -64,7 +64,9 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 
 	get shouldShowLoading() {
 		if (this.player) {
-			return this.player.isLoading && this.shouldAutoplay;
+			return (
+				this.player.isLoading && (this.shouldAutoplay || this.player.state === 'playing')
+			);
 		}
 		return true;
 	}

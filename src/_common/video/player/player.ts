@@ -82,7 +82,7 @@ export default class AppVideoPlayer extends Vue {
 
 	get shouldShowLoading() {
 		if (this.player) {
-			return this.player.isLoading && this.autoplay;
+			return this.player.isLoading && (this.autoplay || this.player.state === 'playing');
 		}
 		return true;
 	}
