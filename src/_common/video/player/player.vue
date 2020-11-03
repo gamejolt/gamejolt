@@ -30,7 +30,7 @@
 
 		<transition>
 			<div
-				v-if="shouldShowUI || true"
+				v-if="shouldShowUI"
 				class="-bottom -ui anim-fade-enter anim-fade-leave-down"
 				@mouseenter="isHoveringControls = true"
 				@mouseleave="isHoveringControls = false"
