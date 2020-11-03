@@ -8,7 +8,7 @@ import {
 } from '../../settings/settings.service';
 
 export type VideoPlayerControllerContext = 'feed' | 'page' | null;
-type ScrubberStage = 'start' | 'scrub' | 'end';
+export type ScrubberStage = 'start' | 'scrub' | 'end';
 
 export class VideoPlayerController {
 	volume: number;
@@ -62,26 +62,32 @@ export function toggleVideoPlayback(player: VideoPlayerController) {
 	}
 }
 
-export function setVideoVolume(
-	player: VideoPlayerController,
-	level: number,
-	storeLevel: boolean,
-	forceUnmute = true
-) {
+/** Volume is set on a scale of 0 to 1 */
+export function setVideoVolume(player: VideoPlayerController, level: number) {
 	const volume = Math.min(1, Math.max(0, Math.round(level * 100) / 100));
-	if (volume && storeLevel) {
-		player.mutedFallbackVolume = volume;
-	}
+	player.volume = volume;
 
 	if (player.context === 'feed') {
 		SettingVideoPlayerFeedVolume.set(volume);
 	} else if (player.context === 'page') {
 		SettingVideoPlayerVolume.set(volume);
 	}
+}
 
-	player.volume = volume;
+/** Volume is set on a scale of 0 to 1 */
+export function scrubVideoVolume(
+	player: VideoPlayerController,
+	volumeLevel: number,
+	stage: ScrubberStage
+) {
+	const volume = Math.min(1, Math.max(0, volumeLevel));
+	if (volume && stage === 'end') {
+		player.mutedFallbackVolume = volume;
+	}
 
-	if (volume && player.isMuted && forceUnmute) {
+	setVideoVolume(player, volume);
+
+	if (volume && player.isMuted && stage !== 'end') {
 		toggleVideoMuted(player);
 	}
 
@@ -93,14 +99,14 @@ export function setVideoVolume(
 export function toggleVideoMuted(player: VideoPlayerController) {
 	player.isMuted = !player.isMuted;
 	if (!player.isMuted && player.mutedFallbackVolume !== null) {
-		setVideoVolume(player, player.mutedFallbackVolume, false);
+		setVideoVolume(player, player.mutedFallbackVolume);
 	}
 
 	if (player.context === 'feed') {
 		SettingVideoPlayerFeedMuted.set(player.isMuted);
 		// Feed videos don't have a volume slider, so if the video element volume was somehow changed we want to set it back to 100%.
 		if (!player.isMuted) {
-			setVideoVolume(player, 100, true);
+			setVideoVolume(player, 1);
 		}
 	} else if (player.context === 'page') {
 		SettingVideoPlayerMuted.set(player.isMuted);

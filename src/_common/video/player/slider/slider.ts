@@ -3,7 +3,12 @@ import { Component, Prop, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../utils/vue';
 import { Ruler } from '../../../ruler/ruler-service';
 import { AppTooltip } from '../../../tooltip/tooltip-directive';
-import { setVideoVolume, toggleVideoMuted, VideoPlayerController } from '../controller';
+import {
+	ScrubberStage,
+	scrubVideoVolume,
+	toggleVideoMuted,
+	VideoPlayerController,
+} from '../controller';
 
 @Component({
 	directives: {
@@ -74,7 +79,7 @@ export default class AppVideoPlayerSlider extends Vue {
 	}
 
 	mounted() {
-		this._setThumbOffset(false, false);
+		this._setThumbOffset('end');
 		this.initVariables();
 	}
 
@@ -91,7 +96,7 @@ export default class AppVideoPlayerSlider extends Vue {
 		await this.$nextTick();
 		this.isDragging = true;
 		this.initVariables();
-		this._setThumbOffset(false, true, event);
+		this._setThumbOffset('start', event);
 
 		window.addEventListener('mouseup', this.onWindowMouseUp);
 		window.addEventListener('mousemove', this.onWindowMouseMove);
@@ -101,7 +106,7 @@ export default class AppVideoPlayerSlider extends Vue {
 		if (!this.isDragging) {
 			return;
 		}
-		this._setThumbOffset(false, true, event);
+		this._setThumbOffset('scrub', event);
 	}
 
 	private _onMouseUp(event: MouseEvent) {
@@ -109,7 +114,7 @@ export default class AppVideoPlayerSlider extends Vue {
 			return;
 		}
 
-		this._setThumbOffset(true, true, event);
+		this._setThumbOffset('end', event);
 		this.isDragging = false;
 	}
 
@@ -131,7 +136,7 @@ export default class AppVideoPlayerSlider extends Vue {
 		this.cleanupWindowListeners();
 	}
 
-	private _setThumbOffset(storeValue: boolean, shouldUnmute: boolean, event?: MouseEvent) {
+	private _setThumbOffset(stage: ScrubberStage, event?: MouseEvent) {
 		if (this.player.isMuted) {
 			this.calculatedThumbOffset = 0;
 		}
@@ -165,7 +170,7 @@ export default class AppVideoPlayerSlider extends Vue {
 
 		const scaledPercent = this.percentFull / scale;
 		// set the controller volume with a scale of 0 to 1
-		setVideoVolume(this.player, scaledPercent, storeValue && scaledPercent !== 0, shouldUnmute);
+		scrubVideoVolume(this.player, scaledPercent, stage);
 	}
 
 	@Watch('player.volume')
@@ -175,6 +180,6 @@ export default class AppVideoPlayerSlider extends Vue {
 		}
 
 		// Set the thumbTop to match with the current volume level.
-		this._setThumbOffset(false, true);
+		this._setThumbOffset('end');
 	}
 }
