@@ -208,7 +208,7 @@ export default class AppCommentWidgetComment extends Vue {
 	}
 
 	get canPlaceStickers() {
-		return canPlaceStickerOnComment(this.model, this.parent || this.comment);
+		return canPlaceStickerOnComment(this.model, this.comment, this.parent);
 	}
 
 	get canReply() {

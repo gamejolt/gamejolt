@@ -21,8 +21,15 @@ export class StickerPlacement extends Model {
 
 Model.create(StickerPlacement);
 
-export function canPlaceStickerOnComment(model: Model, parentComment?: Comment) {
-	return canCommentOnModel(model, parentComment);
+export function canPlaceStickerOnComment(model: Model, comment: Comment, parentComment?: Comment) {
+	if (!comment.user.canComment || (parentComment && !parentComment.user.canComment)) {
+		return false;
+	}
+	if (parentComment && !parentComment.user.canComment) {
+		return false;
+	}
+
+	return canCommentOnModel(model);
 }
 
 export function canPlaceStickerOnFiresidePost(post: FiresidePost) {
