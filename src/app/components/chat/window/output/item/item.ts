@@ -20,7 +20,7 @@ import {
 	retryFailedQueuedMessage,
 	setMessageEditing,
 } from '../../../client';
-import { ChatMessage } from '../../../message';
+import { ChatMessage, ChatMessageType } from '../../../message';
 import { ChatRoom } from '../../../room';
 
 export interface ChatMessageEditEvent {
@@ -51,6 +51,7 @@ export default class AppChatWindowOutputItem extends Vue {
 
 	readonly date = date;
 	readonly ChatMessage = ChatMessage;
+	readonly ChatMessageType = ChatMessageType;
 	readonly displayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 });
 
 	singleLineMode = true;

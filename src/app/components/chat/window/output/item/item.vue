@@ -4,9 +4,9 @@
 	<div
 		class="chat-window-message"
 		:class="{
-			'chat-msg-type-normal': message.type === ChatMessage.TypeMessage,
-			'chat-msg-type-system': message.type === ChatMessage.TypeSystem,
-			'chat-msg-type-invite': message.type === ChatMessage.TypeInvite,
+			'chat-msg-type-normal': message.type === ChatMessageType.MESSAGE,
+			'chat-msg-type-system': message.type === ChatMessageType.SYSTEM,
+			'chat-msg-type-invite': message.type === ChatMessageType.INVITE,
 			'chat-window-message-not-combined': !message.combine,
 			'chat-window-message-combined': message.combine,
 			'chat-window-message-editing': isEditing,
@@ -65,7 +65,7 @@
 					<template #popover>
 						<div class="list-group">
 							<a
-								v-if="message.type === ChatMessage.TypeMessage"
+								v-if="message.type === ChatMessageType.MESSAGE"
 								class="list-group-item has-icon"
 								@click="startEdit"
 							>
@@ -108,14 +108,14 @@
 					</span>
 				</template>
 
-				<template v-if="message.type === ChatMessage.TypeMessage">
+				<template v-if="message.type === ChatMessageType.MESSAGE">
 					<app-content-viewer :source="message.content" :display-rules="displayRules" />
 				</template>
-				<template v-else-if="message.type === ChatMessage.TypeInvite">
+				<template v-else-if="message.type === ChatMessageType.INVITE">
 					<div class="alert">
 						<p>
 							<translate>
-								You have been invited to a group.
+								I'd like to invite you to a group chat.
 							</translate>
 						</p>
 						<app-button

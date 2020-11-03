@@ -7,7 +7,7 @@ import { sleep } from '../../../utils/utils';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { store } from '../../store';
-import { ChatMessage } from './message';
+import { ChatMessage, ChatMessageType } from './message';
 import { ChatRoom } from './room';
 import { ChatRoomChannel } from './room-channel';
 import { ChatUser } from './user';
@@ -423,7 +423,7 @@ export function queueChatMessage(chat: ChatClient, content: string, roomId: numb
 	const tempId = Math.floor(Math.random() * Date.now());
 	const message = new ChatMessage({
 		id: tempId,
-		type: ChatMessage.TypeMessage,
+		type: ChatMessageType.MESSAGE,
 		user_id: chat.currentUser.id,
 		user: chat.currentUser,
 		room_id: roomId,
@@ -703,7 +703,7 @@ export function acceptInvite(chat: ChatClient, msgId: number) {
 
 export function startTyping(chat: ChatClient) {
 	const room = chat.room;
-	F;
+
 	if (room) {
 		chat.roomChannels[room.id].push('start_typing', {});
 	}
