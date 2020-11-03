@@ -98,16 +98,17 @@ export function scrubVideoVolume(
 
 export function toggleVideoMuted(player: VideoPlayerController) {
 	player.isMuted = !player.isMuted;
-	if (!player.isMuted && player.mutedFallbackVolume !== null) {
-		setVideoVolume(player, player.mutedFallbackVolume);
+	if (!player.isMuted) {
+		if (player.mutedFallbackVolume) {
+			setVideoVolume(player, player.mutedFallbackVolume);
+		} else if (player.context === 'feed') {
+			// Feed videos don't have a volume slider, so if the video element volume was somehow changed we want to set it back to 100%.
+			setVideoVolume(player, 1);
+		}
 	}
 
 	if (player.context === 'feed') {
 		SettingVideoPlayerFeedMuted.set(player.isMuted);
-		// Feed videos don't have a volume slider, so if the video element volume was somehow changed we want to set it back to 100%.
-		if (!player.isMuted) {
-			setVideoVolume(player, 1);
-		}
 	} else if (player.context === 'page') {
 		SettingVideoPlayerMuted.set(player.isMuted);
 	}
