@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { propOptional } from '../../../../utils/vue';
+import { propOptional, propRequired } from '../../../../utils/vue';
 import { Ruler } from '../../../ruler/ruler-service';
 import { AppTooltip } from '../../../tooltip/tooltip-directive';
 import { setVideoVolume, toggleVideoMuted, VideoPlayerController } from '../controller';
@@ -11,7 +11,7 @@ import { setVideoVolume, toggleVideoMuted, VideoPlayerController } from '../cont
 	},
 })
 export default class AppVideoPlayerSlider extends Vue {
-	@Prop(propOptional(VideoPlayerController, null)) player!: VideoPlayerController | null;
+	@Prop(propRequired(VideoPlayerController)) player!: VideoPlayerController;
 	@Prop(propOptional(Boolean, false)) vertical!: boolean;
 
 	isDragging = false;
@@ -28,7 +28,7 @@ export default class AppVideoPlayerSlider extends Vue {
 	};
 
 	get thumbOffset() {
-		if (this.player?.isMuted) {
+		if (this.player.isMuted) {
 			return -(this.thumbSize / 2);
 		}
 
@@ -70,14 +70,11 @@ export default class AppVideoPlayerSlider extends Vue {
 	}
 
 	get readableSliderPercentage() {
-		if (this.player?.isMuted) {
-			return '0%';
-		}
-		return `${this.percentFull}%`;
+		return `${this.player.isMuted ? 0 : this.percentFull}%`;
 	}
 
 	mounted() {
-		this.syncThumbOffsetToPlayer(false);
+		this._setThumbOffset(false, false);
 		this.initVariables();
 	}
 
@@ -88,7 +85,7 @@ export default class AppVideoPlayerSlider extends Vue {
 	}
 
 	async onMouseDown(event: MouseEvent) {
-		if (this.player?.isMuted) {
+		if (this.player.isMuted) {
 			toggleVideoMuted(this.player);
 		}
 		await this.$nextTick();
@@ -134,21 +131,15 @@ export default class AppVideoPlayerSlider extends Vue {
 		this.cleanupWindowListeners();
 	}
 
-	private syncThumbOffsetToPlayer(shouldUnmute: boolean) {
-		if (this.player) {
-			this._setThumbOffset(false, shouldUnmute);
-		}
-	}
-
 	private _setThumbOffset(storeValue: boolean, shouldUnmute: boolean, event?: MouseEvent) {
-		if (this.player?.isMuted) {
+		if (this.player.isMuted) {
 			this.calculatedThumbOffset = 0;
 		}
 		let mouseOffset = 0;
 
 		if (event) {
 			mouseOffset = this.vertical ? event.pageY : event.pageX;
-		} else if (this.player) {
+		} else {
 			mouseOffset = this.player.volume * this.sliderSize + this.sliderOffset;
 		}
 
@@ -173,15 +164,8 @@ export default class AppVideoPlayerSlider extends Vue {
 		}
 
 		const scaledPercent = this.percentFull / scale;
-		if (this.player) {
-			// set the controller volume with a scale of 0 to 1
-			setVideoVolume(
-				this.player,
-				scaledPercent,
-				storeValue && scaledPercent !== 0,
-				shouldUnmute
-			);
-		}
+		// set the controller volume with a scale of 0 to 1
+		setVideoVolume(this.player, scaledPercent, storeValue && scaledPercent !== 0, shouldUnmute);
 	}
 
 	@Watch('player.volume')
@@ -191,6 +175,6 @@ export default class AppVideoPlayerSlider extends Vue {
 		}
 
 		// Set the thumbTop to match with the current volume level.
-		this.syncThumbOffsetToPlayer(true);
+		this._setThumbOffset(false, true);
 	}
 }
