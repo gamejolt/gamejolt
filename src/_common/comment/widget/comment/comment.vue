@@ -134,7 +134,8 @@
 				:comment="comment"
 				:children="children"
 				:parent="parent"
-				:show-reply="!parent && !showChildren"
+				:show-reply="showReplies"
+				:can-reply="canReply"
 				:can-place-stickers="canPlaceStickers"
 				:model="model"
 			/>

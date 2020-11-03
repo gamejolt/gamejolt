@@ -203,8 +203,16 @@ export default class AppCommentWidgetComment extends Vue {
 		return this.blockReason !== false;
 	}
 
+	get showReplies() {
+		return !this.parent && !this.showChildren;
+	}
+
 	get canPlaceStickers() {
 		return canPlaceStickerOnComment(this.model, this.parent || this.comment);
+	}
+
+	get canReply() {
+		return this.showReplies && this.canPlaceStickers;
 	}
 
 	startEdit() {

@@ -102,6 +102,10 @@
 						-->
 						<div ref="sticker-scroll" />
 
+						<!--
+						Key the media-item container here so that we don't reuse components going from one post page to another,
+						allowing the components to properly fetch the stickers that are assigned to them.
+						-->
 						<div v-if="post.hasMedia" :key="`media-${post.id}`" class="-media-items">
 							<div v-for="item of post.media" :key="item.id">
 								<app-media-item-post
@@ -139,6 +143,9 @@
 							</span>
 						</div>
 
+						<!--
+						Key the sticker target so it doesn't get reused if going from one post page to another one.
+						-->
 						<app-sticker-target
 							:key="`lead-${post.id}`"
 							:controller="stickerTargetController"
