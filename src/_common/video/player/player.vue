@@ -9,58 +9,103 @@
 		@mousemove="onMouseMove"
 		@keydown="onKeypress"
 	>
-		<div
-			class="-video"
-			:class="{
-				'-paused-cursor': player.state === 'paused',
-			}"
-			@click="onVideoClick"
+		<app-responsive-dimensions
+			class="-video-container"
+			:style="{ minWidth: shouldUseBlackBars ? `${blackBarsBreakpoint}px` : 'unset' }"
+			:ratio="mediaItem.width / mediaItem.height"
+			:max-width="mediaItem.width"
+			:max-height="deviceMaxHeight"
+			@change="onChangeDimensions"
 		>
-			<app-video-player-shaka-lazy :player="player" :autoplay="autoplay" />
-		</div>
-
-		<transition>
 			<div
-				v-if="player.state === 'paused' && !player.isScrubbing"
-				class="-paused-indicator anim-fade-enter-enlarge anim-fade-leave-shrink"
+				class="-content-container"
+				:class="{
+					'-paused-cursor': player.state === 'paused',
+					'-filled': Screen.isXs && isFilled,
+				}"
+				@click="onVideoClick"
 			>
-				<app-jolticon class="-paused-indicator-icon" icon="play" />
-			</div>
-		</transition>
+				<app-video-player-shaka-lazy
+					v-if="player"
+					class="-video"
+					:style="{ width }"
+					:player="player"
+					:autoplay="autoplay"
+				/>
 
-		<transition>
-			<div
-				v-if="shouldShowUI"
-				class="-bottom -ui anim-fade-enter anim-fade-leave-down"
-				@mouseenter="isHoveringControls = true"
-				@mouseleave="isHoveringControls = false"
-			>
-				<div class="-bottom-gradient">
-					<div class="-bottom-controls">
-						<app-player-scrubber :player="player" />
+				<!--
+				This will show behind the video so that we can switch to it while
+				the video is loading and when it's unfocused/not active.
+				-->
+				<app-media-item-backdrop
+					class="-backdrop"
+					:style="{ height, width }"
+					:media-item="mediaItem"
+				>
+					<app-img-responsive
+						class="-img"
+						:style="{ width }"
+						:src="mediaItem.mediaserver_url"
+						alt=""
+					/>
+				</app-media-item-backdrop>
 
-						<div class="-row">
-							<app-player-playback :player="player" />
-							<app-player-volume
-								:player="player"
-								has-slider
-								@volume-down="triggerVolumeDown"
-								@volume-up="triggerVolumeUp"
-							/>
+				<transition>
+					<div
+						v-if="player.state === 'paused' && !player.isScrubbing"
+						class="-paused-indicator -ui anim-fade-enter-enlarge anim-fade-leave-shrink"
+					>
+						<app-jolticon class="-paused-indicator-icon" icon="play" />
+					</div>
+				</transition>
 
-							<div style="flex: auto" />
+				<transition>
+					<div
+						v-if="shouldShowUI"
+						class="-bottom -ui anim-fade-enter anim-fade-leave-down"
+						@mouseenter="isHoveringControls = true"
+						@mouseleave="isHoveringControls = false"
+					>
+						<div class="-bottom-gradient">
+							<div class="-bottom-controls">
+								<app-player-scrubber :player="player" />
 
-							<div v-if="player.duration > 0" class="-time anim-fade-in-enlarge">
-								<div class="-time-inner">
-									{{ readableTime }}
+								<div class="-row">
+									<app-player-playback :player="player" />
+									<app-player-volume
+										:player="player"
+										has-slider
+										@volume-down="triggerVolumeDown"
+										@volume-up="triggerVolumeUp"
+									/>
+
+									<div style="flex: auto" />
+
+									<div
+										v-if="player.duration > 0"
+										class="-time anim-fade-in-enlarge"
+									>
+										<div class="-time-inner">
+											{{ readableTime }}
+										</div>
+									</div>
+									<app-player-fullscreen :player="player" />
 								</div>
 							</div>
-							<app-player-fullscreen :player="player" />
 						</div>
 					</div>
-				</div>
+				</transition>
 			</div>
-		</transition>
+
+			<div class="-video-stats">
+				<span v-app-tooltip.touchable="$gettext(`Plays`)">
+					<app-jolticon icon="play" />
+					<span class="-video-stats-label">
+						{{ viewCount }}
+					</span>
+				</span>
+			</div>
+		</app-responsive-dimensions>
 	</div>
 </template>
 
@@ -69,27 +114,52 @@
 @import '~styles-lib/mixins'
 
 .-player
-	rounded-corners-lg()
 	position: relative
-	overflow: hidden
-	display: flex
 	height: 100%
+	min-width: 100%
+	display: flex
+	flex-direction: column
+	align-items: center
 
 	&:focus
 		outline: none
+
+.-video-container
+	position: relative
+	margin-bottom: 24px
 
 	&:hover
 		.-time-inner
 			background-color: rgba($black, 1)
 
+.-content-container
+	rounded-corners-lg()
+	height: 100%
+	background-color: $black
+	display: flex
+	justify-content: center
+	position: relative
+	overflow: hidden
+
+.-filled
+	border-radius: 0 !important
+
 .-paused-cursor
 	cursor: pointer
 
 .-video
+	position: relative
+	height: 100%
 	margin: auto
-
-.-ui
 	z-index: 1
+
+.-backdrop
+	position: absolute
+	top: 0
+	z-index: 0
+
+.-img
+	max-height: 100%
 
 .-paused-indicator
 	pointer-events: none
@@ -106,6 +176,9 @@
 	&-icon
 		color: white
 		font-size: 60px
+
+.-ui
+	z-index: 1
 
 .-bottom
 	position: absolute
@@ -140,4 +213,15 @@
 		pointer-events: none
 		user-select: none
 		transition: background-color 250ms $strong-ease-out
+
+.-video-stats
+	position: absolute
+	top: calc(100% + 4px)
+	right: 0
+
+	@media $media-xs
+		right: 16px
+
+	&-label
+		margin-left: 4px
 </style>
