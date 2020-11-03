@@ -7,7 +7,7 @@ import { Model } from '../../model/model.service';
 import { Screen } from '../../screen/screen-service';
 import { AppState, AppStore } from '../../store/app-store';
 import FormComment from '../add/add.vue';
-import { Comment, getCanCommentOnModel, getCommentModelResourceName } from '../comment-model';
+import { canCommentOnModel, Comment, getCommentModelResourceName } from '../comment-model';
 import {
 	CommentStoreManager,
 	CommentStoreManagerKey,
@@ -88,10 +88,7 @@ export default class AppCommentThreadModal extends BaseModal {
 	}
 
 	get shouldShowReply() {
-		if (this.parent && !this.parent.user.canComment) {
-			return false;
-		}
-		if (!getCanCommentOnModel(this.model)) {
+		if (!canCommentOnModel(this.model, this.parent)) {
 			return false;
 		}
 

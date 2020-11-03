@@ -1,13 +1,15 @@
 import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../utils/vue';
 import AppBackdrop from '../backdrop/backdrop';
 import { Backdrop } from '../backdrop/backdrop.service';
+import { DrawerStore, DrawerStoreKey } from '../drawer/drawer-store';
 import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
 import { Screen } from '../screen/screen-service';
 import AppScrollAffix from '../scroll/affix/affix.vue';
 import AppScrollScrollerTS from '../scroll/scroller/scroller';
 import AppScrollScroller from '../scroll/scroller/scroller.vue';
+import AppStickerLayer from '../sticker/layer/layer.vue';
 import { AppTheme } from '../theme/theme';
 import { BaseModal } from './base';
 import './modal-global.styl';
@@ -18,14 +20,14 @@ import { Modal } from './modal.service';
 		AppTheme,
 		AppScrollScroller,
 		AppScrollAffix,
+		AppStickerLayer,
 	},
 })
 export default class AppModal extends Vue {
-	@Prop(Number)
-	index!: number;
+	@Prop(Number) index!: number;
+	@Prop(Object) theme?: any;
 
-	@Prop(Object)
-	theme?: any;
+	@Inject({ from: DrawerStoreKey, default: null }) drawer!: null | DrawerStore;
 
 	modal: Modal = null as any;
 	isHoveringContent = false;
@@ -102,7 +104,12 @@ export default class AppModal extends Vue {
 	}
 
 	dismissBackdrop() {
-		if (Screen.isMobile || this.modal.noBackdropClose || this.isHoveringContent) {
+		if (
+			Screen.isMobile ||
+			this.modal.noBackdropClose ||
+			this.isHoveringContent ||
+			this.drawer?.isDrawerOpen
+		) {
 			return;
 		}
 		this.dismiss();

@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
 import { ContentFocus } from '../../content-focus/content-focus.service';
 import { AppImgResponsive } from '../../img/responsive/responsive';
@@ -8,6 +8,11 @@ import {
 	AppResponsiveDimensionsChangeEvent,
 } from '../../responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../screen/screen-service';
+import {
+	StickerTargetController,
+	StickerTargetParentControllerKey,
+} from '../../sticker/target/target-controller';
+import AppStickerTarget from '../../sticker/target/target.vue';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 import AppVideo from '../../video/video.vue';
 import AppMediaItemBackdrop from '../backdrop/backdrop.vue';
@@ -19,36 +24,32 @@ import { MediaItem } from '../media-item-model';
 		AppMediaItemBackdrop,
 		AppVideo,
 		AppResponsiveDimensions,
+		AppStickerTarget,
 	},
 	directives: {
 		AppTooltip,
 	},
 })
 export default class AppMediaItemPost extends Vue {
-	@Prop(propRequired(MediaItem))
-	mediaItem!: MediaItem;
+	@Prop(propRequired(MediaItem)) mediaItem!: MediaItem;
+	@Prop(propOptional(Boolean, true)) isPostHydrated!: boolean;
+	@Prop(propOptional(Boolean, false)) isActive!: boolean;
+	@Prop(propOptional(Boolean, false)) restrictDeviceMaxHeight!: boolean;
+	@Prop(propOptional(Boolean, false)) inline!: boolean;
 
-	@Prop(propOptional(Boolean, true))
-	isPostHydrated!: boolean;
-
-	@Prop(propOptional(Boolean, false))
-	isActive!: boolean;
-
-	@Prop(propOptional(Boolean, false))
-	restrictDeviceMaxHeight!: boolean;
-
-	@Prop(propOptional(Boolean, false))
-	inline!: boolean;
+	@Inject(StickerTargetParentControllerKey) parentStickerTarget!: StickerTargetController;
 
 	isFilled = false;
 
+	// We pass the parent sticker target controller in as the parent for this
+	// one. This will link them up so that when the parent is showing, we also
+	// try showing stickers on this target.
+	stickerTargetController = new StickerTargetController(this.mediaItem, this.parentStickerTarget);
+
 	readonly Screen = Screen;
 
-	@Emit('bootstrap')
-	emitBootstrap() {}
-
-	@Emit('fullscreen')
-	emitFullscreen(_mediaItem: MediaItem) {}
+	@Emit('bootstrap') emitBootstrap() {}
+	@Emit('fullscreen') emitFullscreen(_mediaItem: MediaItem) {}
 
 	get shouldShowFullscreenOption() {
 		return (

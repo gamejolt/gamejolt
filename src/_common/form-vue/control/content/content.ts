@@ -30,9 +30,6 @@ export default class AppFormControlContent extends BaseFormControlTS {
 	@Prop(Number)
 	minHeight!: number;
 
-	@Prop(String)
-	startupActivity?: string;
-
 	@Prop(Object) tempResourceContextData?: Object;
 
 	@Prop(propOptional(Boolean, false)) compact!: boolean;

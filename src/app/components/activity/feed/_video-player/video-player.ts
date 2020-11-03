@@ -10,6 +10,8 @@ import {
 	AppResponsiveDimensionsChangeEvent,
 } from '../../../../../_common/responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../../../../_common/screen/screen-service';
+import { ScrollInviewController } from '../../../../../_common/scroll/inview/controller';
+import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
 import { SettingVideoPlayerFeedAutoplay } from '../../../../../_common/settings/settings.service';
 import {
 	toggleVideoMuted,
@@ -19,6 +21,7 @@ import {
 } from '../../../../../_common/video/player/controller';
 import { AppVideoPlayerShakaLazy } from '../../../lazy';
 import { ActivityFeedItem } from '../item-service';
+import { InviewConfigFocused } from '../item/item';
 import { ActivityFeedKey, ActivityFeedView } from '../view';
 
 /**
@@ -26,10 +29,11 @@ import { ActivityFeedKey, ActivityFeedView } from '../view';
  * becomes focused. We delay the load so if they're scrolling through the feed
  * fast we're not loading a ton video players in and slowing down the feed.
  */
-const LoadDelay = 500;
+const LoadDelay = 300;
 
 @Component({
 	components: {
+		AppScrollInview,
 		AppVideoPlayerShakaLazy,
 		AppImgResponsive,
 		AppResponsiveDimensions,
@@ -52,11 +56,9 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	shouldLoadVideo = false;
 	shouldLoadVideoTimer: null | NodeJS.Timer = null;
 
+	readonly InviewConfigFocused = InviewConfigFocused;
+	readonly focusedController = new ScrollInviewController();
 	readonly Screen = Screen;
-
-	get isFocused() {
-		return this.feed.isItemFocused(this.feedItem);
-	}
 
 	get maxPlayerHeight() {
 		if (GJ_IS_SSR) {
@@ -183,9 +185,11 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 		}
 	}
 
-	@Watch('isFocused')
+	@Watch('focusedController.isFocused')
 	onIsFocusedChange() {
-		if (this.isFocused) {
+		const isFocused = this.focusedController.isFocused;
+
+		if (isFocused) {
 			this.setVideoShouldLoadTimer();
 		} else {
 			this.clearVideoShouldLoadTimer();

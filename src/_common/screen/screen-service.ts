@@ -84,6 +84,10 @@ export class Screen {
 					'dpi)'
 		  ).matches;
 
+	static isPointerMouse = GJ_IS_SSR
+		? true
+		: window.matchMedia('not screen and (pointer: coarse)').matches;
+
 	static resizeChanges = new EventTopic<void>();
 
 	/**

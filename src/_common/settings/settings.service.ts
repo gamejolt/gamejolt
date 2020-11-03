@@ -67,7 +67,6 @@ class BooleanSetting extends SettingBase<boolean> {
 
 export const SettingThemeDark = new BooleanSetting('theme-dark', true);
 export const SettingThemeAlwaysOurs = new BooleanSetting('theme-always-ours', false);
-export const SettingAlwaysShowStickers = new BooleanSetting('always-show-stickers', false);
 export const SettingGameInstallDir = new StringSetting('game-install-dir', () => {
 	const path = require('path') as typeof nodePath;
 	const dataPath = nw.App.dataPath;

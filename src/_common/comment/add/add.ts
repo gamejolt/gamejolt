@@ -27,9 +27,6 @@ export default class FormComment extends BaseForm<Comment> implements FormOnInit
 	@Prop(String)
 	placeholder?: string;
 
-	@Prop(String)
-	editorStartupActivity?: string;
-
 	$refs!: {
 		form: AppForm;
 	};

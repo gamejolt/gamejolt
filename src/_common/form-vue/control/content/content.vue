@@ -17,7 +17,6 @@
 			:model-id="modelId"
 			:value="controlVal"
 			:min-height="minHeight"
-			:startup-activity="startupActivity"
 			:temp-resource-context-data="tempResourceContextData"
 			:single-line-mode="singleLineMode"
 			:max-height="maxHeight"

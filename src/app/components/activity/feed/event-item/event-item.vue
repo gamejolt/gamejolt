@@ -113,19 +113,15 @@
 					:post="post"
 				/>
 
-				<app-sticker-target
-					ref="stickerTarget"
-					:stickers="post.stickers"
-					:show-stickers="stickersVisible"
-					:no-animate-in="!animateStickers"
-					@hide-all="onAllStickersHidden"
-				>
+				<div ref="sticker-scroll" />
+
+				<app-sticker-target :controller="stickerTargetController">
 					<!--
-						This shouldn't ever really show a collapser. It's for the jokers that think it would
-						be fun to make a post with a bunch of new lines.
+					This shouldn't ever really show a collapser. It's for the jokers that think it would
+					be fun to make a post with a bunch of new lines.
 					-->
 					<app-fade-collapse
-						:collapse-height="600"
+						:collapse-height="400"
 						:is-open="isLeadOpen"
 						:animate="false"
 						@require-change="canToggleLeadChanged"
@@ -139,7 +135,7 @@
 
 				<a v-if="canToggleLead" class="hidden-text-expander" @click="toggleLead()" />
 
-				<app-event-item-controls-overlay>
+				<app-sticker-controls-overlay>
 					<app-activity-feed-devlog-post-text
 						v-if="post.has_article"
 						:item="item"
@@ -150,16 +146,29 @@
 						<app-poll-voting :poll="post.poll" :game="post.game" :user="post.user" />
 					</div>
 
-					<div v-if="shouldShowCommunities" class="-communities">
-						<app-scroll-scroller class="-communities-list" horizontal>
-							<app-community-pill
-								v-for="postCommunity of communities"
-								:key="postCommunity.id"
-								:community-link="postCommunity"
-							/>
-						</app-scroll-scroller>
+					<app-scroll-scroller
+						v-if="shouldShowCommunities"
+						class="-communities -controls-buffer"
+						horizontal
+					>
+						<app-community-pill
+							v-for="postCommunity of communities"
+							:key="postCommunity.id"
+							:community-link="postCommunity"
+						/>
+					</app-scroll-scroller>
+
+					<div
+						v-if="post.sticker_counts.length"
+						class="-reactions-container -controls-buffer"
+						@click.stop
+					>
+						<app-sticker-reactions
+							:controller="stickerTargetController"
+							@show="scrollToStickers()"
+						/>
 					</div>
-				</app-event-item-controls-overlay>
+				</app-sticker-controls-overlay>
 			</template>
 
 			<app-event-item-controls
@@ -171,7 +180,6 @@
 				:feed="feed"
 				:item="item"
 				:video="video"
-				:show-stickers="stickersVisible"
 				show-comments
 				event-label="feed"
 				@post-edit="onPostEdited(eventItem)"
@@ -183,7 +191,7 @@
 				@post-reject="onPostRejected(eventItem, $event)"
 				@post-pin="onPostPinned(eventItem)"
 				@post-unpin="onPostUnpinned(eventItem)"
-				@post-stickers-visibility-change="onPostStickersVisibilityChange"
+				@sticker="scrollToStickers()"
 			/>
 		</div>
 	</div>

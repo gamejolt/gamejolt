@@ -1,6 +1,7 @@
 import { initRouter } from '../../utils/router';
 import { store } from '../store/index';
 import { routeBadgeFeatured } from './badge/featured/featured.route';
+import { routeBasement } from './basement/basement.route';
 import { routeCommunitiesView } from './communities/view/view.route';
 import { routeDash } from './dashboard/dashboard.route';
 import { routeDiscover } from './discover/discover.route';
@@ -38,6 +39,7 @@ const routes = [
 	routeWeplay,
 	routeWelcome,
 	routeBadgeFeatured,
+	routeBasement,
 ];
 
 export const router = initRouter(routes);
