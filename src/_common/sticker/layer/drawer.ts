@@ -14,6 +14,7 @@ import {
 	setDrawerStoreActiveItem,
 	setDrawerStoreHeight,
 } from '../../drawer/drawer-store';
+import { EscapeStack, EscapeStackCallback } from '../../escape-stack/escape-stack.service';
 import AppLoadingFade from '../../loading/fade/fade.vue';
 import { Screen } from '../../screen/screen-service';
 import AppScrollScroller from '../../scroll/scroller/scroller.vue';
@@ -48,6 +49,7 @@ export default class AppStickerLayerDrawer extends Vue {
 	private isWaitingForFrame = false;
 	private touchedSticker: Sticker | null = null;
 	private resize$: EventSubscription | undefined;
+	private escapeCallback?: EscapeStackCallback;
 
 	private readonly drawerPadding = 8;
 	private readonly stickerSpacing = 8;
@@ -211,12 +213,20 @@ export default class AppStickerLayerDrawer extends Vue {
 	mounted() {
 		this.calculateStickersPerRow();
 		this.resize$ = Screen.resizeChanges.subscribe(() => this.calculateStickersPerRow());
+
+		this.escapeCallback = () => setDrawerOpen(this.drawerStore, false);
+		EscapeStack.register(this.escapeCallback);
 	}
 
-	beforeDestory() {
+	beforeDestroy() {
 		if (this.resize$) {
 			this.resize$.unsubscribe();
 			this.resize$ = undefined;
+		}
+
+		if (this.escapeCallback) {
+			EscapeStack.deregister(this.escapeCallback);
+			this.escapeCallback = undefined;
 		}
 	}
 
