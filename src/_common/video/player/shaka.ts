@@ -66,7 +66,6 @@ export default class AppVideoPlayerShaka extends Vue {
 
 		this.shakaPlayer = new ShakaPlayer(this.$refs.video);
 
-		// console.log('Shaka Configuration', this.shakaPlayer.getConfiguration());
 		this.shakaPlayer.configure({
 			abr: {
 				// The goal is to select the 720p format by default.
@@ -130,6 +129,7 @@ export default class AppVideoPlayerShaka extends Vue {
 		video.addEventListener('play', () => {
 			this.player.state = 'playing';
 			this.videoStartTime = Date.now();
+			this.player.isLoading = false;
 		});
 		video.addEventListener('pause', () => {
 			this.player.state = 'paused';
@@ -214,6 +214,7 @@ export default class AppVideoPlayerShaka extends Vue {
 
 		if (!this.allowDegradedAutoplay) {
 			this.player.state = 'paused';
+			this.player.isLoading = false;
 			return;
 		}
 
@@ -234,6 +235,7 @@ export default class AppVideoPlayerShaka extends Vue {
 		// volume to the initial setting.
 		this.player.state = 'paused';
 		this.player.volume = startVolume;
+		this.player.isLoading = false;
 	}
 
 	@Watch('player.volume')

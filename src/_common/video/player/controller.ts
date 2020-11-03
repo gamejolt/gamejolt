@@ -14,6 +14,7 @@ export class VideoPlayerController {
 
 	isScrubbing = false;
 	stateBeforeScrubbing: null | VideoPlayerController['state'] = null;
+	isLoading = true;
 
 	currentTime = 0;
 	queuedTimeChange: null | number = null;

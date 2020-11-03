@@ -9,24 +9,30 @@
 		@mousemove="onMouseMove"
 		@keydown="onKeypress"
 	>
-		<div
-			class="-video"
-			:class="{
-				'-paused-cursor': player.state === 'paused',
-			}"
-			@click="onVideoClick"
-		>
+		<div class="-video">
 			<app-video-player-shaka-lazy :player="player" :autoplay="autoplay" />
 		</div>
 
-		<transition>
-			<div
-				v-if="player.state === 'paused' && !player.isScrubbing"
-				class="-paused-indicator anim-fade-enter-enlarge anim-fade-leave-shrink"
-			>
-				<app-jolticon class="-paused-indicator-icon" icon="play" />
-			</div>
-		</transition>
+		<div
+			class="-overlay"
+			:class="{
+				'-paused-cursor': player.state === 'paused',
+				'-darken': shouldShowLoading,
+			}"
+			@click="onVideoClick"
+		>
+			<app-loading v-if="shouldShowLoading" no-color hide-label stationary />
+			<template v-else>
+				<transition>
+					<div
+						v-if="player.state === 'paused' && !player.isScrubbing"
+						class="-paused-indicator anim-fade-enter-enlarge anim-fade-leave-shrink"
+					>
+						<app-jolticon class="-paused-indicator-icon" icon="play" />
+					</div>
+				</transition>
+			</template>
+		</div>
 
 		<transition>
 			<div
@@ -88,8 +94,22 @@
 .-video
 	margin: auto
 
-.-ui
+.-overlay
+	position: absolute
+	top: 0
+	left: 0
+	width: 100%
+	height: 100%
+	display: flex
+	justify-content: center
+	align-items: center
 	z-index: 1
+
+	&.-darken
+		background-color: rgba($black, 0.5)
+
+.-ui
+	z-index: 2
 
 .-paused-indicator
 	pointer-events: none

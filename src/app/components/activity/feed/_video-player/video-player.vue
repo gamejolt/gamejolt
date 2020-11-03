@@ -23,6 +23,10 @@
 					allow-degraded-autoplay
 				/>
 
+				<div v-if="shouldShowLoading" class="-overlay">
+					<app-loading no-color hide-label stationary />
+				</div>
+
 				<!--
 				This will show behind the video so that we can switch to it while
 				the video is loading and when it's unfocused/not active.
@@ -136,6 +140,15 @@ $-controls-spacing = 8px
 .-video
 	z-index: 1
 
+.-overlay
+	display: flex
+	justify-content: center
+	align-items: center
+	background-color: rgba($black, 0.5)
+	z-index: 2
+	width: 100%
+	height: 100%
+
 .-backdrop
 	position: absolute
 	top: 0
@@ -191,7 +204,7 @@ $-controls-spacing = 8px
 	left: 0
 	right: 0
 	bottom: 0
-	z-index: 1
+	z-index: 3
 
 	&-gradient
 		background-image: linear-gradient(to bottom, rgba($black, 0), rgba($black, 0.5))

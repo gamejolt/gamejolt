@@ -3,6 +3,7 @@ import { Component, Emit, Inject, Prop, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../../utils/vue';
 import { ContentFocus } from '../../../../../_common/content-focus/content-focus.service';
 import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
+import AppLoading from '../../../../../_common/loading/loading.vue';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/backdrop.vue';
 import { MediaItem } from '../../../../../_common/media-item/media-item-model';
 import {
@@ -38,6 +39,7 @@ const LoadDelay = 300;
 		AppImgResponsive,
 		AppResponsiveDimensions,
 		AppMediaItemBackdrop,
+		AppLoading,
 	},
 })
 export default class AppActivityFeedVideoPlayer extends Vue {
@@ -59,6 +61,13 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	readonly InviewConfigFocused = InviewConfigFocused;
 	readonly focusedController = new ScrollInviewController();
 	readonly Screen = Screen;
+
+	get shouldShowLoading() {
+		if (this.player) {
+			return this.player.isLoading && this.shouldAutoplay;
+		}
+		return true;
+	}
 
 	get maxPlayerHeight() {
 		if (GJ_IS_SSR) {

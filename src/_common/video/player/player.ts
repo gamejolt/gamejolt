@@ -2,7 +2,7 @@ import Vue from 'vue';
 import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
 import { AppVideoPlayerShakaLazy } from '../../../app/components/lazy';
 import { propOptional, propRequired } from '../../../utils/vue';
-import AppShortkey from '../../shortkey/shortkey.vue';
+import AppLoading from '../../loading/loading.vue';
 import {
 	queueVideoTimeChange,
 	setVideoVolume,
@@ -49,7 +49,7 @@ function createReadableTimestamp(time: number) {
 		AppPlayerVolume,
 		AppPlayerScrubber,
 		AppPlayerFullscreen,
-		AppShortkey,
+		AppLoading,
 	},
 })
 export default class AppVideoPlayer extends Vue {
@@ -78,6 +78,13 @@ export default class AppVideoPlayer extends Vue {
 			' / ' +
 			createReadableTimestamp(this.player.duration)
 		);
+	}
+
+	get shouldShowLoading() {
+		if (this.player) {
+			return this.player.isLoading && this.autoplay;
+		}
+		return true;
 	}
 
 	mounted() {
