@@ -26,7 +26,7 @@
 				<app-sticker-target
 					class="-stickers"
 					:controller="stickerTargetController"
-					:disabled="!isActive"
+					:disabled="stickersDisabled"
 				>
 					<app-img-responsive
 						v-if="!isPostHydrated || !mediaItem.is_animated"

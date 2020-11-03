@@ -42,10 +42,6 @@ export default class AppStickerTarget extends Vue {
 	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
 	@Inject(StickerLayerKey) layer!: StickerLayerController;
 
-	get canPlaceStickers() {
-		return this.controller.canPlaceStickers && !this.disabled;
-	}
-
 	$el!: HTMLDivElement;
 	readonly InviewConfig = InviewConfig;
 	private queuedInview = false;
@@ -67,12 +63,12 @@ export default class AppStickerTarget extends Vue {
 		unregisterStickerTarget(this.layer, this, this.controller);
 	}
 
-	@Watch('canPlaceStickers')
+	@Watch('disabled')
 	checkDisabledState() {
-		if (this.canPlaceStickers) {
-			registerStickerTarget(this.layer, this, this.controller);
-		} else {
+		if (this.disabled) {
 			unregisterStickerTarget(this.layer, this, this.controller);
+		} else {
+			registerStickerTarget(this.layer, this, this.controller);
 		}
 	}
 

@@ -16,6 +16,7 @@ import { Model } from '../../../model/model.service';
 import { Popper } from '../../../popper/popper.service';
 import AppPopper from '../../../popper/popper.vue';
 import { ReportModal } from '../../../report/modal/modal.service';
+import { canPlaceStickerOnComment } from '../../../sticker/placement/placement.model';
 import { AppState, AppStore } from '../../../store/app-store';
 import AppTimelineListItem from '../../../timeline-list/item/item.vue';
 import { AppTooltip } from '../../../tooltip/tooltip-directive';
@@ -200,6 +201,10 @@ export default class AppCommentWidgetComment extends Vue {
 		}
 
 		return this.blockReason !== false;
+	}
+
+	get canPlaceStickers() {
+		return canPlaceStickerOnComment(this.model, this.parent || this.comment);
 	}
 
 	startEdit() {

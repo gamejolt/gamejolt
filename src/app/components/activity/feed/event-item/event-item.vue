@@ -111,11 +111,15 @@
 					v-if="post.hasMedia"
 					:item="item"
 					:post="post"
+					:can-place-sticker="canPlaceSticker"
 				/>
 
 				<div ref="sticker-scroll" />
 
-				<app-sticker-target :controller="stickerTargetController">
+				<app-sticker-target
+					:controller="stickerTargetController"
+					:disabled="!canPlaceSticker"
+				>
 					<!--
 					This shouldn't ever really show a collapser. It's for the jokers that think it would
 					be fun to make a post with a bunch of new lines.

@@ -26,19 +26,6 @@ export class StickerTargetController {
 
 	private _shouldShow = false;
 
-	get canPlaceStickers(): boolean {
-		if (this.model instanceof FiresidePost || this.model instanceof Comment) {
-			return !this.model.user.blocked_you && !this.model.user.is_blocked;
-		}
-		// MediaItem types don't have any user information,
-		// so we want to instead check the parent for any information about user-blocks.
-		if (this.parent) {
-			return Boolean(this.parent.canPlaceStickers);
-		}
-
-		return false;
-	}
-
 	get shouldShow() {
 		return Boolean(this._shouldShow || this.parent?.shouldShow || this.layer?.isShowingDrawer);
 	}

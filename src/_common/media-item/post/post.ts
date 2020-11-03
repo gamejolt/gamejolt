@@ -36,6 +36,7 @@ export default class AppMediaItemPost extends Vue {
 	@Prop(propOptional(Boolean, false)) isActive!: boolean;
 	@Prop(propOptional(Boolean, false)) restrictDeviceMaxHeight!: boolean;
 	@Prop(propOptional(Boolean, false)) inline!: boolean;
+	@Prop(propOptional(Boolean, false)) canPlaceSticker!: boolean;
 
 	@InjectReactive(StickerTargetParentControllerKey) parentStickerTarget!: StickerTargetController;
 
@@ -94,6 +95,10 @@ export default class AppMediaItemPost extends Vue {
 			return window.screen.height * 0.45;
 		}
 		return Screen.height * 0.45;
+	}
+
+	get stickersDisabled() {
+		return !this.isActive || !this.canPlaceSticker;
 	}
 
 	async onDimensionsChange(e: AppResponsiveDimensionsChangeEvent) {

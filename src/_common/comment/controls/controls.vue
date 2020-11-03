@@ -36,7 +36,7 @@
 			/>
 
 			<app-button
-				v-if="canComment"
+				v-if="canPlaceStickers"
 				v-app-tooltip="$gettext('Place Sticker')"
 				v-app-track-event="`comment-widget:place-sticker`"
 				v-app-auth-required

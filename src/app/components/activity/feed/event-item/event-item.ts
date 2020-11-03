@@ -23,6 +23,7 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
 import AppStickerControlsOverlay from '../../../../../_common/sticker/controls-overlay/controls-overlay.vue';
+import { canPlaceStickerOnFiresidePost } from '../../../../../_common/sticker/placement/placement.model';
 import AppStickerReactions from '../../../../../_common/sticker/reactions/reactions.vue';
 import {
 	StickerTargetController,
@@ -250,6 +251,13 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	get shouldBlock() {
 		return !this.hasBypassedBlock && this.isBlocked;
+	}
+
+	get canPlaceSticker() {
+		if (!this.post) {
+			return false;
+		}
+		return canPlaceStickerOnFiresidePost(this.post);
 	}
 
 	mounted() {
