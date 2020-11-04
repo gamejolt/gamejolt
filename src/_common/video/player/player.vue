@@ -66,6 +66,7 @@
 						class="-bottom -ui anim-fade-enter anim-fade-leave-down"
 						@mouseenter="isHoveringControls = true"
 						@mouseleave="isHoveringControls = false"
+						@click.stop
 					>
 						<div class="-bottom-gradient">
 							<div class="-bottom-controls">
