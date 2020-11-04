@@ -79,7 +79,9 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	}
 
 	get shouldShowMuteControl() {
-		return Screen.isMobile || this.isHovered || this.player?.volume === 0;
+		return (
+			Screen.isMobile || this.isHovered || this.player?.volume === 0 || this.player?.isMuted
+		);
 	}
 
 	get remainingTime() {
