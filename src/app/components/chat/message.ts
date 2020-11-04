@@ -1,9 +1,8 @@
 import { ChatUser } from './user';
 
 export enum ChatMessageType {
-	MESSAGE = 'message',
-	INVITE = 'invite',
-	SYSTEM = 'system',
+	MESSAGE = 1,
+	INVITE,
 }
 
 export const CHAT_MESSAGE_MAX_CONTENT_LENGTH = 1000;

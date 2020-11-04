@@ -5,7 +5,6 @@
 		class="chat-window-message"
 		:class="{
 			'chat-msg-type-normal': message.type === ChatMessageType.MESSAGE,
-			'chat-msg-type-system': message.type === ChatMessageType.SYSTEM,
 			'chat-msg-type-invite': message.type === ChatMessageType.INVITE,
 			'chat-window-message-not-combined': !message.combine,
 			'chat-window-message-combined': message.combine,
