@@ -42,9 +42,9 @@
 			</div>
 		</app-responsive-dimensions>
 
-		<div v-if="player" class="-bottom">
+		<div v-if="player" class="-bottom" @click.stop>
 			<div class="-bottom-gradient">
-				<div class="-bottom-controls" @click.stop>
+				<div class="-bottom-controls">
 					<transition name="fade">
 						<div
 							v-if="shouldShowPlaybackControl"
