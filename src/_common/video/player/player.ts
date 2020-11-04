@@ -71,10 +71,11 @@ function createReadableTimestamp(time: number) {
 export default class AppVideoPlayer extends Vue {
 	@Prop(propRequired(MediaItem)) mediaItem!: MediaItem;
 	@Prop(propRequired(Array)) manifests!: string[];
-	@Prop(propRequired(Number)) viewCount!: number;
 	@Prop(propOptional(Boolean, false)) autoplay!: boolean;
 	@Prop(propOptional(Number, 0)) startTime!: number;
 	@Prop(propOptional(String, null)) context!: VideoPlayerControllerContext;
+	@Prop(propOptional(Number, 0)) viewCount!: number;
+	@Prop(propOptional(Boolean, false)) showVideoStats!: boolean;
 
 	player = new VideoPlayerController(undefined, this.manifests, this.context);
 	isHoveringControls = false;

@@ -14,6 +14,7 @@
 							:view-count="video.view_count"
 							:start-time="videoStartTime"
 							autoplay
+							show-video-stats
 							@play="onVideoPlay"
 						/>
 						<template v-else>

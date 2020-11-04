@@ -114,13 +114,11 @@
 				/>
 			</template>
 			<template v-else-if="videoStatus === 'complete'">
-				<app-responsive-dimensions :ratio="16 / 9">
-					<app-video-player
-						class="-video-player"
-						:poster="videoPoster"
-						:manifests="videoManifestUrls"
-					/>
-				</app-responsive-dimensions>
+				<app-video-player
+					class="-video-player"
+					:media-item="videoMediaItem"
+					:manifests="videoManifestUrls"
+				/>
 			</template>
 		</template>
 		<template v-else-if="videoProvider === FiresidePostVideo.PROVIDER_YOUTUBE">

@@ -11,6 +11,7 @@
 	>
 		<app-responsive-dimensions
 			class="-video-container"
+			:class="{ '-with-stats': showVideoStats }"
 			:style="{ minWidth: blackBarsBreakpoint || 'unset' }"
 			:ratio="mediaItem.width / mediaItem.height"
 			:max-width="mediaItem.width"
@@ -97,7 +98,7 @@
 				</transition>
 			</div>
 
-			<div class="-video-stats">
+			<div v-if="showVideoStats" class="-video-stats">
 				<span v-app-tooltip.touchable="$gettext(`Plays`)">
 					<app-jolticon icon="play" />
 					<span class="-video-stats-label">
@@ -126,7 +127,9 @@
 
 .-video-container
 	position: relative
-	margin-bottom: 24px
+
+	&.-with-stats
+		margin-bottom: 24px
 
 	&:hover
 		.-time-inner
@@ -218,9 +221,14 @@
 	position: absolute
 	top: calc(100% + 4px)
 	right: 0
+	font-weight: bold
+
+	> span
+		display: inline-flex
+		align-items: center
 
 	@media $media-xs
-		right: 16px
+		margin-right: ($grid-gutter-width-xs / 2)
 
 	&-label
 		margin-left: 4px
