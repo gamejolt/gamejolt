@@ -11,7 +11,7 @@
 	>
 		<app-responsive-dimensions
 			class="-video-container"
-			:style="{ minWidth: shouldUseBlackBars ? `${blackBarsBreakpoint}px` : 'unset' }"
+			:style="{ minWidth: blackBarsBreakpoint || 'unset' }"
 			:ratio="mediaItem.width / mediaItem.height"
 			:max-width="mediaItem.width"
 			:max-height="deviceMaxHeight"
@@ -21,7 +21,7 @@
 				class="-content-container"
 				:class="{
 					'-paused-cursor': player.state === 'paused',
-					'-filled': Screen.isXs && isFilled,
+					'-filled': Screen.isXs,
 				}"
 				@click="onVideoClick"
 			>

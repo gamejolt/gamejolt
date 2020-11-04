@@ -83,7 +83,6 @@ export default class AppVideoPlayer extends Vue {
 
 	private responsiveHeight = -1;
 	private responsiveWidth = -1;
-	isFilled = false;
 
 	readonly number = number;
 	readonly Screen = Screen;
@@ -101,16 +100,13 @@ export default class AppVideoPlayer extends Vue {
 	}
 
 	get blackBarsBreakpoint() {
-		if (Screen.isMobile) {
-			return 260;
+		if (Screen.isXs) {
+			return '100%';
+		} else if (Screen.isSm) {
+			return '260px';
 		}
 
-		return 400;
-	}
-
-	get shouldUseBlackBars() {
-		// Don't add black bars if they're only going to be under 10px wide on each side.
-		return this.blackBarsBreakpoint - this.responsiveWidth >= 20;
+		return '400px';
 	}
 
 	get shouldShowUI() {
@@ -151,7 +147,6 @@ export default class AppVideoPlayer extends Vue {
 	onChangeDimensions(event: AppResponsiveDimensionsChangeEvent) {
 		this.responsiveHeight = event.height;
 		this.responsiveWidth = event.containerWidth;
-		this.isFilled = event.isFilled;
 	}
 
 	onMouseOut() {
