@@ -253,14 +253,19 @@ export default class AppVideoPlayerShaka extends Vue {
 		}
 	}
 
-	@Watch('player.state')
+	@Watch('player.queuedPlaybackChange')
 	syncPlayState() {
+		if (this.player.queuedPlaybackChange === null) {
+			return;
+		}
+
 		const { video } = this.$refs;
-		if (this.player.state === 'paused' && !video.paused) {
+		if (this.player.queuedPlaybackChange === 'paused' && !video.paused) {
 			video.pause();
-		} else if (this.player.state === 'playing' && video.paused) {
+		} else if (this.player.queuedPlaybackChange === 'playing' && video.paused) {
 			this.tryPlayingVideo();
 		}
+		this.player.queuedPlaybackChange = null;
 	}
 
 	@Watch('player.queuedTimeChange')

@@ -8,6 +8,7 @@ import {
 } from '../../settings/settings.service';
 
 export type VideoPlayerControllerContext = 'feed' | 'page' | null;
+export type VideoPlayerState = 'paused' | 'playing';
 export type ScrubberStage = 'start' | 'scrub' | 'end';
 
 export class VideoPlayerController {
@@ -15,7 +16,7 @@ export class VideoPlayerController {
 	mutedFallbackVolume: number;
 	isMuted: boolean;
 	duration = 0;
-	state: 'paused' | 'playing' = 'paused';
+	state: VideoPlayerState = 'paused';
 
 	isScrubbing = false;
 	stateBeforeScrubbing: null | VideoPlayerController['state'] = null;
@@ -27,6 +28,7 @@ export class VideoPlayerController {
 
 	isFullscreen = false;
 	queuedFullScreenChange: null | boolean = null;
+	queuedPlaybackChange: null | VideoPlayerState = null;
 
 	constructor(
 		public poster: undefined | string,
@@ -52,14 +54,29 @@ export class VideoPlayerController {
 	}
 }
 
-export function toggleVideoPlayback(player: VideoPlayerController) {
+export function toggleVideoPlayback(
+	player: VideoPlayerController,
+	forcedState: VideoPlayerState | null = null
+) {
+	if (player.queuedPlaybackChange) {
+		return;
+	}
+
+	if (forcedState !== null) {
+		return queuePlayerPlayback(player, forcedState);
+	}
+
 	if (player.state === 'playing') {
-		player.state = 'paused';
+		queuePlayerPlayback(player, 'paused');
 	} else if (player.state === 'paused') {
-		player.state = 'playing';
+		queuePlayerPlayback(player, 'playing');
 	} else {
 		assertNever(player.state);
 	}
+}
+
+function queuePlayerPlayback(player: VideoPlayerController, state: VideoPlayerState) {
+	player.queuedPlaybackChange = state;
 }
 
 /** Volume is set on a scale of 0 to 1 */
@@ -124,9 +141,9 @@ export function scrubVideo(player: VideoPlayerController, position: number, stag
 	// Pause the video while scrubbing.
 	if (stage === 'start') {
 		player.stateBeforeScrubbing = player.state;
-		player.state = 'paused';
+		queuePlayerPlayback(player, 'paused');
 	} else if (stage === 'end' && player.stateBeforeScrubbing) {
-		player.state = player.stateBeforeScrubbing;
+		queuePlayerPlayback(player, player.stateBeforeScrubbing);
 		player.stateBeforeScrubbing = null;
 	}
 
