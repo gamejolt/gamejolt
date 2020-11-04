@@ -131,8 +131,8 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 			SettingVideoPlayerFeedAutoplay.set(true);
 		}
 
-		// This function needs to come after out Settings changes,
-		// as it gets handled asynchronously through the Shaka player component
+		// This function needs to come after the changes to Settings,
+		// as it gets handled asynchronously through the Shaka player component.
 		toggleVideoPlayback(this.player);
 		trackVideoPlayerEvent(
 			this.player,
