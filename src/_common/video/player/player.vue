@@ -4,6 +4,7 @@
 	<div
 		class="-player"
 		tabindex="-1"
+		:class="{ '-fullscreen': player.isFullscreen }"
 		@fullscreenchange="onFullscreenChange"
 		@mouseleave="onMouseOut"
 		@mousemove="onMouseMove"
@@ -14,7 +15,7 @@
 			:class="{ '-with-stats': showVideoStats }"
 			:style="{ minWidth: blackBarsBreakpoint || 'unset' }"
 			:ratio="mediaItem.width / mediaItem.height"
-			:max-width="mediaItem.width"
+			:max-width="playerMaxWidth"
 			:max-height="deviceMaxHeight"
 			@change="onChangeDimensions"
 		>
@@ -22,7 +23,6 @@
 				class="-content-container"
 				:class="{
 					'-paused-cursor': player.state === 'paused',
-					'-filled': Screen.isXs,
 				}"
 				@click="onVideoClick"
 			>
@@ -114,6 +114,11 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 
+.-fullscreen
+	.-video-container
+		width: 100vw !important
+		height: 100vh !important
+
 .-player
 	position: relative
 	height: 100%
@@ -136,16 +141,16 @@
 			background-color: rgba($black, 1)
 
 .-content-container
-	rounded-corners-lg()
 	height: 100%
 	background-color: $black
 	display: flex
 	justify-content: center
+	align-items: center
 	position: relative
 	overflow: hidden
 
-.-filled
-	border-radius: 0 !important
+	@media $media-sm-up
+		rounded-corners-lg()
 
 .-paused-cursor
 	cursor: pointer
@@ -158,7 +163,6 @@
 
 .-backdrop
 	position: absolute
-	top: 0
 	z-index: 0
 
 .-img
