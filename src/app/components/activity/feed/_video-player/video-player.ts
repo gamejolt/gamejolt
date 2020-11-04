@@ -73,10 +73,6 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 			return;
 		}
 
-		if (this.player?.isFullscreen) {
-			return;
-		}
-
 		if (Screen.isMobile) {
 			window.screen.height * 0.45;
 		}

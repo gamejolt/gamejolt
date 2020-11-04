@@ -139,7 +139,7 @@ export default class AppVideoPlayer extends Vue {
 		}
 
 		if (this.player.isFullscreen) {
-			return;
+			return Screen.height;
 		}
 
 		if (Screen.isMobile) {
