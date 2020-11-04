@@ -3,12 +3,7 @@ import { Component, Prop, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../utils/vue';
 import { Ruler } from '../../../ruler/ruler-service';
 import { AppTooltip } from '../../../tooltip/tooltip-directive';
-import {
-	ScrubberStage,
-	scrubVideoVolume,
-	toggleVideoMuted,
-	VideoPlayerController,
-} from '../controller';
+import { ScrubberStage, scrubVideoVolume, VideoPlayerController } from '../controller';
 
 @Component({
 	directives: {
@@ -23,7 +18,7 @@ export default class AppVideoPlayerSlider extends Vue {
 
 	thumbSize = 12;
 	sliderSize = 128;
-	calculatedThumbOffset = 0;
+	thumbOffset = 0;
 	private sliderOffset = 0;
 	private percentFull = 0;
 
@@ -31,14 +26,6 @@ export default class AppVideoPlayerSlider extends Vue {
 		slider: HTMLElement;
 		thumb: HTMLDivElement;
 	};
-
-	get thumbOffset() {
-		if (this.player.isMuted) {
-			return -(this.thumbSize / 2);
-		}
-
-		return this.calculatedThumbOffset;
-	}
 
 	get sliderFilledStyling() {
 		if (this.vertical) {
@@ -75,7 +62,7 @@ export default class AppVideoPlayerSlider extends Vue {
 	}
 
 	get readableSliderPercentage() {
-		return `${this.player.isMuted ? 0 : this.percentFull}%`;
+		return `${this.percentFull}%`;
 	}
 
 	mounted() {
@@ -90,9 +77,6 @@ export default class AppVideoPlayerSlider extends Vue {
 	}
 
 	async onMouseDown(event: MouseEvent) {
-		if (this.player.isMuted) {
-			toggleVideoMuted(this.player);
-		}
 		await this.$nextTick();
 		this.isDragging = true;
 		this.initVariables();
@@ -137,9 +121,6 @@ export default class AppVideoPlayerSlider extends Vue {
 	}
 
 	private _setThumbOffset(stage: ScrubberStage, event?: MouseEvent) {
-		if (this.player.isMuted) {
-			this.calculatedThumbOffset = 0;
-		}
 		let mouseOffset = 0;
 
 		if (event) {
@@ -151,16 +132,14 @@ export default class AppVideoPlayerSlider extends Vue {
 		const sliderOffsetStart = -(this.thumbSize / 2);
 		const sliderOffsetEnd = sliderOffsetStart + this.sliderSize;
 
-		this.calculatedThumbOffset = Math.max(
+		this.thumbOffset = Math.max(
 			sliderOffsetStart,
 			Math.min(sliderOffsetEnd, mouseOffset - this.sliderOffset + sliderOffsetStart)
 		);
 
 		const scale = 100;
 		this.percentFull = Math.round(
-			((this.sliderSize - this.calculatedThumbOffset - this.thumbSize / 2) /
-				this.sliderSize) *
-				scale
+			((this.sliderSize - this.thumbOffset - this.thumbSize / 2) / this.sliderSize) * scale
 		);
 
 		// invert the value for horizontal sliders

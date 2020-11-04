@@ -90,11 +90,7 @@
 										@click="onClickMute"
 									>
 										<app-jolticon
-											:icon="
-												player.volume > 0 && !player.isMuted
-													? 'audio'
-													: 'audio-mute'
-											"
+											:icon="player.volume > 0 ? 'audio' : 'audio-mute'"
 										/>
 									</div>
 								</template>

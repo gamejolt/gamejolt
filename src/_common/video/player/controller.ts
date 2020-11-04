@@ -12,8 +12,6 @@ export type ScrubberStage = 'start' | 'scrub' | 'end';
 
 export class VideoPlayerController {
 	volume: number;
-	mutedFallbackVolume: number;
-	isMuted: boolean;
 	duration = 0;
 	state: 'paused' | 'playing' = 'paused';
 
@@ -36,19 +34,17 @@ export class VideoPlayerController {
 		// Assign volume level from the proper local storage context.
 		switch (context) {
 			case 'feed':
-				this.volume = SettingVideoPlayerFeedVolume.get();
-				this.isMuted = SettingVideoPlayerFeedMuted.get();
+				this.volume = SettingVideoPlayerFeedMuted.get()
+					? 0
+					: SettingVideoPlayerFeedVolume.get();
 				break;
 			case 'page':
-				this.volume = SettingVideoPlayerVolume.get();
-				this.isMuted = SettingVideoPlayerMuted.get();
+				this.volume = SettingVideoPlayerMuted.get() ? 0 : SettingVideoPlayerVolume.get();
 				break;
 			default:
 				this.volume = 1;
-				this.isMuted = false;
 				break;
 		}
-		this.mutedFallbackVolume = this.volume;
 	}
 }
 
@@ -62,16 +58,30 @@ export function toggleVideoPlayback(player: VideoPlayerController) {
 	}
 }
 
-/** Volume is set on a scale of 0 to 1 */
-export function setVideoVolume(player: VideoPlayerController, level: number) {
-	const volume = Math.min(1, Math.max(0, Math.round(level * 100) / 100));
-	player.volume = volume;
-
+/** Assigns the volume Setting to the appropriate context. */
+function assignVolumeSetting(player: VideoPlayerController, volume: number) {
 	if (player.context === 'feed') {
 		SettingVideoPlayerFeedVolume.set(volume);
 	} else if (player.context === 'page') {
 		SettingVideoPlayerVolume.set(volume);
 	}
+}
+
+/** Gets the volume Setting from the appropriate context. */
+function getVolumeSetting(player: VideoPlayerController) {
+	if (player.context === 'feed') {
+		return SettingVideoPlayerFeedVolume.get();
+	} else if (player.context === 'page') {
+		return SettingVideoPlayerVolume.get();
+	}
+
+	return 1;
+}
+
+/** Volume is set on a scale of 0 to 1 */
+export function setVideoVolume(player: VideoPlayerController, level: number) {
+	const volume = Math.min(1, Math.max(0, Math.round(level * 100) / 100));
+	player.volume = volume;
 }
 
 /** Volume is set on a scale of 0 to 1 */
@@ -81,36 +91,28 @@ export function scrubVideoVolume(
 	stage: ScrubberStage
 ) {
 	const volume = Math.min(1, Math.max(0, volumeLevel));
-	if (volume && stage === 'end') {
-		player.mutedFallbackVolume = volume;
-	}
-
 	setVideoVolume(player, volume);
 
-	if (volume && player.isMuted && stage !== 'end') {
-		toggleVideoMuted(player);
-	}
-
-	if (!volume && !player.isMuted) {
-		toggleVideoMuted(player);
+	if (stage === 'end') {
+		if (volume) {
+			// If we have an audible volume level at the end of scrubbing,
+			// assign it to the appropriate volume Setting depending on the player context.
+			assignVolumeSetting(player, volume);
+			setVideoMuted(player, false);
+		} else {
+			// Mute the player if scrub-end has no audible volume.
+			setVideoMuted(player, true);
+		}
 	}
 }
 
-export function toggleVideoMuted(player: VideoPlayerController) {
-	player.isMuted = !player.isMuted;
-	if (!player.isMuted) {
-		if (player.mutedFallbackVolume) {
-			setVideoVolume(player, player.mutedFallbackVolume);
-		} else if (player.context === 'feed') {
-			// Feed videos don't have a volume slider, so if the video element volume was somehow changed we want to set it back to 100%.
-			setVideoVolume(player, 1);
-		}
-	}
+export function setVideoMuted(player: VideoPlayerController, mute: boolean) {
+	setVideoVolume(player, mute ? 0 : getVolumeSetting(player));
 
 	if (player.context === 'feed') {
-		SettingVideoPlayerFeedMuted.set(player.isMuted);
+		SettingVideoPlayerFeedMuted.set(mute);
 	} else if (player.context === 'page') {
-		SettingVideoPlayerMuted.set(player.isMuted);
+		SettingVideoPlayerMuted.set(mute);
 	}
 }
 
