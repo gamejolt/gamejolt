@@ -93,11 +93,11 @@ export default class AppVideoPlayer extends Vue {
 	@Emit('play') emitPlay() {}
 
 	get height() {
-		return `${this.responsiveHeight}px`;
+		return GJ_IS_SSR ? null : `${this.responsiveHeight}px`;
 	}
 
 	get width() {
-		return `${this.responsiveWidth}px`;
+		return GJ_IS_SSR ? null : `${this.responsiveWidth}px`;
 	}
 
 	get blackBarsBreakpoint() {
@@ -110,7 +110,14 @@ export default class AppVideoPlayer extends Vue {
 		return '400px';
 	}
 
+	get shouldShowPausedIndicator() {
+		return !GJ_IS_SSR && this.player.state === 'paused' && !this.player.isScrubbing;
+	}
+
 	get shouldShowUI() {
+		if (GJ_IS_SSR) {
+			return false;
+		}
 		return this.isHoveringControls || this.isHovered || this.player.state === 'paused';
 	}
 
@@ -132,7 +139,7 @@ export default class AppVideoPlayer extends Vue {
 		}
 
 		if (this.player.isFullscreen) {
-			return Screen.height;
+			return;
 		}
 
 		if (Screen.isMobile) {

@@ -27,7 +27,7 @@
 				@click="onVideoClick"
 			>
 				<app-video-player-shaka-lazy
-					v-if="player"
+					v-if="player && !GJ_IS_SSR"
 					class="-video"
 					:style="{ width }"
 					:player="player"
@@ -40,7 +40,7 @@
 				-->
 				<app-media-item-backdrop
 					class="-backdrop"
-					:style="{ height, width }"
+					:style="{ height, width, position: GJ_IS_SSR ? 'relative' : null }"
 					:media-item="mediaItem"
 				>
 					<app-img-responsive
@@ -53,7 +53,7 @@
 
 				<transition>
 					<div
-						v-if="player.state === 'paused' && !player.isScrubbing"
+						v-if="shouldShowPausedIndicator"
 						class="-paused-indicator -ui anim-fade-enter-enlarge anim-fade-leave-shrink"
 					>
 						<app-jolticon class="-paused-indicator-icon" icon="play" />

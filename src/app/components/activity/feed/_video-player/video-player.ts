@@ -50,8 +50,9 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	autoplay = SettingVideoPlayerFeedAutoplay.get();
 	player: VideoPlayerController | null = null;
 	isHovered = false;
-	height = '';
-	width = '';
+
+	private responsiveHeight = -1;
+	private responsiveWidth = -1;
 
 	shouldLoadVideo = false;
 	shouldLoadVideoTimer: null | NodeJS.Timer = null;
@@ -60,8 +61,20 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	readonly focusedController = new ScrollInviewController();
 	readonly Screen = Screen;
 
+	get height() {
+		return GJ_IS_SSR ? null : `${this.responsiveHeight}px`;
+	}
+
+	get width() {
+		return GJ_IS_SSR ? null : `${this.responsiveWidth}px`;
+	}
+
 	get maxPlayerHeight() {
 		if (GJ_IS_SSR) {
+			return;
+		}
+
+		if (this.player?.isFullscreen) {
 			return;
 		}
 
@@ -108,8 +121,8 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	@Emit('time') emitTime(_timestamp: number) {}
 
 	onChangeDimensions(event: AppResponsiveDimensionsChangeEvent) {
-		this.height = event.height + 'px';
-		this.width = event.containerWidth + 'px';
+		this.responsiveHeight = event.height;
+		this.responsiveWidth = event.containerWidth;
 	}
 
 	onMouseOut() {
