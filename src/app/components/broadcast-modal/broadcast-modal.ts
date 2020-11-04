@@ -7,7 +7,7 @@ import { AppImgResponsive } from '../../../_common/img/responsive/responsive';
 import { BaseModal } from '../../../_common/modal/base';
 import AppModalTS from '../../../_common/modal/modal';
 import { AppResponsiveDimensions } from '../../../_common/responsive-dimensions/responsive-dimensions';
-import AppStickerTargetTS from '../../../_common/sticker/target/target';
+import { StickerTargetController } from '../../../_common/sticker/target/target-controller';
 import AppStickerTarget from '../../../_common/sticker/target/target.vue';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import AppVideoEmbed from '../../../_common/video/embed/embed.vue';
@@ -33,29 +33,12 @@ import AppPollVoting from '../poll/voting/voting.vue';
 export default class AppBroadcastModal extends BaseModal {
 	@Prop(propRequired(Array)) posts!: FiresidePost[];
 
-	// Will get assigned in created() immediately.
-	post: FiresidePost = null as any;
-	stickersVisible = false;
+	post: FiresidePost = this.posts[0];
+	stickerTargetController = new StickerTargetController(this.post);
 
 	readonly Environment = Environment;
 
 	$refs!: {
 		modal: AppModalTS;
-		stickerTarget: AppStickerTargetTS;
 	};
-
-	created() {
-		this.post = this.posts[0];
-	}
-
-	onPostStickersVisibilityChange(visible: boolean) {
-		this.stickersVisible = visible;
-		if (visible) {
-			this.$refs.modal.scrollTo(0);
-		}
-	}
-
-	onAllStickersHidden() {
-		this.stickersVisible = false;
-	}
 }

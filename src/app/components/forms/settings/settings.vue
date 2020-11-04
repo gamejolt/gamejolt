@@ -1,11 +1,16 @@
+<script lang="ts" src="./settings"></script>
+
 <template>
-	<app-form name="settingsForm" ref="form" @changed="onChange">
-		<fieldset id="settings-client" v-if="GJ_IS_CLIENT">
+	<app-form ref="form" name="settingsForm" @changed="onChange">
+		<fieldset v-if="GJ_IS_CLIENT" id="settings-client">
 			<legend>
 				<translate>settings.client</translate>
 			</legend>
 
-			<app-form-group name="game_install_dir" :label="$gettext('settings.game_install_dir_label')">
+			<app-form-group
+				name="game_install_dir"
+				:label="$gettext('settings.game_install_dir_label')"
+			>
 				<div class="pull-right">
 					<app-button sm @click="changeLocation('game-install-dir')">
 						<translate>settings.change_location_button</translate>
@@ -21,11 +26,11 @@
 				</p>
 
 				<input
+					ref="game-install-dir"
 					class="hidden"
 					type="file"
 					nwdirectory
 					@change="onSelectedInstallDir($event.target.value)"
-					ref="game-install-dir"
 				/>
 
 				<app-form-control-errors />
@@ -126,16 +131,6 @@
 					</translate>
 				</p>
 			</app-form-group>
-
-			<app-form-group name="always_show_stickers" :label="$gettext('Always show stickers?')">
-				<app-form-control-toggle class="pull-right" />
-				<p class="help-block">
-					<translate>
-						Shows stickers on posts by default. You can still hide them individually or by clicking
-						on the sticker bar below the post.
-					</translate>
-				</p>
-			</app-form-group>
 		</fieldset>
 
 		<fieldset id="settings-restrictions">
@@ -147,8 +142,8 @@
 				<app-form-control-toggle class="pull-right" />
 				<p class="help-block">
 					<translate>
-						This will block games that have a maturity rating of "Mature" and ask if you'd like to
-						continue before showing the full page.
+						This will block games that have a maturity rating of "Mature" and ask if
+						you'd like to continue before showing the full page.
 					</translate>
 				</p>
 			</app-form-group>
@@ -160,15 +155,19 @@
 			</legend>
 
 			<app-form-group name="feed_notifications" :label="$gettext('Feed notifications?')">
-				<app-form-control-toggle class="pull-right" :disabled="browserNotificationsDisabled" />
+				<app-form-control-toggle
+					class="pull-right"
+					:disabled="browserNotificationsDisabled"
+				/>
 				<p class="help-block">
 					<translate>
-						We attempt to send you notifications as they happen. You can disable them here anytime.
+						We attempt to send you notifications as they happen. You can disable them
+						here anytime.
 					</translate>
 				</p>
-				<div class="alert" v-if="browserNotificationsDisabled">
-					You've disabled this in your browser. If you'd like to get notifications, you'll have to
-					give us permission within your browser first.
+				<div v-if="browserNotificationsDisabled" class="alert">
+					You've disabled this in your browser. If you'd like to get notifications, you'll
+					have to give us permission within your browser first.
 				</div>
 			</app-form-group>
 
@@ -176,13 +175,11 @@
 				<app-form-control-toggle class="pull-right" />
 				<p class="help-block">
 					<translate>
-						With this on you will receive notifications of new site features that have been added
-						since you last visited.
+						With this on you will receive notifications of new site features that have
+						been added since you last visited.
 					</translate>
 				</p>
 			</app-form-group>
 		</fieldset>
 	</app-form>
 </template>
-
-<script lang="ts" src="./settings"></script>

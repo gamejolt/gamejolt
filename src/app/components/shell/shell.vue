@@ -12,12 +12,14 @@
 			'has-banner': hasBanner && !isShellHidden,
 		}"
 	>
-		<template v-if="isShellHidden">
-			<slot />
-		</template>
-		<app-shell-body v-else>
-			<slot />
-		</app-shell-body>
+		<app-sticker-layer>
+			<template v-if="isShellHidden">
+				<slot />
+			</template>
+			<app-shell-body v-else>
+				<slot />
+			</app-shell-body>
+		</app-sticker-layer>
 
 		<app-shell-top-nav v-if="hasTopBar" />
 		<app-shell-cbar />

@@ -80,7 +80,17 @@
 							</div>
 						</div>
 
-						<div v-if="post.hasMedia" class="-media-items">
+						<!--
+						Indicates where sticker placements may begin for scrolling when they show
+						stickers.
+						-->
+						<div ref="sticker-scroll" />
+
+						<!--
+						Key the media-item container here so that we don't reuse components going from one post page to another,
+						allowing the components to properly fetch the stickers that are assigned to them.
+						-->
+						<div v-if="post.hasMedia" :key="`media-${post.id}`" class="-media-items">
 							<div v-for="item of post.media" :key="item.id">
 								<app-media-item-post
 									class="-media-item"
@@ -117,11 +127,12 @@
 							</span>
 						</div>
 
+						<!--
+						Key the sticker target so it doesn't get reused if going from one post page to another one.
+						-->
 						<app-sticker-target
-							ref="stickerTarget"
-							:stickers="post.stickers"
-							:show-stickers="stickersVisible"
-							@hide-all="onAllStickersHidden"
+							:key="`lead-${post.id}`"
+							:controller="stickerTargetController"
 						>
 							<app-content-viewer :source="post.lead_content" />
 						</app-sticker-target>
@@ -140,13 +151,21 @@
 						</div>
 					</div>
 
-					<app-event-item-controls-overlay v-if="post.hasPoll">
+					<app-sticker-controls-overlay v-if="post.hasPoll">
 						<app-poll-voting :poll="post.poll" :game="post.game" :user="post.user" />
 
 						<br />
-					</app-event-item-controls-overlay>
+					</app-sticker-controls-overlay>
 
-					<app-event-item-controls-overlay v-if="communities.length">
+					<app-sticker-controls-overlay
+						v-if="communities.length || post.sticker_counts.length"
+					>
+						<app-sticker-reactions
+							v-if="post.sticker_counts.length"
+							:controller="stickerTargetController"
+							@show="scrollToStickers()"
+						/>
+
 						<app-scroll-scroller class="-communities" horizontal thin>
 							<app-community-pill
 								v-for="postCommunity of communities"
@@ -169,17 +188,16 @@
 							</div>
 						</template>
 
-						<br />
-					</app-event-item-controls-overlay>
+						<div class="-controls-spacing" />
+					</app-sticker-controls-overlay>
 
 					<app-event-item-controls
 						:post="post"
 						should-show-follow
-						:show-stickers="stickersVisible"
 						event-label="page"
 						@post-remove="onPostRemoved"
 						@post-publish="onPostPublished"
-						@post-stickers-visibility-change="onPostStickersVisibilityChange"
+						@sticker="scrollToStickers()"
 					/>
 
 					<br />
@@ -199,6 +217,12 @@
 @import '~styles-lib/mixins'
 @import '../variables'
 @import '../common'
+
+.-controls-spacing
+	padding-bottom: $-controls-spacing-xs
+
+	@media $media-sm-up
+		padding-bottom: $-controls-spacing
 
 .-row
 	display: flex

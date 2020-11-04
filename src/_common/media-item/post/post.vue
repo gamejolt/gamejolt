@@ -23,24 +23,30 @@
 				/>
 			</div>
 			<app-media-item-backdrop class="-backdrop" :media-item="mediaItem" :radius="itemRadius">
-				<app-img-responsive
-					v-if="!isPostHydrated || !mediaItem.is_animated"
-					class="-img"
-					:style="itemStyling"
-					:src="mediaItem.mediaserver_url"
-					alt=""
-					ondragstart="return false"
-				/>
-				<app-video
-					v-else-if="isActive"
-					class="-video"
-					:style="itemStyling"
-					:poster="mediaItem.mediaserver_url"
-					:webm="mediaItem.mediaserver_url_webm"
-					:mp4="mediaItem.mediaserver_url_mp4"
-					:should-play="shouldVideoPlay"
-					show-loading
-				/>
+				<app-sticker-target
+					class="-stickers"
+					:controller="stickerTargetController"
+					:disabled="stickersDisabled"
+				>
+					<app-img-responsive
+						v-if="!isPostHydrated || !mediaItem.is_animated"
+						class="-img"
+						:style="itemStyling"
+						:src="mediaItem.mediaserver_url"
+						alt=""
+						ondragstart="return false"
+					/>
+					<app-video
+						v-else-if="isActive"
+						class="-video"
+						:style="itemStyling"
+						:poster="mediaItem.mediaserver_url"
+						:webm="mediaItem.mediaserver_url_webm"
+						:mp4="mediaItem.mediaserver_url_mp4"
+						:should-play="shouldVideoPlay"
+						show-loading
+					/>
+				</app-sticker-target>
 			</app-media-item-backdrop>
 		</app-responsive-dimensions>
 	</div>
@@ -49,6 +55,10 @@
 <style lang="stylus" scoped>
 @import '~styles/variables'
 @import '~styles-lib/mixins'
+
+.-stickers
+	width: 100%
+	height: 100%
 
 .-video
 	&:after

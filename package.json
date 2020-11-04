@@ -1,6 +1,6 @@
 {
 	"name": "game-jolt-client",
-	"version": "0.56.0",
+	"version": "0.57.0",
 	"scripts": {
 		"postinstall": "yarn run translations",
 		"start": "gulp watch",
@@ -134,9 +134,9 @@
 		"text-mask-core": "5.1.2",
 		"thread-loader": "1.2.0",
 		"ts-loader": "6.2.1",
-		"tslib": "1.11.2",
+		"tslib": "2.0.3",
 		"twitter-text": "3.0.0",
-		"typescript": "3.8.3",
+		"typescript": "4.0.5",
 		"ua-parser-js": "0.7.21",
 		"undertaker-forward-reference": "1.0.2",
 		"url-loader": "1.1.2",

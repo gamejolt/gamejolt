@@ -16,7 +16,7 @@ import AppNavTabList from '../../nav/tab-list/tab-list.vue';
 import { AppState, AppStore } from '../../store/app-store';
 import { User } from '../../user/user.model';
 import FormComment from '../add/add.vue';
-import { Comment, getCanCommentOnModel, getCommentModelResourceName } from '../comment-model';
+import { canCommentOnModel, Comment, getCommentModelResourceName } from '../comment-model';
 import {
 	CommentStoreManager,
 	CommentStoreManagerKey,
@@ -164,7 +164,7 @@ export default class AppCommentWidget extends Vue {
 	}
 
 	get shouldShowAdd() {
-		if (!getCanCommentOnModel(this.model)) {
+		if (!canCommentOnModel(this.model)) {
 			return false;
 		}
 		return this.showAdd;

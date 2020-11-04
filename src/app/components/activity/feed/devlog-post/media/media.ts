@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
-import { propRequired } from '../../../../../../utils/vue';
+import { propOptional, propRequired } from '../../../../../../utils/vue';
 import { Analytics } from '../../../../../../_common/analytics/analytics.service';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
 import AppLightboxTS from '../../../../../../_common/lightbox/lightbox';
@@ -29,6 +29,7 @@ if (!GJ_IS_SSR) {
 export default class AppActivityFeedDevlogPostMedia extends Vue implements LightboxMediaSource {
 	@Prop(propRequired(ActivityFeedItem)) item!: ActivityFeedItem;
 	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
+	@Prop(propOptional(Boolean, false)) canPlaceSticker!: boolean;
 
 	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
@@ -73,6 +74,7 @@ export default class AppActivityFeedDevlogPostMedia extends Vue implements Light
 
 	goNext() {
 		if (this.page >= this.post.media.length) {
+			this._updateSliderOffset();
 			return;
 		}
 
@@ -84,6 +86,7 @@ export default class AppActivityFeedDevlogPostMedia extends Vue implements Light
 
 	goPrev() {
 		if (this.page <= 1) {
+			this._updateSliderOffset();
 			return;
 		}
 
