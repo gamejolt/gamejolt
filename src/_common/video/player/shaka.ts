@@ -60,6 +60,9 @@ export default class AppVideoPlayerShaka extends Vue {
 			return;
 		}
 
+		// Sync the video muted state with the player state.
+		this.syncMuted();
+
 		// We sync volume before loading in the media so that nothing plays
 		// louder/quieter than they want.
 		this.syncVolume();
@@ -234,6 +237,12 @@ export default class AppVideoPlayerShaka extends Vue {
 		// volume to the initial setting.
 		this.player.state = 'paused';
 		this.player.volume = startVolume;
+	}
+
+	@Watch('player.isMuted')
+	syncMuted() {
+		const { video } = this.$refs;
+		video.muted = this.player.isMuted;
 	}
 
 	@Watch('player.volume')
