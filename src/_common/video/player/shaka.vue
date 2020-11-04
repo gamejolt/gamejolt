@@ -2,7 +2,7 @@
 
 <template>
 	<div class="-shaka">
-		<video ref="video" :poster="player.poster" :autoplay="shouldAutoplay" loop playsinline />
+		<video ref="video" :autoplay="shouldAutoplay" loop playsinline />
 	</div>
 </template>
 

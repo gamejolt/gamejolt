@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Emit, Inject, Prop, Watch } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../../utils/vue';
+import { propRequired } from '../../../../../utils/vue';
 import { ContentFocus } from '../../../../../_common/content-focus/content-focus.service';
 import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/backdrop.vue';
@@ -44,7 +44,6 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	@Prop(propRequired(ActivityFeedItem)) feedItem!: ActivityFeedItem;
 	@Prop(propRequired(Array)) manifests!: string[];
 	@Prop(propRequired(MediaItem)) mediaItem!: MediaItem;
-	@Prop(propOptional(String)) poster!: string | undefined;
 	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
 	autoplay = SettingVideoPlayerFeedAutoplay.get();
@@ -213,7 +212,7 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	@Watch('shouldLoadVideo')
 	onShouldLoadVideoChange() {
 		if (this.shouldLoadVideo) {
-			this.player = new VideoPlayerController(this.poster, this.manifests, 'feed');
+			this.player = new VideoPlayerController(this.manifests, 'feed');
 			this.autoplay = SettingVideoPlayerFeedAutoplay.get();
 		} else {
 			this.player = null;

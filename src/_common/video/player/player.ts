@@ -77,7 +77,7 @@ export default class AppVideoPlayer extends Vue {
 	@Prop(propOptional(Number, 0)) viewCount!: number;
 	@Prop(propOptional(Boolean, false)) showVideoStats!: boolean;
 
-	player = new VideoPlayerController(undefined, this.manifests, this.context);
+	player = new VideoPlayerController(this.manifests, this.context);
 	isHoveringControls = false;
 	private isHovered = false;
 	private _hideUITimer?: NodeJS.Timer;
