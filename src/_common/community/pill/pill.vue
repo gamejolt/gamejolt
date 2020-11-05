@@ -13,7 +13,7 @@
 	</app-pill>
 	<app-pill-bi v-else :left-to="toCommunity" :right-to="toChannel">
 		<template #img>
-			<app-community-thumbnail-img:community="community" />
+			<app-community-thumbnail-img :community="community" />
 		</template>
 
 		<template #left>
