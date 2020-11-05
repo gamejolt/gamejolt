@@ -12,7 +12,7 @@
 	>
 		<app-responsive-dimensions
 			class="-video-container"
-			:class="{ '-with-stats': showVideoStats }"
+			:class="{ '-with-stats': shouldShowVideoStats }"
 			:style="{ minWidth: blackBarsBreakpoint || 'unset' }"
 			:ratio="mediaItem.width / mediaItem.height"
 			:max-width="playerMaxWidth"
@@ -113,7 +113,7 @@
 				</transition>
 			</div>
 
-			<div v-if="showVideoStats" class="-video-stats">
+			<div v-if="shouldShowVideoStats" class="-video-stats">
 				<span v-app-tooltip.touchable="$gettext(`Plays`)">
 					<app-jolticon icon="play" />
 					<span class="-video-stats-label">

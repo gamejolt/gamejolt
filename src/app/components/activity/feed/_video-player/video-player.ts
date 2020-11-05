@@ -15,7 +15,7 @@ import { ScrollInviewController } from '../../../../../_common/scroll/inview/con
 import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
 import { SettingVideoPlayerFeedAutoplay } from '../../../../../_common/settings/settings.service';
 import {
-	toggleVideoMuted,
+	scrubVideoVolume,
 	toggleVideoPlayback,
 	trackVideoPlayerEvent,
 	VideoPlayerController,
@@ -90,15 +90,19 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 		return Screen.height * 0.45;
 	}
 
+	private get shouldshowGeneralControls() {
+		return Screen.isMobile || this.isHovered || this.player?.state === 'paused';
+	}
+
 	get shouldShowPlaybackControl() {
 		if (!this.contentHasFocus) {
 			return false;
 		}
-		return Screen.isMobile || this.isHovered || this.player?.state === 'paused';
+		return this.shouldshowGeneralControls;
 	}
 
 	get shouldShowMuteControl() {
-		return Screen.isMobile || this.isHovered || this.player?.volume === 0;
+		return this.shouldshowGeneralControls || this.player?.volume === 0;
 	}
 
 	get remainingTime() {
@@ -143,25 +147,29 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 		if (!this.player) {
 			return;
 		}
+
+		if (this.player.state === 'playing') {
+			SettingVideoPlayerFeedAutoplay.set(false);
+		} else {
+			SettingVideoPlayerFeedAutoplay.set(true);
+		}
+
+		// This function needs to come after the changes to Settings,
+		// as it gets handled asynchronously through the Shaka player component.
 		toggleVideoPlayback(this.player);
 		trackVideoPlayerEvent(
 			this.player,
 			this.player.state === 'playing' ? 'play' : 'pause',
 			'click-control'
 		);
-
-		if (this.player.state === 'playing') {
-			SettingVideoPlayerFeedAutoplay.set(true);
-		} else {
-			SettingVideoPlayerFeedAutoplay.set(false);
-		}
 	}
 
 	onClickMute() {
 		if (!this.player) {
 			return;
 		}
-		toggleVideoMuted(this.player);
+
+		scrubVideoVolume(this.player, this.player.volume ? 0 : 1, 'end');
 		trackVideoPlayerEvent(
 			this.player,
 			!this.player.volume ? 'mute' : 'unmute',
@@ -190,9 +198,9 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 			return;
 		}
 		if (!this.contentHasFocus) {
-			this.player.state = 'paused';
+			toggleVideoPlayback(this.player, 'paused');
 		} else if (SettingVideoPlayerFeedAutoplay.get()) {
-			this.player.state = 'playing';
+			toggleVideoPlayback(this.player, 'playing');
 		}
 	}
 

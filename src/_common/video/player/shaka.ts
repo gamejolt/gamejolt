@@ -60,9 +60,6 @@ export default class AppVideoPlayerShaka extends Vue {
 			return;
 		}
 
-		// Sync the video muted state with the player state.
-		this.syncMuted();
-
 		// We sync volume before loading in the media so that nothing plays
 		// louder/quieter than they want.
 		this.syncVolume();
@@ -241,12 +238,6 @@ export default class AppVideoPlayerShaka extends Vue {
 		this.player.isLoading = false;
 	}
 
-	@Watch('player.isMuted')
-	syncMuted() {
-		const { video } = this.$refs;
-		video.muted = this.player.isMuted;
-	}
-
 	@Watch('player.volume')
 	syncVolume() {
 		const { video } = this.$refs;
@@ -255,14 +246,19 @@ export default class AppVideoPlayerShaka extends Vue {
 		}
 	}
 
-	@Watch('player.state')
+	@Watch('player.queuedPlaybackChange')
 	syncPlayState() {
+		if (this.player.queuedPlaybackChange === null) {
+			return;
+		}
+
 		const { video } = this.$refs;
-		if (this.player.state === 'paused' && !video.paused) {
+		if (this.player.queuedPlaybackChange === 'paused' && !video.paused) {
 			video.pause();
-		} else if (this.player.state === 'playing' && video.paused) {
+		} else if (this.player.queuedPlaybackChange === 'playing' && video.paused) {
 			this.tryPlayingVideo();
 		}
+		this.player.queuedPlaybackChange = null;
 	}
 
 	@Watch('player.queuedTimeChange')

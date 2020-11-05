@@ -155,6 +155,10 @@ export default class AppVideoPlayer extends Vue {
 		return Screen.height - 150;
 	}
 
+	get shouldShowVideoStats() {
+		return this.showVideoStats && !this.player.isFullscreen;
+	}
+
 	mounted() {
 		if (this.startTime) {
 			queueVideoTimeChange(this.player, this.startTime);
