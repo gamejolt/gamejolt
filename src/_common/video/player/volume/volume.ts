@@ -3,8 +3,9 @@ import { Component, Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../utils/vue';
 import AppPopper from '../../../popper/popper.vue';
 import { Screen } from '../../../screen/screen-service';
+import { SettingVideoPlayerMuted } from '../../../settings/settings.service';
 import { AppTooltip } from '../../../tooltip/tooltip-directive';
-import { toggleVideoMuted, trackVideoPlayerEvent, VideoPlayerController } from '../controller';
+import { setVideoMuted, trackVideoPlayerEvent, VideoPlayerController } from '../controller';
 import AppPlayerSlider from '../slider/slider.vue';
 
 @Component({
@@ -23,7 +24,7 @@ export default class AppPlayerVolume extends Vue {
 	readonly Screen = Screen;
 
 	onClickMute() {
-		toggleVideoMuted(this.player);
+		setVideoMuted(this.player, !SettingVideoPlayerMuted.get());
 		trackVideoPlayerEvent(
 			this.player,
 			!this.player.volume ? 'mute' : 'unmute',
