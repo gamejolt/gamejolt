@@ -136,18 +136,21 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 		if (!this.player) {
 			return;
 		}
+
+		if (this.player.state === 'playing') {
+			SettingVideoPlayerFeedAutoplay.set(false);
+		} else {
+			SettingVideoPlayerFeedAutoplay.set(true);
+		}
+
+		// This function needs to come after the changes to Settings,
+		// as it gets handled asynchronously through the Shaka player component.
 		toggleVideoPlayback(this.player);
 		trackVideoPlayerEvent(
 			this.player,
 			this.player.state === 'playing' ? 'play' : 'pause',
 			'click-control'
 		);
-
-		if (this.player.state === 'playing') {
-			SettingVideoPlayerFeedAutoplay.set(true);
-		} else {
-			SettingVideoPlayerFeedAutoplay.set(false);
-		}
 	}
 
 	onClickMute() {
@@ -184,9 +187,9 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 			return;
 		}
 		if (!this.contentHasFocus) {
-			this.player.state = 'paused';
+			toggleVideoPlayback(this.player, 'paused');
 		} else if (SettingVideoPlayerFeedAutoplay.get()) {
-			this.player.state = 'playing';
+			toggleVideoPlayback(this.player, 'playing');
 		}
 	}
 
