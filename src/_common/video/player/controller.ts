@@ -28,11 +28,7 @@ export class VideoPlayerController {
 	isFullscreen = false;
 	queuedFullScreenChange: null | boolean = null;
 
-	constructor(
-		public poster: undefined | string,
-		public manifests: string[],
-		public context: VideoPlayerControllerContext
-	) {
+	constructor(public manifests: string[], public context: VideoPlayerControllerContext) {
 		// Assign volume level from the proper local storage context.
 		switch (context) {
 			case 'feed':

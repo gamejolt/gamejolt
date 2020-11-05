@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Emit, Inject, Prop, Watch } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../../utils/vue';
+import { propRequired } from '../../../../../utils/vue';
 import { ContentFocus } from '../../../../../_common/content-focus/content-focus.service';
 import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/backdrop.vue';
@@ -44,14 +44,14 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	@Prop(propRequired(ActivityFeedItem)) feedItem!: ActivityFeedItem;
 	@Prop(propRequired(Array)) manifests!: string[];
 	@Prop(propRequired(MediaItem)) mediaItem!: MediaItem;
-	@Prop(propOptional(String)) poster!: string | undefined;
 	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
 	autoplay = SettingVideoPlayerFeedAutoplay.get();
 	player: VideoPlayerController | null = null;
 	isHovered = false;
-	height = '';
-	width = '';
+
+	private responsiveHeight = -1;
+	private responsiveWidth = -1;
 
 	shouldLoadVideo = false;
 	shouldLoadVideoTimer: null | NodeJS.Timer = null;
@@ -59,6 +59,14 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	readonly InviewConfigFocused = InviewConfigFocused;
 	readonly focusedController = new ScrollInviewController();
 	readonly Screen = Screen;
+
+	get height() {
+		return GJ_IS_SSR ? null : `${this.responsiveHeight}px`;
+	}
+
+	get width() {
+		return GJ_IS_SSR ? null : `${this.responsiveWidth}px`;
+	}
 
 	get maxPlayerHeight() {
 		if (GJ_IS_SSR) {
@@ -108,8 +116,8 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	@Emit('time') emitTime(_timestamp: number) {}
 
 	onChangeDimensions(event: AppResponsiveDimensionsChangeEvent) {
-		this.height = event.height + 'px';
-		this.width = event.containerWidth + 'px';
+		this.responsiveHeight = event.height;
+		this.responsiveWidth = event.containerWidth;
 	}
 
 	onMouseOut() {
@@ -200,7 +208,7 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	@Watch('shouldLoadVideo')
 	onShouldLoadVideoChange() {
 		if (this.shouldLoadVideo) {
-			this.player = new VideoPlayerController(this.poster, this.manifests, 'feed');
+			this.player = new VideoPlayerController(this.manifests, 'feed');
 			this.autoplay = SettingVideoPlayerFeedAutoplay.get();
 		} else {
 			this.player = null;
