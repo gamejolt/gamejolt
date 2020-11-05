@@ -1,6 +1,7 @@
 import { assertNever } from '../../../utils/utils';
 import { Analytics } from '../../analytics/analytics.service';
 import {
+	SettingVideoPlayerFeedAutoplay,
 	SettingVideoPlayerFeedMuted,
 	SettingVideoPlayerFeedVolume,
 	SettingVideoPlayerMuted,
@@ -36,14 +37,20 @@ export class VideoPlayerController {
 				this.volume = SettingVideoPlayerFeedMuted.get()
 					? 0
 					: SettingVideoPlayerFeedVolume.get();
+				this.queuedPlaybackChange = SettingVideoPlayerFeedAutoplay.get()
+					? 'playing'
+					: 'paused';
 				break;
 			case 'page':
 				this.volume = SettingVideoPlayerMuted.get() ? 0 : SettingVideoPlayerVolume.get();
+				this.queuedPlaybackChange = 'playing';
 				break;
 			default:
 				this.volume = 1;
+				this.queuedPlaybackChange = 'paused';
 				break;
 		}
+		this.state = this.queuedPlaybackChange;
 	}
 }
 
@@ -51,7 +58,7 @@ export function toggleVideoPlayback(
 	player: VideoPlayerController,
 	forcedState: VideoPlayerState | null = null
 ) {
-	if (player.queuedPlaybackChange) {
+	if (player.queuedPlaybackChange || player.isLoading) {
 		return;
 	}
 

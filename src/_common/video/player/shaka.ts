@@ -129,7 +129,6 @@ export default class AppVideoPlayerShaka extends Vue {
 		video.addEventListener('play', () => {
 			this.player.state = 'playing';
 			this.videoStartTime = Date.now();
-			this.player.isLoading = false;
 		});
 		video.addEventListener('pause', () => {
 			this.player.state = 'paused';
@@ -214,7 +213,6 @@ export default class AppVideoPlayerShaka extends Vue {
 
 		if (!this.allowDegradedAutoplay) {
 			this.player.state = 'paused';
-			this.player.isLoading = false;
 			return;
 		}
 
@@ -235,7 +233,6 @@ export default class AppVideoPlayerShaka extends Vue {
 		// volume to the initial setting.
 		this.player.state = 'paused';
 		this.player.volume = startVolume;
-		this.player.isLoading = false;
 	}
 
 	@Watch('player.volume')
@@ -247,7 +244,9 @@ export default class AppVideoPlayerShaka extends Vue {
 	}
 
 	@Watch('player.queuedPlaybackChange')
-	syncPlayState() {
+	async syncPlayState() {
+		// Don't do anything if there's been no queued playback change.
+		// Playback changes are set in the VideoPlayerController constructor, depending on the context of the player.
 		if (this.player.queuedPlaybackChange === null) {
 			return;
 		}
@@ -256,9 +255,10 @@ export default class AppVideoPlayerShaka extends Vue {
 		if (this.player.queuedPlaybackChange === 'paused' && !video.paused) {
 			video.pause();
 		} else if (this.player.queuedPlaybackChange === 'playing' && video.paused) {
-			this.tryPlayingVideo();
+			await this.tryPlayingVideo();
 		}
 		this.player.queuedPlaybackChange = null;
+		this.player.isLoading = false;
 	}
 
 	@Watch('player.queuedTimeChange')

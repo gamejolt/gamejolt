@@ -53,7 +53,7 @@
 
 				<transition>
 					<div
-						class="-overlay"
+						class="-overlay -ui"
 						:class="{
 							'-paused-cursor': player.state === 'paused',
 							'-darken': shouldShowLoading,
@@ -129,6 +129,10 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 
+$-zindex-backdrop = 0
+$-zindex-video = 1
+$-zindex-ui = 2
+
 .-fullscreen
 	.-video-container
 		width: 100vw !important
@@ -174,6 +178,7 @@
 	position: relative
 	height: 100%
 	margin: auto
+	z-index: $-zindex-video
 
 .-overlay
 	position: absolute
@@ -184,17 +189,16 @@
 	display: flex
 	justify-content: center
 	align-items: center
-	z-index: 1
 
 	&.-darken
 		background-color: rgba($black, 0.5)
 
 .-ui
-	z-index: 2
+	z-index: $-zindex-ui
 
 .-backdrop
 	position: absolute
-	z-index: 0
+	z-index: $-zindex-backdrop
 
 .-img
 	max-height: 100%
@@ -214,9 +218,6 @@
 	&-icon
 		color: white
 		font-size: 60px
-
-.-ui
-	z-index: 1
 
 .-bottom
 	position: absolute

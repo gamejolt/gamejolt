@@ -91,6 +91,10 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	}
 
 	private get shouldshowGeneralControls() {
+		// Clicking on 'playback controls while the video is trying to play can end up de-syncing the player state.
+		if (this.player?.isLoading) {
+			return false;
+		}
 		return Screen.isMobile || this.isHovered || this.player?.state === 'paused';
 	}
 
