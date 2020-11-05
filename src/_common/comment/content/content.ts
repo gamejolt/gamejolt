@@ -28,6 +28,7 @@ import AppCommentVideoThumbnail from '../video/thumbnail/thumbnail.vue';
 export default class AppCommentContent extends Vue {
 	@Prop(propRequired(Comment)) comment!: Comment;
 	@Prop(propOptional(String, '')) content!: string;
+	@Prop(propOptional(Boolean, false)) canPlaceStickers!: boolean;
 
 	canToggleContent = false;
 	showFullContent = false;

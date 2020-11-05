@@ -2,7 +2,7 @@
 
 <template>
 	<div>
-		<app-sticker-target :controller="stickerTargetController">
+		<app-sticker-target :controller="stickerTargetController" :disabled="!canPlaceStickers">
 			<app-fade-collapse
 				:collapse-height="375"
 				:is-open="showFullContent"

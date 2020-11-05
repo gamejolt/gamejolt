@@ -35,6 +35,8 @@ export type StickerCount = {
 	sticker: Sticker;
 };
 
+const FetchStickersEndpoint = '/web/stickers/dash';
+
 @Component({
 	name: 'RouteDashStickers',
 	components: {
@@ -45,7 +47,7 @@ export type StickerCount = {
 })
 @RouteResolver({
 	deps: {},
-	resolver: () => Api.sendRequest('/web/stickers/dash'),
+	resolver: () => Api.sendRequest(FetchStickersEndpoint),
 })
 export default class RouteDashStickers extends BaseRouteComponent {
 	@Inject(DrawerStoreKey) drawer!: DrawerStore;
@@ -119,6 +121,10 @@ export default class RouteDashStickers extends BaseRouteComponent {
 
 	async onCollect() {
 		const remainingBalance = await StickerCollectModal.show();
-		this.balance = remainingBalance ?? 0;
+		if (remainingBalance === this.balance) {
+			return;
+		}
+		// Fetch the updated sticker list after collecting more.
+		this.reloadRoute();
 	}
 }

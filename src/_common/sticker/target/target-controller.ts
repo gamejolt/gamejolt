@@ -36,7 +36,7 @@ export class StickerTargetController {
 
 	/**
 	 * Note, the AppStickerTarget component is what actually loads the stickers
-	 * in based on this state.
+	 * in based on this state changing.
 	 */
 	get shouldLoad() {
 		return this.shouldShow && this.isInview && !this.hasLoadedStickers;
@@ -55,17 +55,23 @@ export class StickerTargetController {
 
 export function toggleStickersShouldShow(
 	controller: StickerTargetController,
+	/** Whether or not to force reload the stickers for this target. */
+	forceLoad = false,
 	shouldShow?: boolean
 ) {
 	// The parent is the one that gets the state for should showing. All
 	// children follow along within the getter.
 	if (controller.parent) {
-		toggleStickersShouldShow(controller.parent, shouldShow);
+		toggleStickersShouldShow(controller.parent, forceLoad, shouldShow);
 		return;
 	}
 
 	shouldShow = shouldShow ?? !controller.shouldShow;
 	controller.shouldShow = shouldShow;
+
+	if (forceLoad) {
+		controller.hasLoadedStickers = false;
+	}
 }
 
 export function getStickerModelResourceName(model: Model): ValidStickerResource {
@@ -84,5 +90,5 @@ export function addStickerToTarget(controller: StickerTargetController, sticker:
 	controller.newStickers.push(sticker);
 
 	// Anytime we add new stickers to the target, show all the stickers again.
-	toggleStickersShouldShow(controller, true);
+	toggleStickersShouldShow(controller, false, true);
 }

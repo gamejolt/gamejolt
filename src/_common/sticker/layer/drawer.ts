@@ -14,6 +14,7 @@ import {
 	setDrawerStoreActiveItem,
 	setDrawerStoreHeight,
 } from '../../drawer/drawer-store';
+import { EscapeStack, EscapeStackCallback } from '../../escape-stack/escape-stack.service';
 import AppLoadingFade from '../../loading/fade/fade.vue';
 import { Screen } from '../../screen/screen-service';
 import AppScrollScroller from '../../scroll/scroller/scroller.vue';
@@ -21,7 +22,7 @@ import AppStickerCard from '../card/card.vue';
 import { StickerCollectModal } from '../collect/modal/modal.service';
 import { Sticker } from '../sticker.model';
 import AppSticker from '../sticker.vue';
-import AppShellBottomDrawerItem from './item/item.vue';
+import AppStickerLayerDrawerItem from './drawer-item.vue';
 
 if (!GJ_IS_SSR) {
 	const VueTouch = require('vue-touch');
@@ -33,12 +34,12 @@ if (!GJ_IS_SSR) {
 		AppScrollScroller,
 		AppStickerCard,
 		AppSticker,
-		AppShellBottomDrawerItem,
+		AppStickerLayerDrawerItem,
 		AppLoadingFade,
 		AppEventItemMediaIndicator,
 	},
 })
-export default class AppStickerDrawer extends Vue {
+export default class AppStickerLayerDrawer extends Vue {
 	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
 	@State hasCbar!: Store['hasCbar'];
 
@@ -48,6 +49,7 @@ export default class AppStickerDrawer extends Vue {
 	private isWaitingForFrame = false;
 	private touchedSticker: Sticker | null = null;
 	private resize$: EventSubscription | undefined;
+	private escapeCallback?: EscapeStackCallback;
 
 	private readonly drawerPadding = 8;
 	private readonly stickerSpacing = 8;
@@ -211,13 +213,25 @@ export default class AppStickerDrawer extends Vue {
 	mounted() {
 		this.calculateStickersPerRow();
 		this.resize$ = Screen.resizeChanges.subscribe(() => this.calculateStickersPerRow());
+
+		this.escapeCallback = () => setDrawerOpen(this.drawerStore, false);
+		EscapeStack.register(this.escapeCallback);
 	}
 
-	beforeDestory() {
+	beforeDestroy() {
 		if (this.resize$) {
 			this.resize$.unsubscribe();
 			this.resize$ = undefined;
 		}
+
+		if (this.escapeCallback) {
+			EscapeStack.deregister(this.escapeCallback);
+			this.escapeCallback = undefined;
+		}
+	}
+
+	onClickMargin() {
+		setDrawerOpen(this.drawerStore, false);
 	}
 
 	// VueTouch things - START

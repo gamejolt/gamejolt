@@ -16,7 +16,7 @@
 		>
 			<div class="-content-container">
 				<app-video-player-shaka-lazy
-					v-if="player"
+					v-if="player && !GJ_IS_SSR"
 					class="-video"
 					:player="player"
 					:autoplay="shouldAutoplay"
@@ -33,7 +33,7 @@
 				-->
 				<app-media-item-backdrop
 					class="-backdrop"
-					:style="{ height, width }"
+					:style="{ height, width, position: GJ_IS_SSR ? 'relative' : null }"
 					:media-item="mediaItem"
 				>
 					<app-img-responsive
@@ -94,7 +94,11 @@
 										@click="onClickMute"
 									>
 										<app-jolticon
-											:icon="player.volume > 0 ? 'audio' : 'audio-mute'"
+											:icon="
+												player.volume > 0 && !player.isMuted
+													? 'audio'
+													: 'audio-mute'
+											"
 										/>
 									</div>
 								</template>
@@ -115,6 +119,16 @@
 
 $-controls-height = 48px
 $-controls-spacing = 8px
+
+.-ssr
+	display: flex
+	justify-content: center
+	align-items: center
+
+	> .jolticon
+		position: absolute
+		font-size: $jolticon-size * 10
+		filter: drop-shadow(0 0 6px $black)
 
 .-player
 	position: relative

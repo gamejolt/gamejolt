@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
+import { Component, Emit, InjectReactive, Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
 import { ContentFocus } from '../../content-focus/content-focus.service';
 import { AppImgResponsive } from '../../img/responsive/responsive';
@@ -36,15 +36,13 @@ export default class AppMediaItemPost extends Vue {
 	@Prop(propOptional(Boolean, false)) isActive!: boolean;
 	@Prop(propOptional(Boolean, false)) restrictDeviceMaxHeight!: boolean;
 	@Prop(propOptional(Boolean, false)) inline!: boolean;
+	@Prop(propOptional(Boolean, false)) canPlaceSticker!: boolean;
 
-	@Inject(StickerTargetParentControllerKey) parentStickerTarget!: StickerTargetController;
+	@InjectReactive(StickerTargetParentControllerKey) parentStickerTarget!: StickerTargetController;
 
 	isFilled = false;
 
-	// We pass the parent sticker target controller in as the parent for this
-	// one. This will link them up so that when the parent is showing, we also
-	// try showing stickers on this target.
-	stickerTargetController = new StickerTargetController(this.mediaItem, this.parentStickerTarget);
+	stickerTargetController!: StickerTargetController;
 
 	readonly Screen = Screen;
 
@@ -99,9 +97,23 @@ export default class AppMediaItemPost extends Vue {
 		return Screen.height * 0.45;
 	}
 
+	get stickersDisabled() {
+		return !this.isActive || !this.canPlaceSticker;
+	}
+
 	async onDimensionsChange(e: AppResponsiveDimensionsChangeEvent) {
 		this.emitBootstrap();
 		this.isFilled = e.isFilled;
+	}
+
+	created() {
+		// We pass the parent sticker target controller in as the parent for this
+		// one. This will link them up so that when the parent is showing, we also
+		// try showing stickers on this target.
+		this.stickerTargetController = new StickerTargetController(
+			this.mediaItem,
+			this.parentStickerTarget
+		);
 	}
 
 	onClickImage() {

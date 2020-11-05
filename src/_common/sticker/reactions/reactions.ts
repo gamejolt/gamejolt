@@ -29,7 +29,7 @@ export default class AppStickerReactions extends Vue {
 	}
 
 	onClick() {
-		toggleStickersShouldShow(this.controller);
+		toggleStickersShouldShow(this.controller, true);
 
 		if (this.controller.shouldShow) {
 			this.emitShow();

@@ -36,7 +36,7 @@
 			/>
 
 			<app-button
-				v-if="canComment"
+				v-if="canPlaceStickers"
 				v-app-tooltip="$gettext('Place Sticker')"
 				v-app-track-event="`comment-widget:place-sticker`"
 				v-app-auth-required
@@ -49,7 +49,7 @@
 		</span>
 
 		<template v-if="showReply">
-			<span v-app-auth-required>
+			<span v-if="canReply" v-app-auth-required>
 				<app-button
 					v-app-tooltip="$gettext(`Reply`)"
 					v-app-track-event="`comment-widget:reply-click`"

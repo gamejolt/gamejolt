@@ -1,17 +1,19 @@
 import Vue from 'vue';
 import { Component, Inject } from 'vue-property-decorator';
-import { Analytics } from '../../../analytics/analytics.service';
+import { Analytics } from '../../analytics/analytics.service';
 import {
 	assignDrawerStoreGhostCallback as assignDrawerStoreMoveCallback,
 	commitDrawerStoreItemPlacement,
 	DrawerStore,
 	DrawerStoreKey,
 	setDrawerStoreActiveItem,
-} from '../../../drawer/drawer-store';
+} from '../../drawer/drawer-store';
 
 @Component({})
-export default class AppStickerDrawerGhost extends Vue {
+export default class AppStickerLayerGhost extends Vue {
 	@Inject(DrawerStoreKey) drawer!: DrawerStore;
+
+	private isConfirmingPlacement = false;
 
 	$el!: HTMLDivElement;
 
@@ -67,6 +69,11 @@ export default class AppStickerDrawerGhost extends Vue {
 	}
 
 	onConfirmPlacement() {
+		// Only allow 1 placement request through at a time for each sticker ghost. This component will be v-if'd away after placement.
+		if (this.isConfirmingPlacement) {
+			return;
+		}
+		this.isConfirmingPlacement = true;
 		Analytics.trackEvent('sticker-drawer', 'confirm-placement');
 		commitDrawerStoreItemPlacement(this.drawer);
 	}

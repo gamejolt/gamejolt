@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Prop, Provide } from 'vue-property-decorator';
+import { Component, Prop, ProvideReactive, Watch } from 'vue-property-decorator';
 import { RawLocation } from 'vue-router';
 import { propRequired } from '../../../../utils/vue';
 import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
@@ -18,10 +18,6 @@ import { createLightbox, LightboxMediaSource } from '../../../../_common/lightbo
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/backdrop.vue';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppMediaItemPost from '../../../../_common/media-item/post/post.vue';
-import {
-	AppResponsiveDimensions,
-	AppResponsiveDimensionsChangeEvent,
-} from '../../../../_common/responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
@@ -53,7 +49,6 @@ import AppPollVoting from '../../../components/poll/voting/voting.vue';
 @Component({
 	components: {
 		AppTimeAgo,
-		AppResponsiveDimensions,
 		AppImgResponsive,
 		AppVideo,
 		AppVideoPlayer,
@@ -88,7 +83,7 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 
 	@AppState user!: AppStore['user'];
 
-	@Provide(StickerTargetParentControllerKey)
+	@ProvideReactive(StickerTargetParentControllerKey)
 	stickerTargetController = new StickerTargetController(this.post);
 
 	activeImageIndex = 0;
@@ -123,21 +118,6 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 
 	get video(): null | FiresidePostVideo {
 		return this.post.videos[0] ?? null;
-	}
-
-	get deviceMaxHeight() {
-		if (GJ_IS_SSR) {
-			return;
-		}
-
-		if (Screen.isMobile) {
-			return window.screen.height - 150;
-		}
-		return Screen.height - 150;
-	}
-
-	onPlayerSizeChange(event: AppResponsiveDimensionsChangeEvent) {
-		this.isPlayerFilled = event.isFilled;
 	}
 
 	created() {
@@ -239,5 +219,10 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 		}
 		this.lightbox.close();
 		this.lightbox = undefined;
+	}
+
+	@Watch('post.id')
+	onPostIdChange() {
+		this.stickerTargetController = new StickerTargetController(this.post);
 	}
 }

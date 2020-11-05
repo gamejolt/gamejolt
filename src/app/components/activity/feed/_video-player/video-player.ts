@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Emit, Inject, Prop, Watch } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../../utils/vue';
+import { propRequired } from '../../../../../utils/vue';
 import { ContentFocus } from '../../../../../_common/content-focus/content-focus.service';
 import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
 import AppLoading from '../../../../../_common/loading/loading.vue';
@@ -15,7 +15,7 @@ import { ScrollInviewController } from '../../../../../_common/scroll/inview/con
 import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
 import { SettingVideoPlayerFeedAutoplay } from '../../../../../_common/settings/settings.service';
 import {
-	setVideoVolume,
+	toggleVideoMuted,
 	toggleVideoPlayback,
 	trackVideoPlayerEvent,
 	VideoPlayerController,
@@ -46,14 +46,14 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	@Prop(propRequired(ActivityFeedItem)) feedItem!: ActivityFeedItem;
 	@Prop(propRequired(Array)) manifests!: string[];
 	@Prop(propRequired(MediaItem)) mediaItem!: MediaItem;
-	@Prop(propOptional(String)) poster!: string | undefined;
 	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
 	autoplay = SettingVideoPlayerFeedAutoplay.get();
 	player: VideoPlayerController | null = null;
 	isHovered = false;
-	height = '';
-	width = '';
+
+	private responsiveHeight = -1;
+	private responsiveWidth = -1;
 
 	shouldLoadVideo = false;
 	shouldLoadVideoTimer: null | NodeJS.Timer = null;
@@ -69,6 +69,14 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 			);
 		}
 		return true;
+	}
+
+	get height() {
+		return GJ_IS_SSR ? null : `${this.responsiveHeight}px`;
+	}
+
+	get width() {
+		return GJ_IS_SSR ? null : `${this.responsiveWidth}px`;
 	}
 
 	get maxPlayerHeight() {
@@ -119,8 +127,8 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	@Emit('time') emitTime(_timestamp: number) {}
 
 	onChangeDimensions(event: AppResponsiveDimensionsChangeEvent) {
-		this.height = event.height + 'px';
-		this.width = event.containerWidth + 'px';
+		this.responsiveHeight = event.height;
+		this.responsiveWidth = event.containerWidth;
 	}
 
 	onMouseOut() {
@@ -153,12 +161,7 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 		if (!this.player) {
 			return;
 		}
-		if (this.player.volume === 0) {
-			setVideoVolume(this.player, 100);
-		} else {
-			setVideoVolume(this.player, 0);
-		}
-
+		toggleVideoMuted(this.player);
 		trackVideoPlayerEvent(
 			this.player,
 			!this.player.volume ? 'mute' : 'unmute',
@@ -216,7 +219,7 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	@Watch('shouldLoadVideo')
 	onShouldLoadVideoChange() {
 		if (this.shouldLoadVideo) {
-			this.player = new VideoPlayerController(this.poster, this.manifests, 'feed');
+			this.player = new VideoPlayerController(this.manifests, 'feed');
 			this.autoplay = SettingVideoPlayerFeedAutoplay.get();
 		} else {
 			this.player = null;

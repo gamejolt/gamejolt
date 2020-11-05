@@ -2,10 +2,20 @@ import Vue from 'vue';
 import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
 import { AppVideoPlayerShakaLazy } from '../../../app/components/lazy';
 import { propOptional, propRequired } from '../../../utils/vue';
+import { number } from '../../filters/number';
+import { AppImgResponsive } from '../../img/responsive/responsive';
 import AppLoading from '../../loading/loading.vue';
+import AppMediaItemBackdrop from '../../media-item/backdrop/backdrop.vue';
+import { MediaItem } from '../../media-item/media-item-model';
+import {
+	AppResponsiveDimensions,
+	AppResponsiveDimensionsChangeEvent,
+} from '../../responsive-dimensions/responsive-dimensions';
+import { Screen } from '../../screen/screen-service';
+import { AppTooltip } from '../../tooltip/tooltip-directive';
 import {
 	queueVideoTimeChange,
-	setVideoVolume,
+	scrubVideoVolume,
 	toggleVideoPlayback,
 	trackVideoPlayerEvent,
 	VideoPlayerController,
@@ -50,25 +60,64 @@ function createReadableTimestamp(time: number) {
 		AppPlayerScrubber,
 		AppPlayerFullscreen,
 		AppLoading,
+		AppResponsiveDimensions,
+		AppImgResponsive,
+		AppMediaItemBackdrop,
+	},
+	directives: {
+		AppTooltip,
 	},
 })
 export default class AppVideoPlayer extends Vue {
-	@Prop(propRequired(String)) poster!: string;
+	@Prop(propRequired(MediaItem)) mediaItem!: MediaItem;
 	@Prop(propRequired(Array)) manifests!: string[];
 	@Prop(propOptional(Boolean, false)) autoplay!: boolean;
 	@Prop(propOptional(Number, 0)) startTime!: number;
 	@Prop(propOptional(String, null)) context!: VideoPlayerControllerContext;
+	@Prop(propOptional(Number, 0)) viewCount!: number;
+	@Prop(propOptional(Boolean, false)) showVideoStats!: boolean;
 
-	player = new VideoPlayerController(this.poster, this.manifests, this.context);
-	isHovered = false;
+	player = new VideoPlayerController(this.manifests, this.context);
 	isHoveringControls = false;
+	private isHovered = false;
 	private _hideUITimer?: NodeJS.Timer;
+
+	private responsiveHeight = -1;
+	private responsiveWidth = -1;
+
+	readonly number = number;
+	readonly Screen = Screen;
 
 	$el!: HTMLDivElement;
 
 	@Emit('play') emitPlay() {}
 
+	get height() {
+		return GJ_IS_SSR ? null : `${this.responsiveHeight}px`;
+	}
+
+	get width() {
+		return GJ_IS_SSR ? null : `${this.responsiveWidth}px`;
+	}
+
+	get blackBarsBreakpoint() {
+		if (Screen.isXs) {
+			return '100%';
+		} else if (Screen.isSm) {
+			return '260px';
+		}
+
+		return '400px';
+	}
+
+	get shouldShowPausedIndicator() {
+		return !GJ_IS_SSR && this.player.state === 'paused' && !this.player.isScrubbing;
+	}
+
 	get shouldShowUI() {
+		if (GJ_IS_SSR) {
+			return false;
+		}
 		return this.isHoveringControls || this.isHovered || this.player.state === 'paused';
 	}
 
@@ -87,6 +136,25 @@ export default class AppVideoPlayer extends Vue {
 		return true;
 	}
 
+	get playerMaxWidth() {
+		return this.player.isFullscreen ? Screen.width : this.mediaItem.width;
+	}
+
+	get deviceMaxHeight() {
+		if (GJ_IS_SSR) {
+			return;
+		}
+
+		if (this.player.isFullscreen) {
+			return Screen.height;
+		}
+
+		if (Screen.isMobile) {
+			return window.screen.height - 150;
+		}
+		return Screen.height - 150;
+	}
+
 	mounted() {
 		if (this.startTime) {
 			queueVideoTimeChange(this.player, this.startTime);
@@ -97,6 +165,11 @@ export default class AppVideoPlayer extends Vue {
 
 	beforeDestroy() {
 		this.clearHideUITimer();
+	}
+
+	onChangeDimensions(event: AppResponsiveDimensionsChangeEvent) {
+		this.responsiveHeight = event.height;
+		this.responsiveWidth = event.containerWidth;
 	}
 
 	onMouseOut() {
@@ -188,12 +261,20 @@ export default class AppVideoPlayer extends Vue {
 	}
 
 	triggerVolumeDown() {
-		setVideoVolume(this.player, Math.round(Math.max(this.player.volume - 0.1, 0) * 100) / 100);
+		scrubVideoVolume(
+			this.player,
+			Math.round(Math.max(this.player.volume - 0.1, 0) * 100) / 100,
+			'end'
+		);
 		trackVideoPlayerEvent(this.player, 'volume-down', 'keybind');
 	}
 
 	triggerVolumeUp() {
-		setVideoVolume(this.player, Math.round(Math.min(this.player.volume + 0.1, 1) * 100) / 100);
+		scrubVideoVolume(
+			this.player,
+			Math.round(Math.min(this.player.volume + 0.1, 1) * 100) / 100,
+			'end'
+		);
 		trackVideoPlayerEvent(this.player, 'volume-up', 'keybind');
 	}
 
