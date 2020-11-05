@@ -6,32 +6,17 @@
 			<template v-if="video">
 				<div class="full-bleed-xs">
 					<template v-if="video.provider === 'gamejolt'">
-						<app-responsive-dimensions
+						<app-video-player
 							v-if="!video.is_processing && video.posterMediaItem"
-							class="-responsive"
-							:ratio="video.posterMediaItem.width / video.posterMediaItem.height"
-							:max-width="video.posterMediaItem.width"
-							:max-height="deviceMaxHeight"
-							@change="onPlayerSizeChange"
-						>
-							<app-video-player
-								:class="{ '-filled': Screen.isXs && isPlayerFilled }"
-								context="page"
-								:poster="video.posterUrl"
-								:manifests="video.manifestUrls"
-								:start-time="videoStartTime"
-								autoplay
-								@play="onVideoPlay"
-							/>
-							<div class="-video-stats">
-								<span v-app-tooltip.touchable="$gettext(`Plays`)">
-									<app-jolticon icon="play" />
-									<span class="-video-stats-label">
-										{{ number(video.view_count) }}
-									</span>
-								</span>
-							</div>
-						</app-responsive-dimensions>
+							context="page"
+							:media-item="video.posterMediaItem"
+							:manifests="video.manifestUrls"
+							:view-count="video.view_count"
+							:start-time="videoStartTime"
+							autoplay
+							show-video-stats
+							@play="onVideoPlay"
+						/>
 						<template v-else>
 							<app-video-processing-progress
 								:post="post"
@@ -258,28 +243,6 @@
 			margin: 0 $grid-gutter-width
 			flex-shrink: 1
 			flex-basis: $-center-col-max-width
-
-.-responsive
-	margin: 0 auto 8px + $line-height-computed
-
-.-filled
-	border-radius: 0 !important
-
-.-video-stats
-	display: flex
-	justify-content: flex-end
-	margin-top: 8px
-	font-weight: bold
-
-	> span
-		display: inline-flex
-		align-items: center
-
-		@media $media-xs
-			margin-right: ($grid-gutter-width-xs / 2)
-
-	&-label
-		margin-left: 4px
 
 .-game-badge
 	margin-top: $-spacing
