@@ -66,7 +66,6 @@ export default class AppVideoPlayerShaka extends Vue {
 
 		this.shakaPlayer = new ShakaPlayer(this.$refs.video);
 
-		// console.log('Shaka Configuration', this.shakaPlayer.getConfiguration());
 		this.shakaPlayer.configure({
 			abr: {
 				// The goal is to select the 720p format by default.
@@ -245,7 +244,9 @@ export default class AppVideoPlayerShaka extends Vue {
 	}
 
 	@Watch('player.queuedPlaybackChange')
-	syncPlayState() {
+	async syncPlayState() {
+		// Don't do anything if there's been no queued playback change.
+		// Playback changes are set in the VideoPlayerController constructor, depending on the context of the player.
 		if (this.player.queuedPlaybackChange === null) {
 			return;
 		}
@@ -254,9 +255,10 @@ export default class AppVideoPlayerShaka extends Vue {
 		if (this.player.queuedPlaybackChange === 'paused' && !video.paused) {
 			video.pause();
 		} else if (this.player.queuedPlaybackChange === 'playing' && video.paused) {
-			this.tryPlayingVideo();
+			await this.tryPlayingVideo();
 		}
 		this.player.queuedPlaybackChange = null;
+		this.player.isLoading = false;
 	}
 
 	@Watch('player.queuedTimeChange')

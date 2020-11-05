@@ -53,10 +53,24 @@
 
 				<transition>
 					<div
-						v-if="shouldShowPausedIndicator"
-						class="-paused-indicator -ui anim-fade-enter-enlarge anim-fade-leave-shrink"
+						class="-overlay -ui"
+						:class="{
+							'-paused-cursor': player.state === 'paused',
+							'-darken': shouldShowLoading,
+						}"
+						@click="onVideoClick"
 					>
-						<app-jolticon class="-paused-indicator-icon" icon="play" />
+						<app-loading v-if="shouldShowLoading" no-color hide-label stationary />
+						<template v-else>
+							<transition>
+								<div
+									v-if="shouldShowPausedIndicator"
+									class="-paused-indicator -ui anim-fade-enter-enlarge anim-fade-leave-shrink"
+								>
+									<app-jolticon class="-paused-indicator-icon" icon="play" />
+								</div>
+							</transition>
+						</template>
 					</div>
 				</transition>
 
@@ -115,6 +129,10 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 
+$-zindex-backdrop = 0
+$-zindex-video = 1
+$-zindex-ui = 2
+
 .-fullscreen
 	.-video-container
 		width: 100vw !important
@@ -160,11 +178,27 @@
 	position: relative
 	height: 100%
 	margin: auto
-	z-index: 1
+	z-index: $-zindex-video
+
+.-overlay
+	position: absolute
+	top: 0
+	left: 0
+	width: 100%
+	height: 100%
+	display: flex
+	justify-content: center
+	align-items: center
+
+	&.-darken
+		background-color: rgba($black, 0.5)
+
+.-ui
+	z-index: $-zindex-ui
 
 .-backdrop
 	position: absolute
-	z-index: 0
+	z-index: $-zindex-backdrop
 
 .-img
 	max-height: 100%
@@ -184,9 +218,6 @@
 	&-icon
 		color: white
 		font-size: 60px
-
-.-ui
-	z-index: 1
 
 .-bottom
 	position: absolute

@@ -4,6 +4,7 @@ import { AppVideoPlayerShakaLazy } from '../../../app/components/lazy';
 import { propOptional, propRequired } from '../../../utils/vue';
 import { number } from '../../filters/number';
 import { AppImgResponsive } from '../../img/responsive/responsive';
+import AppLoading from '../../loading/loading.vue';
 import AppMediaItemBackdrop from '../../media-item/backdrop/backdrop.vue';
 import { MediaItem } from '../../media-item/media-item-model';
 import {
@@ -11,7 +12,6 @@ import {
 	AppResponsiveDimensionsChangeEvent,
 } from '../../responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../screen/screen-service';
-import AppShortkey from '../../shortkey/shortkey.vue';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 import {
 	queueVideoTimeChange,
@@ -59,7 +59,7 @@ function createReadableTimestamp(time: number) {
 		AppPlayerVolume,
 		AppPlayerScrubber,
 		AppPlayerFullscreen,
-		AppShortkey,
+		AppLoading,
 		AppResponsiveDimensions,
 		AppImgResponsive,
 		AppMediaItemBackdrop,
@@ -127,6 +127,13 @@ export default class AppVideoPlayer extends Vue {
 			' / ' +
 			createReadableTimestamp(this.player.duration)
 		);
+	}
+
+	get shouldShowLoading() {
+		if (this.player) {
+			return this.player.isLoading && (this.autoplay || this.player.state === 'playing');
+		}
+		return true;
 	}
 
 	get playerMaxWidth() {
