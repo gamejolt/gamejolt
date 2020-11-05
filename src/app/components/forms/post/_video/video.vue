@@ -32,9 +32,12 @@
 					>
 						<p class="help-block">
 							<translate>
-								Only short videos of 60 seconds or less are allowed at this time.
+								Only short videos between 3 and 60 seconds are allowed at this time.
 							</translate>
 							<br />
+							<translate>
+								Videos must be bigger than 200x200.
+							</translate>
 							<translate>
 								Video filetypes currently supported:
 							</translate>
