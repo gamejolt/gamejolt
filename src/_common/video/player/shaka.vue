@@ -8,4 +8,3 @@
 		:context="player.context"
 	/>
 </template>
-

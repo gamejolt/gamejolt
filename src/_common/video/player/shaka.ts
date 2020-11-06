@@ -35,6 +35,8 @@ export default class AppVideoPlayerShaka extends Vue {
 	private previousState: ShakaTrack | null = null;
 	private currentState: ShakaTrack | null = null;
 	private video?: HTMLVideoElement;
+	// Function to run after setting up Shaka.
+	private syncFunction!: () => void;
 
 	get shouldAutoplay() {
 		return this.autoplay;
@@ -48,8 +50,9 @@ export default class AppVideoPlayerShaka extends Vue {
 		}
 	}
 
-	async initShakaWithVideo(video: HTMLVideoElement) {
+	async initShakaWithVideo(video: HTMLVideoElement, syncFunction: () => void) {
 		this.video = video;
+		this.syncFunction = syncFunction;
 		polyfill.installAll();
 		if (!ShakaPlayer.isBrowserSupported()) {
 			trackVideoPlayerEvent(this.player, 'browser-unsupported');
@@ -146,5 +149,6 @@ export default class AppVideoPlayerShaka extends Vue {
 				);
 			}
 		});
+		this.syncFunction();
 	}
 }

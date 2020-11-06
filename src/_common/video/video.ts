@@ -29,7 +29,10 @@ export default class AppVideo extends Vue {
 	@Prop(propOptional(Boolean, false)) showLoading!: boolean;
 	@Prop(propOptional(Boolean, true)) shouldPlay!: boolean;
 	@Prop(propOptional(Boolean, false)) shouldMute!: boolean;
-	@Prop(propOptional(Function)) initCallback?: (videoTag: HTMLVideoElement) => void;
+	@Prop(propOptional(Function)) initCallback?: (
+		videoTag: HTMLVideoElement,
+		syncFunctions: () => void
+	) => void;
 
 	@Prop(propOptional(String, null)) playerContext!: VideoPlayerControllerContext;
 	@Prop(propOptional(VideoPlayerController, null))
@@ -88,13 +91,20 @@ export default class AppVideo extends Vue {
 		// playing.
 		this.$el.appendChild(this.video);
 
-		// Call the initCallback prop that was passed, allowing the Shaka component to properly bind to the video element.
-		if (this.initCallback) {
-			this.isLoaded = true;
-			this.initCallback(this.video);
-		}
 		this.syncVolume();
 		this.syncTime();
+		if (this.initCallback) {
+			// If using a callback function (used to set up Shaka events at the right timing),
+			// we need to run 'this.syncStates' after Shaka is done initializing itself.
+			this.initCallback(this.video, this.syncStates);
+		} else {
+			// Otherwise, we can just sync now.
+			this.syncStates();
+		}
+		this.isLoaded = true;
+	}
+
+	private syncStates() {
 		this.syncPlayState();
 	}
 
