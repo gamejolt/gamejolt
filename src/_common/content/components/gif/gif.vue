@@ -28,7 +28,6 @@
 						:poster="media.preview"
 						:sources="videoSources"
 						:should-play="shouldPlay"
-						should-mute
 					/>
 				</app-scroll-inview>
 			</div>

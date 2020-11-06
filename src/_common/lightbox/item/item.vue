@@ -36,7 +36,6 @@
 							:poster="mediaItem.mediaserver_url"
 							:sources="videoSources"
 							show-loading
-							should-mute
 						/>
 					</app-media-item-backdrop>
 				</div>

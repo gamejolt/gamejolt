@@ -19,10 +19,10 @@
 					v-if="player && !GJ_IS_SSR"
 					class="-video"
 					:style="{ width }"
-					:player-controller="player"
+					:inherited-player="player"
 					:sources="videoSources"
 					:should-play="shouldAutoplay"
-					context="feed"
+					player-context="feed"
 					allow-degraded-autoplay
 				/>
 

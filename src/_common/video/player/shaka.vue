@@ -2,9 +2,9 @@
 
 <template>
 	<app-video
-		:player-controller="player"
+		:inherited-player="player"
 		:should-play="shouldAutoplay"
 		:init-callback="initShakaWithVideo"
-		:context="player.context"
+		:player-context="player.context"
 	/>
 </template>

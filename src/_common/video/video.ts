@@ -31,12 +31,12 @@ export default class AppVideo extends Vue {
 	@Prop(propOptional(Boolean, false)) shouldMute!: boolean;
 	@Prop(propOptional(Function)) initCallback?: (
 		videoTag: HTMLVideoElement,
-		syncFunctions: () => void
+		syncFunction: () => void
 	) => void;
 
 	@Prop(propOptional(String, null)) playerContext!: VideoPlayerControllerContext;
 	@Prop(propOptional(VideoPlayerController, null))
-	playerController!: VideoPlayerController | null;
+	inheritedPlayer!: VideoPlayerController | null;
 
 	/**
 	 * If their browser settings block autoplaying with audio, then the browser
@@ -48,7 +48,7 @@ export default class AppVideo extends Vue {
 
 	isLoaded = false;
 	player =
-		this.playerController ||
+		this.inheritedPlayer ||
 		new VideoPlayerController(
 			this.sources.map(i => i.src),
 			this.playerContext
@@ -64,7 +64,7 @@ export default class AppVideo extends Vue {
 		this.video.poster = this.poster;
 		this.video.loop = true;
 		this.video.autoplay = this.shouldPlay;
-		this.video.muted = this.shouldMute;
+		this.video.muted = !this.inheritedPlayer;
 
 		this.setupVideoEvents();
 
@@ -87,14 +87,15 @@ export default class AppVideo extends Vue {
 			this.video.addEventListener('play', onPlay);
 		}
 
+		this.syncVolume();
+		this.syncTime();
+
 		// As soon as we append, it'll actually load into view and start
 		// playing.
 		this.$el.appendChild(this.video);
 
-		this.syncVolume();
-		this.syncTime();
 		if (this.initCallback) {
-			// If using a callback function (used to set up Shaka events at the right timing),
+			// If using a callback function (used to set up Shaka events with the right timing),
 			// we need to run 'this.syncStates' after Shaka is done initializing itself.
 			this.initCallback(this.video, this.syncStates);
 		} else {
@@ -125,7 +126,8 @@ export default class AppVideo extends Vue {
 	}
 
 	private trackPlaytime() {
-		if (!this.videoStartTime) {
+		// Only track playtime events for components that get a VideoPlayerController passed in (meaning that we have playback controls).
+		if (!this.videoStartTime || !this.inheritedPlayer) {
 			return;
 		}
 
@@ -205,7 +207,7 @@ export default class AppVideo extends Vue {
 	@Watch('shouldPlay')
 	onShouldPlayChange() {
 		// Ignore 'shouldPlay' changes for instances that have an inherited player controller handling playback.
-		if (this.playerController) {
+		if (this.inheritedPlayer) {
 			return;
 		}
 

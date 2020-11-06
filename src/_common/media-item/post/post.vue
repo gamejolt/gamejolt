@@ -44,7 +44,6 @@
 						:sources="videoSources"
 						:should-play="shouldVideoPlay"
 						show-loading
-						should-mute
 					/>
 				</app-sticker-target>
 			</app-media-item-backdrop>
