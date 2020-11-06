@@ -22,7 +22,6 @@ import {
 } from '../../../../../_common/video/player/controller';
 import { VideoSourceArray } from '../../../../../_common/video/video';
 import AppVideo from '../../../../../_common/video/video.vue';
-import { AppVideoPlayerShakaLazy } from '../../../lazy';
 import { ActivityFeedItem } from '../item-service';
 import { InviewConfigFocused } from '../item/item';
 import { ActivityFeedKey, ActivityFeedView } from '../view';
@@ -37,7 +36,6 @@ const LoadDelay = 300;
 @Component({
 	components: {
 		AppScrollInview,
-		AppVideoPlayerShakaLazy,
 		AppImgResponsive,
 		AppResponsiveDimensions,
 		AppMediaItemBackdrop,
