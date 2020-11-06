@@ -117,7 +117,7 @@
 				<span v-app-tooltip.touchable="$gettext(`Plays`)">
 					<app-jolticon icon="play" />
 					<span class="-video-stats-label">
-						{{ viewCount }}
+						{{ number(viewCount) }}
 					</span>
 				</span>
 			</div>
