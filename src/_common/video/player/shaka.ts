@@ -1,7 +1,8 @@
 import { Player as ShakaPlayer, polyfill } from 'shaka-player';
 import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Component, Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
+import AppVideo from '../video.vue';
 import { trackVideoPlayerEvent, VideoPlayerController } from './controller';
 
 type ShakaTrack = {
@@ -12,7 +13,11 @@ type ShakaTrack = {
 	videoBandwidth: number;
 };
 
-@Component({})
+@Component({
+	components: {
+		AppVideo,
+	},
+})
 export default class AppVideoPlayerShaka extends Vue {
 	@Prop(propRequired(VideoPlayerController)) player!: VideoPlayerController;
 	@Prop(propOptional(Boolean, false)) autoplay!: boolean;
@@ -29,22 +34,13 @@ export default class AppVideoPlayerShaka extends Vue {
 	private isDestroyed = false;
 	private previousState: ShakaTrack | null = null;
 	private currentState: ShakaTrack | null = null;
-	private videoStartTime = 0;
-
-	$refs!: {
-		video: HTMLVideoElement;
-	};
+	private video?: HTMLVideoElement;
 
 	get shouldAutoplay() {
 		return this.autoplay;
 	}
 
-	mounted() {
-		this.init();
-	}
-
 	beforeDestroy() {
-		this.trackPlaytime();
 		this.isDestroyed = true;
 		if (this.shakaPlayer) {
 			this.shakaPlayer.destroy();
@@ -52,7 +48,8 @@ export default class AppVideoPlayerShaka extends Vue {
 		}
 	}
 
-	private async init() {
+	async initShakaWithVideo(video: HTMLVideoElement) {
+		this.video = video;
 		polyfill.installAll();
 		if (!ShakaPlayer.isBrowserSupported()) {
 			trackVideoPlayerEvent(this.player, 'browser-unsupported');
@@ -60,11 +57,7 @@ export default class AppVideoPlayerShaka extends Vue {
 			return;
 		}
 
-		// We sync volume before loading in the media so that nothing plays
-		// louder/quieter than they want.
-		this.syncVolume();
-
-		this.shakaPlayer = new ShakaPlayer(this.$refs.video);
+		this.shakaPlayer = new ShakaPlayer(this.video);
 
 		this.shakaPlayer.configure({
 			abr: {
@@ -112,45 +105,13 @@ export default class AppVideoPlayerShaka extends Vue {
 		}
 		trackVideoPlayerEvent(this.player, 'load-manifest', manifestType);
 
-		this.setupEvents();
-
-		// Sync up the rest of the state after loading the sources.
-		this.syncTime();
-		this.syncPlayState();
+		this.setupShakaEvents();
 	}
 
-	private setupEvents() {
+	private setupShakaEvents() {
 		if (this.isDestroyed || !this.shakaPlayer) {
 			return;
 		}
-
-		const { video } = this.$refs;
-
-		video.addEventListener('play', () => {
-			this.player.state = 'playing';
-			this.videoStartTime = Date.now();
-		});
-		video.addEventListener('pause', () => {
-			this.player.state = 'paused';
-			this.trackPlaytime();
-		});
-		video.addEventListener('volumechange', () => (this.player.volume = video.volume));
-		video.addEventListener('durationchange', () => {
-			if (video.duration) {
-				this.player.duration = video.duration * 1000;
-			}
-		});
-		video.addEventListener(
-			'timeupdate',
-			() => (this.player.currentTime = video.currentTime * 1000)
-		);
-		video.addEventListener('progress', () => {
-			let time = 0;
-			for (let i = 0; i < video.buffered.length; ++i) {
-				time = Math.max(time, video.buffered.end(i) * 1000);
-			}
-			this.player.bufferedTo = time;
-		});
 
 		this.shakaPlayer.addEventListener('adaptation', () => {
 			const tracks: ShakaTrack[] = this.shakaPlayer!.getVariantTracks();
@@ -185,92 +146,5 @@ export default class AppVideoPlayerShaka extends Vue {
 				);
 			}
 		});
-	}
-
-	private trackPlaytime() {
-		if (!this.videoStartTime) {
-			return;
-		}
-
-		const playtime = Date.now() - this.videoStartTime;
-		const loops = Math.floor(playtime / this.player.duration);
-		trackVideoPlayerEvent(this.player, 'watched', 'playtime', `${Math.ceil(playtime / 1000)}`);
-		trackVideoPlayerEvent(this.player, 'watched', 'loops', `${loops}`);
-		this.videoStartTime = 0;
-	}
-
-	private async tryPlayingVideo() {
-		const { video } = this.$refs;
-		if (!video) {
-			return;
-		}
-
-		const startVolume = this.player.volume;
-		try {
-			await video.play();
-			return;
-		} catch {}
-
-		if (!this.allowDegradedAutoplay) {
-			this.player.state = 'paused';
-			return;
-		}
-
-		// If autoplaying the video failed, first try setting the volume of
-		// the video to 0.
-		if (startVolume > 0) {
-			this.player.volume = 0;
-			await this.$nextTick();
-		}
-
-		try {
-			await video.play();
-			return;
-		} catch {}
-
-		// If the autoplaying is still blocked with the volume set to 0,
-		// pause the video in the player controller and reset the player
-		// volume to the initial setting.
-		this.player.state = 'paused';
-		this.player.volume = startVolume;
-	}
-
-	@Watch('player.volume')
-	syncVolume() {
-		const { video } = this.$refs;
-		if (this.player.volume !== video.volume) {
-			video.volume = this.player.volume;
-		}
-	}
-
-	@Watch('player.queuedPlaybackChange')
-	async syncPlayState() {
-		// Don't do anything if there's been no queued playback change.
-		// Playback changes are set in the VideoPlayerController constructor, depending on the context of the player.
-		if (this.player.queuedPlaybackChange === null) {
-			return;
-		}
-
-		const { video } = this.$refs;
-		if (this.player.queuedPlaybackChange === 'paused' && !video.paused) {
-			video.pause();
-		} else if (this.player.queuedPlaybackChange === 'playing' && video.paused) {
-			await this.tryPlayingVideo();
-		}
-		this.player.queuedPlaybackChange = null;
-		this.player.isLoading = false;
-	}
-
-	@Watch('player.queuedTimeChange')
-	syncTime() {
-		const { video } = this.$refs;
-		if (this.player.queuedTimeChange !== null) {
-			const time = this.player.queuedTimeChange;
-			this.player.currentTime = time;
-			this.player.queuedTimeChange = null;
-
-			// We store in milliseconds, HTMLMediaElement works in seconds.
-			video.currentTime = time / 1000;
-		}
 	}
 }

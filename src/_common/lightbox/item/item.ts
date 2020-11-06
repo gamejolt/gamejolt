@@ -7,6 +7,7 @@ import AppMediaItemBackdrop from '../../media-item/backdrop/backdrop.vue';
 import { Screen } from '../../screen/screen-service';
 import AppSketchfabEmbed from '../../sketchfab/embed/embed.vue';
 import AppVideoEmbed from '../../video/embed/embed.vue';
+import { VideoSourceArray } from '../../video/video';
 import AppVideo from '../../video/video.vue';
 import AppLightboxTS from '../lightbox';
 import { LightboxConfig, LightboxMediaModel } from '../lightbox-helpers';
@@ -60,6 +61,19 @@ export default class AppLightboxItem extends Vue {
 
 	get mediaItem() {
 		return this.item.getMediaItem()!;
+	}
+
+	get videoSources(): VideoSourceArray {
+		return [
+			{
+				type: 'video/mp4',
+				src: this.mediaItem.mediaserver_url_mp4,
+			},
+			{
+				type: 'video/webm',
+				src: this.mediaItem.mediaserver_url_webm,
+			},
+		];
 	}
 
 	async mounted() {

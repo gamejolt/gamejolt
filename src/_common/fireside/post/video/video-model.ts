@@ -1,6 +1,7 @@
 import { HistoryTick } from '../../../history-tick/history-tick-service';
 import { MediaItem } from '../../../media-item/media-item-model';
 import { Model } from '../../../model/model.service';
+import { VideoSourceArray } from '../../../video/video';
 
 //** Our preference for which manifest type will try loading first. */
 const manifestPreferences = ['mpd', 'm3u8'];
@@ -45,6 +46,19 @@ export class FiresidePostVideo extends Model {
 			.filter(i => i.type === MediaItem.TYPE_VIDEO_MANIFEST)
 			.sort((a, b) => getManifestPreference(a) - getManifestPreference(b))
 			.map(i => i.img_url);
+	}
+
+	get transcodedVideos(): VideoSourceArray {
+		const videoSources: VideoSourceArray = [];
+		this.media.map(i => {
+			if (i.type === MediaItem.TYPE_TRANSCODED_VIDEO) {
+				videoSources.push({
+					type: i.filetype,
+					src: i.img_url,
+				});
+			}
+		});
+		return videoSources;
 	}
 }
 

@@ -60,8 +60,7 @@
 									v-else
 									class="-video"
 									:poster="item.mediaserver_url"
-									:webm="item.mediaserver_url_webm"
-									:mp4="item.mediaserver_url_mp4"
+									:sources="getVideoSources(item)"
 									:show-loading="true"
 								/>
 							</app-responsive-dimensions>

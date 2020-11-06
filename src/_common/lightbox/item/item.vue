@@ -34,9 +34,9 @@
 							v-else
 							class="-video"
 							:poster="mediaItem.mediaserver_url"
-							:webm="mediaItem.mediaserver_url_webm"
-							:mp4="mediaItem.mediaserver_url_mp4"
+							:sources="videoSources"
 							show-loading
+							should-mute
 						/>
 					</app-media-item-backdrop>
 				</div>

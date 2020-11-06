@@ -26,9 +26,9 @@
 						v-if="isInview"
 						class="-video"
 						:poster="media.preview"
-						:webm="media.webm.url"
-						:mp4="media.mp4.url"
+						:sources="videoSources"
 						:should-play="shouldPlay"
+						should-mute
 					/>
 				</app-scroll-inview>
 			</div>

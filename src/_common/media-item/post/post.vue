@@ -41,10 +41,10 @@
 						class="-video"
 						:style="itemStyling"
 						:poster="mediaItem.mediaserver_url"
-						:webm="mediaItem.mediaserver_url_webm"
-						:mp4="mediaItem.mediaserver_url_mp4"
+						:sources="videoSources"
 						:should-play="shouldVideoPlay"
 						show-loading
+						should-mute
 					/>
 				</app-sticker-target>
 			</app-media-item-backdrop>

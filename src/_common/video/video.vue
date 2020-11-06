@@ -8,9 +8,8 @@
 			</div>
 		</template>
 		<template v-else>
-			<video :poster="poster" loop autoplay muted playsinline>
-				<source type="video/webm" :src="webm" />
-				<source type="video/mp4" :src="mp4" />
+			<video :poster="poster" :autoplay="shouldPlay" :muted="shouldMute" loop playsinline>
+				<source v-for="{ src, type } of sources" :key="type" :type="type" :src="src" />
 			</video>
 		</template>
 	</div>
@@ -37,4 +36,5 @@
 	>>> video
 		display: block
 		width: 100%
+		height: auto
 </style>
