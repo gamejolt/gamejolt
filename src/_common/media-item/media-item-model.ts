@@ -1,6 +1,24 @@
 import { LightboxMediaModel, LightboxMediaType } from '../lightbox/lightbox-helpers';
 import { Model } from '../model/model.service';
 import { constructStickerCounts, StickerCount } from '../sticker/sticker-count';
+import { VideoSourceArray } from '../video/video';
+
+export function getVideoSourcesFromMediaItem(item: MediaItem) {
+	const sources: VideoSourceArray = [];
+	if (item.mediaserver_url_mp4) {
+		sources.push({
+			type: 'video/mp4',
+			src: item.mediaserver_url_mp4,
+		});
+	}
+	if (item.mediaserver_url_webm) {
+		sources.push({
+			type: 'video/webm',
+			src: item.mediaserver_url_webm,
+		});
+	}
+	return sources;
+}
 
 export class MediaItem extends Model implements LightboxMediaModel {
 	static readonly TYPE_GAME_THUMBNAIL = 'game-thumbnail';

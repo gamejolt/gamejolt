@@ -3,11 +3,11 @@ import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../utils/vue';
 import { ContentFocus } from '../../../content-focus/content-focus.service';
+import { getVideoSourcesFromMediaItem, MediaItem } from '../../../media-item/media-item-model';
 import { AppObserveDimensions } from '../../../observe-dimensions/observe-dimensions.directive';
 import { Screen } from '../../../screen/screen-service';
 import { ScrollInviewConfig } from '../../../scroll/inview/config';
 import { AppScrollInview } from '../../../scroll/inview/inview';
-import { VideoSourceArray } from '../../../video/video';
 import AppVideo from '../../../video/video.vue';
 import { ContentOwner } from '../../content-owner';
 import AppBaseContentComponent from '../base/base-content-component.vue';
@@ -63,17 +63,12 @@ export default class AppContentGif extends Vue {
 		return ContentFocus.isWindowFocused;
 	}
 
-	get videoSources(): VideoSourceArray {
-		return [
-			{
-				type: 'video/mp4',
-				src: this.media.mp4.url,
-			},
-			{
-				type: 'video/webm',
-				src: this.media.webm.url,
-			},
-		];
+	get videoSources() {
+		if (!this.media || !(this.media instanceof MediaItem)) {
+			return [];
+		}
+
+		return getVideoSourcesFromMediaItem(this.media);
 	}
 
 	mounted() {

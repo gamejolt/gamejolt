@@ -14,10 +14,9 @@ import {
 } from '../../sticker/target/target-controller';
 import AppStickerTarget from '../../sticker/target/target.vue';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
-import { VideoSourceArray } from '../../video/video';
 import AppVideo from '../../video/video.vue';
 import AppMediaItemBackdrop from '../backdrop/backdrop.vue';
-import { MediaItem } from '../media-item-model';
+import { getVideoSourcesFromMediaItem, MediaItem } from '../media-item-model';
 
 @Component({
 	components: {
@@ -62,17 +61,8 @@ export default class AppMediaItemPost extends Vue {
 		return this.isActive && ContentFocus.hasFocus;
 	}
 
-	get videoSources(): VideoSourceArray {
-		return [
-			{
-				type: 'video/mp4',
-				src: this.mediaItem.mediaserver_url_mp4,
-			},
-			{
-				type: 'video/webm',
-				src: this.mediaItem.mediaserver_url_webm,
-			},
-		];
+	get videoSources() {
+		return getVideoSourcesFromMediaItem(this.mediaItem);
 	}
 
 	get itemRadius() {
