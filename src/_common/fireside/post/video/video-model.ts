@@ -49,16 +49,9 @@ export class FiresidePostVideo extends Model {
 	}
 
 	get transcodedVideos(): VideoSourceArray {
-		const videoSources: VideoSourceArray = [];
-		this.media.map(i => {
-			if (i.type === MediaItem.TYPE_TRANSCODED_VIDEO) {
-				videoSources.push({
-					type: i.filetype,
-					src: i.img_url,
-				});
-			}
-		});
-		return videoSources;
+		return this.media
+			.filter(i => i.type === MediaItem.TYPE_TRANSCODED_VIDEO)
+			.map(i => ({ type: i.filetype, src: i.img_url }));
 	}
 }
 
