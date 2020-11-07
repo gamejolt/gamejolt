@@ -2,7 +2,7 @@
 
 <template>
 	<app-video
-		:player-controller="player"
+		:player="player"
 		:should-play="shouldAutoplay"
 		:init-callback="initShakaWithVideo"
 		track-playtime

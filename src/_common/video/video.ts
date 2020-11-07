@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { propOptional } from '../../utils/vue';
+import { propOptional, propRequired } from '../../utils/vue';
 import AppLoading from '../loading/loading.vue';
 import { trackVideoPlayerEvent, VideoPlayerController } from './player/controller';
 
@@ -20,15 +20,13 @@ type VideoSourceObject = {
 	},
 })
 export default class AppVideo extends Vue {
-	@Prop(propOptional(Array, () => [])) sources!: VideoSourceArray;
-	@Prop(propOptional(String, '')) poster!: string;
+	@Prop(propRequired(VideoPlayerController))
+	player!: VideoPlayerController;
 	@Prop(propOptional(Boolean, false)) showLoading!: boolean;
 	@Prop(propOptional(Boolean, true)) shouldPlay!: boolean;
 
 	@Prop(propOptional(Function)) initCallback?: (videoTag: HTMLVideoElement) => Promise<boolean>;
-	@Prop(propOptional(Boolean, false)) trackPlaytime!: boolean;
-	@Prop(propOptional(VideoPlayerController, null))
-	playerController!: VideoPlayerController | null;
+	@Prop(propOptional(Boolean, true)) trackPlaytime!: boolean;
 
 	/**
 	 * If their browser settings block autoplaying with audio, then the browser
@@ -39,13 +37,6 @@ export default class AppVideo extends Vue {
 	@Prop(propOptional(Boolean, false)) allowDegradedAutoplay!: boolean;
 
 	isLoaded = false;
-	/** The player controller that was either passed in or created. */
-	player =
-		this.playerController ||
-		new VideoPlayerController(
-			this.sources.map(i => i.src),
-			null
-		);
 
 	private video!: HTMLVideoElement;
 	private videoStartTime = 0;
@@ -54,18 +45,18 @@ export default class AppVideo extends Vue {
 		this.video = document.createElement('video');
 		this.video.style.display = 'block';
 		this.video.style.width = '100%';
-		this.video.poster = this.poster;
+		this.video.poster = this.player.poster || '';
 		this.video.loop = true;
 		this.video.autoplay = this.shouldPlay;
-		this.video.muted = !this.playerController;
+		this.video.muted = this.player.context === 'gif';
 
 		this.setupVideoEvents();
 
-		if (this.sources.length) {
-			this.sources.map(i => {
+		if (this.player.context !== 'page') {
+			this.player.manifests.forEach(i => {
 				const elem = document.createElement('source');
-				elem.type = i.type;
-				elem.src = i.src;
+				elem.type = this.getManifestType(i);
+				elem.src = i;
 				this.video.appendChild(elem);
 			});
 
@@ -119,9 +110,14 @@ export default class AppVideo extends Vue {
 		await this.syncPlayState();
 	}
 
+	getManifestType(item: string) {
+		const splitItem = item.split('.');
+		return `video/${splitItem.pop() || ''}`;
+	}
+
 	private trackVideoPlaytime() {
-		// Only track playtime events for components that get a VideoPlayerController passed in (meaning that we have playback controls).
-		if (!this.videoStartTime || !this.playerController) {
+		// Gifs currently don't pause when they become 'inactive'.
+		if (!this.videoStartTime || this.player.context === 'gif') {
 			return;
 		}
 
@@ -133,7 +129,7 @@ export default class AppVideo extends Vue {
 	}
 
 	private setupVideoEvents() {
-		if (!this.video || !this.player) {
+		if (!this.video) {
 			return;
 		}
 		this.video.addEventListener('play', () => {
@@ -164,7 +160,7 @@ export default class AppVideo extends Vue {
 	}
 
 	private async tryPlayingVideo() {
-		if (!this.video || !this.player) {
+		if (!this.video) {
 			return;
 		}
 
@@ -209,7 +205,7 @@ export default class AppVideo extends Vue {
 
 	@Watch('player.volume')
 	syncVolume() {
-		if (!this.video || !this.player) {
+		if (!this.video) {
 			return;
 		}
 
@@ -220,7 +216,7 @@ export default class AppVideo extends Vue {
 
 	@Watch('player.queuedPlaybackChange')
 	async syncPlayState() {
-		if (!this.video || !this.player || this.player.queuedPlaybackChange === null) {
+		if (!this.video || this.player.queuedPlaybackChange === null) {
 			return;
 		}
 
@@ -235,7 +231,7 @@ export default class AppVideo extends Vue {
 
 	@Watch('player.queuedTimeChange')
 	syncTime() {
-		if (!this.video || !this.player || this.player.queuedTimeChange === null) {
+		if (!this.video || this.player.queuedTimeChange === null) {
 			return;
 		}
 

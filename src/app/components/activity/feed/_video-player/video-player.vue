@@ -19,7 +19,7 @@
 					v-if="player && !GJ_IS_SSR"
 					class="-video"
 					:style="{ width }"
-					:player-controller="player"
+					:player="player"
 					:sources="videoSources"
 					:should-play="shouldAutoplay"
 					track-playtime

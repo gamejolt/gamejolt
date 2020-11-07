@@ -8,8 +8,19 @@
 			</div>
 		</template>
 		<template v-else>
-			<video :poster="poster" :autoplay="shouldPlay" :muted="shouldMute" loop playsinline>
-				<source v-for="{ src, type } of sources" :key="type" :type="type" :src="src" />
+			<video
+				:poster="player.poster"
+				:autoplay="shouldPlay"
+				:muted="player.context === 'gif'"
+				loop
+				playsinline
+			>
+				<source
+					v-for="manifest of player.manifests"
+					:key="manifest"
+					:type="getManifestType(manifest)"
+					:src="manifest"
+				/>
 			</video>
 		</template>
 	</div>

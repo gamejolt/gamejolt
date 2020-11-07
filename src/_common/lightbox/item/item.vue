@@ -31,10 +31,9 @@
 							:alt="item.caption"
 						/>
 						<app-video
-							v-else
+							v-else-if="videoController"
 							class="-video"
-							:poster="mediaItem.mediaserver_url"
-							:sources="videoSources"
+							:player="videoController"
 							show-loading
 						/>
 					</app-media-item-backdrop>

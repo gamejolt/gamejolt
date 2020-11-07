@@ -4,10 +4,7 @@ import AppContentViewer from '../../../_common/content/content-viewer/content-vi
 import { Environment } from '../../../_common/environment/environment.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { AppImgResponsive } from '../../../_common/img/responsive/responsive';
-import {
-	getVideoSourcesFromMediaItem,
-	MediaItem,
-} from '../../../_common/media-item/media-item-model';
+import { getVideoPlayerFromSources, MediaItem } from '../../../_common/media-item/media-item-model';
 import { BaseModal } from '../../../_common/modal/base';
 import AppModalTS from '../../../_common/modal/modal';
 import { AppResponsiveDimensions } from '../../../_common/responsive-dimensions/responsive-dimensions';
@@ -46,7 +43,11 @@ export default class AppBroadcastModal extends BaseModal {
 		modal: AppModalTS;
 	};
 
-	getVideoSources(item: MediaItem) {
-		return getVideoSourcesFromMediaItem(item);
+	getVideoController(item: MediaItem) {
+		const sources = {
+			mp4: item.mediaserver_url_mp4,
+			webm: item.mediaserver_url_webm,
+		};
+		return getVideoPlayerFromSources(sources, 'gif', item.mediaserver_url);
 	}
 }

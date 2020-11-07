@@ -8,7 +8,7 @@ import {
 	SettingVideoPlayerVolume,
 } from '../../settings/settings.service';
 
-export type VideoPlayerControllerContext = 'feed' | 'page' | null;
+export type VideoPlayerControllerContext = 'feed' | 'page' | 'gif' | null;
 export type VideoPlayerState = 'paused' | 'playing';
 export type ScrubberStage = 'start' | 'scrub' | 'end';
 
@@ -30,7 +30,11 @@ export class VideoPlayerController {
 	queuedFullScreenChange: null | boolean = null;
 	queuedPlaybackChange: null | VideoPlayerState = null;
 
-	constructor(public manifests: string[], public context: VideoPlayerControllerContext) {
+	constructor(
+		public manifests: string[],
+		public context: VideoPlayerControllerContext,
+		public poster?: string
+	) {
 		// Assign volume level from the proper local storage context.
 		switch (context) {
 			case 'feed':
@@ -43,6 +47,10 @@ export class VideoPlayerController {
 				break;
 			case 'page':
 				this.volume = SettingVideoPlayerMuted.get() ? 0 : SettingVideoPlayerVolume.get();
+				this.queuedPlaybackChange = 'playing';
+				break;
+			case 'gif':
+				this.volume = 0;
 				this.queuedPlaybackChange = 'playing';
 				break;
 			default:
@@ -81,6 +89,10 @@ function queuePlayerPlayback(player: VideoPlayerController, state: VideoPlayerSt
 
 /** Volume is set on a scale of 0 to 1 */
 export function setVideoVolume(player: VideoPlayerController, level: number) {
+	if (player.context === 'gif') {
+		return;
+	}
+
 	const volume = Math.min(1, Math.max(0, Math.round(level * 100) / 100));
 	player.volume = volume;
 }
@@ -100,6 +112,8 @@ function getVolumeSetting(player: VideoPlayerController) {
 		return SettingVideoPlayerFeedVolume.get();
 	} else if (player.context === 'page') {
 		return SettingVideoPlayerVolume.get();
+	} else if (player.context === 'gif') {
+		return 0;
 	}
 
 	return 1;

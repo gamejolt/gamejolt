@@ -20,10 +20,9 @@
 					/>
 
 					<app-video
-						v-if="hasVideo"
+						v-if="hasVideo && videoController"
 						class="-video"
-						:poster="mediaItem.mediaserver_url"
-						:sources="videoSources"
+						:player="videoController"
 						:should-play="shouldPlayVideo"
 					/>
 				</div>

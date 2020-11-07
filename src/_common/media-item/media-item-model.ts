@@ -1,23 +1,15 @@
 import { LightboxMediaModel, LightboxMediaType } from '../lightbox/lightbox-helpers';
 import { Model } from '../model/model.service';
 import { constructStickerCounts, StickerCount } from '../sticker/sticker-count';
-import { VideoSourceArray } from '../video/video';
+import { VideoPlayerController, VideoPlayerControllerContext } from '../video/player/controller';
 
-export function getVideoSourcesFromMediaItem(item: MediaItem) {
-	const sources: VideoSourceArray = [];
-	if (item.mediaserver_url_mp4) {
-		sources.push({
-			type: 'video/mp4',
-			src: item.mediaserver_url_mp4,
-		});
-	}
-	if (item.mediaserver_url_webm) {
-		sources.push({
-			type: 'video/webm',
-			src: item.mediaserver_url_webm,
-		});
-	}
-	return sources;
+export function getVideoPlayerFromSources(
+	item: { mp4: string; webm: string },
+	context: VideoPlayerControllerContext = null,
+	poster?: string
+) {
+	const sources = [item.mp4, item.webm];
+	return new VideoPlayerController(sources, context, poster);
 }
 
 export class MediaItem extends Model implements LightboxMediaModel {

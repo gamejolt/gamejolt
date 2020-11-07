@@ -4,7 +4,7 @@ import { EventSubscription } from '../../../system/event/event-topic';
 import { findRequiredVueParent } from '../../../utils/vue';
 import { AppImgResponsive } from '../../img/responsive/responsive';
 import AppMediaItemBackdrop from '../../media-item/backdrop/backdrop.vue';
-import { getVideoSourcesFromMediaItem } from '../../media-item/media-item-model';
+import { getVideoPlayerFromSources } from '../../media-item/media-item-model';
 import { Screen } from '../../screen/screen-service';
 import AppSketchfabEmbed from '../../sketchfab/embed/embed.vue';
 import AppVideoEmbed from '../../video/embed/embed.vue';
@@ -63,8 +63,12 @@ export default class AppLightboxItem extends Vue {
 		return this.item.getMediaItem()!;
 	}
 
-	get videoSources() {
-		return getVideoSourcesFromMediaItem(this.mediaItem);
+	get videoController() {
+		const sources = {
+			mp4: this.mediaItem.mediaserver_url_mp4,
+			webm: this.mediaItem.mediaserver_url_webm,
+		};
+		return getVideoPlayerFromSources(sources, 'gif', this.mediaItem.mediaserver_url);
 	}
 
 	async mounted() {
