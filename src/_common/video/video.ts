@@ -2,11 +2,7 @@ import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { propOptional } from '../../utils/vue';
 import AppLoading from '../loading/loading.vue';
-import {
-	trackVideoPlayerEvent,
-	VideoPlayerController,
-	VideoPlayerControllerContext,
-} from './player/controller';
+import { trackVideoPlayerEvent, VideoPlayerController } from './player/controller';
 
 // We have to not use Vue for video embed stuff!
 // https://forum.ionicframework.com/t/ionic-2-video-video-memory-leak-garbage-collection-solved/52333
@@ -28,15 +24,11 @@ export default class AppVideo extends Vue {
 	@Prop(propOptional(String, '')) poster!: string;
 	@Prop(propOptional(Boolean, false)) showLoading!: boolean;
 	@Prop(propOptional(Boolean, true)) shouldPlay!: boolean;
-	@Prop(propOptional(Boolean, false)) shouldMute!: boolean;
-	@Prop(propOptional(Function)) initCallback?: (
-		videoTag: HTMLVideoElement,
-		syncFunction: () => void
-	) => void;
 
-	@Prop(propOptional(String, null)) playerContext!: VideoPlayerControllerContext;
+	@Prop(propOptional(Function)) initCallback?: (videoTag: HTMLVideoElement) => Promise<boolean>;
+	@Prop(propOptional(Boolean, false)) trackPlaytime!: boolean;
 	@Prop(propOptional(VideoPlayerController, null))
-	inheritedPlayer!: VideoPlayerController | null;
+	playerController!: VideoPlayerController | null;
 
 	/**
 	 * If their browser settings block autoplaying with audio, then the browser
@@ -47,11 +39,12 @@ export default class AppVideo extends Vue {
 	@Prop(propOptional(Boolean, false)) allowDegradedAutoplay!: boolean;
 
 	isLoaded = false;
+	/** The player controller that was either passed in or created. */
 	player =
-		this.inheritedPlayer ||
+		this.playerController ||
 		new VideoPlayerController(
 			this.sources.map(i => i.src),
-			this.playerContext
+			null
 		);
 
 	private video!: HTMLVideoElement;
@@ -64,7 +57,7 @@ export default class AppVideo extends Vue {
 		this.video.poster = this.poster;
 		this.video.loop = true;
 		this.video.autoplay = this.shouldPlay;
-		this.video.muted = !this.inheritedPlayer;
+		this.video.muted = !this.playerController;
 
 		this.setupVideoEvents();
 
@@ -87,26 +80,11 @@ export default class AppVideo extends Vue {
 			this.video.addEventListener('play', onPlay);
 		}
 
-		this.syncVolume();
-		this.syncTime();
-
 		// As soon as we append, it'll actually load into view and start
 		// playing.
 		this.$el.appendChild(this.video);
 
-		if (this.initCallback) {
-			// If using a callback function (used to set up Shaka events with the right timing),
-			// we need to run 'this.syncStates' after Shaka is done initializing itself.
-			this.initCallback(this.video, this.syncStates);
-		} else {
-			// Otherwise, we can just sync now.
-			this.syncStates();
-		}
-		this.isLoaded = true;
-	}
-
-	private syncStates() {
-		this.syncPlayState();
+		this.endOfInit();
 	}
 
 	/**
@@ -114,7 +92,7 @@ export default class AppVideo extends Vue {
 	 * https://dev.w3.org/html5/spec-author-view/video.html#best-practices-for-authors-using-media-elements
 	 */
 	beforeDestroy() {
-		this.trackPlaytime();
+		this.trackVideoPlaytime();
 		if (this.video) {
 			// Empty all sources.
 			while (this.video.firstChild) {
@@ -125,9 +103,25 @@ export default class AppVideo extends Vue {
 		}
 	}
 
-	private trackPlaytime() {
+	private async endOfInit() {
+		if (this.initCallback) {
+			// Wait for the callback to fail or succeed,
+			await this.initCallback!(this.video);
+		}
+		// then syn the states.
+		await this.syncStates();
+		this.isLoaded = true;
+	}
+
+	private async syncStates() {
+		this.syncVolume();
+		this.syncTime();
+		await this.syncPlayState();
+	}
+
+	private trackVideoPlaytime() {
 		// Only track playtime events for components that get a VideoPlayerController passed in (meaning that we have playback controls).
-		if (!this.videoStartTime || !this.inheritedPlayer) {
+		if (!this.videoStartTime || !this.playerController) {
 			return;
 		}
 
@@ -148,7 +142,7 @@ export default class AppVideo extends Vue {
 		});
 		this.video.addEventListener('pause', () => {
 			this.player.state = 'paused';
-			this.trackPlaytime();
+			this.trackVideoPlaytime();
 		});
 		this.video.addEventListener('volumechange', () => (this.player.volume = this.video.volume));
 		this.video.addEventListener('durationchange', () => {
@@ -206,13 +200,8 @@ export default class AppVideo extends Vue {
 
 	@Watch('shouldPlay')
 	onShouldPlayChange() {
-		// Ignore 'shouldPlay' changes for instances that have an inherited player controller handling playback.
-		if (this.inheritedPlayer) {
-			return;
-		}
-
 		if (this.shouldPlay) {
-			this.video.play();
+			this.tryPlayingVideo();
 		} else {
 			this.video.pause();
 		}

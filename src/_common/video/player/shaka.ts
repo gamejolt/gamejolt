@@ -36,7 +36,6 @@ export default class AppVideoPlayerShaka extends Vue {
 	private currentState: ShakaTrack | null = null;
 	private video?: HTMLVideoElement;
 	// Function to run after setting up Shaka.
-	private syncFunction!: () => void;
 
 	get shouldAutoplay() {
 		return this.autoplay;
@@ -50,14 +49,14 @@ export default class AppVideoPlayerShaka extends Vue {
 		}
 	}
 
-	async initShakaWithVideo(video: HTMLVideoElement, syncFunction: () => void) {
+	// Returns a boolean Promise, indicating success or failure of initialization.
+	async initShakaWithVideo(video: HTMLVideoElement) {
 		this.video = video;
-		this.syncFunction = syncFunction;
 		polyfill.installAll();
 		if (!ShakaPlayer.isBrowserSupported()) {
 			trackVideoPlayerEvent(this.player, 'browser-unsupported');
 			console.error('Browser not supported for video streaming.');
-			return;
+			return false;
 		}
 
 		this.shakaPlayer = new ShakaPlayer(this.video);
@@ -89,7 +88,7 @@ export default class AppVideoPlayerShaka extends Vue {
 		// unsupported in the browser, we fallback to HLS.
 		for (const manifest of this.player.manifests) {
 			if (this.isDestroyed) {
-				return;
+				return false;
 			}
 
 			try {
@@ -104,16 +103,17 @@ export default class AppVideoPlayerShaka extends Vue {
 
 		if (!manifestType) {
 			trackVideoPlayerEvent(this.player, 'load-manifest-failed');
-			return;
+			return false;
 		}
 		trackVideoPlayerEvent(this.player, 'load-manifest', manifestType);
 
-		this.setupShakaEvents();
+		return this.setupShakaEvents();
 	}
 
+	// Returns a boolean, indicating success or failure of initialization.
 	private setupShakaEvents() {
 		if (this.isDestroyed || !this.shakaPlayer) {
-			return;
+			return false;
 		}
 
 		this.shakaPlayer.addEventListener('adaptation', () => {
@@ -149,6 +149,6 @@ export default class AppVideoPlayerShaka extends Vue {
 				);
 			}
 		});
-		this.syncFunction();
+		return true;
 	}
 }
