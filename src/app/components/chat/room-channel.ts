@@ -19,7 +19,7 @@ interface RoomPresence {
 }
 
 interface MemberAddPayload {
-	members: ChatUser[];
+	member: ChatUser;
 }
 
 interface MemberLeavePayload {
@@ -166,17 +166,9 @@ export class ChatRoomChannel extends Channel {
 	}
 
 	private onMemberAdd(data: MemberAddPayload) {
-		const roomMembers = this.client.roomMembers[this.roomId];
-
-		for (const member of data.members) {
-			const user = new ChatUser(member);
-
-			if (roomMembers) {
-				roomMembers.add(user);
-			}
-
-			this.room.members.push(user);
-		}
+		const member = new ChatUser(data.member);
+		this.client.roomMembers[this.roomId].add(member);
+		this.room.members.push(member);
 	}
 
 	private onOwnerSync(data: OwnerSyncPayload) {
