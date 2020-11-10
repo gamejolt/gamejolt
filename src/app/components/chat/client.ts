@@ -6,6 +6,8 @@ import { arrayRemove, numberSort } from '../../../utils/array';
 import { sleep } from '../../../utils/utils';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
+import { Growls } from '../../../_common/growls/growls.service';
+import { Translate } from '../../../_common/translate/translate.service';
 import { store } from '../../store';
 import { ChatMessage, ChatMessageType } from './message';
 import { ChatRoom } from './room';
@@ -697,7 +699,11 @@ export function acceptInvite(chat: ChatClient, msgId: number) {
 	if (room) {
 		chat.roomChannels[room.id]
 			.push('accept_invite', { msg_id: msgId })
-			.receive('ok', response => enterChatRoom(chat, response.room.id));
+			.receive('ok', response => enterChatRoom(chat, response.room.id))
+			.receive('error', response => {
+				console.error('[Chat] Received error sending message', response);
+				Growls.error(Translate.$gettext('Could not accept invite.'));
+			});
 	}
 }
 
