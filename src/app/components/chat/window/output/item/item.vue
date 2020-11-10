@@ -112,13 +112,19 @@
 				</template>
 				<template v-else-if="message.type === ChatMessageType.INVITE">
 					<div class="alert">
-						<p>
+						<p v-if="isInviteSender">
 							<translate>
-								I'd like to invite you to a group chat.
+								You have sent a group chat invite.
 							</translate>
 						</p>
+						<p v-if="!isInviteSender">
+							<translate>
+								You have been invited to a group chat.
+							</translate>
+						</p>
+
 						<app-button
-							:disabled="chat.currentUser && message.user.id === chat.currentUser.id"
+							v-if="!isInviteSender"
 							primary
 							solid
 							@click="acceptInvite(message.id)"

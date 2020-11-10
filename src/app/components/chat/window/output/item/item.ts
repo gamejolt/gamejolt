@@ -74,6 +74,10 @@ export default class AppChatWindowOutputItem extends Vue {
 		return this.singleLineMode;
 	}
 
+	get isInviteSender() {
+		return this.chat.currentUser && this.message.user.id === this.chat.currentUser.id;
+	}
+
 	get loggedOn() {
 		return {
 			template: date(this.message.logged_on, 'shortTime'),
