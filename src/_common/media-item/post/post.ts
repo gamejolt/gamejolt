@@ -44,7 +44,10 @@ export default class AppMediaItemPost extends Vue {
 	// We pass the parent sticker target controller in as the parent for this
 	// one. This will link them up so that when the parent is showing, we also
 	// try showing stickers on this target.
-	stickerTargetController = new StickerTargetController(this.mediaItem, this.parentStickerTarget);
+	stickerTargetController = StickerTargetController.createWithParent(
+		this.mediaItem,
+		this.parentStickerTarget
+	);
 
 	readonly Screen = Screen;
 

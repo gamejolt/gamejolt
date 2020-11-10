@@ -86,7 +86,9 @@ export default class AppActivityFeedEventItem extends Vue {
 	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
 	@Provide(StickerTargetParentControllerKey)
-	stickerTargetController = this.post ? new StickerTargetController(this.post) : null;
+	stickerTargetController = this.post
+		? StickerTargetController.create(this.post, this.post)
+		: null;
 
 	@State app!: Store['app'];
 

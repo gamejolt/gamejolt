@@ -20,7 +20,6 @@ import AppScrollScroller from '../../scroll/scroller/scroller.vue';
 import AppStickerCard from '../card/card.vue';
 import { StickerCollectModal } from '../collect/modal/modal.service';
 import { Sticker } from '../sticker.model';
-import AppSticker from '../sticker.vue';
 import AppShellBottomDrawerItem from './item/item.vue';
 
 if (!GJ_IS_SSR) {
@@ -32,7 +31,6 @@ if (!GJ_IS_SSR) {
 	components: {
 		AppScrollScroller,
 		AppStickerCard,
-		AppSticker,
 		AppShellBottomDrawerItem,
 		AppLoadingFade,
 		AppEventItemMediaIndicator,

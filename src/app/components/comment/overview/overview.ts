@@ -91,6 +91,7 @@ export default class AppCommentOverview extends Vue {
 	open(comment: Comment) {
 		CommentThreadModal.show({
 			model: this.model,
+			parentId: comment.parent_id || comment.id,
 			commentId: comment.id,
 			displayMode: this.displayMode,
 		});

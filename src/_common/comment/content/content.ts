@@ -4,6 +4,7 @@ import { propOptional, propRequired } from '../../../utils/vue';
 import AppContentViewer from '../../content/content-viewer/content-viewer.vue';
 import AppFadeCollapse from '../../fade-collapse/fade-collapse.vue';
 import { date } from '../../filters/date';
+import { Model } from '../../model/model.service';
 import AppStickerControlsOverlay from '../../sticker/controls-overlay/controls-overlay.vue';
 import AppStickerReactions from '../../sticker/reactions/reactions.vue';
 import { StickerTargetController } from '../../sticker/target/target-controller';
@@ -27,12 +28,13 @@ import AppCommentVideoThumbnail from '../video/thumbnail/thumbnail.vue';
 })
 export default class AppCommentContent extends Vue {
 	@Prop(propRequired(Comment)) comment!: Comment;
+	@Prop(propRequired(Model)) model!: Model;
 	@Prop(propOptional(String, '')) content!: string;
 
 	canToggleContent = false;
 	showFullContent = false;
 	showAllVideos = false;
-	stickerTargetController = new StickerTargetController(this.comment);
+	stickerTargetController = StickerTargetController.create(this.comment, this.model);
 
 	readonly date = date;
 }

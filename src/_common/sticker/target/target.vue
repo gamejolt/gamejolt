@@ -19,6 +19,7 @@
 					:key="sticker.id"
 					class="-sticker -sticker-animate"
 					:style="{ 'animation-delay': getStickerAnimationDelay(sticker) }"
+					:controller="controller"
 					:sticker="sticker"
 				/>
 			</div>

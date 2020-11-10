@@ -1,13 +1,23 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { Emit, Prop, Watch } from 'vue-property-decorator';
+import { Emit, Inject, Prop, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../utils/vue';
+import { CommentStoreManager, CommentStoreManagerKey } from '../comment/comment-store';
+import { CommentThreadModal } from '../comment/thread/modal.service';
+import AppUserAvatarImg from '../user/user-avatar/img/img.vue';
 import { StickerPlacement } from './placement/placement.model';
+import { StickerTargetController } from './target/target-controller';
 
-@Component({})
+@Component({
+	components: {
+		AppUserAvatarImg,
+	},
+})
 export default class AppSticker extends Vue {
 	@Prop(propRequired(StickerPlacement)) sticker!: StickerPlacement;
+	@Prop(propRequired(StickerTargetController)) controller!: StickerTargetController;
 	@Prop(propOptional(Boolean, true)) isClickable!: boolean;
+	@Inject(CommentStoreManagerKey) commentManager!: CommentStoreManager;
 
 	$refs!: {
 		outer: HTMLDivElement;
@@ -16,6 +26,14 @@ export default class AppSticker extends Vue {
 
 	@Emit('click')
 	emitClick() {}
+
+	get shouldShowComment() {
+		return this.isClickable && !!this.sticker.comment;
+	}
+
+	get commentUser() {
+		return this.sticker.comment!.user;
+	}
 
 	mounted() {
 		this.onUpdateStickerPlacement();
@@ -34,9 +52,19 @@ export default class AppSticker extends Vue {
 		this.$refs.inner.style.transform = `rotate(${this.sticker.rotation * 90 - 45}deg)`;
 	}
 
-	onClickRemove() {
+	async onClick() {
 		if (this.isClickable) {
-			this.emitClick();
+			if (this.sticker.comment) {
+				CommentThreadModal.show({
+					parentId: this.sticker.comment.parent_id || this.sticker.comment.id,
+					commentId: this.sticker.comment.id,
+					displayMode: 'comments',
+					model: this.controller.commentOwner,
+					autofocus: false,
+				});
+			} else {
+				this.emitClick();
+			}
 		}
 	}
 }

@@ -30,6 +30,9 @@ export default class AppCommentThreadModal extends BaseModal {
 	@Prop(Number)
 	commentId!: number;
 
+	@Prop(Number)
+	parentId!: number;
+
 	@Prop(Model)
 	model!: Model;
 
@@ -54,12 +57,7 @@ export default class AppCommentThreadModal extends BaseModal {
 			this.model.id
 		);
 		if (store) {
-			const comment = store.comments.find(c => c.id === this.commentId);
-			if (comment && comment.parent_id) {
-				const parent = store.comments.find(c => c.id === comment.parent_id);
-				return parent;
-			}
-			return comment;
+			return store.parentComments.find(c => c.id === this.parentId);
 		}
 	}
 

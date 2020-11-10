@@ -230,7 +230,7 @@ export default class AppStickerDrawerGhost extends Vue {
 		} else {
 			this.commentStyle = {
 				// Adjust so the comment form is placed slightly below the sticker for a connected look.
-				left: 'calc(100% - 16px)',
+				left: 'calc(100% - 8px)',
 				top: 'calc(100% - 52px)',
 				right: '',
 			};

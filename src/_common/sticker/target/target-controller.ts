@@ -8,6 +8,8 @@ import { ValidStickerResource } from './target';
 
 export const StickerTargetParentControllerKey = Symbol('sticker-target-parent');
 
+type StickerTargetModel = FiresidePost | Comment | MediaItem;
+
 export class StickerTargetController {
 	isInview = false;
 	stickers: StickerPlacement[] = [];
@@ -42,15 +44,53 @@ export class StickerTargetController {
 		return this.shouldShow && this.isInview && !this.hasLoadedStickers;
 	}
 
+	/**
+	 * Return the resource that owns comments placed with stickers on this
+	 * sticker target.
+	 */
+	get commentOwner(): Model {
+		// The parent is usually "closer" to the comment owner.
+		// Example: the parent of a media item is a fireside post, which is
+		// also the owner for any comments left on the media item stickers.
+		if (this.parent) {
+			return this.parent.commentOwner;
+		}
+
+		if (!this._commentOwner) {
+			throw new Error('Comment owner has to be defined!');
+		}
+
+		return this._commentOwner;
+	}
+
+	static create(model: StickerTargetModel, commentOwner: Model) {
+		return new StickerTargetController(model, undefined, commentOwner);
+	}
+
+	static createWithParent(model: StickerTargetModel, parent: StickerTargetController) {
+		return new StickerTargetController(model, parent, undefined);
+	}
+
 	constructor(
-		public readonly model: FiresidePost | Comment | MediaItem,
-		parent?: StickerTargetController
+		public readonly model: StickerTargetModel,
+		parent?: StickerTargetController,
+		private readonly _commentOwner?: Model
 	) {
 		if (parent) {
 			this.parent = parent;
 			parent.children.push(this);
 		}
 	}
+
+	// constructor(
+	// 	public readonly model: StickerTargetModel,
+	// 	parent?: StickerTargetController
+	// ) {
+	// 	if (parent) {
+	// 		this.parent = parent;
+	// 		parent.children.push(this);
+	// 	}
+	// }
 }
 
 export function toggleStickersShouldShow(

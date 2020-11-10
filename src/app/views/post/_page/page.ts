@@ -89,7 +89,7 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 	@AppState user!: AppStore['user'];
 
 	@Provide(StickerTargetParentControllerKey)
-	stickerTargetController = new StickerTargetController(this.post);
+	stickerTargetController = StickerTargetController.create(this.post, this.post);
 
 	activeImageIndex = 0;
 	videoStartTime = 0;

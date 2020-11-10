@@ -34,7 +34,7 @@ export default class AppBroadcastModal extends BaseModal {
 	@Prop(propRequired(Array)) posts!: FiresidePost[];
 
 	post: FiresidePost = this.posts[0];
-	stickerTargetController = new StickerTargetController(this.post);
+	stickerTargetController = StickerTargetController.create(this.post, this.post);
 
 	readonly Environment = Environment;
 

@@ -113,11 +113,19 @@
 			<div ref="scrollTarget" class="-scroll-target" />
 
 			<div v-if="comment.sticker_placement" class="-sticker-placement">
-				<img class="-sticker" :src="comment.sticker_placement.sticker.img_url" />
+				<img
+					class="-sticker"
+					:style="{ transform: stickerRotationStyle }"
+					:src="comment.sticker_placement.sticker.img_url"
+				/>
 			</div>
 
 			<template v-if="!isEditing">
-				<app-comment-content :comment="comment" :content="comment.comment_content" />
+				<app-comment-content
+					:comment="comment"
+					:content="comment.comment_content"
+					:model="model"
+				/>
 			</template>
 			<template v-else>
 				<form-comment

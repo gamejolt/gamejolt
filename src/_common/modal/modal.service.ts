@@ -49,6 +49,11 @@ export class Modal {
 		});
 	}
 
+	static toFront(modal: Modal) {
+		this.remove(modal);
+		this.modals.push(modal);
+	}
+
 	static remove(modal: Modal) {
 		arrayRemove(Modal.modals, item => item.id === modal.id);
 	}

@@ -78,19 +78,6 @@ export default class AppCommentWidgetComment extends Vue {
 
 	readonly Environment = Environment;
 
-	created() {
-		this.widget = findRequiredVueParent(this, AppCommentWidget) as AppCommentWidgetTS;
-	}
-
-	mounted() {
-		// Scroll it into view if it's active.
-		if (this.isActive) {
-			setTimeout(() => {
-				this.$refs.scrollTarget.scrollIntoView({ behavior: 'smooth' });
-			}, 250);
-		}
-	}
-
 	get isChild() {
 		return !!this.parent;
 	}
@@ -204,6 +191,29 @@ export default class AppCommentWidgetComment extends Vue {
 
 	get hasSticker() {
 		return !!this.comment.sticker_placement;
+	}
+
+	get stickerRotationStyle() {
+		return `rotate(${this.comment.sticker_placement!.rotation * 90 - 45}deg)`;
+	}
+
+	created() {
+		this.widget = findRequiredVueParent(this, AppCommentWidget) as AppCommentWidgetTS;
+	}
+
+	mounted() {
+		// Scroll it into view if it's active.
+		if (this.isActive) {
+			setTimeout(() => {
+				this.$refs.scrollTarget.scrollIntoView({ behavior: 'smooth' });
+			}, 250);
+		}
+
+		this.$watch('isActive', () => {
+			if (this.isActive) {
+				this.$refs.scrollTarget.scrollIntoView({ behavior: 'smooth' });
+			}
+		});
 	}
 
 	startEdit() {
