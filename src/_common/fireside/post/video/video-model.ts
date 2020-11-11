@@ -1,6 +1,7 @@
 import { HistoryTick } from '../../../history-tick/history-tick-service';
 import { MediaItem } from '../../../media-item/media-item-model';
 import { Model } from '../../../model/model.service';
+import { VideoPlayerSource } from '../../../video/player/controller';
 import { VideoSourceArray } from '../../../video/video';
 
 //** Our preference for which manifest type will try loading first. */
@@ -34,7 +35,7 @@ export class FiresidePostVideo extends Model {
 		return this.posterMediaItem?.mediaserver_url;
 	}
 
-	get manifestUrls() {
+	get manifestSources(): VideoPlayerSource[] {
 		const getManifestPreference = (item: MediaItem) => {
 			const ext = item.filename.substring(item.filename.lastIndexOf('.') + 1);
 			const index = manifestPreferences.findIndex(i => i === ext);
@@ -45,7 +46,7 @@ export class FiresidePostVideo extends Model {
 		return this.media
 			.filter(i => i.type === MediaItem.TYPE_VIDEO_MANIFEST)
 			.sort((a, b) => getManifestPreference(a) - getManifestPreference(b))
-			.map(i => i.img_url);
+			.map(i => ({ src: i.img_url, type: i.filetype }));
 	}
 
 	get transcodedVideos(): VideoSourceArray {

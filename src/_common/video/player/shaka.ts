@@ -78,22 +78,22 @@ export default class AppVideoPlayerShaka extends Vue {
 
 		this.shakaPlayer.addEventListener('error', onErrorEvent);
 
-		if (this.player.manifests.length === 0) {
+		if (this.player.sources.length === 0) {
 			throw new Error(`No manifests to load.`);
 		}
 
-		let manifestType: string | undefined;
+		let chosenManifestType: string | undefined;
 
 		// We go with the first one that loads in properly. This way if DASH is
 		// unsupported in the browser, we fallback to HLS.
-		for (const manifest of this.player.manifests) {
+		for (const { src: manifestUrl, type: manifestType } of this.player.sources) {
 			if (this.isDestroyed) {
 				return false;
 			}
 
 			try {
-				await this.shakaPlayer.load(manifest);
-				manifestType = manifest.split('.').pop();
+				await this.shakaPlayer.load(manifestUrl);
+				chosenManifestType = manifestType.split('/').pop();
 				// Don't attempt to load next manifest, this one worked.
 				break;
 			} catch (e) {
@@ -101,11 +101,11 @@ export default class AppVideoPlayerShaka extends Vue {
 			}
 		}
 
-		if (!manifestType) {
+		if (!chosenManifestType) {
 			trackVideoPlayerEvent(this.player, 'load-manifest-failed');
 			return false;
 		}
-		trackVideoPlayerEvent(this.player, 'load-manifest', manifestType);
+		trackVideoPlayerEvent(this.player, 'load-manifest', chosenManifestType);
 
 		return this.setupShakaEvents();
 	}

@@ -53,10 +53,10 @@ export default class AppVideo extends Vue {
 		this.setupVideoEvents();
 
 		if (this.player.context !== 'page') {
-			this.player.manifests.forEach(i => {
+			this.player.sources.forEach(({ src: url, type }) => {
 				const elem = document.createElement('source');
-				elem.type = this.getManifestType(i);
-				elem.src = i;
+				elem.type = type;
+				elem.src = url;
 				this.video.appendChild(elem);
 			});
 
@@ -108,11 +108,6 @@ export default class AppVideo extends Vue {
 		this.syncVolume();
 		this.syncTime();
 		await this.syncPlayState();
-	}
-
-	getManifestType(item: string) {
-		const splitItem = item.split('.');
-		return `video/${splitItem.pop() || ''}`;
 	}
 
 	private trackVideoPlaytime() {

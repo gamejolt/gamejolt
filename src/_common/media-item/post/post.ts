@@ -14,9 +14,10 @@ import {
 } from '../../sticker/target/target-controller';
 import AppStickerTarget from '../../sticker/target/target.vue';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
+import { getVideoPlayerFromSources } from '../../video/player/controller';
 import AppVideo from '../../video/video.vue';
 import AppMediaItemBackdrop from '../backdrop/backdrop.vue';
-import { getVideoPlayerFromSources, MediaItem } from '../media-item-model';
+import { MediaItem } from '../media-item-model';
 
 @Component({
 	components: {

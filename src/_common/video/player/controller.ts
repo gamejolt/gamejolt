@@ -12,6 +12,27 @@ export type VideoPlayerControllerContext = 'feed' | 'page' | 'gif' | null;
 export type VideoPlayerState = 'paused' | 'playing';
 export type ScrubberStage = 'start' | 'scrub' | 'end';
 
+export type VideoPlayerSource = {
+	src: string;
+	type: string;
+};
+
+export function getVideoPlayerFromSources(
+	item: { mp4?: string; webm?: string },
+	context: VideoPlayerControllerContext = null,
+	poster?: string
+) {
+	const sources: VideoPlayerSource[] = [];
+	if (item.mp4) {
+		sources.push({ src: item.mp4, type: 'video/mp4' });
+	}
+	if (item.webm) {
+		sources.push({ src: item.webm, type: 'video/webm' });
+	}
+
+	return new VideoPlayerController(sources, context, poster);
+}
+
 export class VideoPlayerController {
 	volume: number;
 	duration = 0;
@@ -31,7 +52,7 @@ export class VideoPlayerController {
 	queuedPlaybackChange: null | VideoPlayerState = null;
 
 	constructor(
-		public manifests: string[],
+		public sources: VideoPlayerSource[],
 		public context: VideoPlayerControllerContext,
 		public poster?: string
 	) {

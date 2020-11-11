@@ -6,7 +6,6 @@
 			<app-activity-feed-video-player
 				class="-video"
 				:feed-item="item"
-				:manifests="video.manifestUrls"
 				:video-sources="video.transcodedVideos"
 				:media-item="video.posterMediaItem"
 				@play="onVideoPlay"

@@ -1,16 +1,6 @@
 import { LightboxMediaModel, LightboxMediaType } from '../lightbox/lightbox-helpers';
 import { Model } from '../model/model.service';
 import { constructStickerCounts, StickerCount } from '../sticker/sticker-count';
-import { VideoPlayerController, VideoPlayerControllerContext } from '../video/player/controller';
-
-export function getVideoPlayerFromSources(
-	item: { mp4: string; webm: string },
-	context: VideoPlayerControllerContext = null,
-	poster?: string
-) {
-	const sources = [item.mp4, item.webm];
-	return new VideoPlayerController(sources, context, poster);
-}
 
 export class MediaItem extends Model implements LightboxMediaModel {
 	static readonly TYPE_GAME_THUMBNAIL = 'game-thumbnail';

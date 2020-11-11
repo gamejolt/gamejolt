@@ -4,7 +4,7 @@ import AppContentViewer from '../../../_common/content/content-viewer/content-vi
 import { Environment } from '../../../_common/environment/environment.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { AppImgResponsive } from '../../../_common/img/responsive/responsive';
-import { getVideoPlayerFromSources, MediaItem } from '../../../_common/media-item/media-item-model';
+import { MediaItem } from '../../../_common/media-item/media-item-model';
 import { BaseModal } from '../../../_common/modal/base';
 import AppModalTS from '../../../_common/modal/modal';
 import { AppResponsiveDimensions } from '../../../_common/responsive-dimensions/responsive-dimensions';
@@ -12,6 +12,7 @@ import { StickerTargetController } from '../../../_common/sticker/target/target-
 import AppStickerTarget from '../../../_common/sticker/target/target.vue';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import AppVideoEmbed from '../../../_common/video/embed/embed.vue';
+import { getVideoPlayerFromSources } from '../../../_common/video/player/controller';
 import AppVideo from '../../../_common/video/video.vue';
 import AppEventItemControls from '../event-item/controls/controls.vue';
 import { AppCommentWidgetLazy } from '../lazy';

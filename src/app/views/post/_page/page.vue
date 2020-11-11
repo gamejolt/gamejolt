@@ -10,7 +10,7 @@
 							v-if="!video.is_processing && video.posterMediaItem"
 							context="page"
 							:media-item="video.posterMediaItem"
-							:manifests="video.manifestUrls"
+							:manifests="video.manifestSources"
 							:view-count="video.view_count"
 							:start-time="videoStartTime"
 							autoplay
