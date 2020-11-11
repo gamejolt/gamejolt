@@ -17,9 +17,7 @@ export class AppImgResponsive extends Vue {
 	private resize$: EventSubscription | undefined;
 
 	created() {
-		if (GJ_IS_SSR) {
-			this.processedSrc = this.src;
-		}
+		this.processedSrc = this.src;
 	}
 
 	async mounted() {
