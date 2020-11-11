@@ -23,11 +23,9 @@
 				>
 					<img class="-poster" :src="media.preview" />
 					<app-video
-						v-if="isInview"
+						v-if="isInview && videoController"
 						class="-video"
-						:poster="media.preview"
-						:webm="media.webm.url"
-						:mp4="media.mp4.url"
+						:player="videoController"
 						:should-play="shouldPlay"
 					/>
 				</app-scroll-inview>

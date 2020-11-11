@@ -20,7 +20,8 @@ import {
 	trackVideoPlayerEvent,
 	VideoPlayerController,
 } from '../../../../../_common/video/player/controller';
-import { AppVideoPlayerShakaLazy } from '../../../lazy';
+import { VideoSourceArray } from '../../../../../_common/video/video';
+import AppVideo from '../../../../../_common/video/video.vue';
 import { ActivityFeedItem } from '../item-service';
 import { InviewConfigFocused } from '../item/item';
 import { ActivityFeedKey, ActivityFeedView } from '../view';
@@ -35,17 +36,17 @@ const LoadDelay = 300;
 @Component({
 	components: {
 		AppScrollInview,
-		AppVideoPlayerShakaLazy,
 		AppImgResponsive,
 		AppResponsiveDimensions,
 		AppMediaItemBackdrop,
 		AppLoading,
+		AppVideo,
 	},
 })
 export default class AppActivityFeedVideoPlayer extends Vue {
 	@Prop(propRequired(ActivityFeedItem)) feedItem!: ActivityFeedItem;
-	@Prop(propRequired(Array)) manifests!: string[];
 	@Prop(propRequired(MediaItem)) mediaItem!: MediaItem;
+	@Prop(propRequired(Array)) videoSources!: VideoSourceArray;
 	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
 	autoplay = SettingVideoPlayerFeedAutoplay.get();
@@ -231,7 +232,7 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	@Watch('shouldLoadVideo')
 	onShouldLoadVideoChange() {
 		if (this.shouldLoadVideo) {
-			this.player = new VideoPlayerController(this.manifests, 'feed');
+			this.player = new VideoPlayerController(this.videoSources, 'feed');
 			this.autoplay = SettingVideoPlayerFeedAutoplay.get();
 		} else {
 			this.player = null;

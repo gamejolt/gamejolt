@@ -120,7 +120,7 @@
 				<app-video-player
 					class="-video-player"
 					:media-item="videoMediaItem"
-					:manifests="videoManifestUrls"
+					:manifests="videoManifestSources"
 				/>
 			</template>
 		</template>

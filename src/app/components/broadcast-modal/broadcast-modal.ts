@@ -4,6 +4,7 @@ import AppContentViewer from '../../../_common/content/content-viewer/content-vi
 import { Environment } from '../../../_common/environment/environment.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { AppImgResponsive } from '../../../_common/img/responsive/responsive';
+import { MediaItem } from '../../../_common/media-item/media-item-model';
 import { BaseModal } from '../../../_common/modal/base';
 import AppModalTS from '../../../_common/modal/modal';
 import { AppResponsiveDimensions } from '../../../_common/responsive-dimensions/responsive-dimensions';
@@ -11,6 +12,7 @@ import { StickerTargetController } from '../../../_common/sticker/target/target-
 import AppStickerTarget from '../../../_common/sticker/target/target.vue';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import AppVideoEmbed from '../../../_common/video/embed/embed.vue';
+import { getVideoPlayerFromSources } from '../../../_common/video/player/controller';
 import AppVideo from '../../../_common/video/video.vue';
 import AppEventItemControls from '../event-item/controls/controls.vue';
 import { AppCommentWidgetLazy } from '../lazy';
@@ -41,4 +43,12 @@ export default class AppBroadcastModal extends BaseModal {
 	$refs!: {
 		modal: AppModalTS;
 	};
+
+	getVideoController(item: MediaItem) {
+		const sources = {
+			mp4: item.mediaserver_url_mp4,
+			webm: item.mediaserver_url_webm,
+		};
+		return getVideoPlayerFromSources(sources, 'gif', item.mediaserver_url);
+	}
 }

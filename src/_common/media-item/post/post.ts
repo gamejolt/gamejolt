@@ -14,6 +14,7 @@ import {
 } from '../../sticker/target/target-controller';
 import AppStickerTarget from '../../sticker/target/target.vue';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
+import { getVideoPlayerFromSources } from '../../video/player/controller';
 import AppVideo from '../../video/video.vue';
 import AppMediaItemBackdrop from '../backdrop/backdrop.vue';
 import { MediaItem } from '../media-item-model';
@@ -59,6 +60,14 @@ export default class AppMediaItemPost extends Vue {
 
 	get shouldVideoPlay() {
 		return this.isActive && ContentFocus.hasFocus;
+	}
+
+	get videoController() {
+		const sources = {
+			mp4: this.mediaItem.mediaserver_url_mp4,
+			webm: this.mediaItem.mediaserver_url_webm,
+		};
+		return getVideoPlayerFromSources(sources, 'gif', this.mediaItem.mediaserver_url);
 	}
 
 	get itemRadius() {

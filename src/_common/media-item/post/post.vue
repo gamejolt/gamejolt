@@ -37,12 +37,10 @@
 						ondragstart="return false"
 					/>
 					<app-video
-						v-else-if="isActive"
+						v-else-if="isActive && videoController"
 						class="-video"
 						:style="itemStyling"
-						:poster="mediaItem.mediaserver_url"
-						:webm="mediaItem.mediaserver_url_webm"
-						:mp4="mediaItem.mediaserver_url_mp4"
+						:player="videoController"
 						:should-play="shouldVideoPlay"
 						show-loading
 					/>

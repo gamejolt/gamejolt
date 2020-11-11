@@ -15,15 +15,18 @@
 			@change="onChangeDimensions"
 		>
 			<div class="-content-container">
-				<app-video-player-shaka-lazy
+				<app-video
 					v-if="player && !GJ_IS_SSR"
 					class="-video"
+					:style="{ width }"
 					:player="player"
-					:autoplay="shouldAutoplay"
+					:sources="videoSources"
+					:should-play="shouldAutoplay"
+					track-playtime
 					allow-degraded-autoplay
 				/>
 
-				<div v-if="shouldShowLoading" class="-overlay">
+				<div v-if="shouldShowLoading" class="-overlay -ui">
 					<app-loading no-color hide-label stationary />
 				</div>
 
@@ -46,7 +49,7 @@
 			</div>
 		</app-responsive-dimensions>
 
-		<div v-if="player" class="-bottom" @click.stop>
+		<div v-if="player" class="-bottom -ui" @click.stop>
 			<div class="-bottom-gradient">
 				<div class="-bottom-controls">
 					<transition name="fade">
@@ -113,6 +116,9 @@
 @import '../variables'
 @import '../../../../_common/video/player/common'
 
+$-zindex-backdrop = 0
+$-zindex-video = 1
+$-zindex-ui = 2
 $-controls-height = 48px
 $-controls-spacing = 8px
 
@@ -148,21 +154,24 @@ $-controls-spacing = 8px
 	justify-content: center
 
 .-video
-	z-index: 1
+	z-index: $-zindex-video
 
 .-overlay
+	position: absolute
 	display: flex
 	justify-content: center
 	align-items: center
 	background-color: rgba($black, 0.5)
-	z-index: 2
 	width: 100%
 	height: 100%
+
+.-ui
+	z-index: $-zindex-ui
 
 .-backdrop
 	position: absolute
 	top: 0
-	z-index: 0
+	z-index: $-zindex-backdrop
 
 .-img
 	max-height: 100%
@@ -214,7 +223,6 @@ $-controls-spacing = 8px
 	left: 0
 	right: 0
 	bottom: 0
-	z-index: 3
 
 	&-gradient
 		background-image: linear-gradient(to bottom, rgba($black, 0), rgba($black, 0.5))

@@ -7,6 +7,7 @@ import { AppObserveDimensions } from '../../../observe-dimensions/observe-dimens
 import { Screen } from '../../../screen/screen-service';
 import { ScrollInviewConfig } from '../../../scroll/inview/config';
 import { AppScrollInview } from '../../../scroll/inview/inview';
+import { getVideoPlayerFromSources } from '../../../video/player/controller';
 import AppVideo from '../../../video/video.vue';
 import { ContentOwner } from '../../content-owner';
 import AppBaseContentComponent from '../base/base-content-component.vue';
@@ -60,6 +61,19 @@ export default class AppContentGif extends Vue {
 
 	get shouldPlay() {
 		return ContentFocus.isWindowFocused;
+	}
+
+	get videoController() {
+		if (!this.media || !this.media.mp4.url || !this.media.webm.url) {
+			return;
+		}
+
+		const sourcesPayload = {
+			mp4: this.media.mp4.url,
+			webm: this.media.webm.url,
+		};
+
+		return getVideoPlayerFromSources(sourcesPayload, 'gif', this.media.preview);
 	}
 
 	mounted() {

@@ -4,6 +4,7 @@ import { ContentFocus } from '../../content-focus/content-focus.service';
 import { AppImgResponsive } from '../../img/responsive/responsive';
 import AppMediaItemBackdrop from '../../media-item/backdrop/backdrop.vue';
 import { Screen } from '../../screen/screen-service';
+import { getVideoPlayerFromSources } from '../../video/player/controller';
 import AppVideo from '../../video/video.vue';
 import { Game } from '../game.model';
 
@@ -37,6 +38,18 @@ export default class AppGameThumbnailImg extends Vue {
 
 	get shouldPlayVideo() {
 		return this.hasVideo && ContentFocus.hasFocus;
+	}
+
+	get videoController() {
+		if (!this.mediaItem) {
+			return;
+		}
+
+		const sourcesPayload = {
+			mp4: this.mediaItem.mediaserver_url_mp4,
+			webm: this.mediaItem.mediaserver_url_webm,
+		};
+		return getVideoPlayerFromSources(sourcesPayload, 'gif', this.mediaItem.mediaserver_url);
 	}
 
 	imgLoadChange(isLoaded: boolean) {
