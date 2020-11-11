@@ -54,22 +54,22 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 
 	// Notifications settings.
 	newsletter?: boolean;
-	notifiy_shouts?: boolean;
-	notifiy_comments?: boolean;
-	notifiy_comment_replies?: boolean;
-	notifiy_ratings?: boolean;
-	notifiy_game_follows?: boolean;
-	notifiy_user_follows?: boolean;
-	notifiy_user_uploads?: boolean;
-	notifiy_private_messages?: boolean;
-	notifiy_friendships?: boolean;
-	notifiy_forum_posts?: boolean;
-	notifiy_followed_game_updates?: boolean;
-	notifiy_sales?: boolean;
-	notifiy_collaborator_invites?: boolean;
-	notifiy_mentions?: boolean;
-	notifiy_gj_news?: boolean;
-	notifiy_gj_recommendations?: boolean;
+	notify_shouts?: boolean;
+	notify_comments?: boolean;
+	notify_comment_replies?: boolean;
+	notify_ratings?: boolean;
+	notify_game_follows?: boolean;
+	notify_user_follows?: boolean;
+	notify_user_uploads?: boolean;
+	notify_private_messages?: boolean;
+	notify_friendships?: boolean;
+	notify_forum_posts?: boolean;
+	notify_followed_game_updates?: boolean;
+	notify_sales?: boolean;
+	notify_collaborator_invites?: boolean;
+	notify_mentions?: boolean;
+	notify_gj_news?: boolean;
+	notify_gj_recommendations?: boolean;
 
 	// Email settings
 	email_address?: string;
