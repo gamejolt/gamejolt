@@ -1,3 +1,5 @@
+<script lang="ts" src="./manage-page"></script>
+
 <template>
 	<div>
 		<app-nav-tab-list>
@@ -12,8 +14,7 @@
 						}"
 						:class="{ active: tab === 'template' }"
 					>
-						<!-- @click="tab = 'template'" -->
-						<span class="page-active-tab" v-if="templateEnabled">
+						<span v-if="templateEnabled" class="page-active-tab">
 							<app-jolticon icon="checkbox" />
 						</span>
 						<translate>Use a Template</translate>
@@ -29,8 +30,7 @@
 						}"
 						:class="{ active: tab === 'static' }"
 					>
-						<!-- @click="tab = 'static'" -->
-						<span class="page-active-tab" v-if="staticEnabled">
+						<span v-if="staticEnabled" class="page-active-tab">
 							<app-jolticon icon="checkbox" />
 						</span>
 						<translate>Upload Your Own</translate>
@@ -48,7 +48,6 @@
 						}"
 						:class="{ active: tab === 'domain' }"
 					>
-						<!-- @click="tab = 'domain'" -->
 						<translate>Custom Domain</translate>
 					</router-link>
 				</li>
@@ -56,18 +55,18 @@
 		</app-nav-tab-list>
 
 		<div
-			class="row"
 			v-if="(templateEnabled && tab === 'template') || (staticEnabled && tab === 'static')"
+			class="row"
 		>
 			<div class="col-sm-9">
-				<div class="alert full-bleed-xs" v-if="templateEnabled">
+				<div v-if="templateEnabled" class="alert full-bleed-xs">
 					<p>
 						<strong><translate>Your site is turned on and active.</translate></strong>
 					</p>
 					<p><translate>You can customize it using the site editor below.</translate></p>
 				</div>
 
-				<div class="alert full-bleed-xs" v-if="staticEnabled">
+				<div v-if="staticEnabled" class="alert full-bleed-xs">
 					<p>
 						<strong><translate>Your static site is turned on and active.</translate></strong>
 					</p>
@@ -77,13 +76,13 @@
 			<div class="col-sm-3">
 				<div class="clearfix">
 					<app-button
-						class="anim-fade-in no-animate-leave pull-right"
-						@click="disable()"
 						v-app-tooltip="
 							$gettext(
 								`This will turn your Site off completely and it will no longer be accessible.`
 							)
 						"
+						class="pull-right"
+						@click="disable()"
 					>
 						<translate>Disable</translate>
 					</app-button>
@@ -120,5 +119,3 @@
 		margin: 0
 		margin-right: 5px
 </style>
-
-<script lang="ts" src="./manage-page"></script>

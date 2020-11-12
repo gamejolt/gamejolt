@@ -1,3 +1,5 @@
+<script lang="ts" src="./item"></script>
+
 <template>
 	<app-message-thread-item
 		:id="`forum-post-${id}`"
@@ -10,13 +12,20 @@
 		:is-reply="isReply"
 		:is-last="isLastInThread"
 	>
-		<app-scroll-inview @inview="onInviewChange(true)" @outview="onInviewChange(false)">
+		<app-scroll-inview
+			:config="InviewConfig"
+			@inview="onInviewChange(true)"
+			@outview="onInviewChange(false)"
+		>
 			<a
+				v-if="!isReply && post.parent_post_id && post.replied_to"
 				class="forum-post-replied-to-button"
-				v-if="!isReply && post.parent_post_id"
 				@click="loadParentPost"
 			>
-				<app-jolticon class="middle" :icon="'chevron-' + (!showingParent ? 'right' : 'down')" />
+				<app-jolticon
+					class="middle"
+					:icon="'chevron-' + (!showingParent ? 'right' : 'down')"
+				/>
 				<span v-translate="{ user: post.replied_to.display_name }">
 					In response to
 					<b>%{ user }</b>
@@ -36,15 +45,20 @@
 
 			<app-content-viewer v-if="!isEditing" :source="post.text_content" />
 			<template v-else>
-				<form-forum-post :model="post" :topic="topic" @cancel="closeEdit" @submit="closeEdit" />
+				<form-forum-post
+					:model="post"
+					:topic="topic"
+					@cancel="closeEdit"
+					@submit="closeEdit"
+				/>
 
 				<br />
 			</template>
 
-			<p class="text-muted small" v-if="post.modified_by">
+			<p v-if="post.modified_by_user && post.modified_on" class="text-muted small">
 				<translate>Last modified on</translate>
 				<span :title="date(post.modified_on, 'medium')">
-					{{ post.modified_on | date('longDate') }}
+					{{ date(post.modified_on, 'longDate') }}
 				</span>
 				<translate>by</translate>
 				<router-link
@@ -62,9 +76,9 @@
 			</p>
 		</app-scroll-inview>
 
-		<template slot="meta">
+		<template #meta>
 			<app-popper v-if="app.user" popover-class="fill-darkest">
-				<a class="link-muted" v-app-tooltip="$gettext('Options')">
+				<a v-app-tooltip="$gettext('Options')" class="link-muted">
 					<app-jolticon icon="ellipsis-v" class="middle" />
 				</a>
 				<div slot="popover" class="list-group list-group-dark">
@@ -74,8 +88,13 @@
 					</a>
 
 					<a
+						v-if="
+							app.user &&
+								post.user_id === app.user.id &&
+								!topic.is_locked &&
+								!isEditing
+						"
 						class="list-group-item has-icon"
-						v-if="app.user && post.user_id === app.user.id && !topic.is_locked && !isEditing"
 						@click="edit()"
 					>
 						<app-jolticon icon="edit" />
@@ -112,19 +131,24 @@
 			</app-popper>
 		</template>
 
-		<template v-if="!isReply" slot="controls">
+		<template v-if="!isReply" #controls>
 			<app-button
 				v-if="!topic.is_locked && app.user"
+				v-app-tooltip="$gettext('Reply')"
 				class="forum-post-reply-button"
 				circle
 				trans
 				icon="reply"
-				v-app-tooltip="$gettext('Reply')"
 				:disabled="isEditing"
 				@click="reply"
 			/>
 
-			<app-button v-if="post.replies_count && !isEditing" type="a" trans @click="toggleReplies">
+			<app-button
+				v-if="post.replies_count && !isEditing"
+				type="a"
+				trans
+				@click="toggleReplies"
+			>
 				<translate
 					:translate-n="post.replies_count"
 					:translate-params="{ count: post.replies_count }"
@@ -135,7 +159,7 @@
 			</app-button>
 		</template>
 
-		<template v-if="isReplying || isShowingReplies" slot="replies">
+		<template v-if="isReplying || isShowingReplies" #replies>
 			<app-message-thread-add v-if="isReplying">
 				<form-forum-post
 					v-if="isReplying"
@@ -176,8 +200,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .forum-post
 	&-replied-to-button
@@ -192,5 +216,3 @@
 	&-reply-button
 		margin-right: 8px
 </style>
-
-<script lang="ts" src="./item"></script>

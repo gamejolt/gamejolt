@@ -41,6 +41,8 @@ export interface ActivityFeedViewOptions {
 	shouldShowFollow?: boolean;
 }
 
+export const ActivityFeedKey = Symbol('activity-feed');
+
 export class ActivityFeedView {
 	/**
 	 * We keep a feed ID so that when we clear we can change it and let vue
@@ -58,6 +60,7 @@ export class ActivityFeedView {
 	mainCommunity: Community | null = null;
 	shouldShowUserCards = true;
 	shouldShowFollow = false;
+	newCount = 0;
 
 	get isBootstrapped() {
 		return this.state.isBootstrapped;
@@ -123,6 +126,7 @@ export class ActivityFeedView {
 		this.timesLoaded = 0;
 		this.totalTimesLoaded = 0;
 		this.scroll = 0;
+		this.newCount = 0;
 	}
 
 	prepend(input: ActivityFeedInput[]) {
@@ -229,17 +233,12 @@ export class ActivityFeedView {
 		return this.state.markItemViewed(item);
 	}
 
-	setItemExpanded(item: ActivityFeedItem) {
-		return this.state.markItemExpanded(item);
-	}
-
-	inviewChange(item: ActivityFeedItem, visible: boolean) {
+	setItemHydration(item: ActivityFeedItem, visible: boolean) {
 		const itemState = this.getItemState(item);
 
 		if (visible) {
 			itemState.isBootstrapped = true;
 			itemState.isHydrated = true;
-			this.setItemViewed(item);
 		} else {
 			itemState.isHydrated = false;
 		}
@@ -275,7 +274,7 @@ export class ActivityFeedView {
 		Analytics.trackEvent('activity-feed', 'loaded-more', 'page-' + this.totalTimesLoaded);
 	}
 
-	async loadNew(newCount: number) {
+	async loadNew(newCount = ItemsPerPage) {
 		if (this.state.isLoadingNew || newCount < 1) {
 			return;
 		}
@@ -296,7 +295,9 @@ export class ActivityFeedView {
 			return;
 		}
 
-		if (clearOld) {
+		// If we received the amount of items per page (or more somehow),
+		// clear the feed to avoid gaps.
+		if (clearOld || response.items.length >= ItemsPerPage) {
 			this.clear();
 		}
 

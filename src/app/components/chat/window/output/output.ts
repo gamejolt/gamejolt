@@ -53,7 +53,7 @@ export default class AppChatWindowOutput extends Vue {
 	}
 
 	get shouldShowIntro() {
-		return this.room.isPmRoom && this.allMessages.length === 0;
+		return this.allMessages.length === 0;
 	}
 
 	get introEmoji() {

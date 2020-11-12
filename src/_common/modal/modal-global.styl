@@ -1,5 +1,5 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .modal-header
 	padding: $modal-padding-xs
@@ -23,6 +23,7 @@
 .modal-body
 	position: relative
 	padding: $modal-padding-xs
+	overflow: hidden
 
 .modal-footer
 	clearfix() // clear it in case folks use .pull-* classes on buttons

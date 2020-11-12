@@ -1,6 +1,8 @@
+<script lang="ts" src="./games"></script>
+
 <template>
 	<section class="section">
-		<div class="container-xl" v-if="hasSearch">
+		<div v-if="hasSearch" class="container-xl">
 			<app-game-grid
 				:games="searchPayload.games"
 				:games-count="searchPayload.gamesCount"
@@ -11,5 +13,3 @@
 		</div>
 	</section>
 </template>
-
-<script lang="ts" src="./games"></script>

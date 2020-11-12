@@ -1,11 +1,13 @@
+<script lang="ts" src="./controls"></script>
+
 <template>
 	<transition name="fade">
 		<app-jolticon
 			v-if="visible"
+			v-app-tooltip="$gettext('Insert Gif')"
 			class="emoji-button inset-container-controls"
 			icon="gif"
 			@click.native.prevent="openGifModal"
-			v-app-tooltip="$gettext('Insert Gif')"
 		/>
 	</transition>
 </template>
@@ -25,5 +27,3 @@
 	&:focus
 		outline: none
 </style>
-
-<script lang="ts" src="./controls"></script>

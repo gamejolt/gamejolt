@@ -1,5 +1,7 @@
+<script lang="ts" src="./view"></script>
+
 <template>
-	<div class="route-discover-games-view" v-if="game">
+	<div v-if="game" class="route-discover-games-view">
 		<app-game-maturity-block :game="game">
 			<section v-if="collaboratorInvite" class="section section-thin fill-highlight">
 				<div class="container text-center">
@@ -23,12 +25,10 @@
 			<app-page-header
 				:cover-media-item="game.header_media_item"
 				should-affix-nav
-				:blur-header="!shouldShowFullCover"
-				:cover-auto-height="!shouldShowFullCover"
 				:autoscroll-anchor-key="autoscrollAnchorKey"
 				:show-cover-buttons="shouldShowCoverButtons"
 			>
-				<template slot="cover-buttons" v-if="shouldShowCoverButtons">
+				<template v-if="shouldShowCoverButtons" #cover-buttons>
 					<app-game-cover-buttons
 						v-if="!Screen.isXs"
 						:game="game"
@@ -46,6 +46,7 @@
 						&nbsp;
 
 						<app-button
+							v-app-tooltip="$gettext(`Manage Game`)"
 							circle
 							trans
 							icon="cog"
@@ -53,11 +54,11 @@
 								name: 'dash.games.manage.game.overview',
 								params: { id: game.id },
 							}"
-							v-app-tooltip="$gettext(`Manage Game`)"
 						/>
 
 						<app-game-perms :game="game" required="analytics">
 							<app-button
+								v-app-tooltip="$gettext(`View Game Analytics`)"
 								circle
 								trans
 								icon="chart"
@@ -65,19 +66,24 @@
 									name: 'dash.analytics',
 									params: { resource: 'Game', resourceId: game.id },
 								}"
-								v-app-tooltip="$gettext(`View Game Analytics`)"
 							/>
 						</app-game-perms>
 					</app-game-perms>
 				</template>
 
-				<app-user-card-hover slot="spotlight" :user="game.developer">
-					<app-user-avatar :user="game.developer" />
-				</app-user-card-hover>
+				<template #spotlight>
+					<app-user-card-hover :user="game.developer">
+						<app-user-avatar :user="game.developer" />
+					</app-user-card-hover>
+				</template>
 
-				<app-discover-games-view-nav slot="nav" />
+				<template #nav>
+					<app-discover-games-view-nav />
+				</template>
 
-				<app-discover-games-view-controls slot="controls" />
+				<template #controls>
+					<app-discover-games-view-controls />
+				</template>
 
 				<h1 :class="{ h2: Screen.isMobile }">
 					<router-link :to="{ name: 'discover.games.view.overview' }">
@@ -104,5 +110,3 @@
 		</app-game-maturity-block>
 	</div>
 </template>
-
-<script lang="ts" src="./view"></script>

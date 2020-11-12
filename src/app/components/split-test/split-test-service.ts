@@ -1,19 +1,32 @@
 import { Route } from 'vue-router';
 
-function getPayloadVariation(payload: any, experiment: string, route?: Route): number {
-	let variation = checkHardcoded(experiment, route);
-	if (variation !== -1) {
-		return variation;
-	}
+// const ExperimentInlineComments = 'split:inline-comments';
 
-	if (typeof payload._experiment !== 'undefined' && typeof payload._variation !== 'undefined') {
-		if (payload._experiment === experiment) {
-			return payload._variation;
-		}
-	}
+// // export function hasInlineCommentsSplitTest() {
+// // 	return getClientSideVariation(ExperimentInlineComments) === 1;
+// // }
 
-	return -1;
-}
+// // export function trackInlineCommentsSplitTest() {
+// // 	Analytics.trackEvent(
+// // 		ExperimentInlineComments,
+// // 		'variation-' + getClientSideVariation(ExperimentInlineComments)
+// // 	);
+// // }
+
+// function getPayloadVariation(payload: any, experiment: string, route?: Route): number {
+// 	const variation = checkHardcoded(experiment, route);
+// 	if (variation !== -1) {
+// 		return variation;
+// 	}
+
+// 	if (typeof payload._experiment !== 'undefined' && typeof payload._variation !== 'undefined') {
+// 		if (payload._experiment === experiment) {
+// 			return payload._variation;
+// 		}
+// 	}
+
+// 	return -1;
+// }
 
 function getClientSideVariation(experiment: string, route?: Route): number {
 	if (GJ_IS_SSR) {

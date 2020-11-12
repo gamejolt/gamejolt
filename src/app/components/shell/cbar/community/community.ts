@@ -52,10 +52,6 @@ export default class AppShellCbarCommunity extends Vue {
 		return this.communityState.isUnread;
 	}
 
-	get featureCount() {
-		return this.communityState.unreadFeatureCount;
-	}
-
 	get isActive() {
 		return this.activeCommunity?.id === this.community.id;
 	}
@@ -64,7 +60,7 @@ export default class AppShellCbarCommunity extends Vue {
 		if (this.isActive) {
 			const theme = this.community.theme || this.userTheme;
 			if (theme) {
-				return '#' + theme.highlight_;
+				return '#' + theme.darkHighlight_;
 			}
 		}
 		return null;

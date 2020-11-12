@@ -342,7 +342,7 @@ export default class FormGameBuild extends BaseForm<GameBuildFormModel>
 			this.game.assign(response.game);
 
 			// Copy new platforms to the form model.
-			for (let _platform of GameBuildLaunchOption.LAUNCHABLE_PLATFORMS) {
+			for (const _platform of GameBuildLaunchOption.LAUNCHABLE_PLATFORMS) {
 				const key = 'os_' + _platform;
 
 				// oh geez
@@ -383,7 +383,7 @@ export default class FormGameBuild extends BaseForm<GameBuildFormModel>
 			this.prevCount = this.buildLaunchOptions.length;
 		}
 
-		for (let launchOption of this.buildLaunchOptions) {
+		for (const launchOption of this.buildLaunchOptions) {
 			this.setField(('launch_' + launchOption.os) as any, launchOption.executable_path);
 		}
 

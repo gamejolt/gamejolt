@@ -22,14 +22,13 @@ import {
 	SidebarStore,
 } from '../../../../_common/sidebar/sidebar.store';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
-import { ThemeMutation, ThemeStore } from '../../../../_common/theme/theme.store';
 import { AppCommunityPerms } from '../../../components/community/perms/perms';
 import { CommunitySidebarData } from '../../../components/community/sidebar/sidebar-data';
 import { CommunityHeaderModal } from '../../../components/forms/community/header/modal/modal.service';
 import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import AppShellContentWithSidebar from '../../../components/shell/content-with-sidebar/content-with-sidebar.vue';
-import { Store } from '../../../store/index';
+import { store, Store, tillGridBootstrapped } from '../../../store/index';
 import { routeCommunitiesViewEditDetails } from './edit/details/details.route';
 import {
 	CommunityRouteStore,
@@ -41,6 +40,8 @@ import AppCommunitiesViewCard from './_card/card.vue';
 import AppCommunitiesViewContext from './_context/context.vue';
 import AppEditableThumbnail from './_editable-thumbnail/editable-thumbnail.vue';
 import AppNavChannels from './_nav/channels/channels.vue';
+
+export const CommunityThemeKey = 'community';
 
 @Component({
 	name: 'RouteCommunitiesView',
@@ -80,11 +81,11 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	@Provide(CommunityRouteStoreKey) routeStore = new CommunityRouteStore();
 
 	@AppState user!: AppStore['user'];
-	@ThemeMutation setPageTheme!: ThemeStore['setPageTheme'];
 	@Mutation setActiveCommunity!: Store['setActiveCommunity'];
 	@Mutation clearActiveCommunity!: Store['clearActiveCommunity'];
 	@Mutation viewCommunity!: Store['viewCommunity'];
 	@State communityStates!: Store['communityStates'];
+	@State grid!: Store['grid'];
 
 	@SidebarState activeContextPane!: SidebarStore['activeContextPane'];
 	@SidebarMutation addContextPane!: SidebarStore['addContextPane'];
@@ -96,6 +97,10 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	readonly sidebarComponent = AppCommunitiesViewContext;
 
 	contextPane: ContextPane | null = null;
+
+	get hasUnreadPosts() {
+		return this.communityStates.getCommunityState(this.community).isUnread;
+	}
 
 	get community() {
 		return this.routeStore.community;
@@ -162,32 +167,38 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	routeResolved($payload: any) {
 		const { routeStore } = this;
 		const community = new Community($payload.community);
+
 		setCommunity(routeStore, community);
 		routeStore.sidebarData = new CommunitySidebarData($payload);
 		routeStore.collaborator = $payload.invite ? new Collaborator($payload.invite) : null;
 
-		if ($payload.unreadChannels) {
-			const communityState = this.communityStates.getCommunityState(community);
-
-			// This flag was set to true in grid bootstrap and we need to unset it
-			// now that we have the actual unread channels in this community.
-			// read comment in client service for more info.
-			communityState.hasUnreadPosts = false;
-
-			for (const channelId of $payload.unreadChannels as number[]) {
-				communityState.markChannelUnread(channelId);
-			}
-		}
-
 		this.setActiveCommunity(community);
-		this.setPageTheme(community.theme || null);
 		this.viewCommunity(community);
+		this.setPageTheme();
+
+		if (this.user && community.is_member) {
+			this.getCommunityBootstrap();
+		}
+	}
+
+	private async getCommunityBootstrap() {
+		// When this is the first route the user enters, grid might not be bootstrapped yet.
+		const grid = await tillGridBootstrapped();
+		grid.queueRequestCommunityBootstrap(this.community.id);
 	}
 
 	routeDestroyed() {
 		this.removeContextPane(this.contextPane);
 		this.clearActiveCommunity();
-		this.setPageTheme(null);
+		store.commit('theme/clearPageTheme', CommunityThemeKey);
+		if (this.grid) {
+			this.grid.deregisterViewingCommunity(this.community.id);
+		}
+	}
+
+	private setPageTheme() {
+		const theme = this.community?.theme ?? null;
+		store.commit('theme/setPageTheme', { key: CommunityThemeKey, theme });
 	}
 
 	showEditHeader() {

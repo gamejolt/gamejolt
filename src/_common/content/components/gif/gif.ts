@@ -1,46 +1,39 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
+import { propRequired } from '../../../../utils/vue';
+import { ContentFocus } from '../../../content-focus/content-focus.service';
 import { AppObserveDimensions } from '../../../observe-dimensions/observe-dimensions.directive';
 import { Screen } from '../../../screen/screen-service';
+import { ScrollInviewConfig } from '../../../scroll/inview/config';
 import { AppScrollInview } from '../../../scroll/inview/inview';
+import { getVideoPlayerFromSources } from '../../../video/player/controller';
+import AppVideo from '../../../video/video.vue';
 import { ContentOwner } from '../../content-owner';
 import AppBaseContentComponent from '../base/base-content-component.vue';
 import { computeSize } from '../media-item/media-item';
+
+const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.windowHeight * 0.25}px` });
 
 @Component({
 	components: {
 		AppBaseContentComponent,
 		AppScrollInview,
+		AppVideo,
 	},
 	directives: {
 		AppObserveDimensions,
 	},
 })
 export default class AppContentGif extends Vue {
-	@Prop(String)
-	gifId!: string;
-
-	@Prop(Number)
-	width!: number;
-
-	@Prop(Number)
-	height!: number;
-
-	@Prop(String)
-	service!: string;
-
-	@Prop(Object)
-	media!: any;
-
-	@Prop(Object)
-	owner!: ContentOwner;
-
-	@Prop(Boolean)
-	isEditing!: boolean;
-
-	@Prop(Boolean)
-	isDisabled!: boolean;
+	@Prop(propRequired(String)) gifId!: string;
+	@Prop(propRequired(Number)) width!: number;
+	@Prop(propRequired(Number)) height!: number;
+	@Prop(propRequired(String)) service!: string;
+	@Prop(propRequired(Object)) media!: any;
+	@Prop(propRequired(Object)) owner!: ContentOwner;
+	@Prop(propRequired(Boolean)) isEditing!: boolean;
+	@Prop(propRequired(Boolean)) isDisabled!: boolean;
 
 	$refs!: {
 		container: HTMLElement;
@@ -49,7 +42,7 @@ export default class AppContentGif extends Vue {
 	computedHeight = this.height;
 	computedWidth = this.width;
 	isInview = false;
-	inviewMargin = Screen.windowHeight * 0.25;
+	readonly InviewConfig = InviewConfig;
 
 	get containerWidth() {
 		// Always have SSR fullwidth the image. We never let SSR calculate the height of the container based on the width.
@@ -64,6 +57,23 @@ export default class AppContentGif extends Vue {
 			return 'auto';
 		}
 		return this.computedHeight > 0 ? this.computedHeight + 'px' : 'auto';
+	}
+
+	get shouldPlay() {
+		return ContentFocus.isWindowFocused;
+	}
+
+	get videoController() {
+		if (!this.media || !this.media.mp4.url || !this.media.webm.url) {
+			return;
+		}
+
+		const sourcesPayload = {
+			mp4: this.media.mp4.url,
+			webm: this.media.webm.url,
+		};
+
+		return getVideoPlayerFromSources(sourcesPayload, 'gif', this.media.preview);
 	}
 
 	mounted() {

@@ -43,8 +43,6 @@
 							v-if="shouldShowGifButton"
 							:view="view"
 							:state-counter="stateCounter"
-							:startup-activity="openedStartup ? '' : startupActivity"
-							@opened-startup="onOpenedStartup"
 						/>
 					</transition>
 					<transition name="fade">
@@ -53,9 +51,7 @@
 							ref="emojiPanel"
 							:view="view"
 							:state-counter="stateCounter"
-							:startup-activity="openedStartup ? '' : startupActivity"
 							@visibilityChanged="onEmojiPanelVisibilityChanged"
-							@opened-startup="onOpenedStartup"
 						/>
 					</transition>
 				</app-content-editor-controls-inset-container>

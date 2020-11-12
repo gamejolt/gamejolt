@@ -1,7 +1,12 @@
+<script lang="ts" src="./widget"></script>
+
 <template>
 	<span class="fireside-post-like-widget">
 		<span class="-like">
 			<app-button
+				v-app-tooltip="tooltip"
+				v-app-track-event="`fireside-post-like-widget:click`"
+				v-app-auth-required
 				class="-like-button"
 				:icon="!liked ? 'heart' : 'heart-filled'"
 				circle
@@ -10,9 +15,6 @@
 				:block="block"
 				:primary="liked"
 				:solid="liked"
-				v-app-tooltip="tooltip"
-				v-app-track-event="`fireside-post-like-widget:click`"
-				v-app-auth-required
 				@click="toggleLike"
 			/>
 
@@ -31,10 +33,10 @@
 
 		<a
 			v-if="post.like_count > 0"
+			v-app-tooltip="$gettext(`View all people that liked this post`)"
 			class="blip"
 			:class="{ 'blip-active': liked, mobile: Screen.isXs }"
 			@click="showLikers()"
-			v-app-tooltip="$gettext(`View all people that liked this post`)"
 		>
 			{{ likeCount }}
 		</a>
@@ -119,5 +121,3 @@
 		transform: scale(2) rotate(45deg) translate(6px, -6px)
 		opacity: 0
 </style>
-
-<script lang="ts" src="./widget"></script>

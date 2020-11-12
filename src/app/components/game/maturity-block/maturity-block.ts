@@ -4,7 +4,7 @@ import { State } from 'vuex-class';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Game } from '../../../../_common/game/game.model';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
-import { Settings } from '../../../../_common/settings/settings.service';
+import { SettingRestrictedBrowsing } from '../../../../_common/settings/settings.service';
 import { Store } from '../../../store/index';
 import AppGameOgrs from '../ogrs/ogrs.vue';
 
@@ -25,7 +25,7 @@ export default class AppGameMaturityBlock extends Vue {
 			this.game &&
 			this.game.tigrs_age === 3 &&
 			!GJ_IS_SSR &&
-			Settings.get('restricted-browsing') &&
+			SettingRestrictedBrowsing.get() &&
 			!this.game.is_following &&
 			!this.game.hasPerms() &&
 			!this.hasBypassed
@@ -46,7 +46,7 @@ export default class AppGameMaturityBlock extends Vue {
 	}
 
 	removeRestriction() {
-		Settings.set('restricted-browsing', false);
+		SettingRestrictedBrowsing.set(false);
 		this.proceed();
 	}
 }

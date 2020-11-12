@@ -42,6 +42,9 @@ export default class AppContentEmbed extends Vue {
 	loading = false;
 	previewEmbeds: any[] = [];
 
+	@Emit('removed') emitRemoved() {}
+	@Emit('update-attrs') emitUpdateAttrs(_attrs: Record<string, any>) {}
+
 	$refs!: {
 		inputElement: HTMLInputElement;
 	};
@@ -75,12 +78,9 @@ export default class AppContentEmbed extends Vue {
 		this.previewEmbeds = arrayShuffle(ContentEmbedService.previewSources).slice(0, 3);
 	}
 
-	@Emit('removed')
-	remove() {}
-
 	onInput(e: Event) {
 		if (e.target instanceof HTMLInputElement) {
-			this.$emit('updateAttrs', { source: e.target.value });
+			this.emitUpdateAttrs({ source: e.target.value });
 		}
 	}
 
@@ -92,13 +92,13 @@ export default class AppContentEmbed extends Vue {
 					this.$refs.inputElement.selectionStart === 0 &&
 					this.$refs.inputElement.selectionEnd === 0
 				) {
-					this.remove();
+					this.emitRemoved();
 					e.preventDefault();
 				}
 				break;
 			case 'Enter':
 				if (this.$refs.inputElement.value.length === 0) {
-					this.remove();
+					this.emitRemoved();
 				} else {
 					this.loading = true;
 					const data = await ContentEmbedService.getEmbedData(
@@ -106,7 +106,7 @@ export default class AppContentEmbed extends Vue {
 						this.$refs.inputElement.value
 					);
 					if (data !== undefined) {
-						this.$emit('updateAttrs', data);
+						this.emitUpdateAttrs(data);
 					} else {
 						Growls.error({
 							title: this.$gettext(`Uh oh`),
@@ -120,7 +120,7 @@ export default class AppContentEmbed extends Vue {
 				e.preventDefault();
 				break;
 			case 'Escape':
-				this.remove();
+				this.emitRemoved();
 				e.preventDefault();
 				break;
 		}

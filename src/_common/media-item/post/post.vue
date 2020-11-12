@@ -1,3 +1,5 @@
+<script lang="ts" src="./post"></script>
+
 <template>
 	<div class="media-item-post" :class="{ '-inline': inline }" @click="onClickImage">
 		<app-responsive-dimensions
@@ -12,40 +14,63 @@
 		>
 			<div v-if="shouldShowFullscreenOption" class="-toolbar">
 				<app-button
-					@click="emitFullscreen(mediaItem)"
+					v-app-tooltip="$gettext(`Fullscreen`)"
 					overlay
 					circle
 					trans
 					icon="fullscreen"
-					v-app-tooltip="$gettext(`Fullscreen`)"
+					@click="emitFullscreen(mediaItem)"
 				/>
 			</div>
 			<app-media-item-backdrop class="-backdrop" :media-item="mediaItem" :radius="itemRadius">
-				<app-img-responsive
-					v-if="!isPostHydrated || !mediaItem.is_animated"
-					class="-img"
-					:style="itemStyling"
-					:src="mediaItem.mediaserver_url"
-					alt=""
-					ondragstart="return false"
-				/>
-				<app-video
-					v-else-if="shouldVideoPlay"
-					class="-video"
-					:style="itemStyling"
-					:poster="mediaItem.mediaserver_url"
-					:webm="mediaItem.mediaserver_url_webm"
-					:mp4="mediaItem.mediaserver_url_mp4"
-					show-loading
-				/>
+				<app-sticker-target
+					class="-stickers"
+					:controller="stickerTargetController"
+					:disabled="stickersDisabled"
+				>
+					<app-img-responsive
+						v-if="!isPostHydrated || !mediaItem.is_animated"
+						class="-img"
+						:style="itemStyling"
+						:src="mediaItem.mediaserver_url"
+						alt=""
+						ondragstart="return false"
+					/>
+					<app-video
+						v-else-if="isActive && videoController"
+						class="-video"
+						:style="itemStyling"
+						:player="videoController"
+						:should-play="shouldVideoPlay"
+						show-loading
+					/>
+				</app-sticker-target>
 			</app-media-item-backdrop>
 		</app-responsive-dimensions>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+
+.-stickers
+	width: 100%
+	height: 100%
+
+.-video
+	&:after
+		content: 'GIF'
+		rounded-corners()
+		position: absolute
+		right: 8px
+		bottom: 8px
+		padding: 4px 6px
+		background-color: rgba($black, 0.4)
+		color: var(--dark-theme-fg)
+		font-size: $font-size-small
+		font-weight: bold
+		transition: opacity 250ms $strong-ease-out
 
 .media-item-post
 	position: relative
@@ -57,6 +82,10 @@
 	&.-inline
 		display: inline-block
 
+	&:not(.-inline)
+		.-img
+			cursor: zoom-in
+
 	.-media
 		margin-left: auto
 		margin-right: auto
@@ -66,7 +95,8 @@
 
 	// Set the width to be what AppResponsiveDimensions gives us,
 	// so we don't overflow past what it sets.
-	.-img, .-video
+	.-img
+	.-video
 		width: 100%
 
 	.-toolbar
@@ -87,6 +117,8 @@
 	&:hover
 		.-toolbar
 			opacity: 1
-</style>
 
-<script lang="ts" src="./post"></script>
+		@media $media-pointer-mouse
+			.-video:after
+				opacity: 0
+</style>

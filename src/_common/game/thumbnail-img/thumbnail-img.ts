@@ -4,6 +4,7 @@ import { ContentFocus } from '../../content-focus/content-focus.service';
 import { AppImgResponsive } from '../../img/responsive/responsive';
 import AppMediaItemBackdrop from '../../media-item/backdrop/backdrop.vue';
 import { Screen } from '../../screen/screen-service';
+import { getVideoPlayerFromSources } from '../../video/player/controller';
 import AppVideo from '../../video/video.vue';
 import { Game } from '../game.model';
 
@@ -36,9 +37,19 @@ export default class AppGameThumbnailImg extends Vue {
 	}
 
 	get shouldPlayVideo() {
-		// When the window is not focused, or when we're scrolling, we don't want to play videos.
-		// This should speed up inactive tabs.
-		return this.hasVideo && ContentFocus.hasFocus && !Screen.isScrolling;
+		return this.hasVideo && ContentFocus.hasFocus;
+	}
+
+	get videoController() {
+		if (!this.mediaItem) {
+			return;
+		}
+
+		const sourcesPayload = {
+			mp4: this.mediaItem.mediaserver_url_mp4,
+			webm: this.mediaItem.mediaserver_url_webm,
+		};
+		return getVideoPlayerFromSources(sourcesPayload, 'gif', this.mediaItem.mediaserver_url);
 	}
 
 	imgLoadChange(isLoaded: boolean) {

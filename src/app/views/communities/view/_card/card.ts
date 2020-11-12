@@ -20,6 +20,7 @@ export default class AppCommunitiesViewCard extends Vue {
 	@Prop(propOptional(Boolean, false)) overflow!: boolean;
 	@Prop(propOptional(Boolean, false)) inline!: boolean;
 	@Prop(propOptional(Boolean, false)) asHeader!: boolean;
+	@Prop(propOptional(Boolean, false)) hasUnread!: boolean;
 
 	get cardComponent() {
 		return this.inline ? AppCommunityCardBaseInline : AppCommunityCardBase;
@@ -35,6 +36,7 @@ export default class AppCommunitiesViewCard extends Vue {
 			Object.assign(props, {
 				routeStore: this.routeStore,
 				asHeader: this.asHeader,
+				hasUnread: this.hasUnread,
 			});
 		}
 

@@ -1,3 +1,4 @@
+import { ChatClient, isUserOnline } from './client';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
 
@@ -5,11 +6,40 @@ export class ChatUserCollection {
 	static readonly TYPE_FRIEND = 'friend';
 	static readonly TYPE_ROOM = 'room';
 
-	collection: ChatUser[] = [];
+	chat: ChatClient | null = null;
 	onlineCount = 0;
 	offlineCount = 0;
 
-	constructor(public type: 'friend' | 'room', users: any[] = []) {
+	private collection_: ChatUser[] = [];
+
+	get collection() {
+		// Sorting is done inplace, so let's make a new wrapping array.
+		const collection = [...this.collection_];
+
+		if (this.type === ChatUserCollection.TYPE_FRIEND) {
+			return sortByLastMessageOn(collection);
+		} else {
+			return collection.sort((a, b) => {
+				const aSort = this.getSortVal(a);
+				const bSort = this.getSortVal(b);
+				if (aSort > bSort) {
+					return 1;
+				} else if (aSort < bSort) {
+					return -1;
+				}
+
+				if (a.display_name.toLowerCase() > b.display_name.toLowerCase()) {
+					return 1;
+				} else if (a.display_name.toLowerCase() < b.display_name.toLowerCase()) {
+					return -1;
+				}
+
+				return 0;
+			});
+		}
+	}
+
+	constructor(public type: 'friend' | 'room', users: any[] = [], chatClient?: ChatClient) {
 		if (users && users.length) {
 			for (const user of users) {
 				if (user.isOnline) {
@@ -18,21 +48,23 @@ export class ChatUserCollection {
 					++this.offlineCount;
 				}
 
-				this.collection.push(new ChatUser(user));
+				this.collection_.push(new ChatUser(user));
 			}
 		}
 
-		this.sort();
+		if (chatClient) {
+			this.chat = chatClient;
+		}
 	}
 
 	get(input: number | ChatUser) {
 		const userId = typeof input === 'number' ? input : input.id;
-		return this.collection.find(user => user.id === userId);
+		return this.collection_.find(user => user.id === userId);
 	}
 
 	getByRoom(input: number | ChatRoom) {
 		const roomId = typeof input === 'number' ? input : input.id;
-		return this.collection.find(user => user.room_id === roomId);
+		return this.collection_.find(user => user.room_id === roomId);
 	}
 
 	has(input: number | ChatUser) {
@@ -51,16 +83,15 @@ export class ChatUserCollection {
 			++this.offlineCount;
 		}
 
-		this.collection.push(user);
-		this.sort();
+		this.collection_.push(user);
 	}
 
 	remove(input: number | ChatUser) {
 		const userId = typeof input === 'number' ? input : input.id;
-		const index = this.collection.findIndex(user => user.id === userId);
+		const index = this.collection_.findIndex(user => user.id === userId);
 
 		if (index !== -1) {
-			const user = this.collection[index];
+			const user = this.collection_[index];
 
 			if (user.isOnline) {
 				--this.onlineCount;
@@ -68,12 +99,10 @@ export class ChatUserCollection {
 				--this.offlineCount;
 			}
 
-			this.collection.splice(index, 1);
+			this.collection_.splice(index, 1);
 		} else {
 			return;
 		}
-
-		this.sort();
 	}
 
 	update(user: ChatUser) {
@@ -81,8 +110,6 @@ export class ChatUserCollection {
 		if (curUser) {
 			Object.assign(curUser, user);
 		}
-
-		this.sort();
 	}
 
 	online(input: number | ChatUser) {
@@ -115,23 +142,42 @@ export class ChatUserCollection {
 		user.isOnline = false;
 	}
 
-	sort() {
-		if (this.type === ChatUserCollection.TYPE_FRIEND) {
-			this.collection.sort((a, b) => {
-				return b.last_message_on - a.last_message_on;
-			});
-
-			return;
-		}
-
-		this.collection.sort((a, b) => {
-			if (a.display_name.toLowerCase() > b.display_name.toLowerCase()) {
-				return 1;
-			} else if (a.display_name.toLowerCase() < b.display_name.toLowerCase()) {
+	private getSortVal(user: ChatUser) {
+		if (this.type === ChatUserCollection.TYPE_ROOM) {
+			// Move your own user to the top of lists
+			if (this.chat && this.chat.currentUser?.id === user.id) {
 				return -1;
 			}
 
-			return 0;
-		});
+			let friendOnlineStatus = null;
+			if (this.chat) {
+				friendOnlineStatus = isUserOnline(this.chat, user.id);
+			}
+
+			// online
+			if (friendOnlineStatus) {
+				return 0;
+			}
+
+			// offline
+			if (friendOnlineStatus === false) {
+				return 1;
+			}
+
+			// not friends
+			if (friendOnlineStatus === null) {
+				return 2;
+			}
+		}
+
+		return 1;
 	}
+}
+
+/**
+ * Sorts an array of users or rooms by the last time someone has made a message
+ * in the room.
+ */
+export function sortByLastMessageOn<T extends (ChatUser | ChatRoom)[]>(items: T): T {
+	return items.sort((a, b) => b.last_message_on - a.last_message_on);
 }

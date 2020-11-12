@@ -2,7 +2,19 @@ import { Component, Watch } from 'vue-property-decorator';
 import * as _ClientAutoStartMod from '../../../../_common/client/autostart/autostart.service';
 import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
 import { BaseForm, FormOnInit } from '../../../../_common/form-vue/form.service';
-import { Settings } from '../../../../_common/settings/settings.service';
+import {
+	SettingAnimatedThumbnails,
+	SettingAutostartClient,
+	SettingBroadcastModal,
+	SettingFeedNotifications,
+	SettingGameInstallDir,
+	SettingMaxDownloadCount,
+	SettingMaxExtractCount,
+	SettingQueueWhenPlaying,
+	SettingRestrictedBrowsing,
+	SettingThemeAlwaysOurs,
+	SettingThemeDark,
+} from '../../../../_common/settings/settings.service';
 import { ThemeMutation, ThemeState, ThemeStore } from '../../../../_common/theme/theme.store';
 
 let ClientAutoStartMod: typeof _ClientAutoStartMod | undefined;
@@ -25,7 +37,6 @@ type FormModel = {
 	autostart_client: boolean;
 	theme_dark: boolean;
 	theme_always_ours: boolean;
-	always_show_stickers: boolean;
 };
 
 @Component({
@@ -50,27 +61,25 @@ export default class FormSettings extends BaseForm<FormModel> implements FormOnI
 	}
 
 	onInit() {
-		console.log(Settings.get('always-show-stickers'));
-		this.setField('restricted_browsing', Settings.get('restricted-browsing'));
-		this.setField('broadcast_modal', Settings.get('broadcast-modal'));
-		this.setField('animated_thumbnails', Settings.get('animated-thumbnails'));
-		this.setField('feed_notifications', Settings.get('feed-notifications'));
-		this.setField('always_show_stickers', Settings.get('always-show-stickers'));
-		this.setField('theme_dark', this.isDark);
-		this.setField('theme_always_ours', this.alwaysOurs);
+		this.setField('restricted_browsing', SettingRestrictedBrowsing.get());
+		this.setField('broadcast_modal', SettingBroadcastModal.get());
+		this.setField('animated_thumbnails', SettingAnimatedThumbnails.get());
+		this.setField('feed_notifications', SettingFeedNotifications.get());
+		this.setField('theme_dark', SettingThemeDark.get());
+		this.setField('theme_always_ours', SettingThemeAlwaysOurs.get());
 
 		if (GJ_IS_CLIENT) {
-			this.setField('game_install_dir', Settings.get('game-install-dir'));
-			this.setField('queue_when_playing', Settings.get('queue-when-playing'));
+			this.setField('game_install_dir', SettingGameInstallDir.get());
+			this.setField('queue_when_playing', SettingQueueWhenPlaying.get());
 
-			this.setField('max_download_count', Settings.get('max-download-count'));
+			this.setField('max_download_count', SettingMaxDownloadCount.get());
 			this.setField('limit_downloads', this.formModel.max_download_count !== -1);
 
-			this.setField('max_extract_count', Settings.get('max-extract-count'));
+			this.setField('max_extract_count', SettingMaxExtractCount.get());
 			this.setField('limit_extractions', this.formModel.max_extract_count !== -1);
 
 			if (this.canClientAutostart) {
-				this.setField('autostart_client', Settings.get('autostart-client'));
+				this.setField('autostart_client', SettingAutostartClient.get());
 			}
 		}
 	}
@@ -94,39 +103,36 @@ export default class FormSettings extends BaseForm<FormModel> implements FormOnI
 	limitDownloadsChange(shouldLimit: boolean) {
 		this.setField(
 			'max_download_count',
-			shouldLimit ? Settings.getDefault('max-download-count') : -1
+			shouldLimit ? SettingMaxDownloadCount.defaultValue : -1
 		);
 		this.onChange();
 	}
 
 	@Watch('formModel.limit_extractions')
 	limitExtractionsChange(shouldLimit: boolean) {
-		this.setField(
-			'max_extract_count',
-			shouldLimit ? Settings.getDefault('max-extract-count') : -1
-		);
+		this.setField('max_extract_count', shouldLimit ? SettingMaxExtractCount.defaultValue : -1);
 		this.onChange();
 	}
 
 	onChange() {
-		Settings.set('restricted-browsing', this.formModel.restricted_browsing);
-		Settings.set('broadcast-modal', this.formModel.broadcast_modal);
-		Settings.set('animated-thumbnails', this.formModel.animated_thumbnails);
-		Settings.set('feed-notifications', this.formModel.feed_notifications);
-		Settings.set('theme-dark', this.formModel.theme_dark);
-		Settings.set('theme-always-ours', this.formModel.theme_always_ours);
-		Settings.set('always-show-stickers', this.formModel.always_show_stickers);
+		SettingRestrictedBrowsing.set(this.formModel.restricted_browsing);
+		SettingBroadcastModal.set(this.formModel.broadcast_modal);
+		SettingAnimatedThumbnails.set(this.formModel.animated_thumbnails);
+		SettingFeedNotifications.set(this.formModel.feed_notifications);
+		SettingThemeDark.set(this.formModel.theme_dark);
+		SettingThemeAlwaysOurs.set(this.formModel.theme_always_ours);
+
 		this.setDark(this.formModel.theme_dark);
 		this.setAlwaysOurs(this.formModel.theme_always_ours);
 
 		if (GJ_IS_CLIENT) {
-			Settings.set('game-install-dir', this.formModel.game_install_dir);
-			Settings.set('max-download-count', this.formModel.max_download_count);
-			Settings.set('max-extract-count', this.formModel.max_extract_count);
-			Settings.set('queue-when-playing', this.formModel.queue_when_playing);
+			SettingGameInstallDir.set(this.formModel.game_install_dir);
+			SettingMaxDownloadCount.set(this.formModel.max_download_count);
+			SettingMaxExtractCount.set(this.formModel.max_extract_count);
+			SettingQueueWhenPlaying.set(this.formModel.queue_when_playing);
 
 			if (ClientAutoStartMod && this.canClientAutostart) {
-				Settings.set('autostart-client', this.formModel.autostart_client);
+				SettingAutostartClient.set(this.formModel.autostart_client);
 
 				if (this.formModel.autostart_client) {
 					ClientAutoStartMod.ClientAutoStart.set();

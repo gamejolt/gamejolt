@@ -1,7 +1,6 @@
 import VueRouter, { RawLocation } from 'vue-router';
 import { TrophyModal } from '../../app/components/trophy/modal/modal.service';
 import { assertNever } from '../../utils/utils';
-import { Api } from '../api/api.service';
 import { Collaborator } from '../collaborator/collaborator.model';
 import { Comment, getCommentUrl } from '../comment/comment-model';
 import { CommentVideoModal } from '../comment/video/modal/modal.service';
@@ -35,7 +34,7 @@ function getRouteLocationForModel(model: Game | User | FiresidePost | Community)
 		return model.url;
 	} else if (model instanceof Game) {
 		return model.routeLocation;
-	} else if (model instanceof FiresidePost && !!model.game) {
+	} else if (model instanceof FiresidePost && model.game) {
 		return model.routeLocation;
 	} else if (model instanceof Community) {
 		return model.routeLocation;
@@ -201,10 +200,6 @@ export class Notification extends Model {
 		delete that['from_resource_model'];
 		delete that['action_resource_model'];
 		delete that['to_resource_model'];
-	}
-
-	static fetchNotificationsCount() {
-		return Api.sendRequest('/web/dash/activity/count', null, { detach: true });
 	}
 
 	get routeLocation(): RawLocation {

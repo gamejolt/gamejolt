@@ -5,6 +5,20 @@ $-thumbnail-size = 80px
 $-thumbnail-size-sm = 48px
 $-bg-color-base = var(--theme-bg)
 
+.-unread-blip
+	position: absolute
+	top: 16px
+	left: 24px
+	height: 12px
+	width: 12px
+	border: $border-width-large solid var(--theme-bg)
+	background-color: var(--theme-fg)
+	border-radius: 50%
+	pointer-events: none
+
+	@media $media-xs
+		left: 18px
+
 .popper-wrapper .-community-card
 	min-width: 300px
 
@@ -92,6 +106,14 @@ $-bg-color-base = var(--theme-bg)
 
 	&-item
 		margin: 0 4px
+
+	.button
+		position: relative
+
+		&:hover
+			.-unread-blip
+				border-color: var(--theme-bg-actual)
+				background-color: var(--theme-bi-fg)
 
 	@media $media-xs
 		.-menu

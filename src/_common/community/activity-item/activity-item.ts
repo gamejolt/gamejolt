@@ -34,6 +34,7 @@ export default class AppCommunityActivityItem extends Vue {
 
 	readonly Screen = Screen;
 	readonly date = date;
+	readonly CommunityActivityItem = CommunityActivityItem;
 
 	get loggedOn() {
 		return date(this.item.added_on, 'medium');
@@ -98,7 +99,7 @@ export default class AppCommunityActivityItem extends Vue {
 				reason: this.item.action_resource.reason,
 			});
 		} else if (this.item.action_resource instanceof CommunityChannel) {
-			return '#' + this.item.action_resource.title;
+			return this.item.action_resource.title;
 		} else if (this.item.action_resource instanceof Game) {
 			return this.item.action_resource.title;
 		}
@@ -108,8 +109,11 @@ export default class AppCommunityActivityItem extends Vue {
 		return !!this.actionTo || !!this.actionText;
 	}
 
+	get extraData(): Record<string, any> {
+		return JSON.parse(this.item.extra_data);
+	}
+
 	getExtraData(key: string) {
-		const data = JSON.parse(this.item.extra_data);
-		return data[key];
+		return this.extraData[key];
 	}
 }

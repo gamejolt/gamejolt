@@ -1,7 +1,9 @@
+<script lang="ts" src="./edit-modal"></script>
+
 <template>
 	<app-modal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
+			<app-button :disabled="closeButtonDisabled" @click="modal.dismiss()">
 				<translate>Close</translate>
 			</app-button>
 		</div>
@@ -15,10 +17,9 @@
 					:default-community="community"
 					:default-channel="channel"
 					@submit="onSubmitted"
+					@video-upload-status-change="onVideoUploadStatusChanged"
 				/>
 			</app-loading-fade>
 		</div>
 	</app-modal>
 </template>
-
-<script lang="ts" src="./edit-modal"></script>

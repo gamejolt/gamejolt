@@ -1,4 +1,5 @@
 import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Location } from 'vue-router';
 import { Analytics } from '../../analytics/analytics.service';
 import AppMessageThreadAdd from '../../message-thread/add/add.vue';
 import { BaseModal } from '../../modal/base';
@@ -6,7 +7,7 @@ import { Model } from '../../model/model.service';
 import { Screen } from '../../screen/screen-service';
 import { AppState, AppStore } from '../../store/app-store';
 import FormComment from '../add/add.vue';
-import { Comment, getCanCommentOnModel, getCommentModelResourceName } from '../comment-model';
+import { canCommentOnModel, Comment, getCommentModelResourceName } from '../comment-model';
 import {
 	CommentStoreManager,
 	CommentStoreManagerKey,
@@ -87,14 +88,21 @@ export default class AppCommentThreadModal extends BaseModal {
 	}
 
 	get shouldShowReply() {
-		if (this.parent && !this.parent.user.canComment) {
-			return false;
-		}
-		if (!getCanCommentOnModel(this.model)) {
+		if (!canCommentOnModel(this.model, this.parent)) {
 			return false;
 		}
 
 		return this.user && !this.hasError;
+	}
+
+	destroyed() {
+		// If there was a permalink in the URL, we want to remove it when closing the comment modal.
+		const hash = this.$route.hash;
+		if (!hash || hash.indexOf('#comment-') !== 0) {
+			return;
+		}
+
+		this.$router.replace({ ...this.$route, hash: '' } as Location);
 	}
 
 	_onCommentAdd(comment: Comment) {

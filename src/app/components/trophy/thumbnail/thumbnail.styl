@@ -1,5 +1,5 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .trophy-thumbnail
 	rounded-corners-lg()
@@ -12,7 +12,7 @@
 	height: 0
 	padding-top: 100%
 	overflow: hidden
-	rounded-corners()
+	border-radius: $border-radius-large - 2px
 
 .trophy-thumbnail-img-inner
 	change-bg('dark')
@@ -26,7 +26,8 @@
 		display: block
 		width: 100%
 
-.trophy-thumbnail-img-1x, .trophy-thumbnail-img-2x
+.trophy-thumbnail-img-1x
+.trophy-thumbnail-img-2x
 	position: absolute
 	top: 50%
 	left: 50%

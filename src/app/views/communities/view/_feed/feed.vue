@@ -46,12 +46,6 @@
 			</ul>
 		</app-nav-tab-list>
 
-		<app-expand v-if="shouldShowLoadNew" when animate-initial>
-			<app-activity-feed-new-button @click="loadNew">
-				<translate>Show New Posts</translate>
-			</app-activity-feed-new-button>
-		</app-expand>
-
 		<app-activity-feed-placeholder v-if="!feed" />
 		<template v-else>
 			<app-activity-feed
@@ -61,6 +55,7 @@
 				@unfeature-post="onPostUnfeatured"
 				@reject-post="onPostRejected"
 				@move-channel-post="onPostMovedChannel"
+				@load-new="onLoadedNew"
 			/>
 			<div v-else-if="channel !== routeStore.frontpageChannel" class="alert">
 				<div v-translate="{ message: noPostsMessage }">

@@ -25,7 +25,7 @@
 				v-if="chat"
 				class="-control"
 				:highlight="highlight"
-				:notification-count="chat.friendNotificationsCount"
+				:notification-count="chat.roomNotificationsCount"
 				:is-active="visibleLeftPane === 'chat'"
 				is-control
 			>

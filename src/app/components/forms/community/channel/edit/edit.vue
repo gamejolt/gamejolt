@@ -77,6 +77,9 @@
 		<app-form-button>
 			<translate>Save Channel</translate>
 		</app-form-button>
+		<app-button trans @click="onRename">
+			<translate>Rename Channel</translate>
+		</app-button>
 	</app-form>
 </template>
 

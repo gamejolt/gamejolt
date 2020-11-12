@@ -1,12 +1,7 @@
 <script lang="ts" src="./backdrop"></script>
 
 <template>
-	<div
-		class="backdrop"
-		:class="[className, { active }]"
-		@click="_clicked"
-		@transitionend="_transitionend"
-	/>
+	<div class="backdrop" :class="className" @click="_clicked" />
 </template>
 
 <style lang="stylus" scoped>
@@ -27,11 +22,5 @@
 	background-color: rgba($black, $backdrop-opacity)
 	user-select: none
 	z-index: $zindex-backdrop
-	opacity: 0
-	transition: opacity 300ms
-	will-change: opacity
-
-	&.active
-		opacity: 1
 </style>
 

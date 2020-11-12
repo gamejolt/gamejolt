@@ -15,10 +15,10 @@
 				>
 					<app-jolticon icon="menu" />
 					<div
-						v-if="chat && chat.friendNotificationsCount > 0"
+						v-if="chat && chat.roomNotificationsCount > 0"
 						class="-notification-chat notification-tag tag tag-highlight"
 					>
-						{{ chat.friendNotificationsCount }}
+						{{ chat.roomNotificationsCount }}
 					</div>
 				</a>
 

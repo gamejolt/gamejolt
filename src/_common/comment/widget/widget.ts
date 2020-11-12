@@ -5,6 +5,7 @@ import { Analytics } from '../../analytics/analytics.service';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { Collaborator } from '../../collaborator/collaborator.model';
 import { Environment } from '../../environment/environment.service';
+import { number } from '../../filters/number';
 import AppIllustration from '../../illustration/illustration.vue';
 import AppLoading from '../../loading/loading.vue';
 import AppMessageThreadAdd from '../../message-thread/add/add.vue';
@@ -15,13 +16,13 @@ import AppNavTabList from '../../nav/tab-list/tab-list.vue';
 import { AppState, AppStore } from '../../store/app-store';
 import { User } from '../../user/user.model';
 import FormComment from '../add/add.vue';
-import { Comment, getCanCommentOnModel, getCommentModelResourceName } from '../comment-model';
+import { canCommentOnModel, Comment, getCommentModelResourceName } from '../comment-model';
 import {
 	CommentStoreManager,
 	CommentStoreManagerKey,
 	CommentStoreModel,
-	fetchStoreComments,
 	fetchCommentThread,
+	fetchStoreComments,
 	lockCommentStore,
 	onCommentAdd,
 	onCommentEdit,
@@ -35,6 +36,7 @@ import {
 	CommentStoreThreadView,
 	CommentStoreView,
 } from '../comment-store-view';
+import { DisplayMode } from '../modal/modal.service';
 import AppCommentWidgetComment from './comment/comment.vue';
 
 let incrementer = 0;
@@ -78,6 +80,9 @@ export default class AppCommentWidget extends Vue {
 	@Prop(propOptional(String))
 	initialTab?: string;
 
+	@Prop(propOptional(String, null))
+	displayMode!: DisplayMode | null;
+
 	@AppState
 	user!: AppStore['user'];
 
@@ -92,6 +97,8 @@ export default class AppCommentWidget extends Vue {
 	currentPage = 1;
 
 	collaborators: Collaborator[] = [];
+
+	readonly number = number;
 
 	get loginUrl() {
 		return (
@@ -157,7 +164,7 @@ export default class AppCommentWidget extends Vue {
 	}
 
 	get shouldShowAdd() {
-		if (!getCanCommentOnModel(this.model)) {
+		if (!canCommentOnModel(this.model)) {
 			return false;
 		}
 		return this.showAdd;
