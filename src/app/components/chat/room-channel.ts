@@ -122,6 +122,10 @@ export class ChatRoomChannel extends Channel {
 	private onRemoveMsg(data: { id: number }) {
 		if (this.room) {
 			arrayRemove(this.client.messages[this.roomId], i => i.id === data.id);
+
+			const messages = [...this.client.messages[this.roomId]];
+			this.client.messages[this.roomId] = [];
+			processNewChatOutput(this.client, this.roomId, messages, false);
 		}
 	}
 
