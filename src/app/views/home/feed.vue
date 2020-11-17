@@ -59,7 +59,7 @@
 			</template>
 
 			<template v-if="!Screen.isMobile" #right>
-				<app-home-recommended-game />
+				<app-home-recommended-game :game="featuredGame" :loading="loadingFeaturedGame" />
 				<app-home-recommended-users
 					v-if="shouldShowRecommendedUsers"
 					:users="recommendedUsers"
@@ -104,7 +104,23 @@
 			<app-post-add-button @add="onPostAdded" />
 
 			<template v-if="Screen.isXs">
-				<h6 class="-communities-heading">
+				<template v-if="loadingFeaturedGame || !!featuredGame">
+					<h6 class="-feed-heading">
+						<translate>Featured Game</translate>
+					</h6>
+					<span
+						v-if="loadingFeaturedGame"
+						class="lazy-placeholder -game-placeholder"
+						:style="{ height: '67px' }"
+					/>
+					<app-game-badge
+						v-else-if="featuredGame"
+						class="-game-badge"
+						:game="featuredGame"
+					/>
+				</template>
+
+				<h6 class="-feed-heading">
 					<translate>Communities</translate>
 				</h6>
 
@@ -154,7 +170,11 @@
 		text-overflow()
 
 // Keep things tight since it's on mobile.
-.-communities-heading
+.-feed-heading
 	margin-top: 0
 	margin-bottom: 5px
+
+.-game-placeholder
+	rounded-corners-lg()
+	margin-bottom: $line-height-computed
 </style>

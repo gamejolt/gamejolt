@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { Api } from '../../../../../_common/api/api.service';
+import { Prop } from 'vue-property-decorator';
+import { propOptional, propRequired } from '../../../../../utils/vue';
 import { Game } from '../../../../../_common/game/game.model';
 import AppGameThumbnailPlaceholder from '../../../../../_common/game/thumbnail/placeholder/placeholder.vue';
 import AppGameThumbnail from '../../../../../_common/game/thumbnail/thumbnail.vue';
@@ -12,15 +13,6 @@ import AppGameThumbnail from '../../../../../_common/game/thumbnail/thumbnail.vu
 	},
 })
 export default class AppHomeRecommendedGame extends Vue {
-	game: Game | null = null;
-	isLoading = true;
-
-	async mounted() {
-		const payload = await Api.sendRequest('/web/dash/recommended/featured');
-		if (payload.featuredGame) {
-			this.game = new Game(payload.featuredGame);
-		}
-
-		this.isLoading = false;
-	}
+	@Prop(propOptional(Game, null)) game!: Game | null;
+	@Prop(propRequired(Boolean)) loading!: boolean;
 }

@@ -6,6 +6,8 @@ import AppAdWidget from '../../../_common/ad/widget/widget.vue';
 import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
+import { Game } from '../../../_common/game/game.model';
+import { AppLazyPlaceholder } from '../../../_common/lazy/placeholder/placeholder';
 import { Meta } from '../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
@@ -18,6 +20,7 @@ import { ActivityFeedView } from '../../components/activity/feed/view';
 import AppBroadcastCard from '../../components/broadcast-card/broadcast-card.vue';
 import AppCommunitySliderPlaceholder from '../../components/community/slider/placeholder/placeholder.vue';
 import AppCommunitySlider from '../../components/community/slider/slider.vue';
+import AppGameBadge from '../../components/game/badge/badge.vue';
 import { AppActivityFeedLazy } from '../../components/lazy';
 import AppPageContainer from '../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../components/post/add-button/add-button.vue';
@@ -49,6 +52,8 @@ class DashGame {
 		AppAdWidget,
 		AppHomeRecommendedUsers,
 		AppHomeRecommendedGame,
+		AppGameBadge,
+		AppLazyPlaceholder,
 	},
 })
 @RouteResolver({
@@ -72,7 +77,9 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	gameFilterQuery = '';
 	isShowingAllGames = false;
 	loadingRecommendedUsers = true;
+	loadingFeaturedGame = true;
 	recommendedUsers: User[] = [];
+	featuredGame: Game | null = null;
 
 	// TODO(HALLOWEEN2020): remove after
 	shouldShowBasement = false;
@@ -162,6 +169,7 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 
 	mounted() {
 		this.loadRecommendedUsers();
+		this.loadFeaturedGame();
 	}
 
 	onLoadedNew() {
@@ -203,5 +211,16 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 		}
 
 		this.loadingRecommendedUsers = false;
+	}
+
+	async loadFeaturedGame() {
+		this.loadingFeaturedGame = true;
+
+		const payload = await Api.sendRequest('/web/dash/recommended/featured');
+		if (payload.featuredGame) {
+			this.featuredGame = new Game(payload.featuredGame);
+		}
+
+		this.loadingFeaturedGame = false;
 	}
 }

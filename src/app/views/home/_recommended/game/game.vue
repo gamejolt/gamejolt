@@ -2,7 +2,11 @@
 
 <template>
 	<div>
-		<div v-if="isLoading" class="-recommended-game">
+		<h4 v-if="loading || !!game" class="section-header">
+			<translate>Featured Game</translate>
+		</h4>
+
+		<div v-if="loading" class="-recommended-game">
 			<app-game-thumbnail-placeholder />
 		</div>
 		<div v-else-if="game" class="-recommended-game">
