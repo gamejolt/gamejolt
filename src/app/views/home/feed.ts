@@ -22,7 +22,8 @@ import { AppActivityFeedLazy } from '../../components/lazy';
 import AppPageContainer from '../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../components/post/add-button/add-button.vue';
 import { Store } from '../../store';
-import AppHomeRecommended from './_recommended/recommended.vue';
+import AppHomeRecommendedGame from './_recommended/game/game.vue';
+import AppHomeRecommendedUsers from './_recommended/users/users.vue';
 
 class DashGame {
 	constructor(
@@ -46,7 +47,8 @@ class DashGame {
 		AppUserCard,
 		AppScrollAffix,
 		AppAdWidget,
-		AppHomeRecommended,
+		AppHomeRecommendedUsers,
+		AppHomeRecommendedGame,
 	},
 })
 @RouteResolver({

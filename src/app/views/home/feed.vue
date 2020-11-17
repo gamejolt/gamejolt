@@ -59,7 +59,8 @@
 			</template>
 
 			<template v-if="!Screen.isMobile" #right>
-				<app-home-recommended
+				<app-home-recommended-game />
+				<app-home-recommended-users
 					v-if="shouldShowRecommendedUsers"
 					:users="recommendedUsers"
 					:loading="loadingRecommendedUsers"
@@ -75,9 +76,14 @@
 
 			<template v-if="shouldShowBasement">
 				<div
-					style="display: flex; flex-direction: column; align-items: center; margin-bottom: 40px;"
+					style="
+						display: flex;
+						flex-direction: column;
+						align-items: center;
+						margin-bottom: 40px;
+					"
 				>
-					<p class="lead text-center anim-fade-in-down" style="max-width: 550px;">
+					<p class="lead text-center anim-fade-in-down" style="max-width: 550px">
 						A creature grabbed all the candy people gave you and dashed into a door
 						you've never seen before! It seems to lead to the Game Jolt Basement. I
 						wonder what's down there...
