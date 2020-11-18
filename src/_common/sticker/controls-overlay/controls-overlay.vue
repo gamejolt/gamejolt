@@ -2,7 +2,7 @@
 
 <template>
 	<div class="sticker-controls-overlay">
-		<div class="-overlay" :class="{ '-end': end, '-wider': wider }" />
+		<div class="-overlay" :class="{ '-end': end }" />
 		<slot />
 	</div>
 </template>
