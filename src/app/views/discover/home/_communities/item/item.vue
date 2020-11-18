@@ -31,7 +31,7 @@
 @import '~styles-lib/mixins'
 
 .-item
-	margin-bottom: $line-height-computed
+	margin-bottom: $grid-gutter-width
 
 .-backdrop-sizing
 	position: relative
@@ -63,4 +63,7 @@
 
 		.-item:hover &
 			theme-prop('color', 'link')
+
+	@media $media-md-up
+		font-size: $font-size-base
 </style>

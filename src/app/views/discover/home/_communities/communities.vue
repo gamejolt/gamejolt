@@ -38,7 +38,6 @@
 			</div>
 
 			<br />
-			<br />
 
 			<div class="page-cut">
 				<app-button
