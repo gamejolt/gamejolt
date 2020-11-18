@@ -257,7 +257,8 @@ export default class FormGamePackage extends BaseForm<FormGamePackageModel>
 
 		const params = [this.formModel.game_id, this.formModel.id];
 		await Api.sendRequest(
-			'/web/dash/developer/games/packages/cancel-sales/' + params.join('/')
+			'/web/dash/developer/games/packages/cancel-sales/' + params.join('/'),
+			{}
 		);
 
 		this.promotionalPricing = null;

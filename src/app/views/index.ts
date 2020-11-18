@@ -17,6 +17,7 @@ import { routeProfile } from './profile/profile.route';
 import { routeSearch } from './search/search.route';
 import { routeSettings } from './settings/settings.route';
 import { routeStyleguide } from './styleguide/styleguide.route';
+import { routeTimeout } from './timeout/timeout.route';
 import { routeWelcome } from './welcome/welcome.route';
 import { routeWeplay } from './weplay/weplay.route';
 
@@ -40,6 +41,7 @@ const routes = [
 	routeWelcome,
 	routeBadgeFeatured,
 	routeBasement,
+	routeTimeout,
 ];
 
 export const router = initRouter(routes);

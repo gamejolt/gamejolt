@@ -34,7 +34,7 @@ import AppCommunitiesViewPageContainer from '../../_page-container/page-containe
 @RouteResolver({
 	deps: { params: ['id'] },
 	resolver({ route }) {
-		return Api.sendRequest('/web/dash/communities/blocks/' + route.params.id, {});
+		return Api.sendRequest('/web/dash/communities/blocks/' + route.params.id);
 	},
 })
 export default class RouteCommunitiesViewEditBlocks extends BaseRouteComponent {
@@ -123,7 +123,7 @@ export default class RouteCommunitiesViewEditBlocks extends BaseRouteComponent {
 			try {
 				const payload = await Api.sendRequest(
 					`/web/dash/communities/blocks/remove/${block.id}`,
-					undefined,
+					{},
 					{
 						detach: true,
 					}
