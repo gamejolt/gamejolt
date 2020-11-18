@@ -18,15 +18,13 @@
 				'align-items': itemAlignment,
 			}"
 		>
-			<div
+			<app-responsive-dimensions
 				ref="container"
-				v-app-observe-dimensions="computeSize"
 				class="media-item-container"
 				:class="{ '-zoomable': canFullscreenItem }"
-				:style="{
-					width: containerWidth,
-					height: containerHeight,
-				}"
+				:ratio="mediaItem ? mediaItem.width / mediaItem.height : null"
+				:max-height="maxHeight"
+				:max-width="maxWidth"
 			>
 				<app-media-item-backdrop
 					:class="{ '-backdrop': shouldShowPlaceholder }"
@@ -35,7 +33,7 @@
 				>
 					<template v-if="mediaItem">
 						<component
-							:is="hasLink && !isEditing ? 'a' : 'span'"
+							:is="hasLink && !isEditing ? 'a' : 'div'"
 							:href="hasLink && !isEditing ? href : undefined"
 							rel="nofollow noopener"
 							target="_blank"
@@ -76,7 +74,7 @@
 						</app-link-external>
 					</small>
 				</div>
-			</div>
+			</app-responsive-dimensions>
 			<span v-if="mediaItem && hasCaption" class="text-muted">
 				<em>{{ caption }}</em>
 			</span>
