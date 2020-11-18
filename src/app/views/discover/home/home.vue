@@ -13,7 +13,7 @@
 					<app-discover-home-communities :communities="featuredCommunities" />
 					<!-- :is-loading="!isRouteBootstrapped" -->
 
-					<template v-if="app.user">
+					<template v-if="!isInSplit">
 						<h2>
 							<translate>Featured Games</translate>
 						</h2>

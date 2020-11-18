@@ -45,6 +45,10 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	featuredCommunities: Community[] = [];
 	games: Game[] = [];
 
+	get isInSplit() {
+		return hasCommunitiesHomeSplitTest(this.$route, this.app.user);
+	}
+
 	routeCreated() {
 		Meta.setTitle(null);
 	}
@@ -80,7 +84,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 			}
 		}
 
-		if (hasCommunitiesHomeSplitTest(this.$route, this.app.user) && $payload.communities) {
+		if (this.isInSplit && $payload.communities) {
 			this.featuredCommunities = Community.populate($payload.communities);
 		} else {
 			this.featuredCommunities = Community.populate($payload.featuredCommunities);

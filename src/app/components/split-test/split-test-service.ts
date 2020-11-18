@@ -63,7 +63,6 @@ function checkHardcoded(experiment: string, route?: Route): number {
 	// Allows you to put the experiment in the URL to force it.
 	// Example: /games/best?oCnfrO9TSku9N0t3viKvKg=1
 	if (route) {
-		console.log('check', route.query);
 		const query = route.query;
 		if (query[experiment]) {
 			return parseInt(query[experiment] as string, 10);
