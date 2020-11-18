@@ -34,6 +34,7 @@
 					<template v-if="mediaItem">
 						<component
 							:is="hasLink && !isEditing ? 'a' : 'div'"
+							class="-img-container"
 							:href="hasLink && !isEditing ? href : undefined"
 							rel="nofollow noopener"
 							target="_blank"
@@ -108,6 +109,10 @@
 // While the image is still loading, we show a dimmed background as a fallback for app-media-item-backdrop
 .-backdrop
 	change-bg('bg-offset')
+
+// Stretch out the img container so that img-responsive is able to fetch the proper quality item.
+.-img-container
+	width: 100%
 
 .media-item
 	width: 100%
