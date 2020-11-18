@@ -4,12 +4,17 @@ import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { Game } from '../../../../_common/game/game.model';
+import AppLoading from '../../../../_common/loading/loading.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
 import AppGameGrid from '../../../components/game/grid/grid.vue';
 import AppGameGridPlaceholder from '../../../components/game/grid/placeholder/placeholder.vue';
 import { AppAuthJoinLazy } from '../../../components/lazy';
+import {
+	hasCommunitiesHomeSplitTest,
+	trackCommunitiesHomeSplitTest,
+} from '../../../components/split-test/split-test-service';
 import { Store } from '../../../store/index';
 import AppDiscoverHomeBanner from './_banner/banner.vue';
 import AppDiscoverHomeCommunities from './_communities/communities.vue';
@@ -24,6 +29,7 @@ import AppDiscoverHomeTags from './_tags/tags.vue';
 		AppGameGrid,
 		AppGameGridPlaceholder,
 		AppAuthJoin: AppAuthJoinLazy,
+		AppLoading,
 	},
 })
 @RouteResolver({
@@ -33,8 +39,7 @@ import AppDiscoverHomeTags from './_tags/tags.vue';
 	resolver: () => Api.sendRequest('/web/discover'),
 })
 export default class RouteDiscoverHome extends BaseRouteComponent {
-	@State
-	app!: Store['app'];
+	@State app!: Store['app'];
 
 	featuredItem: FeaturedItem | null = null;
 	featuredCommunities: Community[] = [];
@@ -45,6 +50,8 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	}
 
 	routeResolved($payload: any) {
+		trackCommunitiesHomeSplitTest(this.$route, this.app.user);
+
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb;
 		Meta.twitter = $payload.twitter;
@@ -73,7 +80,12 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 			}
 		}
 
-		this.featuredCommunities = Community.populate($payload.featuredCommunities);
+		if (hasCommunitiesHomeSplitTest(this.$route, this.app.user) && $payload.communities) {
+			this.featuredCommunities = Community.populate($payload.communities);
+		} else {
+			this.featuredCommunities = Community.populate($payload.featuredCommunities);
+		}
+
 		this.games = Game.populate($payload.games);
 	}
 }
