@@ -84,10 +84,9 @@ export class Screen {
 					'dpi)'
 		  ).matches;
 
-	/**
-	 * Whether or now the window is being scrolled. Gets updated by the Scroll service.
-	 */
-	static isScrolling = false;
+	static isPointerMouse = GJ_IS_SSR
+		? true
+		: window.matchMedia('not screen and (pointer: coarse)').matches;
 
 	static resizeChanges = new EventTopic<void>();
 

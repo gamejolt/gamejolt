@@ -1,87 +1,78 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
-import { AppObserveDimensions } from '../../../observe-dimensions/observe-dimensions.directive';
+import { propRequired } from '../../../../utils/vue';
+import { ContentFocus } from '../../../content-focus/content-focus.service';
+import { AppResponsiveDimensions } from '../../../responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../../screen/screen-service';
+import { ScrollInviewConfig } from '../../../scroll/inview/config';
 import { AppScrollInview } from '../../../scroll/inview/inview';
+import { getVideoPlayerFromSources } from '../../../video/player/controller';
+import AppVideo from '../../../video/video.vue';
 import { ContentOwner } from '../../content-owner';
 import AppBaseContentComponent from '../base/base-content-component.vue';
-import { computeSize } from '../media-item/media-item';
+
+const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.windowHeight * 0.25}px` });
 
 @Component({
 	components: {
 		AppBaseContentComponent,
 		AppScrollInview,
-	},
-	directives: {
-		AppObserveDimensions,
+		AppVideo,
+		AppResponsiveDimensions,
 	},
 })
 export default class AppContentGif extends Vue {
-	@Prop(String)
-	gifId!: string;
-
-	@Prop(Number)
-	width!: number;
-
-	@Prop(Number)
-	height!: number;
-
-	@Prop(String)
-	service!: string;
-
-	@Prop(Object)
-	media!: any;
-
-	@Prop(Object)
-	owner!: ContentOwner;
-
-	@Prop(Boolean)
-	isEditing!: boolean;
-
-	@Prop(Boolean)
-	isDisabled!: boolean;
+	@Prop(propRequired(String)) gifId!: string;
+	@Prop(propRequired(Number)) width!: number;
+	@Prop(propRequired(Number)) height!: number;
+	@Prop(propRequired(String)) service!: string;
+	@Prop(propRequired(Object)) media!: any;
+	@Prop(propRequired(Object)) owner!: ContentOwner;
+	@Prop(propRequired(Boolean)) isEditing!: boolean;
+	@Prop(propRequired(Boolean)) isDisabled!: boolean;
 
 	$refs!: {
 		container: HTMLElement;
 	};
 
-	computedHeight = this.height;
-	computedWidth = this.width;
 	isInview = false;
-	inviewMargin = Screen.windowHeight * 0.25;
+	readonly InviewConfig = InviewConfig;
 
-	get containerWidth() {
-		// Always have SSR fullwidth the image. We never let SSR calculate the height of the container based on the width.
-		if (GJ_IS_SSR) {
-			return '100%';
-		}
-		return this.computedWidth > 0 ? this.computedWidth + 'px' : 'auto';
+	get shouldPlay() {
+		return ContentFocus.isWindowFocused;
 	}
 
-	get containerHeight() {
-		if (GJ_IS_SSR) {
-			return 'auto';
+	get videoController() {
+		if (!this.media || !this.media.mp4.url || !this.media.webm.url) {
+			return;
 		}
-		return this.computedHeight > 0 ? this.computedHeight + 'px' : 'auto';
+
+		const sourcesPayload = {
+			mp4: this.media.mp4.url,
+			webm: this.media.webm.url,
+		};
+
+		return getVideoPlayerFromSources(sourcesPayload, 'gif', this.media.preview);
 	}
 
-	mounted() {
-		this.computeSize();
+	get maxWidth() {
+		const { container } = this.$refs;
+		const maxOwnerWidth = this.owner.getContentRules().maxMediaWidth;
+		if (maxOwnerWidth !== null) {
+			return Math.min(maxOwnerWidth, container ? container.clientWidth : this.width);
+		}
+
+		return this.width;
 	}
 
-	computeSize() {
-		const maxContainerWidth = this.$refs.container.getBoundingClientRect().width;
-		let maxWidth = this.owner.getContentRules().maxMediaWidth;
-		if (maxWidth === null || maxWidth > maxContainerWidth) {
-			maxWidth = maxContainerWidth;
+	get maxHeight() {
+		const maxOwnerHeight = this.owner.getContentRules().maxMediaHeight;
+		if (maxOwnerHeight !== null) {
+			return Math.min(maxOwnerHeight, this.height);
 		}
-		const maxHeight = this.owner.getContentRules().maxMediaHeight;
 
-		const size = computeSize(this.width, this.height, maxWidth, maxHeight);
-
-		this.computedWidth = size.width;
-		this.computedHeight = size.height;
+		return this.height;
 	}
 
 	onRemoved() {

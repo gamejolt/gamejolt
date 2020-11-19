@@ -1,5 +1,4 @@
-import { RawLocation } from 'vue-router';
-import { Route } from 'vue-router/types/router';
+import { Location, Route } from 'vue-router/types/router';
 import { Api } from '../../api/api.service';
 import { Perm } from '../../collaborator/collaboratable';
 import { COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING } from '../../community/channel/channel-permissions';
@@ -18,7 +17,7 @@ import { CommentableModel, Model, ModelSaveRequestOptions } from '../../model/mo
 import { Poll } from '../../poll/poll.model';
 import { Registry } from '../../registry/registry.service';
 import { StickerPlacement } from '../../sticker/placement/placement.model';
-import { appStore } from '../../store/app-store';
+import { constructStickerCounts, StickerCount } from '../../sticker/sticker-count';
 import { Translate } from '../../translate/translate.service';
 import { User } from '../../user/user.model';
 import { FiresidePostCommunity } from './community/community.model';
@@ -54,15 +53,19 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	like_count!: number;
 	comment_count!: number;
 	user!: User;
-	game!: Game;
+	game?: Game;
 	as_game_owner!: boolean;
 	post_to_user_profile!: boolean;
 	slug!: string;
 	subline!: string;
 	url!: string;
 	view_count?: number;
-	expand_count?: number;
 	is_pinned!: boolean;
+
+	/**
+	 * If the post has an article saved, whether or not it's loaded in yet.
+	 */
+	has_article!: boolean;
 
 	lead_content!: string;
 	leadStr!: string;
@@ -78,6 +81,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	poll!: Poll | null;
 	platforms_published_to: FiresidePostPublishedPlatform[] = [];
 	stickers: StickerPlacement[] = [];
+	sticker_counts: StickerCount[] = [];
 
 	// Used for forms and saving.
 	key_group_ids: number[] = [];
@@ -138,8 +142,8 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 			this.platforms_published_to = data.platforms_published_to;
 		}
 
-		if (data.stickers) {
-			this.stickers = StickerPlacement.populate(data.stickers);
+		if (data.sticker_counts) {
+			this.sticker_counts = constructStickerCounts(data.sticker_counts);
 		}
 
 		Registry.store('FiresidePost', this);
@@ -178,7 +182,11 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return this.videos.length > 0;
 	}
 
-	get hasArticle() {
+	/**
+	 * This differs from has_article in that it is purely a frontend check, so
+	 * it updates in realtime.
+	 */
+	get hasArticleContent() {
 		const cache = ContentSetCacheService.getCache(this, 'fireside-post-article');
 		return cache.hasContent;
 	}
@@ -206,22 +214,10 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return FiresidePostLike.populate(response.likes);
 	}
 
-	get routeLocation(): RawLocation {
-		if (this.game) {
-			return {
-				name: 'discover.games.view.devlog.view',
-				params: {
-					slug: this.game.slug,
-					id: this.game.id + '',
-					postSlug: this.slug,
-				},
-			};
-		}
-
+	get routeLocation(): Location {
 		return {
-			name: 'profile.post.view',
+			name: 'post',
 			params: {
-				username: this.user.username,
 				slug: this.slug,
 			},
 		};
@@ -284,7 +280,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 
 	getPinContextFor(route: Route) {
 		if (this.isInGamePinContext(route)) {
-			return this.game;
+			return this.game!;
 		}
 
 		const fpc = this.getCommunityPinContext(route);
@@ -337,7 +333,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 			return null;
 		}
 
-		for (let communityLink of this.communities) {
+		for (const communityLink of this.communities) {
 			const community = communityLink.community;
 			const channelTitle = communityLink.channel!.title;
 
@@ -431,20 +427,6 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return payload;
 	}
 
-	$viewed() {
-		// TODO(collaborators) block collaborators from logging ticks on posts they own
-		if (!appStore.state.user || this.user.id !== appStore.state.user.id) {
-			HistoryTick.sendBeacon('fireside-post', this.id);
-		}
-	}
-
-	$expanded() {
-		// TODO(collaborators) block collaborators from logging ticks on posts they own
-		if (!appStore.state.user || this.user.id !== appStore.state.user.id) {
-			HistoryTick.sendBeacon('fireside-post-expand', this.id);
-		}
-	}
-
 	$feature(community: Community) {
 		const c = this.getTaggedCommunity(community);
 		if (!c) {
@@ -523,3 +505,16 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 }
 
 Model.create(FiresidePost);
+
+/**
+ * Will load the article from the API and store it into the post model.
+ */
+export async function loadArticleIntoPost(post: FiresidePost) {
+	const payload = await Api.sendRequest(`/web/posts/article/${post.id}`);
+	post.article_content = payload.article;
+	return post;
+}
+
+export function $viewPost(post: FiresidePost) {
+	HistoryTick.sendBeacon('fireside-post', post.id);
+}

@@ -17,7 +17,7 @@ interface WebpackContext extends WebpackRequire {
 	keys(): string[];
 }
 
-declare var require: WebpackRequire;
+declare const require: WebpackRequire;
 
 // Loaders
 declare module '!file-loader!*' {

@@ -41,9 +41,10 @@
 @import '~styles-lib/mixins'
 
 .comment-overview .-comment-container:not(:last-child)
-	border-bottom-width: $border-width-small
+	border-bottom-width: $border-width-large
 	border-bottom-style: solid
-	theme-prop('border-color', 'bg-subtle')
+	border-color: var(--theme-bg-backdrop)
+	// theme-prop('border-color', 'bg-subtle')
 
 .-comment-container:last-child
 	.-comment

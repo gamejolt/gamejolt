@@ -1,3 +1,5 @@
+<script lang="ts" src="./search"></script>
+
 <template>
 	<div class="app-search">
 		<app-shortkey shortkey="s" @press="focus" />
@@ -5,7 +7,13 @@
 		<!--
 			Put the action/method stuff so that crawlers can see how to submit the form.
 		-->
-		<form class="navbar-form" action="/search" method="GET" role="search" onsubmit="return false">
+		<form
+			class="navbar-form"
+			action="/search"
+			method="GET"
+			role="search"
+			onsubmit="return false"
+		>
 			<div class="-input">
 				<label :for="`search-input-${id}`" class="sr-only">
 					<translate>search.input.placeholder</translate>
@@ -34,7 +42,9 @@
 						@keydown="onKeydown"
 					/>
 
-					<app-search-autocomplete slot="popover" />
+					<template #popover>
+						<app-search-autocomplete />
+					</template>
 				</app-popper>
 			</div>
 		</form>
@@ -45,5 +55,3 @@
 .-input
 	width: 100%
 </style>
-
-<script lang="ts" src="./search"></script>

@@ -10,6 +10,7 @@
 				@submit="submit($event)"
 				@cancel="onFormCancel"
 				@single-line-mode-change="onSingleLineModeChanged($event)"
+				@changed="onChange($event)"
 			/>
 		</div>
 	</div>

@@ -1,6 +1,6 @@
 import { addWeeks, startOfDay } from 'date-fns';
 import { determine } from 'jstimezonedetect';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../utils/array';
 import { propOptional } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
@@ -8,14 +8,9 @@ import { CommunityChannel } from '../../../../_common/community/channel/channel.
 import AppCommunityChannelSelect from '../../../../_common/community/channel/select/select.vue';
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
-import { ContentDocument } from '../../../../_common/content/content-document';
-import { ContentWriter } from '../../../../_common/content/content-writer';
 import { FiresidePostCommunity } from '../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
-import {
-	AppFormAutosize,
-	AutosizeBootstrap,
-} from '../../../../_common/form-vue/autosize.directive';
+import { FiresidePostVideo } from '../../../../_common/fireside/post/video/video-model';
 import AppFormControlCheckbox from '../../../../_common/form-vue/control/checkbox/checkbox.vue';
 import AppFormControlContent from '../../../../_common/form-vue/control/content/content.vue';
 import AppFormControlDate from '../../../../_common/form-vue/control/date/date.vue';
@@ -56,12 +51,15 @@ import AppFormPostCommunityPillAdd from './_community-pill/add/add.vue';
 import AppFormPostCommunityPill from './_community-pill/community-pill.vue';
 import AppFormPostCommunityPillIncomplete from './_community-pill/incomplete/incomplete.vue';
 import AppFormPostMedia from './_media/media.vue';
+import { VideoStatus } from './_video/video';
+import AppFormPostVideo from './_video/video.vue';
 
 type FormPostModel = FiresidePost & {
 	mediaItemIds: number[];
 	publishToPlatforms: number[] | null;
 	key_group_ids: number[];
 	video_url: string;
+	video_id: number;
 	sketchfab_id: string;
 	attached_communities: { community_id: number; channel_id: number }[];
 
@@ -103,12 +101,12 @@ type FormPostModel = FiresidePost & {
 		AppCommunityChannelSelect,
 		AppFormControlContent,
 		AppScrollScroller,
+		AppFormPostVideo,
 	},
 	directives: {
 		AppFocusWhen,
 		AppScrollWhen,
 		AppTooltip,
-		AppFormAutosize,
 	},
 })
 export default class FormPost extends BaseForm<FormPostModel>
@@ -128,7 +126,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 		form: AppForm;
 	};
 
-	readonly YOUTUBE_URL_REGEX = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_\-]{11})(?:&.+)*$/i;
 	readonly SKETCHFAB_FIELD_REGEX = SKETCHFAB_FIELD_VALIDATION_REGEX;
 
 	readonly MAX_POLL_ITEMS = 10;
@@ -151,16 +148,21 @@ export default class FormPost extends BaseForm<FormPostModel>
 	accessPermissionsEnabled = false;
 	isSavedDraftPost = false;
 	leadLengthLimit = 255;
+	articleLengthLimit = 50_000;
 	isUploadingPastedImage = false;
 	maxCommunities = 0;
 	attachedCommunities: { community: Community; channel: CommunityChannel }[] = [];
 	targetableCommunities: Community[] = [];
 	scrollingKey = 1;
-
-	private updateAutosize?: () => void;
+	uploadingVideoStatus = VideoStatus.IDLE;
+	videoProvider = FiresidePostVideo.PROVIDER_GAMEJOLT;
 
 	readonly GameVideo = GameVideo;
 	readonly Screen = Screen;
+	readonly FiresidePostVideo = FiresidePostVideo;
+
+	@Emit('video-upload-status-change')
+	emitVideoUploadStatusChange(_status: VideoStatus) {}
 
 	get loadUrl() {
 		return `/web/posts/manage/save/${this.model!.id}`;
@@ -205,37 +207,8 @@ export default class FormPost extends BaseForm<FormPostModel>
 		return getSketchfabIdFromInput(this.formModel.sketchfab_id);
 	}
 
-	get hasValidYouTubeUrl() {
-		return this.formModel.video_url && this.formModel.video_url.match(this.YOUTUBE_URL_REGEX);
-	}
-
-	get youtubeVideoId() {
-		const url = this.formModel.video_url;
-		if (url) {
-			// extract video id from url
-			const matches = url.match(this.YOUTUBE_URL_REGEX);
-			if (matches && matches.length > 1) {
-				const videoId = matches[1];
-				return videoId;
-			}
-		}
-	}
-
 	get hasOptionalData() {
 		return this.longEnabled;
-	}
-
-	get tagContentDocuments() {
-		const documents = [] as ContentDocument[];
-		if (this.formModel.hasLead) {
-			const leadDoc = ContentDocument.fromJson(this.formModel.lead_content);
-			documents.push(leadDoc);
-			if (this.formModel.hasArticle) {
-				const articleDoc = ContentDocument.fromJson(this.formModel.article_content);
-				documents.push(articleDoc);
-			}
-		}
-		return documents;
 	}
 
 	get hasPoll() {
@@ -353,16 +326,20 @@ export default class FormPost extends BaseForm<FormPostModel>
 		return this.defaultCommunity;
 	}
 
+	get submitButtonsEnabled() {
+		return this.valid && this.uploadingVideoStatus !== VideoStatus.UPLOADING;
+	}
+
 	@Watch('formModel.post_to_user_profile')
 	onPostToUserProfileToggle() {
-		if (!!this.formModel.post_to_user_profile) {
+		if (this.formModel.post_to_user_profile) {
 			this.setField('as_game_owner', false);
 		}
 	}
 
 	@Watch('formModel.as_game_owner')
 	onPostAsGameOwnerToggle() {
-		if (!!this.formModel.as_game_owner) {
+		if (this.formModel.as_game_owner) {
 			this.setField('post_to_user_profile', false);
 		}
 	}
@@ -387,22 +364,19 @@ export default class FormPost extends BaseForm<FormPostModel>
 	async onInit() {
 		const model = this.model!;
 
-		// save if the post was a saved draft post (not a new draft post)
+		// Store if the post was a saved draft post (not a new draft post)
 		if (model.status === FiresidePost.STATUS_DRAFT && model.hasLead) {
 			this.isSavedDraftPost = true;
 		}
 
-		this.setField('status', FiresidePost.STATUS_ACTIVE);
+		// Don't overwrite setting on a draft post because the user has already made a choice for this setting.
+		if (model.status !== FiresidePost.STATUS_DRAFT) {
+			this.setField('post_to_user_profile', true);
+		}
 
 		this.setField('attached_communities', []);
 
-		this.setField('post_to_user_profile', true);
-
 		if (model.videos.length) {
-			this.setField(
-				'video_url',
-				'https://www.youtube.com/watch?v=' + model.videos[0].video_id
-			);
 			this.enableVideo();
 		} else if (model.sketchfabs.length) {
 			this.setField('sketchfab_id', model.sketchfabs[0].sketchfab_id);
@@ -437,7 +411,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 			this.accessPermissionsEnabled = true;
 		}
 
-		if (model.hasArticle) {
+		if (model.has_article) {
 			this.longEnabled = true;
 		}
 
@@ -445,12 +419,16 @@ export default class FormPost extends BaseForm<FormPostModel>
 	}
 
 	onLoad(payload: any) {
+		// Pull any post information that may not already be loaded in.
+		this.setField('article_content', payload.post.article_content);
+
 		this.keyGroups = KeyGroup.populate(payload.keyGroups);
 		this.wasPublished = payload.wasPublished;
 		this.maxFilesize = payload.maxFilesize;
 		this.maxWidth = payload.maxWidth;
 		this.maxHeight = payload.maxHeight;
 		this.leadLengthLimit = payload.leadLengthLimit;
+		this.articleLengthLimit = payload.articleLengthLimit;
 		this.maxCommunities = payload.maxCommunities;
 
 		if (payload.attachedCommunities) {
@@ -542,6 +520,10 @@ export default class FormPost extends BaseForm<FormPostModel>
 		this.setField('status', FiresidePost.STATUS_DRAFT);
 	}
 
+	onPublishSubmit() {
+		this.setField('status', FiresidePost.STATUS_ACTIVE);
+	}
+
 	async onSubmit() {
 		// a scheduled post gets saved as draft and will get set to published when the scheduled date is reached
 		if (this.isScheduling) {
@@ -568,8 +550,22 @@ export default class FormPost extends BaseForm<FormPostModel>
 			this.setField('mediaItemIds', []);
 		}
 
-		if (this.attachmentType !== FiresidePost.TYPE_VIDEO || !this.formModel.video_url) {
+		if (this.attachmentType === FiresidePost.TYPE_VIDEO) {
+			if (this.videoProvider === FiresidePostVideo.PROVIDER_GAMEJOLT) {
+				// Unset the video url for linked videos and set the video id for uploaded videos
+				// to signal to the backend that the attached video should be kept.
+				this.setField('video_url', '');
+				this.setField('video_id', this.formModel.videos[0].id);
+			} else if (this.videoProvider === FiresidePostVideo.PROVIDER_YOUTUBE) {
+				// Make sure to unset the video id for uploaded videos.
+				this.setField('video_id', 0);
+			} else {
+				this.setField('video_url', '');
+				this.setField('video_id', 0);
+			}
+		} else {
 			this.setField('video_url', '');
+			this.setField('video_id', 0);
 		}
 
 		if (this.attachmentType === FiresidePost.TYPE_SKETCHFAB && this.formModel.sketchfab_id) {
@@ -605,14 +601,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 				),
 			});
 		}
-	}
-
-	/**
-	 * This is called when the autosize directive is bootstrapped. It passes us
-	 * some hooks that we can call to modify it.
-	 */
-	bootstrapAutosize({ updater }: AutosizeBootstrap) {
-		this.updateAutosize = updater;
 	}
 
 	enableImages() {
@@ -677,22 +665,11 @@ export default class FormPost extends BaseForm<FormPostModel>
 		this.setField('video_url', '');
 		this.setField('sketchfab_id', '');
 		this.setField('media', []);
+		this.setField('videos', []);
 	}
 
 	toggleLong() {
 		this.longEnabled = !this.longEnabled;
-	}
-
-	async addTag(tag: string) {
-		const doc = ContentDocument.fromJson(this.formModel.lead_content);
-		const writer = new ContentWriter(doc);
-		writer.appendTag(tag);
-		this.setField('lead_content', doc.toJson());
-
-		if (this.updateAutosize) {
-			await this.$nextTick();
-			this.updateAutosize();
-		}
 	}
 
 	createPoll() {
@@ -835,7 +812,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 	}
 
 	timezoneByName(timezone: string) {
-		for (let region in this.timezones) {
+		for (const region in this.timezones) {
 			const tz = this.timezones[region].find(_tz => _tz.i === timezone);
 			if (tz) {
 				return tz;
@@ -847,8 +824,8 @@ export default class FormPost extends BaseForm<FormPostModel>
 	async fetchTimezones() {
 		// Get timezones list.
 		this.timezones = await Timezone.getGroupedTimezones();
-		for (let region in this.timezones) {
-			for (let tz of this.timezones[region]) {
+		for (const region in this.timezones) {
+			for (const tz of this.timezones[region]) {
 				let offset = '';
 				if (tz.o > 0) {
 					offset = `+${tz.o / 3600}:00`;
@@ -922,5 +899,30 @@ export default class FormPost extends BaseForm<FormPostModel>
 		} else {
 			this.onMediaUploadFailed($payload.reason);
 		}
+	}
+
+	onVideoChanged(video: FiresidePostVideo | null) {
+		if (video === null) {
+			this.setField('videos', []);
+		} else {
+			this.setField('videos', [video]);
+		}
+	}
+
+	onVideoUrlChanged(url: string) {
+		this.setField('video_url', url);
+	}
+
+	onUploadingVideoStatusChanged(status: VideoStatus) {
+		this.uploadingVideoStatus = status;
+		this.emitVideoUploadStatusChange(this.uploadingVideoStatus);
+	}
+
+	onVideoProviderChanged(provider: string) {
+		this.videoProvider = provider;
+	}
+
+	onDisableVideoAttachment() {
+		this.disableAttachments();
 	}
 }

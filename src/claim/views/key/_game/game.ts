@@ -11,8 +11,9 @@ import AppGamePackageCard from '../../../../_common/game/package/card/card.vue';
 import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
 import { KeyGroup } from '../../../../_common/key-group/key-group.model';
 import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
-import { ThemeMutation, ThemeStore } from '../../../../_common/theme/theme.store';
-import { Store } from '../../../store/index';
+import { store, Store } from '../../../store/index';
+
+const ClaimGameThemeKey = 'claim-game';
 
 @Component({
 	components: {
@@ -31,9 +32,6 @@ export default class AppKeyGame extends Vue {
 
 	@Prop(propOptional(String))
 	accessKey?: string;
-
-	@ThemeMutation
-	setPageTheme!: ThemeStore['setPageTheme'];
 
 	@State
 	app!: Store['app'];
@@ -59,7 +57,7 @@ export default class AppKeyGame extends Vue {
 		this.game = new Game(this.payload.game);
 		this.bundle = this.payload.bundle ? new GameBundle(this.payload.bundle) : null;
 		this.keyGroup = this.payload.keyGroup ? new KeyGroup(this.payload.keyGroup) : null;
-		this.setPageTheme(this.game.theme || null);
+		this.setPageTheme();
 
 		if (
 			this.keyGroup &&
@@ -78,7 +76,15 @@ export default class AppKeyGame extends Vue {
 	}
 
 	destroyed() {
-		this.setPageTheme(null);
+		store.commit('theme/clearPageTheme', ClaimGameThemeKey);
+	}
+
+	private setPageTheme() {
+		const theme = this.game.theme ?? null;
+		store.commit('theme/setPageTheme', {
+			key: ClaimGameThemeKey,
+			theme,
+		});
 	}
 
 	claim() {

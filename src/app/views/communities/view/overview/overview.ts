@@ -1,14 +1,12 @@
-import { Component, Inject } from 'vue-property-decorator';
+import { Component, Inject, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Growls } from '../../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
-import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import AppCommunitySidebar from '../../../../components/community/sidebar/sidebar.vue';
-import AppPageHeader from '../../../../components/page-header/page-header.vue';
 import { Store } from '../../../../store/index';
 import { CommunitiesViewChannelDeps } from '../channel/channel';
 import {
@@ -25,7 +23,6 @@ import AppCommunitiesViewPageContainer from '../_page-container/page-container.v
 @Component({
 	name: 'RouteCommunitiesViewOverview',
 	components: {
-		AppPageHeader,
 		AppCommunitiesViewPageContainer,
 		AppCommunitySidebar,
 		AppCommunitiesViewFeed,
@@ -44,11 +41,10 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	@State communities!: Store['communities'];
 	@State communityStates!: Store['communityStates'];
 	@Action joinCommunity!: Store['joinCommunity'];
+	@State grid!: Store['grid'];
 
 	feed: ActivityFeedView | null = null;
 	finishedLoading = false;
-
-	readonly Screen = Screen;
 
 	get community() {
 		return this.routeStore.community;
@@ -56,10 +52,6 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	get communityState() {
 		return this.communityStates.getCommunityState(this.community);
-	}
-
-	get channelPath() {
-		return this.routeStore.channelPath;
 	}
 
 	get sidebarData() {
@@ -93,6 +85,13 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		return this.canAcceptCollaboration ? '' : this.$gettext(`You are in too many communities.`);
 	}
 
+	@Watch('communityState.hasUnreadFeaturedPosts', { immediate: true })
+	onChannelUnreadChanged() {
+		if (this.feed && this.feed.newCount === 0 && this.communityState.hasUnreadFeaturedPosts) {
+			this.feed.newCount = 1;
+		}
+	}
+
 	routeCreated() {
 		this.feed = ActivityFeedService.routeInit(this);
 		this.finishedLoading = false;
@@ -107,11 +106,24 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			fromCache
 		);
 
-		this.communityState.unreadFeatureCount = 0;
 		this.finishedLoading = true;
 
 		if (this.routeTitle) {
 			setCommunityMeta(this.community, this.routeTitle);
+		}
+
+		if (!fromCache && this.user) {
+			this.grid?.pushViewNotifications('community-featured', {
+				communityId: this.community.id,
+			});
+		}
+	}
+
+	loadedNew() {
+		if (this.communityState.hasUnreadFeaturedPosts && this.user) {
+			this.grid?.pushViewNotifications('community-featured', {
+				communityId: this.community.id,
+			});
 		}
 	}
 

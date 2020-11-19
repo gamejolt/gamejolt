@@ -1,3 +1,5 @@
+<script lang="ts" src="./fireside-post"></script>
+
 <template>
 	<div class="event-item-controls-fireside-post">
 		<div class="-row">
@@ -6,11 +8,11 @@
 
 				<div v-if="shouldShowCommentsButton" class="-inline-button">
 					<app-button
+						v-app-tooltip="$gettext('View Comments')"
 						icon="comment"
 						circle
 						trans
 						@click="openComments()"
-						v-app-tooltip="$gettext('View Comments')"
 					/>
 
 					<a
@@ -19,41 +21,20 @@
 						:class="{ mobile: Screen.isXs }"
 						@click="openComments()"
 					>
-						{{ commentsCount | fuzzynumber }}
+						{{ fuzzynumber(commentsCount) }}
 					</a>
 					<span v-else class="blip-missing" />
 				</div>
 
-				<template v-if="shouldShowStickersButton">
-					<app-button
-						icon="sticker"
-						circle
-						trans
-						@click="placeSticker()"
-						v-app-tooltip="$gettext('Place Sticker')"
-						v-app-auth-required
-					/>
-
-					&nbsp;
-				</template>
-
-				<div
-					v-if="shouldShowStickersBar"
-					class="-stickers"
-					:class="{ '-showing': showStickers }"
-					@click.stop="onClickShowStickers"
-					v-app-tooltip="$gettext(`Toggle Stickers`)"
-				>
-					<span class="-caret"></span>
-
-					<span v-for="sticker of previewStickers" :key="sticker.id" class="-sticker">
-						<img :src="sticker.img_url" />
-					</span>
-
-					<small class="-stickers-count text-muted">
-						{{ post.stickers.length | number }}
-					</small>
-				</div>
+				<app-button
+					v-if="shouldShowStickersButton"
+					v-app-tooltip="$gettext('Place Sticker')"
+					v-app-auth-required
+					icon="sticker"
+					circle
+					trans
+					@click="placeSticker()"
+				/>
 			</div>
 			<span v-if="shouldShowExtra" class="-extra">
 				<span v-if="shouldShowEdit && !showUserControls" class="-extra">
@@ -81,7 +62,11 @@
 		</div>
 
 		<div class="-row small" :class="{ '-spacing-top': shouldShowEdit, tiny: Screen.isXs }">
-			<app-event-item-controls-fireside-post-stats :key="'stats'" class="text-muted" :post="post" />
+			<app-event-item-controls-fireside-post-stats
+				:key="'stats'"
+				class="text-muted"
+				:post="post"
+			/>
 
 			<span v-if="shouldShowEdit && showUserControls" class="-extra">
 				<app-button v-if="canPublish" class="-inline-button" primary @click="publish()">
@@ -96,8 +81,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .event-item-controls-fireside-post
 	display: flex
@@ -112,58 +97,6 @@
 		display: inline-flex
 		align-items: center
 
-	.-stickers
-		pressy()
-		cursor: pointer
-		position: relative
-		display: inline-flex
-		align-items: center
-		flex-direction: row
-		padding: 2px 4px 2px 6px
-		border-radius: 20px
-		will-change: transform
-
-		&:hover
-			change-bg('bg-offset')
-
-			.-caret
-				border-right-color: var(--theme-bg-offset)
-
-		&-count
-			margin-left: 18px
-			font-weight: 700
-
-		&.-showing
-			change-bg('bi-bg')
-
-			&:hover
-				.-caret
-					border-right-color: var(--theme-bi-bg)
-
-			.-caret
-				border-right-color: var(--theme-bi-bg)
-
-			small
-				color: var(--theme-bi-fg)
-
-
-		.-caret
-			caret(direction: left, color: $trans, size: 5px)
-			left: -3px
-
-	.-sticker
-		width: 20px
-		height: 20px
-		position: relative
-		margin-right: -10px
-		display: inline-block
-
-		& > img
-			display: block
-			width: 100%
-			height: 100%
-			filter: drop-shadow(1px 1px 0 white) drop-shadow(-1px 1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px -1px 0 white)
-
 	.-extra
 		margin-left: auto
 
@@ -173,9 +106,7 @@
 	.-spacing
 		&-top
 			margin-top: 12px
+
 		&-right
 			margin-right: 8px
-
 </style>
-
-<script lang="ts" src="./fireside-post"></script>

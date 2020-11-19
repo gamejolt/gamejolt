@@ -1,3 +1,5 @@
+<script lang="ts" src="./media-item"></script>
+
 <template>
 	<app-base-content-component
 		:is-editing="isEditing"
@@ -9,29 +11,30 @@
 		<div
 			class="media-item"
 			:class="{
-				'media-item-editing': isEditing,
+				'-editing': isEditing,
+				'-link': hasLink && !isEditing,
 			}"
 			:style="{
 				'align-items': itemAlignment,
 			}"
 		>
-			<div
-				class="media-item-container"
+			<app-responsive-dimensions
 				ref="container"
-				v-app-observe-dimensions="computeSize"
-				:style="{
-					width: containerWidth,
-					height: containerHeight,
-				}"
+				class="media-item-container"
+				:class="{ '-zoomable': canFullscreenItem }"
+				:ratio="mediaItem ? mediaItem.width / mediaItem.height : null"
+				:max-height="maxHeight"
+				:max-width="maxWidth"
 			>
 				<app-media-item-backdrop
 					:class="{ '-backdrop': shouldShowPlaceholder }"
 					:media-item="mediaItem"
 					radius="lg"
 				>
-					<template v-if="isHydrated">
+					<template v-if="mediaItem">
 						<component
-							:is="hasLink && !isEditing ? 'a' : 'span'"
+							:is="hasLink && !isEditing ? 'a' : 'div'"
+							class="-img-container"
 							:href="hasLink && !isEditing ? href : undefined"
 							rel="nofollow noopener"
 							target="_blank"
@@ -43,6 +46,7 @@
 								:alt="title"
 								:title="title"
 								@load.native="onImageLoad"
+								@click.native="onItemFullscreen()"
 							/>
 							<img
 								v-else
@@ -51,6 +55,7 @@
 								:alt="title"
 								:title="title"
 								@load="onImageLoad"
+								@click="onItemFullscreen()"
 							/>
 						</component>
 					</template>
@@ -61,20 +66,17 @@
 						<app-loading />
 					</template>
 				</app-media-item-backdrop>
-			</div>
-			<div v-if="isHydrated && hasLink && isEditing" class="link-overlay">
-				<small>
-					<app-link-external
-						:href="href"
-						class="link-overlay-display"
-						v-app-tooltip="$gettext('This image is linked, click to open')"
-					>
-						<app-jolticon icon="link" />
-						<span>{{ displayHref }}</span>
-					</app-link-external>
-				</small>
-			</div>
-			<span v-if="isHydrated && hasCaption" class="text-muted">
+				<div v-if="mediaItem && hasLink" class="-link-overlay">
+					<small>
+						<app-link-external class="-link-overlay-display" :href="href">
+							<app-jolticon class="-icon" icon="link" />
+							&nbsp;
+							<span>{{ displayHref }}</span>
+						</app-link-external>
+					</small>
+				</div>
+			</app-responsive-dimensions>
+			<span v-if="mediaItem && hasCaption" class="text-muted">
 				<em>{{ caption }}</em>
 			</span>
 		</div>
@@ -82,54 +84,73 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+
+.-editing
+	// Make sure the X button fits properly, usually not a problem unless the image is super wide.
+	min-height: 44px
+
+	.-link-overlay
+		change-bg('bg-offset')
+		opacity: 0.7
+		padding: 2px
+		bottom: 4px
+		left: 4px
+
+.-link
+	// Mobile - styling for coarse pointers
+	@media screen and (pointer: coarse)
+		margin-bottom: $line-height-computed + 20px !important
+
+.-zoomable
+	cursor: zoom-in
+
+// While the image is still loading, we show a dimmed background as a fallback for app-media-item-backdrop
+.-backdrop
+	change-bg('bg-offset')
+
+// Stretch out the img container so that img-responsive is able to fetch the proper quality item.
+.-img-container
+	width: 100%
 
 .media-item
 	width: 100%
 	display: flex
 	flex-direction: column
 	margin-bottom: $line-height-computed
-	cursor: default
-
-	&-editing
-		// Make sure the X button fits properly, usually not a problem unless the image is super wide.
-		min-height: 44px
+	cursor: inherit
 
 .media-item-container
 	display: flex
 	justify-content: center
 	align-items: center
-	overflow: hidden
 	max-width: 100%
 	position: relative
 
-	// While the image is still loading, we show a dimmed background as a fallback for app-media-item-backdrop
-	.-backdrop
-		change-bg('bg-offset')
-
-.link-overlay
-	position: absolute
-	top: 8px
-	left: 8px
-	rounded-corners()
-	change-bg('bg-offset')
-	padding-left: 6px
-	padding-right: 6px
-	padding-top: 2px
-	padding-bottom: 2px
-	cursor: pointer
-	opacity: 0.7
-	transition: opacity 0.1 ease
-
 	&:hover
-		opacity: 1
+		.-link-overlay
+			opacity: 1
 
-	& a
-		theme-prop('color', 'fg-offset')
+.-link-overlay
+	rounded-corners()
+	cursor: pointer
+	position: absolute
+	padding: 2px
+	bottom: -22px
+	left: 2px
 
-.link-overlay-display
-	vertical-align: middle
+	&-display
+		display: flex
+
+	// Desktop - styling for non-coarse pointers
+	@media not screen and (pointer: coarse)
+		change-bg('bg-offset')
+		transition: opacity 300ms ease
+		opacity: 0
+		padding: 4px
+		bottom: 8px
+		left: 8px
 
 .caption-placeholder
 	cursor: pointer
@@ -144,5 +165,3 @@
 li .media-item
 	align-items: flex-start !important
 </style>
-
-<script lang="ts" src="./media-item"></script>

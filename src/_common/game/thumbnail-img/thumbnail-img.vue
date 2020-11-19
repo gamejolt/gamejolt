@@ -1,3 +1,5 @@
+<script lang="ts" src="./thumbnail-img"></script>
+
 <template>
 	<div
 		class="game-thumbnail-img"
@@ -9,7 +11,7 @@
 			<app-media-item-backdrop :media-item="mediaItem" radius="lg">
 				<app-jolticon class="-icon" icon="game" />
 
-				<div class="-media" v-if="mediaItem && !hideMedia">
+				<div v-if="mediaItem && !hideMedia" class="-media">
 					<app-img-responsive
 						class="-img"
 						:src="mediaItem.mediaserver_url"
@@ -18,11 +20,9 @@
 					/>
 
 					<app-video
-						v-if="hasVideo"
+						v-if="hasVideo && videoController"
 						class="-video"
-						:poster="mediaItem.mediaserver_url"
-						:webm="mediaItem.mediaserver_url_webm"
-						:mp4="mediaItem.mediaserver_url_mp4"
+						:player="videoController"
 						:should-play="shouldPlayVideo"
 					/>
 				</div>
@@ -32,5 +32,3 @@
 </template>
 
 <style lang="stylus" src="./thumbnail-img.styl" scoped></style>
-
-<script lang="ts" src="./thumbnail-img"></script>

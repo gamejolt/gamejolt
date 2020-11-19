@@ -3,7 +3,6 @@ import { Component, Prop, Watch } from 'vue-property-decorator';
 import { arrayRemove } from '../../../utils/array';
 import AppPopper from '../../../_common/popper/popper.vue';
 import AppShortkey from '../../../_common/shortkey/shortkey.vue';
-import AppSearchAutocomplete from './autocomplete/autocomplete.vue';
 import AppSearchInputTS from './input/input';
 import AppSearchInput from './input/input.vue';
 import { Search } from './search-service';
@@ -17,7 +16,7 @@ let searchIterator = 0;
 
 @Component({
 	components: {
-		AppSearchAutocomplete,
+		AppSearchAutocomplete: () => import('./autocomplete/autocomplete.vue'),
 		AppSearchInput,
 		AppPopper,
 		AppShortkey,

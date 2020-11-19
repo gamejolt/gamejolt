@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
+import { propOptional, propRequired } from '../../../../../../utils/vue';
+import { Analytics } from '../../../../../../_common/analytics/analytics.service';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
 import AppLightboxTS from '../../../../../../_common/lightbox/lightbox';
 import {
@@ -11,7 +13,7 @@ import AppMediaItemPost from '../../../../../../_common/media-item/post/post.vue
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppEventItemMediaIndicator from '../../../../event-item/media-indicator/media-indicator.vue';
 import { ActivityFeedItem } from '../../item-service';
-import { ActivityFeedView } from '../../view';
+import { ActivityFeedKey, ActivityFeedView } from '../../view';
 
 if (!GJ_IS_SSR) {
 	const VueTouch = require('vue-touch');
@@ -25,22 +27,17 @@ if (!GJ_IS_SSR) {
 	},
 })
 export default class AppActivityFeedDevlogPostMedia extends Vue implements LightboxMediaSource {
-	@Inject()
-	feed!: ActivityFeedView;
+	@Prop(propRequired(ActivityFeedItem)) item!: ActivityFeedItem;
+	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
+	@Prop(propOptional(Boolean, false)) canPlaceSticker!: boolean;
 
-	@Prop(ActivityFeedItem)
-	item!: ActivityFeedItem;
-
-	@Prop(FiresidePost)
-	post!: FiresidePost;
+	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
 	page = 1;
 	activeMediaItem: MediaItem | null = null;
 	isDragging = false;
 	isWaitingForFrame = false;
-	contentBootstrapped = false;
 	private lightbox?: AppLightboxTS;
-
 	readonly Screen = Screen;
 
 	get isHydrated() {
@@ -76,27 +73,30 @@ export default class AppActivityFeedDevlogPostMedia extends Vue implements Light
 	}
 
 	goNext() {
+		if (this.page >= this.post.media.length) {
+			this._updateSliderOffset();
+			return;
+		}
+
 		this.page = Math.min(this.page + 1, this.post.media.length);
 		this.activeMediaItem = this.post.media[this.page - 1];
 		this._updateSliderOffset();
-		this.$emit('expanded');
+		Analytics.trackEvent('activity-feed', 'media-next');
 	}
 
 	goPrev() {
+		if (this.page <= 1) {
+			this._updateSliderOffset();
+			return;
+		}
+
 		this.page = Math.max(this.page - 1, 1);
 		this.activeMediaItem = this.post.media[this.page - 1];
 		this._updateSliderOffset();
-		this.$emit('expanded');
+		Analytics.trackEvent('activity-feed', 'media-prev');
 	}
 
 	async onItemBootstrapped() {
-		if (!this.contentBootstrapped) {
-			this.contentBootstrapped = true;
-
-			await this.$nextTick();
-			this.$emit('content-bootstrapped');
-		}
-
 		this._updateSliderOffset();
 	}
 
@@ -158,6 +158,7 @@ export default class AppActivityFeedDevlogPostMedia extends Vue implements Light
 
 	onClickFullscreen() {
 		this.createLightbox();
+		Analytics.trackEvent('activity-feed', 'media-fullscreen');
 	}
 
 	private createLightbox() {

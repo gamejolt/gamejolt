@@ -1,7 +1,9 @@
+<script lang="ts" src="./item"></script>
+
 <template>
 	<app-scroll-inview
 		class="-item"
-		:margin="`${Screen.height / 2}px`"
+		:config="InviewConfig"
 		@inview="isInview = true"
 		@outview="isInview = false"
 	>
@@ -22,29 +24,31 @@
 						-->
 						<template v-if="isPending">
 							<app-button
+								v-app-tooltip="$gettext(`Cancel`)"
 								tag="span"
 								trans
 								circle
 								icon="remove"
-								v-app-tooltip="$gettext(`Cancel`)"
 								@click.prevent="cancel"
 							/>
 						</template>
 						<template v-else>
 							<app-button
+								v-app-tooltip="$gettext(`Add Friend`)"
 								tag="span"
 								primary
 								circle
 								icon="friend-add-2"
-								v-app-tooltip="$gettext(`Add Friend`)"
 								@click.prevent="accept"
 							/>
 							<app-button
+								v-app-tooltip="
+									$gettext(`Dismiss request. Sender will not be notified.`)
+								"
 								tag="span"
 								trans
 								circle
 								icon="remove"
-								v-app-tooltip="$gettext(`Dismiss request. Sender will not be notified.`)"
 								@click.prevent="reject"
 							/>
 						</template>
@@ -63,8 +67,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .-item
 	display: block
@@ -73,5 +77,3 @@
 .-name
 	text-overflow()
 </style>
-
-<script lang="ts" src="./item"></script>

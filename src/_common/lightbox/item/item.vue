@@ -1,12 +1,12 @@
+<script lang="ts" src="./item"></script>
+
 <template>
 	<div class="media-bar-lightbox-item">
-		<div class="-inner" v-if="isActive || isNext || isPrev">
+		<div v-if="isActive || isNext || isPrev" class="-inner">
 			<!-- Image -->
 			<template v-if="mediaType === 'image'">
 				<div class="-embed">
-					<!--
-						The min/max will be the actual dimensions for the image thumbnail.
-					-->
+					<!-- The min/max will be the actual dimensions for the image thumbnail. -->
 					<app-media-item-backdrop
 						:media-item="mediaItem"
 						:style="{
@@ -14,6 +14,7 @@
 							height: maxHeight ? maxHeight + 'px' : undefined,
 							marginLeft: 'auto',
 							marginRight: 'auto',
+							maxWidth: `${mediaItem.width}px`,
 						}"
 						radius="lg"
 					>
@@ -23,25 +24,29 @@
 							:src="item.img_thumbnail"
 							:alt="item.caption"
 						/>
+						<img
+							v-else-if="isGifWithoutVideo"
+							class="img-responsive"
+							:src="mediaItem.img_url"
+							:alt="item.caption"
+						/>
 						<app-video
-							v-else
+							v-else-if="videoController"
 							class="-video"
-							:poster="mediaItem.mediaserver_url"
-							:webm="mediaItem.mediaserver_url_webm"
-							:mp4="mediaItem.mediaserver_url_mp4"
+							:player="videoController"
 							show-loading
 						/>
 					</app-media-item-backdrop>
 				</div>
 
-				<div class="-caption" v-if="item.caption" ref="caption">
+				<div v-if="item.caption" ref="caption" class="-caption">
 					<h4>{{ item.caption }}</h4>
 				</div>
 			</template>
 
 			<!-- Video -->
 			<template v-else-if="mediaType === 'video'">
-				<div class="-embed" v-if="isActive">
+				<div v-if="isActive" class="-embed">
 					<!-- We want to wait until the size is properly calculated, otherwise the player won't size properly. -->
 					<app-video-embed
 						v-if="initialized"
@@ -53,15 +58,15 @@
 					/>
 				</div>
 
-				<div class="-caption" v-if="item.title || item.description" ref="caption">
+				<div v-if="item.title || item.description" ref="caption" class="-caption">
 					<h4>{{ item.title }}</h4>
-					<p v-if="item.description" v-text="item.description"></p>
+					<p v-if="item.description" v-text="item.description" />
 				</div>
 			</template>
 
 			<!-- Sketchfab -->
 			<template v-else-if="mediaType === 'sketchfab'">
-				<div class="-embed" v-if="isActive">
+				<div v-if="isActive" class="-embed">
 					<app-sketchfab-embed
 						:sketchfab-id="item.sketchfab_id"
 						:max-width="maxWidth"
@@ -75,5 +80,3 @@
 </template>
 
 <style lang="stylus" src="./item.styl" scoped></style>
-
-<script lang="ts" src="./item"></script>

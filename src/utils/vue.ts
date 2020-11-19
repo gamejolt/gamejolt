@@ -42,7 +42,7 @@ export function propRequired<T>(type?: PropType<T>) {
 	return {
 		type,
 		required: true,
-	} as PropOptions;
+	} as PropOptions<T>;
 }
 
 // We do this so that you get a type error if you try to assign any non-scalar
@@ -64,7 +64,7 @@ export function propOptional<T>(
 		type,
 		required: false,
 		default: defaultValue,
-	} as PropOptions;
+	} as PropOptions<T>;
 }
 
 declare module 'vue/types/options' {
@@ -86,6 +86,16 @@ export function installVuePlugin<T>(
 	}
 ) {
 	Vue.mixin({
+		// For debugging purposes in development.
+		data(this: Vue) {
+			if (GJ_BUILD_TYPE === 'development' && this.$options.gjIsRoot) {
+				const self = this as any;
+				return {
+					[key]: self[key],
+				};
+			}
+			return {};
+		},
 		beforeCreate() {
 			const self = this as any;
 			const parent = this.$options.parent as Record<string, any> | undefined;
@@ -115,16 +125,6 @@ export function installVuePlugin<T>(
 		},
 		mounted(this: Vue) {
 			runHook(this, pluginOptions?.mounted);
-		},
-		// For debugging purposes in development.
-		data(this: Vue) {
-			if (GJ_BUILD_TYPE === 'development' && this.$options.gjIsRoot) {
-				const self = this as any;
-				return {
-					[key]: self[key],
-				};
-			}
-			return {};
 		},
 	});
 

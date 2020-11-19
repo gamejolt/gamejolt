@@ -8,14 +8,17 @@ import AppGameModLinks from '../../../app/components/game/mod-links/mod-links.vu
 import { currency } from '../../filters/currency';
 import AppPopper from '../../popper/popper.vue';
 import { Screen } from '../../screen/screen-service';
+import { ScrollInviewConfig } from '../../scroll/inview/config';
 import { AppScrollInview } from '../../scroll/inview/inview';
-import { Settings } from '../../settings/settings.service';
+import { SettingAnimatedThumbnails } from '../../settings/settings.service';
 import { AppStore } from '../../store/app-store';
 import AppUserCardHover from '../../user/card/hover/hover.vue';
 import AppUserAvatarImg from '../../user/user-avatar/img/img.vue';
 import AppUserVerifiedTick from '../../user/verified-tick/verified-tick.vue';
 import { Game } from '../game.model';
 import AppGameThumbnailImg from '../thumbnail-img/thumbnail-img.vue';
+
+const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height}px` });
 
 @Component({
 	components: {
@@ -49,7 +52,7 @@ export default class AppGameThumbnail extends Vue {
 
 	isBootstrapped = GJ_IS_SSR;
 	isHydrated = GJ_IS_SSR;
-
+	readonly InviewConfig = InviewConfig;
 	readonly Screen = Screen;
 	readonly Game = Game;
 
@@ -59,7 +62,7 @@ export default class AppGameThumbnail extends Vue {
 	}
 
 	get shouldAnimate() {
-		return !!Settings.get('animated-thumbnails') && this.isHydrated;
+		return SettingAnimatedThumbnails.get() && this.isHydrated;
 	}
 
 	get url() {

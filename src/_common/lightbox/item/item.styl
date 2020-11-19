@@ -1,6 +1,6 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-@require '../variables'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+@import '../variables'
 
 .media-bar-lightbox-item
 	display: block
@@ -10,6 +10,7 @@
 	// Apply control padding to child container on mobile to allow for dynamic heights
 	height: 'calc(100vh - %s)' % $-controls-height
 	padding-bottom: $-controls-height
+	touch-action: pan-y
 
 	@media only screen and (orientation: landscape)
 		height: 100vh
@@ -49,11 +50,13 @@ img
 	position: relative
 
 	>>>
-		.-img, iframe
+		.-img
+		iframe
 			display: block
 			margin: 0 auto
 
-		.-img, .-video
+		.-img
+		.-video
 			width: 100%
 
 .-caption

@@ -1,12 +1,12 @@
 import { Autostarter } from 'client-voodoo';
 import * as path from 'path';
 import { Device } from '../../device/device.service';
-import { Settings } from '../../settings/settings.service';
+import { SettingAutostartClient } from '../../settings/settings.service';
 import { Client } from '../client.service';
 
 export class ClientAutoStart {
 	static init() {
-		if (Settings.get('autostart-client')) {
+		if (SettingAutostartClient.get()) {
 			this.set();
 		}
 	}

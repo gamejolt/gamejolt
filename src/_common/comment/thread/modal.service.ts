@@ -11,6 +11,8 @@ interface CommentThreadModalOptions {
 	autofocus?: boolean;
 }
 
+export type CommentThreadModalPermalinkDeregister = () => void;
+
 export class CommentThreadModal {
 	static async show(options: CommentThreadModalOptions) {
 		const { model, commentId, displayMode, autofocus } = options;
@@ -54,6 +56,6 @@ export class CommentThreadModal {
 			if (checkPath === to.path && !!to.hash) {
 				this.showFromPermalink(router, model, displayMode);
 			}
-		});
+		}) as CommentThreadModalPermalinkDeregister;
 	}
 }

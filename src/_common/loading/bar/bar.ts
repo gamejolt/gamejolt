@@ -32,9 +32,11 @@ export default class AppLoadingBar extends Vue {
 	}
 
 	mounted() {
+		// NOTICE: Router may not be available on all sections (like gameserver).
+
 		// We hook into router so that we can show loading bar while the async
 		// component chunks are being loaded by webpack.
-		this.$router.beforeEach((_to, _from, next) => {
+		this.$router?.beforeEach((_to, _from, next) => {
 			// If we hit before each while in the middle of a route change, it
 			// means that the previous one never resolved, so we should mark a
 			// request as having been completed first.
@@ -47,7 +49,7 @@ export default class AppLoadingBar extends Vue {
 			next();
 		});
 
-		this.$router.beforeResolve((_to, _from, next) => {
+		this.$router?.beforeResolve((_to, _from, next) => {
 			this.routeChanging = false;
 			this.addComplete();
 			next();

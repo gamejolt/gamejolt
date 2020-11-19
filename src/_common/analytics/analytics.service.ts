@@ -117,25 +117,25 @@ export class Analytics {
 		});
 	}
 
-	static trackPageview(path?: string) {
+	static trackPageview(path?: string, force = false) {
 		if (GJ_IS_SSR) {
 			return;
 		}
 
 		// Gotta make sure the system has a chance to compile the title into the page.
 		window.setTimeout(() => {
-			this.pageTrackers.forEach(i => this._trackPageview(i, path));
+			this.pageTrackers.forEach(i => this._trackPageview(i, path, force));
 		});
 	}
 
-	private static _trackPageview(tracker: PageTracker, path?: string) {
+	private static _trackPageview(tracker: PageTracker, path?: string, force?: boolean) {
 		if (!this.shouldTrack) {
 			console.log('Skip tracking page view since not a normal user.');
 			return;
 		}
 
-		if (tracker.pageViewRecorded) {
-			console.log('Page view already recorded for this tracker.');
+		// Don't track the page view if it already was and we're not forcing it.
+		if (tracker.pageViewRecorded && !force) {
 			return;
 		}
 

@@ -1,5 +1,11 @@
+<script lang="ts" src="./card-base"></script>
+
 <template>
-	<app-theme class="community-card sheet sheet-full sheet-no-full-bleed" :theme="community.theme">
+	<app-theme
+		class="community-card sheet sheet-full sheet-no-full-bleed"
+		:class="{ 'sheet-elevate': elevate }"
+		:theme="community.theme"
+	>
 		<div class="-info">
 			<div
 				class="-header"
@@ -22,13 +28,14 @@
 
 				<div class="-member-counts small">
 					<router-link
+						v-app-track-event="`community-card:community-members`"
+						v-translate="{ count: number(memberCount) }"
+						:translate-n="memberCount"
+						translate-plural="<b>%{count}</b> members"
 						:to="{
 							name: 'communities.view.members',
 							params: { path: community.path },
 						}"
-						:translate-n="memberCount"
-						v-translate="{ count: number(memberCount) }"
-						translate-plural="<b>%{count}</b> members"
 					>
 						<b>1</b>
 						member
@@ -37,7 +44,13 @@
 
 				<div class="-controls">
 					<template v-if="community.hasPerms()">
-						<app-button v-if="!isEditing" primary block :to="community.routeEditLocation">
+						<app-button
+							v-if="!isEditing"
+							v-app-track-event="`community-card-inline:community-edit`"
+							primary
+							block
+							:to="community.routeEditLocation"
+						>
 							<translate>Edit Community</translate>
 						</app-button>
 						<app-button v-else primary block :to="community.routeLocation">
@@ -67,5 +80,3 @@
 </template>
 
 <style lang="stylus" src="./card-base.styl" scoped></style>
-
-<script lang="ts" src="./card-base"></script>

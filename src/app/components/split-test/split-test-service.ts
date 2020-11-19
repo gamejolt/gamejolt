@@ -1,19 +1,38 @@
 import { Route } from 'vue-router';
+import { Analytics } from '../../../_common/analytics/analytics.service';
+import { User } from '../../../_common/user/user.model';
 
-function getPayloadVariation(payload: any, experiment: string, route?: Route): number {
-	let variation = checkHardcoded(experiment, route);
-	if (variation !== -1) {
-		return variation;
-	}
+const ExperimentCommunitiesHome = 'split:communities-home';
 
-	if (typeof payload._experiment !== 'undefined' && typeof payload._variation !== 'undefined') {
-		if (payload._experiment === experiment) {
-			return payload._variation;
-		}
-	}
-
-	return -1;
+export function hasCommunitiesHomeSplitTest(route: Route, user: User | null) {
+	return !user && getClientSideVariation(ExperimentCommunitiesHome, route) === 2;
 }
+
+export function trackCommunitiesHomeSplitTest(route: Route, user: User | null) {
+	if (user) {
+		return;
+	}
+
+	Analytics.trackEvent(
+		ExperimentCommunitiesHome,
+		'variation-' + getClientSideVariation(ExperimentCommunitiesHome, route)
+	);
+}
+
+// function getPayloadVariation(payload: any, experiment: string, route?: Route): number {
+// 	const variation = checkHardcoded(experiment, route);
+// 	if (variation !== -1) {
+// 		return variation;
+// 	}
+
+// 	if (typeof payload._experiment !== 'undefined' && typeof payload._variation !== 'undefined') {
+// 		if (payload._experiment === experiment) {
+// 			return payload._variation;
+// 		}
+// 	}
+
+// 	return -1;
+// }
 
 function getClientSideVariation(experiment: string, route?: Route): number {
 	if (GJ_IS_SSR) {

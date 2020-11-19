@@ -1,5 +1,5 @@
 import { DOMParser, Node } from 'prosemirror-model';
-import { EditorState, Plugin, Transaction } from 'prosemirror-state';
+import { EditorState, Plugin, Selection, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import 'prosemirror-view/style/prosemirror.css';
 import ResizeObserver from 'resize-observer-polyfill';
@@ -67,9 +67,6 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	@Prop(String)
 	name!: string;
 
-	@Prop(String)
-	startupActivity?: string;
-
 	/**
 	 * Used to send more information with the create temp resource request.
 	 * Passed in object is directly handed to the Api. By default `undefined`, resulting in a GET request.
@@ -86,6 +83,8 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	@Prop(propOptional(Number, 200)) maxHeight!: number;
 
 	@Prop(propOptional(ContentRules)) displayRules?: ContentRules;
+
+	@Prop(propOptional(Boolean, false)) focusEnd!: boolean;
 
 	$_veeValidate = {
 		value: () => this.value,
@@ -106,7 +105,6 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	emojiPanelVisible = false;
 	controlsCollapsed = true;
 	isEmpty = true; // Gets updated through the update-is-empty-plugin
-	openedStartup = false; // When the gif or emoji panel opened on startup. Prevents them from opening again.
 	canShowMentionSuggestions = 0; // Indicates whether we want to currently show the mention suggestion panel. Values > 0 indicate true.
 	mentionUserCount = 0;
 
@@ -257,7 +255,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 
 		if (this.value) {
 			const doc = ContentDocument.fromJson(this.value);
-			this.setContent(doc);
+			await this.setContent(doc);
 		} else {
 			const state = EditorState.create({
 				doc: DOMParser.fromSchema(this.schema).parse(this.$refs.doc),
@@ -323,6 +321,8 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 				this.view.dispatch(tr);
 			}
 		}
+
+		return this.view!;
 	}
 
 	public getContent() {
@@ -336,14 +336,14 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 		return null;
 	}
 
-	public setContent(doc: ContentDocument) {
+	public async setContent(doc: ContentDocument) {
 		if (doc.context !== this.contentContext) {
 			throw new Error(
 				`The passed in content context is invalid. ${doc.context} != ${this.contentContext}`
 			);
 		}
 		if (this.schema instanceof ContentEditorSchema) {
-			// Do this here so we don't fire an update direclty after populating.
+			// Do this here so we don't fire an update directly after populating.
 			doc.ensureEndParagraph();
 
 			this.hydrator = new ContentHydrator(doc.hydration);
@@ -352,7 +352,21 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 				doc: Node.fromJSON(this.schema, jsonObj),
 				plugins: this.plugins,
 			});
-			this.createView(state);
+
+			const view = this.createView(state);
+
+			if (this.focusEnd) {
+				// Wait here so images and other content can render in and scale properly.
+				// Otherwise the scroll at the end of the transaction below would not cover the entire doc.
+				await this.$nextTick();
+
+				// Set selection at the end of the document.
+				const tr = view.state.tr;
+				const selection = Selection.atEnd(view.state.doc);
+				tr.setSelection(selection);
+				tr.scrollIntoView();
+				view.dispatch(tr);
+			}
 		}
 	}
 
@@ -418,10 +432,6 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 
 	onControlsCollapsedChanged(collapsed: boolean) {
 		this.controlsCollapsed = collapsed;
-	}
-
-	onOpenedStartup() {
-		this.openedStartup = true;
 	}
 
 	onInsertMention() {

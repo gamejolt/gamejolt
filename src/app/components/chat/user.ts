@@ -8,6 +8,7 @@ export class ChatUser {
 	permission_level!: number;
 
 	isOnline = false;
+	typing = false;
 
 	constructor(data: Partial<ChatUser> = {}) {
 		Object.assign(this, data);

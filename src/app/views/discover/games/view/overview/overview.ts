@@ -1,11 +1,15 @@
-import { Component } from 'vue-property-decorator';
+import { Component, Inject } from 'vue-property-decorator';
 import AppAdWidget from '../../../../../../_common/ad/widget/widget.vue';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCard from '../../../../../../_common/card/card.vue';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
 import AppCommentAddButton from '../../../../../../_common/comment/add-button/add-button.vue';
-import { Comment, getCanCommentOnModel } from '../../../../../../_common/comment/comment-model';
-import { CommentState, CommentStore } from '../../../../../../_common/comment/comment-store';
+import { canCommentOnModel, Comment } from '../../../../../../_common/comment/comment-model';
+import {
+	CommentStoreManager,
+	CommentStoreManagerKey,
+	getCommentStore,
+} from '../../../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../../../_common/comment/modal/modal.service';
 import { CommentThreadModal } from '../../../../../../_common/comment/thread/modal.service';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
@@ -25,13 +29,13 @@ import { PartnerReferral } from '../../../../../../_common/partner-referral/part
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
-import AppActivityFeed from '../../../../../components/activity/feed/feed.vue';
 import AppActivityFeedPlaceholder from '../../../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../../../components/activity/feed/view';
 import AppCommentOverview from '../../../../../components/comment/overview/overview.vue';
 import AppGameCommunityBadge from '../../../../../components/game/community-badge/community-badge.vue';
 import AppGameOgrs from '../../../../../components/game/ogrs/ogrs.vue';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
+import { AppActivityFeedLazy } from '../../../../../components/lazy';
 import AppPageContainer from '../../../../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../../../../components/post/add-button/add-button.vue';
 import AppRatingWidget from '../../../../../components/rating/widget/widget.vue';
@@ -63,7 +67,7 @@ import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue
 		AppGameMediaBar,
 		AppCommentAddButton,
 		AppCommentOverview,
-		AppActivityFeed,
+		AppActivityFeed: AppActivityFeedLazy,
 		AppActivityFeedPlaceholder,
 		AppPostAddButton,
 		AppGamePerms,
@@ -101,6 +105,8 @@ import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue
 	},
 })
 export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
+	@Inject(CommentStoreManagerKey) commentManager!: CommentStoreManager;
+
 	@RouteStoreModule.State
 	isOverviewLoaded!: RouteStore['isOverviewLoaded'];
 
@@ -179,9 +185,6 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	@RouteStoreModule.State
 	knownFollowerCount!: RouteStore['knownFollowerCount'];
 
-	@CommentState
-	getCommentStore!: CommentStore['getCommentStore'];
-
 	feed: ActivityFeedView | null = null;
 
 	permalinkWatchDeregister?: Function;
@@ -219,7 +222,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 	get commentsCount() {
 		if (this.game) {
-			const store = this.getCommentStore('Game', this.game.id);
+			const store = getCommentStore(this.commentManager, 'Game', this.game.id);
 			return store ? store.totalCount : 0;
 		}
 		return 0;
@@ -230,14 +233,14 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	}
 
 	get shouldShowCommentAdd() {
-		return getCanCommentOnModel(this.game);
+		return canCommentOnModel(this.game);
 	}
 
 	routeCreated() {
 		this.feed = ActivityFeedService.routeInit(this);
 	}
 
-	async routeResolved($payload: any, fromCache: boolean) {
+	routeResolved($payload: any, fromCache: boolean) {
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb;
 		Meta.twitter = $payload.twitter;
