@@ -35,7 +35,7 @@ export class DrawerStore {
 	stickerSize = 64;
 	canUnlockNewStickers = GJ_IS_SSR
 		? false
-		: localStorage.getItem(CAN_UNLOCK_NEW_STICKERS_STORAGE_KEY);
+		: !!localStorage.getItem(CAN_UNLOCK_NEW_STICKERS_STORAGE_KEY);
 	hideDrawer = false;
 	stickerCurrency: number | null = null;
 	stickerCost: number | null = null;
@@ -446,7 +446,11 @@ function getPointerEvent(event: MouseEvent | TouchEvent): null | MouseEvent | To
 
 export function setCanUnlockNewStickers(store: DrawerStore, canUnlock: boolean) {
 	store.canUnlockNewStickers = canUnlock;
-	localStorage.setItem(CAN_UNLOCK_NEW_STICKERS_STORAGE_KEY, canUnlock ? '1' : '0');
+	if (canUnlock) {
+		localStorage.setItem(CAN_UNLOCK_NEW_STICKERS_STORAGE_KEY, '1');
+	} else {
+		localStorage.removeItem(CAN_UNLOCK_NEW_STICKERS_STORAGE_KEY);
+	}
 }
 
 export function handleNewStickerNotification(store: DrawerStore) {
