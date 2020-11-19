@@ -373,13 +373,7 @@ export default class AppStickerLayerDrawer extends Vue {
 		if (remainingBalance !== undefined && remainingBalance < this.drawerStore.stickerCurrency) {
 			// If stickers were redeemed, un-hide the drawer so we can start placing stickers.
 			setDrawerHidden(this.drawerStore, false);
-
-			if (
-				!!this.drawerStore.stickerCost &&
-				remainingBalance >= this.drawerStore.stickerCost
-			) {
-				setCanUnlockNewStickers(this.drawerStore, false);
-			}
+			setCanUnlockNewStickers(this.drawerStore, false);
 		} else {
 			// otherwise, hide and clear the drawer.
 			setDrawerOpen(this.drawerStore, false);
