@@ -1,17 +1,19 @@
+<script lang="ts" src="./card"></script>
+
 <template>
-	<app-card class="game-package-card" :id="`game-package-card-${package.id}`">
+	<app-card :id="`game-package-card-${package.id}`" class="game-package-card">
 		<div class="game-package-card-pricing fill-gray">
 			<!-- Fixed Pricing -->
 			<div v-if="sellable.type === 'paid'">
-				<span class="game-package-card-pricing-sale-percentage" v-if="sale">
+				<span v-if="sale" class="game-package-card-pricing-sale-percentage">
 					-{{ salePercentageOff }}%
 				</span>
 				<strong class="game-package-card-pricing-amount">
 					{{ pricing.amount | currency }}
 				</strong>
 				<span
-					class="game-package-card-pricing-amount game-package-card-pricing-amount-old"
 					v-if="sale"
+					class="game-package-card-pricing-amount game-package-card-pricing-amount-old"
 				>
 					{{ saleOldPricing.amount | currency }}
 				</span>
@@ -50,8 +52,8 @@
 
 		<div class="card-meta card-meta-sm">
 			<component
-				v-if="metaComponent"
 				:is="metaComponent"
+				v-if="metaComponent"
 				:game="game"
 				:package="package"
 				:card="card"
@@ -60,29 +62,29 @@
 			<app-jolticon
 				v-for="supportKey of card.platformSupport"
 				:key="supportKey"
-				:icon="card.platformSupportInfo[supportKey].icon"
 				v-app-tooltip="card.platformSupportInfo[supportKey].tooltip"
+				:icon="card.platformSupportInfo[supportKey].icon"
 			/>
 
-			<span class="dot-separator" v-if="card.platformSupport.length"></span>
+			<span v-if="card.platformSupport.length" class="dot-separator" />
 
 			<template v-if="card.showcasedRelease">
 				<translate>Version:</translate>
 				<strong>{{ card.showcasedRelease.version_number }}</strong>
 
-				<span class="dot-separator"></span>
+				<span class="dot-separator" />
 
 				<app-time-ago :date="card.showcasedRelease.published_on" />
 			</template>
 		</div>
 
-		<div class="card-content card-sale-info" v-if="sale">
+		<div v-if="sale" class="card-content card-sale-info">
 			<strong><translate>On sale!</translate></strong>
 			<translate>Offer ends in</translate>
 			<app-countdown :end="pricing.end" />
 		</div>
 
-		<div class="card-content" v-if="package.description">
+		<div v-if="package.description" class="card-content">
 			<app-fade-collapse
 				:collapse-height="100"
 				:is-open="showFullDescription"
@@ -93,14 +95,14 @@
 			</app-fade-collapse>
 
 			<a
-				class="hidden-text-expander"
 				v-if="canToggleDescription"
-				@click="showFullDescription = !showFullDescription"
 				v-app-track-event="`game-package-card:show-full-description`"
+				class="hidden-text-expander"
+				@click="showFullDescription = !showFullDescription"
 			/>
 		</div>
 
-		<div class="card-content" v-if="!isOwned && card.hasSteamKey">
+		<div v-if="!isOwned && card.hasSteamKey" class="card-content">
 			<p>
 				<app-jolticon icon="steam" />
 				<translate>You will also get a Steam key with this purchase.</translate>
@@ -113,7 +115,7 @@
 				<translate>No published releases yet.</translate>
 			</div>
 		</template>
-		<div class="card-controls" v-else>
+		<div v-else class="card-controls">
 			<template v-if="sellable.type !== 'paid' || isOwned || isPartner">
 				<component
 					:is="buttonsComponent"
@@ -127,9 +129,9 @@
 				<template v-if="isPartner && sellable.type === 'paid' && !isOwned">
 					<br />
 					<div class="alert">
-						<translate
-							>You get access to this package because you're a partner.</translate
-						>
+						<translate>
+							You get access to this package because you're a partner.
+						</translate>
 					</div>
 					<hr />
 				</template>
@@ -158,7 +160,7 @@
 					<translate>You also get access to keys for these other platforms.</translate>
 				</div>
 
-				<div class="clearfix" v-for="linkedKey of linkedKeys" :key="linkedKey.key">
+				<div v-for="linkedKey of linkedKeys" :key="linkedKey.key" class="clearfix">
 					<div class="pull-right">
 						&nbsp;
 						<app-button @click="copyProviderKey(linkedKey)">
@@ -187,8 +189,8 @@
 					<small class="text-muted">({{ build.primary_file.filesize | filesize }})</small>
 
 					<span
-						class="package-card-well-os"
 						v-for="os of ['windows', 'mac', 'linux', 'other']"
+						class="package-card-well-os"
 					>
 						<template v-if="build['os_' + os] || build['os_' + os + '_64']">
 							{{ card.platformSupportInfo[os].tooltip }}
@@ -203,19 +205,9 @@
 				<div v-if="card.hasSteamKey">
 					<translate>1 Steam key</translate>
 				</div>
-
-				<br />
-
-				<small>
-					<translate
-						>And really warm feelings for supporting an indie developer!</translate
-					>
-				</small>
 			</div>
 		</app-expand>
 	</app-card>
 </template>
 
 <style lang="stylus" src="./card.styl" scoped></style>
-
-<script lang="ts" src="./card"></script>
