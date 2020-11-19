@@ -1,6 +1,27 @@
-import Axios from 'axios';
+import Axios, { CancelTokenSource } from 'axios';
 import { Environment } from '../environment/environment.service';
 import { Payload } from '../payload/payload-service';
+
+// Memoized essentially, and lazily fetched when first needed.
+let _hasWebpSupport: null | Promise<boolean> = null;
+const hasWebpSupport = () => {
+	if (!_hasWebpSupport) {
+		_hasWebpSupport = GJ_IS_SSR
+			? // SSR passes through the webp support from the client.
+			  Promise.resolve(Environment.ssrContext.accept.includes('image/webp'))
+			: // For normal clients we have to test for it by loading in a webp
+			  // image through a data URI.
+			  new Promise<boolean>(resolve => {
+					const image = new Image();
+					image.onerror = () => resolve(false);
+					image.onload = () => resolve(image.width === 1);
+					image.src =
+						'data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAwA0JaQAA3AA/vuUAAA=';
+			  }).catch(() => false);
+	}
+
+	return _hasWebpSupport;
+};
 
 export interface RequestOptions {
 	/**
@@ -73,6 +94,12 @@ export interface RequestOptions {
 	// You can change the default api host/path used through these.
 	apiHost?: string;
 	apiPath?: string;
+
+	/**
+	 * CancelToken function given to the Axios request when uploading a file.
+	 * Invoking the returned executor cancels the file upload.
+	 */
+	fileCancelToken?: CancelTokenSource;
 }
 
 export class Api {
@@ -146,7 +173,12 @@ export class Api {
 		return Payload.processResponse(requestPromise, options);
 	}
 
-	private static createRequest(method: string, url: string, data: any, options: RequestOptions) {
+	private static async createRequest(
+		method: 'GET' | 'POST',
+		url: string,
+		data: any,
+		options: RequestOptions
+	) {
 		// For SSR we pass in the frontend cookie of "ssr" so that the server
 		// knows that this is an SSR request and shouldn't store session data.
 		const headers: any = {};
@@ -159,8 +191,12 @@ export class Api {
 			headers['x-gj-client-version'] = GJ_VERSION;
 		}
 
-		// An upload request.
+		if (await hasWebpSupport()) {
+			headers['accept'] = 'image/webp,*/*';
+		}
+
 		if (options.file) {
+			// An upload request.
 			// We have to send it over as form data instead of JSON data.
 			data = { ...data, file: options.file };
 			const formData = new FormData();
@@ -174,7 +210,7 @@ export class Api {
 				}
 			}
 
-			const request = Axios({
+			return Axios({
 				method,
 				url,
 				data: formData,
@@ -186,6 +222,7 @@ export class Api {
 						options.progress(e);
 					}
 				},
+				cancelToken: options.fileCancelToken?.token,
 			}).then((response: any) => {
 				// When the request is done, send one last progress event of
 				// nothing to indicate that the transfer is complete.
@@ -194,8 +231,6 @@ export class Api {
 				}
 				return response;
 			});
-
-			return request;
 		}
 
 		return Axios({
@@ -206,5 +241,10 @@ export class Api {
 			withCredentials: options.withCredentials,
 			ignoreLoadingBar: options.ignoreLoadingBar,
 		});
+	}
+
+	public static createCancelToken() {
+		const CancelToken = Axios.CancelToken;
+		return CancelToken.source();
 	}
 }

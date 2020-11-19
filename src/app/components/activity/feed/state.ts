@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { arrayRemove } from '../../../../utils/array';
-import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { EventItem } from '../../../../_common/event-item/event-item.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Game } from '../../../../_common/game/game.model';
@@ -31,7 +30,6 @@ export class ActivityFeedState {
 	games: { [k: number]: Game } = {};
 	notificationWatermark = 0; // Timestamp.
 	viewedItems: string[] = [];
-	expandedItems: string[] = [];
 	isBootstrapped = false;
 	isLoadingMore = false;
 	isLoadingNew = false;
@@ -62,7 +60,6 @@ export class ActivityFeedState {
 		this.users = {};
 		this.games = {};
 		this.viewedItems = [];
-		this.expandedItems = [];
 		this.isBootstrapped = false;
 		this.reachedEnd = false;
 	}
@@ -112,17 +109,6 @@ export class ActivityFeedState {
 
 		this.viewedItems.push(item.id);
 		item.$viewed();
-	}
-
-	markItemExpanded(item: ActivityFeedItem) {
-		if (this.expandedItems.indexOf(item.id) !== -1) {
-			return;
-		}
-
-		this.expandedItems.push(item.id);
-		item.$expanded();
-
-		Analytics.trackEvent('activity-feed', 'expanded-item');
 	}
 
 	/**

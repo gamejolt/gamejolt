@@ -1,3 +1,5 @@
+<script lang="ts" src="./welcome"></script>
+
 <template>
 	<div class="-welcome fill-darkest">
 		<!-- steepper would go here -->
@@ -34,26 +36,16 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .-welcome
 	change-bg('darkest')
-	position: absolute
-	z-index: $zindex-shell-top-nav
-	top: 0
-	left: 0
-	right: 0
-	bottom: 0
-	overflow-y: auto
-	overflow-x: hidden
+	min-height: 100vh
 
 .-controls
 	margin-top: 30px
 
 .-skip
 	theme-prop('color', 'fg-muted')
-
 </style>
-
-<script lang="ts" src="./welcome"></script>

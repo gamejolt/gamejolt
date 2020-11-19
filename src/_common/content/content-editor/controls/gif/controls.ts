@@ -17,21 +17,11 @@ export default class AppContentEditorControlsGifControls extends Vue {
 	view!: EditorView;
 	@Prop(Number)
 	stateCounter!: number;
-	@Prop(String)
-	startupActivity?: string;
 
 	visible = false;
-	openedStartup = false;
 
 	created() {
 		this.update();
-	}
-
-	mounted() {
-		if (this.startupActivity === 'gif') {
-			this.$emit('opened-startup');
-			this.openGifModal();
-		}
 	}
 
 	@Watch('stateCounter')

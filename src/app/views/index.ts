@@ -1,5 +1,7 @@
 import { initRouter } from '../../utils/router';
 import { store } from '../store/index';
+import { routeBadgeFeatured } from './badge/featured/featured.route';
+import { routeBasement } from './basement/basement.route';
 import { routeCommunitiesView } from './communities/view/view.route';
 import { routeDash } from './dashboard/dashboard.route';
 import { routeDiscover } from './discover/discover.route';
@@ -10,6 +12,7 @@ import { routeLanding } from './landing/landing.route';
 import { routeLegal } from './legal/legal.route';
 import { routeLibrary } from './library/library.route';
 import { routeNotifications } from './notifications/notifications.route';
+import { routePost } from './post/post.route';
 import { routeProfile } from './profile/profile.route';
 import { routeSearch } from './search/search.route';
 import { routeSettings } from './settings/settings.route';
@@ -23,6 +26,7 @@ const routes = [
 	routeCommunitiesView,
 	routeLanding,
 	routeSearch,
+	routePost,
 	routeProfile,
 	routeLibrary,
 	routeDash,
@@ -34,6 +38,8 @@ const routes = [
 	routeIntent,
 	routeWeplay,
 	routeWelcome,
+	routeBadgeFeatured,
+	routeBasement,
 ];
 
 export const router = initRouter(routes);

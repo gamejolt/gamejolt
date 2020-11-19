@@ -1,3 +1,5 @@
+<script lang="ts" src="./user-follow"></script>
+
 <template>
 	<transition>
 		<div v-if="shouldShow" class="-user-follow anim-fade-enter alert">
@@ -12,7 +14,7 @@
 				<app-user-follow-widget
 					class="-flex-none"
 					:sm="Screen.isXs"
-					:user="post.user"
+					:user="user"
 					event-label="fireside-post-like-widget"
 				/>
 			</div>
@@ -23,14 +25,12 @@
 	</transition>
 </template>
 
-<script lang="ts" src="./user-follow"></script>
-
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
 
 .-user-follow
 	display: flex
-	margin-top: $grid-gutter-width * 0.5;
+	margin-top: $grid-gutter-width * 0.5
 	margin-bottom: 0
 	padding: 0
 

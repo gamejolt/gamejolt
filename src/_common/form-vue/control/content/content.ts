@@ -30,9 +30,6 @@ export default class AppFormControlContent extends BaseFormControlTS {
 	@Prop(Number)
 	minHeight!: number;
 
-	@Prop(String)
-	startupActivity?: string;
-
 	@Prop(Object) tempResourceContextData?: Object;
 
 	@Prop(propOptional(Boolean, false)) compact!: boolean;
@@ -42,6 +39,8 @@ export default class AppFormControlContent extends BaseFormControlTS {
 	@Prop(propOptional(Number, 200)) maxHeight!: number;
 
 	@Prop(propOptional(ContentRules)) displayRules?: ContentRules;
+
+	@Prop(propOptional(Boolean, false)) focusEnd!: boolean;
 
 	$refs!: {
 		editor: AppContentEditorTS;

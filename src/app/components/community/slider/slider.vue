@@ -1,5 +1,7 @@
+<script lang="ts" src="./slider"></script>
+
 <template>
-	<div class="-list" v-if="communities.length || showAddButton">
+	<div v-if="communities.length || withAddButton" class="-list">
 		<app-scroll-scroller class="-scroller" horizontal thin>
 			<div class="-flex">
 				<app-community-slider-item
@@ -10,12 +12,10 @@
 				/>
 
 				<app-community-slider-discover-item key="discover" />
-				<app-community-slider-add-item key="add" v-if="showAddButton" />
+				<app-community-slider-add-item v-if="withAddButton" key="add" />
 			</div>
 		</app-scroll-scroller>
 	</div>
 </template>
 
 <style lang="stylus" src="./slider.styl" scoped></style>
-
-<script lang="ts" src="./slider"></script>

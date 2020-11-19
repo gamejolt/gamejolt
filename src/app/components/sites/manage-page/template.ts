@@ -27,6 +27,14 @@ export default class AppSitesManagePageTemplate extends Vue {
 		return this.getEditorLocation('content');
 	}
 
+	get enableTooltip() {
+		return this.staticEnabled
+			? this.$gettext(
+					'This will disable your static site and use a customizable template instead.'
+			  )
+			: undefined;
+	}
+
 	enable() {
 		if (!this.site) {
 			return;

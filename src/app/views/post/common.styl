@@ -1,0 +1,23 @@
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+@import './variables'
+
+.-section
+	@media $media-xs
+		padding-top: 0
+
+.-user-info
+	clearfix()
+	display: flex
+	align-items: center
+	padding: $-spacing 0
+	min-width: 0
+
+.-avatar
+	change-bg('bg-subtle')
+	img-circle()
+	flex: none
+	overflow: hidden
+	width: $-avatar-size
+	height: $-avatar-size
+	margin-right: 10px

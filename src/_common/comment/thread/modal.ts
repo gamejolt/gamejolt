@@ -1,4 +1,5 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Location } from 'vue-router';
 import { Analytics } from '../../analytics/analytics.service';
 import AppMessageThreadAdd from '../../message-thread/add/add.vue';
 import { BaseModal } from '../../modal/base';
@@ -6,8 +7,13 @@ import { Model } from '../../model/model.service';
 import { Screen } from '../../screen/screen-service';
 import { AppState, AppStore } from '../../store/app-store';
 import FormComment from '../add/add.vue';
-import { Comment, getCanCommentOnModel, getCommentModelResourceName } from '../comment-model';
-import { CommentMutation, CommentState, CommentStore } from '../comment-store';
+import { canCommentOnModel, Comment, getCommentModelResourceName } from '../comment-model';
+import {
+	CommentStoreManager,
+	CommentStoreManagerKey,
+	getCommentStore,
+	onCommentAdd,
+} from '../comment-store';
 import { DisplayMode } from '../modal/modal.service';
 import AppCommentWidget from '../widget/widget.vue';
 
@@ -19,6 +25,8 @@ import AppCommentWidget from '../widget/widget.vue';
 	},
 })
 export default class AppCommentThreadModal extends BaseModal {
+	@Inject(CommentStoreManagerKey) commentManager!: CommentStoreManager;
+
 	@Prop(Number)
 	commentId!: number;
 
@@ -34,19 +42,17 @@ export default class AppCommentThreadModal extends BaseModal {
 	@AppState
 	user!: AppStore['user'];
 
-	@CommentState
-	getCommentStore!: CommentStore['getCommentStore'];
-
-	@CommentMutation
-	onCommentAdd!: CommentStore['onCommentAdd'];
-
 	hasError = false;
 	isEditorFocused = false;
 
 	readonly Screen = Screen;
 
 	get parent() {
-		const store = this.getCommentStore(getCommentModelResourceName(this.model), this.model.id);
+		const store = getCommentStore(
+			this.commentManager,
+			getCommentModelResourceName(this.model),
+			this.model.id
+		);
 		if (store) {
 			const comment = store.comments.find(c => c.id === this.commentId);
 			if (comment && comment.parent_id) {
@@ -58,7 +64,11 @@ export default class AppCommentThreadModal extends BaseModal {
 	}
 
 	get username() {
-		const store = this.getCommentStore(getCommentModelResourceName(this.model), this.model.id);
+		const store = getCommentStore(
+			this.commentManager,
+			getCommentModelResourceName(this.model),
+			this.model.id
+		);
 		if (store) {
 			const comment = store.comments.find(c => c.id === this.commentId);
 			if (comment) {
@@ -78,19 +88,26 @@ export default class AppCommentThreadModal extends BaseModal {
 	}
 
 	get shouldShowReply() {
-		if (this.parent && !this.parent.user.canComment) {
-			return false;
-		}
-		if (!getCanCommentOnModel(this.model)) {
+		if (!canCommentOnModel(this.model, this.parent)) {
 			return false;
 		}
 
 		return this.user && !this.hasError;
 	}
 
+	destroyed() {
+		// If there was a permalink in the URL, we want to remove it when closing the comment modal.
+		const hash = this.$route.hash;
+		if (!hash || hash.indexOf('#comment-') !== 0) {
+			return;
+		}
+
+		this.$router.replace({ ...this.$route, hash: '' } as Location);
+	}
+
 	_onCommentAdd(comment: Comment) {
 		Analytics.trackEvent('comment-widget', 'add');
-		this.onCommentAdd(comment);
+		onCommentAdd(this.commentManager, comment);
 		this.$emit('add', comment);
 	}
 

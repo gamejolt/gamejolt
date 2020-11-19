@@ -70,8 +70,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require './variables'
-@require '~styles-lib/mixins'
+@import './variables'
+@import '~styles-lib/mixins'
 
 .-items
 	white-space: nowrap
@@ -93,8 +93,10 @@
 	border-width: 2px
 	border-style: dashed
 	margin-right: $-padding
+	transition: border-color 0.1s ease
 
-	&:hover, &.-drop-active
+	&:hover
+	&.-drop-active
 		theme-prop('border-color', 'link')
 		theme-prop('color', 'link')
 

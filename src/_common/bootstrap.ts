@@ -13,15 +13,15 @@ import AppLinkHelp from './link/help/help.vue';
 import { Meta } from './meta/meta-service';
 import { Payload } from './payload/payload-service';
 import { Referrer } from './referrer/referrer.service';
-import { Settings } from './settings/settings.service';
+import { SettingThemeAlwaysOurs, SettingThemeDark } from './settings/settings.service';
 /**
  * Bootstraps common services and returns a "createApp" function that our entry point can call to
  * get what it needs.
  */
 export function bootstrapCommon(appComponent: typeof Vue, store: VuexStore, router?: VueRouter) {
 	if (store.state.theme) {
-		store.commit('theme/setDark', Settings.get('theme-dark'));
-		store.commit('theme/setAlwaysOurs', Settings.get('theme-always-ours'));
+		store.commit('theme/setDark', SettingThemeDark.get());
+		store.commit('theme/setAlwaysOurs', SettingThemeAlwaysOurs.get());
 	}
 
 	Payload.init(store);

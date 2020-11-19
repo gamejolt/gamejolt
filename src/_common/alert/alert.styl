@@ -2,12 +2,13 @@ $alert-padding = ($grid-gutter-width / 2)
 $alert-padding-xs = ($grid-gutter-width-xs / 2)
 
 .alert
-	rounded-corners-lg()
+	rounded-corners()
 	change-bg('bg-offset')
 	position: relative
 	padding: $alert-padding-xs
 	margin-bottom: $line-height-computed
 	font-size: $font-size-small
+	overflow: hidden
 
 	@media $media-sm-up
 		padding: $alert-padding
@@ -15,7 +16,8 @@ $alert-padding-xs = ($grid-gutter-width-xs / 2)
 	h4
 		margin-top: 0
 
-	p, ul
+	p
+	ul
 		margin-bottom: 0
 
 	p + p
@@ -38,15 +40,18 @@ $alert-padding-xs = ($grid-gutter-width-xs / 2)
 	change-bg('bg')
 
 .alert.alert-highlight
-	&, .fill-offset &
+	&
+	.fill-offset &
 		@extend .fill-highlight
 
 .alert.alert-notice
-	&, .fill-offset &
+	&
+	.fill-offset &
 		@extend .fill-notice
 
 .alert.alert-dark
-	&, .fill-offset &
+	&
+	.fill-offset &
 		@extend .fill-darkest
 
 .alert-dismiss
@@ -69,8 +74,6 @@ $alert-padding-xs = ($grid-gutter-width-xs / 2)
 	margin: -($alert-padding)
 	margin-top: $alert-padding
 	padding: $alert-padding
-	border-bottom-left-radius: $border-radius-large
-	border-bottom-right-radius: $border-radius-large
 
 	&::before
 		content: ''

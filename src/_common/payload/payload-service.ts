@@ -5,6 +5,8 @@ import { RequestOptions } from '../api/api.service';
 import { Environment } from '../environment/environment.service';
 import { Seo } from '../seo/seo.service';
 
+export type PayloadFormErrors = { [errorId: string]: boolean };
+
 export class PayloadError {
 	static readonly ERROR_NEW_VERSION = 'payload-new-version';
 	static readonly ERROR_NOT_LOGGED = 'payload-not-logged';
@@ -107,12 +109,24 @@ export class Payload {
 
 			this.checkPayloadUser(response, options);
 
+			// Do not do error redirects when the user cancelled the upload file request.
+			if (this.isCancelledUpload(error)) {
+				throw error;
+			}
+
 			if (!options.noErrorRedirect) {
 				throw this.handlePayloadError(PayloadError.fromAxiosError(error));
 			} else {
 				throw error;
 			}
 		}
+	}
+
+	/**
+	 * Indicates an axios cancel token cancelled the request.
+	 */
+	static isCancelledUpload(payload: any) {
+		return payload.__CANCEL__ === true;
 	}
 
 	private static checkPayloadVersion(data: any, options: RequestOptions) {
@@ -225,5 +239,20 @@ export class Payload {
 		}
 
 		return error;
+	}
+
+	static formErrors(payload: any): PayloadFormErrors | null {
+		const errors = payload?.errors;
+
+		if (typeof errors !== 'object' || Object.keys(errors).length === 0) {
+			return null;
+		}
+
+		return errors;
+	}
+
+	static hasFormError(payload: any, errorId: string): boolean {
+		const errors = this.formErrors(payload);
+		return !!errors?.[errorId];
 	}
 }

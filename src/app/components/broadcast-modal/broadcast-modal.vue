@@ -1,3 +1,5 @@
+<script lang="ts" src="./broadcast-modal"></script>
+
 <template>
 	<app-modal ref="modal">
 		<div class="modal-controls">
@@ -23,9 +25,9 @@
 				<div class="col-sm-4 col-sm-push-8">
 					<div class="list-group">
 						<a
-							class="list-group-item has-icon"
 							v-for="_post of posts"
 							:key="_post.id"
+							class="list-group-item has-icon"
 							@click="post = _post"
 						>
 							<h5 class="list-group-item-heading">
@@ -48,8 +50,8 @@
 								:ratio="item.width / item.height"
 							>
 								<app-img-responsive
-									class="-img"
 									v-if="!item.is_animated"
+									class="-img"
 									:src="item.mediaserver_url"
 									alt=""
 								/>
@@ -57,9 +59,7 @@
 								<app-video
 									v-else
 									class="-video"
-									:poster="item.mediaserver_url"
-									:webm="item.mediaserver_url_webm"
-									:mp4="item.mediaserver_url_mp4"
+									:player="getVideoController(item)"
 									:show-loading="true"
 								/>
 							</app-responsive-dimensions>
@@ -84,16 +84,11 @@
 						<app-time-ago v-if="post.isActive" :date="post.published_on" />
 					</div>
 
-					<app-sticker-target
-						:stickers="post.stickers"
-						:show-stickers="stickersVisible"
-						ref="stickerTarget"
-						@hide-all="onAllStickersHidden"
-					>
+					<app-sticker-target :controller="stickerTargetController">
 						<app-content-viewer :source="post.lead_content" />
 					</app-sticker-target>
 
-					<div v-if="post.hasArticle">
+					<div v-if="post.has_article">
 						<div class="page-cut" />
 
 						<app-content-viewer :source="post.article_content" />
@@ -105,17 +100,13 @@
 						<br />
 					</template>
 
-					<app-event-item-controls
-						show-comments
-						:post="post"
-						:show-stickers="stickersVisible"
-						ref="stickerTarget"
-						@post-stickers-visibility-change="onPostStickersVisibilityChange"
-					/>
+					<app-event-item-controls :post="post" event-label="broadcast" />
+
+					<br />
+					<br />
+					<app-comment-widget-lazy :model="post" display-mode="comments" />
 				</div>
 			</div>
 		</div>
 	</app-modal>
 </template>
-
-<script lang="ts" src="./broadcast-modal"></script>

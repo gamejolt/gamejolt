@@ -1,15 +1,18 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .-container
 	position: relative
 
 .-trophy-card
-	elevate-hover-2()
+	elevate-1()
 	height: 280px
 	position: relative
 	overflow: hidden
 	cursor: pointer
+
+	&:hover
+		elevate-2()
 
 .-trophy-new
 	border-color: var(--theme-notice)

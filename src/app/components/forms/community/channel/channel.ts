@@ -15,14 +15,22 @@ export default class FormCommunityChannel extends BaseForm<CommunityChannel> imp
 	resetOnSubmit = true;
 
 	get isValid() {
+		if (!this.valid) {
+			return false;
+		}
+
 		return (
 			!!this.formModel.title &&
 			this.formModel.title.trim().length >= 3 &&
 			this.formModel.title.trim().length <= 30 &&
 			!this.channels
-				.map(i => i.title.toLowerCase())
-				.includes(this.formModel.title.toLowerCase())
+				.map(i => i.title.toLowerCase().trim())
+				.includes(this.formModel.title.toLowerCase().trim())
 		);
+	}
+
+	get isEditing() {
+		return !!this.model;
 	}
 
 	onInit() {

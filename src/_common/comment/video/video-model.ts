@@ -1,7 +1,7 @@
-import { Model } from '../../model/model.service';
-import { Comment } from '../comment-model';
 import { Game } from '../../game/game.model';
 import { HistoryTick } from '../../history-tick/history-tick-service';
+import { Model } from '../../model/model.service';
+import { Comment } from '../comment-model';
 
 export class CommentVideo extends Model {
 	video_id!: string;
@@ -23,10 +23,10 @@ export class CommentVideo extends Model {
 			this.game = new Game(data.game);
 		}
 	}
-
-	$viewed() {
-		return HistoryTick.sendBeacon('comment-video', this.id);
-	}
 }
 
 Model.create(CommentVideo);
+
+export function $viewCommentVideo(video: CommentVideo) {
+	return HistoryTick.sendBeacon('comment-video', video.id);
+}

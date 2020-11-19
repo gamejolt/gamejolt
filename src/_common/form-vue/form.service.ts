@@ -2,6 +2,7 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { arrayRemove, arrayUnique } from '../../utils/array';
 import { Api } from '../api/api.service';
+import { PayloadFormErrors } from '../payload/payload-service';
 import AppFormButton from './button/button.vue';
 import { AppFormControlError } from './control-errors/control-error';
 import AppFormControlErrors from './control-errors/control-errors.vue';
@@ -73,7 +74,6 @@ export class BaseForm<T> extends Vue {
 	hasFormErrors = false;
 
 	// These get overriden as getters in the child classes.
-	readonly loadUrl!: string | null;
 	readonly loadData: any | null;
 	isLoaded: boolean | null = null;
 	isLoadedBootstrapped: boolean | null = null;
@@ -81,14 +81,18 @@ export class BaseForm<T> extends Vue {
 
 	private changeDeregister?: Function;
 
-	state: { [k: string]: any } = {
+	state = {
 		isProcessing: false,
 		isShowingSuccess: false,
 	};
 
 	successClearTimeout?: NodeJS.Timer;
-	serverErrors: { [k: string]: boolean } = {};
+	serverErrors: PayloadFormErrors = {};
 	private customErrors: string[] = [];
+
+	get loadUrl(): null | string {
+		return null;
+	}
 
 	get valid() {
 		return !this.hasFormErrors && this.customErrors.length === 0;
@@ -184,10 +188,6 @@ export class BaseForm<T> extends Vue {
 	 */
 	setField<K extends keyof T>(key: K, value: T[K]) {
 		Vue.set(this.formModel as any, key as any, value);
-	}
-
-	setState(key: string, value: any) {
-		Vue.set(this.state, key, value);
 	}
 
 	setCustomError(error: string) {

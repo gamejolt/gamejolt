@@ -1,12 +1,23 @@
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
+import { propRequired } from '../../../../../utils/vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
+import { ScrollInviewConfig } from '../../../../../_common/scroll/inview/config';
 import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
 import AppActivityFeedEventItem from '../event-item/event-item.vue';
 import { ActivityFeedItem } from '../item-service';
 import AppActivityFeedNotification from '../notification/notification.vue';
-import { ActivityFeedView } from '../view';
+import { ActivityFeedKey, ActivityFeedView } from '../view';
 import AppActivityFeedItemPlaceholder from './placeholder/placeholder.vue';
+
+const InviewConfig = new ScrollInviewConfig();
+const InviewConfigHydration = new ScrollInviewConfig({ margin: `${Screen.windowHeight}px` });
+
+/**
+ * Can be used by the various feed components to track whether or not they're
+ * the focused feed component.
+ */
+export const InviewConfigFocused = new ScrollInviewConfig({ trackFocused: true });
 
 @Component({
 	components: {
@@ -17,13 +28,12 @@ import AppActivityFeedItemPlaceholder from './placeholder/placeholder.vue';
 	},
 })
 export default class AppActivityFeedItem extends Vue {
-	@Inject()
-	feed!: ActivityFeedView;
+	@Prop(propRequired(ActivityFeedItem)) item!: ActivityFeedItem;
 
-	@Prop(ActivityFeedItem)
-	item!: ActivityFeedItem;
+	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
-	inviewMargin = Screen.windowHeight;
+	readonly InviewConfig = InviewConfig;
+	readonly InviewConfigHydration = InviewConfigHydration;
 
 	mounted() {
 		const height = this.feed.getItemHeight(this.item);
@@ -41,12 +51,14 @@ export default class AppActivityFeedItem extends Vue {
 		return this.item.type !== 'notification' ? this.feed.getItemHeight(this.item) : undefined;
 	}
 
-	onExpanded() {
-		this.feed.setItemExpanded(this.item);
+	onInviewChange(inview: boolean) {
+		if (inview) {
+			this.feed.setItemViewed(this.item);
+		}
 	}
 
-	onInviewChange(visible: boolean) {
-		this.feed.inviewChange(this.item, visible);
+	onInviewHydrationChange(inview: boolean) {
+		this.feed.setItemHydration(this.item, inview);
 	}
 
 	onResize(height: number) {

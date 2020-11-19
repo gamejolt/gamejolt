@@ -7,8 +7,10 @@ import {
 	FormOnLoad,
 	FormOnSubmitSuccess,
 } from '../../../../../../_common/form-vue/form.service';
+import { Growls } from '../../../../../../_common/growls/growls.service';
 import { AppImgResponsive } from '../../../../../../_common/img/responsive/responsive';
 import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
+import { CommunityChannelRenameModal } from '../../../../community/channel/rename-modal/rename-modal.service';
 
 class FormModel extends CommunityChannel {
 	permission_posting = 'all';
@@ -71,5 +73,25 @@ export default class FormCommunityChannelEdit extends BaseForm<FormModel>
 
 		this.setField('background', this.model!.background);
 		this.$emit('clear');
+	}
+
+	async onRename() {
+		const channel = await CommunityChannelRenameModal.show(
+			this.model!,
+			this.community,
+			this.community.channels!
+		);
+
+		if (channel) {
+			// Overwrite the current form's model with the new title.
+			// Since the modal wasn't part of this form, it doesn't update automatically.
+			this.setField('title', channel.title);
+
+			Growls.success({
+				message: this.$gettextInterpolate(`Renamed channel to %{ title }.`, {
+					title: channel.title,
+				}),
+			});
+		}
 	}
 }

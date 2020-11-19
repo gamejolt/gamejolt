@@ -32,6 +32,7 @@ export default class FormProfile extends BaseForm<User> implements FormOnLoad, F
 	usernameTimeLeft = 0;
 	usernameDuration = '';
 	isBioLocked = false;
+	bioLengthLimit = 5_000;
 
 	Environment = Environment;
 
@@ -52,6 +53,7 @@ export default class FormProfile extends BaseForm<User> implements FormOnLoad, F
 		}
 
 		this.isBioLocked = payload.isBioLocked;
+		this.bioLengthLimit = payload.bioLengthLimit;
 	}
 
 	onSubmitError(response: any) {

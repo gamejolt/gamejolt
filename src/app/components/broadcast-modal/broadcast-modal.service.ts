@@ -3,7 +3,7 @@ import { Api } from '../../../_common/api/api.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { Modal } from '../../../_common/modal/modal.service';
 import { Screen } from '../../../_common/screen/screen-service';
-import { Settings } from '../../../_common/settings/settings.service';
+import { SettingBroadcastModal } from '../../../_common/settings/settings.service';
 import { appStore } from '../../../_common/store/app-store';
 
 const STORAGE_KEY_PREFIX = 'broadcast-modal:date:';
@@ -15,7 +15,7 @@ export class BroadcastModal {
 
 	static async check() {
 		const user = appStore.state.user;
-		if (!user || !Settings.get('broadcast-modal') || GJ_IS_SSR || Screen.isXs) {
+		if (!user || !SettingBroadcastModal.get() || GJ_IS_SSR || Screen.isXs) {
 			return;
 		}
 

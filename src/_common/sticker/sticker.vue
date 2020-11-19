@@ -1,12 +1,15 @@
+<script lang="ts" src="./sticker"></script>
+
 <template>
-	<div v-if="!isRemoved" class="-sticker" ref="sticker" @click.stop="onClickRemove">
+	<div ref="outer" class="-sticker" @click.stop="onClickRemove">
 		<img
+			ref="inner"
 			draggable="false"
 			onmousedown="return false"
 			style="user-drag: none"
 			:src="sticker.sticker.img_url"
 			:class="{
-				'-removable': canRemove,
+				'-clickable': isClickable,
 			}"
 		/>
 	</div>
@@ -26,8 +29,6 @@
 		height: 100%
 		filter: drop-shadow(2px 2px 0 white) drop-shadow(-2px 2px 0 white) drop-shadow(2px -2px 0 white) drop-shadow(-2px -2px 0 white)
 
-.-removable
+.-clickable
 	cursor: pointer
 </style>
-
-<script lang="ts" src="./sticker"></script>

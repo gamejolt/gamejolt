@@ -3,7 +3,6 @@ import { Component, Prop } from 'vue-property-decorator';
 import { Community } from '../../../../_common/community/community.model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
-import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppCommunitySliderAddItem from './add-item/add-item.vue';
 import AppCommunitySliderDiscoverItem from './discover-item/discover-item.vue';
@@ -30,14 +29,7 @@ export default class AppCommunitySlider extends Vue {
 	@Prop({ type: String, required: false, default: 'global' })
 	eventCat!: string;
 
-	@AppState
-	user!: AppStore['user'];
-
 	get addButtonSize() {
 		return Screen.isXs ? 60 : 100;
-	}
-
-	get showAddButton() {
-		return this.withAddButton && this.user;
 	}
 }
