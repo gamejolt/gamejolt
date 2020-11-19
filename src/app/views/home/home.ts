@@ -30,9 +30,10 @@ export default class RouteHome extends BaseRouteComponent {
 	userBootstrapped!: AppStore['userBootstrapped'];
 
 	routeResolved() {
-		// The route content, but not the path, changes depending on the user state - so we need to
-		// track the page view through a trackingPath meta value that aligns with our route content.
-		this.$route.meta.trackingPath = this.user ? routeHome.path : routeDiscoverHome.path;
+		// The route content, but not the path, changes depending on the user
+		// state - so we need to track the page view through a analyticsPath
+		// meta value that aligns with our route content.
+		this.$route.meta.analyticsPath = this.user ? routeHome.path : routeDiscoverHome.path;
 	}
 
 	render(h: CreateElement) {

@@ -21,7 +21,7 @@ class PageTracker {
 	pageViewRecorded = false;
 
 	get normalizedId() {
-		return this.id.replace(/[\-_:]/g, '');
+		return this.id.replace(/[-_:]/g, '');
 	}
 
 	constructor(public id = '') {}
@@ -52,11 +52,12 @@ export class Analytics {
 		});
 
 		EventBus.on('routeChangeAfter', () => {
-			const trackingPath = router.currentRoute.meta.trackingPath;
+			const analyticsPath = router.currentRoute.meta.analyticsPath;
 
-			// Track the page view using the trackingPath if we have one assigned to the route meta.
-			if (trackingPath) {
-				this.trackPageview(trackingPath);
+			// Track the page view using the analyticsPath if we have one
+			// assigned to the route meta.
+			if (analyticsPath) {
+				this.trackPageview(analyticsPath);
 				return;
 			}
 
@@ -108,10 +109,10 @@ export class Analytics {
 				// This will ensure that resolve() gets called at least within 1s.
 				lastArg.hitCallback = cb;
 				window.setTimeout(cb, 1000);
-				ga.apply(null, args);
+				ga(...args);
 			} else {
 				// Otherwise do it immediately.
-				ga.apply(null, args);
+				ga(...args);
 				cb();
 			}
 		});
