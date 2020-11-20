@@ -1,6 +1,8 @@
+<script lang="ts" src="./manage"></script>
+
 <template>
 	<div v-if="isRouteBootstrapped">
-		<section class="section section-thin fill-notice" v-if="game.is_locked">
+		<section v-if="game.is_locked" class="section section-thin fill-notice">
 			<div class="container">
 				<div class="col-sm-10 col-md-8 col-lg-6 col-centered text-center">
 					<p>
@@ -11,8 +13,8 @@
 					</p>
 					<p>
 						<translate>
-							We have received a DMCA takedown notice and were required to remove it from the site.
-							Only you are able to view it.
+							We have received a DMCA takedown notice and were required to remove it
+							from the site. Only you are able to view it.
 						</translate>
 					</p>
 				</div>
@@ -52,15 +54,15 @@
 					</template>
 
 					<p class="text-muted small">
-						<span class="tag" v-if="game._is_wip">
+						<span v-if="game._is_wip" class="tag">
 							<translate>Early Access</translate>
 						</span>
-						<span class="tag" v-else-if="game._is_devlog">
+						<span v-else-if="game._is_devlog" class="tag">
 							<translate>Devlog</translate>
 						</span>
 
 						<template v-if="!isWizard">
-							<span class="tag tag-notice" v-if="game.status === Game.STATUS_HIDDEN">
+							<span v-if="game.status === Game.STATUS_HIDDEN" class="tag tag-notice">
 								<translate>dash.games.hidden_tag</translate>
 							</span>
 
@@ -68,13 +70,13 @@
 								<span class="tag tag-highlight">
 									<translate>dash.games.published_tag</translate>
 								</span>
-								<span class="dot-separator"></span>
+								<span class="dot-separator" />
 								<app-time-ago :date="game.published_on" />
 							</template>
 						</template>
 					</p>
 				</div>
-				<div class="col-sm-4" v-if="!isWizard">
+				<div v-if="!isWizard" class="col-sm-4">
 					<p>
 						<app-game-perms required="analytics">
 							<app-button
@@ -95,83 +97,115 @@
 				</div>
 			</div>
 
+			<app-expand :when="!isWizard && game.status === Game.STATUS_HIDDEN">
+				<div class="alert alert-notice">
+					<translate>dash.games.hidden_message</translate>
+					<template v-if="!game.published_on">
+						<translate>dash.games.hidden_message_unpublished</translate>
+					</template>
+				</div>
+			</app-expand>
+
 			<app-expand :when="game.status === Game.STATUS_VISIBLE && !game.is_listable">
-				<div class="alert alert-notice" v-translate>
+				<div v-translate class="alert alert-notice">
 					<b>Your game page is no longer visible in game listings!</b>
 					It must have active game builds for it to show.
 				</div>
 			</app-expand>
 
-			<nav class="platform-list inline" slot="nav">
-				<ul>
-					<li v-app-tooltip.bottom="$gettext(`Set up your game page and manage its builds.`)">
-						<router-link
-							:to="{ name: 'dash.games.manage.game.overview' }"
-							:class="{ active: $route.name.indexOf('dash.games.manage.game') === 0 }"
+			<template #nav>
+				<nav class="platform-list inline">
+					<ul>
+						<li
+							v-app-tooltip.bottom="
+								$gettext(`Set up your game page and manage its builds.`)
+							"
 						>
-							<translate>Overview/Setup</translate>
-						</router-link>
-					</li>
-					<li v-app-tooltip.bottom="$gettext(`dash.games.news_tooltip`)">
-						<router-link
-							:to="{ name: 'dash.games.manage.devlog' }"
-							:class="{ active: $route.name.indexOf('dash.games.manage.devlog') === 0 }"
+							<router-link
+								:to="{ name: 'dash.games.manage.game.overview' }"
+								:class="{
+									active: $route.name.indexOf('dash.games.manage.game') === 0,
+								}"
+							>
+								<translate>Overview/Setup</translate>
+							</router-link>
+						</li>
+						<li v-app-tooltip.bottom="$gettext(`dash.games.news_tooltip`)">
+							<router-link
+								:to="{ name: 'dash.games.manage.devlog' }"
+								:class="{
+									active: $route.name.indexOf('dash.games.manage.devlog') === 0,
+								}"
+							>
+								<translate>Devlog</translate>
+							</router-link>
+						</li>
+						<app-game-perms
+							v-app-tooltip.bottom="$gettext(`dash.games.api_tooltip`)"
+							required="game-api"
+							tag="li"
 						>
-							<translate>Devlog</translate>
-						</router-link>
-					</li>
-					<app-game-perms
-						required="game-api"
-						tag="li"
-						v-app-tooltip.bottom="$gettext(`dash.games.api_tooltip`)"
-					>
-						<router-link
-							:to="{ name: 'dash.games.manage.api.overview' }"
-							:class="{ active: $route.name.indexOf('dash.games.manage.api') === 0 }"
+							<router-link
+								:to="{ name: 'dash.games.manage.api.overview' }"
+								:class="{
+									active: $route.name.indexOf('dash.games.manage.api') === 0,
+								}"
+							>
+								<translate>dash.games.api_tab</translate>
+							</router-link>
+						</app-game-perms>
+						<app-game-perms
+							v-app-tooltip.bottom="
+								$gettext(`Manage your game keys and give access to users.`)
+							"
+							required="sales"
+							tag="li"
 						>
-							<translate>dash.games.api_tab</translate>
-						</router-link>
-					</app-game-perms>
-					<app-game-perms
-						required="sales"
-						tag="li"
-						v-app-tooltip.bottom="$gettext(`Manage your game keys and give access to users.`)"
-					>
-						<router-link
-							:to="{ name: 'dash.games.manage.key-groups.list' }"
-							:class="{ active: $route.name.indexOf('dash.games.manage.key-groups') === 0 }"
+							<router-link
+								:to="{ name: 'dash.games.manage.key-groups.list' }"
+								:class="{
+									active:
+										$route.name.indexOf('dash.games.manage.key-groups') === 0,
+								}"
+							>
+								<translate>Keys/Access</translate>
+							</router-link>
+						</app-game-perms>
+						<app-game-perms
+							v-app-tooltip.bottom="
+								$gettext(
+									`Game Jolt Sites are customizable external sites for your portfolio and games!`
+								)
+							"
+							required="all"
+							tag="li"
 						>
-							<translate>Keys/Access</translate>
-						</router-link>
-					</app-game-perms>
-					<app-game-perms
-						required="all"
-						tag="li"
-						v-app-tooltip.bottom="
-							$gettext(
-								`Game Jolt Sites are customizable external sites for your portfolio and games!`
-							)
-						"
-					>
-						<router-link :to="{ name: 'dash.games.manage.site' }" active-class="active">
-							<translate>Site</translate>
-						</router-link>
-					</app-game-perms>
+							<router-link
+								:to="{ name: 'dash.games.manage.site' }"
+								active-class="active"
+							>
+								<translate>Site</translate>
+							</router-link>
+						</app-game-perms>
 
-					<li
-						v-if="game.developer.id == user.id"
-						v-app-tooltip.bottom="$gettext(`Allow other users to manage your game.`)"
-					>
-						<router-link :to="{ name: 'dash.games.manage.collaborators' }" active-class="active">
-							<translate>Collaborators</translate>
-						</router-link>
-					</li>
-				</ul>
-			</nav>
+						<li
+							v-if="game.developer.id == user.id"
+							v-app-tooltip.bottom="
+								$gettext(`Allow other users to manage your game.`)
+							"
+						>
+							<router-link
+								:to="{ name: 'dash.games.manage.collaborators' }"
+								active-class="active"
+							>
+								<translate>Collaborators</translate>
+							</router-link>
+						</li>
+					</ul>
+				</nav>
+			</template>
 		</app-page-header>
 
 		<router-view />
 	</div>
 </template>
-
-<script lang="ts" src="./manage"></script>

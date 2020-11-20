@@ -1,3 +1,5 @@
+<script lang="ts" src="./nav"></script>
+
 <template>
 	<div>
 		<ul class="sans-margin game-dash-nav">
@@ -50,10 +52,10 @@
 				</router-link>
 			</app-game-perms>
 			<app-game-perms
+				v-if="!isWizard || !game._is_devlog"
 				tag="li"
 				required="builds,sales"
 				:either="true"
-				v-if="!isWizard || !game._is_devlog"
 			>
 				<router-link
 					:to="{
@@ -61,7 +63,9 @@
 						query: $route.query,
 					}"
 					:class="{
-						active: $route.name.indexOf('dash.games.manage.game.packages') === 0,
+						active:
+							$route.name &&
+							$route.name.indexOf('dash.games.manage.game.packages') === 0,
 					}"
 				>
 					<app-manage-game-nav-required
@@ -83,7 +87,7 @@
 					<translate>Maturity</translate>
 				</router-link>
 			</app-game-perms>
-			<app-game-perms tag="li" required="music" v-if="!isWizard || !game._is_devlog">
+			<app-game-perms v-if="!isWizard" tag="li" required="music">
 				<router-link
 					:to="{
 						name: 'dash.games.manage.game.music',
@@ -94,7 +98,11 @@
 					<translate>Music</translate>
 				</router-link>
 			</app-game-perms>
-			<app-game-perms tag="li" required="all" v-if="!isWizard && app.user.id === game.developer.id">
+			<app-game-perms
+				v-if="!isWizard && app.user && app.user.id === game.developer.id"
+				tag="li"
+				required="all"
+			>
 				<router-link
 					:to="{
 						name: 'dash.games.manage.game.linked-accounts',
@@ -105,7 +113,7 @@
 					<translate>Linked Accounts</translate>
 				</router-link>
 			</app-game-perms>
-			<app-game-perms tag="li">
+			<app-game-perms v-if="!isWizard" tag="li">
 				<router-link
 					:to="{
 						name: 'dash.games.manage.game.settings',
@@ -119,10 +127,10 @@
 		</ul>
 
 		<app-game-perms
+			v-if="$route.name !== 'dash.games.manage.game.wizard-finish'"
 			required="all"
 			tag="div"
 			class="hidden-xs"
-			v-if="$route.name !== 'dash.games.manage.game.wizard-finish'"
 		>
 			<app-button
 				v-if="game.status === Game.STATUS_HIDDEN"
@@ -143,12 +151,10 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
 
 // Needed for the icons to show correctly.
 .game-dash-nav
 	li > a
 		position: relative
 </style>
-
-<script lang="ts" src="./nav"></script>
