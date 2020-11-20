@@ -1,12 +1,7 @@
 <script lang="ts" src="./affix"></script>
 
 <template>
-	<app-scroll-inview
-		:config="InviewConfig"
-		emits-on="full-overlap"
-		@inview="inview"
-		@outview="outview"
-	>
+	<app-scroll-inview :config="InviewConfig" @inview="inview" @outview="outview">
 		<div
 			v-if="isAffixed"
 			ref="placeholder"

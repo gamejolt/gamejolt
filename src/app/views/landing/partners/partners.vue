@@ -10,8 +10,8 @@
 				<div class="row">
 					<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 						<p class="lead">
-							Promote indie games on your YouTube and Twitch channels and earn revenue
-							when people buy the game!
+							Promote games on your YouTube and Twitch channels and earn revenue when
+							people buy the game!
 						</p>
 
 						<app-button

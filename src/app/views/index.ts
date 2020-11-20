@@ -5,6 +5,7 @@ import { routeBasement } from './basement/basement.route';
 import { routeCommunitiesView } from './communities/view/view.route';
 import { routeDash } from './dashboard/dashboard.route';
 import { routeDiscover } from './discover/discover.route';
+import { routeDownload } from './download/download.route';
 import { routeForums } from './forums/forums.route';
 import { routeHome } from './home/home.route';
 import { routeIntent } from './intent/intent.route';
@@ -24,6 +25,7 @@ import { routeWeplay } from './weplay/weplay.route';
 const routes = [
 	routeHome,
 	routeDiscover,
+	routeDownload,
 	routeCommunitiesView,
 	routeLanding,
 	routeSearch,

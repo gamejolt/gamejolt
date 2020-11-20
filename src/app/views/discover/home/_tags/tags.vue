@@ -1,20 +1,22 @@
+<script lang="ts" src="./tags"></script>
+
 <template>
-	<section class="-section fill-darker">
+	<section class="-section fill-offset">
 		<div class="-heading container-xl">
 			<h2 class="sans-margin clearfix">
 				<app-button
+					v-app-track-event="`home:more-btn:browse`"
 					class="hidden-xs pull-right"
 					outline
 					:to="{
 						name: 'discover.games.list._fetch',
 						params: { section: null },
 					}"
-					v-app-track-event="`home:more-btn:browse`"
 				>
 					<translate>Browse All Games</translate>
 				</app-button>
 
-				<translate>Browse by Tag</translate>
+				<translate>Browse Games</translate>
 			</h2>
 		</div>
 
@@ -23,12 +25,12 @@
 		<div class="-button visible-xs">
 			<div class="container">
 				<app-button
+					v-app-track-event="`home:more-btn:browse`"
 					outline
 					:to="{
 						name: 'discover.games.list._fetch',
 						params: { section: null },
 					}"
-					v-app-track-event="`home:more-btn:browse`"
 				>
 					<translate>Browse All Games</translate>
 				</app-button>
@@ -38,7 +40,7 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
 
 .-section
 	padding-top: ($grid-gutter-width / 2)
@@ -54,5 +56,3 @@
 	padding: $line-height-computed 0
 	text-align: center
 </style>
-
-<script lang="ts" src="./tags"></script>
