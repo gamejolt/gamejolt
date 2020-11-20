@@ -124,7 +124,7 @@ export default class RouteDownload extends BaseRouteComponent {
 		]);
 
 		this.started = true;
-		if (GJ_ENVIRONMENT === 'production') {
+		if (GJ_BUILD_TYPE === 'production') {
 			Navigate.goto(data.url);
 		}
 	}
