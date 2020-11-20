@@ -44,6 +44,9 @@ export class GameDownloader {
 		if (GJ_IS_CLIENT) {
 			let urlPath = router.resolve({
 				name: 'download',
+				params: {
+					type: 'build',
+				},
 				query: {
 					game: game.id + '',
 					build: build.id + '',
@@ -100,6 +103,9 @@ export class GameDownloader {
 		} else {
 			router.push({
 				name: 'download',
+				params: {
+					type: 'build',
+				},
 				query: {
 					game: game.id + '',
 					build: build.id + '',

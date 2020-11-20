@@ -50,6 +50,9 @@ export default class AppGameSoundtrackCard extends Vue {
 	download() {
 		const location = {
 			name: 'download',
+			params: {
+				type: 'soundtrack',
+			},
 			query: { game: this.game.id + '' },
 		};
 

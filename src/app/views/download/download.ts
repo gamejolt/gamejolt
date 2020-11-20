@@ -107,9 +107,6 @@ export default class RouteDownload extends BaseRouteComponent {
 			return;
 		}
 
-		// Wait for view so we can scroll.
-		await this.$nextTick();
-
 		// We do it like this so that we start getting the download URL right
 		// away while still waiting for the timeout.
 		const [data] = await Promise.all<any>([
