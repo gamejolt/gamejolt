@@ -97,6 +97,7 @@
 									class="-media-item"
 									:media-item="item"
 									is-active
+									can-place-sticker
 									@fullscreen="onClickFullscreen"
 								/>
 								<br />
