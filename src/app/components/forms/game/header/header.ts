@@ -79,7 +79,7 @@ export default class FormGameHeader extends BaseForm<FormModel>
 			// Overwrite the base model's header media item here.
 			// This needs to be done because this form does not resolve (and may never resolve)
 			// after clearning a header. Need to ensure that the base model's header gets cleared.
-			(this.model as any).header_media_item = payload.game.header_media_item;
+			this.model?.assign(payload.game);
 		}
 	}
 
