@@ -1,31 +1,47 @@
 <script lang="ts" src="./target"></script>
 
 <template>
-	<div class="-sticker-target">
+	<app-scroll-inview
+		:config="InviewConfig"
+		class="sticker-target"
+		@inview="onInview"
+		@outview="onOutview"
+	>
 		<transition name="-fade">
-			<div v-if="showStickers">
+			<div
+				v-if="isShowingStickers"
+				:class="{
+					'-faded': drawerStore.isDrawerOpen,
+				}"
+			>
 				<app-sticker
-					v-for="sticker of sorted"
+					v-for="sticker of stickers"
 					:key="sticker.id"
-					:class="{ '-sticker-animate': !noAnimateIn }"
+					class="-sticker -sticker-animate"
 					:style="{ 'animation-delay': getStickerAnimationDelay(sticker) }"
 					:sticker="sticker"
-					@click="onStickersRemoved"
 				/>
 			</div>
 		</transition>
 
 		<slot />
-	</div>
+	</app-scroll-inview>
 </template>
 
 <style lang="stylus" scoped>
 @import '~styles/variables'
+@import '~styles-lib/mixins'
 
-.-sticker-target
+.sticker-target
 	position: relative
 	// Needs to be lower than the z-index of elements we want above the stickers.
 	z-index: 0
+
+.-sticker
+	transition: filter 1s !important
+
+	.-faded > &
+		filter: grayscale(1) opacity(0.6)
 
 .-sticker-animate
 	animation-name: sticker-animate-in

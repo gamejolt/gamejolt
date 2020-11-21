@@ -31,7 +31,7 @@ module.exports = {
 				order: ['script', 'template', 'style'],
 			},
 		],
-		'vue/html-indent': ['error', 'tab'],
+		'vue/html-indent': 'off',
 		'vue/html-self-closing': [
 			'warn',
 			{

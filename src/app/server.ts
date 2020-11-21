@@ -54,7 +54,7 @@ export default (context: any) => {
 				// });
 
 				context.meta = {
-					title: 'Game Jolt - Indie games for the love of it',
+					title: 'Game Jolt - Games for the love of it',
 					renderTags() {
 						return Meta.render();
 					},

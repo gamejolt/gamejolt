@@ -1,8 +1,9 @@
 import Vue from 'vue';
 import { Component, Emit, Inject, Prop, Watch } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../../utils/vue';
+import { propRequired } from '../../../../../utils/vue';
 import { ContentFocus } from '../../../../../_common/content-focus/content-focus.service';
 import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
+import AppLoading from '../../../../../_common/loading/loading.vue';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/backdrop.vue';
 import { MediaItem } from '../../../../../_common/media-item/media-item-model';
 import {
@@ -14,12 +15,13 @@ import { ScrollInviewController } from '../../../../../_common/scroll/inview/con
 import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
 import { SettingVideoPlayerFeedAutoplay } from '../../../../../_common/settings/settings.service';
 import {
-	setVideoVolume,
+	scrubVideoVolume,
 	toggleVideoPlayback,
 	trackVideoPlayerEvent,
 	VideoPlayerController,
 } from '../../../../../_common/video/player/controller';
-import { AppVideoPlayerShakaLazy } from '../../../lazy';
+import { VideoSourceArray } from '../../../../../_common/video/video';
+import AppVideo from '../../../../../_common/video/video.vue';
 import { ActivityFeedItem } from '../item-service';
 import { InviewConfigFocused } from '../item/item';
 import { ActivityFeedKey, ActivityFeedView } from '../view';
@@ -34,24 +36,25 @@ const LoadDelay = 300;
 @Component({
 	components: {
 		AppScrollInview,
-		AppVideoPlayerShakaLazy,
 		AppImgResponsive,
 		AppResponsiveDimensions,
 		AppMediaItemBackdrop,
+		AppLoading,
+		AppVideo,
 	},
 })
 export default class AppActivityFeedVideoPlayer extends Vue {
 	@Prop(propRequired(ActivityFeedItem)) feedItem!: ActivityFeedItem;
-	@Prop(propRequired(Array)) manifests!: string[];
 	@Prop(propRequired(MediaItem)) mediaItem!: MediaItem;
-	@Prop(propOptional(String)) poster!: string | undefined;
+	@Prop(propRequired(Array)) videoSources!: VideoSourceArray;
 	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
 	autoplay = SettingVideoPlayerFeedAutoplay.get();
 	player: VideoPlayerController | null = null;
 	isHovered = false;
-	height = '';
-	width = '';
+
+	private responsiveHeight = -1;
+	private responsiveWidth = -1;
 
 	shouldLoadVideo = false;
 	shouldLoadVideoTimer: null | NodeJS.Timer = null;
@@ -59,6 +62,23 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	readonly InviewConfigFocused = InviewConfigFocused;
 	readonly focusedController = new ScrollInviewController();
 	readonly Screen = Screen;
+
+	get shouldShowLoading() {
+		if (this.player) {
+			return (
+				this.player.isLoading && (this.shouldAutoplay || this.player.state === 'playing')
+			);
+		}
+		return true;
+	}
+
+	get height() {
+		return GJ_IS_SSR ? null : `${this.responsiveHeight}px`;
+	}
+
+	get width() {
+		return GJ_IS_SSR ? null : `${this.responsiveWidth}px`;
+	}
 
 	get maxPlayerHeight() {
 		if (GJ_IS_SSR) {
@@ -71,15 +91,23 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 		return Screen.height * 0.45;
 	}
 
-	get shouldShowPlaybackControl() {
-		if (!this.contentHasFocus) {
+	private get shouldshowGeneralControls() {
+		// Clicking on 'playback controls while the video is trying to play can end up de-syncing the player state.
+		if (this.player?.isLoading) {
 			return false;
 		}
 		return Screen.isMobile || this.isHovered || this.player?.state === 'paused';
 	}
 
+	get shouldShowPlaybackControl() {
+		if (!this.contentHasFocus) {
+			return false;
+		}
+		return this.shouldshowGeneralControls;
+	}
+
 	get shouldShowMuteControl() {
-		return Screen.isMobile || this.isHovered || this.player?.volume === 0;
+		return this.shouldshowGeneralControls || this.player?.volume === 0;
 	}
 
 	get remainingTime() {
@@ -108,8 +136,8 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	@Emit('time') emitTime(_timestamp: number) {}
 
 	onChangeDimensions(event: AppResponsiveDimensionsChangeEvent) {
-		this.height = event.height + 'px';
-		this.width = event.containerWidth + 'px';
+		this.responsiveHeight = event.height;
+		this.responsiveWidth = event.containerWidth;
 	}
 
 	onMouseOut() {
@@ -124,30 +152,29 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 		if (!this.player) {
 			return;
 		}
+
+		if (this.player.state === 'playing') {
+			SettingVideoPlayerFeedAutoplay.set(false);
+		} else {
+			SettingVideoPlayerFeedAutoplay.set(true);
+		}
+
+		// This function needs to come after the changes to Settings,
+		// as it gets handled asynchronously through the Shaka player component.
 		toggleVideoPlayback(this.player);
 		trackVideoPlayerEvent(
 			this.player,
 			this.player.state === 'playing' ? 'play' : 'pause',
 			'click-control'
 		);
-
-		if (this.player.state === 'playing') {
-			SettingVideoPlayerFeedAutoplay.set(true);
-		} else {
-			SettingVideoPlayerFeedAutoplay.set(false);
-		}
 	}
 
 	onClickMute() {
 		if (!this.player) {
 			return;
 		}
-		if (this.player.volume === 0) {
-			setVideoVolume(this.player, 100);
-		} else {
-			setVideoVolume(this.player, 0);
-		}
 
+		scrubVideoVolume(this.player, this.player.volume ? 0 : 1, 'end');
 		trackVideoPlayerEvent(
 			this.player,
 			!this.player.volume ? 'mute' : 'unmute',
@@ -176,9 +203,9 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 			return;
 		}
 		if (!this.contentHasFocus) {
-			this.player.state = 'paused';
+			toggleVideoPlayback(this.player, 'paused');
 		} else if (SettingVideoPlayerFeedAutoplay.get()) {
-			this.player.state = 'playing';
+			toggleVideoPlayback(this.player, 'playing');
 		}
 	}
 
@@ -205,7 +232,7 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	@Watch('shouldLoadVideo')
 	onShouldLoadVideoChange() {
 		if (this.shouldLoadVideo) {
-			this.player = new VideoPlayerController(this.poster, this.manifests, 'feed');
+			this.player = new VideoPlayerController(this.videoSources, 'feed');
 			this.autoplay = SettingVideoPlayerFeedAutoplay.get();
 		} else {
 			this.player = null;

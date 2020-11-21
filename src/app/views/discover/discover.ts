@@ -1,6 +1,6 @@
-import { BaseRouteComponent } from '../../../_common/route/route-component';
 import { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
+import { BaseRouteComponent } from '../../../_common/route/route-component';
 
 @Component({
 	name: 'RouteDiscover',

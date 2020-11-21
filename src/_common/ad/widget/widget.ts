@@ -29,7 +29,7 @@ export default class AppAdWidget extends Vue {
 	@Watch('placement')
 	@Watch('meta', { deep: true })
 	generateAdSlot() {
-		let { size, placement, meta } = this;
+		const { size, placement, meta } = this;
 		this.adSlot = new AdSlot(size, placement, meta);
 	}
 }

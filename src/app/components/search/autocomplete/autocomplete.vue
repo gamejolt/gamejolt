@@ -1,5 +1,7 @@
+<script lang="ts" src="./autocomplete"></script>
+
 <template>
-	<div slot="popover" class="search-autocomplete-popover">
+	<div class="search-autocomplete-popover">
 		<div v-if="isHidden" class="well sans-margin-bottom">
 			<app-jolticon icon="chevron-up" />
 			<translate>Enter your search query for maximum finding...</translate>
@@ -7,7 +9,11 @@
 		<template v-else>
 			<!-- View All -->
 			<div class="list-group list-group-dark">
-				<a class="list-group-item" :class="{ active: selected === 0 }" @mousedown="viewAll()">
+				<a
+					class="list-group-item"
+					:class="{ active: selected === 0 }"
+					@mousedown="viewAll()"
+				>
 					<translate>search.autocomplete.show_all</translate>
 				</a>
 			</div>
@@ -19,15 +25,15 @@
 				</div>
 				<div class="list-group list-group-dark thin">
 					<router-link
-						class="list-group-item"
 						v-for="libraryGame of libraryGames"
 						:key="libraryGame.id"
+						v-app-track-event="`search:autocomplete:go-library-game`"
+						class="list-group-item"
 						:to="{
 							name: 'discover.games.view.overview',
 							params: { slug: libraryGame.slug, id: libraryGame.id },
 						}"
 						:class="{ active: items[selected - 1] === libraryGame }"
-						v-app-track-event="`search:autocomplete:go-library-game`"
 					>
 						<span class="search-game-thumbnail">
 							<app-game-thumbnail-img :game="libraryGame" />
@@ -45,15 +51,15 @@
 				</div>
 				<div class="list-group list-group-dark thin">
 					<router-link
-						class="list-group-item"
 						v-for="game of games"
 						:key="game.id"
+						v-app-track-event="`search:autocomplete:go-game`"
+						class="list-group-item"
 						:to="{
 							name: 'discover.games.view.overview',
 							params: { slug: game.slug, id: game.id },
 						}"
 						:class="{ active: items[selected - 1] === game }"
-						v-app-track-event="`search:autocomplete:go-game`"
 					>
 						<div class="pull-right">
 							<app-game-compat-icons :game="game" />
@@ -75,15 +81,15 @@
 				</div>
 				<div class="list-group list-group-dark thin">
 					<router-link
-						class="list-group-item"
 						v-for="user of users"
 						:key="user.id"
+						v-app-track-event="`search:autocomplete:go-user`"
+						class="list-group-item"
 						:to="{
 							name: 'profile.overview',
 							params: { username: user.username },
 						}"
 						:class="{ active: items[selected - 1] === user }"
-						v-app-track-event="`search:autocomplete:go-user`"
 					>
 						<img :src="user.img_avatar" class="search-user-avatar" alt="" />
 						{{ user.display_name }}
@@ -96,6 +102,55 @@
 	</div>
 </template>
 
-<style lang="stylus" src="./autocomplete.styl" scoped></style>
+<style lang="stylus" scoped>
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
-<script lang="ts" src="./autocomplete"></script>
+.search-autocomplete-popover
+	.search-user-avatar
+	.search-game-thumbnail
+		float: left
+		margin-right: 10px
+		background-color: $dark-theme-bg-offset
+		border: 0
+
+	.search-game-thumbnail
+		&
+		& > img
+			height: 20px
+			width: @height * (16 / 9)
+
+	.search-user-avatar
+		width: 20px
+		height: 20px
+		border-radius: 50%
+
+	.game-compat-icons
+		margin-right: 15px
+
+	.progress
+		display: inline-block
+		margin: 0
+		width: 75px
+		vertical-align: middle
+
+		@media $media-md
+			width: 100px
+
+		@media $media-lg
+			width: 150px
+
+	.client-game-buttons
+		.tag
+			margin: 0
+
+		// In list-group-items this gets floated.
+		.tag-notice
+			float: none
+
+	.client-install-progress-info
+		display: none
+
+	.client-install-progress
+		display: inline-block
+</style>
