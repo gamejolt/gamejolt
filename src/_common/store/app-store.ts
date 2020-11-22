@@ -18,6 +18,7 @@ export type Mutations = {
 	'app/setError': number;
 	'app/clearError': undefined;
 	'app/redirect': string;
+	'app/setTimeout': UserTimeout;
 };
 
 interface UserConsents {
@@ -34,7 +35,7 @@ export class AppStore extends VuexStore<AppStore, Actions, Mutations> {
 	timeout: UserTimeout | null = null;
 
 	get isUserTimedOut() {
-		return this.userBootstrapped && !!this.user && !!this.timeout && !this.timeout.isExpired;
+		return this.userBootstrapped && !!this.user && !!this.timeout && this.timeout.getIsActive();
 	}
 
 	@VuexMutation
@@ -47,7 +48,7 @@ export class AppStore extends VuexStore<AppStore, Actions, Mutations> {
 
 		if (user.timeout) {
 			const timeout = new UserTimeout(user.timeout);
-			if (timeout.isExpired) {
+			if (!timeout.getIsActive()) {
 				this.timeout = null;
 			} else {
 				console.info('The user is timed out.', timeout.expires_on);
@@ -58,6 +59,16 @@ export class AppStore extends VuexStore<AppStore, Actions, Mutations> {
 		}
 
 		this.userBootstrapped = true;
+	}
+
+	@VuexMutation
+	setTimeout(timeout: Mutations['app/setTimeout']) {
+		if (!timeout.getIsActive()) {
+			this.timeout = null;
+		} else {
+			console.info('The user is timed out.', timeout.expires_on);
+			this.timeout = timeout;
+		}
 	}
 
 	@VuexMutation
