@@ -12,17 +12,12 @@
 				<p>Oh no, you've been timed out :(</p>
 
 				<template v-if="timeout.reason_template">
-					<div>
-						<template v-if="timeout.reason_template === 'violated-terms'">
-							<translate>
-								You have violated the Game Jolt terms and conditions.
-							</translate>
-							STOP RIGHT THERE, YOU HAVE VIOLATED THE LAW!
-						</template>
-					</div>
+					<app-timeout-template :timeout="timeout" />
 
-					<p>Additional information:</p>
-					<pre><code>{{ timeout.reason }}</code></pre>
+					<template v-if="timeout.reason">
+						<p>Additional information:</p>
+						<pre><code>{{ timeout.reason }}</code></pre>
+					</template>
 				</template>
 
 				<template v-else>

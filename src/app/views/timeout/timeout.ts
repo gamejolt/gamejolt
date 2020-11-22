@@ -17,6 +17,7 @@ import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import { UserTimeout } from '../../../_common/user/timeout/timeout.model';
 import AppTimeoutResourcesComment from './_resources/comment/comment.vue';
 import AppTimeoutResourcesPost from './_resources/post/post.vue';
+import AppTimeoutTemplate from './_template/template.vue';
 
 @Component({
 	name: 'RouteTimeout',
@@ -29,6 +30,7 @@ import AppTimeoutResourcesPost from './_resources/post/post.vue';
 		AppTimeoutResourcesPost,
 		AppGameThumbnail,
 		AppCommunityCard,
+		AppTimeoutTemplate,
 	},
 })
 @RouteResolver({
