@@ -91,8 +91,4 @@ export default class AppActivityFeedNotification extends Vue {
 	onMarkRead() {
 		this.notification.$read();
 	}
-
-	onMarkUnread() {
-		this.notification.$unread();
-	}
 }

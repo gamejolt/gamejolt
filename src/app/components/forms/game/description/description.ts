@@ -4,7 +4,11 @@ import { ContentWriter } from '../../../../../_common/content/content-writer';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import AppFormControlContent from '../../../../../_common/form-vue/control/content/content.vue';
 import AppForm from '../../../../../_common/form-vue/form';
-import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
+import {
+	BaseForm,
+	FormOnLoad,
+	FormOnSubmitSuccess,
+} from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
 import { AppGamePerms } from '../../../game/perms/perms';
 import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
@@ -25,7 +29,7 @@ type DescriptionFormModel = Game & {
 	},
 })
 export default class FormGameDescription extends BaseForm<DescriptionFormModel>
-	implements FormOnLoad {
+	implements FormOnSubmitSuccess, FormOnLoad {
 	@Prop(Array)
 	tags!: string[];
 
@@ -73,6 +77,10 @@ export default class FormGameDescription extends BaseForm<DescriptionFormModel>
 			this.isFnafDetected = true;
 			this.isDisabled = true;
 		}
+	}
+
+	onSubmitSuccess() {
+		this.setField('autotag', undefined);
 	}
 
 	async addTag(tag: string) {
