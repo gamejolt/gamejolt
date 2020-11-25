@@ -59,12 +59,12 @@
 			</template>
 
 			<template v-if="!Screen.isMobile" #right>
-				<app-home-recommended-game :game="featuredGame" :loading="loadingFeaturedGame" />
+				<app-home-recommended-game :game="featuredGame" :loading="loadingRecommendedData" />
 				<app-home-recommended-users
 					v-if="shouldShowRecommendedUsers"
 					:users="recommendedUsers"
-					:loading="loadingRecommendedUsers"
-					@refresh="onRecommendedUsersRefresh"
+					:loading="loadingRecommendedUsers || loadingRecommendedData"
+					@refresh="refreshRecommendedUsers"
 				/>
 
 				<app-scroll-affix>
@@ -104,12 +104,12 @@
 			<app-post-add-button @add="onPostAdded" />
 
 			<template v-if="Screen.isXs">
-				<template v-if="loadingFeaturedGame || !!featuredGame">
+				<template v-if="loadingRecommendedData || !!featuredGame">
 					<h6 class="-feed-heading">
 						<translate>Featured Game</translate>
 					</h6>
 					<span
-						v-if="loadingFeaturedGame"
+						v-if="loadingRecommendedData"
 						class="lazy-placeholder -game-placeholder"
 						:style="{ height: '67px' }"
 					/>

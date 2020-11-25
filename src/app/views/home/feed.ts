@@ -76,8 +76,8 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	games: DashGame[] = [];
 	gameFilterQuery = '';
 	isShowingAllGames = false;
-	loadingRecommendedUsers = true;
-	loadingFeaturedGame = true;
+	loadingRecommendedUsers = false; // Set to `true` while refreshing users.
+	loadingRecommendedData = true;
 	recommendedUsers: User[] = [];
 	featuredGame: Game | null = null;
 
@@ -168,8 +168,7 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	}
 
 	mounted() {
-		this.loadRecommendedUsers();
-		this.loadFeaturedGame();
+		this.loadRecommendedData();
 	}
 
 	onLoadedNew() {
@@ -188,39 +187,32 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 		}
 	}
 
-	async onRecommendedUsersRefresh() {
-		await this.loadRecommendedUsers(true);
-	}
-
-	async loadRecommendedUsers(refresh = false) {
+	async refreshRecommendedUsers() {
 		this.loadingRecommendedUsers = true;
 
-		let url = '/web/dash/recommended';
-		if (refresh) {
-			url += '/refresh';
-		}
-		try {
-			const $payload = await Api.sendRequest(url, undefined, {
-				detach: true,
-			});
-			if ($payload && $payload.users) {
-				this.recommendedUsers = User.populate($payload.users);
-			}
-		} catch (error) {
-			console.error('error during fetching recommended users.', error);
+		const payload = await Api.sendRequest('/web/dash/recommended/refresh', undefined, {
+			detach: true,
+		});
+		if (payload && payload.users) {
+			this.recommendedUsers = User.populate(payload.users);
 		}
 
 		this.loadingRecommendedUsers = false;
 	}
 
-	async loadFeaturedGame() {
-		this.loadingFeaturedGame = true;
+	async loadRecommendedData() {
+		this.loadingRecommendedData = true;
 
-		const payload = await Api.sendRequest('/web/dash/recommended/featured');
-		if (payload.featuredGame) {
-			this.featuredGame = new Game(payload.featuredGame);
+		const payload = await Api.sendRequest('/web/dash/recommended', undefined, { detach: true });
+		if (payload) {
+			if (payload.users) {
+				this.recommendedUsers = User.populate(payload.users);
+			}
+			if (payload.featuredGame) {
+				this.featuredGame = new Game(payload.featuredGame);
+			}
 		}
 
-		this.loadingFeaturedGame = false;
+		this.loadingRecommendedData = false;
 	}
 }
