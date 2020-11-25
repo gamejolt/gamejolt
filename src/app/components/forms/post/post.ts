@@ -304,7 +304,11 @@ export default class FormPost extends BaseForm<FormPostModel>
 	}
 
 	get shouldShowCommunities() {
-		return this.attachedCommunities.length > 0 || this.possibleCommunities.length > 0;
+		return (
+			this.attachedCommunities.length > 0 ||
+			this.possibleCommunities.length > 0 ||
+			this.incompleteDefaultCommunity
+		);
 	}
 
 	get incompleteDefaultCommunity() {
