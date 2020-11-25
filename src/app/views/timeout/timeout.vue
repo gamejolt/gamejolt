@@ -2,89 +2,92 @@
 
 <template>
 	<div class="-main fill-darker theme-dark">
-		<div class="-content">
-			<div>
-				<app-theme-svg src="~img/game-jolt-logo.svg" alt="" strict-colors />
-			</div>
-			<br />
+		<div class="container">
+			<div class="-content">
+				<div>
+					<app-theme-svg
+						src="~img/game-jolt-logo.svg"
+						alt="Game Jolt"
+						:width="164 * 2"
+						:height="18 * 2"
+						strict-colors
+					/>
+				</div>
+				<br />
 
-			<template v-if="timeout && timeout.getIsActive()">
-				<p>Oh no, you've been timed out :(</p>
+				<template v-if="timeout && timeout.getIsActive()">
+					<p class="lead">
+						<translate>You've been put in time-out.</translate>
+					</p>
 
-				<template v-if="timeout.reason_template">
-					<app-timeout-template :timeout="timeout" />
-
-					<template v-if="timeout.reason">
-						<p>Additional information:</p>
-						<pre><code>{{ timeout.reason }}</code></pre>
-					</template>
-				</template>
-
-				<template v-else>
-					<p>Your timeout reason:</p>
-					<pre><code>{{ timeout.reason }}</code></pre>
-				</template>
-
-				<template v-if="timeout.resource !== null">
-					<div class="-resource">
-						<p class="help-block">
+					<template v-if="!isExpired">
+						<p>
 							<translate>
-								Your timeout was caused in part by the content below. In order to
-								continue using Game Jolt, you have to delete it.
+								You will be allowed back on Game Jolt again in:
 							</translate>
+							<strong>
+								<app-time-ago
+									:date="timeout.expires_on"
+									strict
+									is-future
+									without-suffix
+								/>
+							</strong>
 						</p>
+					</template>
+					<br />
 
-						<div class="-resource-content-container">
-							<div class="-resource-content">
-								<template v-if="resourceIsComment">
-									<app-timeout-resources-comment :comment="timeout.resource" />
-								</template>
-								<template v-else-if="resourceIsGame">
-									<app-game-thumbnail :game="timeout.resource" />
-								</template>
-								<template v-else-if="resourceIsCommunity">
-									<app-community-card
-										:community="timeout.resource"
-										:allow-edit="false"
-									/>
-								</template>
-								<template v-else-if="resourceIsPost">
-									<app-timeout-resources-post :post="timeout.resource" />
-								</template>
-							</div>
+					<template v-if="reasonText">
+						<h3 class="sans-margin-top">
+							<translate>Reason</translate>
+						</h3>
 
-							<div class="-resource-overlay" />
-						</div>
+						<pre>{{ reasonText }}</pre>
+					</template>
 
-						<app-button solid @click="onClickClearResource">
-							<translate>Delete</translate>
-						</app-button>
-					</div>
-				</template>
-
-				<template v-if="!isExpired">
 					<p>
-						Expires in:
-						<app-time-ago :date="timeout.expires_on" strict is-future without-suffix />
+						Please read the
+						<app-link-help page="guidelines">Site Guidelines</app-link-help> for more
+						information on what sort of content is allowed on Game Jolt as well as how
+						to behave as a good Game Jolt Citizen.
+					</p>
+					<br />
+
+					<template v-if="timeout.resource !== null">
+						<div class="sheet sheet-elevate">
+							<p>
+								<translate>
+									Being put in time-out was caused in part by the content below.
+								</translate>
+							</p>
+
+							<pre>{{ resourceText }}</pre>
+
+							<p>
+								<translate>
+									In order to be allowed back on Game Jolt, you have to delete the
+									content in question.
+								</translate>
+							</p>
+
+							<app-button solid @click="onClickClearResource">
+								<translate>Delete Content</translate>
+							</app-button>
+						</div>
+					</template>
+
+					<p>
+						If you would like to get in contact with us, please send an email to
+						<app-contact-link email="contact@gamejolt.com">
+							contact@gamejolt.com
+						</app-contact-link>
 					</p>
 				</template>
-
-				<div>
-					Helpful links:
-					<ul>
-						<li><app-link-help page="guidelines">Site guidelines</app-link-help></li>
-						<li>
-							<app-contact-link email="contact@gamejolt.com">
-								Contact Email
-							</app-contact-link>
-						</li>
-					</ul>
-				</div>
-			</template>
-			<template v-else>
-				<p>Your timeout has expired, yay.</p>
-				<app-button :to="{ name: 'home' }">Click here to get back to fun</app-button>
-			</template>
+				<template v-else>
+					<p>You're no longer in time-out, yay!</p>
+					<app-button :to="{ name: 'home' }">Go To Game Jolt</app-button>
+				</template>
+			</div>
 		</div>
 	</div>
 </template>
@@ -94,65 +97,16 @@
 @import '~styles-lib/mixins'
 
 .-main
-	change-bg('darker')
-	position: absolute
-	z-index: $zindex-shell-top-nav
-	top: 0
-	left: 0
-	right: 0
-	bottom: 0
-	overflow-y: auto
-	overflow-x: hidden
+	display: flex
+	align-items: center
+	min-height: 100vh
+	padding: 30px 0
+
+.container
 	display: flex
 	justify-content: center
-	padding-top: 30px
-	min-height: 100vh
 
 .-content
-	max-width: 1100px
-
-	@media $media-md-up
-		min-width: 600px
-
-.-resource
-	rounded-corners-lg()
-	elevate-2()
-	change-bg('dark')
-	margin-top: 16px
-	margin-bottom: 16px
-	padding: 16px
-
-.-resource-content-container
-	position: relative
-	margin-bottom: 16px
-
-.-resource-content
-	pointer-events: none !important
-	user-select: none !important
-	padding: 8px
-
-	>>>
-		.game-thumbnail
-			max-width: 320px
-			margin-bottom: 0
-
-	>>>
-		.community-card
-			max-width: 240px
-			margin-bottom: 0
-
-.-resource-overlay
-	position: absolute
-	z-index: 1000
-	top: 0
-	left: 0
-	right: 0
-	bottom: 0
-	rounded-corners()
-	background-color: var(--theme-darkest)
-	opacity: 0
-	transition: opacity 0.1s ease-in-out
-
-	&:hover
-		opacity: 0.35
+	width: 100%
+	max-width: 600px
 </style>

@@ -1,13 +1,7 @@
 import Component from 'vue-class-component';
 import { LocationRedirect } from '../../../utils/router';
 import { Api } from '../../../_common/api/api.service';
-import { Comment } from '../../../_common/comment/comment-model';
-import AppCommunityCard from '../../../_common/community/card/card.vue';
-import { Community } from '../../../_common/community/community.model';
 import AppContactLink from '../../../_common/contact-link/contact-link.vue';
-import { FiresidePost } from '../../../_common/fireside/post/post-model';
-import { Game } from '../../../_common/game/game.model';
-import AppGameThumbnail from '../../../_common/game/thumbnail/thumbnail.vue';
 import { Growls } from '../../../_common/growls/growls.service';
 import AppLinkHelp from '../../../_common/link/help/help.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
@@ -15,9 +9,6 @@ import { AppMutation, AppState, appStore, AppStore } from '../../../_common/stor
 import { AppThemeSvg } from '../../../_common/theme/svg/svg';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import { UserTimeout } from '../../../_common/user/timeout/timeout.model';
-import AppTimeoutResourcesComment from './_resources/comment/comment.vue';
-import AppTimeoutResourcesPost from './_resources/post/post.vue';
-import AppTimeoutTemplate from './_template/template.vue';
 
 @Component({
 	name: 'RouteTimeout',
@@ -26,11 +17,6 @@ import AppTimeoutTemplate from './_template/template.vue';
 		AppTimeAgo,
 		AppLinkHelp,
 		AppContactLink,
-		AppTimeoutResourcesComment,
-		AppTimeoutResourcesPost,
-		AppGameThumbnail,
-		AppCommunityCard,
-		AppTimeoutTemplate,
 	},
 })
 @RouteResolver({
@@ -59,27 +45,31 @@ export default class RouteTimeout extends BaseRouteComponent {
 	isClearingResource = false;
 
 	get routeTitle() {
-		return this.$gettext('You have been timed out');
+		return this.$gettext(`You've been put in time-out.`);
 	}
 
 	get isActive() {
 		return this.timeout?.getIsActive();
 	}
 
-	get resourceIsComment() {
-		return this.timeout?.resource instanceof Comment;
+	get reasonText() {
+		const reasons: string[] = [];
+		if (this.timeout?.reason_template) {
+			reasons.push(this.timeout.reason_template);
+		}
+		if (this.timeout?.reason) {
+			reasons.push(this.timeout.reason);
+		}
+
+		if (!reasons.length) {
+			return null;
+		}
+
+		return reasons.join('\n---\n');
 	}
 
-	get resourceIsGame() {
-		return this.timeout?.resource instanceof Game;
-	}
-
-	get resourceIsCommunity() {
-		return this.timeout?.resource instanceof Community;
-	}
-
-	get resourceIsPost() {
-		return this.timeout?.resource instanceof FiresidePost;
+	get resourceText() {
+		return 'Your Comment\n"I hate you"';
 	}
 
 	mounted() {
@@ -95,6 +85,10 @@ export default class RouteTimeout extends BaseRouteComponent {
 	}
 
 	async onClickClearResource() {
+		if (this.isClearingResource) {
+			return;
+		}
+
 		this.isClearingResource = true;
 
 		const payload = await Api.sendRequest('/web/dash/timeout/clear-resource', {});
@@ -103,9 +97,9 @@ export default class RouteTimeout extends BaseRouteComponent {
 			this.setTimeout(newTimeout);
 
 			this.updateExpired();
-			Growls.info(this.$gettext(`The resource has been removed.`));
+			Growls.info(this.$gettext(`The content has been removed.`));
 		} else {
-			Growls.error(this.$gettext(`Failed to clear timeout resource.`));
+			Growls.error(this.$gettext(`Failed to remove content.`));
 		}
 
 		this.isClearingResource = false;
