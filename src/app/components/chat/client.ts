@@ -708,6 +708,13 @@ export function stopTyping(chat: ChatClient) {
 	}
 }
 
+export function kickGroupMember(chat: ChatClient, memberId: number) {
+	const room = chat.room;
+	if (room) {
+		chat.roomChannels[room.id].push('kick_member', { member_id: memberId });
+	}
+}
+
 export function isInChatRoom(chat: ChatClient, roomId?: number) {
 	if (!roomId) {
 		return !!chat.room;
