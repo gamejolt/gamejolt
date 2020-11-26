@@ -58,7 +58,7 @@
 				{{ title }}
 				<span v-if="meta" class="tiny">{{ meta }}</span>
 
-				<span v-if="currentRoom && !isOwner">
+				<span v-if="canModerate">
 					<app-popper>
 						<template #default>
 							<a v-app-tooltip="$gettext('Manage Member')" class="link-muted -user-options">

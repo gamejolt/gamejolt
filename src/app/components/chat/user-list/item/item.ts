@@ -44,6 +44,15 @@ export default class AppChatUserListItem extends Vue {
 	readonly InviewConfig = InviewConfig;
 	readonly Screen = Screen;
 
+	get canModerate() {
+		return (
+			this.chat.currentUser &&
+			this.currentRoom &&
+			this.chat.currentUser.id === this.currentRoom.owner_id &&
+			!this.isOwner
+		);
+	}
+
 	get roomId() {
 		return this.item instanceof ChatUser ? this.item.room_id : this.item.id;
 	}
