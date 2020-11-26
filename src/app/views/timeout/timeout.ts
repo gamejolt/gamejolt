@@ -68,10 +68,6 @@ export default class RouteTimeout extends BaseRouteComponent {
 		return reasons.join('\n---\n');
 	}
 
-	get resourceText() {
-		return 'Your Comment\n"I hate you"';
-	}
-
 	mounted() {
 		this.updateTimer = setInterval(this.updateExpired, 100);
 	}

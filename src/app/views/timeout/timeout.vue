@@ -22,9 +22,7 @@
 
 					<template v-if="!isExpired">
 						<p>
-							<translate>
-								You will be allowed back on Game Jolt again in:
-							</translate>
+							<translate> You will be allowed back on Game Jolt again in: </translate>
 							<strong>
 								<app-time-ago
 									:date="timeout.expires_on"
@@ -53,7 +51,7 @@
 					</p>
 					<br />
 
-					<template v-if="timeout.resource !== null">
+					<template v-if="timeout.resource_content !== null">
 						<div class="sheet sheet-elevate">
 							<p>
 								<translate>
@@ -61,7 +59,7 @@
 								</translate>
 							</p>
 
-							<pre>{{ resourceText }}</pre>
+							<pre>{{ timeout.resource_content }}</pre>
 
 							<p>
 								<translate>
@@ -103,8 +101,10 @@
 	padding: 30px 0
 
 .container
+	position: relative
 	display: flex
 	justify-content: center
+	max-width: 100%
 
 .-content
 	width: 100%

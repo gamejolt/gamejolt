@@ -167,7 +167,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	get hasCbar() {
-		if (this.isShellHidden) {
+		if (this.isShellHidden || this.app.isUserTimedOut) {
 			return false;
 		}
 
