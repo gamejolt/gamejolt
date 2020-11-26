@@ -57,6 +57,25 @@
 				</span>
 				{{ title }}
 				<span v-if="meta" class="tiny">{{ meta }}</span>
+
+				<span v-if="currentRoom && !isOwner">
+					<app-popper>
+						<template #default>
+							<a v-app-tooltip="$gettext('More Options')" class="link-muted">
+								<app-jolticon icon="cog" class="middle" />
+							</a>
+						</template>
+
+						<template #popover>
+							<div class="list-group">
+								<a class="list-group-item has-icon" @click="kickUser">
+									<app-jolticon icon="friend-remove-1" />
+									<translate>Kick User</translate>
+								</a>
+							</div>
+						</template>
+					</app-popper>
+				</span>
 			</div>
 		</component>
 	</app-scroll-inview>
