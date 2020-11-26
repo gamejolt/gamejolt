@@ -61,7 +61,7 @@
 				<span v-if="currentRoom && !isOwner">
 					<app-popper>
 						<template #default>
-							<a v-app-tooltip="$gettext('More Options')" class="link-muted">
+							<a v-app-tooltip="$gettext('Manage Member')" class="link-muted -user-options">
 								<app-jolticon icon="cog" class="middle" />
 							</a>
 						</template>
@@ -70,7 +70,7 @@
 							<div class="list-group">
 								<a class="list-group-item has-icon" @click="kickUser">
 									<app-jolticon icon="friend-remove-1" />
-									<translate>Kick User</translate>
+									<translate>Kick Member</translate>
 								</a>
 							</div>
 						</template>
@@ -119,6 +119,13 @@
 	display: inline-block
 	float: right
 	padding-left: 8px
+	color: var(--theme-fg-muted) !important
+
+	&:hover
+		color: var(--theme-fg) !important
+
+.-user-options
+	display: inline-block
 	color: var(--theme-fg-muted) !important
 
 	&:hover
