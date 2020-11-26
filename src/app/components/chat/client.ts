@@ -670,11 +670,7 @@ export async function leaveGroupRoom(chat: ChatClient, room: ChatRoom) {
 		throw new Error(`Can't leave non-group rooms.`);
 	}
 
-	chat.userChannel?.push('group_leave', { room_id: room.id }).receive('ok', _response => {
-		if (isInChatRoom(chat, room.id)) {
-			leaveChatRoom(chat);
-		}
-	});
+	chat.userChannel?.push('group_leave', { room_id: room.id });
 }
 
 export function removeMessage(chat: ChatClient, msgId: number) {
