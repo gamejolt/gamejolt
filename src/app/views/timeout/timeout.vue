@@ -83,7 +83,7 @@
 				</template>
 				<template v-else>
 					<p>You're no longer in time-out, yay!</p>
-					<app-button :to="{ name: 'home' }">Go To Game Jolt</app-button>
+					<app-button @click="onClickLeave">Go To Game Jolt</app-button>
 				</template>
 			</div>
 		</div>

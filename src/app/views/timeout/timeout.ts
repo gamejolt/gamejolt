@@ -4,6 +4,7 @@ import { Api } from '../../../_common/api/api.service';
 import AppContactLink from '../../../_common/contact-link/contact-link.vue';
 import { Growls } from '../../../_common/growls/growls.service';
 import AppLinkHelp from '../../../_common/link/help/help.vue';
+import { Navigate } from '../../../_common/navigate/navigate.service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { AppMutation, AppState, appStore, AppStore } from '../../../_common/store/app-store';
 import { AppThemeSvg } from '../../../_common/theme/svg/svg';
@@ -99,5 +100,9 @@ export default class RouteTimeout extends BaseRouteComponent {
 		}
 
 		this.isClearingResource = false;
+	}
+
+	onClickLeave() {
+		Navigate.reload();
 	}
 }
