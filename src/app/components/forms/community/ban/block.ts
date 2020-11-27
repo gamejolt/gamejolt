@@ -63,7 +63,7 @@ export default class FormCommunityBlock extends BaseForm<FormModel>
 		);
 
 		if (!response.success) {
-			if (response.collaborator) {
+			if (response.errors.collaborator) {
 				Growls.error({
 					title: this.$gettext('Moderators cannot be blocked'),
 					message: this.$gettextInterpolate(

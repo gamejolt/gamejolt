@@ -21,7 +21,7 @@ const CheckoutThemeKey = 'checkout';
 	},
 })
 @RouteResolver({
-	resolver: ({ route }) => Api.sendRequest('/web/checkout/' + route.params.orderId, {}),
+	resolver: ({ route }) => Api.sendRequest('/web/checkout/' + route.params.orderId),
 })
 export default class RouteCheckout extends BaseRouteComponent {
 	cards!: any[];

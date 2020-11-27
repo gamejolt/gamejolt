@@ -49,22 +49,38 @@
 				<app-nav-tab-list>
 					<ul>
 						<li>
-							<a :class="{ active: isSortHot }" @click="sortHot()">
+							<a
+								v-app-track-event="`comment-widget:change-sort:hot`"
+								:class="{ active: isSortHot }"
+								@click="sortHot()"
+							>
 								<translate>Hot</translate>
 							</a>
 						</li>
 						<li v-if="showTopSorting">
-							<a :class="{ active: isSortTop }" @click="sortTop()">
+							<a
+								v-app-track-event="`comment-widget:change-sort:top`"
+								:class="{ active: isSortTop }"
+								@click="sortTop()"
+							>
 								<translate>Top</translate>
 							</a>
 						</li>
 						<li>
-							<a :class="{ active: isSortNew }" @click="sortNew()">
+							<a
+								v-app-track-event="`comment-widget:change-sort:new`"
+								:class="{ active: isSortNew }"
+								@click="sortNew()"
+							>
 								<translate>New</translate>
 							</a>
 						</li>
 						<li>
-							<a :class="{ active: isSortYou }" @click="sortYou()">
+							<a
+								v-app-track-event="`comment-widget:change-sort:you`"
+								:class="{ active: isSortYou }"
+								@click="sortYou()"
+							>
 								<translate>You</translate>
 							</a>
 						</li>
@@ -97,9 +113,7 @@
 							Everyone else seems to be in sleep mode, why don't you start the
 							conversation?
 						</translate>
-						<translate v-else>
-							Everyone seems to be in sleep mode.
-						</translate>
+						<translate v-else> Everyone seems to be in sleep mode. </translate>
 					</p>
 				</app-illustration>
 			</div>
