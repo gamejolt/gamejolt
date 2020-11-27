@@ -38,7 +38,7 @@ export class Poll extends Model {
 			throw new Error(`Cannot refresh a poll that doesn't exist yet`);
 		}
 
-		return this.$_save(`/web/polls/refresh/${this.id}`, 'poll', { detach: true, data: null });
+		return this.$_save(`/web/polls/refresh/${this.id}`, 'poll', { detach: true });
 	}
 }
 

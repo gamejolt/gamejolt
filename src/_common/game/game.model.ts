@@ -474,16 +474,18 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 	}
 
 	$setStatus(status: number) {
-		return this.$_save(
-			'/web/dash/developer/games/set-status/' + this.id + '/' + status,
-			'game'
-		);
+		return this.$_save('/web/dash/developer/games/set-status/' + this.id, 'game', {
+			data: { status },
+		});
 	}
 
 	$setDevStage(stage: number) {
 		return this.$_save(
 			'/web/dash/developer/games/set-dev-stage/' + this.id + '/' + stage,
-			'game'
+			'game',
+			{
+				data: { stage },
+			}
 		);
 	}
 

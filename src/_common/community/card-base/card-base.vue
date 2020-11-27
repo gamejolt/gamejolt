@@ -43,7 +43,7 @@
 				</div>
 
 				<div class="-controls">
-					<template v-if="community.hasPerms()">
+					<template v-if="community.hasPerms() && allowEdit">
 						<app-button
 							v-if="!isEditing"
 							v-app-track-event="`community-card-inline:community-edit`"

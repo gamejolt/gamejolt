@@ -1,3 +1,4 @@
+import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { Growls } from '../../../../../../../_common/growls/growls.service';
 import { ModalFacebookPageSelector } from '../../../../../../../_common/linked-account/facebook-page-selector-modal/facebook-page-selector-modal-service';
@@ -14,7 +15,6 @@ import {
 	BaseRouteComponent,
 	RouteResolver,
 } from '../../../../../../../_common/route/route-component';
-import { Component } from 'vue-property-decorator';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
 @Component({
@@ -130,7 +130,10 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 		}
 
 		const response = await Api.sendRequest(
-			'/web/dash/linked-accounts/unlink/' + provider + '?resource=Game&resourceId=' + this.game.id,
+			'/web/dash/linked-accounts/unlink/' +
+				provider +
+				'?resource=Game&resourceId=' +
+				this.game.id,
 			{}
 		);
 
@@ -138,10 +141,13 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 		if (response.success) {
 			this.accounts = LinkedAccount.populate(response.accounts);
 			Growls.success(
-				this.$gettextInterpolate(`Your %{ provider } account has been unlinked from %{ game }.`, {
-					provider: providerName,
-					game: this.game.title,
-				}),
+				this.$gettextInterpolate(
+					`Your %{ provider } account has been unlinked from %{ game }.`,
+					{
+						provider: providerName,
+						game: this.game.title,
+					}
+				),
 				this.$gettext('Account Unlinked')
 			);
 		} else {
@@ -182,7 +188,8 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 					'/' +
 					this.facebookAccount.id +
 					'/' +
-					modalResult.id
+					modalResult.id,
+				{}
 			);
 
 			if (payload.success) {
@@ -199,7 +206,9 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 				);
 			} else {
 				Growls.error(
-					this.$gettext('Failed to change to new Facebook page. Try to Sync your Facebook account.')
+					this.$gettext(
+						'Failed to change to new Facebook page. Try to Sync your Facebook account.'
+					)
 				);
 			}
 		}
@@ -216,7 +225,8 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 			'/web/dash/linked-accounts/unlink-facebook-page/' +
 				this.game.id +
 				'/' +
-				this.facebookAccount.id
+				this.facebookAccount.id,
+			{}
 		);
 
 		if (payload.success) {
@@ -226,10 +236,13 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 			}
 
 			Growls.success(
-				this.$gettextInterpolate(`The Facebook Page %{ title } has been unlinked from %{ game }.`, {
-					title: tempPageName,
-					game: this.game.title,
-				}),
+				this.$gettextInterpolate(
+					`The Facebook Page %{ title } has been unlinked from %{ game }.`,
+					{
+						title: tempPageName,
+						game: this.game.title,
+					}
+				),
 				this.$gettext('Facebook Page Unlinked')
 			);
 		} else {
@@ -250,7 +263,8 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 				'/' +
 				tumblrBlog.name +
 				'?resource=Game&resourceId=' +
-				this.game.id
+				this.game.id,
+			{}
 		);
 
 		if (payload.success) {
@@ -267,7 +281,9 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 			);
 		} else {
 			Growls.error(
-				this.$gettext('Failed to change to new Tumblr blog. Maybe try to sync your Tumblr account.')
+				this.$gettext(
+					'Failed to change to new Tumblr blog. Maybe try to sync your Tumblr account.'
+				)
 			);
 		}
 
@@ -287,7 +303,8 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 			'/web/dash/linked-accounts/unlink-tumblr-blog/' +
 				this.tumblrAccount.id +
 				'?resource=Game&resourceId=' +
-				this.game.id
+				this.game.id,
+			{}
 		);
 
 		if (payload.success) {
@@ -297,10 +314,13 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 			}
 
 			Growls.success(
-				this.$gettextInterpolate(`The Tumblr Blog %{ title } has been unlinked from %{ game }.`, {
-					title: tempBlogTitle,
-					game: this.game.title,
-				}),
+				this.$gettextInterpolate(
+					`The Tumblr Blog %{ title } has been unlinked from %{ game }.`,
+					{
+						title: tempBlogTitle,
+						game: this.game.title,
+					}
+				),
 				this.$gettext('Tumblr Blog Unlinked')
 			);
 		} else {

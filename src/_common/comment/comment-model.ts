@@ -257,7 +257,7 @@ export async function fetchComments(
 		query = '?page=' + page;
 	}
 
-	return Api.sendRequest(`/comments/${resource}/${resourceId}/${sort}${query}`, {
+	return Api.sendRequest(`/comments/${resource}/${resourceId}/${sort}${query}`, undefined, {
 		detach: true,
 	});
 }
@@ -267,8 +267,8 @@ export async function getCommentUrl(commentId: number): Promise<string> {
 		detach: true,
 	});
 
-	if (!response || response.error) {
-		return Promise.reject(response.error);
+	if (!response || response.errors) {
+		return Promise.reject(response.errors);
 	}
 
 	return response.url;

@@ -14,9 +14,9 @@ import AppScrollAffix from '../../../../../../../_common/scroll/affix/affix.vue'
 import { AppNoAutoscroll } from '../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { UserGameScore } from '../../../../../../../_common/user/game-score/game-score.model';
-import { Store } from '../../../../../../store/index';
 import AppScoreList from '../../../../../../components/score/list/list.vue';
 import AppScoreboardSelector from '../../../../../../components/score/scoreboard-selector/scoreboard-selector.vue';
+import { Store } from '../../../../../../store/index';
 import { RouteStore, RouteStoreModule } from '../../view.store';
 
 @Component({
@@ -42,8 +42,7 @@ import { RouteStore, RouteStoreModule } from '../../view.store';
 		}
 
 		const url =
-			'/web/discover/games/scores' +
-			'/' +
+			'/web/discover/games/scores/' +
 			route.params.id +
 			'/' +
 			route.params.tableId +

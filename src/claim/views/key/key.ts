@@ -115,7 +115,7 @@ export default class RouteKey extends BaseRouteComponent {
 				{ detach: true }
 			);
 
-			if (response && response.error && response.error === 'already-claimed-in-group') {
+			if (response && !response.success && response.reason === 'already-claimed-in-group') {
 				this.invalidKey = true;
 				Growls.error(this.$gettext(`You already claimed a key for that!`));
 				return;

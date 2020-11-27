@@ -100,8 +100,8 @@ export default class AppContentMediaUpload extends Vue {
 		this.uploadProcessing = false;
 		const itemType = getMediaItemTypeForContext(this.owner.getContext());
 		const parentId = await this.owner.getModelId();
-		const $payload = await Api.sendRequest(
-			'/web/dash/media-items/add',
+		const payload = await Api.sendRequest(
+			'/web/dash/media-items/add-one',
 			{
 				type: itemType,
 				parent_id: parentId,
@@ -112,22 +112,15 @@ export default class AppContentMediaUpload extends Vue {
 				detach: true,
 			}
 		);
-		if ($payload.success && $payload.mediaItems && $payload.mediaItems.length === 1) {
-			return new MediaItem($payload.mediaItems[0]);
-		} else if (!$payload.success && $payload.errors.file) {
-			const sizePayload = await Api.sendRequest(
-				'/web/dash/media-items',
-				{
-					type: itemType,
-					parent_id: parentId,
-				},
-				{
-					detach: true,
-				}
-			);
+		if (payload.success && payload.mediaItem) {
+			return new MediaItem(payload.mediaItem);
+		} else if (!payload.success && payload.errors.file) {
+			const sizePayload = await Api.sendRequest('/web/dash/media-items', undefined, {
+				detach: true,
+			});
 
 			const maxWidth = sizePayload.maxWidth;
-			const maxHeight = sizePayload.maxWidth;
+			const maxHeight = sizePayload.maxHeight;
 			const maxFilesize = sizePayload.maxFilesize;
 
 			Growls.error({
