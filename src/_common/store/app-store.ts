@@ -2,6 +2,7 @@ import { Action, Mutation, namespace, State } from 'vuex-class';
 import { VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
 import { Environment } from '../environment/environment.service';
 import { Navigate } from '../navigate/navigate.service';
+import { UserTimeout } from '../user/timeout/timeout.model';
 import { User } from '../user/user.model';
 
 export const AppState = namespace('app', State);
@@ -17,6 +18,7 @@ export type Mutations = {
 	'app/setError': number;
 	'app/clearError': undefined;
 	'app/redirect': string;
+	'app/setTimeout': UserTimeout;
 };
 
 interface UserConsents {
@@ -30,6 +32,11 @@ export class AppStore extends VuexStore<AppStore, Actions, Mutations> {
 	userBootstrapped = false;
 	consents: UserConsents = {};
 	error: number | string | null = null;
+	timeout: UserTimeout | null = null;
+
+	get isUserTimedOut() {
+		return this.userBootstrapped && !!this.user && !!this.timeout && this.timeout.getIsActive();
+	}
 
 	@VuexMutation
 	setUser(user: Mutations['app/setUser']) {
@@ -38,7 +45,30 @@ export class AppStore extends VuexStore<AppStore, Actions, Mutations> {
 		} else {
 			this.user = user;
 		}
+
+		if (user.timeout) {
+			const timeout = new UserTimeout(user.timeout);
+			if (!timeout.getIsActive()) {
+				this.timeout = null;
+			} else {
+				console.info('The user is timed out.', timeout.expires_on);
+				this.timeout = timeout;
+			}
+		} else {
+			this.timeout = null;
+		}
+
 		this.userBootstrapped = true;
+	}
+
+	@VuexMutation
+	setTimeout(timeout: Mutations['app/setTimeout']) {
+		if (!timeout.getIsActive()) {
+			this.timeout = null;
+		} else {
+			console.info('The user is timed out.', timeout.expires_on);
+			this.timeout = timeout;
+		}
 	}
 
 	@VuexMutation

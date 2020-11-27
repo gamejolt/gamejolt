@@ -40,7 +40,7 @@ export default class AppPagination extends Vue {
 	}
 
 	get prevPage() {
-		return this.currentPage - 1 > 1 ? this.currentPage - 1 : undefined;
+		return this.hasPrevious ? this.currentPage - 1 : undefined;
 	}
 
 	get nextPage() {

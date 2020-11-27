@@ -29,7 +29,7 @@ type ActivityItem = {
 @RouteResolver({
 	deps: { params: ['id'] },
 	resolver({ route }) {
-		return Api.sendRequest('/web/dash/communities/activity/' + route.params.id, {});
+		return Api.sendRequest('/web/dash/communities/activity/' + route.params.id);
 	},
 })
 export default class RouteCommunitiesViewEditActivity extends BaseRouteComponent {
@@ -46,10 +46,11 @@ export default class RouteCommunitiesViewEditActivity extends BaseRouteComponent
 	async loadMore() {
 		this.isLoading = true;
 		const payload = await Api.sendRequest(
-			'/web/dash/communities/activity/' + this.routeStore.community.id,
-			{
-				from: this.items[this.items.length - 1].item.added_on,
-			},
+			'/web/dash/communities/activity/' +
+				this.routeStore.community.id +
+				'?from=' +
+				this.items[this.items.length - 1].item.added_on,
+			undefined,
 			{
 				detach: true,
 			}

@@ -944,11 +944,11 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 			let payload: any = null;
 			try {
-				payload = await Api.sendRequest('/web/dash/token/get-for-game', {
-					game_id: localPackage.game_id,
-				});
+				payload = await Api.sendRequest(
+					'/web/dash/token/get-for-game?game_id=' + localPackage.game_id
+				);
 			} catch (err) {
-				console.log('Could not get game token to launch with - launching anyways');
+				console.log('Could not get game token to launch with - launching anyway.');
 				console.warn(err);
 			}
 

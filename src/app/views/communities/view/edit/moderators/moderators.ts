@@ -26,7 +26,7 @@ import AppCommunitiesViewPageContainer from '../../_page-container/page-containe
 @RouteResolver({
 	deps: { params: ['id'] },
 	resolver({ route }) {
-		return Api.sendRequest('/web/dash/communities/collaborators/' + route.params.id, {});
+		return Api.sendRequest('/web/dash/communities/collaborators/' + route.params.id);
 	},
 })
 export default class RouteCommunitiesViewEditModerators extends BaseRouteComponent {

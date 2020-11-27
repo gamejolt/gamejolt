@@ -78,13 +78,9 @@ export default class AppShellAccountPopover extends Vue {
 	}
 
 	async getWallet() {
-		const response = await Api.sendRequest(
-			'/web/dash/funds/wallet',
-			{},
-			{
-				detach: true,
-			}
-		);
+		const response = await Api.sendRequest('/web/dash/funds/wallet', undefined, {
+			detach: true,
+		});
 		this.walletAmount = response.amount;
 	}
 
