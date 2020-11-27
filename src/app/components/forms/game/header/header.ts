@@ -78,7 +78,7 @@ export default class FormGameHeader extends BaseForm<FormModel>
 			const payload = await this.formModel.$clearHeader();
 			// Overwrite the base model's header media item here.
 			// This needs to be done because this form does not resolve (and may never resolve)
-			// after clearning a header. Need to ensure that the base model's header gets cleared.
+			// after cleaning a header. Need to ensure that the base model's header gets cleared.
 			this.model?.assign(payload.game);
 		}
 	}
