@@ -90,7 +90,7 @@ export default class RouteDashAccountBlocks extends BaseRouteComponent {
 			return;
 		}
 
-		const payload = await Api.sendRequest(`/web/dash/blocks/remove/${block.id}`);
+		const payload = await Api.sendRequest(`/web/dash/blocks/remove/${block.id}`, {});
 		if (!payload.success) {
 			Growls.error(this.$gettext('Failed to unblock user. Try again in a bit.'));
 			return;

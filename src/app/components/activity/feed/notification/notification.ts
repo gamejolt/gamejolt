@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
+import { propRequired } from '../../../../../utils/vue';
 import '../../../../../_common/comment/comment.styl';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
@@ -17,7 +18,7 @@ import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-tro
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
 import { getTrophyImg } from '../../../trophy/thumbnail/thumbnail';
 import { ActivityFeedItem } from '../item-service';
-import { ActivityFeedView } from '../view';
+import { ActivityFeedKey, ActivityFeedView } from '../view';
 
 @Component({
 	components: {
@@ -34,16 +35,12 @@ import { ActivityFeedView } from '../view';
 	},
 })
 export default class AppActivityFeedNotification extends Vue {
-	@Inject()
-	feed!: ActivityFeedView;
+	@Prop(propRequired(ActivityFeedItem)) item!: ActivityFeedItem;
 
-	@Prop(ActivityFeedItem)
-	item!: ActivityFeedItem;
+	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
 	notification!: Notification;
-
 	canToggleContent = false;
-
 	readonly Screen = Screen;
 	readonly Notification = Notification;
 
@@ -93,9 +90,5 @@ export default class AppActivityFeedNotification extends Vue {
 
 	onMarkRead() {
 		this.notification.$read();
-	}
-
-	onMarkUnread() {
-		this.notification.$unread();
 	}
 }

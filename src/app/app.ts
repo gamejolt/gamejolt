@@ -4,6 +4,7 @@ import { loadCurrentLanguage } from '../utils/translations';
 import { Analytics } from '../_common/analytics/analytics.service';
 import { CommentStoreManager, CommentStoreManagerKey } from '../_common/comment/comment-store';
 import AppCookieBanner from '../_common/cookie/banner/banner.vue';
+import { DrawerStore, DrawerStoreKey } from '../_common/drawer/drawer-store';
 import AppErrorPage from '../_common/error/page/page.vue';
 import AppCommonShell from '../_common/shell/shell.vue';
 import { AppState, AppStore } from '../_common/store/app-store';
@@ -11,7 +12,6 @@ import { getTranslationLang } from '../_common/translate/translate.service';
 import { ChatClient, ChatKey } from './components/chat/client';
 import { ChatClientLazy } from './components/lazy';
 import AppShell from './components/shell/shell.vue';
-import { trackInlineCommentsSplitTest } from './components/split-test/split-test-service';
 import { Store } from './store';
 
 @Component({
@@ -25,6 +25,7 @@ import { Store } from './store';
 export default class App extends Vue {
 	@ProvideReactive(ChatKey) chat: null | ChatClient = null;
 	@Provide(CommentStoreManagerKey) commentManager = new CommentStoreManager();
+	@Provide(DrawerStoreKey) drawerStore = new DrawerStore();
 
 	@AppState user!: AppStore['user'];
 
@@ -45,9 +46,6 @@ export default class App extends Vue {
 				Analytics.trackEvent('translations', 'loaded', lang);
 			}
 		}
-
-		// Since this is a split test that is basically global.
-		trackInlineCommentsSplitTest();
 	}
 
 	mounted() {

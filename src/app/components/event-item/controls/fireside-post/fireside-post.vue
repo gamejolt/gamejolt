@@ -26,36 +26,15 @@
 					<span v-else class="blip-missing" />
 				</div>
 
-				<template v-if="shouldShowStickersButton">
-					<app-button
-						v-app-tooltip="$gettext('Place Sticker')"
-						v-app-auth-required
-						icon="sticker"
-						circle
-						trans
-						@click="placeSticker()"
-					/>
-
-					&nbsp;
-				</template>
-
-				<div
-					v-if="shouldShowStickersBar"
-					v-app-tooltip="$gettext(`Toggle Stickers`)"
-					class="-stickers"
-					:class="{ '-showing': showStickers }"
-					@click.stop="onClickShowStickers"
-				>
-					<span class="-caret" />
-
-					<span v-for="sticker of previewStickers" :key="sticker.id" class="-sticker">
-						<img :src="sticker.img_url" />
-					</span>
-
-					<small class="-stickers-count text-muted">
-						{{ number(post.stickers.length) }}
-					</small>
-				</div>
+				<app-button
+					v-if="shouldShowStickersButton"
+					v-app-tooltip="$gettext('Place Sticker')"
+					v-app-auth-required
+					icon="sticker"
+					circle
+					trans
+					@click="placeSticker()"
+				/>
 			</div>
 			<span v-if="shouldShowExtra" class="-extra">
 				<span v-if="shouldShowEdit && !showUserControls" class="-extra">
@@ -117,57 +96,6 @@
 	.-inline-button
 		display: inline-flex
 		align-items: center
-
-	.-stickers
-		pressy()
-		cursor: pointer
-		position: relative
-		display: inline-flex
-		align-items: center
-		flex-direction: row
-		padding: 2px 4px 2px 6px
-		border-radius: 20px
-		will-change: transform
-
-		&:hover
-			change-bg('bg-offset')
-
-			.-caret
-				border-right-color: var(--theme-bg-offset)
-
-		&-count
-			margin-left: 18px
-			font-weight: 700
-
-		&.-showing
-			change-bg('bi-bg')
-
-			&:hover
-				.-caret
-					border-right-color: var(--theme-bi-bg)
-
-			.-caret
-				border-right-color: var(--theme-bi-bg)
-
-			small
-				color: var(--theme-bi-fg)
-
-		.-caret
-			caret(direction: left, color: $trans, size: 5px)
-			left: -3px
-
-	.-sticker
-		width: 20px
-		height: 20px
-		position: relative
-		margin-right: -10px
-		display: inline-block
-
-		& > img
-			display: block
-			width: 100%
-			height: 100%
-			filter: drop-shadow(1px 1px 0 white) drop-shadow(-1px 1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px -1px 0 white)
 
 	.-extra
 		margin-left: auto

@@ -200,9 +200,13 @@ export default class AppContentEditorGifModal extends BaseModal {
 	onClickSearchResult(searchResult: SearchResult) {
 		// Run this async
 		// Also don't care about whether this succeeds or not.
-		Api.sendRequest('/web/content/tenor/register-share/' + searchResult.id, undefined, {
-			detach: true,
-		}).then();
+		Api.sendRequest(
+			'/web/content/tenor/register-share/' + searchResult.id,
+			{},
+			{
+				detach: true,
+			}
+		).then();
 
 		this.modal.resolve(searchResult);
 	}

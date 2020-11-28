@@ -1,3 +1,5 @@
+<script lang="ts" src="./all"></script>
+
 <template>
 	<div>
 		<div v-if="!hasTrophies" class="alert alert-info">
@@ -9,5 +11,3 @@
 		<app-trophy-list-paged v-else :initial-trophies="trophies" :url="listLoadMoreUrl" />
 	</div>
 </template>
-
-<script lang="ts" src="./all"></script>

@@ -8,10 +8,10 @@ import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/rou
 import { WithRouteStore } from '../../../../_common/route/route-store';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
-import { Store, store } from '../../../store/index';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { UserAvatarModal } from '../../../components/user/avatar-modal/avatar-modal.service';
 import { UserHeaderModal } from '../../../components/user/header-modal/header-modal.service';
+import { Store, store } from '../../../store/index';
 import { RouteStore, RouteStoreModule, RouteStoreName } from './account.store';
 
 @Component({
@@ -32,7 +32,7 @@ import { RouteStore, RouteStoreModule, RouteStoreName } from './account.store';
 @RouteResolver({
 	deps: {},
 	// We want to reload this data every time we come into this section.
-	resolver: () => Api.sendRequest('/web/dash/account', {}),
+	resolver: () => Api.sendRequest('/web/dash/account'),
 	// This will set our user with more fields required for managing it.
 	resolveStore({ payload }) {
 		store.commit('app/setUser', payload.user);

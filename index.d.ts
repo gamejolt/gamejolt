@@ -1,11 +1,12 @@
-/// <reference path="./typings/webpack.d.ts" />
-/// <reference path="./typings/environment.d.ts" />
-/// <reference path="./typings/html.d.ts" />
-/// <reference path="./typings/vue-shims.d.ts" />
-/// <reference path="./typings/translate.d.ts" />
-/// <reference path="./typings/router.d.ts" />
-/// <reference path="./typings/tooltip.d.ts" />
-/// <reference path="./typings/api.d.ts" />
+import './typings/api.d.ts';
+import './typings/environment.d.ts';
+import './typings/html.d.ts';
+import './typings/router.d.ts';
+import './typings/shaka.d.ts';
+import './typings/tooltip.d.ts';
+import './typings/translate.d.ts';
+import './typings/vue-shims.d.ts';
+import './typings/webpack.d.ts';
 
 interface Window {
 	_gjStartTime: number;

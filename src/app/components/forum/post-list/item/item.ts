@@ -17,11 +17,14 @@ import AppMessageThread from '../../../../../_common/message-thread/message-thre
 import { Popper } from '../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
 import { ReportModal } from '../../../../../_common/report/modal/modal.service';
+import { ScrollInviewConfig } from '../../../../../_common/scroll/inview/config';
 import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../../store/index';
 import FormForumPost from '../../../forms/forum/post/post.vue';
+
+const InviewConfig = new ScrollInviewConfig();
 
 @Component({
 	components: {
@@ -46,19 +49,13 @@ import FormForumPost from '../../../forms/forum/post/post.vue';
 	},
 })
 export default class AppForumPostListItem extends Vue {
-	@Prop(ForumTopic)
-	topic!: ForumTopic;
-	@Prop(ForumPost)
-	post!: ForumPost;
-	@Prop(Boolean)
-	isReply!: boolean;
-	@Prop(Boolean)
-	showReplies!: boolean;
-	@Prop(Boolean)
-	isLastInThread?: boolean;
+	@Prop(ForumTopic) topic!: ForumTopic;
+	@Prop(ForumPost) post!: ForumPost;
+	@Prop(Boolean) isReply!: boolean;
+	@Prop(Boolean) showReplies!: boolean;
+	@Prop(Boolean) isLastInThread?: boolean;
 
-	@State
-	app!: Store['app'];
+	@State app!: Store['app'];
 
 	isEditing = false;
 	isReplying = false;
@@ -69,9 +66,10 @@ export default class AppForumPostListItem extends Vue {
 	replies: ForumPost[] = [];
 	totalReplyCount = 0;
 
-	date = date;
-	number = number;
-	Environment = Environment;
+	readonly InviewConfig = InviewConfig;
+	readonly date = date;
+	readonly number = number;
+	readonly Environment = Environment;
 
 	get id() {
 		return (this.isReply ? this.post.parent_post_id + '-' : '') + this.post.id;
@@ -134,9 +132,13 @@ export default class AppForumPostListItem extends Vue {
 		}
 
 		try {
-			const payload = await Api.sendRequest('/web/forums/posts/parent/' + this.post.id, {
-				noErrorRedirect: true,
-			});
+			const payload = await Api.sendRequest(
+				'/web/forums/posts/parent/' + this.post.id,
+				undefined,
+				{
+					noErrorRedirect: true,
+				}
+			);
 			this.parent = new ForumPost(payload.parent);
 			this.showingParent = true;
 		} catch (e) {

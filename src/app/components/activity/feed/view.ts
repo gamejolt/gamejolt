@@ -41,6 +41,8 @@ export interface ActivityFeedViewOptions {
 	shouldShowFollow?: boolean;
 }
 
+export const ActivityFeedKey = Symbol('activity-feed');
+
 export class ActivityFeedView {
 	/**
 	 * We keep a feed ID so that when we clear we can change it and let vue
@@ -231,17 +233,12 @@ export class ActivityFeedView {
 		return this.state.markItemViewed(item);
 	}
 
-	setItemExpanded(item: ActivityFeedItem) {
-		return this.state.markItemExpanded(item);
-	}
-
-	inviewChange(item: ActivityFeedItem, visible: boolean) {
+	setItemHydration(item: ActivityFeedItem, visible: boolean) {
 		const itemState = this.getItemState(item);
 
 		if (visible) {
 			itemState.isBootstrapped = true;
 			itemState.isHydrated = true;
-			this.setItemViewed(item);
 		} else {
 			itemState.isHydrated = false;
 		}

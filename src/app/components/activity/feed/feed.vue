@@ -8,7 +8,7 @@
 	-->
 	<div :key="feed.id" class="activity-feed">
 		<template v-if="newCount > 0 || feed.isLoadingNew">
-			<app-scroll-inview :margin="`-${Scroll.offsetTop}px`" @inview="onNewButtonInview">
+			<app-scroll-inview :config="InviewConfigShowNew" @inview="onNewButtonInview">
 				<app-expand v-if="!feed.isLoadingNew" :when="isNewButtonInview">
 					<app-activity-feed-new-button @click="loadNew()">
 						<translate>Show new items</translate>
@@ -39,7 +39,11 @@
 		<!--
 			If they are viewing a slice of the state, then we don't want to allow loading more.
 		-->
-		<app-scroll-inview v-if="!feed.slice" :margin="loadMoreMargin" @inview="onScrollLoadMore">
+		<app-scroll-inview
+			v-if="!feed.slice"
+			:config="InviewConfigLoadMore"
+			@inview="onScrollLoadMore"
+		>
 			<div v-if="shouldShowLoadMore" class="page-cut">
 				<app-button
 					v-app-track-event="`activity-feed:more`"

@@ -8,12 +8,11 @@ import AppCommentVideoLikeWidget from '../../../../_common/comment/video/like-wi
 import { CommentVideo } from '../../../../_common/comment/video/video-model';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
-import AppEventItemControlsOverlay from '../../../../_common/event-item/controls-overlay/controls-overlay.vue';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import AppStickerControlsOverlay from '../../../../_common/sticker/controls-overlay/controls-overlay.vue';
 import { UserFollowSuggestion } from '../../../../_common/user/follow/suggestion.service';
 import { ActivityFeedItem } from '../../activity/feed/item-service';
 import { ActivityFeedView } from '../../activity/feed/view';
-import AppEventItemControlsComments from './comments/comments.vue';
 import AppEventItemControlsFiresidePost from './fireside-post/fireside-post.vue';
 import AppEventItemControlsUserFollow from './user-follow/user-follow.vue';
 
@@ -21,9 +20,8 @@ import AppEventItemControlsUserFollow from './user-follow/user-follow.vue';
 	components: {
 		AppCommentVideoLikeWidget,
 		AppEventItemControlsFiresidePost,
-		AppEventItemControlsComments,
 		AppEventItemControlsUserFollow,
-		AppEventItemControlsOverlay,
+		AppStickerControlsOverlay,
 	},
 })
 export default class AppEventItemControls extends Vue {
@@ -33,12 +31,10 @@ export default class AppEventItemControls extends Vue {
 	@Prop(propOptional(ActivityFeedItem)) item?: ActivityFeedItem;
 	@Prop(propOptional(Boolean, false)) shouldShowFollow!: boolean;
 	@Prop(propOptional(Boolean, false)) showComments!: boolean;
-	@Prop(propOptional(Boolean, false)) showStickers!: boolean;
 	@Prop(propOptional(String, '')) eventLabel!: string;
 
 	@State app!: Store['app'];
 
-	commentsCount = 0;
 	shouldShowFollowState = false;
 
 	@Emit('post-edit') emitPostEdit() {}
@@ -50,7 +46,7 @@ export default class AppEventItemControls extends Vue {
 	@Emit('post-reject') emitPostReject(_community: Community) {}
 	@Emit('post-pin') emitPostPin() {}
 	@Emit('post-unpin') emitPostUnpin() {}
-	@Emit('post-stickers-visibility-change') emitStickersVisibilityChange(_visible: boolean) {}
+	@Emit('sticker') emitSticker() {}
 
 	created() {
 		// The 'feed' and 'item' props will be included when this is used in the
@@ -64,10 +60,6 @@ export default class AppEventItemControls extends Vue {
 
 	get hasActivePost() {
 		return this.post && this.post.status === FiresidePost.STATUS_ACTIVE;
-	}
-
-	get showCommentFeed() {
-		return !!this.showComments;
 	}
 
 	get isShowingFollow() {

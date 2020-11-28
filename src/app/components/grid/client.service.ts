@@ -215,9 +215,10 @@ export class GridClient {
 	private async connect() {
 		const cookie = await getCookie('frontend');
 		const user = store.state.app.user;
+		const timedOut = store.state.app.isUserTimedOut;
 
-		if (user === null || cookie === undefined) {
-			// not properly logged in
+		if (user === null || cookie === undefined || timedOut) {
+			// Not properly logged in.
 			return;
 		}
 
@@ -409,7 +410,7 @@ export class GridClient {
 			}
 		} else {
 			// error
-			console.log(`[Grid] Failed to fetch notification count bootstrap (${payload.body}).`);
+			console.error(`[Grid] Failed to fetch notification count bootstrap (${payload.body}).`);
 
 			const delay = Math.min(
 				30_000 + Math.random() * 10_000,

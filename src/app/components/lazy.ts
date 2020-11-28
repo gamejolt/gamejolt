@@ -1,3 +1,6 @@
+import { AsyncComponentFactory } from 'vue/types/options';
+import AppActivityFeedPlaceholder from './activity/feed/placeholder/placeholder.vue';
+
 export async function GridClientLazy() {
 	return (await import(/* webpackChunkName: "grid" */ './grid/client.service')).GridClient;
 }
@@ -22,10 +25,15 @@ export async function FormCommentLazy() {
 	);
 }
 
-export async function AppActivityFeedLazy() {
-	return await import(/* webpackChunkName: "activityFeed" */ './activity/feed/feed.vue');
-}
+export const AppActivityFeedLazy: AsyncComponentFactory = () => ({
+	component: import(/* webpackChunkName: "activityFeed" */ './activity/feed/feed.vue') as any,
+	loading: AppActivityFeedPlaceholder,
+});
 
 export async function ChatClientLazy() {
 	return await import(/* webpackChunkName: "chat" */ './chat/client');
+}
+
+export async function AppVideoPlayerShakaLazy() {
+	return await import(/* webpackChunkName: "video" */ '../../_common/video/player/shaka.vue');
 }

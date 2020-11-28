@@ -9,25 +9,5 @@
 		>
 			%{ count } view
 		</translate>
-
-		<span class="dot-separator" />
-
-		<translate
-			:translate-n="post.expand_count || 0"
-			:translate-params="{ count: number(post.expand_count || 0) }"
-			translate-plural="%{ count } expands"
-		>
-			%{ count } expand
-		</translate>
-
-		<app-jolticon
-			v-app-tooltip.touchable="
-				$gettext(
-					'An expand is some sort of interaction with your post. For example, playing a video post, or clicking into your post.'
-				)
-			"
-			class="hidden-xs"
-			icon="help-circle"
-		/>
 	</div>
 </template>

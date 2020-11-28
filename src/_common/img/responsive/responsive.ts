@@ -1,6 +1,7 @@
 import Vue, { CreateElement } from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { EventSubscription } from '../../../system/event/event-topic';
+import { sleep } from '../../../utils/utils';
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
 import { ImgHelper } from '../helper/helper-service';
@@ -17,7 +18,9 @@ export class AppImgResponsive extends Vue {
 	private resize$: EventSubscription | undefined;
 
 	created() {
-		this.processedSrc = this.src;
+		if (GJ_IS_SSR) {
+			this.processedSrc = this.src;
+		}
 	}
 
 	async mounted() {
@@ -50,6 +53,9 @@ export class AppImgResponsive extends Vue {
 	}
 
 	private async updateSrc() {
+		// Try waiting for any resizes and breakpoint changes to happen before getting the container information.
+		await sleep(0);
+
 		const containerWidth = Ruler.width(this.$el.parentNode as HTMLElement);
 		const containerHeight = Ruler.height(this.$el.parentNode as HTMLElement);
 

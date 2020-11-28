@@ -33,6 +33,7 @@ export class CommunityActivityItem extends Model {
 	public static TYPE_CHANNEL_ADD = 'channel/add';
 	public static TYPE_CHANNEL_REMOVE = 'channel/remove';
 	public static TYPE_CHANNEL_EDIT = 'channel/edit';
+	public static TYPE_CHANNEL_RENAME = 'channel/rename';
 
 	public static TYPE_GAME_LINK = 'game/link';
 	public static TYPE_GAME_UNLINK = 'game/unlink';
@@ -73,6 +74,7 @@ export class CommunityActivityItem extends Model {
 
 				case CommunityActivityItem.TYPE_CHANNEL_ADD:
 				case CommunityActivityItem.TYPE_CHANNEL_EDIT:
+				case CommunityActivityItem.TYPE_CHANNEL_RENAME:
 					this.action_resource = new CommunityChannel(data.action_resource);
 					break;
 
@@ -90,9 +92,9 @@ export class CommunityActivityItem extends Model {
 				return { icon: 'heart-filled', color: 'notice' };
 
 			case CommunityActivityItem.TYPE_POST_FEATURE:
-				return { icon: 'fireside', color: '' };
+				return { icon: 'star', color: '' };
 			case CommunityActivityItem.TYPE_POST_UNFEATURE:
-				return { icon: 'fireside', color: '' };
+				return { icon: 'star', color: '' };
 			case CommunityActivityItem.TYPE_POST_MOVE:
 				return { icon: 'arrow-forward', color: '' };
 			case CommunityActivityItem.TYPE_POST_EJECT:
@@ -120,6 +122,7 @@ export class CommunityActivityItem extends Model {
 			case CommunityActivityItem.TYPE_CHANNEL_REMOVE:
 				return { icon: 'remove', color: 'notice' };
 			case CommunityActivityItem.TYPE_CHANNEL_EDIT:
+			case CommunityActivityItem.TYPE_CHANNEL_RENAME:
 				return { icon: 'edit', color: '' };
 
 			case CommunityActivityItem.TYPE_GAME_LINK:

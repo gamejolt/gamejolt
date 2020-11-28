@@ -5,7 +5,8 @@ export class ContentTempResource {
 	public static async getTempModelId(context: ContentContext, postData: any) {
 		const payload = await Api.sendRequest(
 			`/web/content/temp-resource-id/${context}`,
-			postData,
+			// Make sure it's a POST request.
+			postData || {},
 			{
 				noErrorRedirect: true,
 			}

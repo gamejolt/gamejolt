@@ -1,9 +1,10 @@
 import { Growls } from '../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { Payload } from '../../../../_common/payload/payload-service';
+import { appStore } from '../../../../_common/store/app-store';
 import { Translate } from '../../../../_common/translate/translate.service';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
 import { User } from '../../../../_common/user/user.model';
-import { appStore } from '../../../../_common/store/app-store';
 
 export class UserFriendshipHelper {
 	static async sendRequest(targetUser: User) {
@@ -27,6 +28,13 @@ export class UserFriendshipHelper {
 		}
 	}
 
+	/**
+	 * Attempts to accept a friends request.
+	 *
+	 * Note: This function throws on any unexpected error,
+	 * but returns false for other errors that should be gracefully dismissed,
+	 * for instance when attempting to accept a friendship that was cancelled.
+	 */
 	static async acceptRequest(request: UserFriendship) {
 		try {
 			await request.$accept();
@@ -37,8 +45,15 @@ export class UserFriendshipHelper {
 				}),
 				Translate.$gettext(`Request Accepted`)
 			);
+
+			return true;
 		} catch (e) {
 			Growls.error(Translate.$gettext(`Unable to accept friend request.`));
+
+			if (Payload.hasFormError(e, 'friendship-not-found')) {
+				return false;
+			}
+
 			throw e;
 		}
 	}
@@ -60,9 +75,12 @@ export class UserFriendshipHelper {
 			const response = await request.$remove();
 
 			Growls.success(
-				Translate.$gettextInterpolate(`Your friend request to @%{ username } was canceled.`, {
-					username: request.target_user.username,
-				}),
+				Translate.$gettextInterpolate(
+					`Your friend request to @%{ username } was canceled.`,
+					{
+						username: request.target_user.username,
+					}
+				),
 				Translate.$gettext(`Request Canceled`)
 			);
 
