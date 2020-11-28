@@ -4,35 +4,41 @@
 	<div class="-main fill-darker theme-dark">
 		<div class="container">
 			<div class="-content">
-				<div>
+				<div class="-centered">
 					<app-theme-svg
 						src="~img/game-jolt-logo.svg"
 						alt="Game Jolt"
-						:width="164 * 2"
-						:height="18 * 2"
+						:width="164 * logoScale"
+						:height="18 * logoScale"
 						strict-colors
 					/>
 				</div>
 				<br />
 
 				<template v-if="timeout && timeout.getIsActive()">
-					<p class="lead">
-						<translate>You've been put in time-out.</translate>
-					</p>
+					<div class="-centered">
+						<app-illustration src="~img/ill/time-out.svg">
+							<p>
+								<translate>You've been put in time-out.</translate>
+							</p>
+						</app-illustration>
 
-					<template v-if="!isExpired">
-						<p>
-							<translate> You will be allowed back on Game Jolt again in: </translate>
-							<strong>
-								<app-time-ago
-									:date="timeout.expires_on"
-									strict
-									is-future
-									without-suffix
-								/>
-							</strong>
-						</p>
-					</template>
+						<template v-if="!isExpired">
+							<p class="text-center">
+								<translate>
+									You will be allowed back on Game Jolt again in:
+								</translate>
+								<strong>
+									<app-time-ago
+										:date="timeout.expires_on"
+										strict
+										is-future
+										without-suffix
+									/>
+								</strong>
+							</p>
+						</template>
+					</div>
 					<br />
 
 					<template v-if="reasonText">
@@ -109,4 +115,9 @@
 .-content
 	width: 100%
 	max-width: 600px
+
+.-centered
+	display: flex
+	align-items: center
+	flex-direction: column
 </style>
