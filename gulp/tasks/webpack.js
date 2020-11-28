@@ -8,7 +8,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WebpackDevServer = require('webpack-dev-server');
-const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const VueSSRServerPlugin = require('vue-server-renderer/server-plugin');
@@ -18,6 +17,7 @@ const OfflinePlugin = require('offline-plugin');
 const WebpackPwaManifest = require('webpack-pwa-manifest');
 const OptimizeCssnanoPlugin = require('@intervolga/optimize-cssnano-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 
 module.exports = function(config) {
 	let base = path.resolve(config.projectBase);
@@ -398,7 +398,27 @@ module.exports = function(config) {
 								to: 'update-hook.js',
 							},
 					  ]),
-				// devNoop || new ImageminPlugin(),
+				devNoop ||
+					new ImageMinimizerPlugin({
+						minimizerOptions: {
+							// Lossless optimization. Pulled from the ImageMinimizerPlugin readme.
+							plugins: [
+								['gifsicle', { interlaced: true }],
+								['jpegtran', { progressive: true }],
+								['optipng', { optimizationLevel: 5 }],
+								[
+									'svgo',
+									{
+										plugins: [
+											{
+												removeViewBox: false,
+											},
+										],
+									},
+								],
+							],
+						},
+					}),
 				!shouldUseHMR ? noop : new webpack.HotModuleReplacementPlugin(),
 				!shouldExtractCss
 					? noop

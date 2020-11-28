@@ -5,6 +5,7 @@ import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import AppLoadingFade from '../../../../_common/loading/fade/fade.vue';
 import { BaseModal } from '../../../../_common/modal/base';
 import FormPost from '../../forms/post/post.vue';
+import { VideoStatus } from '../../forms/post/_video/video';
 import AppPostAddPlaceholder from '../add-placeholder/add-placeholder.vue';
 
 @Component({
@@ -25,6 +26,11 @@ export default class AppPostEditModal extends BaseModal {
 	channel?: CommunityChannel;
 
 	post: FiresidePost | null = null;
+	videoUploadStatus: VideoStatus = VideoStatus.IDLE;
+
+	get closeButtonDisabled() {
+		return this.videoUploadStatus === VideoStatus.UPLOADING;
+	}
 
 	@Watch('postProvider', { immediate: true })
 	async postProviderSet() {
@@ -37,5 +43,9 @@ export default class AppPostEditModal extends BaseModal {
 
 	onSubmitted(post: FiresidePost) {
 		this.modal.resolve(post);
+	}
+
+	onVideoUploadStatusChanged(videoStatus: VideoStatus) {
+		this.videoUploadStatus = videoStatus;
 	}
 }

@@ -13,7 +13,7 @@ import { CommunityRouteStore, CommunityRouteStoreKey, updateCommunity } from '..
 @RouteResolver({
 	deps: { params: ['id'] },
 	async resolver({ route }) {
-		const payload = await Api.sendRequest('/web/dash/communities/' + route.params.id, {});
+		const payload = await Api.sendRequest('/web/dash/communities/' + route.params.id);
 
 		if (payload && payload.community) {
 			const redirect = enforceLocation(route, { path: payload.community.path });

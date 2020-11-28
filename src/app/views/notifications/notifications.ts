@@ -5,9 +5,9 @@ import { HistoryCache } from '../../../_common/history/cache/cache.service';
 import { Notification } from '../../../_common/notification/notification-model';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
-import AppActivityFeed from '../../components/activity/feed/feed.vue';
 import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../components/activity/feed/view';
+import { AppActivityFeedLazy } from '../../components/lazy';
 import { Store } from '../../store';
 
 const HistoryCacheFeedTag = 'notifications-feed';
@@ -15,7 +15,7 @@ const HistoryCacheFeedTag = 'notifications-feed';
 @Component({
 	name: 'RouteNotifications',
 	components: {
-		AppActivityFeed,
+		AppActivityFeed: AppActivityFeedLazy,
 		AppActivityFeedPlaceholder,
 	},
 })

@@ -1,5 +1,4 @@
-import { RawLocation } from 'vue-router';
-import { Route } from 'vue-router/types/router';
+import { Location, Route } from 'vue-router/types/router';
 import { Api } from '../../api/api.service';
 import { Perm } from '../../collaborator/collaboratable';
 import { COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING } from '../../community/channel/channel-permissions';
@@ -18,7 +17,7 @@ import { CommentableModel, Model, ModelSaveRequestOptions } from '../../model/mo
 import { Poll } from '../../poll/poll.model';
 import { Registry } from '../../registry/registry.service';
 import { StickerPlacement } from '../../sticker/placement/placement.model';
-import { appStore } from '../../store/app-store';
+import { constructStickerCounts, StickerCount } from '../../sticker/sticker-count';
 import { Translate } from '../../translate/translate.service';
 import { User } from '../../user/user.model';
 import { FiresidePostCommunity } from './community/community.model';
@@ -61,7 +60,6 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	subline!: string;
 	url!: string;
 	view_count?: number;
-	expand_count?: number;
 	is_pinned!: boolean;
 
 	/**
@@ -83,6 +81,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	poll!: Poll | null;
 	platforms_published_to: FiresidePostPublishedPlatform[] = [];
 	stickers: StickerPlacement[] = [];
+	sticker_counts: StickerCount[] = [];
 
 	// Used for forms and saving.
 	key_group_ids: number[] = [];
@@ -143,8 +142,8 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 			this.platforms_published_to = data.platforms_published_to;
 		}
 
-		if (data.stickers) {
-			this.stickers = StickerPlacement.populate(data.stickers);
+		if (data.sticker_counts) {
+			this.sticker_counts = constructStickerCounts(data.sticker_counts);
 		}
 
 		Registry.store('FiresidePost', this);
@@ -215,7 +214,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return FiresidePostLike.populate(response.likes);
 	}
 
-	get routeLocation(): RawLocation {
+	get routeLocation(): Location {
 		return {
 			name: 'post',
 			params: {
@@ -383,7 +382,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 			url += '/' + gameId;
 		}
 
-		const response = await Api.sendRequest(url);
+		const response = await Api.sendRequest(url, {});
 		await FiresidePost.processCreate(response, 'post');
 		return new FiresidePost(response.post);
 	}
@@ -426,20 +425,6 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		this.is_pinned = isPinned;
 
 		return payload;
-	}
-
-	$viewed() {
-		// TODO(collaborators) block collaborators from logging ticks on posts they own
-		if (!appStore.state.user || this.user.id !== appStore.state.user.id) {
-			HistoryTick.sendBeacon('fireside-post', this.id);
-		}
-	}
-
-	$expanded() {
-		// TODO(collaborators) block collaborators from logging ticks on posts they own
-		if (!appStore.state.user || this.user.id !== appStore.state.user.id) {
-			HistoryTick.sendBeacon('fireside-post-expand', this.id);
-		}
 	}
 
 	$feature(community: Community) {
@@ -528,4 +513,8 @@ export async function loadArticleIntoPost(post: FiresidePost) {
 	const payload = await Api.sendRequest(`/web/posts/article/${post.id}`);
 	post.article_content = payload.article;
 	return post;
+}
+
+export function $viewPost(post: FiresidePost) {
+	HistoryTick.sendBeacon('fireside-post', post.id);
 }

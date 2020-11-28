@@ -1,5 +1,7 @@
+<script lang="ts" src="./release"></script>
+
 <template>
-	<app-form class="game-release-form" name="releaseForm" ref="form">
+	<app-form ref="form" class="game-release-form" name="releaseForm">
 		<app-form-group
 			name="version_number"
 			:title="$gettext('dash.games.releases.form.version_number_label')"
@@ -31,76 +33,15 @@
 			<app-form-control-errors />
 		</app-form-group>
 
-		<fieldset v-if="model.status !== GameRelease.STATUS_PUBLISHED">
-			<app-form-legend compact>
-				<translate>Schedule publishing of release</translate>
-			</app-form-legend>
-
-			<template v-if="!isScheduling">
-				<p class="help-block">
-					<translate>You can set a future date/time that this release will publish.</translate>
-				</p>
-
-				<p>
-					<app-button @click="addSchedule()">
-						<translate>Add Schedule</translate>
-					</app-button>
-				</p>
-			</template>
-			<template v-else-if="isScheduling && timezones">
-				<app-form-group name="scheduled_for_timezone" :label="$gettext(`Timezone`)">
-					<p class="help-block">
-						<translate>All time selection below will use this timezone.</translate>
-					</p>
-
-					<p class="help-block">
-						<strong>
-							<translate>
-								Should auto-detect, but if it doesn't, choose your closest city.
-							</translate>
-						</strong>
-					</p>
-
-					<app-form-control-select>
-						<optgroup v-for="(timezones, region) of timezones" :key="region" :label="region">
-							<option v-for="timezone of timezones" :key="timezone.label" :value="timezone.i">
-								{{ timezone.label }}
-							</option>
-						</optgroup>
-					</app-form-control-select>
-
-					<app-form-control-errors />
-				</app-form-group>
-
-				<app-form-group name="scheduled_for" :label="$gettext(`Date and time`)">
-					<app-form-control-date
-						:timezone-offset="scheduledTimezoneOffset"
-						:rules="{
-							min_date: now,
-						}"
-					/>
-					<app-form-control-errors :label="$gettext(`scheduled for`)" />
-				</app-form-group>
-
-				<p class="text-right">
-					<app-button trans @click="removeSchedule()">
-						<translate>Remove Scheduling</translate>
-					</app-button>
-				</p>
-			</template>
-
-			<br />
-		</fieldset>
-
 		<fieldset>
 			<app-form-legend compact>
 				<translate>Builds</translate>
 			</app-form-legend>
 
-			<div class="alert alert-notice" v-if="!builds.length">
+			<div v-if="!builds.length" class="alert alert-notice">
 				<translate>
-					You don't have any builds in this release yet. You won't be able to publish until you put
-					some in.
+					You don't have any builds in this release yet. You won't be able to publish
+					until you put some in.
 				</translate>
 			</div>
 
@@ -123,14 +64,18 @@
 
 			<br />
 
-			<div class="alert alert-notice sans-margin" v-if="areBuildsLockedByJam">
+			<div v-if="areBuildsLockedByJam" class="alert alert-notice sans-margin">
 				<app-jolticon icon="notice" />
 				<strong>
-					<translate>Your game is part of a jam that locks builds during voting.</translate>
+					<translate>
+						Your game is part of a jam that locks builds during voting.
+					</translate>
 				</strong>
-				<translate>You will not be able to add new builds until the voting period ends.</translate>
+				<translate>
+					You will not be able to add new builds until the voting period ends.
+				</translate>
 			</div>
-			<div class="row" v-else>
+			<div v-else class="row">
 				<div class="col-sm-6">
 					<h5 class="sans-margin-top">
 						<strong><translate>Upload Downloadable Build</translate></strong>
@@ -166,6 +111,75 @@
 			</div>
 		</fieldset>
 
+		<fieldset v-if="model.status !== GameRelease.STATUS_PUBLISHED">
+			<app-form-legend compact>
+				<translate>Schedule publishing of release</translate>
+			</app-form-legend>
+
+			<template v-if="!isScheduling">
+				<p class="help-block">
+					<translate>
+						You can set a future date/time that this release will publish.
+					</translate>
+				</p>
+
+				<p>
+					<app-button @click="addSchedule()">
+						<translate>Add Schedule</translate>
+					</app-button>
+				</p>
+			</template>
+			<template v-else-if="isScheduling && timezones">
+				<app-form-group name="scheduled_for_timezone" :label="$gettext(`Timezone`)">
+					<p class="help-block">
+						<translate>All time selection below will use this timezone.</translate>
+					</p>
+
+					<p class="help-block">
+						<strong>
+							<translate>
+								Should auto-detect, but if it doesn't, choose your closest city.
+							</translate>
+						</strong>
+					</p>
+
+					<app-form-control-select>
+						<optgroup
+							v-for="(timezones, region) of timezones"
+							:key="region"
+							:label="region"
+						>
+							<option
+								v-for="timezone of timezones"
+								:key="timezone.label"
+								:value="timezone.i"
+							>
+								{{ timezone.label }}
+							</option>
+						</optgroup>
+					</app-form-control-select>
+
+					<app-form-control-errors />
+				</app-form-group>
+
+				<app-form-group name="scheduled_for" :label="$gettext(`Date and time`)">
+					<app-form-control-date
+						:timezone-offset="scheduledTimezoneOffset"
+						:rules="{
+							min_date: now,
+						}"
+					/>
+					<app-form-control-errors :label="$gettext(`scheduled for`)" />
+				</app-form-group>
+
+				<p class="text-right">
+					<app-button trans @click="removeSchedule()">
+						<translate>Remove Scheduling</translate>
+					</app-button>
+				</p>
+			</template>
+		</fieldset>
+
 		<hr />
 
 		<!--
@@ -174,25 +188,29 @@
 		-->
 		<template v-if="model.status !== GameRelease.STATUS_PUBLISHED">
 			<app-button
+				v-if="isScheduling"
 				primary
 				solid
-				v-if="isScheduling"
 				:disabled="!valid || !builds.length"
 				@click="saveDraft()"
 			>
 				<translate>Schedule release</translate>
 			</app-button>
 			<app-button
+				v-else
 				primary
 				solid
-				v-else
 				:disabled="!valid || !builds.length"
 				@click="savePublished()"
 			>
 				<translate>Publish Release</translate>
 			</app-button>
 
-			<app-button v-if="!isScheduling" :disabled="!valid || !builds.length" @click="saveDraft()">
+			<app-button
+				v-if="!isScheduling"
+				:disabled="!valid || !builds.length"
+				@click="saveDraft()"
+			>
 				<translate>Save Draft</translate>
 			</app-button>
 		</template>
@@ -205,7 +223,11 @@
 		<div :class="{ 'pull-right': !Screen.isXs }">
 			<br class="visible-xs" />
 
-			<app-button trans v-if="model.status === GameRelease.STATUS_PUBLISHED" @click="unpublish()">
+			<app-button
+				v-if="model.status === GameRelease.STATUS_PUBLISHED"
+				trans
+				@click="unpublish()"
+			>
 				<translate>Unpublish Release</translate>
 			</app-button>
 
@@ -215,10 +237,3 @@
 		</div>
 	</app-form>
 </template>
-
-<style lang="stylus" scoped>
->>> .game-new-build-form .form-group
-	margin-bottom: 0
-</style>
-
-<script lang="ts" src="./release"></script>

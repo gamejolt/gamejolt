@@ -1,8 +1,10 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { EventSubscription } from '../../../system/event/event-topic';
+import { propOptional } from '../../../utils/vue';
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
+import { ScrollInviewConfig } from '../inview/config';
 import { AppScrollInview } from '../inview/inview';
 import { Scroll } from '../scroll.service';
 
@@ -12,14 +14,9 @@ import { Scroll } from '../scroll.service';
 	},
 })
 export default class AppScrollAffix extends Vue {
-	@Prop({ type: String, default: 'gj-scroll-affixed' })
-	className!: string;
-
-	@Prop(Boolean)
-	disabled!: boolean;
-
-	@Prop(Number)
-	scrollOffset?: number;
+	@Prop(propOptional(String, 'gj-scroll-affixed')) className!: string;
+	@Prop(propOptional(Boolean, false)) disabled!: boolean;
+	@Prop(propOptional(Number, 0)) scrollOffset!: number;
 
 	@Prop({
 		type: String,
@@ -31,6 +28,7 @@ export default class AppScrollAffix extends Vue {
 	shouldAffix = false;
 	width: number | null = null;
 	height = 0;
+	InviewConfig!: ScrollInviewConfig;
 
 	private resize$: EventSubscription | undefined;
 
@@ -58,17 +56,8 @@ export default class AppScrollAffix extends Vue {
 		return classes;
 	}
 
-	get inviewMargin() {
-		let offset = this.scrollOffset || 0;
-		if (this.anchor === 'top') {
-			offset += Scroll.offsetTop;
-		}
-
-		// The 10000px is so that it only considers the element "out of view" in
-		// one direction.
-		return this.anchor === 'top'
-			? `-${offset}px 0px 10000px 0px`
-			: `10000px 0px -${offset}px 0px`;
+	created() {
+		this.createInviewConfig();
 	}
 
 	mounted() {
@@ -113,5 +102,19 @@ export default class AppScrollAffix extends Vue {
 		}
 
 		this.shouldAffix = false;
+	}
+
+	private createInviewConfig() {
+		let offset = this.scrollOffset;
+		if (this.anchor === 'top') {
+			offset += Scroll.offsetTop;
+		}
+
+		// The 10000px is so that it only considers the element "out of view" in
+		// one direction.
+		const margin =
+			this.anchor === 'top' ? `-${offset}px 0px 10000px 0px` : `10000px 0px -${offset}px 0px`;
+
+		this.InviewConfig = new ScrollInviewConfig({ margin, emitsOn: 'full-overlap' });
 	}
 }

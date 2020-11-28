@@ -1,14 +1,23 @@
+<script lang="ts" src="./results"></script>
+
 <template>
 	<section v-if="hasSearch">
 		<app-page-container no-left order="right,main">
 			<!-- Games -->
-			<div slot="right" v-if="searchPayload.games.length">
+			<div v-if="searchPayload.games.length" slot="right">
 				<h3 class="-heading">
-					<app-button class="pull-right" trans :to="{ name: 'search.games', query: { q: query } }">
+					<app-button
+						class="pull-right"
+						trans
+						:to="{ name: 'search.games', query: { q: query } }"
+					>
 						<translate>View All</translate>
 					</app-button>
 
-					<router-link class="link-unstyled" :to="{ name: 'search.games', query: { q: query } }">
+					<router-link
+						class="link-unstyled"
+						:to="{ name: 'search.games', query: { q: query } }"
+					>
 						<translate>search.results.games_heading</translate>
 					</router-link>
 					<small>({{ searchPayload.gamesCount | number }})</small>
@@ -20,10 +29,17 @@
 					force-scrollable
 					event-label="search-overview-games"
 				/>
-				<app-game-list v-else :games="searchPayload.games" event-label="search-overview-games" />
+				<app-game-list
+					v-else
+					:games="searchPayload.games"
+					event-label="search-overview-games"
+				/>
 
 				<div class="hidden-xs hidden-sm">
-					<router-link class="link-muted" :to="{ name: 'search.games', query: { q: query } }">
+					<router-link
+						class="link-muted"
+						:to="{ name: 'search.games', query: { q: query } }"
+					>
 						<translate>View all</translate>
 					</router-link>
 				</div>
@@ -32,11 +48,18 @@
 			<!-- Users -->
 			<template v-if="searchPayload.users.length">
 				<h3 class="-heading">
-					<app-button class="pull-right" trans :to="{ name: 'search.users', query: { q: query } }">
+					<app-button
+						class="pull-right"
+						trans
+						:to="{ name: 'search.users', query: { q: query } }"
+					>
 						<translate>View All</translate>
 					</app-button>
 
-					<router-link class="link-unstyled" :to="{ name: 'search.users', query: { q: query } }">
+					<router-link
+						class="link-unstyled"
+						:to="{ name: 'search.users', query: { q: query } }"
+					>
 						<translate>search.results.users_heading</translate>
 					</router-link>
 					<small>({{ searchPayload.usersCount | number }})</small>
@@ -45,11 +68,11 @@
 				<div class="scrollable-grid-xs">
 					<div class="row">
 						<div
-							class="scrollable-grid-item col-xs-10 col-sm-6"
 							v-for="user of slicedUsers"
 							:key="user.id"
+							class="scrollable-grid-item col-xs-10 col-sm-6"
 						>
-							<app-user-card :user="user" />
+							<app-user-card :user="user" elevate />
 						</div>
 					</div>
 				</div>
@@ -68,12 +91,10 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .-heading
 	clearfix()
 	margin-top: $line-height-computed
 </style>
-
-<script lang="ts" src="./results"></script>

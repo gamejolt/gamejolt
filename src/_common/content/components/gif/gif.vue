@@ -7,31 +7,27 @@
 		@removed="onRemoved"
 	>
 		<div class="-outer content-gif">
-			<div
+			<app-responsive-dimensions
 				ref="container"
-				v-app-observe-dimensions="computeSize"
 				class="-container"
-				:style="{
-					width: containerWidth,
-					height: containerHeight,
-				}"
+				:ratio="width / height"
+				:max-width="maxWidth"
+				:max-height="maxHeight"
 			>
 				<app-scroll-inview
-					:margin="`${inviewMargin}px`"
+					:config="InviewConfig"
 					@inview="onInviewChange(true)"
 					@outview="onInviewChange(false)"
 				>
 					<img class="-poster" :src="media.preview" />
 					<app-video
-						v-if="isInview"
+						v-if="isInview && videoController"
 						class="-video"
-						:poster="media.preview"
-						:webm="media.webm.url"
-						:mp4="media.mp4.url"
+						:player="videoController"
 						:should-play="shouldPlay"
 					/>
 				</app-scroll-inview>
-			</div>
+			</app-responsive-dimensions>
 		</div>
 	</app-base-content-component>
 </template>

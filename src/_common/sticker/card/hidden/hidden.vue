@@ -1,5 +1,7 @@
+<script lang="ts" src="./hidden"></script>
+
 <template>
-	<div class="-card">
+	<div class="-card" :class="{ '-redeemable': !disabled, '-disabled': disabled }">
 		<div class="-img">
 			<app-jolticon class="-icon jolticon-3x" icon="sticker" />
 		</div>
@@ -16,16 +18,22 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+
+.-redeemable
+	elevate-hover-1()
+
+.-disabled
+	cursor: not-allowed
+	opacity: 0.5
 
 .-card
 	change-bg('bg-offset')
-	width: 150px
 	rounded-corners-lg()
+	width: 150px
 	position: relative
 	overflow: hidden
-	elevate-hover-1()
 
 .-img
 	margin: 12px
@@ -42,5 +50,3 @@
 	align-items: center
 	font-weight: bold
 </style>
-
-<script lang="ts" src="./hidden"></script>

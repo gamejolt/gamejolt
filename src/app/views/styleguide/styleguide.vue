@@ -1,3 +1,5 @@
+<script lang="ts" src="./styleguide"></script>
+
 <template>
 	<div class="container">
 		<div class="row">
@@ -8,7 +10,7 @@
 					<nav class="platform-list">
 						<ul>
 							<li v-for="(label, key) of nav" :key="key">
-								<a :href="`#styleguide-${key}`" v-app-scroll-to>
+								<a v-app-scroll-to :href="`#styleguide-${key}`">
 									{{ label }}
 								</a>
 							</li>
@@ -17,10 +19,8 @@
 				</app-scroll-affix>
 			</div>
 			<div class="col-sm-9 col-sm-pull-3 col-lg-10 col-lg-pull-2">
-				<component v-for="(component, key) of components" :key="key" :is="component" />
+				<component :is="component" v-for="(component, key) of components" :key="key" />
 			</div>
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./styleguide"></script>

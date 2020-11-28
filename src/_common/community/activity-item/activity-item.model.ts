@@ -92,9 +92,9 @@ export class CommunityActivityItem extends Model {
 				return { icon: 'heart-filled', color: 'notice' };
 
 			case CommunityActivityItem.TYPE_POST_FEATURE:
-				return { icon: 'fireside', color: '' };
+				return { icon: 'star', color: '' };
 			case CommunityActivityItem.TYPE_POST_UNFEATURE:
-				return { icon: 'fireside', color: '' };
+				return { icon: 'star', color: '' };
 			case CommunityActivityItem.TYPE_POST_MOVE:
 				return { icon: 'arrow-forward', color: '' };
 			case CommunityActivityItem.TYPE_POST_EJECT:

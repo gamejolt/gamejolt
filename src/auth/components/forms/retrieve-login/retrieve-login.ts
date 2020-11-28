@@ -6,11 +6,12 @@ import { BaseForm, FormOnSubmit } from '../../../../_common/form-vue/form.servic
 @Component({})
 export default class FormRetrieveLogin extends BaseForm<any> implements FormOnSubmit {
 	warnOnDiscard = false;
+	invalidEmail = false;
 
 	readonly Connection = Connection;
 
 	onChanged() {
-		this.setState('invalidEmail', false);
+		this.invalidEmail = false;
 	}
 
 	async onSubmit() {
@@ -18,7 +19,7 @@ export default class FormRetrieveLogin extends BaseForm<any> implements FormOnSu
 
 		if (response.success === false) {
 			if (response.reason && response.reason === 'invalid-email') {
-				this.setState('invalidEmail', true);
+				this.invalidEmail = true;
 			}
 		}
 

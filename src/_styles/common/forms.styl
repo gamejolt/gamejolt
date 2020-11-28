@@ -7,7 +7,7 @@ $form-common-spacing = ($line-height-computed / 2)
 $line-spacing-above-text = (($line-height-computed - $font-size-base) / 2)
 
 // Form control sizing
-//
+// 
 // Relative text size, padding, and border-radii changes for form controls. For
 // horizontal sizing, wrap controls in the predefined grid classes. `<select>`
 // element gets special love because it's special, and that's a fact!
@@ -22,11 +22,12 @@ input-size(input-height, padding-vertical, padding-horizontal, font-size, line-h
 		height: input-height
 		line-height: input-height
 
-	textarea&, select[multiple]&
+	textarea&
+	select[multiple]&
 		height: auto
 
 // Normalize non-controls
-//
+// 
 // Restyle and baseline non-control form elements.
 fieldset
 	padding: 0
@@ -57,7 +58,7 @@ label
 	font-weight: bold
 
 // Normalize form controls
-//
+// 
 // While most of our form styles require extra classes, some basic normalization
 // is required to ensure optimum display with or without those classes to better
 // address browser inconsistencies.
@@ -67,7 +68,8 @@ input[type='search']
 	box-sizing: border-box
 
 // Position radios and checkboxes better
-input[type='radio'], input[type='checkbox']
+input[type='radio']
+input[type='checkbox']
 	margin: 4px 0 0
 	margin-top: s('1px \9') /* IE8-9 */
 	line-height: normal
@@ -82,11 +84,14 @@ input[type='range']
 	width: 100%
 
 // Make multiple select elements height not fixed
-select[multiple], select[size]
+select[multiple]
+select[size]
 	height: auto
 
 // Focus for file, radio, and checkbox
-input[type='file']:focus, input[type='radio']:focus, input[type='checkbox']:focus
+input[type='file']:focus
+input[type='radio']:focus
+input[type='checkbox']:focus
 	tab-focus()
 
 // Adjust output element
@@ -98,10 +103,10 @@ output
 	line-height: $line-height-base
 
 // Common form controls
-//
+// 
 // Shared size and type resets for form controls. Apply `.form-control` to any
 // of the following form controls:
-//
+// 
 // select
 // textarea
 // input[type="text"]
@@ -157,11 +162,13 @@ output
 		font-style: italic
 
 	// Disabled and read-only inputs
-	//
+	// 
 	// HTML5 says that controls under a fieldset > legend:first-child won't be
 	// disabled if the fieldset is disabled. Due to implementation difficulty, we
 	// don't honor that edge case; we style them as disabled anyway.
-	&[disabled], &[readonly], fieldset[disabled] &
+	&[disabled]
+	&[readonly]
+	fieldset[disabled] &
 		change-bg('bg-offset')
 		cursor: not-allowed
 		opacity: 1 // iOS fix for unreadable disabled content
@@ -172,7 +179,7 @@ output
 		resize: vertical
 
 // Search inputs in iOS
-//
+// 
 // This overrides the extra rounded corners on search inputs in iOS so that our
 // `.form-control` class can properly style them. Note that this cannot simply
 // be added to `.form-control` as it's not specific enough. For details, see
@@ -181,14 +188,14 @@ input[type='search']
 	-webkit-appearance: none
 
 // Special styles for iOS date input
-//
+// 
 // In Mobile Safari, date inputs require a pixel line-height that matches the
 // given height of the input.
 input[type='date']
 	line-height: $input-height-base
 
 // Form groups
-//
+// 
 // Designed to help with the organization and spacing of vertical forms. For
 // horizontal forms, use the predefined grid classes.
 // Try to match heading style.
@@ -201,16 +208,17 @@ input[type='date']
 		font-size: 85%
 
 // Control labels
-//
+// 
 // Space the bottom of the control label away from its control.
 .control-label
 	font-family: $font-family-heading
 	margin-bottom: $form-common-spacing
 
 // Checkboxes and radios
-//
+// 
 // Indent the labels to position radios/checkboxes as hanging controls.
-.radio, .checkbox
+.radio
+.checkbox
 	display: block
 	min-height: $line-height-computed // clear the floating input if there is no label text
 	margin-top: 10px
@@ -222,17 +230,22 @@ input[type='date']
 		font-weight: normal
 		cursor: pointer
 
-.radio input[type='radio'], .radio-inline input[type='radio'], .checkbox input[type='checkbox'], .checkbox-inline input[type='checkbox']
+.radio input[type='radio']
+.radio-inline input[type='radio']
+.checkbox input[type='checkbox']
+.checkbox-inline input[type='checkbox']
 	float: left
 	margin-left: -20px
 	// Make pointers!
 	cursor: pointer
 
-.radio + .radio, .checkbox + .checkbox
+.radio + .radio
+.checkbox + .checkbox
 	margin-top: -5px // Move up sibling radios or checkboxes for tighter spacing
 
 // Radios and checkboxes on same line
-.radio-inline, .checkbox-inline
+.radio-inline
+.checkbox-inline
 	display: inline-block
 	padding-left: 20px
 	margin-bottom: 0
@@ -240,18 +253,28 @@ input[type='date']
 	font-weight: normal
 	cursor: pointer
 
-.radio-inline + .radio-inline, .checkbox-inline + .checkbox-inline
+.radio-inline + .radio-inline
+.checkbox-inline + .checkbox-inline
 	margin-top: 0
 	margin-left: 10px // space out consecutive inline controls
 
 // Apply same disabled cursor tweak as for inputs
-//
+// 
 // Note: Neither radios nor checkboxes can be readonly.
-input[type='radio'], input[type='checkbox'], .radio, .radio-inline, .checkbox, .checkbox-inline
-	&[disabled], fieldset[disabled] &
+input[type='radio']
+input[type='checkbox']
+.radio
+.radio-inline
+.checkbox
+.checkbox-inline
+	&[disabled]
+	fieldset[disabled] &
 		cursor: not-allowed
 
-.checkbox, .checkbox-inline, .radio, .radio-inline
+.checkbox
+.checkbox-inline
+.radio
+.radio-inline
 	// Want any jolticons to be a pointer as well.
 	label > .jolticon
 		cursor: pointer
@@ -260,11 +283,13 @@ input[type='radio'], input[type='checkbox'], .radio, .radio-inline, .checkbox, .
 	&.disabled
 		theme-prop('color', 'fg-muted')
 
-		&, & > label, & > label > .jolticon
+		&
+		& > label
+		& > label > .jolticon
 			cursor: not-allowed
 
 // Form control sizing
-//
+// 
 // Build on `.form-control` with modifier classes to decrease or increase the
 // height and font-size of form controls.
 input-sm()
@@ -274,14 +299,14 @@ input-sm()
 	input-sm()
 
 // Static form control text
-//
+// 
 // Apply class to a `p` element to make any string of text align with labels in
 // a horizontal form layout.
 .form-control-static
 	margin-bottom: 0 // Remove default margin from `p`
 
 // Help text
-//
+// 
 // Apply to any element you wish to create light text for placement immediately
 // below a form control. Use for general help, formatting, or instructional text.
 // Space the top of the help block away from its control.
@@ -324,7 +349,7 @@ legend + .help-block
 		caret(color: var(--theme-notice), direction: 'up', size: 5px)
 		content: ''
 		display: block
-		left: 10px
+		left: 16px
 
 	// For when the help block is above, swap the spacing.
 	&.above
@@ -338,21 +363,22 @@ legend + .help-block
 			caret(color: var(--theme-notice), direction: 'down', size: 5px)
 			content: ''
 			display: block
-			left: 10px
+			left: 16px
 
 	&.hide-caret
-		&:before, &:after
+		&:before
+		&:after
 			display: none
 
 // Inline forms
-//
+// 
 // Make forms appear inline-block by adding the `.form-inline` class. Inline
 // forms begin stacked on extra small (mobile) devices and then go inline when
 // viewports reach <768px.
-//
+// 
 // Requires wrapping inputs and labels with `.form-group` for proper display of
 // default HTML form controls and our custom form controls (e.g., input groups).
-//
+// 
 // Heads up! This is mixin-ed into `.navbar-form` in navbars.less.
 .form-inline
 	// Kick in the inline
@@ -380,31 +406,38 @@ legend + .help-block
 		// Remove default margin on radios/checkboxes that were used for stacking, and
 		// then undo the floating of radios and checkboxes to match (which also avoids
 		// a bug in WebKit: https://github.com/twbs/bootstrap/issues/1969).
-		.radio, .checkbox
+		.radio
+		.checkbox
 			display: inline-block
 			margin-top: 0
 			margin-bottom: 0
 			padding-left: 0
 			vertical-align: middle
 
-		.radio input[type='radio'], .checkbox input[type='checkbox']
+		.radio input[type='radio']
+		.checkbox input[type='checkbox']
 			float: none
 			margin-left: 0
 
 // Horizontal forms
-//
+// 
 // Horizontal forms are built on grid classes and allow you to create forms with
 // labels on the left and inputs on the right.
 .form-horizontal
 	// Consistent vertical alignment of labels, radios, and checkboxes
-	.control-label, .radio, .checkbox, .radio-inline, .checkbox-inline
+	.control-label
+	.radio
+	.checkbox
+	.radio-inline
+	.checkbox-inline
 		margin-top: 0
 		margin-bottom: 0
 		padding-top: ($padding-base-vertical + 1) // Default padding plus a border
 
 	// Account for padding we're adding to ensure the alignment and of help text
 	// and other content below items
-	.radio, .checkbox
+	.radio
+	.checkbox
 		min-height: ($line-height-computed + ($padding-base-vertical + 1))
 
 	// Make form groups behave like rows

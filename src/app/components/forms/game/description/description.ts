@@ -1,11 +1,15 @@
+import { Component, Prop, Watch } from 'vue-property-decorator';
 import { ContentDocument } from '../../../../../_common/content/content-document';
 import { ContentWriter } from '../../../../../_common/content/content-writer';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import AppFormControlContent from '../../../../../_common/form-vue/control/content/content.vue';
 import AppForm from '../../../../../_common/form-vue/form';
-import { BaseForm } from '../../../../../_common/form-vue/form.service';
+import {
+	BaseForm,
+	FormOnLoad,
+	FormOnSubmitSuccess,
+} from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
-import { Component, Prop, Watch } from 'vue-property-decorator';
 import { AppGamePerms } from '../../../game/perms/perms';
 import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
 import AppFormGameDescriptionTags from './tags/tags.vue';
@@ -24,7 +28,8 @@ type DescriptionFormModel = Game & {
 		AppFormControlContent,
 	},
 })
-export default class FormGameDescription extends BaseForm<DescriptionFormModel> {
+export default class FormGameDescription extends BaseForm<DescriptionFormModel>
+	implements FormOnSubmitSuccess, FormOnLoad {
 	@Prop(Array)
 	tags!: string[];
 
@@ -33,10 +38,15 @@ export default class FormGameDescription extends BaseForm<DescriptionFormModel> 
 
 	isFnafDetected = false;
 	isDisabled = false;
+	lengthLimit = 50_000;
 
 	$refs!: {
 		form: AppForm;
 	};
+
+	get loadUrl() {
+		return `/web/dash/developer/games/description/save/${this.model!.id}`;
+	}
 
 	get hasDetailsPerms() {
 		return this.model && this.model.hasPerms('details');
@@ -54,6 +64,10 @@ export default class FormGameDescription extends BaseForm<DescriptionFormModel> 
 		return this.formModel.title.toLowerCase();
 	}
 
+	onLoad(payload: any) {
+		this.lengthLimit = payload.lengthLimit;
+	}
+
 	@Watch('serverErrors')
 	onServerErrors() {
 		this.isFnafDetected = false;
@@ -63,6 +77,10 @@ export default class FormGameDescription extends BaseForm<DescriptionFormModel> 
 			this.isFnafDetected = true;
 			this.isDisabled = true;
 		}
+	}
+
+	onSubmitSuccess() {
+		this.setField('autotag', undefined);
 	}
 
 	async addTag(tag: string) {

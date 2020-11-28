@@ -1,17 +1,17 @@
+<script lang="ts" src="./financials"></script>
+
 <template>
-	<app-form name="financialsForm" class="form-dashboard-financials" ref="form">
+	<app-form ref="form" name="financialsForm" class="form-dashboard-financials">
 		<template v-if="!isVerified">
 			<div class="alert">
 				<translate>
-					Before you can use the Marketplace, we'll need to gather some details from you. This will
-					ensure that your account is completely set up and ready to run smoothly on the Game Jolt
-					Marketplace.
+					Before you can use the Marketplace, we'll need to gather some details from you.
+					This will ensure that your account is completely set up and ready to run
+					smoothly on the Game Jolt Marketplace.
 				</translate>
 			</div>
 
-			<!--
-				If they haven't accepted any terms yet.
-			-->
+			<!-- If they haven't accepted any terms yet. -->
 			<fieldset v-if="!hasSignedAgreement && partner">
 				<legend>
 					<translate>To start, which type of account would you like to set up?</translate>
@@ -40,17 +40,16 @@
 			</fieldset>
 		</template>
 
-		<div class="alert" v-if="isVerified">
+		<div v-if="isVerified" class="alert">
 			<app-jolticon icon="check" />
 			<translate>
-				Your account is ready for the Game Jolt Marketplace! You can set additional options below.
+				Your account is ready for the Game Jolt Marketplace! You can set additional options
+				below.
 			</translate>
 		</div>
 		<br />
 
-		<!--
-			First step is to sign an agreement.
-		-->
+		<!-- First step is to sign an agreement. -->
 		<app-expand :when="!!whichAgreement || hasSignedAgreement">
 			<app-developer-terms
 				v-if="whichAgreement === 'developer' || hasSignedAgreement"
@@ -65,15 +64,13 @@
 			/>
 		</app-expand>
 
-		<!--
-		PayPal is required.
-	-->
+		<!-- PayPal is required. -->
 		<fieldset v-if="account">
 			<legend>
 				<span
 					v-if="user.paypal_id"
-					class="pull-right done-icon"
 					v-app-tooltip="$gettext(`You have completed this section.`)"
+					class="pull-right done-icon"
 				>
 					<app-jolticon icon="check" big />
 				</span>
@@ -83,13 +80,15 @@
 			<div class="form-group">
 				<p class="small">
 					<translate>
-						We currently use PayPal for automatic monthly deposits. You will also be able to
-						withdraw your revenue at any time through this linked account.
+						We currently use PayPal for automatic monthly deposits. You will also be
+						able to withdraw your revenue at any time through this linked account.
 					</translate>
 				</p>
 
 				<div v-if="user.paypal_id">
-					<label class="control-label"><translate>Current PayPal Account</translate></label>
+					<label class="control-label">
+						<translate>Current PayPal Account</translate>
+					</label>
 					<div class="form-static">{{ user.paypal_email_address }}</div>
 					<br />
 				</div>
@@ -105,15 +104,13 @@
 			</div>
 		</fieldset>
 
-		<!--
-		They need to have PayPal linked before they can do this.
-	-->
+		<!-- They need to have PayPal linked before they can do this. -->
 		<fieldset v-if="account && user.paypal_id">
 			<legend>
 				<span
 					v-if="isVerified"
-					class="pull-right done-icon"
 					v-app-tooltip="$gettext(`You have completed this section.`)"
+					class="pull-right done-icon"
 				>
 					<app-jolticon icon="check" big />
 				</span>
@@ -122,23 +119,21 @@
 
 			<form-financials-managed-account v-if="!account.skip_stripe" />
 
-			<div class="alert" v-if="account.skip_stripe">
+			<div v-if="account.skip_stripe" class="alert">
 				<p>
 					<translate>You've been manually approved for the Marketplace.</translate>
 				</p>
 			</div>
 		</fieldset>
 
-		<!--
-		Only allow them to change percentage split if they are signed up as a dev.
-	-->
+		<!-- Only allow them to change percentage split if they are signed up as a dev. -->
 		<fieldset v-if="isVerified && account.tos_signed_developer">
 			<legend><translate>Percentage Split</translate></legend>
 
-			<p class="small" v-translate>
+			<p v-translate class="small">
 				You decide what percentage of your sale revenue to give to Game Jolt.
 				<b>We won't let you give us more than 10%</b>
-				because we'd rather have you support other indie developers by buying their games.
+				because we'd rather have you support other developers by buying their games.
 			</p>
 
 			<app-form-group name="percentage_split" :hide-label="true">
@@ -166,15 +161,15 @@
 
 			<p class="small">
 				<translate>
-					Your Wallet is where your earnings will be stored for you to buy games on Game Jolt or
-					withdraw into your PayPal account.
+					Your Wallet is where your earnings will be stored for you to buy games on Game
+					Jolt or withdraw into your PayPal account.
 				</translate>
 			</p>
 
 			<p class="small">
 				<translate>
-					We never take a cut of games you buy when you pay with your Wallet, and there are no
-					payment processing fees. The money goes directly to the developer.
+					We never take a cut of games you buy when you pay with your Wallet, and there
+					are no payment processing fees. The money goes directly to the developer.
 				</translate>
 			</p>
 
@@ -184,8 +179,9 @@
 			>
 				<p class="help-block">
 					<translate>
-						We'll keep this amount in your Wallet when doing automatic pay outs. This way you always
-						have some money to buy other games on the site through your Wallet.
+						We'll keep this amount in your Wallet when doing automatic pay outs. This
+						way you always have some money to buy other games on the site through your
+						Wallet.
 					</translate>
 					<br />
 					<translate>
@@ -213,9 +209,9 @@
 
 			<p class="small">
 				<translate>
-					If you'd like, you can set an amount below, and we will not make monthly deposits into
-					your PayPal account until your revenue reaches this amount. This can help to maintain
-					cleaner accounting on your end.
+					If you'd like, you can set an amount below, and we will not make monthly
+					deposits into your PayPal account until your revenue reaches this amount. This
+					can help to maintain cleaner accounting on your end.
 				</translate>
 			</p>
 
@@ -253,8 +249,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .form-dashboard-financials
 	>>> .done-icon
@@ -269,9 +265,13 @@
 		border-width: $border-width-base
 		border-style: solid
 
-		h1, h2, h3, h4, h5, h6, p
+		h1
+		h2
+		h3
+		h4
+		h5
+		h6
+		p
 			&:first-child
 				margin-top: 0
 </style>
-
-<script lang="ts" src="./financials"></script>

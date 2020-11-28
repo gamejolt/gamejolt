@@ -1,3 +1,5 @@
+<script lang="ts" src="./placeholder"></script>
+
 <template>
 	<div class="-container">
 		<div class="-item">
@@ -31,17 +33,15 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '../../event-item/event-item'
-@require '~styles-lib/mixins'
+@import '../../event-item/event-item'
+@import '~styles-lib/mixins'
 
 // Gotta override the border hover styling of event items.
 .-item
-	&, &:hover
-		theme-prop('border-color', 'bg-offset')
+	&
+	&:hover
+		border-color: transparent
 		cursor: default
-
-		@media $media-sm-up
-			theme-prop('border-color', 'bg-subtle')
 
 .-placeholder-text
 	lazy-placeholder-inline()
@@ -50,5 +50,3 @@
 	lazy-placeholder-inline()
 	height: $font-size-small
 </style>
-
-<script lang="ts" src="./placeholder"></script>

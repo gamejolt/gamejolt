@@ -6,10 +6,10 @@ import { FiresidePost } from '../../../../../../_common/fireside/post/post-model
 import AppNavTabList from '../../../../../../_common/nav/tab-list/tab-list.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
-import AppActivityFeed from '../../../../../components/activity/feed/feed.vue';
 import AppActivityFeedPlaceholder from '../../../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../../../components/activity/feed/view';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
+import { AppActivityFeedLazy } from '../../../../../components/lazy';
 import AppPostAddButton from '../../../../../components/post/add-button/add-button.vue';
 import { RouteStore, RouteStoreModule } from '../manage.store';
 
@@ -21,7 +21,7 @@ function getFetchUrl(route: Route) {
 @Component({
 	name: 'RouteDashGamesManageDevlog',
 	components: {
-		AppActivityFeed,
+		AppActivityFeed: AppActivityFeedLazy,
 		AppActivityFeedPlaceholder,
 		AppPostAddButton,
 		AppGamePerms,

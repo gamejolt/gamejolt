@@ -25,10 +25,8 @@ export class BroadcastModal {
 		}
 
 		const payload = await Api.sendRequest(
-			'/web/broadcasts',
-			{
-				from: localStorage[this._key()],
-			},
+			'/web/broadcasts?from=' + localStorage[this._key()],
+			undefined,
 			{ detach: true }
 		);
 

@@ -5,6 +5,8 @@ import { RequestOptions } from '../api/api.service';
 import { Environment } from '../environment/environment.service';
 import { Seo } from '../seo/seo.service';
 
+export type PayloadFormErrors = { [errorId: string]: boolean };
+
 export class PayloadError {
 	static readonly ERROR_NEW_VERSION = 'payload-new-version';
 	static readonly ERROR_NOT_LOGGED = 'payload-not-logged';
@@ -13,6 +15,7 @@ export class PayloadError {
 	static readonly ERROR_OFFLINE = 'payload-offline';
 	static readonly ERROR_REDIRECT = 'payload-redirect';
 	static readonly ERROR_NEW_CLIENT_VERSION = 'payload-new-client-version';
+	static readonly ERROR_USER_TIMED_OUT = 'payload-user-timed-out';
 
 	redirect?: string;
 
@@ -28,6 +31,8 @@ export class PayloadError {
 			// If it was a 401 error, then they need to be logged in.
 			// Let's redirect them to the login page on the main site.
 			return new PayloadError(PayloadError.ERROR_NOT_LOGGED, response.data || undefined);
+		} else if (response.status === 403 && response.data.user?.timeout) {
+			return new PayloadError(PayloadError.ERROR_USER_TIMED_OUT, response.data || undefined);
 		}
 
 		// Otherwise, show an error page.
@@ -107,12 +112,24 @@ export class Payload {
 
 			this.checkPayloadUser(response, options);
 
+			// Do not do error redirects when the user cancelled the upload file request.
+			if (this.isCancelledUpload(error)) {
+				throw error;
+			}
+
 			if (!options.noErrorRedirect) {
 				throw this.handlePayloadError(PayloadError.fromAxiosError(error));
 			} else {
 				throw error;
 			}
 		}
+	}
+
+	/**
+	 * Indicates an axios cancel token cancelled the request.
+	 */
+	static isCancelledUpload(payload: any) {
+		return payload.__CANCEL__ === true;
 	}
 
 	private static checkPayloadVersion(data: any, options: RequestOptions) {
@@ -213,6 +230,8 @@ export class Payload {
 			this.store.commit('app/redirect', location);
 		} else if (error.type === PayloadError.ERROR_NEW_CLIENT_VERSION) {
 			this.store.commit('app/redirect', Environment.clientSectionUrl + '/upgrade');
+		} else if (error.type === PayloadError.ERROR_USER_TIMED_OUT) {
+			this.store.commit('app/redirect', Environment.wttfBaseUrl + '/timeout');
 		} else if (error.type === PayloadError.ERROR_INVALID) {
 			this.store.commit('app/setError', 500);
 		} else if (
@@ -225,5 +244,20 @@ export class Payload {
 		}
 
 		return error;
+	}
+
+	static formErrors(payload: any): PayloadFormErrors | null {
+		const errors = payload?.errors;
+
+		if (typeof errors !== 'object' || Object.keys(errors).length === 0) {
+			return null;
+		}
+
+		return errors;
+	}
+
+	static hasFormError(payload: any, errorId: string): boolean {
+		const errors = this.formErrors(payload);
+		return !!errors?.[errorId];
 	}
 }

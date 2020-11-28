@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { Mutation } from 'vuex-class';
+import { arrayRemove } from '../../../../../../utils/array';
 import { propRequired } from '../../../../../../utils/vue';
 import { Api } from '../../../../../../_common/api/api.service';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
@@ -157,6 +158,10 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 
 		try {
 			await this.post.$reject(postCommunity.community);
+			// Make sure the post community gets removed from the post.
+			// The backend might not return the post resource if the post was already
+			// ejected, so the community list doesn't get updated.
+			arrayRemove(this.post.communities, i => i.id === postCommunity.id);
 			this.emitReject(postCommunity.community);
 		} catch (err) {
 			console.warn('Failed to eject post');

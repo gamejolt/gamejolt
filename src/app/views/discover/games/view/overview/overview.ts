@@ -4,7 +4,7 @@ import { Api } from '../../../../../../_common/api/api.service';
 import AppCard from '../../../../../../_common/card/card.vue';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
 import AppCommentAddButton from '../../../../../../_common/comment/add-button/add-button.vue';
-import { Comment, getCanCommentOnModel } from '../../../../../../_common/comment/comment-model';
+import { canCommentOnModel, Comment } from '../../../../../../_common/comment/comment-model';
 import {
 	CommentStoreManager,
 	CommentStoreManagerKey,
@@ -32,13 +32,13 @@ import { PartnerReferral } from '../../../../../../_common/partner-referral/part
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
-import AppActivityFeed from '../../../../../components/activity/feed/feed.vue';
 import AppActivityFeedPlaceholder from '../../../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../../../components/activity/feed/view';
 import AppCommentOverview from '../../../../../components/comment/overview/overview.vue';
 import AppGameCommunityBadge from '../../../../../components/game/community-badge/community-badge.vue';
 import AppGameOgrs from '../../../../../components/game/ogrs/ogrs.vue';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
+import { AppActivityFeedLazy } from '../../../../../components/lazy';
 import AppPageContainer from '../../../../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../../../../components/post/add-button/add-button.vue';
 import AppRatingWidget from '../../../../../components/rating/widget/widget.vue';
@@ -70,7 +70,7 @@ import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue
 		AppGameMediaBar,
 		AppCommentAddButton,
 		AppCommentOverview,
-		AppActivityFeed,
+		AppActivityFeed: AppActivityFeedLazy,
 		AppActivityFeedPlaceholder,
 		AppPostAddButton,
 		AppGamePerms,
@@ -236,7 +236,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	}
 
 	get shouldShowCommentAdd() {
-		return getCanCommentOnModel(this.game);
+		return canCommentOnModel(this.game);
 	}
 
 	routeCreated() {

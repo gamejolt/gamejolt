@@ -4,11 +4,11 @@ import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/rou
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppUserCard from '../../../../_common/user/card/card.vue';
 import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
-import AppActivityFeed from '../../../components/activity/feed/feed.vue';
 import AppActivityFeedPlaceholder from '../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../components/activity/feed/view';
 import AppGameGrid from '../../../components/game/grid/grid.vue';
 import AppGameList from '../../../components/game/list/list.vue';
+import { AppActivityFeedLazy } from '../../../components/lazy';
 import AppPageContainer from '../../../components/page-container/page-container.vue';
 import { Search } from '../../../components/search/search-service';
 import { RouteStore, routeStore, RouteStoreModule } from '../search.store';
@@ -20,7 +20,7 @@ import { RouteStore, routeStore, RouteStoreModule } from '../search.store';
 		AppUserCard,
 		AppGameList,
 		AppGameGrid,
-		AppActivityFeed,
+		AppActivityFeed: AppActivityFeedLazy,
 		AppActivityFeedPlaceholder,
 	},
 	filters: {

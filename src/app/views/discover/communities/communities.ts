@@ -2,16 +2,19 @@ import { Component, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { sleep } from '../../../../utils/utils';
 import { Api } from '../../../../_common/api/api.service';
-import AppCommunityAddWidget from '../../../../_common/community/add-widget/add-widget.vue';
+import AppCommunityCardCreatePlaceholder from '../../../../_common/community/card-create-placeholder/card-create-placeholder.vue';
 import AppCommunityCard from '../../../../_common/community/card/card.vue';
 import { Community } from '../../../../_common/community/community.model';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
+import { ScrollInviewConfig } from '../../../../_common/scroll/inview/config';
+import { ScrollInviewController } from '../../../../_common/scroll/inview/controller';
 import { AppScrollInview } from '../../../../_common/scroll/inview/inview';
 import { AppStore } from '../../../../_common/store/app-store';
 
 const endpoint = '/web/discover/communities';
+const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height * 2}px` });
 
 @Component({
 	name: 'RouteDiscoverCommunities',
@@ -19,7 +22,7 @@ const endpoint = '/web/discover/communities';
 		AppCommunityCard,
 		AppLoading,
 		AppScrollInview,
-		AppCommunityAddWidget,
+		AppCommunityCardCreatePlaceholder,
 	},
 })
 @RouteResolver({
@@ -29,21 +32,16 @@ const endpoint = '/web/discover/communities';
 	resolver: ({ route }) => Api.sendRequest(`${endpoint}?q=${route.query.q || ''}`),
 })
 export default class RouteDiscoverCommunities extends BaseRouteComponent {
-	@State
-	app!: AppStore;
+	@State app!: AppStore;
 
 	searchText = '';
 	communities: Community[] = [];
 	page = 1;
-
 	isLoading = false;
 	hasMore = true;
-
 	private nextSearchId = 0;
-
-	$refs!: {
-		inview: AppScrollInview;
-	};
+	readonly loadMoreInviewController = new ScrollInviewController();
+	readonly InviewConfigLoadMore = InviewConfigLoadMore;
 
 	get routeTitle() {
 		return 'Discover Communities - They are grandiose!';
@@ -55,10 +53,6 @@ export default class RouteDiscoverCommunities extends BaseRouteComponent {
 
 	get isLoadingMore() {
 		return this.isLoading;
-	}
-
-	get loadMoreMargin() {
-		return `${Screen.height * 2}px`;
 	}
 
 	get showCreateCommunity() {
@@ -99,7 +93,6 @@ export default class RouteDiscoverCommunities extends BaseRouteComponent {
 	}
 
 	clearSearch() {
-		console.log('clearing search');
 		this.searchText = '';
 	}
 
@@ -144,7 +137,7 @@ export default class RouteDiscoverCommunities extends BaseRouteComponent {
 		// inview won't emit if the scroll didn't go out of view.
 		// We have to check if we still have room to load more entries manually then.
 		await this.$nextTick();
-		if (this.$refs.inview.inView) {
+		if (this.loadMoreInviewController.isInview) {
 			this.onScrollLoadMore();
 		}
 	}
