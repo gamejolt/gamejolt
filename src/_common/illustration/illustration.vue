@@ -22,6 +22,7 @@ $-font-size = 19px
 
 .-ill
 	margin: $line-height-computed 0
+	max-width: 100%
 
 .-text
 	color: var(--theme-fg-muted)
