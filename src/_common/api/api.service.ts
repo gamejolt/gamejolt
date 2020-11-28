@@ -1,4 +1,4 @@
-import Axios from 'axios';
+import Axios, { CancelTokenSource } from 'axios';
 import { Environment } from '../environment/environment.service';
 import { Payload } from '../payload/payload-service';
 
@@ -94,6 +94,12 @@ export interface RequestOptions {
 	// You can change the default api host/path used through these.
 	apiHost?: string;
 	apiPath?: string;
+
+	/**
+	 * CancelToken function given to the Axios request when uploading a file.
+	 * Invoking the returned executor cancels the file upload.
+	 */
+	fileCancelToken?: CancelTokenSource;
 }
 
 export class Api {
@@ -216,6 +222,7 @@ export class Api {
 						options.progress(e);
 					}
 				},
+				cancelToken: options.fileCancelToken?.token,
 			}).then((response: any) => {
 				// When the request is done, send one last progress event of
 				// nothing to indicate that the transfer is complete.
@@ -234,5 +241,10 @@ export class Api {
 			withCredentials: options.withCredentials,
 			ignoreLoadingBar: options.ignoreLoadingBar,
 		});
+	}
+
+	public static createCancelToken() {
+		const CancelToken = Axios.CancelToken;
+		return CancelToken.source();
 	}
 }

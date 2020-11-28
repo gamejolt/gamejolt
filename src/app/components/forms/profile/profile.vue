@@ -116,6 +116,9 @@
 				:disabled="isBioLocked"
 				:model-id="model.id"
 				:max-height="0"
+				:rules="{
+					max_content_length: [bioLengthLimit],
+				}"
 			/>
 
 			<app-form-control-errors />

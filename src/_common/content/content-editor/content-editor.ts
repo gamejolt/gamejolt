@@ -67,9 +67,6 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	@Prop(String)
 	name!: string;
 
-	@Prop(String)
-	startupActivity?: string;
-
 	/**
 	 * Used to send more information with the create temp resource request.
 	 * Passed in object is directly handed to the Api. By default `undefined`, resulting in a GET request.
@@ -108,7 +105,6 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	emojiPanelVisible = false;
 	controlsCollapsed = true;
 	isEmpty = true; // Gets updated through the update-is-empty-plugin
-	openedStartup = false; // When the gif or emoji panel opened on startup. Prevents them from opening again.
 	canShowMentionSuggestions = 0; // Indicates whether we want to currently show the mention suggestion panel. Values > 0 indicate true.
 	mentionUserCount = 0;
 
@@ -436,10 +432,6 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 
 	onControlsCollapsedChanged(collapsed: boolean) {
 		this.controlsCollapsed = collapsed;
-	}
-
-	onOpenedStartup() {
-		this.openedStartup = true;
 	}
 
 	onInsertMention() {

@@ -1,3 +1,11 @@
+import { namespace } from 'vuex-class';
+import {
+	NamespaceVuexStore,
+	VuexAction,
+	VuexModule,
+	VuexMutation,
+	VuexStore,
+} from '../../../../../utils/vuex';
 import { Api } from '../../../../../_common/api/api.service';
 import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
 import { Game } from '../../../../../_common/game/game.model';
@@ -7,14 +15,6 @@ import { GameVideo } from '../../../../../_common/game/video/video.model';
 import { Growls } from '../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { Translate } from '../../../../../_common/translate/translate.service';
-import {
-	NamespaceVuexStore,
-	VuexAction,
-	VuexModule,
-	VuexMutation,
-	VuexStore,
-} from '../../../../../utils/vuex';
-import { namespace } from 'vuex-class';
 import { store } from '../../../../store';
 import { router } from '../../../index';
 
@@ -56,17 +56,14 @@ const TRANSITION_MAP: any = {
 	description: 'design',
 	design: 'packages.list',
 	packages: 'maturity',
-	maturity: 'music',
-	music: 'settings',
-	settings: 'wizard-finish',
+	maturity: 'wizard-finish',
 };
 
 const TRANSITION_MAP_DEVLOG: any = {
 	details: 'description',
 	description: 'design',
 	design: 'maturity',
-	maturity: 'settings',
-	settings: 'wizard-finish',
+	maturity: 'wizard-finish',
 };
 
 function instantiateMediaItem(item: any) {
@@ -282,7 +279,10 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 
 	@VuexAction
 	async removeGame() {
-		const result = await ModalConfirm.show(Translate.$gettext('dash.games.remove_confirmation'));
+		const result = await ModalConfirm.show(
+			Translate.$gettext('dash.games.remove_confirmation')
+		);
+
 		if (!result) {
 			return;
 		}

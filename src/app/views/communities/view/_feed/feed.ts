@@ -11,10 +11,10 @@ import AppExpand from '../../../../../_common/expand/expand.vue';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
-import AppActivityFeed from '../../../../components/activity/feed/feed.vue';
 import AppActivityFeedNewButton from '../../../../components/activity/feed/new-button/new-button.vue';
 import AppActivityFeedPlaceholder from '../../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
+import { AppActivityFeedLazy } from '../../../../components/lazy';
 import AppPostAddButton from '../../../../components/post/add-button/add-button.vue';
 import { Store } from '../../../../store';
 import { CommunityRouteStore, CommunityRouteStoreKey, isVirtualChannel } from '../view.store';
@@ -23,7 +23,7 @@ import AppBlockedNotice from '../_blocked-notice/blocked-notice.vue';
 @Component({
 	components: {
 		AppPostAddButton,
-		AppActivityFeed,
+		AppActivityFeed: AppActivityFeedLazy,
 		AppActivityFeedPlaceholder,
 		AppActivityFeedNewButton,
 		AppNavTabList,
@@ -110,7 +110,7 @@ export default class AppCommunitiesViewFeed extends Vue {
 		// Mark the community/channel as read after loading new posts.
 		Api.sendRequest(
 			`/web/communities/mark-as-read/${this.community.path}/${this.channel.title}`,
-			undefined,
+			{},
 			{ detach: true }
 		);
 

@@ -1,14 +1,15 @@
 import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Component, Inject } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import * as _ClientMod from '../../../../_common/client/client.service';
 import { Connection } from '../../../../_common/connection/connection-service';
+import { DrawerStore, DrawerStoreKey } from '../../../../_common/drawer/drawer-store';
 import { currency } from '../../../../_common/filters/currency';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { SettingThemeDark } from '../../../../_common/settings/settings.service';
-import { AppState, AppStore } from '../../../../_common/store/app-store';
+import { AppStore } from '../../../../_common/store/app-store';
 import { ThemeMutation, ThemeState, ThemeStore } from '../../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
@@ -35,17 +36,11 @@ if (GJ_IS_CLIENT) {
 	},
 })
 export default class AppShellAccountPopover extends Vue {
-	@State
-	app!: AppStore;
+	@Inject(DrawerStoreKey) drawer!: DrawerStore;
 
-	@ThemeState
-	isDark!: ThemeStore['isDark'];
-
-	@ThemeMutation
-	setDark!: ThemeStore['setDark'];
-
-	@AppState
-	hasNewStickers!: AppStore['hasNewStickers'];
+	@State app!: AppStore;
+	@ThemeState isDark!: ThemeStore['isDark'];
+	@ThemeMutation setDark!: ThemeStore['setDark'];
 
 	isShowing = false;
 	walletAmount: number | false = false;
@@ -61,7 +56,7 @@ export default class AppShellAccountPopover extends Vue {
 	}
 
 	get shouldShowNewStickers() {
-		return this.hasNewStickers;
+		return this.drawer.canUnlockNewStickers;
 	}
 
 	onShow() {
@@ -83,13 +78,9 @@ export default class AppShellAccountPopover extends Vue {
 	}
 
 	async getWallet() {
-		const response = await Api.sendRequest(
-			'/web/dash/funds/wallet',
-			{},
-			{
-				detach: true,
-			}
-		);
+		const response = await Api.sendRequest('/web/dash/funds/wallet', undefined, {
+			detach: true,
+		});
 		this.walletAmount = response.amount;
 	}
 

@@ -79,7 +79,7 @@ export default class FormUserHeader extends BaseForm<FormModel>
 		);
 
 		if (result) {
-			this.app.user!.$clearHeader();
+			this.formModel.$clearHeader();
 		}
 	}
 

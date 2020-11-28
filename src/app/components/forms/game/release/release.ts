@@ -19,6 +19,7 @@ import { GamePackage } from '../../../../../_common/game/package/package.model';
 import { GameRelease } from '../../../../../_common/game/release/release.model';
 import { Growls } from '../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import { Screen } from '../../../../../_common/screen/screen-service';
 import { Timezone, TimezoneData } from '../../../../../_common/timezone/timezone.service';
 import FormGameBuildTS from '../build/build';
 import FormGameBuild from '../build/build.vue';

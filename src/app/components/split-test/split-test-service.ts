@@ -1,16 +1,21 @@
 import { Route } from 'vue-router';
 import { Analytics } from '../../../_common/analytics/analytics.service';
+import { User } from '../../../_common/user/user.model';
 
-const ExperimentInlineComments = 'split:inline-comments';
+const ExperimentCommunitiesHome = 'split:communities-home';
 
-export function hasInlineCommentsSplitTest() {
-	return getClientSideVariation(ExperimentInlineComments) === 1;
+export function hasCommunitiesHomeSplitTest(route: Route, user: User | null) {
+	return !user && getClientSideVariation(ExperimentCommunitiesHome, route) === 2;
 }
 
-export function trackInlineCommentsSplitTest() {
+export function trackCommunitiesHomeSplitTest(route: Route, user: User | null) {
+	if (user) {
+		return;
+	}
+
 	Analytics.trackEvent(
-		ExperimentInlineComments,
-		'variation-' + getClientSideVariation(ExperimentInlineComments)
+		ExperimentCommunitiesHome,
+		'variation-' + getClientSideVariation(ExperimentCommunitiesHome, route)
 	);
 }
 

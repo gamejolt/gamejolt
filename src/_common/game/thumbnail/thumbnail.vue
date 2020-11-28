@@ -1,13 +1,24 @@
+<script lang="ts" src="./thumbnail"></script>
+
 <template>
 	<router-link class="game-thumbnail" :to="url">
-		<app-scroll-inview :margin="`${Screen.height}px`" @inview="inView" @outview="outView">
-			<div class="-controls theme-dark" v-if="app.user && Screen.isLg && isHydrated" @click.prevent>
+		<app-scroll-inview :config="InviewConfig" @inview="inView" @outview="outView">
+			<div
+				v-if="app.user && Screen.isLg && isHydrated"
+				class="-controls theme-dark"
+				@click.prevent
+			>
 				<slot />
 
 				<template v-if="shouldShowControls">
 					<app-game-follow-widget :game="game" overlay circle event-label="game-thumb" />
 
-					<app-game-playlist-add-to-widget :game="game" overlay circle event-label="game-thumb" />
+					<app-game-playlist-add-to-widget
+						:game="game"
+						overlay
+						circle
+						event-label="game-thumb"
+					/>
 				</template>
 
 				<template v-if="showModTools">
@@ -28,8 +39,8 @@
 
 			<div class="-meta">
 				<div
-					class="-pricing fill-offset"
 					v-if="game._has_packages && !hidePricing"
+					class="-pricing fill-offset"
 					:class="{
 						'-pricing-owned': isOwned,
 						'-pricing-sale': sale,
@@ -38,19 +49,21 @@
 					<template v-if="!isOwned">
 						<template v-if="sellableType === 'paid'">
 							<div class="-pricing-container">
-								<div class="-pricing-amount-old" v-if="sale">
+								<div v-if="sale" class="-pricing-amount-old">
 									{{ oldPricingAmount }}
 								</div>
 								<div class="-pricing-amount">
 									{{ pricingAmount }}
 								</div>
 							</div>
-							<div class="-pricing-sale-percentage" v-if="sale">-{{ salePercentageOff }}%</div>
+							<div v-if="sale" class="-pricing-sale-percentage">
+								-{{ salePercentageOff }}%
+							</div>
 						</template>
-						<span class="-pricing-tag" v-else-if="sellableType === 'pwyw'">
+						<span v-else-if="sellableType === 'pwyw'" class="-pricing-tag">
 							<translate>Name Your Price</translate>
 						</span>
-						<span class="-pricing-tag" v-else>
+						<span v-else class="-pricing-tag">
 							<translate>Free</translate>
 						</span>
 					</template>
@@ -67,9 +80,14 @@
 					</app-user-card-hover>
 				</div>
 
-				<div class="-dev" :title="`${game.developer.display_name} (@${game.developer.username})`">
+				<div
+					class="-dev"
+					:title="`${game.developer.display_name} (@${game.developer.username})`"
+				>
 					{{ game.developer.display_name }}
-					<small><app-user-verified-tick :user="game.developer" vertical-align/></small>
+					<small>
+						<app-user-verified-tick :user="game.developer" vertical-align />
+					</small>
 				</div>
 
 				<div class="-title" :title="game.title">
@@ -78,12 +96,12 @@
 
 				<div class="-meta-extra">
 					<!-- Don't show if devlog -->
-					<div class="-os" v-if="game.development_status !== 4">
+					<div v-if="game.development_status !== 4" class="-os">
 						<app-game-compat-icons :game="game" />
 					</div>
 
 					<span class="-tags">
-						<span class="-tag tag tag-notice" v-if="game.status === Game.STATUS_HIDDEN">
+						<span v-if="game.status === Game.STATUS_HIDDEN" class="-tag tag tag-notice">
 							<translate>Hidden</translate>
 						</span>
 					</span>
@@ -94,5 +112,3 @@
 </template>
 
 <style lang="stylus" src="./thumbnail.styl" scoped></style>
-
-<script lang="ts" src="./thumbnail"></script>

@@ -1,6 +1,16 @@
 @import '../variables'
 @import '~styles-lib/mixins'
 
+.-reactions-container
+	display: inline-block
+
+.-controls-buffer
+	&:last-of-type
+		margin-bottom: $-item-padding-xs-v
+
+		@media $media-sm-up
+			margin-bottom: $-item-padding-v
+
 .page-cut
 	@media $media-sm-up
 		margin-left: -($-item-padding-container)
@@ -89,10 +99,4 @@
 		margin-bottom: $-item-padding-v
 
 .-communities
-	padding-bottom: $-item-padding-xs-v
-
-	&-list
-		white-space: nowrap
-
-	@media $media-sm-up
-		padding-bottom: $-item-padding-v
+	white-space: nowrap

@@ -78,6 +78,7 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 	sellable?: Sellable;
 	can_user_rate?: boolean;
 	is_following?: boolean;
+	has_adult_content!: boolean;
 	should_show_ads!: boolean;
 	like_count!: number;
 	sites_enabled!: boolean;
@@ -163,11 +164,15 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 	}
 
 	get is_paid_game() {
-		return this.sellable && this.sellable.type === 'paid';
+		return this.sellable?.type === 'paid';
+	}
+
+	get isOwned() {
+		return this.sellable?.is_owned === true;
 	}
 
 	get _can_buy_primary_sellable() {
-		return this.is_paid_game && this.sellable && !this.sellable.is_owned;
+		return this.is_paid_game && this.sellable?.is_owned === false;
 	}
 
 	// We don't want to show ads if this game has sellable items.
@@ -269,7 +274,7 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 
 	getUrl(page = '') {
 		if (page === 'soundtrack') {
-			return '/games/' + this.slug + '/' + this.id + '/download/soundtrack';
+			return `/get/soundtrack?game=${this.id}`;
 		}
 		return '/games/' + this.slug + '/' + this.id;
 	}
@@ -469,16 +474,18 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 	}
 
 	$setStatus(status: number) {
-		return this.$_save(
-			'/web/dash/developer/games/set-status/' + this.id + '/' + status,
-			'game'
-		);
+		return this.$_save('/web/dash/developer/games/set-status/' + this.id, 'game', {
+			data: { status },
+		});
 	}
 
 	$setDevStage(stage: number) {
 		return this.$_save(
 			'/web/dash/developer/games/set-dev-stage/' + this.id + '/' + stage,
-			'game'
+			'game',
+			{
+				data: { stage },
+			}
 		);
 	}
 

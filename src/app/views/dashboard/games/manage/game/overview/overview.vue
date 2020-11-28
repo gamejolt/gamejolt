@@ -1,14 +1,16 @@
+<script lang="ts" src="./overview"></script>
+
 <template>
 	<div>
 		<div class="row">
 			<div class="col-lg-8">
-				<div class="alert alert-highlight" v-if="game.is_published">
+				<div v-if="game.is_published" class="alert alert-highlight">
 					<app-jolticon icon="check" />
 					<translate>This game page is published to the site.</translate>
 				</div>
 
 				<!-- Show a little message if they still have builds being processed. -->
-				<div class="alert" v-if="hasBuildsProcessing">
+				<div v-if="hasBuildsProcessing" class="alert">
 					<app-progress-poller
 						:url="`/web/dash/developer/games/poll-build-progress/${game.id}`"
 						@complete="onAllBuildsProcessed"
@@ -17,7 +19,6 @@
 					<app-progress-bar thin active indeterminate :percent="100" />
 
 					<p>
-						<app-jolticon icon="notice" />
 						<span v-translate>
 							<strong>You still have builds that are being processed.</strong>
 							They won't show on your game page until they're finished processing.
@@ -28,14 +29,18 @@
 				<app-expand :when="!game.is_published && canPublish">
 					<div class="alert alert-highlight">
 						<p>
-							<translate>Your game page is ready to publish to the site for all to see!</translate>
+							<translate>
+								Your game page is ready to publish to the site for all to see!
+							</translate>
 						</p>
 
 						<app-game-perms required="all" tag="div" class="alert-actions">
 							<app-button
+								v-app-tooltip="
+									$gettext(`dash.games.overview.todo_info_publish_button_tooltip`)
+								"
 								primary
 								block
-								v-app-tooltip="$gettext(`dash.games.overview.todo_info_publish_button_tooltip`)"
 								@click="publish"
 							>
 								<translate>dash.games.overview.todo_info_publish_button</translate>
@@ -48,16 +53,16 @@
 					<div class="alert">
 						<p>
 							<translate>
-								Your game is set as being a canceled game. You can transition back to a normal game
-								page at any time!
+								Your game is set as being a canceled game. You can transition back
+								to a normal game page at any time!
 							</translate>
 						</p>
 
 						<app-game-perms required="all" tag="div" class="alert-actions">
 							<app-button
+								v-app-tooltip="$gettext(`This will make your game active again.`)"
 								primary
 								block
-								v-app-tooltip="$gettext(`This will make your game active again.`)"
 								@click="uncancel"
 							>
 								<translate>Uncancel Game</translate>
@@ -119,9 +124,7 @@
 								<translate>Likes</translate>
 							</div>
 							<div class="stat-big-digit">
-								<template>
-									{{ likeCount | number }}
-								</template>
+								{{ likeCount | number }}
 							</div>
 						</div>
 					</div>
@@ -131,9 +134,7 @@
 								<translate>Avg. Rating</translate>
 							</div>
 							<div class="stat-big-digit">
-								<template>
-									{{ averageRating }}
-								</template>
+								{{ averageRating }}
 							</div>
 						</div>
 					</div>
@@ -177,13 +178,10 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .-graph
 	>>> .graph
 		rounded-corners-lg()
-
 </style>
-
-<script lang="ts" src="./overview"></script>

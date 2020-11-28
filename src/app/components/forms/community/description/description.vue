@@ -8,6 +8,7 @@
 				:rules="{
 					content_required: true,
 					content_no_media_uploads: true,
+					max_content_length: [lengthLimit],
 				}"
 				:max-height="0"
 				:validate-on="['blur']"
