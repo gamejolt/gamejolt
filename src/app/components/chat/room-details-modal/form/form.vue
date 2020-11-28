@@ -10,7 +10,7 @@
 				hide-label
 				optional
 			>
-				<app-form-control type="text" />
+				<app-form-control type="text" :placeholder="$gettext(`Room title`)" />
 			</app-form-group>
 
 			<app-form-button @click="onSubmit">
