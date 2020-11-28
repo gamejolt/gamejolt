@@ -33,6 +33,15 @@
 				</div>
 				<app-chat-user-list v-else :users="tab === 'chats' ? chats : friends" show-pm />
 			</template>
+			<template v-else-if="chat.connected">
+				<app-loading centered :label="$gettext(`Loading your chats...`)" />
+			</template>
+			<template v-else>
+				<app-illustration class="-no-chat" src="~img/ill/no-chat.svg">
+					<p><translate>The chat server went away...</translate></p>
+					<p><translate>It will be back in a few minutes.</translate></p>
+				</app-illustration>
+			</template>
 		</div>
 	</div>
 </template>
@@ -42,4 +51,12 @@
 
 #shell-chat-pane
 	padding-top: 20px
+
+.-no-chat
+	margin-left: 12px
+	margin-right: 12px
+
+	@media $media-md-up
+		margin-left: 24px
+		margin-right: 24px
 </style>
