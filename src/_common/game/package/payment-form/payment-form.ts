@@ -238,6 +238,8 @@ export default class FormGamePackagePayment extends BaseForm<any>
 		this.checkoutType = checkoutType;
 		this.calculatedAddressTax = false;
 		this.addressTaxAmount = 0;
+
+		this.getAddressTax();
 	}
 
 	async getAddressTax() {
