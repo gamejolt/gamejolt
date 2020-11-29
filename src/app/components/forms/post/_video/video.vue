@@ -32,9 +32,12 @@
 					>
 						<p class="help-block">
 							<translate>
-								Only short videos of 60 seconds or less are allowed at this time.
+								Only short videos between 3 and 60 seconds are allowed at this time.
 							</translate>
 							<br />
+							<translate>
+								Videos must be bigger than 200x200.
+							</translate>
 							<translate>
 								Video filetypes currently supported:
 							</translate>
@@ -114,13 +117,11 @@
 				/>
 			</template>
 			<template v-else-if="videoStatus === 'complete'">
-				<app-responsive-dimensions :ratio="16 / 9">
-					<app-video-player
-						class="-video-player"
-						:poster="videoPoster"
-						:manifests="videoManifestUrls"
-					/>
-				</app-responsive-dimensions>
+				<app-video-player
+					class="-video-player"
+					:media-item="videoMediaItem"
+					:manifests="videoManifestSources"
+				/>
 			</template>
 		</template>
 		<template v-else-if="videoProvider === FiresidePostVideo.PROVIDER_YOUTUBE">

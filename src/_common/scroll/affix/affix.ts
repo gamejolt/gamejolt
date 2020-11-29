@@ -115,6 +115,6 @@ export default class AppScrollAffix extends Vue {
 		const margin =
 			this.anchor === 'top' ? `-${offset}px 0px 10000px 0px` : `10000px 0px -${offset}px 0px`;
 
-		this.InviewConfig = new ScrollInviewConfig({ margin });
+		this.InviewConfig = new ScrollInviewConfig({ margin, emitsOn: 'full-overlap' });
 	}
 }

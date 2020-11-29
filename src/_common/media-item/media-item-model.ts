@@ -1,5 +1,6 @@
 import { LightboxMediaModel, LightboxMediaType } from '../lightbox/lightbox-helpers';
 import { Model } from '../model/model.service';
+import { constructStickerCounts, StickerCount } from '../sticker/sticker-count';
 
 export class MediaItem extends Model implements LightboxMediaModel {
 	static readonly TYPE_GAME_THUMBNAIL = 'game-thumbnail';
@@ -10,10 +11,8 @@ export class MediaItem extends Model implements LightboxMediaModel {
 
 	static readonly TYPE_FIRESIDE_POST_HEADER = 'fireside-post-header';
 	static readonly TYPE_FIRESIDE_POST_IMAGE = 'fireside-post-image';
-	static readonly TYPE_FIRESIDE_POST_ARTICLE_IMAGE = 'fireside-post-article-image';
 	static readonly TYPE_FIRESIDE_POST_VIDEO = 'fireside-post-video';
-
-	static readonly TYPE_VIDEO_POSTER = 'video-poster';
+	static readonly TYPE_FIRESIDE_POST_ARTICLE_IMAGE = 'fireside-post-article-image';
 
 	static readonly TYPE_FEATURED_HEADER = 'featured-header';
 
@@ -25,7 +24,9 @@ export class MediaItem extends Model implements LightboxMediaModel {
 
 	static readonly TYPE_CHAT_MESSAGE = 'chat-message';
 
-	static readonly TYPE_TRANSCODED = 'transcoded';
+	static readonly TYPE_VIDEO_POSTER = 'video-poster';
+	static readonly TYPE_VIDEO_MANIFEST = 'video-manifest';
+	static readonly TYPE_TRANSCODED_VIDEO = 'transcoded-video';
 
 	static readonly STATUS_ACTIVE = 'active';
 	static readonly STATUS_REMOVED = 'removed';
@@ -52,8 +53,17 @@ export class MediaItem extends Model implements LightboxMediaModel {
 	mediaserver_url!: string;
 	avg_img_color!: null | string;
 	img_has_transparency!: boolean;
+	sticker_counts: StickerCount[] = [];
 
 	post_id?: number;
+
+	constructor(data: any = {}) {
+		super(data);
+
+		if (data.sticker_counts) {
+			this.sticker_counts = constructStickerCounts(data.sticker_counts);
+		}
+	}
 
 	get croppedWidth() {
 		const crop = this.getCrop();

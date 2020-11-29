@@ -15,13 +15,20 @@
 			@change="onChangeDimensions"
 		>
 			<div class="-content-container">
-				<app-video-player-shaka-lazy
-					v-if="player"
+				<app-video
+					v-if="player && !GJ_IS_SSR"
 					class="-video"
+					:style="{ width }"
 					:player="player"
-					:autoplay="shouldAutoplay"
+					:sources="videoSources"
+					:should-play="shouldAutoplay"
+					track-playtime
 					allow-degraded-autoplay
 				/>
+
+				<div v-if="shouldShowLoading" class="-overlay -ui">
+					<app-loading no-color hide-label stationary />
+				</div>
 
 				<!--
 				This will show behind the video so that we can switch to it while
@@ -29,7 +36,7 @@
 				-->
 				<app-media-item-backdrop
 					class="-backdrop"
-					:style="{ height, width }"
+					:style="{ height, width, position: GJ_IS_SSR ? 'relative' : null }"
 					:media-item="mediaItem"
 				>
 					<app-img-responsive
@@ -42,9 +49,9 @@
 			</div>
 		</app-responsive-dimensions>
 
-		<div v-if="player" class="-bottom">
+		<div v-if="player" class="-bottom -ui" @click.stop>
 			<div class="-bottom-gradient">
-				<div class="-bottom-controls" @click.stop>
+				<div class="-bottom-controls">
 					<transition name="fade">
 						<div
 							v-if="shouldShowPlaybackControl"
@@ -109,8 +116,21 @@
 @import '../variables'
 @import '../../../../_common/video/player/common'
 
+$-zindex-backdrop = 0
+$-zindex-video = 1
+$-zindex-ui = 2
 $-controls-height = 48px
 $-controls-spacing = 8px
+
+.-ssr
+	display: flex
+	justify-content: center
+	align-items: center
+
+	> .jolticon
+		position: absolute
+		font-size: $jolticon-size * 10
+		filter: drop-shadow(0 0 6px $black)
 
 .-player
 	position: relative
@@ -134,12 +154,24 @@ $-controls-spacing = 8px
 	justify-content: center
 
 .-video
-	z-index: 1
+	z-index: $-zindex-video
+
+.-overlay
+	position: absolute
+	display: flex
+	justify-content: center
+	align-items: center
+	background-color: rgba($black, 0.5)
+	width: 100%
+	height: 100%
+
+.-ui
+	z-index: $-zindex-ui
 
 .-backdrop
 	position: absolute
 	top: 0
-	z-index: 0
+	z-index: $-zindex-backdrop
 
 .-img
 	max-height: 100%
@@ -191,7 +223,6 @@ $-controls-spacing = 8px
 	left: 0
 	right: 0
 	bottom: 0
-	z-index: 1
 
 	&-gradient
 		background-image: linear-gradient(to bottom, rgba($black, 0), rgba($black, 0.5))

@@ -67,7 +67,6 @@ class BooleanSetting extends SettingBase<boolean> {
 
 export const SettingThemeDark = new BooleanSetting('theme-dark', true);
 export const SettingThemeAlwaysOurs = new BooleanSetting('theme-always-ours', false);
-export const SettingAlwaysShowStickers = new BooleanSetting('always-show-stickers', false);
 export const SettingGameInstallDir = new StringSetting('game-install-dir', () => {
 	const path = require('path') as typeof nodePath;
 	const dataPath = nw.App.dataPath;
@@ -83,8 +82,11 @@ export const SettingRestrictedBrowsing = new BooleanSetting('restricted-browsing
 export const SettingBroadcastModal = new BooleanSetting('broadcast-modal', true);
 export const SettingAnimatedThumbnails = new BooleanSetting('animated-thumbnails', true);
 export const SettingFeedNotifications = new BooleanSetting('feed-notifications', true);
+// Video Players
 export const SettingVideoPlayerVolume = new NumberSetting('video-player-volume', 1);
+export const SettingVideoPlayerMuted = new BooleanSetting('video-player-muted', false);
 export const SettingVideoPlayerFeedVolume = new NumberSetting('video-player-feed-volume', 0);
+export const SettingVideoPlayerFeedMuted = new BooleanSetting('video-player-feed-muted', true);
 export const SettingVideoPlayerFeedAutoplay = new BooleanSetting(
 	'video-player-feed-autoplay',
 	true

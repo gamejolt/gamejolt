@@ -16,4 +16,5 @@ import AppCommunityThumbnailImg from '../thumbnail/img/img.vue';
 export default class AppCommunityCard extends Vue {
 	@Prop(propRequired(Community)) community!: Community;
 	@Prop(propOptional(Boolean, false)) elevate!: boolean;
+	@Prop(propOptional(Boolean, true)) allowEdit!: boolean;
 }

@@ -18,15 +18,13 @@
 				'align-items': itemAlignment,
 			}"
 		>
-			<div
+			<app-responsive-dimensions
 				ref="container"
-				v-app-observe-dimensions="computeSize"
 				class="media-item-container"
 				:class="{ '-zoomable': canFullscreenItem }"
-				:style="{
-					width: containerWidth,
-					height: containerHeight,
-				}"
+				:ratio="mediaItem ? mediaItem.width / mediaItem.height : null"
+				:max-height="maxHeight"
+				:max-width="maxWidth"
 			>
 				<app-media-item-backdrop
 					:class="{ '-backdrop': shouldShowPlaceholder }"
@@ -35,7 +33,8 @@
 				>
 					<template v-if="mediaItem">
 						<component
-							:is="hasLink && !isEditing ? 'a' : 'span'"
+							:is="hasLink && !isEditing ? 'a' : 'div'"
+							class="-img-container"
 							:href="hasLink && !isEditing ? href : undefined"
 							rel="nofollow noopener"
 							target="_blank"
@@ -76,7 +75,7 @@
 						</app-link-external>
 					</small>
 				</div>
-			</div>
+			</app-responsive-dimensions>
 			<span v-if="mediaItem && hasCaption" class="text-muted">
 				<em>{{ caption }}</em>
 			</span>
@@ -110,6 +109,10 @@
 // While the image is still loading, we show a dimmed background as a fallback for app-media-item-backdrop
 .-backdrop
 	change-bg('bg-offset')
+
+// Stretch out the img container so that img-responsive is able to fetch the proper quality item.
+.-img-container
+	width: 100%
 
 .media-item
 	width: 100%

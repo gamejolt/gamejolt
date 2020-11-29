@@ -5,104 +5,11 @@ import { FiresidePost } from '../fireside/post/post-model';
 import { Game } from '../game/game.model';
 import { Growls } from '../growls/growls.service';
 import { Model } from '../model/model.service';
+import { constructStickerCounts, StickerCount } from '../sticker/sticker-count';
 import { Subscription } from '../subscription/subscription.model';
 import { User } from '../user/user.model';
 import { CommentVideo } from './video/video-model';
 import { CommentVote } from './vote/vote-model';
-
-export async function fetchComment(id: number) {
-	try {
-		const payload = await Api.sendRequest(`/comments/get-comment/${id}`, null, {
-			detach: true,
-		});
-		return new Comment(payload.comment);
-	} catch (e) {
-		// Probably removed.
-	}
-}
-
-export type CommentBlockReason = 'commenter-blocked' | 'mentioned-blocked-user';
-
-export function getCommentBlockReason(comment: Comment): CommentBlockReason | false {
-	if (comment.user.is_blocked) {
-		return 'commenter-blocked';
-	}
-
-	const doc = ContentDocument.fromJson(comment.comment_content);
-	const mentions = doc.getMarks('mention');
-
-	for (const mention of mentions) {
-		const hydrated = doc.hydration.find(
-			i => i.source === mention.attrs.username && i.type === 'username'
-		);
-
-		if (hydrated?.data?.is_blocked) {
-			return 'mentioned-blocked-user';
-		}
-	}
-
-	return false;
-}
-
-export function getCommentModelResourceName(model: Model) {
-	if (model instanceof Game) {
-		return 'Game';
-	} else if (model instanceof User) {
-		return 'User';
-	} else if (model instanceof FiresidePost) {
-		return 'Fireside_Post';
-	}
-	throw new Error('Model cannot contain comments');
-}
-
-export function getCanCommentOnModel(model: Model) {
-	if (model instanceof User) {
-		return model.canComment;
-	} else if (model instanceof FiresidePost) {
-		return model.canComment;
-	} else if (model instanceof Game) {
-		return model.canComment;
-	}
-
-	return true;
-}
-
-/**
- * @param options scrollId is a timestamp that controls where fetching starts (posted_on)
- */
-export async function fetchComments(
-	resource: string,
-	resourceId: number,
-	sort: string,
-	options: { scrollId?: number | null; page?: number | null }
-) {
-	const { scrollId, page } = options;
-	let query = '';
-
-	if (scrollId) {
-		query = '?scroll_id=' + scrollId;
-	}
-
-	if (page) {
-		query = '?page=' + page;
-	}
-
-	return Api.sendRequest(`/comments/${resource}/${resourceId}/${sort}${query}`, {
-		detach: true,
-	});
-}
-
-export async function getCommentUrl(commentId: number): Promise<string> {
-	const response = await Api.sendRequest(`/comments/get-comment-url/${commentId}`, null, {
-		detach: true,
-	});
-
-	if (!response || response.error) {
-		return Promise.reject(response.error);
-	}
-
-	return response.url;
-}
 
 export class Comment extends Model {
 	static readonly STATUS_REMOVED = 0;
@@ -128,6 +35,7 @@ export class Comment extends Model {
 	subscription?: Subscription;
 	is_pinned!: boolean;
 	comment_content!: string;
+	sticker_counts: StickerCount[] = [];
 
 	isFollowPending = false;
 
@@ -152,6 +60,10 @@ export class Comment extends Model {
 
 		if (data.subscription) {
 			this.subscription = new Subscription(data.subscription);
+		}
+
+		if (data.sticker_counts) {
+			this.sticker_counts = constructStickerCounts(data.sticker_counts);
 		}
 	}
 
@@ -263,3 +175,101 @@ export class Comment extends Model {
 }
 
 Model.create(Comment);
+
+export async function fetchComment(id: number) {
+	try {
+		const payload = await Api.sendRequest(`/comments/get-comment/${id}`, null, {
+			detach: true,
+		});
+		return new Comment(payload.comment);
+	} catch (e) {
+		// Probably removed.
+	}
+}
+
+export type CommentBlockReason = 'commenter-blocked' | 'mentioned-blocked-user';
+
+export function getCommentBlockReason(comment: Comment): CommentBlockReason | false {
+	if (comment.user.is_blocked) {
+		return 'commenter-blocked';
+	}
+
+	const doc = ContentDocument.fromJson(comment.comment_content);
+	const mentions = doc.getMarks('mention');
+
+	for (const mention of mentions) {
+		const hydrated = doc.hydration.find(
+			i => i.source === mention.attrs.username && i.type === 'username'
+		);
+
+		if (hydrated?.data?.is_blocked) {
+			return 'mentioned-blocked-user';
+		}
+	}
+
+	return false;
+}
+
+export function getCommentModelResourceName(model: Model) {
+	if (model instanceof Game) {
+		return 'Game';
+	} else if (model instanceof User) {
+		return 'User';
+	} else if (model instanceof FiresidePost) {
+		return 'Fireside_Post';
+	}
+	throw new Error('Model cannot contain comments');
+}
+
+export function canCommentOnModel(model: Model, parentComment?: Comment) {
+	if (parentComment && !parentComment.user.canComment) {
+		return false;
+	}
+
+	if (model instanceof User) {
+		return model.canComment;
+	} else if (model instanceof FiresidePost) {
+		return model.canComment;
+	} else if (model instanceof Game) {
+		return model.canComment;
+	}
+
+	return true;
+}
+
+/**
+ * @param options scrollId is a timestamp that controls where fetching starts (posted_on)
+ */
+export async function fetchComments(
+	resource: string,
+	resourceId: number,
+	sort: string,
+	options: { scrollId?: number | null; page?: number | null }
+) {
+	const { scrollId, page } = options;
+	let query = '';
+
+	if (scrollId) {
+		query = '?scroll_id=' + scrollId;
+	}
+
+	if (page) {
+		query = '?page=' + page;
+	}
+
+	return Api.sendRequest(`/comments/${resource}/${resourceId}/${sort}${query}`, undefined, {
+		detach: true,
+	});
+}
+
+export async function getCommentUrl(commentId: number): Promise<string> {
+	const response = await Api.sendRequest(`/comments/get-comment-url/${commentId}`, null, {
+		detach: true,
+	});
+
+	if (!response || response.errors) {
+		return Promise.reject(response.errors);
+	}
+
+	return response.url;
+}

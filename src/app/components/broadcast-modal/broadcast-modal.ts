@@ -4,13 +4,15 @@ import AppContentViewer from '../../../_common/content/content-viewer/content-vi
 import { Environment } from '../../../_common/environment/environment.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { AppImgResponsive } from '../../../_common/img/responsive/responsive';
+import { MediaItem } from '../../../_common/media-item/media-item-model';
 import { BaseModal } from '../../../_common/modal/base';
 import AppModalTS from '../../../_common/modal/modal';
 import { AppResponsiveDimensions } from '../../../_common/responsive-dimensions/responsive-dimensions';
-import AppStickerTargetTS from '../../../_common/sticker/target/target';
+import { StickerTargetController } from '../../../_common/sticker/target/target-controller';
 import AppStickerTarget from '../../../_common/sticker/target/target.vue';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import AppVideoEmbed from '../../../_common/video/embed/embed.vue';
+import { getVideoPlayerFromSources } from '../../../_common/video/player/controller';
 import AppVideo from '../../../_common/video/video.vue';
 import AppEventItemControls from '../event-item/controls/controls.vue';
 import { AppCommentWidgetLazy } from '../lazy';
@@ -33,29 +35,20 @@ import AppPollVoting from '../poll/voting/voting.vue';
 export default class AppBroadcastModal extends BaseModal {
 	@Prop(propRequired(Array)) posts!: FiresidePost[];
 
-	// Will get assigned in created() immediately.
-	post: FiresidePost = null as any;
-	stickersVisible = false;
+	post: FiresidePost = this.posts[0];
+	stickerTargetController = new StickerTargetController(this.post);
 
 	readonly Environment = Environment;
 
 	$refs!: {
 		modal: AppModalTS;
-		stickerTarget: AppStickerTargetTS;
 	};
 
-	created() {
-		this.post = this.posts[0];
-	}
-
-	onPostStickersVisibilityChange(visible: boolean) {
-		this.stickersVisible = visible;
-		if (visible) {
-			this.$refs.modal.scrollTo(0);
-		}
-	}
-
-	onAllStickersHidden() {
-		this.stickersVisible = false;
+	getVideoController(item: MediaItem) {
+		const sources = {
+			mp4: item.mediaserver_url_mp4,
+			webm: item.mediaserver_url_webm,
+		};
+		return getVideoPlayerFromSources(sources, 'gif', item.mediaserver_url);
 	}
 }

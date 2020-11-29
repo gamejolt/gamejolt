@@ -132,9 +132,13 @@ export default class AppForumPostListItem extends Vue {
 		}
 
 		try {
-			const payload = await Api.sendRequest('/web/forums/posts/parent/' + this.post.id, {
-				noErrorRedirect: true,
-			});
+			const payload = await Api.sendRequest(
+				'/web/forums/posts/parent/' + this.post.id,
+				undefined,
+				{
+					noErrorRedirect: true,
+				}
+			);
 			this.parent = new ForumPost(payload.parent);
 			this.showingParent = true;
 		} catch (e) {

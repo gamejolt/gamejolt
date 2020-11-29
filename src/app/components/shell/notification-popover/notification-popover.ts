@@ -9,14 +9,14 @@ import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../store';
-import AppActivityFeed from '../../activity/feed/feed.vue';
 import { ActivityFeedView } from '../../activity/feed/view';
+import { AppActivityFeedLazy } from '../../lazy';
 
 @Component({
 	components: {
 		AppPopper,
 		AppLoading,
-		AppActivityFeed,
+		AppActivityFeed: AppActivityFeedLazy,
 	},
 	directives: {
 		AppTooltip,

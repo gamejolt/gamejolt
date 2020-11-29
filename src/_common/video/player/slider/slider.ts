@@ -1,9 +1,9 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { propOptional } from '../../../../utils/vue';
+import { propOptional, propRequired } from '../../../../utils/vue';
 import { Ruler } from '../../../ruler/ruler-service';
 import { AppTooltip } from '../../../tooltip/tooltip-directive';
-import { setVideoVolume, VideoPlayerController } from '../controller';
+import { ScrubberStage, scrubVideoVolume, VideoPlayerController } from '../controller';
 
 @Component({
 	directives: {
@@ -11,7 +11,7 @@ import { setVideoVolume, VideoPlayerController } from '../controller';
 	},
 })
 export default class AppVideoPlayerSlider extends Vue {
-	@Prop(propOptional(VideoPlayerController, null)) player!: VideoPlayerController | null;
+	@Prop(propRequired(VideoPlayerController)) player!: VideoPlayerController;
 	@Prop(propOptional(Boolean, false)) vertical!: boolean;
 
 	isDragging = false;
@@ -66,7 +66,7 @@ export default class AppVideoPlayerSlider extends Vue {
 	}
 
 	mounted() {
-		this.syncThumbOffsetToPlayer();
+		this._setThumbOffset('end');
 		this.initVariables();
 	}
 
@@ -76,10 +76,11 @@ export default class AppVideoPlayerSlider extends Vue {
 		this.sliderSize = this.vertical ? offset.height : offset.width;
 	}
 
-	onMouseDown(event: MouseEvent) {
+	async onMouseDown(event: MouseEvent) {
+		await this.$nextTick();
 		this.isDragging = true;
 		this.initVariables();
-		this._setThumbOffset(event);
+		this._setThumbOffset('start', event);
 
 		window.addEventListener('mouseup', this.onWindowMouseUp);
 		window.addEventListener('mousemove', this.onWindowMouseMove);
@@ -89,14 +90,15 @@ export default class AppVideoPlayerSlider extends Vue {
 		if (!this.isDragging) {
 			return;
 		}
-		this._setThumbOffset(event);
+		this._setThumbOffset('scrub', event);
 	}
 
 	private _onMouseUp(event: MouseEvent) {
 		if (!this.isDragging) {
-			this._setThumbOffset(event);
+			return;
 		}
 
+		this._setThumbOffset('end', event);
 		this.isDragging = false;
 	}
 
@@ -118,18 +120,12 @@ export default class AppVideoPlayerSlider extends Vue {
 		this.cleanupWindowListeners();
 	}
 
-	private syncThumbOffsetToPlayer() {
-		if (this.player) {
-			this._setThumbOffset();
-		}
-	}
-
-	private _setThumbOffset(event?: MouseEvent) {
+	private _setThumbOffset(stage: ScrubberStage, event?: MouseEvent) {
 		let mouseOffset = 0;
 
 		if (event) {
 			mouseOffset = this.vertical ? event.pageY : event.pageX;
-		} else if (this.player) {
+		} else {
 			mouseOffset = this.player.volume * this.sliderSize + this.sliderOffset;
 		}
 
@@ -151,10 +147,9 @@ export default class AppVideoPlayerSlider extends Vue {
 			this.percentFull = Math.abs(this.percentFull - scale);
 		}
 
-		if (this.player) {
-			// set the controller volume with a scale of 0 to 1
-			setVideoVolume(this.player, this.percentFull / scale);
-		}
+		const scaledPercent = this.percentFull / scale;
+		// set the controller volume with a scale of 0 to 1
+		scrubVideoVolume(this.player, scaledPercent, stage);
 	}
 
 	@Watch('player.volume')
@@ -164,6 +159,6 @@ export default class AppVideoPlayerSlider extends Vue {
 		}
 
 		// Set the thumbTop to match with the current volume level.
-		this.syncThumbOffsetToPlayer();
+		this._setThumbOffset('end');
 	}
 }

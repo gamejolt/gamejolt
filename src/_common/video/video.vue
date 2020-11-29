@@ -8,9 +8,19 @@
 			</div>
 		</template>
 		<template v-else>
-			<video :poster="poster" loop autoplay muted playsinline>
-				<source type="video/webm" :src="webm" />
-				<source type="video/mp4" :src="mp4" />
+			<video
+				:poster="player.poster"
+				:autoplay="shouldPlay"
+				:muted="player.context === 'gif'"
+				loop
+				playsinline
+			>
+				<source
+					v-for="manifest of player.manifests"
+					:key="manifest"
+					:type="getManifestType(manifest)"
+					:src="manifest"
+				/>
 			</video>
 		</template>
 	</div>
@@ -37,4 +47,5 @@
 	>>> video
 		display: block
 		width: 100%
+		height: auto
 </style>

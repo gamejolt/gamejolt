@@ -1,12 +1,15 @@
+<script lang="ts" src="./game"></script>
+
 <template>
 	<div>
 		<div class="game-cover">
-			<app-media-item-cover v-if="game.header_media_item" :media-item="game.header_media_item" />
+			<app-media-item-cover
+				v-if="game.header_media_item"
+				:media-item="game.header_media_item"
+			/>
 		</div>
 
-		<!--
-		If this game is in a bundle, show a back button.
-	-->
+		<!-- If this game is in a bundle, show a back button. -->
 		<template v-if="bundle">
 			<br />
 			<app-button
@@ -31,22 +34,18 @@
 			</h4>
 		</div>
 
-		<div class="alert full-bleed full-bleed-xs" v-if="showingThanks">
+		<div v-if="showingThanks" class="alert full-bleed full-bleed-xs">
 			<p><strong>Thanks for buying the game!</strong></p>
 			<p>
-				We've emailed you your key's URL (this page) just so you can always find it. You are able to
-				find your download(s) below. Any future updates to the game will be available here as well.
+				We've emailed you your key's URL (this page) just so you can always find it. You are
+				able to find your download(s) below. Any future updates to the game will be
+				available here as well.
 			</p>
 			<p>~ Warm thanks from both {{ game.developer.display_name }} and the Game Jolt team.</p>
-			<p class="text-muted text-right">
-				Stay Indie...
-				<em>or else!</em>
-				(ノಠ益ಠ)ノ彡┻━┻
-			</p>
 		</div>
 
 		<template v-if="!bundle">
-			<div class="alert full-bleed full-bleed-xs text-center" v-if="!app.user">
+			<div v-if="!app.user" class="alert full-bleed full-bleed-xs text-center">
 				<p>
 					<a :href="loginUrl">
 						<translate>
@@ -72,10 +71,10 @@
 		</app-fade-collapse>
 
 		<a
-			class="hidden-text-expander"
 			v-if="canToggleDescription"
+			class="hidden-text-expander"
 			@click="showingFullDescription = !showingFullDescription"
-		></a>
+		/>
 
 		<template v-if="!isClaimOnly">
 			<br v-if="customGameMessages.length" />
@@ -95,7 +94,7 @@
 				<translate>Releases</translate>
 			</h2>
 
-			<div class="packages-list" v-if="packagePayload && packagePayload.packages.length">
+			<div v-if="packagePayload && packagePayload.packages.length" class="packages-list">
 				<app-game-package-card
 					v-for="pkg of packagePayload.packages"
 					:key="pkg.id"
@@ -108,7 +107,7 @@
 				/>
 			</div>
 
-			<div class="alert alert-notice" v-else>
+			<div v-else class="alert alert-notice">
 				<translate>No releases yet.</translate>
 			</div>
 		</template>
@@ -116,8 +115,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .game-cover
 	margin-top: -($grid-gutter-width / 2)
@@ -137,5 +136,3 @@ h4
 	margin-top: 0
 	margin-bottom: $line-height-computed * 2
 </style>
-
-<script lang="ts" src="./game"></script>

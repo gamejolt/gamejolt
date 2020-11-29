@@ -109,7 +109,7 @@
 						/>
 					</div>
 
-					<app-button trans>
+					<app-button trans @click="searchKeys">
 						<translate>Search</translate>
 					</app-button>
 				</form>

@@ -24,7 +24,6 @@ import AppLoadingFade from '../../../../../_common/loading/fade/fade.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { Payload } from '../../../../../_common/payload/payload-service';
 import AppProgressBar from '../../../../../_common/progress/bar/bar.vue';
-import { AppResponsiveDimensions } from '../../../../../_common/responsive-dimensions/responsive-dimensions';
 import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
 import AppVideoPlayer from '../../../../../_common/video/player/player.vue';
 import AppVideoProcessingProgress from '../../../../../_common/video/processing-progress/processing-progress.vue';
@@ -55,7 +54,6 @@ export const enum VideoStatus {
 		AppVideoEmbed,
 		AppVideoPlayer,
 		AppVideoProcessingProgress,
-		AppResponsiveDimensions,
 	},
 	directives: {
 		AppFocusWhen,
@@ -140,12 +138,12 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		return video && video.provider === FiresidePostVideo.PROVIDER_GAMEJOLT ? video : null;
 	}
 
-	get videoManifestUrls() {
-		return this.uploadedVideo?.manifestUrls ?? [];
+	get videoManifestSources() {
+		return this.uploadedVideo?.manifestSources ?? [];
 	}
 
-	get videoPoster() {
-		return this.uploadedVideo?.posterUrl;
+	get videoMediaItem() {
+		return this.uploadedVideo?.posterMediaItem;
 	}
 
 	get shouldShowFormPlaceholder() {

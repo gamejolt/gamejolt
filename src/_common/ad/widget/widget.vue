@@ -1,3 +1,5 @@
+<script lang="ts" src="./widget"></script>
+
 <template>
 	<div
 		v-if="shouldShow"
@@ -14,8 +16,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .ad-widget
 	text-align: center
@@ -39,5 +41,3 @@
 		.-content
 			min-height: 275px
 </style>
-
-<script lang="ts" src="./widget"></script>

@@ -1,11 +1,10 @@
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Prop, ProvideReactive, Watch } from 'vue-property-decorator';
 import { RawLocation } from 'vue-router';
 import { propRequired } from '../../../../utils/vue';
 import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
-import AppEventItemControlsOverlay from '../../../../_common/event-item/controls-overlay/controls-overlay.vue';
 import { number } from '../../../../_common/filters/number';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import {
@@ -19,16 +18,16 @@ import { createLightbox, LightboxMediaSource } from '../../../../_common/lightbo
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/backdrop.vue';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppMediaItemPost from '../../../../_common/media-item/post/post.vue';
-import {
-	AppResponsiveDimensions,
-	AppResponsiveDimensionsChangeEvent,
-} from '../../../../_common/responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
-import { SettingAlwaysShowStickers } from '../../../../_common/settings/settings.service';
 import AppSketchfabEmbed from '../../../../_common/sketchfab/embed/embed.vue';
-import AppStickerTargetTS from '../../../../_common/sticker/target/target';
+import AppStickerControlsOverlay from '../../../../_common/sticker/controls-overlay/controls-overlay.vue';
+import AppStickerReactions from '../../../../_common/sticker/reactions/reactions.vue';
+import {
+	StickerTargetController,
+	StickerTargetParentControllerKey,
+} from '../../../../_common/sticker/target/target-controller';
 import AppStickerTarget from '../../../../_common/sticker/target/target.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
@@ -50,14 +49,13 @@ import AppPollVoting from '../../../components/poll/voting/voting.vue';
 @Component({
 	components: {
 		AppTimeAgo,
-		AppResponsiveDimensions,
 		AppImgResponsive,
 		AppVideo,
 		AppVideoPlayer,
 		AppVideoEmbed,
 		AppSketchfabEmbed,
 		AppEventItemControls,
-		AppEventItemControlsOverlay,
+		AppStickerControlsOverlay,
 		AppPollVoting,
 		AppAdWidget,
 		AppCommunityPill,
@@ -67,6 +65,7 @@ import AppPollVoting from '../../../components/poll/voting/voting.vue';
 		AppUserFollowWidget,
 		AppGameListItem,
 		AppStickerTarget,
+		AppStickerReactions,
 		AppMediaItemBackdrop,
 		AppMediaItemPost,
 		AppScrollScroller,
@@ -84,18 +83,20 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 
 	@AppState user!: AppStore['user'];
 
-	stickersVisible = false;
+	@ProvideReactive(StickerTargetParentControllerKey)
+	stickerTargetController = new StickerTargetController(this.post);
+
 	activeImageIndex = 0;
 	videoStartTime = 0;
-	private lightbox?: AppLightboxTS;
 	isPlayerFilled = false;
-
-	$refs!: {
-		stickerTarget: AppStickerTargetTS;
-	};
+	private lightbox?: AppLightboxTS;
 
 	readonly Screen = Screen;
 	readonly number = number;
+
+	$refs!: {
+		'sticker-scroll': HTMLDivElement;
+	};
 
 	get displayUser() {
 		return this.post.displayUser;
@@ -119,27 +120,10 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 		return this.post.videos[0] ?? null;
 	}
 
-	get deviceMaxHeight() {
-		if (GJ_IS_SSR) {
-			return;
-		}
-
-		if (Screen.isMobile) {
-			return window.screen.height - 150;
-		}
-		return Screen.height - 150;
-	}
-
-	onPlayerSizeChange(event: AppResponsiveDimensionsChangeEvent) {
-		this.isPlayerFilled = event.isFilled;
-	}
-
 	created() {
 		if (GJ_IS_SSR) {
 			return;
 		}
-
-		this.stickersVisible = SettingAlwaysShowStickers.get();
 
 		if (typeof this.$route.query.t === 'string') {
 			if (this.video) {
@@ -207,18 +191,6 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 		});
 	}
 
-	onPostStickersVisibilityChange(visible: boolean) {
-		this.stickersVisible = visible;
-		// Scroll to the sticker target to show stickers.
-		if (visible) {
-			Scroll.to(this.$refs.stickerTarget.$el as HTMLElement, { preventDirections: ['down'] });
-		}
-	}
-
-	onAllStickersHidden() {
-		this.stickersVisible = false;
-	}
-
 	onClickFullscreen(mediaItem: MediaItem) {
 		this.activeImageIndex = this.post.media.findIndex(i => i.id === mediaItem.id);
 		this.createLightbox();
@@ -228,6 +200,10 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 		if (this.video) {
 			$viewPostVideo(this.video);
 		}
+	}
+
+	scrollToStickers() {
+		Scroll.to(this.$refs['sticker-scroll'], { preventDirections: ['down'] });
 	}
 
 	private createLightbox() {
@@ -243,5 +219,10 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 		}
 		this.lightbox.close();
 		this.lightbox = undefined;
+	}
+
+	@Watch('post.id')
+	onPostIdChange() {
+		this.stickerTargetController = new StickerTargetController(this.post);
 	}
 }

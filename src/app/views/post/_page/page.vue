@@ -6,32 +6,17 @@
 			<template v-if="video">
 				<div class="full-bleed-xs">
 					<template v-if="video.provider === 'gamejolt'">
-						<app-responsive-dimensions
+						<app-video-player
 							v-if="!video.is_processing && video.posterMediaItem"
-							class="-responsive"
-							:ratio="video.posterMediaItem.width / video.posterMediaItem.height"
-							:max-width="video.posterMediaItem.width"
-							:max-height="deviceMaxHeight"
-							@change="onPlayerSizeChange"
-						>
-							<app-video-player
-								:class="{ '-filled': Screen.isXs && isPlayerFilled }"
-								context="page"
-								:poster="video.posterUrl"
-								:manifests="video.manifestUrls"
-								:start-time="videoStartTime"
-								autoplay
-								@play="onVideoPlay"
-							/>
-							<div class="-video-stats">
-								<span v-app-tooltip.touchable="$gettext(`Plays`)">
-									<app-jolticon icon="play" />
-									<span class="-video-stats-label">
-										{{ number(video.view_count) }}
-									</span>
-								</span>
-							</div>
-						</app-responsive-dimensions>
+							context="page"
+							:media-item="video.posterMediaItem"
+							:manifests="video.manifestSources"
+							:view-count="video.view_count"
+							:start-time="videoStartTime"
+							autoplay
+							show-video-stats
+							@play="onVideoPlay"
+						/>
 						<template v-else>
 							<app-video-processing-progress
 								:post="post"
@@ -96,12 +81,23 @@
 							</div>
 						</div>
 
-						<div v-if="post.hasMedia" class="-media-items">
+						<!--
+						Indicates where sticker placements may begin for scrolling when they show
+						stickers.
+						-->
+						<div ref="sticker-scroll" />
+
+						<!--
+						Key the media-item container here so that we don't reuse components going from one post page to another,
+						allowing the components to properly fetch the stickers that are assigned to them.
+						-->
+						<div v-if="post.hasMedia" :key="`media-${post.id}`" class="-media-items">
 							<div v-for="item of post.media" :key="item.id">
 								<app-media-item-post
 									class="-media-item"
 									:media-item="item"
 									is-active
+									can-place-sticker
 									@fullscreen="onClickFullscreen"
 								/>
 								<br />
@@ -133,11 +129,12 @@
 							</span>
 						</div>
 
+						<!--
+						Key the sticker target so it doesn't get reused if going from one post page to another one.
+						-->
 						<app-sticker-target
-							ref="stickerTarget"
-							:stickers="post.stickers"
-							:show-stickers="stickersVisible"
-							@hide-all="onAllStickersHidden"
+							:key="`lead-${post.id}`"
+							:controller="stickerTargetController"
 						>
 							<app-content-viewer :source="post.lead_content" />
 						</app-sticker-target>
@@ -156,13 +153,21 @@
 						</div>
 					</div>
 
-					<app-event-item-controls-overlay v-if="post.hasPoll">
+					<app-sticker-controls-overlay v-if="post.hasPoll">
 						<app-poll-voting :poll="post.poll" :game="post.game" :user="post.user" />
 
 						<br />
-					</app-event-item-controls-overlay>
+					</app-sticker-controls-overlay>
 
-					<app-event-item-controls-overlay v-if="communities.length">
+					<app-sticker-controls-overlay
+						v-if="communities.length || post.sticker_counts.length"
+					>
+						<app-sticker-reactions
+							v-if="post.sticker_counts.length"
+							:controller="stickerTargetController"
+							@show="scrollToStickers()"
+						/>
+
 						<app-scroll-scroller class="-communities" horizontal thin>
 							<app-community-pill
 								v-for="postCommunity of communities"
@@ -185,17 +190,16 @@
 							</div>
 						</template>
 
-						<br />
-					</app-event-item-controls-overlay>
+						<div class="-controls-spacing" />
+					</app-sticker-controls-overlay>
 
 					<app-event-item-controls
 						:post="post"
 						should-show-follow
-						:show-stickers="stickersVisible"
 						event-label="page"
 						@post-remove="onPostRemoved"
 						@post-publish="onPostPublished"
-						@post-stickers-visibility-change="onPostStickersVisibilityChange"
+						@sticker="scrollToStickers()"
 					/>
 
 					<br />
@@ -216,6 +220,12 @@
 @import '../variables'
 @import '../common'
 
+.-controls-spacing
+	padding-bottom: $-controls-spacing-xs
+
+	@media $media-sm-up
+		padding-bottom: $-controls-spacing
+
 .-row
 	display: flex
 
@@ -234,28 +244,6 @@
 			margin: 0 $grid-gutter-width
 			flex-shrink: 1
 			flex-basis: $-center-col-max-width
-
-.-responsive
-	margin: 0 auto 8px + $line-height-computed
-
-.-filled
-	border-radius: 0 !important
-
-.-video-stats
-	display: flex
-	justify-content: flex-end
-	margin-top: 8px
-	font-weight: bold
-
-	> span
-		display: inline-flex
-		align-items: center
-
-		@media $media-xs
-			margin-right: ($grid-gutter-width-xs / 2)
-
-	&-label
-		margin-left: 4px
 
 .-game-badge
 	margin-top: $-spacing
