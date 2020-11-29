@@ -182,3 +182,46 @@
 	font-size: $font-size-tiny
 	cursor: default
 	user-select: none
+
+.-invite
+	display: flex
+	padding: 12px
+	change-bg('bg')
+	max-width: 500px
+
+.-invite-group-bubble
+	border-radius: 50%
+	width: 32px
+	height: 32px
+	img-circle()
+	display: inline-flex
+	align-items: center
+	justify-content: center
+	vertical-align: middle
+	background-color: var(--theme-backlight)
+	margin-right: 12px
+	flex-shrink: 0
+
+	.jolticon
+		color: var(--theme-backlight-fg) !important
+
+	&-loading
+		background-color: var(--theme-bg-offset)
+
+		.jolticon
+			color: var(--theme-fg-muted) !important
+
+	&-go
+		cursor: pointer
+
+.-invite-title
+	height: $line-height-computed
+
+	&-go
+		cursor: pointer
+
+.-invite-title-placeholder
+	lazy-placeholder-block()
+	margin-bottom: 4px
+	width: 150px
+	height: $line-height-computed - 4

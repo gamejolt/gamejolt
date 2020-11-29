@@ -747,3 +747,12 @@ export function updateChatRoomLastMessageOn(chat: ChatClient, message: ChatMessa
 		groupRoom.last_message_on = time;
 	}
 }
+
+export function fetchInviteInfo(chat: ChatClient, message: ChatMessage) {
+	return new Promise<any>((resolve, reject) => {
+		chat.userChannel
+			?.push('invite_info', { message_id: message.id })
+			.receive('ok', response => resolve(response))
+			.receive('error', response => reject(response));
+	});
+}
