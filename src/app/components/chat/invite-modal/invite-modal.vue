@@ -67,7 +67,7 @@
 						<translate>Create Group</translate>
 					</template>
 					<template v-else>
-						<translate>Add To Group</translate>
+						<translate>Invite To Group</translate>
 					</template>
 				</app-button>
 			</div>

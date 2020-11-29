@@ -22,7 +22,7 @@
 									v-app-tooltip="
 										room.isPmRoom
 											? $gettext('Create Group Chat')
-											: $gettext('Add Friends')
+											: $gettext('Invite Friends')
 									"
 									class="anim-fade-in"
 									circle
