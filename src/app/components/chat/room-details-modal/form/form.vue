@@ -10,10 +10,17 @@
 				hide-label
 				optional
 			>
-				<app-form-control type="text" :placeholder="$gettext(`Room title`)" />
+				<app-form-control
+					type="text"
+					:rules="{ min: titleMinLength, max: titleMaxLength }"
+					:validate-on="['blur']"
+					:placeholder="$gettext(`Empty group title`)"
+				/>
+
+				<app-form-control-errors />
 			</app-form-group>
 
-			<app-form-button @click="onSubmit">
+			<app-form-button :disabled="!valid" @click="onSubmit">
 				<translate>Rename</translate>
 			</app-form-button>
 		</div>

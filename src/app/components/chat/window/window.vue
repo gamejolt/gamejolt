@@ -99,8 +99,8 @@
 
 							<app-button
 								v-if="!room.isPmRoom && isOwner"
-								v-app-tooltip="$gettext('Edit Title')"
-								class="-header-control anim-fade-in"
+								v-app-tooltip="$gettext('Edit Group')"
+								class="-header-control anim-fade-in-right"
 								circle
 								trans
 								icon="edit"

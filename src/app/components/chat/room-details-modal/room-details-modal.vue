@@ -10,7 +10,7 @@
 
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<translate>Rename Room</translate>
+				<translate>Edit group details</translate>
 			</h2>
 		</div>
 
