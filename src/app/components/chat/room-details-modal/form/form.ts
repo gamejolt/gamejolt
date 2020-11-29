@@ -14,7 +14,7 @@ export default class FormRoomDetails extends BaseForm<FormModel> implements Form
 	titleMaxLength = 50;
 
 	get loadUrl() {
-		return `/web/chat/rooms/room-details`;
+		return `/web/chat/rooms/room-edit`;
 	}
 
 	onLoad($payload: any) {
