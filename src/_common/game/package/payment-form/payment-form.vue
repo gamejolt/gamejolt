@@ -1,10 +1,12 @@
+<script lang="ts" src="./payment-form"></script>
+
 <template>
-	<app-form name="gamePackagePayment" ref="form">
+	<app-form ref="form" name="gamePackagePayment">
 		<template v-if="checkoutStep === 'primary'">
-			<div class="alert full-bleed" v-if="partner">
+			<div v-if="partner" class="alert full-bleed">
 				<span v-translate="{ user: partner.display_name }">
-					You've accessed this game through a Game Jolt Partner link! A percentage of this sale will
-					go to %{ user }.
+					You've accessed this game through a Game Jolt Partner link! A percentage of this
+					sale will go to %{ user }.
 				</span>
 				<router-link class="link-help" :to="{ name: 'landing.partners' }" target="_blank">
 					<translate>Learn more about the Game Jolt Partner system.</translate>
@@ -23,14 +25,15 @@
 				</template>
 				<template v-else>
 					<span v-translate="{ amount: formattedAmount }">
-						This developer suggests paying %{ amount }, but you're able to pay what you want!
+						This developer suggests paying %{ amount }, but you're able to pay what you
+						want!
 					</span>
 				</template>
 			</p>
 			<p v-else>
 				<span v-translate="{ amount: formattedAmount }">
-					The developer has set the price of this game to %{ amount }, but you're able to support
-					them by giving more!
+					The developer has set the price of this game to %{ amount }, but you're able to
+					support them by giving more!
 				</span>
 			</p>
 
@@ -47,7 +50,11 @@
 						row: Screen.isXs,
 					}"
 				>
-					<app-form-group name="amount" :label="$gettext(`Name your price`)" label-class="col-sm-4">
+					<app-form-group
+						name="amount"
+						:label="$gettext(`Name your price`)"
+						label-class="col-sm-4"
+					>
 						<div class="col-sm-8">
 							<span class="amount-input">
 								<span class="amount-input-currency">$</span>
@@ -60,7 +67,7 @@
 								/>
 							</span>
 
-							<span class="text-muted" v-if="!isNameYourPrice">
+							<span v-if="!isNameYourPrice" class="text-muted">
 								<translate :translate-params="{ amount: formattedAmount }">
 									(%{ amount } or more)
 								</translate>
@@ -140,7 +147,13 @@
 								If they don't have enough funds in their wallet for the order, we give 'em a message.
 							-->
 								<app-expand :when="valid">
-									<div v-if="app.user && walletBalance > 0 && hasSufficientWalletFunds">
+									<div
+										v-if="
+											app.user &&
+											walletBalance > 0 &&
+											hasSufficientWalletFunds
+										"
+									>
 										<span
 											class="saved-card"
 											:class="{ disabled: isLoadingMethods }"
@@ -148,10 +161,12 @@
 										>
 											<div class="saved-card-avatar">
 												<img
+													v-app-tooltip="
+														`${app.user.display_name} (@${app.user.username})`
+													"
 													:src="app.user.img_avatar"
 													class="img-responsive"
 													alt=""
-													v-app-tooltip="`${app.user.display_name} (@${app.user.username})`"
 												/>
 											</div>
 											<div class="saved-card-content">
@@ -181,10 +196,12 @@
 												>
 													<div class="saved-card-avatar">
 														<img
+															v-app-tooltip="
+																`${app.user.display_name} (@${app.user.username})`
+															"
 															class="img-responsive"
 															:src="app.user.img_avatar"
 															alt=""
-															v-app-tooltip="`${app.user.display_name} (@${app.user.username})`"
 														/>
 													</div>
 													<div class="saved-card-content">
@@ -199,10 +216,16 @@
 															{{ cards[0].last4 }}
 														</span>
 														<small
+															v-if="
+																cardsTax[cards[0].id] &&
+																cardsTax[cards[0].id].amount > 0
+															"
 															class="text-muted"
-															v-if="cardsTax[cards[0].id] && cardsTax[cards[0].id].amount > 0"
 														>
-															+{{ cardsTax[cards[0].id].amount | currency }}
+															+{{
+																cardsTax[cards[0].id].amount
+																	| currency
+															}}
 															<translate>tax</translate>
 														</small>
 													</div>
@@ -215,17 +238,20 @@
 												popover-class="fill-darkest"
 											>
 												<span
-													:class="{ disabled: isLoadingMethods }"
 													v-app-tooltip="$gettext('Select another card')"
+													:class="{ disabled: isLoadingMethods }"
 												>
 													<app-jolticon icon="chevron-down" />
 												</span>
 
-												<div slot="popover" class="list-group list-group-dark">
+												<div
+													slot="popover"
+													class="list-group list-group-dark"
+												>
 													<a
-														class="list-group-item"
 														v-for="card of cards"
 														:key="card.id"
+														class="list-group-item"
 														@click="checkoutSavedCard(card)"
 													>
 														<span class="tag">
@@ -234,10 +260,15 @@
 														****
 														{{ card.last4 }}
 														<small
+															v-if="
+																cardsTax[card.id] &&
+																cardsTax[card.id].amount > 0
+															"
 															class="text-muted"
-															v-if="cardsTax[card.id] && cardsTax[card.id].amount > 0"
 														>
-															+{{ cardsTax[card.id].amount | currency }}
+															+{{
+																cardsTax[card.id].amount | currency
+															}}
 															<translate>tax</translate>
 														</small>
 													</a>
@@ -269,12 +300,18 @@
 						</div>
 					</app-expand>
 
-					<div class="row" v-if="isNameYourPrice && build">
+					<div v-if="isNameYourPrice && build" class="row">
 						<div class="col-sm-offset-4 col-sm-8">
 							<a class="small" @click="$emit('skip')">
-								<translate v-if="isDownloading">No thanks, take me to the download.</translate>
-								<translate v-else-if="isInstalling">No thanks, just install it.</translate>
-								<translate v-else-if="isPlaying">No thanks, take me to the game.</translate>
+								<translate v-if="isDownloading">
+									No thanks, take me to the download.
+								</translate>
+								<translate v-else-if="isInstalling">
+									No thanks, just install it.
+								</translate>
+								<translate v-else-if="isPlaying">
+									No thanks, take me to the game.
+								</translate>
 							</a>
 						</div>
 					</div>
@@ -283,7 +320,8 @@
 					<div class="alert full-bleed">
 						<app-jolticon icon="info-circle" />
 						<translate>
-							Because of international tax laws, we are required to collect this information.
+							Because of international tax laws, we are required to collect this
+							information.
 						</translate>
 					</div>
 
@@ -291,7 +329,11 @@
 						<div class="col-sm-6">
 							<app-form-group name="country" :label="$gettext('Country')">
 								<app-form-control-select>
-									<option v-for="country of countries" :key="country.code" :value="country.code">
+									<option
+										v-for="country of countries"
+										:key="country.code"
+										:value="country.code"
+									>
 										{{ country.name }}
 									</option>
 								</app-form-control-select>
@@ -307,11 +349,22 @@
 
 					<div class="row">
 						<div class="col-sm-6">
-							<app-form-group name="region" :label="$gettext('State/Province/County')">
-								<app-form-control type="text" v-if="!regions" :validate-on="['blur']" />
+							<app-form-group
+								name="region"
+								:label="$gettext('State/Province/County')"
+							>
+								<app-form-control
+									v-if="!regions"
+									type="text"
+									:validate-on="['blur']"
+								/>
 
 								<app-form-control-select v-else>
-									<option v-for="region of regions" :key="region.code" :value="region.code">
+									<option
+										v-for="region of regions"
+										:key="region.code"
+										:value="region.code"
+									>
 										{{ region.name }}
 									</option>
 								</app-form-control-select>
@@ -339,7 +392,11 @@
 						</div>
 
 						<div v-if="checkoutType === 'paypal'">
-							<app-form-button :solid="false" :disabled="!valid" @before-submit="checkoutPaypal()">
+							<app-form-button
+								:solid="false"
+								:disabled="!valid"
+								@before-submit="checkoutPaypal()"
+							>
 								<translate>Proceed to PayPal</translate>
 							</app-form-button>
 						</div>
@@ -350,30 +407,39 @@
 								:label="$gettext('Calculating tax...')"
 							/>
 
-							<p v-if="calculatedAddressTax && addressTaxAmount > 0" class="anim-fade-in small">
+							<p
+								v-if="calculatedAddressTax && addressTaxAmount > 0"
+								class="anim-fade-in small"
+							>
 								+{{ addressTaxAmount | currency }}
 								<translate>tax</translate>
 								<app-jolticon
+									v-app-tooltip.touchable="
+										$gettext(
+											`We are required to collect taxes on orders for certain regions.`
+										)
+									"
 									class="text-muted"
 									icon="help-circle"
-									v-app-tooltip.touchable="
-										$gettext(`We are required to collect taxes on orders for certain regions.`)
-									"
 								/>
 							</p>
 
 							<div v-if="!hasSufficientWalletFunds" class="alert">
-								<translate>You do not have enough funds in your Wallet for this order.</translate>
+								<translate>
+									You do not have enough funds in your Wallet for this order.
+								</translate>
 							</div>
 
 							<app-button
 								primary
-								:disabled="!valid || !calculatedAddressTax || !hasSufficientWalletFunds"
+								:disabled="
+									!valid || !calculatedAddressTax || !hasSufficientWalletFunds
+								"
 								@click="checkoutWallet"
 							>
 								<translate>Buy Using Wallet</translate>
 								<small v-if="calculatedAddressTax">
-									{{ (formModel.amount + addressTaxAmount) | currency }}
+									{{ (formModel.amount * 100 + addressTaxAmount) | currency }}
 								</small>
 							</app-button>
 						</div>
@@ -385,5 +451,3 @@
 </template>
 
 <style lang="stylus" src="./payment-form.styl" scoped></style>
-
-<script lang="ts" src="./payment-form"></script>
