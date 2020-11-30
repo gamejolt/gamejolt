@@ -17,6 +17,7 @@ export class ChatNotificationGrowl {
 
 			title: `💬 ${message.user.display_name} (@${message.user.username})`,
 			message: this.generateSystemMessage(message),
+			icon: message.user.img_avatar,
 
 			component: AppChatNotificationGrowl,
 			props: { chat, message },
