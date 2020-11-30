@@ -1,25 +1,33 @@
+<script lang="ts" src="./notification-growl"></script>
+
 <template>
 	<div class="-container">
 		<app-user-avatar class="-avatar" :user="message.user" />
 		<div class="-content">
 			<h4 class="-header">
-				<app-jolticon icon="user-messages" />
-				{{ message.user.display_name }}
+				<app-jolticon :icon="icon" />
+				{{ message.user.display_name }} (@{{ message.user.username }})
 			</h4>
 
-			<app-fade-collapse :collapse-height="100">
+			<app-fade-collapse
+				v-if="message.type === ChatMessageType.MESSAGE"
+				:collapse-height="100"
+			>
 				<app-content-viewer :source="message.content" />
 			</app-fade-collapse>
+			<span v-else-if="message.type === ChatMessageType.INVITE">
+				<translate>You received an invite to join a Chat Group.</translate>
+			</span>
 
 			<!-- Block any interaction with the content inside the viewer. -->
-			<div class="-content-overlay"></div>
+			<div class="-content-overlay" />
 		</div>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .-container
 	display: flex
@@ -45,7 +53,4 @@
 .-header
 	text-overflow()
 	margin-bottom: 8px
-
 </style>
-
-<script lang="ts" src="./notification-growl"></script>

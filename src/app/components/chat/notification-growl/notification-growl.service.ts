@@ -30,7 +30,7 @@ export class ChatNotificationGrowl {
 				return `💬 ${message.user.display_name} (@${message.user.username})`;
 
 			case ChatMessageType.INVITE:
-				return '👥 ' + Translate.$gettext(`You received a chat group invite`);
+				return '👥 ' + Translate.$gettext(`You received a Chat Group Invite`);
 		}
 
 		throw new Error(
