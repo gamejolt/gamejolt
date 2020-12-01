@@ -3,9 +3,11 @@ import { LocationRedirect } from '../../../utils/router';
 import { Api } from '../../../_common/api/api.service';
 import AppContactLink from '../../../_common/contact-link/contact-link.vue';
 import { Growls } from '../../../_common/growls/growls.service';
+import AppIllustration from '../../../_common/illustration/illustration.vue';
 import AppLinkHelp from '../../../_common/link/help/help.vue';
 import { Navigate } from '../../../_common/navigate/navigate.service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { Screen } from '../../../_common/screen/screen-service';
 import { AppMutation, AppState, appStore, AppStore } from '../../../_common/store/app-store';
 import { AppThemeSvg } from '../../../_common/theme/svg/svg';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
@@ -18,6 +20,7 @@ import { UserTimeout } from '../../../_common/user/timeout/timeout.model';
 		AppTimeAgo,
 		AppLinkHelp,
 		AppContactLink,
+		AppIllustration,
 	},
 })
 @RouteResolver({
@@ -67,6 +70,13 @@ export default class RouteTimeout extends BaseRouteComponent {
 		}
 
 		return reasons.join('\n---\n');
+	}
+
+	get logoScale() {
+		if (Screen.isSm || Screen.isXs) {
+			return 1;
+		}
+		return 2;
 	}
 
 	mounted() {
