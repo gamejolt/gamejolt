@@ -1,3 +1,4 @@
+import { Translate } from '../../../_common/translate/translate.service';
 import { ChatClient } from './client';
 import { ChatUser } from './user';
 
@@ -43,11 +44,19 @@ export class ChatRoom {
 }
 
 export function getChatRoomTitle(room: ChatRoom, chat: ChatClient) {
-	return (
-		room.title ||
-		room.members
-			.filter(member => member.id !== chat.currentUser?.id)
-			.map(member => member.display_name)
-			.join(', ')
-	);
+	if (room.title) {
+		return room.title;
+	}
+
+	// When no title is set and no/one member is in the chat, set the title
+	// to "Group Chat" instead of just the single name.
+	if (!room.members || room.members.length === 1) {
+		return Translate.$gettext(`Group Chat`);
+	}
+
+	// No room title, return a comma separated list of members.
+	return room.members
+		.filter(member => member.id !== chat.currentUser?.id)
+		.map(member => member.display_name)
+		.join(', ');
 }
