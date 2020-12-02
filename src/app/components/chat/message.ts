@@ -1,14 +1,14 @@
 import { ChatUser } from './user';
 
-export type ChatMessageType = 0 | 1;
+export enum ChatMessageType {
+	MESSAGE = 1,
+	INVITE,
+}
 
 export const CHAT_MESSAGE_MAX_CONTENT_LENGTH = 1000;
 export const TIMEOUT_CONSIDER_QUEUED = 1500; // Time in ms until a queued message should be displayed as such.
 
 export class ChatMessage {
-	static readonly TypeNormal = 0;
-	static readonly TypeSystem = 1;
-
 	id!: number;
 	type!: ChatMessageType;
 	user_id!: number;

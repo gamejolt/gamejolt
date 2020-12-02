@@ -67,7 +67,7 @@
 						<translate>Create Group</translate>
 					</template>
 					<template v-else>
-						<translate>Add To Group</translate>
+						<translate>Invite To Group</translate>
 					</template>
 				</app-button>
 			</div>
@@ -108,7 +108,7 @@ $-height = 40px
 	color: var(--theme-bg-subtle)
 
 	&.-active
-		color: var(--theme-highlight)
+		color: var(--theme-bi-bg)
 
 .-avatar
 	flex: none

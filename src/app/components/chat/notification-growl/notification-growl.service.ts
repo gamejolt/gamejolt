@@ -1,7 +1,8 @@
 import { ContentDocument } from '../../../../_common/content/content-document';
 import { Growls } from '../../../../_common/growls/growls.service';
+import { Translate } from '../../../../_common/translate/translate.service';
 import { ChatClient, enterChatRoom, isInChatRoom } from '../client';
-import { ChatMessage } from '../message';
+import { ChatMessage, ChatMessageType } from '../message';
 import AppChatNotificationGrowl from './notification-growl.vue';
 
 export class ChatNotificationGrowl {
@@ -15,13 +16,27 @@ export class ChatNotificationGrowl {
 			onclick: () => enterChatRoom(chat, message.room_id),
 			system,
 
-			title: `💬 ${message.user.display_name} (@${message.user.username})`,
+			title: this.generateTitle(message),
 			message: this.generateSystemMessage(message),
 			icon: message.user.img_avatar,
 
 			component: AppChatNotificationGrowl,
 			props: { chat, message },
 		});
+	}
+
+	private static generateTitle(message: ChatMessage): string {
+		switch (message.type) {
+			case ChatMessageType.MESSAGE:
+				return `💬 ${message.user.display_name} (@${message.user.username})`;
+
+			case ChatMessageType.INVITE:
+				return '👥 ' + Translate.$gettext(`You received a Chat Group Invite`);
+		}
+
+		throw new Error(
+			'Chat message type ' + message.type + ' not implemented for notification title.'
+		);
 	}
 
 	/**
@@ -36,6 +51,10 @@ export class ChatNotificationGrowl {
 	 *  - Replace gj emoji with :<emoji>:
 	 */
 	private static generateSystemMessage(message: ChatMessage): string {
+		if (message.type === ChatMessageType.INVITE) {
+			return this.generateSystemInviteMessage(message);
+		}
+
 		let systemMessage = '';
 
 		const doc = ContentDocument.fromJson(message.content);
@@ -113,5 +132,18 @@ export class ChatNotificationGrowl {
 		}
 
 		return systemMessage;
+	}
+
+	/**
+	 * Generates a short predefined message for when a user gets invited to a group chat.
+	 */
+	private static generateSystemInviteMessage(message: ChatMessage): string {
+		return Translate.$gettextInterpolate(
+			`%{ displayName } (@%{ username }) invited you to join a group chat.`,
+			{
+				displayName: message.user.display_name,
+				username: message.user.username,
+			}
+		);
 	}
 }

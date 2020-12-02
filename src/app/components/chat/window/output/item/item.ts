@@ -13,14 +13,17 @@ import { Theme } from '../../../../../../_common/theme/theme.model';
 import { ThemeState, ThemeStore } from '../../../../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import {
+	acceptInvite,
 	ChatClient,
 	ChatKey,
+	enterChatRoom,
+	fetchInviteInfo,
 	removeMessage,
 	retryFailedQueuedMessage,
 	setMessageEditing,
 } from '../../../client';
-import { ChatMessage } from '../../../message';
-import { ChatRoom } from '../../../room';
+import { ChatMessage, ChatMessageType } from '../../../message';
+import { ChatRoom, getChatRoomTitle } from '../../../room';
 
 export interface ChatMessageEditEvent {
 	message: ChatMessage;
@@ -50,9 +53,14 @@ export default class AppChatWindowOutputItem extends Vue {
 
 	readonly date = date;
 	readonly ChatMessage = ChatMessage;
+	readonly ChatMessageType = ChatMessageType;
 	readonly displayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 });
 
+	optionsVisible = false;
 	singleLineMode = true;
+	isInviteMessageAccepted = false;
+	isInviteExpired = false;
+	invitedRoom: ChatRoom | null = null;
 
 	readonly Screen = Screen;
 
@@ -70,6 +78,10 @@ export default class AppChatWindowOutputItem extends Vue {
 		}
 
 		return this.singleLineMode;
+	}
+
+	get isInviteSender() {
+		return this.chat.currentUser && this.message.user.id === this.chat.currentUser.id;
 	}
 
 	get loggedOn() {
@@ -116,6 +128,44 @@ export default class AppChatWindowOutputItem extends Vue {
 		return null;
 	}
 
+	get invitedRoomTitle() {
+		if (!this.invitedRoom) {
+			return this.$gettext(`Group Chat`);
+		}
+
+		return getChatRoomTitle(this.invitedRoom);
+	}
+
+	get loadedInvitedRoom() {
+		return this.invitedRoom !== null;
+	}
+
+	get canEnterInviteRoom() {
+		return this.isInviteSender || this.isInviteMessageAccepted;
+	}
+
+	async mounted() {
+		if (this.message.type === ChatMessageType.INVITE) {
+			try {
+				const payload = await fetchInviteInfo(this.chat, this.message);
+				this.isInviteMessageAccepted = payload.role !== 'pending';
+				this.invitedRoom = new ChatRoom(payload.room);
+				console.log(payload.room);
+			} catch (error) {
+				// An error in fetching could mean that they joined the group and then left.
+				// That removes all roles they have in the room, so we don't know if they are
+				// still allowed to view the info with this invite. The other user has to send
+				// a new invite.
+				this.isInviteExpired = true;
+			}
+		}
+	}
+
+	acceptInvite(msgId: number) {
+		acceptInvite(this.chat, msgId);
+		this.isInviteMessageAccepted = true;
+	}
+
 	startEdit() {
 		setMessageEditing(this.chat, this.message);
 		Popper.hideAll();
@@ -144,5 +194,19 @@ export default class AppChatWindowOutputItem extends Vue {
 
 		setMessageEditing(this.chat, null);
 		removeMessage(this.chat, this.message.id);
+	}
+
+	onShowOptions() {
+		this.optionsVisible = true;
+	}
+
+	onHideOptions() {
+		this.optionsVisible = false;
+	}
+
+	enterInviteRoom() {
+		if (this.invitedRoom && this.canEnterInviteRoom) {
+			enterChatRoom(this.chat, this.invitedRoom.id);
+		}
 	}
 }

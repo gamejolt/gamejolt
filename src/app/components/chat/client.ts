@@ -6,6 +6,8 @@ import { arrayRemove, numberSort } from '../../../utils/array';
 import { sleep } from '../../../utils/utils';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
+import { Growls } from '../../../_common/growls/growls.service';
+import { Translate } from '../../../_common/translate/translate.service';
 import { store } from '../../store';
 import { ChatMessage, ChatMessageType } from './message';
 import { ChatRoom } from './room';
@@ -424,7 +426,7 @@ export function queueChatMessage(chat: ChatClient, content: string, roomId: numb
 	const tempId = Math.floor(Math.random() * Date.now());
 	const message = new ChatMessage({
 		id: tempId,
-		type: ChatMessage.TypeNormal,
+		type: ChatMessageType.MESSAGE,
 		user_id: chat.currentUser.id,
 		user: chat.currentUser,
 		room_id: roomId,
@@ -485,7 +487,6 @@ function setTimeSplit(chat: ChatClient, roomId: number, message: ChatMessage) {
 function outputMessage(
 	chat: ChatClient,
 	roomId: number,
-	type: ChatMessageType,
 	message: ChatMessage,
 	isHistorical: boolean
 ) {
@@ -493,7 +494,6 @@ function outputMessage(
 		return;
 	}
 
-	message.type = type;
 	message.logged_on = new Date(message.logged_on);
 	setTimeSplit(chat, roomId, message);
 
@@ -538,7 +538,7 @@ export function processNewChatOutput(
 	}
 
 	messages.forEach(message => {
-		outputMessage(chat, message.room_id, ChatMessage.TypeNormal, message, isHistorical);
+		outputMessage(chat, message.room_id, message, isHistorical);
 
 		if (!isHistorical) {
 			// Emit an event that we've sent out a new message.
@@ -695,8 +695,22 @@ export function editMessage(chat: ChatClient, message: ChatMessage) {
 	}
 }
 
+export function acceptInvite(chat: ChatClient, msgId: number) {
+	const room = chat.room;
+	if (room) {
+		chat.roomChannels[room.id]
+			.push('accept_invite', { msg_id: msgId })
+			.receive('ok', response => enterChatRoom(chat, response.room.id))
+			.receive('error', response => {
+				console.error('[Chat] Received error sending message', response);
+				Growls.error(Translate.$gettext('Could not accept invite.'));
+			});
+	}
+}
+
 export function startTyping(chat: ChatClient) {
 	const room = chat.room;
+
 	if (room) {
 		chat.roomChannels[room.id].push('start_typing', {});
 	}
@@ -732,4 +746,13 @@ export function updateChatRoomLastMessageOn(chat: ChatClient, message: ChatMessa
 	if (groupRoom) {
 		groupRoom.last_message_on = time;
 	}
+}
+
+export function fetchInviteInfo(chat: ChatClient, message: ChatMessage) {
+	return new Promise<any>((resolve, reject) => {
+		chat.userChannel
+			?.push('invite_info', { message_id: message.id })
+			.receive('ok', response => resolve(response))
+			.receive('error', response => reject(response));
+	});
 }

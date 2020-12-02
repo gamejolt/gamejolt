@@ -51,9 +51,7 @@ export default class AppChatWindow extends Vue {
 	}
 
 	get roomTitle() {
-		return this.room.isGroupRoom
-			? getChatRoomTitle(this.room, this.chat)
-			: this.room.user?.display_name;
+		return this.room.isGroupRoom ? getChatRoomTitle(this.room) : this.room.user?.display_name;
 	}
 
 	get membersCount() {

@@ -1,4 +1,3 @@
-import { ChatClient } from './client';
 import { ChatUser } from './user';
 
 export type ChatRoomType = 'pm' | 'open_group' | 'closed_group' | 'viral_group';
@@ -41,9 +40,6 @@ export class ChatRoom {
 	}
 }
 
-export function getChatRoomTitle(room: ChatRoom, chat: ChatClient) {
-	return room.members
-		.filter(member => member.id !== chat.currentUser?.id)
-		.map(member => member.display_name)
-		.join(', ');
+export function getChatRoomTitle(room: ChatRoom) {
+	return room.members.map(member => member.display_name).join(', ');
 }
