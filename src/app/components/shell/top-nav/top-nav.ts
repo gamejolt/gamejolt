@@ -58,8 +58,24 @@ export default class AppShellTopNav extends Vue {
 	readonly Screen = Screen;
 	readonly Connection = Connection;
 
+	get isTimedOut() {
+		return this.app.isUserTimedOut;
+	}
+
 	get shouldShowSearch() {
-		return !Screen.isXs && this.$route.name !== 'discover.communities';
+		return !Screen.isXs && this.$route.name !== 'discover.communities' && !this.isTimedOut;
+	}
+
+	get shouldShowMenu() {
+		return Screen.isXs && !this.isTimedOut;
+	}
+
+	get shouldShowExplore() {
+		return !Screen.isXs && this.app.user && !this.isTimedOut;
+	}
+
+	get shouldShowMoreMenu() {
+		return !Screen.isXs && !this.isTimedOut;
 	}
 
 	get minColWidth() {

@@ -9,6 +9,7 @@ import { Analytics } from '../../analytics/analytics.service';
 import {
 	DrawerStore,
 	DrawerStoreKey,
+	setCanUnlockNewStickers,
 	setDrawerHidden,
 	setDrawerOpen,
 	setDrawerStoreActiveItem,
@@ -372,6 +373,7 @@ export default class AppStickerLayerDrawer extends Vue {
 		if (remainingBalance !== undefined && remainingBalance < this.drawerStore.stickerCurrency) {
 			// If stickers were redeemed, un-hide the drawer so we can start placing stickers.
 			setDrawerHidden(this.drawerStore, false);
+			setCanUnlockNewStickers(this.drawerStore, false);
 		} else {
 			// otherwise, hide and clear the drawer.
 			setDrawerOpen(this.drawerStore, false);

@@ -7,14 +7,12 @@
 		@removed="onRemoved"
 	>
 		<div class="-outer content-gif">
-			<div
+			<app-responsive-dimensions
 				ref="container"
-				v-app-observe-dimensions="computeSize"
 				class="-container"
-				:style="{
-					width: containerWidth,
-					height: containerHeight,
-				}"
+				:ratio="width / height"
+				:max-width="maxWidth"
+				:max-height="maxHeight"
 			>
 				<app-scroll-inview
 					:config="InviewConfig"
@@ -29,7 +27,7 @@
 						:should-play="shouldPlay"
 					/>
 				</app-scroll-inview>
-			</div>
+			</app-responsive-dimensions>
 		</div>
 	</app-base-content-component>
 </template>

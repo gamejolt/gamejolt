@@ -1,14 +1,16 @@
+<script lang="ts" src="./about"></script>
+
 <template>
 	<div class="route-landing-about">
 		<section class="section landing-header text-center">
 			<div class="container">
 				<h1>
 					<app-theme-svg
+						v-app-tooltip="$gettext('This is a lightning bolt.')"
 						class="bolt anim-fade-in-down"
 						src="~img/jolt.svg"
 						alt=""
 						strict-colors
-						v-app-tooltip="$gettext('This is a lightning bolt.')"
 					/>
 				</h1>
 
@@ -17,8 +19,8 @@
 				<div class="row anim-fade-in-up stagger">
 					<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 						<p class="lead">
-							Millions of gamers, let's players, and indie developers visit Game Jolt
-							each month to get their indie gaming fix.
+							Millions of gamers, let's players, and game developers visit Game Jolt
+							each month to get their gaming fix.
 						</p>
 					</div>
 				</div>
@@ -39,7 +41,7 @@
 						<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 							<p>
 								Game Jolt is run by me, David DeCarmine, and Yaprak DeCarmine, plus
-								the help of the millions of indie developers and gamers on Game
+								the help of the millions of game developers and gamers on Game
 								Jolt. Together, our mission is to grow indie gaming!
 							</p>
 
@@ -81,9 +83,9 @@
 							<p>
 								<strong>For support</strong>
 								, check out the
-								<router-link :to="{ name: 'forums.landing.overview' }"
-									>forums</router-link
-								>
+								<router-link :to="{ name: 'forums.landing.overview' }">
+									forums
+								</router-link>
 								or email us at
 								<app-contact-link email="contact@gamejolt.com">
 									contact@gamejolt.com
@@ -149,7 +151,7 @@
 										>
 											{{ size }}
 										</a>
-										<span v-if="i !== 3" class="dot-separator"></span>
+										<span v-if="i !== 3" class="dot-separator" />
 									</span>
 								</div>
 							</div>
@@ -186,7 +188,7 @@
 										>
 											{{ size }}
 										</a>
-										<span v-if="i !== 3" class="dot-separator"></span>
+										<span v-if="i !== 3" class="dot-separator" />
 									</span>
 								</div>
 							</div>
@@ -221,7 +223,7 @@
 												>
 													{{ size }}
 												</a>
-												<span v-if="i !== 3" class="dot-separator"></span>
+												<span v-if="i !== 3" class="dot-separator" />
 											</span>
 										</div>
 									</div>
@@ -255,7 +257,7 @@
 												>
 													{{ size }}
 												</a>
-												<span v-if="i !== 3" class="dot-separator"></span>
+												<span v-if="i !== 3" class="dot-separator" />
 											</span>
 										</div>
 									</div>
@@ -298,7 +300,7 @@
 												>
 													{{ size }}
 												</a>
-												<span v-if="i !== 3" class="dot-separator"></span>
+												<span v-if="i !== 3" class="dot-separator" />
 											</span>
 										</div>
 									</div>
@@ -332,7 +334,7 @@
 												>
 													{{ size }}
 												</a>
-												<span v-if="i !== 3" class="dot-separator"></span>
+												<span v-if="i !== 3" class="dot-separator" />
 											</span>
 										</div>
 									</div>
@@ -351,7 +353,7 @@
 					<p class="text-center">Wanna look like us? Check these hex codes out!</p>
 
 					<div class="row">
-						<div class="col-sm-3" v-for="(fg, bg) of colors">
+						<div v-for="(fg, bg) of colors" class="col-sm-3">
 							<div
 								class="well color-hex-code"
 								:style="{
@@ -370,13 +372,10 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
 
 .route-landing-about
-
 	.color-hex-code
 		font-family: $font-family-monospace
 		font-weight: bold
 </style>
-
-<script lang="ts" src="./about"></script>

@@ -43,11 +43,13 @@ export class GameDownloader {
 		// Client needs to download externally.
 		if (GJ_IS_CLIENT) {
 			let urlPath = router.resolve({
-				name: 'discover.games.view.download.build',
+				name: 'download',
 				params: {
-					slug: game.slug,
-					id: game.id + '',
-					buildId: build.id + '',
+					type: 'build',
+				},
+				query: {
+					game: game.id + '',
+					build: build.id + '',
 				},
 			}).href;
 
@@ -81,7 +83,7 @@ export class GameDownloader {
 					forceDownload: true,
 				});
 
-				const downloadUrl = response.downloadUrl;
+				const downloadUrl = response.url;
 
 				// We await so that we're sure the tick has logged.
 				await HistoryTick.sendBeacon('game-build', build.id, {
@@ -100,11 +102,13 @@ export class GameDownloader {
 			this.isDownloadQueued = false;
 		} else {
 			router.push({
-				name: 'discover.games.view.download.build',
+				name: 'download',
 				params: {
-					slug: game.slug,
-					id: game.id + '',
-					buildId: build.id + '',
+					type: 'build',
+				},
+				query: {
+					game: game.id + '',
+					build: build.id + '',
 				},
 			});
 		}
