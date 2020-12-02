@@ -22,7 +22,7 @@ export default class FormRoomDetails extends BaseForm<FormModel> implements Form
 		this.titleMaxLength = $payload.titleMaxLength;
 	}
 
-	onSubmit() {
+	onRename() {
 		this.emitSubmit(this.formModel.title);
 	}
 }

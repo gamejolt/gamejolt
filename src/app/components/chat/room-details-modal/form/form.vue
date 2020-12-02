@@ -20,9 +20,9 @@
 				<app-form-control-errors />
 			</app-form-group>
 
-			<app-form-button :disabled="!valid" @click="onSubmit">
+			<app-button solid primary :disabled="!valid" @click="onRename">
 				<translate>Rename</translate>
-			</app-form-button>
+			</app-button>
 		</div>
 	</app-form>
 </template>
