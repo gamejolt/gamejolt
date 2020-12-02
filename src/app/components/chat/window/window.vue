@@ -156,7 +156,7 @@
 					<app-chat-user-list
 						v-if="users"
 						:current-room="room"
-						:users="users.collection"
+						:entries="users.collection"
 					/>
 				</app-scroll-scroller>
 			</div>
