@@ -59,11 +59,12 @@
 			</template>
 
 			<template v-if="!Screen.isMobile" #right>
-				<app-home-recommended
+				<app-home-recommended-game :game="featuredGame" :loading="loadingRecommendedData" />
+				<app-home-recommended-users
 					v-if="shouldShowRecommendedUsers"
 					:users="recommendedUsers"
-					:loading="loadingRecommendedUsers"
-					@refresh="onRecommendedUsersRefresh"
+					:loading="loadingRecommendedUsers || loadingRecommendedData"
+					@refresh="refreshRecommendedUsers"
 				/>
 
 				<app-scroll-affix>
@@ -75,9 +76,14 @@
 
 			<template v-if="shouldShowBasement">
 				<div
-					style="display: flex; flex-direction: column; align-items: center; margin-bottom: 40px;"
+					style="
+						display: flex;
+						flex-direction: column;
+						align-items: center;
+						margin-bottom: 40px;
+					"
 				>
-					<p class="lead text-center anim-fade-in-down" style="max-width: 550px;">
+					<p class="lead text-center anim-fade-in-down" style="max-width: 550px">
 						A creature grabbed all the candy people gave you and dashed into a door
 						you've never seen before! It seems to lead to the Game Jolt Basement. I
 						wonder what's down there...
@@ -98,7 +104,23 @@
 			<app-post-add-button @add="onPostAdded" />
 
 			<template v-if="Screen.isXs">
-				<h6 class="-communities-heading">
+				<template v-if="loadingRecommendedData || !!featuredGame">
+					<h6 class="-feed-heading">
+						<translate>Featured Game</translate>
+					</h6>
+					<span
+						v-if="loadingRecommendedData"
+						class="lazy-placeholder -game-placeholder"
+						:style="{ height: '67px' }"
+					/>
+					<app-game-badge
+						v-else-if="featuredGame"
+						class="-game-badge"
+						:game="featuredGame"
+					/>
+				</template>
+
+				<h6 class="-feed-heading">
 					<translate>Communities</translate>
 				</h6>
 
@@ -148,7 +170,11 @@
 		text-overflow()
 
 // Keep things tight since it's on mobile.
-.-communities-heading
+.-feed-heading
 	margin-top: 0
 	margin-bottom: 5px
+
+.-game-placeholder
+	rounded-corners-lg()
+	margin-bottom: $line-height-computed
 </style>
