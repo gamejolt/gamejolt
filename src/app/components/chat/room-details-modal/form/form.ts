@@ -1,14 +1,14 @@
 import { Component, Emit } from 'vue-property-decorator';
 import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
 
-type FormModel = {
+export type FormModel = {
 	title: string;
 };
 
 @Component({})
 export default class FormRoomDetails extends BaseForm<FormModel> implements FormOnLoad {
 	@Emit('submit')
-	emitSubmit(_title: string) {}
+	emitSubmit(_model: FormModel) {}
 
 	titleMinLength = 3;
 	titleMaxLength = 50;
@@ -23,6 +23,6 @@ export default class FormRoomDetails extends BaseForm<FormModel> implements Form
 	}
 
 	onRename() {
-		this.emitSubmit(this.formModel.title);
+		this.emitSubmit(this.formModel);
 	}
 }
