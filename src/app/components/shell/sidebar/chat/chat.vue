@@ -31,7 +31,7 @@
 				>
 					<translate>No friends yet.</translate>
 				</div>
-				<app-chat-user-list v-else :users="tab === 'chats' ? chats : friends" show-pm />
+				<app-chat-user-list v-else :entries="tab === 'chats' ? chats : friends" show-pm />
 			</template>
 		</div>
 	</div>
