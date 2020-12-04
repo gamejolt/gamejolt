@@ -1,3 +1,5 @@
+<script lang="ts" src="./activity-item"></script>
+
 <template>
 	<div class="-item" :class="{ '-item-usersplit': usersplit }">
 		<span v-if="!Screen.isXs" class="-left">
@@ -69,6 +71,7 @@
 				</span>
 
 				<div class="-action">
+					<!-- Show a text based on the action taken. -->
 					<span
 						v-if="item.type === CommunityActivityItem.TYPE_COMMUNITY_CREATED"
 						v-translate
@@ -204,6 +207,16 @@
 						<em>Unlinked</em> a game from this community.
 					</span>
 
+					<!-- Adds a row to display the given reason for an action.  -->
+					<template v-if="hasReason">
+						<br />
+						<span class="-reason-row">
+							<translate>Reason: </translate>
+							<i>{{ reasonText }}</i>
+						</span>
+					</template>
+
+					<!-- Adds a row to show a preview of the resource, and to link to it. -->
 					<template v-if="shouldShowActionSecondLine">
 						<br />
 						<component
@@ -320,7 +333,6 @@ $-avatar-size = 40px
 		font-style: normal
 
 .-resource-row
+.-reason-row
 	font-size: $font-size-small
 </style>
-
-<script lang="ts" src="./activity-item"></script>
