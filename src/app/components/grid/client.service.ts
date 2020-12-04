@@ -464,7 +464,12 @@ export class GridClient {
 		}
 
 		let message = NotificationText.getText(notification, true);
-		let icon = notification.from_model === undefined ? '' : notification.from_model.img_avatar;
+		let icon = '';
+		if (notification.from_model instanceof User) {
+			icon = notification.from_model.img_avatar;
+		} else if (notification.from_model instanceof Community) {
+			icon = notification.from_model.img_thumbnail;
+		}
 
 		// When it's a game post as game owner, use the game owner's avatar instead.
 		if (

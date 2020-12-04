@@ -46,5 +46,3 @@
 		</app-form-group>
 	</app-form>
 </template>
-
-<style lang="stylus" scoped></style>

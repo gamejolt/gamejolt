@@ -3,6 +3,10 @@ import { Component, Inject, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import '../../../../../_common/comment/comment.styl';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
+import {
+	CommunityUserNotification,
+	NotificationType,
+} from '../../../../../_common/community/user-notification/user-notification.model';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
 import { Mention } from '../../../../../_common/mention/mention.model';
@@ -56,6 +60,16 @@ export default class AppActivityFeedNotification extends Vue {
 		if (
 			this.notification.type === Notification.TYPE_MENTION &&
 			(this.notification.action_model as Mention).resource === 'Comment'
+		) {
+			return true;
+		}
+
+		// Community user notifications with a post want to show the post lead.
+		if (
+			this.notification.type === Notification.TYPE_COMMUNITY_USER_NOTIFICATION &&
+			[NotificationType.POSTS_EJECT, NotificationType.POSTS_MOVE].includes(
+				(this.notification.action_model as CommunityUserNotification).type
+			)
 		) {
 			return true;
 		}

@@ -4,7 +4,20 @@
 			<div @click.stop="go" class="notification-container">
 				<router-link :to="notification.routeLocation">
 					<app-timeline-list-item :is-new="isNew">
-						<div slot="bubble" v-if="notification.from_model">
+						<div
+							slot="bubble"
+							v-if="
+								notification.type === Notification.TYPE_COMMUNITY_USER_NOTIFICATION
+							"
+						>
+							<div class="-community-thumb">
+								<app-community-thumbnail-img
+									class="img-circle"
+									:community="notification.from_model"
+								/>
+							</div>
+						</div>
+						<div slot="bubble" v-else-if="notification.from_model">
 							<app-user-card-hover
 								:user="notification.from_model"
 								:disabled="!feed.shouldShowUserCards"
@@ -29,7 +42,7 @@
 							slot="bubble"
 							v-else-if="
 								notification.type === Notification.TYPE_GAME_TROPHY_ACHIEVED ||
-									notification.type === Notification.TYPE_SITE_TROPHY_ACHIEVED
+								notification.type === Notification.TYPE_SITE_TROPHY_ACHIEVED
 							"
 						>
 							<img class="img-circle -trophy-img" :src="trophyImg" />
@@ -55,14 +68,17 @@
 										>
 											<app-content-viewer
 												v-if="
-													notification.type === 'comment-add' ||
-														notification.type ===
-															'comment-add-object-owner'
+													notification.type ===
+														Notification.TYPE_COMMENT_ADD ||
+													notification.type ===
+														Notification.TYPE_COMMENT_ADD_OBJECT_OWNER
 												"
 												:source="notification.action_model.comment_content"
 											/>
 											<app-content-viewer
-												v-else-if="notification.type === 'mention'"
+												v-else-if="
+													notification.type === Notification.TYPE_MENTION
+												"
 												:source="
 													notification.action_model.comment
 														.comment_content
@@ -71,7 +87,7 @@
 											<span
 												v-else-if="
 													notification.type ===
-														Notification.TYPE_POST_FEATURED_IN_COMMUNITY
+													Notification.TYPE_POST_FEATURED_IN_COMMUNITY
 												"
 											>
 												{{
@@ -81,9 +97,17 @@
 											<span
 												v-else-if="
 													notification.type ===
+													Notification.TYPE_COMMUNITY_USER_NOTIFICATION
+												"
+											>
+												{{ notification.to_model.getShortLead() }}
+											</span>
+											<span
+												v-else-if="
+													notification.type ===
 														Notification.TYPE_GAME_TROPHY_ACHIEVED ||
-														notification.type ===
-															Notification.TYPE_SITE_TROPHY_ACHIEVED
+													notification.type ===
+														Notification.TYPE_SITE_TROPHY_ACHIEVED
 												"
 											>
 												{{ notification.action_model.trophy.description }}

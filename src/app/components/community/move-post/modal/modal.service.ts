@@ -1,15 +1,14 @@
 import { asyncComponentLoader } from '../../../../../utils/utils';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
-import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import {
+	CommunityNotifyOptions,
+	FiresidePost,
+} from '../../../../../_common/fireside/post/post-model';
 import { Modal } from '../../../../../_common/modal/modal.service';
 
-export type CommunityMovePostModalResult = {
+export type CommunityMovePostModalResult = CommunityNotifyOptions & {
 	channel: CommunityChannel;
-
-	notifyUser: boolean;
-	reasonType: string | null;
-	reason: string | null;
 };
 
 export class CommunityMovePostModal {
