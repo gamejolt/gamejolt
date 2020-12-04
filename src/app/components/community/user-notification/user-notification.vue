@@ -14,8 +14,6 @@
 
 		<div class="-message">
 			<div>
-				<app-jolticon icon="notice" notice />
-
 				<template v-if="notification.type === NotificationType.POSTS_MOVE">
 					<span
 						v-translate="{
@@ -23,13 +21,13 @@
 							toChannel: notification.extra_data['to-channel'],
 						}"
 					>
-						Your post has been moved from the <i>%{ fromChannel }</i> channel to the
-						<i>%{ toChannel }</i> channel.
+						Your post has been <b>moved</b> from the <i>%{ fromChannel }</i> channel to
+						the <i>%{ toChannel }</i> channel.
 					</span>
 				</template>
 				<template v-else-if="notification.type === NotificationType.POSTS_EJECT">
-					<span>
-						<translate>Your posts has been ejected from the community.</translate>
+					<span v-translate>
+						Your posts has been <b>ejected</b> from the community.
 					</span>
 				</template>
 			</div>

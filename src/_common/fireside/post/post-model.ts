@@ -451,13 +451,15 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return this.$_save(`/web/communities/manage/unfeature/${c.id}`, 'post');
 	}
 
-	$reject(community: Community) {
+	$reject(community: Community, notifyOptions: CommunityNotifyOptions | undefined = undefined) {
 		const c = this.getTaggedCommunity(community);
 		if (!c) {
 			throw new Error('Cannot reject a post to a community it is not tagged in');
 		}
 
-		return this.$_save(`/web/communities/manage/reject/${c.id}`, 'post');
+		return this.$_save(`/web/communities/manage/reject/${c.id}`, 'post', {
+			data: notifyOptions,
+		});
 	}
 
 	$moveChannel(

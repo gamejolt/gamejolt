@@ -9,7 +9,10 @@ import {
 	NotificationType,
 } from '../../../../_common/community/user-notification/user-notification.model';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
-import { getCommunityMovePostReasons } from '../../../../_common/user/action-reasons';
+import {
+	getCommunityEjectPostReasons,
+	getCommunityMovePostReasons,
+} from '../../../../_common/user/action-reasons';
 
 @Component({
 	components: {
@@ -30,6 +33,8 @@ export default class AppCommunityUserNotification extends Vue {
 		switch (this.notification.type) {
 			case NotificationType.POSTS_MOVE:
 				return getCommunityMovePostReasons();
+			case NotificationType.POSTS_EJECT:
+				return getCommunityEjectPostReasons();
 		}
 
 		throw new Error('No reasons defined.');
