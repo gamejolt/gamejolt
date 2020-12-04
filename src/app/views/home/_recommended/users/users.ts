@@ -1,8 +1,6 @@
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
 import { Analytics } from '../../../../../_common/analytics/analytics.service';
-import { Game } from '../../../../../_common/game/game.model';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import AppUserFollowWidget from '../../../../../_common/user/follow/widget.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
@@ -20,8 +18,6 @@ import AppUserList from '../../../../components/user/list/list.vue';
 export default class AppHomeRecommendedUsers extends Vue {
 	@Prop(Array)
 	users!: User[];
-
-	@Prop(propRequired(Game)) featuredGame!: Game;
 
 	@Prop(Boolean)
 	loading!: boolean;
