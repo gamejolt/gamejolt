@@ -37,9 +37,9 @@
 				<app-loading centered :label="$gettext(`Loading your chats...`)" />
 			</template>
 			<template v-else>
-				<app-illustration class="-no-chat" src="~img/ill/no-chat.svg">
+				<app-illustration class="-no-chat" src="~img/ill/maintenance.svg">
 					<p><translate>The chat server went away...</translate></p>
-					<p><translate>It will be back in a few minutes.</translate></p>
+					<p><translate>It should be back shortly.</translate></p>
 				</app-illustration>
 			</template>
 		</div>
