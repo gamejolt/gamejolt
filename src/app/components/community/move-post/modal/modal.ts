@@ -46,7 +46,7 @@ export default class AppCommunityMovePostModal extends BaseModal {
 
 	get shouldShowForm() {
 		// Do not show the form when the logged in user is the author of the post.
-		// It does not really make sense to let them notify themselves.
+		// It does not make sense to let them notify themselves.
 		return this.post.user.id !== this.user!.id;
 	}
 
@@ -70,11 +70,13 @@ export default class AppCommunityMovePostModal extends BaseModal {
 		}
 
 		const notifyUser = this.reasonFormModel.notifyUser !== 'no';
+		const hasReason = notifyUser && this.reasonFormModel.notifyUser === 'yes-reason';
+
 		const result = {
 			channel: this.selectedChannel,
 			notifyUser,
-			reason: notifyUser ? this.reasonFormModel.reason : null,
-			reasonType: notifyUser ? this.reasonFormModel.reasonType : null,
+			reason: hasReason ? this.reasonFormModel.reason : null,
+			reasonType: hasReason ? this.reasonFormModel.reasonType : null,
 		} as CommunityMovePostModalResult;
 
 		this.modal.resolve(result);
