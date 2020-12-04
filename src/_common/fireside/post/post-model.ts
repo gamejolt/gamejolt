@@ -32,6 +32,12 @@ interface FiresidePostPublishedPlatform {
 	url: string;
 }
 
+export type CommunityNotifyOptions = {
+	notifyUser: boolean;
+	reason: string | null;
+	reasonType: string | null;
+};
+
 export class FiresidePost extends Model implements ContentContainerModel, CommentableModel {
 	static readonly TYPE_TEXT = 'text';
 	static readonly TYPE_MEDIA = 'media';
@@ -454,7 +460,11 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return this.$_save(`/web/communities/manage/reject/${c.id}`, 'post');
 	}
 
-	$moveChannel(community: Community, channel: CommunityChannel) {
+	$moveChannel(
+		community: Community,
+		channel: CommunityChannel,
+		notifyOptions: CommunityNotifyOptions | undefined = undefined
+	) {
 		const c = this.getTaggedCommunity(community);
 		if (!c) {
 			throw new Error('Cannot move a post to a channel in a community it is not tagged in');
@@ -466,7 +476,9 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 			);
 		}
 
-		return this.$_save(`/web/communities/manage/move-post/${c.id}/${channel.id}`, 'post');
+		return this.$_save(`/web/communities/manage/move-post/${c.id}/${channel.id}`, 'post', {
+			data: notifyOptions,
+		});
 	}
 
 	getTaggedCommunity(community: Community) {

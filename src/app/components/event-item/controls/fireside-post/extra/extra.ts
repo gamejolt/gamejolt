@@ -112,14 +112,18 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 			possibleChannels = await this.fetchCommunityChannels(postCommunity.community);
 		}
 
-		const channel = await CommunityMovePostModal.show(postCommunity, possibleChannels);
-		if (!channel) {
+		const result = await CommunityMovePostModal.show(
+			postCommunity,
+			this.post,
+			possibleChannels
+		);
+		if (!result) {
 			return;
 		}
 
 		try {
-			await this.post.$moveChannel(postCommunity.community, channel);
-			this.emitMoveChannel(channel);
+			await this.post.$moveChannel(postCommunity.community, result.channel, result);
+			this.emitMoveChannel(result.channel);
 		} catch (e) {
 			console.error('Failed to move community post to a channel');
 			console.error(e);
