@@ -112,6 +112,13 @@
 								</translate>
 							</a>
 						</app-community-perms>
+
+						<app-community-perms :community="i.community" required="community-blocks">
+							<a class="list-group-item has-icon" @click.stop="blockFromCommunity(i)">
+								<app-jolticon icon="friend-remove-2" />
+								<translate>Block author</translate>
+							</a>
+						</app-community-perms>
 					</div>
 				</template>
 			</div>
