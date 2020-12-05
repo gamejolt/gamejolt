@@ -1,3 +1,5 @@
+<script lang="ts" src="./room-details-modal"></script>
+
 <template>
 	<app-modal>
 		<div class="modal-controls">
@@ -8,14 +10,12 @@
 
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<translate>Room Details</translate>
+				<translate>Edit group details</translate>
 			</h2>
 		</div>
 
 		<div class="modal-body">
-			<div class="chat-compiled-room-description" v-html="room.description"></div>
+			<form-room-details :model="room" @submit="onSubmit($event)" />
 		</div>
 	</app-modal>
 </template>
-
-<script lang="ts" src="./room-details-modal"></script>

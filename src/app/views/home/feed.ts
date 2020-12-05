@@ -6,6 +6,8 @@ import AppAdWidget from '../../../_common/ad/widget/widget.vue';
 import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
+import { Game } from '../../../_common/game/game.model';
+import { AppLazyPlaceholder } from '../../../_common/lazy/placeholder/placeholder';
 import { Meta } from '../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
@@ -18,11 +20,13 @@ import { ActivityFeedView } from '../../components/activity/feed/view';
 import AppBroadcastCard from '../../components/broadcast-card/broadcast-card.vue';
 import AppCommunitySliderPlaceholder from '../../components/community/slider/placeholder/placeholder.vue';
 import AppCommunitySlider from '../../components/community/slider/slider.vue';
+import AppGameBadge from '../../components/game/badge/badge.vue';
 import { AppActivityFeedLazy } from '../../components/lazy';
 import AppPageContainer from '../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../components/post/add-button/add-button.vue';
 import { Store } from '../../store';
-import AppHomeRecommended from './_recommended/recommended.vue';
+import AppHomeRecommendedGame from './_recommended/game/game.vue';
+import AppHomeRecommendedUsers from './_recommended/users/users.vue';
 
 class DashGame {
 	constructor(
@@ -46,7 +50,10 @@ class DashGame {
 		AppUserCard,
 		AppScrollAffix,
 		AppAdWidget,
-		AppHomeRecommended,
+		AppHomeRecommendedUsers,
+		AppHomeRecommendedGame,
+		AppGameBadge,
+		AppLazyPlaceholder,
 	},
 })
 @RouteResolver({
@@ -69,8 +76,10 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	games: DashGame[] = [];
 	gameFilterQuery = '';
 	isShowingAllGames = false;
-	loadingRecommendedUsers = true;
+	loadingRecommendedUsers = false; // Set to `true` while refreshing users.
+	loadingRecommendedData = true;
 	recommendedUsers: User[] = [];
+	featuredGame: Game | null = null;
 
 	// TODO(HALLOWEEN2020): remove after
 	shouldShowBasement = false;
@@ -160,7 +169,7 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	}
 
 	mounted() {
-		this.loadRecommendedUsers();
+		this.loadRecommendedData();
 	}
 
 	onLoadedNew() {
@@ -179,28 +188,32 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 		}
 	}
 
-	async onRecommendedUsersRefresh() {
-		await this.loadRecommendedUsers(true);
-	}
-
-	async loadRecommendedUsers(refresh = false) {
+	async refreshRecommendedUsers() {
 		this.loadingRecommendedUsers = true;
 
-		let url = '/web/dash/recommended';
-		if (refresh) {
-			url += '/refresh';
-		}
-		try {
-			const $payload = await Api.sendRequest(url, undefined, {
-				detach: true,
-			});
-			if ($payload && $payload.users) {
-				this.recommendedUsers = User.populate($payload.users);
-			}
-		} catch (error) {
-			console.error('error during fetching recommended users.', error);
+		const payload = await Api.sendRequest('/web/dash/recommended/refresh', undefined, {
+			detach: true,
+		});
+		if (payload && payload.users) {
+			this.recommendedUsers = User.populate(payload.users);
 		}
 
 		this.loadingRecommendedUsers = false;
+	}
+
+	async loadRecommendedData() {
+		this.loadingRecommendedData = true;
+
+		const payload = await Api.sendRequest('/web/dash/recommended', undefined, { detach: true });
+		if (payload) {
+			if (payload.users) {
+				this.recommendedUsers = User.populate(payload.users);
+			}
+			if (payload.featuredGame) {
+				this.featuredGame = new Game(payload.featuredGame);
+			}
+		}
+
+		this.loadingRecommendedData = false;
 	}
 }

@@ -3,6 +3,8 @@ import { Component, InjectReactive } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { EscapeStack } from '../../../../../_common/escape-stack/escape-stack.service';
 import { number } from '../../../../../_common/filters/number';
+import AppIllustration from '../../../../../_common/illustration/illustration.vue';
+import AppLoading from '../../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Store } from '../../../../store';
 import { ChatClient, ChatKey, enterChatRoom, leaveChatRoom } from '../../../chat/client';
@@ -14,6 +16,8 @@ import AppChatWindows from '../../../chat/windows/windows.vue';
 	components: {
 		AppChatUserList,
 		AppChatWindows,
+		AppIllustration,
+		AppLoading,
 	},
 })
 export default class AppShellSidebarChat extends Vue {
