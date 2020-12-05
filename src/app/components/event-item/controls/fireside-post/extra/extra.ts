@@ -92,6 +92,11 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 		return false;
 	}
 
+	get shouldShowBlockCommunityUser() {
+		// Cannot block yourself.
+		return this.post.user.id !== this.user?.id;
+	}
+
 	getProviderIcon(provider: string) {
 		return getLinkedAccountPlatformIcon(provider);
 	}
