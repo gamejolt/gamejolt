@@ -1,6 +1,8 @@
+<script lang="ts" src="./block"></script>
+
 <template>
 	<app-form name="communityBlockForm">
-		<app-form-group name="username">
+		<app-form-group v-if="!usernameLocked" name="username">
 			<app-form-control
 				type="text"
 				:rules="{
@@ -20,6 +22,12 @@
 				/>
 			</app-form-control-errors>
 		</app-form-group>
+		<template v-else>
+			<label class="control-label"><translate>Username</translate></label>
+			<div class="form-control -locked-username">
+				{{ formModel.username }}
+			</div>
+		</template>
 
 		<app-form-group name="reasonType" :label="$gettext('Block reason')">
 			<div class="radio" v-for="(reasonDisplay, reason) in defaultReasons" :key="reason">
@@ -57,20 +65,30 @@
 			<app-form-control-errors />
 		</app-form-group>
 
-		<app-form-group name="ejectPosts" :label="$gettext(`Eject user's posts from the community?`)">
+		<app-form-group
+			name="ejectPosts"
+			:label="$gettext(`Eject user's posts from the community?`)"
+		>
 			<app-form-control-toggle class="pull-right" />
 			<p class="help-block">
 				<translate>
-					Once the user is blocked, all their posts will be ejected from the community. This also
-					affects their featured posts.
+					Once the user is blocked, all their posts will be ejected from the community.
+					This also affects their featured posts.
 				</translate>
 			</p>
 		</app-form-group>
 
-		<app-form-button>
+		<app-form-button :disabled="!valid">
 			<translate>Block</translate>
 		</app-form-button>
 	</app-form>
 </template>
 
-<script lang="ts" src="./block"></script>
+<style lang="stylus" scoped>
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+
+.-locked-username
+	margin-bottom: ($line-height-computed * 1.5)
+	cursor: not-allowed
+</style>

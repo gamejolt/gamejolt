@@ -1,10 +1,12 @@
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
+import { propOptional, propRequired } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
 import { Community } from '../../../../../_common/community/community.model';
 import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
 import { BaseForm, FormOnInit, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
 import { Growls } from '../../../../../_common/growls/growls.service';
+import { User } from '../../../../../_common/user/user.model';
 
 interface FormModel {
 	username: string;
@@ -21,10 +23,11 @@ interface FormModel {
 })
 export default class FormCommunityBlock extends BaseForm<FormModel>
 	implements FormOnInit, FormOnSubmit {
-	@Prop(Community)
-	community!: Community;
+	@Prop(propRequired(Community)) community!: Community;
+	@Prop(propOptional(User, null)) user?: User | null;
 
 	resetOnSubmit = true;
+	usernameLocked = false;
 
 	get defaultReasons() {
 		return {
@@ -51,9 +54,14 @@ export default class FormCommunityBlock extends BaseForm<FormModel>
 	}
 
 	onInit() {
-		this.setField('reasonType', this.defaultReasons.spam);
+		this.setField('reasonType', 'spam');
 		this.setField('expiry', 'week');
 		this.setField('ejectPosts', true);
+
+		if (this.user) {
+			this.setField('username', this.user.username);
+			this.usernameLocked = true;
+		}
 	}
 
 	async onSubmit() {
