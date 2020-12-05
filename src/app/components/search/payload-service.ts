@@ -15,6 +15,7 @@ export class SearchPayload {
 	gamesCount: number;
 	posts: FiresidePost[];
 	postsCount: number;
+	postsPerPage: number;
 	libraryGames: LocalDbGame[];
 
 	constructor(public type: string, data: any) {
@@ -29,6 +30,7 @@ export class SearchPayload {
 		this.games = Game.populate(data.games);
 		this.posts = FiresidePost.populate(data.posts);
 		this.postsCount = data.postsCount || 0;
+		this.postsPerPage = data.postsPerPage || 0;
 		this.libraryGames = [];
 
 		if (GJ_IS_CLIENT) {
