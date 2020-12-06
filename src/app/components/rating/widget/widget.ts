@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { EventBus } from '../../../../system/event/event-bus.service';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { fuzzynumber } from '../../../../_common/filters/fuzzynumber';
@@ -8,6 +7,7 @@ import { Game } from '../../../../_common/game/game.model';
 import { GameRating } from '../../../../_common/game/rating/rating.model';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { LikersModal } from '../../../../_common/likers/modal.service';
+import { EventBus } from '../../../../_common/system/event/event-bus.service';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 
 export const RatingWidgetOnChange = 'GameRating.changed';

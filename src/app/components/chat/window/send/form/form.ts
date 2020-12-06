@@ -1,6 +1,5 @@
 import Component from 'vue-class-component';
 import { Emit, InjectReactive, Prop, Watch } from 'vue-property-decorator';
-import { EventBus } from '../../../../../../system/event/event-bus.service';
 import { isMac } from '../../../../../../utils/utils';
 import { propRequired } from '../../../../../../utils/vue';
 import { ContentContext } from '../../../../../../_common/content/content-context';
@@ -18,6 +17,7 @@ import { FormValidatorContentNoMediaUpload } from '../../../../../../_common/for
 import { AppObserveDimensions } from '../../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppShortkey from '../../../../../../_common/shortkey/shortkey.vue';
+import { EventBus } from '../../../../../../_common/system/event/event-bus.service';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { ChatClient, ChatKey, setMessageEditing, startTyping, stopTyping } from '../../../client';
 import { ChatMessage, CHAT_MESSAGE_MAX_CONTENT_LENGTH } from '../../../message';

@@ -1,9 +1,9 @@
 import Vue, { CreateElement } from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { EventSubscription } from '../../../system/event/event-topic';
 import { sleep } from '../../../utils/utils';
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
+import { EventSubscription } from '../../system/event/event-topic';
 import { ImgHelper } from '../helper/helper-service';
 
 const WIDTH_HEIGHT_REGEX = /\/(\d+)x(\d+)\//;
