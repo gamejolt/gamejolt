@@ -1,9 +1,9 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { EventSubscription } from '../../../system/event/event-topic';
 import { propOptional } from '../../../utils/vue';
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
+import { EventSubscription } from '../../system/event/event-topic';
 import { ScrollInviewConfig } from '../inview/config';
 import { AppScrollInview } from '../inview/inview';
 import { Scroll } from '../scroll.service';

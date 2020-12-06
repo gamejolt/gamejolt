@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { EventSubscription } from '../../../system/event/event-topic';
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
+import { EventSubscription } from '../../system/event/event-topic';
 
 const RATIO = 0.5625; // 16:9
 
