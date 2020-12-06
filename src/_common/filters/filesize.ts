@@ -1,6 +1,10 @@
 const Units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
 
-export function filesize(bytes: number, precision = 0) {
+export function filesize(bytes: number | string, precision = 0) {
+	if (typeof bytes === 'string') {
+		bytes = parseInt(bytes, 10);
+	}
+
 	if (!isFinite(bytes)) {
 		return '?';
 	} else if (bytes < 1024) {
