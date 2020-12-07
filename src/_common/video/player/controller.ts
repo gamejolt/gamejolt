@@ -61,7 +61,8 @@ export class VideoPlayerController {
 			case 'feed':
 				this.volume = SettingVideoPlayerFeedMuted.get()
 					? 0
-					: SettingVideoPlayerFeedVolume.get();
+					: // Use the page player volume because the feed player has no volume control.
+					  SettingVideoPlayerVolume.get();
 				this.queuedPlaybackChange = SettingVideoPlayerFeedAutoplay.get()
 					? 'playing'
 					: 'paused';
