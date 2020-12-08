@@ -151,7 +151,9 @@ export default class AppChatUserListItem extends Vue {
 		}
 
 		const result = await ModalConfirm.show(
-			this.$gettext(`Are you sure you want to kick this user?`),
+			this.$gettextInterpolate(`Are you sure you want to kick %{ title } from this room?`, {
+				title: this.title,
+			}),
 			undefined,
 			'yes'
 		);

@@ -58,10 +58,13 @@
 				{{ title }}
 				<span v-if="meta" class="tiny">{{ meta }}</span>
 
-				<span v-if="canModerate">
+				<span v-if="canModerate" @click.prevent>
 					<app-popper>
 						<template #default>
-							<a v-app-tooltip="$gettext('Manage Member')" class="link-muted -user-options">
+							<a
+								v-app-tooltip="$gettext('Manage Member')"
+								class="link-muted -user-options"
+							>
 								<app-jolticon icon="cog" class="middle" />
 							</a>
 						</template>
@@ -69,8 +72,8 @@
 						<template #popover>
 							<div class="list-group">
 								<a class="list-group-item has-icon" @click="kickUser">
-									<app-jolticon icon="friend-remove-1" />
-									<translate>Kick Member</translate>
+									<app-jolticon icon="friend-remove-1" notice />
+									<span v-translate="{ title }">Kick %{ title }</span>
 								</a>
 							</div>
 						</template>
@@ -126,8 +129,9 @@
 
 .-user-options
 	display: inline-block
-	color: var(--theme-fg-muted) !important
+	color: var(--theme-fg-muted)
+	padding: 0
 
 	&:hover
-		color: var(--theme-fg) !important
+		color: var(--theme-fg)
 </style>
