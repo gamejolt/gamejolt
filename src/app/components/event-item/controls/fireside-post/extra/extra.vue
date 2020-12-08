@@ -105,7 +105,7 @@
 								class="list-group-item has-icon"
 								@click.stop="rejectFromCommunity(i)"
 							>
-								<app-jolticon icon="remove" />
+								<app-jolticon icon="logout" class="-eject" />
 
 								<translate :translate-params="{ community: i.community.name }">
 									Eject from %{ community }
@@ -120,7 +120,9 @@
 						>
 							<a class="list-group-item has-icon" @click.stop="blockFromCommunity(i)">
 								<app-jolticon icon="friend-remove-2" />
-								<translate>Block author</translate>
+								<translate :translate-params="{ community: i.community.name }">
+									Block author from %{ community }
+								</translate>
 							</a>
 						</app-community-perms>
 					</div>
@@ -152,4 +154,7 @@
 		left: -($list-group-icon-width - 1px)
 		top: -2px
 		margin-right: -($list-group-icon-width - 5px)
+
+.-eject
+	transform: rotateZ(90deg)
 </style>
