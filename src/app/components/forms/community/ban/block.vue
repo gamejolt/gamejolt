@@ -2,7 +2,7 @@
 
 <template>
 	<app-form name="communityBlockForm">
-		<app-form-group v-if="!usernameLocked" name="username">
+		<app-form-group name="username">
 			<app-form-control
 				type="text"
 				:rules="{
@@ -13,6 +13,7 @@
 					},
 				}"
 				:validate-on="['blur']"
+				:disabled="usernameLocked"
 			/>
 
 			<app-form-control-errors :label="$gettext('username')">
@@ -22,15 +23,9 @@
 				/>
 			</app-form-control-errors>
 		</app-form-group>
-		<template v-else>
-			<label class="control-label"><translate>Username</translate></label>
-			<div class="form-control -locked-username">
-				{{ formModel.username }}
-			</div>
-		</template>
 
 		<app-form-group name="reasonType" :label="$gettext('Block reason')">
-			<div class="radio" v-for="(reasonDisplay, reason) in defaultReasons" :key="reason">
+			<div v-for="(reasonDisplay, reason) in defaultReasons" :key="reason" class="radio">
 				<label>
 					<app-form-control-radio :value="reason" />
 					{{ reasonDisplay }}
@@ -56,7 +51,7 @@
 		</app-form-group>
 
 		<app-form-group name="expiry" :label="$gettext('Block expires in...')">
-			<div class="radio" v-for="(expiryDisplay, expiry) in expiryOptions" :key="expiry">
+			<div v-for="(expiryDisplay, expiry) in expiryOptions" :key="expiry" class="radio">
 				<label>
 					<app-form-control-radio :value="expiry" />
 					{{ expiryDisplay }}
@@ -83,12 +78,3 @@
 		</app-form-button>
 	</app-form>
 </template>
-
-<style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
-.-locked-username
-	margin-bottom: ($line-height-computed * 1.5)
-	cursor: not-allowed
-</style>
