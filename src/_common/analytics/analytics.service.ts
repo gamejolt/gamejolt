@@ -1,8 +1,8 @@
 import VueRouter from 'vue-router';
-import { EventBus } from '../../system/event/event-bus.service';
 import { arrayRemove } from '../../utils/array';
 import { Environment } from '../environment/environment.service';
 import { appStore } from '../store/app-store';
+import { EventBus } from '../system/event/event-bus.service';
 
 const ga: any = (typeof window !== 'undefined' && (window as any).ga) || function() {};
 
@@ -21,7 +21,7 @@ class PageTracker {
 	pageViewRecorded = false;
 
 	get normalizedId() {
-		return this.id.replace(/[\-_:]/g, '');
+		return this.id.replace(/[-_:]/g, '');
 	}
 
 	constructor(public id = '') {}
@@ -52,6 +52,15 @@ export class Analytics {
 		});
 
 		EventBus.on('routeChangeAfter', () => {
+			const analyticsPath = router.currentRoute.meta.analyticsPath;
+
+			// Track the page view using the analyticsPath if we have one
+			// assigned to the route meta.
+			if (analyticsPath) {
+				this.trackPageview(analyticsPath);
+				return;
+			}
+
 			this.trackPageview(router.currentRoute.fullPath);
 		});
 	}
@@ -100,10 +109,10 @@ export class Analytics {
 				// This will ensure that resolve() gets called at least within 1s.
 				lastArg.hitCallback = cb;
 				window.setTimeout(cb, 1000);
-				ga.apply(null, args);
+				ga(...args);
 			} else {
 				// Otherwise do it immediately.
-				ga.apply(null, args);
+				ga(...args);
 				cb();
 			}
 		});

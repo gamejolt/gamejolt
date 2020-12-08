@@ -30,6 +30,10 @@ interface OwnerSyncPayload {
 	owner_id: number;
 }
 
+interface UpdateTitlePayload {
+	title: string;
+}
+
 export class ChatRoomChannel extends Channel {
 	room!: ChatRoom;
 	roomId: number;
@@ -54,6 +58,7 @@ export class ChatRoomChannel extends Channel {
 		this.on('member_leave', this.onMemberLeave.bind(this));
 		this.on('owner_sync', this.onOwnerSync.bind(this));
 		this.on('member_add', this.onMemberAdd.bind(this));
+		this.on('update_title', this.onUpdateTitle.bind(this));
 
 		this.onClose(() => {
 			if (isInChatRoom(this.client, roomId)) {
@@ -177,6 +182,10 @@ export class ChatRoomChannel extends Channel {
 
 			this.room.members.push(user);
 		}
+	}
+
+	private onUpdateTitle(data: UpdateTitlePayload) {
+		this.room.title = data.title;
 	}
 
 	private onOwnerSync(data: OwnerSyncPayload) {

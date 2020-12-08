@@ -1,7 +1,5 @@
 import Vue from 'vue';
 import { Component, InjectReactive, Prop, Watch } from 'vue-property-decorator';
-import { EventBus, EventBusDeregister } from '../../../../../system/event/event-bus.service';
-import { EventSubscription } from '../../../../../system/event/event-topic';
 import { propRequired } from '../../../../../utils/vue';
 import { date } from '../../../../../_common/filters/date';
 import AppIllustration from '../../../../../_common/illustration/illustration.vue';
@@ -9,6 +7,11 @@ import AppLoading from '../../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import {
+	EventBus,
+	EventBusDeregister,
+} from '../../../../../_common/system/event/event-bus.service';
+import { EventSubscription } from '../../../../../_common/system/event/event-topic';
 import { ChatClient, ChatKey, ChatNewMessageEvent, loadOlderChatMessages } from '../../client';
 import { ChatMessage, TIMEOUT_CONSIDER_QUEUED } from '../../message';
 import { ChatRoom } from '../../room';

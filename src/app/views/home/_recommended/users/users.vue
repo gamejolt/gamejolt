@@ -1,3 +1,5 @@
+<script lang="ts" src="./users"></script>
+
 <template>
 	<div class="user-recommended">
 		<div class="-header">
@@ -23,6 +25,4 @@
 	</div>
 </template>
 
-<style lang="stylus" scoped src="./recommended.styl"></style>
-
-<script lang="ts" src="./recommended"></script>
+<style lang="stylus" scoped src="./users.styl"></style>

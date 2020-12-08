@@ -7,7 +7,7 @@ const config = {
 	injectVersion: 2,
 	sections: {
 		app: {
-			title: 'Game Jolt - Indie games for the love of it',
+			title: 'Game Jolt - Games for the love of it',
 			server: true,
 			client: true,
 			crawl: true,
@@ -37,7 +37,7 @@ const config = {
 			},
 		},
 		auth: {
-			title: 'Game Jolt - Indie games for the love of it',
+			title: 'Game Jolt - Games for the love of it',
 			server: true,
 			client: true,
 			crawl: true,
@@ -62,8 +62,11 @@ const config = {
 			client: true,
 			bodyClass: 'fill-darkest',
 		},
+		'widget-package': {
+			title: 'Get Game from Game Jolt',
+		},
 		z: {
-			title: 'Game Jolt - Indie games for the love of it',
+			title: 'Game Jolt - Games for the love of it',
 			bodyClass: 'main-body',
 		},
 	},

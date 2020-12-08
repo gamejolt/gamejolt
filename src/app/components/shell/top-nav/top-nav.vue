@@ -5,7 +5,7 @@
 		<div ref="left" class="navbar-left" :style="{ 'min-width': minColWidth }">
 			<div v-app-observe-dimensions="checkColWidths" class="-col">
 				<a
-					v-if="Screen.isXs"
+					v-if="shouldShowMenu"
 					v-app-track-event="`top-nav:cbar:toggle`"
 					class="-small-cbar navbar-item"
 					:class="{
@@ -50,7 +50,7 @@
 				</router-link>
 
 				<router-link
-					v-if="!Screen.isXs && app.user"
+					v-if="shouldShowExplore"
 					v-app-track-event="`top-nav:main-menu:discover`"
 					class="-explore navbar-item"
 					:class="{ active: $route.name === 'discover.home' }"
@@ -63,7 +63,7 @@
 				</router-link>
 
 				<app-popper
-					v-if="!Screen.isXs"
+					v-if="shouldShowMoreMenu"
 					v-app-track-event="`top-nav:more-menu:toggle`"
 					popover-class="fill-darkest"
 					hide-on-state-change
@@ -122,7 +122,7 @@
 			https://github.com/gamejolt/issue-tracker/issues/382
 		-->
 		<div
-			v-if="app.userBootstrapped"
+			v-if="app.userBootstrapped && !isTimedOut"
 			ref="right"
 			class="navbar-right"
 			:style="{ 'min-width': minColWidth }"

@@ -11,6 +11,7 @@ export class AuthModal {
 				),
 			size: 'sm',
 			props: {},
+			noBackdropClose: true,
 		});
 	}
 }

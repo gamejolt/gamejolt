@@ -5,8 +5,7 @@ import { AppImgResponsive } from '../../../img/responsive/responsive';
 import AppLoading from '../../../loading/loading.vue';
 import AppMediaItemBackdrop from '../../../media-item/backdrop/backdrop.vue';
 import { MediaItem } from '../../../media-item/media-item-model';
-import { AppObserveDimensions } from '../../../observe-dimensions/observe-dimensions.directive';
-import { AppTooltip } from '../../../tooltip/tooltip-directive';
+import { AppResponsiveDimensions } from '../../../responsive-dimensions/responsive-dimensions';
 import { ContentEditorLinkModal } from '../../content-editor/modals/link/link-modal.service';
 import { ContentOwner } from '../../content-owner';
 import AppContentViewerTS from '../../content-viewer/content-viewer';
@@ -19,10 +18,7 @@ import AppBaseContentComponent from '../base/base-content-component.vue';
 		AppLoading,
 		AppImgResponsive,
 		AppMediaItemBackdrop,
-	},
-	directives: {
-		AppTooltip,
-		AppObserveDimensions,
+		AppResponsiveDimensions,
 	},
 })
 export default class AppContentMediaItem extends Vue {
@@ -55,8 +51,6 @@ export default class AppContentMediaItem extends Vue {
 
 	mediaItem: MediaItem | null = null;
 	hasError = false;
-	computedWidth = this.mediaItemWidth;
-	computedHeight = this.mediaItemHeight;
 	imageLoaded = false;
 
 	contentViewerParent: AppContentViewerTS | null = null;
@@ -92,21 +86,6 @@ export default class AppContentMediaItem extends Vue {
 
 	get hasCaption() {
 		return !!this.caption;
-	}
-
-	get containerWidth() {
-		// Always have SSR fullwidth the image. We never let SSR calculate the height of the container based on the width.
-		if (GJ_IS_SSR) {
-			return '100%';
-		}
-		return this.computedWidth > 0 ? this.computedWidth + 'px' : 'auto';
-	}
-
-	get containerHeight() {
-		if (GJ_IS_SSR) {
-			return 'auto';
-		}
-		return this.computedHeight > 0 ? this.computedHeight + 'px' : 'auto';
 	}
 
 	get itemAlignment() {
@@ -164,7 +143,6 @@ export default class AppContentMediaItem extends Vue {
 	}
 
 	mounted() {
-		this.computeSize();
 		this.contentViewerParent =
 			findVueParent<AppContentViewerTS>(this, AppContentViewer) || null;
 	}
@@ -184,22 +162,27 @@ export default class AppContentMediaItem extends Vue {
 		}
 	}
 
-	removeLink() {
-		this.emitUpdateAttrs({ href: '' });
+	get maxWidth() {
+		const { container } = this.$refs;
+		const maxOwnerWidth = this.owner.getContentRules().maxMediaWidth;
+		if (maxOwnerWidth !== null) {
+			return Math.min(maxOwnerWidth, container ? container.clientWidth : this.mediaItemWidth);
+		}
+
+		return this.mediaItemWidth;
 	}
 
-	computeSize() {
-		const maxContainerWidth = this.$refs.container.getBoundingClientRect().width;
-		let maxWidth = this.owner.getContentRules().maxMediaWidth;
-		if (maxWidth === null || maxWidth > maxContainerWidth) {
-			maxWidth = maxContainerWidth;
+	get maxHeight() {
+		const maxOwnerHeight = this.owner.getContentRules().maxMediaHeight;
+		if (maxOwnerHeight !== null) {
+			return Math.min(maxOwnerHeight, this.mediaItemHeight);
 		}
-		const maxHeight = this.owner.getContentRules().maxMediaHeight;
 
-		const size = computeSize(this.mediaItemWidth, this.mediaItemHeight, maxWidth, maxHeight);
+		return this.mediaItemHeight;
+	}
 
-		this.computedWidth = size.width;
-		this.computedHeight = size.height;
+	removeLink() {
+		this.emitUpdateAttrs({ href: '' });
 	}
 
 	onImageLoad() {
@@ -213,55 +196,4 @@ export default class AppContentMediaItem extends Vue {
 
 		this.contentViewerParent!.onItemFullscreen(this.mediaItem!);
 	}
-}
-
-/**
- * Function that computes an output size (width/height) given the input parameters.
- * Base width/height are the actual width/height of the object to be displayed.
- * Max width/height are the maximum allowed width/height of the object.
- */
-export function computeSize(
-	baseWidth: number,
-	baseHeight: number,
-	maxWidth: number | null,
-	maxHeight: number | null
-) {
-	let width = baseWidth;
-	let height = baseHeight;
-
-	let relativeWidth = null;
-	let relativeHeight = null;
-
-	if (maxWidth !== null && width > maxWidth) {
-		width = maxWidth;
-		relativeWidth = width / baseWidth;
-	}
-	if (maxHeight !== null && height > maxHeight) {
-		height = maxHeight;
-		relativeHeight = height / baseHeight;
-	}
-
-	if (relativeWidth !== null && relativeHeight !== null) {
-		// Object is larger than both max width and max height.
-		const scaledWidth = baseWidth * (maxHeight! / baseHeight);
-		const scaledHeight = baseHeight * (maxWidth! / baseWidth);
-		if (scaledWidth > scaledHeight) {
-			width = maxWidth!;
-			height = scaledHeight;
-		} else {
-			width = scaledWidth;
-			height = maxHeight!;
-		}
-	} else if (relativeWidth !== null) {
-		// Object is only larger than max width.
-		height *= relativeWidth;
-	} else if (relativeHeight !== null) {
-		// Object is only larger than max height.
-		width *= relativeHeight;
-	}
-
-	return {
-		width,
-		height,
-	};
 }

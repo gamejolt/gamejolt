@@ -189,7 +189,8 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 				this.tumblrAccount.id +
 				'/' +
 				tumblrBlog.name +
-				'?resource=User'
+				'?resource=User',
+			{}
 		);
 
 		if (payload.success) {
@@ -227,7 +228,8 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 		const payload = await Api.sendRequest(
 			'/web/dash/linked-accounts/unlink-tumblr-blog/' +
 				this.tumblrAccount.id +
-				'?resource=User'
+				'?resource=User',
+			{}
 		);
 
 		if (payload.success) {

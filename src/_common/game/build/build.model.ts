@@ -269,7 +269,7 @@ export class GameBuild extends Model {
 
 	getUrl(game: Game, page: string) {
 		if (page === 'download') {
-			return `/games/${game.slug}/${game.id}/download/build/${this.id}`;
+			return `/get/build?game=${game.id}&build=${this.id}`;
 		}
 
 		return undefined;
@@ -277,7 +277,7 @@ export class GameBuild extends Model {
 
 	static getDownloadUrl(id: number, options: { key?: string; forceDownload?: boolean } = {}) {
 		// This is a game key so you can access games that you have a key for.
-		let data: any = {};
+		const data: any = {};
 		if (options.key) {
 			data.key = options.key;
 		}

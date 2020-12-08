@@ -2,7 +2,7 @@ import { Component, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { sleep } from '../../../../utils/utils';
 import { Api } from '../../../../_common/api/api.service';
-import AppCommunityAddWidget from '../../../../_common/community/add-widget/add-widget.vue';
+import AppCommunityCardCreatePlaceholder from '../../../../_common/community/card-create-placeholder/card-create-placeholder.vue';
 import AppCommunityCard from '../../../../_common/community/card/card.vue';
 import { Community } from '../../../../_common/community/community.model';
 import AppLoading from '../../../../_common/loading/loading.vue';
@@ -22,7 +22,7 @@ const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height *
 		AppCommunityCard,
 		AppLoading,
 		AppScrollInview,
-		AppCommunityAddWidget,
+		AppCommunityCardCreatePlaceholder,
 	},
 })
 @RouteResolver({

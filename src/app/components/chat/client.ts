@@ -1,11 +1,11 @@
 import Axios from 'axios';
 import { Channel, Socket } from 'phoenix';
 import Vue from 'vue';
-import { EventBus } from '../../../system/event/event-bus.service';
 import { arrayRemove, numberSort } from '../../../utils/array';
 import { sleep } from '../../../utils/utils';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
+import { EventBus } from '../../../_common/system/event/event-bus.service';
 import { store } from '../../store';
 import { ChatMessage, ChatMessageType } from './message';
 import { ChatRoom } from './room';
@@ -159,9 +159,10 @@ async function connect(chat: ChatClient) {
 
 	const frontend = await getCookie('frontend');
 	const user = store.state.app.user;
+	const timedOut = store.state.app.isUserTimedOut;
 
-	if (user === null || frontend === undefined) {
-		// not properly logged in
+	if (user === null || frontend === undefined || timedOut) {
+		// Not properly logged in.
 		return;
 	}
 
@@ -686,6 +687,15 @@ export function editMessage(chat: ChatClient, message: ChatMessage) {
 		chat.roomChannels[room.id].push('message_update', {
 			content: message.content,
 			id: message.id,
+		});
+	}
+}
+
+export function editChatRoomTitle(chat: ChatClient, title: string) {
+	const room = chat.room;
+	if (room) {
+		chat.roomChannels[room.id].push('update_title', {
+			title,
 		});
 	}
 }

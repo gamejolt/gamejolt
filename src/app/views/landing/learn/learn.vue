@@ -1,21 +1,23 @@
+<script lang="ts" src="./learn"></script>
+
 <template>
 	<div class="route-landing-learn">
 		<section class="section landing-header text-center">
 			<div class="container">
 				<h1>
 					<app-theme-svg
+						v-app-tooltip="$gettext('This is a lightning bolt.')"
 						class="bolt anim-fade-in-down"
 						src="~img/jolt.svg"
 						alt=""
 						strict-colors
-						v-app-tooltip="$gettext('This is a lightning bolt.')"
 					/>
 				</h1>
 
 				<div class="row anim-fade-in-up">
 					<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
 						<p class="lead">
-							Discover, play, buy, and follow 100,000+ independently developed games!
+							Discover, play, buy, and follow 100,000+ games!
 						</p>
 					</div>
 				</div>
@@ -55,25 +57,25 @@
 							<h4 class="text-center">Let's Players</h4>
 
 							<p>
-								Let's players and streamers have been a massive help in getting
-								indie games discovered! Link your channel to Game Jolt and post
-								video comments.
+								Let's players and streamers have been a massive help in discovering
+								and sharing new games! Link your channel to Game Jolt and post
+								videos.
 							</p>
 						</div>
 
-						<div class="landing-break-sm"></div>
+						<div class="landing-break-sm" />
 
 						<div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-0">
 							<div class="landing-graphic">
 								<app-theme-svg src="./developers.svg" alt="" />
 							</div>
 
-							<h4 class="text-center">Indie Developers</h4>
+							<h4 class="text-center">Studios</h4>
 
 							<p>
 								Since starting in 2002, the goal of Game Jolt has always been to
-								grow indie gaming. We give you the tools to build an audience,
-								distribute your games, and manage your base of players.
+								help studios get noticed. We give you the tools to build an
+								audience, distribute your games, and manage your base of players.
 							</p>
 						</div>
 					</div>
@@ -83,7 +85,7 @@
 			<section class="section fill-offset">
 				<div class="container">
 					<div class="row">
-						<div class="col-lg-1"></div>
+						<div class="col-lg-1" />
 						<div class="col-sm-7 col-md-6 col-lg-5">
 							<h2 class="section-header">Discover</h2>
 							<hr class="underbar" />
@@ -91,8 +93,7 @@
 							<br />
 							<h4 class="sans-margin-top">Find New Games</h4>
 							<p>
-								Browse game listings to discover new and old gems created by
-								independent developers!
+								Browse game listings to discover new and old gems!
 							</p>
 
 							<p>
@@ -154,7 +155,7 @@
 								personalized game recommendations.
 							</p>
 						</div>
-						<div class="col-md-1"></div>
+						<div class="col-md-1" />
 						<div class="col-sm-5">
 							<div class="landing-graphic-full hidden-xs">
 								<app-theme-svg src="./discover.svg" alt="" />
@@ -172,7 +173,7 @@
 								<app-theme-svg src="./interact.svg" alt="" />
 							</div>
 						</div>
-						<div class="col-md-1"></div>
+						<div class="col-md-1" />
 						<div class="col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-0 col-lg-5">
 							<h2 class="section-header">Interact</h2>
 							<hr class="underbar" />
@@ -180,8 +181,8 @@
 							<br />
 							<h4 class="sans-margin-top">Discuss</h4>
 							<p>
-								Ask questions, provide feedback, and discuss directly with
-								developers by commenting on their game pages.
+								Ask questions, provide feedback, and discuss directly with studios
+								by commenting on their game pages.
 							</p>
 
 							<br />
@@ -206,9 +207,9 @@
 			<section class="section fill-offset">
 				<div class="container">
 					<div class="row">
-						<div class="col-lg-1"></div>
+						<div class="col-lg-1" />
 						<div class="col-sm-7 col-md-6 col-lg-5">
-							<h2 class="section-header">Support Indie Developers</h2>
+							<h2 class="section-header">Support Studios</h2>
 							<hr class="underbar" />
 
 							<br />
@@ -228,7 +229,7 @@
 								your support!
 							</p>
 						</div>
-						<div class="col-md-1"></div>
+						<div class="col-md-1" />
 						<div class="col-sm-5">
 							<div class="landing-graphic-full hidden-xs">
 								<app-theme-svg src="./support.svg" alt="" />
@@ -246,7 +247,7 @@
 								<app-theme-svg src="./feeds.svg" alt="" />
 							</div>
 						</div>
-						<div class="col-md-1"></div>
+						<div class="col-md-1" />
 						<div class="col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-0 col-lg-5">
 							<h2 class="section-header">Devlogs</h2>
 							<hr class="underbar" />
@@ -298,7 +299,7 @@
 			<section class="section fill-offset">
 				<div class="container">
 					<div class="row">
-						<div class="col-lg-1"></div>
+						<div class="col-lg-1" />
 						<div class="col-sm-7 col-md-6 col-lg-5">
 							<h2 class="section-header">Organize</h2>
 							<hr class="underbar" />
@@ -315,10 +316,10 @@
 							<p>
 								Any game you follow will show up in your Activity Feed. Keep track
 								of what matters to you, and stay updated with your slice of the
-								indie world!
+								gaming world!
 							</p>
 						</div>
-						<div class="col-md-1"></div>
+						<div class="col-md-1" />
 						<div class="col-sm-5">
 							<div class="landing-graphic-full hidden-xs">
 								<app-theme-svg src="./organize.svg" alt="" />
@@ -336,7 +337,7 @@
 								<app-theme-svg src="./achievements.svg" alt="" />
 							</div>
 						</div>
-						<div class="col-md-1"></div>
+						<div class="col-md-1" />
 						<div class="col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-0 col-lg-5">
 							<h2 class="section-header">Achievements</h2>
 							<hr class="underbar" />
@@ -377,8 +378,8 @@
 							<h4 class="text-center">Friends</h4>
 
 							<p>
-								Become indie friends on Game Jolt and get notified when your friends
-								are online, when they're playing games, or send them game
+								Become friends on Game Jolt and get notified when your friends are
+								online, when they're playing games, or send them game
 								recommendations.
 							</p>
 						</div>
@@ -391,12 +392,12 @@
 							<h4 class="text-center">Chat</h4>
 
 							<p>
-								Meet other indies, network and get help through private messaging
+								Meet other gamers, network and get help through private messaging
 								and available chat rooms.
 							</p>
 						</div>
 
-						<div class="landing-break-sm"></div>
+						<div class="landing-break-sm" />
 
 						<div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-0">
 							<div class="landing-graphic">
@@ -406,7 +407,7 @@
 							<h4 class="text-center">Forums</h4>
 
 							<p>
-								Find developers looking for testers, discuss the industry,
+								Find studios looking for testers, discuss the industry,
 								participate in existing conversations with let's players and devs,
 								or start your own topic! Haikus are encouraged!
 							</p>
@@ -477,7 +478,7 @@
 				</div>
 			</section>
 
-			<section class="section" v-if="!app.user">
+			<section v-if="!app.user" class="section">
 				<div class="container">
 					<h1 class="section-header text-center">
 						<translate>Join</translate>
@@ -498,12 +499,9 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
 
 .route-landing-learn .landing-body
-
 	.loading
 		color: $white
 </style>
-
-<script lang="ts" src="./learn"></script>

@@ -1,13 +1,13 @@
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { EventTopic } from '../../../../system/event/event-topic';
 import { debounce } from '../../../../utils/utils';
 import { findRequiredVueParent } from '../../../../utils/vue';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Game } from '../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../_common/game/thumbnail-img/thumbnail-img.vue';
 import { AppStore } from '../../../../_common/store/app-store';
+import { EventTopic } from '../../../../_common/system/event/event-topic';
 import { User } from '../../../../_common/user/user.model';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
 import * as _LocalDbGameMod from '../../client/local-db/game/game.model';
@@ -62,8 +62,8 @@ export default class AppSearchAutocomplete extends Vue {
 	mounted() {
 		if (this.search) {
 			this._keydownSpy = (event: KeyboardEvent) => {
-				let min = 0;
-				let max = this.items.length;
+				const min = 0;
+				const max = this.items.length;
 
 				if (event.keyCode === KEYCODE_DOWN) {
 					this.selected = Math.min(this.selected + 1, max);

@@ -54,6 +54,6 @@ export default class RouteDashGamesManageApiDataStorageItemsView extends BaseRou
 		}
 
 		await this.item.$remove();
-		this.$router.push('dash.games.manage.api.data-storage.items.list');
+		this.$router.push({ name: 'dash.games.manage.api.data-storage.items.list' });
 	}
 }

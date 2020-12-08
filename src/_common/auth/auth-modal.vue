@@ -1,3 +1,5 @@
+<script lang="ts" src="./auth-modal"></script>
+
 <template>
 	<app-modal>
 		<div class="modal-controls">
@@ -13,8 +15,6 @@
 		</div>
 	</app-modal>
 </template>
-
-<script lang="ts" src="./auth-modal"></script>
 
 <style lang="stylus" scoped>
 .-auth-container

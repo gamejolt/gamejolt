@@ -1,9 +1,9 @@
 import { Route } from 'vue-router';
-import { EventBus } from '../../system/event/event-bus.service';
 import { objectEquals } from '../../utils/object';
 import { installVuePlugin } from '../../utils/vue';
 import { Environment } from '../environment/environment.service';
 import { Model } from '../model/model.service';
+import { EventBus } from '../system/event/event-bus.service';
 import { AdSlot } from './ad-slot-info';
 import { AdAdapterBase } from './adapter-base';
 import { AdPlaywireAdapter } from './playwire/playwire-adapter';

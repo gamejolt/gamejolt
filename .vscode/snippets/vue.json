@@ -10,5 +10,21 @@
 	"mixins": {
 		"prefix": "mixins",
 		"body": ["@require '~styles-lib/mixins'"]
+	},
+	"component": {
+		"prefix": "component",
+		"body": [
+			"<script lang=\"ts\" src=\"./$1\"></script>",
+			"",
+			"<template>",
+			"\t<div class=\"$2\">",
+			"\t\t<!-- -->",
+			"\t</div>",
+			"</template>",
+			"",
+			"<style lang=\"stylus\" scoped>",
+			"$3",
+			"</style>"
+		]
 	}
 }

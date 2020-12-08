@@ -54,7 +54,7 @@ export default class AppCommentControls extends Vue {
 						'You and %{ count } people like this comment.',
 						count - 1
 					),
-					{ count }
+					{ count: count - 1 }
 				);
 			}
 		} else {

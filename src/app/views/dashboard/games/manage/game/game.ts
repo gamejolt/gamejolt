@@ -23,17 +23,10 @@ import AppManageGameNav from './_nav/nav.vue';
 	},
 })
 export default class RouteDashGamesManageGame extends BaseRouteComponent {
-	@RouteStoreModule.State
-	game!: RouteStore['game'];
-
-	@RouteStoreModule.State
-	media!: RouteStore['media'];
-
-	@RouteStoreModule.State
-	canPublish!: RouteStore['canPublish'];
-
-	@RouteStoreModule.Action
-	saveDraft!: RouteStore['saveDraft'];
+	@RouteStoreModule.State game!: RouteStore['game'];
+	@RouteStoreModule.State media!: RouteStore['media'];
+	@RouteStoreModule.State canPublish!: RouteStore['canPublish'];
+	@RouteStoreModule.Action saveDraft!: RouteStore['saveDraft'];
 
 	readonly Game = Game;
 	readonly Screen = Screen;

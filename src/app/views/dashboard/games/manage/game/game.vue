@@ -1,28 +1,17 @@
+<script lang="ts" src="./game"></script>
+
 <template>
 	<div>
-		<section class="alert alert-well sans-margin-bottom" v-if="game.status === Game.STATUS_HIDDEN">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-10 col-lg-8 col-centered" :class="{ 'text-center': Screen.isDesktop }">
-						<translate>dash.games.hidden_message</translate>
-						<template v-if="!game.published_on">
-							<translate>dash.games.hidden_message_unpublished</translate>
-						</template>
-					</div>
-				</div>
-			</div>
-		</section>
-
 		<app-expand :when="$route.name === 'dash.games.manage.game.design'">
 			<app-editable-overlay @click="showEditHeader()">
-				<span slot="overlay">
-					<translate v-if="!game.header_media_item">Upload Game Header</translate>
-					<translate v-else>Change Header</translate>
-				</span>
+				<template #overlay>
+					<span>
+						<translate v-if="!game.header_media_item">Upload Game Header</translate>
+						<translate v-else>Change Header</translate>
+					</span>
+				</template>
 
-				<!--
-				If no header yet, show their highlight color with a min-height.
-			-->
+				<!-- If no header yet, show their highlight color with a min-height. -->
 				<div
 					class="fill-highlight"
 					:style="{
@@ -41,7 +30,7 @@
 			<app-manage-game-media-bar :game="game" :media-items="media" />
 		</app-expand>
 
-		<div class="container" v-if="Screen.isMobile">
+		<div v-if="Screen.isMobile" class="container">
 			<br />
 			<app-nav-tab-list>
 				<app-manage-game-nav />
@@ -51,7 +40,7 @@
 		<section class="section">
 			<div class="container">
 				<div class="row">
-					<div class="col-md-2" v-if="Screen.isDesktop">
+					<div v-if="Screen.isDesktop" class="col-md-2">
 						<nav class="platform-list">
 							<app-manage-game-nav />
 						</nav>
@@ -64,5 +53,3 @@
 		</section>
 	</div>
 </template>
-
-<script lang="ts" src="./game"></script>
