@@ -440,7 +440,7 @@ export function queueChatMessage(chat: ChatClient, content: string, roomId: numb
 	sendChatMessage(chat, message);
 }
 
-function setTimeSplit(chat: ChatClient, roomId: number, message: ChatMessage) {
+export function setTimeSplit(chat: ChatClient, roomId: number, message: ChatMessage) {
 	message.combine = false;
 	message.dateSplit = false;
 
