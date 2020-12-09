@@ -1,10 +1,10 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { EventSubscription } from '../../system/event/event-topic';
 import { Analytics } from '../analytics/analytics.service';
 import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
 import { Screen } from '../screen/screen-service';
 import AppShortkey from '../shortkey/shortkey.vue';
+import { EventSubscription } from '../system/event/event-topic';
 import AppLightboxItem from './item/item.vue';
 import { LightboxMediaSource } from './lightbox-helpers';
 import AppLightboxSlider from './slider.vue';

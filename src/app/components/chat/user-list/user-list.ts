@@ -6,15 +6,15 @@ import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
 import AppChatUserListItem from './item/item.vue';
 
-function searchUsers(users: (ChatUser | ChatRoom)[], query: string): (ChatUser | ChatRoom)[] {
-	return users.filter(i => {
+function searchEntries(entries: (ChatUser | ChatRoom)[], query: string): (ChatUser | ChatRoom)[] {
+	return entries.filter(i => {
 		if (i instanceof ChatUser) {
 			return (
 				fuzzysearch(query, i.display_name.toLowerCase()) ||
 				fuzzysearch(query, i.username.toLowerCase())
 			);
 		} else if (i instanceof ChatRoom) {
-			return searchUsers(i.members, query).length > 0;
+			return searchEntries(i.members, query).length > 0;
 		}
 	});
 }
@@ -25,18 +25,29 @@ function searchUsers(users: (ChatUser | ChatRoom)[], query: string): (ChatUser |
 	},
 })
 export default class AppChatUserList extends Vue {
-	@Prop(propRequired(Array)) users!: (ChatUser | ChatRoom)[];
+	@Prop(propRequired(Array)) entries!: (ChatUser | ChatRoom)[];
 	@Prop(propOptional(ChatRoom)) currentRoom?: ChatRoom;
 	@Prop(propOptional(Boolean, false)) showPm!: boolean;
 
 	filterQuery = '';
 
-	get filteredUsers() {
+	get filteredEntries() {
 		if (!this.filterQuery) {
-			return this.users;
+			return this.entries;
 		}
 
 		const query = this.filterQuery.toLowerCase();
-		return searchUsers(this.users, query);
+		return searchEntries(this.entries, query);
+	}
+
+	getKeyForEntry(entry: ChatUser | ChatRoom) {
+		let key = '';
+		if (entry instanceof ChatUser) {
+			key = 'chat-user-';
+		} else if (entry instanceof ChatRoom) {
+			key = 'chat-room-';
+		}
+
+		return key + entry.id;
 	}
 }

@@ -24,7 +24,7 @@
 											? $gettext('Create Group Chat')
 											: $gettext('Add Friends')
 									"
-									class="anim-fade-in"
+									class="-header-control anim-fade-in"
 									circle
 									trans
 									:icon="'friend-add-' + friendAddJolticonVersion"
@@ -42,12 +42,13 @@
 								circle
 								trans
 								icon="users"
-								class="anim-fade-in"
+								class="-header-control anim-fade-in"
 								@click="toggleUsers"
 							/>
 
 							<app-button
 								v-app-tooltip="$gettext('Close Room')"
+								class="-header-control"
 								circle
 								trans
 								icon="remove"
@@ -95,6 +96,16 @@
 								<br />
 								<small>@{{ room.user.username }}</small>
 							</h3>
+
+							<app-button
+								v-if="!room.isPmRoom && isOwner"
+								v-app-tooltip="$gettext('Edit Group')"
+								class="-header-control anim-fade-in-right"
+								circle
+								trans
+								icon="edit"
+								@click="editTitle()"
+							/>
 						</div>
 					</div>
 				</div>
@@ -145,7 +156,7 @@
 					<app-chat-user-list
 						v-if="users"
 						:current-room="room"
-						:users="users.collection"
+						:entries="users.collection"
 					/>
 				</app-scroll-scroller>
 			</div>

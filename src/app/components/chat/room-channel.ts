@@ -7,6 +7,7 @@ import {
 	isInChatRoom,
 	processNewChatOutput,
 	setChatRoom,
+	setTimeSplit,
 	updateChatRoomLastMessageOn,
 } from './client';
 import { ChatMessage } from './message';
@@ -28,6 +29,10 @@ interface MemberLeavePayload {
 
 interface OwnerSyncPayload {
 	owner_id: number;
+}
+
+interface UpdateTitlePayload {
+	title: string;
 }
 
 export class ChatRoomChannel extends Channel {
@@ -54,6 +59,7 @@ export class ChatRoomChannel extends Channel {
 		this.on('member_leave', this.onMemberLeave.bind(this));
 		this.on('owner_sync', this.onOwnerSync.bind(this));
 		this.on('member_add', this.onMemberAdd.bind(this));
+		this.on('update_title', this.onUpdateTitle.bind(this));
 
 		this.onClose(() => {
 			if (isInChatRoom(this.client, roomId)) {
@@ -121,7 +127,30 @@ export class ChatRoomChannel extends Channel {
 
 	private onRemoveMsg(data: { id: number }) {
 		if (this.room) {
+			const roomMessages = this.client.messages[this.roomId];
+
+			// Get the two surrounding messages of the removed message.
+			const removedMessageIndex = roomMessages.findIndex(i => i.id === data.id);
+			const previousMessage =
+				removedMessageIndex === 0 ? null : roomMessages[removedMessageIndex - 1];
+			const nextMessage =
+				removedMessageIndex === roomMessages.length - 1
+					? null
+					: roomMessages[removedMessageIndex + 1];
+
 			arrayRemove(this.client.messages[this.roomId], i => i.id === data.id);
+
+			// Recalc the time split of the surrounding messages.
+			// If for example the removed message was the first in a batch of user messages,
+			// removing it would get rid of the split between that user and the previous one.
+			// Resetting the time split on the next (now first in batch) message shows the user
+			// header on that message.
+			if (previousMessage) {
+				setTimeSplit(this.client, this.roomId, previousMessage);
+			}
+			if (nextMessage) {
+				setTimeSplit(this.client, this.roomId, nextMessage);
+			}
 		}
 	}
 
@@ -177,6 +206,10 @@ export class ChatRoomChannel extends Channel {
 
 			this.room.members.push(user);
 		}
+	}
+
+	private onUpdateTitle(data: UpdateTitlePayload) {
+		this.room.title = data.title;
 	}
 
 	private onOwnerSync(data: OwnerSyncPayload) {

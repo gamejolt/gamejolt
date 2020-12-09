@@ -8,6 +8,7 @@ import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Community } from '../../../_common/community/community.model';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
+import { FiresidePostCommunity } from '../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { GameTrophy } from '../../../_common/game/trophy/trophy.model';
 import { Growls } from '../../../_common/growls/growls.service';
@@ -531,6 +532,10 @@ export class GridClient {
 					title = Translate.$gettext(`Trophy Unlocked!`);
 					message = notification.action_model.trophy.title;
 					icon = getTrophyImg(notification.action_model.trophy);
+				}
+			} else if (notification.type === Notification.TYPE_POST_FEATURED_IN_COMMUNITY) {
+				if (notification.action_model instanceof FiresidePostCommunity) {
+					icon = notification.action_model.community.img_thumbnail;
 				}
 			}
 

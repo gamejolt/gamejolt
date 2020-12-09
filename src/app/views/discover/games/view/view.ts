@@ -1,5 +1,4 @@
 import { Component, Inject } from 'vue-property-decorator';
-import { EventBus, EventBusDeregister } from '../../../../../system/event/event-bus.service';
 import { enforceLocation } from '../../../../../utils/router';
 import { AdSettingsContainer } from '../../../../../_common/ad/ad-store';
 import { Analytics } from '../../../../../_common/analytics/analytics.service';
@@ -19,6 +18,10 @@ import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/
 import { WithRouteStore } from '../../../../../_common/route/route-store';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
+import {
+	EventBus,
+	EventBusDeregister,
+} from '../../../../../_common/system/event/event-bus.service';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { Translate } from '../../../../../_common/translate/translate.service';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';

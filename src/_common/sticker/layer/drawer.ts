@@ -4,7 +4,6 @@ import { State } from 'vuex-class';
 import AppEventItemMediaIndicator from '../../../app/components/event-item/media-indicator/media-indicator.vue';
 import { Store } from '../../../app/store/index';
 import { StickerCount } from '../../../app/views/dashboard/stickers/stickers';
-import { EventSubscription } from '../../../system/event/event-topic';
 import { Analytics } from '../../analytics/analytics.service';
 import {
 	DrawerStore,
@@ -19,6 +18,7 @@ import { EscapeStack, EscapeStackCallback } from '../../escape-stack/escape-stac
 import AppLoadingFade from '../../loading/fade/fade.vue';
 import { Screen } from '../../screen/screen-service';
 import AppScrollScroller from '../../scroll/scroller/scroller.vue';
+import { EventSubscription } from '../../system/event/event-topic';
 import AppStickerCard from '../card/card.vue';
 import { StickerCollectModal } from '../collect/modal/modal.service';
 import { Sticker } from '../sticker.model';

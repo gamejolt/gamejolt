@@ -1,3 +1,5 @@
+<script lang="ts" src="./modal"></script>
+
 <template>
 	<app-modal>
 		<div class="modal-controls">
@@ -14,12 +16,16 @@
 
 		<div class="modal-body">
 			<app-community-move-post
+				v-if="canMove"
 				:fireside-post-community="firesidePostCommunity"
 				:channels="channels"
 				@select="onChannelSelected"
 			/>
+			<span v-else>
+				<translate>
+					There are no channels in this community that the post can be moved to.
+				</translate>
+			</span>
 		</div>
 	</app-modal>
 </template>
-
-<script lang="ts" src="./modal"></script>

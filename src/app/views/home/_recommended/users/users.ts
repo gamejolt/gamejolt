@@ -1,11 +1,11 @@
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
-import { Analytics } from '../../../../_common/analytics/analytics.service';
-import AppLoading from '../../../../_common/loading/loading.vue';
-import AppUserFollowWidget from '../../../../_common/user/follow/widget.vue';
-import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
-import { User } from '../../../../_common/user/user.model';
-import AppUserList from '../../../components/user/list/list.vue';
+import { Analytics } from '../../../../../_common/analytics/analytics.service';
+import AppLoading from '../../../../../_common/loading/loading.vue';
+import AppUserFollowWidget from '../../../../../_common/user/follow/widget.vue';
+import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
+import { User } from '../../../../../_common/user/user.model';
+import AppUserList from '../../../../components/user/list/list.vue';
 
 @Component({
 	components: {
@@ -15,7 +15,7 @@ import AppUserList from '../../../components/user/list/list.vue';
 		AppUserList,
 	},
 })
-export default class AppHomeRecommended extends Vue {
+export default class AppHomeRecommendedUsers extends Vue {
 	@Prop(Array)
 	users!: User[];
 

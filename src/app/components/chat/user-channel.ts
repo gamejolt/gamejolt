@@ -30,6 +30,11 @@ interface RoomIdPayload {
 	room_id: number;
 }
 
+interface UpdateGroupTitlePayload {
+	title: string;
+	room_id: number;
+}
+
 export class ChatUserChannel extends Channel {
 	readonly client: ChatClient;
 	readonly socket: Socket;
@@ -53,6 +58,7 @@ export class ChatUserChannel extends Channel {
 		this.on('clear_notifications', this.onClearNotifications.bind(this));
 		this.on('group_add', this.onGroupAdd.bind(this));
 		this.on('group_leave', this.onRoomLeave.bind(this));
+		this.on('update_title', this.onUpdateTitle.bind(this));
 		this.onClose(() => {
 			this.tabLeader.kill();
 		});
@@ -145,5 +151,13 @@ export class ChatUserChannel extends Channel {
 	private onGroupAdd(data: GroupAddPayload) {
 		const newGroup = new ChatRoom(data.room);
 		this.client.groupRooms.push(newGroup);
+	}
+
+	private onUpdateTitle(data: UpdateGroupTitlePayload) {
+		const index = this.client.groupRooms.findIndex(room => room.id === data.room_id);
+
+		if (index !== -1) {
+			this.client.groupRooms[index].title = data.title;
+		}
 	}
 }

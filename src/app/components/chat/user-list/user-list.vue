@@ -11,10 +11,10 @@
 			/>
 		</div>
 
-		<ul v-show="users.length" class="shell-nav">
+		<ul v-show="entries.length" class="shell-nav">
 			<app-chat-user-list-item
-				v-for="user of filteredUsers"
-				:key="user.id"
+				v-for="user of filteredEntries"
+				:key="getKeyForEntry(user)"
 				:item="user"
 				:current-room="currentRoom"
 				:show-pm="showPm"
