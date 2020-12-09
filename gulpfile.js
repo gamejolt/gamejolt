@@ -62,6 +62,9 @@ const config = {
 			client: true,
 			bodyClass: 'fill-darkest',
 		},
+		'widget-package': {
+			title: 'Get Game from Game Jolt',
+		},
 		z: {
 			title: 'Game Jolt - Games for the love of it',
 			bodyClass: 'main-body',

@@ -1,0 +1,29 @@
+@import './styles/variables'
+@import '../_styles/common'
+@import '../_common/jolticons/jolticons'
+@import '../_common/alert/alert'
+
+html
+body
+	background-color: transparent
+
+body
+	height: $shell-height
+	padding-top: $pricing-card-offset
+	overflow: hidden
+
+/**
+ * Forms
+ */
+.form-group
+	margin-bottom: 5px
+	// Wasn't allowing tooltips to go over buttons correctly
+	position: relative
+	z-index: 1
+
+.alert
+	@extend .anim-fade-in-enlarge
+	margin-bottom: 0
+
+.form-control
+	border: 0

@@ -1,11 +1,11 @@
 import Axios from 'axios';
 import { Channel, Socket } from 'phoenix';
 import Vue from 'vue';
-import { EventBus } from '../../../system/event/event-bus.service';
 import { arrayRemove, numberSort } from '../../../utils/array';
 import { sleep } from '../../../utils/utils';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
+import { EventBus } from '../../../_common/system/event/event-bus.service';
 import { store } from '../../store';
 import { ChatMessage, ChatMessageType } from './message';
 import { ChatRoom } from './room';
@@ -440,7 +440,7 @@ export function queueChatMessage(chat: ChatClient, content: string, roomId: numb
 	sendChatMessage(chat, message);
 }
 
-function setTimeSplit(chat: ChatClient, roomId: number, message: ChatMessage) {
+export function setTimeSplit(chat: ChatClient, roomId: number, message: ChatMessage) {
 	message.combine = false;
 	message.dateSplit = false;
 

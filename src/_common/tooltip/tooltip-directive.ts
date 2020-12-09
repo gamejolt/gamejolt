@@ -1,7 +1,7 @@
 import { DirectiveOptions } from 'vue';
 import { TooltipModel } from './tooltip-model';
 
-let state = new WeakMap<HTMLElement, TooltipModel>();
+const state = new WeakMap<HTMLElement, TooltipModel>();
 
 /**
  * Use the 'touchable' modifier to allow toggle usage for mobile.
@@ -10,7 +10,7 @@ let state = new WeakMap<HTMLElement, TooltipModel>();
  */
 export const AppTooltip: DirectiveOptions = {
 	bind(el, binding) {
-		let tooltip = new TooltipModel(el, binding);
+		const tooltip = new TooltipModel(el, binding);
 		state.set(el, tooltip);
 	},
 	update(el, binding) {

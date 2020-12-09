@@ -198,7 +198,7 @@ export default class AppVideo extends Vue {
 		}
 	}
 
-	@Watch('player.volume')
+	@Watch('player.volume', { immediate: true })
 	syncVolume() {
 		if (!this.video) {
 			return;
