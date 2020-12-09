@@ -5,6 +5,7 @@
 		"postinstall": "yarn run translations",
 		"start": "gulp watch",
 		"dev": "gulp watch",
+		"devd": "gulp watch --development",
 		"translations": "gulp translations:compile",
 		"client": "nw build/dev-client",
 		"client-build-dev": "gulp --development --client --arch=64",
