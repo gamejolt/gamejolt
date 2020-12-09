@@ -131,6 +131,10 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 		}
 	}
 
+	get shouldShowLike() {
+		return this.post.canLike;
+	}
+
 	openComments() {
 		Analytics.trackEvent('post-controls', 'comments', this.eventLabel);
 		CommentModal.show({
