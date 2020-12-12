@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { propOptional } from '../../../../utils/vue';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import { TagInfo, TagsInfo } from '../tags-info.service';
 import AppTagThumbnail from '../thumbnail/thumbnail.vue';
@@ -36,8 +37,7 @@ const FeaturedTags = [
 	},
 })
 export default class AppTagList extends Vue {
-	@Prop({ type: String, required: false, default: 'global' })
-	eventCat!: string;
+	@Prop(propOptional(String, 'global')) eventCat!: string;
 
 	get tags() {
 		const tags: TagInfo[] = [];
