@@ -229,7 +229,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 	@VuexAction
 	async hide() {
 		const result = await ModalConfirm.show(
-			Translate.$gettext('Are you sure you want to hide your game page?')
+			Translate.$gettext('Are you sure you want to unlist your game page?')
 		);
 		if (!result) {
 			return;
@@ -238,8 +238,8 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 		await this.game.$setStatus(Game.STATUS_HIDDEN);
 
 		Growls.info(
-			Translate.$gettext('Your game page is now hidden.'),
-			Translate.$gettext('Game Hidden')
+			Translate.$gettext('Your game page is now unlisted.'),
+			Translate.$gettext('Game Unlisted')
 		);
 	}
 

@@ -192,8 +192,12 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 		return this.development_status === Game.DEVELOPMENT_STATUS_DEVLOG;
 	}
 
-	get is_published() {
+	get isVisible() {
 		return this.status === Game.STATUS_VISIBLE;
+	}
+
+	get isUnlisted() {
+		return this.status === Game.STATUS_HIDDEN;
 	}
 
 	get _has_cover() {
@@ -230,10 +234,6 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 		}
 
 		return true;
-	}
-
-	get isVisible() {
-		return this.status === Game.STATUS_VISIBLE;
 	}
 
 	getContent(context: ContentContext) {

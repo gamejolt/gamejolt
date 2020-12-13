@@ -62,11 +62,11 @@
 						</span>
 
 						<template v-if="!isWizard">
-							<span v-if="game.status === Game.STATUS_HIDDEN" class="tag tag-notice">
-								<translate>dash.games.hidden_tag</translate>
+							<span v-if="game.isUnlisted" class="tag tag-notice">
+								<translate>Unlisted</translate>
 							</span>
 
-							<template v-if="game.status === Game.STATUS_VISIBLE">
+							<template v-if="game.isVisible">
 								<span class="tag tag-highlight">
 									<translate>dash.games.published_tag</translate>
 								</span>
@@ -97,16 +97,20 @@
 				</div>
 			</div>
 
-			<app-expand :when="!isWizard && game.status === Game.STATUS_HIDDEN">
+			<app-expand :when="!isWizard && game.isUnlisted">
 				<div class="alert alert-notice">
-					<translate>dash.games.hidden_message</translate>
+					<translate>This game is currently unlisted from public view.</translate>
 					<template v-if="!game.published_on">
-						<translate>dash.games.hidden_message_unpublished</translate>
+						<translate>
+							We recommend keeping it unlisted until you've finished filling out the
+							details and added some media. Don't forget to publish it when it's
+							ready, or it won't show up in the game listings!
+						</translate>
 					</template>
 				</div>
 			</app-expand>
 
-			<app-expand :when="game.status === Game.STATUS_VISIBLE && !game.is_listable">
+			<app-expand :when="game.isVisible && !game.is_listable">
 				<div v-translate class="alert alert-notice">
 					<b>Your game page is no longer visible in game listings!</b>
 					It must have active game builds for it to show.
