@@ -6,7 +6,7 @@
 			<div class="container">
 				<h1>
 					<app-theme-svg
-						v-app-tooltip="$gettext('This is a lightning bolt.')"
+						v-app-tooltip="$gettext('This is a lightning bolt!')"
 						class="bolt anim-fade-in-down"
 						src="~img/jolt.svg"
 						alt=""
@@ -19,8 +19,9 @@
 				<div class="row anim-fade-in-up stagger">
 					<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 						<p class="lead">
-							Millions of gamers, let's players, and game developers visit Game Jolt
-							each month to get their gaming fix.
+							Game Jolt is one of the largest communities in existence for video games
+							and the people who love to make and play them, working its way into the
+							lives of 150 million people!
 						</p>
 					</div>
 				</div>
@@ -40,39 +41,37 @@
 					<div class="row">
 						<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 							<p>
-								Game Jolt is run by me, David DeCarmine, and Yaprak DeCarmine, plus
-								the help of the millions of game developers and gamers on Game
-								Jolt. Together, our mission is to grow indie gaming!
+								Whether you're into sharing your fan art for the most popular games
+								in the world or you spend your free time finding obscure games
+								nobody has heard of, Game Jolt is a one-stop community for all of
+								gaming.
 							</p>
-
 							<p>
-								In 2002, at the age of 14, I came up with the idea of a platform for
-								indies&mdash;for hobbyists that were creating games for the love of
-								it. Something more personal, more collaborative, and more indie.
-								Where anyone can create a game, show it off, and build an audience.
-								It was kind of crazy. This was way before the existence of current
-								platforms, and before indie gaming became as big as it has.
+								Connecting gamers and creators within game communities across PC,
+								mobile and console, join communities like
+								<a href="https://gamejolt.com/c/minecraft">Minecraft</a>,
+								<a href="https://gamejolt.com/c/pokemon">Pokémon</a> and
+								<a href="https://gamejolt.com/c/fnaf">FNaF</a> or try your hand at
+								playing some of our
+								<a href="https://gamejolt.com/games/featured">favorite games</a>!
 							</p>
-
 							<p>
-								Game Jolt has come a long way since then. After I revamped the site
-								in 2008 it became one of the biggest indie gaming platforms in
-								existence. Today, millions of gamers, let's players, and indie
-								developers visit Game Jolt each month to get their indie gaming fix,
-								and to explore over 100,000 games.
+								We’ve extended our reach to a growing population of visual artists,
+								musicians, streamers, writers, conversationalists, fan cultures, and
+								the list goes on. Our
+								<a href="https://gamejolt.com/communities">community</a> continues
+								to demonstrate their widening range of interests making us the
+								ultimate platform for billions of gamers!
 							</p>
-
 							<p>
-								I believe there's power in community. Gamers, let's players,
-								developers, reviewers, journalists: let’s grow this amazing and
-								weird thing that is indie gaming, and celebrate making games for the
-								love of it.
+								<a href="https://gamejolt.com/join">Join</a> over a hundred million
+								gamers on Game Jolt and hundreds of thousands of creators!
 							</p>
 						</div>
 					</div>
 
 					<h1 class="text-center">
-						Contact
+						Our Team
 					</h1>
 
 					<hr class="underbar underbar-center" />
@@ -81,25 +80,40 @@
 					<div class="row">
 						<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 							<p>
-								<strong>For support</strong>
-								, check out the
-								<router-link :to="{ name: 'forums.landing.overview' }">
-									forums
-								</router-link>
-								or email us at
+								Our team is made up of gamers, developers, artists, musicians and
+								publishers. We are building the platform for billions of gamers
+								worldwide!
+							</p>
+							<div class="-staff">
+								<div class="-staff-item">
+									<a href="https://gamejolt.com/@thoro">
+										<img src="./thoro.jpg" alt="thoro" class="-avatar" />
+									</a>
+									<strong>Yaprak</strong> <small>@thoro</small> <br />
+									Co-founder / CEO
+								</div>
+								<div class="-staff-item">
+									<a href="https://gamejolt.com/@cros">
+										<img src="./cros.jpg" alt="cros" class="-avatar" />
+									</a>
+									<strong>David</strong> <small>@cros</small> <br />
+									Co-founder / CTO
+								</div>
+							</div>
+							<br />
+
+							<p>
+								<strong>For support</strong>, email us at
 								<app-contact-link email="contact@gamejolt.com">
 									contact@gamejolt.com
 								</app-contact-link>
-								.
 							</p>
 
 							<p>
-								<strong>Press/business inquiries</strong>
-								email Yaprak DeCarmine at
+								<strong>Press/business inquiries</strong>, email Yaprak DeCarmine at
 								<app-contact-link email="yaprak@gamejolt.com">
 									yaprak@gamejolt.com
 								</app-contact-link>
-								.
 							</p>
 						</div>
 					</div>
@@ -142,7 +156,7 @@
 								<br />
 
 								<div class="text-right">
-									<span v-for="(size, i) of ['1x', '2x', '3x', '4x']">
+									<span v-for="(size, i) of ['1x', '2x', '3x', '4x']" :key="size">
 										<a
 											:href="
 												assetUrls['./gamejolt-logo-dark-' + size + '.png']
@@ -179,7 +193,7 @@
 								<br />
 
 								<div class="text-right">
-									<span v-for="(size, i) of ['1x', '2x', '3x', '4x']">
+									<span v-for="(size, i) of ['1x', '2x', '3x', '4x']" :key="size">
 										<a
 											:href="
 												assetUrls['./gamejolt-logo-light-' + size + '.png']
@@ -212,7 +226,10 @@
 										<br />
 
 										<div class="text-right">
-											<span v-for="(size, i) of ['1x', '2x', '3x', '4x']">
+											<span
+												v-for="(size, i) of ['1x', '2x', '3x', '4x']"
+												:key="size"
+											>
 												<a
 													:href="
 														assetUrls[
@@ -246,7 +263,10 @@
 										<br />
 
 										<div class="text-right">
-											<span v-for="(size, i) of ['1x', '2x', '3x', '4x']">
+											<span
+												v-for="(size, i) of ['1x', '2x', '3x', '4x']"
+												:key="size"
+											>
 												<a
 													:href="
 														assetUrls[
@@ -289,7 +309,10 @@
 										<br />
 
 										<div class="text-right">
-											<span v-for="(size, i) of ['1x', '2x', '3x', '4x']">
+											<span
+												v-for="(size, i) of ['1x', '2x', '3x', '4x']"
+												:key="size"
+											>
 												<a
 													:href="
 														assetUrls[
@@ -323,7 +346,10 @@
 										<br />
 
 										<div class="text-right">
-											<span v-for="(size, i) of ['1x', '2x', '3x', '4x']">
+											<span
+												v-for="(size, i) of ['1x', '2x', '3x', '4x']"
+												:key="size"
+											>
 												<a
 													:href="
 														assetUrls[
@@ -353,9 +379,9 @@
 					<p class="text-center">Wanna look like us? Check these hex codes out!</p>
 
 					<div class="row">
-						<div v-for="(fg, bg) of colors" class="col-sm-3">
+						<div v-for="(fg, bg) of colors" :key="bg" class="col-sm-3">
 							<div
-								class="well color-hex-code"
+								class="well -color-hex-code"
 								:style="{
 									color: fg,
 									'background-color': bg,
@@ -373,9 +399,30 @@
 
 <style lang="stylus" scoped>
 @import '~styles/variables'
+@import '~styles-lib/mixins'
 
-.route-landing-about
-	.color-hex-code
-		font-family: $font-family-monospace
-		font-weight: bold
+.-color-hex-code
+	font-family: $font-family-monospace
+	font-weight: bold
+
+.-staff
+	display: flex
+	flex-direction: row
+	justify-content: center
+
+.-staff-item
+	width: 100%
+	max-width: 150px
+	margin: 0 ($grid-gutter-width-xs / 2)
+	text-align: center
+
+	@media $media-sm-up
+		margin: 0 ($grid-gutter-width / 2)
+
+.-avatar
+	img-responsive()
+	img-circle()
+	display: block
+	margin-bottom: $line-height-computed
+	border: 4px solid var(--theme-fg)
 </style>
