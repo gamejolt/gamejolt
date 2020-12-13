@@ -46,7 +46,11 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	games: Game[] = [];
 
 	get isInSplit() {
-		return hasCommunitiesHomeSplitTest(this.$route, this.app.user);
+		return hasCommunitiesHomeSplitTest(this.$route);
+	}
+
+	get slicedGames() {
+		return this.games.slice(0, 6);
 	}
 
 	routeCreated() {
@@ -54,7 +58,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	}
 
 	routeResolved($payload: any) {
-		trackCommunitiesHomeSplitTest(this.$route, this.app.user);
+		trackCommunitiesHomeSplitTest(this.$route);
 
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb;
@@ -84,12 +88,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 			}
 		}
 
-		if (this.isInSplit && $payload.communities) {
-			this.featuredCommunities = Community.populate($payload.communities);
-		} else {
-			this.featuredCommunities = Community.populate($payload.featuredCommunities);
-		}
-
+		this.featuredCommunities = Community.populate($payload.communities);
 		this.games = Game.populate($payload.games);
 	}
 }
