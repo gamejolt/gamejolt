@@ -73,9 +73,7 @@ export default class FormUserHeader extends BaseForm<FormModel>
 
 	async clearHeader() {
 		const result = await ModalConfirm.show(
-			this.$gettext(`Are you sure you want to remove your profile header?`),
-			undefined,
-			'yes'
+			this.$gettext(`Are you sure you want to remove your profile header?`)
 		);
 
 		if (result) {

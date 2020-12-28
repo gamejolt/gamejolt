@@ -69,9 +69,7 @@ export default class FormCommunityHeader extends BaseForm<FormModel>
 
 	async clearHeader() {
 		const result = await ModalConfirm.show(
-			this.$gettext(`Are you sure you want to remove the community header?`),
-			undefined,
-			'yes'
+			this.$gettext(`Are you sure you want to remove the community header?`)
 		);
 
 		if (result) {

@@ -83,8 +83,7 @@ export default class RouteDashAccountBlocks extends BaseRouteComponent {
 			this.$gettextInterpolate(`Are you sure you want to unblock %{ name }?`, {
 				name: block.user.display_name,
 			}),
-			this.$gettext(`Unblock user`),
-			'yes'
+			this.$gettext(`Unblock user`)
 		);
 		if (!confirm) {
 			return;

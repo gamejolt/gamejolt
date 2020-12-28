@@ -62,9 +62,7 @@ export class UserFriendshipHelper {
 		const confirmResult = await ModalConfirm.show(
 			Translate.$gettextInterpolate(`Cancel the friend request you sent to @%{ username }?`, {
 				username: request.target_user.username,
-			}),
-			undefined,
-			'yes'
+			})
 		);
 
 		if (!confirmResult) {
@@ -95,9 +93,7 @@ export class UserFriendshipHelper {
 		const confirmResult = await ModalConfirm.show(
 			Translate.$gettextInterpolate(`Dismiss the friend request from @%{ username }?`, {
 				username: request.user.username,
-			}),
-			undefined,
-			'yes'
+			})
 		);
 
 		if (!confirmResult) {
@@ -128,9 +124,7 @@ export class UserFriendshipHelper {
 		const confirmResult = await ModalConfirm.show(
 			Translate.$gettextInterpolate(`Remove @%{ username } as a friend?`, {
 				username: them.username,
-			}),
-			undefined,
-			'yes'
+			})
 		);
 
 		if (!confirmResult) {

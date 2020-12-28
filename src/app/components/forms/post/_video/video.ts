@@ -359,8 +359,7 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 				this.$gettext(
 					'When you remove your video, you can upload a new one later or link a YouTube video instead.'
 				),
-				this.$gettext('Remove uploaded video?'),
-				'yes'
+				this.$gettext('Remove uploaded video?')
 			);
 
 			if (!result) {

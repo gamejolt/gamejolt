@@ -100,7 +100,9 @@ export default class RouteKey extends BaseRouteComponent {
 			this.$gettextInterpolate(
 				`Claiming this %{ type } into your Library will allow you to access it through your Game Jolt account and invalidate this key page.`,
 				{ type: resourceName }
-			)
+			),
+			undefined,
+			'ok'
 		);
 
 		const user = this.app.user;
