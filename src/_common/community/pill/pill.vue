@@ -22,7 +22,7 @@
 		</template>
 
 		<template #right>
-			{{ channel.title }}
+			{{ channel.displayTitle }}
 
 			<app-jolticon
 				v-if="communityLink.isFeatured"

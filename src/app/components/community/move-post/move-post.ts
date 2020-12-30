@@ -17,7 +17,7 @@ export default class AppCommunityMovePost extends Vue {
 	channels!: CommunityChannel[];
 
 	@Emit('select')
-	emitSelect(channel: CommunityChannel) {}
+	emitSelect(_channel: CommunityChannel) {}
 
 	selectedChannel: CommunityChannel | null = null;
 

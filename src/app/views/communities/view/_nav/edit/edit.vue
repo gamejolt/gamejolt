@@ -36,6 +36,29 @@
 				</router-link>
 			</app-community-perms>
 			<app-community-perms
+				v-if="shouldShowCompetitions"
+				tag="li"
+				:community="community"
+				required="community-competitions"
+				@click.native.capture="onChangeSection('communities.view.edit.competitions')"
+			>
+				<router-link
+					:to="{
+						name: 'communities.view.edit.competitions',
+						params: {
+							id: community.id,
+						},
+					}"
+					:class="{
+						active:
+							$route.name === 'communities.view.edit.competitions' ||
+							$route.name.startsWith('communities.view.edit.competition'),
+					}"
+				>
+					<translate>Jams</translate>
+				</router-link>
+			</app-community-perms>
+			<app-community-perms
 				tag="li"
 				:community="community"
 				required="community-games"

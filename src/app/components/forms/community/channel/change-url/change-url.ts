@@ -1,10 +1,19 @@
 import { Component, Prop } from 'vue-property-decorator';
-import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
-import { Community } from '../../../../../_common/community/community.model';
-import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.service';
+import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
+import { Community } from '../../../../../../_common/community/community.model';
+import { BaseForm } from '../../../../../../_common/form-vue/form.service';
+import AppFormCommunityChannelTitle from '../_title/title.vue';
 
-@Component({})
-export default class FormCommunityChannel extends BaseForm<CommunityChannel> implements FormOnInit {
+type FormModel = {
+	title: string;
+};
+
+@Component({
+	components: {
+		AppFormCommunityChannelTitle,
+	},
+})
+export default class FormCommunityChannelChangeUrl extends BaseForm<FormModel> {
 	@Prop(Community)
 	community!: Community;
 
@@ -27,13 +36,5 @@ export default class FormCommunityChannel extends BaseForm<CommunityChannel> imp
 				.map(i => i.title.toLowerCase().trim())
 				.includes(this.formModel.title.toLowerCase().trim())
 		);
-	}
-
-	get isEditing() {
-		return !!this.model;
-	}
-
-	onInit() {
-		this.setField('community_id', this.community.id);
 	}
 }

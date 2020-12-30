@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import { Component, Inject } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
-import { COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING } from '../../../../../../_common/community/channel/channel-permissions';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
 import { AppState, AppStore } from '../../../../../../_common/store/app-store';
@@ -49,10 +48,13 @@ export default class AppNavChannelCards extends Vue {
 	}
 
 	isChannelLocked(channel: CommunityChannel) {
-		return (
-			this.user &&
-			!channel.permissions.canPerform(COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING)
-		);
+		// Don't show the locked status to guests.
+		if (!this.user) {
+			return false;
+		}
+
+		// Don't show in the draft stage, because no one can post in that stage.
+		return !channel.canPost && channel.visibility !== 'draft';
 	}
 
 	isChannelUnread(channel: CommunityChannel) {
@@ -72,5 +74,9 @@ export default class AppNavChannelCards extends Vue {
 		}
 
 		return false;
+	}
+
+	isChannelUnpublished(channel: CommunityChannel) {
+		return channel.visibility !== 'published';
 	}
 }

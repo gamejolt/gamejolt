@@ -32,6 +32,7 @@ export default class AppCommunityChannelCard extends Vue {
 	@Prop(propOptional(Boolean, false)) isUnread!: boolean;
 	@Prop(propOptional(String)) sort!: string;
 	@Prop(propOptional(Boolean, false)) isLocked!: boolean;
+	@Prop(propOptional(Boolean, false)) isUnpublished!: boolean;
 
 	cardHeight = CARD_HEIGHT;
 
@@ -52,7 +53,7 @@ export default class AppCommunityChannelCard extends Vue {
 		}
 
 		const link = {
-			name: 'communities.view.channel',
+			name: 'communities.view.channel.feed',
 			params: { path: this.community.path, channel: this.path },
 		} as any;
 

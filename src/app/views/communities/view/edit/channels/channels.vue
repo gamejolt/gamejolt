@@ -1,3 +1,5 @@
+<script lang="ts" src="./channels"></script>
+
 <template>
 	<app-communities-view-page-container>
 		<app-community-perms :community="community" required="community-channels">
@@ -8,23 +10,29 @@
 			<div class="page-help">
 				<p>
 					<translate>
-						Channels make it easy for your community members to organize their posts into indvidual
-						sub-topics.
+						Channels make it easy for your community members to organize their posts
+						into indvidual sub-topics.
 					</translate>
 				</p>
 			</div>
 
-			<form-community-channel
-				:community="community"
-				@submit="onChannelAdded"
-				:channels="community.channels"
-			/>
-
 			<app-card-list
 				:items="communityPresetChannels"
 				:active-item="activeItem"
+				:is-adding="isShowingChannelAdd"
 				@activate="activeItem = $event"
 			>
+				<app-card-list-add
+					:label="$gettext(`Add Channel`)"
+					@toggle="isShowingChannelAdd = !isShowingChannelAdd"
+				>
+					<form-community-channel-add
+						:community="community"
+						:channels="community.channels"
+						@submit="onChannelAdded"
+					/>
+				</app-card-list-add>
+
 				<app-community-channel-preset-list-item
 					v-for="presetType of communityPresetChannels"
 					:key="presetType"
@@ -43,24 +51,37 @@
 				<app-card-list-draggable @change="saveChannelSort">
 					<app-card-list-item
 						v-for="channel in community.channels"
-						:key="channel.id"
 						:id="`channel-container-${channel.id}`"
+						:key="channel.id"
 						:item="channel"
 					>
 						<div class="-row">
 							<div class="-channel-img-preview">
-								<img v-if="channel.background" :src="channel.background.mediaserver_url" />
+								<img
+									v-if="channel.background"
+									:src="channel.background.mediaserver_url"
+								/>
 							</div>
 
 							<div class="card-title">
-								<h5>{{ channel.title }}</h5>
+								<div v-if="channel.hasDisplayTitle" class="text-muted">
+									{{ channel.displayTitle }}
+								</div>
+								<h5>
+									<app-jolticon
+										v-if="channel.type === 'competition'"
+										v-app-tooltip.bottom="$gettext(`Channel contains Game Jam`)"
+										icon="jams"
+									/>
+									{{ channel.title }}
+								</h5>
 							</div>
 
 							<a
 								v-if="canRemoveChannel"
+								v-app-tooltip="$gettext(`Remove Channel`)"
 								class="-remove"
 								@click.stop="onClickRemoveChannel(channel)"
-								v-app-tooltip="$gettext(`Remove Channel`)"
 							>
 								<app-jolticon icon="remove" />
 							</a>
@@ -77,8 +98,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .-row
 	display: flex
@@ -88,7 +109,8 @@
 		color: var(--theme-fg-muted)
 		margin-left: auto
 
-		&, .jolticon
+		&
+		.jolticon
 			cursor: pointer
 			vertical-align: middle
 
@@ -113,5 +135,3 @@
 	> *
 		text-overflow()
 </style>
-
-<script lang="ts" src="./channels"></script>

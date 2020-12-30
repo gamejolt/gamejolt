@@ -3,7 +3,6 @@ import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { propOptional } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
-import { COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING } from '../../../../../_common/community/channel/channel-permissions';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
@@ -70,14 +69,10 @@ export default class AppCommunitiesViewFeed extends Vue {
 			// Only show the post add if we have at least one target channel to
 			// post to.
 			if (this.community.channels) {
-				return this.community.channels.some(i =>
-					i.permissions.canPerform(COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING)
-				);
+				return this.community.channels.some(i => i.canPost);
 			}
 		} else {
-			return this.channel.permissions.canPerform(
-				COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING
-			);
+			return this.channel.canPost;
 		}
 
 		return true;

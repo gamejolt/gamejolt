@@ -45,5 +45,6 @@ export default class RouteCommunitiesViewEdit extends BaseRouteComponent {
 		this.routeStore.collaborator = $payload.collaboration
 			? new Collaborator($payload.collaboration)
 			: null;
+		this.routeStore.hasCompetitions = !!$payload.hasCompetitions;
 	}
 }

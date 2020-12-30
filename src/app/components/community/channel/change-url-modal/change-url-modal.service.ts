@@ -3,18 +3,18 @@ import { CommunityChannel } from '../../../../../_common/community/channel/chann
 import { Community } from '../../../../../_common/community/community.model';
 import { Modal } from '../../../../../_common/modal/modal.service';
 
-export class CommunityChannelRenameModal {
+export class CommunityChannelChangeUrlModal {
 	static async show(
 		channel: CommunityChannel,
 		community: Community,
 		channels: CommunityChannel[]
 	) {
 		return await Modal.show<CommunityChannel>({
-			modalId: 'CommunityChannelRename',
+			modalId: 'CommunityChannelChangeUrl',
 			component: () =>
 				asyncComponentLoader(
 					import(
-						/* webpackChunkName: "CommunityChannelRenameModal" */ './rename-modal.vue'
+						/* webpackChunkName: "CommunityChannelChangeUrlModal" */ './change-url-modal.vue'
 					)
 				),
 			props: { channel, community, channels },

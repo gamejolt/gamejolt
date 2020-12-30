@@ -1,3 +1,5 @@
+<script lang="ts" src="./selector"></script>
+
 <template>
 	<app-popper popover-class="fill-bg" height="45vh" hide-on-state-change @hide="resetSelections">
 		<slot />
@@ -23,9 +25,9 @@
 			<app-scroll-helper :when="!!selectedCommunity" />
 			<div v-if="!selectedCommunity" class="-communities list-group">
 				<a
-					class="-community-item list-group-item"
 					v-for="community of communities"
 					:key="community.id"
+					class="-community-item list-group-item"
 					@click="selectCommunity(community)"
 				>
 					<app-community-thumbnail-img class="-community-img" :community="community" />
@@ -40,13 +42,24 @@
 			<div v-else class="-channels list-group">
 				<template v-if="channels">
 					<a
-						class="-channel-item list-group-item"
 						v-for="channel of channels"
 						:key="channel.id"
+						class="-channel-item list-group-item"
 						@click="selectChannel(channel)"
 					>
 						<span class="-text">
-							{{ channel.title }}
+							<app-jolticon
+								v-if="channel.type === 'competition'"
+								v-app-tooltip="$gettext(`Game Jam`)"
+								icon="jams"
+							/>
+							<app-jolticon
+								v-if="channel.isUnpublished"
+								v-app-tooltip="$gettext(`Channel is not publicly visible`)"
+								icon="subscribed"
+							/>
+
+							{{ channel.displayTitle }}
 						</span>
 					</a>
 				</template>
@@ -56,5 +69,3 @@
 </template>
 
 <style lang="stylus" src="./selector.styl" scoped></style>
-
-<script lang="ts" src="./selector"></script>

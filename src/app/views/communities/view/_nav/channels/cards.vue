@@ -5,7 +5,7 @@
 		<app-community-channel-card
 			:community="community"
 			:path="frontpageChannel.title"
-			label="Frontpage"
+			:label="$gettext(`Frontpage`)"
 			:background-item="frontpageChannel.background"
 			:is-active="activeChannel === frontpageChannel"
 			:is-unread="isChannelUnread(frontpageChannel)"
@@ -16,7 +16,7 @@
 			:community="community"
 			:path="allChannel.title"
 			sort="hot"
-			label="All Posts"
+			:label="$gettext(`All Posts`)"
 			:background-item="allChannel.background"
 			:is-active="activeChannel === allChannel"
 			:is-unread="isChannelUnread(allChannel)"
@@ -33,11 +33,12 @@
 				:key="channel.id"
 				:community="community"
 				:path="channel.title"
-				:label="channel.title"
+				:label="channel.displayTitle"
 				:background-item="channel.background"
 				:is-active="activeChannel === channel"
 				:is-unread="isChannelUnread(channel)"
 				:is-locked="isChannelLocked(channel)"
+				:is-unpublished="isChannelUnpublished(channel)"
 				@click.native="toggleLeftPane()"
 			/>
 		</template>

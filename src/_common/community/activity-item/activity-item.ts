@@ -78,7 +78,7 @@ export default class AppCommunityActivityItem extends Vue {
 			return this.item.action_resource.user.url;
 		} else if (this.item.action_resource instanceof CommunityChannel) {
 			return {
-				name: 'communities.view.channel',
+				name: 'communities.view.channel.feed',
 				params: {
 					channel: this.item.action_resource.title,
 				},

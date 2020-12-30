@@ -2,6 +2,8 @@ import { RouteConfig } from 'vue-router';
 import { routeCommunitiesViewEditActivity } from './activity/activity.route';
 import { routeCommunitiesViewEditBlocks } from './blocks/blocks.route';
 import { routeCommunitiesViewEditChannels } from './channels/channels.route';
+import { routeCommunitiesViewEditCompetition } from './competition/competition.route';
+import { routeCommunitiesViewEditCompetitions } from './competitions/competitions.route';
 import { routeCommunitiesViewEditDetails } from './details/details.route';
 import { routeCommunitiesViewEditGames } from './games/games.route';
 import { routeCommunitiesViewEditModerators } from './moderators/moderators.route';
@@ -16,5 +18,7 @@ export const routeCommunitiesViewEdit: RouteConfig = {
 		routeCommunitiesViewEditBlocks,
 		routeCommunitiesViewEditGames,
 		routeCommunitiesViewEditActivity,
+		routeCommunitiesViewEditCompetitions,
+		routeCommunitiesViewEditCompetition,
 	],
 };

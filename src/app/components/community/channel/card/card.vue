@@ -7,7 +7,6 @@
 			class="community-channel-card sheet sheet-no-full-bleed sheet-full"
 			:class="{ '-active': isActive, 'theme-dark': backgroundItem }"
 			:to="linkTo"
-			:title="label"
 			:style="{ height }"
 		>
 			<div v-if="backgroundItem" class="-card-bg">
@@ -26,12 +25,17 @@
 				<div class="-card-content-title">
 					<app-jolticon
 						v-if="isLocked"
-						v-app-tooltip.left="
+						v-app-tooltip.top="
 							$gettext(`You do not have permissions to post to this channel.`)
 						"
 						icon="lock"
 					/>
-					{{ label }}
+					<app-jolticon
+						v-if="isUnpublished"
+						v-app-tooltip.top="$gettext(`Channel is not publicly visible`)"
+						icon="subscribed"
+					/>
+					<span :title="label">{{ label }}</span>
 				</div>
 
 				<div
@@ -42,6 +46,8 @@
 					class="-card-content-unread"
 				/>
 			</div>
+
+			<div v-if="isUnpublished" class="-card-unpublished" />
 		</router-link>
 	</div>
 </template>

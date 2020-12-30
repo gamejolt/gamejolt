@@ -1,4 +1,4 @@
-<script lang="ts" src="./rename-modal"></script>
+<script lang="ts" src="./change-url-modal"></script>
 
 <template>
 	<app-modal>
@@ -9,11 +9,11 @@
 		</div>
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<translate>Rename Channel</translate>
+				<translate>Change Channel URL</translate>
 			</h2>
 		</div>
 		<div class="modal-body">
-			<form-community-channel
+			<form-community-channel-change-url
 				:model="channel"
 				:community="community"
 				:channels="channels"

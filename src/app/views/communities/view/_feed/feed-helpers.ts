@@ -14,7 +14,7 @@ import { getChannelPathFromRoute } from '../view.store';
 export function doFeedChannelPayload(route: Route) {
 	const channel = getChannelPathFromRoute(route);
 	const sort = getFeedChannelSort(route);
-	const apiOverviewUrl = `/web/communities/overview/${route.params.path}/${channel}?sort=${sort}`;
+	const apiOverviewUrl = `/web/communities/feed/${route.params.path}/${channel}?sort=${sort}`;
 
 	return Api.sendRequest(ActivityFeedService.makeFeedUrl(route, apiOverviewUrl));
 }

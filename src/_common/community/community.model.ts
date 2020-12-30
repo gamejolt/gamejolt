@@ -6,7 +6,6 @@ import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 import { Theme } from '../theme/theme.model';
 import { UserBlock } from '../user/block/block.model';
-import { COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING } from './channel/channel-permissions';
 import { CommunityChannel } from './channel/channel.model';
 
 export class Community extends Collaboratable(Model) {
@@ -102,14 +101,12 @@ export class Community extends Collaboratable(Model) {
 			return [];
 		}
 
-		return this.channels?.filter(channel =>
-			channel.permissions.canPerform(COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING)
-		);
+		return this.channels?.filter(channel => channel.canPost);
 	}
 
 	channelRouteLocation(channel: CommunityChannel): Location {
 		return {
-			name: 'communities.view.channel',
+			name: 'communities.view.channel.feed',
 			params: {
 				path: this.path,
 				channel: channel.title,

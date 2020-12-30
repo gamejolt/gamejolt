@@ -25,6 +25,8 @@ export class CommunityRouteStore {
 	sidebarData: null | CommunitySidebarData = null;
 	collaborator: null | Collaborator = null;
 
+	hasCompetitions = false;
+
 	get channel() {
 		const channels = [
 			this.frontpageChannel,
@@ -32,6 +34,10 @@ export class CommunityRouteStore {
 			...(this.community.channels || []),
 		];
 		return channels.find(i => i.title === this.channelPath) || null;
+	}
+
+	get competition() {
+		return this.channel?.competition;
 	}
 
 	get canEditMedia() {

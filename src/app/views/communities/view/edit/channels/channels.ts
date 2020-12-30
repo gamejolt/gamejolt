@@ -1,5 +1,6 @@
 import Component from 'vue-class-component';
 import { Inject } from 'vue-property-decorator';
+import AppCardListAdd from '../../../../../../_common/card/list/add/add.vue';
 import AppCardListDraggable from '../../../../../../_common/card/list/draggable/draggable.vue';
 import AppCardListItem from '../../../../../../_common/card/list/item/item.vue';
 import AppCardList from '../../../../../../_common/card/list/list.vue';
@@ -14,7 +15,7 @@ import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive'
 import AppCommunityChannelPresetListItem from '../../../../../components/community/channel/preset-list-item/preset-list-item.vue';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 import { CommunityRemoveChannelModal } from '../../../../../components/community/remove-channel/modal/modal.service';
-import FormCommunityChannel from '../../../../../components/forms/community/channel/channel.vue';
+import FormCommunityChannelAdd from '../../../../../components/forms/community/channel/add/add.vue';
 import FormCommunityChannelEdit from '../../../../../components/forms/community/channel/edit/edit.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey, updateCommunity } from '../../view.store';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
@@ -24,12 +25,13 @@ import AppCommunitiesViewPageContainer from '../../_page-container/page-containe
 	components: {
 		AppCommunitiesViewPageContainer,
 		AppCommunityPerms,
-		FormCommunityChannel,
 		AppCardList,
 		AppCardListDraggable,
 		AppCardListItem,
+		AppCardListAdd,
 		FormCommunityChannelEdit,
 		AppCommunityChannelPresetListItem,
+		FormCommunityChannelAdd,
 	},
 	directives: {
 		AppTooltip,
@@ -39,6 +41,7 @@ export default class RouteCommunitiesViewEditChannels extends BaseRouteComponent
 	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
 
 	activeItem: CommunityChannel | Community | CommunityPresetChannelType | null = null;
+	isShowingChannelAdd = false;
 
 	get community() {
 		return this.routeStore.community;
@@ -71,6 +74,8 @@ export default class RouteCommunitiesViewEditChannels extends BaseRouteComponent
 
 	onChannelAdded(channel: CommunityChannel) {
 		this.community.channels!.push(channel);
+		// Close form after adding a channel.
+		this.isShowingChannelAdd = false;
 	}
 
 	onPresetListItemSaved(community: Community) {

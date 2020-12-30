@@ -3,14 +3,14 @@ import { propRequired } from '../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
 import { BaseModal } from '../../../../../_common/modal/base';
-import FormCommunityChannel from '../../../forms/community/channel/channel.vue';
+import FormCommunityChannelChangeUrl from '../../../forms/community/channel/change-url/change-url.vue';
 
 @Component({
 	components: {
-		FormCommunityChannel,
+		FormCommunityChannelChangeUrl,
 	},
 })
-export default class AppCommunityChannelRenameModal extends BaseModal {
+export default class AppCommunityChannelChangeUrlModal extends BaseModal {
 	@Prop(propRequired(CommunityChannel)) channel!: CommunityChannel;
 	@Prop(propRequired(Community)) community!: Community;
 	@Prop(propRequired(Array)) channels!: CommunityChannel[];

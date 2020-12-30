@@ -1,3 +1,5 @@
+<script lang="ts" src="./community-pill"></script>
+
 <template>
 	<app-pill-bi no-hover>
 		<app-community-thumbnail-img slot="img" :community="community" />
@@ -8,7 +10,7 @@
 		</template>
 
 		<span class="-channel" slot="right">
-			{{ channel ? channel.title : '???' }}
+			{{ channel ? channel.displayTitle : '???' }}
 
 			<a v-if="removable" class="-remove text-muted" @click="emitRemove">
 				<app-jolticon icon="remove" />
@@ -30,7 +32,4 @@
 
 .-tick
 	margin-left: 5px
-
 </style>
-
-<script lang="ts" src="./community-pill"></script>

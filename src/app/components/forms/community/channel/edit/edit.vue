@@ -1,5 +1,17 @@
+<script lang="ts" src="./edit"></script>
+
 <template>
-	<app-form name="communityChannelFormEdit">
+	<app-form ref="form" name="communityChannelFormEdit">
+		<app-form-group name="display_title" optional>
+			<app-form-control
+				:rules="{ min: 3, max: 30 }"
+				:validate-on="['blur']"
+				:placeholder="formModel.title"
+			/>
+
+			<app-form-control-errors />
+		</app-form-group>
+
 		<!-- Show the current backgroud image if there is one -->
 		<div v-if="formModel.background" class="form-group">
 			<label class="control-label">
@@ -31,13 +43,13 @@
 			"
 			:optional="true"
 		>
-			<p class="help-block" v-translate>
+			<p v-translate class="help-block">
 				Your image must be a PNG or JPG.
 				<br />
 				<strong>PNGs are highly recommended as they produce a lossless image.</strong>
 			</p>
 
-			<p class="help-block" v-translate="{ dimensions: maxWidth + '×' + maxHeight }">
+			<p v-translate="{ dimensions: maxWidth + '×' + maxHeight }" class="help-block">
 				Your background image must be smaller than
 				<code>%{dimensions}</code>.
 				<br />
@@ -55,38 +67,31 @@
 			<app-form-control-errors />
 		</app-form-group>
 
-		<app-form-group name="permission_posting" :label="$gettext('Channel posting permissions')">
-			<div class="help-inline">
-				<span v-translate>
-					Choose who can post to this channel.
-				</span>
-			</div>
-			<div
-				class="radio"
-				v-for="(permissionDisplay, permission) of permissionPostingOptions"
-				:key="permission"
-			>
-				<label>
-					<app-form-control-radio :value="permission" />
-					{{ permissionDisplay }}
-				</label>
-			</div>
-			<app-form-control-errors />
-		</app-form-group>
+		<app-form-community-channel-permissions />
 
 		<app-form-button>
 			<translate>Save Channel</translate>
 		</app-form-button>
-		<app-button trans @click="onRename">
-			<translate>Rename Channel</translate>
+		<app-button
+			v-if="competitionId"
+			:to="{
+				name: 'communities.view.edit.competition.details',
+				params: { compId: competitionId },
+			}"
+			solid
+		>
+			<translate>Edit Jam</translate>
+		</app-button>
+		<app-button trans @click="onChangeUrl">
+			<translate>Change URL</translate>
 		</app-button>
 	</app-form>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-@require '../../../../community/channel/card/variables'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+@import '../../../../community/channel/card/variables'
 
 .-background-preview
 	rounded-corners-lg()
@@ -99,5 +104,3 @@
 	img
 		width: 100%
 </style>
-
-<script lang="ts" src="./edit"></script>

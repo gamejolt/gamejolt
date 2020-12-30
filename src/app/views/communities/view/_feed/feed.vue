@@ -16,7 +16,7 @@
 					<router-link
 						v-app-track-event="`communities-feed:change-sort:new`"
 						:to="{
-							name: 'communities.view.channel',
+							name: 'communities.view.channel.feed',
 							params: {
 								channel: channel.title,
 							},
@@ -31,7 +31,7 @@
 					<router-link
 						v-app-track-event="`communities-feed:change-sort:hot`"
 						:to="{
-							name: 'communities.view.channel',
+							name: 'communities.view.channel.feed',
 							params: {
 								channel: channel.title,
 							},

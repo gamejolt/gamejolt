@@ -1,7 +1,15 @@
 import { Api } from '../../api/api.service';
 import { MediaItem } from '../../media-item/media-item-model';
 import { Model } from '../../model/model.service';
-import { CommunityChannelPermissions } from './channel-permissions';
+import { CommunityCompetition } from '../competition/competition.model';
+import {
+	CommunityChannelPermissions,
+	COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING,
+} from './channel-permissions';
+
+export type CommunityChannelType = 'post-feed' | 'competition';
+
+export type CommunityChannelVisibility = 'draft' | 'unlisted' | 'published';
 
 export class CommunityChannel extends Model {
 	community_id!: number;
@@ -9,14 +17,41 @@ export class CommunityChannel extends Model {
 	added_on!: number;
 	sort!: number;
 	background?: MediaItem;
+	type!: CommunityChannelType;
+	visibility!: CommunityChannelVisibility;
+	display_title!: string | null;
+	description_content!: string | null;
+	competition!: CommunityCompetition | null;
 
 	permissions!: CommunityChannelPermissions;
+
+	get hasDisplayTitle() {
+		return !!this.display_title && this.display_title !== this.title;
+	}
+
+	get displayTitle() {
+		return this.display_title || this.title;
+	}
+
+	get isUnpublished() {
+		return this.visibility !== 'published';
+	}
+
+	get canPost() {
+		return (
+			this.permissions.canPerform(COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING) &&
+			this.visibility !== 'draft'
+		);
+	}
 
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.background) {
 			this.background = new MediaItem(data.background);
+		}
+		if (data.competition) {
+			this.competition = new CommunityCompetition(data.competition);
 		}
 
 		this.permissions = new CommunityChannelPermissions(data.perms);

@@ -10,7 +10,8 @@ import {
 import { Growls } from '../../../../../../_common/growls/growls.service';
 import { AppImgResponsive } from '../../../../../../_common/img/responsive/responsive';
 import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
-import { CommunityChannelRenameModal } from '../../../../community/channel/rename-modal/rename-modal.service';
+import { CommunityChannelChangeUrlModal } from '../../../../community/channel/change-url-modal/change-url-modal.service';
+import AppFormCommunityChannelPermissions from '../_permissions/permissions.vue';
 
 class FormModel extends CommunityChannel {
 	permission_posting = 'all';
@@ -20,6 +21,7 @@ class FormModel extends CommunityChannel {
 	components: {
 		AppImgResponsive,
 		AppFormControlUpload,
+		AppFormCommunityChannelPermissions,
 	},
 })
 export default class FormCommunityChannelEdit extends BaseForm<FormModel>
@@ -32,6 +34,10 @@ export default class FormCommunityChannelEdit extends BaseForm<FormModel>
 	maxHeight = 0;
 
 	modelClass = FormModel;
+
+	get competitionId() {
+		return this.model!.competition?.id;
+	}
 
 	get loadUrl() {
 		return `/web/dash/communities/channels/save/${this.community.id}/${this.formModel.id}`;
@@ -75,8 +81,8 @@ export default class FormCommunityChannelEdit extends BaseForm<FormModel>
 		this.$emit('clear');
 	}
 
-	async onRename() {
-		const channel = await CommunityChannelRenameModal.show(
+	async onChangeUrl() {
+		const channel = await CommunityChannelChangeUrlModal.show(
 			this.model!,
 			this.community,
 			this.community.channels!
@@ -88,7 +94,7 @@ export default class FormCommunityChannelEdit extends BaseForm<FormModel>
 			this.setField('title', channel.title);
 
 			Growls.success({
-				message: this.$gettextInterpolate(`Renamed channel to %{ title }.`, {
+				message: this.$gettextInterpolate(`Changed channel url to %{ title }.`, {
 					title: channel.title,
 				}),
 			});
