@@ -305,8 +305,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 
 		const result = await ModalConfirm.show(
 			Translate.$gettext(`Are you sure you want to leave this project?`),
-			Translate.$gettext('Leave project?'),
-			'yes'
+			Translate.$gettext('Leave project?')
 		);
 
 		if (!result) {

@@ -133,9 +133,7 @@ export default class AppChatWindowOutputItem extends Vue {
 		Popper.hideAll();
 
 		const result = await ModalConfirm.show(
-			this.$gettext(`Are you sure you want to remove this message?`),
-			undefined,
-			'yes'
+			this.$gettext(`Are you sure you want to remove this message?`)
 		);
 
 		if (!result) {

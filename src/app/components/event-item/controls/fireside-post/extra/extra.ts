@@ -147,9 +147,7 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 		const result = await ModalConfirm.show(
 			this.$gettext(
 				`Are you sure you want to eject this post from ${postCommunity.community.name}?`
-			),
-			undefined,
-			'yes'
+			)
 		);
 
 		if (!result) {

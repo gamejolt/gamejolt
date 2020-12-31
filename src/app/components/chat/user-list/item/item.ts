@@ -136,9 +136,7 @@ export default class AppChatUserListItem extends Vue {
 		}
 
 		const result = await ModalConfirm.show(
-			this.$gettext(`Are you sure you want to leave the group chat?`),
-			undefined,
-			'yes'
+			this.$gettext(`Are you sure you want to leave the group chat?`)
 		);
 
 		if (!result) {

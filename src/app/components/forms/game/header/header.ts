@@ -69,9 +69,7 @@ export default class FormGameHeader extends BaseForm<FormModel>
 
 	async clearHeader() {
 		const result = await ModalConfirm.show(
-			this.$gettext(`Are you sure you want to remove your game header?`),
-			undefined,
-			'yes'
+			this.$gettext(`Are you sure you want to remove your game header?`)
 		);
 
 		if (result) {

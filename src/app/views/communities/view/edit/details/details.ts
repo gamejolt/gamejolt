@@ -94,8 +94,7 @@ export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent 
 
 		const result = await ModalConfirm.show(
 			this.$gettext(`Are you sure you want to leave this community?`),
-			this.$gettext(`Leave community?`),
-			'yes'
+			this.$gettext(`Leave community?`)
 		);
 		if (!result) {
 			return;
