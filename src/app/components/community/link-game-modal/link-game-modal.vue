@@ -1,3 +1,5 @@
+<script lang="ts" src="./link-game-modal"></script>
+
 <template>
 	<app-modal>
 		<div class="modal-controls">
@@ -21,14 +23,17 @@
 						<div class="-game-title">{{ game.title }}</div>
 						<div v-if="!game.isVisible" class="-game-hidden">
 							<span
-								v-app-tooltip.bottom="$gettext(`Hidden games do not show in the community sidebar`)"
-								><translate>Hidden</translate></span
+								v-app-tooltip.bottom="
+									$gettext(`Unlisted games do not show in the community sidebar.`)
+								"
 							>
+								<translate>Unlisted</translate>
+							</span>
 						</div>
 					</div>
 
 					<div class="-game-button">
-						<app-button @click="onClickLink(game)" primary>
+						<app-button primary @click="onClickLink(game)">
 							<translate>Link</translate>
 						</app-button>
 					</div>
@@ -37,8 +42,8 @@
 			<div v-else-if="!isLoading" class="page-help">
 				<p>
 					<translate>
-						You have no more games available to link. Just remember, games can only be linked to a
-						single community.
+						You have no more games available to link. Just remember, games can only be
+						linked to a single community.
 					</translate>
 				</p>
 			</div>
@@ -56,8 +61,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 $-v-padding = 15px
 $-h-padding = 20px
@@ -85,7 +90,8 @@ $-height = 44px
 		flex: auto
 		overflow: hidden
 
-	&-title, &-hidden
+	&-title
+	&-hidden
 		text-overflow()
 
 	&-title
@@ -99,5 +105,3 @@ $-height = 44px
 		flex: none
 		margin-left: $-h-padding
 </style>
-
-<script lang="ts" src="./link-game-modal"></script>

@@ -101,8 +101,8 @@
 					</div>
 
 					<span class="-tags">
-						<span v-if="game.status === Game.STATUS_HIDDEN" class="-tag tag tag-notice">
-							<translate>Hidden</translate>
+						<span v-if="game.isUnlisted" class="-tag tag tag-notice">
+							<translate>Unlisted</translate>
 						</span>
 					</span>
 				</div>

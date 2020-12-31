@@ -46,7 +46,7 @@ export default class RouteDashGamesManageGameSettings extends BaseRouteComponent
 		return null;
 	}
 
-	get isHidden() {
+	get isUnlisted() {
 		return this.game.status === Game.STATUS_HIDDEN;
 	}
 
