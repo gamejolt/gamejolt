@@ -499,9 +499,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 
 	async remove() {
 		const result = await ModalConfirm.show(
-			Translate.$gettext(`Are you sure you want to remove this post?`),
-			undefined,
-			'yes'
+			Translate.$gettext(`Are you sure you want to remove this post?`)
 		);
 
 		if (result) {

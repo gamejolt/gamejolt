@@ -237,8 +237,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	async logout() {
 		const result = await ModalConfirm.show(
 			Translate.$gettext('Are you seriously going to leave us?'),
-			Translate.$gettext('Logout?'),
-			'yes'
+			Translate.$gettext('Logout?')
 		);
 
 		if (!result) {

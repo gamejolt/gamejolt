@@ -1,5 +1,6 @@
 import { createTextMaskInputElement } from 'text-mask-core/dist/textMaskCore';
 import { Component, Prop } from 'vue-property-decorator';
+import { propOptional } from '../../../utils/vue';
 import BaseFormControl from './base';
 
 @Component({})
@@ -10,6 +11,7 @@ export default class AppFormControl extends BaseFormControl {
 	@Prop(Array) validateOn!: string[];
 	@Prop(Number) validateDelay!: number;
 	@Prop(Array) mask!: (string | RegExp)[];
+	@Prop(propOptional(Boolean, false)) disabled!: boolean;
 
 	controlVal = '';
 	maskedInputElem: any = null;

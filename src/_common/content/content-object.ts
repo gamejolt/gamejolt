@@ -125,7 +125,10 @@ export class ContentObject extends ContentNode {
 				if (this.marks.some(m => m.type === 'link')) {
 					length += LINK_LENGTH;
 				} else if (this.text) {
-					length += this.text.length;
+					// Replace surrogate pairs with "_"
+					// This will count the code points rather than code units.
+					// Based on https://medium.com/@tanishiking/count-the-number-of-unicode-code-points-in-javascript-on-cross-browser-62c32b8d919c
+					length += this.text.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, '_').length;
 				}
 				break;
 			case 'listItem': // Include a char for the 1./* at the beginning

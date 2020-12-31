@@ -25,11 +25,7 @@ export default class AppUserAddressCard extends Vue {
 	}
 
 	async remove() {
-		const result = await ModalConfirm.show(
-			`Are you sure you want to remove this address?`,
-			undefined,
-			'yes'
-		);
+		const result = await ModalConfirm.show(`Are you sure you want to remove this address?`);
 		if (!result) {
 			return;
 		}
