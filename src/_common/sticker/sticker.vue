@@ -27,7 +27,6 @@
 		user-select: none
 		width: 100%
 		height: 100%
-		filter: drop-shadow(2px 2px 0 white) drop-shadow(-2px 2px 0 white) drop-shadow(2px -2px 0 white) drop-shadow(-2px -2px 0 white)
 
 .-clickable
 	cursor: pointer
