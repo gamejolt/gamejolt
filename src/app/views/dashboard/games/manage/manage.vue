@@ -99,12 +99,15 @@
 
 			<app-expand :when="!isWizard && game.isUnlisted">
 				<div class="alert alert-notice">
-					<translate>This game is currently unlisted from public view.</translate>
+					<translate>
+						This game is currently unlisted from the public game listings, but can still
+						be accessed through your game's URL.
+					</translate>
 					<template v-if="!game.published_on">
 						<translate>
 							We recommend keeping it unlisted until you've finished filling out the
 							details and added some media. Don't forget to publish it when it's
-							ready, or it won't show up in the game listings!
+							ready!
 						</translate>
 					</template>
 				</div>
