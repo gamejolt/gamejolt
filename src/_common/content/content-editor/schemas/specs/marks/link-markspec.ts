@@ -18,7 +18,7 @@ const getAttrsContentEditorLink = function(domNode: Element) {
 };
 
 const toDOM = function(mark: Mark, _inline: boolean): DOMOutputSpec {
-	let { href, title, autolink } = mark.attrs;
+	const { href, title, autolink } = mark.attrs;
 	return [
 		'span',
 		{
@@ -50,8 +50,9 @@ export const link = {
 			tag: 'a',
 			getAttrs(domNode: Element) {
 				const href = domNode.getAttribute('href') ?? '';
+				// Only autolinks are allowed, so we force it to be one (same title & content as href)
 				const title = href;
-				const isAutolink = false;
+				const isAutolink = true;
 
 				return {
 					href,
