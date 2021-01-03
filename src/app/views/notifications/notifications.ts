@@ -39,7 +39,7 @@ export default class RouteNotifications extends BaseRouteComponent {
 	grid!: Store['grid'];
 
 	feed: ActivityFeedView | null = null;
-	itemsPerPage?: number;
+	itemsPerPage = 15;
 
 	get routeTitle() {
 		return this.$gettext(`Your Notifications`);
@@ -81,9 +81,9 @@ export default class RouteNotifications extends BaseRouteComponent {
 		if ($payload.perPage) {
 			if (this.feed) {
 				this.feed.itemsPerPage = $payload.perPage;
-			} else {
-				this.itemsPerPage = $payload.perPage;
 			}
+
+			this.itemsPerPage = $payload.perPage;
 		}
 
 		if (!fromCache) {
