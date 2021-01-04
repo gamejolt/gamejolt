@@ -8,7 +8,7 @@ import { BaseForm, FormOnInit, FormOnSubmit } from '../../../../../_common/form-
 import { Growls } from '../../../../../_common/growls/growls.service';
 import { User } from '../../../../../_common/user/user.model';
 
-interface FormModel {
+export interface FormModel {
 	username: string;
 	reasonType: string;
 	reason: string;
