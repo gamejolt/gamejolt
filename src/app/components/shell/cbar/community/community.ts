@@ -81,7 +81,7 @@ export default class AppShellCbarCommunity extends Vue {
 	}
 
 	get shouldShowJoin() {
-		return !this.shouldShowLeave;
+		return !this.community.is_member;
 	}
 
 	async onLeaveCommunityClick() {
