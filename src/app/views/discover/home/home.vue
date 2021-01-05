@@ -9,36 +9,37 @@
 
 		<template v-if="isRouteBootstrapped">
 			<section class="section fill-backdrop">
-				<div class="container-xl">
-					<app-discover-home-communities :communities="featuredCommunities" />
-					<!-- :is-loading="!isRouteBootstrapped" -->
+				<app-discover-home-communities :communities="featuredCommunities" />
 
-					<template v-if="!isInSplit">
+				<div class="container-xl">
+					<div class="text-center">
 						<h2>
-							<translate>Featured Games</translate>
+							<translate>Follow Games</translate>
 						</h2>
+
 						<p>
 							<translate>
-								Check these games out and follow along in their development!
+								Discover, follow, and play games!
 							</translate>
 						</p>
 
-						<!-- <app-game-grid-placeholder v-if="!isRouteBootstrapped" :num="6" /> -->
-						<app-game-grid :games="games" truncate-to-fit event-label="home" />
+						<hr class="underbar underbar-center" />
+						<br />
+					</div>
 
-						<div class="page-cut">
-							<app-button
-								v-app-track-event="`home:more-btn:browse`"
-								trans
-								:to="{
-									name: 'discover.games.list._fetch',
-									params: { section: null },
-								}"
-							>
-								<translate>More Games</translate>
-							</app-button>
-						</div>
-					</template>
+					<app-game-grid :games="slicedGames" truncate-to-fit event-label="home" />
+
+					<div class="page-cut">
+						<app-button
+							v-app-track-event="`home:more-btn:browse`"
+							:to="{
+								name: 'discover.games.list._fetch',
+								params: { section: null },
+							}"
+						>
+							<translate>Browse More Games</translate>
+						</app-button>
+					</div>
 				</div>
 			</section>
 

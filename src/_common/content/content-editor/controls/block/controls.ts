@@ -128,7 +128,7 @@ export default class AppContentEditorBlockControls extends Vue {
 	onClickMedia() {
 		const input = document.createElement('input');
 		input.type = 'file';
-		input.accept = '.png,.jpg,.jpeg,.gif,.bmp,.webp';
+		input.accept = '.png,.jpg,.jpeg,.gif,.webp';
 		input.multiple = true;
 
 		input.onchange = e => {

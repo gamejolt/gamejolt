@@ -100,9 +100,7 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 					{
 						title: this.facebookAccount.facebookSelectedPage.name,
 					}
-				),
-				undefined,
-				'yes'
+				)
 			);
 			if (!confirmRemoval) {
 				this.loading = false;
@@ -119,9 +117,7 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 					{
 						title: this.tumblrAccount.tumblrSelectedBlog.title,
 					}
-				),
-				undefined,
-				'yes'
+				)
 			);
 			if (!confirmRemoval) {
 				this.loading = false;

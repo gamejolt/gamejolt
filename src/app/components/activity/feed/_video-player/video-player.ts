@@ -13,7 +13,10 @@ import {
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { ScrollInviewController } from '../../../../../_common/scroll/inview/controller';
 import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
-import { SettingVideoPlayerFeedAutoplay } from '../../../../../_common/settings/settings.service';
+import {
+	SettingVideoPlayerFeedAutoplay,
+	SettingVideoPlayerVolume,
+} from '../../../../../_common/settings/settings.service';
 import {
 	scrubVideoVolume,
 	toggleVideoPlayback,
@@ -174,7 +177,11 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 			return;
 		}
 
-		scrubVideoVolume(this.player, this.player.volume ? 0 : 1, 'end');
+		scrubVideoVolume(
+			this.player,
+			this.player.volume ? 0 : SettingVideoPlayerVolume.get(),
+			'end'
+		);
 		trackVideoPlayerEvent(
 			this.player,
 			!this.player.volume ? 'mute' : 'unmute',

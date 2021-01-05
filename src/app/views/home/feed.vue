@@ -59,7 +59,11 @@
 			</template>
 
 			<template v-if="!Screen.isMobile" #right>
-				<app-home-recommended-game :game="featuredGame" :loading="loadingRecommendedData" />
+				<app-home-recommended-game
+					v-app-track-event="`activity:featured-game`"
+					:game="featuredGame"
+					:loading="loadingRecommendedData"
+				/>
 				<app-home-recommended-users
 					v-if="shouldShowRecommendedUsers"
 					:users="recommendedUsers"
@@ -115,6 +119,7 @@
 					/>
 					<app-game-badge
 						v-else-if="featuredGame"
+						v-app-track-event="`activity:featured-game`"
 						class="-game-badge"
 						:game="featuredGame"
 					/>

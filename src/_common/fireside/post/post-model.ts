@@ -249,6 +249,19 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return this.canComment;
 	}
 
+	get canLike() {
+		let postOwner = this.user;
+		if (this.game && this.as_game_owner) {
+			postOwner = this.game.developer;
+		}
+
+		if (postOwner.blocked_you || postOwner.is_blocked) {
+			return false;
+		}
+
+		return true;
+	}
+
 	getContent(context: ContentContext) {
 		if (context === 'fireside-post-lead') {
 			return this.lead_content;
@@ -500,9 +513,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 
 	async remove() {
 		const result = await ModalConfirm.show(
-			Translate.$gettext(`Are you sure you want to remove this post?`),
-			undefined,
-			'yes'
+			Translate.$gettext(`Are you sure you want to remove this post?`)
 		);
 
 		if (result) {

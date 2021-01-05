@@ -19,6 +19,7 @@ import { ReportModal } from '../../../../../../_common/report/modal/modal.servic
 import { AppState, AppStore } from '../../../../../../_common/store/app-store';
 import { User } from '../../../../../../_common/user/user.model';
 import { Store } from '../../../../../store/index';
+import { CommunityBlockUserModal } from '../../../../community/block-user-modal/block-user-modal.service';
 import { CommunityEjectPostModal } from '../../../../community/eject-post/modal/modal.service';
 import { CommunityMovePostModal } from '../../../../community/move-post/modal/modal.service';
 import { AppCommunityPerms } from '../../../../community/perms/perms';
@@ -89,6 +90,11 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 		}
 
 		return false;
+	}
+
+	get shouldShowBlockCommunityUser() {
+		// Cannot block yourself.
+		return this.post.user.id !== this.user?.id;
 	}
 
 	getProviderIcon(provider: string) {
@@ -164,6 +170,10 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 			console.warn('Failed to eject post');
 			return;
 		}
+	}
+
+	blockFromCommunity(postCommunity: FiresidePostCommunity) {
+		CommunityBlockUserModal.show(this.post.user, postCommunity.community);
 	}
 
 	copyShareUrl() {

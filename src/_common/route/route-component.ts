@@ -2,7 +2,6 @@ import Vue, { ComponentOptions } from 'vue';
 import { createDecorator } from 'vue-class-component';
 import { Component } from 'vue-property-decorator';
 import VueRouter, { RawLocation, Route } from 'vue-router';
-import { EventBus } from '../../system/event/event-bus.service';
 import { arrayRemove } from '../../utils/array';
 import { LocationRedirect } from '../../utils/router';
 import { asyncComponentLoader } from '../../utils/utils';
@@ -10,6 +9,7 @@ import { HistoryCache } from '../history/cache/cache.service';
 import { Meta } from '../meta/meta-service';
 import { Navigate } from '../navigate/navigate.service';
 import { PayloadError } from '../payload/payload-service';
+import { EventBus } from '../system/event/event-bus.service';
 
 // This is component state that the server may have returned to the browser. It
 // can be used to bootstrap components with initial data.
@@ -158,7 +158,7 @@ export function RouteResolver(options: RouteResolverOptions = {}) {
 				}
 
 				let promise: Promise<{ fromCache: boolean; payload: any }> | undefined;
-				let hasCache = !!resolverOptions.cache ? HistoryCache.has(to, name) : false;
+				const hasCache = resolverOptions.cache ? HistoryCache.has(to, name) : false;
 				const resolver = Resolver.startResolve(componentOptions, to);
 
 				if (resolverOptions.lazy && !hasCache && !GJ_IS_SSR) {

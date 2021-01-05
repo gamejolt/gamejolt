@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
-import { EventBus, EventBusDeregister } from '../../../../system/event/event-bus.service';
 import { sleep } from '../../../../utils/utils';
 import { Client } from '../../../../_common/client/client.service';
 import { Connection } from '../../../../_common/connection/connection-service';
@@ -8,6 +7,7 @@ import AppExpand from '../../../../_common/expand/expand.vue';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import Onboarding from '../../../../_common/onboarding/onboarding.service';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
+import { EventBus, EventBusDeregister } from '../../../../_common/system/event/event-bus.service';
 import './intro-global.styl';
 
 @Component({
@@ -96,7 +96,7 @@ export default class AppClientIntro extends Vue {
 
 		// We want to show a "loading" message after a bit of waiting. If it hasn't loaded the
 		// homepage by the time the intro has finished, they probably have a slow connection.
-		let timer = setTimeout(() => (this.shouldShowLoading = true), 1000);
+		const timer = setTimeout(() => (this.shouldShowLoading = true), 1000);
 
 		// We do the leave animation as soon as the initial state has come into view behind this
 		// intro anim.

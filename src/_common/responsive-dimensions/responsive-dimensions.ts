@@ -1,8 +1,8 @@
 import Vue, { CreateElement } from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { EventSubscription } from '../../system/event/event-topic';
 import { Ruler } from '../ruler/ruler-service';
 import { Screen } from '../screen/screen-service';
+import { EventSubscription } from '../system/event/event-topic';
 
 export class AppResponsiveDimensionsChangeEvent {
 	constructor(public containerWidth: number, public height: number, public isFilled: boolean) {}

@@ -114,8 +114,7 @@ export default class RouteCommunitiesViewEditBlocks extends BaseRouteComponent {
 				'Do you really want to lift the block for the user @%{ username } early? The reason they were blocked: %{ reason }',
 				{ username: block.user.username, reason: block.reason }
 			),
-			this.$gettext('Lift Block'),
-			'yes'
+			this.$gettext('Lift Block')
 		);
 
 		if (response) {

@@ -1,3 +1,5 @@
+<script lang="ts" src="./block"></script>
+
 <template>
 	<app-form name="communityBlockForm">
 		<app-form-group name="username">
@@ -11,6 +13,7 @@
 					},
 				}"
 				:validate-on="['blur']"
+				:disabled="usernameLocked"
 			/>
 
 			<app-form-control-errors :label="$gettext('username')">
@@ -22,7 +25,7 @@
 		</app-form-group>
 
 		<app-form-group name="reasonType" :label="$gettext('Block reason')">
-			<div class="radio" v-for="(reasonDisplay, reason) in defaultReasons" :key="reason">
+			<div v-for="(reasonDisplay, reason) in defaultReasons" :key="reason" class="radio">
 				<label>
 					<app-form-control-radio :value="reason" />
 					{{ reasonDisplay }}
@@ -48,7 +51,7 @@
 		</app-form-group>
 
 		<app-form-group name="expiry" :label="$gettext('Block expires in...')">
-			<div class="radio" v-for="(expiryDisplay, expiry) in expiryOptions" :key="expiry">
+			<div v-for="(expiryDisplay, expiry) in expiryOptions" :key="expiry" class="radio">
 				<label>
 					<app-form-control-radio :value="expiry" />
 					{{ expiryDisplay }}
@@ -57,20 +60,21 @@
 			<app-form-control-errors />
 		</app-form-group>
 
-		<app-form-group name="ejectPosts" :label="$gettext(`Eject user's posts from the community?`)">
+		<app-form-group
+			name="ejectPosts"
+			:label="$gettext(`Eject user's posts from the community?`)"
+		>
 			<app-form-control-toggle class="pull-right" />
 			<p class="help-block">
 				<translate>
-					Once the user is blocked, all their posts will be ejected from the community. This also
-					affects their featured posts.
+					Once the user is blocked, all their posts will be ejected from the community.
+					This also affects their featured posts.
 				</translate>
 			</p>
 		</app-form-group>
 
-		<app-form-button>
+		<app-form-button :disabled="!valid">
 			<translate>Block</translate>
 		</app-form-button>
 	</app-form>
 </template>
-
-<script lang="ts" src="./block"></script>

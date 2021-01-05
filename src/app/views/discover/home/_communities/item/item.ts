@@ -4,6 +4,7 @@ import { Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../utils/vue';
 import { Community } from '../../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbnail/img/img.vue';
+import { number } from '../../../../../../_common/filters/number';
 import AppMediaItemBackdrop from '../../../../../../_common/media-item/backdrop/backdrop.vue';
 
 @Component({
@@ -14,4 +15,6 @@ import AppMediaItemBackdrop from '../../../../../../_common/media-item/backdrop/
 })
 export default class AppDiscoverHomeCommunitiesItem extends Vue {
 	@Prop(propRequired(Community)) community!: Community;
+
+	readonly number = number;
 }

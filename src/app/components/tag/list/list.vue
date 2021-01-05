@@ -1,7 +1,9 @@
+<script lang="ts" src="./list"></script>
+
 <template>
 	<app-scroll-scroller horizontal thin>
 		<div class="-list">
-			<div class="-list-item" v-for="tag of tags" :key="tag.id">
+			<div v-for="tag of tags" :key="tag.id" class="-list-item">
 				<app-tag-thumbnail class="-list-thumb" :tag="tag.id" :event-cat="eventCat" />
 			</div>
 		</div>
@@ -9,7 +11,7 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
 
 .-list
 	white-space: nowrap
@@ -29,5 +31,3 @@
 	&-thumb
 		margin-bottom: 0 !important
 </style>
-
-<script lang="ts" src="./list"></script>
