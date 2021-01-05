@@ -1,7 +1,12 @@
 <script lang="ts" src="./user-notification"></script>
 
 <template>
-	<app-alert-dismissable class="-notification" no-margin @dismiss="onDismiss">
+	<app-alert-dismissable
+		class="-notification"
+		no-margin
+		:dismiss-tooltip="$gettext(`Dismiss`)"
+		@dismiss="onDismiss"
+	>
 		<div class="-community">
 			<app-community-thumbnail-img
 				:community="notification.community"
@@ -34,7 +39,7 @@
 
 			<template v-if="hasReason">
 				<div><translate>The reason for this action is as follows:</translate></div>
-				<div>
+				<div class="-reason">
 					<em>
 						<strong>
 							{{ reasonText }}
@@ -75,4 +80,13 @@
 
 .-message
 	margin-top: 8px
+
+.-reason
+	margin-top: 8px
+	padding-left: 12px
+	padding-top: 4px
+	padding-bottom: 4px
+	border-color: var(--theme-bg-subtle)
+	border-width: 4px
+	border-left-style: solid
 </style>
