@@ -5,6 +5,7 @@ import {
 	CommentThreadModal,
 	CommentThreadModalPermalinkDeregister,
 } from '../../../_common/comment/thread/modal.service';
+import { CommunityUserNotification } from '../../../_common/community/user-notification/user-notification.model';
 import { $viewPost, FiresidePost } from '../../../_common/fireside/post/post-model';
 import { Meta } from '../../../_common/meta/meta-service';
 import { Registry } from '../../../_common/registry/registry.service';
@@ -52,6 +53,7 @@ const PostThemeKey = 'post';
 })
 export default class RoutePost extends BaseRouteComponent {
 	post: FiresidePost | null = null;
+	communityNotifications: CommunityUserNotification[] = [];
 
 	private permalinkWatchDeregister?: CommentThreadModalPermalinkDeregister;
 
@@ -100,6 +102,12 @@ export default class RoutePost extends BaseRouteComponent {
 			this.post.assign(post);
 		} else {
 			this.post = post;
+		}
+
+		if ($payload.communityNotifications) {
+			this.communityNotifications = CommunityUserNotification.populate(
+				$payload.communityNotifications
+			);
 		}
 
 		this.setPageTheme();

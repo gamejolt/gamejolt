@@ -9,6 +9,7 @@ import { Game } from '../../game/game.model';
 import { Screen } from '../../screen/screen-service';
 import { AppTimeAgo } from '../../time/ago/ago';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
+import { getSingleReasonText } from '../../user/action-reasons';
 import { UserBlock } from '../../user/block/block.model';
 import AppUserAvatar from '../../user/user-avatar/user-avatar.vue';
 import { User } from '../../user/user.model';
@@ -94,10 +95,7 @@ export default class AppCommunityActivityItem extends Vue {
 		} else if (this.item.action_resource instanceof User) {
 			return '@' + this.item.action_resource.username;
 		} else if (this.item.action_resource instanceof UserBlock) {
-			return this.$gettextInterpolate('@%{ username } for %{ reason }', {
-				username: this.item.action_resource.user.username,
-				reason: this.item.action_resource.reason,
-			});
+			return '@' + this.item.action_resource.user.username;
 		} else if (this.item.action_resource instanceof CommunityChannel) {
 			return this.item.action_resource.title;
 		} else if (this.item.action_resource instanceof Game) {
@@ -111,6 +109,25 @@ export default class AppCommunityActivityItem extends Vue {
 
 	get extraData(): Record<string, any> {
 		return JSON.parse(this.item.extra_data);
+	}
+
+	get reasonText() {
+		// The user block resource comes with a reason.
+		if (this.item.action_resource instanceof UserBlock) {
+			return getSingleReasonText(this.item.action_resource.reason);
+		}
+
+		// Some other actions might encode a "reason" field in the extra data.
+		const reason = this.getExtraData('reason');
+		if (!reason) {
+			return null;
+		}
+
+		return getSingleReasonText(reason);
+	}
+
+	get hasReason() {
+		return !!this.reasonText;
 	}
 
 	getExtraData(key: string) {

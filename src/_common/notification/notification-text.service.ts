@@ -1,6 +1,9 @@
-import { assertNever } from '../../utils/utils';
 import { CommentVideo } from '../comment/video/video-model';
 import { Community } from '../community/community.model';
+import {
+	CommunityUserNotification,
+	NotificationType,
+} from '../community/user-notification/user-notification.model';
 import { currency } from '../filters/currency';
 import { FiresidePostCommunity } from '../fireside/post/community/community.model';
 import { FiresidePost } from '../fireside/post/post-model';
@@ -20,7 +23,7 @@ import { Notification } from './notification-model';
 export class NotificationText {
 	private static getSubjectTranslationValue(notification: Notification) {
 		if (notification.is_user_based) {
-			if (notification.from_model) {
+			if (notification.from_model instanceof User) {
 				return (
 					notification.from_model.display_name +
 					' (@' +
@@ -32,6 +35,11 @@ export class NotificationText {
 			}
 		} else if (notification.is_game_based && notification.to_model instanceof Game) {
 			return notification.to_model.title;
+		} else if (
+			notification.is_community_based &&
+			notification.from_model instanceof Community
+		) {
+			return notification.from_model.name;
 		}
 		return '';
 	}
@@ -109,6 +117,35 @@ export class NotificationText {
 				);
 			}
 
+			case Notification.TYPE_COMMUNITY_USER_NOTIFICATION:
+				{
+					const userNotification = notification.action_model as CommunityUserNotification;
+
+					switch (userNotification.type) {
+						case NotificationType.POSTS_MOVE:
+							return _process(
+								Translate.$gettextInterpolate(
+									`Your post in the <em>%{ community }</em> community has been <b>moved</b> to a different channel.`,
+									{
+										community: userNotification.community.name,
+									},
+									!plaintext
+								)
+							);
+						case NotificationType.POSTS_EJECT:
+							return _process(
+								Translate.$gettextInterpolate(
+									`Your post has been <b>ejected</b> from the <em>%{ community }</em> community.`,
+									{
+										community: userNotification.community.name,
+									},
+									!plaintext
+								)
+							);
+					}
+				}
+				break;
+
 			case Notification.TYPE_GAME_TROPHY_ACHIEVED: {
 				if (
 					notification.action_model instanceof UserGameTrophy &&
@@ -117,7 +154,7 @@ export class NotificationText {
 				) {
 					return _process(
 						Translate.$gettextInterpolate(
-							`You achieved <em>%{ trophyTitle }</em> on %{ gameTitle }!`,
+							`You achieved <em>%{ trophyTitle }</em> on <b>%{ gameTitle }</b>!`,
 							{
 								trophyTitle: notification.action_model.trophy.title,
 								gameTitle: notification.action_model.game.title,
@@ -126,7 +163,7 @@ export class NotificationText {
 						)
 					);
 				}
-				return '';
+				break;
 			}
 
 			case Notification.TYPE_SITE_TROPHY_ACHIEVED: {
@@ -144,7 +181,7 @@ export class NotificationText {
 						)
 					);
 				}
-				return '';
+				break;
 			}
 
 			case Notification.TYPE_COMMENT_VIDEO_ADD: {
@@ -388,10 +425,18 @@ export class NotificationText {
 					}
 
 					default: {
-						return assertNever(mention.resource);
+						console.warn(
+							'Encountered not-implemented resource type for mention notification',
+							mention.resource
+						);
+						return undefined;
 					}
 				}
 			}
 		}
+
+		// When the notification type has no implementation, we log and don't show it (return undefined).
+		console.warn('Encountered not-implemented notification type', notification.type);
+		return undefined;
 	}
 }

@@ -6,6 +6,11 @@ import { Community } from '../../../../../_common/community/community.model';
 import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
 import { BaseForm, FormOnInit, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
 import { Growls } from '../../../../../_common/growls/growls.service';
+import {
+	getCommunityBlockReasons,
+	REASON_OTHER,
+	REASON_SPAM,
+} from '../../../../../_common/user/action-reasons';
 import { User } from '../../../../../_common/user/user.model';
 
 interface FormModel {
@@ -30,12 +35,7 @@ export default class FormCommunityBlock extends BaseForm<FormModel>
 	usernameLocked = false;
 
 	get defaultReasons() {
-		return {
-			spam: this.$gettext('Spam'),
-			'off-topic': this.$gettext('Off Topic'),
-			abuse: this.$gettext('Offensive or insulting'),
-			other: this.$gettext('Other'),
-		};
+		return getCommunityBlockReasons();
 	}
 
 	get expiryOptions() {
@@ -50,11 +50,11 @@ export default class FormCommunityBlock extends BaseForm<FormModel>
 	}
 
 	get showReasonOther() {
-		return this.formModel.reasonType === 'other';
+		return this.formModel.reasonType === REASON_OTHER;
 	}
 
 	onInit() {
-		this.setField('reasonType', 'spam');
+		this.setField('reasonType', REASON_SPAM);
 		this.setField('expiry', 'week');
 		this.setField('ejectPosts', true);
 
