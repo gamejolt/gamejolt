@@ -210,6 +210,7 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 
 		const { resourceName, resourceId } = this._getPinTarget();
 		await this.post.$togglePin(resourceName, resourceId);
+		this.post.is_pinned = !wasPinned;
 
 		if (wasPinned) {
 			this.emitUnpin();
