@@ -40,6 +40,15 @@
 
 				<!-- Main Content -->
 				<div class="-content-main">
+					<template v-if="communityNotifications">
+						<app-community-user-notification
+							v-for="communityNotification of communityNotifications"
+							:key="communityNotification.id"
+							:notification="communityNotification"
+							@dismiss="onDismissNotification(communityNotification)"
+						/>
+					</template>
+
 					<div class="post-view">
 						<app-game-badge
 							v-if="post.game"

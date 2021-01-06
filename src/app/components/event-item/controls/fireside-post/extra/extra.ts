@@ -14,12 +14,13 @@ import { FiresidePost } from '../../../../../../_common/fireside/post/post-model
 import { Game } from '../../../../../../_common/game/game.model';
 import { Growls } from '../../../../../../_common/growls/growls.service';
 import { getLinkedAccountPlatformIcon } from '../../../../../../_common/linked-account/linked-account.model';
-import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import AppPopper from '../../../../../../_common/popper/popper.vue';
 import { ReportModal } from '../../../../../../_common/report/modal/modal.service';
 import { AppState, AppStore } from '../../../../../../_common/store/app-store';
 import { User } from '../../../../../../_common/user/user.model';
 import { Store } from '../../../../../store/index';
+import { CommunityBlockUserModal } from '../../../../community/block-user-modal/block-user-modal.service';
+import { CommunityEjectPostModal } from '../../../../community/eject-post/modal/modal.service';
 import { CommunityMovePostModal } from '../../../../community/move-post/modal/modal.service';
 import { AppCommunityPerms } from '../../../../community/perms/perms';
 
@@ -91,6 +92,11 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 		return false;
 	}
 
+	get shouldShowBlockCommunityUser() {
+		// Cannot block yourself.
+		return this.post.user.id !== this.user?.id;
+	}
+
 	getProviderIcon(provider: string) {
 		return getLinkedAccountPlatformIcon(provider);
 	}
@@ -112,14 +118,18 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 			possibleChannels = await this.fetchCommunityChannels(postCommunity.community);
 		}
 
-		const channel = await CommunityMovePostModal.show(postCommunity, possibleChannels);
-		if (!channel) {
+		const result = await CommunityMovePostModal.show(
+			postCommunity,
+			this.post,
+			possibleChannels
+		);
+		if (!result) {
 			return;
 		}
 
 		try {
-			await this.post.$moveChannel(postCommunity.community, channel);
-			this.emitMoveChannel(channel);
+			await this.post.$moveChannel(postCommunity.community, result.channel, result);
+			this.emitMoveChannel(result.channel);
 		} catch (e) {
 			console.error('Failed to move community post to a channel');
 			console.error(e);
@@ -144,20 +154,13 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 	}
 
 	async rejectFromCommunity(postCommunity: FiresidePostCommunity) {
-		const result = await ModalConfirm.show(
-			this.$gettext(
-				`Are you sure you want to eject this post from ${postCommunity.community.name}?`
-			),
-			undefined,
-			'yes'
-		);
-
+		const result = await CommunityEjectPostModal.show(postCommunity, this.post);
 		if (!result) {
 			return;
 		}
 
 		try {
-			await this.post.$reject(postCommunity.community);
+			await this.post.$reject(postCommunity.community, result);
 			// Make sure the post community gets removed from the post.
 			// The backend might not return the post resource if the post was already
 			// ejected, so the community list doesn't get updated.
@@ -167,6 +170,10 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 			console.warn('Failed to eject post');
 			return;
 		}
+	}
+
+	blockFromCommunity(postCommunity: FiresidePostCommunity) {
+		CommunityBlockUserModal.show(this.post.user, postCommunity.community);
 	}
 
 	copyShareUrl() {

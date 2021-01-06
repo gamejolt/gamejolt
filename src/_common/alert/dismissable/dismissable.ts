@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { propOptional } from '../../../utils/vue';
 import AppExpand from '../../expand/expand.vue';
+import { AppTooltip } from '../../tooltip/tooltip-directive';
 
 const STORAGE_KEY_PREFIX = 'dismiss-alert:';
 
@@ -8,11 +10,15 @@ const STORAGE_KEY_PREFIX = 'dismiss-alert:';
 	components: {
 		AppExpand,
 	},
+	directives: {
+		AppTooltip,
+	},
 })
 export default class AppAlertDismissable extends Vue {
 	@Prop(String) alertType!: string;
-	@Prop(String) dismissKey!: string;
+	@Prop(propOptional(String, null)) dismissKey!: string | null;
 	@Prop(Boolean) noMargin?: boolean;
+	@Prop(propOptional(String)) dismissTooltip?: string;
 
 	shouldShow = false;
 
@@ -21,13 +27,15 @@ export default class AppAlertDismissable extends Vue {
 	}
 
 	mounted() {
-		if (!window.localStorage.getItem(this._key)) {
+		if (!this.dismissKey || !window.localStorage.getItem(this._key)) {
 			this.shouldShow = true;
 		}
 	}
 
 	dismiss() {
-		window.localStorage.setItem(this._key, Date.now() + '');
+		if (this.dismissKey) {
+			window.localStorage.setItem(this._key, Date.now() + '');
+		}
 		this.shouldShow = false;
 
 		this.$emit('dismiss');

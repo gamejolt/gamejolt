@@ -4,7 +4,7 @@
 	<div>
 		<div class="row">
 			<div class="col-lg-8">
-				<div v-if="game.is_published" class="alert alert-highlight">
+				<div v-if="game.isVisible" class="alert alert-highlight">
 					<app-jolticon icon="check" />
 					<translate>This game page is published to the site.</translate>
 				</div>
@@ -26,7 +26,7 @@
 					</p>
 				</div>
 
-				<app-expand :when="!game.is_published && canPublish">
+				<app-expand :when="!game.isVisible && canPublish">
 					<div class="alert alert-highlight">
 						<p>
 							<translate>

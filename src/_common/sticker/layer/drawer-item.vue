@@ -39,9 +39,6 @@
 .-peeled
 	filter: contrast(0)
 
-.-img
-	filter: drop-shadow(2px 2px 0 white) drop-shadow(-2px 2px 0 white) drop-shadow(2px -2px 0 white) drop-shadow(-2px -2px 0 white)
-
 .-pocket
 	position: absolute
 	bottom: 0

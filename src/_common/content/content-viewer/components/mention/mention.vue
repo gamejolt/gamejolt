@@ -1,3 +1,5 @@
+<script lang="ts" src="./mention"></script>
+
 <template>
 	<span class="user-mention">
 		<template v-if="user">
@@ -12,7 +14,11 @@
 								class="img-responsive mention-avatar-img"
 								alt=""
 							/>
-							<app-jolticon class="mention-verified" v-if="user.is_verified" icon="verified" />
+							<app-jolticon
+								v-if="user.is_verified"
+								class="mention-verified"
+								icon="verified"
+							/>
 						</span>
 					</span>
 				</router-link>
@@ -30,11 +36,12 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .user-mention
 	display: inline-block
+	white-space: normal
 
 .avatar-container
 	position: relative
@@ -51,7 +58,4 @@
 	bottom: -4px
 	change-bg('bg-offset')
 	border-radius: 100%
-
 </style>
-
-<script lang="ts" src="./mention"></script>

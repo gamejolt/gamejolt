@@ -1,18 +1,13 @@
 import { Route } from 'vue-router';
 import { Analytics } from '../../../_common/analytics/analytics.service';
-import { User } from '../../../_common/user/user.model';
 
-const ExperimentCommunitiesHome = 'split:communities-home';
+const ExperimentCommunitiesHome = 'split:communities-home-v2';
 
-export function hasCommunitiesHomeSplitTest(route: Route, user: User | null) {
-	return !user && getClientSideVariation(ExperimentCommunitiesHome, route) === 2;
+export function hasCommunitiesHomeSplitTest(route: Route) {
+	return getClientSideVariation(ExperimentCommunitiesHome, route) === 2;
 }
 
-export function trackCommunitiesHomeSplitTest(route: Route, user: User | null) {
-	if (user) {
-		return;
-	}
-
+export function trackCommunitiesHomeSplitTest(route: Route) {
 	Analytics.trackEvent(
 		ExperimentCommunitiesHome,
 		'variation-' + getClientSideVariation(ExperimentCommunitiesHome, route)

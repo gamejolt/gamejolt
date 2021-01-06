@@ -4,6 +4,7 @@ import { Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { Community } from '../../../../../_common/community/community.model';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
+import { getCommunityBlockReasons } from '../../../../../_common/user/action-reasons';
 
 @Component({
 	components: {
@@ -19,12 +20,7 @@ export default class AppBlockedNotice extends Vue {
 		}
 
 		const reason = this.community.user_block.reason;
-		const reasons = {
-			spam: this.$gettext('Spam'),
-			'off-topic': this.$gettext('Off Topic'),
-			abuse: this.$gettext('Offensive or insulting'),
-			other: this.$gettext('Other'),
-		} as { [reason: string]: string };
+		const reasons = getCommunityBlockReasons();
 		if (reasons[reason]) {
 			return reasons[reason];
 		}

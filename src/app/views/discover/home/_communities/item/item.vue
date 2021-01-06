@@ -1,9 +1,8 @@
 <script lang="ts" src="./item"></script>
 
 <template>
-	<div class="-item col-xs-4 col-sm-3 col-md-2">
+	<div class="-item">
 		<router-link
-			v-app-track-event="`home:communities:${community.id}`"
 			:to="{
 				name: 'communities.view.overview',
 				params: { path: community.path },
@@ -22,6 +21,15 @@
 			<div class="-label">
 				{{ community.name }}
 			</div>
+			<div class="-count">
+				<span
+					v-translate="{ count: number(community.member_count) }"
+					:translate-n="community.member_count"
+					translate-plural="%{count} members"
+				>
+					1 member
+				</span>
+			</div>
 		</router-link>
 	</div>
 </template>
@@ -31,6 +39,7 @@
 @import '~styles-lib/mixins'
 
 .-item
+	pressy()
 	margin-bottom: $grid-gutter-width
 
 .-backdrop-sizing
@@ -54,16 +63,19 @@
 	text-overflow()
 	theme-prop('color', 'fg')
 	font-weight: bold
-	font-size: $font-size-tiny
+	font-size: $font-size-small
 	text-align: center
 	margin-top: 8px
 
 	@media $media-sm-up
-		font-size: $font-size-small
-
 		.-item:hover &
 			theme-prop('color', 'link')
 
 	@media $media-md-up
 		font-size: $font-size-base
+
+.-count
+	color: var(--theme-fg-muted)
+	font-size: $font-size-small
+	text-align: center
 </style>

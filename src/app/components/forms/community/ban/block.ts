@@ -1,10 +1,17 @@
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
+import { propOptional, propRequired } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
 import { Community } from '../../../../../_common/community/community.model';
 import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
 import { BaseForm, FormOnInit, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
 import { Growls } from '../../../../../_common/growls/growls.service';
+import {
+	getCommunityBlockReasons,
+	REASON_OTHER,
+	REASON_SPAM,
+} from '../../../../../_common/user/action-reasons';
+import { User } from '../../../../../_common/user/user.model';
 
 interface FormModel {
 	username: string;
@@ -21,18 +28,14 @@ interface FormModel {
 })
 export default class FormCommunityBlock extends BaseForm<FormModel>
 	implements FormOnInit, FormOnSubmit {
-	@Prop(Community)
-	community!: Community;
+	@Prop(propRequired(Community)) community!: Community;
+	@Prop(propOptional(User, null)) user?: User | null;
 
 	resetOnSubmit = true;
+	usernameLocked = false;
 
 	get defaultReasons() {
-		return {
-			spam: this.$gettext('Spam'),
-			'off-topic': this.$gettext('Off Topic'),
-			abuse: this.$gettext('Offensive or insulting'),
-			other: this.$gettext('Other'),
-		};
+		return getCommunityBlockReasons();
 	}
 
 	get expiryOptions() {
@@ -47,13 +50,18 @@ export default class FormCommunityBlock extends BaseForm<FormModel>
 	}
 
 	get showReasonOther() {
-		return this.formModel.reasonType === 'other';
+		return this.formModel.reasonType === REASON_OTHER;
 	}
 
 	onInit() {
-		this.setField('reasonType', this.defaultReasons.spam);
+		this.setField('reasonType', REASON_SPAM);
 		this.setField('expiry', 'week');
 		this.setField('ejectPosts', true);
+
+		if (this.user) {
+			this.setField('username', this.user.username);
+			this.usernameLocked = true;
+		}
 	}
 
 	async onSubmit() {
