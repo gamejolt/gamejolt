@@ -1,4 +1,3 @@
-import { assertNever } from '../../utils/utils';
 import { CommentVideo } from '../comment/video/video-model';
 import { Community } from '../community/community.model';
 import {
@@ -164,7 +163,7 @@ export class NotificationText {
 						)
 					);
 				}
-				return '';
+				break;
 			}
 
 			case Notification.TYPE_SITE_TROPHY_ACHIEVED: {
@@ -182,7 +181,7 @@ export class NotificationText {
 						)
 					);
 				}
-				return '';
+				break;
 			}
 
 			case Notification.TYPE_COMMENT_VIDEO_ADD: {
@@ -426,10 +425,18 @@ export class NotificationText {
 					}
 
 					default: {
-						return assertNever(mention.resource);
+						console.warn(
+							'Encountered not-implemented resource type for mention notification',
+							mention.resource
+						);
+						return undefined;
 					}
 				}
 			}
 		}
+
+		// When the notification type has no implementation, we log and don't show it (return undefined).
+		console.warn('Encountered not-implemented notification type', notification.type);
+		return undefined;
 	}
 }

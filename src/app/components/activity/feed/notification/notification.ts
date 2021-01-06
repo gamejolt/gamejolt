@@ -56,6 +56,11 @@ export default class AppActivityFeedNotification extends Vue {
 		return NotificationText.getText(this.notification, false);
 	}
 
+	get shouldShow() {
+		// Only show when there is a title text for the notification.
+		return this.titleText !== undefined;
+	}
+
 	get hasDetails() {
 		if (
 			this.notification.type === Notification.TYPE_MENTION &&
