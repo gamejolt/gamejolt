@@ -133,7 +133,7 @@
 			class="hidden-xs"
 		>
 			<app-button
-				v-if="game.status === Game.STATUS_HIDDEN"
+				v-if="game.isUnlisted"
 				primary
 				block
 				:disabled="!canPublish"

@@ -69,9 +69,18 @@
 					</div>
 
 					<div v-if="post.hasVideo">
+						<app-video-player
+							v-if="video.provider === 'gamejolt'"
+							context="page"
+							:media-item="video.posterMediaItem"
+							:manifests="video.manifestSources"
+							autoplay
+							@play="onVideoPlay"
+						/>
 						<app-video-embed
+							v-else
 							video-provider="youtube"
-							:video-id="post.videos[0].video_id"
+							:video-id="video.video_id"
 							autoplay
 						/>
 

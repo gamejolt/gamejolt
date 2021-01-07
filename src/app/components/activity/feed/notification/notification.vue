@@ -1,111 +1,149 @@
+<script lang="ts" src="./notification"></script>
+
 <template>
 	<div>
-		<div class="notification-item">
-			<div @click.stop="go" class="notification-container">
-				<router-link :to="notification.routeLocation">
-					<app-timeline-list-item :is-new="isNew">
-						<div slot="bubble" v-if="notification.from_model">
-							<app-user-card-hover
-								:user="notification.from_model"
-								:disabled="!feed.shouldShowUserCards"
+		<template v-if="shouldShow">
+			<div class="notification-item">
+				<div @click.stop="go" class="notification-container">
+					<router-link :to="notification.routeLocation">
+						<app-timeline-list-item :is-new="isNew">
+							<div
+								v-if="
+									notification.type ===
+									Notification.TYPE_COMMUNITY_USER_NOTIFICATION
+								"
+								slot="bubble"
 							>
-								<app-user-avatar :user="notification.from_model" />
-							</app-user-card-hover>
-						</div>
-						<div
-							slot="bubble"
-							v-else-if="
-								notification.type === Notification.TYPE_POST_FEATURED_IN_COMMUNITY
-							"
-						>
-							<div class="-community-thumb">
-								<app-community-thumbnail-img
-									class="img-circle"
-									:community="notification.action_model.community"
-								/>
-							</div>
-						</div>
-						<div
-							slot="bubble"
-							v-else-if="
-								notification.type === Notification.TYPE_GAME_TROPHY_ACHIEVED ||
-									notification.type === Notification.TYPE_SITE_TROPHY_ACHIEVED
-							"
-						>
-							<img class="img-circle -trophy-img" :src="trophyImg" />
-						</div>
-
-						<div class="-container">
-							<div class="-main">
-								<div
-									class="timeline-list-item-title timeline-list-item-title-small"
-									v-html="titleText"
-								/>
-
-								<div class="timeline-list-item-meta">
-									<app-time-ago :date="notification.added_on" />
+								<div class="-community-thumb">
+									<app-community-thumbnail-img
+										class="img-circle"
+										:community="notification.from_model"
+									/>
 								</div>
+							</div>
+							<div v-else-if="notification.from_model" slot="bubble">
+								<app-user-card-hover
+									:user="notification.from_model"
+									:disabled="!feed.shouldShowUserCards"
+								>
+									<app-user-avatar :user="notification.from_model" />
+								</app-user-card-hover>
+							</div>
+							<div
+								v-else-if="
+									notification.type ===
+									Notification.TYPE_POST_FEATURED_IN_COMMUNITY
+								"
+								slot="bubble"
+							>
+								<div class="-community-thumb">
+									<app-community-thumbnail-img
+										class="img-circle"
+										:community="notification.action_model.community"
+									/>
+								</div>
+							</div>
+							<div
+								v-else-if="
+									notification.type === Notification.TYPE_GAME_TROPHY_ACHIEVED ||
+									notification.type === Notification.TYPE_SITE_TROPHY_ACHIEVED
+								"
+								slot="bubble"
+							>
+								<img class="img-circle -trophy-img" :src="trophyImg" />
+							</div>
 
-								<div class="timeline-list-item-details" v-if="hasDetails">
-									<div class="timeline-list-item-content">
-										<app-fade-collapse
-											:collapse-height="160"
-											:is-open="false"
-											@require-change="canToggleContent = $event"
-										>
-											<app-content-viewer
-												v-if="
-													notification.type === 'comment-add' ||
-														notification.type ===
-															'comment-add-object-owner'
-												"
-												:source="notification.action_model.comment_content"
-											/>
-											<app-content-viewer
-												v-else-if="notification.type === 'mention'"
-												:source="
-													notification.action_model.comment
-														.comment_content
-												"
-											/>
-											<span
-												v-else-if="
-													notification.type ===
-														Notification.TYPE_POST_FEATURED_IN_COMMUNITY
-												"
+							<div class="-container">
+								<div class="-main">
+									<div
+										class="timeline-list-item-title timeline-list-item-title-small"
+										v-html="titleText"
+									/>
+
+									<div class="timeline-list-item-meta">
+										<app-time-ago :date="notification.added_on" />
+									</div>
+
+									<div v-if="hasDetails" class="timeline-list-item-details">
+										<div class="timeline-list-item-content">
+											<app-fade-collapse
+												:collapse-height="160"
+												:is-open="false"
+												@require-change="canToggleContent = $event"
 											>
-												{{
-													notification.action_model.fireside_post.getShortLead()
-												}}
-											</span>
-											<span
-												v-else-if="
-													notification.type ===
-														Notification.TYPE_GAME_TROPHY_ACHIEVED ||
+												<app-content-viewer
+													v-if="
+														notification.type ===
+															Notification.TYPE_COMMENT_ADD ||
+														notification.type ===
+															Notification.TYPE_COMMENT_ADD_OBJECT_OWNER
+													"
+													:source="
+														notification.action_model.comment_content
+													"
+												/>
+												<app-content-viewer
+													v-else-if="
+														notification.type ===
+														Notification.TYPE_MENTION
+													"
+													:source="
+														notification.action_model.comment
+															.comment_content
+													"
+												/>
+												<span
+													v-else-if="
+														notification.type ===
+														Notification.TYPE_POST_FEATURED_IN_COMMUNITY
+													"
+												>
+													{{
+														notification.action_model.fireside_post.getShortLead()
+													}}
+												</span>
+												<span
+													v-else-if="
+														notification.type ===
+														Notification.TYPE_COMMUNITY_USER_NOTIFICATION
+													"
+												>
+													{{ notification.to_model.getShortLead() }}
+												</span>
+												<span
+													v-else-if="
+														notification.type ===
+															Notification.TYPE_GAME_TROPHY_ACHIEVED ||
 														notification.type ===
 															Notification.TYPE_SITE_TROPHY_ACHIEVED
-												"
-											>
-												{{ notification.action_model.trophy.description }}
-											</span>
-										</app-fade-collapse>
+													"
+												>
+													{{
+														notification.action_model.trophy.description
+													}}
+												</span>
+											</app-fade-collapse>
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
 
-						<div class="-overlay"></div>
-					</app-timeline-list-item>
-				</router-link>
+							<div class="-overlay" />
+						</app-timeline-list-item>
+					</router-link>
+				</div>
+				<div v-if="isNew" class="-actions">
+					<a @click.stop.prevent="onMarkRead">
+						<app-jolticon
+							v-app-tooltip="$gettext(`Mark as Read`)"
+							icon="radio-circle"
+						/>
+					</a>
+				</div>
 			</div>
-			<div class="-actions" v-if="isNew">
-				<a @click.stop.prevent="onMarkRead">
-					<app-jolticon icon="radio-circle" v-app-tooltip="$gettext(`Mark as Read`)" />
-				</a>
-			</div>
-		</div>
 
-		<div class="timeline-list-item-split" />
+			<div class="timeline-list-item-split" />
+		</template>
 	</div>
 </template>
 
@@ -155,5 +193,3 @@
 	width: 100%
 	height: 100%
 </style>
-
-<script lang="ts" src="./notification"></script>

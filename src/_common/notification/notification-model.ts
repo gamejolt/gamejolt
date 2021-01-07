@@ -6,6 +6,10 @@ import { Comment, getCommentUrl } from '../comment/comment-model';
 import { CommentVideoModal } from '../comment/video/modal/modal.service';
 import { CommentVideo } from '../comment/video/video-model';
 import { Community } from '../community/community.model';
+import {
+	CommunityUserNotification,
+	NotificationType,
+} from '../community/user-notification/user-notification.model';
 import { Environment } from '../environment/environment.service';
 import { EventItem } from '../event-item/event-item.model';
 import { FiresidePostCommunity } from '../fireside/post/community/community.model';
@@ -60,6 +64,7 @@ export class Notification extends Model {
 	static TYPE_COMMENT_VIDEO_ADD = 'comment-video-add';
 	static TYPE_GAME_TROPHY_ACHIEVED = 'game-trophy-achieved';
 	static TYPE_SITE_TROPHY_ACHIEVED = 'site-trophy-achieved';
+	static TYPE_COMMUNITY_USER_NOTIFICATION = 'community-user-notification';
 
 	static ACTIVITY_FEED_TYPES = [
 		EventItem.TYPE_POST_ADD,
@@ -81,6 +86,7 @@ export class Notification extends Model {
 		Notification.TYPE_COLLABORATOR_INVITE,
 		Notification.TYPE_GAME_TROPHY_ACHIEVED,
 		Notification.TYPE_SITE_TROPHY_ACHIEVED,
+		Notification.TYPE_COMMUNITY_USER_NOTIFICATION,
 	];
 
 	user_id!: number;
@@ -90,7 +96,7 @@ export class Notification extends Model {
 
 	from_resource!: string;
 	from_resource_id!: number;
-	from_model?: User;
+	from_model?: User | Community;
 
 	action_resource!: string;
 	action_resource_id!: number;
@@ -108,7 +114,8 @@ export class Notification extends Model {
 		| Mention
 		| CommentVideo
 		| UserGameTrophy
-		| UserSiteTrophy;
+		| UserSiteTrophy
+		| CommunityUserNotification;
 
 	to_resource!: string | null;
 	to_resource_id!: number | null;
@@ -117,6 +124,7 @@ export class Notification extends Model {
 	// Generated in constructor.
 	is_user_based = false;
 	is_game_based = false;
+	is_community_based = false;
 
 	// For feeds.
 	scroll_id?: string;
@@ -124,8 +132,15 @@ export class Notification extends Model {
 	constructor(data: any = {}) {
 		super(data);
 
-		if (data.from_resource === 'User' && data.from_resource_id) {
-			this.from_model = new User(data.from_resource_model);
+		if (data.from_resource_id) {
+			switch (data.from_resource) {
+				case 'User':
+					this.from_model = new User(data.from_resource_model);
+					break;
+				case 'Community':
+					this.from_model = new Community(data.from_resource_model);
+					break;
+			}
 		}
 
 		if (!this.viewed_on) {
@@ -193,6 +208,9 @@ export class Notification extends Model {
 		} else if (this.type === Notification.TYPE_SITE_TROPHY_ACHIEVED) {
 			this.action_model = new UserSiteTrophy(data.action_resource_model);
 			this.is_user_based = true;
+		} else if (this.type === Notification.TYPE_COMMUNITY_USER_NOTIFICATION) {
+			this.action_model = new CommunityUserNotification(data.action_resource_model);
+			this.is_community_based = true;
 		}
 
 		// Keep memory clean after bootstrapping the models.
@@ -212,7 +230,7 @@ export class Notification extends Model {
 				return getRouteLocationForModel(this.from_model!);
 
 			case Notification.TYPE_GAME_RATING_ADD:
-				return getRouteLocationForModel(this.from_model as User);
+				return getRouteLocationForModel(this.from_model!);
 
 			case Notification.TYPE_GAME_FOLLOW:
 				return getRouteLocationForModel(this.from_model!);
@@ -221,6 +239,14 @@ export class Notification extends Model {
 				return getRouteLocationForModel(
 					(this.action_model as FiresidePostCommunity).community
 				);
+
+			case Notification.TYPE_COMMUNITY_USER_NOTIFICATION:
+				switch ((this.action_model as CommunityUserNotification).type) {
+					case NotificationType.POSTS_MOVE:
+					case NotificationType.POSTS_EJECT:
+						return getRouteLocationForModel(this.to_model as FiresidePost);
+				}
+				break;
 
 			case Notification.TYPE_COLLABORATOR_INVITE:
 				switch (this.to_resource) {

@@ -15,12 +15,24 @@
 		</div>
 
 		<div class="modal-body">
-			<app-community-move-post
-				v-if="canMove"
-				:fireside-post-community="firesidePostCommunity"
-				:channels="channels"
-				@select="onChannelSelected"
-			/>
+			<template v-if="canMove">
+				<app-community-channel-select
+					v-model="selectedChannel"
+					class="-channel-select"
+					:channels="selectableChannels"
+				/>
+
+				<form-community-move-post v-if="shouldShowForm" @change="onChangeForm" />
+
+				<app-button
+					primary
+					icon="arrow-forward"
+					:disabled="!hasSelectedChannel"
+					@click="onMove"
+				>
+					<translate>Move</translate>
+				</app-button>
+			</template>
 			<span v-else>
 				<translate>
 					There are no channels in this community that the post can be moved to.
@@ -29,3 +41,10 @@
 		</div>
 	</app-modal>
 </template>
+
+<style lang="stylus" scoped>
+@import '~styles/variables'
+
+.-channel-select
+	margin-bottom: $line-height-computed
+</style>

@@ -230,9 +230,7 @@ export default class AppCommentWidgetComment extends Vue {
 		Popper.hideAll();
 
 		const result = await ModalConfirm.show(
-			this.$gettext(`Are you sure you want to remove this comment?`),
-			undefined,
-			'yes'
+			this.$gettext(`Are you sure you want to remove this comment?`)
 		);
 
 		if (!result) {

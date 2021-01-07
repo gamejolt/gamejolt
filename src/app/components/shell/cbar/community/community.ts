@@ -38,6 +38,7 @@ export default class AppShellCbarCommunity extends Vue {
 	@State communityStates!: Store['communityStates'];
 	@Action leaveCommunity!: Store['leaveCommunity'];
 	@Action toggleLeftPane!: Store['toggleLeftPane'];
+	@Action joinCommunity!: Store['joinCommunity'];
 	@SidebarMutation showContextOnRouteChange!: SidebarStore['showContextOnRouteChange'];
 
 	popperVisible = false;
@@ -76,12 +77,21 @@ export default class AppShellCbarCommunity extends Vue {
 	}
 
 	get shouldShowLeave() {
-		return !this.community.hasPerms();
+		return !this.community.hasPerms() && !!this.community.is_member;
+	}
+
+	get shouldShowJoin() {
+		return !this.community.is_member;
 	}
 
 	async onLeaveCommunityClick() {
 		Popper.hideAll();
 		await this.leaveCommunity(this.community);
+	}
+
+	async onJoinCommunityClick() {
+		Popper.hideAll();
+		await this.joinCommunity(this.community);
 	}
 
 	onCommunityClick(event: Event) {

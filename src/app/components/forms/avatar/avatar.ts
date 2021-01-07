@@ -81,9 +81,7 @@ export default class FormAvatar extends BaseForm<FormModel>
 
 	async clearAvatar() {
 		const result = await ModalConfirm.show(
-			this.$gettext(`Are you sure you want to remove your avatar?`),
-			undefined,
-			'yes'
+			this.$gettext(`Are you sure you want to remove your avatar?`)
 		);
 
 		if (result) {

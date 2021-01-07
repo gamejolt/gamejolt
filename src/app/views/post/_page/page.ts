@@ -1,9 +1,11 @@
 import Vue from 'vue';
 import { Component, Prop, ProvideReactive, Watch } from 'vue-property-decorator';
 import { RawLocation } from 'vue-router';
-import { propRequired } from '../../../../utils/vue';
+import { arrayRemove } from '../../../../utils/array';
+import { propOptional, propRequired } from '../../../../utils/vue';
 import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
+import { CommunityUserNotification } from '../../../../_common/community/user-notification/user-notification.model';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import { number } from '../../../../_common/filters/number';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
@@ -40,6 +42,7 @@ import AppVideoEmbed from '../../../../_common/video/embed/embed.vue';
 import AppVideoPlayer from '../../../../_common/video/player/player.vue';
 import AppVideoProcessingProgress from '../../../../_common/video/processing-progress/processing-progress.vue';
 import AppVideo from '../../../../_common/video/video.vue';
+import AppCommunityUserNotification from '../../../components/community/user-notification/user-notification.vue';
 import AppEventItemControls from '../../../components/event-item/controls/controls.vue';
 import AppGameBadge from '../../../components/game/badge/badge.vue';
 import AppGameListItem from '../../../components/game/list/item/item.vue';
@@ -73,6 +76,7 @@ import AppPollVoting from '../../../components/poll/voting/voting.vue';
 		AppUserVerifiedTick,
 		AppVideoProcessingProgress,
 		AppCommentWidgetLazy,
+		AppCommunityUserNotification,
 	},
 	directives: {
 		AppTooltip,
@@ -80,6 +84,7 @@ import AppPollVoting from '../../../components/poll/voting/voting.vue';
 })
 export default class AppPostPage extends Vue implements LightboxMediaSource {
 	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
+	@Prop(propOptional(Array, () => [])) communityNotifications!: CommunityUserNotification[];
 
 	@AppState user!: AppStore['user'];
 
@@ -224,5 +229,9 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 	@Watch('post.id')
 	onPostIdChange() {
 		this.stickerTargetController = new StickerTargetController(this.post);
+	}
+
+	onDismissNotification(notification: CommunityUserNotification) {
+		arrayRemove(this.communityNotifications, i => i.id === notification.id);
 	}
 }
