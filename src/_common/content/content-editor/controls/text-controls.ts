@@ -3,13 +3,14 @@ import { Mark, MarkType, Node } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { MouseState } from '../../../../../utils/mouse';
-import { Screen } from '../../../../screen/screen-service';
-import { AppTooltip } from '../../../../tooltip/tooltip-directive';
-import { ContextCapabilities } from '../../../content-context';
-import { ContentEditorService } from '../../content-editor.service';
-import { ContentEditorLinkModal } from '../../modals/link/link-modal.service';
-import { ContentEditorSchema } from '../../schemas/content-editor-schema';
+import { MouseState } from '../../../../utils/mouse';
+import { propRequired } from '../../../../utils/vue';
+import { Screen } from '../../../screen/screen-service';
+import { AppTooltip } from '../../../tooltip/tooltip-directive';
+import { ContextCapabilities } from '../../content-context';
+import { ContentEditorService } from '../content-editor.service';
+import { ContentEditorLinkModal } from '../modals/link/link-modal.service';
+import { ContentEditorSchema } from '../schemas/content-editor-schema';
 
 @Component({
 	directives: {
@@ -17,12 +18,9 @@ import { ContentEditorSchema } from '../../schemas/content-editor-schema';
 	},
 })
 export default class AppContentEditorTextControls extends Vue {
-	@Prop(Object)
-	view!: EditorView<ContentEditorSchema>;
-	@Prop(Number)
-	stateCounter!: number;
-	@Prop(Object)
-	capabilities!: ContextCapabilities;
+	@Prop(propRequired(Object)) view!: EditorView<ContentEditorSchema>;
+	@Prop(propRequired(Number)) stateCounter!: number;
+	@Prop(propRequired(Object)) capabilities!: ContextCapabilities;
 
 	// CSS and styling
 	visible = false;

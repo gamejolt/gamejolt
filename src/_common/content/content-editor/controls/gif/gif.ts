@@ -3,6 +3,7 @@ import { EditorView } from 'prosemirror-view';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop, Watch } from 'vue-property-decorator';
+import { propRequired } from '../../../../../utils/vue';
 import { AppTooltip } from '../../../../tooltip/tooltip-directive';
 import { ContentEditorService } from '../../content-editor.service';
 import { ContentEditorGifModal } from '../../modals/gif/gif-modal.service';
@@ -12,11 +13,9 @@ import { ContentEditorGifModal } from '../../modals/gif/gif-modal.service';
 		AppTooltip,
 	},
 })
-export default class AppContentEditorControlsGifControls extends Vue {
-	@Prop(EditorView)
-	view!: EditorView;
-	@Prop(Number)
-	stateCounter!: number;
+export default class AppContentEditorControlsGif extends Vue {
+	@Prop(propRequired(EditorView)) view!: EditorView;
+	@Prop(propRequired(Number)) stateCounter!: number;
 
 	visible = false;
 

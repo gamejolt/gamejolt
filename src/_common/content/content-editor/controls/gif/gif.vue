@@ -1,4 +1,4 @@
-<script lang="ts" src="./controls"></script>
+<script lang="ts" src="./gif"></script>
 
 <template>
 	<transition name="fade">

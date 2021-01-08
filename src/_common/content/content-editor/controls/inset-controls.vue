@@ -1,11 +1,13 @@
+<script lang="ts" src="./inset-controls"></script>
+
 <template>
-	<div class="inset-controls-container" ref="container" :style="{ top: this.top + 'px' }">
+	<div ref="container" class="inset-controls-container" :style="{ top: top + 'px' }">
 		<slot v-if="shouldShow" />
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
 
 .inset-controls-container
 	position: absolute
@@ -19,4 +21,3 @@
 		margin-left: 8px
 </style>
 
-<script lang="ts" src="./container"></script>

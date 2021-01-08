@@ -1,7 +1,12 @@
 import { EditorView } from 'prosemirror-view';
 import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Component, InjectReactive, Prop, Watch } from 'vue-property-decorator';
+import { propRequired } from '../../../../../utils/vue';
 import { AppTooltip } from '../../../../tooltip/tooltip-directive';
+import {
+	ContentEditorController,
+	ContentEditorControllerKey,
+} from '../../content-editor-controller';
 import { ContentEditorSchema } from '../../schemas/content-editor-schema';
 import { GJ_EMOJIS } from '../../schemas/specs/nodes/gj-emoji-nodespec';
 
@@ -10,11 +15,12 @@ import { GJ_EMOJIS } from '../../schemas/specs/nodes/gj-emoji-nodespec';
 		AppTooltip,
 	},
 })
-export default class AppContentEditorControlsEmojiPanel extends Vue {
-	@Prop(EditorView)
-	view!: EditorView<ContentEditorSchema>;
-	@Prop(Number)
-	stateCounter!: number;
+export default class AppContentEditorControlsEmoji extends Vue {
+	@Prop(propRequired(EditorView)) view!: EditorView<ContentEditorSchema>;
+	@Prop(propRequired(Number)) stateCounter!: number;
+
+	@InjectReactive(ContentEditorControllerKey)
+	controller!: ContentEditorController;
 
 	visible = false;
 	emoji = 'huh'; // gets set to a random one at mounted
@@ -49,7 +55,7 @@ export default class AppContentEditorControlsEmojiPanel extends Vue {
 	private setPanelVisibility(visible: boolean) {
 		if (this.panelVisible !== visible) {
 			this.panelVisible = visible;
-			this.$emit('visibilityChanged', visible);
+			this.$emit('visibilitychange', visible);
 		}
 	}
 
@@ -79,7 +85,14 @@ export default class AppContentEditorControlsEmojiPanel extends Vue {
 		if (this.clickedWithPanelVisible) {
 			this.setPanelVisibility(false);
 		} else {
-			this.show();
+			if (this.controller.embedded) {
+				const message = {
+					action: 'emojiSelector',
+				};
+				(window as any).gjEditorChannel.postMessage(JSON.stringify(message));
+			} else {
+				this.show();
+			}
 		}
 	}
 
