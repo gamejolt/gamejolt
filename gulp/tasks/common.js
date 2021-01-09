@@ -10,11 +10,11 @@ const path = require('path');
 gulp.registry(FwdRef());
 
 module.exports = (config, projectBase) => {
-	function filterSections(func) {
+	function filterSections(predicate) {
 		const sections = {};
 		for (const section in config.sections) {
 			const sectionConfig = config.sections[section];
-			if (func(sectionConfig, section)) {
+			if (predicate(sectionConfig, section)) {
 				sections[section] = sectionConfig;
 			}
 		}
@@ -26,7 +26,9 @@ module.exports = (config, projectBase) => {
 	config.write = argv.fs || false;
 	config.analyzeBundle = argv['analyze-bundle'] || false;
 	config.ssr = argv.ssr || false; // 'client' | 'server' | false
-	config.client = argv.client || false;
+	config.isClient = argv.client || false;
+	config.isApp = argv.app || false;
+	config.isWeb = !config.isClient && !config.isApp;
 
 	// If true, will not push the client package using gjpush.
 	config.noGjPush = argv.noGjPush || false;
@@ -52,8 +54,12 @@ module.exports = (config, projectBase) => {
 
 	if (config.ssr === 'server') {
 		config.sections = filterSections(i => i.server);
-	} else if (config.client) {
+	} else if (config.isClient) {
 		config.sections = filterSections(i => i.client);
+	} else if (config.isApp) {
+		config.sections = filterSections(i => i.app);
+	} else {
+		config.sections = filterSections(i => !i.client && !i.app);
 	}
 
 	if (argv['section']) {
@@ -75,13 +81,15 @@ module.exports = (config, projectBase) => {
 	config.buildDir = config.buildBaseDir + (config.production ? 'build/prod' : 'build/dev');
 	config.libDir = 'src/lib/';
 
-	if (config.client || config.ssr) {
+	if (config.isClient || config.isApp || config.ssr) {
 		config.write = true;
 	}
 
 	if (config.ssr === 'server') {
 		config.buildDir += '-server';
-	} else if (config.client) {
+	} else if (config.isApp) {
+		config.buildDir += '-app';
+	} else if (config.isClient) {
 		config.buildDir += '-client';
 		config.clientBuildDir = config.buildDir + '-build';
 		config.clientBuildCacheDir = config.buildDir + '-cache';

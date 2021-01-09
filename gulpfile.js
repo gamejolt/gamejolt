@@ -71,6 +71,8 @@ const config = {
 		},
 		editor: {
 			title: 'Editor',
+			app: true,
+			analytics: false,
 		},
 	},
 	translations: 'site-translations',

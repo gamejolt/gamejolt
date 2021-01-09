@@ -2,12 +2,12 @@ import { lift, toggleMark, wrapIn } from 'prosemirror-commands';
 import { Mark, MarkType, Node } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
 import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Component, InjectReactive, Prop, Watch } from 'vue-property-decorator';
 import { MouseState } from '../../../../utils/mouse';
 import { propRequired } from '../../../../utils/vue';
 import { Screen } from '../../../screen/screen-service';
 import { AppTooltip } from '../../../tooltip/tooltip-directive';
-import { ContextCapabilities } from '../../content-context';
+import { ContentEditorController, ContentEditorControllerKey } from '../content-editor-controller';
 import { ContentEditorService } from '../content-editor.service';
 import { ContentEditorLinkModal } from '../modals/link/link-modal.service';
 import { ContentEditorSchema } from '../schemas/content-editor-schema';
@@ -18,9 +18,10 @@ import { ContentEditorSchema } from '../schemas/content-editor-schema';
 	},
 })
 export default class AppContentEditorTextControls extends Vue {
-	@Prop(propRequired(Object)) view!: EditorView<ContentEditorSchema>;
 	@Prop(propRequired(Number)) stateCounter!: number;
-	@Prop(propRequired(Object)) capabilities!: ContextCapabilities;
+
+	@InjectReactive(ContentEditorControllerKey)
+	controller!: ContentEditorController;
 
 	// CSS and styling
 	visible = false;
@@ -41,8 +42,16 @@ export default class AppContentEditorTextControls extends Vue {
 		container: HTMLElement;
 	};
 
+	get contextCapabilities() {
+		return this.controller.contextCapabilities;
+	}
+
+	get view() {
+		return this.controller.view!;
+	}
+
 	get shouldShowHeading() {
-		return this.capabilities.heading && (this.isInHeading || this.testWrapInHeading());
+		return this.contextCapabilities.heading && (this.isInHeading || this.testWrapInHeading());
 	}
 
 	mounted() {
@@ -187,7 +196,7 @@ export default class AppContentEditorTextControls extends Vue {
 	}
 
 	testIsInHeading(node: Node<ContentEditorSchema>) {
-		if (!this.capabilities.heading) {
+		if (!this.contextCapabilities.heading) {
 			return false;
 		}
 		return ContentEditorService.isContainedInNode(

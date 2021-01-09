@@ -57,7 +57,7 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 		throw new Error('No context assigned to viewer');
 	}
 
-	getCapabilities() {
+	getContextCapabilities() {
 		if (this.data) {
 			return ContextCapabilities.getForContext(this.data.context);
 		}

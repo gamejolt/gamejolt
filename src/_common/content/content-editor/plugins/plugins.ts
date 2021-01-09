@@ -38,7 +38,7 @@ export function createPlugins(editor: AppContentEditor, schema: ContentEditorSch
 		history(),
 		incrementerPlugin,
 		isEmptyPlugin,
-		new UpdateAutolinkPlugin(editor.capabilities),
+		new UpdateAutolinkPlugin(editor.contextCapabilities),
 		createInputRules(editor),
 	] as KeyedPlugin[];
 

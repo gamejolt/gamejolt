@@ -54,7 +54,7 @@ export class ContentEmbedService {
 		// Go through all lines of pasted content individually
 		// This also has to take capabilities into account
 
-		const capabilities = owner.getCapabilities();
+		const capabilities = owner.getContextCapabilities();
 		const hydrator = owner.getHydrator();
 		for (const line of lines) {
 			for (const source of this.sources) {

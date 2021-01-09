@@ -16,7 +16,7 @@
 		<transition name="fade">
 			<div v-if="visible">
 				<button
-					v-if="capabilities.textBold && !isInHeading"
+					v-if="contextCapabilities.textBold && !isInHeading"
 					v-app-tooltip="$gettext('Bold (Ctrl+B)')"
 					class="control-button"
 					:class="{
@@ -28,7 +28,7 @@
 					<app-jolticon icon="bold" />
 				</button>
 				<button
-					v-if="capabilities.textItalic"
+					v-if="contextCapabilities.textItalic"
 					v-app-tooltip="$gettext('Italic (Ctrl+I)')"
 					class="control-button"
 					:class="{
@@ -40,7 +40,7 @@
 					<app-jolticon icon="italic" />
 				</button>
 				<button
-					v-if="capabilities.textStrike"
+					v-if="contextCapabilities.textStrike"
 					v-app-tooltip="$gettext('Strikethrough')"
 					class="control-button"
 					:class="{
@@ -52,7 +52,7 @@
 					<app-jolticon icon="strikethrough" />
 				</button>
 				<button
-					v-if="capabilities.textCode"
+					v-if="contextCapabilities.textCode"
 					v-app-tooltip="$gettext('Code (Ctrl+`)')"
 					class="control-button"
 					:class="{
@@ -64,7 +64,7 @@
 					<app-jolticon icon="brackets" />
 				</button>
 				<button
-					v-if="capabilities.textLink && capabilities.customLink"
+					v-if="contextCapabilities.textLink && contextCapabilities.customLink"
 					v-app-tooltip="$gettext(isAutolink ? 'Autolinked' : 'Link (Ctrl+K)')"
 					class="control-button"
 					:class="{

@@ -19,7 +19,7 @@ type NodeViewList = {
 export function buildNodeViews(owner: ContentOwner): NodeViewList {
 	// Construct node views based on capabilities
 	const nodeViews = {} as NodeViewList;
-	const capabilities = owner.getCapabilities();
+	const capabilities = owner.getContextCapabilities();
 
 	if (capabilities.hasAnyEmbed) {
 		nodeViews.embed = function(node, view, getPos) {

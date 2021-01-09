@@ -5,7 +5,7 @@ import { ContentHydrator } from './content-hydrator';
 
 export interface ContentOwner {
 	getHydrator(): ContentHydrator;
-	getCapabilities(): ContextCapabilities;
+	getContextCapabilities(): ContextCapabilities;
 	getContext(): ContentContext;
 
 	getContent(): ContentDocument | null;

@@ -1,13 +1,12 @@
-import { EditorView } from 'prosemirror-view';
 import Vue from 'vue';
-import { Component, InjectReactive, Prop, Watch } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
+import { Component, InjectReactive } from 'vue-property-decorator';
 import { AppTooltip } from '../../../../tooltip/tooltip-directive';
+import { ContentEditorAppAdapterMessage } from '../../app-adapter';
 import {
 	ContentEditorController,
 	ContentEditorControllerKey,
+	editorInsertEmoji,
 } from '../../content-editor-controller';
-import { ContentEditorSchema } from '../../schemas/content-editor-schema';
 import { GJ_EMOJIS } from '../../schemas/specs/nodes/gj-emoji-nodespec';
 
 @Component({
@@ -16,13 +15,9 @@ import { GJ_EMOJIS } from '../../schemas/specs/nodes/gj-emoji-nodespec';
 	},
 })
 export default class AppContentEditorControlsEmoji extends Vue {
-	@Prop(propRequired(EditorView)) view!: EditorView<ContentEditorSchema>;
-	@Prop(propRequired(Number)) stateCounter!: number;
-
 	@InjectReactive(ContentEditorControllerKey)
 	controller!: ContentEditorController;
 
-	visible = false;
 	emoji = 'huh'; // gets set to a random one at mounted
 	panelVisible = false;
 	clickedWithPanelVisible = false;
@@ -31,13 +26,8 @@ export default class AppContentEditorControlsEmoji extends Vue {
 		panel: HTMLElement;
 	};
 
-	created() {
-		this.update();
-	}
-
-	@Watch('stateCounter')
-	update() {
-		this.visible = this.canInsertEmoji();
+	get visible() {
+		return this.controller.capabilities.emoji;
 	}
 
 	get spanClass() {
@@ -55,7 +45,7 @@ export default class AppContentEditorControlsEmoji extends Vue {
 	private setPanelVisibility(visible: boolean) {
 		if (this.panelVisible !== visible) {
 			this.panelVisible = visible;
-			this.$emit('visibilitychange', visible);
+			this.$emit('visibility-change', visible);
 		}
 	}
 
@@ -85,11 +75,8 @@ export default class AppContentEditorControlsEmoji extends Vue {
 		if (this.clickedWithPanelVisible) {
 			this.setPanelVisibility(false);
 		} else {
-			if (this.controller.embedded) {
-				const message = {
-					action: 'emojiSelector',
-				};
-				(window as any).gjEditorChannel.postMessage(JSON.stringify(message));
+			if (GJ_IS_APP) {
+				ContentEditorAppAdapterMessage.showEmojiSelector().send();
 			} else {
 				this.show();
 			}
@@ -104,22 +91,8 @@ export default class AppContentEditorControlsEmoji extends Vue {
 		this.setPanelVisibility(false);
 	}
 
-	private canInsertEmoji() {
-		const emojiNodeType = this.view.state.schema.nodes.gjEmoji;
-		const { $from } = this.view.state.selection;
-		const index = $from.index();
-		return $from.parent.canReplaceWith(index, index, emojiNodeType);
-	}
-
 	onClickEmoji(emojiType: string) {
-		const emojiNodeType = this.view.state.schema.nodes.gjEmoji;
-
-		if (this.canInsertEmoji()) {
-			const tr = this.view.state.tr;
-			tr.replaceSelectionWith(emojiNodeType.create({ type: emojiType }));
-			this.view.dispatch(tr);
-			this.view.focus();
-		}
+		editorInsertEmoji(this.controller, emojiType);
 	}
 
 	public async show() {

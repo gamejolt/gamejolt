@@ -20,7 +20,7 @@
 			<div v-if="shouldShow">
 				<template v-if="Screen.isXs">
 					<button
-						v-if="capabilities.media"
+						v-if="contextCapabilities.media"
 						v-app-tooltip="$gettext('Add an image or GIF')"
 						type="button"
 						class="control-button"
@@ -29,7 +29,7 @@
 						<app-jolticon icon="screenshot" />
 					</button>
 					<button
-						v-if="capabilities.hasAnyEmbed"
+						v-if="contextCapabilities.hasAnyEmbed"
 						v-app-tooltip="$gettext('Add an embed')"
 						type="button"
 						class="control-button"
@@ -38,7 +38,7 @@
 						<app-jolticon icon="embed" />
 					</button>
 					<button
-						v-if="capabilities.codeBlock"
+						v-if="contextCapabilities.codeBlock"
 						v-app-tooltip="$gettext('Add a code block')"
 						type="button"
 						class="control-button"
@@ -47,7 +47,7 @@
 						<app-jolticon icon="brackets" />
 					</button>
 					<button
-						v-if="capabilities.blockquote"
+						v-if="contextCapabilities.blockquote"
 						v-app-tooltip="$gettext('Add a quote')"
 						type="button"
 						class="control-button"
@@ -56,7 +56,7 @@
 						<app-jolticon icon="blockquote" />
 					</button>
 					<button
-						v-if="capabilities.spoiler"
+						v-if="contextCapabilities.spoiler"
 						v-app-tooltip="$gettext('Add a spoiler')"
 						type="button"
 						class="control-button"
@@ -65,7 +65,7 @@
 						<app-jolticon icon="inactive" />
 					</button>
 					<button
-						v-if="capabilities.hr"
+						v-if="contextCapabilities.hr"
 						v-app-tooltip="$gettext('Add a separator')"
 						type="button"
 						class="control-button"
@@ -74,7 +74,7 @@
 						<app-jolticon icon="hr" />
 					</button>
 					<button
-						v-if="capabilities.list"
+						v-if="contextCapabilities.list"
 						v-app-tooltip="$gettext('Add a bulleted list')"
 						type="button"
 						class="control-button"
@@ -83,7 +83,7 @@
 						<app-jolticon icon="bullet-list" />
 					</button>
 					<button
-						v-if="capabilities.list"
+						v-if="contextCapabilities.list"
 						v-app-tooltip="$gettext('Add a numbered list')"
 						type="button"
 						class="control-button"
@@ -107,7 +107,7 @@
 						<span v-if="!collapsed">
 							<span class="dot-separator" />
 							<app-button
-								v-if="capabilities.media"
+								v-if="contextCapabilities.media"
 								v-app-tooltip="$gettext('Add an image or GIF')"
 								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
@@ -116,7 +116,7 @@
 								@click="onClickMedia"
 							/>
 							<app-button
-								v-if="capabilities.hasAnyEmbed"
+								v-if="contextCapabilities.hasAnyEmbed"
 								v-app-tooltip="$gettext('Add an embed')"
 								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
@@ -125,7 +125,7 @@
 								@click="onClickEmbed"
 							/>
 							<app-button
-								v-if="capabilities.codeBlock"
+								v-if="contextCapabilities.codeBlock"
 								v-app-tooltip="$gettext('Add a code block')"
 								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
@@ -134,7 +134,7 @@
 								@click="onClickCodeBlock"
 							/>
 							<app-button
-								v-if="capabilities.blockquote"
+								v-if="contextCapabilities.blockquote"
 								v-app-tooltip="$gettext('Add a quote')"
 								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
@@ -143,7 +143,7 @@
 								@click="onClickBlockquote"
 							/>
 							<app-button
-								v-if="capabilities.spoiler"
+								v-if="contextCapabilities.spoiler"
 								v-app-tooltip="$gettext('Add a spoiler')"
 								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
@@ -152,7 +152,7 @@
 								@click="onClickSpoiler"
 							/>
 							<app-button
-								v-if="capabilities.hr"
+								v-if="contextCapabilities.hr"
 								v-app-tooltip="$gettext('Add a separator')"
 								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
@@ -161,7 +161,7 @@
 								@click="onClickHr"
 							/>
 							<app-button
-								v-if="capabilities.list"
+								v-if="contextCapabilities.list"
 								v-app-tooltip="$gettext('Add a bulleted list')"
 								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
@@ -170,7 +170,7 @@
 								@click="onClickBulletList"
 							/>
 							<app-button
-								v-if="capabilities.list"
+								v-if="contextCapabilities.list"
 								v-app-tooltip="$gettext('Add a numbered list')"
 								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle

@@ -12,7 +12,12 @@ import { ContentDocument } from '../content-document';
 import { ContentFormatAdapter, ProsemirrorEditorFormat } from '../content-format-adapter';
 import { ContentHydrator } from '../content-hydrator';
 import { ContentOwner } from '../content-owner';
-import { ContentEditorController, ContentEditorControllerKey } from './content-editor-controller';
+import { ContentEditorAppAdapterMessage, editorGetAppAdapter } from './app-adapter';
+import {
+	ContentEditorController,
+	ContentEditorControllerKey,
+	editorSyncScope,
+} from './content-editor-controller';
 import { ContentEditorService } from './content-editor.service';
 import { ContentRules } from './content-rules';
 import { ContentTempResource } from './content-temp-resource.service';
@@ -48,7 +53,6 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	@Prop(propOptional(Boolean, false)) disabled!: boolean;
 	@Prop(propOptional(Number, null)) modelId!: number;
 	@Prop(propOptional(Number, 0)) minHeight!: number;
-	@Prop(propOptional(Boolean, false)) embedded!: boolean;
 	// TODO: Not needed anymore?
 	// @Prop(propOptional(String, '')) name!: string;
 	/**
@@ -70,6 +74,9 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	@Prop(propOptional(ContentRules)) displayRules?: ContentRules;
 	@Prop(propOptional(Boolean, false)) focusEnd!: boolean;
 
+	@ProvideReactive(ContentEditorControllerKey)
+	controller: ContentEditorController = new ContentEditorController();
+
 	$_veeValidate = {
 		value: () => this.value,
 		name: () => 'app-content-editor',
@@ -77,11 +84,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 
 	schema: ContentEditorSchema | null = null;
 	plugins: Plugin<ContentEditorSchema>[] | null = null;
-	capabilities: ContextCapabilities = ContextCapabilities.getEmpty();
 	hydrator!: ContentHydrator;
-
-	@ProvideReactive(ContentEditorControllerKey)
-	controller: ContentEditorController = null as any;
 
 	focusWatcher: FocusWatcher | null = null;
 	resizeObserver: ResizeObserver | null = null;
@@ -108,6 +111,8 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	// Keep a copy of the json version of the doc, to only set the content if the external source changed.
 	_sourceControlVal: string | null = null;
 
+	readonly GJ_IS_APP = GJ_IS_APP;
+
 	$refs!: {
 		editor: HTMLElement;
 		doc: HTMLElement;
@@ -123,41 +128,39 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	emitInsertBlockNode(_nodeType: string) {}
 
 	get view() {
-		return this.controller?.view ?? null;
+		return this.controller.view ?? null;
+	}
+
+	get contextCapabilities() {
+		return this.controller.contextCapabilities;
 	}
 
 	get shouldShowControls() {
-		return !this.disabled && this.isFocused && this.capabilities.hasAnyBlock;
+		return !this.disabled && this.isFocused && this.contextCapabilities.hasAnyBlock;
 	}
 
 	get shouldShowTextControls() {
 		return (
 			!this.disabled &&
 			this.isFocused &&
-			this.capabilities.hasAnyText &&
+			this.contextCapabilities.hasAnyText &&
 			!this.emojiPanelVisible
 		);
 	}
 
 	get shouldShowEmojiPanel() {
-		return !this.disabled && this.capabilities.emoji && this.isFocused;
+		return !this.disabled && this.contextCapabilities.emoji && this.isFocused;
 	}
 
 	get couldShowEmojiPanel() {
-		if (this.capabilities) {
-			return this.capabilities.emoji;
-		}
-		return false;
+		return this.contextCapabilities.emoji;
 	}
 
 	get couldShowGifPanel() {
-		if (this.embedded) {
+		if (GJ_IS_APP) {
 			return false;
 		}
-		if (this.capabilities) {
-			return this.capabilities.gif;
-		}
-		return false;
+		return this.contextCapabilities.gif;
 	}
 
 	get editorGutterSize() {
@@ -184,7 +187,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	}
 
 	get shouldShowGifButton() {
-		return !this.disabled && this.capabilities.gif && this.isFocused;
+		return !this.disabled && this.contextCapabilities.gif && this.isFocused;
 	}
 
 	getContext() {
@@ -195,8 +198,8 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 		return this.hydrator;
 	}
 
-	getCapabilities() {
-		return this.capabilities;
+	getContextCapabilities() {
+		return this.contextCapabilities;
 	}
 
 	async getModelId() {
@@ -213,21 +216,32 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 		}
 	}
 
-	@Watch('value')
-	public onSourceUpdated() {
-		if (this._sourceControlVal !== this.value) {
-			this._sourceControlVal = this.value;
-			// When we receive an empty string as the document json, the caller probably wants to clear the document.
-			if (this.value === '') {
-				this.reset();
-			} else {
-				const doc = ContentDocument.fromJson(this.value);
-				this.setContent(doc);
-			}
+	@Watch('stateCounter')
+	onStateCounterChange() {
+		editorSyncScope(this.controller, this.disabled, this.isFocused);
+		if (GJ_IS_APP) {
+			const msg = ContentEditorAppAdapterMessage.syncScope(this.controller);
+			editorGetAppAdapter().send(msg);
 		}
 	}
 
-	public onUpdate(state: EditorState<ContentEditorSchema>) {
+	@Watch('value')
+	onSourceUpdated() {
+		if (this._sourceControlVal === this.value) {
+			return;
+		}
+
+		this._sourceControlVal = this.value;
+		// When we receive an empty string as the document json, the caller probably wants to clear the document.
+		if (this.value === '') {
+			this.reset();
+		} else {
+			const doc = ContentDocument.fromJson(this.value);
+			this.setContent(doc);
+		}
+	}
+
+	onUpdate(state: EditorState<ContentEditorSchema>) {
 		const source = ContentFormatAdapter.adaptOut(
 			state.doc.toJSON() as ProsemirrorEditorFormat,
 			this.contentContext
@@ -244,11 +258,12 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	}
 
 	async mounted() {
-		this.capabilities = ContextCapabilities.getForContext(this.contentContext);
 		this.hydrator = new ContentHydrator();
-		this.controller = new ContentEditorController({ embedded: this.embedded });
+		this.controller.contextCapabilities = ContextCapabilities.getForContext(
+			this.contentContext
+		);
 
-		this.schema = generateSchema(this.capabilities);
+		this.schema = generateSchema(this.contextCapabilities);
 		this.plugins = createPlugins(this, this.schema);
 
 		// We have to wait a frame here before we can start using the $refs.doc variable.

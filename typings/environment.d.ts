@@ -2,6 +2,7 @@ declare const GJ_SECTION: string;
 declare const GJ_ENVIRONMENT: 'development' | 'production';
 declare const GJ_BUILD_TYPE: 'development' | 'production';
 declare const GJ_IS_CLIENT: boolean;
+declare const GJ_IS_APP: boolean;
 declare const GJ_IS_SSR: boolean;
 declare const GJ_VERSION: string;
 declare const GJ_MANIFEST_URL: string;

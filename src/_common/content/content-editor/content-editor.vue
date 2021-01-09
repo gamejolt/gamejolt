@@ -38,31 +38,23 @@
 
 				<app-content-editor-inset-controls :view="view" :state-counter="stateCounter">
 					<transition name="fade">
-						<app-content-editor-controls-gif
-							v-if="!embedded && shouldShowGifButton"
-							:view="view"
-							:state-counter="stateCounter"
-						/>
+						<app-content-editor-controls-gif v-if="!GJ_IS_APP && shouldShowGifButton" />
 					</transition>
 					<transition name="fade">
 						<app-content-editor-controls-emoji
 							v-if="shouldShowEmojiPanel"
 							ref="emojiPanel"
-							:view="view"
-							:state-counter="stateCounter"
-							@visibilitychange="onEmojiPanelVisibilityChanged"
+							@visibility-change="onEmojiPanelVisibilityChanged"
 						/>
 					</transition>
 				</app-content-editor-inset-controls>
 			</app-scroll-scroller>
 		</div>
 
-		<template v-if="!embedded">
+		<template v-if="!GJ_IS_APP">
 			<transition name="fade">
 				<app-content-editor-block-controls
 					v-if="shouldShowControls"
-					:capabilities="capabilities"
-					:view="view"
 					:editor="this"
 					:state-counter="stateCounter"
 					:collapsed="controlsCollapsed"
@@ -72,8 +64,6 @@
 			<transition name="fade">
 				<app-content-editor-text-controls
 					v-if="shouldShowTextControls"
-					:capabilities="capabilities"
-					:view="view"
 					:state-counter="stateCounter"
 				/>
 			</transition>
