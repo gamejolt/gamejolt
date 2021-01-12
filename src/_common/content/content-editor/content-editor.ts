@@ -218,7 +218,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 
 	@Watch('stateCounter')
 	onStateCounterChange() {
-		editorSyncScope(this.controller, this.disabled, this.isFocused);
+		editorSyncScope(this.controller, this.disabled);
 		if (GJ_IS_APP) {
 			const msg = ContentEditorAppAdapterMessage.syncScope(this.controller);
 			editorGetAppAdapter().send(msg);

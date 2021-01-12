@@ -26,8 +26,4 @@ export default class App extends Vue {
 	mounted() {
 		this.adapter = new ContentEditorAppAdapter(this.$refs.editor.controller);
 	}
-
-	onUpdate(content: string) {
-		this.content = content;
-	}
 }

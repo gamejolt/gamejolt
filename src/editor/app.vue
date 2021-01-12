@@ -9,7 +9,6 @@
 			embedded
 			:value="content"
 			:content-context="'fireside-post-article'"
-			@input="onUpdate"
 		/>
 	</div>
 </template>

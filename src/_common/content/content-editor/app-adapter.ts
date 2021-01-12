@@ -1,18 +1,35 @@
+import { assertNever } from '../../../utils/utils';
 import {
 	ContentEditorController,
+	editorInsertBlockquote,
+	editorInsertBulletList,
+	editorInsertCodeBlock,
 	editorInsertEmoji,
+	editorInsertHr,
+	editorInsertNumberedList,
+	editorInsertSpoiler,
+	editorToggleHeading,
 	editorToggleMark,
 } from './content-editor-controller';
 
 export class ContentEditorAppAdapterMessage {
 	constructor(
 		public readonly action:
+			| 'scope'
+			| 'emojiSelector'
 			| 'bold'
 			| 'italic'
 			| 'strikethrough'
-			| 'emoji'
-			| 'emojiSelector'
-			| 'scope',
+			| 'code'
+			| 'h1'
+			| 'h2'
+			| 'bulletList'
+			| 'numberedList'
+			| 'spoiler'
+			| 'blockquote'
+			| 'hr'
+			| 'codeBlock'
+			| 'emoji',
 		public readonly data: null | any
 	) {}
 
@@ -23,11 +40,38 @@ export class ContentEditorAppAdapterMessage {
 
 	static showEmojiSelector = () => new ContentEditorAppAdapterMessage('emojiSelector', null);
 
-	static syncScope = (controller: ContentEditorController) =>
-		new ContentEditorAppAdapterMessage('scope', {
-			s: controller.scope.toJson(),
-			c: controller.capabilities.toJson(),
+	static syncScope(controller: ContentEditorController) {
+		const scope = controller.scope;
+		const cap = controller.capabilities;
+
+		return new ContentEditorAppAdapterMessage('scope', {
+			s: {
+				b: scope.bold,
+				i: scope.italic,
+				s: scope.strike,
+				c: scope.code,
+				h1: scope.h1,
+				h2: scope.h2,
+			},
+			c: {
+				b: cap.bold,
+				i: cap.italic,
+				s: cap.strike,
+				c: cap.code,
+				h1: cap.h1,
+				h2: cap.h2,
+				emoji: cap.emoji,
+				gif: cap.gif,
+				l: cap.list,
+				m: cap.media,
+				e: cap.embed,
+				cb: cap.codeBlock,
+				bq: cap.blockquote,
+				sp: cap.spoiler,
+				hr: cap.hr,
+			},
 		});
+	}
 
 	toJson() {
 		const msg = {
@@ -42,18 +86,55 @@ export class ContentEditorAppAdapterMessage {
 			return;
 		}
 
+		const { marks } = controller.view.state.schema;
+
 		switch (this.action) {
 			case 'bold':
-				return editorToggleMark(controller, controller.view.state.schema.marks.strong);
+				return editorToggleMark(controller, marks.strong);
 
 			case 'italic':
-				return editorToggleMark(controller, controller.view.state.schema.marks.em);
+				return editorToggleMark(controller, marks.em);
 
 			case 'strikethrough':
-				return editorToggleMark(controller, controller.view.state.schema.marks.strike);
+				return editorToggleMark(controller, marks.strike);
+
+			case 'code':
+				return editorToggleMark(controller, marks.code);
+
+			case 'h1':
+				return editorToggleHeading(controller, 1);
+
+			case 'h2':
+				return editorToggleHeading(controller, 2);
+
+			case 'bulletList':
+				return editorInsertBulletList(controller);
+
+			case 'numberedList':
+				return editorInsertNumberedList(controller);
+
+			case 'spoiler':
+				return editorInsertSpoiler(controller);
+
+			case 'blockquote':
+				return editorInsertBlockquote(controller);
+
+			case 'hr':
+				return editorInsertHr(controller);
+
+			case 'codeBlock':
+				return editorInsertCodeBlock(controller);
 
 			case 'emoji':
 				return editorInsertEmoji(controller, this.data!.type);
+
+			case 'emojiSelector':
+			case 'scope':
+				// These are never run locally, only sent to the app.
+				break;
+
+			default:
+				assertNever(this.action);
 		}
 	}
 
