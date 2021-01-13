@@ -1,3 +1,4 @@
+import { assertNever } from '../../utils/utils';
 import { MediaItem } from '../media-item/media-item-model';
 
 export type ContentContext =
@@ -246,8 +247,10 @@ export class ContextCapabilities {
 					ContextCapabilityType.Mention,
 					ContextCapabilityType.Gif,
 				]);
+
+			default:
+				assertNever(context);
 		}
-		throw new Error('Context capabilities undefined for context ' + context);
 	}
 }
 

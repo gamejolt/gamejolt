@@ -461,7 +461,8 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	}
 
 	onScroll() {
-		// When the doc scroller gets scrolled, we want to make sure we position the controls appropriately.
+		// When the doc scroller gets scrolled, we want to make sure we position
+		// the controls appropriately.
 		this.stateCounter++;
 	}
 

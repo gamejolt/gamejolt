@@ -6,13 +6,9 @@
 
 		<app-content-editor
 			ref="editor"
-			embedded
 			:value="content"
-			:content-context="'fireside-post-article'"
+			:content-context="context"
+			@input="onContentChange"
 		/>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-@import '~styles/variables'
-</style>

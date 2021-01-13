@@ -16,6 +16,7 @@ export class ContentEditorAppAdapterMessage {
 	constructor(
 		public readonly action:
 			| 'scope'
+			| 'content'
 			| 'emojiSelector'
 			| 'bold'
 			| 'italic'
@@ -73,6 +74,10 @@ export class ContentEditorAppAdapterMessage {
 		});
 	}
 
+	static syncContent(content: string) {
+		return new ContentEditorAppAdapterMessage('content', { content });
+	}
+
 	toJson() {
 		const msg = {
 			action: this.action,
@@ -128,8 +133,9 @@ export class ContentEditorAppAdapterMessage {
 			case 'emoji':
 				return editorInsertEmoji(controller, this.data!.type);
 
-			case 'emojiSelector':
 			case 'scope':
+			case 'content':
+			case 'emojiSelector':
 				// These are never run locally, only sent to the app.
 				break;
 
