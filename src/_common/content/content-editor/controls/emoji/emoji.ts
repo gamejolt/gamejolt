@@ -27,7 +27,7 @@ export default class AppContentEditorControlsEmoji extends Vue {
 	};
 
 	get visible() {
-		return this.controller.capabilities.emoji;
+		return this.controller.scope.isFocused && this.controller.capabilities.emoji;
 	}
 
 	get spanClass() {

@@ -6,17 +6,18 @@ import ResizeObserver from 'resize-observer-polyfill';
 import Vue from 'vue';
 import { Component, Emit, Prop, ProvideReactive, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
+import { AppObserveDimensions } from '../../observe-dimensions/observe-dimensions.directive';
 import AppScrollScroller from '../../scroll/scroller/scroller.vue';
 import { ContentContext, ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
 import { ContentFormatAdapter, ProsemirrorEditorFormat } from '../content-format-adapter';
 import { ContentHydrator } from '../content-hydrator';
 import { ContentOwner } from '../content-owner';
-import { ContentEditorAppAdapterMessage, editorGetAppAdapter } from './app-adapter';
 import {
 	ContentEditorController,
 	ContentEditorControllerKey,
 	editorSyncScope,
+	editorSyncWindow,
 } from './content-editor-controller';
 import { ContentEditorService } from './content-editor.service';
 import { ContentRules } from './content-rules';
@@ -43,6 +44,9 @@ import { ContentEditorSchema, generateSchema } from './schemas/content-editor-sc
 		AppContentEditorInsetControls,
 		AppContentEditorControlsMentionAutocomplete,
 		AppScrollScroller,
+	},
+	directives: {
+		AppObserveDimensions,
 	},
 })
 export default class AppContentEditor extends Vue implements ContentOwner {
@@ -218,11 +222,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 
 	@Watch('stateCounter')
 	onStateCounterChange() {
-		editorSyncScope(this.controller, this.disabled);
-		if (GJ_IS_APP) {
-			const msg = ContentEditorAppAdapterMessage.syncScope(this.controller);
-			editorGetAppAdapter().send(msg);
-		}
+		editorSyncScope(this.controller, this.disabled, this.isFocused);
 	}
 
 	@Watch('value')
@@ -284,12 +284,6 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 			this.createView(state);
 		}
 
-		// Observe any resize events so the editor controls can be repositioned correctly
-		this.resizeObserver = new ResizeObserver(() => {
-			this.stateCounter++;
-		});
-		this.resizeObserver.observe(this.$refs.doc);
-
 		this.stateCounter++;
 
 		this.focusWatcher = new FocusWatcher(this.$refs.editor, this.onFocusIn, this.onFocusOut);
@@ -342,7 +336,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 		return view!;
 	}
 
-	public getContent() {
+	getContent() {
 		if (this.view instanceof EditorView) {
 			const data = ContentFormatAdapter.adaptOut(
 				this.view.state.doc.toJSON() as ProsemirrorEditorFormat,
@@ -353,7 +347,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 		return null;
 	}
 
-	public async setContent(doc: ContentDocument) {
+	async setContent(doc: ContentDocument) {
 		if (doc.context !== this.contentContext) {
 			throw new Error(
 				`The passed in content context is invalid. ${doc.context} != ${this.contentContext}`
@@ -387,7 +381,13 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 		}
 	}
 
-	public onFocusOuter() {
+	onDimensionsChange() {
+		const rect = this.$refs.editor.getBoundingClientRect();
+		editorSyncWindow(this.controller, rect.width, rect.height);
+		this.stateCounter++;
+	}
+
+	onFocusOuter() {
 		// Focus the content editable when the outer doc gets focused.
 		const child = this.$refs.doc.firstChild;
 		if (child instanceof HTMLElement) {
@@ -396,18 +396,22 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	}
 
 	private onFocusIn() {
-		if (!this.isFocused) {
-			this.$emit('editor-focus');
+		if (this.isFocused) {
+			return;
 		}
+		this.$emit('editor-focus');
 		this.isFocused = true;
+		++this.stateCounter;
 	}
 
 	private onFocusOut() {
-		if (this.isFocused) {
-			this.canShowMentionSuggestions = 0; // When the editor goes out of focus, hide the mention suggestions panel.
-			this.$emit('editor-blur');
+		if (!this.isFocused) {
+			return;
 		}
+		this.canShowMentionSuggestions = 0; // When the editor goes out of focus, hide the mention suggestions panel.
+		this.$emit('editor-blur');
 		this.isFocused = false;
+		++this.stateCounter;
 	}
 
 	private async highlightCurrentSelection() {
@@ -426,16 +430,16 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 
 		// Wait a tick for the editor's doc to update, then force an update to reposition the controls.
 		await this.$nextTick();
-		this.stateCounter++;
+		++this.stateCounter;
 	}
 
-	public showEmojiPanel() {
+	showEmojiPanel() {
 		if (this.$refs.emojiPanel instanceof AppContentEditorControlsEmoji) {
 			this.$refs.emojiPanel.show();
 		}
 	}
 
-	public updateIsEmpty(state: EditorState) {
+	updateIsEmpty(state: EditorState) {
 		// The "empty" prosemirror document takes up a length of 4.
 		this.isEmpty = state.doc.nodeSize <= 4;
 	}
@@ -463,16 +467,16 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	onScroll() {
 		// When the doc scroller gets scrolled, we want to make sure we position
 		// the controls appropriately.
-		this.stateCounter++;
+		++this.stateCounter;
 	}
 
-	public focus() {
+	focus() {
 		this.$refs.editor.focus();
 		if (this.view) {
 			this.view.focus();
 		}
 
-		this.stateCounter++;
+		++this.stateCounter;
 	}
 
 	getContentRules() {

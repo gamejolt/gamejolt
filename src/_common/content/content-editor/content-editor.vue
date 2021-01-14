@@ -1,7 +1,13 @@
 <script lang="ts" src="./content-editor"></script>
 
 <template>
-	<div ref="editor" class="content-editor" tabindex="0" @focus="onFocusOuter">
+	<div
+		ref="editor"
+		v-app-observe-dimensions="onDimensionsChange"
+		class="content-editor"
+		tabindex="0"
+		@focus="onFocusOuter"
+	>
 		<div
 			class="content-container"
 			:class="{

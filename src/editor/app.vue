@@ -6,8 +6,10 @@
 
 		<app-content-editor
 			ref="editor"
-			:value="content"
+			:value="initialContent"
 			:content-context="context"
+			:min-height="0"
+			:max-height="0"
 			@input="onContentChange"
 		/>
 	</div>

@@ -21,7 +21,7 @@ export default class App extends Vue {
 	@State app!: Store['app'];
 
 	context = '';
-	content = '';
+	initialContent = '';
 	adapter!: ContentEditorAppAdapter;
 
 	$refs!: {
@@ -38,7 +38,12 @@ export default class App extends Vue {
 	}
 
 	mounted() {
-		this.adapter = new ContentEditorAppAdapter(this.$refs.editor.controller);
+		this.adapter = new ContentEditorAppAdapter(
+			this.$refs.editor.controller,
+			(newContent: string) => {
+				this.initialContent = newContent;
+			}
+		);
 	}
 
 	onContentChange(content: string) {

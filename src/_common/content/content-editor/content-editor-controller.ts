@@ -3,6 +3,7 @@ import { Mark, MarkType, Node, NodeType } from 'prosemirror-model';
 import { Selection, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { ContextCapabilities } from '../content-context';
+import { ContentEditorAppAdapterMessage, editorGetAppAdapter } from './app-adapter';
 import { SearchResult } from './modals/gif/gif-modal.service';
 import { ContentEditorSchema } from './schemas/content-editor-schema';
 
@@ -11,8 +12,19 @@ export const ContentEditorControllerKey = Symbol('content-editor-controller');
 export class ContentEditorController {
 	view: EditorView<ContentEditorSchema> | null = null;
 	contextCapabilities = ContextCapabilities.getEmpty();
+	window = new ContentEditorWindow();
 	scope = new ContentEditorScope();
 	capabilities = new ContentEditorScopeCapabilities();
+}
+
+class ContentEditorWindow {
+	width: number;
+	height: number;
+
+	constructor(data?: Partial<ContentEditorWindow>) {
+		this.width = data?.width ?? 0;
+		this.height = data?.height ?? 0;
+	}
 }
 
 /**
@@ -20,6 +32,8 @@ export class ContentEditorController {
  * are currently set, current block data, etc.
  */
 class ContentEditorScope {
+	isFocused: boolean;
+	hasSelection: boolean;
 	bold: boolean;
 	italic: boolean;
 	strike: boolean;
@@ -28,6 +42,8 @@ class ContentEditorScope {
 	h2: boolean;
 
 	constructor(data?: Partial<ContentEditorScope>) {
+		this.isFocused = data?.isFocused ?? false;
+		this.hasSelection = data?.hasSelection ?? false;
 		this.bold = data?.bold ?? false;
 		this.italic = data?.italic ?? false;
 		this.strike = data?.strike ?? false;
@@ -77,11 +93,24 @@ class ContentEditorScopeCapabilities {
 	}
 }
 
+export function editorSyncWindow(c: ContentEditorController, width: number, height: number) {
+	c.window = new ContentEditorWindow({ width, height });
+
+	if (GJ_IS_APP) {
+		const msg = ContentEditorAppAdapterMessage.syncWindow(c);
+		editorGetAppAdapter().send(msg);
+	}
+}
+
 /**
  * Syncs the current state under the cursor/selection, as well as the
  * capabilities for what can be done with that selection.
  */
-export function editorSyncScope(c: ContentEditorController, isDisabled: boolean) {
+export function editorSyncScope(
+	c: ContentEditorController,
+	isDisabled: boolean,
+	isFocused: boolean
+) {
 	if (!c.view) {
 		return;
 	}
@@ -106,13 +135,12 @@ export function editorSyncScope(c: ContentEditorController, isDisabled: boolean)
 	const cursorIndex = $from.index();
 	const node = editorGetSelectedNode(c);
 	const parentNode = node && editorGetParentNode(c, node);
-	const emptySelection = state.selection.empty;
+	const hasSelection = !state.selection.empty;
 
 	/**
 	 * Whether or not our current scope can be marked.
 	 */
 	const canBeMarked =
-		!emptySelection &&
 		(node?.type.name === 'text' || node?.type.name === 'paragraph') &&
 		parentNode !== null &&
 		parentNode.type.spec.marks !== '';
@@ -120,7 +148,7 @@ export function editorSyncScope(c: ContentEditorController, isDisabled: boolean)
 	/**
 	 * Whether or not our current scope allows us to insert a block-level node.
 	 */
-	const canInsertBlock = node?.type.name === 'paragraph' && emptySelection;
+	const canInsertBlock = !hasSelection && node?.type.name === 'paragraph';
 
 	const marksForSelection = (canBeMarked && editorGetMarksForSelection(c)) || [];
 	const hasMark = (markType: string) => marksForSelection.some(i => i.type.name === markType);
@@ -133,6 +161,8 @@ export function editorSyncScope(c: ContentEditorController, isDisabled: boolean)
 	const headingLevel = headingNode !== null ? (headingNode.attrs.level as number) : null;
 
 	c.scope = new ContentEditorScope({
+		isFocused,
+		hasSelection,
 		bold: hasMark('strong'),
 		italic: hasMark('em'),
 		strike: hasMark('strike'),
@@ -175,6 +205,11 @@ export function editorSyncScope(c: ContentEditorController, isDisabled: boolean)
 			  }
 			: null),
 	});
+
+	if (GJ_IS_APP) {
+		const msg = ContentEditorAppAdapterMessage.syncScope(c);
+		editorGetAppAdapter().send(msg);
+	}
 }
 
 export function editorGetSelectedNode(c: ContentEditorController) {

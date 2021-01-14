@@ -1,3 +1,4 @@
+import { objectPick } from '../../../utils/object';
 import { assertNever } from '../../../utils/utils';
 import {
 	ContentEditorController,
@@ -15,6 +16,7 @@ import {
 export class ContentEditorAppAdapterMessage {
 	constructor(
 		public readonly action:
+			| 'window'
 			| 'scope'
 			| 'content'
 			| 'emojiSelector'
@@ -41,36 +43,45 @@ export class ContentEditorAppAdapterMessage {
 
 	static showEmojiSelector = () => new ContentEditorAppAdapterMessage('emojiSelector', null);
 
+	static syncWindow(controller: ContentEditorController) {
+		return new ContentEditorAppAdapterMessage(
+			'window',
+			objectPick(controller.window, ['width', 'height'])
+		);
+	}
+
 	static syncScope(controller: ContentEditorController) {
 		const scope = controller.scope;
 		const cap = controller.capabilities;
 
 		return new ContentEditorAppAdapterMessage('scope', {
-			s: {
-				b: scope.bold,
-				i: scope.italic,
-				s: scope.strike,
-				c: scope.code,
-				h1: scope.h1,
-				h2: scope.h2,
-			},
-			c: {
-				b: cap.bold,
-				i: cap.italic,
-				s: cap.strike,
-				c: cap.code,
-				h1: cap.h1,
-				h2: cap.h2,
-				emoji: cap.emoji,
-				gif: cap.gif,
-				l: cap.list,
-				m: cap.media,
-				e: cap.embed,
-				cb: cap.codeBlock,
-				bq: cap.blockquote,
-				sp: cap.spoiler,
-				hr: cap.hr,
-			},
+			s: objectPick(scope, [
+				'isFocused',
+				'hasSelection',
+				'bold',
+				'italic',
+				'strike',
+				'code',
+				'h1',
+				'h2',
+			]),
+			c: objectPick(cap, [
+				'bold',
+				'italic',
+				'strike',
+				'code',
+				'h1',
+				'h2',
+				'emoji',
+				'gif',
+				'list',
+				'media',
+				'embed',
+				'codeBlock',
+				'blockquote',
+				'spoiler',
+				'hr',
+			]),
 		});
 	}
 
@@ -79,11 +90,10 @@ export class ContentEditorAppAdapterMessage {
 	}
 
 	toJson() {
-		const msg = {
+		return JSON.stringify({
 			action: this.action,
 			data: this.data,
-		};
-		return JSON.stringify(msg);
+		});
 	}
 
 	run(controller: ContentEditorController) {
@@ -94,6 +104,9 @@ export class ContentEditorAppAdapterMessage {
 		const { marks } = controller.view.state.schema;
 
 		switch (this.action) {
+			case 'content':
+				return editorGetAppAdapter().onChangeInitial(this.data.content);
+
 			case 'bold':
 				return editorToggleMark(controller, marks.strong);
 
@@ -133,8 +146,8 @@ export class ContentEditorAppAdapterMessage {
 			case 'emoji':
 				return editorInsertEmoji(controller, this.data!.type);
 
+			case 'window':
 			case 'scope':
-			case 'content':
 			case 'emojiSelector':
 				// These are never run locally, only sent to the app.
 				break;
@@ -167,7 +180,10 @@ export function editorGetAppAdapter() {
 }
 
 export class ContentEditorAppAdapter {
-	constructor(private controller: ContentEditorController) {
+	constructor(
+		private controller: ContentEditorController,
+		public onChangeInitial: (content: string) => void
+	) {
 		(window as any).gjEditor = this;
 	}
 

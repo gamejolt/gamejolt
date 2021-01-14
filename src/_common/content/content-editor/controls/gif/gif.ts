@@ -23,7 +23,7 @@ export default class AppContentEditorControlsGif extends Vue {
 	}
 
 	get visible() {
-		return this.controller.capabilities.emoji;
+		return this.controller.scope.isFocused && this.controller.capabilities.emoji;
 	}
 
 	async openGifModal() {
