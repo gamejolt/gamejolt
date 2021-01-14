@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import { Component, InjectReactive } from 'vue-property-decorator';
 import { AppTooltip } from '../../../../tooltip/tooltip-directive';
-import { ContentEditorAppAdapterMessage } from '../../app-adapter';
 import {
 	ContentEditorController,
 	ContentEditorControllerKey,
@@ -75,11 +74,7 @@ export default class AppContentEditorControlsEmoji extends Vue {
 		if (this.clickedWithPanelVisible) {
 			this.setPanelVisibility(false);
 		} else {
-			if (GJ_IS_APP) {
-				ContentEditorAppAdapterMessage.showEmojiSelector().send();
-			} else {
-				this.show();
-			}
+			this.show();
 		}
 	}
 

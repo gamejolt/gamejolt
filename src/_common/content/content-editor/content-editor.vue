@@ -42,9 +42,13 @@
 					</span>
 				</transition>
 
-				<app-content-editor-inset-controls :view="view" :state-counter="stateCounter">
+				<app-content-editor-inset-controls
+					v-if="!GJ_IS_APP"
+					:view="view"
+					:state-counter="stateCounter"
+				>
 					<transition name="fade">
-						<app-content-editor-controls-gif v-if="!GJ_IS_APP && shouldShowGifButton" />
+						<app-content-editor-controls-gif v-if="shouldShowGifButton" />
 					</transition>
 					<transition name="fade">
 						<app-content-editor-controls-emoji

@@ -153,18 +153,15 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	}
 
 	get shouldShowEmojiPanel() {
-		return !this.disabled && this.contextCapabilities.emoji && this.isFocused;
+		return !GJ_IS_APP && !this.disabled && this.contextCapabilities.emoji && this.isFocused;
 	}
 
 	get couldShowEmojiPanel() {
-		return this.contextCapabilities.emoji;
+		return !GJ_IS_APP && this.contextCapabilities.emoji;
 	}
 
 	get couldShowGifPanel() {
-		if (GJ_IS_APP) {
-			return false;
-		}
-		return this.contextCapabilities.gif;
+		return !GJ_IS_APP && this.contextCapabilities.gif;
 	}
 
 	get editorGutterSize() {

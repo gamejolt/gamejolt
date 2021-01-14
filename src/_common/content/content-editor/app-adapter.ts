@@ -19,7 +19,6 @@ export class ContentEditorAppAdapterMessage {
 			| 'window'
 			| 'scope'
 			| 'content'
-			| 'emojiSelector'
 			| 'bold'
 			| 'italic'
 			| 'strikethrough'
@@ -40,8 +39,6 @@ export class ContentEditorAppAdapterMessage {
 		const msg = JSON.parse(commandJson);
 		return new ContentEditorAppAdapterMessage(msg.action, msg.data ?? null);
 	}
-
-	static showEmojiSelector = () => new ContentEditorAppAdapterMessage('emojiSelector', null);
 
 	static syncWindow(controller: ContentEditorController) {
 		return new ContentEditorAppAdapterMessage(
@@ -148,7 +145,6 @@ export class ContentEditorAppAdapterMessage {
 
 			case 'window':
 			case 'scope':
-			case 'emojiSelector':
 				// These are never run locally, only sent to the app.
 				break;
 
