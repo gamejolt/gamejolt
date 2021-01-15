@@ -1,5 +1,8 @@
+import Vue from 'vue';
 import { objectPick } from '../../../utils/object';
 import { assertNever } from '../../../utils/utils';
+import { Theme } from '../../theme/theme.model';
+import { ContentContext } from '../content-context';
 import {
 	ContentEditorController,
 	editorInsertBlockquote,
@@ -16,6 +19,8 @@ import {
 export class ContentEditorAppAdapterMessage {
 	constructor(
 		public readonly action:
+			| 'initialize'
+			| 'initialized'
 			| 'window'
 			| 'scope'
 			| 'content'
@@ -38,6 +43,10 @@ export class ContentEditorAppAdapterMessage {
 	static fromJson(commandJson: string) {
 		const msg = JSON.parse(commandJson);
 		return new ContentEditorAppAdapterMessage(msg.action, msg.data ?? null);
+	}
+
+	static initialized() {
+		return new ContentEditorAppAdapterMessage('initialized', null);
 	}
 
 	static syncWindow(controller: ContentEditorController) {
@@ -102,7 +111,8 @@ export class ContentEditorAppAdapterMessage {
 
 		switch (this.action) {
 			case 'content':
-				return editorGetAppAdapter().onChangeInitial(this.data.content);
+				editorGetAppAdapter().initialContent = this.data.content;
+				return;
 
 			case 'bold':
 				return editorToggleMark(controller, marks.strong);
@@ -143,6 +153,11 @@ export class ContentEditorAppAdapterMessage {
 			case 'emoji':
 				return editorInsertEmoji(controller, this.data!.type);
 
+			case 'initialize':
+				// Handled in the AppAdapter since it sets things up.
+				break;
+
+			case 'initialized':
 			case 'window':
 			case 'scope':
 				// These are never run locally, only sent to the app.
@@ -176,10 +191,14 @@ export function editorGetAppAdapter() {
 }
 
 export class ContentEditorAppAdapter {
-	constructor(
-		private controller: ContentEditorController,
-		public onChangeInitial: (content: string) => void
-	) {
+	isInitialized = false;
+	context: null | ContentContext = null;
+	controller: null | ContentEditorController = null;
+	initialContent = '';
+	placeholder = '';
+	theme: null | Theme = null;
+
+	constructor(public getController: () => ContentEditorController) {
 		(window as any).gjEditor = this;
 	}
 
@@ -198,11 +217,40 @@ export class ContentEditorAppAdapter {
 		);
 	}
 
+	private async _init(msg: ContentEditorAppAdapterMessage) {
+		if (!msg.data.context) {
+			throw new Error(`No context passed into initialize.`);
+		}
+
+		this.context = msg.data.context;
+		this.initialContent = msg.data.initialContent ?? '';
+		this.placeholder = msg.data.placeholder ?? '';
+		// this.theme = msg.data.theme ?? '';
+		this.isInitialized = true;
+
+		// TODO: There's gotta be a better way?
+		await Vue.nextTick();
+		this.controller = this.getController();
+		this.send(ContentEditorAppAdapterMessage.initialized());
+	}
+
 	run(commandJson: string) {
-		ContentEditorAppAdapterMessage.fromJson(commandJson).run(this.controller);
+		const msg = ContentEditorAppAdapterMessage.fromJson(commandJson);
+
+		if (msg.action === 'initialize') {
+			return this._init(msg);
+		}
+
+		if (this.controller) {
+			msg.run(this.controller);
+		}
 	}
 
 	send(message: ContentEditorAppAdapterMessage) {
 		this.appChannel.postMessage(message.toJson());
+	}
+
+	onContentChange(content: string) {
+		this.send(ContentEditorAppAdapterMessage.syncContent(content));
 	}
 }

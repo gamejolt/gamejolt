@@ -5,12 +5,14 @@
 		<app-theme />
 
 		<app-content-editor
+			v-if="adapter.isInitialized"
 			ref="editor"
-			:value="initialContent"
-			:content-context="context"
+			:content-context="adapter.context"
+			:value="adapter.initialContent"
+			:placeholder="adapter.placeholder"
 			:min-height="0"
 			:max-height="0"
-			@input="onContentChange"
+			@input="adapter.onContentChange($event)"
 		/>
 	</div>
 </template>
