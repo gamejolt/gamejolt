@@ -118,7 +118,7 @@
 
 .content-placeholder
 	top: 4px
-	left: 4px
+	left: 0
 	position: absolute
 	font-style: italic
 	pointer-events: none

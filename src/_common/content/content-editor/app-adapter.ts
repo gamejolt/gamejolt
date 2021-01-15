@@ -16,6 +16,99 @@ import {
 	editorToggleMark,
 } from './content-editor-controller';
 
+export class ContentEditorAppAdapter {
+	isInitialized = false;
+	context: null | ContentContext = null;
+	controller: null | ContentEditorController = null;
+	initialContent = '';
+	placeholder = '';
+	theme: null | Theme = null;
+
+	constructor(public getController: () => ContentEditorController) {
+		(window as any).gjEditor = this;
+	}
+
+	/**
+	 * This channel is set up by the app and can be used to send data back to
+	 * it.
+	 */
+	get appChannel(): { postMessage: (message: string) => void } {
+		const win = window as any;
+
+		// The fallback is for dev to easily debug without requiring the app.
+		return (
+			win.gjEditorChannel ?? {
+				postMessage: message => console.log('Sending message over channel:', message),
+			}
+		);
+	}
+
+	async init(msg: ContentEditorAppAdapterMessage) {
+		if (msg.action !== 'initialize') {
+			throw new Error(`Only initialize message can be sent to the init method.`);
+		}
+
+		const {
+			data: { context, initialContent, placeholder, theme },
+		} = msg;
+
+		if (!context) {
+			throw new Error(`No context passed into initialize.`);
+		}
+
+		this.context = context;
+		this.initialContent = initialContent ?? '';
+		this.placeholder = placeholder ?? '';
+		this.theme = theme ? new Theme(theme) : null;
+		this.isInitialized = true;
+
+		// TODO: There's gotta be a better way?
+		await Vue.nextTick();
+		this.controller = this.getController();
+		this.send(ContentEditorAppAdapterMessage.initialized());
+	}
+
+	run(obj: any) {
+		const msg = ContentEditorAppAdapterMessage.fromJson(obj);
+
+		// Special action that's called before the controller is set up.
+		if (msg.action === 'initialize') {
+			this.init(msg);
+			return;
+		}
+
+		if (!this.controller) {
+			return;
+		}
+		msg.run(this.controller);
+	}
+
+	send(message: ContentEditorAppAdapterMessage) {
+		this.appChannel.postMessage(message.toJson());
+	}
+
+	onContentChange(content: string) {
+		this.send(ContentEditorAppAdapterMessage.syncContent(content));
+	}
+}
+
+/**
+ * Returns the currently initialized [ContentEditorAppAdapter]. Will throw if
+ * there's not one initialized.
+ */
+export function editorGetAppAdapter() {
+	if (!GJ_IS_APP) {
+		throw new Error(`Tried getting app adapter in non-app build.`);
+	}
+
+	const adapter = (window as any).gjEditor as ContentEditorAppAdapter | undefined;
+	if (!adapter) {
+		throw new Error(`Tried getting app adapter before it was initialized.`);
+	}
+
+	return adapter;
+}
+
 export class ContentEditorAppAdapterMessage {
 	constructor(
 		public readonly action:
@@ -40,9 +133,8 @@ export class ContentEditorAppAdapterMessage {
 		public readonly data: null | any
 	) {}
 
-	static fromJson(commandJson: string) {
-		const msg = JSON.parse(commandJson);
-		return new ContentEditorAppAdapterMessage(msg.action, msg.data ?? null);
+	static fromJson(obj: any) {
+		return new ContentEditorAppAdapterMessage(obj.action, obj.data ?? null);
 	}
 
 	static initialized() {
@@ -170,87 +262,5 @@ export class ContentEditorAppAdapterMessage {
 
 	send() {
 		editorGetAppAdapter().send(this);
-	}
-}
-
-/**
- * Returns the currently initialized [ContentEditorAppAdapter]. Will throw if
- * there's not one initialized.
- */
-export function editorGetAppAdapter() {
-	if (!GJ_IS_APP) {
-		throw new Error(`Tried getting app adapter in non-app build.`);
-	}
-
-	const adapter = (window as any).gjEditor as ContentEditorAppAdapter | undefined;
-	if (!adapter) {
-		throw new Error(`Tried getting app adapter before it was initialized.`);
-	}
-
-	return adapter;
-}
-
-export class ContentEditorAppAdapter {
-	isInitialized = false;
-	context: null | ContentContext = null;
-	controller: null | ContentEditorController = null;
-	initialContent = '';
-	placeholder = '';
-	theme: null | Theme = null;
-
-	constructor(public getController: () => ContentEditorController) {
-		(window as any).gjEditor = this;
-	}
-
-	/**
-	 * This channel is set up by the app and can be used to send data back to
-	 * it.
-	 */
-	get appChannel(): { postMessage: (message: string) => void } {
-		const win = window as any;
-
-		// The fallback is for dev to easily debug without requiring the app.
-		return (
-			win.gjEditorChannel ?? {
-				postMessage: message => console.log('Sending message over channel:', message),
-			}
-		);
-	}
-
-	private async _init(msg: ContentEditorAppAdapterMessage) {
-		if (!msg.data.context) {
-			throw new Error(`No context passed into initialize.`);
-		}
-
-		this.context = msg.data.context;
-		this.initialContent = msg.data.initialContent ?? '';
-		this.placeholder = msg.data.placeholder ?? '';
-		// this.theme = msg.data.theme ?? '';
-		this.isInitialized = true;
-
-		// TODO: There's gotta be a better way?
-		await Vue.nextTick();
-		this.controller = this.getController();
-		this.send(ContentEditorAppAdapterMessage.initialized());
-	}
-
-	run(commandJson: string) {
-		const msg = ContentEditorAppAdapterMessage.fromJson(commandJson);
-
-		if (msg.action === 'initialize') {
-			return this._init(msg);
-		}
-
-		if (this.controller) {
-			msg.run(this.controller);
-		}
-	}
-
-	send(message: ContentEditorAppAdapterMessage) {
-		this.appChannel.postMessage(message.toJson());
-	}
-
-	onContentChange(content: string) {
-		this.send(ContentEditorAppAdapterMessage.syncContent(content));
 	}
 }
