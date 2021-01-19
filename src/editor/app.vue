@@ -3,7 +3,6 @@
 <template>
 	<div id="editor">
 		<app-theme :theme="adapter.theme" />
-
 		<app-content-editor
 			v-if="adapter.isInitialized"
 			ref="editor"

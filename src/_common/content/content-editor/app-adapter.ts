@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import { store } from '../../../editor/store';
 import { objectPick } from '../../../utils/object';
 import { assertNever } from '../../../utils/utils';
 import { Theme } from '../../theme/theme.model';
@@ -49,7 +50,7 @@ export class ContentEditorAppAdapter {
 		}
 
 		const {
-			data: { context, initialContent, placeholder, theme },
+			data: { context, initialContent, placeholder, theme, lightMode },
 		} = msg;
 
 		if (!context) {
@@ -61,6 +62,8 @@ export class ContentEditorAppAdapter {
 		this.placeholder = placeholder ?? '';
 		this.theme = theme ? new Theme(theme) : null;
 		this.isInitialized = true;
+
+		store.commit('theme/setDark', !(lightMode ?? false));
 
 		// TODO: There's gotta be a better way?
 		await Vue.nextTick();
