@@ -147,6 +147,7 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 			this.feed,
 			{
 				type: 'EventItem',
+				name: 'activity',
 				url: `/web/dash/activity/more/activity`,
 				shouldShowFollow: true,
 				notificationWatermark: feedPayload.unreadWatermark,

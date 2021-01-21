@@ -7,6 +7,7 @@ export interface BeaconOptions {
 	sourceResource?: string;
 	sourceResourceId?: number;
 	key?: string;
+	sourceFeed?: string;
 }
 
 export class HistoryTick {
@@ -71,6 +72,11 @@ export class HistoryTick {
 			// Key.
 			if (options.key) {
 				queryParams.push('key=' + options.key);
+			}
+
+			// Source feed.
+			if (options.sourceFeed) {
+				queryParams.push('feed=' + options.sourceFeed);
 			}
 
 			let url = `${Environment.apiHost}/tick/${type}`;

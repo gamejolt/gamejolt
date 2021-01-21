@@ -282,6 +282,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	async loadNotificationState() {
 		const state = new ActivityFeedState({
 			type: 'Notification',
+			name: 'notification',
 			url: `/web/dash/activity/more/notifications`,
 		});
 
