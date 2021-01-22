@@ -540,6 +540,6 @@ export async function loadArticleIntoPost(post: FiresidePost) {
 	return post;
 }
 
-export function $viewPost(post: FiresidePost) {
-	HistoryTick.sendBeacon('fireside-post', post.id);
+export function $viewPost(post: FiresidePost, sourceFeed?: string) {
+	HistoryTick.sendBeacon('fireside-post', post.id, { sourceFeed });
 }
