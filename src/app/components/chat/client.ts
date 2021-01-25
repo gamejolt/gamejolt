@@ -28,11 +28,11 @@ export interface ChatNewMessageEvent {
  * @param requestGetter Function that generates a promise that represents the
  * request
  */
-async function pollRequest(
+async function pollRequest<T>(
 	chat: ChatClient,
 	context: string,
-	requestGetter: () => Promise<any>
-): Promise<any> {
+	requestGetter: () => Promise<T>
+): Promise<T | null> {
 	const chatId = chat.id;
 
 	let result = null;
@@ -52,9 +52,11 @@ async function pollRequest(
 			result = await promise;
 			finished = true;
 		} catch (e) {
-			const sleepMs = Math.min(30000, Math.random() * delay * 1000 + 1000);
-			console.error(`[Chat] Failed request [${context}]. Reattempt in ${sleepMs} ms.`);
-			await sleep(sleepMs);
+			if (delay < 30_000) {
+				delay += 1_000 + 1_000 * Math.random();
+			}
+			console.error(`[Chat] Failed request [${context}]. Reattempt in ${delay} ms.`);
+			await sleep(delay);
 		}
 
 		delay++;
@@ -168,23 +170,30 @@ async function connect(chat: ChatClient) {
 
 	console.log('[Chat] Connecting...');
 
-	const [hostResult, tokenResult] = await pollRequest(chat, 'Auth to server', () => {
-		return Promise.all([
-			Axios.get(`${Environment.chat}/host`, { ignoreLoadingBar: true, timeout: 3000 }),
-			Axios.post(
-				`${Environment.chat}/token`,
-				{ frontend },
-				{ ignoreLoadingBar: true, timeout: 3000 }
-			),
-		]);
+	const results = await pollRequest(chat, 'Auth to server', async () => {
+		// Do the host check first. This request will get rate limited and only
+		// let a certain number through, which will cause the second one to not
+		// get processed.
+		const hostResult = await Axios.get(`${Environment.chat}/host`, {
+			ignoreLoadingBar: true,
+			timeout: 3000,
+		});
+
+		const tokenResult = await Axios.post(
+			`${Environment.chat}/token`,
+			{ frontend },
+			{ ignoreLoadingBar: true, timeout: 3000 }
+		);
+
+		return { host: hostResult, token: tokenResult };
 	});
 
-	if (chatId !== chat.id) {
+	if (!results || chatId !== chat.id) {
 		return;
 	}
 
-	const host = `${hostResult.data}`;
-	const token = tokenResult.data.token;
+	const host = `${results.host.data}`;
+	const token = results.token.data.token;
 
 	console.log('[Chat] Server selected:', host);
 
@@ -223,7 +232,7 @@ async function connect(chat: ChatClient) {
 		chat,
 		'Connect to socket',
 		() =>
-			new Promise(resolve => {
+			new Promise<void>(resolve => {
 				if (chat.socket !== null) {
 					chat.socket.connect();
 				}
@@ -273,7 +282,7 @@ async function joinUserChannel(chat: ChatClient, userId: number) {
 		chat,
 		request,
 		() =>
-			new Promise((resolve, reject) => {
+			new Promise<void>((resolve, reject) => {
 				channel
 					.join()
 					.receive('error', reject)
@@ -311,7 +320,7 @@ async function joinRoomChannel(chat: ChatClient, roomId: number) {
 		chat,
 		`Join room channel: ${roomId}`,
 		() =>
-			new Promise((resolve, reject) => {
+			new Promise<void>((resolve, reject) => {
 				// If the client started polling a different room, stop polling this one.
 				if (chat.pollingRoomId !== roomId) {
 					console.log('[Chat] Stop joining room', roomId);
