@@ -25,13 +25,12 @@ export class CommunityRouteStore {
 	sidebarData: null | CommunitySidebarData = null;
 	collaborator: null | Collaborator = null;
 
-	hasCompetitions = false;
-
 	get channel() {
 		const channels = [
 			this.frontpageChannel,
 			this.allChannel,
 			...(this.community.channels || []),
+			...this.community.archivedChannels,
 		];
 		return channels.find(i => i.title === this.channelPath) || null;
 	}

@@ -4,7 +4,7 @@
 	<div>
 		<h2 class="-title">{{ titleText }}</h2>
 
-		<div class="-blocks">
+		<div v-if="blocksData.length" class="-blocks">
 			<div v-for="blockData of blocksData" :key="blockData.text" class="-block-container">
 				<div class="-block">
 					<div class="-block-digits">

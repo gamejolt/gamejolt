@@ -1,0 +1,23 @@
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+
+.-grid
+	&-items
+		@media $media-sm-up
+			margin-left: -($grid-gutter-width / 2)
+			margin-right: -($grid-gutter-width / 2)
+
+	&-item
+		display: inline-block
+		vertical-align: top
+		width: 100%
+
+		@media $media-sm-up
+			padding-left: ($grid-gutter-width / 2)
+			padding-right: ($grid-gutter-width / 2)
+
+		@media $media-sm
+			width: (100% / 2)
+
+		@media $media-md-up
+			width: (100% / 3)

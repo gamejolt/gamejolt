@@ -41,7 +41,7 @@ export default class RouteCommunitiesViewChannel extends BaseRouteComponent {
 	}
 
 	get channel() {
-		return this.routeStore.channel!;
+		return this.routeStore.channel;
 	}
 
 	get channelPath() {
@@ -89,8 +89,13 @@ export default class RouteCommunitiesViewChannel extends BaseRouteComponent {
 	}
 
 	routeResolved($payload: any) {
-		if ($payload.channel && this.channel) {
-			this.channel.assign(new CommunityChannel($payload.channel));
+		if ($payload.channel) {
+			const channel = new CommunityChannel($payload.channel);
+			if (this.channel) {
+				this.channel.assign(channel);
+			} else if (channel.is_archived) {
+				this.community.archivedChannels.push(channel);
+			}
 		}
 
 		if (this.routeTitle) {

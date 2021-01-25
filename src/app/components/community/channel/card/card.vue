@@ -24,9 +24,14 @@
 			<div class="-card-content">
 				<div class="-card-content-title">
 					<app-jolticon
-						v-if="isLocked"
+						v-if="isArchived"
+						v-app-tooltip.top="$gettext(`Archived Channel`)"
+						icon="lock"
+					/>
+					<app-jolticon
+						v-else-if="isLocked"
 						v-app-tooltip.top="
-							$gettext(`You do not have permissions to post to this channel.`)
+							$gettext(`You do not have permissions to post to this channel`)
 						"
 						icon="lock"
 					/>
@@ -47,7 +52,7 @@
 				/>
 			</div>
 
-			<div v-if="isUnpublished" class="-card-unpublished" />
+			<div v-if="isUnpublished || isArchived" class="-card-unpublished" />
 		</router-link>
 	</div>
 </template>

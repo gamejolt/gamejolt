@@ -12,6 +12,36 @@
 			<app-form-control-errors />
 		</app-form-group>
 
+		<app-form-group name="title" :label="$gettext(`URL`)">
+			<app-form-control
+				type="text"
+				:rules="{
+					pattern: /^[a-z0-9_]+$/i,
+					min: 3,
+					max: 30,
+					availability: {
+						url: `/web/dash/communities/channels/check-field-availability/${community.id}/${model.id}`,
+					},
+				}"
+				data-vv-delay="500"
+			/>
+			<app-form-control-errors>
+				<app-form-control-error
+					when="availability"
+					:message="$gettext('A channel with that name already exists.')"
+				/>
+
+				<app-form-control-error
+					when="pattern"
+					:message="
+						$gettext(
+							'Channel names can only contain numbers, letters, and underscores (_).'
+						)
+					"
+				/>
+			</app-form-control-errors>
+		</app-form-group>
+
 		<!-- Show the current backgroud image if there is one -->
 		<div v-if="formModel.background" class="form-group">
 			<label class="control-label">
@@ -67,24 +97,11 @@
 			<app-form-control-errors />
 		</app-form-group>
 
-		<app-form-community-channel-permissions />
+		<app-form-community-channel-permissions v-if="!model.is_archived" />
 
 		<app-form-button>
 			<translate>Save Channel</translate>
 		</app-form-button>
-		<app-button
-			v-if="competitionId"
-			:to="{
-				name: 'communities.view.edit.competition.details',
-				params: { compId: competitionId },
-			}"
-			solid
-		>
-			<translate>Edit Jam</translate>
-		</app-button>
-		<app-button trans @click="onChangeUrl">
-			<translate>Change URL</translate>
-		</app-button>
 	</app-form>
 </template>
 

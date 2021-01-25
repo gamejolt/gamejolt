@@ -2,9 +2,11 @@
 
 <template>
 	<div>
-		<app-communities-view-channel-header />
+		<template v-if="channel">
+			<app-communities-view-channel-header />
 
-		<router-view />
+			<router-view />
+		</template>
 	</div>
 </template>
 

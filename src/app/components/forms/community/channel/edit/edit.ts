@@ -7,10 +7,8 @@ import {
 	FormOnLoad,
 	FormOnSubmitSuccess,
 } from '../../../../../../_common/form-vue/form.service';
-import { Growls } from '../../../../../../_common/growls/growls.service';
 import { AppImgResponsive } from '../../../../../../_common/img/responsive/responsive';
 import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
-import { CommunityChannelChangeUrlModal } from '../../../../community/channel/change-url-modal/change-url-modal.service';
 import AppFormCommunityChannelPermissions from '../_permissions/permissions.vue';
 
 class FormModel extends CommunityChannel {
@@ -79,25 +77,5 @@ export default class FormCommunityChannelEdit extends BaseForm<FormModel>
 
 		this.setField('background', this.model!.background);
 		this.$emit('clear');
-	}
-
-	async onChangeUrl() {
-		const channel = await CommunityChannelChangeUrlModal.show(
-			this.model!,
-			this.community,
-			this.community.channels!
-		);
-
-		if (channel) {
-			// Overwrite the current form's model with the new title.
-			// Since the modal wasn't part of this form, it doesn't update automatically.
-			this.setField('title', channel.title);
-
-			Growls.success({
-				message: this.$gettextInterpolate(`Changed channel url to %{ title }.`, {
-					title: channel.title,
-				}),
-			});
-		}
 	}
 }

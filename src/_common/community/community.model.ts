@@ -1,4 +1,5 @@
 import type { Location, Route } from 'vue-router';
+import { numberSort } from '../../utils/array';
 import { Api } from '../api/api.service';
 import { Collaboratable, Perm } from '../collaborator/collaboratable';
 import { Game } from '../game/game.model';
@@ -15,6 +16,7 @@ export class Community extends Collaboratable(Model) {
 	post_placeholder_text!: string | null;
 	description_content!: string;
 	is_verified!: boolean;
+	has_archived_channels!: boolean | null;
 
 	thumbnail?: MediaItem;
 	header?: MediaItem;
@@ -29,6 +31,11 @@ export class Community extends Collaboratable(Model) {
 	is_member?: boolean;
 
 	perms?: Perm[];
+
+	/** Gets populated when visiting an archived channel (just one) or viewing them in the sidebar/edit section. */
+	archivedChannels: CommunityChannel[] = [];
+	_expandedArchivedChannels = false;
+	_loadedArchivedChannels = false;
 
 	constructor(data: any = {}) {
 		super(data);
@@ -102,6 +109,16 @@ export class Community extends Collaboratable(Model) {
 		}
 
 		return this.channels?.filter(channel => channel.canPost);
+	}
+
+	/** Whether or not a generally removable channel can be removed from the community at this moment. */
+	get canRemoveChannel() {
+		if (!this.channels) {
+			return false;
+		}
+
+		// Only publicly visible channels count.
+		return this.channels.filter(i => i.visibility === 'published').length > 1;
 	}
 
 	channelRouteLocation(channel: CommunityChannel): Location {
@@ -244,4 +261,36 @@ export const enum CommunityPresetChannelType {
 
 export function isEditingCommunity(route: Route) {
 	return !!route.name && route.name.startsWith('communities.view.edit.');
+}
+
+export async function loadArchivedChannels(community: Community) {
+	const payload = await Api.sendRequest(
+		`/web/communities/fetch-archived-channels/` + community.path
+	);
+	if (payload.channels) {
+		const channels = CommunityChannel.populate(payload.channels);
+
+		// For each retrieved channel, either assign to one that's already in the list
+		// or push. The channel could already be there when it got added through viewing
+		// it from the channel view endpoint.
+		for (const channel of channels) {
+			const existingChannel = community.archivedChannels.find(
+				i => i.id === channel.id
+			);
+			if (existingChannel) {
+				existingChannel.assign(channel);
+			} else {
+				community.archivedChannels.push(channel);
+			}
+		}
+
+		// Because of assign/push possibly messing up sort, sort now.
+		community.archivedChannels = community.archivedChannels.sort((a, b) =>
+			numberSort(a.sort, b.sort)
+		);
+	} else {
+		// This can happen when an archived channel gets removed while viewing the sidebar.
+		community.archivedChannels = [];
+		community.has_archived_channels = false;
+	}
 }

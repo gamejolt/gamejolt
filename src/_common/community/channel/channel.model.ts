@@ -9,21 +9,23 @@ import {
 
 export type CommunityChannelType = 'post-feed' | 'competition';
 
-export type CommunityChannelVisibility = 'draft' | 'unlisted' | 'published';
+export type CommunityChannelVisibility = 'draft' | 'published';
 
 export class CommunityChannel extends Model {
 	community_id!: number;
 	title!: string;
 	added_on!: number;
 	sort!: number;
-	background?: MediaItem;
 	type!: CommunityChannelType;
 	visibility!: CommunityChannelVisibility;
 	display_title!: string | null;
 	description_content!: string | null;
-	competition!: CommunityCompetition | null;
+	is_archived!: boolean;
 
 	permissions!: CommunityChannelPermissions;
+
+	background?: MediaItem;
+	competition!: CommunityCompetition | null;
 
 	get hasDisplayTitle() {
 		return !!this.display_title && this.display_title !== this.title;
@@ -40,7 +42,8 @@ export class CommunityChannel extends Model {
 	get canPost() {
 		return (
 			this.permissions.canPerform(COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING) &&
-			this.visibility !== 'draft'
+			this.visibility !== 'draft' &&
+			!this.is_archived
 		);
 	}
 
@@ -64,6 +67,13 @@ export class CommunityChannel extends Model {
 		);
 	}
 
+	static $saveSortArchived(communityId: number, channelIds: number[]) {
+		return Api.sendRequest(
+			'/web/dash/communities/channels/save-sort-archived/' + communityId,
+			channelIds
+		);
+	}
+
 	$save() {
 		if (this.id) {
 			return this.$_save(
@@ -74,6 +84,17 @@ export class CommunityChannel extends Model {
 		}
 
 		return this.$_save('/web/dash/communities/channels/save/' + this.community_id, 'channel');
+	}
+
+	$saveDescription() {
+		return this.$_save('/web/dash/communities/description/save-channel/' + this.id, 'channel');
+	}
+
+	$publish() {
+		return this.$_save(
+			`/web/dash/communities/channels/publish/` + this.community_id + '/' + this.id,
+			'channel'
+		);
 	}
 
 	$clearBackground() {
@@ -94,6 +115,20 @@ export class CommunityChannel extends Model {
 				detach: true,
 				data: moveToChannel ? { move_to_channel: moveToChannel.id } : {},
 			}
+		);
+	}
+
+	$archive() {
+		return this.$_save(
+			`/web/dash/communities/channels/archive/` + this.community_id + '/' + this.id,
+			'channel'
+		);
+	}
+
+	$unarchive() {
+		return this.$_save(
+			`/web/dash/communities/channels/unarchive/` + this.community_id + '/' + this.id,
+			'channel'
 		);
 	}
 }

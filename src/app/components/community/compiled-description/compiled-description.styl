@@ -1,8 +1,17 @@
-@require '../../../../_styles/mixins/compiled-content'
+@import '../../../../_styles/mixins/compiled-content'
 
 .community-description-content
 	compiled-content($font-size-base)
 
-	h3, h4
+	h3
+	h4
+		font-weight: normal
+		margin-top: 0
+
+.community-channel-description-content
+	compiled-content($font-size-base)
+
+	h3
+	h4
 		font-weight: normal
 		margin-top: 0

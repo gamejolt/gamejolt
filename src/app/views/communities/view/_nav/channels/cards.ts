@@ -2,7 +2,11 @@ import Vue from 'vue';
 import { Component, Inject } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
-import { Community } from '../../../../../../_common/community/community.model';
+import {
+	Community,
+	loadArchivedChannels,
+} from '../../../../../../_common/community/community.model';
+import AppLoading from '../../../../../../_common/loading/loading.vue';
 import { AppState, AppStore } from '../../../../../../_common/store/app-store';
 import AppCommunityChannelCard from '../../../../../components/community/channel/card/card.vue';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
@@ -17,6 +21,7 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 	components: {
 		AppCommunityPerms,
 		AppCommunityChannelCard,
+		AppLoading,
 	},
 })
 export default class AppNavChannelCards extends Vue {
@@ -26,6 +31,8 @@ export default class AppNavChannelCards extends Vue {
 	@State communityStates!: Store['communityStates'];
 	@AppState user!: AppStore['user'];
 	@Action toggleLeftPane!: Store['toggleLeftPane'];
+
+	isLoadingArchivedChannels = false;
 
 	get community() {
 		return this.routeStore.community;
@@ -77,6 +84,24 @@ export default class AppNavChannelCards extends Vue {
 	}
 
 	isChannelUnpublished(channel: CommunityChannel) {
-		return channel.visibility !== 'published';
+		return channel.isUnpublished;
+	}
+
+	async onClickArchivedChannels() {
+		if (this.isLoadingArchivedChannels) {
+			return;
+		}
+
+		this.community._expandedArchivedChannels = !this.community._expandedArchivedChannels;
+
+		// Load in archived channels.
+		if (this.community._expandedArchivedChannels && !this.community._loadedArchivedChannels) {
+			this.isLoadingArchivedChannels = true;
+
+			await loadArchivedChannels(this.community);
+
+			this.community._loadedArchivedChannels = true;
+			this.isLoadingArchivedChannels = false;
+		}
 	}
 }

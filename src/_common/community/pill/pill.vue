@@ -22,12 +22,19 @@
 		</template>
 
 		<template #right>
+			<app-jolticon
+				v-if="channel.type === 'competition'"
+				v-app-tooltip="$gettext(`Jam`)"
+				icon="jams"
+				class="-jams-icon"
+			/>
+
 			{{ channel.displayTitle }}
 
 			<app-jolticon
 				v-if="communityLink.isFeatured"
 				v-app-tooltip="$gettext(`Featured`)"
-				class="-featured"
+				class="-featured-icon"
 				icon="star"
 			/>
 		</template>
@@ -38,7 +45,11 @@
 .-tick
 	margin-left: 5px
 
-.-featured
+.-featured-icon
 	margin: 0 0 0 5px
 	font-size: 12px
+
+.-jams-icon
+	margin-right: 2px
+	margin-bottom: 2px
 </style>

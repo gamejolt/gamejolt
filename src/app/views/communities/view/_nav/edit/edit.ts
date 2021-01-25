@@ -18,13 +18,6 @@ export default class AppNavEdit extends Vue {
 		return this.routeStore.community;
 	}
 
-	get shouldShowCompetitions() {
-		return (
-			this.routeStore.hasCompetitions ||
-			this.$route.name?.includes('communities.view.edit.competitions')
-		);
-	}
-
 	onChangeSection(path: string) {
 		this.emitChangeSection(path);
 	}

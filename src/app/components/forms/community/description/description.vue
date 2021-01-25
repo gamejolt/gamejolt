@@ -1,5 +1,7 @@
+<script lang="ts" src="./description"></script>
+
 <template>
-	<app-form name="descriptionForm">
+	<app-form name="communityDescriptionForm">
 		<app-form-group name="description_content" hide-label>
 			<app-form-control-content
 				:placeholder="$gettext(`Write your community description here...`)"
@@ -22,5 +24,3 @@
 		</app-form-button>
 	</app-form>
 </template>
-
-<script lang="ts" src="./description"></script>

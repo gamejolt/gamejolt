@@ -20,6 +20,11 @@
 		</template>
 
 		<template #sidebar>
+			<app-community-competition-countdown
+				v-if="channel.type === 'competition'"
+				class="-countdown"
+				:competition="channel.competition"
+			/>
 			<div v-if="channel.description_content">
 				<app-community-channel-description :channel="channel" />
 			</div>
@@ -28,6 +33,6 @@
 </template>
 
 <style lang="stylus" scoped>
-.-container
-	padding-top: 0
+.-countdown
+	margin-bottom: 32px
 </style>

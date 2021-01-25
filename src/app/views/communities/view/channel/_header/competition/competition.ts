@@ -4,6 +4,8 @@ import { Inject } from 'vue-property-decorator';
 import { number } from '../../../../../../../_common/filters/number';
 import { Screen } from '../../../../../../../_common/screen/screen-service';
 import AppCommunityCompetitionCountdown from '../../../../../../components/community/competition/countdown/countdown.vue';
+import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
+import AppPageHeaderControls from '../../../../../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../../../../../components/page-header/page-header.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../view.store';
 
@@ -11,6 +13,8 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../view.store
 	components: {
 		AppCommunityCompetitionCountdown,
 		AppPageHeader,
+		AppPageHeaderControls,
+		AppCommunityPerms,
 	},
 	filters: {
 		number,

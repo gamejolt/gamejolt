@@ -9,6 +9,7 @@ import { AppState, AppStore } from '../../../../../../_common/store/app-store';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../../components/activity/feed/view';
 import AppCommunityChannelDescription from '../../../../../components/community/channel/description/description.vue';
+import AppCommunityCompetitionCountdown from '../../../../../components/community/competition/countdown/countdown.vue';
 import { Store } from '../../../../../store';
 import { CommunityRouteStore, CommunityRouteStoreKey, isVirtualChannel } from '../../view.store';
 import {
@@ -27,6 +28,7 @@ import { CommunitiesViewChannelDeps } from '../channel';
 		AppCommunitiesViewFeed,
 		AppCommunityChannelDescription,
 		AppIllustration,
+		AppCommunityCompetitionCountdown,
 	},
 })
 @RouteResolver({

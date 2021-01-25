@@ -17,45 +17,36 @@ export default class AppCommunityCompetitionCountdown extends Vue {
 
 	updateTimer!: NodeJS.Timer | null;
 	blocksData: BlockData[] = [];
-
-	get titleText() {
-		const period = this.competition.period;
-		switch (period) {
-			case 'pre-comp':
-				return this.$gettext(`Starts in...`);
-			case 'running':
-				return this.$gettext(`Ends in...`);
-			case 'voting':
-				return this.$gettext(`Voting ends in...`);
-			// No countdown is shown.
-			case 'post-comp':
-				return this.$gettext(`The Jam has ended.`);
-		}
-	}
+	titleText = '';
 
 	mounted() {
 		this.updateTimer = setInterval(() => {
-			this.updateBlocksData();
+			this.updateDisplayData();
 		}, 1000);
-		this.updateBlocksData();
+		this.updateDisplayData();
 	}
 
-	updateBlocksData() {
+	updateDisplayData() {
 		let timestamp = 0;
 		const period = this.competition.period;
 		switch (period) {
 			case 'pre-comp':
+				this.titleText = this.$gettext(`Starts in...`);
 				timestamp = this.competition.starts_on;
 				break;
 			case 'running':
+				this.titleText = this.$gettext(`Ends in...`);
 				timestamp = this.competition.ends_on;
 				break;
 			case 'voting':
+				this.titleText = this.$gettext(`Voting ends in...`);
 				timestamp = this.competition.voting_ends_on;
 				break;
 			// No countdown is shown.
 			case 'post-comp':
-				return [];
+				this.titleText = this.$gettext(`The Jam has ended.`);
+				this.blocksData = [];
+				return;
 		}
 
 		let diff = timestamp - Date.now();

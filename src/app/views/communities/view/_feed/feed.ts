@@ -8,6 +8,7 @@ import { Community } from '../../../../../_common/community/community.model';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import AppIllustration from '../../../../../_common/illustration/illustration.vue';
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import AppActivityFeedNewButton from '../../../../components/activity/feed/new-button/new-button.vue';
@@ -28,6 +29,7 @@ import AppBlockedNotice from '../_blocked-notice/blocked-notice.vue';
 		AppNavTabList,
 		AppBlockedNotice,
 		AppExpand,
+		AppIllustration,
 	},
 })
 export default class AppCommunitiesViewFeed extends Vue {
@@ -79,7 +81,15 @@ export default class AppCommunitiesViewFeed extends Vue {
 	}
 
 	get shouldShowTabs() {
-		return this.channel !== this.routeStore.frontpageChannel;
+		if (this.channel === this.routeStore.frontpageChannel) {
+			return false;
+		}
+
+		if (!this.feed || this.feed.hasItems) {
+			return true;
+		}
+
+		return false;
 	}
 
 	get placeholderText() {
