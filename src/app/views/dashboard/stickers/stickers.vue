@@ -54,35 +54,12 @@
 					</div>
 					<div class="col-md-8 col-md-pull-4">
 						<template v-if="hasStickersInCollection">
-							<div v-if="halloweenStickers.length">
-								<div class="-candy-stickers well">
-									<p>
-										<b>
-											Trick or Treat on Game Jolt with candy stickers!
-										</b>
-										During Halloween weekend, all stickers you unlock will be
-										candy that you can hand out to other Game Jolt users for
-										trick or treating.
-									</p>
-									<div class="-collection">
-										<app-sticker-card
-											v-for="stickerCount of halloweenStickers"
-											:key="stickerCount.sticker_id"
-											:sticker="stickerCount.sticker"
-											:label="`x${stickerCount.count}`"
-										/>
-									</div>
-								</div>
-							</div>
-
-							<div v-if="normalStickers.length" class="-collection">
-								<app-sticker-card
-									v-for="stickerCount of normalStickers"
-									:key="stickerCount.sticker_id"
-									:sticker="stickerCount.sticker"
-									:label="`x${stickerCount.count}`"
-								/>
-							</div>
+							<app-sticker-card
+								v-for="stickerCount of stickerCollection"
+								:key="stickerCount.sticker_id"
+								:sticker="stickerCount.sticker"
+								:label="`x${stickerCount.count}`"
+							/>
 						</template>
 						<p v-else>
 							<translate>You don't have any stickers yet.</translate>
@@ -107,18 +84,4 @@
 	grid-template-columns: repeat(auto-fill, $card-width)
 	justify-content: space-between
 	grid-gap: $card-margin * 2
-
-.-candy-stickers
-	border: $border-width-large dashed var(--theme-link)
-	margin-left: -($grid-gutter-width-xs / 2)
-	margin-right: @margin-left
-
-	@media $media-xs
-		border-radius: 0
-		border-left: 0
-		border-right: 0
-
-	@media $media-sm-up
-		margin-left: -($grid-gutter-width / 2)
-		margin-right: @margin-left
 </style>
