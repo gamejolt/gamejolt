@@ -54,12 +54,14 @@
 					</div>
 					<div class="col-md-8 col-md-pull-4">
 						<template v-if="hasStickersInCollection">
-							<app-sticker-card
-								v-for="stickerCount of stickerCollection"
-								:key="stickerCount.sticker_id"
-								:sticker="stickerCount.sticker"
-								:label="`x${stickerCount.count}`"
-							/>
+							<div class="-collection">
+								<app-sticker-card
+									v-for="stickerCount of stickerCollection"
+									:key="stickerCount.sticker_id"
+									:sticker="stickerCount.sticker"
+									:label="`x${stickerCount.count}`"
+								/>
+							</div>
 						</template>
 						<p v-else>
 							<translate>You don't have any stickers yet.</translate>
