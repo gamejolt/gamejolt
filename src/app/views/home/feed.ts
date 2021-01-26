@@ -81,9 +81,6 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	recommendedUsers: User[] = [];
 	featuredGame: Game | null = null;
 
-	// TODO(HALLOWEEN2020): remove after
-	shouldShowBasement = false;
-
 	readonly Screen = Screen;
 
 	get hasGamesSection() {
@@ -164,8 +161,6 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 		if (!fromCache) {
 			this.grid?.pushViewNotifications('activity');
 		}
-
-		this.shouldShowBasement = homePayload.receivedCandy;
 	}
 
 	mounted() {

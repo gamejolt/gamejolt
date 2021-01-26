@@ -67,14 +67,6 @@ export default class RouteDashStickers extends BaseRouteComponent {
 		return this.stickerCollection.length > 0;
 	}
 
-	get normalStickers() {
-		return this.stickerCollection.filter(i => !i.sticker.is_type_halloween_candy);
-	}
-
-	get halloweenStickers() {
-		return this.stickerCollection.filter(i => i.sticker.is_type_halloween_candy);
-	}
-
 	get stickerProgress() {
 		const progress = this.balance % this.stickerCost;
 		return (progress / this.stickerCost) * 100;
