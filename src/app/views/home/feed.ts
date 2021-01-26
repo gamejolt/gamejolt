@@ -6,8 +6,6 @@ import AppAdWidget from '../../../_common/ad/widget/widget.vue';
 import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
-import { Game } from '../../../_common/game/game.model';
-import { AppLazyPlaceholder } from '../../../_common/lazy/placeholder/placeholder';
 import { Meta } from '../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
@@ -17,15 +15,12 @@ import { User } from '../../../_common/user/user.model';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../components/activity/feed/view';
-import AppBroadcastCard from '../../components/broadcast-card/broadcast-card.vue';
 import AppCommunitySliderPlaceholder from '../../components/community/slider/placeholder/placeholder.vue';
 import AppCommunitySlider from '../../components/community/slider/slider.vue';
-import AppGameBadge from '../../components/game/badge/badge.vue';
 import { AppActivityFeedLazy } from '../../components/lazy';
 import AppPageContainer from '../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../components/post/add-button/add-button.vue';
 import { Store } from '../../store';
-import AppHomeRecommendedGame from './_recommended/game/game.vue';
 import AppHomeRecommendedUsers from './_recommended/users/users.vue';
 
 class DashGame {
@@ -43,7 +38,6 @@ class DashGame {
 		AppPageContainer,
 		AppActivityFeed: AppActivityFeedLazy,
 		AppActivityFeedPlaceholder,
-		AppBroadcastCard,
 		AppCommunitySlider,
 		AppCommunitySliderPlaceholder,
 		AppPostAddButton,
@@ -51,9 +45,6 @@ class DashGame {
 		AppScrollAffix,
 		AppAdWidget,
 		AppHomeRecommendedUsers,
-		AppHomeRecommendedGame,
-		AppGameBadge,
-		AppLazyPlaceholder,
 	},
 })
 @RouteResolver({
@@ -79,7 +70,6 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	loadingRecommendedUsers = false; // Set to `true` while refreshing users.
 	loadingRecommendedData = true;
 	recommendedUsers: User[] = [];
-	featuredGame: Game | null = null;
 
 	// TODO(HALLOWEEN2020): remove after
 	shouldShowBasement = false;
@@ -208,9 +198,6 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 		if (payload) {
 			if (payload.users) {
 				this.recommendedUsers = User.populate(payload.users);
-			}
-			if (payload.featuredGame) {
-				this.featuredGame = new Game(payload.featuredGame);
 			}
 		}
 
