@@ -59,11 +59,6 @@
 			</template>
 
 			<template v-if="!Screen.isMobile" #right>
-				<app-home-recommended-game
-					v-app-track-event="`activity:featured-game`"
-					:game="featuredGame"
-					:loading="loadingRecommendedData"
-				/>
 				<app-home-recommended-users
 					v-if="shouldShowRecommendedUsers"
 					:users="recommendedUsers"
@@ -81,23 +76,6 @@
 			<app-post-add-button @add="onPostAdded" />
 
 			<template v-if="Screen.isXs">
-				<template v-if="loadingRecommendedData || !!featuredGame">
-					<h6 class="-feed-heading">
-						<translate>Featured Game</translate>
-					</h6>
-					<span
-						v-if="loadingRecommendedData"
-						class="lazy-placeholder -game-placeholder"
-						:style="{ height: '67px' }"
-					/>
-					<app-game-badge
-						v-else-if="featuredGame"
-						v-app-track-event="`activity:featured-game`"
-						class="-game-badge"
-						:game="featuredGame"
-					/>
-				</template>
-
 				<h6 class="-feed-heading">
 					<translate>Communities</translate>
 				</h6>
@@ -151,8 +129,4 @@
 .-feed-heading
 	margin-top: 0
 	margin-bottom: 5px
-
-.-game-placeholder
-	rounded-corners-lg()
-	margin-bottom: $line-height-computed
 </style>
