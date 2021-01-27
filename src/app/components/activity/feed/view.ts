@@ -39,6 +39,7 @@ export interface ActivityFeedViewOptions {
 	hideGameInfo?: boolean;
 	shouldShowUserCards?: boolean;
 	shouldShowFollow?: boolean;
+	shouldShowDates?: boolean;
 }
 
 export const ActivityFeedKey = Symbol('activity-feed');
@@ -60,6 +61,7 @@ export class ActivityFeedView {
 	mainCommunity: Community | null = null;
 	shouldShowUserCards = true;
 	shouldShowFollow = false;
+	shouldShowDates = true;
 	newCount = 0;
 
 	get isBootstrapped() {
@@ -108,6 +110,7 @@ export class ActivityFeedView {
 			mainCommunity = null,
 			shouldShowUserCards = true,
 			shouldShowFollow = false,
+			shouldShowDates = true,
 		}: ActivityFeedViewOptions = {}
 	) {
 		this.state = state;
@@ -117,6 +120,7 @@ export class ActivityFeedView {
 		this.mainCommunity = mainCommunity;
 		this.shouldShowUserCards = shouldShowUserCards;
 		this.shouldShowFollow = shouldShowFollow;
+		this.shouldShowDates = shouldShowDates;
 	}
 
 	clear() {

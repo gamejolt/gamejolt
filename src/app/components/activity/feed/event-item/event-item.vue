@@ -79,6 +79,7 @@
 							<translate>Pinned</translate>
 						</span>
 						<app-activity-feed-event-item-time
+							v-if="shouldShowDate"
 							:event-item="eventItem"
 							:post="post"
 							:link="linkResolved"

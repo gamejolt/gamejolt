@@ -67,6 +67,7 @@ export default class RouteSearchResults extends BaseRouteComponent {
 				name: 'search',
 				url: `/web/posts/fetch/search/${encodeURIComponent(this.$route.query.q + '')}`,
 				shouldShowFollow: true,
+				shouldShowDates: false,
 			},
 			$payload.posts,
 			fromCache
