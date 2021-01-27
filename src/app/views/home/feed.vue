@@ -4,7 +4,7 @@
 	<section class="section fill-backdrop">
 		<app-page-container xl>
 			<template #left>
-				<app-user-card v-if="Screen.isDesktop" :user="app.user" />
+				<app-user-card v-if="Screen.isDesktop" :user="user" />
 
 				<template v-if="hasGamesSection">
 					<h4 class="section-header">
@@ -84,35 +84,42 @@
 				<app-community-slider v-else :communities="communities" with-add-button />
 			</template>
 
-			<app-activity-feed-placeholder v-if="!feed || !feed.isBootstrapped" />
-			<template v-else>
-				<div v-if="!feed.hasItems" class="alert full-bleed-xs text-center">
-					<p class="lead">
-						<translate>
-							You don't have any activity yet. Follow games to stay up to date on
-							their latest development!
-						</translate>
-					</p>
+			<div class="full-bleed-xs">
+				<app-nav-tab-list center>
+					<ul>
+						<li>
+							<router-link
+								:to="{
+									name: 'home',
+								}"
+								active-class="active"
+								exact
+							>
+								<translate>Following</translate>
+							</router-link>
+						</li>
+						<li>
+							<router-link
+								:to="{
+									name: 'home',
+									params: { tab: 'fyp' },
+								}"
+								active-class="active"
+								exact
+							>
+								<translate>For You</translate>
+								&nbsp;
+								<span class="tag tag-notice">
+									<translate>Beta</translate>
+								</span>
+							</router-link>
+						</li>
+					</ul>
+				</app-nav-tab-list>
+			</div>
 
-					<router-link
-						v-app-track-event="`activity:main-menu:discover`"
-						:to="{
-							name: 'discover.home',
-						}"
-					>
-						<app-button icon="compass-needle" solid lg>
-							<translate>Explore</translate>
-						</app-button>
-					</router-link>
-				</div>
-				<app-activity-feed
-					v-else
-					:feed="feed"
-					show-ads
-					@load-new="onLoadedNew"
-					@load-more="onLoadMore"
-				/>
-			</template>
+			<route-home-activity v-if="feedTab === 'activity'" />
+			<route-home-fyp v-else-if="feedTab === 'fyp'" />
 		</app-page-container>
 	</section>
 </template>

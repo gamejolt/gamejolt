@@ -2,14 +2,13 @@ import { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
 import { router } from '..';
 import { Api } from '../../../_common/api/api.service';
+import { Meta } from '../../../_common/meta/meta-service';
 import {
 	asyncRouteLoader,
 	BaseRouteComponent,
 	RouteResolver,
 } from '../../../_common/route/route-component';
 import { AppState, AppStore } from '../../../_common/store/app-store';
-import { routeDiscoverHome } from '../discover/home/home.route';
-import { routeHome } from './home.route';
 
 @Component({
 	name: 'RouteHome',
@@ -29,11 +28,24 @@ export default class RouteHome extends BaseRouteComponent {
 	@AppState
 	userBootstrapped!: AppStore['userBootstrapped'];
 
+	routeCreated() {
+		Meta.setTitle(null);
+	}
+
 	routeResolved() {
 		// The route content, but not the path, changes depending on the user
 		// state - so we need to track the page view through a analyticsPath
 		// meta value that aligns with our route content.
-		this.$route.meta.analyticsPath = this.user ? routeHome.path : routeDiscoverHome.path;
+		let analyticsPath = '/discover';
+		if (this.user) {
+			if (this.$route.params?.tab === 'fyp') {
+				analyticsPath = '/fyp';
+			} else {
+				analyticsPath = '/';
+			}
+		}
+
+		this.$route.meta.analyticsPath = analyticsPath;
 	}
 
 	render(h: CreateElement) {
