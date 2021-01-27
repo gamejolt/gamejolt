@@ -2,6 +2,7 @@ import { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
 import { router } from '..';
 import { Api } from '../../../_common/api/api.service';
+import { Meta } from '../../../_common/meta/meta-service';
 import {
 	asyncRouteLoader,
 	BaseRouteComponent,
@@ -28,6 +29,10 @@ export default class RouteHome extends BaseRouteComponent {
 
 	@AppState
 	userBootstrapped!: AppStore['userBootstrapped'];
+
+	routeCreated() {
+		Meta.setTitle(null);
+	}
 
 	routeResolved() {
 		// The route content, but not the path, changes depending on the user
