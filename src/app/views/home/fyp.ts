@@ -18,7 +18,7 @@ import { RouteActivityFeedController } from './feed';
 	cache: true,
 	lazy: true,
 	resolver: ({ route }) =>
-		Api.sendRequest(ActivityFeedService.makeFeedUrl(route, '/mobile/posts/recommended')),
+		Api.sendRequest(ActivityFeedService.makeFeedUrl(route, '/web/posts/for-you')),
 })
 export default class RouteHomeFYP extends BaseRouteComponent {
 	@Inject('route-activity-feed')
@@ -38,7 +38,7 @@ export default class RouteHomeFYP extends BaseRouteComponent {
 			{
 				type: 'EventItem',
 				name: 'fyp',
-				url: `/mobile/posts/recommended`,
+				url: `/web/posts/for-you`,
 				shouldShowFollow: true,
 			},
 			payload.items,
