@@ -239,6 +239,10 @@ export default class AppActivityFeedEventItem extends Vue {
 		return this.post.getPinContextFor(this.$route) !== null;
 	}
 
+	get shouldShowDate() {
+		return this.feed.shouldShowDates;
+	}
+
 	get isBlocked() {
 		if (this.post) {
 			return feedShouldBlockPost(this.post, this.$route);

@@ -40,6 +40,7 @@ export default class RouteHomeFYP extends BaseRouteComponent {
 				name: 'fyp',
 				url: `/web/posts/for-you`,
 				shouldShowFollow: true,
+				shouldShowDates: false,
 			},
 			payload.items,
 			fromCache
