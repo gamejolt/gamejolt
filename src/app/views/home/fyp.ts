@@ -40,7 +40,6 @@ export default class RouteHomeFYP extends BaseRouteComponent {
 				name: 'fyp',
 				url: `/mobile/posts/recommended`,
 				shouldShowFollow: true,
-				notificationWatermark: payload.unreadWatermark,
 			},
 			payload.items,
 			fromCache
