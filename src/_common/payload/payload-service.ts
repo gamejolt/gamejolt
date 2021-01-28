@@ -250,9 +250,9 @@ export class Payload {
 			this.store.commit('app/setError', 500);
 		} else if (error.type === PayloadError.ERROR_RATE_LIMIT) {
 			Growls.error({
-				title: Translate.$gettext(`Woah there, slow down!`),
+				title: Translate.$gettext(`Whoa there, slow down!`),
 				message: Translate.$gettext(
-					`Looks like you are doing that too much. Slow down, then try again in a couple minutes.`
+					`Looks like you are doing that too much. Slow down, then try again in a few minutes.`
 				),
 			});
 		} else if (
