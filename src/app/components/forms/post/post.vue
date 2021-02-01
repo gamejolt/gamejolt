@@ -529,11 +529,14 @@
 			</div>
 		</template>
 
-		<app-expand v-if="!wasPublished" :when="hasChannelError">
-			<div class="-error -earmark alert alert-notice">
-				<translate> Choose a channel to post to. </translate>
-			</div>
-		</app-expand>
+		<div v-if="!wasPublished" class="-error-no-channel">
+			<div class="-caret" :class="{ '-hide': !hasChannelError }" />
+			<app-expand :when="hasChannelError">
+				<div class="-error -earmark alert alert-notice">
+					<translate> Choose a channel to post to. </translate>
+				</div>
+			</app-expand>
+		</div>
 
 		<!-- Author options -->
 		<template v-if="shouldShowAuthorOptions">

@@ -1,6 +1,6 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-@require './_community-pill/variables'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+@import './_community-pill/variables'
 
 .form-group:last-child
 	margin-bottom: 10px
@@ -47,8 +47,21 @@
 .-channels
 	margin-top: 10px
 
-.-channels, .-error, .-community-message
+.-channels
+.-error
+.-community-message
 	margin-bottom: 10px
+
+.-error-no-channel
+	position: relative
+
+	.-caret
+		caret(color: var(--theme-notice), direction: 'up', size: 5px)
+		left: 15%
+		transition: opacity 200ms
+
+		&.-hide
+			opacity: 0
 
 .-poll-option
 	display: flex
@@ -112,7 +125,8 @@
 		height: $pill-height
 
 	// Need to apply to the button inside the pill add component too
-	&, >>> .button
+	&
+	>>> .button
 		height: 28px
 		margin-bottom: 0
 
