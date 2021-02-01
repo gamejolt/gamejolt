@@ -82,9 +82,7 @@
 					<p class="help-block">
 						<translate>Enter your Sketchfab model's URL or ID. For example:</translate>
 						<br />
-						<code>
-							https://sketchfab.com/3d-models/your-model-name-ID
-						</code>
+						<code> https://sketchfab.com/3d-models/your-model-name-ID </code>
 					</p>
 
 					<app-form-control
@@ -531,6 +529,12 @@
 			</div>
 		</template>
 
+		<app-expand v-if="!wasPublished" :when="hasChannelError">
+			<div class="-error -earmark alert alert-notice">
+				<translate> Choose a channel to post to. </translate>
+			</div>
+		</app-expand>
+
 		<!-- Author options -->
 		<template v-if="shouldShowAuthorOptions">
 			<fieldset>
@@ -558,7 +562,7 @@
 						v-if="formModel.as_game_owner"
 						v-app-tooltip.touchable="
 							model.game.developer.display_name +
-								` (@${model.game.developer.username})`
+							` (@${model.game.developer.username})`
 						"
 						class="-author-avatar pull-right"
 					>
