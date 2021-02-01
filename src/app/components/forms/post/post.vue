@@ -728,6 +728,9 @@
 .-error-no-channel
 	position: relative
 
+	.alert
+		padding: 10px !important
+
 	.-caret
 		caret(color: var(--theme-notice), direction: 'up', size: 5px)
 		left: 15%
