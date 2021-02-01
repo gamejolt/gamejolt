@@ -1,18 +1,17 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
-$-item-size = 95px
-$-bubble-size = $-item-size * 0.25
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+@import '../variables'
 
 .-item
 	display: inline-block
+
+.-wrapper
+	position: relative
 	width: $-item-size
 	height: $-item-size
 
 .-pressy
 	display: inline-block
-	width: 100%
-	height: 100%
 
 	&:hover
 		transform: scale(1.05)
@@ -28,15 +27,12 @@ $-bubble-size = $-item-size * 0.25
 	theme-prop('border-color', 'gray')
 
 .-followed
-	position: static
-
-	div
-		position: relative
-		top: -($-bubble-size)
-		left: $-item-size - $-bubble-size
-		width: $-bubble-size
-		height: $-bubble-size
-		border-radius: 50%
+	position: absolute
+	bottom: 0
+	right: 0
+	width: $-bubble-size
+	height: $-bubble-size
+	border-radius: 50%
 
 	.-icon
 		position: absolute

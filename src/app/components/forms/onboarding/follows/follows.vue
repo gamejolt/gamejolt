@@ -1,20 +1,23 @@
+
+<script lang="ts" src="./follows"></script>
+
 <template>
 	<app-form name="onboardingFollows">
 		<div class="-form">
 			<section class="-message">
 				<h3 class="section-header">
-					<translate>
-						Join Interesting Communities
-					</translate>
+					<translate> Join Interesting Communities </translate>
 				</h3>
 
 				<p class="text-muted">
-					<translate>Explore fan-created artwork, videos, game guides and more.</translate>
+					<translate>
+						Explore fan-created artwork, videos, game guides and more.
+					</translate>
 				</p>
 			</section>
 
 			<section class="-communities">
-				<app-scroll-scroller horizontal thin>
+				<app-scroll-scroller thin>
 					<div class="-list">
 						<app-onboarding-follows-community-item
 							v-for="community of communities"
@@ -33,5 +36,3 @@
 </template>
 
 <style lang="stylus" src="./follows.styl" scoped></style>
-
-<script lang="ts" src="./follows"></script>

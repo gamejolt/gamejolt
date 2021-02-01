@@ -1,5 +1,6 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+@import './variables'
 
 .-form
 	display: flex
@@ -21,12 +22,18 @@
 		margin-bottom: 5px
 
 	.-list
-		white-space: nowrap
-		padding: 7px
-		height: 140px
+		display: grid
+		grid-template-columns: repeat(auto-fill, $-item-size)
+		grid-gap: 8px
+		justify-content: space-between
 
-		>>> .-item
-			display: inline-block
+@media $media-mobile
+	.-list
+		padding-bottom: 40px
 
-			&:not(:last-child)
-				margin-right: 9px
+	.-controls
+		position: fixed
+		bottom: 0
+		right: 0
+		left: 0
+		padding: 8px
