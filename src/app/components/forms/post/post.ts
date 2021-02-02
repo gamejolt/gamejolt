@@ -8,6 +8,7 @@ import { CommunityChannel } from '../../../../_common/community/channel/channel.
 import AppCommunityChannelSelect from '../../../../_common/community/channel/select/select.vue';
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
+import AppExpand from '../../../../_common/expand/expand.vue';
 import { FiresidePostCommunity } from '../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { FiresidePostVideo } from '../../../../_common/fireside/post/video/video-model';
@@ -102,6 +103,7 @@ type FormPostModel = FiresidePost & {
 		AppFormControlContent,
 		AppScrollScroller,
 		AppFormPostVideo,
+		AppExpand,
 	},
 	directives: {
 		AppFocusWhen,
