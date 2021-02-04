@@ -48,7 +48,7 @@
 					params: { channel: channel.title },
 				}"
 			>
-				<translate>Edit</translate>
+				<translate>Edit Channel</translate>
 			</app-button>
 		</div>
 	</app-card-list-item>

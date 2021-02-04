@@ -36,11 +36,27 @@ export default class RouteCommunitiesViewEditChannelsEdit extends BaseRouteCompo
 	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
 
 	get competition() {
-		return this.routeStore.competition!;
+		return this.routeStore.competition;
 	}
 
 	get channel() {
 		return this.routeStore.channel!;
+	}
+
+	get canEditHeader() {
+		return !!this.competition;
+	}
+
+	get pageHeaderProps() {
+		if (!this.competition) {
+			return {};
+		}
+
+		return {
+			coverMediaItem: this.competition.header,
+			coverMaxHeight: 250,
+			coverEditable: true,
+		};
 	}
 
 	routeResolved($payload: any) {
@@ -51,6 +67,6 @@ export default class RouteCommunitiesViewEditChannelsEdit extends BaseRouteCompo
 	}
 
 	async onClickEditHeader() {
-		await CommunityCompetitionHeaderModal.show(this.competition);
+		await CommunityCompetitionHeaderModal.show(this.competition!);
 	}
 }

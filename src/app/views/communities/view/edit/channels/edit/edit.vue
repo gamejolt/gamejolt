@@ -2,16 +2,9 @@
 
 <template>
 	<div>
-		<app-page-header
-			v-if="channel.type === 'competition'"
-			:cover-media-item="competition.header"
-			:cover-max-height="250"
-			should-affix-nav
-			cover-editable
-			@edit-cover="onClickEditHeader"
-		>
-			<template #cover-edit-buttons>
-				<translate>Edit Channel Header</translate>
+		<app-page-header v-bind="pageHeaderProps" should-affix-nav @edit-cover="onClickEditHeader">
+			<template v-if="canEditHeader" #cover-edit-buttons>
+				<translate>Upload Header</translate>
 			</template>
 
 			<template #default>
@@ -23,18 +16,23 @@
 						<translate>Published</translate>
 					</span>
 
-					<span v-if="competition.period === 'pre-comp'" class="tag">
-						<translate>Future</translate>
-					</span>
-					<span v-else-if="competition.period === 'running'" class="tag tag-highlight">
-						<translate>Running</translate>
-					</span>
-					<span v-else-if="competition.period === 'voting'" class="tag tag-highlight">
-						<translate>Voting</translate>
-					</span>
-					<span v-else-if="competition.period === 'post-comp'" class="tag">
-						<translate>Finished</translate>
-					</span>
+					<template v-if="competition">
+						<span v-if="competition.period === 'pre-comp'" class="tag">
+							<translate>Future</translate>
+						</span>
+						<span
+							v-else-if="competition.period === 'running'"
+							class="tag tag-highlight"
+						>
+							<translate>Running</translate>
+						</span>
+						<span v-else-if="competition.period === 'voting'" class="tag tag-highlight">
+							<translate>Voting</translate>
+						</span>
+						<span v-else-if="competition.period === 'post-comp'" class="tag">
+							<translate>Finished</translate>
+						</span>
+					</template>
 				</div>
 
 				<h1 class="section-header">
@@ -44,15 +42,6 @@
 
 			<template #nav>
 				<div class="-competition-nav">
-					<!-- <app-button
-						v-app-tooltip="$gettext(`Return to Channel List`)"
-						class="-btn-back"
-						trans
-						sparse
-						circle
-						icon="chevron-left"
-						:to="{ name: 'communities.view.edit.channels.list' }"
-					/> -->
 					<nav class="platform-list inline">
 						<ul>
 							<li>
@@ -67,14 +56,14 @@
 									<translate>Channel</translate>
 								</router-link>
 							</li>
-							<li>
+							<li v-if="competition">
 								<router-link
 									:to="{
 										name: 'communities.view.edit.channels.competition.overview',
 									}"
 									active-class="active"
 								>
-									<translate>Jam</translate>
+									<translate>Manage Jam</translate>
 								</router-link>
 							</li>
 						</ul>
@@ -91,35 +80,12 @@
 						block
 						icon="arrow-forward"
 					>
-						<translate>View Jam</translate>
+						<translate v-if="competition">View Jam</translate>
+						<translate v-else>View Channel</translate>
 					</app-button>
 				</app-page-header-controls>
 			</template>
 		</app-page-header>
-
-		<template v-else>
-			<app-communities-view-page-container class="-nav-container">
-				<nav class="breadcrumb">
-					<ul>
-						<li>
-							<router-link :to="{ name: 'communities.view.edit.channels.list' }">
-								<span class="breadcrumb-tag">&nbsp;</span>
-								<translate>Channels</translate>
-							</router-link>
-							<app-jolticon icon="chevron-right" class="breadcrumb-separator" />
-						</li>
-						<li>
-							<span class="active">
-								<span class="breadcrumb-tag">
-									<translate>channel</translate>
-								</span>
-								{{ channel.displayTitle }}
-							</span>
-						</li>
-					</ul>
-				</nav>
-			</app-communities-view-page-container>
-		</template>
 
 		<router-view />
 	</div>

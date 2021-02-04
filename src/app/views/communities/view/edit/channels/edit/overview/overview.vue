@@ -14,12 +14,14 @@
 					@submit="onSubmit"
 				/>
 			</div>
-			<div class="col-md-4 col-lg-push-1">
-				<h2 :class="{ 'section-header': Screen.isDesktop }">
-					<translate>Edit Description</translate>
-				</h2>
-				<form-community-channel-description :model="channel" />
-			</div>
+			<template v-if="canEditDescription">
+				<div class="col-md-4 col-lg-push-1">
+					<h2 :class="{ 'section-header': Screen.isDesktop }">
+						<translate>Edit Description</translate>
+					</h2>
+					<form-community-channel-description :model="channel" />
+				</div>
+			</template>
 		</div>
 		<template v-if="shouldShowArchiveOptions">
 			<section class="section">
