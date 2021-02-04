@@ -31,8 +31,8 @@
   <g
      id="layer2">
     <path
-       d="M 0.5,0 C 0.223,0 0,0.223 0,0.5 v 3 C 0,3.777 0.223,4 0.5,4 H 3 L 5,6 V 4 H 5.5 C 5.777,4 6,3.777 6,3.5 v -3 C 6,0.223 5.777,0 5.5,0 Z M 8,7 c -1.662,0 -3,1.338 -3,3 0,1.662 1.338,3 3,3 1.662,0 3,-1.338 3,-3 C 11,8.338 9.662,7 8,7 Z m -1,7 c -1.108,0 -2,0.892 -2,2 h 6 c 0,-1.108 -0.892,-2 -2,-2 z"
-       style="display:inline;opacity:1;vector-effect:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       id="rect819" />
+       d="M 8.0214844,2 C 7.8351367,1.9944638 7.6534055,2.0585223 7.5117188,2.1796875 l -5.8339844,5 H 3 C 3,9.1197917 3,11.059896 3,13 c 0,0.554 0.446,1 1,1 h 2.5 v -4 h 3 v 4 H 12 c 0.554,0 1,-0.446 1,-1 0,-1.940104 0,-3.8802083 0,-5.8203125 h 1.322266 l -5.8339848,-5 C 8.3578245,2.0681473 8.1930592,2.004723 8.0214844,2 Z"
+       style="fill:#000000;stroke-width:4.5;stroke-linecap:round;stroke-linejoin:round"
+       id="rect840" />
   </g>
 </svg>
