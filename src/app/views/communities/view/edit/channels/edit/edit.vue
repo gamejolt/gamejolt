@@ -8,6 +8,7 @@
 			should-affix-nav
 			:cover-max-height="250"
 			cover-editable
+			@edit-cover="onClickEditHeader"
 		>
 			<template #default>
 				<h1 class="section-header">

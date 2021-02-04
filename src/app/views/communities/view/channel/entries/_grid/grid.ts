@@ -155,7 +155,7 @@ export default class RouteCommunitiesViewChannelEntriesGrid extends BaseRouteCom
 	page = 1;
 	sort = 'random';
 	category: string | null = null;
-	ignoreAwards = false;
+	ignoreAwards?: boolean = undefined;
 	hashWatchDeregister?: CommunityCompetitionEntryModalHashDeregister;
 
 	get competition() {
@@ -247,7 +247,7 @@ export default class RouteCommunitiesViewChannelEntriesGrid extends BaseRouteCom
 
 		if (this.category) {
 			this.sort = 'best';
-			this.ignoreAwards = false;
+			this.ignoreAwards = undefined;
 		} else {
 			const sort = getValidSortQueryParam(this.$route);
 			if (sort) {
@@ -261,7 +261,7 @@ export default class RouteCommunitiesViewChannelEntriesGrid extends BaseRouteCom
 			}
 
 			const ignoreAwards = getValidIgnoreAwardsQueryParam(this.$route);
-			this.ignoreAwards = ignoreAwards || false;
+			this.ignoreAwards = ignoreAwards || undefined;
 		}
 	}
 

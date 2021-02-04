@@ -40,6 +40,16 @@
 
 		<div>
 			<span v-if="!category" class="pull-right">
+				<app-button
+					sm
+					class="-awards-first"
+					:icon="ignoreAwards ? 'box-empty' : 'checkbox'"
+					:to="{
+						query: { page: undefined, sort: sort, 'ignore-awards': +!ignoreAwards },
+					}"
+				>
+					<translate>Show Awards first</translate>
+				</app-button>
 				<translate>Sort by</translate>
 				<app-popper>
 					<span class="-sort">
@@ -128,4 +138,8 @@
 				bottom: 0
 				height: $border-width-large * 2
 				change-bg('bi-bg')
+
+.-awards-first
+	margin-bottom: 3px
+	margin-right: 16px
 </style>

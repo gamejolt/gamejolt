@@ -93,6 +93,24 @@ export class CommunityCompetition extends Model {
 			}
 		);
 	}
+
+	$saveHeader() {
+		return this.$_save(
+			`/web/dash/communities/competitions/header/save/${this.id}`,
+			'competition',
+			{
+				file: this.file,
+				allowComplexData: ['crop'],
+			}
+		);
+	}
+
+	$clearHeader() {
+		return this.$_save(
+			`/web/dash/communities/competitions/header/clear/${this.id}`,
+			'competition'
+		);
+	}
 }
 
 Model.create(CommunityCompetition);

@@ -6,6 +6,7 @@ import {
 	RouteResolver,
 } from '../../../../../../../_common/route/route-component';
 import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
+import { CommunityCompetitionHeaderModal } from '../../../../../../components/community/competition/header-modal/header-modal.service';
 import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
 import AppPageHeaderControls from '../../../../../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../../../../../components/page-header/page-header.vue';
@@ -47,5 +48,9 @@ export default class RouteCommunitiesViewEditChannelsEdit extends BaseRouteCompo
 		if ($payload.channel) {
 			this.channel.assign($payload.channel);
 		}
+	}
+
+	async onClickEditHeader() {
+		await CommunityCompetitionHeaderModal.show(this.competition);
 	}
 }

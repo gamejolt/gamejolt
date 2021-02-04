@@ -55,6 +55,14 @@ export default class AppCommunityCompetitionEntryThumbnail extends Vue {
 		return !!this.displayRank;
 	}
 
+	get shouldShowNoVotes() {
+		return (
+			this.showRank &&
+			!this.votingCategory &&
+			(!this.entry.vote_results || this.entry.vote_results.length === 0)
+		);
+	}
+
 	get displayRank() {
 		// Find the result for the given category.
 		const categoryId = this.votingCategory ? this.votingCategory.id : null;

@@ -56,7 +56,7 @@
 								<app-jolticon
 									v-app-tooltip="$gettext(`Jam Award`)"
 									class="-award-icon"
-									icon="crown"
+									icon="medal"
 									big
 									highlight
 								/>
