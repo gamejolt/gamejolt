@@ -24,6 +24,7 @@ export class CommunityCompetition extends Model {
 	voting_type!: VotingType;
 	voting_user_restriction!: VotingUserRestriction;
 	has_awards!: boolean;
+	are_results_calculated!: boolean;
 
 	entry_count!: number;
 

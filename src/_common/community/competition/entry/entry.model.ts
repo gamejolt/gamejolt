@@ -1,6 +1,9 @@
+import { Environment } from '../../../environment/environment.service';
 import { Game } from '../../../game/game.model';
 import { Model } from '../../../model/model.service';
 import { User } from '../../../user/user.model';
+import { CommunityCompetitionEntryAward } from './award/award.model';
+import { CommunityCompetitionEntryVoteResult } from './vote/vote-result.model';
 
 type EntryType = 'Game';
 
@@ -8,12 +11,19 @@ export class CommunityCompetitionEntry extends Model {
 	community_competition_id!: number;
 	added_on!: number;
 	type!: EntryType;
+	vote_count!: number;
 
 	user!: User;
 	resource!: Game;
+	vote_results!: CommunityCompetitionEntryVoteResult[];
+	awards!: CommunityCompetitionEntryAward[];
 
 	get author() {
 		return this.resource.developer;
+	}
+
+	get permalink() {
+		return Environment.baseUrl + '/x/permalink/jam-entry/' + this.id;
 	}
 
 	constructor(data: any = {}) {
@@ -32,6 +42,10 @@ export class CommunityCompetitionEntry extends Model {
 					console.error('Not implemented resource type', this.type);
 					break;
 			}
+		}
+
+		if (data.vote_results) {
+			this.vote_results = CommunityCompetitionEntryVoteResult.populate(data.vote_results);
 		}
 	}
 

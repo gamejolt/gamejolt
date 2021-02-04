@@ -123,7 +123,7 @@
 			</template>
 		</fieldset>
 
-		<app-form-button :disabled="!valid || !timezoneService.loaded">
+		<app-form-button v-if="shouldShowSaveButton" :disabled="!valid || !timezoneService.loaded">
 			<translate>Save</translate>
 		</app-form-button>
 	</app-form>

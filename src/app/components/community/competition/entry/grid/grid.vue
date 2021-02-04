@@ -14,9 +14,32 @@
 		</p>
 
 		<app-condense-whitespace class="-grid-items">
-			<div v-for="entry of entries" :key="entry.id" class="-grid-item">
-				<app-community-competition-entry-thumbnail :entry="entry" />
-			</div>
+			<template v-if="entries.length > 0">
+				<div v-for="entry of entries" :key="entry.id" class="-grid-item">
+					<app-community-competition-entry-thumbnail
+						:entry="entry"
+						:show-rank="shouldShowThumbnailRanks"
+						:voting-category="category"
+						:show-awards="shouldShowThumbnailAwards"
+					/>
+				</div>
+			</template>
+			<template v-else>
+				<div
+					v-for="i of placeholderCount"
+					:key="i"
+					class="-grid-item -grid-item-placeholder"
+				>
+					<div class="-grid-item-placeholder-part -grid-item-placeholder-thumb">
+						<div
+							v-if="shouldShowThumbnailRanks"
+							class="-grid-item-placeholder-overlay"
+						/>
+					</div>
+					<div class="-grid-item-placeholder-part -grid-item-placeholder-name" />
+					<div class="-grid-item-placeholder-part -grid-item-placeholder-user" />
+				</div>
+			</template>
 		</app-condense-whitespace>
 	</div>
 </template>

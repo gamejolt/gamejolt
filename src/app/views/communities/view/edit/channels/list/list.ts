@@ -49,6 +49,10 @@ export default class RouteCommunitiesViewEditChannelsList extends BaseRouteCompo
 		return [CommunityPresetChannelType.FEATURED, CommunityPresetChannelType.ALL];
 	}
 
+	get hasFullChannelsPermission() {
+		return this.community.hasPerms('community-channels');
+	}
+
 	async saveChannelSort(sortedChannels: CommunityChannel[]) {
 		// Reorder the channels to see the result of the ordering right away.
 		this.community.channels!.splice(0, this.community.channels!.length, ...sortedChannels);

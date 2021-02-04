@@ -2,6 +2,7 @@ import Component from 'vue-class-component';
 import { Inject } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../../utils/array';
 import { Api } from '../../../../../../_common/api/api.service';
+import { CompetitionPeriodVoting } from '../../../../../../_common/community/competition/competition.model';
 import { CommunityCompetitionEntry } from '../../../../../../_common/community/competition/entry/entry.model';
 import { CommunityCompetitionEntrySubmitModal } from '../../../../../../_common/community/competition/entry/submit-modal/submit-modal.service';
 import { CommunityCompetitionVotingCategory } from '../../../../../../_common/community/competition/voting-category/voting-category.model';
@@ -16,6 +17,7 @@ import {
 	CommunityRouteStore,
 	CommunityRouteStoreKey,
 	getChannelPathFromRoute,
+	setCommunityMeta,
 } from '../../view.store';
 
 @Component({
@@ -74,6 +76,14 @@ export default class RouteCommunitiesViewChannelEntries extends BaseRouteCompone
 			return false;
 		}
 
+		// Competition is over and no submissions have been entered.
+		if (
+			this.competition.periodNum >= CompetitionPeriodVoting &&
+			this.userEntries.length === 0
+		) {
+			return false;
+		}
+
 		return true;
 	}
 
@@ -85,6 +95,12 @@ export default class RouteCommunitiesViewChannelEntries extends BaseRouteCompone
 		return this.userEntries.length > 0;
 	}
 
+	get routeTitle() {
+		return this.$gettextInterpolate(`%{ name } Entries`, {
+			name: this.channel.displayTitle,
+		});
+	}
+
 	routeResolved($payload: any) {
 		if ($payload.entries) {
 			this.userEntries = CommunityCompetitionEntry.populate($payload.entries);
@@ -93,6 +109,10 @@ export default class RouteCommunitiesViewChannelEntries extends BaseRouteCompone
 			this.categories = CommunityCompetitionVotingCategory.populate($payload.categories);
 		}
 		this.isLoading = false;
+
+		if (this.routeTitle) {
+			setCommunityMeta(this.community, this.routeTitle);
+		}
 	}
 
 	async onClickSubmit() {

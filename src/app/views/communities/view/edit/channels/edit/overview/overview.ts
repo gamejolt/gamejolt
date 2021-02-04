@@ -45,6 +45,12 @@ export default class RouteCommunitiesViewEditChannelsOverview extends BaseRouteC
 		);
 	}
 
+	get shouldShowArchiveOptions() {
+		return (
+			this.channel.visibility === 'published' && this.community.hasPerms('community-channels')
+		);
+	}
+
 	onSubmit(model: CommunityChannel) {
 		// After submitting the form, redirect to the edit page with the new title if it changed.
 		// The title of the channel is part of the URL.

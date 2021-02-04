@@ -39,7 +39,7 @@
 			</a>
 		</div>
 
-		<div class="-controls">
+		<div v-if="canEditChannel" class="-controls">
 			<app-button
 				primary
 				:to="{

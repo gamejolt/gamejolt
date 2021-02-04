@@ -1,5 +1,8 @@
 import Component from 'vue-class-component';
-import { CommunityCompetition } from '../../../../../../_common/community/competition/competition.model';
+import {
+	CommunityCompetition,
+	CompetitionPeriodVoting,
+} from '../../../../../../_common/community/competition/competition.model';
 import { date } from '../../../../../../_common/filters/date';
 import AppFormControlDate from '../../../../../../_common/form-vue/control/date/date.vue';
 import { FormTimezoneService } from '../../../../../../_common/form-vue/control/date/form-timezone.service';
@@ -33,6 +36,11 @@ export default class FormCommunityCompetitionEdit extends BaseForm<CommunityComp
 		}
 
 		return rules;
+	}
+
+	get shouldShowSaveButton() {
+		// Before and during the competition, start/end dates can be edited.
+		return this.model!.periodNum < CompetitionPeriodVoting;
 	}
 
 	async onInit() {

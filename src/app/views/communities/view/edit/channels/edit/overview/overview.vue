@@ -17,7 +17,7 @@
 			<form-community-channel-description :model="channel" />
 		</template>
 
-		<template v-if="channel.visibility === 'published'">
+		<template v-if="shouldShowArchiveOptions">
 			<div class="well fill-offset -danger-zone">
 				<template v-if="!channel.is_archived">
 					<h4 class="sans-margin-top">

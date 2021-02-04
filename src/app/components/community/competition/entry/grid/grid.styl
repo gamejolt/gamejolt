@@ -21,3 +21,34 @@
 
 		@media $media-md-up
 			width: (100% / 3)
+
+		&-placeholder
+			margin-bottom: 24px
+
+			&-part
+				change-bg('bg-offset')
+
+			&-thumb
+				height: 0
+				padding-top: 56.25% // HD 16:9
+				rounded-corners-lg()
+				position: relative
+				overflow: hidden
+
+			&-overlay
+				position: absolute
+				bottom: 0
+				height: 30px
+				left: 0
+				right: 0
+				background-color: rgba(0, 0, 0, 0.5)
+
+			&-name
+				margin-top: 4px
+				height: $line-height-computed * 1.25
+				rounded-corners()
+
+			&-user
+				margin-top: 5px
+				height: $line-height-computed
+				rounded-corners()

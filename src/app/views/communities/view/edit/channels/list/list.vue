@@ -2,7 +2,11 @@
 
 <template>
 	<app-communities-view-page-container>
-		<app-community-perms :community="community" required="community-channels">
+		<app-community-perms
+			:community="community"
+			required="community-channels,community-competitions"
+			either
+		>
 			<h2 class="section-header">
 				<translate>Channels</translate>
 			</h2>
@@ -17,6 +21,7 @@
 			</div>
 
 			<app-card-list
+				v-if="hasFullChannelsPermission"
 				:items="communityPresetChannels"
 				:active-item="activeItem"
 				:is-adding="isShowingChannelAdd"
@@ -43,13 +48,16 @@
 			</app-card-list>
 
 			<app-card-list v-if="community.channels" :items="community.channels">
-				<app-card-list-draggable @change="saveChannelSort">
+				<component
+					:is="hasFullChannelsPermission ? 'app-card-list-draggable' : 'span'"
+					@change="saveChannelSort"
+				>
 					<app-communities-edit-channel-list-item
 						v-for="channel of community.channels"
 						:key="channel.id"
 						:channel="channel"
 					/>
-				</app-card-list-draggable>
+				</component>
 			</app-card-list>
 
 			<template v-if="community.has_archived_channels">
@@ -65,13 +73,16 @@
 				<template v-if="community._expandedArchivedChannels">
 					<template v-if="community.archivedChannels.length">
 						<app-card-list :items="community.archivedChannels">
-							<app-card-list-draggable @change="saveChannelSortArchived">
+							<component
+								:is="hasFullChannelsPermission ? 'app-card-list-draggable' : 'span'"
+								@change="saveChannelSortArchived"
+							>
 								<app-communities-edit-channel-list-item
 									v-for="channel of community.archivedChannels"
 									:key="channel.id"
 									:channel="channel"
 								/>
-							</app-card-list-draggable>
+							</component>
 						</app-card-list>
 					</template>
 

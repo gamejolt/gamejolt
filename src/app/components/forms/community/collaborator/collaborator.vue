@@ -27,8 +27,20 @@
 					<translate>Full Collaborator</translate>
 					&mdash;
 					<translate class="help-inline">
-						They will be able to access and modify everything for the community. They won't be able
-						to add other collaborators.
+						They will be able to access and modify everything for the community. They
+						won't be able to add other collaborators.
+					</translate>
+				</label>
+			</div>
+			<div class="radio">
+				<label>
+					<app-form-control-radio :value="Collaborator.ROLE_JAM_ORGANIZER" />
+					<translate>Jam Organizer</translate>
+					&mdash;
+					<translate class="help-inline">
+						They will be able to organize Jams within channels of this community, and
+						edit properties of Jam channels. They also have the same abilities as
+						Moderators.
 					</translate>
 				</label>
 			</div>
@@ -38,8 +50,8 @@
 					<translate>Moderator</translate>
 					&mdash;
 					<translate class="help-inline">
-						They will be able to feature community posts, move them between channels and eject them
-						from the community.
+						They will be able to feature community posts, move them between channels and
+						eject them from the community.
 					</translate>
 				</label>
 			</div>

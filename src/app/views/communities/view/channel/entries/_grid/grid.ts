@@ -1,8 +1,10 @@
 import Component from 'vue-class-component';
-import { Inject } from 'vue-property-decorator';
+import { Inject, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router/types/router';
+import { propRequired } from '../../../../../../../utils/vue';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { CommunityCompetitionEntry } from '../../../../../../../_common/community/competition/entry/entry.model';
+import { CommunityCompetitionVotingCategory } from '../../../../../../../_common/community/competition/voting-category/voting-category.model';
 import { number } from '../../../../../../../_common/filters/number';
 import AppPagination from '../../../../../../../_common/pagination/pagination.vue';
 import AppPopper from '../../../../../../../_common/popper/popper.vue';
@@ -11,6 +13,10 @@ import {
 	RouteResolver,
 } from '../../../../../../../_common/route/route-component';
 import AppCommunityCompetitionEntryGrid from '../../../../../../components/community/competition/entry/grid/grid.vue';
+import {
+	CommunityCompetitionEntryModal,
+	CommunityCompetitionEntryModalHashDeregister,
+} from '../../../../../../components/community/competition/entry/modal/modal.service';
 import {
 	CommunityRouteStore,
 	CommunityRouteStoreKey,
@@ -69,25 +75,40 @@ function getValidIgnoreAwardsQueryParam(route: Route) {
 	return null;
 }
 
+function getValidCategoryName(route: Route) {
+	const paramValue = route.query['category'];
+	if (typeof paramValue === 'string') {
+		return paramValue;
+	}
+
+	return null;
+}
+
 function makeRequest(route: Route) {
 	const channel = getChannelPathFromRoute(route);
 
 	const query = [];
 
-	const sort = getValidSortQueryParam(route);
-	if (sort !== null) {
-		query.push(['sort', sort]);
+	const category = getValidCategoryName(route);
+	if (category) {
+		query.push(['category', category]);
+	} else {
+		// Sort and ignore awards are only supported in overall view.
+		const sort = getValidSortQueryParam(route);
+		if (sort !== null) {
+			query.push(['sort', sort]);
+		}
+
+		const ignoreAwards = getValidIgnoreAwardsQueryParam(route);
+		if (ignoreAwards !== null) {
+			// Add as "1" or "0".
+			query.push(['ignore-awards', ((ignoreAwards as any) * 1).toString()]);
+		}
 	}
 
 	const page = getValidPageQueryParam(route);
 	if (page !== null) {
 		query.push(['page', page]);
-	}
-
-	const ignoreAwards = getValidIgnoreAwardsQueryParam(route);
-	if (ignoreAwards !== null) {
-		// Add as "1" or "0".
-		query.push(['ignore-awards', ((ignoreAwards as any) * 1).toString()]);
 	}
 
 	const seed = sessionStorage.getItem(getSeedSessionStorageKey(route));
@@ -116,11 +137,16 @@ function makeRequest(route: Route) {
 	},
 })
 @RouteResolver({
-	deps: { params: ['path', 'channel'], query: ['sort', 'page', 'category', 'ignore-awards'] },
+	deps: {
+		params: ['path', 'channel'],
+		query: ['sort', 'page', 'category', 'ignore-awards'],
+	},
 	resolver: ({ route }) => makeRequest(route),
 })
 export default class RouteCommunitiesViewChannelEntriesGrid extends BaseRouteComponent {
 	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
+
+	@Prop(propRequired(Array)) categories!: CommunityCompetitionVotingCategory[];
 
 	readonly number = number;
 
@@ -128,10 +154,21 @@ export default class RouteCommunitiesViewChannelEntriesGrid extends BaseRouteCom
 	perPage = 50;
 	page = 1;
 	sort = 'random';
+	category: string | null = null;
 	ignoreAwards = false;
+	hashWatchDeregister?: CommunityCompetitionEntryModalHashDeregister;
 
 	get competition() {
 		return this.routeStore.competition!;
+	}
+
+	get canSortBest() {
+		return (
+			this.competition.has_community_voting &&
+			this.competition.is_voting_enabled &&
+			this.competition.period === 'post-comp' &&
+			this.competition.are_results_calculated
+		);
 	}
 
 	get sortOptions() {
@@ -155,11 +192,7 @@ export default class RouteCommunitiesViewChannelEntriesGrid extends BaseRouteCom
 		];
 
 		// Allow sorting by best when community voting and jam is done.
-		if (
-			this.competition.has_community_voting &&
-			this.competition.is_voting_enabled &&
-			this.competition.period === 'post-comp'
-		) {
+		if (this.canSortBest) {
 			options.unshift({
 				text: this.$gettext(`Rank`),
 				sort: 'best',
@@ -177,19 +210,68 @@ export default class RouteCommunitiesViewChannelEntriesGrid extends BaseRouteCom
 		return Math.ceil(this.competition.entry_count / this.perPage);
 	}
 
+	get hasCategories() {
+		return this.categories.length > 0;
+	}
+
+	get categoryOptions() {
+		const options = [
+			{
+				text: this.$gettext(`All Entries`),
+				category: null,
+			} as any,
+		];
+
+		for (const category of this.categories) {
+			options.push({
+				text: category.name,
+				category: category.name,
+			});
+		}
+
+		return options;
+	}
+
+	get selectedCategory() {
+		return this.categories.find(i => i.name === this.category);
+	}
+
 	routeCreated() {
-		const sort = getValidSortQueryParam(this.$route);
-		this.sort = sort || 'random';
+		this.entries = [];
 
 		const page = getValidPageQueryParam(this.$route);
 		this.page = page || 1;
 
-		const ignoreAwards = getValidIgnoreAwardsQueryParam(this.$route);
-		this.ignoreAwards = ignoreAwards || false;
+		const category = getValidCategoryName(this.$route);
+		this.category = category;
+
+		if (this.category) {
+			this.sort = 'best';
+			this.ignoreAwards = false;
+		} else {
+			const sort = getValidSortQueryParam(this.$route);
+			if (sort) {
+				this.sort = sort;
+			} else {
+				if (this.canSortBest) {
+					this.sort = 'best';
+				} else {
+					this.sort = 'random';
+				}
+			}
+
+			const ignoreAwards = getValidIgnoreAwardsQueryParam(this.$route);
+			this.ignoreAwards = ignoreAwards || false;
+		}
 	}
 
 	routeResolved($payload: any) {
 		this.handlePayload($payload);
+
+		CommunityCompetitionEntryModal.showFromHash(this.$router);
+		if (!this.hashWatchDeregister) {
+			this.hashWatchDeregister = CommunityCompetitionEntryModal.watchForHash(this.$router);
+		}
 
 		// Watch the entry count change.
 		// It does when the user adds/removes one of their entries.
@@ -211,6 +293,13 @@ export default class RouteCommunitiesViewChannelEntriesGrid extends BaseRouteCom
 		});
 	}
 
+	destroyed() {
+		if (this.hashWatchDeregister) {
+			this.hashWatchDeregister();
+			this.hashWatchDeregister = undefined;
+		}
+	}
+
 	async reloadPage() {
 		const request = makeRequest(this.$route);
 		const payload = await request;
@@ -223,7 +312,7 @@ export default class RouteCommunitiesViewChannelEntriesGrid extends BaseRouteCom
 
 		// If we receive a seed from backend, store it so it can be sent with the next request.
 		const seed = $payload.seed;
-		if (seed !== null) {
+		if (seed) {
 			sessionStorage.setItem(getSeedSessionStorageKey(this.$route), seed);
 		}
 	}

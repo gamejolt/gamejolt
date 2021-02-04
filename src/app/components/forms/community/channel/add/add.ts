@@ -1,3 +1,4 @@
+import { determine } from 'jstimezonedetect';
 import { Component, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
@@ -8,6 +9,7 @@ import AppFormCommunityChannelPermissions from '../_permissions/permissions.vue'
 
 class FormModel extends CommunityChannel {
 	permission_posting = 'all';
+	timezone: string | null = null;
 }
 
 @Component({
@@ -65,6 +67,8 @@ export default class FormCommunityChannelAdd extends BaseForm<FormModel> impleme
 		this.setField('community_id', this.community.id);
 		this.setField('type', 'post-feed');
 		this.setField('permission_posting', 'all');
+		// Used to submit a default timezone for a competition when creating a competition channel.
+		this.setField('timezone', determine().name());
 	}
 
 	async onChangedDisplayTitle() {

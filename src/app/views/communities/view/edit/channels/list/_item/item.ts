@@ -25,6 +25,11 @@ export default class AppCommunitiesEditChannelListItem extends Vue {
 	}
 
 	get canRemoveChannel() {
+		// Cannot remove when no channel perms
+		if (!this.community.hasPerms('community-channels')) {
+			return false;
+		}
+
 		// Draft channels can always be removed because they don't count towards the active channels.
 		if (this.channel.visibility === 'draft') {
 			return true;
@@ -36,6 +41,18 @@ export default class AppCommunitiesEditChannelListItem extends Vue {
 		}
 
 		return this.community.canRemoveChannel;
+	}
+
+	get canEditChannel() {
+		// When it's a competition channel, mods with competition perms can edit.
+		if (
+			this.channel.type === 'competition' &&
+			this.community.hasPerms('community-competitions')
+		) {
+			return true;
+		}
+
+		return this.community.hasPerms('community-channels');
 	}
 
 	async onClickRemoveChannel(channel: CommunityChannel) {

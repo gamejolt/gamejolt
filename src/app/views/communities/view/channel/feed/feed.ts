@@ -11,7 +11,12 @@ import { ActivityFeedView } from '../../../../../components/activity/feed/view';
 import AppCommunityChannelDescription from '../../../../../components/community/channel/description/description.vue';
 import AppCommunityCompetitionCountdown from '../../../../../components/community/competition/countdown/countdown.vue';
 import { Store } from '../../../../../store';
-import { CommunityRouteStore, CommunityRouteStoreKey, isVirtualChannel } from '../../view.store';
+import {
+	CommunityRouteStore,
+	CommunityRouteStoreKey,
+	isVirtualChannel,
+	setCommunityMeta,
+} from '../../view.store';
 import {
 	doFeedChannelPayload,
 	getFeedChannelSort,
@@ -68,6 +73,42 @@ export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent 
 		return getFeedChannelSort(this.$route);
 	}
 
+	get routeTitle() {
+		this.disableRouteTitleSuffix = true;
+
+		const title = this.$gettextInterpolate(`%{ name } Community on Game Jolt`, {
+			name: this.community.name,
+		});
+
+		const prefixWith = (prefix: string) => `${prefix} - ${title}`;
+
+		if (this.channel === this.routeStore.allChannel) {
+			switch (this.sort) {
+				case 'hot':
+					return prefixWith(this.$gettext('Hot posts'));
+				case 'new':
+					return prefixWith(this.$gettext('New posts'));
+			}
+		}
+
+		switch (this.sort) {
+			case 'hot':
+				return prefixWith(
+					this.$gettextInterpolate('Hot posts in %{ channel }', {
+						channel: this.channel ? this.channel.displayTitle : this.channelPath,
+					})
+				);
+			case 'new':
+				return prefixWith(
+					this.$gettextInterpolate('New posts in %{ channel }', {
+						channel: this.channel ? this.channel.displayTitle : this.channelPath,
+					})
+				);
+		}
+
+		return title;
+	}
+
 	@Watch('communityState.unreadChannels', { immediate: true })
 	onChannelUnreadChanged() {
 		if (
@@ -94,6 +135,10 @@ export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent 
 
 		if (!fromCache && this.user && !isVirtualChannel(this.routeStore, this.channel)) {
 			this.pushViewToGrid();
+		}
+
+		if (this.routeTitle) {
+			setCommunityMeta(this.community, this.routeTitle);
 		}
 	}
 

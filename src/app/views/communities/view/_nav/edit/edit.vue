@@ -20,7 +20,8 @@
 			<app-community-perms
 				tag="li"
 				:community="community"
-				required="community-channels"
+				required="community-channels,community-competitions"
+				either
 				@click.native.capture="onChangeSection('communities.view.edit.channels.list')"
 			>
 				<router-link
