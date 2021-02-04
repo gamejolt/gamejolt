@@ -11,7 +11,7 @@ import { BaseForm, FormOnLoad } from '../../../../../../_common/form-vue/form.se
 export default class FormCommunityChannelDescription extends BaseForm<CommunityChannel>
 	implements FormOnLoad {
 	modelClass = CommunityChannel;
-	saveMethod = '$saveDescription' as '$saveDescription';
+	saveMethod = '$saveDescription' as const;
 	lengthLimit = 5_000;
 
 	get loadUrl() {

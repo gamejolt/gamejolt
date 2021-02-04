@@ -1,3 +1,5 @@
+<script lang="ts" src="./preset"></script>
+
 <template>
 	<app-form name="communityFeaturedFormEdit">
 		<!-- Show the current backgroud image if there is one -->
@@ -28,13 +30,13 @@
 			"
 			:optional="true"
 		>
-			<p class="help-block" v-translate>
+			<p v-translate class="help-block">
 				Your image must be a PNG or JPG.
 				<br />
 				<strong>PNGs are highly recommended as they produce a lossless image.</strong>
 			</p>
 
-			<p class="help-block" v-translate="{ dimensions: maxWidth + '×' + maxHeight }">
+			<p v-translate="{ dimensions: maxWidth + '×' + maxHeight }" class="help-block">
 				Your background image must be smaller than
 				<code>%{dimensions}</code>.
 				<br />
@@ -52,16 +54,16 @@
 			<app-form-control-errors />
 		</app-form-group>
 
-		<app-form-button>
+		<app-form-button show-when-valid>
 			<translate>Save Channel</translate>
 		</app-form-button>
 	</app-form>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-@require '../../../../community/channel/card/variables'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+@import '../../../../community/channel/card/variables'
 
 .-background-preview
 	rounded-corners-lg()
@@ -74,5 +76,3 @@
 	> img
 		width: 100%
 </style>
-
-<script lang="ts" src="./preset"></script>

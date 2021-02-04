@@ -19,7 +19,7 @@
 			<app-form-control-errors />
 		</app-form-group>
 
-		<app-form-button>
+		<app-form-button show-when-valid>
 			<translate>Save Description</translate>
 		</app-form-button>
 	</app-form>

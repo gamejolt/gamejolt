@@ -28,7 +28,7 @@
 			</p>
 		</app-form-group>
 
-		<app-form-button :icon="isAdding ? 'add' : 'edit'" :disabled="!valid">
+		<app-form-button :icon="isAdding ? 'add' : 'edit'" show-when-valid>
 			<translate>Save Award</translate>
 		</app-form-button>
 	</app-form>

@@ -53,6 +53,7 @@
 					<app-button
 						primary
 						icon="edit"
+						block
 						:to="{
 							name: 'communities.view.edit.channels.competition.overview',
 							params: {

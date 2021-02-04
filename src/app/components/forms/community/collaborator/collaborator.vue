@@ -1,6 +1,8 @@
+<script lang="ts" src="./collaborator"></script>
+
 <template>
 	<app-form name="collaboratorForm">
-		<app-form-group name="username" :label="$gettext(`Username`)" v-if="method === 'add'">
+		<app-form-group v-if="method === 'add'" name="username" :label="$gettext(`Username`)">
 			<app-form-control
 				:rules="{
 					max: 100,
@@ -58,11 +60,9 @@
 			<app-form-control-errors />
 		</app-form-group>
 
-		<app-form-button v-if="!!formModel.role">
+		<app-form-button v-if="!!formModel.role" show-when-valid>
 			<translate v-if="method === 'add'">Invite</translate>
 			<translate v-else>Save</translate>
 		</app-form-button>
 	</app-form>
 </template>
-
-<script lang="ts" src="./collaborator"></script>

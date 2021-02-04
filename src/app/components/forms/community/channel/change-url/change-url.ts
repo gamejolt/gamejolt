@@ -1,4 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
+import { propRequired } from '../../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
 import { BaseForm } from '../../../../../../_common/form-vue/form.service';
@@ -14,11 +15,8 @@ type FormModel = {
 	},
 })
 export default class FormCommunityChannelChangeUrl extends BaseForm<FormModel> {
-	@Prop(Community)
-	community!: Community;
-
-	@Prop(Array)
-	channels!: CommunityChannel[];
+	@Prop(propRequired(Community)) community!: Community;
+	@Prop(propRequired(Array)) channels!: CommunityChannel[];
 
 	modelClass = CommunityChannel;
 	resetOnSubmit = true;

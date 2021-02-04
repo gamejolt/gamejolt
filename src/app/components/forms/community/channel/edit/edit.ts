@@ -1,4 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
+import { propRequired } from '../../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
 import AppFormControlUpload from '../../../../../../_common/form-vue/control/upload/upload.vue';
@@ -24,8 +25,7 @@ class FormModel extends CommunityChannel {
 })
 export default class FormCommunityChannelEdit extends BaseForm<FormModel>
 	implements FormOnLoad, FormOnSubmitSuccess {
-	@Prop(Community)
-	community!: Community;
+	@Prop(propRequired(Community)) community!: Community;
 
 	maxFilesize = 0;
 	maxWidth = 0;

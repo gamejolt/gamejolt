@@ -2,7 +2,14 @@
 
 <template>
 	<app-form ref="form" name="communityChannelFormEdit">
-		<app-form-group name="display_title" optional>
+		<app-form-group name="display_title" :label="$gettext(`Display Name`)" optional>
+			<div class="help-block">
+				<translate>
+					This should be short and to the point. If you don't fill in a display name,
+					we'll use your channel's URL path as its name.
+				</translate>
+			</div>
+
 			<app-form-control
 				:rules="{ min: 3, max: 30 }"
 				:validate-on="['blur']"
@@ -12,7 +19,7 @@
 			<app-form-control-errors />
 		</app-form-group>
 
-		<app-form-group name="title" :label="$gettext(`URL`)">
+		<app-form-group name="title" :label="$gettext(`URL Path`)">
 			<app-form-control
 				type="text"
 				:rules="{
@@ -35,7 +42,7 @@
 					when="pattern"
 					:message="
 						$gettext(
-							'Channel names can only contain numbers, letters, and underscores (_).'
+							'Channel URL paths can only contain numbers, letters, and underscores (_).'
 						)
 					"
 				/>
@@ -45,7 +52,7 @@
 		<!-- Show the current backgroud image if there is one -->
 		<div v-if="formModel.background" class="form-group">
 			<label class="control-label">
-				<translate>Current Channel Background Image</translate>
+				<translate>Current Channel Image</translate>
 			</label>
 
 			<div class="-background-preview">
@@ -59,7 +66,7 @@
 
 			<div class="clearfix">
 				<app-button @click="clearBackground">
-					<translate>Clear Background</translate>
+					<translate>Clear Image</translate>
 				</app-button>
 			</div>
 		</div>
@@ -68,8 +75,8 @@
 			name="file"
 			:label="
 				!formModel.background
-					? $gettext('Upload Background Image')
-					: $gettext('Change Background Image')
+					? $gettext('Upload Channel Image')
+					: $gettext('Change Channel Image')
 			"
 			:optional="true"
 		>
@@ -80,7 +87,7 @@
 			</p>
 
 			<p v-translate="{ dimensions: maxWidth + '×' + maxHeight }" class="help-block">
-				Your background image must be smaller than
+				Your channel image must be smaller than
 				<code>%{dimensions}</code>.
 				<br />
 				<strong>Images are cropped to a ratio of 3.8 ÷ 1.</strong>
@@ -99,7 +106,7 @@
 
 		<app-form-community-channel-permissions v-if="!model.is_archived" />
 
-		<app-form-button>
+		<app-form-button show-when-valid>
 			<translate>Save Channel</translate>
 		</app-form-button>
 	</app-form>

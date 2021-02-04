@@ -1,3 +1,5 @@
+<script lang="ts" src="./draggable"></script>
+
 <template>
 	<draggable
 		v-model="items"
@@ -6,5 +8,3 @@
 		<slot />
 	</draggable>
 </template>
-
-<script lang="ts" src="./draggable"></script>

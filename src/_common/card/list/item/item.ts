@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { findRequiredVueParent } from '../../../../utils/vue';
+import { findRequiredVueParent, propOptional, propRequired } from '../../../../utils/vue';
 import AppExpand from '../../../expand/expand.vue';
 import { Screen } from '../../../screen/screen-service';
 import AppCard from '../../card.vue';
@@ -14,8 +14,11 @@ import AppCardList from '../list.vue';
 	},
 })
 export default class AppCardListItem extends Vue {
-	@Prop() item!: any;
-	@Prop(Boolean) forceActive?: boolean;
+	@Prop(propRequired()) item!: any;
+	@Prop(propOptional(Boolean, false)) forceActive!: boolean;
+
+	/** Takes up the padding that would show as if this card was expandable. */
+	@Prop(propOptional(Boolean, false)) forceExpandablePadding!: boolean;
 
 	list: AppCardListTS = null as any;
 

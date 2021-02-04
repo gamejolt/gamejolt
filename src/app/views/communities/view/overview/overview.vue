@@ -1,3 +1,5 @@
+<script lang="ts" src="./overview"></script>
+
 <template>
 	<div>
 		<section v-if="collaboratorInvite" class="section section-thin fill-highlight">
@@ -35,5 +37,3 @@
 		</app-communities-view-page-container>
 	</div>
 </template>
-
-<script lang="ts" src="./overview"></script>

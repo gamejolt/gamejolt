@@ -5,16 +5,16 @@
 		<app-page-header
 			v-if="channel.type === 'competition'"
 			:cover-media-item="competition.header"
-			should-affix-nav
 			:cover-max-height="250"
+			should-affix-nav
 			cover-editable
 		>
-			<template #default>
-				<h1 class="section-header">
-					{{ channel.displayTitle }}
-				</h1>
+			<template #cover-edit-buttons>
+				<translate>Edit Channel Header</translate>
+			</template>
 
-				<p class="text-muted small">
+			<template #default>
+				<div class="text-muted small">
 					<span v-if="channel.visibility === 'draft'" class="tag">
 						<translate>Draft</translate>
 					</span>
@@ -34,12 +34,16 @@
 					<span v-else-if="competition.period === 'post-comp'" class="tag">
 						<translate>Finished</translate>
 					</span>
-				</p>
+				</div>
+
+				<h1 class="section-header">
+					{{ channel.displayTitle }}
+				</h1>
 			</template>
 
 			<template #nav>
 				<div class="-competition-nav">
-					<app-button
+					<!-- <app-button
 						v-app-tooltip="$gettext(`Return to Channel List`)"
 						class="-btn-back"
 						trans
@@ -47,7 +51,7 @@
 						circle
 						icon="chevron-left"
 						:to="{ name: 'communities.view.edit.channels.list' }"
-					/>
+					/> -->
 					<nav class="platform-list inline">
 						<ul>
 							<li>
@@ -83,6 +87,7 @@
 						:to="{
 							name: 'communities.view.channel.feed',
 						}"
+						block
 						icon="arrow-forward"
 					>
 						<translate>View Jam</translate>

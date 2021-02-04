@@ -1,26 +1,15 @@
 <script lang="ts" src="./competition"></script>
 
 <template>
-	<app-communities-view-page-container>
+	<app-communities-view-page-container full>
 		<app-nav-tab-list>
 			<app-communities-edit-competition-nav />
 		</app-nav-tab-list>
 
-		<router-view />
-
-		<!-- <template #sidebar>
-			<nav v-if="!Screen.isMobile" class="platform-list -sidebar-nav">
-				<app-communities-edit-competition-nav />
-			</nav>
-		</template> -->
+		<div class="row">
+			<div class="col-md-8">
+				<router-view />
+			</div>
+		</div>
 	</app-communities-view-page-container>
 </template>
-
-<style lang="stylus" scoped>
-@import '~styles/variables'
-
-// Needed for the icons to show correctly.
-.-sidebar-nav
-	li > a
-		position: relative
-</style>
