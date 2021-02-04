@@ -17,7 +17,7 @@
 		<div class="modal-body">
 			<form-community-eject-post v-if="shouldShowForm" @change="onChangeForm" />
 
-			<app-button primary icon="logout" class="-btn" @click="onEject">
+			<app-button primary icon="eject" @click="onEject">
 				<translate>Eject</translate>
 			</app-button>
 		</div>
@@ -27,9 +27,4 @@
 <style lang="stylus" scoped>
 .-title
 	font-weight: normal
-
-.-btn
-	>>>
-		.jolticon
-			transform: rotateZ(90deg)
 </style>

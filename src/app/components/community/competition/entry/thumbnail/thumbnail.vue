@@ -15,6 +15,9 @@
 							<translate>Rank</translate>
 							<b>#{{ displayRank }}</b>
 						</div>
+						<div v-else-if="shouldShowNoVotes" class="-rank">
+							<translate>No Votes</translate>
+						</div>
 						<div v-if="shouldShowRemove" class="-remove">
 							<app-button
 								v-app-tooltip="$gettext(`Remove Entry`)"
@@ -49,7 +52,7 @@
 							v-app-tooltip="entryAward.community_competition_award.description"
 							class="-award"
 						>
-							<app-jolticon class="-award-icon" icon="crown" highlight />
+							<app-jolticon class="-award-icon" icon="medal" highlight />
 							<small>
 								<b>{{ entryAward.community_competition_award.name }}</b>
 							</small>
@@ -140,7 +143,9 @@
 	text-overflow()
 
 .-award-data
-	margin-top: 4px
+	display: flex
+	flex-direction: column
+	align-items: flex-start
 
 .-award
 	change-bg('bi-bg')
@@ -152,6 +157,7 @@
 	padding-right: 12px
 	display: inline-flex
 	rounded-corners()
+	margin-top: 4px
 
 	&-icon
 		display: inline-block

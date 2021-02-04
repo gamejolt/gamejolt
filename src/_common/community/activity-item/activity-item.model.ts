@@ -126,7 +126,7 @@ export class CommunityActivityItem extends Model {
 			case CommunityActivityItem.TYPE_POST_MOVE:
 				return { icon: 'arrow-forward', color: '' };
 			case CommunityActivityItem.TYPE_POST_EJECT:
-				return { icon: 'remove', color: 'notice' };
+				return { icon: 'eject', color: 'notice' };
 
 			case CommunityActivityItem.TYPE_MOD_INVITE:
 				return { icon: 'friend-add-1', color: '' };

@@ -39,6 +39,7 @@
 				:is-unread="isChannelUnread(channel)"
 				:is-locked="isChannelLocked(channel)"
 				:is-unpublished="isChannelUnpublished(channel)"
+				:channel-type="channel.type"
 				@click.native="toggleLeftPane()"
 			/>
 		</template>
@@ -70,6 +71,7 @@
 						:is-locked="isChannelLocked(channel)"
 						:is-archived="channel.is_archived"
 						:is-unpublished="isChannelUnpublished(channel)"
+						:channel-type="channel.type"
 						@click.native="toggleLeftPane()"
 					/>
 				</template>

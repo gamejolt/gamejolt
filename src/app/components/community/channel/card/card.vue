@@ -40,6 +40,11 @@
 						v-app-tooltip.top="$gettext(`Channel is not publicly visible`)"
 						icon="subscribed"
 					/>
+					<app-jolticon
+						v-if="channelType === 'competition'"
+						v-app-tooltip.top="$gettext(`Jam`)"
+						icon="jams"
+					/>
 					<span :title="label">{{ label }}</span>
 				</div>
 

@@ -105,7 +105,7 @@
 								class="list-group-item has-icon"
 								@click.stop="rejectFromCommunity(i)"
 							>
-								<app-jolticon icon="logout" class="-eject" />
+								<app-jolticon icon="eject" />
 
 								<translate :translate-params="{ community: i.community.name }">
 									Eject from %{ community }
@@ -154,7 +154,4 @@
 		left: -($list-group-icon-width - 1px)
 		top: -2px
 		margin-right: -($list-group-icon-width - 5px)
-
-.-eject
-	transform: rotateZ(90deg)
 </style>

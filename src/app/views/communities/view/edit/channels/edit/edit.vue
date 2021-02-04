@@ -8,6 +8,7 @@
 			:cover-max-height="250"
 			should-affix-nav
 			cover-editable
+			@edit-cover="onClickEditHeader"
 		>
 			<template #cover-edit-buttons>
 				<translate>Edit Channel Header</translate>
