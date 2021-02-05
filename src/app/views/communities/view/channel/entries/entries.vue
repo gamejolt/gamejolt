@@ -12,9 +12,11 @@
 					<translate>You have not submitted an entry to this jam... yet?</translate>
 				</p>
 
-				<app-button icon="add" @click="onClickSubmit">
-					<translate>Submit an entry</translate>
-				</app-button>
+				<p>
+					<app-button icon="add" @click="onClickSubmit">
+						<translate>Submit an entry</translate>
+					</app-button>
+				</p>
 			</template>
 			<template v-else-if="competition.period === 'pre-comp'">
 				<p class="help-block">
