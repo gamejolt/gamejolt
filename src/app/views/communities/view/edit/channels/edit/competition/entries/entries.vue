@@ -1,7 +1,7 @@
 <script lang="ts" src="./entries"></script>
 
 <template>
-	<div>ENTRIES</div>
+	<div>Coming soon...</div>
 </template>
 
 <style lang="stylus" scoped></style>

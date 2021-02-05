@@ -236,6 +236,10 @@ export default class RouteCommunitiesViewChannelEntriesGrid extends BaseRouteCom
 		return this.categories.find(i => i.name === this.category);
 	}
 
+	get shouldShowAwardsFirstOption() {
+		return this.competition.are_results_calculated && this.competition.has_awards;
+	}
+
 	routeCreated() {
 		this.entries = [];
 

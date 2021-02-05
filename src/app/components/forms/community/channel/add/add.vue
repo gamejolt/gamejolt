@@ -69,7 +69,7 @@
 			</div>
 		</app-form-group>
 
-		<app-form-button show-when-valid>
+		<app-form-button :disabled="!isValid">
 			<translate>Add</translate>
 		</app-form-button>
 	</app-form>

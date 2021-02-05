@@ -41,6 +41,7 @@
 		<div>
 			<span v-if="!category" class="pull-right">
 				<app-button
+					v-if="shouldShowAwardsFirstOption"
 					sm
 					class="-awards-first"
 					:icon="ignoreAwards ? 'box-empty' : 'checkbox'"
