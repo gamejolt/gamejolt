@@ -148,7 +148,7 @@
 	align-items: flex-start
 
 .-award
-	change-bg('bi-bg')
+	change-bg('backlight')
 	width: auto
 	color: var(--theme-highlight)
 	padding-top: 4px
