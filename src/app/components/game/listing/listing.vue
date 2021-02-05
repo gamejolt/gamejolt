@@ -1,12 +1,14 @@
+<script lang="ts" src="./listing"></script>
+
 <template>
-	<div class="game-listing" id="games">
-		<section class="section fill-offset nav-only" v-if="!hideFilters">
+	<div id="games" class="game-listing">
+		<section v-if="!hideFilters" class="section fill-offset nav-only">
 			<div class="container">
 				<app-game-filtering-widget :filtering="listing.filteringContainer" />
 			</div>
 		</section>
 
-		<div class="container" v-if="!hideFilters">
+		<div v-if="!hideFilters" class="container">
 			<div class="clearfix">
 				<app-game-filtering-tags :filtering="listing.filteringContainer" />
 			</div>
@@ -18,47 +20,47 @@
 					<ul>
 						<li v-if="includeFeaturedSection">
 							<router-link
+								v-app-no-autoscroll
+								v-app-track-event="`game-list:section-selector:featured`"
 								:to="{ name: $route.name, params: { section: 'featured' } }"
 								:class="{ active: $route.params.section === 'featured' }"
-								gj-no-auto-scroll
-								v-app-track-event="`game-list:section-selector:featured`"
 							>
 								<translate>games.list.sections_selector_featured</translate>
 							</router-link>
 						</li>
 						<li>
 							<router-link
+								v-app-no-autoscroll
+								v-app-track-event="`game-list:section-selector:hot`"
 								:to="{ name: $route.name, params: { section: null } }"
 								:class="{ active: !$route.params.section }"
-								gj-no-auto-scroll
-								v-app-track-event="`game-list:section-selector:hot`"
 							>
 								<translate>games.list.sections_selector_hot</translate>
 							</router-link>
 						</li>
 						<li>
 							<router-link
+								v-app-no-autoscroll
+								v-app-track-event="`game-list:section-selector:best`"
 								:to="{ name: $route.name, params: { section: 'best' } }"
 								:class="{ active: $route.params.section === 'best' }"
-								gj-no-auto-scroll
-								v-app-track-event="`game-list:section-selector:best`"
 							>
 								<translate>games.list.sections_selector_best</translate>
 							</router-link>
 						</li>
 						<li>
 							<router-link
+								v-app-no-autoscroll
+								v-app-track-event="`game-list:section-selector:new`"
 								:to="{ name: $route.name, params: { section: 'new' } }"
 								:class="{ active: $route.params.section === 'new' }"
-								gj-no-auto-scroll
-								v-app-track-event="`game-list:section-selector:new`"
 							>
 								<translate>games.list.sections_selector_new</translate>
 							</router-link>
 						</li>
 					</ul>
 
-					<template slot="meta">
+					<template #meta>
 						<div v-if="listing.isBootstrapped" :class="{ 'text-right': !Screen.isXs }">
 							<translate v-if="listing.gamesCount === 0">
 								No games.
@@ -111,13 +113,10 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
 
 .game-listing
-
 	.game-filtering-tags
 		margin-top: $font-size-base
 		margin-bottom: 0
 </style>
-
-<script lang="ts" src="./listing"></script>

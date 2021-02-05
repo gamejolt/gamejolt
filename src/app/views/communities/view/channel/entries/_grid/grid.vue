@@ -63,6 +63,7 @@
 							<router-link
 								v-for="sortOption of sortOptions"
 								:key="sortOption.sort"
+								v-app-no-autoscroll
 								:to="{ query: { sort: sortOption.sort, page: undefined } }"
 								class="list-group-item has-addon"
 							>

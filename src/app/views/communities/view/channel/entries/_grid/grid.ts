@@ -12,6 +12,7 @@ import {
 	BaseRouteComponent,
 	RouteResolver,
 } from '../../../../../../../_common/route/route-component';
+import { AppNoAutoscroll } from '../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import AppCommunityCompetitionEntryGrid from '../../../../../../components/community/competition/entry/grid/grid.vue';
 import {
 	CommunityCompetitionEntryModal,
@@ -134,6 +135,9 @@ function makeRequest(route: Route) {
 		AppPopper,
 		AppCommunityCompetitionEntryGrid,
 		AppPagination,
+	},
+	directives: {
+		AppNoAutoscroll,
 	},
 })
 @RouteResolver({
