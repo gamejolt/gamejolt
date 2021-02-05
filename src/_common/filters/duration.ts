@@ -16,14 +16,23 @@ const humanizer = humanizeDuration.humanizer({
 	},
 });
 
-export function duration(time: number): string {
+export function duration(time: number, language = 'shortEn'): string {
 	if (typeof time !== 'undefined') {
-		return humanizer(time * 1000, {
-			delimiter: ', ',
-			spacer: '',
-			units: ['d', 'h', 'm', 's'],
-			round: true,
-		});
+		const timeS = time * 1000;
+		if (language === 'shortEn') {
+			return humanizer(timeS, {
+				delimiter: ', ',
+				spacer: '',
+				units: ['d', 'h', 'm', 's'],
+				round: true,
+			});
+		} else {
+			return humanizer(timeS, {
+				language,
+				units: ['d', 'h', 'm', 's'],
+				round: true,
+			});
+		}
 	} else {
 		return '';
 	}

@@ -7,7 +7,6 @@
 			class="community-channel-card sheet sheet-no-full-bleed sheet-full"
 			:class="{ '-active': isActive, 'theme-dark': backgroundItem }"
 			:to="linkTo"
-			:title="label"
 			:style="{ height }"
 		>
 			<div v-if="backgroundItem" class="-card-bg">
@@ -25,13 +24,28 @@
 			<div class="-card-content">
 				<div class="-card-content-title">
 					<app-jolticon
-						v-if="isLocked"
-						v-app-tooltip.left="
-							$gettext(`You do not have permissions to post to this channel.`)
+						v-if="isArchived"
+						v-app-tooltip.top="$gettext(`Archived Channel`)"
+						icon="lock"
+					/>
+					<app-jolticon
+						v-else-if="isLocked"
+						v-app-tooltip.top="
+							$gettext(`You do not have permissions to post to this channel`)
 						"
 						icon="lock"
 					/>
-					{{ label }}
+					<app-jolticon
+						v-if="isUnpublished"
+						v-app-tooltip.top="$gettext(`Channel is not publicly visible`)"
+						icon="subscribed"
+					/>
+					<app-jolticon
+						v-if="channelType === 'competition'"
+						v-app-tooltip.top="$gettext(`Jam`)"
+						icon="jams"
+					/>
+					<span :title="label">{{ label }}</span>
 				</div>
 
 				<div
@@ -42,6 +56,8 @@
 					class="-card-content-unread"
 				/>
 			</div>
+
+			<div v-if="isUnpublished || isArchived" class="-card-unpublished" />
 		</router-link>
 	</div>
 </template>

@@ -89,7 +89,11 @@
 					</div>
 				</div>
 
-				<div v-if="hasSpotlight" class="page-header-spotlight" :class="{ dark: spotlightDark }">
+				<div
+					v-if="hasSpotlight"
+					class="page-header-spotlight"
+					:class="{ dark: spotlightDark }"
+				>
 					<slot name="spotlight" />
 				</div>
 			</div>

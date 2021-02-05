@@ -207,6 +207,33 @@
 						<em>Unlinked</em> a game from this community.
 					</span>
 
+					<span
+						v-else-if="
+							item.type === CommunityActivityItem.TYPE_COMPETITION_EDIT_SETTINGS
+						"
+						v-translate
+					>
+						<em>Edited</em> a jam in this community.
+					</span>
+					<span
+						v-else-if="item.type === CommunityActivityItem.TYPE_COMPETITION_EDIT_VOTING"
+						v-translate
+					>
+						<em>Edited</em> voting settings for a jam in this community.
+					</span>
+					<span
+						v-else-if="
+							item.type === CommunityActivityItem.TYPE_COMPETITION_VOTING_SET_ACTIVE
+						"
+						v-translate="{
+							action: getExtraData('is-active')
+								? $gettext(`Activated`)
+								: $gettext(`Deactivated`),
+						}"
+					>
+						<em>%{ action }</em> voting for a jam in this community.
+					</span>
+
 					<!-- Adds a row to display the given reason for an action.  -->
 					<template v-if="hasReason">
 						<br />

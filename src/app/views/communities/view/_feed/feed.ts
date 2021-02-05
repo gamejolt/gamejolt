@@ -3,12 +3,12 @@ import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { propOptional } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
-import { COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING } from '../../../../../_common/community/channel/channel-permissions';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import AppIllustration from '../../../../../_common/illustration/illustration.vue';
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import AppActivityFeedNewButton from '../../../../components/activity/feed/new-button/new-button.vue';
@@ -29,6 +29,7 @@ import AppBlockedNotice from '../_blocked-notice/blocked-notice.vue';
 		AppNavTabList,
 		AppBlockedNotice,
 		AppExpand,
+		AppIllustration,
 	},
 })
 export default class AppCommunitiesViewFeed extends Vue {
@@ -70,21 +71,25 @@ export default class AppCommunitiesViewFeed extends Vue {
 			// Only show the post add if we have at least one target channel to
 			// post to.
 			if (this.community.channels) {
-				return this.community.channels.some(i =>
-					i.permissions.canPerform(COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING)
-				);
+				return this.community.channels.some(i => i.canPost);
 			}
 		} else {
-			return this.channel.permissions.canPerform(
-				COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING
-			);
+			return this.channel.canPost;
 		}
 
 		return true;
 	}
 
 	get shouldShowTabs() {
-		return this.channel !== this.routeStore.frontpageChannel;
+		if (this.channel === this.routeStore.frontpageChannel) {
+			return false;
+		}
+
+		if (!this.feed || this.feed.hasItems) {
+			return true;
+		}
+
+		return false;
 	}
 
 	get placeholderText() {

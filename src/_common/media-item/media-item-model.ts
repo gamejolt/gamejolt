@@ -22,6 +22,8 @@ export class MediaItem extends Model implements LightboxMediaModel {
 
 	static readonly TYPE_COMMUNITY_DESCRIPTION = 'community-description';
 
+	static readonly TYPE_COMMUNITY_CHANNEL_DESCRIPTION = 'community-channel-description';
+
 	static readonly TYPE_CHAT_MESSAGE = 'chat-message';
 
 	static readonly TYPE_VIDEO_POSTER = 'video-poster';

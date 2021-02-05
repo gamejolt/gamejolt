@@ -18,7 +18,7 @@ export class Timezone {
 			processPayload: false,
 		};
 
-		const response = await Api.sendRequest('/jams/manage/jams/get-timezones', null, options);
+		const response = await Api.sendRequest('/web/timezones/get-list', null, options);
 		return response.data;
 	}
 
@@ -34,7 +34,7 @@ export class Timezone {
 		if (!this.groupedTimezones) {
 			const timezones = await this.getTimezones();
 			this.groupedTimezones = {};
-			for (let timezone of timezones) {
+			for (const timezone of timezones) {
 				const arr = this.groupedTimezones[timezone.r];
 				if (arr) {
 					arr.push(timezone);

@@ -111,21 +111,6 @@
 					</span>
 				</router-link>
 			</li>
-
-			<li class="offline-disable">
-				<a
-					v-app-track-event="`sidebar:jams`"
-					:href="Environment.jamsBaseUrl"
-					target="_blank"
-				>
-					<span class="shell-nav-icon">
-						<app-jolticon icon="jams" />
-					</span>
-					<span class="shell-nav-label">
-						<translate>Jams</translate>
-					</span>
-				</a>
-			</li>
 		</ul>
 
 		<template v-if="app.user">

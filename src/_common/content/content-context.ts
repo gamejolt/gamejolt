@@ -10,7 +10,8 @@ export type ContentContext =
 	| 'user-bio'
 	| 'forum-post'
 	| 'community-description'
-	| 'chat-message';
+	| 'chat-message'
+	| 'community-channel-description';
 
 enum ContextCapabilityType {
 	TextBold,
@@ -173,6 +174,7 @@ export class ContextCapabilities {
 				]);
 			case 'game-description':
 			case 'community-description':
+			case 'community-channel-description':
 				return new ContextCapabilities([
 					ContextCapabilityType.TextBold,
 					ContextCapabilityType.TextItalic,
@@ -267,6 +269,8 @@ export function getMediaItemTypeForContext(context: ContentContext) {
 			return MediaItem.TYPE_COMMUNITY_DESCRIPTION;
 		case 'chat-message':
 			return MediaItem.TYPE_CHAT_MESSAGE;
+		case 'community-channel-description':
+			return MediaItem.TYPE_COMMUNITY_CHANNEL_DESCRIPTION;
 	}
 	throw new Error('There is no matching media item type for the context ' + context);
 }

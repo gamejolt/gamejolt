@@ -11,7 +11,8 @@ export type Roles =
 	| 'community-manager'
 	| 'developer'
 	| 'dj'
-	| 'moderator';
+	| 'moderator'
+	| 'jam-organizer';
 
 export class Collaborator extends Model {
 	static readonly STATUS_ACTIVE = 'active';
@@ -23,6 +24,7 @@ export class Collaborator extends Model {
 	static readonly ROLE_DEVELOPER = 'developer';
 	static readonly ROLE_DJ = 'dj';
 	static readonly ROLE_MODERATOR = 'moderator';
+	static readonly ROLE_JAM_ORGANIZER = 'jam-organizer';
 
 	resource!: 'Game' | 'Community';
 	resource_id!: number;

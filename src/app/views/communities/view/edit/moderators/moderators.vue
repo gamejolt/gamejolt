@@ -1,3 +1,5 @@
+<script lang="ts" src="./moderators"></script>
+
 <template>
 	<app-communities-view-page-container>
 		<h2 class="section-header">
@@ -36,12 +38,13 @@
 						<template v-if="collaborator.role === Collaborator.ROLE_EQUAL_COLLABORATOR">
 							<translate>Collaborator</translate>
 						</template>
+						<template v-else-if="collaborator.role === Collaborator.ROLE_JAM_ORGANIZER">
+							<translate>Jam Organizer</translate>
+						</template>
 						<template v-else-if="collaborator.role === Collaborator.ROLE_MODERATOR">
 							<translate>Moderator</translate>
 						</template>
-						<template v-else>
-							-
-						</template>
+						<template v-else> - </template>
 					</span>
 
 					<template v-if="collaborator.status !== Collaborator.STATUS_ACTIVE">
@@ -61,7 +64,7 @@
 			</app-card-list-item>
 
 			<app-card-list-add
-				:label="$gettext(`Add Collaborator`)"
+				:label="$gettext(`Add Moderator`)"
 				@toggle="isShowingCollaboratorAdd = !isShowingCollaboratorAdd"
 			>
 				<form-community-collaborator :community="community" @submit="onAddedCollaborator" />
@@ -69,5 +72,3 @@
 		</app-card-list>
 	</app-communities-view-page-container>
 </template>
-
-<script lang="ts" src="./moderators"></script>

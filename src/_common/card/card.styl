@@ -1,8 +1,5 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
-gj-card
-	display: block
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .card
 	clearfix()
@@ -20,6 +17,10 @@ gj-card
 		cursor: pointer
 		user-select: none
 
+	// Should match the above padding (expandable).
+	&-expandable-padding
+		padding-left: 40px
+
 	&-draggable
 		padding-right: 40px
 
@@ -33,7 +34,8 @@ gj-card
 		float: right
 		margin-left: 10px
 
-		&, .jolticon
+		&
+		.jolticon
 			cursor: pointer
 
 		&:hover
@@ -51,7 +53,8 @@ gj-card
 		margin-top: 0
 		margin-bottom: 5px
 
-		h4, h5
+		h4
+		h5
 			margin-top: 0
 			margin-bottom: 0
 

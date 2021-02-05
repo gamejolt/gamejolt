@@ -30,8 +30,13 @@ export class CommunityRouteStore {
 			this.frontpageChannel,
 			this.allChannel,
 			...(this.community.channels || []),
+			...this.community.archivedChannels,
 		];
 		return channels.find(i => i.title === this.channelPath) || null;
+	}
+
+	get competition() {
+		return this.channel?.competition;
 	}
 
 	get canEditMedia() {
