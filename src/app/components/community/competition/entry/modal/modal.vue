@@ -91,7 +91,7 @@
 								<translate>View Game</translate>
 							</app-button>
 							<app-button block icon="link" @click="copyShareUrl">
-								<translate>Copy Permalink</translate>
+								<translate>Copy Link</translate>
 							</app-button>
 						</div>
 
@@ -174,7 +174,7 @@
 							<translate>View Game</translate>
 						</app-button>
 						<app-button block icon="link" @click="copyShareUrl">
-							<translate>Copy Permalink</translate>
+							<translate>Copy Link</translate>
 						</app-button>
 					</div>
 				</div>

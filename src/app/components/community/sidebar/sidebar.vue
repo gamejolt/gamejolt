@@ -95,7 +95,7 @@
 					</div>
 
 					<app-button block @click="copyShareUrl">
-						<translate>Copy Permalink</translate>
+						<translate>Copy Link</translate>
 					</app-button>
 				</div>
 			</app-popper>
