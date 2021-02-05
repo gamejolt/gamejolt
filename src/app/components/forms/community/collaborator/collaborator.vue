@@ -40,9 +40,8 @@
 					<translate>Jam Organizer</translate>
 					&mdash;
 					<translate class="help-inline">
-						They will be able to organize Jams within channels of this community, and
-						edit properties of Jam channels. They also have the same abilities as
-						Moderators.
+						They will be able to organize jams of this community, and edit properties of
+						jam channels. They also have the same abilities as Moderators.
 					</translate>
 				</label>
 			</div>

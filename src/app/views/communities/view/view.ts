@@ -140,7 +140,7 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 
 	get isShowingHeader() {
 		if (this.routeStore.channel?.type === 'competition') {
-			return !!this.competitionHeader;
+			return !!this.competitionHeader && !this.isEditing;
 		}
 
 		if (!this.coverMediaItem) {

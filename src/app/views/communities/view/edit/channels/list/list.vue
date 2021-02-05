@@ -38,7 +38,7 @@
 					/>
 				</app-card-list-add>
 
-				<app-community-channel-preset-list-item
+				<app-communities-edit-channel-list-preset-item
 					v-for="presetType of communityPresetChannels"
 					:key="presetType"
 					:community="community"

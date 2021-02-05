@@ -12,13 +12,13 @@ import {
 import { Growls } from '../../../../../../../_common/growls/growls.service';
 import AppLoading from '../../../../../../../_common/loading/loading.vue';
 import { BaseRouteComponent } from '../../../../../../../_common/route/route-component';
-import AppCommunityChannelPresetListItem from '../../../../../../components/community/channel/preset-list-item/preset-list-item.vue';
 import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
 import { CommunityRemoveChannelModal } from '../../../../../../components/community/remove-channel/modal/modal.service';
 import FormCommunityChannelAdd from '../../../../../../components/forms/community/channel/add/add.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey, updateCommunity } from '../../../view.store';
 import AppCommunitiesViewPageContainer from '../../../_page-container/page-container.vue';
 import AppCommunitiesEditChannelListItem from './_item/item.vue';
+import AppCommunitiesEditChannelListPresetItem from './_preset-item/preset-item.vue';
 
 @Component({
 	name: 'RouteCommunitiesViewEditChannels',
@@ -28,8 +28,8 @@ import AppCommunitiesEditChannelListItem from './_item/item.vue';
 		AppCardList,
 		AppCardListDraggable,
 		AppCardListAdd,
-		AppCommunityChannelPresetListItem,
 		FormCommunityChannelAdd,
+		AppCommunitiesEditChannelListPresetItem,
 		AppCommunitiesEditChannelListItem,
 		AppLoading,
 	},

@@ -17,8 +17,9 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../view.st
 	},
 })
 export default class AppCommunitiesEditChannelListItem extends Vue {
-	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
 	@Prop(propRequired(CommunityChannel)) channel!: CommunityChannel;
+
+	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
 
 	get community() {
 		return this.routeStore.community;
