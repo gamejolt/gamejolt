@@ -5,6 +5,7 @@ import { CommunityChannel } from '../../../../../../_common/community/channel/ch
 import { Community } from '../../../../../../_common/community/community.model';
 import AppFormTS from '../../../../../../_common/form-vue/form';
 import { BaseForm, FormOnInit } from '../../../../../../_common/form-vue/form.service';
+import { AppState, AppStore } from '../../../../../../_common/store/app-store';
 import AppFormCommunityChannelPermissions from '../_permissions/permissions.vue';
 
 class FormModel extends CommunityChannel {
@@ -20,6 +21,9 @@ class FormModel extends CommunityChannel {
 export default class FormCommunityChannelAdd extends BaseForm<FormModel> implements FormOnInit {
 	@Prop(propRequired(Community)) community!: Community;
 	@Prop(propRequired(Array)) channels!: CommunityChannel[];
+
+	@AppState
+	user!: AppStore['user'];
 
 	modelClass = FormModel;
 	resetOnSubmit = true;
@@ -57,6 +61,11 @@ export default class FormCommunityChannelAdd extends BaseForm<FormModel> impleme
 			this.formModel.title.trim().length <= 30 &&
 			!this.isTitleTaken(this.formModel.title)
 		);
+	}
+
+	get shouldShowType() {
+		// TODO: for now, only site mods are allowed to create jam channels.
+		return this.user && this.user.permission_level >= 3;
 	}
 
 	isTitleTaken(title: string) {
