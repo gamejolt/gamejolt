@@ -65,7 +65,7 @@
 
 		<app-form-community-channel-permissions />
 
-		<app-form-group name="type" :label="$gettext(`Channel Type`)">
+		<app-form-group v-if="shouldShowType" name="type" :label="$gettext(`Channel Type`)">
 			<div v-for="type of types" :key="type.radioValue" class="radio">
 				<label>
 					<app-form-control-radio type="radio" :value="type.radioValue" />
