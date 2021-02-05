@@ -38,8 +38,10 @@ export default class FormCommunityChannelAdd extends BaseForm<FormModel> impleme
 			},
 			{
 				radioValue: 'competition',
-				text: this.$gettext(`Jam`),
-				helpText: this.$gettext(`Contains a Game Jam`),
+				text: this.$gettext(`Game Jam`),
+				helpText: this.$gettext(
+					`A competition to create games within a certain timeframe, usually around a particular theme`
+				),
 			},
 		];
 	}

@@ -2,7 +2,14 @@
 
 <template>
 	<app-form ref="form" name="communityChannelAddForm">
-		<app-form-group name="display_title" optional>
+		<app-form-group name="display_title" :label="$gettext(`Display Name`)" optional>
+			<div class="help-block">
+				<translate>
+					This should be short and to the point. If you don't fill in a display name,
+					we'll use your channel's URL path as its name.
+				</translate>
+			</div>
+
 			<app-form-control
 				:rules="{ min: 3, max: 30 }"
 				:validate-on="['blur']"
@@ -13,7 +20,7 @@
 			<app-form-control-errors />
 		</app-form-group>
 
-		<app-form-group name="title" :label="$gettext(`URL`)">
+		<app-form-group name="title" :label="$gettext(`URL Path`)">
 			<app-form-control
 				type="text"
 				:rules="{
@@ -26,9 +33,6 @@
 				}"
 				data-vv-delay="500"
 				:validate-on="['blur']"
-				:placeholder="
-					isTitleInitial ? $gettext(`Type a display title to auto-generate`) : ''
-				"
 				@changed="onChangedTitle"
 			/>
 			<app-form-control-errors>
@@ -43,7 +47,9 @@
 
 				<app-form-control-error
 					when="availability"
-					:message="$gettext('A channel with that name already exists.')"
+					:message="
+						$gettext('A channel in this community with that URL path already exists.')
+					"
 				/>
 
 				<app-form-control-error
@@ -59,7 +65,7 @@
 
 		<app-form-community-channel-permissions />
 
-		<app-form-group name="type" :label="$gettext(`Channel content`)">
+		<app-form-group name="type" :label="$gettext(`Channel Type`)">
 			<div v-for="type of types" :key="type.radioValue" class="radio">
 				<label>
 					<app-form-control-radio type="radio" :value="type.radioValue" />

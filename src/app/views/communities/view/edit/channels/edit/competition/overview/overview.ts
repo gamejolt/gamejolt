@@ -3,7 +3,6 @@ import { Inject } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { CommunityCompetitionVotingCategory } from '../../../../../../../../../_common/community/competition/voting-category/voting-category.model';
 import { Environment } from '../../../../../../../../../_common/environment/environment.service';
-import { date } from '../../../../../../../../../_common/filters/date';
 import { duration } from '../../../../../../../../../_common/filters/duration';
 import { Growls } from '../../../../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
@@ -25,10 +24,6 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view
 	directives: {
 		AppTooltip,
 	},
-	filters: {
-		duration,
-		date,
-	},
 })
 @RouteResolver({
 	deps: { params: ['id', 'channel'] },
@@ -44,6 +39,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends
 	isLoading = true;
 
 	readonly Environment = Environment;
+	readonly duration = duration;
 
 	get channel() {
 		return this.routeStore.channel!;
@@ -88,15 +84,15 @@ export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends
 	async onClickPublish() {
 		const result = await ModalConfirm.show(
 			this.$gettext(
-				`Are you sure you want to publish your jam? You will not be able to set it back to "Draft".`
+				`Are you sure you want to publish your jam? You will not be able to set it back to draft.`
 			),
-			this.$gettext(`Publish your Jam`)
+			this.$gettext(`Publish your jam`)
 		);
 
 		if (result) {
 			await this.channel.$publish();
 
-			Growls.success(this.$gettext(`Your Jam has been published!`));
+			Growls.success(this.$gettext(`Your jam has been published!`));
 		}
 	}
 }

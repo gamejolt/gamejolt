@@ -1,7 +1,7 @@
 <script lang="ts" src="./permissions"></script>
 
 <template>
-	<app-form-group name="permission_posting" :label="$gettext('Channel posting permissions')">
+	<app-form-group name="permission_posting" :label="$gettext('Channel Posting Permissions')">
 		<div class="help-inline">
 			<translate>Choose who can post to this channel.</translate>
 		</div>

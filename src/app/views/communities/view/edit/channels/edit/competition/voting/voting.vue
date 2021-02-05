@@ -26,7 +26,7 @@
 				<tbody>
 					<tr>
 						<th>
-							<translate>Voting End Date</translate>
+							<translate>Voting end date</translate>
 						</th>
 						<td>
 							<app-community-competition-date
@@ -59,7 +59,7 @@
 					<template v-if="competition.has_community_voting">
 						<tr>
 							<th>
-								<translate>Who Can Vote?</translate>
+								<translate>Who can vote?</translate>
 							</th>
 							<td>
 								<template v-if="competition.voting_user_restriction === 'users'">
@@ -72,7 +72,7 @@
 						</tr>
 						<tr>
 							<th>
-								<translate>Voting Type</translate>
+								<translate>Voting type</translate>
 							</th>
 							<td>
 								<template v-if="competition.voting_type === 'overall'">
@@ -134,7 +134,6 @@
 					@activate="activeVotingCategory = $event"
 				>
 					<app-card-list-add
-						icon="add"
 						:label="$gettext(`Add Category`)"
 						@toggle="isShowingVotingCategoryAdd = !isShowingVotingCategoryAdd"
 					>
@@ -151,6 +150,14 @@
 							:key="category.id"
 							:item="category"
 						>
+							<a
+								v-app-tooltip="$gettext(`Remove Category`)"
+								class="card-remove"
+								@click.stop="onClickRemoveCategory(category)"
+							>
+								<app-jolticon icon="remove" />
+							</a>
+
 							<div>
 								{{ category.name }}
 							</div>
@@ -159,15 +166,6 @@
 							</div>
 
 							<template #body>
-								<div class="-category-controls">
-									<app-button
-										icon="remove"
-										@click="onClickRemoveCategory(category)"
-									>
-										<translate>Remove Category</translate>
-									</app-button>
-								</div>
-
 								<form-community-competition-voting-category
 									:competition="competition"
 									:model="category"
@@ -210,7 +208,6 @@
 					@activate="activeAward = $event"
 				>
 					<app-card-list-add
-						icon="add"
 						:label="$gettext(`Add Award`)"
 						@toggle="isShowingAwardAdd = !isShowingAwardAdd"
 					>
@@ -227,6 +224,14 @@
 							:key="award.id"
 							:item="award"
 						>
+							<a
+								v-app-tooltip="$gettext(`Remove Award`)"
+								class="card-remove"
+								@click.stop="onClickRemoveAward(award)"
+							>
+								<app-jolticon icon="remove" />
+							</a>
+
 							<div>
 								{{ award.name }}
 							</div>
@@ -235,12 +240,6 @@
 							</div>
 
 							<template #body>
-								<div class="-category-controls">
-									<app-button icon="remove" @click="onClickRemoveAward(award)">
-										<translate>Remove Award</translate>
-									</app-button>
-								</div>
-
 								<form-community-competition-award
 									:competition="competition"
 									:model="award"

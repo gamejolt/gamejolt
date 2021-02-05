@@ -2,7 +2,7 @@
 
 <template>
 	<div>
-		<h2 class="sans-margin-top">
+		<h2 class="section-header">
 			<translate
 				:translate-n="competition.entry_count"
 				:translate-params="{
@@ -81,6 +81,7 @@
 
 			<app-community-competition-entry-grid
 				:competition="competition"
+				:num-placeholders="numPlaceholders"
 				:entries="entries"
 				:current-page="page"
 				:page-count="pageCount"

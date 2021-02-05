@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { Emit, Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../../../utils/vue';
 import {
 	CommunityCompetition,
@@ -21,15 +21,18 @@ import AppCommunityCompetitionEntryThumbnail from '../thumbnail/thumbnail.vue';
 export default class AppCommunityCompetitionEntryGrid extends Vue {
 	@Prop(propRequired(CommunityCompetition)) competition!: CommunityCompetition;
 	@Prop(propRequired(Array)) entries!: CommunityCompetitionEntry[];
-	@Prop(propRequired(Number)) currentPage!: number;
-	@Prop(propRequired(Number)) pageCount!: number;
+	@Prop(propOptional(Number, 0)) currentPage!: number;
+	@Prop(propOptional(Number, 0)) pageCount!: number;
+	@Prop(propOptional(Number, 6)) numPlaceholders!: number;
 	@Prop(propOptional(CommunityCompetitionVotingCategory))
 	category?: CommunityCompetitionVotingCategory;
+	@Prop(propOptional(Boolean, false)) showRemove!: boolean;
+
+	readonly number = number;
 
 	get placeholderCount() {
-		const max = Math.min(this.competition.entry_count, 6);
 		const iterators = [];
-		for (let i = 0; i < max; i++) {
+		for (let i = 0; i < this.numPlaceholders; i++) {
 			iterators.push(i);
 		}
 		return iterators;
@@ -51,5 +54,6 @@ export default class AppCommunityCompetitionEntryGrid extends Vue {
 		);
 	}
 
-	readonly number = number;
+	@Emit('remove')
+	emitRemove(_entry: CommunityCompetitionEntry) {}
 }

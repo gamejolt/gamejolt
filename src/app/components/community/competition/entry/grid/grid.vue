@@ -2,7 +2,7 @@
 
 <template>
 	<div>
-		<p class="text-muted small">
+		<p v-if="pageCount > 0 && currentPage > 0" class="text-muted small">
 			<translate
 				:translate-params="{
 					count: number(pageCount),
@@ -21,6 +21,8 @@
 						:show-rank="shouldShowThumbnailRanks"
 						:voting-category="category"
 						:show-awards="shouldShowThumbnailAwards"
+						:show-remove="showRemove"
+						@remove="emitRemove(entry)"
 					/>
 				</div>
 			</template>

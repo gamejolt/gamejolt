@@ -8,8 +8,7 @@ import { Screen } from '../../../../../../_common/screen/screen-service';
 import { AppState, AppStore } from '../../../../../../_common/store/app-store';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../../components/activity/feed/view';
-import AppCommunityChannelDescription from '../../../../../components/community/channel/description/description.vue';
-import AppCommunityCompetitionCountdown from '../../../../../components/community/competition/countdown/countdown.vue';
+import AppCommunityCompetitionSidebar from '../../../../../components/community/competition/sidebar/sidebar.vue';
 import { Store } from '../../../../../store';
 import {
 	CommunityRouteStore,
@@ -31,9 +30,8 @@ import { CommunitiesViewChannelDeps } from '../channel';
 	components: {
 		AppCommunitiesViewPageContainer,
 		AppCommunitiesViewFeed,
-		AppCommunityChannelDescription,
 		AppIllustration,
-		AppCommunityCompetitionCountdown,
+		AppCommunityCompetitionSidebar,
 	},
 })
 @RouteResolver({
@@ -81,6 +79,10 @@ export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent 
 		});
 
 		const prefixWith = (prefix: string) => `${prefix} - ${title}`;
+
+		if (this.channel.type === 'competition') {
+			return prefixWith(this.channel.displayTitle);
+		}
 
 		if (this.channel === this.routeStore.allChannel) {
 			switch (this.sort) {

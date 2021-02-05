@@ -5,7 +5,7 @@
 		<!-- Show the current backgroud image if there is one -->
 		<div v-if="hasChannelImage" class="form-group">
 			<label class="control-label">
-				<translate>Current Channel Background Image</translate>
+				<translate>Current Channel Image</translate>
 			</label>
 
 			<div class="-background-preview">
@@ -16,7 +16,7 @@
 
 			<div class="clearfix">
 				<app-button @click="clearBackground">
-					<translate>Clear Background</translate>
+					<translate>Clear Image</translate>
 				</app-button>
 			</div>
 		</div>
@@ -25,8 +25,8 @@
 			name="file"
 			:label="
 				!formModel.featured_background
-					? $gettext('Upload Background Image')
-					: $gettext('Change Background Image')
+					? $gettext('Upload Channel Image')
+					: $gettext('Change Channel Image')
 			"
 			:optional="true"
 		>

@@ -9,11 +9,11 @@
 			<!-- Starts on -->
 			<span>
 				<template v-if="competition.periodNum === 0">
-					<translate>Your Jam will start in about</translate>
+					<translate>Your jam will start in about</translate>
 					<app-time-ago without-suffix is-future :date="competition.starts_on" />
 				</template>
 				<template v-else>
-					<translate>Your Jam started about</translate>
+					<translate>Your jam started about</translate>
 					<app-time-ago :date="competition.starts_on" />
 				</template>
 			</span>
@@ -28,7 +28,7 @@
 				<template v-else>
 					<translate>It ran for about</translate>
 				</template>
-				{{ competitionRuntime | duration('en') }}
+				{{ duration(competitionRuntime, 'en') }}
 			</span>
 
 			<br />
@@ -42,7 +42,7 @@
 					<template v-else>
 						<translate>Voting lasted for about</translate>
 					</template>
-					{{ competitionVotingRuntime | duration('en') }}
+					{{ duration(competitionVotingRuntime, 'en') }}
 				</template>
 				<template v-else>
 					<i><translate>Voting is disabled.</translate></i>
@@ -53,13 +53,13 @@
 		<div v-if="shouldShowCategoryWarning" class="alert alert-notice">
 			<p>
 				<span v-translate>
-					Your Jam is set to let users vote on Voting Categories once the voting period
+					Your jam is set to let users vote within categories once the voting period
 					starts. However, <b>no voting categories are set up</b>.
 				</span>
 			</p>
 			<p>
 				<span v-translate>
-					You must set up voting categories before the Jam is over, or users
+					You must set up voting categories before the jam is over, or users
 					<b>will not be able to vote on entries</b>.
 				</span>
 			</p>
@@ -72,13 +72,13 @@
 					name: 'communities.view.edit.channels.competition.voting',
 				}"
 			>
-				<translate>Set up Voting Categories</translate>
+				<translate>Set Up Voting</translate>
 			</app-button>
 		</div>
 
 		<div v-if="channel.visibility === 'draft'" class="alert alert-notice">
 			<p>
-				<span v-translate><b>This Jam is a draft</b> and only moderators can view it.</span>
+				<span v-translate><b>This jam is a draft</b> and only moderators can view it.</span>
 			</p>
 			<p>
 				<translate>
@@ -95,23 +95,31 @@
 			<tbody>
 				<tr>
 					<th>
-						<translate>Jam Name</translate>
-					</th>
-					<td>
-						{{ channel.displayTitle }}
-
+						<translate>Jam name</translate>
 						<app-jolticon
 							v-app-tooltip="
-								$gettext(`The Jam's name is the same as the channel display title`)
+								$gettext(
+									`The jam's name is the same as the channel's display name.`
+								)
 							"
 							class="text-muted"
 							icon="info-circle"
 						/>
+					</th>
+					<td>
+						{{ channel.displayTitle }}
 					</td>
 				</tr>
 				<tr>
 					<th>
 						<translate>URL</translate>
+						<app-jolticon
+							v-app-tooltip="
+								$gettext(`The jam's URL is the same as the channel's URL path.`)
+							"
+							class="text-muted"
+							icon="info-circle"
+						/>
 					</th>
 					<td>
 						<router-link :to="{ name: 'communities.view.channel.feed' }">
@@ -140,7 +148,7 @@
 				</tr>
 				<tr>
 					<th>
-						<translate>Start Date and Time</translate>
+						<translate>Start date</translate>
 					</th>
 					<td>
 						<app-community-competition-date
@@ -151,7 +159,7 @@
 				</tr>
 				<tr>
 					<th>
-						<translate>End Date and Time</translate>
+						<translate>End date</translate>
 					</th>
 					<td>
 						<app-community-competition-date
@@ -162,7 +170,7 @@
 				</tr>
 				<tr v-if="competition.is_voting_enabled">
 					<th>
-						<translate>Voting End Date and Time</translate>
+						<translate>Voting end date</translate>
 					</th>
 					<td>
 						<app-community-competition-date

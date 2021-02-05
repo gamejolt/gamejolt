@@ -1,3 +1,5 @@
+<script lang="ts" src="./blocks"></script>
+
 <template>
 	<app-communities-view-page-container full>
 		<h2 class="section-header">
@@ -7,7 +9,8 @@
 		<div class="page-help">
 			<p>
 				<translate>
-					Block users from contributing to this community. They will not be able to join or post.
+					Block users from contributing to this community. They will not be able to join
+					or post.
 				</translate>
 			</p>
 		</div>
@@ -24,41 +27,46 @@
 						<th class="-header" @click="changeSort('name')">
 							<translate>Blocked user</translate>
 							<span v-if="sort === 'name'">
-								<app-jolticon :icon="sortIcon" v-app-tooltip="sortDirectionLabel" />
+								<app-jolticon v-app-tooltip="sortDirectionLabel" :icon="sortIcon" />
 							</span>
 						</th>
 						<th class="-header" @click="changeSort('blocker')">
 							<translate>Issued by</translate>
 							<span v-if="sort === 'blocker'">
-								<app-jolticon :icon="sortIcon" v-app-tooltip="sortDirectionLabel" />
+								<app-jolticon v-app-tooltip="sortDirectionLabel" :icon="sortIcon" />
 							</span>
 						</th>
 						<th class="-header" @click="changeSort('blocked-on')">
 							<translate>Blocked on</translate>
 							<span v-if="sort === 'blocked-on'">
-								<app-jolticon :icon="sortIcon" v-app-tooltip="sortDirectionLabel" />
+								<app-jolticon v-app-tooltip="sortDirectionLabel" :icon="sortIcon" />
 							</span>
 						</th>
 						<th class="-header" @click="changeSort('expires-on')">
 							<translate>Expires</translate>
 							<span v-if="sort === 'expires-on'">
-								<app-jolticon :icon="sortIcon" v-app-tooltip="sortDirectionLabel" />
+								<app-jolticon v-app-tooltip="sortDirectionLabel" :icon="sortIcon" />
 							</span>
 						</th>
-						<th></th>
+						<th />
 					</tr>
 				</thead>
 				<tbody>
 					<tr v-for="block of blocks" :key="block.user.id" class="-row">
 						<td>
 							<router-link
-								:to="{ name: 'profile.overview', params: { username: block.user.username } }"
+								:to="{
+									name: 'profile.overview',
+									params: { username: block.user.username },
+								}"
 								class="-user-link"
 							>
 								<app-user-card-hover :user="block.user">
 									<span class="-user-link">
 										<app-user-avatar-img class="-avatar" :user="block.user" />
-										<span class="-user-link-name">@{{ block.user.username }}</span>
+										<span class="-user-link-name">
+											@{{ block.user.username }}
+										</span>
 									</span>
 								</app-user-card-hover>
 							</router-link>
@@ -75,8 +83,13 @@
 							>
 								<app-user-card-hover :user="block.blocked_by_user">
 									<span class="-user-link">
-										<app-user-avatar-img class="-avatar" :user="block.blocked_by_user" />
-										<span class="-user-link-name"> @{{ block.blocked_by_user.username }} </span>
+										<app-user-avatar-img
+											class="-avatar"
+											:user="block.blocked_by_user"
+										/>
+										<span class="-user-link-name">
+											@{{ block.blocked_by_user.username }}
+										</span>
 									</span>
 								</app-user-card-hover>
 							</router-link>
@@ -98,10 +111,10 @@
 
 						<td>
 							<app-jolticon
-								class="-lift"
-								@click.native="onClickLift(block)"
-								icon="remove"
 								v-app-tooltip="$gettext(`Lift Block`)"
+								class="-lift"
+								icon="remove"
+								@click.native="onClickLift(block)"
 							/>
 						</td>
 					</tr>
@@ -120,8 +133,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .table
 	margin-top: 20px
@@ -154,5 +167,3 @@
 .-lift
 	cursor: pointer
 </style>
-
-<script lang="ts" src="./blocks"></script>

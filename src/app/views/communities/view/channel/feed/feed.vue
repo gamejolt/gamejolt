@@ -1,12 +1,12 @@
 <script lang="ts" src="./feed"></script>
 
 <template>
-	<app-communities-view-page-container class="-container">
+	<app-communities-view-page-container>
 		<template #default>
-			<div v-if="channel.visibility === 'draft'" class="col-md-6 col-centered">
+			<div v-if="channel.visibility === 'draft'">
 				<app-illustration src="~img/ill/no-comments.svg">
 					<translate>
-						This channel is a "Draft". When it gets published, the post feed will appear
+						This is a draft channel. When it gets published, the post feed will appear
 						here.
 					</translate>
 				</app-illustration>
@@ -20,19 +20,11 @@
 		</template>
 
 		<template #sidebar>
-			<app-community-competition-countdown
+			<app-community-competition-sidebar
 				v-if="channel.type === 'competition'"
-				class="-countdown"
-				:competition="channel.competition"
+				:community="community"
+				:channel="channel"
 			/>
-			<div v-if="channel.description_content">
-				<app-community-channel-description :channel="channel" />
-			</div>
 		</template>
 	</app-communities-view-page-container>
 </template>
-
-<style lang="stylus" scoped>
-.-countdown
-	margin-bottom: 32px
-</style>

@@ -28,7 +28,7 @@
 			</p>
 		</app-form-group>
 
-		<app-form-button :icon="isAdding ? 'add' : 'edit'" show-when-valid>
+		<app-form-button show-when-valid>
 			<translate>Save Category</translate>
 		</app-form-button>
 	</app-form>

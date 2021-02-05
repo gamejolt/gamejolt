@@ -31,14 +31,9 @@
 				<app-media-item-cover :media-item="coverMediaItem" />
 			</div>
 
-			<!-- Inline Community Card - used as header/navigation -->
-			<template v-if="!routeStore.isShowingSidebar">
-				<app-communities-view-card
-					overflow
-					inline
-					:as-header="!isShowingHeader"
-					:has-unread="hasUnreadPosts"
-				/>
+			<!-- Mobile Header -->
+			<template v-if="!routeStore.isShowingSidebar && !isEditing">
+				<app-mobile-header :has-unread="hasUnreadPosts" />
 			</template>
 
 			<router-view />

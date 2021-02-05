@@ -2,26 +2,24 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Inject } from 'vue-property-decorator';
 import { number } from '../../../../../../../_common/filters/number';
+import AppNavTabList from '../../../../../../../_common/nav/tab-list/tab-list.vue';
 import { Screen } from '../../../../../../../_common/screen/screen-service';
-import AppCommunityCompetitionCountdown from '../../../../../../components/community/competition/countdown/countdown.vue';
 import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
-import AppPageHeaderControls from '../../../../../../components/page-header/controls/controls.vue';
-import AppPageHeader from '../../../../../../components/page-header/page-header.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../view.store';
+import AppCommunitiesViewPageContainer from '../../../_page-container/page-container.vue';
 
 @Component({
 	components: {
-		AppCommunityCompetitionCountdown,
-		AppPageHeader,
-		AppPageHeaderControls,
+		AppCommunitiesViewPageContainer,
 		AppCommunityPerms,
-	},
-	filters: {
-		number,
+		AppNavTabList,
 	},
 })
 export default class AppCommunitiesViewChannelHeaderCompetition extends Vue {
 	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
+
+	readonly number = number;
+	readonly Screen = Screen;
 
 	get channel() {
 		return this.routeStore.channel!;
@@ -34,10 +32,4 @@ export default class AppCommunitiesViewChannelHeaderCompetition extends Vue {
 	get competition() {
 		return this.channel.competition!;
 	}
-
-	get shouldShowDescription() {
-		return Screen.isMobile || this.$route.name === 'communities.view.channel.description';
-	}
-
-	readonly Screen = Screen;
 }

@@ -162,6 +162,10 @@ export default class RouteCommunitiesViewChannelEntriesGrid extends BaseRouteCom
 		return this.routeStore.competition!;
 	}
 
+	get numPlaceholders() {
+		return Math.min(this.competition.entry_count, 6);
+	}
+
 	get canSortBest() {
 		return (
 			this.competition.has_community_voting &&

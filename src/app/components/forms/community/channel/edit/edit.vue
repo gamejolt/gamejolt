@@ -35,7 +35,9 @@
 			<app-form-control-errors>
 				<app-form-control-error
 					when="availability"
-					:message="$gettext('A channel with that name already exists.')"
+					:message="
+						$gettext('A channel in this community with that URL path already exists.')
+					"
 				/>
 
 				<app-form-control-error

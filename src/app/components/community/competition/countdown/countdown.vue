@@ -2,14 +2,16 @@
 
 <template>
 	<div>
-		<h2 class="-title">{{ titleText }}</h2>
+		<h2 class="sans-margin-top">{{ titleText }}</h2>
 
 		<div v-if="blocksData.length" class="-blocks">
 			<div v-for="blockData of blocksData" :key="blockData.text" class="-block-container">
 				<div class="-block">
 					<div class="-block-digits">
-						<div class="-block-digit">{{ blockData.digit1 }}</div>
-						<div class="-block-digit">{{ blockData.digit2 }}</div>
+						<div class="-block-digit">
+							{{ blockData.digit1 }}
+							{{ blockData.digit2 }}
+						</div>
 					</div>
 					<div class="-block-text">
 						<span class="text-muted">{{ blockData.text }}</span>
@@ -25,11 +27,6 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 
-.-title
-	text-align: center
-	margin-top: 0
-	margin-bottom: 12px
-
 .-block-container
 	display: inline-flex
 	align-items: center
@@ -40,16 +37,12 @@
 	align-items: center
 
 .-block-digit
-	display: inline-block
-	font-size: $font-size-large
-	font-weight: bold
-	background-color: var(--theme-bg)
-	padding-left: 8px
-	padding-right: 8px
-	padding-top: 4px
-	padding-bottom: 4px
 	rounded-corners()
 	elevate-1()
+	display: inline-block
+	font-weight: bold
+	background-color: var(--theme-bg)
+	padding: 4px 6px
 
 .-block-text
 	margin-top: 4px
@@ -57,8 +50,8 @@
 
 .-block-separator
 	display: inline-block
-	margin-left: 16px
-	margin-right: 16px
+	margin-left: 8px
+	margin-right: 8px
 	margin-bottom: 20px
 	font-size: $font-size-large
 	font-weight: bold

@@ -12,7 +12,7 @@ import AppIllustration from '../../../../../../_common/illustration/illustration
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { AppState, AppStore } from '../../../../../../_common/store/app-store';
-import AppCommunityCompetitionEntryThumbnail from '../../../../../components/community/competition/entry/thumbnail/thumbnail.vue';
+import AppCommunityCompetitionEntryGrid from '../../../../../components/community/competition/entry/grid/grid.vue';
 import {
 	CommunityRouteStore,
 	CommunityRouteStoreKey,
@@ -24,7 +24,7 @@ import {
 	name: 'RouteCommunitiesViewChannelEntries',
 	components: {
 		AppIllustration,
-		AppCommunityCompetitionEntryThumbnail,
+		AppCommunityCompetitionEntryGrid,
 	},
 })
 @RouteResolver({
