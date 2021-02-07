@@ -1,7 +1,8 @@
 <script lang="ts" src="./edit"></script>
 
 <template>
-	<div>
+	<!-- Read comment in routeResolved for why the channel might not exist yet. -->
+	<div v-if="channel">
 		<app-page-header v-bind="pageHeaderProps" should-affix-nav @edit-cover="onClickEditHeader">
 			<template v-if="canEditHeader" #cover-edit-buttons>
 				<translate>Upload Header</translate>
