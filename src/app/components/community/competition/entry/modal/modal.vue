@@ -1,7 +1,7 @@
 <script lang="ts" src="./modal"></script>
 
 <template>
-	<app-modal>
+	<app-modal class="-entry-modal">
 		<div class="modal-controls">
 			<app-button @click="modal.dismiss()">
 				<translate>Close</translate>
@@ -39,7 +39,7 @@
 								</div>
 								<div class="-entered-date">
 									<translate>Entered on</translate>
-									<b>{{ m_entry.added_on | date('short') }}</b>
+									<b>{{ date(m_entry.added_on, 'short') }}</b>
 									<i class="text-muted">
 										(<app-time-ago :date="m_entry.added_on" strict />)
 									</i>
@@ -54,7 +54,7 @@
 								class="-award"
 							>
 								<app-jolticon
-									v-app-tooltip="$gettext(`Jam Award`)"
+									v-app-tooltip.touchable="$gettext(`Jam Award`)"
 									class="-award-icon"
 									icon="medal"
 									big
@@ -138,17 +138,8 @@
 							</template>
 							<app-activity-feed-placeholder v-if="!feed || !feed.isBootstrapped" />
 							<template v-else>
-								<div
-									v-if="feed.hasItems"
-									class="-feed"
-									:class="{ '-feed-has-more': shouldShowFeedMore }"
-								>
-									<app-activity-feed class="-activity-feed" :feed="feed" />
-									<div v-if="shouldShowFeedMore" class="-feed-more">
-										<div class="-feed-more-item -feed-more-item-1" />
-										<div class="-feed-more-item -feed-more-item-2" />
-										<div class="-feed-more-item -feed-more-item-3" />
-									</div>
+								<div v-if="feed.hasItems">
+									<app-activity-feed :feed="feed" />
 								</div>
 								<div v-else class="alert">
 									<translate>
@@ -189,6 +180,11 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 
+.-entry-modal
+	>>>
+		.modal-content
+			change-bg('bg-backdrop')
+
 .-section
 	margin-bottom: 24px
 
@@ -226,47 +222,4 @@
 	&-details
 		margin-left: 64px
 		margin-top: 4px
-
-.-activity-feed
-	position: relative
-	z-index: 2
-
-.-feed
-	position: relative
-
-	&-has-more
-		margin-bottom: 32px
-
-	&-more
-		z-index: 1
-		position: absolute
-		bottom: 0
-		left: 0
-		right: 0
-
-		&-item
-			position: absolute
-			background-color: var(--theme-bg-backdrop)
-			width: 100%
-			rounded-corners-lg()
-			height: 100px
-			elevate-2()
-
-			&-1
-				bottom: -10px
-				z-index: 3
-				transform: scale(0.85)
-				opacity: 0.85
-
-			&-2
-				bottom: -30px
-				z-index: 2
-				transform: scale(0.7)
-				opacity: 0.7
-
-			&-3
-				bottom: -50px
-				z-index: 1
-				transform: scale(0.55)
-				opacity: 0.55
 </style>

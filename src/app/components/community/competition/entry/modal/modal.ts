@@ -63,6 +63,7 @@ export default class AppCommunityCompetitionEntryModal extends BaseModal {
 	returnedFeedItems = 0;
 
 	readonly Screen = Screen;
+	readonly date = date;
 
 	get title() {
 		return this.m_entry ? this.m_entry.resource.title : this.$gettext(`Loading...`);
@@ -93,10 +94,6 @@ export default class AppCommunityCompetitionEntryModal extends BaseModal {
 
 	get sortedAwards() {
 		return this.m_entry!.awards!.sort((a, b) => numberSort(a.sort, b.sort));
-	}
-
-	get shouldShowFeedMore() {
-		return this.returnedFeedItems > 3;
 	}
 
 	created() {
@@ -138,6 +135,7 @@ export default class AppCommunityCompetitionEntryModal extends BaseModal {
 		this.feed = ActivityFeedService.routed(
 			this.feed,
 			{
+				name: 'competition-entry-devlog',
 				type: 'EventItem',
 				url: `/web/posts/fetch/game/${this.m_entry.resource.id}`,
 				slice: 3,
