@@ -97,7 +97,7 @@
 					<th>
 						<translate>Jam name</translate>
 						<app-jolticon
-							v-app-tooltip="
+							v-app-tooltip.touchable="
 								$gettext(
 									`The jam's name is the same as the channel's display name.`
 								)
@@ -114,7 +114,7 @@
 					<th>
 						<translate>URL</translate>
 						<app-jolticon
-							v-app-tooltip="
+							v-app-tooltip.touchable="
 								$gettext(`The jam's URL is the same as the channel's URL path.`)
 							"
 							class="text-muted"

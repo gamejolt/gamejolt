@@ -12,7 +12,7 @@
 					{{ votingCategory.name }}
 					<app-jolticon
 						v-if="votingCategory.description"
-						v-app-tooltip="votingCategory.description"
+						v-app-tooltip.touchable="votingCategory.description"
 						class="text-muted"
 						icon="help-circle"
 					/>

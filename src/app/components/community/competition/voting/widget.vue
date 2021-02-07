@@ -190,7 +190,7 @@
 												voteResult.community_competition_voting_category_id
 											)
 										"
-										v-app-tooltip="
+										v-app-tooltip.touchable="
 											getVotingCategoryDescription(
 												voteResult.community_competition_voting_category_id
 											)
