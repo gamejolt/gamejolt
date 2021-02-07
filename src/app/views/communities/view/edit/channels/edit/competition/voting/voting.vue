@@ -104,7 +104,7 @@
 				<translate>Change</translate>
 			</app-button>
 
-			<template v-if="canEditVotingCategories">
+			<template v-if="votingCategoriesEnabled">
 				<h3>
 					<translate>Voting Categories</translate>
 				</h3>
@@ -123,57 +123,85 @@
 					</translate>
 				</p>
 
-				<div v-if="!hasVotingCategories" class="alert alert-notice">
-					<translate>You must add categories before voting starts.</translate>
-				</div>
+				<template v-if="canEditVotingCategories">
+					<div v-if="!hasVotingCategories" class="alert alert-notice">
+						<translate>You must add categories before voting starts.</translate>
+					</div>
 
-				<app-card-list
-					:items="votingCategories"
-					:active-item="activeVotingCategory"
-					:is-adding="isShowingVotingCategoryAdd"
-					@activate="activeVotingCategory = $event"
-				>
-					<app-card-list-add
-						:label="$gettext(`Add Category`)"
-						@toggle="isShowingVotingCategoryAdd = !isShowingVotingCategoryAdd"
+					<app-card-list
+						:items="votingCategories"
+						:active-item="activeVotingCategory"
+						:is-adding="isShowingVotingCategoryAdd"
+						@activate="activeVotingCategory = $event"
 					>
-						<form-community-competition-voting-category
-							:competition="competition"
-							@submit="onCategoryAddSubmit"
-						/>
-					</app-card-list-add>
-
-					<app-card-list-draggable @change="saveCategorySort">
-						<app-card-list-item
-							v-for="category in votingCategories"
-							:id="`category-container-${category.id}`"
-							:key="category.id"
-							:item="category"
+						<app-card-list-add
+							:label="$gettext(`Add Category`)"
+							@toggle="isShowingVotingCategoryAdd = !isShowingVotingCategoryAdd"
 						>
-							<a
-								v-app-tooltip="$gettext(`Remove Category`)"
-								class="card-remove"
-								@click.stop="onClickRemoveCategory(category)"
+							<form-community-competition-voting-category
+								:competition="competition"
+								@submit="onCategoryAddSubmit"
+							/>
+						</app-card-list-add>
+
+						<app-card-list-draggable @change="saveCategorySort">
+							<app-card-list-item
+								v-for="category in votingCategories"
+								:id="`category-container-${category.id}`"
+								:key="category.id"
+								:item="category"
 							>
-								<app-jolticon icon="remove" />
-							</a>
+								<a
+									v-app-tooltip="$gettext(`Remove Category`)"
+									class="card-remove"
+									@click.stop="onClickRemoveCategory(category)"
+								>
+									<app-jolticon icon="remove" />
+								</a>
 
-							<div>
-								{{ category.name }}
-							</div>
-							<div v-if="category.description">
-								<small class="text-muted">{{ category.description }}</small>
-							</div>
+								<div>
+									{{ category.name }}
+								</div>
+								<div v-if="category.description">
+									<small class="text-muted">{{ category.description }}</small>
+								</div>
 
-							<template #body>
-								<form-community-competition-voting-category
-									:competition="competition"
-									:model="category"
-								/>
-							</template>
-						</app-card-list-item>
-					</app-card-list-draggable>
-				</app-card-list>
+								<template #body>
+									<form-community-competition-voting-category
+										:competition="competition"
+										:model="category"
+									/>
+								</template>
+							</app-card-list-item>
+						</app-card-list-draggable>
+					</app-card-list>
+				</template>
+
+				<template v-else>
+					<div v-if="!hasVotingCategories" class="alert alert-notice">
+						<translate>
+							No voting categories were added before voting began. Because of this,
+							users cannot vote on entries.
+						</translate>
+					</div>
+					<template v-else>
+						<app-card-list :items="votingCategories">
+							<app-card-list-item
+								v-for="category in votingCategories"
+								:id="`category-container-${category.id}`"
+								:key="category.id"
+								:item="category"
+							>
+								<div>
+									{{ category.name }}
+								</div>
+								<div v-if="category.description">
+									<small class="text-muted">{{ category.description }}</small>
+								</div>
+							</app-card-list-item>
+						</app-card-list>
+					</template>
+				</template>
 			</template>
 
 			<template v-if="canEditAwards">
