@@ -74,7 +74,7 @@
 						</div>
 
 						<!-- Right column hidden on mobile, show inline -->
-						<div v-if="Screen.isMobile" class="-section">
+						<div v-if="Screen.isMobile" class="-section -mobile-thumb">
 							<router-link :to="m_entry.resource.routeLocation">
 								<app-game-thumbnail-img
 									class="-game-thumb"
@@ -207,6 +207,9 @@
 
 .-game-thumb
 	margin-bottom: 16px
+
+.-mobile-thumb
+	margin-top: 16px
 
 .-award
 	margin-top: 16px
