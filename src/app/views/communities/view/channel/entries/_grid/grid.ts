@@ -320,6 +320,9 @@ export default class RouteCommunitiesViewChannelEntriesGrid extends BaseRouteCom
 
 	handlePayload($payload: any) {
 		this.entries = CommunityCompetitionEntry.populate($payload.entries);
+		if (this.entries.length > this.competition.entry_count) {
+			this.competition.entry_count = this.entries.length;
+		}
 		this.perPage = $payload.perPage;
 
 		// If we receive a seed from backend, store it so it can be sent with the next request.
