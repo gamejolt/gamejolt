@@ -6,12 +6,12 @@ import { Modal } from '../../../../../../_common/modal/modal.service';
 export type CommunityCompetitionEntryModalHashDeregister = () => void;
 
 export class CommunityCompetitionEntryModal {
-	static async showEntry(router: VueRouter, entry: CommunityCompetitionEntry) {
-		return this.show(router, entry.id, { entry });
+	static async showEntry(entry: CommunityCompetitionEntry) {
+		return this.show({ entry });
 	}
 
-	static async showId(router: VueRouter, entryId: number) {
-		return this.show(router, entryId, { entryId });
+	private static async showId(entryId: number) {
+		return this.show({ entryId });
 	}
 
 	static async showFromHash(router: VueRouter) {
@@ -25,10 +25,10 @@ export class CommunityCompetitionEntryModal {
 			return;
 		}
 
-		return this.showId(router, id);
+		return this.showId(id);
 	}
 
-	private static async show(router: VueRouter, entryId: number, props: any) {
+	private static async show(props: any) {
 		return await Modal.show<void>({
 			modalId: 'CommunityCompetitionEntry',
 			component: () =>
