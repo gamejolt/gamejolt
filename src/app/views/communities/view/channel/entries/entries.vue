@@ -31,7 +31,7 @@
 			<template v-else-if="channel.visibility === 'draft'">
 				<p v-if="!hasSubmittedEntries" class="help-block">
 					<translate>
-						The jam is setup as a draft. Publish the jam to open submissions.
+						The jam is set up as a draft. Publish the jam to open submissions.
 					</translate>
 				</p>
 			</template>
