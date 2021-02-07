@@ -127,7 +127,7 @@
 										keep up with this game's development by following it.
 									</translate>
 								</p>
-								<app-game-badge :game="m_entry.resource" />
+								<app-game-badge class="full-bleed-xs" :game="m_entry.resource" />
 							</template>
 							<template v-else>
 								<p>
