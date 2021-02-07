@@ -11,6 +11,7 @@
 			<ul>
 				<li>
 					<router-link
+						v-app-no-autoscroll
 						:to="{
 							name: 'communities.view.channel.feed',
 						}"
@@ -21,6 +22,7 @@
 				</li>
 				<li>
 					<router-link
+						v-app-no-autoscroll
 						:to="{
 							name: 'communities.view.channel.entries',
 						}"

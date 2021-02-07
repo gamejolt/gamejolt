@@ -18,6 +18,7 @@
 			<router-link
 				v-for="categoryOption of categoryOptions"
 				:key="categoryOption.text"
+				v-app-no-autoscroll
 				:to="{
 					query: {
 						category: categoryOption.category || undefined,
