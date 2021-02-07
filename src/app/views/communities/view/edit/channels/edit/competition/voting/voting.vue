@@ -34,12 +34,17 @@
 								:timezone="competition.timezone"
 							/>
 							<span class="help-inline">
-								(<translate>in</translate>
-								<app-time-ago
-									without-suffix
-									is-future
-									:date="competition.voting_ends_on"
-								/>)
+								<template v-if="competition.periodNum <= CompetitionPeriodVoting">
+									(<translate>in</translate>
+									<app-time-ago
+										without-suffix
+										is-future
+										:date="competition.voting_ends_on"
+									/>)
+								</template>
+								<template v-else>
+									(<app-time-ago :date="competition.voting_ends_on" />)
+								</template>
 							</span>
 						</td>
 					</tr>

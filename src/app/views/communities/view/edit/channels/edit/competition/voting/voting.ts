@@ -65,6 +65,8 @@ export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends B
 	isShowingVotingCategoryAdd = false;
 	isEditing = false;
 
+	readonly CompetitionPeriodVoting = CompetitionPeriodVoting;
+
 	$refs!: {
 		toggleForm: FormCommunityCompetitionVotingToggleTS;
 	};
