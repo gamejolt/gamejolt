@@ -70,7 +70,12 @@ export default class RouteCommunitiesViewEditChannelsEdit extends BaseRouteCompo
 				// When reloading a route, the community doesn't come with any archived channel
 				// in its channels array. If the channel of the current route is not in the
 				// community's channel list, create and push it.
-				this.routeStore.community.channels!.push(new CommunityChannel($payload.channel));
+				const channel = new CommunityChannel($payload.channel);
+				if (channel.is_archived) {
+					this.routeStore.community.archivedChannels.push(channel);
+				} else {
+					this.routeStore.community.channels!.push(channel);
+				}
 			}
 		}
 	}
