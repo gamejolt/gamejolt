@@ -30,6 +30,18 @@
 					</p>
 				</div>
 			</template>
+			<template
+				v-else-if="competition.voting_user_restriction === 'participants' && !isParticipant"
+			>
+				<div class="alert">
+					<p>
+						<translate>
+							Only participants can vote on entries of this jam. To participate,
+							submit an entry to this jam.
+						</translate>
+					</p>
+				</div>
+			</template>
 			<template v-else>
 				<div>
 					<p

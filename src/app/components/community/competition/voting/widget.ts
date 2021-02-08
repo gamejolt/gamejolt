@@ -17,21 +17,6 @@ import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import FormCommunityCompetitionVotingCast from '../../../forms/community/competition/voting/cast/cast.vue';
 
-/**
- * - voting disabled / community voting disabled / pre/running
- * - during voting:
- *  - not logged in
- *  - voting categories set, but none set up
- *	- own game (can't vote)
- *	- overall vote
- *	- category vote
- * - after voting:
- *	- no votes (empty array)
- *  - no votes calculated
- *	- overall vote results
- *	- category vote results
- */
-
 @Component({
 	components: {
 		AppTimeAgo,
@@ -49,6 +34,7 @@ export default class AppCommunityCompetitionVotingWidget extends Vue {
 	@Prop(propRequired(CommunityCompetitionEntry)) entry!: CommunityCompetitionEntry;
 	@Prop(propRequired(Array)) votingCategories!: CommunityCompetitionVotingCategory[];
 	@Prop(propRequired(Array)) userVotes!: CommunityCompetitionEntryVote[];
+	@Prop(propRequired(Boolean)) isParticipant!: boolean;
 
 	@AppState
 	user!: AppStore['user'];

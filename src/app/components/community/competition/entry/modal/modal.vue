@@ -122,6 +122,7 @@
 									:entry="m_entry"
 									:voting-categories="votingCategories"
 									:user-votes="userVotes"
+									:is-participant="isParticipant"
 								/>
 							</template>
 							<app-loading v-else centered />

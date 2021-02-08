@@ -61,6 +61,7 @@ export default class AppCommunityCompetitionEntryModal extends BaseModal {
 	isLoading = true;
 	feed: ActivityFeedView | null = null;
 	returnedFeedItems = 0;
+	isParticipant = false;
 
 	readonly Screen = Screen;
 	readonly date = date;
@@ -113,6 +114,8 @@ export default class AppCommunityCompetitionEntryModal extends BaseModal {
 		const payload = await Api.sendRequest(
 			`/web/communities/competitions/entries/view-entry/${entryId}`
 		);
+
+		this.isParticipant = payload.isParticipant;
 
 		if (this.m_entry) {
 			this.m_entry.assign(payload.entry);
