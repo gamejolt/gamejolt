@@ -168,7 +168,7 @@ export class CommunityActivityItem extends Model {
 				return { icon: 'bullet-list', color: '' };
 
 			case CommunityActivityItem.TYPE_COMPETITION_ENTRY_GIVE_AWARD:
-				return { icon: 'trophy', color: '' };
+				return { icon: 'medal', color: '' };
 		}
 	}
 }

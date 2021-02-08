@@ -233,6 +233,30 @@
 					>
 						<em>%{ action }</em> voting for a jam in this community.
 					</span>
+					<span
+						v-else-if="
+							item.type === CommunityActivityItem.TYPE_COMPETITION_ENTRY_GIVE_AWARD
+						"
+						v-translate="{ award: getExtraData('award-name') }"
+					>
+						<em>Awarded</em> the <i>%{ award }</i> award to an entry.
+					</span>
+					<span
+						v-else-if="
+							item.type === CommunityActivityItem.TYPE_COMPETITION_ENTRY_REMOVE
+						"
+						v-translate
+					>
+						<em>Hid</em> an entry from its jam.
+					</span>
+					<span
+						v-else-if="
+							item.type === CommunityActivityItem.TYPE_COMPETITION_ENTRY_UNREMOVE
+						"
+						v-translate
+					>
+						<em>Readmitted</em> an entry to its jam.
+					</span>
 
 					<!-- Adds a row to display the given reason for an action.  -->
 					<template v-if="hasReason">
