@@ -36,7 +36,7 @@ export class CommunityCompetitionEntryModal {
 					import(/* webpackChunkName: "CommunityCompetitionEntryModal" */ './modal.vue')
 				),
 			props,
-			size: 'lg',
+			size: 'sm',
 		});
 	}
 
