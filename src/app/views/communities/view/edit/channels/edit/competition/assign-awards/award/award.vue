@@ -102,7 +102,7 @@
 				@input="onFilterInput"
 			/>
 
-			<template v-if="entries.length === 0">
+			<template v-if="unassignedCount === 0">
 				<div class="alert">
 					<p>
 						<span v-if="!!filterValue" v-translate="{ filter: filterValue }">
@@ -115,60 +115,80 @@
 				</div>
 			</template>
 
-			<div v-else class="table-responsive">
-				<table class="table">
-					<colgroup>
-						<col width="40px" />
-						<col />
-						<col />
-					</colgroup>
+			<template v-else-if="entries.length > 0">
+				<div class="table-responsive">
+					<table class="table">
+						<colgroup>
+							<col width="40px" />
+							<col />
+							<col />
+						</colgroup>
 
-					<thead>
-						<tr>
-							<th />
-							<th>
-								<translate>Entry</translate>
-							</th>
-							<th>
-								<translate>Developer</translate>
-							</th>
-						</tr>
-					</thead>
+						<thead>
+							<tr>
+								<th />
+								<th>
+									<translate>Entry</translate>
+								</th>
+								<th>
+									<translate>Developer</translate>
+								</th>
+							</tr>
+						</thead>
 
-					<tbody>
-						<tr v-for="entry of entries" :key="entry.id">
-							<td>
-								<app-button
-									v-app-tooltip="$gettext(`Assign award to entry`)"
-									icon="add"
-									sparse
-									primary
-									@click="onClickAssign(entry)"
-								/>
-							</td>
-							<th>
-								<a @click="onClickShowEntry(entry)">
-									{{ entry.resource.title }}
-								</a>
-								<app-jolticon
-									v-if="entry.is_removed"
-									v-app-tooltip.touchable="
-										$gettext(`This entry was hidden from the jam`)
-									"
-									class="text-muted"
-									icon="inactive"
-								/>
-							</th>
-							<td>
-								{{ entry.resource.developer.display_name }}
-								<small class="text-muted">
-									(@{{ entry.resource.developer.username }})
-								</small>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
+						<tbody>
+							<tr v-for="entry of entries" :key="entry.id">
+								<td>
+									<app-button
+										v-app-tooltip="$gettext(`Assign award to entry`)"
+										icon="add"
+										sparse
+										primary
+										@click="onClickAssign(entry)"
+									/>
+								</td>
+								<th>
+									<a @click="onClickShowEntry(entry)">
+										{{ entry.resource.title }}
+									</a>
+									<app-jolticon
+										v-if="entry.is_removed"
+										v-app-tooltip.touchable="
+											$gettext(`This entry was hidden from the jam`)
+										"
+										class="text-muted"
+										icon="inactive"
+									/>
+								</th>
+								<td>
+									{{ entry.resource.developer.display_name }}
+									<small class="text-muted">
+										(@{{ entry.resource.developer.username }})
+									</small>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<app-pagination
+					:total-items="unassignedCount"
+					:current-page="page"
+					:items-per-page="perPage"
+					prevent-url-change
+					@pagechange="onPageChanged"
+				/>
+			</template>
+
+			<!-- Probably on a too high page -->
+			<template v-else>
+				<h4>
+					<translate>Whoops! There are no entries back here...</translate>
+				</h4>
+				<app-button icon="reply" @click="onPageChanged(1)">
+					<translate>Go back</translate>
+				</app-button>
+			</template>
 		</app-loading-fade>
 	</div>
 </template>

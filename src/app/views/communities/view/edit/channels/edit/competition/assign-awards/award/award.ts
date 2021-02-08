@@ -8,6 +8,7 @@ import { CommunityCompetitionEntry } from '../../../../../../../../../../_common
 import { Growls } from '../../../../../../../../../../_common/growls/growls.service';
 import AppLoadingFade from '../../../../../../../../../../_common/loading/fade/fade.vue';
 import AppLoading from '../../../../../../../../../../_common/loading/loading.vue';
+import AppPagination from '../../../../../../../../../../_common/pagination/pagination.vue';
 import {
 	BaseRouteComponent,
 	RouteResolver,
@@ -20,6 +21,7 @@ type Payload = {
 	awardedEntries: any[];
 	entries: any[];
 	perPage: number;
+	entryCount: number;
 };
 
 function makeRequest(route: Route, page = 1, filterValue = '') {
@@ -47,6 +49,7 @@ const draggable = require('vuedraggable');
 		AppLoading,
 		AppLoadingFade,
 		draggable,
+		AppPagination,
 	},
 	directives: {
 		AppTooltip,
@@ -60,6 +63,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 	award!: CommunityCompetitionAward;
 	awardedEntries: CommunityCompetitionEntry[] = [];
 	entries: CommunityCompetitionEntry[] = [];
+	entryCount!: number;
 	perPage = 50;
 	isLoading = true;
 	filterValue = '';
@@ -74,6 +78,10 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 
 	get noAwards() {
 		return this.awardedEntries.length === 0;
+	}
+
+	get unassignedCount() {
+		return this.entryCount - this.awardedEntries.length;
 	}
 
 	get draggableItems() {
@@ -112,6 +120,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 		this.awardedEntries = CommunityCompetitionEntry.populate($payload.awardedEntries);
 		this.entries = CommunityCompetitionEntry.populate($payload.entries);
 		this.perPage = $payload.perPage;
+		this.entryCount = $payload.entryCount;
 
 		this.isLoading = false;
 	}
@@ -172,5 +181,12 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 			console.error(e);
 			Growls.error(this.$gettext(`Could not save entry arrangement.`));
 		}
+	}
+
+	async onPageChanged(page: number) {
+		this.page = page;
+
+		const payload = await makeRequest(this.$route, this.page, this.filterValue);
+		this.handlePayload(payload);
 	}
 }
