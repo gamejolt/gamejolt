@@ -44,8 +44,8 @@
 					<span v-translate="{ count: entryCount }">
 						<b>%{ count }</b> total entries have been submitted.
 					</span>
+					<br />
 					<template v-if="entryCount > competition.entry_count">
-						<br />
 						<span
 							v-translate="{
 								count: entryCount - competition.entry_count,
@@ -55,6 +55,9 @@
 							<b>%{ count }</b> have been hidden, resulting in
 							<b>%{ visibleCount }</b> visible entries.
 						</span>
+					</template>
+					<template v-else>
+						<translate>No entries have been hidden.</translate>
 					</template>
 				</p>
 
@@ -127,11 +130,11 @@
 
 						<tbody>
 							<tr v-for="entry of entries" :key="entry.id">
-								<td>
+								<th>
 									<a @click="onClickShowEntry(entry)">
 										{{ entry.resource.title }}
 									</a>
-								</td>
+								</th>
 								<td>
 									<router-link
 										:to="{

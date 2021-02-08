@@ -47,6 +47,15 @@
 							</div>
 						</div>
 
+						<div v-if="m_entry.is_removed" class="-section alert alert-notice">
+							<p>
+								<translate>
+									This entry was removed from the jam and cannot be viewed
+									anymore.
+								</translate>
+							</p>
+						</div>
+
 						<div v-if="shouldShowAwards">
 							<div
 								v-for="entryAward of sortedAwards"

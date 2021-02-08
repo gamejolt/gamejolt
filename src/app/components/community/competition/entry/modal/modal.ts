@@ -93,7 +93,9 @@ export default class AppCommunityCompetitionEntryModal extends BaseModal {
 	}
 
 	get sortedAwards() {
-		return this.m_entry!.awards!.sort((a, b) => numberSort(a.sort, b.sort));
+		return this.m_entry!.awards!.sort((a, b) =>
+			numberSort(a.community_competition_award.sort, b.community_competition_award.sort)
+		);
 	}
 
 	created() {

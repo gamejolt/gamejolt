@@ -220,6 +220,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 				await entry.$unhideEntry();
 
 				Growls.success(this.$gettext(`Entry was readmitted to the jam.`));
+				this.competition.entry_count++;
 			}
 		} else {
 			const result = await ModalConfirm.show(
@@ -231,6 +232,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 				await entry.$hideEntry();
 
 				Growls.success(this.$gettext(`Entry was hidden from the jam.`));
+				this.competition.entry_count--;
 			}
 		}
 	}
