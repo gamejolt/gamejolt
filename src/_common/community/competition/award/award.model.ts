@@ -7,6 +7,8 @@ export class CommunityCompetitionAward extends Model {
 	description!: string | null;
 	sort!: number;
 
+	entry_count!: number | null;
+
 	static $saveSort(competitionId: number, awardIds: number[]) {
 		return Api.sendRequest(
 			`/web/dash/communities/competitions/awards/save-sort/${competitionId}`,
