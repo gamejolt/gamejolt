@@ -46,10 +46,16 @@ export default class AppCommunityCompetitionVotingWidget extends Vue {
 	readonly number = number;
 
 	get loginUrl() {
-		// TODO: add hash to open this entry modal.
-		return (
-			Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath)
-		);
+		let url =
+			Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath);
+
+		// Append the current entry modal hash to open it back up if there isn't one on the current url.
+		if (!this.$route.hash) {
+			const entryHash = '#entry-' + this.entry.id;
+			url += encodeURIComponent(entryHash);
+		}
+
+		return url;
 	}
 
 	get shouldShow() {
