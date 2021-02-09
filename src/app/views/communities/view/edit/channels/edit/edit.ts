@@ -61,21 +61,12 @@ export default class RouteCommunitiesViewEditChannelsEdit extends BaseRouteCompo
 	}
 
 	routeResolved($payload: any) {
-		// Assign updated channel information from payload to live channel instance.
 		if ($payload.channel) {
-			if (this.routeStore.channel) {
-				this.channel.assign($payload.channel);
-			} else {
-				// This is mainly for archived channels:
-				// When reloading a route, the community doesn't come with any archived channel
-				// in its channels array. If the channel of the current route is not in the
-				// community's channel list, create and push it.
-				const channel = new CommunityChannel($payload.channel);
-				if (channel.is_archived) {
-					this.routeStore.community.archivedChannels.push(channel);
-				} else {
-					this.routeStore.community.channels!.push(channel);
-				}
+			const channel = new CommunityChannel($payload.channel);
+			if (this.channel) {
+				this.channel.assign(channel);
+			} else if (channel.is_archived) {
+				this.routeStore.archivedChannels.push(channel);
 			}
 		}
 	}

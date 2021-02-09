@@ -64,21 +64,21 @@
 				<h3 class="-archived-heading" @click="onClickArchivedChannels">
 					<app-jolticon
 						:icon="
-							community._expandedArchivedChannels ? 'chevron-down' : 'chevron-right'
+							routeStore.expandedArchivedChannels ? 'chevron-down' : 'chevron-right'
 						"
 					/>
 					<translate>Archived Channels</translate>
 				</h3>
 
-				<template v-if="community._expandedArchivedChannels">
-					<template v-if="community.archivedChannels.length">
-						<app-card-list :items="community.archivedChannels">
+				<template v-if="routeStore.expandedArchivedChannels">
+					<template v-if="routeStore.archivedChannels.length">
+						<app-card-list :items="routeStore.archivedChannels">
 							<component
 								:is="hasFullChannelsPermission ? 'app-card-list-draggable' : 'span'"
 								@change="saveChannelSortArchived"
 							>
 								<app-communities-edit-channel-list-item
-									v-for="channel of community.archivedChannels"
+									v-for="channel of routeStore.archivedChannels"
 									:key="channel.id"
 									:channel="channel"
 								/>

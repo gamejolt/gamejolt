@@ -2,16 +2,17 @@ import Vue from 'vue';
 import { Component, Inject } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
-import {
-	Community,
-	loadArchivedChannels,
-} from '../../../../../../_common/community/community.model';
+import { Community } from '../../../../../../_common/community/community.model';
 import AppLoading from '../../../../../../_common/loading/loading.vue';
 import { AppState, AppStore } from '../../../../../../_common/store/app-store';
 import AppCommunityChannelCard from '../../../../../components/community/channel/card/card.vue';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 import { Store } from '../../../../../store';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
+import {
+	CommunityRouteStore,
+	CommunityRouteStoreKey,
+	loadArchivedChannels,
+} from '../../view.store';
 
 /**
  * Base cards list that gets wrapped depending on how we want to display the
@@ -92,15 +93,15 @@ export default class AppNavChannels extends Vue {
 			return;
 		}
 
-		this.community._expandedArchivedChannels = !this.community._expandedArchivedChannels;
+		this.routeStore.expandedArchivedChannels = !this.routeStore.expandedArchivedChannels;
 
 		// Load in archived channels.
-		if (this.community._expandedArchivedChannels && !this.community._loadedArchivedChannels) {
+		if (this.routeStore.expandedArchivedChannels && !this.routeStore.loadedArchivedChannels) {
 			this.isLoadingArchivedChannels = true;
 
-			await loadArchivedChannels(this.community);
+			await loadArchivedChannels(this.routeStore);
 
-			this.community._loadedArchivedChannels = true;
+			this.routeStore.loadedArchivedChannels = true;
 			this.isLoadingArchivedChannels = false;
 		}
 	}

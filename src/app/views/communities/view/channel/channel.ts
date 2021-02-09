@@ -57,7 +57,7 @@ export default class RouteCommunitiesViewChannel extends BaseRouteComponent {
 			if (this.channel) {
 				this.channel.assign(channel);
 			} else if (channel.is_archived) {
-				this.community.archivedChannels.push(channel);
+				this.routeStore.archivedChannels.push(channel);
 			}
 		}
 	}

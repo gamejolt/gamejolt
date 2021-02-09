@@ -47,20 +47,20 @@
 		<template v-if="community.has_archived_channels">
 			<h5 class="-heading -archived-heading" @click="onClickArchivedChannels">
 				<app-jolticon
-					:icon="community._expandedArchivedChannels ? 'chevron-down' : 'chevron-right'"
+					:icon="routeStore.expandedArchivedChannels ? 'chevron-down' : 'chevron-right'"
 				/>
 				<translate>Archived Channels</translate>
 			</h5>
 
 			<template
 				v-if="
-					community._expandedArchivedChannels ||
+					routeStore.expandedArchivedChannels ||
 					(activeChannel && activeChannel.is_archived)
 				"
 			>
-				<template v-if="community.archivedChannels.length">
+				<template v-if="routeStore.archivedChannels.length">
 					<app-community-channel-card
-						v-for="channel of community.archivedChannels"
+						v-for="channel of routeStore.archivedChannels"
 						:key="channel.id"
 						:community="community"
 						:path="channel.title"
