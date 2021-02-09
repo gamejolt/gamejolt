@@ -110,6 +110,7 @@
 							:user-votes="userVotes"
 							:is-participant="isParticipant"
 							:is-archived="isArchived"
+							:is-blocked="isBlocked"
 						/>
 					</template>
 					<app-loading v-else centered />

@@ -47,6 +47,7 @@ export default class AppCommunityCompetitionEntryModal extends BaseModal {
 	userVotes: CommunityCompetitionEntryVote[] = [];
 	isParticipant = false;
 	isArchived = false;
+	isBlocked = false;
 	isLoading = true;
 
 	readonly Screen = Screen;
@@ -103,6 +104,7 @@ export default class AppCommunityCompetitionEntryModal extends BaseModal {
 
 		this.isParticipant = payload.isParticipant;
 		this.isArchived = payload.isArchived;
+		this.isBlocked = payload.isBlocked;
 
 		if (this.m_entry) {
 			this.m_entry.assign(payload.entry);

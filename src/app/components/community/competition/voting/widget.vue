@@ -13,6 +13,14 @@
 					</p>
 				</div>
 			</template>
+			<template v-else-if="isBlocked">
+				<div class="alert alert-notice">
+					<p v-translate>
+						<b>You have been blocked</b> from this community and cannot vote on jam
+						entries.
+					</p>
+				</div>
+			</template>
 			<template v-else-if="isArchived">
 				<div class="alert">
 					<p v-translate>
