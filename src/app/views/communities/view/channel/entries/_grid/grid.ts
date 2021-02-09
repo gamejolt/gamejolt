@@ -1,11 +1,12 @@
 import Component from 'vue-class-component';
-import { Inject, Prop } from 'vue-property-decorator';
+import { Inject, Prop, Watch } from 'vue-property-decorator';
 import { Route } from 'vue-router/types/router';
 import { propRequired } from '../../../../../../../utils/vue';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { CommunityCompetitionEntry } from '../../../../../../../_common/community/competition/entry/entry.model';
 import { CommunityCompetitionVotingCategory } from '../../../../../../../_common/community/competition/voting-category/voting-category.model';
 import { number } from '../../../../../../../_common/filters/number';
+import AppIllustration from '../../../../../../../_common/illustration/illustration.vue';
 import AppPagination from '../../../../../../../_common/pagination/pagination.vue';
 import AppPopper from '../../../../../../../_common/popper/popper.vue';
 import {
@@ -135,6 +136,7 @@ function makeRequest(route: Route) {
 		AppPopper,
 		AppCommunityCompetitionEntryGrid,
 		AppPagination,
+		AppIllustration,
 	},
 	directives: {
 		AppNoAutoscroll,
@@ -284,28 +286,32 @@ export default class RouteCommunitiesViewChannelEntriesGrid extends BaseRouteCom
 		if (!this.hashWatchDeregister) {
 			this.hashWatchDeregister = CommunityCompetitionEntryModal.watchForHash(this.$router);
 		}
-
-		// Watch the entry count change.
-		// It does when the user adds/removes one of their entries.
-		// In that case, we want to reset the view to page 1 of newest games.
-		// That way, they will see their newly added entry in the list of entries instead of
-		// having to refresh.
-		this.$watch('competition.entry_count', () => {
-			if (this.$route.query.sort !== 'new' || this.$route.query.page !== undefined) {
-				this.$router.push({
-					query: {
-						sort: 'new',
-						page: undefined,
-					},
-				});
-			} else {
-				// Already viewing that page? Reload page.
-				this.reloadPage();
-			}
-		});
 	}
 
-	destroyed() {
+	// Watch the entry count change.
+	// It does when the user adds/removes one of their entries.
+	// In that case, we want to reset the view to page 1 of newest games.
+	// That way, they will see their newly added entry in the list of entries instead of
+	// having to refresh.
+	@Watch('competition.entry_count')
+	onEntryCountChanged() {
+		if (!this.isRouteBootstrapped) {
+			return;
+		}
+		if (this.$route.query.sort !== 'new' || this.$route.query.page !== undefined) {
+			this.$router.push({
+				query: {
+					sort: 'new',
+					page: undefined,
+				},
+			});
+		} else {
+			// Already viewing that page? Reload page.
+			this.reloadPage();
+		}
+	}
+
+	routeDestroyed() {
 		if (this.hashWatchDeregister) {
 			this.hashWatchDeregister();
 			this.hashWatchDeregister = undefined;

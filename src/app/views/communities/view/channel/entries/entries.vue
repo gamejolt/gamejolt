@@ -52,15 +52,6 @@
 			</div>
 		</div>
 
-		<template v-if="!competition.entry_count">
-			<app-illustration src="~img/ill/no-comments.svg">
-				<p>
-					<translate>Alas, no entries have been submitted to the jam...</translate>
-				</p>
-			</app-illustration>
-		</template>
-		<template v-else>
-			<router-view :categories="categories" />
-		</template>
+		<router-view :categories="categories" />
 	</div>
 </template>
