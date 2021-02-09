@@ -109,6 +109,7 @@
 							:voting-categories="votingCategories"
 							:user-votes="userVotes"
 							:is-participant="isParticipant"
+							:is-archived="isArchived"
 						/>
 					</template>
 					<app-loading v-else centered />

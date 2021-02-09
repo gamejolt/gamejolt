@@ -13,6 +13,14 @@
 					</p>
 				</div>
 			</template>
+			<template v-else-if="isArchived">
+				<div class="alert">
+					<p v-translate>
+						The channel for <b>this jam is archived</b> and voting is therefore
+						disabled.
+					</p>
+				</div>
+			</template>
 			<template v-else-if="votingCategoryError">
 				<div class="alert">
 					<p v-translate>

@@ -35,6 +35,7 @@ export default class AppCommunityCompetitionVotingWidget extends Vue {
 	@Prop(propRequired(Array)) votingCategories!: CommunityCompetitionVotingCategory[];
 	@Prop(propRequired(Array)) userVotes!: CommunityCompetitionEntryVote[];
 	@Prop(propRequired(Boolean)) isParticipant!: boolean;
+	@Prop(propRequired(Boolean)) isArchived!: boolean;
 
 	@AppState
 	user!: AppStore['user'];

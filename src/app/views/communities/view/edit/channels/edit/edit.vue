@@ -34,6 +34,16 @@
 							<translate>Finished</translate>
 						</span>
 					</template>
+
+					<span
+						v-if="channel.is_archived"
+						v-app-tooltip.touchable="
+							$gettext(`This channel was archived and is now read-only`)
+						"
+						class="tag tag-notice"
+					>
+						<translate>Archived</translate>
+					</span>
 				</div>
 
 				<h1 class="section-header">

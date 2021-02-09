@@ -88,7 +88,11 @@ export default class RouteCommunitiesViewChannelEntries extends BaseRouteCompone
 	}
 
 	get canSubmitEntry() {
-		return this.competition.period === 'running' && this.channel.visibility === 'published';
+		return (
+			this.competition.period === 'running' &&
+			this.channel.visibility === 'published' &&
+			!this.channel.is_archived
+		);
 	}
 
 	get hasSubmittedEntries() {

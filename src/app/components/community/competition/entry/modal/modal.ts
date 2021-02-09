@@ -45,8 +45,9 @@ export default class AppCommunityCompetitionEntryModal extends BaseModal {
 	competition: CommunityCompetition | null = null;
 	votingCategories: CommunityCompetitionVotingCategory[] = [];
 	userVotes: CommunityCompetitionEntryVote[] = [];
-	isLoading = true;
 	isParticipant = false;
+	isArchived = false;
+	isLoading = true;
 
 	readonly Screen = Screen;
 	readonly date = date;
@@ -101,6 +102,7 @@ export default class AppCommunityCompetitionEntryModal extends BaseModal {
 		);
 
 		this.isParticipant = payload.isParticipant;
+		this.isArchived = payload.isArchived;
 
 		if (this.m_entry) {
 			this.m_entry.assign(payload.entry);
