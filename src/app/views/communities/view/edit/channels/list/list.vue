@@ -34,6 +34,7 @@
 					<form-community-channel-add
 						:community="community"
 						:channels="community.channels"
+						:archived-channels="routeStore.archivedChannels"
 						@submit="onChannelAdded"
 					/>
 				</app-card-list-add>

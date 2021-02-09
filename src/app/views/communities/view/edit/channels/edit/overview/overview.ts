@@ -73,7 +73,7 @@ export default class RouteCommunitiesViewEditChannelsOverview extends BaseRouteC
 		if (result) {
 			const payload = await this.channel.$archive();
 			if (payload.success) {
-				this.community.archivedChannels.push(this.channel);
+				this.routeStore.archivedChannels.push(this.channel);
 				arrayRemove(this.community.channels!, i => i.id === this.channel.id);
 				this.community.has_archived_channels = true;
 
@@ -97,9 +97,9 @@ export default class RouteCommunitiesViewEditChannelsOverview extends BaseRouteC
 			try {
 				await this.channel.$unarchive();
 				this.community.channels!.push(this.channel);
-				arrayRemove(this.community.archivedChannels, i => i.id === this.channel.id);
+				arrayRemove(this.routeStore.archivedChannels, i => i.id === this.channel.id);
 
-				if (this.community.archivedChannels.length === 0) {
+				if (this.routeStore.archivedChannels.length === 0) {
 					this.community.has_archived_channels = false;
 				}
 
