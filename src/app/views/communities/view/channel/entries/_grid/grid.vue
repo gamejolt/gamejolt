@@ -2,101 +2,111 @@
 
 <template>
 	<div>
-		<h2 class="section-header">
-			<translate
-				:translate-n="competition.entry_count"
-				:translate-params="{
-					count: number(competition.entry_count),
-				}"
-				translate-plural="%{ count } Entries"
-			>
-				%{ count } Entry
-			</translate>
-		</h2>
+		<template v-if="!competition.entry_count">
+			<app-illustration src="~img/ill/no-comments.svg">
+				<p>
+					<translate>Alas, no entries have been submitted to the jam...</translate>
+				</p>
+			</app-illustration>
+		</template>
 
-		<div v-if="hasCategories" class="-category-nav-container">
-			<router-link
-				v-for="categoryOption of categoryOptions"
-				:key="categoryOption.text"
-				v-app-no-autoscroll
-				:to="{
-					query: {
-						category: categoryOption.category || undefined,
-						sort: undefined,
-						page: undefined,
-					},
-				}"
-				class="-category-nav-item"
-				:class="{
-					'-category-nav-item-active': category === categoryOption.category,
-				}"
-			>
-				{{ categoryOption.text }}
-				<div
-					v-if="category === categoryOption.category"
-					class="-category-nav-item-active-bar"
-				/>
-			</router-link>
-		</div>
+		<template v-else>
+			<h2 class="section-header">
+				<translate
+					:translate-n="competition.entry_count"
+					:translate-params="{
+						count: number(competition.entry_count),
+					}"
+					translate-plural="%{ count } Entries"
+				>
+					%{ count } Entry
+				</translate>
+			</h2>
 
-		<div>
-			<span v-if="!category" class="pull-right">
-				<app-button
-					v-if="shouldShowAwardsFirstOption"
-					sm
-					class="-awards-first"
-					:icon="ignoreAwards ? 'box-empty' : 'checkbox'"
+			<div v-if="hasCategories" class="-category-nav-container">
+				<router-link
+					v-for="categoryOption of categoryOptions"
+					:key="categoryOption.text"
+					v-app-no-autoscroll
 					:to="{
-						query: { page: undefined, sort: sort, 'ignore-awards': +!ignoreAwards },
+						query: {
+							category: categoryOption.category || undefined,
+							sort: undefined,
+							page: undefined,
+						},
+					}"
+					class="-category-nav-item"
+					:class="{
+						'-category-nav-item-active': category === categoryOption.category,
 					}"
 				>
-					<translate>Show Awards first</translate>
-				</app-button>
-				<translate>Sort by</translate>
-				<app-popper>
-					<span class="-sort">
-						{{ selectedSortOption.text }}
-						<app-jolticon icon="chevron-down" />
-					</span>
+					{{ categoryOption.text }}
+					<div
+						v-if="category === categoryOption.category"
+						class="-category-nav-item-active-bar"
+					/>
+				</router-link>
+			</div>
 
-					<template #popover>
-						<div class="list-group">
-							<router-link
-								v-for="sortOption of sortOptions"
-								:key="sortOption.sort"
-								v-app-no-autoscroll
-								:to="{ query: { sort: sortOption.sort, page: undefined } }"
-								class="list-group-item has-addon"
-							>
-								<div class="list-group-item-addon">
-									<app-jolticon
-										v-if="selectedSortOption.sort === sortOption.sort"
-										icon="check"
-									/>
-								</div>
-								{{ sortOption.text }}
-							</router-link>
-						</div>
-					</template>
-				</app-popper>
-			</span>
+			<div>
+				<span v-if="!category" class="pull-right">
+					<app-button
+						v-if="shouldShowAwardsFirstOption"
+						sm
+						class="-awards-first"
+						:icon="ignoreAwards ? 'box-empty' : 'checkbox'"
+						:to="{
+							query: { page: undefined, sort: sort, 'ignore-awards': +!ignoreAwards },
+						}"
+					>
+						<translate>Show Awards first</translate>
+					</app-button>
+					<translate>Sort by</translate>
+					<app-popper>
+						<span class="-sort">
+							{{ selectedSortOption.text }}
+							<app-jolticon icon="chevron-down" />
+						</span>
 
-			<app-community-competition-entry-grid
-				:competition="competition"
-				:num-placeholders="numPlaceholders"
-				:entries="entries"
-				:current-page="page"
-				:page-count="pageCount"
-				:category="selectedCategory"
-			/>
+						<template #popover>
+							<div class="list-group">
+								<router-link
+									v-for="sortOption of sortOptions"
+									:key="sortOption.sort"
+									v-app-no-autoscroll
+									:to="{ query: { sort: sortOption.sort, page: undefined } }"
+									class="list-group-item has-addon"
+								>
+									<div class="list-group-item-addon">
+										<app-jolticon
+											v-if="selectedSortOption.sort === sortOption.sort"
+											icon="check"
+										/>
+									</div>
+									{{ sortOption.text }}
+								</router-link>
+							</div>
+						</template>
+					</app-popper>
+				</span>
 
-			<app-pagination
-				v-if="pageCount > 0"
-				:total-items="competition.entry_count"
-				:items-per-page="perPage"
-				:current-page="page"
-			/>
-		</div>
+				<app-community-competition-entry-grid
+					:competition="competition"
+					:num-placeholders="numPlaceholders"
+					:entries="entries"
+					:current-page="page"
+					:page-count="pageCount"
+					:category="selectedCategory"
+				/>
+
+				<app-pagination
+					v-if="pageCount > 0"
+					:total-items="competition.entry_count"
+					:items-per-page="perPage"
+					:current-page="page"
+				/>
+			</div>
+		</template>
 	</div>
 </template>
 

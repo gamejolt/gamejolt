@@ -108,7 +108,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 		this.handlePayload($payload);
 	}
 
-	destroyed() {
+	routeDestroyed() {
 		if (this.filterDispatcher) {
 			clearTimeout(this.filterDispatcher);
 			this.filterDispatcher = undefined;
