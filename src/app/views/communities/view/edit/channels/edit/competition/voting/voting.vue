@@ -13,6 +13,14 @@
 			@toggle-not-set-up="onToggleNotSetUp"
 		/>
 
+		<div v-else-if="!competition.is_voting_enabled" class="alert">
+			<p>
+				<translate>
+					Voting is disabled. Because the jam is already over, it cannot be enabled.
+				</translate>
+			</p>
+		</div>
+
 		<template v-if="isEditing">
 			<form-community-competition-voting-edit
 				:model="competition"
