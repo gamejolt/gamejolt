@@ -20,6 +20,7 @@ import {
 } from '../../../../../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../../../../../_common/scroll/scroll.service';
 import { AppTimeAgo } from '../../../../../../../../../_common/time/ago/ago';
+import { AppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
 import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/date.vue';
 import FormCommunityCompetitionAward from '../../../../../../../../components/forms/community/competition/award/award.vue';
 import FormCommunityCompetitionVotingCategory from '../../../../../../../../components/forms/community/competition/voting/category/category.vue';
@@ -42,6 +43,9 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view
 		FormCommunityCompetitionAward,
 		FormCommunityCompetitionVotingEdit,
 	},
+	directives: {
+		AppTooltip,
+	},
 })
 @RouteResolver({
 	deps: { params: ['id', 'channel'] },
@@ -60,6 +64,8 @@ export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends B
 	activeVotingCategory: CommunityCompetitionVotingCategory | null = null;
 	isShowingVotingCategoryAdd = false;
 	isEditing = false;
+
+	readonly CompetitionPeriodVoting = CompetitionPeriodVoting;
 
 	$refs!: {
 		toggleForm: FormCommunityCompetitionVotingToggleTS;
@@ -85,13 +91,16 @@ export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends B
 		return this.competition.periodNum < CompetitionPeriodPostComp;
 	}
 
-	get canEditVotingCategories() {
+	get votingCategoriesEnabled() {
 		return (
-			this.competition.periodNum < CompetitionPeriodVoting &&
 			this.competition.is_voting_enabled &&
 			this.competition.has_community_voting &&
 			this.competition.voting_type === 'categories'
 		);
+	}
+
+	get canEditVotingCategories() {
+		return this.competition.periodNum < CompetitionPeriodVoting && this.votingCategoriesEnabled;
 	}
 
 	get canEditAwards() {

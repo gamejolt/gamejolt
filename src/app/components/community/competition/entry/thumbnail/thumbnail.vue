@@ -93,7 +93,7 @@
 	top: -($border-width-large)
 	bottom: -($border-width-large)
 	right: -($border-width-large)
-	background-color: var(--theme-highlight)
+	background-color: var(--theme-bi-bg)
 	rounded-corners-lg()
 
 .-inner

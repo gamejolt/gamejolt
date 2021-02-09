@@ -1,6 +1,7 @@
 import Component from 'vue-class-component';
 import { Inject } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
+import { CommunityChannel } from '../../../../../../../_common/community/channel/channel.model';
 import {
 	BaseRouteComponent,
 	RouteResolver,
@@ -60,9 +61,13 @@ export default class RouteCommunitiesViewEditChannelsEdit extends BaseRouteCompo
 	}
 
 	routeResolved($payload: any) {
-		// Assign updated channel information from payload to live channel instance.
 		if ($payload.channel) {
-			this.channel.assign($payload.channel);
+			const channel = new CommunityChannel($payload.channel);
+			if (this.channel) {
+				this.channel.assign(channel);
+			} else if (channel.is_archived) {
+				this.routeStore.archivedChannels.push(channel);
+			}
 		}
 	}
 

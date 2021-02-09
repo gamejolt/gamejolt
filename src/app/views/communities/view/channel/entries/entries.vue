@@ -25,14 +25,19 @@
 			</template>
 			<template v-else-if="competition.periodNum >= 2">
 				<p class="help-block">
-					<translate> The jam has ended and submissions are now closed. </translate>
+					<translate>The jam has ended and submissions are now closed.</translate>
 				</p>
 			</template>
 			<template v-else-if="channel.visibility === 'draft'">
 				<p v-if="!hasSubmittedEntries" class="help-block">
 					<translate>
-						The jam is setup as a draft. Publish the jam to open submissions.
+						The jam is set up as a draft. Publish the jam to open submissions.
 					</translate>
+				</p>
+			</template>
+			<template v-else-if="channel.is_archived">
+				<p class="help-block">
+					<translate>This channel is archived and entries cannot be submitted.</translate>
 				</p>
 			</template>
 
@@ -47,17 +52,6 @@
 			</div>
 		</div>
 
-		<template v-if="!competition.entry_count">
-			<app-illustration src="~img/ill/no-comments.svg">
-				<p>
-					<translate>
-						Alas, no entries have been submitted to the jam...
-					</translate>
-				</p>
-			</app-illustration>
-		</template>
-		<template v-else>
-			<router-view :categories="categories" />
-		</template>
+		<router-view :categories="categories" />
 	</div>
 </template>

@@ -17,21 +17,6 @@ import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import FormCommunityCompetitionVotingCast from '../../../forms/community/competition/voting/cast/cast.vue';
 
-/**
- * - voting disabled / community voting disabled / pre/running
- * - during voting:
- *  - not logged in
- *  - voting categories set, but none set up
- *	- own game (can't vote)
- *	- overall vote
- *	- category vote
- * - after voting:
- *	- no votes (empty array)
- *  - no votes calculated
- *	- overall vote results
- *	- category vote results
- */
-
 @Component({
 	components: {
 		AppTimeAgo,
@@ -49,6 +34,9 @@ export default class AppCommunityCompetitionVotingWidget extends Vue {
 	@Prop(propRequired(CommunityCompetitionEntry)) entry!: CommunityCompetitionEntry;
 	@Prop(propRequired(Array)) votingCategories!: CommunityCompetitionVotingCategory[];
 	@Prop(propRequired(Array)) userVotes!: CommunityCompetitionEntryVote[];
+	@Prop(propRequired(Boolean)) isParticipant!: boolean;
+	@Prop(propRequired(Boolean)) isArchived!: boolean;
+	@Prop(propRequired(Boolean)) isBlocked!: boolean;
 
 	@AppState
 	user!: AppStore['user'];
@@ -58,10 +46,16 @@ export default class AppCommunityCompetitionVotingWidget extends Vue {
 	readonly number = number;
 
 	get loginUrl() {
-		// TODO: add hash to open this entry modal.
-		return (
-			Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath)
-		);
+		let url =
+			Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath);
+
+		// Append the current entry modal hash to open it back up if there isn't one on the current url.
+		if (!this.$route.hash) {
+			const entryHash = '#entry-' + this.entry.id;
+			url += encodeURIComponent(entryHash);
+		}
+
+		return url;
 	}
 
 	get shouldShow() {

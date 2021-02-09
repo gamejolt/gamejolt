@@ -1,3 +1,4 @@
+import { Api } from '../../../../api/api.service';
 import { Model } from '../../../../model/model.service';
 import { CommunityCompetitionAward } from '../../award/award.model';
 
@@ -15,6 +16,27 @@ export class CommunityCompetitionEntryAward extends Model {
 				data.community_competition_award
 			);
 		}
+	}
+
+	static $saveSort(awardId: number, sortedIds: number[]) {
+		return Api.sendRequest(
+			`/web/dash/communities/competitions/awards/save-entry-sort/${awardId}`,
+			sortedIds
+		);
+	}
+
+	static $assign(entryId: number, awardId: number) {
+		return Api.sendRequest(
+			`/web/dash/communities/competitions/awards/entry-assign/${awardId}/${entryId}`,
+			{}
+		);
+	}
+
+	static $unassign(entryId: number, awardId: number) {
+		return Api.sendRequest(
+			`/web/dash/communities/competitions/awards/entry-unassign/${awardId}/${entryId}`,
+			{}
+		);
 	}
 }
 

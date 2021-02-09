@@ -11,6 +11,7 @@
 			<ul>
 				<li>
 					<router-link
+						v-app-no-autoscroll
 						:to="{
 							name: 'communities.view.channel.feed',
 						}"
@@ -21,6 +22,7 @@
 				</li>
 				<li>
 					<router-link
+						v-app-no-autoscroll
 						:to="{
 							name: 'communities.view.channel.entries',
 						}"
@@ -33,6 +35,23 @@
 					</router-link>
 				</li>
 			</ul>
+			<app-community-perms
+				v-if="Screen.isDesktop"
+				:community="community"
+				perms="community-competitions"
+			>
+				<app-button
+					class="pull-right"
+					trans
+					icon="edit"
+					:to="{
+						name: 'communities.view.edit.channels.competition.overview',
+						params: { id: community.id },
+					}"
+				>
+					<translate>Edit Jam</translate>
+				</app-button>
+			</app-community-perms>
 		</app-nav-tab-list>
 	</app-communities-view-page-container>
 </template>

@@ -8,7 +8,6 @@ import { CommunityCompetitionEntry } from '../../../../../../_common/community/c
 import { CommunityCompetitionEntryVote } from '../../../../../../_common/community/competition/entry/vote/vote.model';
 import { CommunityCompetitionVotingCategory } from '../../../../../../_common/community/competition/voting-category/voting-category.model';
 import { date } from '../../../../../../_common/filters/date';
-import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
 import AppLoading from '../../../../../../_common/loading/loading.vue';
 import { BaseModal } from '../../../../../../_common/modal/base';
 import { Screen } from '../../../../../../_common/screen/screen-service';
@@ -18,33 +17,21 @@ import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive'
 import AppUserCardHover from '../../../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatar from '../../../../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../../../../_common/user/verified-tick/verified-tick.vue';
-import { ActivityFeedService } from '../../../../activity/feed/feed-service';
-import AppActivityFeedPlaceholder from '../../../../activity/feed/placeholder/placeholder.vue';
-import { ActivityFeedView } from '../../../../activity/feed/view';
 import AppGameBadge from '../../../../game/badge/badge.vue';
-import AppGameFollowWidget from '../../../../game/follow-widget/follow-widget.vue';
-import { AppActivityFeedLazy } from '../../../../lazy';
 import AppCommunityCompetitionVotingWidget from '../../voting/widget.vue';
 
 @Component({
 	components: {
-		AppGameThumbnailImg,
 		AppTimeAgo,
 		AppUserCardHover,
 		AppUserVerifiedTick,
 		AppUserAvatar,
 		AppLoading,
 		AppCommunityCompetitionVotingWidget,
-		AppActivityFeed: AppActivityFeedLazy,
-		AppActivityFeedPlaceholder,
-		AppGameFollowWidget,
 		AppGameBadge,
 	},
 	directives: {
 		AppTooltip,
-	},
-	filters: {
-		date,
 	},
 })
 export default class AppCommunityCompetitionEntryModal extends BaseModal {
@@ -58,11 +45,13 @@ export default class AppCommunityCompetitionEntryModal extends BaseModal {
 	competition: CommunityCompetition | null = null;
 	votingCategories: CommunityCompetitionVotingCategory[] = [];
 	userVotes: CommunityCompetitionEntryVote[] = [];
+	isParticipant = false;
+	isArchived = false;
+	isBlocked = false;
 	isLoading = true;
-	feed: ActivityFeedView | null = null;
-	returnedFeedItems = 0;
 
 	readonly Screen = Screen;
+	readonly date = date;
 
 	get title() {
 		return this.m_entry ? this.m_entry.resource.title : this.$gettext(`Loading...`);
@@ -92,11 +81,9 @@ export default class AppCommunityCompetitionEntryModal extends BaseModal {
 	}
 
 	get sortedAwards() {
-		return this.m_entry!.awards!.sort((a, b) => numberSort(a.sort, b.sort));
-	}
-
-	get shouldShowFeedMore() {
-		return this.returnedFeedItems > 3;
+		return this.m_entry!.awards!.sort((a, b) =>
+			numberSort(a.community_competition_award.sort, b.community_competition_award.sort)
+		);
 	}
 
 	created() {
@@ -115,6 +102,10 @@ export default class AppCommunityCompetitionEntryModal extends BaseModal {
 			`/web/communities/competitions/entries/view-entry/${entryId}`
 		);
 
+		this.isParticipant = payload.isParticipant;
+		this.isArchived = payload.isArchived;
+		this.isBlocked = payload.isBlocked;
+
 		if (this.m_entry) {
 			this.m_entry.assign(payload.entry);
 		} else {
@@ -131,22 +122,6 @@ export default class AppCommunityCompetitionEntryModal extends BaseModal {
 		if (payload.userVotes) {
 			this.userVotes = CommunityCompetitionEntryVote.populate(payload.userVotes);
 		}
-
-		const feedPayload = await Api.sendRequest(
-			`/web/posts/fetch/game/${this.m_entry.resource.id}`
-		);
-		this.feed = ActivityFeedService.routed(
-			this.feed,
-			{
-				type: 'EventItem',
-				url: `/web/posts/fetch/game/${this.m_entry.resource.id}`,
-				slice: 3,
-				hideGameInfo: true,
-			},
-			feedPayload.items,
-			false
-		);
-		this.returnedFeedItems = feedPayload.items.length;
 
 		this.isLoading = false;
 	}

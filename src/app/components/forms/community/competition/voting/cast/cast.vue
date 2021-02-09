@@ -12,7 +12,7 @@
 					{{ votingCategory.name }}
 					<app-jolticon
 						v-if="votingCategory.description"
-						v-app-tooltip="votingCategory.description"
+						v-app-tooltip.touchable="votingCategory.description"
 						class="text-muted"
 						icon="help-circle"
 					/>
@@ -62,14 +62,12 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-sm-4 -overall-label">
-					<label control-label>
-						<translate>Your Overall</translate>
-					</label>
+				<label class="col-sm-4 -overall-label" control-label>
+					<translate>Your Overall</translate>
 					<div class="text-muted">
 						<i><translate>(calculated)</translate></i>
 					</div>
-				</div>
+				</label>
 				<div class="col-sm-8">
 					<div class="-overall-rating">
 						<b>

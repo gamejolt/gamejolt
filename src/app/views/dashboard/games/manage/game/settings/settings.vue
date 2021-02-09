@@ -43,6 +43,10 @@
 									able to view it.
 								</translate>
 							</p>
+							<p v-if="hasCompetitionEntries" v-translate>
+								<b>Warning:</b> This will remove your game from any jams that you
+								have entered it into.
+							</p>
 						</div>
 
 						<app-button @click="hide()">
@@ -85,6 +89,10 @@
 						<p v-translate>
 							Removing your game page will remove it from the site completely.
 							<b>This is permanent!</b>
+						</p>
+						<p v-if="hasCompetitionEntries" v-translate>
+							<b>Warning:</b> This will also remove your game from any jams that you
+							have entered it into.
 						</p>
 					</div>
 

@@ -61,7 +61,7 @@ export default class AppCommunitiesEditChannelListItem extends Vue {
 
 		if (channel._removed) {
 			if (channel.is_archived) {
-				this.community.archivedChannels = this.community.archivedChannels.filter(
+				this.routeStore.archivedChannels = this.routeStore.archivedChannels.filter(
 					i => i.id !== channel.id
 				);
 			} else {

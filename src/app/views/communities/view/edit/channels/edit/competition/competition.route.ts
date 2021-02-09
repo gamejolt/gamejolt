@@ -1,4 +1,5 @@
 import { RouteConfig } from 'vue-router';
+import { routeCommunitiesViewEditChannelsCompetitionAssignAwards } from './assign-awards/assign-awards.route';
 import { routeCommunitiesViewEditChannelsCompetitionEntries } from './entries/entries.route';
 import { routeCommunitiesViewEditChannelsCompetitionOverview } from './overview/overview.route';
 import { routeCommunitiesViewEditChannelsCompetitionSettings } from './settings/settings.route';
@@ -15,5 +16,6 @@ export const routeCommunitiesViewEditChannelsCompetition: RouteConfig = {
 		routeCommunitiesViewEditChannelsCompetitionOverview,
 		routeCommunitiesViewEditChannelsCompetitionVoting,
 		routeCommunitiesViewEditChannelsCompetitionEntries,
+		routeCommunitiesViewEditChannelsCompetitionAssignAwards,
 	],
 };

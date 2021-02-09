@@ -21,6 +21,7 @@ class FormModel extends CommunityChannel {
 export default class FormCommunityChannelAdd extends BaseForm<FormModel> implements FormOnInit {
 	@Prop(propRequired(Community)) community!: Community;
 	@Prop(propRequired(Array)) channels!: CommunityChannel[];
+	@Prop(propRequired(Array)) archivedChannels!: CommunityChannel[];
 
 	@AppState
 	user!: AppStore['user'];
@@ -69,7 +70,7 @@ export default class FormCommunityChannelAdd extends BaseForm<FormModel> impleme
 	}
 
 	isTitleTaken(title: string) {
-		return [...this.channels, ...this.community.archivedChannels]
+		return [...this.channels, ...this.archivedChannels]
 			.map(i => i.title.toLowerCase().trim())
 			.includes(title.toLowerCase().trim());
 	}

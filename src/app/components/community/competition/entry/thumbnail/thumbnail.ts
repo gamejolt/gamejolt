@@ -106,6 +106,6 @@ export default class AppCommunityCompetitionEntryThumbnail extends Vue {
 
 	/** Instead of navigating to the link target, open the entry modal instead. */
 	onClickThumbnail() {
-		CommunityCompetitionEntryModal.showEntry(this.$router, this.entry);
+		CommunityCompetitionEntryModal.showEntry(this.entry);
 	}
 }

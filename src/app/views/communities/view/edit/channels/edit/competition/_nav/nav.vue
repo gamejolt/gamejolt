@@ -58,5 +58,16 @@
 				</span>
 			</router-link>
 		</li>
+		<li v-if="canAssignAwards">
+			<router-link
+				:to="{
+					name: 'communities.view.edit.channels.competition.assign-awards',
+				}"
+				active-class="active"
+			>
+				<app-jolticon icon="medal" />
+				<translate>Assign Awards</translate>
+			</router-link>
+		</li>
 	</ul>
 </template>

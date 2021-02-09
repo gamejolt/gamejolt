@@ -13,6 +13,22 @@
 					</p>
 				</div>
 			</template>
+			<template v-else-if="isBlocked">
+				<div class="alert alert-notice">
+					<p v-translate>
+						<b>You have been blocked</b> from this community and cannot vote on jam
+						entries.
+					</p>
+				</div>
+			</template>
+			<template v-else-if="isArchived">
+				<div class="alert">
+					<p v-translate>
+						The channel for <b>this jam is archived</b> and voting is therefore
+						disabled.
+					</p>
+				</div>
+			</template>
 			<template v-else-if="votingCategoryError">
 				<div class="alert">
 					<p v-translate>
@@ -26,6 +42,18 @@
 					<p>
 						<translate>
 							Nice try, my friend, but you can't vote on your own submission!
+						</translate>
+					</p>
+				</div>
+			</template>
+			<template
+				v-else-if="competition.voting_user_restriction === 'participants' && !isParticipant"
+			>
+				<div class="alert">
+					<p>
+						<translate>
+							Only participants can vote on entries of this jam. To participate,
+							submit an entry to this jam.
 						</translate>
 					</p>
 				</div>
@@ -190,7 +218,7 @@
 												voteResult.community_competition_voting_category_id
 											)
 										"
-										v-app-tooltip="
+										v-app-tooltip.touchable="
 											getVotingCategoryDescription(
 												voteResult.community_competition_voting_category_id
 											)

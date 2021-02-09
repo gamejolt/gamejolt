@@ -13,6 +13,8 @@ export class CommunityCompetitionEntry extends Model {
 	type!: EntryType;
 	vote_count!: number;
 
+	is_removed!: boolean | null;
+
 	user!: User;
 	resource!: Game;
 	vote_results!: CommunityCompetitionEntryVoteResult[];
@@ -51,6 +53,20 @@ export class CommunityCompetitionEntry extends Model {
 
 	$remove() {
 		return this.$_remove(`/web/communities/competitions/entries/remove-entry/${this.id}`);
+	}
+
+	$hideEntry() {
+		return this.$_save(
+			`/web/dash/communities/competitions/entries/remove-entry/${this.id}`,
+			'entry'
+		);
+	}
+
+	$unhideEntry() {
+		return this.$_save(
+			`/web/dash/communities/competitions/entries/unremove-entry/${this.id}`,
+			'entry'
+		);
 	}
 }
 

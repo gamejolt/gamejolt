@@ -1,7 +1,8 @@
 <script lang="ts" src="./edit"></script>
 
 <template>
-	<div>
+	<!-- Read comment in routeResolved for why the channel might not exist yet. -->
+	<div v-if="channel">
 		<app-page-header v-bind="pageHeaderProps" should-affix-nav @edit-cover="onClickEditHeader">
 			<template v-if="canEditHeader" #cover-edit-buttons>
 				<translate>Upload Header</translate>
@@ -33,6 +34,16 @@
 							<translate>Finished</translate>
 						</span>
 					</template>
+
+					<span
+						v-if="channel.is_archived"
+						v-app-tooltip.touchable="
+							$gettext(`This channel was archived and is now read-only`)
+						"
+						class="tag tag-notice"
+					>
+						<translate>Archived</translate>
+					</span>
 				</div>
 
 				<h1 class="section-header">
