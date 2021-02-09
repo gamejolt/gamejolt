@@ -10,7 +10,7 @@
 		<template v-else-if="competition.periodNum === CompetitionPeriodPreComp">
 			<p>
 				<translate>
-					The Jam has not yet begun and has no entries. Check back later when the jam has
+					The jam has not yet begun and has no entries. Check back later when the jam has
 					started.
 				</translate>
 			</p>
@@ -28,7 +28,7 @@
 				<app-illustration src="~img/ill/no-comments-small.svg">
 					<p>
 						<translate v-if="competition.periodNum >= CompetitionPeriodVoting">
-							No new entries can be submitted to the Jam, and none have been submitted
+							No new entries can be submitted to the jam, and none have been submitted
 							during its runtime.
 						</translate>
 						<translate v-else>
