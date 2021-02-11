@@ -5,6 +5,7 @@ import { Store } from '../../../../../client/store/index';
 import { propOptional, propRequired } from '../../../../../utils/vue';
 import AppCommunityCard from '../../../../../_common/community/card/card.vue';
 import { Community } from '../../../../../_common/community/community.model';
+import { Screen } from '../../../../../_common/screen/screen-service';
 import { hasCommunitiesHomeSplitTest } from '../../../../components/split-test/split-test-service';
 import AppDiscoverHomeCommunitiesItem from './item/item.vue';
 
@@ -25,6 +26,6 @@ export default class AppDiscoverHomeCommunities extends Vue {
 	}
 
 	get slicedCommunities() {
-		return this.communities.slice(0, 12);
+		return this.communities.slice(0, Screen.isMobile ? 18 : 24);
 	}
 }
