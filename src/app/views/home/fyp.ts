@@ -32,7 +32,7 @@ export default class RouteHomeFYP extends BaseRouteComponent {
 		this.controller.feed = ActivityFeedService.routeInit(this);
 	}
 
-	routeResolved(payload: any, fromCache: boolean) {
+	routeResolved($payload: any, fromCache: boolean) {
 		this.controller.feed = ActivityFeedService.routed(
 			this.feed,
 			{
@@ -41,8 +41,9 @@ export default class RouteHomeFYP extends BaseRouteComponent {
 				url: `/web/posts/for-you`,
 				shouldShowFollow: true,
 				shouldShowDates: false,
+				itemsPerPage: $payload.perPage,
 			},
-			payload.items,
+			$payload.items,
 			fromCache
 		);
 	}
