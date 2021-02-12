@@ -53,6 +53,7 @@ export default class RouteHomeActivity extends BaseRouteComponent {
 				url: `/web/dash/activity/more/activity`,
 				shouldShowFollow: true,
 				notificationWatermark: payload.unreadWatermark,
+				itemsPerPage: payload.perPage,
 			},
 			payload.items,
 			fromCache
