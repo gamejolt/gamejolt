@@ -4,7 +4,7 @@
 	<section class="section fill-backdrop">
 		<app-page-container xl>
 			<template #left>
-				<app-user-card v-if="Screen.isDesktop" :user="app.user" />
+				<app-user-card v-if="Screen.isDesktop" :user="user" />
 
 				<template v-if="hasGamesSection">
 					<h4 class="section-header">
@@ -59,11 +59,6 @@
 			</template>
 
 			<template v-if="!Screen.isMobile" #right>
-				<app-home-recommended-game
-					v-app-track-event="`activity:featured-game`"
-					:game="featuredGame"
-					:loading="loadingRecommendedData"
-				/>
 				<app-home-recommended-users
 					v-if="shouldShowRecommendedUsers"
 					:users="recommendedUsers"
@@ -78,53 +73,9 @@
 				</app-scroll-affix>
 			</template>
 
-			<template v-if="shouldShowBasement">
-				<div
-					style="
-						display: flex;
-						flex-direction: column;
-						align-items: center;
-						margin-bottom: 40px;
-					"
-				>
-					<p class="lead text-center anim-fade-in-down" style="max-width: 550px">
-						A creature grabbed all the candy people gave you and dashed into a door
-						you've never seen before! It seems to lead to the Game Jolt Basement. I
-						wonder what's down there...
-					</p>
-
-					<router-link to="basement">
-						<img
-							class="img-responsive anim-fade-in-enlarge"
-							width="267"
-							height="400"
-							src="~img/halloween2020/door.png"
-							alt="The Game Jolt Basement"
-						/>
-					</router-link>
-				</div>
-			</template>
-
 			<app-post-add-button @add="onPostAdded" />
 
 			<template v-if="Screen.isXs">
-				<template v-if="loadingRecommendedData || !!featuredGame">
-					<h6 class="-feed-heading">
-						<translate>Featured Game</translate>
-					</h6>
-					<span
-						v-if="loadingRecommendedData"
-						class="lazy-placeholder -game-placeholder"
-						:style="{ height: '67px' }"
-					/>
-					<app-game-badge
-						v-else-if="featuredGame"
-						v-app-track-event="`activity:featured-game`"
-						class="-game-badge"
-						:game="featuredGame"
-					/>
-				</template>
-
 				<h6 class="-feed-heading">
 					<translate>Communities</translate>
 				</h6>
@@ -133,35 +84,42 @@
 				<app-community-slider v-else :communities="communities" with-add-button />
 			</template>
 
-			<app-activity-feed-placeholder v-if="!feed || !feed.isBootstrapped" />
-			<template v-else>
-				<div v-if="!feed.hasItems" class="alert full-bleed-xs text-center">
-					<p class="lead">
-						<translate>
-							You don't have any activity yet. Follow games to stay up to date on
-							their latest development!
-						</translate>
-					</p>
+			<div class="full-bleed-xs">
+				<app-nav-tab-list center>
+					<ul>
+						<li>
+							<router-link
+								:to="{
+									name: 'home',
+								}"
+								active-class="active"
+								exact
+							>
+								<translate>Following</translate>
+							</router-link>
+						</li>
+						<li>
+							<router-link
+								:to="{
+									name: 'home',
+									params: { tab: 'fyp' },
+								}"
+								active-class="active"
+								exact
+							>
+								<translate>For You</translate>
+								&nbsp;
+								<span class="tag tag-notice">
+									<translate>Beta</translate>
+								</span>
+							</router-link>
+						</li>
+					</ul>
+				</app-nav-tab-list>
+			</div>
 
-					<router-link
-						v-app-track-event="`activity:main-menu:discover`"
-						:to="{
-							name: 'discover.home',
-						}"
-					>
-						<app-button icon="compass-needle" solid lg>
-							<translate>Explore</translate>
-						</app-button>
-					</router-link>
-				</div>
-				<app-activity-feed
-					v-else
-					:feed="feed"
-					show-ads
-					@load-new="onLoadedNew"
-					@load-more="onLoadMore"
-				/>
-			</template>
+			<route-home-activity v-if="feedTab === 'activity'" />
+			<route-home-fyp v-else-if="feedTab === 'fyp'" />
 		</app-page-container>
 	</section>
 </template>
@@ -178,8 +136,4 @@
 .-feed-heading
 	margin-top: 0
 	margin-bottom: 5px
-
-.-game-placeholder
-	rounded-corners-lg()
-	margin-bottom: $line-height-computed
 </style>

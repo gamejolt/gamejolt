@@ -265,6 +265,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 			this.feed,
 			{
 				type: 'EventItem',
+				name: 'game-devlog',
 				url: `/web/posts/fetch/game/${this.game.id}`,
 				hideGameInfo: true,
 				itemsPerPage: $payload.perPage,

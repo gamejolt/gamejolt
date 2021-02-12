@@ -8,7 +8,6 @@ export class Sticker extends Model {
 
 	rarity!: number;
 	img_url!: string;
-	is_type_halloween_candy!: boolean;
 
 	constructor(data: any = {}) {
 		super(data);

@@ -82,9 +82,7 @@
 					<p class="help-block">
 						<translate>Enter your Sketchfab model's URL or ID. For example:</translate>
 						<br />
-						<code>
-							https://sketchfab.com/3d-models/your-model-name-ID
-						</code>
+						<code> https://sketchfab.com/3d-models/your-model-name-ID </code>
 					</p>
 
 					<app-form-control
@@ -531,6 +529,15 @@
 			</div>
 		</template>
 
+		<div v-if="!wasPublished" class="-error-no-channel">
+			<div class="-caret" :class="{ '-hide': !hasChannelError }" />
+			<app-expand :when="hasChannelError">
+				<div class="-error -earmark alert alert-notice">
+					<translate> Choose a channel to post to. </translate>
+				</div>
+			</app-expand>
+		</div>
+
 		<!-- Author options -->
 		<template v-if="shouldShowAuthorOptions">
 			<fieldset>
@@ -558,7 +565,7 @@
 						v-if="formModel.as_game_owner"
 						v-app-tooltip.touchable="
 							model.game.developer.display_name +
-								` (@${model.game.developer.username})`
+							` (@${model.game.developer.username})`
 						"
 						class="-author-avatar pull-right"
 					>
@@ -663,4 +670,187 @@
 	</app-form>
 </template>
 
-<style lang="stylus" src="./post.styl" scoped></style>
+<style lang="stylus" scoped>
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+@import './_community-pill/variables'
+
+.form-group:last-child
+	margin-bottom: 10px
+
+.-attachment-controls
+	margin-bottom: $line-height-computed
+
+	@media $media-xs
+		white-space: nowrap
+		overflow-x: scroll
+		overflow-y: hidden
+
+.-upload-input
+	display: none
+
+.-lead-form-group
+	margin-bottom: 10px
+
+.-hp
+	display: flex
+	align-items: center
+	margin-top: 5px
+
+	&-label
+		theme-prop('color', 'fg-muted')
+		flex: none
+		margin-right: 10px
+		font-size: $font-size-small
+		font-weight: bold
+
+	&-bar
+		flex: auto
+
+		.progress
+			margin-bottom: 0
+
+	&-count
+		theme-prop('color', 'notice')
+		flex: none
+		margin-left: 10px
+		font-size: $font-size-small
+		font-weight: bold
+
+.-channels
+	margin-top: 10px
+
+.-channels
+.-error
+.-community-message
+	margin-bottom: 10px
+
+.-error-no-channel
+	position: relative
+
+	.alert
+		padding: 10px !important
+
+	.-caret
+		caret(color: var(--theme-notice), direction: 'up', size: 5px)
+		left: 15%
+		transition: opacity 200ms
+
+		&.-hide
+			opacity: 0
+
+.-poll-option
+	display: flex
+
+	.form-group
+		flex-grow: 1
+		margin-bottom: ($font-size-base / 2)
+
+	&-remove
+		width: 40px
+		line-height: $input-height-base
+		text-align: center
+
+.-poll-duration
+	.form-group
+		margin-bottom: 0
+
+.-linked-accounts
+	.form-group
+		margin-bottom: 0
+
+.-linked-account
+	display: flex
+	align-items: center
+	margin-top: 10px
+
+	&-icon
+		flex: none
+		margin-right: 10px
+
+	&-label
+		flex: auto
+		margin-right: 10px
+
+	&-toggle
+		flex: none
+
+.-communities
+	margin: 10px 0
+
+	&-list
+		white-space: nowrap
+		display: flex
+		align-items: center
+		margin-bottom: 4px
+
+		&-placeholder
+			margin: 10px 0 14px
+
+		.v-leave
+			display: none
+			position: absolute
+
+.-community-pill
+	flex-shrink: 0
+
+	&-placeholder
+		change-bg('bg-subtle')
+		rounded-corners()
+		width: 138px
+		height: $pill-height
+
+	// Need to apply to the button inside the pill add component too
+	&
+	>>> .button
+		height: 28px
+		margin-bottom: 0
+
+.-author-avatar
+	width: $input-height-base
+	margin-right: 8px
+
+@media $media-xs
+	.-controls
+		display: flex
+		flex-direction: column
+
+		&-attachments
+			display: flex
+			justify-content: center
+			margin-bottom: $line-height-computed
+			padding: 10px 0
+			border-top: $border-width-base solid var(--theme-bg-subtle)
+			border-bottom: $border-width-base solid var(--theme-bg-subtle)
+
+			> :not(:first-child)
+				margin-left: 10px
+
+		&-submit
+			display: flex
+
+			&-button
+				flex: 1 0
+				margin-right: 10px
+				margin-left: 10px
+
+				&:first-of-type
+					margin-left: 0
+
+				&:last-of-type
+					margin-right: 0
+
+@media $media-sm-up
+	.-controls
+		display: flex
+		flex-direction: row
+
+		&-attachments
+			flex: auto
+
+		&-submit
+			flex: none
+
+			&-button
+				display: inline-block
+</style>

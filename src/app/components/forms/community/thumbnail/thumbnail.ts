@@ -1,4 +1,6 @@
+import { Component, Watch } from 'vue-property-decorator';
 import { Community } from '../../../../../_common/community/community.model';
+import { filesize } from '../../../../../_common/filters/filesize';
 import AppFormControlCrop from '../../../../../_common/form-vue/control/crop/crop.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
@@ -8,8 +10,6 @@ import {
 	FormOnBeforeSubmit,
 	FormOnLoad,
 } from '../../../../../_common/form-vue/form.service';
-import { filesize } from '../../../../../_common/filters/filesize';
-import { Component, Watch } from 'vue-property-decorator';
 
 type FormModel = Community & {
 	thumbnail_crop?: any;

@@ -3,7 +3,9 @@ import { VuexStore } from '../../utils/vuex';
 import { Analytics } from '../analytics/analytics.service';
 import { RequestOptions } from '../api/api.service';
 import { Environment } from '../environment/environment.service';
+import { Growls } from '../growls/growls.service';
 import { Seo } from '../seo/seo.service';
+import { Translate } from '../translate/translate.service';
 
 export type PayloadFormErrors = { [errorId: string]: boolean };
 
@@ -16,6 +18,7 @@ export class PayloadError {
 	static readonly ERROR_REDIRECT = 'payload-redirect';
 	static readonly ERROR_NEW_CLIENT_VERSION = 'payload-new-client-version';
 	static readonly ERROR_USER_TIMED_OUT = 'payload-user-timed-out';
+	static readonly ERROR_RATE_LIMIT = 'payload-rate-limit';
 
 	redirect?: string;
 
@@ -30,9 +33,15 @@ export class PayloadError {
 		} else if (response.status === 401) {
 			// If it was a 401 error, then they need to be logged in.
 			// Let's redirect them to the login page on the main site.
-			return new PayloadError(PayloadError.ERROR_NOT_LOGGED, response.data || undefined);
+			return new PayloadError(PayloadError.ERROR_NOT_LOGGED, response.data || undefined, 401);
 		} else if (response.status === 403 && response.data.user?.timeout) {
-			return new PayloadError(PayloadError.ERROR_USER_TIMED_OUT, response.data || undefined);
+			return new PayloadError(
+				PayloadError.ERROR_USER_TIMED_OUT,
+				response.data || undefined,
+				403
+			);
+		} else if (response.status === 429) {
+			return new PayloadError(PayloadError.ERROR_RATE_LIMIT, response.data || undefined, 429);
 		}
 
 		// Otherwise, show an error page.
@@ -50,6 +59,8 @@ export class PayloadError {
 
 export class Payload {
 	static readonly httpErrors = [400, 403, 404, 500];
+	// These http errors are not redirects, so the noRedirect behavior should not apply to them.
+	static readonly httpNoRedirectOverrides = [429];
 
 	private static store: VuexStore;
 	private static ver?: number = undefined;
@@ -73,7 +84,7 @@ export class Payload {
 		};
 
 		try {
-			let response = await requestPromise;
+			const response = await requestPromise;
 
 			if (!response || !response.data) {
 				if (!options.noErrorRedirect) {
@@ -117,7 +128,10 @@ export class Payload {
 				throw error;
 			}
 
-			if (!options.noErrorRedirect) {
+			if (
+				!options.noErrorRedirect ||
+				this.httpNoRedirectOverrides.includes(response.status)
+			) {
 				throw this.handlePayloadError(PayloadError.fromAxiosError(error));
 			} else {
 				throw error;
@@ -234,6 +248,13 @@ export class Payload {
 			this.store.commit('app/redirect', Environment.wttfBaseUrl + '/timeout');
 		} else if (error.type === PayloadError.ERROR_INVALID) {
 			this.store.commit('app/setError', 500);
+		} else if (error.type === PayloadError.ERROR_RATE_LIMIT) {
+			Growls.error({
+				title: Translate.$gettext(`Whoa there, slow down!`),
+				message: Translate.$gettext(
+					`Looks like you are doing that too much. Slow down, then try again in a few minutes.`
+				),
+			});
 		} else if (
 			error.type === PayloadError.ERROR_HTTP_ERROR &&
 			(!error.status || this.httpErrors.indexOf(error.status) !== -1)

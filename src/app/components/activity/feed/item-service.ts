@@ -31,9 +31,9 @@ export class ActivityFeedItem {
 		return this.type === other.type && this.feedItem.id === other.feedItem.id;
 	}
 
-	$viewed() {
+	$viewed(sourceFeed: string) {
 		if (this.feedItem instanceof EventItem && this.feedItem.type === EventItem.TYPE_POST_ADD) {
-			$viewPost(this.feedItem.action as FiresidePost);
+			$viewPost(this.feedItem.action as FiresidePost, sourceFeed);
 		}
 	}
 }

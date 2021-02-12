@@ -40,11 +40,6 @@
 									</router-link>
 								</li>
 								<li>
-									<a href="http://jams.gamejolt.com" target="_blank">
-										<translate>Jams</translate>
-									</a>
-								</li>
-								<li>
 									<router-link :to="{ name: 'forums.landing.overview' }">
 										<translate>Forums</translate>
 									</router-link>

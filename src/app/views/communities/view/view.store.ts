@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import { Route } from 'vue-router';
+import { numberSort } from '../../../../utils/array';
+import { Api } from '../../../../_common/api/api.service';
 import { Collaborator } from '../../../../_common/collaborator/collaborator.model';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import {
@@ -25,13 +27,23 @@ export class CommunityRouteStore {
 	sidebarData: null | CommunitySidebarData = null;
 	collaborator: null | Collaborator = null;
 
+	/** Gets populated when visiting an archived channel (just one) or viewing them in the sidebar/edit section. */
+	archivedChannels: CommunityChannel[] = [];
+	expandedArchivedChannels = false;
+	loadedArchivedChannels = false;
+
 	get channel() {
 		const channels = [
 			this.frontpageChannel,
 			this.allChannel,
 			...(this.community.channels || []),
+			...this.archivedChannels,
 		];
 		return channels.find(i => i.title === this.channelPath) || null;
+	}
+
+	get competition() {
+		return this.channel?.competition;
 	}
 
 	get canEditMedia() {
@@ -49,6 +61,14 @@ export class CommunityRouteStore {
 
 export function setCommunity(store: CommunityRouteStore, community: Community) {
 	store.isLoaded = true;
+
+	// When the community changes, reset archive channel settings.
+	if (store.community?.id !== community.id) {
+		store.archivedChannels = [];
+		store.loadedArchivedChannels = false;
+		store.expandedArchivedChannels = false;
+	}
+
 	store.community = community;
 	_updateChannels(store);
 }
@@ -163,4 +183,32 @@ export function setCommunityMeta(community: Community, title: string) {
 		description,
 		image,
 	};
+}
+
+export async function loadArchivedChannels(store: CommunityRouteStore) {
+	const payload = await Api.sendRequest(
+		`/web/communities/fetch-archived-channels/` + store.community.path
+	);
+	if (payload.channels) {
+		const channels = CommunityChannel.populate(payload.channels);
+
+		// For each retrieved channel, either assign to one that's already in the list
+		// or push. The channel could already be there when it got added through viewing
+		// it from the channel view endpoint.
+		for (const channel of channels) {
+			const existingChannel = store.archivedChannels.find(i => i.id === channel.id);
+			if (existingChannel) {
+				existingChannel.assign(channel);
+			} else {
+				store.archivedChannels.push(channel);
+			}
+		}
+
+		// Because of assign/push possibly messing up sort, sort now.
+		store.archivedChannels = store.archivedChannels.sort((a, b) => numberSort(a.sort, b.sort));
+	} else {
+		// This can happen when an archived channel gets removed while viewing the sidebar.
+		store.archivedChannels = [];
+		store.community.has_archived_channels = false;
+	}
 }

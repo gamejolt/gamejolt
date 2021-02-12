@@ -13,6 +13,11 @@ export interface ActivityFeedStateOptions {
 	type: 'Notification' | 'EventItem';
 
 	/**
+	 * A name to identify the feed. Used in tick tracking.
+	 */
+	name: string;
+
+	/**
 	 * The URL to hit to load more from the feed.
 	 */
 	url: string;
@@ -25,6 +30,7 @@ export interface ActivityFeedStateOptions {
 
 export class ActivityFeedState {
 	feedType: 'Notification' | 'EventItem';
+	feedName: string;
 	items: ActivityFeedItem[] = [];
 	users: { [k: number]: User } = {};
 	games: { [k: number]: Game } = {};
@@ -48,6 +54,7 @@ export class ActivityFeedState {
 
 	constructor(options: ActivityFeedStateOptions) {
 		this.feedType = options.type;
+		this.feedName = options.name;
 		this.loadMoreUrl = options.url;
 
 		if (typeof options.notificationWatermark !== 'undefined') {
@@ -108,7 +115,7 @@ export class ActivityFeedState {
 		}
 
 		this.viewedItems.push(item.id);
-		item.$viewed();
+		item.$viewed(this.feedName);
 	}
 
 	/**

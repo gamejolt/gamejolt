@@ -1,7 +1,6 @@
 import { Location, Route } from 'vue-router/types/router';
 import { Api } from '../../api/api.service';
 import { Perm } from '../../collaborator/collaboratable';
-import { COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING } from '../../community/channel/channel-permissions';
 import { CommunityChannel } from '../../community/channel/channel.model';
 import { Community } from '../../community/community.model';
 import { ContentContainerModel } from '../../content/content-container-model';
@@ -319,11 +318,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 			return true;
 		}
 		for (const community of this.communities) {
-			if (
-				!community.channel?.permissions.canPerform(
-					COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING
-				)
-			) {
+			if (!community.channel?.canPost) {
 				return false;
 			}
 		}
@@ -348,7 +343,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		// 3. viewing the channel the post was published to.
 		// NOTE: this means posts cannot be pinned to meta channels like 'featured' and 'all posts'
 
-		if (route.name !== 'communities.view.channel') {
+		if (route.name !== 'communities.view.channel.feed') {
 			return null;
 		}
 
@@ -540,6 +535,6 @@ export async function loadArticleIntoPost(post: FiresidePost) {
 	return post;
 }
 
-export function $viewPost(post: FiresidePost) {
-	HistoryTick.sendBeacon('fireside-post', post.id);
+export function $viewPost(post: FiresidePost, sourceFeed?: string) {
+	HistoryTick.sendBeacon('fireside-post', post.id, { sourceFeed });
 }

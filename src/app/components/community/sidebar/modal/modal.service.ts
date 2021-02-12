@@ -3,14 +3,14 @@ import { Community } from '../../../../../_common/community/community.model';
 import { Modal } from '../../../../../_common/modal/modal.service';
 import { CommunitySidebarData } from '../sidebar-data';
 
-interface CommunitySidebarModalOptions {
+interface Options {
 	isEditing: boolean;
 	data: CommunitySidebarData;
 	community: Community;
 }
 
 export class CommunitySidebarModal {
-	static async show(options: CommunitySidebarModalOptions) {
+	static async show(options: Options) {
 		const { isEditing, community, data } = options;
 
 		return await Modal.show<void>({

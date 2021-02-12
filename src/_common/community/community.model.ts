@@ -6,7 +6,6 @@ import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 import { Theme } from '../theme/theme.model';
 import { UserBlock } from '../user/block/block.model';
-import { COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING } from './channel/channel-permissions';
 import { CommunityChannel } from './channel/channel.model';
 
 export class Community extends Collaboratable(Model) {
@@ -16,6 +15,7 @@ export class Community extends Collaboratable(Model) {
 	post_placeholder_text!: string | null;
 	description_content!: string;
 	is_verified!: boolean;
+	has_archived_channels!: boolean | null;
 
 	thumbnail?: MediaItem;
 	header?: MediaItem;
@@ -102,14 +102,22 @@ export class Community extends Collaboratable(Model) {
 			return [];
 		}
 
-		return this.channels?.filter(channel =>
-			channel.permissions.canPerform(COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING)
-		);
+		return this.channels?.filter(channel => channel.canPost);
+	}
+
+	/** Whether or not a generally removable channel can be removed from the community at this moment. */
+	get canRemoveChannel() {
+		if (!this.channels) {
+			return false;
+		}
+
+		// Only publicly visible channels count.
+		return this.channels.filter(i => i.visibility === 'published').length > 1;
 	}
 
 	channelRouteLocation(channel: CommunityChannel): Location {
 		return {
-			name: 'communities.view.channel',
+			name: 'communities.view.channel.feed',
 			params: {
 				path: this.path,
 				channel: channel.title,

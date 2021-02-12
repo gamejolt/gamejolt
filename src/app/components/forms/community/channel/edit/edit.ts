@@ -1,4 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
+import { propRequired } from '../../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
 import AppFormControlUpload from '../../../../../../_common/form-vue/control/upload/upload.vue';
@@ -7,10 +8,9 @@ import {
 	FormOnLoad,
 	FormOnSubmitSuccess,
 } from '../../../../../../_common/form-vue/form.service';
-import { Growls } from '../../../../../../_common/growls/growls.service';
 import { AppImgResponsive } from '../../../../../../_common/img/responsive/responsive';
 import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
-import { CommunityChannelRenameModal } from '../../../../community/channel/rename-modal/rename-modal.service';
+import AppFormCommunityChannelPermissions from '../_permissions/permissions.vue';
 
 class FormModel extends CommunityChannel {
 	permission_posting = 'all';
@@ -20,18 +20,22 @@ class FormModel extends CommunityChannel {
 	components: {
 		AppImgResponsive,
 		AppFormControlUpload,
+		AppFormCommunityChannelPermissions,
 	},
 })
 export default class FormCommunityChannelEdit extends BaseForm<FormModel>
 	implements FormOnLoad, FormOnSubmitSuccess {
-	@Prop(Community)
-	community!: Community;
+	@Prop(propRequired(Community)) community!: Community;
 
 	maxFilesize = 0;
 	maxWidth = 0;
 	maxHeight = 0;
 
 	modelClass = FormModel;
+
+	get competitionId() {
+		return this.model!.competition?.id;
+	}
 
 	get loadUrl() {
 		return `/web/dash/communities/channels/save/${this.community.id}/${this.formModel.id}`;
@@ -73,25 +77,5 @@ export default class FormCommunityChannelEdit extends BaseForm<FormModel>
 
 		this.setField('background', this.model!.background);
 		this.$emit('clear');
-	}
-
-	async onRename() {
-		const channel = await CommunityChannelRenameModal.show(
-			this.model!,
-			this.community,
-			this.community.channels!
-		);
-
-		if (channel) {
-			// Overwrite the current form's model with the new title.
-			// Since the modal wasn't part of this form, it doesn't update automatically.
-			this.setField('title', channel.title);
-
-			Growls.success({
-				message: this.$gettextInterpolate(`Renamed channel to %{ title }.`, {
-					title: channel.title,
-				}),
-			});
-		}
 	}
 }

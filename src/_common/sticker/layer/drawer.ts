@@ -80,19 +80,8 @@ export default class AppStickerLayerDrawer extends Vue {
 		}
 	}
 
-	get hasHalloweenStickers() {
-		return this.drawerStore.drawerItems.some(i => i.sticker.is_type_halloween_candy);
-	}
-
 	get stickerSheets() {
-		return [
-			...this.chunkStickers(
-				this.drawerStore.drawerItems.filter(i => i.sticker.is_type_halloween_candy)
-			),
-			...this.chunkStickers(
-				this.drawerStore.drawerItems.filter(i => !i.sticker.is_type_halloween_candy)
-			),
-		];
+		return this.chunkStickers(this.drawerStore.drawerItems);
 	}
 
 	private chunkStickers(stickers: StickerCount[]) {
@@ -138,13 +127,9 @@ export default class AppStickerLayerDrawer extends Vue {
 	}
 
 	get styles() {
-		const HalloweenTextHeight = this.hasHalloweenStickers ? 25 : 0;
 		const numRowsShowing = Screen.isPointerMouse ? 2.3 : 2;
 
 		return {
-			halloweenText: {
-				height: `${HalloweenTextHeight}px`,
-			},
 			shell: [
 				{
 					transform: `translateY(0)`,
@@ -152,9 +137,7 @@ export default class AppStickerLayerDrawer extends Vue {
 					maxWidth: Screen.isXs ? 'unset' : `calc(100% - 64px)`,
 					// Max-height of 2 sticker rows
 					maxHeight: Screen.isPointerMouse
-						? `${this.drawerPadding * 2 +
-								this.stickerSize * numRowsShowing +
-								HalloweenTextHeight}px`
+						? `${this.drawerPadding * 2 + this.stickerSize * numRowsShowing}px`
 						: null,
 				},
 				// Shift the drawer down when there's an item being dragged and the drawer container is not being hovered.
@@ -172,20 +155,14 @@ export default class AppStickerLayerDrawer extends Vue {
 				maxWidth: Screen.isXs ? 'unset' : `calc(100% - 64px)`,
 				// Max-height of 2 sticker rows
 				maxHeight: Screen.isPointerMouse
-					? this.drawerPadding * 2 +
-					  this.stickerSize * numRowsShowing +
-					  HalloweenTextHeight +
-					  'px'
+					? this.drawerPadding * 2 + this.stickerSize * numRowsShowing + 'px'
 					: null,
 			},
 			dimensions: {
 				minWidth: Screen.isXs ? 'unset' : '400px',
 				minHeight: `${this.stickerSize}px`,
 				maxHeight: Screen.isPointerMouse
-					? this.drawerPadding +
-					  this.stickerSize * numRowsShowing +
-					  HalloweenTextHeight +
-					  'px'
+					? this.drawerPadding + this.stickerSize * numRowsShowing + 'px'
 					: undefined,
 				paddingBottom: `${this.drawerPadding}px`,
 			},

@@ -1,6 +1,8 @@
+<script lang="ts" src="./time"></script>
+
 <template>
 	<component :is="link ? 'router-link' : 'span'" :to="link" :class="link ? 'link-unstyled' : ''">
-		<template v-if="shouldShowScheduled">
+		<template v-if="post && post.isScheduled">
 			<span class="tag" style="vertical-align: middle">
 				<app-jolticon icon="calendar-grid" />
 				<translate>Scheduled</translate>
@@ -12,5 +14,3 @@
 		</template>
 	</component>
 </template>
-
-<script lang="ts" src="./time"></script>

@@ -101,7 +101,7 @@
 						<div class="page-help">
 							<p>
 								<translate>
-									You are currently a collaborator on this community. Leaving the
+									You are currently a moderator on this community. Leaving the
 									community will revoke all of your moderation permissions.
 								</translate>
 							</p>

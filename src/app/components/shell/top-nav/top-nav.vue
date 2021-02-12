@@ -94,15 +94,6 @@
 								<app-jolticon icon="forums" />
 								<translate>Forums</translate>
 							</router-link>
-							<a
-								v-app-track-event="`sidebar:jams`"
-								class="list-group-item has-icon offline-disable"
-								:href="Environment.jamsBaseUrl"
-								target="_blank"
-							>
-								<app-jolticon icon="jams" />
-								<translate>Jams</translate>
-							</a>
 						</div>
 					</template>
 				</app-popper>

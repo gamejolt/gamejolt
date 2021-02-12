@@ -29,15 +29,34 @@ export function resolveFeedChannelPayload(
 	payload: any,
 	fromCache: boolean
 ) {
+	const channel = getChannelPathFromRoute(route);
+
+	let feedName = null;
+	switch (channel) {
+		case CommunityPresetChannelType.FEATURED:
+			feedName = 'community-featured';
+			break;
+
+		case CommunityPresetChannelType.ALL:
+			feedName = 'community-all';
+			break;
+
+		default:
+			feedName = 'community-channel';
+			break;
+	}
+
 	return ActivityFeedService.routed(
 		feed,
 		{
 			type: 'EventItem',
+			name: feedName,
 			url: getFeedChannelFetchUrl(route),
 			mainCommunity,
 			shouldShowFollow: true,
 			notificationWatermark: payload.unreadWatermark,
 			itemsPerPage: payload.perPage,
+			shouldShowDates: channel !== CommunityPresetChannelType.FEATURED,
 		},
 		payload.items,
 		fromCache

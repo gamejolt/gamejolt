@@ -1,6 +1,6 @@
 <template>
 	<div class="-container">
-		<div v-if="Screen.isLg" class="-offset" />
+		<div v-if="Screen.isLg && !full" class="-offset" />
 		<div
 			class="-content"
 			:class="{ '-single': !sidebarHasContent, '-full': full && !sidebarHasContent }"
@@ -20,8 +20,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 $-offset-width = 110px
 $-content-width = 650px
@@ -36,13 +36,15 @@ $-sidebar-basis = $-sidebar-width - $-offset-width
 	justify-content: center
 	padding: ($grid-gutter-width / 2) 0
 
-.-content, .-sidebar
-	margin-left: ($grid-gutter-width-xs / 2)
-	margin-right: ($grid-gutter-width-xs / 2)
+.-content
+.-sidebar
+	&:not(.-full)
+		margin-left: ($grid-gutter-width-xs / 2)
+		margin-right: ($grid-gutter-width-xs / 2)
 
-	@media $media-sm-up
-		margin-left: ($grid-gutter-width / 2)
-		margin-right: ($grid-gutter-width / 2)
+		@media $media-sm-up
+			margin-left: ($grid-gutter-width / 2)
+			margin-right: ($grid-gutter-width / 2)
 
 .-offset
 	flex: 1

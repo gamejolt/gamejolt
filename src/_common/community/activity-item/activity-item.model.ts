@@ -4,6 +4,8 @@ import { Model } from '../../model/model.service';
 import { UserBlock } from '../../user/block/block.model';
 import { User } from '../../user/user.model';
 import { CommunityChannel } from '../channel/channel.model';
+import { CommunityCompetition } from '../competition/competition.model';
+import { CommunityCompetitionEntry } from '../competition/entry/entry.model';
 
 export type TypeIcon = {
 	icon: string;
@@ -38,13 +40,27 @@ export class CommunityActivityItem extends Model {
 	public static TYPE_GAME_LINK = 'game/link';
 	public static TYPE_GAME_UNLINK = 'game/unlink';
 
+	public static TYPE_COMPETITION_EDIT_SETTINGS = 'competition/edit/settings';
+	public static TYPE_COMPETITION_EDIT_VOTING = 'competition/edit/voting';
+	public static TYPE_COMPETITION_VOTING_SET_ACTIVE = 'competition/voting/set-active';
+	public static TYPE_COMPETITION_ENTRY_REMOVE = 'competition/entry/remove';
+	public static TYPE_COMPETITION_ENTRY_UNREMOVE = 'competition/entry/unremove';
+	public static TYPE_COMPETITION_ENTRY_GIVE_AWARD = 'competition/entry/give-award';
+
 	type!: string;
 	added_on!: number;
 	extra_data!: string;
 
 	user?: User;
 
-	action_resource?: FiresidePost | User | CommunityChannel | UserBlock | Game;
+	action_resource?:
+		| FiresidePost
+		| User
+		| CommunityChannel
+		| UserBlock
+		| Game
+		| CommunityCompetition
+		| CommunityCompetitionEntry;
 
 	constructor(data: any = {}) {
 		super(data);
@@ -82,6 +98,18 @@ export class CommunityActivityItem extends Model {
 				case CommunityActivityItem.TYPE_GAME_UNLINK:
 					this.action_resource = new Game(data.action_resource);
 					break;
+
+				case CommunityActivityItem.TYPE_COMPETITION_EDIT_SETTINGS:
+				case CommunityActivityItem.TYPE_COMPETITION_EDIT_VOTING:
+				case CommunityActivityItem.TYPE_COMPETITION_VOTING_SET_ACTIVE:
+					this.action_resource = new CommunityCompetition(data.action_resource);
+					break;
+
+				case CommunityActivityItem.TYPE_COMPETITION_ENTRY_REMOVE:
+				case CommunityActivityItem.TYPE_COMPETITION_ENTRY_UNREMOVE:
+				case CommunityActivityItem.TYPE_COMPETITION_ENTRY_GIVE_AWARD:
+					this.action_resource = new CommunityCompetitionEntry(data.action_resource);
+					break;
 			}
 		}
 	}
@@ -98,7 +126,7 @@ export class CommunityActivityItem extends Model {
 			case CommunityActivityItem.TYPE_POST_MOVE:
 				return { icon: 'arrow-forward', color: '' };
 			case CommunityActivityItem.TYPE_POST_EJECT:
-				return { icon: 'remove', color: 'notice' };
+				return { icon: 'eject', color: 'notice' };
 
 			case CommunityActivityItem.TYPE_MOD_INVITE:
 				return { icon: 'friend-add-1', color: '' };
@@ -115,6 +143,8 @@ export class CommunityActivityItem extends Model {
 			case CommunityActivityItem.TYPE_EDIT_HEADER:
 			case CommunityActivityItem.TYPE_EDIT_DETAILS:
 			case CommunityActivityItem.TYPE_EDIT_HEADER_REMOVE:
+			case CommunityActivityItem.TYPE_COMPETITION_EDIT_SETTINGS:
+			case CommunityActivityItem.TYPE_COMPETITION_EDIT_VOTING:
 				return { icon: 'edit', color: '' };
 
 			case CommunityActivityItem.TYPE_CHANNEL_ADD:
@@ -128,6 +158,17 @@ export class CommunityActivityItem extends Model {
 			case CommunityActivityItem.TYPE_GAME_LINK:
 			case CommunityActivityItem.TYPE_GAME_UNLINK:
 				return { icon: 'game', color: '' };
+
+			case CommunityActivityItem.TYPE_COMPETITION_VOTING_SET_ACTIVE:
+				return { icon: 'pedestals-numbers', color: '' };
+
+			case CommunityActivityItem.TYPE_COMPETITION_ENTRY_REMOVE:
+				return { icon: 'bullet-list', color: 'notice' };
+			case CommunityActivityItem.TYPE_COMPETITION_ENTRY_UNREMOVE:
+				return { icon: 'bullet-list', color: '' };
+
+			case CommunityActivityItem.TYPE_COMPETITION_ENTRY_GIVE_AWARD:
+				return { icon: 'medal', color: '' };
 		}
 	}
 }

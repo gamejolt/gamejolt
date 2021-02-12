@@ -64,9 +64,11 @@ export default class RouteSearchResults extends BaseRouteComponent {
 			this.feed,
 			{
 				type: 'EventItem',
+				name: 'search',
 				url: `/web/posts/fetch/search/${encodeURIComponent(this.$route.query.q + '')}`,
 				shouldShowFollow: true,
 				itemsPerPage: $payload.postsPerPage,
+				shouldShowDates: false,
 			},
 			$payload.posts,
 			fromCache

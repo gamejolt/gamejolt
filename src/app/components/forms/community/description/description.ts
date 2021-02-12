@@ -10,7 +10,7 @@ import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.servi
 })
 export default class FormCommunityDescription extends BaseForm<Community> implements FormOnLoad {
 	modelClass = Community;
-	saveMethod = '$saveDescription' as '$saveDescription';
+	saveMethod = '$saveDescription' as const;
 	lengthLimit = 5_000;
 
 	get loadUrl() {

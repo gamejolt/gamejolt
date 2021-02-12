@@ -1,31 +1,29 @@
-import { Component, Watch } from 'vue-property-decorator';
+import { Component, Provide } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { router } from '..';
 import { numberSort } from '../../../utils/array';
 import { fuzzysearch } from '../../../utils/string';
 import AppAdWidget from '../../../_common/ad/widget/widget.vue';
-import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
-import { Game } from '../../../_common/game/game.model';
-import { AppLazyPlaceholder } from '../../../_common/lazy/placeholder/placeholder';
-import { Meta } from '../../../_common/meta/meta-service';
-import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import AppNavTabList from '../../../_common/nav/tab-list/tab-list.vue';
+import {
+	asyncRouteLoader,
+	BaseRouteComponent,
+	RouteResolver,
+} from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
+import { AppState, AppStore } from '../../../_common/store/app-store';
 import AppUserCard from '../../../_common/user/card/card.vue';
 import { User } from '../../../_common/user/user.model';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
-import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../components/activity/feed/view';
-import AppBroadcastCard from '../../components/broadcast-card/broadcast-card.vue';
 import AppCommunitySliderPlaceholder from '../../components/community/slider/placeholder/placeholder.vue';
 import AppCommunitySlider from '../../components/community/slider/slider.vue';
-import AppGameBadge from '../../components/game/badge/badge.vue';
-import { AppActivityFeedLazy } from '../../components/lazy';
 import AppPageContainer from '../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../components/post/add-button/add-button.vue';
 import { Store } from '../../store';
-import AppHomeRecommendedGame from './_recommended/game/game.vue';
 import AppHomeRecommendedUsers from './_recommended/users/users.vue';
 
 class DashGame {
@@ -37,13 +35,14 @@ class DashGame {
 	) {}
 }
 
+export class RouteActivityFeedController {
+	feed: ActivityFeedView | null = null;
+}
+
 @Component({
 	name: 'RouteActivityFeed',
 	components: {
 		AppPageContainer,
-		AppActivityFeed: AppActivityFeedLazy,
-		AppActivityFeedPlaceholder,
-		AppBroadcastCard,
 		AppCommunitySlider,
 		AppCommunitySliderPlaceholder,
 		AppPostAddButton,
@@ -51,40 +50,31 @@ class DashGame {
 		AppScrollAffix,
 		AppAdWidget,
 		AppHomeRecommendedUsers,
-		AppHomeRecommendedGame,
-		AppGameBadge,
-		AppLazyPlaceholder,
+		AppNavTabList,
+		RouteHomeActivity: () => asyncRouteLoader(import('./activity.vue'), router),
+		RouteHomeFyp: () => asyncRouteLoader(import('./fyp.vue'), router),
 	},
 })
 @RouteResolver({
 	cache: true,
 	lazy: true,
-	deps: { query: ['feed_last_id'] },
-	resolver: ({ route }) =>
-		Promise.all([
-			Api.sendRequest(ActivityFeedService.makeFeedUrl(route, '/web/dash/activity/activity')),
-			Api.sendRequest('/web/dash/home'),
-		]),
+	resolver: () => Api.sendRequest('/web/dash/home'),
 })
 export default class RouteActivityFeed extends BaseRouteComponent {
-	@State app!: Store['app'];
+	@AppState user!: AppStore['user'];
 	@State communities!: Store['communities'];
-	@State unreadActivityCount!: Store['unreadActivityCount'];
-	@State grid!: Store['grid'];
 
-	feed: ActivityFeedView | null = null;
 	games: DashGame[] = [];
 	gameFilterQuery = '';
 	isShowingAllGames = false;
 	loadingRecommendedUsers = false; // Set to `true` while refreshing users.
 	loadingRecommendedData = true;
 	recommendedUsers: User[] = [];
-	featuredGame: Game | null = null;
-
-	// TODO(HALLOWEEN2020): remove after
-	shouldShowBasement = false;
 
 	readonly Screen = Screen;
+
+	@Provide('route-activity-feed')
+	controller = new RouteActivityFeedController();
 
 	get hasGamesSection() {
 		return this.games.length > 0 && Screen.isLg;
@@ -111,11 +101,8 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 		return this.loadingRecommendedUsers || this.recommendedUsers.length > 0;
 	}
 
-	@Watch('unreadActivityCount', { immediate: true })
-	onUnreadActivityCountChanged() {
-		if (this.feed && this.unreadActivityCount > this.feed.newCount) {
-			this.feed.newCount = this.unreadActivityCount;
-		}
+	get feedTab(): 'activity' | 'fyp' {
+		return this.$route.params?.tab === 'fyp' ? 'fyp' : 'activity';
 	}
 
 	private checkGameFilter(game: DashGame) {
@@ -137,54 +124,20 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 		return false;
 	}
 
-	routeCreated() {
-		Meta.setTitle(null);
-		this.feed = ActivityFeedService.routeInit(this);
-	}
-
-	routeResolved([feedPayload, homePayload]: any, fromCache: boolean) {
-		this.feed = ActivityFeedService.routed(
-			this.feed,
-			{
-				type: 'EventItem',
-				url: `/web/dash/activity/more/activity`,
-				shouldShowFollow: true,
-				notificationWatermark: feedPayload.unreadWatermark,
-				itemsPerPage: feedPayload.perPage,
-			},
-			feedPayload.items,
-			fromCache
-		);
-
-		this.games = (homePayload.ownerGames as DashGame[])
+	routeResolved(payload: any, _fromCache: boolean) {
+		this.games = (payload.ownerGames as DashGame[])
 			.map(i => new DashGame(i.id, i.title, i.ownerName, i.createdOn))
 			.sort((a, b) => numberSort(a.createdOn, b.createdOn))
 			.reverse();
-
-		if (!fromCache) {
-			this.grid?.pushViewNotifications('activity');
-		}
-
-		this.shouldShowBasement = homePayload.receivedCandy;
 	}
 
 	mounted() {
 		this.loadRecommendedData();
 	}
 
-	onLoadedNew() {
-		if (this.unreadActivityCount > 0) {
-			this.grid?.pushViewNotifications('activity');
-		}
-	}
-
-	onLoadMore() {
-		Analytics.trackPageview(undefined, true);
-	}
-
 	onPostAdded(post: FiresidePost) {
-		if (this.app.user) {
-			ActivityFeedService.onPostAdded(this.feed!, post, this);
+		if (this.controller.feed) {
+			ActivityFeedService.onPostAdded(this.controller.feed, post, this);
 		}
 	}
 
@@ -208,9 +161,6 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 		if (payload) {
 			if (payload.users) {
 				this.recommendedUsers = User.populate(payload.users);
-			}
-			if (payload.featuredGame) {
-				this.featuredGame = new Game(payload.featuredGame);
 			}
 		}
 

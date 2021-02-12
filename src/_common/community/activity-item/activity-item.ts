@@ -14,6 +14,8 @@ import { UserBlock } from '../../user/block/block.model';
 import AppUserAvatar from '../../user/user-avatar/user-avatar.vue';
 import { User } from '../../user/user.model';
 import { CommunityChannel } from '../channel/channel.model';
+import { CommunityCompetition } from '../competition/competition.model';
+import { CommunityCompetitionEntry } from '../competition/entry/entry.model';
 import { CommunityActivityItem } from './activity-item.model';
 
 @Component({
@@ -79,13 +81,32 @@ export default class AppCommunityActivityItem extends Vue {
 			return this.item.action_resource.user.url;
 		} else if (this.item.action_resource instanceof CommunityChannel) {
 			return {
-				name: 'communities.view.channel',
+				name: 'communities.view.channel.feed',
 				params: {
 					channel: this.item.action_resource.title,
 				},
 			};
 		} else if (this.item.action_resource instanceof Game) {
 			return this.item.action_resource.routeLocation;
+		} else if (this.item.action_resource instanceof CommunityCompetition) {
+			// For community competitions, the channel title is encoded in the extra data.
+			const channelTitle = this.getExtraData('channel-title');
+			return {
+				name: 'communities.view.channel.feed',
+				params: {
+					channel: channelTitle,
+				},
+			};
+		} else if (this.item.action_resource instanceof CommunityCompetitionEntry) {
+			// For community competition entries, the channel title is encoded in the extra data.
+			const channelTitle = this.getExtraData('channel-title');
+			return {
+				name: 'communities.view.channel.entries',
+				params: {
+					channel: channelTitle,
+				},
+				hash: '#entry-' + this.item.action_resource.id,
+			};
 		}
 	}
 
@@ -100,6 +121,12 @@ export default class AppCommunityActivityItem extends Vue {
 			return this.item.action_resource.title;
 		} else if (this.item.action_resource instanceof Game) {
 			return this.item.action_resource.title;
+		} else if (this.item.action_resource instanceof CommunityCompetition) {
+			// For community competitions, the channel title is encoded in the extra data.
+			const channelTitle = this.getExtraData('channel-title');
+			return channelTitle;
+		} else if (this.item.action_resource instanceof CommunityCompetitionEntry) {
+			return this.item.action_resource.resource.title;
 		}
 	}
 

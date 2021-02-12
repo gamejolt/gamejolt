@@ -36,9 +36,9 @@ import {
 	setChannelPathFromRoute,
 	setCommunity,
 } from './view.store';
-import AppCommunitiesViewCard from './_card/card.vue';
 import AppCommunitiesViewContext from './_context/context.vue';
 import AppEditableThumbnail from './_editable-thumbnail/editable-thumbnail.vue';
+import AppMobileHeader from './_mobile-header/mobile-header.vue';
 import AppNavChannels from './_nav/channels/channels.vue';
 
 export const CommunityThemeKey = 'community';
@@ -54,7 +54,7 @@ export const CommunityThemeKey = 'community';
 		AppCommunityPerms,
 		AppPopper,
 		AppCommunityVerifiedTick,
-		AppCommunitiesViewCard,
+		AppMobileHeader,
 		AppNavChannels,
 		AppEditableThumbnail,
 		AppEditableOverlay,
@@ -118,8 +118,12 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 		return this.user && this.user.isMod;
 	}
 
+	get competitionHeader() {
+		return this.routeStore.channel?.competition?.header ?? null;
+	}
+
 	get coverMediaItem() {
-		return this.community.header || null;
+		return this.competitionHeader ?? this.community.header ?? null;
 	}
 
 	get coverEditable() {
@@ -135,6 +139,10 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	}
 
 	get isShowingHeader() {
+		if (this.routeStore.channel?.type === 'competition') {
+			return !!this.competitionHeader && !this.isEditing;
+		}
+
 		if (!this.coverMediaItem) {
 			return false;
 		}
