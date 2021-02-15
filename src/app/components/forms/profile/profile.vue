@@ -155,19 +155,12 @@
 			</p>
 		</app-form-group>
 
-		<app-form-group name="liked_posts_enabled" :label="$gettext(`Show 'Liked Posts' feed?`)">
+		<app-form-group name="liked_posts_enabled" :label="$gettext(`Show your liked posts?`)">
 			<app-form-control-toggle class="pull-right" />
 
 			<p class="help-block">
 				<translate>
-					Shows the "Liked" tab on your profile which contains a feed of all posts you've
-					liked on Game Jolt.
-				</translate>
-			</p>
-			<p class="help-block">
-				<translate>
-					Note that when you turn this off, you will still be able to see your own feed of
-					liked posts, while no one else can.
+					Will publicly show the posts you've liked posts on your profile.
 				</translate>
 			</p>
 		</app-form-group>

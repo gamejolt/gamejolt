@@ -5,36 +5,37 @@
 		<!-- Spawn day -->
 		<app-user-spawn-day :user="user" @post-add="onPostAdded" />
 
-		<template v-if="isOwner">
-			<app-post-add-button @add="onPostAdded" />
+		<app-post-add-button v-if="isOwner" @add="onPostAdded" />
 
-			<app-nav-tab-list>
-				<ul>
-					<li>
-						<router-link
-							:to="{
-								name: 'profile.overview',
-								query: {},
-							}"
-							active-class="active"
-							exact
-						>
-							<translate>Posts</translate>
-						</router-link>
-					</li>
-					<li>
-						<router-link
-							:to="{
-								name: 'profile.overview',
-								query: {},
-								params: { feedSection: 'likes' },
-							}"
-							active-class="active"
-							exact
-						>
-							<translate>Likes</translate>
-						</router-link>
-					</li>
+		<app-nav-tab-list>
+			<ul>
+				<li>
+					<router-link
+						:to="{
+							name: 'profile.overview',
+							query: {},
+						}"
+						active-class="active"
+						exact
+					>
+						<translate>Posts</translate>
+					</router-link>
+				</li>
+				<li v-app-tooltip="likeFeedTooltip">
+					<router-link
+						:to="{
+							name: 'profile.overview',
+							query: {},
+							params: { feedSection: 'likes' },
+						}"
+						active-class="active"
+						exact
+					>
+						<translate>Likes</translate>
+						<app-jolticon v-if="isLikeFeedDisabled" icon="subscribed" />
+					</router-link>
+				</li>
+				<template v-if="isOwner">
 					<li>
 						<router-link
 							:to="{
@@ -63,77 +64,50 @@
 							<translate>Scheduled Posts</translate>
 						</router-link>
 					</li>
-				</ul>
-			</app-nav-tab-list>
-		</template>
-		<template v-else-if="showLikedFeed">
-			<app-nav-tab-list>
-				<ul>
-					<li>
-						<router-link
-							:to="{
-								name: 'profile.overview',
-								query: {},
-							}"
-							active-class="active"
-							exact
-						>
-							<translate>Posts</translate>
-						</router-link>
-					</li>
-					<li>
-						<router-link
-							:to="{
-								name: 'profile.overview',
-								query: {},
-								params: { feedSection: 'likes' },
-							}"
-							active-class="active"
-							exact
-						>
-							<translate>Likes</translate>
-						</router-link>
-					</li>
-				</ul>
-			</app-nav-tab-list>
-		</template>
+				</template>
+			</ul>
+		</app-nav-tab-list>
 
-		<app-activity-feed-placeholder v-if="!feed || !feed.isBootstrapped" />
+		<app-illustration
+			v-if="isLikeFeed && isLikeFeedDisabled && !isOwner"
+			src="~img/ill/no-comments.svg"
+		>
+			<p>
+				<translate>
+					This user has made their liked posts private.
+				</translate>
+			</p>
+		</app-illustration>
+		<app-activity-feed-placeholder v-else-if="!feed || !feed.isBootstrapped" />
 		<template v-else>
-			<template v-if="feed.hasItems">
-				<template v-if="isLikeFeedOwnerDisabled">
-					<div class="alert">
-						<p>
-							<translate>
-								You have disabled your liked posts feed, so only you can see this.
-								To enable it, go to your profile settings and turn it back on.
-							</translate>
-						</p>
-
-						<app-button :to="{ name: 'dash.account.edit' }">
-							<translate>Edit Profile</translate>
-						</app-button>
-					</div>
-				</template>
-
-				<app-activity-feed
-					:feed="feed"
-					:show-ads="!isOwner"
-					@edit-post="onPostEdited"
-					@publish-post="onPostPublished"
-					@remove-post="onPostRemoved"
-				/>
-			</template>
-			<div v-else class="alert">
-				<template v-if="isOwner">
-					<translate v-if="isLikeFeed">You haven't liked anything yet.</translate>
-					<translate v-else>You haven't posted anything yet.</translate>
-				</template>
-				<template v-else>
-					<translate v-if="isLikeFeed">This user hasn't liked anything yet.</translate>
-					<translate v-else>This user hasn't posted anything yet.</translate>
-				</template>
-			</div>
+			<app-activity-feed
+				v-if="feed.hasItems"
+				:feed="feed"
+				:show-ads="!isOwner"
+				@edit-post="onPostEdited"
+				@publish-post="onPostPublished"
+				@remove-post="onPostRemoved"
+			/>
+			<app-illustration v-else src="~img/ill/no-comments.svg">
+				<p>
+					<template v-if="isOwner">
+						<translate v-if="isLikeFeed">
+							You haven't liked anything yet.
+						</translate>
+						<translate v-else>
+							You haven't posted anything yet.
+						</translate>
+					</template>
+					<template v-else>
+						<translate v-if="isLikeFeed">
+							This user hasn't liked anything yet.
+						</translate>
+						<translate v-else>
+							This user hasn't posted anything yet.
+						</translate>
+					</template>
+				</p>
+			</app-illustration>
 		</template>
 	</div>
 </template>

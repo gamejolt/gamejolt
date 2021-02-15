@@ -4,8 +4,10 @@ import { State } from 'vuex-class';
 import { Api } from '../../../../../_common/api/api.service';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import AppIllustration from '../../../../../_common/illustration/illustration.vue';
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import AppActivityFeedPlaceholder from '../../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
@@ -33,6 +35,10 @@ function getFetchUrl(route: Route) {
 		AppNavTabList,
 		AppPostAddButton,
 		AppUserSpawnDay,
+		AppIllustration,
+	},
+	directives: {
+		AppTooltip,
 	},
 })
 @RouteResolver({
@@ -47,36 +53,31 @@ function getFetchUrl(route: Route) {
 		}),
 })
 export default class RouteProfileOverviewFeed extends BaseRouteComponent {
-	@State
-	app!: Store['app'];
-
-	@RouteStoreModule.State
-	user!: RouteStore['user'];
+	@State app!: Store['app'];
+	@RouteStoreModule.State user!: RouteStore['user'];
 
 	feed: ActivityFeedView | null = null;
 
 	get isOwner() {
-		return this.app.user && this.user && this.user.id === this.app.user.id;
+		return this.app.user && this.user?.id === this.app.user.id;
 	}
 
 	get isLikeFeed() {
 		return isLikeFeed(this.$route);
 	}
 
-	get showLikedFeed() {
-		if (!this.user) {
-			return false;
-		}
-
-		if (this.isOwner) {
-			return true;
-		}
-
-		return this.user.liked_posts_enabled;
+	get isLikeFeedDisabled() {
+		return this.user?.liked_posts_enabled === false;
 	}
 
-	get isLikeFeedOwnerDisabled() {
-		return this.isOwner && this.isLikeFeed && this.user && !this.user.liked_posts_enabled;
+	get likeFeedTooltip() {
+		if (!this.isLikeFeedDisabled) {
+			return null;
+		}
+
+		return this.isOwner
+			? this.$gettext(`You've made your liked posts private, so only you can see this.`)
+			: this.$gettext(`This user has made their liked posts private.`);
 	}
 
 	routeCreated() {
