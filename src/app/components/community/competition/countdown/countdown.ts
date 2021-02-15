@@ -5,8 +5,7 @@ import { propRequired } from '../../../../../utils/vue';
 import { CommunityCompetition } from '../../../../../_common/community/competition/competition.model';
 
 type BlockData = {
-	digit1: string;
-	digit2: string;
+	digits: string[];
 	text: string;
 	hasSeparator: boolean;
 };
@@ -71,26 +70,22 @@ export default class AppCommunityCompetitionCountdown extends Vue {
 
 		this.blocksData = [
 			{
-				digit1: daysStr[0],
-				digit2: daysStr[1],
+				digits: daysStr.split(''),
 				text: this.$gettext(`day(s)`),
 				hasSeparator: true,
 			},
 			{
-				digit1: hoursStr[0],
-				digit2: hoursStr[1],
+				digits: hoursStr.split(''),
 				text: this.$gettext(`hour(s)`),
 				hasSeparator: true,
 			},
 			{
-				digit1: minsStr[0],
-				digit2: minsStr[1],
+				digits: minsStr.split(''),
 				text: this.$gettext(`minute(s)`),
 				hasSeparator: true,
 			},
 			{
-				digit1: secondsStr[0],
-				digit2: secondsStr[1],
+				digits: secondsStr.split(''),
 				text: this.$gettext(`second(s)`),
 				hasSeparator: false,
 			},

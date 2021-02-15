@@ -9,8 +9,9 @@
 				<div class="-block">
 					<div class="-block-digits">
 						<div class="-block-digit">
-							{{ blockData.digit1 }}
-							{{ blockData.digit2 }}
+							<template v-for="digit in blockData.digits">
+								{{ digit }}
+							</template>
 						</div>
 					</div>
 					<div class="-block-text">
