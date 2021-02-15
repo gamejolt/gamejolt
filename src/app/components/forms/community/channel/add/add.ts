@@ -65,8 +65,8 @@ export default class FormCommunityChannelAdd extends BaseForm<FormModel> impleme
 	}
 
 	get shouldShowType() {
-		// TODO: for now, only site mods are allowed to create jam channels.
-		return this.user && this.user.permission_level >= 3;
+		// TODO: for now, only site mods (and wittleriri) are allowed to create jam channels.
+		return this.user && (this.user.permission_level >= 3 || this.user.id === 5027906);
 	}
 
 	isTitleTaken(title: string) {
