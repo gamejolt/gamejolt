@@ -15,9 +15,14 @@ import AppUserSpawnDay from '../../../../components/user/spawn-day/spawn-day.vue
 import { Store } from '../../../../store/index';
 import { RouteStore, RouteStoreModule } from '../../profile.store';
 
+function isLikeFeed(route: Route) {
+	return route.params.feedSection === 'likes';
+}
+
 function getFetchUrl(route: Route) {
 	const tab = route.query.tab || 'active';
-	return `/web/posts/fetch/user/@${route.params.username}?tab=${tab}`;
+	const feedType = isLikeFeed(route) ? 'user-likes' : 'user';
+	return `/web/posts/fetch/${feedType}/@${route.params.username}?tab=${tab}`;
 }
 
 @Component({
@@ -33,7 +38,7 @@ function getFetchUrl(route: Route) {
 @RouteResolver({
 	cache: false,
 	lazy: true,
-	deps: { query: ['tab', 'feed_last_id'] },
+	deps: { params: ['feedSection'], query: ['tab', 'feed_last_id'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(ActivityFeedService.makeFeedUrl(route, getFetchUrl(route)), undefined, {
 			// Don't error redirect here. It would go to 404 if the user is banned, and prevent us
@@ -54,6 +59,26 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 		return this.app.user && this.user && this.user.id === this.app.user.id;
 	}
 
+	get isLikeFeed() {
+		return isLikeFeed(this.$route);
+	}
+
+	get showLikedFeed() {
+		if (!this.user) {
+			return false;
+		}
+
+		if (this.isOwner) {
+			return true;
+		}
+
+		return this.user.liked_posts_enabled;
+	}
+
+	get isLikeFeedOwnerDisabled() {
+		return this.isOwner && this.isLikeFeed && this.user && !this.user.liked_posts_enabled;
+	}
+
 	routeCreated() {
 		this.feed = ActivityFeedService.routeInit(this);
 	}
@@ -66,6 +91,7 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 				name: 'user-profile',
 				url: getFetchUrl(this.$route),
 				itemsPerPage: $payload.perPage,
+				shouldShowDates: !this.isLikeFeed,
 			},
 			$payload.items,
 			fromCache
