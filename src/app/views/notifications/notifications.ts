@@ -39,6 +39,7 @@ export default class RouteNotifications extends BaseRouteComponent {
 	grid!: Store['grid'];
 
 	feed: ActivityFeedView | null = null;
+	itemsPerPage = 15;
 
 	get routeTitle() {
 		return this.$gettext(`Your Notifications`);
@@ -53,7 +54,7 @@ export default class RouteNotifications extends BaseRouteComponent {
 	@Watch('notificationState', { immediate: true })
 	onNotificationStateChange(state: Store['notificationState']) {
 		if (state) {
-			this.feed = new ActivityFeedView(state);
+			this.feed = new ActivityFeedView(state, { itemsPerPage: this.itemsPerPage });
 		} else {
 			this.feed = null;
 		}
@@ -75,6 +76,14 @@ export default class RouteNotifications extends BaseRouteComponent {
 			this.feed.clear();
 			this.feed.append(Notification.populate($payload.items));
 			HistoryCache.store(this.$route, true, HistoryCacheFeedTag);
+		}
+
+		if ($payload.perPage) {
+			if (this.feed) {
+				this.feed.itemsPerPage = $payload.perPage;
+			}
+
+			this.itemsPerPage = $payload.perPage;
 		}
 
 		if (!fromCache) {

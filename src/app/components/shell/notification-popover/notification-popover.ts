@@ -64,6 +64,8 @@ export default class AppShellNotificationPopover extends Vue {
 				slice: 15,
 				shouldScroll: false,
 				shouldShowUserCards: false,
+				// Some default value before the real feed data gets populated on show.
+				itemsPerPage: 15,
 			});
 		} else {
 			this.feed = null;
@@ -92,6 +94,10 @@ export default class AppShellNotificationPopover extends Vue {
 
 				const items = Notification.populate($payload.items);
 				this.feed.append(items);
+
+				if ($payload.perPage) {
+					this.feed.itemsPerPage = $payload.perPage;
+				}
 			}
 			// If it is already bootstrapped, we just want to load new items if
 			// there is any.

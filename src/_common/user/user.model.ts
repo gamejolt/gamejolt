@@ -27,6 +27,7 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 	is_verified!: boolean;
 	is_partner!: boolean | null;
 	friend_requests_enabled!: boolean;
+	liked_posts_enabled?: boolean;
 
 	created_on!: number;
 

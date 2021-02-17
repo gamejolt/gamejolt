@@ -7,17 +7,6 @@ import { Notification } from '../../../../_common/notification/notification-mode
 import { ActivityFeedInput, ActivityFeedItem } from './item-service';
 import { ActivityFeedState } from './state';
 
-/**
- * The number of times we should do an auto-load of items before stopping and requiring them to do
- * it manually.
- */
-const LoadMoreTimes = 3;
-
-/**
- * The items we expect per page of a feed.
- */
-const ItemsPerPage = 15;
-
 const ScrollDirectionFrom = 'from';
 const ScrollDirectionTo = 'to';
 
@@ -39,6 +28,7 @@ export interface ActivityFeedViewOptions {
 	hideGameInfo?: boolean;
 	shouldShowUserCards?: boolean;
 	shouldShowFollow?: boolean;
+	itemsPerPage?: number;
 	shouldShowDates?: boolean;
 }
 
@@ -63,6 +53,10 @@ export class ActivityFeedView {
 	shouldShowFollow = false;
 	shouldShowDates = true;
 	newCount = 0;
+	/**
+	 * How many feed items are expected to be loaded per page.
+	 */
+	itemsPerPage!: number;
 
 	get isBootstrapped() {
 		return this.state.isBootstrapped;
@@ -91,13 +85,22 @@ export class ActivityFeedView {
 		return this.state.reachedEnd;
 	}
 
+	/**
+	 * The number of times we should do an auto-load of items before stopping and requiring them to do
+	 * it manually.
+	 */
+	get autoLoadTimes() {
+		// Load at least once; and try to auto-load approx. 50 items.
+		return Math.max(1, Math.floor(50 / this.itemsPerPage));
+	}
+
 	get shouldScrollLoadMore() {
 		// We don't allow loading more if they are viewing a slice of the items.
 		return (
 			!this.slice &&
 			!this.isLoadingMore &&
 			!this.reachedEnd &&
-			this.timesLoaded < LoadMoreTimes
+			this.timesLoaded < this.autoLoadTimes
 		);
 	}
 
@@ -110,6 +113,7 @@ export class ActivityFeedView {
 			mainCommunity = null,
 			shouldShowUserCards = true,
 			shouldShowFollow = false,
+			itemsPerPage = -1,
 			shouldShowDates = true,
 		}: ActivityFeedViewOptions = {}
 	) {
@@ -120,6 +124,15 @@ export class ActivityFeedView {
 		this.mainCommunity = mainCommunity;
 		this.shouldShowUserCards = shouldShowUserCards;
 		this.shouldShowFollow = shouldShowFollow;
+		this.itemsPerPage = itemsPerPage;
+
+		// Should never create a feed view without this argument.
+		if (this.itemsPerPage === -1) {
+			throw new Error(
+				'Tried creating feed view without setting items per page! Load url: ' +
+					this.state.loadMoreUrl
+			);
+		}
 		this.shouldShowDates = shouldShowDates;
 	}
 
@@ -263,6 +276,11 @@ export class ActivityFeedView {
 		});
 
 		this.state.isLoadingMore = false;
+
+		if (response.perPage) {
+			this.itemsPerPage = response.perPage;
+		}
+
 		if (!response.items || !response.items.length) {
 			this.state.reachedEnd = true;
 			Analytics.trackEvent('activity-feed', 'reached-end');
@@ -278,7 +296,7 @@ export class ActivityFeedView {
 		Analytics.trackEvent('activity-feed', 'loaded-more', 'page-' + this.totalTimesLoaded);
 	}
 
-	async loadNew(newCount = ItemsPerPage) {
+	async loadNew(newCount = this.itemsPerPage) {
 		if (this.state.isLoadingNew || newCount < 1) {
 			return;
 		}
@@ -287,7 +305,7 @@ export class ActivityFeedView {
 
 		// If the new count is greater than the amount we show on a page, then
 		// we want to refresh the whole thing so that we don't have gaps.
-		const clearOld = newCount > ItemsPerPage;
+		const clearOld = newCount > this.itemsPerPage;
 
 		const response = await Api.sendRequest(this.state.loadMoreUrl, {
 			scrollId: this.state.startScrollId,
@@ -295,13 +313,18 @@ export class ActivityFeedView {
 		});
 
 		this.state.isLoadingNew = false;
+
+		if (response.perPage) {
+			this.itemsPerPage = response.perPage;
+		}
+
 		if (!response.items || !response.items.length) {
 			return;
 		}
 
 		// If we received the amount of items per page (or more somehow),
 		// clear the feed to avoid gaps.
-		if (clearOld || response.items.length >= ItemsPerPage) {
+		if (clearOld || response.items.length >= this.itemsPerPage) {
 			this.clear();
 		}
 

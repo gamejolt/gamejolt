@@ -55,6 +55,7 @@ export function resolveFeedChannelPayload(
 			mainCommunity,
 			shouldShowFollow: true,
 			notificationWatermark: payload.unreadWatermark,
+			itemsPerPage: payload.perPage,
 			shouldShowDates: channel !== CommunityPresetChannelType.FEATURED,
 		},
 		payload.items,

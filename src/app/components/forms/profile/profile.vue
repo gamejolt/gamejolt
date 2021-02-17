@@ -1,3 +1,5 @@
+<script lang="ts" src="./profile"></script>
+
 <template>
 	<app-form name="profileForm">
 		<app-form-group name="theme" :label="$gettext(`Color Theme`)">
@@ -153,10 +155,18 @@
 			</p>
 		</app-form-group>
 
+		<app-form-group name="liked_posts_enabled" :label="$gettext(`Show your liked posts?`)">
+			<app-form-control-toggle class="pull-right" />
+
+			<p class="help-block">
+				<translate>
+					Will publicly show the posts you've liked posts on your profile.
+				</translate>
+			</p>
+		</app-form-group>
+
 		<app-form-button>
 			<translate>dash.profile.edit.submit_button</translate>
 		</app-form-button>
 	</app-form>
 </template>
-
-<script lang="ts" src="./profile"></script>

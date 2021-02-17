@@ -11,7 +11,10 @@ import {
 	getCommentStore,
 } from '../../../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../../../_common/comment/modal/modal.service';
-import { CommentThreadModal } from '../../../../../../_common/comment/thread/modal.service';
+import {
+	CommentThreadModal,
+	CommentThreadModalPermalinkDeregister,
+} from '../../../../../../_common/comment/thread/modal.service';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../../../_common/environment/environment.service';
 import AppFadeCollapse from '../../../../../../_common/fade-collapse/fade-collapse.vue';
@@ -187,7 +190,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 	feed: ActivityFeedView | null = null;
 
-	permalinkWatchDeregister?: Function;
+	permalinkWatchDeregister?: CommentThreadModalPermalinkDeregister;
 
 	readonly Screen = Screen;
 	readonly Environment = Environment;
@@ -265,6 +268,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 				name: 'game-devlog',
 				url: `/web/posts/fetch/game/${this.game.id}`,
 				hideGameInfo: true,
+				itemsPerPage: $payload.perPage,
 			},
 			$payload.posts,
 			fromCache
