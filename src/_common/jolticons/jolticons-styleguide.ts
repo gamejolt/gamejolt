@@ -177,6 +177,9 @@ export default class AppJolticonsStyleguide extends Vue {
 			'comment-filled',
 			'eject',
 			'medal',
+			'user-details',
+			'game-details',
+			'camera',
 		]
 			.sort()
 			.filter(i => i.indexOf(this.filter) !== -1);
