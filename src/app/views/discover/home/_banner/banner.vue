@@ -1,5 +1,7 @@
+<script lang="ts" src="./banner"></script>
+
 <template>
-	<div v-if="!item || isLoading" class="-placeholder"></div>
+	<div v-if="!item || isLoading" class="-placeholder" />
 	<app-theme v-else :theme="theme">
 		<app-media-item-backdrop class="-backdrop" :media-item="bannerMediaItem">
 			<section
@@ -10,15 +12,20 @@
 			>
 				<router-link
 					v-if="location"
+					v-app-track-event="`home:banner:${item.id}`"
 					class="-click"
 					:to="location"
-					v-app-track-event="`home:banner:${item.id}`"
 				/>
 
 				<div class="container">
 					<div class="-main">
 						<div v-if="item.front_url" class="-logo">
-							<img class="-img" style="display: inline-block" :src="item.front_url" alt="" />
+							<img
+								class="-img"
+								style="display: inline-block"
+								:src="item.front_url"
+								alt=""
+							/>
 						</div>
 
 						<div
@@ -35,47 +42,51 @@
 								<template v-if="item.game">
 									<app-button
 										v-if="item.custom_url"
+										v-app-track-event="`home:banner:custom-${item.game.id}`"
 										solid
 										:href="item.custom_url"
 										target="_blank"
-										v-app-track-event="`home:banner:custom-${item.game.id}`"
 									>
 										{{ item.custom_text }}
 									</app-button>
 
 									<app-button
 										v-if="shouldShowViewGame"
+										v-app-track-event="`home:banner:${item.game.id}`"
 										solid
 										:to="location"
-										v-app-track-event="`home:banner:${item.game.id}`"
 									>
 										<translate>View Game</translate>
 									</app-button>
 
 									<app-game-follow-widget
 										v-if="shouldShowFollowGame"
+										v-app-track-event="`home:banner:follow-${item.game.id}`"
 										:game="item.game"
 										solid
 										primary
-										v-app-track-event="`home:banner:follow-${item.game.id}`"
 									/>
 								</template>
 								<template v-else-if="item.community">
 									<app-button
 										v-if="item.custom_url"
+										v-app-track-event="
+											`home:banner:custom-community-${item.community.path}`
+										"
 										solid
 										:href="item.custom_url"
 										target="_blank"
-										v-app-track-event="`home:banner:custom-community-${item.community.path}`"
 									>
 										{{ item.custom_text }}
 									</app-button>
 
 									<app-button
 										v-if="shouldShowViewCommunity"
+										v-app-track-event="
+											`home:banner:community-${item.community.path}`
+										"
 										solid
 										:to="location"
-										v-app-track-event="`home:banner:community-${item.community.path}`"
 									>
 										<translate>View Community</translate>
 									</app-button>
@@ -107,6 +118,16 @@
 										<translate>View Jam Page</translate>
 									</app-button>
 								</template>
+								<template v-else-if="item.custom_url">
+									<app-button
+										v-app-track-event="`home:banner:custom`"
+										solid
+										:href="item.custom_url"
+										target="_blank"
+									>
+										{{ item.custom_text }}
+									</app-button>
+								</template>
 							</div>
 						</div>
 					</div>
@@ -117,5 +138,3 @@
 </template>
 
 <style lang="stylus" src="./banner.styl" scoped></style>
-
-<script lang="ts" src="./banner"></script>
