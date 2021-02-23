@@ -16,6 +16,12 @@
 					class="-click"
 					:to="location"
 				/>
+				<a
+					v-else-if="item.custom_url"
+					v-app-track-event="`home:banner:${item.id}`"
+					class="-click"
+					:href="item.custom_url"
+				/>
 
 				<div class="container">
 					<div class="-main">
