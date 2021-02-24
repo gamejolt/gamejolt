@@ -33,15 +33,25 @@ export class ContentEditorAppAdapter {
 	 * This channel is set up by the app and can be used to send data back to
 	 * it.
 	 */
-	get appChannel(): { postMessage: (message: string) => void } {
+	get appChannel() {
 		const win = window as any;
 
 		// The fallback is for dev to easily debug without requiring the app.
-		return (
-			win.gjEditorChannel ?? {
-				postMessage: message => console.log('Sending message over channel:', message),
-			}
-		);
+		return {
+			postMessage: (message: string) => {
+				if (win.flutter_inappwebview) {
+					// This is a hack because the normal `callHandler` isn't
+					// available for some reason.
+					win.flutter_inappwebview._callHandler(
+						'gjEditor',
+						setTimeout(function() {}),
+						JSON.stringify([message])
+					);
+				} else {
+					console.log('Sending message over channel:', message);
+				}
+			},
+		};
 	}
 
 	async init(msg: ContentEditorAppAdapterMessage) {
