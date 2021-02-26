@@ -2,6 +2,7 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { propOptional, propRequired } from '../../../utils/vue';
+import { fuzzynumber } from '../../filters/fuzzynumber';
 import { number } from '../../filters/number';
 import AppLoading from '../../loading/loading.vue';
 import { AppStore } from '../../store/app-store';
@@ -33,6 +34,7 @@ export default class AppUserCard extends Vue {
 	@State app!: AppStore;
 
 	readonly number = number;
+	readonly fuzzynumber = fuzzynumber;
 
 	get followerCount() {
 		return this.user.follower_count || 0;
@@ -52,6 +54,10 @@ export default class AppUserCard extends Vue {
 
 	get videoCount() {
 		return this.user.video_count || 0;
+	}
+
+	get likeCount() {
+		return this.user.like_count || 0;
 	}
 
 	get headerBackgroundImage() {

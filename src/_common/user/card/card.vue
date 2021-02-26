@@ -139,6 +139,22 @@
 						</div>
 					</router-link>
 				</li>
+				<li v-if="likeCount" class="stat-big stat-big-smaller">
+					<router-link
+						class="link-unstyled"
+						:to="{
+							name: 'profile.overview',
+							params: { username: user.username },
+						}"
+					>
+						<div class="stat-big-label">
+							<translate>Likes</translate>
+						</div>
+						<div class="stat-big-digit">
+							{{ fuzzynumber(likeCount) }}
+						</div>
+					</router-link>
+				</li>
 			</ul>
 		</div>
 	</app-theme>

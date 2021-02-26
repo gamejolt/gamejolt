@@ -96,6 +96,7 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 	post_count?: number;
 	game_count?: number;
 	video_count?: number;
+	like_count?: number;
 
 	is_gamer = false;
 	is_developer = false;
