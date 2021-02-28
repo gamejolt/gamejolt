@@ -93,6 +93,7 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 				url: getFetchUrl(this.$route),
 				itemsPerPage: $payload.perPage,
 				shouldShowDates: !this.isLikeFeed,
+				shouldShowFollow: this.isLikeFeed,
 			},
 			$payload.items,
 			fromCache
