@@ -159,9 +159,7 @@
 			<app-form-control-toggle class="pull-right" />
 
 			<p class="help-block">
-				<translate>
-					Will publicly show the posts you've liked posts on your profile.
-				</translate>
+				<translate>Will publicly show the posts you've liked on your profile.</translate>
 			</p>
 		</app-form-group>
 
