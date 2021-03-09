@@ -5,7 +5,7 @@ import { VideoPlayerSource } from '../../../video/player/controller';
 import { VideoSourceArray } from '../../../video/video';
 
 //** Our preference for which manifest type will try loading first. */
-const manifestPreferences = ['mpd', 'm3u8'];
+const manifestPreferences = ['m3u8', 'mpd'];
 
 export class FiresidePostVideo extends Model {
 	static PROVIDER_YOUTUBE = 'youtube';

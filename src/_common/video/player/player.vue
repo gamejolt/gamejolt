@@ -32,6 +32,7 @@
 					:style="{ width }"
 					:player="player"
 					:autoplay="autoplay"
+					allow-degraded-autoplay
 				/>
 
 				<!--
