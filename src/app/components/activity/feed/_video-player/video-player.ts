@@ -23,6 +23,7 @@ import {
 	trackVideoPlayerEvent,
 	VideoPlayerController,
 } from '../../../../../_common/video/player/controller';
+import { createReadableTimestamp } from '../../../../../_common/video/player/player';
 import { VideoSourceArray } from '../../../../../_common/video/video';
 import AppVideo from '../../../../../_common/video/video.vue';
 import { AppVideoPlayerShakaLazy } from '../../../lazy';
@@ -119,7 +120,10 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 		if (!this.player) {
 			return null;
 		}
-		return Math.ceil((this.player.duration - this.player.currentTime) / 1000) + 's';
+
+		return createReadableTimestamp(this.player.duration - this.player.currentTime, {
+			hideEmptyMinutes: true,
+		});
 	}
 
 	get currentTime() {
