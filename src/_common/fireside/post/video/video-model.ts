@@ -1,11 +1,10 @@
 import { HistoryTick } from '../../../history-tick/history-tick-service';
 import { MediaItem } from '../../../media-item/media-item-model';
 import { Model } from '../../../model/model.service';
-import { VideoPlayerSource } from '../../../video/player/controller';
 import { VideoSourceArray } from '../../../video/video';
 
 //** Our preference for which manifest type will try loading first. */
-const manifestPreferences = ['mpd', 'm3u8'];
+const manifestPreferences = ['m3u8', 'mpd'];
 
 export class FiresidePostVideo extends Model {
 	static PROVIDER_YOUTUBE = 'youtube';
@@ -35,7 +34,7 @@ export class FiresidePostVideo extends Model {
 		return this.posterMediaItem?.mediaserver_url;
 	}
 
-	get manifestSources(): VideoPlayerSource[] {
+	get manifestSources(): VideoSourceArray {
 		const getManifestPreference = (item: MediaItem) => {
 			const ext = item.filename.substring(item.filename.lastIndexOf('.') + 1);
 			const index = manifestPreferences.findIndex(i => i === ext);

@@ -26,7 +26,6 @@ export default class AppVideo extends Vue {
 	@Prop(propOptional(Boolean, true)) shouldPlay!: boolean;
 
 	@Prop(propOptional(Function)) initCallback?: (videoTag: HTMLVideoElement) => Promise<boolean>;
-	@Prop(propOptional(Boolean, true)) trackPlaytime!: boolean;
 
 	/**
 	 * If their browser settings block autoplaying with audio, then the browser

@@ -15,14 +15,12 @@
 			@change="onChangeDimensions"
 		>
 			<div class="-content-container">
-				<app-video
+				<app-video-player-shaka-lazy
 					v-if="player && !GJ_IS_SSR"
 					class="-video"
 					:style="{ width }"
 					:player="player"
-					:sources="videoSources"
-					:should-play="shouldAutoplay"
-					track-playtime
+					:autoplay="autoplay"
 					allow-degraded-autoplay
 				/>
 
