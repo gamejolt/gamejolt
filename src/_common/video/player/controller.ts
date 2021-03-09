@@ -7,22 +7,18 @@ import {
 	SettingVideoPlayerMuted,
 	SettingVideoPlayerVolume,
 } from '../../settings/settings.service';
+import { VideoSourceArray } from '../video';
 
 export type VideoPlayerControllerContext = 'feed' | 'page' | 'gif' | null;
 export type VideoPlayerState = 'paused' | 'playing';
 export type ScrubberStage = 'start' | 'scrub' | 'end';
-
-export type VideoPlayerSource = {
-	src: string;
-	type: string;
-};
 
 export function getVideoPlayerFromSources(
 	item: { mp4?: string; webm?: string },
 	context: VideoPlayerControllerContext = null,
 	poster?: string
 ) {
-	const sources: VideoPlayerSource[] = [];
+	const sources: VideoSourceArray = [];
 	if (item.mp4) {
 		sources.push({ src: item.mp4, type: 'video/mp4' });
 	}
@@ -52,7 +48,7 @@ export class VideoPlayerController {
 	queuedPlaybackChange: null | VideoPlayerState = null;
 
 	constructor(
-		public sources: VideoPlayerSource[],
+		public sources: VideoSourceArray,
 		public context: VideoPlayerControllerContext,
 		public poster?: string
 	) {

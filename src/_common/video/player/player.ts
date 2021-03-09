@@ -13,6 +13,7 @@ import {
 } from '../../responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../screen/screen-service';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
+import { VideoSourceArray } from '../video';
 import {
 	queueVideoTimeChange,
 	scrubVideoVolume,
@@ -20,7 +21,6 @@ import {
 	trackVideoPlayerEvent,
 	VideoPlayerController,
 	VideoPlayerControllerContext,
-	VideoPlayerSource,
 } from './controller';
 import AppPlayerFullscreen from './fullscreen/fullscreen.vue';
 import AppPlayerPlayback from './playback/playback.vue';
@@ -71,7 +71,7 @@ function createReadableTimestamp(time: number) {
 })
 export default class AppVideoPlayer extends Vue {
 	@Prop(propRequired(MediaItem)) mediaItem!: MediaItem;
-	@Prop(propRequired(Array)) manifests!: VideoPlayerSource[];
+	@Prop(propRequired(Array)) manifests!: VideoSourceArray;
 	@Prop(propOptional(Boolean, false)) autoplay!: boolean;
 	@Prop(propOptional(Number, 0)) startTime!: number;
 	@Prop(propOptional(String, null)) context!: VideoPlayerControllerContext;

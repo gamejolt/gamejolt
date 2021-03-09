@@ -22,8 +22,8 @@ import {
 	toggleVideoPlayback,
 	trackVideoPlayerEvent,
 	VideoPlayerController,
-	VideoPlayerSource,
 } from '../../../../../_common/video/player/controller';
+import { VideoSourceArray } from '../../../../../_common/video/video';
 import AppVideo from '../../../../../_common/video/video.vue';
 import { AppVideoPlayerShakaLazy } from '../../../lazy';
 import { ActivityFeedItem } from '../item-service';
@@ -51,7 +51,7 @@ const LoadDelay = 300;
 export default class AppActivityFeedVideoPlayer extends Vue {
 	@Prop(propRequired(ActivityFeedItem)) feedItem!: ActivityFeedItem;
 	@Prop(propRequired(MediaItem)) mediaItem!: MediaItem;
-	@Prop(propRequired(Array)) manifests!: VideoPlayerSource[];
+	@Prop(propRequired(Array)) manifests!: VideoSourceArray;
 	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
 	autoplay = SettingVideoPlayerFeedAutoplay.get();
