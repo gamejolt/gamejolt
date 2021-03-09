@@ -21,6 +21,7 @@
 					:style="{ width }"
 					:player="player"
 					:autoplay="autoplay"
+					allow-degraded-autoplay
 				/>
 
 				<div v-if="shouldShowLoading" class="-overlay -ui">
