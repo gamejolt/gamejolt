@@ -43,14 +43,16 @@ const UIHideTimeout = 400;
  */
 const UIHideTimeoutMovement = 2000;
 
-function createReadableTimestamp(time: number) {
+export function createReadableTimestamp(time: number, options = { hideEmptyMinutes: false }) {
 	time /= 1000;
 	const minutes = Math.floor(time / 60);
 	const seconds = Math.floor(time % 60)
 		.toString()
 		.padStart(2, '0');
 
-	return `${minutes}:${seconds}`;
+	const displayMinutes = minutes <= 0 && options.hideEmptyMinutes ? '' : `${minutes}:`;
+
+	return `${displayMinutes}${seconds}`;
 }
 
 @Component({
