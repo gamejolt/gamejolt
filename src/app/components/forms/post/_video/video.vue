@@ -32,7 +32,7 @@
 					>
 						<p class="help-block">
 							<translate>
-								Only short videos between 3 and 60 seconds are allowed at this time.
+								Your video must be between 1 second and 15 minutes long.
 							</translate>
 							<br />
 							<translate>

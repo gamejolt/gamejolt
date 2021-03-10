@@ -39,9 +39,12 @@
 		/>
 
 		<div>
-			<translate>Your video is currently being processed.</translate>
+			<translate>
+				Your video is currently being processed. This could take some time depending on the
+				size of your video.
+			</translate>
 			<translate v-if="post.isActive">
-				We will publish it once it's ready.
+				We will publish your post once it's ready.
 			</translate>
 		</div>
 	</div>
