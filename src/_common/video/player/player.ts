@@ -43,16 +43,34 @@ const UIHideTimeout = 400;
  */
 const UIHideTimeoutMovement = 2000;
 
-export function createReadableTimestamp(time: number, options = { hideEmptyMinutes: false }) {
+/**
+ * Returns as format `m:ss`, or the remaining seconds with 's' appended if
+ * duration is lower than 60 seconds, e.g. `1:23` or `42s`.
+ *
+ * @param time should be duration in milliseconds.
+ */
+export function createDenseReadableTimestamp(time: number) {
+	time /= 1000;
+	const minutes = Math.floor(time / 60);
+	const displayMinutes = minutes <= 0 ? '' : `${minutes}:`;
+	const seconds = Math.floor(time % 60) + (displayMinutes.length === 0 ? 's' : '');
+
+	return `${displayMinutes}${seconds}`;
+}
+
+/**
+ * Always returns as format `m:ss`, e.g. `1:23` or `0:04`.
+ *
+ * @param time should be duration in milliseconds.
+ */
+export function createReadableTimestamp(time: number) {
 	time /= 1000;
 	const minutes = Math.floor(time / 60);
 	const seconds = Math.floor(time % 60)
 		.toString()
 		.padStart(2, '0');
 
-	const displayMinutes = minutes <= 0 && options.hideEmptyMinutes ? '' : `${minutes}:`;
-
-	return `${displayMinutes}${seconds}`;
+	return `${minutes}:${seconds}`;
 }
 
 @Component({
