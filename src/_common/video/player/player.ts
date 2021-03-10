@@ -44,10 +44,10 @@ const UIHideTimeout = 400;
 const UIHideTimeoutMovement = 2000;
 
 /**
- * @param time should be duration in milliseconds.
- *
  * Returns as format `m:ss`, or the remaining seconds with 's' appended if
  * duration is lower than 60 seconds, e.g. `1:23` or `42s`.
+ *
+ * @param time should be duration in milliseconds.
  */
 export function createDenseReadableTimestamp(time: number) {
 	time /= 1000;
@@ -59,9 +59,9 @@ export function createDenseReadableTimestamp(time: number) {
 }
 
 /**
- * @param time should be duration in milliseconds.
- *
  * Always returns as format `m:ss`, e.g. `1:23` or `0:04`.
+ *
+ * @param time should be duration in milliseconds.
  */
 export function createReadableTimestamp(time: number) {
 	time /= 1000;
