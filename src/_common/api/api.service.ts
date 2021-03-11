@@ -93,6 +93,7 @@ export interface RequestOptions {
 
 	// You can change the default api host/path used through these.
 	apiHost?: string;
+	uploadHost?: string;
 	apiPath?: string;
 
 	/**
@@ -104,6 +105,7 @@ export interface RequestOptions {
 
 export class Api {
 	static apiHost: string = Environment.apiHost;
+	static uploadHost: string = Environment.uploadHost;
 	static apiPath = '/site-api';
 
 	static async sendRequest(
@@ -161,7 +163,9 @@ export class Api {
 		}
 
 		const method = sanitizedPostData ? 'POST' : 'GET';
-		const url = (options.apiHost || this.apiHost) + (options.apiPath || this.apiPath) + uri;
+		const apiHost = options.apiHost || this.apiHost;
+		const uploadHost = options.uploadHost || this.uploadHost;
+		const url = (options.file ? uploadHost : apiHost) + (options.apiPath || this.apiPath) + uri;
 
 		const requestPromise = this.createRequest(method, url, sanitizedPostData, options);
 
