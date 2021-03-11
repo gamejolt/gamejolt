@@ -40,6 +40,7 @@ export class Environment {
 	static mediaserverUrl = 'https://m.gjcdn.net';
 
 	static apiHost = 'https://gamejolt.com';
+	static uploadHost = 'https://upload.gamejolt.com';
 	static gameserverApiHost = 'https://gamejolt.net';
 	static activityStreamHost = 'https://activity.gamejolt.com';
 	static chat = 'https://chatex.gamejolt.com/chatex';
@@ -64,6 +65,7 @@ if (GJ_ENVIRONMENT === 'development') {
 	Environment.mediaserverUrl = 'http://media.development.gamejolt.com';
 
 	Environment.apiHost = GJ_TUNNELS.backend || 'http://development.gamejolt.com';
+	Environment.uploadHost = Environment.apiHost;
 	Environment.gameserverApiHost = 'http://development.gamejolt.com';
 	Environment.activityStreamHost = 'http://activity.development.gamejolt.com';
 	Environment.chat = 'http://chat.development.gamejolt.com/chatex';
