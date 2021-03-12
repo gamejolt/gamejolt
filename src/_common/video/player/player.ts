@@ -55,8 +55,8 @@ export function createDenseReadableTimestamp(time: number) {
 	const displayMinutes = minutes <= 0 ? '' : `${minutes}:`;
 	let seconds = Math.floor(time % 60).toString();
 
-	// Pad the seconds with 0 while we're still displaying minutes.
-	if (displayMinutes.length !== 0) {
+	// Pad the seconds with 0 while we still have minutes.
+	if (minutes >= 1) {
 		seconds = seconds.padStart(2, '0');
 	} else {
 		seconds += 's';
