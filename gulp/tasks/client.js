@@ -38,7 +38,7 @@ module.exports = config => {
 		parseInt(versionStuff[3]),
 	];
 
-	const gjpushVersion = 'v0.2.0';
+	const gjpushVersion = 'v0.4.0';
 	const gjGameId = config.developmentEnv ? 1000 : 362412;
 	let gjGamePazckageId;
 	let gjGameInstallerPackageId;
