@@ -1,6 +1,5 @@
 import { Component, Inject, InjectReactive } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
-import { Mutation } from 'vuex-class/lib/bindings';
 import { Api } from '../../../../_common/api/api.service';
 import AppCommentAddButton from '../../../../_common/comment/add-button/add-button.vue';
 import { Comment } from '../../../../_common/comment/comment-model';
@@ -84,12 +83,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 	@State
 	grid!: Store['grid'];
-
-	@State
-	friendRequestCount!: Store['friendRequestCount'];
-
-	@Mutation
-	setFriendRequestCount!: Store['setFriendRequestCount'];
 
 	@RouteStoreModule.State
 	user!: RouteStore['user'];

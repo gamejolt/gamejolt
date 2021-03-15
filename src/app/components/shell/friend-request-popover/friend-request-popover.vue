@@ -1,3 +1,5 @@
+<script lang="ts" src="./friend-request-popover"></script>
+
 <template>
 	<app-popper
 		v-if="!Connection.isClientOffline"
@@ -9,17 +11,12 @@
 		@hide="onHide()"
 	>
 		<a
-			class="navbar-item"
-			:class="{ active: isShowing }"
 			v-app-tooltip.bottom="$gettext(`Friend Requests`)"
 			v-app-track-event="`top-nav:friend-requests:toggle`"
+			class="navbar-item"
+			:class="{ active: isShowing }"
 		>
-			<span
-				class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
-				v-if="friendRequestCount"
-			>
-				{{ friendRequestCount }}
-			</span>
+			<div v-if="hasNewFriendRequests" class="-new-tag anim-fade-enter anim-fade-leave" />
 			<app-jolticon icon="friend-requests" />
 		</a>
 
@@ -33,7 +30,7 @@
 								@click="setActiveTab('requests')"
 							>
 								<translate>Friend Requests</translate>
-								<span class="badge">{{ friendRequestCount }}</span>
+								<span class="badge">{{ requestCount }}</span>
 							</a>
 						</li>
 						<li v-if="pendingCount">
@@ -63,11 +60,11 @@
 					<br />
 					<app-loading centered />
 				</template>
-				<div class="alert" v-else-if="!requests.length">
+				<div v-else-if="!requests.length" class="alert">
 					<translate>No friend requests right now.</translate>
 				</div>
 				<div v-else-if="!isAtEnd" class="page-cut -load-more">
-					<app-button trans @click="loadMore" v-app-track-event="`friend-requests:more`">
+					<app-button v-app-track-event="`friend-requests:more`" trans @click="loadMore">
 						<translate>Load More</translate>
 					</app-button>
 				</div>
@@ -77,7 +74,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .-nav
 	margin-bottom: 0
@@ -86,6 +84,18 @@
 .-load-more
 	margin-top: 4px
 	margin-bottom: 4px
-</style>
 
-<script lang="ts" src="./friend-request-popover"></script>
+.-new-tag
+	border-radius: 50%
+	width: 12px
+	height: 12px
+	display: block
+	change-bg('highlight')
+	position: absolute
+	bottom: 10px
+	right: 4px
+	display: block
+	border-color: var(--theme-darkest)
+	border-width: 2px
+	border-style: solid
+</style>

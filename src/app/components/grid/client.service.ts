@@ -42,7 +42,7 @@ interface CommunityNewPostPayload {
 interface BootstrapPayload {
 	status: string;
 	body: {
-		friendRequestCount: number;
+		hasNewFriendRequests: boolean;
 		lastNotificationTime: number;
 		notificationCount: number;
 		activityUnreadCount: number;
@@ -126,9 +126,7 @@ function clearNotifications(type: ClearNotificationsType, data: ClearNotificatio
 			}
 			break;
 		case 'friend-requests':
-			// This event gets fired every time the user accepts/rejects a friendship.
-			// The only action we need to take here is to decrease the global friendship number by 1.
-			store.commit('changeFriendRequestCount', -1);
+			store.commit('setHasNewFriendRequests', false);
 			break;
 	}
 }
@@ -324,7 +322,7 @@ export class GridClient {
 
 	handleNotification(payload: NewNotificationPayload) {
 		if (this.connected) {
-			// if no bootstrap has been received yet, store new notifications in a backlog to process them later
+			// If no bootstrap has been received yet, store new notifications in a backlog to process them later
 			// the bootstrap delivers the timestamp of the last event item included in the bootstrap's notification count
 			// all event notifications received before the timestamp from the bootstrap will be ignored
 			if (!this.bootstrapReceived) {
@@ -333,17 +331,12 @@ export class GridClient {
 				const data = payload.notification_data.event_item;
 				const notification = new Notification(data);
 
-				// only handle if timestamp is newer than the bootstrap timestamp
+				// Only handle if timestamp is newer than the bootstrap timestamp
 				if (notification.added_on > this.bootstrapTimestamp) {
 					switch (notification.type) {
-						case Notification.TYPE_FRIENDSHIP_CANCEL:
-							// this special type of notification only decrements the friend request number
-							store.commit('changeFriendRequestCount', -1);
-							break;
-
 						case Notification.TYPE_FRIENDSHIP_REQUEST:
-							// for an incoming friend request, increase the friend request number
-							store.commit('changeFriendRequestCount', 1);
+							// For an incoming friend request, set that they have a new friend request.
+							store.commit('setHasNewFriendRequests', true);
 							this.spawnNotification(notification);
 							break;
 
@@ -374,7 +367,7 @@ export class GridClient {
 				count: payload.body.notificationUnreadCount,
 			});
 
-			store.commit('setFriendRequestCount', payload.body.friendRequestCount);
+			store.commit('setHasNewFriendRequests', payload.body.hasNewFriendRequests);
 			this.bootstrapTimestamp = payload.body.lastNotificationTime;
 
 			this.bootstrapReceived = true;

@@ -75,8 +75,7 @@ export type Mutations = AppMutations &
 		setHasContentSidebar: boolean;
 		setNotificationCount: { type: UnreadItemType; count: number };
 		incrementNotificationCount: { type: UnreadItemType; count: number };
-		setFriendRequestCount: number;
-		changeFriendRequestCount: number;
+		setHasNewFriendRequests: boolean;
 		setActiveCommunity: Community;
 		clearActiveCommunity: void;
 		viewCommunity: Community;
@@ -144,7 +143,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	unreadActivityCount = 0;
 	/** Unread items in the notification feed. */
 	unreadNotificationsCount = 0;
-	friendRequestCount = 0;
+	hasNewFriendRequests = false;
 	notificationState: ActivityFeedState | null = null;
 
 	mobileCbarShowing = false;
@@ -423,13 +422,8 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	setFriendRequestCount(amount: Mutations['setFriendRequestCount']) {
-		this.friendRequestCount = amount;
-	}
-
-	@VuexMutation
-	changeFriendRequestCount(amount: Mutations['changeFriendRequestCount']) {
-		this.friendRequestCount += amount;
+	setHasNewFriendRequests(has: Mutations['setHasNewFriendRequests']) {
+		this.hasNewFriendRequests = has;
 	}
 
 	@VuexMutation

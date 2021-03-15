@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
-import { Mutation, State } from 'vuex-class/lib/bindings';
+import { State } from 'vuex-class/lib/bindings';
 import { Api } from '../../../../_common/api/api.service';
 import { Connection } from '../../../../_common/connection/connection-service';
 import AppLoading from '../../../../_common/loading/loading.vue';
@@ -26,10 +26,7 @@ type Tab = 'requests' | 'pending';
 })
 export default class AppShellFriendRequestPopover extends Vue {
 	@State
-	friendRequestCount!: Store['friendRequestCount'];
-
-	@Mutation
-	setFriendRequestCount!: Store['setFriendRequestCount'];
+	hasNewFriendRequests!: Store['hasNewFriendRequests'];
 
 	@AppState
 	user!: AppStore['user'];
@@ -44,6 +41,7 @@ export default class AppShellFriendRequestPopover extends Vue {
 
 	activeTab: Tab = 'requests';
 	pendingCount = 0;
+	requestCount = 0;
 	incoming: UserFriendship[] = [];
 	outgoing: UserFriendship[] = [];
 
@@ -55,7 +53,7 @@ export default class AppShellFriendRequestPopover extends Vue {
 
 	get isAtEnd() {
 		return (
-			(this.activeTab === 'requests' ? this.friendRequestCount : this.pendingCount) ===
+			(this.activeTab === 'requests' ? this.requestCount : this.pendingCount) ===
 			this.requests.length
 		);
 	}
@@ -77,7 +75,8 @@ export default class AppShellFriendRequestPopover extends Vue {
 			const payload = await Api.sendRequest('/web/dash/friends/requests', null, {
 				detach: true,
 			});
-			this.setFriendRequestCount(payload.requestCount);
+			this.requestCount = payload.requestCount;
+			this.grid?.pushViewNotifications('friend-requests', {}, true);
 			this.pendingCount = payload.pendingCount;
 			this.perPage = payload.perPage;
 
@@ -119,8 +118,7 @@ export default class AppShellFriendRequestPopover extends Vue {
 
 		// Load tab the first time it's opened.
 		if (this.requests.length === 0) {
-			const count =
-				this.activeTab === 'pending' ? this.pendingCount : this.friendRequestCount;
+			const count = this.activeTab === 'pending' ? this.pendingCount : this.requestCount;
 			if (count > 0) {
 				this.isLoading = true;
 				await this.loadTab();
@@ -138,7 +136,7 @@ export default class AppShellFriendRequestPopover extends Vue {
 	async acceptRequest(request: UserFriendship) {
 		await UserFriendshipHelper.acceptRequest(request);
 
-		this.processRemoveRequest(request);
+		this.removeRequest(request);
 	}
 
 	async rejectRequest(request: UserFriendship) {
@@ -146,15 +144,7 @@ export default class AppShellFriendRequestPopover extends Vue {
 			return;
 		}
 
-		this.processRemoveRequest(request);
-	}
-
-	processRemoveRequest(request: UserFriendship) {
 		this.removeRequest(request);
-
-		// We don't want to clear notifications through grid here.
-		// We call setFriendRequestCount through removeRequest above.
-		this.grid?.pushViewNotifications('friend-requests', {}, false);
 	}
 
 	async cancelRequest(request: UserFriendship) {
@@ -162,19 +152,14 @@ export default class AppShellFriendRequestPopover extends Vue {
 			return;
 		}
 
-		this.removeRequest(request, true);
+		this.removeRequest(request);
 		this.pendingCount--;
 	}
 
-	private removeRequest(request: UserFriendship, isPending = false) {
+	private removeRequest(request: UserFriendship) {
 		const index = this.incoming.findIndex(item => item.id === request.id);
 		if (index !== -1) {
 			this.incoming.splice(index, 1);
-		}
-
-		// The friend request counter is only for incoming requests, not pending ones.
-		if (!isPending) {
-			this.setFriendRequestCount(this.incoming.length);
 		}
 
 		// Set tab to outgoing when we just recalled the last pending request.
