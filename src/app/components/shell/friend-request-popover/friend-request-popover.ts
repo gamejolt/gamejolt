@@ -102,8 +102,8 @@ export default class AppShellFriendRequestPopover extends Vue {
 		this.requests.push(...requests);
 	}
 
-	@Watch('friendRequestCount')
-	onRequestCountChanged() {
+	@Watch('hasNewFriendRequests')
+	onhasNewFriendRequestsChanged() {
 		// When the request count changed from anywhere,
 		// make sure we rebootstrap again when opening the popover the next time.
 		this.isBootstrapped = false;
