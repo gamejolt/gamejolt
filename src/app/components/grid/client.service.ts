@@ -299,7 +299,7 @@ export class GridClient {
 			this.handleBootstrap(channel, payload);
 		});
 
-		channel.push('request-bootstrap', { user_id: userId });
+		channel.push('request-bootstrap', {});
 
 		channel.on('clear-notifications', (payload: ClearNotificationsPayload) => {
 			this.handleClearNotifications(payload);
@@ -710,7 +710,6 @@ export class GridClient {
 		if (this.notificationChannel) {
 			this.viewingCommunityId = communityId;
 			this.notificationChannel.push('request-community-bootstrap', {
-				user_id: store.state.app.user!.id.toString(),
 				community_id: communityId.toString(),
 			});
 		}
