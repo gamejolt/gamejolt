@@ -12,7 +12,9 @@
 			</div>
 		</div>
 		<div v-else class="-player">
-			<app-video-embed :video-id="embed.video_id" video-provider="youtube" autoplay />
+			<app-scroll-inview :config="InviewConfig" @outview="onOutview">
+				<app-video-embed :video-id="embed.video_id" video-provider="youtube" autoplay />
+			</app-scroll-inview>
 		</div>
 
 		<div class="-info">
