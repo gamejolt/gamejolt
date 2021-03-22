@@ -62,7 +62,6 @@
 				:was-published="wasPublished"
 				@delete="onDisableVideoAttachment"
 				@video-change="onVideoChanged"
-				@video-url-change="onVideoUrlChanged"
 				@video-status-change="onUploadingVideoStatusChanged"
 				@video-provider-change="onVideoProviderChanged"
 			/>

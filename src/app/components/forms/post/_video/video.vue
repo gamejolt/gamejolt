@@ -35,12 +35,8 @@
 								Your video must be between 1 second and 15 minutes long.
 							</translate>
 							<br />
-							<translate>
-								Videos must be bigger than 200x200.
-							</translate>
-							<translate>
-								Video filetypes currently supported:
-							</translate>
+							<translate> Videos must be bigger than 200x200. </translate>
+							<translate> Video filetypes currently supported: </translate>
 							<span
 								v-for="filetype of allowedFiletypes"
 								:key="filetype"
@@ -87,12 +83,6 @@
 						<app-form-control-errors />
 					</app-form-group>
 				</app-form>
-
-				<div v-if="!wasPublished" class="text-right">
-					<app-button trans @click="setVideoProvider(FiresidePostVideo.PROVIDER_YOUTUBE)">
-						<translate>Add YouTube video instead</translate>
-					</app-button>
-				</div>
 			</template>
 			<template v-else-if="videoStatus === 'uploading'">
 				<app-progress-bar :percent="uploadProgress * 100" />
@@ -123,49 +113,6 @@
 					:manifests="videoManifestSources"
 				/>
 			</template>
-		</template>
-		<template v-else-if="videoProvider === FiresidePostVideo.PROVIDER_YOUTUBE">
-			<app-form-legend compact deletable @delete="emitDelete">
-				<translate>YouTube video URL</translate>
-			</app-form-legend>
-
-			<app-form name="postVideoYouTubeForm">
-				<app-form-group
-					v-app-focus-when="!wasPublished"
-					name="video_url"
-					hide-label
-					:label="$gettext(`YouTube Video URL`)"
-				>
-					<p class="help-block">
-						<translate>Enter the URL of your YouTube video. For example:</translate>
-						<code>https://www.youtube.com/watch?v=dQw4w9WgXcQ</code>
-					</p>
-
-					<app-form-control
-						type="text"
-						:rules="{
-							pattern: YOUTUBE_URL_REGEX,
-						}"
-					/>
-
-					<app-form-control-errors />
-
-					<template v-if="hasValidYouTubeUrl">
-						<br />
-						<app-video-embed
-							class="-video-embed"
-							:video-provider="FiresidePostVideo.PROVIDER_YOUTUBE"
-							:video-id="youtubeVideoId"
-						/>
-					</template>
-				</app-form-group>
-			</app-form>
-
-			<div v-if="!wasPublished" class="text-right">
-				<app-button trans @click="setVideoProvider(FiresidePostVideo.PROVIDER_GAMEJOLT)">
-					<translate>Upload video instead</translate>
-				</app-button>
-			</div>
 		</template>
 	</app-loading-fade>
 </template>

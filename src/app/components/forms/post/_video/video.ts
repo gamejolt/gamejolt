@@ -30,7 +30,6 @@ import AppVideoProcessingProgress from '../../../../../_common/video/processing-
 
 interface FormModel {
 	video: File | null;
-	video_url: string;
 	_progress: ProgressEvent | null;
 }
 
@@ -64,8 +63,6 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
 	@Prop(propRequired(Boolean)) wasPublished!: boolean;
 
-	readonly YOUTUBE_URL_REGEX = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:&.+)*$/i;
-
 	// These fields are populated through the form load.
 	maxFilesize = 1000;
 	maxDuration = 60;
@@ -94,9 +91,6 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 	@Emit('video-change')
 	emitVideoChange(_video: FiresidePostVideo | null) {}
 
-	@Emit('video-url-change')
-	emitVideoUrlChange(_url: string) {}
-
 	@Emit('video-provider-change')
 	emitVideoProviderChange(_provider: string) {}
 
@@ -111,22 +105,6 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		}
 
 		return progressEvent.loaded / progressEvent.total;
-	}
-
-	get hasValidYouTubeUrl() {
-		return this.formModel.video_url && this.formModel.video_url.match(this.YOUTUBE_URL_REGEX);
-	}
-
-	get youtubeVideoId() {
-		const url = this.formModel.video_url;
-		if (url) {
-			// extract video id from url
-			const matches = url.match(this.YOUTUBE_URL_REGEX);
-			if (matches && matches.length > 1) {
-				const videoId = matches[1];
-				return videoId;
-			}
-		}
 	}
 
 	get canRemoveUploadingVideo() {
@@ -175,18 +153,9 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 	}
 
 	onInit() {
-		// Set the video_url field based on the input post.
-		// This is important when opening this form for editing.
 		if (this.post.videos.length) {
 			const video = this.post.videos[0];
-			if (video.provider === FiresidePostVideo.PROVIDER_YOUTUBE) {
-				this.setField(
-					'video_url',
-					'https://www.youtube.com/watch?v=' + this.post.videos[0].video_id
-				);
-				this.setVideoProvider(FiresidePostVideo.PROVIDER_YOUTUBE);
-			} else if (video.provider === FiresidePostVideo.PROVIDER_GAMEJOLT) {
-				this.setField('video_url', '');
+			if (video.provider === FiresidePostVideo.PROVIDER_GAMEJOLT) {
 				this.setVideoProvider(FiresidePostVideo.PROVIDER_GAMEJOLT);
 			}
 		} else {
@@ -239,10 +208,6 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 	videoSelected() {
 		if (this.formModel.video !== null) {
 			this.$refs.form.submit();
-
-			// Reset the video url here to indicate to the backend that we are
-			// now uploading a video.
-			this.setField('video_url', '');
 		}
 	}
 
@@ -346,11 +311,6 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 	setVideoProvider(provider: string) {
 		this.videoProvider = provider;
 		this.emitVideoProviderChange(this.videoProvider);
-	}
-
-	@Watch('formModel.video_url')
-	onVideoUrlChanged() {
-		this.emitVideoUrlChange(this.formModel.video_url);
 	}
 
 	async onDeleteUpload() {

@@ -59,7 +59,6 @@ type FormPostModel = FiresidePost & {
 	mediaItemIds: number[];
 	publishToPlatforms: number[] | null;
 	key_group_ids: number[];
-	video_url: string;
 	video_id: number;
 	sketchfab_id: string;
 	attached_communities: { community_id: number; channel_id: number }[];
@@ -560,17 +559,11 @@ export default class FormPost extends BaseForm<FormPostModel>
 			if (this.videoProvider === FiresidePostVideo.PROVIDER_GAMEJOLT) {
 				// Unset the video url for linked videos and set the video id for uploaded videos
 				// to signal to the backend that the attached video should be kept.
-				this.setField('video_url', '');
 				this.setField('video_id', this.formModel.videos[0].id);
-			} else if (this.videoProvider === FiresidePostVideo.PROVIDER_YOUTUBE) {
-				// Make sure to unset the video id for uploaded videos.
-				this.setField('video_id', 0);
 			} else {
-				this.setField('video_url', '');
 				this.setField('video_id', 0);
 			}
 		} else {
-			this.setField('video_url', '');
 			this.setField('video_id', 0);
 		}
 
@@ -668,7 +661,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 		this.enabledAttachments = false;
 		this.attachmentType = '';
 
-		this.setField('video_url', '');
 		this.setField('sketchfab_id', '');
 		this.setField('media', []);
 		this.setField('videos', []);
@@ -913,10 +905,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 		} else {
 			this.setField('videos', [video]);
 		}
-	}
-
-	onVideoUrlChanged(url: string) {
-		this.setField('video_url', url);
 	}
 
 	onUploadingVideoStatusChanged(status: VideoStatus) {
