@@ -1,7 +1,7 @@
 <script lang="ts" src="./video"></script>
 
 <template>
-	<div v-if="video.provider === 'gamejolt'" class="-spacing">
+	<div class="-spacing">
 		<template v-if="!video.is_processing && video.posterMediaItem">
 			<app-activity-feed-video-player
 				class="-video"
@@ -16,12 +16,6 @@
 			<app-video-processing-progress :post="post" @complete="onProcessingComplete" />
 		</div>
 	</div>
-	<app-activity-feed-video-embed
-		v-else
-		:video-id="video.video_id"
-		:thumbnail="video.thumbnail_url"
-		:is-hydrated="isHydrated"
-	/>
 </template>
 
 <style lang="stylus" scoped>

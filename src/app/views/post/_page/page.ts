@@ -38,7 +38,6 @@ import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
 import AppUserFollowWidget from '../../../../_common/user/follow/widget.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
-import AppVideoEmbed from '../../../../_common/video/embed/embed.vue';
 import AppVideoPlayer from '../../../../_common/video/player/player.vue';
 import AppVideoProcessingProgress from '../../../../_common/video/processing-progress/processing-progress.vue';
 import AppVideo from '../../../../_common/video/video.vue';
@@ -56,7 +55,6 @@ import AppPollVoting from '../../../components/poll/voting/voting.vue';
 		AppImgResponsive,
 		AppVideo,
 		AppVideoPlayer,
-		AppVideoEmbed,
 		AppSketchfabEmbed,
 		AppEventItemControls,
 		AppStickerControlsOverlay,
