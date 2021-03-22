@@ -20,6 +20,7 @@ import { constructStickerCounts, StickerCount } from '../../sticker/sticker-coun
 import { Translate } from '../../translate/translate.service';
 import { User } from '../../user/user.model';
 import { FiresidePostCommunity } from './community/community.model';
+import { FiresidePostEmbed } from './embed/embed.model';
 import { FiresidePostLike } from './like/like-model';
 import { FiresidePostSketchfab } from './sketchfab/sketchfab-model';
 import { FiresidePostTag } from './tag/tag-model';
@@ -87,6 +88,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	platforms_published_to: FiresidePostPublishedPlatform[] = [];
 	stickers: StickerPlacement[] = [];
 	sticker_counts: StickerCount[] = [];
+	embeds: FiresidePostEmbed[] = [];
 
 	// Used for forms and saving.
 	key_group_ids: number[] = [];
@@ -149,6 +151,10 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 
 		if (data.sticker_counts) {
 			this.sticker_counts = constructStickerCounts(data.sticker_counts);
+		}
+
+		if (data.embeds) {
+			this.embeds = FiresidePostEmbed.populate(data.embeds);
 		}
 
 		Registry.store('FiresidePost', this);

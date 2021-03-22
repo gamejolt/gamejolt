@@ -148,6 +148,12 @@
 							<app-content-viewer :source="post.lead_content" />
 						</app-sticker-target>
 
+						<app-fireside-post-embed
+							v-for="embed of post.embeds"
+							:key="embed.id"
+							:embed="embed"
+						/>
+
 						<div v-if="post.has_article">
 							<div class="page-cut" />
 

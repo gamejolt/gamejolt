@@ -141,6 +141,12 @@
 				<a v-if="canToggleLead" class="hidden-text-expander" @click="toggleLead()" />
 
 				<app-sticker-controls-overlay>
+					<app-fireside-post-embed
+						v-for="embed of post.embeds"
+						:key="embed.id"
+						:embed="embed"
+					/>
+
 					<app-activity-feed-devlog-post-text
 						v-if="post.has_article"
 						:item="item"
