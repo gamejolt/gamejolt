@@ -12,9 +12,20 @@
 			</div>
 		</div>
 		<div v-else class="-player">
-			<app-scroll-inview :config="InviewConfig" @outview="onOutview">
-				<app-video-embed :video-id="embed.video_id" video-provider="youtube" autoplay />
-			</app-scroll-inview>
+			<app-responsive-dimensions :ratio="16 / 9">
+				<app-scroll-inview
+					:config="InviewConfig"
+					@inview="onInviewChanged(true)"
+					@outview="onInviewChanged(false)"
+				>
+					<app-video-embed
+						v-if="shouldShowVideo"
+						:video-id="embed.video_id"
+						video-provider="youtube"
+						:autoplay="shouldAutoplay"
+					/>
+				</app-scroll-inview>
+			</app-responsive-dimensions>
 		</div>
 
 		<div class="-info">
@@ -110,4 +121,5 @@
 	border-bottom-style: solid
 	border-bottom-width: $border-width-base
 	border-bottom-color: var(--theme-bg-subtle)
+	background-color: var(--theme-bg-offset)
 </style>
