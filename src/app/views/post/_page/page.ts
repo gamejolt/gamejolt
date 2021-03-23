@@ -44,6 +44,7 @@ import AppVideoProcessingProgress from '../../../../_common/video/processing-pro
 import AppVideo from '../../../../_common/video/video.vue';
 import AppCommunityUserNotification from '../../../components/community/user-notification/user-notification.vue';
 import AppEventItemControls from '../../../components/event-item/controls/controls.vue';
+import AppFiresidePostEmbed from '../../../components/fireside/post/embed/embed.vue';
 import AppGameBadge from '../../../components/game/badge/badge.vue';
 import AppGameListItem from '../../../components/game/list/item/item.vue';
 import { AppCommentWidgetLazy } from '../../../components/lazy';
@@ -77,6 +78,7 @@ import AppPollVoting from '../../../components/poll/voting/voting.vue';
 		AppVideoProcessingProgress,
 		AppCommentWidgetLazy,
 		AppCommunityUserNotification,
+		AppFiresidePostEmbed,
 	},
 	directives: {
 		AppTooltip,
