@@ -4,16 +4,23 @@ import { Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { FiresidePostEmbed } from '../../../../../_common/fireside/post/embed/embed.model';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import { ScrollInviewConfig } from '../../../../../_common/scroll/inview/config';
+import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
 import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
+
+const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.windowHeight * 0.5}px` });
 
 @Component({
 	components: {
 		AppVideoEmbed,
+		AppScrollInview,
 	},
 })
 export default class AppFiresidePostEmbed extends Vue {
 	@Prop(propRequired(FiresidePostEmbed)) embed!: FiresidePostEmbed;
 
+	readonly InviewConfig = InviewConfig;
 	isOpen = false;
 
 	get videoThumbUrl() {
@@ -26,5 +33,9 @@ export default class AppFiresidePostEmbed extends Vue {
 		} else {
 			Navigate.newWindow(this.embed.url);
 		}
+	}
+
+	onOutview() {
+		this.isOpen = false;
 	}
 }
