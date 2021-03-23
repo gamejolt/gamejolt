@@ -24,13 +24,6 @@
 							/>
 						</template>
 					</template>
-					<app-video-embed
-						v-else
-						class="-video"
-						video-provider="youtube"
-						:video-id="video.video_id"
-						autoplay
-					/>
 				</div>
 			</template>
 

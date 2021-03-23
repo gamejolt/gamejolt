@@ -6,13 +6,11 @@ import { $viewPostVideo } from '../../../../../../_common/fireside/post/video/vi
 import AppVideoProcessingProgress from '../../../../../../_common/video/processing-progress/processing-progress.vue';
 import { ActivityFeedItem } from '../../item-service';
 import { ActivityFeedKey, ActivityFeedView } from '../../view';
-import AppActivityFeedVideoEmbed from '../../_video-embed/video-embed.vue';
 import AppActivityFeedVideoPlayer from '../../_video-player/video-player.vue';
 
 @Component({
 	components: {
 		AppActivityFeedVideoPlayer,
-		AppActivityFeedVideoEmbed,
 		AppVideoProcessingProgress,
 	},
 })
