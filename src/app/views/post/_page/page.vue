@@ -145,6 +145,7 @@
 							v-for="embed of post.embeds"
 							:key="embed.id"
 							:embed="embed"
+							:hide-outview="false"
 						/>
 
 						<div v-if="post.has_article">
