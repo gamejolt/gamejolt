@@ -433,7 +433,7 @@ module.exports = config => {
 							},
 							StringFileInfo: {
 								Comments: '',
-								CompanyName: 'Lucent Web Creative, LLC',
+								CompanyName: 'Game Jolt Inc.',
 								FileDescription: 'Game Jolt Client',
 								FileVersion: joltronVersionArray.join('.'),
 								InternalName: 'GameJoltClient',
