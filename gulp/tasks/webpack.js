@@ -186,6 +186,10 @@ module.exports = function(config) {
 				publicPath = '/package/';
 			}
 		}
+		// In app build, we always serve from relative path.
+		else if (config.isApp && config.production) {
+			publicPath = '';
+		}
 
 		let webAppManifest = undefined;
 		if (config.ssr !== 'server' && config.isWeb && sectionConfig.webAppManifest) {

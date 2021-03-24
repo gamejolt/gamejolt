@@ -16,6 +16,7 @@ import { ContentOwner } from '../content-owner';
 import {
 	ContentEditorController,
 	ContentEditorControllerKey,
+	editorFocus,
 	editorSyncScope,
 	editorSyncWindow,
 } from './content-editor-controller';
@@ -229,12 +230,22 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 		}
 
 		this._sourceControlVal = this.value;
-		// When we receive an empty string as the document json, the caller probably wants to clear the document.
+
+		// When we receive an empty string as the document json, the caller
+		// probably wants to clear the document.
 		if (this.value === '') {
 			this.reset();
 		} else {
+			const wasFocused = this.isFocused;
 			const doc = ContentDocument.fromJson(this.value);
+
+			// Don't await this since we want to make sure we focus within the
+			// same tick if they were focused previously.
 			this.setContent(doc);
+
+			if (wasFocused) {
+				editorFocus(this.controller);
+			}
 		}
 	}
 

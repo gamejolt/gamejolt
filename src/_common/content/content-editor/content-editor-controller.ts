@@ -212,6 +212,17 @@ export function editorSyncScope(
 	}
 }
 
+/**
+ * Refocus the editor window if it's not currently focused.
+ */
+export function editorFocus(c: ContentEditorController) {
+	if (!c.view) {
+		return;
+	}
+
+	c.view.focus();
+}
+
 export function editorGetSelectedNode(c: ContentEditorController) {
 	if (!c.view) {
 		return null;

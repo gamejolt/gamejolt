@@ -40,13 +40,7 @@ export class ContentEditorAppAdapter {
 		return {
 			postMessage: (message: string) => {
 				if (win.flutter_inappwebview) {
-					// This is a hack because the normal `callHandler` isn't
-					// available for some reason.
-					win.flutter_inappwebview._callHandler(
-						'gjEditor',
-						setTimeout(function() {}),
-						JSON.stringify([message])
-					);
+					win.flutter_inappwebview.callHandler('gjEditor', message);
 				} else {
 					console.log('Sending message over channel:', message);
 				}
