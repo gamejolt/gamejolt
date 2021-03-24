@@ -7,4 +7,3 @@
 .cache
 yarn-error.log
 /gulp/tasks/client/vendor/tmp-gamejolt.iss
-/gulp/tasks/client/certs
