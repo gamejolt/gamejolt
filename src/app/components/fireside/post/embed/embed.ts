@@ -2,7 +2,10 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../../utils/vue';
-import { FiresidePostEmbed } from '../../../../../_common/fireside/post/embed/embed.model';
+import {
+	FiresidePostEmbed,
+	TYPE_YOUTUBE,
+} from '../../../../../_common/fireside/post/embed/embed.model';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import { AppResponsiveDimensions } from '../../../../../_common/responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../../../../_common/screen/screen-service';
@@ -27,6 +30,10 @@ export default class AppFiresidePostEmbed extends Vue {
 	isOpen = false;
 	shouldAutoplay = true;
 	isInview = true;
+
+	get shouldShow() {
+		return this.embed.type === TYPE_YOUTUBE;
+	}
 
 	get videoThumbUrl() {
 		return `https://i.ytimg.com/vi/${this.embed.video_id}/hqdefault.jpg`;

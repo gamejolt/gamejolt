@@ -1,7 +1,12 @@
 <script lang="ts" src="./embed"></script>
 
 <template>
-	<div class="-embed" :class="{ '-embed-closed': !isOpen }" @click.prevent.stop="onClick">
+	<div
+		v-if="shouldShow"
+		class="-embed"
+		:class="{ '-embed-closed': !isOpen }"
+		@click.prevent.stop="onClick"
+	>
 		<div v-if="!isOpen" class="-thumb">
 			<div class="-thumb-img-container">
 				<img :src="videoThumbUrl" class="-thumb-img" />
