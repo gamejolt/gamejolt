@@ -1,22 +1,20 @@
+import { ContentDocument } from '../../../_common/content/content-document';
 import { ChatUser } from './user';
-
-export type ChatMessageType = 0 | 1;
 
 export const CHAT_MESSAGE_MAX_CONTENT_LENGTH = 1000;
 export const TIMEOUT_CONSIDER_QUEUED = 1500; // Time in ms until a queued message should be displayed as such.
 
-export class ChatMessage {
-	static readonly TypeNormal = 0;
-	static readonly TypeSystem = 1;
+export type ChatMessageType = 'content' | 'sticker';
 
+export class ChatMessage {
 	id!: number;
-	type!: ChatMessageType;
 	user_id!: number;
 	user!: ChatUser;
 	room_id!: number;
 	content!: string;
 	logged_on!: Date;
 	edited_on!: Date | null;
+	type!: ChatMessageType;
 
 	combine?: boolean;
 	dateSplit?: boolean;
@@ -43,5 +41,20 @@ export class ChatMessage {
 		if (data.user) {
 			this.user = new ChatUser(data.user);
 		}
+	}
+
+	getContentStickerId(): number {
+		if (this.type === 'content') {
+			return -1;
+		}
+
+		const doc = ContentDocument.fromJson(this.content);
+		const stickers = doc.getChildrenByType('sticker');
+
+		if (stickers.length > 0) {
+			return stickers[0].attrs['id'];
+		}
+
+		return -1;
 	}
 }

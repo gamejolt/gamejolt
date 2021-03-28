@@ -17,11 +17,13 @@ import { FormValidatorContentNoMediaUpload } from '../../../../../../_common/for
 import { AppObserveDimensions } from '../../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppShortkey from '../../../../../../_common/shortkey/shortkey.vue';
+import { Sticker } from '../../../../../../_common/sticker/sticker.model';
 import { EventBus } from '../../../../../../_common/system/event/event-bus.service';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { ChatClient, ChatKey, setMessageEditing, startTyping, stopTyping } from '../../../client';
 import { ChatMessage, CHAT_MESSAGE_MAX_CONTENT_LENGTH } from '../../../message';
 import { ChatRoom } from '../../../room';
+import { ChatWindowSendStickerModal } from '../sticker-modal/sticker-modal.service';
 
 const TYPING_TIMEOUT_INTERVAL = 3000;
 
@@ -73,6 +75,9 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 
 	@Emit('single-line-mode-change')
 	emitSingleLineModeChange(_singleLine: boolean) {}
+
+	@Emit('submit-sticker')
+	emitSubmitSticker(_stickerId: number) {}
 
 	get contentEditorTempResourceContextData() {
 		if (this.chat && this.chat.room) {
@@ -335,5 +340,12 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	private disableTypingTimeout() {
 		this.typing = false;
 		stopTyping(this.chat);
+	}
+
+	async onStickerClick() {
+		const result = await ChatWindowSendStickerModal.show();
+		if (result instanceof Sticker) {
+			this.emitSubmitSticker(result.id);
+		}
 	}
 }

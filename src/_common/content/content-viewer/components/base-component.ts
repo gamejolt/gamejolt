@@ -15,6 +15,7 @@ import { AppContentViewerListItem } from './list-item';
 import { AppContentViewerMediaItem } from './media-item';
 import { AppContentViewerParagraph } from './paragraph';
 import { AppContentViewerSpoiler } from './spoiler';
+import { AppContentViewerSticker } from './sticker';
 import { AppContentViewerText } from './text';
 
 function getComponentType(data: ContentObject): any {
@@ -48,6 +49,8 @@ function getComponentType(data: ContentObject): any {
 			return AppContentViewerHeading;
 		case 'gif':
 			return AppContentViewerGif;
+		case 'sticker':
+			return AppContentViewerSticker;
 	}
 }
 

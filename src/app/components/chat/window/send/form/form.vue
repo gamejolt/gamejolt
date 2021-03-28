@@ -66,6 +66,16 @@
 				:solid="hasContent"
 				@click="onSubmit"
 			/>
+			<app-button
+				icon="sticker"
+				sparse
+				:primary="!hasContent"
+				:trans="hasContent"
+				:solid="!hasContent"
+				class="-send-button"
+				:disabled="!isSendButtonDisabled"
+				@click="onStickerClick"
+			/>
 		</app-form-group>
 
 		<div v-if="!Screen.isXs" class="-bottom-indicators anim-fade-in no-animate-leave">
