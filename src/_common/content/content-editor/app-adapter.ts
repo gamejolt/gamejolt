@@ -163,6 +163,10 @@ export class ContentEditorAppAdapterMessage {
 			s: objectPick(scope, [
 				'isFocused',
 				'hasSelection',
+				'cursorStartTop',
+				'cursorStartBottom',
+				'cursorEndTop',
+				'cursorEndBottom',
 				'bold',
 				'italic',
 				'strike',

@@ -34,6 +34,10 @@ class ContentEditorWindow {
 class ContentEditorScope {
 	isFocused: boolean;
 	hasSelection: boolean;
+	cursorStartTop: number | null;
+	cursorStartBottom: number | null;
+	cursorEndTop: number | null;
+	cursorEndBottom: number | null;
 	bold: boolean;
 	italic: boolean;
 	strike: boolean;
@@ -44,6 +48,10 @@ class ContentEditorScope {
 	constructor(data?: Partial<ContentEditorScope>) {
 		this.isFocused = data?.isFocused ?? false;
 		this.hasSelection = data?.hasSelection ?? false;
+		this.cursorStartTop = data?.cursorStartTop ?? null;
+		this.cursorStartBottom = data?.cursorStartBottom ?? null;
+		this.cursorEndTop = data?.cursorEndTop ?? null;
+		this.cursorEndBottom = data?.cursorEndBottom ?? null;
 		this.bold = data?.bold ?? false;
 		this.italic = data?.italic ?? false;
 		this.strike = data?.strike ?? false;
@@ -160,9 +168,16 @@ export function editorSyncScope(
 	const isInHeading = headingNode !== null;
 	const headingLevel = headingNode !== null ? (headingNode.attrs.level as number) : null;
 
+	const coordsStart = isFocused ? c.view.coordsAtPos(state.selection.from) : null;
+	const coordsEnd = isFocused ? c.view.coordsAtPos(state.selection.to) : null;
+
 	c.scope = new ContentEditorScope({
 		isFocused,
 		hasSelection,
+		cursorStartTop: coordsStart?.top,
+		cursorStartBottom: coordsStart?.bottom,
+		cursorEndTop: coordsEnd?.top,
+		cursorEndBottom: coordsEnd?.bottom,
 		bold: hasMark('strong'),
 		italic: hasMark('em'),
 		strike: hasMark('strike'),
