@@ -1,8 +1,11 @@
-import { EditorView } from 'prosemirror-view';
 import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Component, InjectReactive } from 'vue-property-decorator';
 import { AppTooltip } from '../../../../tooltip/tooltip-directive';
-import { ContentEditorSchema } from '../../schemas/content-editor-schema';
+import {
+	ContentEditorController,
+	ContentEditorControllerKey,
+	editorInsertEmoji,
+} from '../../content-editor-controller';
 import { GJ_EMOJIS } from '../../schemas/specs/nodes/gj-emoji-nodespec';
 
 @Component({
@@ -10,13 +13,10 @@ import { GJ_EMOJIS } from '../../schemas/specs/nodes/gj-emoji-nodespec';
 		AppTooltip,
 	},
 })
-export default class AppContentEditorControlsEmojiPanel extends Vue {
-	@Prop(EditorView)
-	view!: EditorView<ContentEditorSchema>;
-	@Prop(Number)
-	stateCounter!: number;
+export default class AppContentEditorControlsEmoji extends Vue {
+	@InjectReactive(ContentEditorControllerKey)
+	controller!: ContentEditorController;
 
-	visible = false;
 	emoji = 'huh'; // gets set to a random one at mounted
 	panelVisible = false;
 	clickedWithPanelVisible = false;
@@ -25,13 +25,8 @@ export default class AppContentEditorControlsEmojiPanel extends Vue {
 		panel: HTMLElement;
 	};
 
-	created() {
-		this.update();
-	}
-
-	@Watch('stateCounter')
-	update() {
-		this.visible = this.canInsertEmoji();
+	get visible() {
+		return this.controller.scope.isFocused && this.controller.capabilities.emoji;
 	}
 
 	get spanClass() {
@@ -49,7 +44,7 @@ export default class AppContentEditorControlsEmojiPanel extends Vue {
 	private setPanelVisibility(visible: boolean) {
 		if (this.panelVisible !== visible) {
 			this.panelVisible = visible;
-			this.$emit('visibilityChanged', visible);
+			this.$emit('visibility-change', visible);
 		}
 	}
 
@@ -91,22 +86,8 @@ export default class AppContentEditorControlsEmojiPanel extends Vue {
 		this.setPanelVisibility(false);
 	}
 
-	private canInsertEmoji() {
-		const emojiNodeType = this.view.state.schema.nodes.gjEmoji;
-		const { $from } = this.view.state.selection;
-		const index = $from.index();
-		return $from.parent.canReplaceWith(index, index, emojiNodeType);
-	}
-
 	onClickEmoji(emojiType: string) {
-		const emojiNodeType = this.view.state.schema.nodes.gjEmoji;
-
-		if (this.canInsertEmoji()) {
-			const tr = this.view.state.tr;
-			tr.replaceSelectionWith(emojiNodeType.create({ type: emojiType }));
-			this.view.dispatch(tr);
-			this.view.focus();
-		}
+		editorInsertEmoji(this.controller, emojiType);
 	}
 
 	public async show() {

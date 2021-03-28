@@ -1,16 +1,17 @@
 import { EditorView } from 'prosemirror-view';
 import Vue from 'vue';
 import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
-import { Api } from '../../../../../api/api.service';
-import AppLoading from '../../../../../loading/loading.vue';
-import { Screen } from '../../../../../screen/screen-service';
-import AppUserAvatarImg from '../../../../../user/user-avatar/img/img.vue';
-import { User } from '../../../../../user/user.model';
-import AppUserVerifiedTick from '../../../../../user/verified-tick/verified-tick.vue';
-import { ContentEditorService } from '../../../content-editor.service';
-import { BasicMentionRegex } from '../../../plugins/input-rules/detect-mention-suggestion';
-import { ContentEditorSchema } from '../../../schemas/content-editor-schema';
-import ContentEditorMentionCache from '../cache.service';
+import { propRequired } from '../../../../../utils/vue';
+import { Api } from '../../../../api/api.service';
+import AppLoading from '../../../../loading/loading.vue';
+import { Screen } from '../../../../screen/screen-service';
+import AppUserAvatarImg from '../../../../user/user-avatar/img/img.vue';
+import { User } from '../../../../user/user.model';
+import AppUserVerifiedTick from '../../../../user/verified-tick/verified-tick.vue';
+import { ContentEditorService } from '../../content-editor.service';
+import { BasicMentionRegex } from '../../plugins/input-rules/detect-mention-suggestion';
+import { ContentEditorSchema } from '../../schemas/content-editor-schema';
+import ContentEditorMentionCache from './cache.service';
 
 @Component({
 	components: {
@@ -19,13 +20,10 @@ import ContentEditorMentionCache from '../cache.service';
 		AppUserVerifiedTick,
 	},
 })
-export default class AppContentEditorControlsMentionAutocompleteControls extends Vue {
-	@Prop(Object)
-	view!: EditorView<ContentEditorSchema>;
-	@Prop(Number)
-	stateCounter!: number;
-	@Prop(Number)
-	canShow!: number;
+export default class AppContentEditorControlsMentionAutocomplete extends Vue {
+	@Prop(propRequired(Object)) view!: EditorView<ContentEditorSchema>;
+	@Prop(propRequired(Number)) stateCounter!: number;
+	@Prop(propRequired(Number)) canShow!: number;
 
 	visible = false;
 	top = 'auto';
@@ -96,7 +94,7 @@ export default class AppContentEditorControlsMentionAutocompleteControls extends
 				if (matches && matches.length >= 2) {
 					const start = this.view.coordsAtPos(state.selection.from);
 
-					const box = this.$refs.container.offsetParent.getBoundingClientRect();
+					const box = this.$refs.container.offsetParent!.getBoundingClientRect();
 					// If the text control is more than 50% down the page, open the control above ("inverted")
 					const relativeYPos = box.top / Screen.height;
 					if (relativeYPos >= 0.5) {

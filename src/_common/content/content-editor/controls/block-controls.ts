@@ -2,15 +2,15 @@ import { Node } from 'prosemirror-model';
 import { Selection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
-import { Growls } from '../../../../growls/growls.service';
-import { Screen } from '../../../../screen/screen-service';
-import { AppTooltip } from '../../../../tooltip/tooltip-directive';
-import { ContextCapabilities } from '../../../content-context';
-import AppContentEditorTS from '../../content-editor';
-import { ContentEditorService } from '../../content-editor.service';
-import { ContentEditorSchema } from '../../schemas/content-editor-schema';
+import { Component, InjectReactive, Prop, Watch } from 'vue-property-decorator';
+import { propRequired } from '../../../../utils/vue';
+import { Growls } from '../../../growls/growls.service';
+import { Screen } from '../../../screen/screen-service';
+import { AppTooltip } from '../../../tooltip/tooltip-directive';
+import AppContentEditorTS from '../content-editor';
+import { ContentEditorController, ContentEditorControllerKey } from '../content-editor-controller';
+import { ContentEditorService } from '../content-editor.service';
+import { ContentEditorSchema } from '../schemas/content-editor-schema';
 
 @Component({
 	components: {},
@@ -19,15 +19,12 @@ import { ContentEditorSchema } from '../../schemas/content-editor-schema';
 	},
 })
 export default class AppContentEditorBlockControls extends Vue {
-	@Prop(Object)
-	view!: EditorView<ContentEditorSchema>;
-	@Prop(Number)
-	stateCounter!: number;
-	@Prop(Object)
-	capabilities!: ContextCapabilities;
-	@Prop(Boolean)
-	collapsed!: boolean;
+	@Prop(propRequired(Number)) stateCounter!: number;
+	@Prop(propRequired(Boolean)) collapsed!: boolean;
 	@Prop(propRequired(Object)) editor!: AppContentEditorTS;
+
+	@InjectReactive(ContentEditorControllerKey)
+	controller!: ContentEditorController;
 
 	visible = false;
 	top = 0;
@@ -39,6 +36,14 @@ export default class AppContentEditorBlockControls extends Vue {
 	$refs!: {
 		container: HTMLElement;
 	};
+
+	get contextCapabilities() {
+		return this.controller.contextCapabilities;
+	}
+
+	get view() {
+		return this.controller.view!;
+	}
 
 	get shouldShow() {
 		return this.visible && this.top > -24 && this.boxHeight - this.top > 24;
@@ -83,7 +88,7 @@ export default class AppContentEditorBlockControls extends Vue {
 	}
 
 	testIsInHeading(node: Node<ContentEditorSchema>) {
-		if (!this.capabilities.heading) {
+		if (!this.contextCapabilities.heading) {
 			return false;
 		}
 		return ContentEditorService.isContainedInNode(
@@ -94,7 +99,7 @@ export default class AppContentEditorBlockControls extends Vue {
 	}
 
 	private setCollapsed(value: boolean) {
-		this.$emit('collapsedChanged', value);
+		this.$emit('collapsed-change', value);
 	}
 
 	onClickExpand() {

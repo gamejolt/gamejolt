@@ -14,6 +14,7 @@
 		"client-build-osx": "gulp --production --client --arch=64",
 		"client-build-linux32": "gulp --production --client --arch=32",
 		"client-build-linux64": "gulp --production --client --arch=64",
+		"app-build": "gulp --production --app",
 		"ssr-server": "gulp --ssr server",
 		"ssr-client": "gulp --ssr client",
 		"ssr": "cd src && node server.js",

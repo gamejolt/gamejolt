@@ -15,10 +15,11 @@ type EventHandlers = {
 
 export default function buildEvents(editor: AppContentEditorTS): EventHandlers {
 	const handlers = {} as EventHandlers;
+	const capabilities = editor.contextCapabilities;
 
-	if (editor.capabilities.media) {
-		handlers.paste = pasteEventHandler(editor.capabilities);
-		handlers.drop = dropEventHandler(editor.capabilities);
+	if (capabilities.media) {
+		handlers.paste = pasteEventHandler(capabilities);
+		handlers.drop = dropEventHandler(capabilities);
 	}
 	handlers.focus = focusEventHandler(editor);
 	handlers.keydown = keydownEventHandler(editor);

@@ -18,7 +18,7 @@ const tar = require('tar');
 
 module.exports = config => {
 	// We can skip all this stuff if not doing a client build.
-	if (!config.client) {
+	if (!config.isClient) {
 		return;
 	}
 
@@ -636,7 +636,7 @@ module.exports = config => {
 					.on('error', reject)
 					.on('close', () => {
 						// Make sure it is executable.
-						fs.chmodSync(joltronDest, 0755);
+						fs.chmodSync(joltronDest, '0755');
 
 						// Finally create joltron's manifest file
 						fs.writeFileSync(

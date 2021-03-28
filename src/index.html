@@ -1,82 +1,88 @@
-<!doctype html>
+<!DOCTYPE html>
 
-<html lang="en" xmlns:fb="http://www.facebook.com/2008/fbml" xmlns:og="http://opengraphprotocol.org/schema/">
-
+<html
+	lang="en"
+	xmlns:fb="http://www.facebook.com/2008/fbml"
+	xmlns:og="http://opengraphprotocol.org/schema/"
+>
 	<head>
-
-		<meta charset="utf-8">
-		<meta http-equiv="Content-Security-Policy" content="block-all-mixed-content">
+		<meta charset="utf-8" />
+		<meta http-equiv="Content-Security-Policy" content="block-all-mixed-content" />
 
 		<% if (!_crawl) { %>
-			<!-- Keep it from being crawled -->
-			<meta name="robots" content="noindex, nofollow">
+		<!-- Keep it from being crawled -->
+		<meta name="robots" content="noindex, nofollow" />
 		<% } %>
 
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="HandheldFriendly" content="True">
-		<meta name="theme-color" content="#191919">
-		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="HandheldFriendly" content="True" />
+		<meta name="theme-color" content="#191919" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
 		<% if (_section === 'app') { %>
-			<!-- Add to homescreen for Chrome on Android -->
-			<meta name="mobile-web-app-capable" content="yes">
+		<!-- Add to homescreen for Chrome on Android -->
+		<meta name="mobile-web-app-capable" content="yes" />
 
-			<!-- Add to homescreen for Safari on iOS -->
-			<meta name="apple-mobile-web-app-capable" content="yes">
-			<meta name="apple-mobile-web-app-title" content="Game Jolt">
-			<link rel="apple-touch-icon-precomposed" href="<%= require(`./app/img/touch/apple-touch-icon-precomposed.png`) %>">
+		<!-- Add to homescreen for Safari on iOS -->
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-title" content="Game Jolt" />
+		<link
+			rel="apple-touch-icon-precomposed"
+			href="<%= require(`./app/img/touch/apple-touch-icon-precomposed.png`) %>"
+		/>
 
-			<!-- Tile icon for Win8 (144x144 + tile color) -->
-			<meta name="msapplication-TileImage" content="<%= require(`./app/img/touch/ms-touch-icon-144x144-precomposed.png`) %>">
-			<meta name="msapplication-TileColor" content="#191919">
+		<!-- Tile icon for Win8 (144x144 + tile color) -->
+		<meta
+			name="msapplication-TileImage"
+			content="<%= require(`./app/img/touch/ms-touch-icon-144x144-precomposed.png`) %>"
+		/>
+		<meta name="msapplication-TileColor" content="#191919" />
 		<% } %>
 
 		<!-- http://blogs.windows.com/windows_phone/b/wpdev/archive/2012/11/15/adapting-your-webkit-optimized-site-for-internet-explorer-10.aspx#step5 -->
-		<meta name="msapplication-tap-highlight" content="no">
+		<meta name="msapplication-tap-highlight" content="no" />
 
 		<script>
 			window._gjStartTime = Date.now();
 		</script>
 
 		<script type="text/javascript">
-
 			if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
-				var msViewportStyle = document.createElement("style");
+				var msViewportStyle = document.createElement('style');
 				msViewportStyle.appendChild(
-					document.createTextNode(
-						"@-ms-viewport{width:auto!important}"
-					)
+					document.createTextNode('@-ms-viewport{width:auto!important}')
 				);
-				document.getElementsByTagName("head")[0].appendChild(msViewportStyle);
+				document.getElementsByTagName('head')[0].appendChild(msViewportStyle);
 			}
-
 		</script>
 
 		<title><%= _title %></title>
 
 		<!-- FB -->
-		<meta property="fb:app_id" content="410666682312265">
-		<meta property="og:site_name" content="Game Jolt">
-		<meta property="fb:admins" content="1070315546">
-		<meta property="og:image" content="<%= require(`./app/img/meta-default-image.png`) %>">
+		<meta property="fb:app_id" content="410666682312265" />
+		<meta property="og:site_name" content="Game Jolt" />
+		<meta property="fb:admins" content="1070315546" />
+		<meta property="og:image" content="<%= require(`./app/img/meta-default-image.png`) %>" />
 
 		<!-- Twitter -->
-		<meta name="twitter:site" content="@gamejolt">
-
+		<meta name="twitter:site" content="@gamejolt" />
 	</head>
 
 	<body class="<%= _bodyClass %>" id="root">
-
 		<div id="app"></div>
 
+		<% if (_analytics) { %>
 		<script async src="https://www.google-analytics.com/analytics.js"></script>
 		<script>
-			window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+			window.ga =
+				window.ga ||
+				function() {
+					(ga.q = ga.q || []).push(arguments);
+				};
+			ga.l = +new Date();
 			ga('create', '<%= !_isClient ? `UA-6742777-1` : `UA-6742777-16` %>', 'auto');
 			ga('require', 'linkid', 'linkid.js');
 		</script>
-
-		<%= _scripts %>
-
+		<% } %> <%= _scripts %>
 	</body>
 </html>
