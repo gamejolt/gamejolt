@@ -129,6 +129,11 @@ export class ChatUserChannel extends Channel {
 		// If the notification key is null, set it to 1.
 		newChatNotification(this.client, message.room_id);
 		updateChatRoomLastMessageOn(this.client, message);
+		// Play message received sound, but only on the tab leader.
+		console.log('is tab leader', this.tabLeader.isLeader);
+		if (this.tabLeader.isLeader) {
+			message.playNotificationSound();
+		}
 
 		// Don't show growls/system notifications unless it's a message from a
 		// friend for now.

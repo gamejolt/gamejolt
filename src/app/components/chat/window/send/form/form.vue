@@ -67,13 +67,14 @@
 				@click="onSubmit"
 			/>
 			<app-button
+				v-app-tooltip="$gettext(`Send sticker`)"
 				icon="sticker"
 				sparse
-				:primary="!hasContent"
-				:trans="hasContent"
-				:solid="!hasContent"
+				:primary="!hasContent && !isEditing"
+				:trans="hasContent || isEditing"
+				:solid="!hasContent && !isEditing"
 				class="-send-button"
-				:disabled="!isSendButtonDisabled"
+				:disabled="!isSendButtonDisabled || isEditing"
 				@click="onStickerClick"
 			/>
 		</app-form-group>

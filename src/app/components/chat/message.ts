@@ -1,4 +1,5 @@
 import { ContentDocument } from '../../../_common/content/content-document';
+import { playStickerSound } from '../../../_common/sticker/sticker.model';
 import { ChatUser } from './user';
 
 export const CHAT_MESSAGE_MAX_CONTENT_LENGTH = 1000;
@@ -56,5 +57,18 @@ export class ChatMessage {
 		}
 
 		return -1;
+	}
+
+	playNotificationSound() {
+		if (this.type !== 'sticker') {
+			return;
+		}
+
+		const stickerId = this.getContentStickerId();
+		if (!stickerId || stickerId === -1) {
+			return;
+		}
+
+		playStickerSound(stickerId);
 	}
 }

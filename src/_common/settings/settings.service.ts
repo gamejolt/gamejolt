@@ -82,6 +82,7 @@ export const SettingRestrictedBrowsing = new BooleanSetting('restricted-browsing
 export const SettingBroadcastModal = new BooleanSetting('broadcast-modal', true);
 export const SettingAnimatedThumbnails = new BooleanSetting('animated-thumbnails', true);
 export const SettingFeedNotifications = new BooleanSetting('feed-notifications', true);
+export const SettingStickerSounds = new BooleanSetting('sticker-sounds', true);
 // Video Players
 export const SettingVideoPlayerVolume = new NumberSetting('video-player-volume', 1);
 export const SettingVideoPlayerMuted = new BooleanSetting('video-player-muted', false);

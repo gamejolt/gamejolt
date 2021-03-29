@@ -16,6 +16,6 @@
 
 <style lang="stylus" scoped>
 .-sticker
-	width: 100px
-	height: 100px
+	width: 64px
+	height: 64px
 </style>
