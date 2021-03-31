@@ -1,4 +1,16 @@
+import { Environment } from '../environment/environment.service';
 import { Model } from '../model/model.service';
+import { SettingStickerSounds } from '../settings/settings.service';
+
+export function playStickerSound(stickerId: number) {
+	if (!SettingStickerSounds.get()) {
+		return;
+	}
+
+	const stickerSoundPath = Environment.staticCdnUrl + `/img/audio/stickers/${stickerId}.ogg`;
+	const audio = new Audio(stickerSoundPath);
+	audio.play();
+}
 
 export class Sticker extends Model {
 	public static readonly RARITY_COMMON = 0;

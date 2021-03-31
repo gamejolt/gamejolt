@@ -38,6 +38,7 @@ enum ContextCapabilityType {
 	HorizontalRule,
 	Spoiler,
 	Heading,
+	Sticker,
 }
 
 export class ContextCapabilities {
@@ -51,7 +52,8 @@ export class ContextCapabilities {
 			this.blockquote ||
 			this.list ||
 			this.hr ||
-			this.spoiler
+			this.spoiler ||
+			this.sticker
 		);
 	}
 	get hasAnyText() {
@@ -126,6 +128,9 @@ export class ContextCapabilities {
 	}
 	get gif() {
 		return this.hasCapability(ContextCapabilityType.Gif);
+	}
+	get sticker() {
+		return this.hasCapability(ContextCapabilityType.Sticker);
 	}
 
 	private constructor(capabilities: ContextCapabilityType[]) {
@@ -247,6 +252,7 @@ export class ContextCapabilities {
 					ContextCapabilityType.Tag,
 					ContextCapabilityType.Mention,
 					ContextCapabilityType.Gif,
+					ContextCapabilityType.Sticker,
 				]);
 		}
 		throw new Error('Context capabilities undefined for context ' + context);

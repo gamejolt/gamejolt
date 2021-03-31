@@ -425,7 +425,12 @@ export function leaveChatRoom(chat: ChatClient) {
 	}
 }
 
-export function queueChatMessage(chat: ChatClient, content: string, roomId: number) {
+export function queueChatMessage(
+	chat: ChatClient,
+	type: ChatMessageType,
+	content: string,
+	roomId: number
+) {
 	if (chat.currentUser === null) {
 		return;
 	}
@@ -433,10 +438,10 @@ export function queueChatMessage(chat: ChatClient, content: string, roomId: numb
 	const tempId = Math.floor(Math.random() * Date.now());
 	const message = new ChatMessage({
 		id: tempId,
-		type: ChatMessage.TypeNormal,
 		user_id: chat.currentUser.id,
 		user: chat.currentUser,
 		room_id: roomId,
+		type,
 		content,
 		logged_on: new Date(),
 		_isQueued: true,
@@ -494,7 +499,6 @@ export function setTimeSplit(chat: ChatClient, roomId: number, message: ChatMess
 function outputMessage(
 	chat: ChatClient,
 	roomId: number,
-	type: ChatMessageType,
 	message: ChatMessage,
 	isHistorical: boolean
 ) {
@@ -502,7 +506,6 @@ function outputMessage(
 		return;
 	}
 
-	message.type = type;
 	message.logged_on = new Date(message.logged_on);
 	setTimeSplit(chat, roomId, message);
 
@@ -547,7 +550,7 @@ export function processNewChatOutput(
 	}
 
 	messages.forEach(message => {
-		outputMessage(chat, message.room_id, ChatMessage.TypeNormal, message, isHistorical);
+		outputMessage(chat, message.room_id, message, isHistorical);
 
 		if (!isHistorical) {
 			// Emit an event that we've sent out a new message.
@@ -564,8 +567,15 @@ export function processNewChatOutput(
 function sendChatMessage(chat: ChatClient, message: ChatMessage) {
 	message._error = false;
 	message._isProcessing = true;
+
+	// Send data based on message type.
+	const eventData =
+		message.type === 'content'
+			? { content: message.content }
+			: { sticker_id: message.getContentStickerId() };
+
 	chat.roomChannels[message.room_id]
-		.push('message', { content: message.content })
+		.push('message', eventData)
 		.receive('ok', data => {
 			// Upon receiving confirmation from the server, remove the message from the queue and add
 			// the received message to the list.

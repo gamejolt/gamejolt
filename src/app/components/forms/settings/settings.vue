@@ -180,6 +180,16 @@
 					</translate>
 				</p>
 			</app-form-group>
+
+			<app-form-group name="sticker_sounds" :label="$gettext('Play sticker sounds?')">
+				<app-form-control-toggle class="pull-right" />
+				<p class="help-block">
+					<translate>
+						With this on your device will play a sound when someone sends you a sticker
+						in chat.
+					</translate>
+				</p>
+			</app-form-group>
 		</fieldset>
 	</app-form>
 </template>

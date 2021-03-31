@@ -12,6 +12,7 @@ import {
 	SettingMaxExtractCount,
 	SettingQueueWhenPlaying,
 	SettingRestrictedBrowsing,
+	SettingStickerSounds,
 	SettingThemeAlwaysOurs,
 	SettingThemeDark,
 } from '../../../../_common/settings/settings.service';
@@ -37,6 +38,7 @@ type FormModel = {
 	autostart_client: boolean;
 	theme_dark: boolean;
 	theme_always_ours: boolean;
+	sticker_sounds: boolean;
 };
 
 @Component({
@@ -67,6 +69,7 @@ export default class FormSettings extends BaseForm<FormModel> implements FormOnI
 		this.setField('feed_notifications', SettingFeedNotifications.get());
 		this.setField('theme_dark', SettingThemeDark.get());
 		this.setField('theme_always_ours', SettingThemeAlwaysOurs.get());
+		this.setField('sticker_sounds', SettingStickerSounds.get());
 
 		if (GJ_IS_CLIENT) {
 			this.setField('game_install_dir', SettingGameInstallDir.get());
@@ -121,6 +124,7 @@ export default class FormSettings extends BaseForm<FormModel> implements FormOnI
 		SettingFeedNotifications.set(this.formModel.feed_notifications);
 		SettingThemeDark.set(this.formModel.theme_dark);
 		SettingThemeAlwaysOurs.set(this.formModel.theme_always_ours);
+		SettingStickerSounds.set(this.formModel.sticker_sounds);
 
 		this.setDark(this.formModel.theme_dark);
 		this.setAlwaysOurs(this.formModel.theme_always_ours);

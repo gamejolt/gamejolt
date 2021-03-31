@@ -63,7 +63,11 @@
 
 					<template #popover>
 						<div class="list-group">
-							<a class="list-group-item has-icon" @click="startEdit">
+							<a
+								v-if="message.type === 'content'"
+								class="list-group-item has-icon"
+								@click="startEdit"
+							>
 								<app-jolticon icon="edit" />
 								<translate>Edit Message</translate>
 							</a>

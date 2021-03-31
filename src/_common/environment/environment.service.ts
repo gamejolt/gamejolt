@@ -38,6 +38,7 @@ export class Environment {
 	static devBaseUrl = 'http://dev.gamejolt.com';
 	static gameserverUrl = (isSecure ? 'https' : 'http') + '://gamejolt.net';
 	static mediaserverUrl = 'https://m.gjcdn.net';
+	static staticCdnUrl = 'https://s.gjcdn.net';
 
 	static apiHost = 'https://gamejolt.com';
 	static uploadHost = 'https://upload.gamejolt.com';
@@ -63,6 +64,7 @@ if (GJ_ENVIRONMENT === 'development') {
 	Environment.devBaseUrl = 'http://dev.development.gamejolt.com';
 	Environment.gameserverUrl = 'http://development.gamejolt.net';
 	Environment.mediaserverUrl = 'http://media.development.gamejolt.com';
+	Environment.staticCdnUrl = 'http://development.gamejolt.com';
 
 	Environment.apiHost = GJ_TUNNELS.backend || 'http://development.gamejolt.com';
 	Environment.uploadHost = Environment.apiHost;
