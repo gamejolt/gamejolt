@@ -6,7 +6,7 @@
 			<app-img-responsive class="content-image" :src="sticker.img_url" />
 		</template>
 		<template v-else-if="hasError">
-			<translate>Error loading media item.</translate>
+			<translate>Error loading sticker</translate>
 		</template>
 		<template v-else>
 			<app-loading />
