@@ -7,7 +7,7 @@ export function playStickerSound(stickerId: number) {
 		return;
 	}
 
-	const stickerSoundPath = Environment.staticCdnUrl + `/audio/stickers/${stickerId}.ogg`;
+	const stickerSoundPath = Environment.staticCdnUrl + `/img/audio/stickers/${stickerId}.ogg`;
 	const audio = new Audio(stickerSoundPath);
 	audio.play();
 }
