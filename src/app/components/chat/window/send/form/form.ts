@@ -17,7 +17,7 @@ import { FormValidatorContentNoMediaUpload } from '../../../../../../_common/for
 import { AppObserveDimensions } from '../../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppShortkey from '../../../../../../_common/shortkey/shortkey.vue';
-import { playStickerSound, Sticker } from '../../../../../../_common/sticker/sticker.model';
+import { Sticker } from '../../../../../../_common/sticker/sticker.model';
 import { EventBus } from '../../../../../../_common/system/event/event-bus.service';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { ChatClient, ChatKey, setMessageEditing, startTyping, stopTyping } from '../../../client';
@@ -346,7 +346,6 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		const result = await ChatWindowSendStickerModal.show();
 		if (result instanceof Sticker) {
 			const stickerId = result.id;
-			playStickerSound(stickerId);
 			this.emitSubmitSticker(stickerId);
 		}
 	}
