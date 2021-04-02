@@ -37,7 +37,6 @@
 				>
 					<app-jolticon class="-control-icon" icon="user-messages" />
 				</a>
-				<div ref="stickerOrigin" class="-sticker-origin" />
 			</app-shell-cbar-item>
 
 			<!-- Library - !Screen.isXs -->
@@ -89,39 +88,4 @@
 
 		&-icon
 			font-size: $jolticon-size * 1.5
-
-.-sticker-origin
-	position: absolute
-	top: 0
-	left: 0
-	right: 0
-	bottom: 0
-	pointer-events: none
-	user-select: none
-	z-index: 2
-</style>
-
-<style lang="stylus">
-.sticker-img-q347i9o5v6ynw489
-	position: fixed
-	display: block
-	z-index: 100
-	pointer-events: none
-	user-select: none
-	width: 50px
-	height: 50px
-	top: 12px
-	left: 12px
-	animation-name: sticker-img-q347i9o5v6ynw489-popcorn
-	animation-duration: 1s
-	animation-timing-function: ease-out
-
-@keyframes sticker-img-q347i9o5v6ynw489-popcorn
-	0%
-		transform: none
-		opacity: 1
-
-	100%
-		transform: translateX(200px) translateY(50px) rotateZ(270deg) scale(0.5)
-		opacity: 0
 </style>

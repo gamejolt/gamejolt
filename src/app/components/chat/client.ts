@@ -568,14 +568,8 @@ function sendChatMessage(chat: ChatClient, message: ChatMessage) {
 	message._error = false;
 	message._isProcessing = true;
 
-	// Send data based on message type.
-	const eventData =
-		message.type === 'content'
-			? { content: message.content }
-			: { sticker_id: message.getContentStickerId() };
-
 	chat.roomChannels[message.room_id]
-		.push('message', eventData)
+		.push('message', { content: message.content })
 		.receive('ok', data => {
 			// Upon receiving confirmation from the server, remove the message from the queue and add
 			// the received message to the list.

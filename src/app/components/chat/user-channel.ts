@@ -3,7 +3,6 @@ import Vue from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { TabLeader } from '../../../utils/tab-leader';
 import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
-import { EventBus } from '../../../_common/system/event/event-bus.service';
 import {
 	ChatClient,
 	isInChatRoom,
@@ -131,7 +130,6 @@ export class ChatUserChannel extends Channel {
 		// If the notification key is null, set it to 1.
 		newChatNotification(this.client, message.room_id);
 		updateChatRoomLastMessageOn(this.client, message);
-		this.startAnimateMessageReceived(message);
 		// Play message received sound, but only on the tab leader.
 		let shouldPlay = this.tabLeader.isLeader;
 		// For client, only play when window is focussed.
@@ -149,15 +147,6 @@ export class ChatUserChannel extends Channel {
 		}
 
 		ChatNotificationGrowl.show(this.client, message, this.tabLeader.isLeader);
-	}
-
-	private async startAnimateMessageReceived(message: ChatMessage) {
-		if (message.type !== 'sticker') {
-			return;
-		}
-
-		const stickerData = (await message.getContentStickerImg()) as any;
-		EventBus.emit('chat-sticker-received', stickerData);
 	}
 
 	private onYouUpdated(data: Partial<ChatUser>) {
