@@ -66,17 +66,6 @@
 				:solid="hasContent"
 				@click="onSubmit"
 			/>
-			<app-button
-				v-app-tooltip="$gettext(`Send sticker`)"
-				icon="sticker"
-				sparse
-				:primary="!hasContent && !isEditing"
-				:trans="hasContent || isEditing"
-				:solid="!hasContent && !isEditing"
-				class="-send-button"
-				:disabled="!isSendButtonDisabled || isEditing"
-				@click="onStickerClick"
-			/>
 		</app-form-group>
 
 		<div v-if="!Screen.isXs" class="-bottom-indicators anim-fade-in no-animate-leave">

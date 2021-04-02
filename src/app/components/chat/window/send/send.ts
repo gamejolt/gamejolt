@@ -3,7 +3,6 @@ import { Component, InjectReactive, Prop, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { ContentDocument } from '../../../../../_common/content/content-document';
 import { AppContentEditorLazy } from '../../../../../_common/content/content-editor/content-editor-lazy';
-import { ContentObject } from '../../../../../_common/content/content-object';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import {
 	ChatClient,
@@ -61,18 +60,6 @@ export default class AppChatWindowSend extends Vue {
 			if (room) {
 				queueChatMessage(this.chat, 'content', contentJson, room.id);
 			}
-		}
-	}
-
-	onSubmitSticker(stickerId: number) {
-		const stickerObj = new ContentObject('sticker');
-		stickerObj.attrs['id'] = stickerId;
-		const doc = new ContentDocument('chat-message', [stickerObj]);
-
-		const contentJson = doc.toJson();
-		const room = this.chat.room;
-		if (room) {
-			queueChatMessage(this.chat, 'sticker', contentJson, room.id);
 		}
 	}
 

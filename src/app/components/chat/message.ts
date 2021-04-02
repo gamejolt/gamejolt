@@ -1,6 +1,3 @@
-import { ContentDocument } from '../../../_common/content/content-document';
-import { ContentHydrator } from '../../../_common/content/content-hydrator';
-import { playStickerSound } from '../../../_common/sticker/sticker.model';
 import { ChatUser } from './user';
 
 export const CHAT_MESSAGE_MAX_CONTENT_LENGTH = 1000;
@@ -45,51 +42,7 @@ export class ChatMessage {
 		}
 	}
 
-	getContentStickerId(): number {
-		if (this.type !== 'sticker') {
-			return -1;
-		}
-
-		const doc = ContentDocument.fromJson(this.content);
-		const stickers = doc.getChildrenByType('sticker');
-
-		if (stickers.length > 0) {
-			return stickers[0].attrs['id'];
-		}
-
-		return -1;
-	}
-
-	async getContentStickerImg() {
-		if (this.type !== 'sticker') {
-			return null;
-		}
-
-		const doc = ContentDocument.fromJson(this.content);
-		const stickers = doc.getChildrenByType('sticker');
-
-		if (stickers.length > 0) {
-			const stickerObj = stickers[0];
-			const stickerId = stickerObj.attrs['id'];
-			const hydrator = new ContentHydrator(doc.hydration);
-			return new Promise(resolve => {
-				hydrator.useData('sticker-id', stickerId, data => resolve(data));
-			});
-		}
-
-		return null;
-	}
-
 	playNotificationSound() {
-		if (this.type !== 'sticker') {
-			return;
-		}
-
-		const stickerId = this.getContentStickerId();
-		if (!stickerId || stickerId === -1) {
-			return;
-		}
-
-		playStickerSound(stickerId);
+		/** Currently no sound is played when receiving a message. */
 	}
 }
