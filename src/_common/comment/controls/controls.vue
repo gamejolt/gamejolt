@@ -60,10 +60,15 @@
 					@click="onReplyClick(true)"
 				/>
 			</span>
-			<app-button v-if="children.length" class="-replies" trans @click="onReplyClick(false)">
+			<app-button
+				v-if="childrenCount > 0"
+				class="-replies"
+				trans
+				@click="onReplyClick(false)"
+			>
 				<translate
-					:translate-n="children.length"
-					:translate-params="{ count: children.length }"
+					:translate-n="childrenCount"
+					:translate-params="{ count: childrenCount }"
 					translate-plural="+ %{ count } replies"
 				>
 					+ %{ count } reply

@@ -95,6 +95,7 @@
 					:model="model"
 					:comment="comment"
 					:children="childComments[comment.id]"
+					:children-count="childrenCounts[comment.id]"
 					:show-children="isThreadView"
 				/>
 			</app-message-thread>
