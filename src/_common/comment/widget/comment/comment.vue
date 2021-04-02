@@ -128,7 +128,7 @@
 		<template #controls>
 			<app-comment-controls
 				:comment="comment"
-				:children-count="childrenCount"
+				:children="children"
 				:parent="parent"
 				:show-reply="showReplies"
 				:can-reply="canReply"

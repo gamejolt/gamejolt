@@ -59,7 +59,6 @@ export default class AppCommentWidgetComment extends Vue {
 	@Prop(propRequired(Model)) model!: Model;
 	@Prop(propRequired(Comment)) comment!: Comment;
 	@Prop(propOptional(Array, () => [])) children!: Comment[];
-	@Prop(propOptional(Number, 0)) childrenCount!: number;
 	@Prop(propOptional(Comment)) parent?: Comment;
 	@Prop(propOptional(Boolean, false)) isLastInThread!: boolean;
 	@Prop(propOptional(Boolean, false)) showChildren!: boolean;
@@ -173,7 +172,7 @@ export default class AppCommentWidgetComment extends Vue {
 	}
 
 	get shouldShowReplies() {
-		return this.showChildren && (this.children.length > 0 || this.childrenCount > 0);
+		return this.children.length > 0 && this.showChildren;
 	}
 
 	get canFollow() {

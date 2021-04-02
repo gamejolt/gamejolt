@@ -95,7 +95,6 @@ export default class AppCommentWidget extends Vue {
 	resourceOwner: User | null = null;
 	perPage = 10;
 	currentPage = 1;
-	childrenCounts: { [k: number]: number } = {};
 
 	collaborators: Collaborator[] = [];
 
@@ -282,10 +281,6 @@ export default class AppCommentWidget extends Vue {
 			this.hasError = false;
 			this.resourceOwner = new User(payload.resourceOwner);
 			this.perPage = payload.perPage || 10;
-
-			if (payload.childCounts) {
-				this.childrenCounts = payload.childCounts;
-			}
 
 			// Display all loaded comments.
 			if (this.storeView instanceof CommentStoreSliceView) {
