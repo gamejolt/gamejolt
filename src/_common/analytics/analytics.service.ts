@@ -186,6 +186,8 @@ export class Analytics {
 	}
 
 	static async trackEvent(category: string, action: string, label?: string, value?: string) {
+		return;
+
 		if (!this.shouldTrack) {
 			console.log('Skip tracking event since not a normal user.');
 			return;
@@ -211,6 +213,8 @@ export class Analytics {
 	}
 
 	static async trackSocial(network: string, action: string, target: string) {
+		return;
+
 		if (!this.shouldTrack) {
 			console.log('Skip tracking social event since not a normal user.');
 			return;
@@ -227,6 +231,8 @@ export class Analytics {
 	}
 
 	static async trackTiming(category: string, timingVar: string, value: number, label?: string) {
+		return;
+
 		if (!this.shouldTrack) {
 			console.log('Skip tracking timing event since not a normal user.');
 			return;
