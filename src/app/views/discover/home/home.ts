@@ -11,10 +11,6 @@ import { FeaturedItem } from '../../../components/featured-item/featured-item.mo
 import AppGameGrid from '../../../components/game/grid/grid.vue';
 import AppGameGridPlaceholder from '../../../components/game/grid/placeholder/placeholder.vue';
 import { AppAuthJoinLazy } from '../../../components/lazy';
-import {
-	hasCommunitiesHomeSplitTest,
-	trackCommunitiesHomeSplitTest,
-} from '../../../components/split-test/split-test-service';
 import { Store } from '../../../store/index';
 import AppDiscoverHomeBanner from './_banner/banner.vue';
 import AppDiscoverHomeCommunities from './_communities/communities.vue';
@@ -45,10 +41,6 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	featuredCommunities: Community[] = [];
 	games: Game[] = [];
 
-	get isInSplit() {
-		return hasCommunitiesHomeSplitTest(this.$route);
-	}
-
 	get slicedGames() {
 		return this.games.slice(0, 6);
 	}
@@ -58,8 +50,6 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	}
 
 	routeResolved($payload: any) {
-		trackCommunitiesHomeSplitTest(this.$route);
-
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb;
 		Meta.twitter = $payload.twitter;

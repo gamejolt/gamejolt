@@ -6,7 +6,6 @@ import { propOptional, propRequired } from '../../../../../utils/vue';
 import AppCommunityCard from '../../../../../_common/community/card/card.vue';
 import { Community } from '../../../../../_common/community/community.model';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import { hasCommunitiesHomeSplitTest } from '../../../../components/split-test/split-test-service';
 import AppDiscoverHomeCommunitiesItem from './item/item.vue';
 
 @Component({
@@ -20,10 +19,6 @@ export default class AppDiscoverHomeCommunities extends Vue {
 	@Prop(propOptional(Boolean, false)) isLoading!: boolean;
 
 	@State app!: Store['app'];
-
-	get isInSplit() {
-		return hasCommunitiesHomeSplitTest(this.$route);
-	}
 
 	get slicedCommunities() {
 		return this.communities.slice(0, Screen.isMobile ? 18 : 24);

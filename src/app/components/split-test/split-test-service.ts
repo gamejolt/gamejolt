@@ -1,18 +1,4 @@
 import { Route } from 'vue-router';
-import { Analytics } from '../../../_common/analytics/analytics.service';
-
-const ExperimentCommunitiesHome = 'split:communities-home-v2';
-
-export function hasCommunitiesHomeSplitTest(route: Route) {
-	return getClientSideVariation(ExperimentCommunitiesHome, route) === 2;
-}
-
-export function trackCommunitiesHomeSplitTest(route: Route) {
-	Analytics.trackEvent(
-		ExperimentCommunitiesHome,
-		'variation-' + getClientSideVariation(ExperimentCommunitiesHome, route)
-	);
-}
 
 // function getPayloadVariation(payload: any, experiment: string, route?: Route): number {
 // 	const variation = checkHardcoded(experiment, route);

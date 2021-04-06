@@ -1,7 +1,7 @@
 <script lang="ts" src="./communities"></script>
 
 <template>
-	<div :class="isInSplit ? 'container' : 'container-xl'">
+	<div class="container-xl">
 		<div class="text-center">
 			<h2 class="section-header">
 				<translate>Browse Communities</translate>
@@ -17,35 +17,18 @@
 			<br />
 		</div>
 
-		<template v-if="isInSplit">
-			<div class="row">
-				<div
-					v-for="community of slicedCommunities"
-					:key="community.id"
-					class="-item col-sm-6 col-md-4 col-lg-3 anim-fade-in"
-				>
-					<app-community-card
-						v-app-track-event="`home:communities:click`"
-						:community="community"
-						elevate
-					/>
-				</div>
+		<div class="row">
+			<div
+				v-for="community of slicedCommunities"
+				:key="community.id"
+				class="col-xs-6 col-sm-3 col-md-2"
+			>
+				<app-discover-home-communities-item
+					v-app-track-event="`home:communities:click`"
+					:community="community"
+				/>
 			</div>
-		</template>
-		<template v-else>
-			<div class="row">
-				<div
-					v-for="community of slicedCommunities"
-					:key="community.id"
-					class="col-xs-6 col-sm-3 col-md-2"
-				>
-					<app-discover-home-communities-item
-						v-app-track-event="`home:communities:click`"
-						:community="community"
-					/>
-				</div>
-			</div>
-		</template>
+		</div>
 
 		<br />
 
