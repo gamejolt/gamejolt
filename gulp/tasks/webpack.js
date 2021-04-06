@@ -456,6 +456,7 @@ module.exports = function(config) {
 								_crawl: !!sectionConfig.crawl,
 								_scripts: sectionConfig.scripts,
 								_bodyClass: sectionConfig.bodyClass || '',
+								_analytics: sectionConfig.analytics !== false,
 							},
 					  }),
 				webAppManifest ? new WebpackPwaManifest(webAppManifest) : noop,

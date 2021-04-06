@@ -1,5 +1,4 @@
 import { Component, Inject } from 'vue-property-decorator';
-import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
@@ -49,6 +48,7 @@ export default class RouteHomeFYP extends BaseRouteComponent {
 	}
 
 	onLoadMore() {
-		Analytics.trackPageview(undefined, true);
+		// Log as a proper event.
+		// Analytics.trackEvent(undefined, true);
 	}
 }

@@ -22,7 +22,7 @@ export interface CustomMessage {
 }
 
 function pluckBuilds(packages: GamePackage[], func: (build: GameBuild) => boolean) {
-	let pluckedBuilds: GameBuild[] = [];
+	const pluckedBuilds: GameBuild[] = [];
 
 	packages.forEach((_package: GamePackage) => {
 		if (!_package._builds) {
@@ -330,7 +330,7 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 	}
 
 	static pluckInstallableBuilds(packages: GamePackage[], os: string, arch?: string): GameBuild[] {
-		let pluckedBuilds: GameBuild[] = [];
+		const pluckedBuilds: GameBuild[] = [];
 
 		packages.forEach(_package => {
 			// Don't include builds for packages that aren't bought yet.

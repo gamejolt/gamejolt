@@ -71,18 +71,7 @@
 	<body class="<%= _bodyClass %>" id="root">
 		<div id="app"></div>
 
-		<script async src="https://www.google-analytics.com/analytics.js"></script>
-		<script>
-			window.ga =
-				window.ga ||
-				function() {
-					(ga.q = ga.q || []).push(arguments);
-				};
-			ga.l = +new Date();
-			ga('create', '<%= !_isClient ? `UA-6742777-1` : `UA-6742777-16` %>', 'auto');
-			ga('require', 'linkid', 'linkid.js');
-		</script>
-
+		<% if (_analytics) { %>
 		<script
 			async
 			src="https://www.googletagmanager.com/gtag/js?id=<%= !_isClient ? `G-FJMPYMGHM7` : `G-CXLRR656PN` %>"
@@ -93,7 +82,6 @@
 				dataLayer.push(arguments);
 			}
 			gtag('js', new Date());
-			gtag('config', '<%= !_isClient ? `G-FJMPYMGHM7` : `G-CXLRR656PN` %>');
 		</script>
 
 		<!-- Yandex.Metrika counter -->
@@ -127,7 +115,9 @@
 				/></div
 		></noscript>
 		<!-- /Yandex.Metrika counter -->
+		<% } %>
 
+		<!-- Scripts -->
 		<%= _scripts %>
 	</body>
 </html>

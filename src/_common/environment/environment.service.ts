@@ -11,8 +11,6 @@ interface SsrContext {
 }
 
 export class Environment {
-	static env: 'production' | 'development' = GJ_ENVIRONMENT;
-	static buildType: 'production' | 'development' = GJ_BUILD_TYPE;
 	static isClient = GJ_IS_CLIENT;
 	static isSecure = isSecure;
 
@@ -48,6 +46,10 @@ export class Environment {
 	static widgetHost = 'https://widgets.gamejolt.com';
 	static gridHost = 'https://grid.gamejolt.com/grid/host';
 	static recaptchaSiteKey = '6Led_UAUAAAAAB_ptIOOlAF5DFK9YM7Qi_7z8iKk';
+
+	static gaId = 'G-FJMPYMGHM7';
+	/** This is the older tag ID. */
+	static gaUniversalId = 'UA-6742777-1';
 }
 
 if (GJ_ENVIRONMENT === 'development') {
@@ -89,4 +91,8 @@ if (GJ_IS_CLIENT) {
 		Environment.checkoutBaseUrl = 'chrome-extension://game-jolt-client/checkout.html#';
 		Environment.clientSectionUrl = 'chrome-extension://game-jolt-client/client.html#';
 	}
+
+	// We have different analytics IDs for Client.
+	Environment.gaId = 'G-CXLRR656PN';
+	Environment.gaUniversalId = 'UA-6742777-16';
 }

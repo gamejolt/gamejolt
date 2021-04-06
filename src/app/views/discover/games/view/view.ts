@@ -1,7 +1,6 @@
 import { Component, Inject } from 'vue-property-decorator';
 import { enforceLocation } from '../../../../../utils/router';
 import { AdSettingsContainer } from '../../../../../_common/ad/ad-store';
-import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../../_common/api/api.service';
 import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
 import {
@@ -157,7 +156,6 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	readonly Screen = Screen;
 
 	private ratingWatchDeregister?: EventBusDeregister;
-	private gaTrackingId?: string;
 
 	private roleNames: { [k: string]: string } = {
 		[Collaborator.ROLE_EQUAL_COLLABORATOR]: this.$gettext('an equal collaborator'),
@@ -211,25 +209,11 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 				}
 			);
 		}
-
-		// Since routes are reused when switching params (new game page) we want
-		// to unset any previously set tracking IDs.
-		if (this.gaTrackingId) {
-			Analytics.detachAdditionalPageTracker(this.gaTrackingId);
-			this.gaTrackingId = undefined;
-		}
 	}
 
 	routeResolved($payload: any) {
 		this.setPageTheme();
 		this._setAdSettings();
-
-		// If the game has a GA tracking ID, then we attach it to this
-		// scope so all page views within get tracked.
-		if (this.game.ga_tracking_id) {
-			Analytics.attachAdditionalPageTracker(this.game.ga_tracking_id);
-			this.gaTrackingId = this.game.ga_tracking_id;
-		}
 
 		if (this.commentStore) {
 			releaseCommentStore(this.commentManager, this.commentStore);
@@ -246,10 +230,6 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		if (this.ratingWatchDeregister) {
 			this.ratingWatchDeregister();
 			this.ratingWatchDeregister = undefined;
-		}
-
-		if (this.game && this.game.ga_tracking_id) {
-			Analytics.detachAdditionalPageTracker(this.game.ga_tracking_id);
 		}
 
 		if (this.commentStore) {

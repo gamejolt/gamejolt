@@ -1,6 +1,5 @@
 import { Component, Inject, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
@@ -71,6 +70,7 @@ export default class RouteHomeActivity extends BaseRouteComponent {
 	}
 
 	onLoadMore() {
-		Analytics.trackPageview(undefined, true);
+		// TODO: Log this as a proper event.
+		// Analytics.trackEvent(undefined, true);
 	}
 }

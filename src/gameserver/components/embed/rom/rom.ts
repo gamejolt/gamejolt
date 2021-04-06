@@ -2,7 +2,6 @@ import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { loadScript } from '../../../../utils/utils';
-import { Environment } from '../../../../_common/environment/environment.service';
 import { GameBuild } from '../../../../_common/game/build/build.model';
 import { Store } from '../../../store/index';
 
@@ -73,7 +72,7 @@ export default class AppEmbedRom extends Vue {
 			peripherals: ['cart'],
 			resolution: [160, 144],
 			rom:
-				Environment.env === 'development'
+				GJ_ENVIRONMENT === 'development'
 					? 'https://dl.dropboxusercontent.com/u/71978/rom-test/pokemon.gb'
 					: this.url,
 		});
@@ -90,7 +89,7 @@ export default class AppEmbedRom extends Vue {
 			peripherals: ['cart'],
 			resolution: [160, 144],
 			rom:
-				Environment.env === 'development'
+				GJ_ENVIRONMENT === 'development'
 					? 'https://dl.dropboxusercontent.com/u/71978/rom-test/pokemon-crystal.gbc'
 					: this.url,
 		});
@@ -107,7 +106,7 @@ export default class AppEmbedRom extends Vue {
 			peripherals: ['cart'],
 			resolution: [240, 160],
 			rom:
-				Environment.env === 'development'
+				GJ_ENVIRONMENT === 'development'
 					? 'https://dl.dropboxusercontent.com/u/71978/rom-test/zelda.gba'
 					: this.url,
 		});
@@ -123,7 +122,7 @@ export default class AppEmbedRom extends Vue {
 			peripherals: ['cart'],
 			resolution: [256, 240],
 			rom:
-				Environment.env === 'development'
+				GJ_ENVIRONMENT === 'development'
 					? 'https://dl.dropboxusercontent.com/u/71978/rom-test/smb3.nes'
 					: this.url,
 		});
@@ -138,7 +137,7 @@ export default class AppEmbedRom extends Vue {
 			peripherals: ['cart'],
 			resolution: [384 * 2, 224],
 			rom:
-				Environment.env === 'development'
+				GJ_ENVIRONMENT === 'development'
 					? 'https://dl.dropboxusercontent.com/u/71978/rom-test/golf.vb'
 					: this.url,
 		});
@@ -154,7 +153,7 @@ export default class AppEmbedRom extends Vue {
 			peripherals: ['cart'],
 			resolution: [320, 224],
 			rom:
-				Environment.env === 'development'
+				GJ_ENVIRONMENT === 'development'
 					? 'https://dl.dropboxusercontent.com/u/71978/rom-test/sonic.md'
 					: this.url,
 		});
@@ -171,7 +170,7 @@ export default class AppEmbedRom extends Vue {
 			peripherals: ['cart'],
 			resolution: [256, 224],
 			rom:
-				Environment.env === 'development'
+				GJ_ENVIRONMENT === 'development'
 					? 'https://dl.dropboxusercontent.com/u/71978/rom-test/chrono-trigger.sfc'
 					: this.url,
 		});
@@ -189,7 +188,7 @@ export default class AppEmbedRom extends Vue {
 			resolution: [418, 235],
 			args: ['-ab', 'sys4096\\n', '-autoboot_delay', '4'],
 			rom:
-				Environment.env === 'development'
+				GJ_ENVIRONMENT === 'development'
 					? 'https://dl.dropboxusercontent.com/u/71978/rom-test/sys4096.prg'
 					: this.url,
 		});
@@ -206,7 +205,7 @@ export default class AppEmbedRom extends Vue {
 			peripherals: ['dump'],
 			resolution: [352, 296],
 			rom:
-				Environment.env === 'development'
+				GJ_ENVIRONMENT === 'development'
 					? 'https://dl.dropboxusercontent.com/u/71978/rom-test/test.z80'
 					: this.url,
 		});
@@ -222,7 +221,7 @@ export default class AppEmbedRom extends Vue {
 			peripherals: ['cart'],
 			resolution: [176, 223],
 			rom:
-				Environment.env === 'development'
+				GJ_ENVIRONMENT === 'development'
 					? 'https://dl.dropboxusercontent.com/u/71978/rom-test/pacman.a26'
 					: this.url,
 		});
@@ -230,7 +229,7 @@ export default class AppEmbedRom extends Vue {
 
 	cpc() {
 		const romFullPath =
-			Environment.env === 'development'
+			GJ_ENVIRONMENT === 'development'
 				? 'https://dl.dropboxusercontent.com/u/71978/rom-test/zrealms.dsk'
 				: this.url;
 
@@ -266,7 +265,7 @@ export default class AppEmbedRom extends Vue {
 			peripherals: ['cart1'],
 			resolution: [272, 233],
 			rom:
-				Environment.env === 'development'
+				GJ_ENVIRONMENT === 'development'
 					? 'https://dl.dropboxusercontent.com/u/71978/rom-test/brazil.mx1'
 					: this.url,
 		});
