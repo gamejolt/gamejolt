@@ -218,7 +218,7 @@ export function onCommentAdd(manager: CommentStoreManager, comment: Comment) {
 			Translate.$gettext('Almost there...')
 		);
 	} else if (store && !store.contains(comment)) {
-		// insert the new comment at the beginning
+		// Insert the new comment at the beginning
 		if (store.sort === Comment.SORT_YOU || comment.parent_id) {
 			++store.count;
 			store.comments.unshift(comment);

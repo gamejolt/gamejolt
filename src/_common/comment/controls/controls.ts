@@ -81,6 +81,10 @@ export default class AppCommentControls extends Vue {
 		return this.comment.user_vote && this.comment.user_vote.vote === CommentVote.VOTE_DOWNVOTE;
 	}
 
+	get childCount() {
+		return Math.max((this.children ?? []).length, this.comment.child_count);
+	}
+
 	async onUpvoteClick() {
 		const payload = await this.voteComment(CommentVote.VOTE_UPVOTE);
 		if (payload.success && payload.newSticker) {

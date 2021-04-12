@@ -65,12 +65,8 @@
 							@click="onFollowClick"
 						>
 							<app-jolticon icon="subscribe" />
-							<translate v-if="comment.subscription">
-								Following
-							</translate>
-							<translate v-else>
-								Follow Thread
-							</translate>
+							<translate v-if="comment.subscription">Following</translate>
+							<translate v-else>Follow Thread</translate>
 						</a>
 						<a v-if="canRemove" class="list-group-item has-icon" @click="removeComment">
 							<app-jolticon icon="remove" notice />

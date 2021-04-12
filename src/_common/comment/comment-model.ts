@@ -36,6 +36,7 @@ export class Comment extends Model {
 	is_pinned!: boolean;
 	comment_content!: string;
 	sticker_counts: StickerCount[] = [];
+	child_count!: number;
 
 	isFollowPending = false;
 
