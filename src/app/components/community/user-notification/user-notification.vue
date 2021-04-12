@@ -31,9 +31,7 @@
 					</span>
 				</template>
 				<template v-else-if="notification.type === NotificationType.POSTS_EJECT">
-					<span v-translate>
-						Your posts has been <b>ejected</b> from the community.
-					</span>
+					<span v-translate>Your post has been <b>ejected</b> from the community.</span>
 				</template>
 			</div>
 
