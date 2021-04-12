@@ -64,6 +64,10 @@
 					</div>
 				</div>
 				<div class="-header-meta small text-muted">
+					<span v-if="shouldShowFeedBucketId">
+						Bucket: {{ eventItem.feed_bucket_id }}
+					</span>
+
 					<app-user-follow-widget
 						v-if="shouldShowFollow"
 						class="-header-meta-follow"

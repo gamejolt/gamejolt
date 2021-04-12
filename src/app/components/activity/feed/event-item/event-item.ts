@@ -266,6 +266,15 @@ export default class AppActivityFeedEventItem extends Vue {
 		return canPlaceStickerOnFiresidePost(this.post);
 	}
 
+	get shouldShowFeedBucketId() {
+		// Avoid displaying in "real" prod builds.
+		if (GJ_BUILD_TYPE === 'production' && GJ_ENVIRONMENT === 'production') {
+			return false;
+		}
+
+		return !!this.eventItem.feed_bucket_id;
+	}
+
 	mounted() {
 		this.feedComponent = findRequiredVueParent(this, AppActivityFeed) as AppActivityFeedTS;
 	}

@@ -19,6 +19,7 @@ export class EventItem extends Model {
 
 	// For feeds.
 	scroll_id?: string;
+	feed_bucket_id?: string;
 
 	constructor(data: any = {}) {
 		// Don't auto assign data. We pull what we want.
@@ -28,6 +29,7 @@ export class EventItem extends Model {
 		this.type = data.type;
 		this.added_on = data.added_on;
 		this.scroll_id = data.scroll_id;
+		this.feed_bucket_id = data.feed_bucket_id;
 
 		if (this.type === EventItem.TYPE_COMMENT_VIDEO_ADD) {
 			this.action = new CommentVideo(data.action_resource_model);
