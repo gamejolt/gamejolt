@@ -22,6 +22,7 @@
 			>
 				{{ count }}
 			</span>
+			<div v-if="hasNewUnlockedStickers" class="-new-tag anim-fade-enter anim-fade-leave" />
 			<app-jolticon icon="notifications" />
 			<div ref="newStickerAnimContainer" class="-new-sticker-anim-container" />
 		</a>
@@ -84,4 +85,18 @@
 	user-select: none
 	pointer-events: none
 	z-index: 3
+
+.-new-tag
+	border-radius: 50%
+	width: 12px
+	height: 12px
+	display: block
+	change-bg('highlight')
+	position: absolute
+	bottom: 10px
+	right: 4px
+	display: block
+	border-color: var(--theme-darkest)
+	border-width: 2px
+	border-style: solid
 </style>

@@ -48,7 +48,7 @@ export default class AppShellNotificationPopover extends Vue {
 	};
 
 	get count() {
-		return this.unreadNotificationsCount + (this.hasNewUnlockedStickers ? 1 : 0);
+		return this.unreadNotificationsCount;
 	}
 
 	/**
@@ -132,7 +132,6 @@ export default class AppShellNotificationPopover extends Vue {
 
 		const countPayload = await Api.sendRequest(`/web/stickers/user-count`);
 		this.totalStickersCount = countPayload.count;
-		console.log(this.totalStickersCount);
 
 		this.isLoading = false;
 	}

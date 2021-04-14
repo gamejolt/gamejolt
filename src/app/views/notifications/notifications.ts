@@ -8,6 +8,8 @@ import { ActivityFeedService } from '../../components/activity/feed/feed-service
 import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../components/activity/feed/view';
 import { AppActivityFeedLazy } from '../../components/lazy';
+import AppShellNotificationPopoverStickerNavItemPlaceholder from '../../components/shell/notification-popover/sticker-nav-item/placeholder/placeholder.vue';
+import AppShellNotificationPopoverStickerNavItem from '../../components/shell/notification-popover/sticker-nav-item/sticker-nav-item.vue';
 import { Store } from '../../store';
 
 const HistoryCacheFeedTag = 'notifications-feed';
@@ -17,6 +19,8 @@ const HistoryCacheFeedTag = 'notifications-feed';
 	components: {
 		AppActivityFeed: AppActivityFeedLazy,
 		AppActivityFeedPlaceholder,
+		AppShellNotificationPopoverStickerNavItem,
+		AppShellNotificationPopoverStickerNavItemPlaceholder,
 	},
 })
 @RouteResolver({
@@ -38,11 +42,23 @@ export default class RouteNotifications extends BaseRouteComponent {
 	@State
 	grid!: Store['grid'];
 
+	@State hasNewUnlockedStickers!: Store['hasNewUnlockedStickers'];
+
 	feed: ActivityFeedView | null = null;
 	itemsPerPage = 15;
+	totalStickersCount = 0;
+	isStickersLoading = true;
 
 	get routeTitle() {
 		return this.$gettext(`Your Notifications`);
+	}
+
+	get shouldShowStickers() {
+		return this.totalStickersCount > 0;
+	}
+
+	get shouldShowStickerPlaceholder() {
+		return this.isStickersLoading;
 	}
 
 	/**
@@ -67,7 +83,7 @@ export default class RouteNotifications extends BaseRouteComponent {
 		}
 	}
 
-	routeResolved($payload: any, fromCache: boolean) {
+	async routeResolved($payload: any, fromCache: boolean) {
 		// We mark in the history cache whether this route is a historical view
 		// or a new view. If it's new, we want to load fresh. If it's old, we
 		// want to use current feed data, just so we can try to go back to the
@@ -89,6 +105,10 @@ export default class RouteNotifications extends BaseRouteComponent {
 		if (!fromCache) {
 			this.grid?.pushViewNotifications('notifications');
 		}
+
+		const countPayload = await Api.sendRequest(`/web/stickers/user-count`);
+		this.totalStickersCount = countPayload.count;
+		this.isStickersLoading = false;
 	}
 
 	onLoadedNew() {
