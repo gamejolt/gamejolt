@@ -39,6 +39,7 @@
 									:key="stickerCount.sticker_id"
 									:sticker="stickerCount.sticker"
 									:label="`x${stickerCount.count}`"
+									:is-new="newStickerIds.includes(stickerCount.sticker_id)"
 								/>
 							</div>
 						</template>

@@ -1,48 +1,54 @@
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
+import { sleep } from '../../../../utils/utils';
 import { Api } from '../../../../_common/api/api.service';
 import { Connection } from '../../../../_common/connection/connection-service';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Notification } from '../../../../_common/notification/notification-model';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
+import { EventBus, EventBusDeregister } from '../../../../_common/system/event/event-bus.service';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../store';
 import { ActivityFeedView } from '../../activity/feed/view';
+import { GRID_EVENT_NEW_STICKER } from '../../grid/client.service';
 import { AppActivityFeedLazy } from '../../lazy';
+import AppShellAccountPopoverNewSticker from './new-sticker/new-sticker.vue';
+import AppShellNotificationPopoverStickerNavItem from './sticker-nav-item/sticker-nav-item.vue';
 
 @Component({
 	components: {
 		AppPopper,
 		AppLoading,
 		AppActivityFeed: AppActivityFeedLazy,
+		AppShellNotificationPopoverStickerNavItem,
 	},
 	directives: {
 		AppTooltip,
 	},
 })
 export default class AppShellNotificationPopover extends Vue {
-	@State
-	notificationState!: Store['notificationState'];
-
-	@State
-	unreadNotificationsCount!: Store['unreadNotificationsCount'];
-
-	@Action
-	markNotificationsAsRead!: Store['markNotificationsAsRead'];
-
-	@State
-	grid!: Store['grid'];
+	@State notificationState!: Store['notificationState'];
+	@State unreadNotificationsCount!: Store['unreadNotificationsCount'];
+	@Action markNotificationsAsRead!: Store['markNotificationsAsRead'];
+	@State hasNewUnlockedStickers!: Store['hasNewUnlockedStickers'];
+	@State grid!: Store['grid'];
 
 	isShowing = false;
 	isLoading = true;
 	feed: ActivityFeedView | null = null;
+	totalStickersCount = 0;
+	private newStickerDeregister?: EventBusDeregister;
 
 	readonly Connection = Connection;
 
+	$refs!: {
+		newStickerAnimContainer: HTMLDivElement;
+	};
+
 	get count() {
-		return this.unreadNotificationsCount;
+		return this.unreadNotificationsCount + (this.hasNewUnlockedStickers ? 1 : 0);
 	}
 
 	/**
@@ -51,6 +57,20 @@ export default class AppShellNotificationPopover extends Vue {
 	 */
 	get isNavbarItemActive() {
 		return (Screen.isXs && this.$route.name === 'notifications') || this.isShowing;
+	}
+
+	mounted() {
+		this.newStickerDeregister = EventBus.on(
+			GRID_EVENT_NEW_STICKER,
+			this.onNewStickers.bind(this)
+		);
+	}
+
+	destroy() {
+		if (this.newStickerDeregister) {
+			this.newStickerDeregister();
+			this.newStickerDeregister = undefined;
+		}
 	}
 
 	/**
@@ -110,6 +130,10 @@ export default class AppShellNotificationPopover extends Vue {
 			}
 		}
 
+		const countPayload = await Api.sendRequest(`/web/stickers/user-count`);
+		this.totalStickersCount = countPayload.count;
+		console.log(this.totalStickersCount);
+
 		this.isLoading = false;
 	}
 
@@ -120,5 +144,28 @@ export default class AppShellNotificationPopover extends Vue {
 	reset() {
 		this.feed?.clear();
 		this.isLoading = true;
+	}
+
+	/**
+	 * Handles the Grid event of new sticker unlocks to show animations.
+	 */
+	private async onNewStickers(stickerImgUrls: string[]) {
+		for (const stickerImgUrl of stickerImgUrls) {
+			// Create new sticker animation component.
+			const stickerEl = new AppShellAccountPopoverNewSticker({
+				propsData: {
+					key: Date.now().toString(),
+					stickerImg: stickerImgUrl,
+				},
+			});
+			// Mount and add to DOM.
+			stickerEl.$mount();
+			this.$refs.newStickerAnimContainer.appendChild(stickerEl.$el);
+
+			// Sleep for slightly less than animation duration (~1.5s).
+			// This slightly overlays the animations which results in a smoother
+			// and faster unlock experience.
+			await sleep(1300);
+		}
 	}
 }

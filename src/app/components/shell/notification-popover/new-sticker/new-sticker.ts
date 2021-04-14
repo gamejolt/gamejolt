@@ -4,7 +4,7 @@ import { Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 
 @Component({})
-export default class AppShellAccountPopoverNewSticker extends Vue {
+export default class AppShellNotificationPopoverNewSticker extends Vue {
 	@Prop(propRequired(String)) stickerImg!: string;
 
 	$refs!: {

@@ -19,6 +19,7 @@ export type InitPayload = {
 	stickerCounts: StickerCountPayload[];
 	stickers: any[];
 	stickerCost: number;
+	newStickerIds: number[];
 };
 
 type StickerCountPayload = {
@@ -57,6 +58,7 @@ export default class RouteDashStickers extends BaseRouteComponent {
 	balance = 0;
 	stickerCollection: StickerCount[] = [];
 	stickerCost = 10;
+	newStickerIds: number[] = [];
 
 	get routeTitle() {
 		return this.$gettext(`Your Stickers`);
@@ -86,6 +88,7 @@ export default class RouteDashStickers extends BaseRouteComponent {
 	routeResolved($payload: InitPayload) {
 		this.balance = $payload.balance;
 		this.stickerCost = $payload.stickerCost;
+		this.newStickerIds = $payload.newStickerIds;
 
 		this.stickerCollection = [];
 		for (const stickerCountPayload of $payload.stickerCounts) {
@@ -100,6 +103,15 @@ export default class RouteDashStickers extends BaseRouteComponent {
 			this.stickerCollection.push(stickerCount);
 		}
 		this.stickerCollection.sort((a, b) => numberSort(b.sticker.rarity, a.sticker.rarity));
+
+		// Sort all "new" stickers to the top.
+		if (this.newStickerIds.length > 0) {
+			const newStickers = this.stickerCollection.filter(x =>
+				this.newStickerIds.includes(x.sticker_id)
+			);
+			this.stickerCollection = this.stickerCollection.filter(x => !newStickers.includes(x));
+			this.stickerCollection.unshift(...newStickers);
+		}
 
 		this.grid?.pushViewNotifications('stickers');
 	}
