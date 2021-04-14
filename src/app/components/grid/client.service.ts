@@ -16,6 +16,7 @@ import { Notification } from '../../../_common/notification/notification-model';
 import { NotificationText } from '../../../_common/notification/notification-text.service';
 import { SettingFeedNotifications } from '../../../_common/settings/settings.service';
 import { SiteTrophy } from '../../../_common/site/trophy/trophy.model';
+import { EventBus } from '../../../_common/system/event/event-bus.service';
 import { Translate } from '../../../_common/translate/translate.service';
 import { UserGameTrophy } from '../../../_common/user/trophy/game-trophy.model';
 import { UserSiteTrophy } from '../../../_common/user/trophy/site-trophy.model';
@@ -24,6 +25,8 @@ import { store } from '../../store/index';
 import { router } from '../../views';
 import { getTrophyImg } from '../trophy/thumbnail/thumbnail';
 import { CommunityChannel } from './community-channel';
+
+export const GRID_EVENT_NEW_STICKER = 'grid-new-sticker-received';
 
 interface NewNotificationPayload {
 	notification_data: {
@@ -49,6 +52,7 @@ interface BootstrapPayload {
 		notificationUnreadCount: number;
 		unreadFeaturedCommunities: { [communityId: number]: number };
 		unreadCommunities: number[];
+		hasNewUnlockedStickers: boolean;
 	};
 }
 
@@ -72,7 +76,9 @@ type ClearNotificationsType =
 	| 'community-featured'
 	// For an individual community channel.
 	| 'community-channel'
-	| 'friend-requests';
+	| 'friend-requests'
+	// For the user's unviewed automatically unlocked stickers.
+	| 'stickers';
 
 interface ClearNotificationsPayload {
 	type: ClearNotificationsType;
@@ -83,6 +89,10 @@ interface ClearNotificationsPayload {
 interface ClearNotificationsData {
 	channelId?: number;
 	communityId?: number;
+}
+
+interface StickerUnlockPayload {
+	sticker_img_urls: string[];
 }
 
 export interface ClearNotificationsEventData extends ClearNotificationsPayload {
@@ -127,6 +137,9 @@ function clearNotifications(type: ClearNotificationsType, data: ClearNotificatio
 			break;
 		case 'friend-requests':
 			store.commit('setHasNewFriendRequests', false);
+			break;
+		case 'stickers':
+			store.commit('setHasNewUnlockedStickers', false);
 			break;
 	}
 }
@@ -307,6 +320,10 @@ export class GridClient {
 			this.handleCommunityBootstrap(payload);
 		});
 
+		channel.on('sticker-unlock', (payload: StickerUnlockPayload) => {
+			this.handleStickerUnlock(payload);
+		});
+
 		this.joinCommunities();
 	}
 
@@ -368,6 +385,7 @@ export class GridClient {
 			});
 
 			store.commit('setHasNewFriendRequests', payload.body.hasNewFriendRequests);
+			store.commit('setHasNewUnlockedStickers', payload.body.hasNewUnlockedStickers);
 			this.bootstrapTimestamp = payload.body.lastNotificationTime;
 
 			this.bootstrapReceived = true;
@@ -441,6 +459,14 @@ export class GridClient {
 		}
 
 		clearNotifications(type, data);
+	}
+
+	handleStickerUnlock({ sticker_img_urls }: StickerUnlockPayload) {
+		if (!store.state.hasNewUnlockedStickers) {
+			store.commit('setHasNewUnlockedStickers', true);
+		}
+
+		EventBus.emit(GRID_EVENT_NEW_STICKER, sticker_img_urls);
 	}
 
 	spawnNotification(notification: Notification) {

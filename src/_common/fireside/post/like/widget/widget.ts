@@ -3,11 +3,7 @@ import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Store } from '../../../../../auth/store/index';
 import { AppAuthRequired } from '../../../../auth/auth-required-directive';
-import {
-	DrawerStore,
-	DrawerStoreKey,
-	handleNewStickerNotification,
-} from '../../../../drawer/drawer-store';
+import { DrawerStore, DrawerStoreKey } from '../../../../drawer/drawer-store';
 import { fuzzynumber } from '../../../../filters/fuzzynumber';
 import { Growls } from '../../../../growls/growls.service';
 import { LikersModal } from '../../../../likers/modal.service';
@@ -75,10 +71,7 @@ export default class AppFiresidePostLikeWidget extends Vue {
 			this.showDislikeAnim = false;
 
 			try {
-				const payload = await newLike.$save();
-				if (payload.success && payload.newSticker && this.drawer) {
-					handleNewStickerNotification(this.drawer);
-				}
+				await newLike.$save();
 			} catch (e) {
 				this.post.user_like = null;
 				--this.post.like_count;

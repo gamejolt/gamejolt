@@ -1,21 +1,18 @@
 import Component from 'vue-class-component';
 import { Inject } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import { numberSort } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
-import {
-	DrawerStore,
-	DrawerStoreKey,
-	setCanUnlockNewStickers,
-} from '../../../../_common/drawer/drawer-store';
+import { DrawerStore, DrawerStoreKey } from '../../../../_common/drawer/drawer-store';
 import { number } from '../../../../_common/filters/number';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppStickerCard from '../../../../_common/sticker/card/card.vue';
-import { StickerCollectModal } from '../../../../_common/sticker/collect/modal/modal.service';
 import { Sticker } from '../../../../_common/sticker/sticker.model';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
+import { Store } from '../../../store';
 
 export type InitPayload = {
 	balance: number;
@@ -52,6 +49,8 @@ const FetchStickersEndpoint = '/web/stickers/dash';
 export default class RouteDashStickers extends BaseRouteComponent {
 	@Inject(DrawerStoreKey) drawer!: DrawerStore;
 
+	@State grid!: Store['grid'];
+
 	readonly Screen = Screen;
 	readonly number = number;
 
@@ -72,10 +71,6 @@ export default class RouteDashStickers extends BaseRouteComponent {
 		return (progress / this.stickerCost) * 100;
 	}
 
-	get stickersBuyableAmount() {
-		return Math.floor(this.balance / this.stickerCost);
-	}
-
 	get coverMediaItem() {
 		// Create fake media item resource to pass into the page header.
 		const url = require('./background.png');
@@ -86,10 +81,6 @@ export default class RouteDashStickers extends BaseRouteComponent {
 			img_url: url,
 			mediaserver_url: url,
 		});
-	}
-
-	routeCreated() {
-		setCanUnlockNewStickers(this.drawer, false);
 	}
 
 	routeResolved($payload: InitPayload) {
@@ -109,14 +100,7 @@ export default class RouteDashStickers extends BaseRouteComponent {
 			this.stickerCollection.push(stickerCount);
 		}
 		this.stickerCollection.sort((a, b) => numberSort(b.sticker.rarity, a.sticker.rarity));
-	}
 
-	async onCollect() {
-		const remainingBalance = await StickerCollectModal.show();
-		if (remainingBalance === this.balance) {
-			return;
-		}
-		// Fetch the updated sticker list after collecting more.
-		this.reloadRoute();
+		this.grid?.pushViewNotifications('stickers');
 	}
 }

@@ -76,6 +76,7 @@ export type Mutations = AppMutations &
 		setNotificationCount: { type: UnreadItemType; count: number };
 		incrementNotificationCount: { type: UnreadItemType; count: number };
 		setHasNewFriendRequests: boolean;
+		setHasNewUnlockedStickers: boolean;
 		setActiveCommunity: Community;
 		clearActiveCommunity: void;
 		viewCommunity: Community;
@@ -144,6 +145,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	/** Unread items in the notification feed. */
 	unreadNotificationsCount = 0;
 	hasNewFriendRequests = false;
+	hasNewUnlockedStickers = false;
 	notificationState: ActivityFeedState | null = null;
 
 	mobileCbarShowing = false;
@@ -424,6 +426,11 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	@VuexMutation
 	setHasNewFriendRequests(has: Mutations['setHasNewFriendRequests']) {
 		this.hasNewFriendRequests = has;
+	}
+
+	@VuexMutation
+	setHasNewUnlockedStickers(has: Mutations['setHasNewUnlockedStickers']) {
+		this.hasNewUnlockedStickers = has;
 	}
 
 	@VuexMutation

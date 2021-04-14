@@ -16,6 +16,7 @@
 				v-if="shouldShowNew"
 				class="-new-tag -new-tag-account anim-fade-enter anim-fade-leave"
 			/>
+			<div ref="newStickerAnimContainer" class="-new-sticker-anim-container" />
 		</a>
 
 		<template v-if="isShowing" #popover>
@@ -58,7 +59,7 @@
 						:to="{ name: 'dash.stickers' }"
 					>
 						<translate>Stickers</translate>
-						<span v-if="shouldShowNewStickers" class="-new-tag -new-tag-list" />
+						<span v-if="hasNewUnlockedStickers" class="-new-tag -new-tag-list" />
 					</router-link>
 					<a
 						v-app-track-event="`account-popover:token`"
@@ -237,4 +238,12 @@
 	&-list
 		float: right
 		margin-top: 4px
+
+.-new-sticker-anim-container
+	position: absolute
+	left: 16px
+	top: 16px
+	user-select: none
+	pointer-events: none
+	z-index: 3
 </style>

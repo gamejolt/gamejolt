@@ -8,8 +8,6 @@ import { Analytics } from '../../analytics/analytics.service';
 import {
 	DrawerStore,
 	DrawerStoreKey,
-	setCanUnlockNewStickers,
-	setDrawerHidden,
 	setDrawerOpen,
 	setDrawerStoreActiveItem,
 	setDrawerStoreHeight,
@@ -20,7 +18,6 @@ import { Screen } from '../../screen/screen-service';
 import AppScrollScroller from '../../scroll/scroller/scroller.vue';
 import { EventSubscription } from '../../system/event/event-topic';
 import AppStickerCard from '../card/card.vue';
-import { StickerCollectModal } from '../collect/modal/modal.service';
 import { Sticker } from '../sticker.model';
 import AppSticker from '../sticker.vue';
 import AppStickerLayerDrawerItem from './drawer-item.vue';
@@ -179,15 +176,6 @@ export default class AppStickerLayerDrawer extends Vue {
 		};
 	}
 
-	get canPurchaseStickers() {
-		const { stickerCurrency, stickerCost } = this.drawerStore;
-		if (!stickerCurrency || !stickerCost) {
-			return false;
-		}
-
-		return stickerCurrency > stickerCost;
-	}
-
 	mounted() {
 		this.calculateStickersPerRow();
 		this.resize$ = Screen.resizeChanges.subscribe(() => this.calculateStickersPerRow());
@@ -336,25 +324,6 @@ export default class AppStickerLayerDrawer extends Vue {
 		this.stickersPerRow = Math.floor(
 			(this.$refs.content.offsetWidth - this.drawerPadding * 2) / this.stickerSize
 		);
-	}
-
-	async onClickPurchase() {
-		if (!this.drawerStore.stickerCurrency) {
-			return;
-		}
-
-		Analytics.trackEvent('sticker-drawer', 'purchase-stickers');
-		setDrawerHidden(this.drawerStore, true);
-
-		const remainingBalance = await StickerCollectModal.show();
-		if (remainingBalance !== undefined && remainingBalance < this.drawerStore.stickerCurrency) {
-			// If stickers were redeemed, un-hide the drawer so we can start placing stickers.
-			setDrawerHidden(this.drawerStore, false);
-			setCanUnlockNewStickers(this.drawerStore, false);
-		} else {
-			// otherwise, hide and clear the drawer.
-			setDrawerOpen(this.drawerStore, false);
-		}
 	}
 
 	@Watch('isLoading')
