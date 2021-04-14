@@ -3,12 +3,7 @@ import { Component, Inject, Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
-import {
-	DrawerStore,
-	DrawerStoreKey,
-	handleNewStickerNotification,
-	setDrawerOpen,
-} from '../../drawer/drawer-store';
+import { DrawerStore, DrawerStoreKey, setDrawerOpen } from '../../drawer/drawer-store';
 import { fuzzynumber } from '../../filters/fuzzynumber';
 import { LikersModal } from '../../likers/modal.service';
 import { Model } from '../../model/model.service';
@@ -81,11 +76,8 @@ export default class AppCommentControls extends Vue {
 		return this.comment.user_vote && this.comment.user_vote.vote === CommentVote.VOTE_DOWNVOTE;
 	}
 
-	async onUpvoteClick() {
-		const payload = await this.voteComment(CommentVote.VOTE_UPVOTE);
-		if (payload.success && payload.newSticker) {
-			handleNewStickerNotification(this.drawer);
-		}
+	onUpvoteClick() {
+		this.voteComment(CommentVote.VOTE_UPVOTE);
 	}
 
 	onDownvoteClick() {

@@ -4,17 +4,16 @@
 	<app-loading-fade :is-loading="!isLoaded">
 		<template v-if="shouldShowFormPlaceholder">
 			<app-form-legend compact :deletable="canRemoveUploadingVideo">
-				<span class="lazy-placeholder" style="width: 60px" />
+				<span class="-placeholder-text" style="width: 60px" />
 			</app-form-legend>
 			<p class="help-block">
-				<span class="lazy-placeholder" style="width: 230px" />
+				<span class="-placeholder-text" style="width: 230px" />
 				<br />
-				<span class="lazy-placeholder" style="width: 310px" />
+				<span class="-placeholder-text" style="width: 310px" />
+				<br />
+				<span class="-placeholder-text" style="width: 190px" />
 			</p>
 			<span class="-placeholder-add" />
-			<div class="text-right">
-				<span class="-placeholder-button" style="width: 180px" />
-			</div>
 		</template>
 		<template v-else-if="videoProvider === FiresidePostVideo.PROVIDER_GAMEJOLT">
 			<app-form-legend compact :deletable="canRemoveUploadingVideo" @delete="onDeleteUpload">
@@ -121,14 +120,13 @@
 @import '../_media/variables'
 @import '~styles-lib/mixins'
 
+.-placeholder-text
+	lazy-placeholder-inline()
+
 .-placeholder-add
 	lazy-placeholder-block()
 	width: $-height + $border-width-large
 	height: $-height + $border-width-large
-
-.-placeholder-button
-	lazy-placeholder-inline()
-	height: $button-md-line-height
 
 .-add
 	rounded-corners-lg()

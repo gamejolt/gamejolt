@@ -50,12 +50,7 @@
 										</translate>
 									</p>
 									<template v-if="drawerStore.hasLoaded">
-										<template v-if="canPurchaseStickers">
-											<app-button solid primary @click="onClickPurchase()">
-												Get Stickers
-											</app-button>
-										</template>
-										<p v-else>
+										<p>
 											<translate>
 												Use Game Jolt, like some posts, and you might get
 												some.

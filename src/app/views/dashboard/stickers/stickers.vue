@@ -10,9 +10,7 @@
 			</router-link>
 			<div class="text-muted small">
 				<p>
-					<translate>
-						Marvel at your collection of beautiful stickers.
-					</translate>
+					<translate> Marvel at your collection of beautiful stickers. </translate>
 				</p>
 			</div>
 		</app-page-header>
@@ -24,25 +22,6 @@
 						<app-progress-bar class="-progress" :percent="stickerProgress">
 							<strong>{{ stickerProgress }}% to next sticker</strong>
 						</app-progress-bar>
-
-						<template v-if="stickersBuyableAmount > 0">
-							<p>
-								<translate
-									:translate-n="stickersBuyableAmount"
-									:translate-params="{ count: number(stickersBuyableAmount) }"
-									translate-plural="You currently have enough points to unlock %{ count } new stickers!"
-								>
-									You currently have enough points to unlock %{ count } new
-									sticker!
-								</translate>
-							</p>
-							<p>
-								<app-button @click="onCollect">
-									<translate>Unlock Stickers</translate>
-								</app-button>
-							</p>
-							<br />
-						</template>
 
 						<p class="small">
 							<translate>
@@ -60,6 +39,7 @@
 									:key="stickerCount.sticker_id"
 									:sticker="stickerCount.sticker"
 									:label="`x${stickerCount.count}`"
+									:is-new="newStickerIds.includes(stickerCount.sticker_id)"
 								/>
 							</div>
 						</template>
