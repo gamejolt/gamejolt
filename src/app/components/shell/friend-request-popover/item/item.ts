@@ -9,6 +9,7 @@ import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { UserFriendship } from '../../../../../_common/user/friendship/friendship.model';
 import AppUserAvatarImg from '../../../../../_common/user/user-avatar/img/img.vue';
+import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verified-tick.vue';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
 
@@ -17,6 +18,7 @@ const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` }
 		AppScrollInview,
 		AppCard,
 		AppUserAvatarImg,
+		AppUserVerifiedTick,
 	},
 	directives: {
 		AppTooltip,
