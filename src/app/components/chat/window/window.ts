@@ -11,6 +11,7 @@ import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../store/index';
 import { ChatClient, ChatKey, leaveChatRoom } from '../client';
 import { ChatInviteModal } from '../invite-modal/invite-modal.service';
+import AppChatMemberList from '../member-list/member-list.vue';
 import { ChatMessage } from '../message';
 import { ChatRoom, getChatRoomTitle } from '../room';
 import { ChatRoomDetailsModal } from '../room-details-modal/room-details-modal.service';
@@ -27,6 +28,7 @@ import AppChatWindowSend from './send/send.vue';
 		AppChatWindowSend,
 		AppChatWindowOutput,
 		AppFadeCollapse,
+		AppChatMemberList,
 	},
 	directives: {
 		AppTooltip,

@@ -5,7 +5,7 @@
 		<slot />
 		<div
 			class="user-online-status"
-			:class="{ '-online': isOnline, '-offline': !isOnline }"
+			:class="{ '-online': isOnline, '-offline': !isOnline, '-absolute': absolute }"
 			:style="{ width: outerSize, height: outerSize }"
 		>
 			<div
@@ -24,9 +24,6 @@
 	position: relative
 
 .user-online-status
-	position: absolute
-	right: -2px
-	bottom: @right
 	border: $border-width-large solid
 	border-color: var(--theme-bg-actual)
 	display: flex
@@ -45,4 +42,9 @@
 
 	&.-offline
 		background-color: var(--theme-fg-muted)
+
+	&.-absolute
+		position: absolute
+		right: -2px
+		bottom: @right
 </style>

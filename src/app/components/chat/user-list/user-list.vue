@@ -7,7 +7,7 @@
 				v-model="filterQuery"
 				text="search"
 				class="form-control"
-				placeholder="Filter..."
+				:placeholder="$gettext(`Filter...`)"
 			/>
 		</div>
 
