@@ -1,3 +1,5 @@
+<script lang="ts" src="./legal"></script>
+
 <template>
 	<section class="section">
 		<div class="container">
@@ -17,7 +19,11 @@
 								</router-link>
 							</li>
 							<li>
-								<router-link :to="{ name: 'legal.privacy' }" active-class="active" exact>
+								<router-link
+									:to="{ name: 'legal.privacy' }"
+									active-class="active"
+									exact
+								>
 									<translate>Privacy Policy</translate>
 								</router-link>
 							</li>
@@ -31,6 +37,11 @@
 									<translate>Advertising Platforms</translate>
 								</router-link>
 							</li>
+							<li>
+								<router-link :to="{ name: 'legal.deletion' }" active-class="active">
+									<translate>Account Deletion</translate>
+								</router-link>
+							</li>
 						</ul>
 					</nav>
 				</div>
@@ -38,5 +49,3 @@
 		</div>
 	</section>
 </template>
-
-<script lang="ts" src="./legal"></script>
