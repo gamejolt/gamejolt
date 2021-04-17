@@ -1,3 +1,5 @@
+<script lang="ts" src="./login-form"></script>
+
 <template>
 	<div
 		:class="{
@@ -16,7 +18,11 @@
 				<fieldset :disabled="Connection.isClientOffline">
 					<!-- Min not needed since the login will fail if incorrect
 					anyway. -->
-					<app-form-group name="username" :label="$gettext('Username')" :hide-label="true">
+					<app-form-group
+						name="username"
+						:label="$gettext('Username')"
+						:hide-label="true"
+					>
 						<app-form-control
 							type="text"
 							:placeholder="$gettext('Username')"
@@ -27,7 +33,11 @@
 						<app-form-control-errors />
 					</app-form-group>
 
-					<app-form-group name="password" :label="$gettext('Password')" :hide-label="true">
+					<app-form-group
+						name="password"
+						:label="$gettext('Password')"
+						:hide-label="true"
+					>
 						<app-form-control
 							type="password"
 							:placeholder="$gettext('Password')"
@@ -38,26 +48,33 @@
 						<app-form-control-errors />
 					</app-form-group>
 
-					<div class="alert alert-notice anim-fade-in-enlarge no-animate-leave" v-if="invalidLogin">
+					<div
+						v-if="invalidLogin"
+						class="alert alert-notice anim-fade-in-enlarge no-animate-leave"
+					>
 						<p><translate>Incorrect username or password.</translate></p>
 						<p>
 							<translate>
-								Please note, after 5 incorrect login attempts you will be locked out of your account
-								for 1 hour.
+								Please note, after 5 incorrect login attempts you will be locked out
+								of your account for 1 hour.
 							</translate>
 						</p>
 						<p>
 							<translate>
-								If you've forgotten your username or password, you can retrieve them below.
+								If you've forgotten your username or password, you can retrieve them
+								below.
 							</translate>
 						</p>
 					</div>
 
-					<div class="alert alert-notice anim-fade-in-enlarge no-animate-leave" v-if="blockedLogin">
+					<div
+						v-if="blockedLogin"
+						class="alert alert-notice anim-fade-in-enlarge no-animate-leave"
+					>
 						<p>
 							<translate>
-								Whoa, there! You've tried to log in too many times and just straight up failed.
-								You'll have to cool down a bit before trying again.
+								Whoa, there! You've tried to log in too many times and just straight
+								up failed. You'll have to cool down a bit before trying again.
 							</translate>
 						</p>
 					</div>
@@ -92,7 +109,8 @@
 					<span><translate>Sign in with Google</translate></span>
 				</app-button>
 
-				<app-button
+				<!-- TODO: Disabled since it's currently broken -->
+				<!-- <app-button
 					class="-fb"
 					solid
 					block
@@ -101,7 +119,7 @@
 				>
 					<img src="../fb-icon.png" alt="" />
 					<span><translate>Continue with Facebook</translate></span>
-				</app-button>
+				</app-button> -->
 
 				<div class="-extra-options">
 					<app-button
@@ -128,7 +146,7 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '../auth-form'
+@import '../auth-form'
 
 .-extra-options
 	display: flex
@@ -142,5 +160,3 @@
 		margin: 0 4px
 		text-align: center
 </style>
-
-<script lang="ts" src="./login-form"></script>
