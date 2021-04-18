@@ -1,3 +1,5 @@
+<script lang="ts" src="./join-form"></script>
+
 <template>
 	<div
 		:class="{
@@ -24,7 +26,8 @@
 					<span><translate>Sign up with Google</translate></span>
 				</app-button>
 
-				<app-button
+				<!-- TODO: Disabled since it's currently broken -->
+				<!-- <app-button
 					class="-fb"
 					block
 					solid
@@ -33,7 +36,7 @@
 				>
 					<img src="../fb-icon.png" alt="" />
 					<span><translate>Continue with Facebook</translate></span>
-				</app-button>
+				</app-button> -->
 			</div>
 
 			<div class="auth-line-thru">
@@ -56,7 +59,11 @@
 						<app-form-control-errors />
 					</app-form-group>
 
-					<app-form-group name="username" :label="$gettext('Username')" :hide-label="true">
+					<app-form-group
+						name="username"
+						:label="$gettext('Username')"
+						:hide-label="true"
+					>
 						<app-form-control
 							type="text"
 							:disabled="blocked"
@@ -64,7 +71,9 @@
 								min: 3,
 								max: 30,
 								pattern: 'username',
-								availability: { url: '/web/auth/check-field-availability/username' },
+								availability: {
+									url: '/web/auth/check-field-availability/username',
+								},
 							}"
 							:validate-on="['blur']"
 							:placeholder="$gettext('Username')"
@@ -73,7 +82,11 @@
 						<app-form-control-errors />
 					</app-form-group>
 
-					<app-form-group name="password" :label="$gettext('Password')" :hide-label="true">
+					<app-form-group
+						name="password"
+						:label="$gettext('Password')"
+						:hide-label="true"
+					>
 						<app-form-control
 							type="password"
 							:disabled="blocked"
@@ -95,7 +108,7 @@
 					</div>
 				</fieldset>
 
-				<div class="alert alert-notice -blocked-message" v-if="blocked">
+				<div v-if="blocked" class="alert alert-notice -blocked-message">
 					<translate>You must wait 15 minutes before creating another account.</translate>
 				</div>
 			</app-form>
@@ -104,11 +117,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '../auth-form'
+@import '../auth-form'
 
 .-blocked-message
 	margin-top: 5px
-
 </style>
-
-<script lang="ts" src="./join-form"></script>
