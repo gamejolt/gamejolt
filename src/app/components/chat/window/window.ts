@@ -15,7 +15,6 @@ import AppChatMemberList from '../member-list/member-list.vue';
 import { ChatMessage } from '../message';
 import { ChatRoom, getChatRoomTitle } from '../room';
 import { ChatRoomDetailsModal } from '../room-details-modal/room-details-modal.service';
-import AppChatUserList from '../user-list/user-list.vue';
 import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vue';
 import AppChatWindowOutput from './output/output.vue';
 import AppChatWindowSend from './send/send.vue';
@@ -23,7 +22,6 @@ import AppChatWindowSend from './send/send.vue';
 @Component({
 	components: {
 		AppScrollScroller,
-		AppChatUserList,
 		AppChatUserOnlineStatus,
 		AppChatWindowSend,
 		AppChatWindowOutput,

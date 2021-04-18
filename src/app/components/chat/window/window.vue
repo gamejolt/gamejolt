@@ -153,11 +153,6 @@
 						</span>
 					</div>
 
-					<!-- <app-chat-user-list
-						v-if="users"
-						:current-room="room"
-						:entries="users.collection"
-					/> -->
 					<app-chat-member-list v-if="users" :users="users.collection" />
 				</app-scroll-scroller>
 			</div>

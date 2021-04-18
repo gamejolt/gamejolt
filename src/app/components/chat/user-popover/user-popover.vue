@@ -1,0 +1,112 @@
+<script lang="ts" src="./user-popover"></script>
+
+<template>
+	<div>
+		<div class="fill-darker -popover-info-container">
+			<div class="-popover-avatar-container">
+				<div class="-popover-avatar-img">
+					<app-user-avatar class="-popover-avatar" :user="user" />
+					<div class="-popover-avatar-circle" />
+				</div>
+			</div>
+
+			<div class="-popover-names">
+				<div class="-popover-displayname">
+					<b>{{ user.display_name }}</b>
+				</div>
+				<div class="-popover-username text-muted">@{{ user.username }}</div>
+			</div>
+
+			<div v-if="isOnline !== null" class="-popover-status">
+				<app-chat-user-online-status
+					class="-popover-status-bubble"
+					:is-online="isOnline"
+					:size="16"
+					:absolute="false"
+				/>
+				<span>{{ isOnline ? $gettext(`Online`) : $gettext(`Offline`) }}</span>
+			</div>
+
+			<div v-if="isOwner" class="-popover-status">
+				<app-jolticon icon="crown" />
+				<translate>Room Owner</translate>
+			</div>
+		</div>
+		<div class="list-group list-group-dark">
+			<router-link
+				:to="{ name: 'profile.overview', params: { username: user.username } }"
+				class="list-group-item has-icon"
+			>
+				<translate>View profile</translate>
+			</router-link>
+			<a v-if="canMessage" class="list-group-item has-icon" @click="onClickSendMessage">
+				<app-jolticon icon="message" />
+				<translate>Send message</translate>
+			</a>
+			<template v-if="canModerate">
+				<hr />
+				<a class="list-group-item has-icon" @click="onClickKick">
+					<app-jolticon icon="remove" notice />
+					<translate>Kick from room</translate>
+				</a>
+			</template>
+		</div>
+	</div>
+</template>
+
+<style lang="stylus" scoped>
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+
+.-popover
+	&-info-container
+		padding: 8px
+		border-bottom-width: 2px
+		border-bottom-style: solid
+		border-bottom-color: var(--theme-darkest)
+		max-width: 300px
+
+	&-names
+		margin-top: 4px
+		text-align: center
+
+	&-username
+		font-size: $font-size-small
+
+	&-avatar
+		width: 72px
+		height: 72px
+		z-index: 2
+		transition: filter 0.1s ease
+
+		&:hover
+			filter: brightness(1.3) contrast(0.9)
+
+		&-circle
+			width: 80px
+			height: 80px
+			top: -4px
+			left: -4px
+			position: absolute
+			z-index: 1
+			border-radius: 50%
+			background-color: var(--theme-darkest)
+
+		&-img
+			position: relative
+
+		&-container
+			display: flex
+			justify-content: center
+			margin-bottom: 10px
+
+	&-status
+		display: flex
+		font-size: $font-size-small
+		justify-content: center
+		margin-top: 8px
+		user-select: none
+
+		&-bubble
+			margin-right: 4px
+</style>

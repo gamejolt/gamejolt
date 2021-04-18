@@ -21,6 +21,7 @@ import {
 } from '../../../client';
 import { ChatMessage } from '../../../message';
 import { ChatRoom } from '../../../room';
+import AppChatUserPopover from '../../../user-popover/user-popover.vue';
 
 export interface ChatMessageEditEvent {
 	message: ChatMessage;
@@ -30,6 +31,7 @@ export interface ChatMessageEditEvent {
 	components: {
 		AppContentViewer,
 		AppPopper,
+		AppChatUserPopover,
 	},
 	directives: {
 		AppTooltip,
