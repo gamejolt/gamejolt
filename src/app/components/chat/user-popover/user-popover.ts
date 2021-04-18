@@ -37,6 +37,11 @@ export default class AppChatUserPopover extends Vue {
 	}
 
 	get canMessage() {
+		// Don't show "Send message" link when already in PM room with the user.
+		if (this.currentRoom?.isPmRoom) {
+			return false;
+		}
+		// Show when users are friends.
 		return this.chat.friendsList.get(this.user) !== undefined;
 	}
 

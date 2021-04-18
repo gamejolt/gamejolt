@@ -80,7 +80,7 @@
 		transition: filter 0.1s ease
 
 		&:hover
-			filter: brightness(1.3) contrast(0.9)
+			filter: brightness(0.6) contrast(1.1)
 
 		&-circle
 			width: 80px
@@ -94,6 +94,10 @@
 
 		&-img
 			position: relative
+			border-radius: 50%
+
+			&:hover
+				elevate-hover-2()
 
 		&-container
 			display: flex
