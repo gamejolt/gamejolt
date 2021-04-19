@@ -7,13 +7,6 @@
 		}"
 	>
 		<div class="auth-form-container">
-			<p class="page-help">
-				By signing up, you agree to the
-				<a :href="Environment.baseUrl + '/terms'">Terms of Use</a> and
-				<a :href="Environment.baseUrl + '/privacy'">Privacy Policy</a>, including the
-				<a :href="Environment.baseUrl + '/cookies'">Cookie Policy</a>.
-			</p>
-
 			<div class="anim-fade-in">
 				<app-button
 					class="-google"
@@ -25,18 +18,6 @@
 					<img src="../google-icon.svg" alt="" />
 					<span><translate>Sign up with Google</translate></span>
 				</app-button>
-
-				<!-- TODO: Disabled since it's currently broken -->
-				<!-- <app-button
-					class="-fb"
-					block
-					solid
-					:disabled="Connection.isClientOffline || blocked"
-					@click="linkedChoose('facebook')"
-				>
-					<img src="../fb-icon.png" alt="" />
-					<span><translate>Continue with Facebook</translate></span>
-				</app-button> -->
 			</div>
 
 			<div class="auth-line-thru">
@@ -113,6 +94,13 @@
 				</div>
 			</app-form>
 		</div>
+
+		<p class="page-help">
+			By signing up, you agree to the
+			<a :href="Environment.baseUrl + '/terms'">Terms of Use</a> and
+			<a :href="Environment.baseUrl + '/privacy'">Privacy Policy</a>, including the
+			<a :href="Environment.baseUrl + '/cookies'">Cookie Policy</a>.
+		</p>
 	</div>
 </template>
 

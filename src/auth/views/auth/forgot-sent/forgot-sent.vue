@@ -1,3 +1,5 @@
+<script lang="ts" src="./forgot-sent"></script>
+
 <template>
 	<div class="anim-fade-in-up">
 		<h2 class="section-header">
@@ -5,7 +7,9 @@
 		</h2>
 
 		<p>
-			<translate>We've sent your login credentials to the email address you entered.</translate>
+			<translate>
+				We've sent information on how to log in to the email address on your account.
+			</translate>
 		</p>
 
 		<p class="small text-muted">
@@ -13,5 +17,3 @@
 		</p>
 	</div>
 </template>
-
-<script lang="ts" src="./forgot-sent"></script>

@@ -7,13 +7,6 @@
 		}"
 	>
 		<div class="auth-form-container">
-			<p class="page-help">
-				By logging in, you agree to the
-				<a :href="Environment.baseUrl + '/terms'">Terms of Use</a> and
-				<a :href="Environment.baseUrl + '/privacy'">Privacy Policy</a>, including the
-				<a :href="Environment.baseUrl + '/cookies'">Cookie Policy</a>.
-			</p>
-
 			<app-form class="auth-form" name="loginForm">
 				<fieldset :disabled="Connection.isClientOffline">
 					<!-- Min not needed since the login will fail if incorrect
@@ -108,38 +101,6 @@
 					<img src="../google-icon.svg" alt="" />
 					<span><translate>Sign in with Google</translate></span>
 				</app-button>
-
-				<!-- TODO: Disabled since it's currently broken -->
-				<!-- <app-button
-					class="-fb"
-					solid
-					block
-					:disabled="Connection.isClientOffline"
-					@click="linkedChoose('facebook')"
-				>
-					<img src="../fb-icon.png" alt="" />
-					<span><translate>Continue with Facebook</translate></span>
-				</app-button> -->
-
-				<div class="-extra-options">
-					<app-button
-						class="-twitter"
-						solid
-						:disabled="Connection.isClientOffline"
-						@click="linkedChoose('twitter')"
-					>
-						<translate>Twitter</translate>
-					</app-button>
-
-					<app-button
-						class="-twitch"
-						solid
-						:disabled="Connection.isClientOffline"
-						@click="linkedChoose('twitch')"
-					>
-						<translate>Twitch</translate>
-					</app-button>
-				</div>
 			</div>
 		</div>
 	</div>
