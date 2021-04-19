@@ -29,7 +29,7 @@
 				class="alert alert-notice anim-fade-in-enlarge no-animate-leave"
 			>
 				<p>
-					Hmm, that email address or username is not in our system. Maybe you didn't
+					Hmm, we couldn't find you in our system. Maybe you didn't
 					<a href="/join">sign up yet</a>?
 				</p>
 			</div>
