@@ -1,9 +1,11 @@
+<script lang="ts" src="./overview"></script>
+
 <template>
 	<div v-if="user">
 		<!--
 			If this user is banned, we show very little.
 		-->
-		<section class="section fill-notice" v-if="!user.status">
+		<section v-if="!user.status" class="section fill-notice">
 			<div class="container">
 				<h2 class="-banned-header">
 					<translate>profile.banned_message_html</translate>
@@ -42,7 +44,7 @@
 				</app-expand>
 			</div>
 		</section>
-		<section class="section fill-backdrop" v-else>
+		<section v-else class="section fill-backdrop">
 			<div>
 				<app-page-container xl order="left,main,right">
 					<div slot="left">
@@ -62,10 +64,10 @@
 								this when the user changes.
 							-->
 							<app-fade-collapse
+								:key="user.bio_content"
 								:collapse-height="200"
 								:is-open="showFullDescription"
 								:animate="false"
-								:key="user.bio_content"
 								@require-change="canToggleDescription = $event"
 								@expand="showFullDescription = true"
 							>
@@ -74,8 +76,8 @@
 
 							<p>
 								<a
-									class="hidden-text-expander"
 									v-if="canToggleDescription"
+									class="hidden-text-expander"
 									@click="showFullDescription = !showFullDescription"
 								/>
 							</p>
@@ -144,14 +146,6 @@
 								>
 									{{ gamesCount | number }} Games
 								</app-button>
-
-								<app-button
-									v-if="videosCount > 0"
-									block
-									:to="{ name: 'profile.videos' }"
-								>
-									{{ videosCount | number }} Videos
-								</app-button>
 							</template>
 
 							<br />
@@ -195,19 +189,6 @@
 									<translate>Website</translate>
 								</app-link-external>
 							</div>
-							<template v-if="youtubeChannels.length">
-								<div v-for="channel of youtubeChannels" :key="channel.id">
-									<app-link-external
-										class="link-unstyled"
-										:href="
-											`https://www.youtube.com/channel/${channel.channel_id}`
-										"
-									>
-										<app-jolticon icon="youtube" />
-										{{ channel.title }}
-									</app-link-external>
-								</div>
-							</template>
 
 							<br />
 							<br />
@@ -216,7 +197,7 @@
 						<!-- Communities -->
 						<template v-if="hasCommunitiesSection">
 							<div class="clearfix">
-								<div class="pull-right" v-if="canShowMoreCommunities">
+								<div v-if="canShowMoreCommunities" class="pull-right">
 									<app-button
 										trans
 										:disabled="isLoadingAllCommunities"
@@ -238,18 +219,18 @@
 										v-for="i in previewCommunityCount"
 										:key="i"
 										class="-community-item -community-thumb-placeholder"
-									></div>
+									/>
 								</template>
 								<template v-else>
 									<router-link
 										v-for="community of shownCommunities"
 										:key="community.id"
+										v-app-tooltip.bottom="community.name"
 										class="-community-item link-unstyled"
 										:to="{
 											name: 'communities.view.overview',
 											params: { path: community.path },
 										}"
-										v-app-tooltip.bottom="community.name"
 									>
 										<app-community-thumbnail-img
 											class="-community-thumb"
@@ -470,5 +451,3 @@
 	position: relative
 	cursor: pointer
 </style>
-
-<script lang="ts" src="./overview"></script>

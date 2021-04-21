@@ -4,8 +4,6 @@ import { Location } from 'vue-router';
 import { State } from 'vuex-class';
 import { findRequiredVueParent, propRequired } from '../../../../../utils/vue';
 import { Analytics } from '../../../../../_common/analytics/analytics.service';
-import { CommentVideoModal } from '../../../../../_common/comment/video/modal/modal.service';
-import { CommentVideo } from '../../../../../_common/comment/video/video-model';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
 import AppCommunityPill from '../../../../../_common/community/pill/pill.vue';
@@ -38,13 +36,12 @@ import { Store } from '../../../../store';
 import AppEventItemControls from '../../../event-item/controls/controls.vue';
 import AppFiresidePostEmbed from '../../../fireside/post/embed/embed.vue';
 import AppPollVoting from '../../../poll/voting/voting.vue';
-import AppActivityFeedCommentVideo from '../comment-video/comment-video.vue';
 import AppActivityFeedDevlogPostMedia from '../devlog-post/media/media.vue';
 import AppActivityFeedDevlogPostSketchfab from '../devlog-post/sketchfab/sketchfab.vue';
 import AppActivityFeedDevlogPostText from '../devlog-post/text/text.vue';
 import AppActivityFeedDevlogPostVideo from '../devlog-post/video/video.vue';
 import AppActivityFeedTS from '../feed';
-import { feedShouldBlockPost, feedShouldBlockVideo } from '../feed-service';
+import { feedShouldBlockPost } from '../feed-service';
 import AppActivityFeed from '../feed.vue';
 import { ActivityFeedItem } from '../item-service';
 import { ActivityFeedKey, ActivityFeedView } from '../view';
@@ -56,7 +53,6 @@ import AppActivityFeedEventItemTime from './time/time.vue';
 		AppActivityFeedEventItemTime,
 		AppUserAvatar,
 		AppUserFollowWidget,
-		AppActivityFeedCommentVideo,
 		AppActivityFeedDevlogPostMedia,
 		AppActivityFeedDevlogPostSketchfab,
 		AppActivityFeedDevlogPostVideo,
@@ -133,12 +129,6 @@ export default class AppActivityFeedEventItem extends Vue {
 		}
 	}
 
-	get video() {
-		if (this.eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD) {
-			return this.eventItem.action as CommentVideo;
-		}
-	}
-
 	get user() {
 		return this.eventItem.user;
 	}
@@ -169,10 +159,6 @@ export default class AppActivityFeedEventItem extends Vue {
 	}
 
 	get link(): null | Location {
-		if (this.eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD) {
-			return null;
-		}
-
 		const withQueryParams = (location: Location): Location => {
 			return {
 				...location,
@@ -249,9 +235,6 @@ export default class AppActivityFeedEventItem extends Vue {
 		if (this.post) {
 			return feedShouldBlockPost(this.post, this.$route);
 		}
-		if (this.video) {
-			return feedShouldBlockVideo(this.video, this.$route);
-		}
 		return false;
 	}
 
@@ -323,22 +306,17 @@ export default class AppActivityFeedEventItem extends Vue {
 			return;
 		}
 
-		if (this.video) {
-			Analytics.trackEvent('activity-feed', 'click');
-			CommentVideoModal.show(this.video);
-		} else {
-			if (!this.link) {
-				return;
-			}
-
-			Analytics.trackEvent('activity-feed', 'click');
-			if (e.ctrlKey || e.shiftKey) {
-				Navigate.newWindow(Environment.wttfBaseUrl + this.linkResolved);
-				return;
-			}
-
-			this.$router.push(this.link);
+		if (!this.link) {
+			return;
 		}
+
+		Analytics.trackEvent('activity-feed', 'click');
+		if (e.ctrlKey || e.shiftKey) {
+			Navigate.newWindow(Environment.wttfBaseUrl + this.linkResolved);
+			return;
+		}
+
+		this.$router.push(this.link);
 	}
 
 	onUnhideBlock() {

@@ -8,7 +8,6 @@ import { Model } from '../model/model.service';
 import { constructStickerCounts, StickerCount } from '../sticker/sticker-count';
 import { Subscription } from '../subscription/subscription.model';
 import { User } from '../user/user.model';
-import { CommentVideo } from './video/video-model';
 import { CommentVote } from './vote/vote-model';
 
 export class Comment extends Model {
@@ -31,7 +30,6 @@ export class Comment extends Model {
 	posted_on!: number;
 	modified_on?: number;
 	lang!: string;
-	videos: CommentVideo[] = [];
 	subscription?: Subscription;
 	is_pinned!: boolean;
 	comment_content!: string;
@@ -48,10 +46,6 @@ export class Comment extends Model {
 
 		if (data.user) {
 			this.user = new User(data.user);
-		}
-
-		if (data.videos) {
-			this.videos = CommentVideo.populate(data.videos);
 		}
 
 		if (data.user_vote) {

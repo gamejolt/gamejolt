@@ -94,9 +94,6 @@ export default class RouteProfile extends BaseRouteComponent {
 	user!: RouteStore['user'];
 
 	@RouteStoreModule.State
-	videosCount!: RouteStore['videosCount'];
-
-	@RouteStoreModule.State
 	trophyCount!: RouteStore['trophyCount'];
 
 	@RouteStoreModule.State
