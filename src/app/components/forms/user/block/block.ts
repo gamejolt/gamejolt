@@ -1,5 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
+import AppFormControlPrefixedInput from '../../../../../_common/form-vue/control/prefixed-input/prefixed-input.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
 import {
 	BaseForm,
@@ -16,6 +17,7 @@ interface FormModel {
 @Component({
 	components: {
 		AppFormControlToggle,
+		AppFormControlPrefixedInput,
 	},
 })
 export default class FormUserBlock extends BaseForm<FormModel>

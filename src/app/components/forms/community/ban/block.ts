@@ -3,6 +3,7 @@ import { Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
 import { Community } from '../../../../../_common/community/community.model';
+import AppFormControlPrefixedInput from '../../../../../_common/form-vue/control/prefixed-input/prefixed-input.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
 import { BaseForm, FormOnInit, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
 import { Growls } from '../../../../../_common/growls/growls.service';
@@ -24,6 +25,7 @@ interface FormModel {
 @Component({
 	components: {
 		AppFormControlToggle,
+		AppFormControlPrefixedInput,
 	},
 })
 export default class FormCommunityBlock extends BaseForm<FormModel>

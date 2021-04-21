@@ -3,7 +3,8 @@
 <template>
 	<app-form name="communityBlockForm">
 		<app-form-group name="username">
-			<app-form-control
+			<app-form-control-prefixed-input
+				prefix="@"
 				type="text"
 				:rules="{
 					max: 100,
