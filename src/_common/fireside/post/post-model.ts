@@ -220,11 +220,6 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return url.substring(url.lastIndexOf('-') + 1);
 	}
 
-	async fetchLikes(): Promise<FiresidePostLike[]> {
-		const response = await Api.sendRequest(`/web/posts/likes/${this.id}`);
-		return FiresidePostLike.populate(response.likes);
-	}
-
 	get routeLocation(): Location {
 		return {
 			name: 'post',
