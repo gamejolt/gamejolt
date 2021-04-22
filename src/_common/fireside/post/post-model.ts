@@ -22,7 +22,6 @@ import { User } from '../../user/user.model';
 import { FiresidePostCommunity } from './community/community.model';
 import { FiresidePostEmbed } from './embed/embed.model';
 import { FiresidePostLike } from './like/like-model';
-import { FiresidePostSketchfab } from './sketchfab/sketchfab-model';
 import { FiresidePostTag } from './tag/tag-model';
 import { FiresidePostVideo } from './video/video-model';
 
@@ -42,13 +41,12 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	static readonly TYPE_TEXT = 'text';
 	static readonly TYPE_MEDIA = 'media';
 	static readonly TYPE_VIDEO = 'video';
-	static readonly TYPE_SKETCHFAB = 'sketchfab';
 
 	static readonly STATUS_DRAFT = 'draft';
 	static readonly STATUS_ACTIVE = 'active';
 	static readonly STATUS_REMOVED = 'removed';
 
-	type!: 'text' | 'media' | 'video' | 'sketchfab' | 'comment-video';
+	type!: 'text' | 'media' | 'video' | 'comment-video';
 	hash!: string;
 	status!: string;
 	added_on!: number;
@@ -81,7 +79,6 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	communities: FiresidePostCommunity[] = [];
 	media: MediaItem[] = [];
 	videos: FiresidePostVideo[] = [];
-	sketchfabs: FiresidePostSketchfab[] = [];
 	user_like?: FiresidePostLike | null;
 	key_groups: KeyGroup[] = [];
 	poll!: Poll | null;
@@ -122,10 +119,6 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 
 		if (data.videos) {
 			this.videos = FiresidePostVideo.populate(data.videos);
-		}
-
-		if (data.sketchfabs) {
-			this.sketchfabs = FiresidePostSketchfab.populate(data.sketchfabs);
 		}
 
 		if (data.user_like) {
@@ -183,10 +176,6 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 
 	get hasMedia() {
 		return this.media.length > 0;
-	}
-
-	get hasSketchfab() {
-		return this.sketchfabs.length > 0;
 	}
 
 	get hasVideo() {

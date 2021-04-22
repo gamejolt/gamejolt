@@ -101,13 +101,6 @@
 					@query-param="onQueryParam"
 				/>
 
-				<app-activity-feed-devlog-post-sketchfab
-					v-if="post.hasSketchfab"
-					:item="item"
-					:post="post"
-					@click.native.stop
-				/>
-
 				<app-activity-feed-devlog-post-media
 					v-if="post.hasMedia"
 					:item="item"

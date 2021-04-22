@@ -106,13 +106,6 @@
 							</div>
 						</div>
 
-						<div v-if="post.hasSketchfab" class="full-bleed-xs">
-							<app-sketchfab-embed
-								:sketchfab-id="post.sketchfabs[0].sketchfab_id"
-								autoplay
-							/>
-						</div>
-
 						<div class="tiny text-muted">
 							<app-time-ago v-if="post.isActive" :date="post.published_on" strict />
 							<template v-else-if="post.isScheduled">

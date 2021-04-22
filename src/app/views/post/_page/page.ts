@@ -23,7 +23,6 @@ import AppMediaItemPost from '../../../../_common/media-item/post/post.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
-import AppSketchfabEmbed from '../../../../_common/sketchfab/embed/embed.vue';
 import AppStickerControlsOverlay from '../../../../_common/sticker/controls-overlay/controls-overlay.vue';
 import AppStickerReactions from '../../../../_common/sticker/reactions/reactions.vue';
 import {
@@ -55,7 +54,6 @@ import AppPollVoting from '../../../components/poll/voting/voting.vue';
 		AppImgResponsive,
 		AppVideo,
 		AppVideoPlayer,
-		AppSketchfabEmbed,
 		AppEventItemControls,
 		AppStickerControlsOverlay,
 		AppPollVoting,

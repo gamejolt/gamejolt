@@ -87,8 +87,6 @@
 						<br />
 					</div>
 
-					<!-- No need for sketchfab -->
-
 					<div class="tiny text-muted">
 						<app-time-ago v-if="post.isActive" :date="post.published_on" />
 					</div>
