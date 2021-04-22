@@ -9,7 +9,7 @@
 	>
 		<div v-if="!isOpen" class="-thumb">
 			<div class="-thumb-img-container">
-				<img :src="videoThumbUrl" class="-thumb-img" />
+				<img v-if="thumbUrl" :src="thumbUrl" class="-thumb-img" />
 			</div>
 			<div class="-thumb-play">
 				<div class="-thumb-play-icon-bg" />
@@ -23,25 +23,32 @@
 					@inview="onInviewChanged(true)"
 					@outview="onInviewChanged(false)"
 				>
-					<app-video-embed
-						v-if="shouldShowVideo"
-						:video-id="embed.video_id"
-						video-provider="youtube"
-						:autoplay="shouldAutoplay"
-					/>
+					<template v-if="shouldShowEmbedContent">
+						<app-video-embed
+							v-if="embed.type === TYPE_YOUTUBE"
+							:video-id="embed.extraData.videoId"
+							video-provider="youtube"
+							:autoplay="shouldAutoplay"
+						/>
+						<app-sketchfab-embed
+							v-else-if="embed.type === TYPE_SKETCHFAB"
+							:sketchfab-id="embed.extraData.modelId"
+							:autoplay="shouldAutoplay"
+						/>
+					</template>
 				</app-scroll-inview>
 			</app-responsive-dimensions>
 		</div>
 
 		<div class="-info">
 			<div>
-				<b><translate>YouTube Video</translate></b>
+				<b>{{ title }}</b>
 			</div>
 			<div class="text-muted">
 				{{ embed.url }}
 			</div>
 
-			<div class="text-muted"><app-jolticon icon="link" /> youtube.com</div>
+			<div class="text-muted"><app-jolticon icon="link" /> {{ website }}</div>
 		</div>
 	</div>
 </template>
