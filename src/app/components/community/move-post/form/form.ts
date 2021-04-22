@@ -1,6 +1,9 @@
 import Component from 'vue-class-component';
-import { Emit, Watch } from 'vue-property-decorator';
+import { Emit, Prop, Watch } from 'vue-property-decorator';
+import { propRequired } from '../../../../../utils/vue';
+import { Community } from '../../../../../_common/community/community.model';
 import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.service';
+import { getOptions } from '../../../../../_common/settings/options.service';
 import {
 	getCommunityMovePostReasons,
 	REASON_OTHER,
@@ -15,8 +18,11 @@ export type FormModel = {
 
 @Component({})
 export default class FormCommunityMovePost extends BaseForm<FormModel> implements FormOnInit {
-	@Emit('change')
-	emitChange(_form: FormModel) {}
+	@Prop(propRequired(Community)) community!: Community;
+
+	@Emit('change') emitChange(_form: FormModel) {}
+
+	otherOptions: string[] = [];
 
 	get notifyUserOptions() {
 		return {
@@ -41,6 +47,9 @@ export default class FormCommunityMovePost extends BaseForm<FormModel> implement
 	onInit() {
 		this.setField('notifyUser', 'no');
 		this.setField('reasonType', REASON_SPAM);
+
+		const options = getOptions('community-move-post', this.community.id.toString());
+		this.otherOptions = options.getList();
 	}
 
 	@Watch('formModel', { deep: true })

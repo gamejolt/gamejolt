@@ -22,7 +22,11 @@
 					:channels="selectableChannels"
 				/>
 
-				<form-community-move-post v-if="shouldShowForm" @change="onChangeForm" />
+				<form-community-move-post
+					v-if="shouldShowForm"
+					:community="firesidePostCommunity.community"
+					@change="onChangeForm"
+				/>
 
 				<app-button
 					primary
