@@ -42,6 +42,10 @@ export default class AppFiresidePostEmbed extends Vue {
 	}
 
 	get thumbUrl() {
+		if (this.embed.metadata && this.embed.metadata.image_media_item) {
+			return this.embed.metadata.image_media_item.img_url;
+		}
+
 		switch (this.embed.type) {
 			case TYPE_YOUTUBE: {
 				const videoId = this.embed.extraData.videoId;
@@ -53,6 +57,10 @@ export default class AppFiresidePostEmbed extends Vue {
 	}
 
 	get title() {
+		if (this.embed.metadata && this.embed.metadata.title) {
+			return this.embed.metadata.title;
+		}
+
 		switch (this.embed.type) {
 			case TYPE_YOUTUBE:
 				return this.$gettext(`YouTube`);
