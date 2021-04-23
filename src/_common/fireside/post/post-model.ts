@@ -48,7 +48,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	static readonly STATUS_ACTIVE = 'active';
 	static readonly STATUS_REMOVED = 'removed';
 
-	type!: 'text' | 'media' | 'video' | 'sketchfab' | 'comment-video';
+	type!: 'text' | 'media' | 'video' | 'sketchfab';
 	hash!: string;
 	status!: string;
 	added_on!: number;

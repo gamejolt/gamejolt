@@ -88,11 +88,6 @@
 				</div>
 			</div>
 
-			<app-activity-feed-comment-video
-				v-if="eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD"
-				:item="item"
-				:video="video"
-			/>
 			<template v-if="post">
 				<app-activity-feed-devlog-post-video
 					v-if="post.hasVideo"
@@ -184,13 +179,9 @@
 
 			<app-event-item-controls
 				class="-controls"
-				:class="{
-					'-controls-comment-video': eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD,
-				}"
 				:post="post"
 				:feed="feed"
 				:item="item"
-				:video="video"
 				show-comments
 				event-label="feed"
 				@post-edit="onPostEdited(eventItem)"

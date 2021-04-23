@@ -9,7 +9,6 @@ import {
 } from '../../../../../../_common/linked-account/linked-account.model';
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import { AppState, AppStore } from '../../../../../../_common/store/app-store';
-import { YoutubeChannel } from '../../../../../../_common/youtube/channel/channel-model';
 
 function constructUrl(baseUrl: string, route: Route) {
 	let url = baseUrl + route.params.provider;
@@ -33,19 +32,7 @@ function constructUrl(baseUrl: string, route: Route) {
 })
 @RouteResolver({
 	resolver({ route }) {
-		let url;
-		if (route.params.provider === LinkedAccount.PROVIDER_YOUTUBE_CHANNEL) {
-			url =
-				'/web/dash/linked-accounts/link-youtube-channel-callback/' +
-				LinkedAccount.PROVIDER_YOUTUBE + // replace with actual youtube id for backend
-				'?code=' +
-				route.query.code +
-				'&state=' +
-				route.query.state;
-		} else {
-			url = constructUrl('/web/dash/linked-accounts/link-callback/', route);
-		}
-
+		const url = constructUrl('/web/dash/linked-accounts/link-callback/', route);
 		// Force POST.
 		return Api.sendRequest(url, {});
 	},
@@ -140,21 +127,6 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 								}
 							),
 							this.$gettext('Account Linked')
-						);
-					}
-					break;
-				case LinkedAccount.PROVIDER_YOUTUBE_CHANNEL:
-				case LinkedAccount.PROVIDER_YOUTUBE:
-					{
-						const channel = new YoutubeChannel($payload.channel);
-						Growls.success(
-							this.$gettextInterpolate(
-								'Your YouTube channel (%{ title }) has been linked.',
-								{
-									title: channel.title,
-								}
-							),
-							this.$gettext('YouTube Channel Linked')
 						);
 					}
 					break;

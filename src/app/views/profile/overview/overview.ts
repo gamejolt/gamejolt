@@ -33,7 +33,6 @@ import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
 import { User } from '../../../../_common/user/user.model';
-import { YoutubeChannel } from '../../../../_common/youtube/channel/channel-model';
 import { ChatClient, ChatKey, enterChatRoom } from '../../../components/chat/client';
 import AppCommentOverview from '../../../components/comment/overview/overview.vue';
 import AppGameList from '../../../components/game/list/list.vue';
@@ -100,9 +99,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	placeholderCommunitiesCount!: RouteStore['placeholderCommunitiesCount'];
 
 	@RouteStoreModule.State
-	videosCount!: RouteStore['videosCount'];
-
-	@RouteStoreModule.State
 	userFriendship!: RouteStore['userFriendship'];
 
 	@RouteStoreModule.Mutation
@@ -142,7 +138,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	communities: Community[] = [];
 	allCommunities: Community[] | null = null;
 	overviewComments: Comment[] = [];
-	youtubeChannels: YoutubeChannel[] = [];
 	linkedAccounts: LinkedAccount[] = [];
 	knownFollowers: User[] = [];
 	knownFollowerCount = 0;
@@ -173,19 +168,13 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	}
 
 	get hasQuickButtonsSection() {
-		return (
-			this.canAddAsFriend ||
-			this.canMessage ||
-			(Screen.isMobile && (this.gamesCount > 0 || this.videosCount > 0))
-		);
+		return this.canAddAsFriend || this.canMessage || (Screen.isMobile && this.gamesCount > 0);
 	}
 
 	get hasLinksSection() {
 		return (
 			this.user &&
-			(this.youtubeChannels.length > 0 ||
-				(this.linkedAccounts && this.linkedAccounts.length > 0) ||
-				this.user.web_site)
+			((this.linkedAccounts && this.linkedAccounts.length > 0) || this.user.web_site)
 		);
 	}
 
@@ -310,7 +299,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		this.games = [];
 		this.communities = [];
 		this.allCommunities = null;
-		this.youtubeChannels = [];
 		this.linkedAccounts = [];
 		this.overviewComments = [];
 	}
@@ -328,7 +316,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		this.showFullDescription = false;
 		this.showAllCommunities = false;
 		this.isLoadingAllCommunities = false;
-		this.youtubeChannels = YoutubeChannel.populate($payload.youtubeChannels);
 		this.games = Game.populate($payload.developerGamesTeaser);
 		this.communities = Community.populate($payload.communities);
 		this.linkedAccounts = LinkedAccount.populate($payload.linkedAccounts);

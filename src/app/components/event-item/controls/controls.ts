@@ -4,8 +4,6 @@ import { State } from 'vuex-class';
 import { Store } from '../../../../auth/store/index';
 import { propOptional } from '../../../../utils/vue';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
-import AppCommentVideoLikeWidget from '../../../../_common/comment/video/like-widget/like-widget.vue';
-import { CommentVideo } from '../../../../_common/comment/video/video-model';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
@@ -18,7 +16,6 @@ import AppEventItemControlsUserFollow from './user-follow/user-follow.vue';
 
 @Component({
 	components: {
-		AppCommentVideoLikeWidget,
 		AppEventItemControlsFiresidePost,
 		AppEventItemControlsUserFollow,
 		AppStickerControlsOverlay,
@@ -26,7 +23,6 @@ import AppEventItemControlsUserFollow from './user-follow/user-follow.vue';
 })
 export default class AppEventItemControls extends Vue {
 	@Prop(propOptional(FiresidePost)) post?: FiresidePost;
-	@Prop(propOptional(CommentVideo)) video?: CommentVideo;
 	@Prop(propOptional(ActivityFeedView)) feed?: ActivityFeedView;
 	@Prop(propOptional(ActivityFeedItem)) item?: ActivityFeedItem;
 	@Prop(propOptional(Boolean, false)) shouldShowFollow!: boolean;

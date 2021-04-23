@@ -3,8 +3,6 @@ import { TrophyModal } from '../../app/components/trophy/modal/modal.service';
 import { assertNever } from '../../utils/utils';
 import { Collaborator } from '../collaborator/collaborator.model';
 import { Comment, getCommentUrl } from '../comment/comment-model';
-import { CommentVideoModal } from '../comment/video/modal/modal.service';
-import { CommentVideo } from '../comment/video/video-model';
 import { Community } from '../community/community.model';
 import {
 	CommunityUserNotification,
@@ -61,16 +59,11 @@ export class Notification extends Model {
 	static TYPE_USER_FOLLOW = 'user-follow';
 	static TYPE_COLLABORATOR_INVITE = 'collaborator-invite';
 	static TYPE_MENTION = 'mention';
-	static TYPE_COMMENT_VIDEO_ADD = 'comment-video-add';
 	static TYPE_GAME_TROPHY_ACHIEVED = 'game-trophy-achieved';
 	static TYPE_SITE_TROPHY_ACHIEVED = 'site-trophy-achieved';
 	static TYPE_COMMUNITY_USER_NOTIFICATION = 'community-user-notification';
 
-	static ACTIVITY_FEED_TYPES = [
-		EventItem.TYPE_POST_ADD,
-		EventItem.TYPE_COMMENT_VIDEO_ADD,
-		EventItem.TYPE_GAME_PUBLISH,
-	];
+	static ACTIVITY_FEED_TYPES = [EventItem.TYPE_POST_ADD, EventItem.TYPE_GAME_PUBLISH];
 
 	static NOTIFICATION_FEED_TYPES = [
 		Notification.TYPE_COMMENT_ADD,
@@ -112,7 +105,6 @@ export class Notification extends Model {
 		| Subscription
 		| Collaborator
 		| Mention
-		| CommentVideo
 		| UserGameTrophy
 		| UserSiteTrophy
 		| CommunityUserNotification;
@@ -198,9 +190,6 @@ export class Notification extends Model {
 			this.is_user_based = true;
 		} else if (this.type === Notification.TYPE_MENTION) {
 			this.action_model = new Mention(data.action_resource_model);
-			this.is_user_based = true;
-		} else if (this.type === Notification.TYPE_COMMENT_VIDEO_ADD) {
-			this.action_model = new CommentVideo(data.action_resource_model);
 			this.is_user_based = true;
 		} else if (this.type === Notification.TYPE_GAME_TROPHY_ACHIEVED) {
 			this.action_model = new UserGameTrophy(data.action_resource_model);
@@ -304,10 +293,6 @@ export class Notification extends Model {
 	async go(router: VueRouter) {
 		if (this.routeLocation) {
 			router.push(this.routeLocation);
-		} else if (this.type === Notification.TYPE_COMMENT_VIDEO_ADD) {
-			if (this.action_model instanceof CommentVideo) {
-				CommentVideoModal.show(this.action_model);
-			}
 		} else if (
 			this.type === Notification.TYPE_GAME_TROPHY_ACHIEVED ||
 			this.type === Notification.TYPE_SITE_TROPHY_ACHIEVED

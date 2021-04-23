@@ -2,7 +2,6 @@ import { namespace } from 'vuex-class';
 import { NamespaceVuexStore, VuexModule, VuexMutation, VuexStore } from '../../../../../utils/vuex';
 import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
 import { Comment } from '../../../../../_common/comment/comment-model';
-import { CommentVideo } from '../../../../../_common/comment/video/video-model';
 import { Device } from '../../../../../_common/device/device.service';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { GameBuild } from '../../../../../_common/game/build/build.model';
@@ -28,7 +27,6 @@ type RouteMutations = {
 	processOverviewPayload: { payload: any; fromCache: boolean };
 	acceptCollaboratorInvite: Collaborator;
 	declineCollaboratorInvite: Collaborator;
-	pushVideoComments: CommentVideo[];
 	showMultiplePackagesMessage: undefined;
 	toggleDescription: undefined;
 	setCanToggleDescription: boolean;
@@ -95,10 +93,6 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 	showDetails = GJ_IS_SSR;
 
 	overviewComments: Comment[] = [];
-
-	videoComments: CommentVideo[] = [];
-	videoCommentsCount = 0;
-	videoCommentsPage = 0;
 
 	customGameMessages: CustomGameMessage[] = [];
 
@@ -190,7 +184,6 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 			this.recommendedGames = [];
 			this.mediaItems = [];
 			this.supporters = [];
-			this.videoComments = [];
 			this.overviewComments = [];
 			this.userRating = null;
 			this.linkedAccounts = [];
@@ -255,9 +248,6 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 
 		this.overviewComments = Comment.populate(payload.comments);
 
-		this.videoComments = CommentVideo.populate(payload.videoComments);
-		this.videoCommentsCount = payload.videoCommentsCount || 0;
-
 		this.partnerKey = payload.partnerReferredKey || '';
 		this.partner = payload.partnerReferredBy ? new User(payload.partnerReferredBy) : null;
 
@@ -281,12 +271,6 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 	@VuexMutation
 	declineCollaboratorInvite() {
 		this.collaboratorInvite = null;
-	}
-
-	@VuexMutation
-	pushVideoComments(videos: RouteMutations['pushVideoComments']) {
-		++this.videoCommentsPage;
-		this.videoComments = this.videoComments.concat(videos);
 	}
 
 	@VuexMutation
