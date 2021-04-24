@@ -14,6 +14,8 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import { ScrollInviewConfig } from '../../../../_common/scroll/inview/config';
 import { AppScrollInview } from '../../../../_common/scroll/inview/inview';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
+import { EventBus, EventBusDeregister } from '../../../../_common/system/event/event-bus.service';
+import { GRID_EVENT_POST_PUBLISHED } from '../../grid/client.service';
 import AppActivityFeedItem from './item/item.vue';
 import AppActivityFeedNewButton from './new-button/new-button.vue';
 import { ActivityFeedKey, ActivityFeedView } from './view';
@@ -51,6 +53,7 @@ export default class AppActivityFeed extends Vue {
 	readonly InviewConfigLoadMore = InviewConfigLoadMore;
 	readonly number = number;
 	readonly Scroll = Scroll;
+	private postPublishedEventDeregister?: EventBusDeregister;
 
 	$el!: HTMLDivElement;
 
@@ -83,11 +86,21 @@ export default class AppActivityFeed extends Vue {
 
 	mounted() {
 		window.addEventListener('scroll', this.onScroll);
+
+		this.postPublishedEventDeregister = EventBus.on(
+			GRID_EVENT_POST_PUBLISHED,
+			this.onGridPostPublished.bind(this)
+		);
 	}
 
 	destroyed() {
 		this.feed.scroll = this.scroll;
 		window.removeEventListener('scroll', this.onScroll);
+
+		if (this.postPublishedEventDeregister) {
+			this.postPublishedEventDeregister();
+			this.postPublishedEventDeregister = undefined;
+		}
 	}
 
 	onScroll = () => {
@@ -244,5 +257,20 @@ export default class AppActivityFeed extends Vue {
 		this.emitLoadNew();
 		// Make sure this is after the emitter so we remove the button before resetting
 		this.isNewButtonInview = false;
+	}
+
+	private onGridPostPublished(post: FiresidePost) {
+		// Check to see if the post that just got published is in this feed.
+		// If it is, update it with the incoming data.
+		const feedItem = this.feed.items.find(
+			i =>
+				i.type === 'event-item' &&
+				i.feedItem instanceof EventItem &&
+				i.feedItem.action instanceof FiresidePost &&
+				i.feedItem.action.id === post.id
+		);
+		if (feedItem) {
+			Object.assign((feedItem.feedItem as EventItem).action, post);
+		}
 	}
 }

@@ -9,6 +9,7 @@ import { Community } from '../../../_common/community/community.model';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { FiresidePostCommunity } from '../../../_common/fireside/post/community/community.model';
+import { FiresidePostGotoGrowl } from '../../../_common/fireside/post/goto-growl/goto-growl.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { GameTrophy } from '../../../_common/game/trophy/trophy.model';
 import { Growls } from '../../../_common/growls/growls.service';
@@ -27,6 +28,7 @@ import { getTrophyImg } from '../trophy/thumbnail/thumbnail';
 import { CommunityChannel } from './community-channel';
 
 export const GRID_EVENT_NEW_STICKER = 'grid-new-sticker-received';
+export const GRID_EVENT_POST_PUBLISHED = 'grid-post-published';
 
 interface NewNotificationPayload {
 	notification_data: {
@@ -93,6 +95,11 @@ interface ClearNotificationsData {
 
 interface StickerUnlockPayload {
 	sticker_img_urls: string[];
+}
+
+interface PostPublishedPayload {
+	post_id: number;
+	post_data: any;
 }
 
 export interface ClearNotificationsEventData extends ClearNotificationsPayload {
@@ -261,7 +268,7 @@ export class GridClient {
 		await pollRequest(
 			'Connect to socket',
 			() =>
-				new Promise(resolve => {
+				new Promise<void>(resolve => {
 					if (this.socket !== null) {
 						this.socket.connect();
 					}
@@ -278,7 +285,7 @@ export class GridClient {
 		await pollRequest(
 			'Join user notification channel',
 			() =>
-				new Promise((resolve, reject) => {
+				new Promise<void>((resolve, reject) => {
 					channel
 						.join()
 						.receive('error', reject)
@@ -322,6 +329,10 @@ export class GridClient {
 
 		channel.on('sticker-unlock', (payload: StickerUnlockPayload) => {
 			this.handleStickerUnlock(payload);
+		});
+
+		channel.on('post-published', (payload: PostPublishedPayload) => {
+			this.handlePostPublished(payload);
 		});
 
 		this.joinCommunities();
@@ -467,6 +478,14 @@ export class GridClient {
 		}
 
 		EventBus.emit(GRID_EVENT_NEW_STICKER, sticker_img_urls);
+	}
+
+	handlePostPublished({ post_data }: PostPublishedPayload) {
+		const post = new FiresidePost(post_data);
+		EventBus.emit(GRID_EVENT_POST_PUBLISHED, post);
+
+		// Send out a growl to let the user know that their post was published.
+		FiresidePostGotoGrowl.show(post, 'publish');
 	}
 
 	spawnNotification(notification: Notification) {

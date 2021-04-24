@@ -41,11 +41,11 @@
 		</div>
 
 		<div class="-info">
-			<div>
+			<div class="-title">
 				<b>{{ title }}</b>
 			</div>
-			<div class="text-muted">
-				{{ embed.url }}
+			<div class="-description text-muted">
+				{{ description }}
 			</div>
 
 			<div class="text-muted"><app-jolticon icon="link" /> {{ website }}</div>
@@ -128,6 +128,19 @@
 	display: flex
 	justify-content: center
 	flex-direction: column
+	position: relative
+	width: calc(100% - 130px)
+
+.-title
+	max-width: calc(100% - 24px)
+	text-overflow()
+	margin-bottom: 4px
+
+.-description
+	max-height: $line-height-computed * 2
+	overflow: hidden
+	max-width: calc(100% - 24px)
+	margin-bottom: 4px
 
 .-player
 	border-bottom-style: solid

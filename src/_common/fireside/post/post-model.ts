@@ -65,6 +65,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	url!: string;
 	view_count?: number;
 	is_pinned!: boolean;
+	is_processing!: boolean;
 
 	/**
 	 * If the post has an article saved, whether or not it's loaded in yet.

@@ -51,9 +51,9 @@ export default class AppFiresidePostEmbed extends Vue {
 				const videoId = this.embed.extraData.videoId;
 				return `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
 			}
-			case TYPE_SKETCHFAB:
-				return null;
 		}
+
+		return undefined;
 	}
 
 	get title() {
@@ -70,12 +70,33 @@ export default class AppFiresidePostEmbed extends Vue {
 	}
 
 	get website() {
+		if (this.embed.metadata && this.embed.metadata.site_url) {
+			const url = new URL(this.embed.metadata.site_url);
+			return url.hostname;
+		}
+
 		switch (this.embed.type) {
 			case TYPE_YOUTUBE:
 				return 'youtube.com';
 			case TYPE_SKETCHFAB:
 				return 'sketchfab.com';
 		}
+	}
+
+	get description() {
+		if (this.embed.metadata) {
+			if (this.embed.metadata.description) {
+				return this.embed.metadata.description.replace('\n', ' ');
+			}
+
+			if (this.embed.metadata.site_name) {
+				return this.embed.metadata.site_name;
+			}
+
+			return this.embed.metadata.site_url;
+		}
+
+		return this.embed.url;
 	}
 
 	get shouldShowEmbedContent() {

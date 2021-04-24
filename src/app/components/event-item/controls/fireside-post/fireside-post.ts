@@ -89,7 +89,7 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 	}
 
 	get showUserControls() {
-		return this.post.isActive;
+		return this.post.isActive && !this.post.is_processing;
 	}
 
 	get hasPerms() {
