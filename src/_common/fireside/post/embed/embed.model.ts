@@ -9,6 +9,7 @@ export class FiresidePostEmbed extends Model {
 	type!: string;
 	extra_data!: string;
 	metadata!: EmbedMetadata | null;
+	is_processing!: boolean;
 
 	/**
 	 * Parsed data from the `extra_data` field.

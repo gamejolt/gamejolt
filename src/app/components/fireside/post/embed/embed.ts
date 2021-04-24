@@ -13,6 +13,7 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import { ScrollInviewConfig } from '../../../../../_common/scroll/inview/config';
 import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
 import AppSketchfabEmbed from '../../../../../_common/sketchfab/embed/embed.vue';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.windowHeight * 0.5}px` });
@@ -23,6 +24,9 @@ const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.windowHeight * 0
 		AppScrollInview,
 		AppResponsiveDimensions,
 		AppSketchfabEmbed,
+	},
+	directives: {
+		AppTooltip,
 	},
 })
 export default class AppFiresidePostEmbed extends Vue {
@@ -43,7 +47,7 @@ export default class AppFiresidePostEmbed extends Vue {
 
 	get thumbUrl() {
 		if (this.embed.metadata && this.embed.metadata.image_media_item) {
-			return this.embed.metadata.image_media_item.img_url;
+			return this.embed.metadata.image_media_item.mediaserver_url;
 		}
 
 		switch (this.embed.type) {
@@ -72,7 +76,14 @@ export default class AppFiresidePostEmbed extends Vue {
 	get website() {
 		if (this.embed.metadata && this.embed.metadata.site_url) {
 			const url = new URL(this.embed.metadata.site_url);
-			return url.hostname;
+			let website = url.hostname;
+			if (
+				this.embed.metadata.site_name &&
+				this.embed.metadata.site_name !== this.embed.metadata.url
+			) {
+				website = this.embed.metadata.site_name + ' | ' + website;
+			}
+			return website;
 		}
 
 		switch (this.embed.type) {
@@ -104,6 +115,10 @@ export default class AppFiresidePostEmbed extends Vue {
 	}
 
 	onClick() {
+		if (this.embed.is_processing) {
+			return;
+		}
+
 		if (!this.isOpen) {
 			this.isOpen = true;
 		} else {
