@@ -9,11 +9,9 @@ import {
 } from '../../../../../_common/linked-account/linked-account.model';
 import AppLinkedAccount from '../../../../../_common/linked-account/linked-account.vue';
 import { LinkedAccounts } from '../../../../../_common/linked-account/linked-accounts.service';
-import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { Translate } from '../../../../../_common/translate/translate.service';
-import { YoutubeChannel } from '../../../../../_common/youtube/channel/channel-model';
 import { UserSetPasswordModal } from '../../../../components/user/set-password-modal/set-password-modal.service';
 import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 
@@ -38,7 +36,6 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 	heading!: RouteStore['heading'];
 
 	accounts: LinkedAccount[] = [];
-	channels: YoutubeChannel[] = [];
 	loading = false;
 
 	get facebookAccount() {
@@ -77,7 +74,6 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 	}
 
 	routeResolved($payload: any) {
-		this.channels = YoutubeChannel.populate($payload.channels);
 		this.accounts = LinkedAccount.populate($payload.accounts);
 	}
 
@@ -132,49 +128,6 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 			}
 		}
 		this.loading = false;
-	}
-
-	async linkYouTubeChannel() {
-		if (!this.user) {
-			return;
-		}
-
-		await LinkedAccounts.link(
-			this.$router,
-			'',
-			'/web/dash/linked-accounts/link-youtube-channel',
-			'User'
-		);
-	}
-
-	async unlinkYouTubeChannel(channel: YoutubeChannel) {
-		if (!this.user) {
-			return;
-		}
-
-		const result = await ModalConfirm.show(
-			this.$gettext(
-				'Are you you want to unlink this channel? Any videos you may have done as part of this channel will be removed from Game Jolt.'
-			)
-		);
-
-		if (!result) {
-			return;
-		}
-
-		const payload = await channel.$remove();
-		if (payload.success) {
-			this.channels = YoutubeChannel.populate(payload.channels);
-		} else {
-			Growls.error(
-				this.$gettextInterpolate(
-					'Failed to remove YouTube channel %{ title } form Game Jolt.',
-					{
-						title: channel.title,
-					}
-				)
-			);
-		}
 	}
 
 	async onLinkTumblrBlog(tumblrBlog: TumblrBlog) {

@@ -550,14 +550,6 @@ export class GridClient {
 				} else {
 					title = Translate.$gettext('New Post');
 				}
-			} else if (notification.type === Notification.TYPE_COMMENT_VIDEO_ADD) {
-				if (notification.from_model instanceof User) {
-					title = Translate.$gettextInterpolate(`New Video by @%{ username }`, {
-						username: notification.from_model.username,
-					});
-				} else {
-					title = Translate.$gettext('New Video');
-				}
 			} else if (notification.type === Notification.TYPE_GAME_TROPHY_ACHIEVED) {
 				if (
 					notification.action_model instanceof UserGameTrophy &&

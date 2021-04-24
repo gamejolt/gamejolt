@@ -12,7 +12,6 @@ import {
 	setCommentCount,
 } from '../../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../../_common/comment/modal/modal.service';
-import AppCommentVideoLikeWidget from '../../../../../_common/comment/video/like-widget/like-widget.vue';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
 import {
@@ -37,7 +36,6 @@ import AppEventItemControlsFiresidePostStats from './stats/stats.vue';
 	components: {
 		AppCommentWidget: AppCommentWidgetLazy,
 		AppFiresidePostLikeWidget,
-		AppCommentVideoLikeWidget,
 		AppEventItemControlsFiresidePostStats,
 		AppEventItemControlsFiresidePostExtra,
 	},

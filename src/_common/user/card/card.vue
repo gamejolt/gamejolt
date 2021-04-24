@@ -123,22 +123,6 @@
 						</div>
 					</router-link>
 				</li>
-				<li v-if="videoCount" class="stat-big stat-big-smaller">
-					<router-link
-						class="link-unstyled"
-						:to="{
-							name: 'profile.videos',
-							params: { username: user.username },
-						}"
-					>
-						<div class="stat-big-label">
-							<translate>Videos</translate>
-						</div>
-						<div class="stat-big-digit">
-							{{ number(videoCount) }}
-						</div>
-					</router-link>
-				</li>
 				<li v-if="likeCount" class="stat-big stat-big-smaller">
 					<router-link
 						class="link-unstyled"
