@@ -122,6 +122,7 @@
 						<app-content-viewer
 							class="fireside-post-lead"
 							:source="post.lead_content"
+							:display-rules="displayRules"
 						/>
 					</app-fade-collapse>
 				</app-sticker-target>

@@ -7,6 +7,7 @@ import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
 import AppCommunityPill from '../../../../../_common/community/pill/pill.vue';
+import { ContentRules } from '../../../../../_common/content/content-editor/content-rules';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
@@ -245,6 +246,13 @@ export default class AppActivityFeedEventItem extends Vue {
 			return false;
 		}
 		return canPlaceStickerOnFiresidePost(this.post);
+	}
+
+	get displayRules() {
+		// For feeds we want to truncate links, the full links can be seen:
+		// - on the post apge
+		// - when hovering (html title) or on navigation
+		return new ContentRules({ truncateLinks: true });
 	}
 
 	mounted() {
