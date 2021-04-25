@@ -28,7 +28,7 @@ import { getTrophyImg } from '../trophy/thumbnail/thumbnail';
 import { CommunityChannel } from './community-channel';
 
 export const GRID_EVENT_NEW_STICKER = 'grid-new-sticker-received';
-export const GRID_EVENT_POST_PUBLISHED = 'grid-post-published';
+export const GRID_EVENT_POST_UPDATED = 'grid-post-published';
 
 interface NewNotificationPayload {
 	notification_data: {
@@ -97,9 +97,14 @@ interface StickerUnlockPayload {
 	sticker_img_urls: string[];
 }
 
-interface PostPublishedPayload {
+interface PostUpdatedPayload {
 	post_id: number;
+	/** Contains payload data for a `FiresidePost` resource. */
 	post_data: any;
+	/** `true` when the post was just published in the chain of events. */
+	was_published: boolean;
+	/** (Only set when `was_published` is true) Indicate whether this post was scheduled before it was automatically published. */
+	was_scheduled: boolean;
 }
 
 export interface ClearNotificationsEventData extends ClearNotificationsPayload {
@@ -160,7 +165,7 @@ let connectionResolvers: (() => void)[] = [];
  * Resolves once Grid is fully connected.
  */
 function tillConnection(client: GridClient) {
-	return new Promise(resolve => {
+	return new Promise<void>(resolve => {
 		if (client.connected) {
 			resolve();
 		} else {
@@ -331,8 +336,8 @@ export class GridClient {
 			this.handleStickerUnlock(payload);
 		});
 
-		channel.on('post-published', (payload: PostPublishedPayload) => {
-			this.handlePostPublished(payload);
+		channel.on('post-updated', (payload: PostUpdatedPayload) => {
+			this.handlePostUpdated(payload);
 		});
 
 		this.joinCommunities();
@@ -480,12 +485,15 @@ export class GridClient {
 		EventBus.emit(GRID_EVENT_NEW_STICKER, sticker_img_urls);
 	}
 
-	handlePostPublished({ post_data }: PostPublishedPayload) {
+	handlePostUpdated({ post_data, was_scheduled, was_published }: PostUpdatedPayload) {
 		const post = new FiresidePost(post_data);
-		EventBus.emit(GRID_EVENT_POST_PUBLISHED, post);
 
-		// Send out a growl to let the user know that their post was published.
-		FiresidePostGotoGrowl.show(post, 'publish');
+		EventBus.emit(GRID_EVENT_POST_UPDATED, post);
+
+		if (was_published) {
+			// Send out a growl to let the user know that their post was updated.
+			FiresidePostGotoGrowl.show(post, was_scheduled ? 'scheduled-publish' : 'publish');
+		}
 	}
 
 	spawnNotification(notification: Notification) {
@@ -621,7 +629,7 @@ export class GridClient {
 			await pollRequest(
 				`Join community channel '${community.name}' (${community.id})`,
 				() =>
-					new Promise((resolve, reject) => {
+					new Promise<void>((resolve, reject) => {
 						channel
 							.join()
 							.receive('error', reject)

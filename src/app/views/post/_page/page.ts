@@ -46,7 +46,7 @@ import AppEventItemControls from '../../../components/event-item/controls/contro
 import AppFiresidePostEmbed from '../../../components/fireside/post/embed/embed.vue';
 import AppGameBadge from '../../../components/game/badge/badge.vue';
 import AppGameListItem from '../../../components/game/list/item/item.vue';
-import { GRID_EVENT_POST_PUBLISHED } from '../../../components/grid/client.service';
+import { GRID_EVENT_POST_UPDATED } from '../../../components/grid/client.service';
 import { AppCommentWidgetLazy } from '../../../components/lazy';
 import AppPollVoting from '../../../components/poll/voting/voting.vue';
 
@@ -151,7 +151,7 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 
 	mounted() {
 		this.postPublishedEventDeregister = EventBus.on(
-			GRID_EVENT_POST_PUBLISHED,
+			GRID_EVENT_POST_UPDATED,
 			(post: FiresidePost) => this.emitPostUpdated(post)
 		);
 	}

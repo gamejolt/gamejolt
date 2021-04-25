@@ -42,9 +42,14 @@
 				/>
 			</div>
 			<div v-else-if="post.is_processing" class="-row fill-offset -processing">
-				<translate>
-					Your post is being processed and will be published once it's ready
-				</translate>
+				<template v-if="post.status === 'active'">
+					<translate>
+						Your post is being processed and will be published once it's ready
+					</translate>
+				</template>
+				<template v-else>
+					<translate>Parts of your post are being processed</translate>
+				</template>
 			</div>
 			<span v-if="shouldShowExtra" class="-extra">
 				<span v-if="shouldShowEdit && !showUserControls" class="-extra">

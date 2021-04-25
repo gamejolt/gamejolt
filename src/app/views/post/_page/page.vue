@@ -296,11 +296,6 @@
 	width: 100%
 	height: 100%
 
-@media $media-sm-up
-	.post-view >>>
-		iframe
-			rounded-corners-lg()
-
 .-media-item
 	cursor: zoom-in
 

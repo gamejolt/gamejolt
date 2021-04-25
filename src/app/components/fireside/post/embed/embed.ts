@@ -114,6 +114,23 @@ export default class AppFiresidePostEmbed extends Vue {
 		return this.isInview || !this.hideOutview;
 	}
 
+	get imageAlt() {
+		if (this.embed.metadata && this.embed.metadata.image_alt) {
+			return this.embed.metadata.image_alt;
+		}
+	}
+
+	get playIcon() {
+		switch (this.embed.type) {
+			case TYPE_SKETCHFAB:
+				return 'sketchfab';
+			case TYPE_YOUTUBE:
+				return 'play';
+		}
+
+		return 'blog-article';
+	}
+
 	onClick() {
 		if (this.embed.is_processing) {
 			return;

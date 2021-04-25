@@ -17,6 +17,7 @@
 						v-app-tooltip.touchable="$gettext(`Processing...`)"
 						class="-thumb-play-icon"
 						icon="broadcast"
+						big
 					/>
 				</div>
 			</div>
@@ -36,12 +37,16 @@
 		</template>
 
 		<template v-else>
-			<div v-if="!isOpen" class="-thumb">
+			<div v-if="!isOpen" class="-thumb" :alt="imageAlt">
 				<div class="-thumb-img-container">
 					<img v-if="thumbUrl" :src="thumbUrl" class="-thumb-img" />
 				</div>
 				<div class="-thumb-play">
-					<app-jolticon class="-thumb-play-icon" icon="play" big />
+					<app-jolticon
+						class="-thumb-play-icon -thumb-play-icon-play"
+						:icon="playIcon"
+						big
+					/>
 				</div>
 			</div>
 			<div v-else class="-player">
@@ -139,7 +144,10 @@
 
 		&-icon
 			z-index: 2
-			filter: drop-shadow(0 0 4px black)
+
+			&-play
+				color: white
+				filter: drop-shadow(0 0 4px black)
 
 .-info
 	margin: $-info-margin

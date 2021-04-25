@@ -15,7 +15,7 @@ import { ScrollInviewConfig } from '../../../../_common/scroll/inview/config';
 import { AppScrollInview } from '../../../../_common/scroll/inview/inview';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import { EventBus, EventBusDeregister } from '../../../../_common/system/event/event-bus.service';
-import { GRID_EVENT_POST_PUBLISHED } from '../../grid/client.service';
+import { GRID_EVENT_POST_UPDATED } from '../../grid/client.service';
 import AppActivityFeedItem from './item/item.vue';
 import AppActivityFeedNewButton from './new-button/new-button.vue';
 import { ActivityFeedKey, ActivityFeedView } from './view';
@@ -88,7 +88,7 @@ export default class AppActivityFeed extends Vue {
 		window.addEventListener('scroll', this.onScroll);
 
 		this.postPublishedEventDeregister = EventBus.on(
-			GRID_EVENT_POST_PUBLISHED,
+			GRID_EVENT_POST_UPDATED,
 			this.onGridPostPublished.bind(this)
 		);
 	}
