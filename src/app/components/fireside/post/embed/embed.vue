@@ -123,8 +123,8 @@
 
 		&-container
 			position: relative
-			height: $-thumb-size
-			width: $-thumb-size
+			height: $-thumb-size - 2px
+			width: $-thumb-size - 2px
 			overflow: hidden
 			display: flex
 			justify-content: center
