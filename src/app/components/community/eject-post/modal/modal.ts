@@ -3,7 +3,7 @@ import { propRequired } from '../../../../../utils/vue';
 import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { BaseModal } from '../../../../../_common/modal/base';
-import { getOptions } from '../../../../../_common/settings/options.service';
+import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { REASON_OTHER } from '../../../../../_common/user/action-reasons';
 import { FormModel } from '../form/form';
@@ -60,7 +60,7 @@ export default class AppCommunityEjectPostModal extends BaseModal {
 
 		// Add custom options entry to list of options.
 		if (result.reasonType === REASON_OTHER && result.reason) {
-			const options = getOptions(
+			const options = getDatalistOptions(
 				'community-eject',
 				this.firesidePostCommunity.community.id.toString()
 			);

@@ -6,7 +6,7 @@ import { Community } from '../../../../../_common/community/community.model';
 import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
 import { BaseForm, FormOnInit, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
 import { Growls } from '../../../../../_common/growls/growls.service';
-import { getOptions } from '../../../../../_common/settings/options.service';
+import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
 import {
 	getCommunityBlockReasons,
 	REASON_OTHER,
@@ -65,7 +65,7 @@ export default class FormCommunityBlock extends BaseForm<FormModel>
 			this.usernameLocked = true;
 		}
 
-		const options = getOptions('community-user-block', this.community.id.toString());
+		const options = getDatalistOptions('community-user-block', this.community.id.toString());
 		this.otherOptions = options.getList();
 	}
 
@@ -88,7 +88,10 @@ export default class FormCommunityBlock extends BaseForm<FormModel>
 		} else {
 			// Add custom options entry to list of options.
 			if (this.formModel.reasonType === REASON_OTHER && this.formModel.reason) {
-				const options = getOptions('community-user-block', this.community.id.toString());
+				const options = getDatalistOptions(
+					'community-user-block',
+					this.community.id.toString()
+				);
 				options.unshiftItem(this.formModel.reason);
 			}
 

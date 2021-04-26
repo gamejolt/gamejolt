@@ -3,7 +3,7 @@ import { Emit, Prop, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { Community } from '../../../../../_common/community/community.model';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
-import { getOptions } from '../../../../../_common/settings/options.service';
+import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
 import {
 	getCommunityEjectPostReasons,
 	REASON_OTHER,
@@ -48,7 +48,7 @@ export default class FormCommunityEjectPost extends BaseForm<FormModel> {
 		this.setField('notifyUser', 'yes');
 		this.setField('reasonType', REASON_SPAM);
 
-		const options = getOptions('community-eject', this.community.id.toString());
+		const options = getDatalistOptions('community-eject', this.community.id.toString());
 		this.otherOptions = options.getList();
 	}
 
