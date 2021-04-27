@@ -11,6 +11,7 @@
 		:type="controlType"
 		:value="controlVal"
 		:disabled="disabled"
+		:list="htmlListId"
 		@input="onChange"
 	/>
 </template>
