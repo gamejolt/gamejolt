@@ -13,6 +13,7 @@
 				:validate-on="['blur']"
 				:max-height="maxHeight"
 				:display-rules="displayRules"
+				:model-id="contentModelId"
 				focus-end
 				@focus="onFocusEditor"
 				@blur="onBlurEditor"
