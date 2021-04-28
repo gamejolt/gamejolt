@@ -7,6 +7,7 @@ import { isImage } from '../../../utils/image';
 import { uuidv4 } from '../../../utils/uuid';
 import { MediaItem } from '../../media-item/media-item-model';
 import { ContextCapabilities } from '../content-context';
+import { ContentHydrator } from '../content-hydrator';
 import { ContentEditorAppAdapterMessage, editorGetAppAdapter } from './app-adapter';
 import { ContentEditorService } from './content-editor.service';
 import { MediaUploadTask } from './media-upload-task';
@@ -21,6 +22,7 @@ export class ContentEditorController {
 	window = new ContentEditorWindow();
 	scope = new ContentEditorScope();
 	capabilities = new ContentEditorScopeCapabilities();
+	hydrator = new ContentHydrator();
 }
 
 class ContentEditorWindow {

@@ -5,6 +5,7 @@ import { assertNever } from '../../../utils/utils';
 import { MediaItem } from '../../media-item/media-item-model';
 import { Theme } from '../../theme/theme.model';
 import { ContentContext } from '../content-context';
+import { ContentHydrationType } from '../content-hydrator';
 import {
 	ContentEditorController,
 	editorInsertBlockquote,
@@ -146,7 +147,9 @@ export class ContentEditorAppAdapterMessage {
 			| 'mediaUploadStart'
 			| 'mediaUploadProgress'
 			| 'mediaUploadFinalize'
-			| 'mediaUploadCancel',
+			| 'mediaUploadCancel'
+			| 'hydrationRequest'
+			| 'hydrationResponse',
 		public readonly data: null | any
 	) {}
 
@@ -206,6 +209,10 @@ export class ContentEditorAppAdapterMessage {
 
 	static syncContent(content: string) {
 		return new ContentEditorAppAdapterMessage('content', { content });
+	}
+
+	static requestHydration(type: ContentHydrationType, source: string) {
+		return new ContentEditorAppAdapterMessage('hydrationRequest', { type, source });
 	}
 
 	toJson() {
@@ -303,6 +310,15 @@ export class ContentEditorAppAdapterMessage {
 				return editorMediaUploadCancel(uploadTask);
 			}
 
+			case 'hydrationResponse': {
+				const { type, source, hydrationData } = this.data;
+				if (!type || !source || !hydrationData) {
+					return;
+				}
+
+				return controller.hydrator.setData(type, source, hydrationData);
+			}
+
 			case 'initialize':
 				// Handled in the AppAdapter since it sets things up.
 				break;
@@ -310,6 +326,7 @@ export class ContentEditorAppAdapterMessage {
 			case 'initialized':
 			case 'window':
 			case 'scope':
+			case 'hydrationRequest':
 				// These are never run locally, only sent to the app.
 				break;
 

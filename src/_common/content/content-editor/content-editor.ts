@@ -89,7 +89,6 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 
 	schema: ContentEditorSchema | null = null;
 	plugins: Plugin<ContentEditorSchema>[] | null = null;
-	hydrator!: ContentHydrator;
 
 	focusWatcher: FocusWatcher | null = null;
 	resizeObserver: ResizeObserver | null = null;
@@ -197,7 +196,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	}
 
 	getHydrator() {
-		return this.hydrator;
+		return this.controller.hydrator;
 	}
 
 	getContextCapabilities() {
@@ -266,7 +265,6 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	}
 
 	async mounted() {
-		this.hydrator = new ContentHydrator();
 		this.controller.contextCapabilities = ContextCapabilities.getForContext(
 			this.contentContext
 		);
@@ -365,7 +363,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 			// Do this here so we don't fire an update directly after populating.
 			doc.ensureEndParagraph();
 
-			this.hydrator = new ContentHydrator(doc.hydration);
+			this.controller.hydrator = new ContentHydrator(doc.hydration);
 			const jsonObj = ContentFormatAdapter.adaptIn(doc);
 			const state = EditorState.create({
 				doc: Node.fromJSON(this.schema, jsonObj),
