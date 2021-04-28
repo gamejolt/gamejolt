@@ -2,8 +2,14 @@ import { lift, toggleMark, wrapIn } from 'prosemirror-commands';
 import { Mark, MarkType, Node, NodeType } from 'prosemirror-model';
 import { Selection, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
+import Vue from 'vue';
+import { isImage } from '../../../utils/image';
+import { uuidv4 } from '../../../utils/uuid';
+import { MediaItem } from '../../media-item/media-item-model';
 import { ContextCapabilities } from '../content-context';
 import { ContentEditorAppAdapterMessage, editorGetAppAdapter } from './app-adapter';
+import { ContentEditorService } from './content-editor.service';
+import { MediaUploadTask } from './media-upload-task';
 import { SearchResult } from './modals/gif/gif-modal.service';
 import { ContentEditorSchema } from './schemas/content-editor-schema';
 
@@ -284,6 +290,20 @@ function _getParentNode(
 	return null;
 }
 
+function _findNode(
+	doc: Node<ContentEditorSchema>,
+	finder: (node: Node<ContentEditorSchema>) => boolean
+) {
+	// Loops through nodes trying to find the mediaUpload node with a matching uploadId
+	for (let i = 0; i < doc.nodeSize; i++) {
+		const node = doc.nodeAt(i);
+		if (node !== null && node !== undefined && finder(node)) {
+			return i;
+		}
+	}
+	return -1;
+}
+
 /**
  * Tries getting a parent node of the given type.
  */
@@ -381,6 +401,30 @@ export function editorEnsureEndNode(
 		return tr.insert(tr.doc.nodeSize - 2, newNode);
 	}
 	return null;
+}
+
+/**
+ * Starts the upload for an image File passed in. This is used on web.
+ */
+export function editorUploadImageFile(c: ContentEditorController, file: File | null) {
+	if (file === null || !isImage(file)) {
+		return false;
+	}
+
+	// Only preview the image if it's smaller than 5 Mb.
+	let thumbnail: string | undefined;
+	if (file.size < 5000000) {
+		const reader = new FileReader();
+		reader.onloadend = () => {
+			if (reader.result !== null) {
+				thumbnail = reader.result.toString();
+			}
+		};
+		reader.readAsDataURL(file);
+	}
+
+	const uploadTask = new MediaUploadTask(c, uuidv4(), thumbnail).withFile(file);
+	editorMediaUploadInsert(c, uploadTask);
 }
 
 export function editorToggleMark(
@@ -501,9 +545,7 @@ export function editorInsertHr(c: ContentEditorController) {
 		return;
 	}
 
-	_insertNewBlockNode(c, schema => {
-		return schema.nodes.hr.create();
-	});
+	_insertNewBlockNode(c, schema => schema.nodes.hr.create());
 }
 
 export function editorInsertCodeBlock(c: ContentEditorController) {
@@ -511,9 +553,7 @@ export function editorInsertCodeBlock(c: ContentEditorController) {
 		return;
 	}
 
-	_insertNewBlockNode(c, schema => {
-		return schema.nodes.codeBlock.create();
-	});
+	_insertNewBlockNode(c, schema => schema.nodes.codeBlock.create());
 }
 
 export function editorInsertEmoji(c: ContentEditorController, emojiType: string) {
@@ -521,9 +561,7 @@ export function editorInsertEmoji(c: ContentEditorController, emojiType: string)
 		return;
 	}
 
-	_insertNewInlineNode(c, schema => {
-		return schema.nodes.gjEmoji.create({ type: emojiType });
-	});
+	_insertNewInlineNode(c, schema => schema.nodes.gjEmoji.create({ type: emojiType }));
 }
 
 export function editorInsertGif(c: ContentEditorController, gif: SearchResult) {
@@ -531,16 +569,101 @@ export function editorInsertGif(c: ContentEditorController, gif: SearchResult) {
 		return;
 	}
 
-	_insertNewBlockNode(c, schema => {
-		return schema.nodes.gif.create({
+	_insertNewBlockNode(c, schema =>
+		schema.nodes.gif.create({
 			id: gif.id,
 			width: gif.width,
 			height: gif.height,
 			service: 'tenor',
 			media: { webm: gif.webm, mp4: gif.mp4, preview: gif.preview },
 			url: gif.url,
+		})
+	);
+}
+
+/**
+ * Used by both web and app to insert a node into the document for a media
+ * upload. The MediaUploadTask has to be created first.
+ */
+export function editorMediaUploadInsert(c: ContentEditorController, uploadTask: MediaUploadTask) {
+	if (!c.capabilities.media) {
+		return;
+	}
+
+	// The media upload node will use the uploadId to find the task in this
+	// object.
+	ContentEditorService.UploadTaskCache[uploadTask.uploadId] = uploadTask;
+
+	// TODO: This might need to insert an inline node.
+	_insertNewBlockNode(c, schema =>
+		schema.nodes.mediaUpload.create({
+			uploadId: uploadTask.uploadId,
+		})
+	);
+}
+
+/**
+ * Finalized a media upload and replaces the media upload placeholder node with
+ * the actual media item that was uploaded.
+ */
+export function editorMediaUploadFinalize(uploadTask: MediaUploadTask, mediaItem: MediaItem) {
+	const c = uploadTask.editorController;
+	if (!c.view) {
+		return;
+	}
+
+	const {
+		view,
+		view: {
+			state: { tr, schema, doc },
+		},
+	} = c;
+
+	Vue.delete(ContentEditorService.UploadTaskCache, uploadTask.uploadId);
+
+	const nodePos = _findNode(
+		doc,
+		i => i.type.name === 'mediaUpload' && i.attrs.uploadId === uploadTask.uploadId
+	);
+	if (nodePos !== -1) {
+		tr.setNodeMarkup(nodePos, schema.nodes.mediaItem, {
+			id: mediaItem.id,
+			width: mediaItem.width,
+			height: mediaItem.height,
+			align: 'center',
+			caption: '',
 		});
-	});
+		view.dispatch(tr);
+	}
+}
+
+/**
+ * Will remove a media upload node. Used when the upload task has failed for
+ * some reason.
+ */
+export function editorMediaUploadCancel(uploadTask: MediaUploadTask) {
+	const c = uploadTask.editorController;
+	if (!c.view) {
+		return;
+	}
+
+	const {
+		view,
+		view: {
+			state: { tr, doc },
+		},
+	} = c;
+
+	Vue.delete(ContentEditorService.UploadTaskCache, uploadTask.uploadId);
+
+	const nodePos = _findNode(
+		doc,
+		i => i.type.name === 'mediaUpload' && i.attrs.uploadId === uploadTask.uploadId
+	);
+	if (nodePos !== -1) {
+		tr.delete(nodePos, nodePos + 1);
+		view.dispatch(tr);
+	}
 }
 
 /**

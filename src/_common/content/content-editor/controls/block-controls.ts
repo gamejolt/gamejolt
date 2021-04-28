@@ -8,7 +8,11 @@ import { Growls } from '../../../growls/growls.service';
 import { Screen } from '../../../screen/screen-service';
 import { AppTooltip } from '../../../tooltip/tooltip-directive';
 import AppContentEditorTS from '../content-editor';
-import { ContentEditorController, ContentEditorControllerKey } from '../content-editor-controller';
+import {
+	ContentEditorController,
+	ContentEditorControllerKey,
+	editorUploadImageFile,
+} from '../content-editor-controller';
 import { ContentEditorService } from '../content-editor.service';
 import { ContentEditorSchema } from '../schemas/content-editor-schema';
 
@@ -142,7 +146,7 @@ export default class AppContentEditorBlockControls extends Vue {
 				if (files !== null) {
 					for (let i = 0; i < files.length; i++) {
 						const file = files[i];
-						const result = ContentEditorService.handleImageFile(this.view, file);
+						const result = editorUploadImageFile(this.controller, file);
 						if (!result) {
 							Growls.error({
 								title: this.$gettext('Invalid file selected'),

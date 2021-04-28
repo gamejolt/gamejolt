@@ -2,6 +2,7 @@ import Vue from 'vue';
 import { store } from '../../../editor/store';
 import { objectPick } from '../../../utils/object';
 import { assertNever } from '../../../utils/utils';
+import { MediaItem } from '../../media-item/media-item-model';
 import { Theme } from '../../theme/theme.model';
 import { ContentContext } from '../content-context';
 import {
@@ -13,9 +14,14 @@ import {
 	editorInsertHr,
 	editorInsertNumberedList,
 	editorInsertSpoiler,
+	editorMediaUploadCancel,
+	editorMediaUploadFinalize,
+	editorMediaUploadInsert,
 	editorToggleHeading,
 	editorToggleMark,
 } from './content-editor-controller';
+import { ContentEditorService } from './content-editor.service';
+import { MediaUploadTask } from './media-upload-task';
 
 export class ContentEditorAppAdapter {
 	isInitialized = false;
@@ -136,7 +142,11 @@ export class ContentEditorAppAdapterMessage {
 			| 'blockquote'
 			| 'hr'
 			| 'codeBlock'
-			| 'emoji',
+			| 'emoji'
+			| 'mediaUploadStart'
+			| 'mediaUploadProgress'
+			| 'mediaUploadFinalize'
+			| 'mediaUploadCancel',
 		public readonly data: null | any
 	) {}
 
@@ -254,7 +264,44 @@ export class ContentEditorAppAdapterMessage {
 				return editorInsertCodeBlock(controller);
 
 			case 'emoji':
-				return editorInsertEmoji(controller, this.data!.type);
+				return editorInsertEmoji(controller, this.data.type);
+
+			case 'mediaUploadStart': {
+				const uploadTask = new MediaUploadTask(
+					controller,
+					this.data.uploadId,
+					this.data.thumbnail
+				);
+				return editorMediaUploadInsert(controller, uploadTask);
+			}
+
+			case 'mediaUploadProgress': {
+				const uploadTask = ContentEditorService.UploadTaskCache[this.data.uploadId];
+				if (!uploadTask) {
+					return;
+				}
+
+				return uploadTask.updateProgress(this.data.progress);
+			}
+
+			case 'mediaUploadFinalize': {
+				const uploadTask = ContentEditorService.UploadTaskCache[this.data.uploadId];
+				if (!uploadTask || !this.data.mediaItem) {
+					return;
+				}
+
+				const mediaItem = new MediaItem(this.data.mediaItem);
+				return editorMediaUploadFinalize(uploadTask, mediaItem);
+			}
+
+			case 'mediaUploadCancel': {
+				const uploadTask = ContentEditorService.UploadTaskCache[this.data.uploadId];
+				if (!uploadTask) {
+					return;
+				}
+
+				return editorMediaUploadCancel(uploadTask);
+			}
 
 			case 'initialize':
 				// Handled in the AppAdapter since it sets things up.

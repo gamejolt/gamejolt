@@ -1,8 +1,10 @@
 import { Node } from 'prosemirror-model';
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
+import { imageMimeTypes } from '../../../../utils/image';
 import { ContextCapabilities } from '../../content-context';
 import AppContentEditorTS from '../content-editor';
+import { ContentEditorController, editorUploadImageFile } from '../content-editor-controller';
 import { ContentEditorService } from '../content-editor.service';
 import { dropEventHandler } from './drop-event-handler';
 import { focusEventHandler } from './focus-event-handler';
@@ -15,11 +17,11 @@ type EventHandlers = {
 
 export default function buildEvents(editor: AppContentEditorTS): EventHandlers {
 	const handlers = {} as EventHandlers;
-	const capabilities = editor.contextCapabilities;
+	const c = editor.controller;
 
-	if (capabilities.media) {
-		handlers.paste = pasteEventHandler(capabilities);
-		handlers.drop = dropEventHandler(capabilities);
+	if (c.contextCapabilities.media) {
+		handlers.paste = pasteEventHandler(c);
+		handlers.drop = dropEventHandler(c);
 	}
 	handlers.focus = focusEventHandler(editor);
 	handlers.keydown = keydownEventHandler(editor);
@@ -44,4 +46,23 @@ export function canPasteImages(state: EditorState, capabilities: ContextCapabili
 		}
 	}
 	return true;
+}
+
+export function handleImageUploads(c: ContentEditorController, items: DataTransferItemList) {
+	let handled = false;
+
+	for (let i = 0; i < items.length; i++) {
+		const transferItem = items[i];
+
+		if (
+			transferItem.kind === 'file' &&
+			imageMimeTypes.includes(transferItem.type.toLowerCase())
+		) {
+			const result = editorUploadImageFile(c, transferItem.getAsFile());
+			if (result) {
+				handled = true;
+			}
+		}
+	}
+	return handled;
 }

@@ -1,9 +1,11 @@
+<script lang="ts" src="./media-upload"></script>
+
 <template>
 	<div class="media-upload-container">
 		<div class="media-upload">
 			<img
-				v-if="src"
-				:src="src"
+				v-if="task.thumbnail"
+				:src="task.thumbnail"
 				class="-placeholder"
 				:style="{ 'max-height': placeholderMaxHeight + 'px' }"
 			/>
@@ -12,9 +14,9 @@
 				<app-progress-bar
 					class="-progress"
 					thin
-					:percent="uploadProgress * 100.0"
-					:indeterminate="uploadProcessing"
-					:active="uploadProcessing"
+					:percent="task.progress * 100.0"
+					:indeterminate="task.isProcessing"
+					:active="task.isProcessing"
 				/>
 			</div>
 		</div>
@@ -53,5 +55,3 @@
 	padding-left: 10px
 	padding-right: 10px
 </style>
-
-<script lang="ts" src="./media-upload"></script>

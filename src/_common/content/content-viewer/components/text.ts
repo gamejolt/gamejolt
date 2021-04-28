@@ -64,7 +64,7 @@ export class AppContentViewerText extends Vue {
 
 			// Make sure the href is prefaced by a protocol.
 			let href = attrs.href;
-			if (!/^[a-z][a-z0-9+\-\.]*:\/\//i.test(href)) {
+			if (!/^[a-z][a-z0-9+\-.]*:\/\//i.test(href)) {
 				href = '//' + href;
 			}
 

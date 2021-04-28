@@ -1,12 +1,11 @@
 import { Fragment, Mark, Node, NodeType } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { imageMimeTypes, isImage } from '../../../utils/image';
-import { uuidv4 } from '../../../utils/uuid';
+import { MediaUploadTask } from './media-upload-task';
 import { ContentEditorSchema } from './schemas/content-editor-schema';
 
 export class ContentEditorService {
-	public static UploadFileCache: { [uploadId: string]: File | undefined } = {};
+	public static UploadTaskCache = {} as Record<string, MediaUploadTask>;
 
 	/**
 	 * Ensures that the last node in the editor doc is a specific node.
@@ -105,44 +104,6 @@ export class ContentEditorService {
 			child = parent;
 			parent = this.getParentNode(state, child);
 		}
-		return false;
-	}
-
-	public static handleImageUploads(
-		view: EditorView<ContentEditorSchema>,
-		items: DataTransferItemList
-	) {
-		let handled = false;
-
-		for (let i = 0; i < items.length; i++) {
-			const transferItem = items[i];
-
-			if (
-				transferItem.kind === 'file' &&
-				imageMimeTypes.includes(transferItem.type.toLowerCase())
-			) {
-				const result = this.handleImageFile(view, transferItem.getAsFile());
-				if (result) {
-					handled = true;
-				}
-			}
-		}
-		return handled;
-	}
-
-	public static handleImageFile(view: EditorView<ContentEditorSchema>, file: File | null) {
-		if (file !== null && isImage(file)) {
-			const uploadId = uuidv4();
-			this.UploadFileCache[uploadId] = file;
-			const newNode = view.state.schema.nodes.mediaUpload.create({
-				uploadId,
-			});
-			const tr = view.state.tr.replaceSelectionWith(newNode);
-			view.focus();
-			view.dispatch(tr);
-			return true;
-		}
-
 		return false;
 	}
 
