@@ -1,13 +1,15 @@
+<script lang="ts" src="./footer"></script>
+
 <template>
 	<footer id="footer" class="section">
 		<div class="container">
 			<template v-if="!Screen.isXs">
-				<div class="text-center" v-if="!GJ_IS_CLIENT">
+				<div v-if="!GJ_IS_CLIENT" class="text-center">
 					<p>
 						<router-link
+							v-app-track-event="`footer:client-promo`"
 							class="-client-logo"
 							:to="{ name: 'landing.client' }"
-							v-app-track-event="`footer:client-promo`"
 						>
 							<app-theme-svg
 								src="~img/game-jolt-client-logo.svg"
@@ -116,9 +118,14 @@
 									</router-link>
 								</li>
 								<li>
-									<app-contact-link email="contact@gamejolt.com">
-										<translate>footer.contact</translate>
-									</app-contact-link>
+									<router-link
+										:to="{
+											name: 'landing.help',
+											params: { path: 'support' },
+										}"
+									>
+										<translate>Support</translate>
+									</router-link>
 								</li>
 								<li>
 									<router-link :to="{ name: 'legal.terms' }">
@@ -144,7 +151,7 @@
 			<hr />
 
 			<div class="clearfix">
-				<div class="footer-jolt" v-if="!Screen.isXs">
+				<div v-if="!Screen.isXs" class="footer-jolt">
 					<router-link :to="{ name: 'home' }">
 						<app-theme-svg
 							src="~img/jolt.svg"
@@ -173,13 +180,13 @@
 						/>
 					</p>
 
-					<p class="tiny">&copy; {{ curDate | date('yyyy') }} Lucent Web Creative, LLC</p>
+					<p class="tiny">&copy; {{ date(curDate, 'yyyy') }} Lucent Web Creative, LLC</p>
 
-					<p class="tiny text-muted" v-if="GJ_IS_CLIENT">
-						<a @click="showSystemReport" class="link-muted">
+					<p v-if="GJ_IS_CLIENT" class="tiny text-muted">
+						<a class="link-muted" @click="showSystemReport">
 							<translate>footer.send_system_report</translate>
 						</a>
-						<span class="dot-separator"></span>
+						<span class="dot-separator" />
 						v{{ clientVersion }}
 					</p>
 				</div>
@@ -204,5 +211,3 @@
 </template>
 
 <style lang="stylus" src="./footer.styl" scoped></style>
-
-<script lang="ts" src="./footer"></script>
