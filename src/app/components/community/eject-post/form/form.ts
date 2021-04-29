@@ -1,6 +1,9 @@
 import Component from 'vue-class-component';
-import { Emit, Watch } from 'vue-property-decorator';
+import { Emit, Prop, Watch } from 'vue-property-decorator';
+import { propRequired } from '../../../../../utils/vue';
+import { Community } from '../../../../../_common/community/community.model';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
+import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
 import {
 	getCommunityEjectPostReasons,
 	REASON_OTHER,
@@ -15,8 +18,11 @@ export type FormModel = {
 
 @Component({})
 export default class FormCommunityEjectPost extends BaseForm<FormModel> {
-	@Emit('change')
-	emitChange(_form: FormModel) {}
+	@Prop(propRequired(Community)) community!: Community;
+
+	@Emit('change') emitChange(_form: FormModel) {}
+
+	otherOptions: string[] = [];
 
 	get notifyUserOptions() {
 		return {
@@ -41,6 +47,9 @@ export default class FormCommunityEjectPost extends BaseForm<FormModel> {
 	onInit() {
 		this.setField('notifyUser', 'yes');
 		this.setField('reasonType', REASON_SPAM);
+
+		const options = getDatalistOptions('community-eject', this.community.id.toString());
+		this.otherOptions = options.getList();
 	}
 
 	@Watch('formModel', { deep: true })

@@ -18,13 +18,12 @@ if (GJ_IS_CLIENT) {
 		AppThemeSvg,
 		AppContactLink,
 	},
-	filters: {
-		date,
-	},
 })
 export default class AppShellFooter extends Vue {
 	curDate = new Date();
+
 	readonly Screen = Screen;
+	readonly date = date;
 
 	get clientVersion() {
 		return GJ_VERSION;

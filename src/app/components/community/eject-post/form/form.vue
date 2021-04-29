@@ -42,10 +42,14 @@
 			</div>
 			<app-form-control
 				type="text"
+				html-list-id="eject-post-reasons-list"
 				:rules="{
 					max: 100,
 				}"
 			/>
+			<datalist id="eject-post-reasons-list">
+				<option v-for="optionStr of otherOptions" :key="optionStr" :value="optionStr" />
+			</datalist>
 			<app-form-control-errors />
 		</app-form-group>
 	</app-form>

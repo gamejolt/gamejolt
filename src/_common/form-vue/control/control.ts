@@ -12,6 +12,7 @@ export default class AppFormControl extends BaseFormControl {
 	@Prop(Number) validateDelay!: number;
 	@Prop(Array) mask!: (string | RegExp)[];
 	@Prop(propOptional(Boolean, false)) disabled!: boolean;
+	@Prop(propOptional(String, undefined)) htmlListId!: string;
 
 	controlVal = '';
 	maskedInputElem: any = null;
