@@ -45,8 +45,8 @@ export default class AppCommentControls extends Vue {
 			} else {
 				return this.$gettextInterpolate(
 					this.$ngettext(
-						'You and another person like this comment.',
-						'You and %{ count } people like this comment.',
+						'You and another user like this comment.',
+						'You and %{ count } users like this comment.',
 						count - 1
 					),
 					{ count: count - 1 }
@@ -55,8 +55,8 @@ export default class AppCommentControls extends Vue {
 		} else {
 			return this.$gettextInterpolate(
 				this.$ngettext(
-					'One person likes this comment.',
-					'%{ count } people like this comment.',
+					'One user likes this comment.',
+					'%{ count } users like this comment.',
 					count
 				),
 				{ count }
