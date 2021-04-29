@@ -30,6 +30,7 @@ import { User } from '../../../../../_common/user/user.model';
 import { AppCommentWidgetLazy } from '../../../lazy';
 import { PostEditModal } from '../../../post/edit-modal/edit-modal-service';
 import AppEventItemControlsFiresidePostExtra from './extra/extra.vue';
+import AppEventItemControlsFiresidePostSaveProgress from './save-progress/save-progress.vue';
 import AppEventItemControlsFiresidePostStats from './stats/stats.vue';
 
 @Component({
@@ -38,6 +39,7 @@ import AppEventItemControlsFiresidePostStats from './stats/stats.vue';
 		AppFiresidePostLikeWidget,
 		AppEventItemControlsFiresidePostStats,
 		AppEventItemControlsFiresidePostExtra,
+		AppEventItemControlsFiresidePostSaveProgress,
 	},
 	directives: {
 		AppTooltip,

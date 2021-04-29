@@ -31,7 +31,6 @@ import {
 } from '../../../../_common/sticker/target/target-controller';
 import AppStickerTarget from '../../../../_common/sticker/target/target.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
-import { EventBus, EventBusDeregister } from '../../../../_common/system/event/event-bus.service';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
@@ -46,7 +45,6 @@ import AppEventItemControls from '../../../components/event-item/controls/contro
 import AppFiresidePostEmbed from '../../../components/fireside/post/embed/embed.vue';
 import AppGameBadge from '../../../components/game/badge/badge.vue';
 import AppGameListItem from '../../../components/game/list/item/item.vue';
-import { GRID_EVENT_POST_UPDATED } from '../../../components/grid/client.service';
 import { AppCommentWidgetLazy } from '../../../components/lazy';
 import AppPollVoting from '../../../components/poll/voting/voting.vue';
 
@@ -97,7 +95,6 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 	videoStartTime = 0;
 	isPlayerFilled = false;
 	private lightbox?: AppLightboxTS;
-	private postPublishedEventDeregister?: EventBusDeregister;
 
 	readonly Screen = Screen;
 	readonly number = number;
@@ -149,20 +146,8 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 		}
 	}
 
-	mounted() {
-		this.postPublishedEventDeregister = EventBus.on(
-			GRID_EVENT_POST_UPDATED,
-			(post: FiresidePost) => this.emitPostUpdated(post)
-		);
-	}
-
 	destroyed() {
 		this.closeLightbox();
-
-		if (this.postPublishedEventDeregister) {
-			this.postPublishedEventDeregister();
-			this.postPublishedEventDeregister = undefined;
-		}
 	}
 
 	onLightboxClose() {

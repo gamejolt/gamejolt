@@ -28,7 +28,6 @@ import { getTrophyImg } from '../trophy/thumbnail/thumbnail';
 import { CommunityChannel } from './community-channel';
 
 export const GRID_EVENT_NEW_STICKER = 'grid-new-sticker-received';
-export const GRID_EVENT_POST_UPDATED = 'grid-post-published';
 
 interface NewNotificationPayload {
 	notification_data: {
@@ -487,8 +486,6 @@ export class GridClient {
 
 	handlePostUpdated({ post_data, was_scheduled, was_published }: PostUpdatedPayload) {
 		const post = new FiresidePost(post_data);
-
-		EventBus.emit(GRID_EVENT_POST_UPDATED, post);
 
 		if (was_published) {
 			// Send out a growl to let the user know that their post was updated.

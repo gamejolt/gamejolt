@@ -9,11 +9,8 @@ export class EmbedMetadata extends Model {
 	type!: string | null;
 	description!: string | null;
 
-	image_url!: string | null;
 	image_media_item!: MediaItem | null;
 	image_alt!: string | null;
-
-	video_url!: string | null;
 
 	constructor(data: any = {}) {
 		super(data);
