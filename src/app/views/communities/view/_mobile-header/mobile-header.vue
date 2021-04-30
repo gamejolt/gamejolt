@@ -45,8 +45,8 @@
 					v-app-track-event="`community-mobile-header:toggle-context`"
 					icon="menu"
 					trans
-					:sparse="Screen.isXs"
-					:circle="Screen.isXs"
+					:sparse="Screen.isXs && shouldShowAbout"
+					:circle="Screen.isXs && shouldShowAbout"
 					@click="onClickMenu"
 				>
 					<div v-if="hasUnread" class="-unread-blip" />
