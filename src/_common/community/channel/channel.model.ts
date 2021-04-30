@@ -41,6 +41,7 @@ export class CommunityChannel extends Model {
 
 	get canPost() {
 		return (
+			this.type != 'competition' &&
 			this.permissions.canPerform(COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING) &&
 			this.visibility !== 'draft' &&
 			!this.is_archived

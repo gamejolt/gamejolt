@@ -1,9 +1,10 @@
 <script lang="ts" src="./countdown"></script>
 
 <template>
-	<div>
-		<h2 class="sans-margin-top">{{ titleText }}</h2>
-
+	<div class="-countdown">
+		<div class="-title">
+			<strong>{{ titleText }}</strong>
+		</div>
 		<div v-if="blocksData.length" class="-blocks">
 			<div v-for="blockData of blocksData" :key="blockData.text" class="-block-container">
 				<div class="-block">
@@ -27,6 +28,25 @@
 <style lang="stylus" scoped>
 @import '~styles/variables'
 @import '~styles-lib/mixins'
+
+.-countdown
+	display: flex
+	flex-direction: column
+	justify-content: center
+	margin-bottom: $line-height-computed
+
+	@media $media-sm-up
+		flex-direction: row
+
+.-title
+	flex: none
+	padding-top: 4px
+
+	@media $media-sm-up
+		margin-right: ($grid-gutter-width / 2)
+
+.-blocks
+	flex: none
 
 .-block-container
 	display: inline-flex

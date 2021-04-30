@@ -1,29 +1,28 @@
 import Component from 'vue-class-component';
 import { Inject, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
-import AppIllustration from '../../../../../../_common/illustration/illustration.vue';
-import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
-import { Screen } from '../../../../../../_common/screen/screen-service';
-import { AppState, AppStore } from '../../../../../../_common/store/app-store';
-import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
-import { ActivityFeedView } from '../../../../../components/activity/feed/view';
-import AppCommunityCompetitionSidebar from '../../../../../components/community/competition/sidebar/sidebar.vue';
-import { Store } from '../../../../../store';
+import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import AppIllustration from '../../../../../_common/illustration/illustration.vue';
+import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
+import { ActivityFeedView } from '../../../../components/activity/feed/view';
+import { Store } from '../../../../store';
 import {
 	CommunityRouteStore,
 	CommunityRouteStoreKey,
 	isVirtualChannel,
 	setCommunityMeta,
-} from '../../view.store';
+} from '../view.store';
 import {
 	doFeedChannelPayload,
 	getFeedChannelSort,
 	resolveFeedChannelPayload,
-} from '../../_feed/feed-helpers';
-import AppCommunitiesViewFeed from '../../_feed/feed.vue';
-import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
-import { CommunitiesViewChannelDeps } from '../channel';
+} from '../_feed/feed-helpers';
+import AppCommunitiesViewFeed from '../_feed/feed.vue';
+import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
+import { CommunitiesViewChannelDeps } from './channel';
 
 @Component({
 	name: 'RouteCommunitiesViewChannelFeed',
@@ -31,7 +30,6 @@ import { CommunitiesViewChannelDeps } from '../channel';
 		AppCommunitiesViewPageContainer,
 		AppCommunitiesViewFeed,
 		AppIllustration,
-		AppCommunityCompetitionSidebar,
 	},
 })
 @RouteResolver({

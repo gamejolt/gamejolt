@@ -5,7 +5,6 @@ import { arrayRemove } from '../../../../utils/array';
 import { propOptional } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
-import AppCommunityChannelSelect from '../../../../_common/community/channel/select/select.vue';
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import AppExpand from '../../../../_common/expand/expand.vue';
@@ -25,7 +24,7 @@ import {
 	FormOnLoad,
 	FormOnSubmit,
 	FormOnSubmitError,
-	FormOnSubmitSuccess,
+	FormOnSubmitSuccess
 } from '../../../../_common/form-vue/form.service';
 import AppFormLegend from '../../../../_common/form-vue/legend/legend.vue';
 import { GameVideo } from '../../../../_common/game/video/video.model';
@@ -40,7 +39,7 @@ import { AppScrollWhen } from '../../../../_common/scroll/scroll-when.directive'
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import {
 	getSketchfabIdFromInput,
-	SKETCHFAB_FIELD_VALIDATION_REGEX,
+	SKETCHFAB_FIELD_VALIDATION_REGEX
 } from '../../../../_common/sketchfab/embed/embed';
 import AppSketchfabEmbed from '../../../../_common/sketchfab/embed/embed.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
@@ -98,7 +97,6 @@ type FormPostModel = FiresidePost & {
 		AppFormPostCommunityPillAdd,
 		AppFormPostCommunityPillIncomplete,
 		AppCommunityPill,
-		AppCommunityChannelSelect,
 		AppFormControlContent,
 		AppScrollScroller,
 		AppFormPostVideo,
