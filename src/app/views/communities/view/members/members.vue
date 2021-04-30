@@ -1,3 +1,5 @@
+<script lang="ts" src="./members"></script>
+
 <template>
 	<app-communities-view-page-container full>
 		<div v-if="!community.member_count" class="alert alert-info">
@@ -13,5 +15,3 @@
 		/>
 	</app-communities-view-page-container>
 </template>
-
-<script lang="ts" src="./members"></script>

@@ -1,3 +1,5 @@
+<script lang="ts" src="./feed"></script>
+
 <template>
 	<div>
 		<app-blocked-notice :community="community" />
@@ -6,8 +8,8 @@
 			v-if="shouldShowPostAdd"
 			:community="community"
 			:channel="channel"
-			@add="emitAddPost"
 			:placeholder="placeholderText"
+			@add="emitAddPost"
 		/>
 
 		<app-nav-tab-list v-if="shouldShowTabs">
@@ -16,7 +18,7 @@
 					<router-link
 						v-app-track-event="`communities-feed:change-sort:new`"
 						:to="{
-							name: 'communities.view.channel.feed',
+							name: 'communities.view.channel',
 							params: {
 								channel: channel.title,
 							},
@@ -31,7 +33,7 @@
 					<router-link
 						v-app-track-event="`communities-feed:change-sort:hot`"
 						:to="{
-							name: 'communities.view.channel.feed',
+							name: 'communities.view.channel',
 							params: {
 								channel: channel.title,
 							},
@@ -83,5 +85,3 @@
 		</template>
 	</div>
 </template>
-
-<script lang="ts" src="./feed"></script>

@@ -171,7 +171,6 @@
 												: $gettext(`Hide entry from the Jam`)
 										"
 										sm
-										:icon="entry.is_removed ? 'active' : 'inactive'"
 										@click="onClickRemoveEntry(entry)"
 									>
 										<translate v-if="entry.is_removed">Readmit Entry</translate>

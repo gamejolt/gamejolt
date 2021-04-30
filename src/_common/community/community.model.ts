@@ -117,7 +117,7 @@ export class Community extends Collaboratable(Model) {
 
 	channelRouteLocation(channel: CommunityChannel): Location {
 		return {
-			name: 'communities.view.channel.feed',
+			name: 'communities.view.channel',
 			params: {
 				path: this.path,
 				channel: channel.title,

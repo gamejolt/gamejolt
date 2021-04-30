@@ -122,7 +122,7 @@
 						/>
 					</th>
 					<td>
-						<router-link :to="{ name: 'communities.view.channel.feed' }">
+						<router-link :to="{ name: 'communities.view.channel' }">
 							{{ Environment.baseUrl + '/c/' + community.path + '/'
 							}}<b>{{ channel.title }}</b>
 						</router-link>

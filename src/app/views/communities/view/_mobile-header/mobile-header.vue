@@ -50,13 +50,11 @@
 					@click="onClickMenu"
 				>
 					<div v-if="hasUnread" class="-unread-blip" />
-					<template v-if="!Screen.isXs">
+					<template v-if="!Screen.isXs || !shouldShowAbout">
 						<translate v-if="routeStore && routeStore.channelPath">
 							Channels
 						</translate>
-						<translate v-else>
-							Menu
-						</translate>
+						<translate v-else>Menu</translate>
 					</template>
 				</app-button>
 			</div>
@@ -81,8 +79,7 @@
 				class="-controls-item -about"
 			>
 				<app-button trans @click="onClickAbout">
-					<translate v-if="isJam">About Jam</translate>
-					<translate v-else>About</translate>
+					<translate>About</translate>
 				</app-button>
 			</div>
 

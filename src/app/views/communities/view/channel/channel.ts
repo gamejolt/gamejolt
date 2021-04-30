@@ -1,14 +1,17 @@
 import { Component, Inject } from 'vue-property-decorator';
+import { router } from '../../..';
 import { Api } from '../../../../../_common/api/api.service';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
-import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import {
+	asyncRouteLoader,
+	BaseRouteComponent,
+	RouteResolver,
+} from '../../../../../_common/route/route-component';
 import {
 	CommunityRouteStore,
 	CommunityRouteStoreKey,
 	getChannelPathFromRoute,
 } from '../view.store';
-import { getFeedChannelSort } from '../_feed/feed-helpers';
-import AppCommunitiesViewChannelHeader from './_header/header.vue';
 
 /**
  * Route dependencies for channel-type pages.
@@ -21,7 +24,8 @@ export const CommunitiesViewChannelDeps = {
 @Component({
 	name: 'RouteCommunitiesViewChannel',
 	components: {
-		AppCommunitiesViewChannelHeader,
+		RouteCommunitiesViewChannelFeed: () => asyncRouteLoader(import('./feed.vue'), router),
+		RouteCommunitiesViewChannelJam: () => asyncRouteLoader(import('./jam.vue'), router),
 	},
 })
 @RouteResolver({
@@ -32,8 +36,7 @@ export const CommunitiesViewChannelDeps = {
 	},
 })
 export default class RouteCommunitiesViewChannel extends BaseRouteComponent {
-	@Inject(CommunityRouteStoreKey)
-	routeStore!: CommunityRouteStore;
+	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
 
 	get community() {
 		return this.routeStore.community;
@@ -41,14 +44,6 @@ export default class RouteCommunitiesViewChannel extends BaseRouteComponent {
 
 	get channel() {
 		return this.routeStore.channel;
-	}
-
-	get channelPath() {
-		return this.routeStore.channelPath;
-	}
-
-	get sort() {
-		return getFeedChannelSort(this.$route);
 	}
 
 	routeResolved($payload: any) {

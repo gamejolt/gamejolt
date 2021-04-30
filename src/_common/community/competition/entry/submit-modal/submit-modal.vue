@@ -15,11 +15,6 @@
 		<div class="modal-body">
 			<app-loading v-if="isLoading" centered />
 			<template v-else-if="selectedGame">
-				<span class="help-inline -back" @click="onClickBack">
-					<app-jolticon icon="chevron-left" />
-					<translate>Select a different game</translate>
-				</span>
-
 				<app-game-thumbnail
 					:game="selectedGame"
 					class="-game-thumb-selected"

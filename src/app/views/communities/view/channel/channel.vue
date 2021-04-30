@@ -1,12 +1,9 @@
 <script lang="ts" src="./channel"></script>
 
 <template>
-	<div>
-		<template v-if="channel">
-			<app-communities-view-channel-header />
-
-			<router-view />
-		</template>
+	<div v-if="channel">
+		<route-communities-view-channel-jam v-if="channel.type === 'competition'" />
+		<route-communities-view-channel-feed v-else />
 	</div>
 </template>
 

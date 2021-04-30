@@ -1,15 +1,18 @@
-<script lang="ts" src="./grid"></script>
+<script lang="ts" src="./jam-entries"></script>
 
 <template>
 	<div>
 		<template v-if="!competition.entry_count">
+			<h2 class="section-header">
+				<translate>Entries</translate>
+			</h2>
+
 			<app-illustration src="~img/ill/no-comments.svg">
 				<p>
-					<translate>Alas, no entries have been submitted to the jam...</translate>
+					<translate>No entries have been submitted to this jam yet...</translate>
 				</p>
 			</app-illustration>
 		</template>
-
 		<template v-else>
 			<h2 class="section-header">
 				<translate

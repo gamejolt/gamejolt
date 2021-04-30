@@ -86,7 +86,7 @@
 				<app-page-header-controls>
 					<app-button
 						:to="{
-							name: 'communities.view.channel.feed',
+							name: 'communities.view.channel',
 						}"
 						block
 						icon="arrow-forward"
