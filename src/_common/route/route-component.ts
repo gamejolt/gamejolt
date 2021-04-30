@@ -358,7 +358,6 @@ export class BaseRouteComponent extends Vue {
 		if (options.hasResolver) {
 			const resolver = Resolver.startResolve(this.$options, to);
 			this.isRouteLoading = true;
-			this.disableRouteTitleSuffix = false;
 
 			const { fromCache, payload } = await getPayload(this.$options, to, useCache);
 			resolver.payload = payload;

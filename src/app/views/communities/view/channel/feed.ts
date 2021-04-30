@@ -47,6 +47,9 @@ export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent 
 
 	feed: ActivityFeedView | null = null;
 
+	/** @override */
+	disableRouteTitleSuffix = true;
+
 	readonly Screen = Screen;
 
 	get community() {
@@ -70,8 +73,6 @@ export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent 
 	}
 
 	get routeTitle() {
-		this.disableRouteTitleSuffix = true;
-
 		const title = this.$gettextInterpolate(`%{ name } Community on Game Jolt`, {
 			name: this.community.name,
 		});

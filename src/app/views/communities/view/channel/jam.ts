@@ -70,6 +70,9 @@ export default class RouteCommunitiesViewChannelJam extends BaseRouteComponent {
 	userEntries: CommunityCompetitionEntry[] = [];
 	categories: CommunityCompetitionVotingCategory[] = [];
 
+	/** @override */
+	disableRouteTitleSuffix = true;
+
 	get community() {
 		return this.routeStore.community;
 	}
@@ -121,7 +124,10 @@ export default class RouteCommunitiesViewChannelJam extends BaseRouteComponent {
 	}
 
 	get routeTitle() {
-		return this.channel.displayTitle;
+		return this.$gettextInterpolate(`%{ channel } - %{ name } Community on Game Jolt`, {
+			name: this.community.name,
+			channel: this.channel.displayTitle,
+		});
 	}
 
 	routeResolved($payload: any) {

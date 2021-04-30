@@ -111,7 +111,7 @@ function makeRequest(route: Route) {
 		query.push(['page', page]);
 	}
 
-	const seed = sessionStorage.getItem(getSeedSessionStorageKey(route));
+	const seed = GJ_IS_SSR ? null : sessionStorage.getItem(getSeedSessionStorageKey(route));
 	if (seed) {
 		query.push(['seed', seed]);
 	}
@@ -332,7 +332,7 @@ export default class RouteCommunitiesViewChannelJamEntries extends BaseRouteComp
 
 		// If we receive a seed from backend, store it so it can be sent with the next request.
 		const seed = $payload.seed;
-		if (seed) {
+		if (seed && !GJ_IS_SSR) {
 			sessionStorage.setItem(getSeedSessionStorageKey(this.$route), seed);
 		}
 	}

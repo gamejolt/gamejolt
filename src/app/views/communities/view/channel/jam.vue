@@ -22,7 +22,7 @@
 						{{ channel.displayTitle }}
 					</h1>
 
-					<div class="-header-subtitle text-muted">
+					<div v-if="!competition.hasEnded" class="-header-subtitle text-muted">
 						Submissions are open <b>{{ date(competition.starts_on) }}</b> to
 						<b>{{ date(competition.ends_on) }}</b>
 					</div>
