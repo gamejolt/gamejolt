@@ -1,5 +1,5 @@
 import { lift, toggleMark, wrapIn } from 'prosemirror-commands';
-import { Mark, MarkType, Node, NodeType } from 'prosemirror-model';
+import { Fragment, Mark, MarkType, Node, NodeType } from 'prosemirror-model';
 import { Selection, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import Vue from 'vue';
@@ -12,6 +12,7 @@ import { ContentEditorAppAdapterMessage, editorGetAppAdapter } from './app-adapt
 import { ContentEditorService } from './content-editor.service';
 import { MediaUploadTask } from './media-upload-task';
 import { SearchResult } from './modals/gif/gif-modal.service';
+import { BasicMentionRegex } from './plugins/input-rules/detect-mention-suggestion';
 import { ContentEditorSchema } from './schemas/content-editor-schema';
 
 export const ContentEditorControllerKey = Symbol('content-editor-controller');
@@ -50,6 +51,8 @@ class ContentEditorScope {
 	italic: boolean;
 	strike: boolean;
 	code: boolean;
+	link: boolean;
+	autolink: boolean;
 	h1: boolean;
 	h2: boolean;
 
@@ -63,6 +66,8 @@ class ContentEditorScope {
 		this.bold = data?.bold ?? false;
 		this.italic = data?.italic ?? false;
 		this.strike = data?.strike ?? false;
+		this.link = data?.link ?? false;
+		this.autolink = data?.autolink ?? false;
 		this.code = data?.code ?? false;
 		this.h1 = data?.h1 ?? false;
 		this.h2 = data?.h2 ?? false;
@@ -78,6 +83,7 @@ class ContentEditorScopeCapabilities {
 	italic: boolean;
 	strike: boolean;
 	code: boolean;
+	link: boolean;
 	h1: boolean;
 	h2: boolean;
 	emoji: boolean;
@@ -89,12 +95,14 @@ class ContentEditorScopeCapabilities {
 	blockquote: boolean;
 	spoiler: boolean;
 	hr: boolean;
+	mention: string;
 
 	constructor(data?: Partial<ContentEditorScopeCapabilities>) {
 		this.bold = data?.bold ?? false;
 		this.italic = data?.italic ?? false;
 		this.strike = data?.strike ?? false;
 		this.code = data?.code ?? false;
+		this.link = data?.link ?? false;
 		this.h1 = data?.h1 ?? false;
 		this.h2 = data?.h2 ?? false;
 		this.emoji = data?.emoji ?? false;
@@ -106,6 +114,7 @@ class ContentEditorScopeCapabilities {
 		this.blockquote = data?.blockquote ?? false;
 		this.spoiler = data?.spoiler ?? false;
 		this.hr = data?.hr ?? false;
+		this.mention = data?.mention ?? '';
 	}
 }
 
@@ -141,17 +150,14 @@ export function editorSyncScope(
 		contextCapabilities,
 		view: {
 			state,
-			state: {
-				schema,
-				selection: { $from },
-			},
+			state: { doc, schema, selection },
 		},
 	} = c;
 	const emojiNodeType = schema.nodes.gjEmoji;
-	const cursorIndex = $from.index();
+	const cursorIndex = selection.$from.index();
 	const node = editorGetSelectedNode(c);
 	const parentNode = node && editorGetParentNode(c, node);
-	const hasSelection = !state.selection.empty;
+	const hasSelection = !selection.empty;
 
 	/**
 	 * Whether or not our current scope can be marked.
@@ -176,8 +182,15 @@ export function editorSyncScope(
 	const isInHeading = headingNode !== null;
 	const headingLevel = headingNode !== null ? (headingNode.attrs.level as number) : null;
 
-	const coordsStart = isFocused ? c.view.coordsAtPos(state.selection.from) : null;
-	const coordsEnd = isFocused ? c.view.coordsAtPos(state.selection.to) : null;
+	const coordsStart = isFocused ? c.view.coordsAtPos(selection.from) : null;
+	const coordsEnd = isFocused ? c.view.coordsAtPos(selection.to) : null;
+
+	// Autolinks are somewhat special since it has an autolink attribute
+	// assigned, so we have to check it manually.
+	const hasAutolink =
+		canBeMarked &&
+		node?.isText &&
+		marksForSelection.some(i => i.type.name === 'link' && !!i.attrs.autolink);
 
 	c.scope = new ContentEditorScope({
 		isFocused,
@@ -190,6 +203,9 @@ export function editorSyncScope(
 		italic: hasMark('em'),
 		strike: hasMark('strike'),
 		code: hasMark('code'),
+		autolink: hasAutolink,
+		// Link and autolink are exclusive.
+		link: !hasAutolink && hasMark('link'),
 		h1: headingLevel === 1,
 		h2: headingLevel === 2,
 	});
@@ -201,16 +217,33 @@ export function editorSyncScope(
 		// wrap this current node in a heading or not.
 		(isInHeading || wrapIn(schema.nodes.heading, { level: 1 })(state));
 
+	let mention = '';
+	if (contextCapabilities.mention && node?.isText && !_checkNodeIsCode(node, parentNode)) {
+		const slice = doc.slice(0, selection.from);
+		const sliceText = _getFragmentText(slice.content);
+		const matches = BasicMentionRegex.exec(sliceText);
+
+		if (matches && matches.length >= 2) {
+			mention = matches[1];
+		}
+	}
+
 	c.capabilities = new ContentEditorScopeCapabilities({
 		emoji:
 			contextCapabilities.emoji &&
-			$from.parent.canReplaceWith(cursorIndex, cursorIndex, emojiNodeType),
+			selection.$from.parent.canReplaceWith(cursorIndex, cursorIndex, emojiNodeType),
+		mention,
 		...(canBeMarked
 			? {
 					bold: contextCapabilities.textBold,
 					italic: contextCapabilities.textItalic,
 					strike: contextCapabilities.textStrike,
 					code: contextCapabilities.textCode,
+					// Can't link/unlink if it's currently autolinked.
+					link:
+						!hasAutolink &&
+						contextCapabilities.textLink &&
+						contextCapabilities.customLink,
 					h1: canHeading,
 					h2: canHeading,
 			  }
@@ -441,6 +474,24 @@ export function editorToggleMark(
 	// TODO: Check against capabilities before doing this?
 
 	toggleMark(mark, attrs)(c.view.state, tr => c.view?.dispatch(tr));
+}
+
+export function editorLink(c: ContentEditorController, href: string, title?: string) {
+	// Allow them to link even if one is currently set so that it can overwrite.
+	if (!c.view) {
+		return;
+	}
+
+	editorToggleMark(c, c.view.state.schema.marks.link, { href, title });
+}
+
+export function editorUnlink(c: ContentEditorController) {
+	// Unlinking is just toggling the "link" mark when it's on.
+	if (!c.view || !c.scope.link) {
+		return;
+	}
+
+	editorToggleMark(c, c.view.state.schema.marks.link);
 }
 
 export function editorToggleHeading(c: ContentEditorController, level: 1 | 2) {
@@ -719,4 +770,55 @@ function _insertNewBlockNode(
 
 	view.focus();
 	view.dispatch(tr);
+}
+
+/**
+ * Returns whether the node passed in is within a code mark or code block.
+ */
+function _checkNodeIsCode(
+	node: Node<ContentEditorSchema>,
+	parentNode: null | Node<ContentEditorSchema>
+) {
+	if (node.type.name === 'text') {
+		return (
+			node.marks.some(i => i.type.name === 'code') || parentNode?.type.name === 'codeBlock'
+		);
+	}
+
+	return false;
+}
+
+/**
+ * Returns the string of text content within the fragment passed in.
+ */
+function _getFragmentText(frag: Fragment<ContentEditorSchema> | Node<ContentEditorSchema>) {
+	const textNodes = _getTextNodes(frag);
+
+	let text = '';
+	for (const textNode of textNodes) {
+		if (textNode.type.name === 'hardBreak') {
+			text += '\n';
+		} else {
+			text += textNode.text;
+		}
+	}
+	return text;
+}
+
+/**
+ * Loops through the fragment passed in and gets all the text nodes within it.
+ */
+function _getTextNodes(node: Fragment<ContentEditorSchema> | Node<ContentEditorSchema>) {
+	const nodes: Node<ContentEditorSchema>[] = [];
+
+	for (let i = 0; i < node.childCount; i++) {
+		const child = node.child(i);
+		if (child.isText || child.type.name === 'hardBreak') {
+			nodes.push(child);
+		} else {
+			nodes.push(..._getTextNodes(child));
+		}
+	}
+
+	return nodes;
 }

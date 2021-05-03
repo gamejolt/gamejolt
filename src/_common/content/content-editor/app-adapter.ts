@@ -15,11 +15,13 @@ import {
 	editorInsertHr,
 	editorInsertNumberedList,
 	editorInsertSpoiler,
+	editorLink,
 	editorMediaUploadCancel,
 	editorMediaUploadFinalize,
 	editorMediaUploadInsert,
 	editorToggleHeading,
 	editorToggleMark,
+	editorUnlink,
 } from './content-editor-controller';
 import { ContentEditorService } from './content-editor.service';
 import { MediaUploadTask } from './media-upload-task';
@@ -135,6 +137,8 @@ export class ContentEditorAppAdapterMessage {
 			| 'italic'
 			| 'strikethrough'
 			| 'code'
+			| 'link'
+			| 'unlink'
 			| 'h1'
 			| 'h2'
 			| 'bulletList'
@@ -184,6 +188,8 @@ export class ContentEditorAppAdapterMessage {
 				'italic',
 				'strike',
 				'code',
+				'link',
+				'autolink',
 				'h1',
 				'h2',
 			]),
@@ -192,6 +198,7 @@ export class ContentEditorAppAdapterMessage {
 				'italic',
 				'strike',
 				'code',
+				'link',
 				'h1',
 				'h2',
 				'emoji',
@@ -203,6 +210,7 @@ export class ContentEditorAppAdapterMessage {
 				'blockquote',
 				'spoiler',
 				'hr',
+				'mention',
 			]),
 		});
 	}
@@ -245,6 +253,12 @@ export class ContentEditorAppAdapterMessage {
 
 			case 'code':
 				return editorToggleMark(controller, marks.code);
+
+			case 'link':
+				return editorLink(controller, this.data.href, this.data.title);
+
+			case 'unlink':
+				return editorUnlink(controller);
 
 			case 'h1':
 				return editorToggleHeading(controller, 1);

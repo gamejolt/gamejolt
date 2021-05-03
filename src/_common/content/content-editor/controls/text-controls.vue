@@ -52,18 +52,6 @@
 					<app-jolticon icon="strikethrough" />
 				</button>
 				<button
-					v-if="contextCapabilities.textCode"
-					v-app-tooltip="$gettext('Code (Ctrl+`)')"
-					class="control-button"
-					:class="{
-						'control-button-active': hasMark('code'),
-					}"
-					@click.prevent="onClickCode"
-					@mousedown.prevent
-				>
-					<app-jolticon icon="brackets" />
-				</button>
-				<button
 					v-if="contextCapabilities.textLink && contextCapabilities.customLink"
 					v-app-tooltip="$gettext(isAutolink ? 'Autolinked' : 'Link (Ctrl+K)')"
 					class="control-button"
@@ -74,6 +62,18 @@
 					@mousedown.prevent
 				>
 					<app-jolticon icon="link" />
+				</button>
+				<button
+					v-if="contextCapabilities.textCode"
+					v-app-tooltip="$gettext('Code (Ctrl+`)')"
+					class="control-button"
+					:class="{
+						'control-button-active': hasMark('code'),
+					}"
+					@click.prevent="onClickCode"
+					@mousedown.prevent
+				>
+					<app-jolticon icon="brackets" />
 				</button>
 
 				<template v-if="shouldShowHeading">
