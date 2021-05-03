@@ -55,6 +55,9 @@ export default class RoutePost extends BaseRouteComponent {
 	post: FiresidePost | null = null;
 	communityNotifications: CommunityUserNotification[] = [];
 
+	/** @override */
+	disableRouteTitleSuffix = true;
+
 	private permalinkWatchDeregister?: CommentThreadModalPermalinkDeregister;
 
 	get theme() {
@@ -69,8 +72,6 @@ export default class RoutePost extends BaseRouteComponent {
 		if (!this.post) {
 			return null;
 		}
-
-		this.disableRouteTitleSuffix = true;
 
 		const lead = this.post.getShortLead();
 		const user = this.post.user.display_name;

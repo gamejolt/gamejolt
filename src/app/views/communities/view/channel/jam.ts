@@ -1,30 +1,48 @@
 import Component from 'vue-class-component';
 import { Inject } from 'vue-property-decorator';
-import { arrayRemove } from '../../../../../../utils/array';
-import { Api } from '../../../../../../_common/api/api.service';
-import { CompetitionPeriodVoting } from '../../../../../../_common/community/competition/competition.model';
-import { CommunityCompetitionEntry } from '../../../../../../_common/community/competition/entry/entry.model';
-import { CommunityCompetitionEntrySubmitModal } from '../../../../../../_common/community/competition/entry/submit-modal/submit-modal.service';
-import { CommunityCompetitionVotingCategory } from '../../../../../../_common/community/competition/voting-category/voting-category.model';
-import { number } from '../../../../../../_common/filters/number';
-import { Growls } from '../../../../../../_common/growls/growls.service';
-import AppIllustration from '../../../../../../_common/illustration/illustration.vue';
-import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
-import { Screen } from '../../../../../../_common/screen/screen-service';
-import { AppState, AppStore } from '../../../../../../_common/store/app-store';
-import AppCommunityCompetitionEntryGrid from '../../../../../components/community/competition/entry/grid/grid.vue';
+import { router } from '../../..';
+import { arrayRemove } from '../../../../../utils/array';
+import { Api } from '../../../../../_common/api/api.service';
+import { CompetitionPeriodVoting } from '../../../../../_common/community/competition/competition.model';
+import { CommunityCompetitionEntry } from '../../../../../_common/community/competition/entry/entry.model';
+import { CommunityCompetitionEntrySubmitModal } from '../../../../../_common/community/competition/entry/submit-modal/submit-modal.service';
+import { CommunityCompetitionVotingCategory } from '../../../../../_common/community/competition/voting-category/voting-category.model';
+import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
+import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
+import { date } from '../../../../../_common/filters/date';
+import { number } from '../../../../../_common/filters/number';
+import { Growls } from '../../../../../_common/growls/growls.service';
+import AppIllustration from '../../../../../_common/illustration/illustration.vue';
+import {
+	asyncRouteLoader,
+	BaseRouteComponent,
+	RouteResolver,
+} from '../../../../../_common/route/route-component';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import AppCommunityCompetitionCountdown from '../../../../components/community/competition/countdown/countdown.vue';
+import AppCommunityCompetitionEntryGrid from '../../../../components/community/competition/entry/grid/grid.vue';
+import { AppCommunityPerms } from '../../../../components/community/perms/perms';
 import {
 	CommunityRouteStore,
 	CommunityRouteStoreKey,
 	getChannelPathFromRoute,
 	setCommunityMeta,
-} from '../../view.store';
+} from '../view.store';
+import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 
 @Component({
-	name: 'RouteCommunitiesViewChannelEntries',
+	name: 'RouteCommunitiesViewChannelJam',
 	components: {
 		AppIllustration,
+		AppCommunitiesViewPageContainer,
 		AppCommunityCompetitionEntryGrid,
+		AppCommunityCompetitionCountdown,
+		AppFadeCollapse,
+		AppContentViewer,
+		AppCommunityPerms,
+		RouteCommunitiesViewChannelJamEntries: () =>
+			asyncRouteLoader(import('./jam-entries.vue'), router),
 	},
 })
 @RouteResolver({
@@ -36,7 +54,7 @@ import {
 		);
 	},
 })
-export default class RouteCommunitiesViewChannelEntries extends BaseRouteComponent {
+export default class RouteCommunitiesViewChannelJam extends BaseRouteComponent {
 	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
 
 	@AppState
@@ -44,10 +62,16 @@ export default class RouteCommunitiesViewChannelEntries extends BaseRouteCompone
 
 	readonly number = number;
 	readonly Screen = Screen;
+	readonly date = date;
 
+	canToggleDescription = false;
+	isDescriptionOpen = false;
 	isLoading = true;
 	userEntries: CommunityCompetitionEntry[] = [];
 	categories: CommunityCompetitionVotingCategory[] = [];
+
+	/** @override */
+	disableRouteTitleSuffix = true;
 
 	get community() {
 		return this.routeStore.community;
@@ -100,8 +124,9 @@ export default class RouteCommunitiesViewChannelEntries extends BaseRouteCompone
 	}
 
 	get routeTitle() {
-		return this.$gettextInterpolate(`%{ name } Entries`, {
-			name: this.channel.displayTitle,
+		return this.$gettextInterpolate(`%{ channel } - %{ name } Community on Game Jolt`, {
+			name: this.community.name,
+			channel: this.channel.displayTitle,
 		});
 	}
 
@@ -117,6 +142,14 @@ export default class RouteCommunitiesViewChannelEntries extends BaseRouteCompone
 		if (this.routeTitle) {
 			setCommunityMeta(this.community, this.routeTitle);
 		}
+	}
+
+	toggleDescription() {
+		this.isDescriptionOpen = !this.isDescriptionOpen;
+	}
+
+	canToggleDescriptionChanged(canToggle: boolean) {
+		this.canToggleDescription = canToggle;
 	}
 
 	async onClickSubmit() {

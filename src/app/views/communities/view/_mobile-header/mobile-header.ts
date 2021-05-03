@@ -14,7 +14,6 @@ import { SidebarState, SidebarStore } from '../../../../../_common/sidebar/sideb
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { AppTheme } from '../../../../../_common/theme/theme';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { CommunityCompetitionSidebarModal } from '../../../../components/community/competition/sidebar/modal/modal.service';
 import { CommunitySidebarModal } from '../../../../components/community/sidebar/modal/modal.service';
 import { Store } from '../../../../store';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
@@ -74,8 +73,10 @@ export default class AppMobileHeader extends Vue {
 	}
 
 	get shouldShowAbout() {
+		// It's too confusing to see an "About" button for the community as well
+		// as the jam info.
 		if (this.isJam) {
-			return Screen.isMobile;
+			return false;
 		}
 
 		if (this.routeStore.sidebarData) {
@@ -90,14 +91,9 @@ export default class AppMobileHeader extends Vue {
 	}
 
 	onClickAbout() {
-		const { sidebarData, community, channel } = this.routeStore;
+		const { sidebarData, community } = this.routeStore;
 
-		if (channel?.type === 'competition') {
-			CommunityCompetitionSidebarModal.show({
-				community: community,
-				channel: channel,
-			});
-		} else if (sidebarData) {
+		if (sidebarData) {
 			CommunitySidebarModal.show({
 				isEditing: false,
 				data: sidebarData,

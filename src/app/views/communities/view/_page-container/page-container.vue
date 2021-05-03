@@ -1,3 +1,5 @@
+<script lang="ts" src="./page-container"></script>
+
 <template>
 	<div class="-container">
 		<div v-if="Screen.isLg && !full" class="-offset" />
@@ -89,5 +91,3 @@ $-sidebar-basis = $-sidebar-width - $-offset-width
 		&.-none
 			margin: 0
 </style>
-
-<script lang="ts" src="./page-container"></script>

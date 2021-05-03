@@ -1,7 +1,7 @@
 <script lang="ts" src="./communities"></script>
 
 <template>
-	<div class="container-xl">
+	<div class="container">
 		<div class="text-center">
 			<h2 class="section-header">
 				<translate>Browse Communities</translate>
@@ -21,11 +21,12 @@
 			<div
 				v-for="community of slicedCommunities"
 				:key="community.id"
-				class="col-xs-6 col-sm-3 col-md-2"
+				class="col-sm-6 col-md-4 col-lg-3 anim-fade-in"
 			>
-				<app-discover-home-communities-item
+				<app-community-card
 					v-app-track-event="`home:communities:click`"
 					:community="community"
+					elevate
 				/>
 			</div>
 		</div>

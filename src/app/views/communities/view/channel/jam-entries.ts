@@ -1,29 +1,27 @@
 import Component from 'vue-class-component';
 import { Inject, Prop, Watch } from 'vue-property-decorator';
 import { Route } from 'vue-router/types/router';
-import { propRequired } from '../../../../../../../utils/vue';
-import { Api } from '../../../../../../../_common/api/api.service';
-import { CommunityCompetitionEntry } from '../../../../../../../_common/community/competition/entry/entry.model';
-import { CommunityCompetitionVotingCategory } from '../../../../../../../_common/community/competition/voting-category/voting-category.model';
-import { number } from '../../../../../../../_common/filters/number';
-import AppIllustration from '../../../../../../../_common/illustration/illustration.vue';
-import AppPagination from '../../../../../../../_common/pagination/pagination.vue';
-import AppPopper from '../../../../../../../_common/popper/popper.vue';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../../../../_common/route/route-component';
-import { AppNoAutoscroll } from '../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
-import AppCommunityCompetitionEntryGrid from '../../../../../../components/community/competition/entry/grid/grid.vue';
+import { propRequired } from '../../../../../utils/vue';
+import { Api } from '../../../../../_common/api/api.service';
+import { CommunityCompetitionEntry } from '../../../../../_common/community/competition/entry/entry.model';
+import { CommunityCompetitionVotingCategory } from '../../../../../_common/community/competition/voting-category/voting-category.model';
+import { number } from '../../../../../_common/filters/number';
+import AppIllustration from '../../../../../_common/illustration/illustration.vue';
+import AppPagination from '../../../../../_common/pagination/pagination.vue';
+import AppPopper from '../../../../../_common/popper/popper.vue';
+import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { AppNoAutoscroll } from '../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
+import { Scroll } from '../../../../../_common/scroll/scroll.service';
+import AppCommunityCompetitionEntryGrid from '../../../../components/community/competition/entry/grid/grid.vue';
 import {
 	CommunityCompetitionEntryModal,
 	CommunityCompetitionEntryModalHashDeregister,
-} from '../../../../../../components/community/competition/entry/modal/modal.service';
+} from '../../../../components/community/competition/entry/modal/modal.service';
 import {
 	CommunityRouteStore,
 	CommunityRouteStoreKey,
 	getChannelPathFromRoute,
-} from '../../../view.store';
+} from '../view.store';
 
 function getSeedSessionStorageKey(route: Route) {
 	return (
@@ -113,7 +111,7 @@ function makeRequest(route: Route) {
 		query.push(['page', page]);
 	}
 
-	const seed = sessionStorage.getItem(getSeedSessionStorageKey(route));
+	const seed = GJ_IS_SSR ? null : sessionStorage.getItem(getSeedSessionStorageKey(route));
 	if (seed) {
 		query.push(['seed', seed]);
 	}
@@ -131,7 +129,7 @@ function makeRequest(route: Route) {
 }
 
 @Component({
-	name: 'RouteCommunitiesViewChannelEntriesGrid',
+	name: 'RouteCommunitiesViewChannelJamEntries',
 	components: {
 		AppPopper,
 		AppCommunityCompetitionEntryGrid,
@@ -149,7 +147,7 @@ function makeRequest(route: Route) {
 	},
 	resolver: ({ route }) => makeRequest(route),
 })
-export default class RouteCommunitiesViewChannelEntriesGrid extends BaseRouteComponent {
+export default class RouteCommunitiesViewChannelJamEntries extends BaseRouteComponent {
 	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
 
 	@Prop(propRequired(Array)) categories!: CommunityCompetitionVotingCategory[];
@@ -298,7 +296,9 @@ export default class RouteCommunitiesViewChannelEntriesGrid extends BaseRouteCom
 		if (!this.isRouteBootstrapped) {
 			return;
 		}
+
 		if (this.$route.query.sort !== 'new' || this.$route.query.page !== undefined) {
+			Scroll.shouldAutoScroll = false;
 			this.$router.push({
 				query: {
 					sort: 'new',
@@ -319,8 +319,7 @@ export default class RouteCommunitiesViewChannelEntriesGrid extends BaseRouteCom
 	}
 
 	async reloadPage() {
-		const request = makeRequest(this.$route);
-		const payload = await request;
+		const payload = await makeRequest(this.$route);
 		this.handlePayload(payload);
 	}
 
@@ -333,7 +332,7 @@ export default class RouteCommunitiesViewChannelEntriesGrid extends BaseRouteCom
 
 		// If we receive a seed from backend, store it so it can be sent with the next request.
 		const seed = $payload.seed;
-		if (seed) {
+		if (seed && !GJ_IS_SSR) {
 			sessionStorage.setItem(getSeedSessionStorageKey(this.$route), seed);
 		}
 	}
