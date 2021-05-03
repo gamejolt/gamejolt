@@ -178,7 +178,7 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 		this.activeImageIndex = Math.max(this.activeImageIndex - 1, 0);
 	}
 
-	onProcessingComplete(payload: any) {
+	onVideoProcessingComplete(payload: any) {
 		if (payload.video && this.video) {
 			this.video.assign(payload.video);
 		}

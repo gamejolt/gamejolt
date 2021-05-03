@@ -20,7 +20,7 @@
 						<template v-else>
 							<app-video-processing-progress
 								:post="post"
-								@complete="onProcessingComplete"
+								@complete="onVideoProcessingComplete"
 							/>
 						</template>
 					</template>
