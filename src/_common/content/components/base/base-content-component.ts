@@ -8,14 +8,11 @@ import { AppTooltip } from '../../../tooltip/tooltip-directive';
 	},
 })
 export default class AppBaseContentComponent extends Vue {
-	@Prop(Boolean)
-	isEditing!: boolean;
+	@Prop(Boolean) isEditing!: boolean;
+	@Prop(Boolean) showEdit!: boolean;
+	@Prop(Boolean) isDisabled!: boolean;
 
-	@Prop(Boolean)
-	showEdit!: boolean;
-
-	@Prop(Boolean)
-	isDisabled!: boolean;
+	readonly GJ_IS_APP = GJ_IS_APP;
 
 	onRemovedClicked() {
 		if (!this.isDisabled) {
