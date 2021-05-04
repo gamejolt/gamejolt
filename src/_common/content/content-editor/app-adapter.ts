@@ -13,6 +13,7 @@ import {
 	editorInsertCodeBlock,
 	editorInsertEmoji,
 	editorInsertHr,
+	editorInsertMention,
 	editorInsertNumberedList,
 	editorInsertSpoiler,
 	editorLink,
@@ -148,6 +149,7 @@ export class ContentEditorAppAdapterMessage {
 			| 'hr'
 			| 'codeBlock'
 			| 'emoji'
+			| 'mention'
 			| 'mediaUploadStart'
 			| 'mediaUploadProgress'
 			| 'mediaUploadFinalize'
@@ -175,24 +177,31 @@ export class ContentEditorAppAdapterMessage {
 	static syncScope(controller: ContentEditorController) {
 		const scope = controller.scope;
 		const cap = controller.capabilities;
+		const {
+			state: { selection },
+		} = controller.view!;
 
 		return new ContentEditorAppAdapterMessage('scope', {
-			s: objectPick(scope, [
-				'isFocused',
-				'hasSelection',
-				'cursorStartTop',
-				'cursorStartBottom',
-				'cursorEndTop',
-				'cursorEndBottom',
-				'bold',
-				'italic',
-				'strike',
-				'code',
-				'link',
-				'autolink',
-				'h1',
-				'h2',
-			]),
+			s: {
+				...objectPick(scope, [
+					'isFocused',
+					'hasSelection',
+					'cursorStartTop',
+					'cursorStartBottom',
+					'cursorEndTop',
+					'cursorEndBottom',
+					'bold',
+					'italic',
+					'strike',
+					'code',
+					'link',
+					'autolink',
+					'h1',
+					'h2',
+				]),
+				cursorStartPos: selection.anchor,
+				cursorEndPos: selection.head,
+			},
 			c: objectPick(cap, [
 				'bold',
 				'italic',
@@ -255,7 +264,10 @@ export class ContentEditorAppAdapterMessage {
 				return editorToggleMark(controller, marks.code);
 
 			case 'link':
-				return editorLink(controller, this.data.href, this.data.title);
+				return editorLink(controller, this.data.href, {
+					from: this.data.from,
+					to: this.data.to,
+				});
 
 			case 'unlink':
 				return editorUnlink(controller);
@@ -286,6 +298,9 @@ export class ContentEditorAppAdapterMessage {
 
 			case 'emoji':
 				return editorInsertEmoji(controller, this.data.type);
+
+			case 'mention':
+				return editorInsertMention(controller, this.data.username);
 
 			case 'mediaUploadStart': {
 				const uploadTask = new MediaUploadTask(

@@ -1,6 +1,6 @@
 import { lift, toggleMark, wrapIn } from 'prosemirror-commands';
 import { Fragment, Mark, MarkType, Node, NodeType } from 'prosemirror-model';
-import { Selection, Transaction } from 'prosemirror-state';
+import { Selection, TextSelection, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import Vue from 'vue';
 import { isImage } from '../../../utils/image';
@@ -218,7 +218,13 @@ export function editorSyncScope(
 		(isInHeading || wrapIn(schema.nodes.heading, { level: 1 })(state));
 
 	let mention = '';
-	if (contextCapabilities.mention && node?.isText && !_checkNodeIsCode(node, parentNode)) {
+	if (
+		canBeMarked &&
+		contextCapabilities.mention &&
+		node?.isText &&
+		!hasSelection &&
+		!_checkNodeIsCode(node, parentNode)
+	) {
 		const slice = doc.slice(0, selection.from);
 		const sliceText = _getFragmentText(slice.content);
 		const matches = BasicMentionRegex.exec(sliceText);
@@ -476,13 +482,33 @@ export function editorToggleMark(
 	toggleMark(mark, attrs)(c.view.state, tr => c.view?.dispatch(tr));
 }
 
-export function editorLink(c: ContentEditorController, href: string, title?: string) {
+export function editorLink(
+	c: ContentEditorController,
+	href: string,
+	options?: { from?: number; to?: number }
+) {
 	// Allow them to link even if one is currently set so that it can overwrite.
 	if (!c.view) {
 		return;
 	}
 
-	editorToggleMark(c, c.view.state.schema.marks.link, { href, title });
+	const {
+		view,
+		view: {
+			state: { tr, doc, schema },
+		},
+	} = c;
+
+	// If a range was passed in, set the link on this instead of what's currently selected.
+	if (options?.from && options?.to) {
+		const { from, to } = options;
+		const newSelection = new TextSelection(doc.resolve(from), doc.resolve(to));
+		tr.setSelection(newSelection);
+		view.dispatch(tr);
+		view.focus();
+	}
+
+	editorToggleMark(c, schema.marks.link, { href });
 }
 
 export function editorUnlink(c: ContentEditorController) {
@@ -632,6 +658,26 @@ export function editorInsertGif(c: ContentEditorController, gif: SearchResult) {
 			url: gif.url,
 		})
 	);
+}
+
+export function editorInsertMention(c: ContentEditorController, username: string) {
+	if (!c.view || !c.capabilities.mention) {
+		return;
+	}
+
+	const {
+		view,
+		view: {
+			state: { selection, tr },
+		},
+	} = c;
+
+	const start = selection.from - c.capabilities.mention.length - 1;
+	const end = selection.from;
+
+	// Add space to the end.
+	tr.insertText(`@${username} `, start, end);
+	view.dispatch(tr);
 }
 
 /**
