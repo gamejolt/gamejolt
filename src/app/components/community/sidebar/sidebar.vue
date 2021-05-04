@@ -1,3 +1,5 @@
+<script lang="ts" src="./sidebar"></script>
+
 <template>
 	<div>
 		<div v-if="shouldShowKnownMembers">
@@ -14,18 +16,18 @@
 			<br />
 		</div>
 
-		<app-community-description :community="community" :is-editing="isEditing" :key="community.id" />
+		<app-community-description
+			:key="community.id"
+			:community="community"
+			:is-editing="isEditing"
+		/>
 
 		<div v-if="shouldShowGames" class="-game-list">
 			<div class="clearfix">
-				<div class="pull-right" v-if="hasMoreGames">
+				<div v-if="hasMoreGames" class="pull-right">
 					<app-button trans @click="toggleGamesList">
-						<translate v-if="gameListCollapsed">
-							View All
-						</translate>
-						<translate v-else>
-							Show fewer
-						</translate>
+						<translate v-if="gameListCollapsed"> View All </translate>
+						<translate v-else> Show fewer </translate>
 					</app-button>
 				</div>
 
@@ -38,8 +40,12 @@
 
 		<div class="-mod-list">
 			<div class="clearfix">
-				<div class="pull-right" v-if="hasMoreCollaborators">
-					<app-button trans :disabled="isLoadingMoreCollaborators" @click="toggleCollaboratorList">
+				<div v-if="hasMoreCollaborators" class="pull-right">
+					<app-button
+						trans
+						:disabled="isLoadingMoreCollaborators"
+						@click="toggleCollaboratorList"
+					>
 						<translate v-if="collaboratorListCollapsed || isLoadingMoreCollaborators">
 							View All
 						</translate>
@@ -64,7 +70,11 @@
 									class="img-responsive -mod-avatar-img"
 									alt=""
 								/>
-								<app-jolticon class="-mod-verified" v-if="user.is_verified" icon="verified" />
+								<app-jolticon
+									v-if="user.is_verified"
+									class="-mod-verified"
+									icon="verified"
+								/>
 							</span>
 						</span>
 					</router-link>
@@ -76,31 +86,43 @@
 		</div>
 
 		<div class="-community-end small">
-			<app-popper
-				popover-class="fill-darkest"
-				@show="isShowingShare = true"
-				@hide="isShowingShare = false"
-			>
-				<a>
-					<translate>Share this community</translate>
-				</a>
+			<div>
+				<app-popper
+					popover-class="fill-darkest"
+					@show="isShowingShare = true"
+					@hide="isShowingShare = false"
+				>
+					<a>
+						<translate>Share this community</translate>
+					</a>
 
-				<div slot="popover" class="well sans-margin" v-if="isShowingShare">
-					<div class="social-widgets" v-if="!GJ_IS_CLIENT">
-						<app-social-twitter-share :url="shareUrl" :content="shareContent" />
+					<template v-if="isShowingShare" #popover>
+						<div class="well sans-margin">
+							<div v-if="!GJ_IS_CLIENT" class="social-widgets">
+								<app-social-twitter-share :url="shareUrl" :content="shareContent" />
 
-						<span class="dot-separator"></span>
+								<span class="dot-separator" />
 
-						<app-social-facebook-like :url="shareUrl" />
-					</div>
+								<app-social-facebook-like :url="shareUrl" />
+							</div>
 
-					<app-button block @click="copyShareUrl">
-						<translate>Copy Link</translate>
-					</app-button>
-				</div>
-			</app-popper>
+							<app-button block @click="copyShareUrl">
+								<translate>Copy Link</translate>
+							</app-button>
+						</div>
+					</template>
+				</app-popper>
 
-			<div class="text-muted ">
+				<template v-if="shouldShowReport">
+					<span class="dot-separator" />
+
+					<a @click="onClickReport">
+						<translate>Report</translate>
+					</a>
+				</template>
+			</div>
+
+			<div class="text-muted">
 				A community for
 				<app-time-ago :date="community.added_on" without-suffix />
 			</div>
@@ -109,8 +131,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .-mod-list-entry
 	margin-bottom: ($line-height-computed / 4)
@@ -143,7 +165,4 @@
 
 .-community-end
 	margin-top: $line-height-computed * 1.5
-
 </style>
-
-<script lang="ts" src="./sidebar"></script>
