@@ -111,6 +111,8 @@ export default class AppContentMediaUpload extends Vue {
 
 		return new MediaItem(payload.mediaItem);
 
+		// TODO: We should be getting this info before instead of showing after the failure.
+
 		//  else if (!payload.success && payload.errors.file) {
 		// 	const sizePayload = await Api.sendRequest('/web/dash/media-items', undefined, {
 		// 		detach: true,

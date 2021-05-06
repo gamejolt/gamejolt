@@ -12,6 +12,7 @@ import {
 	editorInsertBulletList,
 	editorInsertCodeBlock,
 	editorInsertEmoji,
+	editorInsertGif,
 	editorInsertHr,
 	editorInsertMention,
 	editorInsertNumberedList,
@@ -149,6 +150,7 @@ export class ContentEditorAppAdapterMessage {
 			| 'hr'
 			| 'codeBlock'
 			| 'emoji'
+			| 'gif'
 			| 'mention'
 			| 'mediaUploadStart'
 			| 'mediaUploadProgress'
@@ -298,6 +300,9 @@ export class ContentEditorAppAdapterMessage {
 
 			case 'emoji':
 				return editorInsertEmoji(controller, this.data.type);
+
+			case 'gif':
+				return editorInsertGif(controller, this.data.result);
 
 			case 'mention':
 				return editorInsertMention(controller, this.data.username);
