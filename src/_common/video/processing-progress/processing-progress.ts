@@ -43,10 +43,10 @@ export default class AppVideoProcessingProgress extends Vue {
 	@Emit('complete') emitComplete(_payload: any) {}
 	@Emit('error') emitError(_payload: any) {}
 
-	onProgress({ videoPosterImgUrl }: any, progress: number, isInditerminate: boolean) {
+	onProgress({ videoPosterImgUrl }: any, progress: number, isIndeterminate: boolean) {
 		this.hasData = true;
 		this.videoPosterImgUrl = videoPosterImgUrl;
-		this.isIndeterminate = isInditerminate;
+		this.isIndeterminate = isIndeterminate;
 		this.progress = progress;
 	}
 }

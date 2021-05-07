@@ -7,6 +7,7 @@ import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
 import AppCommunityPill from '../../../../../_common/community/pill/pill.vue';
+import { ContentRules } from '../../../../../_common/content/content-editor/content-rules';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
@@ -37,7 +38,6 @@ import AppEventItemControls from '../../../event-item/controls/controls.vue';
 import AppFiresidePostEmbed from '../../../fireside/post/embed/embed.vue';
 import AppPollVoting from '../../../poll/voting/voting.vue';
 import AppActivityFeedDevlogPostMedia from '../devlog-post/media/media.vue';
-import AppActivityFeedDevlogPostSketchfab from '../devlog-post/sketchfab/sketchfab.vue';
 import AppActivityFeedDevlogPostText from '../devlog-post/text/text.vue';
 import AppActivityFeedDevlogPostVideo from '../devlog-post/video/video.vue';
 import AppActivityFeedTS from '../feed';
@@ -54,7 +54,6 @@ import AppActivityFeedEventItemTime from './time/time.vue';
 		AppUserAvatar,
 		AppUserFollowWidget,
 		AppActivityFeedDevlogPostMedia,
-		AppActivityFeedDevlogPostSketchfab,
 		AppActivityFeedDevlogPostVideo,
 		AppActivityFeedDevlogPostText,
 		AppEventItemControls,
@@ -247,6 +246,13 @@ export default class AppActivityFeedEventItem extends Vue {
 			return false;
 		}
 		return canPlaceStickerOnFiresidePost(this.post);
+	}
+
+	get displayRules() {
+		// For feeds we want to truncate links, the full links can be seen:
+		// - on the post apge
+		// - when hovering (html title) or on navigation
+		return new ContentRules({ truncateLinks: true });
 	}
 
 	mounted() {

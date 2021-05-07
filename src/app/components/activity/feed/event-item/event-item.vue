@@ -96,13 +96,6 @@
 					@query-param="onQueryParam"
 				/>
 
-				<app-activity-feed-devlog-post-sketchfab
-					v-if="post.hasSketchfab"
-					:item="item"
-					:post="post"
-					@click.native.stop
-				/>
-
 				<app-activity-feed-devlog-post-media
 					v-if="post.hasMedia"
 					:item="item"
@@ -129,6 +122,7 @@
 						<app-content-viewer
 							class="fireside-post-lead"
 							:source="post.lead_content"
+							:display-rules="displayRules"
 						/>
 					</app-fade-collapse>
 				</app-sticker-target>

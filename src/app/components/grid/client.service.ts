@@ -9,6 +9,7 @@ import { Community } from '../../../_common/community/community.model';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { FiresidePostCommunity } from '../../../_common/fireside/post/community/community.model';
+import { FiresidePostGotoGrowl } from '../../../_common/fireside/post/goto-growl/goto-growl.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { GameTrophy } from '../../../_common/game/trophy/trophy.model';
 import { Growls } from '../../../_common/growls/growls.service';
@@ -95,6 +96,16 @@ interface StickerUnlockPayload {
 	sticker_img_urls: string[];
 }
 
+interface PostUpdatedPayload {
+	post_id: number;
+	/** Contains payload data for a `FiresidePost` resource. */
+	post_data: any;
+	/** `true` when the post was just published in the chain of events. */
+	was_published: boolean;
+	/** (Only set when `was_published` is true) Indicate whether this post was scheduled before it was automatically published. */
+	was_scheduled: boolean;
+}
+
 export interface ClearNotificationsEventData extends ClearNotificationsPayload {
 	currentCount: number;
 }
@@ -153,7 +164,7 @@ let connectionResolvers: (() => void)[] = [];
  * Resolves once Grid is fully connected.
  */
 function tillConnection(client: GridClient) {
-	return new Promise(resolve => {
+	return new Promise<void>(resolve => {
 		if (client.connected) {
 			resolve();
 		} else {
@@ -261,7 +272,7 @@ export class GridClient {
 		await pollRequest(
 			'Connect to socket',
 			() =>
-				new Promise(resolve => {
+				new Promise<void>(resolve => {
 					if (this.socket !== null) {
 						this.socket.connect();
 					}
@@ -278,7 +289,7 @@ export class GridClient {
 		await pollRequest(
 			'Join user notification channel',
 			() =>
-				new Promise((resolve, reject) => {
+				new Promise<void>((resolve, reject) => {
 					channel
 						.join()
 						.receive('error', reject)
@@ -322,6 +333,10 @@ export class GridClient {
 
 		channel.on('sticker-unlock', (payload: StickerUnlockPayload) => {
 			this.handleStickerUnlock(payload);
+		});
+
+		channel.on('post-updated', (payload: PostUpdatedPayload) => {
+			this.handlePostUpdated(payload);
 		});
 
 		this.joinCommunities();
@@ -469,6 +484,15 @@ export class GridClient {
 		EventBus.emit(GRID_EVENT_NEW_STICKER, sticker_img_urls);
 	}
 
+	handlePostUpdated({ post_data, was_scheduled, was_published }: PostUpdatedPayload) {
+		const post = new FiresidePost(post_data);
+
+		if (was_published) {
+			// Send out a growl to let the user know that their post was updated.
+			FiresidePostGotoGrowl.show(post, was_scheduled ? 'scheduled-publish' : 'publish');
+		}
+	}
+
 	spawnNotification(notification: Notification) {
 		const feedType = notification.feedType;
 		if (feedType !== '') {
@@ -602,7 +626,7 @@ export class GridClient {
 			await pollRequest(
 				`Join community channel '${community.name}' (${community.id})`,
 				() =>
-					new Promise((resolve, reject) => {
+					new Promise<void>((resolve, reject) => {
 						channel
 							.join()
 							.receive('error', reject)

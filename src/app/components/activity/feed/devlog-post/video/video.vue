@@ -13,7 +13,7 @@
 			/>
 		</template>
 		<div v-else class="well sans-rounded fill-offset">
-			<app-video-processing-progress :post="post" @complete="onProcessingComplete" />
+			<app-video-processing-progress :post="post" @complete="onVideoProcessingComplete" />
 		</div>
 	</div>
 </template>

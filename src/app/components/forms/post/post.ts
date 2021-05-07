@@ -24,7 +24,7 @@ import {
 	FormOnLoad,
 	FormOnSubmit,
 	FormOnSubmitError,
-	FormOnSubmitSuccess
+	FormOnSubmitSuccess,
 } from '../../../../_common/form-vue/form.service';
 import AppFormLegend from '../../../../_common/form-vue/legend/legend.vue';
 import { GameVideo } from '../../../../_common/game/video/video.model';
@@ -37,11 +37,6 @@ import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppScrollWhen } from '../../../../_common/scroll/scroll-when.directive';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
-import {
-	getSketchfabIdFromInput,
-	SKETCHFAB_FIELD_VALIDATION_REGEX
-} from '../../../../_common/sketchfab/embed/embed';
-import AppSketchfabEmbed from '../../../../_common/sketchfab/embed/embed.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { Timezone, TimezoneData } from '../../../../_common/timezone/timezone.service';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
@@ -59,7 +54,6 @@ type FormPostModel = FiresidePost & {
 	publishToPlatforms: number[] | null;
 	key_group_ids: number[];
 	video_id: number;
-	sketchfab_id: string;
 	attached_communities: { community_id: number; channel_id: number }[];
 
 	poll_item_count: number;
@@ -87,7 +81,6 @@ type FormPostModel = FiresidePost & {
 		AppFormControlToggle,
 		AppFormControlUpload,
 		AppFormLegend,
-		AppSketchfabEmbed,
 		AppVideoEmbed,
 		AppLoading,
 		AppUserAvatarImg,
@@ -124,8 +117,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 	$refs!: {
 		form: AppForm;
 	};
-
-	readonly SKETCHFAB_FIELD_REGEX = SKETCHFAB_FIELD_VALIDATION_REGEX;
 
 	readonly MAX_POLL_ITEMS = 10;
 	readonly MIN_POLL_DURATION = 5;
@@ -189,21 +180,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 	get enabledVideo() {
 		return this.enabledAttachments && this.attachmentType === FiresidePost.TYPE_VIDEO;
-	}
-
-	get enabledSketchfab() {
-		return this.enabledAttachments && this.attachmentType === FiresidePost.TYPE_SKETCHFAB;
-	}
-
-	get hasValidSketchfabModelId() {
-		return (
-			this.formModel.sketchfab_id &&
-			this.formModel.sketchfab_id.match(this.SKETCHFAB_FIELD_REGEX)
-		);
-	}
-
-	get sketchfabId() {
-		return getSketchfabIdFromInput(this.formModel.sketchfab_id);
 	}
 
 	get hasOptionalData() {
@@ -381,9 +357,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 		if (model.videos.length) {
 			this.enableVideo();
-		} else if (model.sketchfabs.length) {
-			this.setField('sketchfab_id', model.sketchfabs[0].sketchfab_id);
-			this.enableSketchfab();
 		} else if (model.hasMedia) {
 			this.enableImages();
 		} else if (this.attachmentType !== '') {
@@ -565,12 +538,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 			this.setField('video_id', 0);
 		}
 
-		if (this.attachmentType === FiresidePost.TYPE_SKETCHFAB && this.formModel.sketchfab_id) {
-			this.setField('sketchfab_id', this.sketchfabId);
-		} else {
-			this.setField('sketchfab_id', '');
-		}
-
 		if (!this.accessPermissionsEnabled) {
 			this.setField('key_group_ids', []);
 		}
@@ -650,16 +617,10 @@ export default class FormPost extends BaseForm<FormPostModel>
 		this.attachmentType = FiresidePost.TYPE_VIDEO;
 	}
 
-	enableSketchfab() {
-		this.enabledAttachments = true;
-		this.attachmentType = FiresidePost.TYPE_SKETCHFAB;
-	}
-
 	disableAttachments() {
 		this.enabledAttachments = false;
 		this.attachmentType = '';
 
-		this.setField('sketchfab_id', '');
 		this.setField('media', []);
 		this.setField('videos', []);
 	}
@@ -834,7 +795,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 	}
 
 	async onPaste(e: ClipboardEvent) {
-		// Do not react to paste events when videos/sketchfab is selected.
+		// Do not react to paste events when "Images" is not selected.
 		if (!!this.attachmentType && this.attachmentType !== FiresidePost.TYPE_MEDIA) {
 			return;
 		}

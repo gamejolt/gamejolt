@@ -26,6 +26,6 @@ export default class AppEventItemControlsFiresidePostStats extends Vue {
 	}
 
 	get shouldShowStats() {
-		return this.hasPerms && this.post.isActive;
+		return this.hasPerms && this.post.isActive && !this.post.is_processing;
 	}
 }

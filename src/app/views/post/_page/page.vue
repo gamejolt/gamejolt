@@ -20,7 +20,7 @@
 						<template v-else>
 							<app-video-processing-progress
 								:post="post"
-								@complete="onProcessingComplete"
+								@complete="onVideoProcessingComplete"
 							/>
 						</template>
 					</template>
@@ -104,13 +104,6 @@
 								/>
 								<br />
 							</div>
-						</div>
-
-						<div v-if="post.hasSketchfab" class="full-bleed-xs">
-							<app-sketchfab-embed
-								:sketchfab-id="post.sketchfabs[0].sketchfab_id"
-								autoplay
-							/>
 						</div>
 
 						<div class="tiny text-muted">
@@ -302,11 +295,6 @@
 .-video
 	width: 100%
 	height: 100%
-
-@media $media-sm-up
-	.post-view >>>
-		iframe
-			rounded-corners-lg()
 
 .-media-item
 	cursor: zoom-in
