@@ -23,7 +23,11 @@ export class FiresidePostEmbed extends Model {
 			this.metadata = new EmbedMetadata(data.metadata);
 		}
 
-		this.extraData = JSON.parse(data.extra_data);
+		if (this.extra_data) {
+			this.extraData = JSON.parse(data.extra_data);
+		} else {
+			this.extraData = {};
+		}
 	}
 }
 
