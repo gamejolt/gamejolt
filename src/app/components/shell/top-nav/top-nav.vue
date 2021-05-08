@@ -127,7 +127,10 @@
 			class="navbar-right"
 			:style="{ 'min-width': minColWidth }"
 		>
-			<div v-if="!Screen.isXs && !GJ_IS_CLIENT" class="-button">
+			<div
+				v-if="$route.name !== 'landing.app' && !Screen.isXs && !GJ_IS_CLIENT"
+				class="-button"
+			>
 				<app-button
 					v-app-track-event="`top-nav:get-app:click`"
 					:to="{ name: 'landing.app' }"

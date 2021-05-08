@@ -2,7 +2,7 @@
 
 <template>
 	<div class="route-landing-app">
-		<section class="-header">
+		<section class="-header theme-dark">
 			<div class="-header-darken" />
 
 			<div class="container -header-content">
@@ -63,6 +63,7 @@
 		background-position: 50% 50%
 		background-size: cover
 		height: 450px
+		color: var(--theme-fg)
 
 		&-darken
 			position: absolute

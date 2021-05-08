@@ -3,7 +3,7 @@
 <template>
 	<footer id="footer" class="section">
 		<div class="container">
-			<template v-if="!GJ_IS_CLIENT">
+			<template v-if="!GJ_IS_CLIENT && $route.name !== 'landing.app'">
 				<div class="text-center">
 					<p>
 						<strong>Be the first!</strong>
