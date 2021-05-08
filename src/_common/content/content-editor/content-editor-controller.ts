@@ -838,33 +838,20 @@ function _checkNodeIsCode(
  * Returns the string of text content within the fragment passed in.
  */
 function _getFragmentText(frag: Fragment<ContentEditorSchema> | Node<ContentEditorSchema>) {
-	const textNodes = _getTextNodes(frag);
-
 	let text = '';
-	for (const textNode of textNodes) {
-		if (textNode.type.name === 'hardBreak') {
+	frag.forEach((child, _offset, _index) => {
+		// We put the new line above the text rather than below so that mention
+		// regex can still work properly.
+		if (child.isBlock || child.type.name === 'hardBreak') {
 			text += '\n';
-		} else {
-			text += textNode.text;
 		}
-	}
+
+		if (child.isText) {
+			text += child.text;
+		} else if (!child.isLeaf) {
+			text += _getFragmentText(child);
+		}
+	});
+
 	return text;
-}
-
-/**
- * Loops through the fragment passed in and gets all the text nodes within it.
- */
-function _getTextNodes(node: Fragment<ContentEditorSchema> | Node<ContentEditorSchema>) {
-	const nodes: Node<ContentEditorSchema>[] = [];
-
-	for (let i = 0; i < node.childCount; i++) {
-		const child = node.child(i);
-		if (child.isText || child.type.name === 'hardBreak') {
-			nodes.push(child);
-		} else {
-			nodes.push(..._getTextNodes(child));
-		}
-	}
-
-	return nodes;
 }
