@@ -125,7 +125,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 
 	@Emit('submit')
 	emitSubmit() {
-		this.stateCounter++;
+		++this.stateCounter;
 	}
 
 	@Emit('insert-block-node')
@@ -290,7 +290,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 			this.createView(state);
 		}
 
-		this.stateCounter++;
+		++this.stateCounter;
 
 		this.focusWatcher = new FocusWatcher(this.$refs.editor, this.onFocusIn, this.onFocusOut);
 		this.focusWatcher.start();
@@ -384,13 +384,15 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 				tr.scrollIntoView();
 				view.dispatch(tr);
 			}
+
+			++this.stateCounter;
 		}
 	}
 
 	onDimensionsChange() {
 		const rect = this.$refs.editor.getBoundingClientRect();
 		editorSyncWindow(this.controller, rect.width, rect.height);
-		this.stateCounter++;
+		++this.stateCounter;
 	}
 
 	onFocusOuter() {
