@@ -2,13 +2,6 @@
 
 <template>
 	<div>
-		<div class="alert full-bleed-xs">
-			<strong>
-				A new feed from the creators of Game Jolt, specifically FOR YOU!
-			</strong>
-			The more you <app-jolticon icon="heart-filled" /> Like posts, the better your
-			recommendations will be.
-		</div>
 		<app-activity-feed-placeholder v-if="!feed || !feed.isBootstrapped" />
 		<div v-else>
 			<div v-if="!feed.hasItems" class="alert full-bleed-xs text-center">
