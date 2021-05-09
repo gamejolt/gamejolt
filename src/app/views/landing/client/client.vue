@@ -1,12 +1,14 @@
+<script lang="ts" src="./client"></script>
+
 <template>
 	<div class="route-landing-client">
-		<div class="alert alert-notice sans-margin">
+		<div class="alert alert-notice alert-well sans-margin">
 			<div class="container text-center">
 				<p>
 					This is a
 					<strong>pre-release</strong>
-					. The Client isn't yet finished. Constructive feedback and ideas are welcome to help shape
-					the best experience ever.
+					. The Client isn't yet finished. Constructive feedback and ideas are welcome to
+					help shape the best experience ever.
 				</p>
 			</div>
 		</div>
@@ -21,8 +23,8 @@
 							<sup>PREVIEW</sup>
 						</h1>
 						<p>
-							Effortlessly install too many games (and counting!), keep them updated automatically,
-							and use the whole site without opening a browser.
+							Effortlessly install too many games (and counting!), keep them updated
+							automatically, and use the whole site without opening a browser.
 						</p>
 					</div>
 				</div>
@@ -57,10 +59,10 @@
 				<div class="row">
 					<div class="header-download-buttons">
 						<app-button
-							primary
-							lg
 							v-if="shouldOfferWindows"
 							v-app-track-event="`client-landing:download:win`"
+							primary
+							lg
 							@click="download(platform, '32')"
 						>
 							<app-jolticon icon="download" />
@@ -68,10 +70,10 @@
 						</app-button>
 
 						<app-button
-							primary
-							lg
 							v-if="shouldOfferMac"
 							v-app-track-event="`client-landing:download:mac`"
+							primary
+							lg
 							@click="download(platform, '64')"
 						>
 							<app-jolticon icon="download" />
@@ -79,10 +81,10 @@
 						</app-button>
 
 						<app-button
-							primary
-							lg
 							v-if="shouldOfferLinux"
 							v-app-track-event="`client-landing:download:linux`"
+							primary
+							lg
 							@click="download(platform, arch)"
 						>
 							<app-jolticon icon="download" />
@@ -98,7 +100,7 @@
 				<div v-if="!isDetectedPlatformIncompatible">
 					<br />
 					or download for
-					<a href="#all-downloads" v-app-scroll-to>other platforms</a>
+					<a v-app-scroll-to href="#all-downloads">other platforms</a>
 					<br />
 					<br />
 					<app-jolticon icon="windows" class="text-muted" />
@@ -110,7 +112,7 @@
 
 		<div class="fill-darker">
 			<section class="client-presentation">
-				<div class="container" v-if="showMascot">
+				<div v-if="showMascot" class="container">
 					<img
 						class="client-presentation-mascot"
 						src="./clyde-video-overlay.png"
@@ -121,7 +123,11 @@
 				</div>
 				<div class="client-presentation-inner">
 					<div class="container text-center">
-						<img class="img-responsive" src="./client-presentation.jpg" alt="Game Jolt Client" />
+						<img
+							class="img-responsive"
+							src="./client-presentation.jpg"
+							alt="Game Jolt Client"
+						/>
 					</div>
 				</div>
 			</section>
@@ -142,14 +148,16 @@
 							<p><app-jolticon icon="download-box" class="jolticon-4x" /></p>
 							<h5><strong>Auto Updates</strong></h5>
 							<p class="small">
-								Client keeps your installed games up-to-date with the latest versions.
+								Client keeps your installed games up-to-date with the latest
+								versions.
 							</p>
 						</div>
 						<div class="features-stripe-col col-sm-3 col-lg-2">
 							<p><app-jolticon icon="offline" class="jolticon-4x" /></p>
 							<h5><strong>Offline Mode</strong></h5>
 							<p class="small">
-								Play your installed games even when you're not online. Even on the toilet!
+								Play your installed games even when you're not online. Even on the
+								toilet!
 							</p>
 						</div>
 						<div class="features-stripe-col col-sm-3 col-lg-2">
@@ -171,15 +179,20 @@
 									One Click Play
 								</h2>
 								<p>
-									Client is the easiest, speediest way to install and play Game Jolt games. Click
-									"Install" and Client will download and unpack the right files for your OS. Then
-									click "Launch" to play, simple as that. So try out a bunch of games,
+									Client is the easiest, speediest way to install and play Game
+									Jolt games. Click "Install" and Client will download and unpack
+									the right files for your OS. Then click "Launch" to play, simple
+									as that. So try out a bunch of games,
 									<em>fast</em>
 									.
 								</p>
 							</div>
 							<div class="col-sm-6">
-								<img class="img-responsive" src="./install-shot.jpg" alt="Install Fast" />
+								<img
+									class="img-responsive"
+									src="./install-shot.jpg"
+									alt="Install Fast"
+								/>
 							</div>
 						</div>
 					</div>
@@ -195,17 +208,22 @@
 								</h2>
 								<p>Never miss a release!</p>
 								<p>
-									Client keeps your installed games up to date, so you'll always play the latest
-									versions. Your game library syncs up with your Game Jolt account, so you can
-									access your playlists and receive notifications, as well.
+									Client keeps your installed games up to date, so you'll always
+									play the latest versions. Your game library syncs up with your
+									Game Jolt account, so you can access your playlists and receive
+									notifications, as well.
 								</p>
 								<p>
-									Even the Client itself auto-updates, so you'll always be browsing your favorite
-									site using the latest version.
+									Even the Client itself auto-updates, so you'll always be
+									browsing your favorite site using the latest version.
 								</p>
 							</div>
 							<div class="col-sm-6 col-sm-pull-6">
-								<img class="img-responsive" src="./auto-update-shot.jpg" alt="Auto Update" />
+								<img
+									class="img-responsive"
+									src="./auto-update-shot.jpg"
+									alt="Auto Update"
+								/>
 							</div>
 						</div>
 					</div>
@@ -221,8 +239,8 @@
 								</h2>
 								<p>Chat with the Game Jolt community using Client!</p>
 								<p>
-									Never miss a message again. Get notifications when friends message you. No more
-									excuses.
+									Never miss a message again. Get notifications when friends
+									message you. No more excuses.
 								</p>
 							</div>
 							<div class="col-sm-6">
@@ -240,14 +258,21 @@
 									<app-jolticon icon="offline" class="jolticon-2x" />
 									Offline Mode
 								</h2>
-								<p>Play your installed games any time, even when you're not online.</p>
 								<p>
-									Neither power outage nor shoddy wifi will stand in the way of your gaming! Client
-									will sync your library and update your games the next time you connect.
+									Play your installed games any time, even when you're not online.
+								</p>
+								<p>
+									Neither power outage nor shoddy wifi will stand in the way of
+									your gaming! Client will sync your library and update your games
+									the next time you connect.
 								</p>
 							</div>
 							<div class="col-sm-6 col-sm-pull-6">
-								<img class="img-responsive" src="./offline-mode-shot.jpg" alt="Offline Mode" />
+								<img
+									class="img-responsive"
+									src="./offline-mode-shot.jpg"
+									alt="Offline Mode"
+								/>
 							</div>
 						</div>
 					</div>
@@ -262,12 +287,17 @@
 									HTML Support
 								</h2>
 								<p>
-									Quick play HTML (and WebGL) games without ever needing to open a browser window.
-									You'll almost never have to leave the comfort of Client!
+									Quick play HTML (and WebGL) games without ever needing to open a
+									browser window. You'll almost never have to leave the comfort of
+									Client!
 								</p>
 							</div>
 							<div class="col-sm-6">
-								<img class="img-responsive" src="./html-games-shot.jpg" alt="HTML Games" />
+								<img
+									class="img-responsive"
+									src="./html-games-shot.jpg"
+									alt="HTML Games"
+								/>
 							</div>
 						</div>
 					</div>
@@ -281,10 +311,14 @@
 									<app-jolticon icon="world" class="jolticon-2x" />
 									Open Source
 								</h2>
-								<p>Wanna know what we're putting on your desktop? Client is fully open source!</p>
 								<p>
-									You can view us working on the project, pull it and make changes for the fun of
-									it, release customized versions of the client, or even help fix bugs at the
+									Wanna know what we're putting on your desktop? Client is fully
+									open source!
+								</p>
+								<p>
+									You can view us working on the project, pull it and make changes
+									for the fun of it, release customized versions of the client, or
+									even help fix bugs at the
 									<app-link-external href="https://github.com/gamejolt/gamejolt">
 										GitHub repository
 									</app-link-external>
@@ -292,7 +326,11 @@
 								</p>
 							</div>
 							<div class="col-sm-6 col-sm-pull-6">
-								<img class="img-responsive" src="./open-source-shot.jpg" alt="Open Source" />
+								<img
+									class="img-responsive"
+									src="./open-source-shot.jpg"
+									alt="Open Source"
+								/>
 							</div>
 						</div>
 					</div>
@@ -309,20 +347,25 @@
 								<p>
 									Client is not just a downloader app; it's the
 									<strong>whole Game Jolt site on your desktop.</strong>
-									Browse, search, and find games. Chat with friends and receive notifications. Even
-									upload files, manage games, and edit pages right in Client.
+									Browse, search, and find games. Chat with friends and receive
+									notifications. Even upload files, manage games, and edit pages
+									right in Client.
 								</p>
 								<p>It's pretty much all you've ever dreamed of, most likely.</p>
 							</div>
 							<div class="col-sm-6">
-								<img class="img-responsive" src="./full-site-shot.jpg" alt="Game Jolt" />
+								<img
+									class="img-responsive"
+									src="./full-site-shot.jpg"
+									alt="Game Jolt"
+								/>
 							</div>
 						</div>
 					</div>
 				</section>
 			</div>
 
-			<section class="download-footer" id="all-downloads">
+			<section id="all-downloads" class="download-footer">
 				<div class="container text-center">
 					<div class="row">
 						<div class="col-lg-9 col-centered">
@@ -331,9 +374,9 @@
 									<p><app-jolticon icon="linux" class="jolticon-4x" /></p>
 									<p>
 										<app-button
+											v-app-track-event="`client-landing:download:linux`"
 											primary
 											block
-											v-app-track-event="`client-landing:download:linux`"
 											@click="download('linux', '64')"
 										>
 											<app-jolticon icon="download" />
@@ -345,9 +388,9 @@
 									<p><app-jolticon icon="mac" class="jolticon-4x" /></p>
 									<p>
 										<app-button
+											v-app-track-event="`client-landing:download:mac`"
 											primary
 											block
-											v-app-track-event="`client-landing:download:mac`"
 											@click="download('mac', '64')"
 										>
 											<app-jolticon icon="download" />
@@ -359,9 +402,9 @@
 									<p><app-jolticon icon="windows" class="jolticon-4x" /></p>
 									<p>
 										<app-button
+											v-app-track-event="`client-landing:download:win`"
 											primary
 											block
-											v-app-track-event="`client-landing:download:win`"
 											@click="download('windows', '32')"
 										>
 											<app-jolticon icon="download" />
@@ -374,9 +417,7 @@
 					</div>
 					<br />
 
-					<p class="lead">
-						Play games. Make games.
-					</p>
+					<p class="lead">Play games. Make games.</p>
 				</div>
 			</section>
 
@@ -386,7 +427,9 @@
 						<p class="sans-margin">
 							<strong>Found a bug?</strong>
 							Post it in the
-							<app-link-external href="https://github.com/gamejolt/issue-tracker/issues">
+							<app-link-external
+								href="https://github.com/gamejolt/issue-tracker/issues"
+							>
 								issue tracker
 							</app-link-external>
 							.
@@ -399,5 +442,3 @@
 </template>
 
 <style lang="stylus" src="./client.styl" scoped></style>
-
-<script lang="ts" src="./client"></script>

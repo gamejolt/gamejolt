@@ -3,23 +3,15 @@
 <template>
 	<footer id="footer" class="section">
 		<div class="container">
-			<template v-if="!Screen.isXs">
-				<div v-if="!GJ_IS_CLIENT" class="text-center">
+			<template v-if="!GJ_IS_CLIENT && $route.name !== 'landing.app'">
+				<div class="text-center">
 					<p>
-						<router-link
-							v-app-track-event="`footer:client-promo`"
-							class="-client-logo"
-							:to="{ name: 'landing.client' }"
-						>
-							<app-theme-svg
-								src="~img/game-jolt-client-logo.svg"
-								alt="Game Jolt Client"
-								strict-colors
-							/>
-						</router-link>
-						<app-button solid primary :to="{ name: 'landing.client' }">
-							<translate>Get It Now</translate>
-						</app-button>
+						<strong>Be the first!</strong>
+						<br class="visible-xs" />
+						Test the beta version of the Game Jolt app.
+					</p>
+					<p>
+						<app-app-buttons />
 					</p>
 				</div>
 
@@ -31,6 +23,11 @@
 					<div class="row">
 						<div class="col-xs-4 col-sm-3">
 							<ol class="list-unstyled footer-link-list">
+								<li>
+									<router-link :to="{ name: 'landing.app' }">
+										<translate>Mobile App</translate>
+									</router-link>
+								</li>
 								<li>
 									<router-link :to="{ name: 'landing.learn' }">
 										<translate>What's Game Jolt</translate>
@@ -78,16 +75,6 @@
 									<app-link-external href="https://github.com/gamejolt">
 										<translate>footer.open_source</translate>
 									</app-link-external>
-								</li>
-								<li>
-									<router-link
-										:to="{
-											name: 'forums.channels.view',
-											params: { name: 'gj-improve' },
-										}"
-									>
-										<translate>Feature Requests</translate>
-									</router-link>
 								</li>
 								<li>
 									<app-link-external
@@ -210,4 +197,48 @@
 	</footer>
 </template>
 
-<style lang="stylus" src="./footer.styl" scoped></style>
+<style lang="stylus" scoped>
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+
+#footer
+	change-bg('darkest')
+	padding-top: $grid-gutter-width * 0.5
+	padding-bottom: 0
+	position: relative
+	z-index: $zindex-footer
+
+	@media $media-xs
+		text-align: center
+
+.-app-logo
+	margin-right: 10px
+
+.footer
+	&-link-list
+		font-size: $font-size-tiny
+
+		@media $media-sm-up
+			font-size: $font-size-small
+
+		& > li
+			margin-bottom: 6px
+
+			& > a
+				theme-prop('color', 'fg-muted')
+
+				&:hover
+					color: $white
+
+	@media $media-sm-up
+		&-jolt
+			float: left
+
+		&-meta
+			float: left
+			margin-left: $grid-gutter-width
+
+		&-translations
+			float: right
+			text-align: right
+</style>
