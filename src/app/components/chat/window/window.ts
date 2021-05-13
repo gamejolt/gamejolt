@@ -13,9 +13,9 @@ import { ChatClient, ChatKey, leaveChatRoom } from '../client';
 import { ChatInviteModal } from '../invite-modal/invite-modal.service';
 import { ChatMessage } from '../message';
 import { ChatRoom, getChatRoomTitle } from '../room';
-import { ChatRoomDetailsModal } from '../room-details-modal/room-details-modal.service';
 import AppChatUserList from '../user-list/user-list.vue';
 import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vue';
+import AppChatWindowMenu from './menu/menu.vue';
 import AppChatWindowOutput from './output/output.vue';
 import AppChatWindowSend from './send/send.vue';
 
@@ -27,6 +27,7 @@ import AppChatWindowSend from './send/send.vue';
 		AppChatWindowSend,
 		AppChatWindowOutput,
 		AppFadeCollapse,
+		AppChatWindowMenu,
 	},
 	directives: {
 		AppTooltip,
@@ -46,12 +47,6 @@ export default class AppChatWindow extends Vue {
 	friendAddJolticonVersion = 1;
 
 	readonly Screen = Screen;
-
-	get isOwner() {
-		return (
-			this.room && this.chat.currentUser && this.room.owner_id === this.chat.currentUser.id
-		);
-	}
 
 	get users() {
 		return this.chat.roomMembers[this.room.id];
@@ -100,14 +95,6 @@ export default class AppChatWindow extends Vue {
 		} else {
 			this.toggleLeftPane();
 		}
-	}
-
-	editTitle() {
-		if (!this.isOwner) {
-			return;
-		}
-
-		ChatRoomDetailsModal.show(this.room);
 	}
 
 	toggleUsers() {
