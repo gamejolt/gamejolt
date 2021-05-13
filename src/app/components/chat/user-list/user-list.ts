@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { fuzzysearch } from '../../../../utils/string';
-import { propOptional, propRequired } from '../../../../utils/vue';
+import { propRequired } from '../../../../utils/vue';
 import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
 import AppChatUserListItem from './item/item.vue';
@@ -26,8 +26,6 @@ function searchEntries(entries: (ChatUser | ChatRoom)[], query: string): (ChatUs
 })
 export default class AppChatUserList extends Vue {
 	@Prop(propRequired(Array)) entries!: (ChatUser | ChatRoom)[];
-	@Prop(propOptional(ChatRoom)) currentRoom?: ChatRoom;
-	@Prop(propOptional(Boolean, false)) showPm!: boolean;
 
 	filterQuery = '';
 

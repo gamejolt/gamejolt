@@ -16,8 +16,6 @@
 				v-for="user of filteredEntries"
 				:key="getKeyForEntry(user)"
 				:item="user"
-				:current-room="currentRoom"
-				:show-pm="showPm"
 			/>
 		</ul>
 	</div>

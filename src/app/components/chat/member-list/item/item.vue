@@ -9,6 +9,7 @@
 		@outview="isInview = false"
 	>
 		<app-popper
+			v-if="isInview"
 			popover-class="fill-darkest"
 			block
 			:placement="Screen.isMobile ? 'bottom' : 'left'"

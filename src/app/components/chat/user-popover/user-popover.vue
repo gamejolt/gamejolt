@@ -1,25 +1,25 @@
 <script lang="ts" src="./user-popover"></script>
 
 <template>
-	<div>
-		<div class="fill-darker -popover-info-container">
-			<div class="-popover-avatar-container">
-				<div class="-popover-avatar-img">
-					<app-user-avatar class="-popover-avatar" :user="user" />
-					<div class="-popover-avatar-circle" />
+	<div class="chat-user-popover">
+		<div class="fill-darker -info-container">
+			<div class="-avatar-container">
+				<div class="-avatar-img">
+					<app-user-avatar class="-avatar" :user="user" />
+					<div class="-avatar-circle" />
 				</div>
 			</div>
 
-			<div class="-popover-names">
-				<div class="-popover-displayname">
+			<div class="-names">
+				<div class="-displayname">
 					<b>{{ user.display_name }}</b>
 				</div>
-				<div class="-popover-username text-muted">@{{ user.username }}</div>
+				<div class="-username text-muted">@{{ user.username }}</div>
 			</div>
 
-			<div v-if="isOnline !== null" class="-popover-status">
+			<div v-if="isOnline !== null" class="-status">
 				<app-chat-user-online-status
-					class="-popover-status-bubble"
+					class="-status-bubble"
 					:is-online="isOnline"
 					:size="16"
 					:absolute="false"
@@ -27,7 +27,7 @@
 				<span>{{ isOnline ? $gettext(`Online`) : $gettext(`Offline`) }}</span>
 			</div>
 
-			<div v-if="isOwner" class="-popover-status">
+			<div v-if="isOwner" class="-status">
 				<app-jolticon icon="crown" />
 				<translate>Room Owner</translate>
 			</div>
@@ -37,17 +37,18 @@
 				:to="{ name: 'profile.overview', params: { username: user.username } }"
 				class="list-group-item has-icon"
 			>
-				<translate>View profile</translate>
+				<app-jolticon icon="user" />
+				<translate>View Profile</translate>
 			</router-link>
 			<a v-if="canMessage" class="list-group-item has-icon" @click="onClickSendMessage">
 				<app-jolticon icon="message" />
-				<translate>Send message</translate>
+				<translate>Send Message</translate>
 			</a>
 			<template v-if="canModerate">
 				<hr />
 				<a class="list-group-item has-icon" @click="onClickKick">
-					<app-jolticon icon="remove" notice />
-					<translate>Kick from room</translate>
+					<app-jolticon icon="logout" notice />
+					<translate>Kick from Room</translate>
 				</a>
 			</template>
 		</div>
@@ -58,22 +59,22 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 
-.-popover
-	&-info-container
-		padding: 8px
-		border-bottom-width: 2px
+.chat-user-popover
+	.-info-container
+		padding: 16px
+		border-bottom-width: $border-width-large
 		border-bottom-style: solid
 		border-bottom-color: var(--theme-darkest)
-		max-width: 300px
+		width: 250px
 
-	&-names
+	.-names
 		margin-top: 4px
 		text-align: center
 
-	&-username
+	.-username
 		font-size: $font-size-small
 
-	&-avatar
+	.-avatar
 		width: 72px
 		height: 72px
 		z-index: 2
@@ -104,11 +105,13 @@
 			justify-content: center
 			margin-bottom: 10px
 
-	&-status
-		display: flex
-		font-size: $font-size-small
-		justify-content: center
+	.-status
 		margin-top: 8px
+		display: flex
+		font-family: $font-family-tiny
+		font-size: $font-size-tiny
+		font-weight: bold
+		justify-content: center
 		user-select: none
 
 		&-bubble

@@ -41,6 +41,7 @@ export default class AppChatUserPopover extends Vue {
 		if (this.currentRoom?.isPmRoom) {
 			return false;
 		}
+
 		// Show when users are friends.
 		return this.chat.friendsList.get(this.user) !== undefined;
 	}
@@ -61,7 +62,6 @@ export default class AppChatUserPopover extends Vue {
 	onClickSendMessage() {
 		const friend = this.chat.friendsList.get(this.user);
 		if (friend) {
-			console.log(friend.room_id);
 			enterChatRoom(this.chat, friend.room_id);
 		}
 	}
@@ -73,7 +73,7 @@ export default class AppChatUserPopover extends Vue {
 					{ username: this.user.username }
 			  )
 			: this.$gettextInterpolate(
-					`Are you sure you want to kick @%{ username } from this room? You are not friends with this user, so you cannot invite them back into this room.`,
+					`Are you sure you want to kick @%{ username } from this room? You're not friends with this user, so you won't be able to invite them back into this room.`,
 					{ username: this.user.username }
 			  );
 		const confirm = await ModalConfirm.show(

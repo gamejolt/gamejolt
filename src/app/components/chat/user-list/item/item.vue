@@ -8,10 +8,8 @@
 		@inview="isInview = true"
 		@outview="isInview = false"
 	>
-		<component
-			:is="component"
+		<a
 			v-if="isInview"
-			v-bind="componentProps"
 			class="-item"
 			:class="{
 				active: isActive,
@@ -52,13 +50,10 @@
 			</div>
 
 			<div class="shell-nav-label">
-				<span v-if="isOwner" v-app-tooltip="`Room Owner`">
-					<app-jolticon icon="crown" />
-				</span>
 				{{ title }}
 				<span v-if="meta" class="tiny">{{ meta }}</span>
 			</div>
-		</component>
+		</a>
 	</app-scroll-inview>
 </template>
 
