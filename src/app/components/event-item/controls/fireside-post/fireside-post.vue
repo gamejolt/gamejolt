@@ -41,6 +41,9 @@
 					@click="placeSticker()"
 				/>
 			</div>
+			<div v-else-if="post.is_processing" class="-row fill-offset -processing">
+				<app-event-item-controls-fireside-post-save-progress :post="post" />
+			</div>
 			<span v-if="shouldShowExtra" class="-extra">
 				<span v-if="shouldShowEdit && !showUserControls" class="-extra">
 					<app-button v-if="canPublish" class="-inline-button" primary @click="publish()">
@@ -98,12 +101,17 @@
 		display: flex
 		align-items: center
 
+	.-processing
+		padding: 8px
+		rounded-corners()
+
 	.-inline-button
 		display: inline-flex
 		align-items: center
 
 	.-extra
 		margin-left: auto
+		flex-shrink: 0
 
 		.-inline-button
 			margin-left: 12px

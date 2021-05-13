@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Prop, ProvideReactive, Watch } from 'vue-property-decorator';
+import { Component, Emit, Prop, ProvideReactive, Watch } from 'vue-property-decorator';
 import { RawLocation } from 'vue-router';
 import { arrayRemove } from '../../../../utils/array';
 import { propOptional, propRequired } from '../../../../utils/vue';
@@ -23,7 +23,6 @@ import AppMediaItemPost from '../../../../_common/media-item/post/post.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
-import AppSketchfabEmbed from '../../../../_common/sketchfab/embed/embed.vue';
 import AppStickerControlsOverlay from '../../../../_common/sticker/controls-overlay/controls-overlay.vue';
 import AppStickerReactions from '../../../../_common/sticker/reactions/reactions.vue';
 import {
@@ -55,7 +54,6 @@ import AppPollVoting from '../../../components/poll/voting/voting.vue';
 		AppImgResponsive,
 		AppVideo,
 		AppVideoPlayer,
-		AppSketchfabEmbed,
 		AppEventItemControls,
 		AppStickerControlsOverlay,
 		AppPollVoting,
@@ -90,6 +88,8 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 
 	@ProvideReactive(StickerTargetParentControllerKey)
 	stickerTargetController = new StickerTargetController(this.post);
+
+	@Emit('post-updated') emitPostUpdated(_post: FiresidePost) {}
 
 	activeImageIndex = 0;
 	videoStartTime = 0;
@@ -178,7 +178,7 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 		this.activeImageIndex = Math.max(this.activeImageIndex - 1, 0);
 	}
 
-	onProcessingComplete(payload: any) {
+	onVideoProcessingComplete(payload: any) {
 		if (payload.video && this.video) {
 			this.video.assign(payload.video);
 		}

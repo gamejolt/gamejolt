@@ -3,7 +3,8 @@
 <template>
 	<app-form name="collaboratorForm">
 		<app-form-group v-if="method === 'add'" name="username" :label="$gettext(`Username`)">
-			<app-form-control
+			<app-form-control-prefixed-input
+				prefix="@"
 				:rules="{
 					max: 100,
 					availability: {

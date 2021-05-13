@@ -23,16 +23,6 @@
 			>
 				<translate>Video</translate>
 			</app-button>
-
-			<app-button
-				trans
-				:primary="enabledSketchfab"
-				:solid="enabledSketchfab"
-				icon="sketchfab"
-				@click="enableSketchfab()"
-			>
-				Sketchfab
-			</app-button>
 		</div>
 		<div v-else class="well fill-offset full-bleed">
 			<!-- Images -->
@@ -65,38 +55,6 @@
 				@video-status-change="onUploadingVideoStatusChanged"
 				@video-provider-change="onVideoProviderChanged"
 			/>
-
-			<!-- Sketchfab -->
-			<fieldset v-else-if="enabledSketchfab">
-				<app-form-legend compact deletable @delete="disableAttachments()">
-					<translate>Embed Sketchfab model</translate>
-				</app-form-legend>
-
-				<app-form-group
-					v-app-focus-when="!wasPublished"
-					name="sketchfab_id"
-					hide-label
-					:label="$gettext(`Sketchfab Model URL`)"
-				>
-					<p class="help-block">
-						<translate>Enter your Sketchfab model's URL or ID. For example:</translate>
-						<br />
-						<code> https://sketchfab.com/3d-models/your-model-name-ID </code>
-					</p>
-
-					<app-form-control
-						type="text"
-						:rules="{
-							pattern: SKETCHFAB_FIELD_REGEX,
-						}"
-					/>
-					<app-form-control-errors />
-					<div v-if="hasValidSketchfabModelId">
-						<br />
-						<app-sketchfab-embed :sketchfab-id="sketchfabId" />
-					</div>
-				</app-form-group>
-			</fieldset>
 		</div>
 
 		<!-- Post title (short) -->

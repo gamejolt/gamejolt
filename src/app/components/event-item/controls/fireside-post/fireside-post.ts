@@ -12,7 +12,6 @@ import {
 	setCommentCount,
 } from '../../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../../_common/comment/modal/modal.service';
-import AppCommentVideoLikeWidget from '../../../../../_common/comment/video/like-widget/like-widget.vue';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
 import {
@@ -31,15 +30,16 @@ import { User } from '../../../../../_common/user/user.model';
 import { AppCommentWidgetLazy } from '../../../lazy';
 import { PostEditModal } from '../../../post/edit-modal/edit-modal-service';
 import AppEventItemControlsFiresidePostExtra from './extra/extra.vue';
+import AppEventItemControlsFiresidePostSaveProgress from './save-progress/save-progress.vue';
 import AppEventItemControlsFiresidePostStats from './stats/stats.vue';
 
 @Component({
 	components: {
 		AppCommentWidget: AppCommentWidgetLazy,
 		AppFiresidePostLikeWidget,
-		AppCommentVideoLikeWidget,
 		AppEventItemControlsFiresidePostStats,
 		AppEventItemControlsFiresidePostExtra,
+		AppEventItemControlsFiresidePostSaveProgress,
 	},
 	directives: {
 		AppTooltip,
@@ -89,7 +89,7 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 	}
 
 	get showUserControls() {
-		return this.post.isActive;
+		return this.post.isActive && !this.post.is_processing;
 	}
 
 	get hasPerms() {

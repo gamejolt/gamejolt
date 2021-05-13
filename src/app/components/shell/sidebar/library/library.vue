@@ -97,6 +97,16 @@
 		</ul>
 
 		<ul v-if="Screen.isXs" class="shell-nav">
+			<li v-if="!GJ_IS_CLIENT" class="offline-disable">
+				<router-link v-app-track-event="`sidebar:app`" :to="{ name: 'landing.app' }">
+					<span class="shell-nav-icon">
+						<app-jolticon icon="world" />
+					</span>
+					<span class="shell-nav-label">
+						<translate>Get the App</translate>
+					</span>
+				</router-link>
+			</li>
 			<li class="offline-disable">
 				<router-link
 					v-app-track-event="`sidebar:forums`"

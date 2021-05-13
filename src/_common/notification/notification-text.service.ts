@@ -1,4 +1,3 @@
-import { CommentVideo } from '../comment/video/video-model';
 import { Community } from '../community/community.model';
 import {
 	CommunityUserNotification,
@@ -182,15 +181,6 @@ export class NotificationText {
 					);
 				}
 				break;
-			}
-
-			case Notification.TYPE_COMMENT_VIDEO_ADD: {
-				let videoTitle = '';
-				if (notification.action_model instanceof CommentVideo) {
-					videoTitle = notification.action_model.title;
-				}
-
-				return videoTitle;
 			}
 
 			case Notification.TYPE_COMMENT_ADD_OBJECT_OWNER: {

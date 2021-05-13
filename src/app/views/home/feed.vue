@@ -108,10 +108,6 @@
 								exact
 							>
 								<translate>For You</translate>
-								&nbsp;
-								<span class="tag tag-notice">
-									<translate>Beta</translate>
-								</span>
 							</router-link>
 						</li>
 					</ul>

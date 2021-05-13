@@ -1,7 +1,6 @@
 import { Location } from 'vue-router';
 import { Route } from 'vue-router/types/router';
 import { arrayRemove } from '../../../../utils/array';
-import { CommentVideo } from '../../../../_common/comment/video/video-model';
 import { EventItem } from '../../../../_common/event-item/event-item.model';
 import { FiresidePostGotoGrowl } from '../../../../_common/fireside/post/goto-growl/goto-growl.service';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
@@ -335,19 +334,6 @@ export function feedShouldBlockPost(post: FiresidePost, route: Route) {
 	if (post.game === null && post.user.is_blocked) {
 		// We need to show if they force viewed the profile.
 		if (route.name !== 'profile.overview' || route.params.username !== post.user.username) {
-			return true;
-		}
-	}
-	return false;
-}
-
-export function feedShouldBlockVideo(video: CommentVideo, route: Route) {
-	if (video.comment.user.is_blocked) {
-		// We need to show if they force viewed the profile.
-		if (
-			route.name !== 'profile.overview' ||
-			route.params.username !== video.comment.user.username
-		) {
 			return true;
 		}
 	}

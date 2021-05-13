@@ -30,15 +30,15 @@ export default class AppCommunityCompetitionCountdown extends Vue {
 		const period = this.competition.period;
 		switch (period) {
 			case 'pre-comp':
-				this.titleText = this.$gettext(`Starts in...`);
+				this.titleText = this.$gettext(`Starts in`);
 				timestamp = this.competition.starts_on;
 				break;
 			case 'running':
-				this.titleText = this.$gettext(`Ends in...`);
+				this.titleText = this.$gettext(`Ends in`);
 				timestamp = this.competition.ends_on;
 				break;
 			case 'voting':
-				this.titleText = this.$gettext(`Voting ends in...`);
+				this.titleText = this.$gettext(`Voting ends in`);
 				timestamp = this.competition.voting_ends_on;
 				break;
 			// No countdown is shown.

@@ -12,7 +12,7 @@ export class AppProgressPoller extends Vue {
 	@Prop(Number)
 	interval?: number;
 
-	intervalHandle?: NodeJS.Timer;
+	timeoutHandle?: NodeJS.Timer;
 
 	@Emit('progress')
 	emitProgress(_response: unknown, _progress: number, _indeterminate: boolean) {}
@@ -25,7 +25,7 @@ export class AppProgressPoller extends Vue {
 
 	mounted() {
 		this.check();
-		this.intervalHandle = setInterval(() => this.check(), this.interval || PollInterval);
+		this.setTimeout();
 	}
 
 	async check() {
@@ -38,39 +38,44 @@ export class AppProgressPoller extends Vue {
 				detach: true,
 			});
 
-			if (response.status === 'progress') {
-				const indeterminate = typeof response.progress !== 'number';
-				const progress = indeterminate ? 100 : response.progress;
-				this.emitProgress(response, progress, indeterminate);
-				return;
-			}
-
 			if (response.status === 'complete' || response.status === 'error') {
 				if (response.status === 'complete') {
 					this.emitComplete(response);
 				} else if (response.status === 'error') {
 					this.emitError(response);
 				}
+				return;
+			}
 
-				this.clearInterval();
+			if (response.status === 'progress') {
+				const indeterminate = typeof response.progress !== 'number';
+				const progress = indeterminate ? 100 : response.progress;
+				this.emitProgress(response, progress, indeterminate);
 			}
 		} catch (e) {
 			this.$emit('error', e);
 		}
+
+		this.setTimeout();
 	}
 
 	destroyed() {
-		this.clearInterval();
+		this.clearTimeout();
 	}
 
 	render(h: CreateElement) {
 		return h('span');
 	}
 
-	private clearInterval() {
-		if (this.intervalHandle) {
-			clearInterval(this.intervalHandle);
-			this.intervalHandle = undefined;
+	private setTimeout() {
+		this.clearTimeout();
+		this.timeoutHandle = setTimeout(() => this.check(), this.interval || PollInterval);
+	}
+
+	private clearTimeout() {
+		if (this.timeoutHandle) {
+			clearTimeout(this.timeoutHandle);
+			this.timeoutHandle = undefined;
 		}
 	}
 }

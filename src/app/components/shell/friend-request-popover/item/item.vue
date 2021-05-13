@@ -55,7 +55,11 @@
 					</div>
 
 					<div class="card-title">
-						<h5 class="-name">{{ them.display_name }}</h5>
+						<h5>
+							<span class="-name -name-container">{{ them.display_name }}</span>
+							<app-user-verified-tick :user="them" />
+						</h5>
+
 						<h5 class="-name">
 							<small>@{{ them.username }}</small>
 						</h5>
@@ -76,4 +80,8 @@
 
 .-name
 	text-overflow()
+
+	&-container
+		max-width: 150px
+		display: inline-block
 </style>

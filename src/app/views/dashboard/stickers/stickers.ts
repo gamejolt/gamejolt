@@ -70,7 +70,7 @@ export default class RouteDashStickers extends BaseRouteComponent {
 
 	get stickerProgress() {
 		const progress = this.balance % this.stickerCost;
-		return (progress / this.stickerCost) * 100;
+		return Math.floor((progress / this.stickerCost) * 100);
 	}
 
 	get coverMediaItem() {

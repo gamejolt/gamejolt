@@ -81,7 +81,7 @@ export default class AppCommunityActivityItem extends Vue {
 			return this.item.action_resource.user.url;
 		} else if (this.item.action_resource instanceof CommunityChannel) {
 			return {
-				name: 'communities.view.channel.feed',
+				name: 'communities.view.channel',
 				params: {
 					channel: this.item.action_resource.title,
 				},
@@ -92,7 +92,7 @@ export default class AppCommunityActivityItem extends Vue {
 			// For community competitions, the channel title is encoded in the extra data.
 			const channelTitle = this.getExtraData('channel-title');
 			return {
-				name: 'communities.view.channel.feed',
+				name: 'communities.view.channel',
 				params: {
 					channel: channelTitle,
 				},

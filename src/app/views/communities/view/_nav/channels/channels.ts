@@ -61,6 +61,11 @@ export default class AppNavChannels extends Vue {
 			return false;
 		}
 
+		// Don't show for jams since you can't post.
+		if (channel.type === 'competition') {
+			return false;
+		}
+
 		// Don't show in the draft stage, because no one can post in that stage.
 		return !channel.canPost && channel.visibility !== 'draft';
 	}

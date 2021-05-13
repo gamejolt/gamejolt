@@ -57,6 +57,7 @@ export default class AppShellTopNav extends Vue {
 	readonly Environment = Environment;
 	readonly Screen = Screen;
 	readonly Connection = Connection;
+	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
 
 	get isTimedOut() {
 		return this.app.isUserTimedOut;

@@ -38,7 +38,7 @@ export default class AppActivityFeedDevlogPostVideo extends Vue {
 		$viewPostVideo(this.video);
 	}
 
-	onProcessingComplete(payload: any) {
+	onVideoProcessingComplete(payload: any) {
 		if (payload.video && this.video) {
 			this.video.assign(payload.video);
 		}

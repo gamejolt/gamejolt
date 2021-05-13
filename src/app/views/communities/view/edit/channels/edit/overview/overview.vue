@@ -3,7 +3,7 @@
 <template>
 	<app-communities-view-page-container full>
 		<div class="row">
-			<div class="col-md-8 col-lg-7">
+			<div class="col-md-8">
 				<h2 class="section-header">
 					<translate>Details</translate>
 				</h2>
@@ -13,20 +13,19 @@
 					:model="channel"
 					@submit="onSubmit"
 				/>
-			</div>
-			<template v-if="canEditDescription">
-				<div class="col-md-4 col-lg-push-1">
-					<h2 :class="{ 'section-header': Screen.isDesktop }">
+
+				<template v-if="canEditDescription">
+					<h2>
 						<translate>Edit Description</translate>
 					</h2>
 					<form-community-channel-description :model="channel" />
-				</div>
-			</template>
+				</template>
+			</div>
 		</div>
 		<template v-if="shouldShowArchiveOptions">
 			<section class="section">
 				<div class="row">
-					<div class="col-md-8 col-lg-7">
+					<div class="col-md-8">
 						<div class="well fill-offset">
 							<template v-if="!channel.is_archived">
 								<h4 class="section-header">

@@ -1,19 +1,9 @@
 import { Model } from '../../../model/model.service';
-import { User } from '../../../user/user.model';
 
 export class FiresidePostLike extends Model {
 	fireside_post_id!: number;
 	user_id!: number;
-	user?: User;
 	added_on!: number;
-
-	constructor(data: any = {}) {
-		super(data);
-
-		if (data.user) {
-			this.user = new User(data.user);
-		}
-	}
 
 	$save() {
 		if (this.id) {

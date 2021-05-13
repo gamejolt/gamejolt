@@ -1,10 +1,14 @@
+import { Component, Prop } from 'vue-property-decorator';
 import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
+import AppFormControlPrefixedInput from '../../../../../_common/form-vue/control/prefixed-input/prefixed-input.vue';
 import { AppFocusWhen } from '../../../../../_common/form-vue/focus-when.directive';
 import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
-import { Component, Prop } from 'vue-property-decorator';
 
 @Component({
+	components: {
+		AppFormControlPrefixedInput,
+	},
 	directives: {
 		AppFocusWhen,
 	},

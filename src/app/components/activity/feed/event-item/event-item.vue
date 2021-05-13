@@ -88,24 +88,12 @@
 				</div>
 			</div>
 
-			<app-activity-feed-comment-video
-				v-if="eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD"
-				:item="item"
-				:video="video"
-			/>
 			<template v-if="post">
 				<app-activity-feed-devlog-post-video
 					v-if="post.hasVideo"
 					:item="item"
 					:post="post"
 					@query-param="onQueryParam"
-				/>
-
-				<app-activity-feed-devlog-post-sketchfab
-					v-if="post.hasSketchfab"
-					:item="item"
-					:post="post"
-					@click.native.stop
 				/>
 
 				<app-activity-feed-devlog-post-media
@@ -134,6 +122,7 @@
 						<app-content-viewer
 							class="fireside-post-lead"
 							:source="post.lead_content"
+							:display-rules="displayRules"
 						/>
 					</app-fade-collapse>
 				</app-sticker-target>
@@ -184,13 +173,9 @@
 
 			<app-event-item-controls
 				class="-controls"
-				:class="{
-					'-controls-comment-video': eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD,
-				}"
 				:post="post"
 				:feed="feed"
 				:item="item"
-				:video="video"
 				show-comments
 				event-label="feed"
 				@post-edit="onPostEdited(eventItem)"

@@ -62,8 +62,6 @@ export class LinkedAccount extends Model {
 	static readonly PROVIDER_GOOGLE: Provider = 'google';
 	static readonly PROVIDER_TWITCH: Provider = 'twitch';
 	static readonly PROVIDER_TUMBLR: Provider = 'tumblr';
-	static readonly PROVIDER_YOUTUBE: Provider = 'youtube';
-	static readonly PROVIDER_YOUTUBE_CHANNEL = 'youtube-channel';
 	static readonly PROVIDER_DISCORD: Provider = 'discord';
 
 	game_id!: number;

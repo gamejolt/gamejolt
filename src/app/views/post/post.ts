@@ -55,6 +55,9 @@ export default class RoutePost extends BaseRouteComponent {
 	post: FiresidePost | null = null;
 	communityNotifications: CommunityUserNotification[] = [];
 
+	/** @override */
+	disableRouteTitleSuffix = true;
+
 	private permalinkWatchDeregister?: CommentThreadModalPermalinkDeregister;
 
 	get theme() {
@@ -69,8 +72,6 @@ export default class RoutePost extends BaseRouteComponent {
 		if (!this.post) {
 			return null;
 		}
-
-		this.disableRouteTitleSuffix = true;
 
 		const lead = this.post.getShortLead();
 		const user = this.post.user.display_name;
@@ -138,5 +139,9 @@ export default class RoutePost extends BaseRouteComponent {
 	private setPageTheme() {
 		const theme = this.post ? this.post.game?.theme ?? this.post.user.theme : null;
 		store.commit('theme/setPageTheme', { key: PostThemeKey, theme });
+	}
+
+	onPostUpdated(post: FiresidePost) {
+		Object.assign(this.post, post);
 	}
 }

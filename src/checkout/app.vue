@@ -1,3 +1,5 @@
+<script lang="ts" src="./app"></script>
+
 <template>
 	<app-common-shell :class="{ 'is-client-offline': Connection.isClientOffline }">
 		<app-cookie-banner />
@@ -25,7 +27,9 @@
 				<div class="row">
 					<div class="col-sm-6">
 						<p class="footer-links">
-							<app-contact-link email="contact@gamejolt.com">Contact Game Jolt</app-contact-link>
+							<app-contact-link email="contact@gamejolt.com">
+								Contact Game Jolt
+							</app-contact-link>
 							&nbsp; | &nbsp;
 							<a :href="Environment.baseUrl + '/terms'" target="_blank">Terms</a>
 							&nbsp; | &nbsp;
@@ -42,7 +46,7 @@
 					</div>
 					<div class="col-sm-6">
 						<p class="footer-copyright">
-							&copy; {{ curDate | date('yyyy') }} Lucent Web Creative, LLC
+							&copy; {{ curDate | date('yyyy') }} Game Jolt Inc.
 						</p>
 					</div>
 				</div>
@@ -50,5 +54,3 @@
 		</footer>
 	</app-common-shell>
 </template>
-
-<script lang="ts" src="./app"></script>

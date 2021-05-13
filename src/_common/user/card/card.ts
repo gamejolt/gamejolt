@@ -52,10 +52,6 @@ export default class AppUserCard extends Vue {
 		return this.user.game_count || 0;
 	}
 
-	get videoCount() {
-		return this.user.video_count || 0;
-	}
-
 	get likeCount() {
 		return this.user.like_count || 0;
 	}

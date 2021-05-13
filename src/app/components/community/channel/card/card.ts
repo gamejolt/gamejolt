@@ -55,7 +55,7 @@ export default class AppCommunityChannelCard extends Vue {
 		}
 
 		const link = {
-			name: 'communities.view.channel.feed',
+			name: 'communities.view.channel',
 			params: { path: this.community.path, channel: this.path },
 		} as any;
 

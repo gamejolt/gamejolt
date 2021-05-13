@@ -79,6 +79,15 @@
 						<div class="list-group-dark">
 							<router-link
 								v-if="!GJ_IS_CLIENT && !Screen.isXs"
+								v-app-track-event="`sidebar:app`"
+								class="list-group-item has-icon offline-disable"
+								:to="{ name: 'landing.app' }"
+							>
+								<app-jolticon icon="world" />
+								<translate>Get the App</translate>
+							</router-link>
+							<router-link
+								v-if="!GJ_IS_CLIENT && !Screen.isXs"
 								v-app-track-event="`sidebar:client`"
 								class="list-group-item has-icon offline-disable"
 								:to="{ name: 'landing.client' }"
@@ -118,6 +127,17 @@
 			class="navbar-right"
 			:style="{ 'min-width': minColWidth }"
 		>
+			<div
+				v-if="$route.name !== 'landing.app' && !Screen.isXs && !GJ_IS_CLIENT"
+				class="-button"
+			>
+				<app-button
+					v-app-track-event="`top-nav:get-app:click`"
+					:to="{ name: 'landing.app' }"
+				>
+					<translate>Get App</translate>
+				</app-button>
+			</div>
 			<div v-app-observe-dimensions="checkColWidths" class="-col">
 				<template v-if="app.user">
 					<!-- Notifications -->
@@ -214,6 +234,12 @@
 	padding-left: 24px
 	padding-right: 24px
 	max-width: 600px
+
+.-button
+	display: flex
+	align-items: center
+	justify-content: center
+	margin-right: 12px
 
 .navbar-left
 .navbar-right

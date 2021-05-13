@@ -53,10 +53,6 @@ export default class AppCommunityCompetitionEntrySubmitModal extends BaseModal {
 		this.selectedGame = game;
 	}
 
-	onClickBack() {
-		this.selectedGame = null;
-	}
-
 	async onClickSubmit() {
 		if (!this.selectedGame || this.isSubmitting) {
 			return;
