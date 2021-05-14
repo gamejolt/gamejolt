@@ -121,6 +121,10 @@ export class ChatUserChannel extends Channel {
 
 	private onRoomLeave(data: RoomIdPayload) {
 		arrayRemove(this.client.groupRooms, i => i.id === data.room_id);
+
+		if (isInChatRoom(this.client, data.room_id)) {
+			leaveChatRoom(this.client);
+		}
 	}
 
 	private onNotification(data: Partial<ChatMessage>) {

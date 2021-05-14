@@ -8,33 +8,15 @@
 		@inview="isInview = true"
 		@outview="isInview = false"
 	>
-		<a
+		<app-popper
 			v-if="isInview"
-			class="-item"
-			:class="{
-				active: isActive,
-			}"
-			:title="hoverTitle"
-			v-on="componentEvents"
+			popover-class="fill-darkest"
+			block
+			:placement="Screen.isMobile ? 'bottom' : 'left'"
 		>
-			<template v-if="!user">
-				<span
-					v-if="isHovered || Screen.isXs"
-					v-app-tooltip="$gettext('Leave Room')"
-					class="-action"
-					@click.stop.prevent="leaveRoom"
-				>
-					<app-jolticon icon="logout" class="middle" />
-				</span>
-			</template>
-
-			<span v-if="notificationsCount" class="tag tag-highlight notifications-tag">
-				{{ notificationsCountLocalized }}
-			</span>
-
-			<div class="shell-nav-icon">
-				<div class="-avatar">
-					<template v-if="user">
+			<a>
+				<div class="shell-nav-icon">
+					<div class="-avatar">
 						<img :src="user.img_avatar" />
 						<app-chat-user-online-status
 							v-if="isOnline !== null"
@@ -42,18 +24,22 @@
 							:is-online="isOnline"
 							:size="12"
 						/>
-					</template>
-					<div v-else class="-group-icon">
-						<app-jolticon icon="users" />
 					</div>
 				</div>
-			</div>
 
-			<div class="shell-nav-label">
-				{{ title }}
-				<span v-if="meta" class="tiny">{{ meta }}</span>
-			</div>
-		</a>
+				<div class="shell-nav-label">
+					<span v-if="isOwner" v-app-tooltip="$gettext(`Room Owner`)">
+						<app-jolticon icon="crown" />
+					</span>
+					{{ user.display_name }}
+					<span class="tiny">@{{ user.username }}</span>
+				</div>
+			</a>
+
+			<template #popover>
+				<app-chat-user-popover :user="user" />
+			</template>
+		</app-popper>
 	</app-scroll-inview>
 </template>
 
@@ -90,13 +76,4 @@
 	&-status
 		right: 12px
 		bottom: 10px
-
-.-action
-	display: inline-block
-	float: right
-	padding-left: 8px
-	color: var(--theme-fg-muted) !important
-
-	&:hover
-		color: var(--theme-fg) !important
 </style>

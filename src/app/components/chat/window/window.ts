@@ -11,9 +11,9 @@ import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../store/index';
 import { ChatClient, ChatKey, leaveChatRoom } from '../client';
 import { ChatInviteModal } from '../invite-modal/invite-modal.service';
+import AppChatMemberList from '../member-list/member-list.vue';
 import { ChatMessage } from '../message';
 import { ChatRoom, getChatRoomTitle } from '../room';
-import AppChatUserList from '../user-list/user-list.vue';
 import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vue';
 import AppChatWindowMenu from './menu/menu.vue';
 import AppChatWindowOutput from './output/output.vue';
@@ -22,12 +22,12 @@ import AppChatWindowSend from './send/send.vue';
 @Component({
 	components: {
 		AppScrollScroller,
-		AppChatUserList,
 		AppChatUserOnlineStatus,
 		AppChatWindowSend,
 		AppChatWindowOutput,
 		AppFadeCollapse,
 		AppChatWindowMenu,
+		AppChatMemberList,
 	},
 	directives: {
 		AppTooltip,

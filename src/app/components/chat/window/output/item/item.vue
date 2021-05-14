@@ -4,8 +4,6 @@
 	<div
 		class="chat-window-message"
 		:class="{
-			'chat-msg-type-normal': message.type === ChatMessage.TypeNormal,
-			'chat-msg-type-system': message.type === ChatMessage.TypeSystem,
 			'chat-window-message-not-combined': !message.combine,
 			'chat-window-message-combined': message.combine,
 			'chat-window-message-editing': isEditing,
@@ -14,13 +12,18 @@
 		}"
 		:style="{ 'background-color': isEditingColor }"
 	>
-		<router-link
-			v-if="!message.combine"
-			class="chat-window-message-avatar"
-			:to="message.user.url"
-		>
-			<img class="img-responsive" :src="message.user.img_avatar" alt="" />
-		</router-link>
+		<a v-if="!message.combine" class="chat-window-message-avatar">
+			<app-popper placement="right">
+				<img
+					class="img-responsive -chat-window-message-avatar-img"
+					:src="message.user.img_avatar"
+					alt=""
+				/>
+				<template #popover>
+					<app-chat-user-popover :user="message.user" />
+				</template>
+			</app-popper>
+		</a>
 
 		<div class="chat-window-message-container">
 			<div v-if="!message.combine" class="chat-window-message-byline">

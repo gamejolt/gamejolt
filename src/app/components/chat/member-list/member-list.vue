@@ -1,4 +1,4 @@
-<script lang="ts" src="./user-list"></script>
+<script lang="ts" src="./member-list"></script>
 
 <template>
 	<div class="chat-user-list">
@@ -11,12 +11,10 @@
 			/>
 		</div>
 
-		<ul v-show="entries.length" class="shell-nav">
-			<app-chat-user-list-item
-				v-for="user of filteredEntries"
-				:key="getKeyForEntry(user)"
-				:item="user"
-			/>
+		<ul v-show="users.length" class="shell-nav">
+			<app-chat-member-list-item v-for="user of filteredUsers" :key="user.id" :user="user" />
 		</ul>
 	</div>
 </template>
+
+<style lang="stylus" scoped></style>
