@@ -6,6 +6,7 @@ import { propOptional, propRequired } from '../../../../utils/vue';
 export default class AppChatUserOnlineStatus extends Vue {
 	@Prop(propRequired(Boolean)) isOnline!: boolean;
 	@Prop(propOptional(Number, null)) size!: number | null;
+	@Prop(propOptional(Boolean, true)) absolute!: boolean;
 
 	get outerSize() {
 		if (!this.size || typeof this.size !== 'number') {

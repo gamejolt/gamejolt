@@ -684,11 +684,7 @@ export async function leaveGroupRoom(chat: ChatClient, room: ChatRoom) {
 		throw new Error(`Can't leave non-group rooms.`);
 	}
 
-	chat.userChannel?.push('group_leave', { room_id: room.id }).receive('ok', _response => {
-		if (isInChatRoom(chat, room.id)) {
-			leaveChatRoom(chat);
-		}
-	});
+	chat.userChannel?.push('group_leave', { room_id: room.id });
 }
 
 export function removeMessage(chat: ChatClient, msgId: number) {
@@ -753,5 +749,12 @@ export function updateChatRoomLastMessageOn(chat: ChatClient, message: ChatMessa
 	const groupRoom = chat.groupRooms.find(i => i.id === message.room_id);
 	if (groupRoom) {
 		groupRoom.last_message_on = time;
+	}
+}
+
+export function kickGroupMember(chat: ChatClient, memberId: number) {
+	const room = chat.room;
+	if (room) {
+		chat.roomChannels[room.id].push('kick_member', { member_id: memberId });
 	}
 }

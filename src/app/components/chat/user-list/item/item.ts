@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, InjectReactive, Prop } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../../utils/vue';
+import { propRequired } from '../../../../../utils/vue';
 import { number } from '../../../../../_common/filters/number';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../../../../_common/screen/screen-service';
@@ -25,8 +25,6 @@ const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` }
 })
 export default class AppChatUserListItem extends Vue {
 	@Prop(propRequired()) item!: ChatUser | ChatRoom;
-	@Prop(propOptional(ChatRoom)) currentRoom?: ChatRoom;
-	@Prop(propOptional(Boolean, false)) showPm!: boolean;
 
 	@InjectReactive(ChatKey) chat!: ChatClient;
 
@@ -43,16 +41,12 @@ export default class AppChatUserListItem extends Vue {
 		return this.item instanceof ChatUser ? this.item : null;
 	}
 
-	get url() {
-		return this.user?.url ?? '/';
-	}
-
 	get isActive() {
-		return this.showPm && this.chat.room && this.chat.room.id === this.roomId;
+		return this.chat.room?.id === this.roomId;
 	}
 
 	get notificationsCount() {
-		return this.chat.notifications[this.roomId] || 0;
+		return this.chat.notifications[this.roomId] ?? 0;
 	}
 
 	get notificationsCountLocalized() {
@@ -86,29 +80,15 @@ export default class AppChatUserListItem extends Vue {
 		return parts.join(' ');
 	}
 
-	get isOwner() {
-		return this.currentRoom && this.user && this.currentRoom.owner_id === this.user.id;
-	}
-
-	get component() {
-		return !this.showPm ? 'router-link' : 'a';
-	}
-
-	get componentProps() {
-		return !this.showPm ? { to: this.url } : {};
-	}
-
 	get componentEvents() {
-		const events: Record<string, any> = {};
+		const events: Record<string, any> = {
+			click: this.onClick,
+		};
 
 		// Only group chats have an action we need to show on hover.
 		if (!this.user) {
 			events.mouseenter = this.onMouseEnter;
 			events.mouseleave = this.onMouseLeave;
-		}
-
-		if (this.showPm) {
-			events.click = this.onClick;
 		}
 
 		return events;

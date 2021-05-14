@@ -31,7 +31,7 @@
 				>
 					<translate>No friends yet.</translate>
 				</div>
-				<app-chat-user-list v-else :entries="tab === 'chats' ? chats : friends" show-pm />
+				<app-chat-user-list v-else :entries="tab === 'chats' ? chats : friends" />
 			</template>
 			<template v-else-if="chat.connected">
 				<app-loading centered :label="$gettext(`Loading your chats...`)" />
