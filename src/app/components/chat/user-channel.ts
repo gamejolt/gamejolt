@@ -144,13 +144,8 @@ export class ChatUserChannel extends Channel {
 			message.playNotificationSound();
 		}
 
-		// Don't show growls/system notifications unless it's a message from a
-		// friend for now.
-		if (!this.client.friendsList.getByRoom(message.room_id)) {
-			return;
-		}
-
-		ChatNotificationGrowl.show(this.client, message, this.tabLeader.isLeader);
+		const room = this.client.groupRooms.find(i => i.id === message.room_id);
+		ChatNotificationGrowl.show(this.client, message, room, this.tabLeader.isLeader);
 	}
 
 	private onYouUpdated(data: Partial<ChatUser>) {

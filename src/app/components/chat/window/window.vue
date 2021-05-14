@@ -14,6 +14,8 @@
 				<div class="chat-window-header-wrap">
 					<div class="chat-window-header fill-offset">
 						<div class="chat-window-header-controls">
+							<app-chat-window-menu :room="room" />
+
 							<span
 								@mouseenter="friendAddJolticonVersion = 2"
 								@mouseleave="friendAddJolticonVersion = 1"
@@ -96,16 +98,6 @@
 								<br />
 								<small>@{{ room.user.username }}</small>
 							</h3>
-
-							<app-button
-								v-if="!room.isPmRoom && isOwner"
-								v-app-tooltip="$gettext('Edit Group')"
-								class="-header-control anim-fade-in-right"
-								circle
-								trans
-								icon="edit"
-								@click="editTitle()"
-							/>
 						</div>
 					</div>
 				</div>

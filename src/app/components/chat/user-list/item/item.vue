@@ -24,7 +24,7 @@
 					class="-action"
 					@click.stop.prevent="leaveRoom"
 				>
-					<app-jolticon icon="remove" class="middle" />
+					<app-jolticon icon="logout" class="middle" />
 				</span>
 			</template>
 

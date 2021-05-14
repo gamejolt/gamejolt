@@ -2,21 +2,35 @@ import { ContentDocument } from '../../../../_common/content/content-document';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { ChatClient, enterChatRoom, isInChatRoom } from '../client';
 import { ChatMessage } from '../message';
+import { ChatRoom, getChatRoomTitle } from '../room';
 import AppChatNotificationGrowl from './notification-growl.vue';
 
 export class ChatNotificationGrowl {
-	static async show(chat: ChatClient, message: ChatMessage, system = true) {
+	static async show(
+		chat: ChatClient,
+		message: ChatMessage,
+		groupRoom: ChatRoom | undefined,
+		system = true
+	) {
 		// Skip if already in the room.
 		if (isInChatRoom(chat, message.room_id) && chat.isFocused) {
 			return;
+		}
+
+		let title = `💬 ${message.user.display_name}`;
+		// Append room title when message was sent in a group room.
+		if (groupRoom) {
+			title += ' (' + getChatRoomTitle(groupRoom, chat) + ')';
+		} else {
+			title += ` (@${message.user.username})`;
 		}
 
 		Growls.info({
 			onclick: () => enterChatRoom(chat, message.room_id),
 			system,
 
-			title: `💬 ${message.user.display_name} (@${message.user.username})`,
-			message: this.generateSystemMessage(message),
+			title,
+			message: this.generateSystemMessage(message, groupRoom),
 			icon: message.user.img_avatar,
 
 			component: AppChatNotificationGrowl,
@@ -35,7 +49,10 @@ export class ChatNotificationGrowl {
 	 *  - Try and mask any paragraphs inside of spoilers with *spoiler*
 	 *  - Replace gj emoji with :<emoji>:
 	 */
-	private static generateSystemMessage(message: ChatMessage): string {
+	private static generateSystemMessage(
+		message: ChatMessage,
+		groupRoom: ChatRoom | undefined
+	): string {
 		let systemMessage = '';
 
 		const doc = ContentDocument.fromJson(message.content);
@@ -83,13 +100,13 @@ export class ChatNotificationGrowl {
 		const firstChild = doc.firstChild;
 		if (firstChild) {
 			if (firstChild.type === 'mediaItem') {
-				systemMessage = '[Sent you an image]';
+				systemMessage = groupRoom ? '[Sent an image]' : '[Sent you an image]';
 				allowedLines = 1;
 			} else if (firstChild.type === 'gif') {
-				systemMessage = '[Sent you a gif]';
+				systemMessage = groupRoom ? '[Sent a gif]' : '[Sent you a gif]';
 				allowedLines = 1;
 			} else if (firstChild.type === 'codeBlock') {
-				systemMessage = '[Sent you a code snippet]';
+				systemMessage = groupRoom ? '[Sent a code snippet]' : '[Sent you a code snippet]';
 				allowedLines = 1;
 			}
 		}
@@ -109,7 +126,11 @@ export class ChatNotificationGrowl {
 
 		// Fallback, in case the message somehow ends up empty.
 		if (systemMessage.trim() === '') {
-			systemMessage = 'Sent you a message';
+			if (groupRoom) {
+				systemMessage = 'Sent a message';
+			} else {
+				systemMessage = 'Sent you a message';
+			}
 		}
 
 		return systemMessage;
