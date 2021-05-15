@@ -34,6 +34,7 @@ export default class AppContentEditorGifModal extends BaseModal {
 	$refs!: {
 		contentScroller: AppScrollScrollerTS;
 		modal: AppModalTS;
+		search: HTMLInputElement;
 	};
 
 	get shouldShowResetButton() {
@@ -54,7 +55,15 @@ export default class AppContentEditorGifModal extends BaseModal {
 
 	async mounted() {
 		this.$refs.modal.$el.focus();
-		this.populateCategories();
+
+		await this.populateCategories();
+
+		// Wait for the categories to be loaded. The input is disabled until they are.
+		// Then wait a tick to make sure the `disabled` state goes away.
+		// Inputs cannot be focused until they are no longer disabled.
+		await this.$nextTick();
+		// Focus now.
+		this.$refs.search.focus();
 	}
 
 	private async populateCategories() {
