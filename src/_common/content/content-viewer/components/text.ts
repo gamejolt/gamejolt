@@ -66,7 +66,20 @@ export class AppContentViewerText extends Vue {
 	}
 
 	render(h: CreateElement) {
-		let vnode = h('span', this.text);
+		const text = this.text;
+		const style = {} as any;
+
+		if (this.owner.getContentRules().biggifyEmojis) {
+			// Increase font size if entire content is just one emoji.
+			if (text && /^\p{Emoji}$/u.test(text) && !/[a-z0-9]/.test(text)) {
+				const content = this.owner.getContent();
+				if (content && content.getLength() === this.data.getLength()) {
+					style['font-size'] = '32px';
+				}
+			}
+		}
+
+		let vnode = h('span', { style }, text);
 		if (this.isLink) {
 			const attrs = this.getMarkAttrs('link');
 			const children = [vnode];
