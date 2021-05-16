@@ -1,9 +1,11 @@
 import Vue from 'vue';
 import { Component, InjectReactive, Prop, Watch } from 'vue-property-decorator';
+import { sleep } from '../../../../../utils/utils';
 import { propRequired } from '../../../../../utils/vue';
 import { date } from '../../../../../_common/filters/date';
 import AppIllustration from '../../../../../_common/illustration/illustration.vue';
 import AppLoading from '../../../../../_common/loading/loading.vue';
+import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
@@ -23,6 +25,9 @@ import AppChatWindowOutputItem from './item/item.vue';
 		AppChatWindowOutputItem,
 		AppScrollScroller,
 		AppIllustration,
+	},
+	directives: {
+		AppObserveDimensions,
 	},
 	filters: {
 		date,
@@ -45,7 +50,6 @@ export default class AppChatWindowOutput extends Vue {
 	private checkQueuedTimeout?: NodeJS.Timer;
 	private _introEmoji?: string;
 	private newMessageDeregister?: EventBusDeregister;
-	private inputResizeDeregister?: EventBusDeregister;
 
 	get allMessages() {
 		return this.messages.concat(this.queuedMessages);
@@ -103,22 +107,6 @@ export default class AppChatWindowOutput extends Vue {
 				}
 			}
 		);
-
-		this.inputResizeDeregister = EventBus.on('Chat.inputResize', async () => {
-			// When the chat's input size changes, we want to scroll to the bottom, so the input doesn't start to cover the message list.
-			if (this.shouldScroll) {
-				await this.$nextTick();
-				this.autoscroll();
-			}
-		});
-
-		// When the total count (messages and queuedMessages) changes, scroll down.
-		// This is not a @Watch decorator, because we don't want to react to just one of them changing
-		// An example of when this can happen is when a queued message gets moved to the messages array.
-		this.$watch(
-			() => this.messages.length + this.queuedMessages.length,
-			this.onMessagesLengthChange
-		);
 	}
 
 	destroyed() {
@@ -136,11 +124,6 @@ export default class AppChatWindowOutput extends Vue {
 			this.newMessageDeregister();
 			this.newMessageDeregister = undefined;
 		}
-
-		if (this.inputResizeDeregister) {
-			this.inputResizeDeregister();
-			this.inputResizeDeregister = undefined;
-		}
 	}
 
 	@Watch('queuedMessages')
@@ -157,7 +140,13 @@ export default class AppChatWindowOutput extends Vue {
 	 * bottom of the view. If they have, then we shouldn't autoscroll until
 	 * they scroll back to the bottom.
 	 */
-	onScroll() {
+	async onScroll() {
+		// Sleep a short amount here.
+		// Sometimes the send input or messages resize rapidly, too fast for the onResize events to fire.
+		// In those cases, the onScroll would fire twice, and we don't autoscroll.
+		// To combat those cases, we need to wait a short amount before trying to disable autoscroll here.
+		await sleep(50);
+
 		if (this.canLoadOlder && this.$el.scrollTop === 0) {
 			this.loadOlder();
 			return;
@@ -211,14 +200,14 @@ export default class AppChatWindowOutput extends Vue {
 		this.$el.scrollTop = diff;
 	}
 
-	onMessagesLengthChange() {
+	private autoscroll() {
+		this.$el.scrollTop = this.$el.scrollHeight + 10000;
+	}
+
+	public tryAutoscroll() {
 		if (this.shouldScroll) {
 			this.autoscroll();
 		}
-	}
-
-	private autoscroll() {
-		this.$el.scrollTop = this.$el.scrollHeight + 10000;
 	}
 
 	isNewMessage(message: ChatMessage) {
