@@ -32,7 +32,7 @@
 						<app-jolticon icon="crown" />
 					</span>
 					{{ user.display_name }}
-					<span class="tiny">@{{ user.username }}</span>
+					<span class="tiny text-muted">@{{ user.username }}</span>
 				</div>
 			</a>
 

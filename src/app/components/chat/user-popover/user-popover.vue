@@ -13,6 +13,7 @@
 			<div class="-names">
 				<div class="-displayname">
 					<b>{{ user.display_name }}</b>
+					<app-user-verified-tick :user="user" />
 				</div>
 				<div class="-username text-muted">@{{ user.username }}</div>
 			</div>

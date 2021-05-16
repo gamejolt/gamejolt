@@ -5,6 +5,7 @@ import { propRequired } from '../../../../utils/vue';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { AppTheme } from '../../../../_common/theme/theme';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
+import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
 import { ChatClient, ChatKey, enterChatRoom, isUserOnline, kickGroupMember } from '../client';
 import { ChatUser } from '../user';
 import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vue';
@@ -14,6 +15,7 @@ import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vu
 		AppChatUserOnlineStatus,
 		AppUserAvatar,
 		AppTheme,
+		AppUserVerifiedTick,
 	},
 })
 export default class AppChatUserPopover extends Vue {
