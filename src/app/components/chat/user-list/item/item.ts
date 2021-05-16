@@ -3,11 +3,13 @@ import { Component, InjectReactive, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { number } from '../../../../../_common/filters/number';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import AppPopper from '../../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { ScrollInviewConfig } from '../../../../../_common/scroll/inview/config';
 import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { ChatClient, ChatKey, enterChatRoom, isUserOnline, leaveGroupRoom } from '../../client';
+import AppChatNotificationSettings from '../../notification-settings/notification-settings.vue';
 import { ChatRoom, getChatRoomTitle } from '../../room';
 import { ChatUser } from '../../user';
 import AppChatUserOnlineStatus from '../../user-online-status/user-online-status.vue';
@@ -18,6 +20,8 @@ const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` }
 	components: {
 		AppScrollInview,
 		AppChatUserOnlineStatus,
+		AppPopper,
+		AppChatNotificationSettings,
 	},
 	directives: {
 		AppTooltip,
