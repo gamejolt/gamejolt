@@ -30,7 +30,6 @@
 				<router-link class="chat-window-message-user link-unstyled" :to="message.user.url">
 					{{ message.user.display_name }}
 				</router-link>
-				<app-user-verified-tick :user="message.user" vertical-align />
 				<span class="chat-window-message-username"> @{{ message.user.username }} </span>
 				<span class="chat-window-message-time">
 					<span v-if="!message._showAsQueued" v-app-tooltip="loggedOn.tooltip">

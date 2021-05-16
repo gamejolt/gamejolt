@@ -12,7 +12,6 @@ import { Screen } from '../../../../../../_common/screen/screen-service';
 import { Theme } from '../../../../../../_common/theme/theme.model';
 import { ThemeState, ThemeStore } from '../../../../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
-import AppUserVerifiedTick from '../../../../../../_common/user/verified-tick/verified-tick.vue';
 import {
 	ChatClient,
 	ChatKey,
@@ -33,7 +32,6 @@ export interface ChatMessageEditEvent {
 		AppContentViewer,
 		AppPopper,
 		AppChatUserPopover,
-		AppUserVerifiedTick,
 	},
 	directives: {
 		AppTooltip,
