@@ -26,6 +26,11 @@ export interface ActivityFeedStateOptions {
 	 * A timestamp of when the notifications in this feed were last viewed.
 	 */
 	notificationWatermark?: number;
+
+	/**
+	 * Skips sending item-viewed ticks when items in this feed are viewed.
+	 */
+	suppressTicks?: boolean;
 }
 
 export class ActivityFeedState {
@@ -40,6 +45,7 @@ export class ActivityFeedState {
 	isLoadingMore = false;
 	isLoadingNew = false;
 	reachedEnd = false;
+	suppressTicks = false;
 	readonly loadMoreUrl: string;
 
 	get startScrollId() {
@@ -56,6 +62,7 @@ export class ActivityFeedState {
 		this.feedType = options.type;
 		this.feedName = options.name;
 		this.loadMoreUrl = options.url;
+		this.suppressTicks = options.suppressTicks ?? false;
 
 		if (typeof options.notificationWatermark !== 'undefined') {
 			this.notificationWatermark = options.notificationWatermark;
@@ -115,7 +122,9 @@ export class ActivityFeedState {
 		}
 
 		this.viewedItems.push(item.id);
-		item.$viewed(this.feedName);
+		if (!this.suppressTicks) {
+			item.$viewed(this.feedName);
+		}
 	}
 
 	/**
