@@ -41,6 +41,7 @@ export default class RouteHomeFYP extends BaseRouteComponent {
 				shouldShowFollow: true,
 				shouldShowDates: false,
 				itemsPerPage: $payload.perPage,
+				suppressTicks: $payload.suppressTicks,
 			},
 			$payload.items,
 			fromCache
