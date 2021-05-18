@@ -317,9 +317,9 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 		if (this.videoStatus !== VideoStatus.IDLE) {
 			const result = await ModalConfirm.show(
 				this.$gettext(
-					'When you remove your video, you can upload a new one later or link a YouTube video instead.'
+					`Are you sure you want to remove this video? You'll be able to add another one later.`
 				),
-				this.$gettext('Remove uploaded video?')
+				this.$gettext('Remove video?')
 			);
 
 			if (!result) {
