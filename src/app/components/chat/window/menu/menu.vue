@@ -1,7 +1,7 @@
 <script lang="ts" src="./menu"></script>
 
 <template>
-	<app-popper popover-class="fill-darkest" placement="bottom" @show="onShowPopper">
+	<app-popper popover-class="fill-darkest" placement="bottom">
 		<app-button v-app-tooltip="$gettext(`Manage...`)" circle sparse trans icon="ellipsis-h" />
 
 		<template #popover>
@@ -16,43 +16,20 @@
 						<hr />
 					</template>
 
-					<app-loading-fade :is-loading="isLoadingNotificationSettings">
-						<h5 class="-header list-group-item">
-							<translate>Notifications</translate>
-						</h5>
+					<app-chat-notification-settings
+						:room-id="room.id"
+						:is-pm-room="room.isPmRoom"
+					/>
 
-						<a
-							v-for="setting of notificationSettings"
-							:key="setting.level"
-							class="list-group-item has-icon"
-							@click="onClickSetNotificationLevel(setting.level)"
-						>
-							<app-jolticon
-								:icon="
-									setting.level === notificationLevel
-										? 'radio-circle-filled'
-										: 'radio-circle'
-								"
-							/>
-							{{ setting.text }}
+					<template v-if="shouldShowLeave">
+						<hr />
+						<a class="list-group-item has-icon" @click="leaveRoom">
+							<app-jolticon icon="logout" notice />
+							<translate>Leave Room</translate>
 						</a>
-					</app-loading-fade>
+					</template>
 				</div>
 			</div>
 		</template>
 	</app-popper>
 </template>
-
-<style lang="stylus" scoped>
-@import '~styles/variables'
-
-.-header
-	font-family: $font-family-heading
-	font-size: $font-size-tiny
-	font-weight: normal
-	letter-spacing: 0.1em
-	line-height: 1
-	text-transform: uppercase
-	margin-top: 0
-	margin-bottom: 0
-</style>
