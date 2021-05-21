@@ -2,6 +2,8 @@ import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { stringSort } from '../../../../../utils/array';
+import { shouldShowAppPromotion } from '../../../../../utils/mobile-app';
+import { trackAppPromotionClick } from '../../../../../_common/analytics/analytics.service';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import { number } from '../../../../../_common/filters/number';
@@ -42,6 +44,7 @@ export default class AppShellSidebarLibrary extends Vue {
 	readonly Environment = Environment;
 	readonly Screen = Screen;
 	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
+	readonly trackAppPromotionClick = trackAppPromotionClick;
 
 	get collectionsLength() {
 		return number(this.collections.length);
@@ -57,6 +60,10 @@ export default class AppShellSidebarLibrary extends Vue {
 
 	get playlistFoldersToDisplay() {
 		return Object.keys(this.playlistFolders).filter(folder => folder !== 'main');
+	}
+
+	get shouldShowAppPromotion() {
+		return shouldShowAppPromotion(this.$route);
 	}
 
 	toggleFolder(key: string) {

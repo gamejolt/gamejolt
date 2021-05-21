@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
+import { shouldShowAppPromotion } from '../../../../utils/mobile-app';
+import { trackAppPromotionClick } from '../../../../_common/analytics/analytics.service';
 import AppAppButtons from '../../../../_common/app-buttons/app-buttons.vue';
 import AppContactLink from '../../../../_common/contact-link/contact-link.vue';
 import { date } from '../../../../_common/filters/date';
@@ -27,9 +29,14 @@ export default class AppShellFooter extends Vue {
 	readonly Screen = Screen;
 	readonly date = date;
 	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
+	readonly trackAppPromotionClick = trackAppPromotionClick;
 
 	get clientVersion() {
 		return GJ_VERSION;
+	}
+
+	get shouldShowAppPromotion() {
+		return shouldShowAppPromotion(this.$route);
 	}
 
 	async showSystemReport() {

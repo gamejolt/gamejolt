@@ -1,4 +1,5 @@
 import VueRouter from 'vue-router';
+import { AppPromotionSource } from '../../utils/mobile-app';
 import { Environment } from '../environment/environment.service';
 import { appStore } from '../store/app-store';
 import { EventBus } from '../system/event/event-bus.service';
@@ -184,4 +185,16 @@ export class Analytics {
 		// 	ga('set', 'expVar', '' + variation);
 		// }
 	}
+}
+
+function trackEvent(name: string, parameters: Record<string, string | number>) {
+	// We prefix with `x_` so that we know it is one of our own events.
+	gtag('event', `x_${name}`, parameters);
+	console.log(`Track event. ${name}`, parameters);
+}
+
+export function trackAppPromotionClick(options: { source: AppPromotionSource }) {
+	trackEvent('app_promotion_click', {
+		source: options.source,
+	});
 }
