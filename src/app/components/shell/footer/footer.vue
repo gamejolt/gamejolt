@@ -3,7 +3,7 @@
 <template>
 	<footer id="footer" class="section">
 		<div class="container">
-			<template v-if="!GJ_IS_CLIENT && $route.name !== 'landing.app'">
+			<template v-if="shouldShowAppPromotion">
 				<div class="text-center">
 					<p>
 						<strong>Be the first!</strong>
@@ -11,7 +11,7 @@
 						Test the beta version of the Game Jolt app.
 					</p>
 					<p>
-						<app-app-buttons />
+						<app-app-buttons source="footer" />
 					</p>
 				</div>
 
@@ -23,8 +23,11 @@
 					<div class="row">
 						<div class="col-xs-4 col-sm-3">
 							<ol class="list-unstyled footer-link-list">
-								<li>
-									<router-link :to="{ name: 'landing.app' }">
+								<li v-if="shouldShowAppPromotion">
+									<router-link
+										:to="{ name: 'landing.app' }"
+										@click.native="trackAppPromotionClick({ source: 'footer' })"
+									>
 										<translate>Mobile App</translate>
 									</router-link>
 								</li>

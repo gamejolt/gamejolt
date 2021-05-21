@@ -78,10 +78,10 @@
 					<template #popover>
 						<div class="list-group-dark">
 							<router-link
-								v-if="!GJ_IS_CLIENT && !Screen.isXs"
-								v-app-track-event="`sidebar:app`"
+								v-if="shouldShowAppPromotion && !Screen.isXs"
 								class="list-group-item has-icon offline-disable"
 								:to="{ name: 'landing.app' }"
+								@click.native="trackAppPromotionClick({ source: 'top-nav-mobile' })"
 							>
 								<app-jolticon icon="world" />
 								<translate>Get the App</translate>
@@ -127,13 +127,10 @@
 			class="navbar-right"
 			:style="{ 'min-width': minColWidth }"
 		>
-			<div
-				v-if="$route.name !== 'landing.app' && !Screen.isXs && !GJ_IS_CLIENT"
-				class="-button"
-			>
+			<div v-if="shouldShowAppPromotion && !Screen.isXs" class="-button">
 				<app-button
-					v-app-track-event="`top-nav:get-app:click`"
 					:to="{ name: 'landing.app' }"
+					@click.native="trackAppPromotionClick({ source: 'top-nav' })"
 				>
 					<translate>Get App</translate>
 				</app-button>

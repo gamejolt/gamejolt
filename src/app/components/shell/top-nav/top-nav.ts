@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import { Component, InjectReactive } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
+import { shouldShowAppPromotion } from '../../../../utils/mobile-app';
+import { trackAppPromotionClick } from '../../../../_common/analytics/analytics.service';
 import { Connection } from '../../../../_common/connection/connection-service';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { AppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
@@ -58,6 +60,7 @@ export default class AppShellTopNav extends Vue {
 	readonly Screen = Screen;
 	readonly Connection = Connection;
 	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
+	readonly trackAppPromotionClick = trackAppPromotionClick;
 
 	get isTimedOut() {
 		return this.app.isUserTimedOut;
@@ -77,6 +80,10 @@ export default class AppShellTopNav extends Vue {
 
 	get shouldShowMoreMenu() {
 		return !Screen.isXs && !this.isTimedOut;
+	}
+
+	get shouldShowAppPromotion() {
+		return shouldShowAppPromotion(this.$route);
 	}
 
 	get minColWidth() {

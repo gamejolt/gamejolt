@@ -11,7 +11,7 @@
 					phone!
 				</p>
 
-				<app-app-buttons />
+				<app-app-buttons source="landing" />
 			</div>
 		</section>
 
@@ -35,7 +35,7 @@
 			<div class="container text-center">
 				<h1 class="section-header">Get the Game Jolt App!</h1>
 
-				<app-app-buttons />
+				<app-app-buttons source="landing" />
 
 				<br />
 				<br />
