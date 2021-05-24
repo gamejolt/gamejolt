@@ -81,7 +81,7 @@
 								v-if="shouldShowAppPromotion && !Screen.isXs"
 								class="list-group-item has-icon offline-disable"
 								:to="{ name: 'landing.app' }"
-								@click.native="trackAppPromotionClick({ source: 'top-nav-mobile' })"
+								@click.native="trackAppPromotionClick({ source: 'top-nav-options' })"
 							>
 								<app-jolticon icon="world" />
 								<translate>Get the App</translate>
