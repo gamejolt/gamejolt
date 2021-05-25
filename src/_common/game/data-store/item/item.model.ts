@@ -23,6 +23,11 @@ export class GameDataStoreItem extends Model {
 			'/web/dash/developer/games/api/data-storage/remove-item/' + this.game_id + '/' + this.id
 		);
 	}
+
+	get shortenedKey() {
+		const maxLength : number = 50
+		return this.key.length > maxLength ? this.key.substring(0, maxLength).concat("...") : this.key
+	}
 }
 
 Model.create(GameDataStoreItem);

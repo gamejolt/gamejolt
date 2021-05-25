@@ -53,7 +53,7 @@
 									params: { item: item.id },
 								}"
 							>
-								<code>{{ item.key }}</code>
+								<code>{{ item.shortenedKey }}</code>
 							</router-link>
 						</td>
 						<td class="small">
