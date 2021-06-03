@@ -1,4 +1,9 @@
-import { Component } from 'vue-property-decorator';
+import { Component, Inject } from 'vue-property-decorator';
+import {
+	AppPromotionStore,
+	AppPromotionStoreKey,
+	setAppPromotionCohort,
+} from '../../../utils/mobile-app';
 import { sleep } from '../../../utils/utils';
 import { AdSettingsContainer } from '../../../_common/ad/ad-store';
 import AppAdWidget from '../../../_common/ad/widget/widget.vue';
@@ -62,6 +67,8 @@ const DownloadDelay = 3000;
 	},
 })
 export default class RouteDownload extends BaseRouteComponent {
+	@Inject(AppPromotionStoreKey) appPromotion!: AppPromotionStore;
+
 	started = false;
 	game: Game = null as any;
 	build: null | GameBuild = null;
@@ -91,6 +98,10 @@ export default class RouteDownload extends BaseRouteComponent {
 				  });
 		}
 		return null;
+	}
+
+	routeCreated() {
+		setAppPromotionCohort(this.appPromotion, 'store');
 	}
 
 	async routeResolved($payload: any) {
