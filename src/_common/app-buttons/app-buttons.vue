@@ -4,7 +4,7 @@
 	<div class="app-buttons">
 		<a
 			class="-button"
-			href="https://play.google.com/store/apps/details?id=com.gamejolt.app&amp;utm_source=site&amp;utm_campaign=landing&amp;pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"
+			:href="appPromotion.playStoreUrl"
 			target="_blank"
 			@click="trackAppPromotionClick({ source })"
 		>
@@ -17,7 +17,7 @@
 		</a>
 		<a
 			class="-button"
-			href="https://testflight.apple.com/join/JdCeNWsX"
+			:href="appPromotion.appStoreUrl"
 			target="_blank"
 			@click="trackAppPromotionClick({ source })"
 		>

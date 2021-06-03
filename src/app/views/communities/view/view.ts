@@ -1,5 +1,10 @@
-import { Component, Provide, Watch } from 'vue-property-decorator';
+import { Component, Inject, Provide, Watch } from 'vue-property-decorator';
 import { Action, Mutation, State } from 'vuex-class';
+import {
+	AppPromotionStore,
+	AppPromotionStoreKey,
+	setAppPromotionCohort,
+} from '../../../../utils/mobile-app';
 import { enforceLocation } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
@@ -79,6 +84,7 @@ export const CommunityThemeKey = 'community';
 })
 export default class RouteCommunitiesView extends BaseRouteComponent {
 	@Provide(CommunityRouteStoreKey) routeStore = new CommunityRouteStore();
+	@Inject(AppPromotionStoreKey) appPromotion!: AppPromotionStore;
 
 	@AppState user!: AppStore['user'];
 	@Mutation setActiveCommunity!: Store['setActiveCommunity'];
@@ -170,6 +176,8 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 		if (this.contextPane) {
 			this.contextPane.props = { routeStore: this.routeStore };
 		}
+
+		setAppPromotionCohort(this.appPromotion, 'community');
 	}
 
 	routeResolved($payload: any) {

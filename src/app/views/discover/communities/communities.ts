@@ -1,5 +1,10 @@
-import { Component, Watch } from 'vue-property-decorator';
+import { Component, Inject, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import {
+	AppPromotionStore,
+	AppPromotionStoreKey,
+	setAppPromotionCohort,
+} from '../../../../utils/mobile-app';
 import { sleep } from '../../../../utils/utils';
 import { Api } from '../../../../_common/api/api.service';
 import AppCommunityCardCreatePlaceholder from '../../../../_common/community/card-create-placeholder/card-create-placeholder.vue';
@@ -33,6 +38,7 @@ const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height *
 })
 export default class RouteDiscoverCommunities extends BaseRouteComponent {
 	@State app!: AppStore;
+	@Inject(AppPromotionStoreKey) appPromotion!: AppPromotionStore;
 
 	searchText = '';
 	communities: Community[] = [];
@@ -65,6 +71,7 @@ export default class RouteDiscoverCommunities extends BaseRouteComponent {
 		this.page = 1;
 		this.isLoading = false;
 		this.hasMore = true;
+		setAppPromotionCohort(this.appPromotion, 'community');
 	}
 
 	routeResolved(payload: any) {

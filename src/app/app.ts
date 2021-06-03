@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Provide, ProvideReactive, Watch } from 'vue-property-decorator';
+import { AppPromotionStore, AppPromotionStoreKey } from '../utils/mobile-app';
 import { loadCurrentLanguage } from '../utils/translations';
 import { Analytics } from '../_common/analytics/analytics.service';
 import { CommentStoreManager, CommentStoreManagerKey } from '../_common/comment/comment-store';
@@ -26,6 +27,7 @@ export default class App extends Vue {
 	@ProvideReactive(ChatKey) chat: null | ChatClient = null;
 	@Provide(CommentStoreManagerKey) commentManager = new CommentStoreManager();
 	@Provide(DrawerStoreKey) drawerStore = new DrawerStore();
+	@Provide(AppPromotionStoreKey) appPromotionStore = new AppPromotionStore();
 
 	@AppState user!: AppStore['user'];
 
@@ -40,7 +42,7 @@ export default class App extends Vue {
 
 	created() {
 		if (!GJ_IS_SSR) {
-			Analytics.trackTiming('shell', 'vue-init', Date.now() - window._gjStartTime);
+			Analytics.trackTiming('shell', 'vue-init', Date.now() - (window as any)._gjStartTime);
 			const lang = getTranslationLang();
 			if (lang !== 'en_US') {
 				Analytics.trackEvent('translations', 'loaded', lang);
@@ -52,7 +54,11 @@ export default class App extends Vue {
 		// Let it finish doing all the initial rendering junk and track after
 		// that.
 		setTimeout(() => {
-			Analytics.trackTiming('shell', 'vue-mounted', Date.now() - window._gjStartTime);
+			Analytics.trackTiming(
+				'shell',
+				'vue-mounted',
+				Date.now() - (window as any)._gjStartTime
+			);
 		});
 
 		loadCurrentLanguage(this);
