@@ -24,9 +24,7 @@ export class AppPromotionStore {
 	get playStoreUrl(): string {
 		const params = [] as string[];
 
-		if (this.cohort) {
-			params.push(`ac=${this.cohort}`);
-		}
+		params.push(`ac=${this.cohort ?? 'other'}`);
 
 		const storeUrl = encodeURIComponent(
 			'https://play.google.com/store/apps/details?id=com.gamejolt.app&utm_source=site&utm_campaign=landing'
