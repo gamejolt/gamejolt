@@ -1,4 +1,5 @@
 import { Route } from 'vue-router';
+import { arrayRemove } from '../../../utils/array';
 
 const MAX_ITEMS = 10;
 
@@ -19,9 +20,20 @@ export class HistoryCache {
 
 	static get(route: Route, tag?: string) {
 		const stateKey = this.getStateKey();
-		return this.states.find(
+		const state = this.states.find(
 			i => i.url === route.fullPath && i.tag === tag && i.stateKey === stateKey
 		);
+
+		if (state) {
+			// We have to put the state back on top so that it was just
+			// accessed. We don't want it being cleaned up.
+			arrayRemove(this.states, i => i === state);
+			this.states.push(state);
+
+			return state;
+		}
+
+		return null;
 	}
 
 	static has(route: Route, tag?: string) {

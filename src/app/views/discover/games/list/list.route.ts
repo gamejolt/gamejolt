@@ -17,6 +17,6 @@ export const routeDiscoverGamesListTag: RouteConfig = {
 
 export const routeDiscoverGamesListDate: RouteConfig = {
 	name: 'discover.games.list._fetch-date',
-	path: `:section(by\\-date)/:date(${DateRegex})(\:)?:endDate(${DateRegex})?`,
+	path: `:section(by\\-date)/:date(${DateRegex})(:)?:endDate(${DateRegex})?`,
 	component: () => import(/* webpackChunkName: "routeDiscoverGamesList" */ './list.vue'),
 };

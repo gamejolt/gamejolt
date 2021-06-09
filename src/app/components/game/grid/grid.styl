@@ -1,6 +1,6 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-@require '../../scrollable-grid/scrollable-grid'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+@import '../../scrollable-grid/scrollable-grid'
 
 .game-grid
 	&-ad
@@ -31,13 +31,6 @@
 				change-bg('bg-offset')
 				padding: 20px
 				width: 300px + @padding * 2
-
-		&-video-inner
-			padding-left: 20px
-			padding-right: 20px
-			// It needs to take up some height so that it pushes the next item
-			// in the grid down.
-			min-height: 50px
 
 	&-items
 		@media $media-sm-up

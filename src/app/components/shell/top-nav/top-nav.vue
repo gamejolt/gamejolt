@@ -52,13 +52,28 @@
 				<router-link
 					v-if="shouldShowExplore"
 					v-app-track-event="`top-nav:main-menu:discover`"
-					class="-explore navbar-item"
+					class="navbar-item"
 					:class="{ active: $route.name === 'discover.home' }"
 					:to="{ name: 'discover.home' }"
 				>
-					<app-jolticon icon="compass-needle" class="-explore-icon" />
+					<app-jolticon icon="compass-needle" class="-section-icon" />
 					<strong class="text-upper">
 						<translate>Explore</translate>
+					</strong>
+				</router-link>
+
+				<router-link
+					v-if="!Screen.isXs"
+					v-app-track-event="`top-nav:main-menu:store`"
+					class="navbar-item"
+					:class="{ active: ($route.name || '').startsWith('discover.games.') }"
+					:to="{
+						name: 'discover.games.list._fetch',
+						params: { section: null },
+					}"
+				>
+					<strong class="text-upper">
+						<translate>Store</translate>
 					</strong>
 				</router-link>
 
@@ -81,7 +96,9 @@
 								v-if="shouldShowAppPromotion && !Screen.isXs"
 								class="list-group-item has-icon offline-disable"
 								:to="{ name: 'landing.app' }"
-								@click.native="trackAppPromotionClick({ source: 'top-nav-options' })"
+								@click.native="
+									trackAppPromotionClick({ source: 'top-nav-options' })
+								"
 							>
 								<app-jolticon icon="world" />
 								<translate>Get the App</translate>
@@ -220,7 +237,7 @@
 			top: 0
 			right: 0
 
-.-explore-icon
+.-section-icon
 	position: relative
 	top: 2px
 

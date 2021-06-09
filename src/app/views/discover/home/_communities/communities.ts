@@ -3,15 +3,15 @@ import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Store } from '../../../../../client/store/index';
 import { propOptional, propRequired } from '../../../../../utils/vue';
+import AppCommunityCardPlaceholder from '../../../../../_common/community/card-placeholder/card-placeholder.vue';
 import AppCommunityCard from '../../../../../_common/community/card/card.vue';
 import { Community } from '../../../../../_common/community/community.model';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import AppDiscoverHomeCommunitiesItem from './item/item.vue';
 
 @Component({
 	components: {
-		AppDiscoverHomeCommunitiesItem,
 		AppCommunityCard,
+		AppCommunityCardPlaceholder,
 	},
 })
 export default class AppDiscoverHomeCommunities extends Vue {

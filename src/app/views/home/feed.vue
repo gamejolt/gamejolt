@@ -7,9 +7,20 @@
 				<app-user-card v-if="Screen.isDesktop" :user="user" />
 
 				<template v-if="hasGamesSection">
-					<h4 class="section-header">
-						<translate>Manage Games</translate>
-					</h4>
+					<div class="clearfix">
+						<div class="pull-right">
+							<app-button
+								v-app-tooltip="$gettext(`Add Game`)"
+								icon="add"
+								circle
+								trans
+								:to="{ name: 'dash.games.add' }"
+							/>
+						</div>
+						<h4 class="section-header">
+							<translate>Manage Games</translate>
+						</h4>
+					</div>
 
 					<template v-if="hasGameFilter">
 						<div>

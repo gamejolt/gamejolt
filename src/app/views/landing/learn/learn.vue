@@ -16,9 +16,7 @@
 
 				<div class="row anim-fade-in-up">
 					<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
-						<p class="lead">
-							Discover, play, buy, and follow 100,000+ games!
-						</p>
+						<p class="lead">Discover, play, buy, and follow 100,000+ games!</p>
 					</div>
 				</div>
 			</div>
@@ -27,9 +25,7 @@
 		<div class="landing-body">
 			<section class="section">
 				<div class="container">
-					<h1 class="section-header text-center">
-						Game Jolt Loves
-					</h1>
+					<h1 class="section-header text-center">Game Jolt Loves</h1>
 
 					<hr class="underbar underbar-center" />
 					<br />
@@ -92,16 +88,14 @@
 
 							<br />
 							<h4 class="sans-margin-top">Find New Games</h4>
-							<p>
-								Browse game listings to discover new and old gems!
-							</p>
+							<p>Browse game listings to discover new and old gems!</p>
 
 							<p>
 								Get started now by browsing
 								<router-link
 									:to="{
 										name: 'discover.games.list._fetch',
-										params: { section: 'featured' },
+										params: { section: null },
 									}"
 								>
 									Featured
@@ -362,9 +356,7 @@
 
 			<section class="section fill-black">
 				<div class="container">
-					<h1 class="section-header text-center">
-						Community
-					</h1>
+					<h1 class="section-header text-center">Community</h1>
 
 					<hr class="underbar underbar-center" />
 					<br />
@@ -407,9 +399,9 @@
 							<h4 class="text-center">Forums</h4>
 
 							<p>
-								Find studios looking for testers, discuss the industry,
-								participate in existing conversations with let's players and devs,
-								or start your own topic! Haikus are encouraged!
+								Find studios looking for testers, discuss the industry, participate
+								in existing conversations with let's players and devs, or start your
+								own topic! Haikus are encouraged!
 							</p>
 						</div>
 					</div>
@@ -418,9 +410,7 @@
 
 			<section class="section fill-highlight">
 				<div class="container text-center">
-					<h1 class="section-header">
-						Everywhere
-					</h1>
+					<h1 class="section-header">Everywhere</h1>
 
 					<div class="row">
 						<div class="col-lg-7 col-centered">

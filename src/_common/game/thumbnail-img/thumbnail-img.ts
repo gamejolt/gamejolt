@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { propOptional, propRequired } from '../../../utils/vue';
 import { ContentFocus } from '../../content-focus/content-focus.service';
 import { AppImgResponsive } from '../../img/responsive/responsive';
 import AppMediaItemBackdrop from '../../media-item/backdrop/backdrop.vue';
@@ -16,9 +17,9 @@ import { Game } from '../game.model';
 	},
 })
 export default class AppGameThumbnailImg extends Vue {
-	@Prop(Object) game!: Game;
-	@Prop(Boolean) hideMedia?: boolean;
-	@Prop(Boolean) animate?: boolean;
+	@Prop(propRequired(Object)) game!: Game;
+	@Prop(propOptional(Boolean, false)) hideMedia!: boolean;
+	@Prop(propOptional(Boolean, false)) animate!: boolean;
 
 	isThumbnailLoaded = GJ_IS_SSR;
 
