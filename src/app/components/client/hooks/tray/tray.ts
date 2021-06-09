@@ -1,6 +1,6 @@
-import { Translate } from '../../../../../_common/translate/translate.service';
 import { Location } from 'vue-router';
 import { Client } from '../../../../../_common/client/client.service';
+import { Translate } from '../../../../../_common/translate/translate.service';
 import { store } from '../../../../store/index';
 import { router } from '../../../../views/index';
 import { UserTokenModal } from '../../../user/token-modal/token-modal.service';
@@ -33,11 +33,11 @@ export function clientTrayMenuBuilder(this: undefined, menu: nw.Menu) {
 
 	menu.append(
 		new nw.MenuItem({
-			label: Translate.$gettext('Browse Games'),
+			label: Translate.$gettext('Store'),
 			click: () =>
 				go({
 					name: 'discover.games.list._fetch',
-					params: { section: 'featured' },
+					params: { section: null as any },
 				}),
 		})
 	);

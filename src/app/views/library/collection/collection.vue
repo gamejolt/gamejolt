@@ -1,3 +1,5 @@
+<script lang="ts" src="./collection"></script>
+
 <template>
 	<div v-if="collection">
 		<app-page-header
@@ -6,20 +8,20 @@
 			:autoscroll-anchor-key="collection._id"
 		>
 			<div class="row collection-copy">
-				<div class="col-sm-4 col-md-3" v-if="!Screen.isXs">
+				<div v-if="!Screen.isXs" class="col-sm-4 col-md-3">
 					<app-game-collection-thumbnail
-						class="anim-fade-in-enlarge"
 						v-for="collection of [collection]"
 						:key="collection._id"
+						class="anim-fade-in-enlarge"
 						:collection="collection"
 					/>
 				</div>
 				<div class="col-sm-8 col-md-9">
 					<transition mode="out-in" appear>
 						<div
-							class="anim-fade-enter-right anim-fade-leave-up"
 							v-for="collection of [collection]"
 							:key="collection._id"
+							class="anim-fade-enter-right anim-fade-leave-up"
 						>
 							<!--
 								Followed Games
@@ -30,11 +32,13 @@
 										<translate>Your Followed Games</translate>
 									</h1>
 									<p class="text-muted small">
-										<translate>When you follow a game, it shows up here.</translate>
+										<translate>
+											When you follow a game, it shows up here.
+										</translate>
 										<br />
 										<translate>
-											You'll receive notifications when developers post news about any games you're
-											following.
+											You'll receive notifications when developers post news
+											about any games you're following.
 										</translate>
 									</p>
 								</template>
@@ -46,7 +50,10 @@
 										<translate>by</translate>
 										<router-link
 											class="link-unstyled"
-											:to="{ name: 'profile.overview', params: { username: user.username } }"
+											:to="{
+												name: 'profile.overview',
+												params: { username: user.username },
+											}"
 										>
 											{{ user.display_name }}
 										</router-link>
@@ -70,13 +77,21 @@
 									</h1>
 									<p class="text-muted small">
 										<translate>
-											These are the games that you've made or collaborated on. Be proud!
+											These are the games that you've made or collaborated on.
+											Be proud!
 										</translate>
 										<br />
 										<translate>
-											Feel free to share this page with others to show off your games.
+											Feel free to share this page with others to show off
+											your games.
 										</translate>
 									</p>
+									<br />
+									<div>
+										<app-button :to="{ name: 'dash.games.add' }">
+											<translate>Add Your Game</translate>
+										</app-button>
+									</div>
 								</template>
 								<template v-else-if="user">
 									<h1>
@@ -86,7 +101,10 @@
 										<translate>by</translate>
 										<router-link
 											class="link-unstyled"
-											:to="{ name: 'profile.overview', params: { username: user.username } }"
+											:to="{
+												name: 'profile.overview',
+												params: { username: user.username },
+											}"
 										>
 											{{ user.display_name }}
 										</router-link>
@@ -120,7 +138,10 @@
 										<translate>by</translate>
 										<router-link
 											class="link-unstyled"
-											:to="{ name: 'profile.overview', params: { username: user.username } }"
+											:to="{
+												name: 'profile.overview',
+												params: { username: user.username },
+											}"
 										>
 											{{ user.display_name }}
 										</router-link>
@@ -144,7 +165,8 @@
 									</h1>
 									<p class="text-muted small">
 										<translate>
-											Every day we pick a handful of games that we think you may like!
+											Every day we pick a handful of games that we think you
+											may like!
 										</translate>
 									</p>
 								</template>
@@ -156,7 +178,10 @@
 										<translate>for</translate>
 										<router-link
 											class="link-unstyled"
-											:to="{ name: 'profile.overview', params: { username: user.username } }"
+											:to="{
+												name: 'profile.overview',
+												params: { username: user.username },
+											}"
 										>
 											{{ user.display_name }}
 										</router-link>
@@ -177,7 +202,10 @@
 									<translate>by</translate>
 									<router-link
 										class="link-unstyled"
-										:to="{ name: 'profile.overview', params: { username: playlist.user.username } }"
+										:to="{
+											name: 'profile.overview',
+											params: { username: playlist.user.username },
+										}"
 									>
 										{{ playlist.user.display_name }}
 									</router-link>
@@ -214,16 +242,18 @@
 				</div>
 			</div>
 
-			<template slot="nav" v-if="listing">
+			<template v-if="listing" slot="nav">
 				<ul class="stat-list">
-					<li class="stat-big stat-big-smaller" v-if="shouldShowFollowers">
+					<li v-if="shouldShowFollowers" class="stat-big stat-big-smaller">
 						<div class="stat-big-label">
 							<translate>library.collection.followers_label</translate>
 						</div>
 						<div class="stat-big-digit">{{ followerCount | number }}</div>
 					</li>
 					<li class="stat-big stat-big-smaller">
-						<div class="stat-big-label"><translate>library.collection.games_label</translate></div>
+						<div class="stat-big-label">
+							<translate>library.collection.games_label</translate>
+						</div>
 						<div class="stat-big-digit">{{ listing.gamesCount | number }}</div>
 					</li>
 				</ul>
@@ -246,7 +276,7 @@
 					</app-button>
 
 					<!-- More options -->
-					<app-popper popover-class="fill-darkest" slot="end">
+					<app-popper slot="end" popover-class="fill-darkest">
 						<app-button icon="ellipsis-v" circle trans />
 
 						<div slot="popover" class="list-group list-group-dark">
@@ -260,31 +290,40 @@
 			</app-page-header-controls>
 		</app-page-header>
 
-		<app-game-listing :listing="listing" :hide-section-nav="true" :is-loading="isRouteLoading">
+		<app-game-listing
+			:listing="listing"
+			:filtering="filtering"
+			hide-section-nav
+			:is-loading="isRouteLoading"
+		>
 			<app-game-grid v-if="listing" :games="listing.games" event-label="collection-games">
-				<template v-slot:thumbnail-controls="props">
+				<template #thumbnail-controls="props">
 					<app-button
+						v-if="type === 'playlist' && collection.isOwner"
+						v-app-tooltip="
+							$gettext(`library.collection.thumbnail_control_playlist_tooltip`)
+						"
 						icon="remove"
 						circle
 						overlay
-						v-if="type === 'playlist' && collection.isOwner"
-						v-app-tooltip="$gettext(`library.collection.thumbnail_control_playlist_tooltip`)"
 						@click="removeFromPlaylist(props.game)"
 					/>
 
 					<app-button
+						v-if="type === 'followed' && collection.isOwner"
+						v-app-tooltip="
+							$gettext(`library.collection.thumbnail_control_unfollow_tooltip`)
+						"
 						icon="remove"
 						circle
 						overlay
-						v-if="type === 'followed' && collection.isOwner"
-						v-app-tooltip="$gettext(`library.collection.thumbnail_control_unfollow_tooltip`)"
 						@click="removeFromLibrary(props.game)"
 					/>
 				</template>
 			</app-game-grid>
 		</app-game-listing>
 
-		<section class="section" v-if="recommendedGames.length">
+		<section v-if="recommendedGames.length" class="section">
 			<div class="container-xl">
 				<div class="clearfix">
 					<h1 class="section-header">
@@ -293,7 +332,8 @@
 					<div :class="{ 'pull-left': !Screen.isXs }">
 						<p>
 							<translate>
-								We remixed this playlist into a tasty collection of other games that you may enjoy.
+								We remixed this playlist into a tasty collection of other games that
+								you may enjoy.
 							</translate>
 						</p>
 						<hr class="underbar" />
@@ -306,7 +346,11 @@
 				</div>
 
 				<app-loading-fade :is-loading="isLoadingRecommended">
-					<app-game-grid :games="recommendedGames" scrollable event-label="collection-games-mix" />
+					<app-game-grid
+						:games="recommendedGames"
+						scrollable
+						event-label="collection-games-mix"
+					/>
 				</app-loading-fade>
 
 				<p class="visible-xs">
@@ -320,8 +364,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .library-collection-header
 	.collection-copy
@@ -337,7 +381,4 @@
 
 	@media $media-xs
 		text-align: center
-
 </style>
-
-<script lang="ts" src="./collection"></script>

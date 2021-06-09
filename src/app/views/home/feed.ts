@@ -15,6 +15,7 @@ import {
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
 import { AppState, AppStore } from '../../../_common/store/app-store';
+import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppUserCard from '../../../_common/user/card/card.vue';
 import { User } from '../../../_common/user/user.model';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
@@ -53,6 +54,9 @@ export class RouteActivityFeedController {
 		AppNavTabList,
 		RouteHomeActivity: () => asyncRouteLoader(import('./activity.vue'), router),
 		RouteHomeFyp: () => asyncRouteLoader(import('./fyp.vue'), router),
+	},
+	directives: {
+		AppTooltip,
 	},
 })
 @RouteResolver({

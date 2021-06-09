@@ -33,7 +33,7 @@ export function checkGameFilteringRoute(route: Route) {
 		if (storageKey) {
 			console.log('from storage');
 
-			let filters = JSON.parse(storageKey);
+			const filters = JSON.parse(storageKey);
 			if (filters && !isEmpty(filters)) {
 				// Never resolve so we don't switch routes.
 				const _filters = getRouteData(filters);
@@ -249,14 +249,10 @@ export class GameFilteringContainer {
 		return this.filters[filter].indexOf(option) !== -1;
 	}
 
-	getQueryString(route: Route) {
-		let queryPieces: string[] = [];
+	getQueryString(route: Route, options: { page?: number } = {}) {
+		const queryPieces: string[] = [];
 
-		if (route.params.section) {
-			queryPieces.push('section=' + route.params.section);
-		} else {
-			queryPieces.push('section=hot');
-		}
+		queryPieces.push('section=' + (route.params.section ?? 'featured'));
 
 		if (route.query.sort) {
 			queryPieces.push('sort=' + route.query.sort);
@@ -270,8 +266,9 @@ export class GameFilteringContainer {
 			queryPieces.push('date=' + route.params.date);
 		}
 
-		if (route.query.page && parseInt(route.query.page as string, 10) > 1) {
-			queryPieces.push('page=' + route.query.page);
+		const page = options.page ?? (route.query.page && parseInt(route.query.page as string, 10));
+		if (page > 1) {
+			queryPieces.push('page=' + page);
 		}
 
 		forEach(GameFilteringContainer.definitions, (definition, filter) => {
@@ -369,7 +366,7 @@ function isEmpty(filters: Filters, options: any = {}) {
 }
 
 function getRouteData(filters: Filters) {
-	let params: Params = {};
+	const params: Params = {};
 	forEach(GameFilteringContainer.definitions, (definition, filter) => {
 		if (!filters[filter]) {
 			return;

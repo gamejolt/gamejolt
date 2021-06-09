@@ -32,59 +32,9 @@
 									</router-link>
 								</li>
 								<li>
-									<router-link :to="{ name: 'landing.learn' }">
-										<translate>What's Game Jolt</translate>
-									</router-link>
-								</li>
-								<li>
 									<router-link :to="{ name: 'landing.client' }">
 										<translate>Client</translate>
 									</router-link>
-								</li>
-								<li>
-									<router-link :to="{ name: 'forums.landing.overview' }">
-										<translate>Forums</translate>
-									</router-link>
-								</li>
-							</ol>
-						</div>
-						<div class="col-xs-4 col-sm-3">
-							<ol class="list-unstyled footer-link-list">
-								<li>
-									<router-link :to="{ name: 'landing.about' }">
-										<translate>About</translate>
-									</router-link>
-								</li>
-								<li>
-									<router-link :to="{ name: 'landing.game-api' }">
-										<translate>Game API</translate>
-									</router-link>
-								</li>
-								<li>
-									<router-link :to="{ name: 'landing.marketplace' }">
-										<translate>Marketplace</translate>
-									</router-link>
-								</li>
-								<li>
-									<router-link :to="{ name: 'landing.partners' }">
-										<translate>Partners</translate>
-									</router-link>
-								</li>
-							</ol>
-						</div>
-						<div class="col-xs-4 col-sm-3 hidden-xs">
-							<ol class="list-unstyled footer-link-list">
-								<li>
-									<app-link-external href="https://github.com/gamejolt">
-										<translate>footer.open_source</translate>
-									</app-link-external>
-								</li>
-								<li>
-									<app-link-external
-										href="https://github.com/gamejolt/issue-tracker"
-									>
-										<translate>Bug Tracker</translate>
-									</app-link-external>
 								</li>
 								<li>
 									<app-link-external
@@ -95,6 +45,7 @@
 								</li>
 							</ol>
 						</div>
+
 						<div class="col-xs-4 col-sm-3">
 							<ol class="list-unstyled footer-link-list">
 								<li>
@@ -118,6 +69,15 @@
 									</router-link>
 								</li>
 								<li>
+									<router-link :to="{ name: 'landing.about' }">
+										<translate>About</translate>
+									</router-link>
+								</li>
+							</ol>
+						</div>
+						<div class="col-xs-4 col-sm-3">
+							<ol class="list-unstyled footer-link-list">
+								<li>
 									<router-link :to="{ name: 'legal.terms' }">
 										<translate>legal.terms</translate>
 									</router-link>
@@ -130,6 +90,32 @@
 								<li v-if="!GJ_IS_CLIENT">
 									<router-link :to="{ name: 'legal.cookies' }">
 										<translate>Cookie Policy</translate>
+									</router-link>
+								</li>
+							</ol>
+						</div>
+						<div class="col-xs-4 col-sm-3 hidden-xs">
+							<div class="text-muted" style="margin-bottom: 4px">
+								<small>
+									<strong>
+										<translate>For Developers</translate>
+									</strong>
+								</small>
+							</div>
+							<ol class="list-unstyled footer-link-list">
+								<li>
+									<router-link :to="{ name: 'landing.game-api' }">
+										<translate>Game API</translate>
+									</router-link>
+								</li>
+								<li>
+									<router-link :to="{ name: 'landing.marketplace' }">
+										<translate>Marketplace</translate>
+									</router-link>
+								</li>
+								<li>
+									<router-link :to="{ name: 'landing.partners' }">
+										<translate>Partner Program</translate>
 									</router-link>
 								</li>
 							</ol>
@@ -189,10 +175,10 @@
 
 					<p class="small text-muted">
 						<translate>footer.translations</translate>
-						<br />
+						<!-- <br />
 						<app-link-external href="https://poeditor.com/join/project/B4nWT6EgnD">
 							<translate>footer.translations_help</translate>
-						</app-link-external>
+						</app-link-external> -->
 					</p>
 				</div>
 			</div>

@@ -2,7 +2,7 @@
 
 <template>
 	<div v-if="!item || isLoading" class="-placeholder" />
-	<app-theme v-else :theme="theme">
+	<app-theme v-else :theme="theme" force-dark>
 		<app-media-item-backdrop class="-backdrop" :media-item="bannerMediaItem">
 			<section
 				class="-banner landing-header-no-fill"
@@ -108,18 +108,18 @@
 								<template v-else-if="item.jam">
 									<app-button
 										v-if="shouldShowJamViewGames"
+										v-app-track-event="`home:banner:${item.jam.id}`"
 										primary
 										solid
 										:to="location"
-										v-app-track-event="`home:banner:${item.jam.id}`"
 									>
 										<translate>View Games</translate>
 									</app-button>
 									<app-button
+										v-app-track-event="`home:banne:jam-${item.jam.id}`"
 										solid
 										:href="item.jam.fullUrl"
 										target="_blank"
-										v-app-track-event="`home:banne:jam-${item.jam.id}`"
 									>
 										<translate>View Jam Page</translate>
 									</app-button>
@@ -143,4 +143,93 @@
 	</app-theme>
 </template>
 
-<style lang="stylus" src="./banner.styl" scoped></style>
+<style lang="stylus" scoped>
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+
+-gutter()
+	padding-left: ($grid-gutter-width-xs / 2)
+	padding-right: ($grid-gutter-width-xs / 2)
+
+	@media $media-sm-up
+		padding-left: ($grid-gutter-width / 2)
+		padding-right: ($grid-gutter-width / 2)
+
+.-backdrop
+.-banner
+.-placeholder
+	height: 450px
+
+.-placeholder
+	change-bg('bg-subtle')
+
+.-backdrop
+	change-bg('bg-offset')
+
+.-banner
+	position: relative
+	width: 100%
+	background-repeat: no-repeat
+	background-position: 50% 50%
+	background-size: cover
+
+.-click
+	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+	z-index: 1
+
+.container
+	height: 100%
+
+.-main
+	position: relative
+	display: flex
+	height: 100%
+	flex-direction: column
+	justify-content: space-evenly
+	margin-left: -($grid-gutter-width-xs / 2)
+	margin-right: -($grid-gutter-width-xs / 2)
+
+	@media $media-sm-up
+		flex-direction: row
+		align-items: center
+		justify-content: center
+		margin-left: -($grid-gutter-width / 2)
+		margin-right: -($grid-gutter-width / 2)
+
+.-logo
+	-gutter()
+	display: flex
+	align-items: center
+	justify-content: center
+
+	.-img
+		max-width: 100%
+
+	@media $media-xs
+		height: 200px
+
+	@media $media-sm-up
+		width: 60%
+
+.-info
+	-gutter()
+	text-align: center
+
+	@media $media-sm-up
+		width: 40%
+		text-align: left
+
+	&-full
+		width: 100%
+		max-width: 500px
+		text-align: center
+
+.-controls
+	position: relative
+	// Put this over the click.
+	z-index: 2
+</style>

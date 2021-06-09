@@ -196,7 +196,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 
 		if (!this.listing || !this.filtering) {
 			this.filtering = new GameFilteringContainer(this.$route);
-			this.listing = new GameListingContainer(this.filtering);
+			this.listing = new GameListingContainer();
 		}
 
 		this.filtering.init(this.$route);

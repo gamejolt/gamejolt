@@ -1,5 +1,7 @@
+<script lang="ts" src="./tags"></script>
+
 <template>
-	<div class="game-filtering-tags" v-if="!filtering.areTagFiltersEmpty || tag">
+	<div v-if="!filtering.areTagFiltersEmpty || tag" class="game-filtering-tags">
 		<a v-if="tag" class="tag tag-highlight game-filtering-tag" @click="clearTag()">
 			<strong>
 				<translate>Tag</translate>
@@ -11,8 +13,8 @@
 
 		<span
 			v-for="(value, filter) of filtering.filters"
-			:key="filter"
 			v-if="GameFilteringContainer.definitions[filter].type !== 'string' && value"
+			:key="filter"
 		>
 			<!-- Array type -->
 			<template v-if="GameFilteringContainer.definitions[filter].type === 'array'">
@@ -30,7 +32,10 @@
 
 			<!-- Radio type -->
 			<template v-else-if="GameFilteringContainer.definitions[filter].type === 'radio'">
-				<a class="tag tag-highlight game-filtering-tag" @click="removeFilterOption(filter, value)">
+				<a
+					class="tag tag-highlight game-filtering-tag"
+					@click="removeFilterOption(filter, value)"
+				>
 					<strong>{{ GameFilteringContainer.definitions[filter].label }}:</strong>
 					{{ GameFilteringContainer.definitions[filter].options[value] }}
 					<app-jolticon icon="remove" />
@@ -41,7 +46,7 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
 
 .game-filtering-tags
 	margin-bottom: $line-height-computed
@@ -52,5 +57,3 @@
 .game-filtering-tag
 	margin-right: 5px
 </style>
-
-<script lang="ts" src="./tags"></script>
