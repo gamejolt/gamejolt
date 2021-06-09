@@ -9,6 +9,7 @@ import { Environment } from '../../../../_common/environment/environment.service
 import { number } from '../../../../_common/filters/number';
 import AppGameThumbnail from '../../../../_common/game/thumbnail/thumbnail.vue';
 import AppPopper from '../../../../_common/popper/popper.vue';
+import { ReportModal } from '../../../../_common/report/modal/modal.service';
 import { AppSocialFacebookLike } from '../../../../_common/social/facebook/like/like';
 import { AppSocialTwitterShare } from '../../../../_common/social/twitter/share/share';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
@@ -134,6 +135,10 @@ export default class AppCommunitySidebar extends Vue {
 		return this.filteredGames;
 	}
 
+	get shouldShowReport() {
+		return !this.community.hasPerms();
+	}
+
 	copyShareUrl() {
 		Clipboard.copy(this.shareUrl);
 	}
@@ -171,5 +176,9 @@ export default class AppCommunitySidebar extends Vue {
 
 	toggleGamesList() {
 		this.gameListCollapsed = !this.gameListCollapsed;
+	}
+
+	onClickReport() {
+		ReportModal.show(this.community);
 	}
 }
