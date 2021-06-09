@@ -41,13 +41,6 @@ export default class FormCommunityChannelEdit extends BaseForm<FormModel>
 		return `/web/dash/communities/channels/save/${this.community.id}/${this.formModel.id}`;
 	}
 
-	get permissionPostingOptions() {
-		return {
-			all: this.$gettext('Everyone'),
-			mods: this.$gettext('Moderators only'),
-		};
-	}
-
 	onLoad(payload: any) {
 		this.maxFilesize = payload.maxFilesize;
 		this.maxWidth = payload.maxWidth;
