@@ -2,7 +2,7 @@ import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../utils/vue';
 import AppLoading from '../loading/loading.vue';
-import { trackVideoPlayerEvent, VideoPlayerController } from './player/controller';
+import { setVideoMuted, trackVideoPlayerEvent, VideoPlayerController } from './player/controller';
 
 // We have to not use Vue for video embed stuff!
 // https://forum.ionicframework.com/t/ionic-2-video-video-memory-leak-garbage-collection-solved/52333
@@ -48,6 +48,10 @@ export default class AppVideo extends Vue {
 		this.video.loop = true;
 		this.video.autoplay = this.shouldPlay;
 		this.video.muted = this.player.context === 'gif';
+
+		// Allows videos in iOS Safari to play without automatically going
+		// fullscreen.
+		this.video.playsInline = true;
 
 		this.setupVideoEvents();
 
@@ -134,7 +138,13 @@ export default class AppVideo extends Vue {
 			this.player.state = 'paused';
 			this.trackVideoPlaytime();
 		});
-		this.video.addEventListener('volumechange', () => (this.player.volume = this.video.volume));
+		this.video.addEventListener('volumechange', () => {
+			this.player.volume = this.video.volume;
+
+			if (this.player.muted != this.video.muted) {
+				setVideoMuted(this.player, this.video.muted);
+			}
+		});
 		this.video.addEventListener('durationchange', () => {
 			if (this.video.duration) {
 				this.player.duration = this.video.duration * 1000;
@@ -197,10 +207,25 @@ export default class AppVideo extends Vue {
 		}
 	}
 
+	@Watch('player.muted', { immediate: true })
+	syncMuted() {
+		if (!this.video) {
+			return;
+		}
+
+		if (this.player.muted !== this.video.muted) {
+			this.video.muted = this.player.muted;
+		}
+	}
+
 	@Watch('player.volume', { immediate: true })
 	syncVolume() {
 		if (!this.video) {
 			return;
+		}
+
+		if (this.player.volume > 0) {
+			setVideoMuted(this.player, false);
 		}
 
 		if (this.player.volume !== this.video.volume) {

@@ -27,7 +27,7 @@ export default class AppPlayerVolume extends Vue {
 		setVideoMuted(this.player, !SettingVideoPlayerMuted.get());
 		trackVideoPlayerEvent(
 			this.player,
-			!this.player.volume ? 'mute' : 'unmute',
+			!this.player.volume || this.player.muted ? 'mute' : 'unmute',
 			'click-control'
 		);
 	}
