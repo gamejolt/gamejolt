@@ -58,6 +58,10 @@ export class VideoPlayerController {
 	 * through external methods and going fullscreen with their controls.
 	 */
 	get altControlsBehavior() {
+		if (GJ_IS_SSR) {
+			return false;
+		}
+
 		return !document.fullscreenEnabled;
 	}
 

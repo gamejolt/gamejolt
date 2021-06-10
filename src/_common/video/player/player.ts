@@ -319,7 +319,7 @@ export default class AppVideoPlayer extends Vue {
 		if (this.player.queuedFullScreenChange !== null) {
 			if (this.player.queuedFullScreenChange) {
 				if (this.player.altControlsBehavior) {
-					const video: any = this.$el.getElementsByTagName('video')[0];
+					const video: any = this.$el.querySelector('video');
 					// iOS Safari doesn't allow us to go fullscreen through our
 					// preferred way, so we need to use their fullscreen method
 					// and player controls instead.
