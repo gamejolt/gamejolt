@@ -274,7 +274,10 @@ export class GridClient {
 			() =>
 				new Promise<void>(resolve => {
 					if (this.socket !== null) {
-						this.socket.connect();
+						this.socket.connect({
+							gj_platform: GJ_IS_CLIENT ? 'client' : 'web',
+							gj_platform_version: GJ_VERSION,
+						});
 					}
 					resolve();
 				})
