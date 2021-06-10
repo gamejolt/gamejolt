@@ -80,9 +80,9 @@ export default class FormCommunityBlock extends BaseForm<FormModel>
 		if (!response.success) {
 			if (response.errors.collaborator) {
 				Growls.error({
-					title: this.$gettext('Moderators cannot be blocked'),
+					title: this.$gettext('Collaborators cannot be blocked'),
 					message: this.$gettextInterpolate(
-						'%{ user } is a Moderator on this Community. Remove them from the moderators list first to block them.',
+						'%{ user } is a Collaborator on this Community. Remove them from the collaborators list first to block them.',
 						{ user: this.formModel.username }
 					),
 				});

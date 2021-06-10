@@ -3,13 +3,14 @@
 <template>
 	<app-communities-view-page-container>
 		<h2 class="section-header">
-			<translate>Moderators</translate>
+			<translate>Collaborators</translate>
 		</h2>
 
 		<div class="page-help">
 			<p>
 				<translate>
-					Assign moderators and choose their access level to help manage your community.
+					Assign collaborators and choose their access level to help manage your
+					community.
 				</translate>
 			</p>
 		</div>
@@ -36,7 +37,7 @@
 				<div class="card-meta">
 					<span class="tag">
 						<template v-if="collaborator.role === Collaborator.ROLE_EQUAL_COLLABORATOR">
-							<translate>Collaborator</translate>
+							<translate>Full Collaborator</translate>
 						</template>
 						<template v-else-if="collaborator.role === Collaborator.ROLE_JAM_ORGANIZER">
 							<translate>Jam Organizer</translate>
@@ -64,7 +65,7 @@
 			</app-card-list-item>
 
 			<app-card-list-add
-				:label="$gettext(`Add Moderator`)"
+				:label="$gettext(`Add Collaborator`)"
 				@toggle="isShowingCollaboratorAdd = !isShowingCollaboratorAdd"
 			>
 				<form-community-collaborator :community="community" @submit="onAddedCollaborator" />
