@@ -75,6 +75,11 @@ export default class AppFiresidePostEmbed extends Vue {
 
 	get website() {
 		if (this.embed.metadata && this.embed.metadata.site_url) {
+			// Node SSR doesn't support the URL api.
+			if (GJ_IS_SSR) {
+				return this.embed.metadata.site_url;
+			}
+
 			const url = new URL(this.embed.metadata.site_url);
 			let website = url.hostname;
 			if (
