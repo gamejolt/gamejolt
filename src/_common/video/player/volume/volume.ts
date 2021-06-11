@@ -41,4 +41,12 @@ export default class AppPlayerVolume extends Vue {
 			'click-control'
 		);
 	}
+
+	get isMuted() {
+		if (this.player.altControlsBehavior) {
+			return this.player.muted;
+		} else {
+			return this.player.volume === 0;
+		}
+	}
 }

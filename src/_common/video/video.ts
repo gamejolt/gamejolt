@@ -141,7 +141,7 @@ export default class AppVideo extends Vue {
 		this.video.addEventListener('volumechange', () => {
 			this.player.volume = this.video.volume;
 
-			if (this.player.muted != this.video.muted) {
+			if (this.player.altControlsBehavior && this.player.muted != this.video.muted) {
 				setVideoMuted(this.player, this.video.muted);
 			}
 		});
