@@ -12,8 +12,10 @@ import AppLoading from '../../../../../_common/loading/loading.vue';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/backdrop.vue';
 import { MediaItem } from '../../../../../_common/media-item/media-item-model';
 import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
-import { AppResponsiveDimensions } from '../../../../../_common/responsive-dimensions/responsive-dimensions';
-import { Ruler } from '../../../../../_common/ruler/ruler-service';
+import {
+	AppResponsiveDimensions,
+	AppResponsiveDimensionsChangeEvent,
+} from '../../../../../_common/responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { ScrollInviewConfig } from '../../../../../_common/scroll/inview/config';
 import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
@@ -93,11 +95,9 @@ export default class AppPostCard extends Vue {
 		this.calcData();
 	}
 
-	calcData() {
-		const parentWidth = Ruler.width(this.$el.parentElement as HTMLElement);
-
-		const cardWidth = Math.floor(parentWidth);
-		const cardHeight = Math.floor(parentWidth / this.aspectRatio);
+	calcData(event?: AppResponsiveDimensionsChangeEvent) {
+		const cardWidth = event?.containerWidth ?? 200;
+		const cardHeight = event?.height ?? cardWidth / this.aspectRatio;
 		const cardRatio = cardWidth / cardHeight;
 
 		this.cardWidth = cardWidth + 'px';

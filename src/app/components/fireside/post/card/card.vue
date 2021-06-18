@@ -1,91 +1,88 @@
 <script lang="ts" src="./card"></script>
 
 <template>
-	<div v-if="post" v-app-observe-dimensions="calcData" class="post-card">
-		<app-scroll-inview
-			:config="InviewConfig"
-			:style="{
-				width: cardWidth,
-				height: cardHeight,
-			}"
-			@inview="inView"
-			@outview="outView"
-		>
-			<div ref="card" class="-inner">
-				<template v-if="!!mediaItem">
-					<div class="-inner-media">
-						<app-media-item-backdrop
-							class="-backdrop"
-							:media-item="mediaItem"
-							:style="{
-								position: GJ_IS_SSR ? 'relative' : null,
-							}"
-						>
-							<app-img-responsive
-								class="-img"
-								:src="mediaItem.mediaserver_url"
-								alt=""
-								:style="{
-									width: imageWidth,
-									height: imageHeight,
-								}"
-							/>
-						</app-media-item-backdrop>
+	<div v-if="post" class="post-card">
+		<app-responsive-dimensions :ratio="aspectRatio" :change="calcData">
+			<app-scroll-inview
+				:config="InviewConfig"
+				:style="{
+					width: cardWidth,
+					height: cardHeight,
+					'padding-top': GJ_IS_SSR ? (1 / aspectRatio) * 100 + '%' : null,
+				}"
+				@inview="inView"
+				@outview="outView"
+			>
+				<div ref="card" class="-inner">
+					<template v-if="!!mediaItem">
+						<div class="-inner-media">
+							<app-media-item-backdrop class="-backdrop" :media-item="mediaItem">
+								<app-img-responsive
+									class="-img"
+									:src="mediaItem.mediaserver_url"
+									alt=""
+									:style="{
+										width: imageWidth,
+										height: imageHeight,
+									}"
+								/>
+							</app-media-item-backdrop>
 
-						<template v-if="videoController && isHydrated">
-							<app-video
-								class="-video"
-								:player="videoController"
-								allow-degraded-autoplay
-								:style="{
-									width: videoWidth,
-									height: videoHeight,
-								}"
-							/>
+							<template v-if="videoController && isHydrated">
+								<app-video
+									class="-video"
+									:player="videoController"
+									allow-degraded-autoplay
+									:style="{
+										width: videoWidth,
+										height: videoHeight,
+									}"
+								/>
 
-							<div v-if="videoController.isLoading" class="-overlay">
-								<app-loading no-color hide-label stationary />
-							</div>
+								<div v-if="videoController.isLoading" class="-overlay">
+									<app-loading no-color hide-label stationary />
+								</div>
+							</template>
+						</div>
+						<div class="-inner-gradient" />
+					</template>
+					<app-content-viewer v-else class="-inner-message" :source="post.lead_content" />
+
+					<router-link class="-link" tag="div" :to="post.routeLocation" />
+
+					<div class="-details" :class="{ '-light': !!mediaItem }">
+						<template v-if="withUser">
+							<app-user-avatar class="-details-user-avatar" :user="post.user" />
+							<a class="-details-user-name" :href="userLink">
+								@{{ post.user.username }}
+							</a>
 						</template>
+
+						<span class="-details-spacer" />
+
+						<template v-if="post.scheduled_for">
+							<app-jolticon icon="calendar" />
+						</template>
+
+						<template v-if="post.hasPoll">
+							<app-jolticon
+								icon="pedestals-numbers"
+								:style="{ color: pollIconColor }"
+							/>
+						</template>
+
+						<template v-if="post.is_pinned">
+							<app-jolticon icon="thumbtack" />
+						</template>
+
+						<app-jolticon icon="heart-filled" :style="{ color: heartIconColor }" />
+						<span class="-details-likes">
+							{{ fuzzynumber(post.like_count) }}
+						</span>
 					</div>
-					<div class="-inner-gradient" />
-				</template>
-				<app-content-viewer
-					v-else
-					class="-inner-message"
-					:source="post.lead_content"
-					:display-rules="contentViewerRules"
-				/>
-
-				<router-link class="-link" tag="div" :to="post.routeLocation" />
-
-				<div class="-details" :class="{ '-light': !!mediaItem }">
-					<template v-if="withUser">
-						<app-user-avatar class="-details-user-avatar" :user="post.user" />
-						<a class="-details-user-name" :href="userLink">@{{ post.user.username }}</a>
-					</template>
-
-					<span class="-details-spacer" />
-
-					<template v-if="post.scheduled_for">
-						<app-jolticon icon="calendar" />
-					</template>
-
-					<template v-if="post.hasPoll">
-						<app-jolticon icon="pedestals-numbers" :style="{ color: pollIconColor }" />
-					</template>
-
-					<template v-if="post.is_pinned">
-						<app-jolticon icon="thumbtack" />
-					</template>
-
-					<app-jolticon icon="heart-filled" :style="{ color: heartIconColor }" />
-					<span class="-details-likes">
-						{{ fuzzynumber(post.like_count) }}
-					</span>
 				</div>
-			</div>
-		</app-scroll-inview>
+			</app-scroll-inview>
+		</app-responsive-dimensions>
 	</div>
 </template>
 
@@ -93,6 +90,7 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 
+$-aspect-ratio = (10 / 16)
 $-base-width = 200px
 $-padding = 8px
 
@@ -102,6 +100,7 @@ $-padding = 8px
 	overflow: hidden
 	position: relative
 	background-color: var(--theme-bg)
+	aspect-ratio: $-aspect-ratio
 	// Safari needs this to actually clip our inner content to the border-radius we have assigned.
 	transform: translateZ(0)
 
