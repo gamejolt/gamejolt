@@ -12,6 +12,7 @@
 					:community="community"
 					:model="channel"
 					@submit="onSubmit"
+					@background-change="onBackgroundChange"
 				/>
 
 				<template v-if="canEditDescription">
