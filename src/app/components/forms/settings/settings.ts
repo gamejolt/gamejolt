@@ -6,6 +6,7 @@ import {
 	SettingAnimatedThumbnails,
 	SettingAutostartClient,
 	SettingBroadcastModal,
+	SettingDefaultFeed,
 	SettingFeedNotifications,
 	SettingGameInstallDir,
 	SettingMaxDownloadCount,
@@ -16,6 +17,7 @@ import {
 	SettingThemeDark,
 } from '../../../../_common/settings/settings.service';
 import { ThemeMutation, ThemeState, ThemeStore } from '../../../../_common/theme/theme.store';
+import { DEFAULT_FEED_ACTIVITY, DEFAULT_FEED_FYP } from '../../../views/home/default-feed.service';
 
 let ClientAutoStartMod: typeof _ClientAutoStartMod | undefined;
 if (GJ_IS_CLIENT) {
@@ -38,6 +40,7 @@ type FormModel = {
 	theme_dark: boolean;
 	theme_always_ours: boolean;
 	sticker_sounds: boolean;
+	fyp_default_feed: boolean;
 };
 
 @Component({
@@ -68,6 +71,7 @@ export default class FormSettings extends BaseForm<FormModel> implements FormOnI
 		this.setField('feed_notifications', SettingFeedNotifications.get());
 		this.setField('theme_dark', SettingThemeDark.get());
 		this.setField('theme_always_ours', SettingThemeAlwaysOurs.get());
+		this.setField('fyp_default_feed', SettingDefaultFeed.get() === DEFAULT_FEED_FYP);
 
 		if (GJ_IS_CLIENT) {
 			this.setField('game_install_dir', SettingGameInstallDir.get());
@@ -122,6 +126,9 @@ export default class FormSettings extends BaseForm<FormModel> implements FormOnI
 		SettingFeedNotifications.set(this.formModel.feed_notifications);
 		SettingThemeDark.set(this.formModel.theme_dark);
 		SettingThemeAlwaysOurs.set(this.formModel.theme_always_ours);
+		SettingDefaultFeed.set(
+			this.formModel.fyp_default_feed ? DEFAULT_FEED_FYP : DEFAULT_FEED_ACTIVITY
+		);
 
 		this.setDark(this.formModel.theme_dark);
 		this.setAlwaysOurs(this.formModel.theme_always_ours);

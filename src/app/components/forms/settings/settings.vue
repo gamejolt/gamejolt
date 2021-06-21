@@ -131,6 +131,13 @@
 					</translate>
 				</p>
 			</app-form-group>
+
+			<app-form-group name="fyp_default_feed" :label="$gettext(`Show 'For You' first?`)">
+				<app-form-control-toggle class="pull-right" />
+				<p class="help-block">
+					<translate>Show the "For You" feed first when opening Game Jolt.</translate>
+				</p>
+			</app-form-group>
 		</fieldset>
 
 		<fieldset id="settings-restrictions">
