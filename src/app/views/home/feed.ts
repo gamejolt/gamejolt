@@ -25,6 +25,7 @@ import AppCommunitySlider from '../../components/community/slider/slider.vue';
 import AppPageContainer from '../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../components/post/add-button/add-button.vue';
 import { Store } from '../../store';
+import DefaultFeed from './default-feed.service';
 import AppHomeRecommendedUsers from './_recommended/users/users.vue';
 
 class DashGame {
@@ -67,6 +68,7 @@ export class RouteActivityFeedController {
 export default class RouteActivityFeed extends BaseRouteComponent {
 	@AppState user!: AppStore['user'];
 	@State communities!: Store['communities'];
+	@State unreadActivityCount!: Store['unreadActivityCount'];
 
 	games: DashGame[] = [];
 	gameFilterQuery = '';
@@ -76,6 +78,7 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	recommendedUsers: User[] = [];
 
 	readonly Screen = Screen;
+	readonly DefaultFeed = DefaultFeed;
 
 	@Provide('route-activity-feed')
 	controller = new RouteActivityFeedController();
@@ -106,7 +109,11 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	}
 
 	get feedTab(): 'activity' | 'fyp' {
-		return this.$route.params?.tab === 'fyp' ? 'fyp' : 'activity';
+		return DefaultFeed.getRouteFeedTab(this.$route);
+	}
+
+	get hasUnreadActivity() {
+		return this.unreadActivityCount > 0;
 	}
 
 	private checkGameFilter(game: DashGame) {

@@ -9,6 +9,7 @@ import {
 	RouteResolver,
 } from '../../../_common/route/route-component';
 import { AppState, AppStore } from '../../../_common/store/app-store';
+import DefaultFeed from './default-feed.service';
 
 @Component({
 	name: 'RouteHome',
@@ -38,8 +39,10 @@ export default class RouteHome extends BaseRouteComponent {
 		// meta value that aligns with our route content.
 		let analyticsPath = '/discover';
 		if (this.user) {
-			if (this.$route.params?.tab === 'fyp') {
+			if (this.$route.params?.tab === DefaultFeed.fypTab) {
 				analyticsPath = '/fyp';
+			} else if (this.$route.params?.tab === DefaultFeed.activityTab) {
+				analyticsPath = '/'; // For clarification purposes that "activity" => "/".
 			} else {
 				analyticsPath = '/';
 			}

@@ -100,23 +100,31 @@
 					<ul>
 						<li>
 							<router-link
+								class="-activity-tab"
 								:to="{
 									name: 'home',
+									params: { tab: DefaultFeed.activityTab },
 								}"
-								active-class="active"
-								exact
+								:class="{
+									active: feedTab === 'activity',
+								}"
 							>
 								<translate>Following</translate>
+								<span
+									v-if="hasUnreadActivity"
+									class="-new-tag anim-fade-enter anim-fade-leave"
+								/>
 							</router-link>
 						</li>
 						<li>
 							<router-link
 								:to="{
 									name: 'home',
-									params: { tab: 'fyp' },
+									params: { tab: DefaultFeed.fypTab },
 								}"
-								active-class="active"
-								exact
+								:class="{
+									active: feedTab === 'fyp',
+								}"
 							>
 								<translate>For You</translate>
 							</router-link>
@@ -143,4 +151,21 @@
 .-feed-heading
 	margin-top: 0
 	margin-bottom: 5px
+
+.-activity-tab
+	position: relative
+
+.-new-tag
+	border-radius: 50%
+	width: 12px
+	height: 12px
+	display: block
+	change-bg('highlight')
+	position: absolute
+	top: 2px
+	right: 2px
+	display: block
+	border-color: var(--theme-darkest)
+	border-width: 2px
+	border-style: solid
 </style>
