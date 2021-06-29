@@ -2,7 +2,7 @@
 
 <template>
 	<div class="chat-user-list">
-		<div class="nav-controls">
+		<div v-if="!hideFilter" class="nav-controls">
 			<input
 				v-model="filterQuery"
 				text="search"
@@ -12,7 +12,12 @@
 		</div>
 
 		<ul v-show="users.length" class="shell-nav">
-			<app-chat-member-list-item v-for="user of filteredUsers" :key="user.id" :user="user" />
+			<app-chat-member-list-item
+				v-for="user of filteredUsers"
+				:key="user.id"
+				:user="user"
+				:room="room"
+			/>
 		</ul>
 	</div>
 </template>

@@ -8,6 +8,7 @@ import { ScrollInviewConfig } from '../../../../../_common/scroll/inview/config'
 import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { ChatClient, ChatKey, isUserOnline } from '../../client';
+import { ChatRoom } from '../../room';
 import { ChatUser } from '../../user';
 import AppChatUserOnlineStatus from '../../user-online-status/user-online-status.vue';
 import AppChatUserPopover from '../../user-popover/user-popover.vue';
@@ -28,15 +29,12 @@ const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` }
 export default class AppChatMemberListItem extends Vue {
 	@InjectReactive(ChatKey) chat!: ChatClient;
 	@Prop(propRequired(ChatUser)) user!: ChatUser;
+	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 
 	readonly InviewConfig = InviewConfig;
 	readonly Screen = Screen;
 
 	isInview = false;
-
-	get currentRoom() {
-		return this.chat.room;
-	}
 
 	get isOnline() {
 		if (!this.chat) {
@@ -47,6 +45,6 @@ export default class AppChatMemberListItem extends Vue {
 	}
 
 	get isOwner() {
-		return this.currentRoom && this.currentRoom.owner_id === this.user.id;
+		return this.room.owner_id === this.user.id;
 	}
 }

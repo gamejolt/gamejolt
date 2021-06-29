@@ -123,7 +123,7 @@ export class ChatUserChannel extends Channel {
 		arrayRemove(this.client.groupRooms, i => i.id === data.room_id);
 
 		if (isInChatRoom(this.client, data.room_id)) {
-			leaveChatRoom(this.client);
+			leaveChatRoom(this.client, this.client.roomChannels[data.room_id].room);
 		}
 	}
 

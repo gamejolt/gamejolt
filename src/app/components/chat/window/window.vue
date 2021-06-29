@@ -66,7 +66,12 @@
 						>
 							<span
 								v-if="!room.isPmRoom"
-								class="chat-window-header-avatar avatar anim-fade-in-enlarge no-animate-xs"
+								class="
+									chat-window-header-avatar
+									avatar
+									anim-fade-in-enlarge
+									no-animate-xs
+								"
 							>
 								<div class="-icon">
 									<app-jolticon icon="users" />
@@ -74,7 +79,12 @@
 							</span>
 							<router-link
 								v-else-if="room.user"
-								class="chat-window-header-avatar avatar anim-fade-in-enlarge no-animate-xs"
+								class="
+									chat-window-header-avatar
+									avatar
+									anim-fade-in-enlarge
+									no-animate-xs
+								"
 								:to="room.user.url"
 							>
 								<img class="-icon" :src="room.user.img_avatar" alt="" />
@@ -145,7 +155,7 @@
 						</span>
 					</div>
 
-					<app-chat-member-list v-if="users" :users="users.collection" />
+					<app-chat-member-list v-if="users" :users="users.collection" :room="room" />
 				</app-scroll-scroller>
 			</div>
 		</div>

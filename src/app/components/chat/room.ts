@@ -2,13 +2,14 @@ import { Translate } from '../../../_common/translate/translate.service';
 import { ChatClient } from './client';
 import { ChatUser } from './user';
 
-export type ChatRoomType = 'pm' | 'open_group' | 'closed_group' | 'viral_group';
+export type ChatRoomType = 'pm' | 'open_group' | 'closed_group' | 'viral_group' | 'fireside_group';
 
 export class ChatRoom {
 	static readonly ROOM_PM = 'pm';
 	static readonly ROOM_OPEN_GROUP = 'open_group';
 	static readonly ROOM_CLOSED_GROUP = 'closed_group';
 	static readonly ROOM_VIRAL_GROUP = 'viral_group';
+	static readonly ROOM_FIRESIDE_GROUP = 'fireside_group';
 
 	id!: number;
 	title!: string;
@@ -38,8 +39,13 @@ export class ChatRoom {
 		return (
 			this.type === ChatRoom.ROOM_OPEN_GROUP ||
 			this.type === ChatRoom.ROOM_CLOSED_GROUP ||
-			this.type === ChatRoom.ROOM_VIRAL_GROUP
+			this.type === ChatRoom.ROOM_VIRAL_GROUP ||
+			this.type === ChatRoom.ROOM_FIRESIDE_GROUP
 		);
+	}
+
+	get isFiresideRoom() {
+		return this.type === ChatRoom.ROOM_FIRESIDE_GROUP;
 	}
 }
 

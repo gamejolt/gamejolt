@@ -37,7 +37,7 @@
 			</a>
 
 			<template #popover>
-				<app-chat-user-popover :user="user" />
+				<app-chat-user-popover :user="user" :room="room" />
 			</template>
 		</app-popper>
 	</app-scroll-inview>
@@ -50,6 +50,7 @@
 .-container
 	height: 50px
 	overflow: hidden
+	rounded-corners()
 
 .-avatar
 	position: relative

@@ -20,7 +20,7 @@
 					alt=""
 				/>
 				<template #popover>
-					<app-chat-user-popover :user="message.user" />
+					<app-chat-user-popover :user="message.user" :room="room" />
 				</template>
 			</app-popper>
 		</a>

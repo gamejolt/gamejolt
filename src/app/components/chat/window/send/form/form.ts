@@ -75,16 +75,16 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	emitSingleLineModeChange(_singleLine: boolean) {}
 
 	get contentEditorTempResourceContextData() {
-		if (this.chat && this.chat.room) {
-			return { roomId: this.chat.room.id };
+		if (this.chat && this.room) {
+			return { roomId: this.room.id };
 		}
 	}
 
 	get placeholder() {
-		if (this.chat && this.chat.room) {
-			if (this.chat.room.isPmRoom && this.chat.room.user) {
+		if (this.chat && this.room) {
+			if (this.room.isPmRoom && this.room.user) {
 				return this.$gettextInterpolate('Message @%{ username }', {
-					username: this.chat.room.user.username,
+					username: this.room.user.username,
 				});
 			}
 		}
@@ -224,7 +224,7 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	onChange(_value: string) {
 		if (!this.typing) {
 			this.typing = true;
-			startTyping(this.chat);
+			startTyping(this.chat, this.room);
 		} else {
 			clearTimeout(this.typingTimeout);
 		}
@@ -334,6 +334,6 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 
 	private disableTypingTimeout() {
 		this.typing = false;
-		stopTyping(this.chat);
+		stopTyping(this.chat, this.room);
 	}
 }

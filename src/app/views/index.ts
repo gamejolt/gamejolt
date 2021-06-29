@@ -5,6 +5,7 @@ import { routeCommunitiesView } from './communities/view/view.route';
 import { routeDash } from './dashboard/dashboard.route';
 import { routeDiscover } from './discover/discover.route';
 import { routeDownload } from './download/download.route';
+import { routeFireside } from './fireside/fireside.route';
 import { routeForums } from './forums/forums.route';
 import { routeHome } from './home/home.route';
 import { routeIntent } from './intent/intent.route';
@@ -42,6 +43,7 @@ const routes = [
 	routeWelcome,
 	routeBadgeFeatured,
 	routeTimeout,
+	routeFireside,
 ];
 
 export const router = initRouter(routes);
