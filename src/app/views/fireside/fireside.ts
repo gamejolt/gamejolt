@@ -28,6 +28,8 @@ import { EVENT_UPDATE, FiresideChannel } from '../../components/grid/fireside-ch
 import AppPageContainer from '../../components/page-container/page-container.vue';
 import { store, Store } from '../../store';
 import AppFiresideChatMembers from './_chat-members/chat-members.vue';
+import { FiresideChatMembersModal } from './_chat-members/modal/modal.service';
+import { FiresideStatsModal } from './_stats/modal/modal.service';
 import AppFiresideStats from './_stats/stats.vue';
 
 type RoutePayload = {
@@ -125,6 +127,21 @@ export default class RouteFireside extends BaseRouteComponent {
 
 	get shouldShowBackgroundImage() {
 		return this.backgroundImageUrl && (Screen.isMd || Screen.isLg);
+	}
+
+	get shouldShowChatMembers() {
+		return this.shouldShowChat && Screen.isLg;
+	}
+
+	get shouldShowFiresideStats() {
+		return this.status === 'joined' && (Screen.isLg || Screen.isMd);
+	}
+
+	get shouldShowTitleControls() {
+		return (
+			this.status === 'joined' &&
+			(!this.shouldShowChatMembers || !this.shouldShowFiresideStats)
+		);
 	}
 
 	async routeResolved($payload: RoutePayload) {
@@ -413,5 +430,19 @@ export default class RouteFireside extends BaseRouteComponent {
 	onClickRetry() {
 		this.disconnect();
 		this.tryJoin();
+	}
+
+	onClickShowChatMembers() {
+		if (!this.chatUsers || !this.chatRoom) {
+			return;
+		}
+		FiresideChatMembersModal.show(this.chatUsers, this.chatRoom);
+	}
+
+	onClickShowFiresideStats() {
+		if (!this.fireside) {
+			return;
+		}
+		FiresideStatsModal.show(this.fireside, this.status);
 	}
 }

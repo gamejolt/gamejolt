@@ -12,22 +12,42 @@
 		<app-page-container xl class="-content">
 			<template #default>
 				<template v-if="fireside">
-					<h2 class="sans-margin-top">
-						<small class="-subtitle">
-							<router-link
-								:to="{
-									name: 'profile.overview',
-									params: { username: fireside.user.username },
-								}"
-							>
-								@{{ fireside.user.username }}
-							</router-link>
-							<app-user-avatar-img class="-avatar" :user="fireside.user" />
-							<span>'s Fireside</span>
-						</small>
-						<br />
-						{{ fireside.title }}
-					</h2>
+					<div class="-fireside-title">
+						<h2 class="sans-margin-top">
+							<small class="-subtitle">
+								<router-link
+									:to="{
+										name: 'profile.overview',
+										params: { username: fireside.user.username },
+									}"
+								>
+									@{{ fireside.user.username }}
+								</router-link>
+								<app-user-avatar-img class="-avatar" :user="fireside.user" />
+								<span>'s Fireside</span>
+							</small>
+							<br />
+							{{ fireside.title }}
+						</h2>
+						<div v-if="shouldShowTitleControls" class="-fireside-title-controls">
+							<app-button
+								v-if="!shouldShowChatMembers"
+								v-app-tooltip="$gettext(`Chat Members`)"
+								circle
+								sparse
+								icon="users"
+								@click="onClickShowChatMembers"
+							/>
+							<app-button
+								v-if="!shouldShowFiresideStats"
+								v-app-tooltip="$gettext(`Fireside info`)"
+								circle
+								sparse
+								icon="fireside"
+								@click="onClickShowFiresideStats"
+							/>
+						</div>
+					</div>
 				</template>
 
 				<template v-if="status === 'loading' || status === 'initial'">
@@ -147,7 +167,7 @@
 			</template>
 
 			<template #right>
-				<template v-if="shouldShowChat">
+				<template v-if="shouldShowChatMembers">
 					<div class="-chat-members -content-obj -sidebar-obj">
 						<app-fireside-chat-members :chat-users="chatUsers" :chat-room="chatRoom" />
 					</div>
@@ -155,7 +175,7 @@
 			</template>
 
 			<template #left>
-				<template v-if="status === 'joined'">
+				<template v-if="shouldShowFiresideStats">
 					<div class="-content-obj -sidebar-obj">
 						<app-fireside-stats :fireside="fireside" :status="status" />
 					</div>
@@ -258,4 +278,12 @@
 	animation-duration: 0.5s
 	animation-iteration-count: 1
 	animation-fill-mode: forwards
+
+.-fireside-title
+	display: flex
+	align-items: flex-end
+	justify-content: space-between
+
+	&-controls
+		margin-bottom: 15px
 </style>

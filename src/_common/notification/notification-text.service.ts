@@ -422,6 +422,18 @@ export class NotificationText {
 						return undefined;
 					}
 				}
+
+				break;
+			}
+
+			case Notification.TYPE_FIRESIDE_START: {
+				return _process(
+					Translate.$gettextInterpolate(
+						`<em>%{ subject }</em> started up a new Fireside.`,
+						this.getTranslationValues(notification),
+						!plaintext
+					)
+				);
 			}
 		}
 

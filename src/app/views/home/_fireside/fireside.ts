@@ -4,9 +4,11 @@ import { Api } from '../../../../_common/api/api.service';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import AppLoadingFade from '../../../../_common/loading/fade/fade.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
+import { EventBus, EventBusDeregister } from '../../../../_common/system/event/event-bus.service';
 import AppFiresideBadgeAdd from '../../../components/fireside/badge/add/add.vue';
 import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
 import AppFiresideBadgePlaceholder from '../../../components/fireside/badge/placeholder/placeholder.vue';
+import { GRID_EVENT_FIRESIDE_START } from '../../../components/grid/client.service';
 
 @Component({
 	components: {
@@ -24,8 +26,19 @@ export default class AppHomeFireside extends Vue {
 	isLoading = true;
 	isInitialLoading = true;
 
+	firesideStartDeregister: EventBusDeregister | null = null;
+
 	mounted() {
 		this.refresh();
+
+		this.firesideStartDeregister = EventBus.on(GRID_EVENT_FIRESIDE_START, () => this.refresh());
+	}
+
+	destroyed() {
+		if (this.firesideStartDeregister) {
+			this.firesideStartDeregister();
+			this.firesideStartDeregister = null;
+		}
 	}
 
 	onFiresideExpired() {
