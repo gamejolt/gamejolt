@@ -23,6 +23,7 @@ import AppContentViewer from '../../../../_common/content/content-viewer/content
 import AppExpand from '../../../../_common/expand/expand.vue';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
 import { number } from '../../../../_common/filters/number';
+import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { Game } from '../../../../_common/game/game.model';
 import '../../../../_common/lazy/placeholder/placeholder.styl';
 import { LinkedAccount, Provider } from '../../../../_common/linked-account/linked-account.model';
@@ -35,6 +36,7 @@ import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy
 import { User } from '../../../../_common/user/user.model';
 import { ChatClient, ChatKey, enterChatRoom } from '../../../components/chat/client';
 import AppCommentOverview from '../../../components/comment/overview/overview.vue';
+import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
 import AppGameList from '../../../components/game/list/list.vue';
 import AppGameListPlaceholder from '../../../components/game/list/placeholder/placeholder.vue';
 import AppPageContainer from '../../../components/page-container/page-container.vue';
@@ -59,6 +61,7 @@ import { RouteStore, RouteStoreModule } from '../profile.store';
 		AppUserKnownFollowers,
 		AppCommunityVerifiedTick,
 		AppTrophyThumbnail,
+		AppFiresideBadge,
 	},
 	directives: {
 		AppTooltip,
@@ -141,6 +144,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	linkedAccounts: LinkedAccount[] = [];
 	knownFollowers: User[] = [];
 	knownFollowerCount = 0;
+	fireside: Fireside | null = null;
 
 	permalinkWatchDeregister?: CommentThreadModalPermalinkDeregister;
 
@@ -278,6 +282,10 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		return this.user && this.user.blocked_you;
 	}
 
+	get shouldShowFireside() {
+		return this.fireside && this.fireside.canJoin();
+	}
+
 	getLinkedAccount(provider: Provider) {
 		if (
 			this.user &&
@@ -339,6 +347,9 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		}
 		if ($payload.knownFollowerCount) {
 			this.knownFollowerCount = $payload.knownFollowerCount;
+		}
+		if ($payload.fireside) {
+			this.fireside = new Fireside($payload.fireside);
 		}
 
 		this.overviewPayload($payload);

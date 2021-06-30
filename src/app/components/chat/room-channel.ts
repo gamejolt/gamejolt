@@ -38,6 +38,11 @@ interface UpdateTitlePayload {
 export class ChatRoomChannel extends Channel {
 	room!: ChatRoom;
 	roomId: number;
+	/**
+	 * An instanced room channel is for a room that can be opened anywhere on the site,
+	 * outside of and in addition to the active chat in the chat sidebar.
+	 */
+	instanced: boolean;
 	readonly client: ChatClient;
 	readonly socket: Socket;
 
@@ -48,6 +53,7 @@ export class ChatRoomChannel extends Channel {
 		this.client = client;
 		this.roomId = roomId;
 		this.socket = socket;
+		this.instanced = false;
 		(this.socket as any).channels.push(this);
 
 		this.setupPresence();
@@ -63,7 +69,9 @@ export class ChatRoomChannel extends Channel {
 
 		this.onClose(() => {
 			if (isInChatRoom(this.client, roomId)) {
-				setChatRoom(this.client, undefined);
+				if (!this.instanced) {
+					setChatRoom(this.client, undefined);
+				}
 
 				// Reset the room we were in
 				Vue.delete(this.client.roomMembers, roomId);

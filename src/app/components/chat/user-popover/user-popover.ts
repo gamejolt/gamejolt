@@ -6,6 +6,7 @@ import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service'
 import { AppTheme } from '../../../../_common/theme/theme';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
 import { ChatClient, ChatKey, enterChatRoom, isUserOnline, kickGroupMember } from '../client';
+import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
 import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vue';
 
@@ -19,10 +20,7 @@ import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vu
 export default class AppChatUserPopover extends Vue {
 	@InjectReactive(ChatKey) chat!: ChatClient;
 	@Prop(propRequired(ChatUser)) user!: ChatUser;
-
-	get currentRoom() {
-		return this.chat.room;
-	}
+	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 
 	get isOnline() {
 		if (!this.chat) {
@@ -33,12 +31,12 @@ export default class AppChatUserPopover extends Vue {
 	}
 
 	get isOwner() {
-		return this.currentRoom && this.currentRoom.owner_id === this.user.id;
+		return this.room.owner_id === this.user.id;
 	}
 
 	get canMessage() {
 		// Don't show "Send message" link when already in PM room with the user.
-		if (this.currentRoom?.isPmRoom) {
+		if (this.room.isPmRoom) {
 			return false;
 		}
 
@@ -53,8 +51,7 @@ export default class AppChatUserPopover extends Vue {
 
 		return (
 			this.chat.currentUser &&
-			this.currentRoom &&
-			this.chat.currentUser.id === this.currentRoom.owner_id &&
+			this.chat.currentUser.id === this.room.owner_id &&
 			!this.isOwner
 		);
 	}
@@ -82,7 +79,7 @@ export default class AppChatUserPopover extends Vue {
 		);
 
 		if (confirm) {
-			kickGroupMember(this.chat, this.user.id);
+			kickGroupMember(this.chat, this.room, this.user.id);
 		}
 	}
 }

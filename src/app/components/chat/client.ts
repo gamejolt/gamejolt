@@ -306,6 +306,34 @@ async function joinUserChannel(chat: ChatClient, userId: number) {
 	);
 }
 
+export async function joinInstancedRoomChannel(chat: ChatClient, roomId: number) {
+	const channel = new ChatRoomChannel(roomId, chat);
+	channel.instanced = true;
+
+	await pollRequest(
+		chat,
+		`Join instanced room channel: ${roomId}`,
+		() =>
+			new Promise<void>((resolve, reject) => {
+				channel
+					.join()
+					.receive('error', reject)
+					.receive('ok', response => {
+						chat.roomChannels[roomId] = channel;
+						channel.room = new ChatRoom(response.room);
+						const messages = response.messages.map(
+							(msg: ChatMessage) => new ChatMessage(msg)
+						);
+						messages.reverse();
+						setupRoom(chat, channel.room, messages);
+						resolve();
+					});
+			})
+	);
+
+	return channel;
+}
+
 async function joinRoomChannel(chat: ChatClient, roomId: number) {
 	const channel = new ChatRoomChannel(roomId, chat);
 
@@ -408,18 +436,22 @@ function leaveChannel(chat: ChatClient, channel: Channel) {
 	}
 }
 
-export function leaveChatRoom(chat: ChatClient) {
+export function leaveChatRoom(chat: ChatClient, room: ChatRoom | null = null) {
 	if (chat.messageEditing) {
 		setMessageEditing(chat, null);
 	}
 
-	if (!chat.room) {
+	if (room === null) {
+		room = chat.room;
+	}
+
+	if (!room) {
 		return;
 	}
 
-	const channel = chat.roomChannels[chat.room.id];
+	const channel = chat.roomChannels[room.id];
 	if (channel) {
-		delete chat.roomChannels[chat.room.id];
+		delete chat.roomChannels[room.id];
 		leaveChannel(chat, channel);
 		chat.pollingRoomId = -1;
 	}
@@ -502,15 +534,18 @@ function outputMessage(
 	message: ChatMessage,
 	isHistorical: boolean
 ) {
-	if (!chat.room || !isInChatRoom(chat, roomId)) {
+	const isInstanced = isRoomInstanced(chat, roomId);
+	if (!isInstanced && (!chat.room || !isInChatRoom(chat, roomId))) {
 		return;
 	}
 
 	message.logged_on = new Date(message.logged_on);
 	setTimeSplit(chat, roomId, message);
 
-	if (!chat.room.isPrivateRoom && !isHistorical) {
-		newChatNotification(chat, roomId);
+	if (!isHistorical) {
+		if (isInstanced || (chat.room && !chat.room.isPrivateRoom)) {
+			newChatNotification(chat, roomId);
+		}
 	}
 
 	// Push it into the room's message list.
@@ -518,7 +553,7 @@ function outputMessage(
 }
 
 function setupRoom(chat: ChatClient, room: ChatRoom, messages: ChatMessage[]) {
-	if (!isInChatRoom(chat, room.id)) {
+	if (isRoomInstanced(chat, room.id) || !isInChatRoom(chat, room.id)) {
 		if (room.type === ChatRoom.ROOM_PM) {
 			// We need to rename the room to the username
 			const friend = chat.friendsList.getByRoom(room.id);
@@ -534,7 +569,10 @@ function setupRoom(chat: ChatClient, room: ChatRoom, messages: ChatMessage[]) {
 			new ChatUserCollection(ChatUserCollection.TYPE_ROOM, room.members || [], chat)
 		);
 
-		setChatRoom(chat, room);
+		// Only set the room as "the" active room when it's not instanced.
+		if (!isRoomInstanced(chat, room.id)) {
+			setChatRoom(chat, room);
+		}
 		processNewChatOutput(chat, room.id, messages, true);
 	}
 }
@@ -586,6 +624,15 @@ function sendChatMessage(chat: ChatClient, message: ChatMessage) {
 			message._error = true;
 			message._isProcessing = false;
 		});
+}
+
+function isRoomInstanced(chat: ChatClient, roomId: number) {
+	const channel = chat.roomChannels[roomId];
+	if (!channel) {
+		return false;
+	}
+
+	return channel.instanced;
 }
 
 /** Set the message that is currently being edited, or 'null' to clear the state. */
@@ -658,6 +705,32 @@ export function isUserOnline(chat: ChatClient, userId: number): null | boolean {
 export function setChatFocused(chat: ChatClient, focused: boolean) {
 	chat.isFocused = focused;
 
+	if (chat.currentUser) {
+		// Update focused for current room.
+		if (chat.room) {
+			if (chat.isFocused) {
+				chat.roomChannels[chat.room.id].push('focus', { roomId: chat.room.id });
+			} else {
+				chat.roomChannels[chat.room.id].push('unfocus', { roomId: chat.room.id });
+			}
+		}
+
+		// Update focused for all instanced rooms.
+		for (const roomId in chat.roomChannels) {
+			if (Object.prototype.hasOwnProperty.call(chat.roomChannels, roomId)) {
+				const roomChannel = chat.roomChannels[roomId];
+				if (roomChannel.instanced) {
+					const channelRoomId = roomChannel.room.id;
+					if (chat.isFocused) {
+						chat.roomChannels[channelRoomId].push('focus', { roomId: channelRoomId });
+					} else {
+						chat.roomChannels[channelRoomId].push('unfocus', { roomId: channelRoomId });
+					}
+				}
+			}
+		}
+	}
+
 	if (chat.room && chat.currentUser) {
 		if (chat.isFocused) {
 			chat.roomChannels[chat.room.id].push('focus', { roomId: chat.room.id });
@@ -687,21 +760,15 @@ export async function leaveGroupRoom(chat: ChatClient, room: ChatRoom) {
 	chat.userChannel?.push('group_leave', { room_id: room.id });
 }
 
-export function removeMessage(chat: ChatClient, msgId: number) {
-	const room = chat.room;
-	if (room) {
-		chat.roomChannels[room.id].push('message_remove', { id: msgId });
-	}
+export function removeMessage(chat: ChatClient, room: ChatRoom, msgId: number) {
+	chat.roomChannels[room.id].push('message_remove', { id: msgId });
 }
 
-export function editMessage(chat: ChatClient, message: ChatMessage) {
-	const room = chat.room;
-	if (room) {
-		chat.roomChannels[room.id].push('message_update', {
-			content: message.content,
-			id: message.id,
-		});
-	}
+export function editMessage(chat: ChatClient, room: ChatRoom, message: ChatMessage) {
+	chat.roomChannels[room.id].push('message_update', {
+		content: message.content,
+		id: message.id,
+	});
 }
 
 export function editChatRoomTitle(chat: ChatClient, title: string) {
@@ -713,23 +780,23 @@ export function editChatRoomTitle(chat: ChatClient, title: string) {
 	}
 }
 
-export function startTyping(chat: ChatClient) {
-	const room = chat.room;
-	if (room) {
-		chat.roomChannels[room.id].push('start_typing', {});
-	}
+export function startTyping(chat: ChatClient, room: ChatRoom) {
+	chat.roomChannels[room.id].push('start_typing', {});
 }
 
-export function stopTyping(chat: ChatClient) {
-	const room = chat.room;
-	if (room) {
-		chat.roomChannels[room.id].push('stop_typing', {});
-	}
+export function stopTyping(chat: ChatClient, room: ChatRoom) {
+	chat.roomChannels[room.id].push('stop_typing', {});
 }
 
 export function isInChatRoom(chat: ChatClient, roomId?: number) {
+	// When no room id is passed in, just check if the user is in any room.
 	if (!roomId) {
 		return !!chat.room;
+	}
+
+	// Instanced rooms are always active, and the user is in all instanced rooms.
+	if (isRoomInstanced(chat, roomId)) {
+		return true;
 	}
 
 	return chat.room ? chat.room.id === roomId : false;
@@ -752,9 +819,6 @@ export function updateChatRoomLastMessageOn(chat: ChatClient, message: ChatMessa
 	}
 }
 
-export function kickGroupMember(chat: ChatClient, memberId: number) {
-	const room = chat.room;
-	if (room) {
-		chat.roomChannels[room.id].push('kick_member', { member_id: memberId });
-	}
+export function kickGroupMember(chat: ChatClient, room: ChatRoom, memberId: number) {
+	chat.roomChannels[room.id].push('kick_member', { member_id: memberId });
 }

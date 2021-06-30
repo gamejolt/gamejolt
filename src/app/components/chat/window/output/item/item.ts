@@ -143,6 +143,6 @@ export default class AppChatWindowOutputItem extends Vue {
 		}
 
 		setMessageEditing(this.chat, null);
-		removeMessage(this.chat, this.message.id);
+		removeMessage(this.chat, this.room, this.message.id);
 	}
 }

@@ -28,6 +28,7 @@ import { getTrophyImg } from '../trophy/thumbnail/thumbnail';
 import { CommunityChannel } from './community-channel';
 
 export const GRID_EVENT_NEW_STICKER = 'grid-new-sticker-received';
+export const GRID_EVENT_FIRESIDE_START = 'grid-fireside-start';
 
 interface NewNotificationPayload {
 	notification_data: {
@@ -372,6 +373,12 @@ export class GridClient {
 						case Notification.TYPE_FRIENDSHIP_REQUEST:
 							// For an incoming friend request, set that they have a new friend request.
 							store.commit('setHasNewFriendRequests', true);
+							this.spawnNotification(notification);
+							break;
+
+						case Notification.TYPE_FIRESIDE_START:
+							// Emit event that different components can pick up to update their views.
+							EventBus.emit(GRID_EVENT_FIRESIDE_START, notification.action_model);
 							this.spawnNotification(notification);
 							break;
 

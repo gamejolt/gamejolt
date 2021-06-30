@@ -25,6 +25,7 @@ import AppCommunitySlider from '../../components/community/slider/slider.vue';
 import AppPageContainer from '../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../components/post/add-button/add-button.vue';
 import { Store } from '../../store';
+import AppHomeFireside from './_fireside/fireside.vue';
 import AppHomeRecommendedUsers from './_recommended/users/users.vue';
 
 class DashGame {
@@ -52,6 +53,7 @@ export class RouteActivityFeedController {
 		AppAdWidget,
 		AppHomeRecommendedUsers,
 		AppNavTabList,
+		AppHomeFireside,
 		RouteHomeActivity: () => asyncRouteLoader(import('./activity.vue'), router),
 		RouteHomeFyp: () => asyncRouteLoader(import('./fyp.vue'), router),
 	},

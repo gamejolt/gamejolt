@@ -2,7 +2,8 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
 import { fuzzysearch } from '../../../../utils/string';
-import { propRequired } from '../../../../utils/vue';
+import { propOptional, propRequired } from '../../../../utils/vue';
+import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
 import AppChatMemberListItem from './item/item.vue';
 
@@ -13,6 +14,8 @@ import AppChatMemberListItem from './item/item.vue';
 })
 export default class AppChatMemberList extends Vue {
 	@Prop(propRequired(Array)) users!: ChatUser[];
+	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
+	@Prop(propOptional(Boolean, false)) hideFilter!: boolean;
 
 	filterQuery = '';
 

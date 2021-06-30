@@ -70,6 +70,8 @@
 			</template>
 
 			<template v-if="!Screen.isMobile" #right>
+				<app-home-fireside />
+
 				<app-home-recommended-users
 					v-if="shouldShowRecommendedUsers"
 					:users="recommendedUsers"

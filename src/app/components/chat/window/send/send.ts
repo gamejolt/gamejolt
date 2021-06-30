@@ -49,17 +49,14 @@ export default class AppChatWindowSend extends Vue {
 			message.content = contentJson;
 		}
 
-		editMessage(this.chat, message);
+		editMessage(this.chat, this.room, message);
 	}
 
 	sendMessage(message: ChatMessage) {
 		const doc = ContentDocument.fromJson(message.content);
 		if (doc instanceof ContentDocument) {
 			const contentJson = doc.toJson();
-			const room = this.chat.room;
-			if (room) {
-				queueChatMessage(this.chat, 'content', contentJson, room.id);
-			}
+			queueChatMessage(this.chat, 'content', contentJson, this.room.id);
 		}
 	}
 
