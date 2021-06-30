@@ -69,6 +69,7 @@ const FiresideThemeKey = 'fireside';
 	},
 })
 @RouteResolver({
+	deps: { params: ['hash'] },
 	resolver: ({ route }) => Api.sendRequest(`/web/fireside/fetch/${route.params.hash}?meta=1`),
 	lazy: true,
 })
@@ -150,6 +151,10 @@ export default class RouteFireside extends BaseRouteComponent {
 		Meta.fb.title = this.routeTitle;
 		Meta.twitter = $payload.twitter || {};
 		Meta.twitter.title = this.routeTitle;
+
+		if (this.status === 'joined') {
+			this.disconnect();
+		}
 
 		this.fireside = new Fireside($payload.fireside);
 		this.backgroundImageUrl = this.fireside.header_media_item?.mediaserver_url ?? null;
