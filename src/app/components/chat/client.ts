@@ -705,6 +705,32 @@ export function isUserOnline(chat: ChatClient, userId: number): null | boolean {
 export function setChatFocused(chat: ChatClient, focused: boolean) {
 	chat.isFocused = focused;
 
+	if (chat.currentUser) {
+		// Update focused for current room.
+		if (chat.room) {
+			if (chat.isFocused) {
+				chat.roomChannels[chat.room.id].push('focus', { roomId: chat.room.id });
+			} else {
+				chat.roomChannels[chat.room.id].push('unfocus', { roomId: chat.room.id });
+			}
+		}
+
+		// Update focused for all instanced rooms.
+		for (const roomId in chat.roomChannels) {
+			if (Object.prototype.hasOwnProperty.call(chat.roomChannels, roomId)) {
+				const roomChannel = chat.roomChannels[roomId];
+				if (roomChannel.instanced) {
+					const channelRoomId = roomChannel.room.id;
+					if (chat.isFocused) {
+						chat.roomChannels[channelRoomId].push('focus', { roomId: channelRoomId });
+					} else {
+						chat.roomChannels[channelRoomId].push('unfocus', { roomId: channelRoomId });
+					}
+				}
+			}
+		}
+	}
+
 	if (chat.room && chat.currentUser) {
 		if (chat.isFocused) {
 			chat.roomChannels[chat.room.id].push('focus', { roomId: chat.room.id });
