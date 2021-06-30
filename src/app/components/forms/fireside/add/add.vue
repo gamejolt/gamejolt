@@ -19,7 +19,7 @@
 		</app-form-group>
 
 		<app-form-button icon="fireside" :disabled="!valid">
-			<translate>Create</translate>
+			<translate>LET'S GO</translate>
 		</app-form-button>
 	</app-form>
 </template>

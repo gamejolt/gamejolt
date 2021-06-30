@@ -14,6 +14,10 @@
 				<h1 class="sans-margin-top">
 					<div class="text-center">
 						<translate>Discover Firesides</translate>
+						<br />
+						<small>
+							<translate>Hang out with people in temporary pop-up chats</translate>
+						</small>
 					</div>
 					<app-illustration src="~img/ill/end-of-feed.svg" />
 				</h1>

@@ -3,26 +3,26 @@ import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
+import AppCard from '../../../../_common/card/card.vue';
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { duration } from '../../../../_common/filters/duration';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { Growls } from '../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../_common/illustration/illustration.vue';
-import AppPopper from '../../../../_common/popper/popper.vue';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
-import { AppSocialFacebookLike } from '../../../../_common/social/facebook/like/like';
-import { AppSocialTwitterShare } from '../../../../_common/social/twitter/share/share';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { RouteStatus } from '../fireside';
 
 @Component({
 	components: {
 		AppIllustration,
 		AppProgressBar,
-		AppPopper,
-		AppSocialTwitterShare,
-		AppSocialFacebookLike,
+		AppCard,
+	},
+	directives: {
+		AppTooltip,
 	},
 })
 export default class AppFiresideStats extends Vue {
@@ -35,7 +35,6 @@ export default class AppFiresideStats extends Vue {
 	totalDurationText: string | null = null;
 	expiresDurationText: string | null = null;
 	expiresProgressValue: number | null = null;
-	isShowingShare = false;
 
 	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
 

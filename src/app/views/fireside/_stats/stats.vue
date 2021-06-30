@@ -24,48 +24,36 @@
 				</span>
 			</div>
 
-			<app-button
-				v-if="canExtend"
-				v-app-tooltip.bottom="$gettext(`Extend the duration of your Fireside`)"
-				block
-				icon="fireside"
-				class="-extend-btn"
-				@click="onClickExtend"
-			>
-				<translate>Stoke the Flames</translate>
-			</app-button>
+			<template v-if="canExtend">
+				<app-button
+					v-app-tooltip.bottom="$gettext(`Extend the duration of your Fireside`)"
+					block
+					icon="fireside"
+					class="-extend-btn"
+					@click="onClickExtend()"
+				>
+					<translate>Stoke the Flames</translate>
+				</app-button>
+				<p class="help-block">
+					<translate>
+						Firesides stay open for as long as you're around. Throw a log on the fire to
+						keep your fireside going.
+					</translate>
+				</p>
+			</template>
 		</div>
 		<div>
-			<app-popper
-				popover-class="fill-darkest"
-				block
-				@show="isShowingShare = true"
-				@hide="isShowingShare = false"
-			>
-				<template #default>
-					<div class="text-center">
-						<a>
-							<translate>Share this Fireside</translate>
-						</a>
-					</div>
-				</template>
-
-				<template #popover>
-					<div v-if="isShowingShare" class="well sans-margin">
-						<div v-if="!GJ_IS_CLIENT" class="social-widgets">
-							<app-social-twitter-share :url="shareUrl" :content="shareContent" />
-
-							<span class="dot-separator" />
-
-							<app-social-facebook-like :url="shareUrl" />
-						</div>
-
-						<app-button block @click="copyShareUrl">
-							<translate>Copy Link</translate>
-						</app-button>
-					</div>
-				</template>
-			</app-popper>
+			<app-card class="-share-card">
+				<p>
+					<translate>Share this Fireside</translate>
+				</p>
+				<div class="-copy-controls">
+					<input class="form-control" :value="shareUrl" />
+					<app-button trans @click="copyShareUrl">
+						<translate>Copy</translate>
+					</app-button>
+				</div>
+			</app-card>
 		</div>
 	</div>
 </template>
@@ -97,4 +85,14 @@
 	animation-duration: 2.5s
 	animation-iteration-count: 1
 	animation-fill-mode: forwards
+
+.-share-card
+	margin-bottom: 0px
+	margin-top: 20px
+
+.-copy-controls
+	display: flex
+
+	> input
+		margin-right: 8px
 </style>

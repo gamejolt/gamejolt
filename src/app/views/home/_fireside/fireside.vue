@@ -16,6 +16,11 @@
 				</a>
 			</span>
 		</div>
+		<p>
+			<small>
+				<translate>Hang out with people in temporary pop-up chats</translate>
+			</small>
+		</p>
 
 		<template v-if="isInitialLoading">
 			<app-fireside-badge-placeholder />
@@ -59,6 +64,5 @@
 		margin-bottom: 0
 
 .-list
-	min-height: 183px
 	margin-bottom: $line-height-computed
 </style>
