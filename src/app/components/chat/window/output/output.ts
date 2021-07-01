@@ -52,7 +52,8 @@ export default class AppChatWindowOutput extends Vue {
 	}
 
 	get canLoadOlder() {
-		return !this.reachedEnd && !this.isLoadingOlder;
+		// Fireside rooms delete older messages as newer ones arrive, so they can't load older.
+		return !this.room.isFiresideRoom && !this.reachedEnd && !this.isLoadingOlder;
 	}
 
 	get shouldShowIntro() {
