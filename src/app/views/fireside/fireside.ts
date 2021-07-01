@@ -87,6 +87,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	private gridPreviousConnectedState: boolean | null = null;
 	status: RouteStatus = 'initial';
 	backgroundImageUrl: string | null = null;
+	hasExpiryWarning = false; // Visually shows a warning to the owner when the fireside's time is running low.
 
 	get routeTitle() {
 		if (!this.fireside) {
@@ -170,6 +171,7 @@ export default class RouteFireside extends BaseRouteComponent {
 
 		this.fireside = new Fireside($payload.fireside);
 		this.backgroundImageUrl = this.fireside.header_media_item?.mediaserver_url ?? null;
+		this.hasExpiryWarning = false;
 		this.setPageTheme();
 
 		const userCanJoin = await this.checkUserCanJoin();
@@ -446,6 +448,9 @@ export default class RouteFireside extends BaseRouteComponent {
 			this.disconnect();
 			this.status = 'expired';
 		}
+
+		// Shows an expiry warning on the stats icon (on mobile) when < 60 seconds remain.
+		this.hasExpiryWarning = this.fireside.getExpiryInMs() < 60_000;
 	}
 
 	onClickRetry() {

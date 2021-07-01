@@ -56,6 +56,10 @@ export class Fireside extends Model {
 		return this.isOpen() && !this.blocked;
 	}
 
+	public getExpiryInMs() {
+		return this.expires_on - Date.now();
+	}
+
 	$save() {
 		return this.$_save(`/web/dash/fireside/save/` + this.hash, 'fireside');
 	}
