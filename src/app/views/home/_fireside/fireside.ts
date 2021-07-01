@@ -54,18 +54,22 @@ export default class AppHomeFireside extends Vue {
 
 		this.isLoading = true;
 
-		const payload = await Api.sendRequest(`/web/fireside/user-list`, undefined, {
-			detach: true,
-		});
-		if (payload.userFireside) {
-			this.userFireside = new Fireside(payload.userFireside);
-		} else {
-			this.userFireside = null;
-		}
-		if (payload.firesides) {
-			this.firesides = Fireside.populate(payload.firesides);
-		} else {
-			this.firesides = [];
+		try {
+			const payload = await Api.sendRequest(`/web/fireside/user-list`, undefined, {
+				detach: true,
+			});
+			if (payload.userFireside) {
+				this.userFireside = new Fireside(payload.userFireside);
+			} else {
+				this.userFireside = null;
+			}
+			if (payload.firesides) {
+				this.firesides = Fireside.populate(payload.firesides);
+			} else {
+				this.firesides = [];
+			}
+		} catch (error) {
+			console.error('Failed to refresh Fireside data.', error);
 		}
 
 		this.isLoading = false;
