@@ -2,7 +2,7 @@
 
 <template>
 	<div v-if="post" class="post-card">
-		<app-responsive-dimensions :ratio="aspectRatio" :change="calcData">
+		<app-responsive-dimensions :ratio="aspectRatio" @change="calcData()">
 			<app-scroll-inview
 				:config="InviewConfig"
 				:style="{
@@ -46,6 +46,7 @@
 						</div>
 						<div class="-inner-gradient" />
 					</template>
+
 					<app-content-viewer v-else class="-inner-message" :source="post.lead_content" />
 
 					<router-link class="-link" tag="div" :to="post.routeLocation" />
@@ -103,9 +104,13 @@ $-padding = 8px
 	aspect-ratio: $-aspect-ratio
 	// Safari needs this to actually clip our inner content to the border-radius we have assigned.
 	transform: translateZ(0)
+	cursor: pointer
 
 	&:hover
 		elevate-2()
+
+		.-link
+			border-color: var(--theme-link)
 
 .-inner
 	&
@@ -150,9 +155,6 @@ $-padding = 8px
 	right: 0
 	bottom: 0
 	border: solid $border-width-base transparent
-
-	&:hover
-		border-color: var(--theme-link)
 
 .-details
 	position: absolute
