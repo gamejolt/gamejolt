@@ -14,10 +14,8 @@ import AppFormControlContent from '../../../../../../_common/form-vue/control/co
 import AppForm from '../../../../../../_common/form-vue/form';
 import { BaseForm } from '../../../../../../_common/form-vue/form.service';
 import { FormValidatorContentNoMediaUpload } from '../../../../../../_common/form-vue/validators/content_no_media_upload';
-import { AppObserveDimensions } from '../../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppShortkey from '../../../../../../_common/shortkey/shortkey.vue';
-import { EventBus } from '../../../../../../_common/system/event/event-bus.service';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { ChatClient, ChatKey, setMessageEditing, startTyping, stopTyping } from '../../../client';
 import { ChatMessage, CHAT_MESSAGE_MAX_CONTENT_LENGTH } from '../../../message';
@@ -37,7 +35,6 @@ export type FormModel = {
 	},
 	directives: {
 		AppTooltip,
-		AppObserveDimensions,
 	},
 })
 export default class AppChatWindowSendForm extends BaseForm<FormModel> {
@@ -65,14 +62,10 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		editor: AppFormControlContentTS;
 	};
 
-	@Emit('submit')
-	emitSubmit(_content: FormModel) {}
-
-	@Emit('cancel')
-	emitCancel() {}
-
-	@Emit('single-line-mode-change')
-	emitSingleLineModeChange(_singleLine: boolean) {}
+	@Emit('submit') emitSubmit(_content: FormModel) {}
+	@Emit('cancel') emitCancel() {}
+	@Emit('single-line-mode-change') emitSingleLineModeChange(_singleLine: boolean) {}
+	@Emit('size-change') emitSizeChange() {}
 
 	get contentEditorTempResourceContextData() {
 		if (this.chat && this.room) {
@@ -244,7 +237,7 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		await this.$nextTick();
 		if (!wasShifted && this.shouldShiftEditor) {
 			// We want to emit this event here too, to make sure we scroll down when the controls pop up on mobile.
-			this.onInputResize();
+			this.emitSizeChange();
 		}
 	}
 
@@ -256,10 +249,6 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		if (!this.isEditorFocused) {
 			this.$refs.editor.focus();
 		}
-	}
-
-	onInputResize() {
-		EventBus.emit('Chat.inputResize');
 	}
 
 	onUpKeyPressed(event: KeyboardEvent) {
