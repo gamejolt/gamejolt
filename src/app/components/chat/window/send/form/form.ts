@@ -48,11 +48,10 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	readonly displayRules = new ContentRules({ maxMediaWidth: 125, maxMediaHeight: 100 });
 
 	isEditorFocused = false;
-
 	// Don't show "Do you want to save" when dismissing the form.
 	warnOnDiscard = false;
-
 	typing = false;
+	nextMessageTimeout: NodeJS.Timer | null = null;
 
 	private escapeCallback?: EscapeStackCallback;
 	private typingTimeout!: NodeJS.Timer;
@@ -122,7 +121,7 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	}
 
 	get isSendButtonDisabled() {
-		if (!this.valid || !this.hasContent) {
+		if (!this.valid || !this.hasContent || this.nextMessageTimeout !== null) {
 			return true;
 		}
 
@@ -198,6 +197,9 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		if (this.hasFormErrors) {
 			return;
 		}
+		if (this.nextMessageTimeout !== null) {
+			return;
+		}
 
 		// Manually check for if media is uploading here.
 		// We don't want to put the rule directly on the form cause showing form errors
@@ -212,6 +214,27 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 
 		// Refocus editor after submitting message with enter.
 		this.$refs.editor.focus();
+
+		this.applyNextMessageTimeout();
+	}
+
+	private applyNextMessageTimeout() {
+		if (!this.room.isFiresideRoom) {
+			return;
+		}
+
+		// For fireside rooms, timeout the user from sending another message for 1.5s.
+		// Do not do this for the owner.
+		if (this.chat.currentUser?.id === this.room.owner_id) {
+			return;
+		}
+
+		this.nextMessageTimeout = setTimeout(() => {
+			if (this.nextMessageTimeout) {
+				clearTimeout(this.nextMessageTimeout);
+				this.nextMessageTimeout = null;
+			}
+		}, 1500);
 	}
 
 	onChange(_value: string) {
