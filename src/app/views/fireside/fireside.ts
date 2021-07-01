@@ -382,14 +382,25 @@ export default class RouteFireside extends BaseRouteComponent {
 		}
 
 		// Now join the chat's room channel.
-		const chatChannel = await joinInstancedRoomChannel(this.chat, this.fireside.chat_room_id);
-		if (!chatChannel) {
-			console.debug(`[FIRESIDE] Setup failure 4.`);
+		try {
+			const chatChannel = await joinInstancedRoomChannel(
+				this.chat,
+				this.fireside.chat_room_id
+			);
+
+			if (!chatChannel) {
+				console.debug(`[FIRESIDE] Setup failure 4.`);
+				this.status = 'setup-failed';
+				return;
+			}
+
+			this.chatChannel = chatChannel;
+		} catch (error) {
+			console.debug(`[FIRESIDE] Setup failure 5.`, error);
 			this.status = 'setup-failed';
 			return;
 		}
 
-		this.chatChannel = chatChannel;
 		this.chatChannel.on('kick_member', (data: any) => {
 			if (data.user_id === this.user!.id) {
 				Growls.info(this.$gettext(`You've been kicked from the Fireside.`));

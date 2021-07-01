@@ -310,26 +310,19 @@ export async function joinInstancedRoomChannel(chat: ChatClient, roomId: number)
 	const channel = new ChatRoomChannel(roomId, chat);
 	channel.instanced = true;
 
-	await pollRequest(
-		chat,
-		`Join instanced room channel: ${roomId}`,
-		() =>
-			new Promise<void>((resolve, reject) => {
-				channel
-					.join()
-					.receive('error', reject)
-					.receive('ok', response => {
-						chat.roomChannels[roomId] = channel;
-						channel.room = new ChatRoom(response.room);
-						const messages = response.messages.map(
-							(msg: ChatMessage) => new ChatMessage(msg)
-						);
-						messages.reverse();
-						setupRoom(chat, channel.room, messages);
-						resolve();
-					});
-			})
-	);
+	await new Promise<void>((resolve, reject) => {
+		channel
+			.join()
+			.receive('error', reject)
+			.receive('ok', response => {
+				chat.roomChannels[roomId] = channel;
+				channel.room = new ChatRoom(response.room);
+				const messages = response.messages.map((msg: ChatMessage) => new ChatMessage(msg));
+				messages.reverse();
+				setupRoom(chat, channel.room, messages);
+				resolve();
+			});
+	});
 
 	return channel;
 }
