@@ -31,6 +31,14 @@
 						</h2>
 						<div v-if="shouldShowTitleControls" class="-fireside-title-controls">
 							<app-button
+								v-if="shouldShowEditControlButton"
+								v-app-tooltip="$gettext(`Edit Fireside`)"
+								circle
+								sparse
+								icon="edit"
+								@click="onClickEditFireside"
+							/>
+							<app-button
 								v-if="!shouldShowChatMembers"
 								v-app-tooltip="$gettext(`Chat Members`)"
 								circle

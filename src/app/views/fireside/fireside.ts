@@ -29,6 +29,7 @@ import AppPageContainer from '../../components/page-container/page-container.vue
 import { store, Store } from '../../store';
 import AppFiresideChatMembers from './_chat-members/chat-members.vue';
 import { FiresideChatMembersModal } from './_chat-members/modal/modal.service';
+import { FiresideEditModal } from './_edit-modal/edit-modal.service';
 import { FiresideStatsModal } from './_stats/modal/modal.service';
 import AppFiresideStats from './_stats/stats.vue';
 
@@ -138,10 +139,21 @@ export default class RouteFireside extends BaseRouteComponent {
 		return this.status === 'joined' && (Screen.isLg || Screen.isMd);
 	}
 
+	get shouldShowEditControlButton() {
+		return (
+			this.status === 'joined' &&
+			this.user &&
+			this.fireside &&
+			this.fireside.user.id === this.user.id
+		);
+	}
+
 	get shouldShowTitleControls() {
 		return (
 			this.status === 'joined' &&
-			(!this.shouldShowChatMembers || !this.shouldShowFiresideStats)
+			(!this.shouldShowChatMembers ||
+				!this.shouldShowFiresideStats ||
+				this.shouldShowEditControlButton)
 		);
 	}
 
@@ -359,7 +371,11 @@ export default class RouteFireside extends BaseRouteComponent {
 			});
 		} catch (error) {
 			console.debug(`[FIRESIDE] Setup failure 3.`, error);
-			this.status = 'setup-failed';
+			if (error && error.reason === 'blocked') {
+				this.status = 'blocked';
+			} else {
+				this.status = 'setup-failed';
+			}
 			return;
 		}
 
@@ -449,5 +465,12 @@ export default class RouteFireside extends BaseRouteComponent {
 			return;
 		}
 		FiresideStatsModal.show(this.fireside, this.status);
+	}
+
+	onClickEditFireside() {
+		if (!this.fireside) {
+			return;
+		}
+		FiresideEditModal.show(this.fireside);
 	}
 }
