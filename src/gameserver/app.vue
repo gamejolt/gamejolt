@@ -1,3 +1,5 @@
+<script lang="ts" src="./app"></script>
+
 <template>
 	<app-common-shell
 		v-if="build"
@@ -17,7 +19,7 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
 
 .-build-embed
 	margin: 0
@@ -32,5 +34,3 @@
 		background-color: $white
 		border: 0
 </style>
-
-<script lang="ts" src="./app"></script>

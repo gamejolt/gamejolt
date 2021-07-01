@@ -1,5 +1,7 @@
+<script lang="ts" src="./flash"></script>
+
 <template>
-	<div style="margin: 0 auto; text-align: center;">
+	<div style="margin: 0 auto; text-align: center">
 		<object
 			type="application/x-shockwave-flash"
 			:data="url"
@@ -27,5 +29,3 @@
 		</object>
 	</div>
 </template>
-
-<script lang="ts" src="./flash"></script>
