@@ -1,5 +1,6 @@
 import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
+import { UserBlock } from '../user/block/block.model';
 import { User } from '../user/user.model';
 
 export class Fireside extends Model {
@@ -16,9 +17,19 @@ export class Fireside extends Model {
 	 */
 	is_expired!: boolean;
 	member_count!: number;
+	user_block?: UserBlock | null;
 
 	get blocked() {
-		return this.user.blocked_you || this.user.is_blocked;
+		return !!this.user_block || this.user.blocked_you || this.user.is_blocked;
+	}
+
+	get location() {
+		return {
+			name: 'fireside',
+			params: {
+				hash: this.hash,
+			},
+		};
 	}
 
 	constructor(data: any = {}) {
@@ -27,8 +38,13 @@ export class Fireside extends Model {
 		if (data.user) {
 			this.user = new User(data.user);
 		}
+
 		if (data.header_media_item) {
 			this.header_media_item = new MediaItem(data.header_media_item);
+		}
+
+		if (data.user_block) {
+			this.user_block = new UserBlock(data.user_block);
 		}
 	}
 
@@ -40,13 +56,12 @@ export class Fireside extends Model {
 		return this.isOpen() && !this.blocked;
 	}
 
-	public get location() {
-		return {
-			name: 'fireside',
-			params: {
-				hash: this.hash,
-			},
-		};
+	$save() {
+		return this.$_save(`/web/dash/fireside/save/` + this.hash, 'fireside');
+	}
+
+	$extinguish() {
+		return this.$_save(`/web/dash/fireside/extinguish/` + this.hash, 'fireside');
 	}
 }
 
