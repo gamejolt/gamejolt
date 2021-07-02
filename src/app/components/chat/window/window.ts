@@ -4,7 +4,6 @@ import { Action } from 'vuex-class';
 import { propRequired } from '../../../../utils/vue';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
 import { number } from '../../../../_common/filters/number';
-import { AppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import { SettingChatGroupShowMembers } from '../../../../_common/settings/settings.service';
@@ -18,7 +17,6 @@ import { ChatMessage } from '../message';
 import { ChatRoom, getChatRoomTitle } from '../room';
 import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vue';
 import AppChatWindowMenu from './menu/menu.vue';
-import AppChatWindowOutputTS from './output/output';
 import AppChatWindowOutput from './output/output.vue';
 import AppChatWindowSend from './send/send.vue';
 
@@ -35,7 +33,6 @@ import AppChatWindowSend from './send/send.vue';
 	},
 	directives: {
 		AppTooltip,
-		AppObserveDimensions,
 	},
 })
 export default class AppChatWindow extends Vue {
@@ -52,10 +49,6 @@ export default class AppChatWindow extends Vue {
 	friendAddJolticonVersion = 1;
 
 	readonly Screen = Screen;
-
-	$refs!: {
-		output: AppChatWindowOutputTS[];
-	};
 
 	get users() {
 		return this.chat.roomMembers[this.room.id];
@@ -111,14 +104,6 @@ export default class AppChatWindow extends Vue {
 
 		if (!Screen.isXs) {
 			SettingChatGroupShowMembers.set(this.isShowingUsers);
-		}
-	}
-
-	onSendResize() {
-		// See vue file for why output is an array rather than just a single component.
-		if (this.$refs.output && this.$refs.output.length > 0) {
-			const output = this.$refs.output[0];
-			output.tryAutoscroll();
 		}
 	}
 }

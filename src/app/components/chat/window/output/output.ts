@@ -49,6 +49,7 @@ export default class AppChatWindowOutput extends Vue {
 	private newMessageDeregister?: EventBusDeregister;
 	private shouldScroll = true;
 	private isAutoscrolling = false;
+	private isOnScrollQueued = false;
 
 	$refs!: {
 		scroller: AppScrollScrollerTS;
@@ -126,39 +127,6 @@ export default class AppChatWindowOutput extends Vue {
 		}
 	}
 
-	/**
-	 * We watch when they scroll to see if they've moved away from the bottom of
-	 * the view. If they have, then we shouldn't autoscroll until they scroll
-	 * back to the bottom.
-	 */
-	onScroll() {
-		if (this.isAutoscrolling) {
-			this.isAutoscrolling = false;
-			return;
-		}
-
-		if (this.canLoadOlder && this.$el.scrollTop === 0) {
-			this.loadOlder();
-			return;
-		}
-
-		// We skip checking the scroll if the element isn't scrollable yet.
-		// This'll be the case if the height of the element is less than its
-		// scroll height.
-		if (this.$el.scrollHeight < (this.$el as HTMLElement).offsetHeight) {
-			return;
-		}
-
-		if (
-			this.$el.scrollHeight - (this.$el.scrollTop + (this.$el as HTMLElement).offsetHeight) >
-			10
-		) {
-			this.shouldScroll = false;
-		} else {
-			this.shouldScroll = true;
-		}
-	}
-
 	async loadOlder() {
 		this.isLoadingOlder = true;
 		await this.$nextTick();
@@ -190,18 +158,69 @@ export default class AppChatWindowOutput extends Vue {
 		this.$el.scrollTop = diff;
 	}
 
-	private autoscroll() {
-		this.isAutoscrolling = true;
-		this.$refs.scroller.scrollTo(this.$el.scrollHeight + 10000);
+	/**
+	 * We watch when they scroll to see if they've moved away from the bottom of
+	 * the view. If they have, then we shouldn't autoscroll until they scroll
+	 * back to the bottom.
+	 */
+	queueOnScroll() {
+		if (this.isOnScrollQueued) {
+			return;
+		}
+
+		// Gather up all the scroll events that happen within a short time
+		// period and process them as one "scroll." This tries to get around the
+		// fact that ResizeObserver doesn't trigger as fast as onscroll does, so
+		// things sometimes can get out of sync.
+		this.isOnScrollQueued = true;
+		setTimeout(() => {
+			this.onScroll();
+			this.isOnScrollQueued = false;
+		}, 10);
+	}
+
+	private onScroll() {
+		// If the scroll triggered because of us autoscrolling, we wanna discard it.
+		if (this.isAutoscrolling) {
+			// Now that we caught it, we assume the autoscroll was finalized.
+			this.isAutoscrolling = false;
+			return;
+		}
+
+		if (this.canLoadOlder && this.$el.scrollTop === 0) {
+			this.loadOlder();
+			return;
+		}
+
+		// We skip checking the scroll if the element isn't scrollable yet.
+		// This'll be the case if the height of the element is less than its
+		// scroll height.
+		if (this.$el.scrollHeight < (this.$el as HTMLElement).offsetHeight) {
+			return;
+		}
+
+		if (
+			this.$el.scrollHeight - (this.$el.scrollTop + (this.$el as HTMLElement).offsetHeight) >
+			10
+		) {
+			this.shouldScroll = false;
+		} else {
+			this.shouldScroll = true;
+		}
 	}
 
 	public async tryAutoscroll() {
-		// Wait to make sure the changes to the height of the element were processed.
-		await this.$nextTick();
-
 		if (this.shouldScroll) {
 			this.autoscroll();
 		}
+	}
+
+	private autoscroll() {
+		// We set that we've done an autoscroll. We'll check this variable in
+		// the "scroll handler" and ignore the scroll event since it was
+		// triggered by us.
+		this.isAutoscrolling = true;
+		this.$refs.scroller.scrollTo(this.$el.scrollHeight + 10000);
 	}
 
 	isNewMessage(message: ChatMessage) {
