@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
+import { ChatUser } from '../../../app/components/chat/user';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 import { User } from '../user.model';
 
@@ -10,8 +11,8 @@ import { User } from '../user.model';
 	},
 })
 export default class AppUserVerifiedTick extends Vue {
-	@Prop(User)
-	user!: User;
+	@Prop(Object)
+	user!: User | ChatUser;
 
 	@Prop(Boolean)
 	highlight!: boolean;

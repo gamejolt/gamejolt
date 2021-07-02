@@ -6,6 +6,7 @@ export class ChatUser {
 	display_name!: string;
 	img_avatar!: string;
 	permission_level!: number;
+	is_verified!: boolean;
 
 	isOnline = false;
 	typing = false;

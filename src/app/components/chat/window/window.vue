@@ -105,6 +105,7 @@
 								<router-link class="link-unstyled" :to="room.user.url">
 									{{ roomTitle }}
 								</router-link>
+								<app-user-verified-tick :user="room.user" />
 								<br />
 								<small>@{{ room.user.username }}</small>
 							</h3>
