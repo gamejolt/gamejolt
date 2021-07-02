@@ -64,7 +64,6 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	@Emit('submit') emitSubmit(_content: FormModel) {}
 	@Emit('cancel') emitCancel() {}
 	@Emit('single-line-mode-change') emitSingleLineModeChange(_singleLine: boolean) {}
-	@Emit('size-change') emitSizeChange() {}
 
 	get contentEditorTempResourceContextData() {
 		if (this.chat && this.room) {
@@ -251,17 +250,8 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		this.emitSingleLineModeChange(false);
 	}
 
-	async onFocusEditor() {
-		const wasShifted = this.shouldShiftEditor;
-
+	onFocusEditor() {
 		this.isEditorFocused = true;
-
-		// Wait until the editor controls are visible.
-		await this.$nextTick();
-		if (!wasShifted && this.shouldShiftEditor) {
-			// We want to emit this event here too, to make sure we scroll down when the controls pop up on mobile.
-			this.emitSizeChange();
-		}
 	}
 
 	onBlurEditor() {

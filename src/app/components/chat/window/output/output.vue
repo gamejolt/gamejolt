@@ -1,8 +1,20 @@
 <script lang="ts" src="./output"></script>
 
 <template>
-	<app-scroll-scroller ref="scroller" @scroll.native="onScroll">
-		<div class="-container anim-fade-in no-animate-leave">
+	<!--
+	We need to autoscroll when either the scroller dimensions change--this will
+	trigger when the send box changes size or when the window changes--and we
+	need to autoscroll if the content changes within the scroller.
+	-->
+	<app-scroll-scroller
+		ref="scroller"
+		v-app-observe-dimensions="tryAutoscroll"
+		@scroll.native="queueOnScroll"
+	>
+		<div
+			v-app-observe-dimensions="tryAutoscroll"
+			class="-container anim-fade-in no-animate-leave"
+		>
 			<div v-if="shouldShowIntro" class="-intro">
 				<app-illustration src="~img/ill/no-chat.svg">
 					<translate v-if="room.isPmRoom">

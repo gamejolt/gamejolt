@@ -5,7 +5,6 @@ import { date } from '../../../../../_common/filters/date';
 import AppIllustration from '../../../../../_common/illustration/illustration.vue';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
-import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollScrollerTS from '../../../../../_common/scroll/scroller/scroller';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
@@ -13,7 +12,6 @@ import {
 	EventBus,
 	EventBusDeregister,
 } from '../../../../../_common/system/event/event-bus.service';
-import { EventSubscription } from '../../../../../_common/system/event/event-topic';
 import { ChatClient, ChatKey, ChatNewMessageEvent, loadOlderChatMessages } from '../../client';
 import { ChatMessage, TIMEOUT_CONSIDER_QUEUED } from '../../message';
 import { ChatRoom } from '../../room';
@@ -40,8 +38,7 @@ export default class AppChatWindowOutput extends Vue {
 
 	@InjectReactive(ChatKey) chat!: ChatClient;
 
-	@AppState
-	user!: AppStore['user'];
+	@AppState user!: AppStore['user'];
 
 	/** Whether or not we reached the end of the historical messages. */
 	reachedEnd = false;
@@ -50,6 +47,9 @@ export default class AppChatWindowOutput extends Vue {
 	private checkQueuedTimeout?: NodeJS.Timer;
 	private _introEmoji?: string;
 	private newMessageDeregister?: EventBusDeregister;
+	private shouldScroll = true;
+	private isAutoscrolling = false;
+	private isOnScrollQueued = false;
 
 	$refs!: {
 		scroller: AppScrollScrollerTS;
@@ -89,44 +89,24 @@ export default class AppChatWindowOutput extends Vue {
 		return this.chat.notifications[this.room.id] > 0;
 	}
 
-	private shouldScroll = true;
-	private resize$: EventSubscription | undefined;
-	// Ultra-hack: Allow autoscroll up to 10ms after it was determined that we shouldn't autoscroll.
-	// This fixes the input resize event firing too quickly for resize observer.
-	private lastShouldNotAutoscroll = 0;
-
 	async mounted() {
-		this.resize$ = Screen.resizeChanges.subscribe(() => this.autoscroll());
-
-		// Give it some time to render.
-		await this.$nextTick();
-		this.autoscroll();
-
 		// Check every 100ms for which queued messages we should show.
 		this.checkQueuedTimeout = setInterval(this.updateVisibleQueuedMessages, 100);
 
 		this.newMessageDeregister = EventBus.on(
 			'Chat.newMessage',
 			async (event: ChatNewMessageEvent) => {
-				// When the user sent a message, we want the chat to scroll all the way down to show that message.
+				// When the user sent a message, we want the chat to scroll all
+				// the way down to show that message.
 				if (this.user && event.message.user.id === this.user.id) {
 					await this.$nextTick();
 					this.autoscroll();
-				}
-				// When the user received a message, try to autoscroll.
-				else {
-					this.tryAutoscroll();
 				}
 			}
 		);
 	}
 
 	destroyed() {
-		if (this.resize$) {
-			this.resize$.unsubscribe();
-			this.resize$ = undefined;
-		}
-
 		if (this.checkQueuedTimeout) {
 			clearTimeout(this.checkQueuedTimeout);
 			this.checkQueuedTimeout = undefined;
@@ -144,37 +124,6 @@ export default class AppChatWindowOutput extends Vue {
 		for (const message of this.queuedMessages) {
 			message._showAsQueued =
 				Date.now() - message.logged_on.getTime() > TIMEOUT_CONSIDER_QUEUED;
-		}
-	}
-
-	/**
-	 * We watch when they scroll to see if they've moved away from the
-	 * bottom of the view. If they have, then we shouldn't autoscroll until
-	 * they scroll back to the bottom.
-	 */
-	onScroll() {
-		if (this.canLoadOlder && this.$el.scrollTop === 0) {
-			this.loadOlder();
-			return;
-		}
-
-		// We skip checking the scroll if the element isn't scrollable yet.
-		// This'll be the case if the height of the element is less than its
-		// scroll height.
-		if (this.$el.scrollHeight < (this.$el as HTMLElement).offsetHeight) {
-			return;
-		}
-
-		if (
-			this.$el.scrollHeight - (this.$el.scrollTop + (this.$el as HTMLElement).offsetHeight) >
-			30
-		) {
-			if (this.shouldScroll) {
-				this.lastShouldNotAutoscroll = Date.now();
-			}
-			this.shouldScroll = false;
-		} else {
-			this.shouldScroll = true;
 		}
 	}
 
@@ -209,20 +158,69 @@ export default class AppChatWindowOutput extends Vue {
 		this.$el.scrollTop = diff;
 	}
 
-	private autoscroll() {
-		this.$refs.scroller.scrollTo(this.$el.scrollHeight + 10000);
-		// Fire this event right now because it could be delayed when the tab isn't focused
-		// on some browsers.
-		this.onScroll();
+	/**
+	 * We watch when they scroll to see if they've moved away from the bottom of
+	 * the view. If they have, then we shouldn't autoscroll until they scroll
+	 * back to the bottom.
+	 */
+	queueOnScroll() {
+		if (this.isOnScrollQueued) {
+			return;
+		}
+
+		// Gather up all the scroll events that happen within a short time
+		// period and process them as one "scroll." This tries to get around the
+		// fact that ResizeObserver doesn't trigger as fast as onscroll does, so
+		// things sometimes can get out of sync.
+		this.isOnScrollQueued = true;
+		setTimeout(() => {
+			this.onScroll();
+			this.isOnScrollQueued = false;
+		}, 10);
+	}
+
+	private onScroll() {
+		// If the scroll triggered because of us autoscrolling, we wanna discard it.
+		if (this.isAutoscrolling) {
+			// Now that we caught it, we assume the autoscroll was finalized.
+			this.isAutoscrolling = false;
+			return;
+		}
+
+		if (this.canLoadOlder && this.$el.scrollTop === 0) {
+			this.loadOlder();
+			return;
+		}
+
+		// We skip checking the scroll if the element isn't scrollable yet.
+		// This'll be the case if the height of the element is less than its
+		// scroll height.
+		if (this.$el.scrollHeight < (this.$el as HTMLElement).offsetHeight) {
+			return;
+		}
+
+		if (
+			this.$el.scrollHeight - (this.$el.scrollTop + (this.$el as HTMLElement).offsetHeight) >
+			10
+		) {
+			this.shouldScroll = false;
+		} else {
+			this.shouldScroll = true;
+		}
 	}
 
 	public async tryAutoscroll() {
-		// Wait to make sure the changes to the height of the element were processed.
-		await this.$nextTick();
-
-		if (this.shouldScroll || Date.now() - this.lastShouldNotAutoscroll < 10) {
+		if (this.shouldScroll) {
 			this.autoscroll();
 		}
+	}
+
+	private autoscroll() {
+		// We set that we've done an autoscroll. We'll check this variable in
+		// the "scroll handler" and ignore the scroll event since it was
+		// triggered by us.
+		this.isAutoscrolling = true;
+		this.$refs.scroller.scrollTo(this.$el.scrollHeight + 10000);
 	}
 
 	isNewMessage(message: ChatMessage) {
