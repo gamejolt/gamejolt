@@ -118,9 +118,20 @@ export class ChatClient {
 
 	get roomNotificationsCount() {
 		let count = 0;
-		for (const val of Object.values(this.notifications)) {
-			count += val || 0;
+
+		for (const roomId in this.notifications) {
+			const channel = this.roomChannels[roomId];
+
+			if (
+				// Only count for non-instanced channels.
+				(channel === undefined || !channel.instanced) &&
+				Object.prototype.hasOwnProperty.call(this.notifications, roomId)
+			) {
+				const roomCount = this.notifications[roomId];
+				count += roomCount || 0;
+			}
 		}
+
 		return count;
 	}
 
@@ -310,26 +321,19 @@ export async function joinInstancedRoomChannel(chat: ChatClient, roomId: number)
 	const channel = new ChatRoomChannel(roomId, chat);
 	channel.instanced = true;
 
-	await pollRequest(
-		chat,
-		`Join instanced room channel: ${roomId}`,
-		() =>
-			new Promise<void>((resolve, reject) => {
-				channel
-					.join()
-					.receive('error', reject)
-					.receive('ok', response => {
-						chat.roomChannels[roomId] = channel;
-						channel.room = new ChatRoom(response.room);
-						const messages = response.messages.map(
-							(msg: ChatMessage) => new ChatMessage(msg)
-						);
-						messages.reverse();
-						setupRoom(chat, channel.room, messages);
-						resolve();
-					});
-			})
-	);
+	await new Promise<void>((resolve, reject) => {
+		channel
+			.join()
+			.receive('error', reject)
+			.receive('ok', response => {
+				chat.roomChannels[roomId] = channel;
+				channel.room = new ChatRoom(response.room);
+				const messages = response.messages.map((msg: ChatMessage) => new ChatMessage(msg));
+				messages.reverse();
+				setupRoom(chat, channel.room, messages);
+				resolve();
+			});
+	});
 
 	return channel;
 }

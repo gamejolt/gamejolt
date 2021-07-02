@@ -31,6 +31,14 @@
 						</h2>
 						<div v-if="shouldShowTitleControls" class="-fireside-title-controls">
 							<app-button
+								v-if="shouldShowEditControlButton"
+								v-app-tooltip="$gettext(`Edit Fireside`)"
+								circle
+								sparse
+								icon="edit"
+								@click="onClickEditFireside"
+							/>
+							<app-button
 								v-if="!shouldShowChatMembers"
 								v-app-tooltip="$gettext(`Chat Members`)"
 								circle
@@ -38,14 +46,23 @@
 								icon="users"
 								@click="onClickShowChatMembers"
 							/>
-							<app-button
-								v-if="!shouldShowFiresideStats"
-								v-app-tooltip="$gettext(`Fireside info`)"
-								circle
-								sparse
-								icon="fireside"
-								@click="onClickShowFiresideStats"
-							/>
+							<div v-if="!shouldShowFiresideStats" class="-stats-btn">
+								<app-button
+									v-app-tooltip="$gettext(`Fireside info`)"
+									circle
+									sparse
+									:solid="hasExpiryWarning"
+									:primary="hasExpiryWarning"
+									icon="fireside"
+									@click="onClickShowFiresideStats"
+								/>
+								<app-jolticon
+									v-if="hasExpiryWarning"
+									icon="notice"
+									notice
+									class="-stats-btn-warn"
+								/>
+							</div>
 						</div>
 					</div>
 				</template>
@@ -154,13 +171,19 @@
 						<div class="-chat-window -content-obj">
 							<app-chat-window-output
 								v-if="chatRoom"
+								ref="output"
 								class="-chat-window-output fill-backdrop"
 								:room="chatRoom"
 								:messages="chatMessages"
 								:queued-messages="chatQueuedMessages"
 							/>
 
-							<app-chat-window-send class="-chat-window-input" :room="chatRoom" />
+							<app-chat-window-send
+								v-app-observe-dimensions="onSendResize"
+								class="-chat-window-input"
+								:room="chatRoom"
+								@size-change="onSendResize"
+							/>
 						</div>
 					</template>
 				</template>
@@ -286,4 +309,17 @@
 
 	&-controls
 		margin-bottom: 15px
+
+.-stats-btn
+	display: inline-block
+	position: relative
+
+	&-warn
+		position: absolute
+		left: -8px
+		top: -8px
+		pointer-events: none
+		change-bg('bg-offset')
+		rounded-corners()
+		padding: 2px
 </style>

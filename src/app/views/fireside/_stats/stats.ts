@@ -96,7 +96,7 @@ export default class AppFiresideStats extends Vue {
 		this.totalDurationText = duration((Date.now() - this.fireside.added_on) / 1000);
 
 		if (this.fireside.expires_on > Date.now()) {
-			const expiresInS = (this.fireside.expires_on - Date.now()) / 1000;
+			const expiresInS = this.fireside.getExpiryInMs() / 1000;
 
 			if (expiresInS > 60) {
 				this.expiresDurationText = null;

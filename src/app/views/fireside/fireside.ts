@@ -10,6 +10,7 @@ import { Growls } from '../../../_common/growls/growls.service';
 import AppIllustration from '../../../_common/illustration/illustration.vue';
 import AppLoading from '../../../_common/loading/loading.vue';
 import { Meta } from '../../../_common/meta/meta-service';
+import { AppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import { AppState, AppStore } from '../../../_common/store/app-store';
@@ -22,6 +23,7 @@ import {
 	leaveChatRoom,
 } from '../../components/chat/client';
 import { ChatRoomChannel } from '../../components/chat/room-channel';
+import AppChatWindowOutputTS from '../../components/chat/window/output/output';
 import AppChatWindowOutput from '../../components/chat/window/output/output.vue';
 import AppChatWindowSend from '../../components/chat/window/send/send.vue';
 import { EVENT_UPDATE, FiresideChannel } from '../../components/grid/fireside-channel';
@@ -29,6 +31,7 @@ import AppPageContainer from '../../components/page-container/page-container.vue
 import { store, Store } from '../../store';
 import AppFiresideChatMembers from './_chat-members/chat-members.vue';
 import { FiresideChatMembersModal } from './_chat-members/modal/modal.service';
+import { FiresideEditModal } from './_edit-modal/edit-modal.service';
 import { FiresideStatsModal } from './_stats/modal/modal.service';
 import AppFiresideStats from './_stats/stats.vue';
 
@@ -66,6 +69,7 @@ const FiresideThemeKey = 'fireside';
 	},
 	directives: {
 		AppTooltip,
+		AppObserveDimensions,
 	},
 })
 @RouteResolver({
@@ -86,6 +90,11 @@ export default class RouteFireside extends BaseRouteComponent {
 	private gridPreviousConnectedState: boolean | null = null;
 	status: RouteStatus = 'initial';
 	backgroundImageUrl: string | null = null;
+	hasExpiryWarning = false; // Visually shows a warning to the owner when the fireside's time is running low.
+
+	$refs!: {
+		output: AppChatWindowOutputTS;
+	};
 
 	get routeTitle() {
 		if (!this.fireside) {
@@ -138,10 +147,21 @@ export default class RouteFireside extends BaseRouteComponent {
 		return this.status === 'joined' && (Screen.isLg || Screen.isMd);
 	}
 
+	get shouldShowEditControlButton() {
+		return (
+			this.status === 'joined' &&
+			this.user &&
+			this.fireside &&
+			this.fireside.user.id === this.user.id
+		);
+	}
+
 	get shouldShowTitleControls() {
 		return (
 			this.status === 'joined' &&
-			(!this.shouldShowChatMembers || !this.shouldShowFiresideStats)
+			(!this.shouldShowChatMembers ||
+				!this.shouldShowFiresideStats ||
+				this.shouldShowEditControlButton)
 		);
 	}
 
@@ -158,6 +178,7 @@ export default class RouteFireside extends BaseRouteComponent {
 
 		this.fireside = new Fireside($payload.fireside);
 		this.backgroundImageUrl = this.fireside.header_media_item?.mediaserver_url ?? null;
+		this.hasExpiryWarning = false;
 		this.setPageTheme();
 
 		const userCanJoin = await this.checkUserCanJoin();
@@ -359,19 +380,34 @@ export default class RouteFireside extends BaseRouteComponent {
 			});
 		} catch (error) {
 			console.debug(`[FIRESIDE] Setup failure 3.`, error);
-			this.status = 'setup-failed';
+			if (error && error.reason === 'blocked') {
+				this.status = 'blocked';
+			} else {
+				this.status = 'setup-failed';
+			}
 			return;
 		}
 
 		// Now join the chat's room channel.
-		const chatChannel = await joinInstancedRoomChannel(this.chat, this.fireside.chat_room_id);
-		if (!chatChannel) {
-			console.debug(`[FIRESIDE] Setup failure 4.`);
+		try {
+			const chatChannel = await joinInstancedRoomChannel(
+				this.chat,
+				this.fireside.chat_room_id
+			);
+
+			if (!chatChannel) {
+				console.debug(`[FIRESIDE] Setup failure 4.`);
+				this.status = 'setup-failed';
+				return;
+			}
+
+			this.chatChannel = chatChannel;
+		} catch (error) {
+			console.debug(`[FIRESIDE] Setup failure 5.`, error);
 			this.status = 'setup-failed';
 			return;
 		}
 
-		this.chatChannel = chatChannel;
 		this.chatChannel.on('kick_member', (data: any) => {
 			if (data.user_id === this.user!.id) {
 				Growls.info(this.$gettext(`You've been kicked from the Fireside.`));
@@ -430,6 +466,9 @@ export default class RouteFireside extends BaseRouteComponent {
 			this.disconnect();
 			this.status = 'expired';
 		}
+
+		// Shows an expiry warning on the stats icon (on mobile) when < 60 seconds remain.
+		this.hasExpiryWarning = this.fireside.getExpiryInMs() < 60_000;
 	}
 
 	onClickRetry() {
@@ -449,5 +488,18 @@ export default class RouteFireside extends BaseRouteComponent {
 			return;
 		}
 		FiresideStatsModal.show(this.fireside, this.status);
+	}
+
+	onClickEditFireside() {
+		if (!this.fireside) {
+			return;
+		}
+		FiresideEditModal.show(this.fireside);
+	}
+
+	onSendResize() {
+		if (this.$refs.output) {
+			this.$refs.output.tryAutoscroll();
+		}
 	}
 }

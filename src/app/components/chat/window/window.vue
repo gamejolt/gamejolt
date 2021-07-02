@@ -119,6 +119,7 @@
 					<app-chat-window-output
 						v-for="room of [room]"
 						:key="room.id"
+						ref="output"
 						class="chat-window-output-inner"
 						:room="room"
 						:messages="messages"
@@ -127,7 +128,11 @@
 				</div>
 
 				<div v-if="chat.currentUser" class="chat-window-send-container">
-					<app-chat-window-send :room="room" />
+					<app-chat-window-send
+						v-app-observe-dimensions="onSendResize"
+						:room="room"
+						@size-change="onSendResize"
+					/>
 				</div>
 			</div>
 		</div>

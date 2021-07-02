@@ -12,6 +12,10 @@ export class ChatUserCollection {
 
 	private collection_: ChatUser[] = [];
 
+	get count() {
+		return this.onlineCount + this.offlineCount;
+	}
+
 	get collection() {
 		// Sorting is done inplace, so let's make a new wrapping array.
 		const collection = [...this.collection_];

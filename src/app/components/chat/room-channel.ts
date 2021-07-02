@@ -2,6 +2,9 @@ import { Channel, Presence, Socket } from 'phoenix';
 import Vue from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { Analytics } from '../../../_common/analytics/analytics.service';
+import { ContentDocument } from '../../../_common/content/content-document';
+import { ContentObject } from '../../../_common/content/content-object';
+import { MarkObject } from '../../../_common/content/mark-object';
 import {
 	ChatClient,
 	isInChatRoom,
@@ -24,6 +27,10 @@ interface MemberAddPayload {
 }
 
 interface MemberLeavePayload {
+	user_id: number;
+}
+
+interface MemberKickedPayload {
 	user_id: number;
 }
 
@@ -66,6 +73,7 @@ export class ChatRoomChannel extends Channel {
 		this.on('owner_sync', this.onOwnerSync.bind(this));
 		this.on('member_add', this.onMemberAdd.bind(this));
 		this.on('update_title', this.onUpdateTitle.bind(this));
+		this.on('kick_member', this.onMemberKicked.bind(this));
 
 		this.onClose(() => {
 			if (isInChatRoom(this.client, roomId)) {
@@ -124,6 +132,10 @@ export class ChatRoomChannel extends Channel {
 
 		processNewChatOutput(this.client, this.roomId, [message], false);
 		updateChatRoomLastMessageOn(this.client, message);
+
+		while (this.room.isFiresideRoom && this.client.messages[this.roomId].length > 100) {
+			this.client.messages[this.roomId].shift();
+		}
 	}
 
 	private onUserUpdated(data: Partial<ChatUser>) {
@@ -200,6 +212,25 @@ export class ChatRoomChannel extends Channel {
 			roomMembers.remove(data.user_id);
 		}
 		arrayRemove(this.room.members, i => i.id === data.user_id);
+	}
+
+	private onMemberKicked(data: MemberKickedPayload) {
+		// Generate doc for the message that contains "[removed]".
+		const text = new ContentObject('text');
+		text.text = '[removed]';
+		const textMark = new MarkObject('code');
+		text.marks.push(textMark);
+		const p = new ContentObject('paragraph', [text]);
+		const doc = new ContentDocument('chat-message', [p]);
+
+		const json = doc.toJson();
+
+		// Mark all messages by the kicked member as "removed".
+		for (const message of this.client.messages[this.roomId]) {
+			if (message.user.id === data.user_id) {
+				message.content = json;
+			}
+		}
 	}
 
 	private onMemberAdd(data: MemberAddPayload) {
