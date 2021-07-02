@@ -4,6 +4,7 @@ import { propRequired } from '../../../../../utils/vue';
 import { date } from '../../../../../_common/filters/date';
 import AppIllustration from '../../../../../_common/illustration/illustration.vue';
 import AppLoading from '../../../../../_common/loading/loading.vue';
+import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollScrollerTS from '../../../../../_common/scroll/scroller/scroller';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
@@ -24,6 +25,9 @@ import AppChatWindowOutputItem from './item/item.vue';
 		AppChatWindowOutputItem,
 		AppScrollScroller,
 		AppIllustration,
+	},
+	directives: {
+		AppObserveDimensions,
 	},
 	filters: {
 		date,
@@ -87,6 +91,9 @@ export default class AppChatWindowOutput extends Vue {
 
 	private shouldScroll = true;
 	private resize$: EventSubscription | undefined;
+	// Ultra-hack: Allow autoscroll up to 10ms after it was determined that we shouldn't autoscroll.
+	// This fixes the input resize event firing too quickly for resize observer.
+	private lastShouldNotAutoscroll = 0;
 
 	async mounted() {
 		this.resize$ = Screen.resizeChanges.subscribe(() => this.autoscroll());
@@ -170,8 +177,6 @@ export default class AppChatWindowOutput extends Vue {
 			this.shouldScroll = true;
 		}
 	}
-
-	private lastShouldNotAutoscroll = 0;
 
 	async loadOlder() {
 		this.isLoadingOlder = true;
