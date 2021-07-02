@@ -86,18 +86,6 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		return Screen.isXs && this.isEditorFocused;
 	}
 
-	get typingDisplayNames() {
-		const usersOnline = this.chat.roomMembers[this.room.id];
-		if (!usersOnline || usersOnline.collection.length === 0) {
-			return [];
-		}
-
-		return usersOnline.collection
-			.filter(user => user.typing)
-			.filter(user => user.id !== this.chat.currentUser?.id)
-			.map(user => user.display_name);
-	}
-
 	get hasContent() {
 		if (!this.formModel.content) {
 			return false;
@@ -133,6 +121,45 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 
 	get editorModelId() {
 		return this.formModel.id || null;
+	}
+
+	get typingText() {
+		const usersOnline = this.chat.roomMembers[this.room.id];
+		if (!usersOnline || usersOnline.collection.length === 0) {
+			return [];
+		}
+
+		const typingNames = usersOnline.collection
+			.filter(user => user.typing)
+			.filter(user => user.id !== this.chat.currentUser?.id)
+			.map(user => user.display_name);
+
+		const displayNamePlaceholderValues = {
+			user1: typingNames[0],
+			user2: typingNames[1],
+			user3: typingNames[2],
+		};
+
+		if (typingNames.length > 3) {
+			return this.$gettext(`Several people are typing...`);
+		} else if (typingNames.length === 3) {
+			return this.$gettextInterpolate(
+				`%{ user1 }, %{ user2 } and %{ user3 } are typing...`,
+				displayNamePlaceholderValues
+			);
+		} else if (typingNames.length === 2) {
+			return this.$gettextInterpolate(
+				`%{ user1 } and %{ user2 } are typing...`,
+				displayNamePlaceholderValues
+			);
+		} else if (typingNames.length === 1) {
+			return this.$gettextInterpolate(
+				`%{ user1 } is typing...`,
+				displayNamePlaceholderValues
+			);
+		}
+
+		return '';
 	}
 
 	@Watch('chat.messageEditing')
@@ -283,35 +310,6 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 
 			setMessageEditing(this.chat, lastMessage);
 		}
-	}
-
-	getTypingText() {
-		const displayNamePlaceholderValues = {
-			user1: this.typingDisplayNames[0],
-			user2: this.typingDisplayNames[1],
-			user3: this.typingDisplayNames[2],
-		};
-
-		if (this.typingDisplayNames.length > 3) {
-			return this.$gettext(`Several people are typing...`);
-		} else if (this.typingDisplayNames.length === 3) {
-			return this.$gettextInterpolate(
-				`%{ user1 }, %{ user2 } and %{ user3 } are typing...`,
-				displayNamePlaceholderValues
-			);
-		} else if (this.typingDisplayNames.length === 2) {
-			return this.$gettextInterpolate(
-				`%{ user1 } and %{ user2 } are typing...`,
-				displayNamePlaceholderValues
-			);
-		} else if (this.typingDisplayNames.length === 1) {
-			return this.$gettextInterpolate(
-				`%{ user1 } is typing...`,
-				displayNamePlaceholderValues
-			);
-		}
-
-		return '';
 	}
 
 	async cancelEditing() {

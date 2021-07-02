@@ -5,8 +5,8 @@
 		<app-shortkey shortkey="tab" @press="onTabKeyPressed" />
 
 		<div class="-top-indicators">
-			<span v-if="Screen.isXs && getTypingText().length > 0" class="-typing">
-				{{ getTypingText() }}
+			<span v-if="Screen.isXs && !!typingText" class="-typing">
+				{{ typingText }}
 			</span>
 		</div>
 
@@ -69,8 +69,8 @@
 
 		<div v-if="!Screen.isXs" class="-bottom-indicators anim-fade-in no-animate-leave">
 			<transition name="fade">
-				<span v-if="!Screen.isXs && getTypingText().length > 0" class="-typing">
-					{{ getTypingText() }}
+				<span v-if="!Screen.isXs && !!typingText" class="-typing">
+					{{ typingText }}
 				</span>
 			</transition>
 
