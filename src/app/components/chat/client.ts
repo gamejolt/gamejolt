@@ -118,9 +118,20 @@ export class ChatClient {
 
 	get roomNotificationsCount() {
 		let count = 0;
-		for (const val of Object.values(this.notifications)) {
-			count += val || 0;
+
+		for (const roomId in this.notifications) {
+			const channel = this.roomChannels[roomId];
+
+			if (
+				// Only count for non-instanced channels.
+				(channel === undefined || !channel.instanced) &&
+				Object.prototype.hasOwnProperty.call(this.notifications, roomId)
+			) {
+				const roomCount = this.notifications[roomId];
+				count += roomCount || 0;
+			}
 		}
+
 		return count;
 	}
 
