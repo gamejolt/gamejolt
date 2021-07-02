@@ -601,16 +601,10 @@ export class GridClient {
 			});
 		} else {
 			// Received a notification that cannot be parsed properly...
-			Growls.info({
-				title: Translate.$gettext('New Notification'),
-				message: Translate.$gettext('You have a new notification.'),
-				icon: undefined,
-				onclick: () => {
-					Analytics.trackEvent('grid', 'notification-click', notification.type);
-					router.push('/notifications');
-				},
-				system: isSystem,
-			});
+			console.error(
+				'[Grid] Received notification that cannot be displayed.',
+				notification.type
+			);
 		}
 	}
 

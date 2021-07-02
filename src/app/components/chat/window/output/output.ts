@@ -4,8 +4,8 @@ import { propRequired } from '../../../../../utils/vue';
 import { date } from '../../../../../_common/filters/date';
 import AppIllustration from '../../../../../_common/illustration/illustration.vue';
 import AppLoading from '../../../../../_common/loading/loading.vue';
-import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import { Screen } from '../../../../../_common/screen/screen-service';
+import AppScrollScrollerTS from '../../../../../_common/scroll/scroller/scroller';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import {
@@ -24,9 +24,6 @@ import AppChatWindowOutputItem from './item/item.vue';
 		AppChatWindowOutputItem,
 		AppScrollScroller,
 		AppIllustration,
-	},
-	directives: {
-		AppObserveDimensions,
 	},
 	filters: {
 		date,
@@ -49,6 +46,10 @@ export default class AppChatWindowOutput extends Vue {
 	private checkQueuedTimeout?: NodeJS.Timer;
 	private _introEmoji?: string;
 	private newMessageDeregister?: EventBusDeregister;
+
+	$refs!: {
+		scroller: AppScrollScrollerTS;
+	};
 
 	get allMessages() {
 		return this.messages.concat(this.queuedMessages);
@@ -105,6 +106,10 @@ export default class AppChatWindowOutput extends Vue {
 					await this.$nextTick();
 					this.autoscroll();
 				}
+				// When the user received a message, try to autoscroll.
+				else {
+					this.tryAutoscroll();
+				}
 			}
 		);
 	}
@@ -157,11 +162,16 @@ export default class AppChatWindowOutput extends Vue {
 			this.$el.scrollHeight - (this.$el.scrollTop + (this.$el as HTMLElement).offsetHeight) >
 			30
 		) {
+			if (this.shouldScroll) {
+				this.lastShouldNotAutoscroll = Date.now();
+			}
 			this.shouldScroll = false;
 		} else {
 			this.shouldScroll = true;
 		}
 	}
+
+	private lastShouldNotAutoscroll = 0;
 
 	async loadOlder() {
 		this.isLoadingOlder = true;
@@ -195,11 +205,17 @@ export default class AppChatWindowOutput extends Vue {
 	}
 
 	private autoscroll() {
-		this.$el.scrollTop = this.$el.scrollHeight + 10000;
+		this.$refs.scroller.scrollTo(this.$el.scrollHeight + 10000);
+		// Fire this event right now because it could be delayed when the tab isn't focused
+		// on some browsers.
+		this.onScroll();
 	}
 
-	public tryAutoscroll() {
-		if (this.shouldScroll) {
+	public async tryAutoscroll() {
+		// Wait to make sure the changes to the height of the element were processed.
+		await this.$nextTick();
+
+		if (this.shouldScroll || Date.now() - this.lastShouldNotAutoscroll < 10) {
 			this.autoscroll();
 		}
 	}

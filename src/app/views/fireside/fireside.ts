@@ -10,6 +10,7 @@ import { Growls } from '../../../_common/growls/growls.service';
 import AppIllustration from '../../../_common/illustration/illustration.vue';
 import AppLoading from '../../../_common/loading/loading.vue';
 import { Meta } from '../../../_common/meta/meta-service';
+import { AppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import { AppState, AppStore } from '../../../_common/store/app-store';
@@ -22,6 +23,7 @@ import {
 	leaveChatRoom,
 } from '../../components/chat/client';
 import { ChatRoomChannel } from '../../components/chat/room-channel';
+import AppChatWindowOutputTS from '../../components/chat/window/output/output';
 import AppChatWindowOutput from '../../components/chat/window/output/output.vue';
 import AppChatWindowSend from '../../components/chat/window/send/send.vue';
 import { EVENT_UPDATE, FiresideChannel } from '../../components/grid/fireside-channel';
@@ -67,6 +69,7 @@ const FiresideThemeKey = 'fireside';
 	},
 	directives: {
 		AppTooltip,
+		AppObserveDimensions,
 	},
 })
 @RouteResolver({
@@ -88,6 +91,10 @@ export default class RouteFireside extends BaseRouteComponent {
 	status: RouteStatus = 'initial';
 	backgroundImageUrl: string | null = null;
 	hasExpiryWarning = false; // Visually shows a warning to the owner when the fireside's time is running low.
+
+	$refs!: {
+		output: AppChatWindowOutputTS;
+	};
 
 	get routeTitle() {
 		if (!this.fireside) {
@@ -488,5 +495,11 @@ export default class RouteFireside extends BaseRouteComponent {
 			return;
 		}
 		FiresideEditModal.show(this.fireside);
+	}
+
+	onSendResize() {
+		if (this.$refs.output) {
+			this.$refs.output.tryAutoscroll();
+		}
 	}
 }

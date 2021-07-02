@@ -171,13 +171,19 @@
 						<div class="-chat-window -content-obj">
 							<app-chat-window-output
 								v-if="chatRoom"
+								ref="output"
 								class="-chat-window-output fill-backdrop"
 								:room="chatRoom"
 								:messages="chatMessages"
 								:queued-messages="chatQueuedMessages"
 							/>
 
-							<app-chat-window-send class="-chat-window-input" :room="chatRoom" />
+							<app-chat-window-send
+								v-app-observe-dimensions="onSendResize"
+								class="-chat-window-input"
+								:room="chatRoom"
+								@size-change="onSendResize"
+							/>
 						</div>
 					</template>
 				</template>
