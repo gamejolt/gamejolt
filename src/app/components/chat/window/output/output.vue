@@ -1,8 +1,15 @@
 <script lang="ts" src="./output"></script>
 
 <template>
-	<app-scroll-scroller ref="scroller" @scroll.native="onScroll">
-		<div class="-container anim-fade-in no-animate-leave">
+	<app-scroll-scroller
+		ref="scroller"
+		v-app-observe-dimensions="tryAutoscroll"
+		@scroll.native="onScroll"
+	>
+		<div
+			v-app-observe-dimensions="tryAutoscroll"
+			class="-container anim-fade-in no-animate-leave"
+		>
 			<div v-if="shouldShowIntro" class="-intro">
 				<app-illustration src="~img/ill/no-chat.svg">
 					<translate v-if="room.isPmRoom">
