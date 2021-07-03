@@ -72,6 +72,8 @@ export type Mutations = AppMutations &
 	_ClientLibraryMod.Mutations & {
 		showShell: void;
 		hideShell: void;
+		showFooter: void;
+		hideFooter: void;
 		setHasContentSidebar: boolean;
 		setNotificationCount: { type: UnreadItemType; count: number };
 		incrementNotificationCount: { type: UnreadItemType; count: number };
@@ -83,7 +85,7 @@ export type Mutations = AppMutations &
 		featuredPost: FiresidePost;
 	};
 
-let bootstrapResolver: (() => void) | null = null;
+let bootstrapResolver: ((value?: any) => void) | null = null;
 let backdrop: AppBackdrop | null = null;
 export let tillStoreBootstrapped = new Promise(resolve => (bootstrapResolver = resolve));
 
@@ -139,6 +141,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	isLibraryBootstrapped = false;
 	isShellBootstrapped = false;
 	isShellHidden = false;
+	isFooterHidden = false;
 
 	/** Unread items in the activity feed. */
 	unreadActivityCount = 0;
@@ -179,6 +182,10 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		}
 
 		return this.mobileCbarShowing || !Screen.isXs;
+	}
+
+	get hasFooter() {
+		return !this.isFooterHidden;
 	}
 
 	/**
@@ -392,6 +399,16 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	@VuexMutation
 	showShell() {
 		this.isShellHidden = false;
+	}
+
+	@VuexMutation
+	hideFooter() {
+		this.isFooterHidden = true;
+	}
+
+	@VuexMutation
+	showFooter() {
+		this.isFooterHidden = false;
 	}
 
 	@VuexMutation

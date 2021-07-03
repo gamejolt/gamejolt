@@ -57,5 +57,12 @@ router.beforeEach((to, _from, next) => {
 	} else {
 		store.commit('showShell');
 	}
+
+	if (to.matched.some(record => record.meta.noFooter)) {
+		store.commit('hideFooter');
+	} else {
+		store.commit('showFooter');
+	}
+
 	next();
 });

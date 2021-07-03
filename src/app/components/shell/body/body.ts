@@ -11,4 +11,5 @@ import AppShellFooter from '../footer/footer.vue';
 })
 export default class AppShellBody extends Vue {
 	@State hasContentSidebar!: Store['hasContentSidebar'];
+	@State hasFooter!: Store['hasFooter'];
 }
