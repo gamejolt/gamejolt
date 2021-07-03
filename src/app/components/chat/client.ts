@@ -826,3 +826,14 @@ export function updateChatRoomLastMessageOn(chat: ChatClient, message: ChatMessa
 export function kickGroupMember(chat: ChatClient, room: ChatRoom, memberId: number) {
 	chat.roomChannels[room.id].push('kick_member', { member_id: memberId });
 }
+
+/**
+ * Called when something internal changes that would require us to resort our
+ * member arrays.
+ *
+ * For example, if a friend goes online/offline, we resort the room member lists
+ * to reflect that status.
+ */
+export function recollectChatRoomMembers(chat: ChatClient) {
+	Object.values(chat.roomMembers).forEach(i => i.recollect());
+}

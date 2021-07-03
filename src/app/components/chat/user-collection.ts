@@ -151,7 +151,7 @@ export class ChatUserCollection {
 	 * Will resort our collection of users. We need to call this internally in
 	 * reaction to changes to the users being tracked.
 	 */
-	private recollect() {
+	recollect() {
 		if (this.type === ChatUserCollection.TYPE_FRIEND) {
 			sortCollection(this.chat, this.collection_, 'lastMessage');
 		} else {
