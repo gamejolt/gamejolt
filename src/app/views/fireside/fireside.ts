@@ -10,7 +10,6 @@ import { Growls } from '../../../_common/growls/growls.service';
 import AppIllustration from '../../../_common/illustration/illustration.vue';
 import AppLoading from '../../../_common/loading/loading.vue';
 import { Meta } from '../../../_common/meta/meta-service';
-import { AppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import { AppState, AppStore } from '../../../_common/store/app-store';
@@ -23,11 +22,9 @@ import {
 	leaveChatRoom,
 } from '../../components/chat/client';
 import { ChatRoomChannel } from '../../components/chat/room-channel';
-import AppChatWindowOutputTS from '../../components/chat/window/output/output';
 import AppChatWindowOutput from '../../components/chat/window/output/output.vue';
 import AppChatWindowSend from '../../components/chat/window/send/send.vue';
 import { EVENT_UPDATE, FiresideChannel } from '../../components/grid/fireside-channel';
-import AppPageContainer from '../../components/page-container/page-container.vue';
 import { store, Store } from '../../store';
 import AppFiresideChatMembers from './_chat-members/chat-members.vue';
 import { FiresideChatMembersModal } from './_chat-members/modal/modal.service';
@@ -57,7 +54,6 @@ const FiresideThemeKey = 'fireside';
 @Component({
 	name: 'RouteFireside',
 	components: {
-		AppPageContainer,
 		AppUserAvatarImg,
 		AppLoading,
 		AppChatWindowOutput,
@@ -69,7 +65,6 @@ const FiresideThemeKey = 'fireside';
 	},
 	directives: {
 		AppTooltip,
-		AppObserveDimensions,
 	},
 })
 @RouteResolver({
@@ -89,12 +84,9 @@ export default class RouteFireside extends BaseRouteComponent {
 	private chatPreviousConnectedState: boolean | null = null;
 	private gridPreviousConnectedState: boolean | null = null;
 	status: RouteStatus = 'initial';
-	backgroundImageUrl: string | null = null;
 	hasExpiryWarning = false; // Visually shows a warning to the owner when the fireside's time is running low.
 
-	$refs!: {
-		output: AppChatWindowOutputTS;
-	};
+	readonly Screen = Screen;
 
 	get routeTitle() {
 		if (!this.fireside) {
@@ -135,10 +127,6 @@ export default class RouteFireside extends BaseRouteComponent {
 		return !!this.chat && this.chat.connected && !!this.chatRoom;
 	}
 
-	get shouldShowBackgroundImage() {
-		return this.backgroundImageUrl && (Screen.isMd || Screen.isLg);
-	}
-
 	get shouldShowChatMembers() {
 		return this.shouldShowChat && Screen.isLg;
 	}
@@ -177,7 +165,6 @@ export default class RouteFireside extends BaseRouteComponent {
 		}
 
 		this.fireside = new Fireside($payload.fireside);
-		this.backgroundImageUrl = this.fireside.header_media_item?.mediaserver_url ?? null;
 		this.hasExpiryWarning = false;
 		this.setPageTheme();
 
@@ -361,9 +348,7 @@ export default class RouteFireside extends BaseRouteComponent {
 				return;
 			}
 
-			const newFireside = new Fireside(payload.fireside);
-			Object.assign(this.fireside, newFireside);
-			this.backgroundImageUrl = this.fireside.header_media_item?.mediaserver_url ?? null;
+			this.fireside.assign(payload.fireside);
 			this.expiryCheck();
 		});
 
@@ -495,11 +480,5 @@ export default class RouteFireside extends BaseRouteComponent {
 			return;
 		}
 		FiresideEditModal.show(this.fireside);
-	}
-
-	onSendResize() {
-		if (this.$refs.output) {
-			this.$refs.output.tryAutoscroll();
-		}
 	}
 }
