@@ -210,11 +210,16 @@
 @import '~styles-lib/mixins'
 
 .-fireside
-	height: 'calc(100vh - %s)' % $shell-top-nav-height
+	change-bg('bg')
 	overflow: hidden
 	display: flex
 	flex-direction: column
 	align-items: center
+	position: fixed
+	top: var(--shell-top)
+	bottom: var(--shell-bottom)
+	left: var(--shell-left)
+	right: var(--shell-right)
 
 .-header
 	flex: none
