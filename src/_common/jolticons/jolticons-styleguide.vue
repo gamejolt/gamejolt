@@ -1,5 +1,7 @@
+<script lang="ts" src="./jolticons-styleguide"></script>
+
 <template>
-	<section class="section" id="styleguide-jolticons">
+	<section id="styleguide-jolticons" class="section">
 		<h1 class="section-header">Jolticons</h1>
 
 		<p>
@@ -11,15 +13,15 @@
 		</p>
 
 		<input
+			v-model="filter"
 			type="text"
 			class="form-control"
-			style="width: 100%; margin-bottom: 1em; padding: 5px;"
+			style="width: 100%; margin-bottom: 1em; padding: 5px"
 			placeholder="Search for a Jolticon..."
-			v-model="filter"
 		/>
 
 		<div class="row">
-			<div class="col-xs-2 text-center" v-for="jolticon of filteredIcons" :key="jolticon">
+			<div v-for="jolticon of filteredIcons" :key="jolticon" class="col-xs-2 text-center">
 				<p v-app-tooltip="jolticon">
 					<app-jolticon :icon="jolticon" big />
 				</p>
@@ -28,4 +30,3 @@
 	</section>
 </template>
 
-<script lang="ts" src="./jolticons-styleguide"></script>
