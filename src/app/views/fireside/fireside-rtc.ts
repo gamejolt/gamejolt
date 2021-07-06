@@ -37,13 +37,13 @@ export class FiresideRTC {
 		});
 
 		this.agoraClient.on('user-left', (remoteUser, _reason) => {
-			arrayRemove(this.users, i => i.agoraUser.uid === remoteUser.uid);
+			arrayRemove(this.users, i => i.userId === remoteUser.uid);
 		});
 
 		this.agoraClient.on('user-published', async (remoteUser, mediaType) => {
 			console.log('got user published');
 
-			const user = this.users.find(i => i.agoraUser.uid === remoteUser.uid);
+			const user = this.users.find(i => i.userId === remoteUser.uid);
 			if (!user) {
 				console.warn(`couldn't find remote user locally`, remoteUser);
 				return;
@@ -54,16 +54,16 @@ export class FiresideRTC {
 
 			user.tracks.push(new FiresideRTCTrack(mediaType, track));
 
-			// For audio tracks we always immediately play.
-			if (mediaType === 'audio') {
-				remoteUser.audioTrack?.play();
-			}
+			// // For audio tracks we always immediately play.
+			// if (mediaType === 'audio') {
+			// 	remoteUser.audioTrack?.play();
+			// }
 		});
 
 		this.agoraClient.on('user-unpublished', async (remoteUser, mediaType) => {
 			console.log('got user unpublished');
 
-			const user = this.users.find(i => i.agoraUser.uid === remoteUser.uid);
+			const user = this.users.find(i => i.userId === remoteUser.uid);
 			if (!user) {
 				console.warn(`couldn't find remote user locally`, remoteUser);
 				return;
@@ -76,9 +76,12 @@ export class FiresideRTC {
 }
 
 export class FiresideRTCUser {
+	public userId: number;
 	public readonly tracks: FiresideRTCTrack[] = [];
 
-	constructor(public readonly agoraUser: IAgoraRTCRemoteUser) {}
+	constructor(public readonly agoraUser: IAgoraRTCRemoteUser) {
+		this.userId = agoraUser.uid as number;
+	}
 
 	get videoTrack() {
 		return this.tracks.find(i => i.type === 'video');

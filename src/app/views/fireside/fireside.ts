@@ -31,8 +31,10 @@ import { FiresideRTC, FiresideRTCKey } from './fireside-rtc';
 import AppFiresideChatMembers from './_chat-members/chat-members.vue';
 import { FiresideChatMembersModal } from './_chat-members/modal/modal.service';
 import { FiresideEditModal } from './_edit-modal/edit-modal.service';
+import AppFiresideHostAvatar from './_host-avatar/host-avatar.vue';
 import { FiresideStatsModal } from './_stats/modal/modal.service';
 import AppFiresideStats from './_stats/stats.vue';
+import AppFiresideVideoStats from './_video-stats/video-stats.vue';
 import AppFiresideVideo from './_video/video.vue';
 
 type RoutePayload = {
@@ -67,6 +69,8 @@ const FiresideThemeKey = 'fireside';
 		AppFiresideStats,
 		AppResponsiveDimensions,
 		AppFiresideVideo,
+		AppFiresideVideoStats,
+		AppFiresideHostAvatar,
 	},
 	directives: {
 		AppTooltip,
