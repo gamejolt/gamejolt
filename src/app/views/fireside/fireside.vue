@@ -70,7 +70,9 @@
 			</div>
 
 			<div v-if="shouldShowVideo" class="-video">
-				<app-responsive-dimensions class="-video-inner" :ratio="16 / 9" />
+				<app-responsive-dimensions class="-video-inner" :ratio="16 / 9">
+					<app-fireside-video v-if="rtc && rtc.focusedUser" :rtc-user="rtc.focusedUser" />
+				</app-responsive-dimensions>
 			</div>
 
 			<template v-if="status === 'loading' || status === 'initial'">
@@ -344,6 +346,7 @@
 	flex: 3 0
 
 	&-inner
+		position: relative
 		background-color: var(--theme-bg-offset)
 
 .-chat-window

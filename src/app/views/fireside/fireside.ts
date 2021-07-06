@@ -1,5 +1,5 @@
 import Component from 'vue-class-component';
-import { InjectReactive } from 'vue-property-decorator';
+import { InjectReactive, ProvideReactive } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { sleep } from '../../../utils/utils';
 import { Api } from '../../../_common/api/api.service';
@@ -20,18 +20,20 @@ import {
 	ChatClient,
 	ChatKey,
 	joinInstancedRoomChannel,
-	leaveChatRoom,
+	leaveChatRoom
 } from '../../components/chat/client';
 import { ChatRoomChannel } from '../../components/chat/room-channel';
 import AppChatWindowOutput from '../../components/chat/window/output/output.vue';
 import AppChatWindowSend from '../../components/chat/window/send/send.vue';
 import { EVENT_UPDATE, FiresideChannel } from '../../components/grid/fireside-channel';
 import { store, Store } from '../../store';
+import { FiresideRTC, FiresideRTCKey } from './fireside-rtc';
 import AppFiresideChatMembers from './_chat-members/chat-members.vue';
 import { FiresideChatMembersModal } from './_chat-members/modal/modal.service';
 import { FiresideEditModal } from './_edit-modal/edit-modal.service';
 import { FiresideStatsModal } from './_stats/modal/modal.service';
 import AppFiresideStats from './_stats/stats.vue';
+import AppFiresideVideo from './_video/video.vue';
 
 type RoutePayload = {
 	fireside: any;
@@ -64,6 +66,7 @@ const FiresideThemeKey = 'fireside';
 		AppFiresideChatMembers,
 		AppFiresideStats,
 		AppResponsiveDimensions,
+		AppFiresideVideo,
 	},
 	directives: {
 		AppTooltip,
@@ -78,6 +81,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	@AppState user!: AppStore['user'];
 	@State grid!: Store['grid'];
 	@InjectReactive(ChatKey) chat!: ChatClient;
+	@ProvideReactive(FiresideRTCKey) rtc: FiresideRTC | null = null;
 
 	private fireside: Fireside | null = null;
 	private gridChannel: FiresideChannel | null = null;
@@ -201,11 +205,14 @@ export default class RouteFireside extends BaseRouteComponent {
 
 		if (this.fireside.isOpen()) {
 			// Set up watchers to initiate connection once one of them boots up.
-			this.$watch('chat.connected', this.watchChat.bind(this));
-			this.$watch('grid.connected', this.watchGrid.bind(this));
+			this.$watch('chat.connected', () => this.watchChat());
+			this.$watch('grid.connected', () => this.watchGrid());
 
 			// Both services may already be connected (watchers wouldn't fire), so try joining manually now.
 			this.tryJoin();
+
+			// TODO: Gotta clear out previous RTC on reconnection.
+			this.rtc ??= new FiresideRTC(this.$route.query.appId as string, this.$route.query.token as string, this.$route.query.channel as string);
 		} else {
 			this.status = 'expired';
 			console.debug(`[FIRESIDE] Fireside is expired, and cannot be joined.`);
@@ -214,6 +221,9 @@ export default class RouteFireside extends BaseRouteComponent {
 
 	routeDestroyed() {
 		store.commit('theme/clearPageTheme', FiresideThemeKey);
+
+		this.rtc?.destroy();
+		this.rtc = null;
 		this.disconnect();
 
 		// This also happens in Disconnect, but make 100% sure we cleared the interval.
