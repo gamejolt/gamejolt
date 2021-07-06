@@ -10,6 +10,7 @@ import { Growls } from '../../../_common/growls/growls.service';
 import AppIllustration from '../../../_common/illustration/illustration.vue';
 import AppLoading from '../../../_common/loading/loading.vue';
 import { Meta } from '../../../_common/meta/meta-service';
+import { AppResponsiveDimensions } from '../../../_common/responsive-dimensions/responsive-dimensions';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import { AppState, AppStore } from '../../../_common/store/app-store';
@@ -62,6 +63,7 @@ const FiresideThemeKey = 'fireside';
 		AppAuthJoin,
 		AppFiresideChatMembers,
 		AppFiresideStats,
+		AppResponsiveDimensions,
 	},
 	directives: {
 		AppTooltip,
@@ -85,6 +87,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	private gridPreviousConnectedState: boolean | null = null;
 	status: RouteStatus = 'initial';
 	hasExpiryWarning = false; // Visually shows a warning to the owner when the fireside's time is running low.
+	shouldShowVideo = false;
 
 	readonly Screen = Screen;
 
@@ -124,15 +127,26 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	get shouldShowChat() {
-		return !!this.chat && this.chat.connected && !!this.chatRoom;
+		const mobileCondition =
+			Screen.isMobile && !this.isVertical && this.shouldShowVideo ? false : true;
+
+		return !!this.chat && this.chat.connected && !!this.chatRoom && mobileCondition;
 	}
 
 	get shouldShowChatMembers() {
-		return this.shouldShowChat && Screen.isLg;
+		return !this.shouldShowVideo && this.shouldShowChat && Screen.isLg;
+	}
+
+	get isVertical() {
+		return Screen.height > Screen.width;
+	}
+
+	get isSmall() {
+		return !(Screen.isLg || Screen.isMd);
 	}
 
 	get shouldShowFiresideStats() {
-		return this.status === 'joined' && (Screen.isLg || Screen.isMd);
+		return !this.shouldShowVideo && this.status === 'joined' && !this.isSmall;
 	}
 
 	get shouldShowEditControlButton() {
@@ -169,6 +183,8 @@ export default class RouteFireside extends BaseRouteComponent {
 		this.setPageTheme();
 
 		const userCanJoin = await this.checkUserCanJoin();
+		console.log(userCanJoin);
+
 		if (!userCanJoin) {
 			this.status = 'unauthorized';
 			console.debug(
@@ -262,6 +278,8 @@ export default class RouteFireside extends BaseRouteComponent {
 		}
 
 		const frontendCookie = await getCookie('frontend');
+		console.warn('cookie', frontendCookie);
+
 		if (!frontendCookie) {
 			return false;
 		}

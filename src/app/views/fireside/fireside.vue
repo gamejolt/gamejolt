@@ -2,6 +2,10 @@
 
 <template>
 	<div class="-fireside">
+		<app-button class="-test" solid overlay @click="shouldShowVideo = !shouldShowVideo">
+			<translate>Toggle Video</translate>
+		</app-button>
+
 		<div class="-header">
 			<template v-if="fireside">
 				<div class="-fireside-title">
@@ -60,140 +64,144 @@
 			</template>
 		</div>
 		<div class="-split" />
-		<div class="-body">
+		<div class="-body" :class="{ '-body-column': isSmall && isVertical }">
 			<div v-if="shouldShowFiresideStats" class="-leading">
 				<app-fireside-stats :fireside="fireside" :status="status" />
 			</div>
 
-			<div class="-content">
-				<template v-if="status === 'loading' || status === 'initial'">
-					<div key="loading" class="-message-wrapper">
-						<div class="-message">
-							<app-illustration src="~img/ill/end-of-feed.svg">
-								<app-loading
-									centered
-									:label="$gettext(`Traveling to the Fireside...`)"
-								/>
-							</app-illustration>
-						</div>
-					</div>
-				</template>
+			<div v-if="shouldShowVideo" class="-video">
+				<app-responsive-dimensions class="-video-inner" :ratio="16 / 9" />
+			</div>
 
-				<template v-else-if="status === 'unauthorized'">
-					<div key="unauthorized" class="-message-wrapper">
-						<div class="-message">
-							<h2 class="section-header text-center">
-								<translate>Join Game Jolt</translate>
-							</h2>
-
-							<div class="text-center">
-								<p class="lead">
-									<translate>Do you love games as much as we do?</translate>
-								</p>
-							</div>
-
-							<hr class="underbar underbar-center" />
-							<br />
-
-							<app-auth-join />
-						</div>
-					</div>
-				</template>
-
-				<template v-else-if="status === 'expired'">
-					<div key="expired" class="-message-wrapper">
-						<div class="-message">
-							<app-illustration src="~img/ill/no-comments-small.svg">
-								<p>
-									<translate>This Fireside's fire has burned out.</translate>
-								</p>
-								<p>
-									<router-link :to="{ name: 'home' }">
-										<small><translate>Everybody go home</translate></small>
-									</router-link>
-								</p>
-							</app-illustration>
-						</div>
-					</div>
-				</template>
-
-				<template v-else-if="status === 'setup-failed'">
-					<div key="setup-failed" class="-message-wrapper">
-						<div class="-message">
-							<app-illustration src="~img/ill/maintenance.svg">
-								<p>
-									<translate>Could not reach this Fireside.</translate>
-									<br />
-									<translate>Maybe try finding it again?</translate>
-								</p>
-								&nbsp;
-								<app-button block @click="onClickRetry">
-									<translate>Retry</translate>
-								</app-button>
-								&nbsp;
-							</app-illustration>
-						</div>
-					</div>
-				</template>
-
-				<template v-else-if="status === 'disconnected'">
-					<div key="disconnected" class="-message-wrapper">
-						<div class="-message">
-							<app-illustration src="~img/ill/no-comments-small.svg">
-								<p>
-									<translate>
-										You have been disconnected from Fireside services.
-									</translate>
-									<br /><br />
-									<small>
-										<translate>
-											We are actively trying to reconnect you, but you can
-											also try refreshing the page.
-										</translate>
-									</small>
-								</p>
-							</app-illustration>
-						</div>
-					</div>
-				</template>
-
-				<template v-else-if="status === 'blocked'">
-					<div key="blocked" class="-message-wrapper">
-						<div class="-message">
-							<div class="text-center">
-								<app-jolticon icon="friend-remove-2" big notice />
-							</div>
-							<div class="text-center">
-								<h3>
-									<translate>
-										You are blocked from joining this Fireside
-									</translate>
-								</h3>
-								<p>
-									<router-link :to="{ name: 'home' }">
-										<small><translate>Return home</translate></small>
-									</router-link>
-								</p>
-							</div>
-						</div>
-					</div>
-				</template>
-
-				<template v-else-if="status === 'joined'">
-					<template v-if="shouldShowChat">
-						<div class="-chat-window">
-							<app-chat-window-output
-								v-if="chatRoom"
-								ref="output"
-								class="-chat-window-output fill-backdrop"
-								:room="chatRoom"
-								:messages="chatMessages"
-								:queued-messages="chatQueuedMessages"
+			<template v-if="status === 'loading' || status === 'initial'">
+				<div key="loading" class="-message-wrapper">
+					<div class="-message">
+						<app-illustration src="~img/ill/end-of-feed.svg">
+							<app-loading
+								centered
+								:label="$gettext(`Traveling to the Fireside...`)"
 							/>
+						</app-illustration>
+					</div>
+				</div>
+			</template>
 
-							<app-chat-window-send class="-chat-window-input" :room="chatRoom" />
+			<template v-else-if="status === 'unauthorized'">
+				<div key="unauthorized" class="-message-wrapper">
+					<div class="-message">
+						<h2 class="section-header text-center">
+							<translate>Join Game Jolt</translate>
+						</h2>
+
+						<div class="text-center">
+							<p class="lead">
+								<translate>Do you love games as much as we do?</translate>
+							</p>
 						</div>
-					</template>
+
+						<hr class="underbar underbar-center" />
+						<br />
+
+						<app-auth-join />
+					</div>
+				</div>
+			</template>
+
+			<template v-else-if="status === 'expired'">
+				<div key="expired" class="-message-wrapper">
+					<div class="-message">
+						<app-illustration src="~img/ill/no-comments-small.svg">
+							<p>
+								<translate>This Fireside's fire has burned out.</translate>
+							</p>
+							<p>
+								<router-link :to="{ name: 'home' }">
+									<small><translate>Everybody go home</translate></small>
+								</router-link>
+							</p>
+						</app-illustration>
+					</div>
+				</div>
+			</template>
+
+			<template v-else-if="status === 'setup-failed'">
+				<div key="setup-failed" class="-message-wrapper">
+					<div class="-message">
+						<app-illustration src="~img/ill/maintenance.svg">
+							<p>
+								<translate>Could not reach this Fireside.</translate>
+								<br />
+								<translate>Maybe try finding it again?</translate>
+							</p>
+							&nbsp;
+							<app-button block @click="onClickRetry">
+								<translate>Retry</translate>
+							</app-button>
+							&nbsp;
+						</app-illustration>
+					</div>
+				</div>
+			</template>
+
+			<template v-else-if="status === 'disconnected'">
+				<div key="disconnected" class="-message-wrapper">
+					<div class="-message">
+						<app-illustration src="~img/ill/no-comments-small.svg">
+							<p>
+								<translate>
+									You have been disconnected from Fireside services.
+								</translate>
+								<br /><br />
+								<small>
+									<translate>
+										We are actively trying to reconnect you, but you can also
+										try refreshing the page.
+									</translate>
+								</small>
+							</p>
+						</app-illustration>
+					</div>
+				</div>
+			</template>
+
+			<template v-else-if="status === 'blocked'">
+				<div key="blocked" class="-message-wrapper">
+					<div class="-message">
+						<div class="text-center">
+							<app-jolticon icon="friend-remove-2" big notice />
+						</div>
+						<div class="text-center">
+							<h3>
+								<translate> You are blocked from joining this Fireside </translate>
+							</h3>
+							<p>
+								<router-link :to="{ name: 'home' }">
+									<small><translate>Return home</translate></small>
+								</router-link>
+							</p>
+						</div>
+					</div>
+				</div>
+			</template>
+			<div
+				v-else-if="shouldShowChat"
+				key="chat"
+				class="-chat"
+				:class="{ '-trailing': shouldShowVideo }"
+			>
+				<template v-if="status === 'joined'">
+					<div class="-chat-window">
+						<app-chat-window-output
+							v-if="chatRoom"
+							ref="output"
+							class="-chat-window-output fill-backdrop"
+							:room="chatRoom"
+							:messages="chatMessages"
+							:queued-messages="chatQueuedMessages"
+						/>
+
+						<app-chat-window-send class="-chat-window-input" :room="chatRoom" />
+					</div>
 				</template>
 			</div>
 			<div v-if="shouldShowChatMembers" class="-trailing">
@@ -208,6 +216,12 @@
 <style lang="stylus" scoped>
 @import '~styles/variables'
 @import '~styles-lib/mixins'
+
+.-test
+	position: fixed
+	top: 75px
+	left: 75px
+	z-index: 2000
 
 .-fireside
 	change-bg('bg')
@@ -240,6 +254,7 @@
 .-body
 	flex: auto
 	display: flex
+	flex-direction: row
 	width: 100%
 	max-width: 1800px
 	overflow: hidden
@@ -247,8 +262,18 @@
 	@media $media-md-up
 		padding: 16px 0
 
+	&-column
+		flex-direction: column
+
+		.-video
+			flex: none
+
+		.-chat
+			flex: auto
+			max-width: unset
+
 .-leading
-.-content
+.-chat
 .-trailing
 	display: flex
 	flex-direction: column
@@ -269,9 +294,10 @@
 	@media $media-md
 		order: 1
 
-.-content
+.-chat
 	flex: 3 0
 	position: relative
+	overflow: visible !important
 
 .-fireside-title
 	display: flex
@@ -313,6 +339,12 @@
 	padding: 16px
 	width: 100%
 	max-width: 600px
+
+.-video
+	flex: 3 0
+
+	&-inner
+		background-color: var(--theme-bg-offset)
 
 .-chat-window
 	position: absolute
