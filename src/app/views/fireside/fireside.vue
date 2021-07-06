@@ -69,7 +69,7 @@
 				<app-fireside-stats :fireside="fireside" :status="status" />
 			</div>
 
-			<div v-if="shouldShowVideo" class="-video-wrapper">
+			<div v-if="shouldShowVideo" class="-video-wrapper" :class="{ '-vertical': isVertical }">
 				<div class="-video-container">
 					<app-responsive-dimensions class="-video-inner" :ratio="16 / 9">
 						<template v-if="rtc && rtc.focusedUser">
@@ -366,6 +366,9 @@
 		align-items: center
 		flex-direction: column
 		background-color: var(--theme-darkest)
+
+		&.-vertical
+			flex: 1
 
 	&-container
 		width: 100%
