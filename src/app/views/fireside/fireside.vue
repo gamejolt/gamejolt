@@ -69,10 +69,26 @@
 				<app-fireside-stats :fireside="fireside" :status="status" />
 			</div>
 
-			<div v-if="shouldShowVideo" class="-video">
-				<app-responsive-dimensions class="-video-inner" :ratio="16 / 9">
-					<app-fireside-video v-if="rtc && rtc.focusedUser" :rtc-user="rtc.focusedUser" />
-				</app-responsive-dimensions>
+			<div v-if="shouldShowVideo" class="-video-wrapper">
+				<div class="-video-container">
+					<app-responsive-dimensions class="-video-inner" :ratio="16 / 9">
+						<app-fireside-video
+							v-if="rtc && rtc.focusedUser"
+							:rtc-user="rtc.focusedUser"
+						/>
+					</app-responsive-dimensions>
+				</div>
+				<div v-if="rtc" class="-video-streamers">
+					<template v-for="streamer of rtc.users">
+						<div
+							:key="streamer.agoraUser.uid"
+							class="-streamer-icon"
+							:class="{ '-active': rtc.focusedUser === streamer }"
+						>
+							{{ streamer.agoraUser.uid.toString().substr(0, 3) }}
+						</div>
+					</template>
+				</div>
 			</div>
 
 			<template v-if="status === 'loading' || status === 'initial'">
@@ -343,11 +359,46 @@
 	max-width: 600px
 
 .-video
-	flex: 3 0
+	&-container
+	&-wrapper
+		flex: 3 0
+		display: flex
+		justify-content: center
+		align-items: center
+		flex-direction: column
+		background-color: var(--theme-darkest)
+
+	&-container
+		width: 100%
+		height: 100%
 
 	&-inner
 		position: relative
 		background-color: var(--theme-bg-offset)
+
+	&-streamers
+		height: 80px
+		align-self: flex-end
+		justify-self: flex-end
+		display: grid
+		grid-template-columns: repeat(auto-fill, minmax(80px, 1fr))
+		width: 100%
+
+.-streamer-icon
+	border-radius: 50%
+	background-color: var(--theme-bg-offset)
+	color: white
+	display: flex
+	justify-content: center
+	align-items: center
+	margin: 8px
+	cursor: pointer
+	user-select: none
+
+	&.-active
+		cursor: default
+		background-color: var(--theme-highlight)
+		color: var(--theme-highlight-fg)
 
 .-chat-window
 	position: absolute
