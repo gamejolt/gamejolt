@@ -64,29 +64,53 @@
 			</template>
 		</div>
 		<div class="-split" />
-		<div class="-body" :class="{ '-body-column': isSmall && isVertical }">
+		<div class="-body" :class="{ '-body-column': isVertical }">
 			<div v-if="shouldShowFiresideStats" class="-leading">
 				<app-fireside-stats :fireside="fireside" :status="status" />
 			</div>
 
 			<div v-if="shouldShowVideo" class="-video-wrapper" :class="{ '-vertical': isVertical }">
-				<div class="-video-container">
-					<app-responsive-dimensions class="-video-inner" :ratio="16 / 9">
-						<template v-if="rtc && rtc.focusedUser">
-							<app-fireside-video-stats :key="'stats-' + rtc.focusedUser.userId" />
-							<app-fireside-video
-								:key="'video-' + rtc.focusedUser.userId"
-								:rtc-user="rtc.focusedUser"
-							/>
-						</template>
-					</app-responsive-dimensions>
+				<div class="-video-padding">
+					<div
+						ref="videoWrapper"
+						v-app-observe-dimensions="onDimensionsChange"
+						class="-video-container"
+					>
+						<div
+							class="-video-inner"
+							:style="{
+								width: videoWidth + 'px',
+								height: videoHeight + 'px',
+							}"
+						>
+							<template
+								v-if="
+									rtc &&
+									rtc.focusedUser &&
+									rtc.agoraClient.connectionState === 'CONNECTED' &&
+									rtc.focusedUser.tracks.length > 0
+								"
+							>
+								<app-fireside-video-stats
+									:key="'stats-' + rtc.focusedUser.userId"
+								/>
+								<app-fireside-video
+									:key="'video-' + rtc.focusedUser.userId"
+									:rtc-user="rtc.focusedUser"
+								/>
+							</template>
+							<template v-else>
+								<app-loading centered stationary no-color hide-label />
+							</template>
+						</div>
+					</div>
 				</div>
+
 				<div v-if="rtc" class="-video-hosts">
-					<app-fireside-host-avatar
-						v-for="host of rtc.users"
-						:key="host.userId"
-						:host="host"
-					/>
+					<div v-for="host of rtc.users" :key="host.userId" class="-host-outer">
+						<div class="-host-spacer" />
+						<app-fireside-host-avatar class="-host" :host="host" />
+					</div>
 				</div>
 			</div>
 
@@ -358,33 +382,64 @@
 	max-width: 600px
 
 .-video
-	&-container
 	&-wrapper
-		flex: 3 0
+	&-container
+	&-inner
 		display: flex
 		justify-content: center
 		align-items: center
+
+	&-wrapper
+		flex: 3 0
 		flex-direction: column
-		background-color: var(--theme-darkest)
+		overflow: hidden
 
 		&.-vertical
 			flex: 1
+			max-height: 40vh
 
-	&-container
+	&-padding
+		position: relative
 		width: 100%
 		height: 100%
+		padding: 8px
+
+	&-container
+		min-height: 0
+		width: 100%
+		height: 100%
+		position: relative
 
 	&-inner
-		position: relative
-		background-color: var(--theme-bg-offset)
+		rounded-corners-lg()
+		elevate-2()
+		overflow: hidden
+		position: absolute
+		background-color: var(--theme-bg-subtle)
 
 	&-hosts
-		height: 80px
-		align-self: flex-end
-		justify-self: flex-end
-		display: grid
-		grid-template-columns: repeat(auto-fill, minmax(80px, 1fr))
 		width: 100%
+		display: flex
+		justify-content: center
+
+.-host
+	position: absolute
+	left: 0
+	top: 0
+	right: 0
+	bottom: 0
+
+	&-spacer
+		width: 100%
+		padding-top: 100%
+
+	&-outer
+		position: relative
+		display: inline-flex
+		align-items: center
+		justify-content: center
+		max-width: 64px
+		flex: auto
 
 .-chat-window
 	position: absolute

@@ -17,7 +17,7 @@
 	display: flex
 	justify-content: center
 	align-items: center
-	margin: 8px
+	margin: 4px
 	cursor: pointer
 	user-select: none
 

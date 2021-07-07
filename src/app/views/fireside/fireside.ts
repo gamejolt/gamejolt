@@ -10,9 +10,11 @@ import { Growls } from '../../../_common/growls/growls.service';
 import AppIllustration from '../../../_common/illustration/illustration.vue';
 import AppLoading from '../../../_common/loading/loading.vue';
 import { Meta } from '../../../_common/meta/meta-service';
+import { AppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
 import { AppResponsiveDimensions } from '../../../_common/responsive-dimensions/responsive-dimensions';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
+import AppScrollScroller from '../../../_common/scroll/scroller/scroller.vue';
 import { AppState, AppStore } from '../../../_common/store/app-store';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../_common/user/user-avatar/img/img.vue';
@@ -71,9 +73,11 @@ const FiresideThemeKey = 'fireside';
 		AppFiresideVideo,
 		AppFiresideVideoStats,
 		AppFiresideHostAvatar,
+		AppScrollScroller,
 	},
 	directives: {
 		AppTooltip,
+		AppObserveDimensions,
 	},
 })
 @RouteResolver({
@@ -98,6 +102,13 @@ export default class RouteFireside extends BaseRouteComponent {
 	shouldShowVideo = false;
 
 	readonly Screen = Screen;
+
+	videoWidth = 0;
+	videoHeight= 0;
+
+	$refs!: {
+		videoWrapper?: HTMLDivElement;
+	}
 
 	get routeTitle() {
 		if (!this.fireside) {
@@ -250,6 +261,34 @@ export default class RouteFireside extends BaseRouteComponent {
 			}
 
 			this.join();
+		}
+	}
+
+	onDimensionsChange() {
+		const videoWrapper = this.$refs.videoWrapper;
+		if (!videoWrapper) {
+			return;
+		}
+
+		const wrapperWidth = videoWrapper.offsetWidth;
+		const wrapperHeight = videoWrapper.offsetHeight;
+		const wrapperRatio = wrapperWidth / wrapperHeight;
+
+		const videoStats = this.rtc?.agoraClient?.getRemoteVideoStats();
+		const receiveWidth = videoStats?.receiveResolutionWidth?.receiveResolutionWidth ?? 16;
+		const receiveHeight = videoStats?.receiveResolutionHeight?.receiveResolutionHeight ?? 9;
+		const receiveRatio = receiveWidth / receiveHeight;
+
+		// If the video is wider than the containing element...
+		if ( receiveRatio > wrapperRatio ) {
+			this.videoWidth = wrapperWidth;
+			this.videoHeight = wrapperWidth / receiveRatio;
+		} else if (receiveRatio < wrapperRatio ) {
+			this.videoHeight = wrapperHeight;
+			this.videoWidth = wrapperHeight * receiveRatio;
+		} else {
+			this.videoWidth = wrapperWidth;
+			this.videoHeight = wrapperHeight;
 		}
 	}
 
