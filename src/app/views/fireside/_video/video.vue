@@ -1,7 +1,13 @@
 <script lang="ts" src="./video"></script>
 
 <template>
-	<div class="-video" @mouseleave="onMouseOut" @mousemove="onMouseMove" @click="onVideoClick">
+	<div
+		class="-video"
+		@mouseleave="onMouseOut"
+		@mousemove="onMouseMove"
+		@touchmove="onMouseMove"
+		@click="onVideoClick"
+	>
 		<div ref="player" class="-video-player" />
 		<div
 			v-if="hasOverlayItems"
@@ -12,7 +18,7 @@
 		>
 			<div @click.stop>
 				<div v-if="showHosts" class="-overlay-hosts -control">
-					<app-fireside-host-list />
+					<app-fireside-host-list scrollable />
 				</div>
 			</div>
 		</div>
@@ -44,9 +50,9 @@
 
 .-overlay-hosts
 	position: absolute
-	left: 4px
+	left: 0px
 	bottom: 4px
-	right: 4px
+	right: 0px
 
 .-control
 	&

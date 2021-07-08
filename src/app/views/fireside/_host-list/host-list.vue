@@ -1,12 +1,24 @@
 <script lang="ts" src="./host-list"></script>
 
 <template>
-	<div v-if="rtc" class="-fireside-hosts">
-		<div v-for="host of rtc.users" :key="host.userId" class="-host-outer">
-			<div class="-host-spacer" />
-			<app-fireside-host-avatar class="-host" :host="host" @change-host="emitChangeHost" />
+	<component
+		:is="scrollable ? 'app-scroll-scroller' : 'div'"
+		v-if="rtc"
+		:horizontal="scrollable"
+		class="-fireside-hosts"
+		:class="{ '-scrollable': scrollable }"
+	>
+		<div class="-fireside-hosts-inner">
+			<div v-for="host of rtc.users" :key="host.userId" class="-host-outer">
+				<div class="-host-spacer" />
+				<app-fireside-host-avatar
+					class="-host"
+					:host="host"
+					@change-host="emitChangeHost"
+				/>
+			</div>
 		</div>
-	</div>
+	</component>
 </template>
 
 <style lang="stylus" scoped>
@@ -15,8 +27,25 @@
 
 .-fireside-hosts
 	width: 100%
-	display: flex
-	justify-content: center
+
+	&:not(.-scrollable)
+		.-fireside-hosts-inner
+			display: flex
+
+		.-host-outer
+			max-width: 64px
+			flex: auto
+
+	&.-scrollable
+		.-fireside-hosts-inner
+			display: inline-flex
+
+		.-host-outer
+			width: 64px
+			flex: none
+
+	&-inner
+		justify-content: center
 
 .-host
 	position: absolute
@@ -34,6 +63,4 @@
 		display: inline-flex
 		align-items: center
 		justify-content: center
-		max-width: 64px
-		flex: auto
 </style>
