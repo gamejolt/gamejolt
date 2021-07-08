@@ -149,7 +149,7 @@ export default class RouteFireside extends BaseRouteComponent {
 
 	get shouldShowChat() {
 		const mobileCondition =
-			Screen.isMobile && !this.isVertical && this.shouldShowVideo ? false : true;
+			Screen.isMobile && !this.isVertical  ? false : true;
 
 		return !!this.chat && this.chat.connected && !!this.chatRoom && mobileCondition;
 	}
