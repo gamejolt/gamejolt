@@ -392,7 +392,7 @@
 
 		&.-vertical
 			flex: 1
-			max-height: 40vh
+			max-height: 33vh
 
 	&-padding
 		position: relative
