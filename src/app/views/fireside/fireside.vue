@@ -91,12 +91,13 @@
 									rtc.focusedUser.tracks.length > 0
 								"
 							>
-								<app-fireside-video-stats
+								<!-- <app-fireside-video-stats
 									:key="'stats-' + rtc.focusedUser.userId"
-								/>
+								/> -->
 								<app-fireside-video
 									:key="'video-' + rtc.focusedUser.userId"
 									:rtc-user="rtc.focusedUser"
+									:show-hosts="!shouldShowHosts"
 								/>
 							</template>
 							<template v-else>
@@ -106,12 +107,7 @@
 					</div>
 				</div>
 
-				<div v-if="rtc" class="-video-hosts">
-					<div v-for="host of rtc.users" :key="host.userId" class="-host-outer">
-						<div class="-host-spacer" />
-						<app-fireside-host-avatar class="-host" :host="host" />
-					</div>
-				</div>
+				<app-fireside-host-list v-if="rtc && shouldShowHosts" />
 			</div>
 
 			<template v-if="status === 'loading' || status === 'initial'">
@@ -416,30 +412,6 @@
 		overflow: hidden
 		position: absolute
 		background-color: var(--theme-bg-subtle)
-
-	&-hosts
-		width: 100%
-		display: flex
-		justify-content: center
-
-.-host
-	position: absolute
-	left: 0
-	top: 0
-	right: 0
-	bottom: 0
-
-	&-spacer
-		width: 100%
-		padding-top: 100%
-
-	&-outer
-		position: relative
-		display: inline-flex
-		align-items: center
-		justify-content: center
-		max-width: 64px
-		flex: auto
 
 .-chat-window
 	position: absolute

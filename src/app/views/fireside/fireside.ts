@@ -34,6 +34,7 @@ import AppFiresideChatMembers from './_chat-members/chat-members.vue';
 import { FiresideChatMembersModal } from './_chat-members/modal/modal.service';
 import { FiresideEditModal } from './_edit-modal/edit-modal.service';
 import AppFiresideHostAvatar from './_host-avatar/host-avatar.vue';
+import AppFiresideHostList from './_host-list/host-list.vue';
 import { FiresideStatsModal } from './_stats/modal/modal.service';
 import AppFiresideStats from './_stats/stats.vue';
 import AppFiresideVideoStats from './_video-stats/video-stats.vue';
@@ -74,6 +75,7 @@ const FiresideThemeKey = 'fireside';
 		AppFiresideVideoStats,
 		AppFiresideHostAvatar,
 		AppScrollScroller,
+		AppFiresideHostList,
 	},
 	directives: {
 		AppTooltip,
@@ -154,6 +156,10 @@ export default class RouteFireside extends BaseRouteComponent {
 
 	get shouldShowChatMembers() {
 		return !this.shouldShowVideo && this.shouldShowChat && Screen.isLg;
+	}
+
+	get shouldShowHosts() {
+		return !this.isVertical &&  !this.isSmall;
 	}
 
 	get isVertical() {
