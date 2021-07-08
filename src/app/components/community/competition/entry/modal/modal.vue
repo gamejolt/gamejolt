@@ -75,7 +75,6 @@
 							class="-award-icon"
 							icon="medal"
 							big
-							highlight
 						/>
 						<div class="-award-details">
 							<h4 class="sans-margin">
@@ -148,8 +147,8 @@
 
 .-award
 	margin-top: 16px
-	change-bg('backlight')
-	color: var(--theme-highlight)
+	change-bg('bi-bg')
+	color: var(--theme-bi-fg)
 	padding: 16px
 	rounded-corners-lg()
 
