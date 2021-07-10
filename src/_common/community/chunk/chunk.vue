@@ -79,7 +79,7 @@
 					</template>
 
 					<!-- Add empty flexible items if we haven't met our preferred items per row -->
-					<template v-if="items.length < preferredCardsPerRow">
+					<template v-if="items.length < preferredCardsPerRow && !Screen.isXs">
 						<template v-for="(item, index) of preferredCardsPerRow - items.length">
 							<div :key="item" class="-card" />
 
@@ -93,9 +93,6 @@
 							/>
 						</template>
 					</template>
-				</template>
-				<template v-else>
-					<!-- TODO: no-items illustration -->
 				</template>
 			</div>
 		</component>
