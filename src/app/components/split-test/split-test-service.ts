@@ -1,19 +1,19 @@
 import { Route } from 'vue-router';
 
-// function getPayloadVariation(payload: any, experiment: string, route?: Route): number {
-// 	const variation = checkHardcoded(experiment, route);
-// 	if (variation !== -1) {
-// 		return variation;
-// 	}
+export function getSplitTestSimpleShell() {
+	const key = 'simple_shell';
+	return (splitTests[key] ??= new SplitTest(key));
+}
 
-// 	if (typeof payload._experiment !== 'undefined' && typeof payload._variation !== 'undefined') {
-// 		if (payload._experiment === experiment) {
-// 			return payload._variation;
-// 		}
-// 	}
+const splitTests: Record<string, SplitTest> = {};
 
-// 	return -1;
-// }
+class SplitTest {
+	constructor(public name: string) {}
+
+	get value(): boolean {
+		return getClientSideVariation(this.name) === 2;
+	}
+}
 
 function getClientSideVariation(experiment: string, route?: Route): number {
 	if (GJ_IS_SSR) {

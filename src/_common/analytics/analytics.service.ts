@@ -1,11 +1,17 @@
+import { getAnalytics, logEvent, setCurrentScreen } from 'firebase/analytics';
 import VueRouter from 'vue-router';
 import { AppPromotionSource } from '../../utils/mobile-app';
 import { Environment } from '../environment/environment.service';
+import { getFirebaseApp } from '../firebase/firebase.service';
 import { appStore } from '../store/app-store';
 import { EventBus } from '../system/event/event-bus.service';
 
+function getFirebaseAnalytics() {
+	return getAnalytics(getFirebaseApp());
+}
+
 // Stub for SSR.
-const gtag: any = (typeof window !== 'undefined' && (window as any).gtag) || function() {};
+const gtag: any = (typeof window !== 'undefined' && (window as any).gtag) || function () {};
 
 export class Analytics {
 	static readonly SOCIAL_NETWORK_FB = 'facebook';
@@ -87,18 +93,21 @@ export class Analytics {
 			path = window.location.pathname + window.location.search + window.location.hash;
 		}
 
-		const options = {
-			page_path: path,
-			page_title: path,
-			user_id: this.appUser?.id,
-		};
+		const analytics = getFirebaseAnalytics();
+
+		// const options = {
+		// 	page_path: path,
+		// 	page_title: path,
+		// 	user_id: this.appUser?.id,
+		// };
 
 		// Now track the page view.
 		if (GJ_BUILD_TYPE === 'development') {
-			console.log(`Track page view: ${JSON.stringify(options)}`);
+			console.log(`Track page view: ${path}`);
 		} else {
-			gtag('set', options);
-			gtag('config', Environment.gaId);
+			setCurrentScreen(analytics, path);
+			// gtag('set', options);
+			// // gtag('config', Environment.gaId);
 			gtag('config', Environment.gaUniversalId);
 		}
 
@@ -187,10 +196,12 @@ export class Analytics {
 	}
 }
 
-function trackEvent(name: string, parameters: Record<string, string | number>) {
+function trackEvent(name: string, eventParams: Record<string, string | number>) {
 	// We prefix with `x_` so that we know it is one of our own events.
-	gtag('event', `x_${name}`, parameters);
-	console.log(`Track event. ${name}`, parameters);
+	// gtag('event', `x_${name}`, eventParams);
+	logEvent(getFirebaseAnalytics(), `x_${name}`, eventParams);
+
+	console.log(`Track event.`, name, eventParams);
 }
 
 export function trackAppPromotionClick(options: { source: AppPromotionSource }) {
