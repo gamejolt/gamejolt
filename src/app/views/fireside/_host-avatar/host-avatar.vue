@@ -1,8 +1,10 @@
 <script lang="ts" src="./host-avatar"></script>
 
 <template>
-	<div class="-host-avatar" :class="{ '-active': rtc.focusedUser === host }" @click="onClick">
-		{{ host.userId.toString().substr(0, 3) }}
+	<div class="-wrapper" :class="{ '-talking': host.volumeLevel > 1 }">
+		<div class="-avatar" :class="{ '-active': rtc.focusedUser === host }" @click="onClick">
+			{{ host.userId.toString().substr(0, 3) }}
+		</div>
 	</div>
 </template>
 
@@ -10,14 +12,24 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 
-.-host-avatar
+.-wrapper
+	border-radius: 50%
+	padding: $border-width-large * 2
+	margin: 4px
+
+	&.-talking
+		padding: $border-width-large
+		border: $border-width-large solid var(--theme-highlight)
+
+.-avatar
+	width: 100%
+	height: 100%
 	border-radius: 50%
 	background-color: var(--theme-bg-offset)
 	color: var(--theme-fg)
 	display: flex
 	justify-content: center
 	align-items: center
-	margin: 4px
 	cursor: pointer
 	user-select: none
 

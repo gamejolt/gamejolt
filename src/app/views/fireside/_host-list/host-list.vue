@@ -25,6 +25,8 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 
+$-max-size = 64px + ($border-width-large * 2)
+
 .-fireside-hosts
 	width: 100%
 
@@ -33,7 +35,7 @@
 			display: flex
 
 		.-host-outer
-			max-width: 64px
+			max-width: $-max-size
 			flex: auto
 
 	&.-scrollable
@@ -41,7 +43,7 @@
 			display: inline-flex
 
 		.-host-outer
-			width: 64px
+			width: $-max-size
 			flex: none
 
 	&-inner

@@ -1,8 +1,14 @@
 import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Component, InjectReactive, Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../utils/vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { FiresideRTCUser } from '../fireside-rtc';
+import {
+	FiresideRTC,
+	FiresideRTCKey,
+	FiresideRTCUser,
+	subscribeTrack,
+	unsubscribeTrack,
+} from '../fireside-rtc';
 import AppFiresideHostList from '../_host-list/host-list.vue';
 
 const UIHideTimeout = 2000;
@@ -15,6 +21,8 @@ const UIHideTimeoutMovement = 2000;
 export default class AppFiresideVideo extends Vue {
 	@Prop(propRequired(FiresideRTCUser)) rtcUser!: FiresideRTCUser;
 	@Prop(propOptional(Boolean, false)) showHosts!: boolean;
+
+	@InjectReactive(FiresideRTCKey) rtc!: FiresideRTC;
 
 	isHoveringControls = false;
 	private isHovered = false;
@@ -36,6 +44,21 @@ export default class AppFiresideVideo extends Vue {
 
 	get hasOverlayItems() {
 		return this.showHosts;
+	}
+
+	mounted() {
+		this.sub();
+	}
+
+	private async sub() {
+		await subscribeTrack(this.rtc, this.rtcUser, 'video');
+		this.rtcUser.videoTrack?.agoraTrack.play(this.$refs.player);
+	}
+
+	beforeDestroy() {
+		this.rtcUser.agoraUser.videoTrack?.stop();
+		this.$refs.player.innerHTML = '';
+		unsubscribeTrack(this.rtc, this.rtcUser, 'video');
 	}
 
 	onMouseOut() {
@@ -66,16 +89,5 @@ export default class AppFiresideVideo extends Vue {
 
 		clearTimeout(this._hideUITimer);
 		this._hideUITimer = undefined;
-	}
-
-	@Watch('rtcUser.videoTrack', { immediate: true })
-	async onVideoTrackChange() {
-		await this.$nextTick();
-		this.rtcUser.videoTrack?.agoraTrack.play(this.$refs.player);
-	}
-
-	beforeDestroy() {
-		this.rtcUser.agoraUser.videoTrack?.stop();
-		this.$refs.player.innerHTML = '';
 	}
 }
