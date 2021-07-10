@@ -88,29 +88,10 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
+@import './common'
 
-$-aspect-ratio = (10 / 16)
 $-base-width = 200px
 $-padding = 8px
-
-.post-card
-	rounded-corners-lg()
-	elevate-1()
-	overflow: hidden
-	position: relative
-	background-color: var(--theme-bg)
-	aspect-ratio: $-aspect-ratio
-	// Safari needs this to actually clip our inner content to the border-radius we have assigned.
-	transform: translateZ(0)
-	cursor: pointer
-
-	&:hover
-		elevate-2()
-
-		.-link
-			border-color: var(--theme-link)
 
 .-inner
 	&

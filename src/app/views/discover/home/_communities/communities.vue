@@ -2,6 +2,27 @@
 
 <template>
 	<div class="container">
+		<template v-if="testCondition">
+			<template v-if="isLoading">
+				<div class="row">
+					<template v-for="i of 1">
+						<app-community-chunk-placeholder :key="i" class="-chunk" />
+					</template>
+				</div>
+			</template>
+			<template v-else-if="filteredCommunities.top.length > 0">
+				<div class="row">
+					<template v-for="community of filteredCommunities.top">
+						<app-community-chunk
+							:key="community.id"
+							class="-chunk"
+							:community="community"
+						/>
+					</template>
+				</div>
+			</template>
+		</template>
+
 		<div class="text-center">
 			<h2 class="section-header">
 				<translate>Browse Communities</translate>
@@ -49,3 +70,11 @@
 		</div>
 	</div>
 </template>
+
+<style lang="stylus" scoped>
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+
+.-chunk
+	margin-bottom: $grid-gutter-width
+</style>
