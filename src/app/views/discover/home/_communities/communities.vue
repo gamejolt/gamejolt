@@ -53,6 +53,7 @@
 				<app-community-card
 					v-app-track-event="`home:communities:click`"
 					:community="community"
+					:track-goto="testCondition"
 					elevate
 				/>
 			</div>
