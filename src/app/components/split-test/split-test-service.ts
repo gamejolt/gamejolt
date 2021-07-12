@@ -1,20 +1,5 @@
 import { Route } from 'vue-router';
 
-export function getSplitTestSimpleShell() {
-	const key = 'simple_shell';
-	return (splitTests[key] ??= new SplitTest(key));
-}
-
-const splitTests: Record<string, SplitTest> = {};
-
-class SplitTest {
-	constructor(public name: string) {}
-
-	get value(): boolean {
-		return getClientSideVariation(this.name) === 2;
-	}
-}
-
 function getClientSideVariation(experiment: string, route?: Route): number {
 	if (GJ_IS_SSR) {
 		return 1;
