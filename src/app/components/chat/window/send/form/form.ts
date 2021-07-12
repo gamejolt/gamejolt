@@ -51,8 +51,8 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	// Don't show "Do you want to save" when dismissing the form.
 	warnOnDiscard = false;
 	typing = false;
-	nextMessageTimeout: NodeJS.Timer | null = null;
 
+	private nextMessageTimeout: NodeJS.Timer | null = null;
 	private escapeCallback?: EscapeStackCallback;
 	private typingTimeout!: NodeJS.Timer;
 
@@ -250,9 +250,16 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		}
 
 		// For fireside rooms, timeout the user from sending another message for 1.5s.
-		// Do not do this for the owner.
+		// Do not do this for the owner/mods.
 		if (this.chat.currentUser?.id === this.room.owner_id) {
 			return;
+		}
+		if (this.chat.currentUser) {
+			// Fetch the user from the room to guarantee the role is bootstrapped.
+			const roomUser = this.chat.roomMembers[this.room.id].get(this.chat.currentUser);
+			if (roomUser && (roomUser.role === 'owner' || roomUser.role === 'moderator')) {
+				return;
+			}
 		}
 
 		this.nextMessageTimeout = setTimeout(() => {

@@ -6,7 +6,16 @@ import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service'
 import { AppTheme } from '../../../../_common/theme/theme';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
-import { ChatClient, ChatKey, enterChatRoom, isUserOnline, kickGroupMember } from '../client';
+import {
+	ChatClient,
+	ChatKey,
+	demoteModerator,
+	enterChatRoom,
+	isUserOnline,
+	kickGroupMember,
+	promoteToModerator,
+	userCanModerateOtherUser,
+} from '../client';
 import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
 import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vue';
@@ -36,6 +45,10 @@ export default class AppChatUserPopover extends Vue {
 		return this.room.owner_id === this.user.id;
 	}
 
+	get isModerator() {
+		return this.chat.roomMembers[this.room.id].get(this.user)?.role === 'moderator';
+	}
+
 	get canMessage() {
 		// Don't show "Send message" link when already in PM room with the user.
 		if (this.room.isPmRoom) {
@@ -47,15 +60,23 @@ export default class AppChatUserPopover extends Vue {
 	}
 
 	get canModerate() {
-		if (!this.chat) {
+		if (!this.chat || !this.chat.currentUser) {
 			return false;
 		}
 
-		return (
-			this.chat.currentUser &&
-			this.chat.currentUser.id === this.room.owner_id &&
-			!this.isOwner
-		);
+		return userCanModerateOtherUser(this.chat, this.room, this.chat.currentUser, this.user);
+	}
+
+	get canChangeModerator() {
+		if (!this.chat.currentUser) {
+			return false;
+		}
+		if (!this.room.canElectModerators) {
+			return false;
+		}
+
+		// Only the owner of the room can promote/demote moderators.
+		return this.chat.currentUser.id === this.room.owner_id;
 	}
 
 	onClickSendMessage() {
@@ -82,6 +103,31 @@ export default class AppChatUserPopover extends Vue {
 
 		if (confirm) {
 			kickGroupMember(this.chat, this.room, this.user.id);
+		}
+	}
+
+	async onClickPromoteModerator() {
+		const result = await ModalConfirm.show(
+			this.$gettextInterpolate(
+				`Do you want to promote @%{ username } to Moderator? They will be able to remove messages and kick users from the chat. You can demote them at any time.`,
+				{ username: this.user.username }
+			)
+		);
+
+		if (result) {
+			promoteToModerator(this.chat, this.room, this.user.id);
+		}
+	}
+
+	async onClickDemoteModerator() {
+		const result = await ModalConfirm.show(
+			this.$gettextInterpolate(`Do you want to demote @%{ username } to User?`, {
+				username: this.user.username,
+			})
+		);
+
+		if (result) {
+			demoteModerator(this.chat, this.room, this.user.id);
 		}
 	}
 }

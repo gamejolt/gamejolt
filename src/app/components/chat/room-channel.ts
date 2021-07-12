@@ -142,6 +142,11 @@ export class ChatRoomChannel extends Channel {
 		const updatedUser = new ChatUser(data);
 		if (this.room && isInChatRoom(this.client, this.roomId) && this.room.isGroupRoom) {
 			this.client.roomMembers[this.roomId].update(updatedUser);
+
+			// Make sure the owner field is synced.
+			if (updatedUser.role === 'owner') {
+				this.room.owner_id = updatedUser.id;
+			}
 		}
 	}
 
@@ -240,6 +245,11 @@ export class ChatRoomChannel extends Channel {
 			}
 
 			this.room.members.push(user);
+
+			// Make sure the owner field is synced.
+			if (user.role === 'owner') {
+				this.room.owner_id = user.id;
+			}
 		}
 	}
 
