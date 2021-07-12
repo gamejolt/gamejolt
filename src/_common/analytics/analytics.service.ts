@@ -1,18 +1,167 @@
-import { getAnalytics, logEvent, setCurrentScreen } from 'firebase/analytics';
+import {
+	Analytics as FirebaseAnalytics,
+	initializeAnalytics,
+	logEvent,
+	setCurrentScreen,
+	setUserId,
+} from 'firebase/analytics';
 import VueRouter from 'vue-router';
 import { AppPromotionSource } from '../../utils/mobile-app';
-import { Environment } from '../environment/environment.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
-import { appStore } from '../store/app-store';
+import { WithAppStore } from '../store/app-store';
 import { EventBus } from '../system/event/event-bus.service';
 
-function getFirebaseAnalytics() {
-	return getAnalytics(getFirebaseApp());
+let _store: WithAppStore;
+let _pageViewRecorded = false;
+
+let _analytics: FirebaseAnalytics;
+function _getFirebaseAnalytics() {
+	_analytics ??= initializeAnalytics(getFirebaseApp(), { config: { send_page_view: false } });
+	return _analytics;
 }
 
-// Stub for SSR.
-const gtag: any = (typeof window !== 'undefined' && (window as any).gtag) || function () {};
+function _getStoreUser() {
+	return _store.state.app.user;
+}
 
+function _shouldTrack() {
+	const user = _getStoreUser();
+
+	// If they're not a normal user, don't track.
+	if (GJ_BUILD_TYPE === 'production' && user && user.permission_level > 0) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * Initializes the analytics for use with the current app.
+ */
+export function initAnalytics(store: WithAppStore) {
+	if (GJ_IS_SSR) {
+		return;
+	}
+
+	_store = store;
+
+	_store.watch(
+		(state) => state.app.user,
+		(user) => {
+			if (user?.id) {
+				trackUserId(user.id);
+			} else {
+				untrackUserId();
+			}
+		}
+	);
+}
+
+/**
+ * Can be called to hook into the router to track pageviews automatically.
+ */
+export function initAnalyticsRouter(router: VueRouter) {
+	if (GJ_IS_SSR) {
+		return;
+	}
+
+	// Reset all page trackers since we're starting the page route.
+	router.beforeEach((_to, _from, next) => {
+		_pageViewRecorded = false;
+		next();
+	});
+
+	EventBus.on('routeChangeAfter', () => {
+		const route = router.currentRoute;
+		const analyticsPath = route.meta.analyticsPath;
+
+		// Track the page view using the analyticsPath if we have one
+		// assigned to the route meta.
+		if (analyticsPath) {
+			trackPageview(analyticsPath);
+			return;
+		}
+
+		trackPageview(route.fullPath);
+	});
+}
+
+/**
+ * Tracks a pageview.
+ */
+export function trackPageview(path?: string) {
+	if (GJ_IS_SSR) {
+		return;
+	}
+
+	// Gotta make sure the system has a chance to compile the title into the page.
+	window.setTimeout(() => {
+		_trackPageview(path);
+	});
+}
+
+function _trackPageview(path?: string) {
+	if (!_shouldTrack()) {
+		console.log('Skip tracking page view since not a normal user.');
+		return;
+	}
+
+	// Don't track the page view if it already was.
+	if (_pageViewRecorded) {
+		return;
+	}
+
+	// If no path passed in, then pull it from the location.
+	if (!path) {
+		path = window.location.pathname + window.location.search + window.location.hash;
+	}
+
+	const analytics = _getFirebaseAnalytics();
+
+	// Now track the page view.
+	if (GJ_BUILD_TYPE === 'development') {
+		console.log(`Track page view: ${path}`);
+	} else {
+		// We have to manually log the page_view event. Setting the current
+		// screen will set that screen variable for all future events.
+		setCurrentScreen(analytics, path);
+		logEvent(_getFirebaseAnalytics(), 'page_view', { page_path: path, page_title: path });
+	}
+
+	_pageViewRecorded = true;
+}
+
+/**
+ * Sets the current user ID into analytics.
+ */
+export function trackUserId(id: number) {
+	setUserId(_getFirebaseAnalytics(), `${id}`);
+}
+
+/**
+ * When the user is no longer logged in, can use this to unset the user from
+ * analytics.
+ */
+export function untrackUserId() {
+	// TODO: Check to make sure this actually works.
+	setUserId(_getFirebaseAnalytics(), '');
+}
+
+function _trackEvent(name: string, eventParams: Record<string, string | number>) {
+	// We prefix with `x_` so that we know it is one of our own events.
+	logEvent(_getFirebaseAnalytics(), `x_${name}`, eventParams);
+	console.log(`Track event.`, name, eventParams);
+}
+
+export function trackAppPromotionClick(options: { source: AppPromotionSource }) {
+	_trackEvent('app_promotion_click', {
+		source: options.source,
+	});
+}
+
+/**
+ * @deprecated This is left here so that old code doesn't break.
+ */
 export class Analytics {
 	static readonly SOCIAL_NETWORK_FB = 'facebook';
 	static readonly SOCIAL_NETWORK_TWITTER = 'twitter';
@@ -26,93 +175,6 @@ export class Analytics {
 	static readonly SOCIAL_ACTION_FOLLOW = 'follow';
 	static readonly SOCIAL_ACTION_SUBSCRIBE = 'subscribe';
 	static readonly SOCIAL_ACTION_UNSUBSCRIBE = 'unsubscribe';
-
-	static pageViewRecorded = false;
-
-	static initRouter(router: VueRouter) {
-		// Reset all page trackers since we're starting the page route.
-		router.beforeEach((_to, _from, next) => {
-			this.pageViewRecorded = false;
-			next();
-		});
-
-		EventBus.on('routeChangeAfter', () => {
-			const route = router.currentRoute;
-			const analyticsPath = route.meta.analyticsPath;
-
-			// Track the page view using the analyticsPath if we have one
-			// assigned to the route meta.
-			if (analyticsPath) {
-				this.trackPageview(analyticsPath);
-				return;
-			}
-
-			this.trackPageview(route.fullPath);
-		});
-	}
-
-	private static get appUser() {
-		return appStore.state.user;
-	}
-
-	private static get shouldTrack() {
-		const user = this.appUser;
-
-		// If they're not a normal user, don't track.
-		if (GJ_BUILD_TYPE === 'production' && user && user.permission_level > 0) {
-			return false;
-		}
-
-		return true;
-	}
-
-	static trackPageview(path?: string) {
-		if (GJ_IS_SSR) {
-			return;
-		}
-
-		// Gotta make sure the system has a chance to compile the title into the page.
-		window.setTimeout(() => {
-			this._trackPageview(path);
-		});
-	}
-
-	private static _trackPageview(path?: string) {
-		if (!this.shouldTrack) {
-			console.log('Skip tracking page view since not a normal user.');
-			return;
-		}
-
-		// Don't track the page view if it already was.
-		if (this.pageViewRecorded) {
-			return;
-		}
-
-		// If no path passed in, then pull it from the location.
-		if (!path) {
-			path = window.location.pathname + window.location.search + window.location.hash;
-		}
-
-		const analytics = getFirebaseAnalytics();
-
-		// const options = {
-		// 	page_path: path,
-		// 	page_title: path,
-		// 	user_id: this.appUser?.id,
-		// };
-
-		// Now track the page view.
-		if (GJ_BUILD_TYPE === 'development') {
-			console.log(`Track page view: ${path}`);
-		} else {
-			setCurrentScreen(analytics, path);
-			// gtag('set', options);
-			// // gtag('config', Environment.gaId);
-			gtag('config', Environment.gaUniversalId);
-		}
-
-		this.pageViewRecorded = true;
-	}
 
 	static trackEvent(category: string, action: string, label?: string, value?: string) {
 		return;
@@ -134,10 +196,6 @@ export class Analytics {
 
 		// 	this.ga('send', 'event', category, action, label, value, options);
 		// }
-	}
-
-	static async trackError(action: string, label?: string, value?: string) {
-		this.trackEvent('errors', action, label, value);
 	}
 
 	static trackSocial(network: string, action: string, target: string) {
@@ -173,39 +231,4 @@ export class Analytics {
 		// 	});
 		// }
 	}
-
-	static setCurrentExperiment(experiment: string, variation: string | number) {
-		return;
-
-		// // If the chosen variation is -1, then they weren't chosen to run in this experiment, so we skip tracking.
-		// if (variation === -1 || variation === '-1') {
-		// 	return;
-		// }
-
-		// if (!this.shouldTrack) {
-		// 	console.log('Skip setting experiment since not a normal user.');
-		// 	return;
-		// }
-
-		// if (Environment.buildType === 'development') {
-		// 	console.log(`Set new experiment: ${experiment} = ${variation}`);
-		// } else {
-		// 	ga('set', 'expId', experiment);
-		// 	ga('set', 'expVar', '' + variation);
-		// }
-	}
-}
-
-function trackEvent(name: string, eventParams: Record<string, string | number>) {
-	// We prefix with `x_` so that we know it is one of our own events.
-	// gtag('event', `x_${name}`, eventParams);
-	logEvent(getFirebaseAnalytics(), `x_${name}`, eventParams);
-
-	console.log(`Track event.`, name, eventParams);
-}
-
-export function trackAppPromotionClick(options: { source: AppPromotionSource }) {
-	trackEvent('app_promotion_click', {
-		source: options.source,
-	});
 }

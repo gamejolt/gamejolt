@@ -1,10 +1,9 @@
 import { AxiosError } from 'axios';
-import { VuexStore } from '../../utils/vuex';
-import { Analytics } from '../analytics/analytics.service';
 import { RequestOptions } from '../api/api.service';
 import { Environment } from '../environment/environment.service';
 import { Growls } from '../growls/growls.service';
 import { Seo } from '../seo/seo.service';
+import { WithAppStore } from '../store/app-store';
 import { Translate } from '../translate/translate.service';
 
 export type PayloadFormErrors = { [errorId: string]: boolean };
@@ -62,10 +61,10 @@ export class Payload {
 	// These http errors are not redirects, so the noRedirect behavior should not apply to them.
 	static readonly httpNoRedirectOverrides = [429];
 
-	private static store: VuexStore;
+	private static store: WithAppStore;
 	private static ver?: number = undefined;
 
-	static init(store: VuexStore) {
+	static init(store: WithAppStore) {
 		this.store = store;
 	}
 
@@ -104,7 +103,6 @@ export class Payload {
 			this.checkPayloadConsents(response);
 			this.checkPayloadVersion(data, options);
 			this.checkPayloadSeo(data, options);
-			this.checkAnalyticsExperiments(response, options);
 
 			return data.payload;
 		} catch (error) {
@@ -213,21 +211,6 @@ export class Payload {
 
 		if (data.clientForceUpgrade) {
 			throw new PayloadError(PayloadError.ERROR_NEW_CLIENT_VERSION);
-		}
-	}
-
-	private static checkAnalyticsExperiments(response: any, _options: RequestOptions) {
-		if (!response.data.payload) {
-			return;
-		}
-
-		const payload = response.data.payload;
-		if (
-			typeof payload._experiment !== 'undefined' &&
-			typeof payload._variation !== 'undefined' &&
-			payload._variation !== -1
-		) {
-			Analytics.setCurrentExperiment(payload._experiment, payload._variation);
 		}
 	}
 

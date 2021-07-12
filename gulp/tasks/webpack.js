@@ -19,10 +19,10 @@ const OptimizeCssnanoPlugin = require('@intervolga/optimize-cssnano-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 
-module.exports = function(config) {
+module.exports = function (config) {
 	let base = path.resolve(config.projectBase);
 
-	let noop = function() {};
+	let noop = function () {};
 	let devNoop = !config.production ? noop : undefined;
 	let prodNoop = config.production ? noop : undefined;
 
@@ -116,16 +116,16 @@ module.exports = function(config) {
 	// Check for ngrok tunnels.
 	const getTunnels = config.production
 		? Promise.resolve({})
-		: new Promise(resolve => {
+		: new Promise((resolve) => {
 				const http = require('http');
-				const req = http.get('http://localhost:4040/api/tunnels', res => {
+				const req = http.get('http://localhost:4040/api/tunnels', (res) => {
 					if (res.statusCode !== 200) {
 						return resolve({});
 					}
 
 					res.setEncoding('utf8');
 					let response = '';
-					res.on('data', data => (response += data));
+					res.on('data', (data) => (response += data));
 					res.on('end', () => {
 						try {
 							const parsed = JSON.parse(response);
@@ -153,7 +153,7 @@ module.exports = function(config) {
 
 	let webpackSectionConfigs = {};
 	let webpackSectionTasks = [];
-	Object.keys(config.sections).forEach(function(section) {
+	Object.keys(config.sections).forEach(function (section) {
 		const sectionConfig = config.sections[section];
 
 		let appEntries = ['./' + section + '/main.ts'];
@@ -243,6 +243,15 @@ module.exports = function(config) {
 			externals: externals,
 			module: {
 				rules: [
+					// We don't want to import firebase ever on server for now.
+					...(config.ssr === 'server'
+						? [
+								{
+									test: /node_modules\/@?firebase\/.+/,
+									loader: 'null-loader',
+								},
+						  ]
+						: []),
 					{
 						test: /\.vue$/,
 						loader: 'vue-loader',
@@ -456,7 +465,6 @@ module.exports = function(config) {
 								_crawl: !!sectionConfig.crawl,
 								_scripts: sectionConfig.scripts,
 								_bodyClass: sectionConfig.bodyClass || '',
-								_analytics: sectionConfig.analytics !== false,
 							},
 					  }),
 				webAppManifest ? new WebpackPwaManifest(webAppManifest) : noop,
@@ -489,9 +497,9 @@ module.exports = function(config) {
 			],
 		};
 
-		gulp.task('compile:' + section, function(cb) {
+		gulp.task('compile:' + section, function (cb) {
 			let compiler = webpack(webpackSectionConfigs[section]);
-			compiler.run(function(err, stats) {
+			compiler.run(function (err, stats) {
 				if (err) {
 					throw new gutil.PluginError('webpack:build', err);
 				}
@@ -513,13 +521,13 @@ module.exports = function(config) {
 
 	gulp.task(
 		'watch',
-		gulp.series('clean', function(cb) {
+		gulp.series('clean', function (cb) {
 			const buildSections = config.buildSection.split(',');
 			let port = parseInt(config.port),
 				portOffset = 0;
 
 			getTunnels
-				.then(GJ_TUNNELS => {
+				.then((GJ_TUNNELS) => {
 					console.log(GJ_TUNNELS);
 					for (let buildSection of buildSections) {
 						// Insert another define plugin with the GJ_TUNNELS const.

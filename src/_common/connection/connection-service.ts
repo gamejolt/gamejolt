@@ -1,6 +1,5 @@
 import { makeObservableService } from '../../utils/vue';
-import { VuexStore } from '../../utils/vuex';
-import { AppStore } from '../store/app-store';
+import { WithAppStore } from '../store/app-store';
 import { ConnectionReconnect } from './reconnect-service';
 
 export class Connection {
@@ -16,7 +15,7 @@ export class Connection {
 		return GJ_IS_CLIENT && this.isOffline;
 	}
 
-	static init(store: VuexStore) {
+	static init(store: WithAppStore) {
 		if (GJ_IS_SSR) {
 			return;
 		}
@@ -30,8 +29,8 @@ export class Connection {
 
 		// The error state gets set on the store globally.
 		store.watch(
-			state => (state.app as AppStore).error,
-			error => {
+			(state) => state.app.error,
+			(error) => {
 				this.setRequestFailure(error === 'offline');
 			}
 		);
