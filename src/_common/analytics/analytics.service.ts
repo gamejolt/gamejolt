@@ -198,3 +198,69 @@ export function trackAppPromotionClick(options: { source: AppPromotionSource }) 
 		source: options.source,
 	});
 }
+
+export type CommunityOpenSource =
+	// Mobile App
+	| 'auditScreen'
+	| 'cbar'
+	| 'channelCard'
+	| 'collaboratorRequest'
+	| 'communityGrid'
+	| 'create'
+	| 'gameCommunityBadge'
+	| 'linkRouter'
+	| 'notification'
+	| 'pill'
+	// Web
+	| 'communityChunk'
+	| 'communityCard';
+
+export function trackGotoCommunity(options: {
+	source: CommunityOpenSource;
+	id?: number;
+	path?: string;
+	channel?: string;
+}) {
+	const { id, path, channel } = options;
+	const extras: Record<string, string | number> = {};
+
+	if (id) {
+		Object.assign(extras, {
+			id: id,
+		});
+	}
+
+	if (path) {
+		Object.assign(extras, {
+			path: path,
+		});
+	}
+
+	if (channel) {
+		Object.assign(extras, {
+			channel: channel,
+		});
+	}
+
+	trackEvent('goto_community', {
+		source: options.source,
+		...extras,
+	});
+}
+
+export type PostOpenSource =
+	// Mobile App
+	| 'feed'
+	| 'comment'
+	| 'link'
+	| 'notification'
+	| 'gridNotification'
+	| 'communityAudit'
+	// Web
+	| 'communityChunk';
+
+export function trackPostOpen(options: { source: PostOpenSource }) {
+	trackEvent('post_open', {
+		source: options.source,
+	});
+}

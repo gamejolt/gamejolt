@@ -3,7 +3,11 @@
 <template>
 	<div class="community-chunk">
 		<div class="-header">
-			<router-link class="-header-lead" :to="community.routeLocation">
+			<router-link
+				class="-header-lead"
+				:to="community.routeLocation"
+				@click.native="trackGotoCommunity()"
+			>
 				<div class="-thumbnail">
 					<div class="-thumbnail-inner">
 						<app-media-item-backdrop :media-item="community.thumbnail" radius="full">
@@ -36,7 +40,12 @@
 			</router-link>
 
 			<div class="-header-button">
-				<app-button :to="community.routeLocation" outline primary>
+				<app-button
+					:to="community.routeLocation"
+					outline
+					primary
+					@click.native="trackGotoCommunity()"
+				>
 					<translate> View Community </translate>
 				</app-button>
 			</div>
@@ -66,7 +75,11 @@
 				<template v-else-if="items.length > 0">
 					<template v-for="(item, index) of items">
 						<div :key="item.id" class="-card">
-							<app-post-card :post="item.action" with-user />
+							<app-post-card
+								:post="item.action"
+								:post-open-source="postOpenSource"
+								with-user
+							/>
 						</div>
 
 						<div

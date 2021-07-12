@@ -3,6 +3,7 @@ import { Component, Prop } from 'vue-property-decorator';
 import AppPostCardPlaceholder from '../../../app/components/fireside/post/card/card-placeholder.vue';
 import AppPostCard from '../../../app/components/fireside/post/card/card.vue';
 import { propRequired } from '../../../utils/vue';
+import { PostOpenSource, trackGotoCommunity } from '../../analytics/analytics.service';
 import { Api } from '../../api/api.service';
 import { EventItem } from '../../event-item/event-item.model';
 import { number } from '../../filters/number';
@@ -34,6 +35,7 @@ export default class AppCommunityChunk extends Vue {
 	readonly number = number;
 	readonly Screen = Screen;
 	readonly preferredCardsPerRow = 5;
+	readonly postOpenSource: PostOpenSource = 'communityChunk';
 
 	mounted() {
 		this.fetchFeed();
@@ -46,5 +48,13 @@ export default class AppCommunityChunk extends Vue {
 		);
 		this.items = EventItem.populate(payload.items);
 		this.isLoadingPosts = false;
+	}
+
+	trackGotoCommunity() {
+		trackGotoCommunity({
+			source: 'communityChunk',
+			id: this.community.id,
+			path: this.community.path,
+		});
 	}
 }

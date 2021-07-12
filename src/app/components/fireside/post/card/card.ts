@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../../utils/vue';
+import { PostOpenSource, trackPostOpen } from '../../../../../_common/analytics/analytics.service';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { fuzzynumber } from '../../../../../_common/filters/fuzzynumber';
@@ -46,6 +47,7 @@ export const AppPostCardAspectRatio = 10 / 16;
 })
 export default class AppPostCard extends Vue {
 	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
+	@Prop(propOptional(String, null)) postOpenSource!: PostOpenSource | null;
 	@Prop(propOptional(String, null)) videoContext!: VideoPlayerControllerContext;
 	@Prop(propOptional(Boolean, false)) withUser!: boolean;
 
@@ -197,5 +199,11 @@ export default class AppPostCard extends Vue {
 
 	get userLink() {
 		return Environment.wttfBaseUrl + this.post?.user.url;
+	}
+
+	trackPostOpen() {
+		if (this.postOpenSource) {
+			trackPostOpen({ source: this.postOpenSource });
+		}
 	}
 }

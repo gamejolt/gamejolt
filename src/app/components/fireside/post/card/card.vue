@@ -49,7 +49,12 @@
 
 					<app-content-viewer v-else class="-inner-message" :source="post.lead_content" />
 
-					<router-link class="-link" tag="div" :to="post.routeLocation" />
+					<router-link
+						class="-link"
+						tag="div"
+						:to="post.routeLocation"
+						@click.native="trackPostOpen()"
+					/>
 
 					<div class="-details" :class="{ '-light': !!mediaItem }">
 						<template v-if="withUser">
