@@ -47,4 +47,8 @@ export default class AppChatMemberListItem extends Vue {
 	get isOwner() {
 		return this.room.owner_id === this.user.id;
 	}
+
+	get isModerator() {
+		return this.chat.roomMembers[this.room.id].get(this.user)?.role === 'moderator';
+	}
 }

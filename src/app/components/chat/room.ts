@@ -47,6 +47,13 @@ export class ChatRoom {
 	get isFiresideRoom() {
 		return this.type === ChatRoom.ROOM_FIRESIDE_GROUP;
 	}
+
+	/**
+	 * Returns whether members of the room can be made moderators.
+	 */
+	get canElectModerators() {
+		return this.isFiresideRoom;
+	}
 }
 
 export function getChatRoomTitle(room: ChatRoom, chat: ChatClient) {

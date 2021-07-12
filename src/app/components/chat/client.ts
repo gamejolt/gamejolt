@@ -837,3 +837,45 @@ export function kickGroupMember(chat: ChatClient, room: ChatRoom, memberId: numb
 export function recollectChatRoomMembers(chat: ChatClient) {
 	Object.values(chat.roomMembers).forEach(i => i.recollect());
 }
+
+/**
+ * Returns whether `user` can moderate `otherUser` within the given `room`.
+ */
+export function userCanModerateOtherUser(
+	chat: ChatClient,
+	room: ChatRoom,
+	user: ChatUser,
+	otherUser: ChatUser
+) {
+	// Cannot moderate yourself.
+	if (user.id === otherUser.id) {
+		return false;
+	}
+
+	// Make sure we get the users from the room, which include the roles.
+	const roomUser = chat.roomMembers[room.id].get(user);
+	const roomOtherUser = chat.roomMembers[room.id].get(otherUser);
+	if (!roomUser || !roomOtherUser) {
+		return false;
+	}
+
+	// Normal users cannot moderate.
+	if (roomUser.role === 'user') {
+		return false;
+	}
+
+	// Mods cannot moderate the owner of a room.
+	if (otherUser.role === 'owner') {
+		return false;
+	}
+
+	return roomUser.role === 'moderator' || roomUser.role === 'owner';
+}
+
+export function promoteToModerator(chat: ChatClient, room: ChatRoom, memberId: number) {
+	chat.roomChannels[room.id].push('promote_moderator', { member_id: memberId });
+}
+
+export function demoteModerator(chat: ChatClient, room: ChatRoom, memberId: number) {
+	chat.roomChannels[room.id].push('demote_moderator', { member_id: memberId });
+}
