@@ -25,7 +25,7 @@ import {
 import AppVideo from '../../../../../_common/video/video.vue';
 
 const _kOverlayNoticeColor = '#f11a5c';
-const _InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height * 0.2}px` });
+const _InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height}px` });
 
 export const AppPostCardAspectRatio = 10 / 16;
 
