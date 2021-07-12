@@ -210,7 +210,9 @@
 				</div>
 
 				<!-- Right Sidebar -->
-				<div v-if="!Screen.isXs" class="-content-right" />
+				<div v-if="!Screen.isXs" class="-content-right">
+					<app-post-page-recommendations :key="post.id" :post="post" />
+				</div>
 			</div>
 		</div>
 	</section>

@@ -47,6 +47,7 @@ import AppGameBadge from '../../../components/game/badge/badge.vue';
 import AppGameListItem from '../../../components/game/list/item/item.vue';
 import { AppCommentWidgetLazy } from '../../../components/lazy';
 import AppPollVoting from '../../../components/poll/voting/voting.vue';
+import AppPostPageRecommendations from './recommendations/recommendations.vue';
 
 @Component({
 	components: {
@@ -75,6 +76,7 @@ import AppPollVoting from '../../../components/poll/voting/voting.vue';
 		AppCommentWidgetLazy,
 		AppCommunityUserNotification,
 		AppFiresidePostEmbed,
+		AppPostPageRecommendations,
 	},
 	directives: {
 		AppTooltip,

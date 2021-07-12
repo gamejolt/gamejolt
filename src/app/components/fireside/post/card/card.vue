@@ -1,7 +1,7 @@
 <script lang="ts" src="./card"></script>
 
 <template>
-	<div v-if="post" class="post-card">
+	<div v-if="post" class="post-card" :class="{ 'post-card-elevated': !flat }">
 		<app-responsive-dimensions :ratio="aspectRatio" @change="calcData()">
 			<app-scroll-inview
 				:config="InviewConfig"
@@ -97,7 +97,6 @@ $-padding = 8px
 
 .post-card
 	rounded-corners-lg()
-	elevate-1()
 	overflow: hidden
 	position: relative
 	background-color: var(--theme-bg)
@@ -111,6 +110,9 @@ $-padding = 8px
 
 		.-link
 			border-color: var(--theme-link)
+
+.post-card-elevated
+	elevate-1()
 
 .-inner
 	&

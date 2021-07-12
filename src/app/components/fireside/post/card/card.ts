@@ -3,7 +3,6 @@ import { Component, Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../../utils/vue';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
-import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import { fuzzynumber } from '../../../../../_common/filters/fuzzynumber';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
@@ -23,7 +22,6 @@ import {
 	VideoPlayerControllerContext,
 } from '../../../../../_common/video/player/controller';
 import AppVideo from '../../../../../_common/video/video.vue';
-import { ActivityFeedItem } from '../../../activity/feed/item-service';
 
 const _kOverlayNoticeColor = '#f11a5c';
 const _InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height * 0.2}px` });
@@ -45,9 +43,10 @@ const _InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height * 0.2}px
 	},
 })
 export default class AppPostCard extends Vue {
-	@Prop(propRequired(ActivityFeedItem)) item!: ActivityFeedItem;
+	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
 	@Prop(propOptional(String, null)) videoContext!: VideoPlayerControllerContext;
 	@Prop(propOptional(Boolean, false)) withUser!: boolean;
+	@Prop(propOptional(Boolean, false)) flat!: boolean;
 
 	$el!: HTMLElement;
 	$refs!: {
@@ -158,15 +157,6 @@ export default class AppPostCard extends Vue {
 
 	outView() {
 		this.isHydrated = false;
-	}
-
-	get post() {
-		if (
-			this.item.feedItem instanceof EventItem &&
-			this.item.feedItem.type === EventItem.TYPE_POST_ADD
-		) {
-			return this.item.feedItem.action as FiresidePost;
-		}
 	}
 
 	get mediaItem() {
