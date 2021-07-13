@@ -2,6 +2,8 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { InjectReactive, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../utils/vue';
+import { Api } from '../../../../_common/api/api.service';
+import { Growls } from '../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { AppTheme } from '../../../../_common/theme/theme';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
@@ -14,6 +16,7 @@ import {
 	isUserOnline,
 	kickGroupMember,
 	promoteToModerator,
+	tryGetRoomRole,
 	userCanModerateOtherUser,
 } from '../client';
 import { ChatRoom } from '../room';
@@ -46,7 +49,8 @@ export default class AppChatUserPopover extends Vue {
 	}
 
 	get isModerator() {
-		return this.chat.roomMembers[this.room.id].get(this.user)?.role === 'moderator';
+		const role = tryGetRoomRole(this.chat, this.room, this.user);
+		return role === 'moderator';
 	}
 
 	get canMessage() {
@@ -115,7 +119,22 @@ export default class AppChatUserPopover extends Vue {
 		);
 
 		if (result) {
-			promoteToModerator(this.chat, this.room, this.user.id);
+			if (this.chat.roomMembers[this.room.id].has(this.user)) {
+				promoteToModerator(this.chat, this.room, this.user.id);
+			} else if (this.room.type === 'fireside_group') {
+				const payload = await Api.sendRequest(
+					`/web/dash/fireside/chat/promote-moderator/${this.room.id}/${this.user.id}`,
+					{}
+				);
+				if (payload.success && payload.role) {
+					Growls.success(
+						this.$gettextInterpolate(
+							`@%{ username } has been promoted to Moderator. Refresh the page to see changes.`,
+							{ username: this.user.username }
+						)
+					);
+				}
+			}
 		}
 	}
 
@@ -127,7 +146,22 @@ export default class AppChatUserPopover extends Vue {
 		);
 
 		if (result) {
-			demoteModerator(this.chat, this.room, this.user.id);
+			if (this.chat.roomMembers[this.room.id].has(this.user)) {
+				demoteModerator(this.chat, this.room, this.user.id);
+			} else if (this.room.type === 'fireside_group') {
+				const payload = await Api.sendRequest(
+					`/web/dash/fireside/chat/demote-moderator/${this.room.id}/${this.user.id}`,
+					{}
+				);
+				if (payload.success && payload.role) {
+					Growls.success(
+						this.$gettextInterpolate(
+							`@%{ username } has been demoted to User. Refresh the page to see changes.`,
+							{ username: this.user.username }
+						)
+					);
+				}
+			}
 		}
 	}
 }
