@@ -11,6 +11,14 @@ import { getFirebaseApp } from '../firebase/firebase.service';
 import { WithAppStore } from '../store/app-store';
 import { EventBus } from '../system/event/event-bus.service';
 
+export const SOCIAL_NETWORK_FB = 'facebook';
+export const SOCIAL_NETWORK_TWITTER = 'twitter';
+
+export const SOCIAL_ACTION_LIKE = 'like';
+export const SOCIAL_ACTION_SEND = 'send';
+export const SOCIAL_ACTION_TWEET = 'tweet';
+export const SOCIAL_ACTION_FOLLOW = 'follow';
+
 let _store: WithAppStore;
 let _pageViewRecorded = false;
 
@@ -39,7 +47,7 @@ function _shouldTrack() {
  * Initializes the analytics for use with the current app.
  */
 export function initAnalytics(store: WithAppStore) {
-	if (GJ_IS_SSR) {
+	if (GJ_IS_SSR || GJ_IS_CLIENT) {
 		return;
 	}
 
@@ -49,9 +57,9 @@ export function initAnalytics(store: WithAppStore) {
 		(state) => state.app.user,
 		(user) => {
 			if (user?.id) {
-				trackUserId(user.id);
+				_trackUserId(user.id);
 			} else {
-				untrackUserId();
+				_untrackUserId();
 			}
 		}
 	);
@@ -61,7 +69,7 @@ export function initAnalytics(store: WithAppStore) {
  * Can be called to hook into the router to track pageviews automatically.
  */
 export function initAnalyticsRouter(router: VueRouter) {
-	if (GJ_IS_SSR) {
+	if (GJ_IS_SSR || GJ_IS_CLIENT) {
 		return;
 	}
 
@@ -78,63 +86,56 @@ export function initAnalyticsRouter(router: VueRouter) {
 		// Track the page view using the analyticsPath if we have one
 		// assigned to the route meta.
 		if (analyticsPath) {
-			trackPageview(analyticsPath);
+			_trackPageview(analyticsPath);
 			return;
 		}
 
-		trackPageview(route.fullPath);
+		_trackPageview(route.fullPath);
 	});
 }
 
-/**
- * Tracks a pageview.
- */
-export function trackPageview(path?: string) {
-	if (GJ_IS_SSR) {
+function _trackPageview(path?: string) {
+	if (GJ_IS_SSR || GJ_IS_CLIENT) {
 		return;
 	}
 
 	// Gotta make sure the system has a chance to compile the title into the page.
 	window.setTimeout(() => {
-		_trackPageview(path);
+		if (!_shouldTrack()) {
+			console.log('Skip tracking page view since not a normal user.');
+			return;
+		}
+
+		// Don't track the page view if it already was.
+		if (_pageViewRecorded) {
+			return;
+		}
+
+		// If no path passed in, then pull it from the location.
+		if (!path) {
+			path = window.location.pathname + window.location.search + window.location.hash;
+		}
+
+		const analytics = _getFirebaseAnalytics();
+
+		// Now track the page view.
+		if (GJ_BUILD_TYPE === 'development') {
+			console.log(`Track page view: ${path}`);
+		} else {
+			// We have to manually log the page_view event. Setting the current
+			// screen will set that screen variable for all future events.
+			setCurrentScreen(analytics, path);
+			logEvent(_getFirebaseAnalytics(), 'page_view', { page_path: path, page_title: path });
+		}
+
+		_pageViewRecorded = true;
 	});
-}
-
-function _trackPageview(path?: string) {
-	if (!_shouldTrack()) {
-		console.log('Skip tracking page view since not a normal user.');
-		return;
-	}
-
-	// Don't track the page view if it already was.
-	if (_pageViewRecorded) {
-		return;
-	}
-
-	// If no path passed in, then pull it from the location.
-	if (!path) {
-		path = window.location.pathname + window.location.search + window.location.hash;
-	}
-
-	const analytics = _getFirebaseAnalytics();
-
-	// Now track the page view.
-	if (GJ_BUILD_TYPE === 'development') {
-		console.log(`Track page view: ${path}`);
-	} else {
-		// We have to manually log the page_view event. Setting the current
-		// screen will set that screen variable for all future events.
-		setCurrentScreen(analytics, path);
-		logEvent(_getFirebaseAnalytics(), 'page_view', { page_path: path, page_title: path });
-	}
-
-	_pageViewRecorded = true;
 }
 
 /**
  * Sets the current user ID into analytics.
  */
-export function trackUserId(id: number) {
+function _trackUserId(id: number) {
 	setUserId(_getFirebaseAnalytics(), `${id}`);
 }
 
@@ -142,12 +143,16 @@ export function trackUserId(id: number) {
  * When the user is no longer logged in, can use this to unset the user from
  * analytics.
  */
-export function untrackUserId() {
+function _untrackUserId() {
 	// TODO: Check to make sure this actually works.
 	setUserId(_getFirebaseAnalytics(), '');
 }
 
 function _trackEvent(name: string, eventParams: Record<string, string | number>) {
+	if (GJ_IS_SSR || GJ_IS_CLIENT) {
+		return;
+	}
+
 	// We prefix with `x_` so that we know it is one of our own events.
 	logEvent(_getFirebaseAnalytics(), `x_${name}`, eventParams);
 	console.log(`Track event.`, name, eventParams);
@@ -163,19 +168,6 @@ export function trackAppPromotionClick(options: { source: AppPromotionSource }) 
  * @deprecated This is left here so that old code doesn't break.
  */
 export class Analytics {
-	static readonly SOCIAL_NETWORK_FB = 'facebook';
-	static readonly SOCIAL_NETWORK_TWITTER = 'twitter';
-	static readonly SOCIAL_NETWORK_TWITCH = 'twitch';
-	static readonly SOCIAL_NETWORK_YOUTUBE = 'youtube';
-
-	static readonly SOCIAL_ACTION_LIKE = 'like';
-	static readonly SOCIAL_ACTION_SHARE = 'share';
-	static readonly SOCIAL_ACTION_SEND = 'send';
-	static readonly SOCIAL_ACTION_TWEET = 'tweet';
-	static readonly SOCIAL_ACTION_FOLLOW = 'follow';
-	static readonly SOCIAL_ACTION_SUBSCRIBE = 'subscribe';
-	static readonly SOCIAL_ACTION_UNSUBSCRIBE = 'unsubscribe';
-
 	static trackEvent(category: string, action: string, label?: string, value?: string) {
 		return;
 

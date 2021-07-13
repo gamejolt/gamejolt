@@ -1,4 +1,5 @@
 import { FirebaseApp, initializeApp } from 'firebase/app';
+import { Environment } from '../environment/environment.service';
 
 const firebaseConfig = {
 	apiKey: 'AIzaSyB8-lpXgBHQKGd92EkkDEc_4eIl4tpk_AA',
@@ -7,8 +8,10 @@ const firebaseConfig = {
 	projectId: 'api-project-1065321331780',
 	storageBucket: 'api-project-1065321331780.appspot.com',
 	messagingSenderId: '1065321331780',
-	appId: '1:1065321331780:web:37c4d21c84f1a69ad3d011',
-	measurementId: 'G-ZV3SVDN43D',
+
+	// These change depending on the "app" which is web or client.
+	appId: Environment.firebaseAppId,
+	measurementId: Environment.firebaseMeasurementId,
 };
 
 export function initFirebase() {
