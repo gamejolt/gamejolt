@@ -116,16 +116,16 @@ module.exports = function (config) {
 	// Check for ngrok tunnels.
 	const getTunnels = config.production
 		? Promise.resolve({})
-		: new Promise((resolve) => {
+		: new Promise(resolve => {
 				const http = require('http');
-				const req = http.get('http://localhost:4040/api/tunnels', (res) => {
+				const req = http.get('http://localhost:4040/api/tunnels', res => {
 					if (res.statusCode !== 200) {
 						return resolve({});
 					}
 
 					res.setEncoding('utf8');
 					let response = '';
-					res.on('data', (data) => (response += data));
+					res.on('data', data => (response += data));
 					res.on('end', () => {
 						try {
 							const parsed = JSON.parse(response);
@@ -527,7 +527,7 @@ module.exports = function (config) {
 				portOffset = 0;
 
 			getTunnels
-				.then((GJ_TUNNELS) => {
+				.then(GJ_TUNNELS => {
 					console.log(GJ_TUNNELS);
 					for (let buildSection of buildSections) {
 						// Insert another define plugin with the GJ_TUNNELS const.

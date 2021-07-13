@@ -19,8 +19,8 @@ export class ClientUser {
 		// When the app user changes in the store, freeze it into local storage so we can bootstrap
 		// from that next client launch (before any payload response).
 		store.watch(
-			(state) => state.app.user,
-			(user) => {
+			state => state.app.user,
+			user => {
 				if (user) {
 					localStorage.setItem('user', JSON.stringify(user));
 				} else {

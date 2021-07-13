@@ -84,7 +84,7 @@ export default class AppSearch extends Vue {
 	}
 
 	removeKeydownSpy(fn: SearchKeydownSpy) {
-		arrayRemove(this.keydownSpies, (i) => i === fn);
+		arrayRemove(this.keydownSpies, i => i === fn);
 	}
 
 	onKeydown(event: KeyboardEvent) {

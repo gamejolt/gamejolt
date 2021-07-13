@@ -54,8 +54,8 @@ export function initAnalytics(store: WithAppStore) {
 	_store = store;
 
 	_store.watch(
-		(state) => state.app.user,
-		(user) => {
+		state => state.app.user,
+		user => {
 			if (user?.id) {
 				_trackUserId(user.id);
 			} else {

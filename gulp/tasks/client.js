@@ -16,7 +16,7 @@ const http = require('http');
 const escape = require('shell-escape');
 const tar = require('tar');
 
-module.exports = (config) => {
+module.exports = config => {
 	// We can skip all this stuff if not doing a client build.
 	if (!config.client) {
 		return;
@@ -211,7 +211,7 @@ module.exports = (config) => {
 		// Download the gjpush zip.
 		return new Promise((resolve, reject) => {
 			https
-				.get(options, (res) => {
+				.get(options, res => {
 					if (res.statusCode !== 200) {
 						return reject(
 							new Error('Invalid status code. Expected 200 got ' + res.statusCode)
@@ -224,7 +224,7 @@ module.exports = (config) => {
 						resolve();
 					});
 				})
-				.on('error', (err) => {
+				.on('error', err => {
 					reject(err);
 				})
 				.end();
@@ -275,7 +275,7 @@ module.exports = (config) => {
 							mv(
 								path.join(base, 'package', 'node_modules'),
 								path.join(base, 'node_modules'),
-								(err) => {
+								err => {
 									if (err) {
 										reject(err);
 										return;
@@ -284,7 +284,7 @@ module.exports = (config) => {
 									mv(
 										path.join(base, 'package', 'package.json'),
 										path.join(base, 'package.json'),
-										(err) => {
+										err => {
 											if (err) {
 												reject(err);
 												return;
@@ -299,7 +299,7 @@ module.exports = (config) => {
 											);
 
 											console.log('Moving package.nw to ' + trashNw);
-											mv(packageNw, trashNw, (err) => {
+											mv(packageNw, trashNw, err => {
 												if (err) {
 													reject(err);
 													return;
@@ -347,7 +347,7 @@ module.exports = (config) => {
 	/**
 	 * Pushes the single package to GJ.
 	 */
-	gulp.task('client:gjpush-package', (cb) => {
+	gulp.task('client:gjpush-package', cb => {
 		// GJPUSH!
 		// We trust the exit codes to tell us if something went wrong because a non 0 exit code will make this throw.
 		cp.execFileSync(gjpushExecutable, [
@@ -399,7 +399,7 @@ module.exports = (config) => {
 			// Do status first, if it fails it means the repo doesn't exist, so try cloning.
 			const func = shell.task([gitStatus + ' || ' + gitClone]);
 
-			func((err) => {
+			func(err => {
 				if (err) {
 					reject(err);
 					return;
@@ -479,7 +479,7 @@ module.exports = (config) => {
 
 					const func = shell.task(cmds, { cwd: joltronRepoDir });
 
-					func((err) => {
+					func(err => {
 						if (err) {
 							reject(err);
 							return;
@@ -504,7 +504,7 @@ module.exports = (config) => {
 			buildIdPromise = buildIdPromise.then(() => gjGameBuildId);
 		} else {
 			// Function to issue an authenticated service API request and return the result as json..
-			let serviceApiRequest = (url) => {
+			let serviceApiRequest = url => {
 				let options = {
 					hostname: config.developmentEnv ? 'development.gamejolt.com' : 'gamejolt.com',
 					path: '/service-api/push' + url,
@@ -516,11 +516,11 @@ module.exports = (config) => {
 				};
 
 				return new Promise((resolve, reject) => {
-					http.request(options, (res) => {
+					http.request(options, res => {
 						res.setEncoding('utf8');
 
 						let str = '';
-						res.on('data', (data) => {
+						res.on('data', data => {
 							str += data;
 						}).on('end', () => {
 							resolve(JSON.parse(str));
@@ -540,7 +540,7 @@ module.exports = (config) => {
 			buildIdPromise = serviceApiRequest(
 				'/releases/by_version/' + gjGamePackageId + '/' + packageJson.version
 			)
-				.then((data) => {
+				.then(data => {
 					// Then find the builds for that version.
 					return serviceApiRequest(
 						'/releases/builds/' +
@@ -551,9 +551,9 @@ module.exports = (config) => {
 							gjGamePackageId
 					);
 				})
-				.then((data) => {
+				.then(data => {
 					// The build matching the filename we just uploaded is the build ID we're after.
-					return data.builds.data.find((build) => {
+					return data.builds.data.find(build => {
 						return (
 							build &&
 							build.file &&
@@ -561,7 +561,7 @@ module.exports = (config) => {
 						);
 					});
 				})
-				.then((build) => {
+				.then(build => {
 					if (!build) {
 						throw new Error('Could not get build');
 					}
@@ -570,7 +570,7 @@ module.exports = (config) => {
 				});
 		}
 
-		return buildIdPromise.then((buildId) => {
+		return buildIdPromise.then(buildId => {
 			// This is joltron's data directory for this client build
 			const buildDir = path.resolve(
 				config.clientBuildDir,
@@ -626,7 +626,7 @@ module.exports = (config) => {
 
 			// Figure out the archive file list.
 			const archiveFiles = readdir(buildDir)
-				.map((file) => './' + file.replace(/\\/g, '/'))
+				.map(file => './' + file.replace(/\\/g, '/'))
 				.sort();
 
 			return new Promise((resolve, reject) => {
@@ -672,7 +672,7 @@ module.exports = (config) => {
 	 * This takes the joltron folder structure we generated in the previous steps and packages it up
 	 * as an installer for easier distribution
 	 */
-	gulp.task('client:installer', (cb) => {
+	gulp.task('client:installer', cb => {
 		if (config.platform === 'osx') {
 			// On mac we need to create an app that when run will execute joltron.
 			// We have a template app we use that contains the minimal setup required.
@@ -722,14 +722,14 @@ module.exports = (config) => {
 				},
 			});
 
-			dmg.on('progress', (info) => {
+			dmg.on('progress', info => {
 				console.log(info);
 			});
 			dmg.on('finish', () => {
 				console.log('Finished building DMG.');
 				cb();
 			});
-			dmg.on('error', (err) => {
+			dmg.on('error', err => {
 				console.error(err);
 				cb(err);
 			});
@@ -765,7 +765,7 @@ module.exports = (config) => {
 	/**
 	 * Pushes the installer to GJ
 	 */
-	gulp.task('client:gjpush-installer', (cb) => {
+	gulp.task('client:gjpush-installer', cb => {
 		// TODO this is probably broken for windows/linux
 		let installerFile = '';
 		switch (config.platform) {

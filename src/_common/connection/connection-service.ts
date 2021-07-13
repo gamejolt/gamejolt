@@ -29,8 +29,8 @@ export class Connection {
 
 		// The error state gets set on the store globally.
 		store.watch(
-			(state) => state.app.error,
-			(error) => {
+			state => state.app.error,
+			error => {
 				this.setRequestFailure(error === 'offline');
 			}
 		);
