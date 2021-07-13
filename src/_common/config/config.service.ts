@@ -22,6 +22,7 @@ class ConfigOptionBoolean extends ConfigOption<boolean> {
  * Whether or not the search autocomplete should show when typing.
  */
 export const configHasAutocomplete = new ConfigOptionBoolean('has_search_autocomplete', true);
+export const configDiscoverCommunityChunks = new ConfigOptionBoolean('discover_community_chunks', false);
 
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());

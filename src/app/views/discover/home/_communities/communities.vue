@@ -2,7 +2,7 @@
 
 <template>
 	<div class="container">
-		<template v-if="testCondition">
+		<template v-if="configDiscoverCommunityChunks.value">
 			<template v-if="isLoading">
 				<div class="row">
 					<template v-for="i of 1">
@@ -53,7 +53,7 @@
 				<app-community-card
 					v-app-track-event="`home:communities:click`"
 					:community="community"
-					:track-goto="testCondition"
+					:track-goto="configDiscoverCommunityChunks.value"
 					elevate
 				/>
 			</div>

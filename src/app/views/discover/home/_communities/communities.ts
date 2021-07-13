@@ -9,6 +9,7 @@ import AppCommunityCard from '../../../../../_common/community/card/card.vue';
 import AppCommunityChunkPlaceholder from '../../../../../_common/community/chunk/chunk-placeholder.vue';
 import AppCommunityChunk from '../../../../../_common/community/chunk/chunk.vue';
 import { Community } from '../../../../../_common/community/community.model';
+import { configDiscoverCommunityChunks } from '../../../../../_common/config/config.service';
 import { Screen } from '../../../../../_common/screen/screen-service';
 
 const EmphasizedCommunityIDs = [
@@ -38,7 +39,7 @@ export default class AppDiscoverHomeCommunities extends Vue {
 
 	@State app!: Store['app'];
 
-	readonly testCondition = true;
+	readonly configDiscoverCommunityChunks = configDiscoverCommunityChunks;
 
 	get filteredCommunities() {
 		const localCommunities = this.communities.map(i => i);
