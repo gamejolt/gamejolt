@@ -47,9 +47,8 @@ export class Environment {
 	static gridHost = 'https://grid.gamejolt.com/grid/host';
 	static recaptchaSiteKey = '6Led_UAUAAAAAB_ptIOOlAF5DFK9YM7Qi_7z8iKk';
 
-	static gaId = 'G-FJMPYMGHM7';
-	/** This is the older tag ID. */
-	static gaUniversalId = 'UA-6742777-1';
+	static firebaseAppId = '1:1065321331780:web:37c4d21c84f1a69ad3d011';
+	static firebaseMeasurementId = 'G-ZV3SVDN43D';
 }
 
 if (GJ_ENVIRONMENT === 'development') {
@@ -92,7 +91,7 @@ if (GJ_IS_CLIENT) {
 		Environment.clientSectionUrl = 'chrome-extension://game-jolt-client/client.html#';
 	}
 
-	// We have different analytics IDs for Client.
-	Environment.gaId = 'G-CXLRR656PN';
-	Environment.gaUniversalId = 'UA-6742777-16';
+	// We have different firebase app for Client.
+	Environment.firebaseAppId = '1:1065321331780:web:b58ac57b00c1d538d3d011';
+	Environment.firebaseMeasurementId = 'G-PJSN27C1K6';
 }

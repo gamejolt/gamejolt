@@ -1,3 +1,5 @@
+<script lang="ts" src="./app"></script>
+
 <template>
 	<app-common-shell :class="{ 'is-client-offline': Connection.isClientOffline }">
 		<div id="content">
@@ -9,5 +11,3 @@
 		<app-client-base v-if="GJ_IS_CLIENT" />
 	</app-common-shell>
 </template>
-
-<script lang="ts" src="./app"></script>
