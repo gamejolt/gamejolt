@@ -9,6 +9,12 @@ export const AppState = namespace('app', State);
 export const AppAction = namespace('app', Action);
 export const AppMutation = namespace('app', Mutation);
 
+/**
+ * A type that specifies a Vuex store with the app store within it.
+ */
+export type WithAppStore = VuexStore<{ app: AppStore }>;
+
+// eslint-disable-next-line @typescript-eslint/ban-types
 export type Actions = {};
 
 export type Mutations = {

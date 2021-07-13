@@ -18,6 +18,7 @@ import {
 	removeMessage,
 	retryFailedQueuedMessage,
 	setMessageEditing,
+	userCanModerateOtherUser,
 } from '../../../client';
 import { ChatMessage } from '../../../message';
 import { ChatRoom } from '../../../room';
@@ -55,6 +56,7 @@ export default class AppChatWindowOutputItem extends Vue {
 	readonly displayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 });
 
 	singleLineMode = true;
+	messageOptionsVisible = false;
 
 	readonly Screen = Screen;
 
@@ -116,6 +118,42 @@ export default class AppChatWindowOutputItem extends Vue {
 		}
 
 		return null;
+	}
+
+	get shouldShowMessageOptions() {
+		return this.canRemoveMessage || this.canEditMessage;
+	}
+
+	get canRemoveMessage() {
+		if (!this.chat.currentUser) {
+			return false;
+		}
+
+		// The owner of the message can remove it.
+		if (this.chat.currentUser.id === this.message.user.id) {
+			return true;
+		}
+
+		// Mods/Room owners can also remove the message.
+		return userCanModerateOtherUser(
+			this.chat,
+			this.room,
+			this.chat.currentUser,
+			this.message.user
+		);
+	}
+
+	get canEditMessage() {
+		// Only content messages can be edited.
+		if (this.message.type !== 'content') {
+			return false;
+		}
+		if (!this.chat.currentUser) {
+			return false;
+		}
+
+		// Only the owner of the message can edit.
+		return this.chat.currentUser.id === this.message.user.id;
 	}
 
 	startEdit() {

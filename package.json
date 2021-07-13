@@ -1,6 +1,6 @@
 {
 	"name": "game-jolt-client",
-	"version": "0.68.0",
+	"version": "0.68.1",
 	"scripts": {
 		"postinstall": "yarn run translations",
 		"start": "gulp watch",
@@ -36,7 +36,6 @@
 		"@types/node": "10.11.3",
 		"@types/nw.js": "0.13.8",
 		"@types/phoenix": "1.4.4",
-		"@types/prettier": "1.16.1",
 		"@types/prismjs": "1.16.0",
 		"@types/prosemirror-commands": "1.0.1",
 		"@types/prosemirror-history": "1.0.1",
@@ -72,6 +71,7 @@
 		"eslint-plugin-vue": "7.9.0",
 		"express": "4.17.1",
 		"file-loader": "2.0.0",
+		"firebase": "9.0.0-beta.6",
 		"follow-redirects": "1.4.1",
 		"friendly-errors-webpack-plugin": "1.7.0",
 		"fs-readdir-recursive": "1.1.0",
@@ -108,7 +108,7 @@
 		"pofile": "1.0.11",
 		"polished": "3.6.3",
 		"postcss-loader": "3.0.0",
-		"prettier": "1.19.1",
+		"prettier": "2.3.2",
 		"prismjs": "1.20.0",
 		"prosemirror-commands": "1.1.4",
 		"prosemirror-history": "1.1.3",

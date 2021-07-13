@@ -68,8 +68,9 @@ export class ChatUserCollection {
 	}
 
 	add(user: ChatUser) {
-		// Don't add the same user again.
+		// Don't add the same user again, update with new data instead.
 		if (this.has(user)) {
+			this.update(user);
 			return;
 		}
 
@@ -113,6 +114,7 @@ export class ChatUserCollection {
 			Object.assign(curUser, user);
 			this.recollect();
 		}
+		return curUser;
 	}
 
 	online(input: number | ChatUser) {
@@ -202,6 +204,15 @@ function getSortVal(chat: ChatClient, user: ChatUser) {
 		return -1;
 	}
 
+	// Room owners and mods are at the top of lists.
+	const roomStatus = user.role;
+	if (roomStatus === 'owner') {
+		return 0;
+	} else if (roomStatus === 'moderator') {
+		return 1;
+	}
+
+	// Your friends show after that.
 	let friendOnlineStatus = null;
 	if (chat) {
 		friendOnlineStatus = isUserOnline(chat, user.id);
@@ -209,16 +220,16 @@ function getSortVal(chat: ChatClient, user: ChatUser) {
 
 	if (friendOnlineStatus === true) {
 		// online
-		return 0;
+		return 2;
 	} else if (friendOnlineStatus === false) {
 		// offline
-		return 1;
+		return 3;
 	} else if (friendOnlineStatus === null) {
 		// not friends
-		return 2;
+		return 4;
 	}
 
-	return 0;
+	return 5;
 }
 
 /**

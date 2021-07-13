@@ -30,7 +30,13 @@
 
 			<div v-if="isOwner" class="-status">
 				<app-jolticon icon="crown" />
+				&nbsp;
 				<translate>Room Owner</translate>
+			</div>
+			<div v-else-if="isModerator" class="-status">
+				<app-jolticon icon="star" />
+				&nbsp;
+				<translate>Moderator</translate>
 			</div>
 		</div>
 		<div class="list-group list-group-dark">
@@ -46,11 +52,29 @@
 				<translate>Send Message</translate>
 			</a>
 			<template v-if="canModerate">
-				<hr />
-				<a class="list-group-item has-icon" @click="onClickKick">
-					<app-jolticon icon="logout" notice />
-					<translate>Kick from Room</translate>
-				</a>
+				<template v-if="canChangeModerator">
+					<hr />
+					<template v-if="!isModerator">
+						<a class="list-group-item has-icon" @click="onClickPromoteModerator">
+							<app-jolticon icon="star" />
+							<translate>Promote to Moderator</translate>
+						</a>
+					</template>
+					<template v-else>
+						<a class="list-group-item has-icon" @click="onClickDemoteModerator">
+							<app-jolticon icon="remove" notice />
+							<translate>Demote Moderator</translate>
+						</a>
+					</template>
+				</template>
+
+				<template v-if="!isModerator">
+					<hr />
+					<a class="list-group-item has-icon" @click="onClickKick">
+						<app-jolticon icon="logout" notice />
+						<translate>Kick from Room</translate>
+					</a>
+				</template>
 			</template>
 		</div>
 	</div>
@@ -117,4 +141,7 @@
 
 		&-bubble
 			margin-right: 4px
+
+		*
+			vertical-align: middle
 </style>

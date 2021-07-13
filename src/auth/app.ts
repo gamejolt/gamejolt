@@ -6,7 +6,7 @@ import AppCookieBanner from '../_common/cookie/banner/banner.vue';
 import AppErrorPage from '../_common/error/page/page.vue';
 import AppCommonShell from '../_common/shell/shell.vue';
 
-let components: any = {
+const components: any = {
 	AppCommonShell,
 	AppErrorPage,
 	AppCookieBanner,

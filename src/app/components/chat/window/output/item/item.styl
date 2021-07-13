@@ -17,6 +17,7 @@
 		line-height: $font-size-small * 1.25
 
 	&:hover
+	&-options-visible
 		background-color: var(--theme-bg-offset)
 
 		.chat-window-message-small-time
@@ -130,6 +131,7 @@
 
 		../:hover &
 		.chat-window-message-editing &
+		&-open
 			visibility: visible
 
 	&-retry
