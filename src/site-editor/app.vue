@@ -1,3 +1,5 @@
+<script lang="ts" src="./app"></script>
+
 <template>
 	<app-common-shell>
 		<div id="shell">
@@ -10,5 +12,3 @@
 		</div>
 	</app-common-shell>
 </template>
-
-<script lang="ts" src="./app"></script>

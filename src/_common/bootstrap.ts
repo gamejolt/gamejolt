@@ -6,6 +6,7 @@ import { VuexStore } from '../utils/vuex';
 import { initAnalytics, initAnalyticsRouter } from './analytics/analytics.service';
 import { AppTrackEvent } from './analytics/track-event.directive';
 import AppButton from './button/button.vue';
+import { ensureConfig } from './config/config.service';
 import { Connection } from './connection/connection-service';
 import AppJolticon from './jolticon/jolticon.vue';
 import AppLinkExternal from './link/external/external.vue';
@@ -20,6 +21,9 @@ import { SettingThemeAlwaysOurs, SettingThemeDark } from './settings/settings.se
  * get what it needs.
  */
 export function bootstrapCommon(appComponent: typeof Vue, store: VuexStore, router?: VueRouter) {
+	// Try to start loading this as soon as possible.
+	ensureConfig();
+
 	if (store.state.theme) {
 		store.commit('theme/setDark', SettingThemeDark.get());
 		store.commit('theme/setAlwaysOurs', SettingThemeAlwaysOurs.get());
