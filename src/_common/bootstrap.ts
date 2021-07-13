@@ -48,7 +48,7 @@ export function bootstrapCommon(appComponent: typeof Vue, store: VuexStore, rout
 	Vue.directive('AppTrackEvent', AppTrackEvent);
 
 	// Set some constants so we can use them in templates.
-	Vue.use((vue) => {
+	Vue.use(vue => {
 		const proto = vue.prototype as any;
 		proto.GJ_SECTION = GJ_SECTION;
 		proto.GJ_IS_CLIENT = GJ_IS_CLIENT;
@@ -63,7 +63,7 @@ export function bootstrapCommon(appComponent: typeof Vue, store: VuexStore, rout
 			gjIsRoot: true,
 			store,
 			router,
-			render: (h) => h(appComponent),
+			render: h => h(appComponent),
 		});
 	};
 }
