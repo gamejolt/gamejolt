@@ -1,5 +1,6 @@
 import { Translate } from '../../../_common/translate/translate.service';
 import { ChatClient } from './client';
+import { ChatRole } from './role';
 import { ChatUser } from './user';
 
 export type ChatRoomType = 'pm' | 'open_group' | 'closed_group' | 'viral_group' | 'fireside_group';
@@ -16,6 +17,7 @@ export class ChatRoom {
 	type!: ChatRoomType;
 	user?: ChatUser;
 	members!: ChatUser[];
+	roles!: ChatRole[];
 	owner_id!: number;
 	last_message_on!: number;
 
@@ -24,6 +26,9 @@ export class ChatRoom {
 
 		if (data.members) {
 			this.members = data.members.map(member => new ChatUser(member));
+		}
+		if (data.roles) {
+			this.roles = data.roles.map(role => new ChatRole(role));
 		}
 	}
 
@@ -53,6 +58,34 @@ export class ChatRoom {
 	 */
 	get canElectModerators() {
 		return this.isFiresideRoom;
+	}
+
+	/**
+	 * Updates (or creates) the role in this room for the input user.
+	 */
+	updateRoleForUser(updatedUser: ChatUser) {
+		if (!updatedUser.role) {
+			return;
+		}
+
+		// Try to find an existing role to update.
+		const existingRoomRole = this.roles.find(i => i.user_id === updatedUser.id);
+		if (existingRoomRole) {
+			existingRoomRole.role = updatedUser.role;
+		}
+		// If no role exists in the room yet, create a new one.
+		else {
+			const newRole = new ChatRole({
+				user_id: updatedUser.id,
+				role: updatedUser.role,
+			});
+			this.roles.push(newRole);
+		}
+
+		// Update the owner id if the input user is the owner.
+		if (updatedUser.role === 'owner') {
+			this.owner_id = updatedUser.id;
+		}
 	}
 }
 

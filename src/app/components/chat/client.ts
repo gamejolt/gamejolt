@@ -839,6 +839,38 @@ export function recollectChatRoomMembers(chat: ChatClient) {
 }
 
 /**
+ * Attempts to get the role for a user in a room.
+ * This is only possible if the role is bootstrapped onto the input user,
+ * or if the user is currently in the room.
+ */
+export function tryGetRoomRole(chat: ChatClient, room: ChatRoom, user: ChatUser) {
+	if (room.owner_id === user.id) {
+		return 'owner';
+	}
+
+	// The room userCollection always has the most up to date role information.
+	const roomUser = chat.roomMembers[room.id].get(user);
+	if (roomUser && roomUser.role !== null) {
+		return roomUser.role;
+	}
+
+	// See if the role is set onto the room.
+	const roomRole = room.roles.find(i => i.user_id === user.id);
+	if (roomRole && roomRole.role) {
+		return roomRole.role;
+	}
+
+	// We try to fall back to the input role.
+	// This could be from a message from a user no longer in the room.
+	if (user.role !== null) {
+		return user.role;
+	}
+
+	// If no role could be found, just return user.
+	return 'user';
+}
+
+/**
  * Returns whether `user` can moderate `otherUser` within the given `room`.
  */
 export function userCanModerateOtherUser(
@@ -852,24 +884,25 @@ export function userCanModerateOtherUser(
 		return false;
 	}
 
-	// Make sure we get the users from the room, which include the roles.
-	const roomUser = chat.roomMembers[room.id].get(user);
-	const roomOtherUser = chat.roomMembers[room.id].get(otherUser);
-	if (!roomUser || !roomOtherUser) {
-		return false;
+	const userRole = tryGetRoomRole(chat, room, user);
+	const otherUserRole = tryGetRoomRole(chat, room, otherUser);
+
+	// Owners can always moderate.
+	if (userRole === 'owner') {
+		return true;
 	}
 
 	// Normal users cannot moderate.
-	if (roomUser.role === 'user') {
+	if (userRole === null || userRole === 'user') {
 		return false;
 	}
 
-	// Mods cannot moderate the owner of a room.
-	if (otherUser.role === 'owner') {
+	// Mods can only moderate users.
+	if (otherUserRole !== 'user') {
 		return false;
 	}
 
-	return roomUser.role === 'moderator' || roomUser.role === 'owner';
+	return userRole === 'moderator';
 }
 
 export function promoteToModerator(chat: ChatClient, room: ChatRoom, memberId: number) {

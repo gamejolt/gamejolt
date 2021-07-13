@@ -17,7 +17,14 @@ import { FormValidatorContentNoMediaUpload } from '../../../../../../_common/for
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppShortkey from '../../../../../../_common/shortkey/shortkey.vue';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
-import { ChatClient, ChatKey, setMessageEditing, startTyping, stopTyping } from '../../../client';
+import {
+	ChatClient,
+	ChatKey,
+	setMessageEditing,
+	startTyping,
+	stopTyping,
+	tryGetRoomRole,
+} from '../../../client';
 import { ChatMessage, CHAT_MESSAGE_MAX_CONTENT_LENGTH } from '../../../message';
 import { ChatRoom } from '../../../room';
 
@@ -255,9 +262,8 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 			return;
 		}
 		if (this.chat.currentUser) {
-			// Fetch the user from the room to guarantee the role is bootstrapped.
-			const roomUser = this.chat.roomMembers[this.room.id].get(this.chat.currentUser);
-			if (roomUser && (roomUser.role === 'owner' || roomUser.role === 'moderator')) {
+			const userRole = tryGetRoomRole(this.chat, this.room, this.chat.currentUser);
+			if (userRole === 'owner' || userRole === 'moderator') {
 				return;
 			}
 		}

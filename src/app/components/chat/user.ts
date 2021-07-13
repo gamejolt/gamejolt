@@ -1,4 +1,4 @@
-export type CHAT_ROLES = 'owner' | 'moderator' | 'user';
+import { CHAT_ROLES } from './role';
 
 export class ChatUser {
 	id!: number;
