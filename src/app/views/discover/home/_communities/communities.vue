@@ -5,9 +5,7 @@
 		<template v-if="configDiscoverCommunityChunks.value">
 			<template v-if="isLoading">
 				<div class="row">
-					<template v-for="i of 1">
-						<app-community-chunk-placeholder :key="i" class="-chunk" />
-					</template>
+					<app-community-chunk-placeholder class="-chunk" />
 				</div>
 			</template>
 			<template v-else-if="filteredCommunities.top.length > 0">
