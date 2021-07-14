@@ -28,7 +28,7 @@
 								/>
 							</app-media-item-backdrop>
 
-							<template v-if="videoController && isBootstrapped">
+							<template v-if="videoController && isHydrated">
 								<app-video
 									class="-video"
 									:player="videoController"
