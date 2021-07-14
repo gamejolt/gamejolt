@@ -148,7 +148,7 @@ function _untrackUserId() {
 	setUserId(_getFirebaseAnalytics(), '');
 }
 
-function _trackEvent(name: string, eventParams: Record<string, string | number>) {
+function _trackEvent(name: string, eventParams: Record<string, string | number | undefined>) {
 	if (GJ_IS_SSR || GJ_IS_CLIENT) {
 		return;
 	}
@@ -158,10 +158,25 @@ function _trackEvent(name: string, eventParams: Record<string, string | number>)
 	console.log(`Track event.`, name, eventParams);
 }
 
-export function trackAppPromotionClick(options: { source: AppPromotionSource }) {
-	_trackEvent('app_promotion_click', {
-		source: options.source,
-	});
+export function trackAppPromotionClick(params: { source: AppPromotionSource }) {
+	_trackEvent('app_promotion_click', params);
+}
+
+export type CommunityOpenSource = 'communityChunk' | 'communityCard';
+
+export function trackGotoCommunity(params: {
+	source: CommunityOpenSource;
+	id?: number;
+	path?: string;
+	channel?: string;
+}) {
+	_trackEvent('goto_community', params);
+}
+
+export type PostOpenSource = 'communityChunk';
+
+export function trackPostOpen(params: { source: PostOpenSource }) {
+	_trackEvent('post_open', params);
 }
 
 /**
@@ -223,70 +238,4 @@ export class Analytics {
 		// 	});
 		// }
 	}
-}
-
-export type CommunityOpenSource =
-	// Mobile App
-	| 'auditScreen'
-	| 'cbar'
-	| 'channelCard'
-	| 'collaboratorRequest'
-	| 'communityGrid'
-	| 'create'
-	| 'gameCommunityBadge'
-	| 'linkRouter'
-	| 'notification'
-	| 'pill'
-	// Web
-	| 'communityChunk'
-	| 'communityCard';
-
-export function trackGotoCommunity(options: {
-	source: CommunityOpenSource;
-	id?: number;
-	path?: string;
-	channel?: string;
-}) {
-	const { id, path, channel } = options;
-	const extras: Record<string, string | number> = {};
-
-	if (id) {
-		Object.assign(extras, {
-			id: id,
-		});
-	}
-
-	if (path) {
-		Object.assign(extras, {
-			path: path,
-		});
-	}
-
-	if (channel) {
-		Object.assign(extras, {
-			channel: channel,
-		});
-	}
-
-	trackEvent('goto_community', {
-		source: options.source,
-		...extras,
-	});
-}
-
-export type PostOpenSource =
-	// Mobile App
-	| 'feed'
-	| 'comment'
-	| 'link'
-	| 'notification'
-	| 'gridNotification'
-	| 'communityAudit'
-	// Web
-	| 'communityChunk';
-
-export function trackPostOpen(options: { source: PostOpenSource }) {
-	trackEvent('post_open', {
-		source: options.source,
-	});
 }
