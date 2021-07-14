@@ -26,7 +26,7 @@
 				}"
 			>
 				<app-progress-bar :percent="getItemPercentage(item) * 100">
-					<span v-if="!obscureResults" class="-progress-percent">
+					<span v-if="!shouldObscureResults" class="-progress-percent">
 						{{
 							number(getItemPercentage(item), {
 								style: 'percent',
@@ -69,8 +69,8 @@
 				<span class="dot-separator" />
 
 				<app-time-ago v-if="isVotable" :date="poll.end_time" is-future />
-				<translate v-else-if="poll.end_time"> Voting finished </translate>
-				<translate v-else> Draft poll </translate>
+				<translate v-else-if="poll.end_time">Voting finished</translate>
+				<translate v-else>Draft poll</translate>
 			</span>
 		</div>
 	</div>

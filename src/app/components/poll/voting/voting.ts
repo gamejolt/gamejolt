@@ -35,7 +35,7 @@ export default class AppPollVoting extends Vue {
 
 	readonly number = number;
 
-	get obscureResults() {
+	get shouldObscureResults() {
 		return this.poll.is_private && !this.isOwner;
 	}
 
