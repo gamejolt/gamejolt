@@ -4,6 +4,9 @@ import { getFirebaseApp } from '../firebase/firebase.service';
 
 const _options: ConfigOption[] = [];
 const JOIN_OPTIONS_STORAGE_KEY = 'config:join-options';
+const OVERRIDES_STORAGE_KEY = 'config:overrides';
+
+type ValueType = number | string | boolean;
 
 interface Conditions {
 	/**
@@ -17,7 +20,7 @@ interface Conditions {
 	join?: boolean;
 }
 
-abstract class ConfigOption<T = any> {
+export abstract class ConfigOption<T extends ValueType = any> {
 	constructor(
 		public readonly name: string,
 		public readonly defaultValue: T,
@@ -31,6 +34,12 @@ abstract class ConfigOption<T = any> {
 	 * does all the checks against conditions and what not.
 	 */
 	protected _getValue(getter: () => T): T {
+		// If an override is specified locally.
+		const overrides = _configGetOverrides();
+		if (this.name in overrides) {
+			return overrides[this.name] as T;
+		}
+
 		if (
 			// If join condition was set, we need to make sure the current
 			// config option was set at the time of join or not. Only use the
@@ -47,7 +56,7 @@ abstract class ConfigOption<T = any> {
 	abstract get value(): any;
 }
 
-class ConfigOptionBoolean extends ConfigOption<boolean> {
+export class ConfigOptionBoolean extends ConfigOption<boolean> {
 	get value() {
 		if (GJ_IS_SSR) {
 			return this.defaultValue;
@@ -113,12 +122,12 @@ async function _init() {
 
 	await fetchAndActivate(config);
 
-	const activeOptions: Record<string, string | number | boolean> = {};
+	const activeOptions: Record<string, ValueType> = {};
 	for (const option of _options) {
 		activeOptions[option.name] = option.value;
 	}
 
-	console.log('Got remote config data.', activeOptions);
+	console.log('Got config data.', activeOptions);
 	trackExperiments(activeOptions);
 }
 
@@ -134,11 +143,37 @@ export function configSaveJoinOptions() {
 	localStorage.setItem(JOIN_OPTIONS_STORAGE_KEY, _options.map(i => i.name).join('|'));
 }
 
-let _joinOptions: string[] | null;
+let _joinOptions: undefined | string[];
 function _getJoinOptions() {
 	if (GJ_IS_SSR) {
 		return [];
 	}
 
 	return (_joinOptions ??= (localStorage.getItem(JOIN_OPTIONS_STORAGE_KEY) ?? '').split('|'));
+}
+
+export function configGetAll() {
+	return _options;
+}
+
+type Overrides = Record<string, ValueType>;
+let _overrides: undefined | Overrides;
+
+export function configSaveOverrides(overrides: Overrides) {
+	if (GJ_IS_SSR) {
+		return;
+	}
+
+	localStorage.setItem(OVERRIDES_STORAGE_KEY, JSON.stringify(overrides));
+
+	// Bust local cache.
+	_overrides = undefined;
+}
+
+function _configGetOverrides(): Overrides {
+	if (GJ_IS_SSR) {
+		return {};
+	}
+
+	return (_overrides ??= JSON.parse(localStorage.getItem(OVERRIDES_STORAGE_KEY) ?? '{}'));
 }
