@@ -48,7 +48,7 @@ export default class AppDiscoverHomeCommunities extends Vue {
 
 		localCommunities.forEach(i => {
 			const index = EmphasizedCommunityIDs.indexOf(i.id);
-			if (index === -1) {
+			if (index === -1 || !this.configDiscoverCommunityChunks.value) {
 				normalCommunities.push(i);
 			} else {
 				emphasizedCommunities.push(i);
