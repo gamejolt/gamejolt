@@ -64,6 +64,13 @@ export const configHasAutocomplete = new ConfigOptionBoolean('has_search_autocom
 	join: true,
 });
 
+/**
+ * Whether or not to show who to follow on the feed.
+ */
+export const configWhoToFollow = new ConfigOptionBoolean('who_to_follow', true, {
+	join: true,
+});
+
 export const configDiscoverCommunityChunks = new ConfigOptionBoolean(
 	'discover_community_chunks',
 	false
