@@ -1,6 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
-import { Auth } from '../../../../_common/auth/auth.service';
+import { authOnLogin, redirectToOnboarding } from '../../../../_common/auth/auth.service';
 import { Growls } from '../../../../_common/growls/growls.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { AppProgressPoller } from '../../../../_common/progress/poller/poller';
@@ -53,6 +53,7 @@ export default class RouteJoinAlmost extends BaseRouteComponent {
 		}
 
 		// If it worked, redirect to onbaording flow. They're good to go!
-		Auth.redirectOnboarding();
+		authOnLogin('email');
+		redirectToOnboarding();
 	}
 }
