@@ -71,6 +71,11 @@ export const configWhoToFollow = new ConfigOptionBoolean('who_to_follow', true, 
 	join: true,
 });
 
+export const configDiscoverCommunityChunks = new ConfigOptionBoolean(
+	'discover_community_chunks',
+	false
+);
+
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());
 }

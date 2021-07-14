@@ -149,7 +149,7 @@ function _untrackUserId() {
 	setUserId(_getFirebaseAnalytics(), '');
 }
 
-function _trackEvent(name: string, eventParams: Record<string, string | number>) {
+function _trackEvent(name: string, eventParams: Record<string, string | number | undefined>) {
 	if (GJ_IS_SSR || GJ_IS_CLIENT) {
 		return;
 	}
@@ -195,6 +195,23 @@ export function trackAppPromotionClick(options: { source: AppPromotionSource }) 
 	_trackEvent('app_promotion_click', {
 		source: options.source,
 	});
+}
+
+export type CommunityOpenSource = 'communityChunk' | 'communityCard';
+
+export function trackGotoCommunity(params: {
+	source: CommunityOpenSource;
+	id?: number;
+	path?: string;
+	channel?: string;
+}) {
+	_trackEvent('goto_community', params);
+}
+
+export type PostOpenSource = 'communityChunk';
+
+export function trackPostOpen(params: { source: PostOpenSource }) {
+	_trackEvent('post_open', params);
 }
 
 /**
