@@ -28,10 +28,11 @@
 								/>
 							</app-media-item-backdrop>
 
-							<template v-if="videoController && isHydrated">
+							<template v-if="videoController && isBootstrapped">
 								<app-video
 									class="-video"
 									:player="videoController"
+									:should-play="shouldPlayVideo"
 									allow-degraded-autoplay
 									:style="{
 										width: videoWidth,
