@@ -1,27 +1,68 @@
-import { fetchAndActivate, getBoolean, getRemoteConfig } from 'firebase/remote-config';
+import { fetchAndActivate, getRemoteConfig, getValue } from 'firebase/remote-config';
+import { trackExperiments } from '../analytics/analytics.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
 
-const _defaultConfigValues: Record<string, any> = {};
+const _options: ConfigOption[] = [];
+const JOIN_OPTIONS_STORAGE_KEY = 'config:join-options';
 
-class ConfigOption<T = any> {
-	constructor(public readonly name: string, public readonly defaultValue: T) {
-		_defaultConfigValues[name] = defaultValue;
+interface Conditions {
+	/**
+	 * Will only use the remote value if the user joined after this config was
+	 * shipped (new users). Will still use the remote value if they log out as
+	 * long as they joined previously while this config was active.
+	 *
+	 * If multiple users use the same browser, this could change things around
+	 * if they create a new account.
+	 */
+	join?: boolean;
+}
+
+abstract class ConfigOption<T = any> {
+	constructor(
+		public readonly name: string,
+		public readonly defaultValue: T,
+		public readonly conditions?: Conditions
+	) {
+		_options.push(this);
 	}
+
+	/**
+	 * Helper to return the value for this config option in child classes. It
+	 * does all the checks against conditions and what not.
+	 */
+	protected _getValue(getter: () => T): T {
+		if (
+			// If join condition was set, we need to make sure the current
+			// config option was set at the time of join or not. Only use the
+			// remote value if it was.
+			this.conditions?.join &&
+			!_getJoinOptions().includes(this.name)
+		) {
+			return this.defaultValue;
+		}
+
+		return getter();
+	}
+
+	abstract get value(): any;
 }
 
 class ConfigOptionBoolean extends ConfigOption<boolean> {
 	get value() {
-		if (!GJ_IS_SSR) {
-			return getBoolean(_getFirebaseRemoteConfig(), this.name);
+		if (GJ_IS_SSR) {
+			return this.defaultValue;
 		}
-		return this.defaultValue;
+
+		return this._getValue(() => getValue(_getFirebaseRemoteConfig(), this.name).asBoolean());
 	}
 }
 
 /**
  * Whether or not the search autocomplete should show when typing.
  */
-export const configHasAutocomplete = new ConfigOptionBoolean('has_search_autocomplete', true);
+export const configHasAutocomplete = new ConfigOptionBoolean('has_search_autocomplete', true, {
+	join: true,
+});
 
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());
@@ -51,7 +92,38 @@ async function _init() {
 	};
 
 	// Pull from the defaults that were set up before calling this function.
-	config.defaultConfig = _defaultConfigValues;
+	for (const option of _options) {
+		config.defaultConfig[option.name] = option.defaultValue;
+	}
 
 	await fetchAndActivate(config);
+
+	const activeOptions: Record<string, string | number | boolean> = {};
+	for (const option of _options) {
+		activeOptions[option.name] = option.value;
+	}
+
+	console.log('Got remote config data.', activeOptions);
+	trackExperiments(activeOptions);
+}
+
+/**
+ * Should be called when the user joins to save the current configs so we know
+ * what was active when they first joined.
+ */
+export function configSaveJoinOptions() {
+	if (GJ_IS_SSR) {
+		return;
+	}
+
+	localStorage.setItem(JOIN_OPTIONS_STORAGE_KEY, _options.map(i => i.name).join('|'));
+}
+
+let _joinOptions: string[] | null;
+function _getJoinOptions() {
+	if (GJ_IS_SSR) {
+		return [];
+	}
+
+	return (_joinOptions ??= (localStorage.getItem(JOIN_OPTIONS_STORAGE_KEY) ?? '').split('|'));
 }

@@ -1,9 +1,14 @@
-import { Api } from '../../../../../../_common/api/api.service';
-import { Auth } from '../../../../../../_common/auth/auth.service';
-import { Growls } from '../../../../../../_common/growls/growls.service';
-import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
+import { Api } from '../../../../../../_common/api/api.service';
+import {
+	authOnJoin,
+	authOnLogin,
+	redirectToDashboard,
+	redirectToOnboarding,
+} from '../../../../../../_common/auth/auth.service';
+import { Growls } from '../../../../../../_common/growls/growls.service';
+import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import AuthLinkedAccountProcessing from '../../_processing/processing.vue';
 
 @Component({
@@ -53,7 +58,9 @@ export default class RouteAuthLinkedAccountGoogleCallback extends BaseRouteCompo
 				case 'invalid-google-account':
 					Growls.error({
 						sticky: true,
-						message: this.$gettext('This Google account does not support Sign Up with Google.'),
+						message: this.$gettext(
+							'This Google account does not support Sign Up with Google.'
+						),
 					});
 					break;
 
@@ -70,11 +77,13 @@ export default class RouteAuthLinkedAccountGoogleCallback extends BaseRouteCompo
 		}
 
 		if ($payload.accountCreated) {
-			Auth.redirectOnboarding();
+			authOnJoin('google');
+			redirectToOnboarding();
 			return;
 		}
 
-		Auth.redirectDashboard();
+		authOnLogin('google');
+		redirectToDashboard();
 	}
 
 	render(h: CreateElement) {
