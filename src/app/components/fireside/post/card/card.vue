@@ -1,7 +1,7 @@
 <script lang="ts" src="./card"></script>
 
 <template>
-	<div v-if="post" class="post-card" :class="{ 'post-card-elevated': !flat }">
+	<div v-if="post" class="post-card">
 		<app-responsive-dimensions :ratio="aspectRatio" @change="calcData()">
 			<app-scroll-inview
 				:config="InviewConfig"
@@ -32,16 +32,13 @@
 								<app-video
 									class="-video"
 									:player="videoController"
+									:should-play="shouldPlayVideo"
 									allow-degraded-autoplay
 									:style="{
 										width: videoWidth,
 										height: videoHeight,
 									}"
 								/>
-
-								<div v-if="videoController.isLoading" class="-overlay">
-									<app-loading no-color hide-label stationary />
-								</div>
 							</template>
 						</div>
 						<div class="-inner-gradient" />
@@ -49,7 +46,12 @@
 
 					<app-content-viewer v-else class="-inner-message" :source="post.lead_content" />
 
-					<router-link class="-link" tag="div" :to="post.routeLocation" />
+					<router-link
+						class="-link"
+						tag="div"
+						:to="post.routeLocation"
+						@click.native="trackPostOpen()"
+					/>
 
 					<div class="-details" :class="{ '-light': !!mediaItem }">
 						<template v-if="withUser">
@@ -88,10 +90,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
+@import './common'
 
-$-aspect-ratio = (10 / 16)
 $-base-width = 200px
 $-padding = 8px
 
@@ -110,9 +110,6 @@ $-padding = 8px
 
 		.-link
 			border-color: var(--theme-link)
-
-.post-card-elevated
-	elevate-1()
 
 .-inner
 	&
@@ -214,15 +211,4 @@ $-padding = 8px
 	>>> > video
 		height: 100% !important
 		width: 100% !important
-
-.-overlay
-	position: absolute
-	left: 0
-	top: 0
-	right: 0
-	bottom: 0
-	background-color: rgba(0, 0, 0, 0.45)
-	display: flex
-	justify-content: center
-	align-items: center
 </style>

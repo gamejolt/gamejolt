@@ -140,8 +140,19 @@ export class ChatRoomChannel extends Channel {
 
 	private onUserUpdated(data: Partial<ChatUser>) {
 		const updatedUser = new ChatUser(data);
-		if (this.room && isInChatRoom(this.client, this.roomId) && this.room.isGroupRoom) {
-			this.client.roomMembers[this.roomId].update(updatedUser);
+		if (this.room && this.room.isGroupRoom) {
+			if (isInChatRoom(this.client, this.roomId)) {
+				this.client.roomMembers[this.roomId].update(updatedUser);
+			}
+
+			this.room.updateRoleForUser(updatedUser);
+
+			// Sync the user update to the list of messages.
+			for (const message of this.client.messages[this.roomId]) {
+				if (message.user.id === updatedUser.id) {
+					Object.assign(message.user, updatedUser);
+				}
+			}
 		}
 	}
 
@@ -240,6 +251,8 @@ export class ChatRoomChannel extends Channel {
 			}
 
 			this.room.members.push(user);
+
+			this.room.updateRoleForUser(user);
 		}
 	}
 

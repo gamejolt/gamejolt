@@ -31,6 +31,9 @@
 					<span v-if="isOwner" v-app-tooltip="$gettext(`Room Owner`)">
 						<app-jolticon icon="crown" />
 					</span>
+					<span v-else-if="isModerator" v-app-tooltip="$gettext(`Moderator`)">
+						<app-jolticon icon="star" />
+					</span>
 					{{ user.display_name }}
 					<span class="tiny text-muted">@{{ user.username }}</span>
 				</div>

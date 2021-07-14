@@ -47,7 +47,7 @@ export default class AppVideo extends Vue {
 		this.video.poster = this.player.poster || '';
 		this.video.loop = true;
 		this.video.autoplay = this.shouldPlay;
-		this.video.muted = this.player.context === 'gif';
+		this.video.muted = this.player.muted || this.player.context === 'gif';
 
 		// Allows videos in iOS Safari to play without automatically going
 		// fullscreen.

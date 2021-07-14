@@ -56,8 +56,6 @@ const config = {
 		},
 		gameserver: {
 			title: 'Playing Game - Game Jolt',
-			// Don't log analytics on gameserver since it's a different domain.
-			analytics: false,
 		},
 		client: {
 			title: 'Game Jolt',

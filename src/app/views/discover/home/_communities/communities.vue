@@ -2,6 +2,25 @@
 
 <template>
 	<div class="container">
+		<template v-if="configDiscoverCommunityChunks.value">
+			<template v-if="isLoading">
+				<div class="row">
+					<app-community-chunk-placeholder class="-chunk" />
+				</div>
+			</template>
+			<template v-else-if="filteredCommunities.top.length > 0">
+				<div class="row">
+					<template v-for="community of filteredCommunities.top">
+						<app-community-chunk
+							:key="community.id"
+							class="-chunk"
+							:community="community"
+						/>
+					</template>
+				</div>
+			</template>
+		</template>
+
 		<div class="text-center">
 			<h2 class="section-header">
 				<translate>Browse Communities</translate>
@@ -32,6 +51,7 @@
 				<app-community-card
 					v-app-track-event="`home:communities:click`"
 					:community="community"
+					:track-goto="configDiscoverCommunityChunks.value"
 					elevate
 				/>
 			</div>
@@ -49,3 +69,11 @@
 		</div>
 	</div>
 </template>
+
+<style lang="stylus" scoped>
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+
+.-chunk
+	margin-bottom: $grid-gutter-width
+</style>

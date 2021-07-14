@@ -1,14 +1,19 @@
-import { Analytics } from '../../../analytics/analytics.service';
+import {
+	Analytics,
+	SOCIAL_ACTION_FOLLOW,
+	SOCIAL_ACTION_TWEET,
+	SOCIAL_NETWORK_TWITTER,
+} from '../../../analytics/analytics.service';
 
 function setupEvents() {
 	(window as any).twttr.events.bind('tweet', () => {
 		const url = window.location.href;
-		Analytics.trackSocial(Analytics.SOCIAL_NETWORK_TWITTER, Analytics.SOCIAL_ACTION_TWEET, url);
+		Analytics.trackSocial(SOCIAL_NETWORK_TWITTER, SOCIAL_ACTION_TWEET, url);
 	});
 
 	(window as any).twttr.events.bind('follow', () => {
 		const url = window.location.href;
-		Analytics.trackSocial(Analytics.SOCIAL_NETWORK_TWITTER, Analytics.SOCIAL_ACTION_FOLLOW, url);
+		Analytics.trackSocial(SOCIAL_NETWORK_TWITTER, SOCIAL_ACTION_FOLLOW, url);
 	});
 }
 
@@ -21,9 +26,9 @@ export class TwitterSdk {
 		}
 
 		if (!this.isBootstrapped) {
-			let bootstrapLib = (d: any, s: any, id: any) => {
-				let js: any,
-					fjs = d.getElementsByTagName(s)[0];
+			const bootstrapLib = (d: any, s: any, id: any) => {
+				const fjs = d.getElementsByTagName(s)[0];
+				let js: any;
 				if (!d.getElementById(id)) {
 					js = d.createElement(s);
 					js.id = id;

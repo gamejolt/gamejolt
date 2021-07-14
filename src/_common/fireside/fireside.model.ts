@@ -2,6 +2,7 @@ import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 import { UserBlock } from '../user/block/block.model';
 import { User } from '../user/user.model';
+import { FiresideRole } from './role/role.model';
 
 export class Fireside extends Model {
 	user!: User;
@@ -18,6 +19,7 @@ export class Fireside extends Model {
 	is_expired!: boolean;
 	member_count!: number;
 	user_block?: UserBlock | null;
+	role: FiresideRole | null = null;
 
 	get blocked() {
 		return !!this.user_block || this.user.blocked_you || this.user.is_blocked;
@@ -45,6 +47,10 @@ export class Fireside extends Model {
 
 		if (data.user_block) {
 			this.user_block = new UserBlock(data.user_block);
+		}
+
+		if (data.role) {
+			this.role = new FiresideRole(data.role);
 		}
 	}
 

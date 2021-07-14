@@ -5,6 +5,7 @@ import { numberSort } from '../../../utils/array';
 import { fuzzysearch } from '../../../utils/string';
 import AppAdWidget from '../../../_common/ad/widget/widget.vue';
 import { Api } from '../../../_common/api/api.service';
+import { configWhoToFollow } from '../../../_common/config/config.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import AppNavTabList from '../../../_common/nav/tab-list/tab-list.vue';
 import {
@@ -104,7 +105,10 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	}
 
 	get shouldShowRecommendedUsers() {
-		return this.loadingRecommendedUsers || this.recommendedUsers.length > 0;
+		return (
+			configWhoToFollow.value &&
+			(this.loadingRecommendedUsers || this.recommendedUsers.length > 0)
+		);
 	}
 
 	get feedTab(): 'activity' | 'fyp' {

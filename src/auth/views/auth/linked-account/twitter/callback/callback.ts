@@ -1,9 +1,14 @@
-import { Api } from '../../../../../../_common/api/api.service';
-import { Auth } from '../../../../../../_common/auth/auth.service';
-import { Growls } from '../../../../../../_common/growls/growls.service';
-import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
+import { Api } from '../../../../../../_common/api/api.service';
+import {
+	authOnJoin,
+	authOnLogin,
+	redirectToDashboard,
+	redirectToOnboarding,
+} from '../../../../../../_common/auth/auth.service';
+import { Growls } from '../../../../../../_common/growls/growls.service';
+import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import AuthLinkedAccountProcessing from '../../_processing/processing.vue';
 
 @Component({
@@ -42,11 +47,13 @@ export default class RouteAuthLinkedAccountTwitterCallback extends BaseRouteComp
 		}
 
 		if ($payload.accountCreated) {
-			Auth.redirectOnboarding();
+			authOnJoin('twitter');
+			redirectToOnboarding();
 			return;
 		}
 
-		Auth.redirectDashboard();
+		authOnLogin('twitter');
+		redirectToDashboard();
 	}
 
 	render(h: CreateElement) {
