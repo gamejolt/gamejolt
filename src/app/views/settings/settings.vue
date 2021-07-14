@@ -1,3 +1,5 @@
+<script lang="ts" src="./settings"></script>
+
 <template>
 	<div>
 		<app-page-header>
@@ -28,11 +30,13 @@
 					</div>
 					<div class="col-sm-9 col-md-8 col-lg-6">
 						<form-settings />
+
+						<template v-if="hasDev">
+							<form-settings-dev />
+						</template>
 					</div>
 				</div>
 			</div>
 		</section>
 	</div>
 </template>
-
-<script lang="ts" src="./settings"></script>
