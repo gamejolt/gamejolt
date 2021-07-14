@@ -7,6 +7,7 @@ import {
 } from 'firebase/analytics';
 import VueRouter from 'vue-router';
 import { AppPromotionSource } from '../../utils/mobile-app';
+import { AuthMethod } from '../auth/auth.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
 import { WithAppStore } from '../store/app-store';
 import { EventBus } from '../system/event/event-bus.service';
@@ -156,6 +157,38 @@ function _trackEvent(name: string, eventParams: Record<string, string | number>)
 	// We prefix with `x_` so that we know it is one of our own events.
 	logEvent(_getFirebaseAnalytics(), `x_${name}`, eventParams);
 	console.log(`Track event.`, name, eventParams);
+}
+
+/**
+ * Track their remote config data as the experiments so that we can segment and
+ * target based on what they saw.
+ */
+export function trackExperiments(configData: Record<string, string | boolean | number>) {
+	// Limits:
+	// https://support.google.com/analytics/answer/9267744?hl=en
+	const sanitizedEntries = Object.entries(configData)
+		.map(([key, value]) => {
+			return [key.substr(0, 35), `${value}`.substr(0, 95)];
+		})
+		.slice(0, 20);
+
+	_trackEvent('gj_experiments', Object.fromEntries(sanitizedEntries));
+}
+
+export function trackLogin(method: AuthMethod) {
+	if (GJ_IS_SSR || GJ_IS_CLIENT) {
+		return;
+	}
+
+	logEvent(_getFirebaseAnalytics(), 'login', { method });
+}
+
+export function trackJoin(method: AuthMethod) {
+	if (GJ_IS_SSR || GJ_IS_CLIENT) {
+		return;
+	}
+
+	logEvent(_getFirebaseAnalytics(), 'sign_up', { method });
 }
 
 export function trackAppPromotionClick(options: { source: AppPromotionSource }) {
