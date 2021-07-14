@@ -167,9 +167,7 @@ export function trackExperiments(configData: Record<string, string | boolean | n
 	// Limits:
 	// https://support.google.com/analytics/answer/9267744?hl=en
 	const sanitizedEntries = Object.entries(configData)
-		.map(([key, value]) => {
-			return [key.substr(0, 35), `${value}`.substr(0, 95)];
-		})
+		.map(([key, value]) => ['exp_' + key.substr(0, 35), `${value}`.substr(0, 95)])
 		.slice(0, 20);
 
 	_trackEvent('gj_experiments', Object.fromEntries(sanitizedEntries));

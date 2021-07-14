@@ -71,6 +71,9 @@ export const configWhoToFollow = new ConfigOptionBoolean('who_to_follow', true, 
 	join: true,
 });
 
+/**
+ * Will show chunks of posts on discover page for certain communities.
+ */
 export const configDiscoverCommunityChunks = new ConfigOptionBoolean(
 	'discover_community_chunks',
 	false
