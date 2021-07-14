@@ -39,10 +39,6 @@
 										height: videoHeight,
 									}"
 								/>
-
-								<div v-if="videoController.isLoading" class="-overlay">
-									<app-loading no-color hide-label stationary />
-								</div>
 							</template>
 						</div>
 						<div class="-inner-gradient" />
@@ -199,15 +195,4 @@ $-padding = 8px
 	>>> > video
 		height: 100% !important
 		width: 100% !important
-
-.-overlay
-	position: absolute
-	left: 0
-	top: 0
-	right: 0
-	bottom: 0
-	background-color: rgba(0, 0, 0, 0.45)
-	display: flex
-	justify-content: center
-	align-items: center
 </style>
