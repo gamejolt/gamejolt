@@ -2,7 +2,7 @@
 
 <template>
 	<div class="post-page-recommendations">
-		<h4 class="section-header">
+		<h4>
 			<translate>Next up</translate>
 		</h4>
 		<component

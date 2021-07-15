@@ -188,8 +188,6 @@
 				/>
 
 				<div v-if="Screen.isMobile" class="-mobile-recs">
-					<br />
-					<br />
 					<app-post-page-recommendations :posts="recommendedPosts" />
 				</div>
 
