@@ -3,6 +3,7 @@ import { Component, Emit, Prop, ProvideReactive, Watch } from 'vue-property-deco
 import { RawLocation } from 'vue-router';
 import { arrayRemove } from '../../../../utils/array';
 import { propOptional, propRequired } from '../../../../utils/vue';
+import { Api } from '../../../../_common/api/api.service';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import { CommunityUserNotification } from '../../../../_common/community/user-notification/user-notification.model';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
@@ -93,6 +94,8 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 
 	@Emit('post-updated') emitPostUpdated(_post: FiresidePost) {}
 
+	recommendedPosts: FiresidePost[] | null = null;
+
 	activeImageIndex = 0;
 	videoStartTime = 0;
 	isPlayerFilled = false;
@@ -146,6 +149,18 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 				query: { ...this.$route.query, t: undefined },
 			} as RawLocation);
 		}
+
+		this.fetchRecommendedPosts();
+	}
+
+	async fetchRecommendedPosts() {
+		const payload = await Api.sendRequest(
+			`/web/posts/recommendations/${this.post.id}`,
+			undefined,
+			{ detach: true }
+		);
+
+		this.recommendedPosts = FiresidePost.populate(payload.posts);
 	}
 
 	destroyed() {

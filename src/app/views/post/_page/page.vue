@@ -190,7 +190,7 @@
 				<div v-if="Screen.isMobile" class="-mobile-recs">
 					<br />
 					<br />
-					<app-post-page-recommendations :post="post" />
+					<app-post-page-recommendations :posts="recommendedPosts" />
 				</div>
 
 				<br />
@@ -199,7 +199,7 @@
 			</template>
 
 			<template v-if="!Screen.isMobile" #right>
-				<app-post-page-recommendations :post="post" />
+				<app-post-page-recommendations :posts="recommendedPosts" />
 			</template>
 		</app-page-container>
 	</section>
