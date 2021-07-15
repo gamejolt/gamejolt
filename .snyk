@@ -6,3 +6,7 @@ patch:
   SNYK-JS-LODASH-567746:
     - client-voodoo > winston > async > lodash:
         patched: '2021-07-15T13:06:08.239Z'
+    - snyk > snyk-nodejs-lockfile-parser > @yarnpkg/core > lodash:
+        patched: '2021-07-15T13:10:17.027Z'
+    - snyk > snyk-docker-plugin > snyk-nodejs-lockfile-parser > @yarnpkg/core > lodash:
+        patched: '2021-07-15T13:10:17.027Z'
