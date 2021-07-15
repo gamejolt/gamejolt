@@ -1,18 +1,18 @@
+<script lang="ts" src="./fade-collapse"></script>
+
 <template>
 	<div
 		class="fade-collapse"
 		:class="{
-			'-sm': this.size === 'sm',
-			'-animate': this.animate,
-			'fade-collapse-collapsed': this.isCollapsed,
+			'-sm': size === 'sm',
+			'-animate': animate,
+			'fade-collapse-collapsed': isCollapsed,
 		}"
 		@transitionend="afterTransition"
 	>
-		<div class="-fade" @click="fadeClick($event)"></div>
-		<slot></slot>
+		<div class="-fade" @click="fadeClick($event)" />
+		<slot />
 	</div>
 </template>
 
 <style lang="stylus" src="./fade-collapse.styl" scoped></style>
-
-<script lang="ts" src="./fade-collapse"></script>

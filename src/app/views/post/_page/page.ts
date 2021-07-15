@@ -2,10 +2,10 @@ import Vue from 'vue';
 import { Component, Emit, Prop, ProvideReactive, Watch } from 'vue-property-decorator';
 import { RawLocation } from 'vue-router';
 import { arrayRemove } from '../../../../utils/array';
-import { propOptional, propRequired } from '../../../../utils/vue';
-import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
+import { Api } from '../../../../_common/api/api.service';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import { CommunityUserNotification } from '../../../../_common/community/user-notification/user-notification.model';
+import { configRecommendedPosts } from '../../../../_common/config/config.service';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import { number } from '../../../../_common/filters/number';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
@@ -46,10 +46,13 @@ import AppFiresidePostEmbed from '../../../components/fireside/post/embed/embed.
 import AppGameBadge from '../../../components/game/badge/badge.vue';
 import AppGameListItem from '../../../components/game/list/item/item.vue';
 import { AppCommentWidgetLazy } from '../../../components/lazy';
+import AppPageContainer from '../../../components/page-container/page-container.vue';
 import AppPollVoting from '../../../components/poll/voting/voting.vue';
+import AppPostPageRecommendations from './recommendations/recommendations.vue';
 
 @Component({
 	components: {
+		AppPageContainer,
 		AppTimeAgo,
 		AppImgResponsive,
 		AppVideo,
@@ -57,7 +60,6 @@ import AppPollVoting from '../../../components/poll/voting/voting.vue';
 		AppEventItemControls,
 		AppStickerControlsOverlay,
 		AppPollVoting,
-		AppAdWidget,
 		AppCommunityPill,
 		AppContentViewer,
 		AppUserCardHover,
@@ -75,22 +77,28 @@ import AppPollVoting from '../../../components/poll/voting/voting.vue';
 		AppCommentWidgetLazy,
 		AppCommunityUserNotification,
 		AppFiresidePostEmbed,
+		AppPostPageRecommendations,
 	},
 	directives: {
 		AppTooltip,
 	},
 })
 export default class AppPostPage extends Vue implements LightboxMediaSource {
-	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
-	@Prop(propOptional(Array, () => [])) communityNotifications!: CommunityUserNotification[];
+	@Prop({ type: FiresidePost, required: true })
+	post!: FiresidePost;
+
+	@Prop({ type: Array, default: () => [], required: false })
+	communityNotifications!: CommunityUserNotification[];
+
+	@Emit('post-updated')
+	emitPostUpdated(_post: FiresidePost) {}
 
 	@AppState user!: AppStore['user'];
 
 	@ProvideReactive(StickerTargetParentControllerKey)
 	stickerTargetController = new StickerTargetController(this.post);
 
-	@Emit('post-updated') emitPostUpdated(_post: FiresidePost) {}
-
+	recommendedPosts: FiresidePost[] = [];
 	activeImageIndex = 0;
 	videoStartTime = 0;
 	isPlayerFilled = false;
@@ -125,6 +133,10 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 		return this.post.videos[0] ?? null;
 	}
 
+	get hasPostRecommendations() {
+		return configRecommendedPosts.value;
+	}
+
 	created() {
 		if (GJ_IS_SSR) {
 			return;
@@ -144,6 +156,32 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 				query: { ...this.$route.query, t: undefined },
 			} as RawLocation);
 		}
+	}
+
+	mounted() {
+		this.fetchRecommendedPosts();
+	}
+
+	@Watch('post.id')
+	onPostChange() {
+		this.stickerTargetController = new StickerTargetController(this.post);
+		this.fetchRecommendedPosts();
+	}
+
+	async fetchRecommendedPosts() {
+		if (!this.hasPostRecommendations) {
+			return;
+		}
+
+		this.recommendedPosts = [];
+
+		const payload = await Api.sendRequest(
+			`/web/posts/recommendations/${this.post.id}`,
+			undefined,
+			{ detach: true }
+		);
+
+		this.recommendedPosts = FiresidePost.populate(payload.posts);
 	}
 
 	destroyed() {
@@ -224,11 +262,6 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 		}
 		this.lightbox.close();
 		this.lightbox = undefined;
-	}
-
-	@Watch('post.id')
-	onPostIdChange() {
-		this.stickerTargetController = new StickerTargetController(this.post);
 	}
 
 	onDismissNotification(notification: CommunityUserNotification) {

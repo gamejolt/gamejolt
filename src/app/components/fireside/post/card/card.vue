@@ -44,11 +44,19 @@
 						<div class="-inner-gradient" />
 					</template>
 
-					<app-content-viewer v-else class="-inner-message" :source="post.lead_content" />
+					<template v-else>
+						<app-fade-collapse
+							class="-inner-message"
+							:collapse-height="leadHeight"
+							ignore-threshold
+							size="sm"
+						>
+							<app-content-viewer :source="post.lead_content" />
+						</app-fade-collapse>
+					</template>
 
 					<router-link
 						class="-link"
-						tag="div"
 						:to="post.routeLocation"
 						@click.native="trackPostOpen()"
 					/>
@@ -122,7 +130,9 @@ $-padding = 8px
 		top: $-padding
 		right: $-padding
 		bottom: $-padding
-		font-size: 30
+
+		>>> .fireside-post-lead-content
+			font-size: ceil($font-size-base * 1.1)
 
 .-light
 	&
