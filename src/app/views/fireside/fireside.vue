@@ -2,10 +2,6 @@
 
 <template>
 	<div class="-fireside">
-		<app-button class="-test" solid overlay @click="shouldShowVideo = !shouldShowVideo">
-			<translate>Toggle Video</translate>
-		</app-button>
-
 		<div class="-header">
 			<template v-if="fireside">
 				<div class="-fireside-title">
@@ -87,8 +83,8 @@
 								v-if="
 									rtc &&
 									rtc.focusedUser &&
-									rtc.agoraClient.connectionState === 'CONNECTED' &&
-									rtc.focusedUser.tracks.length > 0
+									rtc.focusedUser.videoTrack &&
+									rtc.videoClient.connectionState === 'CONNECTED'
 								"
 							>
 								<!-- <app-fireside-video-stats

@@ -43,6 +43,11 @@ import AppFiresideVideo from './_video/video.vue';
 
 type RoutePayload = {
 	fireside: any;
+	streamingAppId: string;
+	videoChannelName: string;
+	videoToken: string | null;
+	audioChatChannelName: string;
+	audioChatToken: string | null;
 	metaDescription: string;
 	fb: any;
 	twitter: any;
@@ -102,7 +107,6 @@ export default class RouteFireside extends BaseRouteComponent {
 	private gridPreviousConnectedState: boolean | null = null;
 	status: RouteStatus = 'initial';
 	hasExpiryWarning = false; // Visually shows a warning to the owner when the fireside's time is running low.
-	shouldShowVideo = false;
 
 	readonly Screen = Screen;
 
@@ -146,6 +150,10 @@ export default class RouteFireside extends BaseRouteComponent {
 			return undefined;
 		}
 		return this.chat.roomMembers[this.chatRoom.id];
+	}
+
+	get shouldShowVideo() {
+		return this.fireside instanceof Fireside && this.fireside.is_streaming;
 	}
 
 	get shouldShowChat() {
@@ -234,7 +242,7 @@ export default class RouteFireside extends BaseRouteComponent {
 			this.tryJoin();
 
 			// TODO: Gotta clear out previous RTC on reconnection.
-			this.rtc ??= new FiresideRTC(this.$route.query.appId as string, this.$route.query.token as string, this.$route.query.channel as string);
+			this.rtc ??= new FiresideRTC($payload.streamingAppId, $payload.videoChannelName, $payload.videoToken, $payload.audioChatChannelName, $payload.audioChatToken);
 		} else {
 			this.status = 'expired';
 			console.debug(`[FIRESIDE] Fireside is expired, and cannot be joined.`);
@@ -281,7 +289,7 @@ export default class RouteFireside extends BaseRouteComponent {
 		const wrapperHeight = videoWrapper.offsetHeight;
 		const wrapperRatio = wrapperWidth / wrapperHeight;
 
-		const videoStats = this.rtc?.agoraClient?.getRemoteVideoStats();
+		const videoStats = this.rtc?.videoClient?.getRemoteVideoStats();
 		const receiveWidth = videoStats?.receiveResolutionWidth?.receiveResolutionWidth ?? 16;
 		const receiveHeight = videoStats?.receiveResolutionHeight?.receiveResolutionHeight ?? 9;
 		const receiveRatio = receiveWidth / receiveHeight;

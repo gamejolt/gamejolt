@@ -5,9 +5,7 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import {
 	FiresideRTC,
 	FiresideRTCKey,
-	FiresideRTCUser,
-	subscribeTrack,
-	unsubscribeTrack,
+	FiresideRTCUser
 } from '../fireside-rtc';
 import AppFiresideHostList from '../_host-list/host-list.vue';
 
@@ -50,15 +48,19 @@ export default class AppFiresideVideo extends Vue {
 		this.sub();
 	}
 
-	private async sub() {
-		await subscribeTrack(this.rtc, this.rtcUser, 'video');
-		this.rtcUser.videoTrack?.agoraTrack.play(this.$refs.player);
+	private sub() {
+		this.rtcUser.startVideoPlayback(this.rtc, this.$refs.player);
+
+		// await subscribeTrack(this.rtc, this.rtcUser, 'video');
+		// this.rtcUser.videoTrack?.agoraTrack.play(this.$refs.player);
 	}
 
 	beforeDestroy() {
-		this.rtcUser.agoraUser.videoTrack?.stop();
-		this.$refs.player.innerHTML = '';
-		unsubscribeTrack(this.rtc, this.rtcUser, 'video');
+		this.rtcUser.stopVideoPlayback(this.rtc);
+
+		// this.rtcUser.videoUser?.videoTrack?.stop();
+		// this.$refs.player.innerHTML = '';
+		// unsubscribeTrack(this.rtc, this.rtcUser, 'video');
 	}
 
 	onMouseOut() {

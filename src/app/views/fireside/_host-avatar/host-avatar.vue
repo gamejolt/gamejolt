@@ -1,7 +1,8 @@
 <script lang="ts" src="./host-avatar"></script>
 
 <template>
-	<div class="-wrapper" :class="{ '-talking': host.volumeLevel > 1 }">
+	<div class="-wrapper">
+		<!-- <div class="-wrapper" :class="{ '-talking': host.volumeLevel > 1 }"> -->
 		<div class="-avatar" :class="{ '-active': rtc.focusedUser === host }" @click="onClick">
 			{{ host.userId.toString().substr(0, 3) }}
 		</div>

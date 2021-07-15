@@ -1,71 +1,69 @@
-import AgoraRTC, { IAgoraRTCRemoteUser, IRemoteTrack, UID } from 'agora-rtc-sdk-ng';
-import { arrayRemove } from '../../../utils/array';
+import AgoraRTC, { IAgoraRTCRemoteUser, IRemoteAudioTrack, IRemoteVideoTrack, UID } from 'agora-rtc-sdk-ng';
 
 export const FiresideRTCKey = Symbol('fireside-rtc');
 
 export class FiresideRTC {
-	agoraClient = AgoraRTC.createClient({ mode: 'live', codec: 'vp8' });
+	videoClient = AgoraRTC.createClient({ mode: 'live', codec: 'vp8' });
+	audioClient = AgoraRTC.createClient({ mode: 'live', codec: 'vp8' });
 	uid: null | UID = null;
 	users: FiresideRTCUser[] = [];
 	focusedUser: FiresideRTCUser | null = null;
 
-	constructor(private appId: string, private token: string, private channel: string) {
+	constructor(
+		private appId: string,
+		private videoChannel: string,
+		private videoToken: string | null,
+		private audioChatChannel: string,
+		private audioChatToken: string | null
+	) {
 		this.setupEvents();
 		this.join();
 	}
 
 	public async destroy() {
-		await this.agoraClient?.leave();
+		await Promise.all([
+			this.videoClient?.leave(),
+			this.audioClient?.leave(),
+		]);
 	}
 
 	private async join() {
 		try {
 			// We set ourselves up as an audience member with the "low latency"
 			// level, instead of the ultra low latency which is used for hosts.
-			await this.agoraClient.setClientRole('audience', { level: 1 });
-			this.uid = await this.agoraClient.join(this.appId, this.channel, this.token, null);
-			this.agoraClient.enableAudioVolumeIndicator();
+			await Promise.all([
+				this.videoClient
+					.setClientRole('audience', { level: 1 })
+					.then(() => this.videoClient.join(this.appId, this.videoChannel, this.videoToken, null)),
+				this.audioClient
+					.setClientRole('audience', { level: 1 })
+					.then(() => this.audioClient.join(this.appId, this.audioChatChannel, this.audioChatToken)),
+			]);
+
+			// this.videoClient.enableAudioVolumeIndicator();
 		} catch (e) {
 			console.error(e);
 		}
 	}
 
 	private setupEvents() {
-		this.agoraClient.on('user-joined', (remoteUser) => {
-			const user = new FiresideRTCUser(remoteUser);
-			this.users.push(user);
-			this.focusedUser ??= user;
-		});
+		this.videoClient.on('user-published', async (remoteUser, mediaType) => {
+			console.log('got user published (video channel)');
 
-		this.agoraClient.on('user-left', (remoteUser, _reason) => {
-			arrayRemove(this.users, (i) => i.userId === remoteUser.uid);
-			// TODO: Unfocus if they were focused for video.
-			// TODO: Do the unpublish events still trigger?
-		});
-
-		this.agoraClient.on('user-published', async (remoteUser, mediaType) => {
-			console.log('got user published');
-
-			const user = this.users.find((i) => i.userId === remoteUser.uid);
+			const user = this.findOrAddUser(remoteUser);
 			if (!user) {
-				console.warn(`couldn't find remote user locally`, remoteUser);
 				return;
 			}
 
-			if (mediaType === 'video') {
-				user.hasVideo = true;
-			} else if (mediaType === 'audio') {
-				user.hasAudio = true;
-				await subscribeTrack(this, user, 'audio');
+			user.videoUser = remoteUser;
 
-				// For audio tracks we always immediately play.
-				if (mediaType === 'audio') {
-					remoteUser.audioTrack?.play();
-				}
+			// Focusing video user if this is the first video stream we're subscribed to.
+			if (mediaType === 'video') {
+				this.focusedUser ??= user;
 			}
 		});
 
-		this.agoraClient.on('user-unpublished', async (remoteUser, mediaType) => {
+		this.videoClient.on('user-unpublished', async (remoteUser) => {
 			console.log('got user unpublished');
 
 			const user = this.users.find((i) => i.userId === remoteUser.uid);
@@ -74,69 +72,172 @@ export class FiresideRTC {
 				return;
 			}
 
-			if (mediaType === 'video') {
-				user.hasVideo = false;
-				// TODO: Unfocus if they were focused for video.
-				// user.videoTrack = null;
-				// await this.agoraClient.unsubscribe(remoteUser, 'video');
-			} else if (mediaType === 'audio') {
-				user.hasAudio = false;
-				await unsubscribeTrack(this, user, 'audio');
-			}
+			// TODO: Unfocus if they were focused for video.
+			await user.stopVideoPlayback(this);
 		});
 
-		this.agoraClient.on('volume-indicator', (items) => {
-			for (const { uid, level } of items) {
-				const user = this.users.find((i) => i.userId === uid);
-				if (user) {
-					user.volumeLevel = level;
-				}
+		this.audioClient.on('user-published', async (remoteUser, mediaType) => {
+			console.log('got user published (audio chat channel)');
+
+			if (mediaType !== 'audio') {
+				console.warn('Unexpected media type: ' + mediaType + '. Ignoring');
+				return;
 			}
+
+			const user = this.findOrAddUser(remoteUser);
+			if (!user) {
+				return;
+			}
+
+			user.audioChatUser = remoteUser;
+			user.startAudioPlayback(this);
 		});
+
+		// this.videoClient.on('volume-indicator', (items) => {
+		// 	for (const { uid, level } of items) {
+		// 		const user = this.users.find((i) => i.userId === uid);
+		// 		if (user) {
+		// 			user.volumeLevel = level;
+		// 		}
+		// 	}
+		// });
+	}
+
+	private findOrAddUser(remoteUser: IAgoraRTCRemoteUser): FiresideRTCUser | null
+	{
+		let user = this.users.find((i) => i.userId === remoteUser.uid);
+		if (!user) {
+			if (typeof remoteUser.uid !== 'number') {
+				console.warn('Expected remote user uid to be numeric');
+				return null;
+			}
+
+			user = new FiresideRTCUser(remoteUser.uid);
+			this.users.push(user);
+		}
+		return user;
 	}
 }
 
 export class FiresideRTCUser {
-	public readonly userId: number;
-	public readonly tracks: FiresideRTCTrack[] = [];
-	public hasAudio = false;
-	public hasVideo = false;
-	public volumeLevel = 0;
+	public videoUser: IAgoraRTCRemoteUser | null = null;
+	public audioChatUser: IAgoraRTCRemoteUser | null = null;
+	public videoTrack: IRemoteVideoTrack | null = null;
+	public desktopAudioTrack: IRemoteAudioTrack | null = null;
+	public micAudioTrack: IRemoteAudioTrack | null = null;
 
-	constructor(public readonly agoraUser: IAgoraRTCRemoteUser) {
-		this.userId = agoraUser.uid as number;
+	private playerElement: HTMLDivElement | null = null;
+
+	constructor(public readonly userId: number) {}
+
+	public async startVideoPlayback(rtc: FiresideRTC, element: HTMLDivElement) {
+		if (!this.videoUser) {
+			return;
+		}
+
+		try {
+			const [videoTrack, desktopAudioTrack] = await Promise.all([
+				rtc.videoClient.subscribe(this.videoUser, 'video'),
+				rtc.videoClient.subscribe(this.videoUser, 'audio'),
+			]);
+
+			this.videoTrack = videoTrack;
+			this.playerElement = element;
+			this.videoTrack.play(element);
+			this.desktopAudioTrack = desktopAudioTrack;
+			this.desktopAudioTrack.play();
+		} catch (e) {
+			console.error('Failed to start video playback, attempting to gracefully stop.');
+			console.error(e);
+
+			this.stopVideoPlayback(rtc);
+			throw e;
+		}
 	}
 
-	get videoTrack() {
-		return this.tracks.find((i) => i.type === 'video');
+	public async stopVideoPlayback(rtc: FiresideRTC) {
+		if (!this.videoUser) {
+			return;
+		}
+
+		if (this.videoTrack) {
+			try {
+				this.videoTrack.stop();
+			} catch (e) {
+				console.warn('Failed to stop video track playback');
+				console.warn(e);
+			}
+		}
+
+		if (this.playerElement) {
+			this.playerElement.innerHTML = '';
+			this.playerElement = null;
+		}
+
+		if (this.desktopAudioTrack) {
+			try {
+				this.desktopAudioTrack.stop();
+			} catch (e) {
+				console.warn('Failed to stop desktop audio track playback');
+				console.warn(e);
+			}
+		}
+
+		this.videoTrack = null;
+		this.desktopAudioTrack = null;
+
+		// Don't care if these fail, best effort.
+		try {
+			rtc.videoClient.unsubscribe(this.videoUser, 'video');
+		} catch (e) {
+			console.error(e);
+		}
+
+		try {
+			rtc.videoClient.unsubscribe(this.videoUser, 'audio');
+		} catch (e) {
+			console.error(e);
+		}
 	}
 
-	get audioTrack() {
-		return this.tracks.find((i) => i.type === 'audio');
+	public async startAudioPlayback(rtc: FiresideRTC) {
+		if (!this.audioChatUser) {
+			return;
+		}
+
+		try {
+			this.micAudioTrack = await rtc.videoClient.subscribe(this.audioChatUser, 'audio');
+			this.micAudioTrack.play();
+		} catch (e) {
+			console.error('Failed to start video playback, attempting to gracefully stop.');
+			console.error(e);
+
+			this.stopAudioPlayback(rtc);
+			throw e;
+		}
 	}
-}
 
-export async function subscribeTrack(
-	rtc: FiresideRTC,
-	user: FiresideRTCUser,
-	mediaType: 'video' | 'audio'
-) {
-	const track = await rtc.agoraClient.subscribe(user.agoraUser, mediaType);
-	user.tracks.push(new FiresideRTCTrack(mediaType, track));
-}
+	public stopAudioPlayback(rtc: FiresideRTC) {
+		if (!this.audioChatUser) {
+			return;
+		}
 
-export async function unsubscribeTrack(
-	rtc: FiresideRTC,
-	user: FiresideRTCUser,
-	mediaType: 'video' | 'audio'
-) {
-	await rtc.agoraClient.unsubscribe(user.agoraUser, mediaType);
-	arrayRemove(user.tracks, (i) => i.type === mediaType);
-}
+		if (this.micAudioTrack) {
+			try {
+				this.micAudioTrack.stop();
+			} catch (e) {
+				console.warn('Failed to stop mic audio track playback');
+				console.warn(e);
+			}
+		}
 
-export class FiresideRTCTrack {
-	constructor(
-		public readonly type: 'audio' | 'video',
-		public readonly agoraTrack: IRemoteTrack
-	) {}
+		this.micAudioTrack = null;
+
+		// Don't care if these fail, best effort.
+		try {
+			rtc.audioClient.unsubscribe(this.audioChatUser, 'audio');
+		} catch (e) {
+			console.error(e);
+		}
+	}
 }

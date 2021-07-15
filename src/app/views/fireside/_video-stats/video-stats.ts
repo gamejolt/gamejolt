@@ -25,7 +25,7 @@ export default class AppFiresideVideoStats extends Vue {
 
 	mounted() {
 		this.statsInterval = setInterval(() => {
-			this.videoStats = this.rtc.agoraClient.getRemoteVideoStats();
+			this.videoStats = this.rtc.videoClient.getRemoteVideoStats();
 		}, 3000);
 	}
 
