@@ -206,7 +206,7 @@ export function trackGotoCommunity(params: {
 	_trackEvent('goto_community', params);
 }
 
-export type PostOpenSource = 'communityChunk';
+export type PostOpenSource = 'communityChunk' | 'postRecommendation';
 
 export function trackPostOpen(params: { source: PostOpenSource }) {
 	_trackEvent('post_open', params);

@@ -12,7 +12,7 @@
 			:thin="shouldScroll"
 		>
 			<div class="-posts">
-				<template v-if="!usablePosts">
+				<template v-if="!usablePosts.length">
 					<template v-for="i of 4">
 						<div :key="i" class="-post">
 							<app-post-card-placeholder />
@@ -31,7 +31,11 @@
 				<template v-else>
 					<template v-for="(recommendedPost, i) of usablePosts">
 						<div :key="recommendedPost.id" class="-post">
-							<app-post-card :post="recommendedPost" with-user />
+							<app-post-card
+								:post="recommendedPost"
+								with-user
+								post-open-source="postRecommendation"
+							/>
 						</div>
 
 						<div

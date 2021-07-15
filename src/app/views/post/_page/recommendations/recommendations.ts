@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
@@ -16,7 +15,8 @@ import AppPostCard from '../../../../components/fireside/post/card/card.vue';
 	},
 })
 export default class AppPostPageRecommendations extends Vue {
-	@Prop(propRequired(Array)) posts!: FiresidePost[];
+	@Prop({ type: Array, required: true })
+	posts!: FiresidePost[];
 
 	get shouldScroll() {
 		return Screen.isXs;

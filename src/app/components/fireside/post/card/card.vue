@@ -45,7 +45,12 @@
 					</template>
 
 					<template v-else>
-						<app-fade-collapse class="-inner-message" :collapse-height="leadHeight">
+						<app-fade-collapse
+							class="-inner-message"
+							:collapse-height="leadHeight"
+							ignore-threshold
+							size="sm"
+						>
 							<app-content-viewer :source="post.lead_content" />
 						</app-fade-collapse>
 					</template>
