@@ -1,5 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
+import { Clipboard } from '../../../../../../../../../_common/clipboard/clipboard-service';
 import { date } from '../../../../../../../../../_common/filters/date';
 import { GameDataStoreItem } from '../../../../../../../../../_common/game/data-store/item/item.model';
 import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
@@ -55,5 +56,9 @@ export default class RouteDashGamesManageApiDataStorageItemsView extends BaseRou
 
 		await this.item.$remove();
 		this.$router.push({ name: 'dash.games.manage.api.data-storage.items.list' });
+	}
+
+	copyKey() {
+		Clipboard.copy(this.item.key)
 	}
 }
