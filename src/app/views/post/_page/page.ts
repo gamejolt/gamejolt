@@ -45,11 +45,13 @@ import AppFiresidePostEmbed from '../../../components/fireside/post/embed/embed.
 import AppGameBadge from '../../../components/game/badge/badge.vue';
 import AppGameListItem from '../../../components/game/list/item/item.vue';
 import { AppCommentWidgetLazy } from '../../../components/lazy';
+import AppPageContainer from '../../../components/page-container/page-container.vue';
 import AppPollVoting from '../../../components/poll/voting/voting.vue';
 import AppPostPageRecommendations from './recommendations/recommendations.vue';
 
 @Component({
 	components: {
+		AppPageContainer,
 		AppTimeAgo,
 		AppImgResponsive,
 		AppVideo,

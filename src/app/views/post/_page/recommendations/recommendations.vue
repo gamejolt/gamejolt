@@ -25,18 +25,11 @@
 @import '~styles-lib/mixins'
 
 .post-page-recommendations
-	max-width: 250px
-	margin-left: 50px
+	@media $media-lg-up
+		margin-left: 50px
 
 	.-posts
-		margin-left: -8px
-		margin-right: -8px
-
-	.-post
-		float: left
-		// width: 50%
-		width: 100%
-		padding-bottom: $line-height-computed
-		padding-left: 8px
-		padding-right: 8px
+		display: grid
+		grid-template-columns: repeat(auto-fill, minmax(max(50%, 120px), 1fr))
+		grid-gap: 16px
 </style>
