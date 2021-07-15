@@ -242,7 +242,7 @@ export default class RouteFireside extends BaseRouteComponent {
 			this.tryJoin();
 
 			// TODO: Gotta clear out previous RTC on reconnection.
-			this.rtc ??= new FiresideRTC($payload.streamingAppId, $payload.videoChannelName, $payload.videoToken, $payload.audioChatChannelName, $payload.audioChatToken);
+			this.rtc ??= new FiresideRTC(this.fireside, $payload.streamingAppId, $payload.videoChannelName, $payload.videoToken, $payload.audioChatChannelName, $payload.audioChatToken);
 		} else {
 			this.status = 'expired';
 			console.debug(`[FIRESIDE] Fireside is expired, and cannot be joined.`);

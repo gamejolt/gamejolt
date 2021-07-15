@@ -1,4 +1,6 @@
 import AgoraRTC, { IAgoraRTCRemoteUser, IRemoteAudioTrack, IRemoteVideoTrack, UID } from 'agora-rtc-sdk-ng';
+import { Api } from '../../../_common/api/api.service';
+import { Fireside } from '../../../_common/fireside/fireside.model';
 
 export const FiresideRTCKey = Symbol('fireside-rtc');
 
@@ -8,8 +10,10 @@ export class FiresideRTC {
 	uid: null | UID = null;
 	users: FiresideRTCUser[] = [];
 	focusedUser: FiresideRTCUser | null = null;
+	renewTokenInterval: NodeJS.Timer | null = null;
 
 	constructor(
+		private fireside: Fireside,
 		private appId: string,
 		private videoChannel: string,
 		private videoToken: string | null,
@@ -18,9 +22,14 @@ export class FiresideRTC {
 	) {
 		this.setupEvents();
 		this.join();
+		this.renewTokenInterval = setInterval(() => this.renewToken(), 60);
 	}
 
 	public async destroy() {
+		if (this.renewTokenInterval) {
+			clearInterval(this.renewTokenInterval);
+		}
+
 		await Promise.all([
 			this.videoClient?.leave(),
 			this.audioClient?.leave(),
@@ -111,6 +120,26 @@ export class FiresideRTC {
 		// 		}
 		// 	}
 		// });
+	}
+
+	private async renewToken() {
+		console.log('Renewing audience tokens');
+		const response: {videoToken: string | null, audioChatToken: string | null} = await Api.sendRequest('/web/fireside/fetch-audience-tokens/' + this.fireside.hash);
+
+		this.videoToken = response.videoToken;
+		this.audioChatToken = response.audioChatToken;
+
+		if (!this.videoToken || !this.audioChatToken) {
+			console.log('Could not get tokens');
+			this.destroy();
+			return;
+		}
+
+		console.log('Got new audience tokens. Applying...');
+		await Promise.all([
+			this.videoClient.renewToken(this.videoToken),
+			this.audioClient.renewToken(this.audioChatToken),
+		]);
 	}
 
 	private findOrAddUser(remoteUser: IAgoraRTCRemoteUser): FiresideRTCUser | null
