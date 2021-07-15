@@ -2,18 +2,21 @@
 
 <template>
 	<div class="post-page-recommendations">
-		<h3>
-			<translate>Recommended</translate>
-		</h3>
-		<template v-if="posts">
-			<app-post-card
-				v-for="recommendedPost of posts"
-				:key="recommendedPost.id"
-				:post="recommendedPost"
-				with-user
-				flat
-			/>
-		</template>
+		<h4 class="section-header">
+			<translate>Next up</translate>
+		</h4>
+		<div class="-posts">
+			<template v-if="!posts">
+				<div v-for="i of 4" :key="i" class="-post">
+					<app-post-card-placeholder />
+				</div>
+			</template>
+			<template v-else>
+				<div v-for="recommendedPost of posts" :key="recommendedPost.id" class="-post">
+					<app-post-card :post="recommendedPost" with-user />
+				</div>
+			</template>
+		</div>
 	</div>
 </template>
 
@@ -22,18 +25,18 @@
 @import '~styles-lib/mixins'
 
 .post-page-recommendations
-	max-width: 300px
-	margin-left: 20px
-	margin-right: 20px
+	max-width: 250px
+	margin-left: 50px
 
-	& > div
-		display: inline-block
+	.-posts
+		margin-left: -8px
+		margin-right: -8px
+
+	.-post
+		float: left
+		// width: 50%
 		width: 100%
-		max-width: 130px
-		margin-left: 10px
-		margin-right: 10px
-		margin-bottom: 20px
-
-		@media $media-md-down
-			max-width: 100px
+		padding-bottom: $line-height-computed
+		padding-left: 8px
+		padding-right: 8px
 </style>

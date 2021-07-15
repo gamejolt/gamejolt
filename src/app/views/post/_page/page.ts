@@ -3,7 +3,6 @@ import { Component, Emit, Prop, ProvideReactive, Watch } from 'vue-property-deco
 import { RawLocation } from 'vue-router';
 import { arrayRemove } from '../../../../utils/array';
 import { propOptional, propRequired } from '../../../../utils/vue';
-import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import { CommunityUserNotification } from '../../../../_common/community/user-notification/user-notification.model';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
@@ -58,7 +57,6 @@ import AppPostPageRecommendations from './recommendations/recommendations.vue';
 		AppEventItemControls,
 		AppStickerControlsOverlay,
 		AppPollVoting,
-		AppAdWidget,
 		AppCommunityPill,
 		AppContentViewer,
 		AppUserCardHover,

@@ -196,6 +196,7 @@
 					</app-sticker-controls-overlay>
 
 					<app-event-item-controls
+						:key="post.id"
 						:post="post"
 						should-show-follow
 						event-label="page"

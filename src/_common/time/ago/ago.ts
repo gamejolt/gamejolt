@@ -5,16 +5,16 @@ import { date } from '../../filters/date';
 
 @Component({})
 export class AppTimeAgo extends Vue {
-	@Prop([Number, Date])
+	@Prop({ type: [Number, Date], required: true })
 	date!: number | Date;
 
-	@Prop(Boolean)
+	@Prop({ type: Boolean, required: false })
 	withoutSuffix?: boolean;
 
-	@Prop(Boolean)
+	@Prop({ type: Boolean, required: false })
 	strict?: boolean;
 
-	@Prop(Boolean)
+	@Prop({ type: Boolean, required: false })
 	isFuture?: boolean;
 
 	private timeout?: number;

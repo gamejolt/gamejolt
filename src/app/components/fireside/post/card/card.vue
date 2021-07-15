@@ -44,11 +44,14 @@
 						<div class="-inner-gradient" />
 					</template>
 
-					<app-content-viewer v-else class="-inner-message" :source="post.lead_content" />
+					<template v-else>
+						<app-fade-collapse class="-inner-message" :collapse-height="leadHeight">
+							<app-content-viewer :source="post.lead_content" />
+						</app-fade-collapse>
+					</template>
 
 					<router-link
 						class="-link"
-						tag="div"
 						:to="post.routeLocation"
 						@click.native="trackPostOpen()"
 					/>
@@ -95,22 +98,6 @@
 $-base-width = 200px
 $-padding = 8px
 
-.post-card
-	rounded-corners-lg()
-	overflow: hidden
-	position: relative
-	background-color: var(--theme-bg)
-	aspect-ratio: $-aspect-ratio
-	// Safari needs this to actually clip our inner content to the border-radius we have assigned.
-	transform: translateZ(0)
-	cursor: pointer
-
-	&:hover
-		elevate-2()
-
-		.-link
-			border-color: var(--theme-link)
-
 .-inner
 	&
 	&-media
@@ -138,7 +125,9 @@ $-padding = 8px
 		top: $-padding
 		right: $-padding
 		bottom: $-padding
-		font-size: 30
+
+		>>> .fireside-post-lead-content
+			font-size: ceil($font-size-base * 1.1)
 
 .-light
 	&
