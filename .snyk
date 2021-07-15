@@ -1,0 +1,22 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.19.0
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  SNYK-JS-LODASH-567746:
+    - client-voodoo > winston > async > lodash:
+        patched: '2021-07-15T13:06:08.239Z'
+    - snyk > snyk-nodejs-lockfile-parser > @yarnpkg/core > lodash:
+        patched: '2021-07-15T13:10:17.027Z'
+    - snyk > snyk-docker-plugin > snyk-nodejs-lockfile-parser > @yarnpkg/core > lodash:
+        patched: '2021-07-15T13:10:17.027Z'
+  'npm:extend:20180424':
+    - glob-stream > extend:
+        patched: '2021-07-15T14:11:51.548Z'
+    - gulp > vinyl-fs > glob-stream > extend:
+        patched: '2021-07-15T14:11:51.548Z'
+    - extend:
+        patched: '2021-07-15T14:11:51.548Z'
+  'npm:hoek:20180212':
+    - boom > hoek:
+        patched: '2021-07-15T14:11:51.548Z'

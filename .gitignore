@@ -7,3 +7,5 @@
 .cache
 yarn-error.log
 /gulp/tasks/client/vendor/tmp-gamejolt.iss
+/yarn.lock
+/package-lock.json
