@@ -28,6 +28,11 @@ export class FiresideRTC {
 	}
 
 	private async join() {
+		if (!this.videoToken || !this.audioChatToken) {
+			console.log('Audience tokens not provided yet. Not attempting to join');
+			return;
+		}
+
 		try {
 			// We set ourselves up as an audience member with the "low latency"
 			// level, instead of the ultra low latency which is used for hosts.
@@ -37,7 +42,7 @@ export class FiresideRTC {
 					.then(() => this.videoClient.join(this.appId, this.videoChannel, this.videoToken, null)),
 				this.audioClient
 					.setClientRole('audience', { level: 1 })
-					.then(() => this.audioClient.join(this.appId, this.audioChatChannel, this.audioChatToken)),
+					.then(() => this.audioClient.join(this.appId, this.audioChatChannel, this.audioChatToken, null)),
 			]);
 
 			// this.videoClient.enableAudioVolumeIndicator();
@@ -59,11 +64,12 @@ export class FiresideRTC {
 
 			// Focusing video user if this is the first video stream we're subscribed to.
 			if (mediaType === 'video') {
+				user.hasVideo = true;
 				this.focusedUser ??= user;
 			}
 		});
 
-		this.videoClient.on('user-unpublished', async (remoteUser) => {
+		this.videoClient.on('user-unpublished', async (remoteUser, mediaType) => {
 			console.log('got user unpublished');
 
 			const user = this.users.find((i) => i.userId === remoteUser.uid);
@@ -72,8 +78,12 @@ export class FiresideRTC {
 				return;
 			}
 
-			// TODO: Unfocus if they were focused for video.
-			await user.stopVideoPlayback(this);
+			if (mediaType === 'video') {
+				user.hasVideo = false;
+				// TODO: Unfocus if they were focused for video.
+			}
+
+			// await user.stopVideoPlayback(this);
 		});
 
 		this.audioClient.on('user-published', async (remoteUser, mediaType) => {
@@ -122,6 +132,7 @@ export class FiresideRTC {
 export class FiresideRTCUser {
 	public videoUser: IAgoraRTCRemoteUser | null = null;
 	public audioChatUser: IAgoraRTCRemoteUser | null = null;
+	public hasVideo = false;
 	public videoTrack: IRemoteVideoTrack | null = null;
 	public desktopAudioTrack: IRemoteAudioTrack | null = null;
 	public micAudioTrack: IRemoteAudioTrack | null = null;
@@ -206,7 +217,7 @@ export class FiresideRTCUser {
 		}
 
 		try {
-			this.micAudioTrack = await rtc.videoClient.subscribe(this.audioChatUser, 'audio');
+			this.micAudioTrack = await rtc.audioClient.subscribe(this.audioChatUser, 'audio');
 			this.micAudioTrack.play();
 		} catch (e) {
 			console.error('Failed to start video playback, attempting to gracefully stop.');

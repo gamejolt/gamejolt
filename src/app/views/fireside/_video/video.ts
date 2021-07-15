@@ -2,11 +2,7 @@ import Vue from 'vue';
 import { Component, InjectReactive, Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../utils/vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import {
-	FiresideRTC,
-	FiresideRTCKey,
-	FiresideRTCUser
-} from '../fireside-rtc';
+import { FiresideRTC, FiresideRTCKey, FiresideRTCUser } from '../fireside-rtc';
 import AppFiresideHostList from '../_host-list/host-list.vue';
 
 const UIHideTimeout = 2000;
@@ -45,22 +41,11 @@ export default class AppFiresideVideo extends Vue {
 	}
 
 	mounted() {
-		this.sub();
-	}
-
-	private sub() {
 		this.rtcUser.startVideoPlayback(this.rtc, this.$refs.player);
-
-		// await subscribeTrack(this.rtc, this.rtcUser, 'video');
-		// this.rtcUser.videoTrack?.agoraTrack.play(this.$refs.player);
 	}
 
 	beforeDestroy() {
 		this.rtcUser.stopVideoPlayback(this.rtc);
-
-		// this.rtcUser.videoUser?.videoTrack?.stop();
-		// this.$refs.player.innerHTML = '';
-		// unsubscribeTrack(this.rtc, this.rtcUser, 'video');
 	}
 
 	onMouseOut() {

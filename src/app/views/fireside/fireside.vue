@@ -83,7 +83,7 @@
 								v-if="
 									rtc &&
 									rtc.focusedUser &&
-									rtc.focusedUser.videoTrack &&
+									rtc.focusedUser.hasVideo &&
 									rtc.videoClient.connectionState === 'CONNECTED'
 								"
 							>
