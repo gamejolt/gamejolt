@@ -71,20 +71,6 @@
 	<body class="<%= _bodyClass %>" id="root">
 		<div id="app"></div>
 
-		<% if (_analytics) { %>
-		<script
-			async
-			src="https://www.googletagmanager.com/gtag/js?id=<%= !_isClient ? `G-FJMPYMGHM7` : `G-CXLRR656PN` %>"
-		></script>
-		<script>
-			window.dataLayer = window.dataLayer || [];
-			function gtag() {
-				dataLayer.push(arguments);
-			}
-			gtag('js', new Date());
-		</script>
-		<% } %>
-
 		<!-- Scripts -->
 		<%= _scripts %>
 	</body>

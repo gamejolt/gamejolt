@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
+import { trackGotoCommunity } from '../../analytics/analytics.service';
 import { Environment } from '../../environment/environment.service';
 import { number } from '../../filters/number';
 import { AppState, AppStore } from '../../store/app-store';
@@ -25,6 +26,7 @@ export default class AppCommunityCardBase extends Vue {
 	@Prop(propOptional(Boolean, false)) overflow!: boolean;
 	@Prop(propOptional(Boolean, false)) elevate!: boolean;
 	@Prop(propOptional(Boolean, true)) allowEdit!: boolean;
+	@Prop(propOptional(Boolean, false)) trackGoto!: boolean;
 
 	@AppState user!: AppStore['user'];
 
@@ -47,5 +49,15 @@ export default class AppCommunityCardBase extends Vue {
 
 	get shouldShowModTools() {
 		return this.user && this.user.isMod;
+	}
+
+	trackGotoCommunity() {
+		if (this.trackGoto) {
+			trackGotoCommunity({
+				source: 'communityCard',
+				id: this.community.id,
+				path: this.community.path,
+			});
+		}
 	}
 }

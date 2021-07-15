@@ -6,6 +6,7 @@ import { Api } from '../../../_common/api/api.service';
 import AppAuthJoin from '../../../_common/auth/join/join.vue';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Fireside } from '../../../_common/fireside/fireside.model';
+import { FiresideRole } from '../../../_common/fireside/role/role.model';
 import { Growls } from '../../../_common/growls/growls.service';
 import AppIllustration from '../../../_common/illustration/illustration.vue';
 import AppLoading from '../../../_common/loading/loading.vue';
@@ -409,6 +410,18 @@ export default class RouteFireside extends BaseRouteComponent {
 			console.debug(`[FIRESIDE] Fireside is expired, and cannot be joined.`);
 			this.status = 'expired';
 			return;
+		}
+
+		// --- Make them join the Fireside (if they aren't already).
+
+		if (!this.fireside.role) {
+			const rolePayload = await Api.sendRequest(`/web/fireside/join/${this.fireside.hash}`);
+			if (!rolePayload || !rolePayload.success || !rolePayload.role) {
+				console.debug(`[FIRESIDE] Failed to acquire a role.`);
+				this.status = 'setup-failed';
+				return;
+			}
+			this.fireside.role = new FiresideRole(rolePayload.role);
 		}
 
 		// --- Join Grid channel.

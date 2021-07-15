@@ -1,14 +1,15 @@
+import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
+import { State } from 'vuex-class';
+import { propOptional, propRequired } from '../../../../utils/vue';
 import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
+import { number } from '../../../../_common/filters/number';
 import { Game } from '../../../../_common/game/game.model';
 import { PollItem } from '../../../../_common/poll/item/item.model';
 import { Poll } from '../../../../_common/poll/poll.model';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
 import { User } from '../../../../_common/user/user.model';
-import { number } from '../../../../_common/filters/number';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Store } from '../../../store';
 
 @Component({
@@ -21,17 +22,10 @@ import { Store } from '../../../store';
 	},
 })
 export default class AppPollVoting extends Vue {
-	@State
-	app!: Store['app'];
-
-	@Prop(Poll)
-	poll!: Poll;
-
-	@Prop(Game)
-	game?: Game;
-
-	@Prop(User)
-	user?: User;
+	@State app!: Store['app'];
+	@Prop(propRequired(Poll)) poll!: Poll;
+	@Prop(propOptional(Game)) game?: Game;
+	@Prop(propOptional(User)) user?: User;
 
 	chosenItemId: number | null = null;
 	isProcessing = false;
@@ -41,12 +35,20 @@ export default class AppPollVoting extends Vue {
 
 	readonly number = number;
 
+	get shouldObscureResults() {
+		return this.poll.is_private && !this.isOwner;
+	}
+
+	get isOwner() {
+		return this.user && this.app.user && this.user.id === this.app.user.id;
+	}
+
 	get showResults() {
 		return (
 			(!this.isVotable && this.areResultsReady) ||
 			this.votedId !== null ||
 			(this.game && this.game.hasPerms()) ||
-			(this.user && this.app.user && this.user.id === this.app.user.id)
+			this.isOwner
 		);
 	}
 

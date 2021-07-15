@@ -60,5 +60,6 @@
 	"stylusSupremacy.alwaysUseNot": false,
 	"eslint.validate": ["javascript", "typescript", "vue"],
 	// eslint will do the template validation instead.
-	"vetur.validation.template": false
+	"vetur.validation.template": false,
+	"vetur.validation.templateProps": true
 }

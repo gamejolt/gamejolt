@@ -1,9 +1,10 @@
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Prop, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../../utils/vue';
+import { PostOpenSource, trackPostOpen } from '../../../../../_common/analytics/analytics.service';
+import { ContentFocus } from '../../../../../_common/content-focus/content-focus.service';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
-import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import { fuzzynumber } from '../../../../../_common/filters/fuzzynumber';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
@@ -23,10 +24,11 @@ import {
 	VideoPlayerControllerContext,
 } from '../../../../../_common/video/player/controller';
 import AppVideo from '../../../../../_common/video/video.vue';
-import { ActivityFeedItem } from '../../../activity/feed/item-service';
 
 const _kOverlayNoticeColor = '#f11a5c';
-const _InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height * 0.2}px` });
+const _InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height}px` });
+
+export const AppPostCardAspectRatio = 10 / 16;
 
 @Component({
 	components: {
@@ -45,7 +47,8 @@ const _InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height * 0.2}px
 	},
 })
 export default class AppPostCard extends Vue {
-	@Prop(propRequired(ActivityFeedItem)) item!: ActivityFeedItem;
+	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
+	@Prop(propOptional(String, null)) postOpenSource!: PostOpenSource | null;
 	@Prop(propOptional(String, null)) videoContext!: VideoPlayerControllerContext;
 	@Prop(propOptional(Boolean, false)) withUser!: boolean;
 
@@ -57,7 +60,8 @@ export default class AppPostCard extends Vue {
 	readonly fuzzynumber = fuzzynumber;
 	readonly InviewConfig = _InviewConfig;
 
-	aspectRatio = 10 / 16;
+	readonly aspectRatio = AppPostCardAspectRatio;
+
 	videoController: VideoPlayerController | null = null;
 
 	isImageThinner = false;
@@ -73,26 +77,53 @@ export default class AppPostCard extends Vue {
 	isBootstrapped = GJ_IS_SSR;
 	isHydrated = GJ_IS_SSR;
 
-	mounted() {
-		if (this.post?.hasVideo && this.post.videos[0].postCardVideo) {
-			this.videoController = new VideoPlayerController(
-				this.post.videos[0].postCardVideo,
-				this.videoContext
-			);
-			this.videoController.volume = 0;
-		} else if (this.mediaItem?.is_animated) {
-			const sourcesPayload = {
-				mp4: this.mediaItem.mediaserver_url_mp4,
-				webm: this.mediaItem.mediaserver_url_webm,
-			};
+	get shouldPlayVideo() {
+		return this.isHydrated && ContentFocus.hasFocus;
+	}
 
-			this.videoController = getVideoPlayerFromSources(sourcesPayload, 'gif');
+	get mediaItem() {
+		if (this.post?.hasMedia) {
+			return this.post.media[0];
+		} else if (this.post?.hasVideo) {
+			return this.post.videos[0].posterMediaItem;
+		}
+	}
+
+	get video() {
+		if (!this.post?.hasVideo) {
+			return;
 		}
 
+		return this.post?.videos[0].media.find(i => i.type == MediaItem.TYPE_TRANSCODED_VIDEO_CARD);
+	}
+
+	get pollIconColor() {
+		const poll = this.post?.poll;
+		for (let i = 0; i < (poll?.items.length ?? 0); i++) {
+			if (poll?.items[i].is_voted) {
+				return _kOverlayNoticeColor;
+			}
+		}
+	}
+
+	get heartIconColor() {
+		if (this.post?.user_like) {
+			return _kOverlayNoticeColor;
+		}
+	}
+
+	get userLink() {
+		return Environment.wttfBaseUrl + this.post?.user.url;
+	}
+
+	mounted() {
 		this.calcData();
 	}
 
-	calcData() {
+	async calcData() {
+		// Safari browsers don't always get the right initial dimensions if we don't do this.
+		await this.$nextTick();
+
 		const cardWidth = this.$el.offsetWidth;
 		const cardHeight = this.$el.offsetHeight ?? cardWidth / this.aspectRatio;
 		const cardRatio = cardWidth / cardHeight;
@@ -160,47 +191,33 @@ export default class AppPostCard extends Vue {
 		this.isHydrated = false;
 	}
 
-	get post() {
-		if (
-			this.item.feedItem instanceof EventItem &&
-			this.item.feedItem.type === EventItem.TYPE_POST_ADD
-		) {
-			return this.item.feedItem.action as FiresidePost;
-		}
-	}
-
-	get mediaItem() {
-		if (this.post?.hasMedia) {
-			return this.post.media[0];
-		} else if (this.post?.hasVideo) {
-			return this.post.videos[0].posterMediaItem;
-		}
-	}
-
-	get video() {
-		if (!this.post?.hasVideo) {
+	@Watch('shouldPlayVideo')
+	setupVideoController() {
+		if (this.videoController) {
 			return;
 		}
 
-		return this.post?.videos[0].media.find(i => i.type == MediaItem.TYPE_TRANSCODED_VIDEO_CARD);
-	}
+		if (this.post?.hasVideo && this.post.videos[0].postCardVideo) {
+			this.videoController = new VideoPlayerController(
+				this.post.videos[0].postCardVideo,
+				this.videoContext
+			);
 
-	get pollIconColor() {
-		const poll = this.post?.poll;
-		for (let i = 0; i < (poll?.items.length ?? 0); i++) {
-			if (poll?.items[i].is_voted) {
-				return _kOverlayNoticeColor;
-			}
+			this.videoController.volume = 0;
+			this.videoController.muted = true;
+		} else if (this.mediaItem?.is_animated) {
+			const sourcesPayload = {
+				mp4: this.mediaItem.mediaserver_url_mp4,
+				webm: this.mediaItem.mediaserver_url_webm,
+			};
+
+			this.videoController = getVideoPlayerFromSources(sourcesPayload, 'gif');
 		}
 	}
 
-	get heartIconColor() {
-		if (this.post?.user_like) {
-			return _kOverlayNoticeColor;
+	trackPostOpen() {
+		if (this.postOpenSource) {
+			trackPostOpen({ source: this.postOpenSource });
 		}
-	}
-
-	get userLink() {
-		return Environment.wttfBaseUrl + this.post?.user.url;
 	}
 }

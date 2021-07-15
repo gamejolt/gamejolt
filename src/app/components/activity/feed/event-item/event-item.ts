@@ -227,7 +227,9 @@ export default class AppActivityFeedEventItem extends Vue {
 	}
 
 	get shouldShowDate() {
-		return this.feed.shouldShowDates;
+		// We always show in SSR because this is how crawlers find the link to
+		// click into the post.
+		return GJ_IS_SSR || this.feed.shouldShowDates;
 	}
 
 	get isBlocked() {

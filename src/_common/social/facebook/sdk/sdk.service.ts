@@ -1,12 +1,17 @@
-import { Analytics } from '../../../analytics/analytics.service';
+import {
+	Analytics,
+	SOCIAL_ACTION_LIKE,
+	SOCIAL_ACTION_SEND,
+	SOCIAL_NETWORK_FB,
+} from '../../../analytics/analytics.service';
 
 function setupEvents() {
 	(window as any).FB.Event.subscribe('edge.create', (url: string) => {
-		Analytics.trackSocial(Analytics.SOCIAL_NETWORK_FB, Analytics.SOCIAL_ACTION_LIKE, url);
+		Analytics.trackSocial(SOCIAL_NETWORK_FB, SOCIAL_ACTION_LIKE, url);
 	});
 
 	(window as any).FB.Event.subscribe('message.send', (url: string) => {
-		Analytics.trackSocial(Analytics.SOCIAL_NETWORK_FB, Analytics.SOCIAL_ACTION_SEND, url);
+		Analytics.trackSocial(SOCIAL_NETWORK_FB, SOCIAL_ACTION_SEND, url);
 	});
 }
 
@@ -23,9 +28,9 @@ export class FacebookSdk {
 			elem.id = 'fb-root';
 			document.body.appendChild(elem);
 
-			let bootstrapLib = (d: any, s: any, id: any) => {
-				let js: any,
-					fjs = d.getElementsByTagName(s)[0];
+			const bootstrapLib = (d: any, s: any, id: any) => {
+				const fjs = d.getElementsByTagName(s)[0];
+				let js: any;
 				if (!d.getElementById(id)) {
 					js = d.createElement(s);
 					js.id = id;
