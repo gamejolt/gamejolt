@@ -26,7 +26,9 @@ export class FiresideRTC {
 	}
 
 	public async destroy() {
+		console.log('fireside-rtc -> destroy');
 		if (this.renewTokenInterval) {
+			console.log('fireside-rtc -> clear token interval');
 			clearInterval(this.renewTokenInterval);
 		}
 
@@ -37,6 +39,7 @@ export class FiresideRTC {
 	}
 
 	private async join() {
+		console.log('fireside-rtc -> join');
 		if (!this.videoToken || !this.audioChatToken) {
 			console.log('Audience tokens not provided yet. Not attempting to join');
 			return;
@@ -61,6 +64,7 @@ export class FiresideRTC {
 	}
 
 	private setupEvents() {
+		console.log('fireside-rtc -> setup events');
 		this.videoClient.on('user-published', async (remoteUser, mediaType) => {
 			console.log('got user published (video channel)');
 
@@ -74,7 +78,7 @@ export class FiresideRTC {
 			// Focusing video user if this is the first video stream we're subscribed to.
 			if (mediaType === 'video') {
 				user.hasVideo = true;
-				this.focusedUser ??= user;
+				// this.focusedUser ??= user;
 			}
 		});
 
@@ -123,7 +127,13 @@ export class FiresideRTC {
 	}
 
 	private async renewToken() {
+		console.log('fireside-rtc -> renewToken');
 		console.log('Renewing audience tokens');
+
+		if (!this.videoToken || !this.audioChatToken) {
+			return;
+		}
+
 		const response: {videoToken: string | null, audioChatToken: string | null} = await Api.sendRequest('/web/fireside/fetch-audience-tokens/' + this.fireside.hash);
 
 		this.videoToken = response.videoToken;
@@ -171,9 +181,13 @@ export class FiresideRTCUser {
 	constructor(public readonly userId: number) {}
 
 	public async startVideoPlayback(rtc: FiresideRTC, element: HTMLDivElement) {
+		console.log('fireside-rtc -> start video playback');
 		if (!this.videoUser) {
+			console.log('no video user, nothing to do');
 			return;
 		}
+
+		console.log('found video user, starting video playback');
 
 		try {
 			const [videoTrack, desktopAudioTrack] = await Promise.all([
@@ -196,9 +210,14 @@ export class FiresideRTCUser {
 	}
 
 	public async stopVideoPlayback(rtc: FiresideRTC) {
+		console.log('fireside-rtc -> destroy');
+
 		if (!this.videoUser) {
+			console.log('no video user, nothing to do');
 			return;
 		}
+
+		console.log('found video user, stopping video playback');
 
 		if (this.videoTrack) {
 			try {
