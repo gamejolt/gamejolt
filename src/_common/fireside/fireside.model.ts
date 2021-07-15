@@ -18,8 +18,6 @@ export class Fireside extends Model {
 	 */
 	is_expired!: boolean;
 	is_streaming!: boolean;
-	stream_video_channel_name!: string;
-	stream_audio_chat_channel_name!: string;
 	member_count!: number;
 	user_block?: UserBlock | null;
 	role: FiresideRole | null = null;
