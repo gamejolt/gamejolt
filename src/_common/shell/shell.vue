@@ -2,7 +2,7 @@
 
 <template>
 	<app-scroll-inview-parent>
-		<div v-if="!isLoaded" class="-shell-loader">
+		<div v-if="!isLoaded" key="shell-loader" class="-shell-loader">
 			<app-loading stationary hide-label />
 		</div>
 		<slot v-else />
