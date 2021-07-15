@@ -22,7 +22,7 @@ export class FiresideRTC {
 	) {
 		this.setupEvents();
 		this.join();
-		this.renewTokenInterval = setInterval(() => this.renewToken(), 60);
+		this.renewTokenInterval = setInterval(() => this.renewToken(), 60_000);
 	}
 
 	public async destroy() {
