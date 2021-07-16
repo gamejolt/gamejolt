@@ -175,7 +175,7 @@
     "client-voodoo": "2.5.3",
     "fs-extra": "7.0.0",
     "snyk": "^1.661.0",
-    "write-file-atomic": "2.3.0",
+    "write-file-atomic": "2.4.3",
     "yarn": "^1.22.10"
   },
   "main": "chrome-extension://game-jolt-client/index.html#/",
