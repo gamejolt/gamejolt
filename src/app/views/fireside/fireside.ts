@@ -23,7 +23,7 @@ import {
 	ChatClient,
 	ChatKey,
 	joinInstancedRoomChannel,
-	leaveChatRoom
+	leaveChatRoom,
 } from '../../components/chat/client';
 import { ChatRoomChannel } from '../../components/chat/room-channel';
 import AppChatWindowOutput from '../../components/chat/window/output/output.vue';
@@ -33,6 +33,7 @@ import { store, Store } from '../../store';
 import { FiresideRTC, FiresideRTCKey } from './fireside-rtc';
 import AppFiresideChatMembers from './_chat-members/chat-members.vue';
 import { FiresideChatMembersModal } from './_chat-members/modal/modal.service';
+import AppFiresideDesktopAudio from './_desktop_audio/desktop-audio.vue';
 import { FiresideEditModal } from './_edit-modal/edit-modal.service';
 import AppFiresideHostAvatar from './_host-avatar/host-avatar.vue';
 import AppFiresideHostList from './_host-list/host-list.vue';
@@ -82,6 +83,7 @@ const FiresideThemeKey = 'fireside';
 		AppFiresideHostAvatar,
 		AppScrollScroller,
 		AppFiresideHostList,
+		AppFiresideDesktopAudio,
 	},
 	directives: {
 		AppTooltip,
@@ -111,11 +113,11 @@ export default class RouteFireside extends BaseRouteComponent {
 	readonly Screen = Screen;
 
 	videoWidth = 0;
-	videoHeight= 0;
+	videoHeight = 0;
 
 	$refs!: {
 		videoWrapper: HTMLDivElement;
-	}
+	};
 
 	get routeTitle() {
 		if (!this.fireside) {
@@ -152,23 +154,42 @@ export default class RouteFireside extends BaseRouteComponent {
 		return this.chat.roomMembers[this.chatRoom.id];
 	}
 
-	get shouldShowVideo() {
+	get isStreaming() {
 		return this.fireside instanceof Fireside && this.fireside.is_streaming;
 	}
 
+	get shouldPlayVideo() {
+		return (
+			this.rtc &&
+			this.rtc.focusedUser &&
+			this.rtc.focusedUser.hasVideo &&
+			this.rtc.videoClient &&
+			this.rtc.videoClient.connectionState === 'CONNECTED'
+		);
+	}
+
+	get shouldPlayDesktopAudio() {
+		return (
+			this.rtc &&
+			this.rtc.focusedUser &&
+			this.rtc.focusedUser.hasDesktopAudio &&
+			this.rtc.videoClient &&
+			this.rtc.videoClient.connectionState === 'CONNECTED'
+		);
+	}
+
 	get shouldShowChat() {
-		const mobileCondition =
-			Screen.isMobile && !this.isVertical  ? false : true;
+		const mobileCondition = Screen.isMobile && !this.isVertical ? false : true;
 
 		return !!this.chat && this.chat.connected && !!this.chatRoom && mobileCondition;
 	}
 
 	get shouldShowChatMembers() {
-		return !this.shouldShowVideo && this.shouldShowChat && Screen.isLg;
+		return !this.isStreaming && this.shouldShowChat && Screen.isLg;
 	}
 
 	get shouldShowHosts() {
-		return !this.isVertical &&  !this.isSmall;
+		return !this.isVertical && !this.isSmall;
 	}
 
 	get isVertical() {
@@ -180,7 +201,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	get shouldShowFiresideStats() {
-		return !this.shouldShowVideo && this.status === 'joined' && !this.isSmall;
+		return !this.isStreaming && this.status === 'joined' && !this.isSmall;
 	}
 
 	get shouldShowEditControlButton() {
@@ -242,7 +263,14 @@ export default class RouteFireside extends BaseRouteComponent {
 			this.tryJoin();
 
 			// TODO: Gotta clear out previous RTC on reconnection.
-			this.rtc ??= new FiresideRTC(this.fireside, $payload.streamingAppId, $payload.videoChannelName, $payload.videoToken, $payload.audioChatChannelName, $payload.audioChatToken);
+			this.rtc ??= new FiresideRTC(
+				this.fireside,
+				$payload.streamingAppId,
+				$payload.videoChannelName,
+				$payload.videoToken,
+				$payload.audioChatChannelName,
+				$payload.audioChatToken
+			);
 		} else {
 			this.status = 'expired';
 			console.debug(`[FIRESIDE] Fireside is expired, and cannot be joined.`);
@@ -295,10 +323,10 @@ export default class RouteFireside extends BaseRouteComponent {
 		const receiveRatio = receiveWidth / receiveHeight;
 
 		// If the video is wider than the containing element...
-		if ( receiveRatio > wrapperRatio ) {
+		if (receiveRatio > wrapperRatio) {
 			this.videoWidth = wrapperWidth;
 			this.videoHeight = wrapperWidth / receiveRatio;
-		} else if (receiveRatio < wrapperRatio ) {
+		} else if (receiveRatio < wrapperRatio) {
 			this.videoHeight = wrapperHeight;
 			this.videoWidth = wrapperHeight * receiveRatio;
 		} else {

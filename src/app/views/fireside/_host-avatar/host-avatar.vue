@@ -3,7 +3,11 @@
 <template>
 	<div class="-wrapper">
 		<!-- <div class="-wrapper" :class="{ '-talking': host.volumeLevel > 1 }"> -->
-		<div class="-avatar" :class="{ '-active': rtc.focusedUser === host }" @click="onClick">
+		<div
+			class="-avatar"
+			:class="{ '-active': rtc.focusedUserId === host.userId }"
+			@click="onClick"
+		>
 			{{ host.userId.toString().substr(0, 3) }}
 		</div>
 	</div>
