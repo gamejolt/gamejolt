@@ -2,7 +2,7 @@ import AgoraRTC, {
 	IAgoraRTCClient,
 	IAgoraRTCRemoteUser,
 	IRemoteAudioTrack,
-	IRemoteVideoTrack
+	IRemoteVideoTrack,
 } from 'agora-rtc-sdk-ng';
 import { sleep } from '../../../utils/utils';
 import { Api } from '../../../_common/api/api.service';
@@ -149,6 +149,7 @@ export class FiresideRTC {
 			// Focusing video user if this is the first video stream we're subscribed to.
 			if (mediaType === 'video') {
 				user.hasVideo = true;
+				this.focusedUserId ??= user.userId;
 			} else {
 				user.hasDesktopAudio = true;
 			}
@@ -286,7 +287,10 @@ export class FiresideRTC {
 				return null;
 			}
 
-			user = new FiresideRTCUser(remoteUser.uid, this.hosts.find(host => host.id == remoteUser.uid));
+			user = new FiresideRTCUser(
+				remoteUser.uid,
+				this.hosts.find(host => host.id == remoteUser.uid)
+			);
 			this.users.push(user);
 		}
 		return user;
