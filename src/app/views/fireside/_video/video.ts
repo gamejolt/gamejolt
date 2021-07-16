@@ -21,6 +21,7 @@ export default class AppFiresideVideo extends Vue {
 	isHoveringControls = false;
 	private isHovered = false;
 	private _hideUITimer?: NodeJS.Timer;
+	private _myRtcUser!: FiresideRTCUser;
 
 	readonly Screen = Screen;
 
@@ -40,12 +41,17 @@ export default class AppFiresideVideo extends Vue {
 		return this.showHosts;
 	}
 
+	created() {
+		// 10x hack to keep the reference around for when the component gets destroyed.
+		this._myRtcUser = this.rtcUser;
+	}
+
 	mounted() {
 		this.rtcUser.startVideoPlayback(this.rtc, this.$refs.player);
 	}
 
 	beforeDestroy() {
-		this.rtcUser.stopVideoPlayback(this.rtc);
+		this._myRtcUser.stopVideoPlayback(this.rtc);
 	}
 
 	onMouseOut() {

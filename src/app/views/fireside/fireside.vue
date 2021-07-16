@@ -65,7 +65,7 @@
 				<app-fireside-stats :fireside="fireside" :status="status" />
 			</div>
 
-			<div v-if="shouldShowVideo" class="-video-wrapper" :class="{ '-vertical': isVertical }">
+			<div v-if="isStreaming" class="-video-wrapper" :class="{ '-vertical': isVertical }">
 				<div class="-video-padding">
 					<div
 						ref="videoWrapper"
@@ -79,22 +79,21 @@
 								height: videoHeight + 'px',
 							}"
 						>
-							<template
-								v-if="
-									rtc &&
-									rtc.focusedUser &&
-									rtc.focusedUser.hasVideo &&
-									rtc.videoClient.connectionState === 'CONNECTED'
-								"
-							>
+							<template v-if="shouldPlayVideo">
 								<!-- <app-fireside-video-stats
 									:key="'stats-' + rtc.focusedUser.userId"
 								/> -->
-								<app-fireside-video
-									:key="'video-' + rtc.focusedUser.userId"
-									:rtc-user="rtc.focusedUser"
-									:show-hosts="!shouldShowHosts"
-								/>
+
+								<!-- purely for type checking -->
+								<template v-if="rtc && rtc.focusedUser">
+									<app-fireside-video
+										:key="'video-' + rtc.focusedUser.userId"
+										:rtc-user="rtc.focusedUser"
+										:show-hosts="!shouldShowHosts"
+									/>
+								</template>
+
+								<app-fireside-desktop-audio v-if="shouldPlayDesktopAudio" />
 							</template>
 							<template v-else>
 								<app-loading centered stationary no-color hide-label />
@@ -220,7 +219,7 @@
 				v-else-if="shouldShowChat"
 				key="chat"
 				class="-chat"
-				:class="{ '-trailing': shouldShowVideo }"
+				:class="{ '-trailing': isStreaming }"
 			>
 				<template v-if="status === 'joined'">
 					<div class="-chat-window">
