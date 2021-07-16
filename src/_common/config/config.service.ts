@@ -88,7 +88,7 @@ export const configDiscoverCommunityChunks = new ConfigOptionBoolean(
 	false
 );
 
-export const configRecommendedPosts = new ConfigOptionBoolean('recommended_posts ', false);
+export const configRecommendedPosts = new ConfigOptionBoolean('recommended_posts', false);
 
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());
