@@ -17,6 +17,7 @@ export class Fireside extends Model {
 	 * Makes sure that user's possibly incorrect local time does not interfere.
 	 */
 	is_expired!: boolean;
+	is_streaming!: boolean;
 	member_count!: number;
 	user_block?: UserBlock | null;
 	role: FiresideRole | null = null;
