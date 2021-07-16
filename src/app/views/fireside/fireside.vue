@@ -91,9 +91,13 @@
 										:rtc-user="rtc.focusedUser"
 										:show-hosts="!shouldShowHosts"
 									/>
-								</template>
 
-								<app-fireside-desktop-audio v-if="shouldPlayDesktopAudio" />
+									<app-fireside-desktop-audio
+										v-if="shouldPlayDesktopAudio"
+										:key="'desktop-audio' + rtc.focusedUser.userId"
+										:rtc-user="rtc.focusedUser"
+									/>
+								</template>
 							</template>
 							<template v-else>
 								<app-loading centered stationary no-color hide-label />
