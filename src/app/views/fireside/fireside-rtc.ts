@@ -2,11 +2,12 @@ import AgoraRTC, {
 	IAgoraRTCClient,
 	IAgoraRTCRemoteUser,
 	IRemoteAudioTrack,
-	IRemoteVideoTrack,
+	IRemoteVideoTrack
 } from 'agora-rtc-sdk-ng';
 import { sleep } from '../../../utils/utils';
 import { Api } from '../../../_common/api/api.service';
 import { Fireside } from '../../../_common/fireside/fireside.model';
+import { User } from '../../../_common/user/user.model';
 
 export const FiresideRTCKey = Symbol('fireside-rtc');
 
@@ -26,7 +27,8 @@ export class FiresideRTC {
 		private videoChannel: string,
 		private videoToken: string | null,
 		private audioChatChannel: string,
-		private audioChatToken: string | null
+		private audioChatToken: string | null,
+		private hosts: User[]
 	) {
 		this.setup();
 	}
@@ -264,7 +266,7 @@ export class FiresideRTC {
 				return null;
 			}
 
-			user = new FiresideRTCUser(remoteUser.uid);
+			user = new FiresideRTCUser(remoteUser.uid, this.hosts.find(host => host.id == remoteUser.uid));
 			this.users.push(user);
 		}
 		return user;
@@ -282,7 +284,7 @@ export class FiresideRTCUser {
 
 	private playerElement: HTMLDivElement | null = null;
 
-	constructor(public readonly userId: number) {}
+	constructor(public readonly userId: number, public readonly userModel: User | undefined) {}
 
 	public async startVideoPlayback(rtc: FiresideRTC, element: HTMLDivElement) {
 		if (!this.videoUser || !rtc.videoClient) {

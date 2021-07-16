@@ -19,11 +19,12 @@ import AppScrollScroller from '../../../_common/scroll/scroller/scroller.vue';
 import { AppState, AppStore } from '../../../_common/store/app-store';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../_common/user/user-avatar/img/img.vue';
+import { User } from '../../../_common/user/user.model';
 import {
 	ChatClient,
 	ChatKey,
 	joinInstancedRoomChannel,
-	leaveChatRoom,
+	leaveChatRoom
 } from '../../components/chat/client';
 import { ChatRoomChannel } from '../../components/chat/room-channel';
 import AppChatWindowOutput from '../../components/chat/window/output/output.vue';
@@ -49,6 +50,7 @@ type RoutePayload = {
 	videoToken: string | null;
 	audioChatChannelName: string;
 	audioChatToken: string | null;
+	hosts: any[];
 	metaDescription: string;
 	fb: any;
 	twitter: any;
@@ -269,7 +271,8 @@ export default class RouteFireside extends BaseRouteComponent {
 				$payload.videoChannelName,
 				$payload.videoToken,
 				$payload.audioChatChannelName,
-				$payload.audioChatToken
+				$payload.audioChatToken,
+				User.populate($payload.hosts ?? [])
 			);
 		} else {
 			this.status = 'expired';

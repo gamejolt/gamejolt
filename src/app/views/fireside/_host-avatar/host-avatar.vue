@@ -8,7 +8,12 @@
 			:class="{ '-active': rtc.focusedUserId === host.userId }"
 			@click="onClick"
 		>
-			{{ host.userId.toString().substr(0, 3) }}
+			<template v-if="host.userModel">
+				<app-user-avatar-img :user="host.userModel" />
+			</template>
+			<template v-else>
+				{{ host.userId.toString().substr(0, 3) }}
+			</template>
 		</div>
 	</div>
 </template>
@@ -40,6 +45,7 @@
 
 	&.-active
 		cursor: default
+		border: 3px solid var(--theme-highlight)
 		background-color: var(--theme-highlight)
 		color: var(--theme-highlight-fg)
 </style>
