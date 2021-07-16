@@ -12,7 +12,7 @@ export default class AppFiresideHostAvatar extends Vue {
 	@Emit('change-host') emitChangeHost() {}
 
 	onClick() {
-		this.rtc.focusedUser = this.host;
+		this.rtc.focusedUserId = this.host.userId;
 		this.emitChangeHost();
 	}
 }
