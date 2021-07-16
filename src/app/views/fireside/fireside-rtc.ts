@@ -45,6 +45,8 @@ export class FiresideRTC {
 	}
 
 	private async setup() {
+		console.log('FiresideRTC -> setup');
+
 		this.generation++;
 		const currentGen = this.generation;
 
@@ -56,9 +58,11 @@ export class FiresideRTC {
 				await this.join();
 				break;
 			} catch (e) {
+				console.error('Failed to join');
 				console.error(e);
 				await sleep(2000);
 				this.assertNotOutdated(currentGen);
+				console.log('Retrying...');
 			}
 		}
 
@@ -69,7 +73,10 @@ export class FiresideRTC {
 	}
 
 	public async destroy() {
-		if (!this.videoClient || !this.audioClient) {
+		console.log('FiresideRTC -> destroy');
+
+		if (!this.videoClient && !this.audioClient) {
+			console.log('Nothing to destroy, video and audio client are unset');
 			return;
 		}
 
@@ -78,15 +85,18 @@ export class FiresideRTC {
 		}
 
 		try {
-			await Promise.all([this.videoClient.leave(), this.audioClient.leave()]);
+			await Promise.all([
+				this.videoClient ? this.videoClient.leave() : Promise.resolve(),
+				this.audioClient ? this.audioClient.leave() : Promise.resolve(),
+			]);
 		} catch (e) {
 			// reload the page, anything we do now is no longer reliable.
 			location.reload();
 			return;
 		}
 
-		this.videoClient.removeAllListeners();
-		this.audioClient.removeAllListeners();
+		this.videoClient?.removeAllListeners();
+		this.audioClient?.removeAllListeners();
 
 		// Unsetting the video and audio clients before stopping playback
 		// makes the teardown for rtcuser.stop*playback() functions faster and more reliable
@@ -107,21 +117,26 @@ export class FiresideRTC {
 	}
 
 	public async recreate() {
+		console.log('FiresideRTC -> recreate');
 		await this.destroy();
 		return this.setup();
 	}
 
 	private createClients() {
+		console.log('FiresideRTC -> createClients');
 		this.videoClient = AgoraRTC.createClient({ mode: 'live', codec: 'vp8' });
 		this.audioClient = AgoraRTC.createClient({ mode: 'live', codec: 'vp8' });
 	}
 
 	private setupEvents() {
+		console.log('FiresideRTC -> setupEvents');
+		const currentGeneration = this.generation;
 		if (!this.videoClient || !this.audioClient) {
 			throw new Error('Video or audio clients are not defined');
 		}
 
 		this.videoClient.on('user-published', async (remoteUser, mediaType) => {
+			this.assertNotOutdated(currentGeneration);
 			console.log('got user published (video channel)');
 
 			const user = this.findOrAddUser(remoteUser);
@@ -140,6 +155,7 @@ export class FiresideRTC {
 		});
 
 		this.videoClient.on('user-unpublished', async (remoteUser, mediaType) => {
+			this.assertNotOutdated(currentGeneration);
 			console.log('got user unpublished');
 
 			const user = this.users.find(i => i.userId === remoteUser.uid);
@@ -156,6 +172,7 @@ export class FiresideRTC {
 		});
 
 		this.audioClient.on('user-published', async (remoteUser, mediaType) => {
+			this.assertNotOutdated(currentGeneration);
 			console.log('got user published (audio chat channel)');
 
 			if (mediaType !== 'audio') {
@@ -183,6 +200,7 @@ export class FiresideRTC {
 	}
 
 	private async join() {
+		console.log('FiresideRTC -> join');
 		const currentGeneration = this.generation;
 
 		if (!this.videoClient || !this.audioClient) {
@@ -219,6 +237,8 @@ export class FiresideRTC {
 	}
 
 	private async renewToken() {
+		console.log('FiresideRTC -> renewToken');
+
 		if (!this.videoClient || !this.audioClient) {
 			throw new Error('Video or audio clients are not defined');
 		}
@@ -287,9 +307,12 @@ export class FiresideRTCUser {
 	constructor(public readonly userId: number, public readonly userModel: User | undefined) {}
 
 	public async startVideoPlayback(rtc: FiresideRTC, element: HTMLDivElement) {
+		console.log(`FiresideRTCUser(${this.userId}) -> startVideoPlayback`);
 		if (!this.videoUser || !rtc.videoClient) {
 			return;
 		}
+
+		console.log('found video user, starting video playback');
 
 		try {
 			this.videoTrack = await rtc.videoClient.subscribe(this.videoUser, 'video');
@@ -305,11 +328,15 @@ export class FiresideRTCUser {
 	}
 
 	public async stopVideoPlayback(rtc: FiresideRTC) {
+		console.log(`FiresideRTCUser(${this.userId}) -> stopVideoPlayback`);
+
 		if (!this.videoUser) {
+			console.log('no video user, nothing to do');
 			return;
 		}
 
 		if (this.videoTrack && this.videoTrack.isPlaying) {
+			console.log('Stopping existing video track');
 			try {
 				this.videoTrack.stop();
 			} catch (e) {
@@ -335,6 +362,7 @@ export class FiresideRTCUser {
 	}
 
 	public async startDesktopAudioPlayback(rtc: FiresideRTC) {
+		console.log(`FiresideRTCUser(${this.userId}) -> startDesktopAudioPlayback`);
 		if (!this.videoUser || !rtc.videoClient) {
 			return;
 		}
@@ -352,11 +380,13 @@ export class FiresideRTCUser {
 	}
 
 	public async stopDesktopAudioPlayback(rtc: FiresideRTC) {
+		console.log(`FiresideRTCUser(${this.userId}) -> stopDesktopAudioPlayback`);
 		if (!this.videoUser) {
 			return;
 		}
 
 		if (this.desktopAudioTrack && this.desktopAudioTrack.isPlaying) {
+			console.log('Stopping existing desktop audio track');
 			try {
 				this.desktopAudioTrack.stop();
 			} catch (e) {
@@ -376,6 +406,7 @@ export class FiresideRTCUser {
 	}
 
 	public async startAudioPlayback(rtc: FiresideRTC) {
+		console.log(`FiresideRTCUser(${this.userId}) -> startAudioPlayback`);
 		if (!this.audioChatUser || !rtc.audioClient) {
 			return;
 		}
@@ -393,11 +424,13 @@ export class FiresideRTCUser {
 	}
 
 	public stopAudioPlayback(rtc: FiresideRTC) {
+		console.log(`FiresideRTCUser(${this.userId}) -> stopAudioPlayback`);
 		if (!this.audioChatUser) {
 			return;
 		}
 
 		if (this.micAudioTrack && this.micAudioTrack.isPlaying) {
+			console.log('Stopping existing audio track');
 			try {
 				this.micAudioTrack.stop();
 			} catch (e) {
