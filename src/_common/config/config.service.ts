@@ -30,6 +30,30 @@ export abstract class ConfigOption<T extends ValueType = any> {
 	}
 
 	/**
+	 * The option is considered excluded depending on if its conditions match.
+	 */
+	get isExcluded() {
+		if (
+			// If join condition was set, we need to make sure the current
+			// config option was set at the time of join or not. Only use the
+			// remote value if it was.
+			this.conditions?.join &&
+			!_getJoinOptions().includes(this.name)
+		) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * If a dev has overridden this locally.
+	 */
+	get isOverridden() {
+		return this.name in _configGetOverrides();
+	}
+
+	/**
 	 * Helper to return the value for this config option in child classes. It
 	 * does all the checks against conditions and what not.
 	 */
@@ -40,13 +64,7 @@ export abstract class ConfigOption<T extends ValueType = any> {
 			return overrides[this.name] as T;
 		}
 
-		if (
-			// If join condition was set, we need to make sure the current
-			// config option was set at the time of join or not. Only use the
-			// remote value if it was.
-			this.conditions?.join &&
-			!_getJoinOptions().includes(this.name)
-		) {
+		if (this.isExcluded) {
 			return this.defaultValue;
 		}
 
@@ -124,12 +142,14 @@ async function _init() {
 
 	await fetchAndActivate(config);
 
-	const activeOptions: Record<string, ValueType> = {};
+	const activeOptions: Record<string, string> = {};
 	for (const option of _options) {
-		activeOptions[option.name] = option.value;
+		activeOptions[option.name] = option.isOverridden
+			? `overridden-${option.value}`
+			: option.isExcluded
+			? 'excluded'
+			: `${option.value}`;
 	}
-
-	console.log('Got config data.', activeOptions);
 	trackExperiments(activeOptions);
 }
 
