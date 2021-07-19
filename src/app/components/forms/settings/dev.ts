@@ -1,8 +1,8 @@
 import { Component } from 'vue-property-decorator';
 import {
-	configGetAll,
 	ConfigOptionBoolean,
 	configSaveOverrides,
+	ConfigService,
 } from '../../../../_common/config/config.service';
 import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
 import { BaseForm, FormOnInit } from '../../../../_common/form-vue/form.service';
@@ -19,7 +19,7 @@ export default class FormSettingsDev extends BaseForm<FormModel> implements Form
 
 	// Currently we only support modifying toggles.
 	get tests(): ConfigOptionBoolean[] {
-		return configGetAll().filter(i => i instanceof ConfigOptionBoolean);
+		return ConfigService.options.filter(i => i instanceof ConfigOptionBoolean);
 	}
 
 	onInit() {

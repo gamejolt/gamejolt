@@ -131,33 +131,41 @@ async function _init() {
 		return;
 	}
 
-	const config = _getFirebaseRemoteConfig();
+	// Getting the remote config DB set up could fail if there's no access to
+	// indexeddb, so we need to handle that.
+	try {
+		const config = _getFirebaseRemoteConfig();
 
-	config.settings = {
-		// We don't want to wait long since this will delay loading of all
-		// content for now.
-		fetchTimeoutMillis: 3_000,
-		// The fallback is the default value (12 hours).
-		minimumFetchIntervalMillis: GJ_BUILD_TYPE === 'development' ? 10 * 60 * 1_000 : 4_320_0000,
-	};
+		config.settings = {
+			// We don't want to wait long since this will delay loading of all
+			// content for now.
+			fetchTimeoutMillis: 3_000,
+			// The fallback is the default value (12 hours).
+			minimumFetchIntervalMillis:
+				GJ_BUILD_TYPE === 'development' ? 10 * 60 * 1_000 : 4_320_0000,
+		};
 
-	// Pull from the defaults that were set up before calling this function.
-	for (const option of ConfigService.options) {
-		config.defaultConfig[option.name] = option.defaultValue;
+		// Pull from the defaults that were set up before calling this function.
+		for (const option of ConfigService.options) {
+			config.defaultConfig[option.name] = option.defaultValue;
+		}
+
+		await fetchAndActivate(config);
+
+		const activeOptions: Record<string, string> = {};
+		for (const option of ConfigService.options) {
+			activeOptions[option.name] = option.isOverridden
+				? `overridden-${option.value}`
+				: option.isExcluded
+				? 'excluded'
+				: `${option.value}`;
+		}
+		trackExperiments(activeOptions);
+	} catch (e) {
+		// Do nothing.
+	} finally {
+		ConfigService.isLoaded = true;
 	}
-
-	await fetchAndActivate(config);
-	ConfigService.isLoaded = true;
-
-	const activeOptions: Record<string, string> = {};
-	for (const option of ConfigService.options) {
-		activeOptions[option.name] = option.isOverridden
-			? `overridden-${option.value}`
-			: option.isExcluded
-			? 'excluded'
-			: `${option.value}`;
-	}
-	trackExperiments(activeOptions);
 }
 
 /**
@@ -182,10 +190,6 @@ function _getJoinOptions() {
 	}
 
 	return (_joinOptions ??= (localStorage.getItem(JOIN_OPTIONS_STORAGE_KEY) ?? '').split('|'));
-}
-
-export function configGetAll() {
-	return ConfigService.options;
 }
 
 type Overrides = Record<string, ValueType>;
