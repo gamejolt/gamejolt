@@ -72,12 +72,14 @@
 			<template v-if="!Screen.isMobile" #right>
 				<app-home-fireside />
 
-				<app-home-recommended-users
-					v-if="shouldShowRecommendedUsers"
-					:users="recommendedUsers"
-					:loading="loadingRecommendedUsers || loadingRecommendedData"
-					@refresh="refreshRecommendedUsers"
-				/>
+				<app-config-loaded>
+					<app-home-recommended-users
+						v-if="shouldShowRecommendedUsers"
+						:users="recommendedUsers"
+						:loading="loadingRecommendedUsers || loadingRecommendedData"
+						@refresh="refreshRecommendedUsers"
+					/>
+				</app-config-loaded>
 
 				<app-scroll-affix>
 					<div class="-ad">

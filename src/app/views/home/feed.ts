@@ -6,6 +6,7 @@ import { fuzzysearch } from '../../../utils/string';
 import AppAdWidget from '../../../_common/ad/widget/widget.vue';
 import { Api } from '../../../_common/api/api.service';
 import { configWhoToFollow } from '../../../_common/config/config.service';
+import { AppConfigLoaded } from '../../../_common/config/loaded';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import AppNavTabList from '../../../_common/nav/tab-list/tab-list.vue';
 import {
@@ -55,6 +56,7 @@ export class RouteActivityFeedController {
 		AppHomeRecommendedUsers,
 		AppNavTabList,
 		AppHomeFireside,
+		AppConfigLoaded,
 		RouteHomeActivity: () => asyncRouteLoader(import('./activity.vue'), router),
 		RouteHomeFyp: () => asyncRouteLoader(import('./fyp.vue'), router),
 	},

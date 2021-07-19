@@ -1,8 +1,13 @@
 import { fetchAndActivate, getRemoteConfig, getValue } from 'firebase/remote-config';
+import Vue from 'vue';
 import { trackExperiments } from '../analytics/analytics.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
 
-const _options: ConfigOption[] = [];
+export const ConfigService = Vue.observable({
+	isLoaded: false,
+	options: [] as ConfigOption[],
+});
+
 const JOIN_OPTIONS_STORAGE_KEY = 'config:join-options';
 const OVERRIDES_STORAGE_KEY = 'config:overrides';
 
@@ -26,7 +31,7 @@ export abstract class ConfigOption<T extends ValueType = any> {
 		public readonly defaultValue: T,
 		public readonly conditions?: Conditions
 	) {
-		_options.push(this);
+		ConfigService.options.push(this);
 	}
 
 	/**
@@ -122,6 +127,7 @@ export function ensureConfig() {
 let _initPromise: Promise<void> | null = null;
 async function _init() {
 	if (GJ_IS_SSR) {
+		ConfigService.isLoaded = true;
 		return;
 	}
 
@@ -136,14 +142,15 @@ async function _init() {
 	};
 
 	// Pull from the defaults that were set up before calling this function.
-	for (const option of _options) {
+	for (const option of ConfigService.options) {
 		config.defaultConfig[option.name] = option.defaultValue;
 	}
 
 	await fetchAndActivate(config);
+	ConfigService.isLoaded = true;
 
 	const activeOptions: Record<string, string> = {};
-	for (const option of _options) {
+	for (const option of ConfigService.options) {
 		activeOptions[option.name] = option.isOverridden
 			? `overridden-${option.value}`
 			: option.isExcluded
@@ -162,7 +169,10 @@ export function configSaveJoinOptions() {
 		return;
 	}
 
-	localStorage.setItem(JOIN_OPTIONS_STORAGE_KEY, _options.map(i => i.name).join('|'));
+	localStorage.setItem(
+		JOIN_OPTIONS_STORAGE_KEY,
+		ConfigService.options.map(i => i.name).join('|')
+	);
 }
 
 let _joinOptions: undefined | string[];
@@ -175,7 +185,7 @@ function _getJoinOptions() {
 }
 
 export function configGetAll() {
-	return _options;
+	return ConfigService.options;
 }
 
 type Overrides = Record<string, ValueType>;
