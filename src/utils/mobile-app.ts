@@ -1,6 +1,6 @@
 import { Route } from 'vue-router';
 
-export type AppPromotionSource = 'footer' | 'top-nav' | 'top-nav-mobile' | 'sidebar' | 'landing';
+export type AppPromotionSource = 'footer' | 'top-nav' | 'top-nav-options' | 'sidebar' | 'landing';
 export type AppPromotionCohort = 'store' | 'community';
 
 export const AppPromotionStoreKey = Symbol();

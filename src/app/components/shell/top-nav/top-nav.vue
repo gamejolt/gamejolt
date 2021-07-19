@@ -45,7 +45,7 @@
 						v-if="unreadActivityCount > 0"
 						class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
 					>
-						{{ unreadActivityCount < 100 ? unreadActivityCount : '99+' }}
+						{{ humanizedActivityCount }}
 					</span>
 				</router-link>
 
@@ -127,10 +127,10 @@
 		</div>
 
 		<div class="navbar-center">
-			<div class="-search">
+			<app-config-loaded class="-search">
 				<!-- Search Input -->
 				<app-search v-if="shouldShowSearch" />
-			</div>
+			</app-config-loaded>
 		</div>
 
 		<!--
