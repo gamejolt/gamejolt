@@ -43,10 +43,11 @@
 		<meta name="msapplication-tap-highlight" content="no" />
 
 		<script>
-			window._gjStartTime = Date.now();
+			performance.mark('gj-start');
 		</script>
 
-		<script type="text/javascript">
+		<script>
+			<%= _perfPolyfill %>
 			if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
 				var msViewportStyle = document.createElement('style');
 				msViewportStyle.appendChild(
