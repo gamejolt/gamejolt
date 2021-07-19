@@ -10,7 +10,6 @@ import './typings/webpack.d.ts';
 
 declare global {
 	interface Window {
-		_gjStartTime: number;
 		grecaptcha: ReCaptchaV2.ReCaptcha;
 		gapi: any;
 		__INITIAL_STATE__?: {
