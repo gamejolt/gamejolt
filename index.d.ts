@@ -8,12 +8,14 @@ import './typings/translate.d.ts';
 import './typings/vue-shims.d.ts';
 import './typings/webpack.d.ts';
 
-interface Window {
-	_gjStartTime: number;
-	grecaptcha: ReCaptchaV2.ReCaptcha;
-	gapi: any;
-	__INITIAL_STATE__?: {
-		vuex: any;
-		components: any;
-	};
+declare global {
+	interface Window {
+		_gjStartTime: number;
+		grecaptcha: ReCaptchaV2.ReCaptcha;
+		gapi: any;
+		__INITIAL_STATE__?: {
+			vuex: any;
+			components: any;
+		};
+	}
 }
