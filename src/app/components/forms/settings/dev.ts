@@ -1,13 +1,15 @@
 import { Component } from 'vue-property-decorator';
 import {
+	ConfigOption,
 	ConfigOptionBoolean,
+	ConfigOptionString,
 	configSaveOverrides,
 	ConfigService,
 } from '../../../../_common/config/config.service';
 import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
 import { BaseForm, FormOnInit } from '../../../../_common/form-vue/form.service';
 
-type FormModel = Record<string, boolean>;
+type FormModel = Record<string, boolean | string>;
 
 @Component({
 	components: {
@@ -17,9 +19,10 @@ type FormModel = Record<string, boolean>;
 export default class FormSettingsDev extends BaseForm<FormModel> implements FormOnInit {
 	warnOnDiscard = false;
 
-	// Currently we only support modifying toggles.
-	get tests(): ConfigOptionBoolean[] {
-		return ConfigService.options.filter(i => i instanceof ConfigOptionBoolean);
+	get tests(): (ConfigOptionBoolean | ConfigOptionString)[] {
+		return ConfigService.options.filter(
+			i => i instanceof ConfigOptionBoolean || i instanceof ConfigOptionString
+		);
 	}
 
 	onInit() {
@@ -30,5 +33,20 @@ export default class FormSettingsDev extends BaseForm<FormModel> implements Form
 
 	onChange() {
 		configSaveOverrides(this.formModel);
+	}
+
+	isBool(option: ConfigOption) {
+		return option instanceof ConfigOptionBoolean;
+	}
+
+	isString(option: ConfigOption) {
+		return option instanceof ConfigOptionString;
+	}
+
+	stringValues(option: ConfigOption): string[] {
+		if (option instanceof ConfigOptionString) {
+			return option.validValues;
+		}
+		return [];
 	}
 }

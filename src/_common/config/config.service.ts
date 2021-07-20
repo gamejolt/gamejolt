@@ -26,11 +26,14 @@ interface Conditions {
 }
 
 export abstract class ConfigOption<T extends ValueType = any> {
+	public readonly conditions?: Conditions;
+
 	constructor(
 		public readonly name: string,
 		public readonly defaultValue: T,
-		public readonly conditions?: Conditions
+		{ conditions }: { conditions?: Conditions } = {}
 	) {
+		this.conditions = conditions;
 		ConfigService.options.push(this);
 	}
 
@@ -89,12 +92,42 @@ export class ConfigOptionBoolean extends ConfigOption<boolean> {
 	}
 }
 
+export class ConfigOptionString<T extends string = string> extends ConfigOption<T> {
+	public readonly validValues: T[];
+
+	constructor(
+		name: string,
+		defaultValue: T,
+		{ validValues, conditions }: { validValues: T[]; conditions?: Conditions }
+	) {
+		super(name, defaultValue, { conditions: conditions });
+		this.validValues = validValues;
+	}
+
+	get value() {
+		if (GJ_IS_SSR) {
+			return this.defaultValue;
+		}
+
+		return this._getValue(() => {
+			const value = getValue(_getFirebaseRemoteConfig(), this.name).asString() as T;
+
+			// If we don't know the value that we got from remote, we need to fallback to default.
+			if (!this.validValues.includes(value)) {
+				return this.defaultValue;
+			}
+
+			return value;
+		});
+	}
+}
+
 export const configHasAutocomplete = new ConfigOptionBoolean('has_search_autocomplete', true, {
-	join: true,
+	conditions: { join: true },
 });
 
 export const configWhoToFollow = new ConfigOptionBoolean('who_to_follow', true, {
-	join: true,
+	conditions: { join: true },
 });
 
 export const configDiscoverCommunityChunks = new ConfigOptionBoolean(
@@ -103,6 +136,15 @@ export const configDiscoverCommunityChunks = new ConfigOptionBoolean(
 );
 
 export const configRecommendedPosts = new ConfigOptionBoolean('recommended_posts', false);
+
+export const configHomeNav = new ConfigOptionString('home_nav', 'default', {
+	validValues: ['default', 'simple'],
+	conditions: { join: true },
+});
+
+export const configFYPDefault = new ConfigOptionBoolean('fyp_default', false, {
+	conditions: { join: true },
+});
 
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());
