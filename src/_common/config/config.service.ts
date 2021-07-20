@@ -89,23 +89,14 @@ export class ConfigOptionBoolean extends ConfigOption<boolean> {
 	}
 }
 
-/**
- * Whether or not the search autocomplete should show when typing.
- */
 export const configHasAutocomplete = new ConfigOptionBoolean('has_search_autocomplete', true, {
 	join: true,
 });
 
-/**
- * Whether or not to show who to follow on the feed.
- */
 export const configWhoToFollow = new ConfigOptionBoolean('who_to_follow', true, {
 	join: true,
 });
 
-/**
- * Will show chunks of posts on discover page for certain communities.
- */
 export const configDiscoverCommunityChunks = new ConfigOptionBoolean(
 	'discover_community_chunks',
 	false
@@ -151,16 +142,7 @@ async function _init() {
 		}
 
 		await fetchAndActivate(config);
-
-		const activeOptions: Record<string, string> = {};
-		for (const option of ConfigService.options) {
-			activeOptions[option.name] = option.isOverridden
-				? `overridden-${option.value}`
-				: option.isExcluded
-				? 'excluded'
-				: `${option.value}`;
-		}
-		trackExperiments(activeOptions);
+		trackExperiments(ConfigService.options);
 	} catch (e) {
 		// Do nothing.
 	} finally {

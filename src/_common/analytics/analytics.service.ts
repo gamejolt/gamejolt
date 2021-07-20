@@ -6,8 +6,10 @@ import {
 	setUserId,
 } from 'firebase/analytics';
 import VueRouter from 'vue-router';
+import { arrayRemove } from '../../utils/array';
 import { AppPromotionSource } from '../../utils/mobile-app';
 import { AuthMethod } from '../auth/auth.service';
+import { ConfigOption } from '../config/config.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
 import { WithAppStore } from '../store/app-store';
 import { EventBus } from '../system/event/event-bus.service';
@@ -19,6 +21,12 @@ export const SOCIAL_ACTION_LIKE = 'like';
 export const SOCIAL_ACTION_SEND = 'send';
 export const SOCIAL_ACTION_TWEET = 'tweet';
 export const SOCIAL_ACTION_FOLLOW = 'follow';
+
+/**
+ * How long we wait (in ms) before we track another experiment engagement for
+ * the same config option.
+ */
+const EXP_ENGAGEMENT_EXPIRY = 5 * 60 * 1_000;
 
 let _store: WithAppStore;
 let _pageViewRecorded = false;
@@ -159,18 +167,66 @@ function _trackEvent(name: string, eventParams: Record<string, string | number |
 	console.log(`Track event.`, name, eventParams);
 }
 
+const _expEngagements: { time: number; configOption: ConfigOption }[] = [];
+
+function _getExperimentKey(option: ConfigOption) {
+	// Limits:
+	// https://support.google.com/analytics/answer/9267744?hl=en
+	return 'exp_' + option.name.substr(0, 35);
+}
+
+function _getExperimentValue(option: ConfigOption) {
+	const value = option.isOverridden
+		? `overridden-${option.value}`
+		: option.isExcluded
+		? 'excluded'
+		: `${option.value}`;
+
+	// Limits:
+	// https://support.google.com/analytics/answer/9267744?hl=en
+	return value.substr(0, 95);
+}
+
 /**
  * Track their remote config data as the experiments so that we can segment and
  * target based on what they saw.
  */
-export function trackExperiments(configData: Record<string, string>) {
+export function trackExperiments(configOptions: ConfigOption[]) {
+	const activeOptions: Record<string, string> = {};
+	for (const option of configOptions) {
+		activeOptions[_getExperimentKey(option)] = _getExperimentValue(option);
+	}
+
 	// Limits:
 	// https://support.google.com/analytics/answer/9267744?hl=en
-	const sanitizedEntries = Object.entries(configData)
-		.map(([key, value]) => ['exp_' + key.substr(0, 35), value.substr(0, 95)])
-		.slice(0, 20);
+	const slicedEntries = Object.entries(activeOptions).slice(0, 20);
 
-	_trackEvent('gj_experiments', Object.fromEntries(sanitizedEntries));
+	_trackEvent('experiments', Object.fromEntries(slicedEntries));
+}
+
+/**
+ * Used to track anytime they see an actual experiment or engage with it in any
+ * way. This allows us to know when they actually saw an experiment vs just
+ * knowing that they MIGHT see an experiment.
+ *
+ * We rate limit this so that it doesn't trigger too much.
+ */
+export function trackExperimentEngagement(option: ConfigOption) {
+	// If we already tracked an experiment engagement for this config option
+	// within the expiry time, we want to ignore.
+	const prevEngagement = _expEngagements.find(
+		i => i.configOption === option && i.time > Date.now() - EXP_ENGAGEMENT_EXPIRY
+	);
+	if (prevEngagement) {
+		return;
+	}
+
+	_trackEvent('experiment_engagement', {
+		[_getExperimentKey(option)]: _getExperimentValue(option),
+	});
+
+	arrayRemove(_expEngagements, i => i.configOption === option);
+	_expEngagements.push({ configOption: option, time: Date.now() });
 }
 
 export function trackLogin(method: AuthMethod) {

@@ -2,6 +2,7 @@ import Vue from 'vue';
 import { Component, Emit, Prop, ProvideReactive, Watch } from 'vue-property-decorator';
 import { RawLocation } from 'vue-router';
 import { arrayRemove } from '../../../../utils/array';
+import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import { CommunityUserNotification } from '../../../../_common/community/user-notification/user-notification.model';
@@ -169,6 +170,8 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 	}
 
 	async fetchRecommendedPosts() {
+		trackExperimentEngagement(configRecommendedPosts);
+
 		if (!this.hasPostRecommendations) {
 			return;
 		}
