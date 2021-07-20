@@ -1,7 +1,9 @@
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
+import { configDiscoverCommunityChunks } from '../../../../_common/config/config.service';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
@@ -38,6 +40,8 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	}
 
 	routeResolved($payload: any) {
+		trackExperimentEngagement(configDiscoverCommunityChunks);
+
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb;
 		Meta.twitter = $payload.twitter;

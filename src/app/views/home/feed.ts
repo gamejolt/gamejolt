@@ -4,6 +4,7 @@ import { router } from '..';
 import { numberSort } from '../../../utils/array';
 import { fuzzysearch } from '../../../utils/string';
 import AppAdWidget from '../../../_common/ad/widget/widget.vue';
+import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
 import { configWhoToFollow } from '../../../_common/config/config.service';
 import { AppConfigLoaded } from '../../../_common/config/loaded';
@@ -137,6 +138,8 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	}
 
 	routeResolved(payload: any, _fromCache: boolean) {
+		trackExperimentEngagement(configWhoToFollow);
+
 		this.games = (payload.ownerGames as DashGame[])
 			.map(i => new DashGame(i.id, i.title, i.ownerName, i.createdOn))
 			.sort((a, b) => numberSort(a.createdOn, b.createdOn))
