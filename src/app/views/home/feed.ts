@@ -6,7 +6,11 @@ import { fuzzysearch } from '../../../utils/string';
 import AppAdWidget from '../../../_common/ad/widget/widget.vue';
 import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
-import { configWhoToFollow } from '../../../_common/config/config.service';
+import {
+	configFYPDefault,
+	configHomeNav,
+	configWhoToFollow,
+} from '../../../_common/config/config.service';
 import { AppConfigLoaded } from '../../../_common/config/loaded';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import AppNavTabList from '../../../_common/nav/tab-list/tab-list.vue';
@@ -28,6 +32,8 @@ import AppCommunitySlider from '../../components/community/slider/slider.vue';
 import AppPageContainer from '../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../components/post/add-button/add-button.vue';
 import { Store } from '../../store';
+import { LibraryModule, LibraryStore } from '../../store/library';
+import { HomeFeedService, HOME_FEED_ACTIVITY, HOME_FEED_FYP } from './home-feed.service';
 import AppHomeFireside from './_fireside/fireside.vue';
 import AppHomeRecommendedUsers from './_recommended/users/users.vue';
 
@@ -73,6 +79,8 @@ export class RouteActivityFeedController {
 export default class RouteActivityFeed extends BaseRouteComponent {
 	@AppState user!: AppStore['user'];
 	@State communities!: Store['communities'];
+	@State unreadActivityCount!: Store['unreadActivityCount'];
+	@LibraryModule.State developerCollection!: LibraryStore['developerCollection'];
 
 	games: DashGame[] = [];
 	gameFilterQuery = '';
@@ -82,9 +90,14 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	recommendedUsers: User[] = [];
 
 	readonly Screen = Screen;
+	readonly HomeFeedService = HomeFeedService;
 
 	@Provide('route-activity-feed')
 	controller = new RouteActivityFeedController();
+
+	get hasSimpleHome() {
+		return Screen.isLg && configHomeNav.value === 'simple';
+	}
 
 	get hasGamesSection() {
 		return this.games.length > 0 && Screen.isLg;
@@ -114,8 +127,24 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 		);
 	}
 
-	get feedTab(): 'activity' | 'fyp' {
-		return this.$route.params?.tab === 'fyp' ? 'fyp' : 'activity';
+	get defaultTab() {
+		return HomeFeedService.getDefault();
+	}
+
+	get tabs() {
+		if (HomeFeedService.getDefault() === HOME_FEED_FYP) {
+			return [HOME_FEED_FYP, HOME_FEED_ACTIVITY];
+		}
+
+		return [HOME_FEED_ACTIVITY, HOME_FEED_FYP];
+	}
+
+	get feedTab() {
+		return HomeFeedService.getRouteFeedTab(this.$route);
+	}
+
+	get hasUnreadActivity() {
+		return this.unreadActivityCount > 0;
 	}
 
 	private checkGameFilter(game: DashGame) {
@@ -138,7 +167,15 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	}
 
 	routeResolved(payload: any, _fromCache: boolean) {
-		trackExperimentEngagement(configWhoToFollow);
+		if (!Screen.isMobile) {
+			trackExperimentEngagement(configWhoToFollow);
+		}
+
+		if (Screen.isLg) {
+			trackExperimentEngagement(configHomeNav);
+		}
+
+		trackExperimentEngagement(configFYPDefault);
 
 		this.games = (payload.ownerGames as DashGame[])
 			.map(i => new DashGame(i.id, i.title, i.ownerName, i.createdOn))
