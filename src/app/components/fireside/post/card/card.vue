@@ -77,8 +77,8 @@
 
 						<template v-if="post.hasPoll">
 							<app-jolticon
+								:class="{ '-voted': votedOnPoll }"
 								icon="pedestals-numbers"
-								:style="{ color: pollIconColor }"
 							/>
 						</template>
 
@@ -86,7 +86,7 @@
 							<app-jolticon icon="thumbtack" />
 						</template>
 
-						<app-jolticon icon="heart-filled" :style="{ color: heartIconColor }" />
+						<app-jolticon icon="heart-filled" :class="{ '-liked': likedPost }" />
 						<span class="-details-likes">
 							{{ fuzzynumber(post.like_count) }}
 						</span>
@@ -139,6 +139,10 @@ $-padding = 8px
 	> *
 		color: var(--theme-white) !important
 		text-shadow: black 1px 1px 4px
+
+.-voted
+.-liked
+	color: $gj-overlay-notice !important
 
 .-link
 	rounded-corners-lg()

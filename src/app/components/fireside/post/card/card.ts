@@ -26,7 +26,6 @@ import {
 } from '../../../../../_common/video/player/controller';
 import AppVideo from '../../../../../_common/video/video.vue';
 
-const _kOverlayNoticeColor = '#f11a5c';
 const _InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height}px` });
 
 export const AppPostCardAspectRatio = 10 / 16;
@@ -101,19 +100,21 @@ export default class AppPostCard extends Vue {
 		return this.post?.videos[0].media.find(i => i.type == MediaItem.TYPE_TRANSCODED_VIDEO_CARD);
 	}
 
-	get pollIconColor() {
+	get votedOnPoll() {
 		const poll = this.post?.poll;
 		for (let i = 0; i < (poll?.items.length ?? 0); i++) {
 			if (poll?.items[i].is_voted) {
-				return _kOverlayNoticeColor;
+				return true;
 			}
 		}
+		return false;
 	}
 
-	get heartIconColor() {
+	get likedPost() {
 		if (this.post?.user_like) {
-			return _kOverlayNoticeColor;
+			return true;
 		}
+		return false;
 	}
 
 	get userLink() {
