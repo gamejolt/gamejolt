@@ -172,8 +172,18 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 		}
 	}
 
-	blockFromCommunity(postCommunity: FiresidePostCommunity) {
-		CommunityBlockUserModal.show(this.post.user, postCommunity.community);
+	async blockFromCommunity(postCommunity: FiresidePostCommunity) {
+		const result = await CommunityBlockUserModal.show(this.post.user, postCommunity.community);
+
+		// Pretend to eject the post from the feed.
+		// Because the option "eject post" was selected in the form, all posts by the blocked
+		// author will be ejected automatically in the backend.
+		if (result && result.ejectPosts) {
+			// Remove community from post.
+			arrayRemove(this.post.communities, i => i.id === postCommunity.id);
+			// Eject from feed.
+			this.emitReject(postCommunity.community);
+		}
 	}
 
 	copyShareUrl() {
