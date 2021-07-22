@@ -1,4 +1,5 @@
 import type { Location, Route } from 'vue-router';
+import { assertNever } from '../../utils/utils';
 import { Api } from '../api/api.service';
 import { Collaboratable, Perm } from '../collaborator/collaboratable';
 import { Game } from '../game/game.model';
@@ -169,6 +170,7 @@ export class Community extends Collaboratable(Model) {
 			'community',
 			{
 				file: this.file,
+				allowComplexData: ['crop'],
 			}
 		);
 	}
@@ -255,4 +257,16 @@ export const enum CommunityPresetChannelType {
 
 export function isEditingCommunity(route: Route) {
 	return !!route.name && route.name.startsWith('communities.view.edit.');
+}
+
+export function getCommunityChannelBackground(community: Community, presetType: CommunityPresetChannelType)
+{
+	switch (presetType) {
+		case CommunityPresetChannelType.FEATURED:
+			return community.featured_background;
+		case CommunityPresetChannelType.ALL:
+			return community.all_background;
+		default:
+			assertNever(presetType);
+	}
 }

@@ -9,11 +9,9 @@
 		</div>
 
 		<template #body>
-			<form-community-channel-edit-preset
-				:model="community"
-				:preset-type="presetType"
-				@save="emitEdit"
-				@clear="emitEdit"
+			<app-community-channel-card-edit
+				:background="background"
+				@click="onClickEditBackground"
 			/>
 		</template>
 	</app-card-list-item>

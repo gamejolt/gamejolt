@@ -79,12 +79,19 @@ export class CommunityChannel extends Model {
 		if (this.id) {
 			return this.$_save(
 				'/web/dash/communities/channels/save/' + this.community_id + '/' + this.id,
-				'channel',
-				{ file: this.file }
+				'channel'
 			);
 		}
 
 		return this.$_save('/web/dash/communities/channels/save/' + this.community_id, 'channel');
+	}
+
+	$saveBackground() {
+		return this.$_save(
+			'/web/dash/communities/channels/save-background/' + this.community_id + '/' + this.id,
+			'channel',
+			{ file: this.file, allowComplexData: ['crop'] }
+		);
 	}
 
 	$saveDescription() {

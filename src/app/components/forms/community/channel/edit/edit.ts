@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Emit, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
@@ -9,7 +9,8 @@ import {
 	FormOnSubmitSuccess,
 } from '../../../../../../_common/form-vue/form.service';
 import { AppImgResponsive } from '../../../../../../_common/img/responsive/responsive';
-import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
+import { CommunityChannelBackgroundModal } from '../../../../community/channel/background-modal/background-modal.service';
+import AppCommunityChannelCardEdit from '../../../../community/channel/card/edit/edit.vue';
 import AppFormCommunityChannelPermissions from '../_permissions/permissions.vue';
 
 class FormModel extends CommunityChannel {
@@ -21,6 +22,7 @@ class FormModel extends CommunityChannel {
 		AppImgResponsive,
 		AppFormControlUpload,
 		AppFormCommunityChannelPermissions,
+		AppCommunityChannelCardEdit,
 	},
 })
 export default class FormCommunityChannelEdit extends BaseForm<FormModel>
@@ -33,12 +35,24 @@ export default class FormCommunityChannelEdit extends BaseForm<FormModel>
 
 	modelClass = FormModel;
 
+	@Emit('background-change') emitBackgroundChange(_model: CommunityChannel) {}
+
 	get competitionId() {
 		return this.model!.competition?.id;
 	}
 
 	get loadUrl() {
 		return `/web/dash/communities/channels/save/${this.community.id}/${this.formModel.id}`;
+	}
+
+	get titleAvailabilityUrl() {
+		return `/web/dash/communities/channels/check-field-availability/${this.community.id}/${
+			this.model!.id
+		}`;
+	}
+
+	get shouldShowPermissions() {
+		return this.model && !this.model.is_archived;
 	}
 
 	onLoad(payload: any) {
@@ -50,25 +64,11 @@ export default class FormCommunityChannelEdit extends BaseForm<FormModel>
 	}
 
 	onSubmitSuccess() {
-		this.$emit('save');
+		this.emitBackgroundChange(this.formModel);
 	}
 
-	async clearBackground() {
-		const result = await ModalConfirm.show(
-			this.$gettext(`Do you really want to remove this channel's background image?`)
-		);
-
-		if (!result) {
-			return;
-		}
-
-		// It's important we save on the base model!
-		// This way we don't overwrite the form model with the current values from the server.
-		// They may have made changes and just want to clear the image and then save their form.
-		// Doing it in this order allows them to do that.
-		await this.model!.$clearBackground();
-
-		this.setField('background', this.model!.background);
-		this.$emit('clear');
+	async onClickEditBackground() {
+		await CommunityChannelBackgroundModal.show(this.formModel);
+		this.emitBackgroundChange(this.formModel);
 	}
 }
