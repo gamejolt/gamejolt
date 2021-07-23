@@ -8,6 +8,7 @@ import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Community } from '../../../_common/community/community.model';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
+import { Fireside } from '../../../_common/fireside/fireside.model';
 import { FiresidePostCommunity } from '../../../_common/fireside/post/community/community.model';
 import { FiresidePostGotoGrowl } from '../../../_common/fireside/post/goto-growl/goto-growl.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
@@ -586,6 +587,13 @@ export class GridClient {
 			} else if (notification.type === Notification.TYPE_POST_FEATURED_IN_COMMUNITY) {
 				if (notification.action_model instanceof FiresidePostCommunity) {
 					icon = notification.action_model.community.img_thumbnail;
+				}
+			} else if (notification.type === Notification.TYPE_FIRESIDE_START) {
+				if (notification.action_model instanceof Fireside) {
+					title = notification.action_model.title;
+					if (notification.action_model.community instanceof Community) {
+						icon = notification.action_model.community.img_thumbnail;
+					}
 				}
 			}
 

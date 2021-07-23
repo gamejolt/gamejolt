@@ -7,15 +7,25 @@
 				<div class="-fireside-title">
 					<h2 class="sans-margin-top" :class="{ h3: Screen.isXs }">
 						<small class="-subtitle">
-							<router-link
-								:to="{
-									name: 'profile.overview',
-									params: { username: fireside.user.username },
-								}"
-							>
-								@{{ fireside.user.username }}
-							</router-link>
-							<app-user-avatar-img class="-avatar" :user="fireside.user" />
+							<template v-if="fireside.community">
+								<router-link :to="fireside.community.routeLocation">
+									{{ fireside.community.name }}
+								</router-link>
+								<div class="-avatar -community-avatar">
+									<app-community-thumbnail-img :community="fireside.community" />
+								</div>
+							</template>
+							<template v-else>
+								<router-link
+									:to="{
+										name: 'profile.overview',
+										params: { username: fireside.user.username },
+									}"
+								>
+									@{{ fireside.user.username }}
+								</router-link>
+								<app-user-avatar-img class="-avatar" :user="fireside.user" />
+							</template>
 							<span>'s Fireside</span>
 						</small>
 						<br />
@@ -354,7 +364,12 @@
 
 .-avatar
 	width: 16px
+	height: 16px
 	display: inline-block
+
+.-community-avatar
+	overflow: hidden
+	border-radius: 50%
 
 .-message-wrapper
 	position: absolute

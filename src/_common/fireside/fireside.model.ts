@@ -1,3 +1,4 @@
+import { Community } from '../community/community.model';
 import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 import { UserBlock } from '../user/block/block.model';
@@ -6,12 +7,16 @@ import { FiresideRole } from './role/role.model';
 
 export class Fireside extends Model {
 	user!: User;
+	community!: Community;
+	header_media_item: MediaItem | null = null;
+	role: FiresideRole | null = null;
+	user_block?: UserBlock | null;
+
 	hash!: string;
 	title!: string;
 	expires_on!: number;
 	added_on!: number;
 	chat_room_id!: number;
-	header_media_item: MediaItem | null = null;
 	/**
 	 * Provided by the backend so it can be checked before trying to join.
 	 * Makes sure that user's possibly incorrect local time does not interfere.
@@ -19,8 +24,6 @@ export class Fireside extends Model {
 	is_expired!: boolean;
 	is_streaming!: boolean;
 	member_count!: number;
-	user_block?: UserBlock | null;
-	role: FiresideRole | null = null;
 
 	get blocked() {
 		return !!this.user_block || this.user.blocked_you || this.user.is_blocked;
@@ -52,6 +55,10 @@ export class Fireside extends Model {
 
 		if (data.role) {
 			this.role = new FiresideRole(data.role);
+		}
+
+		if (data.community) {
+			this.community = new Community(data.community);
 		}
 	}
 

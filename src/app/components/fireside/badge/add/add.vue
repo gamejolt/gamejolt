@@ -2,25 +2,28 @@
 
 <template>
 	<app-theme :theme="theme">
-		<router-link :to="{ name: 'dash.fireside.add' }">
-			<div class="-fireside-badge fill-darkest">
-				<div class="-backdrop">
-					<div ref="header" class="-header">
-						<div class="-header-overlay" />
-					</div>
-				</div>
-
-				<div class="-content">
-					<h4 class="sans-margin -title">
-						<small>
-							<translate>Stoke the flames</translate>
-						</small>
-						<br />
-						<translate>Start your Fireside!</translate>
-					</h4>
+		<div class="-fireside-badge fill-darkest" @click="onClickBadge">
+			<div class="-backdrop">
+				<div ref="header" class="-header">
+					<div class="-header-overlay" />
 				</div>
 			</div>
-		</router-link>
+
+			<div class="-content">
+				<h4 class="sans-margin -title">
+					<small class="-subtitle">
+						<translate>Stoke the flames</translate>
+					</small>
+					<br />
+					<template v-if="isCommunity">
+						<translate>Start this community's Fireside!</translate>
+					</template>
+					<template v-else>
+						<translate>Start your Fireside!</translate>
+					</template>
+				</h4>
+			</div>
+		</div>
 	</app-theme>
 </template>
 
@@ -42,6 +45,7 @@
 	overflow: hidden
 	padding: 10px 15px
 	elevate-hover-2()
+	cursor: pointer
 
 	&:hover
 		.-header
@@ -71,4 +75,7 @@
 	// Properly aligns it vertically.
 	margin-top: -2px
 	margin-bottom: 2px
+
+.-subtitle
+	color: var(--theme-fg)
 </style>

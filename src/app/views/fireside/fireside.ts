@@ -4,6 +4,7 @@ import { State } from 'vuex-class';
 import { sleep } from '../../../utils/utils';
 import { Api } from '../../../_common/api/api.service';
 import AppAuthJoin from '../../../_common/auth/join/join.vue';
+import AppCommunityThumbnailImg from '../../../_common/community/thumbnail/img/img.vue';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Fireside } from '../../../_common/fireside/fireside.model';
 import { FiresideRole } from '../../../_common/fireside/role/role.model';
@@ -24,7 +25,7 @@ import {
 	ChatClient,
 	ChatKey,
 	joinInstancedRoomChannel,
-	leaveChatRoom
+	leaveChatRoom,
 } from '../../components/chat/client';
 import { ChatRoomChannel } from '../../components/chat/room-channel';
 import AppChatWindowOutput from '../../components/chat/window/output/output.vue';
@@ -79,6 +80,7 @@ const FiresideThemeKey = 'fireside';
 		AppAuthJoin,
 		AppFiresideChatMembers,
 		AppFiresideStats,
+		AppCommunityThumbnailImg,
 		AppResponsiveDimensions,
 		AppFiresideVideo,
 		AppFiresideVideoStats,
@@ -263,17 +265,6 @@ export default class RouteFireside extends BaseRouteComponent {
 
 			// Both services may already be connected (watchers wouldn't fire), so try joining manually now.
 			this.tryJoin();
-
-			// TODO: Gotta clear out previous RTC on reconnection.
-			this.rtc ??= new FiresideRTC(
-				this.fireside,
-				$payload.streamingAppId,
-				$payload.videoChannelName,
-				$payload.videoToken,
-				$payload.audioChatChannelName,
-				$payload.audioChatToken,
-				User.populate($payload.hosts ?? [])
-			);
 		} else {
 			this.status = 'expired';
 			console.debug(`[FIRESIDE] Fireside is expired, and cannot be joined.`);
@@ -283,8 +274,6 @@ export default class RouteFireside extends BaseRouteComponent {
 	routeDestroyed() {
 		store.commit('theme/clearPageTheme', FiresideThemeKey);
 
-		this.rtc?.destroy();
-		this.rtc = null;
 		this.disconnect();
 
 		// This also happens in Disconnect, but make 100% sure we cleared the interval.
@@ -367,7 +356,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	private setPageTheme() {
-		const theme = this.fireside?.user?.theme ?? null;
+		const theme = this.fireside?.community?.theme ?? this.fireside?.user?.theme ?? null;
 		store.commit('theme/setPageTheme', { key: FiresideThemeKey, theme });
 	}
 
@@ -472,14 +461,8 @@ export default class RouteFireside extends BaseRouteComponent {
 			frontendCookie
 		);
 
-		channel.on(EVENT_UPDATE, (payload: any) => {
-			if (!this.fireside || !payload.fireside) {
-				return;
-			}
-
-			this.fireside.assign(payload.fireside);
-			this.expiryCheck();
-		});
+		// Subscribe to the update event.
+		channel.on(EVENT_UPDATE, this.onGridUpdateFireside.bind(this));
 
 		try {
 			await new Promise<void>((resolve, reject) => {
@@ -529,6 +512,14 @@ export default class RouteFireside extends BaseRouteComponent {
 			}
 		});
 
+		// Now join the RTC.
+		if (this.fireside.is_streaming) {
+			const streamingPayload = await Api.sendRequest(
+				`/web/fireside/fetch-streaming-info/${this.fireside.hash}`
+			);
+			this.createOrUpdateRtc(streamingPayload);
+		}
+
 		this.status = 'joined';
 		console.debug(`[FIRESIDE] Successfully joined Fireside.`);
 
@@ -559,6 +550,8 @@ export default class RouteFireside extends BaseRouteComponent {
 
 		this.chatChannel = null;
 
+		this.destroyRtc();
+
 		this.clearExpiryCheck();
 
 		console.debug(`[FIRESIDE] Disconnected from Fireside.`);
@@ -585,6 +578,37 @@ export default class RouteFireside extends BaseRouteComponent {
 		this.hasExpiryWarning = this.fireside.getExpiryInMs() < 60_000;
 	}
 
+	private createOrUpdateRtc(payload: any) {
+		if (!this.fireside || this.status !== 'joined') {
+			return;
+		}
+
+		const hosts = User.populate(payload.hosts ?? []);
+
+		if (this.rtc === null) {
+			this.rtc = new FiresideRTC(
+				payload.streamingAppId,
+				payload.videoChannelName,
+				payload.videoToken,
+				payload.audioChatChannelName,
+				payload.audioChatToken,
+				hosts
+			);
+		} else {
+			// TODO: update hosts when we introduce changing hosts on the fly.
+			this.rtc.renewToken(payload.videoToken, payload.audioChatToken);
+		}
+	}
+
+	private destroyRtc() {
+		if (!this.rtc) {
+			return;
+		}
+
+		this.rtc.destroy();
+		this.rtc = null;
+	}
+
 	onClickRetry() {
 		this.disconnect();
 		this.tryJoin();
@@ -609,5 +633,20 @@ export default class RouteFireside extends BaseRouteComponent {
 			return;
 		}
 		FiresideEditModal.show(this.fireside);
+	}
+
+	onGridUpdateFireside(payload: any) {
+		if (!this.fireside || !payload.fireside) {
+			return;
+		}
+
+		this.fireside.assign(payload.fireside);
+		this.expiryCheck();
+
+		if (this.fireside.is_streaming && payload.streaming_info) {
+			this.createOrUpdateRtc(payload.streaming_info);
+		} else {
+			this.destroyRtc();
+		}
 	}
 }
