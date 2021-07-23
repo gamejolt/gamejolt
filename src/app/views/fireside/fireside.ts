@@ -4,6 +4,7 @@ import { State } from 'vuex-class';
 import { sleep } from '../../../utils/utils';
 import { Api } from '../../../_common/api/api.service';
 import AppAuthJoin from '../../../_common/auth/join/join.vue';
+import AppCommunityThumbnailImg from '../../../_common/community/thumbnail/img/img.vue';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Fireside } from '../../../_common/fireside/fireside.model';
 import { FiresideRole } from '../../../_common/fireside/role/role.model';
@@ -63,6 +64,7 @@ const FiresideThemeKey = 'fireside';
 		AppAuthJoin,
 		AppFiresideChatMembers,
 		AppFiresideStats,
+		AppCommunityThumbnailImg,
 	},
 	directives: {
 		AppTooltip,
@@ -253,7 +255,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	private setPageTheme() {
-		const theme = this.fireside?.user?.theme ?? null;
+		const theme = this.fireside?.community?.theme ?? this.fireside?.user?.theme ?? null;
 		store.commit('theme/setPageTheme', { key: FiresideThemeKey, theme });
 	}
 

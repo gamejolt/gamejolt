@@ -1,7 +1,7 @@
 <script lang="ts" src="./badge"></script>
 
 <template>
-	<app-theme :theme="fireside.user.theme">
+	<app-theme :theme="theme">
 		<router-link :to="fireside.location">
 			<div class="-fireside-badge fill-darkest">
 				<app-media-item-backdrop
@@ -28,7 +28,11 @@
 
 				<div class="-content">
 					<div v-app-tooltip.left="avatarTooltip" class="-avatar">
-						<app-user-avatar-img :user="fireside.user" />
+						<app-community-thumbnail-img
+							v-if="fireside.community"
+							:community="fireside.community"
+						/>
+						<app-user-avatar-img v-else :user="fireside.user" />
 					</div>
 					<div>
 						<div class="tag">

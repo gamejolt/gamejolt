@@ -1,5 +1,6 @@
 import { Component, Inject, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
+import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Growls } from '../../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
@@ -7,6 +8,8 @@ import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import AppCommunitySidebar from '../../../../components/community/sidebar/sidebar.vue';
+import AppFiresideBadgeAdd from '../../../../components/fireside/badge/add/add.vue';
+import AppFiresideBadge from '../../../../components/fireside/badge/badge.vue';
 import { Store } from '../../../../store/index';
 import { CommunitiesViewChannelDeps } from '../channel/channel';
 import {
@@ -26,6 +29,8 @@ import AppCommunitiesViewPageContainer from '../_page-container/page-container.v
 		AppCommunitiesViewPageContainer,
 		AppCommunitySidebar,
 		AppCommunitiesViewFeed,
+		AppFiresideBadge,
+		AppFiresideBadgeAdd,
 	},
 })
 @RouteResolver({
@@ -45,6 +50,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	feed: ActivityFeedView | null = null;
 	finishedLoading = false;
+	fireside: Fireside | null = null;
 
 	get community() {
 		return this.routeStore.community;
@@ -85,6 +91,10 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		return this.canAcceptCollaboration ? '' : this.$gettext(`You are in too many communities.`);
 	}
 
+	get canCreateFireside() {
+		return !this.fireside && this.community.hasPerms('community-firesides');
+	}
+
 	@Watch('communityState.hasUnreadFeaturedPosts', { immediate: true })
 	onChannelUnreadChanged() {
 		if (this.feed && this.feed.newCount === 0 && this.communityState.hasUnreadFeaturedPosts) {
@@ -116,6 +126,10 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			this.grid?.pushViewNotifications('community-featured', {
 				communityId: this.community.id,
 			});
+		}
+
+		if ($payload.fireside) {
+			this.fireside = new Fireside($payload.fireside);
 		}
 	}
 
