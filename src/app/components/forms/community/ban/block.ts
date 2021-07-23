@@ -15,7 +15,7 @@ import {
 } from '../../../../../_common/user/action-reasons';
 import { User } from '../../../../../_common/user/user.model';
 
-interface FormModel {
+export interface FormModel {
 	username: string;
 	reasonType: string;
 	reason: string;
