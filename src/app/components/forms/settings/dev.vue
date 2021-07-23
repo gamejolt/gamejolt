@@ -13,7 +13,12 @@
 				:name="test.name"
 				:label="`Test: ${test.name}`"
 			>
-				<app-form-control-toggle class="pull-right" />
+				<app-form-control-toggle v-if="isBool(test)" class="pull-right" />
+				<app-form-control-select v-else-if="isString(test)">
+					<option v-for="v in stringValues(test)" :key="v" :value="v">
+						{{ v }}
+					</option>
+				</app-form-control-select>
 			</app-form-group>
 		</fieldset>
 	</app-form>

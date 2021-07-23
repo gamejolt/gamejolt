@@ -2,6 +2,7 @@ const gulp = require('gulp');
 const gutil = require('gulp-util');
 const path = require('path');
 const os = require('os');
+const { readFileSync } = require('fs');
 
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -465,6 +466,12 @@ module.exports = function (config) {
 								_crawl: !!sectionConfig.crawl,
 								_scripts: sectionConfig.scripts,
 								_bodyClass: sectionConfig.bodyClass || '',
+								_perfPolyfill: readFileSync(
+									path.resolve(
+										base,
+										'node_modules/first-input-delay/dist/first-input-delay.min.js'
+									)
+								),
 							},
 					  }),
 				webAppManifest ? new WebpackPwaManifest(webAppManifest) : noop,

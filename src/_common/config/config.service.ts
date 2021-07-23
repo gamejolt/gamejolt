@@ -1,8 +1,13 @@
 import { fetchAndActivate, getRemoteConfig, getValue } from 'firebase/remote-config';
+import Vue from 'vue';
 import { trackExperiments } from '../analytics/analytics.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
 
-const _options: ConfigOption[] = [];
+export const ConfigService = Vue.observable({
+	isLoaded: false,
+	options: [] as ConfigOption[],
+});
+
 const JOIN_OPTIONS_STORAGE_KEY = 'config:join-options';
 const OVERRIDES_STORAGE_KEY = 'config:overrides';
 
@@ -21,12 +26,39 @@ interface Conditions {
 }
 
 export abstract class ConfigOption<T extends ValueType = any> {
+	public readonly conditions?: Conditions;
+
 	constructor(
 		public readonly name: string,
 		public readonly defaultValue: T,
-		public readonly conditions?: Conditions
+		{ conditions }: { conditions?: Conditions } = {}
 	) {
-		_options.push(this);
+		this.conditions = conditions;
+		ConfigService.options.push(this);
+	}
+
+	/**
+	 * The option is considered excluded depending on if its conditions match.
+	 */
+	get isExcluded() {
+		if (
+			// If join condition was set, we need to make sure the current
+			// config option was set at the time of join or not. Only use the
+			// remote value if it was.
+			this.conditions?.join &&
+			!_getJoinOptions().includes(this.name)
+		) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * If a dev has overridden this locally.
+	 */
+	get isOverridden() {
+		return this.name in _configGetOverrides();
 	}
 
 	/**
@@ -40,13 +72,7 @@ export abstract class ConfigOption<T extends ValueType = any> {
 			return overrides[this.name] as T;
 		}
 
-		if (
-			// If join condition was set, we need to make sure the current
-			// config option was set at the time of join or not. Only use the
-			// remote value if it was.
-			this.conditions?.join &&
-			!_getJoinOptions().includes(this.name)
-		) {
+		if (this.isExcluded) {
 			return this.defaultValue;
 		}
 
@@ -66,27 +92,59 @@ export class ConfigOptionBoolean extends ConfigOption<boolean> {
 	}
 }
 
-/**
- * Whether or not the search autocomplete should show when typing.
- */
+export class ConfigOptionString<T extends string = string> extends ConfigOption<T> {
+	public readonly validValues: T[];
+
+	constructor(
+		name: string,
+		defaultValue: T,
+		{ validValues, conditions }: { validValues: T[]; conditions?: Conditions }
+	) {
+		super(name, defaultValue, { conditions: conditions });
+		this.validValues = validValues;
+	}
+
+	get value() {
+		if (GJ_IS_SSR) {
+			return this.defaultValue;
+		}
+
+		return this._getValue(() => {
+			const value = getValue(_getFirebaseRemoteConfig(), this.name).asString() as T;
+
+			// If we don't know the value that we got from remote, we need to fallback to default.
+			if (!this.validValues.includes(value)) {
+				return this.defaultValue;
+			}
+
+			return value;
+		});
+	}
+}
+
 export const configHasAutocomplete = new ConfigOptionBoolean('has_search_autocomplete', true, {
-	join: true,
+	conditions: { join: true },
 });
 
-/**
- * Whether or not to show who to follow on the feed.
- */
 export const configWhoToFollow = new ConfigOptionBoolean('who_to_follow', true, {
-	join: true,
+	conditions: { join: true },
 });
 
-/**
- * Will show chunks of posts on discover page for certain communities.
- */
 export const configDiscoverCommunityChunks = new ConfigOptionBoolean(
 	'discover_community_chunks',
 	false
 );
+
+export const configRecommendedPosts = new ConfigOptionBoolean('recommended_posts', false);
+
+export const configHomeNav = new ConfigOptionString('home_nav', 'default', {
+	validValues: ['default', 'simple'],
+	conditions: { join: true },
+});
+
+export const configFYPDefault = new ConfigOptionBoolean('fyp_default', false, {
+	conditions: { join: true },
+});
 
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());
@@ -102,33 +160,36 @@ export function ensureConfig() {
 let _initPromise: Promise<void> | null = null;
 async function _init() {
 	if (GJ_IS_SSR) {
+		ConfigService.isLoaded = true;
 		return;
 	}
 
-	const config = _getFirebaseRemoteConfig();
+	// Getting the remote config DB set up could fail if there's no access to
+	// indexeddb, so we need to handle that.
+	try {
+		const config = _getFirebaseRemoteConfig();
 
-	config.settings = {
-		// We don't want to wait long since this will delay loading of all
-		// content for now.
-		fetchTimeoutMillis: 3_000,
-		// The fallback is the default value (12 hours).
-		minimumFetchIntervalMillis: GJ_BUILD_TYPE === 'development' ? 10 * 60 * 1_000 : 4_320_0000,
-	};
+		config.settings = {
+			// We don't want to wait long since this will delay loading of all
+			// content for now.
+			fetchTimeoutMillis: 3_000,
+			// The fallback is the default value (12 hours).
+			minimumFetchIntervalMillis:
+				GJ_BUILD_TYPE === 'development' ? 10 * 60 * 1_000 : 4_320_0000,
+		};
 
-	// Pull from the defaults that were set up before calling this function.
-	for (const option of _options) {
-		config.defaultConfig[option.name] = option.defaultValue;
+		// Pull from the defaults that were set up before calling this function.
+		for (const option of ConfigService.options) {
+			config.defaultConfig[option.name] = option.defaultValue;
+		}
+
+		await fetchAndActivate(config);
+		trackExperiments(ConfigService.options);
+	} catch (e) {
+		// Do nothing.
+	} finally {
+		ConfigService.isLoaded = true;
 	}
-
-	await fetchAndActivate(config);
-
-	const activeOptions: Record<string, ValueType> = {};
-	for (const option of _options) {
-		activeOptions[option.name] = option.value;
-	}
-
-	console.log('Got config data.', activeOptions);
-	trackExperiments(activeOptions);
 }
 
 /**
@@ -140,7 +201,10 @@ export function configSaveJoinOptions() {
 		return;
 	}
 
-	localStorage.setItem(JOIN_OPTIONS_STORAGE_KEY, _options.map(i => i.name).join('|'));
+	localStorage.setItem(
+		JOIN_OPTIONS_STORAGE_KEY,
+		ConfigService.options.map(i => i.name).join('|')
+	);
 }
 
 let _joinOptions: undefined | string[];
@@ -150,10 +214,6 @@ function _getJoinOptions() {
 	}
 
 	return (_joinOptions ??= (localStorage.getItem(JOIN_OPTIONS_STORAGE_KEY) ?? '').split('|'));
-}
-
-export function configGetAll() {
-	return _options;
 }
 
 type Overrides = Record<string, ValueType>;

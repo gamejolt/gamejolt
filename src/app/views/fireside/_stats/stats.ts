@@ -129,8 +129,6 @@ export default class AppFiresideStats extends Vue {
 		if (payload.success && payload.extended) {
 			this.fireside.expires_on = payload.expiresOn;
 			this.updateExpiryValues();
-
-			Growls.success(this.$gettext(`The flames are stoked you're still here!`));
 		} else {
 			Growls.info(
 				this.$gettext(

@@ -5,6 +5,7 @@ import { PostOpenSource, trackPostOpen } from '../../../../../_common/analytics/
 import { ContentFocus } from '../../../../../_common/content-focus/content-focus.service';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
+import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
 import { fuzzynumber } from '../../../../../_common/filters/fuzzynumber';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
@@ -25,7 +26,6 @@ import {
 } from '../../../../../_common/video/player/controller';
 import AppVideo from '../../../../../_common/video/video.vue';
 
-const _kOverlayNoticeColor = '#f11a5c';
 const _InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height}px` });
 
 export const AppPostCardAspectRatio = 10 / 16;
@@ -41,6 +41,7 @@ export const AppPostCardAspectRatio = 10 / 16;
 		AppScrollInview,
 		AppUserAvatar,
 		AppVideo,
+		AppFadeCollapse,
 	},
 	directives: {
 		AppObserveDimensions,
@@ -57,6 +58,7 @@ export default class AppPostCard extends Vue {
 		card: HTMLElement;
 	};
 
+	readonly GJ_IS_SSR = GJ_IS_SSR;
 	readonly fuzzynumber = fuzzynumber;
 	readonly InviewConfig = _InviewConfig;
 
@@ -73,6 +75,7 @@ export default class AppPostCard extends Vue {
 	imageHeight = '100%';
 	videoWidth = '100%';
 	videoHeight = '100%';
+	leadHeight = 0;
 
 	isBootstrapped = GJ_IS_SSR;
 	isHydrated = GJ_IS_SSR;
@@ -97,19 +100,21 @@ export default class AppPostCard extends Vue {
 		return this.post?.videos[0].media.find(i => i.type == MediaItem.TYPE_TRANSCODED_VIDEO_CARD);
 	}
 
-	get pollIconColor() {
+	get votedOnPoll() {
 		const poll = this.post?.poll;
 		for (let i = 0; i < (poll?.items.length ?? 0); i++) {
 			if (poll?.items[i].is_voted) {
-				return _kOverlayNoticeColor;
+				return true;
 			}
 		}
+		return false;
 	}
 
-	get heartIconColor() {
+	get likedPost() {
 		if (this.post?.user_like) {
-			return _kOverlayNoticeColor;
+			return true;
 		}
+		return false;
 	}
 
 	get userLink() {
@@ -130,6 +135,9 @@ export default class AppPostCard extends Vue {
 
 		this.cardWidth = cardWidth + 'px';
 		this.cardHeight = cardHeight + 'px';
+
+		// Add in some space for the details on the bottom.
+		this.leadHeight = cardHeight - 40;
 
 		const media = this.mediaItem;
 		if (!media) {
