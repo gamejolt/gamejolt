@@ -5,8 +5,6 @@ import AgoraRTC, {
 	IRemoteVideoTrack,
 } from 'agora-rtc-sdk-ng';
 import { sleep } from '../../../utils/utils';
-import { Api } from '../../../_common/api/api.service';
-import { Fireside } from '../../../_common/fireside/fireside.model';
 import { User } from '../../../_common/user/user.model';
 
 export const FiresideRTCKey = Symbol('fireside-rtc');
@@ -19,10 +17,8 @@ export class FiresideRTC {
 	// uid: null | UID = null;
 	users: FiresideRTCUser[] = [];
 	focusedUserId: number | null = null;
-	renewTokenInterval: NodeJS.Timer | null = null;
 
 	constructor(
-		private fireside: Fireside,
 		private appId: string,
 		private videoChannel: string,
 		private videoToken: string | null,
@@ -65,11 +61,6 @@ export class FiresideRTC {
 				console.log('Retrying...');
 			}
 		}
-
-		// If all our retries failed, the token renewal will rejoin if needed.
-		if (this.renewTokenInterval === null) {
-			this.renewTokenInterval = setInterval(() => this.renewToken(), 60_000);
-		}
 	}
 
 	public async destroy() {
@@ -78,10 +69,6 @@ export class FiresideRTC {
 		if (!this.videoClient && !this.audioClient) {
 			console.log('Nothing to destroy, video and audio client are unset');
 			return;
-		}
-
-		if (this.renewTokenInterval) {
-			clearInterval(this.renewTokenInterval);
 		}
 
 		try {
@@ -237,7 +224,7 @@ export class FiresideRTC {
 		// this.videoClient.enableAudioVolumeIndicator();
 	}
 
-	public async renewToken(videoToken: string, audioChatToken: string) {
+	public async renewToken(videoToken: string | null, audioChatToken: string | null) {
 		console.log('FiresideRTC -> renewToken');
 
 		if (!this.videoClient || !this.audioClient) {
@@ -245,11 +232,8 @@ export class FiresideRTC {
 		}
 
 		console.log('Renewing audience tokens');
-		const response: { videoToken: string | null; audioChatToken: string | null } =
-			await Api.sendRequest('/web/fireside/fetch-audience-tokens/' + this.fireside.hash);
-
-		this.videoToken = response.videoToken;
-		this.audioChatToken = response.audioChatToken;
+		this.videoToken = videoToken;
+		this.audioChatToken = audioChatToken;
 
 		if (!this.videoToken || !this.audioChatToken) {
 			console.log('Could not get tokens. The stream likely ended.');

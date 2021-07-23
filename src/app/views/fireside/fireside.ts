@@ -587,7 +587,6 @@ export default class RouteFireside extends BaseRouteComponent {
 
 		if (this.rtc === null) {
 			this.rtc = new FiresideRTC(
-				this.fireside,
 				payload.streamingAppId,
 				payload.videoChannelName,
 				payload.videoToken,
