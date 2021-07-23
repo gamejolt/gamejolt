@@ -550,8 +550,7 @@ export default class RouteFireside extends BaseRouteComponent {
 
 		this.chatChannel = null;
 
-		this.rtc?.destroy();
-		this.rtc = null;
+		this.destroyRtc();
 
 		this.clearExpiryCheck();
 
@@ -584,15 +583,31 @@ export default class RouteFireside extends BaseRouteComponent {
 			return;
 		}
 
-		this.rtc ??= new FiresideRTC(
-			this.fireside,
-			payload.streamingAppId,
-			payload.videoChannelName,
-			payload.videoToken,
-			payload.audioChatChannelName,
-			payload.audioChatToken,
-			User.populate(payload.hosts ?? [])
-		);
+		const hosts = User.populate(payload.hosts ?? []);
+
+		if (this.rtc === null) {
+			this.rtc = new FiresideRTC(
+				this.fireside,
+				payload.streamingAppId,
+				payload.videoChannelName,
+				payload.videoToken,
+				payload.audioChatChannelName,
+				payload.audioChatToken,
+				hosts
+			);
+		} else {
+			// TODO: update hosts when we introduce changing hosts on the fly.
+			this.rtc.renewToken(payload.videoToken, payload.audioChatToken);
+		}
+	}
+
+	private destroyRtc() {
+		if (!this.rtc) {
+			return;
+		}
+
+		this.rtc.destroy();
+		this.rtc = null;
 	}
 
 	onClickRetry() {
@@ -626,11 +641,13 @@ export default class RouteFireside extends BaseRouteComponent {
 			return;
 		}
 
-		if (payload.streaming_info) {
-			this.createOrUpdateRtc(payload.streaming_info);
-		}
-
 		this.fireside.assign(payload.fireside);
 		this.expiryCheck();
+
+		if (this.fireside.is_streaming && payload.streaming_info) {
+			this.createOrUpdateRtc(payload.streaming_info);
+		} else {
+			this.destroyRtc();
+		}
 	}
 }

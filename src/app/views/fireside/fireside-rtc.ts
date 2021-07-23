@@ -237,7 +237,7 @@ export class FiresideRTC {
 		// this.videoClient.enableAudioVolumeIndicator();
 	}
 
-	private async renewToken() {
+	public async renewToken(videoToken: string, audioChatToken: string) {
 		console.log('FiresideRTC -> renewToken');
 
 		if (!this.videoClient || !this.audioClient) {
