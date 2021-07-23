@@ -4,6 +4,7 @@ import { Prop } from 'vue-property-decorator';
 import { RawLocation } from 'vue-router';
 import { propRequired } from '../../../utils/vue';
 import { date } from '../../filters/date';
+import { Fireside } from '../../fireside/fireside.model';
 import { FiresidePost } from '../../fireside/post/post-model';
 import { Game } from '../../game/game.model';
 import { Screen } from '../../screen/screen-service';
@@ -107,6 +108,8 @@ export default class AppCommunityActivityItem extends Vue {
 				},
 				hash: '#entry-' + this.item.action_resource.id,
 			};
+		} else if (this.item.action_resource instanceof Fireside) {
+			return this.item.action_resource.location;
 		}
 	}
 
@@ -127,6 +130,8 @@ export default class AppCommunityActivityItem extends Vue {
 			return channelTitle;
 		} else if (this.item.action_resource instanceof CommunityCompetitionEntry) {
 			return this.item.action_resource.resource.title;
+		} else if (this.item.action_resource instanceof Fireside) {
+			return this.item.action_resource.title;
 		}
 	}
 
