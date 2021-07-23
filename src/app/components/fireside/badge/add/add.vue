@@ -11,7 +11,7 @@
 
 			<div class="-content">
 				<h4 class="sans-margin -title">
-					<small>
+					<small class="-subtitle">
 						<translate>Stoke the flames</translate>
 					</small>
 					<br />
@@ -75,4 +75,7 @@
 	// Properly aligns it vertically.
 	margin-top: -2px
 	margin-bottom: 2px
+
+.-subtitle
+	color: var(--theme-fg)
 </style>
