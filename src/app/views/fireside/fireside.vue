@@ -11,10 +11,9 @@
 								<router-link :to="fireside.community.routeLocation">
 									{{ fireside.community.name }}
 								</router-link>
-								<app-community-thumbnail-img
-									class="-avatar"
-									:community="fireside.community"
-								/>
+								<div class="-avatar -community-avatar">
+									<app-community-thumbnail-img :community="fireside.community" />
+								</div>
 							</template>
 							<template v-else>
 								<router-link
@@ -367,6 +366,10 @@
 	width: 16px
 	height: 16px
 	display: inline-block
+
+.-community-avatar
+	overflow: hidden
+	border-radius: 50%
 
 .-message-wrapper
 	position: absolute
