@@ -265,17 +265,6 @@ export default class RouteFireside extends BaseRouteComponent {
 
 			// Both services may already be connected (watchers wouldn't fire), so try joining manually now.
 			this.tryJoin();
-
-			// TODO: Gotta clear out previous RTC on reconnection.
-			this.rtc ??= new FiresideRTC(
-				this.fireside,
-				$payload.streamingAppId,
-				$payload.videoChannelName,
-				$payload.videoToken,
-				$payload.audioChatChannelName,
-				$payload.audioChatToken,
-				User.populate($payload.hosts ?? [])
-			);
 		} else {
 			this.status = 'expired';
 			console.debug(`[FIRESIDE] Fireside is expired, and cannot be joined.`);
@@ -285,8 +274,6 @@ export default class RouteFireside extends BaseRouteComponent {
 	routeDestroyed() {
 		store.commit('theme/clearPageTheme', FiresideThemeKey);
 
-		this.rtc?.destroy();
-		this.rtc = null;
 		this.disconnect();
 
 		// This also happens in Disconnect, but make 100% sure we cleared the interval.
@@ -474,14 +461,8 @@ export default class RouteFireside extends BaseRouteComponent {
 			frontendCookie
 		);
 
-		channel.on(EVENT_UPDATE, (payload: any) => {
-			if (!this.fireside || !payload.fireside) {
-				return;
-			}
-
-			this.fireside.assign(payload.fireside);
-			this.expiryCheck();
-		});
+		// Subscribe to the update event.
+		channel.on(EVENT_UPDATE, this.onGridUpdateFireside.bind(this));
 
 		try {
 			await new Promise<void>((resolve, reject) => {
@@ -531,6 +512,14 @@ export default class RouteFireside extends BaseRouteComponent {
 			}
 		});
 
+		// Now join the RTC.
+		if (this.fireside.is_streaming) {
+			const streamingPayload = await Api.sendRequest(
+				`/web/fireside/fetch-streaming-info/${this.fireside.hash}`
+			);
+			this.createOrUpdateRtc(streamingPayload);
+		}
+
 		this.status = 'joined';
 		console.debug(`[FIRESIDE] Successfully joined Fireside.`);
 
@@ -561,6 +550,9 @@ export default class RouteFireside extends BaseRouteComponent {
 
 		this.chatChannel = null;
 
+		this.rtc?.destroy();
+		this.rtc = null;
+
 		this.clearExpiryCheck();
 
 		console.debug(`[FIRESIDE] Disconnected from Fireside.`);
@@ -587,6 +579,22 @@ export default class RouteFireside extends BaseRouteComponent {
 		this.hasExpiryWarning = this.fireside.getExpiryInMs() < 60_000;
 	}
 
+	private createOrUpdateRtc(payload: any) {
+		if (!this.fireside || this.status !== 'joined') {
+			return;
+		}
+
+		this.rtc ??= new FiresideRTC(
+			this.fireside,
+			payload.streamingAppId,
+			payload.videoChannelName,
+			payload.videoToken,
+			payload.audioChatChannelName,
+			payload.audioChatToken,
+			User.populate(payload.hosts ?? [])
+		);
+	}
+
 	onClickRetry() {
 		this.disconnect();
 		this.tryJoin();
@@ -611,5 +619,18 @@ export default class RouteFireside extends BaseRouteComponent {
 			return;
 		}
 		FiresideEditModal.show(this.fireside);
+	}
+
+	onGridUpdateFireside(payload: any) {
+		if (!this.fireside || !payload.fireside) {
+			return;
+		}
+
+		if (payload.streaming_info) {
+			this.createOrUpdateRtc(payload.streaming_info);
+		}
+
+		this.fireside.assign(payload.fireside);
+		this.expiryCheck();
 	}
 }
