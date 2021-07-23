@@ -517,7 +517,7 @@ export default class RouteFireside extends BaseRouteComponent {
 			const streamingPayload = await Api.sendRequest(
 				`/web/fireside/fetch-streaming-info/${this.fireside.hash}`
 			);
-			this.createOrUpdateRtc(streamingPayload);
+			this.createOrUpdateRtc(streamingPayload, false);
 		}
 
 		this.status = 'joined';
@@ -578,8 +578,8 @@ export default class RouteFireside extends BaseRouteComponent {
 		this.hasExpiryWarning = this.fireside.getExpiryInMs() < 60_000;
 	}
 
-	private createOrUpdateRtc(payload: any) {
-		if (!this.fireside || this.status !== 'joined') {
+	private createOrUpdateRtc(payload: any, checkJoined = true) {
+		if (!this.fireside || (checkJoined && this.status !== 'joined')) {
 			return;
 		}
 
