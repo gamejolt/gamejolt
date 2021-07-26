@@ -22,6 +22,8 @@ export const SOCIAL_ACTION_SEND = 'send';
 export const SOCIAL_ACTION_TWEET = 'tweet';
 export const SOCIAL_ACTION_FOLLOW = 'follow';
 
+export type PostControlsLocation = 'feed' | 'broadcast' | 'postPage';
+
 /**
  * How long we wait (in ms) before we track another experiment engagement for
  * the same config option.
@@ -266,6 +268,14 @@ export type PostOpenSource = 'communityChunk' | 'postRecommendation';
 
 export function trackPostOpen(params: { source: PostOpenSource }) {
 	_trackEvent('post_open', params);
+}
+
+export function trackPostLike(params: { location: PostControlsLocation }) {
+	_trackEvent('post_like', params);
+}
+
+export function trackPostUnlike(params: { location: PostControlsLocation }) {
+	_trackEvent('post_unlike', params);
 }
 
 /**

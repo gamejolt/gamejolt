@@ -1,3 +1,5 @@
+<script lang="ts" src="./new-button"></script>
+
 <template>
 	<p>
 		<app-button outline primary block @click="emitClick">
@@ -5,5 +7,3 @@
 		</app-button>
 	</p>
 </template>
-
-<script lang="ts" src="./new-button"></script>

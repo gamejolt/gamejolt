@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Emit, Inject, Prop, Watch } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
 import { ContentFocus } from '../../../../../_common/content-focus/content-focus.service';
 import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
 import AppLoading from '../../../../../_common/loading/loading.vue';
@@ -50,9 +49,15 @@ const LoadDelay = 300;
 	},
 })
 export default class AppActivityFeedVideoPlayer extends Vue {
-	@Prop(propRequired(ActivityFeedItem)) feedItem!: ActivityFeedItem;
-	@Prop(propRequired(MediaItem)) mediaItem!: MediaItem;
-	@Prop(propRequired(Array)) manifests!: VideoSourceArray;
+	@Prop({ type: ActivityFeedItem, required: true })
+	feedItem!: ActivityFeedItem;
+
+	@Prop({ type: MediaItem, required: true })
+	mediaItem!: MediaItem;
+
+	@Prop({ type: Array, required: true })
+	manifests!: VideoSourceArray;
+
 	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
 	autoplay = SettingVideoPlayerFeedAutoplay.get();

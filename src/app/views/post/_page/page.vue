@@ -182,9 +182,10 @@
 					<div class="-controls-spacing" />
 				</app-sticker-controls-overlay>
 
-				<app-event-item-controls
+				<app-post-controls
 					:post="post"
 					should-show-follow
+					location="postPage"
 					event-label="page"
 					@post-remove="onPostRemoved"
 					@post-publish="onPostPublished"

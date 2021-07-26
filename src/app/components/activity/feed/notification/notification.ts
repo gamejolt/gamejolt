@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
 import '../../../../../_common/comment/comment.styl';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
 import {
@@ -39,14 +38,18 @@ import { ActivityFeedKey, ActivityFeedView } from '../view';
 	},
 })
 export default class AppActivityFeedNotification extends Vue {
-	@Prop(propRequired(ActivityFeedItem)) item!: ActivityFeedItem;
+	@Prop({ type: ActivityFeedItem, required: true })
+	item!: ActivityFeedItem;
 
 	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
-	notification!: Notification;
 	canToggleContent = false;
 	readonly Screen = Screen;
 	readonly Notification = Notification;
+
+	get notification() {
+		return this.item.feedItem as Notification;
+	}
 
 	get isNew() {
 		return this.feed.isItemUnread(this.item);
@@ -95,10 +98,6 @@ export default class AppActivityFeedNotification extends Vue {
 		) {
 			return getTrophyImg(this.notification.action_model.trophy);
 		}
-	}
-
-	created() {
-		this.notification = this.item.feedItem as Notification;
 	}
 
 	go() {
