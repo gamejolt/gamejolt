@@ -42,13 +42,13 @@ import AppVideoPlayer from '../../../../_common/video/player/player.vue';
 import AppVideoProcessingProgress from '../../../../_common/video/processing-progress/processing-progress.vue';
 import AppVideo from '../../../../_common/video/video.vue';
 import AppCommunityUserNotification from '../../../components/community/user-notification/user-notification.vue';
-import AppEventItemControls from '../../../components/event-item/controls/controls.vue';
 import AppFiresidePostEmbed from '../../../components/fireside/post/embed/embed.vue';
 import AppGameBadge from '../../../components/game/badge/badge.vue';
 import AppGameListItem from '../../../components/game/list/item/item.vue';
 import { AppCommentWidgetLazy } from '../../../components/lazy';
 import AppPageContainer from '../../../components/page-container/page-container.vue';
 import AppPollVoting from '../../../components/poll/voting/voting.vue';
+import AppPostControls from '../../../components/post/controls/controls.vue';
 import AppPostPageRecommendations from './recommendations/recommendations.vue';
 
 @Component({
@@ -58,7 +58,7 @@ import AppPostPageRecommendations from './recommendations/recommendations.vue';
 		AppImgResponsive,
 		AppVideo,
 		AppVideoPlayer,
-		AppEventItemControls,
+		AppPostControls,
 		AppStickerControlsOverlay,
 		AppPollVoting,
 		AppCommunityPill,
@@ -88,7 +88,7 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 	@Prop({ type: FiresidePost, required: true })
 	post!: FiresidePost;
 
-	@Prop({ type: Array, default: () => [], required: false })
+	@Prop({ type: Array, required: false, default: () => [] })
 	communityNotifications!: CommunityUserNotification[];
 
 	@Emit('post-updated')

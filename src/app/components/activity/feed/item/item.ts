@@ -1,12 +1,11 @@
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { ScrollInviewConfig } from '../../../../../_common/scroll/inview/config';
 import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
-import AppActivityFeedEventItem from '../event-item/event-item.vue';
 import { ActivityFeedItem } from '../item-service';
 import AppActivityFeedNotification from '../notification/notification.vue';
+import AppActivityFeedPost from '../post/post.vue';
 import { ActivityFeedKey, ActivityFeedView } from '../view';
 import AppActivityFeedItemPlaceholder from './placeholder/placeholder.vue';
 
@@ -22,13 +21,14 @@ export const InviewConfigFocused = new ScrollInviewConfig({ trackFocused: true }
 @Component({
 	components: {
 		AppScrollInview,
-		AppActivityFeedEventItem,
+		AppActivityFeedPost,
 		AppActivityFeedNotification,
 		AppActivityFeedItemPlaceholder,
 	},
 })
 export default class AppActivityFeedItem extends Vue {
-	@Prop(propRequired(ActivityFeedItem)) item!: ActivityFeedItem;
+	@Prop({ type: ActivityFeedItem, required: true })
+	item!: ActivityFeedItem;
 
 	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 

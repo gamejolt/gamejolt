@@ -2,6 +2,11 @@ import Vue from 'vue';
 import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Store } from '../../../../../auth/store/index';
+import {
+	PostControlsLocation,
+	trackPostLike,
+	trackPostUnlike,
+} from '../../../../analytics/analytics.service';
 import { AppAuthRequired } from '../../../../auth/auth-required-directive';
 import { DrawerStore, DrawerStoreKey } from '../../../../drawer/drawer-store';
 import { fuzzynumber } from '../../../../filters/fuzzynumber';
@@ -23,10 +28,20 @@ import { FiresidePostLike } from '../like-model';
 	},
 })
 export default class AppFiresidePostLikeWidget extends Vue {
-	@Prop(FiresidePost) post!: FiresidePost;
-	@Prop(Boolean) overlay?: boolean;
-	@Prop(Boolean) trans?: boolean;
-	@Prop(Boolean) block?: boolean;
+	@Prop({ type: FiresidePost, required: true })
+	post!: FiresidePost;
+
+	@Prop({ type: String, required: true })
+	location!: PostControlsLocation;
+
+	@Prop({ type: Boolean, default: false, required: false })
+	overlay!: boolean;
+
+	@Prop({ type: Boolean, default: false, required: false })
+	trans!: boolean;
+
+	@Prop({ type: Boolean, default: false, required: false })
+	block!: boolean;
 
 	@Inject({ from: DrawerStoreKey, default: null }) drawer!: null | DrawerStore;
 
@@ -72,6 +87,7 @@ export default class AppFiresidePostLikeWidget extends Vue {
 
 			try {
 				await newLike.$save();
+				trackPostLike({ location: this.location });
 			} catch (e) {
 				this.post.user_like = null;
 				--this.post.like_count;
@@ -87,6 +103,7 @@ export default class AppFiresidePostLikeWidget extends Vue {
 
 			try {
 				await currentLike.$remove();
+				trackPostUnlike({ location: this.location });
 			} catch (e) {
 				this.post.user_like = currentLike;
 				++this.post.like_count;
