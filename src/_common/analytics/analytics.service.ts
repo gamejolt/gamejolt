@@ -9,6 +9,7 @@ import VueRouter from 'vue-router';
 import { arrayRemove } from '../../utils/array';
 import { AppPromotionSource } from '../../utils/mobile-app';
 import { AuthMethod } from '../auth/auth.service';
+import { CommentVote } from '../comment/vote/vote-model';
 import { ConfigOption } from '../config/config.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
 import { WithAppStore } from '../store/app-store';
@@ -22,7 +23,19 @@ export const SOCIAL_ACTION_SEND = 'send';
 export const SOCIAL_ACTION_TWEET = 'tweet';
 export const SOCIAL_ACTION_FOLLOW = 'follow';
 
+export type CommunityOpenSource = 'communityChunk' | 'card' | 'cbar';
+export type PostOpenSource = 'communityChunk' | 'postRecommendation' | 'feed';
 export type PostControlsLocation = 'feed' | 'broadcast' | 'postPage';
+export type UserFollowLocation =
+	| 'feed'
+	| 'postPage'
+	| 'postLike'
+	| 'card'
+	| 'profilePage'
+	| 'userList'
+	| 'gameFollow';
+export type GameFollowLocation = 'thumbnail' | 'gamePage' | 'badge' | 'homeBanner' | 'library';
+export type CommunityJoinLocation = 'onboarding' | 'card' | 'communityPage' | 'homeBanner' | 'cbar';
 
 /**
  * How long we wait (in ms) before we track another experiment engagement for
@@ -159,7 +172,10 @@ function _untrackUserId() {
 	setUserId(_getFirebaseAnalytics(), '');
 }
 
-function _trackEvent(name: string, eventParams: Record<string, string | number | undefined>) {
+function _trackEvent(
+	name: string,
+	eventParams: Record<string, string | number | boolean | undefined>
+) {
 	if (GJ_IS_SSR || GJ_IS_CLIENT) {
 		return;
 	}
@@ -236,8 +252,6 @@ export function trackAppPromotionClick(options: { source: AppPromotionSource }) 
 	});
 }
 
-export type CommunityOpenSource = 'communityChunk' | 'communityCard';
-
 export function trackGotoCommunity(params: {
 	source: CommunityOpenSource;
 	id?: number;
@@ -247,18 +261,91 @@ export function trackGotoCommunity(params: {
 	_trackEvent('goto_community', params);
 }
 
-export type PostOpenSource = 'communityChunk' | 'postRecommendation';
-
 export function trackPostOpen(params: { source: PostOpenSource }) {
 	_trackEvent('post_open', params);
 }
 
-export function trackPostLike(params: { location: PostControlsLocation }) {
-	_trackEvent('post_like', params);
+export function trackPostLike(
+	liked: boolean,
+	params: { failed: boolean; location: PostControlsLocation }
+) {
+	const { failed, location } = params;
+
+	let type = liked ? 'like' : 'unlike';
+	if (failed) {
+		type += '_fail';
+	}
+
+	_trackEvent(`post_${type}`, { location });
 }
 
-export function trackPostUnlike(params: { location: PostControlsLocation }) {
-	_trackEvent('post_unlike', params);
+export function trackCommentVote(vote: number, params: { failed: boolean; toggled: boolean }) {
+	const { failed, toggled } = params;
+
+	let type = '';
+	if (vote === CommentVote.VOTE_UPVOTE) {
+		type = 'like';
+	} else if (vote === CommentVote.VOTE_DOWNVOTE) {
+		type = 'dislike';
+	} else {
+		return;
+	}
+
+	if (failed) {
+		type += '_fail';
+	}
+
+	_trackEvent(`comment_${type}`, { toggled });
+}
+
+export function trackUserFollow(
+	followed: boolean,
+	params: { failed: boolean; location: UserFollowLocation }
+) {
+	const { failed, location } = params;
+
+	let type = followed ? 'follow' : 'unfollow';
+	if (failed) {
+		type += '_fail';
+	}
+
+	_trackEvent(`user_${type}`, { location });
+}
+
+export function trackGameFollow(
+	followed: boolean,
+	params: { failed: boolean; location: GameFollowLocation }
+) {
+	const { failed, location } = params;
+
+	let type = followed ? 'follow' : 'unfollow';
+	if (failed) {
+		type += '_fail';
+	}
+
+	_trackEvent(`game_${type}`, { location });
+}
+
+export function trackCommunityJoin(
+	joined: boolean,
+	params: { failed: boolean; location: CommunityJoinLocation }
+) {
+	const { failed, location } = params;
+
+	let type = joined ? 'join' : 'leave';
+	if (failed) {
+		type += '_fail';
+	}
+
+	_trackEvent(`community_${type}`, { location });
+}
+
+export function trackCommentAdd() {
+	_trackEvent('comment_add', {});
+}
+
+export function trackPostPublish() {
+	_trackEvent('post_publish', {});
 }
 
 /**

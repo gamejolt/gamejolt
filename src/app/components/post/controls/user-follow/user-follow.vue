@@ -5,9 +5,7 @@
 		<div v-if="shouldShow" class="-user-follow anim-fade-enter alert">
 			<div class="-content">
 				<p class="-flex-auto small">
-					<translate>
-						Would you also like to follow this user?
-					</translate>
+					<translate>Would you also like to follow this user?</translate>
 					<br />
 					<translate>You will get notified when they post new stuff.</translate>
 				</p>
@@ -15,7 +13,7 @@
 					class="-flex-none"
 					:sm="Screen.isXs"
 					:user="user"
-					event-label="fireside-post-like-widget"
+					location="postLike"
 				/>
 			</div>
 			<div class="-cancel">

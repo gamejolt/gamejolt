@@ -3,7 +3,7 @@ import { Component, Emit, Inject, Prop, ProvideReactive } from 'vue-property-dec
 import { Location } from 'vue-router';
 import { State } from 'vuex-class';
 import { findRequiredVueParent } from '../../../../../utils/vue';
-import { Analytics } from '../../../../../_common/analytics/analytics.service';
+import { trackPostOpen } from '../../../../../_common/analytics/analytics.service';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
 import AppCommunityPill from '../../../../../_common/community/pill/pill.vue';
@@ -281,7 +281,7 @@ export default class AppActivityFeedPost extends Vue {
 			return;
 		}
 
-		Analytics.trackEvent('activity-feed', 'click');
+		trackPostOpen({ source: 'feed' });
 		if (e.ctrlKey || e.shiftKey) {
 			Navigate.newWindow(Environment.wttfBaseUrl + this.linkResolved);
 			return;
@@ -296,7 +296,6 @@ export default class AppActivityFeedPost extends Vue {
 
 	toggleLead() {
 		this.feed.toggleItemLeadOpen(this.item);
-		Analytics.trackEvent('activity-feed', 'toggle-lead');
 	}
 
 	canToggleLeadChanged(canToggle: boolean) {

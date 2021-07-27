@@ -77,7 +77,7 @@
 						<div :key="item.id" class="-card">
 							<app-post-card
 								:post="item.action"
-								:post-open-source="postOpenSource"
+								:source="postOpenSource"
 								with-user
 							/>
 						</div>

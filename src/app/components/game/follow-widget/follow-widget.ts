@@ -1,10 +1,13 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { propOptional } from '../../../../utils/vue';
+import {
+	GameFollowLocation,
+	trackGameFollow,
+} from '../../../../_common/analytics/analytics.service';
 import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { number } from '../../../../_common/filters/number';
-import { Game } from '../../../../_common/game/game.model';
+import { followGame, Game, unfollowGame } from '../../../../_common/game/game.model';
 import { Growls } from '../../../../_common/growls/growls.service';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
@@ -23,34 +26,34 @@ import { Store } from '../../../store/index';
 	},
 })
 export default class AppGameFollowWidget extends Vue {
-	@Prop(Game)
+	@Prop({ type: Game, required: true })
 	game!: Game;
 
-	@Prop(Boolean)
-	overlay?: boolean;
+	@Prop({ type: String, required: true })
+	location!: GameFollowLocation;
 
-	@Prop(Boolean)
-	circle?: boolean;
+	@Prop({ type: Boolean, required: false, default: false })
+	overlay!: boolean;
 
-	@Prop(Boolean)
-	block?: boolean;
+	@Prop({ type: Boolean, required: false, default: false })
+	circle!: boolean;
 
-	@Prop(Boolean)
-	lg?: boolean;
+	@Prop({ type: Boolean, required: false, default: false })
+	block!: boolean;
 
-	@Prop(Boolean)
-	solid?: boolean;
+	@Prop({ type: Boolean, required: false, default: false })
+	lg!: boolean;
 
-	@Prop({ type: String, required: false, default: 'global' })
-	eventLabel!: string;
+	@Prop({ type: Boolean, required: false, default: false })
+	solid!: boolean;
 
-	@Prop(Boolean)
-	showUserFollow?: boolean;
+	@Prop({ type: Boolean, required: false, default: false })
+	showUserFollow!: boolean;
 
-	@Prop(propOptional(Boolean, false)) hideCount!: boolean;
+	@Prop({ type: Boolean, required: false, default: false })
+	hideCount!: boolean;
 
-	@State
-	app!: Store['app'];
+	@State app!: Store['app'];
 
 	isShowingFollowPopover = false;
 
@@ -101,6 +104,7 @@ export default class AppGameFollowWidget extends Vue {
 			return;
 		}
 
+		let failed = false;
 		if (!this.game.is_following) {
 			// Do this before attempting to follow.
 			// We don't want to wait till the follow is confirmed to show the dialog,
@@ -112,11 +116,14 @@ export default class AppGameFollowWidget extends Vue {
 			}
 
 			try {
-				await this.game.$follow();
+				await followGame(this.game);
 			} catch (e) {
+				failed = true;
 				Growls.error(
 					this.$gettext('Something has prevented you from following this game.')
 				);
+			} finally {
+				trackGameFollow(true, { failed, location: this.location });
 			}
 		} else {
 			if (this.isShowingFollowPopover) {
@@ -124,12 +131,15 @@ export default class AppGameFollowWidget extends Vue {
 			}
 
 			try {
-				await this.game.$unfollow();
+				await unfollowGame(this.game);
 			} catch (e) {
+				failed = true;
 				Growls.error(
 					this.$gettext('library.followed.remove_game_error_growl'),
 					this.$gettext('library.followed.remove_game_error_growl_title')
 				);
+			} finally {
+				trackGameFollow(false, { failed, location: this.location });
 			}
 		}
 	}

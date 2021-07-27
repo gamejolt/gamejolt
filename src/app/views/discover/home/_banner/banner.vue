@@ -71,6 +71,7 @@
 										:game="item.game"
 										solid
 										primary
+										location="homeBanner"
 									/>
 								</template>
 								<template v-else-if="item.community">
@@ -102,7 +103,7 @@
 										:community="item.community"
 										solid
 										primary
-										event-label="home-banner"
+										location="homeBanner"
 									/>
 								</template>
 								<template v-else-if="item.jam">

@@ -1,6 +1,10 @@
 import Vue from 'vue';
 import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
-import { Analytics, PostControlsLocation } from '../../../../_common/analytics/analytics.service';
+import {
+	Analytics,
+	PostControlsLocation,
+	trackPostPublish,
+} from '../../../../_common/analytics/analytics.service';
 import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import {
 	CommentStoreManager,
@@ -198,7 +202,7 @@ export default class AppPostControls extends Vue {
 	}
 
 	async publish() {
-		Analytics.trackEvent('post-controls', 'publish', this.eventLabel);
+		trackPostPublish();
 		await this.post.$publish();
 		this.emitPostPublish();
 	}

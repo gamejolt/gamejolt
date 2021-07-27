@@ -34,7 +34,7 @@
 							<app-post-card
 								:post="recommendedPost"
 								with-user
-								post-open-source="postRecommendation"
+								source="postRecommendation"
 							/>
 						</div>
 

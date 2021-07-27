@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../../utils/vue';
 import { PostOpenSource, trackPostOpen } from '../../../../../_common/analytics/analytics.service';
 import { ContentFocus } from '../../../../../_common/content-focus/content-focus.service';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
@@ -48,10 +47,17 @@ export const AppPostCardAspectRatio = 10 / 16;
 	},
 })
 export default class AppPostCard extends Vue {
-	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
-	@Prop(propOptional(String, null)) postOpenSource!: PostOpenSource | null;
-	@Prop(propOptional(String, null)) videoContext!: VideoPlayerControllerContext;
-	@Prop(propOptional(Boolean, false)) withUser!: boolean;
+	@Prop({ type: FiresidePost, required: true })
+	post!: FiresidePost;
+
+	@Prop({ type: String, required: true })
+	source!: PostOpenSource;
+
+	@Prop({ type: String, required: false, default: null })
+	videoContext!: VideoPlayerControllerContext;
+
+	@Prop({ type: Boolean, required: false, default: false })
+	withUser!: boolean;
 
 	$el!: HTMLElement;
 	$refs!: {
@@ -224,8 +230,6 @@ export default class AppPostCard extends Vue {
 	}
 
 	trackPostOpen() {
-		if (this.postOpenSource) {
-			trackPostOpen({ source: this.postOpenSource });
-		}
+		trackPostOpen({ source: this.source });
 	}
 }

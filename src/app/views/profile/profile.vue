@@ -226,7 +226,7 @@
 							v-if="shouldShowFollow"
 							:user="user"
 							block
-							event-label="profile"
+							location="profilePage"
 						/>
 						<app-button
 							v-else-if="shouldShowEdit"
