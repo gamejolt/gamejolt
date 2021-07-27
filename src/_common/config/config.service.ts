@@ -1,6 +1,5 @@
 import { fetchAndActivate, getRemoteConfig, getValue } from 'firebase/remote-config';
 import Vue from 'vue';
-import { trackExperiments } from '../analytics/analytics.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
 
 export const ConfigService = Vue.observable({
@@ -184,7 +183,6 @@ async function _init() {
 		}
 
 		await fetchAndActivate(config);
-		trackExperiments(ConfigService.options);
 	} catch (e) {
 		// Do nothing.
 	} finally {

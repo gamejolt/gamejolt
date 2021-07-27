@@ -190,23 +190,6 @@ function _getExperimentValue(option: ConfigOption) {
 }
 
 /**
- * Track their remote config data as the experiments so that we can segment and
- * target based on what they saw.
- */
-export function trackExperiments(configOptions: ConfigOption[]) {
-	const activeOptions: Record<string, string> = {};
-	for (const option of configOptions) {
-		activeOptions[_getExperimentKey(option)] = _getExperimentValue(option);
-	}
-
-	// Limits:
-	// https://support.google.com/analytics/answer/9267744?hl=en
-	const slicedEntries = Object.entries(activeOptions).slice(0, 20);
-
-	_trackEvent('experiments', Object.fromEntries(slicedEntries));
-}
-
-/**
  * Used to track anytime they see an actual experiment or engage with it in any
  * way. This allows us to know when they actually saw an experiment vs just
  * knowing that they MIGHT see an experiment.
