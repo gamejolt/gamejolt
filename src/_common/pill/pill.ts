@@ -3,7 +3,7 @@ import { Component, Prop } from 'vue-property-decorator';
 
 @Component({})
 export default class AppPill extends Vue {
-	@Prop(Object)
+	@Prop({ type: Object, required: false })
 	to?: any;
 
 	get component() {

@@ -78,7 +78,7 @@
 									v-if="!user || displayUser.id !== user.id"
 									:user="displayUser"
 									hide-count
-									event-label="post-view"
+									location="postPage"
 								/>
 							</div>
 						</div>

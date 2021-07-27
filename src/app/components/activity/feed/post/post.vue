@@ -70,7 +70,7 @@
 						:user="user"
 						:sm="Screen.isXs"
 						hide-count
-						event-label="feed"
+						location="feed"
 					/>
 
 					<span>

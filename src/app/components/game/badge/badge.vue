@@ -35,7 +35,7 @@
 			</div>
 
 			<div class="-follow-button">
-				<app-game-follow-widget :game="game" overlay hide-count />
+				<app-game-follow-widget :game="game" overlay hide-count location="badge" />
 			</div>
 		</div>
 	</app-theme>

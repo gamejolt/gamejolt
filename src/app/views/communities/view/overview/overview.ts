@@ -151,7 +151,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		}
 
 		await acceptCollaboration(this.routeStore, this.user);
-		this.joinCommunity(this.community);
+		this.joinCommunity({ community: this.community });
 		Growls.success(this.$gettext(`You are now a collaborator on this community!`));
 	}
 

@@ -3,6 +3,7 @@ import { determine } from 'jstimezonedetect';
 import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../utils/array';
 import { propOptional } from '../../../../utils/vue';
+import { trackPostPublish } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
@@ -101,8 +102,10 @@ type FormPostModel = FiresidePost & {
 		AppTooltip,
 	},
 })
-export default class FormPost extends BaseForm<FormPostModel>
-	implements FormOnInit, FormOnLoad, FormOnSubmit, FormOnSubmitSuccess, FormOnSubmitError {
+export default class FormPost
+	extends BaseForm<FormPostModel>
+	implements FormOnInit, FormOnLoad, FormOnSubmit, FormOnSubmitSuccess, FormOnSubmitError
+{
 	modelClass = FiresidePost as any;
 
 	@AppState
@@ -498,6 +501,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 	onPublishSubmit() {
 		this.setField('status', FiresidePost.STATUS_ACTIVE);
+		trackPostPublish();
 	}
 
 	async onSubmit() {
