@@ -1,10 +1,11 @@
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
 import { AppFocusWhen } from '../../../../../_common/form-vue/focus-when.directive';
-import { BaseForm } from '../../../../../_common/form-vue/form.service';
+import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.service';
 
 type FormModel = {
 	title: string;
+	is_draft: boolean;
 };
 
 @Component({
@@ -12,10 +13,15 @@ type FormModel = {
 		AppFocusWhen,
 	},
 })
-export default class FormFiresideAdd extends BaseForm<FormModel> {
+export default class FormFiresideAdd extends BaseForm<FormModel> implements FormOnInit {
 	@Prop({ type: String, required: false, default: undefined }) defaultTitle!: string;
 
-	created() {
+	onInit() {
 		this.setField('title', this.defaultTitle);
+		this.setField('is_draft', false);
+	}
+
+	onDraftSubmit() {
+		this.setField('is_draft', true);
 	}
 }

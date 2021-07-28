@@ -38,6 +38,16 @@ export default class AppFiresideStats extends Vue {
 
 	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
 
+	get canPublish() {
+		return (
+			this.fireside &&
+			this.user &&
+			this.fireside.user.id === this.fireside.user.id &&
+			this.status === 'joined' &&
+			this.fireside.is_draft
+		);
+	}
+
 	get canExtend() {
 		return (
 			this.fireside &&
@@ -112,6 +122,15 @@ export default class AppFiresideStats extends Vue {
 		} else {
 			this.expiresDurationText = null;
 		}
+	}
+
+	async onClickPublish() {
+		if (!this.fireside || this.status !== 'joined' || !this.fireside.is_draft) {
+			return;
+		}
+
+		await this.fireside.$publish();
+		Growls.success(this.$gettext(`Your Fireside is live!`));
 	}
 
 	async onClickExtend() {

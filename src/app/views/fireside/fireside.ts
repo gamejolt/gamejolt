@@ -579,7 +579,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	private createOrUpdateRtc(payload: any, checkJoined = true) {
-		if (!this.fireside || (checkJoined && this.status !== 'joined')) {
+		if (!this.user || !this.fireside || (checkJoined && this.status !== 'joined')) {
 			return;
 		}
 
@@ -587,6 +587,7 @@ export default class RouteFireside extends BaseRouteComponent {
 
 		if (this.rtc === null) {
 			this.rtc = new FiresideRTC(
+				this.user.id,
 				payload.streamingAppId,
 				payload.videoChannelName,
 				payload.videoToken,

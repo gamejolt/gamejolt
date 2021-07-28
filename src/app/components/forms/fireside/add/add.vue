@@ -21,6 +21,15 @@
 		<app-form-button icon="fireside" :disabled="!valid">
 			<translate>LET'S GO</translate>
 		</app-form-button>
+		<app-form-button
+			:solid="false"
+			:primary="false"
+			:disabled="!valid"
+			trans
+			@before-submit="onDraftSubmit()"
+		>
+			<translate>LET'S (almost) GO</translate>
+		</app-form-button>
 	</app-form>
 </template>
 

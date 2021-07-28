@@ -52,7 +52,8 @@ export default class AppFiresideAddModal extends BaseModal {
 
 	async onSubmit(formData: any) {
 		const title = formData.title;
-		const payload = await Api.sendRequest(this.requestUri, { title });
+		const isDraft = formData.is_draft;
+		const payload = await Api.sendRequest(this.requestUri, { title, is_draft: isDraft });
 
 		if (!payload.success) {
 			console.log(payload);

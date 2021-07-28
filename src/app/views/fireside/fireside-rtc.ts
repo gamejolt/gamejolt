@@ -5,6 +5,7 @@ import AgoraRTC, {
 	IRemoteVideoTrack,
 } from 'agora-rtc-sdk-ng';
 import { sleep } from '../../../utils/utils';
+import { Navigate } from '../../../_common/navigate/navigate.service';
 import { User } from '../../../_common/user/user.model';
 
 export const FiresideRTCKey = Symbol('fireside-rtc');
@@ -18,7 +19,10 @@ export class FiresideRTC {
 	users: FiresideRTCUser[] = [];
 	focusedUserId: number | null = null;
 
+	private volumeLevelInterval: NodeJS.Timer | null = null;
+
 	constructor(
+		private userId: number,
 		private appId: string,
 		private videoChannel: string,
 		private videoToken: string | null,
@@ -39,6 +43,10 @@ export class FiresideRTC {
 
 	private logError(message: any) {
 		console.error('[FIRESIDE-RTC] ' + message);
+	}
+
+	get isHost() {
+		return this.hosts.find(host => host.id == this.userId) !== undefined;
 	}
 
 	get focusedUser() {
@@ -80,11 +88,6 @@ export class FiresideRTC {
 
 		this.generation++;
 
-		if (!this.videoClient && !this.audioClient) {
-			this.log('Nothing to destroy, video and audio client are unset');
-			return;
-		}
-
 		try {
 			await Promise.all(
 				this.users.map(user =>
@@ -107,12 +110,17 @@ export class FiresideRTC {
 			]);
 		} catch (e) {
 			// reload the page, anything we do now is no longer reliable.
-			location.reload();
+			Navigate.reload();
 			return;
 		}
 
 		this.videoClient?.removeAllListeners();
 		this.audioClient?.removeAllListeners();
+
+		if (this.volumeLevelInterval !== null) {
+			clearInterval(this.volumeLevelInterval);
+			this.volumeLevelInterval = null;
+		}
 
 		this.videoClient = null;
 		this.audioClient = null;
@@ -128,8 +136,13 @@ export class FiresideRTC {
 
 	private createClients() {
 		this.log('Trace(createClients)');
+
+		(AgoraRTC as any).setParameter('AUDIO_SOURCE_VOLUME_UPDATE_INTERVAL', 100);
+
 		this.videoClient = AgoraRTC.createClient({ mode: 'live', codec: 'vp8' });
 		this.audioClient = AgoraRTC.createClient({ mode: 'live', codec: 'vp8' });
+
+		this.volumeLevelInterval = setInterval(() => this.updateVolumeLevels(), 100);
 	}
 
 	private setupEvents() {
@@ -306,6 +319,12 @@ export class FiresideRTC {
 		}
 		return user;
 	}
+
+	private updateVolumeLevels() {
+		for (const remoteUser of this.users) {
+			remoteUser.updateVolumeLevel();
+		}
+	}
 }
 
 export class FiresideRTCUser {
@@ -316,6 +335,7 @@ export class FiresideRTCUser {
 	public videoTrack: IRemoteVideoTrack | null = null;
 	public desktopAudioTrack: IRemoteAudioTrack | null = null;
 	public micAudioTrack: IRemoteAudioTrack | null = null;
+	public volumeLevel = 0;
 
 	private playerElement: HTMLDivElement | null = null;
 
@@ -382,6 +402,11 @@ export class FiresideRTCUser {
 			return;
 		}
 
+		// if (rtc.isHost) {
+		// 	console.log('Aborting desktop audio playback because current user is a host');
+		// 	return;
+		// }
+
 		try {
 			this.desktopAudioTrack = await rtc.videoClient.subscribe(this.videoUser, 'audio');
 			this.desktopAudioTrack.play();
@@ -426,6 +451,11 @@ export class FiresideRTCUser {
 			return;
 		}
 
+		// if (rtc.isHost) {
+		// 	console.log('Aborting audio playback because current user is a host');
+		// 	return;
+		// }
+
 		try {
 			this.micAudioTrack = await rtc.audioClient.subscribe(this.audioChatUser, 'audio');
 			this.micAudioTrack.play();
@@ -463,5 +493,14 @@ export class FiresideRTCUser {
 				console.error(e);
 			}
 		}
+	}
+
+	public updateVolumeLevel() {
+		if (!this.audioChatUser || !this.micAudioTrack || !this.micAudioTrack.isPlaying) {
+			this.volumeLevel = 0;
+			return;
+		}
+
+		this.volumeLevel = this.micAudioTrack.getVolumeLevel();
 	}
 }
