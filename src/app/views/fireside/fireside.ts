@@ -183,7 +183,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	get shouldShowChat() {
-		const mobileCondition = Screen.isMobile && !this.isVertical ? false : true;
+		const mobileCondition = Screen.isMobile && this.isStreaming ? this.isVertical : true;
 
 		return !!this.chat && this.chat.connected && !!this.chatRoom && mobileCondition;
 	}
@@ -193,19 +193,19 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	get shouldShowHosts() {
-		return !this.isVertical && !this.isSmall;
+		return !this.isVertical && !Screen.isMobile;
 	}
 
 	get isVertical() {
+		if (Screen.isMobile) {
+			return window.screen.height > window.screen.width;
+		}
+
 		return Screen.height > Screen.width;
 	}
 
-	get isSmall() {
-		return !(Screen.isLg || Screen.isMd);
-	}
-
 	get shouldShowFiresideStats() {
-		return !this.isStreaming && this.status === 'joined' && !this.isSmall;
+		return !this.isStreaming && this.status === 'joined' && !Screen.isMobile;
 	}
 
 	get shouldShowEditControlButton() {
