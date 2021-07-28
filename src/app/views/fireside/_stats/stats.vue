@@ -2,7 +2,7 @@
 
 <template>
 	<div class="fireside-stats">
-		<div>
+		<app-scroll-scroller thin>
 			<app-illustration src="~img/ill/end-of-feed.svg" />
 
 			<div v-if="expiresProgressValue !== null" class="-burnout-bar">
@@ -28,6 +28,8 @@
 				<app-button
 					v-app-tooltip.bottom="$gettext(`Make your Fireside public`)"
 					block
+					primary
+					solid
 					icon="notifications"
 					class="-publish-btn"
 					@click="onClickPublish()"
@@ -63,7 +65,7 @@
 					</translate>
 				</p>
 			</template>
-		</div>
+		</app-scroll-scroller>
 		<div>
 			<app-card class="-share-card">
 				<p>

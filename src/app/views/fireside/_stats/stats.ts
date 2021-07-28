@@ -11,6 +11,7 @@ import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { Growls } from '../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../_common/illustration/illustration.vue';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
+import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { RouteStatus } from '../fireside';
@@ -20,6 +21,7 @@ import { RouteStatus } from '../fireside';
 		AppIllustration,
 		AppProgressBar,
 		AppCard,
+		AppScrollScroller,
 	},
 	directives: {
 		AppTooltip,
