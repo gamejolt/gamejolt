@@ -174,7 +174,7 @@
     "axios": "0.21.1",
     "client-voodoo": "2.5.3",
     "fs-extra": "7.0.0",
-    "snyk": "^1.661.0",
+    "snyk": "^1.667.0",
     "write-file-atomic": "2.3.0",
     "yarn": "^1.22.10"
   },
