@@ -50,8 +50,7 @@ export class FiresideRTC {
 	}
 
 	get focusedUser() {
-		const user = this.users.find(remoteUser => remoteUser.userId == this.focusedUserId);
-		return user?.hasVideo ? user : null;
+		return this.users.find(remoteUser => remoteUser.userId == this.focusedUserId) || null;
 	}
 
 	private assertNotOutdated(myGeneration: number) {
