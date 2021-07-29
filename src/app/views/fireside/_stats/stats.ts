@@ -11,6 +11,7 @@ import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { Growls } from '../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../_common/illustration/illustration.vue';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
+import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { RouteStatus } from '../fireside';
@@ -20,6 +21,7 @@ import { RouteStatus } from '../fireside';
 		AppIllustration,
 		AppProgressBar,
 		AppCard,
+		AppScrollScroller,
 	},
 	directives: {
 		AppTooltip,
@@ -37,6 +39,16 @@ export default class AppFiresideStats extends Vue {
 	expiresProgressValue: number | null = null;
 
 	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
+
+	get canPublish() {
+		return (
+			this.fireside &&
+			this.user &&
+			this.fireside.user.id === this.fireside.user.id &&
+			this.status === 'joined' &&
+			this.fireside.is_draft
+		);
+	}
 
 	get canExtend() {
 		return (
@@ -112,6 +124,15 @@ export default class AppFiresideStats extends Vue {
 		} else {
 			this.expiresDurationText = null;
 		}
+	}
+
+	async onClickPublish() {
+		if (!this.fireside || this.status !== 'joined' || !this.fireside.is_draft) {
+			return;
+		}
+
+		await this.fireside.$publish();
+		Growls.success(this.$gettext(`Your Fireside is live!`));
 	}
 
 	async onClickExtend() {

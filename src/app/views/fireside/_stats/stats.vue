@@ -2,7 +2,7 @@
 
 <template>
 	<div class="fireside-stats">
-		<div>
+		<app-scroll-scroller thin>
 			<app-illustration src="~img/ill/end-of-feed.svg" />
 
 			<div v-if="expiresProgressValue !== null" class="-burnout-bar">
@@ -24,6 +24,30 @@
 				</span>
 			</div>
 
+			<template v-if="canPublish">
+				<app-button
+					v-app-tooltip.bottom="$gettext(`Make your Fireside public`)"
+					block
+					primary
+					solid
+					icon="notifications"
+					class="-publish-btn"
+					@click="onClickPublish()"
+				>
+					<translate>Publish</translate>
+				</app-button>
+				<p class="help-block">
+					<translate v-if="!fireside.community">
+						Your Fireside is current in draft. Only you can view it. Publish it to let
+						everyone join!
+					</translate>
+					<translate v-else>
+						Your Fireside is currently in draft. Only you and the community
+						collaborators can view it. Publish it to let everyone join!
+					</translate>
+				</p>
+			</template>
+
 			<template v-if="canExtend">
 				<app-button
 					v-app-tooltip.bottom="$gettext(`Extend the duration of your Fireside`)"
@@ -41,7 +65,7 @@
 					</translate>
 				</p>
 			</template>
-		</div>
+		</app-scroll-scroller>
 		<div>
 			<app-card class="-share-card">
 				<p>
@@ -78,6 +102,9 @@
 .-burnout-bar-placeholder
 	height: 26px
 	width: 1px
+
+.-publish-btn
+	margin-top: 16px
 
 .-extend-btn
 	margin-top: 16px

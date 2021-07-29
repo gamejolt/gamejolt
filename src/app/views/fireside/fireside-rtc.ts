@@ -5,6 +5,7 @@ import AgoraRTC, {
 	IRemoteVideoTrack,
 } from 'agora-rtc-sdk-ng';
 import { sleep } from '../../../utils/utils';
+import { Navigate } from '../../../_common/navigate/navigate.service';
 import { User } from '../../../_common/user/user.model';
 
 export const FiresideRTCKey = Symbol('fireside-rtc');
@@ -18,7 +19,10 @@ export class FiresideRTC {
 	users: FiresideRTCUser[] = [];
 	focusedUserId: number | null = null;
 
+	private volumeLevelInterval: NodeJS.Timer | null = null;
+
 	constructor(
+		private userId: number,
 		private appId: string,
 		private videoChannel: string,
 		private videoToken: string | null,
@@ -27,6 +31,22 @@ export class FiresideRTC {
 		private hosts: User[]
 	) {
 		this.setup();
+	}
+
+	private log(message: any) {
+		console.log('[FIRESIDE-RTC] ' + message);
+	}
+
+	private logWarning(message: any) {
+		console.warn('[FIRESIDE-RTC] ' + message);
+	}
+
+	private logError(message: any) {
+		console.error('[FIRESIDE-RTC] ' + message);
+	}
+
+	get isHost() {
+		return this.hosts.find(host => host.id == this.userId) !== undefined;
 	}
 
 	get focusedUser() {
@@ -41,7 +61,7 @@ export class FiresideRTC {
 	}
 
 	private async setup() {
-		console.log('FiresideRTC -> setup');
+		this.log('Trace(setup)');
 
 		this.generation++;
 		const currentGen = this.generation;
@@ -54,21 +74,33 @@ export class FiresideRTC {
 				await this.join();
 				break;
 			} catch (e) {
-				console.error('Failed to join');
-				console.error(e);
+				this.logError('Failed to join');
+				this.logError(e);
 				await sleep(2000);
 				this.assertNotOutdated(currentGen);
-				console.log('Retrying...');
+				this.log('Retrying...');
 			}
 		}
 	}
 
 	public async destroy() {
-		console.log('FiresideRTC -> destroy');
+		this.log('Trace(destroy)');
 
-		if (!this.videoClient && !this.audioClient) {
-			console.log('Nothing to destroy, video and audio client are unset');
-			return;
+		this.generation++;
+
+		try {
+			await Promise.all(
+				this.users.map(user =>
+					Promise.all([
+						user.stopVideoPlayback(this),
+						user.stopDesktopAudioPlayback(this),
+						user.stopAudioPlayback(this),
+					])
+				)
+			);
+		} catch (e) {
+			this.logWarning('Error while stopping playback. Ignoring.');
+			this.logWarning(e);
 		}
 
 		try {
@@ -78,45 +110,43 @@ export class FiresideRTC {
 			]);
 		} catch (e) {
 			// reload the page, anything we do now is no longer reliable.
-			location.reload();
+			Navigate.reload();
 			return;
 		}
 
 		this.videoClient?.removeAllListeners();
 		this.audioClient?.removeAllListeners();
 
-		// Unsetting the video and audio clients before stopping playback
-		// makes the teardown for rtcuser.stop*playback() functions faster and more reliable
-		// since we don't care about unsubscribing after the video/audio clients have left
-		// their channels.
+		if (this.volumeLevelInterval !== null) {
+			clearInterval(this.volumeLevelInterval);
+			this.volumeLevelInterval = null;
+		}
+
 		this.videoClient = null;
 		this.audioClient = null;
-
-		await Promise.all(
-			this.users.map(user =>
-				Promise.all([
-					user.stopVideoPlayback(this),
-					user.stopDesktopAudioPlayback(this),
-					user.stopAudioPlayback(this),
-				])
-			)
-		);
+		this.focusedUserId = null;
+		this.hosts = [];
 	}
 
 	public async recreate() {
-		console.log('FiresideRTC -> recreate');
+		this.log('Trace(recreate)');
 		await this.destroy();
 		return this.setup();
 	}
 
 	private createClients() {
-		console.log('FiresideRTC -> createClients');
+		this.log('Trace(createClients)');
+
+		(AgoraRTC as any).setParameter('AUDIO_SOURCE_VOLUME_UPDATE_INTERVAL', 100);
+
 		this.videoClient = AgoraRTC.createClient({ mode: 'live', codec: 'vp8' });
 		this.audioClient = AgoraRTC.createClient({ mode: 'live', codec: 'vp8' });
+
+		this.volumeLevelInterval = setInterval(() => this.updateVolumeLevels(), 100);
 	}
 
 	private setupEvents() {
-		console.log('FiresideRTC -> setupEvents');
+		this.log('Trace(setupEvents)');
 		const currentGeneration = this.generation;
 		if (!this.videoClient || !this.audioClient) {
 			throw new Error('Video or audio clients are not defined');
@@ -124,10 +154,14 @@ export class FiresideRTC {
 
 		this.videoClient.on('user-published', async (remoteUser, mediaType) => {
 			this.assertNotOutdated(currentGeneration);
-			console.log('got user published (video channel)');
+			this.log('Got user published (video channel)');
+
+			this.videoClient!.setRemoteVideoStreamType(remoteUser.uid, 1);
 
 			const user = this.findOrAddUser(remoteUser);
 			if (!user) {
+				this.logWarning(`Couldn't find remote user locally`);
+				this.logWarning(remoteUser);
 				return;
 			}
 
@@ -136,7 +170,10 @@ export class FiresideRTC {
 			// Focusing video user if this is the first video stream we're subscribed to.
 			if (mediaType === 'video') {
 				user.hasVideo = true;
-				this.focusedUserId ??= user.userId;
+				if (!this.focusedUserId) {
+					this.log('Focusing user automatically');
+					this.focusedUserId = user.userId;
+				}
 			} else {
 				user.hasDesktopAudio = true;
 			}
@@ -144,11 +181,12 @@ export class FiresideRTC {
 
 		this.videoClient.on('user-unpublished', async (remoteUser, mediaType) => {
 			this.assertNotOutdated(currentGeneration);
-			console.log('got user unpublished');
+			this.log('Got user unpublished (video channel)');
 
 			const user = this.users.find(i => i.userId === remoteUser.uid);
 			if (!user) {
-				console.warn(`couldn't find remote user locally`, remoteUser);
+				this.logWarning(`Couldn't find remote user locally`);
+				this.logWarning(remoteUser);
 				return;
 			}
 
@@ -161,15 +199,17 @@ export class FiresideRTC {
 
 		this.audioClient.on('user-published', async (remoteUser, mediaType) => {
 			this.assertNotOutdated(currentGeneration);
-			console.log('got user published (audio chat channel)');
+			this.log('got user published (audio chat channel)');
 
 			if (mediaType !== 'audio') {
-				console.warn('Unexpected media type: ' + mediaType + '. Ignoring');
+				this.logWarning('Unexpected media type: ' + mediaType + '. Ignoring');
 				return;
 			}
 
 			const user = this.findOrAddUser(remoteUser);
 			if (!user) {
+				this.logWarning(`Couldn't find remote user locally`);
+				this.logWarning(remoteUser);
 				return;
 			}
 
@@ -188,7 +228,7 @@ export class FiresideRTC {
 	}
 
 	private async join() {
-		console.log('FiresideRTC -> join');
+		this.log('Trace(join)');
 		const currentGeneration = this.generation;
 
 		if (!this.videoClient || !this.audioClient) {
@@ -199,7 +239,7 @@ export class FiresideRTC {
 		const audioClient = this.audioClient;
 
 		if (!this.videoToken || !this.audioChatToken) {
-			console.log('Audience tokens not provided yet. Not attempting to join');
+			this.log('Audience tokens not provided yet. Not attempting to join');
 			return;
 		}
 
@@ -225,18 +265,18 @@ export class FiresideRTC {
 	}
 
 	public async renewToken(videoToken: string | null, audioChatToken: string | null) {
-		console.log('FiresideRTC -> renewToken');
+		this.log('Trace(renewToken)');
 
 		if (!this.videoClient || !this.audioClient) {
 			throw new Error('Video or audio clients are not defined');
 		}
 
-		console.log('Renewing audience tokens');
+		this.log('Renewing audience tokens');
 		this.videoToken = videoToken;
 		this.audioChatToken = audioChatToken;
 
 		if (!this.videoToken || !this.audioChatToken) {
-			console.log('Could not get tokens. The stream likely ended.');
+			this.logWarning('Could not get tokens. The stream likely ended.');
 			return;
 		}
 
@@ -244,7 +284,7 @@ export class FiresideRTC {
 		const isAudioDisconnected = this.audioClient.connectionState === 'DISCONNECTED';
 		// If only one of the clients is fully disconnected, just nuke em both and retry.
 		if (isVideoDisconnected !== isAudioDisconnected) {
-			console.log(
+			this.logError(
 				'Only one of the clients (video or audio) is connected. Recreating both to get them in sync'
 			);
 			this.recreate();
@@ -252,10 +292,10 @@ export class FiresideRTC {
 		}
 
 		if (isVideoDisconnected || isAudioDisconnected) {
-			console.log('Got new audience tokens. Applying by joining...');
+			this.log('Got new audience tokens. Applying by joining...');
 			await this.join();
 		} else {
-			console.log('Got new audience tokens. Applying by renewing...');
+			this.log('Got new audience tokens. Applying by renewing...');
 			await Promise.all([
 				this.videoClient.renewToken(this.videoToken),
 				this.audioClient.renewToken(this.audioChatToken),
@@ -267,7 +307,7 @@ export class FiresideRTC {
 		let user = this.users.find(i => i.userId === remoteUser.uid);
 		if (!user) {
 			if (typeof remoteUser.uid !== 'number') {
-				console.warn('Expected remote user uid to be numeric');
+				this.logWarning('Expected remote user uid to be numeric');
 				return null;
 			}
 
@@ -279,6 +319,12 @@ export class FiresideRTC {
 		}
 		return user;
 	}
+
+	private updateVolumeLevels() {
+		for (const remoteUser of this.users) {
+			remoteUser.updateVolumeLevel();
+		}
+	}
 }
 
 export class FiresideRTCUser {
@@ -289,6 +335,7 @@ export class FiresideRTCUser {
 	public videoTrack: IRemoteVideoTrack | null = null;
 	public desktopAudioTrack: IRemoteAudioTrack | null = null;
 	public micAudioTrack: IRemoteAudioTrack | null = null;
+	public volumeLevel = 0;
 
 	private playerElement: HTMLDivElement | null = null;
 
@@ -355,6 +402,11 @@ export class FiresideRTCUser {
 			return;
 		}
 
+		// if (rtc.isHost) {
+		// 	console.log('Aborting desktop audio playback because current user is a host');
+		// 	return;
+		// }
+
 		try {
 			this.desktopAudioTrack = await rtc.videoClient.subscribe(this.videoUser, 'audio');
 			this.desktopAudioTrack.play();
@@ -399,6 +451,11 @@ export class FiresideRTCUser {
 			return;
 		}
 
+		// if (rtc.isHost) {
+		// 	console.log('Aborting audio playback because current user is a host');
+		// 	return;
+		// }
+
 		try {
 			this.micAudioTrack = await rtc.audioClient.subscribe(this.audioChatUser, 'audio');
 			this.micAudioTrack.play();
@@ -436,5 +493,14 @@ export class FiresideRTCUser {
 				console.error(e);
 			}
 		}
+	}
+
+	public updateVolumeLevel() {
+		if (!this.audioChatUser || !this.micAudioTrack || !this.micAudioTrack.isPlaying) {
+			this.volumeLevel = 0;
+			return;
+		}
+
+		this.volumeLevel = this.micAudioTrack.getVolumeLevel();
 	}
 }

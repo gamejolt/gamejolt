@@ -264,6 +264,18 @@
 						<em>Started</em> a Fireside in this community.
 					</span>
 					<span
+						v-else-if="item.type === CommunityActivityItem.TYPE_FIRESIDE_START_DRAFT"
+						v-translate
+					>
+						<em>Started</em> a Fireside in <em>draft</em> mode in this community.
+					</span>
+					<span
+						v-else-if="item.type === CommunityActivityItem.TYPE_FIRESIDE_PUBLISH"
+						v-translate
+					>
+						<em>Published</em> a Fireside in this community.
+					</span>
+					<span
 						v-else-if="item.type === CommunityActivityItem.TYPE_FIRESIDE_EXTINGUISH"
 						v-translate
 					>

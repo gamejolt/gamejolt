@@ -1,8 +1,7 @@
 <script lang="ts" src="./host-avatar"></script>
 
 <template>
-	<div class="-wrapper">
-		<!-- <div class="-wrapper" :class="{ '-talking': host.volumeLevel > 1 }"> -->
+	<div class="-wrapper" :style="{ 'border-width': talking * 5 + 'px' }">
 		<div
 			class="-avatar"
 			:class="{ '-active': rtc.focusedUserId === host.userId }"
@@ -23,13 +22,12 @@
 @import '~styles-lib/mixins'
 
 .-wrapper
-	border-radius: 50%
-	padding: $border-width-large * 2
 	margin: 4px
-
-	&.-talking
-		padding: $border-width-large
-		border: $border-width-large solid var(--theme-highlight)
+	border-radius: 50%
+	border-style: solid
+	border-color: var(--theme-highlight)
+	transition: border-width 100ms cubic-bezier(0.39, 0.58, 0.57, 1)
+	will-change: border-width
 
 .-avatar
 	width: 100%
@@ -45,7 +43,7 @@
 
 	&.-active
 		cursor: default
-		border: 3px solid var(--theme-highlight)
+		// border: 3px solid var(--theme-highlight)
 		background-color: var(--theme-highlight)
 		color: var(--theme-highlight-fg)
 </style>

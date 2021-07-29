@@ -24,6 +24,7 @@ export class Fireside extends Model {
 	is_expired!: boolean;
 	is_streaming!: boolean;
 	member_count!: number;
+	is_draft!: boolean;
 
 	get blocked() {
 		return !!this.user_block || this.user.blocked_you || this.user.is_blocked;
@@ -76,6 +77,10 @@ export class Fireside extends Model {
 
 	$save() {
 		return this.$_save(`/web/dash/fireside/save/` + this.hash, 'fireside');
+	}
+
+	$publish() {
+		return this.$_save(`/web/dash/fireside/publish/` + this.hash, 'fireside');
 	}
 
 	$extinguish() {

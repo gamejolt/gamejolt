@@ -20,4 +20,12 @@ export default class AppFiresideHostAvatar extends Vue {
 		this.rtc.focusedUserId = this.host.userId;
 		this.emitChangeHost();
 	}
+
+	get talking() {
+		// Make a nice looking curve
+		return (
+			Math.pow(Math.log10(this.host.volumeLevel * 100 + 1), 1.5) /
+			Math.pow(Math.log10(101), 1.5)
+		);
+	}
 }
