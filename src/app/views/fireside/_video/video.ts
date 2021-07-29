@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, InjectReactive, Prop } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../utils/vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { FiresideRTC, FiresideRTCKey, FiresideRTCUser } from '../fireside-rtc';
 import AppFiresideHostList from '../_host-list/host-list.vue';
@@ -13,8 +12,11 @@ const UIHideTimeoutMovement = 2000;
 	},
 })
 export default class AppFiresideVideo extends Vue {
-	@Prop(propRequired(FiresideRTCUser)) rtcUser!: FiresideRTCUser;
-	@Prop(propOptional(Boolean, false)) showHosts!: boolean;
+	@Prop({ type: FiresideRTCUser, required: true })
+	rtcUser!: FiresideRTCUser;
+
+	@Prop({ type: Boolean, required: false, default: false })
+	showHosts!: boolean;
 
 	@InjectReactive(FiresideRTCKey) rtc!: FiresideRTC;
 

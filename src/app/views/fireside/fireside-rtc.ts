@@ -137,12 +137,12 @@ export class FiresideRTC {
 	private createClients() {
 		this.log('Trace(createClients)');
 
-		(AgoraRTC as any).setParameter('AUDIO_SOURCE_VOLUME_UPDATE_INTERVAL', 100);
+		(AgoraRTC as any).setParameter('AUDIO_SOURCE_VOLUME_UPDATE_INTERVAL', 200);
 
 		this.videoClient = AgoraRTC.createClient({ mode: 'live', codec: 'vp8' });
 		this.audioClient = AgoraRTC.createClient({ mode: 'live', codec: 'vp8' });
 
-		this.volumeLevelInterval = setInterval(() => this.updateVolumeLevels(), 100);
+		this.volumeLevelInterval = setInterval(() => this.updateVolumeLevels(), 200);
 	}
 
 	private setupEvents() {
@@ -452,10 +452,10 @@ export class FiresideRTCUser {
 			return;
 		}
 
-		if (rtc.isHost) {
-			console.log('Aborting audio playback because current user is a host');
-			return;
-		}
+		// if (rtc.isHost) {
+		// 	console.log('Aborting audio playback because current user is a host');
+		// 	return;
+		// }
 
 		try {
 			this.micAudioTrack = await rtc.audioClient.subscribe(this.audioChatUser, 'audio');

@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Emit, InjectReactive, Prop } from 'vue-property-decorator';
-import { propRequired } from '../../../../utils/vue';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import { FiresideRTC, FiresideRTCKey, FiresideRTCUser } from '../fireside-rtc';
 
@@ -10,7 +9,8 @@ import { FiresideRTC, FiresideRTCKey, FiresideRTCUser } from '../fireside-rtc';
 	},
 })
 export default class AppFiresideHostAvatar extends Vue {
-	@Prop(propRequired(FiresideRTCUser)) host!: FiresideRTCUser;
+	@Prop({ type: FiresideRTCUser, required: true })
+	host!: FiresideRTCUser;
 
 	@InjectReactive(FiresideRTCKey) rtc!: FiresideRTC;
 
