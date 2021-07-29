@@ -6,6 +6,7 @@ import { Api } from '../../../_common/api/api.service';
 import AppAuthJoin from '../../../_common/auth/join/join.vue';
 import AppCommunityThumbnailImg from '../../../_common/community/thumbnail/img/img.vue';
 import { getCookie } from '../../../_common/cookie/cookie.service';
+import { number } from '../../../_common/filters/number';
 import { Fireside } from '../../../_common/fireside/fireside.model';
 import { FiresideRole } from '../../../_common/fireside/role/role.model';
 import { Growls } from '../../../_common/growls/growls.service';
@@ -110,6 +111,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	hasExpiryWarning = false; // Visually shows a warning to the owner when the fireside's time is running low.
 
 	readonly Screen = Screen;
+	readonly number = number;
 
 	videoWidth = 0;
 	videoHeight = 0;
@@ -169,12 +171,15 @@ export default class RouteFireside extends BaseRouteComponent {
 
 	get shouldShowChat() {
 		const mobileCondition = Screen.isMobile && this.isStreaming ? this.isVertical : true;
-
 		return !!this.chat && this.chat.connected && !!this.chatRoom && mobileCondition;
 	}
 
 	get shouldShowChatMembers() {
 		return !this.isStreaming && this.shouldShowChat && Screen.isLg;
+	}
+
+	get shouldShowChatMemberStats() {
+		return this.shouldShowHosts && this.isStreaming;
 	}
 
 	get shouldShowHosts() {

@@ -31,6 +31,19 @@
 						<br />
 						{{ fireside.title }}
 					</h2>
+					<div
+						v-if="shouldShowChatMemberStats && chatUsers"
+						class="-fireside-title-member-stats"
+					>
+						<ul class="stat-list">
+							<a @click="onClickShowChatMembers">
+								<li class="stat-big stat-big-smaller">
+									<div class="stat-big-label">Members</div>
+									<div class="stat-big-digit">{{ number(chatUsers.count) }}</div>
+								</li>
+							</a>
+						</ul>
+					</div>
 					<div v-if="shouldShowTitleControls" class="-fireside-title-controls">
 						<app-button
 							v-if="shouldShowEditControlButton"
@@ -255,12 +268,6 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 
-.-test
-	position: fixed
-	top: 75px
-	left: 75px
-	z-index: 2000
-
 .-fireside
 	change-bg('bg')
 	overflow: hidden
@@ -346,14 +353,19 @@
 
 .-fireside-title
 	display: flex
-	align-items: flex-top
-	justify-content: space-between
+	align-items: center
 
 	h2
 		text-overflow()
+		flex: auto
+
+	&-member-stats
+		flex: none
+		margin-left: 12px
+		margin-right: 24px
 
 	&-controls
-		margin-top: 16px
+		flex: none
 		margin-left: 12px
 		white-space: nowrap
 
