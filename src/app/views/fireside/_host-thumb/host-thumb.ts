@@ -37,10 +37,10 @@ export default class AppFiresideHostThumb extends Vue {
 
 	onClick() {
 		if (this.isFocused) {
-			this.rtc.focusedUserId = null;
-		} else {
-			this.rtc.focusedUserId = this.host.userId;
+			return;
 		}
+
+		this.rtc.focusedUserId = this.host.userId;
 		this.emitChangeHost();
 	}
 }

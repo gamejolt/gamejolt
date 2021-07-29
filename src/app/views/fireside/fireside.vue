@@ -345,7 +345,7 @@
 
 	.-is-streaming &
 		min-width: 350px
-		max-width: 20%
+		max-width: 25%
 
 .-chat
 	flex: 3 0
