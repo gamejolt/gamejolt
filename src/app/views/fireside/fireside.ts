@@ -25,7 +25,7 @@ import {
 	ChatClient,
 	ChatKey,
 	joinInstancedRoomChannel,
-	leaveChatRoom,
+	leaveChatRoom
 } from '../../components/chat/client';
 import { ChatRoomChannel } from '../../components/chat/room-channel';
 import AppChatWindowOutput from '../../components/chat/window/output/output.vue';
