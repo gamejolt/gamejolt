@@ -137,12 +137,12 @@ export class FiresideRTC {
 	private createClients() {
 		this.log('Trace(createClients)');
 
-		(AgoraRTC as any).setParameter('AUDIO_SOURCE_VOLUME_UPDATE_INTERVAL', 200);
+		(AgoraRTC as any).setParameter('AUDIO_SOURCE_VOLUME_UPDATE_INTERVAL', 100);
 
 		this.videoClient = AgoraRTC.createClient({ mode: 'live', codec: 'vp8' });
 		this.audioClient = AgoraRTC.createClient({ mode: 'live', codec: 'vp8' });
 
-		this.volumeLevelInterval = setInterval(() => this.updateVolumeLevels(), 200);
+		this.volumeLevelInterval = setInterval(() => this.updateVolumeLevels(), 100);
 	}
 
 	private setupEvents() {

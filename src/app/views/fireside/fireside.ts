@@ -37,13 +37,11 @@ import AppFiresideChatMembers from './_chat-members/chat-members.vue';
 import { FiresideChatMembersModal } from './_chat-members/modal/modal.service';
 import AppFiresideDesktopAudio from './_desktop_audio/desktop-audio.vue';
 import { FiresideEditModal } from './_edit-modal/edit-modal.service';
-import AppFiresideHostAvatar from './_host-avatar/host-avatar.vue';
 import AppFiresideHostList from './_host-list/host-list.vue';
 import { FiresideStatsModal } from './_stats/modal/modal.service';
 import AppFiresideStats from './_stats/stats.vue';
 import AppFiresideVideoStats from './_video-stats/video-stats.vue';
 import AppFiresideVideo from './_video/video.vue';
-
 type RoutePayload = {
 	fireside: any;
 	streamingAppId: string;
@@ -84,7 +82,6 @@ const FiresideThemeKey = 'fireside';
 		AppResponsiveDimensions,
 		AppFiresideVideo,
 		AppFiresideVideoStats,
-		AppFiresideHostAvatar,
 		AppScrollScroller,
 		AppFiresideHostList,
 		AppFiresideDesktopAudio,

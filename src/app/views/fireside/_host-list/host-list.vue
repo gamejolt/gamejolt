@@ -11,11 +11,7 @@
 		<div class="-fireside-hosts-inner">
 			<div v-for="host of rtc.users" :key="host.userId" class="-host-outer">
 				<div class="-host-spacer" />
-				<app-fireside-host-avatar
-					class="-host"
-					:host="host"
-					@change-host="emitChangeHost"
-				/>
+				<app-fireside-host-thumb class="-host" :host="host" @change-host="emitChangeHost" />
 			</div>
 		</div>
 	</component>
@@ -25,10 +21,11 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 
-$-max-size = 64px + ($border-width-large * 2)
+$-max-size = 100px
 
 .-fireside-hosts
 	width: 100%
+	padding-top: 12px
 
 	&:not(.-scrollable)
 		.-fireside-hosts-inner
@@ -48,6 +45,7 @@ $-max-size = 64px + ($border-width-large * 2)
 
 	&-inner
 		justify-content: center
+		grid-gap: 16px
 
 .-host
 	position: absolute

@@ -8,7 +8,7 @@ import { FiresideRTC, FiresideRTCKey, FiresideRTCUser } from '../fireside-rtc';
 		AppUserAvatarImg,
 	},
 })
-export default class AppFiresideHostAvatar extends Vue {
+export default class AppFiresideHostThumb extends Vue {
 	@Prop({ type: FiresideRTCUser, required: true })
 	host!: FiresideRTCUser;
 
@@ -16,9 +16,12 @@ export default class AppFiresideHostAvatar extends Vue {
 
 	@Emit('change-host') emitChangeHost() {}
 
-	onClick() {
-		this.rtc.focusedUserId = this.host.userId;
-		this.emitChangeHost();
+	get isFocused() {
+		return this.rtc.focusedUserId === this.host.userId;
+	}
+
+	get hasDisplay() {
+		return !this.isFocused;
 	}
 
 	get talking() {
@@ -30,5 +33,14 @@ export default class AppFiresideHostAvatar extends Vue {
 		const accuracy = 7;
 		const volumeSnapped = Math.round(volumeAdjusted * accuracy) / accuracy;
 		return Math.min(1, Math.max(0, volumeSnapped));
+	}
+
+	onClick() {
+		if (this.isFocused) {
+			this.rtc.focusedUserId = null;
+		} else {
+			this.rtc.focusedUserId = this.host.userId;
+		}
+		this.emitChangeHost();
 	}
 }
