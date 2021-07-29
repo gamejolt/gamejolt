@@ -156,7 +156,8 @@ export class FiresideRTC {
 			this.assertNotOutdated(currentGeneration);
 			this.log('Got user published (video channel)');
 
-			this.videoClient!.setRemoteVideoStreamType(remoteUser.uid, 1);
+			// To test the lower quality stream
+			// this.videoClient!.setRemoteVideoStreamType(remoteUser.uid, 1);
 
 			const user = this.findOrAddUser(remoteUser);
 			if (!user) {
