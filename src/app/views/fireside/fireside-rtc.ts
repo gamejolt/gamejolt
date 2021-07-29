@@ -402,10 +402,10 @@ export class FiresideRTCUser {
 			return;
 		}
 
-		// if (rtc.isHost) {
-		// 	console.log('Aborting desktop audio playback because current user is a host');
-		// 	return;
-		// }
+		if (rtc.isHost) {
+			console.log('Aborting desktop audio playback because current user is a host');
+			return;
+		}
 
 		try {
 			this.desktopAudioTrack = await rtc.videoClient.subscribe(this.videoUser, 'audio');
@@ -451,10 +451,10 @@ export class FiresideRTCUser {
 			return;
 		}
 
-		// if (rtc.isHost) {
-		// 	console.log('Aborting audio playback because current user is a host');
-		// 	return;
-		// }
+		if (rtc.isHost) {
+			console.log('Aborting audio playback because current user is a host');
+			return;
+		}
 
 		try {
 			this.micAudioTrack = await rtc.audioClient.subscribe(this.audioChatUser, 'audio');

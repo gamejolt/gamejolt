@@ -28,7 +28,7 @@
 			trans
 			@before-submit="onDraftSubmit()"
 		>
-			<translate>LET'S (almost) GO</translate>
+			<translate>Start as Draft</translate>
 		</app-form-button>
 	</app-form>
 </template>
