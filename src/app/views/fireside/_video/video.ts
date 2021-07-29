@@ -3,12 +3,14 @@ import { Component, InjectReactive, Prop } from 'vue-property-decorator';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { FiresideRTC, FiresideRTCKey, FiresideRTCUser } from '../fireside-rtc';
 import AppFiresideHostList from '../_host-list/host-list.vue';
+import AppFiresideHostThumbIndicator from '../_host-thumb/host-thumb-indicator.vue';
 
 const UIHideTimeout = 2000;
 const UIHideTimeoutMovement = 2000;
 @Component({
 	components: {
 		AppFiresideHostList,
+		AppFiresideHostThumbIndicator,
 	},
 })
 export default class AppFiresideVideo extends Vue {
@@ -41,6 +43,14 @@ export default class AppFiresideVideo extends Vue {
 
 	get hasOverlayItems() {
 		return this.showHosts;
+	}
+
+	get hasVideo() {
+		return this.rtcUser.hasVideo;
+	}
+
+	get isLoadingVideo() {
+		return this.hasVideo && this.rtc.videoClient?.connectionState !== 'CONNECTED';
 	}
 
 	created() {

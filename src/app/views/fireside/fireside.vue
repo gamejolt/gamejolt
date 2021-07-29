@@ -89,28 +89,18 @@
 								height: videoHeight + 'px',
 							}"
 						>
-							<template v-if="shouldPlayVideo">
-								<!-- <app-fireside-video-stats
-									:key="'stats-' + rtc.focusedUser.userId"
-								/> -->
+							<template v-if="rtc && rtc.focusedUser">
+								<app-fireside-video
+									:key="'video-' + rtc.focusedUser.userId"
+									:rtc-user="rtc.focusedUser"
+									:show-hosts="!shouldShowHosts"
+								/>
 
-								<!-- purely for type checking -->
-								<template v-if="rtc && rtc.focusedUser">
-									<app-fireside-video
-										:key="'video-' + rtc.focusedUser.userId"
-										:rtc-user="rtc.focusedUser"
-										:show-hosts="!shouldShowHosts"
-									/>
-
-									<app-fireside-desktop-audio
-										v-if="shouldPlayDesktopAudio"
-										:key="'desktop-audio' + rtc.focusedUser.userId"
-										:rtc-user="rtc.focusedUser"
-									/>
-								</template>
-							</template>
-							<template v-else>
-								<app-loading centered stationary no-color hide-label />
+								<app-fireside-desktop-audio
+									v-if="shouldPlayDesktopAudio"
+									:key="'desktop-audio' + rtc.focusedUser.userId"
+									:rtc-user="rtc.focusedUser"
+								/>
 							</template>
 						</div>
 					</div>

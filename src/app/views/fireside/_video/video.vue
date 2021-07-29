@@ -9,6 +9,18 @@
 		@click="onVideoClick"
 	>
 		<div ref="player" class="-video-player" />
+
+		<template v-if="isLoadingVideo">
+			<app-loading centered stationary no-color hide-label />
+		</template>
+		<template v-else-if="!hasVideo">
+			<div class="-overlay -host-overlay">
+				<div class="-host-wrapper">
+					<app-fireside-host-thumb-indicator class="-host" :host="rtcUser" />
+				</div>
+			</div>
+		</template>
+
 		<div
 			v-if="hasOverlayItems"
 			class="-overlay"
@@ -47,6 +59,24 @@
 		&.-darken
 			opacity: 1
 			background-color: rgba($black, 0.5)
+
+.-host-overlay
+	opacity: 1 !important
+	display: flex
+	align-items: center
+	justify-content: center
+
+.-host-wrapper
+	width: 30%
+	padding-top: @width
+	position: relative
+
+.-host
+	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
 
 .-overlay-hosts
 	position: absolute

@@ -4,17 +4,10 @@
 	<div class="-thumb" @click="onClick">
 		<div class="-display-thumb" :class="{ '-hidden': !hasDisplay }" />
 
-		<div
-			class="-avatar-wrap"
-			:class="{ '-full': !hasDisplay }"
-			:style="{ 'border-width': talking * 5 + 'px' }"
-		>
-			<div class="-avatar">
-				<template v-if="host.userModel">
-					<app-user-avatar-img :user="host.userModel" />
-				</template>
-			</div>
+		<div class="-avatar-wrap" :class="{ '-full': !hasDisplay }">
+			<app-fireside-host-thumb-indicator :host="host" />
 		</div>
+
 		<div class="-spacer" />
 		<div class="-active-indicator" :class="{ '-active': isFocused }" />
 	</div>
@@ -46,25 +39,12 @@
 	width: 60px
 	height: 60px
 	bottom: 0
-	border-radius: 50%
-	border-style: solid
-	border-color: var(--theme-highlight)
-	transition: border-width 100ms cubic-bezier(0.39, 0.58, 0.57, 1)
-	will-change: border-width
-	overflow: hidden
 	transition: all 250ms $strong-ease-out
 
 	&.-full
 		width: 86px
 		height: 86px
 		bottom: 12px
-
-.-avatar
-	background-color: var(--theme-bg-offset)
-	color: var(--theme-fg)
-	display: flex
-	justify-content: center
-	align-items: center
 
 .-spacer
 	flex: none

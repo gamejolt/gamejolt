@@ -40,7 +40,6 @@ import { FiresideEditModal } from './_edit-modal/edit-modal.service';
 import AppFiresideHostList from './_host-list/host-list.vue';
 import { FiresideStatsModal } from './_stats/modal/modal.service';
 import AppFiresideStats from './_stats/stats.vue';
-import AppFiresideVideoStats from './_video-stats/video-stats.vue';
 import AppFiresideVideo from './_video/video.vue';
 type RoutePayload = {
 	fireside: any;
@@ -81,7 +80,6 @@ const FiresideThemeKey = 'fireside';
 		AppCommunityThumbnailImg,
 		AppResponsiveDimensions,
 		AppFiresideVideo,
-		AppFiresideVideoStats,
 		AppScrollScroller,
 		AppFiresideHostList,
 		AppFiresideDesktopAudio,
@@ -157,16 +155,6 @@ export default class RouteFireside extends BaseRouteComponent {
 
 	get isStreaming() {
 		return this.fireside?.is_streaming;
-	}
-
-	get shouldPlayVideo() {
-		return (
-			this.rtc &&
-			this.rtc.focusedUser &&
-			this.rtc.focusedUser.hasVideo &&
-			this.rtc.videoClient &&
-			this.rtc.videoClient.connectionState === 'CONNECTED'
-		);
 	}
 
 	get shouldPlayDesktopAudio() {
