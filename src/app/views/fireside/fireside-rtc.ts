@@ -168,16 +168,13 @@ export class FiresideRTC {
 
 			user.videoUser = remoteUser;
 
-			// Focusing video user if this is the first video stream we're subscribed to.
 			if (mediaType === 'video') {
 				user.hasVideo = true;
-				if (!this.focusedUserId) {
-					this.log('Focusing user automatically');
-					this.focusedUserId = user.userId;
-				}
 			} else {
 				user.hasDesktopAudio = true;
 			}
+
+			this.chooseFocusedUser();
 		});
 
 		this.videoClient.on('user-unpublished', async (remoteUser, mediaType) => {
@@ -196,6 +193,29 @@ export class FiresideRTC {
 			} else {
 				user.hasDesktopAudio = false;
 			}
+
+			this.chooseFocusedUser();
+		});
+
+		this.videoClient.on('user-left', remoteUser => {
+			this.assertNotOutdated(currentGeneration);
+			this.log('Got user left (video channel)');
+
+			const user = this.users.find(i => i.userId === remoteUser.uid);
+			if (!user) {
+				this.logWarning(`Couldn't find remote user locally`);
+				this.logWarning(remoteUser);
+				return;
+			}
+
+			user.stopVideoPlayback(this);
+			user.stopDesktopAudioPlayback(this);
+			user.videoUser = null;
+			user.hasVideo = false;
+			user.hasDesktopAudio = false;
+
+			this.removeUserIfNeeded(user);
+			this.chooseFocusedUser();
 		});
 
 		this.audioClient.on('user-published', async (remoteUser, mediaType) => {
@@ -215,7 +235,29 @@ export class FiresideRTC {
 			}
 
 			user.audioChatUser = remoteUser;
+			user.hasMicAudio = true;
 			user.startAudioPlayback(this);
+
+			this.chooseFocusedUser();
+		});
+
+		this.audioClient.on('user-left', remoteUser => {
+			this.assertNotOutdated(currentGeneration);
+			this.log('Got user left (audio channel)');
+
+			const user = this.users.find(i => i.userId === remoteUser.uid);
+			if (!user) {
+				this.logWarning(`Couldn't find remote user locally`);
+				this.logWarning(remoteUser);
+				return;
+			}
+
+			user.stopAudioPlayback(this);
+			user.audioChatUser = null;
+			user.hasMicAudio = false;
+
+			this.removeUserIfNeeded(user);
+			this.chooseFocusedUser();
 		});
 
 		// this.videoClient.on('volume-indicator', (items) => {
@@ -226,6 +268,28 @@ export class FiresideRTC {
 		// 		}
 		// 	}
 		// });
+	}
+
+	private chooseFocusedUser() {
+		const currentUser = this.focusedUser;
+
+		let bestUser: FiresideRTCUser | null = null;
+		let bestScore = -1;
+
+		for (const user of this.users) {
+			const score =
+				(user.hasVideo ? 4 : 0) +
+				(user.hasMicAudio ? 2 : 0) +
+				(user.hasDesktopAudio ? 1 : 0);
+			if (score > bestScore) {
+				bestUser = user;
+				bestScore = score;
+			} else if (score === bestScore && user === currentUser) {
+				bestUser = user;
+			}
+		}
+
+		this.focusedUserId = bestUser?.userId || null;
 	}
 
 	private async join() {
@@ -321,6 +385,12 @@ export class FiresideRTC {
 		return user;
 	}
 
+	private removeUserIfNeeded(user: FiresideRTCUser): void {
+		if (!user.videoUser && !user.audioChatUser) {
+			this.users = this.users.filter(otherUser => user !== otherUser);
+		}
+	}
+
 	private updateVolumeLevels() {
 		for (const remoteUser of this.users) {
 			remoteUser.updateVolumeLevel();
@@ -333,6 +403,7 @@ export class FiresideRTCUser {
 	public audioChatUser: IAgoraRTCRemoteUser | null = null;
 	public hasVideo = false;
 	public hasDesktopAudio = false;
+	public hasMicAudio = false;
 	public videoTrack: IRemoteVideoTrack | null = null;
 	public desktopAudioTrack: IRemoteAudioTrack | null = null;
 	public micAudioTrack: IRemoteAudioTrack | null = null;
@@ -390,9 +461,11 @@ export class FiresideRTCUser {
 		// Don't care if these fail, best effort.
 		if (rtc.videoClient) {
 			try {
-				rtc.videoClient.unsubscribe(this.videoUser, 'video');
+				await rtc.videoClient.unsubscribe(this.videoUser, 'video');
 			} catch (e) {
-				console.error(e);
+				console.warn(
+					'Failed to unsbuscribe to video. Most of the times this is not an error. We attempt to unsubscribe even when we know the user should normally be unsubscribed.'
+				);
 			}
 		}
 	}
@@ -439,9 +512,11 @@ export class FiresideRTCUser {
 
 		if (rtc.videoClient) {
 			try {
-				rtc.videoClient.unsubscribe(this.videoUser, 'audio');
+				await rtc.videoClient.unsubscribe(this.videoUser, 'audio');
 			} catch (e) {
-				console.error(e);
+				console.warn(
+					'Failed to unsbuscribe to desktop audio. Most of the times this is not an error. We attempt to unsubscribe even when we know the user should normally be unsubscribed.'
+				);
 			}
 		}
 	}
@@ -469,7 +544,7 @@ export class FiresideRTCUser {
 		}
 	}
 
-	public stopAudioPlayback(rtc: FiresideRTC) {
+	public async stopAudioPlayback(rtc: FiresideRTC) {
 		console.log(`FiresideRTCUser(${this.userId}) -> stopAudioPlayback`);
 		if (!this.audioChatUser) {
 			return;
@@ -489,9 +564,11 @@ export class FiresideRTCUser {
 		// Don't care if these fail, best effort.
 		if (rtc.audioClient) {
 			try {
-				rtc.audioClient.unsubscribe(this.audioChatUser, 'audio');
+				await rtc.audioClient.unsubscribe(this.audioChatUser, 'audio');
 			} catch (e) {
-				console.error(e);
+				console.warn(
+					'Failed to unsbuscribe to mic audio. Most of the times this is not an error. We attempt to unsubscribe even when we know the user should normally be unsubscribed.'
+				);
 			}
 		}
 	}
