@@ -43,9 +43,9 @@
 
 .-avatar-wrap
 	position: absolute
-	width: 50px
-	height: 50px
-	bottom: 30px - (@width / 2)
+	width: 60px
+	height: 60px
+	bottom: 0
 	border-radius: 50%
 	border-style: solid
 	border-color: var(--theme-highlight)
