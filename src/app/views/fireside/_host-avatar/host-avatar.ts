@@ -22,10 +22,13 @@ export default class AppFiresideHostAvatar extends Vue {
 	}
 
 	get talking() {
-		// Make a nice looking curve
-		return (
+		// Make a nice looking curve, have it snap to a small number of positions.
+		const volumeAdjusted =
 			Math.pow(Math.log10(this.host.volumeLevel * 100 + 1), 1.5) /
-			Math.pow(Math.log10(101), 1.5)
-		);
+			Math.pow(Math.log10(101), 1.5);
+
+		const accuracy = 7;
+		const volumeSnapped = Math.round(volumeAdjusted * accuracy) / accuracy;
+		return Math.min(1, Math.max(0, volumeSnapped));
 	}
 }
