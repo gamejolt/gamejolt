@@ -22,7 +22,7 @@ export default class AppFiresideHostThumb extends Vue {
 		return this.rtc.focusedUserId === this.host.userId;
 	}
 
-	get hasDisplay() {
+	get hasVideo() {
 		return !this.isFocused;
 	}
 

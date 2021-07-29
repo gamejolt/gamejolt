@@ -106,7 +106,9 @@
 					</div>
 				</div>
 
-				<app-fireside-host-list v-if="rtc && shouldShowHosts" />
+				<div v-if="rtc && shouldShowHosts" class="-hosts-padding">
+					<app-fireside-host-list :vertical="isVertical" />
+				</div>
 			</div>
 
 			<template v-if="status === 'loading' || status === 'initial'">
@@ -403,6 +405,7 @@
 
 		&.-vertical
 			flex: 1
+			flex-direction: row
 			max-height: 33vh
 
 	&-padding
@@ -423,6 +426,14 @@
 		overflow: hidden
 		position: absolute
 		background-color: var(--theme-bg-subtle)
+
+.-hosts-padding
+	flex: none
+	padding-top: 8px
+
+	.-video-wrapper.-vertical &
+		padding-top: 0
+		padding-right: 8px
 
 .-chat-window
 	position: absolute

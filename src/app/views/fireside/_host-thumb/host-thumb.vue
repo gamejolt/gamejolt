@@ -2,9 +2,9 @@
 
 <template>
 	<div class="-thumb" @click="onClick">
-		<div class="-display-thumb" :class="{ '-hidden': !hasDisplay }" />
+		<div class="-display-thumb" :class="{ '-hidden': !hasVideo }" />
 
-		<div class="-avatar-wrap" :class="{ '-full': !hasDisplay }">
+		<div class="-avatar-wrap" :class="{ '-full': !hasVideo }">
 			<app-fireside-host-thumb-indicator :host="host" />
 		</div>
 
@@ -18,11 +18,14 @@
 @import '~styles-lib/mixins'
 
 .-thumb
+	position: relative
 	display: flex
 	flex-direction: column
 	align-items: center
 	cursor: pointer
 	user-select: none
+	width: var(--fireside-host-size)
+	height: var(--fireside-host-size)
 
 .-display-thumb
 	rounded-corners()
@@ -36,19 +39,19 @@
 
 .-avatar-wrap
 	position: absolute
-	width: 60px
-	height: 60px
+	width: calc(var(--fireside-host-size) * 0.6)
+	height: calc(var(--fireside-host-size) * 0.6)
 	bottom: 0
 	transition: all 250ms $strong-ease-out
 
 	&.-full
-		width: 86px
-		height: 86px
+		width: calc(var(--fireside-host-size) - 12px)
+		height: calc(var(--fireside-host-size) - 12px)
 		bottom: 12px
 
 .-spacer
 	flex: none
-	height: 30px
+	height: calc(var(--fireside-host-size) * 0.3)
 
 .-active-indicator
 	flex: none

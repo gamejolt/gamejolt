@@ -12,7 +12,7 @@ import AppFiresideHostThumb from '../_host-thumb/host-thumb.vue';
 })
 export default class AppFiresideHostList extends Vue {
 	@Prop({ type: Boolean, required: false, default: false })
-	scrollable!: boolean;
+	vertical!: boolean;
 
 	@InjectReactive(FiresideRTCKey) rtc!: FiresideRTC;
 

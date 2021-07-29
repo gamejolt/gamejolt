@@ -1,66 +1,44 @@
 <script lang="ts" src="./host-list"></script>
 
 <template>
-	<component
-		:is="scrollable ? 'app-scroll-scroller' : 'div'"
+	<app-scroll-scroller
 		v-if="rtc"
-		:horizontal="scrollable"
 		class="-fireside-hosts"
-		:class="{ '-scrollable': scrollable }"
+		:class="{ '-vertical': vertical }"
+		:horizontal="!vertical"
 	>
 		<div class="-fireside-hosts-inner">
-			<div v-for="host of rtc.users" :key="host.userId" class="-host-outer">
-				<div class="-host-spacer" />
-				<app-fireside-host-thumb class="-host" :host="host" @change-host="emitChangeHost" />
-			</div>
+			<app-fireside-host-thumb
+				v-for="host of rtc.users"
+				:key="host.userId"
+				:host="host"
+				@change-host="emitChangeHost"
+			/>
 		</div>
-	</component>
+	</app-scroll-scroller>
 </template>
 
 <style lang="stylus" scoped>
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 
-$-max-size = 100px
-
 .-fireside-hosts
+	--fireside-host-size: 100px
 	width: 100%
-	padding-top: 12px
+	height: var(--fireside-host-size)
 
-	&:not(.-scrollable)
-		.-fireside-hosts-inner
-			display: flex
-
-		.-host-outer
-			max-width: $-max-size
-			flex: auto
-
-	&.-scrollable
-		.-fireside-hosts-inner
-			display: inline-flex
-
-		.-host-outer
-			width: $-max-size
-			flex: none
+	@media $media-xs
+		--fireside-host-size: 70px
 
 	&-inner
+		display: flex
 		justify-content: center
 		grid-gap: 16px
 
-.-host
-	position: absolute
-	left: 0
-	top: 0
-	right: 0
-	bottom: 0
+	&.-vertical
+		width: var(--fireside-host-size)
+		height: auto
 
-	&-spacer
-		width: 100%
-		padding-top: 100%
-
-	&-outer
-		position: relative
-		display: inline-flex
-		align-items: center
-		justify-content: center
+		.-fireside-hosts-inner
+			flex-direction: column
 </style>
