@@ -67,7 +67,7 @@
 	justify-content: center
 
 .-host-wrapper
-	width: 30%
+	width: calc(min(30%, 300px))
 	padding-top: @width
 	position: relative
 

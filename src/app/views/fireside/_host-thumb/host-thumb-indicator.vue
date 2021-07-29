@@ -40,7 +40,8 @@
 	width: 100%
 
 .-img
-	display: flex
-	height: 100%
-	width: 100%
+	&
+	>>> img
+		height: 100%
+		width: 100%
 </style>
