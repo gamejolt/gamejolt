@@ -159,7 +159,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	get isStreaming() {
-		return this.fireside instanceof Fireside && this.fireside.is_streaming;
+		return this.fireside?.is_streaming;
 	}
 
 	get shouldPlayVideo() {

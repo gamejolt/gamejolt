@@ -70,7 +70,7 @@
 			</template>
 		</div>
 		<div class="-split" />
-		<div class="-body" :class="{ '-body-column': isVertical }">
+		<div class="-body" :class="{ '-body-column': isVertical, '-is-streaming': isStreaming }">
 			<div v-if="shouldShowFiresideStats" class="-leading">
 				<app-fireside-stats :fireside="fireside" :status="status" />
 			</div>
@@ -308,6 +308,9 @@
 	@media $media-md-up
 		padding: 16px 0
 
+	&.-is-streaming
+		max-width: none
+
 	&-column
 		flex-direction: column
 
@@ -316,7 +319,7 @@
 
 		.-chat
 			flex: auto
-			max-width: unset
+			max-width: unset !important
 
 .-leading
 .-chat
@@ -339,6 +342,10 @@
 	// on MD size, we push the columns to the right
 	@media $media-md
 		order: 1
+
+	.-is-streaming &
+		min-width: 350px
+		max-width: 20%
 
 .-chat
 	flex: 3 0
@@ -439,7 +446,10 @@
 
 	@media $media-md-up
 		rounded-corners-lg()
-		elevate-2()
+
+	.-is-streaming &
+		border-top-right-radius: 0
+		border-bottom-right-radius: 0
 
 	&-output
 		flex: auto
