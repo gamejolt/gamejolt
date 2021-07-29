@@ -42,6 +42,10 @@ export default class AppFiresideStats extends Vue {
 
 	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
 
+	get isStreaming() {
+		return this.fireside.is_streaming;
+	}
+
 	get canPublish() {
 		return (
 			this.user &&
@@ -62,16 +66,10 @@ export default class AppFiresideStats extends Vue {
 	}
 
 	get shareUrl() {
-		if (!this.fireside) {
-			return null;
-		}
 		return Environment.baseUrl + this.$router.resolve(this.fireside.location).href;
 	}
 
 	get shareContent() {
-		if (!this.fireside) {
-			return null;
-		}
 		return this.$gettextInterpolate('Join the %{ name } Fireside - Game Jolt', {
 			name: this.fireside.title,
 		});
@@ -99,12 +97,6 @@ export default class AppFiresideStats extends Vue {
 	}
 
 	private updateExpiryValues() {
-		if (!this.fireside) {
-			this.totalDurationText = null;
-			this.expiresDurationText = null;
-			return;
-		}
-
 		this.totalDurationText = duration((Date.now() - this.fireside.added_on) / 1000);
 
 		if (this.fireside.expires_on > Date.now()) {
@@ -127,7 +119,7 @@ export default class AppFiresideStats extends Vue {
 	}
 
 	async onClickPublish() {
-		if (!this.fireside || this.status !== 'joined' || !this.fireside.is_draft) {
+		if (this.status !== 'joined' || !this.fireside.is_draft) {
 			return;
 		}
 
@@ -136,7 +128,7 @@ export default class AppFiresideStats extends Vue {
 	}
 
 	async onClickExtend() {
-		if (!this.fireside || this.status !== 'joined' || !this.canExtend) {
+		if (this.status !== 'joined' || !this.canExtend) {
 			return;
 		}
 
@@ -160,9 +152,6 @@ export default class AppFiresideStats extends Vue {
 	}
 
 	copyShareUrl() {
-		if (!this.shareUrl) {
-			return;
-		}
 		Clipboard.copy(this.shareUrl);
 	}
 }
