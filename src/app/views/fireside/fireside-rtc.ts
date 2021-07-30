@@ -10,6 +10,8 @@ import { User } from '../../../_common/user/user.model';
 
 export const FiresideRTCKey = Symbol('fireside-rtc');
 
+// david staaaaaaahp
+
 export class FiresideRTC {
 	generation = 0;
 
