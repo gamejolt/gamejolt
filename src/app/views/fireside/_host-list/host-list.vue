@@ -33,7 +33,7 @@
 	&-inner
 		display: flex
 		justify-content: center
-		grid-gap: 20px
+		grid-gap: 16px
 
 	&.-vertical
 		width: var(--fireside-host-size)

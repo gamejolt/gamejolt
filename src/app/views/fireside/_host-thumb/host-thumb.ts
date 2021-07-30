@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Emit, InjectReactive, Prop } from 'vue-property-decorator';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import { FiresideRTC, FiresideRTCKey, FiresideRTCUser } from '../fireside-rtc';
 import AppFiresideHostThumbIndicator from './host-thumb-indicator.vue';
@@ -8,6 +9,9 @@ import AppFiresideHostThumbIndicator from './host-thumb-indicator.vue';
 	components: {
 		AppUserAvatarImg,
 		AppFiresideHostThumbIndicator,
+	},
+	directives: {
+		AppTooltip,
 	},
 })
 export default class AppFiresideHostThumb extends Vue {
@@ -22,8 +26,12 @@ export default class AppFiresideHostThumb extends Vue {
 		return this.rtc.focusedUserId === this.host.userId;
 	}
 
-	get hasVideo() {
-		return !this.isFocused;
+	get showingVideoThumb() {
+		return !this.isFocused && this.host.hasVideo;
+	}
+
+	get tooltip() {
+		return '@' + this.host.userModel?.username;
 	}
 
 	onClick() {

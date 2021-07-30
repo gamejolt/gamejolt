@@ -1,10 +1,10 @@
 <script lang="ts" src="./host-thumb"></script>
 
 <template>
-	<div class="-thumb" @click="onClick">
-		<div class="-display-thumb" :class="{ '-hidden': !hasVideo }" />
+	<div v-app-tooltip="tooltip" class="-thumb" @click="onClick">
+		<div class="-display-thumb" :class="{ '-hidden': !showingVideoThumb }" />
 
-		<div class="-avatar-wrap" :class="{ '-full': !hasVideo }">
+		<div class="-avatar-wrap" :class="{ '-full': !showingVideoThumb }">
 			<app-fireside-host-thumb-indicator :host="host" />
 		</div>
 
