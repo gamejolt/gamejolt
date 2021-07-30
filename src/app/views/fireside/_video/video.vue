@@ -10,16 +10,12 @@
 	>
 		<div ref="player" class="-video-player" />
 
-		<template v-if="isLoadingVideo">
-			<app-loading centered stationary no-color hide-label />
-		</template>
-		<template v-else-if="!hasVideo">
-			<div class="-overlay -host-overlay">
-				<div class="-host-wrapper">
-					<app-fireside-host-thumb-indicator class="-host" :host="rtcUser" />
-				</div>
+		<div v-if="isLoadingVideo || !hasVideo" class="-overlay -visible-center">
+			<app-loading v-if="isLoadingVideo" centered stationary no-color hide-label />
+			<div v-else class="-host-wrapper">
+				<app-fireside-host-thumb-indicator class="-host" :host="rtcUser" />
 			</div>
-		</template>
+		</div>
 
 		<div
 			v-if="hasOverlayItems"
@@ -28,10 +24,12 @@
 			@mouseenter="isHoveringControls = true"
 			@mouseleave="isHoveringControls = false"
 		>
-			<div @click.stop>
-				<div v-if="showHosts" class="-overlay-hosts -control">
-					<app-fireside-host-list />
-				</div>
+			<div @click.capture="onTapOverlay">
+				<template v-if="shouldShowUI">
+					<div v-if="showHosts" class="-overlay-hosts -control">
+						<app-fireside-host-list scrollable />
+					</div>
+				</template>
 			</div>
 		</div>
 	</div>
@@ -60,7 +58,7 @@
 			opacity: 1
 			background-color: rgba($black, 0.5)
 
-.-host-overlay
+.-visible-center
 	opacity: 1 !important
 	display: flex
 	align-items: center
