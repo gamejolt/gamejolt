@@ -63,11 +63,11 @@ export default class AppFiresideVideo extends Vue {
 	}
 
 	mounted() {
-		this.rtcUser.startVideoPlayback(this.rtc, this.$refs.player);
+		this.rtcUser.registerVideoPlaybackElement(this.$refs.player);
 	}
 
 	beforeDestroy() {
-		this._myRtcUser.stopVideoPlayback(this.rtc);
+		this._myRtcUser.registerVideoPlaybackElement(this.$refs.player);
 	}
 
 	onMouseOut() {
