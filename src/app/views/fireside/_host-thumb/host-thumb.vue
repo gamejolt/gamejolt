@@ -2,7 +2,7 @@
 
 <template>
 	<div v-app-tooltip="tooltip" class="-thumb" @click="onClick">
-		<div class="-display-thumb" :class="{ '-hidden': !showingVideoThumb }" />
+		<div ref="player" class="-display-thumb" :class="{ '-hidden': !showingVideoThumb }" />
 
 		<div class="-avatar-wrap" :class="{ '-full': !showingVideoThumb }">
 			<app-fireside-host-thumb-indicator :host="host" />
