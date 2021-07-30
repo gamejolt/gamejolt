@@ -26,7 +26,7 @@ export default class AppFiresideVideo extends Vue {
 	showHosts!: boolean;
 
 	@Prop({ type: ChatUserCollection, required: false, default: null })
-	viewers!: ChatUserCollection | null;
+	members!: ChatUserCollection | null;
 
 	@InjectReactive(FiresideRTCKey) rtc!: FiresideRTC;
 
@@ -52,11 +52,11 @@ export default class AppFiresideVideo extends Vue {
 	}
 
 	get hasOverlayItems() {
-		return this.showHosts || !!this.viewers;
+		return this.showHosts || !!this.members;
 	}
 
-	get viewerCount() {
-		return this.viewers?.count;
+	get memberCount() {
+		return this.members?.count;
 	}
 
 	get hasVideo() {

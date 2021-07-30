@@ -26,13 +26,13 @@
 		>
 			<div @click.capture="onTapOverlay">
 				<template v-if="shouldShowUI">
-					<div v-if="viewerCount" class="-overlay-viewers">
+					<div v-if="memberCount" class="-overlay-members">
 						<translate
-							:translate-n="viewerCount"
-							:translate-params="{ count: number(viewerCount) }"
-							translate-plural="%{ count } viewers"
+							:translate-n="memberCount"
+							:translate-params="{ count: number(memberCount) }"
+							translate-plural="%{ count } members"
 						>
-							%{ count } viewer
+							%{ count } member
 						</translate>
 					</div>
 
@@ -92,7 +92,7 @@
 	bottom: 4px
 	right: 0px
 
-.-overlay-viewers
+.-overlay-members
 	position: absolute
 	left: 8px
 	top: 8px

@@ -148,7 +148,7 @@ export default class RouteFireside extends BaseRouteComponent {
 		return this.chat.messageQueue.filter(i => i.room_id === this.chatRoom!.id);
 	}
 
-	get overlayChatUsers() {
+	get overlayChatMembers() {
 		if (this.shouldShowHosts) {
 			return;
 		}
