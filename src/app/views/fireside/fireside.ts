@@ -6,6 +6,7 @@ import { Api } from '../../../_common/api/api.service';
 import AppAuthJoin from '../../../_common/auth/join/join.vue';
 import AppCommunityThumbnailImg from '../../../_common/community/thumbnail/img/img.vue';
 import { getCookie } from '../../../_common/cookie/cookie.service';
+import { number } from '../../../_common/filters/number';
 import { Fireside } from '../../../_common/fireside/fireside.model';
 import { FiresideRole } from '../../../_common/fireside/role/role.model';
 import { Growls } from '../../../_common/growls/growls.service';
@@ -37,13 +38,10 @@ import AppFiresideChatMembers from './_chat-members/chat-members.vue';
 import { FiresideChatMembersModal } from './_chat-members/modal/modal.service';
 import AppFiresideDesktopAudio from './_desktop_audio/desktop-audio.vue';
 import { FiresideEditModal } from './_edit-modal/edit-modal.service';
-import AppFiresideHostAvatar from './_host-avatar/host-avatar.vue';
 import AppFiresideHostList from './_host-list/host-list.vue';
 import { FiresideStatsModal } from './_stats/modal/modal.service';
 import AppFiresideStats from './_stats/stats.vue';
-import AppFiresideVideoStats from './_video-stats/video-stats.vue';
 import AppFiresideVideo from './_video/video.vue';
-
 type RoutePayload = {
 	fireside: any;
 	streamingAppId: string;
@@ -83,8 +81,6 @@ const FiresideThemeKey = 'fireside';
 		AppCommunityThumbnailImg,
 		AppResponsiveDimensions,
 		AppFiresideVideo,
-		AppFiresideVideoStats,
-		AppFiresideHostAvatar,
 		AppScrollScroller,
 		AppFiresideHostList,
 		AppFiresideDesktopAudio,
@@ -115,6 +111,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	hasExpiryWarning = false; // Visually shows a warning to the owner when the fireside's time is running low.
 
 	readonly Screen = Screen;
+	readonly number = number;
 
 	videoWidth = 0;
 	videoHeight = 0;
@@ -151,6 +148,13 @@ export default class RouteFireside extends BaseRouteComponent {
 		return this.chat.messageQueue.filter(i => i.room_id === this.chatRoom!.id);
 	}
 
+	get overlayChatMembers() {
+		if (this.shouldShowHosts) {
+			return;
+		}
+		return this.chatUsers;
+	}
+
 	get chatUsers() {
 		if (!this.chatRoom) {
 			return undefined;
@@ -159,17 +163,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	get isStreaming() {
-		return this.fireside instanceof Fireside && this.fireside.is_streaming;
-	}
-
-	get shouldPlayVideo() {
-		return (
-			this.rtc &&
-			this.rtc.focusedUser &&
-			this.rtc.focusedUser.hasVideo &&
-			this.rtc.videoClient &&
-			this.rtc.videoClient.connectionState === 'CONNECTED'
-		);
+		return !!(this.fireside?.is_streaming && this.rtc && this.rtc.users.length > 0);
 	}
 
 	get shouldPlayDesktopAudio() {
@@ -184,12 +178,15 @@ export default class RouteFireside extends BaseRouteComponent {
 
 	get shouldShowChat() {
 		const mobileCondition = Screen.isMobile && this.isStreaming ? this.isVertical : true;
-
 		return !!this.chat && this.chat.connected && !!this.chatRoom && mobileCondition;
 	}
 
 	get shouldShowChatMembers() {
 		return !this.isStreaming && this.shouldShowChat && Screen.isLg;
+	}
+
+	get shouldShowChatMemberStats() {
+		return this.shouldShowHosts && this.isStreaming;
 	}
 
 	get shouldShowHosts() {
@@ -626,7 +623,7 @@ export default class RouteFireside extends BaseRouteComponent {
 		if (!this.fireside) {
 			return;
 		}
-		FiresideStatsModal.show(this.fireside, this.status);
+		FiresideStatsModal.show(this.fireside, this.status, this.isStreaming);
 	}
 
 	onClickEditFireside() {

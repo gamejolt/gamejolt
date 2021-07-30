@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
-import { propRequired } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppCard from '../../../../_common/card/card.vue';
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
@@ -28,8 +27,14 @@ import { RouteStatus } from '../fireside';
 	},
 })
 export default class AppFiresideStats extends Vue {
-	@Prop(propRequired(Fireside)) fireside!: Fireside;
-	@Prop(propRequired(String)) status!: RouteStatus;
+	@Prop({ type: Fireside, required: true })
+	fireside!: Fireside;
+
+	@Prop({ type: String, required: true })
+	status!: RouteStatus;
+
+	@Prop({type: Boolean, required: true})
+	isStreaming!: boolean;
 
 	@AppState user!: AppStore['user'];
 
@@ -42,7 +47,6 @@ export default class AppFiresideStats extends Vue {
 
 	get canPublish() {
 		return (
-			this.fireside &&
 			this.user &&
 			this.fireside.user.id === this.fireside.user.id &&
 			this.status === 'joined' &&
@@ -52,7 +56,6 @@ export default class AppFiresideStats extends Vue {
 
 	get canExtend() {
 		return (
-			this.fireside &&
 			this.user &&
 			this.user.id === this.fireside.user.id &&
 			this.status === 'joined' &&
@@ -62,16 +65,10 @@ export default class AppFiresideStats extends Vue {
 	}
 
 	get shareUrl() {
-		if (!this.fireside) {
-			return null;
-		}
 		return Environment.baseUrl + this.$router.resolve(this.fireside.location).href;
 	}
 
 	get shareContent() {
-		if (!this.fireside) {
-			return null;
-		}
 		return this.$gettextInterpolate('Join the %{ name } Fireside - Game Jolt', {
 			name: this.fireside.title,
 		});
@@ -99,12 +96,6 @@ export default class AppFiresideStats extends Vue {
 	}
 
 	private updateExpiryValues() {
-		if (!this.fireside) {
-			this.totalDurationText = null;
-			this.expiresDurationText = null;
-			return;
-		}
-
 		this.totalDurationText = duration((Date.now() - this.fireside.added_on) / 1000);
 
 		if (this.fireside.expires_on > Date.now()) {
@@ -127,7 +118,7 @@ export default class AppFiresideStats extends Vue {
 	}
 
 	async onClickPublish() {
-		if (!this.fireside || this.status !== 'joined' || !this.fireside.is_draft) {
+		if (this.status !== 'joined' || !this.fireside.is_draft) {
 			return;
 		}
 
@@ -136,7 +127,7 @@ export default class AppFiresideStats extends Vue {
 	}
 
 	async onClickExtend() {
-		if (!this.fireside || this.status !== 'joined' || !this.canExtend) {
+		if (this.status !== 'joined' || !this.canExtend) {
 			return;
 		}
 
@@ -160,9 +151,6 @@ export default class AppFiresideStats extends Vue {
 	}
 
 	copyShareUrl() {
-		if (!this.shareUrl) {
-			return;
-		}
 		Clipboard.copy(this.shareUrl);
 	}
 }

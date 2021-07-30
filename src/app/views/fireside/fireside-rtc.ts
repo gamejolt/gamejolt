@@ -2,7 +2,7 @@ import AgoraRTC, {
 	IAgoraRTCClient,
 	IAgoraRTCRemoteUser,
 	IRemoteAudioTrack,
-	IRemoteVideoTrack,
+	IRemoteVideoTrack
 } from 'agora-rtc-sdk-ng';
 import { sleep } from '../../../utils/utils';
 import { Navigate } from '../../../_common/navigate/navigate.service';
@@ -20,6 +20,9 @@ export class FiresideRTC {
 	focusedUserId: number | null = null;
 
 	private volumeLevelInterval: NodeJS.Timer | null = null;
+
+	// Avoid using underscore for vue reactivity
+	private shouldShowVideoThumbnails = false;
 
 	constructor(
 		private userId: number,
@@ -50,13 +53,27 @@ export class FiresideRTC {
 	}
 
 	get focusedUser() {
-		const user = this.users.find(remoteUser => remoteUser.userId == this.focusedUserId);
-		return user?.hasVideo ? user : null;
+		return this.users.find(remoteUser => remoteUser.userId == this.focusedUserId) || null;
 	}
 
-	private assertNotOutdated(myGeneration: number) {
+	get thumbnailsVisible() {
+		return this.shouldShowVideoThumbnails;
+	}
+
+	set thumbnailsVisible(visible: boolean) {
+		this.shouldShowVideoThumbnails = visible;
+		for (const user of this.users) {
+			if (this.focusedUserId === user.userId) {
+				continue;
+			}
+
+			user.setWantsVideoTrack(this, visible);
+		}
+	}
+
+	public assertNotOutdated(myGeneration: number) {
 		if (myGeneration !== this.generation) {
-			throw new Error('Outdated generation detected');
+			throw new Error('Outdated Fireside RTC generation detected');
 		}
 	}
 
@@ -92,7 +109,7 @@ export class FiresideRTC {
 			await Promise.all(
 				this.users.map(user =>
 					Promise.all([
-						user.stopVideoPlayback(this),
+						user.setWantsVideoTrack(this, false),
 						user.stopDesktopAudioPlayback(this),
 						user.stopAudioPlayback(this),
 					])
@@ -168,15 +185,19 @@ export class FiresideRTC {
 
 			user.videoUser = remoteUser;
 
-			// Focusing video user if this is the first video stream we're subscribed to.
 			if (mediaType === 'video') {
 				user.hasVideo = true;
-				if (!this.focusedUserId) {
-					this.log('Focusing user automatically');
-					this.focusedUserId = user.userId;
-				}
 			} else {
 				user.hasDesktopAudio = true;
+			}
+
+			this.chooseFocusedUser();
+
+			if (mediaType === 'video') {
+				console.log('Current focused user is: ' + this.focusedUserId);
+				if (this.focusedUserId === user.userId || this.shouldShowVideoThumbnails) {
+					user.setWantsVideoTrack(this, true);
+				}
 			}
 		});
 
@@ -192,10 +213,36 @@ export class FiresideRTC {
 			}
 
 			if (mediaType === 'video') {
+				user.setWantsVideoTrack(this, false);
 				user.hasVideo = false;
 			} else {
 				user.hasDesktopAudio = false;
 			}
+
+			this.chooseFocusedUser();
+		});
+
+		this.videoClient.on('user-left', remoteUser => {
+			this.assertNotOutdated(currentGeneration);
+			this.log('Got user left (video channel)');
+
+			const user = this.users.find(i => i.userId === remoteUser.uid);
+			if (!user) {
+				this.logWarning(`Couldn't find remote user locally`);
+				this.logWarning(remoteUser);
+				return;
+			}
+
+			// TODO: this will probably error out because it'll fail to "properly" unsubscribe from the track.
+			user.setWantsVideoTrack(this, false);
+
+			user.stopDesktopAudioPlayback(this);
+			user.videoUser = null;
+			user.hasVideo = false;
+			user.hasDesktopAudio = false;
+
+			this.removeUserIfNeeded(user);
+			this.chooseFocusedUser();
 		});
 
 		this.audioClient.on('user-published', async (remoteUser, mediaType) => {
@@ -215,7 +262,29 @@ export class FiresideRTC {
 			}
 
 			user.audioChatUser = remoteUser;
+			user.hasMicAudio = true;
 			user.startAudioPlayback(this);
+
+			this.chooseFocusedUser();
+		});
+
+		this.audioClient.on('user-left', remoteUser => {
+			this.assertNotOutdated(currentGeneration);
+			this.log('Got user left (audio channel)');
+
+			const user = this.users.find(i => i.userId === remoteUser.uid);
+			if (!user) {
+				this.logWarning(`Couldn't find remote user locally`);
+				this.logWarning(remoteUser);
+				return;
+			}
+
+			user.stopAudioPlayback(this);
+			user.audioChatUser = null;
+			user.hasMicAudio = false;
+
+			this.removeUserIfNeeded(user);
+			this.chooseFocusedUser();
 		});
 
 		// this.videoClient.on('volume-indicator', (items) => {
@@ -226,6 +295,28 @@ export class FiresideRTC {
 		// 		}
 		// 	}
 		// });
+	}
+
+	private chooseFocusedUser() {
+		if (this.focusedUser) {
+			return;
+		}
+
+		let bestUser: FiresideRTCUser | null = null;
+		let bestScore = -1;
+
+		for (const user of this.users) {
+			const score =
+				(user.hasVideo ? 4 : 0) +
+				(user.hasMicAudio ? 2 : 0) +
+				(user.hasDesktopAudio ? 1 : 0);
+			if (score > bestScore) {
+				bestUser = user;
+				bestScore = score;
+			}
+		}
+
+		this.focusedUserId = bestUser?.userId || null;
 	}
 
 	private async join() {
@@ -321,6 +412,12 @@ export class FiresideRTC {
 		return user;
 	}
 
+	private removeUserIfNeeded(user: FiresideRTCUser): void {
+		if (!user.videoUser && !user.audioChatUser) {
+			this.users = this.users.filter(otherUser => user !== otherUser);
+		}
+	}
+
 	private updateVolumeLevels() {
 		for (const remoteUser of this.users) {
 			remoteUser.updateVolumeLevel();
@@ -328,74 +425,208 @@ export class FiresideRTC {
 	}
 }
 
+interface PlaybackElement {
+	div: HTMLDivElement;
+	isLowBitrate: boolean;
+}
+
 export class FiresideRTCUser {
 	public videoUser: IAgoraRTCRemoteUser | null = null;
 	public audioChatUser: IAgoraRTCRemoteUser | null = null;
 	public hasVideo = false;
 	public hasDesktopAudio = false;
+	public hasMicAudio = false;
 	public videoTrack: IRemoteVideoTrack | null = null;
+	private wantsVideoTrack = false;
+	private isBusyWithVideoTrack = false;
 	public desktopAudioTrack: IRemoteAudioTrack | null = null;
 	public micAudioTrack: IRemoteAudioTrack | null = null;
 	public volumeLevel = 0;
 
-	private playerElement: HTMLDivElement | null = null;
+	private videoPlaybackElements: PlaybackElement[] = [];
 
 	constructor(public readonly userId: number, public readonly userModel: User | undefined) {}
 
-	public async startVideoPlayback(rtc: FiresideRTC, element: HTMLDivElement) {
-		console.log(`FiresideRTCUser(${this.userId}) -> startVideoPlayback`);
-		if (!this.videoUser || !rtc.videoClient) {
+	async setWantsVideoTrack(rtc: FiresideRTC, wantsVideoTrack: boolean) {
+		this.wantsVideoTrack = wantsVideoTrack;
+
+		if (this.isBusyWithVideoTrack) {
+			console.log('busy');
 			return;
 		}
 
-		console.log('found video user, starting video playback');
+		if (!rtc.videoClient) {
+			console.warn(
+				'Video client is not initialized, cannot toggle video thumbnail subscription state'
+			);
+			return;
+		}
+
+		// If user doesnt have a video stream to subscribe/unsubscribe to, nothing to do.
+		if (!this.hasVideo || !this.videoUser) {
+			console.log('no video or no video client');
+			return;
+		}
+
+		// If user is already in the desired state for video subscriptions, noop.
+		if (wantsVideoTrack === !!this.videoTrack) {
+			console.log('already in desired state');
+			return;
+		}
+
+		this.isBusyWithVideoTrack = true;
 
 		try {
-			this.videoTrack = await rtc.videoClient.subscribe(this.videoUser, 'video');
-			this.playerElement = element;
-			this.videoTrack.play(element);
-		} catch (e) {
-			console.error('Failed to start video playback, attempting to gracefully stop.');
-			console.error(e);
+			if (wantsVideoTrack) {
+				try {
+					this.videoTrack = await rtc.videoClient.subscribe(this.videoUser, 'video');
 
-			this.stopVideoPlayback(rtc);
-			throw e;
+					for (const playbackElement of this.videoPlaybackElements) {
+						try {
+							// Wait for next tick before playing so that any video playback elements
+							// are first deregistered.
+							setTimeout(() => {
+								if (this.videoTrack) {
+									this.videoTrack.play(playbackElement.div);
+									rtc.videoClient!.setRemoteVideoStreamType(this.userId, playbackElement.isLowBitrate ? 1 : 0);
+								}
+							}, 0);
+						} catch (e) {
+							console.error(
+								`Failed to play video track for user ${this.userId} on a playback element ${playbackElement.div.id}`
+							);
+							console.error(e);
+						}
+					}
+				} catch (e) {
+					console.error(
+						'Failed to subscribe to video thumbnails for user ' + this.userId
+					);
+					console.error(e);
+				}
+			} else {
+				try {
+					if (this.videoTrack?.isPlaying) {
+						try {
+							this.videoTrack.stop();
+						} catch (e) {
+							console.warn(
+								`Got an error while stopping a video track for user ${this.userId}. Tolerating.`
+							);
+							console.warn(e);
+						}
+					}
+
+					await rtc.videoClient.unsubscribe(this.videoUser, 'video');
+
+					// TODO: we might want to set the video track to null even before unsubscribing.
+					// this is because unsubscribe may fail if we already left the channel or it got disconnected
+					// for some reason. in these cases the video track should still get unset, however I don't
+					// know what happens if the error is literally with unsubscribing, and the video track remains
+					// intact.
+					this.videoTrack = null;
+				} catch (e) {
+					console.error(
+						'Failed to subscribe to video thumbnails for user ' + this.userId
+					);
+					console.error(e);
+				}
+			}
+		} finally {
+			this.isBusyWithVideoTrack = false;
+		}
+
+		// If the operation's state doesn't match up with our desired state, toggle the thumbnails again.
+		if (this.wantsVideoTrack !== wantsVideoTrack) {
+			await this.setWantsVideoTrack(rtc, this.wantsVideoTrack);
 		}
 	}
 
-	public async stopVideoPlayback(rtc: FiresideRTC) {
-		console.log(`FiresideRTCUser(${this.userId}) -> stopVideoPlayback`);
+	public registerVideoPlaybackElement(
+		rtc: FiresideRTC,
+		element: HTMLDivElement,
+		isLowBitrate = false
+	) {
+		this.videoPlaybackElements.push({ div: element, isLowBitrate });
 
-		if (!this.videoUser) {
-			console.log('no video user, nothing to do');
+		if (this.isBusyWithVideoTrack) {
 			return;
 		}
 
-		if (this.videoTrack && this.videoTrack.isPlaying) {
-			console.log('Stopping existing video track');
-			try {
-				this.videoTrack.stop();
-			} catch (e) {
-				console.warn('Failed to stop video track playback');
-				console.warn(e);
+		// Wait for next tick before playing so that any video playback elements
+		// are first deregistered.
+		setTimeout(() => {
+			if (this.videoTrack) {
+				this.videoTrack.play(element);
+				rtc.videoClient!.setRemoteVideoStreamType(this.userId, isLowBitrate ? 1 : 0);
 			}
-		}
-		this.videoTrack = null;
-
-		if (this.playerElement) {
-			this.playerElement.innerHTML = '';
-			this.playerElement = null;
-		}
-
-		// Don't care if these fail, best effort.
-		if (rtc.videoClient) {
-			try {
-				rtc.videoClient.unsubscribe(this.videoUser, 'video');
-			} catch (e) {
-				console.error(e);
-			}
-		}
+		}, 0);
 	}
+
+	public deregisterVideoPlaybackElement(element: HTMLDivElement) {
+		this.videoPlaybackElements = this.videoPlaybackElements.filter(
+			playbackElement => playbackElement.div === element
+		);
+
+		element.innerHTML = '';
+	}
+
+	// public async startVideoPlayback(rtc: FiresideRTC, element: HTMLDivElement) {
+	// 	console.log(`FiresideRTCUser(${this.userId}) -> startVideoPlayback`);
+	// 	if (!this.videoUser || !rtc.videoClient) {
+	// 		return;
+	// 	}
+
+	// 	console.log('found video user, starting video playback');
+
+	// 	try {
+	// 		this.videoTrack = await rtc.videoClient.subscribe(this.videoUser, 'video');
+	// 		this.playerElement = element;
+	// 		this.videoTrack.play(element);
+	// 	} catch (e) {
+	// 		console.error('Failed to start video playback, attempting to gracefully stop.');
+	// 		console.error(e);
+
+	// 		this.stopVideoPlayback(rtc);
+	// 		throw e;
+	// 	}
+	// }
+
+	// public async stopVideoPlayback(rtc: FiresideRTC) {
+	// 	console.log(`FiresideRTCUser(${this.userId}) -> stopVideoPlayback`);
+
+	// 	if (!this.videoUser) {
+	// 		console.log('no video user, nothing to do');
+	// 		return;
+	// 	}
+
+	// 	if (this.videoTrack && this.videoTrack.isPlaying) {
+	// 		console.log('Stopping existing video track');
+	// 		try {
+	// 			this.videoTrack.stop();
+	// 		} catch (e) {
+	// 			console.warn('Failed to stop video track playback');
+	// 			console.warn(e);
+	// 		}
+	// 	}
+	// 	this.videoTrack = null;
+
+	// 	if (this.playerElement) {
+	// 		this.playerElement.innerHTML = '';
+	// 		this.playerElement = null;
+	// 	}
+
+	// 	// Don't care if these fail, best effort.
+	// 	if (rtc.videoClient) {
+	// 		try {
+	// 			await rtc.videoClient.unsubscribe(this.videoUser, 'video');
+	// 		} catch (e) {
+	// 			console.warn(
+	// 				'Failed to unsbuscribe to video. Most of the times this is not an error. We attempt to unsubscribe even when we know the user should normally be unsubscribed.'
+	// 			);
+	// 		}
+	// 	}
+	// }
 
 	public async startDesktopAudioPlayback(rtc: FiresideRTC) {
 		console.log(`FiresideRTCUser(${this.userId}) -> startDesktopAudioPlayback`);
@@ -403,10 +634,10 @@ export class FiresideRTCUser {
 			return;
 		}
 
-		if (rtc.isHost) {
-			console.log('Aborting desktop audio playback because current user is a host');
-			return;
-		}
+		// if (rtc.isHost) {
+		// 	console.log('Aborting desktop audio playback because current user is a host');
+		// 	return;
+		// }
 
 		try {
 			this.desktopAudioTrack = await rtc.videoClient.subscribe(this.videoUser, 'audio');
@@ -439,9 +670,11 @@ export class FiresideRTCUser {
 
 		if (rtc.videoClient) {
 			try {
-				rtc.videoClient.unsubscribe(this.videoUser, 'audio');
+				await rtc.videoClient.unsubscribe(this.videoUser, 'audio');
 			} catch (e) {
-				console.error(e);
+				console.warn(
+					'Failed to unsbuscribe to desktop audio. Most of the times this is not an error. We attempt to unsubscribe even when we know the user should normally be unsubscribed.'
+				);
 			}
 		}
 	}
@@ -452,10 +685,10 @@ export class FiresideRTCUser {
 			return;
 		}
 
-		if (rtc.isHost) {
-			console.log('Aborting audio playback because current user is a host');
-			return;
-		}
+		// if (rtc.isHost) {
+		// 	console.log('Aborting audio playback because current user is a host');
+		// 	return;
+		// }
 
 		try {
 			this.micAudioTrack = await rtc.audioClient.subscribe(this.audioChatUser, 'audio');
@@ -469,7 +702,7 @@ export class FiresideRTCUser {
 		}
 	}
 
-	public stopAudioPlayback(rtc: FiresideRTC) {
+	public async stopAudioPlayback(rtc: FiresideRTC) {
 		console.log(`FiresideRTCUser(${this.userId}) -> stopAudioPlayback`);
 		if (!this.audioChatUser) {
 			return;
@@ -489,9 +722,11 @@ export class FiresideRTCUser {
 		// Don't care if these fail, best effort.
 		if (rtc.audioClient) {
 			try {
-				rtc.audioClient.unsubscribe(this.audioChatUser, 'audio');
+				await rtc.audioClient.unsubscribe(this.audioChatUser, 'audio');
 			} catch (e) {
-				console.error(e);
+				console.warn(
+					'Failed to unsbuscribe to mic audio. Most of the times this is not an error. We attempt to unsubscribe even when we know the user should normally be unsubscribed.'
+				);
 			}
 		}
 	}

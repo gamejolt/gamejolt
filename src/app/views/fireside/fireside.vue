@@ -31,6 +31,19 @@
 						<br />
 						{{ fireside.title }}
 					</h2>
+					<div
+						v-if="shouldShowChatMemberStats && chatUsers"
+						class="-fireside-title-member-stats"
+					>
+						<ul class="stat-list">
+							<a @click="onClickShowChatMembers">
+								<li class="stat-big stat-big-smaller">
+									<div class="stat-big-label">Members</div>
+									<div class="stat-big-digit">{{ number(chatUsers.count) }}</div>
+								</li>
+							</a>
+						</ul>
+					</div>
 					<div v-if="shouldShowTitleControls" class="-fireside-title-controls">
 						<app-button
 							v-if="shouldShowEditControlButton"
@@ -70,12 +83,20 @@
 			</template>
 		</div>
 		<div class="-split" />
-		<div class="-body" :class="{ '-body-column': isVertical }">
+		<div class="-body" :class="{ '-body-column': isVertical, '-is-streaming': isStreaming }">
 			<div v-if="shouldShowFiresideStats" class="-leading">
-				<app-fireside-stats :fireside="fireside" :status="status" />
+				<app-fireside-stats
+					:fireside="fireside"
+					:status="status"
+					:is-streaming="isStreaming"
+				/>
 			</div>
 
-			<div v-if="isStreaming" class="-video-wrapper" :class="{ '-vertical': isVertical }">
+			<div
+				v-if="isStreaming && chatRoom"
+				class="-video-wrapper"
+				:class="{ '-vertical': isVertical }"
+			>
 				<div class="-video-padding">
 					<div
 						ref="videoWrapper"
@@ -89,34 +110,27 @@
 								height: videoHeight + 'px',
 							}"
 						>
-							<template v-if="shouldPlayVideo">
-								<!-- <app-fireside-video-stats
-									:key="'stats-' + rtc.focusedUser.userId"
-								/> -->
+							<template v-if="rtc && rtc.focusedUser">
+								<app-fireside-video
+									:key="'video-' + rtc.focusedUser.userId"
+									:rtc-user="rtc.focusedUser"
+									:show-hosts="!shouldShowHosts"
+									:members="overlayChatMembers"
+								/>
 
-								<!-- purely for type checking -->
-								<template v-if="rtc && rtc.focusedUser">
-									<app-fireside-video
-										:key="'video-' + rtc.focusedUser.userId"
-										:rtc-user="rtc.focusedUser"
-										:show-hosts="!shouldShowHosts"
-									/>
-
-									<app-fireside-desktop-audio
-										v-if="shouldPlayDesktopAudio"
-										:key="'desktop-audio' + rtc.focusedUser.userId"
-										:rtc-user="rtc.focusedUser"
-									/>
-								</template>
-							</template>
-							<template v-else>
-								<app-loading centered stationary no-color hide-label />
+								<app-fireside-desktop-audio
+									v-if="shouldPlayDesktopAudio"
+									:key="'desktop-audio' + rtc.focusedUser.userId"
+									:rtc-user="rtc.focusedUser"
+								/>
 							</template>
 						</div>
 					</div>
 				</div>
 
-				<app-fireside-host-list v-if="rtc && shouldShowHosts" />
+				<div v-if="rtc && shouldShowHosts" class="-hosts-padding">
+					<app-fireside-host-list />
+				</div>
 			</div>
 
 			<template v-if="status === 'loading' || status === 'initial'">
@@ -263,12 +277,6 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 
-.-test
-	position: fixed
-	top: 75px
-	left: 75px
-	z-index: 2000
-
 .-fireside
 	change-bg('bg')
 	overflow: hidden
@@ -308,6 +316,9 @@
 	@media $media-md-up
 		padding: 16px 0
 
+	&.-is-streaming
+		max-width: none
+
 	&-column
 		flex-direction: column
 
@@ -316,7 +327,7 @@
 
 		.-chat
 			flex: auto
-			max-width: unset
+			max-width: unset !important
 
 .-leading
 .-chat
@@ -340,6 +351,10 @@
 	@media $media-md
 		order: 1
 
+	.-is-streaming &
+		min-width: 350px
+		max-width: 25%
+
 .-chat
 	flex: 3 0
 	position: relative
@@ -347,14 +362,19 @@
 
 .-fireside-title
 	display: flex
-	align-items: flex-top
-	justify-content: space-between
+	align-items: center
 
 	h2
 		text-overflow()
+		flex: auto
+
+	&-member-stats
+		flex: none
+		margin-left: 12px
+		margin-right: 24px
 
 	&-controls
-		margin-top: 16px
+		flex: none
 		margin-left: 12px
 		white-space: nowrap
 
@@ -406,6 +426,7 @@
 
 		&.-vertical
 			flex: 1
+			flex-direction: row
 			max-height: 33vh
 
 	&-padding
@@ -427,6 +448,16 @@
 		position: absolute
 		background-color: var(--theme-bg-subtle)
 
+.-hosts-padding
+	flex: none
+	padding-top: 8px
+	max-width: 100%
+	overflow: hidden
+
+	.-video-wrapper.-vertical &
+		padding-top: 0
+		padding-right: 8px
+
 .-chat-window
 	position: absolute
 	top: 0
@@ -439,7 +470,10 @@
 
 	@media $media-md-up
 		rounded-corners-lg()
-		elevate-2()
+
+	.-is-streaming &
+		border-top-right-radius: 0
+		border-bottom-right-radius: 0
 
 	&-output
 		flex: auto

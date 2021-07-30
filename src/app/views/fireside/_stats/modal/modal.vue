@@ -8,7 +8,7 @@
 			</app-button>
 		</div>
 		<div class="modal-body">
-			<app-fireside-stats :fireside="fireside" :status="status" />
+			<app-fireside-stats :fireside="fireside" :status="status" :is-streaming="isStreaming" />
 		</div>
 	</app-modal>
 </template>

@@ -5,10 +5,12 @@
 		<app-scroll-scroller thin>
 			<app-illustration src="~img/ill/end-of-feed.svg" />
 
-			<div v-if="expiresProgressValue !== null" class="-burnout-bar">
-				<app-progress-bar :percent="expiresProgressValue" thin />
-			</div>
-			<div v-else class="-burnout-bar-placeholder" />
+			<template v-if="!isStreaming">
+				<div v-if="expiresProgressValue !== null" class="-burnout-bar">
+					<app-progress-bar :percent="expiresProgressValue" thin />
+				</div>
+				<div v-else class="-burnout-bar-placeholder" />
+			</template>
 
 			<div v-if="totalDurationText" class="text-center">
 				<span><translate>Fireside active for:</translate></span>
@@ -17,7 +19,7 @@
 				</span>
 			</div>
 
-			<div v-if="expiresDurationText" class="text-center -burnout-timer">
+			<div v-if="!isStreaming && expiresDurationText" class="text-center -burnout-timer">
 				<span><translate>Fire burns out in:</translate></span>
 				<span>
 					<b>{{ expiresDurationText }}</b>
@@ -48,7 +50,7 @@
 				</p>
 			</template>
 
-			<template v-if="canExtend">
+			<template v-if="!isStreaming && canExtend">
 				<app-button
 					v-app-tooltip.bottom="$gettext(`Extend the duration of your Fireside`)"
 					block
