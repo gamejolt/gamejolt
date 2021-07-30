@@ -32,7 +32,7 @@
 		--fireside-host-size: 70px
 
 	&-inner
-		display: flex
+		display: inline-flex
 		justify-content: center
 		grid-gap: 16px
 

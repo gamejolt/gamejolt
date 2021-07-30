@@ -447,6 +447,8 @@
 .-hosts-padding
 	flex: none
 	padding-top: 8px
+	width: 100%
+	overflow: hidden
 
 	.-video-wrapper.-vertical &
 		padding-top: 0
