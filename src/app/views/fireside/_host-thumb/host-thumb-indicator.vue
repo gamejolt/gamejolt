@@ -1,7 +1,11 @@
 <script lang="ts" src="./host-thumb-indicator"></script>
 
 <template>
-	<div class="-indicator-wrap" :style="{ padding }">
+	<div
+		class="-indicator-wrap"
+		:class="{ '-active-hover': rtc.focusedUserId == host.userId }"
+		:style="{ padding }"
+	>
 		<div class="-indicator">
 			<template v-if="host.userModel">
 				<app-user-avatar-img class="-img -help" :user="host.userModel" />
@@ -18,7 +22,11 @@
 .-indicator-wrap
 	img-circle()
 
+.-active-hover
+	elevate-2() !important
+
 .-indicator-wrap
+	elevate-1()
 	height: 100%
 	width: 100%
 	background-color: var(--theme-highlight)
