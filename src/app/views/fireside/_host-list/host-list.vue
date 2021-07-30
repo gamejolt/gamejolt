@@ -11,6 +11,7 @@
 			<app-fireside-host-thumb
 				v-for="host of rtc.users"
 				:key="host.userId"
+				class="-host-thumb"
 				:host="host"
 				@change-host="emitChangeHost"
 			/>
@@ -41,4 +42,7 @@
 
 		.-fireside-hosts-inner
 			flex-direction: column
+
+.-host-thumb
+	flex: none
 </style>

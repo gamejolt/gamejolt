@@ -37,7 +37,7 @@
 					</div>
 
 					<div v-if="showHosts" class="-overlay-hosts -control">
-						<app-fireside-host-list scrollable />
+						<app-fireside-host-list />
 					</div>
 				</template>
 			</div>
