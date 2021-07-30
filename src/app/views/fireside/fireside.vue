@@ -125,7 +125,7 @@
 				</div>
 
 				<div v-if="rtc && shouldShowHosts" class="-hosts-padding">
-					<app-fireside-host-list :vertical="isVertical" />
+					<app-fireside-host-list />
 				</div>
 			</div>
 
@@ -447,7 +447,7 @@
 .-hosts-padding
 	flex: none
 	padding-top: 8px
-	width: 100%
+	max-width: 100%
 	overflow: hidden
 
 	.-video-wrapper.-vertical &

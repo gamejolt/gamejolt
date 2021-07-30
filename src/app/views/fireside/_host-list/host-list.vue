@@ -1,12 +1,7 @@
 <script lang="ts" src="./host-list"></script>
 
 <template>
-	<app-scroll-scroller
-		v-if="rtc"
-		class="-fireside-hosts"
-		:class="{ '-vertical': vertical }"
-		:horizontal="!vertical"
-	>
+	<app-scroll-scroller v-if="rtc" class="-fireside-hosts" horizontal>
 		<div class="-fireside-hosts-inner">
 			<app-fireside-host-thumb
 				v-for="host of rtc.users"
@@ -26,7 +21,6 @@
 .-fireside-hosts
 	--fireside-host-size: 100px
 	width: 100%
-	height: var(--fireside-host-size)
 
 	@media $media-xs
 		--fireside-host-size: 70px
@@ -35,13 +29,7 @@
 		display: inline-flex
 		justify-content: center
 		grid-gap: 16px
-
-	&.-vertical
-		width: var(--fireside-host-size)
-		height: auto
-
-		.-fireside-hosts-inner
-			flex-direction: column
+		height: var(--fireside-host-size)
 
 .-host-thumb
 	flex: none
