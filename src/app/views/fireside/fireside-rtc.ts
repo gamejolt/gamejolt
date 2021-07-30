@@ -63,6 +63,10 @@ export class FiresideRTC {
 	set thumbnailsVisible(visible: boolean) {
 		this.shouldShowVideoThumbnails = visible;
 		for (const user of this.users) {
+			if (this.focusedUserId === user.userId) {
+				continue;
+			}
+
 			user.setWantsVideoTrack(this, visible);
 		}
 	}
@@ -537,10 +541,14 @@ export class FiresideRTCUser {
 			return;
 		}
 
-		if (this.videoTrack) {
-			this.videoTrack.play(element);
-			rtc.videoClient!.setRemoteVideoStreamType(this.userId, isLowBitrate ? 1 : 0);
-		}
+		// Wait for next tick before playing so that any video playback elements
+		// are first deregistered.
+		setTimeout(() => {
+			if (this.videoTrack) {
+				this.videoTrack.play(element);
+				rtc.videoClient!.setRemoteVideoStreamType(this.userId, isLowBitrate ? 1 : 0);
+			}
+		}, 0);
 	}
 
 	public deregisterVideoPlaybackElement(element: HTMLDivElement) {

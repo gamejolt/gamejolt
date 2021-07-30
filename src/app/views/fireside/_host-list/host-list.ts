@@ -17,4 +17,12 @@ export default class AppFiresideHostList extends Vue {
 	@InjectReactive(FiresideRTCKey) rtc!: FiresideRTC;
 
 	@Emit('change-host') emitChangeHost() {}
+
+	mounted() {
+		this.rtc.thumbnailsVisible = true;
+	}
+
+	destroyed() {
+		this.rtc.thumbnailsVisible = false;
+	}
 }
