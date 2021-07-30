@@ -85,7 +85,11 @@
 		<div class="-split" />
 		<div class="-body" :class="{ '-body-column': isVertical, '-is-streaming': isStreaming }">
 			<div v-if="shouldShowFiresideStats" class="-leading">
-				<app-fireside-stats :fireside="fireside" :status="status" />
+				<app-fireside-stats
+					:fireside="fireside"
+					:status="status"
+					:is-streaming="isStreaming"
+				/>
 			</div>
 
 			<div

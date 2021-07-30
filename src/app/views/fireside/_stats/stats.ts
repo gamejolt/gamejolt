@@ -33,6 +33,9 @@ export default class AppFiresideStats extends Vue {
 	@Prop({ type: String, required: true })
 	status!: RouteStatus;
 
+	@Prop({type: Boolean, required: true})
+	isStreaming!: boolean;
+
 	@AppState user!: AppStore['user'];
 
 	private updateInterval: NodeJS.Timer | null = null;
@@ -41,10 +44,6 @@ export default class AppFiresideStats extends Vue {
 	expiresProgressValue: number | null = null;
 
 	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
-
-	get isStreaming() {
-		return this.fireside.is_streaming;
-	}
 
 	get canPublish() {
 		return (

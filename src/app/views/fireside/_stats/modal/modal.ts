@@ -15,4 +15,7 @@ export default class AppFiresideStatsModal extends BaseModal {
 
 	@Prop({ type: String, required: true })
 	status!: RouteStatus;
+
+	@Prop({ type: Boolean, required: true })
+	isStreaming!: boolean;
 }

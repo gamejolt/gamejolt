@@ -163,7 +163,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	get isStreaming() {
-		return this.fireside?.is_streaming && this.rtc && this.rtc.users.length > 0;
+		return !!(this.fireside?.is_streaming && this.rtc && this.rtc.users.length > 0);
 	}
 
 	get shouldPlayDesktopAudio() {
@@ -623,7 +623,7 @@ export default class RouteFireside extends BaseRouteComponent {
 		if (!this.fireside) {
 			return;
 		}
-		FiresideStatsModal.show(this.fireside, this.status);
+		FiresideStatsModal.show(this.fireside, this.status, this.isStreaming);
 	}
 
 	onClickEditFireside() {
