@@ -294,7 +294,9 @@ export class FiresideRTC {
 	}
 
 	private chooseFocusedUser() {
-		const currentUser = this.focusedUser;
+		if (this.focusedUser) {
+			return;
+		}
 
 		let bestUser: FiresideRTCUser | null = null;
 		let bestScore = -1;
@@ -307,8 +309,6 @@ export class FiresideRTC {
 			if (score > bestScore) {
 				bestUser = user;
 				bestScore = score;
-			} else if (score === bestScore && user === currentUser) {
-				bestUser = user;
 			}
 		}
 
@@ -614,10 +614,10 @@ export class FiresideRTCUser {
 			return;
 		}
 
-		if (rtc.isHost) {
-			console.log('Aborting desktop audio playback because current user is a host');
-			return;
-		}
+		// if (rtc.isHost) {
+		// 	console.log('Aborting desktop audio playback because current user is a host');
+		// 	return;
+		// }
 
 		try {
 			this.desktopAudioTrack = await rtc.videoClient.subscribe(this.videoUser, 'audio');
