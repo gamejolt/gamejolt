@@ -163,7 +163,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	get isStreaming() {
-		return this.fireside?.is_streaming;
+		return this.fireside?.is_streaming && this.rtc && this.rtc.users.length > 0;
 	}
 
 	get shouldPlayDesktopAudio() {
