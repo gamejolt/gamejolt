@@ -88,7 +88,11 @@
 				<app-fireside-stats :fireside="fireside" :status="status" />
 			</div>
 
-			<div v-if="isStreaming" class="-video-wrapper" :class="{ '-vertical': isVertical }">
+			<div
+				v-if="isStreaming && chatRoom"
+				class="-video-wrapper"
+				:class="{ '-vertical': isVertical }"
+			>
 				<div class="-video-padding">
 					<div
 						ref="videoWrapper"
