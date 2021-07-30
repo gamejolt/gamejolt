@@ -2,7 +2,7 @@ import AgoraRTC, {
 	IAgoraRTCClient,
 	IAgoraRTCRemoteUser,
 	IRemoteAudioTrack,
-	IRemoteVideoTrack,
+	IRemoteVideoTrack
 } from 'agora-rtc-sdk-ng';
 import { sleep } from '../../../utils/utils';
 import { Navigate } from '../../../_common/navigate/navigate.service';
@@ -425,6 +425,11 @@ export class FiresideRTC {
 	}
 }
 
+interface PlaybackElement {
+	div: HTMLDivElement;
+	isLowBitrate: boolean;
+}
+
 export class FiresideRTCUser {
 	public videoUser: IAgoraRTCRemoteUser | null = null;
 	public audioChatUser: IAgoraRTCRemoteUser | null = null;
@@ -438,7 +443,7 @@ export class FiresideRTCUser {
 	public micAudioTrack: IRemoteAudioTrack | null = null;
 	public volumeLevel = 0;
 
-	private videoPlaybackElements: HTMLDivElement[] = [];
+	private videoPlaybackElements: PlaybackElement[] = [];
 
 	constructor(public readonly userId: number, public readonly userModel: User | undefined) {}
 
@@ -478,10 +483,17 @@ export class FiresideRTCUser {
 
 					for (const playbackElement of this.videoPlaybackElements) {
 						try {
-							this.videoTrack.play(playbackElement);
+							// Wait for next tick before playing so that any video playback elements
+							// are first deregistered.
+							setTimeout(() => {
+								if (this.videoTrack) {
+									this.videoTrack.play(playbackElement.div);
+									rtc.videoClient!.setRemoteVideoStreamType(this.userId, playbackElement.isLowBitrate ? 1 : 0);
+								}
+							}, 0);
 						} catch (e) {
 							console.error(
-								`Failed to play video track for user ${this.userId} on a playback element ${playbackElement.id}`
+								`Failed to play video track for user ${this.userId} on a playback element ${playbackElement.div.id}`
 							);
 							console.error(e);
 						}
@@ -535,7 +547,7 @@ export class FiresideRTCUser {
 		element: HTMLDivElement,
 		isLowBitrate = false
 	) {
-		this.videoPlaybackElements.push(element);
+		this.videoPlaybackElements.push({ div: element, isLowBitrate });
 
 		if (this.isBusyWithVideoTrack) {
 			return;
@@ -553,7 +565,7 @@ export class FiresideRTCUser {
 
 	public deregisterVideoPlaybackElement(element: HTMLDivElement) {
 		this.videoPlaybackElements = this.videoPlaybackElements.filter(
-			playbackElement => playbackElement !== element
+			playbackElement => playbackElement.div === element
 		);
 
 		element.innerHTML = '';
