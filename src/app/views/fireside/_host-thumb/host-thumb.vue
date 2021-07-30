@@ -2,7 +2,9 @@
 
 <template>
 	<div v-app-tooltip="tooltip" class="-thumb" @click="onClick">
-		<div ref="player" class="-display-thumb" :class="{ '-hidden': !showingVideoThumb }" />
+		<div class="-display-thumb" :class="{ '-hidden': !showingVideoThumb }">
+			<div ref="player" class="-stream-player" />
+		</div>
 
 		<div class="-avatar-wrap" :class="{ '-full': !showingVideoThumb }">
 			<app-fireside-host-thumb-indicator :host="host" />
@@ -32,15 +34,19 @@
 	flex: auto
 	width: 100%
 	background-color: var(--theme-bg-subtle)
-	transition: opacity 250ms
+	overflow: hidden
 
 	&.-hidden
-		opacity: 0
+		visibility: hidden
+
+.-stream-player
+	width: 100%
+	height: 100%
 
 .-avatar-wrap
 	position: absolute
-	width: calc(var(--fireside-host-size) * 0.6)
-	height: calc(var(--fireside-host-size) * 0.6)
+	width: calc(var(--fireside-host-size) * 0.5)
+	height: calc(var(--fireside-host-size) * 0.5)
 	bottom: 0
 	transition: all 250ms $strong-ease-out
 

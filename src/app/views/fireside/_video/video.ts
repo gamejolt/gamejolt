@@ -58,16 +58,15 @@ export default class AppFiresideVideo extends Vue {
 	}
 
 	created() {
-		// 10x hack to keep the reference around for when the component gets destroyed.
 		this._myRtcUser = this.rtcUser;
 	}
 
 	mounted() {
-		this.rtcUser.registerVideoPlaybackElement(this.$refs.player);
+		this.rtcUser.registerVideoPlaybackElement(this.rtc, this.$refs.player, false);
 	}
 
 	beforeDestroy() {
-		this._myRtcUser.registerVideoPlaybackElement(this.$refs.player);
+		this._myRtcUser.deregisterVideoPlaybackElement(this.$refs.player);
 	}
 
 	onMouseOut() {

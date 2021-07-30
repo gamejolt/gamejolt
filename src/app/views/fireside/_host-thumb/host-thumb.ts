@@ -28,7 +28,7 @@ export default class AppFiresideHostThumb extends Vue {
 
 	mounted() {
 		if (this.showingVideoThumb) {
-			this.host.registerVideoPlaybackElement(this.$refs.player);
+			this.host.registerVideoPlaybackElement(this.rtc, this.$refs.player, true);
 		}
 	}
 
@@ -47,7 +47,7 @@ export default class AppFiresideHostThumb extends Vue {
 	@Watch('showingVideoThumb')
 	onShowingVideoThumbChanged(showing: boolean) {
 		if (showing) {
-			this.host.registerVideoPlaybackElement(this.$refs.player);
+			this.host.registerVideoPlaybackElement(this.rtc, this.$refs.player, true);
 		} else {
 			this.host.deregisterVideoPlaybackElement(this.$refs.player);
 		}

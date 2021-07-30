@@ -526,7 +526,11 @@ export class FiresideRTCUser {
 		}
 	}
 
-	public registerVideoPlaybackElement(element: HTMLDivElement) {
+	public registerVideoPlaybackElement(
+		rtc: FiresideRTC,
+		element: HTMLDivElement,
+		isLowBitrate = false
+	) {
 		this.videoPlaybackElements.push(element);
 
 		if (this.isBusyWithVideoTrack) {
@@ -535,6 +539,7 @@ export class FiresideRTCUser {
 
 		if (this.videoTrack) {
 			this.videoTrack.play(element);
+			rtc.videoClient!.setRemoteVideoStreamType(this.userId, isLowBitrate ? 1 : 0);
 		}
 	}
 
