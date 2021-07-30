@@ -1,7 +1,9 @@
 import Vue from 'vue';
 import { Component, InjectReactive, Prop } from 'vue-property-decorator';
+import { number } from '../../../../_common/filters/number';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
+import { ChatUserCollection } from '../../../components/chat/user-collection';
 import { FiresideRTC, FiresideRTCKey, FiresideRTCUser } from '../fireside-rtc';
 import AppFiresideHostList from '../_host-list/host-list.vue';
 import AppFiresideHostThumbIndicator from '../_host-thumb/host-thumb-indicator.vue';
@@ -23,6 +25,9 @@ export default class AppFiresideVideo extends Vue {
 	@Prop({ type: Boolean, required: false, default: false })
 	showHosts!: boolean;
 
+	@Prop({ type: ChatUserCollection, required: false, default: null })
+	viewers!: ChatUserCollection | null;
+
 	@InjectReactive(FiresideRTCKey) rtc!: FiresideRTC;
 
 	isHoveringControls = false;
@@ -32,6 +37,7 @@ export default class AppFiresideVideo extends Vue {
 	private _myRtcUser!: FiresideRTCUser;
 
 	readonly Screen = Screen;
+	readonly number = number;
 
 	$refs!: {
 		player: HTMLDivElement;
@@ -46,7 +52,11 @@ export default class AppFiresideVideo extends Vue {
 	}
 
 	get hasOverlayItems() {
-		return this.showHosts;
+		return this.showHosts || !!this.viewers;
+	}
+
+	get viewerCount() {
+		return this.viewers?.count;
 	}
 
 	get hasVideo() {

@@ -26,6 +26,16 @@
 		>
 			<div @click.capture="onTapOverlay">
 				<template v-if="shouldShowUI">
+					<div v-if="viewerCount" class="-overlay-viewers">
+						<translate
+							:translate-n="viewerCount"
+							:translate-params="{ count: number(viewerCount) }"
+							translate-plural="%{ count } viewers"
+						>
+							%{ count } viewer
+						</translate>
+					</div>
+
 					<div v-if="showHosts" class="-overlay-hosts -control">
 						<app-fireside-host-list scrollable />
 					</div>
@@ -81,6 +91,12 @@
 	left: 0px
 	bottom: 4px
 	right: 0px
+
+.-overlay-viewers
+	position: absolute
+	left: 8px
+	top: 8px
+	font-weight: bold
 
 .-control
 	&

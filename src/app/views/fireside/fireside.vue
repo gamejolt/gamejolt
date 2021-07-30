@@ -107,6 +107,7 @@
 									:key="'video-' + rtc.focusedUser.userId"
 									:rtc-user="rtc.focusedUser"
 									:show-hosts="!shouldShowHosts"
+									:viewers="overlayChatUsers"
 								/>
 
 								<app-fireside-desktop-audio
