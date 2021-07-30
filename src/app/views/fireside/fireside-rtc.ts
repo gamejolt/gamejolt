@@ -190,6 +190,7 @@ export class FiresideRTC {
 			this.chooseFocusedUser();
 
 			if (mediaType === 'video') {
+				console.log('Current focused user is: ' + this.focusedUserId);
 				if (this.focusedUserId === user.userId || this.shouldShowVideoThumbnails) {
 					user.setWantsVideoTrack(this, true);
 				}
@@ -208,6 +209,7 @@ export class FiresideRTC {
 			}
 
 			if (mediaType === 'video') {
+				user.setWantsVideoTrack(this, false);
 				user.hasVideo = false;
 			} else {
 				user.hasDesktopAudio = false;
@@ -440,6 +442,7 @@ export class FiresideRTCUser {
 		this.wantsVideoTrack = wantsVideoTrack;
 
 		if (this.isBusyWithVideoTrack) {
+			console.log('busy');
 			return;
 		}
 
@@ -452,11 +455,13 @@ export class FiresideRTCUser {
 
 		// If user doesnt have a video stream to subscribe/unsubscribe to, nothing to do.
 		if (!this.hasVideo || !this.videoUser) {
+			console.log('no video or no video client');
 			return;
 		}
 
 		// If user is already in the desired state for video subscriptions, noop.
 		if (wantsVideoTrack === !!this.videoTrack) {
+			console.log('already in desired state');
 			return;
 		}
 
@@ -499,6 +504,10 @@ export class FiresideRTCUser {
 					await rtc.videoClient.unsubscribe(this.videoUser, 'video');
 
 					// TODO: we might want to set the video track to null even before unsubscribing.
+					// this is because unsubscribe may fail if we already left the channel or it got disconnected
+					// for some reason. in these cases the video track should still get unset, however I don't
+					// know what happens if the error is literally with unsubscribing, and the video track remains
+					// intact.
 					this.videoTrack = null;
 				} catch (e) {
 					console.error(
