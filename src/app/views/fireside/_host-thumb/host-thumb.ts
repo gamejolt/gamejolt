@@ -2,7 +2,12 @@ import Vue from 'vue';
 import { Component, Emit, InjectReactive, Prop, Watch } from 'vue-property-decorator';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
-import { FiresideRTC, FiresideRTCKey, FiresideRTCUser } from '../fireside-rtc';
+import { FiresideRTC, FiresideRTCKey } from '../fireside-rtc';
+import {
+	deregisterVideoPlaybackElement,
+	FiresideRTCUser,
+	registerVideoPlaybackElement,
+} from '../fireside-rtc-user';
 import AppFiresideHostThumbIndicator from './host-thumb-indicator.vue';
 
 @Component({
@@ -28,12 +33,12 @@ export default class AppFiresideHostThumb extends Vue {
 
 	mounted() {
 		if (this.showingVideoThumb) {
-			this.host.registerVideoPlaybackElement(this.rtc, this.$refs.player, true);
+			registerVideoPlaybackElement(this.host, this.$refs.player, true);
 		}
 	}
 
 	beforeDestroy() {
-		this.host.deregisterVideoPlaybackElement(this.$refs.player);
+		deregisterVideoPlaybackElement(this.host, this.$refs.player);
 	}
 
 	get isFocused() {
@@ -47,9 +52,9 @@ export default class AppFiresideHostThumb extends Vue {
 	@Watch('showingVideoThumb')
 	onShowingVideoThumbChanged(showing: boolean) {
 		if (showing) {
-			this.host.registerVideoPlaybackElement(this.rtc, this.$refs.player, true);
+			registerVideoPlaybackElement(this.host, this.$refs.player, true);
 		} else {
-			this.host.deregisterVideoPlaybackElement(this.$refs.player);
+			deregisterVideoPlaybackElement(this.host, this.$refs.player);
 		}
 	}
 

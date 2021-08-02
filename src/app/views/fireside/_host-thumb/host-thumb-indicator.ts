@@ -1,7 +1,8 @@
 import Vue from 'vue';
 import { Component, InjectReactive, Prop } from 'vue-property-decorator';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
-import { FiresideRTC, FiresideRTCKey, FiresideRTCUser } from '../fireside-rtc';
+import { FiresideRTC, FiresideRTCKey } from '../fireside-rtc';
+import { FiresideRTCUser } from '../fireside-rtc-user';
 
 @Component({
 	components: {
@@ -9,7 +10,9 @@ import { FiresideRTC, FiresideRTCKey, FiresideRTCUser } from '../fireside-rtc';
 	},
 })
 export default class AppFiresideHostThumbIndicator extends Vue {
-	@Prop({ type: FiresideRTCUser, required: true }) host!: FiresideRTCUser;
+	@Prop({ type: FiresideRTCUser, required: true })
+	host!: FiresideRTCUser;
+
 	@InjectReactive(FiresideRTCKey) rtc!: FiresideRTC;
 
 	get padding() {

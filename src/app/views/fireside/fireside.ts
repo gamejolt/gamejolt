@@ -33,7 +33,12 @@ import AppChatWindowOutput from '../../components/chat/window/output/output.vue'
 import AppChatWindowSend from '../../components/chat/window/send/send.vue';
 import { EVENT_UPDATE, FiresideChannel } from '../../components/grid/fireside-channel';
 import { store, Store } from '../../store';
-import { FiresideRTC, FiresideRTCKey } from './fireside-rtc';
+import {
+	destroyFiresideRTC,
+	FiresideRTC,
+	FiresideRTCKey,
+	renewFiresideRTCToken,
+} from './fireside-rtc';
 import AppFiresideChatMembers from './_chat-members/chat-members.vue';
 import { FiresideChatMembersModal } from './_chat-members/modal/modal.service';
 import AppFiresideDesktopAudio from './_desktop_audio/desktop-audio.vue';
@@ -594,7 +599,7 @@ export default class RouteFireside extends BaseRouteComponent {
 			);
 		} else {
 			// TODO: update hosts when we introduce changing hosts on the fly.
-			this.rtc.renewToken(payload.videoToken, payload.audioChatToken);
+			renewFiresideRTCToken(this.rtc, payload.videoToken, payload.audioChatToken);
 		}
 	}
 
@@ -603,7 +608,7 @@ export default class RouteFireside extends BaseRouteComponent {
 			return;
 		}
 
-		this.rtc.destroy();
+		destroyFiresideRTC(this.rtc);
 		this.rtc = null;
 	}
 

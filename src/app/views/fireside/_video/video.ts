@@ -4,7 +4,12 @@ import { number } from '../../../../_common/filters/number';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { ChatUserCollection } from '../../../components/chat/user-collection';
-import { FiresideRTC, FiresideRTCKey, FiresideRTCUser } from '../fireside-rtc';
+import { FiresideRTC, FiresideRTCKey } from '../fireside-rtc';
+import {
+	deregisterVideoPlaybackElement,
+	FiresideRTCUser,
+	registerVideoPlaybackElement,
+} from '../fireside-rtc-user';
 import AppFiresideHostList from '../_host-list/host-list.vue';
 import AppFiresideHostThumbIndicator from '../_host-thumb/host-thumb-indicator.vue';
 
@@ -72,11 +77,11 @@ export default class AppFiresideVideo extends Vue {
 	}
 
 	mounted() {
-		this.rtcUser.registerVideoPlaybackElement(this.rtc, this.$refs.player, false);
+		registerVideoPlaybackElement(this.rtcUser, this.$refs.player, false);
 	}
 
 	beforeDestroy() {
-		this._myRtcUser.deregisterVideoPlaybackElement(this.$refs.player);
+		deregisterVideoPlaybackElement(this._myRtcUser, this.$refs.player);
 	}
 
 	onMouseOut() {
