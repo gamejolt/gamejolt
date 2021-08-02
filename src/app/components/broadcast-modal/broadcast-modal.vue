@@ -107,7 +107,7 @@
 						<br />
 					</template>
 
-					<app-event-item-controls :post="post" event-label="broadcast" />
+					<app-post-controls :post="post" location="broadcast" event-label="broadcast" />
 
 					<br />
 					<br />

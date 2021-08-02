@@ -28,6 +28,7 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 	is_partner!: boolean | null;
 	friend_requests_enabled!: boolean;
 	liked_posts_enabled?: boolean;
+	mentions_setting?: number;
 
 	created_on!: number;
 
@@ -166,48 +167,6 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 		return Api.sendRequest('/web/touch');
 	}
 
-	async $follow() {
-		this.is_following = true;
-		++this.follower_count;
-
-		try {
-			return await Api.sendRequest(
-				'/web/profile/follow/' + this.id,
-				{
-					data: {
-						timestamp: Date.now(),
-					},
-				},
-				{ detach: true }
-			);
-		} catch (e) {
-			this.is_following = false;
-			--this.follower_count;
-			throw e;
-		}
-	}
-
-	async $unfollow() {
-		this.is_following = false;
-		--this.follower_count;
-
-		try {
-			return await Api.sendRequest(
-				'/web/profile/unfollow/' + this.id,
-				{
-					data: {
-						timestamp: Date.now(),
-					},
-				},
-				{ detach: true }
-			);
-		} catch (e) {
-			this.is_following = true;
-			++this.follower_count;
-			throw e;
-		}
-	}
-
 	$save() {
 		// You can only save yourself, so we don't pass in an ID to the endpoint.
 		return this.$_save('/web/dash/profile/save', 'user', {
@@ -256,3 +215,45 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 }
 
 Model.create(User);
+
+export async function followUser(user: User) {
+	user.is_following = true;
+	++user.follower_count;
+
+	try {
+		return await Api.sendRequest(
+			'/web/profile/follow/' + user.id,
+			{
+				data: {
+					timestamp: Date.now(),
+				},
+			},
+			{ detach: true }
+		);
+	} catch (e) {
+		user.is_following = false;
+		--user.follower_count;
+		throw e;
+	}
+}
+
+export async function unfollowUser(user: User) {
+	user.is_following = false;
+	--user.follower_count;
+
+	try {
+		return await Api.sendRequest(
+			'/web/profile/unfollow/' + user.id,
+			{
+				data: {
+					timestamp: Date.now(),
+				},
+			},
+			{ detach: true }
+		);
+	} catch (e) {
+		user.is_following = true;
+		++user.follower_count;
+		throw e;
+	}
+}

@@ -7,10 +7,6 @@
 				<translate>Firesides</translate>
 			</h4>
 			<span class="help-inline">
-				<router-link :to="{ name: 'discover.firesides' }" class="link-unstyled">
-					<translate>Discover</translate>
-				</router-link>
-				<span class="dot-separator" />
 				<a class="link-unstyled" @click="refresh()">
 					<translate>Refresh</translate>
 				</a>

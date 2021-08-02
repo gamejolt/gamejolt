@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { arrayRemove } from '../../../utils/array';
+import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
 import { configHasAutocomplete } from '../../../_common/config/config.service';
 import AppPopper from '../../../_common/popper/popper.vue';
 import AppShortkey from '../../../_common/shortkey/shortkey.vue';
@@ -119,6 +120,8 @@ export default class AppSearch extends Vue {
 	}
 
 	onFocus() {
+		trackExperimentEngagement(configHasAutocomplete);
+
 		this.isFocused = true;
 		if (this.shouldShowAutcomplete) {
 			this.isShowingAutocomplete = true;

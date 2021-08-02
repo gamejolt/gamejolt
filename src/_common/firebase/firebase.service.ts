@@ -21,5 +21,19 @@ export function initFirebase() {
 
 let _firebaseApp: FirebaseApp | null = null;
 export function getFirebaseApp() {
-	return (_firebaseApp ??= initializeApp(firebaseConfig));
+	if (!_firebaseApp) {
+		_firebaseApp = initializeApp(firebaseConfig);
+		_initPerformanceMonitoring();
+	}
+
+	return _firebaseApp;
+}
+
+async function _initPerformanceMonitoring() {
+	if (GJ_IS_SSR || GJ_IS_CLIENT) {
+		return;
+	}
+
+	const { initializePerformance } = await import('firebase/performance');
+	initializePerformance(getFirebaseApp());
 }

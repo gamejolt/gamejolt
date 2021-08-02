@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
-import { propRequired } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppCard from '../../../../_common/card/card.vue';
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
@@ -11,6 +10,7 @@ import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { Growls } from '../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../_common/illustration/illustration.vue';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
+import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { RouteStatus } from '../fireside';
@@ -20,14 +20,21 @@ import { RouteStatus } from '../fireside';
 		AppIllustration,
 		AppProgressBar,
 		AppCard,
+		AppScrollScroller,
 	},
 	directives: {
 		AppTooltip,
 	},
 })
 export default class AppFiresideStats extends Vue {
-	@Prop(propRequired(Fireside)) fireside!: Fireside;
-	@Prop(propRequired(String)) status!: RouteStatus;
+	@Prop({ type: Fireside, required: true })
+	fireside!: Fireside;
+
+	@Prop({ type: String, required: true })
+	status!: RouteStatus;
+
+	@Prop({type: Boolean, required: true})
+	isStreaming!: boolean;
 
 	@AppState user!: AppStore['user'];
 
@@ -38,9 +45,17 @@ export default class AppFiresideStats extends Vue {
 
 	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
 
+	get canPublish() {
+		return (
+			this.user &&
+			this.fireside.user.id === this.fireside.user.id &&
+			this.status === 'joined' &&
+			this.fireside.is_draft
+		);
+	}
+
 	get canExtend() {
 		return (
-			this.fireside &&
 			this.user &&
 			this.user.id === this.fireside.user.id &&
 			this.status === 'joined' &&
@@ -50,16 +65,10 @@ export default class AppFiresideStats extends Vue {
 	}
 
 	get shareUrl() {
-		if (!this.fireside) {
-			return null;
-		}
 		return Environment.baseUrl + this.$router.resolve(this.fireside.location).href;
 	}
 
 	get shareContent() {
-		if (!this.fireside) {
-			return null;
-		}
 		return this.$gettextInterpolate('Join the %{ name } Fireside - Game Jolt', {
 			name: this.fireside.title,
 		});
@@ -87,12 +96,6 @@ export default class AppFiresideStats extends Vue {
 	}
 
 	private updateExpiryValues() {
-		if (!this.fireside) {
-			this.totalDurationText = null;
-			this.expiresDurationText = null;
-			return;
-		}
-
 		this.totalDurationText = duration((Date.now() - this.fireside.added_on) / 1000);
 
 		if (this.fireside.expires_on > Date.now()) {
@@ -114,8 +117,17 @@ export default class AppFiresideStats extends Vue {
 		}
 	}
 
+	async onClickPublish() {
+		if (this.status !== 'joined' || !this.fireside.is_draft) {
+			return;
+		}
+
+		await this.fireside.$publish();
+		Growls.success(this.$gettext(`Your Fireside is live!`));
+	}
+
 	async onClickExtend() {
-		if (!this.fireside || this.status !== 'joined' || !this.canExtend) {
+		if (this.status !== 'joined' || !this.canExtend) {
 			return;
 		}
 
@@ -129,8 +141,6 @@ export default class AppFiresideStats extends Vue {
 		if (payload.success && payload.extended) {
 			this.fireside.expires_on = payload.expiresOn;
 			this.updateExpiryValues();
-
-			Growls.success(this.$gettext(`The flames are stoked you're still here!`));
 		} else {
 			Growls.info(
 				this.$gettext(
@@ -141,9 +151,6 @@ export default class AppFiresideStats extends Vue {
 	}
 
 	copyShareUrl() {
-		if (!this.shareUrl) {
-			return;
-		}
 		Clipboard.copy(this.shareUrl);
 	}
 }

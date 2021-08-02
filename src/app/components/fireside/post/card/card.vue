@@ -44,11 +44,19 @@
 						<div class="-inner-gradient" />
 					</template>
 
-					<app-content-viewer v-else class="-inner-message" :source="post.lead_content" />
+					<template v-else>
+						<app-fade-collapse
+							class="-inner-message"
+							:collapse-height="leadHeight"
+							ignore-threshold
+							size="sm"
+						>
+							<app-content-viewer :source="post.lead_content" />
+						</app-fade-collapse>
+					</template>
 
 					<router-link
 						class="-link"
-						tag="div"
 						:to="post.routeLocation"
 						@click.native="trackPostOpen()"
 					/>
@@ -69,8 +77,8 @@
 
 						<template v-if="post.hasPoll">
 							<app-jolticon
+								:class="{ '-voted': votedOnPoll }"
 								icon="pedestals-numbers"
-								:style="{ color: pollIconColor }"
 							/>
 						</template>
 
@@ -78,7 +86,7 @@
 							<app-jolticon icon="thumbtack" />
 						</template>
 
-						<app-jolticon icon="heart-filled" :style="{ color: heartIconColor }" />
+						<app-jolticon icon="heart-filled" :class="{ '-liked': likedPost }" />
 						<span class="-details-likes">
 							{{ fuzzynumber(post.like_count) }}
 						</span>
@@ -122,13 +130,19 @@ $-padding = 8px
 		top: $-padding
 		right: $-padding
 		bottom: $-padding
-		font-size: 30
+
+		>>> .fireside-post-lead-content
+			font-size: ceil($font-size-base * 1.1)
 
 .-light
 	&
 	> *
 		color: var(--theme-white) !important
 		text-shadow: black 1px 1px 4px
+
+.-voted
+.-liked
+	color: $gj-overlay-notice !important
 
 .-link
 	rounded-corners-lg()

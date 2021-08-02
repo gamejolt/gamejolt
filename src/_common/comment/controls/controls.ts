@@ -9,7 +9,7 @@ import { LikersModal } from '../../likers/modal.service';
 import { Model } from '../../model/model.service';
 import { Screen } from '../../screen/screen-service';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
-import { canCommentOnModel, Comment } from '../comment-model';
+import { addCommentVote, canCommentOnModel, Comment, removeCommentVote } from '../comment-model';
 import { CommentThreadModal } from '../thread/modal.service';
 import { CommentVote } from '../vote/vote-model';
 
@@ -86,9 +86,9 @@ export default class AppCommentControls extends Vue {
 
 	voteComment(vote: number) {
 		if (!this.comment.user_vote || this.comment.user_vote.vote !== vote) {
-			return this.comment.$vote(vote);
+			return addCommentVote(this.comment, vote);
 		} else {
-			return this.comment.$removeVote();
+			return removeCommentVote(this.comment);
 		}
 	}
 

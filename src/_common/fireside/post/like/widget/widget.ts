@@ -2,6 +2,7 @@ import Vue from 'vue';
 import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Store } from '../../../../../auth/store/index';
+import { PostControlsLocation, trackPostLike } from '../../../../analytics/analytics.service';
 import { AppAuthRequired } from '../../../../auth/auth-required-directive';
 import { DrawerStore, DrawerStoreKey } from '../../../../drawer/drawer-store';
 import { fuzzynumber } from '../../../../filters/fuzzynumber';
@@ -11,7 +12,7 @@ import { Screen } from '../../../../screen/screen-service';
 import { AppTooltip } from '../../../../tooltip/tooltip-directive';
 import AppUserFollowWidget from '../../../../user/follow/widget.vue';
 import { FiresidePost } from '../../post-model';
-import { FiresidePostLike } from '../like-model';
+import { FiresidePostLike, removeFiresidePostLike, saveFiresidePostLike } from '../like-model';
 
 @Component({
 	components: {
@@ -23,10 +24,20 @@ import { FiresidePostLike } from '../like-model';
 	},
 })
 export default class AppFiresidePostLikeWidget extends Vue {
-	@Prop(FiresidePost) post!: FiresidePost;
-	@Prop(Boolean) overlay?: boolean;
-	@Prop(Boolean) trans?: boolean;
-	@Prop(Boolean) block?: boolean;
+	@Prop({ type: FiresidePost, required: true })
+	post!: FiresidePost;
+
+	@Prop({ type: String, required: true })
+	location!: PostControlsLocation;
+
+	@Prop({ type: Boolean, default: false, required: false })
+	overlay!: boolean;
+
+	@Prop({ type: Boolean, default: false, required: false })
+	trans!: boolean;
+
+	@Prop({ type: Boolean, default: false, required: false })
+	block!: boolean;
 
 	@Inject({ from: DrawerStoreKey, default: null }) drawer!: null | DrawerStore;
 
@@ -70,12 +81,16 @@ export default class AppFiresidePostLikeWidget extends Vue {
 			this.showLikeAnim = true;
 			this.showDislikeAnim = false;
 
+			let failed = false;
 			try {
-				await newLike.$save();
+				await saveFiresidePostLike(newLike);
 			} catch (e) {
+				failed = true;
 				this.post.user_like = null;
 				--this.post.like_count;
 				Growls.error(`Can't do that now. Try again later?`);
+			} finally {
+				trackPostLike(true, { failed, location: this.location });
 			}
 		} else {
 			this.emitChange(false);
@@ -85,12 +100,16 @@ export default class AppFiresidePostLikeWidget extends Vue {
 			this.showLikeAnim = false;
 			this.showDislikeAnim = true;
 
+			let failed = false;
 			try {
-				await currentLike.$remove();
+				await removeFiresidePostLike(currentLike);
 			} catch (e) {
+				failed = true;
 				this.post.user_like = currentLike;
 				++this.post.like_count;
 				Growls.error(`Can't do that now. Try again later?`);
+			} finally {
+				trackPostLike(false, { failed, location: this.location });
 			}
 		}
 	}

@@ -363,9 +363,9 @@ module.exports = config => {
 		cb();
 	});
 
-	gulp.task('client:get-joltron', () => {
-		let joltronSrc = '';
+	let joltronSrc = '';
 
+	gulp.task('client:get-joltron', () => {
 		const joltronRepoDir = path.join(
 			process.env.GOPATH,
 			'src',
