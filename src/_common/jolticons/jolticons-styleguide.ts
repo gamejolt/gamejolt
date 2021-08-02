@@ -182,7 +182,8 @@ export default class AppJolticonsStyleguide extends Vue {
 			'phone',
 			'bell-filled',
 			'bell-unfilled',
-			'communities',
+			'communities-2x2',
+			'communities-3x3',
 		]
 			.sort()
 			.filter(i => i.indexOf(this.filter) !== -1);

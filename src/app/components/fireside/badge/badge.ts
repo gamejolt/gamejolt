@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Emit, Prop, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../utils/vue';
+import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
 import { number } from '../../../../_common/filters/number';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/backdrop.vue';
@@ -14,6 +15,7 @@ import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 		AppTheme,
 		AppMediaItemBackdrop,
 		AppUserAvatarImg,
+		AppCommunityThumbnailImg,
 	},
 	directives: {
 		AppTooltip,
@@ -30,7 +32,18 @@ export default class AppFiresideBadge extends Vue {
 	readonly number = number;
 
 	get avatarTooltip() {
+		if (this.fireside.community) {
+			return this.fireside.community.name;
+		}
 		return this.fireside.user.display_name + ' (@' + this.fireside.user.username + ')';
+	}
+
+	get theme() {
+		if (this.fireside.community) {
+			return this.fireside.community.theme;
+		}
+
+		return this.fireside.user.theme;
 	}
 
 	mounted() {

@@ -6,8 +6,11 @@ import {
 	setUserId,
 } from 'firebase/analytics';
 import VueRouter from 'vue-router';
+import { arrayRemove } from '../../utils/array';
 import { AppPromotionSource } from '../../utils/mobile-app';
 import { AuthMethod } from '../auth/auth.service';
+import { CommentVote } from '../comment/vote/vote-model';
+import { ConfigOption } from '../config/config.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
 import { WithAppStore } from '../store/app-store';
 import { EventBus } from '../system/event/event-bus.service';
@@ -19,6 +22,26 @@ export const SOCIAL_ACTION_LIKE = 'like';
 export const SOCIAL_ACTION_SEND = 'send';
 export const SOCIAL_ACTION_TWEET = 'tweet';
 export const SOCIAL_ACTION_FOLLOW = 'follow';
+
+export type CommunityOpenSource = 'communityChunk' | 'card' | 'cbar';
+export type PostOpenSource = 'communityChunk' | 'postRecommendation' | 'feed';
+export type PostControlsLocation = 'feed' | 'broadcast' | 'postPage';
+export type UserFollowLocation =
+	| 'feed'
+	| 'postPage'
+	| 'postLike'
+	| 'card'
+	| 'profilePage'
+	| 'userList'
+	| 'gameFollow';
+export type GameFollowLocation = 'thumbnail' | 'gamePage' | 'badge' | 'homeBanner' | 'library';
+export type CommunityJoinLocation = 'onboarding' | 'card' | 'communityPage' | 'homeBanner' | 'cbar';
+
+/**
+ * How long we wait (in ms) before we track another experiment engagement for
+ * the same config option.
+ */
+const EXP_ENGAGEMENT_EXPIRY = 5 * 60 * 1_000;
 
 let _store: WithAppStore;
 let _pageViewRecorded = false;
@@ -149,7 +172,10 @@ function _untrackUserId() {
 	setUserId(_getFirebaseAnalytics(), '');
 }
 
-function _trackEvent(name: string, eventParams: Record<string, string | number | undefined>) {
+function _trackEvent(
+	name: string,
+	eventParams: Record<string, string | number | boolean | undefined>
+) {
 	if (GJ_IS_SSR || GJ_IS_CLIENT) {
 		return;
 	}
@@ -159,18 +185,49 @@ function _trackEvent(name: string, eventParams: Record<string, string | number |
 	console.log(`Track event.`, name, eventParams);
 }
 
-/**
- * Track their remote config data as the experiments so that we can segment and
- * target based on what they saw.
- */
-export function trackExperiments(configData: Record<string, string | boolean | number>) {
+const _expEngagements: { time: number; configOption: ConfigOption }[] = [];
+
+function _getExperimentKey(option: ConfigOption) {
 	// Limits:
 	// https://support.google.com/analytics/answer/9267744?hl=en
-	const sanitizedEntries = Object.entries(configData)
-		.map(([key, value]) => ['exp_' + key.substr(0, 35), `${value}`.substr(0, 95)])
-		.slice(0, 20);
+	return 'exp_' + option.name.substr(0, 35);
+}
 
-	_trackEvent('gj_experiments', Object.fromEntries(sanitizedEntries));
+function _getExperimentValue(option: ConfigOption) {
+	const value = option.isOverridden
+		? `overridden-${option.value}`
+		: option.isExcluded
+		? 'excluded'
+		: `${option.value}`;
+
+	// Limits:
+	// https://support.google.com/analytics/answer/9267744?hl=en
+	return value.substr(0, 95);
+}
+
+/**
+ * Used to track anytime they see an actual experiment or engage with it in any
+ * way. This allows us to know when they actually saw an experiment vs just
+ * knowing that they MIGHT see an experiment.
+ *
+ * We rate limit this so that it doesn't trigger too much.
+ */
+export function trackExperimentEngagement(option: ConfigOption) {
+	// If we already tracked an experiment engagement for this config option
+	// within the expiry time, we want to ignore.
+	const prevEngagement = _expEngagements.find(
+		i => i.configOption === option && i.time > Date.now() - EXP_ENGAGEMENT_EXPIRY
+	);
+	if (prevEngagement) {
+		return;
+	}
+
+	_trackEvent('experiment_engagement', {
+		[_getExperimentKey(option)]: _getExperimentValue(option),
+	});
+
+	arrayRemove(_expEngagements, i => i.configOption === option);
+	_expEngagements.push({ configOption: option, time: Date.now() });
 }
 
 export function trackLogin(method: AuthMethod) {
@@ -195,8 +252,6 @@ export function trackAppPromotionClick(options: { source: AppPromotionSource }) 
 	});
 }
 
-export type CommunityOpenSource = 'communityChunk' | 'communityCard';
-
 export function trackGotoCommunity(params: {
 	source: CommunityOpenSource;
 	id?: number;
@@ -206,10 +261,91 @@ export function trackGotoCommunity(params: {
 	_trackEvent('goto_community', params);
 }
 
-export type PostOpenSource = 'communityChunk';
-
 export function trackPostOpen(params: { source: PostOpenSource }) {
 	_trackEvent('post_open', params);
+}
+
+export function trackPostLike(
+	liked: boolean,
+	params: { failed: boolean; location: PostControlsLocation }
+) {
+	const { failed, location } = params;
+
+	let type = liked ? 'like' : 'unlike';
+	if (failed) {
+		type += '_fail';
+	}
+
+	_trackEvent(`post_${type}`, { location });
+}
+
+export function trackCommentVote(vote: number, params: { failed: boolean; toggled: boolean }) {
+	const { failed, toggled } = params;
+
+	let type = '';
+	if (vote === CommentVote.VOTE_UPVOTE) {
+		type = 'like';
+	} else if (vote === CommentVote.VOTE_DOWNVOTE) {
+		type = 'dislike';
+	} else {
+		return;
+	}
+
+	if (failed) {
+		type += '_fail';
+	}
+
+	_trackEvent(`comment_${type}`, { toggled });
+}
+
+export function trackUserFollow(
+	followed: boolean,
+	params: { failed: boolean; location: UserFollowLocation }
+) {
+	const { failed, location } = params;
+
+	let type = followed ? 'follow' : 'unfollow';
+	if (failed) {
+		type += '_fail';
+	}
+
+	_trackEvent(`user_${type}`, { location });
+}
+
+export function trackGameFollow(
+	followed: boolean,
+	params: { failed: boolean; location: GameFollowLocation }
+) {
+	const { failed, location } = params;
+
+	let type = followed ? 'follow' : 'unfollow';
+	if (failed) {
+		type += '_fail';
+	}
+
+	_trackEvent(`game_${type}`, { location });
+}
+
+export function trackCommunityJoin(
+	joined: boolean,
+	params: { failed: boolean; location: CommunityJoinLocation }
+) {
+	const { failed, location } = params;
+
+	let type = joined ? 'join' : 'leave';
+	if (failed) {
+		type += '_fail';
+	}
+
+	_trackEvent(`community_${type}`, { location });
+}
+
+export function trackCommentAdd() {
+	_trackEvent('comment_add', {});
+}
+
+export function trackPostPublish() {
+	_trackEvent('post_publish', {});
 }
 
 /**

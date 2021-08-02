@@ -4,7 +4,7 @@ import { Modal } from '../../../../../_common/modal/modal.service';
 import { RouteStatus } from '../../fireside';
 
 export class FiresideStatsModal {
-	static async show(fireside: Fireside, status: RouteStatus) {
+	static async show(fireside: Fireside, status: RouteStatus, isStreaming: boolean) {
 		return await Modal.show<void>({
 			modalId: 'firesideStats',
 			component: () =>
@@ -14,6 +14,7 @@ export class FiresideStatsModal {
 			props: {
 				fireside,
 				status,
+				isStreaming,
 			},
 			size: 'sm',
 		});

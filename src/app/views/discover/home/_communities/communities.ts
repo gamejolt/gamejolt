@@ -39,7 +39,9 @@ export default class AppDiscoverHomeCommunities extends Vue {
 
 	@State app!: Store['app'];
 
-	readonly configDiscoverCommunityChunks = configDiscoverCommunityChunks;
+	get hasChunks() {
+		return configDiscoverCommunityChunks.value;
+	}
 
 	get filteredCommunities() {
 		const localCommunities = this.communities.map(i => i);
@@ -48,7 +50,7 @@ export default class AppDiscoverHomeCommunities extends Vue {
 
 		localCommunities.forEach(i => {
 			const index = EmphasizedCommunityIDs.indexOf(i.id);
-			if (index === -1 || !this.configDiscoverCommunityChunks.value) {
+			if (index === -1 || !this.hasChunks) {
 				normalCommunities.push(i);
 			} else {
 				emphasizedCommunities.push(i);

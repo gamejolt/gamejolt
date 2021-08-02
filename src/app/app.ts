@@ -42,7 +42,7 @@ export default class App extends Vue {
 
 	created() {
 		if (!GJ_IS_SSR) {
-			Analytics.trackTiming('shell', 'vue-init', Date.now() - (window as any)._gjStartTime);
+			performance.measure('gj-shell-init', 'gj-start');
 			const lang = getTranslationLang();
 			if (lang !== 'en_US') {
 				Analytics.trackEvent('translations', 'loaded', lang);
@@ -54,11 +54,7 @@ export default class App extends Vue {
 		// Let it finish doing all the initial rendering junk and track after
 		// that.
 		setTimeout(() => {
-			Analytics.trackTiming(
-				'shell',
-				'vue-mounted',
-				Date.now() - (window as any)._gjStartTime
-			);
+			performance.measure('gj-shell-mounted', 'gj-start');
 		});
 
 		loadCurrentLanguage(this);

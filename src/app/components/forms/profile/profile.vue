@@ -163,6 +163,25 @@
 			</p>
 		</app-form-group>
 
+		<app-form-group name="mentions_setting" :label="$gettext(`Who can mention you?`)">
+			<app-form-control-select>
+				<option
+					v-for="mentionSettingOption of mentionsSettingOptions"
+					:key="mentionSettingOption.value"
+					:value="mentionSettingOption.value"
+				>
+					{{ mentionSettingOption.text }}
+				</option>
+			</app-form-control-select>
+
+			<p class="help-block">
+				<translate>
+					Select which users you will receive mention notifications from. "People you
+					know" are users you follow or are friends with.
+				</translate>
+			</p>
+		</app-form-group>
+
 		<app-form-button>
 			<translate>dash.profile.edit.submit_button</translate>
 		</app-form-button>

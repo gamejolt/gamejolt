@@ -23,7 +23,7 @@ export default class AppCommunityCard extends Vue {
 	trackGotoCommunity() {
 		if (this.trackGoto) {
 			trackGotoCommunity({
-				source: 'communityCard',
+				source: 'card',
 				id: this.community.id,
 				path: this.community.path,
 			});

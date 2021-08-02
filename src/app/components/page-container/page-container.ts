@@ -10,13 +10,13 @@ function validateOrder(val: string) {
 
 @Component({})
 export default class AppPageContainer extends Vue {
-	@Prop(Boolean)
-	xl?: number;
+	@Prop({ type: Boolean, required: false })
+	xl?: boolean;
 
-	@Prop(Boolean)
+	@Prop({ type: Boolean, required: false })
 	noLeft?: boolean;
 
-	@Prop(Boolean)
+	@Prop({ type: Boolean, required: false })
 	noRight?: boolean;
 
 	/**

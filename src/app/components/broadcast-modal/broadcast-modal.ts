@@ -1,5 +1,4 @@
 import { Component, Prop } from 'vue-property-decorator';
-import { propRequired } from '../../../utils/vue';
 import AppContentViewer from '../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../_common/environment/environment.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
@@ -16,9 +15,9 @@ import AppVideoEmbed from '../../../_common/video/embed/embed.vue';
 import { getVideoPlayerFromSources } from '../../../_common/video/player/controller';
 import AppVideoPlayer from '../../../_common/video/player/player.vue';
 import AppVideo from '../../../_common/video/video.vue';
-import AppEventItemControls from '../event-item/controls/controls.vue';
 import { AppCommentWidgetLazy } from '../lazy';
 import AppPollVoting from '../poll/voting/voting.vue';
+import AppPostControls from '../post/controls/controls.vue';
 
 @Component({
 	components: {
@@ -29,14 +28,15 @@ import AppPollVoting from '../poll/voting/voting.vue';
 		AppVideoPlayer,
 		AppTimeAgo,
 		AppPollVoting,
-		AppEventItemControls,
+		AppPostControls,
 		AppContentViewer,
 		AppStickerTarget,
 		AppCommentWidgetLazy,
 	},
 })
 export default class AppBroadcastModal extends BaseModal {
-	@Prop(propRequired(Array)) posts!: FiresidePost[];
+	@Prop({ type: Array, required: true })
+	posts!: FiresidePost[];
 
 	post: FiresidePost = this.posts[0];
 	stickerTargetController = new StickerTargetController(this.post);

@@ -68,7 +68,7 @@
 					:disabled="!!community.user_block"
 					block
 					hide-count
-					event-label="community-mobile-header"
+					location="communityPage"
 				/>
 			</div>
 
