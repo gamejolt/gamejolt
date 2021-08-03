@@ -29,8 +29,8 @@ export class ContentObject extends ContentNode {
 	public attrs!: { [key: string]: any };
 	public marks!: MarkObject[];
 
-	constructor(type: ContentObjectType) {
-		super();
+	constructor(type: ContentObjectType, content: ContentObject[] = []) {
+		super(content);
 
 		this.type = type;
 

@@ -365,29 +365,29 @@ module.exports = config => {
 
 	let joltronSrc = '';
 
-	const joltronRepoDir = path.join(
-		process.env.GOPATH,
-		'src',
-		'github.com',
-		'gamejolt',
-		'joltron'
-	);
-
-	if (!fs.existsSync(joltronRepoDir)) {
-		console.log('Creating gopath dirs: ' + joltronRepoDir);
-		if (config.platform === 'win') {
-			cp.execSync('mkdir "' + joltronRepoDir + '"');
-		} else {
-			cp.execSync('mkdir -p "' + joltronRepoDir + '"');
-		}
-	}
-
-	joltronSrc = path.join(joltronRepoDir, 'joltron');
-	if (config.platform === 'win') {
-		joltronSrc += '.exe';
-	}
-
 	gulp.task('client:get-joltron', () => {
+		const joltronRepoDir = path.join(
+			process.env.GOPATH,
+			'src',
+			'github.com',
+			'gamejolt',
+			'joltron'
+		);
+
+		if (!fs.existsSync(joltronRepoDir)) {
+			console.log('Creating gopath dirs: ' + joltronRepoDir);
+			if (config.platform === 'win') {
+				cp.execSync('mkdir "' + joltronRepoDir + '"');
+			} else {
+				cp.execSync('mkdir -p "' + joltronRepoDir + '"');
+			}
+		}
+
+		joltronSrc = path.join(joltronRepoDir, 'joltron');
+		if (config.platform === 'win') {
+			joltronSrc += '.exe';
+		}
+
 		return new Promise((resolve, reject) => {
 			const gitStatus = 'git -C ' + joltronRepoDir + ' status';
 			let gitClone =
@@ -636,7 +636,7 @@ module.exports = config => {
 					.on('error', reject)
 					.on('close', () => {
 						// Make sure it is executable.
-						fs.chmodSync(joltronDest, 0755);
+						fs.chmodSync(joltronDest, '0755');
 
 						// Finally create joltron's manifest file
 						fs.writeFileSync(

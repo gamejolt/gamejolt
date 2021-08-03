@@ -8,6 +8,7 @@ import {
 	isInChatRoom,
 	leaveChatRoom,
 	newChatNotification,
+	recollectChatRoomMembers,
 	updateChatRoomLastMessageOn,
 } from './client';
 import { ChatMessage } from './message';
@@ -82,20 +83,23 @@ export class ChatUserChannel extends Channel {
 		if (!currentPresence) {
 			const userId = +presenceId;
 			this.client.friendsList.online(userId);
+			recollectChatRoomMembers(this.client);
 		}
 	}
 
 	private onFriendLeave(presenceId: string, currentPresence: UserPresence | undefined) {
 		// If the user has left all devices.
-		if (currentPresence && currentPresence.metas.length === 0) {
+		if (currentPresence?.metas.length === 0) {
 			const userId = +presenceId;
 			this.client.friendsList.offline(userId);
+			recollectChatRoomMembers(this.client);
 		}
 	}
 
 	private onFriendAdd(data: Partial<ChatUser>) {
 		const newFriend = new ChatUser(data);
 		this.client.friendsList.add(newFriend);
+		recollectChatRoomMembers(this.client);
 	}
 
 	private onFriendRemove(data: FriendRemovePayload) {
@@ -107,6 +111,7 @@ export class ChatUserChannel extends Channel {
 		}
 
 		this.client.friendsList.remove(userId);
+		recollectChatRoomMembers(this.client);
 	}
 
 	private onFriendUpdated(data: Partial<ChatUser>) {
@@ -116,6 +121,7 @@ export class ChatUserChannel extends Channel {
 			const friend = this.client.friendsList.get(userId);
 			data.isOnline = friend?.isOnline;
 			this.client.friendsList.update(new ChatUser(data));
+			recollectChatRoomMembers(this.client);
 		}
 	}
 
@@ -123,7 +129,7 @@ export class ChatUserChannel extends Channel {
 		arrayRemove(this.client.groupRooms, i => i.id === data.room_id);
 
 		if (isInChatRoom(this.client, data.room_id)) {
-			leaveChatRoom(this.client);
+			leaveChatRoom(this.client, this.client.roomChannels[data.room_id].room);
 		}
 	}
 

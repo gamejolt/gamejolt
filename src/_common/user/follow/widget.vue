@@ -1,6 +1,10 @@
+<script lang="ts" src="./widget"></script>
+
 <template>
 	<app-button
 		v-if="shouldShow"
+		v-app-auth-required
+		v-app-tooltip.bottom="tooltip"
 		class="user-follow-widget"
 		primary
 		:icon="icon"
@@ -10,8 +14,6 @@
 		:sm="sm"
 		:solid="user.is_following"
 		:badge="badge"
-		v-app-auth-required
-		v-app-tooltip.bottom="tooltip"
 		@click.stop="onClick"
 	>
 		<template v-if="!circle">
@@ -24,5 +26,3 @@
 		</template>
 	</app-button>
 </template>
-
-<script lang="ts" src="./widget"></script>

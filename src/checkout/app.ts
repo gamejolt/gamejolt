@@ -14,7 +14,7 @@ import AppUserBar from '../_common/user/user-bar/user-bar.vue';
 import { User } from '../_common/user/user.model';
 import { Store } from './store/index';
 
-let components: any = {
+const components: any = {
 	AppCommonShell,
 	AppErrorPage,
 	AppUserBar,

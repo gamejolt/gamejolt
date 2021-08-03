@@ -8,6 +8,7 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import { SettingChatGroupShowMembers } from '../../../../_common/settings/settings.service';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
 import { Store } from '../../../store/index';
 import { ChatClient, ChatKey, leaveChatRoom } from '../client';
 import { ChatInviteModal } from '../invite-modal/invite-modal.service';
@@ -28,6 +29,7 @@ import AppChatWindowSend from './send/send.vue';
 		AppFadeCollapse,
 		AppChatWindowMenu,
 		AppChatMemberList,
+		AppUserVerifiedTick,
 	},
 	directives: {
 		AppTooltip,

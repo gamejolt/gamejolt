@@ -1,15 +1,10 @@
-import { VuexStore } from '../../../utils/vuex';
 import { Environment } from '../../environment/environment.service';
 import { Navigate } from '../../navigate/navigate.service';
-import { AppStore } from '../../store/app-store';
+import { WithAppStore } from '../../store/app-store';
 import { User } from '../../user/user.model';
 
-// So that this can be pulled into any section and not rely on the main "app" store, we manually
-// attach this so we know it exists.
-type Store_ = VuexStore<{ app: AppStore }>;
-
 export class ClientUser {
-	static init(store: Store_) {
+	static init(store: WithAppStore) {
 		// We bootstrap the client with the previously stored user if there was any.
 		// This way they can access client offline with their previous user.
 		const localUser = localStorage.getItem('user');

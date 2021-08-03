@@ -374,6 +374,9 @@
 						</app-expand>
 					</template>
 
+					<!-- Fireside -->
+					<app-fireside-badge v-if="shouldShowFireside" :fireside="fireside" />
+
 					<router-view />
 				</app-page-container>
 			</div>

@@ -8,6 +8,7 @@ import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Community } from '../../../_common/community/community.model';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
+import { Fireside } from '../../../_common/fireside/fireside.model';
 import { FiresidePostCommunity } from '../../../_common/fireside/post/community/community.model';
 import { FiresidePostGotoGrowl } from '../../../_common/fireside/post/goto-growl/goto-growl.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
@@ -28,6 +29,7 @@ import { getTrophyImg } from '../trophy/thumbnail/thumbnail';
 import { CommunityChannel } from './community-channel';
 
 export const GRID_EVENT_NEW_STICKER = 'grid-new-sticker-received';
+export const GRID_EVENT_FIRESIDE_START = 'grid-fireside-start';
 
 interface NewNotificationPayload {
 	notification_data: {
@@ -375,6 +377,12 @@ export class GridClient {
 							this.spawnNotification(notification);
 							break;
 
+						case Notification.TYPE_FIRESIDE_START:
+							// Emit event that different components can pick up to update their views.
+							EventBus.emit(GRID_EVENT_FIRESIDE_START, notification.action_model);
+							this.spawnNotification(notification);
+							break;
+
 						default:
 							this.spawnNotification(notification);
 							break;
@@ -580,6 +588,13 @@ export class GridClient {
 				if (notification.action_model instanceof FiresidePostCommunity) {
 					icon = notification.action_model.community.img_thumbnail;
 				}
+			} else if (notification.type === Notification.TYPE_FIRESIDE_START) {
+				if (notification.action_model instanceof Fireside) {
+					title = notification.action_model.title;
+					if (notification.action_model.community instanceof Community) {
+						icon = notification.action_model.community.img_thumbnail;
+					}
+				}
 			}
 
 			Growls.info({
@@ -594,16 +609,10 @@ export class GridClient {
 			});
 		} else {
 			// Received a notification that cannot be parsed properly...
-			Growls.info({
-				title: Translate.$gettext('New Notification'),
-				message: Translate.$gettext('You have a new notification.'),
-				icon: undefined,
-				onclick: () => {
-					Analytics.trackEvent('grid', 'notification-click', notification.type);
-					router.push('/notifications');
-				},
-				system: isSystem,
-			});
+			console.error(
+				'[Grid] Received notification that cannot be displayed.',
+				notification.type
+			);
 		}
 	}
 

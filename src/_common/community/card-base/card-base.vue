@@ -20,7 +20,11 @@
 
 			<div class="-well fill-bg">
 				<div class="-name" :class="{ '-overflow': overflow }">
-					<router-link :to="community.routeLocation" class="link-unstyled">
+					<router-link
+						:to="community.routeLocation"
+						class="link-unstyled"
+						@click.native="trackGotoCommunity()"
+					>
 						{{ community.name }}
 						<app-community-verified-tick :community="community" />
 					</router-link>
@@ -53,7 +57,13 @@
 						>
 							<translate>Edit Community</translate>
 						</app-button>
-						<app-button v-else primary block :to="community.routeLocation">
+						<app-button
+							v-else
+							primary
+							block
+							:to="community.routeLocation"
+							@click.native="trackGotoCommunity()"
+						>
 							<translate>View Community</translate>
 						</app-button>
 					</template>
@@ -63,7 +73,7 @@
 						:disabled="!!community.user_block"
 						block
 						hide-count
-						event-label="community-card"
+						location="card"
 					/>
 					<app-button
 						v-if="shouldShowModTools"

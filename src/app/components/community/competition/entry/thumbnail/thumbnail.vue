@@ -52,7 +52,7 @@
 							v-app-tooltip="entryAward.community_competition_award.description"
 							class="-award"
 						>
-							<app-jolticon class="-award-icon" icon="medal" highlight />
+							<app-jolticon class="-award-icon" icon="medal" />
 							<small>
 								<b>{{ entryAward.community_competition_award.name }}</b>
 							</small>
@@ -148,9 +148,9 @@
 	align-items: flex-start
 
 .-award
-	change-bg('backlight')
+	change-bg('bi-bg')
 	width: auto
-	color: var(--theme-highlight)
+	color: var(--theme-bi-fg)
 	padding-top: 4px
 	padding-bottom: 4px
 	padding-left: 12px

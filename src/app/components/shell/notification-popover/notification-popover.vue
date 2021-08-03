@@ -23,7 +23,7 @@
 				{{ count }}
 			</span>
 			<div v-if="hasNewUnlockedStickers" class="-new-tag anim-fade-enter anim-fade-leave" />
-			<app-jolticon icon="notifications" />
+			<app-jolticon icon="bell-filled" />
 			<div ref="newStickerAnimContainer" class="-new-sticker-anim-container" />
 		</a>
 

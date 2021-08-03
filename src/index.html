@@ -43,10 +43,11 @@
 		<meta name="msapplication-tap-highlight" content="no" />
 
 		<script>
-			window._gjStartTime = Date.now();
+			performance.mark('gj-start');
 		</script>
 
-		<script type="text/javascript">
+		<script>
+			<%= _perfPolyfill %>
 			if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
 				var msViewportStyle = document.createElement('style');
 				msViewportStyle.appendChild(
@@ -70,20 +71,6 @@
 
 	<body class="<%= _bodyClass %>" id="root">
 		<div id="app"></div>
-
-		<% if (_analytics) { %>
-		<script
-			async
-			src="https://www.googletagmanager.com/gtag/js?id=<%= !_isClient ? `G-FJMPYMGHM7` : `G-CXLRR656PN` %>"
-		></script>
-		<script>
-			window.dataLayer = window.dataLayer || [];
-			function gtag() {
-				dataLayer.push(arguments);
-			}
-			gtag('js', new Date());
-		</script>
-		<% } %>
 
 		<!-- Scripts -->
 		<%= _scripts %>

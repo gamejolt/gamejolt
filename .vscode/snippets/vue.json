@@ -23,7 +23,8 @@
 			"</template>",
 			"",
 			"<style lang=\"stylus\" scoped>",
-			"$3",
+			"@import '~styles/variables'",
+			"@import '~styles-lib/mixins'",
 			"</style>"
 		]
 	}

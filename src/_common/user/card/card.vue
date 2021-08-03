@@ -70,9 +70,9 @@
 					<app-user-follow-widget
 						v-if="user.id !== app.user.id"
 						:user="user"
+						location="card"
 						block
 						hide-count
-						event-label="user-card"
 					/>
 					<app-button
 						v-else

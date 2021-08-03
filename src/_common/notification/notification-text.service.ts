@@ -4,6 +4,7 @@ import {
 	NotificationType,
 } from '../community/user-notification/user-notification.model';
 import { currency } from '../filters/currency';
+import { Fireside } from '../fireside/fireside.model';
 import { FiresidePostCommunity } from '../fireside/post/community/community.model';
 import { FiresidePost } from '../fireside/post/post-model';
 import { ForumTopic } from '../forum/topic/topic.model';
@@ -420,6 +421,30 @@ export class NotificationText {
 							mention.resource
 						);
 						return undefined;
+					}
+				}
+
+				break;
+			}
+
+			case Notification.TYPE_FIRESIDE_START: {
+				if (notification.action_model instanceof Fireside) {
+					if (notification.action_model.community instanceof Community) {
+						return _process(
+							Translate.$gettextInterpolate(
+								`A new Fireside was started in <em>%{ name }</em>.`,
+								{ name: notification.action_model.community.name },
+								!plaintext
+							)
+						);
+					} else {
+						return _process(
+							Translate.$gettextInterpolate(
+								`<em>%{ subject }</em> started up a new Fireside.`,
+								this.getTranslationValues(notification),
+								!plaintext
+							)
+						);
 					}
 				}
 			}

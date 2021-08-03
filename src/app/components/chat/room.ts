@@ -1,20 +1,23 @@
 import { Translate } from '../../../_common/translate/translate.service';
 import { ChatClient } from './client';
+import { ChatRole } from './role';
 import { ChatUser } from './user';
 
-export type ChatRoomType = 'pm' | 'open_group' | 'closed_group' | 'viral_group';
+export type ChatRoomType = 'pm' | 'open_group' | 'closed_group' | 'viral_group' | 'fireside_group';
 
 export class ChatRoom {
 	static readonly ROOM_PM = 'pm';
 	static readonly ROOM_OPEN_GROUP = 'open_group';
 	static readonly ROOM_CLOSED_GROUP = 'closed_group';
 	static readonly ROOM_VIRAL_GROUP = 'viral_group';
+	static readonly ROOM_FIRESIDE_GROUP = 'fireside_group';
 
 	id!: number;
 	title!: string;
 	type!: ChatRoomType;
 	user?: ChatUser;
 	members!: ChatUser[];
+	roles!: ChatRole[];
 	owner_id!: number;
 	last_message_on!: number;
 
@@ -23,6 +26,9 @@ export class ChatRoom {
 
 		if (data.members) {
 			this.members = data.members.map(member => new ChatUser(member));
+		}
+		if (data.roles) {
+			this.roles = data.roles.map(role => new ChatRole(role));
 		}
 	}
 
@@ -38,8 +44,48 @@ export class ChatRoom {
 		return (
 			this.type === ChatRoom.ROOM_OPEN_GROUP ||
 			this.type === ChatRoom.ROOM_CLOSED_GROUP ||
-			this.type === ChatRoom.ROOM_VIRAL_GROUP
+			this.type === ChatRoom.ROOM_VIRAL_GROUP ||
+			this.type === ChatRoom.ROOM_FIRESIDE_GROUP
 		);
+	}
+
+	get isFiresideRoom() {
+		return this.type === ChatRoom.ROOM_FIRESIDE_GROUP;
+	}
+
+	/**
+	 * Returns whether members of the room can be made moderators.
+	 */
+	get canElectModerators() {
+		return this.isFiresideRoom;
+	}
+
+	/**
+	 * Updates (or creates) the role in this room for the input user.
+	 */
+	updateRoleForUser(updatedUser: ChatUser) {
+		if (!updatedUser.role) {
+			return;
+		}
+
+		// Try to find an existing role to update.
+		const existingRoomRole = this.roles.find(i => i.user_id === updatedUser.id);
+		if (existingRoomRole) {
+			existingRoomRole.role = updatedUser.role;
+		}
+		// If no role exists in the room yet, create a new one.
+		else {
+			const newRole = new ChatRole({
+				user_id: updatedUser.id,
+				role: updatedUser.role,
+			});
+			this.roles.push(newRole);
+		}
+
+		// Update the owner id if the input user is the owner.
+		if (updatedUser.role === 'owner') {
+			this.owner_id = updatedUser.id;
+		}
 	}
 }
 

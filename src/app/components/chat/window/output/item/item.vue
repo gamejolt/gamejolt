@@ -9,6 +9,7 @@
 			'chat-window-message-editing': isEditing,
 			'-chat-message-queued': message._showAsQueued,
 			'-chat-message-new': isNew,
+			'chat-window-message-options-visible': messageOptionsVisible,
 		}"
 		:style="{ 'background-color': isEditingColor }"
 	>
@@ -20,7 +21,7 @@
 					alt=""
 				/>
 				<template #popover>
-					<app-chat-user-popover :user="message.user" />
+					<app-chat-user-popover :user="message.user" :room="room" />
 				</template>
 			</app-popper>
 		</a>
@@ -54,10 +55,14 @@
 			</div>
 
 			<div
-				v-if="chat.currentUser && chat.currentUser.id === message.user.id"
+				v-if="shouldShowMessageOptions"
 				class="chat-window-message-options"
+				:class="{ 'chat-window-message-options-open': messageOptionsVisible }"
 			>
-				<app-popper>
+				<app-popper
+					@show="messageOptionsVisible = true"
+					@hide="messageOptionsVisible = false"
+				>
 					<template #default>
 						<a v-app-tooltip="$gettext('More Options')" class="link-muted">
 							<app-jolticon icon="ellipsis-v" class="middle" />
@@ -67,7 +72,7 @@
 					<template #popover>
 						<div class="list-group">
 							<a
-								v-if="message.type === 'content'"
+								v-if="canEditMessage"
 								class="list-group-item has-icon"
 								@click="startEdit"
 							>
@@ -75,7 +80,11 @@
 								<translate>Edit Message</translate>
 							</a>
 
-							<a class="list-group-item has-icon" @click="removeMessage">
+							<a
+								v-if="canRemoveMessage"
+								class="list-group-item has-icon"
+								@click="removeMessage"
+							>
 								<app-jolticon icon="remove" notice />
 								<translate>Remove Message</translate>
 							</a>

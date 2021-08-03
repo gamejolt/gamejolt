@@ -31,13 +31,16 @@
 					<span v-if="isOwner" v-app-tooltip="$gettext(`Room Owner`)">
 						<app-jolticon icon="crown" />
 					</span>
+					<span v-else-if="isModerator" v-app-tooltip="$gettext(`Moderator`)">
+						<app-jolticon icon="star" />
+					</span>
 					{{ user.display_name }}
-					<span class="tiny">@{{ user.username }}</span>
+					<span class="tiny text-muted">@{{ user.username }}</span>
 				</div>
 			</a>
 
 			<template #popover>
-				<app-chat-user-popover :user="user" />
+				<app-chat-user-popover :user="user" :room="room" />
 			</template>
 		</app-popper>
 	</app-scroll-inview>
@@ -50,6 +53,7 @@
 .-container
 	height: 50px
 	overflow: hidden
+	rounded-corners()
 
 .-avatar
 	position: relative

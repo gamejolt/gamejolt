@@ -30,6 +30,12 @@ export class FiresidePostVideo extends Model {
 		return this.media.find(i => i.type === MediaItem.TYPE_VIDEO_POSTER);
 	}
 
+	get postCardVideo(): VideoSourceArray | null {
+		return this.media
+			.filter(i => i.type === MediaItem.TYPE_TRANSCODED_VIDEO_CARD)
+			.map(i => ({ src: i.img_url, type: i.filetype }));
+	}
+
 	get posterUrl() {
 		return this.posterMediaItem?.mediaserver_url;
 	}

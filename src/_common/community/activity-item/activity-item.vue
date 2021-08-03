@@ -257,6 +257,30 @@
 					>
 						<em>Readmitted</em> an entry to its jam.
 					</span>
+					<span
+						v-else-if="item.type === CommunityActivityItem.TYPE_FIRESIDE_START"
+						v-translate
+					>
+						<em>Started</em> a Fireside in this community.
+					</span>
+					<span
+						v-else-if="item.type === CommunityActivityItem.TYPE_FIRESIDE_START_DRAFT"
+						v-translate
+					>
+						<em>Started</em> a Fireside in <em>draft</em> mode in this community.
+					</span>
+					<span
+						v-else-if="item.type === CommunityActivityItem.TYPE_FIRESIDE_PUBLISH"
+						v-translate
+					>
+						<em>Published</em> a Fireside in this community.
+					</span>
+					<span
+						v-else-if="item.type === CommunityActivityItem.TYPE_FIRESIDE_EXTINGUISH"
+						v-translate
+					>
+						<em>Extinguished</em> this community's Fireside.
+					</span>
 
 					<!-- Adds a row to display the given reason for an action.  -->
 					<template v-if="hasReason">

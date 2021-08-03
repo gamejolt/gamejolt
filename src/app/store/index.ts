@@ -1,14 +1,11 @@
 import { Route } from 'vue-router';
 import { sync } from 'vuex-router-sync';
 import { VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
+import { CommunityJoinLocation } from '../../_common/analytics/analytics.service';
 import { Api } from '../../_common/api/api.service';
 import { Backdrop } from '../../_common/backdrop/backdrop.service';
 import AppBackdrop from '../../_common/backdrop/backdrop.vue';
-import {
-	$joinCommunity,
-	$leaveCommunity,
-	Community,
-} from '../../_common/community/community.model';
+import { Community, joinCommunity, leaveCommunity } from '../../_common/community/community.model';
 import { Connection } from '../../_common/connection/connection-service';
 import { ContentFocus } from '../../_common/content-focus/content-focus.service';
 import { FiresidePost } from '../../_common/fireside/post/post-model';
@@ -60,8 +57,8 @@ export type Actions = AppActions &
 		toggleRightPane: void;
 		toggleChatPane: void;
 		clearPanes: void;
-		joinCommunity: Community;
-		leaveCommunity: Community;
+		joinCommunity: { community: Community; location?: CommunityJoinLocation };
+		leaveCommunity: { community: Community; location?: CommunityJoinLocation };
 	};
 
 export type Mutations = AppMutations &
@@ -72,6 +69,8 @@ export type Mutations = AppMutations &
 	_ClientLibraryMod.Mutations & {
 		showShell: void;
 		hideShell: void;
+		showFooter: void;
+		hideFooter: void;
 		setHasContentSidebar: boolean;
 		setNotificationCount: { type: UnreadItemType; count: number };
 		incrementNotificationCount: { type: UnreadItemType; count: number };
@@ -83,7 +82,7 @@ export type Mutations = AppMutations &
 		featuredPost: FiresidePost;
 	};
 
-let bootstrapResolver: (() => void) | null = null;
+let bootstrapResolver: ((value?: any) => void) | null = null;
 let backdrop: AppBackdrop | null = null;
 export let tillStoreBootstrapped = new Promise(resolve => (bootstrapResolver = resolve));
 
@@ -139,6 +138,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	isLibraryBootstrapped = false;
 	isShellBootstrapped = false;
 	isShellHidden = false;
+	isFooterHidden = false;
 
 	/** Unread items in the activity feed. */
 	unreadActivityCount = 0;
@@ -179,6 +179,10 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		}
 
 		return this.mobileCbarShowing || !Screen.isXs;
+	}
+
+	get hasFooter() {
+		return !this.isFooterHidden;
 	}
 
 	/**
@@ -395,6 +399,16 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
+	hideFooter() {
+		this.isFooterHidden = true;
+	}
+
+	@VuexMutation
+	showFooter() {
+		this.isFooterHidden = false;
+	}
+
+	@VuexMutation
 	setHasContentSidebar(isShowing: Mutations['setHasContentSidebar']) {
 		// We use this to scooch the footer over to make room for the sidebar content, but we only care about
 		// that when the sidebar isn't behaving as an overlay - which is currently only on the Lg breakpoint.
@@ -453,19 +467,16 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexAction
-	async joinCommunity(community: Actions['joinCommunity']) {
+	async joinCommunity({ community, location }: Actions['joinCommunity']) {
 		if (community._removed) {
 			return;
 		}
 
 		if (!community.is_member) {
-			await $joinCommunity(community);
+			await joinCommunity(community, location);
 		}
 
-		if (this.grid) {
-			await this.grid.joinCommunity(community);
-		}
-
+		this.grid?.joinCommunity(community);
 		this._joinCommunity(community);
 	}
 
@@ -479,15 +490,12 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexAction
-	async leaveCommunity(community: Actions['leaveCommunity']) {
+	async leaveCommunity({ community, location }: Actions['leaveCommunity']) {
 		if (community.is_member && !community._removed) {
-			await $leaveCommunity(community);
+			await leaveCommunity(community, location);
 		}
 
-		if (this.grid) {
-			await this.grid.leaveCommunity(community);
-		}
-
+		this.grid?.leaveCommunity(community);
 		this._leaveCommunity(community);
 	}
 
