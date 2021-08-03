@@ -118,6 +118,7 @@ export default class RouteFireside extends BaseRouteComponent {
 
 	videoWidth = 0;
 	videoHeight = 0;
+	isVertical = false;
 
 	$refs!: {
 		videoWrapper: HTMLDivElement;
@@ -184,14 +185,6 @@ export default class RouteFireside extends BaseRouteComponent {
 
 	get shouldShowHosts() {
 		return !this.isVertical && !Screen.isMobile;
-	}
-
-	get isVertical() {
-		if (Screen.isMobile) {
-			return window.screen.height > window.screen.width;
-		}
-
-		return Screen.height > Screen.width;
 	}
 
 	get shouldShowFiresideStats() {
@@ -289,7 +282,17 @@ export default class RouteFireside extends BaseRouteComponent {
 		}
 	}
 
+	calcIsVertical() {
+		if (Screen.isMobile) {
+			this.isVertical = window.screen.height > window.screen.width;
+		} else {
+			this.isVertical = Screen.height > Screen.width;
+		}
+	}
+
 	onDimensionsChange() {
+		this.calcIsVertical();
+
 		const videoWrapper = this.$refs.videoWrapper;
 		if (!videoWrapper) {
 			return;
