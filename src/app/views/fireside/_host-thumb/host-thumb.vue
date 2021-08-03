@@ -31,7 +31,12 @@
 
 			<div class="-options-spacer" />
 
-			<app-popper placement="top">
+			<app-popper
+				v-if="!hideOptions"
+				placement="top"
+				@show="emitShowPopper"
+				@hide="emitHidePopper"
+			>
 				<a v-app-tooltip="$gettext('Options')" class="-option">
 					<app-jolticon icon="cog" />
 				</a>

@@ -2,7 +2,7 @@
 
 <template>
 	<div class="-stream-options-wrap">
-		<app-popper>
+		<app-popper @show="emitShowPopper" @hide="emitHidePopper">
 			<div v-app-tooltip="$gettext(`Stream Options`)" class="-stream-options">
 				<app-jolticon class="-icon" icon="ellipsis-v" />
 			</div>

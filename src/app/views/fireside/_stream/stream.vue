@@ -74,7 +74,11 @@
 					</div>
 
 					<div v-if="showHosts" class="-overlay-hosts -control">
-						<app-fireside-host-list />
+						<app-fireside-host-list
+							hide-thumb-options
+							@show-popper="onHostOptionsShow"
+							@hide-popper="onHostOptionsHide"
+						/>
 					</div>
 				</div>
 			</template>
