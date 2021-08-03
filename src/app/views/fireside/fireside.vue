@@ -112,7 +112,6 @@
 						>
 							<template v-if="rtc && rtc.focusedUser">
 								<app-fireside-stream
-									:key="rtc.focusedUser.userId"
 									:rtc-user="rtc.focusedUser"
 									:show-hosts="!shouldShowHosts"
 									:members="overlayChatMembers"

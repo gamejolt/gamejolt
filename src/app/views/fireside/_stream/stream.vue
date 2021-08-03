@@ -2,7 +2,7 @@
 
 <template>
 	<div
-		class="-video"
+		class="-video theme-dark"
 		@mouseleave="onMouseOut"
 		@mousemove="onMouseMove"
 		@touchmove="onMouseMove"
@@ -11,9 +11,11 @@
 		<template v-if="hasVideo">
 			<template v-if="videoPaused">
 				<transition>
-					<div class="-paused-indicator anim-fade-leave-shrink">
-						<app-jolticon class="-paused-indicator-icon" icon="play" />
-					</div>
+					<template v-if="!hasOverlayItems">
+						<div class="-paused-indicator anim-fade-leave-shrink">
+							<app-jolticon class="-paused-indicator-icon" icon="play" />
+						</div>
+					</template>
 				</transition>
 			</template>
 			<template v-else-if="isLoadingVideo">
@@ -22,9 +24,14 @@
 				</div>
 			</template>
 			<template v-else>
-				<app-fireside-video class="-video-player" :rtc-user="rtcUser" />
-				<app-fireside-desktop-audio v-if="shouldPlayDesktopAudio" :rtc-user="rtcUser" />
-				<app-fireside-video-stats v-if="rtc.shouldShowVideoStats" />
+				<div :key="rtcUser.userId">
+					<app-fireside-video class="-video-player" :rtc-user="rtcUser" />
+					<app-fireside-desktop-audio v-if="shouldPlayDesktopAudio" :rtc-user="rtcUser" />
+					<app-fireside-video-stats
+						v-if="rtc.shouldShowVideoStats"
+						@click.native.capture.stop
+					/>
+				</div>
 			</template>
 		</template>
 		<template v-else>
@@ -39,11 +46,10 @@
 			v-if="hasOverlayItems"
 			class="-overlay"
 			:class="{ '-darken': shouldShowUI }"
-			@mouseenter="isHoveringControls = true"
-			@mouseleave="isHoveringControls = false"
+			@click.capture="onOverlayTap"
 		>
-			<div @click.capture="onTapOverlay">
-				<template v-if="shouldShowUI">
+			<template v-if="shouldShowUI">
+				<div class="-overlay-inner">
 					<div v-if="memberCount" class="-overlay-members">
 						<translate
 							:translate-n="memberCount"
@@ -54,11 +60,24 @@
 						</translate>
 					</div>
 
+					<div class="-overlay-playback">
+						<div
+							v-if="shouldShowOverlayPlayback"
+							class="-overlay-playback-inner"
+							@click="togglePlayback"
+						>
+							<app-jolticon
+								class="-paused-indicator-icon"
+								:icon="videoPaused ? 'play' : 'pause'"
+							/>
+						</div>
+					</div>
+
 					<div v-if="showHosts" class="-overlay-hosts -control">
 						<app-fireside-host-list />
 					</div>
-				</template>
-			</div>
+				</div>
+			</template>
 		</div>
 	</div>
 </template>
@@ -76,6 +95,8 @@
 		right: 0
 		bottom: 0
 		left: 0
+		color: var(--theme-fg)
+		text-shadow: 1px 1px 3px rgba($black, 0.5)
 
 	> .-overlay
 		z-index: 1
@@ -85,6 +106,16 @@
 		&.-darken
 			opacity: 1
 			background-color: rgba($black, 0.5)
+
+.-overlay-inner
+	height: 100%
+	width: 100%
+	display: flex
+	flex-direction: column
+	padding: 8px 0
+
+	> *
+		flex: 1
 
 .-visible-center
 	opacity: 1 !important
@@ -104,17 +135,20 @@
 	bottom: 0
 	left: 0
 
-.-overlay-hosts
-	position: absolute
-	left: 0px
-	bottom: 4px
-	right: 0px
-
 .-overlay-members
-	position: absolute
-	left: 8px
-	top: 8px
+	padding: 0 8px
 	font-weight: bold
+
+.-overlay-playback
+	flex: auto
+	display: flex
+	align-items: center
+	justify-content: center
+	min-height: 0
+
+	&-inner
+		padding: 16px
+		margin: -(@padding)
 
 .-control
 	&
@@ -131,9 +165,7 @@
 	display: flex
 	align-items: center
 	justify-content: center
-	text-shadow: 1px 1px 3px rgba($black, 0.5)
 
 	&-icon
-		color: white
 		font-size: 60px
 </style>

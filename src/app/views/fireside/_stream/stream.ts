@@ -37,7 +37,6 @@ export default class AppFiresideStream extends Vue {
 
 	@InjectReactive(FiresideRTCKey) rtc!: FiresideRTC;
 
-	isHoveringControls = false;
 	private isHovered = false;
 	private _hideUITimer?: NodeJS.Timer;
 	private _ignorePointerTimer?: NodeJS.Timer;
@@ -50,7 +49,7 @@ export default class AppFiresideStream extends Vue {
 			return false;
 		}
 
-		return this.isHoveringControls || this.isHovered || this._hideUITimer;
+		return (this.hasVideo && this.videoPaused) || this.isHovered || this._hideUITimer;
 	}
 
 	get hasOverlayItems() {
@@ -81,6 +80,10 @@ export default class AppFiresideStream extends Vue {
 		);
 	}
 
+	get shouldShowOverlayPlayback() {
+		return this.hasVideo;
+	}
+
 	onMouseOut() {
 		this.scheduleUIHide(UIHideTimeout);
 	}
@@ -90,13 +93,29 @@ export default class AppFiresideStream extends Vue {
 	}
 
 	onVideoClick() {
+		this.scheduleUIHide(UIHideTimeout);
+
+		// Don't alter video playback here when we have overlays to use tap
+		// interactions with.
+		if (this.hasOverlayItems) {
+			return;
+		}
+
+		this.togglePlayback();
+	}
+
+	onOverlayTap(event: Event) {
+		if (this._ignorePointerTimer) {
+			event.stopImmediatePropagation();
+		}
+	}
+
+	togglePlayback() {
 		if (this.videoPaused) {
 			this.pauseVideo();
 		} else {
 			this.unpauseVideo();
 		}
-
-		this.scheduleUIHide(UIHideTimeout);
 	}
 
 	private scheduleUIHide(delay: number) {
@@ -137,17 +156,11 @@ export default class AppFiresideStream extends Vue {
 		this._ignorePointerTimer = undefined;
 	}
 
-	onTapOverlay(event: Event) {
-		if (this._ignorePointerTimer) {
-			event.stopImmediatePropagation();
-		}
-	}
-
-	pauseVideo() {
+	private pauseVideo() {
 		this.rtc.videoPaused = false;
 	}
 
-	unpauseVideo() {
+	private unpauseVideo() {
 		this.rtc.videoPaused = true;
 	}
 }

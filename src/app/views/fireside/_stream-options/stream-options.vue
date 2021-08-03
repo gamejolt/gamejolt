@@ -53,4 +53,5 @@
 
 .-icon
 	font-size: 20px
+	color: var(--theme-fg)
 </style>
