@@ -7,13 +7,15 @@ import AppCardListItem from '../../../../../../../../_common/card/list/item/item
 import {
 	Community,
 	CommunityPresetChannelType,
+	getCommunityChannelBackground,
 } from '../../../../../../../../_common/community/community.model';
-import FormCommunityChannelEditPreset from '../../../../../../../components/forms/community/channel/edit/preset.vue';
+import AppCommunityChannelCardEdit from '../../../../../../../components/community/channel/card/edit/edit.vue';
+import { CommunityChannelPresetBackgroundModal } from '../../../../../../../components/community/channel/preset-background-modal/preset-background-modal.service';
 
 @Component({
 	components: {
 		AppCardListItem,
-		FormCommunityChannelEditPreset,
+		AppCommunityChannelCardEdit,
 	},
 })
 export default class AppCommunitiesEditChannelListPresetItem extends Vue {
@@ -35,5 +37,14 @@ export default class AppCommunitiesEditChannelListPresetItem extends Vue {
 		}
 
 		assertNever(this.presetType);
+	}
+
+	get background() {
+		return getCommunityChannelBackground(this.community, this.presetType);
+	}
+
+	async onClickEditBackground() {
+		await CommunityChannelPresetBackgroundModal.show(this.community, this.presetType);
+		this.emitEdit();
 	}
 }
