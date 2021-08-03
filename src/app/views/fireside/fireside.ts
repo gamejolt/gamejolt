@@ -210,7 +210,8 @@ export default class RouteFireside extends BaseRouteComponent {
 			this.status === 'joined' &&
 			this.user &&
 			this.fireside &&
-			this.fireside.user.id === this.user.id
+			(this.user.id === this.fireside.user.id ||
+				this.fireside.community?.hasPerms('community-firesides'))
 		);
 	}
 

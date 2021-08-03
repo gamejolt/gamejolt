@@ -33,7 +33,7 @@ export default class AppFiresideStats extends Vue {
 	@Prop({ type: String, required: true })
 	status!: RouteStatus;
 
-	@Prop({type: Boolean, required: true})
+	@Prop({ type: Boolean, required: true })
 	isStreaming!: boolean;
 
 	@AppState user!: AppStore['user'];
@@ -45,19 +45,20 @@ export default class AppFiresideStats extends Vue {
 
 	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
 
-	get canPublish() {
+	get canManage() {
 		return (
-			this.user &&
-			this.fireside.user.id === this.fireside.user.id &&
-			this.status === 'joined' &&
-			this.fireside.is_draft
+			this.user?.id === this.fireside.user.id ||
+			this.fireside.community?.hasPerms('community-firesides')
 		);
+	}
+
+	get canPublish() {
+		return this.canManage && this.status === 'joined' && this.fireside.is_draft;
 	}
 
 	get canExtend() {
 		return (
-			this.user &&
-			this.user.id === this.fireside.user.id &&
+			this.canManage &&
 			this.status === 'joined' &&
 			this.expiresProgressValue !== null &&
 			this.expiresProgressValue <= 95
