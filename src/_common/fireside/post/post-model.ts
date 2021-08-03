@@ -22,7 +22,6 @@ import { User } from '../../user/user.model';
 import { FiresidePostCommunity } from './community/community.model';
 import { FiresidePostEmbed } from './embed/embed.model';
 import { FiresidePostLike } from './like/like-model';
-import { FiresidePostTag } from './tag/tag-model';
 import { FiresidePostVideo } from './video/video-model';
 
 interface FiresidePostPublishedPlatform {
@@ -75,7 +74,6 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	leadStr!: string;
 	article_content!: string;
 
-	tags: FiresidePostTag[] = [];
 	communities: FiresidePostCommunity[] = [];
 	media: MediaItem[] = [];
 	videos: FiresidePostVideo[] = [];
@@ -103,10 +101,6 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 
 		if (data.game) {
 			this.game = new Game(data.game);
-		}
-
-		if (data.tags) {
-			this.tags = FiresidePostTag.populate(data.tags);
 		}
 
 		if (data.communities) {

@@ -59,6 +59,10 @@ export default class RouteCommunitiesViewEditChannelsOverview extends BaseRouteC
 		}
 	}
 
+	onBackgroundChange(model: CommunityChannel) {
+		Object.assign(this.channel, model);
+	}
+
 	async onClickArchive() {
 		if (!this.canArchive) {
 			return;

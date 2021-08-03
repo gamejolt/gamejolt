@@ -109,6 +109,7 @@
 		"minimist": "1.2.0",
 		"mv": "2.1.1",
 		"null-loader": "0.1.1",
+		"nw-builder": "github:gamejolt/nw-builder#skip-merge-app",
 		"offline-plugin": "5.0.6",
 		"phoenix": "1.5.1",
 		"pofile": "1.0.11",
@@ -175,6 +176,7 @@
 		"appdmg": "0.5.2"
 	},
 	"dependencies": {
+		"axios": "0.19.2",
 		"axios": "0.21.1",
 		"client-voodoo": "2.5.3",
 		"fs-extra": "7.0.0",
