@@ -2,9 +2,12 @@ import Vue from 'vue';
 import { Component, InjectReactive, Prop } from 'vue-property-decorator';
 import { FiresideRTC, FiresideRTCKey } from '../fireside-rtc';
 import {
-	deregisterVideoPlaybackElement,
 	FiresideRTCUser,
-	registerVideoPlaybackElement,
+	FiresideVideoLock,
+	FiresideVideoPlayStatePlaying,
+	getVideoLock,
+	releaseVideoLock,
+	setVideoPlayback,
 } from '../fireside-rtc-user';
 
 @Component({})
@@ -18,11 +21,12 @@ export default class AppFiresideVideo extends Vue {
 	@InjectReactive(FiresideRTCKey) rtc!: FiresideRTC;
 
 	private _myRtcUser!: FiresideRTCUser;
+	private _videoLock: FiresideVideoLock | null = null;
 
 	$el!: HTMLDivElement;
 
 	get hasVideo() {
-		return this.rtcUser.hasVideo;
+		return this._myRtcUser.hasVideo;
 	}
 
 	get isLoadingVideo() {
@@ -34,10 +38,16 @@ export default class AppFiresideVideo extends Vue {
 	}
 
 	mounted() {
-		registerVideoPlaybackElement(this.rtcUser, this.$el, this.lowBitrate);
+		this._videoLock = getVideoLock(this._myRtcUser);
+		setVideoPlayback(
+			this._myRtcUser,
+			new FiresideVideoPlayStatePlaying(this.$el, this.lowBitrate)
+		);
 	}
 
-	beforeDestroy() {
-		deregisterVideoPlaybackElement(this._myRtcUser, this.$el);
+	destroyed() {
+		if (this._videoLock) {
+			releaseVideoLock(this._myRtcUser, this._videoLock);
+		}
 	}
 }

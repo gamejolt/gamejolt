@@ -14,12 +14,4 @@ import AppFiresideStreamOptions from '../_stream-options/stream-options.vue';
 })
 export default class AppFiresideHostList extends Vue {
 	@InjectReactive(FiresideRTCKey) rtc!: FiresideRTC;
-
-	mounted() {
-		this.rtc.thumbnailsVisible = true;
-	}
-
-	destroyed() {
-		this.rtc.thumbnailsVisible = false;
-	}
 }

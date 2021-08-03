@@ -1,11 +1,34 @@
 import { IAgoraRTCRemoteUser, IRemoteAudioTrack, IRemoteVideoTrack } from 'agora-rtc-sdk-ng';
 import { arrayRemove } from '../../../utils/array';
+import { sleep } from '../../../utils/utils';
 import { User } from '../../../_common/user/user.model';
 import { FiresideRTC } from './fireside-rtc';
 
-interface PlaybackElement {
-	div: HTMLDivElement;
-	isLowBitrate: boolean;
+export class FiresideVideoPlayStatePlaying {
+	isPlaying = true;
+	constructor(public readonly element: HTMLDivElement, public readonly isLowBitrate: boolean) {}
+}
+
+export class FiresideVideoPlayStateStopped {
+	isPlaying = false;
+}
+
+export type FiresideVideoPlayState = FiresideVideoPlayStatePlaying | FiresideVideoPlayStateStopped;
+
+function _comparePlayState(a: FiresideVideoPlayState, b: FiresideVideoPlayState) {
+	if (a === b) {
+		return true;
+	}
+
+	if (a instanceof FiresideVideoPlayStatePlaying && b instanceof FiresideVideoPlayStatePlaying) {
+		return a.element === b.element && a.isLowBitrate === b.isLowBitrate;
+	}
+
+	return a.isPlaying === b.isPlaying;
+}
+
+export class FiresideVideoLock {
+	released = false;
 }
 
 export class FiresideRTCUser {
@@ -14,8 +37,9 @@ export class FiresideRTCUser {
 
 	hasVideo = false;
 	videoTrack: IRemoteVideoTrack | null = null;
-	wantsVideoTrack = false;
-	isBusyWithVideoTrack = false;
+	videoPlayState: FiresideVideoPlayState = new FiresideVideoPlayStateStopped();
+	queuedVideoPlayState: FiresideVideoPlayState | null = null;
+	readonly videoLocks: FiresideVideoLock[] = [];
 
 	hasDesktopAudio = false;
 	desktopAudioTrack: IRemoteAudioTrack | null = null;
@@ -25,7 +49,6 @@ export class FiresideRTCUser {
 	micAudioTrack: IRemoteAudioTrack | null = null;
 
 	volumeLevel = 0;
-	readonly videoPlaybackElements: PlaybackElement[] = [];
 
 	constructor(
 		public readonly rtc: FiresideRTC,
@@ -37,15 +60,40 @@ export class FiresideRTCUser {
 	}
 }
 
-export async function setWantsVideoTrack(user: FiresideRTCUser, wantsVideoTrack: boolean) {
-	const { rtc } = user;
+/**
+ * THis should be called before playing a video. [releaseVideoLock] must be
+ * called when you no longer need to be playing the video.
+ */
+export function getVideoLock(user: FiresideRTCUser) {
+	const lock = new FiresideVideoLock();
+	user.videoLocks.push(lock);
+	return lock;
+}
 
-	user.wantsVideoTrack = wantsVideoTrack;
-
-	if (user.isBusyWithVideoTrack) {
-		console.log('busy');
+/**
+ * Should be called to release the video lock back to the system. If this was
+ * the last lock, the video will be unsubscribed from.
+ */
+export function releaseVideoLock(user: FiresideRTCUser, lock: FiresideVideoLock) {
+	if (lock.released) {
 		return;
 	}
+
+	lock.released = true;
+	arrayRemove(user.videoLocks, i => i === lock);
+
+	// When there's no more locks, stop the video.
+	if (!user.videoLocks.length) {
+		setVideoPlayback(user, new FiresideVideoPlayStateStopped());
+	}
+}
+
+/**
+ * Used to set the new state for video playback for a [FiresideRTCUser]. Make
+ * sure to acquire/release the appropriate locks, or things may get out of sync.
+ */
+export async function setVideoPlayback(user: FiresideRTCUser, newState: FiresideVideoPlayState) {
+	const { rtc } = user;
 
 	if (!rtc.videoClient) {
 		console.warn(
@@ -56,110 +104,96 @@ export async function setWantsVideoTrack(user: FiresideRTCUser, wantsVideoTrack:
 
 	// If user doesnt have a video stream to subscribe/unsubscribe to, nothing to do.
 	if (!user.hasVideo || !user.videoUser) {
-		console.log('no video or no video client');
+		console.log('No video or no video client');
+		return;
+	}
+
+	const wasQueued = user.queuedVideoPlayState !== null;
+	user.queuedVideoPlayState = newState;
+
+	if (wasQueued) {
+		console.log('Queue up new video play state change, we are already busy.', { ...newState });
 		return;
 	}
 
 	// If user is already in the desired state for video subscriptions, noop.
-	if (wantsVideoTrack === !!user.videoTrack) {
-		console.log('already in desired state');
+	if (_comparePlayState(user.videoPlayState, newState)) {
+		console.log('Already in desired state.', {
+			newState: { ...newState },
+			existingState: { ...user.videoPlayState },
+		});
 		return;
 	}
 
-	user.isBusyWithVideoTrack = true;
+	console.log('Setting new play state.', { ...newState });
 
-	try {
-		if (wantsVideoTrack) {
-			try {
-				user.videoTrack = await rtc.videoClient.subscribe(user.videoUser, 'video');
+	if (newState instanceof FiresideVideoPlayStatePlaying) {
+		try {
+			user.videoTrack = await rtc.videoClient.subscribe(user.videoUser, 'video');
 
-				for (const playbackElement of user.videoPlaybackElements) {
-					try {
-						// Wait for next tick before playing so that any video playback elements
-						// are first deregistered.
-						setTimeout(() => {
-							if (user.videoTrack) {
-								user.videoTrack.play(playbackElement.div);
-								rtc.videoClient!.setRemoteVideoStreamType(
-									user.userId,
-									playbackElement.isLowBitrate ? 1 : 0
-								);
-							}
-						}, 0);
-					} catch (e) {
-						console.error(
-							`Failed to play video track for user ${user.userId} on a playback element ${playbackElement.div.id}`
-						);
-						console.error(e);
-					}
-				}
-			} catch (e) {
-				console.error('Failed to subscribe to video thumbnails for user ' + user.userId);
-				console.error(e);
+			// Wait for next tick before playing so that any video playback elements
+			// are first deregistered.
+			await sleep(0);
+
+			if (user.videoTrack) {
+				user.videoTrack.play(newState.element);
+				rtc.videoClient!.setRemoteVideoStreamType(
+					user.userId,
+					newState.isLowBitrate ? 1 : 0
+				);
 			}
-		} else {
-			try {
-				if (user.videoTrack?.isPlaying) {
-					try {
-						user.videoTrack.stop();
-					} catch (e) {
-						console.warn(
-							`Got an error while stopping a video track for user ${user.userId}. Tolerating.`
-						);
-						console.warn(e);
-					}
+		} catch (e) {
+			console.error('Failed to subscribe to video for user ' + user.userId);
+			console.error(e);
+		}
+	} else if (newState instanceof FiresideVideoPlayStateStopped) {
+		try {
+			if (user.videoTrack?.isPlaying) {
+				try {
+					user.videoTrack.stop();
+				} catch (e) {
+					console.warn(
+						`Got an error while stopping a video track for user ${user.userId}. Tolerating.`
+					);
+					console.warn(e);
 				}
-
-				await rtc.videoClient.unsubscribe(user.videoUser, 'video');
-
-				// TODO: we might want to set the video track to null even
-				// before unsubscribing. this is because unsubscribe may fail if
-				// we already left the channel or it got disconnected for some
-				// reason. in these cases the video track should still get
-				// unset, however I don't know what happens if the error is
-				// literally with unsubscribing, and the video track remains
-				// intact.
-				user.videoTrack = null;
-			} catch (e) {
-				console.error('Failed to subscribe to video thumbnails for user ' + user.userId);
-				console.error(e);
 			}
+
+			await rtc.videoClient.unsubscribe(user.videoUser, 'video');
+
+			// TODO: we might want to set the video track to null even
+			// before unsubscribing. this is because unsubscribe may fail if
+			// we already left the channel or it got disconnected for some
+			// reason. in these cases the video track should still get
+			// unset, however I don't know what happens if the error is
+			// literally with unsubscribing, and the video track remains
+			// intact.
+			user.videoTrack = null;
+
+			// Make sure all the locks are released (just in case).
+			for (const lock of user.videoLocks) {
+				lock.released = true;
+			}
+			user.videoLocks.splice(0);
+		} catch (e) {
+			console.error('Failed to subscribe to video thumbnails for user ' + user.userId);
+			console.error(e);
 		}
-	} finally {
-		user.isBusyWithVideoTrack = false;
 	}
 
-	// If the operation's state doesn't match up with our desired state, toggle the thumbnails again.
-	if (user.wantsVideoTrack !== wantsVideoTrack) {
-		await setWantsVideoTrack(user, user.wantsVideoTrack);
+	// Apply the new video play state finally.
+	user.videoPlayState = newState;
+
+	// While we were performing this operation, a new play state may have been
+	// queued.
+	const queuedState = user.queuedVideoPlayState;
+	user.queuedVideoPlayState = null;
+
+	// If the operation's state doesn't match up with our desired state, run
+	// through this whole process again with the queued play state.
+	if (!_comparePlayState(queuedState, user.videoPlayState)) {
+		setVideoPlayback(user, queuedState);
 	}
-}
-
-export function registerVideoPlaybackElement(
-	user: FiresideRTCUser,
-	element: HTMLDivElement,
-	isLowBitrate = false
-) {
-	const { rtc } = user;
-	user.videoPlaybackElements.push({ div: element, isLowBitrate });
-
-	if (user.isBusyWithVideoTrack) {
-		return;
-	}
-
-	// Wait for next tick before playing so that any video playback elements
-	// are first deregistered.
-	setTimeout(() => {
-		if (user.videoTrack) {
-			user.videoTrack.play(element);
-			rtc.videoClient!.setRemoteVideoStreamType(user.userId, isLowBitrate ? 1 : 0);
-		}
-	}, 0);
-}
-
-export function deregisterVideoPlaybackElement(user: FiresideRTCUser, element: HTMLDivElement) {
-	arrayRemove(user.videoPlaybackElements, i => i.div === element);
-	element.innerHTML = '';
 }
 
 export async function startDesktopAudioPlayback(user: FiresideRTCUser) {

@@ -5,7 +5,8 @@ import { Navigate } from '../../../_common/navigate/navigate.service';
 import { User } from '../../../_common/user/user.model';
 import {
 	FiresideRTCUser,
-	setWantsVideoTrack,
+	FiresideVideoPlayStateStopped,
+	setVideoPlayback,
 	startAudioPlayback,
 	stopAudioPlayback,
 	stopDesktopAudioPlayback,
@@ -59,21 +60,6 @@ export class FiresideRTC {
 		return this.users.find(remoteUser => remoteUser.userId == this.focusedUserId) || null;
 	}
 
-	get thumbnailsVisible() {
-		return this.shouldShowVideoThumbnails;
-	}
-
-	set thumbnailsVisible(visible: boolean) {
-		this.shouldShowVideoThumbnails = visible;
-		for (const user of this.users) {
-			if (this.focusedUserId === user.userId) {
-				continue;
-			}
-
-			setWantsVideoTrack(user, visible);
-		}
-	}
-
 	public assertNotOutdated(myGeneration: number) {
 		if (myGeneration !== this.generation) {
 			throw new Error('Outdated Fireside RTC generation detected');
@@ -90,7 +76,7 @@ export async function destroyFiresideRTC(rtc: FiresideRTC) {
 		await Promise.all(
 			rtc.users.map(user =>
 				Promise.all([
-					setWantsVideoTrack(user, false),
+					setVideoPlayback(user, new FiresideVideoPlayStateStopped()),
 					stopDesktopAudioPlayback(user),
 					stopAudioPlayback(user),
 				])
@@ -239,14 +225,6 @@ function _setupEvents(rtc: FiresideRTC) {
 		}
 
 		_chooseFocusedUser(rtc);
-
-		// TODO: Do we still need this?
-		if (mediaType === 'video') {
-			console.log('Current focused user is: ' + rtc.focusedUserId);
-			if (rtc.focusedUserId === user.userId || rtc.shouldShowVideoThumbnails) {
-				setWantsVideoTrack(user, true);
-			}
-		}
 	});
 
 	rtc.videoClient.on('user-unpublished', async (remoteUser, mediaType) => {
@@ -261,7 +239,7 @@ function _setupEvents(rtc: FiresideRTC) {
 		}
 
 		if (mediaType === 'video') {
-			setWantsVideoTrack(user, false);
+			setVideoPlayback(user, new FiresideVideoPlayStateStopped());
 			user.hasVideo = false;
 		} else {
 			user.hasDesktopAudio = false;
@@ -283,7 +261,7 @@ function _setupEvents(rtc: FiresideRTC) {
 
 		// TODO: this will probably error out because it'll fail to "properly"
 		// unsubscribe from the track.
-		setWantsVideoTrack(user, false);
+		setVideoPlayback(user, new FiresideVideoPlayStateStopped());
 
 		stopDesktopAudioPlayback(user);
 		user.videoUser = null;
