@@ -2,8 +2,10 @@
 	"name": "game-jolt-client",
 	"version": "0.71.2",
 	"repository": {
-		"github": ""
+		"type": "git",
+		"url": "https://github.com/gamejolt/gamejolt.git"
 	},
+	"private": false,
 	"scripts": {
 		"postinstall": "yarn run translations",
 		"start": "gulp watch",
