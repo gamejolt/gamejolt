@@ -20,9 +20,11 @@ export class FiresideRTC {
 	readonly users: FiresideRTCUser[] = [];
 	videoClient: IAgoraRTCClient | null = null;
 	audioClient: IAgoraRTCClient | null = null;
+	videoPaused = false;
 	focusedUserId: number | null = null;
 	volumeLevelInterval: NodeJS.Timer | null = null;
 	shouldShowVideoThumbnails = false;
+	shouldShowVideoStats = false;
 
 	constructor(
 		public readonly userId: number,
@@ -33,6 +35,7 @@ export class FiresideRTC {
 		public audioChatToken: string | null,
 		public readonly hosts: User[]
 	) {
+		this.videoPaused = this.isHost;
 		_setup(this);
 	}
 
@@ -237,6 +240,7 @@ function _setupEvents(rtc: FiresideRTC) {
 
 		_chooseFocusedUser(rtc);
 
+		// TODO: Do we still need this?
 		if (mediaType === 'video') {
 			console.log('Current focused user is: ' + rtc.focusedUserId);
 			if (rtc.focusedUserId === user.userId || rtc.shouldShowVideoThumbnails) {
@@ -308,7 +312,10 @@ function _setupEvents(rtc: FiresideRTC) {
 
 		user.audioChatUser = remoteUser;
 		user.hasMicAudio = true;
-		startAudioPlayback(user);
+
+		if (!user.micAudioMuted) {
+			startAudioPlayback(user);
+		}
 
 		_chooseFocusedUser(rtc);
 	});
@@ -331,15 +338,6 @@ function _setupEvents(rtc: FiresideRTC) {
 		_removeUserIfNeeded(rtc, user);
 		_chooseFocusedUser(rtc);
 	});
-
-	// rtc.videoClient.on('volume-indicator', (items) => {
-	// 	for (const { uid, level } of items) {
-	// 		const user = this.users.find((i) => i.userId === uid);
-	// 		if (user) {
-	// 			user.volumeLevel = level;
-	// 		}
-	// 	}
-	// });
 }
 
 async function _join(rtc: FiresideRTC) {
@@ -358,8 +356,8 @@ async function _join(rtc: FiresideRTC) {
 		return;
 	}
 
-	// We set ourselves up as an audience member with the "low latency"
-	// level, instead of the ultra low latency which is used for hosts.
+	// We set ourselves up as an audience member with the "low latency" level,
+	// instead of the ultra low latency which is used for hosts.
 	await Promise.all([
 		rtc.videoClient.setClientRole('audience', { level: 1 }).then(() => {
 			rtc.assertNotOutdated(currentGeneration);
@@ -370,11 +368,13 @@ async function _join(rtc: FiresideRTC) {
 			return audioClient.join(rtc.appId, rtc.audioChatChannel, rtc.audioChatToken, null);
 		}),
 	]);
-
-	// this.videoClient.enableAudioVolumeIndicator();
 }
 
+/**
+ * This is currently broken since users currently join one-by-one anyway.
+ */
 function _chooseFocusedUser(rtc: FiresideRTC) {
+	// We only choose a new focused user if there isn't one currently set.
 	if (rtc.focusedUser) {
 		return;
 	}

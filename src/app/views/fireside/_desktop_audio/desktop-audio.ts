@@ -17,7 +17,6 @@ export default class AppFiresideDesktopAudio extends Vue {
 	private _myRtcUser!: FiresideRTCUser;
 
 	created() {
-		// 10x hack to keep the reference around for when the component gets destroyed.
 		this._myRtcUser = this.rtcUser;
 	}
 

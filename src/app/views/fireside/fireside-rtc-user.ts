@@ -1,4 +1,5 @@
 import { IAgoraRTCRemoteUser, IRemoteAudioTrack, IRemoteVideoTrack } from 'agora-rtc-sdk-ng';
+import { arrayRemove } from '../../../utils/array';
 import { User } from '../../../_common/user/user.model';
 import { FiresideRTC } from './fireside-rtc';
 
@@ -10,22 +11,30 @@ interface PlaybackElement {
 export class FiresideRTCUser {
 	videoUser: IAgoraRTCRemoteUser | null = null;
 	audioChatUser: IAgoraRTCRemoteUser | null = null;
+
 	hasVideo = false;
-	hasDesktopAudio = false;
-	hasMicAudio = false;
 	videoTrack: IRemoteVideoTrack | null = null;
 	wantsVideoTrack = false;
 	isBusyWithVideoTrack = false;
+
+	hasDesktopAudio = false;
 	desktopAudioTrack: IRemoteAudioTrack | null = null;
+
+	hasMicAudio = false;
+	micAudioMuted = false;
 	micAudioTrack: IRemoteAudioTrack | null = null;
+
 	volumeLevel = 0;
-	videoPlaybackElements: PlaybackElement[] = [];
+	readonly videoPlaybackElements: PlaybackElement[] = [];
 
 	constructor(
 		public readonly rtc: FiresideRTC,
 		public readonly userId: number,
 		public readonly userModel: User | undefined
-	) {}
+	) {
+		// TODO: If anyone at all is unmuted, we can let people enter unmuted when they're a host.
+		this.micAudioMuted = rtc.isHost;
+	}
 }
 
 export async function setWantsVideoTrack(user: FiresideRTCUser, wantsVideoTrack: boolean) {
@@ -149,69 +158,9 @@ export function registerVideoPlaybackElement(
 }
 
 export function deregisterVideoPlaybackElement(user: FiresideRTCUser, element: HTMLDivElement) {
-	user.videoPlaybackElements = user.videoPlaybackElements.filter(
-		playbackElement => playbackElement.div === element
-	);
-
+	arrayRemove(user.videoPlaybackElements, i => i.div === element);
 	element.innerHTML = '';
 }
-
-// public async startVideoPlayback(rtc: FiresideRTC, element: HTMLDivElement) {
-// 	console.log(`FiresideRTCUser(${this.userId}) -> startVideoPlayback`);
-// 	if (!this.videoUser || !rtc.videoClient) {
-// 		return;
-// 	}
-
-// 	console.log('found video user, starting video playback');
-
-// 	try {
-// 		this.videoTrack = await rtc.videoClient.subscribe(this.videoUser, 'video');
-// 		this.playerElement = element;
-// 		this.videoTrack.play(element);
-// 	} catch (e) {
-// 		console.error('Failed to start video playback, attempting to gracefully stop.');
-// 		console.error(e);
-
-// 		this.stopVideoPlayback(rtc);
-// 		throw e;
-// 	}
-// }
-
-// public async stopVideoPlayback(rtc: FiresideRTC) {
-// 	console.log(`FiresideRTCUser(${this.userId}) -> stopVideoPlayback`);
-
-// 	if (!this.videoUser) {
-// 		console.log('no video user, nothing to do');
-// 		return;
-// 	}
-
-// 	if (this.videoTrack && this.videoTrack.isPlaying) {
-// 		console.log('Stopping existing video track');
-// 		try {
-// 			this.videoTrack.stop();
-// 		} catch (e) {
-// 			console.warn('Failed to stop video track playback');
-// 			console.warn(e);
-// 		}
-// 	}
-// 	this.videoTrack = null;
-
-// 	if (this.playerElement) {
-// 		this.playerElement.innerHTML = '';
-// 		this.playerElement = null;
-// 	}
-
-// 	// Don't care if these fail, best effort.
-// 	if (rtc.videoClient) {
-// 		try {
-// 			await rtc.videoClient.unsubscribe(this.videoUser, 'video');
-// 		} catch (e) {
-// 			console.warn(
-// 				'Failed to unsbuscribe to video. Most of the times this is not an error. We attempt to unsubscribe even when we know the user should normally be unsubscribed.'
-// 			);
-// 		}
-// 	}
-// }
 
 export async function startDesktopAudioPlayback(user: FiresideRTCUser) {
 	const { rtc } = user;
@@ -219,11 +168,6 @@ export async function startDesktopAudioPlayback(user: FiresideRTCUser) {
 	if (!user.videoUser || !rtc.videoClient) {
 		return;
 	}
-
-	// if (rtc.isHost) {
-	// 	console.log('Aborting desktop audio playback because current user is a host');
-	// 	return;
-	// }
 
 	try {
 		user.desktopAudioTrack = await rtc.videoClient.subscribe(user.videoUser, 'audio');
@@ -266,17 +210,22 @@ export async function stopDesktopAudioPlayback(user: FiresideRTCUser) {
 	}
 }
 
+export function setAudioPlayback(user: FiresideRTCUser, isPlaying: boolean) {
+	user.micAudioMuted = !isPlaying;
+
+	if (user.micAudioMuted) {
+		stopAudioPlayback(user);
+	} else {
+		startAudioPlayback(user);
+	}
+}
+
 export async function startAudioPlayback(user: FiresideRTCUser) {
 	const { rtc } = user;
 	console.log(`FiresideRTCUser(${user.userId}) -> startAudioPlayback`);
 	if (!user.audioChatUser || !rtc.audioClient) {
 		return;
 	}
-
-	// if (rtc.isHost) {
-	// 	console.log('Aborting audio playback because current user is a host');
-	// 	return;
-	// }
 
 	try {
 		user.micAudioTrack = await rtc.audioClient.subscribe(user.audioChatUser, 'audio');
@@ -297,7 +246,7 @@ export async function stopAudioPlayback(user: FiresideRTCUser) {
 		return;
 	}
 
-	if (user.micAudioTrack && user.micAudioTrack.isPlaying) {
+	if (user.micAudioTrack?.isPlaying) {
 		console.log('Stopping existing audio track');
 		try {
 			user.micAudioTrack.stop();
@@ -321,7 +270,7 @@ export async function stopAudioPlayback(user: FiresideRTCUser) {
 }
 
 export function updateVolumeLevel(user: FiresideRTCUser) {
-	if (!user.audioChatUser || !user.micAudioTrack || !user.micAudioTrack.isPlaying) {
+	if (!user.audioChatUser || !user.micAudioTrack?.isPlaying) {
 		user.volumeLevel = 0;
 		return;
 	}

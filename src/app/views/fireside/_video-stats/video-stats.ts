@@ -11,7 +11,6 @@ export default class AppFiresideVideoStats extends Vue {
 
 	get stats() {
 		const stats: Record<string, any> = {
-			[`UID`]: this.rtc.uid,
 			[`Members`]: this.rtc.users.length,
 		};
 
@@ -25,7 +24,7 @@ export default class AppFiresideVideoStats extends Vue {
 
 	mounted() {
 		this.statsInterval = setInterval(() => {
-			this.videoStats = this.rtc.videoClient.getRemoteVideoStats();
+			this.videoStats = this.rtc.videoClient?.getRemoteVideoStats() ?? {};
 		}, 3000);
 	}
 

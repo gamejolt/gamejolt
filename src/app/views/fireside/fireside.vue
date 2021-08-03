@@ -111,17 +111,11 @@
 							}"
 						>
 							<template v-if="rtc && rtc.focusedUser">
-								<app-fireside-video
-									:key="'video-' + rtc.focusedUser.userId"
+								<app-fireside-stream
+									:key="rtc.focusedUser.userId"
 									:rtc-user="rtc.focusedUser"
 									:show-hosts="!shouldShowHosts"
 									:members="overlayChatMembers"
-								/>
-
-								<app-fireside-desktop-audio
-									v-if="shouldPlayDesktopAudio"
-									:key="'desktop-audio' + rtc.focusedUser.userId"
-									:rtc-user="rtc.focusedUser"
 								/>
 							</template>
 						</div>

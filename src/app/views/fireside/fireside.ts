@@ -41,12 +41,11 @@ import {
 } from './fireside-rtc';
 import AppFiresideChatMembers from './_chat-members/chat-members.vue';
 import { FiresideChatMembersModal } from './_chat-members/modal/modal.service';
-import AppFiresideDesktopAudio from './_desktop_audio/desktop-audio.vue';
 import { FiresideEditModal } from './_edit-modal/edit-modal.service';
 import AppFiresideHostList from './_host-list/host-list.vue';
 import { FiresideStatsModal } from './_stats/modal/modal.service';
 import AppFiresideStats from './_stats/stats.vue';
-import AppFiresideVideo from './_video/video.vue';
+import AppFiresideStream from './_stream/stream.vue';
 type RoutePayload = {
 	fireside: any;
 	streamingAppId: string;
@@ -85,10 +84,9 @@ const FiresideThemeKey = 'fireside';
 		AppFiresideStats,
 		AppCommunityThumbnailImg,
 		AppResponsiveDimensions,
-		AppFiresideVideo,
+		AppFiresideStream,
 		AppScrollScroller,
 		AppFiresideHostList,
-		AppFiresideDesktopAudio,
 	},
 	directives: {
 		AppTooltip,
@@ -169,16 +167,6 @@ export default class RouteFireside extends BaseRouteComponent {
 
 	get isStreaming() {
 		return !!(this.fireside?.is_streaming && this.rtc && this.rtc.users.length > 0);
-	}
-
-	get shouldPlayDesktopAudio() {
-		return (
-			this.rtc &&
-			this.rtc.focusedUser &&
-			this.rtc.focusedUser.hasDesktopAudio &&
-			this.rtc.videoClient &&
-			this.rtc.videoClient.connectionState === 'CONNECTED'
-		);
 	}
 
 	get shouldShowChat() {

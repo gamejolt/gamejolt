@@ -1,19 +1,19 @@
 import Vue from 'vue';
-import { Component, Emit, InjectReactive, Prop, Watch } from 'vue-property-decorator';
+import { Component, InjectReactive, Prop } from 'vue-property-decorator';
+import AppPopper from '../../../../_common/popper/popper.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import { FiresideRTC, FiresideRTCKey } from '../fireside-rtc';
-import {
-	deregisterVideoPlaybackElement,
-	FiresideRTCUser,
-	registerVideoPlaybackElement,
-} from '../fireside-rtc-user';
+import { FiresideRTCUser, setAudioPlayback } from '../fireside-rtc-user';
+import AppFiresideVideo from '../_video/video.vue';
 import AppFiresideHostThumbIndicator from './host-thumb-indicator.vue';
 
 @Component({
 	components: {
 		AppUserAvatarImg,
 		AppFiresideHostThumbIndicator,
+		AppPopper,
+		AppFiresideVideo,
 	},
 	directives: {
 		AppTooltip,
@@ -23,23 +23,7 @@ export default class AppFiresideHostThumb extends Vue {
 	@Prop({ type: FiresideRTCUser, required: true })
 	host!: FiresideRTCUser;
 
-	$refs!: {
-		player: HTMLDivElement;
-	};
-
 	@InjectReactive(FiresideRTCKey) rtc!: FiresideRTC;
-
-	@Emit('change-host') emitChangeHost() {}
-
-	mounted() {
-		if (this.showingVideoThumb) {
-			registerVideoPlaybackElement(this.host, this.$refs.player, true);
-		}
-	}
-
-	beforeDestroy() {
-		deregisterVideoPlaybackElement(this.host, this.$refs.player);
-	}
 
 	get isFocused() {
 		return this.rtc.focusedUserId === this.host.userId;
@@ -47,15 +31,6 @@ export default class AppFiresideHostThumb extends Vue {
 
 	get showingVideoThumb() {
 		return !this.isFocused && this.host.hasVideo;
-	}
-
-	@Watch('showingVideoThumb')
-	onShowingVideoThumbChanged(showing: boolean) {
-		if (showing) {
-			registerVideoPlaybackElement(this.host, this.$refs.player, true);
-		} else {
-			deregisterVideoPlaybackElement(this.host, this.$refs.player);
-		}
 	}
 
 	get tooltip() {
@@ -68,6 +43,13 @@ export default class AppFiresideHostThumb extends Vue {
 		}
 
 		this.rtc.focusedUserId = this.host.userId;
-		this.emitChangeHost();
+	}
+
+	mute() {
+		setAudioPlayback(this.host, false);
+	}
+
+	unmute() {
+		setAudioPlayback(this.host, true);
 	}
 }
