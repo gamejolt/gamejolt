@@ -55,13 +55,13 @@ export class FiresideRTCUser {
 		public readonly userId: number,
 		public readonly userModel: User | undefined
 	) {
-		// TODO: If anyone at all is unmuted, we can let people enter unmuted when they're a host.
-		this.micAudioMuted = rtc.isHost;
+		// If everyone is currently muted, add new users as muted.
+		this.micAudioMuted = rtc.users.every(i => i.micAudioMuted);
 	}
 }
 
 /**
- * THis should be called before playing a video. [releaseVideoLock] must be
+ * This should be called before playing a video. [releaseVideoLock] must be
  * called when you no longer need to be playing the video.
  */
 export function getVideoLock(user: FiresideRTCUser) {
@@ -96,7 +96,7 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 	const { rtc } = user;
 
 	if (!rtc.videoClient) {
-		console.warn(
+		rtc.logWarning(
 			'Video client is not initialized, cannot toggle video thumbnail subscription state'
 		);
 		return;
@@ -104,7 +104,7 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 
 	// If user doesnt have a video stream to subscribe/unsubscribe to, nothing to do.
 	if (!user.hasVideo || !user.videoUser) {
-		console.log('No video or no video client');
+		rtc.log('No video or no video client');
 		return;
 	}
 
@@ -112,20 +112,20 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 	user.queuedVideoPlayState = newState;
 
 	if (wasQueued) {
-		console.log('Queue up new video play state change, we are already busy.', { ...newState });
+		rtc.log('Queue up new video play state change, we are already busy.', { ...newState });
 		return;
 	}
 
 	// If user is already in the desired state for video subscriptions, noop.
 	if (_comparePlayState(user.videoPlayState, newState)) {
-		console.log('Already in desired state.', {
+		rtc.log('Already in desired state.', {
 			newState: { ...newState },
 			existingState: { ...user.videoPlayState },
 		});
 		return;
 	}
 
-	console.log('Setting new play state.', { ...newState });
+	rtc.log('Setting new play state.', { ...newState });
 
 	if (newState instanceof FiresideVideoPlayStatePlaying) {
 		try {
@@ -143,8 +143,7 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 				);
 			}
 		} catch (e) {
-			console.error('Failed to subscribe to video for user ' + user.userId);
-			console.error(e);
+			rtc.logError('Failed to subscribe to video for user ' + user.userId, e);
 		}
 	} else if (newState instanceof FiresideVideoPlayStateStopped) {
 		try {
@@ -152,10 +151,10 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 				try {
 					user.videoTrack.stop();
 				} catch (e) {
-					console.warn(
-						`Got an error while stopping a video track for user ${user.userId}. Tolerating.`
+					rtc.logWarning(
+						`Got an error while stopping a video track for user ${user.userId}. Tolerating.`,
+						e
 					);
-					console.warn(e);
 				}
 			}
 
@@ -176,8 +175,7 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 			}
 			user.videoLocks.splice(0);
 		} catch (e) {
-			console.error('Failed to subscribe to video thumbnails for user ' + user.userId);
-			console.error(e);
+			rtc.logError('Failed to subscribe to video thumbnails for user ' + user.userId, e);
 		}
 	}
 
@@ -198,7 +196,7 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 
 export async function startDesktopAudioPlayback(user: FiresideRTCUser) {
 	const { rtc } = user;
-	console.log(`FiresideRTCUser(${user.userId}) -> startDesktopAudioPlayback`);
+	rtc.log(`${user.userId} -> startDesktopAudioPlayback`);
 	if (!user.videoUser || !rtc.videoClient) {
 		return;
 	}
@@ -207,8 +205,7 @@ export async function startDesktopAudioPlayback(user: FiresideRTCUser) {
 		user.desktopAudioTrack = await rtc.videoClient.subscribe(user.videoUser, 'audio');
 		user.desktopAudioTrack.play();
 	} catch (e) {
-		console.error('Failed to start desktop audio playback, attempting to gracefully stop.');
-		console.error(e);
+		rtc.logError('Failed to start desktop audio playback, attempting to gracefully stop.', e);
 
 		stopDesktopAudioPlayback(user);
 		throw e;
@@ -217,18 +214,17 @@ export async function startDesktopAudioPlayback(user: FiresideRTCUser) {
 
 export async function stopDesktopAudioPlayback(user: FiresideRTCUser) {
 	const { rtc } = user;
-	console.log(`FiresideRTCUser(${user.userId}) -> stopDesktopAudioPlayback`);
+	rtc.log(`${user.userId} -> stopDesktopAudioPlayback`);
 	if (!user.videoUser) {
 		return;
 	}
 
 	if (user.desktopAudioTrack && user.desktopAudioTrack.isPlaying) {
-		console.log('Stopping existing desktop audio track');
+		rtc.log('Stopping existing desktop audio track');
 		try {
 			user.desktopAudioTrack.stop();
 		} catch (e) {
-			console.warn('Failed to stop desktop audio track playback');
-			console.warn(e);
+			rtc.logWarning('Failed to stop desktop audio track playback', e);
 		}
 	}
 	user.desktopAudioTrack = null;
@@ -237,7 +233,7 @@ export async function stopDesktopAudioPlayback(user: FiresideRTCUser) {
 		try {
 			await rtc.videoClient.unsubscribe(user.videoUser, 'audio');
 		} catch (e) {
-			console.warn(
+			rtc.logWarning(
 				'Failed to unsbuscribe to desktop audio. Most of the times this is not an error. We attempt to unsubscribe even when we know the user should normally be unsubscribed.'
 			);
 		}
@@ -256,7 +252,7 @@ export function setAudioPlayback(user: FiresideRTCUser, isPlaying: boolean) {
 
 export async function startAudioPlayback(user: FiresideRTCUser) {
 	const { rtc } = user;
-	console.log(`FiresideRTCUser(${user.userId}) -> startAudioPlayback`);
+	rtc.log(`${user.userId} -> startAudioPlayback`);
 	if (!user.audioChatUser || !rtc.audioClient) {
 		return;
 	}
@@ -265,8 +261,7 @@ export async function startAudioPlayback(user: FiresideRTCUser) {
 		user.micAudioTrack = await rtc.audioClient.subscribe(user.audioChatUser, 'audio');
 		user.micAudioTrack.play();
 	} catch (e) {
-		console.error('Failed to start video playback, attempting to gracefully stop.');
-		console.error(e);
+		rtc.logError('Failed to start video playback, attempting to gracefully stop.', e);
 
 		stopAudioPlayback(user);
 		throw e;
@@ -275,18 +270,17 @@ export async function startAudioPlayback(user: FiresideRTCUser) {
 
 export async function stopAudioPlayback(user: FiresideRTCUser) {
 	const { rtc } = user;
-	console.log(`FiresideRTCUser(${user.userId}) -> stopAudioPlayback`);
+	rtc.log(`${user.userId} -> stopAudioPlayback`);
 	if (!user.audioChatUser) {
 		return;
 	}
 
 	if (user.micAudioTrack?.isPlaying) {
-		console.log('Stopping existing audio track');
+		rtc.log('Stopping existing audio track');
 		try {
 			user.micAudioTrack.stop();
 		} catch (e) {
-			console.warn('Failed to stop mic audio track playback');
-			console.warn(e);
+			rtc.logWarning('Failed to stop mic audio track playback', e);
 		}
 	}
 	user.micAudioTrack = null;
@@ -296,7 +290,7 @@ export async function stopAudioPlayback(user: FiresideRTCUser) {
 		try {
 			await rtc.audioClient.unsubscribe(user.audioChatUser, 'audio');
 		} catch (e) {
-			console.warn(
+			rtc.logWarning(
 				'Failed to unsbuscribe to mic audio. Most of the times this is not an error. We attempt to unsubscribe even when we know the user should normally be unsubscribed.'
 			);
 		}

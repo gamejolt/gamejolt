@@ -1,11 +1,14 @@
 import AgoraRTC, { IAgoraRTCClient, IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng';
 import { arrayRemove } from '../../../utils/array';
-import { sleep } from '../../../utils/utils';
+import { debounce, sleep } from '../../../utils/utils';
+import { Growls } from '../../../_common/growls/growls.service';
 import { Navigate } from '../../../_common/navigate/navigate.service';
+import { Translate } from '../../../_common/translate/translate.service';
 import { User } from '../../../_common/user/user.model';
 import {
 	FiresideRTCUser,
 	FiresideVideoPlayStateStopped,
+	setAudioPlayback,
 	setVideoPlayback,
 	startAudioPlayback,
 	stopAudioPlayback,
@@ -27,6 +30,9 @@ export class FiresideRTC {
 	shouldShowVideoThumbnails = false;
 	shouldShowVideoStats = false;
 
+	setupFinalized = false;
+	finalizeSetupFn: (() => void) | null = null;
+
 	constructor(
 		public readonly userId: number,
 		public readonly appId: string,
@@ -36,24 +42,31 @@ export class FiresideRTC {
 		public audioChatToken: string | null,
 		public readonly hosts: User[]
 	) {
-		this.videoPaused = this.isHost;
 		_setup(this);
 	}
 
-	log(message: any) {
-		console.log('[FIRESIDE-RTC] ' + message);
+	log(message: any, ...optionalParams: any[]) {
+		console.log('[FIRESIDE-RTC] ' + message, ...optionalParams);
 	}
 
-	logWarning(message: any) {
-		console.warn('[FIRESIDE-RTC] ' + message);
+	logWarning(message: any, ...optionalParams: any[]) {
+		console.warn('[FIRESIDE-RTC] ' + message, ...optionalParams);
 	}
 
-	logError(message: any) {
-		console.error('[FIRESIDE-RTC] ' + message);
+	logError(message: any, ...optionalParams: any[]) {
+		console.error('[FIRESIDE-RTC] ' + message, ...optionalParams);
 	}
 
 	get isHost() {
 		return this.hosts.find(host => host.id == this.userId) !== undefined;
+	}
+
+	/**
+	 * If the current user is currently streaming in this fireside. This will
+	 * only return valid data once everything gets susbcribed to.
+	 */
+	get isStreaming() {
+		return this.users.some(i => i.userId === this.userId);
 	}
 
 	get focusedUser() {
@@ -184,6 +197,26 @@ async function _setup(rtc: FiresideRTC) {
 	}
 }
 
+/**
+ * Before doing some stuff (like choosing the best initial stream to show) we
+ * want some of the system to initialize (subscribe to hosts and stuff). This
+ * allows us to do a sort of delayed setup.
+ */
+function _finalizeSetup(rtc: FiresideRTC) {
+	if (rtc.setupFinalized) {
+		return;
+	}
+
+	rtc.finalizeSetupFn ??= debounce(() => {
+		_chooseFocusedUser(rtc);
+		rtc.setupFinalized = true;
+		rtc.log(`Setup finalized.`);
+	}, 500);
+
+	rtc.log(`Debouncing finalize setup.`);
+	rtc.finalizeSetupFn();
+}
+
 function _createClients(rtc: FiresideRTC) {
 	rtc.log('Trace(createClients)');
 
@@ -202,17 +235,16 @@ function _setupEvents(rtc: FiresideRTC) {
 		throw new Error('Video or audio clients are not defined');
 	}
 
-	rtc.videoClient.on('user-published', async (remoteUser, mediaType) => {
+	rtc.videoClient.on('user-published', (remoteUser, mediaType) => {
 		rtc.assertNotOutdated(currentGeneration);
 		rtc.log('Got user published (video channel)');
 
 		// To test the lower quality stream
 		// rtc.videoClient!.setRemoteVideoStreamType(remoteUser.uid, 1);
 
-		const user = _findOrAddUser(rtc, remoteUser);
+		const { user, wasAdded } = _findOrAddUser(rtc, remoteUser);
 		if (!user) {
-			rtc.logWarning(`Couldn't find remote user locally`);
-			rtc.logWarning(remoteUser);
+			rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
 			return;
 		}
 
@@ -224,17 +256,19 @@ function _setupEvents(rtc: FiresideRTC) {
 			user.hasDesktopAudio = true;
 		}
 
-		_chooseFocusedUser(rtc);
+		if (wasAdded) {
+			_userJoined(rtc, user);
+		}
+		_finalizeSetup(rtc);
 	});
 
-	rtc.videoClient.on('user-unpublished', async (remoteUser, mediaType) => {
+	rtc.videoClient.on('user-unpublished', (remoteUser, mediaType) => {
 		rtc.assertNotOutdated(currentGeneration);
 		rtc.log('Got user unpublished (video channel)');
 
 		const user = rtc.users.find(i => i.userId === remoteUser.uid);
 		if (!user) {
-			rtc.logWarning(`Couldn't find remote user locally`);
-			rtc.logWarning(remoteUser);
+			rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
 			return;
 		}
 
@@ -254,8 +288,7 @@ function _setupEvents(rtc: FiresideRTC) {
 
 		const user = rtc.users.find(i => i.userId === remoteUser.uid);
 		if (!user) {
-			rtc.logWarning(`Couldn't find remote user locally`);
-			rtc.logWarning(remoteUser);
+			rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
 			return;
 		}
 
@@ -272,7 +305,7 @@ function _setupEvents(rtc: FiresideRTC) {
 		_chooseFocusedUser(rtc);
 	});
 
-	rtc.audioClient.on('user-published', async (remoteUser, mediaType) => {
+	rtc.audioClient.on('user-published', (remoteUser, mediaType) => {
 		rtc.assertNotOutdated(currentGeneration);
 		rtc.log('got user published (audio chat channel)');
 
@@ -281,10 +314,9 @@ function _setupEvents(rtc: FiresideRTC) {
 			return;
 		}
 
-		const user = _findOrAddUser(rtc, remoteUser);
+		const { user, wasAdded } = _findOrAddUser(rtc, remoteUser);
 		if (!user) {
-			rtc.logWarning(`Couldn't find remote user locally`);
-			rtc.logWarning(remoteUser);
+			rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
 			return;
 		}
 
@@ -295,6 +327,31 @@ function _setupEvents(rtc: FiresideRTC) {
 			startAudioPlayback(user);
 		}
 
+		if (wasAdded) {
+			_userJoined(rtc, user);
+		}
+		_finalizeSetup(rtc);
+	});
+
+	rtc.audioClient.on('user-unpublished', (remoteUser, mediaType) => {
+		rtc.assertNotOutdated(currentGeneration);
+		rtc.log('Got user unpublished (audio channel)');
+
+		// This should never trigger.
+		if (mediaType !== 'audio') {
+			rtc.logWarning('Unexpected media type: ' + mediaType + '. Ignoring');
+			return;
+		}
+
+		const user = rtc.users.find(i => i.userId === remoteUser.uid);
+		if (!user) {
+			rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
+			return;
+		}
+
+		stopAudioPlayback(user);
+		user.hasMicAudio = false;
+
 		_chooseFocusedUser(rtc);
 	});
 
@@ -304,8 +361,7 @@ function _setupEvents(rtc: FiresideRTC) {
 
 		const user = rtc.users.find(i => i.userId === remoteUser.uid);
 		if (!user) {
-			rtc.logWarning(`Couldn't find remote user locally`);
-			rtc.logWarning(remoteUser);
+			rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
 			return;
 		}
 
@@ -348,9 +404,6 @@ async function _join(rtc: FiresideRTC) {
 	]);
 }
 
-/**
- * This is currently broken since users currently join one-by-one anyway.
- */
 function _chooseFocusedUser(rtc: FiresideRTC) {
 	// We only choose a new focused user if there isn't one currently set.
 	if (rtc.focusedUser) {
@@ -372,12 +425,17 @@ function _chooseFocusedUser(rtc: FiresideRTC) {
 	rtc.focusedUserId = bestUser?.userId || null;
 }
 
-function _findOrAddUser(rtc: FiresideRTC, remoteUser: IAgoraRTCRemoteUser): FiresideRTCUser | null {
+function _findOrAddUser(
+	rtc: FiresideRTC,
+	remoteUser: IAgoraRTCRemoteUser
+): { user: FiresideRTCUser | null; wasAdded: boolean } {
+	let wasAdded = false;
 	let user = rtc.users.find(i => i.userId === remoteUser.uid);
+
 	if (!user) {
 		if (typeof remoteUser.uid !== 'number') {
 			rtc.logWarning('Expected remote user uid to be numeric');
-			return null;
+			return { user: null, wasAdded: false };
 		}
 
 		user = new FiresideRTCUser(
@@ -386,14 +444,46 @@ function _findOrAddUser(rtc: FiresideRTC, remoteUser: IAgoraRTCRemoteUser): Fire
 			rtc.hosts.find(host => host.id == remoteUser.uid)
 		);
 		rtc.users.push(user);
+		wasAdded = true;
 	}
-	return user;
+	return { user, wasAdded };
 }
 
-function _removeUserIfNeeded(rtc: FiresideRTC, user: FiresideRTCUser): void {
+function _removeUserIfNeeded(rtc: FiresideRTC, user: FiresideRTCUser) {
 	if (!user.videoUser && !user.audioChatUser) {
 		arrayRemove(rtc.users, i => i === user);
+		_userLeft(rtc, user);
 	}
+}
+
+function _userJoined(rtc: FiresideRTC, user: FiresideRTCUser) {
+	if (user.userId === rtc.userId) {
+		_handleStreamingBegin(rtc);
+	}
+}
+
+function _userLeft(_rtc: FiresideRTC, _user: FiresideRTCUser) {
+	// Nothing yet.
+}
+
+function _handleStreamingBegin(rtc: FiresideRTC) {
+	if (!rtc.isStreaming) {
+		return;
+	}
+
+	rtc.videoPaused = true;
+	for (const user of rtc.users) {
+		setAudioPlayback(user, false);
+	}
+
+	Growls.info({
+		title: Translate.$gettext(`Muted Fireside`),
+		message: Translate.$gettext(
+			`Your Fireside has been muted locally since you're streaming in it.`
+		),
+		system: true,
+		sticky: true,
+	});
 }
 
 function _updateVolumeLevels(rtc: FiresideRTC) {
