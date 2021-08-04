@@ -20,13 +20,14 @@
 
 		<div class="-options">
 			<transition>
-				<span
+				<a
 					v-if="host.micAudioMuted"
 					v-app-tooltip="$gettext(`Muted`)"
 					class="-option -option-warn anim-fade-enter-enlarge anim-fade-leave-shrink"
+					@click="unmute()"
 				>
 					<app-jolticon icon="audio-mute" />
-				</span>
+				</a>
 			</transition>
 
 			<div class="-options-spacer" />
@@ -37,7 +38,7 @@
 				@show="emitShowPopper"
 				@hide="emitHidePopper"
 			>
-				<a v-app-tooltip="$gettext('Options')" class="-option">
+				<a v-app-tooltip="$gettext('Options')" class="-option -option-show-hover">
 					<app-jolticon icon="cog" />
 				</a>
 
@@ -154,4 +155,11 @@
 
 	&-warn
 		color: var(--theme-notice)
+
+.-option-show-hover
+	display: none
+
+.-thumb:hover
+	.-option-show-hover
+		display: flex
 </style>

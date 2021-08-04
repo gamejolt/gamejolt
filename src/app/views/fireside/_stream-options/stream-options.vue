@@ -45,13 +45,13 @@
 	height: calc(var(--fireside-host-size) - 12px)
 	cursor: pointer
 	user-select: none
+	color: var(--theme-fg)
 	background-color: var(--theme-bg-offset)
 
 	&:hover
-		color: var(--theme-bi-fg)
 		background-color: var(--theme-bi-bg)
+		color: var(--theme-bi-fg)
 
 .-icon
 	font-size: 20px
-	color: var(--theme-fg)
 </style>

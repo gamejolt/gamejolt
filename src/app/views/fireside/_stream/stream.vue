@@ -2,7 +2,7 @@
 
 <template>
 	<div
-		class="-video theme-dark"
+		class="-stream theme-dark"
 		@mouseleave="onMouseOut"
 		@mousemove="onMouseMove"
 		@touchmove="onMouseMove"
@@ -12,7 +12,7 @@
 			<template v-if="videoPaused">
 				<transition>
 					<template v-if="!hasOverlayItems">
-						<div class="-paused-indicator anim-fade-leave-shrink">
+						<div class="-paused-indicator -click-target anim-fade-leave-shrink">
 							<app-jolticon class="-paused-indicator-icon" icon="play" />
 						</div>
 					</template>
@@ -25,7 +25,7 @@
 			</template>
 			<template v-else>
 				<div :key="rtcUser.userId">
-					<app-fireside-video class="-video-player" :rtc-user="rtcUser" />
+					<app-fireside-video class="-video-player -click-target" :rtc-user="rtcUser" />
 					<app-fireside-desktop-audio v-if="shouldPlayDesktopAudio" :rtc-user="rtcUser" />
 					<app-fireside-video-stats
 						v-if="rtc.shouldShowVideoStats"
@@ -90,7 +90,7 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 
-.-video
+.-stream
 .-video-player
 	&
 	> .-overlay
@@ -110,6 +110,9 @@
 		&.-darken
 			opacity: 1
 			background-color: rgba($black, 0.5)
+
+.-click-target
+	cursor: pointer
 
 .-overlay-inner
 	height: 100%
@@ -160,7 +163,6 @@
 		user-select: none
 
 .-paused-indicator
-	pointer-events: none
 	position: absolute
 	top: 0
 	right: 0
