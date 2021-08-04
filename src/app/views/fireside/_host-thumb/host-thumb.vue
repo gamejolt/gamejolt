@@ -20,14 +20,13 @@
 
 		<div class="-options">
 			<transition>
-				<a
+				<span
 					v-if="host.micAudioMuted"
 					v-app-tooltip="$gettext(`Muted`)"
 					class="-option -option-warn anim-fade-enter-enlarge anim-fade-leave-shrink"
-					@click="unmute()"
 				>
 					<app-jolticon icon="audio-mute" />
-				</a>
+				</span>
 			</transition>
 
 			<div class="-options-spacer" />
