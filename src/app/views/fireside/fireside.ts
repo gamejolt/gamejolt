@@ -33,15 +33,19 @@ import AppChatWindowOutput from '../../components/chat/window/output/output.vue'
 import AppChatWindowSend from '../../components/chat/window/send/send.vue';
 import { EVENT_UPDATE, FiresideChannel } from '../../components/grid/fireside-channel';
 import { store, Store } from '../../store';
-import { FiresideRTC, FiresideRTCKey } from './fireside-rtc';
+import {
+	destroyFiresideRTC,
+	FiresideRTC,
+	FiresideRTCKey,
+	renewFiresideRTCToken,
+} from './fireside-rtc';
 import AppFiresideChatMembers from './_chat-members/chat-members.vue';
 import { FiresideChatMembersModal } from './_chat-members/modal/modal.service';
-import AppFiresideDesktopAudio from './_desktop_audio/desktop-audio.vue';
 import { FiresideEditModal } from './_edit-modal/edit-modal.service';
 import AppFiresideHostList from './_host-list/host-list.vue';
 import { FiresideStatsModal } from './_stats/modal/modal.service';
 import AppFiresideStats from './_stats/stats.vue';
-import AppFiresideVideo from './_video/video.vue';
+import AppFiresideStream from './_stream/stream.vue';
 type RoutePayload = {
 	fireside: any;
 	streamingAppId: string;
@@ -80,10 +84,9 @@ const FiresideThemeKey = 'fireside';
 		AppFiresideStats,
 		AppCommunityThumbnailImg,
 		AppResponsiveDimensions,
-		AppFiresideVideo,
+		AppFiresideStream,
 		AppScrollScroller,
 		AppFiresideHostList,
-		AppFiresideDesktopAudio,
 	},
 	directives: {
 		AppTooltip,
@@ -115,6 +118,7 @@ export default class RouteFireside extends BaseRouteComponent {
 
 	videoWidth = 0;
 	videoHeight = 0;
+	isVertical = false;
 
 	$refs!: {
 		videoWrapper: HTMLDivElement;
@@ -166,16 +170,6 @@ export default class RouteFireside extends BaseRouteComponent {
 		return !!(this.fireside?.is_streaming && this.rtc && this.rtc.users.length > 0);
 	}
 
-	get shouldPlayDesktopAudio() {
-		return (
-			this.rtc &&
-			this.rtc.focusedUser &&
-			this.rtc.focusedUser.hasDesktopAudio &&
-			this.rtc.videoClient &&
-			this.rtc.videoClient.connectionState === 'CONNECTED'
-		);
-	}
-
 	get shouldShowChat() {
 		const mobileCondition = Screen.isMobile && this.isStreaming ? this.isVertical : true;
 		return !!this.chat && this.chat.connected && !!this.chatRoom && mobileCondition;
@@ -191,14 +185,6 @@ export default class RouteFireside extends BaseRouteComponent {
 
 	get shouldShowHosts() {
 		return !this.isVertical && !Screen.isMobile;
-	}
-
-	get isVertical() {
-		if (Screen.isMobile) {
-			return window.screen.height > window.screen.width;
-		}
-
-		return Screen.height > Screen.width;
 	}
 
 	get shouldShowFiresideStats() {
@@ -296,7 +282,17 @@ export default class RouteFireside extends BaseRouteComponent {
 		}
 	}
 
+	calcIsVertical() {
+		if (Screen.isMobile) {
+			this.isVertical = window.screen.height > window.screen.width;
+		} else {
+			this.isVertical = Screen.height > Screen.width;
+		}
+	}
+
 	onDimensionsChange() {
+		this.calcIsVertical();
+
 		const videoWrapper = this.$refs.videoWrapper;
 		if (!videoWrapper) {
 			return;
@@ -594,7 +590,7 @@ export default class RouteFireside extends BaseRouteComponent {
 			);
 		} else {
 			// TODO: update hosts when we introduce changing hosts on the fly.
-			this.rtc.renewToken(payload.videoToken, payload.audioChatToken);
+			renewFiresideRTCToken(this.rtc, payload.videoToken, payload.audioChatToken);
 		}
 	}
 
@@ -603,7 +599,7 @@ export default class RouteFireside extends BaseRouteComponent {
 			return;
 		}
 
-		this.rtc.destroy();
+		destroyFiresideRTC(this.rtc);
 		this.rtc = null;
 	}
 

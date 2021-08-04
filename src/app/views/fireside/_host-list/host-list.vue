@@ -3,12 +3,19 @@
 <template>
 	<app-scroll-scroller v-if="rtc" class="-fireside-hosts" horizontal>
 		<div class="-fireside-hosts-inner">
+			<app-fireside-stream-options
+				@show-popper="emitShowPopper"
+				@hide-popper="emitHidePopper"
+			/>
+
 			<app-fireside-host-thumb
 				v-for="host of rtc.users"
 				:key="host.userId"
 				class="-host-thumb"
 				:host="host"
-				@change-host="emitChangeHost"
+				:hide-options="hideThumbOptions"
+				@show-popper="emitShowPopper"
+				@hide-popper="emitHidePopper"
 			/>
 		</div>
 	</app-scroll-scroller>

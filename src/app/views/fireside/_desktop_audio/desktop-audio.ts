@@ -1,6 +1,11 @@
 import Vue from 'vue';
 import { Component, InjectReactive, Prop } from 'vue-property-decorator';
-import { FiresideRTC, FiresideRTCKey, FiresideRTCUser } from '../fireside-rtc';
+import { FiresideRTC, FiresideRTCKey } from '../fireside-rtc';
+import {
+	FiresideRTCUser,
+	startDesktopAudioPlayback,
+	stopDesktopAudioPlayback,
+} from '../fireside-rtc-user';
 
 @Component({})
 export default class AppFiresideDesktopAudio extends Vue {
@@ -12,15 +17,14 @@ export default class AppFiresideDesktopAudio extends Vue {
 	private _myRtcUser!: FiresideRTCUser;
 
 	created() {
-		// 10x hack to keep the reference around for when the component gets destroyed.
 		this._myRtcUser = this.rtcUser;
 	}
 
 	mounted() {
-		this.rtcUser.startDesktopAudioPlayback(this.rtc);
+		startDesktopAudioPlayback(this.rtcUser);
 	}
 
 	beforeDestroy() {
-		this._myRtcUser.stopDesktopAudioPlayback(this.rtc);
+		stopDesktopAudioPlayback(this._myRtcUser);
 	}
 }

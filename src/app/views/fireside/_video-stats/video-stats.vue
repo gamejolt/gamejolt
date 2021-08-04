@@ -26,7 +26,6 @@
 	background-color: rgba($black, 0.7)
 	padding: 12px
 	color: $white
-	z-index: 10
 
 	table
 		th
