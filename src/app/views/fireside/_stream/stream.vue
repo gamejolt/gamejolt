@@ -157,6 +157,10 @@
 		padding: 16px
 		margin: -(@padding)
 
+.-overlay-hosts
+	display: flex
+	align-items: flex-end
+
 .-control
 	&
 	>>>
