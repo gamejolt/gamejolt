@@ -56,7 +56,7 @@ export class FiresideRTCUser {
 		public readonly userModel: User | undefined
 	) {
 		// If everyone is currently muted, add new users as muted.
-		this.micAudioMuted = rtc.users.every(i => i.micAudioMuted);
+		this.micAudioMuted = rtc.users.length > 0 ? rtc.users.every(i => i.micAudioMuted) : false;
 	}
 }
 
