@@ -46,8 +46,12 @@ export default class AppFiresideVideo extends Vue {
 	}
 
 	destroyed() {
-		if (this._videoLock) {
-			releaseVideoLock(this._myRtcUser, this._videoLock);
-		}
+		// We want to give a new lock some time to get acquired before shutting
+		// the stream down.
+		setTimeout(() => {
+			if (this._videoLock) {
+				releaseVideoLock(this._myRtcUser, this._videoLock);
+			}
+		}, 0);
 	}
 }
