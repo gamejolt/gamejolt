@@ -139,6 +139,7 @@ export default class FormPost
 	publishToPlatforms: number[] | null = null;
 	isShowingMorePollOptions = false;
 	accessPermissionsEnabled = false;
+	isNewPost = false;
 	isSavedDraftPost = false;
 	leadLengthLimit = 255;
 	articleLengthLimit = 50_000;
@@ -346,13 +347,10 @@ export default class FormPost
 	async onInit() {
 		const model = this.model!;
 
-		// Store if the post was a saved draft post (not a new draft post)
-		if (model.status === FiresidePost.STATUS_DRAFT && model.hasLead) {
-			this.isSavedDraftPost = true;
-		}
+		this.isNewPost = model.status === FiresidePost.STATUS_TEMP;
+		this.isSavedDraftPost = model.status === FiresidePost.STATUS_DRAFT;
 
-		// Don't overwrite setting on a draft post because the user has already made a choice for this setting.
-		if (model.status !== FiresidePost.STATUS_DRAFT) {
+		if (this.isNewPost) {
 			this.setField('post_to_user_profile', true);
 		}
 

@@ -4,10 +4,9 @@ import { Model } from '../model/model.service';
 import { User } from '../user/user.model';
 
 export class EventItem extends Model {
-	static readonly TYPE_GAME_PUBLISH = 'game-publish';
 	static readonly TYPE_POST_ADD = 'post-add';
 
-	type!: 'game-publish' | 'post-add';
+	type!: 'post-add';
 	added_on: number;
 
 	from?: User;
@@ -26,10 +25,7 @@ export class EventItem extends Model {
 		this.added_on = data.added_on;
 		this.scroll_id = data.scroll_id;
 
-		if (this.type === EventItem.TYPE_GAME_PUBLISH) {
-			this.action = new Game(data.action_resource_model);
-			this.from = new User(data.from_resource_model);
-		} else if (this.type === EventItem.TYPE_POST_ADD) {
+		if (this.type === EventItem.TYPE_POST_ADD) {
 			this.action = new FiresidePost(data.action_resource_model);
 			this.from = new User(data.from_resource_model);
 			this.to =
@@ -49,9 +45,7 @@ export class EventItem extends Model {
 			return;
 		}
 
-		if (this.type === EventItem.TYPE_GAME_PUBLISH) {
-			(this.action as Game).developer = user;
-		} else if (this.type === EventItem.TYPE_POST_ADD) {
+		if (this.type === EventItem.TYPE_POST_ADD) {
 			const post = this.action as FiresidePost;
 			if (post.game && post.as_game_owner) {
 				post.game.developer = user;
@@ -69,8 +63,6 @@ export class EventItem extends Model {
 	 */
 	get user(): User {
 		switch (this.type) {
-			case EventItem.TYPE_GAME_PUBLISH:
-				return (this.action as Game).developer;
 			case EventItem.TYPE_POST_ADD: {
 				const post = this.action as FiresidePost;
 				return post.displayUser;
@@ -83,17 +75,13 @@ export class EventItem extends Model {
 			return;
 		}
 
-		if (this.type === EventItem.TYPE_GAME_PUBLISH) {
-			this.action = game;
-		} else if (this.type === EventItem.TYPE_POST_ADD && this.to instanceof Game) {
+		if (this.type === EventItem.TYPE_POST_ADD && this.to instanceof Game) {
 			this.to = game;
 		}
 	}
 
 	get game() {
-		if (this.type === EventItem.TYPE_GAME_PUBLISH) {
-			return this.action as Game;
-		} else if (this.type === EventItem.TYPE_POST_ADD && this.to instanceof Game) {
+		if (this.type === EventItem.TYPE_POST_ADD && this.to instanceof Game) {
 			return this.to;
 		}
 	}

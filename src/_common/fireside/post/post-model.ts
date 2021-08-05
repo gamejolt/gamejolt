@@ -44,6 +44,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	static readonly STATUS_DRAFT = 'draft';
 	static readonly STATUS_ACTIVE = 'active';
 	static readonly STATUS_REMOVED = 'removed';
+	static readonly STATUS_TEMP = 'temp';
 
 	hash!: string;
 	status!: string;
@@ -310,10 +311,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	}
 
 	getShortLead(length = 70) {
-		let lead = this.leadStr
-			.replace('\r\n', ' ')
-			.replace('\r', ' ')
-			.replace('\n', ' ');
+		let lead = this.leadStr.replace('\r\n', ' ').replace('\r', ' ').replace('\n', ' ');
 		if (lead.length > length) {
 			lead = lead.substr(0, length - 3).trim() + '...';
 		}

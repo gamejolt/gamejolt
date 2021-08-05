@@ -124,7 +124,7 @@ export default class AppActivityFeedPost extends Vue {
 	}
 
 	get user() {
-		return this.post.user;
+		return this.post.displayUser;
 	}
 
 	get game() {

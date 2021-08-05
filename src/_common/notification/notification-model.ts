@@ -69,7 +69,7 @@ export class Notification extends Model {
 	static TYPE_COMMUNITY_USER_NOTIFICATION = 'community-user-notification';
 	static TYPE_FIRESIDE_START = 'fireside-start';
 
-	static ACTIVITY_FEED_TYPES = [EventItem.TYPE_POST_ADD, EventItem.TYPE_GAME_PUBLISH];
+	static ACTIVITY_FEED_TYPES = [EventItem.TYPE_POST_ADD];
 
 	static NOTIFICATION_FEED_TYPES = [
 		Notification.TYPE_COMMENT_ADD,
