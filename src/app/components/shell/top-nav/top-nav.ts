@@ -70,7 +70,7 @@ export default class AppShellTopNav extends Vue {
 	}
 
 	get shouldShowSearch() {
-		return !Screen.isXs && this.$route.name !== 'discover.communities' && !this.isTimedOut;
+		return !Screen.isXs && !this.isTimedOut;
 	}
 
 	get shouldShowMenu() {

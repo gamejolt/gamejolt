@@ -1,6 +1,7 @@
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { AdSettingsContainer } from '../../../_common/ad/ad-store';
+import { configHasSearchCommunities } from '../../../_common/config/config.service';
 import AppExpand from '../../../_common/expand/expand.vue';
 import { number } from '../../../_common/filters/number';
 import AppPagination from '../../../_common/pagination/pagination.vue';
@@ -22,9 +23,6 @@ import './search.styl';
 		AppExpand,
 		AppSearch,
 		AppPagination,
-	},
-	filters: {
-		number,
 	},
 })
 @WithRouteStore({
@@ -51,6 +49,7 @@ export default class RouteSearch extends BaseRouteComponent {
 	readonly Screen = Screen;
 	readonly Search = Search;
 	readonly Scroll = Scroll;
+	readonly number = number;
 
 	get routeTitle() {
 		if (this.route.query.q) {
@@ -68,6 +67,10 @@ export default class RouteSearch extends BaseRouteComponent {
 			!this.searchPayload.usersCount &&
 			!this.searchPayload.postsCount
 		);
+	}
+
+	get showCommunities() {
+		return configHasSearchCommunities.value;
 	}
 
 	routeCreated() {

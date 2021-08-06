@@ -3,31 +3,15 @@
 <template>
 	<section class="section fill-backdrop">
 		<div class="container">
-			<div class="row">
-				<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
-					<h1 class="text-center">
-						<translate>Browse Communities</translate>
-					</h1>
+			<h1 class="text-center">
+				<translate>Browse Communities</translate>
+			</h1>
 
-					<div class="-search">
-						<input
-							v-model="searchText"
-							type="text"
-							class="form-control"
-							:placeholder="$gettext(`Search...`)"
-						/>
-						<app-jolticon
-							v-if="searchText"
-							icon="remove"
-							class="text-muted"
-							@click.native="clearSearch"
-						/>
-					</div>
-				</div>
-			</div>
+			<br />
+			<br />
 
 			<app-loading v-if="isLoadingFirst" centered />
-			<template v-else-if="communities.length">
+			<template v-else>
 				<div class="row">
 					<div
 						v-for="community of communities"
@@ -38,22 +22,14 @@
 					</div>
 				</div>
 
-				<app-scroll-inview
-					:config="InviewConfigLoadMore"
-					:controller="loadMoreInviewController"
-					@inview="onScrollLoadMore"
-				>
-					<app-loading v-if="isLoadingMore" class="-loading-more" centered />
-				</app-scroll-inview>
-			</template>
-			<template v-else>
-				<div class="row">
-					<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
-						<div class="alert alert-notice anim-fade-in">
-							No communities match your search.
-						</div>
-					</div>
-				</div>
+				<template v-if="hasMore">
+					<app-scroll-inview
+						v-if="!isLoadingMore"
+						:config="inviewConfig"
+						@inview="loadMore()"
+					/>
+					<app-loading v-else class="-loading-more" centered />
+				</template>
 			</template>
 
 			<div v-if="showCreateCommunity" class="row -create">
@@ -63,7 +39,7 @@
 					<translate>Can't find your dream community?</translate>
 				</h2>
 
-				<app-community-card-create-placeholder style="margin: 0 auto;" />
+				<app-community-card-create-placeholder style="margin: 0 auto" />
 			</div>
 		</div>
 	</section>
@@ -71,21 +47,6 @@
 
 <style lang="stylus" scoped>
 @import '~styles/variables'
-
-.-search
-	margin: ($line-height-computed * 2) 0
-	position: relative
-
-	input
-		width: 100%
-
-	.jolticon
-		position: absolute
-		top: 9px
-		right: 5px
-
-		&:hover
-			cursor: pointer
 
 .-item
 	margin-bottom: $line-height-computed * 1.5

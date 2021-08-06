@@ -47,13 +47,22 @@
 							<translate>search.results.overview_tab</translate>
 						</router-link>
 					</li>
+					<li v-if="showCommunities && searchPayload.communitiesCount">
+						<router-link
+							:to="{ name: 'search.communities', query: { q: query } }"
+							active-class="active"
+						>
+							<translate>Communities</translate>
+							<span class="badge">{{ number(searchPayload.communitiesCount) }}</span>
+						</router-link>
+					</li>
 					<li v-if="searchPayload.usersCount">
 						<router-link
 							:to="{ name: 'search.users', query: { q: query } }"
 							active-class="active"
 						>
 							<translate>search.results.users_tab</translate>
-							<span class="badge">{{ searchPayload.usersCount | number }}</span>
+							<span class="badge">{{ number(searchPayload.usersCount) }}</span>
 						</router-link>
 					</li>
 					<li v-if="searchPayload.gamesCount">
@@ -62,7 +71,7 @@
 							active-class="active"
 						>
 							<translate>search.results.games_tab</translate>
-							<span class="badge">{{ searchPayload.gamesCount | number }}</span>
+							<span class="badge">{{ number(searchPayload.gamesCount) }}</span>
 						</router-link>
 					</li>
 				</ul>
