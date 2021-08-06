@@ -3,11 +3,11 @@ import { arrayRemove } from '../../../utils/array';
 
 const MAX_ITEMS = 10;
 
-interface HistoryCacheState {
+interface HistoryCacheState<T = any> {
 	stateKey: any;
 	tag: string | undefined;
 	url: string;
-	data?: any;
+	data?: T;
 }
 
 export class HistoryCache {
@@ -18,9 +18,9 @@ export class HistoryCache {
 		return typeof history !== 'undefined' ? history.state && history.state.key : undefined;
 	}
 
-	static get(route: Route, tag?: string) {
+	static get<T = any>(route: Route, tag?: string) {
 		const stateKey = this.getStateKey();
-		const state = this.states.find(
+		const state: HistoryCacheState<T> | undefined = this.states.find(
 			i => i.url === route.fullPath && i.tag === tag && i.stateKey === stateKey
 		);
 
@@ -40,7 +40,7 @@ export class HistoryCache {
 		return !!this.get(route, tag);
 	}
 
-	static store(route: Route, data: any, tag?: string) {
+	static store<T = any>(route: Route, data: T, tag?: string) {
 		const state = this.get(route, tag);
 
 		if (state) {

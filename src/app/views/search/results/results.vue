@@ -2,48 +2,87 @@
 
 <template>
 	<section v-if="hasSearch">
+		<!-- Communities -->
+		<template v-if="showCommunities && searchPayload.communities.length">
+			<section class="section section-thin">
+				<div class="container">
+					<h3 class="-heading">
+						<app-button
+							class="pull-right"
+							trans
+							:to="{ name: 'search.communities', query: { q: query } }"
+						>
+							<translate>View All</translate>
+						</app-button>
+
+						<router-link
+							class="link-unstyled"
+							:to="{ name: 'search.communities', query: { q: query } }"
+						>
+							<translate>Communities</translate>
+						</router-link>
+						<small>({{ number(searchPayload.communitiesCount) }})</small>
+					</h3>
+
+					<div class="scrollable-grid-xs">
+						<div class="row">
+							<div
+								v-for="community of slicedCommunities"
+								:key="community.id"
+								class="scrollable-grid-item col-xs-5 col-sm-2"
+							>
+								<app-community-thumbnail :community="community" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</template>
+
 		<app-page-container no-left order="right,main">
 			<!-- Games -->
-			<div v-if="searchPayload.games.length" slot="right">
-				<h3 class="-heading">
-					<app-button
-						class="pull-right"
-						trans
-						:to="{ name: 'search.games', query: { q: query } }"
-					>
-						<translate>View All</translate>
-					</app-button>
+			<template v-if="!showCommunities || !Screen.isMobile">
+				<div v-if="searchPayload.games.length" slot="right">
+					<h3 class="-heading">
+						<app-button
+							class="pull-right"
+							trans
+							:to="{ name: 'search.games', query: { q: query } }"
+						>
+							<translate>View All</translate>
+						</app-button>
 
-					<router-link
-						class="link-unstyled"
-						:to="{ name: 'search.games', query: { q: query } }"
-					>
-						<translate>search.results.games_heading</translate>
-					</router-link>
-					<small>({{ searchPayload.gamesCount | number }})</small>
-				</h3>
+						<router-link
+							class="link-unstyled"
+							:to="{ name: 'search.games', query: { q: query } }"
+						>
+							<translate>search.results.games_heading</translate>
+						</router-link>
+						<small>({{ number(searchPayload.gamesCount) }})</small>
+					</h3>
 
-				<app-game-grid
-					v-if="Screen.isMobile"
-					:games="searchPayload.games"
-					force-scrollable
-					event-label="search-overview-games"
-				/>
-				<app-game-list
-					v-else
-					:games="searchPayload.games"
-					event-label="search-overview-games"
-				/>
+					<app-game-grid
+						v-if="Screen.isMobile"
+						:games="searchPayload.games"
+						force-scrollable
+						event-label="search-overview-games"
+					/>
+					<app-game-list
+						v-else
+						:games="searchPayload.games"
+						event-label="search-overview-games"
+					/>
 
-				<div class="hidden-xs hidden-sm">
-					<router-link
-						class="link-muted"
-						:to="{ name: 'search.games', query: { q: query } }"
-					>
-						<translate>View all</translate>
-					</router-link>
+					<div class="hidden-xs hidden-sm">
+						<router-link
+							class="link-muted"
+							:to="{ name: 'search.games', query: { q: query } }"
+						>
+							<translate>View all</translate>
+						</router-link>
+					</div>
 				</div>
-			</div>
+			</template>
 
 			<!-- Users -->
 			<template v-if="searchPayload.users.length">
@@ -62,7 +101,7 @@
 					>
 						<translate>search.results.users_heading</translate>
 					</router-link>
-					<small>({{ searchPayload.usersCount | number }})</small>
+					<small>({{ number(searchPayload.usersCount) }})</small>
 				</h3>
 
 				<div class="scrollable-grid-xs">

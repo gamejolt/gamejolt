@@ -145,6 +145,8 @@ export const configFYPDefault = new ConfigOptionBoolean('fyp_default', false, {
 	conditions: { join: true },
 });
 
+export const configHasSearchCommunities = new ConfigOptionBoolean('has_search_communities', false);
+
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());
 }
