@@ -8,6 +8,7 @@
 			params: { path: community.path },
 		}"
 		:title="community.name"
+		@click.native="onGotoCommunity"
 	>
 		<div class="-thumb">
 			<app-media-item-backdrop
