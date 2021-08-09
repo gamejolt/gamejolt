@@ -117,8 +117,15 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 		return this.shouldshowGeneralControls;
 	}
 
+	get isMuted() {
+		if (!this.player) {
+			return false;
+		}
+		return this.player.volume === 0 || this.player.muted;
+	}
+
 	get shouldShowMuteControl() {
-		return this.shouldshowGeneralControls || this.player?.volume === 0;
+		return this.shouldshowGeneralControls || this.isMuted;
 	}
 
 	get remainingTime() {
@@ -188,14 +195,12 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 
 		scrubVideoVolume(
 			this.player,
-			this.player.volume ? 0 : SettingVideoPlayerVolume.get(),
+			!this.isMuted ? 0 : Math.max(0.25, SettingVideoPlayerVolume.get()),
 			'end'
 		);
-		trackVideoPlayerEvent(
-			this.player,
-			!this.player.volume ? 'mute' : 'unmute',
-			'click-control'
-		);
+		this.player.muted = this.player.volume === 0;
+
+		trackVideoPlayerEvent(this.player, this.isMuted ? 'mute' : 'unmute', 'click-control');
 	}
 
 	mounted() {
