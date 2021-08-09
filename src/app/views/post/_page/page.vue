@@ -33,11 +33,7 @@
 			</div>
 		</template>
 
-		<app-page-container
-			xl
-			:no-left="!hasPostRecommendations"
-			:no-right="!hasPostRecommendations"
-		>
+		<app-page-container xl>
 			<template #default>
 				<template v-if="communityNotifications">
 					<app-community-user-notification
@@ -192,7 +188,7 @@
 					@sticker="scrollToStickers()"
 				/>
 
-				<div v-if="hasPostRecommendations && Screen.isMobile">
+				<div v-if="Screen.isMobile">
 					<app-post-page-recommendations :posts="recommendedPosts" />
 				</div>
 
@@ -201,7 +197,7 @@
 				<app-comment-widget-lazy :model="post" display-mode="comments" />
 			</template>
 
-			<template v-if="hasPostRecommendations && !Screen.isMobile" #right>
+			<template v-if="!Screen.isMobile" #right>
 				<app-post-page-recommendations :posts="recommendedPosts" />
 			</template>
 		</app-page-container>

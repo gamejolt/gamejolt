@@ -1,7 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import AppCommunityCard from '../../../../_common/community/card/card.vue';
-import { configHasSearchCommunities } from '../../../../_common/config/config.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Search } from '../../../components/search/search-service';
 import { RouteStore, routeStore, RouteStoreModule } from '../search.store';
@@ -34,8 +32,4 @@ export default class RouteSearchCommunities extends BaseRouteComponent {
 	searchPayload!: RouteStore['searchPayload'];
 
 	readonly Search = Search;
-
-	routeCreated() {
-		trackExperimentEngagement(configHasSearchCommunities);
-	}
 }

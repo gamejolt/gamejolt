@@ -3,7 +3,7 @@
 <template>
 	<section v-if="hasSearch">
 		<!-- Communities -->
-		<template v-if="showCommunities && searchPayload.communities.length">
+		<template v-if="searchPayload.communities.length">
 			<section class="section section-thin">
 				<div class="container">
 					<h3 class="-heading">
@@ -41,48 +41,46 @@
 
 		<app-page-container no-left order="right,main">
 			<!-- Games -->
-			<template v-if="!showCommunities || !Screen.isMobile">
-				<div v-if="searchPayload.games.length" slot="right">
-					<h3 class="-heading">
-						<app-button
-							class="pull-right"
-							trans
-							:to="{ name: 'search.games', query: { q: query } }"
-						>
-							<translate>View All</translate>
-						</app-button>
+			<div v-if="!Screen.isMobile && searchPayload.games.length" slot="right">
+				<h3 class="-heading">
+					<app-button
+						class="pull-right"
+						trans
+						:to="{ name: 'search.games', query: { q: query } }"
+					>
+						<translate>View All</translate>
+					</app-button>
 
-						<router-link
-							class="link-unstyled"
-							:to="{ name: 'search.games', query: { q: query } }"
-						>
-							<translate>search.results.games_heading</translate>
-						</router-link>
-						<small>({{ number(searchPayload.gamesCount) }})</small>
-					</h3>
+					<router-link
+						class="link-unstyled"
+						:to="{ name: 'search.games', query: { q: query } }"
+					>
+						<translate>search.results.games_heading</translate>
+					</router-link>
+					<small>({{ number(searchPayload.gamesCount) }})</small>
+				</h3>
 
-					<app-game-grid
-						v-if="Screen.isMobile"
-						:games="searchPayload.games"
-						force-scrollable
-						event-label="search-overview-games"
-					/>
-					<app-game-list
-						v-else
-						:games="searchPayload.games"
-						event-label="search-overview-games"
-					/>
+				<app-game-grid
+					v-if="Screen.isMobile"
+					:games="searchPayload.games"
+					force-scrollable
+					event-label="search-overview-games"
+				/>
+				<app-game-list
+					v-else
+					:games="searchPayload.games"
+					event-label="search-overview-games"
+				/>
 
-					<div class="hidden-xs hidden-sm">
-						<router-link
-							class="link-muted"
-							:to="{ name: 'search.games', query: { q: query } }"
-						>
-							<translate>View all</translate>
-						</router-link>
-					</div>
+				<div class="hidden-xs hidden-sm">
+					<router-link
+						class="link-muted"
+						:to="{ name: 'search.games', query: { q: query } }"
+					>
+						<translate>View all</translate>
+					</router-link>
 				</div>
-			</template>
+			</div>
 
 			<!-- Users -->
 			<template v-if="searchPayload.users.length">

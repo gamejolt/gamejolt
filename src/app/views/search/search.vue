@@ -47,7 +47,7 @@
 							<translate>search.results.overview_tab</translate>
 						</router-link>
 					</li>
-					<li v-if="showCommunities && searchPayload.communitiesCount">
+					<li v-if="searchPayload.communitiesCount">
 						<router-link
 							:to="{ name: 'search.communities', query: { q: query } }"
 							active-class="active"

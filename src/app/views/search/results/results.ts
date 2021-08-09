@@ -1,7 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import AppCommunityThumbnail from '../../../../_common/community/thumbnail/thumbnail.vue';
-import { configHasSearchCommunities } from '../../../../_common/config/config.service';
 import { number } from '../../../../_common/filters/number';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -59,14 +57,6 @@ export default class RouteSearchResults extends BaseRouteComponent {
 
 	get slicedCommunities() {
 		return this.searchPayload.communities.slice(0, 6);
-	}
-
-	get showCommunities() {
-		return configHasSearchCommunities.value;
-	}
-
-	routeCreated() {
-		trackExperimentEngagement(configHasSearchCommunities);
 	}
 
 	routeResolved($payload: any, fromCache: boolean) {

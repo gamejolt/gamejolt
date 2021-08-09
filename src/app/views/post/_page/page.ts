@@ -2,11 +2,9 @@ import Vue from 'vue';
 import { Component, Emit, Prop, ProvideReactive, Watch } from 'vue-property-decorator';
 import { RawLocation } from 'vue-router';
 import { arrayRemove } from '../../../../utils/array';
-import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import { CommunityUserNotification } from '../../../../_common/community/user-notification/user-notification.model';
-import { configRecommendedPosts } from '../../../../_common/config/config.service';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import { number } from '../../../../_common/filters/number';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
@@ -134,10 +132,6 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 		return this.post.videos[0] ?? null;
 	}
 
-	get hasPostRecommendations() {
-		return configRecommendedPosts.value;
-	}
-
 	created() {
 		if (GJ_IS_SSR) {
 			return;
@@ -170,12 +164,6 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 	}
 
 	async fetchRecommendedPosts() {
-		trackExperimentEngagement(configRecommendedPosts);
-
-		if (!this.hasPostRecommendations) {
-			return;
-		}
-
 		this.recommendedPosts = [];
 
 		const payload = await Api.sendRequest(

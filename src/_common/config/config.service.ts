@@ -134,8 +134,6 @@ export const configDiscoverCommunityChunks = new ConfigOptionBoolean(
 	false
 );
 
-export const configRecommendedPosts = new ConfigOptionBoolean('recommended_posts', false);
-
 export const configHomeNav = new ConfigOptionString('home_nav', 'default', {
 	validValues: ['default', 'simple'],
 	conditions: { join: true },
@@ -144,8 +142,6 @@ export const configHomeNav = new ConfigOptionString('home_nav', 'default', {
 export const configFYPDefault = new ConfigOptionBoolean('fyp_default', false, {
 	conditions: { join: true },
 });
-
-export const configHasSearchCommunities = new ConfigOptionBoolean('has_search_communities', false);
 
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());
