@@ -1,3 +1,5 @@
+<script lang="ts" src="./group"></script>
+
 <template>
 	<div
 		class="form-group"
@@ -12,5 +14,3 @@
 		<slot />
 	</div>
 </template>
-
-<script lang="ts" src="./group"></script>

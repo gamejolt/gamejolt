@@ -27,8 +27,8 @@
 					>
 						<div ref="slider" class="-drawer-inner">
 							<template v-if="hasStickers">
-								<template v-for="(sheet, index) in stickerSheets">
-									<div :key="index" class="-sheet" :style="styles.sheet">
+								<template v-for="(sheet, index) in stickerSheets" :key="index">
+									<div class="-sheet" :style="styles.sheet">
 										<app-sticker-layer-drawer-item
 											v-for="item of sheet"
 											:key="item.sticker.id"

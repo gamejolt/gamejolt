@@ -25,12 +25,8 @@
 		<template v-else>
 			<template v-if="hasChunks && filteredCommunities.top.length > 0">
 				<div class="row">
-					<template v-for="community of filteredCommunities.top">
-						<app-community-chunk
-							:key="community.id"
-							class="-chunk"
-							:community="community"
-						/>
+					<template v-for="community of filteredCommunities.top" :key="community.id">
+						<app-community-chunk class="-chunk" :community="community" />
 					</template>
 				</div>
 			</template>

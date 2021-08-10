@@ -1,15 +1,15 @@
+<script lang="ts" src="./textarea"></script>
+
 <template>
 	<textarea
 		:id="id"
+		v-validate="{ rules: validationRules }"
 		:name="group.name"
 		class="form-control"
 		:value="controlVal"
-		@input="onChange($event.target.value)"
-		v-validate="{ rules: validationRules }"
 		:data-vv-validate-on="validateOn"
 		:data-vv-delay="validateDelay"
+		@input="onChange($event.target.value)"
 		@paste="emitPaste"
-	></textarea>
+	/>
 </template>
-
-<script lang="ts" src="./textarea"></script>

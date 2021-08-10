@@ -9,20 +9,17 @@
 		>
 			<div class="row collection-copy">
 				<div v-if="!Screen.isXs" class="col-sm-4 col-md-3">
+					<!-- TODO(vue3): check animation -->
 					<app-game-collection-thumbnail
-						v-for="collection of [collection]"
 						:key="collection._id"
 						class="anim-fade-in-enlarge"
 						:collection="collection"
 					/>
 				</div>
 				<div class="col-sm-8 col-md-9">
+					<!-- TODO(vue3): make sure this works to animate -->
 					<transition mode="out-in" appear>
-						<div
-							v-for="collection of [collection]"
-							:key="collection._id"
-							class="anim-fade-enter-right anim-fade-leave-up"
-						>
+						<div :key="collection._id" class="anim-fade-enter-right anim-fade-leave-up">
 							<!--
 								Followed Games
 							-->

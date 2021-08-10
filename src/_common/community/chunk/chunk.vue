@@ -58,13 +58,12 @@
 		>
 			<div class="-content" :class="{ '-scrollable': Screen.isXs }">
 				<template v-if="isLoadingPosts">
-					<template v-for="(item, index) of preferredCardsPerRow">
-						<div :key="item" class="-card">
+					<template v-for="(item, index) of preferredCardsPerRow" :key="item">
+						<div class="-card">
 							<app-post-card-placeholder />
 						</div>
 
 						<div
-							:key="'spacer-' + index"
 							:class="{
 								'-spacer': index + 1 < preferredCardsPerRow,
 								'-spacer-large': index + 1 === preferredCardsPerRow && Screen.isXs,
@@ -73,17 +72,12 @@
 					</template>
 				</template>
 				<template v-else-if="items.length > 0">
-					<template v-for="(item, index) of items">
-						<div :key="item.id" class="-card">
-							<app-post-card
-								:post="item.action"
-								:source="postOpenSource"
-								with-user
-							/>
+					<template v-for="(item, index) of items" :key="item.id">
+						<div class="-card">
+							<app-post-card :post="item.action" :source="postOpenSource" with-user />
 						</div>
 
 						<div
-							:key="'spacer-' + index"
 							:class="{
 								'-spacer': index + 1 < preferredCardsPerRow,
 								'-spacer-large': index + 1 === preferredCardsPerRow && Screen.isXs,
@@ -93,11 +87,13 @@
 
 					<!-- Add empty flexible items if we haven't met our preferred items per row -->
 					<template v-if="items.length < preferredCardsPerRow && !Screen.isXs">
-						<template v-for="(item, index) of preferredCardsPerRow - items.length">
-							<div :key="item" class="-card" />
+						<template
+							v-for="(item, index) of preferredCardsPerRow - items.length"
+							:key="item"
+						>
+							<div class="-card" />
 
 							<div
-								:key="'spacer-' + index"
 								:class="{
 									'-spacer': index + 1 < preferredCardsPerRow,
 									'-spacer-large':

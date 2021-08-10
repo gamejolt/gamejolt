@@ -7,50 +7,50 @@
 				<div class="notification-container" @click.stop="go">
 					<router-link :to="notification.routeLocation">
 						<app-timeline-list-item :is-new="isNew">
-							<template
-								v-if="
-									notification.type ===
-									Notification.TYPE_COMMUNITY_USER_NOTIFICATION
-								"
-								#bubble
-							>
-								<div class="-community-thumb">
-									<app-community-thumbnail-img
-										class="img-circle"
-										:community="notification.from_model"
-									/>
-								</div>
-							</template>
-							<template v-else-if="notification.from_model" #bubble>
-								<app-user-card-hover
-									:user="notification.from_model"
-									:disabled="!feed.shouldShowUserCards"
+							<template #bubble>
+								<template
+									v-if="
+										notification.type ===
+										Notification.TYPE_COMMUNITY_USER_NOTIFICATION
+									"
 								>
-									<app-user-avatar :user="notification.from_model" />
-								</app-user-card-hover>
-							</template>
-							<template
-								v-else-if="
-									notification.type ===
-									Notification.TYPE_POST_FEATURED_IN_COMMUNITY
-								"
-								#bubble
-							>
-								<div class="-community-thumb">
-									<app-community-thumbnail-img
-										class="img-circle"
-										:community="notification.action_model.community"
-									/>
-								</div>
-							</template>
-							<template
-								v-else-if="
-									notification.type === Notification.TYPE_GAME_TROPHY_ACHIEVED ||
-									notification.type === Notification.TYPE_SITE_TROPHY_ACHIEVED
-								"
-								#bubble
-							>
-								<img class="img-circle -trophy-img" :src="trophyImg" />
+									<div class="-community-thumb">
+										<app-community-thumbnail-img
+											class="img-circle"
+											:community="notification.from_model"
+										/>
+									</div>
+								</template>
+								<template v-else-if="notification.from_model">
+									<app-user-card-hover
+										:user="notification.from_model"
+										:disabled="!feed.shouldShowUserCards"
+									>
+										<app-user-avatar :user="notification.from_model" />
+									</app-user-card-hover>
+								</template>
+								<template
+									v-else-if="
+										notification.type ===
+										Notification.TYPE_POST_FEATURED_IN_COMMUNITY
+									"
+								>
+									<div class="-community-thumb">
+										<app-community-thumbnail-img
+											class="img-circle"
+											:community="notification.action_model.community"
+										/>
+									</div>
+								</template>
+								<template
+									v-else-if="
+										notification.type ===
+											Notification.TYPE_GAME_TROPHY_ACHIEVED ||
+										notification.type === Notification.TYPE_SITE_TROPHY_ACHIEVED
+									"
+								>
+									<img class="img-circle -trophy-img" :src="trophyImg" />
+								</template>
 							</template>
 
 							<div class="-container">

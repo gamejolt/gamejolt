@@ -1,3 +1,5 @@
+<script lang="ts" src="./upload"></script>
+
 <template>
 	<div
 		class="form-control-upload"
@@ -13,20 +15,20 @@
 			If we have a label, then we show the upload "button" as a link instead.
 			We hide the button and use it to simulate a click on it.
 		-->
-			<div class="small" v-if="!!uploadLinkLabel">
+			<div v-if="!!uploadLinkLabel" class="small">
 				<a class="link-muted" @click="showFileSelect()">
 					{{ uploadLinkLabel }}
 				</a>
 			</div>
 
 			<app-form-control-upload-file
-				ref="input"
+				v-show="!uploadLinkLabel"
 				:id="id"
+				ref="input"
+				v-validate="{ rules: validationRules }"
 				:name="group.name"
 				:multiple="multiple"
 				:accept="accept"
-				v-show="!uploadLinkLabel"
-				v-validate="{ rules: validationRules }"
 				:data-vv-validate-on="validateOn"
 				:data-vv-delay="validateDelay"
 				:value="controlVal"
@@ -40,7 +42,7 @@
 					<strong><translate>Selected files:</translate></strong>
 				</p>
 				<div class="list-group list-group-dark">
-					<div class="list-group-item" v-for="file of files">
+					<div v-for="file of files" class="list-group-item">
 						<a class="card-remove" @click="clearFile(file)">
 							<app-jolticon icon="remove" notice />
 						</a>
@@ -61,8 +63,8 @@
 				<div v-if="progress >= 0.99" class="alert">
 					<p>
 						<translate>
-							Upload complete! Please wait while we process your file(s). This may take a few
-							minutes, so don't close or refresh the page.
+							Upload complete! Please wait while we process your file(s). This may
+							take a few minutes, so don't close or refresh the page.
 						</translate>
 					</p>
 				</div>
@@ -72,8 +74,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .form-control-upload
 	rounded-corners-lg()
@@ -89,5 +91,3 @@
 .list-group
 	margin-bottom: 0
 </style>
-
-<script lang="ts" src="./upload"></script>

@@ -1,3 +1,5 @@
+<script lang="ts" src="./content"></script>
+
 <template>
 	<div class="content-control">
 		<!--
@@ -5,11 +7,12 @@
 			and it'll reset back to the BG background color/theming.
 		-->
 		<app-content-editor
+			:id="id"
+			ref="editor"
+			v-validate="{ rules: validationRules }"
 			class="fill-bg form-control content-editor-form-control"
 			:class="{ '-compact': compact }"
-			ref="editor"
 			:name="group.name"
-			:id="id"
 			:content-context="contentContext"
 			:placeholder="placeholder"
 			:disabled="disabled"
@@ -22,7 +25,6 @@
 			:max-height="maxHeight"
 			:display-rules="displayRules"
 			:focus-end="focusEnd"
-			v-validate="{ rules: validationRules }"
 			@input="onChange"
 			@editor-focus="onFocus"
 			@editor-blur="onBlur"
@@ -57,5 +59,3 @@
 	box-shadow: none
 	outline: 0
 </style>
-
-<script lang="ts" src="./content"></script>

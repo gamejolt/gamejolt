@@ -32,8 +32,8 @@
 					don't it will not wrap correctly in the DOM since it adds the
 					space.
 				-->
-				<template v-for="(game, i) of processedGames">
-					<div v-if="shouldShowAd(i)" :key="game.id + '-ad'" class="game-grid-ad">
+				<template v-for="(game, i) of processedGames" :key="game.id">
+					<div v-if="shouldShowAd(i)" class="game-grid-ad">
 						<div class="game-grid-ad-inner">
 							<app-ad-widget
 								size="rectangle"
@@ -42,7 +42,7 @@
 							/>
 						</div>
 					</div>
-					<div :key="game.id" class="game-grid-item">
+					<div class="game-grid-item">
 						<app-game-thumbnail
 							v-app-track-event="
 								eventLabel ? 'game-grid:click:' + eventLabel : undefined

@@ -1,3 +1,5 @@
+<script lang="ts" src="./markdown"></script>
+
 <template>
 	<div
 		class="form-control-markdown"
@@ -19,22 +21,27 @@
 				</li>
 			</ul>
 			<div
+				v-if="
+					shouldShowMarkdownHelp || shouldShowWidgetHelp || htmlSupport || allowCodeEditor
+				"
 				class="form-control-markdown-helptext"
-				v-if="shouldShowMarkdownHelp || shouldShowWidgetHelp || htmlSupport || allowCodeEditor"
 			>
-				<span v-if="allowCodeEditor" class="form-control-markdown-helplink hidden-xs hidden-sm">
+				<span
+					v-if="allowCodeEditor"
+					class="form-control-markdown-helplink hidden-xs hidden-sm"
+				>
 					<a
 						v-if="editorMode === 'textarea'"
-						@click="editorMode = 'code-editor'"
 						v-app-tooltip="$gettext(`Switch to a code editor`)"
+						@click="editorMode = 'code-editor'"
 					>
 						<app-jolticon icon="brackets" />
 						<translate>Code Editor</translate>
 					</a>
 					<a
 						v-if="editorMode === 'code-editor'"
-						@click="editorMode = 'textarea'"
 						v-app-tooltip="$gettext(`Switch back to a simple text box`)"
+						@click="editorMode = 'textarea'"
 					>
 						<app-jolticon icon="blog-article" />
 						<translate>Basic Editor</translate>
@@ -66,6 +73,9 @@
 			<textarea
 				v-if="editorMode === 'textarea'"
 				:id="id"
+				v-validate="{ rules: validationRules }"
+				v-app-form-autosize="bootstrapAutosize"
+				v-app-focus-when="autofocus"
 				class="form-control"
 				:style="{
 					maxHeight,
@@ -77,19 +87,16 @@
 				:disabled="disabled"
 				:value="controlVal"
 				@input="onChange($event.target.value)"
-				v-validate="{ rules: validationRules }"
-				v-app-form-autosize="bootstrapAutosize"
-				v-app-focus-when="autofocus"
-			></textarea>
+			/>
 
 			<div v-else-if="editorMode === 'code-editor'">
 				<app-codemirror
 					:id="id"
 					:value="controlVal"
-					@input="onChange"
 					:options="{
 						mode: 'gfm',
 					}"
+					@input="onChange"
 				/>
 			</div>
 			<app-form-control-markdown-media-items
@@ -108,11 +115,9 @@
 		>
 			<app-loading v-if="isLoadingPreview" />
 
-			<div v-else :class="previewClass" v-html="previewContent"></div>
+			<div v-else :class="previewClass" v-html="previewContent" />
 		</div>
 	</div>
 </template>
 
 <style lang="stylus" src="./markdown.styl" scoped></style>
-
-<script lang="ts" src="./markdown"></script>

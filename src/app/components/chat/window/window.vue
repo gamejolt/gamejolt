@@ -59,11 +59,8 @@
 						</div>
 
 						<!-- Animation scope. -->
-						<div
-							v-for="room of [room]"
-							:key="room.id"
-							class="chat-window-header-content"
-						>
+						<!-- TODO(vue3): check animation works -->
+						<div :key="room.id" class="chat-window-header-content">
 							<span
 								v-if="!room.isPmRoom"
 								class="
@@ -113,11 +110,9 @@
 					</div>
 				</div>
 
-				<!-- The v-for is a hack to make sure we destroy/recreate each
-				time the room changes. -->
+				<!-- TODO(vue3): check animation works -->
 				<div class="chat-window-output fill-backdrop">
 					<app-chat-window-output
-						v-for="room of [room]"
 						:key="room.id"
 						class="chat-window-output-inner"
 						:room="room"

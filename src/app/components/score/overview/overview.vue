@@ -1,8 +1,8 @@
+<script lang="ts" src="./overview"></script>
+
 <template>
 	<div>
-		<!--
-		Scoreboard info/selector.
-	-->
+		<!-- Scoreboard info/selector. -->
 		<div class="row">
 			<div class="col-xs-12" :class="size === 'full' ? 'col-lg-6' : ''">
 				<h2 class="section-header sans-margin-top">
@@ -40,8 +40,8 @@
 			<!--
 			User Best Score
 			Only show if logged in.
-		-->
-			<div class="col-xs-12" :class="size === 'full' ? 'col-lg-6' : ''" v-if="app.user">
+			-->
+			<div v-if="app.user" class="col-xs-12" :class="size === 'full' ? 'col-lg-6' : ''">
 				<div class="score-overview-user-best">
 					<h4 class="section-header">
 						<translate>scores.overview.user_best_heading</translate>
@@ -52,26 +52,32 @@
 							<app-user-avatar :user="app.user" />
 						</div>
 
-						<!-- Animation Scope -->
+						<!-- TODO(vue3): check animation works -->
 						<div
-							v-for="_ of [scoreTable]"
-							:key="_.id"
-							class="col-xs-12 col-sm-9 anim-fade-in-right no-animate-leave no-animate-xs"
+							:key="scoreTable.id"
+							class="
+								col-xs-12 col-sm-9
+								anim-fade-in-right
+								no-animate-leave no-animate-xs
+							"
 						>
-							<div class="alert full-bleed-xs" v-if="!userBestScore">
+							<div v-if="!userBestScore" class="alert full-bleed-xs">
 								<p>
 									<strong>
-										<translate>scores.overview.user_best_none_heading</translate>
+										<translate>
+											scores.overview.user_best_none_heading
+										</translate>
 									</strong>
 								</p>
 								<p>
-									<translate>
-										What'cha waitin' for? Get gaming!
-									</translate>
+									<translate> What'cha waitin' for? Get gaming! </translate>
 								</p>
 							</div>
 
-							<div class="well fill-darkest clearfix full-bleed-xs" v-if="userBestScore">
+							<div
+								v-if="userBestScore"
+								class="well fill-darkest clearfix full-bleed-xs"
+							>
 								<div class="stat-big stat-big-smaller pull-right text-right">
 									<div class="stat-big-digit stat-big-highlight">
 										#{{ userScorePlacement | number }}
@@ -104,18 +110,22 @@
 			Top Scores
 			If we're showing this full-size, then we pull this bit to the right on MD-up.
 			This will collapse the row a bit so it's not really long.
-		-->
+			-->
 			<div class="col-xs-12" :class="size === 'full' ? 'col-lg-6 pull-right' : ''">
 				<div class="score-overview-top">
-					<h4 :class="{ 'section-header': !app.user || (Screen.isDesktop && size === 'full') }">
+					<h4
+						:class="{
+							'section-header': !app.user || (Screen.isDesktop && size === 'full'),
+						}"
+					>
 						<translate>scores.overview.top_scores_heading</translate>
 					</h4>
 
 					<template v-if="scores.length">
 						<!--
 						When screen isn't XS, we split the scores out into two columns.
-					-->
-						<div class="row" v-if="!Screen.isXs">
+						-->
+						<div v-if="!Screen.isXs" class="row">
 							<div class="col-sm-6">
 								<app-score-list :scores="scoresLeft" :step="2" />
 							</div>
@@ -126,11 +136,11 @@
 
 						<!--
 						When screen is XS we just show as one long list.
-					-->
-						<app-score-list :scores="scores" v-if="Screen.isXs" />
+						-->
+						<app-score-list v-if="Screen.isXs" :scores="scores" />
 
 						<app-button
-							blockXs
+							block-xs
 							:to="{
 								name: 'discover.games.view.scores.list',
 								params: {
@@ -144,7 +154,7 @@
 							<translate>scores.overview.view_more_button</translate>
 						</app-button>
 					</template>
-					<div class="alert full-bleed-xs" v-else>
+					<div v-else class="alert full-bleed-xs">
 						<translate>scores.overview.no_scores_html</translate>
 					</div>
 				</div>
@@ -154,11 +164,12 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .score-overview-user-best
-	.well, .alert
+	.well
+	.alert
 		position: relative
 		margin-bottom: 0
 
@@ -171,5 +182,3 @@
 			caret(var(--theme-darkest), size: 9px)
 			content: ''
 </style>
-
-<script lang="ts" src="./overview"></script>

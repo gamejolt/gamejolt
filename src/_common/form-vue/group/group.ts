@@ -1,4 +1,3 @@
-import { ErrorBag } from 'vee-validate';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { titleCase } from '../../../utils/string';

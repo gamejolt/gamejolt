@@ -11,13 +11,13 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WebpackDevServer = require('webpack-dev-server');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const VueSSRServerPlugin = require('vue-server-renderer/server-plugin');
-const VueSSRClientPlugin = require('vue-server-renderer/client-plugin');
+// const VueSSRServerPlugin = require('vue-server-renderer/server-plugin');
+// const VueSSRClientPlugin = require('vue-server-renderer/client-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const OfflinePlugin = require('offline-plugin');
 const WebpackPwaManifest = require('webpack-pwa-manifest');
 const OptimizeCssnanoPlugin = require('@intervolga/optimize-cssnano-plugin');
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const { VueLoaderPlugin } = require('vue-loader');
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 
 module.exports = function (config) {
@@ -238,7 +238,7 @@ module.exports = function (config) {
 					styles: path.resolve(base, 'src/' + section + '/styles'),
 					'styles-lib': path.resolve(base, 'src/_styles/common'),
 					common: path.resolve(base, 'src/_common'),
-					vue$: 'vue/dist/vue.esm.js',
+					vue: '@vue/compat',
 				},
 			},
 			externals: externals,
@@ -257,6 +257,9 @@ module.exports = function (config) {
 						test: /\.vue$/,
 						loader: 'vue-loader',
 						options: {
+							compatConfig: {
+								MODE: 2,
+							},
 							compilerOptions: {
 								whitespace: 'preserve',
 							},
@@ -476,18 +479,19 @@ module.exports = function (config) {
 					  }),
 				webAppManifest ? new WebpackPwaManifest(webAppManifest) : noop,
 				prodNoop || new FriendlyErrorsWebpackPlugin(),
+				// TODO(vue3)
 				// Make the client bundle for both normal prod builds or client ssr builds.
 				// We want to compare the manifests from the two builds.
-				(config.ssr === 'client' || config.production) && !config.client
-					? new VueSSRClientPlugin({
-							filename: 'vue-ssr-client-manifest-' + section + '.json',
-					  })
-					: noop,
-				config.ssr === 'server' && !config.client
-					? new VueSSRServerPlugin({
-							filename: 'vue-ssr-server-bundle-' + section + '.json',
-					  })
-					: noop,
+				// (config.ssr === 'client' || config.production) && !config.client
+				// 	? new VueSSRClientPlugin({
+				// 			filename: 'vue-ssr-client-manifest-' + section + '.json',
+				// 	  })
+				// 	: noop,
+				// config.ssr === 'server' && !config.client
+				// 	? new VueSSRServerPlugin({
+				// 			filename: 'vue-ssr-server-bundle-' + section + '.json',
+				// 	  })
+				// 	: noop,
 				hasOfflineSupport
 					? new OfflinePlugin({
 							excludes: ['**/.*', '**/*.map', 'vue-ssr-*', '**/*gameApiDocContent*'],

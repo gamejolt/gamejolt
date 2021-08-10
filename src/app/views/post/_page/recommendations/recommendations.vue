@@ -13,14 +13,13 @@
 		>
 			<div class="-posts">
 				<template v-if="!usablePosts.length">
-					<template v-for="i of 4">
-						<div :key="i" class="-post">
+					<template v-for="i of 4" :key="i">
+						<div class="-post">
 							<app-post-card-placeholder />
 						</div>
 
 						<div
 							v-if="shouldScroll"
-							:key="'spacer-' + i"
 							:class="{
 								'-spacer': i < usablePosts.length,
 								'-spacer-large': i === usablePosts.length,
@@ -29,8 +28,8 @@
 					</template>
 				</template>
 				<template v-else>
-					<template v-for="(recommendedPost, i) of usablePosts">
-						<div :key="recommendedPost.id" class="-post">
+					<template v-for="(recommendedPost, i) of usablePosts" :key="recommendedPost.id">
+						<div class="-post">
 							<app-post-card
 								:post="recommendedPost"
 								with-user
@@ -40,7 +39,6 @@
 
 						<div
 							v-if="shouldScroll"
-							:key="'spacer-' + i"
 							:class="{
 								'-spacer': i + 1 < usablePosts.length,
 								'-spacer-large': i + 1 === usablePosts.length,
