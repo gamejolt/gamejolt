@@ -1,3 +1,5 @@
+<script lang="ts" src="./collaborators"></script>
+
 <template>
 	<section class="section">
 		<div class="container">
@@ -6,7 +8,8 @@
 					<div class="page-help">
 						<p>
 							<translate>
-								Allow other users to manage your game by giving them collaborator roles.
+								Allow other users to manage your game by giving them collaborator
+								roles.
 							</translate>
 						</p>
 					</div>
@@ -34,33 +37,54 @@
 
 							<div class="card-meta">
 								<span class="tag">
-									<template v-if="collaborator.role === Collaborator.ROLE_EQUAL_COLLABORATOR">
+									<template
+										v-if="
+											collaborator.role ===
+											Collaborator.ROLE_EQUAL_COLLABORATOR
+										"
+									>
 										<translate>Collaborator</translate>
 									</template>
-									<template v-else-if="collaborator.role === Collaborator.ROLE_COMMUNITY_MANAGER">
+									<template
+										v-else-if="
+											collaborator.role ===
+											Collaborator.ROLE_COMMUNITY_MANAGER
+										"
+									>
 										<translate>Community Manager</translate>
 									</template>
-									<template v-else-if="collaborator.role === Collaborator.ROLE_DEVELOPER">
+									<template
+										v-else-if="
+											collaborator.role === Collaborator.ROLE_DEVELOPER
+										"
+									>
 										<translate>Developer</translate>
 									</template>
-									<template v-else>
-										-
-									</template>
+									<template v-else> - </template>
 								</span>
 
 								<template v-if="collaborator.status !== Collaborator.STATUS_ACTIVE">
 									<span class="tag"><translate>Invited</translate></span>
 									<br />
-									<translate>This user hasn't accepted their invitation yet.</translate>
+									<translate>
+										This user hasn't accepted their invitation yet.
+									</translate>
 								</template>
 							</div>
 
-							<template slot="body">
-								<form-game-collaborator :model="collaborator" :game="game" @submit="onSaved" />
+							<template #body>
+								<form-game-collaborator
+									:model="collaborator"
+									:game="game"
+									@submit="onSaved"
+								/>
 							</template>
 						</app-card-list-item>
 
-						<app-card-list-add :label="$gettext(`Add Collaborator`)" @toggle="isAdding = !isAdding">
+						<app-card-list-add
+							:label="$gettext(`Add Collaborator`)"
+							@toggle="isAdding = !isAdding"
+						>
 							<form-game-collaborator :game="game" @submit="onAdded" />
 						</app-card-list-add>
 					</app-card-list>
@@ -69,5 +93,3 @@
 		</div>
 	</section>
 </template>
-
-<script lang="ts" src="./collaborators"></script>

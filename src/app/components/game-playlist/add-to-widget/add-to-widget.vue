@@ -18,7 +18,9 @@
 			:circle="circle"
 		/>
 
-		<app-game-playlist-add-to-popover v-if="isShown" slot="popover" :game="game" />
+		<template v-if="isShown" #popover>
+			<app-game-playlist-add-to-popover :game="game" />
+		</template>
 	</app-popper>
 </template>
 

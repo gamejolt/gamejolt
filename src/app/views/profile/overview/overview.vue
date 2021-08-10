@@ -47,7 +47,7 @@
 		<section v-else class="section fill-backdrop">
 			<div>
 				<app-page-container xl order="left,main,right">
-					<div slot="left">
+					<template #left>
 						<!-- Bio -->
 						<template v-if="!isOverviewLoaded">
 							<div>
@@ -82,9 +82,9 @@
 								/>
 							</p>
 						</template>
-					</div>
+					</template>
 
-					<div slot="left-bottom">
+					<template #left-bottom>
 						<!-- Shouts -->
 						<template v-if="shouldShowShouts">
 							<div class="pull-right">
@@ -112,9 +112,9 @@
 								@reload-comments="reloadPreviewComments"
 							/>
 						</template>
-					</div>
+					</template>
 
-					<div slot="right">
+					<template #right>
 						<app-user-known-followers
 							v-if="shouldShowKnownFollowers"
 							:users="knownFollowers"
@@ -285,9 +285,9 @@
 
 							<div class="-trophies">
 								<app-trophy-thumbnail
-									class="-trophy"
 									v-for="trophy of previewTrophies"
 									:key="trophy.key"
+									class="-trophy"
 									:trophy="trophy.trophy"
 									no-difficulty
 									no-highlight
@@ -296,9 +296,9 @@
 
 								<router-link
 									v-if="shouldShowMoreTrophies"
+									v-app-tooltip="$gettext(`View All Trophies...`)"
 									class="-trophies-more -trophy link-unstyled"
 									:to="{ name: 'profile.trophies' }"
-									v-app-tooltip="$gettext(`View All Trophies...`)"
 								>
 									+{{ moreTrophyCount }}
 								</router-link>
@@ -306,7 +306,7 @@
 
 							<br />
 						</template>
-					</div>
+					</template>
 
 					<!-- User blocked -->
 					<template v-if="userBlockedYou">

@@ -7,31 +7,33 @@
 				:style="{
 					'background-color': colors.hex,
 				}"
-			></div>
+			/>
 
-			<div class="colorpicker-popover" slot="popover">
-				<picker :value="colors" @input="onChange" />
+			<template #popover>
+				<div class="colorpicker-popover">
+					<picker :value="colors" @input="onChange" />
 
-				<div class="colorpicker-well">
-					<div class="col">
-						<app-button primary solid block @click="accept">
-							<translate>Accept</translate>
-						</app-button>
-					</div>
-					<div class="col">
-						<app-button trans block @click="cancel">
-							<translate>Cancel</translate>
-						</app-button>
+					<div class="colorpicker-well">
+						<div class="col">
+							<app-button primary solid block @click="accept">
+								<translate>Accept</translate>
+							</app-button>
+						</div>
+						<div class="col">
+							<app-button trans block @click="cancel">
+								<translate>Cancel</translate>
+							</app-button>
+						</div>
 					</div>
 				</div>
-			</div>
+			</template>
 		</app-popper>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .colorpicker
 	display: inline-block

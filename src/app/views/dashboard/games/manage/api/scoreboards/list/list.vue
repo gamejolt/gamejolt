@@ -1,3 +1,5 @@
+<script lang="ts" src="./list"></script>
+
 <template>
 	<div>
 		<h2 class="section-header">
@@ -7,14 +9,15 @@
 		<div class="page-help">
 			<p>
 				<translate>
-					The API allows you to add multiple customized scoreboards, with control over sorting
-					options and guest scoring, and the ability to attach extra hidden data to scores.
+					The API allows you to add multiple customized scoreboards, with control over
+					sorting options and guest scoring, and the ability to attach extra hidden data
+					to scores.
 				</translate>
 			</p>
 			<p>
 				<translate>
-					The primary scoreboard is the one that will show by default on your game's page. Set a new
-					primary by dragging a scoreboard into the first slot.
+					The primary scoreboard is the one that will show by default on your game's page.
+					Set a new primary by dragging a scoreboard into the first slot.
 				</translate>
 			</p>
 			<p>
@@ -38,12 +41,10 @@
 							:key="scoreTable.id"
 							:item="scoreTable"
 						>
-							<!--
-							Can only remove if there is more than one score table left.
-						-->
+							<!-- Can only remove if there is more than one score table left. -->
 							<a
-								class="card-remove"
 								v-if="scoreTables.length > 1"
+								class="card-remove"
 								@click.stop="removeTable(scoreTable)"
 							>
 								<app-jolticon icon="remove" />
@@ -66,41 +67,47 @@
 
 							<div class="card-meta">
 								<span
-									class="tag tag-highlight"
 									v-if="i === 0"
-									v-app-tooltip="$gettext(`dash.games.scoreboards.primary_tooltip`)"
+									v-app-tooltip="
+										$gettext(`dash.games.scoreboards.primary_tooltip`)
+									"
+									class="tag tag-highlight"
 								>
 									<translate>dash.games.scoreboards.primary_tag</translate>
 								</span>
 								<span
-									class="tag"
 									v-if="scoreTable.allow_guest_scores"
 									v-app-tooltip="$gettext(`dash.games.scoreboards.guest_tooltip`)"
+									class="tag"
 								>
 									<translate>dash.games.scoreboards.guest_tag</translate>
 								</span>
 								<span
-									class="tag"
 									v-if="scoreTable.unique_scores"
-									v-app-tooltip="$gettext(`dash.games.scoreboards.unique_tooltip`)"
+									v-app-tooltip="
+										$gettext(`dash.games.scoreboards.unique_tooltip`)
+									"
+									class="tag"
 								>
 									<translate>dash.games.scoreboards.unique_tag</translate>
 								</span>
 								<span
-									class="tag"
 									v-if="
-										scoreTable.scores_sorting_direction === GameScoreTable.SORTING_DIRECTION_ASC
+										scoreTable.scores_sorting_direction ===
+										GameScoreTable.SORTING_DIRECTION_ASC
 									"
 									v-app-tooltip="$gettext(`dash.games.scoreboards.asc_tooltip`)"
+									class="tag"
 								>
 									<translate>dash.games.scoreboards.asc_tag</translate>
 								</span>
 								<span
-									class="tag"
 									v-if="
-										scoreTable.scores_sorting_direction === GameScoreTable.SORTING_DIRECTION_DESC
+										scoreTable.scores_sorting_direction ===
+										GameScoreTable.SORTING_DIRECTION_DESC
 									"
 									v-app-tooltip="$gettext(`dash.games.scoreboards.desc_tooltip`)"
+									class="tag"
 								>
 									<translate>dash.games.scoreboards.desc_tag</translate>
 								</span>
@@ -123,8 +130,12 @@
 								</app-button>
 							</div>
 
-							<template slot="body">
-								<form-game-score-table :game="game" :model="scoreTable" @submit="onTableEdited" />
+							<template #body>
+								<form-game-score-table
+									:game="game"
+									:model="scoreTable"
+									@submit="onTableEdited"
+								/>
 							</template>
 						</app-card-list-item>
 					</app-card-list-draggable>
@@ -140,5 +151,3 @@
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./list"></script>

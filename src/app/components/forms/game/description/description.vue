@@ -1,7 +1,9 @@
+<script lang="ts" src="./description"></script>
+
 <template>
-	<app-form name="descriptionForm" ref="form">
+	<app-form ref="form" name="descriptionForm">
 		<app-form-group name="description_content" :label="$gettext('Description')">
-			<template slot="label">
+			<template #label>
 				<app-jolticon icon="edit" />
 				<strong>
 					<translate>Game Description</translate>
@@ -87,5 +89,3 @@
 .-tags
 	margin-bottom: $line-height-computed
 </style>
-
-<script lang="ts" src="./description"></script>

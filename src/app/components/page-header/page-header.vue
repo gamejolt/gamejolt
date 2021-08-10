@@ -24,9 +24,11 @@
 				:disabled="!coverEditable"
 				@click="emitEditCover"
 			>
-				<span slot="overlay">
-					<slot name="cover-edit-buttons" />
-				</span>
+				<template #overlay>
+					<span>
+						<slot name="cover-edit-buttons" />
+					</span>
+				</template>
 
 				<!--
 					If no cover media, reserve space with a min-height.

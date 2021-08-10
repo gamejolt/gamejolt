@@ -4,15 +4,15 @@
 	<div>
 		<template v-if="shouldShow">
 			<div class="notification-item">
-				<div @click.stop="go" class="notification-container">
+				<div class="notification-container" @click.stop="go">
 					<router-link :to="notification.routeLocation">
 						<app-timeline-list-item :is-new="isNew">
-							<div
+							<template
 								v-if="
 									notification.type ===
 									Notification.TYPE_COMMUNITY_USER_NOTIFICATION
 								"
-								slot="bubble"
+								#bubble
 							>
 								<div class="-community-thumb">
 									<app-community-thumbnail-img
@@ -20,21 +20,21 @@
 										:community="notification.from_model"
 									/>
 								</div>
-							</div>
-							<div v-else-if="notification.from_model" slot="bubble">
+							</template>
+							<template v-else-if="notification.from_model" #bubble>
 								<app-user-card-hover
 									:user="notification.from_model"
 									:disabled="!feed.shouldShowUserCards"
 								>
 									<app-user-avatar :user="notification.from_model" />
 								</app-user-card-hover>
-							</div>
-							<div
+							</template>
+							<template
 								v-else-if="
 									notification.type ===
 									Notification.TYPE_POST_FEATURED_IN_COMMUNITY
 								"
-								slot="bubble"
+								#bubble
 							>
 								<div class="-community-thumb">
 									<app-community-thumbnail-img
@@ -42,21 +42,23 @@
 										:community="notification.action_model.community"
 									/>
 								</div>
-							</div>
-							<div
+							</template>
+							<template
 								v-else-if="
 									notification.type === Notification.TYPE_GAME_TROPHY_ACHIEVED ||
 									notification.type === Notification.TYPE_SITE_TROPHY_ACHIEVED
 								"
-								slot="bubble"
+								#bubble
 							>
 								<img class="img-circle -trophy-img" :src="trophyImg" />
-							</div>
+							</template>
 
 							<div class="-container">
 								<div class="-main">
 									<div
-										class="timeline-list-item-title timeline-list-item-title-small"
+										class="
+											timeline-list-item-title timeline-list-item-title-small
+										"
 										v-html="titleText"
 									/>
 

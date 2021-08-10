@@ -177,7 +177,7 @@
 													<translate>Balance:</translate>
 													{{ walletBalance | currency }}
 
-													<span class="text-muted" v-if="walletTax > 0">
+													<span v-if="walletTax > 0" class="text-muted">
 														+{{ walletTax | currency }}
 														<translate>tax</translate>
 													</span>
@@ -244,35 +244,35 @@
 													<app-jolticon icon="chevron-down" />
 												</span>
 
-												<div
-													slot="popover"
-													class="list-group list-group-dark"
-												>
-													<a
-														v-for="card of cards"
-														:key="card.id"
-														class="list-group-item"
-														@click="checkoutSavedCard(card)"
-													>
-														<span class="tag">
-															{{ card.brand }}
-														</span>
-														****
-														{{ card.last4 }}
-														<small
-															v-if="
-																cardsTax[card.id] &&
-																cardsTax[card.id].amount > 0
-															"
-															class="text-muted"
+												<template #popover>
+													<div class="list-group list-group-dark">
+														<a
+															v-for="card of cards"
+															:key="card.id"
+															class="list-group-item"
+															@click="checkoutSavedCard(card)"
 														>
-															+{{
-																cardsTax[card.id].amount | currency
-															}}
-															<translate>tax</translate>
-														</small>
-													</a>
-												</div>
+															<span class="tag">
+																{{ card.brand }}
+															</span>
+															****
+															{{ card.last4 }}
+															<small
+																v-if="
+																	cardsTax[card.id] &&
+																	cardsTax[card.id].amount > 0
+																"
+																class="text-muted"
+															>
+																+{{
+																	cardsTax[card.id].amount
+																		| currency
+																}}
+																<translate>tax</translate>
+															</small>
+														</a>
+													</div>
+												</template>
 											</app-popper>
 										</div>
 									</template>

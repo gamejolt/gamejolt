@@ -25,7 +25,9 @@
 					<app-popper popover-class="fill-darkest">
 						<app-button overlay circle icon="cog" />
 
-						<app-game-mod-links slot="popover" :game="game" />
+						<template #popover>
+							<app-game-mod-links :game="game" />
+						</template>
 					</app-popper>
 				</template>
 			</div>

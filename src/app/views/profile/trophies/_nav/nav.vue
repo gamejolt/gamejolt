@@ -1,3 +1,5 @@
+<script lang="ts" src="./nav"></script>
+
 <template>
 	<nav>
 		<ul class="sans-margin">
@@ -37,11 +39,18 @@
 		</ul>
 		<template v-if="hasGames">
 			<hr />
-			<app-list-group-selector :items="games" :current="currentGame" @change="changeGame($event)">
-				<template v-slot="{ item }">
+			<app-list-group-selector
+				:items="games"
+				:current="currentGame"
+				@change="changeGame($event)"
+			>
+				<template #default="{ item }">
 					<translate v-if="!item">Choose a game...</translate>
 					<template v-else>
-						<span class="badge" :class="{ 'badge-notice': gameHasUnviewedTrophies(item.id) }">
+						<span
+							class="badge"
+							:class="{ 'badge-notice': gameHasUnviewedTrophies(item.id) }"
+						>
 							{{ item.trophyCount | number }}
 						</span>
 						{{ item.title }}
@@ -51,5 +60,3 @@
 		</template>
 	</nav>
 </template>
-
-<script lang="ts" src="./nav"></script>

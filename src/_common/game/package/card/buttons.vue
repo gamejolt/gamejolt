@@ -1,13 +1,15 @@
+<script lang="ts" src="./buttons"></script>
+
 <template>
 	<div class="game-package-card-app-buttons">
-		<app-button primary v-if="card.browserBuild" @click="click(card.browserBuild)">
+		<app-button v-if="card.browserBuild" primary @click="click(card.browserBuild)">
 			<translate>Play</translate>
 			<app-jolticon class="jolticon-addon" :icon="card.showcasedBrowserIcon" />
 		</app-button>
 
 		<app-button
-			:primary="!card.browserBuild"
 			v-if="card.downloadableBuild"
+			:primary="!card.browserBuild"
 			@click="click(card.downloadableBuild)"
 		>
 			<translate>Download</translate>
@@ -25,13 +27,13 @@
 		[...] after. If the package has normal builds too, then we just show it as a more options
 		sparse button.
 	-->
-		<app-popper popover-class="fill-darkest" v-if="card.extraBuilds.length">
+		<app-popper v-if="card.extraBuilds.length" popover-class="fill-darkest">
 			<app-button
+				v-app-track-event="`game-package-card:more-options`"
 				icon="ellipsis-v"
 				:primary="card.otherOnly"
 				:circle="!card.otherOnly"
 				:trans="!card.otherOnly"
-				v-app-track-event="`game-package-card:more-options`"
 			>
 				<template v-if="card.otherOnly">
 					<translate>Download</translate>
@@ -39,13 +41,9 @@
 				</template>
 			</app-button>
 
-			<app-game-package-card-more-options
-				slot="popover"
-				:card="card"
-				@click="click($event, true)"
-			/>
+			<template #popover>
+				<app-game-package-card-more-options :card="card" @click="click($event, true)" />
+			</template>
 		</app-popper>
 	</div>
 </template>
-
-<script lang="ts" src="./buttons"></script>

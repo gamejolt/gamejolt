@@ -1,3 +1,5 @@
+<script lang="ts" src="./add"></script>
+
 <template>
 	<div v-if="isRouteBootstrapped">
 		<app-page-header>
@@ -5,9 +7,11 @@
 				<translate>Add Topic</translate>
 			</h1>
 
-			<app-user-avatar slot="spotlight" :user="app.user" />
+			<template #spotlight>
+				<app-user-avatar :user="app.user" />
+			</template>
 
-			<template slot="nav">
+			<template #nav>
 				<app-forum-breadcrumbs :channel="channel" sort="active" page="add-topic" />
 			</template>
 		</app-page-header>
@@ -23,5 +27,3 @@
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./add"></script>

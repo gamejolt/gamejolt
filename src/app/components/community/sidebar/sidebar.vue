@@ -95,19 +95,21 @@
 					<translate>Share this community</translate>
 				</a>
 
-				<div v-if="isShowingShare" slot="popover" class="well sans-margin">
-					<div v-if="!GJ_IS_CLIENT" class="social-widgets">
-						<app-social-twitter-share :url="shareUrl" :content="shareContent" />
+				<template v-if="isShowingShare" #popover>
+					<div class="well sans-margin">
+						<div v-if="!GJ_IS_CLIENT" class="social-widgets">
+							<app-social-twitter-share :url="shareUrl" :content="shareContent" />
 
-						<span class="dot-separator" />
+							<span class="dot-separator" />
 
-						<app-social-facebook-like :url="shareUrl" />
+							<app-social-facebook-like :url="shareUrl" />
+						</div>
+
+						<app-button block @click="copyShareUrl">
+							<translate>Copy Link</translate>
+						</app-button>
 					</div>
-
-					<app-button block @click="copyShareUrl">
-						<translate>Copy Link</translate>
-					</app-button>
-				</div>
+				</template>
 			</app-popper>
 
 			<div class="text-muted">

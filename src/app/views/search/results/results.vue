@@ -41,7 +41,7 @@
 
 		<app-page-container no-left order="right,main">
 			<!-- Games -->
-			<div v-if="!Screen.isMobile && searchPayload.games.length" slot="right">
+			<template v-if="!Screen.isMobile && searchPayload.games.length" #right>
 				<h3 class="-heading">
 					<app-button
 						class="pull-right"
@@ -80,7 +80,7 @@
 						<translate>View all</translate>
 					</router-link>
 				</div>
-			</div>
+			</template>
 
 			<!-- Users -->
 			<template v-if="searchPayload.users.length">

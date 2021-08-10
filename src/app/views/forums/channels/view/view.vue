@@ -1,3 +1,5 @@
+<script lang="ts" src="./view"></script>
+
 <template>
 	<div v-if="channel">
 		<app-page-header>
@@ -30,17 +32,13 @@
 
 				<ul class="stat-list" :class="Screen.isXs ? 'text-center' : 'pull-left'">
 					<li class="stat-big stat-big-smaller">
-						<div class="stat-big-label">
-							Topics
-						</div>
+						<div class="stat-big-label">Topics</div>
 						<div class="stat-big-digit">
 							{{ channel.topics_count || 0 | number }}
 						</div>
 					</li>
 					<li class="stat-big stat-big-smaller">
-						<div class="stat-big-label">
-							Replies
-						</div>
+						<div class="stat-big-label">Replies</div>
 						<div class="stat-big-digit">
 							{{ channel.replies_count || 0 | number }}
 						</div>
@@ -48,15 +46,18 @@
 				</ul>
 			</div>
 
-			<template slot="nav">
+			<template #nav>
 				<app-forum-breadcrumbs :channel="channel" :sort="sort" />
 			</template>
 		</app-page-header>
 
 		<div class="section">
-			<div class="container" id="forum-topics-list">
+			<div id="forum-topics-list" class="container">
 				<template v-if="stickyTopics.length">
-					<app-forum-topic-list :topics="stickyTopics" :post-count-per-page="postCountPerPage" />
+					<app-forum-topic-list
+						:topics="stickyTopics"
+						:post-count-per-page="postCountPerPage"
+					/>
 
 					<br />
 				</template>
@@ -113,7 +114,7 @@
 						</li>
 					</ul>
 
-					<template slot="meta" v-if="topics.length">
+					<template v-if="topics.length" #meta>
 						<span class="text-muted small">
 							<translate
 								:translate-params="{
@@ -167,5 +168,3 @@
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./view"></script>

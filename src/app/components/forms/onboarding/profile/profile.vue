@@ -1,17 +1,19 @@
+<script lang="ts" src="./profile"></script>
+
 <template>
 	<app-form name="onboardingForm">
 		<div class="-form">
 			<section class="-message">
 				<h3 class="section-header">
-					<translate>
-						Let's get you set up!
-					</translate>
+					<translate>Let's get you set up!</translate>
 				</h3>
 			</section>
 
 			<section class="-avatar">
 				<app-editable-overlay @click="chooseAvatar()">
-					<translate slot="overlay">Change</translate>
+					<template #overlay>
+						<translate>Change</translate>
+					</template>
 					<app-user-avatar :user="user" />
 				</app-editable-overlay>
 			</section>
@@ -62,5 +64,3 @@
 </template>
 
 <style lang="stylus" src="./profile.styl" scoped></style>
-
-<script lang="ts" src="./profile"></script>

@@ -1,3 +1,5 @@
+<script lang="ts" src="./overview"></script>
+
 <template>
 	<div>
 		<div v-if="!hasTrophies" class="alert alert-info">
@@ -9,12 +11,12 @@
 		<app-timeline-list v-else>
 			<div v-for="entry of trophyEntries" :key="entry.trophies[0].key">
 				<app-timeline-list-item>
-					<div slot="bubble">
+					<template #bubble>
 						<div class="-timeline-icon">
 							<app-jolticon v-if="entry.game" icon="trophy" />
 							<app-jolticon v-else icon="gamejolt" />
 						</div>
-					</div>
+					</template>
 
 					<div>
 						<div class="timeline-list-item-title">
@@ -70,9 +72,9 @@
 					<div class="timeline-list-item-details">
 						<div class="timeline-list-item-content">
 							<app-trophy-thumbnail
-								class="-trophy-thumb"
 								v-for="userTrophy of entry.trophies"
 								:key="userTrophy.id"
+								class="-trophy-thumb"
 								:trophy="userTrophy.trophy"
 								:no-highlight="isLoggedInUser"
 								@click.native="onClickTrophy(userTrophy)"
@@ -83,7 +85,7 @@
 				<div class="timeline-list-item-split" />
 			</div>
 			<p>
-				<app-button v-if="canLoadMore" @click="onClickShowMore" :disabled="isLoadingMore">
+				<app-button v-if="canLoadMore" :disabled="isLoadingMore" @click="onClickShowMore">
 					<translate>Show More</translate>
 				</app-button>
 				<router-link
@@ -106,7 +108,7 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
 
 .-level-widget
 	max-width: 340px
@@ -120,7 +122,8 @@
 	margin-bottom: 24px
 
 // Used to center the icon
->>> .timeline-list-item-bubble-inner, .timeline-list-item-bubble-inner > div
+>>> .timeline-list-item-bubble-inner
+.timeline-list-item-bubble-inner > div
 	position: relative
 	height: 100%
 
@@ -146,7 +149,4 @@
 
 		.-level-widget
 			margin: 0
-
 </style>
-
-<script lang="ts" src="./overview"></script>

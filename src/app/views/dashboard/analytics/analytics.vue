@@ -1,5 +1,7 @@
+<script lang="ts" src="./analytics"></script>
+
 <template>
-	<div class="route-analytics" v-if="isRouteBootstrapped">
+	<div v-if="isRouteBootstrapped" class="route-analytics">
 		<app-page-header>
 			<nav class="breadcrumb">
 				<ul>
@@ -16,7 +18,11 @@
 							<translate class="breadcrumb-tag" translate>User</translate>
 							@{{ user.username }}
 						</router-link>
-						<app-jolticon icon="chevron-right" class="breadcrumb-separator" v-if="game" />
+						<app-jolticon
+							v-if="game"
+							icon="chevron-right"
+							class="breadcrumb-separator"
+						/>
 					</li>
 					<li v-if="game">
 						<router-link
@@ -31,7 +37,11 @@
 							<translate class="breadcrumb-tag">Game</translate>
 							{{ game.title }}
 						</router-link>
-						<app-jolticon icon="chevron-right" class="breadcrumb-separator" v-if="package" />
+						<app-jolticon
+							v-if="package"
+							icon="chevron-right"
+							class="breadcrumb-separator"
+						/>
 					</li>
 					<li v-if="package">
 						<router-link
@@ -46,7 +56,11 @@
 							<translate class="breadcrumb-tag" translate>Package</translate>
 							{{ package.title || game.title }}
 						</router-link>
-						<app-jolticon icon="chevron-right" class="breadcrumb-separator" v-if="release" />
+						<app-jolticon
+							v-if="release"
+							icon="chevron-right"
+							class="breadcrumb-separator"
+						/>
 					</li>
 					<li v-if="release">
 						<router-link
@@ -65,89 +79,94 @@
 				</ul>
 			</nav>
 
-			<nav slot="nav" class="platform-list inline">
-				<ul>
-					<li>
-						<router-link
-							:to="{
-								name: 'dash.analytics',
-								params: $route.params,
-								query: {
-									period: 'all',
-									partner: $route.query.partner,
-								},
-							}"
-							replace
-							:class="{ active: period === 'all' }"
-							translate
-						>
-							All-Time
-						</router-link>
-					</li>
-					<li>
-						<router-link
+			<template #nav>
+				<nav class="platform-list inline">
+					<ul>
+						<li>
+							<router-link
+								:to="{
+									name: 'dash.analytics',
+									params: $route.params,
+									query: {
+										period: 'all',
+										partner: $route.query.partner,
+									},
+								}"
+								replace
+								:class="{ active: period === 'all' }"
+								translate
+							>
+								All-Time
+							</router-link>
+						</li>
+						<li>
+							<router-link
+								:to="{
+									name: 'dash.analytics',
+									params: $route.params,
+									query: {
+										period: 'monthly',
+										partner: $route.query.partner,
+									},
+								}"
+								replace
+								:class="{ active: period === 'monthly' }"
+								translate
+							>
+								Monthly
+							</router-link>
+						</li>
+					</ul>
+				</nav>
+			</template>
+
+			<template v-if="period === 'monthly'" #controls>
+				<app-page-header-controls>
+					<template #start>
+						<app-button
+							circle
+							trans
+							icon="chevron-left"
 							:to="{
 								name: 'dash.analytics',
 								params: $route.params,
 								query: {
 									period: 'monthly',
+									year: prevYear,
+									month: prevMonth,
 									partner: $route.query.partner,
 								},
 							}"
 							replace
-							:class="{ active: period === 'monthly' }"
-							translate
-						>
-							Monthly
-						</router-link>
-					</li>
-				</ul>
-			</nav>
+						/>
+					</template>
 
-			<app-page-header-controls v-if="period === 'monthly'" slot="controls">
-				<app-button
-					slot="start"
-					circle
-					trans
-					icon="chevron-left"
-					:to="{
-						name: 'dash.analytics',
-						params: $route.params,
-						query: {
-							period: 'monthly',
-							year: prevYear,
-							month: prevMonth,
-							partner: $route.query.partner,
-						},
-					}"
-					replace
-				/>
+					<div class="text-center">
+						<strong>
+							{{ startTime | date('LLLL yyyy') }}
+						</strong>
+					</div>
 
-				<div class="text-center">
-					<strong>
-						{{ startTime | date('LLLL yyyy') }}
-					</strong>
-				</div>
-
-				<app-button
-					slot="end"
-					v-if="now > endTime"
-					circle
-					trans
-					icon="chevron-right"
-					:to="{
-						name: 'dash.analytics',
-						params: $route.params,
-						query: {
-							period: 'monthly',
-							year: nextYear,
-							month: nextMonth,
-							partner: $route.query.partner,
-						},
-					}"
-					replace
-				/>
-			</app-page-header-controls>
+					<template v-if="now > endTime" #end>
+						<app-button
+							circle
+							trans
+							icon="chevron-right"
+							:to="{
+								name: 'dash.analytics',
+								params: $route.params,
+								query: {
+									period: 'monthly',
+									year: nextYear,
+									month: nextMonth,
+									partner: $route.query.partner,
+								},
+							}"
+							replace
+						/>
+					</template>
+				</app-page-header-controls>
+			</template>
 		</app-page-header>
 
 		<template v-if="metricData[metric.key]">
@@ -158,7 +177,11 @@
 			<section class="section section-thin">
 				<div class="container">
 					<div class="row">
-						<div class="col-sm-4 col-md-3" v-for="metric of availableMetrics" :key="metric.key">
+						<div
+							v-for="metric of availableMetrics"
+							:key="metric.key"
+							class="col-sm-4 col-md-3"
+						>
 							<router-link
 								class="stat-graph-overlay"
 								:to="{
@@ -200,12 +223,16 @@
 				<section class="section">
 					<div class="container">
 						<div class="row">
-							<div class="col-md-3" v-if="Screen.isDesktop">
+							<div v-if="Screen.isDesktop" class="col-md-3">
 								<app-scroll-affix>
 									<nav class="platform-list">
 										<ul>
-											<li v-for="(report, i) of pageReports" :key="i" class="no-animate-leave">
-												<a :href="`#report-${i}`" v-app-scroll-to>
+											<li
+												v-for="(report, i) of pageReports"
+												:key="i"
+												class="no-animate-leave"
+											>
+												<a v-app-scroll-to :href="`#report-${i}`">
 													{{ report.title }}
 												</a>
 											</li>
@@ -214,7 +241,11 @@
 								</app-scroll-affix>
 							</div>
 							<div class="col-md-9">
-								<div v-for="(report, i) of pageReports" :key="i" :id="`report-${i}`">
+								<div
+									v-for="(report, i) of pageReports"
+									:id="`report-${i}`"
+									:key="i"
+								>
 									<h2 :class="{ 'section-header': i === 0 }">
 										{{ report.title }}
 									</h2>
@@ -224,7 +255,10 @@
 									<div v-if="report.isLoaded" class="row">
 										<div v-for="(component, n) of report.components" :key="n">
 											<app-analytics-report-simple-stat
-												v-if="component.type === 'sum' || component.type === 'average'"
+												v-if="
+													component.type === 'sum' ||
+													component.type === 'average'
+												"
 												:report-data="component"
 											/>
 											<app-analytics-report-top-composition
@@ -234,7 +268,7 @@
 											<app-analytics-report-top-composition-value
 												v-else-if="
 													component.type === 'top-composition-sum' ||
-														component.type === 'top-composition-avg'
+													component.type === 'top-composition-avg'
 												"
 												:report-data="component"
 											/>
@@ -253,5 +287,3 @@
 		</template>
 	</div>
 </template>
-
-<script lang="ts" src="./analytics"></script>

@@ -1,23 +1,25 @@
+<script lang="ts" src="./music"></script>
+
 <template>
-	<div class="row" v-if="isRouteBootstrapped">
+	<div v-if="isRouteBootstrapped" class="row">
 		<div class="col-sm-4 col-sm-push-8">
 			<div class="page-help">
 				<p>
 					<translate>
-						Let people enjoy your game's soundtrack whenever they want! Upload MP3s of music from
-						your game and the songs will appear on your game page in a nice little music player.
-						Don't upload copyrighted songs without permission!
+						Let people enjoy your game's soundtrack whenever they want! Upload MP3s of
+						music from your game and the songs will appear on your game page in a nice
+						little music player. Don't upload copyrighted songs without permission!
 					</translate>
 				</p>
 			</div>
 		</div>
 
 		<div class="col-sm-8 col-sm-pull-4">
-			<div class="alert" v-if="!songs.length">
+			<div v-if="!songs.length" class="alert">
 				<p>
 					<translate>
-						You haven't added any music. Upload some songs from your game! The music player's worth
-						it, trust us!
+						You haven't added any music. Upload some songs from your game! The music
+						player's worth it, trust us!
 					</translate>
 				</p>
 			</div>
@@ -39,7 +41,7 @@
 								<h5>{{ song.title }}</h5>
 							</div>
 
-							<template slot="body">
+							<template #body>
 								<form-game-song :game="game" :model="song" @submit="onSongEdited" />
 							</template>
 						</app-card-list-item>
@@ -58,5 +60,3 @@
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./music"></script>

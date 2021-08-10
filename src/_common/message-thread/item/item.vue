@@ -1,21 +1,21 @@
 <template>
-	<div class="message-thread-item" :id="id" :class="{ '-blocked': isBlocked }">
+	<div :id="id" class="message-thread-item" :class="{ '-blocked': isBlocked }">
 		<app-timeline-list-item
 			:is-active="isActive"
 			:is-new="isNew"
 			:is-thread="isShowingReplies || isReply"
 			:is-last="isLast"
 		>
+			<template v-if="!isBlocked && user" #bubble>
+				<app-user-card-hover :user="user">
+					<app-user-avatar :user="user" />
+				</app-user-card-hover>
+			</template>
+
 			<slot v-if="isBlocked" name="blocked" />
 			<template v-else>
-				<div slot="bubble" v-if="user">
-					<app-user-card-hover :user="user">
-						<app-user-avatar :user="user" />
-					</app-user-card-hover>
-				</div>
-
 				<div class="timeline-list-item-details">
-					<div class="-meta clearfix" v-if="user">
+					<div v-if="user" class="-meta clearfix">
 						<div class="-byline">
 							<span class="-author">
 								<router-link
@@ -74,17 +74,17 @@
 			</template>
 		</app-timeline-list-item>
 
-		<div class="-replies" v-if="isShowingReplies && !isBlocked">
+		<div v-if="isShowingReplies && !isBlocked" class="-replies">
 			<slot name="replies" />
 		</div>
 
-		<div class="timeline-list-item-split" v-if="!isReply" />
+		<div v-if="!isReply" class="timeline-list-item-split" />
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .-meta
 	margin-bottom: 1em

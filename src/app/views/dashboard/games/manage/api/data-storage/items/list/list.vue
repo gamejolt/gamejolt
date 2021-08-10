@@ -1,3 +1,5 @@
+<script lang="ts" src="./list"></script>
+
 <template>
 	<div>
 		<h2 class="section-header">
@@ -12,8 +14,8 @@
 			</p>
 			<p>
 				<translate>
-					Currently, you can only view (and remove) globally stored data items. Stored user data
-					items are not viewable at this time.
+					Currently, you can only view (and remove) globally stored data items. Stored
+					user data items are not viewable at this time.
 				</translate>
 			</p>
 			<p>
@@ -40,7 +42,7 @@
 						<th>
 							<translate>dash.games.data_store.items.date_label</translate>
 						</th>
-						<th></th>
+						<th />
 					</tr>
 				</thead>
 				<tbody>
@@ -58,9 +60,7 @@
 						</td>
 						<td class="small">
 							{{ item.data.slice(0, 50) }}
-							<template v-if="item.data.length > 50">
-								...
-							</template>
+							<template v-if="item.data.length > 50"> ... </template>
 						</td>
 						<td class="small">
 							{{ item.posted_on | date('medium') }}
@@ -72,12 +72,19 @@
 										<app-jolticon icon="cog" />
 									</a>
 
-									<div slot="popover" class="list-group list-group-dark nowrap">
-										<a class="list-group-item has-icon" @click="removeItem(item)">
-											<app-jolticon icon="remove" notice />
-											<translate>dash.games.data_store.items.remove_button</translate>
-										</a>
-									</div>
+									<template #popover>
+										<div class="list-group list-group-dark nowrap">
+											<a
+												class="list-group-item has-icon"
+												@click="removeItem(item)"
+											>
+												<app-jolticon icon="remove" notice />
+												<translate>
+													dash.games.data_store.items.remove_button
+												</translate>
+											</a>
+										</div>
+									</template>
 								</app-popper>
 							</div>
 						</td>
@@ -87,5 +94,3 @@
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./list"></script>

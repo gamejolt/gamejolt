@@ -309,6 +309,12 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		return true;
 	}
 
+	get shouldShowEditPlaylist() {
+		return (
+			!this.shouldShowFollow && this.collection.type === 'playlist' && this.collection.isOwner
+		);
+	}
+
 	async removeFromPlaylist(game: Game) {
 		const playlist = this.collection.playlist!;
 		if (await this.removeGameFromPlaylist({ playlist, game, shouldConfirm: true })) {

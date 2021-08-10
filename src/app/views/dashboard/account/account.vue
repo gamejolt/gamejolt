@@ -1,3 +1,5 @@
+<script lang="ts" src="./account"></script>
+
 <template>
 	<div>
 		<div v-if="Screen.isXs" class="well fill-darker sans-margin-bottom">
@@ -13,21 +15,25 @@
 				<small>@{{ app.user.username }}</small>
 			</p>
 
-			<app-editable-overlay
-				v-if="!Screen.isXs"
-				slot="spotlight"
-				class="-fill"
-				@click="showEditAvatar()"
-				:disabled="$route.name !== 'dash.account.edit'"
-			>
-				<translate slot="overlay">Change</translate>
-				<app-user-avatar :user="app.user" />
-			</app-editable-overlay>
+			<template v-if="!Screen.isXs" #spotlight>
+				<app-editable-overlay
+					class="-fill"
+					:disabled="$route.name !== 'dash.account.edit'"
+					@click="showEditAvatar()"
+				>
+					<template #overlay>
+						<translate>Change</translate>
+					</template>
+					<app-user-avatar :user="app.user" />
+				</app-editable-overlay>
+			</template>
 		</app-page-header>
 
 		<app-expand :when="$route.name === 'dash.account.edit'">
 			<app-editable-overlay @click="showEditHeader()">
-				<translate slot="overlay">Change Profile Header</translate>
+				<template #overlay>
+					<translate>Change Profile Header</translate>
+				</template>
 
 				<!--
 					If no header yet, show their highlight color with a min-height.
@@ -48,24 +54,33 @@
 		</app-expand>
 
 		<!-- Don't show content before this route has loaded in the account data. -->
-		<section class="section" v-if="isRouteBootstrapped">
+		<section v-if="isRouteBootstrapped" class="section">
 			<div class="container">
 				<div class="row">
-					<div class="col-sm-3 col-md-2" v-if="!Screen.isXs">
+					<div v-if="!Screen.isXs" class="col-sm-3 col-md-2">
 						<nav class="platform-list">
 							<ul>
 								<li>
-									<router-link :to="{ name: 'dash.account.edit' }" active-class="active">
+									<router-link
+										:to="{ name: 'dash.account.edit' }"
+										active-class="active"
+									>
 										<translate>Profile</translate>
 									</router-link>
 								</li>
 								<li>
-									<router-link :to="{ name: 'dash.account.site' }" active-class="active">
+									<router-link
+										:to="{ name: 'dash.account.site' }"
+										active-class="active"
+									>
 										<translate>Portfolio Site</translate>
 									</router-link>
 								</li>
 								<li>
-									<router-link :to="{ name: 'dash.account.blocks' }" active-class="active">
+									<router-link
+										:to="{ name: 'dash.account.blocks' }"
+										active-class="active"
+									>
 										<translate>Blocked Users</translate>
 									</router-link>
 								</li>
@@ -73,7 +88,10 @@
 							<hr />
 							<ul>
 								<li>
-									<router-link :to="{ name: 'dash.account.linked-accounts' }" active-class="active">
+									<router-link
+										:to="{ name: 'dash.account.linked-accounts' }"
+										active-class="active"
+									>
 										<translate>Linked Accounts</translate>
 									</router-link>
 								</li>
@@ -86,7 +104,10 @@
 									</router-link>
 								</li>
 								<li>
-									<router-link :to="{ name: 'dash.account.change-password' }" active-class="active">
+									<router-link
+										:to="{ name: 'dash.account.change-password' }"
+										active-class="active"
+									>
 										<translate>Password</translate>
 									</router-link>
 								</li>
@@ -94,17 +115,26 @@
 							<hr />
 							<ul>
 								<li>
-									<router-link :to="{ name: 'dash.account.payment-methods' }" active-class="active">
+									<router-link
+										:to="{ name: 'dash.account.payment-methods' }"
+										active-class="active"
+									>
 										<translate>Payment Methods</translate>
 									</router-link>
 								</li>
 								<li>
-									<router-link :to="{ name: 'dash.account.addresses' }" active-class="active">
+									<router-link
+										:to="{ name: 'dash.account.addresses' }"
+										active-class="active"
+									>
 										<translate>Saved Addresses</translate>
 									</router-link>
 								</li>
 								<li>
-									<router-link :to="{ name: 'dash.account.purchases.list' }" active-class="active">
+									<router-link
+										:to="{ name: 'dash.account.purchases.list' }"
+										active-class="active"
+									>
 										<translate>Purchases</translate>
 									</router-link>
 								</li>
@@ -112,12 +142,18 @@
 							<hr />
 							<ul>
 								<li>
-									<router-link :to="{ name: 'dash.account.financials' }" active-class="active">
+									<router-link
+										:to="{ name: 'dash.account.financials' }"
+										active-class="active"
+									>
 										<translate>Marketplace Account Setup</translate>
 									</router-link>
 								</li>
 								<li>
-									<router-link :to="{ name: 'dash.account.withdraw-funds' }" active-class="active">
+									<router-link
+										:to="{ name: 'dash.account.withdraw-funds' }"
+										active-class="active"
+									>
 										<translate>Revenue</translate>
 									</router-link>
 								</li>
@@ -127,7 +163,9 @@
 					<div class="col-xs-12 col-sm-9 col-md-10">
 						<template v-if="Screen.isXs && $route.name === 'dash.account.edit'">
 							<app-editable-overlay class="-avatar-xs" @click="showEditAvatar()">
-								<translate slot="overlay">Change</translate>
+								<template #overlay>
+									<translate>Change</translate>
+								</template>
 								<app-user-avatar :user="app.user" />
 							</app-editable-overlay>
 
@@ -143,8 +181,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .-fill
 	position: absolute
@@ -159,5 +197,3 @@
 	border-radius: 50%
 	overflow: hidden
 </style>
-
-<script lang="ts" src="./account"></script>

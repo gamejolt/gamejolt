@@ -1,3 +1,5 @@
+<script lang="ts" src="./list-scores"></script>
+
 <template>
 	<div class="table-responsive">
 		<table class="table table-condensed">
@@ -15,7 +17,7 @@
 					<th>
 						<translate>dash.games.scores.list.date_label</translate>
 					</th>
-					<th></th>
+					<th />
 				</tr>
 			</thead>
 			<tbody>
@@ -65,12 +67,19 @@
 									<app-jolticon icon="cog" />
 								</a>
 
-								<div slot="popover" class="list-group list-group-dark nowrap">
-									<a class="list-group-item has-icon" @click="removeScore(score)">
-										<app-jolticon icon="remove" notice />
-										<translate>dash.games.scores.list.remove_button</translate>
-									</a>
-								</div>
+								<template #popover>
+									<div class="list-group list-group-dark nowrap">
+										<a
+											class="list-group-item has-icon"
+											@click="removeScore(score)"
+										>
+											<app-jolticon icon="remove" notice />
+											<translate>
+												dash.games.scores.list.remove_button
+											</translate>
+										</a>
+									</div>
+								</template>
 							</app-popper>
 						</div>
 					</td>
@@ -79,5 +88,3 @@
 		</table>
 	</div>
 </template>
-
-<script lang="ts" src="./list-scores"></script>

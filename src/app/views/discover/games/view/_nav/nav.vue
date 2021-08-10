@@ -1,3 +1,5 @@
+<script lang="ts" src="./nav"></script>
+
 <template>
 	<div>
 		<nav class="platform-list inline">
@@ -14,14 +16,17 @@
 				<li v-if="game.comments_enabled">
 					<a @click="showComments()">
 						<translate>Comments</translate>
-						<span class="badge" v-if="commentsCount">
+						<span v-if="commentsCount" class="badge">
 							{{ commentsCount | number }}
 						</span>
 					</a>
 				</li>
 
 				<li>
-					<router-link :to="{ name: 'discover.games.view.followers' }" active-class="active">
+					<router-link
+						:to="{ name: 'discover.games.view.followers' }"
+						active-class="active"
+					>
 						<translate>Followers</translate>
 						<span class="badge">
 							{{ game.follower_count | number }}
@@ -45,7 +50,10 @@
 				</li>
 
 				<li v-if="trophiesCount">
-					<router-link :to="{ name: 'discover.games.view.trophies.list' }" active-class="active">
+					<router-link
+						:to="{ name: 'discover.games.view.trophies.list' }"
+						active-class="active"
+					>
 						<translate>games.view.trophies_tab</translate>
 						<span class="badge">{{ trophiesCount | number }}</span>
 					</router-link>
@@ -57,38 +65,42 @@
 							<app-jolticon icon="ellipsis-v" />
 						</a>
 
-						<div slot="popover" class="list-group list-group-dark">
-							<a
-								class="list-group-item has-icon"
-								@click="copyShareUrl"
-								v-app-track-event="`copy-link:game`"
-							>
-								<app-jolticon icon="link" />
-								<translate>Copy link to game</translate>
-							</a>
-							<app-game-perms :game="game">
-								<router-link
+						<template #popover>
+							<div class="list-group list-group-dark">
+								<a
+									v-app-track-event="`copy-link:game`"
 									class="list-group-item has-icon"
-									:to="{
-										name: 'dash.games.manage.game.overview',
-										params: { id: game.id },
-									}"
+									@click="copyShareUrl"
 								>
-									<app-jolticon icon="cog" />
-									<translate>Manage game</translate>
-								</router-link>
-							</app-game-perms>
-							<a class="list-group-item has-icon" v-if="app.user && !hasAnyPerms" @click="report">
-								<app-jolticon icon="flag" />
-								<translate>Report game</translate>
-							</a>
-							<app-game-mod-links v-if="shouldShowModTools" :game="game" />
-						</div>
+									<app-jolticon icon="link" />
+									<translate>Copy link to game</translate>
+								</a>
+								<app-game-perms :game="game">
+									<router-link
+										class="list-group-item has-icon"
+										:to="{
+											name: 'dash.games.manage.game.overview',
+											params: { id: game.id },
+										}"
+									>
+										<app-jolticon icon="cog" />
+										<translate>Manage game</translate>
+									</router-link>
+								</app-game-perms>
+								<a
+									v-if="app.user && !hasAnyPerms"
+									class="list-group-item has-icon"
+									@click="report"
+								>
+									<app-jolticon icon="flag" />
+									<translate>Report game</translate>
+								</a>
+								<app-game-mod-links v-if="shouldShowModTools" :game="game" />
+							</div>
+						</template>
 					</app-popper>
 				</li>
 			</ul>
 		</nav>
 	</div>
 </template>
-
-<script lang="ts" src="./nav"></script>

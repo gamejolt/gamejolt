@@ -20,8 +20,8 @@
 			<app-jolticon icon="friend-requests" />
 		</a>
 
-		<template v-if="isShowing">
-			<div class="-header fill-darker" slot="header">
+		<template v-if="isShowing" #header>
+			<div class="-header fill-darker">
 				<nav class="-nav platform-list inline nav-justified">
 					<ul>
 						<li>
@@ -45,7 +45,10 @@
 					</ul>
 				</nav>
 			</div>
-			<div class="shell-card-popover" slot="popover">
+		</template>
+
+		<template v-if="isShowing" #popover>
+			<div class="shell-card-popover">
 				<div v-if="requests.length">
 					<app-shell-friend-request-popover-item
 						v-for="request of requests"

@@ -2,20 +2,24 @@
 
 <template>
 	<app-pill-bi no-hover>
-		<app-community-thumbnail-img slot="img" :community="community" />
+		<template #img>
+			<app-community-thumbnail-img :community="community" />
+		</template>
 
-		<template slot="left">
+		<template #left>
 			{{ community.name }}
 			<app-community-verified-tick class="-tick" :community="community" small />
 		</template>
 
-		<span class="-channel" slot="right">
-			{{ channel ? channel.displayTitle : '???' }}
+		<template #right>
+			<span class="-channel">
+				{{ channel ? channel.displayTitle : '???' }}
 
-			<a v-if="removable" class="-remove text-muted" @click="emitRemove">
-				<app-jolticon icon="remove" />
-			</a>
-		</span>
+				<a v-if="removable" class="-remove text-muted" @click="emitRemove">
+					<app-jolticon icon="remove" />
+				</a>
+			</span>
+		</template>
 	</app-pill-bi>
 </template>
 

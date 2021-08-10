@@ -27,13 +27,16 @@
 			<div ref="newStickerAnimContainer" class="-new-sticker-anim-container" />
 		</a>
 
-		<template v-if="feed && isShowing">
-			<div class="-header fill-darker small" slot="header">
+		<template v-if="feed && isShowing" #header>
+			<div class="-header fill-darker small">
 				<a class="link-muted" @click="markNotificationsAsRead()">
 					<translate>Mark All as Read</translate>
 				</a>
 			</div>
-			<div class="shell-card-popover" slot="popover">
+		</template>
+
+		<template v-if="feed && isShowing" #popover>
+			<div class="shell-card-popover">
 				<template v-if="isLoading">
 					<br />
 					<app-loading centered />
@@ -54,7 +57,10 @@
 					</template>
 				</template>
 			</div>
-			<div class="fill-darker" slot="footer">
+		</template>
+
+		<template v-if="feed && isShowing" #footer>
+			<div class="fill-darker">
 				<app-button :to="{ name: 'notifications' }" block trans>
 					<translate>View All</translate>
 				</app-button>

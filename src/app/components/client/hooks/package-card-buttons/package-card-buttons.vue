@@ -1,50 +1,55 @@
+<script lang="ts" src="./package-card-buttons"></script>
+
 <template>
 	<div class="package-card-buttons">
 		<!-- Messaging for weird cases... -->
-		<div class="alert" v-if="downloadableUnsupported">
+		<div v-if="downloadableUnsupported" class="alert">
 			<p>
 				<app-jolticon icon="notice" notice />
 				<translate>This package can not be installed on your system.</translate>
 			</p>
 		</div>
 
-		<div class="alert" v-if="downloadableUnsupportedHasQuickPlay">
+		<div v-if="downloadableUnsupportedHasQuickPlay" class="alert">
 			<p>
 				<app-jolticon icon="notice" notice />
 				<translate>
-					This package can not be installed on your system, but can be quick played in the client.
+					This package can not be installed on your system, but can be quick played in the
+					client.
 				</translate>
 			</p>
 		</div>
 
 		<template v-if="localPackage">
 			<div
-				class="alert alert-notice"
 				v-if="localPackage.install_state === PatchState.DOWNLOAD_FAILED"
+				class="alert alert-notice"
 			>
 				<p>
 					<app-jolticon icon="notice" />
 					<translate>
-						Oh no! We couldn't download this package. Perhaps check that you're still online?
+						Oh no! We couldn't download this package. Perhaps check that you're still
+						online?
 					</translate>
 				</p>
 			</div>
 
 			<div
-				class="alert alert-notice"
 				v-if="localPackage.install_state === PatchState.UNPACK_FAILED"
+				class="alert alert-notice"
 			>
 				<p>
 					<app-jolticon icon="notice" />
 					<translate>
-						Oh no! We couldn't unpack this package after downloading it. Maybe try again?
+						Oh no! We couldn't unpack this package after downloading it. Maybe try
+						again?
 					</translate>
 				</p>
 			</div>
 
 			<div
-				class="alert alert-notice"
 				v-if="localPackage.remove_state === RemoveState.REMOVE_FAILED"
+				class="alert alert-notice"
 			>
 				<p>
 					<app-jolticon icon="notice" />
@@ -52,11 +57,12 @@
 				</p>
 			</div>
 
-			<div class="alert alert-highlight" v-if="localPackage.isRunning">
+			<div v-if="localPackage.isRunning" class="alert alert-highlight">
 				<p>
 					<app-jolticon icon="play" />
 					<translate>
-						You are currently running this package. Some options have been disabled while it's open.
+						You are currently running this package. Some options have been disabled
+						while it's open.
 					</translate>
 				</p>
 			</div>
@@ -117,11 +123,11 @@
 		-->
 			<app-button
 				v-if="localPackage.install_state"
+				v-app-tooltip="$gettext('Cancel Installation')"
 				circle
 				icon="remove"
 				trans
 				@click="cancelInstall()"
-				v-app-tooltip="$gettext('Cancel Installation')"
 			/>
 
 			<!-- Game is installed -->
@@ -155,13 +161,13 @@
 			popover-class="fill-darkest"
 		>
 			<app-button
+				v-app-track-event="`game-package-card:more-options`"
 				circle
 				icon="ellipsis-v"
 				trans
-				v-app-track-event="`game-package-card:more-options`"
 			/>
 
-			<div slot="popover">
+			<template #popover>
 				<div
 					v-if="localPackage && (card.browserBuild || localPackage.isSettled)"
 					class="more-client-options list-group list-group-dark nowrap"
@@ -175,12 +181,12 @@
 						</a>
 
 						<!--
-						In client, if a package is installed, allow them to remove.
-					-->
+								In client, if a package is installed, allow them to remove.
+							-->
 						<a
-							@click="uninstall()"
 							:class="{ disabled: localPackage.isRunning }"
 							class="list-group-item has-icon warning"
+							@click="uninstall()"
 						>
 							<app-jolticon icon="remove" notice />
 							<translate>Uninstall</translate>
@@ -188,11 +194,14 @@
 					</template>
 
 					<!--
-					If this game has a quick play web build but is installed, we want
-					to show the quick play here now.
-				-->
+							If this game has a quick play web build but is installed, we want
+							to show the quick play here now.
+						-->
 					<template v-else-if="card.browserBuild">
-						<a @click="buildClick(card.browserBuild)" class="list-group-item has-icon warning">
+						<a
+							class="list-group-item has-icon warning"
+							@click="buildClick(card.browserBuild)"
+						>
 							<app-jolticon icon="html5" />
 							<translate>Quick Play</translate>
 							<small class="text-muted">
@@ -202,11 +211,12 @@
 					</template>
 				</div>
 
-				<!--
-				The non-client options.
-			-->
-				<app-game-package-card-more-options :card="card" @click="buildClick($event, true)" />
-			</div>
+				<!-- The non-client options. -->
+				<app-game-package-card-more-options
+					:card="card"
+					@click="buildClick($event, true)"
+				/>
+			</template>
 		</app-popper>
 	</div>
 </template>
@@ -215,5 +225,3 @@
 .more-client-options
 	margin-bottom: 0
 </style>
-
-<script lang="ts" src="./package-card-buttons"></script>

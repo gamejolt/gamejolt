@@ -81,53 +81,60 @@
 				<a v-app-tooltip="$gettext('Options')" class="link-muted">
 					<app-jolticon icon="ellipsis-v" class="middle" />
 				</a>
-				<div slot="popover" class="list-group list-group-dark">
-					<a class="list-group-item has-icon" @click="copyPermalink">
-						<app-jolticon icon="link" />
-						<translate>Copy Link</translate>
-					</a>
 
-					<a
-						v-if="
-							app.user &&
+				<template #popover>
+					<div class="list-group list-group-dark">
+						<a class="list-group-item has-icon" @click="copyPermalink">
+							<app-jolticon icon="link" />
+							<translate>Copy Link</translate>
+						</a>
+
+						<a
+							v-if="
+								app.user &&
 								post.user_id === app.user.id &&
 								!topic.is_locked &&
 								!isEditing
-						"
-						class="list-group-item has-icon"
-						@click="edit()"
-					>
-						<app-jolticon icon="edit" />
-						<translate>Edit Post</translate>
-					</a>
-					<a class="list-group-item has-icon" @click="report">
-						<app-jolticon icon="flag" notice />
-						<translate>Report Post</translate>
-					</a>
-					<template v-if="app.user.permission_level > 0">
-						<a
-							class="list-group-item"
-							:href="Environment.baseUrl + `/moderate/forums/posts/edit/${post.id}`"
-							target="_blank"
+							"
+							class="list-group-item has-icon"
+							@click="edit()"
 						>
-							<translate>Edit (Mod)</translate>
+							<app-jolticon icon="edit" />
+							<translate>Edit Post</translate>
 						</a>
-						<a
-							class="list-group-item"
-							:href="Environment.baseUrl + `/moderate/forums/posts/remove/${post.id}`"
-							target="_blank"
-						>
-							<translate>Remove (Mod)</translate>
+						<a class="list-group-item has-icon" @click="report">
+							<app-jolticon icon="flag" notice />
+							<translate>Report Post</translate>
 						</a>
-						<a
-							class="list-group-item"
-							:href="Environment.baseUrl + `/moderate/users/view/${post.user_id}`"
-							target="_blank"
-						>
-							<translate>Moderate User</translate>
-						</a>
-					</template>
-				</div>
+						<template v-if="app.user.permission_level > 0">
+							<a
+								class="list-group-item"
+								:href="
+									Environment.baseUrl + `/moderate/forums/posts/edit/${post.id}`
+								"
+								target="_blank"
+							>
+								<translate>Edit (Mod)</translate>
+							</a>
+							<a
+								class="list-group-item"
+								:href="
+									Environment.baseUrl + `/moderate/forums/posts/remove/${post.id}`
+								"
+								target="_blank"
+							>
+								<translate>Remove (Mod)</translate>
+							</a>
+							<a
+								class="list-group-item"
+								:href="Environment.baseUrl + `/moderate/users/view/${post.user_id}`"
+								target="_blank"
+							>
+								<translate>Moderate User</translate>
+							</a>
+						</template>
+					</div>
+				</template>
 			</app-popper>
 		</template>
 

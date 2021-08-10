@@ -34,14 +34,16 @@
 			</template>
 		</app-button>
 
-		<div slot="popover" class="well">
-			<p class="small">
-				<translate>
-					Would you also like to follow this developer? You will get notified when they
-					release new games.
-				</translate>
-			</p>
-			<app-user-follow-widget :user="game.developer" block location="gameFollow" />
-		</div>
+		<template #popover>
+			<div class="well">
+				<p class="small">
+					<translate>
+						Would you also like to follow this developer? You will get notified when
+						they release new games.
+					</translate>
+				</p>
+				<app-user-follow-widget :user="game.developer" block location="gameFollow" />
+			</div>
+		</template>
 	</app-popper>
 </template>

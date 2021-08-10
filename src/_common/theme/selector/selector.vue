@@ -1,6 +1,8 @@
+<script lang="ts" src="./selector"></script>
+
 <template>
 	<div>
-		<div class="list-group" id="theme-selector-selection">
+		<div id="theme-selector-selection" class="list-group">
 			<app-popper block track-trigger-width>
 				<a class="list-group-item has-icon">
 					<template v-if="!current">
@@ -19,25 +21,25 @@
 					</template>
 				</a>
 
-				<div slot="popover" class="list-group">
-					<a
-						class="list-group-item"
-						v-for="template of templates"
-						:key="template.id"
-						@click="select(template.id)"
-					>
-						<div class="list-group-item-heading">
-							<strong>{{ template.name }}</strong>
-							<small class="text-muted">by @{{ template.user.username }}</small>
-						</div>
-						<p class="list-group-item-text">
-							{{ template.description }}
-						</p>
-					</a>
-				</div>
+				<template #popover>
+					<div class="list-group">
+						<a
+							v-for="template of templates"
+							:key="template.id"
+							class="list-group-item"
+							@click="select(template.id)"
+						>
+							<div class="list-group-item-heading">
+								<strong>{{ template.name }}</strong>
+								<small class="text-muted">by @{{ template.user.username }}</small>
+							</div>
+							<p class="list-group-item-text">
+								{{ template.description }}
+							</p>
+						</a>
+					</div>
+				</template>
 			</app-popper>
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./selector"></script>

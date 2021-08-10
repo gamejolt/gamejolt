@@ -1,15 +1,19 @@
+<script lang="ts" src="./add"></script>
+
 <template>
 	<app-form-post-community-pill-selector :communities="communities" @select="emitAdd">
 		<app-pill class="-add">
-			<app-jolticon slot="img" icon="add" />
+			<template #img>
+				<app-jolticon icon="add" />
+			</template>
 			<translate>Add Community</translate>
 		</app-pill>
 	</app-form-post-community-pill-selector>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '../variables.styl'
+@import '~styles/variables'
+@import '../variables.styl'
 
 .-add
 	cursor: pointer
@@ -20,5 +24,3 @@
 	&:hover
 		border-color: var(--theme-link-hover)
 </style>
-
-<script lang="ts" src="./add"></script>

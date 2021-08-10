@@ -1,6 +1,8 @@
+<script lang="ts" src="./scoreboard-selector"></script>
+
 <template>
 	<app-list-group-selector :items="tables" :current="currentTable" @change="selectTable($event)">
-		<template v-slot="{ item }">
+		<template #default="{ item }">
 			<h5 class="list-group-item-heading sans-margin-bottom">
 				<strong>{{ item.name }}</strong>
 			</h5>
@@ -10,5 +12,3 @@
 		</template>
 	</app-list-group-selector>
 </template>
-
-<script lang="ts" src="./scoreboard-selector"></script>

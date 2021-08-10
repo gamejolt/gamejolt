@@ -55,7 +55,7 @@
 					</template>
 				</div>
 
-				<template slot="body">
+				<template #body>
 					<form-community-collaborator
 						:model="collaborator"
 						:community="community"

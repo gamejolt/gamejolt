@@ -97,7 +97,7 @@
 			</app-expand>
 		</template>
 
-		<template slot="body">
+		<template #body>
 			<app-form ref="form" name="buildForm">
 				<div
 					v-if="model.type === GameBuild.TYPE_APPLET"

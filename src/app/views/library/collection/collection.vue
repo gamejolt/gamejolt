@@ -242,7 +242,7 @@
 				</div>
 			</div>
 
-			<template v-if="listing" slot="nav">
+			<template v-if="listing" #nav>
 				<ul class="stat-list">
 					<li v-if="shouldShowFollowers" class="stat-big stat-big-smaller">
 						<div class="stat-big-label">
@@ -259,35 +259,47 @@
 				</ul>
 			</template>
 
-			<app-page-header-controls slot="controls">
-				<!-- Following -->
-				<app-game-collection-follow-widget
-					v-if="shouldShowFollow"
-					block
-					:collection="collection"
-					:follower-count="followerCount"
-					@follow="++followerCount"
-					@unfollow="--followerCount"
-				/>
-				<template v-else-if="type === 'playlist' && collection.isOwner">
-					<!-- Editing Playlist -->
-					<app-button block @click="editPlaylist(collection)">
-						<translate>Edit Playlist</translate>
-					</app-button>
+			<template #controls>
+				<app-page-header-controls>
+					<!-- Following -->
+					<app-game-collection-follow-widget
+						v-if="shouldShowFollow"
+						block
+						:collection="collection"
+						:follower-count="followerCount"
+						@follow="++followerCount"
+						@unfollow="--followerCount"
+					/>
+
+					<template v-if="shouldShowEditPlaylist">
+						<!-- Editing Playlist -->
+						<app-button block @click="editPlaylist(collection)">
+							<translate>Edit Playlist</translate>
+						</app-button>
+					</template>
 
 					<!-- More options -->
-					<app-popper slot="end" popover-class="fill-darkest">
-						<app-button icon="ellipsis-v" circle trans />
+					<template v-if="shouldShowEditPlaylist" #end>
+						<app-popper popover-class="fill-darkest">
+							<app-button icon="ellipsis-v" circle trans />
 
-						<div slot="popover" class="list-group list-group-dark">
-							<a class="list-group-item has-icon" @click="removePlaylist(collection)">
-								<app-jolticon icon="remove" notice />
-								<translate>library.collection.remove_playlist_button</translate>
-							</a>
-						</div>
-					</app-popper>
-				</template>
-			</app-page-header-controls>
+							<template #popover>
+								<div class="list-group list-group-dark">
+									<a
+										class="list-group-item has-icon"
+										@click="removePlaylist(collection)"
+									>
+										<app-jolticon icon="remove" notice />
+										<translate>
+											library.collection.remove_playlist_button
+										</translate>
+									</a>
+								</div>
+							</template>
+						</app-popper>
+					</template>
+				</app-page-header-controls>
+			</template>
 		</app-page-header>
 
 		<app-game-listing

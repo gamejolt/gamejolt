@@ -1,3 +1,5 @@
+<script lang="ts" src="./widget"></script>
+
 <template>
 	<div class="game-filtering-widget">
 		<nav class="game-filtering-widget-list platform-list inline">
@@ -7,14 +9,20 @@
 						<a v-app-track-event="`game-filtering:tab-${filter}`">
 							{{ definitions[filter].label }}
 							<template v-if="definitions[filter].type === 'radio'">
-								<span class="badge badge-highlight" v-if="filtering.filters[filter]">
+								<span
+									v-if="filtering.filters[filter]"
+									class="badge badge-highlight"
+								>
 									1
 								</span>
 							</template>
 							<template v-else>
 								<span
+									v-if="
+										filtering.filters[filter] &&
+										filtering.filters[filter].length > 0
+									"
 									class="badge badge-highlight"
-									v-if="filtering.filters[filter] && filtering.filters[filter].length > 0"
 								>
 									{{ filtering.filters[filter].length | number }}
 								</span>
@@ -23,48 +31,60 @@
 							<app-jolticon icon="chevron-down" />
 						</a>
 
-						<div class="game-filtering-widget-list-group list-group list-group-dark" slot="popover">
-							<a
-								class="list-group-item has-addon"
-								v-for="(label, option) of definitions[filter].options"
-								:key="option"
-								:class="filter === 'os' || filter === 'browser' ? 'has-icon' : ''"
-								@click="toggleFilterOption(filter, option)"
-								@mouseover="onMouseover(filter, option)"
-								@mouseout="onMouseout(filter)"
+						<template #popover>
+							<div
+								class="game-filtering-widget-list-group list-group list-group-dark"
 							>
-								<!--
-								Array types get checboxes.
-							-->
-								<div class="list-group-item-addon" v-if="definitions[filter].type === 'array'">
+								<a
+									v-for="(label, option) of definitions[filter].options"
+									:key="option"
+									class="list-group-item has-addon"
+									:class="
+										filter === 'os' || filter === 'browser' ? 'has-icon' : ''
+									"
+									@click="toggleFilterOption(filter, option)"
+									@mouseover="onMouseover(filter, option)"
+									@mouseout="onMouseout(filter)"
+								>
+									<!-- Array types get checboxes. -->
+									<div
+										v-if="definitions[filter].type === 'array'"
+										class="list-group-item-addon"
+									>
+										<app-jolticon
+											:icon="
+												filtering.isFilterOptionSet(filter, option)
+													? 'checkbox'
+													: 'box-empty'
+											"
+										/>
+									</div>
+
+									<!-- Radio types get radio button things. -->
+									<div
+										v-if="definitions[filter].type === 'radio'"
+										class="list-group-item-addon"
+									>
+										<app-jolticon
+											:icon="
+												filtering.isFilterOptionSet(filter, option)
+													? hovered[filter] === option
+														? 'remove'
+														: 'radio-circle-filled'
+													: 'radio-circle'
+											"
+										/>
+									</div>
+
 									<app-jolticon
-										:icon="filtering.isFilterOptionSet(filter, option) ? 'checkbox' : 'box-empty'"
+										v-if="filter === 'os' || filter === 'browser'"
+										:icon="getJolticon(filter, option)"
 									/>
-								</div>
 
-								<!--
-								Radio types get radio button things.
-							-->
-								<div class="list-group-item-addon" v-if="definitions[filter].type === 'radio'">
-									<app-jolticon
-										:icon="
-											filtering.isFilterOptionSet(filter, option)
-												? hovered[filter] === option
-													? 'remove'
-													: 'radio-circle-filled'
-												: 'radio-circle'
-										"
-									/>
-								</div>
-
-								<app-jolticon
-									v-if="filter === 'os' || filter === 'browser'"
-									:icon="getJolticon(filter, option)"
-								/>
-
-								{{ label }}
-							</a>
-						</div>
+									{{ label }}
+								</a>
+							</div>
+						</template>
 					</app-popper>
 				</li>
 			</ul>
@@ -73,12 +93,11 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .game-filtering-widget
-	.jolticon-box-empty, .jolticon-radio-circle
+	.jolticon-box-empty
+	.jolticon-radio-circle
 		theme-prop('color', 'fg-muted')
 </style>
-
-<script lang="ts" src="./widget"></script>

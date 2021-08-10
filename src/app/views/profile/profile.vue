@@ -168,77 +168,87 @@
 											<app-jolticon icon="ellipsis-v" />
 										</a>
 
-										<div slot="popover" class="list-group list-group-dark">
-											<a
-												v-app-track-event="`copy-link:user`"
-												class="list-group-item has-icon"
-												@click="copyShareUrl"
-											>
-												<app-jolticon icon="link" />
-												<translate>Copy link to user</translate>
-											</a>
-											<a
-												v-if="app.user && user.id !== app.user.id"
-												class="list-group-item has-icon"
-												@click="report"
-											>
-												<app-jolticon icon="flag" />
-												<translate>profile.report_user_button</translate>
-											</a>
-											<a
-												v-if="
-													userFriendship &&
-													userFriendship.state ===
-														UserFriendship.STATE_FRIENDS
-												"
-												class="list-group-item has-icon"
-												@click="removeFriend()"
-											>
-												<app-jolticon icon="friend-remove-1" notice />
-												<translate>profile.remove_friend_button</translate>
-											</a>
-											<a
-												v-if="canBlock"
-												class="list-group-item has-icon"
-												@click="blockUser"
-											>
-												<app-jolticon icon="friend-remove-2" notice />
-												<translate>Block user</translate>
-											</a>
-											<a
-												v-if="app.user && app.user.permission_level > 0"
-												class="list-group-item has-icon"
-												:href="`${Environment.baseUrl}/moderate/users/view/${user.id}`"
-												target="_blank"
-											>
-												<app-jolticon icon="cog" />
-												<translate>profile.moderate_user_button</translate>
-											</a>
-										</div>
+										<template #popover>
+											<div class="list-group list-group-dark">
+												<a
+													v-app-track-event="`copy-link:user`"
+													class="list-group-item has-icon"
+													@click="copyShareUrl"
+												>
+													<app-jolticon icon="link" />
+													<translate>Copy link to user</translate>
+												</a>
+												<a
+													v-if="app.user && user.id !== app.user.id"
+													class="list-group-item has-icon"
+													@click="report"
+												>
+													<app-jolticon icon="flag" />
+													<translate>
+														profile.report_user_button
+													</translate>
+												</a>
+												<a
+													v-if="
+														userFriendship &&
+														userFriendship.state ===
+															UserFriendship.STATE_FRIENDS
+													"
+													class="list-group-item has-icon"
+													@click="removeFriend()"
+												>
+													<app-jolticon icon="friend-remove-1" notice />
+													<translate>
+														profile.remove_friend_button
+													</translate>
+												</a>
+												<a
+													v-if="canBlock"
+													class="list-group-item has-icon"
+													@click="blockUser"
+												>
+													<app-jolticon icon="friend-remove-2" notice />
+													<translate>Block user</translate>
+												</a>
+												<a
+													v-if="app.user && app.user.permission_level > 0"
+													class="list-group-item has-icon"
+													:href="`${Environment.baseUrl}/moderate/users/view/${user.id}`"
+													target="_blank"
+												>
+													<app-jolticon icon="cog" />
+													<translate>
+														profile.moderate_user_button
+													</translate>
+												</a>
+											</div>
+										</template>
 									</app-popper>
 								</li>
 							</ul>
 						</nav>
 					</template>
 
-					<app-page-header-controls slot="controls">
-						<app-user-follow-widget
-							v-if="shouldShowFollow"
-							:user="user"
-							block
-							location="profilePage"
-						/>
-						<app-button
-							v-else-if="shouldShowEdit"
-							primary
-							block
-							:to="{
-								name: 'dash.account.edit',
-							}"
-						>
-							<translate>Edit Profile</translate>
-						</app-button>
-					</app-page-header-controls>
+					<template #controls>
+						<app-page-header-controls>
+							<app-user-follow-widget
+								v-if="shouldShowFollow"
+								:user="user"
+								block
+								location="profilePage"
+							/>
+							<app-button
+								v-else-if="shouldShowEdit"
+								primary
+								block
+								:to="{
+									name: 'dash.account.edit',
+								}"
+							>
+								<translate>Edit Profile</translate>
+							</app-button>
+						</app-page-header-controls>
+					</template>
 				</app-page-header>
 
 				<router-view />
