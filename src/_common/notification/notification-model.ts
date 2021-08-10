@@ -13,6 +13,7 @@ import { EventItem } from '../event-item/event-item.model';
 import { Fireside } from '../fireside/fireside.model';
 import { FiresidePostCommunity } from '../fireside/post/community/community.model';
 import { FiresidePost } from '../fireside/post/post-model';
+import { FiresideStreamNotification } from '../fireside/stream-notification/stream-notification.model';
 import { ForumPost } from '../forum/post/post.model';
 import { ForumTopic } from '../forum/topic/topic.model';
 import { GameLibraryGame } from '../game-library/game/game.model';
@@ -68,6 +69,7 @@ export class Notification extends Model {
 	static TYPE_SITE_TROPHY_ACHIEVED = 'site-trophy-achieved';
 	static TYPE_COMMUNITY_USER_NOTIFICATION = 'community-user-notification';
 	static TYPE_FIRESIDE_START = 'fireside-start';
+	static TYPE_FIRESIDE_STREAM_NOTIFICATION = 'fireside-stream-notification';
 
 	static ACTIVITY_FEED_TYPES = [EventItem.TYPE_POST_ADD];
 
@@ -114,7 +116,8 @@ export class Notification extends Model {
 		| UserGameTrophy
 		| UserSiteTrophy
 		| CommunityUserNotification
-		| Fireside;
+		| Fireside
+		| FiresideStreamNotification;
 
 	to_resource!: string | null;
 	to_resource_id!: number | null;
@@ -210,6 +213,8 @@ export class Notification extends Model {
 		} else if (this.type === Notification.TYPE_FIRESIDE_START) {
 			this.action_model = new Fireside(data.action_resource_model);
 			this.is_user_based = true;
+		} else if (this.type === Notification.TYPE_FIRESIDE_STREAM_NOTIFICATION) {
+			this.action_model = new FiresideStreamNotification(data.action_resource_model);
 		}
 
 		// Keep memory clean after bootstrapping the models.
@@ -288,6 +293,11 @@ export class Notification extends Model {
 
 			case Notification.TYPE_FIRESIDE_START:
 				return getRouteLocationForModel(this.action_model as Fireside);
+
+			case Notification.TYPE_FIRESIDE_STREAM_NOTIFICATION:
+				return getRouteLocationForModel(
+					(this.action_model as FiresideStreamNotification).fireside
+				);
 		}
 
 		// Must pull asynchronously when they click on the notification.
