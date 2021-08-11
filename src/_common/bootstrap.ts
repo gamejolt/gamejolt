@@ -1,4 +1,4 @@
-import VueGlobal from 'vue';
+import { Component, createApp } from 'vue';
 import { VueRouter } from 'vue-router/types/router';
 import { hijackLinks } from '../utils/router';
 import { bootstrapAppTranslations } from '../utils/translations';
@@ -17,10 +17,12 @@ import { Referrer } from './referrer/referrer.service';
 import { SettingThemeAlwaysOurs, SettingThemeDark } from './settings/settings.service';
 
 /**
- * Bootstraps common services and returns a "createApp" function that our entry point can call to
- * get what it needs.
+ * Bootstraps common services and returns a "createApp" function that our entry
+ * point can call to get what it needs.
  */
-export function bootstrapCommon(appComponent: typeof Vue, store: VuexStore, router?: VueRouter) {
+export function bootstrapCommon(appComponent: Component, store: VuexStore, router?: VueRouter) {
+	const app = createApp(appComponent);
+
 	// Try to start loading this as soon as possible.
 	ensureConfig();
 
@@ -41,29 +43,34 @@ export function bootstrapCommon(appComponent: typeof Vue, store: VuexStore, rout
 	}
 
 	// Common components.
-	VueGlobal.component('AppButton', AppButton);
-	VueGlobal.component('AppJolticon', AppJolticon);
-	VueGlobal.component('AppLinkExternal', AppLinkExternal);
-	VueGlobal.component('AppLinkHelp', AppLinkHelp);
-	VueGlobal.directive('AppTrackEvent', AppTrackEvent);
+	app.component('AppButton', AppButton);
+	app.component('AppJolticon', AppJolticon);
+	app.component('AppLinkExternal', AppLinkExternal);
+	app.component('AppLinkHelp', AppLinkHelp);
+	app.directive('AppTrackEvent', AppTrackEvent);
 
 	// Set some constants so we can use them in templates.
-	VueGlobal.use(vue => {
-		const proto = vue.prototype as any;
-		proto.GJ_SECTION = GJ_SECTION;
-		proto.GJ_IS_CLIENT = GJ_IS_CLIENT;
-		proto.GJ_IS_SSR = GJ_IS_SSR;
-	});
+	app.config.globalProperties.GJ_SECTION = GJ_SECTION;
+	app.config.globalProperties.GJ_IS_CLIENT = GJ_IS_CLIENT;
+	app.config.globalProperties.GJ_IS_SSR = GJ_IS_SSR;
 
-	return () => {
-		bootstrapAppTranslations();
+	bootstrapAppTranslations(app);
 
-		return new VueGlobal({
-			// Needed for our vue plugins to know when it's the root vue instance.
-			gjIsRoot: true,
-			store,
-			router,
-			render: h => h(appComponent),
-		});
-	};
+	// TODO(vue3): set up router
+	app.use(store);
+
+	return app;
+
+	// return () => {
+
+	// 	// return new VueGlobal({
+	// 	// 	// TODO(vue3)
+	// 	// 	// Needed for our vue plugins to know when it's the root vue
+	// 	// 	// instance.
+	// 	// 	gjIsRoot: true,
+	// 	// 	store,
+	// 	// 	router,
+	// 	// 	render: h => h(appComponent),
+	// 	// });
+	// };
 }

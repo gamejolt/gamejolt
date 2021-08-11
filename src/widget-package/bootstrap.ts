@@ -1,14 +1,11 @@
-import * as VeeValidate from 'vee-validate';
-import VueGlobal from 'vue';
 import '../utils/polyfills';
 import { bootstrapCommon } from '../_common/bootstrap';
 import App from './app.vue';
 import './main.styl';
 import { store } from './store/index';
 
-const _createApp = bootstrapCommon(App, store);
 export function createApp() {
-	return { app: _createApp(), store };
-}
+	const app = bootstrapCommon(App, store);
 
-VueGlobal.use(VeeValidate);
+	return { app, store };
+}

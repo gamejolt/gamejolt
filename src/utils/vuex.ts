@@ -1,6 +1,6 @@
-import VueGlobal from 'vue';
 import Vuex, {
 	CommitOptions,
+	createStore,
 	DispatchOptions,
 	Module,
 	ModuleTree,
@@ -8,8 +8,6 @@ import Vuex, {
 	Store,
 	StoreOptions,
 } from 'vuex';
-
-VueGlobal.use(Vuex);
 
 // Override dispatch and commit so that we can have them typed with the real mutations/actions.
 interface VuexDispatch<P> {
@@ -33,6 +31,7 @@ export abstract class VuexStore<S = any, A = any, M = any> extends Store<S> {
 	}
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? never : K }[keyof T];
 type NonFunctionProperties<T> = Pick<T, NonFunctionPropertyNames<T>>;
 
@@ -61,7 +60,7 @@ export function NamespaceVuexStore<T extends VuexStore, A, M>(
 	return new NamespacedStore();
 }
 
-const storeInstance = new Vuex.Store({});
+const storeInstance = createStore({});
 
 interface QueuedDecoratorCallback {
 	(store: any): void;
@@ -150,7 +149,7 @@ export function VuexModule(options: VuexModuleOptions = {}) {
 			if (!options.store) {
 				return storeOptions;
 			} else {
-				const _instance = new Vuex.Store(storeOptions) as VuexStore;
+				const _instance = createStore(storeOptions) as VuexStore;
 
 				// Overload this so that we do our own replace state handler.
 				_instance.replaceState = (newState: any) =>

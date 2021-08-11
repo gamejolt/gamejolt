@@ -1,4 +1,3 @@
-import VueGlobal from 'vue';
 import '../utils/polyfills';
 import { AdStore } from '../_common/ad/ad-store';
 import { bootstrapCommon } from '../_common/bootstrap';
@@ -9,19 +8,21 @@ import './main.styl';
 import { store } from './store/index';
 import { router } from './views/index';
 
-const _createApp = bootstrapCommon(App, store, router);
 export function createApp() {
-	return { app: _createApp(), store, router };
+	const app = bootstrapCommon(App, store, router);
+
+	// TODO(vue3): convert to provide/inject
+	app.use(AdStore);
+
+	if (GJ_IS_CLIENT) {
+		require('./bootstrap-client');
+	}
+
+	GamePlayModal.init({ canMinimize: true });
+
+	Registry.setConfig('Game', { maxItems: 100 });
+	Registry.setConfig('User', { maxItems: 150 });
+	Registry.setConfig('FiresidePost', { maxItems: 50 });
+
+	return { app, store, router };
 }
-
-VueGlobal.use(AdStore);
-
-if (GJ_IS_CLIENT) {
-	require('./bootstrap-client');
-}
-
-GamePlayModal.init({ canMinimize: true });
-
-Registry.setConfig('Game', { maxItems: 100 });
-Registry.setConfig('User', { maxItems: 150 });
-Registry.setConfig('FiresidePost', { maxItems: 50 });

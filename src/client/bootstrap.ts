@@ -5,9 +5,10 @@ import './main.styl';
 import { store } from './store/index';
 import { router } from './views/index';
 
-const _createApp = bootstrapCommon(App, store, router);
 export function createApp() {
-	return { app: _createApp(), store, router };
+	const app = bootstrapCommon(App, store, router);
+
+	return { app, store, router };
 }
 
 if (GJ_IS_CLIENT) {

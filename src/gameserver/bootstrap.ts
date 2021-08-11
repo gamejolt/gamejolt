@@ -4,7 +4,8 @@ import App from './app.vue';
 import './main.styl';
 import { store } from './store/index';
 
-const _createApp = bootstrapCommon(App, store);
 export function createApp() {
-	return { app: _createApp(), store };
+	const app = bootstrapCommon(App, store);
+
+	return { app, store };
 }

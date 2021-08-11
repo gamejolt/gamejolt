@@ -1,13 +1,13 @@
-import VueGlobal from 'vue';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../../utils/vue';
 import { Ruler } from '../../../ruler/ruler-service';
 import { scrubVideo, VideoPlayerController } from '../controller';
 
-if (!GJ_IS_SSR) {
-	const VueTouch = require('vue-touch');
-	VueGlobal.use(VueTouch);
-}
+// TODO(vue3)
+// if (!GJ_IS_SSR) {
+// 	const VueTouch = require('vue-touch');
+// 	VueGlobal.use(VueTouch);
+// }
 
 @Options({})
 export default class AppVideoPlayerScrubber extends Vue {

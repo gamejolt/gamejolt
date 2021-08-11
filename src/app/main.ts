@@ -1,5 +1,5 @@
-import { Analytics } from '../_common/analytics/analytics.service';
 import * as OfflinePluginRuntime from 'offline-plugin/runtime';
+import { Analytics } from '../_common/analytics/analytics.service';
 import { createApp } from './bootstrap';
 
 const { app, router, store } = createApp();
@@ -9,7 +9,7 @@ if (window.__INITIAL_STATE__) {
 }
 
 router.onReady(() => {
-	app.$mount('#app');
+	app.mount('#app');
 });
 
 if (GJ_BUILD_TYPE === 'production' && navigator.serviceWorker) {

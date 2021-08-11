@@ -1,4 +1,3 @@
-import VueGlobal from 'vue';
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { Analytics } from '../../../../../../_common/analytics/analytics.service';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
@@ -14,10 +13,11 @@ import AppEventItemMediaIndicator from '../../../../event-item/media-indicator/m
 import { ActivityFeedItem } from '../../item-service';
 import { ActivityFeedKey, ActivityFeedView } from '../../view';
 
-if (!GJ_IS_SSR) {
-	const VueTouch = require('vue-touch');
-	VueGlobal.use(VueTouch);
-}
+// TODO(vue3)
+// if (!GJ_IS_SSR) {
+// 	const VueTouch = require('vue-touch');
+// 	VueGlobal.use(VueTouch);
+// }
 
 @Options({
 	components: {

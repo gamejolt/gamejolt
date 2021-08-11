@@ -1,11 +1,11 @@
-import VueGlobal from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Ruler } from '../../ruler/ruler-service';
 
-if (!GJ_IS_SSR) {
-	const VueTouch = require('vue-touch');
-	VueGlobal.use(VueTouch);
-}
+// TODO(vue3)
+// if (!GJ_IS_SSR) {
+// 	const VueTouch = require('vue-touch');
+// 	VueGlobal.use(VueTouch);
+// }
 
 @Options({})
 export default class AppAudioScrubber extends Vue {

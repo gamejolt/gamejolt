@@ -1,4 +1,3 @@
-import VueGlobal from 'vue';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Analytics } from '../analytics/analytics.service';
 import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
@@ -9,10 +8,11 @@ import AppLightboxItem from './item/item.vue';
 import { LightboxMediaSource } from './lightbox-helpers';
 import AppLightboxSlider from './slider.vue';
 
-if (!GJ_IS_SSR) {
-	const VueTouch = require('vue-touch');
-	VueGlobal.use(VueTouch);
-}
+// TODO(vue3)
+// if (!GJ_IS_SSR) {
+// 	const VueTouch = require('vue-touch');
+// 	VueGlobal.use(VueTouch);
+// }
 
 @Options({
 	components: {

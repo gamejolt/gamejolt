@@ -1,8 +1,8 @@
 import Axios from 'axios';
-import VueGlobal from 'vue';
+import { App, Component } from 'vue';
 import { getTranslationLang, TranslationLangs } from '../_common/translate/translate.service';
 
-export function bootstrapAppTranslations() {
+export function bootstrapAppTranslations(app: App) {
 	const availableLanguages: any = {};
 	for (const _lang of TranslationLangs) {
 		availableLanguages[_lang.code] = _lang.label;
@@ -12,7 +12,7 @@ export function bootstrapAppTranslations() {
 	const translations = require('../translations/en_US/main.json');
 
 	const VueGettext = require('vue-gettext');
-	VueGlobal.use(VueGettext, {
+	app.use(VueGettext, {
 		silent: true,
 		availableLanguages,
 		defaultLanguage: lang,
@@ -20,7 +20,7 @@ export function bootstrapAppTranslations() {
 	});
 }
 
-export async function loadCurrentLanguage(comp: Vue) {
+export async function loadCurrentLanguage(comp: Component) {
 	// This is always loaded.
 	if (comp.$language.current === 'en_US') {
 		return;

@@ -1,4 +1,3 @@
-import VueGlobal from 'vue';
 import { Inject, Options, Vue, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import AppEventItemMediaIndicator from '../../../app/components/event-item/media-indicator/media-indicator.vue';
@@ -22,10 +21,11 @@ import { Sticker } from '../sticker.model';
 import AppSticker from '../sticker.vue';
 import AppStickerLayerDrawerItem from './drawer-item.vue';
 
-if (!GJ_IS_SSR) {
-	const VueTouch = require('vue-touch');
-	VueGlobal.use(VueTouch);
-}
+// TODO(vue3)
+// if (!GJ_IS_SSR) {
+// 	const VueTouch = require('vue-touch');
+// 	VueGlobal.use(VueTouch);
+// }
 
 @Options({
 	components: {
