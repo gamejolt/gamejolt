@@ -1,4 +1,4 @@
-import { Component, Inject, InjectReactive } from 'vue-property-decorator';
+import { Component, Inject, InjectReactive, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
@@ -165,7 +165,11 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	}
 
 	get useShareCard() {
-		return configShareCard.value;
+		return configShareCard.value && !this.ignoringSplitTest;
+	}
+
+	get ignoringSplitTest() {
+		return Screen.isMobile;
 	}
 
 	get shareUrl() {
@@ -335,8 +339,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		Meta.twitter = $payload.twitter || {};
 		Meta.twitter.title = this.routeTitle;
 
-		trackExperimentEngagement(configShareCard);
-
 		// Release the CommentStore if there was one left over.
 		this.clearCommentStore();
 
@@ -470,5 +472,13 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		if (rejected) {
 			this.grid?.pushViewNotifications('friend-requests');
 		}
+	}
+
+	@Watch('ignoringSplitTest', { immediate: true })
+	trackExperiment() {
+		if (this.ignoringSplitTest) {
+			return;
+		}
+		trackExperimentEngagement(configShareCard);
 	}
 }

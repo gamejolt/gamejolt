@@ -11,6 +11,7 @@ import { configShareCard } from '../../../../_common/config/config.service';
 import { number } from '../../../../_common/filters/number';
 import AppGameThumbnail from '../../../../_common/game/thumbnail/thumbnail.vue';
 import AppPopper from '../../../../_common/popper/popper.vue';
+import { Screen } from '../../../../_common/screen/screen-service';
 import AppShareCard from '../../../../_common/share/card/card.vue';
 import { AppSocialFacebookLike } from '../../../../_common/social/facebook/like/like';
 import { AppSocialTwitterShare } from '../../../../_common/social/twitter/share/share';
@@ -74,7 +75,11 @@ export default class AppCommunitySidebar extends Vue {
 	}
 
 	get useShareCard() {
-		return configShareCard.value;
+		return configShareCard.value && !this.ignoringSplitTest;
+	}
+
+	get ignoringSplitTest() {
+		return Screen.isMobile;
 	}
 
 	get shouldShowKnownMembers() {
@@ -142,10 +147,6 @@ export default class AppCommunitySidebar extends Vue {
 		return this.filteredGames;
 	}
 
-	mounted() {
-		trackExperimentEngagement(configShareCard);
-	}
-
 	copyShareUrl() {
 		Clipboard.copy(this.shareUrl);
 	}
@@ -183,5 +184,13 @@ export default class AppCommunitySidebar extends Vue {
 
 	toggleGamesList() {
 		this.gameListCollapsed = !this.gameListCollapsed;
+	}
+
+	@Watch('ignoringSplitTest', { immediate: true })
+	trackExperiment() {
+		if (this.ignoringSplitTest) {
+			return;
+		}
+		trackExperimentEngagement(configShareCard);
 	}
 }
