@@ -83,8 +83,11 @@ export const CommunityThemeKey = 'community';
 	},
 })
 export default class RouteCommunitiesView extends BaseRouteComponent {
-	@Provide(CommunityRouteStoreKey) routeStore = new CommunityRouteStore();
-	@Inject(AppPromotionStoreKey) appPromotion!: AppPromotionStore;
+	@Provide({ to: CommunityRouteStoreKey })
+	routeStore = new CommunityRouteStore();
+
+	@Inject({ from: AppPromotionStoreKey })
+	appPromotion!: AppPromotionStore;
 
 	@AppState user!: AppStore['user'];
 	@Mutation setActiveCommunity!: Store['setActiveCommunity'];

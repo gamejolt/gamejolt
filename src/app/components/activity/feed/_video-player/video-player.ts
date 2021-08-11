@@ -58,7 +58,8 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	@Prop({ type: Array, required: true })
 	manifests!: VideoSourceArray;
 
-	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
+	@Inject({ from: ActivityFeedKey })
+	feed!: ActivityFeedView;
 
 	autoplay = SettingVideoPlayerFeedAutoplay.get();
 	player: VideoPlayerController | null = null;

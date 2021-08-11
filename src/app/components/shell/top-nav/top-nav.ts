@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, InjectReactive } from 'vue-property-decorator';
+import { Component, Inject } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { shouldShowAppPromotion } from '../../../../utils/mobile-app';
 import { trackAppPromotionClick } from '../../../../_common/analytics/analytics.service';
@@ -39,7 +39,8 @@ if (GJ_IS_CLIENT) {
 	},
 })
 export default class AppShellTopNav extends Vue {
-	@InjectReactive(ChatKey) chat!: ChatClient;
+	@Inject({ from: ChatKey })
+	chat!: ChatClient;
 
 	@State app!: Store['app'];
 

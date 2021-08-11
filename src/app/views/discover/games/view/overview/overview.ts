@@ -108,7 +108,8 @@ import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue
 	},
 })
 export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
-	@Inject(CommentStoreManagerKey) commentManager!: CommentStoreManager;
+	@Inject({ from: CommentStoreManagerKey })
+	commentManager!: CommentStoreManager;
 
 	@RouteStoreModule.State
 	isOverviewLoaded!: RouteStore['isOverviewLoaded'];

@@ -34,7 +34,7 @@ const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height *
 })
 export default class AppActivityFeed extends Vue {
 	@Prop(propRequired(ActivityFeedView))
-	@Provide(ActivityFeedKey)
+	@Provide({ to: ActivityFeedKey })
 	feed!: ActivityFeedView;
 
 	@Prop(propOptional(Boolean, false)) showAds!: boolean;

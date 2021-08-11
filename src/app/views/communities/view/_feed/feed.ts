@@ -33,11 +33,12 @@ import AppBlockedNotice from '../_blocked-notice/blocked-notice.vue';
 	},
 })
 export default class AppCommunitiesViewFeed extends Vue {
-	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
-
 	// It's optional since it may not have loaded into the page yet. In that
 	// case, we show a placeholder and wait.
 	@Prop(propOptional(ActivityFeedView)) feed?: ActivityFeedView;
+
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
 
 	@AppState user!: AppStore['user'];
 	@State communityStates!: Store['communityStates'];

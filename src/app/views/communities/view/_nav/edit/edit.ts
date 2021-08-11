@@ -10,7 +10,8 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 	},
 })
 export default class AppNavEdit extends Vue {
-	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
 
 	@Emit('change-section') emitChangeSection(_path: string) {}
 

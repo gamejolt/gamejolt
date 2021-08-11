@@ -27,7 +27,8 @@ function getFetchUrl(route: Route) {
 	resolver: ({ route }) => Api.sendRequest(getFetchUrl(route)),
 })
 export default class RouteCommunitiesViewMembers extends BaseRouteComponent {
-	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
 
 	users: User[] = [];
 

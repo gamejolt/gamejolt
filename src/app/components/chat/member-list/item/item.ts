@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { InjectReactive, Prop } from 'vue-property-decorator';
+import { Inject, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import AppPopper from '../../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
@@ -27,7 +27,9 @@ const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` }
 	},
 })
 export default class AppChatMemberListItem extends Vue {
-	@InjectReactive(ChatKey) chat!: ChatClient;
+	@Inject({ from: ChatKey })
+	chat!: ChatClient;
+
 	@Prop(propRequired(ChatUser)) user!: ChatUser;
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 

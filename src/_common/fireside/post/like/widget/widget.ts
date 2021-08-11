@@ -39,7 +39,8 @@ export default class AppFiresidePostLikeWidget extends Vue {
 	@Prop({ type: Boolean, default: false, required: false })
 	block!: boolean;
 
-	@Inject({ from: DrawerStoreKey, default: null }) drawer!: null | DrawerStore;
+	@Inject({ from: { from: DrawerStoreKey, default: null } })
+	drawer!: null | DrawerStore;
 
 	@State app!: Store['app'];
 

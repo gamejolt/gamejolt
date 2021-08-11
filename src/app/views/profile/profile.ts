@@ -1,4 +1,4 @@
-import { Component, InjectReactive } from 'vue-property-decorator';
+import { Component, Inject } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../_common/api/api.service';
 import { BlockModal } from '../../../_common/block/modal/modal.service';
@@ -85,7 +85,8 @@ const ProfileThemeKey = 'profile';
 	},
 })
 export default class RouteProfile extends BaseRouteComponent {
-	@InjectReactive(ChatKey) chat?: ChatClient;
+	@Inject({ from: ChatKey })
+	chat?: ChatClient;
 
 	@State
 	app!: Store['app'];

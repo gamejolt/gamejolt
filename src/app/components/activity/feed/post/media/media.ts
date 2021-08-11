@@ -35,7 +35,8 @@ export default class AppActivityFeedPostMedia extends Vue implements LightboxMed
 	@Prop({ type: Boolean, required: false, default: false })
 	canPlaceSticker!: boolean;
 
-	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
+	@Inject({ from: ActivityFeedKey })
+	feed!: ActivityFeedView;
 
 	page = 1;
 	activeMediaItem: MediaItem | null = null;

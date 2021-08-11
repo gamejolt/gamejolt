@@ -36,7 +36,8 @@ export const CommunitiesViewChannelDeps = {
 	},
 })
 export default class RouteCommunitiesViewChannel extends BaseRouteComponent {
-	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
 
 	get community() {
 		return this.routeStore.community;

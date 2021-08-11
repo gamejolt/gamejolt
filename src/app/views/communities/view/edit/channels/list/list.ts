@@ -39,7 +39,8 @@ import AppCommunitiesEditChannelListPresetItem from './_preset-item/preset-item.
 	},
 })
 export default class RouteCommunitiesViewEditChannelsList extends BaseRouteComponent {
-	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
 
 	activeItem: CommunityChannel | Community | CommunityPresetChannelType | null = null;
 	isShowingChannelAdd = false;

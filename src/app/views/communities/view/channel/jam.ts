@@ -55,7 +55,8 @@ import AppCommunitiesViewPageContainer from '../_page-container/page-container.v
 	},
 })
 export default class RouteCommunitiesViewChannelJam extends BaseRouteComponent {
-	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
 
 	@AppState
 	user!: AppStore['user'];

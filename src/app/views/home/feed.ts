@@ -92,7 +92,7 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	readonly Screen = Screen;
 	readonly HomeFeedService = HomeFeedService;
 
-	@Provide('route-activity-feed')
+	@Provide({ to: 'route-activity-feed' })
 	controller = new RouteActivityFeedController();
 
 	get hasSimpleHome() {

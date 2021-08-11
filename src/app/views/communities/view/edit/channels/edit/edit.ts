@@ -34,7 +34,8 @@ import AppCommunitiesViewPageContainer from '../../../_page-container/page-conta
 		),
 })
 export default class RouteCommunitiesViewEditChannelsEdit extends BaseRouteComponent {
-	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
 
 	get competition() {
 		return this.routeStore.competition;

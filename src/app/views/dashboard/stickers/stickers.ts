@@ -48,7 +48,8 @@ const FetchStickersEndpoint = '/web/stickers/dash';
 	resolver: () => Api.sendRequest(FetchStickersEndpoint),
 })
 export default class RouteDashStickers extends BaseRouteComponent {
-	@Inject(DrawerStoreKey) drawer!: DrawerStore;
+	@Inject({ from: DrawerStoreKey })
+	drawer!: DrawerStore;
 
 	@State grid!: Store['grid'];
 

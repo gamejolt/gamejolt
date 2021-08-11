@@ -26,7 +26,8 @@ import { CommunityRouteStore, CommunityRouteStoreKey, updateCommunity } from '..
 	},
 })
 export default class RouteCommunitiesViewEdit extends BaseRouteComponent {
-	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
 
 	readonly Screen = Screen;
 

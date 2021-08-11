@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, InjectReactive, Prop, Watch } from 'vue-property-decorator';
+import { Component, Inject, Prop, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { ContentDocument } from '../../../../../_common/content/content-document';
 import { AppContentEditorLazy } from '../../../../../_common/content/content-editor/content-editor-lazy';
@@ -22,8 +22,10 @@ import AppChatWindowSendForm from './form/form.vue';
 	},
 })
 export default class AppChatWindowSend extends Vue {
-	@InjectReactive(ChatKey) chat!: ChatClient;
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
+
+	@Inject({ from: ChatKey })
+	chat!: ChatClient;
 
 	singleLineMode = true;
 

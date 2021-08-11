@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, InjectReactive } from 'vue-property-decorator';
+import { Component, Inject } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
@@ -19,7 +19,8 @@ import AppShellCbarItem from '../item/item.vue';
 	},
 })
 export default class AppShellCbarControls extends Vue {
-	@InjectReactive(ChatKey) chat?: ChatClient;
+	@Inject({ from: ChatKey })
+	chat?: ChatClient;
 
 	@AppState user!: AppStore['user'];
 	@ThemeState theme?: ThemeStore['theme'];

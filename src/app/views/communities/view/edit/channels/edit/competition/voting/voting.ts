@@ -55,7 +55,8 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view
 		),
 })
 export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends BaseRouteComponent {
-	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
 
 	awards: CommunityCompetitionAward[] = [];
 	activeAward: CommunityCompetitionAward | null = null;

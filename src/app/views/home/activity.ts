@@ -22,7 +22,7 @@ import { RouteActivityFeedController } from './feed';
 		Api.sendRequest(ActivityFeedService.makeFeedUrl(route, '/web/dash/activity/activity')),
 })
 export default class RouteHomeActivity extends BaseRouteComponent {
-	@Inject('route-activity-feed')
+	@Inject({ from: 'route-activity-feed' })
 	controller!: RouteActivityFeedController;
 
 	@State grid!: Store['grid'];

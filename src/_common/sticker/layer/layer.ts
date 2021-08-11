@@ -21,9 +21,11 @@ import { StickerLayerController, StickerLayerKey } from './layer-controller';
 export default class AppStickerLayer extends Vue {
 	@Prop(propOptional(Boolean, false)) hasFixedParent!: boolean;
 
-	@Inject(DrawerStoreKey) drawer!: DrawerStore;
+	@Inject({ from: DrawerStoreKey })
+	drawer!: DrawerStore;
 
-	@Provide(StickerLayerKey) layer = new StickerLayerController(this.drawer);
+	@Provide({ to: StickerLayerKey })
+	layer = new StickerLayerController(this.drawer);
 
 	private focusWatcherDeregister!: () => void;
 

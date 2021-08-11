@@ -20,7 +20,7 @@ import { RouteActivityFeedController } from './feed';
 		Api.sendRequest(ActivityFeedService.makeFeedUrl(route, '/web/posts/for-you')),
 })
 export default class RouteHomeFYP extends BaseRouteComponent {
-	@Inject('route-activity-feed')
+	@Inject({ from: 'route-activity-feed' })
 	controller!: RouteActivityFeedController;
 
 	get feed() {

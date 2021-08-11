@@ -36,7 +36,8 @@ if (GJ_IS_CLIENT) {
 	},
 })
 export default class AppShellAccountPopover extends Vue {
-	@Inject(DrawerStoreKey) drawer!: DrawerStore;
+	@Inject({ from: DrawerStoreKey })
+	drawer!: DrawerStore;
 
 	@State app!: AppStore;
 	@ThemeState isDark!: ThemeStore['isDark'];

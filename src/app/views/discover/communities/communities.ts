@@ -43,7 +43,9 @@ interface CacheData {
 })
 export default class RouteDiscoverCommunities extends BaseRouteComponent {
 	@State app!: AppStore;
-	@Inject(AppPromotionStoreKey) appPromotion!: AppPromotionStore;
+
+	@Inject({ from: AppPromotionStoreKey })
+	appPromotion!: AppPromotionStore;
 
 	communities: Community[] = [];
 	page = 1;

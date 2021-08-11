@@ -9,7 +9,7 @@ export class AppScrollInviewParent extends Vue {
 	// we can use that scroll element as the root context.
 	@Prop(propOptional(undefined, null)) scroller!: null | HTMLElement;
 
-	@Provide(ScrollInviewParentKey)
+	@Provide({ to: ScrollInviewParentKey })
 	controller = new ScrollInviewParentController(() => this.scroller);
 
 	render(h: CreateElement) {

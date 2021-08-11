@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, InjectReactive, Prop } from 'vue-property-decorator';
+import { Component, Inject, Prop } from 'vue-property-decorator';
 import { number } from '../../../../_common/filters/number';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -35,7 +35,8 @@ export default class AppFiresideStream extends Vue {
 	@Prop({ type: ChatUserCollection, required: false, default: null })
 	members!: ChatUserCollection | null;
 
-	@InjectReactive(FiresideRTCKey) rtc!: FiresideRTC;
+	@Inject({ from: FiresideRTCKey })
+	rtc!: FiresideRTC;
 
 	private isHovered = false;
 	private _hideUITimer?: NodeJS.Timer;

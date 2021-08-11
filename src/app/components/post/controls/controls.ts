@@ -78,8 +78,11 @@ export default class AppPostControls extends Vue {
 	@Prop({ type: String, required: false, default: '' })
 	eventLabel!: string;
 
-	@Inject(CommentStoreManagerKey) commentManager!: CommentStoreManager;
-	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
+	@Inject({ from: CommentStoreManagerKey })
+	commentManager!: CommentStoreManager;
+
+	@Inject({ from: DrawerStoreKey })
+	drawerStore!: DrawerStore;
 
 	@AppState user!: AppStore['user'];
 

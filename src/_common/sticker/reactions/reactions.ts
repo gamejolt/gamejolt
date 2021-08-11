@@ -18,7 +18,8 @@ import AppStickerReactionsItem from './item.vue';
 export default class AppStickerReactions extends Vue {
 	@Prop(propRequired(StickerTargetController)) controller!: StickerTargetController;
 
-	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
+	@Inject({ from: DrawerStoreKey })
+	drawerStore!: DrawerStore;
 
 	@Emit('show') emitShow() {}
 

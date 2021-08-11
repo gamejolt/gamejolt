@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Emit, InjectReactive, Prop } from 'vue-property-decorator';
+import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
@@ -26,7 +26,8 @@ export default class AppFiresideHostThumb extends Vue {
 	@Prop({ type: Boolean, required: false, default: false })
 	hideOptions!: boolean;
 
-	@InjectReactive(FiresideRTCKey) rtc!: FiresideRTC;
+	@Inject({ from: FiresideRTCKey })
+	rtc!: FiresideRTC;
 
 	@Emit('show-popper') emitShowPopper() {}
 	@Emit('hide-popper') emitHidePopper() {}

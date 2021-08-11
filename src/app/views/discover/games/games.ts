@@ -11,7 +11,8 @@ import { BaseRouteComponent } from '../../../../_common/route/route-component';
 	name: 'RouteDiscoverGames',
 })
 export default class RouteDiscoverGames extends BaseRouteComponent {
-	@Inject(AppPromotionStoreKey) appPromotion!: AppPromotionStore;
+	@Inject({ from: AppPromotionStoreKey })
+	appPromotion!: AppPromotionStore;
 
 	routeCreated() {
 		setAppPromotionCohort(this.appPromotion, 'store');

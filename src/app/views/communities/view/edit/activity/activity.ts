@@ -33,7 +33,8 @@ type ActivityItem = {
 	},
 })
 export default class RouteCommunitiesViewEditActivity extends BaseRouteComponent {
-	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
 
 	items: ActivityItem[] = [];
 	isAtEnd = false;

@@ -26,7 +26,8 @@ import {
 	},
 })
 export default class AppNavChannels extends Vue {
-	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
 
 	@State communities!: Store['communities'];
 	@State communityStates!: Store['communityStates'];

@@ -39,8 +39,11 @@ export default class AppStickerTarget extends Vue {
 	@Prop(propRequired(StickerTargetController)) controller!: StickerTargetController;
 	@Prop(propOptional(Boolean, false)) disabled!: boolean;
 
-	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
-	@Inject(StickerLayerKey) layer!: StickerLayerController;
+	@Inject({ from: DrawerStoreKey })
+	drawerStore!: DrawerStore;
+
+	@Inject({ from: StickerLayerKey })
+	layer!: StickerLayerController;
 
 	declare $el: HTMLDivElement;
 	readonly InviewConfig = InviewConfig;

@@ -1,10 +1,11 @@
 import Vue from 'vue';
-import { Component, InjectReactive } from 'vue-property-decorator';
+import { Component, Inject } from 'vue-property-decorator';
 import { FiresideRTC, FiresideRTCKey } from '../fireside-rtc';
 
 @Component({})
 export default class AppFiresideVideoStats extends Vue {
-	@InjectReactive(FiresideRTCKey) rtc!: FiresideRTC;
+	@Inject({ from: FiresideRTCKey })
+	rtc!: FiresideRTC;
 
 	private videoStats: any = {};
 	private statsInterval?: NodeJS.Timer;

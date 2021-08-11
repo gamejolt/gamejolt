@@ -29,7 +29,8 @@ import { RouteStore, RouteStoreModule } from '../view.store';
 	},
 })
 export default class AppDiscoverGamesViewNav extends Vue {
-	@Inject(CommentStoreManagerKey) commentManager!: CommentStoreManager;
+	@Inject({ from: CommentStoreManagerKey })
+	commentManager!: CommentStoreManager;
 
 	@RouteStoreModule.State
 	game!: RouteStore['game'];

@@ -1,6 +1,6 @@
 import { transparentize } from 'polished';
 import Vue from 'vue';
-import { Component, InjectReactive, Prop } from 'vue-property-decorator';
+import { Component, Inject, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../utils/vue';
 import { ContentRules } from '../../../../../../_common/content/content-editor/content-rules';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
@@ -46,7 +46,8 @@ export default class AppChatWindowOutputItem extends Vue {
 	@Prop(ChatRoom) room!: ChatRoom;
 	@Prop(propRequired(Boolean)) isNew!: boolean;
 
-	@InjectReactive(ChatKey) chat!: ChatClient;
+	@Inject({ from: ChatKey })
+	chat!: ChatClient;
 
 	@ThemeState theme?: ThemeStore['theme'];
 	@ThemeState isDark?: ThemeStore['isDark'];

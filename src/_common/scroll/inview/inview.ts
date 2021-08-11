@@ -15,7 +15,8 @@ export class AppScrollInview extends Vue {
 	@Prop(propOptional(ScrollInviewController, () => new ScrollInviewController()))
 	controller!: ScrollInviewController;
 
-	@Inject(ScrollInviewParentKey) parent!: ScrollInviewParentController;
+	@Inject({ from: ScrollInviewParentKey })
+	parent!: ScrollInviewParentController;
 
 	// These will get called by ScrollInviewContainer.
 	@Emit('inview') emitInView() {}

@@ -1,4 +1,4 @@
-import { Component, InjectReactive, Prop } from 'vue-property-decorator';
+import { Component, Inject, Prop } from 'vue-property-decorator';
 import { fuzzysearch } from '../../../../utils/string';
 import { propOptional, propRequired } from '../../../../utils/vue';
 import { BaseModal } from '../../../../_common/modal/base';
@@ -17,11 +17,12 @@ import { ChatUser } from '../user';
 	},
 })
 export default class AppChatInviteModal extends BaseModal {
-	@InjectReactive(ChatKey) chat!: ChatClient;
-
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 	@Prop(propRequired(Array)) friends!: ChatUser[];
 	@Prop(propOptional(ChatUser, null)) initialUser!: ChatUser | null;
+
+	@Inject({ from: ChatKey })
+	chat!: ChatClient;
 
 	filterQuery = '';
 	selectedUsers: ChatUser[] = this.initialUser ? [this.initialUser] : [];

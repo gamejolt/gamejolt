@@ -32,8 +32,6 @@ import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified
 	},
 })
 export default class AppCommentOverview extends Vue {
-	@Inject(CommentStoreManagerKey) commentManager!: CommentStoreManager;
-
 	@Prop(Array)
 	comments!: Comment[];
 
@@ -42,6 +40,9 @@ export default class AppCommentOverview extends Vue {
 
 	@Prop(String)
 	displayMode!: DisplayMode;
+
+	@Inject({ from: CommentStoreManagerKey })
+	commentManager!: CommentStoreManager;
 
 	get displayComments() {
 		return this.comments.filter(c => getCommentBlockReason(c) === false);

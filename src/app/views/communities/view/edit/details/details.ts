@@ -30,7 +30,8 @@ import AppCommunitiesViewPageContainer from '../../_page-container/page-containe
 	},
 })
 export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent {
-	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
 
 	@Action('leaveCommunity') leaveCommunityAction!: Store['leaveCommunity'];
 

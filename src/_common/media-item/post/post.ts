@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Emit, InjectReactive, Prop } from 'vue-property-decorator';
+import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
 import { ContentFocus } from '../../content-focus/content-focus.service';
 import { AppImgResponsive } from '../../img/responsive/responsive';
@@ -39,7 +39,8 @@ export default class AppMediaItemPost extends Vue {
 	@Prop(propOptional(Boolean, false)) inline!: boolean;
 	@Prop(propOptional(Boolean, false)) canPlaceSticker!: boolean;
 
-	@InjectReactive(StickerTargetParentControllerKey) parentStickerTarget!: StickerTargetController;
+	@Inject({ from: StickerTargetParentControllerKey })
+	parentStickerTarget!: StickerTargetController;
 
 	isFilled = false;
 

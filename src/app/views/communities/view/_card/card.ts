@@ -11,7 +11,8 @@ import AppEditableThumbnail from '../_editable-thumbnail/editable-thumbnail.vue'
 	},
 })
 export default class AppCommunitiesViewCard extends Vue {
-	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
 
 	get community() {
 		return this.routeStore.community;

@@ -20,7 +20,8 @@ export default class AppActivityFeedVideoEmbed extends Vue {
 	@Prop({ type: Boolean, required: true })
 	isHydrated!: boolean;
 
-	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
+	@Inject({ from: ActivityFeedKey })
+	feed!: ActivityFeedView;
 
 	isShowingVideo = GJ_IS_SSR;
 	shouldAutoplay = !GJ_IS_SSR;

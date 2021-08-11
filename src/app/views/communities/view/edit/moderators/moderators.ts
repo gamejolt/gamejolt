@@ -30,7 +30,8 @@ import AppCommunitiesViewPageContainer from '../../_page-container/page-containe
 	},
 })
 export default class RouteCommunitiesViewEditModerators extends BaseRouteComponent {
-	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
 
 	collaborators: Collaborator[] = [];
 	activeCollaborator: Collaborator | null = null;

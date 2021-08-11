@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, InjectReactive } from 'vue-property-decorator';
+import { Component, Inject } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { EscapeStack } from '../../../../../_common/escape-stack/escape-stack.service';
 import { number } from '../../../../../_common/filters/number';
@@ -21,7 +21,8 @@ import AppChatWindows from '../../../chat/windows/windows.vue';
 	},
 })
 export default class AppShellSidebarChat extends Vue {
-	@InjectReactive(ChatKey) chat!: ChatClient;
+	@Inject({ from: ChatKey })
+	chat!: ChatClient;
 
 	@State visibleLeftPane!: Store['visibleLeftPane'];
 	@Action toggleLeftPane!: Store['toggleLeftPane'];

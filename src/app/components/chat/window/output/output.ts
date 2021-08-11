@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, InjectReactive, Prop, Watch } from 'vue-property-decorator';
+import { Component, Inject, Prop, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { date } from '../../../../../_common/filters/date';
 import AppIllustration from '../../../../../_common/illustration/illustration.vue';
@@ -36,7 +36,8 @@ export default class AppChatWindowOutput extends Vue {
 	@Prop(propRequired(Array)) messages!: ChatMessage[];
 	@Prop(propRequired(Array)) queuedMessages!: ChatMessage[];
 
-	@InjectReactive(ChatKey) chat!: ChatClient;
+	@Inject({ from: ChatKey })
+	chat!: ChatClient;
 
 	@AppState user!: AppStore['user'];
 

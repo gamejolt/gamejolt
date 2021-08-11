@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, InjectReactive, Prop } from 'vue-property-decorator';
+import { Component, Inject, Prop } from 'vue-property-decorator';
 import { FiresideRTC, FiresideRTCKey } from '../fireside-rtc';
 import {
 	FiresideRTCUser,
@@ -12,7 +12,8 @@ export default class AppFiresideDesktopAudio extends Vue {
 	@Prop({ type: FiresideRTCUser, required: true })
 	rtcUser!: FiresideRTCUser;
 
-	@InjectReactive(FiresideRTCKey) rtc!: FiresideRTC;
+	@Inject({ from: FiresideRTCKey })
+	rtc!: FiresideRTC;
 
 	private _myRtcUser!: FiresideRTCUser;
 

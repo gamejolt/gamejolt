@@ -104,7 +104,8 @@ const GameThemeKey = 'game';
 	},
 })
 export default class RouteDiscoverGamesView extends BaseRouteComponent {
-	@Inject(CommentStoreManagerKey) commentManager!: CommentStoreManager;
+	@Inject({ from: CommentStoreManagerKey })
+	commentManager!: CommentStoreManager;
 
 	@RouteStoreModule.State
 	game!: RouteStore['game'];

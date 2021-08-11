@@ -28,7 +28,8 @@ import AppCommunitiesEditCompetitionNav from './_nav/nav.vue';
 	resolver: () => Timezone.getTimezones(),
 })
 export default class RouteCommunitiesViewEditChannelsCompetition extends BaseRouteComponent {
-	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
 
 	readonly Screen = Screen;
 

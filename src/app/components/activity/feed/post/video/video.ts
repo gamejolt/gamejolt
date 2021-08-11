@@ -20,7 +20,8 @@ export default class AppActivityFeedPostVideo extends Vue {
 	@Prop({ type: FiresidePost, required: true })
 	post!: FiresidePost;
 
-	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
+	@Inject({ from: ActivityFeedKey })
+	feed!: ActivityFeedView;
 
 	@Emit('query-param') emitQueryParam(_params: Record<string, string>) {}
 

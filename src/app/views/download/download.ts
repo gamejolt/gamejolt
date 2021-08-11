@@ -67,7 +67,8 @@ const DownloadDelay = 3000;
 	},
 })
 export default class RouteDownload extends BaseRouteComponent {
-	@Inject(AppPromotionStoreKey) appPromotion!: AppPromotionStore;
+	@Inject({ from: AppPromotionStoreKey })
+	appPromotion!: AppPromotionStore;
 
 	started = false;
 	game: Game = null as any;

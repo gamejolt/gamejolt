@@ -34,7 +34,8 @@ import AppEditableThumbnail from '../_editable-thumbnail/editable-thumbnail.vue'
 export default class AppMobileHeader extends Vue {
 	@Prop(propOptional(Boolean, false)) hasUnread!: boolean;
 
-	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
 
 	@AppState user!: AppStore['user'];
 	@SidebarState activeContextPane!: SidebarStore['activeContextPane'];

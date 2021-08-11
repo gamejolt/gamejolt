@@ -27,7 +27,8 @@ export default class AppActivityFeedPostText extends Vue {
 	@Prop({ type: FiresidePost, required: true })
 	post!: FiresidePost;
 
-	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
+	@Inject({ from: ActivityFeedKey })
+	feed!: ActivityFeedView;
 
 	isToggling = false;
 	isLoaded = !!this.post.article_content;

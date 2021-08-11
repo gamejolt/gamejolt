@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, InjectReactive, Prop } from 'vue-property-decorator';
+import { Component, Inject, Prop } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
 import { propRequired } from '../../../../utils/vue';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
@@ -36,11 +36,12 @@ import AppChatWindowSend from './send/send.vue';
 	},
 })
 export default class AppChatWindow extends Vue {
-	@InjectReactive(ChatKey) chat!: ChatClient;
-
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 	@Prop(propRequired(Array)) messages!: ChatMessage[];
 	@Prop(propRequired(Array)) queuedMessages!: ChatMessage[];
+
+	@Inject({ from: ChatKey })
+	chat!: ChatClient;
 
 	@Action toggleLeftPane!: Store['toggleLeftPane'];
 

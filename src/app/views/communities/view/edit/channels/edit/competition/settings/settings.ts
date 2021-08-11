@@ -11,7 +11,8 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view
 	},
 })
 export default class RouteCommunitiesViewEditChannelsCompetitionSettings extends BaseRouteComponent {
-	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
 
 	get competition() {
 		return this.routeStore.competition!;

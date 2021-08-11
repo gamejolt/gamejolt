@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Emit, InjectReactive } from 'vue-property-decorator';
+import { Component, Emit, Inject } from 'vue-property-decorator';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { FiresideRTC, FiresideRTCKey } from '../fireside-rtc';
@@ -14,7 +14,8 @@ import { setAudioPlayback } from '../fireside-rtc-user';
 	},
 })
 export default class AppFiresideStreamOptions extends Vue {
-	@InjectReactive(FiresideRTCKey) rtc!: FiresideRTC;
+	@Inject({ from: FiresideRTCKey })
+	rtc!: FiresideRTC;
 
 	@Emit('show-popper') emitShowPopper() {}
 	@Emit('hide-popper') emitHidePopper() {}

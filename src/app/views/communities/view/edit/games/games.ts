@@ -37,7 +37,8 @@ import AppCommunitiesViewPageContainer from '../../_page-container/page-containe
 	},
 })
 export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
-	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
 
 	maxLinkedGames = 10;
 	hasMoreGamesToLink = false;

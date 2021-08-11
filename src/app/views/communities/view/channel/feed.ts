@@ -39,7 +39,8 @@ import { CommunitiesViewChannelDeps } from './channel';
 	resolver: ({ route }) => doFeedChannelPayload(route),
 })
 export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent {
-	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
 
 	@AppState user!: AppStore['user'];
 	@State communityStates!: Store['communityStates'];

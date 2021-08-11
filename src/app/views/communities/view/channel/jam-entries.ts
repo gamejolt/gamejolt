@@ -148,9 +148,10 @@ function makeRequest(route: Route) {
 	resolver: ({ route }) => makeRequest(route),
 })
 export default class RouteCommunitiesViewChannelJamEntries extends BaseRouteComponent {
-	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
-
 	@Prop(propRequired(Array)) categories!: CommunityCompetitionVotingCategory[];
+
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
 
 	readonly number = number;
 

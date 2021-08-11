@@ -1,5 +1,5 @@
 import Component from 'vue-class-component';
-import { InjectReactive, ProvideReactive } from 'vue-property-decorator';
+import { Inject, Provide } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { sleep } from '../../../utils/utils';
 import { Api } from '../../../_common/api/api.service';
@@ -101,8 +101,12 @@ const FiresideThemeKey = 'fireside';
 export default class RouteFireside extends BaseRouteComponent {
 	@AppState user!: AppStore['user'];
 	@State grid!: Store['grid'];
-	@InjectReactive(ChatKey) chat!: ChatClient;
-	@ProvideReactive(FiresideRTCKey) rtc: FiresideRTC | null = null;
+
+	@Inject({ from: ChatKey })
+	chat!: ChatClient;
+
+	@Provide({ to: FiresideRTCKey, reactive: true })
+	rtc: FiresideRTC | null = null;
 
 	private fireside: Fireside | null = null;
 	private gridChannel: FiresideChannel | null = null;

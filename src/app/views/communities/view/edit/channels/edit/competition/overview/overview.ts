@@ -33,7 +33,8 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view
 		),
 })
 export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends BaseRouteComponent {
-	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
 
 	votingCategories: CommunityCompetitionVotingCategory[] = [];
 	isLoading = true;

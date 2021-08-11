@@ -17,8 +17,8 @@ import AppNavEdit from '../_nav/edit/edit.vue';
 	},
 })
 export default class AppCommunitiesViewContext extends Vue {
-	@Provide(CommunityRouteStoreKey)
 	@Prop(propRequired(CommunityRouteStore))
+	@Provide({ to: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 
 	@Action toggleLeftPane!: Store['toggleLeftPane'];

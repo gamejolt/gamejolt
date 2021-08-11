@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Emit, Prop, ProvideReactive, Watch } from 'vue-property-decorator';
+import { Component, Emit, Prop, Provide, Watch } from 'vue-property-decorator';
 import { RawLocation } from 'vue-router';
 import { arrayRemove } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
@@ -94,7 +94,7 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 
 	@AppState user!: AppStore['user'];
 
-	@ProvideReactive(StickerTargetParentControllerKey)
+	@Provide({ to: StickerTargetParentControllerKey, reactive: true })
 	stickerTargetController = new StickerTargetController(this.post);
 
 	recommendedPosts: FiresidePost[] = [];

@@ -38,7 +38,8 @@ if (!GJ_IS_SSR) {
 	},
 })
 export default class AppStickerLayerDrawer extends Vue {
-	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
+	@Inject({ from: DrawerStoreKey })
+	drawerStore!: DrawerStore;
 	@State hasCbar!: Store['hasCbar'];
 
 	sheetPage = 1;

@@ -30,7 +30,8 @@ export default class AppActivityFeedItem extends Vue {
 	@Prop({ type: ActivityFeedItem, required: true })
 	item!: ActivityFeedItem;
 
-	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
+	@Inject({ from: ActivityFeedKey })
+	feed!: ActivityFeedView;
 
 	readonly InviewConfig = InviewConfig;
 	readonly InviewConfigHydration = InviewConfigHydration;

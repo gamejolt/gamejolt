@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, InjectReactive, Prop } from 'vue-property-decorator';
+import { Component, Inject, Prop } from 'vue-property-decorator';
 import { FiresideRTC, FiresideRTCKey } from '../fireside-rtc';
 import {
 	FiresideRTCUser,
@@ -18,7 +18,8 @@ export default class AppFiresideVideo extends Vue {
 	@Prop({ type: Boolean, required: false, default: false })
 	lowBitrate!: boolean;
 
-	@InjectReactive(FiresideRTCKey) rtc!: FiresideRTC;
+	@Inject({ from: FiresideRTCKey })
+	rtc!: FiresideRTC;
 
 	private _myRtcUser!: FiresideRTCUser;
 	private _videoLock: FiresideVideoLock | null = null;

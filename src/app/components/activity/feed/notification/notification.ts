@@ -41,7 +41,8 @@ export default class AppActivityFeedNotification extends Vue {
 	@Prop({ type: ActivityFeedItem, required: true })
 	item!: ActivityFeedItem;
 
-	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
+	@Inject({ from: ActivityFeedKey })
+	feed!: ActivityFeedView;
 
 	canToggleContent = false;
 	readonly Screen = Screen;

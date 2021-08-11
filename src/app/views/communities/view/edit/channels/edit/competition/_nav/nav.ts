@@ -7,7 +7,8 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view
 
 @Component({})
 export default class AppCommunitiesEditCompetitionNav extends Vue {
-	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
 
 	readonly number = number;
 

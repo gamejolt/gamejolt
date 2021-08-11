@@ -28,7 +28,8 @@ export default class AppCommentControls extends Vue {
 	@Prop(propOptional(Boolean, false)) canReply!: boolean;
 	@Prop(propOptional(Boolean, false)) canPlaceStickers!: boolean;
 
-	@Inject(DrawerStoreKey) drawer!: DrawerStore;
+	@Inject({ from: DrawerStoreKey })
+	drawer!: DrawerStore;
 
 	readonly Screen = Screen;
 	readonly fuzzynumber = fuzzynumber;

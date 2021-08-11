@@ -38,7 +38,8 @@ import AppCommunitiesViewPageContainer from '../../_page-container/page-containe
 	},
 })
 export default class RouteCommunitiesViewEditBlocks extends BaseRouteComponent {
-	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
 
 	isAdding = false;
 	blocks: UserBlock[] = [];

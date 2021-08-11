@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { InjectReactive, Prop } from 'vue-property-decorator';
+import { Inject, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import AppLoadingFade from '../../../../../_common/loading/fade/fade.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
@@ -22,9 +22,10 @@ import { ChatRoomDetailsModal } from '../../room-details-modal/room-details-moda
 	},
 })
 export default class AppChatWindowMenu extends Vue {
-	@InjectReactive(ChatKey) chat!: ChatClient;
-
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
+
+	@Inject({ from: ChatKey })
+	chat!: ChatClient;
 
 	get isOwner() {
 		return (

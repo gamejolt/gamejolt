@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, InjectReactive } from 'vue-property-decorator';
+import { Component, Inject } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Store } from '../../../store/index';
 import { ChatClient, ChatKey } from '../client';
@@ -11,7 +11,9 @@ import AppChatWindow from '../window/window.vue';
 	},
 })
 export default class AppChatWindows extends Vue {
-	@InjectReactive(ChatKey) chat!: ChatClient;
+	@Inject({ from: ChatKey })
+	chat!: ChatClient;
+
 	@State visibleLeftPane!: Store['visibleLeftPane'];
 
 	getRoomQueuedMessages(roomId: number) {

@@ -11,7 +11,8 @@ import {
 
 @Component({})
 export default class AppStickerLayerGhost extends Vue {
-	@Inject(DrawerStoreKey) drawer!: DrawerStore;
+	@Inject({ from: DrawerStoreKey })
+	drawer!: DrawerStore;
 
 	private isConfirmingPlacement = false;
 

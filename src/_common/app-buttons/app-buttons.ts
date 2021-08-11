@@ -12,7 +12,8 @@ import { trackAppPromotionClick } from '../analytics/analytics.service';
 export default class AppAppButtons extends Vue {
 	@Prop(propRequired(String)) source!: AppPromotionSource;
 
-	@Inject(AppPromotionStoreKey) appPromotion!: AppPromotionStore;
+	@Inject({ from: AppPromotionStoreKey })
+	appPromotion!: AppPromotionStore;
 
 	readonly trackAppPromotionClick = trackAppPromotionClick;
 }

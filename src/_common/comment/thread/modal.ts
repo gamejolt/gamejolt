@@ -25,8 +25,6 @@ import AppCommentWidget from '../widget/widget.vue';
 	},
 })
 export default class AppCommentThreadModal extends BaseModal {
-	@Inject(CommentStoreManagerKey) commentManager!: CommentStoreManager;
-
 	@Prop(Number)
 	commentId!: number;
 
@@ -38,6 +36,9 @@ export default class AppCommentThreadModal extends BaseModal {
 
 	@Prop(Boolean)
 	autofocus?: boolean;
+
+	@Inject({ from: CommentStoreManagerKey })
+	commentManager!: CommentStoreManager;
 
 	@AppState
 	user!: AppStore['user'];

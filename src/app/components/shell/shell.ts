@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Inject, InjectReactive, Watch } from 'vue-property-decorator';
+import { Component, Inject, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Connection } from '../../../_common/connection/connection-service';
 import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
@@ -44,8 +44,11 @@ if (GJ_IS_CLIENT) {
 	components,
 })
 export default class AppShell extends Vue {
-	@InjectReactive(ChatKey) chat!: ChatClient;
-	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
+	@Inject({ from: ChatKey })
+	chat!: ChatClient;
+
+	@Inject({ from: DrawerStoreKey })
+	drawerStore!: DrawerStore;
 
 	@State app!: Store['app'];
 	@State isShellHidden!: Store['isShellHidden'];

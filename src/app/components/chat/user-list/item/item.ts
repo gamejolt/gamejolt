@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, InjectReactive, Prop } from 'vue-property-decorator';
+import { Component, Inject, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { number } from '../../../../../_common/filters/number';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
@@ -30,7 +30,8 @@ const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` }
 export default class AppChatUserListItem extends Vue {
 	@Prop(propRequired()) item!: ChatUser | ChatRoom;
 
-	@InjectReactive(ChatKey) chat!: ChatClient;
+	@Inject({ from: ChatKey })
+	chat!: ChatClient;
 
 	isInview = false;
 	isHovered = false;

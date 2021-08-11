@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { InjectReactive, Prop } from 'vue-property-decorator';
+import { Inject, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
 import { Growls } from '../../../../_common/growls/growls.service';
@@ -32,9 +32,11 @@ import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vu
 	},
 })
 export default class AppChatUserPopover extends Vue {
-	@InjectReactive(ChatKey) chat!: ChatClient;
 	@Prop(propRequired(ChatUser)) user!: ChatUser;
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
+
+	@Inject({ from: ChatKey })
+	chat!: ChatClient;
 
 	get isOnline() {
 		if (!this.chat) {

@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Provide, ProvideReactive, Watch } from 'vue-property-decorator';
+import { Component, Provide, Watch } from 'vue-property-decorator';
 import { AppPromotionStore, AppPromotionStoreKey } from '../utils/mobile-app';
 import { loadCurrentLanguage } from '../utils/translations';
 import { Analytics } from '../_common/analytics/analytics.service';
@@ -24,10 +24,17 @@ import { Store } from './store';
 	},
 })
 export default class App extends Vue {
-	@ProvideReactive(ChatKey) chat: null | ChatClient = null;
-	@Provide(CommentStoreManagerKey) commentManager = new CommentStoreManager();
-	@Provide(DrawerStoreKey) drawerStore = new DrawerStore();
-	@Provide(AppPromotionStoreKey) appPromotionStore = new AppPromotionStore();
+	@Provide({ to: ChatKey, reactive: true })
+	chat: null | ChatClient = null;
+
+	@Provide({ to: CommentStoreManagerKey })
+	commentManager = new CommentStoreManager();
+
+	@Provide({ to: DrawerStoreKey })
+	drawerStore = new DrawerStore();
+
+	@Provide({ to: AppPromotionStoreKey })
+	appPromotionStore = new AppPromotionStore();
 
 	@AppState user!: AppStore['user'];
 

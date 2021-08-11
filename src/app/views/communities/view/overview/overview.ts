@@ -40,7 +40,8 @@ import AppCommunitiesViewPageContainer from '../_page-container/page-container.v
 	resolver: ({ route }) => doFeedChannelPayload(route),
 })
 export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
-	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
 
 	@AppState user!: AppStore['user'];
 	@State communities!: Store['communities'];

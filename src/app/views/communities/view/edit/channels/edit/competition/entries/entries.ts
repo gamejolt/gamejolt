@@ -118,7 +118,8 @@ function getValidSortDirectionQueryParam(route: Route) {
 	},
 })
 export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends BaseRouteComponent {
-	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
 
 	entryCount = 0;
 	entries: CommunityCompetitionEntry[] = [];

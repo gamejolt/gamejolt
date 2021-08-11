@@ -57,7 +57,8 @@ let incrementer = 0;
 	},
 })
 export default class AppCommentWidget extends Vue {
-	@Inject(CommentStoreManagerKey) commentManager!: CommentStoreManager;
+	@Inject({ from: CommentStoreManagerKey })
+	commentManager!: CommentStoreManager;
 
 	@Prop(Model)
 	model!: Model;

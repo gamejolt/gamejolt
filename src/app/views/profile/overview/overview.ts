@@ -1,4 +1,4 @@
-import { Component, Inject, InjectReactive } from 'vue-property-decorator';
+import { Component, Inject } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import AppCommentAddButton from '../../../../_common/comment/add-button/add-button.vue';
@@ -77,8 +77,11 @@ import { RouteStore, RouteStoreModule } from '../profile.store';
 	resolver: ({ route }) => Api.sendRequest('/web/profile/overview/@' + route.params.username),
 })
 export default class RouteProfileOverview extends BaseRouteComponent {
-	@InjectReactive(ChatKey) chat?: ChatClient;
-	@Inject(CommentStoreManagerKey) commentManager!: CommentStoreManager;
+	@Inject({ from: ChatKey })
+	chat?: ChatClient;
+
+	@Inject({ from: CommentStoreManagerKey })
+	commentManager!: CommentStoreManager;
 
 	@State
 	app!: Store['app'];

@@ -6,12 +6,13 @@ import { Sticker } from '../sticker.model';
 
 @Component({})
 export default class AppStickerLayerDrawerItem extends Vue {
-	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
-
 	@Prop(propRequired(Sticker)) sticker!: Sticker;
 	@Prop(propOptional(Number, 0)) count!: number;
 	@Prop(propOptional(Number, 64)) size!: number;
 	@Prop(propOptional(Boolean, false)) hideCount!: boolean;
+
+	@Inject({ from: DrawerStoreKey })
+	drawerStore!: DrawerStore;
 
 	declare $el: HTMLDivElement;
 

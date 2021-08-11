@@ -21,7 +21,8 @@ import AppCommunitiesViewPageContainer from '../../../../_page-container/page-co
 	},
 })
 export default class RouteCommunitiesViewEditChannelsOverview extends BaseRouteComponent {
-	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
 
 	readonly Screen = Screen;
 

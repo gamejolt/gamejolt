@@ -1,5 +1,5 @@
 import Component from 'vue-class-component';
-import { Emit, InjectReactive, Prop, Watch } from 'vue-property-decorator';
+import { Emit, Inject, Prop, Watch } from 'vue-property-decorator';
 import { isMac } from '../../../../../../utils/utils';
 import { propRequired } from '../../../../../../utils/vue';
 import { ContentContext } from '../../../../../../_common/content/content-context';
@@ -45,9 +45,11 @@ export type FormModel = {
 	},
 })
 export default class AppChatWindowSendForm extends BaseForm<FormModel> {
-	@InjectReactive(ChatKey) chat!: ChatClient;
 	@Prop(propRequired(Boolean)) singleLineMode!: boolean;
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
+
+	@Inject({ from: ChatKey })
+	chat!: ChatClient;
 
 	readonly Screen = Screen;
 	readonly contentContext: ContentContext = 'chat-message';
