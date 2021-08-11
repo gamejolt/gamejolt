@@ -60,17 +60,13 @@
 			</template>
 			<template v-else>
 				<div>
-					<p
-						v-if="competition.voting_type === 'categories'"
-						key="voting-info"
-						v-translate
-					>
+					<p v-if="competition.voting_type === 'categories'" v-translate>
 						Vote for this entry by rating it in each of the categories below. If a
 						particular category doesn't apply for this entry, please choose
 						<code>n/a</code>. For example, it would be appropriate to choose
 						<code>n/a</code> for a "Graphics" category when rating a text-based game.
 					</p>
-					<p key="voting-period" class="help-block">
+					<p class="help-block">
 						<i>
 							<span>
 								<translate>The voting period will end in:</translate>

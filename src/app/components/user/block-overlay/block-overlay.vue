@@ -1,6 +1,8 @@
+<script lang="ts" src="./block-overlay"></script>
+
 <template>
 	<div v-if="user">
-		<section v-if="shouldBlock" key="blocked" class="section fill-darker">
+		<section v-if="shouldBlock" class="section fill-darker">
 			<div class="container">
 				<div class="row">
 					<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
@@ -8,7 +10,9 @@
 							<app-jolticon class="jolticon-4x" icon="friend-remove-2" notice />
 
 							<h4><translate>You blocked this user.</translate></h4>
-							<p><translate>Are you sure you want to view their profile?</translate></p>
+							<p>
+								<translate>Are you sure you want to view their profile?</translate>
+							</p>
 							<br />
 
 							<p class="-buttons">
@@ -21,7 +25,10 @@
 							<hr class="underbar underbar-center" />
 
 							<p>
-								<router-link class="link-muted" :to="{ name: 'dash.account.blocks' }">
+								<router-link
+									class="link-muted"
+									:to="{ name: 'dash.account.blocks' }"
+								>
 									<translate>Manage blocked users</translate>
 								</router-link>
 							</p>
@@ -30,15 +37,15 @@
 				</div>
 			</div>
 		</section>
-		<div v-else key="allowed">
+		<div v-else>
 			<slot />
 		</div>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .user-block
 	text-align: center
@@ -51,7 +58,4 @@
 
 	.-buttons button
 		margin-bottom: 20px
-
 </style>
-
-<script lang="ts" src="./block-overlay"></script>

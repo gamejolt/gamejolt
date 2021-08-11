@@ -80,7 +80,8 @@
 			<br v-if="customGameMessages.length" />
 
 			<div
-				v-for="msg of customGameMessages"
+				v-for="(msg, i) of customGameMessages"
+				:key="i"
 				class="alert full-bleed-xs"
 				:class="{
 					'alert-notice': msg.type === 'alert',

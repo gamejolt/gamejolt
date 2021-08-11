@@ -11,8 +11,8 @@
 					:event-cat="eventCat"
 				/>
 
-				<app-community-slider-discover-item key="discover" />
-				<app-community-slider-add-item v-if="withAddButton" key="add" />
+				<app-community-slider-discover-item />
+				<app-community-slider-add-item v-if="withAddButton" />
 			</div>
 		</app-scroll-scroller>
 	</div>

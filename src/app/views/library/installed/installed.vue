@@ -1,3 +1,5 @@
+<script lang="ts" src="./installed"></script>
+
 <template>
 	<div>
 		<app-page-header>
@@ -12,22 +14,23 @@
 					<translate
 						translate-comment="Short message to remind them that they can change install location at any time in their settings."
 					>
-						You can change the location where games are installed at any time in your settings.
+						You can change the location where games are installed at any time in your
+						settings.
 					</translate>
 					<router-link :to="{ name: 'settings' }">
 						<translate>Go to Settings?</translate>
 					</router-link>
 				</app-alert-dismissable>
 
-				<div class="alert alert-notice" v-if="!games.length">
+				<div v-if="!games.length" class="alert alert-notice">
 					<translate
 						translate-comment="The message shown when there are no games installed yet in their library."
 					>
 						Your installed games show up here... that is, once you have some!
 					</translate>
 				</div>
-				<div class="row" v-else>
-					<div class="col-md-6 col-lg-4 " v-for="game of gamesByTitle" :key="game.id">
+				<div v-else class="row">
+					<div v-for="game of gamesByTitle" :key="game.id" class="col-md-6 col-lg-4">
 						<app-library-installed-game :game="game" />
 					</div>
 				</div>
@@ -35,5 +38,3 @@
 		</section>
 	</div>
 </template>
-
-<script lang="ts" src="./installed"></script>

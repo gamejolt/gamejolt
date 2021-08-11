@@ -75,12 +75,7 @@
 					patched vnode not existing.
 				-->
 				<div v-if="customGameMessages.length">
-					<div
-						v-if="game.canceled"
-						key="wip"
-						v-translate
-						class="alert alert-notice full-bleed-xs"
-					>
+					<div v-if="game.canceled" v-translate class="alert alert-notice full-bleed-xs">
 						This game was canceled, so the current version might be buggy or incomplete.
 						You can still follow it if you'd like to be notified in the case that
 						development continues.

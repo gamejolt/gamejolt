@@ -65,7 +65,6 @@
 							@{{ user.username }}
 							<span class="-mod-avatar-container">
 								<img
-									key="user"
 									:src="user.img_avatar"
 									class="img-responsive -mod-avatar-img"
 									alt=""

@@ -1,10 +1,12 @@
+<script lang="ts" src="./key"></script>
+
 <template>
 	<div v-if="isRouteBootstrapped">
 		<app-invalid-key v-if="invalidKey" />
-		<section class="container" v-else>
+		<section v-else class="container">
 			<component
-				v-if="payload"
 				:is="component"
+				v-if="payload"
 				:access-key="accessKey"
 				:payload="payload"
 				:login-url="loginUrl"
@@ -13,5 +15,3 @@
 		</section>
 	</div>
 </template>
-
-<script lang="ts" src="./key"></script>

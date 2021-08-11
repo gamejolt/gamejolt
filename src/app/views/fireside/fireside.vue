@@ -127,7 +127,7 @@
 			</div>
 
 			<template v-if="status === 'loading' || status === 'initial'">
-				<div key="loading" class="-message-wrapper">
+				<div class="-message-wrapper">
 					<div class="-message">
 						<app-illustration src="~img/ill/end-of-feed.svg">
 							<app-loading
@@ -140,7 +140,7 @@
 			</template>
 
 			<template v-else-if="status === 'unauthorized'">
-				<div key="unauthorized" class="-message-wrapper">
+				<div class="-message-wrapper">
 					<div class="-message">
 						<h2 class="section-header text-center">
 							<translate>Join Game Jolt</translate>
@@ -161,7 +161,7 @@
 			</template>
 
 			<template v-else-if="status === 'expired'">
-				<div key="expired" class="-message-wrapper">
+				<div class="-message-wrapper">
 					<div class="-message">
 						<app-illustration src="~img/ill/no-comments-small.svg">
 							<p>
@@ -178,7 +178,7 @@
 			</template>
 
 			<template v-else-if="status === 'setup-failed'">
-				<div key="setup-failed" class="-message-wrapper">
+				<div class="-message-wrapper">
 					<div class="-message">
 						<app-illustration src="~img/ill/maintenance.svg">
 							<p>
@@ -197,7 +197,7 @@
 			</template>
 
 			<template v-else-if="status === 'disconnected'">
-				<div key="disconnected" class="-message-wrapper">
+				<div class="-message-wrapper">
 					<div class="-message">
 						<app-illustration src="~img/ill/no-comments-small.svg">
 							<p>
@@ -218,7 +218,7 @@
 			</template>
 
 			<template v-else-if="status === 'blocked'">
-				<div key="blocked" class="-message-wrapper">
+				<div class="-message-wrapper">
 					<div class="-message">
 						<div class="text-center">
 							<app-jolticon icon="friend-remove-2" big notice />
@@ -236,12 +236,7 @@
 					</div>
 				</div>
 			</template>
-			<div
-				v-else-if="shouldShowChat"
-				key="chat"
-				class="-chat"
-				:class="{ '-trailing': isStreaming }"
-			>
+			<div v-else-if="shouldShowChat" class="-chat" :class="{ '-trailing': isStreaming }">
 				<template v-if="status === 'joined'">
 					<div class="-chat-window">
 						<app-chat-window-output

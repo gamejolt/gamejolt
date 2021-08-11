@@ -9,7 +9,6 @@
 						<slot />
 						<span class="avatar-container">
 							<img
-								key="user"
 								:src="user.img_avatar"
 								class="img-responsive mention-avatar-img"
 								alt=""

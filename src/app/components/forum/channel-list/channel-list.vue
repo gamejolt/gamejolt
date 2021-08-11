@@ -1,9 +1,11 @@
+<script lang="ts" src="./channel-list"></script>
+
 <template>
 	<div class="forum-channel-list">
-		<div class="forum-channel-list-item row" v-for="channel of channels" :key="channel.id">
+		<div v-for="channel of channels" :key="channel.id" class="forum-channel-list-item row">
 			<div class="col-sm-9 col-md-7">
 				<h4>
-					<span class="tag tag-highlight" v-if="channel.notifications_count">
+					<span v-if="channel.notifications_count" class="tag tag-highlight">
 						{{ channel.notifications_count || 0 | number }}
 					</span>
 					<router-link
@@ -22,7 +24,6 @@
 			</div>
 			<div class="col-sm-3 col-md-2 text-muted small" :class="{ 'text-right': !Screen.isXs }">
 				<span
-					key="topics-count"
 					v-translate="{ count: number(channel.topics_count || 0) }"
 					:translate-n="channel.topics_count || 0"
 					translate-plural="<b>%{ count }</b> Topics"
@@ -32,10 +33,9 @@
 				</span>
 
 				<br class="hidden-xs" />
-				<span class="hidden-sm hidden-md hidden-lg dot-separator"></span>
+				<span class="hidden-sm hidden-md hidden-lg dot-separator" />
 
 				<span
-					key="replies-count"
 					v-translate="{ count: number(channel.replies_count || 0) }"
 					:translate-n="channel.replies_count || 0"
 					translate-plural="<b>%{ count }</b> Replies"
@@ -44,12 +44,12 @@
 					Reply
 				</span>
 			</div>
-			<div class="col-md-3" v-if="Screen.isDesktop">
+			<div v-if="Screen.isDesktop" class="col-md-3">
 				<div
-					class="forum-channel-list-item-latest-topic clearfix"
 					v-for="latestPost of [indexedPosts[channel.id]]"
 					v-if="latestPost"
 					:key="latestPost.id"
+					class="forum-channel-list-item-latest-topic clearfix"
 				>
 					<template v-if="latestPost">
 						<div class="forum-channel-list-item-latest-topic-avatar">
@@ -136,5 +136,3 @@
 			&-user
 				text-overflow()
 </style>
-
-<script lang="ts" src="./channel-list"></script>

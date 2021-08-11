@@ -1,12 +1,14 @@
+<script lang="ts" src="./topic-list"></script>
+
 <template>
 	<div class="forum-topic-list">
 		<div
-			class="forum-topic-list-item"
 			v-for="topic of topics"
 			:key="topic.id"
+			class="forum-topic-list-item"
 			:class="{ '-has-voting': shouldShowVoting(topic) }"
 		>
-			<div class="-vote" v-if="shouldShowVoting(topic)">
+			<div v-if="shouldShowVoting(topic)" class="-vote">
 				<app-forum-topic-upvote-widget :topic="topic" />
 			</div>
 			<div class="-main">
@@ -14,19 +16,26 @@
 					<div class="col-sm-9 col-md-7">
 						<h5 class="forum-topic-list-item-title">
 							<!-- Notifications -->
-							<span class="tag tag-highlight" v-if="!!topic.notifications.length">
+							<span v-if="!!topic.notifications.length" class="tag tag-highlight">
 								{{ topic.notifications.length | number }}
 							</span>
 
 							<!-- Pinned -->
-							<span v-if="topic.is_sticky" v-app-tooltip="$gettext(`This topic is pinned.`)">
+							<span
+								v-if="topic.is_sticky"
+								v-app-tooltip="$gettext(`This topic is pinned.`)"
+							>
 								<app-jolticon icon="thumbtack" highlight />
 							</span>
 
 							<!-- Locked -->
 							<span
 								v-if="topic.is_locked"
-								v-app-tooltip="$gettext(`This topic is locked and can no longer be replied to.`)"
+								v-app-tooltip="
+									$gettext(
+										`This topic is locked and can no longer be replied to.`
+									)
+								"
 							>
 								<app-jolticon icon="lock" class="text-muted" />
 							</span>
@@ -57,9 +66,11 @@
 							<span class="tiny">@{{ topic.user.username }}</span>
 						</div>
 					</div>
-					<div class="col-sm-3 col-md-2 text-muted small" :class="{ 'text-right': !Screen.isXs }">
+					<div
+						class="col-sm-3 col-md-2 text-muted small"
+						:class="{ 'text-right': !Screen.isXs }"
+					>
 						<span
-							key="replies-count"
 							v-translate="{ count: number(topic.replies_count || 0) }"
 							:translate-n="topic.replies_count || 0"
 							translate-plural="<b>%{ count }</b> Replies"
@@ -68,9 +79,8 @@
 							Reply
 						</span>
 						<br class="hidden-xs" />
-						<span class="hidden-sm hidden-md hidden-lg dot-separator"></span>
+						<span class="hidden-sm hidden-md hidden-lg dot-separator" />
 						<span
-							key="followers-count"
 							v-translate="{ count: number(topic.followers_count || 0) }"
 							:translate-n="topic.followers_count || 0"
 							translate-plural="<b>%{ count }</b> Followers"
@@ -79,7 +89,7 @@
 							Follower
 						</span>
 					</div>
-					<div class="col-md-3 text-muted small" v-if="Screen.isDesktop">
+					<div v-if="Screen.isDesktop" class="col-md-3 text-muted small">
 						<div class="forum-topic-list-item-latest-post clearfix">
 							<div class="forum-topic-list-item-latest-post-avatar">
 								<app-user-card-hover :user="topic.latest_post.user">
@@ -118,5 +128,3 @@
 </template>
 
 <style lang="stylus" src="./topic-list.styl" scoped></style>
-
-<script lang="ts" src="./topic-list"></script>

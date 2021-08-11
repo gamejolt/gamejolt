@@ -23,7 +23,7 @@
 			</div>
 		</div>
 
-		<div key="page-help" class="page-help">
+		<div class="page-help">
 			<p>
 				<translate>
 					These are all of the scores that have been submitted to this scoreboard by users
