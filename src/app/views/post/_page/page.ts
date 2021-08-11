@@ -10,7 +10,7 @@ import { number } from '../../../../_common/filters/number';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import {
 	$viewPostVideo,
-	FiresidePostVideo,
+	FiresidePostVideo
 } from '../../../../_common/fireside/post/video/video-model';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { AppImgResponsive } from '../../../../_common/img/responsive/responsive';
@@ -22,11 +22,12 @@ import AppMediaItemPost from '../../../../_common/media-item/post/post.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
+import AppShareCard from '../../../../_common/share/card/card.vue';
 import AppStickerControlsOverlay from '../../../../_common/sticker/controls-overlay/controls-overlay.vue';
 import AppStickerReactions from '../../../../_common/sticker/reactions/reactions.vue';
 import {
 	StickerTargetController,
-	StickerTargetParentControllerKey,
+	StickerTargetParentControllerKey
 } from '../../../../_common/sticker/target/target-controller';
 import AppStickerTarget from '../../../../_common/sticker/target/target.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
@@ -77,6 +78,7 @@ import AppPostPageRecommendations from './recommendations/recommendations.vue';
 		AppCommunityUserNotification,
 		AppFiresidePostEmbed,
 		AppPostPageRecommendations,
+		AppShareCard,
 	},
 	directives: {
 		AppTooltip,
