@@ -1,10 +1,9 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import AppCard from '../../../../_common/card/card.vue';
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
 import { Site } from '../../../../_common/site/site-model';
 
-@Component({
+@Options({
 	components: {
 		AppCard,
 	},

@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
 import { date } from '../../filters/date';
 import { AppTimeAgo } from '../../time/ago/ago';
@@ -9,7 +8,7 @@ import AppUserAvatar from '../../user/user-avatar/user-avatar.vue';
 import { User } from '../../user/user.model';
 import AppUserVerifiedTick from '../../user/verified-tick/verified-tick.vue';
 
-@Component({
+@Options({
 	components: {
 		AppTimelineListItem,
 		AppUserCardHover,

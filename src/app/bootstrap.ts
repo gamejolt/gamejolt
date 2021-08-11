@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import VueGlobal from 'vue';
 import '../utils/polyfills';
 import { AdStore } from '../_common/ad/ad-store';
 import { bootstrapCommon } from '../_common/bootstrap';
@@ -14,7 +14,7 @@ export function createApp() {
 	return { app: _createApp(), store, router };
 }
 
-Vue.use(AdStore);
+VueGlobal.use(AdStore);
 
 if (GJ_IS_CLIENT) {
 	require('./bootstrap-client');

@@ -1,6 +1,4 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { assertNever } from '../../../../../../../../utils/utils';
 import { propRequired } from '../../../../../../../../utils/vue';
 import AppCardListItem from '../../../../../../../../_common/card/list/item/item.vue';
@@ -12,7 +10,7 @@ import {
 import AppCommunityChannelCardEdit from '../../../../../../../components/community/channel/card/edit/edit.vue';
 import { CommunityChannelPresetBackgroundModal } from '../../../../../../../components/community/channel/preset-background-modal/preset-background-modal.service';
 
-@Component({
+@Options({
 	components: {
 		AppCardListItem,
 		AppCommunityChannelCardEdit,

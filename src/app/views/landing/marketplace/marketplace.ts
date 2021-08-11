@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import AppContactLink from '../../../../_common/contact-link/contact-link.vue';
@@ -12,7 +12,7 @@ import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { Store } from '../../../store/index';
 
-@Component({
+@Options({
 	name: 'RouteLandingMarketplace',
 	components: {
 		AppGameThumbnail,

@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
 import AppLightboxTS from '../../lightbox/lightbox';
 import { createLightbox, LightboxMediaSource } from '../../lightbox/lightbox-helpers';
@@ -11,7 +10,7 @@ import { ContentHydrator } from '../content-hydrator';
 import { ContentOwner } from '../content-owner';
 import { AppContentViewerBaseComponent } from './components/base-component';
 
-@Component({
+@Options({
 	components: {
 		AppContentViewerBaseComponent,
 	},

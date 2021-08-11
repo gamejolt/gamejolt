@@ -1,11 +1,10 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { stringSort } from '../../../utils/array';
 import { Analytics } from '../../analytics/analytics.service';
 import { Navigate } from '../../navigate/navigate.service';
 import { getTranslationLang, setTranslationLang, TranslationLangs } from '../translate.service';
 
-@Component({})
+@Options({})
 export default class AppTranslateLangSelector extends Vue {
 	lang = getTranslationLang();
 

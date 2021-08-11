@@ -1,4 +1,4 @@
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Watch } from 'vue-property-decorator';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
 import AppForm from '../../../../../_common/form-vue/form';
@@ -12,7 +12,7 @@ type NewGameBuildFormModel = GameBuild & {
 	file: File;
 };
 
-@Component({
+@Options({
 	components: {
 		AppFormControlUpload,
 		AppExpand,

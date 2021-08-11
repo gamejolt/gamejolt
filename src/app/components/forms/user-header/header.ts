@@ -1,4 +1,4 @@
-import { Component, Watch } from 'vue-property-decorator';
+import { Options, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import AppFormControlCrop from '../../../../_common/form-vue/control/crop/crop.vue';
 import AppFormControlUpload from '../../../../_common/form-vue/control/upload/upload.vue';
@@ -16,7 +16,7 @@ type FormModel = User & {
 	header_crop: any;
 };
 
-@Component({
+@Options({
 	components: {
 		AppFormControlUpload,
 		AppFormControlCrop,

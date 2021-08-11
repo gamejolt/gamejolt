@@ -1,8 +1,8 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { BaseModal } from '../modal/base';
 import AppAuthJoin from './join/join.vue';
 
-@Component({
+@Options({
 	components: {
 		AppAuthJoin,
 	},

@@ -1,13 +1,13 @@
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../_common/api/api.service';
+import { currency } from '../../../../../../_common/filters/currency';
+import { date } from '../../../../../../_common/filters/date';
 import { Order } from '../../../../../../_common/order/order.model';
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import { Translate } from '../../../../../../_common/translate/translate.service';
-import { currency } from '../../../../../../_common/filters/currency';
-import { date } from '../../../../../../_common/filters/date';
-import { Component } from 'vue-property-decorator';
 import { routeStore, RouteStore, RouteStoreModule } from '../../account.store';
 
-@Component({
+@Options({
 	name: 'RouteDashAccountPurchasesList',
 	filters: {
 		date,

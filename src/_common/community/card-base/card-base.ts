@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
 import { trackGotoCommunity } from '../../analytics/analytics.service';
 import { Environment } from '../../environment/environment.service';
@@ -10,11 +9,7 @@ import { Community, isEditingCommunity } from '../community.model';
 import AppCommunityJoinWidget from '../join-widget/join-widget.vue';
 import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
 
-/**
- * Used as a base to compose on top of for either showing the normal community
- * card, or the one that we show in the community page itself.
- */
-@Component({
+@Options({
 	components: {
 		AppTheme,
 		AppCommunityVerifiedTick,

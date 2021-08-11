@@ -1,10 +1,9 @@
-import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { duration } from '../../../../_common/filters/duration';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import { LocalDbPackage, LocalDbPackagePatchState } from '../local-db/package/package.model';
 
-@Component({
+@Options({
 	components: {
 		AppProgressBar,
 	},

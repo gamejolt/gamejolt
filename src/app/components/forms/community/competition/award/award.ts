@@ -1,18 +1,19 @@
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../utils/vue';
 import { CommunityCompetitionAward } from '../../../../../../_common/community/competition/award/award.model';
 import { CommunityCompetition } from '../../../../../../_common/community/competition/competition.model';
 import AppFormControlTextarea from '../../../../../../_common/form-vue/control/textarea/textarea.vue';
 import { BaseForm, FormOnBeforeSubmit } from '../../../../../../_common/form-vue/form.service';
 
-@Component({
+@Options({
 	components: {
 		AppFormControlTextarea,
 	},
 })
-export default class FormCommunityCompetitionAward extends BaseForm<CommunityCompetitionAward>
-	implements FormOnBeforeSubmit {
+export default class FormCommunityCompetitionAward
+	extends BaseForm<CommunityCompetitionAward>
+	implements FormOnBeforeSubmit
+{
 	@Prop(propRequired(CommunityCompetition)) competition!: CommunityCompetition;
 
 	modelClass = CommunityCompetitionAward;

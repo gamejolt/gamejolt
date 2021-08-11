@@ -1,4 +1,4 @@
-import Component from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
 import { LocationRedirect } from '../../../utils/router';
 import { Api } from '../../../_common/api/api.service';
 import AppContactLink from '../../../_common/contact-link/contact-link.vue';
@@ -13,7 +13,7 @@ import { AppThemeSvg } from '../../../_common/theme/svg/svg';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import { UserTimeout } from '../../../_common/user/timeout/timeout.model';
 
-@Component({
+@Options({
 	name: 'RouteTimeout',
 	components: {
 		AppThemeSvg,

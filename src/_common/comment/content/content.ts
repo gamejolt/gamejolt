@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
 import AppContentViewer from '../../content/content-viewer/content-viewer.vue';
 import AppFadeCollapse from '../../fade-collapse/fade-collapse.vue';
@@ -11,7 +10,7 @@ import AppStickerTarget from '../../sticker/target/target.vue';
 import { Comment } from '../comment-model';
 import '../comment.styl';
 
-@Component({
+@Options({
 	components: {
 		AppFadeCollapse,
 		AppContentViewer,

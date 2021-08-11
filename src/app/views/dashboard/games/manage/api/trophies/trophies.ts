@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import AppCardListAdd from '../../../../../../../_common/card/list/add/add.vue';
 import AppCardListDraggable from '../../../../../../../_common/card/list/draggable/draggable.vue';
@@ -17,7 +17,7 @@ import FormGameTrophy from '../../../../../../components/forms/game/trophy/troph
 import AppTrophyThumbnail from '../../../../../../components/trophy/thumbnail/thumbnail.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
-@Component({
+@Options({
 	name: 'RouteDashGamesManageApiTrophies',
 	components: {
 		AppCardList,

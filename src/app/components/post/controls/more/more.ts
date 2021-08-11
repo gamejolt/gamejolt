@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { Mutation } from 'vuex-class';
 import { arrayRemove } from '../../../../../utils/array';
 import { Api } from '../../../../../_common/api/api.service';
@@ -23,7 +22,7 @@ import { CommunityEjectPostModal } from '../../../community/eject-post/modal/mod
 import { CommunityMovePostModal } from '../../../community/move-post/modal/modal.service';
 import { AppCommunityPerms } from '../../../community/perms/perms';
 
-@Component({
+@Options({
 	components: {
 		AppPopper,
 		AppCommunityPerms,

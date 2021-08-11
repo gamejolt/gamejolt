@@ -1,9 +1,8 @@
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import AppGameMediaBar from '../../game/media-bar/media-bar.vue';
 import { MediaItem } from '../../media-item/media-item-model';
 
-@Component({
+@Options({
 	components: {
 		AppGameMediaBar,
 	},

@@ -1,3 +1,4 @@
+import { Options, Watch } from 'vue-property-decorator';
 import AppEditableOverlay from '../../../../../_common/editable-overlay/editable-overlay.vue';
 import AppFormControlTheme from '../../../../../_common/form-vue/control/theme/theme.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
@@ -5,11 +6,10 @@ import { Game } from '../../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
 import { Theme } from '../../../../../_common/theme/theme.model';
 import { ThemeMutation, ThemeState, ThemeStore } from '../../../../../_common/theme/theme.store';
-import { Component, Watch } from 'vue-property-decorator';
 import { GameThumbnailModal } from '../../../game/thumbnail-modal/thumbnail-modal.service';
 import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
 
-@Component({
+@Options({
 	components: {
 		AppFormControlTheme,
 		AppEditableOverlay,

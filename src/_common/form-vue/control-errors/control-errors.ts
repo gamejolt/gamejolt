@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../../utils/vue';
 import { number } from '../../filters/number';
 import AppFormTS from '../form';
@@ -27,7 +26,7 @@ const ErrorMessagesBase: { [k: string]: string } = {
 	content_no_media_uploads: `We are uploading your images...`,
 };
 
-@Component({})
+@Options({})
 export default class AppFormControlErrors extends Vue {
 	@Prop(String) label?: string;
 	@Prop(String) position?: string;

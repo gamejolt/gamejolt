@@ -1,13 +1,13 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { ContentObject } from '../../content-object';
 
-@Component({})
+@Options({})
 export class AppContentViewerGJEmoji extends Vue {
 	@Prop(ContentObject)
 	data!: ContentObject;
 
-	render(h: CreateElement) {
+	render() {
 		return h('span', {
 			class: 'emoji emoji-' + this.data.attrs.type,
 			attrs: { title: `:${this.data.attrs.type}:` },

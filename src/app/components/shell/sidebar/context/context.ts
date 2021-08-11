@@ -1,11 +1,10 @@
-import Vue from 'vue';
-import { Component, Watch } from 'vue-property-decorator';
+import { Options, Vue, Watch } from 'vue-property-decorator';
 import { Mutation, State } from 'vuex-class';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
 import { SidebarState, SidebarStore } from '../../../../../_common/sidebar/sidebar.store';
 import { Store } from '../../../../store/index';
 
-@Component({
+@Options({
 	components: {
 		AppScrollScroller,
 	},

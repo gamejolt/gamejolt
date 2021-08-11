@@ -1,9 +1,7 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import './dogtag.styl';
 
-@Component({})
+@Options({})
 export default class AppUserDogtag extends Vue {
 	@Prop(String) type!: string;
 }

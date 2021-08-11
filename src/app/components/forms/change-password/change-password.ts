@@ -1,6 +1,6 @@
+import { Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { BaseForm, FormOnInit, FormOnSubmit } from '../../../../_common/form-vue/form.service';
-import { Component, Prop } from 'vue-property-decorator';
 
 type FormModel = {
 	old_password: string;
@@ -8,9 +8,11 @@ type FormModel = {
 	confirm_password: string;
 };
 
-@Component({})
-export default class FormChangePassword extends BaseForm<FormModel>
-	implements FormOnInit, FormOnSubmit {
+@Options({})
+export default class FormChangePassword
+	extends BaseForm<FormModel>
+	implements FormOnInit, FormOnSubmit
+{
 	@Prop({ type: Boolean, default: true })
 	requiresOld!: boolean;
 

@@ -1,7 +1,6 @@
 import Cropper from 'cropperjs';
 import 'cropperjs/dist/cropper.css';
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 
 interface CropData {
 	x: number;
@@ -10,7 +9,7 @@ interface CropData {
 	y2: number;
 }
 
-@Component({})
+@Options({})
 export default class AppImgCrop extends Vue {
 	@Prop(String)
 	src!: string;

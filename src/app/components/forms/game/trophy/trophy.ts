@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
 import { BaseForm, FormOnInit, FormOnLoad } from '../../../../../_common/form-vue/form.service';
@@ -7,7 +7,7 @@ import { GameTrophy } from '../../../../../_common/game/trophy/trophy.model';
 import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 
-@Component({
+@Options({
 	components: {
 		AppImgResponsive,
 		AppFormControlToggle,

@@ -1,7 +1,5 @@
 import { formatDistanceStrict } from 'date-fns';
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { sleep } from '../../../../utils/utils';
 import AppAlertDismissable from '../../../../_common/alert/dismissable/dismissable.vue';
@@ -13,7 +11,7 @@ import { AppStore } from '../../../../_common/store/app-store';
 import { User } from '../../../../_common/user/user.model';
 import { PostEditModal } from '../../post/edit-modal/edit-modal-service';
 
-@Component({
+@Options({
 	components: {
 		AppAlertDismissable,
 	},

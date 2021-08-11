@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import AppButtonStyleguide from '../../../_common/button/button-styleguide.vue';
 import AppJolticonsStyleguide from '../../../_common/jolticons/jolticons-styleguide.vue';
 import AppListGroupStyleguide from '../../../_common/list-group/list-group-styleguide.vue';
@@ -10,7 +10,7 @@ import AppThemeSvgStyleguide from '../../../_common/theme/svg/svg-styleguide.vue
 import { User } from '../../../_common/user/user.model';
 import AppStyleguideColor from './color/color.vue';
 
-@Component({
+@Options({
 	name: 'RouteStyleguide',
 	components: {
 		AppScrollAffix,

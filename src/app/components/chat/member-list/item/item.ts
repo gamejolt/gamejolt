@@ -1,6 +1,4 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Inject, Prop } from 'vue-property-decorator';
+import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import AppPopper from '../../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
@@ -15,7 +13,7 @@ import AppChatUserPopover from '../../user-popover/user-popover.vue';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
 
-@Component({
+@Options({
 	components: {
 		AppScrollInview,
 		AppChatUserOnlineStatus,

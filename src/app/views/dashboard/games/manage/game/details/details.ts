@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Growls } from '../../../../../../../_common/growls/growls.service';
 import { BaseRouteComponent } from '../../../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
@@ -7,7 +7,7 @@ import AppGameDevStageSelector from '../../../../../../components/forms/game/dev
 import FormGame from '../../../../../../components/forms/game/game.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
-@Component({
+@Options({
 	name: 'RouteDashGamesManageGameDetails',
 	components: {
 		FormGame,

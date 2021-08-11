@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import {
 	GameFollowLocation,
@@ -15,7 +14,7 @@ import { UserFollowSuggestion } from '../../../../_common/user/follow/suggestion
 import AppUserFollowWidget from '../../../../_common/user/follow/widget.vue';
 import { Store } from '../../../store/index';
 
-@Component({
+@Options({
 	components: {
 		AppUserFollowWidget,
 		AppPopper,

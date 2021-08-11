@@ -1,10 +1,9 @@
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
 import { TagsInfo } from '../../tag/tags-info.service';
 import { GameFilteringContainer } from './container';
 
-@Component({})
+@Options({})
 export default class AppGameFilteringTags extends Vue {
 	@Prop(Object)
 	filtering!: GameFilteringContainer;

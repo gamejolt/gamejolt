@@ -1,8 +1,7 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { Ruler } from '../../../_common/ruler/ruler-service';
 
-@Component({})
+@Options({})
 export default class AppFadeCollapse extends Vue {
 	height = 0;
 	innerHeight = 0;

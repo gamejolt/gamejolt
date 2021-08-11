@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { enforceLocation } from '../../../utils/router';
 import { Api } from '../../../_common/api/api.service';
 import {
@@ -18,7 +18,7 @@ import AppPostPage from './_page/page.vue';
 
 const PostThemeKey = 'post';
 
-@Component({
+@Options({
 	name: 'RoutePost',
 	components: {
 		AppPostPage,

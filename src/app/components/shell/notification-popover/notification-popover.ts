@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Watch } from 'vue-property-decorator';
+import { Options, Vue, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { sleep } from '../../../../utils/utils';
 import { Api } from '../../../../_common/api/api.service';
@@ -17,7 +16,7 @@ import { AppActivityFeedLazy } from '../../lazy';
 import AppShellAccountPopoverNewSticker from './new-sticker/new-sticker.vue';
 import AppShellNotificationPopoverStickerNavItem from './sticker-nav-item/sticker-nav-item.vue';
 
-@Component({
+@Options({
 	components: {
 		AppPopper,
 		AppLoading,

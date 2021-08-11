@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { filesize } from '../../../_common/filters/filesize';
 import { ucwords } from '../../../_common/filters/ucwords';
@@ -7,7 +6,7 @@ import { GameBuild } from '../../../_common/game/build/build.model';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../store/index';
 
-@Component({
+@Options({
 	directives: {
 		AppTooltip,
 	},

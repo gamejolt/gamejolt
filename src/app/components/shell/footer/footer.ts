@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { shouldShowAppPromotion } from '../../../../utils/mobile-app';
 import { trackAppPromotionClick } from '../../../../_common/analytics/analytics.service';
 import AppAppButtons from '../../../../_common/app-buttons/app-buttons.vue';
@@ -15,7 +14,7 @@ if (GJ_IS_CLIENT) {
 	ClientSystemReportModalMod = require('../../client/system-report-modal/system-report-modal.service');
 }
 
-@Component({
+@Options({
 	components: {
 		AppAppButtons,
 		AppTranslateLangSelector,

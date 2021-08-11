@@ -1,11 +1,10 @@
-import Vue from 'vue';
-import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
+import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import { FiresideRTC, FiresideRTCKey } from '../fireside-rtc';
 import AppFiresideHostThumb from '../_host-thumb/host-thumb.vue';
 import AppFiresideStreamOptions from '../_stream-options/stream-options.vue';
 
-@Component({
+@Options({
 	components: {
 		AppFiresideHostThumb,
 		AppScrollScroller,

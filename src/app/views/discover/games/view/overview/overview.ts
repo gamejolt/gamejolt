@@ -1,4 +1,4 @@
-import { Component, Inject } from 'vue-property-decorator';
+import { Inject, Options } from 'vue-property-decorator';
 import AppAdWidget from '../../../../../../_common/ad/widget/widget.vue';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCard from '../../../../../../_common/card/card.vue';
@@ -49,7 +49,7 @@ import AppDiscoverGamesViewOverviewRecommended from './_recommended/recommended.
 import AppDiscoverGamesViewOverviewStatbar from './_statbar/statbar.vue';
 import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue';
 
-@Component({
+@Options({
 	name: 'RouteDiscoverGamesViewOverview',
 	components: {
 		AppPageContainer,

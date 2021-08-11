@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Inject } from 'vue-property-decorator';
+import { Inject, Options, Vue } from 'vue-property-decorator';
 import { Analytics } from '../../analytics/analytics.service';
 import {
 	assignDrawerStoreGhostCallback as assignDrawerStoreMoveCallback,
@@ -9,7 +8,7 @@ import {
 	setDrawerStoreActiveItem,
 } from '../../drawer/drawer-store';
 
-@Component({})
+@Options({})
 export default class AppStickerLayerGhost extends Vue {
 	@Inject({ from: DrawerStoreKey })
 	drawer!: DrawerStore;

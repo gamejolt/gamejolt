@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
+import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
 import { ContentFocus } from '../../content-focus/content-focus.service';
 import { AppImgResponsive } from '../../img/responsive/responsive';
@@ -19,7 +18,7 @@ import AppVideo from '../../video/video.vue';
 import AppMediaItemBackdrop from '../backdrop/backdrop.vue';
 import { MediaItem } from '../media-item-model';
 
-@Component({
+@Options({
 	components: {
 		AppImgResponsive,
 		AppMediaItemBackdrop,

@@ -1,4 +1,4 @@
-import { Component, Inject, Watch } from 'vue-property-decorator';
+import { Inject, Options, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
@@ -23,7 +23,7 @@ import { doFeedChannelPayload, resolveFeedChannelPayload } from '../_feed/feed-h
 import AppCommunitiesViewFeed from '../_feed/feed.vue';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 
-@Component({
+@Options({
 	name: 'RouteCommunitiesViewOverview',
 	components: {
 		AppCommunitiesViewPageContainer,

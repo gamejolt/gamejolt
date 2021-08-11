@@ -1,9 +1,9 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { BaseModal } from '../../../../modal/base';
 import AppFormContentEditorLink from './form/link-form.vue';
 import { LinkData } from './link-modal.service';
 
-@Component({
+@Options({
 	components: {
 		AppFormContentEditorLink,
 	},

@@ -1,8 +1,7 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import AppExpand from '../../../../_common/expand/expand.vue';
 
-@Component({
+@Options({
 	components: {
 		AppExpand,
 	},

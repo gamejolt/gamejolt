@@ -1,5 +1,4 @@
-import Vue from 'vue';
-
+// TODO(vue3)
 declare module 'vue/types/vue' {
 	interface Vue {
 		$gettext: (msgid: string) => string;

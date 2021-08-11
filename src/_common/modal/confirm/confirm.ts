@@ -1,8 +1,7 @@
-import { Component, Prop } from 'vue-property-decorator';
-
+import { Options, Prop } from 'vue-property-decorator';
 import { BaseModal } from '../base';
 
-@Component({})
+@Options({})
 export default class AppModalConfirm extends BaseModal {
 	@Prop(String) message!: string;
 	@Prop(String) title!: string;

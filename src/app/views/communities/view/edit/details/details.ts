@@ -1,5 +1,4 @@
-import Component from 'vue-class-component';
-import { Inject } from 'vue-property-decorator';
+import { Inject, Options } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
 import { enforceLocation } from '../../../../../../utils/router';
 import AppAlertDismissable from '../../../../../../_common/alert/dismissable/dismissable.vue';
@@ -17,7 +16,7 @@ import { CommunityThemeKey } from '../../view';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
 
-@Component({
+@Options({
 	name: 'RouteCommunitiesViewEditDetails',
 	components: {
 		AppCommunitiesViewPageContainer,

@@ -1,12 +1,10 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Environment } from '../../environment/environment.service';
 import { Game } from '../../game/game.model';
 import AppGameThumbnailImg from '../../game/thumbnail-img/thumbnail-img.vue';
-import { Environment } from '../../environment/environment.service';
 import { WidgetCompiler } from '../widget-compiler.service';
 
-@Component({
+@Options({
 	components: {
 		AppGameThumbnailImg,
 	},

@@ -1,8 +1,8 @@
 import { fetchAndActivate, getRemoteConfig, getValue } from 'firebase/remote-config';
-import Vue from 'vue';
+import VueGlobal from 'vue';
 import { getFirebaseApp } from '../firebase/firebase.service';
 
-export const ConfigService = Vue.observable({
+export const ConfigService = VueGlobal.observable({
 	isLoaded: false,
 	options: [] as ConfigOption[],
 });

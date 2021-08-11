@@ -1,10 +1,9 @@
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import AppUserCardHover from '../../../../user/card/hover/hover.vue';
 import { User } from '../../../../user/user.model';
 import { ContentOwner } from '../../../content-owner';
 
-@Component({
+@Options({
 	components: {
 		AppUserCardHover,
 	},

@@ -1,5 +1,4 @@
-import Component from 'vue-class-component';
-import { Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../utils/vue';
 import {
 	Community,
@@ -21,7 +20,7 @@ type FormModel = Community & {
 	background_crop: any;
 };
 
-@Component({
+@Options({
 	components: {
 		AppFormControlUpload,
 		AppFormControlCrop,

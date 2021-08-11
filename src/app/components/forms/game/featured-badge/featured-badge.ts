@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
 import { Environment } from '../../../../../_common/environment/environment.service';
@@ -14,7 +14,7 @@ interface FormModel {
 	size: Record<'width' | 'height', string>;
 }
 
-@Component({
+@Options({
 	components: {
 		AppForm,
 		AppFormGroup,

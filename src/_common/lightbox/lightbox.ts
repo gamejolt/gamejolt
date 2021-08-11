@@ -1,5 +1,5 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import VueGlobal from 'vue';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Analytics } from '../analytics/analytics.service';
 import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
 import { Screen } from '../screen/screen-service';
@@ -11,10 +11,10 @@ import AppLightboxSlider from './slider.vue';
 
 if (!GJ_IS_SSR) {
 	const VueTouch = require('vue-touch');
-	Vue.use(VueTouch);
+	VueGlobal.use(VueTouch);
 }
 
-@Component({
+@Options({
 	components: {
 		AppLightboxSlider,
 		AppLightboxItem,
@@ -135,8 +135,9 @@ export default class AppLightbox extends Vue {
 			return;
 		}
 
-		this.sliderElem.style.transform = `translate3d( ${this.currentSliderOffset +
-			event.deltaX}px, 0, 0 )`;
+		this.sliderElem.style.transform = `translate3d( ${
+			this.currentSliderOffset + event.deltaX
+		}px, 0, 0 )`;
 	}
 
 	panEnd(event: HammerInput) {

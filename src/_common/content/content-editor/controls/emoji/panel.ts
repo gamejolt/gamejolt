@@ -1,11 +1,10 @@
 import { EditorView } from 'prosemirror-view';
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { AppTooltip } from '../../../../tooltip/tooltip-directive';
 import { ContentEditorSchema } from '../../schemas/content-editor-schema';
 import { GJ_EMOJIS } from '../../schemas/specs/nodes/gj-emoji-nodespec';
 
-@Component({
+@Options({
 	directives: {
 		AppTooltip,
 	},
@@ -13,6 +12,7 @@ import { GJ_EMOJIS } from '../../schemas/specs/nodes/gj-emoji-nodespec';
 export default class AppContentEditorControlsEmojiPanel extends Vue {
 	@Prop(EditorView)
 	view!: EditorView<ContentEditorSchema>;
+
 	@Prop(Number)
 	stateCounter!: number;
 
@@ -111,7 +111,7 @@ export default class AppContentEditorControlsEmojiPanel extends Vue {
 
 	public async show() {
 		this.setPanelVisibility(true);
-		await Vue.nextTick();
+		await this.$nextTick();
 		this.$refs.panel.focus();
 	}
 }

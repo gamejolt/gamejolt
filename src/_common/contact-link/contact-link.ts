@@ -1,9 +1,8 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../utils/vue';
 import { Navigate } from '../navigate/navigate.service';
 
-@Component({})
+@Options({})
 export default class AppContactLink extends Vue {
 	@Prop(propRequired(String)) email!: string;
 

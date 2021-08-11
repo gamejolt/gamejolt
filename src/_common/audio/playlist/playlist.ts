@@ -1,11 +1,10 @@
-import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { time } from '../../filters/time';
 import { GameSong } from '../../game/song/song.model';
 import { AppAudioPlayer } from '../player/player';
 import AppAudioScrubber from '../scrubber/scrubber.vue';
 
-@Component({
+@Options({
 	components: {
 		AppAudioPlayer,
 		AppAudioScrubber,

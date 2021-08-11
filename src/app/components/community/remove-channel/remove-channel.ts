@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import AppCommunityChannelSelect from '../../../../_common/community/channel/select/select.vue';
 import { Community } from '../../../../_common/community/community.model';
@@ -7,7 +6,7 @@ import AppExpand from '../../../../_common/expand/expand.vue';
 import { Growls } from '../../../../_common/growls/growls.service';
 import AppPill from '../../../../_common/pill/pill.vue';
 
-@Component({
+@Options({
 	components: {
 		AppCommunityChannelSelect,
 		AppPill,

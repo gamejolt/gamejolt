@@ -1,4 +1,4 @@
-import { Component, Inject } from 'vue-property-decorator';
+import { Inject, Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../_common/api/api.service';
 import { BlockModal } from '../../../_common/block/modal/modal.service';
@@ -29,7 +29,7 @@ import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './prof
 
 const ProfileThemeKey = 'profile';
 
-@Component({
+@Options({
 	name: 'RouteProfile',
 	components: {
 		AppPageHeader,

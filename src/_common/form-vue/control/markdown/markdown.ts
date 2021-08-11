@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../api/api.service';
 import AppCodemirror from '../../../codemirror/codemirror.vue';
 import { Environment } from '../../../environment/environment.service';
@@ -10,7 +10,7 @@ import { AppFocusWhen } from '../../focus-when.directive';
 import BaseFormControl from '../base';
 import AppFormControlMarkdownMediaItems from './media-items/media-items.vue';
 
-@Component({
+@Options({
 	components: {
 		AppLoading,
 		AppCodemirror,

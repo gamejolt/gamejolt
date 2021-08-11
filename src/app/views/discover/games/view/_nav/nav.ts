@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Inject } from 'vue-property-decorator';
+import { Inject, Options, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
 import {
@@ -18,7 +17,7 @@ import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import { Store } from '../../../../../store/index';
 import { RouteStore, RouteStoreModule } from '../view.store';
 
-@Component({
+@Options({
 	components: {
 		AppPopper,
 		AppGamePerms,

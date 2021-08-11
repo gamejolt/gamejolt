@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../api/api.service';
 import AppFormControlUpload from '../../form-vue/control/upload/upload.vue';
 import AppForm from '../../form-vue/form';
@@ -11,7 +11,7 @@ interface FormModel {
 	_progress: ProgressEvent | null;
 }
 
-@Component({
+@Options({
 	components: {
 		AppFormControlUpload,
 	},

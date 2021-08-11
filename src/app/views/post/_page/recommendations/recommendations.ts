@@ -1,13 +1,11 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
 import AppPostCardPlaceholder from '../../../../components/fireside/post/card/card-placeholder.vue';
 import AppPostCard from '../../../../components/fireside/post/card/card.vue';
 
-@Component({
+@Options({
 	components: {
 		AppPostCard,
 		AppPostCardPlaceholder,

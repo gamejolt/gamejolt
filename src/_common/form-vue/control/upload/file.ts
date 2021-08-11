@@ -1,8 +1,7 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional } from '../../../../utils/vue';
 
-@Component({})
+@Options({})
 export default class AppFormControlUploadFile extends Vue {
 	@Prop() id!: any;
 	@Prop() name!: any;

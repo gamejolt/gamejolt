@@ -1,4 +1,4 @@
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Watch } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../utils/array';
 import { findRequiredVueParent } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
@@ -34,7 +34,7 @@ type GameBuildFormModel = GameBuild & {
 	launch_other: string;
 };
 
-@Component({
+@Options({
 	components: {
 		AppCardListItem,
 		AppExpand,

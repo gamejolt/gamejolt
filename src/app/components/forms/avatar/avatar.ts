@@ -1,4 +1,4 @@
-import { Component, Watch } from 'vue-property-decorator';
+import { Options, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { filesize } from '../../../../_common/filters/filesize';
 import AppFormControlCrop from '../../../../_common/form-vue/control/crop/crop.vue';
@@ -18,7 +18,7 @@ type FormModel = User & {
 	avatar_crop?: any;
 };
 
-@Component({
+@Options({
 	components: {
 		AppFormControlUpload,
 		AppFormControlCrop,

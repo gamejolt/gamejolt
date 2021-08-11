@@ -1,10 +1,9 @@
-import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppUserFollowWidget from '../../../../../_common/user/follow/widget.vue';
 
-@Component({
+@Options({
 	components: {
 		AppUserFollowWidget,
 	},

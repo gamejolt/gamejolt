@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Inject } from 'vue-property-decorator';
+import { Inject, Options, Vue } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
@@ -10,7 +9,7 @@ import { Store } from '../../../../store/index';
 import { ChatClient, ChatKey } from '../../../chat/client';
 import AppShellCbarItem from '../item/item.vue';
 
-@Component({
+@Options({
 	components: {
 		AppShellCbarItem,
 	},

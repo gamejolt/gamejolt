@@ -1,6 +1,4 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import AppCard from '../../../../_common/card/card.vue';
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
@@ -15,7 +13,7 @@ import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { RouteStatus } from '../fireside';
 
-@Component({
+@Options({
 	components: {
 		AppIllustration,
 		AppProgressBar,

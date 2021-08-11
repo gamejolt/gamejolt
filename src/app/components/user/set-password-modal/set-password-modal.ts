@@ -1,8 +1,8 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { BaseModal } from '../../../../_common/modal/base';
 import FormSetPassword from '../../forms/set-password/set-password.vue';
 
-@Component({
+@Options({
 	components: {
 		FormSetPassword,
 	},

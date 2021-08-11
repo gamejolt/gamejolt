@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../_common/api/api.service';
 import { GameBundle } from '../../../_common/game-bundle/game-bundle.model';
 import { Game } from '../../../_common/game/game.model';
@@ -20,7 +20,7 @@ interface ErrorPayload {
 
 type Payload = SuccessPayload | ErrorPayload | undefined;
 
-@Component({
+@Options({
 	name: 'RouteRetrieve',
 	components: {
 		FormRetrieve,

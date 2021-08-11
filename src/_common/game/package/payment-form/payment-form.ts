@@ -1,4 +1,4 @@
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { arrayIndexBy } from '../../../../utils/array';
 import { Api } from '../../../api/api.service';
@@ -34,7 +34,7 @@ import { GamePackage } from '../package.model';
 
 type CheckoutType = 'cc-stripe' | 'paypal' | 'wallet';
 
-@Component({
+@Options({
 	components: {
 		AppLoading,
 		AppLoadingFade,

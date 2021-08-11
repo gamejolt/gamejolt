@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { numberSort } from '../../../../../../utils/array';
 import { propOptional } from '../../../../../../utils/vue';
 import { Api } from '../../../../../../_common/api/api.service';
@@ -20,7 +20,7 @@ import AppUserVerifiedTick from '../../../../../../_common/user/verified-tick/ve
 import AppGameBadge from '../../../../game/badge/badge.vue';
 import AppCommunityCompetitionVotingWidget from '../../voting/widget.vue';
 
-@Component({
+@Options({
 	components: {
 		AppTimeAgo,
 		AppUserCardHover,

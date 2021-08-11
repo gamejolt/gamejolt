@@ -1,9 +1,8 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import AppErrorPage from '../_common/error/page/page.vue';
 import AppCommonShell from '../_common/shell/shell.vue';
 
-@Component({
+@Options({
 	components: {
 		AppCommonShell,
 		AppErrorPage,

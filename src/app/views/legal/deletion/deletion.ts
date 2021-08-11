@@ -1,10 +1,10 @@
-import { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options } from 'vue-property-decorator';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
 
 const template: string = require('../../../../lib/terms/deletion/global.md');
 
-@Component({
+@Options({
 	name: 'RouteLegalDeletion',
 })
 export default class RouteLegalDeletion extends BaseRouteComponent {
@@ -12,7 +12,7 @@ export default class RouteLegalDeletion extends BaseRouteComponent {
 		return this.$gettext('Account Deletion');
 	}
 
-	render(h: CreateElement) {
+	render() {
 		return h('div', { domProps: { innerHTML: template } });
 	}
 }

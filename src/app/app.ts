@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Provide, Watch } from 'vue-property-decorator';
+import { Options, Provide, Vue, Watch } from 'vue-property-decorator';
 import { AppPromotionStore, AppPromotionStoreKey } from '../utils/mobile-app';
 import { loadCurrentLanguage } from '../utils/translations';
 import { Analytics } from '../_common/analytics/analytics.service';
@@ -15,7 +14,7 @@ import { ChatClientLazy } from './components/lazy';
 import AppShell from './components/shell/shell.vue';
 import { Store } from './store';
 
-@Component({
+@Options({
 	components: {
 		AppCommonShell,
 		AppShell,

@@ -1,7 +1,7 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 
-@Component({})
+@Options({})
 export class AppCountdown extends Vue {
 	@Prop(Number) end!: number;
 
@@ -22,7 +22,7 @@ export class AppCountdown extends Vue {
 		}
 	}
 
-	render(h: CreateElement) {
+	render() {
 		return h('span', this.time);
 	}
 

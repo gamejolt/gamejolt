@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { Api } from '../../../../../../_common/api/api.service';
 import { EventItem } from '../../../../../../_common/event-item/event-item.model';
@@ -18,7 +18,7 @@ function getFetchUrl(route: Route) {
 	return `/web/posts/fetch/game/${route.params.id}?tab=${tab}`;
 }
 
-@Component({
+@Options({
 	name: 'RouteDashGamesManageDevlog',
 	components: {
 		AppActivityFeed: AppActivityFeedLazy,

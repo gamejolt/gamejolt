@@ -1,5 +1,4 @@
-import Component from 'vue-class-component';
-import { Watch } from 'vue-property-decorator';
+import { Options, Watch } from 'vue-property-decorator';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import AppFormControlCrop from '../../../../../../_common/form-vue/control/crop/crop.vue';
 import AppFormControlUpload from '../../../../../../_common/form-vue/control/upload/upload.vue';
@@ -15,7 +14,7 @@ type FormModel = CommunityChannel & {
 	background_crop: any;
 };
 
-@Component({
+@Options({
 	components: {
 		AppFormControlUpload,
 		AppFormControlCrop,

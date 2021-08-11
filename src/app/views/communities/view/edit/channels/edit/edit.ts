@@ -1,5 +1,4 @@
-import Component from 'vue-class-component';
-import { Inject } from 'vue-property-decorator';
+import { Inject, Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { CommunityChannel } from '../../../../../../../_common/community/channel/channel.model';
 import {
@@ -14,7 +13,7 @@ import AppPageHeader from '../../../../../../components/page-header/page-header.
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../view.store';
 import AppCommunitiesViewPageContainer from '../../../_page-container/page-container.vue';
 
-@Component({
+@Options({
 	name: 'RouteCommunitiesViewEditChannelsEdit',
 	components: {
 		AppPageHeader,

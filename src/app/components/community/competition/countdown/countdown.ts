@@ -1,6 +1,4 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { CommunityCompetition } from '../../../../../_common/community/competition/competition.model';
 
@@ -10,7 +8,7 @@ type BlockData = {
 	hasSeparator: boolean;
 };
 
-@Component({})
+@Options({})
 export default class AppCommunityCompetitionCountdown extends Vue {
 	@Prop(propRequired(CommunityCompetition)) competition!: CommunityCompetition;
 

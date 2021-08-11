@@ -1,11 +1,10 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { titleCase } from '../../../utils/string';
 import { findRequiredVueParent } from '../../../utils/vue';
 import BaseFormControl from '../control/base';
 import AppFormTS from '../form';
 
-@Component({})
+@Options({})
 export default class AppFormGroup extends Vue {
 	@Prop(String) name!: string;
 	@Prop(String) label?: string;

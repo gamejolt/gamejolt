@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
@@ -10,7 +10,7 @@ import { FormModel } from '../form/form';
 import FormCommunityEjectPost from '../form/form.vue';
 import { CommunityEjectPostModalResult } from './modal.service';
 
-@Component({
+@Options({
 	components: {
 		FormCommunityEjectPost,
 	},

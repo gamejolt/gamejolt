@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
+import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../utils/vue';
 import AppBackdrop from '../backdrop/backdrop';
 import { Backdrop } from '../backdrop/backdrop.service';
@@ -15,7 +14,7 @@ import { BaseModal } from './base';
 import './modal-global.styl';
 import { Modal } from './modal.service';
 
-@Component({
+@Options({
 	components: {
 		AppTheme,
 		AppScrollScroller,

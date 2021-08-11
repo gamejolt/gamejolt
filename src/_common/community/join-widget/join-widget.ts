@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { GridClient } from '../../../app/components/grid/client.service';
 import { Store } from '../../../app/store';
@@ -11,7 +10,7 @@ import { AppStore } from '../../store/app-store';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 import { Community } from '../community.model';
 
-@Component({
+@Options({
 	directives: {
 		AppAuthRequired,
 		AppTooltip,

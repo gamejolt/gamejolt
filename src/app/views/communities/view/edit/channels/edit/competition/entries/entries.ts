@@ -1,5 +1,4 @@
-import Component from 'vue-class-component';
-import { Inject } from 'vue-property-decorator';
+import { Inject, Options } from 'vue-property-decorator';
 import { Route } from 'vue-router/types/router';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import {
@@ -70,7 +69,7 @@ function getValidSortDirectionQueryParam(route: Route) {
 	return null;
 }
 
-@Component({
+@Options({
 	name: 'RouteCommunitiesViewEditChannelsCompetitionEntries',
 	components: {
 		AppCommunityCompetitionDate,

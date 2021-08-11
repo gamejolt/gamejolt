@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Api } from '../../../../../_common/api/api.service';
@@ -27,7 +27,7 @@ function getFetchUrl(route: Route) {
 	return `/web/posts/fetch/${feedType}/@${route.params.username}?tab=${tab}`;
 }
 
-@Component({
+@Options({
 	name: 'RouteProfileOverviewFeed',
 	components: {
 		AppActivityFeed: AppActivityFeedLazy,

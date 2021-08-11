@@ -1,5 +1,5 @@
-import { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { Api } from '../../../../../../_common/api/api.service';
 import { Growls } from '../../../../../../_common/growls/growls.service';
@@ -27,7 +27,7 @@ function constructUrl(baseUrl: string, route: Route) {
 	return url;
 }
 
-@Component({
+@Options({
 	name: 'RouteDashAccountLinkedAccountsLinkCallback',
 })
 @RouteResolver({
@@ -138,7 +138,7 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 		});
 	}
 
-	render(h: CreateElement) {
+	render() {
 		return h('div');
 	}
 }

@@ -1,11 +1,11 @@
+import { Options, Prop } from 'vue-property-decorator';
+import { number } from '../../../../../_common/filters/number';
 import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
 import { BaseForm, FormOnInit, FormOnLoad } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
 import { GameSong } from '../../../../../_common/game/song/song.model';
-import { number } from '../../../../../_common/filters/number';
-import { Component, Prop } from 'vue-property-decorator';
 
-@Component({
+@Options({
 	components: {
 		AppFormControlUpload,
 	},

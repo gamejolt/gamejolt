@@ -1,5 +1,4 @@
-import Component from 'vue-class-component';
-import { Inject } from 'vue-property-decorator';
+import { Inject, Options } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../../../../utils/array';
 import { CommunityChannel } from '../../../../../../../../_common/community/channel/channel.model';
 import { Growls } from '../../../../../../../../_common/growls/growls.service';
@@ -12,7 +11,7 @@ import FormCommunityChannelEdit from '../../../../../../../components/forms/comm
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../view.store';
 import AppCommunitiesViewPageContainer from '../../../../_page-container/page-container.vue';
 
-@Component({
+@Options({
 	name: 'RouteCommunitiesViewEditChannelsOverview',
 	components: {
 		FormCommunityChannelEdit,

@@ -1,10 +1,10 @@
-import { BaseModal } from '../../../../_common/modal/base';
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { BaseModal } from '../../../../_common/modal/base';
 import { Store } from '../../../store/index';
 import FormAvatar from '../../forms/avatar/avatar.vue';
 
-@Component({
+@Options({
 	components: {
 		FormAvatar,
 	},

@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import AppExpand from '../../../../../../../_common/expand/expand.vue';
 import { Game } from '../../../../../../../_common/game/game.model';
@@ -12,7 +12,7 @@ import { AppState, AppStore } from '../../../../../../../_common/store/app-store
 import FormGameSettings from '../../../../../../components/forms/game/settings/settings.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
-@Component({
+@Options({
 	name: 'RouteDashGamesManageGameSettings',
 	components: {
 		FormGameSettings,

@@ -1,10 +1,10 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { Growls } from '../../growls/growls.service';
 import { BaseModal } from '../../modal/base';
 import { User } from '../../user/user.model';
 import AppBlockForm from '../form/form.vue';
 
-@Component({
+@Options({
 	components: {
 		AppBlockForm,
 	},

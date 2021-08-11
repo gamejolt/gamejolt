@@ -1,5 +1,4 @@
-import Component from 'vue-class-component';
-import { Inject } from 'vue-property-decorator';
+import { Inject, Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { CommunityCompetitionVotingCategory } from '../../../../../../../../../_common/community/competition/voting-category/voting-category.model';
 import { Environment } from '../../../../../../../../../_common/environment/environment.service';
@@ -15,7 +14,7 @@ import { AppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-d
 import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/date.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view.store';
 
-@Component({
+@Options({
 	name: 'RouteCommunitiesViewEditChannelsCompetitionOverview',
 	components: {
 		AppTimeAgo,

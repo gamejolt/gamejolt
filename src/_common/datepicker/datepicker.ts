@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { date as dateFilter } from '../filters/date';
 import AppDatepickerDay from './day.vue';
 import AppDatepickerMonth from './month.vue';
@@ -70,7 +69,7 @@ export class DatepickerDate {
 	}
 }
 
-@Component({
+@Options({
 	components: {
 		AppDatepickerDay,
 		AppDatepickerMonth,

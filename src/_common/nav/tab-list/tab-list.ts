@@ -1,8 +1,7 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Screen } from '../../screen/screen-service';
 
-@Component({})
+@Options({})
 export default class AppNavTabList extends Vue {
 	@Prop(Boolean) center?: boolean;
 

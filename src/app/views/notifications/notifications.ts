@@ -1,4 +1,4 @@
-import { Component, Watch } from 'vue-property-decorator';
+import { Options, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Api } from '../../../_common/api/api.service';
 import { HistoryCache } from '../../../_common/history/cache/cache.service';
@@ -14,7 +14,7 @@ import { Store } from '../../store';
 
 const HistoryCacheFeedTag = 'notifications-feed';
 
-@Component({
+@Options({
 	name: 'RouteNotifications',
 	components: {
 		AppActivityFeed: AppActivityFeedLazy,

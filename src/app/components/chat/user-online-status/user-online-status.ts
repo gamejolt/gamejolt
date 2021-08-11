@@ -1,8 +1,7 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../utils/vue';
 
-@Component({})
+@Options({})
 export default class AppChatUserOnlineStatus extends Vue {
 	@Prop(propRequired(Boolean)) isOnline!: boolean;
 	@Prop(propOptional(Number, null)) size!: number | null;

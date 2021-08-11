@@ -1,10 +1,9 @@
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Popper } from '../../popper/popper.service';
 import AppPopper from '../../popper/popper.vue';
 import { SiteTemplate } from '../../site/template/template-model';
 
-@Component({
+@Options({
 	components: {
 		AppPopper,
 	},

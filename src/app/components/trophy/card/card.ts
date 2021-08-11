@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
 import { Game } from '../../../../_common/game/game.model';
@@ -9,7 +8,7 @@ import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy
 import { TrophyModal } from '../modal/modal.service';
 import AppTrophyThumbnail from '../thumbnail/thumbnail.vue';
 
-@Component({
+@Options({
 	components: {
 		AppTrophyThumbnail,
 		AppFadeCollapse,

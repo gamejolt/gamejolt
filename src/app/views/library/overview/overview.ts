@@ -1,16 +1,16 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Connection } from '../../../../_common/connection/connection-service';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { Store } from '../../../store';
-import { LibraryModule, LibraryStore } from '../../../store/library';
 import { GameCollection } from '../../../components/game/collection/collection.model';
 import AppGameCollectionGrid from '../../../components/game/collection/grid/grid.vue';
 import AppGameCollectionList from '../../../components/game/collection/list/list.vue';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
+import { Store } from '../../../store';
+import { LibraryModule, LibraryStore } from '../../../store/library';
 
-@Component({
+@Options({
 	name: 'RouteLibraryOverview',
 	components: {
 		AppPageHeader,

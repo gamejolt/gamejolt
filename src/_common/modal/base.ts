@@ -1,10 +1,8 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Modal } from './modal.service';
-import AppModal from './modal.vue'
+import AppModal from './modal.vue';
 
-@Component({
+@Options({
 	components: {
 		AppModal,
 	},

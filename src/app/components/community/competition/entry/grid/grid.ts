@@ -1,6 +1,4 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../../../utils/vue';
 import {
 	CommunityCompetition,
@@ -12,7 +10,7 @@ import { AppCondenseWhitespace } from '../../../../../../_common/condense-whites
 import { number } from '../../../../../../_common/filters/number';
 import AppCommunityCompetitionEntryThumbnail from '../thumbnail/thumbnail.vue';
 
-@Component({
+@Options({
 	components: {
 		AppCommunityCompetitionEntryThumbnail,
 		AppCondenseWhitespace,

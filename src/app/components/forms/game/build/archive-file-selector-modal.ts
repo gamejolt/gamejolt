@@ -1,9 +1,9 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import { BaseModal } from '../../../../../_common/modal/base';
 
-@Component({
+@Options({
 	components: {
 		AppLoading,
 	},

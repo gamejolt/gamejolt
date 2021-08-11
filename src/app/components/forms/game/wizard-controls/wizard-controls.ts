@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { findVueParent } from '../../../../../utils/vue';
 import AppFormButton from '../../../../../_common/form-vue/button/button.vue';
@@ -7,7 +6,7 @@ import AppFormTS from '../../../../../_common/form-vue/form';
 import AppForm from '../../../../../_common/form-vue/form.vue';
 import { RouteStore, RouteStoreName } from '../../../../views/dashboard/games/manage/manage.store';
 
-@Component({
+@Options({
 	components: {
 		AppFormButton,
 	},

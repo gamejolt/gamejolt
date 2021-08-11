@@ -1,3 +1,6 @@
+import { h } from 'vue';
+import { Options } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Api } from '../../../../../../../../_common/api/api.service';
 import { Growls } from '../../../../../../../../_common/growls/growls.service';
 import {
@@ -8,12 +11,9 @@ import {
 	BaseRouteComponent,
 	RouteResolver,
 } from '../../../../../../../../_common/route/route-component';
-import { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { RouteStore, RouteStoreModule } from '../../../manage.store';
 
-@Component({
+@Options({
 	name: 'RouteDashGamesManageGameLinkedAccountsLinkCallback',
 })
 @RouteResolver({
@@ -103,7 +103,7 @@ export default class RouteDashGamesManageGameLinkedAccountsLinkCallback extends 
 		});
 	}
 
-	render(h: CreateElement) {
+	render() {
 		return h('div');
 	}
 }

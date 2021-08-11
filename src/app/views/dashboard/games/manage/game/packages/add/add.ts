@@ -1,10 +1,10 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { GamePackage } from '../../../../../../../../_common/game/package/package.model';
 import { BaseRouteComponent } from '../../../../../../../../_common/route/route-component';
 import FormGamePackage from '../../../../../../../components/forms/game/package/package.vue';
 import { RouteStore, RouteStoreModule } from '../../../manage.store';
 
-@Component({
+@Options({
 	name: 'RouteDashGamesManageGamePackagesAdd',
 	components: {
 		FormGamePackage,

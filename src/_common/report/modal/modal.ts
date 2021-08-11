@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import AppBlockForm from '../../block/form/form.vue';
 import { Comment } from '../../comment/comment-model';
 import { FiresidePost } from '../../fireside/post/post-model';
@@ -10,7 +10,7 @@ import { BaseModal } from '../../modal/base';
 import { User } from '../../user/user.model';
 import AppReportForm from '../form/form.vue';
 
-@Component({
+@Options({
 	components: {
 		AppReportForm,
 		AppBlockForm,

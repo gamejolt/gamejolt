@@ -1,13 +1,11 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { fuzzysearch } from '../../../../utils/string';
 import { propOptional, propRequired } from '../../../../utils/vue';
 import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
 import AppChatMemberListItem from './item/item.vue';
 
-@Component({
+@Options({
 	components: {
 		AppChatMemberListItem,
 	},

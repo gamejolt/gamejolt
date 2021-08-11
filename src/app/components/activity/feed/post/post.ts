@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
+import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { Location } from 'vue-router';
 import { State } from 'vuex-class';
 import { findRequiredVueParent } from '../../../../../utils/vue';
@@ -48,7 +47,7 @@ import { ActivityFeedKey, ActivityFeedView } from '../view';
 import AppActivityFeedPostBlocked from './blocked/blocked.vue';
 import AppActivityFeedPostTime from './time/time.vue';
 
-@Component({
+@Options({
 	components: {
 		AppActivityFeedPostTime,
 		AppUserAvatar,

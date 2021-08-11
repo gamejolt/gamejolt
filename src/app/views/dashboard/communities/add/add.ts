@@ -1,11 +1,11 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Community } from '../../../../../_common/community/community.model';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { User } from '../../../../../_common/user/user.model';
 import FormCommunity from '../../../../components/forms/community/community.vue';
 import AppPageContainer from '../../../../components/page-container/page-container.vue';
 
-@Component({
+@Options({
 	name: 'RouteDashCommunitiesAdd',
 	components: {
 		AppPageContainer,

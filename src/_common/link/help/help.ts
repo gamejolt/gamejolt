@@ -1,9 +1,8 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Environment } from '../../environment/environment.service';
 import { Navigate } from '../../navigate/navigate.service';
 
-@Component({})
+@Options({})
 export default class AppLinkHelp extends Vue {
 	@Prop({ type: String, required: true }) page!: string;
 

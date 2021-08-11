@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Game } from '../../../../_common/game/game.model';
@@ -8,7 +7,7 @@ import { SettingRestrictedBrowsing } from '../../../../_common/settings/settings
 import { Store } from '../../../store/index';
 import AppGameOgrs from '../ogrs/ogrs.vue';
 
-@Component({
+@Options({
 	components: {
 		AppGameOgrs,
 	},

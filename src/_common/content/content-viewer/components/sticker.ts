@@ -1,18 +1,18 @@
-import Vue, { CreateElement } from 'vue';
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import AppContentSticker from '../../components/sticker/sticker.vue';
 import { ContentObject } from '../../content-object';
 import { ContentOwner } from '../../content-owner';
 
-@Component({})
+@Options({})
 export class AppContentViewerSticker extends Vue {
 	@Prop(ContentObject)
 	data!: ContentObject;
+
 	@Prop(Object)
 	owner!: ContentOwner;
 
-	render(h: CreateElement) {
+	render() {
 		return h(AppContentSticker, {
 			key: this.data.attrs.id.toString(),
 			props: {

@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
@@ -9,7 +9,7 @@ import AppLoading from '../../../../_common/loading/loading.vue';
 import { BaseModal } from '../../../../_common/modal/base';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 
-@Component({
+@Options({
 	components: {
 		AppLoading,
 		AppGameThumbnailImg,

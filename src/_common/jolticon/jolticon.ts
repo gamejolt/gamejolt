@@ -1,7 +1,6 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 
-@Component({})
+@Options({})
 export default class AppJolticon extends Vue {
 	@Prop(String) icon!: string;
 	@Prop(Boolean) big?: boolean;

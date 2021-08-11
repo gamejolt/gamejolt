@@ -1,7 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { arrayGroupBy } from '../../../../utils/array';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
@@ -21,7 +20,7 @@ import { ClientInstallPackageModal } from '../install-package-modal/install-pack
 import AppClientInstallProgress from '../install-progress/install-progress.vue';
 import { LocalDbPackage } from '../local-db/package/package.model';
 
-@Component({
+@Options({
 	components: {
 		AppPopper,
 		AppClientInstallProgress,
@@ -215,7 +214,7 @@ export default class AppClientGameButtons extends Vue {
 	}
 
 	openFolder(localPackage: LocalDbPackage) {
-		fs.readdir(path.resolve(localPackage.install_dir), function(err, files) {
+		fs.readdir(path.resolve(localPackage.install_dir), function (err, files) {
 			if (err) {
 				return;
 			}

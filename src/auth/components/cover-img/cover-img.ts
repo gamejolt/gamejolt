@@ -1,8 +1,7 @@
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { ImgHelper } from '../../../_common/img/helper/helper-service';
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
 
-@Component({})
+@Options({})
 export default class AppCoverImg extends Vue {
 	@Prop(String) imgUrl!: string;
 

@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { Growls } from '../../../../../../../_common/growls/growls.service';
 import { ModalFacebookPageSelector } from '../../../../../../../_common/linked-account/facebook-page-selector-modal/facebook-page-selector-modal-service';
@@ -17,7 +17,7 @@ import {
 } from '../../../../../../../_common/route/route-component';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
-@Component({
+@Options({
 	name: 'RouteDashGamesManageGameLinkedAccounts',
 	components: {
 		AppLinkedAccount,

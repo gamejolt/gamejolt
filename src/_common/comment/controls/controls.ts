@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
@@ -13,7 +12,7 @@ import { addCommentVote, canCommentOnModel, Comment, removeCommentVote } from '.
 import { CommentThreadModal } from '../thread/modal.service';
 import { CommentVote } from '../vote/vote-model';
 
-@Component({
+@Options({
 	directives: {
 		AppAuthRequired,
 		AppTooltip,

@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Environment } from '../_common/environment/environment.service';
 import { GameBuild } from '../_common/game/build/build.model';
@@ -8,7 +7,7 @@ import { GamePackage } from '../_common/game/package/package.model';
 import AppCommonShell from '../_common/shell/shell.vue';
 import { Store } from './store/index';
 
-@Component({
+@Options({
 	components: {
 		AppCommonShell,
 		AppEmbedHtml: () =>

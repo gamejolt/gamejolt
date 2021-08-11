@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional } from '../../../../utils/vue';
 import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
 import { AppCondenseWhitespace } from '../../../../_common/condense-whitespace';
@@ -14,7 +13,7 @@ export const GameGridRowSizeLg = 3;
 
 let idCounter = 0;
 
-@Component({
+@Options({
 	components: {
 		AppGameThumbnail,
 		AppAdWidget,

@@ -1,5 +1,4 @@
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import { BaseModal } from '../../../../_common/modal/base';
@@ -16,7 +15,7 @@ import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vu
 import { User } from '../../../../_common/user/user.model';
 import AppTrophyThumbnail from '../thumbnail/thumbnail.vue';
 
-@Component({
+@Options({
 	components: {
 		AppTrophyThumbnail,
 		AppTimeAgo,

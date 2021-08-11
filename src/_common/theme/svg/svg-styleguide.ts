@@ -1,4 +1,4 @@
-import { Component, Watch } from 'vue-property-decorator';
+import { Options, Watch } from 'vue-property-decorator';
 import { importContext } from '../../../utils/utils';
 import AppFormControlSelect from '../../form-vue/control/select/select.vue';
 import AppFormControlTextarea from '../../form-vue/control/textarea/textarea.vue';
@@ -24,7 +24,7 @@ interface FormModel {
 	strictColors?: boolean;
 }
 
-@Component({
+@Options({
 	components: {
 		AppTheme,
 		AppThemeSvg,

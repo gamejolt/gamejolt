@@ -1,4 +1,4 @@
-import { Component, Inject, Watch } from 'vue-property-decorator';
+import { Inject, Options, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../_common/api/api.service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
@@ -8,7 +8,7 @@ import { AppActivityFeedLazy } from '../../components/lazy';
 import { Store } from '../../store';
 import { RouteActivityFeedController } from './feed';
 
-@Component({
+@Options({
 	name: 'RouteHomeActivity',
 	components: {
 		AppActivityFeed: AppActivityFeedLazy,

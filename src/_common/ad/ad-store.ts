@@ -10,6 +10,7 @@ import { AdPlaywireAdapter } from './playwire/playwire-adapter';
 import { AdProperAdapter } from './proper/proper-adapter';
 import AppAdWidgetInner from './widget/inner';
 
+// TODO(vue3)
 declare module 'vue/types/vue' {
 	interface Vue {
 		$ad: AdStore;

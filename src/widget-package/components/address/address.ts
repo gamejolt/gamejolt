@@ -1,10 +1,9 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { Action, Mutation } from 'vuex-class';
 import { Country, Geo, Region } from '../../../_common/geo/geo.service';
 import { AddressData, Store } from '../../store/index';
 
-@Component({})
+@Options({})
 export default class AppAddress extends Vue {
 	@Mutation setAddress!: Store['setAddress'];
 	@Action checkout!: Store['checkout'];

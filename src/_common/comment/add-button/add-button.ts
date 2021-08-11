@@ -1,10 +1,9 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { Model } from '../../model/model.service';
 import { CommentModal, DisplayMode } from '../modal/modal.service';
 
-@Component({
+@Options({
 	directives: {
 		AppAuthRequired,
 	},

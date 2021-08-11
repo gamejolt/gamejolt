@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
 import { propOptional } from '../../../../../utils/vue';
 import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
@@ -19,7 +18,7 @@ import { Store } from '../../../../store';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
 import AppEditableThumbnail from '../_editable-thumbnail/editable-thumbnail.vue';
 
-@Component({
+@Options({
 	components: {
 		AppPopper,
 		AppTheme,

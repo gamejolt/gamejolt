@@ -1,17 +1,16 @@
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Action } from 'vuex-class';
+import { stringSort } from '../../../../utils/array';
+import { fuzzysearch } from '../../../../utils/string';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { AppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';
 import { GamePlaylist } from '../../../../_common/game-playlist/game-playlist.model';
 import { Game } from '../../../../_common/game/game.model';
-import { Popper } from '../../../../_common/popper/popper.service';
-import { stringSort } from '../../../../utils/array';
-import { fuzzysearch } from '../../../../utils/string';
 import AppLoading from '../../../../_common/loading/loading.vue';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-import { Action } from 'vuex-class';
+import { Popper } from '../../../../_common/popper/popper.service';
 import { LibraryStore } from '../../../store/library';
 
-@Component({
+@Options({
 	components: {
 		AppLoading,
 	},

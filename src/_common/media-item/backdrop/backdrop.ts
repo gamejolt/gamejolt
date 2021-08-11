@@ -1,9 +1,8 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
 import { MediaItem } from '../../media-item/media-item-model';
 
-@Component({})
+@Options({})
 export default class AppMediaItemBackdrop extends Vue {
 	@Prop(propOptional(MediaItem))
 	mediaItem!: MediaItem;

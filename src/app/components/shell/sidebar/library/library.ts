@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { stringSort } from '../../../../../utils/array';
 import { shouldShowAppPromotion } from '../../../../../utils/mobile-app';
@@ -15,7 +14,7 @@ import { Store } from '../../../../store/index';
 import { LibraryModule, LibraryStore } from '../../../../store/library';
 import AppShellSidebarCollectionList from './collection-list.vue';
 
-@Component({
+@Options({
 	components: {
 		AppShellSidebarCollectionList,
 		AppExpand,

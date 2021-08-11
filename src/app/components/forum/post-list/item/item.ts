@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../../../_common/api/api.service';
 import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
@@ -26,7 +25,7 @@ import FormForumPost from '../../../forms/forum/post/post.vue';
 
 const InviewConfig = new ScrollInviewConfig();
 
-@Component({
+@Options({
 	components: {
 		AppScrollInview,
 		AppMessageThread,

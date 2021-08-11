@@ -1,9 +1,9 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { ClientUpdater } from '../../../_common/client/client-updater.service';
 import AppProgressBar from '../../../_common/progress/bar/bar.vue';
 import { BaseRouteComponent } from '../../../_common/route/route-component';
 
-@Component({
+@Options({
 	name: 'RouteUpgrade',
 	components: {
 		AppProgressBar,

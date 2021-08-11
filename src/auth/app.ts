@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { loadCurrentLanguage } from '../utils/translations';
 import { Connection } from '../_common/connection/connection-service';
 import AppCookieBanner from '../_common/cookie/banner/banner.vue';
@@ -16,7 +15,7 @@ if (GJ_IS_CLIENT) {
 	components.AppClientBase = require('../_common/client/base/base.vue').default;
 }
 
-@Component({
+@Options({
 	components,
 })
 export default class App extends Vue {

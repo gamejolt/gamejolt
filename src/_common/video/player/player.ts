@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { AppVideoPlayerShakaLazy } from '../../../app/components/lazy';
 import { propOptional, propRequired } from '../../../utils/vue';
 import { number } from '../../filters/number';
@@ -80,7 +79,7 @@ export function createReadableTimestamp(time: number) {
 	return `${minutes}:${seconds}`;
 }
 
-@Component({
+@Options({
 	components: {
 		AppVideoPlayerShakaLazy,
 		AppPlayerPlayback,

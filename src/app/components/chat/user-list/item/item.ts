@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { number } from '../../../../../_common/filters/number';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
@@ -16,7 +15,7 @@ import AppChatUserOnlineStatus from '../../user-online-status/user-online-status
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
 
-@Component({
+@Options({
 	components: {
 		AppScrollInview,
 		AppChatUserOnlineStatus,

@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
@@ -8,7 +7,7 @@ import { ScrollInviewConfig } from '../inview/config';
 import { AppScrollInview } from '../inview/inview';
 import { Scroll } from '../scroll.service';
 
-@Component({
+@Options({
 	components: {
 		AppScrollInview,
 	},

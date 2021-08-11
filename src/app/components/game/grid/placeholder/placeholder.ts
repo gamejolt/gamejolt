@@ -1,11 +1,10 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../../utils/vue';
 import AppGameThumbnailPlaceholder from '../../../../../_common/game/thumbnail/placeholder/placeholder.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { GameGridRowSizeLg, GameGridRowSizeMd, GameGridRowSizeSm } from '../grid';
 
-@Component({
+@Options({
 	components: {
 		AppGameThumbnailPlaceholder,
 	},

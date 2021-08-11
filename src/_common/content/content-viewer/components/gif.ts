@@ -1,17 +1,18 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import AppContentGif from '../../components/gif/gif.vue';
 import { ContentObject } from '../../content-object';
 import { ContentOwner } from '../../content-owner';
 
-@Component({})
+@Options({})
 export class AppContentViewerGif extends Vue {
 	@Prop(ContentObject)
 	data!: ContentObject;
+
 	@Prop(Object)
 	owner!: ContentOwner;
 
-	render(h: CreateElement) {
+	render() {
 		return h(AppContentGif, {
 			props: {
 				gifId: this.data.attrs.id,

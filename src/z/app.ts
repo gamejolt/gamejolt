@@ -1,12 +1,11 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import AppErrorPage from '../_common/error/page/page.vue';
 import AppCommonShell from '../_common/shell/shell.vue';
 import AppUserBar from '../_common/user/user-bar/user-bar.vue';
 import { Store } from './store';
 
-@Component({
+@Options({
 	components: {
 		AppCommonShell,
 		AppUserBar,

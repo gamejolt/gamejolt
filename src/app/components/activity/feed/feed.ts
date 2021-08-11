@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Emit, Prop, Provide, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Provide, Vue, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../utils/vue';
 import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
@@ -21,7 +20,7 @@ import { ActivityFeedKey, ActivityFeedView } from './view';
 const InviewConfigShowNew = new ScrollInviewConfig({ margin: `-${Scroll.offsetTop}px` });
 const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height * 1.5}px` });
 
-@Component({
+@Options({
 	components: {
 		AppLoading,
 		AppActivityFeedItem,

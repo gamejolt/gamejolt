@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
 import { Community } from '../../../../_common/community/community.model';
 import AppFormControlTheme from '../../../../_common/form-vue/control/theme/theme.vue';
@@ -12,7 +12,7 @@ import { ThemeMutation, ThemeState, ThemeStore } from '../../../../_common/theme
 import { Store } from '../../../store';
 import AppPostAddButtonFormControl from '../../post/add-button/form-control/form-control.vue';
 
-@Component({
+@Options({
 	components: {
 		AppPostAddButtonFormControl,
 		AppFormControlTheme,

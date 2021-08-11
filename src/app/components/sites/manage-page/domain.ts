@@ -1,13 +1,12 @@
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import { Game } from '../../../../_common/game/game.model';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { Site } from '../../../../_common/site/site-model';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Store } from '../../../store/index';
 import FormSiteDomain from '../../forms/site/domain/domain.vue';
 
-@Component({
+@Options({
 	components: {
 		FormSiteDomain,
 	},

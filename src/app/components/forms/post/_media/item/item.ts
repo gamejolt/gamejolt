@@ -1,9 +1,8 @@
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { AppImgResponsive } from '../../../../../../_common/img/responsive/responsive';
 import { MediaItem } from '../../../../../../_common/media-item/media-item-model';
-import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
 
-@Component({
+@Options({
 	components: {
 		AppImgResponsive,
 	},

@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { Action, Mutation, State } from 'vuex-class';
 import { AppTheme } from '../_common/theme/theme';
 import AppDownload from './components/download/download.vue';
@@ -12,7 +11,7 @@ import { store, Store } from './store/index';
 
 export const WidgetThemeKey = 'widget';
 
-@Component({
+@Options({
 	components: {
 		AppTheme,
 		AppFooter,

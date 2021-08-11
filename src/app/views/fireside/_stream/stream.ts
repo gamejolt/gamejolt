@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { number } from '../../../../_common/filters/number';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -15,7 +14,8 @@ import AppFiresideVideo from '../_video/video.vue';
 const UIHideTimeout = 2000;
 const UIHideTimeoutMovement = 2000;
 const UITransitionTime = 200;
-@Component({
+
+@Options({
 	components: {
 		AppFiresideHostList,
 		AppFiresideHostThumbIndicator,

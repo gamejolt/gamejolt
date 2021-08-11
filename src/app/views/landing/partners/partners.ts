@@ -1,8 +1,8 @@
+import { Options } from 'vue-property-decorator';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
 import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
-import { Component } from 'vue-property-decorator';
 
-@Component({
+@Options({
 	name: 'RouteLandingPartners',
 	components: {
 		AppThemeSvg,

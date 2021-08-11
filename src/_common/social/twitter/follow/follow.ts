@@ -1,18 +1,19 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import '../../social.styl';
-
 import { TwitterSdk } from '../sdk/sdk.service';
 
-@Component({})
+@Options({})
 export class AppSocialTwitterFollow extends Vue {
 	@Prop(String) handle!: string;
+
 	@Prop({ type: Boolean, default: true })
 	showCount!: boolean;
+
 	@Prop({ type: String, default: 'small' })
 	size!: string;
 
-	render(h: CreateElement) {
+	render() {
 		return h('a', {
 			staticClass: 'twitter-follow-button',
 			attrs: {

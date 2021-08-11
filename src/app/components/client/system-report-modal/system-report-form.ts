@@ -1,5 +1,5 @@
 import { IClientOSInfo } from 'client-voodoo';
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { ClientLogger } from '../../../../_common/client/logger/logger.service';
 import { BaseForm, FormOnSubmit } from '../../../../_common/form-vue/form.service';
@@ -15,7 +15,7 @@ interface FormModel {
 	localdb_packages: { [id: number]: LocalDbPackage };
 }
 
-@Component({})
+@Options({})
 export default class FormClientSystemReport extends BaseForm<FormModel> implements FormOnSubmit {
 	@ClientLibraryState
 	games!: ClientLibraryStore['gamesById'];

@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Community } from '../../../../../_common/community/community.model';
 import { FormOnBeforeSubmit, FormOnLoad } from '../../../../../_common/form-vue/form.service';
 import Onboarding, { OnboardingStep } from '../../../../../_common/onboarding/onboarding.service';
@@ -6,14 +6,16 @@ import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.v
 import OnboardingComponent from '../base';
 import AppOnboardingFollowsCommunityItem from './community-item/community-item.vue';
 
-@Component({
+@Options({
 	components: {
 		AppOnboardingFollowsCommunityItem,
 		AppScrollScroller,
 	},
 })
-export default class FormOnboardingFollows extends OnboardingComponent<any>
-	implements FormOnLoad, FormOnBeforeSubmit {
+export default class FormOnboardingFollows
+	extends OnboardingComponent<any>
+	implements FormOnLoad, FormOnBeforeSubmit
+{
 	stepName = 'follows' as OnboardingStep;
 
 	communities: Community[] = [];

@@ -1,10 +1,9 @@
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
 import { AdSlot, AdSlotMeta, AdSlotPlacement, AdSlotSize } from '../ad-slot-info';
 import AppAdWidgetInner from './inner.vue';
 
-@Component({
+@Options({
 	components: {
 		AppAdWidgetInner,
 	},

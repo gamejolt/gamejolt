@@ -1,6 +1,5 @@
 import Axios from 'axios';
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 
 /**
  * How long to wait after a request has started before showing the loading bar.
@@ -13,7 +12,7 @@ const ShowDelay = 500;
  */
 const HideDelay = 200;
 
-@Component({})
+@Options({})
 export default class AppLoadingBar extends Vue {
 	routeChanging = false;
 	requestCount = 0;

@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
@@ -47,7 +47,7 @@ import {
 	default as AppAnalyticsReportTopCompositionValue,
 } from './_report/top-composition.vue';
 
-@Component({
+@Options({
 	name: 'RouteDashAnalytics',
 	components: {
 		AppPageHeader,

@@ -1,9 +1,9 @@
+import { Options, Prop } from 'vue-property-decorator';
 import { Game } from '../../../../_common/game/game.model';
 import { BaseModal } from '../../../../_common/modal/base';
-import { Component, Prop } from 'vue-property-decorator';
 import FormGameThumbnail from '../../forms/game/thumbnail/thumbnail.vue';
 
-@Component({
+@Options({
 	components: {
 		FormGameThumbnail,
 	},

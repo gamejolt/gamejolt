@@ -1,11 +1,10 @@
-import Vue from 'vue';
-import { Component, Inject } from 'vue-property-decorator';
+import { Inject, Options, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Store } from '../../../store/index';
 import { ChatClient, ChatKey } from '../client';
 import AppChatWindow from '../window/window.vue';
 
-@Component({
+@Options({
 	components: {
 		AppChatWindow,
 	},

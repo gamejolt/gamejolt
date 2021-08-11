@@ -1,11 +1,11 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { AdPlaywireAdapter } from '../../../../_common/ad/playwire/playwire-adapter';
 import { AdProperAdapter } from '../../../../_common/ad/proper/proper-adapter';
 import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
 import AppScrollAffix from '../../../../_common/scroll/affix/affix.vue';
 
-@Component({
+@Options({
 	name: 'RouteLandingAdtest',
 	components: {
 		AppAdWidget,

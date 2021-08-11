@@ -1,6 +1,4 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
@@ -10,7 +8,7 @@ import AppTrophyCard from '../../card/card.vue';
 
 const PAGE_SIZE = 12;
 
-@Component({
+@Options({
 	components: {
 		AppTrophyCard,
 		AppLoading,

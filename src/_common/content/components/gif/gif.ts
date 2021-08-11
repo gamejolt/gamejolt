@@ -1,6 +1,4 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../../utils/vue';
 import { ContentFocus } from '../../../content-focus/content-focus.service';
 import { AppResponsiveDimensions } from '../../../responsive-dimensions/responsive-dimensions';
@@ -14,7 +12,7 @@ import AppBaseContentComponent from '../base/base-content-component.vue';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.windowHeight * 0.25}px` });
 
-@Component({
+@Options({
 	components: {
 		AppBaseContentComponent,
 		AppScrollInview,

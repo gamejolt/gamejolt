@@ -1,12 +1,10 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { Community } from '../../../../../_common/community/community.model';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import { getCommunityBlockReasons } from '../../../../../_common/user/action-reasons';
 
-@Component({
+@Options({
 	components: {
 		AppTimeAgo,
 	},

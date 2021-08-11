@@ -1,8 +1,7 @@
 import Axios from 'axios';
 import { darken, lighten, parseToHsl } from 'polished';
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
-import { CreateElement } from 'vue/types/vue';
+import { h } from 'vue';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { arrayUnique } from '../../../utils/array';
 import { propOptional } from '../../../utils/vue';
 import { Theme } from '../theme.model';
@@ -10,7 +9,7 @@ import { ThemeState, ThemeStore } from '../theme.store';
 
 const SvgGraysRegex = /#([a-f\d]{1,2})\1{2}\b/gi;
 
-@Component({})
+@Options({})
 export class AppThemeSvg extends Vue {
 	@Prop(propOptional(String, '')) src!: string;
 	@Prop(propOptional(Theme, null)) theme!: null | Theme;
@@ -110,7 +109,7 @@ export class AppThemeSvg extends Vue {
 		this.request = request;
 	}
 
-	render(h: CreateElement) {
+	render() {
 		return h('img', { domProps: { src: this.processedSvg } });
 	}
 }

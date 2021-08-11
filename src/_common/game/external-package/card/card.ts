@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Analytics } from '../../../analytics/analytics.service';
 import AppCard from '../../../card/card.vue';
 import AppFadeCollapse from '../../../fade-collapse/fade-collapse.vue';
@@ -8,7 +7,7 @@ import { AppTooltip } from '../../../tooltip/tooltip-directive';
 import { GameBuild } from '../../build/build.model';
 import { GameExternalPackage } from '../external-package.model';
 
-@Component({
+@Options({
 	components: {
 		AppCard,
 		AppFadeCollapse,

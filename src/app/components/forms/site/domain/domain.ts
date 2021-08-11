@@ -1,16 +1,16 @@
+import { Options, Prop } from 'vue-property-decorator';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
 import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
 import { Site } from '../../../../../_common/site/site-model';
 import { User } from '../../../../../_common/user/user.model';
-import { Component, Prop } from 'vue-property-decorator';
 
 interface FormModel {
 	type: string;
 }
 
-@Component({
+@Options({
 	components: {
 		AppFormControlToggle,
 		AppExpand,

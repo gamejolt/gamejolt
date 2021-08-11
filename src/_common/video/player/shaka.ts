@@ -1,6 +1,5 @@
 import { Player as ShakaPlayer, polyfill } from 'shaka-player';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
 import AppVideo from '../video.vue';
 import { trackVideoPlayerEvent, VideoPlayerController } from './controller';
@@ -13,7 +12,7 @@ type ShakaTrack = {
 	videoBandwidth: number;
 };
 
-@Component({
+@Options({
 	components: {
 		AppVideo,
 	},

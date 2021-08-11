@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
+import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import {
 	Analytics,
 	PostControlsLocation,
@@ -41,7 +40,7 @@ import AppPostControlsSaveProgress from './save-progress/save-progress.vue';
 import AppPostControlsStats from './stats/stats.vue';
 import AppPostControlsUserFollow from './user-follow/user-follow.vue';
 
-@Component({
+@Options({
 	components: {
 		AppPostControlsUserFollow,
 		AppPostControlsMore,

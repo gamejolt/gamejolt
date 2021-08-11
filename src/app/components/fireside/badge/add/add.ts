@@ -1,13 +1,11 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Community } from '../../../../../_common/community/community.model';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { AppTheme } from '../../../../../_common/theme/theme';
 import { FiresideAddModal } from '../../add-modal/add-modal.service';
 
-@Component({
+@Options({
 	components: {
 		AppTheme,
 	},

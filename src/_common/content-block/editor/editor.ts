@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Api } from '../../api/api.service';
 import { Environment } from '../../environment/environment.service';
 import AppLoading from '../../loading/loading.vue';
@@ -10,7 +9,7 @@ import FormContentBlockEditor from './editor-form.vue';
 
 const PreviewDebounce = 3000;
 
-@Component({
+@Options({
 	components: {
 		AppLoading,
 		FormContentBlockEditor,

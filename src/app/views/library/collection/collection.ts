@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { enforceLocation } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
@@ -32,7 +32,7 @@ const CollectionThemeKey = 'collection';
 const MixableTypes = ['followed', 'playlist', 'owned', 'developer'];
 const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 
-@Component({
+@Options({
 	name: 'RouteLibraryCollection',
 	components: {
 		AppPageHeader,

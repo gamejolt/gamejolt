@@ -1,20 +1,19 @@
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
+import { number } from '../../../../_common/filters/number';
 import { Game } from '../../../../_common/game/game.model';
 import { GameScoreTable } from '../../../../_common/game/score-table/score-table.model';
 import { Popper } from '../../../../_common/popper/popper.service';
 import { Screen } from '../../../../_common/screen/screen-service';
+import { AppStore } from '../../../../_common/store/app-store';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
 import { UserGameScore } from '../../../../_common/user/game-score/game-score.model';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
-import { number } from '../../../../_common/filters/number';
-import { AppStore } from '../../../../_common/store/app-store';
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import AppScoreList from '../list/list.vue';
 import AppScoreboardSelector from '../scoreboard-selector/scoreboard-selector.vue';
 
-@Component({
+@Options({
 	components: {
 		AppTimeAgo,
 		AppScoreboardSelector,

@@ -1,12 +1,11 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Screen } from '../screen/screen-service';
 import { AppGrowlDynamic } from './growl-dynamic';
 import { Growl } from './growls.service';
 
 require('./growl-content.styl');
 
-@Component({
+@Options({
 	components: {
 		AppGrowlDynamic,
 	},

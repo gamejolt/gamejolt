@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Inject, Prop, Watch } from 'vue-property-decorator';
+import { Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { ContentDocument } from '../../../../../_common/content/content-document';
 import { AppContentEditorLazy } from '../../../../../_common/content/content-editor/content-editor-lazy';
@@ -15,7 +14,7 @@ import { ChatMessage } from '../../message';
 import { ChatRoom } from '../../room';
 import AppChatWindowSendForm from './form/form.vue';
 
-@Component({
+@Options({
 	components: {
 		AppContentEditor: AppContentEditorLazy,
 		AppChatWindowSendForm,

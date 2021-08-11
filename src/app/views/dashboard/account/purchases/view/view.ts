@@ -1,4 +1,8 @@
+import { Options } from 'vue-property-decorator';
+import { arrayGroupBy, arrayIndexBy } from '../../../../../../utils/array';
 import { Api } from '../../../../../../_common/api/api.service';
+import { currency } from '../../../../../../_common/filters/currency';
+import { date } from '../../../../../../_common/filters/date';
 import { Game } from '../../../../../../_common/game/game.model';
 import { GamePackage } from '../../../../../../_common/game/package/package.model';
 import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
@@ -8,13 +12,9 @@ import { OrderPayment } from '../../../../../../_common/order/payment/payment.mo
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { Translate } from '../../../../../../_common/translate/translate.service';
-import { arrayGroupBy, arrayIndexBy } from '../../../../../../utils/array';
-import { currency } from '../../../../../../_common/filters/currency';
-import { date } from '../../../../../../_common/filters/date';
-import { Component } from 'vue-property-decorator';
 import { routeStore, RouteStore, RouteStoreModule } from '../../account.store';
 
-@Component({
+@Options({
 	name: 'RouteDashAccountPurchasesView',
 	components: {
 		AppGameThumbnailImg,

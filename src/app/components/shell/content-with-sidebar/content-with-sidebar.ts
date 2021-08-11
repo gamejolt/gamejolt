@@ -1,16 +1,10 @@
-import Vue from 'vue';
-import { Component, Watch } from 'vue-property-decorator';
+import { Options, Vue, Watch } from 'vue-property-decorator';
 import { Mutation, State } from 'vuex-class';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import { SidebarState, SidebarStore } from '../../../../_common/sidebar/sidebar.store';
 import { Store } from '../../../store/index';
 
-/**
- * Can be used in pages to show a sidebar in the content that affects the shell.
- *
- * Pass a Vue file to the 'contextComponent' prop, and any required props for that component as 'contextProps', to use the sidebar.
- */
-@Component({
+@Options({
 	components: {
 		AppScrollScroller,
 	},

@@ -1,10 +1,10 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { GamePlaylist } from '../../../../_common/game-playlist/game-playlist.model';
 import { BaseModal } from '../../../../_common/modal/base';
 import FormPlaylist from '../../forms/playlist/playlist.vue';
 import { GameCollection } from '../../game/collection/collection.model';
 
-@Component({
+@Options({
 	components: {
 		FormPlaylist,
 	},

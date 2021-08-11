@@ -1,5 +1,5 @@
-import { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options } from 'vue-property-decorator';
 import { LocationRedirect } from '../../../../utils/router';
 import { importContext } from '../../../../utils/utils';
 import { PayloadError } from '../../../../_common/payload/payload-service';
@@ -10,7 +10,7 @@ const paths = importContext(
 	require.context('!file-loader?-emitFile!../../../../lib/doc-help/src/', true, /\.md$/)
 );
 
-@Component({
+@Options({
 	name: 'RouteLandingHelp',
 })
 @RouteResolver({
@@ -59,7 +59,7 @@ export default class RouteLandingHelp extends BaseRouteComponent {
 		this.content = $payload;
 	}
 
-	render(h: CreateElement) {
+	render() {
 		return h('div', { domProps: { innerHTML: this.content } });
 	}
 }

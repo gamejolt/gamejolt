@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Emit, Prop, Provide, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Provide, Vue, Watch } from 'vue-property-decorator';
 import { RawLocation } from 'vue-router';
 import { arrayRemove } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
@@ -49,7 +48,7 @@ import AppPollVoting from '../../../components/poll/voting/voting.vue';
 import AppPostControls from '../../../components/post/controls/controls.vue';
 import AppPostPageRecommendations from './recommendations/recommendations.vue';
 
-@Component({
+@Options({
 	components: {
 		AppPageContainer,
 		AppTimeAgo,

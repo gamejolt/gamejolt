@@ -1,10 +1,10 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import { BaseModal } from '../../../../../_common/modal/base';
 import { RouteStatus } from '../../fireside';
 import AppFiresideStats from '../stats.vue';
 
-@Component({
+@Options({
 	components: {
 		AppFiresideStats,
 	},

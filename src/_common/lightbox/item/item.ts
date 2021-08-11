@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../../utils/vue';
 import { AppImgResponsive } from '../../img/responsive/responsive';
 import AppMediaItemBackdrop from '../../media-item/backdrop/backdrop.vue';
@@ -13,7 +12,7 @@ import AppLightboxTS from '../lightbox';
 import { LightboxConfig, LightboxMediaModel } from '../lightbox-helpers';
 import AppLightbox from '../lightbox.vue';
 
-@Component({
+@Options({
 	components: {
 		AppVideoEmbed,
 		AppSketchfabEmbed,

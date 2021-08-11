@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Analytics } from '../../analytics/analytics.service';
 import { Growls } from '../../growls/growls.service';
 import AppLightboxItem from '../../lightbox/item/item.vue';
@@ -11,7 +10,7 @@ import AppScrollScroller from '../../scroll/scroller/scroller.vue';
 import { MediaBarItemMaxHeight } from './item/item';
 import AppGameMediaBarItem from './item/item.vue';
 
-@Component({
+@Options({
 	components: {
 		AppLoading,
 		AppLightboxItem,

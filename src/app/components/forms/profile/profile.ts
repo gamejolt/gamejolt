@@ -1,5 +1,5 @@
 import { formatDistanceToNow } from 'date-fns';
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
 import AppFormControlContent from '../../../../_common/form-vue/control/content/content.vue';
@@ -11,7 +11,7 @@ import { Theme } from '../../../../_common/theme/theme.model';
 import { ThemeMutation, ThemeStore } from '../../../../_common/theme/theme.store';
 import { User } from '../../../../_common/user/user.model';
 
-@Component({
+@Options({
 	components: {
 		AppLoading,
 		AppExpand,

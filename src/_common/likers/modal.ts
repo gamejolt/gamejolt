@@ -1,18 +1,18 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import AppUserList from '../../app/components/user/list/list.vue';
-import AppLoading from '../loading/loading.vue';
 import { Api } from '../api/api.service';
 import { Comment } from '../comment/comment-model';
 import { number } from '../filters/number';
 import { FiresidePost } from '../fireside/post/post-model';
 import { Game } from '../game/game.model';
+import AppLoading from '../loading/loading.vue';
 import { BaseModal } from '../modal/base';
 import { User } from '../user/user.model';
 import { LikersResource } from './modal.service';
 
 const UsersPerPage = 20;
 
-@Component({
+@Options({
 	components: {
 		AppLoading,
 		AppUserList,

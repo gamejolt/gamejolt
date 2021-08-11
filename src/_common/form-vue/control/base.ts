@@ -1,10 +1,9 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../../utils/vue';
 import AppFormTS from '../form';
 import AppFormGroupTS from '../group/group';
 
-@Component({})
+@Options({})
 export default class BaseFormControl extends Vue {
 	@Prop()
 	rules!: any;

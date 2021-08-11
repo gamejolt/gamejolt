@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { number } from '../../../../../../../_common/filters/number';
@@ -14,7 +14,7 @@ import AppTrophyList from '../../../../../../components/trophy/list/list.vue';
 import { Store } from '../../../../../../store/index';
 import { RouteStore, RouteStoreModule } from '../../view.store';
 
-@Component({
+@Options({
 	name: 'RouteDiscoverGamesViewTrophiesList',
 	components: {
 		AppTrophyCompletion,

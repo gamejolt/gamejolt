@@ -1,10 +1,8 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-
-import { Sellable } from '../../sellable/sellable.model';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Environment } from '../../environment/environment.service';
+import { Sellable } from '../../sellable/sellable.model';
 
-@Component({})
+@Options({})
 export default class AppWidgetCompilerWidgetGamePackages extends Vue {
 	@Prop({ type: Array, default: () => [] })
 	sellables!: Sellable[];

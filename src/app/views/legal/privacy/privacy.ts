@@ -1,9 +1,9 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
 
 const templateMd: string = require('../../../../lib/terms/privacy/global.md');
 
-@Component({
+@Options({
 	name: 'RouteLegalPrivacy',
 })
 export default class RouteLegalPrivacy extends BaseRouteComponent {

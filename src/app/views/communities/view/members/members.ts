@@ -1,4 +1,4 @@
-import { Component, Inject } from 'vue-property-decorator';
+import { Inject, Options } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
@@ -11,7 +11,7 @@ function getFetchUrl(route: Route) {
 	return `/web/communities/members/${route.params.path}`;
 }
 
-@Component({
+@Options({
 	name: 'RouteCommunitiesViewMembers',
 	components: {
 		AppFollowerList,

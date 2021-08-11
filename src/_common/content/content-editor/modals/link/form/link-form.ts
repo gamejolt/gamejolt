@@ -1,9 +1,9 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { AppFocusWhen } from '../../../../../form-vue/focus-when.directive';
 import { BaseForm, FormOnInit } from '../../../../../form-vue/form.service';
 import { LinkData } from '../link-modal.service';
 
-@Component({
+@Options({
 	directives: {
 		AppFocusWhen,
 	},

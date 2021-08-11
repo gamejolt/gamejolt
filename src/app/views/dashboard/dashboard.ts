@@ -1,9 +1,9 @@
-import { BaseRouteComponent } from '../../../_common/route/route-component';
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { BaseRouteComponent } from '../../../_common/route/route-component';
 import { Store } from '../../store/index';
 
-@Component({
+@Options({
 	name: 'RouteDash',
 })
 export default class RouteDash extends BaseRouteComponent {

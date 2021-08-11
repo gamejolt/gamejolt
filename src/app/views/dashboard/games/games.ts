@@ -1,12 +1,12 @@
+import { h } from 'vue';
+import { Options } from 'vue-property-decorator';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
-import { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
 
-@Component({
+@Options({
 	name: 'RouteDashGames',
 })
 export default class RouteDashGames extends BaseRouteComponent {
-	render(h: CreateElement) {
+	render() {
 		return h('router-view');
 	}
 }

@@ -1,7 +1,6 @@
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 
-@Component({})
+@Options({})
 export default class AppExpand extends Vue {
 	@Prop(Boolean) when?: boolean;
 	@Prop(Boolean) animateInitial?: boolean;

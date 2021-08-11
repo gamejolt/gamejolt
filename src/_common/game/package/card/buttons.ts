@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { filesize } from '../../../filters/filesize';
 import AppPopper from '../../../popper/popper.vue';
 import { Screen } from '../../../screen/screen-service';
@@ -8,7 +7,7 @@ import { GamePackage } from '../package.model';
 import { GamePackageCardModel } from './card.model';
 import AppGamePackageCardMoreOptions from './more-options.vue';
 
-@Component({
+@Options({
 	components: {
 		AppPopper,
 		AppGamePackageCardMoreOptions,

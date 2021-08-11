@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
+import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { numberSort } from '../../../utils/array';
 import { propRequired } from '../../../utils/vue';
 import { DrawerStore, DrawerStoreKey } from '../../drawer/drawer-store';
@@ -7,7 +6,7 @@ import { AppTooltip } from '../../tooltip/tooltip-directive';
 import { StickerTargetController, toggleStickersShouldShow } from '../target/target-controller';
 import AppStickerReactionsItem from './item.vue';
 
-@Component({
+@Options({
 	components: {
 		AppStickerReactionsItem,
 	},

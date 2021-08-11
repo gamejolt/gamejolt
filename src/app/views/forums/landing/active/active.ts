@@ -1,10 +1,10 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import AppForumTopicList from '../../../../components/forum/topic-list/topic-list.vue';
 
-@Component({
+@Options({
 	name: 'RouteForumsLandingActive',
 	components: {
 		AppForumTopicList,

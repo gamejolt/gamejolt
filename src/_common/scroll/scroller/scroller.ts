@@ -1,12 +1,11 @@
 import { darken, lighten } from 'polished';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
 import { GrayLight, GraySubtle, Theme } from '../../theme/theme.model';
 import { ThemeState, ThemeStore } from '../../theme/theme.store';
 import { AppScrollInviewParent } from '../inview/parent';
 
-@Component({
+@Options({
 	components: {
 		AppScrollInviewParent,
 	},

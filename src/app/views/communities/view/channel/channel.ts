@@ -1,4 +1,4 @@
-import { Component, Inject } from 'vue-property-decorator';
+import { Inject, Options } from 'vue-property-decorator';
 import { router } from '../../..';
 import { Api } from '../../../../../_common/api/api.service';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
@@ -21,7 +21,7 @@ export const CommunitiesViewChannelDeps = {
 	query: ['sort', 'feed_last_id'],
 };
 
-@Component({
+@Options({
 	name: 'RouteCommunitiesViewChannel',
 	components: {
 		RouteCommunitiesViewChannelFeed: () => asyncRouteLoader(import('./feed.vue'), router),

@@ -1,12 +1,11 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
 import AppExpand from '../../expand/expand.vue';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 
 const STORAGE_KEY_PREFIX = 'dismiss-alert:';
 
-@Component({
+@Options({
 	components: {
 		AppExpand,
 	},

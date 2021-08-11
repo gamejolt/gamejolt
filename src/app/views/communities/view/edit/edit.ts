@@ -1,5 +1,4 @@
-import Component from 'vue-class-component';
-import { Inject } from 'vue-property-decorator';
+import { Inject, Options } from 'vue-property-decorator';
 import { enforceLocation } from '../../../../../utils/router';
 import { Api } from '../../../../../_common/api/api.service';
 import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
@@ -7,7 +6,7 @@ import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { CommunityRouteStore, CommunityRouteStoreKey, updateCommunity } from '../view.store';
 
-@Component({
+@Options({
 	name: 'RouteCommunitiesViewEdit',
 })
 @RouteResolver({

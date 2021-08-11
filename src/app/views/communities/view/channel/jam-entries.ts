@@ -1,5 +1,4 @@
-import Component from 'vue-class-component';
-import { Inject, Prop, Watch } from 'vue-property-decorator';
+import { Inject, Options, Prop, Watch } from 'vue-property-decorator';
 import { Route } from 'vue-router/types/router';
 import { propRequired } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
@@ -128,7 +127,7 @@ function makeRequest(route: Route) {
 	return Api.sendRequest(url);
 }
 
-@Component({
+@Options({
 	name: 'RouteCommunitiesViewChannelJamEntries',
 	components: {
 		AppPopper,

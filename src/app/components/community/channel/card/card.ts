@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../../utils/vue';
 import {
 	Community,
@@ -14,7 +13,7 @@ import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 const CARD_WIDTH = 270;
 const CARD_HEIGHT = 70;
 
-@Component({
+@Options({
 	components: {
 		AppMediaItemBackdrop,
 	},

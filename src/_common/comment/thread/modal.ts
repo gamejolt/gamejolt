@@ -1,4 +1,4 @@
-import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Inject, Options, Prop } from 'vue-property-decorator';
 import { Location } from 'vue-router';
 import { Analytics } from '../../analytics/analytics.service';
 import AppMessageThreadAdd from '../../message-thread/add/add.vue';
@@ -17,7 +17,7 @@ import {
 import { DisplayMode } from '../modal/modal.service';
 import AppCommentWidget from '../widget/widget.vue';
 
-@Component({
+@Options({
 	components: {
 		AppCommentWidget,
 		FormComment,

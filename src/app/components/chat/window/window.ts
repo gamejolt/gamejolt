@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
 import { propRequired } from '../../../../utils/vue';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
@@ -20,7 +19,7 @@ import AppChatWindowMenu from './menu/menu.vue';
 import AppChatWindowOutput from './output/output.vue';
 import AppChatWindowSend from './send/send.vue';
 
-@Component({
+@Options({
 	components: {
 		AppScrollScroller,
 		AppChatUserOnlineStatus,

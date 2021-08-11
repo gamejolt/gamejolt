@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Api } from '../../api/api.service';
 import { Connection } from '../../connection/connection-service';
 import { Environment } from '../../environment/environment.service';
@@ -7,7 +6,7 @@ import { Navigate } from '../../navigate/navigate.service';
 import { FormModel } from './join-form';
 import AppAuthJoinForm from './join-form.vue';
 
-@Component({
+@Options({
 	components: {
 		AppAuthJoinForm,
 	},

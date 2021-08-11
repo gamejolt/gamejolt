@@ -1,10 +1,8 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { GameCollection } from '../collection.model';
-import AppGameCollectionGridItem from './item/item.vue'
+import AppGameCollectionGridItem from './item/item.vue';
 
-@Component({
+@Options({
 	components: {
 		AppGameCollectionGridItem,
 	},

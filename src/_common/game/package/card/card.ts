@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Analytics } from '../../../analytics/analytics.service';
 import AppCard from '../../../card/card.vue';
 import { Clipboard } from '../../../clipboard/clipboard-service';
@@ -24,7 +23,7 @@ import { GamePackagePurchaseModal } from '../purchase-modal/purchase-modal.servi
 import AppGamePackageCardButtons from './buttons.vue';
 import { GamePackageCardModel } from './card.model';
 
-@Component({
+@Options({
 	components: {
 		AppCard,
 		AppTimeAgo,

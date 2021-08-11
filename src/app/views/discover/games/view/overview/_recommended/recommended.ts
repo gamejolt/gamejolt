@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import AppAdWidget from '../../../../../../../_common/ad/widget/widget.vue';
 import { Screen } from '../../../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../../../_common/scroll/affix/affix.vue';
@@ -9,7 +8,7 @@ import AppGameList from '../../../../../../components/game/list/list.vue';
 import AppGameListPlaceholder from '../../../../../../components/game/list/placeholder/placeholder.vue';
 import { RouteStore, RouteStoreModule } from '../../view.store';
 
-@Component({
+@Options({
 	components: {
 		AppGameGridPlaceholder,
 		AppGameGrid,

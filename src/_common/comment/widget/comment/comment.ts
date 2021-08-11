@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { findRequiredVueParent, propOptional, propRequired } from '../../../../utils/vue';
 import { AppAuthRequired } from '../../../auth/auth-required-directive';
 import { Clipboard } from '../../../clipboard/clipboard-service';
@@ -30,7 +29,7 @@ import AppCommentWidget from '../widget.vue';
 
 let CommentNum = 0;
 
-@Component({
+@Options({
 	components: {
 		AppCommentControls,
 		AppCommentContent,

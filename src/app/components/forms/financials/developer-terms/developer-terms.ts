@@ -1,10 +1,9 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { date } from '../../../../../_common/filters/date';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { UserStripeManagedAccount } from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
 
-@Component({
+@Options({
 	directives: {
 		AppTooltip,
 	},

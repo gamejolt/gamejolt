@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Inject, Prop, Watch } from 'vue-property-decorator';
+import { Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { date } from '../../../../../_common/filters/date';
 import AppIllustration from '../../../../../_common/illustration/illustration.vue';
@@ -17,7 +16,7 @@ import { ChatMessage, TIMEOUT_CONSIDER_QUEUED } from '../../message';
 import { ChatRoom } from '../../room';
 import AppChatWindowOutputItem from './item/item.vue';
 
-@Component({
+@Options({
 	components: {
 		AppLoading,
 		AppChatWindowOutputItem,

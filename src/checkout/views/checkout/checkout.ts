@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../_common/api/api.service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { Game } from '../../../_common/game/game.model';
@@ -13,7 +13,7 @@ import { store } from '../../store';
 
 const CheckoutThemeKey = 'checkout';
 
-@Component({
+@Options({
 	name: 'RouteCheckout',
 	components: {
 		AppMediaItemCover,

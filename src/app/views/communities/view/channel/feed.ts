@@ -1,5 +1,4 @@
-import Component from 'vue-class-component';
-import { Inject, Watch } from 'vue-property-decorator';
+import { Inject, Options, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppIllustration from '../../../../../_common/illustration/illustration.vue';
@@ -24,7 +23,7 @@ import AppCommunitiesViewFeed from '../_feed/feed.vue';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 import { CommunitiesViewChannelDeps } from './channel';
 
-@Component({
+@Options({
 	name: 'RouteCommunitiesViewChannelFeed',
 	components: {
 		AppCommunitiesViewPageContainer,

@@ -1,12 +1,11 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../../../../utils/vue';
 import { CommonFormComponents } from '../../../../../_common/form-vue/form.service';
 import { Country, Geo } from '../../../../../_common/geo/geo.service';
 import FormFinancialsManagedAccountTS from './managed-account';
 import FormFinancialsManagedAccount from './managed-account.vue';
 
-@Component({
+@Options({
 	components: {
 		...CommonFormComponents,
 	},

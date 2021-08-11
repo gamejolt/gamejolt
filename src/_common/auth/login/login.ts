@@ -1,12 +1,11 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Connection } from '../../connection/connection-service';
 import { Environment } from '../../environment/environment.service';
 import { Navigate } from '../../navigate/navigate.service';
 import { authOnLogin, redirectToDashboard } from '../auth.service';
 import AppAuthLoginForm from './login-form.vue';
 
-@Component({
+@Options({
 	components: {
 		AppAuthLoginForm,
 	},

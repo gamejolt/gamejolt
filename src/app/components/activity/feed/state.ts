@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import VueGlobal from 'vue';
 import { arrayRemove } from '../../../../utils/array';
 import { EventItem } from '../../../../_common/event-item/event-item.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
@@ -138,7 +138,7 @@ export class ActivityFeedState {
 				const user = item.feedItem.user;
 				if (user) {
 					if (!this.users[user.id]) {
-						Vue.set(this.users as any, user.id, user);
+						VueGlobal.set(this.users as any, user.id, user);
 					}
 
 					item.feedItem.user = this.users[user.id];
@@ -158,7 +158,7 @@ export class ActivityFeedState {
 				const game = item.feedItem.game;
 				if (game) {
 					if (!this.games[game.id]) {
-						Vue.set(this.games as any, game.id, game);
+						VueGlobal.set(this.games as any, game.id, game);
 					}
 
 					item.feedItem.game = this.games[game.id];

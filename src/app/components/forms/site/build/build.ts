@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
 import AppForm from '../../../../../_common/form-vue/form';
@@ -11,7 +11,7 @@ import {
 import { SiteBuild } from '../../../../../_common/site/build/build-model';
 import { Site } from '../../../../../_common/site/site-model';
 
-@Component({
+@Options({
 	components: {
 		AppFormControlUpload,
 	},

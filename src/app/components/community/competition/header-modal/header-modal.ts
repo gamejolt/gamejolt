@@ -1,10 +1,10 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { CommunityCompetition } from '../../../../../_common/community/competition/competition.model';
 import { BaseModal } from '../../../../../_common/modal/base';
 import FormCommunityCompetitionHeader from '../../../forms/community/competition/header/header.vue';
 
-@Component({
+@Options({
 	components: {
 		FormCommunityCompetitionHeader,
 	},

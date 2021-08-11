@@ -1,12 +1,11 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { date } from '../../../../../../../_common/filters/date';
 import { Game } from '../../../../../../../_common/game/game.model';
 import { AppLazyPlaceholder } from '../../../../../../../_common/lazy/placeholder/placeholder';
 import { LinkedAccount } from '../../../../../../../_common/linked-account/linked-account.model';
 import { RouteStore, RouteStoreModule } from '../../view.store';
 
-@Component({
+@Options({
 	components: {
 		AppLazyPlaceholder,
 	},

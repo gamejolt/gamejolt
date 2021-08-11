@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import AppCommunityAddWidget from '../../../../_common/community/add-widget/add-widget.vue';
 import AppCommunityDiscoverWidget from '../../../../_common/community/discover-widget/discover-widget.vue';
@@ -10,7 +9,7 @@ import AppShellCbarCommunity from './community/community.vue';
 import AppShellCbarControls from './controls/controls.vue';
 import AppShellCbarItem from './item/item.vue';
 
-@Component({
+@Options({
 	components: {
 		AppScrollScroller,
 		AppShellCbarControls,

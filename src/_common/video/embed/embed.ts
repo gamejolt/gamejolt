@@ -1,12 +1,11 @@
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
 import { EventSubscription } from '../../system/event/event-topic';
 
 const VIDEO_RATIO = 0.5625; // 16:9
 
-@Component({})
+@Options({})
 export default class AppVideoEmbed extends Vue {
 	@Prop(String) videoProvider!: 'youtube' | 'vimeo';
 	@Prop(String) videoId!: string;

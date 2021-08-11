@@ -1,6 +1,6 @@
 import { addWeeks, startOfDay } from 'date-fns';
 import { determine } from 'jstimezonedetect';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../utils/array';
 import AppCardList from '../../../../../_common/card/list/list.vue';
 import AppFormControlDate from '../../../../../_common/form-vue/control/date/date.vue';
@@ -29,7 +29,7 @@ type GameReleaseFormModel = GameRelease & {
 	should_publish: boolean;
 };
 
-@Component({
+@Options({
 	components: {
 		AppCardList,
 		FormGameBuild,

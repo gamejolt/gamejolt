@@ -1,10 +1,10 @@
 import ResizeObserver from 'resize-observer-polyfill';
 import { createTextMaskInputElement } from 'text-mask-core/dist/textMaskCore';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Watch } from 'vue-property-decorator';
 import { Ruler } from '../../../ruler/ruler-service';
 import BaseFormControl from '../base';
 
-@Component({})
+@Options({})
 export default class AppFormControlPrefixedInput extends BaseFormControl {
 	@Prop({ type: String, default: 'text' })
 	type!: 'text' | 'password' | 'email' | 'number' | 'search' | 'url';

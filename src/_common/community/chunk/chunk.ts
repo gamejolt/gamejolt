@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import AppPostCardPlaceholder from '../../../app/components/fireside/post/card/card-placeholder.vue';
 import AppPostCard from '../../../app/components/fireside/post/card/card.vue';
 import { propRequired } from '../../../utils/vue';
@@ -15,7 +14,7 @@ import AppCommunityJoinWidget from '../join-widget/join-widget.vue';
 import AppCommunityThumbnailImg from '../thumbnail/img/img.vue';
 import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
 
-@Component({
+@Options({
 	components: {
 		AppCommunityThumbnailImg,
 		AppMediaItemBackdrop,

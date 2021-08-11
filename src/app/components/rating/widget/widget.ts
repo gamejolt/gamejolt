@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { fuzzynumber } from '../../../../_common/filters/fuzzynumber';
@@ -16,7 +15,7 @@ export interface RatingWidgetOnChangePayload {
 	userRating?: GameRating;
 }
 
-@Component({
+@Options({
 	directives: {
 		AppAuthRequired,
 		AppTooltip,

@@ -1,4 +1,4 @@
-import { Component, Inject, Provide, Watch } from 'vue-property-decorator';
+import { Inject, Options, Provide, Watch } from 'vue-property-decorator';
 import { Action, Mutation, State } from 'vuex-class';
 import {
 	AppPromotionStore,
@@ -48,7 +48,7 @@ import AppNavChannels from './_nav/channels/channels.vue';
 
 export const CommunityThemeKey = 'community';
 
-@Component({
+@Options({
 	name: 'RouteCommunitiesView',
 	components: {
 		AppShellContentWithSidebar,

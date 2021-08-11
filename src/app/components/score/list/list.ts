@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { number } from '../../../../_common/filters/number';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
@@ -8,7 +7,7 @@ import { UserGameScore } from '../../../../_common/user/game-score/game-score.mo
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
 
-@Component({
+@Options({
 	components: {
 		AppUserAvatar,
 		AppTimeAgo,

@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../utils/array';
 import { Api } from '../../../../../_common/api/api.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
@@ -7,7 +7,7 @@ import { UserAddress } from '../../../../../_common/user/address/address.model';
 import AppUserAddressCard from '../../../../components/user/address/card/card.vue';
 import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 
-@Component({
+@Options({
 	name: 'RouteDashAccountAddresses',
 	components: {
 		AppUserAddressCard,

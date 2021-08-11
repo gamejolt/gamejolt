@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { FiresideRTC, FiresideRTCKey } from '../fireside-rtc';
 import {
 	FiresideRTCUser,
@@ -10,7 +9,7 @@ import {
 	setVideoPlayback,
 } from '../fireside-rtc-user';
 
-@Component({})
+@Options({})
 export default class AppFiresideVideo extends Vue {
 	@Prop({ type: FiresideRTCUser, required: true })
 	rtcUser!: FiresideRTCUser;

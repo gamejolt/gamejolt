@@ -1,12 +1,12 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 
-@Component({})
+@Options({})
 export class AppGrowlDynamic extends Vue {
 	@Prop(Function) component!: typeof Vue;
 	@Prop(Object) props?: any;
 
-	render(h: CreateElement) {
+	render() {
 		return h(this.component, {
 			props: this.props,
 			on: {

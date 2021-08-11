@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import Vue from 'vue';
+import VueGlobal from 'vue';
 import { getTranslationLang, TranslationLangs } from '../_common/translate/translate.service';
 
 export function bootstrapAppTranslations() {
@@ -8,11 +8,11 @@ export function bootstrapAppTranslations() {
 		availableLanguages[_lang.code] = _lang.label;
 	}
 
-	let lang = getTranslationLang();
-	let translations = require('../translations/en_US/main.json');
+	const lang = getTranslationLang();
+	const translations = require('../translations/en_US/main.json');
 
 	const VueGettext = require('vue-gettext');
-	Vue.use(VueGettext, {
+	VueGlobal.use(VueGettext, {
 		silent: true,
 		availableLanguages,
 		defaultLanguage: lang,

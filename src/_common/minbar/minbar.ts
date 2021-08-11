@@ -1,10 +1,9 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { Screen } from '../screen/screen-service';
 import { AppTooltip } from '../tooltip/tooltip-directive';
 import { Minbar, MinbarItem } from './minbar.service';
 
-@Component({
+@Options({
 	directives: {
 		AppTooltip,
 	},

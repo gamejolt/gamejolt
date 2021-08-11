@@ -1,9 +1,8 @@
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { currency } from '../../../../../_common/filters/currency';
 import { number } from '../../../../../_common/filters/number';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
 
-@Component({
+@Options({
 	filters: {
 		number,
 		currency,

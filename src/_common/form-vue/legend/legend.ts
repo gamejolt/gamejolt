@@ -1,7 +1,6 @@
-import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 
-@Component({})
+@Options({})
 export default class AppFormLegend extends Vue {
 	@Prop(Boolean)
 	compact?: boolean;

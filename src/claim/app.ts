@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { loadCurrentLanguage } from '../utils/translations';
 import AppContactLink from '../_common/contact-link/contact-link.vue';
@@ -12,7 +11,7 @@ import AppUserBar from '../_common/user/user-bar/user-bar.vue';
 import { User } from '../_common/user/user.model';
 import { Store } from './store/index';
 
-@Component({
+@Options({
 	components: {
 		AppCommonShell,
 		AppErrorPage,

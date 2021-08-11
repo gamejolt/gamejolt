@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import AppCardListAdd from '../../../../../../../_common/card/list/add/add.vue';
 import AppCardListItem from '../../../../../../../_common/card/list/item/item.vue';
@@ -14,7 +14,7 @@ import {
 import FormGameKeyGroup from '../../../../../../components/forms/game/key-group/key-group.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
-@Component({
+@Options({
 	name: 'RouteDashGamesManageKeyGroupsList',
 	components: {
 		AppCardList,

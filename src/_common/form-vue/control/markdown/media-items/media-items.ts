@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../api/api.service';
 import { Clipboard } from '../../../../clipboard/clipboard-service';
 import { MediaItem } from '../../../../media-item/media-item-model';
@@ -14,7 +14,7 @@ interface FormModel {
 	_progress: ProgressEvent | null;
 }
 
-@Component({
+@Options({
 	components: {
 		AppFormControlUpload,
 	},

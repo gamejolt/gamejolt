@@ -1,6 +1,4 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { RawLocation } from 'vue-router';
 import { propRequired } from '../../../utils/vue';
 import { date } from '../../filters/date';
@@ -19,7 +17,7 @@ import { CommunityCompetition } from '../competition/competition.model';
 import { CommunityCompetitionEntry } from '../competition/entry/entry.model';
 import { CommunityActivityItem } from './activity-item.model';
 
-@Component({
+@Options({
 	components: {
 		AppTimeAgo,
 		AppUserAvatar,

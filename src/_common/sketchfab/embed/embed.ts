@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
 import { EventSubscription } from '../../system/event/event-topic';
@@ -11,10 +10,13 @@ const RATIO = 0.5625; // 16:9
  * Matches all 3 valid sketchfab input formats: new urls, old urls, standalone ids.
  * @see getSketchfabIdFromInput for more info on the formats.
  */
-export const SKETCHFAB_FIELD_VALIDATION_REGEX = /^(?:(?:https:\/\/)?(?:www\.)?(?:sketchfab\.com\/3d-models\/(?:[a-z0-9]+-)+([0-9a-f]{32})\/?))$|^(?:(?:https:\/\/)?(?:www\.)?(?:sketchfab\.com\/models\/([0-9a-f]{32})\/?))$|^([0-9a-f]{32})$/i;
+export const SKETCHFAB_FIELD_VALIDATION_REGEX =
+	/^(?:(?:https:\/\/)?(?:www\.)?(?:sketchfab\.com\/3d-models\/(?:[a-z0-9]+-)+([0-9a-f]{32})\/?))$|^(?:(?:https:\/\/)?(?:www\.)?(?:sketchfab\.com\/models\/([0-9a-f]{32})\/?))$|^([0-9a-f]{32})$/i;
 
-const SKETCHFAB_URL_REGEX_1 = /^(?:(?:https:\/\/)?(?:www\.)?(?:sketchfab\.com\/3d-models\/(?:[a-z0-9]+-)+([0-9a-f]{32})\/?))$/i;
-const SKETCHFAB_URL_REGEX_2 = /^(?:(?:https:\/\/)?(?:www\.)?(?:sketchfab\.com\/models\/([0-9a-f]{32})\/?))$/i;
+const SKETCHFAB_URL_REGEX_1 =
+	/^(?:(?:https:\/\/)?(?:www\.)?(?:sketchfab\.com\/3d-models\/(?:[a-z0-9]+-)+([0-9a-f]{32})\/?))$/i;
+const SKETCHFAB_URL_REGEX_2 =
+	/^(?:(?:https:\/\/)?(?:www\.)?(?:sketchfab\.com\/models\/([0-9a-f]{32})\/?))$/i;
 
 export function getSketchfabIdFromInput(input: string) {
 	// The input has to be validated with the SKETCHFAB_FIELD_VALIDATOR_REGEX.
@@ -35,7 +37,7 @@ export function getSketchfabIdFromInput(input: string) {
 	return input;
 }
 
-@Component({})
+@Options({})
 export default class AppSketchfabEmbed extends Vue {
 	@Prop(String) sketchfabId!: string;
 	@Prop(Number) maxWidth!: number;

@@ -1,5 +1,5 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import VueGlobal from 'vue';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { arrayRemove, arrayUnique } from '../../utils/array';
 import { Api } from '../api/api.service';
 import { PayloadFormErrors } from '../payload/payload-service';
@@ -55,7 +55,7 @@ export const CommonFormComponents = {
 	AppFormButton,
 };
 
-@Component({
+@Options({
 	components: {
 		...CommonFormComponents,
 	},
@@ -187,7 +187,7 @@ export class BaseForm<T> extends Vue {
 	 * we change a field.
 	 */
 	setField<K extends keyof T>(key: K, value: T[K]) {
-		Vue.set(this.formModel as any, key as any, value);
+		VueGlobal.set(this.formModel as any, key as any, value);
 	}
 
 	setCustomError(error: string) {

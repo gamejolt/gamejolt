@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { findRequiredVueParent, propRequired } from '../../../../../utils/vue';
 import AppFormControlUploadTS from '../../../../../_common/form-vue/control/upload/upload';
 import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
@@ -7,7 +6,7 @@ import { CommonFormComponents } from '../../../../../_common/form-vue/form.servi
 import FormFinancialsManagedAccountTS from './managed-account';
 import FormFinancialsManagedAccount from './managed-account.vue';
 
-@Component({
+@Options({
 	components: {
 		...CommonFormComponents,
 		AppFormControlUpload,
@@ -54,7 +53,7 @@ export default class AppFinancialsManagedAccountDocument extends Vue {
 			xhr.setRequestHeader('Accept', 'application/json'); // Makes sure it doesn't return as JSONP.
 			xhr.send(formData);
 
-			xhr.onreadystatechange = function() {
+			xhr.onreadystatechange = function () {
 				if (xhr.readyState !== 4) {
 					return;
 				}

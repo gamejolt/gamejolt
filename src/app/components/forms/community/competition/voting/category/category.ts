@@ -1,19 +1,19 @@
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../../utils/vue';
 import { CommunityCompetition } from '../../../../../../../_common/community/competition/competition.model';
 import { CommunityCompetitionVotingCategory } from '../../../../../../../_common/community/competition/voting-category/voting-category.model';
 import AppFormControlTextarea from '../../../../../../../_common/form-vue/control/textarea/textarea.vue';
 import { BaseForm, FormOnBeforeSubmit } from '../../../../../../../_common/form-vue/form.service';
 
-@Component({
+@Options({
 	components: {
 		AppFormControlTextarea,
 	},
 })
 export default class FormCommunityCompetitionVotingCategory
 	extends BaseForm<CommunityCompetitionVotingCategory>
-	implements FormOnBeforeSubmit {
+	implements FormOnBeforeSubmit
+{
 	@Prop(propRequired(CommunityCompetition)) competition!: CommunityCompetition;
 
 	modelClass = CommunityCompetitionVotingCategory;

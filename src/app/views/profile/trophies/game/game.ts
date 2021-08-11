@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class/lib/bindings';
 import { LocationRedirect } from '../../../../../utils/router';
 import { Api } from '../../../../../_common/api/api.service';
@@ -19,7 +19,7 @@ type CompletionData = {
 	achievedCount: number;
 };
 
-@Component({
+@Options({
 	name: 'RouteProfileTrophiesGame',
 	components: {
 		AppTrophyCard,

@@ -1,5 +1,5 @@
-import { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../_common/api/api.service';
 import {
 	authOnJoin,
@@ -11,7 +11,7 @@ import { Growls } from '../../../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import AuthLinkedAccountProcessing from '../../_processing/processing.vue';
 
-@Component({
+@Options({
 	name: 'RouteAuthLinkedAccountTwitchCallback',
 })
 @RouteResolver({
@@ -69,7 +69,7 @@ export default class RouteAuthLinkedAccountTwitchCallback extends BaseRouteCompo
 		redirectToDashboard();
 	}
 
-	render(h: CreateElement) {
+	render() {
 		return h(AuthLinkedAccountProcessing);
 	}
 }

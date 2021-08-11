@@ -1,10 +1,10 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { Api } from '../../api/api.service';
 
 const PollInterval = 5000;
 
-@Component({})
+@Options({})
 export class AppProgressPoller extends Vue {
 	@Prop(String)
 	url!: string;
@@ -63,7 +63,7 @@ export class AppProgressPoller extends Vue {
 		this.clearTimeout();
 	}
 
-	render(h: CreateElement) {
+	render() {
 		return h('span');
 	}
 

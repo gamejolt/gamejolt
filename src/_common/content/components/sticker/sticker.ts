@@ -1,13 +1,11 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../../utils/vue';
 import { AppImgResponsive } from '../../../img/responsive/responsive';
 import AppLoading from '../../../loading/loading.vue';
 import { Sticker } from '../../../sticker/sticker.model';
 import { ContentOwner } from '../../content-owner';
 
-@Component({
+@Options({
 	components: {
 		AppImgResponsive,
 		AppLoading,

@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { Api } from '../../../../../../_common/api/api.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
@@ -10,7 +10,7 @@ function getFetchUrl(route: Route) {
 	return `/web/discover/games/followers/${route.params.id}`;
 }
 
-@Component({
+@Options({
 	name: 'RouteProfileFollowers',
 	components: {
 		AppFollowerList,

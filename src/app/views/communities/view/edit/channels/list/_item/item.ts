@@ -1,6 +1,4 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Inject, Prop } from 'vue-property-decorator';
+import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../../../utils/vue';
 import AppCardListItem from '../../../../../../../../_common/card/list/item/item.vue';
 import { CommunityChannel } from '../../../../../../../../_common/community/channel/channel.model';
@@ -8,7 +6,7 @@ import { AppTooltip } from '../../../../../../../../_common/tooltip/tooltip-dire
 import { CommunityRemoveChannelModal } from '../../../../../../../components/community/remove-channel/modal/modal.service';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../view.store';
 
-@Component({
+@Options({
 	components: {
 		AppCardListItem,
 	},

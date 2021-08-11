@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
+import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
 import { $viewPostVideo } from '../../../../../../_common/fireside/post/video/video-model';
 import AppVideoProcessingProgress from '../../../../../../_common/video/processing-progress/processing-progress.vue';
@@ -7,7 +6,7 @@ import { ActivityFeedItem } from '../../item-service';
 import { ActivityFeedKey, ActivityFeedView } from '../../view';
 import AppActivityFeedVideoPlayer from '../../_video-player/video-player.vue';
 
-@Component({
+@Options({
 	components: {
 		AppActivityFeedVideoPlayer,
 		AppVideoProcessingProgress,

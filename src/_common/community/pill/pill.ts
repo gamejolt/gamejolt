@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { FiresidePostCommunity } from '../../fireside/post/community/community.model';
 import AppPillBi from '../../pill/bi/bi.vue';
 import AppPill from '../../pill/pill.vue';
@@ -7,7 +6,7 @@ import { AppTooltip } from '../../tooltip/tooltip-directive';
 import AppCommunityThumbnailImg from '../thumbnail/img/img.vue';
 import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
 
-@Component({
+@Options({
 	components: {
 		AppPill,
 		AppPillBi,

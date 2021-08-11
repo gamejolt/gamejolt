@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { propOptional, propRequired } from '../../../../utils/vue';
 import { GameBundle } from '../../../../_common/game-bundle/game-bundle.model';
@@ -7,7 +6,7 @@ import { Game } from '../../../../_common/game/game.model';
 import AppGameThumbnail from '../../../../_common/game/thumbnail/thumbnail.vue';
 import { Store } from '../../../store/index';
 
-@Component({
+@Options({
 	components: {
 		AppGameThumbnail,
 	},

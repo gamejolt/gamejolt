@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../_common/api/api.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import { Site } from '../../../../../../_common/site/site-model';
@@ -6,7 +6,7 @@ import AppSitesLinkCard from '../../../../../components/sites/link-card/link-car
 import AppSitesManagePage from '../../../../../components/sites/manage-page/manage-page.vue';
 import { RouteStore, RouteStoreModule } from '../manage.store';
 
-@Component({
+@Options({
 	name: 'RouteDashGamesManageSite',
 	components: {
 		AppSitesLinkCard,

@@ -1,9 +1,8 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional } from '../../../../../utils/vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 
-@Component({})
+@Options({})
 export default class AppCommunitiesViewPageContainer extends Vue {
 	@Prop(propOptional(Boolean, false))
 	full!: boolean;

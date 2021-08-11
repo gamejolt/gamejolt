@@ -1,11 +1,11 @@
 import Axios from 'axios';
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Device } from '../../../_common/device/device.service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 
 const ManifestUrl = 'https://d.gamejolt.net/data/client/manifest-2.json';
 
-@Component({
+@Options({
 	name: 'RouteDowngrade',
 })
 @RouteResolver({

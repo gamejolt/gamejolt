@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { trackUserFollow, UserFollowLocation } from '../../analytics/analytics.service';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
@@ -9,7 +8,7 @@ import { AppStore } from '../../store/app-store';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 import { followUser, unfollowUser, User } from '../user.model';
 
-@Component({
+@Options({
 	directives: {
 		AppAuthRequired,
 		AppTooltip,

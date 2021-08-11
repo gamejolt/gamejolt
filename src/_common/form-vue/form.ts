@@ -1,12 +1,11 @@
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../utils/vue';
 import AppLoadingFade from '../loading/fade/fade.vue';
 import AppLoading from '../loading/loading.vue';
 import BaseFormControl from './control/base';
 import { BaseForm } from './form.service';
 
-@Component({
+@Options({
 	components: {
 		AppLoading,
 		AppLoadingFade,

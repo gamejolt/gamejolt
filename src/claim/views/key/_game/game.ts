@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { propOptional, propRequired } from '../../../../utils/vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
@@ -15,7 +14,7 @@ import { store, Store } from '../../../store/index';
 
 const ClaimGameThemeKey = 'claim-game';
 
-@Component({
+@Options({
 	components: {
 		AppFadeCollapse,
 		AppGamePackageCard,

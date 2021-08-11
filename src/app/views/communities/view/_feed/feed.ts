@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
+import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { propOptional } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
@@ -20,7 +19,7 @@ import { Store } from '../../../../store';
 import { CommunityRouteStore, CommunityRouteStoreKey, isVirtualChannel } from '../view.store';
 import AppBlockedNotice from '../_blocked-notice/blocked-notice.vue';
 
-@Component({
+@Options({
 	components: {
 		AppPostAddButton,
 		AppActivityFeed: AppActivityFeedLazy,

@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import AppCommunityChannelSelect from '../../../../../_common/community/channel/select/select.vue';
@@ -12,7 +12,7 @@ import { FormModel } from '../form/form';
 import FormCommunityMovePost from '../form/form.vue';
 import { CommunityMovePostModalResult } from './modal.service';
 
-@Component({
+@Options({
 	components: {
 		AppCommunityChannelSelect,
 		FormCommunityMovePost,

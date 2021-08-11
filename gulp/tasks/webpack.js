@@ -274,12 +274,12 @@ module.exports = function (config) {
 						test: /\.ts$/,
 						exclude: /node_modules/,
 						use: [
-							{
-								loader: 'cache-loader',
-								options: {
-									cacheDirectory: path.resolve(base, '.cache/ts-loader'),
-								},
-							},
+							// {
+							// 	loader: 'cache-loader',
+							// 	options: {
+							// 		cacheDirectory: path.resolve(base, '.cache/ts-loader'),
+							// 	},
+							// },
 							{
 								loader: 'ts-loader',
 								options: {

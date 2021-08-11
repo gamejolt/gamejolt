@@ -1,9 +1,9 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Ruler } from '../../ruler/ruler-service';
 import { Scroll } from '../scroll.service';
 
-@Component({})
+@Options({})
 export class AppAutoscrollAnchor extends Vue {
 	@Prop(Boolean)
 	disabled?: boolean;
@@ -69,7 +69,7 @@ export class AppAutoscrollAnchor extends Vue {
 		}
 	}
 
-	render(h: CreateElement) {
+	render() {
 		return h('div', this.$slots.default);
 	}
 }

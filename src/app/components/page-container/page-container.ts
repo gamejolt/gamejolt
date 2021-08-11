@@ -1,5 +1,5 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Screen } from '../../../_common/screen/screen-service';
 
 const validOrder = ['main', 'left', 'right'];
@@ -8,7 +8,7 @@ function validateOrder(val: string) {
 	return val.split(',').every(i => validOrder.includes(i));
 }
 
-@Component({})
+@Options({})
 export default class AppPageContainer extends Vue {
 	@Prop({ type: Boolean, required: false })
 	xl?: boolean;
@@ -54,7 +54,7 @@ export default class AppPageContainer extends Vue {
 
 	// We do this in a render function so that we can change the order of
 	// content.
-	render(h: CreateElement) {
+	render() {
 		// Vue tries as hard as possible not to have to recreate DOM elements
 		// and instead bind new vnodes to the same DOM elements. This was
 		// breaking when we resized and went from 2-col to 3-col, etc. If we

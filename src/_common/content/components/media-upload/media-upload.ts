@@ -1,6 +1,5 @@
 import { EditorView } from 'prosemirror-view';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Api } from '../../../api/api.service';
 import { Growls } from '../../../growls/growls.service';
 import AppLoading from '../../../loading/loading.vue';
@@ -11,7 +10,7 @@ import { ContentEditorService } from '../../content-editor/content-editor.servic
 import { ContentEditorSchema } from '../../content-editor/schemas/content-editor-schema';
 import { ContentOwner } from '../../content-owner';
 
-@Component({
+@Options({
 	components: {
 		AppProgressBar,
 		AppLoading,

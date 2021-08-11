@@ -1,4 +1,4 @@
-import { Component, Inject } from 'vue-property-decorator';
+import { Inject, Options } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import AppCommentAddButton from '../../../../_common/comment/add-button/add-button.vue';
@@ -46,7 +46,7 @@ import AppUserKnownFollowers from '../../../components/user/known-followers/know
 import { Store } from '../../../store/index';
 import { RouteStore, RouteStoreModule } from '../profile.store';
 
-@Component({
+@Options({
 	name: 'RouteProfileOverview',
 	components: {
 		AppPageContainer,

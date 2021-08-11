@@ -1,6 +1,6 @@
-import Vue, { ComponentOptions } from 'vue';
+import { ComponentOptions } from 'vue';
 import { createDecorator } from 'vue-class-component';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import VueRouter, { RawLocation, Route } from 'vue-router';
 import { arrayRemove } from '../../utils/array';
 import { LocationRedirect } from '../../utils/router';
@@ -203,7 +203,7 @@ export function RouteResolver(options: RouteResolverOptions = {}) {
 	});
 }
 
-@Component({})
+@Options({})
 export class BaseRouteComponent extends Vue {
 	isRouteDestroyed = false;
 	isRouteLoading = false;

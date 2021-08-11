@@ -1,12 +1,11 @@
-import Vue from 'vue';
-import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { findRequiredVueParent, propOptional } from '../../../../utils/vue';
 import AppCardListTS from '../list';
 import AppCardList from '../list.vue';
 
 const draggable = require('vuedraggable');
 
-@Component({
+@Options({
 	components: {
 		draggable,
 	},

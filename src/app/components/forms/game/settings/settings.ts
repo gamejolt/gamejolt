@@ -1,10 +1,10 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
 import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
 import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
 
-@Component({
+@Options({
 	components: {
 		AppFormControlToggle,
 		AppDashGameWizardControls,

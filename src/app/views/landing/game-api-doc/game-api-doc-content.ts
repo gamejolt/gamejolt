@@ -1,5 +1,5 @@
-import { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options } from 'vue-property-decorator';
 import { importContext } from '../../../../utils/utils';
 import { PayloadError } from '../../../../_common/payload/payload-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
@@ -9,7 +9,7 @@ const paths = importContext(
 	require.context('!file-loader?-emitFile!../../../../lib/doc-game-api/v1.x/', true, /\.md$/)
 );
 
-@Component({
+@Options({
 	name: 'RouteLandingGameApiDoc',
 })
 @RouteResolver({
@@ -21,15 +21,19 @@ const paths = importContext(
 		}
 
 		if (paths[`./${path}.md`]) {
-			return (await import(
-				/* webpackChunkName: "gameApiDocContent" */
-				`../../../../lib/doc-game-api/v1.x/${path}.md`
-			)).default;
+			return (
+				await import(
+					/* webpackChunkName: "gameApiDocContent" */
+					`../../../../lib/doc-game-api/v1.x/${path}.md`
+				)
+			).default;
 		} else if (paths[`./${path}/index.md`]) {
-			return (await import(
-				/* webpackChunkName: "gameApiDocContent" */
-				`../../../../lib/doc-game-api/v1.x/${path}/index.md`
-			)).default;
+			return (
+				await import(
+					/* webpackChunkName: "gameApiDocContent" */
+					`../../../../lib/doc-game-api/v1.x/${path}/index.md`
+				)
+			).default;
 		}
 
 		return PayloadError.fromHttpError(404);
@@ -54,7 +58,7 @@ export default class RouteLandingGameApiDoc extends BaseRouteComponent {
 		this.content = $payload;
 	}
 
-	render(h: CreateElement) {
+	render() {
 		return h('div', { domProps: { innerHTML: this.content } });
 	}
 }

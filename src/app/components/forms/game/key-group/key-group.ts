@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import { number } from '../../../../../_common/filters/number';
 import {
@@ -11,7 +11,7 @@ import { GamePackage } from '../../../../../_common/game/package/package.model';
 import { KeyGroup } from '../../../../../_common/key-group/key-group.model';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 
-@Component({
+@Options({
 	components: {
 		AppExpand,
 	},
@@ -22,8 +22,10 @@ import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 		number,
 	},
 })
-export default class FormGameKeyGroup extends BaseForm<KeyGroup>
-	implements FormOnInit, FormOnSubmitSuccess {
+export default class FormGameKeyGroup
+	extends BaseForm<KeyGroup>
+	implements FormOnInit, FormOnSubmitSuccess
+{
 	modelClass = KeyGroup;
 	resetOnSubmit = true;
 

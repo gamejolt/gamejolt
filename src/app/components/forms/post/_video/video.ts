@@ -1,6 +1,5 @@
 import { CancelTokenSource } from 'axios';
-import Component from 'vue-class-component';
-import { Emit, Prop, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
 import { number } from '../../../../../_common/filters/number';
@@ -44,7 +43,7 @@ export const enum VideoStatus {
 	COMPLETE = 'complete',
 }
 
-@Component({
+@Options({
 	components: {
 		AppLoadingFade,
 		AppFormControlUpload,

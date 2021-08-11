@@ -1,4 +1,4 @@
-import Component from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { CommunityCompetitionAward } from '../../../../../../../../../_common/community/competition/award/award.model';
 import AppLoading from '../../../../../../../../../_common/loading/loading.vue';
@@ -11,7 +11,7 @@ type Payload = {
 	awards: any[];
 };
 
-@Component({
+@Options({
 	name: 'RouteCommunitiesViewEditChannelsCompetitionAssignAwards',
 	components: {
 		AppLoading,

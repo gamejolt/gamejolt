@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { redirectToDashboard } from '../../../_common/auth/auth.service';
 import { Connection } from '../../../_common/connection/connection-service';
@@ -22,7 +22,7 @@ export function loggedUserBlock() {
 	}
 }
 
-@Component({
+@Options({
 	name: 'RouteAuth',
 	components: {
 		AppCoverImg,

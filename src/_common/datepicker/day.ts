@@ -1,12 +1,11 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { arrayChunk } from '../../utils/array';
 import { findRequiredVueParent } from '../../utils/vue';
 import { date as dateFilter } from '../filters/date';
 import AppDatepickerTS, { DatepickerDate } from './datepicker';
 import AppDatepicker from './datepicker.vue';
 
-@Component({})
+@Options({})
 export default class AppDatepickerDay extends Vue {
 	@Prop(Date) value!: Date;
 

@@ -1,11 +1,11 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import AppFormControlContent from '../../../../../_common/form-vue/control/content/content.vue';
 import AppForm from '../../../../../_common/form-vue/form';
 import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.service';
 import { ForumPost } from '../../../../../_common/forum/post/post.model';
 import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
 
-@Component({
+@Options({
 	components: {
 		AppFormControlContent,
 	},

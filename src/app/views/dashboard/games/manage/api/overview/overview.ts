@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { duration } from '../../../../../../../_common/filters/duration';
 import { number } from '../../../../../../../_common/filters/number';
@@ -9,7 +9,7 @@ import {
 import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
-@Component({
+@Options({
 	name: 'RouteDashGamesManageApiOverview',
 	directives: {
 		AppTooltip,

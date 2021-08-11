@@ -1,9 +1,8 @@
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { ContentDocument } from '../../../../../../_common/content/content-document';
 import AppTagSuggestion from '../../../../../../_common/tag/suggestion/suggestion.vue';
-import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
 
-@Component({
+@Options({
 	components: {
 		AppTagSuggestion,
 	},

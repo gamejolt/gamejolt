@@ -1,8 +1,7 @@
+import { Options, Vue } from 'vue-property-decorator';
 import AppButtonPlaceholder from '../../../../../../_common/button/placeholder/placeholder.vue';
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
 
-@Component({
+@Options({
 	components: {
 		AppButtonPlaceholder,
 	},

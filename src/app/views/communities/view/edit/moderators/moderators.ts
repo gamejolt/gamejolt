@@ -1,5 +1,4 @@
-import Component from 'vue-class-component';
-import { Inject } from 'vue-property-decorator';
+import { Inject, Options } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../../utils/array';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCardListAdd from '../../../../../../_common/card/list/add/add.vue';
@@ -13,7 +12,7 @@ import FormCommunityCollaborator from '../../../../../components/forms/community
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
 
-@Component({
+@Options({
 	name: 'RouteCommunitiesViewEditModerators',
 	components: {
 		AppCommunitiesViewPageContainer,

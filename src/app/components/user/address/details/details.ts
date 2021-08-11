@@ -1,9 +1,8 @@
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Geo } from '../../../../../_common/geo/geo.service';
 import { UserAddress } from '../../../../../_common/user/address/address.model';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
 
-@Component({})
+@Options({})
 export default class AppUserAddressDetails extends Vue {
 	@Prop(UserAddress) address!: UserAddress;
 
@@ -15,7 +14,9 @@ export default class AppUserAddressDetails extends Vue {
 
 	get region() {
 		if (this.address) {
-			return Geo.getRegionName(this.address.country, this.address.region) || this.address.region;
+			return (
+				Geo.getRegionName(this.address.country, this.address.region) || this.address.region
+			);
 		}
 	}
 }

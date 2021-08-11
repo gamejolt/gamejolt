@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { arrayIndexBy } from '../../../../../../../../utils/array';
 import { Api } from '../../../../../../../../_common/api/api.service';
 import AppCardListDraggable from '../../../../../../../../_common/card/list/draggable/draggable.vue';
@@ -19,7 +19,7 @@ import { GamePackageEditModal } from '../../../../../../../components/game/packa
 import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
 import { RouteStore, RouteStoreModule } from '../../../manage.store';
 
-@Component({
+@Options({
 	name: 'RouteDashGamesManageGamePackagesList',
 	components: {
 		AppCardList,

@@ -1,10 +1,8 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import { User } from '../../../../_common/user/user.model';
 
-@Component({})
+@Options({})
 export default class AppUserBlockOverlay extends Vue {
 	@Prop(User)
 	user!: User;

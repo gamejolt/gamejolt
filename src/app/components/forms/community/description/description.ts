@@ -1,9 +1,9 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Community } from '../../../../../_common/community/community.model';
 import AppFormControlContent from '../../../../../_common/form-vue/control/content/content.vue';
 import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
 
-@Component({
+@Options({
 	components: {
 		AppFormControlContent,
 	},

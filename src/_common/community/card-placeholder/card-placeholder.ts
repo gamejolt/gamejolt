@@ -1,10 +1,9 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
 import AppButtonPlaceholder from '../../button/placeholder/placeholder.vue';
 import { Environment } from '../../environment/environment.service';
 
-@Component({
+@Options({
 	components: { AppButtonPlaceholder },
 })
 export default class AppCommunityCardPlaceholder extends Vue {

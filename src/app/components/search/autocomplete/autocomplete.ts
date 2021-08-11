@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Watch } from 'vue-property-decorator';
+import { Options, Vue, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { debounce } from '../../../../utils/utils';
 import { findRequiredVueParent } from '../../../../utils/vue';
@@ -25,7 +24,7 @@ const KEYCODE_UP = 38;
 const KEYCODE_DOWN = 40;
 const KEYCODE_ENTER = 13;
 
-@Component({
+@Options({
 	components: {
 		AppGameThumbnailImg,
 		AppGameCompatIcons,

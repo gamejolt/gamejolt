@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import AppAudioPlaylistTS from '../../../audio/playlist/playlist';
 import AppAudioPlaylist from '../../../audio/playlist/playlist.vue';
 import AppCard from '../../../card/card.vue';
@@ -11,7 +10,7 @@ import { Screen } from '../../../screen/screen-service';
 import { Game } from '../../game.model';
 import { GameSong } from '../../song/song.model';
 
-@Component({
+@Options({
 	components: {
 		AppCard,
 		AppFadeCollapse,

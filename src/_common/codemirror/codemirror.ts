@@ -1,7 +1,5 @@
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import './codemirror.styl';
-
 
 const defaultOptions = {
 	lineNumbers: true,
@@ -10,7 +8,7 @@ const defaultOptions = {
 	indentWithTabs: true,
 };
 
-@Component({})
+@Options({})
 export default class AppCodemirror extends Vue {
 	declare $el: HTMLTextAreaElement;
 

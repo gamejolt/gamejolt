@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../utils/vue';
 import { FiresidePost } from '../../fireside/post/post-model';
 import { Game } from '../../game/game.model';
@@ -11,7 +10,7 @@ function generateSlotId() {
 	return Math.random() + '';
 }
 
-@Component({})
+@Options({})
 export default class AppAdWidgetInner extends Vue {
 	@Prop(propRequired(AdSlot)) adSlot!: AdSlot;
 

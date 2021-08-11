@@ -1,6 +1,4 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Inject, Prop } from 'vue-property-decorator';
+import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import AppLoadingFade from '../../../../../_common/loading/fade/fade.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
@@ -11,7 +9,7 @@ import AppChatNotificationSettings from '../../notification-settings/notificatio
 import { ChatRoom } from '../../room';
 import { ChatRoomDetailsModal } from '../../room-details-modal/room-details-modal.service';
 
-@Component({
+@Options({
 	components: {
 		AppPopper,
 		AppLoadingFade,

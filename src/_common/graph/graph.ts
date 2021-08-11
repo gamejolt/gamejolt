@@ -1,6 +1,5 @@
 import * as Chart from 'chart.js';
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { date } from '../filters/date';
 import { ThemeState, ThemeStore } from '../theme/theme.store';
 
@@ -86,7 +85,7 @@ const backgroundVariantChartOptions: any = {
 	},
 };
 
-@Component({})
+@Options({})
 export default class AppGraph extends Vue {
 	@Prop(Array) dataset!: any[];
 	@Prop({ type: String, default: 'line' })

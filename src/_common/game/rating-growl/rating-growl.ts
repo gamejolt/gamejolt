@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import {
 	RatingWidgetOnChange,
 	RatingWidgetOnChangePayload,
@@ -8,7 +7,7 @@ import AppRatingWidget from '../../../app/components/rating/widget/widget.vue';
 import { EventBus, EventBusDeregister } from '../../system/event/event-bus.service';
 import { Game } from '../game.model';
 
-@Component({
+@Options({
 	components: {
 		AppRatingWidget,
 	},

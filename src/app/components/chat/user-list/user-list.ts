@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { fuzzysearch } from '../../../../utils/string';
 import { propRequired } from '../../../../utils/vue';
 import { ChatRoom } from '../room';
@@ -19,7 +18,7 @@ function searchEntries(entries: (ChatUser | ChatRoom)[], query: string): (ChatUs
 	});
 }
 
-@Component({
+@Options({
 	components: {
 		AppChatUserListItem,
 	},

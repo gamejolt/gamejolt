@@ -1,10 +1,9 @@
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { GrecaptchaSdk } from '../sdk/sdk.service';
 
-@Component({
+@Options({
 	components: {
 		AppLoading,
 	},

@@ -1,12 +1,11 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { Site } from '../../../../_common/site/site-model';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import FormSiteSettings from '../../forms/site/settings/settings.vue';
 
-@Component({
+@Options({
 	components: {
 		FormSiteSettings,
 	},

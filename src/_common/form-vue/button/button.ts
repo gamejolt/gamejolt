@@ -1,9 +1,8 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../../utils/vue';
 import AppFormTS from '../form';
 
-@Component({})
+@Options({})
 export default class AppFormButton extends Vue {
 	@Prop(Boolean) showWhenValid!: boolean;
 	@Prop({ type: Boolean, default: true }) primary!: boolean;

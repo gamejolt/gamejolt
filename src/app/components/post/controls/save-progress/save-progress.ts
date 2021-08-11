@@ -1,11 +1,9 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppProgressBar from '../../../../../_common/progress/bar/bar';
 import { AppProgressPoller } from '../../../../../_common/progress/poller/poller';
 
-@Component({
+@Options({
 	components: {
 		AppProgressPoller,
 		AppProgressBar,

@@ -1,4 +1,4 @@
-import { Component, Inject } from 'vue-property-decorator';
+import { Inject, Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../_common/api/api.service';
 import { CommunityActivityItem } from '../../../../../../_common/community/activity-item/activity-item.model';
 import AppCommunityActivityItem from '../../../../../../_common/community/activity-item/activity-item.vue';
@@ -15,7 +15,7 @@ type ActivityItem = {
 	showIcon: boolean;
 };
 
-@Component({
+@Options({
 	name: 'RouteCommunitiesViewEditActivity',
 	components: {
 		AppCommunitiesViewPageContainer,

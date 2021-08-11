@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import { currency } from '../../../../../_common/filters/currency';
@@ -12,7 +12,7 @@ import { User } from '../../../../../_common/user/user.model';
 import FormWithdrawFunds from '../../../../components/forms/withdraw-funds/withdraw-funds.vue';
 import { routeStore, RouteStore, RouteStoreModule } from '../account.store';
 
-@Component({
+@Options({
 	name: 'RouteDashAccountWithdrawFunds',
 	components: {
 		FormWithdrawFunds,

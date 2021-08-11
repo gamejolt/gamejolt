@@ -1,5 +1,4 @@
-import Component from 'vue-class-component';
-import { Inject } from 'vue-property-decorator';
+import { Inject, Options } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../../../../../utils/array';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import AppCardListAdd from '../../../../../../../../../_common/card/list/add/add.vue';
@@ -29,7 +28,7 @@ import FormCommunityCompetitionVotingToggleTS from '../../../../../../../../comp
 import FormCommunityCompetitionVotingToggle from '../../../../../../../../components/forms/community/competition/voting/toggle/toggle.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view.store';
 
-@Component({
+@Options({
 	name: 'RouteCommunitiesViewEditChannelsCompetitionVoting',
 	components: {
 		FormCommunityCompetitionVotingToggle,

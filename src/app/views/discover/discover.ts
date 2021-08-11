@@ -1,12 +1,12 @@
-import { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options } from 'vue-property-decorator';
 import { BaseRouteComponent } from '../../../_common/route/route-component';
 
-@Component({
+@Options({
 	name: 'RouteDiscover',
 })
 export default class RouteDiscover extends BaseRouteComponent {
-	render(h: CreateElement) {
+	render() {
 		return h('router-view');
 	}
 }

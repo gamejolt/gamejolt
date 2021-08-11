@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Game } from '../../../../../../../_common/game/game.model';
 import { AppStore } from '../../../../../../../_common/store/app-store';
@@ -7,7 +6,7 @@ import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 import AppManageGameNavRequired from './required.vue';
 
-@Component({
+@Options({
 	components: {
 		AppManageGameNavRequired,
 		AppGamePerms,

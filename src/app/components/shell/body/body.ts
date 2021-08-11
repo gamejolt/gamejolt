@@ -1,10 +1,9 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Store } from '../../../store';
 import AppShellFooter from '../footer/footer.vue';
 
-@Component({
+@Options({
 	components: {
 		AppShellFooter,
 	},

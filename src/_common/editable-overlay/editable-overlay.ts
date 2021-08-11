@@ -1,7 +1,6 @@
-import Vue from 'vue';
-import { Component, Prop, Emit } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 
-@Component({})
+@Options({})
 export default class AppEditableOverlay extends Vue {
 	@Prop(Boolean) disabled?: boolean;
 

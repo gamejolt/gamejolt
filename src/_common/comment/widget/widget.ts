@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Inject, Prop, Watch } from 'vue-property-decorator';
+import { Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
@@ -41,7 +40,7 @@ import AppCommentWidgetComment from './comment/comment.vue';
 
 let incrementer = 0;
 
-@Component({
+@Options({
 	components: {
 		AppLoading,
 		AppNavTabList,

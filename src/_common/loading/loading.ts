@@ -1,8 +1,7 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { importContext } from '../../utils/utils';
 
-@Component({})
+@Options({})
 export default class AppLoading extends Vue {
 	@Prop({ type: String, default: 'Loading...' })
 	label!: string;

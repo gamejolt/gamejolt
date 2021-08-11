@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Inject } from 'vue-property-decorator';
+import { Inject, Options, Vue } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { EscapeStack } from '../../../../../_common/escape-stack/escape-stack.service';
 import { number } from '../../../../../_common/filters/number';
@@ -12,7 +11,7 @@ import { sortByLastMessageOn } from '../../../chat/user-collection';
 import AppChatUserList from '../../../chat/user-list/user-list.vue';
 import AppChatWindows from '../../../chat/windows/windows.vue';
 
-@Component({
+@Options({
 	components: {
 		AppChatUserList,
 		AppChatWindows,

@@ -1,4 +1,4 @@
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Watch } from 'vue-property-decorator';
 import { ContentDocument } from '../../../../../_common/content/content-document';
 import { ContentWriter } from '../../../../../_common/content/content-writer';
 import AppExpand from '../../../../../_common/expand/expand.vue';
@@ -19,7 +19,7 @@ type DescriptionFormModel = Game & {
 	autotag_skip?: boolean;
 };
 
-@Component({
+@Options({
 	components: {
 		AppExpand,
 		AppDashGameWizardControls,

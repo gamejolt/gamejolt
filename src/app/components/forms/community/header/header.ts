@@ -1,4 +1,4 @@
-import { Component, Watch } from 'vue-property-decorator';
+import { Options, Watch } from 'vue-property-decorator';
 import { Community } from '../../../../../_common/community/community.model';
 import AppFormControlCrop from '../../../../../_common/form-vue/control/crop/crop.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
@@ -14,7 +14,7 @@ type FormModel = Community & {
 	header_crop: any;
 };
 
-@Component({
+@Options({
 	components: {
 		AppFormControlUpload,
 		AppFormControlCrop,

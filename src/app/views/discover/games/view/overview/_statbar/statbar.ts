@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { fuzzynumber } from '../../../../../../../_common/filters/fuzzynumber';
 import { number } from '../../../../../../../_common/filters/number';
 import { AppLazyPlaceholder } from '../../../../../../../_common/lazy/placeholder/placeholder';
@@ -8,7 +7,7 @@ import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directi
 import AppRatingWidget from '../../../../../../components/rating/widget/widget.vue';
 import { RouteStore, RouteStoreModule } from '../../view.store';
 
-@Component({
+@Options({
 	components: {
 		AppLazyPlaceholder,
 		AppRatingWidget,

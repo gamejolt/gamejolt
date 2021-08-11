@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Inject } from 'vue-property-decorator';
+import { Inject, Options, Vue } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
@@ -14,11 +13,7 @@ import {
 	loadArchivedChannels,
 } from '../../view.store';
 
-/**
- * Base cards list that gets wrapped depending on how we want to display the
- * channels.
- */
-@Component({
+@Options({
 	components: {
 		AppCommunityPerms,
 		AppCommunityChannelCard,

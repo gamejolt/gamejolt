@@ -1,10 +1,9 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { currency } from '../../../_common/filters/currency';
 import { Store } from '../../store/index';
 
-@Component({})
+@Options({})
 export default class AppPricingCard extends Vue {
 	@State sellable!: Store['sellable'];
 	@State price!: NonNullable<Store['price']>;

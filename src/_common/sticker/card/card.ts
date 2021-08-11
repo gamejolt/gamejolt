@@ -1,11 +1,9 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 import { Sticker } from '../sticker.model';
 
-@Component({
+@Options({
 	directives: {
 		AppTooltip,
 	},

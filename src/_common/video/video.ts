@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../utils/vue';
 import AppLoading from '../loading/loading.vue';
 import { setVideoMuted, trackVideoPlayerEvent, VideoPlayerController } from './player/controller';
@@ -14,7 +13,7 @@ type VideoSourceObject = {
 	src: string;
 };
 
-@Component({
+@Options({
 	components: {
 		AppLoading,
 	},

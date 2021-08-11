@@ -1,9 +1,8 @@
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { User } from '../../../../_common/user/user.model';
-import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
 import AppUserListItem from './item/item.vue';
 
-@Component({
+@Options({
 	components: {
 		AppUserListItem,
 	},

@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { VuexStore } from '../../../../utils/vuex';
 import { Analytics } from '../../../analytics/analytics.service';
 import { Growls } from '../../../growls/growls.service';
@@ -13,7 +13,7 @@ import { GamePlayModal } from '../../play-modal/play-modal.service';
 import { GamePackage } from '../package.model';
 import FormGamePackagePayment from '../payment-form/payment-form.vue';
 
-@Component({
+@Options({
 	components: {
 		AppLoading,
 		FormGamePackagePayment,

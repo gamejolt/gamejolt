@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Inject } from 'vue-property-decorator';
+import { Inject, Options, Vue } from 'vue-property-decorator';
 import { isEditingCommunity } from '../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
 import AppEditableOverlay from '../../../../../_common/editable-overlay/editable-overlay.vue';
@@ -8,7 +7,7 @@ import { CommunityThumbnailModal } from '../../../../components/forms/community/
 import { routeCommunitiesViewEditDetails } from '../edit/details/details.route';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
 
-@Component({
+@Options({
 	components: {
 		AppEditableOverlay,
 		AppMediaItemBackdrop,

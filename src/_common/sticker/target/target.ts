@@ -1,6 +1,4 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Inject, Prop, Watch } from 'vue-property-decorator';
+import { Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { sleep } from '../../../utils/utils';
 import { propOptional, propRequired } from '../../../utils/vue';
 import { Api } from '../../api/api.service';
@@ -28,7 +26,7 @@ export type ValidStickerResource = 'Comment' | 'Fireside_Post' | 'MediaItem';
 
 const InviewConfig = new ScrollInviewConfig();
 
-@Component({
+@Options({
 	components: {
 		AppSticker,
 		AppStickerReactions,

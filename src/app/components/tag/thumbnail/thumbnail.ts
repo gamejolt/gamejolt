@@ -1,10 +1,9 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Location } from 'vue-router';
 import { propOptional, propRequired } from '../../../../utils/vue';
 import { TagsInfo } from '../tags-info.service';
 
-@Component({})
+@Options({})
 export default class AppTagThumbnail extends Vue {
 	@Prop(propRequired(String)) tag!: string;
 	@Prop(propOptional(String, 'global')) eventCat!: string;

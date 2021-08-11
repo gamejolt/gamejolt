@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import {
 	BaseRouteComponent,
@@ -9,7 +9,7 @@ import { store } from '../../../../../../store';
 import { ManageGameThemeKey } from '../../manage';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
-@Component({
+@Options({
 	name: 'RouteDashGamesManageGameDesign',
 	components: {
 		FormGameDesign,

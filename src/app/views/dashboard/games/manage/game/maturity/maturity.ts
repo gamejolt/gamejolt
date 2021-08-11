@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Game } from '../../../../../../../_common/game/game.model';
 import { Growls } from '../../../../../../../_common/growls/growls.service';
 import { BaseRouteComponent } from '../../../../../../../_common/route/route-component';
@@ -9,7 +9,7 @@ import FormGameMaturity from '../../../../../../components/forms/game/maturity/m
 import AppGameOgrs from '../../../../../../components/game/ogrs/ogrs.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
-@Component({
+@Options({
 	name: 'RouteDashGamesManageGameMaturity',
 	components: {
 		AppScrollAffix,

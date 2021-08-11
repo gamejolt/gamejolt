@@ -1,4 +1,4 @@
-import { Component, Inject } from 'vue-property-decorator';
+import { Inject, Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import {
 	AppPromotionStore,
@@ -26,7 +26,7 @@ interface CacheData {
 	page: number;
 }
 
-@Component({
+@Options({
 	name: 'RouteDiscoverCommunities',
 	components: {
 		AppCommunityCard,

@@ -1,4 +1,4 @@
-import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Inject, Options, Prop } from 'vue-property-decorator';
 import { fuzzysearch } from '../../../../utils/string';
 import { propOptional, propRequired } from '../../../../utils/vue';
 import { BaseModal } from '../../../../_common/modal/base';
@@ -9,7 +9,7 @@ import { addGroupMembers, addGroupRoom, ChatClient, ChatKey } from '../client';
 import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
 
-@Component({
+@Options({
 	components: {
 		AppScrollScroller,
 		AppUserAvatarImg,

@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { Growls } from '../../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
@@ -8,7 +8,7 @@ import {
 } from '../../../../../../../_common/route/route-component';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
-@Component({
+@Options({
 	name: 'RouteDashGamesManageApiSettings',
 })
 @RouteResolver({

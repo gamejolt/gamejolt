@@ -1,9 +1,9 @@
+import { h } from 'vue';
+import { Options } from 'vue-property-decorator';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { User } from '../../../_common/user/user.model';
-import { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
 
-@Component({
+@Options({
 	name: 'RouteLibrary',
 })
 @RouteResolver({
@@ -12,7 +12,7 @@ import { Component } from 'vue-property-decorator';
 	resolver: () => User.touch(),
 })
 export default class RouteLibrary extends BaseRouteComponent {
-	render(h: CreateElement) {
+	render() {
 		return h('router-view');
 	}
 }

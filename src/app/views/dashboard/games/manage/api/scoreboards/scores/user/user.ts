@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { GameScoreTable } from '../../../../../../../../../_common/game/score-table/score-table.model';
 import { Growls } from '../../../../../../../../../_common/growls/growls.service';
@@ -13,7 +13,7 @@ import { User } from '../../../../../../../../../_common/user/user.model';
 import { RouteStore, RouteStoreModule } from '../../../../manage.store';
 import AppManageGameListScores from '../../_list-scores/list-scores.vue';
 
-@Component({
+@Options({
 	name: 'RouteDashGamesManageApiScoreboardsScoresUser',
 	components: {
 		AppManageGameListScores,

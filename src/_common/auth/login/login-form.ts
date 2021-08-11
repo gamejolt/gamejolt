@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../api/api.service';
 import { Connection } from '../../connection/connection-service';
 import { Environment } from '../../environment/environment.service';
@@ -8,7 +8,7 @@ import { LinkedAccounts } from '../../linked-account/linked-accounts.service';
 import AppLoading from '../../loading/loading.vue';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 
-@Component({
+@Options({
 	components: {
 		AppLoading,
 	},

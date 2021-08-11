@@ -1,9 +1,8 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import AppCard from '../../../_common/card/card.vue';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 
-@Component({
+@Options({
 	components: {
 		AppCard,
 	},

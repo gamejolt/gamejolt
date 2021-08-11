@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { Action, Mutation, State } from 'vuex-class';
 import { currency } from '../../../_common/filters/currency';
 import { ucwords } from '../../../_common/filters/ucwords';
@@ -9,7 +8,7 @@ import { PaymentData, Store } from '../../store/index';
 import AppAddress from '../address/address.vue';
 import AppModal from '../modal/modal.vue';
 
-@Component({
+@Options({
 	components: {
 		AppAddress,
 		AppUserAvatarImg,

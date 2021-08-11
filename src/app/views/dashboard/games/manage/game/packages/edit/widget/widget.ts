@@ -1,3 +1,4 @@
+import { Options, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { Environment } from '../../../../../../../../../_common/environment/environment.service';
 import {
@@ -6,16 +7,18 @@ import {
 } from '../../../../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../../../../_common/screen/screen-service';
 import { Sellable } from '../../../../../../../../../_common/sellable/sellable.model';
-import { Component, Watch } from 'vue-property-decorator';
 
-@Component({
+@Options({
 	name: 'RouteDashGamesManageGamePackagesEditWidget',
 })
 @RouteResolver({
 	deps: {},
 	resolver: ({ route }) =>
 		Api.sendRequest(
-			'/web/dash/developer/games/packages/preview/' + route.params.id + '/' + route.params.packageId
+			'/web/dash/developer/games/packages/preview/' +
+				route.params.id +
+				'/' +
+				route.params.packageId
 		),
 })
 export default class RouteDashGamesManageGamePackagesEditWidget extends BaseRouteComponent {
@@ -43,6 +46,8 @@ export default class RouteDashGamesManageGamePackagesEditWidget extends BaseRout
 		}
 
 		this.widgetCode =
-			'<iframe src="' + this.widgetUrl + '" frameborder="0" width="500" height="245"></iframe>';
+			'<iframe src="' +
+			this.widgetUrl +
+			'" frameborder="0" width="500" height="245"></iframe>';
 	}
 }

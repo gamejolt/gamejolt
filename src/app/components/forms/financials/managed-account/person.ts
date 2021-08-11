@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { findRequiredVueParent, propOptional, propRequired } from '../../../../../utils/vue';
 import { CommonFormComponents } from '../../../../../_common/form-vue/form.service';
 import AppFinancialsManagedAccountAddress from './address.vue';
@@ -12,7 +11,7 @@ import FormFinancialsManagedAccount from './managed-account.vue';
 import AppFinancialsManagedAccountName from './name.vue';
 import AppFinancialsManagedAccountSsn from './ssn.vue';
 
-@Component({
+@Options({
 	components: {
 		...CommonFormComponents,
 		AppFinancialsManagedAccountName,

@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import AppExpand from '../../../../_common/expand/expand.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
@@ -9,7 +9,7 @@ import { Store } from '../../../store/index';
 import AppGameDevStageSelector from './dev-stage-selector/dev-stage-selector.vue';
 import AppDashGameWizardControls from './wizard-controls/wizard-controls.vue';
 
-@Component({
+@Options({
 	components: {
 		AppFormControlToggle,
 		AppExpand,

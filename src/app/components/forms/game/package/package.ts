@@ -1,6 +1,6 @@
 import { addWeeks, startOfDay, startOfTomorrow } from 'date-fns';
 import { determine } from 'jstimezonedetect';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { currency } from '../../../../../_common/filters/currency';
 import { date } from '../../../../../_common/filters/date';
@@ -36,7 +36,7 @@ type FormGamePackageModel = GamePackage & {
 	has_suggested_price: boolean;
 };
 
-@Component({
+@Options({
 	components: {
 		AppFormLegend,
 		AppLoadingFade,
@@ -50,8 +50,10 @@ type FormGamePackageModel = GamePackage & {
 		currency,
 	},
 })
-export default class FormGamePackage extends BaseForm<FormGamePackageModel>
-	implements FormOnInit, FormOnLoad, FormOnBeforeSubmit {
+export default class FormGamePackage
+	extends BaseForm<FormGamePackageModel>
+	implements FormOnInit, FormOnLoad, FormOnBeforeSubmit
+{
 	modelClass = GamePackage as any;
 	resetOnSubmit = true;
 	reloadOnSubmit = true;

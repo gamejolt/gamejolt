@@ -1,12 +1,12 @@
+import { Options } from 'vue-property-decorator';
 import { PayloadError } from '../../../_common/payload/payload-service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
-import { Component } from 'vue-property-decorator';
 
 const ActionUnsubscribeNotification = 'unsubscribe-notification';
 const ActionUnsubscribeGJ = 'unsubscribe-gj';
 const ValidActions = [ActionUnsubscribeNotification, ActionUnsubscribeGJ];
 
-@Component({
+@Options({
 	name: 'RouteIntent',
 })
 @RouteResolver({

@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import AppEditableOverlay from '../../../../../../../_common/editable-overlay/editable-overlay.vue';
 import { Game } from '../../../../../../../_common/game/game.model';
 import { MediaBarItemMaxHeight } from '../../../../../../../_common/game/media-bar/item/item';
@@ -11,7 +10,7 @@ import { Media, RouteStore, RouteStoreModule } from '../../manage.store';
 
 const draggable = require('vuedraggable');
 
-@Component({
+@Options({
 	components: {
 		draggable,
 		AppScrollScroller,

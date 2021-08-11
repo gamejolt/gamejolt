@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import AppContentViewer from '../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../_common/environment/environment.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
@@ -19,7 +19,7 @@ import { AppCommentWidgetLazy } from '../lazy';
 import AppPollVoting from '../poll/voting/voting.vue';
 import AppPostControls from '../post/controls/controls.vue';
 
-@Component({
+@Options({
 	components: {
 		AppResponsiveDimensions,
 		AppImgResponsive,

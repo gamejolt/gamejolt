@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Watch } from 'vue-property-decorator';
+import { Options, Vue, Watch } from 'vue-property-decorator';
 import { sleep } from '../../../../utils/utils';
 import { Client } from '../../../../_common/client/client.service';
 import { Connection } from '../../../../_common/connection/connection-service';
@@ -10,7 +9,7 @@ import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { EventBus, EventBusDeregister } from '../../../../_common/system/event/event-bus.service';
 import './intro-global.styl';
 
-@Component({
+@Options({
 	components: {
 		AppExpand,
 		AppLoading,

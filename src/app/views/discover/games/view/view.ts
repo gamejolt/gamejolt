@@ -1,4 +1,4 @@
-import { Component, Inject } from 'vue-property-decorator';
+import { Inject, Options } from 'vue-property-decorator';
 import { enforceLocation } from '../../../../../utils/router';
 import { AdSettingsContainer } from '../../../../../_common/ad/ad-store';
 import { Api } from '../../../../../_common/api/api.service';
@@ -43,7 +43,7 @@ import AppDiscoverGamesViewNav from './_nav/nav.vue';
 
 const GameThemeKey = 'game';
 
-@Component({
+@Options({
 	name: 'RouteDiscoverGamesView',
 	components: {
 		AppPageHeader,

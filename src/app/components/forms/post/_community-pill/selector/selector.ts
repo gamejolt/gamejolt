@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
@@ -11,7 +10,7 @@ import AppPopper from '../../../../../../_common/popper/popper.vue';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { AppScrollHelper } from './scroll-helper/scroll-helper';
 
-@Component({
+@Options({
 	components: {
 		AppPopper,
 		AppCommunityThumbnailImg,

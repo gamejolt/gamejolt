@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../_common/api/api.service';
 import { Environment } from '../../../_common/environment/environment.service';
@@ -13,7 +13,7 @@ import { Store } from '../../store/index';
 import AppKeyBundle from './_bundle/bundle.vue';
 import AppKeyGame from './_game/game.vue';
 
-@Component({
+@Options({
 	name: 'RouteKey',
 	components: {
 		AppInvalidKey,

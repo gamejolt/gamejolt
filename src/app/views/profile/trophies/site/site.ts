@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
@@ -7,7 +7,7 @@ import AppTrophyCard from '../../../../components/trophy/card/card.vue';
 import AppTrophyListPaged from '../../../../components/trophy/list/paged/paged.vue';
 import { RouteStore, RouteStoreModule } from '../../profile.store';
 
-@Component({
+@Options({
 	name: 'RouteProfileTrophiesSite',
 	components: {
 		AppTrophyCard,

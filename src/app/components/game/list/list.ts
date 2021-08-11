@@ -1,9 +1,8 @@
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Game } from '../../../../_common/game/game.model';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
 import AppGameListItem from './item/item.vue';
 
-@Component({
+@Options({
 	components: {
 		AppGameListItem,
 	},

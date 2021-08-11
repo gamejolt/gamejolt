@@ -1,4 +1,4 @@
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
@@ -17,7 +17,7 @@ class FormModel extends CommunityChannel {
 	permission_posting = 'all';
 }
 
-@Component({
+@Options({
 	components: {
 		AppImgResponsive,
 		AppFormControlUpload,
@@ -25,8 +25,10 @@ class FormModel extends CommunityChannel {
 		AppCommunityChannelCardEdit,
 	},
 })
-export default class FormCommunityChannelEdit extends BaseForm<FormModel>
-	implements FormOnLoad, FormOnSubmitSuccess {
+export default class FormCommunityChannelEdit
+	extends BaseForm<FormModel>
+	implements FormOnLoad, FormOnSubmitSuccess
+{
 	@Prop(propRequired(Community)) community!: Community;
 
 	maxFilesize = 0;

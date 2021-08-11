@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { enforceLocation } from '../../../../../utils/router';
 import { Api } from '../../../../../_common/api/api.service';
@@ -35,7 +35,7 @@ import AppPageHeaderControls from '../../../../components/page-header/controls/c
 import AppPageHeader from '../../../../components/page-header/page-header.vue';
 import { Store } from '../../../../store/index';
 
-@Component({
+@Options({
 	name: 'RouteForumsTopicsView',
 	components: {
 		AppPageHeader,

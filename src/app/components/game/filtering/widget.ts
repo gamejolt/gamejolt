@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { number } from '../../../../_common/filters/number';
@@ -7,7 +6,7 @@ import AppPopper from '../../../../_common/popper/popper.vue';
 import { Store } from '../../../store/index';
 import { GameFilteringContainer } from './container';
 
-@Component({
+@Options({
 	components: {
 		AppPopper,
 	},

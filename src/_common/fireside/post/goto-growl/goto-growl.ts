@@ -1,6 +1,4 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { RawLocation } from 'vue-router';
 import { Game } from '../../../game/game.model';
 import { AppTimeAgo } from '../../../time/ago/ago';
@@ -8,7 +6,7 @@ import { FiresidePost } from '../post-model';
 
 export type Action = 'add' | 'publish' | 'scheduled-publish';
 
-@Component({
+@Options({
 	components: {
 		AppTimeAgo,
 	},

@@ -1,9 +1,9 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { authOnLogin, redirectToOnboarding } from '../../../../_common/auth/auth.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 
-@Component({
+@Options({
 	name: 'RouteAuthAuthorize',
 })
 @RouteResolver({

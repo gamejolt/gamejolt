@@ -1,9 +1,9 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../../utils/vue';
 import AppFormControlErrorsTS from './control-errors';
 
-@Component({})
+@Options({})
 export class AppFormControlError extends Vue {
 	@Prop(String) when!: string;
 	@Prop(String) message!: string;
@@ -25,7 +25,7 @@ export class AppFormControlError extends Vue {
 		errors.setMessageOverride(this.when, this.message);
 	}
 
-	render(h: CreateElement) {
+	render() {
 		return h('span');
 	}
 }

@@ -1,5 +1,5 @@
-import { CreateElement } from 'vue';
-import { Component, Inject } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Inject, Options } from 'vue-property-decorator';
 import {
 	AppPromotionStore,
 	AppPromotionStoreKey,
@@ -7,7 +7,7 @@ import {
 } from '../../../../utils/mobile-app';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
 
-@Component({
+@Options({
 	name: 'RouteDiscoverGames',
 })
 export default class RouteDiscoverGames extends BaseRouteComponent {
@@ -18,7 +18,7 @@ export default class RouteDiscoverGames extends BaseRouteComponent {
 		setAppPromotionCohort(this.appPromotion, 'store');
 	}
 
-	render(h: CreateElement) {
+	render() {
 		return h('router-view');
 	}
 }

@@ -1,12 +1,11 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { loadScript } from '../../../../utils/utils';
 import { Store } from '../../../store/index';
 
 declare const UnityObject2: any;
 
-@Component({})
+@Options({})
 export default class AppEmbedUnity extends Vue {
 	@State url!: Store['url'];
 	@State build!: Store['build'];

@@ -1,11 +1,9 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional } from '../../../../../../utils/vue';
 import AppEditableOverlay from '../../../../../../_common/editable-overlay/editable-overlay.vue';
 import { MediaItem } from '../../../../../../_common/media-item/media-item-model';
 
-@Component({
+@Options({
 	components: {
 		AppEditableOverlay,
 	},

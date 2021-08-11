@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
@@ -14,7 +14,7 @@ import { Store } from '../../../store/index';
 import AppDiscoverHomeBanner from './_banner/banner.vue';
 import AppDiscoverHomeCommunities from './_communities/communities.vue';
 
-@Component({
+@Options({
 	name: 'RouteDiscoverHome',
 	components: {
 		AppDiscoverHomeBanner,

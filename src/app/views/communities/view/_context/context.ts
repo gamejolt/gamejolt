@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop, Provide } from 'vue-property-decorator';
+import { Options, Prop, Provide, Vue } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
 import { propRequired } from '../../../../../utils/vue';
 import { isEditingCommunity } from '../../../../../_common/community/community.model';
@@ -9,7 +8,7 @@ import AppCommunitiesViewCard from '../_card/card.vue';
 import AppNavChannels from '../_nav/channels/channels.vue';
 import AppNavEdit from '../_nav/edit/edit.vue';
 
-@Component({
+@Options({
 	components: {
 		AppCommunitiesViewCard,
 		AppNavChannels,

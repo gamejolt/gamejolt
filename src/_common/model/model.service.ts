@@ -1,3 +1,4 @@
+import VueGlobal from 'vue';
 import { Api, RequestOptions } from '../api/api.service';
 
 export type ModelSaveRequestOptions = RequestOptions & { data?: any };
@@ -17,7 +18,7 @@ export class Model {
 
 	static create(self: any) {
 		// These need to be created dynamically for each model type.
-		self.populate = function(rows: any[]): any[] {
+		self.populate = function (rows: any[]): any[] {
 			const models: any[] = [];
 			if (rows && Array.isArray(rows) && rows.length) {
 				for (const row of rows) {
@@ -27,7 +28,7 @@ export class Model {
 			return models;
 		};
 
-		self.prototype.assign = function(this: any, other: any) {
+		self.prototype.assign = function (this: any, other: any) {
 			// Some times the model constructors add new fields when populating.
 			// This way we retain those fields.
 			const newObj = new self(other);
@@ -37,7 +38,7 @@ export class Model {
 			const Vue = require('vue').default;
 			const keys = Object.keys(newObj);
 			for (const k of keys) {
-				Vue.set(this, k, newObj[k]);
+				VueGlobal.set(this, k, newObj[k]);
 			}
 		};
 

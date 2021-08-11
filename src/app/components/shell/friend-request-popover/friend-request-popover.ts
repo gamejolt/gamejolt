@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Watch } from 'vue-property-decorator';
+import { Options, Vue, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class/lib/bindings';
 import { Api } from '../../../../_common/api/api.service';
 import { Connection } from '../../../../_common/connection/connection-service';
@@ -14,7 +13,7 @@ import AppShellFriendRequestPopoverItem from './item/item.vue';
 
 type Tab = 'requests' | 'pending';
 
-@Component({
+@Options({
 	components: {
 		AppPopper,
 		AppLoading,

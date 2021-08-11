@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { AdSettingsContainer } from '../../../_common/ad/ad-store';
 import AppExpand from '../../../_common/expand/expand.vue';
@@ -15,7 +15,7 @@ import { Store, store } from '../../store/index';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './search.store';
 import './search.styl';
 
-@Component({
+@Options({
 	name: 'RouteSearch',
 	components: {
 		AppPageHeader,

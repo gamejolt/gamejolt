@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { findVueParent, propRequired } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
 import { DrawerStore, DrawerStoreKey, setDrawerOpen } from '../../drawer/drawer-store';
@@ -13,7 +12,7 @@ import { calculateStickerTargetRects, StickerLayerController } from './layer-con
 import AppStickerLayerPlacementMaskItem from './placement-mask-item.vue';
 import AppStickerLayerPlacementMaskTarget from './placement-mask-target.vue';
 
-@Component({
+@Options({
 	components: {
 		AppStickerLayerPlacementMaskItem,
 		AppStickerLayerPlacementMaskTarget,

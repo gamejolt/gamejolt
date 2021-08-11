@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Environment } from '../../../_common/environment/environment.service';
@@ -14,7 +13,7 @@ import AppModal from '../../components/modal/modal.vue';
 import { Store } from '../../store/index';
 import AppPayment from '../payment/payment.vue';
 
-@Component({
+@Options({
 	components: {
 		AppModal,
 		AppFadeCollapse,

@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { Analytics } from '../../../../../../_common/analytics/analytics.service';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
 import AppFadeCollapse from '../../../../../../_common/fade-collapse/fade-collapse.vue';
@@ -13,7 +12,7 @@ import { Scroll } from '../../../../../../_common/scroll/scroll.service';
 import { ActivityFeedItem } from '../../item-service';
 import { ActivityFeedKey, ActivityFeedView } from '../../view';
 
-@Component({
+@Options({
 	components: {
 		AppFadeCollapse,
 		AppContentViewer,

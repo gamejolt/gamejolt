@@ -1,11 +1,10 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-import { CreateElement } from 'vue/types/vue';
+import { h } from 'vue';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../utils/vue';
 import { AdSlot } from '../ad-slot-info';
 import { AdPlaywireAdapter } from './playwire-adapter';
 
-@Component({})
+@Options({})
 export default class AppAdPlaywireVideo extends Vue {
 	@Prop(propRequired(AdSlot)) adSlot!: AdSlot;
 	@Prop(propRequired(AdPlaywireAdapter)) adapter!: AdPlaywireAdapter;
@@ -18,7 +17,7 @@ export default class AppAdPlaywireVideo extends Vue {
 		script.src = 'https://cdn.playwire.com/bolt/js/zeus/embed.js';
 	}
 
-	render(h: CreateElement) {
+	render() {
 		return h('div');
 	}
 }

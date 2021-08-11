@@ -1,5 +1,5 @@
-import { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options } from 'vue-property-decorator';
 import { router } from '..';
 import { Api } from '../../../_common/api/api.service';
 import { Meta } from '../../../_common/meta/meta-service';
@@ -11,7 +11,7 @@ import {
 import { AppState, AppStore } from '../../../_common/store/app-store';
 import { HomeFeedService } from './home-feed.service';
 
-@Component({
+@Options({
 	name: 'RouteHome',
 	components: {
 		RouteHomeFeed: () => asyncRouteLoader(import('./feed.vue'), router),
@@ -51,7 +51,7 @@ export default class RouteHome extends BaseRouteComponent {
 		this.$route.meta.analyticsPath = analyticsPath;
 	}
 
-	render(h: CreateElement) {
+	render() {
 		if (!this.userBootstrapped) {
 			return h('div');
 		}

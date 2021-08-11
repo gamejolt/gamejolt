@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional } from '../../../../utils/vue';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import { TagInfo, TagsInfo } from '../tags-info.service';
@@ -30,7 +29,7 @@ const FeaturedTags = [
 	'adult',
 ];
 
-@Component({
+@Options({
 	components: {
 		AppScrollScroller,
 		AppTagThumbnail,

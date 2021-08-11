@@ -1,7 +1,7 @@
+import { Options } from 'vue-property-decorator';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
-import { Component } from 'vue-property-decorator';
 import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
 
 type MaturityField = {
@@ -9,7 +9,7 @@ type MaturityField = {
 	description?: string;
 };
 
-@Component({
+@Options({
 	components: {
 		AppExpand,
 		AppDashGameWizardControls,

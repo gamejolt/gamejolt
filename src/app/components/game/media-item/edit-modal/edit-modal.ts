@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { Game } from '../../../../../_common/game/game.model';
@@ -11,7 +11,7 @@ import FormGameSketchfab from '../../../forms/game/sketchfab/sketchfab.vue';
 import FormGameVideo from '../../../forms/game/video/video.vue';
 import { GameMediaItemEditModalRemoveCallback } from './edit-modal.service';
 
-@Component({
+@Options({
 	components: {
 		FormGameImage,
 		FormGameVideo,

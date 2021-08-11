@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
 import { trackGotoCommunity } from '../../analytics/analytics.service';
 import AppMediaItemBackdrop from '../../media-item/backdrop/backdrop.vue';
@@ -7,7 +6,7 @@ import AppCommunityCardBase from '../card-base/card-base.vue';
 import { Community } from '../community.model';
 import AppCommunityThumbnailImg from '../thumbnail/img/img.vue';
 
-@Component({
+@Options({
 	components: {
 		AppCommunityCardBase,
 		AppMediaItemBackdrop,

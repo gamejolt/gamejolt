@@ -1,4 +1,4 @@
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppFormControlUploadTS from '../../../../../_common/form-vue/control/upload/upload';
@@ -23,7 +23,7 @@ interface FormModel {
 	_progress: ProgressEvent | null;
 }
 
-@Component({
+@Options({
 	components: {
 		draggable,
 		AppScrollScroller,

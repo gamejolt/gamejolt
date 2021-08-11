@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { authOnLogin, redirectToOnboarding } from '../../../../_common/auth/auth.service';
 import { Growls } from '../../../../_common/growls/growls.service';
@@ -6,7 +6,7 @@ import AppLoading from '../../../../_common/loading/loading.vue';
 import { AppProgressPoller } from '../../../../_common/progress/poller/poller';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
 
-@Component({
+@Options({
 	name: 'RouteJoinAlmost',
 	components: {
 		AppProgressPoller,

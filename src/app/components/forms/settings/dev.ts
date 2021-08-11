@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import {
 	ConfigOption,
 	ConfigOptionBoolean,
@@ -11,7 +11,7 @@ import { BaseForm, FormOnInit } from '../../../../_common/form-vue/form.service'
 
 type FormModel = Record<string, boolean | string>;
 
-@Component({
+@Options({
 	components: {
 		AppFormControlToggle,
 	},

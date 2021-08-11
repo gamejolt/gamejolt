@@ -1,4 +1,4 @@
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop } from 'vue-property-decorator';
 import { propOptional } from '../../../../utils/vue';
 import { ContentContext } from '../../../content/content-context';
 import AppContentEditorTS from '../../../content/content-editor/content-editor';
@@ -6,7 +6,7 @@ import { AppContentEditorLazy } from '../../../content/content-editor/content-ed
 import { ContentRules } from '../../../content/content-editor/content-rules';
 import BaseFormControlTS from '../base';
 
-@Component({
+@Options({
 	components: {
 		AppContentEditor: AppContentEditorLazy,
 	},

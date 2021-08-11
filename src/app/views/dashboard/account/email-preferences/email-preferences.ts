@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Translate } from '../../../../../_common/translate/translate.service';
@@ -7,7 +7,7 @@ import FormEmailPreferences from '../../../../components/forms/email-preferences
 import { IntentService } from '../../../../components/intent/intent.service';
 import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 
-@Component({
+@Options({
 	name: 'RouteDashAccountEmailPreferences',
 	components: {
 		FormEmailPreferences,

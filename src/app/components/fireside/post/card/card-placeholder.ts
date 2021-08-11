@@ -1,8 +1,7 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { AppPostCardAspectRatio } from './card';
 
-@Component({})
+@Options({})
 export default class AppPostCardPlaceholder extends Vue {
 	readonly aspectRatio = AppPostCardAspectRatio;
 }

@@ -1,5 +1,5 @@
 import { Sketch } from 'vue-color';
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../api/api.service';
 import AppLoading from '../../../loading/loading.vue';
 import AppPopper from '../../../popper/popper.vue';
@@ -13,7 +13,7 @@ interface VueColor {
 	hex: string | null;
 }
 
-@Component({
+@Options({
 	components: {
 		AppLoading,
 		AppThemeBubble,

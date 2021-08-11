@@ -1,8 +1,8 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import AppAppButtons from '../../../../_common/app-buttons/app-buttons.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 
-@Component({
+@Options({
 	name: 'RouteLandingApp',
 	components: {
 		AppAppButtons,

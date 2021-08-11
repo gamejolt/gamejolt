@@ -1,5 +1,4 @@
-import Component from 'vue-class-component';
-import { Inject } from 'vue-property-decorator';
+import { Inject, Options } from 'vue-property-decorator';
 import AppCardListAdd from '../../../../../../../_common/card/list/add/add.vue';
 import AppCardListDraggable from '../../../../../../../_common/card/list/draggable/draggable.vue';
 import AppCardList from '../../../../../../../_common/card/list/list.vue';
@@ -24,7 +23,7 @@ import AppCommunitiesViewPageContainer from '../../../_page-container/page-conta
 import AppCommunitiesEditChannelListItem from './_item/item.vue';
 import AppCommunitiesEditChannelListPresetItem from './_preset-item/preset-item.vue';
 
-@Component({
+@Options({
 	name: 'RouteCommunitiesViewEditChannels',
 	components: {
 		AppCommunitiesViewPageContainer,

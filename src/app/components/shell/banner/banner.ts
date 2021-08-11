@@ -1,9 +1,8 @@
-import Vue from 'vue';
-import { Component, Watch } from 'vue-property-decorator';
+import { Options, Vue, Watch } from 'vue-property-decorator';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import { BannerModule, BannerStore } from '../../../store';
 
-@Component({})
+@Options({})
 export default class AppShellBanner extends Vue {
 	@BannerModule.State
 	hasBanner!: BannerStore['hasBanner'];

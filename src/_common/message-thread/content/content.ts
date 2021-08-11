@@ -1,8 +1,7 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
-import AppTimelineListItem from '../../timeline-list/item/item.vue'
+import { Options, Vue } from 'vue-property-decorator';
+import AppTimelineListItem from '../../timeline-list/item/item.vue';
 
-@Component({
+@Options({
 	components: {
 		AppTimelineListItem,
 	},

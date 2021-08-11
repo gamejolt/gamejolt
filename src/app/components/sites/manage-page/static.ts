@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { SiteBuild } from '../../../../_common/site/build/build-model';
@@ -7,7 +6,7 @@ import { Site } from '../../../../_common/site/site-model';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import FormDashSiteBuild from '../../forms/site/build/build.vue';
 
-@Component({
+@Options({
 	components: {
 		FormDashSiteBuild,
 	},

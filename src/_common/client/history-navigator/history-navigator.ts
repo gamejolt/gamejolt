@@ -1,8 +1,7 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { ClientHistoryNavigator } from './history-navigator.service';
 
-@Component({})
+@Options({})
 export default class AppClientHistoryNavigator extends Vue {
 	readonly HistoryNavigator = ClientHistoryNavigator;
 }

@@ -1,9 +1,8 @@
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Game } from '../../../../_common/game/game.model';
 import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
 
-@Component({
+@Options({
 	components: {
 		AppThemeSvg,
 	},

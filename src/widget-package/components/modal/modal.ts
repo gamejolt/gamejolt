@@ -1,8 +1,7 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import AppScrollScroller from '../../../_common/scroll/scroller/scroller.vue';
 
-@Component({
+@Options({
 	components: {
 		AppScrollScroller,
 	},

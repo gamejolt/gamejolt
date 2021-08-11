@@ -1,11 +1,11 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../utils/vue';
 import { Community } from '../../../../_common/community/community.model';
 import { BaseModal } from '../../../../_common/modal/base';
 import { User } from '../../../../_common/user/user.model';
 import FormCommunityBlock from '../../forms/community/ban/block.vue';
 
-@Component({
+@Options({
 	components: {
 		FormCommunityBlock,
 	},

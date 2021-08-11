@@ -1,15 +1,17 @@
-import Component from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import AppFormControlContent from '../../../../../../_common/form-vue/control/content/content.vue';
 import { BaseForm, FormOnLoad } from '../../../../../../_common/form-vue/form.service';
 
-@Component({
+@Options({
 	components: {
 		AppFormControlContent,
 	},
 })
-export default class FormCommunityChannelDescription extends BaseForm<CommunityChannel>
-	implements FormOnLoad {
+export default class FormCommunityChannelDescription
+	extends BaseForm<CommunityChannel>
+	implements FormOnLoad
+{
 	modelClass = CommunityChannel;
 	saveMethod = '$saveDescription' as const;
 	lengthLimit = 5_000;

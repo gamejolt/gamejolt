@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Watch } from 'vue-property-decorator';
+import { Options, Vue, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
@@ -17,7 +16,7 @@ const components = {
 	AppShellSidebarContext,
 };
 
-@Component({
+@Options({
 	components,
 })
 export default class AppShellSidebar extends Vue {

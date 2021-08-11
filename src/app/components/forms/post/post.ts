@@ -1,6 +1,6 @@
 import { addWeeks, startOfDay } from 'date-fns';
 import { determine } from 'jstimezonedetect';
-import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Watch } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../utils/array';
 import { propOptional } from '../../../../utils/vue';
 import { trackPostPublish } from '../../../../_common/analytics/analytics.service';
@@ -75,7 +75,7 @@ type FormPostModel = FiresidePost & {
 	poll_item10: string;
 };
 
-@Component({
+@Options({
 	components: {
 		AppFormControlCheckbox,
 		AppFormControlDate,

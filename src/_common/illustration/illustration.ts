@@ -1,9 +1,8 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../utils/vue';
 import { AppThemeSvg } from '../theme/svg/svg';
 
-@Component({
+@Options({
 	components: {
 		AppThemeSvg,
 	},

@@ -1,4 +1,4 @@
-import { Component, Inject } from 'vue-property-decorator';
+import { Inject, Options } from 'vue-property-decorator';
 import {
 	AppPromotionStore,
 	AppPromotionStoreKey,
@@ -24,7 +24,7 @@ import AppPageContainer from '../../components/page-container/page-container.vue
 
 const DownloadDelay = 3000;
 
-@Component({
+@Options({
 	name: 'RouteDownload',
 	components: {
 		AppPageContainer,

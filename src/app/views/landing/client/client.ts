@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { Device } from '../../../../_common/device/device.service';
 import { Game } from '../../../../_common/game/game.model';
@@ -10,7 +10,7 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import { AppScrollTo } from '../../../../_common/scroll/to/to.directive';
 import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
 
-@Component({
+@Options({
 	name: 'RouteLandingClient',
 	components: {
 		AppThemeSvg,

@@ -1,5 +1,4 @@
-import Component from 'vue-class-component';
-import { Inject } from 'vue-property-decorator';
+import { Inject, Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { numberSort } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
@@ -35,7 +34,7 @@ export type StickerCount = {
 
 const FetchStickersEndpoint = '/web/stickers/dash';
 
-@Component({
+@Options({
 	name: 'RouteDashStickers',
 	components: {
 		AppPageHeader,

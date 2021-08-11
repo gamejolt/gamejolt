@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import AppEditableOverlay from '../../../../_common/editable-overlay/editable-overlay.vue';
@@ -14,7 +14,7 @@ import { UserHeaderModal } from '../../../components/user/header-modal/header-mo
 import { Store, store } from '../../../store/index';
 import { RouteStore, RouteStoreModule, RouteStoreName } from './account.store';
 
-@Component({
+@Options({
 	name: 'RouteDashAccount',
 	components: {
 		AppPageHeader,

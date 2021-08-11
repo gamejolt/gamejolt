@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { date } from '../../../../../../../../../_common/filters/date';
 import { GameDataStoreItem } from '../../../../../../../../../_common/game/data-store/item/item.model';
@@ -9,7 +9,7 @@ import {
 } from '../../../../../../../../../_common/route/route-component';
 import { RouteStore, RouteStoreModule } from '../../../../manage.store';
 
-@Component({
+@Options({
 	name: 'RouteDashGamesManageApiDataStorageItemsView',
 	filters: {
 		date,

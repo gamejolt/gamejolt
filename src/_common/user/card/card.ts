@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { propOptional, propRequired } from '../../../utils/vue';
 import { fuzzynumber } from '../../filters/fuzzynumber';
@@ -14,7 +13,7 @@ import { User } from '../user.model';
 import AppUserVerifiedTick from '../verified-tick/verified-tick.vue';
 import './card-global.styl';
 
-@Component({
+@Options({
 	components: {
 		AppUserAvatarImg,
 		AppUserFollowWidget,

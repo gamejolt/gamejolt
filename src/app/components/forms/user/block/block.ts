@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import AppFormControlPrefixedInput from '../../../../../_common/form-vue/control/prefixed-input/prefixed-input.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
@@ -14,14 +14,16 @@ interface FormModel {
 	removeComments: boolean;
 }
 
-@Component({
+@Options({
 	components: {
 		AppFormControlToggle,
 		AppFormControlPrefixedInput,
 	},
 })
-export default class FormUserBlock extends BaseForm<FormModel>
-	implements FormOnSubmit, FormOnSubmitSuccess {
+export default class FormUserBlock
+	extends BaseForm<FormModel>
+	implements FormOnSubmit, FormOnSubmitSuccess
+{
 	resetOnSubmit = true;
 
 	onSubmit() {

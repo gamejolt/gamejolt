@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { ScrollInviewConfig } from '../../../../../_common/scroll/inview/config';
 import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
@@ -18,7 +17,7 @@ const InviewConfigHydration = new ScrollInviewConfig({ margin: `${Screen.windowH
  */
 export const InviewConfigFocused = new ScrollInviewConfig({ trackFocused: true });
 
-@Component({
+@Options({
 	components: {
 		AppScrollInview,
 		AppActivityFeedPost,

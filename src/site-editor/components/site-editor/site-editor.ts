@@ -1,15 +1,14 @@
+import { Options, Vue } from 'vue-property-decorator';
+import { Mutation, State } from 'vuex-class';
 import { Api } from '../../../_common/api/api.service';
 import AppContentBlockEditor from '../../../_common/content-block/editor/editor.vue';
 import { Growls } from '../../../_common/growls/growls.service';
+import AppLoading from '../../../_common/loading/loading.vue';
 import AppThemeSelector from '../../../_common/theme/selector/selector.vue';
 import AppThemeEditor from '../../../_common/theme/theme-editor/theme-editor.vue';
-import AppLoading from '../../../_common/loading/loading.vue';
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
-import { Mutation, State } from 'vuex-class';
 import { Store } from '../../store/index';
 
-@Component({
+@Options({
 	components: {
 		AppLoading,
 		AppThemeSelector,

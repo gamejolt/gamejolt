@@ -1,5 +1,5 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
 import { ScrollInviewConfig } from './config';
 import { ScrollInviewController } from './controller';
@@ -7,7 +7,7 @@ import { ScrollInviewParentController, ScrollInviewParentKey } from './parent-co
 
 export type ScrollInviewEmitsOn = 'full-overlap' | 'partial-overlap';
 
-@Component({})
+@Options({})
 export class AppScrollInview extends Vue {
 	@Prop(propRequired(ScrollInviewConfig)) config!: ScrollInviewConfig;
 	@Prop(propOptional(String, 'div')) tag!: string;
@@ -31,7 +31,7 @@ export class AppScrollInview extends Vue {
 		this.parent.getContainer(this.config).unobserveItem(this);
 	}
 
-	render(h: CreateElement) {
+	render() {
 		return h(this.tag, this.$slots.default);
 	}
 }

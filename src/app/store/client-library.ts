@@ -14,7 +14,7 @@ import {
 } from 'client-voodoo';
 import * as fs from 'fs';
 import * as path from 'path';
-import Vue from 'vue';
+import VueGlobal from 'vue';
 import { Action, Mutation, namespace, State } from 'vuex-class';
 import { arrayGroupBy, arrayIndexBy, arrayRemove } from '../../utils/array';
 import { fuzzysearch } from '../../utils/string';
@@ -275,13 +275,13 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	@VuexMutation
 	private setCurrentlyPatching([localPackage, patchInstance]: [LocalDbPackage, PatchInstance]) {
 		if (!this.currentlyPatching[localPackage.id]) {
-			Vue.set(this.currentlyPatching, localPackage.id + '', patchInstance);
+			VueGlobal.set(this.currentlyPatching, localPackage.id + '', patchInstance);
 		}
 	}
 
 	@VuexMutation
 	private unsetCurrentlyPatching(localPackage: LocalDbPackage) {
-		Vue.delete(this.currentlyPatching, localPackage.id + '');
+		VueGlobal.delete(this.currentlyPatching, localPackage.id + '');
 	}
 
 	@VuexMutation
@@ -293,7 +293,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			return;
 		}
 
-		Vue.set(this.currentlyUninstalling, localPackage.id + '', uninstallPromise);
+		VueGlobal.set(this.currentlyUninstalling, localPackage.id + '', uninstallPromise);
 	}
 
 	@VuexMutation
@@ -302,7 +302,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			return;
 		}
 
-		Vue.delete(this.currentlyUninstalling, localPackage.id + '');
+		VueGlobal.delete(this.currentlyUninstalling, localPackage.id + '');
 	}
 
 	@VuexMutation
@@ -410,7 +410,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		try {
 			// We freeze the installation directory in time.
 			if (!localPackage.install_dir) {
-				const title = (localPackage.title || 'default').replace(/[\/\?<>\\:\*\|":]/g, '');
+				const title = (localPackage.title || 'default').replace(/[/?<>\\:*|":]/g, '');
 				await this.setPackageInstallDir([
 					localPackage,
 					path.join(

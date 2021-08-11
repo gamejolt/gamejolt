@@ -1,7 +1,5 @@
 import { readableColor } from 'polished';
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
 import { Analytics } from '../../../../../../_common/analytics/analytics.service';
 import { Community } from '../../../../../../_common/community/community.model';
@@ -9,7 +7,7 @@ import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbn
 import Onboarding from '../../../../../../_common/onboarding/onboarding.service';
 import { Store } from '../../../../../store';
 
-@Component({
+@Options({
 	components: {
 		AppCommunityThumbnailImg,
 	},

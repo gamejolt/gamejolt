@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { GameBuild } from '../../../../../../../../../_common/game/build/build.model';
 import { GameBuildLaunchOption } from '../../../../../../../../../_common/game/build/launch-option/launch-option.model';
@@ -13,7 +13,7 @@ import {
 import FormGameRelease from '../../../../../../../../components/forms/game/release/release.vue';
 import { RouteStore, RouteStoreModule } from '../../../../manage.store';
 
-@Component({
+@Options({
 	name: 'RouteDashGamesManageGamePackageReleaseEdit',
 	components: {
 		FormGameRelease,

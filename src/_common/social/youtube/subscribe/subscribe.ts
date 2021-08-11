@@ -1,10 +1,9 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import '../../social.styl';
-
 import { YoutubeSdk } from '../sdk/sdk.service';
 
-@Component({})
+@Options({})
 export class AppSocialYoutubeSubscribe extends Vue {
 	@Prop(String) channel!: string;
 	@Prop({ type: String, default: 'default' })
@@ -12,7 +11,7 @@ export class AppSocialYoutubeSubscribe extends Vue {
 	@Prop({ type: String, default: 'default' })
 	theme!: string;
 
-	render(h: CreateElement) {
+	render() {
 		return h(
 			'div',
 			{

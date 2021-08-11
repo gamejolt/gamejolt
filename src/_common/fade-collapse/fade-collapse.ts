@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { sleep } from '../../utils/utils';
 import { Screen } from '../screen/screen-service';
 import { Scroll } from '../scroll/scroll.service';
@@ -12,7 +11,7 @@ const ExtraCollapsePadding = 200;
  */
 const Threshold = 50;
 
-@Component({})
+@Options({})
 export default class AppFadeCollapse extends Vue {
 	@Prop({ type: Number, required: true })
 	collapseHeight!: number;

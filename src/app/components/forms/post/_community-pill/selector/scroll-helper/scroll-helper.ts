@@ -1,10 +1,10 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { findRequiredVueParent, propOptional } from '../../../../../../../utils/vue';
 import AppScrollScrollerTS from '../../../../../../../_common/scroll/scroller/scroller';
 import AppScrollScroller from '../../../../../../../_common/scroll/scroller/scroller.vue';
 
-@Component({})
+@Options({})
 export class AppScrollHelper extends Vue {
 	@Prop(propOptional(Boolean, false))
 	when!: boolean;
@@ -20,7 +20,7 @@ export class AppScrollHelper extends Vue {
 		this.scrollParent.scrollTo(0);
 	}
 
-	render(h: CreateElement) {
+	render() {
 		return h('div');
 	}
 }

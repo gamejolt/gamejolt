@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../../../utils/array';
 import { Api } from '../../../../../../../_common/api/api.service';
 import AppCardListAdd from '../../../../../../../_common/card/list/add/add.vue';
@@ -16,7 +16,7 @@ import FormGameSong from '../../../../../../components/forms/game/song/song.vue'
 import AppDashGameWizardControls from '../../../../../../components/forms/game/wizard-controls/wizard-controls.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
-@Component({
+@Options({
 	name: 'RouteDashGamesManageGameMusic',
 	components: {
 		FormGameSong,
@@ -74,7 +74,9 @@ export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
 	}
 
 	async removeSong(song: GameSong) {
-		const result = await ModalConfirm.show(this.$gettext('dash.games.music.remove_confirmation'));
+		const result = await ModalConfirm.show(
+			this.$gettext('dash.games.music.remove_confirmation')
+		);
 
 		if (!result) {
 			return;

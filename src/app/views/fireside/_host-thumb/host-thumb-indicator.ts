@@ -1,10 +1,9 @@
-import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import { FiresideRTC, FiresideRTCKey } from '../fireside-rtc';
 import { FiresideRTCUser } from '../fireside-rtc-user';
 
-@Component({
+@Options({
 	components: {
 		AppUserAvatarImg,
 	},

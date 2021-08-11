@@ -1,7 +1,7 @@
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop } from 'vue-property-decorator';
 import BaseFormControl from '../base';
 
-@Component({})
+@Options({})
 export default class AppFormControlTextarea extends BaseFormControl {
 	@Prop(Array)
 	validateOn!: string[];

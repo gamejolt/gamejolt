@@ -1,6 +1,4 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { number } from '../../../../../_common/filters/number';
 import AppListGroupSelector from '../../../../../_common/list-group/selector/selector.vue';
 import { RouteStore, RouteStoreModule } from '../../profile.store';
@@ -11,7 +9,7 @@ export type TrophyNavGame = {
 	title: string;
 };
 
-@Component({
+@Options({
 	components: {
 		AppListGroupSelector,
 	},

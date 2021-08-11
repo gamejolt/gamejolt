@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
+import { Options, Vue } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import AppLoadingFade from '../../../../_common/loading/fade/fade.vue';
@@ -10,7 +9,7 @@ import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
 import AppFiresideBadgePlaceholder from '../../../components/fireside/badge/placeholder/placeholder.vue';
 import { GRID_EVENT_FIRESIDE_START } from '../../../components/grid/client.service';
 
-@Component({
+@Options({
 	components: {
 		AppFiresideBadge,
 		AppLoadingFade,

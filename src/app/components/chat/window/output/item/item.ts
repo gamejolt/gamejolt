@@ -1,6 +1,5 @@
 import { transparentize } from 'polished';
-import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../utils/vue';
 import { ContentRules } from '../../../../../../_common/content/content-editor/content-rules';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
@@ -28,7 +27,7 @@ export interface ChatMessageEditEvent {
 	message: ChatMessage;
 }
 
-@Component({
+@Options({
 	components: {
 		AppContentViewer,
 		AppPopper,

@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { GameScoreTable } from '../../../../../../../_common/game/score-table/score-table.model';
@@ -19,7 +19,7 @@ import AppScoreboardSelector from '../../../../../../components/score/scoreboard
 import { Store } from '../../../../../../store/index';
 import { RouteStore, RouteStoreModule } from '../../view.store';
 
-@Component({
+@Options({
 	name: 'RouteDiscoverGamesViewScoresList',
 	components: {
 		AppNavTabList,

@@ -1,4 +1,4 @@
-import Component from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
 import {
 	CommunityCompetition,
 	CompetitionPeriodVoting,
@@ -11,7 +11,7 @@ import AppFormLegend from '../../../../../../_common/form-vue/legend/legend.vue'
 import AppLoading from '../../../../../../_common/loading/loading.vue';
 import AppCommunityCompetitionDate from '../../../../community/competition/date/date.vue';
 
-@Component({
+@Options({
 	components: {
 		AppFormLegend,
 		AppFormControlDate,
@@ -22,8 +22,10 @@ import AppCommunityCompetitionDate from '../../../../community/competition/date/
 		date,
 	},
 })
-export default class FormCommunityCompetitionEdit extends BaseForm<CommunityCompetition>
-	implements FormOnInit {
+export default class FormCommunityCompetitionEdit
+	extends BaseForm<CommunityCompetition>
+	implements FormOnInit
+{
 	modelClass = CommunityCompetition;
 	timezoneService: FormTimezoneService<CommunityCompetition> | null = null;
 

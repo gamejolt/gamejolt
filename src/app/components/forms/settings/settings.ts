@@ -1,4 +1,4 @@
-import { Component, Watch } from 'vue-property-decorator';
+import { Options, Watch } from 'vue-property-decorator';
 import * as _ClientAutoStartMod from '../../../../_common/client/autostart/autostart.service';
 import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
 import { BaseForm, FormOnInit } from '../../../../_common/form-vue/form.service';
@@ -41,7 +41,7 @@ type FormModel = {
 	sticker_sounds: boolean;
 };
 
-@Component({
+@Options({
 	components: {
 		AppFormControlToggle,
 	},

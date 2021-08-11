@@ -1,12 +1,12 @@
-import Vue, { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Navigate } from '../../navigate/navigate.service';
 import { Screen } from '../../screen/screen-service';
 import { AppStore } from '../../store/app-store';
 import { Client } from '../client.service';
 
-@Component({})
+@Options({})
 export class AppClientTray extends Vue {
 	@State
 	app!: AppStore;
@@ -119,7 +119,7 @@ export class AppClientTray extends Vue {
 		}
 	}
 
-	render(h: CreateElement) {
+	render() {
 		return h('div');
 	}
 }

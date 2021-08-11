@@ -1,7 +1,7 @@
-import Component from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
 import { BaseRouteComponent } from '../../../../../../_common/route/route-component';
 
-@Component({
+@Options({
 	name: 'RouteCommunitiesViewEditChannels',
 	components: {},
 })

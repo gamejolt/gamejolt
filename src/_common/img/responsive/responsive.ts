@@ -1,5 +1,5 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { sleep } from '../../../utils/utils';
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
@@ -9,7 +9,7 @@ import { ImgHelper } from '../helper/helper-service';
 const WIDTH_HEIGHT_REGEX = /\/(\d+)x(\d+)\//;
 const WIDTH_REGEX = /\/(\d+)\//;
 
-@Component({})
+@Options({})
 export class AppImgResponsive extends Vue {
 	@Prop(String) src!: string;
 
@@ -31,7 +31,7 @@ export class AppImgResponsive extends Vue {
 		this.updateSrc();
 	}
 
-	render(h: CreateElement) {
+	render() {
 		return h('img', {
 			staticClass: 'img-responsive',
 			domProps: {

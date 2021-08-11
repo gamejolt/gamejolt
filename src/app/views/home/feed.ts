@@ -1,4 +1,4 @@
-import { Component, Provide } from 'vue-property-decorator';
+import { Options, Provide } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { router } from '..';
 import { numberSort } from '../../../utils/array';
@@ -50,7 +50,7 @@ export class RouteActivityFeedController {
 	feed: ActivityFeedView | null = null;
 }
 
-@Component({
+@Options({
 	name: 'RouteActivityFeed',
 	components: {
 		AppPageContainer,

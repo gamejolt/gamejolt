@@ -1,11 +1,10 @@
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../utils/vue';
 import { Ruler } from '../../../ruler/ruler-service';
 import { AppTooltip } from '../../../tooltip/tooltip-directive';
 import { ScrubberStage, scrubVideoVolume, VideoPlayerController } from '../controller';
 
-@Component({
+@Options({
 	directives: {
 		AppTooltip,
 	},

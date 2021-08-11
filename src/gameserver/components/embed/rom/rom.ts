@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { loadScript } from '../../../../utils/utils';
 import { GameBuild } from '../../../../_common/game/build/build.model';
@@ -9,7 +8,7 @@ declare const RetroJolt: any;
 
 const RetroJoltBaseUrl = 'https://gamejolt.net/retrojolt/1';
 
-@Component({})
+@Options({})
 export default class AppEmbedRom extends Vue {
 	@State url!: Store['url'];
 	@State build!: Store['build'];

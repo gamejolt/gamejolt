@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { PostOpenSource, trackPostOpen } from '../../../../../_common/analytics/analytics.service';
 import { ContentFocus } from '../../../../../_common/content-focus/content-focus.service';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
@@ -29,7 +28,7 @@ const _InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height}px` });
 
 export const AppPostCardAspectRatio = 10 / 16;
 
-@Component({
+@Options({
 	components: {
 		AppContentViewer,
 		AppImgResponsive,

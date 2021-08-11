@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
+import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Store } from '../../../../../auth/store/index';
 import { PostControlsLocation, trackPostLike } from '../../../../analytics/analytics.service';
@@ -14,7 +13,7 @@ import AppUserFollowWidget from '../../../../user/follow/widget.vue';
 import { FiresidePost } from '../../post-model';
 import { FiresidePostLike, removeFiresidePostLike, saveFiresidePostLike } from '../like-model';
 
-@Component({
+@Options({
 	components: {
 		AppUserFollowWidget,
 	},

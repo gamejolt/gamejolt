@@ -1,3 +1,4 @@
+import { Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { AppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';
 import {
@@ -6,15 +7,16 @@ import {
 	FormOnSubmit,
 	FormOnSubmitSuccess,
 } from '../../../../_common/form-vue/form.service';
-import { Component, Prop } from 'vue-property-decorator';
 
-@Component({
+@Options({
 	directives: {
 		AppFocusWhen,
 	},
 })
-export default class FormToken extends BaseForm<any>
-	implements FormOnInit, FormOnSubmit, FormOnSubmitSuccess {
+export default class FormToken
+	extends BaseForm<any>
+	implements FormOnInit, FormOnSubmit, FormOnSubmitSuccess
+{
 	@Prop(String) token!: string;
 
 	onInit() {

@@ -1,5 +1,4 @@
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../api/api.service';
 import AppFormControlToggle from '../../form-vue/control/toggle/toggle.vue';
 import { BaseForm, FormOnSubmit } from '../../form-vue/form.service';
@@ -9,7 +8,7 @@ interface FormModel {
 	removeComments: boolean;
 }
 
-@Component({
+@Options({
 	components: {
 		AppFormControlToggle,
 	},

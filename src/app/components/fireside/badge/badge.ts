@@ -1,6 +1,4 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Emit, Prop, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../utils/vue';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
 import { number } from '../../../../_common/filters/number';
@@ -10,7 +8,7 @@ import { AppTheme } from '../../../../_common/theme/theme';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 
-@Component({
+@Options({
 	components: {
 		AppTheme,
 		AppMediaItemBackdrop,

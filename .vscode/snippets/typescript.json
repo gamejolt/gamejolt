@@ -17,9 +17,9 @@
 		"prefix": "vue-component",
 		"body": [
 			"import Vue from 'vue';",
-			"import { Component } from 'vue-property-decorator';",
+			"import { Options } from 'vue-property-decorator';",
 			"",
-			"@Component({})",
+			"@Options({})",
 			"export default class App${2:Component} extends Vue {",
 			"\t$0",
 			"}",
@@ -30,9 +30,9 @@
 		"prefix": "vue-route-component",
 		"body": [
 			"import { Route } from 'vue-router';",
-			"import { Component } from 'vue-property-decorator';",
+			"import { Options } from 'vue-property-decorator';",
 			"",
-			"@Component({",
+			"@Options({",
 			"\tname: 'Route${2:Component}',",
 			"})",
 			"@RouteResolver({",
@@ -58,9 +58,9 @@
 	"Vue form": {
 		"prefix": "vue-form",
 		"body": [
-			"import { Component } from 'vue-property-decorator';",
+			"import { Options } from 'vue-property-decorator';",
 			"",
-			"@Component({})",
+			"@Options({})",
 			"export class Form${1:Login} extends BaseForm<$2> implements FormOnInit {",
 			"\tmodelClass = $2;",
 			"",
@@ -74,9 +74,9 @@
 	"Vue modal component": {
 		"prefix": "vue-modal-component",
 		"body": [
-			"import { Component } from 'vue-property-decorator';",
+			"import { Options } from 'vue-property-decorator';",
 			"",
-			"@Component({})",
+			"@Options({})",
 			"export default class App${1:Login}Modal extends BaseModal {",
 			"$0",
 			"}",

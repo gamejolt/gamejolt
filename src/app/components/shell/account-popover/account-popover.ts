@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Inject } from 'vue-property-decorator';
+import { Inject, Options, Vue } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import * as _ClientMod from '../../../../_common/client/client.service';
@@ -22,7 +21,7 @@ if (GJ_IS_CLIENT) {
 	ClientMod = require('../../../../_common/client/client.service');
 }
 
-@Component({
+@Options({
 	components: {
 		AppPopper,
 		AppUserAvatarImg,

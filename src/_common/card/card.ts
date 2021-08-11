@@ -1,10 +1,9 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional } from '../../utils/vue';
 
 require('./card.styl');
 
-@Component({})
+@Options({})
 export default class AppCard extends Vue {
 	@Prop(propOptional(Boolean, false)) isDraggable!: boolean;
 	@Prop(propOptional(Boolean, false)) isExpandable!: boolean;

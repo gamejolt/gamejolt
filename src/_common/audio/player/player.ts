@@ -1,5 +1,5 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { GameSong } from '../../game/song/song.model';
 
 interface DurationPayload {
@@ -7,7 +7,7 @@ interface DurationPayload {
 	duration: number;
 }
 
-@Component({})
+@Options({})
 export class AppAudioPlayer extends Vue {
 	@Prop(GameSong)
 	song!: GameSong;
@@ -33,7 +33,7 @@ export class AppAudioPlayer extends Vue {
 		this.setup();
 	}
 
-	render(h: CreateElement) {
+	render() {
 		return h('audio', {
 			domProps: {
 				src: this.song.url,

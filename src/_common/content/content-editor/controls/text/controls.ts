@@ -1,8 +1,7 @@
 import { lift, toggleMark, wrapIn } from 'prosemirror-commands';
 import { Mark, MarkType, Node } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { MouseState } from '../../../../../utils/mouse';
 import { Screen } from '../../../../screen/screen-service';
 import { AppTooltip } from '../../../../tooltip/tooltip-directive';
@@ -11,7 +10,7 @@ import { ContentEditorService } from '../../content-editor.service';
 import { ContentEditorLinkModal } from '../../modals/link/link-modal.service';
 import { ContentEditorSchema } from '../../schemas/content-editor-schema';
 
-@Component({
+@Options({
 	directives: {
 		AppTooltip,
 	},

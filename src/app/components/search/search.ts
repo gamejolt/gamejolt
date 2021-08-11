@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { arrayRemove } from '../../../utils/array';
 import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
 import { configHasAutocomplete } from '../../../_common/config/config.service';
@@ -18,7 +17,7 @@ export type SearchKeydownSpy = (event: KeyboardEvent) => void;
 
 let searchIterator = 0;
 
-@Component({
+@Options({
 	components: {
 		AppSearchAutocomplete: () => import('./autocomplete/autocomplete.vue'),
 		AppSearchInput,

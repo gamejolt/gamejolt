@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../utils/array';
 import { Api } from '../../../../../_common/api/api.service';
 import AppCardListAdd from '../../../../../_common/card/list/add/add.vue';
@@ -15,7 +15,7 @@ import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verif
 import FormUserBlock from '../../../../components/forms/user/block/block.vue';
 import { routeStore, RouteStore, RouteStoreModule } from '../account.store';
 
-@Component({
+@Options({
 	name: 'RouteDashAccountBlocks',
 	components: {
 		FormUserBlock,

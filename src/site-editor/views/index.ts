@@ -1,14 +1,13 @@
-import { BaseRouteComponent, RouteResolver } from '../../_common/route/route-component';
-import { initRouter } from '../../utils/router';
-import { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options } from 'vue-property-decorator';
 import { RouteConfig } from 'vue-router';
+import { initRouter } from '../../utils/router';
+import { BaseRouteComponent, RouteResolver } from '../../_common/route/route-component';
 import { store } from '../store/index';
 
 // Empty route component. We just use it to send API calls and set up the store for the app
 // component to show the correct stuff.
-
-@Component({
+@Options({
 	name: 'RouteEditor',
 })
 @RouteResolver({
@@ -21,7 +20,7 @@ import { store } from '../store/index';
 	},
 })
 class RouteEditor extends BaseRouteComponent {
-	render(h: CreateElement) {
+	render() {
 		return h('div');
 	}
 }

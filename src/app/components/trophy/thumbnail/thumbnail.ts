@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { GameTrophy } from '../../../../_common/game/trophy/trophy.model';
 import { AppImgResponsive } from '../../../../_common/img/responsive/responsive';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
@@ -44,7 +43,7 @@ export function getTrophyImg(trophy: BaseTrophy) {
 const BaseWidth = 34;
 const BaseHeight = 35;
 
-@Component({
+@Options({
 	components: {
 		AppImgResponsive,
 	},

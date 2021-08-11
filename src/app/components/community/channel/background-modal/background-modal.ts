@@ -1,10 +1,10 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { BaseModal } from '../../../../../_common/modal/base';
 import FormCommunityChannelBackground from '../../../forms/community/channel/background/background.vue';
 
-@Component({
+@Options({
 	components: {
 		FormCommunityChannelBackground,
 	},

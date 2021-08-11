@@ -1,7 +1,7 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import BaseFormControl from '../base';
 
-@Component({})
+@Options({})
 export default class AppFormControlRadio extends BaseFormControl {
 	@Prop() value!: any;
 

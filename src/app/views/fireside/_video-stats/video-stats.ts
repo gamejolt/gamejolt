@@ -1,8 +1,7 @@
-import Vue from 'vue';
-import { Component, Inject } from 'vue-property-decorator';
+import { Inject, Options, Vue } from 'vue-property-decorator';
 import { FiresideRTC, FiresideRTCKey } from '../fireside-rtc';
 
-@Component({})
+@Options({})
 export default class AppFiresideVideoStats extends Vue {
 	@Inject({ from: FiresideRTCKey })
 	rtc!: FiresideRTC;

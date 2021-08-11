@@ -1,8 +1,7 @@
-import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
 
-@Component({})
+@Options({})
 export default class AppCardList extends Vue {
 	@Prop(propOptional(Array, () => [])) items!: any[];
 	@Prop(propOptional(undefined, null)) activeItem: any | null;

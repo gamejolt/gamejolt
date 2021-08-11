@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { Game } from '../../../../../_common/game/game.model';
 import { GameScreenshot } from '../../../../../_common/game/screenshot/screenshot.model';
 import { GameSketchfab } from '../../../../../_common/game/sketchfab/sketchfab.model';
@@ -9,7 +9,7 @@ import FormGameImage from '../../../forms/game/image/image.vue';
 import FormGameSketchfab from '../../../forms/game/sketchfab/sketchfab.vue';
 import FormGameVideo from '../../../forms/game/video/video.vue';
 
-@Component({
+@Options({
 	components: {
 		AppNavTabList,
 		FormGameImage,

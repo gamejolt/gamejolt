@@ -1,7 +1,6 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 
-@Component({})
+@Options({})
 export default class AppListGroupStyleguide extends Vue {
 	lgSelector = 0;
 }

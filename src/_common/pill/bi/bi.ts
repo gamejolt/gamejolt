@@ -1,9 +1,8 @@
-import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { Location } from 'vue-router';
 import { propOptional } from '../../../utils/vue';
 
-@Component({})
+@Options({})
 export default class AppPillBi extends Vue {
 	@Prop(propOptional(Object))
 	leftTo?: string | Location;

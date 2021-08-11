@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import { Channel, Socket } from 'phoenix';
-import Vue from 'vue';
+import VueGlobal from 'vue';
 import { arrayRemove, numberSort } from '../../../utils/array';
 import { sleep } from '../../../utils/utils';
 import { getCookie } from '../../../_common/cookie/cookie.service';
@@ -388,7 +388,7 @@ export function setChatRoom(chat: ChatClient, newRoom: ChatRoom | undefined) {
 		}
 
 		if (newRoom.isGroupRoom) {
-			Vue.delete(chat.notifications, '' + newRoom.id);
+			VueGlobal.delete(chat.notifications, '' + newRoom.id);
 		}
 
 		chat.sessionRoomId = newRoom.id;
@@ -405,7 +405,7 @@ export function newChatNotification(chat: ChatClient, roomId: number) {
 	if (chat.notifications[roomId]) {
 		chat.notifications[roomId] = chat.notifications[roomId] + 1;
 	} else {
-		Vue.set(chat.notifications, '' + roomId, 1);
+		VueGlobal.set(chat.notifications, '' + roomId, 1);
 	}
 }
 
@@ -566,8 +566,8 @@ function setupRoom(chat: ChatClient, room: ChatRoom, messages: ChatMessage[]) {
 			}
 		}
 		// Set the room info
-		Vue.set(chat.messages, '' + room.id, []);
-		Vue.set(
+		VueGlobal.set(chat.messages, '' + room.id, []);
+		VueGlobal.set(
 			chat.roomMembers,
 			'' + room.id,
 			new ChatUserCollection(ChatUserCollection.TYPE_ROOM, room.members || [], chat)

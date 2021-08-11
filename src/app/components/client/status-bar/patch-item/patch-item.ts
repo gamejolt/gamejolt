@@ -1,9 +1,8 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import AppProgressBar from '../../../../../_common/progress/bar/bar.vue';
-import { ClientLibraryStore, ClientLibraryState } from '../../../../store/client-library';
+import { ClientLibraryState, ClientLibraryStore } from '../../../../store/client-library';
 
-@Component({
+@Options({
 	components: {
 		AppProgressBar,
 	},

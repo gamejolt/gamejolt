@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Watch } from 'vue-property-decorator';
+import { Options, Vue, Watch } from 'vue-property-decorator';
 import { ClientUpdater } from '../../../../_common/client/client-updater.service';
 import { Client } from '../../../../_common/client/client.service';
 import { number } from '../../../../_common/filters/number';
@@ -7,7 +6,7 @@ import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
 import AppClientStatusBarPatchItem from './patch-item/patch-item.vue';
 
-@Component({
+@Options({
 	components: {
 		AppClientStatusBarPatchItem,
 	},

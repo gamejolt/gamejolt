@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../_common/api/api.service';
 import AppFormButton from '../../../_common/form-vue/button/button.vue';
 import Onboarding from '../../../_common/onboarding/onboarding.service';
@@ -8,7 +8,7 @@ import OnboardingComponent from '../../components/forms/onboarding/base';
 import FormOnboardingFollows from '../../components/forms/onboarding/follows/follows.vue';
 import FormOnboardingProfile from '../../components/forms/onboarding/profile/profile.vue';
 
-@Component({
+@Options({
 	name: 'RouteWelcome',
 	components: {
 		FormOnboardingProfile,

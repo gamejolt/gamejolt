@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
 import { Community } from '../../../../../_common/community/community.model';
@@ -6,7 +6,7 @@ import AppFormControlPrefixedInput from '../../../../../_common/form-vue/control
 import { AppFocusWhen } from '../../../../../_common/form-vue/focus-when.directive';
 import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.service';
 
-@Component({
+@Options({
 	components: {
 		AppFormControlPrefixedInput,
 	},
@@ -14,8 +14,10 @@ import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.servi
 		AppFocusWhen,
 	},
 })
-export default class FormCommunityCollaborator extends BaseForm<Collaborator>
-	implements FormOnInit {
+export default class FormCommunityCollaborator
+	extends BaseForm<Collaborator>
+	implements FormOnInit
+{
 	modelClass = Collaborator;
 	saveMethod = '$invite' as const;
 	resetOnSubmit = true;

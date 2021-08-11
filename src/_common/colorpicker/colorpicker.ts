@@ -1,10 +1,9 @@
-import Vue from 'vue';
 import { Sketch } from 'vue-color';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Popper } from '../popper/popper.service';
 import AppPopper from '../popper/popper.vue';
 
-@Component({
+@Options({
 	components: {
 		picker: Sketch,
 		AppPopper,

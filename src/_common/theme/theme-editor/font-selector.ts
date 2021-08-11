@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Api } from '../../api/api.service';
 import { AppThemeEditorFontSelectorStyleInjector } from './font-selector-style-injector';
 
@@ -10,7 +9,7 @@ interface FontDefinition {
 	};
 }
 
-@Component({
+@Options({
 	components: {
 		AppThemeEditorFontSelectorStyleInjector,
 	},

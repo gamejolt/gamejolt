@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import AppGamePlaylistAddToWidget from '../../../app/components/game-playlist/add-to-widget/add-to-widget.vue';
 import AppGameCompatIcons from '../../../app/components/game/compat-icons/compat-icons.vue';
@@ -21,7 +20,7 @@ import AppGameThumbnailImg from '../thumbnail-img/thumbnail-img.vue';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height}px` });
 
-@Component({
+@Options({
 	components: {
 		AppGameThumbnailImg,
 		AppGameCompatIcons,

@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../utils/array';
 import { Api } from '../../../../../_common/api/api.service';
 import { PaymentSource } from '../../../../../_common/payment-source/payment-source.model';
@@ -7,7 +7,7 @@ import { Translate } from '../../../../../_common/translate/translate.service';
 import AppUserPaymentSourceCard from '../../../../components/user/payment-source/card/card.vue';
 import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 
-@Component({
+@Options({
 	name: 'RouteDashAccountPaymentMethods',
 	components: {
 		AppUserPaymentSourceCard,

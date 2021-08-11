@@ -1,6 +1,4 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../../../utils/vue';
 import { CommunityCompetitionEntry } from '../../../../../../_common/community/competition/entry/entry.model';
 import { CommunityCompetitionVotingCategory } from '../../../../../../_common/community/competition/voting-category/voting-category.model';
@@ -12,7 +10,7 @@ import { AppState, AppStore } from '../../../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { CommunityCompetitionEntryModal } from '../modal/modal.service';
 
-@Component({
+@Options({
 	components: {
 		AppGameThumbnailImg,
 	},

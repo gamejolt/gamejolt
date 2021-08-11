@@ -1,9 +1,8 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { AppMutation, AppState, AppStore } from '../../store/app-store';
 import { ErrorPages } from './page-components';
 
-@Component({})
+@Options({})
 export default class AppErrorPage extends Vue {
 	@AppState error!: AppStore['error'];
 	@AppMutation clearError!: AppStore['clearError'];

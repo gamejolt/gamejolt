@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import AppCard from '../../../../../_common/card/card.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
@@ -13,7 +12,7 @@ import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verif
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
 
-@Component({
+@Options({
 	components: {
 		AppScrollInview,
 		AppCard,

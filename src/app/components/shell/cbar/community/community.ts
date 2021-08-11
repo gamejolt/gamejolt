@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { trackGotoCommunity } from '../../../../../_common/analytics/analytics.service';
 import { Community } from '../../../../../_common/community/community.model';
@@ -17,7 +16,7 @@ import { Store } from '../../../../store';
 import { AppCommunityPerms } from '../../../community/perms/perms';
 import AppShellCbarItem from '../item/item.vue';
 
-@Component({
+@Options({
 	components: {
 		AppShellCbarItem,
 		AppCommunityThumbnailImg,

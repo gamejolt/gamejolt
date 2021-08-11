@@ -1,11 +1,10 @@
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
-import AppLoading from '../../loading/loading.vue';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Api } from '../../api/api.service';
+import AppLoading from '../../loading/loading.vue';
 import { Graph } from '../graph.service';
 import AppGraph from '../graph.vue';
 
-@Component({
+@Options({
 	components: {
 		AppLoading,
 		AppGraph,

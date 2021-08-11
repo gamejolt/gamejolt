@@ -1,11 +1,10 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import AppCard from '../../../../../_common/card/card.vue';
 import { Game } from '../../../../../_common/game/game.model';
 import { Growls } from '../../../../../_common/growls/growls.service';
 import { GameDevStageSelectorConfirmModal } from './confirm-service';
 
-@Component({
+@Options({
 	components: {
 		AppCard,
 	},

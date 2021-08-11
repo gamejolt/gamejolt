@@ -1,14 +1,13 @@
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
-
+import VueGlobal from 'vue';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Ruler } from '../../ruler/ruler-service';
 
 if (!GJ_IS_SSR) {
 	const VueTouch = require('vue-touch');
-	Vue.use(VueTouch);
+	VueGlobal.use(VueTouch);
 }
 
-@Component({})
+@Options({})
 export default class AppAudioScrubber extends Vue {
 	@Prop(Number) currentTime!: number;
 	@Prop(Number) duration!: number;

@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import {
 	AppPromotionSource,
 	AppPromotionStore,
@@ -8,7 +7,7 @@ import {
 import { propRequired } from '../../utils/vue';
 import { trackAppPromotionClick } from '../analytics/analytics.service';
 
-@Component({})
+@Options({})
 export default class AppAppButtons extends Vue {
 	@Prop(propRequired(String)) source!: AppPromotionSource;
 

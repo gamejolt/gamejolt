@@ -1,9 +1,9 @@
-import Vue, { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options, Vue } from 'vue-property-decorator';
 
-@Component({})
+@Options({})
 export class AppContentViewerHorizontalRule extends Vue {
-	render(h: CreateElement) {
+	render() {
 		return h('hr');
 	}
 }

@@ -1,11 +1,11 @@
+import { Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppExpand from '../../../../../../_common/expand/expand.vue';
+import { number } from '../../../../../../_common/filters/number';
 import { BaseForm, FormOnSubmit } from '../../../../../../_common/form-vue/form.service';
 import { KeyGroup } from '../../../../../../_common/key-group/key-group.model';
-import { number } from '../../../../../../_common/filters/number';
-import { Component, Prop } from 'vue-property-decorator';
 
-@Component({
+@Options({
 	components: {
 		AppExpand,
 	},

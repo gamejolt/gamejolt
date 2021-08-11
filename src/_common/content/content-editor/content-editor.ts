@@ -3,8 +3,7 @@ import { EditorState, Plugin, Selection, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import 'prosemirror-view/style/prosemirror.css';
 import ResizeObserver from 'resize-observer-polyfill';
-import Vue from 'vue';
-import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
 import AppScrollScroller from '../../scroll/scroller/scroller.vue';
 import { ContentContext, ContextCapabilities } from '../content-context';
@@ -28,10 +27,7 @@ import { buildNodeViews } from './node-views/node-view-builder';
 import { createPlugins } from './plugins/plugins';
 import { ContentEditorSchema, generateSchema } from './schemas/content-editor-schema';
 
-/**
- * @emits input
- */
-@Component({
+@Options({
 	components: {
 		AppContentEditorBlockControls,
 		AppContentEditorTextControls,

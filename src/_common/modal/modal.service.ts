@@ -1,4 +1,5 @@
-import Vue, { AsyncComponent } from 'vue';
+import { AsyncComponent } from 'vue';
+import { Vue } from 'vue-property-decorator';
 import { arrayRemove } from '../../utils/array';
 import { makeObservableService } from '../../utils/vue';
 import { Popper } from '../popper/popper.service';

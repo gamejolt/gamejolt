@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { Growls } from '../../../../../_common/growls/growls.service';
 import {
@@ -15,7 +15,7 @@ import { Translate } from '../../../../../_common/translate/translate.service';
 import { UserSetPasswordModal } from '../../../../components/user/set-password-modal/set-password-modal.service';
 import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 
-@Component({
+@Options({
 	name: 'RouteDashAccountLinkedAccounts',
 	components: {
 		AppLinkedAccount,

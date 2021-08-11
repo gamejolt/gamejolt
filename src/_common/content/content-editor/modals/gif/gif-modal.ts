@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../api/api.service';
 import AppLoading from '../../../../loading/loading.vue';
 import { BaseModal } from '../../../../modal/base';
@@ -9,7 +9,7 @@ import AppScrollScrollerTS from '../../../../scroll/scroller/scroller';
 import AppScrollScroller from '../../../../scroll/scroller/scroller.vue';
 import { Category, ContentEditorGifModal, SearchResult } from './gif-modal.service';
 
-@Component({
+@Options({
 	components: {
 		AppLoading,
 		AppScrollScroller,

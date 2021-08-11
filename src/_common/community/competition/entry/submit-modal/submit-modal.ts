@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { Api } from '../../../../api/api.service';
 import { Game } from '../../../../game/game.model';
@@ -10,7 +10,7 @@ import { BaseModal } from '../../../../modal/base';
 import { CommunityCompetition } from '../../competition.model';
 import { CommunityCompetitionEntry } from '../entry.model';
 
-@Component({
+@Options({
 	components: {
 		AppLoading,
 		AppGameThumbnailImg,

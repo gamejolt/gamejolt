@@ -1,8 +1,7 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import AppActivityFeedItemPlaceholder from '../item/placeholder/placeholder.vue';
 
-@Component({
+@Options({
 	components: {
 		AppActivityFeedItemPlaceholder,
 	},

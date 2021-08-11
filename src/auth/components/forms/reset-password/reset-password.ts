@@ -1,9 +1,9 @@
+import { Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { Connection } from '../../../../_common/connection/connection-service';
 import { BaseForm, FormOnInit, FormOnSubmit } from '../../../../_common/form-vue/form.service';
-import { Component, Prop } from 'vue-property-decorator';
 
-@Component({})
+@Options({})
 export default class FormResetPassword extends BaseForm<any> implements FormOnInit, FormOnSubmit {
 	@Prop(Number) userId!: number;
 	@Prop(String) token!: string;

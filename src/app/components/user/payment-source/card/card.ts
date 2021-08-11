@@ -1,12 +1,11 @@
-import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import AppCard from '../../../../../_common/card/card.vue';
 import { Growls } from '../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { PaymentSource } from '../../../../../_common/payment-source/payment-source.model';
 import AppUserAddressDetails from '../../address/details/details.vue';
 
-@Component({
+@Options({
 	components: {
 		AppCard,
 		AppUserAddressDetails,

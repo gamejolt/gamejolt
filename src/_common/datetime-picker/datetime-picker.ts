@@ -1,9 +1,8 @@
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import AppDatepicker from '../datepicker/datepicker.vue';
 import AppTimepicker from '../timepicker/timepicker.vue';
 
-@Component({
+@Options({
 	components: {
 		AppDatepicker,
 		AppTimepicker,

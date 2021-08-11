@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Inject } from 'vue-property-decorator';
+import { Inject, Options, Vue } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { shouldShowAppPromotion } from '../../../../utils/mobile-app';
 import { trackAppPromotionClick } from '../../../../_common/analytics/analytics.service';
@@ -31,7 +30,7 @@ if (GJ_IS_CLIENT) {
 		require('../../../../_common/client/history-navigator/history-navigator.vue').default;
 }
 
-@Component({
+@Options({
 	components,
 	directives: {
 		AppTooltip,

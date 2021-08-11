@@ -1,11 +1,11 @@
-import { Component, Emit } from 'vue-property-decorator';
+import { Emit, Options } from 'vue-property-decorator';
 import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
 
 export type FormModel = {
 	title: string;
 };
 
-@Component({})
+@Options({})
 export default class FormRoomDetails extends BaseForm<FormModel> implements FormOnLoad {
 	@Emit('submit')
 	emitSubmit(_model: FormModel) {}

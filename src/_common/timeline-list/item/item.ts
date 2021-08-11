@@ -1,8 +1,7 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import './item-content.styl';
 
-@Component({})
+@Options({})
 export default class AppTimelineListItem extends Vue {
 	@Prop(Boolean)
 	isActive?: boolean;

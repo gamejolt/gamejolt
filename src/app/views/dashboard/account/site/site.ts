@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Site } from '../../../../../_common/site/site-model';
@@ -7,7 +7,7 @@ import AppSitesLinkCard from '../../../../components/sites/link-card/link-card.v
 import AppSitesManagePage from '../../../../components/sites/manage-page/manage-page.vue';
 import { routeStore, RouteStore, RouteStoreModule } from '../account.store';
 
-@Component({
+@Options({
 	name: 'RouteDashAccountSite',
 	components: {
 		AppSitesManagePage,

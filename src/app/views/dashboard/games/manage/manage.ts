@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import { Game } from '../../../../../_common/game/game.model';
@@ -16,7 +16,7 @@ import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './mana
 
 export const ManageGameThemeKey = 'manage-game';
 
-@Component({
+@Options({
 	name: 'RouteDashGamesManage',
 	components: {
 		AppPageHeader,

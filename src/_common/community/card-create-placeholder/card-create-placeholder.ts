@@ -1,8 +1,7 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import AppCommunityAddWidget from '../add-widget/add-widget.vue';
 
-@Component({
+@Options({
 	components: {
 		AppCommunityAddWidget,
 	},

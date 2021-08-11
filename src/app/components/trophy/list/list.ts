@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { number } from '../../../../_common/filters/number';
 import { GameTrophy } from '../../../../_common/game/trophy/trophy.model';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
@@ -7,7 +6,7 @@ import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserGameTrophy } from '../../../../_common/user/trophy/game-trophy.model';
 import AppTrophyThumbnail from '../thumbnail/thumbnail.vue';
 
-@Component({
+@Options({
 	components: {
 		AppTrophyThumbnail,
 		AppTimeAgo,

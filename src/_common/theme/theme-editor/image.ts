@@ -1,9 +1,7 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import FormThemeEditorImage from './image-form.vue';
 
-@Component({
+@Options({
 	components: {
 		FormThemeEditorImage,
 	},

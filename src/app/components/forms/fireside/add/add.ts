@@ -1,5 +1,4 @@
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { AppFocusWhen } from '../../../../../_common/form-vue/focus-when.directive';
 import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.service';
 
@@ -8,7 +7,7 @@ type FormModel = {
 	is_draft: boolean;
 };
 
-@Component({
+@Options({
 	directives: {
 		AppFocusWhen,
 	},

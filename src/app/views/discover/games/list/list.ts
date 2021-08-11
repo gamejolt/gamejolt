@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { arrayShuffle } from '../../../../../utils/array';
 import { LocationRedirect } from '../../../../../utils/router';
 import { titleCase } from '../../../../../utils/string';
@@ -25,7 +25,7 @@ import { TagsInfo } from '../../../../components/tag/tags-info.service';
 
 const listingKey = 'CachedListing';
 
-@Component({
+@Options({
 	name: 'RouteDiscoverGamesList',
 	components: {
 		AppPageHeader,

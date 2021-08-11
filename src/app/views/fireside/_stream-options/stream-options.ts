@@ -1,11 +1,10 @@
-import Vue from 'vue';
-import { Component, Emit, Inject } from 'vue-property-decorator';
+import { Emit, Inject, Options, Vue } from 'vue-property-decorator';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { FiresideRTC, FiresideRTCKey } from '../fireside-rtc';
 import { setAudioPlayback } from '../fireside-rtc-user';
 
-@Component({
+@Options({
 	components: {
 		AppPopper,
 	},

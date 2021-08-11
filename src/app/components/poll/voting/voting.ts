@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { propOptional, propRequired } from '../../../../utils/vue';
 import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
@@ -12,7 +11,7 @@ import { AppTimeAgo } from '../../../../_common/time/ago/ago';
 import { User } from '../../../../_common/user/user.model';
 import { Store } from '../../../store';
 
-@Component({
+@Options({
 	components: {
 		AppProgressBar,
 		AppTimeAgo,

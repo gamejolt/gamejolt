@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { arrayUnique } from '../../../../utils/array';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Device } from '../../../../_common/device/device.service';
@@ -12,7 +11,7 @@ import { GamePlayModal } from '../../../../_common/game/play-modal/play-modal.se
 import { User } from '../../../../_common/user/user.model';
 import AppGameCoverButtonsBuildButtons from './build-buttons.vue';
 
-@Component({})
+@Options({})
 export default class AppGameCoverButtons extends Vue {
 	@Prop(Game)
 	game!: Game;

@@ -1,9 +1,8 @@
-import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import AppPill from '../../../pill/pill.vue';
 import { CommunityChannel } from '../channel.model';
 
-@Component({
+@Options({
 	components: {
 		AppPill,
 	},

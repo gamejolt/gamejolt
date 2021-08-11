@@ -1,10 +1,8 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
-
-import { Growls } from './growls.service';
+import { Options, Vue } from 'vue-property-decorator';
 import AppGrowl from './growl.vue';
+import { Growls } from './growls.service';
 
-@Component({
+@Options({
 	components: {
 		AppGrowl,
 	},

@@ -1,10 +1,9 @@
-import Component from 'vue-class-component';
-import { Emit } from 'vue-property-decorator';
+import { Emit, Options } from 'vue-property-decorator';
 import { CommunityCompetition } from '../../../../../../../_common/community/competition/competition.model';
 import AppFormControlToggle from '../../../../../../../_common/form-vue/control/toggle/toggle.vue';
 import { BaseForm } from '../../../../../../../_common/form-vue/form.service';
 
-@Component({
+@Options({
 	components: {
 		AppFormControlToggle,
 	},

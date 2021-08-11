@@ -1,5 +1,4 @@
-import Component from 'vue-class-component';
-import { Inject } from 'vue-property-decorator';
+import { Inject, Options } from 'vue-property-decorator';
 import { router } from '../../..';
 import { arrayRemove } from '../../../../../utils/array';
 import { Api } from '../../../../../_common/api/api.service';
@@ -31,7 +30,7 @@ import {
 } from '../view.store';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 
-@Component({
+@Options({
 	name: 'RouteCommunitiesViewChannelJam',
 	components: {
 		AppIllustration,

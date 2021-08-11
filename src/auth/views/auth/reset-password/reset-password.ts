@@ -1,10 +1,10 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import FormResetPassword from '../../../components/forms/reset-password/reset-password.vue';
 
-@Component({
+@Options({
 	name: 'RouteAuthResetPassword',
 	components: {
 		FormResetPassword,

@@ -1,11 +1,10 @@
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { State } from 'vuex-class';
+import { AppStore } from '../../../../_common/store/app-store';
 import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../_common/user/user.model';
-import { AppStore } from '../../../../_common/store/app-store';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 
-@Component({
+@Options({
 	components: {
 		AppUserAvatarList,
 	},

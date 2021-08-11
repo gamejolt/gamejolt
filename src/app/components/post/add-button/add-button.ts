@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
@@ -10,7 +9,7 @@ import { AppState, AppStore } from '../../../../_common/store/app-store';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import { PostEditModal } from '../edit-modal/edit-modal-service';
 
-@Component({
+@Options({
 	components: {
 		AppUserAvatarImg,
 	},

@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
 import { number } from '../../../../../_common/filters/number';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
@@ -7,7 +6,7 @@ import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { LibraryModule, LibraryStore } from '../../../../store/library';
 import { GameCollection } from '../collection.model';
 
-@Component({
+@Options({
 	directives: {
 		AppTooltip,
 		AppAuthRequired,

@@ -1,5 +1,4 @@
-import Component from 'vue-class-component';
-import { Inject, Provide } from 'vue-property-decorator';
+import { Inject, Options, Provide } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { sleep } from '../../../utils/utils';
 import { Api } from '../../../_common/api/api.service';
@@ -71,7 +70,7 @@ export type RouteStatus =
 
 const FiresideThemeKey = 'fireside';
 
-@Component({
+@Options({
 	name: 'RouteFireside',
 	components: {
 		AppUserAvatarImg,

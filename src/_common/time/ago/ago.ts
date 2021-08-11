@@ -1,9 +1,9 @@
 import { formatDistanceStrict, formatDistanceToNow } from 'date-fns';
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { date } from '../../filters/date';
 
-@Component({})
+@Options({})
 export class AppTimeAgo extends Vue {
 	@Prop({ type: [Number, Date], required: true })
 	date!: number | Date;
@@ -75,7 +75,7 @@ export class AppTimeAgo extends Vue {
 		}
 	}
 
-	render(h: CreateElement) {
+	render() {
 		return h(
 			'span',
 			{

@@ -1,6 +1,5 @@
 import { EditorView } from 'prosemirror-view';
-import Vue from 'vue';
-import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../../api/api.service';
 import AppLoading from '../../../../../loading/loading.vue';
 import { Screen } from '../../../../../screen/screen-service';
@@ -12,7 +11,7 @@ import { BasicMentionRegex } from '../../../plugins/input-rules/detect-mention-s
 import { ContentEditorSchema } from '../../../schemas/content-editor-schema';
 import ContentEditorMentionCache from '../cache.service';
 
-@Component({
+@Options({
 	components: {
 		AppLoading,
 		AppUserAvatarImg,

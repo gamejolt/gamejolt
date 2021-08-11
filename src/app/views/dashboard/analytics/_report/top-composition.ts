@@ -1,10 +1,9 @@
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { number } from '../../../../../_common/filters/number';
 import AppGraph from '../../../../../_common/graph/graph.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import { number } from '../../../../../_common/filters/number';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
 
-@Component({
+@Options({
 	components: {
 		AppGraph,
 	},

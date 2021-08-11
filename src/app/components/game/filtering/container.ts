@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import VueGlobal from 'vue';
 import { Location, Route } from 'vue-router';
 import { forEach } from '../../../../utils/collection';
 import { objectEquals } from '../../../../utils/object';
@@ -199,7 +199,7 @@ export class GameFilteringContainer {
 		if (definition.type === 'array') {
 			this.filters[filter].push(value);
 		} else if (definition.type === 'string' || definition.type === 'radio') {
-			Vue.set(this.filters, filter, value);
+			VueGlobal.set(this.filters, filter, value);
 		}
 
 		this.saveFilters();
@@ -226,9 +226,9 @@ export class GameFilteringContainer {
 				this.filters[filter].splice(index, 1);
 			}
 		} else if (definition.type === 'string') {
-			Vue.set(this.filters, filter, '');
+			VueGlobal.set(this.filters, filter, '');
 		} else if (definition.type === 'radio') {
-			Vue.set(this.filters, filter, null);
+			VueGlobal.set(this.filters, filter, null);
 		}
 
 		this.saveFilters();

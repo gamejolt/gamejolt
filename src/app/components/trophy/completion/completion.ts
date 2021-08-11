@@ -1,10 +1,9 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import AppCard from '../../../../_common/card/card.vue';
 import { number } from '../../../../_common/filters/number';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 
-@Component({
+@Options({
 	components: {
 		AppCard,
 		AppProgressBar,

@@ -1,9 +1,8 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
 import { GameCollection } from '../collection.model';
 
-@Component({
+@Options({
 	components: {
 		AppImgResponsive,
 	},

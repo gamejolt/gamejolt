@@ -1,14 +1,14 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Growls } from '../../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import { Translate } from '../../../../../_common/translate/translate.service';
-import { Store } from '../../../../store/index';
 import FormProfile from '../../../../components/forms/profile/profile.vue';
+import { Store } from '../../../../store/index';
 import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 
-@Component({
+@Options({
 	name: 'RouteDashAccountEdit',
 	components: {
 		FormProfile,

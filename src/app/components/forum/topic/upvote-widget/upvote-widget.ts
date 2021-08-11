@@ -1,12 +1,11 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
 import { fuzzynumber } from '../../../../../_common/filters/fuzzynumber';
 import { number } from '../../../../../_common/filters/number';
 import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 
-@Component({
+@Options({
 	directives: {
 		AppAuthRequired,
 		AppTooltip,

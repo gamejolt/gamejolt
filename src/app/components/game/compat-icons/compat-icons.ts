@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Game } from '../../../../_common/game/game.model';
 
 const compatMapping: any = {
@@ -19,7 +18,7 @@ const compatMapping: any = {
 
 const compatFields = Object.keys(compatMapping);
 
-@Component({})
+@Options({})
 export default class AppGameCompatIcons extends Vue {
 	@Prop(Object) game!: Game;
 

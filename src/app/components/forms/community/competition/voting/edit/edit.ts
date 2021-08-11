@@ -1,5 +1,4 @@
-import Component from 'vue-class-component';
-import { Emit } from 'vue-property-decorator';
+import { Emit, Options } from 'vue-property-decorator';
 import {
 	CommunityCompetition,
 	CompetitionPeriodVoting,
@@ -20,7 +19,7 @@ type RadioOption<T> = {
 	helpText?: string;
 };
 
-@Component({
+@Options({
 	components: {
 		AppFormLegend,
 		AppFormControlDate,
@@ -31,8 +30,10 @@ type RadioOption<T> = {
 		date,
 	},
 })
-export default class FormCommunityCompetitionVotingEdit extends BaseForm<CommunityCompetition>
-	implements FormOnInit {
+export default class FormCommunityCompetitionVotingEdit
+	extends BaseForm<CommunityCompetition>
+	implements FormOnInit
+{
 	modelClass = CommunityCompetition;
 	timezoneService: FormTimezoneService<CommunityCompetition> | null = null;
 	saveMethod: '$saveVoting' = '$saveVoting';

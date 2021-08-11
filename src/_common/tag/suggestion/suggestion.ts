@@ -1,8 +1,7 @@
-import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { ContentDocument } from '../../content/content-document';
 
-@Component({})
+@Options({})
 export default class AppTagSuggestion extends Vue {
 	@Prop(Array)
 	tags!: string[];

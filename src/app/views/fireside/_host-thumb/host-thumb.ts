@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
+import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
@@ -8,7 +7,7 @@ import { FiresideRTCUser, setAudioPlayback } from '../fireside-rtc-user';
 import AppFiresideVideo from '../_video/video.vue';
 import AppFiresideHostThumbIndicator from './host-thumb-indicator.vue';
 
-@Component({
+@Options({
 	components: {
 		AppUserAvatarImg,
 		AppFiresideHostThumbIndicator,

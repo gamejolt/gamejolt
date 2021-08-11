@@ -1,10 +1,10 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import AppAuthJoin from '../../../../_common/auth/join/join.vue';
 import { Connection } from '../../../../_common/connection/connection-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { loggedUserBlock } from '../auth';
 
-@Component({
+@Options({
 	name: 'RouteAuthJoin',
 	components: {
 		AppAuthJoin,

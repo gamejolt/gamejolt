@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { findVueParent } from '../../../../utils/vue';
 import { AppImgResponsive } from '../../../img/responsive/responsive';
 import AppLoading from '../../../loading/loading.vue';
@@ -12,7 +11,7 @@ import AppContentViewerTS from '../../content-viewer/content-viewer';
 import AppContentViewer from '../../content-viewer/content-viewer.vue';
 import AppBaseContentComponent from '../base/base-content-component.vue';
 
-@Component({
+@Options({
 	components: {
 		AppBaseContentComponent,
 		AppLoading,

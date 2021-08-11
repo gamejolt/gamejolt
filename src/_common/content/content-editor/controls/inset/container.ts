@@ -1,10 +1,8 @@
 import { EditorView } from 'prosemirror-view';
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { ContentEditorSchema } from '../../schemas/content-editor-schema';
 
-@Component({})
+@Options({})
 export default class AppContentEditorControlsInsetContainer extends Vue {
 	@Prop(EditorView)
 	view!: EditorView<ContentEditorSchema>;

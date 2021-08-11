@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import AppEditableOverlay from '../../../_common/editable-overlay/editable-overlay.vue';
 import AppMediaItemCover from '../../../_common/media-item/cover/cover.vue';
 import { MediaItem } from '../../../_common/media-item/media-item-model';
@@ -8,7 +7,7 @@ import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
 import { AppAutoscrollAnchor } from '../../../_common/scroll/auto-scroll/anchor';
 import './page-header-content.styl';
 
-@Component({
+@Options({
 	components: {
 		AppAutoscrollAnchor,
 		AppScrollAffix,

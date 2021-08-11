@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { date } from '../../../../../../../../../_common/filters/date';
 import { number } from '../../../../../../../../../_common/filters/number';
@@ -11,7 +11,7 @@ import {
 import { UserGameScore } from '../../../../../../../../../_common/user/game-score/game-score.model';
 import { RouteStore, RouteStoreModule } from '../../../../manage.store';
 
-@Component({
+@Options({
 	name: 'RouteDashGamesManageApiScoreboardsScoresView',
 	filters: {
 		number,

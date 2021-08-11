@@ -1,11 +1,11 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { number } from '../../../filters/number';
 import AppProgressBar from '../../../progress/bar/bar.vue';
 import BaseFormControl from '../base';
 import AppFormControlUploadFileTS from './file';
 import AppFormControlUploadFile from './file.vue';
 
-@Component({
+@Options({
 	components: {
 		AppProgressBar,
 		AppFormControlUploadFile,

@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { propOptional } from '../../../../../utils/vue';
 import { number } from '../../../../../_common/filters/number';
@@ -7,7 +6,7 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import { SidebarState, SidebarStore } from '../../../../../_common/sidebar/sidebar.store';
 import { Store } from '../../../../store/index';
 
-@Component({})
+@Options({})
 export default class AppShellCbarItem extends Vue {
 	@Prop(propOptional(Boolean, false)) isControl!: boolean;
 	@Prop(propOptional(Boolean, false)) isActive!: boolean;

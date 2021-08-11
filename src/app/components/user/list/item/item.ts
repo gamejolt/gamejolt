@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppStore } from '../../../../../_common/store/app-store';
@@ -9,7 +8,7 @@ import AppUserAvatarImg from '../../../../../_common/user/user-avatar/img/img.vu
 import { User } from '../../../../../_common/user/user.model';
 import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verified-tick.vue';
 
-@Component({
+@Options({
 	components: {
 		AppUserAvatarImg,
 		AppUserFollowWidget,

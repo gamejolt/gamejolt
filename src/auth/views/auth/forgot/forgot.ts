@@ -1,8 +1,8 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
 import FormRetrieveLogin from '../../../components/forms/retrieve-login/retrieve-login.vue';
 
-@Component({
+@Options({
 	name: 'RouteAuthForgot',
 	components: {
 		FormRetrieveLogin,

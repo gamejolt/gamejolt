@@ -1,5 +1,4 @@
-import Component from 'vue-class-component';
-import { Emit } from 'vue-property-decorator';
+import { Emit, Options } from 'vue-property-decorator';
 import { Route } from 'vue-router/types/router';
 import { Api } from '../../../../../../../../../../_common/api/api.service';
 import { CommunityCompetitionAward } from '../../../../../../../../../../_common/community/competition/award/award.model';
@@ -43,7 +42,7 @@ function makeRequest(route: Route, page = 1, filterValue = '') {
 
 const draggable = require('vuedraggable');
 
-@Component({
+@Options({
 	name: 'RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAward',
 	components: {
 		AppLoading,

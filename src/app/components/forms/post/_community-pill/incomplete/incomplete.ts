@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
@@ -8,7 +7,7 @@ import AppCommunityVerifiedTick from '../../../../../../_common/community/verifi
 import AppPillBi from '../../../../../../_common/pill/bi/bi.vue';
 import AppFormPostCommunityPillSelector from '../selector/selector.vue';
 
-@Component({
+@Options({
 	components: {
 		AppFormPostCommunityPillSelector,
 		AppCommunityThumbnailImg,

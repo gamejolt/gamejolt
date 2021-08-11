@@ -1,5 +1,5 @@
-import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
+import VueGlobal from 'vue';
+import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { Analytics } from '../../../../../../_common/analytics/analytics.service';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
 import AppLightboxTS from '../../../../../../_common/lightbox/lightbox';
@@ -16,10 +16,10 @@ import { ActivityFeedKey, ActivityFeedView } from '../../view';
 
 if (!GJ_IS_SSR) {
 	const VueTouch = require('vue-touch');
-	Vue.use(VueTouch);
+	VueGlobal.use(VueTouch);
 }
 
-@Component({
+@Options({
 	components: {
 		AppMediaItemPost,
 		AppEventItemMediaIndicator,

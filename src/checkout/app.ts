@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { loadCurrentLanguage } from '../utils/translations';
 import * as _ClientHistoryNavigatorMod from '../_common/client/history-navigator/history-navigator.service';
@@ -28,7 +27,7 @@ if (GJ_IS_CLIENT) {
 	components.AppClientBase = require('../_common/client/base/base.vue').default;
 }
 
-@Component({
+@Options({
 	components,
 	filters: {
 		date,

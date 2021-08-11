@@ -1,9 +1,8 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-import { Community } from '../../community.model';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { AppImgResponsive } from '../../../img/responsive/responsive';
+import { Community } from '../../community.model';
 
-@Component({
+@Options({
 	components: {
 		AppImgResponsive,
 	},

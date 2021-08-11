@@ -1,5 +1,4 @@
-import Component from 'vue-class-component';
-import { Emit, Inject, Prop, Watch } from 'vue-property-decorator';
+import { Emit, Inject, Options, Prop, Watch } from 'vue-property-decorator';
 import { isMac } from '../../../../../../utils/utils';
 import { propRequired } from '../../../../../../utils/vue';
 import { ContentContext } from '../../../../../../_common/content/content-context';
@@ -35,7 +34,7 @@ export type FormModel = {
 	id?: number;
 };
 
-@Component({
+@Options({
 	components: {
 		AppFormControlContent,
 		AppShortkey,

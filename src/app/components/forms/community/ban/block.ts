@@ -1,5 +1,4 @@
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
 import { Community } from '../../../../../_common/community/community.model';
@@ -23,14 +22,16 @@ interface FormModel {
 	ejectPosts: boolean;
 }
 
-@Component({
+@Options({
 	components: {
 		AppFormControlToggle,
 		AppFormControlPrefixedInput,
 	},
 })
-export default class FormCommunityBlock extends BaseForm<FormModel>
-	implements FormOnInit, FormOnSubmit {
+export default class FormCommunityBlock
+	extends BaseForm<FormModel>
+	implements FormOnInit, FormOnSubmit
+{
 	@Prop(propRequired(Community)) community!: Community;
 	@Prop(propOptional(User, null)) user?: User | null;
 

@@ -1,11 +1,11 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { GameCollection } from '../../../components/game/collection/collection.model';
 import AppGameCollectionGrid from '../../../components/game/collection/grid/grid.vue';
 import { RouteStore, RouteStoreModule } from '../profile.store';
 
-@Component({
+@Options({
 	name: 'RouteProfileLibrary',
 	components: {
 		AppGameCollectionGrid,

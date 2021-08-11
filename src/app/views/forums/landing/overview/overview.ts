@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { ForumCategory } from '../../../../../_common/forum/category/category.model';
 import { ForumChannel } from '../../../../../_common/forum/channel/channel.model';
@@ -7,7 +7,7 @@ import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/
 import AppForumChannelList from '../../../../components/forum/channel-list/channel-list.vue';
 import AppForumRules from '../../../../components/forum/rules/rules.vue';
 
-@Component({
+@Options({
 	name: 'RouteForumsLandingOverview',
 	components: {
 		AppForumRules,

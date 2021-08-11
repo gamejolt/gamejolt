@@ -1,12 +1,12 @@
-import { CreateElement } from 'vue';
+import { h } from 'vue';
+import AppVideoEmbed from '../../video/embed/embed.vue';
 import { WidgetCompilerWidget } from '../widget';
-import AppVideoEmbed from '../../video/embed/embed.vue'
 import { WidgetCompilerContext } from '../widget-compiler.service';
 
 export class WidgetCompilerWidgetYoutube extends WidgetCompilerWidget {
 	readonly name = 'youtube';
 
-	compile(h: CreateElement, _context: WidgetCompilerContext, params: string[] = []) {
+	compile(_context: WidgetCompilerContext, params: string[] = []) {
 		if (!params || !params.length) {
 			throw new Error(`Invalid params for widget.`);
 		}

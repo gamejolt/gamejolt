@@ -1,5 +1,4 @@
-import Component from 'vue-class-component';
-import { Inject } from 'vue-property-decorator';
+import { Inject, Options } from 'vue-property-decorator';
 import { number } from '../../../../../../../../_common/filters/number';
 import AppNavTabList from '../../../../../../../../_common/nav/tab-list/tab-list.vue';
 import {
@@ -12,7 +11,7 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../view.st
 import AppCommunitiesViewPageContainer from '../../../../_page-container/page-container.vue';
 import AppCommunitiesEditCompetitionNav from './_nav/nav.vue';
 
-@Component({
+@Options({
 	name: 'RouteCommunitiesViewEditChannelsCompetition',
 	components: {
 		AppCommunitiesViewPageContainer,

@@ -1,8 +1,7 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { User } from '../../user.model';
 
-@Component({})
+@Options({})
 export default class AppUserAvatarImg extends Vue {
 	@Prop(Object) user?: User;
 

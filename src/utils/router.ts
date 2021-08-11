@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import VueGlobal from 'vue';
 import VueRouter, { Location, Route, RouteConfig } from 'vue-router';
 import { Environment } from '../_common/environment/environment.service';
 import { routeError404, RouteError404 } from '../_common/error/page/page.route';
@@ -8,7 +8,7 @@ import { initScrollBehavior } from '../_common/scroll/auto-scroll/autoscroll.ser
 const ClientBaseRegex = new RegExp('chrome-extension:\\/\\/game\\-jolt\\-client\\/([^.]+)\\.html#');
 
 export function initRouter(appRoutes: RouteConfig[]) {
-	Vue.use(VueRouter);
+	VueGlobal.use(VueRouter);
 
 	const routes = [...appRoutes, routeError404];
 

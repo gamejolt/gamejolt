@@ -1,8 +1,8 @@
+import { Options } from 'vue-property-decorator';
 import { BaseRouteComponent } from '../../../../../../../_common/route/route-component';
-import { Component } from 'vue-property-decorator';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
-@Component({
+@Options({
 	name: 'RouteDashGamesManageGameWizardFinish',
 })
 export default class RouteDashGamesManageGameWizardFinish extends BaseRouteComponent {

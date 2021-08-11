@@ -1,4 +1,4 @@
-import { Component, Inject } from 'vue-property-decorator';
+import { Inject, Options } from 'vue-property-decorator';
 import { Api } from '../../../_common/api/api.service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
@@ -6,7 +6,7 @@ import AppActivityFeedPlaceholder from '../../components/activity/feed/placehold
 import { AppActivityFeedLazy } from '../../components/lazy';
 import { RouteActivityFeedController } from './feed';
 
-@Component({
+@Options({
 	name: 'RouteHomeFYP',
 	components: {
 		AppActivityFeed: AppActivityFeedLazy,

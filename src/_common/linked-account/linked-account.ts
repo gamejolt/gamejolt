@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import AppCard from '../card/card.vue';
 import {
 	getLinkedAccountPlatformIcon,
@@ -9,7 +8,7 @@ import {
 } from './linked-account.model';
 import { ModalTumblrBlogSelector } from './tumblr-blog-selector-modal/tumblr-blog-selector-modal-service';
 
-@Component({
+@Options({
 	components: { AppCard },
 })
 export default class AppLinkedAccount extends Vue {

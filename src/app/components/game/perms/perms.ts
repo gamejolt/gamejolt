@@ -1,10 +1,10 @@
+import { h } from 'vue';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Perm } from '../../../../_common/collaborator/collaboratable';
 import { Game } from '../../../../_common/game/game.model';
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
 import { RouteStore, RouteStoreName } from '../../../views/dashboard/games/manage/manage.store';
 
-@Component({})
+@Options({})
 export class AppGamePerms extends Vue {
 	@Prop(Game) game?: Game;
 	@Prop({ type: String, default: '' })
@@ -43,10 +43,13 @@ export class AppGamePerms extends Vue {
 			throw new Error(`Target game doesn't exist for app-game-perms component.`);
 		}
 
-		return this.targetGame.hasPerms(perms.filter(perm => !!perm), this.either);
+		return this.targetGame.hasPerms(
+			perms.filter(perm => !!perm),
+			this.either
+		);
 	}
 
-	render(h: CreateElement) {
+	render() {
 		if (this.hasPerms) {
 			return h(this.tag, this.$slots.default);
 		}

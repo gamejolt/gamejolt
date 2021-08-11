@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { Game } from '../../../../_common/game/game.model';
@@ -8,7 +7,7 @@ import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../store/index';
 import AppGamePlaylistAddToPopover from '../add-to-popover/add-to-popover.vue';
 
-@Component({
+@Options({
 	components: {
 		AppPopper,
 		AppGamePlaylistAddToPopover,

@@ -1,12 +1,11 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { Growls } from '../../growls/growls.service';
 import { AppState, AppStore } from '../../store/app-store';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 import { TooltipPlacement } from '../../tooltip/tooltip-model';
 
-@Component({
+@Options({
 	directives: {
 		AppTooltip,
 		AppAuthRequired,

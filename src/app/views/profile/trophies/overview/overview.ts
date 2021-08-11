@@ -1,4 +1,4 @@
-import Component from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { numberSort } from '../../../../../utils/array';
 import { Api } from '../../../../../_common/api/api.service';
@@ -22,7 +22,7 @@ type TrophyEntry = {
 	trophies: UserBaseTrophy[];
 };
 
-@Component({
+@Options({
 	name: 'RouteProfileTrophiesOverview',
 	components: {
 		AppTimelineList,

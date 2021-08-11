@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { arrayIndexBy } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
 import { Device } from '../../../../_common/device/device.service';
@@ -11,7 +11,7 @@ import AppLoading from '../../../../_common/loading/loading.vue';
 import { BaseModal } from '../../../../_common/modal/base';
 import { ClientLibraryAction, ClientLibraryStore } from '../../../store/client-library';
 
-@Component({
+@Options({
 	components: {
 		AppLoading,
 		AppGamePackageCard,

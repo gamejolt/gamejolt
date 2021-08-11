@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import {
 	Community,
@@ -8,7 +8,7 @@ import {
 import { BaseModal } from '../../../../../_common/modal/base';
 import FormCommunityChannelPresetBackground from '../../../forms/community/channel/preset-background/preset-background.vue';
 
-@Component({
+@Options({
 	components: {
 		FormCommunityChannelPresetBackground,
 	},

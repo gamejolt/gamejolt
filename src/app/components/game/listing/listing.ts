@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../utils/vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { number } from '../../../../_common/filters/number';
@@ -18,7 +17,7 @@ import AppGameFilteringWidget from '../filtering/widget.vue';
 import AppGameGridPlaceholder from '../grid/placeholder/placeholder.vue';
 import { GameListingContainer } from './listing-container-service';
 
-@Component({
+@Options({
 	components: {
 		AppPagination,
 		AppLoadingFade,

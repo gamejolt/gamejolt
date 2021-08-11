@@ -1,10 +1,10 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { Game } from '../../../../_common/game/game.model';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import FormGameFeaturedBadge from '../../../components/forms/game/featured-badge/featured-badge.vue';
 
-@Component({
+@Options({
 	name: 'RouteBadgeFeatured',
 	components: {
 		FormGameFeaturedBadge,

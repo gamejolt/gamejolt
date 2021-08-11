@@ -1,10 +1,9 @@
-import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { AppResponsiveDimensions } from '../../../../../_common/responsive-dimensions/responsive-dimensions';
 import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
 import { ActivityFeedKey, ActivityFeedView } from '../view';
 
-@Component({
+@Options({
 	components: {
 		AppVideoEmbed,
 		AppResponsiveDimensions,

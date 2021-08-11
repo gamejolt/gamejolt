@@ -1,14 +1,14 @@
-import { CreateElement, VNode } from 'vue';
+import { h, VNode } from 'vue';
 import { WidgetCompilerWidget } from './widget';
-import { WidgetCompilerWidgetYoutube } from './widget-youtube/widget-youtube.service';
-import { WidgetCompilerWidgetVimeo } from './widget-vimeo/widget-vimeo.service';
 import { WidgetCompilerWidgetSoundcloud } from './widget-soundcloud/widget-soundcloud.service';
+import { WidgetCompilerWidgetVimeo } from './widget-vimeo/widget-vimeo.service';
+import { WidgetCompilerWidgetYoutube } from './widget-youtube/widget-youtube.service';
 
 const REGEX = {
 	// Match widget definitions: {% activity-feed %}
 	// {%(whitespace character)(none new line character -- greedy match)(whitespace character)%}
 	// Global match
-	widget: /\{\%\s(.+?)\s\%\}/,
+	widget: /\{%\s(.+?)\s%\}/,
 
 	// To match any whitespace.
 	whitespace: /\s+/g,
@@ -37,12 +37,12 @@ export class WidgetCompiler {
 		return this.contentClass;
 	}
 
-	static compile(h: CreateElement, context: WidgetCompilerContext, content: string) {
+	static compile(context: WidgetCompilerContext, content: string) {
 		if (!content) {
 			return undefined;
 		}
 
-		let children: VNode[] = [];
+		const children: VNode[] = [];
 		let workingInput = content;
 
 		// Loop through each match that looks like a widget.
@@ -64,7 +64,7 @@ export class WidgetCompiler {
 			);
 
 			// Process this match.
-			const injectedWidget = this.processWidgetMatch(h, context, innerMatch);
+			const injectedWidget = this.processWidgetMatch(context, innerMatch);
 			if (injectedWidget) {
 				children.push(injectedWidget);
 			}
@@ -101,11 +101,7 @@ export class WidgetCompiler {
 	 * Will attempt to figure out the widget that they were trying to call
 	 * and call its compilation function.
 	 */
-	private static processWidgetMatch(
-		h: CreateElement,
-		context: WidgetCompilerContext,
-		match: string
-	) {
+	private static processWidgetMatch(context: WidgetCompilerContext, match: string) {
 		// Trim whitespace.
 		match = match.replace(REGEX.whitespaceTrim, '');
 
@@ -127,22 +123,8 @@ export class WidgetCompiler {
 		params.shift();
 
 		// Call the widget's service.
-		return this.widgets[widgetName].compile(h, context, params);
+		return this.widgets[widgetName].compile(context, params);
 	}
-
-	// private static cleanEmptyContent(compiledElement: HTMLElement) {
-	// 	let emptyElems = compiledElement.querySelectorAll('p:empty');
-	// 	for (let i = 0; i < emptyElems.length; ++i) {
-	// 		const elem = emptyElems[i];
-	// 		elem.parentNode!.removeChild(elem);
-	// 	}
-
-	// 	emptyElems = compiledElement.querySelectorAll('div:empty');
-	// 	for (let i = 0; i < emptyElems.length; ++i) {
-	// 		const elem = emptyElems[i];
-	// 		elem.parentNode!.removeChild(elem);
-	// 	}
-	// }
 }
 
 // Add in default widgets.

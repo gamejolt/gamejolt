@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 
 type Palette = {
@@ -7,7 +6,7 @@ type Palette = {
 	colors: string[];
 };
 
-@Component({
+@Options({
 	directives: {
 		AppTooltip,
 	},

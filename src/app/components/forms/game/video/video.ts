@@ -1,4 +1,4 @@
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Watch } from 'vue-property-decorator';
 import { REGEX_VIDEO, REGEX_VIMEO, REGEX_YOUTUBE } from '../../../../../utils/regex';
 import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
@@ -9,7 +9,7 @@ type FormModel = GameVideo & {
 	_url: string;
 };
 
-@Component({
+@Options({
 	components: {
 		AppVideoEmbed,
 	},

@@ -1,11 +1,9 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Inject } from 'vue-property-decorator';
+import { Inject, Options, Vue } from 'vue-property-decorator';
 import { CompetitionPeriodVoting } from '../../../../../../../../../_common/community/competition/competition.model';
 import { number } from '../../../../../../../../../_common/filters/number';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view.store';
 
-@Component({})
+@Options({})
 export default class AppCommunitiesEditCompetitionNav extends Vue {
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;

@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
 import { currency } from '../../../../_common/filters/currency';
@@ -27,7 +27,7 @@ interface FormModel {
 	percentage_split: number;
 }
 
-@Component({
+@Options({
 	components: {
 		AppExpand,
 		AppPartnerTerms,

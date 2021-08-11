@@ -1,5 +1,5 @@
-import Vue from 'vue';
-import { Component, Inject, Watch } from 'vue-property-decorator';
+import VueGlobal from 'vue';
+import { Inject, Options, Vue, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import AppEventItemMediaIndicator from '../../../app/components/event-item/media-indicator/media-indicator.vue';
 import { Store } from '../../../app/store/index';
@@ -24,10 +24,10 @@ import AppStickerLayerDrawerItem from './drawer-item.vue';
 
 if (!GJ_IS_SSR) {
 	const VueTouch = require('vue-touch');
-	Vue.use(VueTouch);
+	VueGlobal.use(VueTouch);
 }
 
-@Component({
+@Options({
 	components: {
 		AppScrollScroller,
 		AppStickerCard,

@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Game } from '../../../../_common/game/game.model';
 import AppNavTabList from '../../../../_common/nav/tab-list/tab-list.vue';
 import { Site } from '../../../../_common/site/site-model';
@@ -8,7 +7,7 @@ import AppSitesManagePageDomain from './domain.vue';
 import AppSitesManagePageStatic from './static.vue';
 import AppSitesManagePageTemplate from './template.vue';
 
-@Component({
+@Options({
 	components: {
 		AppNavTabList,
 		AppSitesManagePageTemplate,

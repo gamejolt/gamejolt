@@ -1,8 +1,7 @@
 import { Node } from 'prosemirror-model';
 import { Selection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { Growls } from '../../../../growls/growls.service';
 import { Screen } from '../../../../screen/screen-service';
@@ -12,7 +11,7 @@ import AppContentEditorTS from '../../content-editor';
 import { ContentEditorService } from '../../content-editor.service';
 import { ContentEditorSchema } from '../../schemas/content-editor-schema';
 
-@Component({
+@Options({
 	components: {},
 	directives: {
 		AppTooltip,

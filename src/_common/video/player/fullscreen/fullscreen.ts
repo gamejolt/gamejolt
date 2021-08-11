@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../../utils/vue';
 import {
 	queueVideoFullscreenChange,
@@ -7,7 +6,7 @@ import {
 	VideoPlayerController,
 } from '../controller';
 
-@Component({})
+@Options({})
 export default class AppVideoPlayerFullscreen extends Vue {
 	@Prop(propRequired(VideoPlayerController)) player!: VideoPlayerController;
 

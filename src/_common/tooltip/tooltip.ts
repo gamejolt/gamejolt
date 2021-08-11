@@ -1,13 +1,12 @@
 import flip from '@popperjs/core/lib/modifiers/flip';
 import hide from '@popperjs/core/lib/modifiers/hide';
 import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow';
-import { createPopper, Instance, Options } from '@popperjs/core/lib/popper-lite';
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { createPopper, Instance, Options as PopperOptions } from '@popperjs/core/lib/popper-lite';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propOptional } from '../../utils/vue';
 import { TooltipModel } from './tooltip-model';
 
-@Component({})
+@Options({})
 export default class TooltipComponent extends Vue {
 	@Prop(propOptional(TooltipModel)) tooltip?: TooltipModel;
 
@@ -41,7 +40,7 @@ export default class TooltipComponent extends Vue {
 			return;
 		}
 
-		const options: Options = {
+		const options: PopperOptions = {
 			placement: this.tooltip.placement,
 			modifiers: [flip, preventOverflow, hide],
 			strategy: 'absolute',

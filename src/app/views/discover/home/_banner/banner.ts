@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Location } from 'vue-router';
 import { State } from 'vuex-class';
 import { propOptional } from '../../../../../utils/vue';
@@ -12,7 +11,7 @@ import { FeaturedItem } from '../../../../components/featured-item/featured-item
 import AppGameFollowWidget from '../../../../components/game/follow-widget/follow-widget.vue';
 import { Store } from '../../../../store/index';
 
-@Component({
+@Options({
 	components: {
 		AppGameFollowWidget,
 		AppCommunityJoinWidget,

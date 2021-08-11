@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import AppExpand from '../../../../../../../_common/expand/expand.vue';
 import { number } from '../../../../../../../_common/filters/number';
@@ -17,7 +17,7 @@ import AppGameDevStageSelector from '../../../../../../components/forms/game/dev
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
-@Component({
+@Options({
 	name: 'RouteDashGamesManageGameOverview',
 	components: {
 		AppProgressPoller,

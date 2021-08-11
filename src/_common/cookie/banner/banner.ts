@@ -1,8 +1,7 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { Environment } from '../../environment/environment.service';
 
-@Component({})
+@Options({})
 export default class AppCookieBanner extends Vue {
 	readonly Environment = Environment;
 

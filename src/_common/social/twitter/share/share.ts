@@ -1,17 +1,16 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import '../../social.styl';
-
 import { TwitterSdk } from '../sdk/sdk.service';
 
-@Component({})
+@Options({})
 export class AppSocialTwitterShare extends Vue {
 	@Prop(String) content!: string;
 	@Prop(String) url?: string;
 	@Prop({ type: String, default: 'small' })
 	size!: string;
 
-	render(h: CreateElement) {
+	render() {
 		return h('a', {
 			staticClass: 'twitter-share-button',
 			attrs: {

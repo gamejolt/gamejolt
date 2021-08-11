@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../utils/vue';
 import AppPopper from '../../../popper/popper.vue';
 import { Screen } from '../../../screen/screen-service';
@@ -11,7 +10,7 @@ import { AppTooltip } from '../../../tooltip/tooltip-directive';
 import { setVideoMuted, trackVideoPlayerEvent, VideoPlayerController } from '../controller';
 import AppPlayerSlider from '../slider/slider.vue';
 
-@Component({
+@Options({
 	components: {
 		AppPopper,
 		AppPlayerSlider,

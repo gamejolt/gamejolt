@@ -1,8 +1,7 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import './bubble-global.styl';
 
-@Component({})
+@Options({})
 export default class AppThemeBubble extends Vue {
 	@Prop(String)
 	highlight!: string;

@@ -1,9 +1,9 @@
+import { Options } from 'vue-property-decorator';
 import AppAuthLogin from '../../../../_common/auth/login/login.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
-import { Component } from 'vue-property-decorator';
 import { loggedUserBlock } from '../auth';
 
-@Component({
+@Options({
 	name: 'RouteAuthLogin',
 	components: {
 		AppAuthLogin,

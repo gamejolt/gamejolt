@@ -1,5 +1,4 @@
-import Component from 'vue-class-component';
-import { Emit, Prop, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { Community } from '../../../../../_common/community/community.model';
 import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.service';
@@ -16,7 +15,7 @@ export type FormModel = {
 	reason: string | null;
 };
 
-@Component({})
+@Options({})
 export default class FormCommunityMovePost extends BaseForm<FormModel> implements FormOnInit {
 	@Prop(propRequired(Community)) community!: Community;
 

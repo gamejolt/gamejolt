@@ -1,7 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { Device } from '../../../../../_common/device/device.service';
 import AppExpand from '../../../../../_common/expand/expand.vue';
@@ -26,7 +25,7 @@ import {
 	LocalDbPackageRemoveState,
 } from '../../local-db/package/package.model';
 
-@Component({
+@Options({
 	components: {
 		AppExpand,
 		AppPopper,

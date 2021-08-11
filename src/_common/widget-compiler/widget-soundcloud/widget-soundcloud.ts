@@ -1,7 +1,6 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 
-@Component({})
+@Options({})
 export default class AppWidgetCompilerWidgetSoundcloud extends Vue {
 	@Prop({ type: String, default: '' })
 	trackId!: string;
@@ -12,7 +11,8 @@ export default class AppWidgetCompilerWidgetSoundcloud extends Vue {
 
 	created() {
 		this.embedSrc =
-			'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' + this.trackId;
+			'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' +
+			this.trackId;
 
 		if (this.color) {
 			this.embedSrc += '&amp;color=' + this.color;

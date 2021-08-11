@@ -1,12 +1,12 @@
 import { transparentize } from 'polished';
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Theme } from './theme.model';
 import { ThemeState, ThemeStore } from './theme.store';
 
 let inc = 0;
 
-@Component({})
+@Options({})
 export class AppTheme extends Vue {
 	@Prop(Theme)
 	theme!: Theme | null;
@@ -25,7 +25,7 @@ export class AppTheme extends Vue {
 
 	scopeId = ++inc;
 
-	render(h: CreateElement) {
+	render() {
 		const id = 'theme-' + this.scopeId;
 		const selector = this.$slots.default ? '#' + id : ':root';
 		let styles = '';

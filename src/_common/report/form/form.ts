@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { arrayRemove } from '../../../utils/array';
 import { Api } from '../../api/api.service';
 import { FiresidePost } from '../../fireside/post/post-model';
@@ -13,7 +13,7 @@ interface FormModel {
 	source: string;
 }
 
-@Component({
+@Options({
 	components: {
 		AppFormControlTextarea,
 	},

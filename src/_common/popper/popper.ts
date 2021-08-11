@@ -4,9 +4,8 @@ import hide from '@popperjs/core/lib/modifiers/hide';
 import preventOverflow, {
 	PreventOverflowModifier,
 } from '@popperjs/core/lib/modifiers/preventOverflow';
-import { createPopper, Instance, Options } from '@popperjs/core/lib/popper-lite';
-import Vue from 'vue';
-import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
+import { createPopper, Instance, Options as PopperOptions } from '@popperjs/core/lib/popper-lite';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propOptional } from '../../utils/vue';
 import { Backdrop } from '../backdrop/backdrop.service';
 import AppBackdrop from '../backdrop/backdrop.vue';
@@ -61,7 +60,7 @@ const modifiers = [
 	} as FlipModifier,
 ];
 
-@Component({
+@Options({
 	components: {
 		AppScrollScroller,
 	},
@@ -181,7 +180,7 @@ export default class AppPopper extends Vue {
 		return classes.join(' ');
 	}
 
-	get popperOptions(): Options {
+	get popperOptions(): PopperOptions {
 		return {
 			placement: this.placement,
 			modifiers: [...modifiers],

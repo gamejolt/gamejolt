@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
@@ -7,7 +7,7 @@ import AppLoading from '../../../../_common/loading/loading.vue';
 import { BaseModal } from '../../../../_common/modal/base';
 import FormFiresideAdd from '../../forms/fireside/add/add.vue';
 
-@Component({
+@Options({
 	components: {
 		FormFiresideAdd,
 		AppLoading,

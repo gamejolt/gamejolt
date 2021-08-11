@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import AppCommunityThumbnail from '../../../../_common/community/thumbnail/thumbnail.vue';
 import { number } from '../../../../_common/filters/number';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
@@ -14,7 +14,7 @@ import AppPageContainer from '../../../components/page-container/page-container.
 import { Search } from '../../../components/search/search-service';
 import { RouteStore, routeStore, RouteStoreModule } from '../search.store';
 
-@Component({
+@Options({
 	name: 'RouteSearchResults',
 	components: {
 		AppPageContainer,

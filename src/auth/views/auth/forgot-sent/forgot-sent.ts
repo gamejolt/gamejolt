@@ -1,7 +1,7 @@
+import { Options } from 'vue-property-decorator';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
-import { Component } from 'vue-property-decorator';
 
-@Component({
+@Options({
 	name: 'RouteAuthForgotSent',
 })
 export default class RouteAuthForgotSent extends BaseRouteComponent {

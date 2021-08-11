@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
 import { AppScrollTo } from '../../../../_common/scroll/to/to.directive';
@@ -7,7 +7,7 @@ import { AppSocialTwitterShare } from '../../../../_common/social/twitter/share/
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 
-@Component({
+@Options({
 	name: 'RouteLandingIndieaf',
 	components: {
 		AppSocialTwitterShare,

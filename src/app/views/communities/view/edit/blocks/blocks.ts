@@ -1,4 +1,4 @@
-import { Component, Inject } from 'vue-property-decorator';
+import { Inject, Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCardListAdd from '../../../../../../_common/card/list/add/add.vue';
 import AppCardList from '../../../../../../_common/card/list/list.vue';
@@ -15,7 +15,7 @@ import FormCommunityBlock from '../../../../../components/forms/community/ban/bl
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
 
-@Component({
+@Options({
 	name: 'RouteCommunitiesViewEditBlocks',
 	components: {
 		AppCommunitiesViewPageContainer,

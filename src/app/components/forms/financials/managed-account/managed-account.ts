@@ -1,5 +1,5 @@
 import * as StripeData from 'stripe';
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { loadScript } from '../../../../../utils/utils';
 import { Api } from '../../../../../_common/api/api.service';
 import AppExpand from '../../../../../_common/expand/expand.vue';
@@ -41,7 +41,7 @@ type PersonRelationship = keyof NonNullable<StripeData.accounts.IPerson['relatio
 // Person requirement fields start with the person id, which looks like "person_ID"
 const PERSON_REQUIREMENT_FIELD = new RegExp(`^(person_.*?)\\.`);
 
-@Component({
+@Options({
 	components: {
 		AppLoading,
 		AppExpand,

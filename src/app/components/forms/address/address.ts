@@ -1,9 +1,9 @@
+import { Options, Watch } from 'vue-property-decorator';
 import { BaseForm } from '../../../../_common/form-vue/form.service';
 import { Geo, Region } from '../../../../_common/geo/geo.service';
 import { UserAddress } from '../../../../_common/user/address/address.model';
-import { Component, Watch } from 'vue-property-decorator';
 
-@Component({})
+@Options({})
 export default class FormAddress extends BaseForm<UserAddress> {
 	modelClass = UserAddress;
 

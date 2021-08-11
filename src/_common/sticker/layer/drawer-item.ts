@@ -1,10 +1,9 @@
-import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
 import { DrawerStore, DrawerStoreKey } from '../../drawer/drawer-store';
 import { Sticker } from '../sticker.model';
 
-@Component({})
+@Options({})
 export default class AppStickerLayerDrawerItem extends Vue {
 	@Prop(propRequired(Sticker)) sticker!: Sticker;
 	@Prop(propOptional(Number, 0)) count!: number;

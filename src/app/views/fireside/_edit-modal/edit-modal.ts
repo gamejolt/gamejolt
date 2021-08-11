@@ -1,10 +1,10 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { BaseModal } from '../../../../_common/modal/base';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import FormFiresideEdit from '../../../components/forms/fireside/edit/edit.vue';
 
-@Component({
+@Options({
 	components: {
 		FormFiresideEdit,
 	},

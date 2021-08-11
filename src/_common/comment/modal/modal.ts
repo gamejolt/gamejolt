@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
 import { BaseModal } from '../../modal/base';
 import { Model } from '../../model/model.service';
@@ -6,7 +6,7 @@ import { Screen } from '../../screen/screen-service';
 import AppCommentWidget from '../widget/widget.vue';
 import { DisplayMode } from './modal.service';
 
-@Component({
+@Options({
 	components: {
 		AppCommentWidget,
 	},

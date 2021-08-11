@@ -1,11 +1,10 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { number } from '../../../../_common/filters/number';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { User } from '../../../../_common/user/user.model';
 
-@Component({
+@Options({
 	components: {
 		AppProgressBar,
 	},

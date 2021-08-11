@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Environment } from '../../../_common/environment/environment.service';
 import { Sellable } from '../../../_common/sellable/sellable.model';
@@ -9,7 +8,7 @@ import AppIncludedItems from '../included-items/included-items.vue';
 import AppModal from '../modal/modal.vue';
 import AppPricingCard from '../pricing-card/pricing-card.vue';
 
-@Component({
+@Options({
 	components: {
 		AppPricingCard,
 		AppModal,

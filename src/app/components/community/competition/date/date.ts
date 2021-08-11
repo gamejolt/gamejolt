@@ -1,12 +1,10 @@
 import { determine } from 'jstimezonedetect';
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../../utils/vue';
 import { date } from '../../../../../_common/filters/date';
 import { Timezone, TimezoneData } from '../../../../../_common/timezone/timezone.service';
 
-@Component({
+@Options({
 	filters: {
 		date,
 	},

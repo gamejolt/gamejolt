@@ -1,12 +1,11 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../utils/vue';
 import { AdSlot } from '../ad-slot-info';
 import { AdProperAdapter, ProperTagUnits } from './proper-adapter';
 
 type TagPlacement = keyof typeof ProperTagUnits;
 
-@Component({})
+@Options({})
 export default class AppAdProper extends Vue {
 	@Prop(propRequired(AdSlot)) adSlot!: AdSlot;
 	@Prop(propRequired(AdProperAdapter)) adapter!: AdProperAdapter;

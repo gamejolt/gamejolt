@@ -1,6 +1,4 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { arrayShuffle } from '../../../../utils/array';
 import { Growls } from '../../../growls/growls.service';
 import AppLoading from '../../../loading/loading.vue';
@@ -11,7 +9,7 @@ import AppBaseContentComponent from '../base/base-content-component.vue';
 import AppContentEmbedSketchfab from './sketchfab/sketchfab.vue';
 import AppContentEmbedSoundcloud from './soundcloud/soundcloud.vue';
 
-@Component({
+@Options({
 	components: {
 		AppVideoEmbed,
 		AppContentEmbedSoundcloud,

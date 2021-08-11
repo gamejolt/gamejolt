@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../utils/vue';
 import { FiresidePost } from '../../fireside/post/post-model';
 import { AppImgResponsive } from '../../img/responsive/responsive';
@@ -7,7 +6,7 @@ import AppProgressBar from '../../progress/bar/bar.vue';
 import { AppProgressPoller } from '../../progress/poller/poller';
 import { AppResponsiveDimensions } from '../../responsive-dimensions/responsive-dimensions';
 
-@Component({
+@Options({
 	components: {
 		AppProgressPoller,
 		AppProgressBar,

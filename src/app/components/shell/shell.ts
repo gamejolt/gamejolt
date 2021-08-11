@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Inject, Watch } from 'vue-property-decorator';
+import { Inject, Options, Vue, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Connection } from '../../../_common/connection/connection-service';
 import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
@@ -40,7 +39,7 @@ if (GJ_IS_CLIENT) {
 	components.AppClientStatusBar = require('../client/status-bar/status-bar.vue').default;
 }
 
-@Component({
+@Options({
 	components,
 })
 export default class AppShell extends Vue {

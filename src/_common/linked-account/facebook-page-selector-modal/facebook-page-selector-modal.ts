@@ -1,12 +1,12 @@
-import { Component, Prop } from 'vue-property-decorator';
-import AppLoading from '../../loading/loading.vue';
+import { Options, Prop } from 'vue-property-decorator';
 import { stringSort } from '../../../utils/array';
 import { Api } from '../../api/api.service';
+import AppLoading from '../../loading/loading.vue';
 import { BaseModal } from '../../modal/base';
 import { FacebookPage, LinkedAccount } from '../linked-account.model';
 import AppLinkedAccount from '../linked-account.vue';
 
-@Component({
+@Options({
 	components: {
 		AppLinkedAccount,
 		AppLoading,
@@ -36,7 +36,10 @@ export default class AppModalFacebookPageSelector extends BaseModal {
 
 	async created() {
 		const payload = await Api.sendRequest(
-			'/web/dash/linked-accounts/facebook-pages/' + this.account.game_id + '/' + this.account.id,
+			'/web/dash/linked-accounts/facebook-pages/' +
+				this.account.game_id +
+				'/' +
+				this.account.id,
 			null,
 			{ detach: true }
 		);

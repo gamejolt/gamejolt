@@ -1,3 +1,4 @@
+import { Options } from 'vue-property-decorator';
 import { ContentDocument } from '../../../../../_common/content/content-document';
 import AppEditableOverlay from '../../../../../_common/editable-overlay/editable-overlay.vue';
 import AppFormControlContent from '../../../../../_common/form-vue/control/content/content.vue';
@@ -5,7 +6,6 @@ import { FormOnLoad, FormOnSubmit } from '../../../../../_common/form-vue/form.s
 import Onboarding, { OnboardingStep } from '../../../../../_common/onboarding/onboarding.service';
 import { AppThemeSvg } from '../../../../../_common/theme/svg/svg';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
-import { Component } from 'vue-property-decorator';
 import { UserAvatarModal } from '../../../user/avatar-modal/avatar-modal.service';
 import OnboardingComponent from '../base';
 
@@ -14,7 +14,7 @@ export type FormModel = {
 	bio: string;
 };
 
-@Component({
+@Options({
 	components: {
 		AppUserAvatar,
 		AppEditableOverlay,
@@ -22,8 +22,10 @@ export type FormModel = {
 		AppFormControlContent,
 	},
 })
-export default class FormOnboardingProfile extends OnboardingComponent<FormModel>
-	implements FormOnLoad, FormOnSubmit {
+export default class FormOnboardingProfile
+	extends OnboardingComponent<FormModel>
+	implements FormOnLoad, FormOnSubmit
+{
 	stepName = 'profile' as OnboardingStep;
 
 	originalUsername = '';
@@ -57,7 +59,9 @@ export default class FormOnboardingProfile extends OnboardingComponent<FormModel
 	}
 
 	get shouldShowSkip() {
-		return (!this.hasAvatar && !this.hasSelectedAvatar) || (!this.hasBio && !this.hasModifiedBio);
+		return (
+			(!this.hasAvatar && !this.hasSelectedAvatar) || (!this.hasBio && !this.hasModifiedBio)
+		);
 	}
 
 	created() {

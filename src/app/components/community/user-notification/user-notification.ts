@@ -1,6 +1,4 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Emit, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../../utils/vue';
 import AppAlertDismissable from '../../../../_common/alert/dismissable/dismissable.vue';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
@@ -14,7 +12,7 @@ import {
 	getCommunityMovePostReasons,
 } from '../../../../_common/user/action-reasons';
 
-@Component({
+@Options({
 	components: {
 		AppCommunityThumbnailImg,
 		AppAlertDismissable,

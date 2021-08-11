@@ -1,6 +1,6 @@
 import { Node } from 'prosemirror-model';
 import { EditorView, NodeView } from 'prosemirror-view';
-import Vue from 'vue';
+import VueGlobal from 'vue';
 import { ContentEditorSchema } from '../schemas/content-editor-schema';
 
 export type GetPosFunction = () => number;
@@ -24,7 +24,7 @@ export abstract class BaseNodeView implements NodeView {
 		this.dom = this.createDOM();
 
 		// Mount component in the next tick, after it got mounted to the DOM, because Vue needs it mounted.
-		Vue.nextTick().then(() => {
+		VueGlobal.nextTick().then(() => {
 			this.mounted();
 		});
 	}
@@ -46,7 +46,7 @@ export abstract class BaseNodeView implements NodeView {
 		this.dom.remove();
 	}
 
-	protected mountVue(vm: Vue) {
+	protected mountVue(vm: VueGlobal) {
 		// Mount the Vue instance onto an inner div to not disturb the div managed by the prosemirror editor
 		const container = this.createVueMountDOM();
 		if (vm.$props !== undefined) {

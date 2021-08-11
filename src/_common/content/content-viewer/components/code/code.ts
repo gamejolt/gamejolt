@@ -1,5 +1,5 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { ContentObject } from '../../../content-object';
 import { ContentOwner } from '../../../content-owner';
 import { renderChildren } from '../base-component';
@@ -28,10 +28,11 @@ const LANGUAGE_MAP = {
 	nocode: 'nocode',
 } as any;
 
-@Component({})
+@Options({})
 export class AppContentViewerCodeBlock extends Vue {
 	@Prop(ContentObject)
 	data!: ContentObject;
+
 	@Prop(Object)
 	owner!: ContentOwner;
 
@@ -48,17 +49,15 @@ export class AppContentViewerCodeBlock extends Vue {
 		this.isPrismLoaded = true;
 	}
 
-	render(h: CreateElement) {
-		let node;
+	render() {
 		if (this.isPrismLoaded) {
-			node = this.renderPrism(h);
+			return this.renderPrism();
 		} else {
-			node = this.renderDefault(h);
+			return this.renderDefault();
 		}
-		return node;
 	}
 
-	private renderPrism(h: CreateElement) {
+	private renderPrism() {
 		let text = '';
 		let language = 'nocode';
 
@@ -98,11 +97,11 @@ export class AppContentViewerCodeBlock extends Vue {
 		);
 	}
 
-	private renderDefault(h: CreateElement) {
+	private renderDefault() {
 		return h(
 			'pre',
 			{ class: 'content-viewer-code-block content-viewer-nocode' },
-			renderChildren(h, this.owner, this.data.content)
+			renderChildren(this.owner, this.data.content)
 		);
 	}
 

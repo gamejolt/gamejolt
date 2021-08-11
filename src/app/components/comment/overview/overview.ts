@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Inject, Prop, Watch } from 'vue-property-decorator';
+import { Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import {
 	Comment,
 	getCommentBlockReason,
@@ -21,7 +20,7 @@ import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
 
-@Component({
+@Options({
 	components: {
 		AppFadeCollapse,
 		AppUserAvatarImg,

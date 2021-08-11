@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
 import { AppSocialFacebookLike } from '../../../../_common/social/facebook/like/like';
@@ -12,7 +12,7 @@ function getRandomInt(min: number, max: number) {
 	return Math.floor(Math.random() * (max - min)) + min;
 }
 
-@Component({
+@Options({
 	name: 'RouteLandingRedlight',
 	components: {
 		AppSocialTwitterShare,

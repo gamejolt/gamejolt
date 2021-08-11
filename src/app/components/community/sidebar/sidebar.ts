@@ -1,6 +1,4 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Prop, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
@@ -22,7 +20,7 @@ import { CommunitySidebarData } from './sidebar-data';
 
 const GAME_LIST_COLLAPSED_COUNT = 3;
 
-@Component({
+@Options({
 	components: {
 		AppCommunityDescription,
 		AppUserAvatarList,

@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import '../../../../../_common/comment/comment.styl';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
 import {
@@ -23,7 +22,7 @@ import { getTrophyImg } from '../../../trophy/thumbnail/thumbnail';
 import { ActivityFeedItem } from '../item-service';
 import { ActivityFeedKey, ActivityFeedView } from '../view';
 
-@Component({
+@Options({
 	components: {
 		AppTimelineListItem,
 		AppTimeAgo,

@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../_common/api/api.service';
 import AppCard from '../../../../../../../../_common/card/card.vue';
 import AppExpand from '../../../../../../../../_common/expand/expand.vue';
@@ -25,7 +25,7 @@ import { GamePackageEditModal } from '../../../../../../../components/game/packa
 import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
 import { RouteStore, RouteStoreModule } from '../../../manage.store';
 
-@Component({
+@Options({
 	name: 'RouteDashGamesManageGamePackagesEdit',
 	components: {
 		AppTimeAgo,

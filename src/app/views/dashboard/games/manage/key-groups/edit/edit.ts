@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../../../utils/array';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { Clipboard } from '../../../../../../../_common/clipboard/clipboard-service';
@@ -21,7 +21,7 @@ import FormGameKeyGroupAddKeys from '../../../../../../components/forms/game/key
 import FormGameKeyGroup from '../../../../../../components/forms/game/key-group/key-group.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
-@Component({
+@Options({
 	name: 'RouteDashGamesManageKeyGroupsEdit',
 	components: {
 		AppProgressBar,

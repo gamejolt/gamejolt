@@ -1,11 +1,9 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-
-import { User } from '../user.model';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Environment } from '../../environment/environment.service';
 import AppUserAvatarImg from '../user-avatar/img/img.vue';
+import { User } from '../user.model';
 
-@Component({
+@Options({
 	components: {
 		AppUserAvatarImg,
 	},

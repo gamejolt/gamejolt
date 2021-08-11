@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../api/api.service';
 import { Connection } from '../../connection/connection-service';
 import { Environment } from '../../environment/environment.service';
@@ -15,7 +15,7 @@ export type FormModel = {
 	token: string;
 };
 
-@Component({
+@Options({
 	components: {
 		AppLoading,
 	},
@@ -23,8 +23,10 @@ export type FormModel = {
 		AppTooltip,
 	},
 })
-export default class AppAuthJoinForm extends BaseForm<FormModel>
-	implements FormOnSubmit, FormOnSubmitSuccess {
+export default class AppAuthJoinForm
+	extends BaseForm<FormModel>
+	implements FormOnSubmit, FormOnSubmitSuccess
+{
 	@Prop(Boolean)
 	overlay?: boolean;
 

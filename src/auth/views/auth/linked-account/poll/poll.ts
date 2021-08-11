@@ -1,16 +1,16 @@
+import { Options } from 'vue-property-decorator';
+import * as _ClientMod from '../../../../../_common/client/client.service';
 import { Growls } from '../../../../../_common/growls/growls.service';
+import AppLoading from '../../../../../_common/loading/loading.vue';
 import { AppProgressPoller } from '../../../../../_common/progress/poller/poller';
 import { BaseRouteComponent } from '../../../../../_common/route/route-component';
-import AppLoading from '../../../../../_common/loading/loading.vue';
-import { Component } from 'vue-property-decorator';
-import * as _ClientMod from '../../../../../_common/client/client.service';
 
 let ClientMod: typeof _ClientMod | undefined;
 if (GJ_IS_CLIENT) {
 	ClientMod = require('../../../../../_common/client/client.service');
 }
 
-@Component({
+@Options({
 	name: 'RouteAuthLinkedAccountPoll',
 	components: {
 		AppProgressPoller,

@@ -1,12 +1,11 @@
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { Community } from '../../../../../_common/community/community.model';
 import { BaseModal } from '../../../../../_common/modal/base';
 import { CommunitySidebarData } from '../sidebar-data';
 import AppCommunitySidebar from '../sidebar.vue';
 
-@Component({
+@Options({
 	components: {
 		AppCommunitySidebar,
 	},

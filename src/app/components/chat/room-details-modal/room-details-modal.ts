@@ -1,11 +1,11 @@
-import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Inject, Options, Prop } from 'vue-property-decorator';
 import { BaseModal } from '../../../../_common/modal/base';
 import { ChatClient, ChatKey, editChatRoomTitle } from '../client';
 import { ChatRoom } from '../room';
 import { FormModel } from './form/form';
 import FormRoomDetails from './form/form.vue';
 
-@Component({
+@Options({
 	components: {
 		FormRoomDetails,
 	},

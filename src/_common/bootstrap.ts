@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import VueGlobal from 'vue';
 import { VueRouter } from 'vue-router/types/router';
 import { hijackLinks } from '../utils/router';
 import { bootstrapAppTranslations } from '../utils/translations';
@@ -41,14 +41,14 @@ export function bootstrapCommon(appComponent: typeof Vue, store: VuexStore, rout
 	}
 
 	// Common components.
-	Vue.component('AppButton', AppButton);
-	Vue.component('AppJolticon', AppJolticon);
-	Vue.component('AppLinkExternal', AppLinkExternal);
-	Vue.component('AppLinkHelp', AppLinkHelp);
-	Vue.directive('AppTrackEvent', AppTrackEvent);
+	VueGlobal.component('AppButton', AppButton);
+	VueGlobal.component('AppJolticon', AppJolticon);
+	VueGlobal.component('AppLinkExternal', AppLinkExternal);
+	VueGlobal.component('AppLinkHelp', AppLinkHelp);
+	VueGlobal.directive('AppTrackEvent', AppTrackEvent);
 
 	// Set some constants so we can use them in templates.
-	Vue.use(vue => {
+	VueGlobal.use(vue => {
 		const proto = vue.prototype as any;
 		proto.GJ_SECTION = GJ_SECTION;
 		proto.GJ_IS_CLIENT = GJ_IS_CLIENT;
@@ -58,7 +58,7 @@ export function bootstrapCommon(appComponent: typeof Vue, store: VuexStore, rout
 	return () => {
 		bootstrapAppTranslations();
 
-		return new Vue({
+		return new VueGlobal({
 			// Needed for our vue plugins to know when it's the root vue instance.
 			gjIsRoot: true,
 			store,

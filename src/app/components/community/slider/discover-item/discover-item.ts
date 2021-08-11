@@ -1,9 +1,8 @@
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import AppCommunityDiscoverWidget from '../../../../../_common/community/discover-widget/discover-widget.vue';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 
-@Component({
+@Options({
 	components: {
 		AppCommunityDiscoverWidget,
 	},
