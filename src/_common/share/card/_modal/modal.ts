@@ -1,4 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
+import { Location } from 'vue-router';
 import { BaseModal } from '../../../modal/base';
 import { Model } from '../../../model/model.service';
 import AppShareCard from '../card';
@@ -12,7 +13,7 @@ import AppShareCardTile from '../_tile/tile.vue';
 })
 export default class AppShareCardModal extends BaseModal {
 	@Prop({ required: true, type: Model }) model!: Model;
-	@Prop({ required: true, type: String }) url!: string;
+	@Prop({ required: true, type: Location }) location!: Location;
 
 	readonly Providers: ShareCardProvider[] = [
 		'facebook',
@@ -25,6 +26,6 @@ export default class AppShareCardModal extends BaseModal {
 	];
 
 	copyLink() {
-		return AppShareCard.copyLink(this.url);
+		return AppShareCard.copyLink(this.$router, this.location);
 	}
 }

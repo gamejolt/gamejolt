@@ -121,6 +121,8 @@ export class ConfigOptionString<T extends string = string> extends ConfigOption<
 	}
 }
 
+export const configShareCard = new ConfigOptionBoolean('web_share_card', true);
+
 export const configHasAutocomplete = new ConfigOptionBoolean('has_search_autocomplete', true, {
 	conditions: { join: true },
 });

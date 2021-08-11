@@ -180,3 +180,7 @@ export function enforceLocation(route: Route, params: any, query: any = {}) {
 		}
 	}
 }
+
+export function getShareableLink(router: VueRouter, location: Location) {
+	return Environment.baseUrl + router.resolve(location).href.replace(/^#/, '');
+}

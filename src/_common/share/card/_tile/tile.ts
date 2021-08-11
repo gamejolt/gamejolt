@@ -1,5 +1,8 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { Location } from 'vue-router';
+import { getShareableLink } from '../../../../utils/router';
+import { Community } from '../../../community/community.model';
 import { FiresidePost } from '../../../fireside/post/post-model';
 import { Model } from '../../../model/model.service';
 import { Navigate } from '../../../navigate/navigate.service';
@@ -17,9 +20,13 @@ export type ShareCardProvider =
 @Component({})
 export default class AppShareCardTile extends Vue {
 	@Prop({ required: true, type: Model }) model!: Model;
-	@Prop({ required: true, type: String }) url!: string;
+	@Prop({ required: true, type: Location }) location!: Location;
 	@Prop({ required: true, type: String }) provider!: ShareCardProvider;
 	@Prop({ required: false, type: Boolean, default: false }) dense!: boolean;
+
+	get url() {
+		return getShareableLink(this.$router, this.location);
+	}
 
 	get icon() {
 		switch (this.provider) {
@@ -79,6 +86,8 @@ export default class AppShareCardTile extends Vue {
 
 		if (this.model instanceof FiresidePost) {
 			subject = 'post';
+		} else if (this.model instanceof Community) {
+			subject = 'community';
 		}
 
 		// Check out this awesome thing on Game Jolt!
@@ -141,7 +150,7 @@ export default class AppShareCardTile extends Vue {
 
 			default:
 				// If we don't have support for a link for some reason, just copy it.
-				AppShareCard.copyLink(this.url);
+				AppShareCard.copyLink(this.$router, this.location);
 				return;
 		}
 
@@ -160,7 +169,7 @@ export default class AppShareCardTile extends Vue {
 		if (inNewWindow) {
 			Navigate.newWindow(providerLink);
 		} else {
-			Navigate.goto(providerLink);
+			Navigate.gotoExternal(providerLink);
 		}
 	}
 }

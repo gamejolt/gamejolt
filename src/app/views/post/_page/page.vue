@@ -188,8 +188,8 @@
 					@sticker="scrollToStickers()"
 				/>
 
-				<div class="-share">
-					<app-share-card :model="post" :url="post.url" />
+				<div v-if="useShareCard" class="-share">
+					<app-share-card :model="post" :location="post.routeLocation" />
 				</div>
 
 				<div v-if="Screen.isMobile">

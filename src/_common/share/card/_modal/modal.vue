@@ -22,7 +22,7 @@
 						:key="i"
 						class="-tile"
 						:model="model"
-						:url="url"
+						:location="location"
 						:provider="i"
 					/>
 				</template>
