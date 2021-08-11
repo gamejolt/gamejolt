@@ -1,6 +1,5 @@
-// TODO(vue3)
-declare module 'vue/types/vue' {
-	interface Vue {
+declare module '@vue/runtime-core' {
+	interface ComponentCustomProperties {
 		$gettext: (msgid: string) => string;
 		$pgettext: (context: string, msgid: string) => string;
 		$ngettext: (msgid: string, plural: string, n: number) => string;

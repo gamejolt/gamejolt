@@ -6,6 +6,7 @@ import './typings/shaka.d.ts';
 import './typings/tooltip.d.ts';
 import './typings/translate.d.ts';
 import './typings/vue-shims.d.ts';
+import './typings/vuex.d.ts';
 import './typings/webpack.d.ts';
 
 declare global {
