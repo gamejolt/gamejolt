@@ -1,4 +1,4 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { arrayChunk } from '../../utils/array';
 import { findRequiredVueParent } from '../../utils/vue';
 import { date as dateFilter } from '../filters/date';
@@ -7,17 +7,24 @@ import AppDatepicker from './datepicker.vue';
 
 @Options({})
 export default class AppDatepickerDay extends Vue {
-	@Prop(Date) value!: Date;
+	@Prop(Date) modelValue!: Date;
 
 	parent: AppDatepickerTS = null as any;
 
+	@Emit('update:modelValue')
+	emitUpdate(_modelValue: Date) {}
+
+	@Emit('selected')
+	emitSelected(_date: Date) {}
+
 	get title() {
-		return dateFilter(this.value, this.parent.formatDayTitle);
+		return dateFilter(this.modelValue, this.parent.formatDayTitle);
 	}
 
 	get labels() {
 		const days = this.getDays();
-		const labels = new Array(7);
+		const labels = [];
+
 		for (let i = 0; i < 7; i++) {
 			labels[i] = {
 				abbr: dateFilter(days[i].date, this.parent.formatDayHeader),
@@ -37,8 +44,8 @@ export default class AppDatepickerDay extends Vue {
 	}
 
 	private getDays() {
-		const year = this.value.getFullYear(),
-			month = this.value.getMonth(),
+		const year = this.modelValue.getFullYear(),
+			month = this.modelValue.getMonth(),
 			firstDayOfMonth = new Date(year, month, 1),
 			firstDate = new Date(firstDayOfMonth);
 
@@ -68,14 +75,14 @@ export default class AppDatepickerDay extends Vue {
 	}
 
 	move(direction: number) {
-		const newValue = new Date(this.value);
+		const newValue = new Date(this.modelValue);
 		newValue.setMonth(newValue.getMonth() + direction);
-		this.$emit('input', newValue);
+		this.emitUpdate(newValue);
 	}
 
 	select(date: Date) {
-		const newValue = new Date(this.value);
+		const newValue = new Date(this.modelValue);
 		newValue.setMonth(date.getMonth(), date.getDate());
-		this.$emit('selected', newValue);
+		this.emitSelected(newValue);
 	}
 }

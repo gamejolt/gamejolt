@@ -1,6 +1,8 @@
+<script lang="ts" src="./media"></script>
+
 <template>
 	<app-loading-fade :is-loading="isLoading">
-		<app-form name="postMediaForm" ref="form">
+		<app-form ref="form" name="postMediaForm">
 			<app-form-group
 				name="image"
 				class="sans-margin-bottom"
@@ -40,11 +42,11 @@
 						</a>
 
 						<draggable
-							style="display: inline-flex"
 							v-model="internalItems"
+							style="display: inline-flex"
 							:options="{ delay: 100, delayOnTouchOnly: true }"
 						>
-							<div class="-item" v-for="item of internalItems" :key="item.id">
+							<div v-for="item of internalItems" :key="item.id" class="-item">
 								<app-form-post-media-item :item="item" @remove="emitRemove(item)" />
 							</div>
 						</draggable>
@@ -52,8 +54,8 @@
 				</app-scroll-scroller>
 
 				<app-form-control-upload
-					class="-upload-input"
 					ref="upload"
+					class="-upload-input"
 					:rules="{
 						filesize: maxFilesize,
 						max_img_dimensions: [maxWidth, maxHeight],
@@ -113,5 +115,3 @@
 .-upload-input
 	display: none
 </style>
-
-<script lang="ts" src="./media"></script>

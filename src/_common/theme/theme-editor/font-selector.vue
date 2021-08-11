@@ -1,22 +1,24 @@
+<script lang="ts" src="./font-selector"></script>
+
 <template>
 	<div>
 		<app-theme-editor-font-selector-style-injector :font-definitions="fontDefinitions" />
 
 		<div class="font-selector" :class="{ 'is-open': isSelectorShowing }">
 			<div class="font-selector-selected" @click="toggleSelector()">
-				<span class="font-selector-cancel" v-if="isSelectorShowing">
+				<span v-if="isSelectorShowing" class="font-selector-cancel">
 					<translate>cancel</translate>
 				</span>
 
 				<a
-					class="font-selector-clear"
 					v-if="!isSelectorShowing && selectedFont"
+					class="font-selector-clear"
 					@click="clearSelectedFont()"
 				>
 					<translate>clear</translate>
 				</a>
 
-				<div class="font-selector-selected-label" v-if="!selectedFont">
+				<div v-if="!selectedFont" class="font-selector-selected-label">
 					<translate>Choose a font...</translate>
 				</div>
 				<div
@@ -28,21 +30,21 @@
 				</div>
 			</div>
 
-			<div class="font-selector-filter" v-if="isSelectorShowing">
+			<div v-if="isSelectorShowing" class="font-selector-filter">
 				<input
+					v-model="fontListFilter"
 					type="text"
 					class="form-control"
-					v-model="fontListFilter"
 					ng-change="updateFontDefinitions()"
 					:placeholder="$gettext(`Filter fonts`)"
 				/>
 			</div>
 
-			<ul class="font-selector-font-list" v-if="isSelectorShowing" ref="list">
+			<ul v-if="isSelectorShowing" ref="list" class="font-selector-font-list">
 				<li
-					class="font-selector-font-list-item"
 					v-for="font of fontListFiltered"
 					:key="font.family"
+					class="font-selector-font-list-item"
 					:style="{ 'font-family': `'${font.family}::Selector'` }"
 					@click="selectFont(font)"
 				>
@@ -54,8 +56,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .font-selector
 	&-font-list
@@ -65,7 +67,8 @@
 		overflow-y: auto
 		overflow-x: hidden
 
-	&-font-list-item, &-selected
+	&-font-list-item
+	&-selected
 		margin: 0
 		padding: 8px 15px
 		list-style: none
@@ -94,5 +97,3 @@
 		change-bg('bg-subtle')
 		padding: 10px 15px
 </style>
-
-<script lang="ts" src="./font-selector"></script>

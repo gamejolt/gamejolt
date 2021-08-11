@@ -1,34 +1,38 @@
+<script lang="ts" src="./add-to-popover"></script>
+
 <template>
 	<div class="add-to-playlist-popover">
-		<app-loading :centered="true" v-if="isLoading" />
+		<app-loading v-if="isLoading" :centered="true" />
 		<template v-else>
 			<div class="list-group list-group-dark">
 				<a class="list-group-item has-icon" @click="addToNewPlaylist">
 					<app-jolticon icon="add" />
 					<translate>library.playlists.add_to.new_playlist_button</translate>
 				</a>
-				<div class="list-group-item" v-if="playlists.length">
+				<div v-if="playlists.length" class="list-group-item">
 					<input
+						v-model="filterQuery"
+						v-app-focus-when
 						type="search"
 						class="form-control"
 						:placeholder="$gettext('library.playlists.add_to.filter_placeholder')"
-						v-app-focus-when
-						v-model="filterQuery"
 						keydown.esc.stop="close"
 					/>
 				</div>
 			</div>
 			<div
-				class="list-group list-group-dark thin add-to-playlist-popover-playlists"
 				v-if="playlists.length"
+				class="list-group list-group-dark thin add-to-playlist-popover-playlists"
 			>
 				<a
-					class="list-group-item has-icon"
-					:class="
-						playlistsWithGame.indexOf(playlist.id) === -1 ? 'playlist-no-game' : 'playlist-has-game'
-					"
 					v-for="playlist of filteredPlaylists"
 					:key="playlist.id"
+					class="list-group-item has-icon"
+					:class="
+						playlistsWithGame.indexOf(playlist.id) === -1
+							? 'playlist-no-game'
+							: 'playlist-has-game'
+					"
 					@click="selectPlaylist(playlist)"
 				>
 					<app-jolticon icon="playlist" />
@@ -43,8 +47,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .add-to-playlist-popover
 	.loading
@@ -83,5 +87,3 @@
 						theme-prop('color', 'notice')
 						display: inline-block
 </style>
-
-<script lang="ts" src="./add-to-popover"></script>

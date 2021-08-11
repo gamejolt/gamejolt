@@ -1,10 +1,12 @@
+<script lang="ts" src="./partner-terms"></script>
+
 <template>
 	<fieldset>
 		<legend>
 			<span
 				v-if="hasSignedPartnerAgreement"
-				class="pull-right done-icon"
 				v-app-tooltip="$gettext(`You have completed this section.`)"
+				class="pull-right done-icon"
 			>
 				<app-jolticon icon="check" big />
 			</span>
@@ -15,11 +17,12 @@
 			<!--
 				If they accepted a different agreement, then show that they can accept this one too.
 			-->
-			<div class="form-group" v-if="hasSignedSomeAgreement && !showAgreement">
+			<div v-if="hasSignedSomeAgreement && !showAgreement" class="form-group">
 				<div class="small">
 					<div>
 						<translate>
-							If you would to be a Game Jolt partner, you must accept the Partner Agreement.
+							If you would to be a Game Jolt partner, you must accept the Partner
+							Agreement.
 						</translate>
 					</div>
 				</div>
@@ -30,18 +33,19 @@
 				</app-button>
 			</div>
 
-			<div class="form-group" v-if="!hasSignedSomeAgreement || showAgreement">
+			<div v-if="!hasSignedSomeAgreement || showAgreement" class="form-group">
 				<div class="tos-scroller">
-					<div v-html="termsTemplate"></div>
+					<div v-html="termsTemplate" />
 				</div>
 				<br />
 
 				<div class="checkbox">
 					<label>
-						<input type="checkbox" v-model="checked" />
+						<input v-model="checked" type="checkbox" />
 						<translate>
-							By checking this box and clicking the button below marked "I Agree," I agree that I
-							have read, understand, and agree to be bound by the terms of this agreement.
+							By checking this box and clicking the button below marked "I Agree," I
+							agree that I have read, understand, and agree to be bound by the terms
+							of this agreement.
 						</translate>
 					</label>
 				</div>
@@ -53,7 +57,7 @@
 			</div>
 		</div>
 
-		<div class="form-group" v-if="hasSignedPartnerAgreement">
+		<div v-if="hasSignedPartnerAgreement" class="form-group">
 			<p class="small">
 				<translate
 					:translate-params="{
@@ -70,5 +74,3 @@
 		</div>
 	</fieldset>
 </template>
-
-<script lang="ts" src="./partner-terms"></script>

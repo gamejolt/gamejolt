@@ -1,3 +1,5 @@
+<script lang="ts" src="./widget"></script>
+
 <template>
 	<div class="row">
 		<div class="col-sm-10 col-md-5 col-lg-6">
@@ -12,15 +14,15 @@
 
 				<p>
 					<translate>
-						For purchases made by Game Jolt members, your game will automatically appear in their
-						Game Library.
+						For purchases made by Game Jolt members, your game will automatically appear
+						in their Game Library.
 					</translate>
 				</p>
 				<p>
 					<translate>
-						Purchases made by folks who aren't members or signed into Game Jolt will be emailed a
-						link to a game key page; all future updates you make to your games will be retrievable
-						through this same page.
+						Purchases made by folks who aren't members or signed into Game Jolt will be
+						emailed a link to a game key page; all future updates you make to your games
+						will be retrievable through this same page.
 					</translate>
 				</p>
 			</div>
@@ -35,13 +37,13 @@
 					<div class="col-xs-9">
 						<div class="radio">
 							<label>
-								<input type="radio" v-model="theme" value="" />
+								<input v-model="theme" type="radio" value="" />
 								<translate>Dark</translate>
 							</label>
 						</div>
 						<div class="radio">
 							<label>
-								<input type="radio" v-model="theme" value="light" />
+								<input v-model="theme" type="radio" value="light" />
 								<translate>Light</translate>
 							</label>
 						</div>
@@ -53,7 +55,7 @@
 				<translate>Embed Code</translate>
 			</h3>
 
-			<textarea class="form-control" rows="3">{{ widgetCode }}</textarea>
+			<textarea v-model="widgetCode" class="form-control" rows="3" readonly />
 		</div>
 		<div class="col-sm-10 col-md-7 col-lg-6">
 			<h3 :class="{ 'section-header': Screen.isDesktop }">
@@ -61,10 +63,8 @@
 			</h3>
 
 			<div class="full-bleed-xs">
-				<iframe :src="widgetUrl" frameborder="0" style="width: 100%" height="245"></iframe>
+				<iframe :src="widgetUrl" frameborder="0" style="width: 100%" height="245" />
 			</div>
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./widget"></script>

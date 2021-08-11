@@ -4,8 +4,8 @@
 	<div v-if="validChannels.length">
 		<span v-for="channel of validChannels" :key="channel.id">
 			<app-pill
-				:class="{ active: value && value.id === channel.id }"
-				@click="emitInput(channel)"
+				:class="{ active: modelValue && modelValue.id === channel.id }"
+				@click="emitUpdate(channel)"
 			>
 				{{ channel.displayTitle }}
 			</app-pill>

@@ -1,3 +1,5 @@
+<script lang="ts" src="./list"></script>
+
 <template>
 	<div>
 		<h2 class="section-header">
@@ -7,7 +9,7 @@
 		<div class="row">
 			<div class="col-md-10 col-lg-9">
 				<div class="form-group">
-					<select class="form-control" v-model="selectedTable" @change="changeTable">
+					<select v-model="selectedTable" class="form-control" @change="changeTable">
 						<option
 							v-for="table of scoreTables"
 							:key="table.id"
@@ -21,16 +23,16 @@
 			</div>
 		</div>
 
-		<div class="page-help" key="page-help">
+		<div key="page-help" class="page-help">
 			<p>
 				<translate>
-					These are all of the scores that have been submitted to this scoreboard by users and
-					guests (if allowed).
+					These are all of the scores that have been submitted to this scoreboard by users
+					and guests (if allowed).
 				</translate>
 			</p>
 		</div>
 
-		<div class="alert alert-notice anim-fade-in" key="no-scores" v-if="!scores.length">
+		<div v-if="!scores.length" key="no-scores" class="alert alert-notice anim-fade-in">
 			<p><translate>This table lacks scores, alas.</translate></p>
 		</div>
 
@@ -42,5 +44,3 @@
 		/>
 	</div>
 </template>
-
-<script lang="ts" src="./list"></script>

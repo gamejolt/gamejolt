@@ -1,4 +1,4 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import FormThemeEditorImage from './image-form.vue';
 
 @Options({
@@ -7,15 +7,23 @@ import FormThemeEditorImage from './image-form.vue';
 	},
 })
 export default class AppThemeEditorImage extends Vue {
-	@Prop(String) type!: string;
-	@Prop(Number) parentId!: number;
-	@Prop(Object) value!: any;
+	@Prop({ type: String, required: true })
+	type!: string;
+
+	@Prop({ type: Number, required: true })
+	parentId!: number;
+
+	@Prop({ type: Object, required: true })
+	modelValue!: any;
+
+	@Emit('update:modelValue')
+	emitUpdate(_modelValue: any) {}
 
 	onImageAdded(_model: any, response: any) {
-		this.$emit('input', response.mediaItem);
+		this.emitUpdate(response.mediaItem);
 	}
 
 	clear() {
-		this.$emit('input', undefined);
+		this.emitUpdate(undefined);
 	}
 }

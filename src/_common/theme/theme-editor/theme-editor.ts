@@ -77,7 +77,7 @@ export default class AppThemeEditor extends Vue {
 		}
 	}
 
-	updateField(field: string, content: string) {
+	updateField(field: string, content?: string) {
 		this.theme[field] = content;
 		this.refresh();
 	}

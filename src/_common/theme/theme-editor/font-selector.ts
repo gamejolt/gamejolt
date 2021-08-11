@@ -1,5 +1,5 @@
 import { nextTick } from 'vue';
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Api } from '../../api/api.service';
 import { AppThemeEditorFontSelectorStyleInjector } from './font-selector-style-injector';
 
@@ -16,7 +16,8 @@ interface FontDefinition {
 	},
 })
 export default class AppThemeEditorFontSelector extends Vue {
-	@Prop(Object) value?: FontDefinition;
+	@Prop({ type: Object, required: false })
+	modelValue?: FontDefinition;
 
 	declare $refs: {
 		list: HTMLElement;
@@ -33,10 +34,13 @@ export default class AppThemeEditorFontSelector extends Vue {
 	fontDefinitions = '';
 	loadedFonts: string[] = [];
 
+	@Emit('update:modelValue')
+	emitUpdate(_font?: FontDefinition) {}
+
 	// Copy to our value when the model changes.
-	@Watch('value', { immediate: true })
+	@Watch('modelValue', { immediate: true })
 	onValueChanged() {
-		this.selectedFont = this.value || null;
+		this.selectedFont = this.modelValue || null;
 		this.updateFontDefinitions();
 	}
 
@@ -102,7 +106,7 @@ export default class AppThemeEditorFontSelector extends Vue {
 	}
 
 	private updateValue(font?: FontDefinition) {
-		this.$emit('input', font);
+		this.emitUpdate(font);
 	}
 
 	private async getFontList(): Promise<FontDefinition[]> {
@@ -133,7 +137,7 @@ export default class AppThemeEditorFontSelector extends Vue {
 	}
 
 	updateFontDefinitions() {
-		let newDefinitions: string[] = [];
+		const newDefinitions: string[] = [];
 
 		// Make sure our selected font's definition is loaded so it's styled correctly.
 		if (this.selectedFont) {

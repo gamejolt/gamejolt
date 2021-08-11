@@ -1,17 +1,19 @@
+<script lang="ts" src="./developer-terms"></script>
+
 <template>
 	<fieldset>
 		<legend>
 			<span
 				v-if="hasSignedDeveloperAgreement"
-				class="pull-right done-icon"
 				v-app-tooltip="$gettext(`You have completed this section.`)"
+				class="pull-right done-icon"
 			>
 				<app-jolticon icon="check" big />
 			</span>
 			<translate>Developer Distribution Agreement</translate>
 		</legend>
 
-		<div class="form-group" v-if="hasSignedDeveloperAgreement">
+		<div v-if="hasSignedDeveloperAgreement" class="form-group">
 			<p class="small">
 				<translate
 					:translate-params="{
@@ -30,12 +32,12 @@
 			<!--
 				If they accepted a different agreement, then show that they can accept this one too.
 			-->
-			<div class="form-group" v-if="hasSignedSomeAgreement">
+			<div v-if="hasSignedSomeAgreement" class="form-group">
 				<div class="small">
 					<div>
 						<translate>
-							If you would like to sell games on the Marketplace, you must accept the Distribution
-							Agreement.
+							If you would like to sell games on the Marketplace, you must accept the
+							Distribution Agreement.
 						</translate>
 					</div>
 					<div>
@@ -52,11 +54,11 @@
 			</div>
 		</div>
 
-		<div class="form-group" v-if="hasSignedOldDeveloperAgreement">
+		<div v-if="hasSignedOldDeveloperAgreement" class="form-group">
 			<div class="alert alert-notice">
 				<translate>
-					You have signed an older version of the Distribution Agreement. To be able to include your
-					games in the Partner Program you must accept the new agreement.
+					You have signed an older version of the Distribution Agreement. To be able to
+					include your games in the Partner Program you must accept the new agreement.
 				</translate>
 				<router-link :to="{ name: 'landing.partners' }">
 					<translate>Learn more about the Partner Program</translate>
@@ -70,30 +72,32 @@
 			<!--
 				Show a diff between the terms.
 			-->
-			<div class="alert" v-if="showAgreement">
+			<div v-if="showAgreement" class="alert">
 				<p>
 					<translate>We publicly track and version all of our terms.</translate>
 					<app-link-external :href="agreementDiffLink">
 						<translate>
-							See the "diff" between the version you signed previously and the current version.
+							See the "diff" between the version you signed previously and the current
+							version.
 						</translate>
 					</app-link-external>
 				</p>
 			</div>
 		</div>
 
-		<div class="form-group" v-if="shouldShowAgreement">
+		<div v-if="shouldShowAgreement" class="form-group">
 			<div class="tos-scroller">
-				<div v-html="termsTemplate"></div>
+				<div v-html="termsTemplate" />
 			</div>
 			<br />
 
 			<div class="checkbox">
 				<label>
-					<input type="checkbox" v-model="checked" />
+					<input v-model="checked" type="checkbox" />
 					<translate>
-						By checking this box and clicking the button below marked "I Agree," I agree that I have
-						read, understand, and agree to be bound by the terms of this agreement.
+						By checking this box and clicking the button below marked "I Agree," I agree
+						that I have read, understand, and agree to be bound by the terms of this
+						agreement.
 					</translate>
 				</label>
 			</div>
@@ -105,5 +109,3 @@
 		</div>
 	</fieldset>
 </template>
-
-<script lang="ts" src="./developer-terms"></script>

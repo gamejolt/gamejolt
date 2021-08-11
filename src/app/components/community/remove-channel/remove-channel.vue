@@ -1,3 +1,5 @@
+<script lang="ts" src="./remove-channel"></script>
+
 <template>
 	<div>
 		<p v-translate>
@@ -11,11 +13,11 @@
 		</p>
 
 		<template v-if="!moving">
-			<app-button primary @click="moving = true" icon="arrow-forward">
+			<app-button primary icon="arrow-forward" @click="moving = true">
 				<translate>Move</translate>
 			</app-button>
 
-			<app-button primary @click="onEject" icon="remove">
+			<app-button primary icon="remove" @click="onEject">
 				<translate>Eject</translate>
 			</app-button>
 		</template>
@@ -23,13 +25,18 @@
 
 		<app-expand :when="moving">
 			<app-community-channel-select
-				class="-channel-select"
 				v-model="selectedChannel"
+				class="-channel-select"
 				:channels="channels"
 			/>
 
 			<div class="-move-controls">
-				<app-button primary :disabled="!hasSelectedChannel" @click="onMove" icon="arrow-forward">
+				<app-button
+					primary
+					:disabled="!hasSelectedChannel"
+					icon="arrow-forward"
+					@click="onMove"
+				>
 					<translate>Move</translate>
 				</app-button>
 				<a @click="moving = false">
@@ -39,17 +46,21 @@
 		</app-expand>
 
 		<p class="help-block">
-			<translate>Removing a channel is irreversible. Once it's gone, it's gone for good.</translate>
+			<translate>
+				Removing a channel is irreversible. Once it's gone, it's gone for good.
+			</translate>
 			<template v-if="moving">
 				<br />
-				<translate>It might take a few moments for the posts to show in the new channel.</translate>
+				<translate>
+					It might take a few moments for the posts to show in the new channel.
+				</translate>
 			</template>
 		</p>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
 
 .-where-to
 	display: inline-block
@@ -68,7 +79,4 @@
 
 	a
 		color: var(--theme-fg)
-
 </style>
-
-<script lang="ts" src="./remove-channel"></script>

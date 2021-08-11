@@ -21,5 +21,3 @@
 		</ul>
 	</div>
 </template>
-
-<style lang="stylus" scoped></style>

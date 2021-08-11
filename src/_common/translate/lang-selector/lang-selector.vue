@@ -1,5 +1,7 @@
+<script lang="ts" src="./lang-selector"></script>
+
 <template>
-	<select class="translate-lang-selector form-control" v-model="lang" @change="onChange">
+	<select v-model="lang" class="translate-lang-selector form-control" @change="onChange">
 		<option v-for="langData of langs" :key="langData.code" :value="langData.code">
 			{{ langData.label }}
 		</option>
@@ -7,8 +9,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .translate-lang-selector
 	theme-prop('color', 'light')
@@ -17,12 +19,11 @@
 	width: auto
 	background-color: transparent
 
-	&:focus, &:active
+	&:focus
+	&:active
 		border-color: $white
 
 	@media $media-sm-up
 		display: inline-block
 		margin: 0
 </style>
-
-<script lang="ts" src="./lang-selector"></script>

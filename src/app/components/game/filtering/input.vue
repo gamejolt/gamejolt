@@ -1,19 +1,21 @@
+<script lang="ts" src="./input"></script>
+
 <template>
 	<form class="game-filtering-input" @submit.prevent="sendSearch">
 		<app-jolticon icon="filter" />
 
 		<transition>
-			<a class="anim-fade-enter anim-fade-leave" @click="clear" v-if="query">
+			<a v-if="query" class="anim-fade-enter anim-fade-leave" @click="clear">
 				<app-jolticon icon="remove" />
 			</a>
 		</transition>
 
 		<input
 			ref="input"
+			v-model="query"
 			type="search"
 			class="form-control"
 			:placeholder="$gettext('games.filtering.input_placeholder')"
-			v-model="query"
 			@blur="sendSearch"
 			@keydown.esc.stop.prevent="blur"
 		/>
@@ -21,8 +23,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .game-filtering-input
 	position: relative
@@ -46,5 +48,3 @@
 		&:hover
 			color: $black
 </style>
-
-<script lang="ts" src="./input"></script>

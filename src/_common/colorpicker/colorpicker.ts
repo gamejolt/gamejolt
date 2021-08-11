@@ -1,5 +1,5 @@
 import { Sketch } from 'vue-color';
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Popper } from '../popper/popper.service';
 import AppPopper from '../popper/popper.vue';
 
@@ -10,15 +10,18 @@ import AppPopper from '../popper/popper.vue';
 	},
 })
 export default class AppColorpicker extends Vue {
-	@Prop(String)
-	value!: string;
+	@Prop({ type: String, required: true })
+	modelValue!: string;
 
 	colors: any = {};
 
-	@Watch('value', { immediate: true })
+	@Emit('update:modelValue')
+	emitUpdate(_modelValue: string) {}
+
+	@Watch('modelValue', { immediate: true })
 	onValueChanged() {
 		this.colors = {
-			hex: this.value,
+			hex: this.modelValue,
 		};
 	}
 
@@ -27,13 +30,13 @@ export default class AppColorpicker extends Vue {
 	}
 
 	accept() {
-		this.$emit('input', this.colors.hex);
+		this.emitUpdate(this.colors.hex);
 		Popper.hideAll();
 	}
 
 	cancel() {
 		this.colors = {
-			hex: this.value,
+			hex: this.modelValue,
 		};
 		Popper.hideAll();
 	}

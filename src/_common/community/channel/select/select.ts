@@ -9,13 +9,13 @@ import { CommunityChannel } from '../channel.model';
 })
 export default class AppCommunityChannelSelect extends Vue {
 	@Prop(CommunityChannel)
-	value?: CommunityChannel;
+	modelValue?: CommunityChannel;
 
 	@Prop(Array)
 	channels!: CommunityChannel[];
 
-	@Emit('input')
-	emitInput(_value: CommunityChannel) {}
+	@Emit('update:modelValue')
+	emitUpdate(_modelValue: CommunityChannel) {}
 
 	get validChannels() {
 		return this.channels.filter(i => i.canPost);
