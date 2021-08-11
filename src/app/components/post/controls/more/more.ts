@@ -2,6 +2,7 @@ import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { Mutation } from 'vuex-class';
 import { arrayRemove } from '../../../../../utils/array';
+import { trackShareLink } from '../../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../../_common/api/api.service';
 import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
@@ -178,6 +179,7 @@ export default class AppPostControlsMore extends Vue {
 
 	copyShareUrl() {
 		Clipboard.copy(this.post.url);
+		trackShareLink({ url: this.post.url });
 	}
 
 	report() {

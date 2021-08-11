@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import { Component, Inject } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { getShareableLink } from '../../../../../../utils/router';
+import { trackShareLink } from '../../../../../../_common/analytics/analytics.service';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
 import {
 	CommentStoreManager,
@@ -8,7 +10,6 @@ import {
 	getCommentStore,
 } from '../../../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../../../_common/comment/modal/modal.service';
-import { Environment } from '../../../../../../_common/environment/environment.service';
 import { number } from '../../../../../../_common/filters/number';
 import AppPopper from '../../../../../../_common/popper/popper.vue';
 import { ReportModal } from '../../../../../../_common/report/modal/modal.service';
@@ -69,7 +70,9 @@ export default class AppDiscoverGamesViewNav extends Vue {
 	}
 
 	copyShareUrl() {
-		Clipboard.copy(Environment.baseUrl + this.$router.resolve(this.game.routeLocation).href);
+		const url = getShareableLink(this.$router, this.game.routeLocation);
+		Clipboard.copy(url);
+		trackShareLink({ url });
 	}
 
 	report() {

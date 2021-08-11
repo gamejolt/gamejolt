@@ -5,7 +5,8 @@ import {
 	AppPromotionStoreKey,
 	setAppPromotionCohort,
 } from '../../../../utils/mobile-app';
-import { enforceLocation } from '../../../../utils/router';
+import { enforceLocation, getShareableLink } from '../../../../utils/router';
+import { trackShareLink } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
 import { Collaborator } from '../../../../_common/collaborator/collaborator.model';
@@ -222,8 +223,8 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	}
 
 	copyShareUrl() {
-		Clipboard.copy(
-			Environment.baseUrl + this.$router.resolve(this.routeStore.community.routeLocation).href
-		);
+		const url = getShareableLink(this.$router, this.community.routeLocation);
+		Clipboard.copy(url);
+		trackShareLink({ url });
 	}
 }

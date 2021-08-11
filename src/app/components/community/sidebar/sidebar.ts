@@ -3,7 +3,10 @@ import Component from 'vue-class-component';
 import { Prop, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { getShareableLink } from '../../../../utils/router';
-import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
+import {
+	trackExperimentEngagement,
+	trackShareLink,
+} from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
 import { Community } from '../../../../_common/community/community.model';
@@ -149,6 +152,9 @@ export default class AppCommunitySidebar extends Vue {
 
 	copyShareUrl() {
 		Clipboard.copy(this.shareUrl);
+		trackShareLink({
+			url: this.shareUrl,
+		});
 	}
 
 	toggleCollaboratorList() {

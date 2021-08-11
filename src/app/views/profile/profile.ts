@@ -1,5 +1,6 @@
 import { Component, InjectReactive } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { trackShareLink } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
 import { BlockModal } from '../../../_common/block/modal/modal.service';
 import { Clipboard } from '../../../_common/clipboard/clipboard-service';
@@ -191,7 +192,11 @@ export default class RouteProfile extends BaseRouteComponent {
 		if (!this.user) {
 			return;
 		}
-		Clipboard.copy(Environment.baseUrl + this.user.url);
+		const url = Environment.baseUrl + this.user.url;
+		Clipboard.copy(url);
+		trackShareLink({
+			url,
+		});
 	}
 
 	report() {

@@ -1,7 +1,9 @@
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
+import { getShareableLink } from '../../../../../utils/router';
 import { propOptional } from '../../../../../utils/vue';
+import { trackShareLink } from '../../../../../_common/analytics/analytics.service';
 import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
 import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/join-widget.vue';
 import AppCommunityVerifiedTick from '../../../../../_common/community/verified-tick/verified-tick.vue';
@@ -107,9 +109,9 @@ export default class AppMobileHeader extends Vue {
 	}
 
 	copyShareUrl() {
-		Clipboard.copy(
-			Environment.baseUrl + this.$router.resolve(this.community.routeLocation).href
-		);
+		const url = getShareableLink(this.$router, this.community.routeLocation);
+		Clipboard.copy(url);
+		trackShareLink({ url });
 
 		Popper.hideAll();
 	}
