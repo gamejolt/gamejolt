@@ -115,6 +115,8 @@
 					</div>
 
 					<div slot="right">
+						<app-share-card v-if="useShareCard" :model="user" :url="shareUrl" />
+
 						<app-user-known-followers
 							v-if="shouldShowKnownFollowers"
 							:users="knownFollowers"
@@ -285,9 +287,9 @@
 
 							<div class="-trophies">
 								<app-trophy-thumbnail
-									class="-trophy"
 									v-for="trophy of previewTrophies"
 									:key="trophy.key"
+									class="-trophy"
 									:trophy="trophy.trophy"
 									no-difficulty
 									no-highlight
@@ -296,9 +298,9 @@
 
 								<router-link
 									v-if="shouldShowMoreTrophies"
+									v-app-tooltip="$gettext(`View All Trophies...`)"
 									class="-trophies-more -trophy link-unstyled"
 									:to="{ name: 'profile.trophies' }"
-									v-app-tooltip="$gettext(`View All Trophies...`)"
 								>
 									+{{ moreTrophyCount }}
 								</router-link>

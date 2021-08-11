@@ -4,6 +4,7 @@ import { Community } from '../../../community/community.model';
 import { FiresidePost } from '../../../fireside/post/post-model';
 import { Model } from '../../../model/model.service';
 import { Navigate } from '../../../navigate/navigate.service';
+import { User } from '../../../user/user.model';
 import AppShareCard from '../card';
 
 export type ShareCardProvider =
@@ -82,6 +83,8 @@ export default class AppShareCardTile extends Vue {
 			subject = 'post';
 		} else if (this.model instanceof Community) {
 			subject = 'community';
+		} else if (this.model instanceof User) {
+			subject = 'user';
 		}
 
 		// Check out this awesome thing on Game Jolt!

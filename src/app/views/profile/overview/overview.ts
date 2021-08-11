@@ -1,5 +1,6 @@
 import { Component, Inject, InjectReactive } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
+import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import AppCommentAddButton from '../../../../_common/comment/add-button/add-button.vue';
 import { Comment } from '../../../../_common/comment/comment-model';
@@ -19,7 +20,9 @@ import {
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
 import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/verified-tick.vue';
+import { configShareCard } from '../../../../_common/config/config.service';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
+import { Environment } from '../../../../_common/environment/environment.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
 import { number } from '../../../../_common/filters/number';
@@ -30,6 +33,7 @@ import { LinkedAccount, Provider } from '../../../../_common/linked-account/link
 import { Meta } from '../../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
+import AppShareCard from '../../../../_common/share/card/card.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
@@ -62,6 +66,7 @@ import { RouteStore, RouteStoreModule } from '../profile.store';
 		AppCommunityVerifiedTick,
 		AppTrophyThumbnail,
 		AppFiresideBadge,
+		AppShareCard,
 	},
 	directives: {
 		AppTooltip,
@@ -157,6 +162,18 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 			return `${this.user.display_name} (@${this.user.username})`;
 		}
 		return null;
+	}
+
+	get useShareCard() {
+		return configShareCard.value;
+	}
+
+	get shareUrl() {
+		if (!this.user) {
+			return Environment.baseUrl;
+		}
+
+		return Environment.baseUrl + this.user.url;
 	}
 
 	get canAddAsFriend() {
@@ -317,6 +334,8 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		Meta.fb.title = this.routeTitle;
 		Meta.twitter = $payload.twitter || {};
 		Meta.twitter.title = this.routeTitle;
+
+		trackExperimentEngagement(configShareCard);
 
 		// Release the CommentStore if there was one left over.
 		this.clearCommentStore();
