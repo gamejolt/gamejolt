@@ -86,11 +86,7 @@
 		</div>
 
 		<div class="-community-end small">
-			<app-share-card
-				v-if="useShareCard"
-				:model="community"
-				:location="community.routeLocation"
-			/>
+			<app-share-card v-if="useShareCard" :model="community" :url="shareUrl" />
 			<app-popper
 				v-else
 				popover-class="fill-darkest"

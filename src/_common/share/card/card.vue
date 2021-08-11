@@ -17,13 +17,7 @@
 
 			<div class="-content-row-lower">
 				<template v-for="i in Providers">
-					<app-share-card-tile
-						:key="i"
-						:model="model"
-						:location="location"
-						:provider="i"
-						dense
-					/>
+					<app-share-card-tile :key="i" :model="model" :url="url" :provider="i" dense />
 				</template>
 
 				<a class="-tile -dense" @click="openShareModal()">
