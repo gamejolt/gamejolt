@@ -37,7 +37,7 @@ import AppShareCard from '../../../../_common/share/card/card.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
-import { User } from '../../../../_common/user/user.model';
+import { unfollowUser, User } from '../../../../_common/user/user.model';
 import { ChatClient, ChatKey, enterChatRoom } from '../../../components/chat/client';
 import AppCommentOverview from '../../../components/comment/overview/overview.vue';
 import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
@@ -457,7 +457,9 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	}
 
 	onClickUnfollow() {
-		this.user?.$unfollow();
+		if (this.user) {
+			unfollowUser(this.user);
+		}
 	}
 
 	async onFriendRequestAccept() {
