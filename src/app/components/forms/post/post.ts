@@ -1,5 +1,6 @@
 import { addWeeks, startOfDay } from 'date-fns';
 import { determine } from 'jstimezonedetect';
+import { nextTick } from 'vue';
 import { Emit, Options, Prop, Watch } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../utils/array';
 import { propOptional } from '../../../../utils/vue';
@@ -478,7 +479,7 @@ export default class FormPost
 
 	async scrollToAdd() {
 		// Wait for the DOM to update
-		await this.$nextTick();
+		await nextTick();
 		// Change our scrolling key so AppScrollWhen will bring the 'Add Community' button inview.
 		this.scrollingKey *= -1;
 	}

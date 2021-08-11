@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../utils/vue';
 import AppLoading from '../loading/loading.vue';
@@ -182,7 +183,7 @@ export default class AppVideo extends Vue {
 		// the video to 0.
 		if (startVolume > 0) {
 			this.player.volume = 0;
-			await this.$nextTick();
+			await nextTick();
 		}
 
 		try {

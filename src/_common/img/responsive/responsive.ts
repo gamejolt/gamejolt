@@ -1,4 +1,4 @@
-import { h } from 'vue';
+import { h, nextTick } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { sleep } from '../../../utils/utils';
 import { Ruler } from '../../ruler/ruler-service';
@@ -27,7 +27,7 @@ export class AppImgResponsive extends Vue {
 		this.resize$ = Screen.resizeChanges.subscribe(() => this.updateSrc());
 
 		// Make sure the view is compiled.
-		await this.$nextTick();
+		await nextTick();
 		this.updateSrc();
 	}
 

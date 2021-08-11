@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
@@ -67,7 +68,7 @@ export default class AppVideoEmbed extends Vue {
 	@Watch('maxVideoWidth')
 	@Watch('maxVideoHeight')
 	async recalculateDimensions() {
-		await this.$nextTick();
+		await nextTick();
 
 		this.width = Ruler.width(
 			this.$el.getElementsByClassName('video-embed-inner')[0] as HTMLElement

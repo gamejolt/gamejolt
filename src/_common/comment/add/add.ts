@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { Emit, Options, Prop } from 'vue-property-decorator';
 import { trackCommentAdd } from '../../analytics/analytics.service';
 import { ContentContext } from '../../content/content-context';
@@ -89,7 +90,7 @@ export default class FormComment
 			}
 
 			// Wait for errors, then clear them.
-			await this.$nextTick();
+			await nextTick();
 			this.$refs.form.clearErrors();
 		}
 	}

@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import AppCardListAdd from '../../../../../../../_common/card/list/add/add.vue';
@@ -111,7 +112,7 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 		// We want to scroll to the top of the item's position when saving
 		// since the form is pretty long. The position may change if they
 		// changed the difficulty level, so we let it compile first.
-		await this.$nextTick();
+		await nextTick();
 		Scroll.to('trophy-container-' + trophy.id);
 	}
 
@@ -122,7 +123,7 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 		// We want to scroll to the top of the item's position when saving since
 		// the form is pretty long. The position may change if they changed the
 		// difficulty level, so we let angular compile first.
-		await this.$nextTick();
+		await nextTick();
 		Scroll.to('trophy-container-' + trophy.id);
 	}
 

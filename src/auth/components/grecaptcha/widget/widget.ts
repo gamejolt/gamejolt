@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
@@ -69,7 +70,7 @@ export default class AppGrecaptchaWidget extends Vue {
 		}
 
 		// Wait one tick to give the captcha element a chance to load in.
-		await this.$nextTick();
+		await nextTick();
 
 		this.widgetId = grecaptcha.render(this.$refs.grecaptcha, {
 			sitekey: Environment.recaptchaSiteKey,

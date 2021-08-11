@@ -2,6 +2,7 @@ import flip from '@popperjs/core/lib/modifiers/flip';
 import hide from '@popperjs/core/lib/modifiers/hide';
 import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow';
 import { createPopper, Instance, Options as PopperOptions } from '@popperjs/core/lib/popper-lite';
+import { nextTick } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propOptional } from '../../utils/vue';
 import { TooltipModel } from './tooltip-model';
@@ -26,7 +27,7 @@ export default class TooltipComponent extends Vue {
 	@Watch('tooltip.placement')
 	async check() {
 		// Wait for the tooltip to be mounted.
-		await this.$nextTick();
+		await nextTick();
 
 		if (!this.tooltip || !this.tooltip.text || !this.tooltip.isActive) {
 			return this.scheduleDestroy();

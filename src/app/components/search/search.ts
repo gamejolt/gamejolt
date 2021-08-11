@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { arrayRemove } from '../../../utils/array';
 import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
@@ -67,12 +68,12 @@ export default class AppSearch extends Vue {
 	}
 
 	async focus() {
-		await this.$nextTick();
+		await nextTick();
 		this.$refs.searchInput.focus();
 	}
 
 	async blur() {
-		await this.$nextTick();
+		await nextTick();
 		this.$refs.searchInput.blur();
 	}
 

@@ -1,4 +1,5 @@
 import { EditorView } from 'prosemirror-view';
+import { nextTick } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { AppTooltip } from '../../../../tooltip/tooltip-directive';
 import { ContentEditorSchema } from '../../schemas/content-editor-schema';
@@ -111,7 +112,7 @@ export default class AppContentEditorControlsEmojiPanel extends Vue {
 
 	public async show() {
 		this.setPanelVisibility(true);
-		await this.$nextTick();
+		await nextTick();
 		this.$refs.panel.focus();
 	}
 }

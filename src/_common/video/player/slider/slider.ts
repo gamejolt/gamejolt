@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../utils/vue';
 import { Ruler } from '../../../ruler/ruler-service';
@@ -76,7 +77,8 @@ export default class AppVideoPlayerSlider extends Vue {
 	}
 
 	async onMouseDown(event: MouseEvent) {
-		await this.$nextTick();
+		await nextTick();
+
 		this.isDragging = true;
 		this.initVariables();
 		this._setThumbOffset('start', event);

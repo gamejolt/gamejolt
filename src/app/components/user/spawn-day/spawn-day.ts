@@ -1,4 +1,5 @@
 import { formatDistanceStrict } from 'date-fns';
+import { nextTick } from 'vue';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { sleep } from '../../../../utils/utils';
@@ -100,7 +101,7 @@ export default class AppUserSpawnDay extends Vue {
 		if (!this.shouldShowSpawnDay) {
 			return;
 		}
-		await this.$nextTick();
+		await nextTick();
 		await sleep(1000);
 		for (let i = 0; i < 55; i++) {
 			const width = Math.random() * 10;
@@ -142,7 +143,7 @@ export default class AppUserSpawnDay extends Vue {
 	}
 
 	async drop(elem: HTMLDivElement) {
-		await this.$nextTick();
+		await nextTick();
 		elem.animate(
 			[
 				// Keyframes, TS doesn't like this for some reason, but it works

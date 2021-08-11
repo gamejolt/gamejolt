@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { Options, Prop } from 'vue-property-decorator';
 import AppFormControlContent from '../../../../../_common/form-vue/control/content/content.vue';
 import AppForm from '../../../../../_common/form-vue/form';
@@ -32,7 +33,7 @@ export default class FormForumPost extends BaseForm<ForumPost> implements FormOn
 			this.setField('text_content', '');
 
 			// Wait for errors to appear, then clear them.
-			await this.$nextTick();
+			await nextTick();
 			this.$refs.form.clearErrors();
 		}
 	}

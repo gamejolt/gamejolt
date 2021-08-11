@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { Emit, Options } from 'vue-property-decorator';
 import {
 	CommunityCompetition,
@@ -97,7 +98,7 @@ export default class FormCommunityCompetitionVotingEdit
 		if (this.isInitial) {
 			// End date plus 1 day.
 			this.setField('voting_ends_on', this.formModel.ends_on + 1000 * 60 * 60 * 24);
-			await this.$nextTick();
+			await nextTick();
 			this.changed = false;
 		}
 

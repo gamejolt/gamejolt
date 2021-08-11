@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../../../_common/api/api.service';
@@ -82,7 +83,7 @@ export default class AppForumPostListItem extends Vue {
 	@Watch('isActive', { immediate: true })
 	async onActiveChanged(isActive: boolean) {
 		// Wait till we're compiled into the DOM.
-		await this.$nextTick();
+		await nextTick();
 		if (isActive) {
 			Scroll.to(this.$el as HTMLElement);
 		}

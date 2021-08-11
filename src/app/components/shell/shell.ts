@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { Inject, Options, Vue, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Connection } from '../../../_common/connection/connection-service';
@@ -87,7 +88,7 @@ export default class AppShell extends Vue {
 				Sidebar/Context Panes
 			*/
 			// Wait for any contextPane state to be changed.
-			await this.$nextTick();
+			await nextTick();
 
 			// Show any context panes that are set to show on route change.
 			if (this.showOnRouteChange) {
@@ -132,7 +133,7 @@ export default class AppShell extends Vue {
 	// screen "resize" event so that content can recalculate.
 	@Watch('hasCbar')
 	async onShouldShowChange() {
-		await this.$nextTick();
+		await nextTick();
 		Screen._onResize();
 	}
 

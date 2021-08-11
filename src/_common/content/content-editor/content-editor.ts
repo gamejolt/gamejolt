@@ -3,6 +3,7 @@ import { EditorState, Plugin, Selection, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import 'prosemirror-view/style/prosemirror.css';
 import ResizeObserver from 'resize-observer-polyfill';
+import { nextTick } from 'vue';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
 import AppScrollScroller from '../../scroll/scroller/scroller.vue';
@@ -247,7 +248,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 		// Due to the scroller around it also initializing on mounted, we have to wait for it to finish.
 		// The scroller v-ifs the slot element away until it's fully mounted.
 		// The next frame after that we have our doc ref available.
-		await this.$nextTick();
+		await nextTick();
 
 		if (this.value) {
 			const doc = ContentDocument.fromJson(this.value);
@@ -354,7 +355,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 			if (this.focusEnd) {
 				// Wait here so images and other content can render in and scale properly.
 				// Otherwise the scroll at the end of the transaction below would not cover the entire doc.
-				await this.$nextTick();
+				await nextTick();
 
 				// Set selection at the end of the document.
 				const tr = view.state.tr;
@@ -404,7 +405,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 		this.view!.dispatch(tr);
 
 		// Wait a tick for the editor's doc to update, then force an update to reposition the controls.
-		await this.$nextTick();
+		await nextTick();
 		this.stateCounter++;
 	}
 

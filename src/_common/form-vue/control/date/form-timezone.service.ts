@@ -1,4 +1,5 @@
 import { determine } from 'jstimezonedetect';
+import { nextTick } from 'vue';
 import { Timezone, TimezoneData } from '../../../timezone/timezone.service';
 import { BaseForm } from '../../form.service';
 
@@ -114,7 +115,7 @@ export class FormTimezoneService<T extends Model> {
 			if (resetFormChanged && this.form.changed) {
 				// Wait for form to update, then set changed back to initial, to prevent
 				// confirm modal from showing up without any changes by the user.
-				await this.form.$nextTick();
+				await nextTick();
 				this.form.changed = false;
 			}
 		}

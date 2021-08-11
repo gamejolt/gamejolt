@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { time } from '../../filters/time';
 import { GameSong } from '../../game/song/song.model';
@@ -44,7 +45,7 @@ export default class AppAudioPlaylist extends Vue {
 
 		// If this song was previously paused, and now they're starting it
 		// again, seek to the time they were at.
-		await this.$nextTick();
+		await nextTick();
 		if (this.currentSong === this.pausedSong) {
 			this.$refs.player.seek(this.pausedSongTime);
 		}
@@ -58,12 +59,12 @@ export default class AppAudioPlaylist extends Vue {
 		this.pausedSongTime = this.currentTime;
 		this.pausedSong = this.currentSong;
 		this.currentSong = null;
-		await this.$nextTick();
+		await nextTick();
 	}
 
 	private async resetSong() {
 		this.currentSong = null;
-		await this.$nextTick();
+		await nextTick();
 		await this.playSong(this.songs[0]);
 	}
 
@@ -114,7 +115,7 @@ export default class AppAudioPlaylist extends Vue {
 
 		if (!player) {
 			this.mainSongButton();
-			await this.$nextTick();
+			await nextTick();
 			player = this.$refs.player;
 		}
 

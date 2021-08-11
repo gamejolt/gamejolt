@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
@@ -79,7 +80,7 @@ export default class AppSketchfabEmbed extends Vue {
 	}
 
 	async recalculateDimensions() {
-		await this.$nextTick();
+		await nextTick();
 
 		this.width = Ruler.width(
 			this.$el.getElementsByClassName('sketchfab-embed-inner')[0] as HTMLElement

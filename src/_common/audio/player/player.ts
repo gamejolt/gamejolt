@@ -1,4 +1,4 @@
-import { h } from 'vue';
+import { h, nextTick } from 'vue';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { GameSong } from '../../game/song/song.model';
 
@@ -53,7 +53,7 @@ export class AppAudioPlayer extends Vue {
 	private async setup() {
 		this.clearWatcher();
 
-		await this.$nextTick();
+		await nextTick();
 
 		this.$el.play();
 		this.setWatcher();

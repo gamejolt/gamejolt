@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../../utils/vue';
 import { AppImgResponsive } from '../../img/responsive/responsive';
@@ -93,7 +94,7 @@ export default class AppLightboxItem extends Vue {
 	}
 
 	async calcDimensions() {
-		await this.$nextTick();
+		await nextTick();
 
 		if (Screen.isXs) {
 			return;

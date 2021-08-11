@@ -75,6 +75,7 @@ declare module 'vue/types/options' {
 
 type VuePluginLifecycleHook<T> = (this: T, vm: Vue) => void;
 
+// TODO(vue3): replace with provide/inject
 export function installVuePlugin<T>(
 	key: string,
 	constructor: Constructor<T>,

@@ -1,6 +1,7 @@
 import { lift, toggleMark, wrapIn } from 'prosemirror-commands';
 import { Mark, MarkType, Node } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
+import { nextTick } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { MouseState } from '../../../../../utils/mouse';
 import { Screen } from '../../../../screen/screen-service';
@@ -121,7 +122,7 @@ export default class AppContentEditorTextControls extends Vue {
 	private async show() {
 		this.visible = true;
 		// Wait a tick for the controls to mount to the dom so the position gets calculated correctly.
-		await this.$nextTick();
+		await nextTick();
 
 		this.setPosition();
 	}

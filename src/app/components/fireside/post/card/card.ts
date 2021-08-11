@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { PostOpenSource, trackPostOpen } from '../../../../../_common/analytics/analytics.service';
 import { ContentFocus } from '../../../../../_common/content-focus/content-focus.service';
@@ -132,7 +133,7 @@ export default class AppPostCard extends Vue {
 
 	async calcData() {
 		// Safari browsers don't always get the right initial dimensions if we don't do this.
-		await this.$nextTick();
+		await nextTick();
 
 		const cardWidth = this.$el.offsetWidth;
 		const cardHeight = this.$el.offsetHeight ?? cardWidth / this.aspectRatio;

@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { Emit, Inject, Options, Prop, Watch } from 'vue-property-decorator';
 import { isMac } from '../../../../../../utils/utils';
 import { propRequired } from '../../../../../../utils/vue';
@@ -177,7 +178,7 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 			this.setField('id', message.id);
 
 			// Wait in case the editor loses focus
-			await this.$nextTick();
+			await nextTick();
 			// Regain focus on the editor
 			this.$refs.editor.focus();
 
@@ -332,7 +333,7 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		this.clearMsg();
 
 		// Wait in case the editor loses focus
-		await this.$nextTick();
+		await nextTick();
 		// Regain focus on the editor
 		this.$refs.editor.focus();
 	}
@@ -342,7 +343,7 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		this.setField('id', undefined);
 
 		// Wait for errors, then clear them.
-		await this.$nextTick();
+		await nextTick();
 		this.$refs.form.clearErrors();
 	}
 

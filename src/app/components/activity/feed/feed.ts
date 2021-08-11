@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { Emit, Options, Prop, Provide, Vue, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../utils/vue';
 import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
@@ -98,7 +99,7 @@ export default class AppActivityFeed extends Vue {
 	@Watch('feed', { immediate: true })
 	async onFeedChanged(feed: ActivityFeedView, oldFeed: ActivityFeedView | undefined) {
 		// Gotta make sure the feed has compiled.
-		await this.$nextTick();
+		await nextTick();
 
 		// First time getting items in. Let's try scrolling to their old
 		// position. This will happen if they click away and back to the feed.

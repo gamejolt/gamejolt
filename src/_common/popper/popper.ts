@@ -5,6 +5,7 @@ import preventOverflow, {
 	PreventOverflowModifier,
 } from '@popperjs/core/lib/modifiers/preventOverflow';
 import { createPopper, Instance, Options as PopperOptions } from '@popperjs/core/lib/popper-lite';
+import { nextTick } from 'vue';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propOptional } from '../../utils/vue';
 import { Backdrop } from '../backdrop/backdrop.service';
@@ -313,7 +314,7 @@ export default class AppPopper extends Vue {
 
 	private async createPopper() {
 		this.isVisible = true;
-		await this.$nextTick();
+		await nextTick();
 
 		this.popperInstance = createPopper(this.$el, this.$refs.popper, this.popperOptions);
 

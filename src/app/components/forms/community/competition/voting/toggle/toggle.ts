@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { Emit, Options } from 'vue-property-decorator';
 import { CommunityCompetition } from '../../../../../../../_common/community/competition/competition.model';
 import AppFormControlToggle from '../../../../../../../_common/form-vue/control/toggle/toggle.vue';
@@ -19,7 +20,7 @@ export default class FormCommunityCompetitionVotingToggle extends BaseForm<Commu
 		if (!this.model!.isVotingSetUp) {
 			this.emitToggleNotSetUp();
 			// No change to the actual model should be counted.
-			await this.$nextTick();
+			await nextTick();
 			this.changed = false;
 		} else {
 			// Submit toggle.

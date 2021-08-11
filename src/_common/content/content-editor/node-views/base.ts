@@ -1,6 +1,6 @@
 import { Node } from 'prosemirror-model';
 import { EditorView, NodeView } from 'prosemirror-view';
-import VueGlobal from 'vue';
+import VueGlobal, { nextTick } from 'vue';
 import { ContentEditorSchema } from '../schemas/content-editor-schema';
 
 export type GetPosFunction = () => number;
@@ -23,8 +23,9 @@ export abstract class BaseNodeView implements NodeView {
 
 		this.dom = this.createDOM();
 
-		// Mount component in the next tick, after it got mounted to the DOM, because Vue needs it mounted.
-		VueGlobal.nextTick().then(() => {
+		// Mount component in the next tick, after it got mounted to the DOM,
+		// because Vue needs it mounted.
+		nextTick().then(() => {
 			this.mounted();
 		});
 	}

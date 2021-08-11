@@ -1,11 +1,12 @@
 import { fetchAndActivate, getRemoteConfig, getValue } from 'firebase/remote-config';
-import VueGlobal from 'vue';
+import { reactive } from 'vue';
 import { getFirebaseApp } from '../firebase/firebase.service';
 
-export const ConfigService = VueGlobal.observable({
+const ConfigService_ = {
 	isLoaded: false,
 	options: [] as ConfigOption[],
-});
+};
+export const ConfigService = reactive(ConfigService_) as typeof ConfigService_;
 
 const JOIN_OPTIONS_STORAGE_KEY = 'config:join-options';
 const OVERRIDES_STORAGE_KEY = 'config:overrides';

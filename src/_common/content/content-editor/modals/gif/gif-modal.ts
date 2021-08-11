@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../api/api.service';
 import AppLoading from '../../../../loading/loading.vue';
@@ -61,7 +62,8 @@ export default class AppContentEditorGifModal extends BaseModal {
 		// Wait for the categories to be loaded. The input is disabled until they are.
 		// Then wait a tick to make sure the `disabled` state goes away.
 		// Inputs cannot be focused until they are no longer disabled.
-		await this.$nextTick();
+		await nextTick();
+
 		// Focus now.
 		this.$refs.search.focus();
 	}

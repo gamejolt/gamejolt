@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { date } from '../../../../../_common/filters/date';
@@ -99,7 +100,7 @@ export default class AppChatWindowOutput extends Vue {
 				// When the user sent a message, we want the chat to scroll all
 				// the way down to show that message.
 				if (this.user && event.message.user.id === this.user.id) {
-					await this.$nextTick();
+					await nextTick();
 					this.autoscroll();
 				}
 			}
@@ -129,7 +130,7 @@ export default class AppChatWindowOutput extends Vue {
 
 	async loadOlder() {
 		this.isLoadingOlder = true;
-		await this.$nextTick();
+		await nextTick();
 
 		// Pulling the height after showing the loading allows us to scroll back
 		// without it looking like it jumps.
@@ -143,7 +144,7 @@ export default class AppChatWindowOutput extends Vue {
 		}
 
 		this.isLoadingOlder = false;
-		await this.$nextTick();
+		await nextTick();
 
 		// If the oldest message is the same, we need to mark that we reached
 		// the end of the history so we don't continue loading more.

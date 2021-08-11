@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Api } from '../../api/api.service';
 import AppCodemirror from '../../codemirror/codemirror.vue';
@@ -57,7 +58,7 @@ export default class AppThemeEditor extends Vue {
 
 	async refresh(initial = false) {
 		// Gotta wait for the value to be saved.
-		await this.$nextTick();
+		await nextTick();
 
 		const iframe = document.getElementById(this.windowId) as HTMLIFrameElement | undefined;
 		if (iframe && iframe.contentWindow) {

@@ -1,4 +1,5 @@
 import { determine } from 'jstimezonedetect';
+import { nextTick } from 'vue';
 import { Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
@@ -130,13 +131,13 @@ export default class FormCommunityChannelAdd extends BaseForm<FormModel> impleme
 
 			// Validate the form manually once the title field is valid.
 			if (title.length >= 3) {
-				await this.$nextTick();
+				await nextTick();
 				this.$refs.form.validate();
 			}
 		} else {
 			this.setField('title', '');
 
-			await this.$nextTick();
+			await nextTick();
 			this.$refs.form.validate();
 		}
 	}

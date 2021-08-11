@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../utils/vue';
 import { StickerPlacement } from './placement/placement.model';
@@ -23,7 +24,7 @@ export default class AppSticker extends Vue {
 	@Watch('sticker.position_y')
 	@Watch('sticker.rotation')
 	async onUpdateStickerPlacement() {
-		await this.$nextTick();
+		await nextTick();
 
 		this.$refs.outer.style.left = `calc(${this.sticker.position_x * 100}% - 32px)`;
 		this.$refs.outer.style.top = `calc(${this.sticker.position_y * 100}% - 32px)`;

@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Analytics } from '../../analytics/analytics.service';
 import { Growls } from '../../growls/growls.service';
@@ -60,7 +61,7 @@ export default class AppGameMediaBar extends Vue implements LightboxMediaSource 
 		// next tick to fix this.
 		if (typeof this.mediaItems !== 'undefined' && !this.urlChecked) {
 			this.urlChecked = true;
-			await this.$nextTick();
+			await nextTick();
 			this.checkUrl();
 		}
 	}

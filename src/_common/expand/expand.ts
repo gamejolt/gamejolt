@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 
 @Options({})
@@ -20,7 +21,7 @@ export default class AppExpand extends Vue {
 			if (this.animateInitial) {
 				(this.$el as HTMLElement).style.height = '0';
 				this.inDom = false;
-				await this.$nextTick();
+				await nextTick();
 				this.onWhenWatch();
 			}
 		}
@@ -33,7 +34,7 @@ export default class AppExpand extends Vue {
 			// This will get the correct height to expand out to.
 			this.inDom = true;
 			this.$el.classList.add('transition');
-			await this.$nextTick();
+			await nextTick();
 
 			// Should be in DOM now so we can pull height.
 			(this.$el as HTMLElement).style.height = this.$el.scrollHeight + 'px';

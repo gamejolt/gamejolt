@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { sleep } from '../../../utils/utils';
 import { propOptional, propRequired } from '../../../utils/vue';
@@ -82,7 +83,7 @@ export default class AppStickerTarget extends Vue {
 
 	@Watch('isShowingStickers')
 	async onIsShowingStickersChange() {
-		await this.$nextTick();
+		await nextTick();
 
 		if (this.isShowingStickers) {
 			this.controller.newStickers = [];

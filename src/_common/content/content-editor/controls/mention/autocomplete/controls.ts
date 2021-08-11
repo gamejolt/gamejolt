@@ -1,4 +1,5 @@
 import { EditorView } from 'prosemirror-view';
+import { nextTick } from 'vue';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../../api/api.service';
 import AppLoading from '../../../../../loading/loading.vue';
@@ -174,7 +175,8 @@ export default class AppContentEditorControlsMentionAutocompleteControls extends
 	private async handleInverted() {
 		// If we are inverted, scroll the container down.
 		if (this.isInverted && this.$refs.list) {
-			await this.$nextTick(); // Need to wait here for the list to get bootstrapped before scrolling it.
+			// Need to wait here for the list to get bootstrapped before scrolling it.
+			await nextTick();
 			this.$refs.list.scrollTop = this.$refs.list.scrollHeight;
 		}
 	}

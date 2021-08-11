@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { Inject, Options, Vue, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import AppEventItemMediaIndicator from '../../../app/components/event-item/media-indicator/media-indicator.vue';
@@ -318,7 +319,7 @@ export default class AppStickerLayerDrawer extends Vue {
 	// VueTouch things - END
 
 	async calculateStickersPerRow() {
-		await this.$nextTick();
+		await nextTick();
 
 		if (!this.$refs.content) {
 			return;
@@ -331,7 +332,7 @@ export default class AppStickerLayerDrawer extends Vue {
 
 	@Watch('isLoading')
 	async onIsLoadingChange() {
-		await this.$nextTick();
+		await nextTick();
 
 		if (!this.drawerStore.isLoading) {
 			setDrawerStoreHeight(this.drawerStore, this.$el.offsetHeight);

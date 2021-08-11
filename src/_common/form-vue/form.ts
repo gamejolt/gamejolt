@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../utils/vue';
 import AppLoadingFade from '../loading/fade/fade.vue';
@@ -98,7 +99,7 @@ export default class AppForm extends Vue {
 		this.base.attemptedSubmit = true;
 
 		// Wait until all form controls have settled into their final values.
-		await this.$nextTick();
+		await nextTick();
 
 		// Gotta validate all controls first.
 		await this.validate();
