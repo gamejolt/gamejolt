@@ -2,6 +2,7 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Community } from '../../../community/community.model';
 import { FiresidePost } from '../../../fireside/post/post-model';
+import { Game } from '../../../game/game.model';
 import { Model } from '../../../model/model.service';
 import { Navigate } from '../../../navigate/navigate.service';
 import { User } from '../../../user/user.model';
@@ -85,6 +86,8 @@ export default class AppShareCardTile extends Vue {
 			subject = 'community';
 		} else if (this.model instanceof User) {
 			subject = 'user';
+		} else if (this.model instanceof Game) {
+			subject = 'game';
 		}
 
 		// Check out this awesome thing on Game Jolt!

@@ -16,6 +16,7 @@ export default class AppShareCard extends Vue {
 	@Prop({ required: true, type: Model }) model!: Model;
 	@Prop({ required: true, type: String }) url!: string;
 	@Prop({ required: false, type: Boolean, default: false }) hideHeading!: boolean;
+	@Prop({ required: false, type: Boolean, default: false }) bleedPadding!: boolean;
 
 	readonly Providers = Providers;
 

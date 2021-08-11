@@ -1,5 +1,6 @@
-import { Component, Inject } from 'vue-property-decorator';
+import { Component, Inject, Watch } from 'vue-property-decorator';
 import AppAdWidget from '../../../../../../_common/ad/widget/widget.vue';
+import { trackExperimentEngagement } from '../../../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCard from '../../../../../../_common/card/card.vue';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
@@ -15,6 +16,7 @@ import {
 	CommentThreadModal,
 	CommentThreadModalPermalinkDeregister,
 } from '../../../../../../_common/comment/thread/modal.service';
+import { configShareCard } from '../../../../../../_common/config/config.service';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../../../_common/environment/environment.service';
 import AppFadeCollapse from '../../../../../../_common/fade-collapse/fade-collapse.vue';
@@ -31,6 +33,7 @@ import { Meta } from '../../../../../../_common/meta/meta-service';
 import { PartnerReferral } from '../../../../../../_common/partner-referral/partner-referral-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
+import AppShareCard from '../../../../../../_common/share/card/card.vue';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
 import AppActivityFeedPlaceholder from '../../../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../../../components/activity/feed/view';
@@ -76,6 +79,7 @@ import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue
 		AppGamePerms,
 		AppContentViewer,
 		AppUserKnownFollowers,
+		AppShareCard,
 	},
 	filters: {
 		number,
@@ -211,6 +215,14 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 		return null;
 	}
 
+	get useShareCard() {
+		return configShareCard.value && !this.ignoringSplitTest;
+	}
+
+	get ignoringSplitTest() {
+		return Screen.isMobile;
+	}
+
 	get hasAnyPerms() {
 		return this.game.hasPerms();
 	}
@@ -304,5 +316,13 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 			this.setOverviewComments(Comment.populate($payload.comments));
 		}
+	}
+
+	@Watch('ignoringSplitTest', { immediate: true })
+	trackExperiment() {
+		if (this.ignoringSplitTest) {
+			return;
+		}
+		trackExperimentEngagement(configShareCard);
 	}
 }
