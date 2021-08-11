@@ -1,3 +1,4 @@
+import { defineAsyncComponent } from '@vue/runtime-core';
 import { Inject, Options, Prop, Provide, Vue } from 'vue-property-decorator';
 import { findVueParent, propOptional } from '../../../utils/vue';
 import { ContentFocus } from '../../content-focus/content-focus.service';
@@ -14,7 +15,7 @@ import { StickerLayerController, StickerLayerKey } from './layer-controller';
 @Options({
 	components: {
 		// Lazy load all of this since we only need it when the drawer is showing.
-		AppStickerLayerPlacementMask: () => import('./placement-mask.vue'),
+		AppStickerLayerPlacementMask: defineAsyncComponent(() => import('./placement-mask.vue')),
 	},
 })
 export default class AppStickerLayer extends Vue {

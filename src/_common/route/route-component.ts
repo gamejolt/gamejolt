@@ -1,10 +1,9 @@
-import { ComponentOptions } from 'vue';
+import { ComponentOptions, defineAsyncComponent } from 'vue';
 import { createDecorator } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
 import VueRouter, { RawLocation, Route } from 'vue-router';
 import { arrayRemove } from '../../utils/array';
 import { LocationRedirect } from '../../utils/router';
-import { asyncComponentLoader } from '../../utils/utils';
 import { ensureConfig } from '../config/config.service';
 import { HistoryCache } from '../history/cache/cache.service';
 import { Meta } from '../meta/meta-service';
@@ -101,7 +100,8 @@ class Resolver {
  * resolve it synchonously later.
  */
 export async function asyncRouteLoader(loader: Promise<any>, router: VueRouter) {
-	const component = await asyncComponentLoader(loader);
+	// TODO(vue3): who knows what I'm supposed to do here...
+	const component = defineAsyncComponent(() => loader);
 	if (!GJ_IS_SSR) {
 		return component;
 	}

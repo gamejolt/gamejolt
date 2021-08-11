@@ -1,3 +1,4 @@
+import { defineAsyncComponent } from '@vue/runtime-core';
 import { Options, Vue } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Environment } from '../_common/environment/environment.service';
@@ -10,22 +11,37 @@ import { Store } from './store/index';
 @Options({
 	components: {
 		AppCommonShell,
-		AppEmbedHtml: () =>
-			import(/* webpackChunkName: "gameserverHtml" */ './components/embed/html/html.vue'),
-		AppEmbedFlash: () =>
-			import(/* webpackChunkName: "gameserverFlash" */ './components/embed/flash/flash.vue'),
-		AppEmbedUnity: () =>
-			import(/* webpackChunkName: "gameserverUnity" */ './components/embed/unity/unity.vue'),
-		AppEmbedApplet: () =>
-			import(
-				/* webpackChunkName: "gameserverApplet" */ './components/embed/applet/applet.vue'
-			),
-		AppEmbedRom: () =>
-			import(/* webpackChunkName: "gameserverRom" */ './components/embed/rom/rom.vue'),
-		AppEmbedSilverlight: () =>
-			import(
-				/* webpackChunkName: "gameserverSilverlight" */ './components/embed/silverlight/silverlight.vue'
-			),
+		AppEmbedHtml: defineAsyncComponent(
+			() =>
+				import(/* webpackChunkName: "gameserverHtml" */ './components/embed/html/html.vue')
+		),
+		AppEmbedFlash: defineAsyncComponent(
+			() =>
+				import(
+					/* webpackChunkName: "gameserverFlash" */ './components/embed/flash/flash.vue'
+				)
+		),
+		AppEmbedUnity: defineAsyncComponent(
+			() =>
+				import(
+					/* webpackChunkName: "gameserverUnity" */ './components/embed/unity/unity.vue'
+				)
+		),
+		AppEmbedApplet: defineAsyncComponent(
+			() =>
+				import(
+					/* webpackChunkName: "gameserverApplet" */ './components/embed/applet/applet.vue'
+				)
+		),
+		AppEmbedRom: defineAsyncComponent(
+			() => import(/* webpackChunkName: "gameserverRom" */ './components/embed/rom/rom.vue')
+		),
+		AppEmbedSilverlight: defineAsyncComponent(
+			() =>
+				import(
+					/* webpackChunkName: "gameserverSilverlight" */ './components/embed/silverlight/silverlight.vue'
+				)
+		),
 	},
 })
 export default class App extends Vue {

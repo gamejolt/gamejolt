@@ -1,3 +1,4 @@
+import { defineAsyncComponent } from '@vue/runtime-core';
 import { Inject, Options, Vue } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { shouldShowAppPromotion } from '../../../../utils/mobile-app';
@@ -16,10 +17,15 @@ import AppSearch from '../../search/search.vue';
 
 const components: any = {
 	AppPopper,
-	AppShellAccountPopover: () => import('../account-popover/account-popover.vue'),
-	AppShellFriendRequestPopover: () =>
-		import('../friend-request-popover/friend-request-popover.vue'),
-	AppShellNotificationPopover: () => import('../notification-popover/notification-popover.vue'),
+	AppShellAccountPopover: defineAsyncComponent(
+		() => import('../account-popover/account-popover.vue')
+	),
+	AppShellFriendRequestPopover: defineAsyncComponent(
+		() => import('../friend-request-popover/friend-request-popover.vue')
+	),
+	AppShellNotificationPopover: defineAsyncComponent(
+		() => import('../notification-popover/notification-popover.vue')
+	),
 	AppSearch,
 	AppThemeSvg,
 	AppConfigLoaded,

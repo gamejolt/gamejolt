@@ -1,4 +1,4 @@
-import { nextTick } from 'vue';
+import { defineAsyncComponent, nextTick } from 'vue';
 import { Inject, Options, Vue, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Connection } from '../../../_common/connection/connection-service';
@@ -29,8 +29,12 @@ const components: any = {
 	AppShellHotBottom,
 	AppShellCbar,
 	AppMinbar,
-	AppShellBanner: () => import(/* webpackChunkName: "shell" */ './banner/banner.vue'),
-	AppChatWindows: () => import(/* webpackChunkName: "chat" */ '../chat/windows/windows.vue'),
+	AppShellBanner: defineAsyncComponent(
+		() => import(/* webpackChunkName: "shell" */ './banner/banner.vue')
+	),
+	AppChatWindows: defineAsyncComponent(
+		() => import(/* webpackChunkName: "chat" */ '../chat/windows/windows.vue')
+	),
 	AppStickerLayer,
 };
 

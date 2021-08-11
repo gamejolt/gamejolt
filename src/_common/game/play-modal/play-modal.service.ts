@@ -1,4 +1,4 @@
-import { asyncComponentLoader } from '../../../utils/utils';
+import { defineAsyncComponent } from 'vue';
 import { Analytics } from '../../analytics/analytics.service';
 import { Environment } from '../../environment/environment.service';
 import { Growls } from '../../growls/growls.service';
@@ -75,10 +75,9 @@ export class GamePlayModal {
 
 		await Modal.show({
 			modalId: 'GamePlay',
-			component: () =>
-				asyncComponentLoader(
-					import(/* webpackChunkName: "GamePlayModal" */ './play-modal.vue')
-				),
+			component: defineAsyncComponent(
+				() => import(/* webpackChunkName: "GamePlayModal" */ './play-modal.vue')
+			),
 			props: { game, build, url, canMinimize },
 			noBackdrop: true,
 			noBackdropClose: true,

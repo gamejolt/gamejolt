@@ -1,5 +1,5 @@
+import { defineAsyncComponent } from 'vue';
 import { Modal } from '../../../../../_common/modal/modal.service';
-import { asyncComponentLoader } from '../../../../../utils/utils';
 
 export class ArchiveFileSelectorModal {
 	static async show(
@@ -12,12 +12,12 @@ export class ArchiveFileSelectorModal {
 	) {
 		return await Modal.show<string>({
 			modalId: 'ArchiveFileSelector',
-			component: () =>
-				asyncComponentLoader(
+			component: defineAsyncComponent(
+				() =>
 					import(
 						/* webpackChunkName: "ArchiveFileSelectorModal" */ './archive-file-selector-modal.vue'
 					)
-				),
+			),
 			props: { gameId, packageId, releaseId, buildId, primaryFileId, platform },
 		});
 	}

@@ -1,3 +1,5 @@
-export async function AppContentEditorLazy() {
-	return await import(/* webpackChunkName: "contentEditor" */ './content-editor.vue');
-}
+import { defineAsyncComponent } from 'vue';
+
+export const AppContentEditorLazy = defineAsyncComponent(
+	() => import(/* webpackChunkName: "contentEditor" */ './content-editor.vue')
+);

@@ -1,4 +1,4 @@
-import { asyncComponentLoader } from '../../../utils/utils';
+import { defineAsyncComponent } from 'vue';
 import { Modal } from '../../modal/modal.service';
 import { Model } from '../../model/model.service';
 
@@ -16,8 +16,9 @@ export class CommentModal {
 
 		return await Modal.show<void>({
 			modalId: 'Comment-' + [model.constructor.name, model.id].join('-'),
-			component: () =>
-				asyncComponentLoader(import(/* webpackChunkName: "CommentModal" */ './modal.vue')),
+			component: defineAsyncComponent(
+				() => import(/* webpackChunkName: "CommentModal" */ './modal.vue')
+			),
 			props: {
 				displayMode,
 				model,

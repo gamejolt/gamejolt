@@ -1,3 +1,4 @@
+import { defineAsyncComponent } from '@vue/runtime-core';
 import { Options } from 'vue-property-decorator';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
@@ -13,10 +14,12 @@ import AppPageHeader from '../../components/page-header/page-header.vue';
 		AppPageHeader,
 		AppScrollAffix,
 		FormSettings,
-		FormSettingsDev: () =>
-			import(
-				/* webpackChunkName: "FormSettingsDev" */ '../../components/forms/settings/dev.vue'
-			),
+		FormSettingsDev: defineAsyncComponent(
+			() =>
+				import(
+					/* webpackChunkName: "FormSettingsDev" */ '../../components/forms/settings/dev.vue'
+				)
+		),
 	},
 	directives: {
 		AppScrollTo,

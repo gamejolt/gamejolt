@@ -1,5 +1,5 @@
+import { defineAsyncComponent } from 'vue';
 import { VueRouter } from 'vue-router/types/router';
-import { asyncComponentLoader } from '../../../utils/utils';
 import { Modal } from '../../modal/modal.service';
 import { Model } from '../../model/model.service';
 import { DisplayMode } from '../modal/modal.service';
@@ -19,10 +19,9 @@ export class CommentThreadModal {
 
 		return await Modal.show<void>({
 			modalId: 'CommentThread-' + [model.constructor.name, model.id, commentId].join('-'),
-			component: () =>
-				asyncComponentLoader(
-					import(/* webpackChunkName: "CommentThreadModal" */ './modal.vue')
-				),
+			component: defineAsyncComponent(
+				() => import(/* webpackChunkName: "CommentThreadModal" */ './modal.vue')
+			),
 			props: {
 				model,
 				commentId,

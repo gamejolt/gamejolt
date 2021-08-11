@@ -1,3 +1,4 @@
+import { defineAsyncComponent } from '@vue/runtime-core';
 import { Options, Vue, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -11,7 +12,9 @@ import AppShellSidebarLibrary from './library/library.vue';
 const components = {
 	AppScrollScroller,
 	AppShortkey,
-	AppShellSidebarChat: () => import(/* webpackChunkName: "chat" */ './chat/chat.vue'),
+	AppShellSidebarChat: defineAsyncComponent(
+		() => import(/* webpackChunkName: "chat" */ './chat/chat.vue')
+	),
 	AppShellSidebarLibrary,
 	AppShellSidebarContext,
 };

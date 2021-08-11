@@ -8,10 +8,6 @@ export function importContext(r: WebpackContext) {
 	return map;
 }
 
-export function asyncComponentLoader(loader: Promise<any>) {
-	return loader.then(mod => mod.default);
-}
-
 export function loadScript(src: string) {
 	return new Promise((resolve, reject) => {
 		const script = window.document.createElement('script');

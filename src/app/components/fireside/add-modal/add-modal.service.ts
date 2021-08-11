@@ -1,4 +1,4 @@
-import { asyncComponentLoader } from '../../../../utils/utils';
+import { defineAsyncComponent } from 'vue';
 import { Community } from '../../../../_common/community/community.model';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { Modal } from '../../../../_common/modal/modal.service';
@@ -13,10 +13,9 @@ export class FiresideAddModal {
 
 		return await Modal.show<Fireside>({
 			modalId: 'FiresideAdd',
-			component: () =>
-				asyncComponentLoader(
-					import(/* webpackChunkName: "FiresideAddModal" */ './add-modal.vue')
-				),
+			component: defineAsyncComponent(
+				() => import(/* webpackChunkName: "FiresideAddModal" */ './add-modal.vue')
+			),
 			props: {
 				community,
 			},

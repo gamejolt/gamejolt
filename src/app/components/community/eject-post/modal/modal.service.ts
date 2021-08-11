@@ -1,4 +1,4 @@
-import { asyncComponentLoader } from '../../../../../utils/utils';
+import { defineAsyncComponent } from 'vue';
 import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
 import {
 	CommunityNotifyOptions,
@@ -12,10 +12,9 @@ export class CommunityEjectPostModal {
 	static async show(firesidePostCommunity: FiresidePostCommunity, post: FiresidePost) {
 		return await Modal.show<CommunityEjectPostModalResult>({
 			modalId: 'CommunityEjectPost',
-			component: () =>
-				asyncComponentLoader(
-					import(/* webpackChunkName: "CommunityEjectPostModal" */ './modal.vue')
-				),
+			component: defineAsyncComponent(
+				() => import(/* webpackChunkName: "CommunityEjectPostModal" */ './modal.vue')
+			),
 			props: { firesidePostCommunity, post },
 			size: 'sm',
 		});

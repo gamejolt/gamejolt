@@ -1,4 +1,4 @@
-import { nextTick } from 'vue';
+import { defineAsyncComponent, nextTick } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { arrayRemove } from '../../../utils/array';
 import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
@@ -20,7 +20,9 @@ let searchIterator = 0;
 
 @Options({
 	components: {
-		AppSearchAutocomplete: () => import('./autocomplete/autocomplete.vue'),
+		AppSearchAutocomplete: defineAsyncComponent(
+			() => import('./autocomplete/autocomplete.vue')
+		),
 		AppSearchInput,
 		AppPopper,
 		AppShortkey,

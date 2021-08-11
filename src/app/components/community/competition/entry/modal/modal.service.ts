@@ -1,5 +1,5 @@
+import { defineAsyncComponent } from 'vue';
 import VueRouter from 'vue-router';
-import { asyncComponentLoader } from '../../../../../../utils/utils';
 import { CommunityCompetitionEntry } from '../../../../../../_common/community/competition/entry/entry.model';
 import { Modal } from '../../../../../../_common/modal/modal.service';
 
@@ -31,10 +31,9 @@ export class CommunityCompetitionEntryModal {
 	private static async show(props: any) {
 		return await Modal.show<void>({
 			modalId: 'CommunityCompetitionEntry',
-			component: () =>
-				asyncComponentLoader(
-					import(/* webpackChunkName: "CommunityCompetitionEntryModal" */ './modal.vue')
-				),
+			component: defineAsyncComponent(
+				() => import(/* webpackChunkName: "CommunityCompetitionEntryModal" */ './modal.vue')
+			),
 			props,
 			size: 'sm',
 		});

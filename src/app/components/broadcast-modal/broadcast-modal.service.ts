@@ -1,4 +1,4 @@
-import { asyncComponentLoader } from '../../../utils/utils';
+import { defineAsyncComponent } from 'vue';
 import { Api } from '../../../_common/api/api.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { Modal } from '../../../_common/modal/modal.service';
@@ -41,10 +41,9 @@ export class BroadcastModal {
 	private static async show(posts: FiresidePost[]) {
 		await Modal.show({
 			modalId: 'Broadcast',
-			component: () =>
-				asyncComponentLoader(
-					import(/* webpackChunkName: "BroadcastModal" */ './broadcast-modal.vue')
-				),
+			component: defineAsyncComponent(
+				() => import(/* webpackChunkName: "BroadcastModal" */ './broadcast-modal.vue')
+			),
 			props: { posts },
 			noBackdropClose: true,
 		});

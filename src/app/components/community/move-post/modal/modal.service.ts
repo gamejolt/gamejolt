@@ -1,4 +1,4 @@
-import { asyncComponentLoader } from '../../../../../utils/utils';
+import { defineAsyncComponent } from 'vue';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
 import {
@@ -19,10 +19,9 @@ export class CommunityMovePostModal {
 	) {
 		return await Modal.show<CommunityMovePostModalResult>({
 			modalId: 'CommunityMovePost',
-			component: () =>
-				asyncComponentLoader(
-					import(/* webpackChunkName: "CommunityMovePostModal" */ './modal.vue')
-				),
+			component: defineAsyncComponent(
+				() => import(/* webpackChunkName: "CommunityMovePostModal" */ './modal.vue')
+			),
 			props: { firesidePostCommunity, channels, post },
 			size: 'sm',
 		});

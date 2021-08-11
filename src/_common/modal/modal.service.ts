@@ -1,13 +1,10 @@
-import { AsyncComponent } from 'vue';
-import { Vue } from 'vue-property-decorator';
+import { Component } from 'vue';
 import { arrayRemove } from '../../utils/array';
 import { makeObservableService } from '../../utils/vue';
 import { Popper } from '../popper/popper.service';
 
-type ModalComponent = typeof Vue | AsyncComponent<Vue>;
-
 export interface ModalOptions {
-	component: ModalComponent;
+	component: Component;
 	modalId: string;
 	size?: 'sm' | 'lg' | 'full' | undefined;
 	props?: any;
@@ -21,7 +18,7 @@ export class Modal {
 	static incrementer = 0;
 
 	size: 'sm' | 'lg' | 'full' | undefined;
-	component: ModalComponent;
+	component: Component;
 	modalId: string;
 	props?: any;
 	noBackdrop?: boolean;
