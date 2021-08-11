@@ -1,9 +1,11 @@
+<script lang="ts" src="./list"></script>
+
 <template>
 	<ol class="score-list list-unstyled">
 		<li
-			class="score-list-item clearfix anim-fade-in-up no-animate-leave"
 			v-for="(score, i) of scores"
 			:key="score.id"
+			class="score-list-item clearfix anim-fade-in-up no-animate-leave"
 		>
 			<div class="score-list-media">
 				<app-user-card-hover :user="score.user">
@@ -45,5 +47,3 @@
 </template>
 
 <style lang="stylus" src="./list.styl" scoped></style>
-
-<script lang="ts" src="./list"></script>

@@ -1,14 +1,19 @@
+<script lang="ts" src="./trophy"></script>
+
 <template>
 	<app-form name="trophyForm">
 		<!--
 			Show the current image if there is one.
 		-->
-		<div class="form-group" v-if="formModel.has_thumbnail">
+		<div v-if="formModel.has_thumbnail" class="form-group">
 			<label class="control-label">
 				<translate>Current Trophy Image</translate>
 			</label>
 
-			<app-img-responsive :src="formModel.img_thumbnail" :alt="$gettext('Current Trophy Image')" />
+			<app-img-responsive
+				:src="formModel.img_thumbnail"
+				:alt="$gettext('Current Trophy Image')"
+			/>
 
 			<br />
 
@@ -41,7 +46,7 @@
 			"
 			:optional="true"
 		>
-			<p class="help-block" v-translate>
+			<p v-translate class="help-block">
 				Your image must be a PNG or JPG.
 				<br />
 				<strong>PNGs are highly recommended as they produce a lossless image.</strong>
@@ -61,7 +66,9 @@
 				accept=".png,.jpg,.jpeg,.webp"
 			/>
 
-			<app-form-control-errors :label="$gettext(`dash.games.trophies.form.image_error_label`)" />
+			<app-form-control-errors
+				:label="$gettext(`dash.games.trophies.form.image_error_label`)"
+			/>
 		</app-form-group>
 
 		<app-form-group name="title" :label="$gettext(`dash.games.trophies.form.title_label`)">
@@ -106,5 +113,3 @@
 		</app-form-button>
 	</app-form>
 </template>
-
-<script lang="ts" src="./trophy"></script>

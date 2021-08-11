@@ -1,80 +1,86 @@
+<script lang="ts" src="./pagination"></script>
+
 <template>
 	<div>
 		<!--
-		Number pagination type
-	-->
+			Number pagination type
+		-->
 		<template v-if="!pager && !Screen.isXs">
-			<div class="pagination" v-if="totalItems > itemsPerPage">
+			<div v-if="totalItems > itemsPerPage" class="pagination">
 				<div
-					class="pagination-item"
 					v-if="hasPrevious && currentPage !== 2"
+					class="pagination-item"
 					@click.capture="onPageClick($event, 1)"
 				>
-					<app-button :to="getPageLocation(1)" v-app-no-autoscroll>
+					<app-button v-app-no-autoscroll :to="getPageLocation(1)">
 						<translate>First</translate>
 					</app-button>
 				</div>
 				<div
-					class="pagination-item"
 					v-if="hasPrevious"
+					class="pagination-item"
 					@click.capture="onPageClick($event, prevPage)"
 				>
-					<app-button :to="getPageLocation(prevPage)" v-app-no-autoscroll>
+					<app-button v-app-no-autoscroll :to="getPageLocation(prevPage)">
 						<translate>Previous</translate>
 					</app-button>
 				</div>
 
 				<div
-					class="pagination-item"
 					v-if="prevChunkPage"
+					class="pagination-item"
 					@click.capture="onPageClick($event, prevChunkPage)"
 				>
-					<app-button sparse :to="getPageLocation(prevChunkPage)" v-app-no-autoscroll>
+					<app-button v-app-no-autoscroll sparse :to="getPageLocation(prevChunkPage)">
 						...
 					</app-button>
 				</div>
 
 				<div
-					class="pagination-item"
 					v-for="(page, i) of pages"
 					:key="i"
+					class="pagination-item"
 					:class="{ active: page === currentPage }"
 					@click.capture="onPageClick($event, page)"
 				>
 					<app-button
 						v-if="page !== currentPage"
+						v-app-no-autoscroll
 						sparse
 						:to="getPageLocation(page > 1 ? page : undefined)"
-						v-app-no-autoscroll
 					>
 						{{ page }}
 					</app-button>
-					<app-button solid sparse v-else>
+					<app-button v-else solid sparse>
 						{{ page }}
 					</app-button>
 				</div>
 
 				<div
-					class="pagination-item"
 					v-if="nextChunkPage"
+					class="pagination-item"
 					@click.capture="onPageClick($event, nextChunkPage)"
 				>
-					<app-button sparse :to="getPageLocation(nextChunkPage)" v-app-no-autoscroll>
+					<app-button v-app-no-autoscroll sparse :to="getPageLocation(nextChunkPage)">
 						...
 					</app-button>
 				</div>
 
-				<div class="pagination-item" v-if="hasNext" @click.capture="onPageClick($event, nextPage)">
-					<app-button :to="getPageLocation(nextPage)" v-app-no-autoscroll>
+				<div
+					v-if="hasNext"
+					class="pagination-item"
+					@click.capture="onPageClick($event, nextPage)"
+				>
+					<app-button v-app-no-autoscroll :to="getPageLocation(nextPage)">
 						<translate>Next</translate>
 					</app-button>
 				</div>
 				<div
-					class="pagination-item"
 					v-if="hasNext && currentPage !== totalPages - 1"
+					class="pagination-item"
 					@click.capture="onPageClick($event, totalPages)"
 				>
-					<app-button :to="getPageLocation(totalPages)" v-app-no-autoscroll>
+					<app-button v-app-no-autoscroll :to="getPageLocation(totalPages)">
 						<translate>Last</translate>
 					</app-button>
 				</div>
@@ -82,31 +88,31 @@
 		</template>
 
 		<!--
-		Pager type
-	-->
+			Pager type
+		-->
 		<template v-else-if="pager || Screen.isXs">
 			<div class="pager" :class="{ reverse: reverseButtons }">
 				<div
-					class="pagination-item previous"
 					v-if="hasPrevious"
+					class="pagination-item previous"
 					@click.capture="onPageClick($event, prevPage)"
 				>
-					<app-button :to="getPageLocation(prevPage)" v-app-no-autoscroll>
+					<app-button v-app-no-autoscroll :to="getPageLocation(prevPage)">
 						{{ previousText || '&laquo; Previous' }}
 					</app-button>
 					<span v-if="!hasPrevious">{{ previousText || '&laquo; Previous' }}</span>
 				</div>
-				<div class="pagination-item" v-if="currentPage > 1">
+				<div v-if="currentPage > 1" class="pagination-item">
 					<app-button solid sparse>
 						{{ currentPage }}
 					</app-button>
 				</div>
 				<div
-					class="pagination-item next"
 					v-if="hasNext"
+					class="pagination-item next"
 					@click.capture="onPageClick($event, nextPage)"
 				>
-					<app-button :to="getPageLocation(nextPage)" v-app-no-autoscroll>
+					<app-button v-app-no-autoscroll :to="getPageLocation(nextPage)">
 						{{ nextText || 'Next &raquo;' }}
 					</app-button>
 					<span v-if="!hasNext">{{ nextText || 'Next &raquo;' }}</span>
@@ -117,8 +123,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .pagination
 	display: inline-flex
@@ -148,5 +154,3 @@
 		.pagination-item:first-child
 			margin-right: 0
 </style>
-
-<script lang="ts" src="./pagination"></script>

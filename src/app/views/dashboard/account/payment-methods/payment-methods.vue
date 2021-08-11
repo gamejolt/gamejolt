@@ -1,5 +1,7 @@
+<script lang="ts" src="./payment-methods"></script>
+
 <template>
-	<div class="row" v-if="isRouteBootstrapped">
+	<div v-if="isRouteBootstrapped" class="row">
 		<template v-if="hasPaymentSources">
 			<div v-for="paymentSource of paymentSources" :key="paymentSource.id" class="col-md-6">
 				<app-user-payment-source-card
@@ -18,5 +20,3 @@
 		</template>
 	</div>
 </template>
-
-<script lang="ts" src="./payment-methods"></script>

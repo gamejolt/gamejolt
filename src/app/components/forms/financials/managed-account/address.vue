@@ -1,3 +1,5 @@
+<script lang="ts" src="./address"></script>
+
 <template>
 	<div v-if="parent.requiresField(namePrefix + '.line1')">
 		<div v-if="!parent.getStripeField(namePrefix + '.line1')">
@@ -41,21 +43,27 @@
 				<app-form-control-errors />
 			</app-form-group>
 
-			<div class="row" v-if="parent.requiresField(namePrefix + '.city')">
+			<div v-if="parent.requiresField(namePrefix + '.city')" class="row">
 				<div class="col-sm-4">
 					<app-form-group :name="`${namePrefix}.city`" :label="$gettext('City')">
 						<app-form-control />
 						<app-form-control-errors />
 					</app-form-group>
 				</div>
-				<div class="col-sm-4" v-if="parent.requiresField(namePrefix + '.state')">
-					<app-form-group :name="`${namePrefix}.state`" :label="$gettext('State/Province/County')">
+				<div v-if="parent.requiresField(namePrefix + '.state')" class="col-sm-4">
+					<app-form-group
+						:name="`${namePrefix}.state`"
+						:label="$gettext('State/Province/County')"
+					>
 						<app-form-control />
 						<app-form-control-errors />
 					</app-form-group>
 				</div>
-				<div class="col-sm-4" v-if="parent.requiresField(namePrefix + '.postal_code')">
-					<app-form-group :name="`${namePrefix}.postal_code`" :label="$gettext('Zip/Postal Code')">
+				<div v-if="parent.requiresField(namePrefix + '.postal_code')" class="col-sm-4">
+					<app-form-group
+						:name="`${namePrefix}.postal_code`"
+						:label="$gettext('Zip/Postal Code')"
+					>
 						<app-form-control />
 						<app-form-control-errors />
 					</app-form-group>
@@ -63,7 +71,7 @@
 			</div>
 		</div>
 
-		<div class="form-horizontal" v-if="parent.getStripeField(namePrefix + '.line1')">
+		<div v-if="parent.getStripeField(namePrefix + '.line1')" class="form-horizontal">
 			<div class="form-group">
 				<label class="control-label col-sm-4">
 					<translate>Address</translate>
@@ -89,5 +97,3 @@
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./address"></script>

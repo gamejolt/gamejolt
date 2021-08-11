@@ -1,10 +1,12 @@
+<script lang="ts" src="./game"></script>
+
 <template>
 	<app-form name="gameForm">
 		<div v-if="stage === 'dev-status'">
 			<p class="page-help">
 				<translate>
-					Choose the stage of development that your game is currently in. You are able to change
-					your development stage at any point.
+					Choose the stage of development that your game is currently in. You are able to
+					change your development stage at any point.
 				</translate>
 			</p>
 
@@ -42,15 +44,17 @@
 
 					<div class="help-block">
 						<div>
-							<translate>Customize your game page URLs. Make them really pretty.</translate>
+							<translate>
+								Customize your game page URLs. Make them really pretty.
+							</translate>
 						</div>
 						<div>
 							<translate>Game Page URL</translate>
-							<code v-html="gameUrl"></code>
+							<code v-html="gameUrl" />
 						</div>
 						<div>
 							<translate>Sites URL</translate>
-							<code v-html="siteUrl"></code>
+							<code v-html="siteUrl" />
 						</div>
 					</div>
 				</app-form-group>
@@ -105,8 +109,10 @@
 						<p class="help-block">
 							<translate>dash.games.form.engine_other_help</translate>
 							<span
+								v-app-tooltip.touchable="
+									$gettext(`dash.games.form.engine_other_why_tooltip`)
+								"
 								class="text-help"
-								v-app-tooltip.touchable="$gettext(`dash.games.form.engine_other_why_tooltip`)"
 							>
 								<translate>dash.games.form.engine_other_why</translate>
 							</span>
@@ -115,16 +121,24 @@
 				</app-expand>
 
 				<template v-if="hasSalesPerms">
-					<app-form-group name="referrals_enabled" :label="$gettext(`Add to partner system?`)">
+					<app-form-group
+						name="referrals_enabled"
+						:label="$gettext(`Add to partner system?`)"
+					>
 						<app-form-control-toggle class="pull-right" />
 
 						<div class="help-block">
 							<div>
 								<translate>
-									This will allow Game Jolt Partners to be able to download the game for free, and
-									give them a 10% cut of sales they refer to your game.
+									This will allow Game Jolt Partners to be able to download the
+									game for free, and give them a 10% cut of sales they refer to
+									your game.
 								</translate>
-								<router-link :to="{ name: 'landing.partners' }" class="link-help" target="_blank">
+								<router-link
+									:to="{ name: 'landing.partners' }"
+									class="link-help"
+									target="_blank"
+								>
 									<translate>What is a Game Jolt Partner?</translate>
 								</router-link>
 							</div>
@@ -133,24 +147,28 @@
 							<div>
 								<em v-translate>
 									<b>Note</b>
-									: This will only be enabled for "paid" or "name your price" games.
+									: This will only be enabled for "paid" or "name your price"
+									games.
 								</em>
 							</div>
 
 							<!--
-							We only show this message to devs that have signed v1 of the distribution agreement.
-							That's because they've approved themselves to be part of the marketplace, but
-							haven't yet signed the terms for partners.
-						-->
+								We only show this message to devs that have signed v1 of the distribution agreement.
+								That's because they've approved themselves to be part of the marketplace, but
+								haven't yet signed the terms for partners.
+							-->
 							<div v-if="account && account.tos_signed_developer === 1">
 								<br />
 								<div class="alert alert-notice">
 									<translate>
-										You must sign the new Distribution Agreement which covers the terms for the
-										Partner Program before your games will become available in the Partner Program.
+										You must sign the new Distribution Agreement which covers
+										the terms for the Partner Program before your games will
+										become available in the Partner Program.
 									</translate>
 									<router-link :to="{ name: 'dash.account.financials' }">
-										<translate>Click here to view the new Distribution Agreement</translate>
+										<translate>
+											Click here to view the new Distribution Agreement
+										</translate>
 									</router-link>
 								</div>
 							</div>
@@ -167,5 +185,3 @@
 		</div>
 	</app-form>
 </template>
-
-<script lang="ts" src="./game"></script>

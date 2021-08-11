@@ -1,32 +1,32 @@
+<script lang="ts" src="./top-composition"></script>
+
 <template>
 	<div>
 		<!--
-	If graph data is null, then don't show the graph and give more space for the
-	table.
-	-->
+		If graph data is null, then don't show the graph and give more space for the
+		table.
+		-->
 		<div :class="reportData.graph !== null ? 'col-sm-8' : 'col-xs-12'">
-			<div class="alert" v-if="!reportData.hasData">
+			<div v-if="!reportData.hasData" class="alert">
 				<translate>No data yet.</translate>
 			</div>
 
-			<table class="table table-striped table-condensed" v-if="reportData.hasData">
+			<table v-if="reportData.hasData" class="table table-striped table-condensed">
 				<thead>
 					<tr>
-						<th style="width: 20px"></th>
+						<th style="width: 20px" />
 						<th>
 							{{ reportData.fieldLabel }}
 						</th>
-						<th class="text-right">
-							<!--{{ analyticsCtrl.stats[ analyticsCtrl.eventType ].label }}-->
-						</th>
-						<th style="width: 150px"></th>
+						<th class="text-right" />
+						<th style="width: 150px" />
 					</tr>
 				</thead>
 				<tbody>
 					<tr v-for="(val, i) of reportData.data" :key="i">
 						<td>{{ (i + 1) | number }}.</td>
 						<th>
-							<template v-if="typeof val.label !== 'object'">
+							<template v-if="isScalarLabel(val)">
 								{{ val.label }}
 							</template>
 							<router-link
@@ -49,7 +49,7 @@
 							<div
 								class="report-percentage"
 								:style="{ width: (val / reportData.total) * 70 + 'px' }"
-							></div>
+							/>
 							<small>
 								{{
 									(val.value / reportData.total)
@@ -61,12 +61,13 @@
 				</tbody>
 			</table>
 		</div>
-		<div class="col-sm-4" v-if="!Screen.isXs && reportData.hasData && reportData.graph !== null">
+		<div
+			v-if="!Screen.isXs && reportData.hasData && reportData.graph !== null"
+			class="col-sm-4"
+		>
 			<app-graph type="doughnut" :dataset="reportData.graph" />
 		</div>
 	</div>
 </template>
 
 <style lang="stylus" src="./report-percentage.styl" scoped></style>
-
-<script lang="ts" src="./top-composition"></script>

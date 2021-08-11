@@ -1,17 +1,24 @@
+<script lang="ts" src="./controls"></script>
+
 <template>
 	<div
 		ref="container"
 		:style="{
-			top: this.top,
-			left: this.left,
-			bottom: this.bottom,
-			visibility: this.showControl ? 'visible' : 'hidden',
+			top: top,
+			left: left,
+			bottom: bottom,
+			visibility: showControl ? 'visible' : 'hidden',
 		}"
 		class="-container"
 	>
 		<transition name="fade">
-			<div v-if="visible" class="-autocomplete" ref="list">
-				<app-loading v-if="isLoading && isInverted" class="-loading-top" centered hide-label />
+			<div v-if="visible" ref="list" class="-autocomplete">
+				<app-loading
+					v-if="isLoading && isInverted"
+					class="-loading-top"
+					centered
+					hide-label
+				/>
 
 				<template v-if="users.length">
 					<button
@@ -43,12 +50,15 @@
 					</button>
 				</template>
 
-				<app-loading v-if="isLoading && !isInverted" class="-loading-bottom" centered hide-label />
+				<app-loading
+					v-if="isLoading && !isInverted"
+					class="-loading-bottom"
+					centered
+					hide-label
+				/>
 			</div>
 		</transition>
 	</div>
 </template>
 
 <style lang="stylus" src="./controls.styl" scoped></style>
-
-<script lang="ts" src="./controls"></script>

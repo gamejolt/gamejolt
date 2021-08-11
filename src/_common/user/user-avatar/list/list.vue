@@ -1,20 +1,22 @@
+<script lang="ts" src="./list"></script>
+
 <template>
 	<div class="-list" :class="{ '-list-sm': sm, '-inline-list': inline }">
 		<div
+			v-for="user of users"
+			:key="user.id"
 			class="-user"
 			:class="{
 				'-user-sm': sm,
 			}"
-			v-for="user of users"
-			:key="user.id"
 		>
 			<app-user-avatar
+				v-app-tooltip="user.display_name + ' (@' + user.username + ')'"
 				class="-avatar"
 				:class="{
 					'-avatar-sm': sm,
 				}"
 				:user="user"
-				v-app-tooltip="user.display_name + ' (@' + user.username + ')'"
 			/>
 			<app-user-verified-tick v-if="!sm" class="-tick" :user="user" />
 		</div>
@@ -22,14 +24,12 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 $-size = 40px
 $-spacing = 4px
-
 $-size-sm = 24px
-
 
 .-list
 	display: grid
@@ -74,7 +74,4 @@ $-size-sm = 24px
 	right: 0
 	bottom: 0
 	pointer-events: none
-
 </style>
-
-<script lang="ts" src="./list"></script>

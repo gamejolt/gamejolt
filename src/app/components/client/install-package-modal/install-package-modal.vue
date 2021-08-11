@@ -1,3 +1,5 @@
+<script lang="ts" src="./install-package-modal"></script>
+
 <template>
 	<app-modal>
 		<div class="modal-controls">
@@ -16,11 +18,12 @@
 		<div class="modal-body">
 			<p>
 				<translate>
-					This game has multiple installable packages. Please choose the one you'd like to install.
+					This game has multiple installable packages. Please choose the one you'd like to
+					install.
 				</translate>
 			</p>
 
-			<app-loading big v-if="isLoading" />
+			<app-loading v-if="isLoading" big />
 			<template v-else-if="installablePackages.length">
 				<app-game-package-card
 					v-for="pkg of installablePackages"
@@ -38,5 +41,3 @@
 		</div>
 	</app-modal>
 </template>
-
-<script lang="ts" src="./install-package-modal"></script>

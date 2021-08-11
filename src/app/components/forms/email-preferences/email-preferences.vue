@@ -1,3 +1,5 @@
+<script lang="ts" src="./email-preferences"></script>
+
 <template>
 	<app-form name="emailPreferencesForm">
 		<app-form-group name="email_address">
@@ -45,14 +47,16 @@
 				</legend>
 
 				<p class="help-block">
-					<translate>Let us know what kinds of activity you'd like to get emailed for.</translate>
+					<translate>
+						Let us know what kinds of activity you'd like to get emailed for.
+					</translate>
 				</p>
 
 				<app-form-group name="notifications" hide-label optional>
 					<div
-						class="checkbox"
 						v-for="notificationType of notificationTypes"
 						:key="notificationType.key"
+						class="checkbox"
 					>
 						<label>
 							<app-form-control-checkbox :value="notificationType.key" />
@@ -78,7 +82,9 @@
 						<div class="col-sm-8">
 							<app-form-control-toggle :disabled="emailsDisabled" />
 							<p class="help-block">
-								<translate>Get emails about new features and changes to Game Jolt.</translate>
+								<translate>
+									Get emails about new features and changes to Game Jolt.
+								</translate>
 							</p>
 						</div>
 					</app-form-group>
@@ -92,7 +98,8 @@
 							<app-form-control-toggle :disabled="emailsDisabled" />
 							<p class="help-block">
 								<translate>
-									Get email recommendations about content on Game Jolt that we think you might like.
+									Get email recommendations about content on Game Jolt that we
+									think you might like.
 								</translate>
 							</p>
 						</div>
@@ -110,5 +117,3 @@
 		</div>
 	</app-form>
 </template>
-
-<script lang="ts" src="./email-preferences"></script>

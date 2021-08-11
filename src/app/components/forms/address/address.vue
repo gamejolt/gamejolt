@@ -1,10 +1,16 @@
+<script lang="ts" src="./address"></script>
+
 <template>
 	<app-form name="userAddressForm">
 		<div class="row">
 			<div class="col-sm-6">
 				<app-form-group name="country" :label="$gettext('Country')">
 					<app-form-control-select>
-						<option v-for="country of countries" :key="country.code" :value="country.code">
+						<option
+							v-for="country of countries"
+							:key="country.code"
+							:value="country.code"
+						>
 							{{ country.name }}
 						</option>
 					</app-form-control-select>
@@ -21,7 +27,7 @@
 		<div class="row">
 			<div class="col-sm-6">
 				<app-form-group name="region" :label="$gettext('State/Province/County')">
-					<app-form-control type="text" v-if="!regions" />
+					<app-form-control v-if="!regions" type="text" />
 
 					<app-form-control-select v-else>
 						<option v-for="region of regions" :key="region.code" :value="region.code">
@@ -45,5 +51,3 @@
 		</app-form-button>
 	</app-form>
 </template>
-
-<script lang="ts" src="./address"></script>

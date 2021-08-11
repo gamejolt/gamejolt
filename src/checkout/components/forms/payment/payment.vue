@@ -1,22 +1,30 @@
+<script lang="ts" src="./payment"></script>
+
 <template>
 	<app-form name="paymentForm">
 		<div class="row">
 			<div class="col-sm-6 col-centered">
-				<div class="card-list full-bleed-xs" v-if="cards.length">
+				<div v-if="cards.length" class="card-list full-bleed-xs">
 					<a
-						class="card-list-item"
 						v-for="card of cards"
 						:key="card.id"
+						class="card-list-item"
 						:class="{ active: formModel.selectedCard === card.id }"
 						@click="selectCard(card)"
 					>
 						<div class="pull-left" style="margin-right: 15px">
-							<input type="radio" :checked="formModel.selectedCard === card.id" name="same" />
+							<input
+								type="radio"
+								:checked="formModel.selectedCard === card.id"
+								name="same"
+							/>
 						</div>
 						<div class="pull-left">
 							<strong>Card ending in {{ card.last4 }}</strong>
 							<br />
-							<span class="small text-muted">Expires {{ card.exp_month }}/{{ card.exp_year }}</span>
+							<span class="small text-muted">
+								Expires {{ card.exp_month }}/{{ card.exp_year }}
+							</span>
 						</div>
 					</a>
 					<a
@@ -25,7 +33,11 @@
 						@click="selectCard()"
 					>
 						<div class="pull-left" style="margin-right: 15px">
-							<input type="radio" :checked="formModel.selectedCard === 0" name="same" />
+							<input
+								type="radio"
+								:checked="formModel.selectedCard === 0"
+								name="same"
+							/>
 						</div>
 						<div class="pull-left">
 							<strong>Use a new card</strong>
@@ -47,10 +59,10 @@
 							<app-form-group name="fullname" :label="$gettext('name on card')">
 								<app-jolticon icon="user" />
 								<app-form-control
+									v-app-focus-when
 									type="text"
 									class="has-icon"
 									:placeholder="$gettext('name on card')"
-									v-app-focus-when
 								/>
 								<app-form-control-errors />
 							</app-form-group>
@@ -93,7 +105,9 @@
 										<app-form-control-errors>
 											<app-form-control-error
 												when="cc_exp"
-												:message="$gettext(`Please enter a valid expiration.`)"
+												:message="
+													$gettext(`Please enter a valid expiration.`)
+												"
 											/>
 											<app-form-control-error
 												when="cc_exp_expired"
@@ -125,7 +139,11 @@
 								</div>
 							</div>
 
-							<app-form-group v-if="app.user" name="save_card" :label="$gettext('Remember card?')">
+							<app-form-group
+								v-if="app.user"
+								name="save_card"
+								:label="$gettext('Remember card?')"
+							>
 								<label class="checkbox">
 									<app-form-control-checkbox />
 									<translate>Remember this card for future purchases</translate>
@@ -139,7 +157,11 @@
 
 								<app-form-group name="country" :label="$gettext('country')">
 									<app-form-control-select>
-										<option v-for="country of countries" :key="country.code" :value="country.code">
+										<option
+											v-for="country of countries"
+											:key="country.code"
+											:value="country.code"
+										>
 											{{ country.name }}
 										</option>
 									</app-form-control-select>
@@ -147,21 +169,31 @@
 								</app-form-group>
 
 								<app-form-group name="street1" :label="$gettext('street address')">
-									<app-form-control type="text" :placeholder="$gettext('street address')" />
+									<app-form-control
+										type="text"
+										:placeholder="$gettext('street address')"
+									/>
 									<app-form-control-errors />
 								</app-form-group>
 
 								<div class="clearfix">
 									<div class="left-col">
-										<app-form-group name="region" :label="$gettext('state/province')">
+										<app-form-group
+											name="region"
+											:label="$gettext('state/province')"
+										>
 											<app-form-control
-												type="text"
 												v-if="!regions"
+												type="text"
 												:placeholder="$gettext('state/province')"
 											/>
 
 											<app-form-control-select v-else>
-												<option v-for="region of regions" :key="region.code" :value="region.code">
+												<option
+													v-for="region of regions"
+													:key="region.code"
+													:value="region.code"
+												>
 													{{ region.name }}
 												</option>
 											</app-form-control-select>
@@ -170,8 +202,14 @@
 										</app-form-group>
 									</div>
 									<div class="right-col">
-										<app-form-group name="postcode" :label="$gettext('zip code')">
-											<app-form-control type="text" :placeholder="$gettext('zip code')" />
+										<app-form-group
+											name="postcode"
+											:label="$gettext('zip code')"
+										>
+											<app-form-control
+												type="text"
+												:placeholder="$gettext('zip code')"
+											/>
 											<app-form-control-errors />
 										</app-form-group>
 									</div>
@@ -191,10 +229,15 @@
 			:label="$gettext(`Calculating tax...`)"
 		/>
 
-		<div class="anim-fade-in no-animate-leave text-center" v-if="calculatedTax && taxAmount > 0">
+		<div
+			v-if="calculatedTax && taxAmount > 0"
+			class="anim-fade-in no-animate-leave text-center"
+		>
 			+{{ taxAmount | currency }} taxes
 			<span
-				v-app-tooltip="$gettext(`We are required to collect taxes on orders for certain regions.`)"
+				v-app-tooltip="
+					$gettext(`We are required to collect taxes on orders for certain regions.`)
+				"
 			>
 				<app-jolticon class="text-muted" icon="help-circle" />
 			</span>
@@ -225,5 +268,3 @@
 </template>
 
 <style lang="stylus" src="./payment.styl" scoped></style>
-
-<script lang="ts" src="./payment"></script>

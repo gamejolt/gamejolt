@@ -1,11 +1,13 @@
+<script lang="ts" src="./package"></script>
+
 <template>
 	<app-form name="packageForm">
 		<app-loading-fade :is-loading="isProcessing">
 			<app-form-group name="title" :label="$gettext(`dash.games.packages.form.title_label`)">
 				<p class="help-block">
 					<translate>
-						This is the name that shows up on your game page above the Download/Play button. For
-						your main package, use the title of your game.
+						This is the name that shows up on your game page above the Download/Play
+						button. For your main package, use the title of your game.
 					</translate>
 				</p>
 
@@ -30,10 +32,11 @@
 				:label="$gettext(`dash.games.packages.form.description_label`)"
 				:optional="true"
 			>
-				<p class="help-block" v-translate>
+				<p v-translate class="help-block">
 					This should be filled in
 					<em>only if it's needed</em>
-					, if the name alone isn't enough to distinguish this package from other packages.
+					, if the name alone isn't enough to distinguish this package from other
+					packages.
 				</p>
 
 				<div v-if="!showDescriptionInput">
@@ -42,7 +45,11 @@
 					</app-button>
 				</div>
 				<div v-else>
-					<app-form-control-textarea rows="2" :rules="{ max: 750 }" :disabled="!hasBuildsPerms" />
+					<app-form-control-textarea
+						rows="2"
+						:rules="{ max: 750 }"
+						:disabled="!hasBuildsPerms"
+					/>
 					<app-form-control-errors />
 				</div>
 			</app-form-group>
@@ -70,9 +77,9 @@
 						/>
 						<translate>Private</translate>
 						&mdash;
-						<span class="help-inline" v-translate>
-							Only you can access this package, as well as any keys you assign. You can assign keys
-							in your
+						<span v-translate class="help-inline">
+							Only you can access this package, as well as any keys you assign. You
+							can assign keys in your
 							<b>Keys/Access</b>
 							page.
 						</span>
@@ -81,8 +88,8 @@
 
 				<div class="alert">
 					<translate>
-						Note that regardless of this setting, your package will only be visible on your game's
-						page if it has published releases in it.
+						Note that regardless of this setting, your package will only be visible on
+						your game's page if it has published releases in it.
 					</translate>
 				</div>
 			</app-form-group>
@@ -95,50 +102,56 @@
 				<app-form-control-toggle class="pull-right" :disabled="!hasSalesPerms" />
 				<p class="help-block">
 					<translate>
-						Enabling this will allow partners to access this package even if it's marked as Private
-						or your game is a Devlog-only project.
+						Enabling this will allow partners to access this package even if it's marked
+						as Private or your game is a Devlog-only project.
 					</translate>
-					<router-link :to="{ name: 'landing.partners' }" class="link-help" target="_blank">
+					<router-link
+						:to="{ name: 'landing.partners' }"
+						class="link-help"
+						target="_blank"
+					>
 						<translate>What is a Game Jolt Partner?</translate>
 					</router-link>
 				</p>
 			</app-form-group>
 
 			<app-form-group name="pricing_type" :label="$gettext(`Pricing Type`)">
-				<div class="alert alert-notice" v-if="isFangame">
+				<div v-if="isFangame" class="alert alert-notice">
 					<translate>
-						Accepting payments for fangames is illegal and against our terms. If you sell fangames,
-						we will remove your account and block you from the Marketplace.
+						Accepting payments for fangames is illegal and against our terms. If you
+						sell fangames, we will remove your account and block you from the
+						Marketplace.
 					</translate>
 				</div>
 				<div v-else>
-					<p class="help-block" v-if="!isUserVerified">
+					<p v-if="!isUserVerified" class="help-block">
 						<app-jolticon icon="notice" />
 						<template v-if="user && game.developer.id === user.id">
 							<translate>
-								You must set up your financial information before you can start accepting money.
+								You must set up your financial information before you can start
+								accepting money.
 							</translate>
 							<router-link :to="{ name: 'dash.account.financials' }">
 								<translate>Go to financial set up.</translate>
 							</router-link>
 						</template>
-						<template>
-							<span
-								v-translate="{
-									username: game.developer.username,
-								}"
-							>
-								@%{ username } needs to set their financial information before the game can start
-								accepting money.
-							</span>
-						</template>
+						<span
+							v-translate="{
+								username: game.developer.username,
+							}"
+						>
+							@%{ username } needs to set their financial information before the game
+							can start accepting money.
+						</span>
 					</p>
 
 					<div
-						class="alert alert-notice"
 						v-if="isUserVerified && model && model.has_browser_builds"
+						class="alert alert-notice"
 					>
-						<translate>Packages with browser builds cannot be sold at this time.</translate>
+						<translate>
+							Packages with browser builds cannot be sold at this time.
+						</translate>
 					</div>
 				</div>
 
@@ -153,7 +166,10 @@
 					</label>
 				</div>
 
-				<div class="radio" :class="{ disabled: !isUserVerified || isFangame || !hasSalesPerms }">
+				<div
+					class="radio"
+					:class="{ disabled: !isUserVerified || isFangame || !hasSalesPerms }"
+				>
 					<label>
 						<app-form-control-radio
 							value="pwyw"
@@ -163,7 +179,9 @@
 						<translate>Pay What You Want</translate>
 						&mdash;
 						<span class="help-inline">
-							<translate>They will be able to pay $0 or more. They set the price.</translate>
+							<translate>
+								They will be able to pay $0 or more. They set the price.
+							</translate>
 						</span>
 					</label>
 				</div>
@@ -172,7 +190,10 @@
 					class="radio"
 					:class="{
 						disabled:
-							!isUserVerified || (model && model.has_browser_builds) || isFangame || !hasSalesPerms,
+							!isUserVerified ||
+							(model && model.has_browser_builds) ||
+							isFangame ||
+							!hasSalesPerms,
 					}"
 				>
 					<label>
@@ -180,24 +201,26 @@
 							value="paid"
 							:disabled="
 								!isUserVerified ||
-									(model && model.has_browser_builds) ||
-									isFangame ||
-									!hasSalesPerms
+								(model && model.has_browser_builds) ||
+								isFangame ||
+								!hasSalesPerms
 							"
 						/>
 						<translate>Paid</translate>
 						&mdash;
 						<span class="help-inline">
-							<translate>Charge a specific price with the ability for them to pay more.</translate>
+							<translate>
+								Charge a specific price with the ability for them to pay more.
+							</translate>
 						</span>
 					</label>
 				</div>
 			</app-form-group>
 
 			<app-form-group
+				v-if="formModel.pricing_type === 'pwyw'"
 				name="price"
 				:label="$gettext(`Suggested Price`)"
-				v-if="formModel.pricing_type === 'pwyw'"
 				:optional="true"
 			>
 				<div class="row">
@@ -225,9 +248,9 @@
 			</app-form-group>
 
 			<app-form-group
+				v-if="formModel.pricing_type === 'paid'"
 				name="price"
 				:label="$gettext(`Price`)"
-				v-if="formModel.pricing_type === 'paid'"
 			>
 				<div class="input-group">
 					<span class="input-group-addon">$</span>
@@ -244,7 +267,11 @@
 			</app-form-group>
 
 			<div v-if="formModel.pricing_type === 'paid'">
-				<app-game-perms tag="div" required="sales" v-if="!promotionalPricing && !isShowingSaleForm">
+				<app-game-perms
+					v-if="!promotionalPricing && !isShowingSaleForm"
+					tag="div"
+					required="sales"
+				>
 					<div>
 						<app-button @click="isShowingSaleForm = true">
 							<translate>Set Up Sale</translate>
@@ -252,7 +279,7 @@
 					</div>
 					<br />
 				</app-game-perms>
-				<div class="well fill-offset full-bleed" v-else-if="isShowingSaleForm">
+				<div v-else-if="isShowingSaleForm" class="well fill-offset full-bleed">
 					<fieldset>
 						<app-form-legend compact>
 							<translate>Set up sale</translate>
@@ -260,20 +287,31 @@
 
 						<app-form-group name="sale_timezone" :label="$gettext(`Timezone`)">
 							<p class="help-block">
-								<translate>All time selection below will use this timezone.</translate>
+								<translate>
+									All time selection below will use this timezone.
+								</translate>
 							</p>
 
 							<p class="help-block">
 								<strong>
 									<translate>
-										Should auto-detect, but if it doesn't, choose your closest city.
+										Should auto-detect, but if it doesn't, choose your closest
+										city.
 									</translate>
 								</strong>
 							</p>
 
 							<app-form-control-select>
-								<optgroup v-for="(timezones, region) in timezones" :label="region">
-									<option v-for="timezone in timezones" :value="timezone.i">
+								<optgroup
+									v-for="(timezones, region) in timezones"
+									:key="region"
+									:label="region"
+								>
+									<option
+										v-for="timezone in timezones"
+										:key="timezone.label"
+										:value="timezone.i"
+									>
 										{{ timezone.label }}
 									</option>
 								</optgroup>
@@ -288,9 +326,13 @@
 							</label>
 
 							<!--
-							Can only set this when first setting up a sale.
-						-->
-							<app-form-group v-if="!promotionalPricing" name="sale_start_now" :hide-label="true">
+								Can only set this when first setting up a sale.
+							-->
+							<app-form-group
+								v-if="!promotionalPricing"
+								name="sale_start_now"
+								:hide-label="true"
+							>
 								<div class="checkbox">
 									<label>
 										<app-form-control-checkbox />
@@ -337,9 +379,13 @@
 								/>
 							</div>
 
-							<p class="help-block" v-if="formModel.price && formModel.sale_price">
+							<p v-if="formModel.price && formModel.sale_price" class="help-block">
 								{{
-									(((formModel.price - formModel.sale_price) / formModel.price) * 100).toFixed(0)
+									(
+										((formModel.price - formModel.sale_price) /
+											formModel.price) *
+										100
+									).toFixed(0)
 								}}% off
 							</p>
 
@@ -347,11 +393,11 @@
 						</app-form-group>
 					</fieldset>
 				</div>
-				<div class="well fill-offset full-bleed" v-else-if="promotionalPricing">
-					<div class="alert" v-if="promotionalPricing.start > now">
+				<div v-else-if="promotionalPricing" class="well fill-offset full-bleed">
+					<div v-if="promotionalPricing.start > now" class="alert">
 						<translate>A sale is currently scheduled.</translate>
 					</div>
-					<div class="alert alert-highlight" v-else>
+					<div v-else class="alert alert-highlight">
 						<translate>Your sale is currently running.</translate>
 					</div>
 
@@ -372,14 +418,22 @@
 							<th><translate>Start</translate></th>
 							<td>
 								{{ saleStartLocal | date('medium') }}
-								<app-time-ago :date="promotionalPricing.start" is-future class="text-muted small" />
+								<app-time-ago
+									:date="promotionalPricing.start"
+									is-future
+									class="text-muted small"
+								/>
 							</td>
 						</tr>
 						<tr>
 							<th><translate>End</translate></th>
 							<td>
 								{{ saleEndLocal | date('medium') }}
-								<app-time-ago :date="promotionalPricing.end" is-future class="text-muted small" />
+								<app-time-ago
+									:date="promotionalPricing.end"
+									is-future
+									class="text-muted small"
+								/>
 							</td>
 						</tr>
 						<tr>
@@ -419,18 +473,21 @@
 			>
 				<p class="help-block">
 					<translate>
-						We use the primary package to determine the price to show on game listings. You can only
-						have one primary package for your game.
+						We use the primary package to determine the price to show on game listings.
+						You can only have one primary package for your game.
 					</translate>
 				</p>
 				<div class="checkbox">
 					<label>
-						<app-form-control-checkbox :disabled="startedPrimary || !hasPrimarySellable" />
+						<app-form-control-checkbox
+							:disabled="startedPrimary || !hasPrimarySellable"
+						/>
 
 						<template v-if="!hasPrimarySellable">
 							<strong>
 								<translate>
-									Since you don't have any packages yet, we'll mark this as your primary one.
+									Since you don't have any packages yet, we'll mark this as your
+									primary one.
 								</translate>
 							</strong>
 						</template>
@@ -447,13 +504,11 @@
 			</app-form-group>
 
 			<app-form-button>
-				<translate v-if="method === 'add'">dash.games.packages.form.add_package_button</translate>
-				<translate v-else-if="method === 'edit'">
-					Save Package
+				<translate v-if="method === 'add'">
+					dash.games.packages.form.add_package_button
 				</translate>
+				<translate v-else-if="method === 'edit'"> Save Package </translate>
 			</app-form-button>
 		</app-loading-fade>
 	</app-form>
 </template>
-
-<script lang="ts" src="./package"></script>

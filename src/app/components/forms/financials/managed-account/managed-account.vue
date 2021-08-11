@@ -1,3 +1,5 @@
+<script lang="ts" src="./managed-account"></script>
+
 <template>
 	<app-form name="managedAccountForm" class="form-dashboard-managed-account">
 		<app-loading v-if="!isLoaded" />
@@ -16,7 +18,8 @@
 							<br />
 							<span class="help-inline">
 								<translate>
-									Are you a sole proprietor, partnership or otherwise an individual human being?
+									Are you a sole proprietor, partnership or otherwise an
+									individual human being?
 								</translate>
 							</span>
 						</label>
@@ -28,7 +31,8 @@
 							<br />
 							<span class="help-inline">
 								<translate>
-									Are you a company / corporation / business / charity / trust fund / etc?
+									Are you a company / corporation / business / charity / trust
+									fund / etc?
 								</translate>
 							</span>
 						</label>
@@ -39,15 +43,21 @@
 				<app-form-group name="country_code" :label="$gettext('Country Code')">
 					<p class="help-block">
 						<translate>
-							Select the country of your residence or the country that your business is legally
-							established in. We're working hard on expanding our reach, and hope to get more
-							countries supported soon.
+							Select the country of your residence or the country that your business
+							is legally established in. We're working hard on expanding our reach,
+							and hope to get more countries supported soon.
 						</translate>
 					</p>
 
 					<app-form-control-select>
-						<option value=""><translate>Please select your country...</translate></option>
-						<option v-for="(country, code) of stripe.countries" :key="code" :value="code">
+						<option value="">
+							<translate>Please select your country...</translate>
+						</option>
+						<option
+							v-for="(country, code) of stripe.countries"
+							:key="code"
+							:value="code"
+						>
 							{{ Geo.getCountryName(code) }}
 						</option>
 					</app-form-control-select>
@@ -58,8 +68,8 @@
 						<div class="alert sans-margin-bottom">
 							<p>
 								<translate>
-									If you do not see your country above, all is not lost! We can still manually
-									approve your account.
+									If you do not see your country above, all is not lost! We can
+									still manually approve your account.
 								</translate>
 							</p>
 							<p>
@@ -76,8 +86,8 @@
 				<div class="alert">
 					<p>
 						<translate>
-							This information is needed for tax purposes as well as account verification. We use
-							Stripe to store and verify this data.
+							This information is needed for tax purposes as well as account
+							verification. We use Stripe to store and verify this data.
 						</translate>
 						<app-link-help page="why-tax-forms" class="link-help">
 							<translate>Learn more</translate>
@@ -85,24 +95,28 @@
 					</p>
 				</div>
 
-				<div class="alert alert-notice" v-if="isVerificationPending">
+				<div v-if="isVerificationPending" class="alert alert-notice">
 					<p>
 						<strong>
-							<translate>Stripe is in the process of verifying your details.</translate>
+							<translate>
+								Stripe is in the process of verifying your details.
+							</translate>
 						</strong>
 						<translate>
-							This can take anywhere from a few minutes to a few days. We'll contact you when the
-							verification process is complete and if Stripe requires additional supporting
-							documents (such as a photo ID) in order to identify you. Hang tight!
+							This can take anywhere from a few minutes to a few days. We'll contact
+							you when the verification process is complete and if Stripe requires
+							additional supporting documents (such as a photo ID) in order to
+							identify you. Hang tight!
 						</translate>
 					</p>
 				</div>
 
-				<div class="alert alert-notice" v-if="requiresVerificationDocument">
+				<div v-if="requiresVerificationDocument" class="alert alert-notice">
 					<p>
 						<strong>
 							<translate>
-								Stripe needs additional identification documents in order to verify your account.
+								Stripe needs additional identification documents in order to verify
+								your account.
 							</translate>
 						</strong>
 						<translate>Please enter them below.</translate>
@@ -146,13 +160,13 @@
 				<div v-if="account.type === 'individual'">
 					<h4><translate>Your Details</translate></h4>
 
-					<div class="alert" v-if="account.status === 'unverified'">
+					<div v-if="account.status === 'unverified'" class="alert">
 						<p><translate>Please fill in your personal information.</translate></p>
 					</div>
 
 					<app-financials-managed-account-person
 						ref="individual"
-						namePrefix="individual"
+						name-prefix="individual"
 						:country-code="account.country_code"
 					/>
 				</div>
@@ -167,18 +181,19 @@
 
 					<h4><translate>Representative Details</translate></h4>
 
-					<div class="alert" v-if="account.status === 'unverified'">
+					<div v-if="account.status === 'unverified'" class="alert">
 						<p>
 							<translate>
-								We are required to collection information for a representative of your company.
+								We are required to collection information for a representative of
+								your company.
 							</translate>
 						</p>
 					</div>
 
 					<app-financials-managed-account-person
-						ref="representative"
 						v-if="representative"
-						:namePrefix="representative.id"
+						ref="representative"
+						:name-prefix="representative.id"
 					/>
 				</div>
 			</div>
@@ -191,13 +206,15 @@
 					<p v-if="genericError !== true">{{ genericError }}</p>
 					<p v-else-if="!account.is_stripe_initialized">
 						<translate>
-							Something went wrong. Please check that you've entered everything correctly.
+							Something went wrong. Please check that you've entered everything
+							correctly.
 						</translate>
 					</p>
 					<p v-else>
 						<translate>
-							Something went wrong. Please check that you've entered everything correctly. This is
-							usually because of an invalid zip/postal code, invalid SSN/EIN or phone number.
+							Something went wrong. Please check that you've entered everything
+							correctly. This is usually because of an invalid zip/postal code,
+							invalid SSN/EIN or phone number.
 						</translate>
 					</p>
 				</div>
@@ -215,8 +232,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .form-dashboard-managed-account
 	// Less spacing.
@@ -227,5 +244,3 @@
 		.control-label
 			padding-top: 0
 </style>
-
-<script lang="ts" src="./managed-account"></script>

@@ -1,3 +1,5 @@
+<script lang="ts" src="./site-editor"></script>
+
 <template>
 	<div class="site-editor fill-darkest" :class="'site-editor-tab-' + tab">
 		<div class="site-editor-body">
@@ -36,7 +38,7 @@
 							</ul>
 						</div>
 
-						<div class="navbar-center"></div>
+						<div class="navbar-center" />
 
 						<div class="navbar-right">
 							<div class="navbar-controls">
@@ -49,14 +51,13 @@
 				</div>
 
 				<div
-					class="
-					site-editor-sidebar
-					fill-dark
-					scrollable
-					anim-fade-enter-left
-					anim-fade-leave-left
-				"
 					v-if="tab === 'theme'"
+					class="
+						site-editor-sidebar
+						fill-dark
+						scrollable
+						anim-fade-enter-left anim-fade-leave-left
+					"
 				>
 					<div class="well">
 						<h3 class="sans-margin-top">
@@ -64,7 +65,9 @@
 						</h3>
 
 						<p class="small text-muted">
-							<translate>Themes decide the layout and general styling of your site.</translate>
+							<translate>
+								Themes decide the layout and general styling of your site.
+							</translate>
 						</p>
 
 						<app-theme-selector
@@ -87,14 +90,13 @@
 					</div>
 				</div>
 				<div
-					class="
-					site-editor-bottom
-					fill-dark
-					scrollable
-					anim-fade-enter-up
-					anim-fade-leave-down
-				"
 					v-if="tab === 'content'"
+					class="
+						site-editor-bottom
+						fill-dark
+						scrollable
+						anim-fade-enter-up anim-fade-leave-down
+					"
 				>
 					<div class="well">
 						<app-content-block-editor
@@ -107,7 +109,7 @@
 				</div>
 
 				<div class="site-editor-content">
-					<iframe id="site-editor-iframe" :src="siteUrl"></iframe>
+					<iframe id="site-editor-iframe" :src="siteUrl" />
 				</div>
 			</div>
 		</div>
@@ -115,5 +117,3 @@
 </template>
 
 <style lang="stylus" src="./site-editor.styl" scoped></style>
-
-<script lang="ts" src="./site-editor"></script>

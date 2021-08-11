@@ -45,70 +45,65 @@
 				</span>
 			</div>
 			<div v-if="Screen.isDesktop" class="col-md-3">
-				<div
-					v-for="latestPost of [indexedPosts[channel.id]]"
-					v-if="latestPost"
-					:key="latestPost.id"
-					class="forum-channel-list-item-latest-topic clearfix"
-				>
-					<template v-if="latestPost">
-						<div class="forum-channel-list-item-latest-topic-avatar">
-							<app-user-card-hover :user="latestPost.user">
-								<app-user-avatar :user="latestPost.user" />
-							</app-user-card-hover>
-						</div>
-
-						<div class="forum-channel-list-item-latest-topic-info">
-							<div class="forum-channel-list-item-latest-topic-info-title">
-								<router-link
-									:to="{
-										name: 'forums.topics.view',
-										params: {
-											slug: latestPost.topic.slug,
-											id: latestPost.topic.id,
-										},
-										hash: '#forum-post-' + latestPost.id,
-										query: {
-											page: getPostPage(latestPost),
-										},
-									}"
-								>
-									{{ latestPost.topic.title }}
-								</router-link>
+				<template v-if="indexedPosts[channel.id]">
+					<template v-for="latestPost of [indexedPosts[channel.id]]" :key="latestPost.id">
+						<div class="forum-channel-list-item-latest-topic clearfix">
+							<div class="forum-channel-list-item-latest-topic-avatar">
+								<app-user-card-hover :user="latestPost.user">
+									<app-user-avatar :user="latestPost.user" />
+								</app-user-card-hover>
 							</div>
-							<div class="text-muted">
-								<translate>by</translate>
-								<strong>
+
+							<div class="forum-channel-list-item-latest-topic-info">
+								<div class="forum-channel-list-item-latest-topic-info-title">
 									<router-link
-										class="link-muted"
 										:to="{
-											name: 'profile.overview',
-											params: { username: latestPost.user.username },
+											name: 'forums.topics.view',
+											params: {
+												slug: latestPost.topic.slug,
+												id: latestPost.topic.id,
+											},
+											hash: '#forum-post-' + latestPost.id,
+											query: {
+												page: getPostPage(latestPost),
+											},
 										}"
 									>
-										{{ latestPost.user.display_name }}
-										<app-user-verified-tick :user="latestPost.user" small />
+										{{ latestPost.topic.title }}
 									</router-link>
-								</strong>
-								<span class="tiny">@{{ latestPost.user.username }}</span>
-							</div>
-							<div class="text-muted">
-								<app-time-ago :date="latestPost.posted_on" />
+								</div>
+								<div class="text-muted">
+									<translate>by</translate>
+									<strong>
+										<router-link
+											class="link-muted"
+											:to="{
+												name: 'profile.overview',
+												params: { username: latestPost.user.username },
+											}"
+										>
+											{{ latestPost.user.display_name }}
+											<app-user-verified-tick :user="latestPost.user" small />
+										</router-link>
+									</strong>
+									<span class="tiny">@{{ latestPost.user.username }}</span>
+								</div>
+								<div class="text-muted">
+									<app-time-ago :date="latestPost.posted_on" />
+								</div>
 							</div>
 						</div>
 					</template>
-					<template v-if="!latestPost">
-						--
-					</template>
-				</div>
+				</template>
+				<template v-else> -- </template>
 			</div>
 		</div>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .forum-channel-list-item
 	margin-bottom: $font-size-base * 2

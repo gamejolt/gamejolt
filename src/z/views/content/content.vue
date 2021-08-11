@@ -1,3 +1,5 @@
+<script lang="ts" src="./content"></script>
+
 <template>
 	<div class="main">
 		<div class="content">
@@ -73,5 +75,3 @@
 </template>
 
 <style lang="stylus" src="./content.styl" scoped></style>
-
-<script lang="ts" src="./content"></script>

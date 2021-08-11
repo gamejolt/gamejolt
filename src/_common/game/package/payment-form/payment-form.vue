@@ -382,8 +382,8 @@
 
 					<div class="form-group">
 						<!--
-						For some reason the tax amount goes on top of this. Gotta manually hoist it on top.
-					-->
+							For some reason the tax amount goes on top of this. Gotta manually hoist it on top.
+						-->
 						<div class="pull-right small" style="position: relative; z-index: 1">
 							<a class="link-muted" @click="startOver">
 								&laquo;

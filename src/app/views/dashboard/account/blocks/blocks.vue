@@ -1,10 +1,12 @@
+<script lang="ts" src="./blocks"></script>
+
 <template>
 	<div class="row">
 		<div class="col-md-3 col-md-push-9 col-lg-4 col-lg-push-8">
 			<div class="page-help">
 				<translate>
-					When you block someone, that user won't be able to follow you, send you a friend request,
-					or reply to your posts and comments.
+					When you block someone, that user won't be able to follow you, send you a friend
+					request, or reply to your posts and comments.
 				</translate>
 				<app-link-help page="blocking-users" class="link-help">
 					<translate>Learn more about what happens when you block a user</translate>
@@ -24,7 +26,10 @@
 				</template>
 
 				<app-card-list :is-adding="isBlocking">
-					<app-card-list-add :label="$gettext('Block User')" @toggle="isBlocking = !isBlocking">
+					<app-card-list-add
+						:label="$gettext('Block User')"
+						@toggle="isBlocking = !isBlocking"
+					>
 						<form-user-block @submit="onBlockSubmit" />
 					</app-card-list-add>
 				</app-card-list>
@@ -52,8 +57,12 @@
 						</app-button>
 					</div>
 
-					<div class="page-cut" v-if="shouldShowLoadMore">
-						<app-button trans @click="loadMore()" v-app-track-event="`profile-edit-blocks:more`">
+					<div v-if="shouldShowLoadMore" class="page-cut">
+						<app-button
+							v-app-track-event="`profile-edit-blocks:more`"
+							trans
+							@click="loadMore()"
+						>
 							<translate>Load More</translate>
 						</app-button>
 					</div>
@@ -65,8 +74,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 $-height = 50px
 $-avatar-height = 40px
@@ -96,7 +105,8 @@ $-h-padding = 20px
 		flex: auto
 		overflow: hidden
 
-	&-name, &-username
+	&-name
+	&-username
 		text-overflow()
 
 	&-name
@@ -105,7 +115,4 @@ $-h-padding = 20px
 	&-username
 		color: var(--theme-fg-muted)
 		font-size: $font-size-small
-
 </style>
-
-<script lang="ts" src="./blocks"></script>

@@ -1,17 +1,20 @@
+<script lang="ts" src="./list"></script>
+
 <template>
 	<div class="row">
 		<div class="col-sm-4 col-sm-push-8">
 			<div class="page-help">
 				<p>
 					<translate>
-						Packages are how you organize and distribute your game's builds and other files.
+						Packages are how you organize and distribute your game's builds and other
+						files.
 					</translate>
 				</p>
 				<p>
 					<translate>
-						Your primary package should contain the builds you want people to play. You can create
-						new packages to contain additional files, such as level editors, art packs, expansions,
-						and other DLC.
+						Your primary package should contain the builds you want people to play. You
+						can create new packages to contain additional files, such as level editors,
+						art packs, expansions, and other DLC.
 					</translate>
 				</p>
 				<p>
@@ -23,21 +26,22 @@
 		</div>
 
 		<div class="col-sm-8 col-sm-pull-4">
-			<div class="alert" v-if="game._is_devlog">
+			<div v-if="game._is_devlog" class="alert">
 				<app-jolticon icon="notice" notice />
 				<b><translate>Public packages do not show on devlog-only game pages.</translate></b>
 				<translate>
-					You are only able to create private packages for testers while your game page is only a
-					devlog. Once you publish your game page into early access or as a complete game, your
-					public packages will show.
+					You are only able to create private packages for testers while your game page is
+					only a devlog. Once you publish your game page into early access or as a
+					complete game, your public packages will show.
 				</translate>
 			</div>
 
-			<div class="alert" v-if="!packages.length">
+			<div v-if="!packages.length" class="alert">
 				<p v-if="hasAllPerms"><translate>You haven't added any packages yet.</translate></p>
 				<p v-else>
 					<translate>
-						This game hasn't got any packages yet, and you don't have permissions to create any.
+						This game hasn't got any packages yet, and you don't have permissions to
+						create any.
 					</translate>
 				</p>
 			</div>
@@ -53,7 +57,11 @@
 				<app-card-list-draggable :disabled="!hasBuildsPerms" @change="saveSort">
 					<app-card-list-item v-for="pkg of packages" :key="pkg.id" :item="pkg">
 						<app-game-perms required="all">
-							<a class="card-remove" v-if="!pkg.has_sales" @click="removePackage(pkg)">
+							<a
+								v-if="!pkg.has_sales"
+								class="card-remove"
+								@click="removePackage(pkg)"
+							>
 								<app-jolticon icon="remove" />
 							</a>
 						</app-game-perms>
@@ -78,25 +86,25 @@
 
 						<div class="card-meta">
 							<span
-								class="tag tag-highlight"
 								v-if="sellables[pkg.id] && sellables[pkg.id].primary"
 								v-app-tooltip="
 									$gettext(
 										`We use the primary package to determine the price to show on game listings.`
 									)
 								"
+								class="tag tag-highlight"
 							>
 								<translate>Primary Package</translate>
 							</span>
 
 							<span
-								class="tag tag-notice"
 								v-if="pkg.visibility === GamePackage.VISIBILITY_PRIVATE"
 								v-app-tooltip="
 									$gettext(
 										`This package will only be available to you and any keys that have access.`
 									)
 								"
+								class="tag tag-notice"
 							>
 								<translate>Private</translate>
 							</span>
@@ -105,23 +113,27 @@
 								<span class="tag">
 									<translate>Pay What You Want</translate>
 								</span>
-								<span class="dot-separator"></span>
+								<span class="dot-separator" />
 								<strong>
 									<translate>Suggested Price</translate>
 								</strong>
 								&mdash;
-								<template v-if="sellables[pkg.id] && sellables[pkg.id].pricings[0].amount">
+								<template
+									v-if="sellables[pkg.id] && sellables[pkg.id].pricings[0].amount"
+								>
 									{{ sellables[pkg.id].pricings[0].amount | currency }}
 								</template>
 								<template v-else>
 									<translate>None</translate>
 								</template>
 							</template>
-							<template v-else-if="sellables[pkg.id] && sellables[pkg.id].type === 'paid'">
+							<template
+								v-else-if="sellables[pkg.id] && sellables[pkg.id].type === 'paid'"
+							>
 								<span class="tag">
 									<translate>Paid</translate>
 								</span>
-								<span class="dot-separator"></span>
+								<span class="dot-separator" />
 								<strong>
 									<translate>Price</translate>
 								</strong>
@@ -135,7 +147,7 @@
 							</template>
 						</div>
 
-						<div class="card-content" v-if="pkg.description">
+						<div v-if="pkg.description" class="card-content">
 							{{ pkg.description }}
 						</div>
 
@@ -176,9 +188,9 @@
 				</app-card-list-draggable>
 			</app-card-list>
 
-			<app-dash-game-wizard-controls :disabled="!game._is_devlog && !game.has_active_builds" />
+			<app-dash-game-wizard-controls
+				:disabled="!game._is_devlog && !game.has_active_builds"
+			/>
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./list"></script>

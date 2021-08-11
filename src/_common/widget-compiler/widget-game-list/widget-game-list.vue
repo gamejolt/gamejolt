@@ -1,7 +1,9 @@
+<script lang="ts" src="./widget-game-list"></script>
+
 <template>
 	<div class="widget-compiler-widget-game-list" :class="contentClass">
 		<div class="-game-list">
-			<a class="-game" v-for="game of games" :key="game.id" :href="url(game)">
+			<a v-for="game of games" :key="game.id" class="-game" :href="url(game)">
 				<app-game-thumbnail-img animate :game="game" />
 				<div class="-title">{{ game.title }}</div>
 			</a>
@@ -10,7 +12,7 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
 
 .-game-list
 	text-align: center
@@ -39,5 +41,3 @@
 	font-weight: bold
 	font-size: 1.1em
 </style>
-
-<script lang="ts" src="./widget-game-list"></script>

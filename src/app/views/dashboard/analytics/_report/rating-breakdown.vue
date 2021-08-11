@@ -1,3 +1,5 @@
+<script lang="ts" src="./rating-breakdown"></script>
+
 <template>
 	<div class="col-sm-8">
 		<table class="table table-striped table-condensed">
@@ -9,11 +11,11 @@
 					<th class="text-right">
 						<translate>Count</translate>
 					</th>
-					<th style="width: 150px"></th>
+					<th style="width: 150px" />
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="i of [1, 0]">
+				<tr v-for="i of [1, 0]" :key="i">
 					<td v-if="i === 1">
 						<translate>Like</translate>
 					</td>
@@ -26,12 +28,14 @@
 					<td>
 						<div
 							class="report-percentage"
-							:style="{ width: ((reportData.data[i] || 0) / reportData.total) * 70 + 'px' }"
-						></div>
+							:style="{
+								width: ((reportData.data[i] || 0) / reportData.total) * 70 + 'px',
+							}"
+						/>
 						<small>
 							{{
 								reportData.data[i] / reportData.total ||
-									0 | number({ style: 'percent', maximumFractionDigits: 2 })
+								0 | number({ style: 'percent', maximumFractionDigits: 2 })
 							}}
 						</small>
 					</td>
@@ -42,5 +46,3 @@
 </template>
 
 <style lang="stylus" src="./report-percentage.styl" scoped></style>
-
-<script lang="ts" src="./rating-breakdown"></script>

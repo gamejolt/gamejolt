@@ -3,41 +3,31 @@
 <template>
 	<div v-if="!filtering.areTagFiltersEmpty || tag" class="game-filtering-tags">
 		<a v-if="tag" class="tag tag-highlight game-filtering-tag" @click="clearTag()">
-			<strong>
-				<translate>Tag</translate>
-				:
-			</strong>
+			<strong><translate>Tag</translate>:</strong>
 			{{ tag.label }}
 			<app-jolticon icon="remove" />
 		</a>
 
-		<span
-			v-for="(value, filter) of filtering.filters"
-			v-if="GameFilteringContainer.definitions[filter].type !== 'string' && value"
-			:key="filter"
-		>
-			<!-- Array type -->
-			<template v-if="GameFilteringContainer.definitions[filter].type === 'array'">
-				<span v-for="(option, index) of value" :key="index">
+		<span v-for="filter of filters" :key="filter.key">
+			<template v-if="filter.type === 'array'">
+				<span v-for="(option, i) of filter.options" :key="i">
 					<a
 						class="tag tag-highlight game-filtering-tag"
-						@click="removeFilterOption(filter, option)"
+						@click="removeFilterOption(filter.key, option)"
 					>
-						<strong>{{ GameFilteringContainer.definitions[filter].label }}:</strong>
-						{{ GameFilteringContainer.definitions[filter].options[option] }}
+						<strong>{{ filter.label }}:</strong>
+						{{ option }}
 						<app-jolticon icon="remove" />
 					</a>
 				</span>
 			</template>
-
-			<!-- Radio type -->
-			<template v-else-if="GameFilteringContainer.definitions[filter].type === 'radio'">
+			<template v-else-if="filter.type === 'radio'">
 				<a
 					class="tag tag-highlight game-filtering-tag"
-					@click="removeFilterOption(filter, value)"
+					@click="removeFilterOption(filter.key, filter.value)"
 				>
-					<strong>{{ GameFilteringContainer.definitions[filter].label }}:</strong>
-					{{ GameFilteringContainer.definitions[filter].options[value] }}
+					<strong>{{ filter.label }}:</strong>
+					{{ filter.valueLabel }}
 					<app-jolticon icon="remove" />
 				</a>
 			</template>

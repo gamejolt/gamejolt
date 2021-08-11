@@ -1,6 +1,8 @@
+<script lang="ts" src="./list"></script>
+
 <template>
 	<div v-if="isRouteBootstrapped">
-		<table class="table" v-if="orders.length">
+		<table v-if="orders.length" class="table">
 			<thead>
 				<tr>
 					<th><translate>Order #</translate></th>
@@ -30,7 +32,7 @@
 						{{ order.completed_on | date('mediumDate') }}
 					</td>
 					<td class="text-right">
-						<span class="tag tag-notice" v-if="order._is_refunded">
+						<span v-if="order._is_refunded" class="tag tag-notice">
 							<translate>Refunded</translate>
 						</span>
 						{{ order.total_amount | currency }}
@@ -42,13 +44,11 @@
 			<div class="col-md-6 col-centered">
 				<p class="lead text-center">
 					<translate>
-						You haven't bought any games on the site yet. Once you do, you'll be able to see all of
-						your orders here and the details for each order.
+						You haven't bought any games on the site yet. Once you do, you'll be able to
+						see all of your orders here and the details for each order.
 					</translate>
 				</p>
 			</div>
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./list"></script>

@@ -1,21 +1,23 @@
+<script lang="ts" src="./card"></script>
+
 <template>
-	<app-card class="game-external-package-card" :id="`game-external-package-card-${package.id}`">
+	<app-card :id="`game-external-package-card-${package.id}`" class="game-external-package-card">
 		<div class="card-title">
 			<h4>
 				{{ package.title }}
 			</h4>
 		</div>
 
-		<div class="card-meta card-meta-sm" v-if="platforms.length">
+		<div v-if="platforms.length" class="card-meta card-meta-sm">
 			<app-jolticon
 				v-for="platform of platforms"
 				:key="platform"
-				:icon="GameBuild.platformSupportInfo[platform].icon"
 				v-app-tooltip="GameBuild.platformSupportInfo[platform].tooltip"
+				:icon="GameBuild.platformSupportInfo[platform].icon"
 			/>
 		</div>
 
-		<div class="card-content" v-if="package.description">
+		<div v-if="package.description" class="card-content">
 			<app-fade-collapse
 				:collapse-height="100"
 				:is-open="showFullDescription"
@@ -26,19 +28,19 @@
 			</app-fade-collapse>
 
 			<a
-				class="hidden-text-expander"
 				v-if="canToggleDescription"
-				@click="showFullDescription = !showFullDescription"
 				v-app-track-event="`game-package-card:show-full-description`"
+				class="hidden-text-expander"
+				@click="showFullDescription = !showFullDescription"
 			/>
 		</div>
 
 		<div class="card-controls">
 			<app-button
+				v-app-tooltip="$gettext(`Play Off-Site`)"
 				primary
 				icon="world"
 				@click="gotoExternal()"
-				v-app-tooltip="$gettext(`Play Off-Site`)"
 			>
 				<translate>Play</translate>
 			</app-button>
@@ -47,8 +49,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .game-external-package-card
 	.card
@@ -60,5 +62,3 @@
 		small
 			margin-left: 5px
 </style>
-
-<script lang="ts" src="./card"></script>

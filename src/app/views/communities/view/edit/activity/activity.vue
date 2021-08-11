@@ -1,3 +1,5 @@
+<script lang="ts" src="./activity"></script>
+
 <template>
 	<app-communities-view-page-container full>
 		<h2 class="section-header">
@@ -30,7 +32,7 @@
 			<app-loading centered />
 		</template>
 		<div v-else-if="!isAtEnd" class="page-cut -more">
-			<app-button trans @click="loadMore" v-app-track-event="`community-edit-activity:more`">
+			<app-button v-app-track-event="`community-edit-activity:more`" trans @click="loadMore">
 				<translate>Load More</translate>
 			</app-button>
 		</div>
@@ -77,5 +79,3 @@
 .-more
 	margin-top: 12px
 </style>
-
-<script lang="ts" src="./activity"></script>

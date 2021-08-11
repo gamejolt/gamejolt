@@ -61,7 +61,7 @@ export default class RouteLibraryOverview extends BaseRouteComponent {
 				eventLabel: 'followed',
 				collections: this.followedCollections,
 			},
-		];
+		].filter(i => i.collections.length > 0);
 	}
 
 	get mainCollections() {

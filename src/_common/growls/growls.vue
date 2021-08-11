@@ -1,11 +1,18 @@
+<script lang="ts" src="./growls"></script>
+
 <template>
 	<div class="growl-container">
-		<app-growl v-for="(growl, index) of Growls.growls" :key="index" :growl="growl" :index="index" />
+		<app-growl
+			v-for="(growl, index) of Growls.growls"
+			:key="index"
+			:growl="growl"
+			:index="index"
+		/>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
 
 .growl-container
 	position: fixed
@@ -18,5 +25,3 @@
 		right: auto
 		width: $growl-width
 </style>
-
-<script lang="ts" src="./growls"></script>

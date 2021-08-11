@@ -1,3 +1,5 @@
+<script lang="ts" src="./post-list"></script>
+
 <template>
 	<app-message-thread class="forum-post-list">
 		<app-forum-post-list-item
@@ -10,5 +12,3 @@
 		/>
 	</app-message-thread>
 </template>
-
-<script lang="ts" src="./post-list"></script>

@@ -1,5 +1,7 @@
+<script lang="ts" src="./color"></script>
+
 <template>
-	<section class="section" id="styleguide-colors">
+	<section id="styleguide-colors" class="section">
 		<h1 class="section-header">Colors</h1>
 
 		<!-- use h3 and p -->
@@ -8,13 +10,13 @@
 			<span class="-colors">
 				<span
 					v-for="color of palette.colors"
-					v-app-tooltip.bottom="color"
 					:key="color"
+					v-app-tooltip.bottom="color"
 					:class="{
 						'-color': true,
 						[color]: true,
 					}"
-				></span>
+				/>
 			</span>
 		</div>
 	</section>
@@ -164,5 +166,3 @@
 .theme-bi-fg
 	background-color: var(--theme-bi-fg)
 </style>
-
-<script lang="ts" src="./color"></script>

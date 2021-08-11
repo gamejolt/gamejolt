@@ -1,3 +1,5 @@
+<script lang="ts" src="./overview"></script>
+
 <template>
 	<div class="route-library-overview">
 		<app-page-header>
@@ -7,17 +9,17 @@
 			<div class="text-muted small">
 				<p>
 					<translate>
-						This is your personalized library of games. Here dwell the games you've followed and any
-						playlists or bundles that you've made or followed.
+						This is your personalized library of games. Here dwell the games you've
+						followed and any playlists or bundles that you've made or followed.
 					</translate>
 				</p>
 			</div>
 		</app-page-header>
 
 		<!--
-		When they are offline, we show them this message.
-	-->
-		<section class="section fill-notice text-center" v-if="Connection.isClientOffline">
+			When they are offline, we show them this message.
+		-->
+		<section v-if="Connection.isClientOffline" class="section fill-notice text-center">
 			<p>
 				<app-jolticon icon="notice" big />
 			</p>
@@ -28,12 +30,11 @@
 
 		<template v-else>
 			<section
-				class="section collection-row-section"
 				v-for="group of collectionGroups"
 				:key="group.key"
-				v-if="group.collections.length"
+				class="section collection-row-section"
 			>
-				<div class="container" v-if="group.heading">
+				<div v-if="group.heading" class="container">
 					<h2 class="section-header" :class="{ h4: Screen.isXs }">
 						{{ group.heading }}
 					</h2>
@@ -61,5 +62,3 @@
 .route-library-overview-page .collection-row-section
 	padding-bottom: 0
 </style>
-
-<script lang="ts" src="./overview"></script>

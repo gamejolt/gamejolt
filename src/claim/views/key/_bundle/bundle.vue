@@ -1,6 +1,8 @@
+<script lang="ts" src="./bundle"></script>
+
 <template>
 	<div>
-		<div class="alert full-bleed full-bleed-xs text-center" v-if="!app.user">
+		<div v-if="!app.user" class="alert full-bleed full-bleed-xs text-center">
 			<p>
 				<a :href="loginUrl">
 					<translate>
@@ -24,7 +26,7 @@
 		</h3>
 
 		<div class="row">
-			<div class="col-sm-6" v-for="game of games" :key="game.id">
+			<div v-for="game of games" :key="game.id" class="col-sm-6">
 				<app-game-thumbnail
 					:game="game"
 					:link-to="
@@ -40,5 +42,3 @@
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./bundle"></script>

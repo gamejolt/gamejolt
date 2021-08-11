@@ -1,12 +1,14 @@
+<script lang="ts" src="./list"></script>
+
 <template>
 	<div class="list-group game-collection-list">
 		<router-link
-			class="list-group-item clearfix"
 			v-for="collection of collections"
 			:key="collection._id"
+			v-app-track-event="eventLabel"
+			class="list-group-item clearfix"
 			:to="collection.routeLocation"
 			:title="collection.getTitle()"
-			v-app-track-event="eventLabel"
 		>
 			<div class="row">
 				<div class="col-xs-3">
@@ -28,13 +30,10 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
 
 .game-collection-list
-
 	// Override from the grid to make this smaller.
 	.game-collection-title
 		margin-top: 0
 </style>
-
-<script lang="ts" src="./list"></script>

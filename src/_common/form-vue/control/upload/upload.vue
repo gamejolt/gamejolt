@@ -42,7 +42,7 @@
 					<strong><translate>Selected files:</translate></strong>
 				</p>
 				<div class="list-group list-group-dark">
-					<div v-for="file of files" class="list-group-item">
+					<div v-for="(file, i) of files" :key="i" class="list-group-item">
 						<a class="card-remove" @click="clearFile(file)">
 							<app-jolticon icon="remove" notice />
 						</a>

@@ -1,3 +1,5 @@
+<script lang="ts" src="./media-bar"></script>
+
 <template>
 	<app-scroll-scroller class="media-bar fill-darker" horizontal thin>
 		<div class="-items" :style="{ height: mediaBarHeight + 'px' }">
@@ -33,5 +35,3 @@
 	white-space: nowrap
 	text-align: center
 </style>
-
-<script lang="ts" src="./media-bar"></script>

@@ -1,3 +1,5 @@
+<script lang="ts" src="./svg-styleguide"></script>
+
 <template>
 	<app-theme :theme="theme">
 		<section id="styleguide-theme-svg" class="section">
@@ -6,7 +8,8 @@
 			<p>
 				See how our
 				<code>svg</code>
-				files display on different background colors with different themes, or paste your own!
+				files display on different background colors with different themes, or paste your
+				own!
 			</p>
 
 			<app-form name="theme-svg">
@@ -32,7 +35,11 @@
 						</app-form-control-select>
 					</app-form-group>
 
-					<app-form-group name="strictColors" class="-selectors-item" label="Strict Colors?">
+					<app-form-group
+						name="strictColors"
+						class="-selectors-item"
+						label="Strict Colors?"
+					>
 						<app-form-control-toggle />
 					</app-form-group>
 
@@ -57,12 +64,14 @@
 						<app-theme-svg :src="file" :theme="theme" :strict-colors="strictColors" />
 					</template>
 					<template v-else-if="!customFile.length">
-						<span class="text-muted">
-							Waiting for Custom SVG...
-						</span>
+						<span class="text-muted"> Waiting for Custom SVG... </span>
 					</template>
 					<template v-else>
-						<app-theme-svg :src="customSvg" :theme="theme" :strict-colors="strictColors" />
+						<app-theme-svg
+							:src="customSvg"
+							:theme="theme"
+							:strict-colors="strictColors"
+						/>
 					</template>
 				</div>
 			</app-form>
@@ -70,11 +79,9 @@
 	</app-theme>
 </template>
 
-<script lang="ts" src="./svg-styleguide"></script>
-
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 #styleguide-theme-svg
 	rounded-corners-lg()

@@ -1,3 +1,5 @@
+<script lang="ts" src="./overview"></script>
+
 <template>
 	<section class="section">
 		<div class="container">
@@ -5,7 +7,7 @@
 
 			<div v-for="category of categories" :key="category.id">
 				<div class="forum-section-header">
-					<h2 class="sans-margin" :id="`category-${category.url}`">
+					<h2 :id="`category-${category.url}`" class="sans-margin">
 						{{ category.title }}
 					</h2>
 				</div>
@@ -20,5 +22,3 @@
 		</div>
 	</section>
 </template>
-
-<script lang="ts" src="./overview"></script>

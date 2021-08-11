@@ -1,3 +1,5 @@
+<script lang="ts" src="./meter"></script>
+
 <template>
 	<div
 		class="meter clearfix"
@@ -10,22 +12,22 @@
 		}"
 	>
 		<div
-			class="meter-blip"
 			v-for="i of 9"
 			:key="i"
+			class="meter-blip"
 			:class="{ 'meter-blip-filled': level >= i - 0.1 }"
-		></div>
+		/>
 
 		<!--
-		Since the last bar is special cased to 9.5 instead of 10.
-	-->
-		<div class="meter-blip" :class="{ 'meter-blip-filled': level >= 9.5 }"></div>
+			Since the last bar is special cased to 9.5 instead of 10.
+		-->
+		<div class="meter-blip" :class="{ 'meter-blip-filled': level >= 9.5 }" />
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 $meter-blip-count = 10
 
@@ -60,5 +62,3 @@ for i in 1 .. $meter-blip-count
 				margin-top: 10px
 				height: 10px
 </style>
-
-<script lang="ts" src="./meter"></script>

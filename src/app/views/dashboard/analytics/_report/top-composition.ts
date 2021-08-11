@@ -15,4 +15,8 @@ export default class AppAnalyticsReportTopComposition extends Vue {
 	@Prop(Object) reportData!: any;
 
 	readonly Screen = Screen;
+
+	isScalarLabel(val: any) {
+		return typeof val.label !== 'object';
+	}
 }

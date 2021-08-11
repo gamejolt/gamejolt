@@ -1,5 +1,7 @@
+<script lang="ts" src="./overview"></script>
+
 <template>
-	<div class="comment-overview sheet sheet-full" v-if="displayComments.length > 0">
+	<div v-if="displayComments.length > 0" class="comment-overview sheet sheet-full">
 		<!--
 			Capture the click and prevent default so that no links within the content open up.
 		-->
@@ -77,5 +79,3 @@
 .-content
 	font-size: $font-size-small
 </style>
-
-<script lang="ts" src="./overview"></script>

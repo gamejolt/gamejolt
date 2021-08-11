@@ -1,17 +1,17 @@
+import { VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
 import { Api } from '../../_common/api/api.service';
 import { Site } from '../../_common/site/site-model';
 import { SiteTemplate } from '../../_common/site/template/template-model';
 import { SiteTheme } from '../../_common/site/theme/theme-model';
-import { ThemeActions, ThemeMutations, ThemeStore } from '../../_common/theme/theme.store';
-import { VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
 import {
 	Actions as AppActions,
 	AppStore,
 	appStore,
 	Mutations as AppMutations,
 } from '../../_common/store/app-store';
+import { ThemeActions, ThemeMutations, ThemeStore } from '../../_common/theme/theme.store';
 
-type Tab = 'theme' | 'editor';
+type Tab = 'theme' | 'content';
 
 export type Actions = AppActions &
 	ThemeActions & {

@@ -1,11 +1,13 @@
+<script lang="ts" src="./dob"></script>
+
 <template>
 	<div>
 		<div
 			v-if="
 				!parent.getStripeField(namePrefix + '.year') &&
-					(parent.requiresField(namePrefix + '.year') ||
-						parent.requiresField(namePrefix + '.month') ||
-						parent.requiresField(namePrefix + '.day'))
+				(parent.requiresField(namePrefix + '.year') ||
+					parent.requiresField(namePrefix + '.month') ||
+					parent.requiresField(namePrefix + '.day'))
 			"
 		>
 			<div>
@@ -13,11 +15,11 @@
 			</div>
 
 			<div class="row">
-				<div class="col-sm-4" v-if="parent.requiresField(namePrefix + '.month')">
+				<div v-if="parent.requiresField(namePrefix + '.month')" class="col-sm-4">
 					<app-form-group
 						:name="`${namePrefix}.month`"
 						:label="$gettext('Month')"
-						:hideLabel="true"
+						:hide-label="true"
 					>
 						<app-form-control-select>
 							<option value=""><translate>Month</translate></option>
@@ -38,11 +40,11 @@
 						<app-form-control-errors />
 					</app-form-group>
 				</div>
-				<div class="col-sm-4" v-if="parent.requiresField(namePrefix + '.day')">
-					<app-form-group :name="`${namePrefix}.day`" :label="$gettext('Day')" :hideLabel="true">
+				<div v-if="parent.requiresField(namePrefix + '.day')" class="col-sm-4">
+					<app-form-group :name="`${namePrefix}.day`" :label="$gettext('Day')" hide-label>
 						<app-form-control-select>
 							<option value=""><translate>Day</translate></option>
-							<option v-for="i of days" :value="i">
+							<option v-for="i of days" :key="i" :value="i">
 								{{ i }}
 							</option>
 						</app-form-control-select>
@@ -50,11 +52,15 @@
 						<app-form-control-errors />
 					</app-form-group>
 				</div>
-				<div class="col-sm-4" v-if="parent.requiresField(namePrefix + '.year')">
-					<app-form-group :name="`${namePrefix}.year`" :label="$gettext('Year')" :hideLabel="true">
+				<div v-if="parent.requiresField(namePrefix + '.year')" class="col-sm-4">
+					<app-form-group
+						:name="`${namePrefix}.year`"
+						:label="$gettext('Year')"
+						:hide-label="true"
+					>
 						<app-form-control-select>
 							<option value=""><translate>Year</translate></option>
-							<option v-for="i of years" :value="i">
+							<option v-for="i of years" :key="i" :value="i">
 								{{ i }}
 							</option>
 						</app-form-control-select>
@@ -65,7 +71,7 @@
 			</div>
 		</div>
 
-		<div class="form-horizontal" v-if="parent.getStripeField(namePrefix + '.year')">
+		<div v-if="parent.getStripeField(namePrefix + '.year')" class="form-horizontal">
 			<div class="form-group">
 				<label class="control-label col-sm-4">
 					<translate>Date of Birth</translate>
@@ -77,5 +83,3 @@
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./dob"></script>

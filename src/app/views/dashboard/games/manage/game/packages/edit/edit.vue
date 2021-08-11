@@ -1,3 +1,5 @@
+<script lang="ts" src="./edit"></script>
+
 <template>
 	<div v-if="isRouteBootstrapped">
 		<nav class="breadcrumb">
@@ -54,8 +56,8 @@
 			<div class="row">
 				<div class="col-sm-8">
 					<div
-						class="alert alert-notice"
 						v-if="game._is_devlog && package.visibility === GamePackage.VISIBILITY_PUBLIC"
+						class="alert alert-notice"
 					>
 						<app-jolticon icon="notice" />
 						<span v-translate>
@@ -146,7 +148,7 @@
 				</div>
 
 				<div class="col-sm-8 col-sm-pull-4">
-					<div class="alert alert-notice" v-if="!releases.length">
+					<div v-if="!releases.length" class="alert alert-notice">
 						<p><translate>There are no releases in this package yet.</translate></p>
 						<p>
 							<translate>
@@ -156,7 +158,7 @@
 					</div>
 
 					<app-game-perms tag="div" required="builds">
-						<app-button primary block @click="newRelease" :disabled="isAddingRelease">
+						<app-button primary block :disabled="isAddingRelease" @click="newRelease">
 							<translate>New Release</translate>
 						</app-button>
 						<br />
@@ -194,21 +196,21 @@
 							<div class="card-meta">
 								<template v-if="release.status === GameRelease.STATUS_HIDDEN">
 									<span
-										class="tag"
 										v-if="!release.isScheduled"
 										v-app-tooltip="$gettext(`dash.games.packages.manage.releases.hidden_tooltip`)"
+										class="tag"
 									>
 										<app-jolticon icon="inactive" />
 										<translate>Draft</translate>
 									</span>
 									<template v-else>
 										<span
-											class="tag tag-notice"
 											v-app-tooltip="
 												$gettext(
 													`This release is scheduled and will be published to your game page in the future.`
 												)
 											"
+											class="tag tag-notice"
 										>
 											<app-jolticon icon="calendar-grid" />
 											<translate>Scheduled</translate>
@@ -219,15 +221,15 @@
 								</template>
 
 								<span
-									class="tag tag-highlight"
 									v-if="release.status === GameRelease.STATUS_PUBLISHED"
 									v-app-tooltip="$gettext(`dash.games.packages.manage.releases.published_tooltip`)"
+									class="tag tag-highlight"
 								>
 									<app-jolticon icon="active" />
 									<translate>dash.games.packages.manage.releases.published_tag</translate>
 								</span>
 
-								<span class="dot-separator"></span>
+								<span class="dot-separator" />
 
 								<template v-if="!release.build_count">
 									<translate>dash.games.packages.manage.releases.builds_count_none</translate>
@@ -245,7 +247,7 @@
 								</template>
 							</div>
 
-							<div class="card-controls" v-if="hasBuildsPerms || hasAnalyticsPerms">
+							<div v-if="hasBuildsPerms || hasAnalyticsPerms" class="card-controls">
 								<app-game-perms required="builds">
 									<app-button
 										primary
@@ -281,5 +283,3 @@
 		<router-view />
 	</div>
 </template>
-
-<script lang="ts" src="./edit"></script>

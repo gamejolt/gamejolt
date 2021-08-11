@@ -1,3 +1,5 @@
+<script lang="ts" src="./widget-game-packages"></script>
+
 <template>
 	<div class="widget-compiler-widget-game-packages">
 		<div v-for="sellable of sellables" :key="sellable.id">
@@ -8,13 +10,13 @@
 				frameborder="0"
 				width="100%"
 				height="245"
-			></iframe>
+			/>
 		</div>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
 
 .widget-compiler-widget-game-packages
 	max-width: 500px
@@ -23,5 +25,3 @@
 	iframe
 		margin-bottom: $line-height-computed
 </style>
-
-<script lang="ts" src="./widget-game-packages"></script>

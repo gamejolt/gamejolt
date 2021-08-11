@@ -1,3 +1,5 @@
+<script lang="ts" src="./status-bar"></script>
+
 <template>
 	<div
 		class="status-bar fill-darker clearfix"
@@ -6,7 +8,7 @@
 		}"
 	>
 		<div class="pull-left">
-			<div class="-item" v-if="numPlaying > 0">
+			<div v-if="numPlaying > 0" class="-item">
 				<app-jolticon icon="play" />
 				<translate>Currently Playing:</translate>
 				<strong :title="currentlyPlayingList">
@@ -15,10 +17,10 @@
 			</div>
 
 			<router-link
-				class="-item link-unstyled"
 				v-if="numPatching > 0"
-				:to="{ name: 'library.installed' }"
 				v-app-tooltip="$gettext(`View Downloads`)"
+				class="-item link-unstyled"
+				:to="{ name: 'library.installed' }"
 			>
 				<translate
 					:translate-n="numPatching || 0"
@@ -39,7 +41,7 @@
 		</div>
 
 		<div class="pull-right">
-			<div class="-item" v-if="hasUpdate || showUpdaterIssue">
+			<div v-if="hasUpdate || showUpdaterIssue" class="-item">
 				<b>
 					<template v-if="hasUpdate">
 						<translate>New Client version available!</translate>
@@ -65,8 +67,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .status-bar
 	padding: 0 10px
@@ -105,5 +107,3 @@
 .-dismiss
 	theme-prop('color', 'white')
 </style>
-
-<script lang="ts" src="./status-bar"></script>

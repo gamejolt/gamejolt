@@ -1,6 +1,8 @@
+<script lang="ts" src="./placeholder"></script>
+
 <template>
 	<div>
-		<div class="game-list-item" v-for="i of num">
+		<div v-for="i of num" :key="i" class="game-list-item">
 			<div class="-thumb">
 				<div class="-placeholder-thumb" />
 			</div>
@@ -13,9 +15,9 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-@require '../list-common'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+@import '../list-common'
 
 .-placeholder
 	&-thumb
@@ -34,5 +36,3 @@
 		margin-top: 6px
 		width: 60%
 </style>
-
-<script lang="ts" src="./placeholder"></script>

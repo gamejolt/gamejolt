@@ -1,3 +1,5 @@
+<script lang="ts" src="./form"></script>
+
 <template>
 	<app-form name="reportForm">
 		<app-form-group name="reason" :label="$gettext(`What's the reason?`)">
@@ -27,14 +29,24 @@
 					</app-form-group>
 				</div>
 
-				<div v-if="formModel.reason === reason.radioValue && !!reason.contexts" class="-context">
+				<div
+					v-if="formModel.reason === reason.radioValue && !!reason.contexts"
+					class="-context"
+				>
 					<app-form-group
 						name="context"
 						:label="$gettext(`Select one or more options that the report applies to`)"
 					>
-						<div class="checkbox" v-for="context of reason.contexts" :key="context.checkValue">
+						<div
+							v-for="context of reason.contexts"
+							:key="context.checkValue"
+							class="checkbox"
+						>
 							<label>
-								<app-form-control-checkbox :value="context.checkValue" @changed="onChangeContext" />
+								<app-form-control-checkbox
+									:value="context.checkValue"
+									@changed="onChangeContext"
+								/>
 
 								{{ context.text }}
 							</label>
@@ -78,5 +90,3 @@
 .-context
 	margin-left: 32px
 </style>
-
-<script lang="ts" src="./form"></script>

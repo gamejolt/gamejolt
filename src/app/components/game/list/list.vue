@@ -1,3 +1,5 @@
+<script lang="ts" src="./list"></script>
+
 <template>
 	<div class="game-list">
 		<app-game-list-item
@@ -8,5 +10,3 @@
 		/>
 	</div>
 </template>
-
-<script lang="ts" src="./list"></script>

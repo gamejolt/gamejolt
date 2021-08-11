@@ -1,7 +1,10 @@
+<script lang="ts" src="./media-indicator"></script>
+
 <template>
 	<div class="event-item-media-indicator">
 		<div
 			v-for="i of count"
+			:key="i"
 			class="-dot"
 			:class="{
 				'-active': current === i,
@@ -11,8 +14,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .event-item-media-indicator
 	display: flex
@@ -30,5 +33,3 @@
 .-active
 	change-bg('link')
 </style>
-
-<script lang="ts" src="./media-indicator"></script>

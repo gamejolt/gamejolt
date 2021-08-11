@@ -1,9 +1,9 @@
+<script lang="ts" src="./view"></script>
+
 <template>
 	<div v-if="isRouteBootstrapped">
 		<p class="text-muted">
-			<translate :translate-params="{ orderId: order.id }">
-				Order #%{orderId}
-			</translate>
+			<translate :translate-params="{ orderId: order.id }"> Order #%{orderId} </translate>
 
 			<span class="dot-separator" />
 
@@ -13,10 +13,10 @@
 		</p>
 
 		<!--
-		If the order was canceled but without a refund (just disabled), then we can't show
-		this.
-	-->
-		<div class="alert alert-notice" v-if="order._is_refunded && firstRefund">
+			If the order was canceled but without a refund (just disabled), then we can't show
+			this.
+		-->
+		<div v-if="order._is_refunded && firstRefund" class="alert alert-notice">
 			<translate
 				:translate-params="{
 					date: date(firstRefund.created_on, 'medium'),
@@ -34,7 +34,7 @@
 					<translate>Billing</translate>
 				</h4>
 
-				<div v-for="address of [order.billing_address]">
+				<div v-for="(address, i) of [order.billing_address]" :key="i">
 					<div v-if="address.fullname">
 						<strong>{{ address.fullname }}</strong>
 					</div>
@@ -52,7 +52,9 @@
 							{{ address.city }}
 						</template>
 						<template v-if="address.region">
-							{{ Geo.getRegionName(address.country, address.region) || address.region }}
+							{{
+								Geo.getRegionName(address.country, address.region) || address.region
+							}}
 						</template>
 						<template v-if="address.postcode">
 							{{ address.postcode }}
@@ -78,15 +80,11 @@
 						{{ payment.stripe_payment_source.last4 }}
 					</template>
 					<template v-else-if="payment.method === OrderPayment.METHOD_PAYPAL">
-						<span class="tag">
-							PayPal
-						</span>
+						<span class="tag"> PayPal </span>
 						{{ payment.paypal_email_address }}
 					</template>
 					<template v-else-if="payment.method === OrderPayment.METHOD_WALLET">
-						<span class="tag">
-							Wallet
-						</span>
+						<span class="tag"> Wallet </span>
 						{{ payment.amount | currency }}
 					</template>
 				</div>
@@ -121,7 +119,7 @@
 
 		<div v-for="item of order.items" :key="item.id">
 			<h4>
-				<span class="tag tag-notice" v-if="item.is_refunded">
+				<span v-if="item.is_refunded" class="tag tag-notice">
 					<translate>Refunded</translate>
 				</span>
 				{{ item.sellable.title }}
@@ -129,7 +127,10 @@
 				<small>{{ item.amount | currency }}</small>
 			</h4>
 
-			<div v-for="firstPackage of [packagesBySellable[item.sellable.id][0]]" :key="firstPackage.id">
+			<div
+				v-for="firstPackage of [packagesBySellable[item.sellable.id][0]]"
+				:key="firstPackage.id"
+			>
 				<div class="row">
 					<div class="col-xs-2">
 						<router-link
@@ -142,7 +143,10 @@
 								},
 							}"
 						>
-							<app-game-thumbnail-img animate :game="gamesById[firstPackage.game_id]" />
+							<app-game-thumbnail-img
+								animate
+								:game="gamesById[firstPackage.game_id]"
+							/>
 						</router-link>
 					</div>
 					<div class="col-xs-10">
@@ -164,7 +168,10 @@
 								<router-link
 									:to="{
 										name: 'profile.overview',
-										params: { username: gamesById[firstPackage.game_id].developer.username },
+										params: {
+											username:
+												gamesById[firstPackage.game_id].developer.username,
+										},
 									}"
 								>
 									{{ gamesById[firstPackage.game_id].developer.display_name }}
@@ -172,7 +179,7 @@
 							</span>
 						</p>
 
-						<p></p>
+						<p />
 
 						<h5 class="sans-margin">
 							<translate>Packages</translate>
@@ -200,8 +207,7 @@
 		font-weight: normal
 
 	tfoot > tr
-		& > th, & > td
+		& > th
+		& > td
 			font-weight: bold
 </style>
-
-<script lang="ts" src="./view"></script>
