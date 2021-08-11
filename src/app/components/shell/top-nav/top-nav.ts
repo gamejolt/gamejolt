@@ -54,7 +54,7 @@ export default class AppShellTopNav extends Vue {
 	moreMenuShowing = false;
 	baseMinColWidth: number | null = null;
 
-	$refs!: {
+	declare $refs: {
 		left: HTMLDivElement;
 		right: HTMLDivElement;
 	};

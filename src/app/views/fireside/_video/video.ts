@@ -23,7 +23,7 @@ export default class AppFiresideVideo extends Vue {
 	private _myRtcUser!: FiresideRTCUser;
 	private _videoLock: FiresideVideoLock | null = null;
 
-	$el!: HTMLDivElement;
+	declare $el: HTMLDivElement;
 
 	get hasVideo() {
 		return this._myRtcUser.hasVideo;

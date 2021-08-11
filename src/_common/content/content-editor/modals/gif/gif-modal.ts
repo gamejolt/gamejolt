@@ -31,7 +31,7 @@ export default class AppContentEditorGifModal extends BaseModal {
 
 	readonly Screen = Screen;
 
-	$refs!: {
+	declare $refs: {
 		contentScroller: AppScrollScrollerTS;
 		modal: AppModalTS;
 		search: HTMLInputElement;

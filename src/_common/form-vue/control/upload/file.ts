@@ -10,7 +10,7 @@ export default class AppFormControlUploadFile extends Vue {
 	@Prop(propOptional(Boolean)) multiple?: boolean;
 	@Prop(propOptional(String)) accept?: string;
 
-	$el!: HTMLInputElement;
+	declare $el: HTMLInputElement;
 
 	showFileSelect() {
 		this.$el.click();

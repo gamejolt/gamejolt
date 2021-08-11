@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-
 import './codemirror.styl';
+
 
 const defaultOptions = {
 	lineNumbers: true,
@@ -12,7 +12,7 @@ const defaultOptions = {
 
 @Component({})
 export default class AppCodemirror extends Vue {
-	$el!: HTMLTextAreaElement;
+	declare $el: HTMLTextAreaElement;
 
 	@Prop(String) value!: string;
 	@Prop({ type: Object, default: () => new Object() })

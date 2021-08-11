@@ -1,3 +1,4 @@
+import { Component, Prop, Watch } from 'vue-property-decorator';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
 import AppForm from '../../../../../_common/form-vue/form';
@@ -6,7 +7,6 @@ import { GameBuild } from '../../../../../_common/game/build/build.model';
 import { Game } from '../../../../../_common/game/game.model';
 import { GamePackage } from '../../../../../_common/game/package/package.model';
 import { GameRelease } from '../../../../../_common/game/release/release.model';
-import { Component, Prop, Watch } from 'vue-property-decorator';
 
 type NewGameBuildFormModel = GameBuild & {
 	file: File;
@@ -18,8 +18,10 @@ type NewGameBuildFormModel = GameBuild & {
 		AppExpand,
 	},
 })
-export default class FormGameNewBuild extends BaseForm<NewGameBuildFormModel>
-	implements FormOnInit, FormOnLoad {
+export default class FormGameNewBuild
+	extends BaseForm<NewGameBuildFormModel>
+	implements FormOnInit, FormOnLoad
+{
 	modelClass = GameBuild as any;
 	resetOnSubmit = true;
 	reloadOnSubmit = true;
@@ -31,7 +33,7 @@ export default class FormGameNewBuild extends BaseForm<NewGameBuildFormModel>
 	@Prop(GameRelease) release!: GameRelease;
 	@Prop(Array) builds!: GameBuild[];
 
-	$refs!: {
+	declare $refs: {
 		form: AppForm;
 	};
 

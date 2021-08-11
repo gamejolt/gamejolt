@@ -36,9 +36,9 @@ export default class AppModal extends Vue {
 	private beforeEachDeregister?: Function;
 	private escapeCallback?: EscapeStackCallback;
 
-	$el!: HTMLDivElement;
+	declare $el: HTMLDivElement;
 
-	$refs!: {
+	declare $refs: {
 		scroller: AppScrollScrollerTS;
 	};
 

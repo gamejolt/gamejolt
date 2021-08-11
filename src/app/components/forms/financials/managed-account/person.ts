@@ -30,7 +30,7 @@ export default class AppFinancialsManagedAccountPerson extends Vue {
 
 	parent: FormFinancialsManagedAccountTS = null as any;
 
-	$refs!: {
+	declare $refs: {
 		'id-document': AppFinancialsManagedAccountDocumentTS;
 		'additional-document': AppFinancialsManagedAccountDocumentTS;
 	};
@@ -54,9 +54,8 @@ export default class AppFinancialsManagedAccountPerson extends Vue {
 			if (
 				this.parent.formModel[`${this.namePrefix}.verification.additional_document.front`]
 			) {
-				additionalDocumentRequest = this.$refs['additional-document'].uploadDocument(
-					stripePublishableKey
-				);
+				additionalDocumentRequest =
+					this.$refs['additional-document'].uploadDocument(stripePublishableKey);
 			}
 		}
 

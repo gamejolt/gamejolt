@@ -54,9 +54,9 @@ export default class AppStickerLayerDrawer extends Vue {
 	private readonly stickerSize = this.drawerStore.stickerSize + this.stickerSpacing;
 	readonly Screen = Screen;
 
-	$el!: HTMLDivElement;
+	declare $el: HTMLDivElement;
 
-	$refs!: {
+	declare $refs: {
 		content: HTMLDivElement;
 		slider: HTMLDivElement;
 	};
@@ -140,8 +140,9 @@ export default class AppStickerLayerDrawer extends Vue {
 				// Shift the drawer down when there's an item being dragged and the drawer container is not being hovered.
 				this.drawerStore.sticker && !this.drawerStore.isHoveringDrawer
 					? {
-							transform: `translateY(${this.drawerStore.drawerHeight -
-								this.drawerStore.stickerSize / 2}px)`,
+							transform: `translateY(${
+								this.drawerStore.drawerHeight - this.drawerStore.stickerSize / 2
+							}px)`,
 					  }
 					: null,
 			],
@@ -309,8 +310,9 @@ export default class AppStickerLayerDrawer extends Vue {
 	private _updateSliderOffset(extraOffsetPx = 0) {
 		const pagePercent = this.sheetPage - 1;
 		const pagePx = (this.$refs.slider as HTMLElement).offsetWidth * -pagePercent;
-		(this.$refs.slider as HTMLElement).style.transform = `translate3d( ${pagePx +
-			extraOffsetPx}px, 0, 0 )`;
+		(this.$refs.slider as HTMLElement).style.transform = `translate3d( ${
+			pagePx + extraOffsetPx
+		}px, 0, 0 )`;
 	}
 	// VueTouch things - END
 

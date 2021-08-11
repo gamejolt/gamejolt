@@ -47,7 +47,7 @@ export default class AppBroadcastModal extends BaseModal {
 		return this.post.videos[0];
 	}
 
-	$refs!: {
+	declare $refs: {
 		modal: AppModalTS;
 	};
 

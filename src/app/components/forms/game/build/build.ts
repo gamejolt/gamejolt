@@ -51,8 +51,10 @@ type GameBuildFormModel = GameBuild & {
 		filesize,
 	},
 })
-export default class FormGameBuild extends BaseForm<GameBuildFormModel>
-	implements FormOnInit, FormOnLoad {
+export default class FormGameBuild
+	extends BaseForm<GameBuildFormModel>
+	implements FormOnInit, FormOnLoad
+{
 	modelClass = GameBuild as any;
 	resetOnSubmit = true;
 	reloadOnSubmit = true;
@@ -91,7 +93,7 @@ export default class FormGameBuild extends BaseForm<GameBuildFormModel>
 	readonly number = number;
 	readonly GameBuild = GameBuild;
 
-	$refs!: {
+	declare $refs: {
 		form: AppForm;
 	};
 

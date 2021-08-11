@@ -28,8 +28,10 @@ type DescriptionFormModel = Game & {
 		AppFormControlContent,
 	},
 })
-export default class FormGameDescription extends BaseForm<DescriptionFormModel>
-	implements FormOnSubmitSuccess, FormOnLoad {
+export default class FormGameDescription
+	extends BaseForm<DescriptionFormModel>
+	implements FormOnSubmitSuccess, FormOnLoad
+{
 	@Prop(Array)
 	tags!: string[];
 
@@ -40,7 +42,7 @@ export default class FormGameDescription extends BaseForm<DescriptionFormModel>
 	isDisabled = false;
 	lengthLimit = 50_000;
 
-	$refs!: {
+	declare $refs: {
 		form: AppForm;
 	};
 

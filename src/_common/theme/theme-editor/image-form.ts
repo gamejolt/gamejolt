@@ -16,15 +16,17 @@ interface FormModel {
 		AppFormControlUpload,
 	},
 })
-export default class FormThemeEditorImage extends BaseForm<FormModel>
-	implements FormOnInit, FormOnLoad, FormOnSubmit {
+export default class FormThemeEditorImage
+	extends BaseForm<FormModel>
+	implements FormOnInit, FormOnLoad, FormOnSubmit
+{
 	resetOnSubmit = true;
 	warnOnDiscard = false;
 
 	@Prop(String) type!: string;
 	@Prop(Number) parentId!: number;
 
-	$refs!: {
+	declare $refs: {
 		form: AppForm;
 	};
 

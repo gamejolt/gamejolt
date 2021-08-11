@@ -42,7 +42,7 @@ export default class AppFormControlContent extends BaseFormControlTS {
 
 	@Prop(propOptional(Boolean, false)) focusEnd!: boolean;
 
-	$refs!: {
+	declare $refs: {
 		editor: AppContentEditorTS;
 	};
 

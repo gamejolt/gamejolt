@@ -106,7 +106,7 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 	readonly Screen = Screen;
 	readonly number = number;
 
-	$refs!: {
+	declare $refs: {
 		'sticker-scroll': HTMLDivElement;
 	};
 

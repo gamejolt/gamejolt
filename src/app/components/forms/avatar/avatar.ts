@@ -25,8 +25,10 @@ type FormModel = User & {
 		AppFormControlToggle,
 	},
 })
-export default class FormAvatar extends BaseForm<FormModel>
-	implements FormOnLoad, FormOnBeforeSubmit {
+export default class FormAvatar
+	extends BaseForm<FormModel>
+	implements FormOnLoad, FormOnBeforeSubmit
+{
 	modelClass = User;
 	reloadOnSubmit = true;
 	warnOnDiscard = false;
@@ -39,7 +41,7 @@ export default class FormAvatar extends BaseForm<FormModel>
 	readonly filesize = filesize;
 	readonly Screen = Screen;
 
-	$refs!: {
+	declare $refs: {
 		form: AppForm;
 	};
 

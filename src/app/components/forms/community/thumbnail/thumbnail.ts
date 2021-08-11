@@ -22,8 +22,10 @@ type FormModel = Community & {
 		AppFormControlToggle,
 	},
 })
-export default class FormCommunityThumbnail extends BaseForm<FormModel>
-	implements FormOnLoad, FormOnBeforeSubmit {
+export default class FormCommunityThumbnail
+	extends BaseForm<FormModel>
+	implements FormOnLoad, FormOnBeforeSubmit
+{
 	modelClass = Community;
 	reloadOnSubmit = true;
 	warnOnDiscard = false;
@@ -36,7 +38,7 @@ export default class FormCommunityThumbnail extends BaseForm<FormModel>
 	readonly filesize = filesize;
 	readonly Screen = Screen;
 
-	$refs!: {
+	declare $refs: {
 		form: AppFormTS;
 	};
 

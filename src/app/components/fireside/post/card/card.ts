@@ -59,8 +59,8 @@ export default class AppPostCard extends Vue {
 	@Prop({ type: Boolean, required: false, default: false })
 	withUser!: boolean;
 
-	$el!: HTMLElement;
-	$refs!: {
+	declare $el: HTMLElement;
+	declare $refs: {
 		card: HTMLElement;
 	};
 

@@ -58,7 +58,7 @@ export default class AppContentMediaItem extends Vue {
 	@Emit('removed') emitRemoved() {}
 	@Emit('update-attrs') emitUpdateAttrs(_attrs: Record<string, any>) {}
 
-	$refs!: {
+	declare $refs: {
 		container: HTMLDivElement;
 	};
 

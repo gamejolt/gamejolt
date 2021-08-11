@@ -12,7 +12,7 @@ export class AppAudioPlayer extends Vue {
 	@Prop(GameSong)
 	song!: GameSong;
 
-	$el!: HTMLAudioElement;
+	declare $el: HTMLAudioElement;
 
 	src = '';
 

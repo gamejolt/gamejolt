@@ -38,8 +38,10 @@ type GameReleaseFormModel = GameRelease & {
 		AppFormLegend,
 	},
 })
-export default class FormGameRelease extends BaseForm<GameReleaseFormModel>
-	implements FormOnInit, FormOnLoad, FormOnSubmitSuccess {
+export default class FormGameRelease
+	extends BaseForm<GameReleaseFormModel>
+	implements FormOnInit, FormOnLoad, FormOnSubmitSuccess
+{
 	modelClass = GameRelease as any;
 
 	@Prop(Game)
@@ -63,7 +65,7 @@ export default class FormGameRelease extends BaseForm<GameReleaseFormModel>
 	@Prop(Boolean)
 	areWebBuildsLockedBySellable!: boolean;
 
-	$refs!: {
+	declare $refs: {
 		form: AppForm;
 	};
 

@@ -51,7 +51,7 @@ export default class AppChatWindowOutput extends Vue {
 	private isAutoscrolling = false;
 	private isOnScrollQueued = false;
 
-	$refs!: {
+	declare $refs: {
 		scroller: AppScrollScrollerTS;
 	};
 

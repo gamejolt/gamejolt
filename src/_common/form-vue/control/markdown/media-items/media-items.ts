@@ -22,8 +22,10 @@ interface FormModel {
 		AppTooltip,
 	},
 })
-export default class AppFormControlMarkdownMediaItems extends BaseForm<FormModel>
-	implements FormOnInit, FormOnLoad, FormOnSubmit {
+export default class AppFormControlMarkdownMediaItems
+	extends BaseForm<FormModel>
+	implements FormOnInit, FormOnLoad, FormOnSubmit
+{
 	@Prop(String) type!: string;
 	@Prop(Number) parentId!: number;
 	@Prop(Boolean) disabled?: boolean;
@@ -31,7 +33,7 @@ export default class AppFormControlMarkdownMediaItems extends BaseForm<FormModel
 	resetOnSubmit = true;
 	reloadOnSubmit = true;
 
-	$refs!: {
+	declare $refs: {
 		form: AppForm;
 	};
 

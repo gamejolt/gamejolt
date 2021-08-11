@@ -17,7 +17,7 @@ export default class AppVideoPlayerScrubber extends Vue {
 	private timebarWidth = 0;
 	timestampOffset = 0;
 
-	$refs!: {
+	declare $refs: {
 		timebar: HTMLDivElement;
 	};
 

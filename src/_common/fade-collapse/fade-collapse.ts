@@ -40,7 +40,7 @@ export default class AppFadeCollapse extends Vue {
 	private frameRequestHandle?: number = undefined;
 	private isRequired = false;
 
-	$el!: HTMLDivElement;
+	declare $el: HTMLDivElement;
 
 	async mounted() {
 		// Let it compile DOM and wait for any images to be resized.

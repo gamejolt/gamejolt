@@ -39,7 +39,7 @@ export default class AppContentEditorTextControls extends Vue {
 
 	readonly Screen = Screen;
 
-	$refs!: {
+	declare $refs: {
 		container: HTMLElement;
 	};
 

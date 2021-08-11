@@ -1,3 +1,4 @@
+import { Component, Watch } from 'vue-property-decorator';
 import AppFormControlCrop from '../../../../../_common/form-vue/control/crop/crop.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
 import AppForm from '../../../../../_common/form-vue/form';
@@ -7,7 +8,6 @@ import {
 	FormOnLoad,
 } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
-import { Component, Watch } from 'vue-property-decorator';
 
 type FormModel = Game & {
 	thumb_crop: any;
@@ -19,8 +19,10 @@ type FormModel = Game & {
 		AppFormControlCrop,
 	},
 })
-export default class FormGameThumbnail extends BaseForm<FormModel>
-	implements FormOnLoad, FormOnBeforeSubmit {
+export default class FormGameThumbnail
+	extends BaseForm<FormModel>
+	implements FormOnLoad, FormOnBeforeSubmit
+{
 	modelClass = Game as any;
 	resetOnSubmit = true;
 	warnOnDiscard = false;
@@ -32,7 +34,7 @@ export default class FormGameThumbnail extends BaseForm<FormModel>
 	maxHeight = 0;
 	cropAspectRatio = 0;
 
-	$refs!: {
+	declare $refs: {
 		form: AppForm;
 	};
 

@@ -33,8 +33,10 @@ interface FormModel {
 		AppLoadingFade,
 	},
 })
-export default class AppFormPostMedia extends BaseForm<FormModel>
-	implements FormOnSubmit, FormOnSubmitSuccess, FormOnSubmitError {
+export default class AppFormPostMedia
+	extends BaseForm<FormModel>
+	implements FormOnSubmit, FormOnSubmitSuccess, FormOnSubmitError
+{
 	@Prop(FiresidePost)
 	post!: FiresidePost;
 
@@ -56,7 +58,7 @@ export default class AppFormPostMedia extends BaseForm<FormModel>
 	resetOnSubmit = true;
 	isDropActive = false;
 
-	$refs!: {
+	declare $refs: {
 		form: AppForm;
 		upload: AppFormControlUploadTS;
 	};

@@ -32,7 +32,7 @@ export default class AppScrollAffix extends Vue {
 
 	private resize$: EventSubscription | undefined;
 
-	$refs!: {
+	declare $refs: {
 		container: HTMLElement;
 		placeholder: HTMLElement;
 	};

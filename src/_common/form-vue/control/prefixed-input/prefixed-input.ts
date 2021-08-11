@@ -29,7 +29,7 @@ export default class AppFormControlPrefixedInput extends BaseFormControl {
 
 	resizeObserver: ResizeObserver | null = null;
 
-	$refs!: {
+	declare $refs: {
 		input: HTMLInputElement;
 		prefix: HTMLSpanElement;
 	};

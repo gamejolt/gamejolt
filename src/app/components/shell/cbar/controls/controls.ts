@@ -27,7 +27,7 @@ export default class AppShellCbarControls extends Vue {
 	@State visibleLeftPane!: Store['visibleLeftPane'];
 	@Action toggleLeftPane!: Store['toggleLeftPane'];
 
-	$refs!: {
+	declare $refs: {
 		stickerOrigin: HTMLDivElement;
 	};
 

@@ -112,7 +112,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	// Keep a copy of the json version of the doc, to only set the content if the external source changed.
 	_sourceControlVal: string | null = null;
 
-	$refs!: {
+	declare $refs: {
 		editor: HTMLElement;
 		doc: HTMLElement;
 		emojiPanel: AppContentEditorControlsEmojiPanelTS;

@@ -38,7 +38,7 @@ export default class AppCommunityChannelCard extends Vue {
 
 	cardHeight = CARD_HEIGHT;
 
-	$el!: HTMLElement;
+	declare $el: HTMLElement;
 
 	mounted() {
 		// Initialize cardHeight to be based off the card width, maintaining aspect ratio.

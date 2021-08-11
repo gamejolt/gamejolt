@@ -42,7 +42,7 @@ export default class AppContentEditorControlsMentionAutocompleteControls extends
 
 	readonly Screen = Screen;
 
-	$refs!: {
+	declare $refs: {
 		container: HTMLElement;
 		list: HTMLDivElement;
 	};

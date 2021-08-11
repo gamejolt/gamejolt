@@ -72,8 +72,8 @@ export default class AppCommentWidgetComment extends Vue {
 
 	widget!: AppCommentWidgetTS;
 
-	$el!: HTMLDivElement;
-	$refs!: {
+	declare $el: HTMLDivElement;
+	declare $refs: {
 		scrollTarget: HTMLDivElement;
 	};
 

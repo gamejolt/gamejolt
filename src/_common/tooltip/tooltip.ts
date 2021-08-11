@@ -11,7 +11,7 @@ import { TooltipModel } from './tooltip-model';
 export default class TooltipComponent extends Vue {
 	@Prop(propOptional(TooltipModel)) tooltip?: TooltipModel;
 
-	$el!: HTMLDivElement;
+	declare $el: HTMLDivElement;
 
 	private _popperInstance: null | Instance = null;
 	private _popperTimeout: null | NodeJS.Timer = null;

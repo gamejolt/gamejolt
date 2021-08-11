@@ -58,8 +58,10 @@ export const enum VideoStatus {
 		AppFocusWhen,
 	},
 })
-export default class AppFormPostVideo extends BaseForm<FormModel>
-	implements FormOnSubmit, FormOnLoad, FormOnSubmitError, FormOnSubmitSuccess, FormOnInit {
+export default class AppFormPostVideo
+	extends BaseForm<FormModel>
+	implements FormOnSubmit, FormOnLoad, FormOnSubmitError, FormOnSubmitSuccess, FormOnInit
+{
 	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
 	@Prop(propRequired(Boolean)) wasPublished!: boolean;
 
@@ -77,7 +79,7 @@ export default class AppFormPostVideo extends BaseForm<FormModel>
 	readonly FiresidePostVideo = FiresidePostVideo;
 	readonly number = number;
 
-	$refs!: {
+	declare $refs: {
 		form: AppFormTS;
 		upload: AppFormControlUploadTS;
 	};

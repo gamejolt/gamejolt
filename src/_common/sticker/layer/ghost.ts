@@ -15,7 +15,7 @@ export default class AppStickerLayerGhost extends Vue {
 
 	private isConfirmingPlacement = false;
 
-	$el!: HTMLDivElement;
+	declare $el: HTMLDivElement;
 
 	get sticker() {
 		return this.drawer.sticker!;

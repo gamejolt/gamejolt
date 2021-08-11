@@ -32,7 +32,7 @@ export default class AppContentGif extends Vue {
 	@Prop(propRequired(Boolean)) isEditing!: boolean;
 	@Prop(propRequired(Boolean)) isDisabled!: boolean;
 
-	$refs!: {
+	declare $refs: {
 		container: HTMLElement;
 	};
 

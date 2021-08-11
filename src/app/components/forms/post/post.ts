@@ -117,7 +117,7 @@ export default class FormPost
 	@Prop(propOptional(CommunityChannel, null))
 	defaultChannel!: CommunityChannel | null;
 
-	$refs!: {
+	declare $refs: {
 		form: AppForm;
 	};
 

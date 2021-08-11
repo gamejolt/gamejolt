@@ -25,7 +25,7 @@ export default class AppUserSpawnDay extends Vue {
 	@State
 	app!: AppStore;
 
-	$refs!: {
+	declare $refs: {
 		container: HTMLElement;
 	};
 

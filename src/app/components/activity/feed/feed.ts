@@ -52,7 +52,7 @@ export default class AppActivityFeed extends Vue {
 	readonly number = number;
 	readonly Scroll = Scroll;
 
-	$el!: HTMLDivElement;
+	declare $el: HTMLDivElement;
 
 	@Emit('edit-post')
 	emitEditPost(_eventItem: EventItem) {}

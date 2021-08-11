@@ -22,7 +22,7 @@ export default class AppFormControlUpload extends BaseFormControl {
 	@Prop(Array) validateOn!: string[];
 	@Prop(Number) validateDelay!: number;
 
-	$refs!: {
+	declare $refs: {
 		input: AppFormControlUploadFileTS;
 	};
 

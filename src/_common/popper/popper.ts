@@ -129,7 +129,7 @@ export default class AppPopper extends Vue {
 	@Prop(propOptional(String, null))
 	height!: string;
 
-	$refs!: {
+	declare $refs: {
 		trigger: any;
 		popper: any;
 	};
@@ -142,7 +142,7 @@ export default class AppPopper extends Vue {
 
 	popperInstance: null | Instance = null;
 
-	$el!: HTMLDivElement;
+	declare $el: HTMLDivElement;
 	private hideTimeout?: NodeJS.Timer;
 	private showDelayTimer?: NodeJS.Timer;
 	private mobileBackdrop: AppBackdrop | null = null;

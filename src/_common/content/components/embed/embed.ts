@@ -45,7 +45,7 @@ export default class AppContentEmbed extends Vue {
 	@Emit('removed') emitRemoved() {}
 	@Emit('update-attrs') emitUpdateAttrs(_attrs: Record<string, any>) {}
 
-	$refs!: {
+	declare $refs: {
 		inputElement: HTMLInputElement;
 	};
 

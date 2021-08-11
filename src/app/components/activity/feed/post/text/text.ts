@@ -32,7 +32,7 @@ export default class AppActivityFeedPostText extends Vue {
 	isToggling = false;
 	isLoaded = !!this.post.article_content;
 
-	$el!: HTMLDivElement;
+	declare $el: HTMLDivElement;
 
 	get isHydrated() {
 		return this.feed.isItemHydrated(this.item);

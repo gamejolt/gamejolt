@@ -63,7 +63,7 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	private escapeCallback?: EscapeStackCallback;
 	private typingTimeout!: NodeJS.Timer;
 
-	$refs!: {
+	declare $refs: {
 		form: AppForm;
 		editor: AppFormControlContentTS;
 	};

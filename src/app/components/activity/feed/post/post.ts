@@ -98,9 +98,9 @@ export default class AppActivityFeedPost extends Vue {
 	readonly Screen = Screen;
 	readonly EventItem = EventItem;
 
-	$el!: HTMLDivElement;
+	declare $el: HTMLDivElement;
 
-	$refs!: {
+	declare $refs: {
 		'sticker-scroll': HTMLDivElement;
 	};
 

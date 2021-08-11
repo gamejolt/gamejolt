@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-
 import { Api } from '../../api/api.service';
 import { AppThemeEditorFontSelectorStyleInjector } from './font-selector-style-injector';
 
@@ -19,7 +18,7 @@ interface FontDefinition {
 export default class AppThemeEditorFontSelector extends Vue {
 	@Prop(Object) value?: FontDefinition;
 
-	$refs!: {
+	declare $refs: {
 		list: HTMLElement;
 	};
 

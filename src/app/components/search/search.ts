@@ -37,7 +37,7 @@ export default class AppSearch extends Vue {
 	isShowingAutocomplete = false;
 	keydownSpies: SearchKeydownSpy[] = [];
 
-	$refs!: {
+	declare $refs: {
 		searchInput: AppSearchInputTS;
 	};
 

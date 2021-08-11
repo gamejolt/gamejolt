@@ -116,7 +116,7 @@ export default class AppVideoPlayer extends Vue {
 	readonly number = number;
 	readonly Screen = Screen;
 
-	$el!: HTMLDivElement;
+	declare $el: HTMLDivElement;
 
 	@Emit('play') emitPlay() {}
 

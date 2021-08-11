@@ -39,7 +39,7 @@ export default class AppLightboxItem extends Vue {
 
 	private resize$: EventSubscription | undefined;
 
-	$refs!: {
+	declare $refs: {
 		caption: HTMLDivElement;
 	};
 

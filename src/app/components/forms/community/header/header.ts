@@ -20,8 +20,10 @@ type FormModel = Community & {
 		AppFormControlCrop,
 	},
 })
-export default class FormCommunityHeader extends BaseForm<FormModel>
-	implements FormOnLoad, FormOnBeforeSubmit {
+export default class FormCommunityHeader
+	extends BaseForm<FormModel>
+	implements FormOnLoad, FormOnBeforeSubmit
+{
 	modelClass = Community as any;
 	saveMethod = '$saveHeader' as '$saveHeader' | '$clearHeader';
 
@@ -33,7 +35,7 @@ export default class FormCommunityHeader extends BaseForm<FormModel>
 	maxWidth = 0;
 	maxHeight = 0;
 
-	$refs!: {
+	declare $refs: {
 		form: AppForm;
 	};
 

@@ -8,8 +8,8 @@ export default class AppFadeCollapse extends Vue {
 	innerHeight = 0;
 	isCollapsed = false;
 
-	$el!: HTMLElement;
-	$refs!: {
+	declare $el: HTMLElement;
+	declare $refs: {
 		inner: HTMLElement;
 	};
 

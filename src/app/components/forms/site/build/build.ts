@@ -16,8 +16,10 @@ import { Site } from '../../../../../_common/site/site-model';
 		AppFormControlUpload,
 	},
 })
-export default class FormDashSiteBuild extends BaseForm<SiteBuild>
-	implements FormOnInit, FormOnLoad, FormOnSubmit {
+export default class FormDashSiteBuild
+	extends BaseForm<SiteBuild>
+	implements FormOnInit, FormOnLoad, FormOnSubmit
+{
 	modelClass = SiteBuild;
 	resetOnSubmit = true;
 	warnOnDiscard = false;
@@ -27,7 +29,7 @@ export default class FormDashSiteBuild extends BaseForm<SiteBuild>
 	maxFilesize = 0;
 	progress = 0;
 
-	$refs!: {
+	declare $refs: {
 		form: AppForm;
 	};
 

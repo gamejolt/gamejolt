@@ -15,7 +15,7 @@ export default class AppContentEditorControlsInsetContainer extends Vue {
 	top = 0;
 	boxHeight = 0;
 
-	$refs!: {
+	declare $refs: {
 		container: HTMLDivElement;
 	};
 

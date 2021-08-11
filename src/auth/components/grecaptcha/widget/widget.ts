@@ -1,7 +1,7 @@
-import { Environment } from '../../../../_common/environment/environment.service';
-import AppLoading from '../../../../_common/loading/loading.vue';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Environment } from '../../../../_common/environment/environment.service';
+import AppLoading from '../../../../_common/loading/loading.vue';
 import { GrecaptchaSdk } from '../sdk/sdk.service';
 
 @Component({
@@ -24,7 +24,7 @@ export default class AppGrecaptchaWidget extends Vue {
 	valid = false;
 	widgetId = 0;
 
-	$refs!: { grecaptcha: HTMLDivElement };
+	declare $refs: { grecaptcha: HTMLDivElement };
 
 	get loadedAndValid() {
 		return this.loaded && this.valid;

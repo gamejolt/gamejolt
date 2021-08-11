@@ -20,8 +20,10 @@ type FormModel = Game & {
 		AppFormControlCrop,
 	},
 })
-export default class FormGameHeader extends BaseForm<FormModel>
-	implements FormOnLoad, FormOnBeforeSubmit {
+export default class FormGameHeader
+	extends BaseForm<FormModel>
+	implements FormOnLoad, FormOnBeforeSubmit
+{
 	modelClass = Game as any;
 	saveMethod = '$saveHeader' as '$saveHeader';
 
@@ -33,7 +35,7 @@ export default class FormGameHeader extends BaseForm<FormModel>
 	maxWidth = 0;
 	maxHeight = 0;
 
-	$refs!: {
+	declare $refs: {
 		form: AppForm;
 	};
 

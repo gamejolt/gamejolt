@@ -41,12 +41,14 @@ interface FormModel {
 		currency,
 	},
 })
-export default class FormFinancials extends BaseForm<FormModel>
-	implements FormOnInit, FormOnSubmit, FormOnLoad, FormOnSubmitError {
+export default class FormFinancials
+	extends BaseForm<FormModel>
+	implements FormOnInit, FormOnSubmit, FormOnLoad, FormOnSubmitError
+{
 	resetOnSubmit = true;
 	reloadOnSubmit = true;
 
-	$refs!: {
+	declare $refs: {
 		form: AppForm;
 	};
 

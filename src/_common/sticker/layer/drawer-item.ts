@@ -13,7 +13,7 @@ export default class AppStickerLayerDrawerItem extends Vue {
 	@Prop(propOptional(Number, 64)) size!: number;
 	@Prop(propOptional(Boolean, false)) hideCount!: boolean;
 
-	$el!: HTMLDivElement;
+	declare $el: HTMLDivElement;
 
 	get itemStyling() {
 		return {

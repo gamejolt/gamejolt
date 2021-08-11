@@ -31,7 +31,7 @@ export default class FormComment
 	@Prop(String)
 	placeholder?: string;
 
-	$refs!: {
+	declare $refs: {
 		form: AppForm;
 	};
 

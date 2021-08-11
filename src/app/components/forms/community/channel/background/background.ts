@@ -21,8 +21,10 @@ type FormModel = CommunityChannel & {
 		AppFormControlCrop,
 	},
 })
-export default class FormCommunityChannelBackground extends BaseForm<FormModel>
-	implements FormOnLoad, FormOnBeforeSubmit {
+export default class FormCommunityChannelBackground
+	extends BaseForm<FormModel>
+	implements FormOnLoad, FormOnBeforeSubmit
+{
 	modelClass = CommunityChannel as any;
 	saveMethod = '$saveBackground' as const;
 
@@ -33,7 +35,7 @@ export default class FormCommunityChannelBackground extends BaseForm<FormModel>
 	maxWidth = 0;
 	maxHeight = 0;
 
-	$refs!: {
+	declare $refs: {
 		form: AppForm;
 	};
 

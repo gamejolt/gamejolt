@@ -44,7 +44,7 @@ export default class AppImgCrop extends Vue {
 
 	cropper!: Cropper;
 
-	$refs!: {
+	declare $refs: {
 		img: HTMLImageElement;
 	};
 
@@ -97,7 +97,8 @@ export default class AppImgCrop extends Vue {
 						(e.detail.width < this.minWidth && widthDiff > 0.5) ||
 						(e.detail.height < this.minHeight && heightDiff > 0.5)
 					) {
-						const targetWidth = e.detail.width < this.minWidth ? this.minWidth : e.detail.width;
+						const targetWidth =
+							e.detail.width < this.minWidth ? this.minWidth : e.detail.width;
 						const targetHeight =
 							e.detail.height < this.minHeight ? this.minHeight : e.detail.height;
 						this.cropper.setData(

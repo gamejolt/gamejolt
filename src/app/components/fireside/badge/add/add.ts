@@ -27,7 +27,7 @@ export default class AppFiresideBadgeAdd extends Vue {
 		return this.community !== undefined;
 	}
 
-	$refs!: {
+	declare $refs: {
 		header: HTMLDivElement;
 	};
 

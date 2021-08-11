@@ -22,8 +22,10 @@ type FormModel = User & {
 		AppFormControlCrop,
 	},
 })
-export default class FormUserHeader extends BaseForm<FormModel>
-	implements FormOnLoad, FormOnBeforeSubmit {
+export default class FormUserHeader
+	extends BaseForm<FormModel>
+	implements FormOnLoad, FormOnBeforeSubmit
+{
 	@State
 	app!: Store['app'];
 	modelClass = User as any;
@@ -37,7 +39,7 @@ export default class FormUserHeader extends BaseForm<FormModel>
 	maxWidth = 0;
 	maxHeight = 0;
 
-	$refs!: {
+	declare $refs: {
 		form: AppForm;
 	};
 

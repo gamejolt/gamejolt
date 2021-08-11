@@ -17,7 +17,7 @@ export default class AppFormControl extends BaseFormControl {
 	controlVal = '';
 	maskedInputElem: any = null;
 
-	$el!: HTMLInputElement;
+	declare $el: HTMLInputElement;
 
 	get controlType() {
 		if (this.type === 'currency') {

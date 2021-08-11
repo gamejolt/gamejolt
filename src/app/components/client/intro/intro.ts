@@ -26,7 +26,7 @@ export default class AppClientIntro extends Vue {
 	private initialStateChangeResolver: Function = null as any;
 	private routeChangeAfterDeregister?: EventBusDeregister;
 
-	$refs!: {
+	declare $refs: {
 		wrap: HTMLDivElement;
 	};
 

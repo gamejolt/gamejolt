@@ -21,7 +21,7 @@ export default class AppContentEditorControlsEmojiPanel extends Vue {
 	panelVisible = false;
 	clickedWithPanelVisible = false;
 
-	$refs!: {
+	declare $refs: {
 		panel: HTMLElement;
 	};
 

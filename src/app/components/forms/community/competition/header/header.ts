@@ -20,8 +20,10 @@ type FormModel = CommunityCompetition & {
 		AppFormControlCrop,
 	},
 })
-export default class FormCommunityCompetitionHeader extends BaseForm<FormModel>
-	implements FormOnLoad, FormOnBeforeSubmit {
+export default class FormCommunityCompetitionHeader
+	extends BaseForm<FormModel>
+	implements FormOnLoad, FormOnBeforeSubmit
+{
 	modelClass = CommunityCompetition as any;
 	saveMethod: '$saveHeader' = '$saveHeader';
 
@@ -33,7 +35,7 @@ export default class FormCommunityCompetitionHeader extends BaseForm<FormModel>
 	maxWidth = 0;
 	maxHeight = 0;
 
-	$refs!: {
+	declare $refs: {
 		form: AppFormTS;
 	};
 

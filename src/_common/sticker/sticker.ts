@@ -9,7 +9,7 @@ export default class AppSticker extends Vue {
 	@Prop(propRequired(StickerPlacement)) sticker!: StickerPlacement;
 	@Prop(propOptional(Boolean, true)) isClickable!: boolean;
 
-	$refs!: {
+	declare $refs: {
 		outer: HTMLDivElement;
 		inner: HTMLImageElement;
 	};

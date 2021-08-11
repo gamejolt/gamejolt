@@ -43,7 +43,7 @@ export default class AppShellNotificationPopover extends Vue {
 
 	readonly Connection = Connection;
 
-	$refs!: {
+	declare $refs: {
 		newStickerAnimContainer: HTMLDivElement;
 	};
 

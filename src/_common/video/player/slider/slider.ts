@@ -22,7 +22,7 @@ export default class AppVideoPlayerSlider extends Vue {
 	private sliderOffset = 0;
 	private percentFull = 0;
 
-	$refs!: {
+	declare $refs: {
 		slider: HTMLElement;
 		thumb: HTMLDivElement;
 	};

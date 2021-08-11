@@ -49,8 +49,10 @@ type CheckoutType = 'cc-stripe' | 'paypal' | 'wallet';
 		currency,
 	},
 })
-export default class FormGamePackagePayment extends BaseForm<any>
-	implements FormOnInit, FormOnSubmit, FormOnSubmitSuccess, FormOnSubmitError {
+export default class FormGamePackagePayment
+	extends BaseForm<any>
+	implements FormOnInit, FormOnSubmit, FormOnSubmitSuccess, FormOnSubmitError
+{
 	@Prop(Game) game!: Game;
 	@Prop(GamePackage) package!: GamePackage;
 	@Prop(GameBuild) build?: GameBuild;
@@ -62,7 +64,7 @@ export default class FormGamePackagePayment extends BaseForm<any>
 	@State
 	app!: AppStore;
 
-	$refs!: {
+	declare $refs: {
 		form: AppForm;
 	};
 

@@ -30,7 +30,7 @@ export default class FormCommunityChannelAdd extends BaseForm<FormModel> impleme
 	resetOnSubmit = true;
 	isTitleInitial = true;
 
-	$refs!: {
+	declare $refs: {
 		form: AppFormTS;
 	};
 

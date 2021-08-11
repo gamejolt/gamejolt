@@ -120,7 +120,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	videoHeight = 0;
 	isVertical = false;
 
-	$refs!: {
+	declare $refs: {
 		videoWrapper: HTMLDivElement;
 	};
 

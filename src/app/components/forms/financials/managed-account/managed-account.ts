@@ -49,8 +49,10 @@ const PERSON_REQUIREMENT_FIELD = new RegExp(`^(person_.*?)\\.`);
 		AppFinancialsManagedAccountCompanyDetails,
 	},
 })
-export default class FormFinancialsManagedAccount extends BaseForm<FormModel>
-	implements FormOnInit, FormOnSubmit {
+export default class FormFinancialsManagedAccount
+	extends BaseForm<FormModel>
+	implements FormOnInit, FormOnSubmit
+{
 	resetOnSubmit = true;
 	scriptLoaded = false;
 	isLoaded = false;
@@ -70,7 +72,7 @@ export default class FormFinancialsManagedAccount extends BaseForm<FormModel>
 	readonly Geo = Geo;
 	readonly currency = currency;
 
-	$refs!: {
+	declare $refs: {
 		individual: AppFinancialsManagedAccountPersonTS;
 		representative: AppFinancialsManagedAccountPersonTS;
 	};
@@ -288,15 +290,13 @@ export default class FormFinancialsManagedAccount extends BaseForm<FormModel>
 					.uploadDocuments(this.stripePublishableKey)
 					.then(([idDocumentUploadId, additionalDocumentUploadId]) => {
 						if (idDocumentUploadId) {
-							data[
-								`${ref.namePrefix}.verification.document.front`
-							] = idDocumentUploadId;
+							data[`${ref.namePrefix}.verification.document.front`] =
+								idDocumentUploadId;
 						}
 
 						if (additionalDocumentUploadId) {
-							data[
-								`${ref.namePrefix}.verification.additional_document.front`
-							] = additionalDocumentUploadId;
+							data[`${ref.namePrefix}.verification.additional_document.front`] =
+								additionalDocumentUploadId;
 						}
 					});
 
