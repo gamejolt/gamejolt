@@ -22,7 +22,7 @@
 				:community="community"
 				required="community-channels,community-competitions"
 				either
-				@click.native.capture="onChangeSection('communities.view.edit.channels.list')"
+				@click.capture="onChangeSection('communities.view.edit.channels.list')"
 			>
 				<router-link
 					:to="{
@@ -40,7 +40,7 @@
 				tag="li"
 				:community="community"
 				required="community-games"
-				@click.native.capture="onChangeSection('communities.view.edit.games')"
+				@click.capture="onChangeSection('communities.view.edit.games')"
 			>
 				<router-link
 					:to="{
@@ -58,7 +58,7 @@
 				tag="li"
 				:community="community"
 				required="community-moderators"
-				@click.native.capture="onChangeSection('communities.view.edit.moderators')"
+				@click.capture="onChangeSection('communities.view.edit.moderators')"
 			>
 				<router-link
 					:to="{
@@ -76,7 +76,7 @@
 				tag="li"
 				:community="community"
 				required="community-blocks"
-				@click.native.capture="onChangeSection('communities.view.edit.blocks')"
+				@click.capture="onChangeSection('communities.view.edit.blocks')"
 			>
 				<router-link
 					:to="{
@@ -99,7 +99,7 @@
 						},
 					}"
 					active-class="active"
-					@click.native.capture="onChangeSection('communities.view.edit.blocks')"
+					@click.capture="onChangeSection('communities.view.edit.blocks')"
 				>
 					<translate>Audit Log</translate>
 				</router-link>

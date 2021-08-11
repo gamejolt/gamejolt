@@ -1,4 +1,4 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { date } from '../../../../../../../../_common/filters/date';
 import { number } from '../../../../../../../../_common/filters/number';
 import { GameScoreTable } from '../../../../../../../../_common/game/score-table/score-table.model';
@@ -20,6 +20,9 @@ export default class AppManageGameListScores extends Vue {
 	@Prop(Array) scores!: UserGameScore[];
 	@Prop(Boolean) isForUser?: boolean;
 
+	@Emit('remove')
+	emitRemove(_score: UserGameScore) {}
+
 	async removeScore(score: UserGameScore) {
 		const result = await ModalConfirm.show(
 			this.$gettext('Are you sure you want to remove this score?')
@@ -31,6 +34,6 @@ export default class AppManageGameListScores extends Vue {
 
 		await score.$remove();
 
-		this.$emit('remove', score);
+		this.emitRemove(score);
 	}
 }

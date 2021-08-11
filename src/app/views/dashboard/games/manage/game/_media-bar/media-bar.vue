@@ -27,7 +27,7 @@
 				:options="{ delay: 100, delayOnTouchOnly: true }"
 			>
 				<div v-for="item of draggableItems" :key="item.id">
-					<app-game-media-bar-item class="-item" :item="item" @click.native="open(item)">
+					<app-game-media-bar-item class="-item" :item="item" @click="open(item)">
 						<app-editable-overlay class="-item-hover hidden-xs" @click="open(item)">
 							<template #overlay>
 								<translate>click to edit</translate>

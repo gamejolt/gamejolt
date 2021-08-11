@@ -8,7 +8,7 @@
 		@panmove="pan"
 		@panend="panEnd"
 		@tap="tap"
-		@click.native.capture.prevent
+		@click.capture.prevent
 	>
 		<div ref="timebar" class="-timebar" :class="{ '-dragging': player.isScrubbing }">
 			<div class="-timebar-handle" :style="{ right: filledRight }" />

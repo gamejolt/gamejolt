@@ -1,4 +1,4 @@
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import AppDatepicker from '../datepicker/datepicker.vue';
 import AppTimepicker from '../timepicker/timepicker.vue';
 
@@ -15,6 +15,9 @@ export default class AppDatetimePicker extends Vue {
 	@Prop(Number) maxDate?: number;
 
 	private myTimezoneOffset = new Date().getTimezoneOffset() * 60000;
+
+	@Emit('change')
+	emitChange(_date: number) {}
 
 	get tzOffset() {
 		return this.timezoneOffset + this.myTimezoneOffset;
@@ -40,13 +43,13 @@ export default class AppDatetimePicker extends Vue {
 
 	@Watch('timezoneOffset')
 	onTimezoneChanged(oldOffset: number, newOffset: number) {
-		this.$emit('input', this.value - oldOffset + newOffset);
+		this.emitChange(this.value - oldOffset + newOffset);
 	}
 
 	select(date: Date) {
 		// Get the selected date from the date/time pickers.
 		// This date would be local to the timezone that was selected,
 		// so it must first be offsetted back to UTC.
-		this.$emit('input', date.getTime() - this.tzOffset);
+		this.emitChange(date.getTime() - this.tzOffset);
 	}
 }

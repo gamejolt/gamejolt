@@ -1,7 +1,7 @@
 import { Node } from 'prosemirror-model';
 import { Selection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { Growls } from '../../../../growls/growls.service';
 import { Screen } from '../../../../screen/screen-service';
@@ -38,6 +38,9 @@ export default class AppContentEditorBlockControls extends Vue {
 	declare $refs: {
 		container: HTMLElement;
 	};
+
+	@Emit('collapsed-changed')
+	emitCollapsedChanged(_value: boolean) {}
 
 	get shouldShow() {
 		return this.visible && this.top > -24 && this.boxHeight - this.top > 24;
@@ -93,7 +96,7 @@ export default class AppContentEditorBlockControls extends Vue {
 	}
 
 	private setCollapsed(value: boolean) {
-		this.$emit('collapsedChanged', value);
+		this.emitCollapsedChanged(value);
 	}
 
 	onClickExpand() {

@@ -5,8 +5,8 @@
 		class="-player theme-dark"
 		:config="InviewConfigFocused"
 		:controller="focusedController"
-		@mouseleave.native="onMouseOut"
-		@mouseenter.native="onMouseIn"
+		@mouseleave="onMouseOut"
+		@mouseenter="onMouseIn"
 	>
 		<app-responsive-dimensions
 			class="-video-container"

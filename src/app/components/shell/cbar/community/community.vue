@@ -27,7 +27,7 @@
 								name: 'communities.view.overview',
 								params: { path: community.path },
 							}"
-							@click.native="onGotoCommunity"
+							@click="onGotoCommunity"
 						>
 							<app-media-item-backdrop
 								class="-backdrop"

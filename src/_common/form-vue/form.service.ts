@@ -1,5 +1,5 @@
 import VueGlobal from 'vue';
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { arrayRemove, arrayUnique } from '../../utils/array';
 import { Api } from '../api/api.service';
 import { PayloadFormErrors } from '../payload/payload-service';
@@ -89,6 +89,9 @@ export class BaseForm<T> extends Vue {
 	successClearTimeout?: NodeJS.Timer;
 	serverErrors: PayloadFormErrors = {};
 	private customErrors: string[] = [];
+
+	@Emit('submit')
+	emitSubmit(_formModel: Readonly<T>, _response: any) {}
 
 	get loadUrl(): null | string {
 		return null;
@@ -247,7 +250,7 @@ export class BaseForm<T> extends Vue {
 			this._showSuccess();
 
 			// Send the new model back into the submit handler.
-			this.$emit('submit', this.formModel, response);
+			this.emitSubmit(this.formModel, response);
 
 			// If we should reset on successful submit, let's do that now.
 			if (this.resetOnSubmit) {

@@ -12,7 +12,7 @@
 					v-for="item of mediaItems"
 					:key="item.id"
 					:item="item"
-					@click.native="setActiveItem(item)"
+					@click="setActiveItem(item)"
 				/>
 			</div>
 		</div>

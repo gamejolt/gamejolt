@@ -1,4 +1,4 @@
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 
 @Options({})
 export default class AppTimepicker extends Vue {
@@ -11,6 +11,9 @@ export default class AppTimepicker extends Vue {
 	hours = '';
 	minutes = '';
 	meridian = '';
+
+	@Emit('change')
+	emitChange(_date: Date) {}
 
 	private get _meridians() {
 		return this.meridians || [this.$gettext('AM'), this.$gettext('PM')];
@@ -81,7 +84,7 @@ export default class AppTimepicker extends Vue {
 		}
 		newValue.setHours(hours);
 		newValue.setDate(this.value.getDate());
-		this.$emit('input', newValue);
+		this.emitChange(newValue);
 	}
 
 	updateMinutes() {
@@ -98,7 +101,7 @@ export default class AppTimepicker extends Vue {
 		const newValue = new Date(this.value);
 		newValue.setMinutes(minutes);
 		newValue.setDate(this.value.getDate());
-		this.$emit('input', newValue);
+		this.emitChange(newValue);
 	}
 
 	addMinutes(minutes: number) {
@@ -108,7 +111,7 @@ export default class AppTimepicker extends Vue {
 
 		const newValue = new Date(this.value.getTime() + minutes * 60000);
 		newValue.setDate(this.value.getDate());
-		this.$emit('input', newValue);
+		this.emitChange(newValue);
 	}
 
 	addHours(hours: number) {

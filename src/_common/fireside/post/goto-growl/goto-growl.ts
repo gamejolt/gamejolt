@@ -1,4 +1,4 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { RawLocation } from 'vue-router';
 import { Game } from '../../../game/game.model';
 import { AppTimeAgo } from '../../../time/ago/ago';
@@ -17,6 +17,9 @@ export default class AppFiresidePostGotoGrowl extends Vue {
 
 	@Prop(String)
 	action!: string;
+
+	@Emit('close')
+	emitClose() {}
 
 	get isActive() {
 		return this.post.status === FiresidePost.STATUS_ACTIVE;
@@ -93,13 +96,13 @@ export default class AppFiresidePostGotoGrowl extends Vue {
 
 	onClickedView() {
 		// Any button clicked closes the modal.
-		this.$emit('close');
+		this.emitClose();
 	}
 
 	mounted() {
 		// Close this modal when the user navigates.
 		this.$router.beforeResolve((_to, _from, next) => {
-			this.$emit('close');
+			this.emitClose();
 			next();
 		});
 	}

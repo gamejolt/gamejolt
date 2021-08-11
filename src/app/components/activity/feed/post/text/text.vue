@@ -23,7 +23,7 @@
 					centered
 					hide-label
 					stationary
-					@click.native.stop
+					@click.stop
 				/>
 				<app-button v-else trans @click.stop="toggleFull()">
 					<translate v-if="!isOpen">read article</translate>

@@ -118,7 +118,7 @@
 			<li v-if="shouldShowAppPromotion" class="offline-disable">
 				<router-link
 					:to="{ name: 'landing.app' }"
-					@click.native="trackAppPromotionClick({ source: 'sidebar' })"
+					@click="trackAppPromotionClick({ source: 'sidebar' })"
 				>
 					<span class="shell-nav-icon">
 						<app-jolticon icon="world" />

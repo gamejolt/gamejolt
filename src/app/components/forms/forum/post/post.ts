@@ -1,5 +1,5 @@
 import { nextTick } from 'vue';
-import { Options, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop } from 'vue-property-decorator';
 import AppFormControlContent from '../../../../../_common/form-vue/control/content/content.vue';
 import AppForm from '../../../../../_common/form-vue/form';
 import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.service';
@@ -22,6 +22,9 @@ export default class FormForumPost extends BaseForm<ForumPost> implements FormOn
 	modelClass = ForumPost;
 	resetOnSubmit = true;
 
+	@Emit('cancel')
+	emitCancel() {}
+
 	async onInit() {
 		this.setField('topic_id', this.topic.id);
 
@@ -39,6 +42,6 @@ export default class FormForumPost extends BaseForm<ForumPost> implements FormOn
 	}
 
 	onCancel() {
-		this.$emit('cancel');
+		this.emitCancel();
 	}
 }

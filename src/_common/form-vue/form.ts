@@ -1,5 +1,5 @@
 import { nextTick } from 'vue';
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../utils/vue';
 import AppLoadingFade from '../loading/fade/fade.vue';
 import AppLoading from '../loading/loading.vue';
@@ -13,12 +13,16 @@ import { BaseForm } from './form.service';
 	},
 })
 export default class AppForm extends Vue {
-	@Prop(String) name!: string;
+	@Prop({ type: String, required: true })
+	name!: string;
 
 	base!: BaseForm<any>;
 	controls: BaseFormControl[] = [];
 
 	private static hasAddedValidators = false;
+
+	@Emit('changed')
+	emitChanged(_formModel: any) {}
 
 	get isLoaded() {
 		// Check specifically false so that "null" is correctly shown as loaded.
@@ -121,6 +125,6 @@ export default class AppForm extends Vue {
 
 	onChange() {
 		this.base.changed = true;
-		this.$emit('changed', this.base.formModel);
+		this.emitChanged(this.base.formModel);
 	}
 }

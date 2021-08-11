@@ -1,4 +1,4 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import AppCard from '../../../../../_common/card/card.vue';
 import { Game } from '../../../../../_common/game/game.model';
 import { Growls } from '../../../../../_common/growls/growls.service';
@@ -20,8 +20,11 @@ export default class AppGameDevStageSelector extends Vue {
 
 	Game = Game;
 
+	@Emit('select')
+	emitSelect(_stage: number) {}
+
 	async select(stage: number) {
-		this.$emit('select', stage);
+		this.emitSelect(stage);
 
 		if (!this.game) {
 			return;

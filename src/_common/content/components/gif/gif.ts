@@ -1,4 +1,4 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../../utils/vue';
 import { ContentFocus } from '../../../content-focus/content-focus.service';
 import { AppResponsiveDimensions } from '../../../responsive-dimensions/responsive-dimensions';
@@ -37,6 +37,9 @@ export default class AppContentGif extends Vue {
 	isInview = false;
 	readonly InviewConfig = InviewConfig;
 
+	@Emit('removed')
+	emitRemoved() {}
+
 	get shouldPlay() {
 		return ContentFocus.isWindowFocused;
 	}
@@ -74,7 +77,7 @@ export default class AppContentGif extends Vue {
 	}
 
 	onRemoved() {
-		this.$emit('removed');
+		this.emitRemoved();
 	}
 
 	onInviewChange(inview: boolean) {

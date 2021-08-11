@@ -1,5 +1,5 @@
 import { nextTick } from 'vue';
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../../../_common/api/api.service';
 import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
@@ -70,6 +70,9 @@ export default class AppForumPostListItem extends Vue {
 	readonly date = date;
 	readonly number = number;
 	readonly Environment = Environment;
+
+	@Emit('replied')
+	emitReplied(_newPost: ForumPost, _payload: any) {}
 
 	get id() {
 		return (this.isReply ? this.post.parent_post_id + '-' : '') + this.post.id;
@@ -164,7 +167,7 @@ export default class AppForumPostListItem extends Vue {
 			this.loadReplies();
 		}
 
-		this.$emit('replied', newPost, response);
+		this.emitReplied(newPost, response);
 	}
 
 	edit() {

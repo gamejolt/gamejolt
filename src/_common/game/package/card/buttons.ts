@@ -1,4 +1,4 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { filesize } from '../../../filters/filesize';
 import AppPopper from '../../../popper/popper.vue';
 import { Screen } from '../../../screen/screen-service';
@@ -22,7 +22,10 @@ export default class AppGamePackageCardButtons extends Vue {
 
 	readonly Screen = Screen;
 
+	@Emit('click')
+	emitClick(_data: { build: GameBuild; fromExtraSection: boolean }) {}
+
 	click(build: GameBuild, fromExtraSection = false) {
-		this.$emit('click', { build, fromExtraSection });
+		this.emitClick({ build, fromExtraSection });
 	}
 }

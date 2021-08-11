@@ -1,4 +1,4 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { date } from '../../../../../_common/filters/date';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { UserStripeManagedAccount } from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
@@ -20,6 +20,9 @@ export default class AppPartnerTerms extends Vue {
 
 	readonly date = date;
 
+	@Emit('accepted')
+	emitAccepted() {}
+
 	get hasSignedPartnerAgreement() {
 		return this.account && this.account.tos_signed_partner > 0;
 	}
@@ -36,6 +39,6 @@ export default class AppPartnerTerms extends Vue {
 	}
 
 	onAccept() {
-		this.$emit('accepted');
+		this.emitAccepted();
 	}
 }

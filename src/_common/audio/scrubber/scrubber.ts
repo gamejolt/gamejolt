@@ -1,4 +1,4 @@
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Ruler } from '../../ruler/ruler-service';
 
 // TODO(vue3)
@@ -17,6 +17,9 @@ export default class AppAudioScrubber extends Vue {
 	private timebarLeft = 0;
 	private timebarWidth = 0;
 	private scrubPos = -1;
+
+	@Emit('seek')
+	emitSeek(_pos: number) {}
 
 	get unfilledRight() {
 		if (this.scrubPos !== -1) {
@@ -74,7 +77,7 @@ export default class AppAudioScrubber extends Vue {
 	}
 
 	panEnd() {
-		this.$emit('seek', this.scrubPos);
+		this.emitSeek(this.scrubPos);
 		this.isDragging = false;
 	}
 

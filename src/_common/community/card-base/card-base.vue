@@ -23,7 +23,7 @@
 					<router-link
 						:to="community.routeLocation"
 						class="link-unstyled"
-						@click.native="trackGotoCommunity()"
+						@click="trackGotoCommunity()"
 					>
 						{{ community.name }}
 						<app-community-verified-tick :community="community" />
@@ -62,7 +62,7 @@
 							primary
 							block
 							:to="community.routeLocation"
-							@click.native="trackGotoCommunity()"
+							@click="trackGotoCommunity()"
 						>
 							<translate>View Community</translate>
 						</app-button>

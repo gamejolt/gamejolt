@@ -1,4 +1,4 @@
-import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import '../../../../../_common/comment/comment.styl';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
 import {
@@ -46,6 +46,9 @@ export default class AppActivityFeedNotification extends Vue {
 	canToggleContent = false;
 	readonly Screen = Screen;
 	readonly Notification = Notification;
+
+	@Emit('clicked')
+	emitClicked() {}
 
 	get notification() {
 		return this.item.feedItem as Notification;
@@ -103,7 +106,7 @@ export default class AppActivityFeedNotification extends Vue {
 	go() {
 		this.notification.$read();
 		this.notification.go(this.$router);
-		this.$emit('clicked');
+		this.emitClicked();
 	}
 
 	onMarkRead() {

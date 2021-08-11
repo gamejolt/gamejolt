@@ -58,6 +58,9 @@ export default class AppContentEditorControlsMentionAutocompleteControls extends
 		return this.visible && (this.isLoading || this.users.length > 0);
 	}
 
+	@Emit('insert')
+	emitInsert(_user: User) {}
+
 	@Emit('users-change')
 	emitUsersChange(_num: number) {}
 
@@ -232,7 +235,7 @@ export default class AppContentEditorControlsMentionAutocompleteControls extends
 			tr.insertText('@' + user.username + ' ', start, end); // Add space to the end.
 			this.view.dispatch(tr);
 
-			this.$emit('insert', user);
+			this.emitInsert(user);
 		}
 	}
 }

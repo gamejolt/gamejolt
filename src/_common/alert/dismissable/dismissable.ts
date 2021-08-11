@@ -1,4 +1,4 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
 import AppExpand from '../../expand/expand.vue';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
@@ -21,6 +21,9 @@ export default class AppAlertDismissable extends Vue {
 
 	shouldShow = false;
 
+	@Emit('dismiss')
+	emitDismiss() {}
+
 	get _key() {
 		return STORAGE_KEY_PREFIX + this.dismissKey;
 	}
@@ -37,6 +40,6 @@ export default class AppAlertDismissable extends Vue {
 		}
 		this.shouldShow = false;
 
-		this.$emit('dismiss');
+		this.emitDismiss();
 	}
 }

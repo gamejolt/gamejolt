@@ -1,4 +1,4 @@
-import { Inject, Options, Prop } from 'vue-property-decorator';
+import { Emit, Inject, Options, Prop } from 'vue-property-decorator';
 import { Location } from 'vue-router';
 import { Analytics } from '../../analytics/analytics.service';
 import AppMessageThreadAdd from '../../message-thread/add/add.vue';
@@ -47,6 +47,9 @@ export default class AppCommentThreadModal extends BaseModal {
 	isEditorFocused = false;
 
 	readonly Screen = Screen;
+
+	@Emit('add')
+	emitAdd(_comment: Comment) {}
 
 	get parent() {
 		const store = getCommentStore(
@@ -109,7 +112,7 @@ export default class AppCommentThreadModal extends BaseModal {
 	_onCommentAdd(comment: Comment) {
 		Analytics.trackEvent('comment-widget', 'add');
 		onCommentAdd(this.commentManager, comment);
-		this.$emit('add', comment);
+		this.emitAdd(comment);
 	}
 
 	onRemove(_comment: Comment) {

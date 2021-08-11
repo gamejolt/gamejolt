@@ -124,7 +124,7 @@
 										name: 'dash.games.manage.api.scoreboards.scores.list',
 										params: { table: scoreTable.id },
 									}"
-									@click.native.stop
+									@click.stop
 								>
 									<translate>dash.games.scoreboards.scores_button</translate>
 								</app-button>

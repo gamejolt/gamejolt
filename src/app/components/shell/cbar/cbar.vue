@@ -15,16 +15,10 @@
 					/>
 				</transition-group>
 				<app-shell-cbar-item>
-					<app-community-discover-widget
-						tooltip-placement="right"
-						@contextmenu.native.prevent
-					/>
+					<app-community-discover-widget tooltip-placement="right" @contextmenu.prevent />
 				</app-shell-cbar-item>
 				<app-shell-cbar-item>
-					<app-community-add-widget
-						tooltip-placement="right"
-						@contextmenu.native.prevent
-					/>
+					<app-community-add-widget tooltip-placement="right" @contextmenu.prevent />
 				</app-shell-cbar-item>
 			</div>
 		</app-scroll-scroller>

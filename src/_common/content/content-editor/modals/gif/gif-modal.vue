@@ -53,7 +53,7 @@
 					:class="{
 						'gif-content-noscroll': isLoading && searchResults.length === 0,
 					}"
-					@scroll.native="onContainerScroll"
+					@scroll="onContainerScroll"
 				>
 					<div v-if="shouldShowCategories" class="-grid">
 						<div

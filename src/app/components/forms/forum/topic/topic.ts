@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop } from 'vue-property-decorator';
 import AppFormControlContent from '../../../../../_common/form-vue/control/content/content.vue';
 import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.service';
 import { ForumChannel } from '../../../../../_common/forum/channel/channel.model';
@@ -14,6 +14,9 @@ export default class FormForumTopic extends BaseForm<ForumTopic> implements Form
 
 	modelClass = ForumTopic;
 
+	@Emit('cancel')
+	emitCancel() {}
+
 	onInit() {
 		this.setField('channel_id', this.channel.id);
 
@@ -23,6 +26,6 @@ export default class FormForumTopic extends BaseForm<ForumTopic> implements Form
 	}
 
 	onCancel() {
-		this.$emit('cancel');
+		this.emitCancel();
 	}
 }

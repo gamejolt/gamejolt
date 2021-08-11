@@ -1,10 +1,12 @@
+import { Emit, Prop } from 'vue-property-decorator';
 import { BaseForm, FormOnSubmitSuccess } from '../../../../_common/form-vue/form.service';
 import Onboarding, { OnboardingStep } from '../../../../_common/onboarding/onboarding.service';
 import { User } from '../../../../_common/user/user.model';
-import { Prop } from 'vue-property-decorator';
 
-export default abstract class OnboardingComponent<T> extends BaseForm<T>
-	implements FormOnSubmitSuccess {
+export default abstract class OnboardingComponent<T>
+	extends BaseForm<T>
+	implements FormOnSubmitSuccess
+{
 	warnOnDiscard = false;
 
 	@Prop(User)
@@ -15,8 +17,10 @@ export default abstract class OnboardingComponent<T> extends BaseForm<T>
 
 	startedOn = Date.now();
 
-	abstract get stepName(): OnboardingStep;
+	@Emit('next')
+	emitNext() {}
 
+	abstract get stepName(): OnboardingStep;
 	abstract get shouldShowSkip(): boolean;
 
 	get canContinue() {
@@ -29,6 +33,6 @@ export default abstract class OnboardingComponent<T> extends BaseForm<T>
 
 	onSubmitSuccess() {
 		Onboarding.endStep(this.shouldShowSkip);
-		this.$emit('next');
+		this.emitNext();
 	}
 }

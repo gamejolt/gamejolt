@@ -1,4 +1,4 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../../utils/vue';
 import AppFormTS from '../form';
 import AppFormGroupTS from '../group/group';
@@ -19,6 +19,9 @@ export default class BaseFormControl extends Vue {
 
 	form!: AppFormTS;
 	group!: AppFormGroupTS;
+
+	@Emit('changed')
+	emitChanged(_value: any) {}
 
 	get id() {
 		const id = this.form.name + '-' + this.group.name;
@@ -76,7 +79,7 @@ export default class BaseFormControl extends Vue {
 		this.form.base.setField(this.group.name, value);
 		this.group.changed = true;
 
-		this.$emit('changed', value);
+		this.emitChanged(value);
 		this.form.onChange();
 	}
 }

@@ -93,9 +93,7 @@
 									</span>
 								</app-user-card-hover>
 							</router-link>
-							<span v-else>
-								-
-							</span>
+							<span v-else> - </span>
 						</td>
 
 						<td class="-info">
@@ -103,9 +101,7 @@
 						</td>
 
 						<td class="-info">
-							<translate v-if="!block.doesExpire">
-								Never
-							</translate>
+							<translate v-if="!block.doesExpire"> Never </translate>
 							<app-time-ago v-else :date="block.expires_on" is-future />
 						</td>
 
@@ -114,7 +110,7 @@
 								v-app-tooltip="$gettext(`Lift Block`)"
 								class="-lift"
 								icon="remove"
-								@click.native="onClickLift(block)"
+								@click="onClickLift(block)"
 							/>
 						</td>
 					</tr>

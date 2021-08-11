@@ -1,4 +1,4 @@
-import { Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Emit, Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
@@ -99,6 +99,18 @@ export default class AppCommentWidget extends Vue {
 	collaborators: Collaborator[] = [];
 
 	readonly number = number;
+
+	@Emit('error')
+	emitError(_e: any) {}
+
+	@Emit('add')
+	emitAdd(_comment: Comment) {}
+
+	@Emit('edit')
+	emitEdit(_comment: Comment) {}
+
+	@Emit('remove')
+	emitRemove(_comment: Comment) {}
 
 	get loginUrl() {
 		return (
@@ -294,14 +306,15 @@ export default class AppCommentWidget extends Vue {
 		} catch (e) {
 			console.error(e);
 			this.hasError = true;
-			this.$emit('error', e);
+			this.emitError(e);
 		}
 	}
 
 	_onCommentAdd(comment: Comment) {
 		Analytics.trackEvent('comment-widget', 'add');
 		onCommentAdd(this.commentManager, comment);
-		this.$emit('add', comment);
+		this.emitAdd(comment);
+
 		if (this.store) {
 			if (this.store.sort !== Comment.SORT_YOU) {
 				this._setSort(Comment.SORT_YOU);
@@ -316,13 +329,13 @@ export default class AppCommentWidget extends Vue {
 	_onCommentEdit(comment: Comment) {
 		Analytics.trackEvent('comment-widget', 'edit');
 		onCommentEdit(this.commentManager, comment);
-		this.$emit('edit', comment);
+		this.emitEdit(comment);
 	}
 
 	_onCommentRemove(comment: Comment) {
 		Analytics.trackEvent('comment-widget', 'remove');
 		onCommentRemove(this.commentManager, comment);
-		this.$emit('remove', comment);
+		this.emitRemove(comment);
 	}
 
 	_pinComment(comment: Comment) {

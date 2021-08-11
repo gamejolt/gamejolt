@@ -191,7 +191,7 @@
 										lineNumbers: false,
 										tabSize: 2,
 									}"
-									@input="updateField(definitionField, $event)"
+									@change="updateField(definitionField, $event)"
 								/>
 							</div>
 						</div>

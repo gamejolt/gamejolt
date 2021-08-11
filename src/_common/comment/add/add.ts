@@ -111,7 +111,10 @@ export default class FormComment
 	@Emit('editor-blur')
 	onBlurEditor() {}
 
+	@Emit('cancel')
+	emitCancel() {}
+
 	onCancel() {
-		this.$emit('cancel');
+		this.emitCancel();
 	}
 }

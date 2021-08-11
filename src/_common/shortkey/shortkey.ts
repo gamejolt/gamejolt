@@ -1,10 +1,13 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { Shortkeys } from './shortkey-service';
 
 @Options({})
 export default class AppShortkey extends Vue {
 	@Prop(String)
 	shortkey!: string;
+
+	@Emit('press')
+	emitPress(e: KeyboardEvent) {}
 
 	mounted() {
 		this.callback = this.callback.bind(this);
@@ -16,6 +19,6 @@ export default class AppShortkey extends Vue {
 	}
 
 	callback(e: KeyboardEvent) {
-		this.$emit('press', e);
+		this.emitPress(e);
 	}
 }

@@ -1,6 +1,6 @@
 import Cropper from 'cropperjs';
 import 'cropperjs/dist/cropper.css';
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 
 interface CropData {
 	x: number;
@@ -46,6 +46,9 @@ export default class AppImgCrop extends Vue {
 	declare $refs: {
 		img: HTMLImageElement;
 	};
+
+	@Emit('input')
+	emitInput(_cop: CropData) {}
 
 	mounted() {
 		const useAspectRatio =
@@ -144,7 +147,7 @@ export default class AppImgCrop extends Vue {
 			},
 			cropend: () => {
 				const crop = this.getCropperDataAsCropData();
-				this.$emit('input', crop);
+				this.emitInput(crop);
 			},
 		});
 	}

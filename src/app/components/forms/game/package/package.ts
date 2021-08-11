@@ -1,6 +1,6 @@
 import { addWeeks, startOfDay, startOfTomorrow } from 'date-fns';
 import { determine } from 'jstimezonedetect';
-import { Options, Prop, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { currency } from '../../../../../_common/filters/currency';
 import { date } from '../../../../../_common/filters/date';
@@ -66,7 +66,6 @@ export default class FormGamePackage
 
 	@Prop(Sellable)
 	sellable!: Sellable;
-	// @Prop(GamePackage) package?: GamePackage;
 
 	showDescriptionInput = false;
 	isShowingSaleForm = false;
@@ -83,6 +82,9 @@ export default class FormGamePackage
 	timezones: { [region: string]: (TimezoneData & { label?: string })[] } = {};
 
 	GamePackage = GamePackage;
+
+	@Emit('salecancel')
+	emitSaleCancel(_formModel: FormGamePackageModel) {}
 
 	get hasBuildsPerms() {
 		return this.game && this.game.hasPerms('builds');
@@ -270,8 +272,6 @@ export default class FormGamePackage
 		this.setField('sale_price', null);
 		this.isProcessing = false;
 
-		// this.onSubmitSuccess(this, payload);
-
-		this.$emit('salecancel', this.formModel);
+		this.emitSaleCancel(this.formModel);
 	}
 }

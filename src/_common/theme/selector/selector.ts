@@ -1,4 +1,4 @@
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Popper } from '../../popper/popper.service';
 import AppPopper from '../../popper/popper.vue';
 import { SiteTemplate } from '../../site/template/template-model';
@@ -17,6 +17,9 @@ export default class AppThemeSelector extends Vue {
 
 	current: SiteTemplate | null = null;
 
+	@Emit('change')
+	emitChange(_id: number) {}
+
 	@Watch('currentTemplate')
 	onTemplateChange() {
 		this.current = this.templates.find(t => t.id === this.currentTemplate) || null;
@@ -29,7 +32,7 @@ export default class AppThemeSelector extends Vue {
 	}
 
 	select(id: number) {
-		this.$emit('change', id);
+		this.emitChange(id);
 		Popper.hideAll();
 	}
 }

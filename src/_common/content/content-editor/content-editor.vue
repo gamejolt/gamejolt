@@ -9,7 +9,7 @@
 				minHeight: containerMinHeight,
 			}"
 		>
-			<app-scroll-scroller class="content-container-scroller" @scroll.native="onScroll" thin>
+			<app-scroll-scroller class="content-container-scroller" @scroll="onScroll" thin>
 				<div
 					:class="{
 						'content-container-gutter-1': editorGutterSize === 1,
@@ -51,7 +51,7 @@
 							ref="emojiPanel"
 							:view="view"
 							:state-counter="stateCounter"
-							@visibilityChanged="onEmojiPanelVisibilityChanged"
+							@visibility-changed="onEmojiPanelVisibilityChanged"
 						/>
 					</transition>
 				</app-content-editor-controls-inset-container>
@@ -66,7 +66,7 @@
 				:editor="this"
 				:state-counter="stateCounter"
 				:collapsed="controlsCollapsed"
-				@collapsedChanged="onControlsCollapsedChanged"
+				@collapsed-changed="onControlsCollapsedChanged"
 			/>
 		</transition>
 		<transition name="fade">

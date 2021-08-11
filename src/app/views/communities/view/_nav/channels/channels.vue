@@ -9,7 +9,7 @@
 			:background-item="frontpageChannel.background"
 			:is-active="activeChannel === frontpageChannel"
 			:is-unread="isChannelUnread(frontpageChannel)"
-			@click.native="toggleLeftPane()"
+			@click="toggleLeftPane()"
 		/>
 
 		<app-community-channel-card
@@ -20,7 +20,7 @@
 			:background-item="allChannel.background"
 			:is-active="activeChannel === allChannel"
 			:is-unread="isChannelUnread(allChannel)"
-			@click.native="toggleLeftPane()"
+			@click="toggleLeftPane()"
 		/>
 
 		<h5 class="-heading">
@@ -40,7 +40,7 @@
 				:is-locked="isChannelLocked(channel)"
 				:is-unpublished="isChannelUnpublished(channel)"
 				:channel-type="channel.type"
-				@click.native="toggleLeftPane()"
+				@click="toggleLeftPane()"
 			/>
 		</template>
 
@@ -72,7 +72,7 @@
 						:is-archived="channel.is_archived"
 						:is-unpublished="isChannelUnpublished(channel)"
 						:channel-type="channel.type"
-						@click.native="toggleLeftPane()"
+						@click="toggleLeftPane()"
 					/>
 				</template>
 

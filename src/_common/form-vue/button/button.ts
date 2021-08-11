@@ -1,4 +1,4 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../../utils/vue';
 import AppFormTS from '../form';
 
@@ -13,6 +13,12 @@ export default class AppFormButton extends Vue {
 	@Prop(String) icon?: string;
 
 	form!: AppFormTS;
+
+	@Emit('before-submit')
+	emitBeforeSubmit(_e: Event) {}
+
+	@Emit('after-submit')
+	emitAfterSubmit(_e: Event, _result: boolean) {}
 
 	get shouldShow() {
 		if (!this.showWhenValid) {
@@ -41,12 +47,12 @@ export default class AppFormButton extends Vue {
 	// To fix this, we set the default behaviour of app-button to not submit the form, and set a NATIVE
 	// click event handler on the app-form-button component to manually submit the form.
 	async onClick(e: Event) {
-		this.$emit('before-submit', e);
+		this.emitBeforeSubmit(e);
 		if (e.defaultPrevented) {
 			return;
 		}
 
 		const result = await this.form.submit();
-		this.$emit('after-submit', e, result);
+		this.emitAfterSubmit(e, result);
 	}
 }

@@ -8,7 +8,7 @@
 		:track-goto="trackGoto"
 	>
 		<template #thumbnail>
-			<router-link :to="community.routeLocation" @click.native="trackGotoCommunity()">
+			<router-link :to="community.routeLocation" @click="trackGotoCommunity()">
 				<app-media-item-backdrop :media-item="community.thumbnail">
 					<app-community-thumbnail-img :community="community" />
 				</app-media-item-backdrop>

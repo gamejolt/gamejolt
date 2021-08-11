@@ -1,4 +1,4 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { arrayChunk } from '../../utils/array';
 import { findRequiredVueParent } from '../../utils/vue';
 import { date as dateFilter } from '../filters/date';
@@ -7,17 +7,21 @@ import AppDatepicker from './datepicker.vue';
 
 @Options({})
 export default class AppDatepickerMonth extends Vue {
-	@Prop(Date) value!: Date;
+	@Prop({ type: Date, required: true })
+	modelValue!: Date;
 
 	parent: AppDatepickerTS = null as any;
 
+	@Emit('update:modelValue')
+	emitUpdate(_date: Date) {}
+
 	get title() {
-		return dateFilter(this.value, this.parent.formatMonthTitle);
+		return dateFilter(this.modelValue, this.parent.formatMonthTitle);
 	}
 
 	get rows() {
 		const months = new Array<DatepickerDate>(12),
-			year = this.value.getFullYear();
+			year = this.modelValue.getFullYear();
 
 		for (let i = 0; i < 12; i++) {
 			months[i] = this.parent.createDate(new Date(year, i, 1));
@@ -31,13 +35,13 @@ export default class AppDatepickerMonth extends Vue {
 	}
 
 	move(direction: number) {
-		const newValue = new Date(this.value);
+		const newValue = new Date(this.modelValue);
 		newValue.setFullYear(newValue.getFullYear() + direction);
-		this.$emit('input', newValue);
+		this.emitUpdate(newValue);
 	}
 
 	select(date: Date) {
-		this.$emit('input', date);
+		this.emitUpdate(date);
 		this.parent.toggleMode();
 	}
 }

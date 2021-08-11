@@ -7,7 +7,7 @@
 		:block="block"
 		:disabled="form.base.state.isProcessing"
 		:icon="icon"
-		@click.native="onClick"
+		@click="onClick"
 	>
 		<slot />
 		<transition>

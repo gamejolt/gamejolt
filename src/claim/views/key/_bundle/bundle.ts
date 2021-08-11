@@ -1,4 +1,4 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { propOptional, propRequired } from '../../../../utils/vue';
 import { GameBundle } from '../../../../_common/game-bundle/game-bundle.model';
@@ -27,12 +27,15 @@ export default class AppKeyBundle extends Vue {
 	bundle: GameBundle = null as any;
 	games: Game[] = [];
 
+	@Emit('claim')
+	emitClaim(_bundle: GameBundle) {}
+
 	created() {
 		this.bundle = new GameBundle(this.payload.bundle);
 		this.games = Game.populate(this.payload.games);
 	}
 
 	claim() {
-		this.$emit('claim', this.bundle);
+		this.emitClaim(this.bundle);
 	}
 }

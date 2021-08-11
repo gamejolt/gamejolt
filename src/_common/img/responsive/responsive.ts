@@ -1,5 +1,5 @@
 import { h, nextTick } from 'vue';
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { sleep } from '../../../utils/utils';
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
@@ -16,6 +16,9 @@ export class AppImgResponsive extends Vue {
 	private initialized = false;
 	private processedSrc = '';
 	private resize$: EventSubscription | undefined;
+
+	@Emit('imgloadchange')
+	emitChange(_isLoaded: boolean) {}
 
 	created() {
 		if (GJ_IS_SSR) {
@@ -91,9 +94,9 @@ export class AppImgResponsive extends Vue {
 			this.initialized = true;
 
 			// Keep the isLoaded state up to date?
-			this.$emit('imgloadchange', false);
+			this.emitChange(false);
 			await ImgHelper.loaded(newSrc);
-			this.$emit('imgloadchange', true);
+			this.emitChange(true);
 		}
 	}
 }

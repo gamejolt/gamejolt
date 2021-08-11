@@ -1,4 +1,4 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { arrayUnique } from '../../../../utils/array';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Device } from '../../../../_common/device/device.service';
@@ -38,6 +38,9 @@ export default class AppGameCoverButtons extends Vue {
 		buildButtons: undefined as typeof Vue | undefined,
 	};
 
+	@Emit('show-multiple-packages')
+	emitShowMultiplePackages() {}
+
 	get buildButtonsComponent() {
 		return AppGameCoverButtons.hook.buildButtons || AppGameCoverButtonsBuildButtons;
 	}
@@ -57,7 +60,7 @@ export default class AppGameCoverButtons extends Vue {
 			} else {
 				// When there's more than one package, we have to give them the
 				// option of what to play/download.
-				this.$emit('show-multiple-packages');
+				this.emitShowMultiplePackages();
 				return false;
 			}
 		}

@@ -1,4 +1,4 @@
-import { Options, Prop, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { arrayIndexBy } from '../../../../utils/array';
 import { Api } from '../../../api/api.service';
@@ -88,6 +88,12 @@ export default class FormGamePackagePayment
 	minOrderAmount = 50;
 
 	readonly Screen = Screen;
+
+	@Emit('bought')
+	emitBought() {}
+
+	@Emit('skip')
+	emitSkip() {}
 
 	get isNameYourPrice() {
 		return this.sellable.type === 'pwyw';
@@ -345,7 +351,7 @@ export default class FormGamePackagePayment
 			}
 
 			// Notify that we've bought this package.
-			this.$emit('bought');
+			this.emitBought();
 		} catch (_e) {
 			this.isProcessing = false;
 

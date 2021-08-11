@@ -1,6 +1,6 @@
 import { EditorView } from 'prosemirror-view';
 import { nextTick } from 'vue';
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { AppTooltip } from '../../../../tooltip/tooltip-directive';
 import { ContentEditorSchema } from '../../schemas/content-editor-schema';
 import { GJ_EMOJIS } from '../../schemas/specs/nodes/gj-emoji-nodespec';
@@ -26,6 +26,9 @@ export default class AppContentEditorControlsEmojiPanel extends Vue {
 		panel: HTMLElement;
 	};
 
+	@Emit('visibility-changed')
+	emitVisibilityChanged(_visible: boolean) {}
+
 	created() {
 		this.update();
 	}
@@ -50,7 +53,7 @@ export default class AppContentEditorControlsEmojiPanel extends Vue {
 	private setPanelVisibility(visible: boolean) {
 		if (this.panelVisible !== visible) {
 			this.panelVisible = visible;
-			this.$emit('visibilityChanged', visible);
+			this.emitVisibilityChanged(visible);
 		}
 	}
 

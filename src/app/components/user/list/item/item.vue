@@ -32,8 +32,8 @@
 				:user="user"
 				hide-count
 				location="userList"
-				@click.native.capture.prevent
-				@click.native.stop
+				@click.capture.prevent
+				@click.stop
 				@follow="emitFollow()"
 				@unfollow="emitUnfollow()"
 			/>

@@ -1,9 +1,12 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 
 @Options({})
 export default class AppPill extends Vue {
 	@Prop({ type: Object, required: false })
 	to?: any;
+
+	@Emit('click')
+	emitClick(_e: MouseEvent) {}
 
 	get component() {
 		if (this.to) {
@@ -30,6 +33,6 @@ export default class AppPill extends Vue {
 			return;
 		}
 
-		this.$emit('click', e);
+		this.emitClick(e);
 	}
 }

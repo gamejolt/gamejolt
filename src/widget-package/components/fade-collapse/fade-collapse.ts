@@ -1,5 +1,5 @@
 import { nextTick } from 'vue';
-import { Options, Vue } from 'vue-property-decorator';
+import { Emit, Options, Vue } from 'vue-property-decorator';
 import { Ruler } from '../../../_common/ruler/ruler-service';
 
 @Options({})
@@ -13,6 +13,9 @@ export default class AppFadeCollapse extends Vue {
 		inner: HTMLElement;
 	};
 
+	@Emit('required')
+	emitRequired() {}
+
 	async mounted() {
 		await nextTick();
 		this.height = Ruler.height(this.$el);
@@ -20,7 +23,7 @@ export default class AppFadeCollapse extends Vue {
 
 		if (this.innerHeight > this.height) {
 			this.isCollapsed = true;
-			this.$emit('required');
+			this.emitRequired();
 		}
 	}
 }

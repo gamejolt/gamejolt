@@ -1,4 +1,4 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
 import { number } from '../../../../../_common/filters/number';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
@@ -39,6 +39,12 @@ export default class AppGameCollectionFollowWidget extends Vue {
 
 	@LibraryModule.Action
 	unfollowCollection!: LibraryStore['unfollowCollection'];
+
+	@Emit('follow')
+	emitFollow() {}
+
+	@Emit('unfollow')
+	emitUnfollow() {}
 
 	get isFollowing() {
 		if (this.collection.type === GameCollection.TYPE_DEVELOPER) {
@@ -85,20 +91,24 @@ export default class AppGameCollectionFollowWidget extends Vue {
 			return;
 		}
 
-		const revert = this.isFollowing ? 'unfollow' : 'follow';
-
-		try {
-			if (this.isFollowing) {
-				this.$emit('unfollow');
+		// The rest of the revert is done in the store actions for the failure
+		// case.
+		if (this.isFollowing) {
+			try {
+				this.emitUnfollow();
 				await this.unfollowCollection(this.collection);
-			} else {
-				this.$emit('follow');
-				await this.followCollection(this.collection);
+			} catch (e) {
+				this.emitUnfollow();
+				throw e;
 			}
-		} catch (e) {
-			// The rest of the revert is done in the store actions.
-			this.$emit(revert);
-			throw e;
+		} else {
+			try {
+				this.emitFollow();
+				await this.followCollection(this.collection);
+			} catch (e) {
+				this.emitFollow();
+				throw e;
+			}
 		}
 	}
 }

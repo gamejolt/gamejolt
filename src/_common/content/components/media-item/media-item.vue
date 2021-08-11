@@ -45,8 +45,8 @@
 								:src="mediaItem.mediaserver_url"
 								:alt="title"
 								:title="title"
-								@load.native="onImageLoad"
-								@click.native="onItemFullscreen()"
+								@load="onImageLoad"
+								@click="onItemFullscreen()"
 							/>
 							<img
 								v-else

@@ -8,7 +8,7 @@
 			:timezone-offset="timezoneOffset"
 			:min-date="minDate"
 			:max-date="maxDate"
-			@input="onChange"
+			@change="onChange"
 		/>
 
 		<input

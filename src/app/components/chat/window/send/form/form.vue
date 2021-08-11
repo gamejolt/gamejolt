@@ -47,7 +47,7 @@
 					@insert-block-node="onEditorInsertBlockNode"
 					@focus="onFocusEditor"
 					@blur="onBlurEditor"
-					@keydown.native.up="onUpKeyPressed($event)"
+					@keydown.up="onUpKeyPressed($event)"
 					@changed="onChange($event)"
 				/>
 

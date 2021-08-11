@@ -1,5 +1,5 @@
 import { nextTick } from 'vue';
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { GrecaptchaSdk } from '../sdk/sdk.service';
@@ -12,10 +12,13 @@ import { GrecaptchaSdk } from '../sdk/sdk.service';
 export default class AppGrecaptchaWidget extends Vue {
 	@Prop({ type: String, default: 'dark' })
 	theme!: 'light' | 'dark';
+
 	@Prop({ type: String, default: 'image' })
 	type!: 'image' | 'audio';
+
 	@Prop({ type: String, default: 'normal' })
 	size!: 'normal' | 'compact' | 'invisible';
+
 	@Prop({ type: String, default: 'bottomright' })
 	badgeLocation!: 'bottomright' | 'bottomleft' | 'inline';
 
@@ -25,6 +28,12 @@ export default class AppGrecaptchaWidget extends Vue {
 	widgetId = 0;
 
 	declare $refs: { grecaptcha: HTMLDivElement };
+
+	@Emit('response')
+	emitResponse(_response: string) {}
+
+	@Emit('expired')
+	emitExpired() {}
 
 	get loadedAndValid() {
 		return this.loaded && this.valid;
@@ -78,8 +87,8 @@ export default class AppGrecaptchaWidget extends Vue {
 			type: this.type,
 			size: this.size,
 			badge: this.badgeLocation,
-			callback: response => this.$emit('response', response),
-			'expired-callback': () => this.$emit('expired'),
+			callback: response => this.emitResponse(response),
+			'expired-callback': () => this.emitExpired(),
 		});
 		this.resetting = false;
 	}

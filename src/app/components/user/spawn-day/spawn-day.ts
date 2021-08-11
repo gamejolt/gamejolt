@@ -1,6 +1,6 @@
 import { formatDistanceStrict } from 'date-fns';
 import { nextTick } from 'vue';
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { sleep } from '../../../../utils/utils';
 import AppAlertDismissable from '../../../../_common/alert/dismissable/dismissable.vue';
@@ -27,6 +27,9 @@ export default class AppUserSpawnDay extends Vue {
 	declare $refs: {
 		container: HTMLElement;
 	};
+
+	@Emit('post-add')
+	emitPostAdd(_post: FiresidePost) {}
 
 	get shouldShowSpawnDay() {
 		if (this.user) {
@@ -94,7 +97,7 @@ export default class AppUserSpawnDay extends Vue {
 			return;
 		}
 
-		this.$emit('post-add', post);
+		this.emitPostAdd(post);
 	}
 
 	async mounted() {

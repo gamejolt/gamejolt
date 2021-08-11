@@ -1,5 +1,5 @@
 import { h } from 'vue';
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Ruler } from '../ruler/ruler-service';
 import { Screen } from '../screen/screen-service';
 import { EventSubscription } from '../system/event/event-topic';
@@ -22,6 +22,9 @@ export class AppResponsiveDimensions extends Vue {
 	private resize$: EventSubscription | undefined;
 	private width: string | null = null;
 	private height = 'auto';
+
+	@Emit('change')
+	emitChange(_event: AppResponsiveDimensionsChangeEvent) {}
 
 	mounted() {
 		this.resize$ = Screen.resizeChanges.subscribe(() => this.updateDimensions());
@@ -72,6 +75,6 @@ export class AppResponsiveDimensions extends Vue {
 
 		this.width = `${width}px`;
 		this.height = `${height}px`;
-		this.$emit('change', new AppResponsiveDimensionsChangeEvent(width, height, isFilled));
+		this.emitChange(new AppResponsiveDimensionsChangeEvent(width, height, isFilled));
 	}
 }

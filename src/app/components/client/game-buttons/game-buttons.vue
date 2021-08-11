@@ -115,8 +115,8 @@
 				<app-popper
 					v-if="gamePackages.length > 1"
 					popover-class="fill-darkest"
-					@show="$emit('show-launch-options', $event)"
-					@hide="$emit('hide-launch-options', $event)"
+					@show="emitShowLaunchOptions()"
+					@hide="emitHideLaunchOptions()"
 				>
 					<app-button
 						primary
@@ -151,8 +151,8 @@
 			<app-popper
 				v-if="!localPackage.install_state"
 				class="fill-darkest"
-				@show="$emit('show-options', $event)"
-				@hide="$emit('hide-options', $event)"
+				@show="emitShowOptions()"
+				@hide="emitHideOptions()"
 			>
 				<app-button
 					circle

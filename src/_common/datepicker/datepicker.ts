@@ -1,4 +1,4 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { date as dateFilter } from '../filters/date';
 import AppDatepickerDay from './day.vue';
 import AppDatepickerMonth from './month.vue';
@@ -92,6 +92,9 @@ export default class AppDatepicker extends Vue {
 	readonly formatDayTitle = 'LLLL yyyy';
 	readonly formatMonthTitle = 'yyyy';
 
+	@Emit('change')
+	emitChange(_date: Date) {}
+
 	created() {
 		this.viewDate = new Date(this.value.getFullYear(), this.value.getMonth());
 	}
@@ -111,6 +114,6 @@ export default class AppDatepicker extends Vue {
 	select(date: Date) {
 		const newValue = new Date(this.value);
 		newValue.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
-		this.$emit('input', newValue);
+		this.emitChange(newValue);
 	}
 }

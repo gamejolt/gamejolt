@@ -10,7 +10,7 @@
 						'border-color': community.is_member ? highlight : '',
 					}"
 					:community="community"
-					@click.native="toggleJoin"
+					@click="toggleJoin"
 				/>
 
 				<div

@@ -1,4 +1,4 @@
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import './codemirror.styl';
 
 const defaultOptions = {
@@ -20,6 +20,9 @@ export default class AppCodemirror extends Vue {
 	private editor!: CodeMirror.EditorFromTextArea;
 	private bootstrapped = false;
 
+	@Emit('change')
+	emitChange(_val: string) {}
+
 	async mounted() {
 		this._options = Object.assign(defaultOptions, this.options);
 
@@ -35,8 +38,7 @@ export default class AppCodemirror extends Vue {
 		this.editor.setValue(this.value || '');
 
 		this.editor.on('change', cm => {
-			this.$emit('changed', cm.getValue());
-			this.$emit('input', cm.getValue());
+			this.emitChange(cm.getValue());
 		});
 
 		this.bootstrapped = true;

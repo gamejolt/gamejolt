@@ -7,7 +7,7 @@
 			v-app-tooltip="$gettext('Insert Gif')"
 			class="emoji-button inset-container-controls"
 			icon="gif"
-			@click.native.prevent="openGifModal"
+			@click.prevent="openGifModal"
 		/>
 	</transition>
 </template>

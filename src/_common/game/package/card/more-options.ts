@@ -1,4 +1,4 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { filesize } from '../../../filters/filesize';
 import { GameBuild } from '../../build/build.model';
 import { GamePackageCardModel } from './card.model';
@@ -13,7 +13,10 @@ export default class AppGamePackageCardMoreOptions extends Vue {
 
 	emulatorInfo = GameBuild.emulatorInfo;
 
+	@Emit('click')
+	emitClick(_build: GameBuild) {}
+
 	click(build: GameBuild) {
-		this.$emit('click', build);
+		this.emitClick(build);
 	}
 }

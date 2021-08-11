@@ -79,7 +79,7 @@
 					max_content_length: [leadLengthLimit],
 				}"
 				:validate-on="['blur']"
-				@paste.native="onPaste"
+				@paste="onPaste"
 			/>
 
 			<div class="-hp">
@@ -242,7 +242,7 @@
 					compact
 					expandable
 					:expanded="isShowingMorePollOptions"
-					@click.native="isShowingMorePollOptions = !isShowingMorePollOptions"
+					@click="isShowingMorePollOptions = !isShowingMorePollOptions"
 				>
 					<translate>More options</translate>
 				</app-form-legend>

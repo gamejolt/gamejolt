@@ -1,20 +1,22 @@
+<script lang="ts" src="./datetime-picker"></script>
+
 <template>
 	<div class="datetime-picker">
 		<app-datepicker
 			required
 			:value="datetime"
-			@input="select($event)"
 			:min-date="minDateBounds"
 			:max-date="maxDateBounds"
+			@change="select($event)"
 		/>
 
-		<app-timepicker :value="datetime" @input="select($event)" :show-meridian="true" />
+		<app-timepicker :value="datetime" :show-meridian="true" @change="select($event)" />
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .datetime-picker
 	clearfix()
@@ -34,5 +36,3 @@
 			float: none
 			margin-top: $line-height-computed
 </style>
-
-<script lang="ts" src="./datetime-picker"></script>

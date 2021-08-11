@@ -1,4 +1,4 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional } from '../../../../utils/vue';
 
 @Options({})
@@ -11,13 +11,16 @@ export default class AppFormControlUploadFile extends Vue {
 
 	declare $el: HTMLInputElement;
 
+	@Emit('input')
+	emitInput(_files: null | File[]) {}
+
 	showFileSelect() {
 		this.$el.click();
 	}
 
 	onChange() {
 		const fileList = this.$el.files;
-		let files: File[] = [];
+		const files: File[] = [];
 		if (fileList) {
 			for (let i = 0; i < fileList.length; ++i) {
 				files.push(fileList.item(i)!);
@@ -25,9 +28,10 @@ export default class AppFormControlUploadFile extends Vue {
 		}
 
 		if (!files.length) {
-			return this.$emit('input', null);
+			this.emitInput(null);
+			return;
 		}
 
-		this.$emit('input', files);
+		this.emitInput(files);
 	}
 }

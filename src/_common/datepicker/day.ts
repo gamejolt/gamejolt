@@ -7,7 +7,8 @@ import AppDatepicker from './datepicker.vue';
 
 @Options({})
 export default class AppDatepickerDay extends Vue {
-	@Prop(Date) modelValue!: Date;
+	@Prop({ type: Date, required: true })
+	modelValue!: Date;
 
 	parent: AppDatepickerTS = null as any;
 

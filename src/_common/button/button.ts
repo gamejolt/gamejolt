@@ -27,8 +27,4 @@ export default class AppButton extends Vue {
 		}
 		return this.tag;
 	}
-
-	onClick(e: Event) {
-		this.$emit('click', e);
-	}
 }

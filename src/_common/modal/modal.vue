@@ -24,8 +24,8 @@
 					<app-theme
 						class="modal-content"
 						:theme="theme"
-						@mouseover.native="isHoveringContent = true"
-						@mouseout.native="isHoveringContent = false"
+						@mouseover="isHoveringContent = true"
+						@mouseout="isHoveringContent = false"
 					>
 						<slot />
 

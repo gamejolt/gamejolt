@@ -291,7 +291,7 @@
 									:trophy="trophy.trophy"
 									no-difficulty
 									no-highlight
-									@click.native="onClickTrophy(trophy)"
+									@click="onClickTrophy(trophy)"
 								/>
 
 								<router-link

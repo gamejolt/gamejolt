@@ -1,4 +1,4 @@
-import { Options } from 'vue-property-decorator';
+import { Emit, Options } from 'vue-property-decorator';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
@@ -239,6 +239,9 @@ export default class FormGameMaturity extends BaseForm<Game> implements FormOnIn
 			description: this.$gettext('dash.games.maturity.gambling_2_description'),
 		},
 	];
+
+	@Emit('changed')
+	emitChanged(_game: Game) {}
 
 	onInit() {
 		this.saveMethod = '$saveMaturity';

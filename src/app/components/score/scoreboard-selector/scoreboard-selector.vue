@@ -1,7 +1,7 @@
 <script lang="ts" src="./scoreboard-selector"></script>
 
 <template>
-	<app-list-group-selector :items="tables" :current="currentTable" @change="selectTable($event)">
+	<app-list-group-selector :items="tables" :current="currentTable" @change="emitSelect($event)">
 		<template #default="{ item }">
 			<h5 class="list-group-item-heading sans-margin-bottom">
 				<strong>{{ item.name }}</strong>

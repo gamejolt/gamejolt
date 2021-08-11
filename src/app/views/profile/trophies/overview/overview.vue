@@ -77,7 +77,7 @@
 								class="-trophy-thumb"
 								:trophy="userTrophy.trophy"
 								:no-highlight="isLoggedInUser"
-								@click.native="onClickTrophy(userTrophy)"
+								@click="onClickTrophy(userTrophy)"
 							/>
 						</div>
 					</div>

@@ -26,7 +26,7 @@
 								<li v-if="shouldShowAppPromotion">
 									<router-link
 										:to="{ name: 'landing.app' }"
-										@click.native="trackAppPromotionClick({ source: 'footer' })"
+										@click="trackAppPromotionClick({ source: 'footer' })"
 									>
 										<translate>Mobile App</translate>
 									</router-link>

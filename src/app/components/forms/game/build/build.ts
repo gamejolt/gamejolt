@@ -1,4 +1,4 @@
-import { Options, Prop, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Watch } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../utils/array';
 import { findRequiredVueParent } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
@@ -96,6 +96,12 @@ export default class FormGameBuild
 	declare $refs: {
 		form: AppForm;
 	};
+
+	@Emit('remove-build')
+	emitRemoveBuild(_formModel: GameBuildFormModel) {}
+
+	@Emit('update-launch-options')
+	emitUpdateLaunchOptions(_formModel: GameBuildFormModel, _launchOptions: any) {}
 
 	get loadUrl() {
 		return `/web/dash/developer/games/builds/save/${this.game.id}/${this.package.id}/${
@@ -271,7 +277,6 @@ export default class FormGameBuild
 	}
 
 	onLoad(payload: any) {
-		console.log(payload);
 		this.maxFilesize = payload.maxFilesize;
 		this.restrictedPlatforms = payload.restrictedPlatforms;
 		this.forceOther = payload.forceOther;
@@ -279,7 +284,7 @@ export default class FormGameBuild
 	}
 
 	remove() {
-		this.$emit('remove-build', this.model);
+		this.emitRemoveBuild(this.model!);
 	}
 
 	// This is called by the release form.
@@ -352,7 +357,7 @@ export default class FormGameBuild
 			}
 
 			// Copy new launch options in.
-			this.$emit('update-launch-options', this.model, response.launchOptions);
+			this.emitUpdateLaunchOptions(this.model!, response.launchOptions);
 		} catch (err) {
 			console.error(err);
 			Growls.error(this.$gettext('Could not set the platform for some reason.'));

@@ -53,7 +53,7 @@ export class AppProgressPoller extends Vue {
 				this.emitProgress(response, progress, indeterminate);
 			}
 		} catch (e) {
-			this.$emit('error', e);
+			this.emitError(e);
 		}
 
 		this.setTimeout();

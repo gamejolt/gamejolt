@@ -2,6 +2,7 @@ import Vue from 'vue';
 
 export type EventBusDeregister = () => void;
 
+// TODO(vue3): rewrite to not use vue stuff
 export class EventBus {
 	private static global = new EventBus();
 

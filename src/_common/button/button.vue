@@ -1,31 +1,30 @@
+<script lang="ts" src="./button"></script>
+
 <template>
 	<component
 		:is="ourTag"
 		type="button"
 		class="button"
 		:class="{
-			'-primary': this.primary,
-			'-trans': this.trans,
-			'-outline': !this.solid,
-			'-overlay': this.overlay,
-			'-circle': this.circle,
-			'-sparse': this.sparse || this.circle,
-			'-lg': this.lg,
-			'-sm': this.sm,
-			'-block': this.block,
-			'-block-xs': this.blockXs,
-			'-disabled': this.disabled,
+			'-primary': primary,
+			'-trans': trans,
+			'-outline': !solid,
+			'-overlay': overlay,
+			'-circle': circle,
+			'-sparse': sparse || circle,
+			'-lg': lg,
+			'-sm': sm,
+			'-block': block,
+			'-block-xs': blockXs,
+			'-disabled': disabled,
 		}"
 		:to="to"
-		:disabled="this.disabled"
-		@click="onClick"
+		:disabled="disabled"
 	>
 		<span v-if="badge" class="-badge">{{ badge }}</span>
-		<app-jolticon class="-icon" v-if="icon" :icon="icon" :big="lg" />
+		<app-jolticon v-if="icon" class="-icon" :icon="icon" :big="lg" />
 		<slot />
 	</component>
 </template>
 
 <style lang="stylus" src="./button.styl" scoped></style>
-
-<script lang="ts" src="./button"></script>

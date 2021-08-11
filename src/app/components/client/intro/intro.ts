@@ -1,4 +1,4 @@
-import { Options, Vue, Watch } from 'vue-property-decorator';
+import { Emit, Options, Vue, Watch } from 'vue-property-decorator';
 import { sleep } from '../../../../utils/utils';
 import { Client } from '../../../../_common/client/client.service';
 import { Connection } from '../../../../_common/connection/connection-service';
@@ -30,6 +30,9 @@ export default class AppClientIntro extends Vue {
 	};
 
 	readonly Connection = Connection;
+
+	@Emit('finish')
+	emitFinish() {}
 
 	async created() {
 		document.body.classList.add('client-intro-no-overflow');
@@ -118,7 +121,7 @@ export default class AppClientIntro extends Vue {
 	}
 
 	private startAudio() {
-		return new Promise(resolve => {
+		return new Promise<void>(resolve => {
 			const audio = new Audio(require('./intro.ogg'));
 			audio.volume = 0.15;
 
@@ -133,7 +136,7 @@ export default class AppClientIntro extends Vue {
 
 	private finish() {
 		document.body.classList.remove('client-intro-no-overflow');
-		this.$emit('finish');
+		this.emitFinish();
 
 		if (this.routeChangeAfterDeregister) {
 			this.routeChangeAfterDeregister();

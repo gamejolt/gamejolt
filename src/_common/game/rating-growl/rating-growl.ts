@@ -1,4 +1,4 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import {
 	RatingWidgetOnChange,
 	RatingWidgetOnChangePayload,
@@ -13,10 +13,13 @@ import { Game } from '../game.model';
 	},
 })
 export default class AppGameRatingGrowl extends Vue {
-	@Prop(Game)
+	@Prop({ type: Game, required: true })
 	game!: Game;
 
 	private ratingWatchDeregister?: EventBusDeregister;
+
+	@Emit('close')
+	emitClose() {}
 
 	mounted() {
 		// Close the modal as soon as they rate the game. We set up on $on event so that we get
@@ -25,7 +28,7 @@ export default class AppGameRatingGrowl extends Vue {
 			RatingWidgetOnChange,
 			(payload: RatingWidgetOnChangePayload) => {
 				if (payload.gameId === this.game.id) {
-					this.$emit('close');
+					this.emitClose();
 				}
 			}
 		);

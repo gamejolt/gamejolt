@@ -1,4 +1,4 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { AppTooltip } from '../../../tooltip/tooltip-directive';
 
 @Options({
@@ -16,15 +16,21 @@ export default class AppBaseContentComponent extends Vue {
 	@Prop(Boolean)
 	isDisabled!: boolean;
 
+	@Emit('removed')
+	emitRemoved() {}
+
+	@Emit('edit')
+	emitEdit() {}
+
 	onRemovedClicked() {
 		if (!this.isDisabled) {
-			this.$emit('removed');
+			this.emitRemoved();
 		}
 	}
 
 	onEditClicked() {
 		if (!this.isDisabled) {
-			this.$emit('edit');
+			this.emitEdit();
 		}
 	}
 }

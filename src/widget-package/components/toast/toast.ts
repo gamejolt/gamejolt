@@ -1,10 +1,13 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 
 @Options({})
 export default class AppToast extends Vue {
 	@Prop(String) type!: string;
 
 	timeout?: number;
+
+	@Emit('dismiss')
+	emitDismiss() {}
 
 	mounted() {
 		if (!this.type) {
@@ -22,7 +25,7 @@ export default class AppToast extends Vue {
 	}
 
 	dismiss() {
-		this.$emit('dismiss');
+		this.emitDismiss();
 		this.clear();
 	}
 

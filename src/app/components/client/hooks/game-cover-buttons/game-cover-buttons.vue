@@ -1,3 +1,5 @@
+<script lang="ts" src="./game-cover-buttons"></script>
+
 <template>
 	<div class="client-game-cover-buttons">
 		<!--
@@ -5,11 +7,11 @@
 			installed.
 		-->
 		<app-button
+			v-if="browserBuilds.length > 0 && !localPackage"
 			primary
 			outline
 			icon="play"
-			v-if="browserBuilds.length > 0 && !localPackage"
-			@click="$emit('play')"
+			@click="emitPlay()"
 		>
 			<translate>Quick Play</translate>
 		</app-button>
@@ -27,5 +29,3 @@
 		/>
 	</div>
 </template>
-
-<script lang="ts" src="./game-cover-buttons"></script>

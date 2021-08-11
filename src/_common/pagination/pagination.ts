@@ -1,4 +1,4 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { Screen } from '../screen/screen-service';
 import { AppNoAutoscroll } from '../scroll/auto-scroll/no-autoscroll.directive';
 
@@ -24,6 +24,9 @@ export default class AppPagination extends Vue {
 	@Prop(String) previousText?: string;
 
 	readonly Screen = Screen;
+
+	@Emit('pagechange')
+	emitPageChange(_page: number, _event: Event) {}
 
 	get totalPages() {
 		const totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
@@ -105,6 +108,6 @@ export default class AppPagination extends Vue {
 			event.preventDefault();
 		}
 
-		this.$emit('pagechange', page, event);
+		this.emitPageChange(page, event);
 	}
 }

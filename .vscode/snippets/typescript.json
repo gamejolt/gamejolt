@@ -111,5 +111,9 @@
 	"Vue prop definition": {
 		"prefix": "vue-prop",
 		"body": ["@Prop({ type: ${1:String}, required: ${2:true} })"]
+	},
+	"Vue emit": {
+		"prefix": "vue-emit",
+		"body": ["@Emit('${1:event}')", "emit${2:Func}() {}"]
 	}
 }

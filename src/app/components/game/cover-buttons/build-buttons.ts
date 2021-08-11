@@ -1,4 +1,4 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { GameBuild } from '../../../../_common/game/build/build.model';
 import { Game } from '../../../../_common/game/game.model';
 
@@ -8,4 +8,10 @@ export default class AppGameCoverButtonsBuildButtons extends Vue {
 	@Prop(Array) downloadableBuilds!: GameBuild[];
 	@Prop(Array) browserBuilds!: GameBuild[];
 	@Prop(Array) installableBuilds!: GameBuild[];
+
+	@Emit('play')
+	emitPlay() {}
+
+	@Emit('download')
+	emitDownload() {}
 }

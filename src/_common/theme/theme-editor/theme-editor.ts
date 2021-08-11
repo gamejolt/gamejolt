@@ -1,5 +1,5 @@
 import { nextTick } from 'vue';
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { Api } from '../../api/api.service';
 import AppCodemirror from '../../codemirror/codemirror.vue';
 import AppColorpicker from '../../colorpicker/colorpicker.vue';
@@ -37,6 +37,9 @@ export default class AppThemeEditor extends Vue {
 	templateObj: SiteTemplate = {} as any;
 	definition: any = {};
 
+	@Emit('change')
+	emitChange(_theme: any) {}
+
 	async created() {
 		const response = await Api.sendRequest(
 			'/sites-io/get-template/' + this.template,
@@ -73,7 +76,7 @@ export default class AppThemeEditor extends Vue {
 		}
 
 		if (!initial) {
-			this.$emit('change', this.theme);
+			this.emitChange(this.theme);
 		}
 	}
 

@@ -55,11 +55,7 @@
 						</app-fade-collapse>
 					</template>
 
-					<router-link
-						class="-link"
-						:to="post.routeLocation"
-						@click.native="trackPostOpen()"
-					/>
+					<router-link class="-link" :to="post.routeLocation" @click="trackPostOpen()" />
 
 					<div class="-details" :class="{ '-light': !!mediaItem }">
 						<template v-if="withUser">

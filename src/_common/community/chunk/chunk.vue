@@ -6,7 +6,7 @@
 			<router-link
 				class="-header-lead"
 				:to="community.routeLocation"
-				@click.native="trackGotoCommunity()"
+				@click="trackGotoCommunity()"
 			>
 				<div class="-thumbnail">
 					<div class="-thumbnail-inner">
@@ -44,7 +44,7 @@
 					:to="community.routeLocation"
 					outline
 					primary
-					@click.native="trackGotoCommunity()"
+					@click="trackGotoCommunity()"
 				>
 					<translate> View Community </translate>
 				</app-button>

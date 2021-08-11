@@ -1,4 +1,4 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { date } from '../../../../../_common/filters/date';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { UserStripeManagedAccount } from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
@@ -19,6 +19,9 @@ export default class AppDeveloperTerms extends Vue {
 	termsTemplate: string = require('../../../../../lib/terms/distribution-agreement/global.md');
 
 	readonly date = date;
+
+	@Emit('accepted')
+	emitAccepted() {}
 
 	get shouldShowAgreement() {
 		return (
@@ -67,6 +70,6 @@ export default class AppDeveloperTerms extends Vue {
 	}
 
 	onAccept() {
-		this.$emit('accepted');
+		this.emitAccepted();
 	}
 }

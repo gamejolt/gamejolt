@@ -123,6 +123,15 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	@Emit('insert-block-node')
 	emitInsertBlockNode(_nodeType: string) {}
 
+	@Emit('input')
+	emitInput(_source: string) {}
+
+	@Emit('editor-focus')
+	emitEditorFocus() {}
+
+	@Emit('editor-blur')
+	emitEditorBlur() {}
+
 	get shouldShowControls() {
 		return !this.disabled && this.isFocused && this.capabilities.hasAnyBlock;
 	}
@@ -227,7 +236,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 			this.contentContext
 		).toJson();
 		this._sourceControlVal = source;
-		this.$emit('input', source);
+		this.emitInput(source);
 	}
 
 	private reset() {
@@ -377,7 +386,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 
 	private onFocusIn() {
 		if (!this.isFocused) {
-			this.$emit('editor-focus');
+			this.emitEditorFocus();
 		}
 		this.isFocused = true;
 	}
@@ -385,7 +394,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	private onFocusOut() {
 		if (this.isFocused) {
 			this.canShowMentionSuggestions = 0; // When the editor goes out of focus, hide the mention suggestions panel.
-			this.$emit('editor-blur');
+			this.emitEditorBlur();
 		}
 		this.isFocused = false;
 	}

@@ -9,7 +9,7 @@
 	<app-scroll-scroller
 		ref="scroller"
 		v-app-observe-dimensions="tryAutoscroll"
-		@scroll.native="queueOnScroll"
+		@scroll="queueOnScroll"
 	>
 		<div
 			v-app-observe-dimensions="tryAutoscroll"

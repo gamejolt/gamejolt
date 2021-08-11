@@ -1,6 +1,6 @@
 import { addWeeks, startOfDay } from 'date-fns';
 import { determine } from 'jstimezonedetect';
-import { Options, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../utils/array';
 import AppCardList from '../../../../../_common/card/list/list.vue';
 import AppFormControlDate from '../../../../../_common/form-vue/control/date/date.vue';
@@ -75,6 +75,12 @@ export default class FormGameRelease
 
 	readonly Screen = Screen;
 	readonly GameRelease = GameRelease;
+
+	@Emit('unpublish-release')
+	emitUnpublishRelease(_release: GameReleaseFormModel) {}
+
+	@Emit('remove-release')
+	emitRemoveRelease(_release: GameReleaseFormModel) {}
 
 	get loadUrl() {
 		return `/web/dash/developer/games/releases/save/${this.game.id}/${this.package.id}`;
@@ -200,11 +206,11 @@ export default class FormGameRelease
 	}
 
 	unpublish() {
-		this.$emit('unpublish-release', this.model);
+		this.emitUnpublishRelease(this.model!);
 	}
 
 	remove() {
-		this.$emit('remove-release', this.model);
+		this.emitRemoveRelease(this.model!);
 	}
 
 	onSubmitSuccess(response: any) {

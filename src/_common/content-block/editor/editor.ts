@@ -1,4 +1,4 @@
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Api } from '../../api/api.service';
 import { Environment } from '../../environment/environment.service';
 import AppLoading from '../../loading/loading.vue';
@@ -27,12 +27,15 @@ export default class AppContentBlockEditor extends Vue {
 	private previewIndex = 0;
 	private previewTimeout: NodeJS.Timer | null = null;
 
-	Environment = Environment;
+	readonly Environment = Environment;
+
+	@Emit('change')
+	emitChange(_content: string) {}
 
 	@Watch('contentBlock.content_markdown')
 	onContentChanged(content: string, oldContent: string) {
 		if (content !== oldContent) {
-			this.$emit('change', content);
+			this.emitChange(content);
 		}
 
 		if (content) {

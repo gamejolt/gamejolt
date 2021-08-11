@@ -1,7 +1,7 @@
 <script lang="ts" src="./maturity"></script>
 
 <template>
-	<app-form name="gameMaturityForm" @changed="$emit('changed', $event)">
+	<app-form name="gameMaturityForm" @changed="emitChanged($event)">
 		<app-form-group name="tigrs_age" :label="$gettext(`dash.games.maturity.age_label`)">
 			<p v-if="model._is_wip" class="help-block">
 				<translate>dash.games.maturity.wip_help</translate>

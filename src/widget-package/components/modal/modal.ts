@@ -1,4 +1,4 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import AppScrollScroller from '../../../_common/scroll/scroller/scroller.vue';
 
 @Options({
@@ -9,7 +9,10 @@ import AppScrollScroller from '../../../_common/scroll/scroller/scroller.vue';
 export default class AppModal extends Vue {
 	@Prop(Boolean) hideClose!: boolean;
 
+	@Emit('close')
+	emitClose() {}
+
 	close() {
-		this.$emit('close');
+		this.emitClose();
 	}
 }

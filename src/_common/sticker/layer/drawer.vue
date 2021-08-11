@@ -36,8 +36,8 @@
 											:sticker="item.sticker"
 											:count="item.count"
 											:size="drawerStore.stickerSize - 8"
-											@mousedown.native="assignTouchedSticker(item)"
-											@touchstart.native="assignTouchedSticker(item)"
+											@mousedown="assignTouchedSticker(item)"
+											@touchstart="assignTouchedSticker(item)"
 										/>
 									</div>
 								</template>

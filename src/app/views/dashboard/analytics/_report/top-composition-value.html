@@ -1,0 +1,53 @@
+<div>
+	<!--
+	If graph data is null, then don't show the graph and give more space for the
+	table.
+	-->
+	<div :class="reportData.graph !== null ? 'col-sm-8' : 'col-xs-12'">
+		<div class="alert" v-if="!reportData.hasData">
+			<translate>No data yet.</translate>
+		</div>
+
+		<table class="table table-striped table-condensed" v-if="reportData.hasData">
+			<thead>
+				<tr>
+					<th style="width: 20px"></th>
+					<th>{{ reportData.fieldLabel }}</th>
+					<th class="text-right">
+						<!--{{ analyticsCtrl.stats[ analyticsCtrl.eventType ].label }}-->
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="( val, i ) of reportData.data" :key="i">
+					<td>{{ i + 1 | number }}.</td>
+					<th>
+						<template v-if="(typeof val.label) !== 'object'">
+							{{ val.label }}
+						</template>
+						<router-link
+							v-else
+							:to="{
+								name: 'dash.analytics',
+								params: {
+									resource: val.label.resource,
+									resourceId: val.label.resourceId,
+								},
+							}"
+						>
+							{{ val.label.value }}
+						</router-link>
+					</th>
+					<td class="text-right">
+						<template v-if="reportData.fieldType === 'number'">
+							{{ val.value | number }}
+						</template>
+						<template v-else-if="reportData.fieldType === 'currency'">
+							{{ val.value | currency }}
+						</template>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

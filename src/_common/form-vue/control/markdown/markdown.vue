@@ -96,7 +96,7 @@
 					:options="{
 						mode: 'gfm',
 					}"
-					@input="onChange"
+					@change="onChange"
 				/>
 			</div>
 			<app-form-control-markdown-media-items

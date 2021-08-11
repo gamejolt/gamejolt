@@ -1,4 +1,4 @@
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { AppImgResponsive } from '../../img/responsive/responsive';
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
@@ -20,6 +20,9 @@ export default class AppMediaItemCover extends Vue {
 
 	isLoaded = false;
 	height = 'auto';
+
+	@Emit('loaded')
+	emitLoaded() {}
 
 	created() {
 		if (GJ_IS_SSR) {
@@ -81,7 +84,7 @@ export default class AppMediaItemCover extends Vue {
 		this.isLoaded = isLoaded;
 
 		if (this.isLoaded) {
-			this.$emit('loaded');
+			this.emitLoaded();
 		}
 	}
 }

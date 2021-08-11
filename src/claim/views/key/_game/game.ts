@@ -1,4 +1,4 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { propOptional, propRequired } from '../../../../utils/vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
@@ -50,6 +50,9 @@ export default class AppKeyGame extends Vue {
 
 	Environment = Environment;
 
+	@Emit('claim')
+	emitClaim(_game: Game) {}
+
 	created() {
 		this.showingThanks = typeof this.$route.query.thanks !== 'undefined';
 
@@ -87,6 +90,6 @@ export default class AppKeyGame extends Vue {
 	}
 
 	claim() {
-		this.$emit('claim', this.game);
+		this.emitClaim(this.game);
 	}
 }

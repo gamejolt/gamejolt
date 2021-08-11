@@ -7,7 +7,7 @@
 			:is-expanded="isActive"
 			:is-draggable="isDraggable"
 			:force-expandable-padding="forceExpandablePadding"
-			@click.native="onClick"
+			@click="onClick"
 		>
 			<div v-if="isDraggable" class="card-drag-handle">
 				<app-jolticon icon="arrows-v" />

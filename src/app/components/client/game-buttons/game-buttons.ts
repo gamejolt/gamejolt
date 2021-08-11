@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { arrayGroupBy } from '../../../../utils/array';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
@@ -84,6 +84,18 @@ export default class AppClientGameButtons extends Vue {
 	readonly LocalDbPackage = LocalDbPackage;
 	readonly os = Device.os();
 	readonly arch = Device.arch();
+
+	@Emit('show-launch-options')
+	emitShowLaunchOptions() {}
+
+	@Emit('hide-launch-options')
+	emitHideLaunchOptions() {}
+
+	@Emit('show-options')
+	emitShowOptions() {}
+
+	@Emit('hide-options')
+	emitHideOptions() {}
 
 	@Watch('game')
 	onGameChange() {

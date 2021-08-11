@@ -1,4 +1,4 @@
-import { Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Emit, Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import {
 	Comment,
 	getCommentBlockReason,
@@ -43,6 +43,9 @@ export default class AppCommentOverview extends Vue {
 	@Inject({ from: CommentStoreManagerKey })
 	commentManager!: CommentStoreManager;
 
+	@Emit('reload-comments')
+	emitReloadComments() {}
+
 	get displayComments() {
 		return this.comments.filter(c => getCommentBlockReason(c) === false);
 	}
@@ -84,7 +87,7 @@ export default class AppCommentOverview extends Vue {
 				store.overviewNeedsRefresh = false;
 			}
 
-			this.$emit('reload-comments');
+			this.emitReloadComments();
 		}
 	}
 

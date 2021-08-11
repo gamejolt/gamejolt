@@ -1,4 +1,4 @@
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { findRequiredVueParent, propOptional, propRequired } from '../../../../utils/vue';
 import AppExpand from '../../../expand/expand.vue';
 import { Screen } from '../../../screen/screen-service';
@@ -18,6 +18,9 @@ export default class AppCardListAdd extends Vue {
 
 	readonly Screen = Screen;
 
+	@Emit('toggle')
+	emitToggle() {}
+
 	get isActive() {
 		return this.list.isAdding;
 	}
@@ -27,6 +30,6 @@ export default class AppCardListAdd extends Vue {
 	}
 
 	toggle() {
-		this.$emit('toggle');
+		this.emitToggle();
 	}
 }

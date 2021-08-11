@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { Device } from '../../../../../_common/device/device.service';
 import AppExpand from '../../../../../_common/expand/expand.vue';
@@ -40,6 +40,15 @@ import {
 	},
 })
 export default class AppClientPackageCardButtons extends Vue {
+	@Prop(Game)
+	game!: Game;
+
+	@Prop(GamePackage)
+	package!: GamePackage;
+
+	@Prop(GamePackageCardModel)
+	card!: GamePackageCardModel;
+
 	@ClientLibraryState
 	packagesById!: ClientLibraryStore['packagesById'];
 
@@ -61,13 +70,6 @@ export default class AppClientPackageCardButtons extends Vue {
 	@ClientLibraryAction
 	private launcherLaunch!: ClientLibraryStore['launcherLaunch'];
 
-	@Prop(Game)
-	game!: Game;
-	@Prop(GamePackage)
-	package!: GamePackage;
-	@Prop(GamePackageCardModel)
-	card!: GamePackageCardModel;
-
 	build: GameBuild | null = null;
 	downloadableUnsupported = false;
 	downloadableUnsupportedHasQuickPlay = false;
@@ -75,6 +77,12 @@ export default class AppClientPackageCardButtons extends Vue {
 	readonly Device = Device;
 	readonly PatchState = LocalDbPackagePatchState;
 	readonly RemoveState = LocalDbPackageRemoveState;
+
+	@Emit('click')
+	emitClick(_data: { build: GameBuild; fromExtraSection?: boolean }) {}
+
+	@Emit('show-build-payment')
+	emitShowBuildPayment(_build: GameBuild) {}
 
 	get canInstall() {
 		const arch = Device.arch();
@@ -138,12 +146,12 @@ export default class AppClientPackageCardButtons extends Vue {
 	}
 
 	buildClick(build: GameBuild, fromExtraSection?: boolean) {
-		this.$emit('click', { build, fromExtraSection });
+		this.emitClick({ build, fromExtraSection });
 	}
 
 	installClick(build: GameBuild) {
 		if (build._package!.shouldShowNamePrice()) {
-			this.$emit('show-build-payment', build);
+			this.emitShowBuildPayment(build);
 			return;
 		}
 

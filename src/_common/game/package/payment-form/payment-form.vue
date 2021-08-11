@@ -302,7 +302,7 @@
 
 					<div v-if="isNameYourPrice && build" class="row">
 						<div class="col-sm-offset-4 col-sm-8">
-							<a class="small" @click="$emit('skip')">
+							<a class="small" @click="emitSkip()">
 								<translate v-if="isDownloading">
 									No thanks, take me to the download.
 								</translate>
