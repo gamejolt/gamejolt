@@ -12,6 +12,7 @@ import { AuthMethod } from '../auth/auth.service';
 import { CommentVote } from '../comment/vote/vote-model';
 import { ConfigOption } from '../config/config.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
+import { ShareCardProvider } from '../share/card/_tile/tile';
 import { WithAppStore } from '../store/app-store';
 import { EventBus } from '../system/event/event-bus.service';
 
@@ -346,6 +347,17 @@ export function trackCommentAdd() {
 
 export function trackPostPublish() {
 	_trackEvent('post_publish', {});
+}
+
+export function trackShareLink(params: { url: string; provider?: ShareCardProvider }) {
+	const { url, provider } = params;
+	const method = provider ? 'external' : 'copy';
+
+	_trackEvent('share_link', {
+		url: encodeURI(url),
+		method,
+		provider,
+	});
 }
 
 /**

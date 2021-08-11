@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { trackShareLink } from '../../analytics/analytics.service';
 import { Clipboard } from '../../clipboard/clipboard-service';
 import { Model } from '../../model/model.service';
 import { ShareModal } from './_modal/modal.service';
@@ -33,5 +34,8 @@ export default class AppShareCard extends Vue {
 
 	static copyLink(url: string) {
 		Clipboard.copy(url);
+		trackShareLink({
+			url,
+		});
 	}
 }

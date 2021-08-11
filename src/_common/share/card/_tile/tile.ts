@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { trackShareLink } from '../../../analytics/analytics.service';
 import { Community } from '../../../community/community.model';
 import { FiresidePost } from '../../../fireside/post/post-model';
 import { Game } from '../../../game/game.model';
@@ -165,6 +166,11 @@ export default class AppShareCardTile extends Vue {
 		if (!providerLink) {
 			return;
 		}
+
+		trackShareLink({
+			url: this.url,
+			provider: this.provider,
+		});
 
 		if (inNewWindow) {
 			Navigate.newWindow(providerLink);
