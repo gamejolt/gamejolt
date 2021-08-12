@@ -1,3 +1,5 @@
+import '@vue/runtime-core';
+
 declare module '@vue/runtime-core' {
 	interface ComponentCustomProperties {
 		$gettext: (msgid: string) => string;
