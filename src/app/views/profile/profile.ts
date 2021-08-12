@@ -2,7 +2,6 @@ import { Component, InjectReactive } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../_common/api/api.service';
 import { BlockModal } from '../../../_common/block/modal/modal.service';
-import { Clipboard } from '../../../_common/clipboard/clipboard-service';
 import { CommentModal } from '../../../_common/comment/modal/modal.service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { number } from '../../../_common/filters/number';
@@ -11,6 +10,7 @@ import { ReportModal } from '../../../_common/report/modal/modal.service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { WithRouteStore } from '../../../_common/route/route-store';
 import { Screen } from '../../../_common/screen/screen-service';
+import { copyShareLink } from '../../../_common/share/share.service';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { Translate } from '../../../_common/translate/translate.service';
@@ -191,7 +191,8 @@ export default class RouteProfile extends BaseRouteComponent {
 		if (!this.user) {
 			return;
 		}
-		Clipboard.copy(Environment.baseUrl + this.user.url);
+		const url = Environment.baseUrl + this.user.url;
+		copyShareLink(url);
 	}
 
 	report() {

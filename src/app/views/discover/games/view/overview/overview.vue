@@ -1,3 +1,5 @@
+<script lang="ts" src="./overview"></script>
+
 <template>
 	<div class="route-game-overview">
 		<!-- Media Bar -->
@@ -5,14 +7,22 @@
 
 		<section class="section section-thin fill-backdrop">
 			<app-ad-widget
-				class="-leaderboard-ad"
 				v-if="shouldShowAds && !Screen.isMobile"
+				class="-leaderboard-ad"
 				size="leaderboard"
 				placement="top"
 			/>
 
 			<app-page-container xl>
 				<div slot="left">
+					<app-share-card
+						v-if="useShareCard"
+						class="-share-card"
+						:model="game"
+						:url="game.getUrl()"
+						bleed-padding
+					/>
+
 					<app-discover-games-view-overview-statbar />
 
 					<app-user-known-followers
@@ -39,7 +49,7 @@
 					<app-comment-add-button
 						v-if="shouldShowCommentAdd"
 						:model="game"
-						displayMode="comments"
+						display-mode="comments"
 					/>
 
 					<app-comment-overview
@@ -52,8 +62,8 @@
 
 				<div slot="right">
 					<app-ad-widget
-						class="-recommended-ad"
 						v-if="shouldShowAds && !Screen.isMobile"
+						class="-recommended-ad"
 						size="rectangle"
 						placement="side"
 					/>
@@ -74,10 +84,10 @@
 				-->
 				<div v-if="customGameMessages.length">
 					<div
-						key="wip"
 						v-if="game.canceled"
-						class="alert alert-notice full-bleed-xs"
+						key="wip"
 						v-translate
+						class="alert alert-notice full-bleed-xs"
 					>
 						This game was canceled, so the current version might be buggy or incomplete.
 						You can still follow it if you'd like to be notified in the case that
@@ -116,12 +126,12 @@
 						<app-card v-if="hasPartnerControls">
 							<div class="card-content">
 								<p>
-									<translate tag="strong"
-										>This game is part of the Partner system!</translate
-									>
-									<translate
-										>You can use this link for sharing the game.</translate
-									>
+									<translate tag="strong">
+										This game is part of the Partner system!
+									</translate>
+									<translate>
+										You can use this link for sharing the game.
+									</translate>
 								</p>
 								<input class="form-control" :value="partnerLink" />
 							</div>
@@ -153,7 +163,7 @@
 							<div
 								class="lazy-placeholder -package-placeholder"
 								style="height: 135px"
-							></div>
+							/>
 
 							<div v-if="externalPackages.length">
 								<app-game-external-package-card
@@ -194,16 +204,16 @@
 					<app-discover-games-view-overview-supporters
 						v-if="supporters.length > 0"
 						:supporters="supporters"
-						:supporterCount="supporterCount"
+						:supporter-count="supporterCount"
 					/>
 				</template>
 
 				<div class="sheet sheet-elevate">
 					<div v-if="!isOverviewLoaded">
-						<span class="lazy-placeholder"></span>
-						<span class="lazy-placeholder"></span>
-						<span class="lazy-placeholder"></span>
-						<span class="lazy-placeholder" style="width: 40%"></span>
+						<span class="lazy-placeholder" />
+						<span class="lazy-placeholder" />
+						<span class="lazy-placeholder" />
+						<span class="lazy-placeholder" style="width: 40%" />
 					</div>
 					<div v-else>
 						<!--
@@ -211,10 +221,10 @@
 							this when the game changes.
 						-->
 						<app-fade-collapse
+							:key="game.description_content"
 							:collapse-height="600"
 							:is-open="showDetails || !postsCount"
 							:animate="false"
-							:key="game.description_content"
 							@require-change="setCanToggleDescription"
 							@expand="toggleDetails()"
 						>
@@ -229,7 +239,7 @@
 								</div>
 								<div class="col-sm-6">
 									<app-lazy-placeholder :when="isOverviewLoaded">
-										<div class="lazy-placeholder" style="height: 115px"></div>
+										<div class="lazy-placeholder" style="height: 115px" />
 										<app-game-ogrs :game="game" />
 									</app-lazy-placeholder>
 								</div>
@@ -238,9 +248,9 @@
 
 						<div class="page-cut page-cut-no-margin">
 							<app-button
+								v-app-track-event="`game-profile:show-full-description`"
 								trans
 								@click="toggleDetails()"
-								v-app-track-event="`game-profile:show-full-description`"
 							>
 								<translate v-if="!showDetails">Show More</translate>
 								<translate v-else>Less</translate>
@@ -282,5 +292,3 @@
 .-package-placeholder
 	margin-bottom: $line-height-computed
 </style>
-
-<script lang="ts" src="./overview"></script>

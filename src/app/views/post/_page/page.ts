@@ -2,9 +2,11 @@ import Vue from 'vue';
 import { Component, Emit, Prop, ProvideReactive, Watch } from 'vue-property-decorator';
 import { RawLocation } from 'vue-router';
 import { arrayRemove } from '../../../../utils/array';
+import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import { CommunityUserNotification } from '../../../../_common/community/user-notification/user-notification.model';
+import { configShareCard } from '../../../../_common/config/config.service';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import { number } from '../../../../_common/filters/number';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
@@ -22,6 +24,7 @@ import AppMediaItemPost from '../../../../_common/media-item/post/post.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
+import AppShareCard from '../../../../_common/share/card/card.vue';
 import AppStickerControlsOverlay from '../../../../_common/sticker/controls-overlay/controls-overlay.vue';
 import AppStickerReactions from '../../../../_common/sticker/reactions/reactions.vue';
 import {
@@ -77,6 +80,7 @@ import AppPostPageRecommendations from './recommendations/recommendations.vue';
 		AppCommunityUserNotification,
 		AppFiresidePostEmbed,
 		AppPostPageRecommendations,
+		AppShareCard,
 	},
 	directives: {
 		AppTooltip,
@@ -109,6 +113,10 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 	$refs!: {
 		'sticker-scroll': HTMLDivElement;
 	};
+
+	get useShareCard() {
+		return configShareCard.value;
+	}
 
 	get displayUser() {
 		return this.post.displayUser;
@@ -154,6 +162,7 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 	}
 
 	mounted() {
+		trackExperimentEngagement(configShareCard);
 		this.fetchRecommendedPosts();
 	}
 

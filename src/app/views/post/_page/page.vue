@@ -188,6 +188,10 @@
 					@sticker="scrollToStickers()"
 				/>
 
+				<div v-if="useShareCard" class="-share">
+					<app-share-card :model="post" :url="post.url" />
+				</div>
+
 				<div v-if="Screen.isMobile">
 					<app-post-page-recommendations :posts="recommendedPosts" />
 				</div>
@@ -273,4 +277,7 @@
 
 .-communities
 	white-space: nowrap
+
+.-share
+	margin-top: $line-height-computed * 1.5
 </style>
