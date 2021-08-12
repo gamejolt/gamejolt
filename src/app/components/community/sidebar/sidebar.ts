@@ -2,13 +2,9 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { getShareableLink } from '../../../../utils/router';
-import {
-	trackExperimentEngagement,
-	trackShareLink,
-} from '../../../../_common/analytics/analytics.service';
+import { getAbsoluteLink } from '../../../../utils/router';
+import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
-import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
 import { Community } from '../../../../_common/community/community.model';
 import { configShareCard } from '../../../../_common/config/config.service';
 import { number } from '../../../../_common/filters/number';
@@ -16,6 +12,7 @@ import AppGameThumbnail from '../../../../_common/game/thumbnail/thumbnail.vue';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppShareCard from '../../../../_common/share/card/card.vue';
+import { copyShareLink } from '../../../../_common/share/share.service';
 import { AppSocialFacebookLike } from '../../../../_common/social/facebook/like/like';
 import { AppSocialTwitterShare } from '../../../../_common/social/twitter/share/share';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
@@ -94,7 +91,7 @@ export default class AppCommunitySidebar extends Vue {
 	}
 
 	get shareUrl() {
-		return getShareableLink(this.$router, this.community.routeLocation);
+		return getAbsoluteLink(this.$router, this.community.routeLocation);
 	}
 
 	get shareContent() {
@@ -151,10 +148,7 @@ export default class AppCommunitySidebar extends Vue {
 	}
 
 	copyShareUrl() {
-		Clipboard.copy(this.shareUrl);
-		trackShareLink({
-			url: this.shareUrl,
-		});
+		copyShareLink(this.shareUrl);
 	}
 
 	toggleCollaboratorList() {

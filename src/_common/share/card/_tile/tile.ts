@@ -7,23 +7,21 @@ import { Game } from '../../../game/game.model';
 import { Model } from '../../../model/model.service';
 import { Navigate } from '../../../navigate/navigate.service';
 import { User } from '../../../user/user.model';
-import AppShareCard from '../card';
-
-export type ShareCardProvider =
-	| 'facebook'
-	| 'twitter'
-	| 'email'
-	| 'sms'
-	| 'fb_messenger'
-	| 'whatsapp'
-	| 'reddit';
+import { copyShareLink, ShareProvider } from '../../share.service';
 
 @Component({})
 export default class AppShareCardTile extends Vue {
-	@Prop({ required: true, type: Model }) model!: Model;
-	@Prop({ required: true, type: String }) url!: string;
-	@Prop({ required: true, type: String }) provider!: ShareCardProvider;
-	@Prop({ required: false, type: Boolean, default: false }) dense!: boolean;
+	@Prop({ type: Model, required: true })
+	model!: Model;
+
+	@Prop({ type: String, required: true })
+	url!: string;
+
+	@Prop({ type: String, required: true })
+	provider!: ShareProvider;
+
+	@Prop({ type: Boolean, required: false, default: false })
+	dense!: boolean;
 
 	get icon() {
 		switch (this.provider) {
@@ -151,7 +149,7 @@ export default class AppShareCardTile extends Vue {
 
 			default:
 				// If we don't have support for a link for some reason, just copy it.
-				AppShareCard.copyLink(this.url);
+				copyShareLink(this.url);
 				return;
 		}
 
@@ -167,10 +165,7 @@ export default class AppShareCardTile extends Vue {
 			return;
 		}
 
-		trackShareLink({
-			url: this.url,
-			provider: this.provider,
-		});
+		trackShareLink(this.url, this.provider);
 
 		if (inNewWindow) {
 			Navigate.newWindow(providerLink);

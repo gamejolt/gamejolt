@@ -1,25 +1,29 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { trackShareLink } from '../../analytics/analytics.service';
-import { Clipboard } from '../../clipboard/clipboard-service';
 import { Model } from '../../model/model.service';
+import { copyShareLink, ShareProvider } from '../share.service';
 import { ShareModal } from './_modal/modal.service';
-import { ShareCardProvider } from './_tile/tile';
 import AppShareCardTile from './_tile/tile.vue';
 
-const Providers: ShareCardProvider[] = ['facebook', 'twitter'];
 @Component({
 	components: {
 		AppShareCardTile,
 	},
 })
 export default class AppShareCard extends Vue {
-	@Prop({ required: true, type: Model }) model!: Model;
-	@Prop({ required: true, type: String }) url!: string;
-	@Prop({ required: false, type: Boolean, default: false }) hideHeading!: boolean;
-	@Prop({ required: false, type: Boolean, default: false }) bleedPadding!: boolean;
+	@Prop({ type: Model, required: true })
+	model!: Model;
 
-	readonly Providers = Providers;
+	@Prop({ type: String, required: true })
+	url!: string;
+
+	@Prop({ type: Boolean, required: false, default: false })
+	hideHeading!: boolean;
+
+	@Prop({ type: Boolean, required: false, default: false })
+	bleedPadding!: boolean;
+
+	readonly providers: ShareProvider[] = ['facebook', 'twitter'];
 
 	openShareModal() {
 		ShareModal.show({
@@ -29,13 +33,6 @@ export default class AppShareCard extends Vue {
 	}
 
 	copyLink() {
-		return AppShareCard.copyLink(this.url);
-	}
-
-	static copyLink(url: string) {
-		Clipboard.copy(url);
-		trackShareLink({
-			url,
-		});
+		copyShareLink(this.url);
 	}
 }

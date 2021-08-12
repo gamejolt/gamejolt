@@ -1,8 +1,7 @@
 import { Component, Prop } from 'vue-property-decorator';
 import { BaseModal } from '../../../modal/base';
 import { Model } from '../../../model/model.service';
-import AppShareCard from '../card';
-import { ShareCardProvider } from '../_tile/tile';
+import { copyShareLink, ShareProvider } from '../../share.service';
 import AppShareCardTile from '../_tile/tile.vue';
 
 @Component({
@@ -11,20 +10,23 @@ import AppShareCardTile from '../_tile/tile.vue';
 	},
 })
 export default class AppShareCardModal extends BaseModal {
-	@Prop({ required: true, type: Model }) model!: Model;
-	@Prop({ required: true, type: String }) url!: string;
+	@Prop({ type: Model, required: true })
+	model!: Model;
 
-	readonly Providers: ShareCardProvider[] = [
+	@Prop({ type: String, required: true })
+	url!: string;
+
+	readonly providers: ShareProvider[] = [
 		'facebook',
 		'twitter',
+		'reddit',
+		'whatsapp',
+		'fb_messenger',
 		'email',
 		'sms',
-		'fb_messenger',
-		'whatsapp',
-		'reddit',
 	];
 
 	copyLink() {
-		return AppShareCard.copyLink(this.url);
+		copyShareLink(this.url);
 	}
 }

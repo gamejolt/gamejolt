@@ -181,6 +181,9 @@ export function enforceLocation(route: Route, params: any, query: any = {}) {
 	}
 }
 
-export function getShareableLink(router: VueRouter, location: Location | RawLocation) {
+/**
+ * Will generate a link from a route location.
+ */
+export function getAbsoluteLink(router: VueRouter, location: Location | RawLocation) {
 	return Environment.baseUrl + router.resolve(location).href.replace(/^#/, '');
 }

@@ -16,9 +16,14 @@
 			</div>
 
 			<div class="-content-row-lower">
-				<template v-for="i in Providers">
-					<app-share-card-tile :key="i" :model="model" :url="url" :provider="i" dense />
-				</template>
+				<app-share-card-tile
+					v-for="i in providers"
+					:key="i"
+					:model="model"
+					:url="url"
+					:provider="i"
+					dense
+				/>
 
 				<a class="-tile -dense" @click="openShareModal()">
 					<app-jolticon class="-icon" icon="ellipsis-h" />

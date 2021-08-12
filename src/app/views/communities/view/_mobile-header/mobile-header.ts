@@ -1,10 +1,8 @@
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
-import { getShareableLink } from '../../../../../utils/router';
+import { getAbsoluteLink } from '../../../../../utils/router';
 import { propOptional } from '../../../../../utils/vue';
-import { trackShareLink } from '../../../../../_common/analytics/analytics.service';
-import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
 import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/join-widget.vue';
 import AppCommunityVerifiedTick from '../../../../../_common/community/verified-tick/verified-tick.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
@@ -12,6 +10,7 @@ import { number } from '../../../../../_common/filters/number';
 import { Popper } from '../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
+import { copyShareLink } from '../../../../../_common/share/share.service';
 import { SidebarState, SidebarStore } from '../../../../../_common/sidebar/sidebar.store';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { AppTheme } from '../../../../../_common/theme/theme';
@@ -109,9 +108,8 @@ export default class AppMobileHeader extends Vue {
 	}
 
 	copyShareUrl() {
-		const url = getShareableLink(this.$router, this.community.routeLocation);
-		Clipboard.copy(url);
-		trackShareLink({ url });
+		const url = getAbsoluteLink(this.$router, this.community.routeLocation);
+		copyShareLink(url);
 
 		Popper.hideAll();
 	}

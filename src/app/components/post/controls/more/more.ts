@@ -2,9 +2,7 @@ import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { Mutation } from 'vuex-class';
 import { arrayRemove } from '../../../../../utils/array';
-import { trackShareLink } from '../../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../../_common/api/api.service';
-import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
@@ -16,6 +14,7 @@ import { Growls } from '../../../../../_common/growls/growls.service';
 import { getLinkedAccountPlatformIcon } from '../../../../../_common/linked-account/linked-account.model';
 import AppPopper from '../../../../../_common/popper/popper.vue';
 import { ReportModal } from '../../../../../_common/report/modal/modal.service';
+import { copyShareLink } from '../../../../../_common/share/share.service';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { User } from '../../../../../_common/user/user.model';
 import { Store } from '../../../../store';
@@ -178,8 +177,7 @@ export default class AppPostControlsMore extends Vue {
 	}
 
 	copyShareUrl() {
-		Clipboard.copy(this.post.url);
-		trackShareLink({ url: this.post.url });
+		copyShareLink(this.post.url);
 	}
 
 	report() {

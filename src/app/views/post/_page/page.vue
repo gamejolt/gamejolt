@@ -279,5 +279,5 @@
 	white-space: nowrap
 
 .-share
-	margin-top: 16px
+	margin-top: $line-height-computed * 1.5
 </style>

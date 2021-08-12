@@ -11,21 +11,20 @@
 
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<translate> Share </translate>
+				<translate>Share</translate>
 			</h2>
 		</div>
 
 		<div class="modal-body">
 			<div class="-grid">
-				<template v-for="i in Providers">
-					<app-share-card-tile
-						:key="i"
-						class="-tile"
-						:model="model"
-						:url="url"
-						:provider="i"
-					/>
-				</template>
+				<app-share-card-tile
+					v-for="i in providers"
+					:key="i"
+					class="-tile"
+					:model="model"
+					:url="url"
+					:provider="i"
+				/>
 			</div>
 
 			<app-button class="-copy" @click="copyLink()">

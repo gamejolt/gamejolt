@@ -6,8 +6,8 @@ $-base-padding = 8px
 $-border = $border-width-base solid var(--theme-bg-subtle)
 $-font-size = $font-size-base
 $-font-size-dense = $font-size-small
-$-jolticon-size = $jolticon-size
-$-jolticon-size-dense = ceil($-jolticon-size * ($-font-size-dense / $-font-size))
+$-icon-size = $jolticon-size
+$-icon-size-dense = ceil($-icon-size * ($-font-size-dense / $-font-size))
 
 .-tile
 	position: relative
@@ -23,19 +23,19 @@ $-jolticon-size-dense = ceil($-jolticon-size * ($-font-size-dense / $-font-size)
 		font-size: $-font-size-dense
 
 		.-icon
-			width: $-jolticon-size-dense * 1.25
+			width: $-icon-size-dense * 1.25
 			height: @width
 
 		>>> .jolticon
-			font-size: $-jolticon-size-dense
+			font-size: $-icon-size-dense
 
 	>>> .jolticon
 		margin: 0
-		font-size: $-jolticon-size
+		font-size: $-icon-size
 
 	.-icon
 		position: relative
-		width: $-jolticon-size * 1.25
+		width: $-icon-size * 1.25
 		height: @width
 		display: flex
 		align-items: center
