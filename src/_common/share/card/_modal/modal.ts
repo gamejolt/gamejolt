@@ -27,6 +27,6 @@ export default class AppShareCardModal extends BaseModal {
 	];
 
 	copyLink() {
-		copyShareLink(this.url);
+		copyShareLink(this.url, this.model);
 	}
 }
