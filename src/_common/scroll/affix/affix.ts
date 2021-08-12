@@ -19,7 +19,7 @@ export default class AppScrollAffix extends Vue {
 
 	@Prop({
 		type: String,
-		validator: i => ['top', 'bottom'].indexOf(i) !== -1,
+		validator: i => typeof i === 'string' && ['top', 'bottom'].indexOf(i) !== -1,
 		default: 'top',
 	})
 	anchor!: 'top' | 'bottom';

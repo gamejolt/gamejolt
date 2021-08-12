@@ -14,9 +14,8 @@ import FormFiresideAdd from '../../forms/fireside/add/add.vue';
 	},
 })
 export default class AppFiresideAddModal extends BaseModal {
-	@Prop({ type: Community, required: false, default: undefined }) community!:
-		| Community
-		| undefined;
+	@Prop({ type: Community, required: false })
+	community?: Community;
 
 	isLoading = true;
 	nameSuggestion: string | null = null;

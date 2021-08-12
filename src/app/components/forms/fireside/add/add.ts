@@ -13,10 +13,13 @@ type FormModel = {
 	},
 })
 export default class FormFiresideAdd extends BaseForm<FormModel> implements FormOnInit {
-	@Prop({ type: String, required: false, default: undefined }) defaultTitle!: string;
+	@Prop({ type: String, required: false })
+	defaultTitle?: string;
 
 	onInit() {
-		this.setField('title', this.defaultTitle);
+		if (this.defaultTitle) {
+			this.setField('title', this.defaultTitle);
+		}
 		this.setField('is_draft', false);
 	}
 

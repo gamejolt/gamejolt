@@ -4,8 +4,8 @@ import { Screen } from '../../../_common/screen/screen-service';
 
 const validOrder = ['main', 'left', 'right'];
 
-function validateOrder(val: string) {
-	return val.split(',').every(i => validOrder.includes(i));
+function validateOrder(val: unknown) {
+	return typeof val === 'string' && val.split(',').every(i => validOrder.includes(i));
 }
 
 @Options({})

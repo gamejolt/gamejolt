@@ -26,7 +26,7 @@ export default class AppModal extends Vue {
 	@Prop(Number) index!: number;
 	@Prop(Object) theme?: any;
 
-	@Inject({ from: { from: DrawerStoreKey, default: null } })
+	@Inject({ from: DrawerStoreKey, default: null })
 	drawer!: null | DrawerStore;
 
 	modal: Modal = null as any;

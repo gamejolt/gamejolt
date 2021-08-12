@@ -8,7 +8,7 @@ import AppPopper from '../../popper/popper.vue';
 })
 export default class AppListGroupSelector extends Vue {
 	@Prop() current?: any;
-	@Prop({ type: Array, default: [] }) items!: any[];
+	@Prop({ type: Array, default: () => [] }) items!: any[];
 
 	@Emit('change')
 	emitChange(_item: any) {}
