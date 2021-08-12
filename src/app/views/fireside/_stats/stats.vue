@@ -70,24 +70,7 @@
 		</app-scroll-scroller>
 
 		<div v-if="!isDraft">
-			<app-share-card
-				v-if="useShareCard"
-				class="-share-card theme-dark"
-				:model="fireside"
-				:url="shareUrl"
-				offset-color
-			/>
-			<app-card v-else class="-share-card">
-				<p>
-					<translate>Share this Fireside</translate>
-				</p>
-				<div class="-copy-controls">
-					<input class="form-control" :value="shareUrl" />
-					<app-button trans @click="copyShareUrl">
-						<translate>Copy</translate>
-					</app-button>
-				</div>
-			</app-card>
+			<app-fireside-share />
 		</div>
 	</div>
 </template>
@@ -122,14 +105,4 @@
 	animation-duration: 2.5s
 	animation-iteration-count: 1
 	animation-fill-mode: forwards
-
-.-share-card
-	margin-bottom: 0px
-	margin-top: 20px
-
-.-copy-controls
-	display: flex
-
-	> input
-		margin-right: 8px
 </style>

@@ -48,6 +48,7 @@ import { FiresideEditModal } from './_edit-modal/edit-modal.service';
 import AppFiresideHostList from './_host-list/host-list.vue';
 import { FiresideStatsModal } from './_stats/modal/modal.service';
 import AppFiresideStats from './_stats/stats.vue';
+import AppFiresideShare from './_stats/_share/share.vue';
 import AppFiresideStream from './_stream/stream.vue';
 
 type RoutePayload = {
@@ -91,6 +92,7 @@ const FiresideThemeKey = 'fireside';
 		AppFiresideStream,
 		AppScrollScroller,
 		AppFiresideHostList,
+		AppFiresideShare,
 	},
 	directives: {
 		AppTooltip,

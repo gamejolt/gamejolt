@@ -122,7 +122,11 @@
 				</div>
 
 				<div v-if="rtc && shouldShowHosts" class="-hosts-padding">
-					<app-fireside-host-list class="-hosts" />
+					<div class="-hosts">
+						<app-fireside-host-list />
+					</div>
+
+					<app-fireside-share v-if="!isDraft" class="-share" hide-heading />
 				</div>
 			</div>
 
@@ -443,19 +447,22 @@
 
 .-hosts-padding
 	flex: none
+	width: 100%
 	padding-top: 8px
 	max-width: 100%
 	overflow: hidden
 	display: inline-flex
-	align-items: flex-end
+	align-items: flex-start
 	grid-gap: 16px
 
-	.-share
-		margin-left: 8px
-		flex: none
-
 	.-hosts
-		flex: auto
+		min-width: 0
+		margin-left: auto
+		margin-right: auto
+
+	.-share
+		margin-right: 8px
+		flex: none
 
 	> *
 		margin-top: 0 !important

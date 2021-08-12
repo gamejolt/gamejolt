@@ -11,11 +11,11 @@ import AppIllustration from '../../../../_common/illustration/illustration.vue';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import AppShareCard from '../../../../_common/share/card/card.vue';
-import { copyShareLink } from '../../../../_common/share/share.service';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { RouteStatus } from '../fireside';
 import { FiresideController, FiresideControllerKey } from '../_controller/controller';
+import AppFiresideShare from './_share/share.vue';
 
 @Component({
 	components: {
@@ -24,6 +24,7 @@ import { FiresideController, FiresideControllerKey } from '../_controller/contro
 		AppCard,
 		AppScrollScroller,
 		AppShareCard,
+		AppFiresideShare,
 	},
 	directives: {
 		AppTooltip,
@@ -179,13 +180,5 @@ export default class AppFiresideStats extends Vue {
 				)
 			);
 		}
-	}
-
-	copyShareUrl() {
-		if (!this.shareUrl || !this.fireside) {
-			return;
-		}
-
-		copyShareLink(this.shareUrl, this.fireside);
 	}
 }
