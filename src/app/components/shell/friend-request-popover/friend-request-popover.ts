@@ -1,5 +1,5 @@
 import { Options, Vue, Watch } from 'vue-property-decorator';
-import { State } from 'vuex-class/lib/bindings';
+import { State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import { Connection } from '../../../../_common/connection/connection-service';
 import AppLoading from '../../../../_common/loading/loading.vue';

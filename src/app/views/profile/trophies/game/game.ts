@@ -1,5 +1,5 @@
 import { Options } from 'vue-property-decorator';
-import { State } from 'vuex-class/lib/bindings';
+import { State } from 'vuex-class';
 import { LocationRedirect } from '../../../../../utils/router';
 import { Api } from '../../../../../_common/api/api.service';
 import { Game } from '../../../../../_common/game/game.model';
