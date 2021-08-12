@@ -14,17 +14,15 @@ export class AppContentViewerGif extends Vue {
 
 	render() {
 		return h(AppContentGif, {
-			props: {
-				gifId: this.data.attrs.id,
-				width: this.data.attrs.width,
-				height: this.data.attrs.height,
-				service: this.data.attrs.service,
-				media: this.data.attrs.media,
-				url: this.data.attrs.url,
-				isEditing: false,
-				owner: this.owner,
-				isDisabled: false,
-			},
+			gifId: this.data.attrs.id,
+			width: this.data.attrs.width,
+			height: this.data.attrs.height,
+			service: this.data.attrs.service,
+			media: this.data.attrs.media,
+			url: this.data.attrs.url,
+			isEditing: false,
+			owner: this.owner,
+			isDisabled: false,
 		});
 	}
 }

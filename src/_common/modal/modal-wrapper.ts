@@ -8,10 +8,8 @@ export class AppModalWrapper extends Vue {
 
 	render() {
 		return h(this.modal.component, {
-			props: {
-				modal: this.modal,
-				...this.modal.props,
-			},
+			modal: this.modal,
+			...this.modal.props,
 		});
 	}
 }

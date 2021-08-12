@@ -21,6 +21,7 @@ export default class AppPill extends Vue {
 	}
 
 	get hasImg() {
+		// TODO(vue3): check
 		return !!this.$slots.img;
 	}
 

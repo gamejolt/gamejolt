@@ -70,6 +70,6 @@ export class AppAutoscrollAnchor extends Vue {
 	}
 
 	render() {
-		return h('div', this.$slots.default);
+		return h('div', {}, this.$slots.default);
 	}
 }

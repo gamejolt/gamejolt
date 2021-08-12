@@ -23,7 +23,7 @@ export class AppCountdown extends Vue {
 	}
 
 	render() {
-		return h('span', this.time);
+		return h('span', {}, this.time);
 	}
 
 	updateTimer() {

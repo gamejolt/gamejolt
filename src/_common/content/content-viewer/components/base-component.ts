@@ -58,7 +58,7 @@ export function renderChildren(owner: ContentOwner, childObjects: ReadonlyArray<
 	const children = [];
 	if (childObjects) {
 		for (const obj of childObjects) {
-			const childVNode = h(getComponentType(obj), { props: { data: obj, owner } });
+			const childVNode = h(getComponentType(obj), { data: obj, owner });
 			children.push(childVNode);
 		}
 	}
@@ -74,6 +74,6 @@ export class AppContentViewerBaseComponent extends Vue {
 	owner!: ContentOwner;
 
 	render() {
-		return h('div', renderChildren(this.owner, this.content));
+		return h('div', {}, renderChildren(this.owner, this.content));
 	}
 }

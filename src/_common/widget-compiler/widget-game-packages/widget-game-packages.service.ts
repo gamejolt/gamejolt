@@ -10,10 +10,8 @@ export class WidgetCompilerWidgetGamePackages extends WidgetCompilerWidget {
 		const namedParams = this.namedParams(params);
 
 		return h(AppWidgetCompilerWidgetGamePackages, {
-			props: {
-				sellables: context['sellables'],
-				theme: namedParams['theme'] || 'dark',
-			},
+			sellables: context['sellables'],
+			theme: namedParams['theme'] || 'dark',
 		});
 	}
 }

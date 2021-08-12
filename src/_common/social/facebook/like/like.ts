@@ -11,14 +11,12 @@ export class AppSocialFacebookLike extends Vue {
 
 	render() {
 		return h('div', {
-			staticClass: 'fb-like',
-			attrs: {
-				'data-href': this.url,
-				'data-share': this.showShare ? 'true' : 'false',
-				'data-layout': 'button_count',
-				'data-action': 'like',
-				'data-show-faces': 'false',
-			},
+			class: 'fb-like',
+			'data-href': this.url,
+			'data-share': this.showShare ? 'true' : 'false',
+			'data-layout': 'button_count',
+			'data-action': 'like',
+			'data-show-faces': 'false',
 		});
 	}
 

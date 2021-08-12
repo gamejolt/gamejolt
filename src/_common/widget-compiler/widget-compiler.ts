@@ -20,9 +20,9 @@ export class AppWidgetCompiler extends Vue {
 		}
 
 		if (this.isDisabled) {
-			return h('div', { domProps: { innerHTML: this.content } });
+			return h('div', { innerHTML: this.content });
 		}
 
-		return WidgetCompiler.compile(h, this.context, this.content);
+		return WidgetCompiler.compile(this.context, this.content);
 	}
 }

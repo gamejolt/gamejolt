@@ -14,17 +14,15 @@ export class AppContentViewerMediaItem extends Vue {
 
 	render() {
 		return h(AppContentMediaItem, {
-			key: this.data.attrs.id.toString(),
-			props: {
-				mediaItemId: this.data.attrs.id,
-				mediaItemWidth: this.data.attrs.width,
-				mediaItemHeight: this.data.attrs.height,
-				caption: this.data.attrs.caption,
-				align: this.data.attrs.align,
-				href: this.data.attrs.href,
-				isEditing: false,
-				owner: this.owner,
-			},
+			key: this.data.attrs.id,
+			mediaItemId: this.data.attrs.id,
+			mediaItemWidth: this.data.attrs.width,
+			mediaItemHeight: this.data.attrs.height,
+			caption: this.data.attrs.caption,
+			align: this.data.attrs.align,
+			href: this.data.attrs.href,
+			isEditing: false,
+			owner: this.owner,
 		});
 	}
 }

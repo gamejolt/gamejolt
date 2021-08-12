@@ -12,6 +12,7 @@ export default class AppIllustration extends Vue {
 	@Prop(propOptional(Boolean)) sm!: boolean;
 
 	get hasContent() {
-		return !!this.$scopedSlots.default;
+		// TODO(vue3): check
+		return !!this.$slots.default;
 	}
 }

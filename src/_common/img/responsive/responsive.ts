@@ -36,10 +36,8 @@ export class AppImgResponsive extends Vue {
 
 	render() {
 		return h('img', {
-			staticClass: 'img-responsive',
-			domProps: {
-				src: this.processedSrc,
-			},
+			class: 'img-responsive',
+			src: this.processedSrc,
 		});
 	}
 

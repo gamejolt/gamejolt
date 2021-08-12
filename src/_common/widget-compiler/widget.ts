@@ -11,9 +11,7 @@ export abstract class WidgetCompilerWidget {
 		// component.
 		const options = new component().$options;
 
-		return h(options, {
-			props: propGetter(),
-		});
+		return h(options, propGetter());
 	}
 
 	namedParams(params: string[] = []) {

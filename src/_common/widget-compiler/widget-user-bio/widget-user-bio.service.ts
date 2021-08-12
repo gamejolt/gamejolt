@@ -8,9 +8,7 @@ export class WidgetCompilerWidgetUserBio extends WidgetCompilerWidget {
 
 	compile(context: WidgetCompilerContext, _params: string[] = []) {
 		return h(AppWidgetCompiler, {
-			props: {
-				content: context['user'] && context['user'].description_compiled,
-			},
+			content: context['user']?.description_compiled,
 		});
 	}
 }

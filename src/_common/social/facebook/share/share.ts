@@ -9,11 +9,9 @@ export class AppSocialFacebookShare extends Vue {
 
 	render() {
 		return h('div', {
-			staticClass: 'fb-share-button',
-			attrs: {
-				'data-href': this.url,
-				'data-layout': 'button',
-			},
+			class: 'fb-share-button',
+			'data-href': this.url,
+			'data-layout': 'button',
 		});
 	}
 

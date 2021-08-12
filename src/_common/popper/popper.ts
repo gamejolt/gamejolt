@@ -190,6 +190,7 @@ export default class AppPopper extends Vue {
 	}
 
 	mounted() {
+		// TODO(vue3): check
 		if (!this.$slots.default) {
 			throw Error('AppPopper is a wrapper - put popper reference in the default slot.');
 		}

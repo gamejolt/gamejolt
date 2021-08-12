@@ -14,9 +14,9 @@ export class AppContentViewerList extends Vue {
 
 	render() {
 		if (this.data.type === 'bulletList') {
-			return h('ul', renderChildren(this.owner, this.data.content));
+			return h('ul', {}, renderChildren(this.owner, this.data.content));
 		} else if (this.data.type === 'orderedList') {
-			return h('ol', renderChildren(this.owner, this.data.content));
+			return h('ol', {}, renderChildren(this.owner, this.data.content));
 		}
 		// Shouldn't happen because child type is guarded by renderChildren
 		throw new Error('Unknown list type encountered.');

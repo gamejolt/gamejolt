@@ -9,12 +9,11 @@ import { Options, Vue } from 'vue-property-decorator';
 @Options({})
 export class AppCondenseWhitespace extends Vue {
 	render() {
-		// TODO(vue3): check this. why error?
-		let children = this.$slots.default;
-		if (children) {
-			children = children.filter(i => !!i.children || (i.text || '').trim() !== '');
-		}
+		// TODO(vue3): I'm not sure what the new attribute is for getting the text yet.
+		const children = this.$slots
+			.default?.()
+			.filter(i => !!i.children || (i.text || '').trim() !== '');
 
-		return h('div', children);
+		return h('div', {}, children);
 	}
 }

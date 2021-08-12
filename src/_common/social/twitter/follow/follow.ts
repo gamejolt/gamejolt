@@ -15,12 +15,10 @@ export class AppSocialTwitterFollow extends Vue {
 
 	render() {
 		return h('a', {
-			staticClass: 'twitter-follow-button',
-			attrs: {
-				href: 'https://twitter.com/' + this.handle,
-				'data-show-count': this.showCount ? 'true' : 'false',
-				'data-size': this.size,
-			},
+			class: 'twitter-follow-button',
+			href: 'https://twitter.com/' + this.handle,
+			'data-show-count': this.showCount ? 'true' : 'false',
+			'data-size': this.size,
 		});
 	}
 

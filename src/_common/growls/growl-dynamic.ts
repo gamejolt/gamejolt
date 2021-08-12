@@ -11,12 +11,8 @@ export class AppGrowlDynamic extends Vue {
 
 	render() {
 		return h(this.component, {
-			props: this.props,
-			on: {
-				close: () => {
-					this.emitClose();
-				},
-			},
+			...this.props,
+			onClose: () => this.emitClose(),
 		});
 	}
 }

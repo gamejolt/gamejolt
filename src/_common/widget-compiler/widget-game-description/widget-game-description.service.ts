@@ -8,9 +8,7 @@ export class WidgetCompilerWidgetGameDescription extends WidgetCompilerWidget {
 
 	compile(context: WidgetCompilerContext, _params: string[] = []) {
 		return h(AppWidgetCompiler, {
-			props: {
-				content: context['game'] && context['game'].description_compiled,
-			},
+			content: context['game'] && context['game'].description_compiled,
 		});
 	}
 }

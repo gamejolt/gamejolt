@@ -14,12 +14,10 @@ export class AppContentViewerSticker extends Vue {
 
 	render() {
 		return h(AppContentSticker, {
-			key: this.data.attrs.id.toString(),
-			props: {
-				stickerId: this.data.attrs.id,
-				isEditing: false,
-				owner: this.owner,
-			},
+			key: this.data.attrs.id,
+			stickerId: this.data.attrs.id,
+			isEditing: false,
+			owner: this.owner,
 		});
 	}
 }

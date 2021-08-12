@@ -68,35 +68,36 @@ export default class AppPageContainer extends Vue {
 			':' + this.order,
 		].join('');
 
+		const left = this.$slots['left']?.() ?? [];
+		const leftBottom = this.$slots['left-bottom']?.() ?? [];
+		const main = this.$slots['default']?.() ?? [];
+		const right = this.$slots['right']?.() ?? [];
+
 		const cols = {
 			left: this.hasLeftColumn
-				? h('div', { key: `left:${keySuffix}`, staticClass: '-left' }, [
-						this.$slots['left'],
-						this.$slots['left-bottom'],
-				  ])
-				: null,
-			main: h(
-				'div',
-				{ key: `main:${keySuffix}`, staticClass: '-main' },
-				this.$slots['default']
-			),
+				? h('div', { key: `left:${keySuffix}`, class: '-left' }, [...left, ...leftBottom])
+				: undefined,
+
+			main: h('div', { key: `main:${keySuffix}`, class: '-main' }, main),
+
 			right: this.hasRightColumn
-				? h('div', { key: `right:${keySuffix}`, staticClass: '-right' }, [
-						this.shouldCombineColumns ? this.$slots['left'] : null,
-						this.$slots['right'],
-						this.shouldCombineColumns ? this.$slots['left-bottom'] : null,
+				? h('div', { key: `right:${keySuffix}`, class: '-right' }, [
+						...(this.shouldCombineColumns ? left : []),
+						...right,
+						...(this.shouldCombineColumns ? leftBottom : []),
 				  ])
-				: null,
+				: undefined,
 		};
 
-		const orderedCols = this.order.split(',').map(i => (cols as any)[i]);
+		const order = this.order.split(',') as (keyof typeof cols)[];
+		const orderedCols = order.map(i => cols[i]);
 
 		return h(
 			'div',
 			{
 				class: this.classes,
 			},
-			[h('div', { staticClass: '-row' }, orderedCols)]
+			[h('div', { class: '-row' }, orderedCols)]
 		);
 	}
 }

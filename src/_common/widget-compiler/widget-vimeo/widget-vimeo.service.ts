@@ -1,7 +1,7 @@
+import { h } from 'vue';
+import AppVideoEmbed from '../../video/embed/embed.vue';
 import { WidgetCompilerWidget } from '../widget';
 import { WidgetCompilerContext } from '../widget-compiler.service';
-import AppVideoEmbed from '../../video/embed/embed.vue';
-import { h } from 'vue';
 
 export class WidgetCompilerWidgetVimeo extends WidgetCompilerWidget {
 	readonly name = 'vimeo';
@@ -14,10 +14,8 @@ export class WidgetCompilerWidgetVimeo extends WidgetCompilerWidget {
 		const videoId = params[0];
 
 		return h(AppVideoEmbed, {
-			props: {
-				videoProvider: 'vimeo',
-				videoId,
-			},
+			videoProvider: 'vimeo',
+			videoId,
 		});
 	}
 }

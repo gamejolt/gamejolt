@@ -32,6 +32,6 @@ export class AppScrollInview extends Vue {
 	}
 
 	render() {
-		return h(this.tag, this.$slots.default);
+		return h(this.tag, {}, this.$slots.default);
 	}
 }

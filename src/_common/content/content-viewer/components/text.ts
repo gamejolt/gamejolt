@@ -67,7 +67,7 @@ export class AppContentViewerText extends Vue {
 	}
 
 	render() {
-		let vnode = h('span', this.text ?? '');
+		let vnode = h('span', {}, this.text ?? undefined);
 
 		if (this.isLink) {
 			const attrs = this.getMarkAttrs('link');
@@ -88,38 +88,34 @@ export class AppContentViewerText extends Vue {
 				elementAttrs.title = attrs.href;
 			}
 
-			vnode = h(AppLinkExternal, { attrs: elementAttrs }, children);
+			vnode = h(AppLinkExternal, elementAttrs, children);
 		} else if (this.isMention) {
 			const attrs = this.getMarkAttrs('mention');
 			const children = [vnode];
 
 			vnode = h(
 				AppContentViewerMention,
-				{ props: { username: attrs.username, owner: this.owner } },
+				{ username: attrs.username, owner: this.owner },
 				children
 			);
 		} else if (this.isTag) {
 			const attrs = this.getMarkAttrs('tag');
 			const children = [vnode];
 
-			vnode = h(
-				AppContentViewerTag,
-				{ props: { tag: attrs.tag, owner: this.owner } },
-				children
-			);
+			vnode = h(AppContentViewerTag, { tag: attrs.tag, owner: this.owner }, children);
 		}
 
 		if (this.isBold) {
-			vnode = h('strong', [vnode]);
+			vnode = h('strong', {}, [vnode]);
 		}
 		if (this.isItalics) {
-			vnode = h('em', [vnode]);
+			vnode = h('em', {}, [vnode]);
 		}
 		if (this.isStrikethrough) {
-			vnode = h('s', [vnode]);
+			vnode = h('s', {}, [vnode]);
 		}
 		if (this.isCode) {
-			vnode = h('code', [vnode]);
+			vnode = h('code', {}, [vnode]);
 		}
 		return vnode;
 	}

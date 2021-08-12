@@ -10,10 +10,8 @@ export class WidgetCompilerWidgetGameMedia extends WidgetCompilerWidget {
 		const namedParams = this.namedParams(params);
 
 		return h(AppWidgetCompilerWidgetGameMedia, {
-			props: {
-				items: context['mediaItems'] || [],
-				num: parseInt(namedParams['num'], 10) || 6,
-			},
+			items: context['mediaItems'] || [],
+			num: parseInt(namedParams['num'], 10) || 6,
 		});
 	}
 }

@@ -1,4 +1,4 @@
-import { h } from 'vue';
+import { h, resolveComponent } from 'vue';
 import { Options } from 'vue-property-decorator';
 import { router } from '..';
 import { Api } from '../../../_common/api/api.service';
@@ -56,6 +56,8 @@ export default class RouteHome extends BaseRouteComponent {
 			return h('div');
 		}
 
-		return h(this.user ? 'RouteHomeFeed' : 'RouteDiscoverHome');
+		return h(
+			this.user ? resolveComponent('RouteHomeFeed') : resolveComponent('RouteDiscoverHome')
+		);
 	}
 }

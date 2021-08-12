@@ -10,6 +10,7 @@ export default class AppCommunitiesViewPageContainer extends Vue {
 	readonly Screen = Screen;
 
 	get sidebarHasContent() {
+		// TODO(vue3): check
 		return !!this.$slots.sidebar;
 	}
 

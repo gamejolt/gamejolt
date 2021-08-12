@@ -13,6 +13,6 @@ export class AppContentViewerParagraph extends Vue {
 	owner!: ContentOwner;
 
 	render() {
-		return h('p', renderChildren(this.owner, this.data.content));
+		return h('p', {}, renderChildren(this.owner, this.data.content));
 	}
 }

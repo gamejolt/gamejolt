@@ -86,12 +86,8 @@ export class AppContentViewerCodeBlock extends Vue {
 			Prism,
 			{
 				class: 'content-viewer-code-block',
-				attrs: {
-					'data-annotation': annotationAttr,
-				},
-				props: {
-					language,
-				},
+				'data-annotation': annotationAttr,
+				language,
 			},
 			text
 		);

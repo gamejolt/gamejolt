@@ -14,7 +14,9 @@ export class AppContentViewerHeading extends Vue {
 
 	render() {
 		return h(
-			'h' + (this.data.attrs.level + 2), // We do this because we want users to only be able to add H3s and H4s (SEO).
+			// We do this because we want users to only be able to add H3s and H4s (SEO).
+			'h' + (this.data.attrs.level + 2),
+			{},
 			renderChildren(this.owner, this.data.content)
 		);
 	}

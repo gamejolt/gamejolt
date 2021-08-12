@@ -49,6 +49,7 @@ export default class AppModal extends Vue {
 	}
 
 	get hasFooter() {
+		// TODO(vue3): check
 		return !!this.$slots.footer;
 	}
 

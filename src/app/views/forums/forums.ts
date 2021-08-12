@@ -8,6 +8,6 @@ import './forums-content.styl';
 })
 export default class RouteForums extends BaseRouteComponent {
 	render() {
-		return h('router-view', { staticClass: 'route-forums' });
+		return h('router-view', { class: 'route-forums' });
 	}
 }

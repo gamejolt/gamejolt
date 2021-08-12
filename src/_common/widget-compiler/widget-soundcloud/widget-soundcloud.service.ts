@@ -20,10 +20,8 @@ export class WidgetCompilerWidgetSoundcloud extends WidgetCompilerWidget {
 		}
 
 		return h(AppWidgetCompilerWidgetSoundcloud, {
-			props: {
-				trackId,
-				color,
-			},
+			trackId,
+			color,
 		});
 	}
 }

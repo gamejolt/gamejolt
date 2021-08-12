@@ -110,6 +110,6 @@ export class AppThemeSvg extends Vue {
 	}
 
 	render() {
-		return h('img', { domProps: { src: this.processedSvg } });
+		return h('img', { src: this.processedSvg });
 	}
 }

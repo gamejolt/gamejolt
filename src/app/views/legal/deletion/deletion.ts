@@ -13,6 +13,6 @@ export default class RouteLegalDeletion extends BaseRouteComponent {
 	}
 
 	render() {
-		return h('div', { domProps: { innerHTML: template } });
+		return h('div', { innerHTML: template });
 	}
 }

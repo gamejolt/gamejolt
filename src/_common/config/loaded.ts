@@ -4,10 +4,10 @@ import { ConfigService } from './config.service';
 
 @Options({})
 export class AppConfigLoaded extends Vue {
-	@Prop({ type: String, default: 'div', required: false })
+	@Prop({ type: String, required: false, default: 'div' })
 	tag!: string;
 
 	render() {
-		return h(this.tag, ConfigService.isLoaded ? this.$slots.default : null);
+		return h(this.tag, {}, ConfigService.isLoaded ? this.$slots.default : undefined);
 	}
 }

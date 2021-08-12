@@ -35,10 +35,8 @@ export class AppAudioPlayer extends Vue {
 
 	render() {
 		return h('audio', {
-			domProps: {
-				src: this.song.url,
-				preload: 'auto',
-			},
+			src: this.song.url,
+			preload: 'auto',
 		});
 	}
 

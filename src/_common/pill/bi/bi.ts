@@ -49,6 +49,7 @@ export default class AppPillBi extends Vue {
 	}
 
 	get hasImg() {
+		// TODO(vue3): check
 		return !!this.$slots.img;
 	}
 

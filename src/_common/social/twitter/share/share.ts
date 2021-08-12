@@ -12,13 +12,11 @@ export class AppSocialTwitterShare extends Vue {
 
 	render() {
 		return h('a', {
-			staticClass: 'twitter-share-button',
-			attrs: {
-				href: 'https://twitter.com/share',
-				'data-text': this.content,
-				'data-url': this.url,
-				'data-size': this.size,
-			},
+			class: 'twitter-share-button',
+			href: 'https://twitter.com/share',
+			'data-text': this.content,
+			'data-url': this.url,
+			'data-size': this.size,
 		});
 	}
 

@@ -58,8 +58,8 @@ export class WidgetCompiler {
 			// Add in the text up until this regex match.
 			children.push(
 				h('div', {
-					staticClass: this.contentClass,
-					domProps: { innerHTML: workingInput.substring(0, matchInfo.index) },
+					class: this.contentClass,
+					innerHTML: workingInput.substring(0, matchInfo.index),
 				})
 			);
 
@@ -78,8 +78,8 @@ export class WidgetCompiler {
 		// Get the remaining portion of input after the last widget (if there were any).
 		children.push(
 			h('div', {
-				staticClass: this.contentClass,
-				domProps: { innerHTML: workingInput },
+				class: this.contentClass,
+				innerHTML: workingInput,
 			})
 		);
 
@@ -90,7 +90,7 @@ export class WidgetCompiler {
 		return h(
 			'div',
 			{
-				staticClass: 'widget-compiler',
+				class: 'widget-compiler',
 			},
 			children
 		);

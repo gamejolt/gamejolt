@@ -13,6 +13,6 @@ export class AppContentViewerBlockquote extends Vue {
 	owner!: ContentOwner;
 
 	render() {
-		return h('blockquote', renderChildren(this.owner, this.data.content));
+		return h('blockquote', {}, renderChildren(this.owner, this.data.content));
 	}
 }

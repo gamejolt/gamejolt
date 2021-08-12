@@ -9,10 +9,8 @@ export class AppSocialFacebookSend extends Vue {
 
 	render() {
 		return h('div', {
-			staticClass: 'fb-send',
-			attrs: {
-				'data-href': this.url,
-			},
+			class: 'fb-send',
+			'data-href': this.url,
 		});
 	}
 

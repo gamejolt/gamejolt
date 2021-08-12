@@ -18,12 +18,10 @@ export class AppContentViewerEmbed extends Vue {
 		}
 
 		return h(AppContentEmbed, {
-			props: {
-				type: this.data.attrs.type,
-				source: this.data.attrs.source,
-				isEditing: false,
-				owner: this.owner,
-			},
+			type: this.data.attrs.type,
+			source: this.data.attrs.source,
+			isEditing: false,
+			owner: this.owner,
 		});
 	}
 }

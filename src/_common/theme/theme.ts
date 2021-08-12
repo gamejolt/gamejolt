@@ -27,6 +27,7 @@ export class AppTheme extends Vue {
 
 	render() {
 		const id = 'theme-' + this.scopeId;
+		// TODO(vue3): check
 		const selector = this.$slots.default ? '#' + id : ':root';
 		let styles = '';
 
@@ -138,9 +139,9 @@ export class AppTheme extends Vue {
 		return h(
 			'div',
 			{
-				domProps: { id: id },
+				id,
 			},
-			[h('style', { domProps: { innerHTML: styles } }), this.$slots.default]
+			[h('style', { innerHTML: styles }), ...(this.$slots.default?.() ?? [])]
 		);
 	}
 }

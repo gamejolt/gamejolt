@@ -60,6 +60,6 @@ export default class RouteLandingHelp extends BaseRouteComponent {
 	}
 
 	render() {
-		return h('div', { domProps: { innerHTML: this.content } });
+		return h('div', { innerHTML: this.content });
 	}
 }

@@ -13,6 +13,6 @@ export class AppContentViewerListItem extends Vue {
 	owner!: ContentOwner;
 
 	render() {
-		return h('li', renderChildren(this.owner, this.data.content));
+		return h('li', {}, renderChildren(this.owner, this.data.content));
 	}
 }

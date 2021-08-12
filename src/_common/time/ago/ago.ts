@@ -79,9 +79,7 @@ export class AppTimeAgo extends Vue {
 		return h(
 			'span',
 			{
-				domProps: {
-					title: this.fixedTime,
-				},
+				title: this.fixedTime,
 			},
 			this.timeAgo
 		);

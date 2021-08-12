@@ -14,4 +14,9 @@ export default class AppTimelineListItem extends Vue {
 
 	@Prop(Boolean)
 	isLast?: boolean;
+
+	get hasBubble() {
+		// TODO(vue3): check
+		return !!this.$slots.bubble;
+	}
 }

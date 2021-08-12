@@ -28,6 +28,7 @@ export default class AppCardListItem extends Vue {
 	}
 
 	get isExpandable() {
+		// TODO(vue3): check
 		return !!this.$slots.body;
 	}
 

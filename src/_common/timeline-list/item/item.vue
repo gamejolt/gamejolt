@@ -1,3 +1,5 @@
+<script lang="ts" src="./item"></script>
+
 <template>
 	<div
 		class="timeline-list-item"
@@ -10,7 +12,7 @@
 	>
 		<div class="timeline-list-item-connector" />
 
-		<div v-if="!!$slots.bubble" class="timeline-list-item-bubble">
+		<div v-if="hasBubble" class="timeline-list-item-bubble">
 			<div class="timeline-list-item-bubble-inner">
 				<slot name="bubble" />
 			</div>
@@ -21,5 +23,3 @@
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./item"></script>

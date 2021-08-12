@@ -14,10 +14,8 @@ export class WidgetCompilerWidgetYoutube extends WidgetCompilerWidget {
 		const videoId = params[0];
 
 		return h(AppVideoEmbed, {
-			props: {
-				videoProvider: 'youtube',
-				videoId,
-			},
+			videoProvider: 'youtube',
+			videoId,
 		});
 	}
 }
