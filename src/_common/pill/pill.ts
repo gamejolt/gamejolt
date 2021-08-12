@@ -26,7 +26,7 @@ export default class AppPill extends Vue {
 	}
 
 	get hasClickListener() {
-		return !!this.$listeners.click;
+		return !!this.$attrs.onClick;
 	}
 
 	onClick(e: MouseEvent) {
