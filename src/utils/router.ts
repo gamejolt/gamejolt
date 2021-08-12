@@ -184,6 +184,9 @@ export function enforceLocation(route: Route, params: any, query: any = {}) {
 /**
  * Will generate a link from a route location.
  */
-export function getAbsoluteLink(router: VueRouter, location: Location | RawLocation) {
-	return Environment.baseUrl + router.resolve(location).href.replace(/^#/, '');
+export function getAbsoluteLink(router: VueRouter, location: Location | RawLocation | string) {
+	let url = typeof location === 'string' ? location : router.resolve(location).href;
+	url = url.replace(/^#/, '');
+
+	return Environment.baseUrl + url;
 }

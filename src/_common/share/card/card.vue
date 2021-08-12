@@ -1,7 +1,10 @@
 <script lang="ts" src="./card"></script>
 
 <template>
-	<div class="share-card card" :class="{ '-bleed-padding': bleedPadding }">
+	<div
+		class="share-card card"
+		:class="{ '-bleed-padding': bleedPadding, '-offset-color': offsetColor }"
+	>
 		<div class="-content">
 			<h4 v-if="!hideHeading">
 				<translate>Share</translate>
@@ -42,9 +45,12 @@ h4
 	margin-left: $-base-padding * 1.5
 
 .share-card
-	background-color: var(--theme-bg-offset)
+	background-color: var(--theme-bg)
 	padding: 0
 	overflow: hidden
+
+	&.-offset-color
+		background-color: var(--theme-bg-offset)
 
 	&.-bleed-padding
 		margin-left: -8px

@@ -1,4 +1,5 @@
 import { Component, Inject, Watch } from 'vue-property-decorator';
+import { getAbsoluteLink } from '../../../../../../utils/router';
 import AppAdWidget from '../../../../../../_common/ad/widget/widget.vue';
 import { trackExperimentEngagement } from '../../../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../../../_common/api/api.service';
@@ -249,6 +250,10 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 	get shouldShowCommentAdd() {
 		return canCommentOnModel(this.game);
+	}
+
+	get shareLink() {
+		return getAbsoluteLink(this.$router, this.game.getUrl());
 	}
 
 	routeCreated() {

@@ -189,7 +189,7 @@
 				/>
 
 				<div v-if="useShareCard" class="-share">
-					<app-share-card :model="post" :url="post.url" />
+					<app-share-card :model="post" :url="post.url" offset-color />
 				</div>
 
 				<div v-if="Screen.isMobile">

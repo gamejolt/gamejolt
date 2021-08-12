@@ -15,15 +15,15 @@
 
 			<app-page-container xl>
 				<div slot="left">
+					<app-discover-games-view-overview-statbar />
+
 					<app-share-card
 						v-if="useShareCard"
 						class="-share-card"
 						:model="game"
-						:url="game.getUrl()"
+						:url="shareLink"
 						bleed-padding
 					/>
-
-					<app-discover-games-view-overview-statbar />
 
 					<app-user-known-followers
 						v-if="isOverviewLoaded"

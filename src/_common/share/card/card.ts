@@ -23,6 +23,9 @@ export default class AppShareCard extends Vue {
 	@Prop({ type: Boolean, required: false, default: false })
 	bleedPadding!: boolean;
 
+	@Prop({ type: Boolean, required: false, default: false })
+	offsetColor!: boolean;
+
 	readonly providers: ShareProvider[] = ['facebook', 'twitter'];
 
 	openShareModal() {
