@@ -27,6 +27,10 @@
 								<app-user-avatar-img class="-avatar" :user="fireside.user" />
 							</template>
 							<span>'s Fireside</span>
+
+							<span v-if="isDraft" class="-draft-tag tag">
+								<translate>Draft</translate>
+							</span>
 						</small>
 						<br />
 						{{ fireside.title }}
@@ -499,4 +503,7 @@
 		top: -8px
 		pointer-events: none
 		padding: 2px
+
+.-draft-tag
+	margin-left: 4px
 </style>
