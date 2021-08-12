@@ -1,22 +1,22 @@
-import { DirectiveOptions } from 'vue';
-import { TooltipModel } from './tooltip-model';
+import { Directive } from 'vue';
+import { TooltipDirectiveValue, TooltipController } from './tooltip-controller';
 
-const state = new WeakMap<HTMLElement, TooltipModel>();
+const state = new WeakMap<HTMLElement, TooltipController>();
 
 /**
  * Use the 'touchable' modifier to allow toggle usage for mobile.
  * Never attach a 'touchable' modifier to a link.
  * It will stop the link from working.
  */
-export const AppTooltip: DirectiveOptions = {
-	bind(el, binding) {
-		const tooltip = new TooltipModel(el, binding);
+export const AppTooltip: Directive<HTMLElement, TooltipDirectiveValue> = {
+	beforeMount(el, binding) {
+		const tooltip = new TooltipController(el, binding);
 		state.set(el, tooltip);
 	},
-	update(el, binding) {
+	updated(el, binding) {
 		state.get(el)?.update(binding);
 	},
-	unbind(el) {
+	unmounted(el) {
 		state.get(el)?.destroy();
 		state.delete(el);
 	},

@@ -1,5 +1,4 @@
-import { DirectiveBinding } from 'vue/types/options';
-import AppTooltipTS from './tooltip';
+import { App, computed, createApp, DirectiveBinding, ref } from 'vue';
 import AppTooltip from './tooltip.vue';
 
 // Same thing as Placement (from @popperjs) or TooltipPlacement
@@ -40,15 +39,18 @@ export type TooltipPlacement =
 
 const TouchablePointerTypes = ['touch', 'pen'];
 
-export class TooltipModel {
+export type TooltipDirectiveValue = string | { content: string; placement?: TooltipPlacement };
+
+type TooltipDirectiveBinding = DirectiveBinding<TooltipDirectiveValue>;
+
+export class TooltipController {
 	text = '';
 	placement: TooltipPlacement = 'top';
 	isActive = false;
 	touchable = false;
 
-	constructor(public el: HTMLElement, binding: DirectiveBinding) {
-		const { modifiers } = binding;
-		if (modifiers instanceof Object && 'touchable' in binding.modifiers) {
+	constructor(public el: HTMLElement, binding: TooltipDirectiveBinding) {
+		if ('touchable' in binding.modifiers) {
 			this.touchable = true;
 		}
 
@@ -65,23 +67,20 @@ export class TooltipModel {
 		this.update(binding);
 	}
 
-	update(binding: DirectiveBinding) {
-		const { modifiers, value } = binding;
-
+	update({ modifiers, value }: TooltipDirectiveBinding) {
 		// The placement for poppers can be added as a modifier or in the
 		// binding.value as { content: string, placement: string}.
-		let placement: TooltipPlacement = 'top';
-		if (modifiers instanceof Object) {
-			const keys = Object.keys(modifiers) as any[];
-			placement = keys.find(i => TooltipAllowedPlacements.includes(i)) ?? 'top';
-		}
-
-		if (value?.placement) {
+		let placement: TooltipPlacement;
+		const keys = Object.keys(modifiers);
+		if (typeof value !== 'string' && value?.placement) {
 			placement = value.placement;
+		} else {
+			placement = (keys.find((i: any) => TooltipAllowedPlacements.includes(i)) ??
+				'top') as TooltipPlacement;
 		}
 
 		this.placement = placement;
-		this.text = binding.value?.content || binding.value;
+		this.text = typeof value === 'string' ? value : value.content;
 	}
 
 	private onMouseEnter = (event: PointerEvent) => {
@@ -91,7 +90,7 @@ export class TooltipModel {
 		}
 
 		this.isActive = true;
-		assignActiveTooltip(this);
+		_assignActiveTooltip(this);
 	};
 
 	private onMouseLeave = (event: PointerEvent) => {
@@ -101,7 +100,7 @@ export class TooltipModel {
 		}
 
 		this.isActive = false;
-		assignActiveTooltip(this);
+		_assignActiveTooltip(this);
 	};
 
 	private onClick = (event: Event) => {
@@ -115,7 +114,7 @@ export class TooltipModel {
 			this.isActive = false;
 		}
 
-		assignActiveTooltip(this);
+		_assignActiveTooltip(this);
 	};
 
 	private onFocusOut = () => {
@@ -131,21 +130,23 @@ export class TooltipModel {
 	}
 }
 
-let TooltipSingleton: null | AppTooltipTS = null;
+let _tooltipApp: null | App = null;
+const _tooltipController = ref<null | TooltipController>(null);
 
-function getTooltipSingleton() {
-	if (!TooltipSingleton) {
-		TooltipSingleton = new AppTooltip() as AppTooltipTS;
+function _getTooltipSingleton() {
+	if (!_tooltipApp) {
+		// TODO(vue3): i have no clue if this will work...
+		_tooltipApp = createApp(AppTooltip, {
+			controller: computed(() => _tooltipController.value),
+		});
 
 		// Mount it into the DOM.
-		const elem = document.createElement('div');
-		document.body.appendChild(elem);
-		TooltipSingleton.$mount(elem);
+		_tooltipApp.mount(document.body);
 	}
 
-	return TooltipSingleton;
+	return _tooltipController;
 }
 
-function assignActiveTooltip(tooltip: TooltipModel) {
-	getTooltipSingleton().tooltip = tooltip;
+function _assignActiveTooltip(tooltip: TooltipController) {
+	_getTooltipSingleton().value = tooltip;
 }

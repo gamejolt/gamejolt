@@ -1,6 +1,6 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
-import { TooltipPlacement } from '../../tooltip/tooltip-model';
+import { TooltipPlacement } from '../../tooltip/tooltip-controller';
 
 @Options({
 	directives: {

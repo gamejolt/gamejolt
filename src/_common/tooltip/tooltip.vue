@@ -1,3 +1,5 @@
+<script lang="ts" src="./tooltip"></script>
+
 <template>
 	<div v-if="tooltip" class="tooltip" :class="{ '-hide': !tooltip.isActive || !tooltip.text }">
 		<div v-if="tooltip.text" class="tooltip-inner">
@@ -6,11 +8,9 @@
 	</div>
 </template>
 
-<script lang="ts" src="./tooltip"></script>
-
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .tooltip
 	position: absolute
@@ -31,7 +31,8 @@
 		color: $tooltip-color
 		background-color: $tooltip-bg
 
-	&.-hide, &[data-popper-reference-hidden]
+	&.-hide
+	&[data-popper-reference-hidden]
 		opacity: 0
 		visibility: hidden
 </style>

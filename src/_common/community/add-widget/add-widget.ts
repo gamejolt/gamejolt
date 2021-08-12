@@ -3,7 +3,7 @@ import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { Growls } from '../../growls/growls.service';
 import { AppState, AppStore } from '../../store/app-store';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
-import { TooltipPlacement } from '../../tooltip/tooltip-model';
+import { TooltipPlacement } from '../../tooltip/tooltip-controller';
 
 @Options({
 	directives: {

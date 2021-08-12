@@ -1,8 +1,8 @@
-import { DirectiveOptions } from 'vue';
+import { Directive } from 'vue';
 import { Screen } from '../screen/screen-service';
 
-export const AppFocusWhen: DirectiveOptions = {
-	bind: (el: HTMLElement, binding) => {
+export const AppFocusWhen: Directive<HTMLElement, boolean | undefined> = {
+	beforeMount(el, binding) {
 		if (Screen.isMobile) {
 			return;
 		}

@@ -4,12 +4,12 @@ import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow';
 import { createPopper, Instance, Options as PopperOptions } from '@popperjs/core/lib/popper-lite';
 import { nextTick } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { propOptional } from '../../utils/vue';
-import { TooltipModel } from './tooltip-model';
+import { TooltipController } from './tooltip-controller';
 
 @Options({})
 export default class TooltipComponent extends Vue {
-	@Prop(propOptional(TooltipModel)) tooltip?: TooltipModel;
+	@Prop({ type: TooltipController, required: false })
+	tooltip?: TooltipController;
 
 	declare $el: HTMLDivElement;
 
