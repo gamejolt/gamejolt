@@ -50,6 +50,14 @@
 					</div>
 					<div v-if="shouldShowTitleControls" class="-fireside-title-controls">
 						<app-button
+							v-if="shouldShowShareShortcut"
+							v-app-tooltip="$gettext(`Share Link`)"
+							icon="share-airplane"
+							circle
+							sparse
+							@click="onClickShare"
+						/>
+						<app-button
 							v-if="shouldShowEditControlButton"
 							v-app-tooltip="$gettext(`Edit Fireside`)"
 							icon="edit"
@@ -113,7 +121,7 @@
 							<template v-if="rtc && rtc.focusedUser">
 								<app-fireside-stream
 									:rtc-user="rtc.focusedUser"
-									:show-hosts="!shouldShowHosts"
+									:show-overlay-hosts="!shouldShowHosts"
 									:members="overlayChatMembers"
 								/>
 							</template>

@@ -1,6 +1,7 @@
 import Component from 'vue-class-component';
 import { InjectReactive, ProvideReactive, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { getAbsoluteLink } from '../../../utils/router';
 import { sleep } from '../../../utils/utils';
 import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
@@ -20,6 +21,7 @@ import { AppResponsiveDimensions } from '../../../_common/responsive-dimensions/
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../_common/scroll/scroller/scroller.vue';
+import { ShareModal } from '../../../_common/share/card/_modal/modal.service';
 import { AppState, AppStore } from '../../../_common/store/app-store';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../_common/user/user-avatar/img/img.vue';
@@ -132,6 +134,17 @@ export default class RouteFireside extends BaseRouteComponent {
 
 	get fireside() {
 		return this.c.fireside;
+	}
+
+	get shareUrl() {
+		if (!this.fireside) {
+			return;
+		}
+		return getAbsoluteLink(this.$router, this.fireside.location);
+	}
+
+	get shouldShowShareShortcut() {
+		return this.fireside && this.shareUrl && !this.isDraft && !this.shouldShowHosts;
 	}
 
 	get routeTitle() {
@@ -621,6 +634,17 @@ export default class RouteFireside extends BaseRouteComponent {
 	onClickRetry() {
 		this.disconnect();
 		this.tryJoin();
+	}
+
+	onClickShare() {
+		if (!this.fireside || !this.shareUrl) {
+			return;
+		}
+
+		ShareModal.show({
+			url: this.shareUrl,
+			model: this.fireside,
+		});
 	}
 
 	onClickShowChatMembers() {
