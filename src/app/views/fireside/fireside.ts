@@ -1,10 +1,12 @@
 import Component from 'vue-class-component';
-import { InjectReactive, ProvideReactive } from 'vue-property-decorator';
+import { InjectReactive, ProvideReactive, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { sleep } from '../../../utils/utils';
+import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
 import AppAuthJoin from '../../../_common/auth/join/join.vue';
 import AppCommunityThumbnailImg from '../../../_common/community/thumbnail/img/img.vue';
+import { configShareCard } from '../../../_common/config/config.service';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { number } from '../../../_common/filters/number';
 import { Fireside } from '../../../_common/fireside/fireside.model';
@@ -41,11 +43,13 @@ import {
 } from './fireside-rtc';
 import AppFiresideChatMembers from './_chat-members/chat-members.vue';
 import { FiresideChatMembersModal } from './_chat-members/modal/modal.service';
+import { FiresideController, FiresideControllerKey } from './_controller/controller';
 import { FiresideEditModal } from './_edit-modal/edit-modal.service';
 import AppFiresideHostList from './_host-list/host-list.vue';
 import { FiresideStatsModal } from './_stats/modal/modal.service';
 import AppFiresideStats from './_stats/stats.vue';
 import AppFiresideStream from './_stream/stream.vue';
+
 type RoutePayload = {
 	fireside: any;
 	streamingAppId: string;
@@ -103,8 +107,8 @@ export default class RouteFireside extends BaseRouteComponent {
 	@State grid!: Store['grid'];
 	@InjectReactive(ChatKey) chat!: ChatClient;
 	@ProvideReactive(FiresideRTCKey) rtc: FiresideRTC | null = null;
+	@ProvideReactive(FiresideControllerKey) c: FiresideController = new FiresideController();
 
-	private fireside: Fireside | null = null;
 	private gridChannel: FiresideChannel | null = null;
 	private chatChannel: ChatRoomChannel | null = null;
 	private expiryInterval: NodeJS.Timer | null = null;
@@ -124,12 +128,20 @@ export default class RouteFireside extends BaseRouteComponent {
 		videoWrapper: HTMLDivElement;
 	};
 
+	get fireside() {
+		return this.c.fireside;
+	}
+
 	get routeTitle() {
 		if (!this.fireside) {
 			return this.$gettext(`Loading Fireside...`);
 		}
 
 		return this.fireside.title + ' - Fireside';
+	}
+
+	get isDraft() {
+		return this.fireside?.is_draft ?? true;
 	}
 
 	get chatRoom() {
@@ -221,7 +233,7 @@ export default class RouteFireside extends BaseRouteComponent {
 			this.disconnect();
 		}
 
-		this.fireside = new Fireside($payload.fireside);
+		this.c.fireside = new Fireside($payload.fireside);
 		this.hasExpiryWarning = false;
 		this.setPageTheme();
 
@@ -236,13 +248,13 @@ export default class RouteFireside extends BaseRouteComponent {
 			return;
 		}
 
-		if (this.fireside.blocked) {
+		if (this.c.fireside.blocked) {
 			this.status = 'blocked';
 			console.debug(`[Fireside] Blocked from joining blocked user's Fireside.`);
 			return;
 		}
 
-		if (this.fireside.isOpen()) {
+		if (this.c.fireside.isOpen()) {
 			// Set up watchers to initiate connection once one of them boots up.
 			this.$watch('chat.connected', () => this.watchChat());
 			this.$watch('grid.connected', () => this.watchGrid());
@@ -413,7 +425,7 @@ export default class RouteFireside extends BaseRouteComponent {
 				this.status = 'setup-failed';
 				return;
 			}
-			this.fireside = new Fireside(payload.fireside);
+			this.c.fireside = new Fireside(payload.fireside);
 		} catch (error) {
 			console.debug(`[FIRESIDE] Setup failure 2.`, error);
 			this.status = 'setup-failed';
@@ -620,7 +632,7 @@ export default class RouteFireside extends BaseRouteComponent {
 		if (!this.fireside) {
 			return;
 		}
-		FiresideStatsModal.show(this.fireside, this.status, this.isStreaming);
+		FiresideStatsModal.show(this.c, this.status, this.isStreaming);
 	}
 
 	onClickEditFireside() {
@@ -643,5 +655,15 @@ export default class RouteFireside extends BaseRouteComponent {
 		} else {
 			this.destroyRtc();
 		}
+	}
+
+	@Watch('isDraft')
+	onIsDraftChange() {
+		// We try not to show sharing information while in draft, since links
+		// will redirect them if they don't have permissions.
+		if (this.isDraft) {
+			return;
+		}
+		trackExperimentEngagement(configShareCard);
 	}
 }

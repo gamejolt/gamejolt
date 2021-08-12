@@ -39,7 +39,7 @@
 					<translate>Publish</translate>
 				</app-button>
 				<p class="help-block">
-					<translate v-if="!fireside.community">
+					<translate v-if="fireside && !fireside.community">
 						Your Fireside is current in draft. Only you can view it. Publish it to let
 						everyone join!
 					</translate>
@@ -68,8 +68,16 @@
 				</p>
 			</template>
 		</app-scroll-scroller>
-		<div>
-			<app-card class="-share-card">
+
+		<div v-if="!isDraft">
+			<app-share-card
+				v-if="useShareCard"
+				class="-share-card theme-dark"
+				:model="fireside"
+				:url="shareUrl"
+				offset-color
+			/>
+			<app-card v-else class="-share-card">
 				<p>
 					<translate>Share this Fireside</translate>
 				</p>

@@ -3,6 +3,8 @@
 <template>
 	<app-scroll-scroller v-if="rtc" class="-fireside-hosts" horizontal>
 		<div class="-fireside-hosts-inner">
+			<app-fireside-share-options />
+
 			<app-fireside-stream-options
 				@show-popper="emitShowPopper"
 				@hide-popper="emitHidePopper"

@@ -3,6 +3,7 @@ import { Component, Emit, InjectReactive, Prop } from 'vue-property-decorator';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import { FiresideRTC, FiresideRTCKey } from '../fireside-rtc';
 import AppFiresideHostThumb from '../_host-thumb/host-thumb.vue';
+import AppFiresideShareOptions from '../_share_options/share-options.vue';
 import AppFiresideStreamOptions from '../_stream-options/stream-options.vue';
 
 @Component({
@@ -10,6 +11,7 @@ import AppFiresideStreamOptions from '../_stream-options/stream-options.vue';
 		AppFiresideHostThumb,
 		AppScrollScroller,
 		AppFiresideStreamOptions,
+		AppFiresideShareOptions,
 	},
 })
 export default class AppFiresideHostList extends Vue {

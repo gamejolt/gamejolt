@@ -1,13 +1,9 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { trackShareLink } from '../../../analytics/analytics.service';
-import { Community } from '../../../community/community.model';
-import { FiresidePost } from '../../../fireside/post/post-model';
-import { Game } from '../../../game/game.model';
 import { Model } from '../../../model/model.service';
 import { Navigate } from '../../../navigate/navigate.service';
-import { User } from '../../../user/user.model';
-import { copyShareLink, ShareProvider } from '../../share.service';
+import { copyShareLink, getShareResourceForModel, ShareProvider } from '../../share.service';
 
 @Component({})
 export default class AppShareCardTile extends Vue {
@@ -75,22 +71,8 @@ export default class AppShareCardTile extends Vue {
 	}
 
 	private get phrase() {
-		const leading = 'Check out this awesome';
-		let subject = 'thing';
-		const trailing = 'on Game Jolt!';
-
-		if (this.model instanceof FiresidePost) {
-			subject = 'post';
-		} else if (this.model instanceof Community) {
-			subject = 'community';
-		} else if (this.model instanceof User) {
-			subject = 'user';
-		} else if (this.model instanceof Game) {
-			subject = 'game';
-		}
-
-		// Check out this awesome thing on Game Jolt!
-		return [leading, subject, trailing].join(' ');
+		const thing = getShareResourceForModel(this.model) ?? 'thing';
+		return `Check out this awesome ${thing} on Game Jolt!`;
 	}
 
 	private get providerLinkData() {
@@ -149,7 +131,7 @@ export default class AppShareCardTile extends Vue {
 
 			default:
 				// If we don't have support for a link for some reason, just copy it.
-				copyShareLink(this.url);
+				copyShareLink(this.url, this.model);
 				return;
 		}
 
@@ -165,7 +147,7 @@ export default class AppShareCardTile extends Vue {
 			return;
 		}
 
-		trackShareLink(this.url, this.provider);
+		trackShareLink(this.url, { provider: this.provider, model: this.model });
 
 		if (inNewWindow) {
 			Navigate.newWindow(providerLink);

@@ -36,6 +36,6 @@ export default class AppShareCard extends Vue {
 	}
 
 	copyLink() {
-		copyShareLink(this.url);
+		copyShareLink(this.url, this.model);
 	}
 }

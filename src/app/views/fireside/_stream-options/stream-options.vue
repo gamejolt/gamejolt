@@ -1,9 +1,9 @@
 <script lang="ts" src="./stream-options"></script>
 
 <template>
-	<div class="-stream-options-wrap">
+	<div class="-options-wrap">
 		<app-popper @show="emitShowPopper" @hide="emitHidePopper">
-			<div v-app-tooltip="$gettext(`Stream Options`)" class="-stream-options">
+			<div v-app-tooltip="$gettext(`Stream Options`)" class="-options">
 				<app-jolticon class="-icon" icon="ellipsis-v" />
 			</div>
 
@@ -25,33 +25,5 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
-.-stream-options-wrap
-	display: flex
-	align-items: flex-start
-	justify-content: center
-	width: var(--fireside-host-size)
-	height: var(--fireside-host-size)
-
-.-stream-options
-	elevate-1()
-	img-circle()
-	display: flex
-	align-items: center
-	justify-content: center
-	width: calc(var(--fireside-host-size) - 12px)
-	height: calc(var(--fireside-host-size) - 12px)
-	cursor: pointer
-	user-select: none
-	color: var(--theme-fg)
-	background-color: var(--theme-bg-offset)
-
-	&:hover
-		background-color: var(--theme-bi-bg)
-		color: var(--theme-bi-fg)
-
-.-icon
-	font-size: 20px
+@import '../common'
 </style>

@@ -43,6 +43,7 @@
 h4
 	margin: $-base-padding
 	margin-left: $-base-padding * 1.5
+	color: var(--theme-fg)
 
 .share-card
 	background-color: var(--theme-bg)
