@@ -198,12 +198,12 @@ export default class AppPopper extends Vue {
 		Popper.registerPopper(this.$router, this);
 	}
 
-	beforeDestroy() {
+	beforeUnmount() {
 		// Destroy the popper instance and element before we lose our $refs.
 		this.destroyPopper();
 	}
 
-	destroyed() {
+	unmounted() {
 		Popper.deregisterPopper(this);
 		this.removeBackdrop();
 	}

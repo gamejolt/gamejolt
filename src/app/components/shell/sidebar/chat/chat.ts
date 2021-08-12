@@ -66,7 +66,7 @@ export default class AppShellSidebarChat extends Vue {
 		EscapeStack.register(this.escapeCallback);
 	}
 
-	destroyed() {
+	unmounted() {
 		if (this.escapeCallback) {
 			EscapeStack.deregister(this.escapeCallback);
 			this.escapeCallback = undefined;

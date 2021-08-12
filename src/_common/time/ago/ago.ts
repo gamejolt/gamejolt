@@ -25,7 +25,7 @@ export class AppTimeAgo extends Vue {
 		this.refresh();
 	}
 
-	destroyed() {
+	unmounted() {
 		this.clearTimeout();
 	}
 

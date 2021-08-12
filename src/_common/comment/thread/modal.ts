@@ -99,7 +99,7 @@ export default class AppCommentThreadModal extends BaseModal {
 		return this.user && !this.hasError;
 	}
 
-	destroyed() {
+	unmounted() {
 		// If there was a permalink in the URL, we want to remove it when closing the comment modal.
 		const hash = this.$route.hash;
 		if (!hash || hash.indexOf('#comment-') !== 0) {

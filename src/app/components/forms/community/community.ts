@@ -56,7 +56,7 @@ export default class FormCommunity
 		this.setField('post_placeholder_text', placeholder || null);
 	}
 
-	destroyed() {
+	unmounted() {
 		this.setFormTheme(null);
 	}
 

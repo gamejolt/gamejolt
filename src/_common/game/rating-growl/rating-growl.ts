@@ -34,7 +34,7 @@ export default class AppGameRatingGrowl extends Vue {
 		);
 	}
 
-	destroyed() {
+	unmounted() {
 		if (this.ratingWatchDeregister) {
 			this.ratingWatchDeregister();
 			this.ratingWatchDeregister = undefined;

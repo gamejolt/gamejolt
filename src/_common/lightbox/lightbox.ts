@@ -64,7 +64,7 @@ export default class AppLightbox extends Vue {
 		EscapeStack.register(this.escapeCallback);
 	}
 
-	destroyed() {
+	unmounted() {
 		document.body.classList.remove('media-bar-lightbox-open');
 
 		if (this.resize$) {

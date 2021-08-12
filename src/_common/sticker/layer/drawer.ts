@@ -187,7 +187,7 @@ export default class AppStickerLayerDrawer extends Vue {
 		EscapeStack.register(this.escapeCallback);
 	}
 
-	beforeDestroy() {
+	beforeUnmount() {
 		if (this.resize$) {
 			this.resize$.unsubscribe();
 			this.resize$ = undefined;

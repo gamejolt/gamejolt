@@ -81,7 +81,7 @@ export default class AppLightboxItem extends Vue {
 		this.initialized = true;
 	}
 
-	destroyed() {
+	unmounted() {
 		if (this.resize$) {
 			this.resize$.unsubscribe();
 			this.resize$ = undefined;

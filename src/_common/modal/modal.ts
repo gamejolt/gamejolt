@@ -75,7 +75,7 @@ export default class AppModal extends Vue {
 		EscapeStack.register(this.escapeCallback);
 	}
 
-	destroyed() {
+	unmounted() {
 		// Make sure we clear the reference to it.
 		if (this.backdrop) {
 			this.backdrop.remove();

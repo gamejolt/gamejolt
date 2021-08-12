@@ -78,7 +78,7 @@ export default class AppFiresideStats extends Vue {
 		this.updateExpiryValues();
 	}
 
-	destroyed() {
+	unmounted() {
 		this.destroyInterval();
 	}
 

@@ -24,7 +24,7 @@ export default class AppErrorPage extends Vue {
 		});
 	}
 
-	destroyed() {
+	unmounted() {
 		if (this.watcher) {
 			this.watcher();
 			this.watcher = undefined;

@@ -80,7 +80,7 @@ export default class AppClientStatusBar extends Vue {
 		}
 	}
 
-	destroyed() {
+	unmounted() {
 		document.body.classList.remove('has-hot-bottom');
 	}
 

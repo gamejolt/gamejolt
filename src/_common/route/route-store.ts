@@ -36,7 +36,7 @@ export function WithRouteStore(config: RouteStoreOptions) {
 
 				next();
 			},
-			destroyed() {
+			unmounted() {
 				const options = componentOptions.routeStoreOptions;
 				if (options) {
 					const { store, routeStoreName } = options;

@@ -14,7 +14,7 @@ export default class AppShortkey extends Vue {
 		Shortkeys.register(this.shortkey, this.callback);
 	}
 
-	destroyed() {
+	unmounted() {
 		Shortkeys.unregister(this.shortkey, this.callback);
 	}
 

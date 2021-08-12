@@ -72,7 +72,7 @@ export default class AppPollVoting extends Vue {
 		}
 	}
 
-	destroyed() {
+	unmounted() {
 		this.clearInterval();
 	}
 

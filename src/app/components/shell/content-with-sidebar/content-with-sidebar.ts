@@ -22,7 +22,7 @@ export default class AppShellContentWithSidebar extends Vue {
 		return this.visibleLeftPane === 'context';
 	}
 
-	beforeDestroy() {
+	beforeUnmount() {
 		this.setHasContentSidebar(false);
 	}
 

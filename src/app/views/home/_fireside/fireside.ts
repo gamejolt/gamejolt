@@ -33,7 +33,7 @@ export default class AppHomeFireside extends Vue {
 		this.firesideStartDeregister = EventBus.on(GRID_EVENT_FIRESIDE_START, () => this.refresh());
 	}
 
-	destroyed() {
+	unmounted() {
 		if (this.firesideStartDeregister) {
 			this.firesideStartDeregister();
 			this.firesideStartDeregister = null;

@@ -358,7 +358,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		this.overviewPayload($payload);
 	}
 
-	destroyed() {
+	unmounted() {
 		this.clearCommentStore();
 		if (this.permalinkWatchDeregister) {
 			this.permalinkWatchDeregister();

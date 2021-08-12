@@ -78,7 +78,7 @@ export default class AppScrollAffix extends Vue {
 		});
 	}
 
-	destroyed() {
+	unmounted() {
 		if (this.resize$) {
 			this.resize$.unsubscribe();
 			this.resize$ = undefined;

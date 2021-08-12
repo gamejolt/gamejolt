@@ -59,7 +59,7 @@ export class AppProgressPoller extends Vue {
 		this.setTimeout();
 	}
 
-	destroyed() {
+	unmounted() {
 		this.clearTimeout();
 	}
 

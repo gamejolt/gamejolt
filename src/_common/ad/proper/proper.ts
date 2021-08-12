@@ -46,7 +46,7 @@ export default class AppAdProper extends Vue {
 		this.doProperDisplay(this.tagId);
 	}
 
-	beforeDestroy() {
+	beforeUnmount() {
 		if (!this.tagPlacement || !this.tagUnit || !this.tagId) {
 			return;
 		}

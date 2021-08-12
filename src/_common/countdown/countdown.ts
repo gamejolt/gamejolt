@@ -16,7 +16,7 @@ export class AppCountdown extends Vue {
 		this.interval = window.setInterval(() => this.updateTimer(), 1000);
 	}
 
-	destroyed() {
+	unmounted() {
 		if (this.interval) {
 			window.clearInterval(this.interval);
 		}

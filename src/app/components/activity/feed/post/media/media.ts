@@ -53,7 +53,7 @@ export default class AppActivityFeedPostMedia extends Vue implements LightboxMed
 		this.activeMediaItem = this.post.media[0];
 	}
 
-	destroyed() {
+	unmounted() {
 		this.closeLightbox();
 	}
 

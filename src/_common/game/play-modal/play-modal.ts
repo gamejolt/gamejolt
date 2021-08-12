@@ -20,7 +20,7 @@ export default class AppGamePlayModal extends BaseModal {
 		document.body.classList.add('game-play-modal-open');
 	}
 
-	destroyed() {
+	unmounted() {
 		document.body.classList.remove('game-play-modal-open');
 	}
 

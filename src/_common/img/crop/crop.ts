@@ -152,7 +152,7 @@ export default class AppImgCrop extends Vue {
 		});
 	}
 
-	beforeDestroy() {
+	beforeUnmount() {
 		this.cropper.destroy();
 	}
 

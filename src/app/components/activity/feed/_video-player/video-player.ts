@@ -207,7 +207,7 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 		this.onIsFocusedChange();
 	}
 
-	beforeDestroy() {
+	beforeUnmount() {
 		this.clearVideoShouldLoadTimer();
 	}
 

@@ -40,7 +40,7 @@ export default class AppVideoPlayerShaka extends Vue {
 		return this.autoplay;
 	}
 
-	beforeDestroy() {
+	beforeUnmount() {
 		this.isDestroyed = true;
 		if (this.shakaPlayer) {
 			this.shakaPlayer.destroy();

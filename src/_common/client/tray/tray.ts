@@ -34,7 +34,7 @@ export class AppClientTray extends Vue {
 		this.createTray();
 	}
 
-	destroyed() {
+	unmounted() {
 		this.removeTray();
 	}
 

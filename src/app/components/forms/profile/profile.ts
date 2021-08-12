@@ -57,7 +57,7 @@ export default class FormProfile extends BaseForm<User> implements FormOnLoad, F
 		];
 	}
 
-	destroyed() {
+	unmounted() {
 		this.setFormTheme(null);
 	}
 

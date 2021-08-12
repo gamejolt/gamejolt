@@ -85,7 +85,7 @@ export default class AppVideo extends Vue {
 	 * This is ridiculous, but it's needed. Memory leaks if we don't!
 	 * https://dev.w3.org/html5/spec-author-view/video.html#best-practices-for-authors-using-media-elements
 	 */
-	beforeDestroy() {
+	beforeUnmount() {
 		this.trackVideoPlaytime();
 		if (this.video) {
 			// Empty all sources.

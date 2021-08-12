@@ -25,7 +25,7 @@ export default class AppShellSidebarContext extends Vue {
 		this.setHasContentSidebar(this.isShowingSidebar);
 	}
 
-	beforeDestroy() {
+	beforeUnmount() {
 		this.setHasContentSidebar(false);
 	}
 }

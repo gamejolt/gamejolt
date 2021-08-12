@@ -66,7 +66,7 @@ export default class AppFormControlPrefixedInput extends BaseFormControl {
 		this.applyValue(this.$refs.input.value);
 	}
 
-	beforeDestroy() {
+	beforeUnmount() {
 		if (this.resizeObserver instanceof ResizeObserver) {
 			this.resizeObserver.disconnect();
 			this.resizeObserver = null;

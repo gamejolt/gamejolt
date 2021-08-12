@@ -85,7 +85,7 @@ export default class AppActivityFeed extends Vue {
 		window.addEventListener('scroll', this.onScroll);
 	}
 
-	destroyed() {
+	unmounted() {
 		this.feed.scroll = this.scroll;
 		window.removeEventListener('scroll', this.onScroll);
 	}

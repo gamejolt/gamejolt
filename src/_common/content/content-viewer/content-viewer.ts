@@ -45,7 +45,7 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 		this.updatedSource();
 	}
 
-	destroyed() {
+	unmounted() {
 		this.closeLightbox();
 	}
 

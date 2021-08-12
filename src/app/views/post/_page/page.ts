@@ -174,7 +174,7 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 		this.recommendedPosts = FiresidePost.populate(payload.posts);
 	}
 
-	destroyed() {
+	unmounted() {
 		this.closeLightbox();
 	}
 

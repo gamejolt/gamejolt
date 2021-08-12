@@ -228,7 +228,7 @@ export default class AppActivityFeedPost extends Vue {
 		this.feedComponent = findRequiredVueParent(this, AppActivityFeed) as AppActivityFeedTS;
 	}
 
-	destroyed() {
+	unmounted() {
 		this.feedComponent = undefined as any;
 	}
 

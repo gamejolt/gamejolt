@@ -181,7 +181,7 @@ export default class AppPostControls extends Vue {
 		setCommentCount(this.commentStore, this.post.comment_count);
 	}
 
-	destroyed() {
+	unmounted() {
 		if (this.commentStore) {
 			releaseCommentStore(this.commentManager, this.commentStore);
 			this.commentStore = null;

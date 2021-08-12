@@ -287,7 +287,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 		}
 	}
 
-	beforeDestroy() {
+	beforeUnmount() {
 		if (this.focusWatcher instanceof FocusWatcher) {
 			this.focusWatcher.destroy();
 		}

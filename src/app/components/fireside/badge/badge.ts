@@ -48,7 +48,7 @@ export default class AppFiresideBadge extends Vue {
 		this.setupCheck();
 	}
 
-	destroyed() {
+	unmounted() {
 		this.destroyExpiryCheck();
 	}
 

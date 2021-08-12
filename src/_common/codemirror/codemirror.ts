@@ -77,7 +77,7 @@ export default class AppCodemirror extends Vue {
 		}
 	}
 
-	beforeDestroy() {
+	beforeUnmount() {
 		if (this.editor) {
 			this.editor.toTextArea();
 		}

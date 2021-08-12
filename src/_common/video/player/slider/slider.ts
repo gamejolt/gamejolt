@@ -117,7 +117,7 @@ export default class AppVideoPlayerSlider extends Vue {
 		window.removeEventListener('mouseup', this.onWindowMouseUp);
 	}
 
-	beforeDestroy() {
+	beforeUnmount() {
 		this.cleanupWindowListeners();
 	}
 

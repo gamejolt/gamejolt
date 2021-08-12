@@ -194,7 +194,7 @@ export default class AppVideoPlayer extends Vue {
 		this.$el.focus();
 	}
 
-	beforeDestroy() {
+	beforeUnmount() {
 		this.clearHideUITimer();
 	}
 

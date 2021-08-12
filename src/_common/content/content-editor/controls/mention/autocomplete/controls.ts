@@ -70,7 +70,7 @@ export default class AppContentEditorControlsMentionAutocompleteControls extends
 		this.isListening = true;
 	}
 
-	destroyed() {
+	unmounted() {
 		if (this.isListening) {
 			document.removeEventListener('keydown', this.onKeyDown);
 			this.isListening = false;

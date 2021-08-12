@@ -28,7 +28,7 @@ export default class FormGameDesign extends BaseForm<Game> {
 		return this.hasCustomError('thumbnail');
 	}
 
-	destroyed() {
+	unmounted() {
 		this.setFormTheme(null);
 	}
 

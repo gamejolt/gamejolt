@@ -257,7 +257,7 @@ export default class FormGameBuild
 		this.releaseForm.buildForms.push(this);
 	}
 
-	beforeDestroy() {
+	beforeUnmount() {
 		arrayRemove(this.releaseForm.buildForms, buildForm => buildForm === this);
 	}
 

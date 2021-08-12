@@ -47,7 +47,7 @@ export default class AppAdWidgetInner extends Vue {
 		this.$ad.addAd(this);
 	}
 
-	beforeDestroy() {
+	beforeUnmount() {
 		this.$ad.removeAd(this);
 		this.$ad.removeClickTracker(this.$el);
 	}

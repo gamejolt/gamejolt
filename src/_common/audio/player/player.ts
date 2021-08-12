@@ -40,7 +40,7 @@ export class AppAudioPlayer extends Vue {
 		});
 	}
 
-	destroyed() {
+	unmounted() {
 		this.clearWatcher();
 	}
 

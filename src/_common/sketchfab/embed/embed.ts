@@ -57,7 +57,7 @@ export default class AppSketchfabEmbed extends Vue {
 		this.resize$ = Screen.resizeChanges.subscribe(() => this.recalculateDimensions());
 	}
 
-	destroyed() {
+	unmounted() {
 		if (this.resize$) {
 			this.resize$.unsubscribe();
 			this.resize$ = undefined;

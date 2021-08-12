@@ -282,7 +282,7 @@ export class BaseRouteComponent extends Vue {
 		}
 	}
 
-	destroyed() {
+	unmounted() {
 		this.isRouteDestroyed = true;
 		this.routeDestroyed();
 	}

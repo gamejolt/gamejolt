@@ -66,7 +66,7 @@ export default class AppGameMediaBar extends Vue implements LightboxMediaSource 
 		}
 	}
 
-	destroyed() {
+	unmounted() {
 		this.closeLightbox();
 	}
 

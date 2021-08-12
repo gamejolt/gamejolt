@@ -45,7 +45,7 @@ export default class AppFiresideVideo extends Vue {
 		);
 	}
 
-	destroyed() {
+	unmounted() {
 		// We want to give a new lock some time to get acquired before shutting
 		// the stream down.
 		setTimeout(() => {

@@ -61,7 +61,7 @@ export default class AppStickerTarget extends Vue {
 		this.checkDisabledState();
 	}
 
-	beforeDestroy() {
+	beforeUnmount() {
 		unregisterStickerTarget(this.layer, this, this.controller);
 	}
 

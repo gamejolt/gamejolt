@@ -124,7 +124,7 @@ export class BaseForm<T> extends Vue {
 		});
 	}
 
-	destroyed() {
+	unmounted() {
 		if (this.changeDeregister) {
 			this.changeDeregister();
 			this.changeDeregister = undefined;

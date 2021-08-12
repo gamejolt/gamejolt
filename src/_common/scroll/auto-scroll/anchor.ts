@@ -60,7 +60,7 @@ export class AppAutoscrollAnchor extends Vue {
 		});
 	}
 
-	destroyed() {
+	unmounted() {
 		Scroll.autoscrollAnchor = undefined;
 
 		if (this.beforeRouteDeregister) {

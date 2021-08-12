@@ -27,7 +27,7 @@ export class AppScrollInview extends Vue {
 		this.parent.getContainer(this.config).observeItem(this);
 	}
 
-	destroyed() {
+	unmounted() {
 		this.parent.getContainer(this.config).unobserveItem(this);
 	}
 

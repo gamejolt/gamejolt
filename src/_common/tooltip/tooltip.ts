@@ -16,7 +16,7 @@ export default class TooltipComponent extends Vue {
 	private _popperInstance: null | Instance = null;
 	private _popperTimeout: null | NodeJS.Timer = null;
 
-	beforeDestroy() {
+	beforeUnmount() {
 		this.destroyPopper();
 	}
 

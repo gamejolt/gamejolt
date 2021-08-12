@@ -107,7 +107,7 @@ export default class AppChatWindowOutput extends Vue {
 		);
 	}
 
-	destroyed() {
+	unmounted() {
 		if (this.checkQueuedTimeout) {
 			clearTimeout(this.checkQueuedTimeout);
 			this.checkQueuedTimeout = undefined;

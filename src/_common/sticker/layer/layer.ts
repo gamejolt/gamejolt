@@ -43,7 +43,7 @@ export default class AppStickerLayer extends Vue {
 		);
 	}
 
-	beforeDestroy() {
+	beforeUnmount() {
 		unregisterStickerLayer(this.drawer, this.layer);
 		this.focusWatcherDeregister();
 	}

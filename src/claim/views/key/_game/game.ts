@@ -77,7 +77,7 @@ export default class AppKeyGame extends Vue {
 		}
 	}
 
-	destroyed() {
+	unmounted() {
 		store.commit('theme/clearPageTheme', ClaimGameThemeKey);
 	}
 

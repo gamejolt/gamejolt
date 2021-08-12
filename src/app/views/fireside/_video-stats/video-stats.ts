@@ -28,7 +28,7 @@ export default class AppFiresideVideoStats extends Vue {
 		}, 3000);
 	}
 
-	beforeDestroy() {
+	beforeUnmount() {
 		if (this.statsInterval) {
 			clearInterval(this.statsInterval);
 		}

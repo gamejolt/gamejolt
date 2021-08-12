@@ -198,7 +198,7 @@ export default class AppCommentWidget extends Vue {
 		await this.init();
 	}
 
-	destroyed() {
+	unmounted() {
 		if (this.store) {
 			this._releaseStore();
 		}

@@ -24,7 +24,7 @@ export default class AppFiresideDesktopAudio extends Vue {
 		startDesktopAudioPlayback(this.rtcUser);
 	}
 
-	beforeDestroy() {
+	beforeUnmount() {
 		stopDesktopAudioPlayback(this._myRtcUser);
 	}
 }

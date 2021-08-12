@@ -59,7 +59,7 @@ export default class AppHomeRecommendedUsers extends Vue {
 		this.shouldLog = false;
 	}
 
-	destroyed() {
+	unmounted() {
 		if (this.shouldLog) {
 			this.logActionsTaken();
 		}

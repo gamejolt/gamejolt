@@ -62,7 +62,7 @@ export default class BaseFormControl extends Vue {
 		}
 	}
 
-	destroyed() {
+	unmounted() {
 		if (this.form) {
 			const index = this.form.controls.findIndex(control => control === this);
 			this.form.controls.splice(index, 1);
