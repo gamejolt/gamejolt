@@ -30,7 +30,7 @@ export default class RouteHome extends BaseRouteComponent {
 	userBootstrapped!: AppStore['userBootstrapped'];
 
 	routeCreated() {
-		Meta.setTitle(null);
+		Meta.title = null;
 	}
 
 	routeResolved() {

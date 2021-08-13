@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import { Options } from 'vue-property-decorator';
-import { Device } from '../../../_common/device/device.service';
+import { getDeviceOS } from '../../../_common/device/device.service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 
 const ManifestUrl = 'https://d.gamejolt.net/data/client/manifest-2.json';
@@ -14,7 +14,7 @@ const ManifestUrl = 'https://d.gamejolt.net/data/client/manifest-2.json';
 export default class RouteDowngrade extends BaseRouteComponent {
 	downloadUrl = '';
 
-	readonly platform = Device.os();
+	readonly platform = getDeviceOS();
 
 	routeResolved(payload: any) {
 		let platform = '';

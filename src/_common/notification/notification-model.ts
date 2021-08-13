@@ -19,7 +19,7 @@ import { ForumTopic } from '../forum/topic/topic.model';
 import { GameLibraryGame } from '../game-library/game/game.model';
 import { Game } from '../game/game.model';
 import { GameRating } from '../game/rating/rating.model';
-import { Growls } from '../growls/growls.service';
+import { showErrorGrowl } from '../growls/growls.service';
 import { Mention } from '../mention/mention.model';
 import { Model } from '../model/model.service';
 import { Navigate } from '../navigate/navigate.service';
@@ -367,7 +367,7 @@ export class Notification extends Model {
 				}
 			} catch (e) {
 				console.error(e);
-				Growls.error(Translate.$gettext(`Couldn't go to notification.`));
+				showErrorGrowl(Translate.$gettext(`Couldn't go to notification.`));
 			}
 		}
 	}

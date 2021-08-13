@@ -1,9 +1,9 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
-import { Growls } from '../../growls/growls.service';
+import { showErrorGrowl } from '../../growls/growls.service';
 import { AppState, AppStore } from '../../store/app-store';
-import { AppTooltip } from '../../tooltip/tooltip-directive';
 import { TooltipPlacement } from '../../tooltip/tooltip-controller';
+import { AppTooltip } from '../../tooltip/tooltip-directive';
 
 @Options({
 	directives: {
@@ -41,7 +41,7 @@ export default class AppCommunityAddWidget extends Vue {
 			return;
 		}
 
-		Growls.error({
+		showErrorGrowl({
 			message: this.$gettext(
 				`You own too many communities. You must remove one before creating another.`
 			),

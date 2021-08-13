@@ -10,7 +10,7 @@ import {
 	FormOnSubmit,
 	FormOnSubmitError,
 } from '../../../../_common/form-vue/form.service';
-import { Growls } from '../../../../_common/growls/growls.service';
+import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import { Navigate } from '../../../../_common/navigate/navigate.service';
 import { ReferralEntry } from '../../../../_common/referral-entry/referral-entry.model';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
@@ -125,7 +125,7 @@ export default class FormFinancials
 	}
 
 	onSubmitError() {
-		Growls.error(this.$gettext('Something went wrong.'));
+		showErrorGrowl(this.$gettext('Something went wrong.'));
 	}
 
 	async linkPayPal() {
@@ -141,7 +141,7 @@ export default class FormFinancials
 			Navigate.gotoExternal(response.authUrl);
 		} catch (err) {
 			console.error(err);
-			Growls.error(this.$gettext('Could not get PayPal redirect URL.'));
+			showErrorGrowl(this.$gettext('Could not get PayPal redirect URL.'));
 		}
 	}
 }

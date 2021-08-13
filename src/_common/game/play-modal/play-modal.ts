@@ -1,5 +1,5 @@
 import { Options, Prop } from 'vue-property-decorator';
-import { Minbar } from '../../minbar/minbar.service';
+import { addMinbarItem, removeMinbarItem } from '../../minbar/minbar.service';
 import { BaseModal } from '../../modal/base';
 import { Game } from '../game.model';
 import { GameRatingGrowl } from '../rating-growl/rating-growl.service';
@@ -38,13 +38,13 @@ export default class AppGamePlayModal extends BaseModal {
 		(this.$el as HTMLElement).style.display = 'none';
 
 		// When this minbar item is clicked, it basically shows this modal again.
-		const minbarItem = Minbar.add({
+		const minbarItem = addMinbarItem({
 			title: this.game.title,
 			thumb: this.game.img_thumbnail,
 			isActive: true, // Only one game open at a time, so make it active.
 			onClick: () => {
 				// We remove the item from the minbar.
-				Minbar.remove(minbarItem);
+				removeMinbarItem(minbarItem);
 
 				// Then we show the modal again.
 				this.maximize();

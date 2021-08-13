@@ -7,7 +7,7 @@ import {
 	Community,
 	CommunityPresetChannelType,
 } from '../../../../../../../_common/community/community.model';
-import { Growls } from '../../../../../../../_common/growls/growls.service';
+import { showErrorGrowl } from '../../../../../../../_common/growls/growls.service';
 import AppLoading from '../../../../../../../_common/loading/loading.vue';
 import { BaseRouteComponent } from '../../../../../../../_common/route/route-component';
 import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
@@ -66,7 +66,7 @@ export default class RouteCommunitiesViewEditChannelsList extends BaseRouteCompo
 			await CommunityChannel.$saveSort(this.community.id, sortedIds);
 		} catch (e) {
 			console.error(e);
-			Growls.error(this.$gettext(`Could not save channel arrangement.`));
+			showErrorGrowl(this.$gettext(`Could not save channel arrangement.`));
 		}
 	}
 
@@ -83,7 +83,7 @@ export default class RouteCommunitiesViewEditChannelsList extends BaseRouteCompo
 			await CommunityChannel.$saveSortArchived(this.community.id, sortedIds);
 		} catch (e) {
 			console.error(e);
-			Growls.error(this.$gettext(`Could not save channel arrangement.`));
+			showErrorGrowl(this.$gettext(`Could not save channel arrangement.`));
 		}
 	}
 

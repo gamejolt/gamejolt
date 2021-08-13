@@ -12,7 +12,7 @@ import { Game } from '../../../../../_common/game/game.model';
 import { GameScreenshot } from '../../../../../_common/game/screenshot/screenshot.model';
 import { GameSketchfab } from '../../../../../_common/game/sketchfab/sketchfab.model';
 import { GameVideo } from '../../../../../_common/game/video/video.model';
-import { Growls } from '../../../../../_common/growls/growls.service';
+import { showInfoGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { Translate } from '../../../../../_common/translate/translate.service';
 import { store } from '../../../../store';
@@ -202,7 +202,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 
 		await this.game.$setStatus(Game.STATUS_VISIBLE);
 
-		Growls.success(
+		showSuccessGrowl(
 			Translate.$gettext('dash.games.overview.published_growl'),
 			Translate.$gettext('dash.games.overview.published_growl_title')
 		);
@@ -237,7 +237,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 
 		await this.game.$setStatus(Game.STATUS_HIDDEN);
 
-		Growls.info(
+		showInfoGrowl(
 			Translate.$gettext('Your game page is now unlisted.'),
 			Translate.$gettext('Game Unlisted')
 		);
@@ -254,7 +254,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 
 		await this.game.$setCanceled(true);
 
-		Growls.info(
+		showInfoGrowl(
 			Translate.$gettext('Your game is now canceled.'),
 			Translate.$gettext('Game Canceled')
 		);
@@ -271,7 +271,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 
 		await this.game.$setCanceled(false);
 
-		Growls.info(
+		showInfoGrowl(
 			Translate.$gettext('Your game is no longer canceled.'),
 			Translate.$gettext('Game Uncanceled')
 		);
@@ -289,7 +289,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 
 		await this.game.$remove();
 
-		Growls.info(
+		showInfoGrowl(
 			Translate.$gettext('dash.games.removed_growl'),
 			Translate.$gettext('dash.games.removed_growl_title')
 		);
@@ -314,7 +314,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 
 		await this.collaboration.$remove();
 
-		Growls.success(
+		showSuccessGrowl(
 			Translate.$gettext('You left the project. You will be missed! ;A;'),
 			Translate.$gettext('Left Project')
 		);

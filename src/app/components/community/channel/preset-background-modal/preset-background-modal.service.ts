@@ -3,11 +3,11 @@ import {
 	Community,
 	CommunityPresetChannelType,
 } from '../../../../../_common/community/community.model';
-import { Modal } from '../../../../../_common/modal/modal.service';
+import { showModal } from '../../../../../_common/modal/modal.service';
 
 export class CommunityChannelPresetBackgroundModal {
 	static async show(community: Community, presetType: CommunityPresetChannelType) {
-		return await Modal.show<Community>({
+		return await showModal<Community>({
 			modalId: 'CommunityChannelPresetBackground',
 			component: defineAsyncComponent(
 				() =>

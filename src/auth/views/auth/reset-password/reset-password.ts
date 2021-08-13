@@ -1,6 +1,6 @@
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
-import { Growls } from '../../../../_common/growls/growls.service';
+import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import FormResetPassword from '../../../components/forms/reset-password/reset-password.vue';
 
@@ -31,7 +31,7 @@ export default class RouteAuthResetPassword extends BaseRouteComponent {
 	}
 
 	onSubmitted() {
-		Growls.success(
+		showSuccessGrowl(
 			this.$gettext('auth.reset_password.success_growl'),
 			this.$gettext('auth.reset_password.success_growl_title')
 		);

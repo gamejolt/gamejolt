@@ -1,6 +1,6 @@
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
-import { Device } from '../../../../_common/device/device.service';
+import { getDeviceArch, getDeviceOS } from '../../../../_common/device/device.service';
 import { Game } from '../../../../_common/game/game.model';
 import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
 import { HistoryTick } from '../../../../_common/history-tick/history-tick-service';
@@ -29,8 +29,8 @@ export default class RouteLandingClient extends BaseRouteComponent {
 	private packageData: GamePackagePayloadModel | null = null;
 	private fallbackUrl = 'https://gamejolt.com';
 
-	readonly platform = Device.os();
-	readonly arch = Device.arch();
+	readonly platform = getDeviceOS();
+	readonly arch = getDeviceArch();
 	readonly Screen = Screen;
 
 	routeResolved(payload: any) {

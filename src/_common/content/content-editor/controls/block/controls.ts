@@ -3,7 +3,7 @@ import { Selection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
-import { Growls } from '../../../../growls/growls.service';
+import { showErrorGrowl } from '../../../../growls/growls.service';
 import { Screen } from '../../../../screen/screen-service';
 import { AppTooltip } from '../../../../tooltip/tooltip-directive';
 import { ContextCapabilities } from '../../../content-context';
@@ -141,7 +141,7 @@ export default class AppContentEditorBlockControls extends Vue {
 						const file = files[i];
 						const result = ContentEditorService.handleImageFile(this.view, file);
 						if (!result) {
-							Growls.error({
+							showErrorGrowl({
 								title: this.$gettext('Invalid file selected'),
 								message: this.$gettextInterpolate(
 									'"%{ filename }" is not a valid image file.',

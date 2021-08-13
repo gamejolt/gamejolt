@@ -9,7 +9,7 @@ import { ActivityFeedKey, ActivityFeedView } from '../view';
 import AppActivityFeedItemPlaceholder from './placeholder/placeholder.vue';
 
 const InviewConfig = new ScrollInviewConfig();
-const InviewConfigHydration = new ScrollInviewConfig({ margin: `${Screen.windowHeight}px` });
+const InviewConfigHydration = new ScrollInviewConfig({ margin: `${Screen.height}px` });
 
 /**
  * Can be used by the various feed components to track whether or not they're

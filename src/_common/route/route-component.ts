@@ -6,7 +6,7 @@ import { arrayRemove } from '../../utils/array';
 import { LocationRedirect } from '../../utils/router';
 import { ensureConfig } from '../config/config.service';
 import { HistoryCache } from '../history/cache/cache.service';
-import { Meta } from '../meta/meta-service';
+import { setMetaTitle } from '../meta/meta-service';
 import { Navigate } from '../navigate/navigate.service';
 import { PayloadError } from '../payload/payload-service';
 import { EventBus } from '../system/event/event-bus.service';
@@ -244,12 +244,12 @@ export class BaseRouteComponent extends Vue {
 
 		// Set up to watch the route title change.
 		if (this.routeTitle) {
-			Meta.setTitle(this.routeTitle, this.disableRouteTitleSuffix);
+			setMetaTitle(this.routeTitle, this.disableRouteTitleSuffix);
 		}
 
 		this.$watch('routeTitle', (title: string | null) => {
 			if (title) {
-				Meta.setTitle(title, this.disableRouteTitleSuffix);
+				setMetaTitle(title, this.disableRouteTitleSuffix);
 			}
 		});
 
@@ -432,7 +432,7 @@ export class BaseRouteComponent extends Vue {
 		// do this outside the watcher that we set up in "created()" so that SSR
 		// also gets updated.
 		if (this.routeTitle) {
-			Meta.setTitle(this.routeTitle, this.disableRouteTitleSuffix);
+			setMetaTitle(this.routeTitle, this.disableRouteTitleSuffix);
 		}
 
 		// We only want to emit the routeChangeAfter event once during a route

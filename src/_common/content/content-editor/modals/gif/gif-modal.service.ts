@@ -1,4 +1,4 @@
-import { Modal } from '../../../../modal/modal.service';
+import { showModal } from '../../../../modal/modal.service';
 import AppContentEditorGifModal from './gif-modal.vue';
 
 export type Category = {
@@ -29,7 +29,7 @@ export class ContentEditorGifModal {
 	static categories?: Category[];
 
 	static async show() {
-		return await Modal.show<SearchResult>({
+		return await showModal<SearchResult>({
 			modalId: 'ContentEditorGif',
 			component: AppContentEditorGifModal,
 			size: 'lg',

@@ -5,7 +5,7 @@ import {
 	CommunityNotifyOptions,
 	FiresidePost,
 } from '../../../../../_common/fireside/post/post-model';
-import { Modal } from '../../../../../_common/modal/modal.service';
+import { showModal } from '../../../../../_common/modal/modal.service';
 
 export type CommunityMovePostModalResult = CommunityNotifyOptions & {
 	channel: CommunityChannel;
@@ -17,7 +17,7 @@ export class CommunityMovePostModal {
 		post: FiresidePost,
 		channels: CommunityChannel[]
 	) {
-		return await Modal.show<CommunityMovePostModalResult>({
+		return await showModal<CommunityMovePostModalResult>({
 			modalId: 'CommunityMovePost',
 			component: defineAsyncComponent(
 				() => import(/* webpackChunkName: "CommunityMovePostModal" */ './modal.vue')

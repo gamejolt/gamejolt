@@ -2,7 +2,7 @@ import { Options } from 'vue-property-decorator';
 import { Api } from '../../../_common/api/api.service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { Game } from '../../../_common/game/game.model';
-import { Growls } from '../../../_common/growls/growls.service';
+import { showErrorGrowl } from '../../../_common/growls/growls.service';
 import AppMediaItemCover from '../../../_common/media-item/cover/cover.vue';
 import { Navigate } from '../../../_common/navigate/navigate.service';
 import { Order } from '../../../_common/order/order.model';
@@ -67,7 +67,7 @@ export default class RouteCheckout extends BaseRouteComponent {
 		}
 
 		if (!redirect) {
-			Growls.error(this.$gettext('Could not redirect.'));
+			showErrorGrowl(this.$gettext('Could not redirect.'));
 			return;
 		}
 

@@ -1,10 +1,10 @@
 import { defineAsyncComponent } from 'vue';
 import { CommunityCompetition } from '../../../../../_common/community/competition/competition.model';
-import { Modal } from '../../../../../_common/modal/modal.service';
+import { showModal } from '../../../../../_common/modal/modal.service';
 
 export class CommunityCompetitionHeaderModal {
 	static async show(competition: CommunityCompetition) {
-		return await Modal.show<CommunityCompetition>({
+		return await showModal<CommunityCompetition>({
 			modalId: 'CommunityCompetitionHeader',
 			component: defineAsyncComponent(
 				() =>

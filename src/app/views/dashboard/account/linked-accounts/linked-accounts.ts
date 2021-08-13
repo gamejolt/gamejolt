@@ -1,6 +1,6 @@
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
-import { Growls } from '../../../../../_common/growls/growls.service';
+import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import {
 	getLinkedAccountProviderDisplayName,
 	LinkedAccount,
@@ -100,7 +100,7 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 		if (response.success) {
 			this.accounts = LinkedAccount.populate(response.accounts);
 			const providerName = getLinkedAccountProviderDisplayName(provider);
-			Growls.success(
+			showSuccessGrowl(
 				Translate.$gettextInterpolate(
 					`Your %{ provider } account has been unlinked from the site.`,
 					{ provider: providerName }
@@ -116,7 +116,7 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 					return;
 				}
 
-				Growls.success(
+				showSuccessGrowl(
 					this.$gettext('Your new password has been set. You can now log in with it.'),
 					this.$gettext('Password Set')
 				);
@@ -124,7 +124,7 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 				// Try to unlink again once they've set one!
 				await this.onUnlink(provider);
 			} else {
-				Growls.error(this.$gettext('Failed to unlink account from the site.'));
+				showErrorGrowl(this.$gettext('Failed to unlink account from the site.'));
 			}
 		}
 		this.loading = false;
@@ -152,14 +152,14 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 				this.accounts = LinkedAccount.populate(payload.accounts);
 			}
 
-			Growls.success(
+			showSuccessGrowl(
 				this.$gettextInterpolate('Changed the selected Tumblr blog to %{ title }.', {
 					title: tumblrBlog.title,
 				}),
 				this.$gettext('Tumblr Blog Changed')
 			);
 		} else {
-			Growls.error(
+			showErrorGrowl(
 				this.$gettext(
 					'Failed to change to new Tumblr blog. Maybe try to sync your Tumblr account.'
 				)
@@ -191,14 +191,14 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 				this.accounts = LinkedAccount.populate(payload.accounts);
 			}
 
-			Growls.success(
+			showSuccessGrowl(
 				this.$gettextInterpolate(`The Tumblr Blog %{ title } has been unlinked.`, {
 					title: tempBlogTitle,
 				}),
 				this.$gettext('Tumblr Blog Unlinked')
 			);
 		} else {
-			Growls.error(this.$gettext(`Could not unlink your Tumblr Blog.`));
+			showErrorGrowl(this.$gettext(`Could not unlink your Tumblr Blog.`));
 		}
 
 		this.loading = false;

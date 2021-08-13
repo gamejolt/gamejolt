@@ -1,6 +1,6 @@
 import { Options } from 'vue-property-decorator';
 import * as _ClientMod from '../../../../_common/client/client.service';
-import { Growls } from '../../../../_common/growls/growls.service';
+import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { AppProgressPoller } from '../../../../_common/progress/poller/poller';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
@@ -55,7 +55,7 @@ export default class RouteDashLinking extends BaseRouteComponent {
 	}
 
 	failed() {
-		Growls.error({
+		showErrorGrowl({
 			message: this.$gettext('Could not link.'),
 			title: this.$gettext('Link Failed'),
 			sticky: true,

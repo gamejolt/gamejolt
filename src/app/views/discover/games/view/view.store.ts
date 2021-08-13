@@ -2,7 +2,7 @@ import { namespace } from 'vuex-class';
 import { NamespaceVuexStore, VuexModule, VuexMutation, VuexStore } from '../../../../../utils/vuex';
 import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
 import { Comment } from '../../../../../_common/comment/comment-model';
-import { Device } from '../../../../../_common/device/device.service';
+import { getDeviceArch, getDeviceOS } from '../../../../../_common/device/device.service';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { GameBuild } from '../../../../../_common/game/build/build.model';
 import { CustomMessage as CustomGameMessage, Game } from '../../../../../_common/game/game.model';
@@ -113,8 +113,8 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 	}
 
 	get installableBuilds() {
-		const os = Device.os();
-		const arch = Device.arch();
+		const os = getDeviceOS();
+		const arch = getDeviceArch();
 		return Game.pluckInstallableBuilds(this.packages, os, arch);
 	}
 

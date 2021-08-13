@@ -1,10 +1,10 @@
 import { defineAsyncComponent } from 'vue';
-import { Modal } from '../../../../_common/modal/modal.service';
+import { showModal } from '../../../../_common/modal/modal.service';
 import { GameCollection } from '../../game/collection/collection.model';
 
 export class GamePlaylistSaveModal {
 	static async show(collection?: GameCollection) {
-		return await Modal.show<GameCollection>({
+		return await showModal<GameCollection>({
 			modalId: 'GamePlaylistSave',
 			component: defineAsyncComponent(
 				() => import(/* webpackChunkName: "GamePlaylistSaveModal" */ './save-modal.vue')

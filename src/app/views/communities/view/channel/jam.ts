@@ -10,7 +10,7 @@ import AppContentViewer from '../../../../../_common/content/content-viewer/cont
 import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
 import { date } from '../../../../../_common/filters/date';
 import { number } from '../../../../../_common/filters/number';
-import { Growls } from '../../../../../_common/growls/growls.service';
+import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../../_common/illustration/illustration.vue';
 import {
 	asyncRouteLoader,
@@ -157,7 +157,7 @@ export default class RouteCommunitiesViewChannelJam extends BaseRouteComponent {
 		if (result) {
 			this.userEntries.unshift(result);
 
-			Growls.success(this.$gettext(`Successfully submitted your entry to the jam!`));
+			showSuccessGrowl(this.$gettext(`Successfully submitted your entry to the jam!`));
 
 			// Triggers the grid to refetch.
 			this.competition.entry_count++;

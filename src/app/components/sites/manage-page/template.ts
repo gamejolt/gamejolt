@@ -1,6 +1,6 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Environment } from '../../../../_common/environment/environment.service';
-import { Growls } from '../../../../_common/growls/growls.service';
+import { showErrorGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { Site } from '../../../../_common/site/site-model';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import FormSiteSettings from '../../forms/site/settings/settings.vue';
@@ -41,13 +41,13 @@ export default class AppSitesManagePageTemplate extends Vue {
 
 		this.site.$activate().catch(e => {
 			if (e.errors && e.errors.domain_in_use) {
-				Growls.error(this.$gettext('Domain is already in use in another site.'));
+				showErrorGrowl(this.$gettext('Domain is already in use in another site.'));
 			}
 		});
 	}
 
 	onSettingsSaved() {
-		Growls.success(
+		showSuccessGrowl(
 			this.$gettext(`Your site settings have been saved.`),
 			this.$gettext(`Settings Saved`)
 		);

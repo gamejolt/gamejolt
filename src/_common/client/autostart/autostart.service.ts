@@ -1,6 +1,6 @@
 import { Autostarter } from 'client-voodoo';
 import * as path from 'path';
-import { Device } from '../../device/device.service';
+import { getDeviceOS } from '../../device/device.service';
 import { SettingAutostartClient } from '../../settings/settings.service';
 import { Client } from '../client.service';
 
@@ -16,7 +16,7 @@ export class ClientAutoStart {
 			return false;
 		}
 
-		return Device.os() === 'windows';
+		return getDeviceOS() === 'windows';
 	}
 
 	static async set() {

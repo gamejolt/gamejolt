@@ -1,7 +1,7 @@
 import AgoraRTC, { IAgoraRTCClient, IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng';
 import { arrayRemove } from '../../../utils/array';
 import { debounce, sleep } from '../../../utils/utils';
-import { Growls } from '../../../_common/growls/growls.service';
+import { showInfoGrowl } from '../../../_common/growls/growls.service';
 import { Navigate } from '../../../_common/navigate/navigate.service';
 import { Translate } from '../../../_common/translate/translate.service';
 import { User } from '../../../_common/user/user.model';
@@ -476,7 +476,7 @@ function _handleStreamingBegin(rtc: FiresideRTC) {
 		setAudioPlayback(user, false);
 	}
 
-	Growls.info({
+	showInfoGrowl({
 		title: Translate.$gettext(`Muted Fireside`),
 		message: Translate.$gettext(
 			`Your Fireside has been muted locally since you're streaming in it.`

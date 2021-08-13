@@ -1,6 +1,6 @@
 import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { Growls } from '../../../../../_common/growls/growls.service';
+import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import { Translate } from '../../../../../_common/translate/translate.service';
@@ -33,7 +33,7 @@ export default class RouteDashAccountEdit extends BaseRouteComponent {
 	}
 
 	onProfileSaved() {
-		Growls.success(this.$gettext(`Your profile has been updated. Right on!`));
+		showSuccessGrowl(this.$gettext(`Your profile has been updated. Right on!`));
 		Scroll.to(0);
 	}
 }

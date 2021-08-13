@@ -1,7 +1,10 @@
 import { defineAsyncComponent } from '@vue/runtime-core';
 import { Inject, Options, Prop, Provide, Vue } from 'vue-property-decorator';
 import { findVueParent, propOptional } from '../../../utils/vue';
-import { ContentFocus } from '../../content-focus/content-focus.service';
+import {
+	ContentFocus,
+	registerContentFocusWatcher,
+} from '../../content-focus/content-focus.service';
 import {
 	DrawerStore,
 	DrawerStoreKey,
@@ -38,7 +41,8 @@ export default class AppStickerLayer extends Vue {
 
 		// We tell the ContentFocus service that content is unfocused when the
 		// mask is active.
-		this.focusWatcherDeregister = ContentFocus.registerWatcher(
+		this.focusWatcherDeregister = registerContentFocusWatcher(
+			ContentFocus,
 			() => !this.layer.isShowingDrawer
 		);
 	}

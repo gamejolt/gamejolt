@@ -4,7 +4,7 @@ import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { arrayGroupBy } from '../../../../utils/array';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
-import { Device } from '../../../../_common/device/device.service';
+import { getDeviceArch, getDeviceOS } from '../../../../_common/device/device.service';
 import { Game } from '../../../../_common/game/game.model';
 import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
 import { GamePackagePurchaseModal } from '../../../../_common/game/package/purchase-modal/purchase-modal.service';
@@ -82,8 +82,8 @@ export default class AppClientGameButtons extends Vue {
 	packageDataPromise: Promise<GamePackagePayloadModel> | null = null;
 
 	readonly LocalDbPackage = LocalDbPackage;
-	readonly os = Device.os();
-	readonly arch = Device.arch();
+	readonly os = getDeviceOS();
+	readonly arch = getDeviceArch();
 
 	@Emit('show-launch-options')
 	emitShowLaunchOptions() {}

@@ -18,7 +18,7 @@ import {
 	FormOnSubmitSuccess,
 } from '../../../../../_common/form-vue/form.service';
 import AppFormLegend from '../../../../../_common/form-vue/legend/legend.vue';
-import { Growls } from '../../../../../_common/growls/growls.service';
+import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoadingFade from '../../../../../_common/loading/fade/fade.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { Payload } from '../../../../../_common/payload/payload-service';
@@ -190,14 +190,14 @@ export default class AppFormPostVideo
 		// to show an error message. It's also useless to cancel the upload
 		// again, since it was just cancelled.
 		if (!Payload.isCancelledUpload($payload)) {
-			Growls.error(this.$gettext('Your video was not submitted successfully.'));
+			showErrorGrowl(this.$gettext('Your video was not submitted successfully.'));
 			this.cancelUpload();
 		}
 	}
 
 	onSubmitSuccess($payload: any) {
 		if (!$payload.video) {
-			Growls.error(this.$gettext('Your video was not submitted successfully.'));
+			showErrorGrowl(this.$gettext('Your video was not submitted successfully.'));
 
 			this.cancelUpload();
 			return;
@@ -261,12 +261,12 @@ export default class AppFormPostVideo
 	onProcessingComplete({ video }: any) {
 		// Final progress update must have the result video set.
 		if (!video) {
-			Growls.error(this.$gettext('The server did not return the processed video.'));
+			showErrorGrowl(this.$gettext('The server did not return the processed video.'));
 			this.cancelUpload();
 			return;
 		}
 
-		Growls.success({
+		showSuccessGrowl({
 			title: this.$gettext('📽 Video uploaded!'),
 			message: this.$gettext(
 				'Your video was successfully processed. The post can now be published.'
@@ -281,14 +281,14 @@ export default class AppFormPostVideo
 
 	onProcessingError(payload: any) {
 		if (payload.reason) {
-			Growls.error(
+			showErrorGrowl(
 				this.$gettextInterpolate(
 					'The server was unable to finish processing your video. Status: %{ reason }',
 					{ reason: (payload.reason as string).toUpperCase().replace('-', '_') }
 				)
 			);
 		} else {
-			Growls.error(
+			showErrorGrowl(
 				this.$gettext(
 					'The server was unable to finish processing your video. Status: GENERIC_FAILURE'
 				)

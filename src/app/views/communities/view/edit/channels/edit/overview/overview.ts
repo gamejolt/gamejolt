@@ -1,7 +1,10 @@
 import { Inject, Options } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../../../../utils/array';
 import { CommunityChannel } from '../../../../../../../../_common/community/channel/channel.model';
-import { Growls } from '../../../../../../../../_common/growls/growls.service';
+import {
+	showErrorGrowl,
+	showSuccessGrowl,
+} from '../../../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import { BaseRouteComponent } from '../../../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../../../_common/screen/screen-service';
@@ -81,7 +84,7 @@ export default class RouteCommunitiesViewEditChannelsOverview extends BaseRouteC
 				arrayRemove(this.community.channels!, i => i.id === this.channel.id);
 				this.community.has_archived_channels = true;
 
-				Growls.success(this.$gettext(`Channel is now archived.`));
+				showSuccessGrowl(this.$gettext(`Channel is now archived.`));
 				Scroll.to(0);
 			}
 		}
@@ -107,12 +110,12 @@ export default class RouteCommunitiesViewEditChannelsOverview extends BaseRouteC
 					this.community.has_archived_channels = false;
 				}
 
-				Growls.success(this.$gettext(`Channel was restored from the archive.`));
+				showSuccessGrowl(this.$gettext(`Channel was restored from the archive.`));
 				Scroll.to(0);
 			} catch (payload) {
 				if (payload.errors) {
 					if (payload.errors['too_many_channels']) {
-						Growls.error(
+						showErrorGrowl(
 							this.$gettext(
 								`There are too many public channels in this community. Remove or archive another channel before restoring this one.`
 							)

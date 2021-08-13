@@ -4,7 +4,7 @@ import { Api } from '../../../../../../../../../../_common/api/api.service';
 import { CommunityCompetitionAward } from '../../../../../../../../../../_common/community/competition/award/award.model';
 import { CommunityCompetitionEntryAward } from '../../../../../../../../../../_common/community/competition/entry/award/award.model';
 import { CommunityCompetitionEntry } from '../../../../../../../../../../_common/community/competition/entry/entry.model';
-import { Growls } from '../../../../../../../../../../_common/growls/growls.service';
+import { showErrorGrowl } from '../../../../../../../../../../_common/growls/growls.service';
 import AppLoadingFade from '../../../../../../../../../../_common/loading/fade/fade.vue';
 import AppLoading from '../../../../../../../../../../_common/loading/loading.vue';
 import AppPagination from '../../../../../../../../../../_common/pagination/pagination.vue';
@@ -178,7 +178,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 			await CommunityCompetitionEntryAward.$saveSort(this.award.id, sortedIds);
 		} catch (e) {
 			console.error(e);
-			Growls.error(this.$gettext(`Could not save entry arrangement.`));
+			showErrorGrowl(this.$gettext(`Could not save entry arrangement.`));
 		}
 	}
 

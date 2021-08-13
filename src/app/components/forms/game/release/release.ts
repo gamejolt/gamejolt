@@ -17,7 +17,7 @@ import { GameBuildLaunchOption } from '../../../../../_common/game/build/launch-
 import { Game } from '../../../../../_common/game/game.model';
 import { GamePackage } from '../../../../../_common/game/package/package.model';
 import { GameRelease } from '../../../../../_common/game/release/release.model';
-import { Growls } from '../../../../../_common/growls/growls.service';
+import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Timezone, TimezoneData } from '../../../../../_common/timezone/timezone.service';
@@ -170,7 +170,7 @@ export default class FormGameRelease
 		await build.$remove(this.game);
 		arrayRemove(this.builds, _build => _build.id === build.id);
 
-		Growls.success(
+		showSuccessGrowl(
 			this.$gettext('dash.games.releases.builds.remove_build_growl'),
 			this.$gettext('dash.games.releases.builds.remove_build_growl_title')
 		);
@@ -194,7 +194,7 @@ export default class FormGameRelease
 		this.setField('should_publish', true);
 		await this.save();
 
-		Growls.success(
+		showSuccessGrowl(
 			this.$gettext('dash.games.releases.manage.publish_release_growl'),
 			this.$gettext('dash.games.releases.manage.publish_release_growl_title')
 		);
@@ -238,8 +238,8 @@ export default class FormGameRelease
 	private async fetchTimezones() {
 		// Get timezones list.
 		this.timezones = await Timezone.getGroupedTimezones();
-		for (let region in this.timezones) {
-			for (let tz of this.timezones[region]) {
+		for (const region in this.timezones) {
+			for (const tz of this.timezones[region]) {
 				let offset = '';
 				if (tz.o > 0) {
 					offset = `+${tz.o / 3600}:00`;
@@ -252,7 +252,7 @@ export default class FormGameRelease
 	}
 
 	private timezoneByName(timezone: string) {
-		for (let region in this.timezones) {
+		for (const region in this.timezones) {
 			const tz = this.timezones[region].find(_tz => _tz.i === timezone);
 			if (tz) {
 				return tz;

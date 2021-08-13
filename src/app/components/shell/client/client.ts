@@ -1,5 +1,5 @@
 import { Options, Vue } from 'vue-property-decorator';
-import { Device } from '../../../../_common/device/device.service';
+import { getDeviceOS } from '../../../../_common/device/device.service';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import AppClientIntro from '../../client/intro/intro.vue';
 import { AppClientSystemProgress } from '../../client/system-progress/system-progress';
@@ -16,6 +16,6 @@ export default class AppShellClient extends Vue {
 	isShowingIntro = true;
 
 	get os() {
-		return Device.os();
+		return getDeviceOS();
 	}
 }

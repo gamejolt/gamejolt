@@ -1,40 +1,40 @@
+import { reactive } from '@vue/reactivity';
 import { Logger, MsgProgress, PatcherState, SelfUpdater, SelfUpdaterInstance } from 'client-voodoo';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import { LocalDb } from '../../app/components/client/local-db/local-db.service';
-import { makeObservableService } from '../../utils/vue';
 import { Environment } from '../environment/environment.service';
 import { Navigate } from '../navigate/navigate.service';
 import { Client } from './client.service';
 
 export type ClientUpdateStatus = 'checking' | 'none' | 'fetching' | 'ready' | 'error';
 
-export abstract class ClientUpdater {
-	private static initPromise: Promise<void> | null = null;
-	private static initPromiseResolver: Function = null as any;
+class ClientUpdaterService {
+	private initPromise: Promise<void> | null = null;
+	private initPromiseResolver: Function = null as any;
 
-	private static db: LocalDb = null as any;
+	private db: LocalDb = null as any;
 
 	// Updater fields
-	private static myClientUpdateStatus: ClientUpdateStatus = 'none';
-	private static myClientUpdateProgress: MsgProgress | null = null;
+	private myClientUpdateStatus: ClientUpdateStatus = 'none';
+	private myClientUpdateProgress: MsgProgress | null = null;
 
-	private static updaterInstance: SelfUpdaterInstance | null = null;
-	private static updaterInstanceBuilder: Promise<SelfUpdaterInstance> | null = null;
+	private updaterInstance: SelfUpdaterInstance | null = null;
+	private updaterInstanceBuilder: Promise<SelfUpdaterInstance> | null = null;
 
-	static get clientUpdateStatus() {
+	get clientUpdateStatus() {
 		return this.myClientUpdateStatus;
 	}
 
-	static get clientUpdateProgress() {
+	get clientUpdateProgress() {
 		return this.myClientUpdateProgress;
 	}
 
-	static get hasUpdaterConnectivity() {
+	get hasUpdaterConnectivity() {
 		return this.updaterInstance && this.updaterInstance.controller.connected;
 	}
 
-	private static setClientUpdateStatus(status: ClientUpdateStatus) {
+	private setClientUpdateStatus(status: ClientUpdateStatus) {
 		console.log('set client update state: ' + status);
 		this.myClientUpdateStatus = status;
 
@@ -43,11 +43,11 @@ export abstract class ClientUpdater {
 		}
 	}
 
-	private static setClientUpdateProgress(progress: MsgProgress | null) {
+	private setClientUpdateProgress(progress: MsgProgress | null) {
 		this.myClientUpdateProgress = progress;
 	}
 
-	static async init() {
+	async init() {
 		if (this.initPromise) {
 			return this.initPromise;
 		}
@@ -76,7 +76,7 @@ export abstract class ClientUpdater {
 		this.initPromiseResolver();
 	}
 
-	private static async _migrateFrom0_12_3() {
+	private async _migrateFrom0_12_3() {
 		// The new dataPath is different than the old 0.12.3 dataPath,
 		// and is also different for each OS, so we find the root of the data path by crawling up the directory tree
 		// till we end up at the root of client data folder.
@@ -117,15 +117,15 @@ export abstract class ClientUpdater {
 
 					const indexeddb = data.indexeddb;
 
-					for (let gameId in indexeddb.games) {
+					for (const gameId in indexeddb.games) {
 						this.db.games.put(indexeddb.games[gameId]);
 					}
-					for (let packageId in indexeddb.packages) {
+					for (const packageId in indexeddb.packages) {
 						this.db.packages.put(indexeddb.packages[packageId]);
 					}
 					await Promise.all([this.db.games.save(), this.db.packages.save()]);
 
-					for (let key of Object.keys(data.localStorage)) {
+					for (const key of Object.keys(data.localStorage)) {
 						localStorage.setItem(key, data.localStorage[key]);
 					}
 
@@ -152,7 +152,7 @@ export abstract class ClientUpdater {
 		}
 	}
 
-	static async checkForClientUpdates() {
+	async checkForClientUpdates() {
 		if (!GJ_WITH_UPDATER) {
 			return;
 		}
@@ -199,7 +199,7 @@ export abstract class ClientUpdater {
 		}
 	}
 
-	static async updateClient() {
+	async updateClient() {
 		if (!GJ_WITH_UPDATER) {
 			return;
 		}
@@ -220,11 +220,11 @@ export abstract class ClientUpdater {
 		}
 	}
 
-	private static async ensureUpdaterInstance(): Promise<SelfUpdaterInstance> {
+	private async ensureUpdaterInstance(): Promise<SelfUpdaterInstance> {
 		return this.updaterInstance || (await this.createUpdaterInstance());
 	}
 
-	private static async createUpdaterInstance() {
+	private async createUpdaterInstance() {
 		if (this.updaterInstanceBuilder) {
 			return this.updaterInstanceBuilder;
 		}
@@ -297,7 +297,7 @@ export abstract class ClientUpdater {
 		return builder;
 	}
 
-	private static async disposeUpdaterInstance(instance: SelfUpdaterInstance) {
+	private async disposeUpdaterInstance(instance: SelfUpdaterInstance) {
 		// Try to cleanly disconnect and dispose of the controller so we can try again with a new one.
 		try {
 			instance.controller.disconnect();
@@ -314,7 +314,7 @@ export abstract class ClientUpdater {
 
 	// Queries the current state of joltron. We might already by in the middle of an update,
 	// or even ready to apply an update that finished processing.
-	private static async queryUpdaterState(instance: SelfUpdaterInstance) {
+	private async queryUpdaterState(instance: SelfUpdaterInstance) {
 		console.log('Checking current status of joltron...');
 		const state = await instance.controller.sendGetState(false, 5000);
 		console.log('Current joltron status: ');
@@ -341,4 +341,4 @@ export abstract class ClientUpdater {
 	}
 }
 
-makeObservableService(ClientUpdater);
+export const ClientUpdater = reactive(new ClientUpdaterService()) as ClientUpdaterService;

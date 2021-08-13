@@ -5,7 +5,7 @@ import { Store } from '../../../app/store';
 import { CommunityJoinLocation } from '../../analytics/analytics.service';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { number } from '../../filters/number';
-import { Growls } from '../../growls/growls.service';
+import { showErrorGrowl } from '../../growls/growls.service';
 import { AppStore } from '../../store/app-store';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 import { Community } from '../community.model';
@@ -83,13 +83,13 @@ export default class AppCommunityJoinWidget extends Vue {
 					message = this.$gettext(`You already joined too many communities!`);
 				}
 
-				Growls.error(message);
+				showErrorGrowl(message);
 			}
 		} else {
 			try {
 				await this.leaveCommunity({ community: this.community, location: this.location });
 			} catch (e) {
-				Growls.error(this.$gettext(`For some reason we couldn't leave this community.`));
+				showErrorGrowl(this.$gettext(`For some reason we couldn't leave this community.`));
 			}
 		}
 

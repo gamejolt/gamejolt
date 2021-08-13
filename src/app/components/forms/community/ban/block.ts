@@ -5,7 +5,7 @@ import { Community } from '../../../../../_common/community/community.model';
 import AppFormControlPrefixedInput from '../../../../../_common/form-vue/control/prefixed-input/prefixed-input.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
 import { BaseForm, FormOnInit, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
-import { Growls } from '../../../../../_common/growls/growls.service';
+import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
 import {
 	getCommunityBlockReasons,
@@ -80,7 +80,7 @@ export default class FormCommunityBlock
 
 		if (!response.success) {
 			if (response.errors.collaborator) {
-				Growls.error({
+				showErrorGrowl({
 					title: this.$gettext('Collaborators cannot be blocked'),
 					message: this.$gettextInterpolate(
 						'%{ user } is a Collaborator on this Community. Remove them from the collaborators list first to block them.',
@@ -109,13 +109,13 @@ export default class FormCommunityBlock
 					}
 				);
 
-				Growls.success({
+				showSuccessGrowl({
 					message: this.$gettextInterpolate(message, {
 						user: this.formModel.username,
 					}),
 				});
 			} else {
-				Growls.success({
+				showSuccessGrowl({
 					message: this.$gettextInterpolate(
 						'%{ user } was blocked from this Community.',
 						{

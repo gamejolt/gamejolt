@@ -1,4 +1,4 @@
-import { Modal } from '../../../../modal/modal.service';
+import { showModal } from '../../../../modal/modal.service';
 import AppContentEditorLinkModal from './link-modal.vue';
 
 export type LinkData = {
@@ -8,7 +8,7 @@ export type LinkData = {
 
 export class ContentEditorLinkModal {
 	static async show(selectedText: string) {
-		return await Modal.show<LinkData>({
+		return await showModal<LinkData>({
 			modalId: 'ContentEditorLink',
 			component: AppContentEditorLinkModal,
 			size: 'sm',

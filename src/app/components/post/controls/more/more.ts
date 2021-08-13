@@ -10,7 +10,7 @@ import { Environment } from '../../../../../_common/environment/environment.serv
 import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Game } from '../../../../../_common/game/game.model';
-import { Growls } from '../../../../../_common/growls/growls.service';
+import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
 import { getLinkedAccountPlatformIcon } from '../../../../../_common/linked-account/linked-account.model';
 import AppPopper from '../../../../../_common/popper/popper.vue';
 import { ReportModal } from '../../../../../_common/report/modal/modal.service';
@@ -132,7 +132,7 @@ export default class AppPostControlsMore extends Vue {
 		} catch (e) {
 			console.error('Failed to move community post to a channel');
 			console.error(e);
-			Growls.error(this.$gettext('Could not move the post, try again later.'));
+			showErrorGrowl(this.$gettext('Could not move the post, try again later.'));
 		}
 	}
 

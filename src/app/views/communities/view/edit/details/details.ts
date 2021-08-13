@@ -4,7 +4,7 @@ import { enforceLocation } from '../../../../../../utils/router';
 import AppAlertDismissable from '../../../../../../_common/alert/dismissable/dismissable.vue';
 import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbnail/img/img.vue';
 import AppEditableOverlay from '../../../../../../_common/editable-overlay/editable-overlay.vue';
-import { Growls } from '../../../../../../_common/growls/growls.service';
+import { showInfoGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import { BaseRouteComponent } from '../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
@@ -79,7 +79,7 @@ export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent 
 		await this.community.$remove();
 		await this.leaveCommunityAction(this.community);
 
-		Growls.info(
+		showInfoGrowl(
 			this.$gettext(`Your community has been removed from the site.`),
 			this.$gettext(`Community Removed`)
 		);
@@ -103,7 +103,7 @@ export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent 
 		await this.collaborator.$remove();
 		await this.leaveCommunityAction(this.community);
 
-		Growls.success(
+		showSuccessGrowl(
 			this.$gettext(`You left the community. You will be missed! ;A;`),
 			this.$gettext(`Left Community`)
 		);

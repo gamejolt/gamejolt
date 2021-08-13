@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import { RequestOptions } from '../api/api.service';
 import { Environment } from '../environment/environment.service';
-import { Growls } from '../growls/growls.service';
+import { showErrorGrowl } from '../growls/growls.service';
 import { Seo } from '../seo/seo.service';
 import { WithAppStore } from '../store/app-store';
 import { Translate } from '../translate/translate.service';
@@ -232,7 +232,7 @@ export class Payload {
 		} else if (error.type === PayloadError.ERROR_INVALID) {
 			this.store.commit('app/setError', 500);
 		} else if (error.type === PayloadError.ERROR_RATE_LIMIT) {
-			Growls.error({
+			showErrorGrowl({
 				title: Translate.$gettext(`Whoa there, slow down!`),
 				message: Translate.$gettext(
 					`Looks like you are doing that too much. Slow down, then try again in a few minutes.`

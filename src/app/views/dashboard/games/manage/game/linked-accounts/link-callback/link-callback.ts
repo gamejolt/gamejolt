@@ -2,7 +2,10 @@ import { h } from 'vue';
 import { Options } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { Api } from '../../../../../../../../_common/api/api.service';
-import { Growls } from '../../../../../../../../_common/growls/growls.service';
+import {
+	showErrorGrowl,
+	showSuccessGrowl,
+} from '../../../../../../../../_common/growls/growls.service';
 import {
 	getLinkedAccountProviderDisplayName,
 	LinkedAccount,
@@ -56,7 +59,7 @@ export default class RouteDashGamesManageGameLinkedAccountsLinkCallback extends 
 		const provider = this.$route.params.provider;
 		const providerName = getLinkedAccountProviderDisplayName(provider);
 		if (!$payload.success || !$payload.account) {
-			Growls.error(
+			showErrorGrowl(
 				this.$gettextInterpolate('Unable to link your %{ provider } account to %{ game }', {
 					provider: providerName,
 					game: this.game.title,
@@ -67,7 +70,7 @@ export default class RouteDashGamesManageGameLinkedAccountsLinkCallback extends 
 
 			switch (provider) {
 				case LinkedAccount.PROVIDER_TWITTER:
-					Growls.success(
+					showSuccessGrowl(
 						this.$gettextInterpolate(
 							'Your %{ provider } account (@%{ name }) has been linked to %{ game }',
 							{
@@ -83,7 +86,7 @@ export default class RouteDashGamesManageGameLinkedAccountsLinkCallback extends 
 				case LinkedAccount.PROVIDER_GOOGLE:
 				case LinkedAccount.PROVIDER_TWITCH:
 				case LinkedAccount.PROVIDER_TUMBLR:
-					Growls.success(
+					showSuccessGrowl(
 						this.$gettextInterpolate(
 							'Your %{ provider } account (%{ name }) has been linked to %{ game }',
 							{

@@ -15,7 +15,7 @@ import { GameBuildLaunchOption } from '../../../../../_common/game/build/launch-
 import { Game } from '../../../../../_common/game/game.model';
 import { GamePackage } from '../../../../../_common/game/package/package.model';
 import { GameRelease } from '../../../../../_common/game/release/release.model';
-import { Growls } from '../../../../../_common/growls/growls.service';
+import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import AppProgressBar from '../../../../../_common/progress/bar/bar.vue';
 import { AppProgressPoller } from '../../../../../_common/progress/poller/poller';
@@ -360,7 +360,7 @@ export default class FormGameBuild
 			this.emitUpdateLaunchOptions(this.model!, response.launchOptions);
 		} catch (err) {
 			console.error(err);
-			Growls.error(this.$gettext('Could not set the platform for some reason.'));
+			showErrorGrowl(this.$gettext('Could not set the platform for some reason.'));
 		} finally {
 			this.isSettingPlatform = false;
 		}

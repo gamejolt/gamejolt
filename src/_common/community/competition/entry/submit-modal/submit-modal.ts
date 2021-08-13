@@ -4,7 +4,7 @@ import { Api } from '../../../../api/api.service';
 import { Game } from '../../../../game/game.model';
 import AppGameThumbnailImg from '../../../../game/thumbnail-img/thumbnail-img.vue';
 import AppGameThumbnail from '../../../../game/thumbnail/thumbnail.vue';
-import { Growls } from '../../../../growls/growls.service';
+import { showErrorGrowl } from '../../../../growls/growls.service';
 import AppLoading from '../../../../loading/loading.vue';
 import { BaseModal } from '../../../../modal/base';
 import { CommunityCompetition } from '../../competition.model';
@@ -77,7 +77,7 @@ export default class AppCommunityCompetitionEntrySubmitModal extends BaseModal {
 				throw new Error('Payload error');
 			}
 		} catch (error) {
-			Growls.error(this.$gettext(`Could not submit your game to the jam :(`));
+			showErrorGrowl(this.$gettext(`Could not submit your game to the jam :(`));
 
 			// Reset modal, try again?
 			this.selectedGame = null;

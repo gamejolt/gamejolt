@@ -3,7 +3,7 @@ import { State } from 'vuex-class';
 import { trackUserFollow, UserFollowLocation } from '../../analytics/analytics.service';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { number } from '../../filters/number';
-import { Growls } from '../../growls/growls.service';
+import { showErrorGrowl } from '../../growls/growls.service';
 import { AppStore } from '../../store/app-store';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 import { followUser, unfollowUser, User } from '../user.model';
@@ -86,7 +86,7 @@ export default class AppUserFollowWidget extends Vue {
 				this.emitFollow();
 			} catch (e) {
 				failed = true;
-				Growls.error(
+				showErrorGrowl(
 					this.$gettext(`Something has prevented you from following this user.`)
 				);
 			} finally {
@@ -98,7 +98,7 @@ export default class AppUserFollowWidget extends Vue {
 				this.emitUnfollow();
 			} catch (e) {
 				failed = true;
-				Growls.error(this.$gettext(`For some reason we couldn't unfollow this user.`));
+				showErrorGrowl(this.$gettext(`For some reason we couldn't unfollow this user.`));
 			} finally {
 				trackUserFollow(false, { failed, location: this.location });
 			}

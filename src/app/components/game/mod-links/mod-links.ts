@@ -2,7 +2,7 @@ import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { Game } from '../../../../_common/game/game.model';
-import { Growls } from '../../../../_common/growls/growls.service';
+import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
 
 @Options({})
 export default class AppGameModLinks extends Vue {
@@ -18,7 +18,7 @@ export default class AppGameModLinks extends Vue {
 				processPayload: false,
 			});
 		} catch (_e) {
-			Growls.success('Tagged the game.');
+			showSuccessGrowl('Tagged the game.');
 		}
 	}
 
@@ -30,7 +30,7 @@ export default class AppGameModLinks extends Vue {
 				processPayload: false,
 			});
 		} catch (_e) {
-			Growls.success('Untagged the game.');
+			showSuccessGrowl('Untagged the game.');
 		}
 	}
 }

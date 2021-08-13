@@ -8,9 +8,9 @@ export class MicrodataContainer {
 			return;
 		}
 
-		let elem = document.head.querySelector(
+		let elem = document.head.querySelector<HTMLScriptElement>(
 			'script[type="application/ld+json"]'
-		) as HTMLScriptElement;
+		);
 		if (elem) {
 			this.clear();
 		}
@@ -28,21 +28,21 @@ export class MicrodataContainer {
 			return;
 		}
 
-		let elem = document.head.querySelector(
+		const elem = document.head.querySelector<HTMLScriptElement>(
 			'script[type="application/ld+json"]'
-		) as HTMLScriptElement;
+		);
 		if (elem) {
 			document.head.removeChild(elem);
 		}
 	}
+}
 
-	render() {
-		if (!this.microdata || typeof this.microdata !== 'object') {
-			return '';
-		}
-
-		return (
-			`<script type="application/ld+json">${JSON.stringify(this.microdata)}</script>` + '\n'
-		);
+export function renderMicrodata(container: MicrodataContainer) {
+	if (!container.microdata || typeof container.microdata !== 'object') {
+		return '';
 	}
+
+	return (
+		`<script type="application/ld+json">${JSON.stringify(container.microdata)}</script>` + '\n'
+	);
 }

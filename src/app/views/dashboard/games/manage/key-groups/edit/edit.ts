@@ -6,7 +6,10 @@ import { Environment } from '../../../../../../../_common/environment/environmen
 import AppExpand from '../../../../../../../_common/expand/expand.vue';
 import { number } from '../../../../../../../_common/filters/number';
 import { GamePackage } from '../../../../../../../_common/game/package/package.model';
-import { Growls } from '../../../../../../../_common/growls/growls.service';
+import {
+	showErrorGrowl,
+	showSuccessGrowl,
+} from '../../../../../../../_common/growls/growls.service';
 import { KeyGroup } from '../../../../../../../_common/key-group/key-group.model';
 import { Key } from '../../../../../../../_common/key/key-model';
 import { ModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
@@ -112,11 +115,11 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 		try {
 			await keyGroup.$remove();
 		} catch (e) {
-			Growls.error(this.$gettext('Could not remove key group for some reason.'));
+			showErrorGrowl(this.$gettext('Could not remove key group for some reason.'));
 			return;
 		}
 
-		Growls.success(
+		showSuccessGrowl(
 			this.$gettext('The key group has been removed.'),
 			this.$gettext('Removed Key Group')
 		);
@@ -141,11 +144,11 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 		try {
 			await key.$remove();
 		} catch (e) {
-			Growls.error(this.$gettext('Could not remove key for some reason.'));
+			showErrorGrowl(this.$gettext('Could not remove key for some reason.'));
 			return;
 		}
 
-		Growls.success(this.$gettext('The key has been removed.'), this.$gettext('Removed Key'));
+		showSuccessGrowl(this.$gettext('The key has been removed.'), this.$gettext('Removed Key'));
 
 		arrayRemove(this.keys, k => k.id === key.id);
 	}

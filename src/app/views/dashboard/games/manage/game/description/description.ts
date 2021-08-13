@@ -1,6 +1,6 @@
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
-import { Growls } from '../../../../../../../_common/growls/growls.service';
+import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
@@ -39,7 +39,7 @@ export default class RouteDashGamesManageGameDescription extends BaseRouteCompon
 	}
 
 	onSaved() {
-		Growls.success(
+		showSuccessGrowl(
 			this.$gettext(`Your game description has been saved.`),
 			this.$gettext(`Description Saved`)
 		);

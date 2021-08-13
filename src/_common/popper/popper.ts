@@ -345,11 +345,12 @@ export default class AppPopper extends Vue {
 		this.clearHideTimeout();
 		this.createPopper();
 
-		// If we are tracking a particular element's width, then we set this popover to be the same
-		// width as the element. We don't track width when it's an XS screen since we do a full
-		// width popover in those cases.
+		// If we are tracking a particular element's width, then we set this
+		// popover to be the same width as the element. We don't track width
+		// when it's an XS screen since we do a full width popover in those
+		// cases.
 		let widthElem: HTMLElement | undefined;
-		if (this.trackTriggerWidth && !Screen.isWindowXs) {
+		if (this.trackTriggerWidth && !Screen.isXs) {
 			widthElem = this.$el as HTMLDivElement | undefined;
 			if (widthElem) {
 				this.width = widthElem.offsetWidth + 'px';

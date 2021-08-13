@@ -3,7 +3,7 @@ import { CommunityChannel } from '../../../../_common/community/channel/channel.
 import AppCommunityChannelSelect from '../../../../_common/community/channel/select/select.vue';
 import { Community } from '../../../../_common/community/community.model';
 import AppExpand from '../../../../_common/expand/expand.vue';
-import { Growls } from '../../../../_common/growls/growls.service';
+import { Growls, showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppPill from '../../../../_common/pill/pill.vue';
 
 @Options({
@@ -56,7 +56,7 @@ export default class AppCommunityRemoveChannel extends Vue {
 			await this.channel.$remove(moveToChannel);
 			success = true;
 		} catch (e) {
-			Growls.error(
+			showErrorGrowl(
 				this.$gettext('Could not remove channel for some reason. Try again later!')
 			);
 		}

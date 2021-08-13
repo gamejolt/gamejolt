@@ -7,11 +7,11 @@ import { initAnalytics, initAnalyticsRouter } from './analytics/analytics.servic
 import { AppTrackEvent } from './analytics/track-event.directive';
 import AppButton from './button/button.vue';
 import { ensureConfig } from './config/config.service';
-import { Connection } from './connection/connection-service';
+import { initConnectionService } from './connection/connection-service';
 import AppJolticon from './jolticon/jolticon.vue';
 import AppLinkExternal from './link/external/external.vue';
 import AppLinkHelp from './link/help/help.vue';
-import { Meta } from './meta/meta-service';
+import { initMetaService } from './meta/meta-service';
 import { Payload } from './payload/payload-service';
 import { Referrer } from './referrer/referrer.service';
 import { SettingThemeAlwaysOurs, SettingThemeDark } from './settings/settings.service';
@@ -33,10 +33,10 @@ export function bootstrapCommon(appComponent: Component, store: VuexStore, route
 
 	initAnalytics(store);
 	Payload.init(store);
-	Connection.init(store);
+	initConnectionService(store);
 
 	if (router) {
-		Meta.init(router);
+		initMetaService(router);
 		Referrer.init(router);
 		initAnalyticsRouter(router);
 		hijackLinks(router, 'gamejolt.com');

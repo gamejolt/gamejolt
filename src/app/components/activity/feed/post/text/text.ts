@@ -77,7 +77,7 @@ export default class AppActivityFeedPostText extends Vue {
 		// We will scroll to the bottom of the element minus some extra padding.
 		// This keeps the element in view a bit.
 		const elementOffset = Scroll.getElementOffsetTopFromContext(this.$el);
-		const scrollTo = elementOffset - Screen.windowHeight * 0.25;
+		const scrollTo = elementOffset - Screen.height * 0.25;
 
 		// Only if we're past where we would scroll.
 		if (Scroll.getScrollTop() > elementOffset) {

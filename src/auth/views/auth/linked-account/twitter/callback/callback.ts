@@ -7,7 +7,7 @@ import {
 	redirectToDashboard,
 	redirectToOnboarding,
 } from '../../../../../../_common/auth/auth.service';
-import { Growls } from '../../../../../../_common/growls/growls.service';
+import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import AuthLinkedAccountProcessing from '../../_processing/processing.vue';
 
@@ -28,7 +28,7 @@ export default class RouteAuthLinkedAccountTwitterCallback extends BaseRouteComp
 	routeResolved($payload: any) {
 		if (!$payload.success) {
 			if ($payload.reason && $payload.reason === 'no-email') {
-				Growls.error({
+				showErrorGrowl({
 					sticky: true,
 					title: this.$gettext('Login failed'),
 					message: this.$gettext(
@@ -36,7 +36,7 @@ export default class RouteAuthLinkedAccountTwitterCallback extends BaseRouteComp
 					),
 				});
 			} else {
-				Growls.error({
+				showErrorGrowl({
 					sticky: true,
 					title: this.$gettext('auth.linked_account.twitter.failed_growl_title'),
 					message: this.$gettext('auth.linked_account.twitter.failed_growl'),

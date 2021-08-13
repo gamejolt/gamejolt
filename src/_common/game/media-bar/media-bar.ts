@@ -1,7 +1,7 @@
 import { nextTick } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Analytics } from '../../analytics/analytics.service';
-import { Growls } from '../../growls/growls.service';
+import { showErrorGrowl } from '../../growls/growls.service';
 import AppLightboxItem from '../../lightbox/item/item.vue';
 import AppLightboxTS from '../../lightbox/lightbox';
 import { createLightbox, LightboxMediaSource } from '../../lightbox/lightbox-helpers';
@@ -150,21 +150,21 @@ export default class AppGameMediaBar extends Vue implements LightboxMediaSource 
 					this.trackEvent('permalink');
 				} else {
 					if (type === 'image') {
-						Growls.error(
+						showErrorGrowl(
 							this.$gettext(
 								`We couldn't find the image that was linked. It may have been removed.`
 							),
 							this.$gettext(`Invalid Image URL`)
 						);
 					} else if (type === 'video') {
-						Growls.error(
+						showErrorGrowl(
 							this.$gettext(
 								`We couldn't find the video that was linked. It may have been removed.`
 							),
 							this.$gettext(`Invalid Video URL`)
 						);
 					} else if (type === 'sketchfab') {
-						Growls.error(
+						showErrorGrowl(
 							this.$gettext(
 								`We couldn't find the sketchfab model that was linked. It may have been removed.`
 							),

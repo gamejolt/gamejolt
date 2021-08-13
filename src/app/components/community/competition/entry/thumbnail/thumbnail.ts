@@ -4,7 +4,7 @@ import { CommunityCompetitionEntry } from '../../../../../../_common/community/c
 import { CommunityCompetitionVotingCategory } from '../../../../../../_common/community/competition/voting-category/voting-category.model';
 import { Game } from '../../../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
-import { Growls } from '../../../../../../_common/growls/growls.service';
+import { showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import { AppState, AppStore } from '../../../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
@@ -96,7 +96,9 @@ export default class AppCommunityCompetitionEntryThumbnail extends Vue {
 		if (result) {
 			await this.entry.$remove();
 			if (this.entry._removed) {
-				Growls.success(this.$gettext(`Your entry was successfully removed from the jam.`));
+				showSuccessGrowl(
+					this.$gettext(`Your entry was successfully removed from the jam.`)
+				);
 				this.emitRemove();
 			}
 		}

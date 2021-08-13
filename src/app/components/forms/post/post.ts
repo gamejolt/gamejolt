@@ -30,7 +30,7 @@ import {
 } from '../../../../_common/form-vue/form.service';
 import AppFormLegend from '../../../../_common/form-vue/legend/legend.vue';
 import { GameVideo } from '../../../../_common/game/video/video.model';
-import { Growls } from '../../../../_common/growls/growls.service';
+import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import { KeyGroup } from '../../../../_common/key-group/key-group.model';
 import { LinkedAccount } from '../../../../_common/linked-account/linked-account.model';
 import AppLoading from '../../../../_common/loading/loading.vue';
@@ -561,7 +561,7 @@ export default class FormPost
 
 	onSubmitError($payload: any) {
 		if ($payload.errors.video_unavailable) {
-			Growls.error({
+			showErrorGrowl({
 				title: this.$gettext(`Failed to submit post`),
 				message: this.$gettext(
 					`The video linked in the post is private or otherwise unavailable. Make sure other people can see the video before you post it.`
@@ -603,7 +603,7 @@ export default class FormPost
 				break;
 		}
 
-		Growls.error(message, this.$gettext('Failed to upload your media.'));
+		showErrorGrowl(message, this.$gettext('Failed to upload your media.'));
 	}
 
 	onMediaSort(mediaItems: MediaItem[]) {

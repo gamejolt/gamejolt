@@ -1,6 +1,6 @@
-import { Growls } from '../../../_common/growls/growls.service';
-import { LocationRedirect } from '../../../utils/router';
 import { Route } from 'vue-router';
+import { LocationRedirect } from '../../../utils/router';
+import { showInfoGrowl } from '../../../_common/growls/growls.service';
 
 export interface Intent {
 	intent: string;
@@ -12,7 +12,7 @@ export class IntentService {
 		if (route.query.intent) {
 			for (let intent of intents) {
 				if (route.query.intent === intent.intent) {
-					Growls.info({
+					showInfoGrowl({
 						sticky: true,
 						message: intent.message,
 					});

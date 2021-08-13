@@ -1,6 +1,6 @@
 import { IParsedWrapper } from 'client-voodoo';
 import { Api } from '../../../../../_common/api/api.service';
-import { Device } from '../../../../../_common/device/device.service';
+import { getDeviceArch, getDeviceOS } from '../../../../../_common/device/device.service';
 import { GameBuild } from '../../../../../_common/game/build/build.model';
 import { GameBuildLaunchOption } from '../../../../../_common/game/build/launch-option/launch-option.model';
 import { GamePackage } from '../../../../../_common/game/package/package.model';
@@ -283,11 +283,11 @@ export class LocalDbPackage extends LocalDbModel<LocalDbPackage> {
 	}
 
 	findLaunchOption() {
-		const os = Device.os();
-		const arch = Device.arch();
+		const os = getDeviceOS();
+		const arch = getDeviceArch();
 
 		let result = undefined;
-		for (let launchOption of this.launch_options) {
+		for (const launchOption of this.launch_options) {
 			let lOs: (string | null)[] = launchOption.os ? launchOption.os.split('_') : [];
 			if (lOs.length === 0) {
 				lOs = [null, '32'];

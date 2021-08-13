@@ -1,6 +1,5 @@
-import { Component } from 'vue';
+import { Component, reactive } from 'vue';
 import { arrayRemove } from '../../utils/array';
-import { makeObservableService } from '../../utils/vue';
 import { Popper } from '../popper/popper.service';
 
 export interface ModalOptions {
@@ -13,10 +12,7 @@ export interface ModalOptions {
 	noEscClose?: boolean;
 }
 
-export class Modal {
-	static modals: Modal[] = [];
-	static incrementer = 0;
-
+export class Modal<T = any> {
 	size: 'sm' | 'lg' | 'full' | undefined;
 	component: Component;
 	modalId: string;
@@ -25,33 +21,11 @@ export class Modal {
 	noBackdropClose?: boolean;
 	noEscClose?: boolean;
 
-	get index() {
-		return Modal.modals.findIndex(i => i === this);
+	get index(): number {
+		return Modals.modals.findIndex(i => i === this);
 	}
 
-	static canAddToStack(id: string | undefined) {
-		if (id) {
-			return !this.modals.some(i => i.modalId === id);
-		}
-		return true;
-	}
-
-	static show<T>(options: ModalOptions) {
-		return new Promise<T | undefined>(resolve => {
-			if (this.canAddToStack(options.modalId)) {
-				Popper.hideAll();
-				++this.incrementer;
-				const modal = new Modal(this.incrementer, resolve, options);
-				this.modals.push(modal);
-			}
-		});
-	}
-
-	static remove(modal: Modal) {
-		arrayRemove(Modal.modals, item => item.id === modal.id);
-	}
-
-	constructor(public id: number, private _resolve: Function, options: ModalOptions) {
+	constructor(public id: number, private _resolve: (value?: T) => void, options: ModalOptions) {
 		this.size = options.size;
 		this.component = options.component;
 		this.props = options.props;
@@ -61,15 +35,42 @@ export class Modal {
 		this.modalId = options.modalId;
 	}
 
-	resolve(val?: any) {
-		Modal.remove(this);
+	resolve(val?: T) {
+		_removeModal(this);
 		this._resolve(val);
 	}
 
 	dismiss() {
-		Modal.remove(this);
+		_removeModal(this);
 		this._resolve(undefined);
 	}
 }
 
-makeObservableService(Modal);
+class ModalsService {
+	modals: Modal[] = [];
+	incrementer = 0;
+}
+
+export const Modals = reactive(new ModalsService()) as ModalsService;
+
+function _canAddToStack(id: string | undefined) {
+	if (id) {
+		return !Modals.modals.some(i => i.modalId === id);
+	}
+	return true;
+}
+
+export function showModal<T>(options: ModalOptions) {
+	return new Promise<T | undefined>(resolve => {
+		if (_canAddToStack(options.modalId)) {
+			Popper.hideAll();
+			++Modals.incrementer;
+			const modal = new Modal(Modals.incrementer, resolve, options);
+			Modals.modals.push(modal);
+		}
+	});
+}
+
+function _removeModal(modal: Modal) {
+	arrayRemove(Modals.modals, i => i.id === modal.id);
+}

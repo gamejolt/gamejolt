@@ -1,7 +1,7 @@
 import VueGlobal from 'vue';
 import { arrayGroupBy, arrayRemove, numberSort } from '../../utils/array';
 import { Api } from '../api/api.service';
-import { Growls } from '../growls/growls.service';
+import { showSuccessGrowl } from '../growls/growls.service';
 import { Translate } from '../translate/translate.service';
 import { Comment, fetchComments } from './comment-model';
 
@@ -211,7 +211,7 @@ export function onCommentAdd(manager: CommentStoreManager, comment: Comment) {
 	const store = getCommentStore(manager, comment.resource, comment.resource_id);
 
 	if (comment.status === Comment.STATUS_SPAM) {
-		Growls.success(
+		showSuccessGrowl(
 			Translate.$gettext(
 				'Your comment has been marked for review. Please allow some time for it to show on the site.'
 			),
@@ -233,7 +233,7 @@ export function onCommentAdd(manager: CommentStoreManager, comment: Comment) {
 export function onCommentEdit(manager: CommentStoreManager, comment: Comment) {
 	// Was it marked as possible spam?
 	if (comment.status === Comment.STATUS_SPAM) {
-		Growls.success(
+		showSuccessGrowl(
 			Translate.$gettext(
 				'Your comment has been marked for review. Please allow some time for it to show on the site.'
 			),

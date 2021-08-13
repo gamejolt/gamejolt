@@ -8,7 +8,7 @@ import { getCookie } from '../../../_common/cookie/cookie.service';
 import { number } from '../../../_common/filters/number';
 import { Fireside } from '../../../_common/fireside/fireside.model';
 import { FiresideRole } from '../../../_common/fireside/role/role.model';
-import { Growls } from '../../../_common/growls/growls.service';
+import { showInfoGrowl } from '../../../_common/growls/growls.service';
 import AppIllustration from '../../../_common/illustration/illustration.vue';
 import AppLoading from '../../../_common/loading/loading.vue';
 import { Meta } from '../../../_common/meta/meta-service';
@@ -504,7 +504,7 @@ export default class RouteFireside extends BaseRouteComponent {
 
 		this.chatChannel.on('kick_member', (data: any) => {
 			if (data.user_id === this.user!.id) {
-				Growls.info(this.$gettext(`You've been kicked from the Fireside.`));
+				showInfoGrowl(this.$gettext(`You've been kicked from the Fireside.`));
 				this.$router.push({ name: 'home' });
 			}
 		});

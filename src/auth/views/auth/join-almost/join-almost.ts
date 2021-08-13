@@ -1,7 +1,7 @@
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { authOnLogin, redirectToOnboarding } from '../../../../_common/auth/auth.service';
-import { Growls } from '../../../../_common/growls/growls.service';
+import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { AppProgressPoller } from '../../../../_common/progress/poller/poller';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
@@ -45,7 +45,7 @@ export default class RouteJoinAlmost extends BaseRouteComponent {
 		sessionStorage.removeItem('signup-password');
 
 		if (!response.success) {
-			Growls.error({
+			showErrorGrowl({
 				message: this.$gettext(`Couldn't log you in for some reason.`),
 				sticky: true,
 			});

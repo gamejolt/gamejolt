@@ -5,7 +5,7 @@ import AppCardListAdd from '../../../../../../_common/card/list/add/add.vue';
 import AppCardListItem from '../../../../../../_common/card/list/item/item.vue';
 import AppCardList from '../../../../../../_common/card/list/list.vue';
 import { Collaborator } from '../../../../../../_common/collaborator/collaborator.model';
-import { Growls } from '../../../../../../_common/growls/growls.service';
+import { showErrorGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import { AppTimeAgo } from '../../../../../../_common/time/ago/ago';
@@ -77,7 +77,7 @@ export default class RouteDashGamesManageCollaborators extends BaseRouteComponen
 		try {
 			await collaborator.$remove();
 
-			Growls.success(
+			showSuccessGrowl(
 				this.$gettext('The collaborator has been removed.'),
 				this.$gettext('Collaborator Removed')
 			);
@@ -88,7 +88,7 @@ export default class RouteDashGamesManageCollaborators extends BaseRouteComponen
 				this.isAdding = true;
 			}
 		} catch (e) {
-			Growls.error(this.$gettext('Could not remove collaborator for some reason.'));
+			showErrorGrowl(this.$gettext('Could not remove collaborator for some reason.'));
 		}
 	}
 }

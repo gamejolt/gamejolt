@@ -36,7 +36,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	featuredCommunities: Community[] = [];
 
 	routeCreated() {
-		Meta.setTitle(null);
+		Meta.title = null;
 	}
 
 	routeResolved($payload: any) {

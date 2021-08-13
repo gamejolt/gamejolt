@@ -1,5 +1,5 @@
 import { Api } from '../../api/api.service';
-import { Growls } from '../../growls/growls.service';
+import { showInfoGrowl } from '../../growls/growls.service';
 import { appStore } from '../../store/app-store';
 import { Game } from '../game.model';
 import AppGameRatingGrowl from './rating-growl.vue';
@@ -32,7 +32,7 @@ export class GameRatingGrowl {
 			return;
 		}
 
-		Growls.info({
+		showInfoGrowl({
 			sticky: true,
 			component: AppGameRatingGrowl,
 			props: { game },

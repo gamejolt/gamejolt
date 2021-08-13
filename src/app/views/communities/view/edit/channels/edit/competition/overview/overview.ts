@@ -3,7 +3,7 @@ import { Api } from '../../../../../../../../../_common/api/api.service';
 import { CommunityCompetitionVotingCategory } from '../../../../../../../../../_common/community/competition/voting-category/voting-category.model';
 import { Environment } from '../../../../../../../../../_common/environment/environment.service';
 import { duration } from '../../../../../../../../../_common/filters/duration';
-import { Growls } from '../../../../../../../../../_common/growls/growls.service';
+import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
@@ -92,7 +92,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends
 		if (result) {
 			await this.channel.$publish();
 
-			Growls.success(this.$gettext(`Your jam has been published!`));
+			showSuccessGrowl(this.$gettext(`Your jam has been published!`));
 		}
 	}
 }

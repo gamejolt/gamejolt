@@ -7,7 +7,10 @@ import AppGamePackageCard from '../../../../../../../../_common/game/package/car
 import { GamePackagePayloadModel } from '../../../../../../../../_common/game/package/package-payload.model';
 import { GamePackage } from '../../../../../../../../_common/game/package/package.model';
 import { GameRelease } from '../../../../../../../../_common/game/release/release.model';
-import { Growls } from '../../../../../../../../_common/growls/growls.service';
+import {
+	showErrorGrowl,
+	showSuccessGrowl,
+} from '../../../../../../../../_common/growls/growls.service';
 import AppLoading from '../../../../../../../../_common/loading/loading.vue';
 import { ModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import AppNavTabList from '../../../../../../../../_common/nav/tab-list/tab-list.vue';
@@ -158,7 +161,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 				},
 			});
 		} catch (e) {
-			Growls.error(this.$gettext(`Could not create new release.`));
+			showErrorGrowl(this.$gettext(`Could not create new release.`));
 			this.isAddingRelease = false;
 		}
 	}
@@ -174,7 +177,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 
 		await release.$remove(this.game);
 
-		Growls.success(
+		showSuccessGrowl(
 			this.$gettext('dash.games.releases.manage.remove_release_growl'),
 			this.$gettext('dash.games.releases.manage.remove_release_growl_title')
 		);

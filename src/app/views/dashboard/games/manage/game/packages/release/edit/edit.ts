@@ -4,7 +4,7 @@ import { GameBuild } from '../../../../../../../../../_common/game/build/build.m
 import { GameBuildLaunchOption } from '../../../../../../../../../_common/game/build/launch-option/launch-option.model';
 import { GamePackage } from '../../../../../../../../../_common/game/package/package.model';
 import { GameRelease } from '../../../../../../../../../_common/game/release/release.model';
-import { Growls } from '../../../../../../../../../_common/growls/growls.service';
+import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
@@ -97,7 +97,7 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 
 		await release.$unpublish(this.game);
 
-		Growls.success(
+		showSuccessGrowl(
 			this.$gettext('dash.games.releases.manage.unpublish_release_growl'),
 			this.$gettext('dash.games.releases.manage.unpublish_release_growl_title')
 		);
@@ -114,7 +114,7 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 
 		await release.$remove(this.game);
 
-		Growls.success(
+		showSuccessGrowl(
 			this.$gettext('dash.games.releases.manage.remove_release_growl'),
 			this.$gettext('dash.games.releases.manage.remove_release_growl_title')
 		);

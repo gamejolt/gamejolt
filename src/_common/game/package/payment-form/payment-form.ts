@@ -2,7 +2,7 @@ import { Emit, Options, Prop, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { arrayIndexBy } from '../../../../utils/array';
 import { Api } from '../../../api/api.service';
-import { Device } from '../../../device/device.service';
+import { getDeviceArch, getDeviceOS } from '../../../device/device.service';
 import { Environment } from '../../../environment/environment.service';
 import AppExpand from '../../../expand/expand.vue';
 import { currency } from '../../../filters/currency';
@@ -16,7 +16,7 @@ import {
 	FormOnSubmitSuccess,
 } from '../../../form-vue/form.service';
 import { Geo, Region } from '../../../geo/geo.service';
-import { Growls } from '../../../growls/growls.service';
+import { showErrorGrowl } from '../../../growls/growls.service';
 import { HistoryTick } from '../../../history-tick/history-tick-service';
 import AppLoadingFade from '../../../loading/fade/fade.vue';
 import AppLoading from '../../../loading/loading.vue';
@@ -325,8 +325,8 @@ export default class FormGamePackagePayment
 		this.isProcessing = true;
 
 		setupData['source'] = HistoryTick.getSource('Game', this.package.game_id) || null;
-		setupData['os'] = Device.os();
-		setupData['arch'] = Device.arch();
+		setupData['os'] = getDeviceArch();
+		setupData['arch'] = getDeviceOS();
 		setupData['ref'] = this.partnerKey || null;
 
 		try {
@@ -356,7 +356,7 @@ export default class FormGamePackagePayment
 			this.isProcessing = false;
 
 			// This should always succeed, so let's throw a generic message if it fails.
-			Growls.error({
+			showErrorGrowl({
 				sticky: true,
 				message: this.$gettext('There was a problem processing your payment method.'),
 			});
@@ -387,8 +387,8 @@ export default class FormGamePackagePayment
 		}
 
 		data['source'] = HistoryTick.getSource('Game', this.package.game_id) || null;
-		data['os'] = Device.os();
-		data['arch'] = Device.arch();
+		data['os'] = getDeviceOS();
+		data['arch'] = getDeviceArch();
 		data['ref'] = this.partnerKey || null;
 
 		return Api.sendRequest('/web/checkout/setup-order', data, { detach: true });

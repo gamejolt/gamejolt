@@ -4,7 +4,7 @@ import { Api } from '../../../_common/api/api.service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { GameBundle } from '../../../_common/game-bundle/game-bundle.model';
 import { Game } from '../../../_common/game/game.model';
-import { Growls } from '../../../_common/growls/growls.service';
+import { showErrorGrowl } from '../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../_common/modal/confirm/confirm-service';
 import { Navigate } from '../../../_common/navigate/navigate.service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
@@ -119,7 +119,7 @@ export default class RouteKey extends BaseRouteComponent {
 
 			if (response && !response.success && response.reason === 'already-claimed-in-group') {
 				this.invalidKey = true;
-				Growls.error(this.$gettext(`You already claimed a key for that!`));
+				showErrorGrowl(this.$gettext(`You already claimed a key for that!`));
 				return;
 			}
 
@@ -136,7 +136,7 @@ export default class RouteKey extends BaseRouteComponent {
 				Navigate.goto(location);
 			}
 		} catch (_e) {
-			Growls.error(
+			showErrorGrowl(
 				this.$gettext(`For some reason we couldn't claim this into your account!`)
 			);
 		}

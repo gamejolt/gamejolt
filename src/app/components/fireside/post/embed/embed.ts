@@ -14,7 +14,7 @@ import AppSketchfabEmbed from '../../../../../_common/sketchfab/embed/embed.vue'
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
 
-const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.windowHeight * 0.5}px` });
+const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height * 0.5}px` });
 
 @Options({
 	components: {

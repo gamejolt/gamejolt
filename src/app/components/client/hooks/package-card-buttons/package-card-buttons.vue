@@ -119,8 +119,8 @@
 			</app-button>
 
 			<!--
-			Can only cancel installs, not updates.
-		-->
+				Can only cancel installs, not updates.
+			-->
 			<app-button
 				v-if="localPackage.install_state"
 				v-app-tooltip="$gettext('Cancel Installation')"
@@ -143,9 +143,9 @@
 		</template>
 
 		<!--
-		Browser quick play
-		We hide this as soon as they install the game.
-	-->
+			Browser quick play
+			We hide this as soon as they install the game.
+		-->
 		<app-button
 			v-else-if="card.browserBuild"
 			primary
@@ -181,8 +181,8 @@
 						</a>
 
 						<!--
-								In client, if a package is installed, allow them to remove.
-							-->
+							In client, if a package is installed, allow them to remove.
+						-->
 						<a
 							:class="{ disabled: localPackage.isRunning }"
 							class="list-group-item has-icon warning"
@@ -194,9 +194,9 @@
 					</template>
 
 					<!--
-							If this game has a quick play web build but is installed, we want
-							to show the quick play here now.
-						-->
+						If this game has a quick play web build but is installed, we want
+						to show the quick play here now.
+					-->
 					<template v-else-if="card.browserBuild">
 						<a
 							class="list-group-item has-icon warning"

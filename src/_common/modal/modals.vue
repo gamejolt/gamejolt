@@ -2,7 +2,7 @@
 
 <template>
 	<div class="modals">
-		<app-modal-wrapper v-for="(modal, index) of Modal.modals" :key="index" :modal="modal" />
+		<app-modal-wrapper v-for="(modal, index) of Modals.modals" :key="index" :modal="modal" />
 	</div>
 </template>
 

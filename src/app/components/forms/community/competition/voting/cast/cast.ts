@@ -7,7 +7,7 @@ import { CommunityCompetitionEntry } from '../../../../../../../_common/communit
 import { CommunityCompetitionEntryVote } from '../../../../../../../_common/community/competition/entry/vote/vote.model';
 import { CommunityCompetitionVotingCategory } from '../../../../../../../_common/community/competition/voting-category/voting-category.model';
 import { number } from '../../../../../../../_common/filters/number';
-import { Growls } from '../../../../../../../_common/growls/growls.service';
+import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
 import AppLoadingFade from '../../../../../../../_common/loading/fade/fade.vue';
 import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 
@@ -168,7 +168,7 @@ export default class FormCommunityCompetitionVotingCast extends Vue {
 
 		this.isSaving = false;
 
-		Growls.success(this.$gettext(`Your vote for this entry was cast!`));
+		showSuccessGrowl(this.$gettext(`Your vote for this entry was cast!`));
 	}
 
 	async onClickClear() {

@@ -1,7 +1,7 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import AppCard from '../../../../../_common/card/card.vue';
 import { Game } from '../../../../../_common/game/game.model';
-import { Growls } from '../../../../../_common/growls/growls.service';
+import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import { GameDevStageSelectorConfirmModal } from './confirm-service';
 
 @Options({
@@ -37,7 +37,7 @@ export default class AppGameDevStageSelector extends Vue {
 		const result = await GameDevStageSelectorConfirmModal.show(this.game, stage);
 		if (result) {
 			await this.game.$setDevStage(stage);
-			Growls.success(
+			showSuccessGrowl(
 				this.$gettext(`Your game's development stage has been changed!`),
 				this.$gettext('Stage Changed')
 			);

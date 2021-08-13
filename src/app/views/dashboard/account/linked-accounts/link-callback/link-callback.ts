@@ -2,7 +2,7 @@ import { h } from 'vue';
 import { Options } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { Api } from '../../../../../../_common/api/api.service';
-import { Growls } from '../../../../../../_common/growls/growls.service';
+import { showErrorGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
 import {
 	getLinkedAccountProviderDisplayName,
 	LinkedAccount,
@@ -51,7 +51,7 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 		if (!$payload.success) {
 			switch ($payload.reason) {
 				case 'account-taken':
-					Growls.error(
+					showErrorGrowl(
 						this.$gettextInterpolate(
 							'This %{ provider } account is already linked to another Game Jolt account.',
 							{
@@ -62,7 +62,7 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 					break;
 
 				case 'channel-taken':
-					Growls.error(
+					showErrorGrowl(
 						this.$gettext(
 							'This YouTube channel is already linked to another Game Jolt account.'
 						)
@@ -70,7 +70,7 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 					break;
 
 				case 'no-channel':
-					Growls.error(
+					showErrorGrowl(
 						this.$gettext(
 							'The selected Google account has no valid YouTube channel associated with it.'
 						)
@@ -78,17 +78,17 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 					break;
 
 				case 'not-public':
-					Growls.error(this.$gettext('This YouTube channel is not public.'));
+					showErrorGrowl(this.$gettext('This YouTube channel is not public.'));
 					break;
 
 				case 'invalid-google-account':
-					Growls.error(
+					showErrorGrowl(
 						this.$gettext('This Google account does not support Sign Up with Google.')
 					);
 					break;
 
 				default:
-					Growls.error(
+					showErrorGrowl(
 						this.$gettextInterpolate('Unable to link your %{ provider } account.', {
 							provder: providerName,
 						})
@@ -100,7 +100,7 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 				case LinkedAccount.PROVIDER_TWITTER:
 					{
 						const account = new LinkedAccount($payload.account);
-						Growls.success(
+						showSuccessGrowl(
 							this.$gettextInterpolate(
 								'Your %{ provider } account (@%{ name }) has been linked.',
 								{
@@ -118,7 +118,7 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 				case LinkedAccount.PROVIDER_TUMBLR:
 					{
 						const account = new LinkedAccount($payload.account);
-						Growls.success(
+						showSuccessGrowl(
 							this.$gettextInterpolate(
 								'Your %{ provider } account (%{ name }) has been linked.',
 								{

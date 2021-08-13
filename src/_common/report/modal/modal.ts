@@ -5,7 +5,7 @@ import { FiresidePost } from '../../fireside/post/post-model';
 import { ForumPost } from '../../forum/post/post.model';
 import { ForumTopic } from '../../forum/topic/topic.model';
 import { Game } from '../../game/game.model';
-import { Growls } from '../../growls/growls.service';
+import { showInfoGrowl } from '../../growls/growls.service';
 import { BaseModal } from '../../modal/base';
 import { User } from '../../user/user.model';
 import AppReportForm from '../form/form.vue';
@@ -63,7 +63,7 @@ export default class AppReportModal extends BaseModal {
 	}
 
 	onSubmittedReport() {
-		Growls.info(
+		showInfoGrowl(
 			this.$gettext(
 				`Thanks for helping us make Game Jolt a place for everyone. We will take a look as soon as possible!`
 			),
@@ -79,7 +79,7 @@ export default class AppReportModal extends BaseModal {
 
 	onSubmittedBlock() {
 		if (this.resource instanceof User) {
-			Growls.info(
+			showInfoGrowl(
 				this.$gettextInterpolate(`You blocked %{ user }!`, {
 					user: this.resource.username,
 				}),

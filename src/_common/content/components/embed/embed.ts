@@ -1,6 +1,6 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { arrayShuffle } from '../../../../utils/array';
-import { Growls } from '../../../growls/growls.service';
+import { showErrorGrowl } from '../../../growls/growls.service';
 import AppLoading from '../../../loading/loading.vue';
 import AppVideoEmbed from '../../../video/embed/embed.vue';
 import { ContentEmbedService } from '../../content-editor/content-embed.service';
@@ -106,7 +106,7 @@ export default class AppContentEmbed extends Vue {
 					if (data !== undefined) {
 						this.emitUpdateAttrs(data);
 					} else {
-						Growls.error({
+						showErrorGrowl({
 							title: this.$gettext(`Uh oh`),
 							message: this.$gettext(
 								`Something went wrong embedding your content. Maybe try again with a different link?`

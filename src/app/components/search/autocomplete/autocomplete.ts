@@ -12,7 +12,7 @@ import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified
 import * as _LocalDbGameMod from '../../client/local-db/game/game.model';
 import AppGameCompatIcons from '../../game/compat-icons/compat-icons.vue';
 import AppSearchTS, { SearchKeydownSpy } from '../search';
-import { Search } from '../search-service';
+import { sendSearch } from '../search-service';
 import AppSearch from '../search.vue';
 
 let LocalDbGameMod: typeof _LocalDbGameMod | undefined;
@@ -89,7 +89,7 @@ export default class AppSearchAutocomplete extends Vue {
 		}
 
 		// We store the query that we're waiting on.
-		const payload = await Search.search(query, { type: 'typeahead' });
+		const payload = await sendSearch(query, { type: 'typeahead' });
 
 		// We only update the payload if the query is still the same as when we sent.
 		// This makes sure we don't step on ourselves while typing fast.

@@ -1,6 +1,6 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import AppCard from '../../../../../_common/card/card.vue';
-import { Growls } from '../../../../../_common/growls/growls.service';
+import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { UserAddress } from '../../../../../_common/user/address/address.model';
 import AppUserAddressDetails from '../details/details.vue';
@@ -31,7 +31,7 @@ export default class AppUserAddressCard extends Vue {
 
 		await this.address.$remove();
 
-		Growls.success(
+		showSuccessGrowl(
 			this.$gettext(`Your address has successfully been removed.`),
 			this.$gettext(`Address Removed`)
 		);

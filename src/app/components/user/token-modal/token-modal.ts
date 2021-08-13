@@ -1,7 +1,7 @@
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
-import { Growls } from '../../../../_common/growls/growls.service';
+import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { BaseModal } from '../../../../_common/modal/base';
 import { Translate } from '../../../../_common/translate/translate.service';
@@ -23,7 +23,7 @@ export default class AppUserTokenModal extends BaseModal {
 			const response = await Api.sendRequest('/web/dash/token');
 			this.token = response.token;
 		} catch (e) {
-			Growls.error(Translate.$gettext(`Couldn't get your token.`));
+			showErrorGrowl(Translate.$gettext(`Couldn't get your token.`));
 		}
 	}
 

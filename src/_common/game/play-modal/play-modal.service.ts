@@ -1,9 +1,9 @@
 import { defineAsyncComponent } from 'vue';
 import { Analytics } from '../../analytics/analytics.service';
 import { Environment } from '../../environment/environment.service';
-import { Growls } from '../../growls/growls.service';
+import { showErrorGrowl } from '../../growls/growls.service';
 import { HistoryTick } from '../../history-tick/history-tick-service';
-import { Modal } from '../../modal/modal.service';
+import { showModal } from '../../modal/modal.service';
 import { Navigate } from '../../navigate/navigate.service';
 import { Popper } from '../../popper/popper.service';
 import { Translate } from '../../translate/translate.service';
@@ -22,7 +22,7 @@ export class GamePlayModal {
 		Analytics.trackEvent('game-play', 'play');
 
 		if (this.hasModal) {
-			Growls.error(
+			showErrorGrowl(
 				Translate.$gettext(
 					`You already have a browser game open. You can only have one running at a time.`
 				)
@@ -73,7 +73,7 @@ export class GamePlayModal {
 		const url = await this.getDownloadUrl(build, { key: options.key });
 		const canMinimize = this.canMinimize;
 
-		await Modal.show({
+		await showModal({
 			modalId: 'GamePlay',
 			component: defineAsyncComponent(
 				() => import(/* webpackChunkName: "GamePlayModal" */ './play-modal.vue')

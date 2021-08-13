@@ -7,7 +7,7 @@ import {
 	redirectToDashboard,
 	redirectToOnboarding,
 } from '../../../../../../_common/auth/auth.service';
-import { Growls } from '../../../../../../_common/growls/growls.service';
+import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import AuthLinkedAccountProcessing from '../../_processing/processing.vue';
 
@@ -29,7 +29,7 @@ export default class RouteAuthLinkedAccountGoogleCallback extends BaseRouteCompo
 		if (!$payload.success) {
 			switch ($payload.reason) {
 				case 'no-email':
-					Growls.error({
+					showErrorGrowl({
 						sticky: true,
 						message: this.$gettext(
 							`Your Google account did not return an email address. Make sure you have verified it with Google.`
@@ -38,7 +38,7 @@ export default class RouteAuthLinkedAccountGoogleCallback extends BaseRouteCompo
 					break;
 
 				case 'duplicate-email':
-					Growls.error({
+					showErrorGrowl({
 						sticky: true,
 						message: this.$gettext(
 							`The email address on this Google account is already in use. Perhaps you already have an account?`
@@ -47,7 +47,7 @@ export default class RouteAuthLinkedAccountGoogleCallback extends BaseRouteCompo
 					break;
 
 				case 'no-unique-username':
-					Growls.error({
+					showErrorGrowl({
 						sticky: true,
 						message: this.$gettext(
 							`Could not create a username for your account. Perhaps you already have an account?`
@@ -56,7 +56,7 @@ export default class RouteAuthLinkedAccountGoogleCallback extends BaseRouteCompo
 					break;
 
 				case 'invalid-google-account':
-					Growls.error({
+					showErrorGrowl({
 						sticky: true,
 						message: this.$gettext(
 							'This Google account does not support Sign Up with Google.'
@@ -65,7 +65,7 @@ export default class RouteAuthLinkedAccountGoogleCallback extends BaseRouteCompo
 					break;
 
 				default:
-					Growls.error({
+					showErrorGrowl({
 						sticky: true,
 						title: this.$gettext('Login Failed'),
 						message: this.$gettext('Unable to log in with Google.'),

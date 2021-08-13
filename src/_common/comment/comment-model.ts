@@ -4,7 +4,7 @@ import { ContentDocument } from '../content/content-document';
 import { Environment } from '../environment/environment.service';
 import { FiresidePost } from '../fireside/post/post-model';
 import { Game } from '../game/game.model';
-import { Growls } from '../growls/growls.service';
+import { showErrorGrowl } from '../growls/growls.service';
 import { Model } from '../model/model.service';
 import { constructStickerCounts, StickerCount } from '../sticker/sticker-count';
 import { Subscription } from '../subscription/subscription.model';
@@ -245,7 +245,7 @@ export async function addCommentVote(comment: Comment, vote: number) {
 		failed = true;
 		comment.votes -= operation;
 		comment.user_vote = previousVote;
-		Growls.error(`Can't do that now. Try again later?`);
+		showErrorGrowl(`Can't do that now. Try again later?`);
 	} finally {
 		trackCommentVote(vote, { failed, toggled: false });
 	}
@@ -271,7 +271,7 @@ export async function removeCommentVote(comment: Comment) {
 		failed = true;
 		comment.user_vote = previousVote;
 		++comment.votes;
-		Growls.error(`Can't do that now. Try again later?`);
+		showErrorGrowl(`Can't do that now. Try again later?`);
 	} finally {
 		trackCommentVote(previousVote.vote, { failed, toggled: true });
 	}

@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { Analytics } from '../../../../../_common/analytics/analytics.service';
-import { Device } from '../../../../../_common/device/device.service';
+import { getDeviceArch, getDeviceOS } from '../../../../../_common/device/device.service';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import { filesize } from '../../../../../_common/filters/filesize';
 import { GameBuild } from '../../../../../_common/game/build/build.model';
@@ -74,7 +74,6 @@ export default class AppClientPackageCardButtons extends Vue {
 	downloadableUnsupported = false;
 	downloadableUnsupportedHasQuickPlay = false;
 
-	readonly Device = Device;
 	readonly PatchState = LocalDbPackagePatchState;
 	readonly RemoveState = LocalDbPackageRemoveState;
 
@@ -85,8 +84,8 @@ export default class AppClientPackageCardButtons extends Vue {
 	emitShowBuildPayment(_build: GameBuild) {}
 
 	get canInstall() {
-		const arch = Device.arch();
-		const os = Device.os();
+		const arch = getDeviceArch();
+		const os = getDeviceOS();
 
 		return this.card.downloadableBuild
 			? Game.checkDeviceSupport(this.card.downloadableBuild, os!, arch)

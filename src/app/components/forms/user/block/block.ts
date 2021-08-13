@@ -7,7 +7,7 @@ import {
 	FormOnSubmit,
 	FormOnSubmitSuccess,
 } from '../../../../../_common/form-vue/form.service';
-import { Growls } from '../../../../../_common/growls/growls.service';
+import { showInfoGrowl } from '../../../../../_common/growls/growls.service';
 
 interface FormModel {
 	username: string;
@@ -33,7 +33,7 @@ export default class FormUserBlock
 	onSubmitSuccess(response: any) {
 		if (response.success) {
 			if (this.formModel.removeComments) {
-				Growls.info({
+				showInfoGrowl({
 					message: this.$gettextInterpolate(
 						'You blocked %{ user }! It might take a few moments for their comments/shouts to disappear',
 						{
@@ -42,7 +42,7 @@ export default class FormUserBlock
 					),
 				});
 			} else {
-				Growls.info({
+				showInfoGrowl({
 					message: this.$gettextInterpolate('You blocked %{ user }!', {
 						user: this.formModel.username,
 					}),

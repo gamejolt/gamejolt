@@ -6,7 +6,7 @@ import AppCardListItem from '../../../../../../_common/card/list/item/item.vue';
 import AppCardList from '../../../../../../_common/card/list/list.vue';
 import { Game } from '../../../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
-import { Growls } from '../../../../../../_common/growls/growls.service';
+import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { CommunityLinkGameModal } from '../../../../../components/community/link-game-modal/link-game-modal.service';
@@ -67,7 +67,7 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 			await this.community.saveGameSort();
 		} catch (e) {
 			console.error(e);
-			Growls.error(this.$gettext(`Could not save game arrangement.`));
+			showErrorGrowl(this.$gettext(`Could not save game arrangement.`));
 		}
 	}
 
@@ -92,7 +92,7 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 			}
 		} catch (e) {
 			console.error(e);
-			Growls.error(this.$gettext(`Failed to link game to community.`));
+			showErrorGrowl(this.$gettext(`Failed to link game to community.`));
 		}
 	}
 
@@ -115,7 +115,7 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 			}
 		} catch (e) {
 			console.error(e);
-			Growls.error(this.$gettext(`Failed to unlink game from community.`));
+			showErrorGrowl(this.$gettext(`Failed to unlink game from community.`));
 		}
 	}
 }

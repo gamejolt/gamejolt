@@ -1,9 +1,9 @@
 import { defineAsyncComponent } from 'vue';
-import { Modal } from '../../../../_common/modal/modal.service';
+import { showModal } from '../../../../_common/modal/modal.service';
 
 export class UserSetPasswordModal {
 	static async show() {
-		return await Modal.show<boolean>({
+		return await showModal<boolean>({
 			modalId: 'UserSetPassword',
 			component: defineAsyncComponent(
 				() =>

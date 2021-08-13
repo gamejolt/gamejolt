@@ -89,7 +89,7 @@
 			"",
 			"export class ${1:Login}Modal {",
 			"\tstatic async show($2) {",
-			"\t\treturn await Modal.show<${3:boolean}>({",
+			"\t\treturn await showModal<${3:boolean}>({",
 			"\t\tmodalId: '${1:Login}',",
 			"\t\t\tcomponent: defineAsyncComponent(() => import(/* webpackChunkName: \"${1:Login}Modal\" */ './$4')),",
 			"\t\t\tprops: { $5 },",

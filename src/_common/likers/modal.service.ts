@@ -2,7 +2,7 @@ import { defineAsyncComponent } from 'vue';
 import { Comment } from '../comment/comment-model';
 import { FiresidePost } from '../fireside/post/post-model';
 import { Game } from '../game/game.model';
-import { Modal } from '../modal/modal.service';
+import { showModal } from '../modal/modal.service';
 
 export type LikersResource = Comment | FiresidePost | Game;
 
@@ -15,7 +15,7 @@ export class LikersModal {
 	static async show(options: LikersModalOptions) {
 		const { count, resource } = options;
 
-		return await Modal.show<void>({
+		return await showModal<void>({
 			modalId: 'Likers',
 			component: defineAsyncComponent(
 				() => import(/* webpackChunkName: "LikersModal" */ './modal.vue')

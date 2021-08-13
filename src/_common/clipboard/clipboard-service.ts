@@ -1,4 +1,4 @@
-import { Growls } from '../growls/growls.service';
+import { showErrorGrowl, showSuccessGrowl } from '../growls/growls.service';
 import { Translate } from '../translate/translate.service';
 
 export class Clipboard {
@@ -15,12 +15,12 @@ export class Clipboard {
 		const result = window.document.execCommand('copy');
 
 		if (result) {
-			Growls.success(
+			showSuccessGrowl(
 				message || Translate.$gettext('Copied to your clipboard.'),
 				Translate.$gettext('Copied!')
 			);
 		} else {
-			Growls.error(
+			showErrorGrowl(
 				Translate.$gettext('Could not copy to your clipboard. Dunno why. Sorry.'),
 				Translate.$gettext('Copy Failed')
 			);

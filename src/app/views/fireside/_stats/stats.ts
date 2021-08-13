@@ -5,7 +5,7 @@ import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { duration } from '../../../../_common/filters/duration';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
-import { Growls } from '../../../../_common/growls/growls.service';
+import { showInfoGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../_common/illustration/illustration.vue';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
@@ -122,7 +122,7 @@ export default class AppFiresideStats extends Vue {
 		}
 
 		await this.fireside.$publish();
-		Growls.success(this.$gettext(`Your Fireside is live!`));
+		showSuccessGrowl(this.$gettext(`Your Fireside is live!`));
 	}
 
 	async onClickExtend() {
@@ -141,7 +141,7 @@ export default class AppFiresideStats extends Vue {
 			this.fireside.expires_on = payload.expiresOn;
 			this.updateExpiryValues();
 		} else {
-			Growls.info(
+			showInfoGrowl(
 				this.$gettext(
 					`Settle down there. Wait a couple seconds before playing with the fire again.`
 				)

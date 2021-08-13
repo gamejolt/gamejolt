@@ -1,6 +1,6 @@
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
-import { Growls } from '../../../../_common/growls/growls.service';
+import { Growls, showErrorGrowl } from '../../../../_common/growls/growls.service';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
 import AppGrecaptchaWidget from '../../../components/grecaptcha/widget/widget.vue';
 
@@ -33,7 +33,7 @@ export default class RouteJoinCaptcha extends BaseRouteComponent {
 	routeCreated() {
 		const token = sessionStorage.getItem('signup-auth-token');
 		if (!token) {
-			Growls.error({
+			showErrorGrowl({
 				sticky: true,
 				message: this.$gettext('Signup session expired!'),
 			});

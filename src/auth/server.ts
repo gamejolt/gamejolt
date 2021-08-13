@@ -1,4 +1,4 @@
-import { Device } from '../_common/device/device.service';
+import { setDeviceUserAgent } from '../_common/device/device.service';
 import { Environment } from '../_common/environment/environment.service';
 import { Meta } from '../_common/meta/meta-service';
 import { createApp } from './bootstrap';
@@ -10,7 +10,7 @@ export default (context: any) => {
 		const s = Date.now();
 
 		Environment.ssrContext = context;
-		Device.ua = context.ua;
+		setDeviceUserAgent(context.ua);
 		router.push(context.url);
 
 		// Wait until the route has resolved all possible async components and

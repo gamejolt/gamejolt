@@ -1,26 +1,25 @@
-import { makeObservableService } from '../../utils/vue';
+import { reactive } from '@vue/reactivity';
+import { arrayRemove } from '../../utils/array';
+
 export interface MinbarItem {
 	isActive?: boolean;
 	notificationCount?: number;
 	title: string;
 	thumb: string;
-	onClick?: Function;
+	onClick?: () => void;
 }
 
-export class Minbar {
-	static items: MinbarItem[] = [];
-
-	static add(item: MinbarItem) {
-		this.items.push(item);
-		return item;
-	}
-
-	static remove(item: MinbarItem) {
-		const index = this.items.findIndex(i => i === item);
-		if (index !== -1) {
-			this.items.splice(index, 1);
-		}
-	}
+class MinbarService {
+	items: MinbarItem[] = [];
 }
 
-makeObservableService(Minbar);
+export const Minbar = reactive(new MinbarService()) as MinbarService;
+
+export function addMinbarItem(item: MinbarItem) {
+	Minbar.items.push(item);
+	return item;
+}
+
+export function removeMinbarItem(item: MinbarItem) {
+	arrayRemove(Minbar.items, i => i === item);
+}

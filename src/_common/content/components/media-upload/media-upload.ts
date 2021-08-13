@@ -1,7 +1,7 @@
 import { EditorView } from 'prosemirror-view';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Api } from '../../../api/api.service';
-import { Growls } from '../../../growls/growls.service';
+import { showErrorGrowl } from '../../../growls/growls.service';
 import AppLoading from '../../../loading/loading.vue';
 import { MediaItem } from '../../../media-item/media-item-model';
 import AppProgressBar from '../../../progress/bar/bar.vue';
@@ -85,7 +85,7 @@ export default class AppContentMediaUpload extends Vue {
 		} catch (error) {
 			this.removeNode();
 
-			Growls.error({
+			showErrorGrowl({
 				title: this.$gettext('Oh no!'),
 				message: this.$gettext('Something went wrong while uploading your image.'),
 			});
@@ -122,7 +122,7 @@ export default class AppContentMediaUpload extends Vue {
 			const maxHeight = sizePayload.maxHeight;
 			const maxFilesize = sizePayload.maxFilesize;
 
-			Growls.error({
+			showErrorGrowl({
 				title: this.$gettext('Oh no!'),
 				message: this.$gettextInterpolate(
 					"It looks like your image's filesize or dimensions are too large. Its filesize must be less than %{ filesize } and its dimensions less than %{ width }×%{ height }",

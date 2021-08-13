@@ -1,11 +1,11 @@
 import { defineAsyncComponent } from 'vue';
-import { Modal } from '../../../../../_common/modal/modal.service';
+import { showModal } from '../../../../../_common/modal/modal.service';
 import { ChatRoom } from '../../../../components/chat/room';
 import { ChatUserCollection } from '../../../../components/chat/user-collection';
 
 export class FiresideChatMembersModal {
 	static async show(chatUsers: ChatUserCollection, chatRoom: ChatRoom) {
-		return await Modal.show<void>({
+		return await showModal<void>({
 			modalId: 'firesideChatMembers',
 			component: defineAsyncComponent(
 				() => import(/* webpackChunkName: "FiresideChatMembersModal" */ './modal.vue')

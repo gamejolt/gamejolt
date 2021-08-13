@@ -11,7 +11,7 @@ import {
 	CompetitionPeriodVoting,
 } from '../../../../../../../../../_common/community/competition/competition.model';
 import { CommunityCompetitionVotingCategory } from '../../../../../../../../../_common/community/competition/voting-category/voting-category.model';
-import { Growls } from '../../../../../../../../../_common/growls/growls.service';
+import { showErrorGrowl } from '../../../../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
@@ -161,7 +161,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends B
 			await CommunityCompetitionVotingCategory.$saveSort(this.competition.id, sortedIds);
 		} catch (e) {
 			console.error(e);
-			Growls.error(this.$gettext(`Could not save category arrangement.`));
+			showErrorGrowl(this.$gettext(`Could not save category arrangement.`));
 		}
 	}
 
@@ -191,7 +191,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends B
 			await CommunityCompetitionAward.$saveSort(this.competition.id, sortedIds);
 		} catch (e) {
 			console.error(e);
-			Growls.error(this.$gettext(`Could not save award arrangement.`));
+			showErrorGrowl(this.$gettext(`Could not save award arrangement.`));
 		}
 	}
 

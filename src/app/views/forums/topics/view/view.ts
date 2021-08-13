@@ -9,7 +9,7 @@ import { number } from '../../../../../_common/filters/number';
 import { ForumChannel } from '../../../../../_common/forum/channel/channel.model';
 import { ForumPost } from '../../../../../_common/forum/post/post.model';
 import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
-import { Growls } from '../../../../../_common/growls/growls.service';
+import { showInfoGrowl } from '../../../../../_common/growls/growls.service';
 import { HistoryTick } from '../../../../../_common/history-tick/history-tick-service';
 import AppMessageThreadAdd from '../../../../../_common/message-thread/add/add.vue';
 import AppMessageThreadPagination from '../../../../../_common/message-thread/pagination/pagination.vue';
@@ -142,7 +142,7 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 	async onPostAdded(newPost: ForumPost, response: any) {
 		// If their post was marked as spam, make sure they know.
 		if (newPost.status === ForumPost.STATUS_SPAM) {
-			Growls.info(
+			showInfoGrowl(
 				this.$gettext(
 					`Your post has been marked for review. Please allow some time for it to show on the site.`
 				),

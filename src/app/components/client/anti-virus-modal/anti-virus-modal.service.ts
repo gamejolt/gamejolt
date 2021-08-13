@@ -1,9 +1,9 @@
 import { defineAsyncComponent } from 'vue';
-import { Modal } from '../../../../_common/modal/modal.service';
+import { showModal } from '../../../../_common/modal/modal.service';
 
 export class ClientAntiVirusModal {
 	static async show(message: string, title?: string) {
-		return await Modal.show({
+		return await showModal({
 			modalId: 'ClientAntiVirus',
 			component: defineAsyncComponent(
 				() =>

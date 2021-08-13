@@ -11,7 +11,7 @@ import {
 	$viewPostVideo,
 	FiresidePostVideo,
 } from '../../../../_common/fireside/post/video/video-model';
-import { Growls } from '../../../../_common/growls/growls.service';
+import { showInfoGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { AppImgResponsive } from '../../../../_common/img/responsive/responsive';
 import AppLightboxTS from '../../../../_common/lightbox/lightbox';
 import { createLightbox, LightboxMediaSource } from '../../../../_common/lightbox/lightbox-helpers';
@@ -214,11 +214,11 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 
 	onPostRemoved() {
 		this.$router.replace({ name: 'home' });
-		Growls.info(this.$gettext('Your post has been removed'));
+		showInfoGrowl(this.$gettext('Your post has been removed'));
 	}
 
 	onPostPublished() {
-		Growls.success({
+		showSuccessGrowl({
 			title: this.$gettext('Huzzah!'),
 			message: this.$gettext('Your post has been published.'),
 		});

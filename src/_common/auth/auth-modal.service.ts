@@ -1,9 +1,9 @@
 import { defineAsyncComponent } from '@vue/runtime-core';
-import { Modal } from '../modal/modal.service';
+import { showModal } from '../modal/modal.service';
 
 export class AuthModal {
 	static async show() {
-		return await Modal.show<void>({
+		return await showModal<void>({
 			modalId: 'Auth',
 			component: defineAsyncComponent(
 				() => import(/* webpackChunkName: "AuthModal" */ './auth-modal.vue')

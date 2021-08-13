@@ -10,7 +10,7 @@ import { date } from '../../../../../_common/filters/date';
 import { number } from '../../../../../_common/filters/number';
 import { ForumPost } from '../../../../../_common/forum/post/post.model';
 import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
-import { Growls } from '../../../../../_common/growls/growls.service';
+import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
 import AppMessageThreadAdd from '../../../../../_common/message-thread/add/add.vue';
 import AppMessageThreadItem from '../../../../../_common/message-thread/item/item.vue';
 import AppMessageThread from '../../../../../_common/message-thread/message-thread.vue';
@@ -116,7 +116,7 @@ export default class AppForumPostListItem extends Vue {
 				this.isShowingReplies = true;
 			}
 		} catch (e) {
-			Growls.error(
+			showErrorGrowl(
 				this.$gettext(`Couldn't load replies for some reason.`),
 				this.$gettext(`Loading Failed`)
 			);

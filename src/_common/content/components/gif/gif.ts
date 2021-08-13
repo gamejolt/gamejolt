@@ -10,7 +10,7 @@ import AppVideo from '../../../video/video.vue';
 import { ContentOwner } from '../../content-owner';
 import AppBaseContentComponent from '../base/base-content-component.vue';
 
-const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.windowHeight * 0.25}px` });
+const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height * 0.25}px` });
 
 @Options({
 	components: {

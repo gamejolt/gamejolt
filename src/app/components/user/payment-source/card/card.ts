@@ -1,6 +1,6 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import AppCard from '../../../../../_common/card/card.vue';
-import { Growls } from '../../../../../_common/growls/growls.service';
+import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { PaymentSource } from '../../../../../_common/payment-source/payment-source.model';
 import AppUserAddressDetails from '../../address/details/details.vue';
@@ -32,7 +32,7 @@ export default class AppUserPaymentSourceCard extends Vue {
 
 		await this.paymentSource.$remove();
 
-		Growls.success(
+		showSuccessGrowl(
 			this.$gettext(`Your card has successfully been removed.`),
 			this.$gettext(`Card Removed`)
 		);

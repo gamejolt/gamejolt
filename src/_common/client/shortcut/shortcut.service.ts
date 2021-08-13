@@ -1,6 +1,6 @@
 import { Shortcut } from 'client-voodoo';
 import * as path from 'path';
-import { Device } from '../../device/device.service';
+import { getDeviceOS } from '../../device/device.service';
 import { Client } from '../client.service';
 
 export class ClientShortcut {
@@ -10,7 +10,7 @@ export class ClientShortcut {
 		}
 		// We just make ".desktop" entries for linux at the moment.
 		// This way it's easier to launch them.
-		return Device.os() === 'linux';
+		return getDeviceOS() === 'linux';
 	}
 
 	static create() {

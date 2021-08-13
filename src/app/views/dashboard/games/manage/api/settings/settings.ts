@@ -1,6 +1,6 @@
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
-import { Growls } from '../../../../../../../_common/growls/growls.service';
+import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
@@ -54,7 +54,7 @@ export default class RouteDashGamesManageApiSettings extends BaseRouteComponent 
 		if (response.newKey) {
 			this.privateKey = response.newKey;
 			this.shouldShowKey = true;
-			Growls.success({
+			showSuccessGrowl({
 				title: this.$gettext('dash.games.api.settings.generate_growl_title'),
 				message: this.$gettext('dash.games.api.settings.generate_growl'),
 				sticky: true,

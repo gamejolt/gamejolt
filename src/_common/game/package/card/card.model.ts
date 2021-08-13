@@ -1,5 +1,5 @@
 import { arrayUnique } from '../../../../utils/array';
-import { Device } from '../../../device/device.service';
+import { getDeviceArch, getDeviceOS } from '../../../device/device.service';
 import { LinkedKey } from '../../../linked-key/linked-key.model';
 import { Sellable } from '../../../sellable/sellable.model';
 import { GameBuild } from '../../build/build.model';
@@ -37,8 +37,8 @@ export class GamePackageCardModel {
 		linkedKeys?: LinkedKey[]
 	) {
 		if (builds) {
-			const os = Device.os();
-			const arch = Device.arch();
+			const os = getDeviceOS();
+			const arch = getDeviceArch();
 
 			// Indexes by the os/type of the build: [ { type: build } ]
 			// While looping we also gather all OS/browser support for this complete package.

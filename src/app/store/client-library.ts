@@ -23,13 +23,13 @@ import { VuexAction, VuexGetter, VuexModule, VuexMutation, VuexStore } from '../
 import { Analytics } from '../../_common/analytics/analytics.service';
 import { Api } from '../../_common/api/api.service';
 import { ClientUpdater } from '../../_common/client/client-updater.service';
-import { Device } from '../../_common/device/device.service';
+import { getDeviceArch, getDeviceOS } from '../../_common/device/device.service';
 import { GameBuild } from '../../_common/game/build/build.model';
 import { GameBuildLaunchOption } from '../../_common/game/build/launch-option/launch-option.model';
 import { Game } from '../../_common/game/game.model';
 import { GamePackage } from '../../_common/game/package/package.model';
 import { GameRelease } from '../../_common/game/release/release.model';
-import { Growls } from '../../_common/growls/growls.service';
+import { showErrorGrowl, showSuccessGrowl } from '../../_common/growls/growls.service';
 import { HistoryTick } from '../../_common/history-tick/history-tick-service';
 import {
 	SettingGameInstallDir,
@@ -123,7 +123,7 @@ function handleClientVoodooError(
 	}
 
 	if (message) {
-		Growls.error(message, title);
+		showErrorGrowl(message, title);
 	}
 }
 
@@ -611,7 +611,11 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 						? 'finished installing'
 						: 'updated to the latest version';
 				const title = operation === 'install' ? 'Game Installed' : 'Game Updated';
-				Growls.success({ title, message: `${packageTitle} has ${action}.`, system: true });
+				showSuccessGrowl({
+					title,
+					message: `${packageTitle} has ${action}.`,
+					system: true,
+				});
 			} else {
 				console.log('installerInstall: Handling canceled installation');
 				// If we were cancelling the first installation - we have to treat the package as uninstalled.
@@ -638,7 +642,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 					);
 					try {
 						await this.installerRollback(localPackage, packageTitle);
-						Growls.success({
+						showSuccessGrowl({
 							title: 'Update Aborted',
 							message: `${packageTitle} aborted the update.`,
 							system: true,
@@ -1014,8 +1018,8 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 		const builds = this.packages.map(i => i.build);
 
-		const os = Device.os();
-		const arch = Device.arch();
+		const os = getDeviceOS();
+		const arch = getDeviceArch();
 
 		const request: any = {
 			games: {},
@@ -1321,7 +1325,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 				if (withNotifications) {
 					if (!wasInstalling) {
-						Growls.success({
+						showSuccessGrowl({
 							title: 'Package Removed',
 							message:
 								'Removed ' +
@@ -1331,7 +1335,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 							system: true,
 						});
 					} else {
-						Growls.success({
+						showSuccessGrowl({
 							title: 'Installation Canceled',
 							message:
 								'Canceled installation of ' +

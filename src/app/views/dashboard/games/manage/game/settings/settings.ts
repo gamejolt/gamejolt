@@ -2,7 +2,7 @@ import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import AppExpand from '../../../../../../../_common/expand/expand.vue';
 import { Game } from '../../../../../../../_common/game/game.model';
-import { Growls } from '../../../../../../../_common/growls/growls.service';
+import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
@@ -74,7 +74,7 @@ export default class RouteDashGamesManageGameSettings extends BaseRouteComponent
 	}
 
 	onSaved() {
-		Growls.success(
+		showSuccessGrowl(
 			this.$gettext('dash.games.settings.save_growl'),
 			this.$gettext('dash.games.settings.save_growl_title')
 		);

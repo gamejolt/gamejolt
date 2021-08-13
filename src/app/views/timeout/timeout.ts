@@ -2,7 +2,7 @@ import { Options } from 'vue-property-decorator';
 import { LocationRedirect } from '../../../utils/router';
 import { Api } from '../../../_common/api/api.service';
 import AppContactLink from '../../../_common/contact-link/contact-link.vue';
-import { Growls } from '../../../_common/growls/growls.service';
+import { showErrorGrowl, showInfoGrowl } from '../../../_common/growls/growls.service';
 import AppIllustration from '../../../_common/illustration/illustration.vue';
 import AppLinkHelp from '../../../_common/link/help/help.vue';
 import { Navigate } from '../../../_common/navigate/navigate.service';
@@ -104,9 +104,9 @@ export default class RouteTimeout extends BaseRouteComponent {
 			this.setTimeout(newTimeout);
 
 			this.updateExpired();
-			Growls.info(this.$gettext(`The content has been removed.`));
+			showInfoGrowl(this.$gettext(`The content has been removed.`));
 		} else {
-			Growls.error(this.$gettext(`Failed to remove content.`));
+			showErrorGrowl(this.$gettext(`Failed to remove content.`));
 		}
 
 		this.isClearingResource = false;

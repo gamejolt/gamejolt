@@ -1,7 +1,7 @@
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
-import { Growls } from '../../../../_common/growls/growls.service';
+import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { AppTheme } from '../../../../_common/theme/theme';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
@@ -127,7 +127,7 @@ export default class AppChatUserPopover extends Vue {
 					{}
 				);
 				if (payload.success && payload.role) {
-					Growls.success(
+					showSuccessGrowl(
 						this.$gettextInterpolate(
 							`@%{ username } has been promoted to Moderator. Refresh the page to see changes.`,
 							{ username: this.user.username }
@@ -154,7 +154,7 @@ export default class AppChatUserPopover extends Vue {
 					{}
 				);
 				if (payload.success && payload.role) {
-					Growls.success(
+					showSuccessGrowl(
 						this.$gettextInterpolate(
 							`@%{ username } has been demoted to User. Refresh the page to see changes.`,
 							{ username: this.user.username }

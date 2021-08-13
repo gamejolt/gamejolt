@@ -11,7 +11,7 @@ import AppGameGrid from '../../../components/game/grid/grid.vue';
 import AppGameList from '../../../components/game/list/list.vue';
 import { AppActivityFeedLazy } from '../../../components/lazy';
 import AppPageContainer from '../../../components/page-container/page-container.vue';
-import { Search } from '../../../components/search/search-service';
+import { Search, sendSearch } from '../../../components/search/search-service';
 import { RouteStore, routeStore, RouteStoreModule } from '../search.store';
 
 @Options({
@@ -27,7 +27,7 @@ import { RouteStore, routeStore, RouteStoreModule } from '../search.store';
 	},
 })
 @RouteResolver({
-	resolver: ({ route }) => Search.search(route.query.q + ''),
+	resolver: ({ route }) => sendSearch(route.query.q + ''),
 	resolveStore({ route, payload }) {
 		routeStore.commit('processPayload', { payload: payload, route: route });
 	},

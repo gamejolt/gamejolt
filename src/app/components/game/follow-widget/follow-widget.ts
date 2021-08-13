@@ -7,7 +7,7 @@ import {
 import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { number } from '../../../../_common/filters/number';
 import { followGame, Game, unfollowGame } from '../../../../_common/game/game.model';
-import { Growls } from '../../../../_common/growls/growls.service';
+import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserFollowSuggestion } from '../../../../_common/user/follow/suggestion.service';
@@ -118,7 +118,7 @@ export default class AppGameFollowWidget extends Vue {
 				await followGame(this.game);
 			} catch (e) {
 				failed = true;
-				Growls.error(
+				showErrorGrowl(
 					this.$gettext('Something has prevented you from following this game.')
 				);
 			} finally {
@@ -133,7 +133,7 @@ export default class AppGameFollowWidget extends Vue {
 				await unfollowGame(this.game);
 			} catch (e) {
 				failed = true;
-				Growls.error(
+				showErrorGrowl(
 					this.$gettext('library.followed.remove_game_error_growl'),
 					this.$gettext('library.followed.remove_game_error_growl_title')
 				);

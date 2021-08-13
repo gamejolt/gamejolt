@@ -7,9 +7,12 @@ import { Backdrop } from '../../_common/backdrop/backdrop.service';
 import AppBackdrop from '../../_common/backdrop/backdrop.vue';
 import { Community, joinCommunity, leaveCommunity } from '../../_common/community/community.model';
 import { Connection } from '../../_common/connection/connection-service';
-import { ContentFocus } from '../../_common/content-focus/content-focus.service';
+import {
+	ContentFocus,
+	registerContentFocusWatcher as registerFocusWatcher,
+} from '../../_common/content-focus/content-focus.service';
 import { FiresidePost } from '../../_common/fireside/post/post-model';
-import { Growls } from '../../_common/growls/growls.service';
+import { showSuccessGrowl } from '../../_common/growls/growls.service';
 import { ModalConfirm } from '../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../_common/screen/screen-service';
 import {
@@ -256,7 +259,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		// We go to the homepage currently just in case they're in a view they shouldn't be.
 		router.push({ name: 'discover.home' });
 
-		Growls.success(
+		showSuccessGrowl(
 			Translate.$gettext('You are now logged out.'),
 			Translate.$gettext('Goodbye!')
 		);
@@ -639,7 +642,8 @@ export const store = new Store();
 sync(store, router, { moduleName: 'route' });
 
 // Sync with the ContentFocus service.
-ContentFocus.registerWatcher(
+registerFocusWatcher(
+	ContentFocus,
 	// We only care if the panes are overlaying, not if they're visible in the
 	// page without overlaying. Example is that context panes show in-page on
 	// large displays.

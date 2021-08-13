@@ -1,7 +1,7 @@
 import { defineAsyncComponent } from 'vue';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
-import { Modal } from '../../../../../_common/modal/modal.service';
+import { showModal } from '../../../../../_common/modal/modal.service';
 
 export class CommunityChannelChangeUrlModal {
 	static async show(
@@ -9,7 +9,7 @@ export class CommunityChannelChangeUrlModal {
 		community: Community,
 		channels: CommunityChannel[]
 	) {
-		return await Modal.show<CommunityChannel>({
+		return await showModal<CommunityChannel>({
 			modalId: 'CommunityChannelChangeUrl',
 			component: defineAsyncComponent(
 				() =>

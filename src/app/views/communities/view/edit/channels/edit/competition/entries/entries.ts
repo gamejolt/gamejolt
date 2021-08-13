@@ -6,7 +6,7 @@ import {
 	CompetitionPeriodVoting,
 } from '../../../../../../../../../_common/community/competition/competition.model';
 import { CommunityCompetitionEntry } from '../../../../../../../../../_common/community/competition/entry/entry.model';
-import { Growls } from '../../../../../../../../../_common/growls/growls.service';
+import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../../../../../../_common/illustration/illustration.vue';
 import AppLoading from '../../../../../../../../../_common/loading/loading.vue';
 import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
@@ -219,7 +219,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 			if (result) {
 				await entry.$unhideEntry();
 
-				Growls.success(this.$gettext(`Entry was readmitted to the jam.`));
+				showSuccessGrowl(this.$gettext(`Entry was readmitted to the jam.`));
 				this.competition.entry_count++;
 			}
 		} else {
@@ -231,7 +231,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 			if (result) {
 				await entry.$hideEntry();
 
-				Growls.success(this.$gettext(`Entry was hidden from the jam.`));
+				showSuccessGrowl(this.$gettext(`Entry was hidden from the jam.`));
 				this.competition.entry_count--;
 			}
 		}

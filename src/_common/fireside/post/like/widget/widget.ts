@@ -5,7 +5,7 @@ import { PostControlsLocation, trackPostLike } from '../../../../analytics/analy
 import { AppAuthRequired } from '../../../../auth/auth-required-directive';
 import { DrawerStore, DrawerStoreKey } from '../../../../drawer/drawer-store';
 import { fuzzynumber } from '../../../../filters/fuzzynumber';
-import { Growls } from '../../../../growls/growls.service';
+import { showErrorGrowl } from '../../../../growls/growls.service';
 import { LikersModal } from '../../../../likers/modal.service';
 import { Screen } from '../../../../screen/screen-service';
 import { AppTooltip } from '../../../../tooltip/tooltip-directive';
@@ -88,7 +88,7 @@ export default class AppFiresidePostLikeWidget extends Vue {
 				failed = true;
 				this.post.user_like = null;
 				--this.post.like_count;
-				Growls.error(`Can't do that now. Try again later?`);
+				showErrorGrowl(`Can't do that now. Try again later?`);
 			} finally {
 				trackPostLike(true, { failed, location: this.location });
 			}
@@ -107,7 +107,7 @@ export default class AppFiresidePostLikeWidget extends Vue {
 				failed = true;
 				this.post.user_like = currentLike;
 				++this.post.like_count;
-				Growls.error(`Can't do that now. Try again later?`);
+				showErrorGrowl(`Can't do that now. Try again later?`);
 			} finally {
 				trackPostLike(false, { failed, location: this.location });
 			}

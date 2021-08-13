@@ -6,7 +6,7 @@ import AppCardListItem from '../../../../../../../../_common/card/list/item/item
 import AppCardList from '../../../../../../../../_common/card/list/list.vue';
 import { currency } from '../../../../../../../../_common/filters/currency';
 import { GamePackage } from '../../../../../../../../_common/game/package/package.model';
-import { Growls } from '../../../../../../../../_common/growls/growls.service';
+import { showSuccessGrowl } from '../../../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
@@ -117,7 +117,7 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 
 		await pkg.$remove(this.game);
 
-		Growls.success(
+		showSuccessGrowl(
 			this.$gettext('The game package has been removed.'),
 			this.$gettext('Package Removed')
 		);

@@ -1,7 +1,7 @@
 import { Options, Prop } from 'vue-property-decorator';
 import { VuexStore } from '../../../../utils/vuex';
 import { Analytics } from '../../../analytics/analytics.service';
-import { Growls } from '../../../growls/growls.service';
+import { showSuccessGrowl } from '../../../growls/growls.service';
 import AppLoading from '../../../loading/loading.vue';
 import { BaseModal } from '../../../modal/base';
 import { Sellable } from '../../../sellable/sellable.model';
@@ -46,7 +46,7 @@ export default class AppGamePackagePurchaseModal extends BaseModal {
 			this.game.sellable.is_owned = true;
 		}
 
-		Growls.success({
+		showSuccessGrowl({
 			title: this.$gettext('Order Complete'),
 			message: this.$gettextInterpolate(
 				'Warm thanks from both %{ developer } and the Game Jolt team.',

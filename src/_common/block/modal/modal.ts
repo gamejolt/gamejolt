@@ -1,5 +1,5 @@
 import { Options, Prop } from 'vue-property-decorator';
-import { Growls } from '../../growls/growls.service';
+import { showInfoGrowl } from '../../growls/growls.service';
 import { BaseModal } from '../../modal/base';
 import { User } from '../../user/user.model';
 import AppBlockForm from '../form/form.vue';
@@ -14,7 +14,7 @@ export default class AppReportModal extends BaseModal {
 	user!: User;
 
 	onSubmittedBlock() {
-		Growls.info(
+		showInfoGrowl(
 			this.$gettextInterpolate(`You blocked %{ user }!`, {
 				user: this.user.username,
 			}),

@@ -1,5 +1,5 @@
 import { defineAsyncComponent } from 'vue';
-import { Modal } from '../../../../../_common/modal/modal.service';
+import { showModal } from '../../../../../_common/modal/modal.service';
 
 export class ArchiveFileSelectorModal {
 	static async show(
@@ -10,7 +10,7 @@ export class ArchiveFileSelectorModal {
 		primaryFileId: number,
 		platform: string
 	) {
-		return await Modal.show<string>({
+		return await showModal<string>({
 			modalId: 'ArchiveFileSelector',
 			component: defineAsyncComponent(
 				() =>

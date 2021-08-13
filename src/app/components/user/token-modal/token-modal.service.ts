@@ -1,9 +1,9 @@
 import { defineAsyncComponent } from 'vue';
-import { Modal } from '../../../../_common/modal/modal.service';
+import { showModal } from '../../../../_common/modal/modal.service';
 
 export class UserTokenModal {
 	static async show() {
-		return await Modal.show<void>({
+		return await showModal<void>({
 			modalId: 'UserToken',
 			component: defineAsyncComponent(
 				() => import(/* webpackChunkName: "UserTokenModal" */ './token-modal.vue')

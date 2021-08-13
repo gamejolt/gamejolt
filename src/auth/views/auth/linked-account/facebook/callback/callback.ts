@@ -7,7 +7,7 @@ import {
 	redirectToDashboard,
 	redirectToOnboarding,
 } from '../../../../../../_common/auth/auth.service';
-import { Growls } from '../../../../../../_common/growls/growls.service';
+import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import AuthLinkedAccountProcessing from '../../_processing/processing.vue';
 
@@ -28,24 +28,24 @@ export default class RouteAuthLinkedAccountFacebookCallback extends BaseRouteCom
 	routeResolved($payload: any) {
 		if (!$payload.success) {
 			if ($payload.reason && $payload.reason === 'no-email') {
-				Growls.error({
+				showErrorGrowl({
 					sticky: true,
 					message: this.$gettext(`auth.linked_account.facebook.no_email_growl`),
 				});
 			} else if ($payload.reason && $payload.reason === 'duplicate-email') {
-				Growls.error({
+				showErrorGrowl({
 					sticky: true,
 					message: this.$gettext(`auth.linked_account.facebook.duplicate_email_growl`),
 				});
 			} else if ($payload.reason && $payload.reason === 'no-unique-username') {
-				Growls.error({
+				showErrorGrowl({
 					sticky: true,
 					message: this.$gettext(
 						`Could not create a username for your account. Perhaps you already have an account?`
 					),
 				});
 			} else {
-				Growls.error({
+				showErrorGrowl({
 					sticky: true,
 					title: this.$gettext('Login Failed'),
 					message: this.$gettext('auth.linked_account.facebook.failed_growl'),

@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router';
 import { Analytics } from '../../analytics/analytics.service';
 import { Environment } from '../../environment/environment.service';
-import { Growls } from '../../growls/growls.service';
+import { showErrorGrowl } from '../../growls/growls.service';
 import { HistoryTick } from '../../history-tick/history-tick-service';
 import { Navigate } from '../../navigate/navigate.service';
 import { Popper } from '../../popper/popper.service';
@@ -96,7 +96,7 @@ export class GameDownloader {
 					Navigate.goto(downloadUrl);
 				}
 			} catch (e) {
-				Growls.error(Translate.$gettext(`Couldn't get download URL.`));
+				showErrorGrowl(Translate.$gettext(`Couldn't get download URL.`));
 			}
 
 			this.isDownloadQueued = false;

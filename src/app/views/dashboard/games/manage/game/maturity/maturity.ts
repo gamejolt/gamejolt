@@ -1,6 +1,6 @@
 import { Options } from 'vue-property-decorator';
 import { Game } from '../../../../../../../_common/game/game.model';
-import { Growls } from '../../../../../../../_common/growls/growls.service';
+import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
 import { BaseRouteComponent } from '../../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../../../_common/scroll/affix/affix.vue';
@@ -39,7 +39,7 @@ export default class RouteDashGamesManageGameMaturity extends BaseRouteComponent
 	}
 
 	onSaved() {
-		Growls.success(
+		showSuccessGrowl(
 			this.$gettext(`dash.games.maturity.saved_growl`),
 			this.$gettext(`dash.games.maturity.saved_growl_title`)
 		);

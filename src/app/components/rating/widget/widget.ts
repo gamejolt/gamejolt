@@ -4,7 +4,7 @@ import { AppAuthRequired } from '../../../../_common/auth/auth-required-directiv
 import { fuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import { Game } from '../../../../_common/game/game.model';
 import { GameRating } from '../../../../_common/game/rating/rating.model';
-import { Growls } from '../../../../_common/growls/growls.service';
+import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import { LikersModal } from '../../../../_common/likers/modal.service';
 import { EventBus } from '../../../../_common/system/event/event-bus.service';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
@@ -108,7 +108,7 @@ export default class AppRatingWidget extends Vue {
 				gameId: this.game.id,
 				userRating: oldUserRating,
 			} as RatingWidgetOnChangePayload);
-			Growls.error(`Can't do that now. Try again later?`);
+			showErrorGrowl(this.$gettext(`Can't do that right now. Try again later?`));
 		}
 	}
 }

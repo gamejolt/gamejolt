@@ -2,7 +2,7 @@ import { Inject, Options, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
-import { Growls } from '../../../../../_common/growls/growls.service';
+import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
@@ -153,7 +153,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 		await acceptCollaboration(this.routeStore, this.user);
 		this.joinCommunity({ community: this.community });
-		Growls.success(this.$gettext(`You are now a collaborator on this community!`));
+		showSuccessGrowl(this.$gettext(`You are now a collaborator on this community!`));
 	}
 
 	async declineCollaboration() {

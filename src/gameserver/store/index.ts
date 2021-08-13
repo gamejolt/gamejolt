@@ -114,7 +114,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 			this.token = response.token;
 		}
 
-		Meta.setTitle(this.package.title || this.game.title);
+		Meta.title = this.package.title || this.game.title;
 	}
 }
 

@@ -3,7 +3,7 @@ import { VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vue
 import { Analytics, trackGameFollow } from '../../_common/analytics/analytics.service';
 import { GamePlaylist } from '../../_common/game-playlist/game-playlist.model';
 import { Game, unfollowGame } from '../../_common/game/game.model';
-import { Growls } from '../../_common/growls/growls.service';
+import { showErrorGrowl, showSuccessGrowl } from '../../_common/growls/growls.service';
 import { ModalConfirm } from '../../_common/modal/confirm/confirm-service';
 import { Scroll } from '../../_common/scroll/scroll.service';
 import { Translate } from '../../_common/translate/translate.service';
@@ -219,7 +219,7 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 			if (isViewingCollection(collection)) {
 				router.replace({ name: 'library.overview' });
 
-				Growls.success(
+				showSuccessGrowl(
 					Translate.$gettextInterpolate(
 						collection.isOwner
 							? Translate.$gettext(`%{ playlist } has been removed.`)
@@ -236,7 +236,7 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 				return true;
 			}
 		} catch (e) {
-			Growls.error(Translate.$gettext(`Error! Error! Unable to unfollow this playlist.`));
+			showErrorGrowl(Translate.$gettext(`Error! Error! Unable to unfollow this playlist.`));
 		}
 
 		return false;
@@ -247,7 +247,7 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 		try {
 			await playlist.$addGame(game.id);
 
-			Growls.success(
+			showSuccessGrowl(
 				Translate.$gettextInterpolate(`You've added %{ game } to %{ playlist }. Nice!`, {
 					game: game.title,
 					playlist: playlist.name,
@@ -257,7 +257,7 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 
 			return true;
 		} catch (e) {
-			Growls.error(
+			showErrorGrowl(
 				Translate.$gettext(`Error! Error! This game could not be added to the playlist.`)
 			);
 		}
@@ -288,7 +288,7 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 		try {
 			await playlist.$removeGame(game.id);
 
-			Growls.success(
+			showSuccessGrowl(
 				Translate.$gettextInterpolate(
 					`You have successfully removed %{ game } from %{ playlist }.`,
 					{ game: game.title, playlist: playlist.name }
@@ -298,7 +298,7 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 
 			return true;
 		} catch (e) {
-			Growls.error(
+			showErrorGrowl(
 				Translate.$gettext(
 					`Error! Error! This game could not be removed from the playlist.`
 				)
@@ -324,7 +324,7 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 		try {
 			await unfollowGame(game);
 
-			Growls.success(
+			showSuccessGrowl(
 				Translate.$gettextInterpolate(
 					`You have stopped following %{ game } and will no longer receive notifications about it.`,
 					{ game: game.title }
@@ -335,7 +335,7 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 			return true;
 		} catch (e) {
 			failed = true;
-			Growls.error(
+			showErrorGrowl(
 				Translate.$gettext(`Uh-oh, something has prevented you from unfollowing this game.`)
 			);
 		} finally {

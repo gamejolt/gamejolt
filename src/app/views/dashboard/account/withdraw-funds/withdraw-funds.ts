@@ -3,7 +3,7 @@ import { Api } from '../../../../../_common/api/api.service';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import { currency } from '../../../../../_common/filters/currency';
 import { number } from '../../../../../_common/filters/number';
-import { Growls } from '../../../../../_common/growls/growls.service';
+import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
@@ -72,7 +72,7 @@ export default class RouteDashAccountWithdrawFunds extends BaseRouteComponent {
 	}
 
 	onSubmit() {
-		Growls.success(
+		showSuccessGrowl(
 			this.$gettext('dash.funds.withdraw.success_growl'),
 			this.$gettext('dash.funds.withdraw.success_growl_title')
 		);

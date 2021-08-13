@@ -1,7 +1,7 @@
 import { Options } from 'vue-property-decorator';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import AppGameGrid from '../../../components/game/grid/grid.vue';
-import { Search } from '../../../components/search/search-service';
+import { Search, sendSearch } from '../../../components/search/search-service';
 import { RouteStore, routeStore, RouteStoreModule } from '../search.store';
 
 @Options({
@@ -13,7 +13,7 @@ import { RouteStore, routeStore, RouteStoreModule } from '../search.store';
 @RouteResolver({
 	cache: true,
 	resolver: ({ route }) =>
-		Search.search(route.query.q as string, {
+		sendSearch(route.query.q as string, {
 			type: 'game',
 			page: route.query.page ? parseInt(route.query.page as string, 10) : 1,
 		}),

@@ -14,7 +14,7 @@ import { FiresidePostGotoGrowl } from '../../../_common/fireside/post/goto-growl
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { FiresideStreamNotification } from '../../../_common/fireside/stream-notification/stream-notification.model';
 import { GameTrophy } from '../../../_common/game/trophy/trophy.model';
-import { Growls } from '../../../_common/growls/growls.service';
+import { showInfoGrowl } from '../../../_common/growls/growls.service';
 import { Notification } from '../../../_common/notification/notification-model';
 import { NotificationText } from '../../../_common/notification/notification-text.service';
 import { SettingFeedNotifications } from '../../../_common/settings/settings.service';
@@ -603,11 +603,11 @@ export class GridClient {
 				}
 			}
 
-			Growls.info({
+			showInfoGrowl({
 				title,
 				message,
 				icon,
-				onclick: () => {
+				onClick: () => {
 					Analytics.trackEvent('grid', 'notification-click', notification.type);
 					notification.go(router);
 				},

@@ -2,7 +2,7 @@ import { StickerCount } from '../../app/views/dashboard/stickers/stickers';
 import { arrayRemove, numberSort } from '../../utils/array';
 import { Analytics } from '../analytics/analytics.service';
 import { Api } from '../api/api.service';
-import { Growls } from '../growls/growls.service';
+import { showErrorGrowl } from '../growls/growls.service';
 import {
 	getCollidingStickerTarget,
 	StickerLayerController,
@@ -220,7 +220,7 @@ export async function commitDrawerStoreItemPlacement(store: DrawerStore) {
 
 		setDrawerOpen(store, false);
 	} else {
-		Growls.error(Translate.$gettext(`Failed to place sticker.`));
+		showErrorGrowl(Translate.$gettext(`Failed to place sticker.`));
 	}
 }
 

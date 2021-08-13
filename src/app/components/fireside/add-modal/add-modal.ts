@@ -2,7 +2,7 @@ import { Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
-import { Growls } from '../../../../_common/growls/growls.service';
+import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { BaseModal } from '../../../../_common/modal/base';
 import FormFiresideAdd from '../../forms/fireside/add/add.vue';
@@ -57,7 +57,7 @@ export default class AppFiresideAddModal extends BaseModal {
 		if (!payload.success) {
 			console.log(payload);
 			if (payload.errors && payload.errors['rate-limit']) {
-				Growls.error(
+				showErrorGrowl(
 					this.$gettext(
 						`Cannot create a new Fireside... yet. Try again in a couple minutes.`
 					)
@@ -79,7 +79,7 @@ export default class AppFiresideAddModal extends BaseModal {
 	}
 
 	private showGenericError() {
-		Growls.error(
+		showErrorGrowl(
 			this.$gettext(`Couldn't created your Fireside. Reload the page and try again.`)
 		);
 	}

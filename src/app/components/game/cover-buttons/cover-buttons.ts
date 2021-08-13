@@ -1,7 +1,7 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { arrayUnique } from '../../../../utils/array';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
-import { Device } from '../../../../_common/device/device.service';
+import { getDeviceArch, getDeviceOS } from '../../../../_common/device/device.service';
 import { GameBuild } from '../../../../_common/game/build/build.model';
 import { GameDownloader } from '../../../../_common/game/downloader/downloader.service';
 import { Game } from '../../../../_common/game/game.model';
@@ -99,8 +99,8 @@ export default class AppGameCoverButtons extends Vue {
 	download() {
 		Analytics.trackEvent('game-cover-buttons', 'download', 'download');
 
-		const os = Device.os();
-		const arch = Device.arch();
+		const os = getDeviceOS();
+		const arch = getDeviceArch();
 
 		// This will return builds that may not work for this OS, but it's still the "best" to get.
 		const defaultBuild = Game.chooseBestBuild(this.downloadableBuilds, os, arch);

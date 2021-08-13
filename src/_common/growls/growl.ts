@@ -27,8 +27,8 @@ export default class AppGrowl extends Vue {
 	// When they click on the element, never auto-leave again.
 	// They must explictly close it after that.
 	onClick(event: Event) {
-		if (this.growl.onclick) {
-			this.growl.onclick(event);
+		if (this.growl.onClick) {
+			this.growl.onClick(event);
 			this.remove(event);
 		}
 	}

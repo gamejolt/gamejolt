@@ -7,7 +7,7 @@ import {
 	redirectToDashboard,
 	redirectToOnboarding,
 } from '../../../../../../_common/auth/auth.service';
-import { Growls } from '../../../../../../_common/growls/growls.service';
+import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import AuthLinkedAccountProcessing from '../../_processing/processing.vue';
 
@@ -28,28 +28,28 @@ export default class RouteAuthLinkedAccountTwitchCallback extends BaseRouteCompo
 	routeResolved($payload: any) {
 		if (!$payload.success) {
 			if ($payload.reason && $payload.reason === 'no-email') {
-				Growls.error({
+				showErrorGrowl({
 					sticky: true,
 					message: this.$gettext(
 						`Your Twitch account did not return an email address. Make sure you have verified it with Twitch.`
 					),
 				});
 			} else if ($payload.reason && $payload.reason === 'duplicate-email') {
-				Growls.error({
+				showErrorGrowl({
 					sticky: true,
 					message: this.$gettext(
 						`The email address on this Twitch account is already in use. Perhaps you already have an account?`
 					),
 				});
 			} else if ($payload.reason && $payload.reason === 'no-unique-username') {
-				Growls.error({
+				showErrorGrowl({
 					sticky: true,
 					message: this.$gettext(
 						`Could not create a username for your account. Perhaps you already have an account?`
 					),
 				});
 			} else {
-				Growls.error({
+				showErrorGrowl({
 					sticky: true,
 					title: this.$gettext('Login Failed'),
 					message: this.$gettext('Unable to log in with Twitch.'),

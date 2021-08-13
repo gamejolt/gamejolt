@@ -1,6 +1,6 @@
 import { Options } from 'vue-property-decorator';
 import * as _ClientMod from '../../../../../_common/client/client.service';
-import { Growls } from '../../../../../_common/growls/growls.service';
+import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import { AppProgressPoller } from '../../../../../_common/progress/poller/poller';
 import { BaseRouteComponent } from '../../../../../_common/route/route-component';
@@ -50,7 +50,7 @@ export default class RouteAuthLinkedAccountPoll extends BaseRouteComponent {
 	}
 
 	failed() {
-		Growls.error(this.$gettext(`Couldn't authorize.`), this.$gettext(`Authorization Failed`));
+		showErrorGrowl(this.$gettext(`Couldn't authorize.`), this.$gettext(`Authorization Failed`));
 		this.$router.push({ name: 'auth.login' });
 	}
 }

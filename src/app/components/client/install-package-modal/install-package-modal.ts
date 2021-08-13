@@ -1,7 +1,7 @@
 import { Options, Prop } from 'vue-property-decorator';
 import { arrayIndexBy } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
-import { Device } from '../../../../_common/device/device.service';
+import { getDeviceArch, getDeviceOS } from '../../../../_common/device/device.service';
 import { filesize } from '../../../../_common/filters/filesize';
 import { GameBuild } from '../../../../_common/game/build/build.model';
 import { Game } from '../../../../_common/game/game.model';
@@ -52,8 +52,8 @@ export default class AppClientInstallPackageModal extends BaseModal {
 		const payload = await Api.sendRequest(`/web/discover/games/packages/${this.game.id}`);
 		this.packageData = new GamePackagePayloadModel(payload);
 
-		const os = Device.os();
-		const arch = Device.arch();
+		const os = getDeviceOS();
+		const arch = getDeviceArch();
 		this.packageData.installableBuilds = Game.pluckInstallableBuilds(
 			this.packageData.packages,
 			os!,
