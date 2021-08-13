@@ -7,15 +7,15 @@ import { ContentOwner } from '../../content-owner';
 @Options({})
 export class AppContentViewerSticker extends Vue {
 	@Prop(ContentObject)
-	data!: ContentObject;
+	contentData!: ContentObject;
 
 	@Prop(Object)
 	owner!: ContentOwner;
 
 	render() {
 		return h(AppContentSticker, {
-			key: this.data.attrs.id,
-			stickerId: this.data.attrs.id,
+			key: this.contentData.attrs.id,
+			stickerId: this.contentData.attrs.id,
 			isEditing: false,
 			owner: this.owner,
 		});

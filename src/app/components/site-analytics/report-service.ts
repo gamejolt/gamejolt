@@ -1,7 +1,7 @@
+import { arrayUnique } from '../../../utils/array';
 import { Api } from '../../../_common/api/api.service';
 import { Geo } from '../../../_common/geo/geo.service';
 import { Translate } from '../../../_common/translate/translate.service';
-import { arrayUnique } from '../../../utils/array';
 import {
 	Analyzer,
 	Collection,
@@ -104,7 +104,7 @@ export class SiteAnalyticsReport {
 			this.isLoaded = true;
 
 			this.components.forEach((component, i) => {
-				let response = this.processComponentResponse(
+				const response = this.processComponentResponse(
 					component,
 					componentResponses[i].data,
 					componentResponses[i].gathers
@@ -115,7 +115,8 @@ export class SiteAnalyticsReport {
 				component.total = response.total;
 
 				if (component.type === 'sum' || component.type === 'average') {
-					component.hasData = typeof component.data !== 'undefined' && component.data !== null;
+					component.hasData =
+						typeof component.data !== 'undefined' && component.data !== null;
 				} else {
 					component.hasData = component.data && Object.keys(component.data).length > 0;
 				}
@@ -165,7 +166,7 @@ export class SiteAnalyticsReport {
 			request.resource_fields = [];
 			// Resource fields has different string union types as values, and
 			// typescript can't infer it as a merged string union yet.
-			for (let k of Object.keys(resourceFields)) {
+			for (const k of Object.keys(resourceFields)) {
 				request.resource_fields.push(...(resourceFields as any)[k]);
 			}
 		}
@@ -190,7 +191,7 @@ export class SiteAnalyticsReport {
 			displayField = component.displayField;
 
 		// Copy the response.
-		let response: any = Object.assign({}, _response);
+		const response: any = Object.assign({}, _response);
 		let graph: any = null;
 		let data: any = {};
 
@@ -210,6 +211,7 @@ export class SiteAnalyticsReport {
 			if (field !== 'rating') {
 				data = [];
 				Object.entries(response.result).forEach((kv: any) => {
+					// eslint-disable-next-line prefer-const
 					let [key, val] = kv;
 
 					switch (analyzer) {
@@ -239,7 +241,7 @@ export class SiteAnalyticsReport {
 
 			// Top composition fields may refer to gathered fields. In this case replace them in now.
 			if (gathers && displayField) {
-				for (let dataEntry of response.result) {
+				for (const dataEntry of response.result) {
 					const resourceInfo: string[] = dataEntry.label.split('-');
 					const resourceName = resourceInfo[0],
 						resourceId = parseInt(resourceInfo[1], 10);
@@ -286,7 +288,10 @@ export class SiteAnalyticsReport {
 				for (let i = 0; i < Math.min(response.result.length, 3); i++) {
 					const dataEntry = response.result[i];
 					graph.push({
-						label: typeof dataEntry.label === 'object' ? dataEntry.label.value : dataEntry.label,
+						label:
+							typeof dataEntry.label === 'object'
+								? dataEntry.label.value
+								: dataEntry.label,
 						value: dataEntry.value,
 					});
 				}

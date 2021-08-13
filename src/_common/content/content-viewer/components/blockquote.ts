@@ -7,12 +7,12 @@ import { renderChildren } from './base-component';
 @Options({})
 export class AppContentViewerBlockquote extends Vue {
 	@Prop(ContentObject)
-	data!: ContentObject;
+	contentData!: ContentObject;
 
 	@Prop(Object)
 	owner!: ContentOwner;
 
 	render() {
-		return h('blockquote', {}, renderChildren(this.owner, this.data.content));
+		return h('blockquote', {}, renderChildren(this.owner, this.contentData.content));
 	}
 }

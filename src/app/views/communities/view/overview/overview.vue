@@ -35,7 +35,7 @@
 				/>
 			</template>
 			<template #sidebar>
-				<app-community-sidebar :data="sidebarData" :community="community" />
+				<app-community-sidebar :sidebar-data="sidebarData" :community="community" />
 			</template>
 		</app-communities-view-page-container>
 	</div>

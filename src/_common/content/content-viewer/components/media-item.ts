@@ -7,20 +7,20 @@ import { ContentOwner } from '../../content-owner';
 @Options({})
 export class AppContentViewerMediaItem extends Vue {
 	@Prop(ContentObject)
-	data!: ContentObject;
+	contentData!: ContentObject;
 
 	@Prop(Object)
 	owner!: ContentOwner;
 
 	render() {
 		return h(AppContentMediaItem, {
-			key: this.data.attrs.id,
-			mediaItemId: this.data.attrs.id,
-			mediaItemWidth: this.data.attrs.width,
-			mediaItemHeight: this.data.attrs.height,
-			caption: this.data.attrs.caption,
-			align: this.data.attrs.align,
-			href: this.data.attrs.href,
+			key: this.contentData.attrs.id,
+			mediaItemId: this.contentData.attrs.id,
+			mediaItemWidth: this.contentData.attrs.width,
+			mediaItemHeight: this.contentData.attrs.height,
+			caption: this.contentData.attrs.caption,
+			align: this.contentData.attrs.align,
+			href: this.contentData.attrs.href,
 			isEditing: false,
 			owner: this.owner,
 		});

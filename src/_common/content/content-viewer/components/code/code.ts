@@ -31,7 +31,7 @@ const LANGUAGE_MAP = {
 @Options({})
 export class AppContentViewerCodeBlock extends Vue {
 	@Prop(ContentObject)
-	data!: ContentObject;
+	contentData!: ContentObject;
 
 	@Prop(Object)
 	owner!: ContentOwner;
@@ -61,8 +61,8 @@ export class AppContentViewerCodeBlock extends Vue {
 		let text = '';
 		let language = 'nocode';
 
-		if (this.data.content.length > 0) {
-			text = this.data.content[0].text || '';
+		if (this.contentData.content.length > 0) {
+			text = this.contentData.content[0].text || '';
 		}
 
 		// Try and find a language annotation.
@@ -97,7 +97,7 @@ export class AppContentViewerCodeBlock extends Vue {
 		return h(
 			'pre',
 			{ class: 'content-viewer-code-block content-viewer-nocode' },
-			renderChildren(this.owner, this.data.content)
+			renderChildren(this.owner, this.contentData.content)
 		);
 	}
 

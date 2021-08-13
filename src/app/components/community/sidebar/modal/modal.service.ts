@@ -5,13 +5,13 @@ import { CommunitySidebarData } from '../sidebar-data';
 
 interface Options {
 	isEditing: boolean;
-	data: CommunitySidebarData;
+	sidebarData: CommunitySidebarData;
 	community: Community;
 }
 
 export class CommunitySidebarModal {
 	static async show(options: Options) {
-		const { isEditing, community, data } = options;
+		const { isEditing, community, sidebarData } = options;
 
 		return await Modal.show<void>({
 			modalId: 'CommunitySidebarModal-' + community.id,
@@ -20,7 +20,7 @@ export class CommunitySidebarModal {
 			),
 			props: {
 				isEditing,
-				data,
+				sidebarData,
 				community,
 			},
 			size: 'sm',

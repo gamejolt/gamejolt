@@ -57,8 +57,8 @@ function getComponentType(data: ContentObject): any {
 export function renderChildren(owner: ContentOwner, childObjects: ReadonlyArray<ContentObject>) {
 	const children = [];
 	if (childObjects) {
-		for (const obj of childObjects) {
-			const childVNode = h(getComponentType(obj), { data: obj, owner });
+		for (const contentData of childObjects) {
+			const childVNode = h(getComponentType(contentData), { contentData, owner });
 			children.push(childVNode);
 		}
 	}

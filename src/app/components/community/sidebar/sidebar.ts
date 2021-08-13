@@ -41,7 +41,7 @@ export default class AppCommunitySidebar extends Vue {
 	community!: Community;
 
 	@Prop(CommunitySidebarData)
-	data!: CommunitySidebarData;
+	sidebarData!: CommunitySidebarData;
 
 	@State
 	app!: Store['app'];
@@ -68,11 +68,15 @@ export default class AppCommunitySidebar extends Vue {
 	}
 
 	get shouldShowKnownMembers() {
-		return !!this.app.user && this.data.knownMembers && this.data.knownMembers.length > 0;
+		return (
+			!!this.app.user &&
+			this.sidebarData.knownMembers &&
+			this.sidebarData.knownMembers.length > 0
+		);
 	}
 
 	get membersYouKnowCount() {
-		return number(this.data.knownMemberCount);
+		return number(this.sidebarData.knownMemberCount);
 	}
 
 	get shareUrl() {
@@ -86,18 +90,18 @@ export default class AppCommunitySidebar extends Vue {
 	}
 
 	get hasMoreCollaborators() {
-		return this.currentCollaboratorCount > this.data.initialCollaboratorCount;
+		return this.currentCollaboratorCount > this.sidebarData.initialCollaboratorCount;
 	}
 
 	get moderators(): User[] {
 		const mods = [];
-		if (this.data.owner) {
-			mods.push(this.data.owner);
+		if (this.sidebarData.owner) {
+			mods.push(this.sidebarData.owner);
 		}
 		if (this.currentCollaborators) {
 			if (this.collaboratorListCollapsed) {
 				mods.push(
-					...this.currentCollaborators.slice(0, this.data.initialCollaboratorCount)
+					...this.currentCollaborators.slice(0, this.sidebarData.initialCollaboratorCount)
 				);
 			} else {
 				mods.push(...this.currentCollaborators);

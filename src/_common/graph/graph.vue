@@ -1,16 +1,18 @@
+<script lang="ts" src="./graph"></script>
+
 <template>
 	<div
 		class="graph full-bleed-xs"
 		:class="['graph-' + type, backgroundVariant ? 'graph-background-variant' : '']"
 	>
 		<div class="chart">
-			<canvas ref="canvas"></canvas>
+			<canvas ref="canvas" />
 		</div>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
 
 .graph
 	padding: ($grid-gutter-width-xs / 2)
@@ -22,8 +24,6 @@
 .graph-background-variant
 	background-color: inherit !important
 
-@require './line'
-@require './pie'
+@import './line'
+@import './pie'
 </style>
-
-<script lang="ts" src="./graph"></script>

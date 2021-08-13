@@ -9,24 +9,24 @@ import AppContentViewerTag from './tag/tag.vue';
 @Options({})
 export class AppContentViewerText extends Vue {
 	@Prop(ContentObject)
-	data!: ContentObject;
+	contentData!: ContentObject;
 
 	@Prop(Object)
 	owner!: ContentOwner;
 
 	hasMark(mark: string) {
-		return this.data.marks && this.data.marks.some(m => m.type === mark);
+		return this.contentData.marks && this.contentData.marks.some(m => m.type === mark);
 	}
 
 	getMarkAttrs(mark: string) {
 		if (this.hasMark(mark)) {
-			return this.data.marks.find(m => m.type === mark)!.attrs;
+			return this.contentData.marks.find(m => m.type === mark)!.attrs;
 		}
 		return [];
 	}
 
 	get text() {
-		const text = this.data.text;
+		const text = this.contentData.text;
 
 		if (text && text?.length > 64 && this.isLink) {
 			const rules = this.owner.getContentRules();

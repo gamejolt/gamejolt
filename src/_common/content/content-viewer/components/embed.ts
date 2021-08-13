@@ -7,19 +7,19 @@ import { ContentOwner } from '../../content-owner';
 @Options({})
 export class AppContentViewerEmbed extends Vue {
 	@Prop(ContentObject)
-	data!: ContentObject;
+	contentData!: ContentObject;
 
 	@Prop(Object)
 	owner!: ContentOwner;
 
 	render() {
-		if (!this.data.attrs.type || !this.data.attrs.source) {
+		if (!this.contentData.attrs.type || !this.contentData.attrs.source) {
 			return h('div');
 		}
 
 		return h(AppContentEmbed, {
-			type: this.data.attrs.type,
-			source: this.data.attrs.source,
+			type: this.contentData.attrs.type,
+			source: this.contentData.attrs.source,
 			isEditing: false,
 			owner: this.owner,
 		});

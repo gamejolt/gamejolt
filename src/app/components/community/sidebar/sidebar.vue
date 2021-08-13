@@ -5,14 +5,14 @@
 		<div v-if="shouldShowKnownMembers">
 			<h5 class="section-header">
 				<translate
-					:translate-n="data.knownMemberCount"
+					:translate-n="sidebarData.knownMemberCount"
 					:translate-params="{ count: membersYouKnowCount }"
 					translate-plural="%{ count } members you know"
 				>
 					1 member you know
 				</translate>
 			</h5>
-			<app-user-avatar-list :users="data.knownMembers" />
+			<app-user-avatar-list :users="sidebarData.knownMembers" />
 			<br />
 		</div>
 
@@ -78,7 +78,7 @@
 						</span>
 					</router-link>
 				</app-user-card-hover>
-				<span v-if="data.owner && user.id === data.owner.id" class="badge">
+				<span v-if="sidebarData.owner && user.id === sidebarData.owner.id" class="badge">
 					<translate>owner</translate>
 				</span>
 			</div>

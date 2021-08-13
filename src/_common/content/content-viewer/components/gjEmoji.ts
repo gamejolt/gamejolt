@@ -5,12 +5,12 @@ import { ContentObject } from '../../content-object';
 @Options({})
 export class AppContentViewerGJEmoji extends Vue {
 	@Prop(ContentObject)
-	data!: ContentObject;
+	contentData!: ContentObject;
 
 	render() {
 		return h('span', {
-			class: 'emoji emoji-' + this.data.attrs.type,
-			title: `:${this.data.attrs.type}:`,
+			class: 'emoji emoji-' + this.contentData.attrs.type,
+			title: `:${this.contentData.attrs.type}:`,
 		});
 	}
 }

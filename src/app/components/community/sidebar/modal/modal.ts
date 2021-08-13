@@ -11,7 +11,12 @@ import AppCommunitySidebar from '../sidebar.vue';
 	},
 })
 export default class AppCommunitySidebarModal extends BaseModal {
-	@Prop(propRequired(Boolean)) isEditing!: boolean;
-	@Prop(propRequired(CommunitySidebarData)) data!: CommunitySidebarData;
-	@Prop(propRequired(Community)) community!: Community;
+	@Prop(propRequired(Boolean))
+	isEditing!: boolean;
+
+	@Prop(propRequired(CommunitySidebarData))
+	sidebarData!: CommunitySidebarData;
+
+	@Prop(propRequired(Community))
+	community!: Community;
 }

@@ -1,3 +1,5 @@
+<script lang="ts" src="./modal"></script>
+
 <template>
 	<app-modal>
 		<div class="modal-controls">
@@ -7,9 +9,11 @@
 		</div>
 
 		<div class="modal-body">
-			<app-community-sidebar :is-editing="isEditing" :community="community" :data="data" />
+			<app-community-sidebar
+				:is-editing="isEditing"
+				:community="community"
+				:sidebar-data="sidebarData"
+			/>
 		</div>
 	</app-modal>
 </template>
-
-<script lang="ts" src="./modal"></script>

@@ -7,12 +7,12 @@ import { renderChildren } from './base-component';
 @Options({})
 export class AppContentViewerListItem extends Vue {
 	@Prop(ContentObject)
-	data!: ContentObject;
+	contentData!: ContentObject;
 
 	@Prop(Object)
 	owner!: ContentOwner;
 
 	render() {
-		return h('li', {}, renderChildren(this.owner, this.data.content));
+		return h('li', {}, renderChildren(this.owner, this.contentData.content));
 	}
 }

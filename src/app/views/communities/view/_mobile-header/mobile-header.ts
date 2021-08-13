@@ -96,7 +96,7 @@ export default class AppMobileHeader extends Vue {
 		if (sidebarData) {
 			CommunitySidebarModal.show({
 				isEditing: false,
-				data: sidebarData,
+				sidebarData,
 				community,
 			});
 		}

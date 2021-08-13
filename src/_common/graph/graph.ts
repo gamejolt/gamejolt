@@ -87,15 +87,19 @@ const backgroundVariantChartOptions: any = {
 
 @Options({})
 export default class AppGraph extends Vue {
-	@Prop(Array) dataset!: any[];
+	@Prop(Array)
+	dataset!: any[];
+
 	@Prop({ type: String, default: 'line' })
 	type!: string;
-	@Prop(Boolean) backgroundVariant?: boolean;
+
+	@Prop(Boolean)
+	backgroundVariant?: boolean;
 
 	@ThemeState theme?: ThemeStore['theme'];
 
 	chart: Chart = null as any;
-	data: any = {};
+	graphData: any = {};
 	chartOptions: any = {};
 	ourColors: any = {};
 
@@ -171,7 +175,7 @@ export default class AppGraph extends Vue {
 
 		this.chart = new Chart(this.$refs.canvas as HTMLCanvasElement, {
 			type: this.type,
-			data: this.data,
+			data: this.graphData,
 			options: this.chartOptions,
 		});
 	}
@@ -187,14 +191,14 @@ export default class AppGraph extends Vue {
 			return;
 		}
 
-		this.data = {
+		this.graphData = {
 			labels: [],
 			datasets: [],
 		};
 
 		if (this.type === 'line') {
 			this.dataset.forEach((series: any, i: number) => {
-				let dataset: any = {
+				const dataset: any = {
 					label: series.label,
 					data: [],
 				};
@@ -203,21 +207,21 @@ export default class AppGraph extends Vue {
 
 				for (const row of series.data) {
 					if (i === 0) {
-						this.data.labels.push(date(row[0], 'LLL dd'));
+						this.graphData.labels.push(date(row[0], 'LLL dd'));
 					}
 
 					dataset.data.push(row[1]);
 				}
 
-				this.data.datasets.push(dataset);
+				this.graphData.datasets.push(dataset);
 			});
 		} else if (this.type === 'pie' || this.type === 'doughnut') {
-			this.data.datasets.push({
+			this.graphData.datasets.push({
 				data: [],
 			});
 
 			this.dataset.forEach((item: any, i: number) => {
-				const dataset = this.data.datasets[0];
+				const dataset = this.graphData.datasets[0];
 
 				dataset.data.push(item.value);
 
@@ -236,12 +240,12 @@ export default class AppGraph extends Vue {
 					dataset[n].push(colorInfo[n]);
 				}
 
-				this.data.labels.push(item.label);
+				this.graphData.labels.push(item.label);
 			});
 		}
 
 		if (this.chart) {
-			this.chart.data = this.data;
+			this.chart.data = this.graphData;
 			this.chart.update();
 		}
 	}

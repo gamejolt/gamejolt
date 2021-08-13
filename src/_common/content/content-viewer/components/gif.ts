@@ -7,19 +7,19 @@ import { ContentOwner } from '../../content-owner';
 @Options({})
 export class AppContentViewerGif extends Vue {
 	@Prop(ContentObject)
-	data!: ContentObject;
+	contentData!: ContentObject;
 
 	@Prop(Object)
 	owner!: ContentOwner;
 
 	render() {
 		return h(AppContentGif, {
-			gifId: this.data.attrs.id,
-			width: this.data.attrs.width,
-			height: this.data.attrs.height,
-			service: this.data.attrs.service,
-			media: this.data.attrs.media,
-			url: this.data.attrs.url,
+			gifId: this.contentData.attrs.id,
+			width: this.contentData.attrs.width,
+			height: this.contentData.attrs.height,
+			service: this.contentData.attrs.service,
+			media: this.contentData.attrs.media,
+			url: this.contentData.attrs.url,
 			isEditing: false,
 			owner: this.owner,
 			isDisabled: false,
