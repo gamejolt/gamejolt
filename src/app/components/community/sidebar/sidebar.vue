@@ -86,48 +86,39 @@
 		</div>
 
 		<div class="-community-end small">
-			<div>
-				<app-share-card
-					v-if="useShareCard"
-					:model="community"
-					:url="shareUrl"
-					bleed-padding
-				/>
-				<app-popper
-					v-else
-					popover-class="fill-darkest"
-					@show="isShowingShare = true"
-					@hide="isShowingShare = false"
-				>
-					<a>
-						<translate>Share this community</translate>
-					</a>
+			<app-share-card v-if="useShareCard" :model="community" :url="shareUrl" bleed-padding />
+			<app-popper
+				v-else
+				popover-class="fill-darkest"
+				@show="isShowingShare = true"
+				@hide="isShowingShare = false"
+			>
+				<a>
+					<translate>Share this community</translate>
+				</a>
 
-					<div v-if="isShowingShare" slot="popover" class="well sans-margin">
-						<div v-if="!GJ_IS_CLIENT" class="social-widgets">
-							<app-social-twitter-share :url="shareUrl" :content="shareContent" />
+				<div v-if="isShowingShare" slot="popover" class="well sans-margin">
+					<div v-if="!GJ_IS_CLIENT" class="social-widgets">
+						<app-social-twitter-share :url="shareUrl" :content="shareContent" />
 
-							<span class="dot-separator" />
+						<span class="dot-separator" />
 
-							<app-social-facebook-like :url="shareUrl" />
-						</div>
-
-						<app-button block @click="copyShareUrl">
-							<translate>Copy Link</translate>
-						</app-button>
+						<app-social-facebook-like :url="shareUrl" />
 					</div>
-				</app-popper>
 
+					<app-button block @click="copyShareUrl">
+						<translate>Copy Link</translate>
+					</app-button>
+				</div>
+			</app-popper>
+
+			<div class="text-muted">
 				<template v-if="shouldShowReport">
-					<span class="dot-separator" />
-
 					<a @click="onClickReport">
 						<translate>Report</translate>
 					</a>
+					<span class="dot-separator" />
 				</template>
-			</div>
-
-			<div class="text-muted">
 				A community for
 				<app-time-ago :date="community.added_on" without-suffix />
 			</div>
