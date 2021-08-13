@@ -1,5 +1,5 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 // Have to put all the sizing information here.
 make-button-size(size)
@@ -73,11 +73,14 @@ make-button-size(size)
 		text-decoration: none
 		cursor: pointer
 
-		>>> .jolticon-addon, >>> small
+		::v-deep(.jolticon-addon)
+		::v-deep(small)
 			theme-prop('color', 'bi-fg', true)
 
 	// Disabled state.
-	&.-disabled, &[disabled], fieldset[disabled] &
+	&.-disabled
+	&[disabled]
+	fieldset[disabled] &
 		cursor: not-allowed
 		opacity: 0.5
 		transform: none
@@ -86,14 +89,14 @@ make-button-size(size)
 			cursor: not-allowed
 
 	// Content
-	>>> .jolticon-addon
+	::v-deep(.jolticon-addon)
 		theme-prop('color', 'fg-muted')
 		position: relative
 		top: -1px
 		vertical-align: middle
 		margin-left: 5px
 
-	>>> small
+	::v-deep(small)
 		theme-prop('color', 'fg-muted')
 		font-weight: normal
 		font-size: $font-size-tiny
@@ -148,7 +151,8 @@ make-button-size(size)
  * Overlay buttons
  */
 .-overlay
-	&.-outline, &.-trans
+	&.-outline
+	&.-trans
 		color: $dark-theme-fg
 		background-color: rgba($black, 0.65)
 
@@ -184,7 +188,9 @@ make-button-size(size)
 		width: 100%
 		text-align: center
 
-	.-block-xs + .-block-xs, .-block-xs + .button-block, .button-block + .-block-xs
+	.-block-xs + .-block-xs
+	.-block-xs + .button-block
+	.button-block + .-block-xs
 		margin-top: 5px
 
 /**

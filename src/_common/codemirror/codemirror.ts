@@ -1,5 +1,4 @@
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import './codemirror.styl';
 
 const defaultOptions = {
 	lineNumbers: true,

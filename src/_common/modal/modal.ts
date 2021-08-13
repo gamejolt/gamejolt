@@ -11,7 +11,6 @@ import AppScrollScroller from '../scroll/scroller/scroller.vue';
 import AppStickerLayer from '../sticker/layer/layer.vue';
 import { AppTheme } from '../theme/theme';
 import { BaseModal } from './base';
-import './modal-global.styl';
 import { Modal } from './modal.service';
 
 @Options({

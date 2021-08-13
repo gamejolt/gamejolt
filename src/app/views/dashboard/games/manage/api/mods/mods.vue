@@ -13,11 +13,11 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 
-.-content >>>
-	h1
+.-content
+	::v-deep(h1)
 		margin-top: 0
 
-	img
+	::v-deep(img)
 		img-responsive()
 		rounded-corners-lg()
 </style>

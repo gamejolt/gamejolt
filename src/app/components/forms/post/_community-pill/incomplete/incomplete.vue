@@ -27,7 +27,7 @@
 
 <style lang="stylus" scoped>
 @import '~styles/variables'
-@import '../variables.styl'
+@import '../variables'
 
 .-pill
 	height: $pill-height

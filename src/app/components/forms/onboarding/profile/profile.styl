@@ -1,5 +1,5 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .-form
 	display: flex
@@ -59,9 +59,9 @@
 	&-placeholder
 		min-height: ($line-height-computed + 22)
 
->>> .form-group
+::v-deep(.form-group)
 	margin-bottom: 0
 
-	>>> .error
+	::v-deep(.error)
 		margin-top: 15px
 		margin-bottom: 0

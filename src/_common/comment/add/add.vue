@@ -1,5 +1,7 @@
+<script lang="ts" src="./add"></script>
+
 <template>
-	<app-form name="commentAddForm" ref="form">
+	<app-form ref="form" name="commentAddForm">
 		<app-form-group name="comment_content" :label="$gettext('Leave a Comment')" hide-label>
 			<app-form-control-content
 				:placeholder="placeholder || $gettext(`Leave a comment...`)"
@@ -49,8 +51,6 @@
 .-buttons
 	text-align: right
 
->>> .form-group
+::v-deep(.form-group)
 	margin-bottom: 8px
 </style>
-
-<script lang="ts" src="./add"></script>

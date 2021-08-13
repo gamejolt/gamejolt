@@ -77,9 +77,7 @@
 			<app-community-perms :community="game.community" tag="div">
 				<div class="col-lg-8">
 					<router-link :to="game.community.routeEditLocation">
-						<app-button icon="users">
-							Edit Community
-						</app-button>
+						<app-button icon="users"> Edit Community </app-button>
 					</router-link>
 				</div>
 			</app-community-perms>
@@ -182,6 +180,6 @@
 @import '~styles-lib/mixins'
 
 .-graph
-	>>> .graph
+	::v-deep(.graph)
 		rounded-corners-lg()
 </style>

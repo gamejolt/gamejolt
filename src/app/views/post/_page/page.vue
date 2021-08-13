@@ -241,8 +241,8 @@
 	flex: none
 	margin-left: 12px
 
-.-circle-img >>>
-	img
+.-circle-img
+	::v-deep(img)
 		border-radius: 50% !important
 
 .-backdrop
@@ -268,7 +268,7 @@
 .-media-item
 	cursor: zoom-in
 
->>> .mention-avatar-img
+::v-deep(.mention-avatar-img)
 	border-radius: 50% !important
 
 .-communities

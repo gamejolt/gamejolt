@@ -1,3 +1,5 @@
+<script lang="ts" src="./placeholder"></script>
+
 <template>
 	<div class="user-card sheet sheet-full">
 		<div class="-user-info">
@@ -31,8 +33,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '../card'
-@require '~styles-lib/mixins'
+@import '../card'
+@import '~styles-lib/mixins'
 
 .-avatar
 	change-bg('bg-subtle')
@@ -45,5 +47,3 @@
 	lazy-placeholder-inline()
 	height: $font-size-small
 </style>
-
-<script lang="ts" src="./placeholder"></script>

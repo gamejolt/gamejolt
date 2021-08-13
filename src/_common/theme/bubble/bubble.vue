@@ -1,3 +1,5 @@
+<script lang="ts" src="./bubble"></script>
+
 <template>
 	<div
 		class="theme-bubble"
@@ -5,14 +7,20 @@
 			'-active': active,
 		}"
 	>
-		<span class="-highlight" v-if="highlight" :style="{ backgroundColor: '#' + highlight }" />
-		<span class="-backlight" v-if="backlight" :style="{ backgroundColor: '#' + backlight }" />
+		<span v-if="highlight" class="-highlight" :style="{ backgroundColor: '#' + highlight }" />
+		<span v-if="backlight" class="-backlight" :style="{ backgroundColor: '#' + backlight }" />
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+
+::v-global(a .theme-bubble)
+	cursor: pointer
+
+::v-global(a .theme-bubble:hover)
+	box-shadow: 0 0 0 2px var(--theme-bg), 0 0 0 4px var(--theme-fg)
 
 .theme-bubble
 	img-circle()
@@ -28,7 +36,8 @@
 .-active
 	box-shadow: 0 0 0 2px var(--theme-bg), 0 0 0 4px var(--theme-link)
 
-.-highlight, .-backlight
+.-highlight
+.-backlight
 	position: absolute
 	width: 150%
 	height: 150%
@@ -44,5 +53,3 @@
 	transform: rotateZ(45deg)
 	z-index: 2
 </style>
-
-<script lang="ts" src="./bubble"></script>

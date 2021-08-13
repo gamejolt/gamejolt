@@ -11,7 +11,6 @@ import AppUserFollowWidget from '../follow/widget.vue';
 import AppUserAvatarImg from '../user-avatar/img/img.vue';
 import { User } from '../user.model';
 import AppUserVerifiedTick from '../verified-tick/verified-tick.vue';
-import './card-global.styl';
 
 @Options({
 	components: {

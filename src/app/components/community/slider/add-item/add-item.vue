@@ -1,3 +1,5 @@
+<script lang="ts" src="./add-item"></script>
+
 <template>
 	<div class="-item">
 		<app-community-add-widget />
@@ -5,8 +7,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '../common'
-@require '~common/jolticons/jolticons'
+@import '../common'
+@import '~common/jolticons/jolticons'
 
 .-item
 	position: relative
@@ -18,7 +20,7 @@
 		// Needed to counteract the height of the label the add button does not have.
 		vertical-align: top
 
-	>>> .jolticon
+	::v-deep(.jolticon)
 		@extend .jolticon-3x
 
 	&:not(.-disabled)
@@ -26,5 +28,3 @@
 		transition: none !important
 		transform: none !important
 </style>
-
-<script lang="ts" src="./add-item"></script>

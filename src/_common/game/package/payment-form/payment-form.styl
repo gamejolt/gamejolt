@@ -1,10 +1,10 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .form-group
 	margin-bottom: $font-size-base
 
->>> label
+::v-deep(label)
 	font-family: $font-family-base !important
 
 .amount-input
@@ -25,7 +25,8 @@
 		left: 10px
 		z-index: 2
 
-.saved-card, .saved-card-more
+.saved-card
+.saved-card-more
 	clearfix()
 	rounded-corners()
 	theme-prop('border-color', 'fg')

@@ -122,7 +122,7 @@
 	margin-bottom: 24px
 
 // Used to center the icon
->>> .timeline-list-item-bubble-inner
+::v-deep(.timeline-list-item-bubble-inner)
 .timeline-list-item-bubble-inner > div
 	position: relative
 	height: 100%

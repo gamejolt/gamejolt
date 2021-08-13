@@ -1,6 +1,5 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional } from '../../utils/vue';
-import './backdrop-global.styl';
 import { Backdrop } from './backdrop.service';
 
 @Options({})

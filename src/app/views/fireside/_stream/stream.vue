@@ -160,9 +160,7 @@
 	align-items: flex-end
 
 .-control
-	&
-	>>>
-		user-select: none
+	user-select: none
 
 .-paused-indicator
 	position: absolute

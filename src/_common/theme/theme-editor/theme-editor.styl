@@ -1,7 +1,7 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
-.theme-editor >>> .CodeMirror
+.theme-editor ::v-deep(.CodeMirror)
 	theme-prop('border-color', 'bg-offset')
 	height: 400px
 
@@ -26,7 +26,8 @@
 		&:last-child
 			border-bottom: 0
 
-			&, >>> .fill-offset
+			&
+			::v-deep(.fill-offset)
 				border-bottom-left-radius: $border-radius-large
 				border-bottom-right-radius: $border-radius-large
 

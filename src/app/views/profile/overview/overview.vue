@@ -410,7 +410,7 @@
 	width: 100%
 	height: 100%
 
-	>>> img
+	::v-deep(img)
 		width: calc(100% - 2px)
 		height: calc(100% - 2px)
 

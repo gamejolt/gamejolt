@@ -1,3 +1,5 @@
+<script lang="ts" src="./intro"></script>
+
 <template>
 	<div
 		class="client-intro"
@@ -24,8 +26,11 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+
+::v-global(.client-intro-no-overflow)
+	overflow: hidden
 
 .client-intro
 	change-bg('darkest')
@@ -57,5 +62,3 @@
 	display: inline-block
 	margin: 0 4px
 </style>
-
-<script lang="ts" src="./intro"></script>

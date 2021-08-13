@@ -13,7 +13,7 @@
 	overflow: hidden
 	-webkit-overflow-scrolling: touch
 
-	>>> .backdrop
+	::v-deep(.backdrop)
 		z-index: 1
 
 // Container that the modal scrolls within
@@ -79,7 +79,7 @@
 		padding: $modal-padding
 		padding-bottom: 0
 
->>> .gj-scroll-affixed
+::v-deep(.gj-scroll-affixed)
 	z-index: 1
 
 	.-footer

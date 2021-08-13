@@ -1,3 +1,5 @@
+<script lang="ts" src="./item"></script>
+
 <template>
 	<div :id="id" class="message-thread-item" :class="{ '-blocked': isBlocked }">
 		<app-timeline-list-item
@@ -111,11 +113,9 @@
 	display: inline-flex
 	margin-left: 5px
 
-	>>> .tag
+	::v-deep(.tag)
 		vertical-align: middle
 
-.-blocked >>> .timeline-list-item-main
+.-blocked ::v-deep(.timeline-list-item-main)
 	padding-left: 0
 </style>
-
-<script lang="ts" src="./item"></script>

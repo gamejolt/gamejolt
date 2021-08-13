@@ -1,12 +1,20 @@
+<script lang="ts" src="./maturity-block"></script>
+
 <template>
 	<div v-if="game">
-		<section class="section fill-darker" v-if="shouldBlock">
+		<section v-if="shouldBlock" class="section fill-darker">
 			<div class="container">
 				<div class="row">
 					<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
 						<div class="game-maturity-block">
-							<h4><translate>This game is tagged for mature audiences.</translate></h4>
-							<p><translate>It could contain content you may not want to view.</translate></p>
+							<h4>
+								<translate>This game is tagged for mature audiences.</translate>
+							</h4>
+							<p>
+								<translate>
+									It could contain content you may not want to view.
+								</translate>
+							</p>
 							<br />
 
 							<app-game-ogrs :game="game" />
@@ -28,7 +36,9 @@
 							</p>
 
 							<p class="small text-muted">
-								<translate>This setting will apply to this browser/device only.</translate>
+								<translate>
+									This setting will apply to this browser/device only.
+								</translate>
 							</p>
 						</div>
 					</div>
@@ -43,8 +53,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .game-maturity-block
 	@media $media-sm-up
@@ -61,7 +71,7 @@
 		@media $media-xs
 			margin-top: 0
 
-	>>> .game-ogrs
+	::v-deep(.game-ogrs)
 		margin: 0 auto
 		text-align: left
 		max-width: 350px
@@ -71,5 +81,3 @@
 			float: none !important
 			width: 88px
 </style>
-
-<script lang="ts" src="./maturity-block"></script>

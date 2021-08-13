@@ -76,7 +76,7 @@
 		position: relative
 		z-index: 1
 
-		>>> .jolticon
+		::v-deep(.jolticon)
 			color: var(--theme-lighter)
 
 		&-item

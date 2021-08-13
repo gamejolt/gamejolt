@@ -1,5 +1,5 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .form-markdown-editor-media-items
 	change-bg('bg')
@@ -11,7 +11,7 @@
 	border-top-right-radius: 0
 	margin-bottom: 0 // Get rid of the bottom margin from 'well' styling.
 
-	>>> .form-group
+	::v-deep(.form-group)
 		margin-bottom: 0
 
 	.media-item-list

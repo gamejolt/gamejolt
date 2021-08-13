@@ -23,6 +23,6 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 
->>> .timeline-list-item-split
+::v-deep(.timeline-list-item-split)
 	full-bleed()
 </style>

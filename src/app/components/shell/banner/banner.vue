@@ -1,3 +1,5 @@
+<script lang="ts" src="./banner"></script>
+
 <template>
 	<div
 		v-if="hasBanner"
@@ -14,13 +16,13 @@
 			<app-jolticon icon="remove" />
 		</a>
 
-		<div class="-message" v-html="currentBanner.message"></div>
+		<div class="-message" v-html="currentBanner.message" />
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .-banner
 	position: fixed
@@ -38,7 +40,7 @@
 		font-size: $font-size-base
 		font-weight: bold
 
-	>>> em
+	::v-deep(em)
 		font-style: normal
 		text-decoration: underline
 
@@ -55,5 +57,3 @@
 	@media $media-sm-up
 		margin-left: 0
 </style>
-
-<script lang="ts" src="./banner"></script>

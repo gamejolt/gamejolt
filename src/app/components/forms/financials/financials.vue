@@ -253,10 +253,10 @@
 @import '~styles-lib/mixins'
 
 .form-dashboard-financials
-	>>> .done-icon
+	::v-deep(.done-icon)
 		theme-prop('color', 'link')
 
-	>>> .tos-scroller
+	::v-deep(.tos-scroller)
 		scrollable()
 		theme-prop('border-color', 'bg-offset')
 		padding: 10px
@@ -265,6 +265,7 @@
 		border-width: $border-width-base
 		border-style: solid
 
+		// TODO(vue3): will these nested selectors work under the deep?
 		h1
 		h2
 		h3

@@ -60,12 +60,12 @@
 
 .post-text
 	// Hide images and widgets until we are hydrated.
-	>>> img
-	>>> iframe
+	::v-deep(img)
+	::v-deep(iframe)
 		visibility: hidden
 
 	&.-hydrated
-		>>> img
-		>>> iframe
+		::v-deep(img)
+		::v-deep(iframe)
 			visibility: visible
 </style>

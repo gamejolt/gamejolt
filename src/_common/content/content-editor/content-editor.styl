@@ -35,14 +35,14 @@
 	theme-prop('color', 'fg-muted')
 
 // Do not show dotted selection outline
->>> .ProseMirror
+::v-deep(.ProseMirror)
 	outline: 0 solid transparent !important
 
 // Override prosemirror selection border around selected nodes
->>> .ProseMirror-selectednode
+::v-deep(.ProseMirror-selectednode)
 	theme-prop('outline-color', 'bi-bg') !important
 
->>> .content-editor-spoiler
+::v-deep(.content-editor-spoiler)
 	change-bg('bg-offset')
 	rounded-corners-lg()
 	font-size: $font-size-base
@@ -59,11 +59,11 @@
 		font-size: $font-size-tiny
 		text-transform: uppercase
 
->>> .content-editor-spoiler:after
+::v-deep(.content-editor-spoiler:after)
 	content: none
 
 // Give each paragraph a 10px margin, except the first and last.
->>> p
+::v-deep(p)
 	margin-top: 10px
 	margin-bottom: 10px
 
@@ -73,25 +73,25 @@
 	&:last-child
 		margin-bottom: 4px
 
->>> code
+::v-deep(code)
 	white-space: pre-wrap
 
->>> td
+::v-deep(td)
 	border-width: $border-width-small
 	border-style: solid
 	padding: 4px
 	min-width: 2em
 
->>> th
+::v-deep(th)
 	padding: 4px
 
->>> blockquote::before
+::v-deep(blockquote::before)
 	white-space: normal
 
->>> blockquote::after
+::v-deep(blockquote::after)
 	white-space: normal
 
->>> table
+::v-deep(table)
 	table-layout: fixed
 	width: 100%
 
@@ -126,24 +126,24 @@
 .fade-leave-to
 	opacity: 0
 
->>> a
+::v-deep(a)
 	cursor: inherit
 
 	&:hover
 		theme-prop('color', 'link')
 
->>> .content-editor-mention
+::v-deep(.content-editor-mention)
 	theme-prop('color', 'link')
 
->>> .content-editor-tag
+::v-deep(.content-editor-tag)
 	theme-prop('color', 'link')
 
->>> .content-editor-link
+::v-deep(.content-editor-link)
 	theme-prop('color', 'link')
 
 // Add a minimal margin to media items so they don't directly border the top of the editor
->>> .media-item
+::v-deep(.media-item)
 	margin-top: ($line-height-computed / 3)
 
->>> img.emoji
+::v-deep(img.emoji)
 	border-radius: 0

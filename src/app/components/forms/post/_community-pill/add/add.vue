@@ -13,7 +13,7 @@
 
 <style lang="stylus" scoped>
 @import '~styles/variables'
-@import '../variables.styl'
+@import '../variables'
 
 .-add
 	cursor: pointer

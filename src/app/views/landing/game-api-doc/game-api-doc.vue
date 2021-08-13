@@ -69,14 +69,14 @@
 @import '~styles-lib/mixins'
 @import '~styles-lib/tables'
 
-.-content >>>
-	h1:first-child
+.-content
+	::v-deep(h1:first-child)
 		margin-top: 0
 
-	table
+	::v-deep(table)
 		@extend .table
 
-	img
+	::v-deep(img)
 		img-responsive()
 		rounded-corners-lg()
 </style>

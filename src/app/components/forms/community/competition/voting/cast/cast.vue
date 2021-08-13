@@ -180,20 +180,18 @@
 	&-bolt
 		opacity: 0.75
 
-		>>>
-			.jolticon
-				transition: transform 0.1s ease
-				transform: scale(0.8)
-				font-size: 24px !important
+		::v-deep(.jolticon)
+			transition: transform 0.1s ease
+			transform: scale(0.8)
+			font-size: 24px !important
 
 		&-active
 		&-hovered
 			color: var(--theme-bi-bg)
 			opacity: 1
 
-			>>>
-				.jolticon
-					transform: none
+			::v-deep(.jolticon)
+				transform: none
 
 .-overall-label
 	text-align: right

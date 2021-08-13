@@ -121,7 +121,7 @@
 .payment-form
 	margin-bottom: $shell-padding
 
-	>>> .user-avatar-img
+	::v-deep(.user-avatar-img)
 		width: $input-height-base
 		float: left
 

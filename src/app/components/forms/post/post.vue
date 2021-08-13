@@ -759,7 +759,7 @@
 
 	// Need to apply to the button inside the pill add component too
 	&
-	>>> .button
+	::v-deep(.button)
 		height: 28px
 		margin-bottom: 0
 

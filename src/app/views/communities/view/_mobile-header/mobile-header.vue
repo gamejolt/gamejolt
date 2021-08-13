@@ -229,7 +229,7 @@ $-bg-color-base = var(--theme-bg)
 		.-menu
 			margin-right: 8px
 
-			>>> .jolticon
+			::v-deep(.jolticon)
 				margin: 0
 
 	&-primary

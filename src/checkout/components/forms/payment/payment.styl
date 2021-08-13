@@ -1,5 +1,5 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 fieldset
 	margin-top: $line-height-computed
@@ -9,7 +9,7 @@ fieldset
 		margin-top: 0
 		font-weight: 300
 
->>> .form-group
+::v-deep(.form-group)
 	position: relative
 	margin-bottom: 6px
 
@@ -23,7 +23,7 @@ fieldset
 		top: 11px
 		z-index: 3
 
->>> .form-control
+::v-deep(.form-control)
 	position: relative
 	height: 40px
 

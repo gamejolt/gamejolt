@@ -237,7 +237,7 @@
 
 .form-dashboard-managed-account
 	// Less spacing.
-	>>> .form-horizontal
+	::v-deep(.form-horizontal)
 		.form-group
 			margin-bottom: 10px
 

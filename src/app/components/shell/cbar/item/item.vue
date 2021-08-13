@@ -92,7 +92,7 @@
 	transition: opacity 300ms, visibility 300ms
 	transition-timing-function: $strong-ease-out
 
-	>>> .jolticon
+	::v-deep(.jolticon)
 		font-size: $font-size-tiny
 		vertical-align: middle
 

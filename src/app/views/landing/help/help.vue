@@ -1,3 +1,5 @@
+<script lang="ts" src="./help"></script>
+
 <template>
 	<div>
 		<section class="section landing-header">
@@ -32,11 +34,9 @@
 	</div>
 </template>
 
-<script lang="ts" src="./help"></script>
-
 <style lang="stylus" scoped>
-.-content >>>
+.-content
 	// Get rid of the top margin that headings produce from the compiled markdown.
-	h1:first-child
+	::v-deep(h1:first-child)
 		margin-top: 0
 </style>

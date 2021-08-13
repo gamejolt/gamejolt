@@ -7,6 +7,9 @@
 <style lang="stylus" scoped>
 @import '~styles/variables'
 
+::v-global(.backdrop-active)
+	overflow: hidden !important
+
 .backdrop
 	position: absolute
 

@@ -49,15 +49,14 @@ img
 	width: 100%
 	position: relative
 
-	>>>
-		.-img
-		iframe
-			display: block
-			margin: 0 auto
+	::v-deep(.-img)
+	::v-deep(iframe)
+		display: block
+		margin: 0 auto
 
-		.-img
-		.-video
-			width: 100%
+	::v-deep(.-img)
+	::v-deep(.-video)
+		width: 100%
 
 .-caption
 	flex: 0 0 auto

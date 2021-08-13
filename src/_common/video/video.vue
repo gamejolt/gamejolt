@@ -44,7 +44,7 @@
 		align-items: center
 		justify-content: center
 
-	>>> video
+	::v-deep(video)
 		display: block
 		width: 100%
 		height: auto

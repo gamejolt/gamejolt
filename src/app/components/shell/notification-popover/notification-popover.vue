@@ -73,7 +73,7 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 
->>> .timeline-list-item-split
+::v-deep(.timeline-list-item-split)
 	full-bleed()
 
 // The full-bleed would add a scrollbar if we didn't cut it off like this.

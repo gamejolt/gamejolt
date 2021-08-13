@@ -21,7 +21,7 @@
 .datetime-picker
 	clearfix()
 
-	>>> .datepicker-table
+	::v-deep(.datepicker-table)
 		float: left
 		margin-right: ($grid-gutter-width / 2)
 
@@ -29,7 +29,7 @@
 			float: none
 			margin-right: 0
 
-	>>> .timepicker
+	::v-deep(.timepicker)
 		float: left
 
 		@media $media-xs

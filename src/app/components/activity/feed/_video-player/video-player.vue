@@ -181,7 +181,7 @@ $-controls-spacing = 8px
 	width: $-controls-height
 	height: @width
 
-	>>> .jolticon
+	::v-deep(.jolticon)
 		font-size: $jolticon-size * 1.5
 		color: $white
 

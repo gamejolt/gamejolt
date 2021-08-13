@@ -1,3 +1,5 @@
+<script lang="ts" src="./tag"></script>
+
 <template>
 	<div class="game-ogrs-tag theme-dark">
 		<app-theme-svg
@@ -9,14 +11,21 @@
 			strict-colors
 		/>
 		<template v-if="full">
-			<app-theme-svg class="-face" :src="imgUrl" width="80" height="80" alt="" strict-colors />
+			<app-theme-svg
+				class="-face"
+				:src="imgUrl"
+				width="80"
+				height="80"
+				alt=""
+				strict-colors
+			/>
 			<img class="-logo" src="./ogrs-logo.svg" width="76" height="8" alt="OGRS" />
 		</template>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
 
 .game-ogrs-tag
 	display: inline-block
@@ -25,13 +34,12 @@
 	border: 4px solid $black
 	background: $black
 
-	>>> img
+	::v-deep(img)
 		display: block
 		margin-left: auto
 		margin-right: auto
 
-.-face, .-logo
+.-face
+.-logo
 	margin-top: 4px
 </style>
-
-<script lang="ts" src="./tag"></script>

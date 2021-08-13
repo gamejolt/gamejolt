@@ -7,7 +7,6 @@ import AppLoading from '../../../../_common/loading/loading.vue';
 import Onboarding from '../../../../_common/onboarding/onboarding.service';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { EventBus, EventBusDeregister } from '../../../../_common/system/event/event-bus.service';
-import './intro-global.styl';
 
 @Options({
 	components: {

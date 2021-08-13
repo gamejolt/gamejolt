@@ -1,3 +1,5 @@
+<script lang="ts" src="./colorpicker"></script>
+
 <template>
 	<div class="colorpicker">
 		<app-popper>
@@ -69,8 +71,6 @@
 		margin-left: auto
 		margin-right: auto
 
-	>>> .vue-color__sketch
+	::v-deep(.vue-color__sketch)
 		box-shadow: none
 </style>
-
-<script lang="ts" src="./colorpicker"></script>

@@ -1,5 +1,5 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .-current
 	display: block
@@ -27,26 +27,25 @@ strong
 	margin-bottom: $line-height-computed
 
 .-popover
-	>>>
-		.vc-sketch
+	::v-deep(.vc-sketch)
+		box-shadow: none
+		width: 100%
+		box-sizing: border-box
+
+	::v-deep(.vc-sketch-presets)
+		display: none
+
+	::v-deep(.vc-input__input)
+		theme-prop('color', 'fg')
+		change-bg('bg')
+		theme-prop('border-color', 'bg-subtle')
+		border-width: 2px
+		border-style: solid
+		border-radius: $input-border-radius
+		box-shadow: none
+		transition: border-color ease-in-out 0.15s
+
+		&:focus
+			theme-prop('border-color', 'fg-muted')
 			box-shadow: none
-			width: 100%
-			box-sizing: border-box
-
-		.vc-sketch-presets
-			display: none
-
-		.vc-input__input
-			theme-prop('color', 'fg')
-			change-bg('bg')
-			theme-prop('border-color', 'bg-subtle')
-			border-width: 2px
-			border-style: solid
-			border-radius: $input-border-radius
-			box-shadow: none
-			transition: border-color ease-in-out 0.15s
-
-			&:focus
-				theme-prop('border-color', 'fg-muted')
-				box-shadow: none
-				outline: 0
+			outline: 0

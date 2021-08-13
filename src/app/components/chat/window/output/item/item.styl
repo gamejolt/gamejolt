@@ -154,13 +154,13 @@
 	.chat-window-message-avatar
 		filter: grayscale(0.75) brightness(0.9)
 
-	>>> .content-image
+	::v-deep(.content-image)
 		filter: grayscale(0.75) brightness(0.9)
 
-	>>> .emoji
+	::v-deep(.emoji)
 		filter: grayscale(1) brightness(0.9)
 
-	>>> .content-gif
+	::v-deep(.content-gif)
 		filter: grayscale(0.75) brightness(0.9)
 
 .-chat-message-new

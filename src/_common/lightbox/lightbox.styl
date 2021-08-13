@@ -11,7 +11,7 @@ $-controls-padding = 10px
 		// iframe elements don't allow events to bubble back to the root document, so we need
 		// to prevent all pointer events while dragging to keep our cursor context in the root
 		// document - otherwise youtube and other iframe embeds will break the dragging.
-		>>> iframe
+		::v-deep(iframe)
 			pointer-events: none
 
 .-inner

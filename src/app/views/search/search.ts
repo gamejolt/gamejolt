@@ -13,7 +13,6 @@ import { Search } from '../../components/search/search-service';
 import AppSearch from '../../components/search/search.vue';
 import { Store, store } from '../../store/index';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './search.store';
-import './search.styl';
 
 @Options({
 	name: 'RouteSearch',

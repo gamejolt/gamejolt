@@ -3,7 +3,6 @@ import { addMinbarItem, removeMinbarItem } from '../../minbar/minbar.service';
 import { BaseModal } from '../../modal/base';
 import { Game } from '../game.model';
 import { GameRatingGrowl } from '../rating-growl/rating-growl.service';
-import './play-modal-global.styl';
 
 @Options({})
 export default class AppGamePlayModal extends BaseModal {

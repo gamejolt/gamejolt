@@ -127,7 +127,7 @@ $-padding = 8px
 		right: $-padding
 		bottom: $-padding
 
-		>>> .fireside-post-lead-content
+		::v-deep(.fireside-post-lead-content)
 			font-size: ceil($font-size-base * 1.1)
 
 .-light
@@ -202,7 +202,7 @@ $-padding = 8px
 	justify-content: center
 	align-items: center
 
-	>>> > video
+	::v-deep(> video)
 		height: 100% !important
 		width: 100% !important
 </style>
