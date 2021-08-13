@@ -47,53 +47,26 @@ export default class AppShell extends Vue {
 	@InjectReactive(ChatKey) chat!: ChatClient;
 	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
 
-	@State
-	app!: Store['app'];
+	@State app!: Store['app'];
+	@State isShellHidden!: Store['isShellHidden'];
+	@State hasTopBar!: Store['hasTopBar'];
+	@State hasSidebar!: Store['hasSidebar'];
+	@State hasCbar!: Store['hasCbar'];
+	@State visibleLeftPane!: Store['visibleLeftPane'];
+	@State visibleRightPane!: Store['visibleRightPane'];
+	@State unreadActivityCount!: Store['unreadActivityCount'];
+	@State unreadNotificationsCount!: Store['unreadNotificationsCount'];
 
-	@State
-	isShellHidden!: Store['isShellHidden'];
+	@BannerModule.State hasBanner!: BannerStore['hasBanner'];
 
-	@State
-	hasTopBar!: Store['hasTopBar'];
+	@SidebarState activeContextPane!: SidebarStore['activeContextPane'];
+	@SidebarState hideOnRouteChange!: SidebarStore['hideOnRouteChange'];
+	@SidebarState showOnRouteChange!: SidebarStore['showOnRouteChange'];
 
-	@State
-	hasSidebar!: Store['hasSidebar'];
+	@SidebarMutation showContextOnRouteChange!: SidebarStore['showContextOnRouteChange'];
 
-	@State
-	hasCbar!: Store['hasCbar'];
-
-	@State
-	visibleLeftPane!: Store['visibleLeftPane'];
-
-	@State
-	visibleRightPane!: Store['visibleRightPane'];
-
-	@State
-	unreadActivityCount!: Store['unreadActivityCount'];
-
-	@State
-	unreadNotificationsCount!: Store['unreadNotificationsCount'];
-
-	@BannerModule.State
-	hasBanner!: BannerStore['hasBanner'];
-
-	@SidebarState
-	activeContextPane!: SidebarStore['activeContextPane'];
-
-	@SidebarState
-	hideOnRouteChange!: SidebarStore['hideOnRouteChange'];
-
-	@SidebarState
-	showOnRouteChange!: SidebarStore['showOnRouteChange'];
-
-	@SidebarMutation
-	showContextOnRouteChange!: SidebarStore['showContextOnRouteChange'];
-
-	@Action
-	showContextPane!: Store['showContextPane'];
-
-	@Action
-	clearPanes!: Store['clearPanes'];
+	@Action showContextPane!: Store['showContextPane'];
+	@Action clearPanes!: Store['clearPanes'];
 
 	readonly Connection = Connection;
 	readonly Screen = Screen;

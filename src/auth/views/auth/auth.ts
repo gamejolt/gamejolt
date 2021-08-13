@@ -1,6 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { Auth } from '../../../_common/auth/auth.service';
+import { redirectToDashboard } from '../../../_common/auth/auth.service';
 import { Connection } from '../../../_common/connection/connection-service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { BaseRouteComponent } from '../../../_common/route/route-component';
@@ -15,7 +15,7 @@ import './auth-content.styl';
 export function loggedUserBlock() {
 	// Redirect right away if they are logged in.
 	if (store.state.app.user) {
-		Auth.redirectDashboard();
+		redirectToDashboard();
 
 		// Never resolve.
 		return new Promise(() => {});

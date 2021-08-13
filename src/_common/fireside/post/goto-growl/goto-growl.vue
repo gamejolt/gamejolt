@@ -1,20 +1,25 @@
+<script lang="ts" src="./goto-growl"></script>
+
 <template>
 	<div>
 		<h4 class="section-header">
-			<span v-if="action === 'publish'" v-translate>
-				Your post was published!
+			<span v-if="action === 'publish'">
+				<translate>Your post was published!</translate>
+			</span>
+			<span v-else-if="action === 'scheduled-publish'">
+				<translate>Your scheduled post was published!</translate>
 			</span>
 			<span v-else-if="isActive">
 				<app-jolticon icon="share-airplane" />
 				<translate>Your post was added!</translate>
 			</span>
-			<span v-else-if="isDraft" v-translate>
+			<span v-else-if="isDraft">
 				<app-jolticon icon="edit" />
-				Your post was saved as a draft.
+				<translate>Your post was saved as a draft.</translate>
 			</span>
-			<span v-else v-translate>
+			<span v-else>
 				<app-jolticon icon="calendar-grid" />
-				Your post was scheduled.
+				<translate>Your post was scheduled.</translate>
 			</span>
 		</h4>
 
@@ -50,10 +55,6 @@
 </template>
 
 <style lang="stylus" scoped>
-
 .-controls
 	margin-top: 16px
-
 </style>
-
-<script lang="ts" src="./goto-growl"></script>

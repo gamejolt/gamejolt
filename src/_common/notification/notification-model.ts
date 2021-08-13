@@ -10,8 +10,10 @@ import {
 } from '../community/user-notification/user-notification.model';
 import { Environment } from '../environment/environment.service';
 import { EventItem } from '../event-item/event-item.model';
+import { Fireside } from '../fireside/fireside.model';
 import { FiresidePostCommunity } from '../fireside/post/community/community.model';
 import { FiresidePost } from '../fireside/post/post-model';
+import { FiresideStreamNotification } from '../fireside/stream-notification/stream-notification.model';
 import { ForumPost } from '../forum/post/post.model';
 import { ForumTopic } from '../forum/topic/topic.model';
 import { GameLibraryGame } from '../game-library/game/game.model';
@@ -31,7 +33,9 @@ import { UserSiteTrophy } from '../user/trophy/site-trophy.model';
 import { UserBaseTrophy } from '../user/trophy/user-base-trophy.model';
 import { User } from '../user/user.model';
 
-function getRouteLocationForModel(model: Game | User | FiresidePost | Community): RawLocation {
+function getRouteLocationForModel(
+	model: Game | User | FiresidePost | Community | Fireside
+): RawLocation {
 	if (model instanceof User) {
 		return model.url;
 	} else if (model instanceof Game) {
@@ -40,6 +44,8 @@ function getRouteLocationForModel(model: Game | User | FiresidePost | Community)
 		return model.routeLocation;
 	} else if (model instanceof Community) {
 		return model.routeLocation;
+	} else if (model instanceof Fireside) {
+		return model.location;
 	}
 	return '';
 }
@@ -62,8 +68,10 @@ export class Notification extends Model {
 	static TYPE_GAME_TROPHY_ACHIEVED = 'game-trophy-achieved';
 	static TYPE_SITE_TROPHY_ACHIEVED = 'site-trophy-achieved';
 	static TYPE_COMMUNITY_USER_NOTIFICATION = 'community-user-notification';
+	static TYPE_FIRESIDE_START = 'fireside-start';
+	static TYPE_FIRESIDE_STREAM_NOTIFICATION = 'fireside-stream-notification';
 
-	static ACTIVITY_FEED_TYPES = [EventItem.TYPE_POST_ADD, EventItem.TYPE_GAME_PUBLISH];
+	static ACTIVITY_FEED_TYPES = [EventItem.TYPE_POST_ADD];
 
 	static NOTIFICATION_FEED_TYPES = [
 		Notification.TYPE_COMMENT_ADD,
@@ -107,7 +115,9 @@ export class Notification extends Model {
 		| Mention
 		| UserGameTrophy
 		| UserSiteTrophy
-		| CommunityUserNotification;
+		| CommunityUserNotification
+		| Fireside
+		| FiresideStreamNotification;
 
 	to_resource!: string | null;
 	to_resource_id!: number | null;
@@ -200,6 +210,11 @@ export class Notification extends Model {
 		} else if (this.type === Notification.TYPE_COMMUNITY_USER_NOTIFICATION) {
 			this.action_model = new CommunityUserNotification(data.action_resource_model);
 			this.is_community_based = true;
+		} else if (this.type === Notification.TYPE_FIRESIDE_START) {
+			this.action_model = new Fireside(data.action_resource_model);
+			this.is_user_based = true;
+		} else if (this.type === Notification.TYPE_FIRESIDE_STREAM_NOTIFICATION) {
+			this.action_model = new FiresideStreamNotification(data.action_resource_model);
 		}
 
 		// Keep memory clean after bootstrapping the models.
@@ -275,6 +290,14 @@ export class Notification extends Model {
 						return assertNever(mention.resource);
 				}
 			}
+
+			case Notification.TYPE_FIRESIDE_START:
+				return getRouteLocationForModel(this.action_model as Fireside);
+
+			case Notification.TYPE_FIRESIDE_STREAM_NOTIFICATION:
+				return getRouteLocationForModel(
+					(this.action_model as FiresideStreamNotification).fireside
+				);
 		}
 
 		// Must pull asynchronously when they click on the notification.

@@ -19,7 +19,7 @@ export default class AppFormCommunityChannelPermissions extends Vue {
 	get permissionPostingOptions() {
 		return {
 			all: this.$gettext('Everyone'),
-			mods: this.$gettext('Moderators only'),
+			mods: this.$gettext('Collaborators only'),
 		};
 	}
 }

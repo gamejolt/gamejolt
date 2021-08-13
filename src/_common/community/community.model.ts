@@ -1,4 +1,6 @@
 import type { Location, Route } from 'vue-router';
+import { assertNever } from '../../utils/utils';
+import { CommunityJoinLocation, trackCommunityJoin } from '../analytics/analytics.service';
 import { Api } from '../api/api.service';
 import { Collaboratable, Perm } from '../collaborator/collaboratable';
 import { Game } from '../game/game.model';
@@ -121,8 +123,8 @@ export class Community extends Collaboratable(Model) {
 			params: {
 				path: this.path,
 				channel: channel.title,
-			}
-		} as Location
+			},
+		} as Location;
 	}
 
 	$save() {
@@ -169,6 +171,7 @@ export class Community extends Collaboratable(Model) {
 			'community',
 			{
 				file: this.file,
+				allowComplexData: ['crop'],
 			}
 		);
 	}
@@ -197,11 +200,11 @@ export class Community extends Collaboratable(Model) {
 
 Model.create(Community);
 
-export async function $joinCommunity(community: Community) {
+export async function joinCommunity(community: Community, location?: CommunityJoinLocation) {
 	community.is_member = true;
 	++community.member_count;
 
-	let success = false;
+	let failed = false;
 	try {
 		const response = await Api.sendRequest(
 			'/web/communities/join/' + community.path,
@@ -212,26 +215,31 @@ export async function $joinCommunity(community: Community) {
 			{ ignoreLoadingBar: true, noErrorRedirect: true }
 		);
 
-		success = !!response.success;
+		failed = !response.success;
 
-		if (!success) {
+		if (failed) {
 			if (response) {
 				throw response;
 			}
 			throw new Error('Empty response');
 		}
 	} finally {
-		if (!success) {
+		if (failed) {
 			community.is_member = false;
 			--community.member_count;
+		}
+
+		if (location) {
+			trackCommunityJoin(true, { failed, location });
 		}
 	}
 }
 
-export async function $leaveCommunity(community: Community) {
+export async function leaveCommunity(community: Community, location?: CommunityJoinLocation) {
 	community.is_member = false;
 	--community.member_count;
 
+	let failed = false;
 	try {
 		await Api.sendRequest(
 			'/web/communities/leave/' + community.path,
@@ -242,9 +250,14 @@ export async function $leaveCommunity(community: Community) {
 			{ ignoreLoadingBar: true, noErrorRedirect: true }
 		);
 	} catch (e) {
+		failed = true;
 		community.is_member = false;
 		++community.member_count;
 		throw e;
+	} finally {
+		if (location) {
+			trackCommunityJoin(false, { failed, location });
+		}
 	}
 }
 
@@ -255,4 +268,18 @@ export const enum CommunityPresetChannelType {
 
 export function isEditingCommunity(route: Route) {
 	return !!route.name && route.name.startsWith('communities.view.edit.');
+}
+
+export function getCommunityChannelBackground(
+	community: Community,
+	presetType: CommunityPresetChannelType
+) {
+	switch (presetType) {
+		case CommunityPresetChannelType.FEATURED:
+			return community.featured_background;
+		case CommunityPresetChannelType.ALL:
+			return community.all_background;
+		default:
+			assertNever(presetType);
+	}
 }

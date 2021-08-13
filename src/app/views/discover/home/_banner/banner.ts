@@ -15,25 +15,21 @@ import { Store } from '../../../../store/index';
 @Component({
 	components: {
 		AppGameFollowWidget,
-		AppTheme,
 		AppCommunityJoinWidget,
+		AppTheme,
 		AppMediaItemBackdrop,
 	},
 })
 export default class AppDiscoverHomeBanner extends Vue {
-	@Prop(FeaturedItem)
-	item!: FeaturedItem;
+	@Prop(propOptional(FeaturedItem)) item?: FeaturedItem;
+	@Prop(propOptional(Boolean, false)) isLoading!: boolean;
 
-	@Prop(propOptional(Boolean, false))
-	isLoading!: boolean;
-
-	@State
-	app!: Store['app'];
+	@State app!: Store['app'];
 
 	readonly Screen = Screen;
 
 	get shouldShowViewGame() {
-		if (!this.item.game) {
+		if (!this.item?.game) {
 			return false;
 		}
 
@@ -41,14 +37,14 @@ export default class AppDiscoverHomeBanner extends Vue {
 	}
 
 	get shouldShowFollowGame() {
-		if (this.item.game) {
+		if (this.item?.game) {
 			return !this.app.user || !this.item.game.is_following;
 		}
 		return false;
 	}
 
 	get shouldShowViewCommunity() {
-		if (!this.item.community) {
+		if (!this.item?.community) {
 			return false;
 		}
 
@@ -56,14 +52,14 @@ export default class AppDiscoverHomeBanner extends Vue {
 	}
 
 	get shouldShowJoinCommunity() {
-		if (this.item.community) {
+		if (this.item?.community) {
 			return !this.app.user || !this.item.community.is_member;
 		}
 		return false;
 	}
 
 	get shouldShowJamViewGames() {
-		if (!this.item.jam) {
+		if (!this.item?.jam) {
 			return false;
 		}
 
@@ -71,7 +67,7 @@ export default class AppDiscoverHomeBanner extends Vue {
 	}
 
 	get location(): Location | undefined {
-		if (this.item.game) {
+		if (this.item?.game) {
 			return {
 				name: 'discover.games.view.overview',
 				params: {
@@ -79,14 +75,14 @@ export default class AppDiscoverHomeBanner extends Vue {
 					slug: this.item.game.slug,
 				},
 			};
-		} else if (this.item.jam) {
+		} else if (this.item?.jam) {
 			return {
 				name: 'library.collection.jam',
 				params: {
 					id: this.item.jam.url,
 				},
 			};
-		} else if (this.item.community) {
+		} else if (this.item?.community) {
 			return {
 				name: 'communities.view.overview',
 				params: {
@@ -97,19 +93,19 @@ export default class AppDiscoverHomeBanner extends Vue {
 	}
 
 	get theme() {
-		if (this.item.game) {
+		if (this.item?.game) {
 			return this.item.game.theme;
-		} else if (this.item.community) {
+		} else if (this.item?.community) {
 			return this.item.community.theme;
 		}
 	}
 
 	get bannerMediaItem() {
-		if (this.item.game) {
+		if (this.item?.game) {
 			return this.item.game.header_media_item;
 		}
 
-		if (this.item.community) {
+		if (this.item?.community) {
 			return this.item.community.header;
 		}
 

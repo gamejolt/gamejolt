@@ -17,6 +17,7 @@
 		line-height: $font-size-small * 1.25
 
 	&:hover
+	&-options-visible
 		background-color: var(--theme-bg-offset)
 
 		.chat-window-message-small-time
@@ -33,8 +34,9 @@
 			// On small screens, reduce the left side margin to make more space for the actual messages.
 			left: 4px + $chat-room-window-padding
 
-		& > img
+		& .-chat-window-message-avatar-img
 			img-circle()
+			elevate-hover-1()
 
 	&-container
 		margin-left: $avatar-size + $left-gutter-size
@@ -129,6 +131,7 @@
 
 		../:hover &
 		.chat-window-message-editing &
+		&-open
 			visibility: visible
 
 	&-retry
@@ -144,15 +147,6 @@
 		hyphens: auto
 		// Try to limit the effects of what zalgo text can do to chat.
 		overflow: hidden
-
-	// System chat messages.
-	// Robo-Jolt and such.
-	.chat-msg-type-system
-		theme-prop('color', 'gray')
-		font-style: italic
-
-		span
-			font-style: italic
 
 .-chat-message-queued
 	color: var(--theme-fg-muted)

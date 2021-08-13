@@ -1,3 +1,5 @@
+import { CHAT_ROLES } from './role';
+
 export class ChatUser {
 	id!: number;
 	room_id!: number;
@@ -6,9 +8,12 @@ export class ChatUser {
 	display_name!: string;
 	img_avatar!: string;
 	permission_level!: number;
+	is_verified!: boolean;
 
 	isOnline = false;
 	typing = false;
+
+	role: CHAT_ROLES | null = null;
 
 	constructor(data: Partial<ChatUser> = {}) {
 		Object.assign(this, data);

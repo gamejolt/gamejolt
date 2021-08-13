@@ -4,23 +4,27 @@
 	<div
 		class="chat-window-message"
 		:class="{
-			'chat-msg-type-normal': message.type === ChatMessage.TypeNormal,
-			'chat-msg-type-system': message.type === ChatMessage.TypeSystem,
 			'chat-window-message-not-combined': !message.combine,
 			'chat-window-message-combined': message.combine,
 			'chat-window-message-editing': isEditing,
 			'-chat-message-queued': message._showAsQueued,
 			'-chat-message-new': isNew,
+			'chat-window-message-options-visible': messageOptionsVisible,
 		}"
 		:style="{ 'background-color': isEditingColor }"
 	>
-		<router-link
-			v-if="!message.combine"
-			class="chat-window-message-avatar"
-			:to="message.user.url"
-		>
-			<img class="img-responsive" :src="message.user.img_avatar" alt="" />
-		</router-link>
+		<a v-if="!message.combine" class="chat-window-message-avatar">
+			<app-popper placement="right">
+				<img
+					class="img-responsive -chat-window-message-avatar-img"
+					:src="message.user.img_avatar"
+					alt=""
+				/>
+				<template #popover>
+					<app-chat-user-popover :user="message.user" :room="room" />
+				</template>
+			</app-popper>
+		</a>
 
 		<div class="chat-window-message-container">
 			<div v-if="!message.combine" class="chat-window-message-byline">
@@ -51,10 +55,14 @@
 			</div>
 
 			<div
-				v-if="chat.currentUser && chat.currentUser.id === message.user.id"
+				v-if="shouldShowMessageOptions"
 				class="chat-window-message-options"
+				:class="{ 'chat-window-message-options-open': messageOptionsVisible }"
 			>
-				<app-popper>
+				<app-popper
+					@show="messageOptionsVisible = true"
+					@hide="messageOptionsVisible = false"
+				>
 					<template #default>
 						<a v-app-tooltip="$gettext('More Options')" class="link-muted">
 							<app-jolticon icon="ellipsis-v" class="middle" />
@@ -64,7 +72,7 @@
 					<template #popover>
 						<div class="list-group">
 							<a
-								v-if="message.type === 'content'"
+								v-if="canEditMessage"
 								class="list-group-item has-icon"
 								@click="startEdit"
 							>
@@ -72,7 +80,11 @@
 								<translate>Edit Message</translate>
 							</a>
 
-							<a class="list-group-item has-icon" @click="removeMessage">
+							<a
+								v-if="canRemoveMessage"
+								class="list-group-item has-icon"
+								@click="removeMessage"
+							>
 								<app-jolticon icon="remove" notice />
 								<translate>Remove Message</translate>
 							</a>

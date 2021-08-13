@@ -19,7 +19,7 @@
 				Notifications are so small that there's no reason to not include them
 				into the view.
 				-->
-				<app-activity-feed-event-item
+				<app-activity-feed-post
 					v-if="item.type === 'event-item'"
 					:item="item"
 					@resize="onResize"

@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../utils/vue';
 import { FiresidePostCommunity } from '../../fireside/post/community/community.model';
 import AppPillBi from '../../pill/bi/bi.vue';
 import AppPill from '../../pill/pill.vue';
@@ -20,10 +19,10 @@ import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
 	},
 })
 export default class AppCommunityPill extends Vue {
-	@Prop(propRequired(FiresidePostCommunity))
+	@Prop({ type: FiresidePostCommunity, required: true })
 	communityLink!: FiresidePostCommunity;
 
-	@Prop(propOptional(Boolean, false))
+	@Prop({ type: Boolean, required: false, default: false })
 	noLinks!: boolean;
 
 	get community() {

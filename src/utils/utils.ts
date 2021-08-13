@@ -3,7 +3,7 @@ import { isError } from 'util';
 export type RequireContextMap = { [k: string]: string };
 
 export function importContext(r: WebpackContext) {
-	let map: RequireContextMap = {};
+	const map: RequireContextMap = {};
 	r.keys().forEach(key => (map[key] = r(key)));
 	return map;
 }
@@ -48,7 +48,7 @@ export function debounce<T extends FunctionType>(
 ): ChangeReturnType<T, void> {
 	let timeout: NodeJS.Timer | null = null;
 
-	return function(this: unknown, ...args: any) {
+	return function (this: unknown, ...args: any) {
 		if (timeout) {
 			clearTimeout(timeout);
 		}
@@ -65,6 +65,7 @@ export function assertNever(x: never): never {
 	throw new Error('Unexpected object: ' + x);
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export type Primitives = Number | String | Boolean;
 export type Properties<T, U> = { [K in keyof T]: T[K] extends U ? K : never }[keyof T];
 

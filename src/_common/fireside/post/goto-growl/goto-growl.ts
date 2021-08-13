@@ -6,7 +6,7 @@ import { Game } from '../../../game/game.model';
 import { AppTimeAgo } from '../../../time/ago/ago';
 import { FiresidePost } from '../post-model';
 
-export type Action = 'add' | 'publish';
+export type Action = 'add' | 'publish' | 'scheduled-publish';
 
 @Component({
 	components: {

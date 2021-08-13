@@ -61,7 +61,7 @@ export const CommonFormComponents = {
 	},
 })
 export class BaseForm<T> extends Vue {
-	@Prop(Object) model?: Readonly<T>;
+	@Prop({ type: Object, required: false }) model?: Readonly<T>;
 
 	formModel: Readonly<T> = {} as T;
 	modelClass?: { new (data?: T): T } = undefined;

@@ -140,4 +140,8 @@ export default class RoutePost extends BaseRouteComponent {
 		const theme = this.post ? this.post.game?.theme ?? this.post.user.theme : null;
 		store.commit('theme/setPageTheme', { key: PostThemeKey, theme });
 	}
+
+	onPostUpdated(post: FiresidePost) {
+		Object.assign(this.post, post);
+	}
 }

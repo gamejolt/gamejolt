@@ -1,3 +1,4 @@
+import { Community } from '../../../_common/community/community.model';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { Game } from '../../../_common/game/game.model';
 import { User } from '../../../_common/user/user.model';
@@ -16,6 +17,8 @@ export class SearchPayload {
 	posts: FiresidePost[];
 	postsCount: number;
 	postsPerPage: number;
+	communities: Community[];
+	communitiesCount: number;
 	libraryGames: LocalDbGame[];
 
 	constructor(public type: string, data: any) {
@@ -24,13 +27,15 @@ export class SearchPayload {
 		this.count = data.count || 0;
 		this.isAdultSearch = data.isAdultSearch || false;
 
-		this.usersCount = data.usersCount || 0;
 		this.users = User.populate(data.users);
-		this.gamesCount = data.gamesCount || 0;
+		this.usersCount = data.usersCount || 0;
 		this.games = Game.populate(data.games);
+		this.gamesCount = data.gamesCount || 0;
 		this.posts = FiresidePost.populate(data.posts);
 		this.postsCount = data.postsCount || 0;
 		this.postsPerPage = data.postsPerPage || 0;
+		this.communities = Community.populate(data.communities);
+		this.communitiesCount = data.communitiesCount || 0;
 		this.libraryGames = [];
 
 		if (GJ_IS_CLIENT) {

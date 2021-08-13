@@ -3,7 +3,7 @@ import { Component, Prop } from 'vue-property-decorator';
 import { Connection } from '../../connection/connection-service';
 import { Environment } from '../../environment/environment.service';
 import { Navigate } from '../../navigate/navigate.service';
-import { Auth } from '../auth.service';
+import { authOnLogin, redirectToDashboard } from '../auth.service';
 import AppAuthLoginForm from './login-form.vue';
 
 @Component({
@@ -21,6 +21,8 @@ export default class AppAuthLogin extends Vue {
 	readonly Connection = Connection;
 
 	onLoggedIn() {
+		authOnLogin('email');
+
 		if (this.redirectTo) {
 			// We don't want them to be able to put in an offsite link as the
 			// redirect URL. So we only open up certain domains. Otherwise we
@@ -34,11 +36,11 @@ export default class AppAuthLogin extends Vue {
 			}
 
 			// Normal redirect, within the gamejolt.com domain.
-			// This is domain-less so we we'll redirect to the path.
+			// This is domain-less so we'll redirect to the path.
 			Navigate.goto(Environment.baseUrl + this.redirectTo);
 			return;
 		}
 
-		Auth.redirectDashboard();
+		redirectToDashboard();
 	}
 }

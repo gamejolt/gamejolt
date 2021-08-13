@@ -7,7 +7,7 @@
 				v-model="filterQuery"
 				text="search"
 				class="form-control"
-				placeholder="Filter..."
+				:placeholder="$gettext(`Filter...`)"
 			/>
 		</div>
 
@@ -16,8 +16,6 @@
 				v-for="user of filteredEntries"
 				:key="getKeyForEntry(user)"
 				:item="user"
-				:current-room="currentRoom"
-				:show-pm="showPm"
 			/>
 		</ul>
 	</div>

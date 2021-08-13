@@ -18,8 +18,10 @@ import AppPostAddButtonFormControl from '../../post/add-button/form-control/form
 		AppFormControlTheme,
 	},
 })
-export default class FormCommunity extends BaseForm<Community>
-	implements FormOnInit, FormOnSubmitSuccess {
+export default class FormCommunity
+	extends BaseForm<Community>
+	implements FormOnInit, FormOnSubmitSuccess
+{
 	modelClass = Community;
 
 	@Action
@@ -45,7 +47,7 @@ export default class FormCommunity extends BaseForm<Community>
 		// When creating a community you get auto joined to it,
 		// but aside from the actual join operation we also do other things
 		// in this store action so we gotta call it anyways.
-		this.joinCommunity(community);
+		this.joinCommunity({ community });
 
 		this.$router.push(community.routeEditLocation);
 	}

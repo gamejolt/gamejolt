@@ -1,7 +1,9 @@
+<script lang="ts" src="./illustration"></script>
+
 <template>
 	<div class="-container">
 		<app-theme-svg class="-ill" :src="src" />
-		<div class="-text" :class="{ '-sm': sm }" v-if="hasContent">
+		<div v-if="hasContent" class="-text" :class="{ '-sm': sm }">
 			<slot />
 		</div>
 	</div>
@@ -33,6 +35,3 @@ $-font-size = 19px
 		&:not(.-sm)
 			font-size: $-font-size
 </style>
-
-<script lang="ts" src="./illustration"></script>
-

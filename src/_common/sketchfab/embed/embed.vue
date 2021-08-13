@@ -1,3 +1,5 @@
+<script lang="ts" src="./embed"></script>
+
 <template>
 	<div class="sketchfab-embed">
 		<div class="sketchfab-embed-inner">
@@ -12,9 +14,7 @@
 				:width="width"
 				:height="height"
 				:src="embedUrl"
-			></iframe>
+			/>
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./embed"></script>

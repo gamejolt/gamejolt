@@ -1,9 +1,10 @@
 import { Component, Emit, Prop } from 'vue-property-decorator';
+import { trackCommentAdd } from '../../analytics/analytics.service';
 import { ContentContext } from '../../content/content-context';
 import { ContentRules } from '../../content/content-editor/content-rules';
 import AppFormControlContent from '../../form-vue/control/content/content.vue';
 import AppForm from '../../form-vue/form';
-import { BaseForm, FormOnInit, FormOnLoad } from '../../form-vue/form.service';
+import { BaseForm, FormOnInit, FormOnLoad, FormOnSubmitSuccess } from '../../form-vue/form.service';
 import { Model } from '../../model/model.service';
 import { Screen } from '../../screen/screen-service';
 import { Comment, getCommentModelResourceName } from '../comment-model';
@@ -14,7 +15,10 @@ import '../comment.styl';
 		AppFormControlContent,
 	},
 })
-export default class FormComment extends BaseForm<Comment> implements FormOnInit, FormOnLoad {
+export default class FormComment
+	extends BaseForm<Comment>
+	implements FormOnInit, FormOnLoad, FormOnSubmitSuccess
+{
 	@Prop(Model)
 	commentModel!: Model;
 
@@ -92,6 +96,12 @@ export default class FormComment extends BaseForm<Comment> implements FormOnInit
 
 	onLoad(payload: any) {
 		this.lengthLimit = payload.lengthLimit;
+	}
+
+	onSubmitSuccess() {
+		if (this.method === 'add') {
+			trackCommentAdd();
+		}
 	}
 
 	@Emit('editor-focus')

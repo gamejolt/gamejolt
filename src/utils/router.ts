@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import VueRouter, { Location, Route, RouteConfig } from 'vue-router';
+import VueRouter, { Location, RawLocation, Route, RouteConfig } from 'vue-router';
 import { Environment } from '../_common/environment/environment.service';
 import { routeError404, RouteError404 } from '../_common/error/page/page.route';
 import { Navigate } from '../_common/navigate/navigate.service';
@@ -179,4 +179,14 @@ export function enforceLocation(route: Route, params: any, query: any = {}) {
 			return LocationRedirect.fromRoute(route, params, query);
 		}
 	}
+}
+
+/**
+ * Will generate a link from a route location.
+ */
+export function getAbsoluteLink(router: VueRouter, location: Location | RawLocation | string) {
+	let url = typeof location === 'string' ? location : router.resolve(location).href;
+	url = url.replace(/^#/, '');
+
+	return Environment.baseUrl + url;
 }

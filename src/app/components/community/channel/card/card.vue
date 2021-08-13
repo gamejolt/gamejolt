@@ -10,7 +10,7 @@
 			:style="{ height }"
 		>
 			<div v-if="backgroundItem" class="-card-bg">
-				<app-media-item-backdrop :media-item="backgroundItem">
+				<app-media-item-backdrop :media-item="backgroundItem" radius="lg">
 					<div
 						class="-card-bg-img"
 						:style="{

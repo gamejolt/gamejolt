@@ -1,3 +1,4 @@
+import { Fireside } from '../../fireside/fireside.model';
 import { FiresidePost } from '../../fireside/post/post-model';
 import { Game } from '../../game/game.model';
 import { Model } from '../../model/model.service';
@@ -47,6 +48,11 @@ export class CommunityActivityItem extends Model {
 	public static TYPE_COMPETITION_ENTRY_UNREMOVE = 'competition/entry/unremove';
 	public static TYPE_COMPETITION_ENTRY_GIVE_AWARD = 'competition/entry/give-award';
 
+	public static TYPE_FIRESIDE_START = 'fireside/start';
+	public static TYPE_FIRESIDE_START_DRAFT = 'fireside/start-draft';
+	public static TYPE_FIRESIDE_PUBLISH = 'fireside/publish';
+	public static TYPE_FIRESIDE_EXTINGUISH = 'fireside/extinguish';
+
 	type!: string;
 	added_on!: number;
 	extra_data!: string;
@@ -60,7 +66,8 @@ export class CommunityActivityItem extends Model {
 		| UserBlock
 		| Game
 		| CommunityCompetition
-		| CommunityCompetitionEntry;
+		| CommunityCompetitionEntry
+		| Fireside;
 
 	constructor(data: any = {}) {
 		super(data);
@@ -109,6 +116,13 @@ export class CommunityActivityItem extends Model {
 				case CommunityActivityItem.TYPE_COMPETITION_ENTRY_UNREMOVE:
 				case CommunityActivityItem.TYPE_COMPETITION_ENTRY_GIVE_AWARD:
 					this.action_resource = new CommunityCompetitionEntry(data.action_resource);
+					break;
+
+				case CommunityActivityItem.TYPE_FIRESIDE_START:
+				case CommunityActivityItem.TYPE_FIRESIDE_START_DRAFT:
+				case CommunityActivityItem.TYPE_FIRESIDE_PUBLISH:
+				case CommunityActivityItem.TYPE_FIRESIDE_EXTINGUISH:
+					this.action_resource = new Fireside(data.action_resource);
 					break;
 			}
 		}
@@ -169,6 +183,13 @@ export class CommunityActivityItem extends Model {
 
 			case CommunityActivityItem.TYPE_COMPETITION_ENTRY_GIVE_AWARD:
 				return { icon: 'medal', color: '' };
+
+			case CommunityActivityItem.TYPE_FIRESIDE_START:
+			case CommunityActivityItem.TYPE_FIRESIDE_START_DRAFT:
+			case CommunityActivityItem.TYPE_FIRESIDE_PUBLISH:
+				return { icon: 'fireside', color: '' };
+			case CommunityActivityItem.TYPE_FIRESIDE_EXTINGUISH:
+				return { icon: 'remove', color: '' };
 		}
 	}
 }

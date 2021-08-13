@@ -69,7 +69,7 @@
 					}"
 					active-class="active"
 				>
-					<translate>Moderators</translate>
+					<translate>Collaborators</translate>
 				</router-link>
 			</app-community-perms>
 			<app-community-perms

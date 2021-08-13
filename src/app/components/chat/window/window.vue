@@ -14,6 +14,8 @@
 				<div class="chat-window-header-wrap">
 					<div class="chat-window-header fill-offset">
 						<div class="chat-window-header-controls">
+							<app-chat-window-menu :room="room" />
+
 							<span
 								@mouseenter="friendAddJolticonVersion = 2"
 								@mouseleave="friendAddJolticonVersion = 1"
@@ -64,7 +66,12 @@
 						>
 							<span
 								v-if="!room.isPmRoom"
-								class="chat-window-header-avatar avatar anim-fade-in-enlarge no-animate-xs"
+								class="
+									chat-window-header-avatar
+									avatar
+									anim-fade-in-enlarge
+									no-animate-xs
+								"
 							>
 								<div class="-icon">
 									<app-jolticon icon="users" />
@@ -72,7 +79,12 @@
 							</span>
 							<router-link
 								v-else-if="room.user"
-								class="chat-window-header-avatar avatar anim-fade-in-enlarge no-animate-xs"
+								class="
+									chat-window-header-avatar
+									avatar
+									anim-fade-in-enlarge
+									no-animate-xs
+								"
 								:to="room.user.url"
 							>
 								<img class="-icon" :src="room.user.img_avatar" alt="" />
@@ -93,19 +105,10 @@
 								<router-link class="link-unstyled" :to="room.user.url">
 									{{ roomTitle }}
 								</router-link>
+								<app-user-verified-tick :user="room.user" />
 								<br />
 								<small>@{{ room.user.username }}</small>
 							</h3>
-
-							<app-button
-								v-if="!room.isPmRoom && isOwner"
-								v-app-tooltip="$gettext('Edit Group')"
-								class="-header-control anim-fade-in-right"
-								circle
-								trans
-								icon="edit"
-								@click="editTitle()"
-							/>
 						</div>
 					</div>
 				</div>
@@ -153,11 +156,7 @@
 						</span>
 					</div>
 
-					<app-chat-user-list
-						v-if="users"
-						:current-room="room"
-						:entries="users.collection"
-					/>
+					<app-chat-member-list v-if="users" :users="users.collection" :room="room" />
 				</app-scroll-scroller>
 			</div>
 		</div>

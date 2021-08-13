@@ -54,7 +54,7 @@
 				</div>
 
 				<h5 class="section-header">
-					<translate>Moderators</translate>
+					<translate>Collaborators</translate>
 				</h5>
 			</div>
 
@@ -87,7 +87,14 @@
 
 		<div class="-community-end small">
 			<div>
+				<app-share-card
+					v-if="useShareCard"
+					:model="community"
+					:url="shareUrl"
+					bleed-padding
+				/>
 				<app-popper
+					v-else
 					popover-class="fill-darkest"
 					@show="isShowingShare = true"
 					@hide="isShowingShare = false"
@@ -96,21 +103,19 @@
 						<translate>Share this community</translate>
 					</a>
 
-					<template v-if="isShowingShare" #popover>
-						<div class="well sans-margin">
-							<div v-if="!GJ_IS_CLIENT" class="social-widgets">
-								<app-social-twitter-share :url="shareUrl" :content="shareContent" />
+					<div v-if="isShowingShare" slot="popover" class="well sans-margin">
+						<div v-if="!GJ_IS_CLIENT" class="social-widgets">
+							<app-social-twitter-share :url="shareUrl" :content="shareContent" />
 
-								<span class="dot-separator" />
+							<span class="dot-separator" />
 
-								<app-social-facebook-like :url="shareUrl" />
-							</div>
-
-							<app-button block @click="copyShareUrl">
-								<translate>Copy Link</translate>
-							</app-button>
+							<app-social-facebook-like :url="shareUrl" />
 						</div>
-					</template>
+
+						<app-button block @click="copyShareUrl">
+							<translate>Copy Link</translate>
+						</app-button>
+					</div>
 				</app-popper>
 
 				<template v-if="shouldShowReport">

@@ -1,12 +1,14 @@
+<script lang="ts" src="./discover-widget"></script>
+
 <template>
-	<router-link class="-discover" :to="{ name: 'discover.communities' }" v-app-tooltip="tooltip">
+	<router-link v-app-tooltip="tooltip" class="-discover" :to="{ name: 'discover.communities' }">
 		<app-jolticon icon="search" />
 	</router-link>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .-discover
 	pressy()
@@ -31,5 +33,3 @@
 	margin: 0 3px
 	font-size: $jolticon-size * 1.5
 </style>
-
-<script lang="ts" src="./discover-widget"></script>

@@ -4,8 +4,10 @@ import {
 	NotificationType,
 } from '../community/user-notification/user-notification.model';
 import { currency } from '../filters/currency';
+import { Fireside } from '../fireside/fireside.model';
 import { FiresidePostCommunity } from '../fireside/post/community/community.model';
 import { FiresidePost } from '../fireside/post/post-model';
+import { FiresideStreamNotification } from '../fireside/stream-notification/stream-notification.model';
 import { ForumTopic } from '../forum/topic/topic.model';
 import { Game } from '../game/game.model';
 import { GameTrophy } from '../game/trophy/trophy.model';
@@ -421,6 +423,79 @@ export class NotificationText {
 						);
 						return undefined;
 					}
+				}
+
+				break;
+			}
+
+			case Notification.TYPE_FIRESIDE_START: {
+				if (notification.action_model instanceof Fireside) {
+					if (notification.action_model.community instanceof Community) {
+						return _process(
+							Translate.$gettextInterpolate(
+								`A new Fireside was started in <em>%{ name }</em>.`,
+								{ name: notification.action_model.community.name },
+								!plaintext
+							)
+						);
+					} else {
+						return _process(
+							Translate.$gettextInterpolate(
+								`<em>%{ subject }</em> started up a new Fireside.`,
+								this.getTranslationValues(notification),
+								!plaintext
+							)
+						);
+					}
+				}
+
+				break;
+			}
+
+			case Notification.TYPE_FIRESIDE_STREAM_NOTIFICATION: {
+				const users = (notification.action_model as FiresideStreamNotification).users;
+
+				if (users.length === 0) {
+					return undefined;
+				}
+
+				const userInterpolates: { [name: string]: string } = {};
+				let i = 1;
+				for (const user of users) {
+					userInterpolates[`user${i}`] = `@${user.username}`;
+					i++;
+				}
+
+				switch (users.length) {
+					case 1:
+						return _process(
+							Translate.$gettextInterpolate(
+								`<em>%{ user1 }</em> is streaming in a Fireside.`,
+								userInterpolates,
+								!plaintext
+							)
+						);
+
+					case 2:
+						return _process(
+							Translate.$gettextInterpolate(
+								`<em>%{ user1 }</em> and <em>%{ user2 }</em> are streaming in a Fireside.`,
+								userInterpolates,
+								!plaintext
+							)
+						);
+
+					default:
+						return _process(
+							Translate.$gettextInterpolate(
+								`<em>%{ user1 }</em>, <em>%{ user2 }</em> and <em>%{ more }</em> more are streaming in a Fireside.`,
+								{
+									...userInterpolates,
+									more: users.length - 2,
+								},
+								!plaintext
+							)
+						);
 				}
 			}
 		}

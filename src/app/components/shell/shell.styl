@@ -61,8 +61,15 @@ body
 
 #shell
 	position: relative
+	// TODO: We should get the shell components using these instead of all the manual stuff below.
+	--shell-top: $shell-top-nav-height
+	--shell-bottom: 0
+	--shell-left: 0
+	--shell-right: 0
 
 	&.has-banner
+		--shell-top: $shell-top-nav-height * 2
+
 		#shell-top-nav
 			top: $shell-top-nav-height
 
@@ -81,6 +88,8 @@ body
 			margin-top: $shell-top-nav-height * 2 + $-scroll-affixed-spacing
 
 	&.has-cbar
+		--shell-left: $shell-cbar-width
+
 		#shell-body
 			padding-left: $shell-cbar-width
 
@@ -94,6 +103,8 @@ body
 			transform: translateX(0)
 
 body.has-hot-bottom
+	--shell-bottom: $status-bar-height
+
 	#shell-body
 		padding-bottom: $status-bar-height
 

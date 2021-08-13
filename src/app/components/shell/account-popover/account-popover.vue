@@ -75,16 +75,6 @@
 					</a>
 				</div>
 
-				<div class="account-popover-button offline-disable">
-					<app-button
-						v-app-track-event="`account-popover:add-game`"
-						block
-						:to="{ name: 'dash.games.add' }"
-					>
-						<translate>Add Game</translate>
-					</app-button>
-				</div>
-
 				<div class="account-popover-separator" />
 
 				<app-shell-user-box />

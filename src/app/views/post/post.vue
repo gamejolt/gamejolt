@@ -2,5 +2,10 @@
 
 <template>
 	<app-post-page-placeholder v-if="!post" />
-	<app-post-page v-else :post="post" :community-notifications="communityNotifications" />
+	<app-post-page
+		v-else
+		:post="post"
+		:community-notifications="communityNotifications"
+		@post-updated="onPostUpdated($event)"
+	/>
 </template>

@@ -20,6 +20,24 @@
 
 			<li class="offline-disable">
 				<router-link
+					v-app-track-event="`sidebar:store`"
+					:to="{
+						name: 'discover.games.list._fetch',
+						params: { section: null },
+					}"
+					:class="{ active: ($route.name || '').startsWith('discover.games.') }"
+				>
+					<span class="shell-nav-icon">
+						<app-jolticon icon="game" />
+					</span>
+					<span class="shell-nav-label">
+						<translate>Store</translate>
+					</span>
+				</router-link>
+			</li>
+
+			<li class="offline-disable">
+				<router-link
 					v-app-track-event="`sidebar:search`"
 					:to="{ name: 'search.results' }"
 					:class="{ active: $route.name && $route.name.indexOf('search') === 0 }"
@@ -97,6 +115,19 @@
 		</ul>
 
 		<ul v-if="Screen.isXs" class="shell-nav">
+			<li v-if="shouldShowAppPromotion" class="offline-disable">
+				<router-link
+					:to="{ name: 'landing.app' }"
+					@click.native="trackAppPromotionClick({ source: 'sidebar' })"
+				>
+					<span class="shell-nav-icon">
+						<app-jolticon icon="world" />
+					</span>
+					<span class="shell-nav-label">
+						<translate>Get the App</translate>
+					</span>
+				</router-link>
+			</li>
 			<li class="offline-disable">
 				<router-link
 					v-app-track-event="`sidebar:forums`"

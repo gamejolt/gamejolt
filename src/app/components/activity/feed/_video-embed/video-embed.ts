@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
 import { AppResponsiveDimensions } from '../../../../../_common/responsive-dimensions/responsive-dimensions';
 import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
 import { ActivityFeedKey, ActivityFeedView } from '../view';
@@ -12,9 +11,14 @@ import { ActivityFeedKey, ActivityFeedView } from '../view';
 	},
 })
 export default class AppActivityFeedVideoEmbed extends Vue {
-	@Prop(propRequired(String)) videoId!: string;
-	@Prop(propRequired(String)) thumbnail!: string;
-	@Prop(propRequired(Boolean)) isHydrated!: boolean;
+	@Prop({ type: String, required: true })
+	videoId!: string;
+
+	@Prop({ type: String, required: true })
+	thumbnail!: string;
+
+	@Prop({ type: Boolean, required: true })
+	isHydrated!: boolean;
 
 	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 

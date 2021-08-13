@@ -31,9 +31,7 @@
 		<div class="landing-body">
 			<section class="section">
 				<div class="container">
-					<h1 class="section-header text-center">
-						A Love of Games
-					</h1>
+					<h1 class="section-header text-center">A Love of Games</h1>
 
 					<hr class="underbar underbar-center" />
 					<br />
@@ -53,7 +51,7 @@
 								<a href="https://gamejolt.com/c/pokemon">Pokémon</a> and
 								<a href="https://gamejolt.com/c/fnaf">FNaF</a> or try your hand at
 								playing some of our
-								<a href="https://gamejolt.com/games/featured">favorite games</a>!
+								<a href="https://gamejolt.com/games">favorite games</a>!
 							</p>
 							<p>
 								We’ve extended our reach to a growing population of visual artists,
@@ -70,9 +68,7 @@
 						</div>
 					</div>
 
-					<h1 class="text-center">
-						Our Team
-					</h1>
+					<h1 class="text-center">Our Team</h1>
 
 					<hr class="underbar underbar-center" />
 					<br />
@@ -118,9 +114,7 @@
 						</div>
 					</div>
 
-					<h1 class="text-center">
-						Logo
-					</h1>
+					<h1 class="text-center">Logo</h1>
 
 					<hr class="underbar underbar-center" />
 					<br />
@@ -134,9 +128,7 @@
 							</p>
 
 							<div class="well fill-darkest">
-								<h5 class="section-header">
-									Dark Backgrounds
-								</h5>
+								<h5 class="section-header">Dark Backgrounds</h5>
 
 								<br />
 
@@ -171,9 +163,7 @@
 							</div>
 
 							<div class="well fill-offset">
-								<h5 class="section-header">
-									Light Backgrounds
-								</h5>
+								<h5 class="section-header">Light Backgrounds</h5>
 
 								<br />
 
@@ -210,9 +200,7 @@
 							<div class="row">
 								<div class="col-sm-6">
 									<div class="well fill-darkest">
-										<h5 class="section-header">
-											Bolt - Dark Backgrounds
-										</h5>
+										<h5 class="section-header">Bolt - Dark Backgrounds</h5>
 
 										<br />
 
@@ -247,9 +235,7 @@
 								</div>
 								<div class="col-sm-6">
 									<div class="well fill-offset">
-										<h5 class="section-header">
-											Bolt - Light Backgrounds
-										</h5>
+										<h5 class="section-header">Bolt - Light Backgrounds</h5>
 
 										<br />
 
@@ -293,9 +279,7 @@
 							<div class="row">
 								<div class="col-sm-6">
 									<div class="well fill-darkest">
-										<h5 class="section-header">
-											Bolt - Dark Backgrounds
-										</h5>
+										<h5 class="section-header">Bolt - Dark Backgrounds</h5>
 
 										<br />
 
@@ -330,9 +314,7 @@
 								</div>
 								<div class="col-sm-6">
 									<div class="well fill-offset">
-										<h5 class="section-header">
-											Bolt - Light Backgrounds
-										</h5>
+										<h5 class="section-header">Bolt - Light Backgrounds</h5>
 
 										<br />
 
@@ -369,9 +351,7 @@
 						</div>
 					</div>
 
-					<h1 class="text-center">
-						Digital Color Palette
-					</h1>
+					<h1 class="text-center">Digital Color Palette</h1>
 
 					<hr class="underbar underbar-center" />
 					<br />

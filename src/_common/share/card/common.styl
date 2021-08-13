@@ -1,0 +1,68 @@
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+
+$-tile-anim-duration = 300ms
+$-base-padding = 8px
+$-border = $border-width-base solid var(--theme-bg-subtle)
+$-font-size = $font-size-base
+$-font-size-dense = $font-size-small
+$-icon-size = $jolticon-size
+$-icon-size-dense = ceil($-icon-size * ($-font-size-dense / $-font-size))
+
+.-tile
+	position: relative
+	display: flex
+	align-items: center
+	justify-content: center
+	flex: auto
+	height: $input-height-base * 1.25
+	font-size: $font-size
+	grid-gap: 4px
+
+	&.-dense
+		font-size: $-font-size-dense
+
+		.-icon
+			width: $-icon-size-dense * 1.25
+			height: @width
+
+		>>> .jolticon
+			font-size: $-icon-size-dense
+
+	>>> .jolticon
+		margin: 0
+		font-size: $-icon-size
+
+	.-icon
+		position: relative
+		width: $-icon-size * 1.25
+		height: @width
+		display: flex
+		align-items: center
+		justify-content: center
+
+	.-icon-primary
+	.-icon-secondary
+		position: absolute
+		transition: all $-tile-anim-duration $strong-ease-out
+		transform: rotate(0)
+
+	.-icon-primary
+		opacity: 1
+
+	.-icon-secondary
+		opacity: 0
+
+	&:hover
+		background-color: var(--theme-bi-bg)
+		color: var(--theme-bi-fg)
+
+		.-icon-primary
+			opacity: 0
+
+		.-icon-secondary
+			opacity: 1
+
+		.-icon-primary
+		.-icon-secondary
+			transform: rotate(360deg)

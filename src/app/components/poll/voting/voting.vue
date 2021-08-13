@@ -1,10 +1,17 @@
+<script lang="ts" src="./voting"></script>
+
 <template>
 	<div class="poll-voting">
 		<template v-if="!showResults">
 			<div class="form-group">
-				<div class="radio" v-for="item of poll.items" :key="item.id">
+				<div v-for="item of poll.items" :key="item.id" class="radio">
 					<label>
-						<input type="radio" :value="item.id" :disabled="isProcessing" v-model="chosenItemId" />
+						<input
+							v-model="chosenItemId"
+							type="radio"
+							:value="item.id"
+							:disabled="isProcessing"
+						/>
 						{{ item.text }}
 					</label>
 				</div>
@@ -19,8 +26,13 @@
 				}"
 			>
 				<app-progress-bar :percent="getItemPercentage(item) * 100">
-					<span v-if="!poll.is_private" class="-progress-percent">
-						{{ number(getItemPercentage(item), { style: 'percent', maximumFractionDigits: 0 }) }}
+					<span v-if="!shouldObscureResults" class="-progress-percent">
+						{{
+							number(getItemPercentage(item), {
+								style: 'percent',
+								maximumFractionDigits: 0,
+							})
+						}}
 					</span>
 
 					{{ item.text }}
@@ -35,7 +47,10 @@
 		<div>
 			<template v-if="!showResults">
 				<span v-app-auth-required>
-					<app-button :disabled="!chosenItemId || isProcessing" @click="vote(chosenItemId)">
+					<app-button
+						:disabled="!chosenItemId || isProcessing"
+						@click="vote(chosenItemId)"
+					>
 						<translate>Vote</translate>
 					</app-button>
 				</span>
@@ -51,15 +66,11 @@
 					%{ votes } vote
 				</translate>
 
-				<span class="dot-separator"></span>
+				<span class="dot-separator" />
 
 				<app-time-ago v-if="isVotable" :date="poll.end_time" is-future />
-				<translate v-else-if="poll.end_time">
-					Voting finished
-				</translate>
-				<translate v-else>
-					Draft poll
-				</translate>
+				<translate v-else-if="poll.end_time">Voting finished</translate>
+				<translate v-else>Draft poll</translate>
 			</span>
 		</div>
 	</div>
@@ -76,5 +87,3 @@
 .-chosen
 	font-weight: bold
 </style>
-
-<script lang="ts" src="./voting"></script>

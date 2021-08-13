@@ -1,7 +1,7 @@
 <script lang="ts" src="./list"></script>
 
 <template>
-	<app-scroll-scroller horizontal thin>
+	<app-scroll-scroller horizontal>
 		<div class="-list">
 			<div v-for="tag of tags" :key="tag.id" class="-list-item">
 				<app-tag-thumbnail class="-list-thumb" :tag="tag.id" :event-cat="eventCat" />

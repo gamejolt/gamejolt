@@ -1,6 +1,8 @@
+<script lang="ts" src="./grid"></script>
+
 <template>
 	<div :id="`grid-pagination-${id}`">
-		<p class="text-muted small" v-if="gamesCount">
+		<p v-if="gamesCount" class="text-muted small">
 			<translate
 				:translate-n="gamesCount"
 				:translate-params="{
@@ -15,9 +17,13 @@
 
 		<div :class="{ 'scrollable-grid': isScrollable }">
 			<app-condense-whitespace class="game-grid-items">
-				<div class="game-grid-ad" v-if="Screen.isDesktop && shouldShowAds">
-					<div class="game-grid-ad-video-inner">
-						<app-ad-widget size="video" placement="content" />
+				<div v-if="Screen.isDesktop && shouldShowAds" class="game-grid-ad">
+					<div class="game-grid-ad-inner">
+						<app-ad-widget
+							size="rectangle"
+							placement="content"
+							:meta="{ staticSize: true }"
+						/>
 					</div>
 				</div>
 
@@ -27,15 +33,21 @@
 					space.
 				-->
 				<template v-for="(game, i) of processedGames">
-					<div class="game-grid-ad" v-if="shouldShowAd(i)" :key="game.id + '-ad'">
+					<div v-if="shouldShowAd(i)" :key="game.id + '-ad'" class="game-grid-ad">
 						<div class="game-grid-ad-inner">
-							<app-ad-widget size="rectangle" placement="content" :meta="{ staticSize: true }" />
+							<app-ad-widget
+								size="rectangle"
+								placement="content"
+								:meta="{ staticSize: true }"
+							/>
 						</div>
 					</div>
-					<div class="game-grid-item" :key="game.id">
+					<div :key="game.id" class="game-grid-item">
 						<app-game-thumbnail
+							v-app-track-event="
+								eventLabel ? 'game-grid:click:' + eventLabel : undefined
+							"
 							:game="game"
-							v-app-track-event="eventLabel ? 'game-grid:click:' + eventLabel : undefined"
 						>
 							<slot name="thumbnail-controls" :game="game" />
 						</app-game-thumbnail>
@@ -45,8 +57,6 @@
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./grid"></script>
 
 <style lang="stylus" src="./grid.styl"></style>
 
