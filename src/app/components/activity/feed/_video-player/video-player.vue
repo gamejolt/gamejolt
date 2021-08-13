@@ -60,7 +60,7 @@
 						</div>
 					</transition>
 
-					<transition-group name="fade" class="-transitions-group">
+					<transition-group tag="div" name="fade" class="-transitions-group">
 						<div
 							v-for="control of ['time', 'bars', 'volume']"
 							:key="control"
@@ -201,7 +201,7 @@ $-controls-spacing = 8px
 		transition: background-color 250ms $strong-ease-out
 
 .fade
-	&-enter
+	&-enter-from
 	&-leave-to
 		opacity: 0
 		visibility: hidden

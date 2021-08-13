@@ -4,9 +4,7 @@
 	<div>
 		<form class="payment-form" novalidate>
 			<div v-if="!user" class="form-group">
-				<label for="email" class="control-label">
-					Send key to
-				</label>
+				<label for="email" class="control-label"> Send key to </label>
 
 				<div class="form-group-control">
 					<input
@@ -21,9 +19,7 @@
 				</div>
 			</div>
 			<div v-else class="form-group">
-				<label class="control-label">
-					Logged in as
-				</label>
+				<label class="control-label"> Logged in as </label>
 
 				<div class="form-group-control">
 					<app-user-avatar-img :user="user" />
@@ -40,9 +36,7 @@
 			</div>
 
 			<div class="form-group">
-				<label for="amount" class="control-label">
-					Name your price
-				</label>
+				<label for="amount" class="control-label"> Name your price </label>
 
 				<div class="form-group-control">
 					<span class="payment-form-amount-input">
@@ -112,9 +106,11 @@
 			</div>
 		</form>
 
-		<app-modal v-if="isShowingAddress" @close="isShowingAddress = false">
-			<app-address />
-		</app-modal>
+		<transition>
+			<app-modal v-if="isShowingAddress" @close="isShowingAddress = false">
+				<app-address />
+			</app-modal>
+		</transition>
 	</div>
 </template>
 

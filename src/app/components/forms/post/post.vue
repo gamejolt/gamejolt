@@ -442,7 +442,7 @@
 		<!-- Communities -->
 		<template v-if="isLoaded">
 			<app-scroll-scroller v-if="shouldShowCommunities" class="-communities" horizontal thin>
-				<transition-group class="-communities-list" tag="div">
+				<transition-group tag="div" class="-communities-list">
 					<app-form-post-community-pill-incomplete
 						v-if="incompleteDefaultCommunity"
 						key="incomplete"
@@ -744,7 +744,7 @@
 		&-placeholder
 			margin: 10px 0 14px
 
-		.v-leave
+		.v-leave-from
 			display: none
 			position: absolute
 

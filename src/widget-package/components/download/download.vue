@@ -21,9 +21,7 @@
 				</app-fade-collapse>
 
 				<span v-if="isDescriptionCollapsed">
-					<a class="link-muted" @click="isShowingDescription = true">
-						(more)
-					</a>
+					<a class="link-muted" @click="isShowingDescription = true"> (more) </a>
 				</span>
 			</template>
 		</div>
@@ -40,9 +38,7 @@
 				@click="buildClick(downloadableBuild)"
 			>
 				Download
-				<small v-if="platformSupportInfo[showcasedOs].arch === '64'">
-					64-bit
-				</small>
+				<small v-if="platformSupportInfo[showcasedOs].arch === '64'"> 64-bit </small>
 				<small>({{ filesize(downloadableBuild.primary_file.filesize) }})</small>
 				<app-jolticon class="jolticon-addon" :icon="showcasedOsIcon" />
 			</app-button>
@@ -66,78 +62,83 @@
 			</app-button>
 		</div>
 
-		<app-modal v-if="isShowingDescription" @close="isShowingDescription = false">
-			{{ package.description }}
-		</app-modal>
+		<transition>
+			<app-modal v-if="isShowingDescription" @close="isShowingDescription = false">
+				{{ package.description }}
+			</app-modal>
+		</transition>
 
-		<app-modal v-if="isShowingMoreOptions" @close="isShowingMoreOptions = false">
-			<div class="row">
-				<div class="col-xs-6 col-centered">
-					<div
-						v-for="extraBuild in extraBuilds"
-						:key="extraBuild.icon + '-' + extraBuild.build.id"
-					>
-						<!--
-							If a ROM, we want to show a tooltip on what kind.
-						-->
-						<app-button
-							v-app-tooltip.touchable="
-								extraBuild.build.type === GameBuild.TYPE_ROM
-									? GameBuild.emulatorInfo[extraBuild.build.emulator_type]
-									: undefined
-							"
-							block
-							:icon="extraBuild.icon"
-							@click="buildClick(extraBuild.build)"
+		<transition>
+			<app-modal v-if="isShowingMoreOptions" @close="isShowingMoreOptions = false">
+				<div class="row">
+					<div class="col-xs-6 col-centered">
+						<div
+							v-for="extraBuild in extraBuilds"
+							:key="extraBuild.icon + '-' + extraBuild.build.id"
 						>
 							<!--
-								We show the filename if it's an "Other" build.
+								If a ROM, we want to show a tooltip on what kind.
 							-->
-							<template v-if="!extraBuild.build.os_other">
-								<template v-if="extraBuild.build.type === 'downloadable'">
-									Download
-								</template>
-								<template v-else-if="extraBuild.build.type === 'rom'">
-									Download ROM
+							<app-button
+								v-app-tooltip.touchable="
+									extraBuild.build.type === GameBuild.TYPE_ROM
+										? GameBuild.emulatorInfo[extraBuild.build.emulator_type]
+										: undefined
+								"
+								block
+								:icon="extraBuild.icon"
+								@click="buildClick(extraBuild.build)"
+							>
+								<!--
+									We show the filename if it's an "Other" build.
+								-->
+								<template v-if="!extraBuild.build.os_other">
+									<template v-if="extraBuild.build.type === 'downloadable'">
+										Download
+									</template>
+									<template v-else-if="extraBuild.build.type === 'rom'">
+										Download ROM
+									</template>
+									<template v-else> Play </template>
 								</template>
 								<template v-else>
-									Play
+									{{ extraBuild.build.primary_file.filename }}
 								</template>
-							</template>
-							<template v-else>
-								{{ extraBuild.build.primary_file.filename }}
-							</template>
 
-							<small v-if="extraBuild.arch === '64'">64-bit</small>
+								<small v-if="extraBuild.arch === '64'">64-bit</small>
 
-							<small class="text-muted">
-								({{ filesize(extraBuild.build.primary_file.filesize) }})
-							</small>
-						</app-button>
-						<br />
+								<small class="text-muted">
+									({{ filesize(extraBuild.build.primary_file.filesize) }})
+								</small>
+							</app-button>
+							<br />
+						</div>
 					</div>
 				</div>
-			</div>
-		</app-modal>
+			</app-modal>
+		</transition>
 
-		<app-modal v-if="isShowingPayment" @close="isShowingPayment = false">
-			<p>
-				<span v-if="!pricing.amount">
-					Show {{ developer.display_name }} some
-					<app-jolticon class="-heart" icon="heart-filled" /> by supporting them.
-				</span>
-				<span v-else>
-					This developer suggests paying
-					<strong>{{ currency(price) }} </strong>, but you're able to pay what you want.
-				</span>
-			</p>
+		<transition>
+			<app-modal v-if="isShowingPayment" @close="isShowingPayment = false">
+				<p>
+					<span v-if="!pricing.amount">
+						Show {{ developer.display_name }} some
+						<app-jolticon class="-heart" icon="heart-filled" /> by supporting them.
+					</span>
+					<span v-else>
+						This developer suggests paying
+						<strong>{{ currency(price) }} </strong>, but you're able to pay what you
+						want.
+					</span>
+				</p>
 
-			<app-payment />
+				<app-payment />
 
-			<a class="link-muted" @click="buildClick(clickedBuild)">
-				No thanks, take me to the game.
-			</a>
-		</app-modal>
+				<a class="link-muted" @click="buildClick(clickedBuild)">
+					No thanks, take me to the game.
+				</a>
+			</app-modal>
+		</transition>
 	</div>
 </template>
 

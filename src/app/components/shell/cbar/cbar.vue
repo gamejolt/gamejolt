@@ -6,7 +6,7 @@
 			<div class="-inner">
 				<app-shell-cbar-controls />
 
-				<transition-group name="-communities">
+				<transition-group tag="div" name="-communities">
 					<app-shell-cbar-community
 						v-for="community of communities"
 						:key="community.id"
@@ -42,7 +42,7 @@
 	transition: transform 300ms $ease-out-back, opacity 150ms
 
 .-communities
-	&-enter
+	&-enter-from
 	&-leave-to
 		opacity: 0
 		transform: translateY(-15px)

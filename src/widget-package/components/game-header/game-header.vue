@@ -40,9 +40,11 @@
 			</div>
 		</div>
 
-		<app-modal v-if="isShowingIncluded" @close="isShowingIncluded = false">
-			<app-included-items />
-		</app-modal>
+		<transition>
+			<app-modal v-if="isShowingIncluded" @close="isShowingIncluded = false">
+				<app-included-items />
+			</app-modal>
+		</transition>
 	</div>
 </template>
 

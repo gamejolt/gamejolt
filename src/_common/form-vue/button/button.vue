@@ -1,3 +1,5 @@
+<script lang="ts" src="./button"></script>
+
 <template>
 	<app-button
 		v-if="shouldShow"
@@ -27,10 +29,8 @@
 	overflow: hidden
 	transition: opacity 300ms, width 300ms
 
-	&.v-enter
+	&.v-enter-from
 	&.v-leave-to
 		opacity: 0
 		width: 0
 </style>
-
-<script lang="ts" src="./button"></script>

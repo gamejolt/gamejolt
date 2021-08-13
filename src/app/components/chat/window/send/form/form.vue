@@ -161,7 +161,7 @@ $-button-spacing-xs = $-button-height
 	&.fade-leave-active
 		transition-duration: 250ms
 
-	&.fade-enter
+	&.fade-enter-from
 	&.fade-leave-to
 		opacity: 0
 

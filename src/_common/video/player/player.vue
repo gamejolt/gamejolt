@@ -51,28 +51,30 @@
 					/>
 				</app-media-item-backdrop>
 
-				<transition>
-					<div
-						class="-overlay -ui"
-						:class="{
-							'-paused-cursor': player.state === 'paused',
-							'-darken': shouldShowLoading,
-						}"
-						@click="onVideoClick"
-					>
-						<app-loading v-if="shouldShowLoading" no-color hide-label stationary />
-						<template v-else>
-							<transition>
-								<div
-									v-if="shouldShowPausedIndicator"
-									class="-paused-indicator -ui anim-fade-enter-enlarge anim-fade-leave-shrink"
-								>
-									<app-jolticon class="-paused-indicator-icon" icon="play" />
-								</div>
-							</transition>
-						</template>
-					</div>
-				</transition>
+				<div
+					class="-overlay -ui"
+					:class="{
+						'-paused-cursor': player.state === 'paused',
+						'-darken': shouldShowLoading,
+					}"
+					@click="onVideoClick"
+				>
+					<app-loading v-if="shouldShowLoading" no-color hide-label stationary />
+					<template v-else>
+						<transition>
+							<div
+								v-if="shouldShowPausedIndicator"
+								class="
+									-paused-indicator
+									-ui
+									anim-fade-enter-enlarge anim-fade-leave-shrink
+								"
+							>
+								<app-jolticon class="-paused-indicator-icon" icon="play" />
+							</div>
+						</transition>
+					</template>
+				</div>
 
 				<transition>
 					<div

@@ -1,5 +1,7 @@
+<script lang="ts" src="./content-editor"></script>
+
 <template>
-	<div class="content-editor" @focus="onFocusOuter" ref="editor" tabindex="0">
+	<div ref="editor" class="content-editor" tabindex="0" @focus="onFocusOuter">
 		<div
 			class="content-container"
 			:class="{
@@ -9,7 +11,7 @@
 				minHeight: containerMinHeight,
 			}"
 		>
-			<app-scroll-scroller class="content-container-scroller" @scroll="onScroll" thin>
+			<app-scroll-scroller class="content-container-scroller" thin @scroll="onScroll">
 				<div
 					:class="{
 						'content-container-gutter-1': editorGutterSize === 1,
@@ -17,10 +19,10 @@
 					}"
 				>
 					<div
+						ref="doc"
 						class="-doc"
 						:style="{ 'max-height': maxHeight > 0 ? maxHeight + 'px' : 'auto' }"
 						:class="editorStyleClass"
-						ref="doc"
 					/>
 				</div>
 
@@ -90,5 +92,3 @@
 </template>
 
 <style lang="stylus" src="./content-editor.styl" scoped></style>
-
-<script lang="ts" src="./content-editor"></script>

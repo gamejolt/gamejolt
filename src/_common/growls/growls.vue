@@ -2,12 +2,19 @@
 
 <template>
 	<div class="growl-container">
-		<app-growl
-			v-for="(growl, index) of Growls.growls"
-			:key="index"
-			:growl="growl"
-			:index="index"
-		/>
+		<transition-group>
+			<!-- TODO(vue3): check to make sure this didn't break -->
+			<app-growl
+				v-for="(growl, index) of Growls.growls"
+				:key="index"
+				:growl="growl"
+				:index="index"
+				:class="{
+					'anim-fade-enter-left anim-fade-leave-left': !Screen.isXs,
+					'anim-fade-enter-down anim-back-leave-down': Screen.isXs,
+				}"
+			/>
+		</transition-group>
 	</div>
 </template>
 

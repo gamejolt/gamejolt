@@ -11,11 +11,12 @@
 		<template v-if="hasVideo">
 			<template v-if="videoPaused">
 				<transition>
-					<template v-if="!hasOverlayItems">
-						<div class="-paused-indicator -click-target anim-fade-leave-shrink">
-							<app-jolticon class="-paused-indicator-icon" icon="play" />
-						</div>
-					</template>
+					<div
+						v-if="!hasOverlayItems"
+						class="-paused-indicator -click-target anim-fade-leave-shrink"
+					>
+						<app-jolticon class="-paused-indicator-icon" icon="play" />
+					</div>
 				</transition>
 			</template>
 			<template v-else-if="isLoadingVideo">

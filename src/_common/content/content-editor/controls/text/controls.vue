@@ -1,10 +1,12 @@
+<script lang="ts" src="./controls"></script>
+
 <template>
 	<div
 		ref="container"
 		class="content-editor-text-controls"
 		:style="{
-			bottom: this.bottom,
-			left: this.left,
+			bottom: bottom,
+			left: left,
 		}"
 		:class="{
 			'controls-desktop': !Screen.isXs,
@@ -15,61 +17,61 @@
 			<div v-if="visible">
 				<button
 					v-if="capabilities.textBold && !isInHeading"
+					v-app-tooltip="$gettext('Bold (Ctrl+B)')"
 					class="control-button"
-					@click.prevent="onClickBold"
-					@mousedown.prevent
 					:class="{
 						'control-button-active': hasMark('strong'),
 					}"
-					v-app-tooltip="$gettext('Bold (Ctrl+B)')"
+					@click.prevent="onClickBold"
+					@mousedown.prevent
 				>
 					<app-jolticon icon="bold" />
 				</button>
 				<button
 					v-if="capabilities.textItalic"
+					v-app-tooltip="$gettext('Italic (Ctrl+I)')"
 					class="control-button"
-					@click.prevent="onClickItalic"
-					@mousedown.prevent
 					:class="{
 						'control-button-active': hasMark('em'),
 					}"
-					v-app-tooltip="$gettext('Italic (Ctrl+I)')"
+					@click.prevent="onClickItalic"
+					@mousedown.prevent
 				>
 					<app-jolticon icon="italic" />
 				</button>
 				<button
 					v-if="capabilities.textStrike"
+					v-app-tooltip="$gettext('Strikethrough')"
 					class="control-button"
-					@click.prevent="onClickStrikethrough"
-					@mousedown.prevent
 					:class="{
 						'control-button-active': hasMark('strike'),
 					}"
-					v-app-tooltip="$gettext('Strikethrough')"
+					@click.prevent="onClickStrikethrough"
+					@mousedown.prevent
 				>
 					<app-jolticon icon="strikethrough" />
 				</button>
 				<button
 					v-if="capabilities.textCode"
+					v-app-tooltip="$gettext('Code (Ctrl+`)')"
 					class="control-button"
-					@click.prevent="onClickCode"
-					@mousedown.prevent
 					:class="{
 						'control-button-active': hasMark('code'),
 					}"
-					v-app-tooltip="$gettext('Code (Ctrl+`)')"
+					@click.prevent="onClickCode"
+					@mousedown.prevent
 				>
 					<app-jolticon icon="brackets" />
 				</button>
 				<button
 					v-if="capabilities.textLink && capabilities.customLink"
+					v-app-tooltip="$gettext(isAutolink ? 'Autolinked!' : 'Link (Ctrl+K)')"
 					class="control-button"
-					@click.prevent="onClickLink"
-					@mousedown.prevent
 					:class="{
 						'control-button-active': hasMark('link'),
 					}"
-					v-app-tooltip="$gettext(isAutolink ? 'Autolinked!' : 'Link (Ctrl+K)')"
+					@click.prevent="onClickLink"
+					@mousedown.prevent
 				>
 					<app-jolticon icon="link" />
 				</button>
@@ -77,24 +79,24 @@
 				<template v-if="shouldShowHeading">
 					<span class="control-separator" />
 					<button
+						v-app-tooltip="$gettext('Heading Level 1')"
 						class="control-button"
-						@click.prevent="onClickHeading(1)"
-						@mousedown.prevent
 						:class="{
 							'control-button-active': headingLevel === 1,
 						}"
-						v-app-tooltip="$gettext('Heading Level 1')"
+						@click.prevent="onClickHeading(1)"
+						@mousedown.prevent
 					>
 						<app-jolticon icon="h1" />
 					</button>
 					<button
+						v-app-tooltip="$gettext('Heading Level 2')"
 						class="control-button"
-						@click.prevent="onClickHeading(2)"
-						@mousedown.prevent
 						:class="{
 							'control-button-active': headingLevel === 2,
 						}"
-						v-app-tooltip="$gettext('Heading Level 2')"
+						@click.prevent="onClickHeading(2)"
+						@mousedown.prevent
 					>
 						<app-jolticon icon="h2" />
 					</button>
@@ -105,5 +107,3 @@
 </template>
 
 <style lang="stylus" src="./controls.styl" scoped></style>
-
-<script lang="ts" src="./controls"></script>

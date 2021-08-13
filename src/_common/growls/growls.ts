@@ -1,4 +1,5 @@
 import { Options, Vue } from 'vue-property-decorator';
+import { Screen } from '../screen/screen-service';
 import AppGrowl from './growl.vue';
 import { Growls } from './growls.service';
 
@@ -9,4 +10,5 @@ import { Growls } from './growls.service';
 })
 export default class AppGrowls extends Vue {
 	readonly Growls = Growls;
+	readonly Screen = Screen;
 }

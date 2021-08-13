@@ -59,7 +59,7 @@
 	&-enter-active
 		transition: opacity 250ms $strong-ease-out
 
-	&-enter
+	&-enter-from
 		opacity: 0
 
 	&-enter-to

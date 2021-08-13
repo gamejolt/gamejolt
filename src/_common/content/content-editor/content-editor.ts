@@ -68,7 +68,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	 * Used to send more information with the create temp resource request.
 	 * Passed in object is directly handed to the Api. By default `undefined`, resulting in a GET request.
 	 */
-	@Prop(Object) tempResourceContextData?: Object;
+	@Prop(Object) tempResourceContextData?: any;
 
 	/**
 	 * In single line mode the editor emits an event on enter and does not insert a new paragraph.

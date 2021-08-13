@@ -17,7 +17,10 @@
 			Invalid widget key.
 		</div>
 
-		<app-processing-overlay v-if="isProcessing" />
+		<!-- TODO(vue3): will this transition flow through all the levels of components to trigger the animation? -->
+		<transition>
+			<app-processing-overlay v-if="isProcessing" />
+		</transition>
 
 		<transition name="slide-up">
 			<app-toast v-if="hasFailure === 'setup-order'" type="error" @dismiss="clearFailure()">

@@ -1,4 +1,3 @@
-// For class-based animations.
 /**
  * Staggers
  */
@@ -12,15 +11,6 @@
 		&:nth-child({i})
 			animation-delay: 25ms * i
 
-// For angular based animations.
-.stagger-enter
-	&.ng-enter-stagger
-		animation-delay: 50ms
-
-.stagger-leave
-	&.ng-leave-stagger
-		animation-delay: 50ms
-
 /**
  * Turning off animations.
  */
@@ -31,14 +21,18 @@
 	opacity: 1 !important
 
 .no-animate-enter
-	&.ng-enter, &.v-enter, &.v-enter-to, &.v-enter-active
+	&.v-enter-from
+	&.v-enter-to
+	&.v-enter-active
 		animation-name: none !important
 		animation-duration: 0s !important
 		transition-duration: 0s !important
 		opacity: 1 !important
 
 .no-animate-leave
-	&.ng-leave, &.v-leave, &.v-leave-to, &.v-leave-active
+	&.v-leave-from
+	&.v-leave-to
+	&.v-leave-active
 		animation-name: none !important
 		animation-duration: 0s !important
 		transition-duration: 0s !important
