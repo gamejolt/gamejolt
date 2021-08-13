@@ -2,11 +2,7 @@
 
 <template>
 	<div class="content-viewer" :class="viewerStyleClass">
-		<app-content-viewer-base-component
-			v-if="shouldShowContent"
-			:content="data.content"
-			:owner="owner"
-		/>
+		<app-content-viewer-base-component v-if="doc" :content="doc.content" :owner="owner" />
 	</div>
 </template>
 

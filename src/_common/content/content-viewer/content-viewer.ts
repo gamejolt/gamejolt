@@ -20,7 +20,7 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 	@Prop(propOptional(Boolean, false)) disableLightbox!: boolean;
 	@Prop(propOptional(ContentRules)) displayRules?: ContentRules;
 
-	data: ContentDocument | null = null;
+	doc: ContentDocument | null = null;
 	hydrator: ContentHydrator = new ContentHydrator();
 
 	private lightbox?: AppLightboxTS;
@@ -30,12 +30,8 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 		return this;
 	}
 
-	get shouldShowContent() {
-		return this.data instanceof ContentDocument;
-	}
-
 	get viewerStyleClass() {
-		if (!this.data) {
+		if (!this.doc) {
 			return '';
 		}
 		return this.getContext() + '-content';
@@ -50,15 +46,15 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 	}
 
 	getContext() {
-		if (this.data) {
-			return this.data.context;
+		if (this.doc) {
+			return this.doc.context;
 		}
 		throw new Error('No context assigned to viewer');
 	}
 
 	getCapabilities() {
-		if (this.data) {
-			return ContextCapabilities.getForContext(this.data.context);
+		if (this.doc) {
+			return ContextCapabilities.getForContext(this.doc.context);
 		}
 		return ContextCapabilities.getEmpty();
 	}
@@ -68,7 +64,7 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 	}
 
 	getContent() {
-		return this.data;
+		return this.doc;
 	}
 
 	getContentRules() {
@@ -85,7 +81,7 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 	}
 
 	setContent(content: ContentDocument) {
-		this.data = content;
+		this.doc = content;
 		this.hydrator = new ContentHydrator(content.hydration);
 	}
 
@@ -95,7 +91,7 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 			const sourceDoc = ContentDocument.fromJson(this.source);
 			this.setContent(sourceDoc);
 		} else {
-			this.data = null;
+			this.doc = null;
 		}
 	}
 
