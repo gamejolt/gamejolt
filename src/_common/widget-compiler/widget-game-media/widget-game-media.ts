@@ -18,7 +18,7 @@ export default class AppWidgetCompilerWidgetGameMedia extends Vue {
 		this.trim();
 	}
 
-	@Watch('items')
+	@Watch('items', { deep: true })
 	onItemsUpdate() {
 		this.trim();
 	}

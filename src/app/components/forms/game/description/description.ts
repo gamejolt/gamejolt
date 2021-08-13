@@ -70,7 +70,7 @@ export default class FormGameDescription
 		this.lengthLimit = payload.lengthLimit;
 	}
 
-	@Watch('serverErrors')
+	@Watch('serverErrors', { deep: true })
 	onServerErrors() {
 		this.isFnafDetected = false;
 		this.isDisabled = false;

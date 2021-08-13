@@ -380,7 +380,7 @@ export default class FormGameBuild
 		return (this.formModel as any)['launch_' + platform];
 	}
 
-	@Watch('releaseLaunchOptions')
+	@Watch('releaseLaunchOptions', { deep: true })
 	onReleaseLaunchOptionsChanged() {
 		this.buildLaunchOptions = this.releaseLaunchOptions.filter(
 			launchOption => launchOption.game_build_id === this.model!.id

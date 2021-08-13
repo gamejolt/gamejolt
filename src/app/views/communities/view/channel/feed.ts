@@ -110,7 +110,7 @@ export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent 
 		return title;
 	}
 
-	@Watch('communityState.unreadChannels', { immediate: true })
+	@Watch('communityState.unreadChannels', { immediate: true, deep: true })
 	onChannelUnreadChanged() {
 		if (
 			this.feed &&

@@ -21,10 +21,7 @@ export default class TooltipComponent extends Vue {
 	}
 
 	// We need to watch for changes of the tooltip instance and its data.
-	@Watch('tooltip')
-	@Watch('tooltip.text')
-	@Watch('tooltip.isActive')
-	@Watch('tooltip.placement')
+	@Watch('tooltip', { deep: true })
 	async check() {
 		// Wait for the tooltip to be mounted.
 		await nextTick();

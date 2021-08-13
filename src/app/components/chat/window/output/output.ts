@@ -119,7 +119,7 @@ export default class AppChatWindowOutput extends Vue {
 		}
 	}
 
-	@Watch('queuedMessages')
+	@Watch('queuedMessages', { deep: true })
 	updateVisibleQueuedMessages() {
 		// Display queued messages as queued that take longer than a certain amount of ms for the server to reply to.
 		for (const message of this.queuedMessages) {

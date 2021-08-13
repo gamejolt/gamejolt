@@ -57,12 +57,12 @@ export default class AppCommunitySidebar extends Vue {
 
 	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
 
-	@Watch('data.collaborators', { immediate: true })
+	@Watch('sidebarData.collaborators', { immediate: true, deep: true })
 	onCollaboratorsUpdated(collaborators: User[]) {
 		this.currentCollaborators = collaborators;
 	}
 
-	@Watch('data.collaboratorCount', { immediate: true })
+	@Watch('sidebarData.collaboratorCount', { immediate: true })
 	onCollaboratorsCountUpdated(collaboratorCount: number) {
 		this.currentCollaboratorCount = collaboratorCount;
 	}
