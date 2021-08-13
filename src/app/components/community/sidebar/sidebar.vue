@@ -113,6 +113,12 @@
 			</app-popper>
 
 			<div class="text-muted">
+				<template v-if="shouldShowReport">
+					<a @click="onClickReport">
+						<translate>Report</translate>
+					</a>
+					<span class="dot-separator" />
+				</template>
 				A community for
 				<app-time-ago :date="community.added_on" without-suffix />
 			</div>
