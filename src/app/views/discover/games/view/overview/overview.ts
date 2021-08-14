@@ -1,4 +1,6 @@
+import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
+import { useAdsController } from '../../../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../../../_common/ad/widget/widget.vue';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCard from '../../../../../../_common/card/card.vue';
@@ -86,7 +88,7 @@ import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue
 	cache: true,
 	deps: { query: ['feed_last_id'] },
 	resolver({ route }) {
-		const gameId = parseInt(route.params.id, 10);
+		const gameId = parseInt(route.params.id as string);
 		HistoryTick.sendBeacon('game-view', gameId, {
 			sourceResource: 'Game',
 			sourceResourceId: gameId,
@@ -96,7 +98,7 @@ import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue
 		// when gathering the payload.
 		let apiOverviewUrl = '/web/discover/games/overview/' + route.params.id;
 
-		const ref = PartnerReferral.getReferrer('Game', parseInt(route.params.id, 10));
+		const ref = PartnerReferral.getReferrer('Game', parseInt(route.params.id as string));
 		if (ref) {
 			apiOverviewUrl += '?ref=' + ref;
 		}
@@ -110,6 +112,8 @@ import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue
 export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	@Inject({ from: CommentStoreManagerKey })
 	commentManager!: CommentStoreManager;
+
+	ads = setup(() => useAdsController());
 
 	@RouteStoreModule.State
 	isOverviewLoaded!: RouteStore['isOverviewLoaded'];
@@ -233,7 +237,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	}
 
 	get shouldShowAds() {
-		return this.$ad.shouldShow;
+		return this.ads.shouldShow;
 	}
 
 	get shouldShowCommentAdd() {

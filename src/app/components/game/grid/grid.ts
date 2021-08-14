@@ -1,5 +1,7 @@
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional } from '../../../../utils/vue';
+import { useAdsController } from '../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
 import { AppCondenseWhitespace } from '../../../../_common/condense-whitespace';
 import { number } from '../../../../_common/filters/number';
@@ -30,13 +32,15 @@ export default class AppGameGrid extends Vue {
 	@Prop(propOptional(Boolean, false)) showAds!: boolean;
 	@Prop(propOptional(String)) eventLabel?: string;
 
+	ads = setup(() => useAdsController());
+
 	id = ++idCounter;
 
 	readonly number = number;
 	readonly Screen = Screen;
 
 	get shouldShowAds() {
-		return this.showAds && this.$ad.shouldShow;
+		return this.showAds && this.ads.shouldShow;
 	}
 
 	get isScrollable() {

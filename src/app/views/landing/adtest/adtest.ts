@@ -1,4 +1,6 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
+import { overrideAdsAdapter, useAdsController } from '../../../../_common/ad/ad-store';
 import { AdPlaywireAdapter } from '../../../../_common/ad/playwire/playwire-adapter';
 import { AdProperAdapter } from '../../../../_common/ad/proper/proper-adapter';
 import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
@@ -13,6 +15,8 @@ import AppScrollAffix from '../../../../_common/scroll/affix/affix.vue';
 	},
 })
 export default class RouteAdtest extends BaseRouteComponent {
+	ads = setup(() => useAdsController());
+
 	get q() {
 		return this.$route.query;
 	}
@@ -32,7 +36,7 @@ export default class RouteAdtest extends BaseRouteComponent {
 		if (this.q.adapter) {
 			const adapter = this.q.adapter as keyof typeof adapterMap;
 			const adapterConstructor = adapterMap[adapter];
-			this.$ad.overrideAdapter(new adapterConstructor());
+			overrideAdsAdapter(this.ads, new adapterConstructor());
 		}
 	}
 }

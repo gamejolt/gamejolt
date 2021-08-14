@@ -67,5 +67,6 @@
 	"volar.autoCompleteRefs": true,
 	"volar.codeLens.references": false,
 	"volar.codeLens.scriptSetupTools": false,
+	"volar.preferredTagNameCase": "pascal",
 	"editor.linkedEditing": true
 }

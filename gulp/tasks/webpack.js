@@ -81,8 +81,16 @@ module.exports = function (config) {
 		devtool = 'source-map';
 	}
 
-	function stylesLoader(withStylusLoader) {
-		const loaders = ['css-loader', 'postcss-loader'];
+	function stylesLoader({ withStylus, withSass, withModules } = {}) {
+		const loaders = [
+			{
+				loader: 'css-loader',
+				options: {
+					modules: withModules ? true : false,
+				},
+			},
+			'postcss-loader',
+		];
 
 		if (shouldExtractCss) {
 			if (config.ssr !== 'server') {
@@ -99,7 +107,7 @@ module.exports = function (config) {
 			});
 		}
 
-		if (withStylusLoader) {
+		if (withStylus) {
 			loaders.push({
 				loader: 'stylus-loader',
 				options: {
@@ -108,6 +116,10 @@ module.exports = function (config) {
 					'include css': true,
 					preferPathResolver: 'webpack',
 				},
+			});
+		} else if (withSass) {
+			loaders.push({
+				loader: 'sass-loader',
 			});
 		}
 
@@ -290,12 +302,40 @@ module.exports = function (config) {
 						],
 					},
 					{
+						test: /\.scss$/,
+						oneOf: [
+							{
+								resourceQuery: /module/,
+								use: stylesLoader({ withSass: true, withModules: true }),
+							},
+							{
+								use: stylesLoader({ withSass: true }),
+							},
+						],
+					},
+					{
 						test: /\.styl(us)?$/,
-						use: stylesLoader(true),
+						oneOf: [
+							{
+								resourceQuery: /module/,
+								use: stylesLoader({ withStylus: true, withModules: true }),
+							},
+							{
+								use: stylesLoader({ withStylus: true }),
+							},
+						],
 					},
 					{
 						test: /\.css$/,
-						use: stylesLoader(false),
+						oneOf: [
+							{
+								resourceQuery: /module/,
+								use: stylesLoader({ withModules: true }),
+							},
+							{
+								use: stylesLoader(),
+							},
+						],
 					},
 					{
 						test: /\.md$/,

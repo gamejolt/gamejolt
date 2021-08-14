@@ -4,6 +4,9 @@ type EventListener<T> = (arg: T) => void;
 type EventBusDeregister = () => void;
 
 export type EventSubscription = {
+	/**
+	 * Will close the subscription. No more events will come after calling this.
+	 */
 	close: EventBusDeregister;
 };
 

@@ -1,6 +1,8 @@
 import { nextTick } from 'vue';
+import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Provide, Vue, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../utils/vue';
+import { useAdsController } from '../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
@@ -36,6 +38,8 @@ export default class AppActivityFeed extends Vue {
 	@Prop(propRequired(ActivityFeedView))
 	@Provide({ to: ActivityFeedKey })
 	feed!: ActivityFeedView;
+
+	ads = setup(() => useAdsController());
 
 	@Prop(propOptional(Boolean, false)) showAds!: boolean;
 
@@ -124,7 +128,7 @@ export default class AppActivityFeed extends Vue {
 	}
 
 	get shouldShowAds() {
-		return this.showAds && this.$ad.shouldShow;
+		return this.showAds && this.ads.shouldShow;
 	}
 
 	get lastPostScrollId() {

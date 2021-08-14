@@ -1,43 +1,78 @@
-<script lang="ts" src="./widget"></script>
+<script lang="ts" setup>
+import { computed, PropType, ref, watch } from 'vue';
+import { AdSlot, AdSlotMeta, AdSlotPlacement, AdSlotSize } from '../ad-slot-info';
+import { useAdsController } from '../ad-store';
+import AppAdWidgetInner from './inner.vue';
+
+const props = defineProps({
+	size: { type: String as PropType<AdSlotSize>, default: 'rectangle' },
+	placement: { type: String as PropType<AdSlotPlacement>, default: 'content' },
+	meta: { type: Object as PropType<AdSlotMeta>, default: () => ({}) },
+});
+
+const adsController = useAdsController();
+const adSlot = ref(_makeAdSlot());
+const shouldShow = computed(() => adsController.shouldShow);
+
+// If anything within our props changes, regenerate.
+watch(
+	props,
+	() => {
+		adSlot.value = _makeAdSlot();
+	},
+	{ deep: true }
+);
+
+function _makeAdSlot() {
+	return new AdSlot(props.size, props.placement, props.meta);
+}
+</script>
 
 <template>
 	<div
 		v-if="shouldShow"
-		class="ad-widget"
-		:class="{
-			'-size-leaderboard': adSlot.size === 'leaderboard',
-			'-size-rectangle': adSlot.size === 'rectangle',
-		}"
+		:class="[
+			$style.adWidget,
+			{
+				[$style.sizeLeaderboard]: adSlot.size === 'leaderboard',
+				[$style.sizeRectangle]: adSlot.size === 'rectangle',
+			},
+		]"
 	>
-		<div class="-content">
-			<app-ad-widget-inner :ad-slot="adSlot" />
+		<div :class="$style.content">
+			<app-ad-widget-inner :class="$style.inner" :ad-slot="adSlot" />
 		</div>
 	</div>
 </template>
 
-<style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
+<!-- TODO(vue3): I was just testing this out, see if it works and decide what to do -->
+<style lang="scss" module>
+.adWidget {
+	text-align: center;
 
-.ad-widget
-	text-align: center
-
-	.-content
-		display: flex
-		align-items: center
-		justify-content: center
-		margin: 0 auto
+	.content {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 0 auto;
 
 		// Make sure the ad is able to take up the full width.
-		> .ad-widget-inner
-			flex: auto
+		> .inner {
+			flex: auto;
+		}
+	}
 
 	// We reserve some extra space for the "report ad" link below the ad itself.
-	&.-size-leaderboard
-		.-content
-			min-height: 115px
+	&.sizeLeaderboard {
+		.content {
+			min-height: 115px;
+		}
+	}
 
-	&.-size-rectangle
-		.-content
-			min-height: 275px
+	&.sizeRectangle {
+		.content {
+			min-height: 275px;
+		}
+	}
+}
 </style>

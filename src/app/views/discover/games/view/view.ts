@@ -1,6 +1,12 @@
+import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
 import { enforceLocation } from '../../../../../utils/router';
-import { AdSettingsContainer } from '../../../../../_common/ad/ad-store';
+import {
+	AdSettingsContainer,
+	releasePageAdsSettings,
+	setPageAdsSettings,
+	useAdsController,
+} from '../../../../../_common/ad/ad-store';
 import { Api } from '../../../../../_common/api/api.service';
 import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
 import {
@@ -64,8 +70,8 @@ const GameThemeKey = 'game';
 	cache: true,
 	deps: { params: ['slug', 'id'], query: ['intent'] },
 	async resolver({ route }) {
-		HistoryTick.trackSource('Game', parseInt(route.params.id, 10));
-		PartnerReferral.trackReferrer('Game', parseInt(route.params.id, 10), route);
+		HistoryTick.trackSource('Game', parseInt(route.params.id as string));
+		PartnerReferral.trackReferrer('Game', parseInt(route.params.id as string), route);
 
 		const intentRedirect = IntentService.checkRoute(
 			route,
@@ -100,6 +106,8 @@ const GameThemeKey = 'game';
 export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	@Inject({ from: CommentStoreManagerKey })
 	commentManager!: CommentStoreManager;
+
+	ads = setup(() => useAdsController());
 
 	@RouteStoreModule.State
 	game!: RouteStore['game'];
@@ -187,7 +195,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 
 	routeCreated() {
 		// This isn't needed by SSR or anything, so it's fine to call it here.
-		this.bootstrapGame(parseInt(this.$route.params.id, 10));
+		this.bootstrapGame(parseInt(this.$route.params.id as string));
 		this.setPageTheme();
 		this._setAdSettings();
 
@@ -259,10 +267,10 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		settings.resource = this.game;
 		settings.isPageDisabled = !this.game._should_show_ads;
 
-		this.$ad.setPageSettings(settings);
+		setPageAdsSettings(this.ads, settings);
 	}
 
 	private _releaseAdSettings() {
-		this.$ad.releasePageSettings();
+		releasePageAdsSettings(this.ads);
 	}
 }

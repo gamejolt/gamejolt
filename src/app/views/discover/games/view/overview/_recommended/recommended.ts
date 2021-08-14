@@ -1,4 +1,6 @@
+import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
+import { useAdsController } from '../../../../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../../../../_common/ad/widget/widget.vue';
 import { Screen } from '../../../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../../../_common/scroll/affix/affix.vue';
@@ -19,6 +21,8 @@ import { RouteStore, RouteStoreModule } from '../../view.store';
 	},
 })
 export default class AppDiscoverGamesViewOverviewRecommended extends Vue {
+	ads = setup(() => useAdsController());
+
 	@RouteStoreModule.State recommendedGames!: RouteStore['recommendedGames'];
 	@RouteStoreModule.State postsCount!: RouteStore['postsCount'];
 
@@ -29,7 +33,7 @@ export default class AppDiscoverGamesViewOverviewRecommended extends Vue {
 	}
 
 	get shouldShowAds() {
-		return this.$ad.shouldShow;
+		return this.ads.shouldShow;
 	}
 
 	get shouldShowBottomAd() {

@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
 import {
 	AppPromotionStore,
@@ -5,7 +6,12 @@ import {
 	setAppPromotionCohort,
 } from '../../../utils/mobile-app';
 import { sleep } from '../../../utils/utils';
-import { AdSettingsContainer } from '../../../_common/ad/ad-store';
+import {
+	AdSettingsContainer,
+	releasePageAdsSettings,
+	setPageAdsSettings,
+	useAdsController,
+} from '../../../_common/ad/ad-store';
 import AppAdWidget from '../../../_common/ad/widget/widget.vue';
 import { Api } from '../../../_common/api/api.service';
 import { GameBuild } from '../../../_common/game/build/build.model';
@@ -69,6 +75,8 @@ const DownloadDelay = 3000;
 export default class RouteDownload extends BaseRouteComponent {
 	@Inject({ from: AppPromotionStoreKey })
 	appPromotion!: AppPromotionStore;
+
+	ads = setup(() => useAdsController());
 
 	started = false;
 	game: Game = null as any;
@@ -152,10 +160,10 @@ export default class RouteDownload extends BaseRouteComponent {
 		settings.isPageDisabled =
 			this.game.has_adult_content || this.game.isOwned || this.game.is_paid_game;
 
-		this.$ad.setPageSettings(settings);
+		setPageAdsSettings(this.ads, settings);
 	}
 
 	private _releaseAdSettings() {
-		this.$ad.releasePageSettings();
+		releasePageAdsSettings(this.ads);
 	}
 }

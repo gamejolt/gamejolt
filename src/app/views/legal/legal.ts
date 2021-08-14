@@ -1,5 +1,11 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { AdSettingsContainer } from '../../../_common/ad/ad-store';
+import {
+	AdSettingsContainer,
+	releasePageAdsSettings,
+	setPageAdsSettings,
+	useAdsController,
+} from '../../../_common/ad/ad-store';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { User } from '../../../_common/user/user.model';
 
@@ -11,13 +17,15 @@ import { User } from '../../../_common/user/user.model';
 	resolver: () => User.touch(),
 })
 export default class RouteLegal extends BaseRouteComponent {
+	ads = setup(() => useAdsController());
+
 	routeCreated() {
 		const settings = new AdSettingsContainer();
 		settings.isPageDisabled = true;
-		this.$ad.setPageSettings(settings);
+		setPageAdsSettings(this.ads, settings);
 	}
 
 	routeDestroyed() {
-		this.$ad.releasePageSettings();
+		releasePageAdsSettings(this.ads);
 	}
 }

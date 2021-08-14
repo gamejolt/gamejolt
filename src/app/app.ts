@@ -1,6 +1,8 @@
+import { setup } from 'vue-class-component';
 import { Options, Provide, Vue, Watch } from 'vue-property-decorator';
 import { AppPromotionStore, AppPromotionStoreKey } from '../utils/mobile-app';
 import { loadCurrentLanguage } from '../utils/translations';
+import { createAdsController } from '../_common/ad/ad-store';
 import { Analytics } from '../_common/analytics/analytics.service';
 import { CommentStoreManager, CommentStoreManagerKey } from '../_common/comment/comment-store';
 import AppCookieBanner from '../_common/cookie/banner/banner.vue';
@@ -23,6 +25,8 @@ import { Store } from './store';
 	},
 })
 export default class App extends Vue {
+	adsController = setup(() => createAdsController());
+
 	@Provide({ to: ChatKey, reactive: true })
 	chat: null | ChatClient = null;
 

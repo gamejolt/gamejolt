@@ -20,6 +20,8 @@ export const ProperTagUnits = {
 	],
 };
 
+export type ProperTagPlacement = keyof typeof ProperTagUnits;
+
 export class AdProperAdapter extends AdAdapterBase {
 	tagUnits = { ...ProperTagUnits };
 
@@ -61,5 +63,13 @@ export class AdProperAdapter extends AdAdapterBase {
 		this.run(() => {
 			(window as any).properSpaNewPage();
 		});
+	}
+
+	getTagUnit(placement: ProperTagPlacement) {
+		return this.tagUnits[placement]?.shift() ?? null;
+	}
+
+	releaseTagUnit(placement: ProperTagPlacement, tagUnit: string) {
+		this.tagUnits[placement].unshift(tagUnit);
 	}
 }
