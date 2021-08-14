@@ -5,16 +5,16 @@
 	},
 	"variables": {
 		"prefix": "variables",
-		"body": ["@require '~styles/variables'"]
+		"body": ["@import '~styles/variables'"]
 	},
 	"mixins": {
 		"prefix": "mixins",
-		"body": ["@require '~styles-lib/mixins'"]
+		"body": ["@import '~styles-lib/mixins'"]
 	},
 	"component": {
 		"prefix": "component",
 		"body": [
-			"<script lang=\"ts\" src=\"./$1\"></script>",
+			"<script lang=\"ts\" setup></script>",
 			"",
 			"<template>",
 			"\t<div class=\"$2\">",

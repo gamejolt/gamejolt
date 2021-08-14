@@ -46,7 +46,7 @@ export class AppResponsiveDimensions extends Vue {
 					maxHeight: this.maxHeight ? this.maxHeight + 'px' : undefined,
 				},
 			},
-			this.$slots.default
+			this.$slots.default?.()
 		);
 	}
 

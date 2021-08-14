@@ -8,6 +8,6 @@ export class AppConfigLoaded extends Vue {
 	tag!: string;
 
 	render() {
-		return h(this.tag, {}, ConfigService.isLoaded ? this.$slots.default : undefined);
+		return h(this.tag, {}, ConfigService.isLoaded ? this.$slots.default?.() : undefined);
 	}
 }

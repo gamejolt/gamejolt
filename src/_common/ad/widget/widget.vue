@@ -5,9 +5,18 @@ import { useAdsController } from '../ad-store';
 import AppAdWidgetInner from './inner.vue';
 
 const props = defineProps({
-	size: { type: String as PropType<AdSlotSize>, default: 'rectangle' },
-	placement: { type: String as PropType<AdSlotPlacement>, default: 'content' },
-	meta: { type: Object as PropType<AdSlotMeta>, default: () => ({}) },
+	size: {
+		type: String as PropType<AdSlotSize>,
+		default: 'rectangle',
+	},
+	placement: {
+		type: String as PropType<AdSlotPlacement>,
+		default: 'content',
+	},
+	meta: {
+		type: Object as PropType<AdSlotMeta>,
+		default: () => ({}),
+	},
 });
 
 const adsController = useAdsController();

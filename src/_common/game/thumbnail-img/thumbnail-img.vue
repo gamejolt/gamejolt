@@ -7,9 +7,18 @@ import { getVideoPlayerFromSources } from '../../video/player/controller';
 import { Game } from '../game.model';
 
 const props = defineProps({
-	game: { type: Object as PropType<Game>, required: true },
-	hideMedia: { type: Boolean, default: false },
-	animate: { type: Boolean, default: false },
+	game: {
+		type: Object as PropType<Game>,
+		required: true,
+	},
+	hideMedia: {
+		type: Boolean,
+		default: false,
+	},
+	animate: {
+		type: Boolean,
+		default: false,
+	},
 });
 
 const isThumbnailLoaded = ref(GJ_IS_SSR);

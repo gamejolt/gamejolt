@@ -4,8 +4,14 @@ import { AdSlot } from '../ad-slot-info';
 import { AdProperAdapter, ProperTagPlacement } from './proper-adapter';
 
 const props = defineProps({
-	adSlot: { type: AdSlot, required: true },
-	adapter: { type: AdProperAdapter, required: true },
+	adSlot: {
+		type: AdSlot,
+		required: true,
+	},
+	adapter: {
+		type: AdProperAdapter,
+		required: true,
+	},
 });
 
 const tagPlacement = ref<ProperTagPlacement | null>(null);

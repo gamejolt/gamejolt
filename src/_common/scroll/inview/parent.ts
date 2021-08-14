@@ -13,6 +13,6 @@ export class AppScrollInviewParent extends Vue {
 	controller = new ScrollInviewParentController(() => this.scroller);
 
 	render() {
-		return h('div', {}, this.$slots.default);
+		return h('div', {}, this.$slots.default?.());
 	}
 }

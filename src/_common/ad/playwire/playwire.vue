@@ -4,8 +4,14 @@ import { AdSlot } from '../ad-slot-info';
 import { AdPlaywireAdapter } from './playwire-adapter';
 
 const props = defineProps({
-	adSlot: { type: AdSlot, required: true },
-	adapter: { type: AdPlaywireAdapter, required: true },
+	adSlot: {
+		type: AdSlot,
+		required: true,
+	},
+	adapter: {
+		type: AdPlaywireAdapter,
+		required: true,
+	},
 });
 
 /**

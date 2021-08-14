@@ -3,8 +3,14 @@ import { computed, PropType } from 'vue';
 import { MediaItem } from '../media-item-model';
 
 const props = defineProps({
-	mediaItem: { type: MediaItem, default: undefined },
-	radius: { type: String as PropType<'sm' | 'md' | 'lg' | 'full'>, default: undefined },
+	mediaItem: {
+		type: MediaItem,
+		default: undefined,
+	},
+	radius: {
+		type: String as PropType<'sm' | 'md' | 'lg' | 'full'>,
+		default: undefined,
+	},
 });
 
 const radiusClass = computed(() => {

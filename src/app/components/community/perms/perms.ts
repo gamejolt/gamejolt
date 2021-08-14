@@ -22,7 +22,7 @@ export class AppCommunityPerms extends Vue {
 
 	render() {
 		if (this.hasPerms) {
-			return h(this.tag, {}, this.$slots.default);
+			return h(this.tag, {}, this.$slots.default?.());
 		}
 	}
 }

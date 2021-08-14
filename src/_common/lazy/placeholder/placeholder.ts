@@ -17,7 +17,7 @@ export class AppLazyPlaceholder extends Vue {
 					'lazy-placeholder-resolved': !!this.when,
 				},
 			},
-			this.$slots.default
+			this.$slots.default?.()
 		);
 	}
 }

@@ -20,7 +20,10 @@ function _generateSlotId() {
 }
 
 const props = defineProps({
-	adSlot: { type: AdSlot, required: true },
+	adSlot: {
+		type: AdSlot,
+		required: true,
+	},
 });
 
 const adsController = useAdsController();
