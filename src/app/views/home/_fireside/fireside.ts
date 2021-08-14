@@ -3,11 +3,11 @@ import { Api } from '../../../../_common/api/api.service';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import AppLoadingFade from '../../../../_common/loading/fade/fade.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
-import { EventBus, EventBusDeregister } from '../../../../_common/system/event/event-bus.service';
+import { EventSubscription } from '../../../../_common/system/event/event-topic';
 import AppFiresideBadgeAdd from '../../../components/fireside/badge/add/add.vue';
 import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
 import AppFiresideBadgePlaceholder from '../../../components/fireside/badge/placeholder/placeholder.vue';
-import { GRID_EVENT_FIRESIDE_START } from '../../../components/grid/client.service';
+import { onFiresideStart } from '../../../components/grid/client.service';
 
 @Options({
 	components: {
@@ -25,19 +25,15 @@ export default class AppHomeFireside extends Vue {
 	isLoading = true;
 	isInitialLoading = true;
 
-	firesideStartDeregister: EventBusDeregister | null = null;
+	firesideStart$?: EventSubscription;
 
 	mounted() {
 		this.refresh();
-
-		this.firesideStartDeregister = EventBus.on(GRID_EVENT_FIRESIDE_START, () => this.refresh());
+		this.firesideStart$ = onFiresideStart.subscribe(() => this.refresh());
 	}
 
 	unmounted() {
-		if (this.firesideStartDeregister) {
-			this.firesideStartDeregister();
-			this.firesideStartDeregister = null;
-		}
+		this.firesideStart$?.close();
 	}
 
 	onFiresideExpired() {

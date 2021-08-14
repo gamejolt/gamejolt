@@ -1,4 +1,3 @@
-import VueGlobal from 'vue';
 import { arrayGroupBy, arrayRemove, numberSort } from '../../utils/array';
 import { Api } from '../api/api.service';
 import { showSuccessGrowl } from '../growls/growls.service';
@@ -85,7 +84,7 @@ export function lockCommentStore(
 	const storeId = resource + '/' + resourceId;
 
 	if (!manager.stores[storeId]) {
-		VueGlobal.set(manager.stores, storeId, new CommentStoreModel(resource, resourceId));
+		manager.stores[storeId] = new CommentStoreModel(resource, resourceId);
 	}
 
 	++manager.stores[storeId].locks;
@@ -103,7 +102,7 @@ export function releaseCommentStore(manager: CommentStoreManager, store: Comment
 
 	--store.locks;
 	if (store.locks <= 0) {
-		VueGlobal.delete(manager.stores, storeId);
+		delete manager.stores[storeId];
 	}
 }
 
@@ -181,7 +180,7 @@ function _addComments(store: CommentStoreModel, comments: Comment[]) {
 		// Replace an old instance of the comment in the store if it exists.
 		const index = store.comments.findIndex(c => c.id === comment.id);
 		if (index !== -1) {
-			VueGlobal.set(store.comments, index, comment);
+			store.comments[index] = comment;
 		} else {
 			store.comments.push(comment);
 		}

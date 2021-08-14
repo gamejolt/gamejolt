@@ -1,4 +1,3 @@
-import VueGlobal from 'vue';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
@@ -346,7 +345,7 @@ export class ActivityFeedView {
 
 	private getItemState(item: ActivityFeedItem) {
 		if (!this.itemStates[item.id]) {
-			VueGlobal.set(this.itemStates, item.id, new ActivityFeedViewItemState());
+			this.itemStates[item.id] = new ActivityFeedViewItemState();
 		}
 
 		return this.itemStates[item.id];

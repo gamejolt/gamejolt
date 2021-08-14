@@ -1,5 +1,4 @@
 import { Channel, Presence, Socket } from 'phoenix';
-import VueGlobal from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { Analytics } from '../../../_common/analytics/analytics.service';
 import { ContentDocument } from '../../../_common/content/content-document';
@@ -82,8 +81,8 @@ export class ChatRoomChannel extends Channel {
 				}
 
 				// Reset the room we were in
-				VueGlobal.delete(this.client.roomMembers, roomId);
-				VueGlobal.delete(this.client.messages, roomId);
+				delete this.client.roomMembers[roomId];
+				delete this.client.messages[roomId];
 			}
 		});
 	}

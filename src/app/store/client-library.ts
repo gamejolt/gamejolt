@@ -14,7 +14,6 @@ import {
 } from 'client-voodoo';
 import * as fs from 'fs';
 import * as path from 'path';
-import VueGlobal from 'vue';
 import { Action, Mutation, namespace, State } from 'vuex-class';
 import { arrayGroupBy, arrayIndexBy, arrayRemove } from '../../utils/array';
 import { fuzzysearch } from '../../utils/string';
@@ -275,13 +274,13 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	@VuexMutation
 	private setCurrentlyPatching([localPackage, patchInstance]: [LocalDbPackage, PatchInstance]) {
 		if (!this.currentlyPatching[localPackage.id]) {
-			VueGlobal.set(this.currentlyPatching, localPackage.id + '', patchInstance);
+			this.currentlyPatching[localPackage.id] = patchInstance;
 		}
 	}
 
 	@VuexMutation
 	private unsetCurrentlyPatching(localPackage: LocalDbPackage) {
-		VueGlobal.delete(this.currentlyPatching, localPackage.id + '');
+		delete this.currentlyPatching[localPackage.id];
 	}
 
 	@VuexMutation
@@ -293,7 +292,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			return;
 		}
 
-		VueGlobal.set(this.currentlyUninstalling, localPackage.id + '', uninstallPromise);
+		this.currentlyUninstalling[localPackage.id] = uninstallPromise;
 	}
 
 	@VuexMutation
@@ -302,7 +301,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			return;
 		}
 
-		VueGlobal.delete(this.currentlyUninstalling, localPackage.id + '');
+		delete this.currentlyUninstalling[localPackage.id];
 	}
 
 	@VuexMutation

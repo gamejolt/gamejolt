@@ -1,4 +1,3 @@
-import VueGlobal from 'vue';
 import { Route } from 'vue-router';
 import { numberSort } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
@@ -124,10 +123,8 @@ export async function acceptCollaboration(store: CommunityRouteStore, currentUse
 	// community. To avoid sending the api request needlessly we update the
 	// community model before calling joinCommunity.
 
-	// Also, using Vue.set because perms and is_member are not initialized
-	// in the model.
-	VueGlobal.set(community, 'perms', invite.perms);
-	VueGlobal.set(community, 'is_member', true);
+	community.perms = invite.perms;
+	community.is_member = true;
 
 	// Add the user to the list of collaborators.
 	if (currentUser && sidebarData) {

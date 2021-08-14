@@ -1,11 +1,10 @@
 import Axios from 'axios';
 import { Channel, Socket } from 'phoenix';
-import VueGlobal from 'vue';
 import { arrayRemove, numberSort } from '../../../utils/array';
 import { sleep } from '../../../utils/utils';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
-import { EventBus } from '../../../_common/system/event/event-bus.service';
+import { EventTopic } from '../../../_common/system/event/event-topic';
 import { store } from '../../store';
 import { ChatMessage, ChatMessageType } from './message';
 import { ChatRoom } from './room';
@@ -16,9 +15,7 @@ import { ChatUserCollection } from './user-collection';
 
 export const ChatKey = Symbol('Chat');
 
-export interface ChatNewMessageEvent {
-	message: ChatMessage;
-}
+export const onNewChatMessage = new EventTopic<ChatMessage>();
 
 /**
  * Polls a request until it returns a result, increases the delay time between
@@ -388,7 +385,7 @@ export function setChatRoom(chat: ChatClient, newRoom: ChatRoom | undefined) {
 		}
 
 		if (newRoom.isGroupRoom) {
-			VueGlobal.delete(chat.notifications, '' + newRoom.id);
+			delete chat.notifications[newRoom.id];
 		}
 
 		chat.sessionRoomId = newRoom.id;
@@ -403,9 +400,9 @@ export function newChatNotification(chat: ChatClient, roomId: number) {
 	}
 
 	if (chat.notifications[roomId]) {
-		chat.notifications[roomId] = chat.notifications[roomId] + 1;
+		++chat.notifications[roomId];
 	} else {
-		VueGlobal.set(chat.notifications, '' + roomId, 1);
+		chat.notifications[roomId] = 1;
 	}
 }
 
@@ -566,11 +563,11 @@ function setupRoom(chat: ChatClient, room: ChatRoom, messages: ChatMessage[]) {
 			}
 		}
 		// Set the room info
-		VueGlobal.set(chat.messages, '' + room.id, []);
-		VueGlobal.set(
-			chat.roomMembers,
-			'' + room.id,
-			new ChatUserCollection(ChatUserCollection.TYPE_ROOM, room.members || [], chat)
+		chat.messages[room.id] = [];
+		chat.roomMembers[room.id] = new ChatUserCollection(
+			ChatUserCollection.TYPE_ROOM,
+			room.members || [],
+			chat
 		);
 
 		// Only set the room as "the" active room when it's not instanced.
@@ -596,9 +593,7 @@ export function processNewChatOutput(
 
 		if (!isHistorical) {
 			// Emit an event that we've sent out a new message.
-			EventBus.emit('Chat.newMessage', <ChatNewMessageEvent>{
-				message,
-			});
+			onNewChatMessage.next(message);
 		}
 	});
 

@@ -17,10 +17,7 @@ import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/
 import { WithRouteStore } from '../../../../../_common/route/route-store';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
-import {
-	EventBus,
-	EventBusDeregister,
-} from '../../../../../_common/system/event/event-bus.service';
+import { EventSubscription } from '../../../../../_common/system/event/event-topic';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { Translate } from '../../../../../_common/translate/translate.service';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
@@ -31,10 +28,7 @@ import AppGameMaturityBlock from '../../../../components/game/maturity-block/mat
 import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { IntentService } from '../../../../components/intent/intent.service';
 import AppPageHeader from '../../../../components/page-header/page-header.vue';
-import {
-	RatingWidgetOnChange,
-	RatingWidgetOnChangePayload,
-} from '../../../../components/rating/widget/widget';
+import { onRatingWidgetChange } from '../../../../components/rating/widget/widget';
 import { store } from '../../../../store';
 import './view-content.styl';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './view.store';
@@ -156,7 +150,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 
 	readonly Screen = Screen;
 
-	private ratingWatchDeregister?: EventBusDeregister;
+	private ratingChange$?: EventSubscription;
 
 	private roleNames: { [k: string]: string } = {
 		[Collaborator.ROLE_EQUAL_COLLABORATOR]: this.$gettext('an equal collaborator'),
@@ -199,16 +193,13 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 
 		// Any game rating change will broadcast this event. We catch it so we
 		// can update the page with the new rating! Yay!
-		if (!this.ratingWatchDeregister) {
-			this.ratingWatchDeregister = EventBus.on(
-				RatingWidgetOnChange,
-				(payload: RatingWidgetOnChangePayload) => {
-					const { gameId, userRating } = payload;
-					if (gameId === this.game.id) {
-						this.setUserRating(userRating || null);
-					}
+		if (!this.ratingChange$) {
+			this.ratingChange$ = onRatingWidgetChange.subscribe(payload => {
+				const { gameId, userRating } = payload;
+				if (gameId === this.game.id) {
+					this.setUserRating(userRating || null);
 				}
-			);
+			});
 		}
 	}
 
@@ -228,10 +219,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		store.commit('theme/clearPageTheme', GameThemeKey);
 		this._releaseAdSettings();
 
-		if (this.ratingWatchDeregister) {
-			this.ratingWatchDeregister();
-			this.ratingWatchDeregister = undefined;
-		}
+		this.ratingChange$?.close();
 
 		if (this.commentStore) {
 			releaseCommentStore(this.commentManager, this.commentStore);

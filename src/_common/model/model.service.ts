@@ -1,4 +1,3 @@
-import VueGlobal from 'vue';
 import { Api, RequestOptions } from '../api/api.service';
 
 export type ModelSaveRequestOptions = RequestOptions & { data?: any };
@@ -33,12 +32,9 @@ export class Model {
 			// This way we retain those fields.
 			const newObj = new self(other);
 
-			// Vue needs to be alerted of data changes. Use the set method in
-			// Vue only so that it can be aware of changes.
-			const Vue = require('vue').default;
 			const keys = Object.keys(newObj);
 			for (const k of keys) {
-				VueGlobal.set(this, k, newObj[k]);
+				this[k] = newObj[k];
 			}
 		};
 

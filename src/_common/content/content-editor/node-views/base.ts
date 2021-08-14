@@ -1,10 +1,11 @@
 import { Node } from 'prosemirror-model';
 import { EditorView, NodeView } from 'prosemirror-view';
-import VueGlobal, { nextTick } from 'vue';
+import { nextTick } from 'vue';
 import { ContentEditorSchema } from '../schemas/content-editor-schema';
 
 export type GetPosFunction = () => number;
 
+// TODO(vue3): gotta redo all this
 export abstract class BaseNodeView implements NodeView {
 	protected node: Node<ContentEditorSchema>;
 	protected view: EditorView<ContentEditorSchema>;
@@ -47,7 +48,7 @@ export abstract class BaseNodeView implements NodeView {
 		this.dom.remove();
 	}
 
-	protected mountVue(vm: VueGlobal) {
+	protected mountVue(vm: any) {
 		// Mount the Vue instance onto an inner div to not disturb the div managed by the prosemirror editor
 		const container = this.createVueMountDOM();
 		if (vm.$props !== undefined) {

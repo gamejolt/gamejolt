@@ -5,8 +5,9 @@ import { Connection } from '../../../../_common/connection/connection-service';
 import AppExpand from '../../../../_common/expand/expand.vue';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import Onboarding from '../../../../_common/onboarding/onboarding.service';
+import { onRouteChangeAfter } from '../../../../_common/route/route-component';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
-import { EventBus, EventBusDeregister } from '../../../../_common/system/event/event-bus.service';
+import { EventSubscription } from '../../../../_common/system/event/event-topic';
 
 @Options({
 	components: {
@@ -22,7 +23,7 @@ export default class AppClientIntro extends Vue {
 	shouldShowLoading = false;
 	shouldTransitionOut = false;
 	private initialStateChangeResolver: Function = null as any;
-	private routeChangeAfterDeregister?: EventBusDeregister;
+	private routeChangeAfter$?: EventSubscription;
 
 	declare $refs: {
 		wrap: HTMLDivElement;
@@ -47,7 +48,7 @@ export default class AppClientIntro extends Vue {
 			this.initialStateChangeResolver();
 		}
 
-		this.routeChangeAfterDeregister = EventBus.on('routeChangeAfter', () => {
+		this.routeChangeAfter$ = onRouteChangeAfter.subscribe(() => {
 			this.initialStateChangeResolver();
 		});
 
@@ -136,10 +137,6 @@ export default class AppClientIntro extends Vue {
 	private finish() {
 		document.body.classList.remove('client-intro-no-overflow');
 		this.emitFinish();
-
-		if (this.routeChangeAfterDeregister) {
-			this.routeChangeAfterDeregister();
-			this.routeChangeAfterDeregister = undefined;
-		}
+		this.routeChangeAfter$?.close();
 	}
 }

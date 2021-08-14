@@ -1,23 +1,26 @@
-import { EventBus, EventBusDeregister } from './event-bus.service';
+import { arrayRemove } from '../../../utils/array';
+
+type EventListener<T> = (arg: T) => void;
+type EventBusDeregister = () => void;
 
 export type EventSubscription = {
-	unsubscribe: EventBusDeregister;
+	close: EventBusDeregister;
 };
 
-// Doesn't matter what this value is, it just needs to be the same between next() and subscribe()
-const TopicEventName = 'value';
-
 export class EventTopic<T> {
-	private e = new EventBus();
+	private listeners: EventListener<T>[] = [];
 
-	subscribe(callback: (arg: T) => any): EventSubscription {
-		const unsubFunc = this.e.on(TopicEventName, callback);
+	subscribe(listener: EventListener<T>): EventSubscription {
+		this.listeners.push(listener);
+
 		return {
-			unsubscribe: unsubFunc,
+			close: () => {
+				arrayRemove(this.listeners, i => i === listener);
+			},
 		};
 	}
 
 	next(value: T) {
-		this.e.emit(TopicEventName, value);
+		this.listeners.forEach(i => i(value));
 	}
 }

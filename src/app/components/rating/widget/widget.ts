@@ -6,7 +6,7 @@ import { Game } from '../../../../_common/game/game.model';
 import { GameRating } from '../../../../_common/game/rating/rating.model';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import { LikersModal } from '../../../../_common/likers/modal.service';
-import { EventBus } from '../../../../_common/system/event/event-bus.service';
+import { EventTopic } from '../../../../_common/system/event/event-topic';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 
 export const RatingWidgetOnChange = 'GameRating.changed';
@@ -14,6 +14,8 @@ export interface RatingWidgetOnChangePayload {
 	gameId: number;
 	userRating?: GameRating;
 }
+
+export const onRatingWidgetChange = new EventTopic<RatingWidgetOnChangePayload>();
 
 @Options({
 	directives: {
@@ -72,10 +74,10 @@ export default class AppRatingWidget extends Vue {
 
 				this.game.like_count += operation;
 
-				EventBus.emit(RatingWidgetOnChange, {
+				onRatingWidgetChange.next({
 					gameId: this.game.id,
 					userRating: undefined,
-				} as RatingWidgetOnChangePayload);
+				});
 
 				await oldUserRating.$remove();
 			} else {
@@ -94,20 +96,20 @@ export default class AppRatingWidget extends Vue {
 
 				this.game.like_count += operation;
 
-				EventBus.emit(RatingWidgetOnChange, {
+				onRatingWidgetChange.next({
 					gameId: this.game.id,
 					userRating: newUserRating,
-				} as RatingWidgetOnChangePayload);
+				});
 
 				await newUserRating.$save();
 			}
 		} catch (e) {
 			console.error(e);
 			this.game.like_count -= operation;
-			EventBus.emit(RatingWidgetOnChange, {
+			onRatingWidgetChange.next({
 				gameId: this.game.id,
 				userRating: oldUserRating,
-			} as RatingWidgetOnChangePayload);
+			});
 			showErrorGrowl(this.$gettext(`Can't do that right now. Try again later?`));
 		}
 	}

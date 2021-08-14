@@ -77,6 +77,8 @@ export default class AppSearchAutocomplete extends Vue {
 	}
 
 	unmounted() {
+		this.searched$.close();
+
 		if (this.search && this._keydownSpy) {
 			this.search.removeKeydownSpy(this._keydownSpy);
 			this._keydownSpy = undefined;

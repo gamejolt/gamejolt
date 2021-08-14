@@ -26,10 +26,7 @@ export default class AppVideoEmbed extends Vue {
 	}
 
 	unmounted() {
-		if (this.resize$) {
-			this.resize$.unsubscribe();
-			this.resize$ = undefined;
-		}
+		this.resize$?.close();
 	}
 
 	@Watch('videoId', { immediate: true })

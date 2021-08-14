@@ -1,5 +1,5 @@
 import VueRouter from 'vue-router';
-import { EventBus } from '../system/event/event-bus.service';
+import { onRouteChangeAfter } from '../route/route-component';
 
 /**
  * Since we're in a single page app, the referrer doesn't get reset on every
@@ -41,7 +41,7 @@ export class Referrer {
 				next();
 			});
 
-			EventBus.on('routeChangeAfter', () => {
+			onRouteChangeAfter.subscribe(() => {
 				// We have finished the first state change.
 				// We will now begin tracking new referrers.
 				this.firstPass = false;

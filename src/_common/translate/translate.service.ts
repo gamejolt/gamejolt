@@ -1,8 +1,6 @@
-import Vue from 'vue';
 import { arrayIndexBy } from '../../utils/array';
 
 const LangStorageKey = 'lang';
-const translator = new Vue();
 
 export function getTranslationLang() {
 	return (typeof localStorage !== 'undefined' && localStorage.getItem(LangStorageKey)) || 'en_US';
@@ -151,12 +149,15 @@ export const TranslationLangs = [
 
 export const TranslationLangsByCode = arrayIndexBy(TranslationLangs, 'code');
 
+// TODO(vue3): halp
 export class Translate {
 	static $gettext(msgid: string) {
-		return translator.$gettext(msgid);
+		return msgid;
+		// return translator.$gettext(msgid);
 	}
 
 	static $gettextInterpolate(msgid: string, context: any, enableHTMLEscaping = false) {
-		return translator.$gettextInterpolate(msgid, context, enableHTMLEscaping);
+		return msgid;
+		// return translator.$gettextInterpolate(msgid, context, enableHTMLEscaping);
 	}
 }

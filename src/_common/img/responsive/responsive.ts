@@ -42,10 +42,7 @@ export class AppImgResponsive extends Vue {
 	}
 
 	unmounted() {
-		if (this.resize$) {
-			this.resize$.unsubscribe();
-			this.resize$ = undefined;
-		}
+		this.resize$?.close();
 	}
 
 	@Watch('src')

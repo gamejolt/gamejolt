@@ -1,4 +1,3 @@
-import VueGlobal from 'vue';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { arrayRemove, arrayUnique } from '../../utils/array';
 import { Api } from '../api/api.service';
@@ -190,7 +189,7 @@ export class BaseForm<T> extends Vue {
 	 * we change a field.
 	 */
 	setField<K extends keyof T>(key: K, value: T[K]) {
-		VueGlobal.set(this.formModel as any, key as any, value);
+		(this.formModel as any)[key] = value;
 	}
 
 	setCustomError(error: string) {

@@ -9,7 +9,7 @@ import { HistoryCache } from '../history/cache/cache.service';
 import { setMetaTitle } from '../meta/meta-service';
 import { Navigate } from '../navigate/navigate.service';
 import { PayloadError } from '../payload/payload-service';
-import { EventBus } from '../system/event/event-bus.service';
+import { EventTopic } from '../system/event/event-topic';
 
 // This is component state that the server may have returned to the browser. It
 // can be used to bootstrap components with initial data.
@@ -32,6 +32,11 @@ export type RouteStoreResolveCallback = (data: {
 	payload: any;
 	fromCache: boolean;
 }) => void;
+
+/**
+ * Subscribe to know when the route has finished changing.
+ */
+export const onRouteChangeAfter = new EventTopic<void>();
 
 /**
  * Takes 2 objects as input, and returns any keys that are either new, deleted,
@@ -441,7 +446,7 @@ export class BaseRouteComponent extends Vue {
 		// need to refresh cache, it means we'll go through the resolve again
 		// after fresh data, so we can just do the emit after that.
 		if (isLeafRoute(this.$options.name) && !fromCache) {
-			EventBus.emit('routeChangeAfter');
+			onRouteChangeAfter.next();
 		}
 
 		// If we used cache, then we want to refresh the route again async. This

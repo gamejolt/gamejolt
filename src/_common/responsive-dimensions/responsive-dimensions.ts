@@ -32,10 +32,7 @@ export class AppResponsiveDimensions extends Vue {
 	}
 
 	unmounted() {
-		if (this.resize$) {
-			this.resize$.unsubscribe();
-			this.resize$ = undefined;
-		}
+		this.resize$?.close();
 	}
 
 	render() {

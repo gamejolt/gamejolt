@@ -1,5 +1,4 @@
 import { Channel, Presence, Socket } from 'phoenix';
-import VueGlobal from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { TabLeader } from '../../../utils/tab-leader';
 import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
@@ -160,7 +159,7 @@ export class ChatUserChannel extends Channel {
 	}
 
 	private onClearNotifications(data: RoomIdPayload) {
-		VueGlobal.delete(this.client.notifications, '' + data.room_id);
+		delete this.client.notifications[data.room_id];
 	}
 
 	private onGroupAdd(data: GroupAddPayload) {

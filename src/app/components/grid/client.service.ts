@@ -15,11 +15,12 @@ import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { FiresideStreamNotification } from '../../../_common/fireside/stream-notification/stream-notification.model';
 import { GameTrophy } from '../../../_common/game/trophy/trophy.model';
 import { showInfoGrowl } from '../../../_common/growls/growls.service';
+import { Model } from '../../../_common/model/model.service';
 import { Notification } from '../../../_common/notification/notification-model';
 import { NotificationText } from '../../../_common/notification/notification-text.service';
 import { SettingFeedNotifications } from '../../../_common/settings/settings.service';
 import { SiteTrophy } from '../../../_common/site/trophy/trophy.model';
-import { EventBus } from '../../../_common/system/event/event-bus.service';
+import { EventTopic } from '../../../_common/system/event/event-topic';
 import { Translate } from '../../../_common/translate/translate.service';
 import { UserGameTrophy } from '../../../_common/user/trophy/game-trophy.model';
 import { UserSiteTrophy } from '../../../_common/user/trophy/site-trophy.model';
@@ -29,8 +30,8 @@ import { router } from '../../views';
 import { getTrophyImg } from '../trophy/thumbnail/thumbnail';
 import { CommunityChannel } from './community-channel';
 
-export const GRID_EVENT_NEW_STICKER = 'grid-new-sticker-received';
-export const GRID_EVENT_FIRESIDE_START = 'grid-fireside-start';
+export const onFiresideStart = new EventTopic<Model>();
+export const onNewStickers = new EventTopic<string[]>();
 
 interface NewNotificationPayload {
 	notification_data: {
@@ -380,7 +381,7 @@ export class GridClient {
 
 						case Notification.TYPE_FIRESIDE_START:
 							// Emit event that different components can pick up to update their views.
-							EventBus.emit(GRID_EVENT_FIRESIDE_START, notification.action_model);
+							onFiresideStart.next(notification.action_model);
 							this.spawnNotification(notification);
 							break;
 
@@ -493,7 +494,7 @@ export class GridClient {
 			store.commit('setHasNewUnlockedStickers', true);
 		}
 
-		EventBus.emit(GRID_EVENT_NEW_STICKER, sticker_img_urls);
+		onNewStickers.next(sticker_img_urls);
 	}
 
 	handlePostUpdated({ post_data, was_scheduled, was_published }: PostUpdatedPayload) {

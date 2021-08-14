@@ -7,11 +7,11 @@ import AppLoading from '../../../../_common/loading/loading.vue';
 import { Notification } from '../../../../_common/notification/notification-model';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { EventBus, EventBusDeregister } from '../../../../_common/system/event/event-bus.service';
+import { EventSubscription } from '../../../../_common/system/event/event-topic';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../store';
 import { ActivityFeedView } from '../../activity/feed/view';
-import { GRID_EVENT_NEW_STICKER } from '../../grid/client.service';
+import { onNewStickers } from '../../grid/client.service';
 import { AppActivityFeedLazy } from '../../lazy';
 import AppShellAccountPopoverNewSticker from './new-sticker/new-sticker.vue';
 import AppShellNotificationPopoverStickerNavItem from './sticker-nav-item/sticker-nav-item.vue';
@@ -38,7 +38,7 @@ export default class AppShellNotificationPopover extends Vue {
 	isLoading = true;
 	feed: ActivityFeedView | null = null;
 	totalStickersCount = 0;
-	private newStickerDeregister?: EventBusDeregister;
+	private newStickers$?: EventSubscription;
 
 	readonly Connection = Connection;
 
@@ -59,17 +59,11 @@ export default class AppShellNotificationPopover extends Vue {
 	}
 
 	mounted() {
-		this.newStickerDeregister = EventBus.on(
-			GRID_EVENT_NEW_STICKER,
-			this.onNewStickers.bind(this)
-		);
+		this.newStickers$ = onNewStickers.subscribe(this.onNewStickers.bind(this));
 	}
 
-	destroy() {
-		if (this.newStickerDeregister) {
-			this.newStickerDeregister();
-			this.newStickerDeregister = undefined;
-		}
+	unmounted() {
+		this.newStickers$?.close();
 	}
 
 	/**

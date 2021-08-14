@@ -58,10 +58,7 @@ export default class AppSketchfabEmbed extends Vue {
 	}
 
 	unmounted() {
-		if (this.resize$) {
-			this.resize$.unsubscribe();
-			this.resize$ = undefined;
-		}
+		this.resize$?.close();
 	}
 
 	@Watch('sketchfabId', { immediate: true })

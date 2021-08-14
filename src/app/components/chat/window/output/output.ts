@@ -8,11 +8,8 @@ import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/
 import AppScrollScrollerTS from '../../../../../_common/scroll/scroller/scroller';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
-import {
-	EventBus,
-	EventBusDeregister,
-} from '../../../../../_common/system/event/event-bus.service';
-import { ChatClient, ChatKey, ChatNewMessageEvent, loadOlderChatMessages } from '../../client';
+import { EventSubscription } from '../../../../../_common/system/event/event-topic';
+import { ChatClient, ChatKey, loadOlderChatMessages, onNewChatMessage } from '../../client';
 import { ChatMessage, TIMEOUT_CONSIDER_QUEUED } from '../../message';
 import { ChatRoom } from '../../room';
 import AppChatWindowOutputItem from './item/item.vue';
@@ -47,7 +44,7 @@ export default class AppChatWindowOutput extends Vue {
 
 	private checkQueuedTimeout?: NodeJS.Timer;
 	private _introEmoji?: string;
-	private newMessageDeregister?: EventBusDeregister;
+	private newMessage$?: EventSubscription;
 	private shouldScroll = true;
 	private isAutoscrolling = false;
 	private isOnScrollQueued = false;
@@ -94,17 +91,14 @@ export default class AppChatWindowOutput extends Vue {
 		// Check every 100ms for which queued messages we should show.
 		this.checkQueuedTimeout = setInterval(this.updateVisibleQueuedMessages, 100);
 
-		this.newMessageDeregister = EventBus.on(
-			'Chat.newMessage',
-			async (event: ChatNewMessageEvent) => {
-				// When the user sent a message, we want the chat to scroll all
-				// the way down to show that message.
-				if (this.user && event.message.user.id === this.user.id) {
-					await nextTick();
-					this.autoscroll();
-				}
+		this.newMessage$ = onNewChatMessage.subscribe(async message => {
+			// When the user sent a message, we want the chat to scroll all
+			// the way down to show that message.
+			if (this.user && message.user.id === this.user.id) {
+				await nextTick();
+				this.autoscroll();
 			}
-		);
+		});
 	}
 
 	unmounted() {
@@ -113,10 +107,7 @@ export default class AppChatWindowOutput extends Vue {
 			this.checkQueuedTimeout = undefined;
 		}
 
-		if (this.newMessageDeregister) {
-			this.newMessageDeregister();
-			this.newMessageDeregister = undefined;
-		}
+		this.newMessage$?.close();
 	}
 
 	@Watch('queuedMessages', { deep: true })

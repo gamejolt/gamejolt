@@ -12,8 +12,8 @@ import { AuthMethod } from '../auth/auth.service';
 import { CommentVote } from '../comment/vote/vote-model';
 import { ConfigOption } from '../config/config.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
+import { onRouteChangeAfter } from '../route/route-component';
 import { WithAppStore } from '../store/app-store';
-import { EventBus } from '../system/event/event-bus.service';
 
 export const SOCIAL_NETWORK_FB = 'facebook';
 export const SOCIAL_NETWORK_TWITTER = 'twitter';
@@ -103,7 +103,7 @@ export function initAnalyticsRouter(router: VueRouter) {
 		next();
 	});
 
-	EventBus.on('routeChangeAfter', () => {
+	onRouteChangeAfter.subscribe(() => {
 		const route = router.currentRoute;
 		const analyticsPath = route.meta.analyticsPath;
 

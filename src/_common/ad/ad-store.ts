@@ -3,7 +3,7 @@ import { objectEquals } from '../../utils/object';
 import { installVuePlugin } from '../../utils/vue';
 import { Environment } from '../environment/environment.service';
 import { Model } from '../model/model.service';
-import { EventBus } from '../system/event/event-bus.service';
+import { onRouteChangeAfter } from '../route/route-component';
 import { AdSlot } from './ad-slot-info';
 import { AdAdapterBase } from './adapter-base';
 import { AdPlaywireAdapter } from './playwire/playwire-adapter';
@@ -102,7 +102,7 @@ export class AdStore {
 					next();
 				});
 
-				EventBus.on('routeChangeAfter', () => {
+				onRouteChangeAfter.subscribe(() => {
 					if (this.routeResolved) {
 						return;
 					}
