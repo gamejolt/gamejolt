@@ -6,7 +6,7 @@
 		role="dialog"
 		tabindex="-1"
 		:style="{
-			'z-index': zIndex,
+			zIndex,
 		}"
 		@click="dismissBackdrop"
 	>

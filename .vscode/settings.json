@@ -23,7 +23,7 @@
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[vue]": {
-		"editor.defaultFormatter": "octref.vetur"
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"vetur.experimental.templateInterpolationService": true,
 	"vetur.format.options.useTabs": true,
@@ -61,5 +61,11 @@
 	"eslint.validate": ["javascript", "typescript", "vue"],
 	// eslint will do the template validation instead.
 	"vetur.validation.template": false,
-	"vetur.validation.templateProps": true
+	"vetur.validation.templateProps": true,
+	"volar.codeLens.pugTools": false,
+	"volar.tsPlugin": true,
+	"volar.autoCompleteRefs": true,
+	"volar.codeLens.references": false,
+	"volar.codeLens.scriptSetupTools": false,
+	"editor.linkedEditing": true
 }

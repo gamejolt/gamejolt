@@ -238,7 +238,6 @@ module.exports = function (config) {
 					styles: path.resolve(base, 'src/' + section + '/styles'),
 					'styles-lib': path.resolve(base, 'src/_styles/common'),
 					common: path.resolve(base, 'src/_common'),
-					vue: '@vue/compat',
 				},
 			},
 			externals: externals,

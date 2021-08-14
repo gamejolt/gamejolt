@@ -1,4 +1,43 @@
-<script lang="ts" src="./thumbnail-img"></script>
+<script lang="ts" setup>
+import { computed, PropType, ref } from 'vue';
+import { ContentFocus } from '../../content-focus/content-focus.service';
+import AppMediaItemBackdrop from '../../media-item/backdrop/backdrop.vue';
+import { Screen } from '../../screen/screen-service';
+import { getVideoPlayerFromSources } from '../../video/player/controller';
+import { Game } from '../game.model';
+
+const props = defineProps({
+	game: { type: Object as PropType<Game>, required: true },
+	hideMedia: { type: Boolean, default: false },
+	animate: { type: Boolean, default: false },
+});
+
+const isThumbnailLoaded = ref(GJ_IS_SSR);
+
+const mediaItem = computed(() => props.game.thumbnail_media_item);
+
+const hasVideo = computed(
+	() => mediaItem.value?.is_animated && Screen.isDesktop && !GJ_IS_SSR && props.animate
+);
+
+const shouldPlayVideo = computed(() => hasVideo.value && ContentFocus.hasFocus);
+
+const videoController = computed(() => {
+	if (!mediaItem.value) {
+		return;
+	}
+
+	const sourcesPayload = {
+		mp4: mediaItem.value.mediaserver_url_mp4,
+		webm: mediaItem.value.mediaserver_url_webm,
+	};
+	return getVideoPlayerFromSources(sourcesPayload, 'gif', mediaItem.value.mediaserver_url);
+});
+
+function imgLoadChange(isLoaded: boolean) {
+	isThumbnailLoaded.value = isLoaded;
+}
+</script>
 
 <template>
 	<div
@@ -8,7 +47,7 @@
 		}"
 	>
 		<div class="-inner">
-			<app-media-item-backdrop :media-item="mediaItem" radius="lg">
+			<AppMediaItemBackdrop :media-item="mediaItem" radius="lg">
 				<app-jolticon class="-icon" icon="game" />
 
 				<div v-if="mediaItem && !hideMedia" class="-media">
@@ -26,7 +65,7 @@
 						:should-play="shouldPlayVideo"
 					/>
 				</div>
-			</app-media-item-backdrop>
+			</AppMediaItemBackdrop>
 		</div>
 	</div>
 </template>
