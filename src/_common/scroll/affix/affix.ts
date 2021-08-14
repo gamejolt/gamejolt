@@ -1,7 +1,7 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
 import { Ruler } from '../../ruler/ruler-service';
-import { Screen } from '../../screen/screen-service';
+import { onScreenResize } from '../../screen/screen-service';
 import { EventSubscription } from '../../system/event/event-topic';
 import { ScrollInviewConfig } from '../inview/config';
 import { AppScrollInview } from '../inview/inview';
@@ -61,7 +61,7 @@ export default class AppScrollAffix extends Vue {
 
 	mounted() {
 		// If we resized, then the element dimensions most likely changed.
-		this.resize$ = Screen.resizeChanges.subscribe(() => {
+		this.resize$ = onScreenResize.subscribe(() => {
 			// Always save dimensions, even if disabled, since we need to make
 			// sure that if they enable at any point we're ready to affix it
 			// properly.

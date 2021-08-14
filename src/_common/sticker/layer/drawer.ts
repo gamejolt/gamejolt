@@ -14,7 +14,7 @@ import {
 } from '../../drawer/drawer-store';
 import { EscapeStack, EscapeStackCallback } from '../../escape-stack/escape-stack.service';
 import AppLoadingFade from '../../loading/fade/fade.vue';
-import { Screen } from '../../screen/screen-service';
+import { onScreenResize, Screen } from '../../screen/screen-service';
 import AppScrollScroller from '../../scroll/scroller/scroller.vue';
 import { EventSubscription } from '../../system/event/event-topic';
 import AppStickerCard from '../card/card.vue';
@@ -181,7 +181,7 @@ export default class AppStickerLayerDrawer extends Vue {
 
 	mounted() {
 		this.calculateStickersPerRow();
-		this.resize$ = Screen.resizeChanges.subscribe(() => this.calculateStickersPerRow());
+		this.resize$ = onScreenResize.subscribe(() => this.calculateStickersPerRow());
 
 		this.escapeCallback = () => setDrawerOpen(this.drawerStore, false);
 		EscapeStack.register(this.escapeCallback);

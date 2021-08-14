@@ -16,6 +16,8 @@ const LG_WIDTH = 1200;
  */
 const HIDPI_BREAKPOINT = 1.5;
 
+export const onScreenResize = new EventTopic<void>();
+
 class ScreenService {
 	/**
 	 * The actual width of the browser/screen context. Either in actual pixels,
@@ -75,8 +77,6 @@ class ScreenService {
 	isPointerMouse = GJ_IS_SSR
 		? true
 		: window.matchMedia('not screen and (pointer: coarse)').matches;
-
-	resizeChanges = new EventTopic<void>();
 }
 
 export const Screen = reactive(new ScreenService()) as ScreenService;
@@ -132,5 +132,5 @@ async function _onResize() {
 	Screen.height = window.innerHeight > 0 ? window.innerHeight : (window as any)['height'];
 
 	// Emit every time we resize.
-	Screen.resizeChanges.next();
+	onScreenResize.next();
 }

@@ -1,7 +1,7 @@
 import { h } from 'vue';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Ruler } from '../ruler/ruler-service';
-import { Screen } from '../screen/screen-service';
+import { onScreenResize } from '../screen/screen-service';
 import { EventSubscription } from '../system/event/event-topic';
 
 export class AppResponsiveDimensionsChangeEvent {
@@ -27,7 +27,7 @@ export class AppResponsiveDimensions extends Vue {
 	emitChange(_event: AppResponsiveDimensionsChangeEvent) {}
 
 	mounted() {
-		this.resize$ = Screen.resizeChanges.subscribe(() => this.updateDimensions());
+		this.resize$ = onScreenResize.subscribe(() => this.updateDimensions());
 		this.updateDimensions();
 	}
 

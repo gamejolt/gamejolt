@@ -1,7 +1,7 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Analytics } from '../analytics/analytics.service';
 import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
-import { Screen } from '../screen/screen-service';
+import { onScreenResize, Screen } from '../screen/screen-service';
 import AppShortkey from '../shortkey/shortkey.vue';
 import { EventSubscription } from '../system/event/event-topic';
 import AppLightboxItem from './item/item.vue';
@@ -56,7 +56,7 @@ export default class AppLightbox extends Vue {
 	mounted() {
 		document.body.classList.add('media-bar-lightbox-open');
 
-		this.resize$ = Screen.resizeChanges.subscribe(() => {
+		this.resize$ = onScreenResize.subscribe(() => {
 			this.refreshSliderPosition();
 		});
 

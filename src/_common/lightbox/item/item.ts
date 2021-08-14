@@ -3,7 +3,7 @@ import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../../utils/vue';
 import { AppImgResponsive } from '../../img/responsive/responsive';
 import AppMediaItemBackdrop from '../../media-item/backdrop/backdrop.vue';
-import { Screen } from '../../screen/screen-service';
+import { onScreenResize, Screen } from '../../screen/screen-service';
 import AppSketchfabEmbed from '../../sketchfab/embed/embed.vue';
 import { EventSubscription } from '../../system/event/event-topic';
 import AppVideoEmbed from '../../video/embed/embed.vue';
@@ -76,7 +76,7 @@ export default class AppLightboxItem extends Vue {
 		await this.calcActive();
 		await this.calcDimensions();
 
-		this.resize$ = Screen.resizeChanges.subscribe(() => this.calcDimensions());
+		this.resize$ = onScreenResize.subscribe(() => this.calcDimensions());
 
 		this.initialized = true;
 	}

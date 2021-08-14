@@ -2,7 +2,7 @@ import { h, nextTick } from 'vue';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { sleep } from '../../../utils/utils';
 import { Ruler } from '../../ruler/ruler-service';
-import { Screen } from '../../screen/screen-service';
+import { onScreenResize, Screen } from '../../screen/screen-service';
 import { EventSubscription } from '../../system/event/event-topic';
 import { ImgHelper } from '../helper/helper-service';
 
@@ -27,7 +27,7 @@ export class AppImgResponsive extends Vue {
 	}
 
 	async mounted() {
-		this.resize$ = Screen.resizeChanges.subscribe(() => this.updateSrc());
+		this.resize$ = onScreenResize.subscribe(() => this.updateSrc());
 
 		// Make sure the view is compiled.
 		await nextTick();

@@ -1,7 +1,7 @@
 import { nextTick } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Ruler } from '../../ruler/ruler-service';
-import { Screen } from '../../screen/screen-service';
+import { onScreenResize } from '../../screen/screen-service';
 import { EventSubscription } from '../../system/event/event-topic';
 
 const RATIO = 0.5625; // 16:9
@@ -54,7 +54,7 @@ export default class AppSketchfabEmbed extends Vue {
 
 	mounted() {
 		this.recalculateDimensions();
-		this.resize$ = Screen.resizeChanges.subscribe(() => this.recalculateDimensions());
+		this.resize$ = onScreenResize.subscribe(() => this.recalculateDimensions());
 	}
 
 	unmounted() {
