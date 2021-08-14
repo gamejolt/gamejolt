@@ -1,6 +1,6 @@
 import { h } from 'vue';
 import { Options } from 'vue-property-decorator';
-import { LocationRedirect } from '../../../../utils/router';
+import { RouteLocationRedirect } from '../../../../utils/router';
 import { importContext } from '../../../../utils/utils';
 import { PayloadError } from '../../../../_common/payload/payload-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
@@ -18,7 +18,7 @@ const paths = importContext(
 		// First check the path as is, then check with "index".
 		const path = route.params.path;
 		if (!path) {
-			return new LocationRedirect({ name: 'home' });
+			return new RouteLocationRedirect({ name: 'home' });
 		}
 
 		if (paths[`./${path}.md`]) {

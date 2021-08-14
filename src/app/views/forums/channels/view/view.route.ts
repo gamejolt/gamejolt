@@ -1,10 +1,10 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
 // For the redirects.
 const path = '/community/forums/:slug/';
 const name = 'forums.channels.view';
 
-export const routeForumsChannelsView: RouteConfig = {
+export const routeForumsChannelsView: RouteRecordRaw = {
 	name: 'forums.channels.view',
 	path: '/f/:name/:sort(active|new|top|archived)?',
 	component: () => import(/* webpackChunkName: "routeForumsChannelsView" */ './view.vue'),

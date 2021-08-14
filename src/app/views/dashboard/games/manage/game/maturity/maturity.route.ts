@@ -1,6 +1,6 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeDashGamesManageGameMaturity: RouteConfig = {
+export const routeDashGamesManageGameMaturity: RouteRecordRaw = {
 	name: 'dash.games.manage.game.maturity',
 	path: 'maturity',
 	component: () =>

@@ -1,14 +1,14 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { Location } from 'vue-router';
+import { RouteLocationRaw } from 'vue-router';
 import { propOptional } from '../../../utils/vue';
 
 @Options({})
 export default class AppPillBi extends Vue {
 	@Prop(propOptional(Object))
-	leftTo?: string | Location;
+	leftTo?: RouteLocationRaw;
 
 	@Prop(propOptional(Object))
-	rightTo?: string | Location;
+	rightTo?: RouteLocationRaw;
 
 	@Prop(propOptional(Boolean, false))
 	noHover!: boolean;

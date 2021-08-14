@@ -1,6 +1,6 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeAuthAuthorize: RouteConfig = {
+export const routeAuthAuthorize: RouteRecordRaw = {
 	name: 'auth.authorize',
 	path: '/authorize/:userId/:code/:type',
 	component: () => import(/* webpackChunkName: "routeAuthAuthorize" */ './authorize.vue'),

@@ -1,6 +1,6 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeDashGamesManageApiMods: RouteConfig = {
+export const routeDashGamesManageApiMods: RouteRecordRaw = {
 	name: 'dash.games.manage.api.mods',
 	path: 'mods',
 	component: () => import(/* webpackChunkName: "routeDashGamesManageApiMods" */ './mods.vue'),

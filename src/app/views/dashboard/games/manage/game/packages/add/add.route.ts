@@ -1,6 +1,6 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeDashGamesManageGamePackagesAdd: RouteConfig = {
+export const routeDashGamesManageGamePackagesAdd: RouteRecordRaw = {
 	name: 'dash.games.manage.game.packages.add',
 	path: 'packages/add',
 	component: () =>

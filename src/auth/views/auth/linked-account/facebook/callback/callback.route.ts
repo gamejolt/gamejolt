@@ -1,6 +1,6 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeAuthLinkedAccountFacebookCallback: RouteConfig = {
+export const routeAuthLinkedAccountFacebookCallback: RouteRecordRaw = {
 	name: 'auth.linked-account.facebook.callback',
 	path: 'facebook/callback',
 	component: () =>

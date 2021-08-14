@@ -1,5 +1,5 @@
 import { Component, createApp } from 'vue';
-import { VueRouter } from 'vue-router/types/router';
+import { Router } from 'vue-router';
 import { hijackLinks } from '../utils/router';
 import { bootstrapAppTranslations } from '../utils/translations';
 import { VuexStore } from '../utils/vuex';
@@ -20,7 +20,7 @@ import { SettingThemeAlwaysOurs, SettingThemeDark } from './settings/settings.se
  * Bootstraps common services and returns a "createApp" function that our entry
  * point can call to get what it needs.
  */
-export function bootstrapCommon(appComponent: Component, store: VuexStore, router?: VueRouter) {
+export function bootstrapCommon(appComponent: Component, store: VuexStore, router?: Router) {
 	const app = createApp(appComponent);
 
 	// Try to start loading this as soon as possible.
@@ -56,8 +56,10 @@ export function bootstrapCommon(appComponent: Component, store: VuexStore, route
 
 	bootstrapAppTranslations(app);
 
-	// TODO(vue3): set up router
 	app.use(store);
+	if (router) {
+		app.use(router);
+	}
 
 	return app;
 

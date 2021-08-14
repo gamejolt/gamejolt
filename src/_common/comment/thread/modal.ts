@@ -1,5 +1,4 @@
 import { Emit, Inject, Options, Prop } from 'vue-property-decorator';
-import { Location } from 'vue-router';
 import { Analytics } from '../../analytics/analytics.service';
 import AppMessageThreadAdd from '../../message-thread/add/add.vue';
 import { BaseModal } from '../../modal/base';
@@ -106,7 +105,7 @@ export default class AppCommentThreadModal extends BaseModal {
 			return;
 		}
 
-		this.$router.replace({ ...this.$route, hash: '' } as Location);
+		this.$router.replace({ ...this.$route, hash: '' });
 	}
 
 	_onCommentAdd(comment: Comment) {

@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Router } from 'vue-router';
 import { onRouteChangeAfter } from '../route/route-component';
 
 /**
@@ -25,7 +25,7 @@ export class Referrer {
 
 	private static _referrer?: string;
 
-	static init(router: VueRouter) {
+	static init(router: Router) {
 		this.isInitialized = true;
 
 		if (!GJ_IS_SSR && window.document.referrer) {

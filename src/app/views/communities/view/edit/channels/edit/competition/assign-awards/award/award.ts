@@ -1,5 +1,5 @@
 import { Emit, Options } from 'vue-property-decorator';
-import { Route } from 'vue-router/types/router';
+import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../../../../../../_common/api/api.service';
 import { CommunityCompetitionAward } from '../../../../../../../../../../_common/community/competition/award/award.model';
 import { CommunityCompetitionEntryAward } from '../../../../../../../../../../_common/community/competition/entry/award/award.model';
@@ -23,7 +23,7 @@ type Payload = {
 	entryCount: number;
 };
 
-function makeRequest(route: Route, page = 1, filterValue = '') {
+function makeRequest(route: RouteLocationNormalized, page = 1, filterValue = '') {
 	let url = `/web/dash/communities/competitions/awards/view/${route.params.awardId}`;
 	let query = '';
 

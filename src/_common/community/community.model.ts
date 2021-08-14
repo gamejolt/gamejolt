@@ -1,4 +1,5 @@
-import type { Location, Route } from 'vue-router';
+import { RouteLocationNormalized } from 'vue-router';
+import { RouteLocationDefinition } from '../../utils/router';
 import { assertNever } from '../../utils/utils';
 import { CommunityJoinLocation, trackCommunityJoin } from '../analytics/analytics.service';
 import { Api } from '../api/api.service';
@@ -76,7 +77,7 @@ export class Community extends Collaboratable(Model) {
 		return require('./no-thumb.png');
 	}
 
-	get routeLocation(): Location {
+	get routeLocation(): RouteLocationDefinition {
 		return {
 			name: 'communities.view.overview',
 			params: {
@@ -85,7 +86,7 @@ export class Community extends Collaboratable(Model) {
 		};
 	}
 
-	get routeEditLocation(): Location {
+	get routeEditLocation(): RouteLocationDefinition {
 		return {
 			name: 'communities.view.edit.details',
 			params: {
@@ -117,14 +118,14 @@ export class Community extends Collaboratable(Model) {
 		return this.channels.filter(i => i.visibility === 'published').length > 1;
 	}
 
-	channelRouteLocation(channel: CommunityChannel): Location {
+	channelRouteLocation(channel: CommunityChannel): RouteLocationDefinition {
 		return {
 			name: 'communities.view.channel',
 			params: {
 				path: this.path,
 				channel: channel.title,
 			},
-		} as Location;
+		};
 	}
 
 	$save() {
@@ -266,8 +267,8 @@ export const enum CommunityPresetChannelType {
 	ALL = 'all',
 }
 
-export function isEditingCommunity(route: Route) {
-	return !!route.name && route.name.startsWith('communities.view.edit.');
+export function isEditingCommunity(route: RouteLocationNormalized) {
+	return typeof route.name === 'string' && route.name.startsWith('communities.view.edit.');
 }
 
 export function getCommunityChannelBackground(

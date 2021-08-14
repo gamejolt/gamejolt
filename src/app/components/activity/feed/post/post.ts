@@ -1,6 +1,6 @@
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
-import { Location } from 'vue-router';
 import { State } from 'vuex-class';
+import { RouteLocationDefinition } from '../../../../../utils/router';
 import { findRequiredVueParent } from '../../../../../utils/vue';
 import { trackPostOpen } from '../../../../../_common/analytics/analytics.service';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
@@ -25,7 +25,7 @@ import { canPlaceStickerOnFiresidePost } from '../../../../../_common/sticker/pl
 import AppStickerReactions from '../../../../../_common/sticker/reactions/reactions.vue';
 import {
 	StickerTargetController,
-	StickerTargetParentControllerKey,
+	StickerTargetParentControllerKey
 } from '../../../../../_common/sticker/target/target-controller';
 import AppStickerTarget from '../../../../../_common/sticker/target/target.vue';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
@@ -158,7 +158,7 @@ export default class AppActivityFeedPost extends Vue {
 		return {
 			...location,
 			query: Object.assign({}, location.query ?? {}, this.queryParams),
-		} as Location;
+		} as RouteLocationDefinition;
 	}
 
 	get linkResolved() {

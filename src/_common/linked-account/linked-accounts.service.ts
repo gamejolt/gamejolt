@@ -1,11 +1,11 @@
-import VueRouter from 'vue-router';
+import { Router } from 'vue-router';
 import { Api } from '../api/api.service';
 import { Navigate } from '../navigate/navigate.service';
 import { Provider } from './linked-account.model';
 
 export class LinkedAccounts {
 	static async link(
-		router: VueRouter,
+		router: Router,
 		provider: Provider | '',
 		routeUrl: string,
 		resource: 'User' | 'Game',
@@ -38,7 +38,7 @@ export class LinkedAccounts {
 		}
 	}
 
-	static async login(router: VueRouter, provider: Provider) {
+	static async login(router: Router, provider: Provider) {
 		let url = '/web/auth/linked-accounts/link/' + provider;
 		if (GJ_IS_CLIENT) {
 			url += '?client';

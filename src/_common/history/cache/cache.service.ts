@@ -1,4 +1,4 @@
-import { Route } from 'vue-router';
+import { RouteLocationNormalized } from 'vue-router';
 import { arrayRemove } from '../../../utils/array';
 
 const MAX_ITEMS = 10;
@@ -18,7 +18,7 @@ export class HistoryCache {
 		return typeof history !== 'undefined' ? history.state && history.state.key : undefined;
 	}
 
-	static get<T = any>(route: Route, tag?: string) {
+	static get<T = any>(route: RouteLocationNormalized, tag?: string) {
 		const stateKey = this.getStateKey();
 		const state: HistoryCacheState<T> | undefined = this.states.find(
 			i => i.url === route.fullPath && i.tag === tag && i.stateKey === stateKey
@@ -36,11 +36,11 @@ export class HistoryCache {
 		return null;
 	}
 
-	static has(route: Route, tag?: string) {
+	static has(route: RouteLocationNormalized, tag?: string) {
 		return !!this.get(route, tag);
 	}
 
-	static store<T = any>(route: Route, data: T, tag?: string) {
+	static store<T = any>(route: RouteLocationNormalized, data: T, tag?: string) {
 		const state = this.get(route, tag);
 
 		if (state) {

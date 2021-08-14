@@ -1,5 +1,5 @@
 import { defineAsyncComponent } from 'vue';
-import { VueRouter } from 'vue-router/types/router';
+import { Router } from 'vue-router';
 import { showModal } from '../../modal/modal.service';
 import { Model } from '../../model/model.service';
 import { DisplayMode } from '../modal/modal.service';
@@ -35,8 +35,8 @@ export class CommentThreadModal {
 	/**
 	 * Checks if the url has a comment permalink and opens the modal
 	 */
-	static async showFromPermalink(router: VueRouter, model: Model, displayMode: DisplayMode) {
-		const hash = router.currentRoute.hash;
+	static async showFromPermalink(router: Router, model: Model, displayMode: DisplayMode) {
+		const hash = router.currentRoute.value.hash;
 		if (!hash || hash.indexOf('#comment-') !== 0) {
 			return;
 		}
@@ -49,8 +49,8 @@ export class CommentThreadModal {
 		CommentThreadModal.show({ commentId: id, model, displayMode });
 	}
 
-	static watchForPermalink(router: VueRouter, model: Model, displayMode: DisplayMode) {
-		const checkPath = router.currentRoute.path;
+	static watchForPermalink(router: Router, model: Model, displayMode: DisplayMode) {
+		const checkPath = router.currentRoute.value.path;
 		return router.afterEach((to, _from) => {
 			if (checkPath === to.path && !!to.hash) {
 				this.showFromPermalink(router, model, displayMode);

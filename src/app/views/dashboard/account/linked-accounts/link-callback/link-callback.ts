@@ -1,6 +1,6 @@
 import { h } from 'vue';
 import { Options } from 'vue-property-decorator';
-import { Route } from 'vue-router';
+import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../../_common/api/api.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
 import {
@@ -10,7 +10,7 @@ import {
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import { AppState, AppStore } from '../../../../../../_common/store/app-store';
 
-function constructUrl(baseUrl: string, route: Route) {
+function constructUrl(baseUrl: string, route: RouteLocationNormalized) {
 	let url = baseUrl + route.params.provider;
 	let firstParam = true;
 

@@ -1,20 +1,8 @@
-import { Route } from 'vue-router';
+import { nextTick } from '@vue/runtime-core';
+import { RouterScrollBehavior } from 'vue-router';
 import { Scroll } from '../scroll.service';
 
-/**
- * Returns the scroll position but also sets up a timeout to enforce the scroll
- * position. Browsers for some reason scroll randomly through the vue-router
- * scroll behavior. It's always slightly off. Scrolling again in the browser's
- * next tick seems to solve this in most cases.
- */
-function scroll(pos: { x: number; y: number }) {
-	setTimeout(() => {
-		window.scrollTo(pos.x, pos.y);
-	}, 0);
-	return pos;
-}
-
-export function initScrollBehavior() {
+export function initScrollBehavior(): RouterScrollBehavior {
 	// Should tell the browser that we want to handle our own scrolling.
 	if (!GJ_IS_SSR) {
 		if ('scrollRestoration' in history) {
@@ -22,11 +10,7 @@ export function initScrollBehavior() {
 		}
 	}
 
-	return function scrollBehavior(
-		to: Route,
-		_from: Route,
-		savedPosition?: { x: number; y: number }
-	) {
+	return (to, _from, savedPosition) => {
 		// We always want to clear the keyChanged attribute for anchors every
 		// autoscroll event.
 		const anchor = Scroll.autoscrollAnchor;
@@ -39,11 +23,11 @@ export function initScrollBehavior() {
 		// Skip one auto scroll trigger.
 		if (!Scroll.shouldAutoScroll) {
 			Scroll.shouldAutoScroll = true;
-			return undefined;
+			return;
 		}
 
 		if (savedPosition) {
-			return scroll(savedPosition);
+			return _scroll(savedPosition);
 		}
 
 		// If the anchor key hasn't changed then we can do the anchor scrolling.
@@ -51,24 +35,36 @@ export function initScrollBehavior() {
 		// behavior since the content on the page is going to be different.
 		if (anchor && !didAnchorChange) {
 			if (typeof anchor.scrollTo !== 'undefined') {
-				return scroll({
-					x: 0,
-					y: anchor.scrollTo,
+				return _scroll({
+					left: 0,
+					top: anchor.scrollTo,
 				});
 			} else {
-				return undefined;
+				return;
 			}
 		}
 
 		if (to.hash) {
 			return {
-				selector: to.hash,
+				el: to.hash,
 			};
 		}
 
 		return {
-			x: 0,
-			y: 0,
+			left: 0,
+			top: 0,
 		};
 	};
+}
+
+/**
+ * Returns the scroll position but also sets up a timeout to enforce the scroll
+ * position. Browsers for some reason scroll randomly through the vue-router
+ * scroll behavior. It's always slightly off. Scrolling again in the browser's
+ * next tick seems to solve this in most cases.
+ */
+async function _scroll(pos: { left: number; top: number }) {
+	await nextTick();
+	window.scrollTo(pos);
+	return pos;
 }

@@ -1,6 +1,6 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeDiscoverCommunities: RouteConfig = {
+export const routeDiscoverCommunities: RouteRecordRaw = {
 	name: 'discover.communities',
 	path: '/communities',
 	component: () => import(/* webpackChunkName: "routeDiscoverCommunities" */ './communities.vue'),

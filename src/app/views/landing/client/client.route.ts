@@ -1,6 +1,6 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeLandingClient: RouteConfig = {
+export const routeLandingClient: RouteRecordRaw = {
 	name: 'landing.client',
 	path: '/client',
 	component: () => import(/* webpackChunkName: "routeLandingClient" */ './client.vue'),

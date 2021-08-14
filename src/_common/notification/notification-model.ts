@@ -1,4 +1,4 @@
-import VueRouter, { RawLocation } from 'vue-router';
+import { RawLocation, Router } from 'vue-router';
 import { TrophyModal } from '../../app/components/trophy/modal/modal.service';
 import { assertNever } from '../../utils/utils';
 import { Collaborator } from '../collaborator/collaborator.model';
@@ -313,7 +313,7 @@ export class Notification extends Model {
 		return '';
 	}
 
-	async go(router: VueRouter) {
+	async go(router: Router) {
 		if (this.routeLocation) {
 			router.push(this.routeLocation);
 		} else if (

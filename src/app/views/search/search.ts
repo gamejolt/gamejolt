@@ -1,5 +1,4 @@
 import { Options } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { AdSettingsContainer } from '../../../_common/ad/ad-store';
 import AppExpand from '../../../_common/expand/expand.vue';
 import { number } from '../../../_common/filters/number';
@@ -11,7 +10,7 @@ import { Scroll } from '../../../_common/scroll/scroll.service';
 import AppPageHeader from '../../components/page-header/page-header.vue';
 import { Search } from '../../components/search/search-service';
 import AppSearch from '../../components/search/search.vue';
-import { Store, store } from '../../store/index';
+import { store } from '../../store/index';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './search.store';
 
 @Options({
@@ -32,9 +31,6 @@ import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './sear
 	},
 })
 export default class RouteSearch extends BaseRouteComponent {
-	@State
-	route!: Store['route'];
-
 	@RouteStoreModule.State
 	hasSearch!: RouteStore['hasSearch'];
 
@@ -50,9 +46,9 @@ export default class RouteSearch extends BaseRouteComponent {
 	readonly number = number;
 
 	get routeTitle() {
-		if (this.route.query.q) {
+		if (this.$route.query.q) {
 			return this.$gettextInterpolate('Search results for %{ query }', {
-				query: this.route.query.q,
+				query: this.$route.query.q,
 			});
 		}
 		return this.$gettext('search.page_title');

@@ -1,6 +1,6 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeDashAccountEdit: RouteConfig = {
+export const routeDashAccountEdit: RouteRecordRaw = {
 	name: 'dash.account.edit',
 	path: 'profile/edit',
 	component: () => import(/* webpackChunkName: "routeDashAccountEdit" */ './edit.vue'),

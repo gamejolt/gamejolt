@@ -1,5 +1,6 @@
+import { ComponentOptionsMixin } from '@vue/runtime-core';
 import { createDecorator } from 'vue-class-component';
-import { Route } from 'vue-router';
+import { RouteLocationNormalized } from 'vue-router';
 import { VuexStore } from '../../utils/vuex';
 
 export interface RouteStoreOptions {
@@ -7,7 +8,7 @@ export interface RouteStoreOptions {
 	store: VuexStore;
 	routeStoreName: string;
 	routeStoreClass: any;
-	created?: (data: { route: Route }) => void;
+	created?: (data: { route: RouteLocationNormalized }) => void;
 	destroyed?: () => void;
 }
 
@@ -47,6 +48,6 @@ export function WithRouteStore(config: RouteStoreOptions) {
 					store.unregisterModule(routeStoreName);
 				}
 			},
-		});
+		} as ComponentOptionsMixin);
 	});
 }

@@ -1,6 +1,6 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeDashAccountFinancials: RouteConfig = {
+export const routeDashAccountFinancials: RouteRecordRaw = {
 	name: 'dash.account.financials',
 	path: 'financials',
 	component: () =>

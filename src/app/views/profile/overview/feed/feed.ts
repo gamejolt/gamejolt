@@ -1,5 +1,5 @@
 import { Options } from 'vue-property-decorator';
-import { Route } from 'vue-router';
+import { RouteLocationNormalized } from 'vue-router';
 import { State } from 'vuex-class';
 import { Api } from '../../../../../_common/api/api.service';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
@@ -17,11 +17,11 @@ import AppUserSpawnDay from '../../../../components/user/spawn-day/spawn-day.vue
 import { Store } from '../../../../store/index';
 import { RouteStore, RouteStoreModule } from '../../profile.store';
 
-function isLikeFeed(route: Route) {
+function isLikeFeed(route: RouteLocationNormalized) {
 	return route.params.feedSection === 'likes';
 }
 
-function getFetchUrl(route: Route) {
+function getFetchUrl(route: RouteLocationNormalized) {
 	const tab = route.query.tab || 'active';
 	const feedType = isLikeFeed(route) ? 'user-likes' : 'user';
 	return `/web/posts/fetch/${feedType}/@${route.params.username}?tab=${tab}`;

@@ -1,6 +1,6 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeDashGamesManageApiScoreboardsList: RouteConfig = {
+export const routeDashGamesManageApiScoreboardsList: RouteRecordRaw = {
 	name: 'dash.games.manage.api.scoreboards.list',
 	path: 'scoreboards',
 	component: () =>

@@ -2,6 +2,6 @@ import { createApp } from './bootstrap';
 
 const { app, router } = createApp();
 
-router.onReady(() => {
+router.isReady().then(() => {
 	app.mount('#app');
 });

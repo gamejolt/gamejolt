@@ -1,4 +1,4 @@
-import { Route } from 'vue-router';
+import { RouteLocationNormalized } from 'vue-router';
 import { Game } from '../../../../_common/game/game.model';
 
 export class GameListingContainer {
@@ -12,14 +12,14 @@ export class GameListingContainer {
 	isLoadingMore = false;
 	reachedEnd = false;
 
-	processPayload(route: Route, payload: any) {
+	processPayload(route: RouteLocationNormalized, payload: any) {
 		this.isBootstrapped = true;
 		this.addGames(Game.populate(payload.games));
 		this.gamesCount = payload.gamesCount;
 		this.perPage = payload.perPage;
 
 		this.currentPage = route.query.page ? parseInt(route.query.page + '', 10) : 1;
-		this.section = route.params.section ?? 'featured';
+		this.section = (route.params.section as string) ?? 'featured';
 	}
 
 	processPagePayload(page: number, payload: any) {

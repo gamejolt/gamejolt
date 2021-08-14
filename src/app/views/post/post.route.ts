@@ -1,6 +1,6 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routePost: RouteConfig = {
+export const routePost: RouteRecordRaw = {
 	name: 'post',
 	path: '/p/:slug',
 	component: () => import(/* webpackChunkName: "routePost" */ './post.vue'),

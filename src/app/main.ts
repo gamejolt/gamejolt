@@ -8,7 +8,7 @@ if (window.__INITIAL_STATE__) {
 	store.replaceState(window.__INITIAL_STATE__.vuex);
 }
 
-router.onReady(() => {
+router.isReady().then(() => {
 	app.mount('#app');
 });
 

@@ -1,5 +1,5 @@
 import { Options } from 'vue-property-decorator';
-import { Route } from 'vue-router';
+import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../../_common/api/api.service';
 import { EventItem } from '../../../../../../_common/event-item/event-item.model';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
@@ -13,7 +13,7 @@ import { AppActivityFeedLazy } from '../../../../../components/lazy';
 import AppPostAddButton from '../../../../../components/post/add-button/add-button.vue';
 import { RouteStore, RouteStoreModule } from '../manage.store';
 
-function getFetchUrl(route: Route) {
+function getFetchUrl(route: RouteLocationNormalized) {
 	const tab = route.query.tab || 'active';
 	return `/web/posts/fetch/game/${route.params.id}?tab=${tab}`;
 }

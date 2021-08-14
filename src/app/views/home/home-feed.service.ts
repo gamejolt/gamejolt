@@ -1,4 +1,4 @@
-import { Route } from 'vue-router/types/router';
+import { RouteLocationNormalized } from 'vue-router';
 import { configFYPDefault } from '../../../_common/config/config.service';
 
 export const HOME_FEED_FYP = 'fyp';
@@ -23,7 +23,7 @@ export class HomeFeedService {
 		return HOME_FEED_ACTIVITY;
 	}
 
-	public static getRouteFeedTab(route: Route) {
+	public static getRouteFeedTab(route: RouteLocationNormalized) {
 		switch (route.params?.tab) {
 			case HOME_FEED_FYP:
 			case this.fypTab:

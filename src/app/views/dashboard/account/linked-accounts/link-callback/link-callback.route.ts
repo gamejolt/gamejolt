@@ -1,8 +1,10 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeDashAccountLinkedAccountsLinkCallback: RouteConfig = {
+export const routeDashAccountLinkedAccountsLinkCallback: RouteRecordRaw = {
 	name: 'dash.account.linked-accounts.link-callback',
 	path: 'linked-accounts/link-callback/:provider',
 	component: () =>
-		import(/* webpackChunkName: "routeDashAccountLinkedAccountsLinkCallback" */ './link-callback'),
+		import(
+			/* webpackChunkName: "routeDashAccountLinkedAccountsLinkCallback" */ './link-callback'
+		),
 };

@@ -1,5 +1,14 @@
-import VueGlobal from 'vue';
-import VueRouter, { Location, Route, RouteConfig } from 'vue-router';
+import {
+	createMemoryHistory,
+	createRouter,
+	createWebHashHistory,
+	createWebHistory,
+	RouteLocationNormalized,
+	RouteLocationRaw,
+	Router,
+	RouteRecordRaw,
+	RouterHistory,
+} from 'vue-router';
 import { Environment } from '../_common/environment/environment.service';
 import { routeError404, RouteError404 } from '../_common/error/page/page.route';
 import { Navigate } from '../_common/navigate/navigate.service';
@@ -7,13 +16,20 @@ import { initScrollBehavior } from '../_common/scroll/auto-scroll/autoscroll.ser
 
 const ClientBaseRegex = new RegExp('chrome-extension:\\/\\/game\\-jolt\\-client\\/([^.]+)\\.html#');
 
-export function initRouter(appRoutes: RouteConfig[]) {
-	VueGlobal.use(VueRouter);
-
+export function initRouter(appRoutes: RouteRecordRaw[]) {
 	const routes = [...appRoutes, routeError404];
 
-	return new VueRouter({
-		mode: !GJ_IS_CLIENT ? 'history' : 'hash',
+	let history: RouterHistory;
+	if (GJ_IS_CLIENT) {
+		history = createWebHashHistory();
+	} else if (GJ_IS_SSR) {
+		history = createMemoryHistory();
+	} else {
+		history = createWebHistory();
+	}
+
+	return createRouter({
+		history,
 		routes,
 		scrollBehavior: initScrollBehavior(),
 	});
@@ -24,7 +40,7 @@ export function initRouter(appRoutes: RouteConfig[]) {
  * must be done inside a router-link element. This captures A tags that may not
  * be in router-link and tries to route them if it points to a correct route.
  */
-export function hijackLinks(router: VueRouter, host: string) {
+export function hijackLinks(router: Router, host: string) {
 	if (GJ_IS_SSR) {
 		return;
 	}
@@ -71,6 +87,7 @@ export function hijackLinks(router: VueRouter, host: string) {
 
 		// Now try to match it against our routes and see if we got anything. If
 		// we match a 404 it's obviously wrong.
+		// TODO(vue3): I don't know what to do here...
 		const matched = router.getMatchedComponents(href);
 		if (matched.length > 0 && matched[0] !== RouteError404) {
 			// We matched a route! Let's go to it and stop the browser from doing
@@ -153,12 +170,18 @@ function newWindow(e: Event, url: string) {
 	}
 }
 
-export class LocationRedirect {
-	constructor(public location: Location) {}
+/**
+ * vue-router doesn't have a type that doesn't include the raw string location.
+ * This is a helper to define the route location as an object definition.
+ */
+export type RouteLocationDefinition = Exclude<RouteLocationRaw, string>;
 
-	static fromRoute(from: Route, params: any, query: any = {}) {
-		return new LocationRedirect({
-			name: from.name,
+export class RouteLocationRedirect {
+	constructor(public location: RouteLocationDefinition) {}
+
+	static fromRoute(from: RouteLocationNormalized, params: any, query: any = {}) {
+		return new RouteLocationRedirect({
+			name: from.name ?? undefined,
 			params: Object.assign({}, from.params, params),
 			query: Object.assign({}, from.query, query),
 			hash: from.hash,
@@ -167,16 +190,16 @@ export class LocationRedirect {
 	}
 }
 
-export function enforceLocation(route: Route, params: any, query: any = {}) {
+export function enforceLocation(route: RouteLocationNormalized, params: any, query: any = {}) {
 	for (const key in params) {
 		if (route.params[key] !== params[key]) {
-			return LocationRedirect.fromRoute(route, params, query);
+			return RouteLocationRedirect.fromRoute(route, params, query);
 		}
 	}
 
 	for (const key in query) {
 		if (route.query[key] !== query[key]) {
-			return LocationRedirect.fromRoute(route, params, query);
+			return RouteLocationRedirect.fromRoute(route, params, query);
 		}
 	}
 }

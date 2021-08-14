@@ -1,5 +1,5 @@
 import { Inject, Options } from 'vue-property-decorator';
-import { Route } from 'vue-router/types/router';
+import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import {
 	CompetitionPeriodPreComp,
@@ -31,7 +31,7 @@ type Payload = {
 	perPage: number;
 };
 
-function getValidPageQueryParam(route: Route) {
+function getValidPageQueryParam(route: RouteLocationNormalized) {
 	const paramValue = route.query.page;
 	if (typeof paramValue === 'string') {
 		const pageNum = parseInt(paramValue, 10);
@@ -48,7 +48,7 @@ function getValidPageQueryParam(route: Route) {
 	return null;
 }
 
-function getValidSortQueryParam(route: Route) {
+function getValidSortQueryParam(route: RouteLocationNormalized) {
 	const paramValue = route.query.sort;
 	if (
 		typeof paramValue === 'string' &&
@@ -60,7 +60,7 @@ function getValidSortQueryParam(route: Route) {
 	return null;
 }
 
-function getValidSortDirectionQueryParam(route: Route) {
+function getValidSortDirectionQueryParam(route: RouteLocationNormalized) {
 	const paramValue = route.query['sort-direction'];
 	if (typeof paramValue === 'string' && ['asc', 'desc'].includes(paramValue)) {
 		return paramValue;

@@ -1,6 +1,7 @@
-import { Location, Route } from 'vue-router';
+import { RouteLocationNormalized } from 'vue-router';
 import { forEach } from '../../../../utils/collection';
 import { objectEquals } from '../../../../utils/object';
+import { RouteLocationDefinition } from '../../../../utils/router';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import { Translate } from '../../../../_common/translate/translate.service';
 import { router } from '../../../views/index';
@@ -16,7 +17,7 @@ interface GameFilteringContainerDefinition {
 type Params = { [k: string]: string };
 type Filters = { [k: string]: any };
 
-export function checkGameFilteringRoute(route: Route) {
+export function checkGameFilteringRoute(route: RouteLocationNormalized) {
 	const params = route.query;
 
 	let paramFiltersFound = false;
@@ -124,7 +125,7 @@ export class GameFilteringContainer {
 		return isEmpty(this.filters, { skipQuery: true });
 	}
 
-	constructor(route: Route) {
+	constructor(route: RouteLocationNormalized) {
 		// Default all filters to empty values.
 		forEach(GameFilteringContainer.definitions, (definition, key) => {
 			if (definition.type === 'array') {
@@ -139,7 +140,7 @@ export class GameFilteringContainer {
 		this.init(route);
 	}
 
-	init(route: Route) {
+	init(route: RouteLocationNormalized) {
 		const params = route.query;
 
 		forEach(GameFilteringContainer.definitions, (definition, filter) => {
@@ -248,7 +249,7 @@ export class GameFilteringContainer {
 		return this.filters[filter].indexOf(option) !== -1;
 	}
 
-	getQueryString(route: Route, options: { page?: number } = {}) {
+	getQueryString(route: RouteLocationNormalized, options: { page?: number } = {}) {
 		const queryPieces: string[] = [];
 
 		queryPieces.push('section=' + (route.params.section ?? 'featured'));
@@ -265,7 +266,8 @@ export class GameFilteringContainer {
 			queryPieces.push('date=' + route.params.date);
 		}
 
-		const page = options.page ?? (route.query.page && parseInt(route.query.page as string, 10));
+		const page =
+			options.page || (route.query.page && parseInt(route.query.page as string)) || 1;
 		if (page > 1) {
 			queryPieces.push('page=' + page);
 		}
@@ -312,7 +314,7 @@ export class GameFilteringContainer {
 		Scroll.shouldAutoScroll = false;
 
 		const query = getRouteData(this.filters);
-		const location = getNewRouteLocation(router.currentRoute, query);
+		const location = getNewRouteLocation(router.currentRoute.value, query);
 
 		if (location) {
 			router.replace(location);
@@ -331,7 +333,7 @@ export class GameFilteringContainer {
 	}
 }
 
-function getNewRouteLocation(route: Route, filters: Filters) {
+function getNewRouteLocation(route: RouteLocationNormalized, filters: Filters) {
 	const query = Object.assign({}, filters);
 
 	if (!objectEquals(query, route.query)) {
@@ -339,7 +341,7 @@ function getNewRouteLocation(route: Route, filters: Filters) {
 			name: route.name,
 			params: route.params,
 			query,
-		} as Location;
+		} as RouteLocationDefinition;
 	}
 }
 

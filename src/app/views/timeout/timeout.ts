@@ -1,5 +1,5 @@
 import { Options } from 'vue-property-decorator';
-import { LocationRedirect } from '../../../utils/router';
+import { RouteLocationRedirect } from '../../../utils/router';
 import { Api } from '../../../_common/api/api.service';
 import AppContactLink from '../../../_common/contact-link/contact-link.vue';
 import { showErrorGrowl, showInfoGrowl } from '../../../_common/growls/growls.service';
@@ -29,7 +29,7 @@ import { UserTimeout } from '../../../_common/user/timeout/timeout.model';
 
 		// Redirect to home for guests or users without active timeouts.
 		if (!!appStore.user || !appStore.state.isUserTimedOut) {
-			return new LocationRedirect({
+			return new RouteLocationRedirect({
 				name: 'home',
 			});
 		}

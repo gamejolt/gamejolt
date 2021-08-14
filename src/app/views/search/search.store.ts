@@ -1,4 +1,4 @@
-import { Route } from 'vue-router';
+import { RouteLocationNormalized } from 'vue-router';
 import { namespace } from 'vuex-class';
 import { NamespaceVuexStore, VuexModule, VuexMutation, VuexStore } from '../../../utils/vuex';
 import { Meta } from '../../../_common/meta/meta-service';
@@ -10,9 +10,9 @@ import { store } from '../../store';
 type RouteActions = {};
 
 type RouteMutations = {
-	initStore: Route;
+	initStore: RouteLocationNormalized;
 	destroyStore: void;
-	processPayload: { payload: SearchPayload; route: Route };
+	processPayload: { payload: SearchPayload; route: RouteLocationNormalized };
 };
 
 export const RouteStoreName = 'searchRoute';

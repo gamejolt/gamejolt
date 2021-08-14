@@ -1,4 +1,4 @@
-import { Route } from 'vue-router';
+import { RouteLocationNormalized } from 'vue-router';
 import { numberSort } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
 import { Collaborator } from '../../../../_common/collaborator/collaborator.model';
@@ -102,7 +102,10 @@ function _updateChannels(store: CommunityRouteStore) {
 	});
 }
 
-export function setChannelPathFromRoute(store: CommunityRouteStore, route: Route) {
+export function setChannelPathFromRoute(
+	store: CommunityRouteStore,
+	route: RouteLocationNormalized
+) {
 	store.channelPath = getChannelPathFromRoute(route);
 }
 
@@ -148,11 +151,11 @@ export async function declineCollaboration(store: CommunityRouteStore) {
 	store.collaborator = null;
 }
 
-export function getChannelPathFromRoute(route: Route) {
+export function getChannelPathFromRoute(route: RouteLocationNormalized) {
 	if (route.name === routeCommunitiesViewOverview.name) {
 		return CommunityPresetChannelType.FEATURED;
 	}
-	return route.params.channel || null;
+	return (route.params.channel as string) || null;
 }
 
 /**

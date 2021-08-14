@@ -42,8 +42,8 @@ class GamePlaylistFolder {
 
 function isViewingCollection(collection: GameCollection) {
 	return (
-		router.currentRoute.name === collection.routeLocation.name &&
-		router.currentRoute.params.id === (collection as any).id
+		router.currentRoute.value.name === collection.routeLocation.name &&
+		router.currentRoute.value.params.id === (collection as any).id
 	);
 }
 

@@ -361,6 +361,8 @@ module.exports = function (config) {
 					GJ_TUNNELS: JSON.stringify({}),
 				}),
 				new webpack.DefinePlugin({
+					__VUE_OPTIONS_API__: true,
+					__VUE_PROD_DEVTOOLS__: false,
 					GJ_SECTION: JSON.stringify(section),
 					GJ_ENVIRONMENT: JSON.stringify(
 						!config.developmentEnv ? 'production' : 'development'

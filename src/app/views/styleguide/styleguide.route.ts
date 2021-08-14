@@ -1,6 +1,6 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeStyleguide: RouteConfig = {
+export const routeStyleguide: RouteRecordRaw = {
 	name: 'styleguide',
 	path: '/styleguide',
 	component: () => import(/* webpackChunkName: "routeStyleguide" */ './styleguide.vue'),

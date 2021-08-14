@@ -1,4 +1,4 @@
-import { Route } from 'vue-router';
+import { RouteLocationNormalized } from 'vue-router';
 import { objectEquals } from '../../utils/object';
 import { installVuePlugin } from '../../utils/vue';
 import { Environment } from '../environment/environment.service';
@@ -61,7 +61,7 @@ function chooseAdapter() {
 	return adapters[getRandom(0, adapters.length)];
 }
 
-function didRouteChange(from: Route, to: Route) {
+function didRouteChange(from: RouteLocationNormalized, to: RouteLocationNormalized) {
 	// We don't want to consider a route changing if just the hash changed. This
 	// helps with stuff like media bar.
 	return (

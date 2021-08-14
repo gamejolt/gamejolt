@@ -1,5 +1,5 @@
 import { reactive } from '@vue/reactivity';
-import VueRouter from 'vue-router';
+import { Router } from 'vue-router';
 import { Environment } from '../environment/environment.service';
 import { FbMetaContainer } from './fb-meta-container';
 import { MetaContainer, renderMetaContainer } from './meta-container';
@@ -85,7 +85,7 @@ class MetaService extends MetaContainer {
 
 export const Meta = reactive(new MetaService()) as MetaService;
 
-export function initMetaService(router: VueRouter) {
+export function initMetaService(router: Router) {
 	router.beforeEach((_to, _from, next) => {
 		_clearMeta();
 		next();

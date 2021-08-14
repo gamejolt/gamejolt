@@ -1,7 +1,7 @@
-import { Route } from 'vue-router';
+import { RouteLocationNormalized } from 'vue-router';
 
 export class PartnerReferral {
-	static trackReferrer(resource: string, resourceId: number, route: Route) {
+	static trackReferrer(resource: string, resourceId: number, route: RouteLocationNormalized) {
 		if (GJ_IS_SSR) {
 			return;
 		}

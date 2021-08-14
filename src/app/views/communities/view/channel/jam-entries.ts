@@ -1,5 +1,5 @@
 import { Inject, Options, Prop, Watch } from 'vue-property-decorator';
-import { Route } from 'vue-router/types/router';
+import { RouteLocationNormalized } from 'vue-router';
 import { propRequired } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
 import { CommunityCompetitionEntry } from '../../../../../_common/community/competition/entry/entry.model';
@@ -22,7 +22,7 @@ import {
 	getChannelPathFromRoute,
 } from '../view.store';
 
-function getSeedSessionStorageKey(route: Route) {
+function getSeedSessionStorageKey(route: RouteLocationNormalized) {
 	return (
 		'community-competition-random-seed-' +
 		route.params.path +
@@ -31,7 +31,7 @@ function getSeedSessionStorageKey(route: Route) {
 	);
 }
 
-function getValidSortQueryParam(route: Route) {
+function getValidSortQueryParam(route: RouteLocationNormalized) {
 	const paramValue = route.query.sort;
 	if (
 		typeof paramValue === 'string' &&
@@ -43,7 +43,7 @@ function getValidSortQueryParam(route: Route) {
 	return null;
 }
 
-function getValidPageQueryParam(route: Route) {
+function getValidPageQueryParam(route: RouteLocationNormalized) {
 	const paramValue = route.query.page;
 	if (typeof paramValue === 'string') {
 		const pageNum = parseInt(paramValue, 10);
@@ -60,7 +60,7 @@ function getValidPageQueryParam(route: Route) {
 	return null;
 }
 
-function getValidIgnoreAwardsQueryParam(route: Route) {
+function getValidIgnoreAwardsQueryParam(route: RouteLocationNormalized) {
 	const paramValue = route.query['ignore-awards'];
 	if (typeof paramValue === 'string' || typeof paramValue === 'number') {
 		const ignoreAwards = paramValue.toString();
@@ -74,7 +74,7 @@ function getValidIgnoreAwardsQueryParam(route: Route) {
 	return null;
 }
 
-function getValidCategoryName(route: Route) {
+function getValidCategoryName(route: RouteLocationNormalized) {
 	const paramValue = route.query['category'];
 	if (typeof paramValue === 'string') {
 		return paramValue;
@@ -83,7 +83,7 @@ function getValidCategoryName(route: Route) {
 	return null;
 }
 
-function makeRequest(route: Route) {
+function makeRequest(route: RouteLocationNormalized) {
 	const channel = getChannelPathFromRoute(route);
 
 	const query = [];

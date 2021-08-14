@@ -1,6 +1,6 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeDashAccountAddresses: RouteConfig = {
+export const routeDashAccountAddresses: RouteRecordRaw = {
 	name: 'dash.account.addresses',
 	path: 'addresses',
 	component: () => import(/* webpackChunkName: "routeDashAccountAddresses" */ './addresses.vue'),

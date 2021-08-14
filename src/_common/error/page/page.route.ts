@@ -1,6 +1,6 @@
 import { h } from 'vue';
 import { Options, Vue } from 'vue-property-decorator';
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 import { AppMutation, AppStore } from '../../store/app-store';
 
 // Just a placeholder that sets the 404 error state.
@@ -21,8 +21,8 @@ export class RouteError404 extends Vue {
 	}
 }
 
-export const routeError404: RouteConfig = {
+export const routeError404: RouteRecordRaw = {
 	name: 'error.404',
-	path: '*',
+	path: '/:_(.*)',
 	component: RouteError404,
 };

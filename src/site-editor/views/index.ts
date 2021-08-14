@@ -1,6 +1,6 @@
 import { h } from 'vue';
 import { Options } from 'vue-property-decorator';
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 import { initRouter } from '../../utils/router';
 import { BaseRouteComponent, RouteResolver } from '../../_common/route/route-component';
 import { store } from '../store/index';
@@ -25,7 +25,7 @@ class RouteEditor extends BaseRouteComponent {
 	}
 }
 
-const routes: RouteConfig[] = [
+const routes: RouteRecordRaw[] = [
 	{
 		name: 'editor',
 		path: '/site-editor/:tab',

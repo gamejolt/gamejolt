@@ -1,6 +1,6 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeBadgeFeatured: RouteConfig = {
+export const routeBadgeFeatured: RouteRecordRaw = {
 	path: '/badge/featured/:gameId',
 	component: () => import(/* webpackChunkName: "routeBadgeFeatured" */ './featured.vue'),
 };

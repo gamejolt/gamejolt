@@ -1,5 +1,5 @@
 import { defineAsyncComponent } from 'vue';
-import VueRouter from 'vue-router';
+import { Router } from 'vue-router';
 import { CommunityCompetitionEntry } from '../../../../../../_common/community/competition/entry/entry.model';
 import { showModal } from '../../../../../../_common/modal/modal.service';
 
@@ -14,8 +14,8 @@ export class CommunityCompetitionEntryModal {
 		return this.show({ entryId });
 	}
 
-	static async showFromHash(router: VueRouter) {
-		const hash = router.currentRoute.hash;
+	static async showFromHash(router: Router) {
+		const hash = router.currentRoute.value.hash;
 		if (!hash || !hash.includes('#entry-')) {
 			return;
 		}
@@ -39,8 +39,8 @@ export class CommunityCompetitionEntryModal {
 		});
 	}
 
-	static watchForHash(router: VueRouter) {
-		const checkPath = router.currentRoute.path;
+	static watchForHash(router: Router) {
+		const checkPath = router.currentRoute.value.path;
 		return router.afterEach((to, _from) => {
 			if (checkPath === to.path && !!to.hash) {
 				this.showFromHash(router);

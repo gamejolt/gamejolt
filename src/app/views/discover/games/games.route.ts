@@ -1,4 +1,4 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 import RouteDiscoverGames from './games';
 import {
 	routeDiscoverGamesListDate,
@@ -7,7 +7,7 @@ import {
 } from './list/list.route';
 import { routeDiscoverGamesView } from './view/view.route';
 
-export const routeDiscoverGames: RouteConfig = {
+export const routeDiscoverGames: RouteRecordRaw = {
 	path: '/games',
 	component: RouteDiscoverGames,
 	children: [

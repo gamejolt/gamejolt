@@ -1,6 +1,6 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { Location } from 'vue-router';
 import { State } from 'vuex-class';
+import { RouteLocationDefinition } from '../../../../../utils/router';
 import { propOptional } from '../../../../../utils/vue';
 import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/join-widget.vue';
 import { Jam } from '../../../../../_common/jam/jam.model';
@@ -65,7 +65,7 @@ export default class AppDiscoverHomeBanner extends Vue {
 		return this.item.jam.getPeriod() >= Jam.PERIOD_RUNNING;
 	}
 
-	get location(): Location | undefined {
+	get location(): RouteLocationDefinition | undefined {
 		if (this.item?.game) {
 			return {
 				name: 'discover.games.view.overview',

@@ -1,4 +1,4 @@
-import { Route } from 'vue-router';
+import { RouteLocationNormalized } from 'vue-router';
 
 export type AppPromotionSource = 'footer' | 'top-nav' | 'top-nav-options' | 'sidebar' | 'landing';
 export type AppPromotionCohort = 'store' | 'community';
@@ -6,12 +6,12 @@ export type AppPromotionCohort = 'store' | 'community';
 export const AppPromotionStoreKey = Symbol();
 
 // We currently are trying to show it in as many places as possible.
-export function shouldShowAppPromotion(route: Route) {
+export function shouldShowAppPromotion(route: RouteLocationNormalized) {
 	if (GJ_IS_CLIENT) {
 		return false;
 	}
 
-	const name = route.name ?? '';
+	const name = (route.name as string) ?? '';
 	return (
 		name.startsWith('communities.') ||
 		name === 'home' ||

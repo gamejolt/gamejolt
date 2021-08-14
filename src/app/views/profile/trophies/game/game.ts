@@ -1,6 +1,6 @@
 import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { LocationRedirect } from '../../../../../utils/router';
+import { RouteLocationRedirect } from '../../../../../utils/router';
 import { Api } from '../../../../../_common/api/api.service';
 import { Game } from '../../../../../_common/game/game.model';
 import AppGameThumbnail from '../../../../../_common/game/thumbnail/thumbnail.vue';
@@ -38,7 +38,7 @@ type CompletionData = {
 		// If the game doesn't have any trophies or the user has not achieved any for this game, redirect to their overview.
 		// This is to prevent showing an empty game page with no entry in the left nav.
 		if (!payload.trophies || payload.trophies.length === 0) {
-			const redirect = new LocationRedirect({
+			const redirect = new RouteLocationRedirect({
 				name: 'profile.trophies',
 			});
 			return redirect;

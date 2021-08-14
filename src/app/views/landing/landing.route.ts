@@ -1,4 +1,4 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 import { routeLandingAbout } from './about/about.route';
 import { routeLandingAdtest } from './adtest/adtest.route';
 import { routeLandingApp } from './app/app.route';
@@ -13,7 +13,7 @@ import { routeLandingMarketplace } from './marketplace/marketplace.route';
 import { routeLandingPartners } from './partners/partners.route';
 import { routeLandingRedlight } from './redlight/redlight.route';
 
-export const routeLanding: RouteConfig = {
+export const routeLanding: RouteRecordRaw = {
 	path: '',
 	component: RouteLanding,
 	children: [

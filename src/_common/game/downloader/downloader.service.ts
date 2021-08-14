@@ -1,4 +1,4 @@
-import VueRouter from 'vue-router';
+import { Router } from 'vue-router';
 import { Analytics } from '../../analytics/analytics.service';
 import { Environment } from '../../environment/environment.service';
 import { showErrorGrowl } from '../../growls/growls.service';
@@ -19,7 +19,7 @@ export class GameDownloader {
 	static shouldTransition = false;
 
 	static async download(
-		router: VueRouter,
+		router: Router,
 		game: Game,
 		build: GameBuild,
 		options: GameDownloaderOptions = {}

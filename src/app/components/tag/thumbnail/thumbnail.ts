@@ -1,5 +1,5 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { Location } from 'vue-router';
+import { RouteLocationDefinition } from '../../../../utils/router';
 import { propOptional, propRequired } from '../../../../utils/vue';
 import { TagsInfo } from '../tags-info.service';
 
@@ -12,7 +12,7 @@ export default class AppTagThumbnail extends Vue {
 		return TagsInfo.tags.find(i => i.id === this.tag)!;
 	}
 
-	get location(): Location {
+	get location(): RouteLocationDefinition {
 		return {
 			name: 'discover.games.list._fetch-tag',
 			params: {

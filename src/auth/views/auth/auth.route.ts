@@ -1,4 +1,4 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 import RouteAuth from './auth.vue';
 import { routeAuthAuthorize } from './authorize/authorize.route';
 import { routeAuthForgotSent } from './forgot-sent/forgot-sent.route';
@@ -10,7 +10,7 @@ import { routeAuthLinkedAccount } from './linked-account/linked-account.route';
 import { routeAuthLogin } from './login/login.route';
 import { routeAuthResetPassword } from './reset-password/reset-password.route';
 
-export const routeAuth: RouteConfig = {
+export const routeAuth: RouteRecordRaw = {
 	path: '/login',
 	component: RouteAuth,
 	children: [

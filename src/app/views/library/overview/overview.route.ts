@@ -1,7 +1,7 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeLibraryOverview: RouteConfig = {
+export const routeLibraryOverview: RouteRecordRaw = {
 	name: 'library.overview',
-	path: '/library',
+	path: '',
 	component: () => import(/* webpackChunkName: "routeLibrary" */ './overview.vue'),
 };

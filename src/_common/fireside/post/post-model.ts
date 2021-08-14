@@ -1,4 +1,5 @@
-import { Location, Route } from 'vue-router/types/router';
+import { RouteLocationNormalized } from 'vue-router';
+import { RouteLocationDefinition } from '../../../utils/router';
 import { Api } from '../../api/api.service';
 import { Perm } from '../../collaborator/collaboratable';
 import { CommunityChannel } from '../../community/channel/channel.model';
@@ -204,7 +205,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return url.substring(url.lastIndexOf('-') + 1);
 	}
 
-	get routeLocation(): Location {
+	get routeLocation(): RouteLocationDefinition {
 		return {
 			name: 'post',
 			params: {
@@ -281,7 +282,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		}
 	}
 
-	getPinContextFor(route: Route) {
+	getPinContextFor(route: RouteLocationNormalized) {
 		if (this.isInGamePinContext(route)) {
 			return this.game!;
 		}
@@ -318,7 +319,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return lead;
 	}
 
-	private getCommunityPinContext(route: Route) {
+	private getCommunityPinContext(route: RouteLocationNormalized) {
 		// A post can be pinned to a community if:
 		// 1. viewing the community feed.
 		// 2. the post was published to the community.
@@ -341,7 +342,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return null;
 	}
 
-	private isInGamePinContext(route: Route) {
+	private isInGamePinContext(route: RouteLocationNormalized) {
 		// A post can be pinned to a game if:
 		// 1. viewing the game feed, or the game's dashboard feed.
 		// 2. the post is a game post (sanity check)
@@ -361,7 +362,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return route.params.id.toString() === this.game.id.toString();
 	}
 
-	private isInUserPinContext(route: Route) {
+	private isInUserPinContext(route: RouteLocationNormalized) {
 		// A post can be pinned to a user if:
 		// 1. viewing the user's profile
 		// 2. the post is shown to be written by the user we're viewing (sanity check)

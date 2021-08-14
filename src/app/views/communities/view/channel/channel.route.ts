@@ -1,6 +1,6 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeCommunitiesViewChannel: RouteConfig = {
+export const routeCommunitiesViewChannel: RouteRecordRaw = {
 	name: 'communities.view.channel',
 	path: ':channel',
 	component: () => import(/* webpackChunkName: "routeCommunitiesViewChannel" */ './channel.vue'),

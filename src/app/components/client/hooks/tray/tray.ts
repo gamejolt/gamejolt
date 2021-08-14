@@ -1,11 +1,11 @@
-import { Location } from 'vue-router';
+import { RouteLocationRaw } from 'vue-router';
 import { Client } from '../../../../../_common/client/client.service';
 import { Translate } from '../../../../../_common/translate/translate.service';
 import { store } from '../../../../store/index';
 import { router } from '../../../../views/index';
 import { UserTokenModal } from '../../../user/token-modal/token-modal.service';
 
-function go(location: Location) {
+function go(location: RouteLocationRaw) {
 	router.push(location);
 	Client.show();
 }

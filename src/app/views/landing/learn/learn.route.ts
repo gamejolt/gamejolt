@@ -1,6 +1,6 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeLandingLearn: RouteConfig = {
+export const routeLandingLearn: RouteRecordRaw = {
 	name: 'landing.learn',
 	path: '/learn',
 	component: () => import(/* webpackChunkName: "routeLandingLearn" */ './learn.vue'),

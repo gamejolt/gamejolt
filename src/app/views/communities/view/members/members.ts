@@ -1,5 +1,5 @@
 import { Inject, Options } from 'vue-property-decorator';
-import { Route } from 'vue-router';
+import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { User } from '../../../../../_common/user/user.model';
@@ -7,7 +7,7 @@ import AppFollowerList from '../../../../components/follower/list/list.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 
-function getFetchUrl(route: Route) {
+function getFetchUrl(route: RouteLocationNormalized) {
 	return `/web/communities/members/${route.params.path}`;
 }
 

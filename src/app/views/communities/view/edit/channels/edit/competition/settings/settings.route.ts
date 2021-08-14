@@ -1,6 +1,6 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeCommunitiesViewEditChannelsCompetitionSettings: RouteConfig = {
+export const routeCommunitiesViewEditChannelsCompetitionSettings: RouteRecordRaw = {
 	name: 'communities.view.edit.channels.competition.settings',
 	path: 'settings',
 	component: () =>

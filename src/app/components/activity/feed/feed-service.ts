@@ -1,6 +1,6 @@
-import { Location } from 'vue-router';
-import { Route } from 'vue-router/types/router';
+import { RouteLocationNormalized } from 'vue-router';
 import { arrayRemove } from '../../../../utils/array';
+import { RouteLocationDefinition } from '../../../../utils/router';
 import { EventItem } from '../../../../_common/event-item/event-item.model';
 import { FiresidePostGotoGrowl } from '../../../../_common/fireside/post/goto-growl/goto-growl.service';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
@@ -42,7 +42,7 @@ type BootstrapOptions = ActivityFeedViewOptions & ActivityFeedStateOptions;
 export class ActivityFeedService {
 	private static cache: ActivityFeedCachedState[] = [];
 
-	static makeFeedUrl(route: Route, url: string) {
+	static makeFeedUrl(route: RouteLocationNormalized, url: string) {
 		if (url.indexOf('?') === -1) {
 			url += '?ignore';
 		}
@@ -94,7 +94,7 @@ export class ActivityFeedService {
 	 * Note: game posts may now be managed through the author's user profile
 	 * as well as the game's dashboard.
 	 */
-	private static isInCorrectManageRoute(post: FiresidePost, route: Route) {
+	private static isInCorrectManageRoute(post: FiresidePost, route: RouteLocationNormalized) {
 		if (post.post_to_user_profile && this.isInCorrectUserManageRoute(post.user, route)) {
 			return true;
 		}
@@ -106,21 +106,21 @@ export class ActivityFeedService {
 		return this.isInCorrectUserManageRoute(post.user, route);
 	}
 
-	private static isInCorrectGameManageRoute(game: Game, route: Route) {
+	private static isInCorrectGameManageRoute(game: Game, route: RouteLocationNormalized) {
 		return (
 			route.name === 'dash.games.manage.devlog' &&
 			route.params.id.toString() === game.id.toString()
 		);
 	}
 
-	private static isInCorrectUserManageRoute(user: User, route: Route) {
+	private static isInCorrectUserManageRoute(user: User, route: RouteLocationNormalized) {
 		return route.name === 'profile.overview' && route.params.username === user.username;
 	}
 
 	/**
 	 * Checks if the feed is correct for the post on the current route.
 	 */
-	private static isInCorrectManageFeed(post: FiresidePost, route: Route) {
+	private static isInCorrectManageFeed(post: FiresidePost, route: RouteLocationNormalized) {
 		if (post.status === FiresidePost.STATUS_ACTIVE) {
 			return !route.query['tab'];
 		} else if (post.status === FiresidePost.STATUS_DRAFT) {
@@ -136,14 +136,14 @@ export class ActivityFeedService {
 	/**
 	 * Checks if the currently active feed is a scheduled feed.
 	 */
-	private static isScheduledFeed(route: Route) {
+	private static isScheduledFeed(route: RouteLocationNormalized) {
 		return route.query['tab'] === 'scheduled';
 	}
 
 	/**
 	 * Checks if we are in the correct game overview route for a post.
 	 */
-	private static isInCorrectGameOverview(post: FiresidePost, route: Route) {
+	private static isInCorrectGameOverview(post: FiresidePost, route: RouteLocationNormalized) {
 		return (
 			post.game instanceof Game &&
 			route.name === 'discover.games.view.overview' &&
@@ -156,18 +156,24 @@ export class ActivityFeedService {
 	 * Returns the correct location for a post's manage feed.
 	 * Assumes the route name/params are already correct.
 	 */
-	private static getCorrectManageFeedLocation(post: FiresidePost, route: Route): Location {
-		const location = {
-			name: route.name,
+	private static getCorrectManageFeedLocation(
+		post: FiresidePost,
+		route: RouteLocationNormalized
+	): RouteLocationDefinition {
+		const location: RouteLocationDefinition = {
+			name: route.name ?? undefined,
 			params: route.params,
-		} as any;
+		};
 
 		this.applyCorrectManageFeedLocation(post, location);
 
 		return location;
 	}
 
-	private static applyCorrectManageFeedLocation(post: FiresidePost, location: Location) {
+	private static applyCorrectManageFeedLocation(
+		post: FiresidePost,
+		location: RouteLocationDefinition
+	) {
 		const tab = getTabForPost(post);
 		if (tab !== 'active') {
 			location.query = { tab };
@@ -236,7 +242,7 @@ export class ActivityFeedService {
 				this.isInCorrectUserManageRoute(post.user, route) &&
 				post.game
 			) {
-				const location: Location = {
+				const location: RouteLocationDefinition = {
 					name: 'dash.games.manage.devlog',
 					params: {
 						id: post.game.id.toString(),
@@ -330,7 +336,7 @@ export class ActivityFeedService {
 	}
 }
 
-export function feedShouldBlockPost(post: FiresidePost, route: Route) {
+export function feedShouldBlockPost(post: FiresidePost, route: RouteLocationNormalized) {
 	if (post.game === null && post.user.is_blocked) {
 		// We need to show if they force viewed the profile.
 		if (route.name !== 'profile.overview' || route.params.username !== post.user.username) {

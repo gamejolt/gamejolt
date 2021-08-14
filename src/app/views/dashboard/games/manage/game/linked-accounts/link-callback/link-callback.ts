@@ -1,6 +1,6 @@
 import { h } from 'vue';
 import { Options } from 'vue-property-decorator';
-import { Route } from 'vue-router';
+import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../../../../_common/api/api.service';
 import {
 	showErrorGrowl,
@@ -23,7 +23,7 @@ import { RouteStore, RouteStoreModule } from '../../../manage.store';
 	resolver({ route }) {
 		const url = RouteDashGamesManageGameLinkedAccountsLinkCallback.constructUrl(
 			'/web/dash/linked-accounts/link-callback/',
-			parseInt(route.params.id, 10),
+			parseInt(route.params.id as string, 10),
 			route
 		);
 
@@ -34,7 +34,7 @@ export default class RouteDashGamesManageGameLinkedAccountsLinkCallback extends 
 	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
-	private static constructUrl(baseUrl: string, gameId: number, route: Route) {
+	private static constructUrl(baseUrl: string, gameId: number, route: RouteLocationNormalized) {
 		let url = baseUrl + route.params.provider;
 		let firstParam = true;
 
@@ -56,7 +56,7 @@ export default class RouteDashGamesManageGameLinkedAccountsLinkCallback extends 
 			return;
 		}
 
-		const provider = this.$route.params.provider;
+		const provider = this.$route.params.provider as string;
 		const providerName = getLinkedAccountProviderDisplayName(provider);
 		if (!$payload.success || !$payload.account) {
 			showErrorGrowl(

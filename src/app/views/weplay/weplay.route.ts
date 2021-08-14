@@ -1,6 +1,6 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeWeplay: RouteConfig = {
+export const routeWeplay: RouteRecordRaw = {
 	name: 'weplay',
 	path: '/stajoltia',
 	component: () => import(/* webpackChunkName: "routeWeplay" */ './weplay.vue'),

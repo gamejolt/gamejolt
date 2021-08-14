@@ -1,7 +1,7 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeCommunitiesViewEditChannelsList: RouteConfig = {
+export const routeCommunitiesViewEditChannelsList: RouteRecordRaw = {
 	name: 'communities.view.edit.channels.list',
-	path: '/c/:path/edit/:id(\\d+)/channels',
+	path: '',
 	component: () => import(/* webpackChunkName: "routeCommunitiesViewEdit" */ './list.vue'),
 };

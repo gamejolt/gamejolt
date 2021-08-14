@@ -1,8 +1,8 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeDashGamesManageApiOverview: RouteConfig = {
+export const routeDashGamesManageApiOverview: RouteRecordRaw = {
 	name: 'dash.games.manage.api.overview',
-	path: '/dashboard/games/:id(\\d+)/api',
+	path: '',
 	component: () =>
 		import(/* webpackChunkName: "routeDashGamesManageApiOverview" */ './overview.vue'),
 	children: [

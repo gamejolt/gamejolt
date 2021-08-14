@@ -5,7 +5,7 @@ import {
 	setCurrentScreen,
 	setUserId,
 } from 'firebase/analytics';
-import VueRouter from 'vue-router';
+import { Router } from 'vue-router';
 import { arrayRemove } from '../../utils/array';
 import { AppPromotionSource } from '../../utils/mobile-app';
 import { AuthMethod } from '../auth/auth.service';
@@ -92,7 +92,7 @@ export function initAnalytics(store: WithAppStore) {
 /**
  * Can be called to hook into the router to track pageviews automatically.
  */
-export function initAnalyticsRouter(router: VueRouter) {
+export function initAnalyticsRouter(router: Router) {
 	if (GJ_IS_SSR || GJ_IS_CLIENT) {
 		return;
 	}
@@ -104,8 +104,8 @@ export function initAnalyticsRouter(router: VueRouter) {
 	});
 
 	onRouteChangeAfter.subscribe(() => {
-		const route = router.currentRoute;
-		const analyticsPath = route.meta.analyticsPath;
+		const route = router.currentRoute.value;
+		const analyticsPath = route.meta.analyticsPath as string | undefined;
 
 		// Track the page view using the analyticsPath if we have one
 		// assigned to the route meta.

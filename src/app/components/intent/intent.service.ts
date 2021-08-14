@@ -1,5 +1,5 @@
-import { Route } from 'vue-router';
-import { LocationRedirect } from '../../../utils/router';
+import { RouteLocationNormalized } from 'vue-router';
+import { RouteLocationRedirect } from '../../../utils/router';
 import { showInfoGrowl } from '../../../_common/growls/growls.service';
 
 export interface Intent {
@@ -8,9 +8,9 @@ export interface Intent {
 }
 
 export class IntentService {
-	static checkRoute(route: Route, ...intents: Intent[]) {
+	static checkRoute(route: RouteLocationNormalized, ...intents: Intent[]) {
 		if (route.query.intent) {
-			for (let intent of intents) {
+			for (const intent of intents) {
 				if (route.query.intent === intent.intent) {
 					showInfoGrowl({
 						sticky: true,
@@ -19,7 +19,7 @@ export class IntentService {
 					break;
 				}
 			}
-			return LocationRedirect.fromRoute(route, {}, { intent: undefined });
+			return RouteLocationRedirect.fromRoute(route, {}, { intent: undefined });
 		}
 	}
 }

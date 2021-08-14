@@ -179,9 +179,12 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 			transitionMap = TRANSITION_MAP_DEVLOG;
 		}
 
-		const routeName = router.currentRoute.name!;
+		const routeName = router.currentRoute.value.name!;
 		for (const current in transitionMap) {
-			if (routeName.indexOf(`${STATE_PREFIX}.${current}`) !== -1) {
+			if (
+				typeof routeName === 'string' &&
+				routeName.indexOf(`${STATE_PREFIX}.${current}`) !== -1
+			) {
 				const next = transitionMap[current];
 				router.push({
 					name: `${STATE_PREFIX}.${next}`,
@@ -211,7 +214,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 
 		router.push({
 			name: 'dash.games.manage.game.overview',
-			params: router.currentRoute.params,
+			params: router.currentRoute.value.params,
 		});
 	}
 
@@ -222,7 +225,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 		// Simply go to the overview and pull out of the wizard!
 		router.push({
 			name: 'dash.games.manage.game.overview',
-			params: router.currentRoute.params,
+			params: router.currentRoute.value.params,
 		});
 	}
 

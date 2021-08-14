@@ -1,6 +1,6 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeDashAccountWithdrawFunds: RouteConfig = {
+export const routeDashAccountWithdrawFunds: RouteRecordRaw = {
 	name: 'dash.account.withdraw-funds',
 	path: 'withdraw-funds',
 	alias: 'developer/withdraw-funds',

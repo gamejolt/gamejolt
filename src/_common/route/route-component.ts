@@ -1,9 +1,9 @@
-import { ComponentOptions, defineAsyncComponent } from 'vue';
+import { ComponentOptions, ComponentOptionsMixin, defineAsyncComponent } from 'vue';
 import { createDecorator } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
-import VueRouter, { RawLocation, Route } from 'vue-router';
+import { NavigationGuardNext, RouteLocationNormalized, Router } from 'vue-router';
 import { arrayRemove } from '../../utils/array';
-import { LocationRedirect } from '../../utils/router';
+import { RouteLocationRedirect } from '../../utils/router';
 import { ensureConfig } from '../config/config.service';
 import { HistoryCache } from '../history/cache/cache.service';
 import { setMetaTitle } from '../meta/meta-service';
@@ -23,12 +23,16 @@ export interface RouteResolverOptions {
 	cache?: boolean;
 	reloadOnHashChange?: boolean;
 	deps?: { params?: string[]; query?: string[] };
-	resolver?: (data: { route: Route }) => Promise<any>;
-	resolveStore?: (data: { route: Route; payload: any; fromCache: boolean }) => void;
+	resolver?: (data: { route: RouteLocationNormalized }) => Promise<any>;
+	resolveStore?: (data: {
+		route: RouteLocationNormalized;
+		payload: any;
+		fromCache: boolean;
+	}) => void;
 }
 
 export type RouteStoreResolveCallback = (data: {
-	route: Route;
+	route: RouteLocationNormalized;
 	payload: any;
 	fromCache: boolean;
 }) => void;
@@ -68,15 +72,15 @@ function getChangedProperties(base: { [k: string]: any }, compare: { [k: string]
 class Resolver {
 	private static resolvers: Resolver[] = [];
 
-	payload: any | PayloadError | LocationRedirect;
+	payload: any | PayloadError | RouteLocationRedirect;
 
-	constructor(public componentName: string, public route: Route) {}
+	constructor(public componentName: string, public route: RouteLocationNormalized) {}
 
-	isValid(currentRoute: Route) {
+	isValid(currentRoute: RouteLocationNormalized) {
 		return Resolver.resolvers.indexOf(this) !== -1 && this.route === currentRoute;
 	}
 
-	static startResolve(componentOptions: ComponentOptions<Vue>, to: Route) {
+	static startResolve(componentOptions: ComponentOptions, to: RouteLocationNormalized) {
 		const resolver = new Resolver(componentOptions.name!, to);
 		Resolver.resolvers.push(resolver);
 		return resolver;
@@ -104,7 +108,7 @@ class Resolver {
  * out of the route, and assign the payload to it so that "created()" hook can
  * resolve it synchonously later.
  */
-export async function asyncRouteLoader(loader: Promise<any>, router: VueRouter) {
+export async function asyncRouteLoader(loader: Promise<any>, router: Router) {
 	// TODO(vue3): who knows what I'm supposed to do here...
 	const component = defineAsyncComponent(() => loader);
 	if (!GJ_IS_SSR) {
@@ -112,8 +116,8 @@ export async function asyncRouteLoader(loader: Promise<any>, router: VueRouter) 
 	}
 
 	// Basically copy the flow of the beforeRouteEnter for SSR.
-	const options = component.options as ComponentOptions<Vue>;
-	const to = router.currentRoute;
+	const options = component.options as ComponentOptions;
+	const to = router.currentRoute.value;
 	const resolver = Resolver.startResolve(options, to);
 
 	const { payload } = await getPayload(options, to, false);
@@ -140,9 +144,9 @@ export function RouteResolver(options: RouteResolverOptions = {}) {
 			// This will get called by the browser and server. We call their
 			// annotated function for fetching the data for the route.
 			async beforeRouteEnter(
-				to: Route,
-				_from: Route,
-				next: (to?: RawLocation | false | ((vm: Vue) => any) | void) => void
+				to: RouteLocationNormalized,
+				_from: RouteLocationNormalized,
+				next: NavigationGuardNext
 			) {
 				const name = componentOptions.name!;
 				const resolverOptions = componentOptions.routeResolverOptions || {};
@@ -204,7 +208,7 @@ export function RouteResolver(options: RouteResolverOptions = {}) {
 					await vm.resolveRoute(to, resolver);
 				});
 			},
-		} as ComponentOptions<Vue>);
+		} as ComponentOptionsMixin);
 	});
 }
 
@@ -296,7 +300,7 @@ export class BaseRouteComponent extends Vue {
 		return this._reloadRoute(false);
 	}
 
-	private _findDeps(to: Route) {
+	private _findDeps(to: RouteLocationNormalized) {
 		const collected: BaseRouteComponent[] = [];
 		let found = false;
 
@@ -344,7 +348,7 @@ export class BaseRouteComponent extends Vue {
 		return { params, query };
 	}
 
-	private async _onRouteChange(to: Route, from: Route) {
+	private async _onRouteChange(to: RouteLocationNormalized, from: RouteLocationNormalized) {
 		const options = this.$options.routeResolverOptions || {};
 
 		// Only do work if the route params/query has actually changed.
@@ -357,7 +361,7 @@ export class BaseRouteComponent extends Vue {
 
 	private async _reloadRoute(useCache = true) {
 		const options = this.$options.routeResolverOptions || {};
-		const to = this.$router.currentRoute;
+		const to = this.$router.currentRoute.value;
 
 		this.routeCreated();
 
@@ -376,7 +380,7 @@ export class BaseRouteComponent extends Vue {
 	// Make sure this function isn't an async func. We want to make sure it can
 	// do most of its work in the same tick so we can call it in the created()
 	// hook after SSR returns data to client.
-	resolveRoute(route: Route, resolver: Resolver, fromCache?: boolean) {
+	resolveRoute(route: RouteLocationNormalized, resolver: Resolver, fromCache?: boolean) {
 		const resolverOptions = this.$options.routeResolverOptions || {};
 		const name = this.$options.name!;
 
@@ -412,7 +416,7 @@ export class BaseRouteComponent extends Vue {
 					this.$store.commit('app/setError', payload.status || 500);
 				}
 				return;
-			} else if (payload instanceof LocationRedirect) {
+			} else if (payload instanceof RouteLocationRedirect) {
 				// We want to clear out all current resolvers before doing the
 				// redirect. They will re-resolve after the route changes.
 				if (GJ_IS_SSR) {
@@ -457,7 +461,7 @@ export class BaseRouteComponent extends Vue {
 		}
 	}
 
-	private async _refreshCache(route: Route) {
+	private async _refreshCache(route: RouteLocationNormalized) {
 		const resolver = Resolver.startResolve(this.$options, route);
 		const { payload } = await getPayload(this.$options, route, false);
 		resolver.payload = payload;
@@ -468,7 +472,7 @@ export class BaseRouteComponent extends Vue {
 	 * If all of the previous params are the same, then the already activated components can stay
 	 * the same. We only initialize routes that have probably changed between updates.
 	 */
-	private _canSkipRouteUpdate(from: Route, to: Route) {
+	private _canSkipRouteUpdate(from: RouteLocationNormalized, to: RouteLocationNormalized) {
 		const deps = this._findDeps(to);
 		const changedParams = getChangedProperties(from.params, to.params);
 		const changedQuery = getChangedProperties(from.query, to.query);
@@ -519,8 +523,8 @@ function isLeafRoute(name?: string) {
  * cache data.
  */
 async function getPayload(
-	componentOptions: ComponentOptions<Vue>,
-	route: Route,
+	componentOptions: ComponentOptions,
+	route: RouteLocationNormalized,
 	useCache: boolean
 ) {
 	const resolverOptions = componentOptions.routeResolverOptions || {};
@@ -528,10 +532,10 @@ async function getPayload(
 	// Make a default resolver that returned void if there is none set.
 	const resolverFunc = resolverOptions.resolver || (() => Promise.resolve());
 
-	function resolveStore(route_: Route, payload: any, fromCache: boolean) {
+	function resolveStore(route_: RouteLocationNormalized, payload: any, fromCache: boolean) {
 		// We never resolve the store if the payload was a redirect. It'll
 		// eventually get handled in the `resolveRoute` function.
-		if (!resolverOptions.resolveStore || payload instanceof LocationRedirect) {
+		if (!resolverOptions.resolveStore || payload instanceof RouteLocationRedirect) {
 			return;
 		}
 

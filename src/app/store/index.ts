@@ -1,4 +1,4 @@
-import { Route } from 'vue-router';
+import { RouteLocationNormalized } from 'vue-router';
 import { sync } from 'vuex-router-sync';
 import { VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
 import { CommunityJoinLocation } from '../../_common/analytics/analytics.service';
@@ -9,7 +9,7 @@ import { Community, joinCommunity, leaveCommunity } from '../../_common/communit
 import { Connection } from '../../_common/connection/connection-service';
 import {
 	ContentFocus,
-	registerContentFocusWatcher as registerFocusWatcher,
+	registerContentFocusWatcher as registerFocusWatcher
 } from '../../_common/content-focus/content-focus.service';
 import { FiresidePost } from '../../_common/fireside/post/post-model';
 import { showSuccessGrowl } from '../../_common/growls/growls.service';
@@ -18,13 +18,13 @@ import { Screen } from '../../_common/screen/screen-service';
 import {
 	SidebarActions,
 	SidebarMutations,
-	SidebarStore,
+	SidebarStore
 } from '../../_common/sidebar/sidebar.store';
 import {
 	Actions as AppActions,
 	AppStore,
 	appStore,
-	Mutations as AppMutations,
+	Mutations as AppMutations
 } from '../../_common/store/app-store';
 import { ThemeActions, ThemeMutations, ThemeStore } from '../../_common/theme/theme.store';
 import { Translate } from '../../_common/translate/translate.service';
@@ -133,7 +133,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	clientLibrary!: _ClientLibraryMod.ClientLibraryStore;
 
 	/** From the vuex-router-sync. */
-	route!: Route;
+	route!: RouteLocationNormalized;
 
 	grid: GridClient | null = null;
 

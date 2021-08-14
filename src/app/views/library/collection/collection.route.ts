@@ -1,4 +1,4 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
 const routes: Array<[string, string]> = [
 	['playlist', '/playlist/:slug/:id(\\d+)'],
@@ -10,7 +10,7 @@ const routes: Array<[string, string]> = [
 	['jam', '/jam/:id/games'],
 ];
 
-export const routeLibraryCollectionRoutes: RouteConfig[] = routes.map(route => {
+export const routeLibraryCollectionRoutes: RouteRecordRaw[] = routes.map(route => {
 	return {
 		name: `library.collection.${route[0]}`,
 		path: route[1],

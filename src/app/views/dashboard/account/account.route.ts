@@ -1,4 +1,4 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 import { routeDashAccountAddresses } from './addresses/addresses.route';
 import { routeDashAccountBlocks } from './blocks/blocks.route';
 import { routeDashAccountChangePassword } from './change-password/change-password.route';
@@ -13,8 +13,8 @@ import { routeDashAccountPurchasesView } from './purchases/view/view.route';
 import { routeDashAccountSite } from './site/site.route';
 import { routeDashAccountWithdrawFunds } from './withdraw-funds/withdraw-funds.route';
 
-export const routeDashAccount: RouteConfig = {
-	path: '/dashboard',
+export const routeDashAccount: RouteRecordRaw = {
+	path: '',
 	component: () => import(/* webpackChunkName: "routeDashAccount" */ './account.vue'),
 	children: [
 		routeDashAccountEdit,

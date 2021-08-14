@@ -1,6 +1,6 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeWelcome: RouteConfig = {
+export const routeWelcome: RouteRecordRaw = {
 	name: 'welcome',
 	path: '/welcome',
 	component: () => import(/* webpackChunkName: "routeWelcome" */ './welcome.vue'),

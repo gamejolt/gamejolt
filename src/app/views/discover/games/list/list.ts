@@ -1,6 +1,6 @@
 import { Options } from 'vue-property-decorator';
 import { arrayShuffle } from '../../../../../utils/array';
-import { LocationRedirect } from '../../../../../utils/router';
+import { RouteLocationRedirect } from '../../../../../utils/router';
 import { titleCase } from '../../../../../utils/string';
 import { Api } from '../../../../../_common/api/api.service';
 import AppExpand from '../../../../../_common/expand/expand.vue';
@@ -45,7 +45,7 @@ const listingKey = 'CachedListing';
 	async resolver({ route }) {
 		const location = checkGameFilteringRoute(route);
 		if (location) {
-			return new LocationRedirect(location);
+			return new RouteLocationRedirect(location);
 		}
 
 		const filtering = new GameFilteringContainer(route);
