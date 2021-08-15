@@ -163,7 +163,7 @@
 		"vuex-router-sync": "5.0.0",
 		"webpack": "4.26.0",
 		"webpack-bundle-analyzer": "3.8.0",
-		"webpack-dev-server": "3.1.10",
+		"webpack-dev-server": "3.11.2",
 		"webpack-pwa-manifest": "3.7.1",
 		"write-file-webpack-plugin": "4.5.0"
 	},

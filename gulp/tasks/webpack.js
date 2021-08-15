@@ -166,7 +166,11 @@ module.exports = function (config) {
 		let indexHtml = section === 'app' ? 'index.html' : section + '.html';
 
 		if (shouldUseHMR) {
-			appEntries.push('webpack-dev-server/client?http://localhost:' + config.port + '/');
+			const devServerUrl = isInDocker
+				? 'https://webpack.development.gamejolt.com:443'
+				: 'http://localhost:' + config.port;
+
+			appEntries.push('webpack-dev-server/client?' + devServerUrl + '/');
 			appEntries.push('webpack/hot/dev-server');
 		}
 
@@ -570,15 +574,23 @@ module.exports = function (config) {
 									},
 								],
 							},
-							public: 'development.gamejolt.com',
-							quiet: true,
+							public: isInDocker
+								? 'webpack.development.gamejolt.com'
+								: 'development.gamejolt.com',
+							transportMode: 'ws',
+							// quiet: true,
+							progress: true,
 							disableHostCheck: hasTunnels || isInDocker,
 							compress: hasTunnels,
 							hot: shouldUseHMR,
+							watchOptions: {
+								ignored: /node_modules/,
+								poll: 300,
+							},
 						});
 
 						if (config.ssr !== 'server') {
-							server.listen(port + portOffset, isInDocker ? '0.0.0.0' : 'localhost');
+							server.listen(port + portOffset, isInDocker ? '0.0.0.0' : '127.0.0.1');
 						}
 						portOffset += 1;
 					}
