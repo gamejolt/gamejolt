@@ -1,14 +1,13 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { trackShareLink } from '../../../analytics/analytics.service';
-import { Model } from '../../../model/model.service';
 import { Navigate } from '../../../navigate/navigate.service';
-import { copyShareLink, getShareResourceForModel, ShareProvider } from '../../share.service';
+import { copyShareLink, ShareProvider, ShareResource } from '../../share.service';
 
 @Component({})
 export default class AppShareCardTile extends Vue {
-	@Prop({ type: Model, required: true })
-	model!: Model;
+	@Prop({ type: String, required: true })
+	resource!: ShareResource;
 
 	@Prop({ type: String, required: true })
 	url!: string;
@@ -71,8 +70,7 @@ export default class AppShareCardTile extends Vue {
 	}
 
 	private get phrase() {
-		const thing = getShareResourceForModel(this.model) ?? 'thing';
-		return `Check out this awesome ${thing} on Game Jolt!`;
+		return `Check out this awesome ${this.resource} on Game Jolt!`;
 	}
 
 	private get providerLinkData() {
@@ -131,7 +129,7 @@ export default class AppShareCardTile extends Vue {
 
 			default:
 				// If we don't have support for a link for some reason, just copy it.
-				copyShareLink(this.url, this.model);
+				copyShareLink(this.url, this.resource);
 				return;
 		}
 
@@ -147,7 +145,7 @@ export default class AppShareCardTile extends Vue {
 			return;
 		}
 
-		trackShareLink(this.url, { provider: this.provider, model: this.model });
+		trackShareLink(this.url, { provider: this.provider, resource: this.resource });
 
 		if (inNewWindow) {
 			Navigate.newWindow(providerLink);

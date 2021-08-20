@@ -4,7 +4,7 @@
 	<app-share-card
 		v-if="useShareCard"
 		class="-share-card"
-		:model="fireside"
+		resource="fireside"
 		:url="shareUrl"
 		:hide-heading="hideHeading"
 		offset-color

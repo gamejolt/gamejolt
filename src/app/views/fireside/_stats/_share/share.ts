@@ -40,6 +40,6 @@ export default class AppFiresideShare extends Vue {
 			return;
 		}
 
-		copyShareLink(this.shareUrl, this.fireside);
+		copyShareLink(this.shareUrl, 'fireside');
 	}
 }

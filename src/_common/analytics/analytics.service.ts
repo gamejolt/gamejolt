@@ -12,8 +12,7 @@ import { AuthMethod } from '../auth/auth.service';
 import { CommentVote } from '../comment/vote/vote-model';
 import { ConfigOption } from '../config/config.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
-import { Model } from '../model/model.service';
-import { getShareResourceForModel, ShareProvider } from '../share/share.service';
+import { ShareProvider, ShareResource } from '../share/share.service';
 import { WithAppStore } from '../store/app-store';
 import { EventBus } from '../system/event/event-bus.service';
 
@@ -350,10 +349,12 @@ export function trackPostPublish() {
 	_trackEvent('post_publish', {});
 }
 
-export function trackShareLink(url: string, params: { model: Model; provider?: ShareProvider }) {
-	const { provider, model } = params;
+export function trackShareLink(
+	url: string,
+	params: { resource: ShareResource; provider?: ShareProvider }
+) {
+	const { provider, resource } = params;
 	const method = provider ? 'external' : 'copy';
-	const resource = getShareResourceForModel(model) ?? 'other';
 
 	_trackEvent('share_link', {
 		url: encodeURI(url),

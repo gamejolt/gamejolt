@@ -223,6 +223,6 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 
 	copyShareUrl() {
 		const url = getAbsoluteLink(this.$router, this.community.routeLocation);
-		copyShareLink(url);
+		copyShareLink(url, 'community');
 	}
 }

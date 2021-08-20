@@ -177,7 +177,7 @@ export default class AppPostControlsMore extends Vue {
 	}
 
 	copyShareUrl() {
-		copyShareLink(this.post.url);
+		copyShareLink(this.post.url, 'post');
 	}
 
 	report() {

@@ -1,7 +1,6 @@
 import { Component, Prop } from 'vue-property-decorator';
 import { BaseModal } from '../../../modal/base';
-import { Model } from '../../../model/model.service';
-import { copyShareLink, ShareProvider } from '../../share.service';
+import { copyShareLink, ShareProvider, ShareResource } from '../../share.service';
 import AppShareCardTile from '../_tile/tile.vue';
 
 @Component({
@@ -10,8 +9,8 @@ import AppShareCardTile from '../_tile/tile.vue';
 	},
 })
 export default class AppShareCardModal extends BaseModal {
-	@Prop({ type: Model, required: true })
-	model!: Model;
+	@Prop({ type: String, required: true })
+	resource!: ShareResource;
 
 	@Prop({ type: String, required: true })
 	url!: string;
@@ -27,6 +26,6 @@ export default class AppShareCardModal extends BaseModal {
 	];
 
 	copyLink() {
-		copyShareLink(this.url, this.model);
+		copyShareLink(this.url, this.resource);
 	}
 }

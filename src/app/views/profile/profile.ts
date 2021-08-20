@@ -192,7 +192,7 @@ export default class RouteProfile extends BaseRouteComponent {
 			return;
 		}
 		const url = Environment.baseUrl + this.user.url;
-		copyShareLink(url, this.user);
+		copyShareLink(url, 'user');
 	}
 
 	report() {

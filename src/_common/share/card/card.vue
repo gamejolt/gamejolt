@@ -22,7 +22,7 @@
 				<app-share-card-tile
 					v-for="i in providers"
 					:key="i"
-					:model="model"
+					:resource="resource"
 					:url="url"
 					:provider="i"
 					dense
