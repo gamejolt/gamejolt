@@ -73,7 +73,9 @@ export class Navigate {
 		 * Including this will attempt to open as a new window instead of a new
 		 * tab. Pass an empty object to use the defaults.
 		 *
-		 * `widthFactor` and `heightFactor` are 1/2 screen size by default.
+		 * - `heightFactor = 0.5`
+		 * - `widthFactor = 0.5`
+		 * - `center = true`
 		 */
 		externalParams?: {
 			widthFactor?: number;
