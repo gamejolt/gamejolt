@@ -1,4 +1,4 @@
-<script lang="ts" src="./modal"></script>
+<script lang="ts" src="./stream-setup-modal"></script>
 
 <template>
 	<app-modal>
@@ -8,14 +8,7 @@
 			</app-button>
 		</div>
 		<div class="modal-body">
-			<app-fireside-stats
-				:fireside="fireside"
-				:status="status"
-				:host-rtc="hostRtc"
-				:is-streaming="isStreaming"
-			/>
+			<app-stream-setup :fireside-host-rtc="firesideHostRtc" />
 		</div>
 	</app-modal>
 </template>
-
-<style lang="stylus" scoped></style>

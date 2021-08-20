@@ -578,8 +578,8 @@ module.exports = function (config) {
 								? 'webpack.development.gamejolt.com'
 								: 'development.gamejolt.com',
 							transportMode: 'ws',
-							// quiet: true,
-							progress: true,
+							quiet: true,
+							// progress: true,
 							disableHostCheck: hasTunnels || isInDocker,
 							compress: hasTunnels,
 							hot: shouldUseHMR,

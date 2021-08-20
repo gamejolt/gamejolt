@@ -33,6 +33,7 @@ import AppChatWindowOutput from '../../components/chat/window/output/output.vue'
 import AppChatWindowSend from '../../components/chat/window/send/send.vue';
 import { EVENT_UPDATE, FiresideChannel } from '../../components/grid/fireside-channel';
 import { store, Store } from '../../store';
+import { FiresideHostRtc } from './fireside-host-rtc';
 import {
 	destroyFiresideRTC,
 	FiresideRTC,
@@ -45,6 +46,7 @@ import { FiresideEditModal } from './_edit-modal/edit-modal.service';
 import AppFiresideHostList from './_host-list/host-list.vue';
 import { FiresideStatsModal } from './_stats/modal/modal.service';
 import AppFiresideStats from './_stats/stats.vue';
+import { StreamSetupModal } from './_stream-setup/stream-setup-modal.service';
 import AppFiresideStream from './_stream/stream.vue';
 type RoutePayload = {
 	fireside: any;
@@ -104,6 +106,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	@InjectReactive(ChatKey) chat!: ChatClient;
 	@ProvideReactive(FiresideRTCKey) rtc: FiresideRTC | null = null;
 
+	private streamingAppId: string | null = null;
 	private fireside: Fireside | null = null;
 	private gridChannel: FiresideChannel | null = null;
 	private chatChannel: ChatRoomChannel | null = null;
@@ -112,6 +115,8 @@ export default class RouteFireside extends BaseRouteComponent {
 	private gridPreviousConnectedState: boolean | null = null;
 	status: RouteStatus = 'initial';
 	hasExpiryWarning = false; // Visually shows a warning to the owner when the fireside's time is running low.
+
+	hostRtc: FiresideHostRtc | null = null;
 
 	readonly Screen = Screen;
 	readonly number = number;
@@ -221,6 +226,8 @@ export default class RouteFireside extends BaseRouteComponent {
 			this.disconnect();
 		}
 
+		console.log($payload);
+		this.streamingAppId = $payload.streamingAppId;
 		this.fireside = new Fireside($payload.fireside);
 		this.hasExpiryWarning = false;
 		this.setPageTheme();
@@ -413,6 +420,7 @@ export default class RouteFireside extends BaseRouteComponent {
 				this.status = 'setup-failed';
 				return;
 			}
+			this.streamingAppId = payload.streamingAppId;
 			this.fireside = new Fireside(payload.fireside);
 		} catch (error) {
 			console.debug(`[FIRESIDE] Setup failure 2.`, error);
@@ -444,6 +452,16 @@ export default class RouteFireside extends BaseRouteComponent {
 				return;
 			}
 			this.fireside.role = new FiresideRole(rolePayload.role);
+		}
+
+		if (this.streamingAppId && this.fireside.role.canStream) {
+			console.log('creating host rtc');
+			this.hostRtc = new FiresideHostRtc(
+				this.streamingAppId,
+				this.user.id,
+				this.fireside.id,
+				this.fireside.role
+			);
 		}
 
 		// --- Join Grid channel.
@@ -532,6 +550,9 @@ export default class RouteFireside extends BaseRouteComponent {
 
 		this.status = 'disconnected';
 
+		this.hostRtc?.destroy();
+		this.hostRtc = null;
+
 		if (this.grid && this.grid.connected && this.gridChannel) {
 			this.gridChannel.leave();
 		}
@@ -543,6 +564,8 @@ export default class RouteFireside extends BaseRouteComponent {
 		}
 
 		this.chatChannel = null;
+
+		StreamSetupModal.close();
 
 		this.destroyRtc();
 
@@ -601,6 +624,7 @@ export default class RouteFireside extends BaseRouteComponent {
 		}
 
 		destroyFiresideRTC(this.rtc);
+
 		this.rtc = null;
 	}
 
@@ -620,7 +644,7 @@ export default class RouteFireside extends BaseRouteComponent {
 		if (!this.fireside) {
 			return;
 		}
-		FiresideStatsModal.show(this.fireside, this.status, this.isStreaming);
+		FiresideStatsModal.show(this.fireside, this.status, this.hostRtc, this.isStreaming);
 	}
 
 	onClickEditFireside() {

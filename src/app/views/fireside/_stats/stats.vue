@@ -67,6 +67,8 @@
 					</translate>
 				</p>
 			</template>
+
+			<app-button v-if="canStream" @click="startStreaming()">Start Streaming</app-button>
 		</app-scroll-scroller>
 		<div>
 			<app-card class="-share-card">

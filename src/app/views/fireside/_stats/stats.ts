@@ -14,6 +14,8 @@ import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue'
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { RouteStatus } from '../fireside';
+import { FiresideHostRtc } from '../fireside-host-rtc';
+import { StreamSetupModal } from '../_stream-setup/stream-setup-modal.service';
 
 @Component({
 	components: {
@@ -35,6 +37,9 @@ export default class AppFiresideStats extends Vue {
 
 	@Prop({ type: Boolean, required: true })
 	isStreaming!: boolean;
+
+	@Prop({ type: FiresideHostRtc, required: false })
+	hostRtc?: FiresideHostRtc;
 
 	@AppState user!: AppStore['user'];
 
@@ -148,6 +153,16 @@ export default class AppFiresideStats extends Vue {
 					`Settle down there. Wait a couple seconds before playing with the fire again.`
 				)
 			);
+		}
+	}
+
+	get canStream() {
+		return !!this.hostRtc;
+	}
+
+	async startStreaming() {
+		if (this.hostRtc) {
+			StreamSetupModal.show(this.hostRtc);
 		}
 	}
 

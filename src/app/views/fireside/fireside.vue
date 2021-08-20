@@ -89,6 +89,7 @@
 					:fireside="fireside"
 					:status="status"
 					:is-streaming="isStreaming"
+					:host-rtc="hostRtc"
 				/>
 			</div>
 
