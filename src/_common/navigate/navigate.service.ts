@@ -67,11 +67,39 @@ export class Navigate {
 		}
 	}
 
-	static newWindow(url: string) {
+	static newWindow(
+		url: string,
+		/**
+		 * Including this will attempt to open as a new window instead of a new
+		 * tab. Pass an empty object to use the defaults.
+		 *
+		 * `widthFactor` and `heightFactor` are 1/2 screen size by default.
+		 */
+		externalParams?: {
+			widthFactor?: number;
+			heightFactor?: number;
+			center?: boolean;
+		}
+	) {
 		if (GJ_IS_CLIENT) {
 			Navigate.gotoExternal(url);
-		} else {
+		} else if (!externalParams) {
 			window.open(url, '_blank');
+		} else {
+			const { widthFactor = 0.5, heightFactor = 0.5, center = true } = externalParams;
+			let width = Math.round(screen.width * widthFactor);
+			let height = Math.round(screen.height * heightFactor);
+			width = Math.min(screen.width, Math.max(100, width));
+			height = Math.min(screen.height, Math.max(100, height));
+			let options = `width=${width},height=${height}`;
+
+			if (center) {
+				const left = Math.max(0, (screen.width - width) / 2);
+				const top = Math.max(0, (screen.height - height) / 2);
+				options += `,left=${left},top=${top}`;
+			}
+
+			window.open(url, '', options);
 		}
 	}
 }
