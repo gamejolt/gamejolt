@@ -1,5 +1,5 @@
 import { Emit, Options, Prop } from 'vue-property-decorator';
-import BaseFormControl from '../base';
+import BaseFormControl from '../controller';
 
 @Options({})
 export default class AppFormControlTextarea extends BaseFormControl {

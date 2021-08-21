@@ -7,7 +7,7 @@ import AppThemeBubble from '../../../theme/bubble/bubble.vue';
 import { ThemePreset } from '../../../theme/preset/preset.model';
 import { makeThemeFromColor, makeThemeFromPreset, Theme } from '../../../theme/theme.model';
 import { AppTooltip } from '../../../tooltip/tooltip-directive';
-import BaseFormControl from '../base';
+import BaseFormControl from '../controller';
 
 interface VueColor {
 	hex: string | null;

@@ -1,3 +1,24 @@
+<script lang="ts" setup>
+defineProps({
+	compact: {
+		type: Boolean,
+	},
+	expandable: {
+		type: Boolean,
+	},
+	expanded: {
+		type: Boolean,
+	},
+	deletable: {
+		type: Boolean,
+	},
+});
+
+const emit = defineEmits({
+	delete: () => true,
+});
+</script>
+
 <template>
 	<legend
 		:class="{
@@ -7,11 +28,11 @@
 		}"
 	>
 		<div class="-inner">
-			<div class="-expander" v-if="expandable">{{ expanded ? `[-]` : `[+]` }}</div>
+			<div v-if="expandable" class="-expander">{{ expanded ? `[-]` : `[+]` }}</div>
 			<div class="-label"><slot /></div>
-			<div class="-compactbar" v-if="compact" />
-			<div class="-delete" v-if="deletable">
-				<app-button sparse circle icon="remove" @click="emitDelete()" />
+			<div v-if="compact" class="-compactbar" />
+			<div v-if="deletable" class="-delete">
+				<app-button sparse circle icon="remove" @click="emit('delete')" />
 			</div>
 		</div>
 	</legend>
@@ -54,5 +75,3 @@
 	flex: none
 	margin-left: 20px
 </style>
-
-<script lang="ts" src="./legend"></script>

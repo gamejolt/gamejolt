@@ -4,7 +4,7 @@ import { ContentContext } from '../../../content/content-context';
 import AppContentEditorTS from '../../../content/content-editor/content-editor';
 import { AppContentEditorLazy } from '../../../content/content-editor/content-editor-lazy';
 import { ContentRules } from '../../../content/content-editor/content-rules';
-import BaseFormControlTS from '../base';
+import BaseFormControlTS from '../controller';
 
 @Options({
 	components: {

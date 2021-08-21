@@ -1,7 +1,7 @@
 import { Options, Prop } from 'vue-property-decorator';
 import { number } from '../../../filters/number';
 import AppProgressBar from '../../../progress/bar/bar.vue';
-import BaseFormControl from '../base';
+import BaseFormControl from '../controller';
 import AppFormControlUploadFileTS from './file';
 import AppFormControlUploadFile from './file.vue';
 

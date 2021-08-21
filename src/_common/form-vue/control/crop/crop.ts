@@ -1,6 +1,6 @@
 import { Options, Prop } from 'vue-property-decorator';
 import AppImgCrop from '../../../img/crop/crop.vue';
-import BaseFormControl from '../base';
+import BaseFormControl from '../controller';
 
 @Options({
 	components: {

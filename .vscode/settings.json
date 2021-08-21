@@ -64,7 +64,7 @@
 	"vetur.validation.templateProps": true,
 	"volar.codeLens.pugTools": false,
 	"volar.tsPlugin": true,
-	"volar.autoCompleteRefs": true,
+	"volar.autoCompleteRefs": false,
 	"volar.codeLens.references": false,
 	"volar.codeLens.scriptSetupTools": false,
 	"volar.preferredTagNameCase": "pascal",

@@ -28,11 +28,13 @@ export default class AppStickerLayer extends Vue {
 	drawer!: DrawerStore;
 
 	@Provide({ to: StickerLayerKey })
-	layer = new StickerLayerController(this.drawer);
+	layer!: StickerLayerController;
 
 	private focusWatcherDeregister!: () => void;
 
 	created() {
+		// TODO(vue3): does this need to be elsewhere if it's being provided?
+		this.layer = new StickerLayerController(this.drawer);
 		registerStickerLayer(this.drawer, this.layer);
 	}
 

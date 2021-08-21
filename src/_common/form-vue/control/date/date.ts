@@ -1,6 +1,6 @@
 import { Options, Prop } from 'vue-property-decorator';
 import AppDatetimePicker from '../../../datetime-picker/datetime-picker.vue';
-import BaseFormControl from '../base';
+import BaseFormControl from '../controller';
 
 @Options({
 	components: {

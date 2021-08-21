@@ -1,5 +1,5 @@
 import { Options, Vue } from 'vue-property-decorator';
-import { AppFormControlError } from '../../../../../../_common/form-vue/control-errors/control-error';
+import AppFormControlError from '../../../../../../_common/form-vue/control-errors/control-error.vue';
 import AppFormControlErrors from '../../../../../../_common/form-vue/control-errors/control-errors.vue';
 import AppFormControl from '../../../../../../_common/form-vue/control/control.vue';
 import AppFormControlRadio from '../../../../../../_common/form-vue/control/radio/radio.vue';

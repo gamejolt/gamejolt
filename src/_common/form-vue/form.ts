@@ -1,9 +1,10 @@
 import { nextTick } from 'vue';
+import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../utils/vue';
 import AppLoadingFade from '../loading/fade/fade.vue';
 import AppLoading from '../loading/loading.vue';
-import BaseFormControl from './control/base';
+import BaseFormControl from './control/controller';
 import { BaseForm } from './form.service';
 
 @Options({

@@ -7,7 +7,7 @@ import { Screen } from '../../../screen/screen-service';
 import { AppTooltip } from '../../../tooltip/tooltip-directive';
 import { AppFormAutosize, AutosizeBootstrap } from '../../autosize.directive';
 import { AppFocusWhen } from '../../focus-when.directive';
-import BaseFormControl from '../base';
+import BaseFormControl from '../controller';
 import AppFormControlMarkdownMediaItems from './media-items/media-items.vue';
 
 @Options({

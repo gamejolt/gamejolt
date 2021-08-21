@@ -2,7 +2,7 @@ import ResizeObserver from 'resize-observer-polyfill';
 import { createTextMaskInputElement } from 'text-mask-core/dist/textMaskCore';
 import { Options, Prop, Watch } from 'vue-property-decorator';
 import { Ruler } from '../../../ruler/ruler-service';
-import BaseFormControl from '../base';
+import BaseFormControl from '../controller';
 
 @Options({})
 export default class AppFormControlPrefixedInput extends BaseFormControl {

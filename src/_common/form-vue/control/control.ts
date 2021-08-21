@@ -1,7 +1,7 @@
 import { createTextMaskInputElement } from 'text-mask-core/dist/textMaskCore';
 import { Options, Prop } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
-import BaseFormControl from './base';
+import BaseFormControl from './controller';
 
 @Options({})
 export default class AppFormControl extends BaseFormControl {
