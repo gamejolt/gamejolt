@@ -125,6 +125,8 @@ export class FiresideHostRtc {
 			]);
 
 			if (wasStreaming) {
+				// TODO: change this show a modal where you can confirm to resume streaming
+				// it'd suck if you lost connection and then it came back when youre not around.
 				await this.startStreaming();
 			}
 		} catch (e) {
