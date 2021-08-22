@@ -84,6 +84,7 @@ export class FiresideHostRtc {
 
 		this.videoClient = null;
 		this.chatClient = null;
+		this.p_isStreaming = false;
 	}
 
 	private async regenerateClients(generation: number) {
@@ -101,7 +102,9 @@ export class FiresideHostRtc {
 			console.log('Regenerating clients');
 			this.areClientsRegenerating = true;
 
+			const wasStreaming = this.p_isStreaming;
 			this._destroy();
+
 			const myGeneration = this.currentClientGeneration;
 
 			this.videoClient = new AgoraStreamingClient(this.appId, 'video');
@@ -121,7 +124,7 @@ export class FiresideHostRtc {
 				this.updateGroupAudioDevice(),
 			]);
 
-			if (this.p_isStreaming) {
+			if (wasStreaming) {
 				await this.startStreaming();
 			}
 		} catch (e) {
@@ -370,11 +373,19 @@ export class FiresideHostRtc {
 	}
 
 	getDesktopAudioVolume() {
-		return this.videoClient?.isDisposed ? 0 : this.videoClient!.getVirtualAudioInputVolume();
+		if (!this.videoClient || this.videoClient.isDisposed) {
+			return 0;
+		}
+
+		return this.videoClient!.getVirtualAudioInputVolume();
 	}
 
 	getMicAudioVolume() {
-		return this.chatClient?.isDisposed ? 0 : this.chatClient!.getAudioInputVolume();
+		if (!this.chatClient || this.chatClient.isDisposed) {
+			return 0;
+		}
+
+		return this.chatClient!.getAudioInputVolume();
 	}
 
 	get isStreaming() {

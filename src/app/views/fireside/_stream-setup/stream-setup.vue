@@ -66,7 +66,12 @@
 							{{ mic.label }}
 						</option>
 					</app-form-control-select>
-					<app-volume-meter class="-volume-meter" :volume="micAudioVolume" />
+
+					<app-volume-meter
+						class="-volume-meter"
+						:host-rtc="firesideHostRtc"
+						type="mic"
+					/>
 
 					<p v-translate class="help-block">
 						Volume meter should move only when <b>you</b> speak.
@@ -81,7 +86,12 @@
 							{{ mic.label }}
 						</option>
 					</app-form-control-select>
-					<app-volume-meter class="-volume-meter" :volume="desktopAudioVolume" />
+
+					<app-volume-meter
+						class="-volume-meter"
+						:host-rtc="firesideHostRtc"
+						type="desktop-audio"
+					/>
 
 					<p class="help-block">
 						<translate>Volume meter should move only when you hear stuff.</translate>
