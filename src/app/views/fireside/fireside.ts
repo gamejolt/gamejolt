@@ -317,6 +317,11 @@ export default class RouteFireside extends BaseRouteComponent {
 
 		this.disconnect();
 
+		if (this.beforeEachDeregister) {
+			this.beforeEachDeregister();
+			this.beforeEachDeregister = null;
+		}
+
 		// This also happens in Disconnect, but make 100% sure we cleared the interval.
 		this.clearExpiryCheck();
 	}
