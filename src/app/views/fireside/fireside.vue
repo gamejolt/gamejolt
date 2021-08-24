@@ -107,10 +107,7 @@
 												class="list-group-item has-icon"
 												@click="onClickEditStream"
 											>
-												<app-jolticon
-													icon="edit"
-													:notice="hasExpiryWarning"
-												/>
+												<app-jolticon icon="edit" />
 												<translate>Edit Stream</translate>
 											</a>
 											<a
@@ -160,6 +157,7 @@
 							<template v-if="rtc && rtc.focusedUser">
 								<app-fireside-stream
 									:rtc-user="rtc.focusedUser"
+									:host-rtc="hostRtc"
 									:show-hosts="!shouldShowHosts"
 									:members="overlayChatMembers"
 								/>
@@ -169,7 +167,7 @@
 				</div>
 
 				<div v-if="rtc && shouldShowHosts" class="-hosts-padding">
-					<app-fireside-host-list />
+					<app-fireside-host-list :host-rtc="hostRtc" />
 				</div>
 			</div>
 

@@ -1,9 +1,11 @@
 import Vue from 'vue';
-import { Component, Emit, InjectReactive } from 'vue-property-decorator';
+import { Component, Emit, InjectReactive, Prop } from 'vue-property-decorator';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { FiresideHostRtc } from '../fireside-host-rtc';
 import { FiresideRTC, FiresideRTCKey } from '../fireside-rtc';
 import { setAudioPlayback } from '../fireside-rtc-user';
+import { StreamSetupModal } from '../_stream-setup/stream-setup-modal.service';
 
 @Component({
 	components: {
@@ -15,6 +17,9 @@ import { setAudioPlayback } from '../fireside-rtc-user';
 })
 export default class AppFiresideStreamOptions extends Vue {
 	@InjectReactive(FiresideRTCKey) rtc!: FiresideRTC;
+
+	@Prop({ type: FiresideHostRtc, required: false })
+	hostRtc?: FiresideHostRtc;
 
 	@Emit('show-popper') emitShowPopper() {}
 	@Emit('hide-popper') emitHidePopper() {}
@@ -33,5 +38,23 @@ export default class AppFiresideStreamOptions extends Vue {
 
 	toggleVideoStats() {
 		this.rtc.shouldShowVideoStats = !this.rtc.shouldShowVideoStats;
+	}
+
+	get canStream() {
+		return !!this.hostRtc;
+	}
+
+	get isPersonallyStreaming() {
+		return this.hostRtc?.isStreaming ?? false;
+	}
+
+	onClickEditStream() {
+		if (this.hostRtc) {
+			StreamSetupModal.show(this.hostRtc);
+		}
+	}
+
+	onClickStopStreaming() {
+		this.hostRtc?.stopStreaming();
 	}
 }

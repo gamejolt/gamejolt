@@ -4,6 +4,7 @@ import { number } from '../../../../_common/filters/number';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { ChatUserCollection } from '../../../components/chat/user-collection';
+import { FiresideHostRtc } from '../fireside-host-rtc';
 import { FiresideRTC, FiresideRTCKey } from '../fireside-rtc';
 import { FiresideRTCUser } from '../fireside-rtc-user';
 import AppFiresideDesktopAudio from '../_desktop_audio/desktop-audio.vue';
@@ -34,6 +35,9 @@ export default class AppFiresideStream extends Vue {
 
 	@Prop({ type: ChatUserCollection, required: false, default: null })
 	members!: ChatUserCollection | null;
+
+	@Prop({ type: FiresideHostRtc, required: false })
+	hostRtc?: FiresideHostRtc;
 
 	@InjectReactive(FiresideRTCKey) rtc!: FiresideRTC;
 
