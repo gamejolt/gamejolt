@@ -232,11 +232,11 @@ export class FiresideHostRtc {
 	}
 
 	get canStreamVideo() {
-		return this.role.can_stream_video;
+		return !!this.role.can_stream_video;
 	}
 
 	get canStreamAudio() {
-		return this.role.can_stream_audio;
+		return !!this.role.can_stream_audio;
 	}
 
 	get selectedWebcamDeviceId() {
