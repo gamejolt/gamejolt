@@ -237,9 +237,24 @@
 			</app-form-group>
 		</app-expand>
 
-		<app-form-group name="isStreaming" :label="$gettext('Streaming?')">
-			<app-form-control-toggle :disabled="firesideHostRtc.isBusy || isInvalidConfig" />
-		</app-form-group>
+		<div class="-actions">
+			<template v-if="!formModel.isStreaming">
+				<app-button @click="onClickCancel()">
+					<translate>Cancel</translate>
+				</app-button>
+
+				<app-button
+					primary
+					:disabled="firesideHostRtc.isBusy || isInvalidConfig"
+					@click="onClickStartStreaming()"
+				>
+					<translate>Start Streaming</translate>
+				</app-button>
+			</template>
+			<app-button v-else :disabled="firesideHostRtc.isBusy" @click="onClickStopStreaming()">
+				<translate>Stop Streaming</translate>
+			</app-button>
+		</div>
 	</app-form>
 </template>
 
@@ -282,4 +297,11 @@
 
 .-disabled
 	cursor: not-allowed
+
+.-actions
+	width: 100%
+	display: inline-flex
+	justify-content: flex-end
+	padding-top: $line-height-computed
+	grid-gap: $line-height-computed
 </style>

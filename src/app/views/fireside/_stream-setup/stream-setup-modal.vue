@@ -8,7 +8,7 @@
 			</app-button>
 		</div>
 		<div class="modal-body">
-			<app-stream-setup :fireside-host-rtc="firesideHostRtc" />
+			<app-stream-setup :fireside-host-rtc="firesideHostRtc" @close="onClose()" />
 		</div>
 	</app-modal>
 </template>

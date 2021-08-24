@@ -1,4 +1,4 @@
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
 import { debounce, sleep } from '../../../../utils/utils';
 import { propRequired } from '../../../../utils/vue';
 import { MediaDeviceService } from '../../../../_common/agora/media-device.service';
@@ -45,6 +45,8 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 	private p_showAdvancedFormError = false;
 
 	private networkQualityDebounce: () => void = null as any;
+
+	@Emit('close') emitClose() {}
 
 	$refs!: {
 		form: AppForm;
@@ -194,6 +196,30 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 
 		this.p_shouldShowAdvanced = !this.p_shouldShowAdvanced;
 		this.p_showAdvancedFormError = false;
+	}
+
+	onClickCancel() {
+		this.emitClose();
+	}
+
+	onClickStartStreaming() {
+		this.setField('isStreaming', true);
+		this.onIsStreamingChangeRequested();
+	}
+
+	onClickStopStreaming() {
+		this.setField('isStreaming', false);
+		this.onIsStreamingChangeRequested();
+	}
+
+	onIsStreamingChangeRequested() {
+		if (this.formModel.isStreaming) {
+			this.firesideHostRtc.startStreaming();
+		} else {
+			this.firesideHostRtc.stopStreaming();
+		}
+
+		// TODO: making formModel.isStreaming reactive to changes in firesideHostRtc.isStreaming
 	}
 
 	get shouldShowAdvanced() {
@@ -352,17 +378,6 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		this.firesideHostRtc.selectedDesktopAudioDeviceId =
 			this.formModel.selectedDesktopAudioDeviceId;
 		this.firesideHostRtc.selectedGroupAudioDeviceId = this.formModel.selectedGroupAudioDeviceId;
-	}
-
-	@Watch('formModel.isStreaming')
-	onIsStreamingChangeRequested() {
-		if (this.formModel.isStreaming) {
-			this.firesideHostRtc.startStreaming();
-		} else {
-			this.firesideHostRtc.stopStreaming();
-		}
-
-		// TODO: making formModel.isStreaming reactive to changes in firesideHostRtc.isStreaming
 	}
 
 	@Watch('firesideHostRtc.isStreaming', { immediate: true })
