@@ -176,20 +176,14 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 			return false;
 		}
 
-		const requiresMinimumOne: Record<string, string>[] = [
-			{ selectedWebcamDeviceId: this.formModel.selectedWebcamDeviceId },
-			{ selectedMicDeviceId: this.formModel.selectedMicDeviceId },
-			{ selectedDesktopAudioDeviceId: this.formModel.selectedDesktopAudioDeviceId },
-		];
+		const required: Record<string, string> = {
+			selectedWebcamDeviceId: this.formModel.selectedWebcamDeviceId,
+			selectedMicDeviceId: this.formModel.selectedMicDeviceId,
+			selectedDesktopAudioDeviceId: this.formModel.selectedDesktopAudioDeviceId,
+		};
 
-		const remainingFields = requiresMinimumOne.filter(entry => {
-			const key = entry[0];
-			const value = entry[1];
-
-			return fieldToRemove !== key && value !== '';
-		});
-
-		return remainingFields.length === 0;
+		delete required[fieldToRemove];
+		return Object.entries(required).every(([_key, value]) => value === '');
 	}
 
 	onToggleAdvanced() {
