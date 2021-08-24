@@ -61,7 +61,9 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 	}
 
 	mounted() {
-		MediaDeviceService.detectDevices({ prompt: false, skipIfPrompted: false });
+		// If we don't prompt here, the user can end up denying permissions and
+		// then opening this form again to an empty device list.
+		MediaDeviceService.detectDevices({ prompt: true, skipIfPrompted: false });
 
 		this.p_refreshVolumeInterval = setInterval(() => {
 			this.desktopAudioVolume = this.firesideHostRtc.getDesktopAudioVolume();
@@ -73,6 +75,15 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		if (this.p_refreshVolumeInterval) {
 			clearInterval(this.p_refreshVolumeInterval);
 		}
+	}
+
+	get selectedMicGroupId() {
+		return this.mics.find(i => i.deviceId == this.formModel.selectedMicDeviceId)?.groupId;
+	}
+
+	get selectedDesktopAudioGroupId() {
+		return this.mics.find(i => i.deviceId == this.formModel.selectedDesktopAudioDeviceId)
+			?.groupId;
 	}
 
 	@Watch('canStreamVideo', { immediate: true })
@@ -196,7 +207,7 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 	@Watch('formModel.selectedDesktopAudioDeviceId')
 	@Watch('formModel.selectedGroupAudioDeviceId')
 	onSelectedDevicesChanged() {
-		// When stremaing, only apply changes to selected devices if the config is valid.
+		// When streaming, only apply changes to selected devices if the config is valid.
 		if (this.isInvalidConfig && this.firesideHostRtc.isStreaming) {
 			// TODO: show error status on the form model values that do not match with whats set on firesideHostRtc.
 			return;

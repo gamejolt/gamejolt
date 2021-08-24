@@ -57,6 +57,10 @@ export default class AppFiresideStats extends Vue {
 		);
 	}
 
+	get isPersonallyStreaming() {
+		return this.hostRtc?.isStreaming;
+	}
+
 	get canPublish() {
 		return this.canManage && this.status === 'joined' && this.fireside.is_draft;
 	}

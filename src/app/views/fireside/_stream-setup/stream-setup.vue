@@ -12,7 +12,12 @@
 				>
 					<translate>Gib</translate>
 				</app-button>
-				<p v-else><translate>Click the lock icon next to the url to enable.</translate></p>
+				<p v-else>
+					<translate>
+						Click the lock icon next to the url to enable. You may need to open this
+						window again or refresh the page to renew your devices.
+					</translate>
+				</p>
 			</template>
 			<app-form-control-select v-else :disabled="firesideHostRtc.isBusy">
 				<option value=""><translate>Video (None)</translate></option>
@@ -41,7 +46,7 @@
 
 		<template v-if="canStreamAudio">
 			<div v-if="!hasMicPermissions" class="form-group">
-				<translate>We need access to your mic to:</translate>
+				<p><translate>We need access to your mic to:</translate></p>
 				<ul>
 					<li><translate>Stream your crispy / smooth voice.</translate></li>
 					<li>
@@ -55,14 +60,22 @@
 				<app-button v-if="!micPermissionsWerePrompted" @click="onClickPromptMicPermissions">
 					<translate>Gib</translate>
 				</app-button>
-				<translate v-else>Click the lock icon next to the url to enable.</translate>
+				<translate v-else>
+					Click the lock icon next to the url to enable. You may need to open this window
+					again or refresh the page to renew your devices.
+				</translate>
 			</div>
 			<template v-else>
 				<app-form-group name="selectedMicDeviceId" hide-label>
 					<app-form-control-select :disabled="firesideHostRtc.isBusy" class="-mic-input">
 						<option value=""><translate>Microphone (None)</translate></option>
 
-						<option v-for="mic of mics" :key="mic.deviceId" :value="mic.deviceId">
+						<option
+							v-for="mic of mics"
+							:key="mic.deviceId"
+							:value="mic.deviceId"
+							:disabled="mic.groupId == selectedDesktopAudioGroupId"
+						>
 							{{ mic.label }}
 						</option>
 					</app-form-control-select>
@@ -82,7 +95,12 @@
 					<app-form-control-select :disabled="firesideHostRtc.isBusy" class="-mic-input">
 						<option value=""><translate>Desktop Audio (None)</translate></option>
 
-						<option v-for="mic of mics" :key="mic.deviceId" :value="mic.deviceId">
+						<option
+							v-for="mic of mics"
+							:key="mic.deviceId"
+							:value="mic.deviceId"
+							:disabled="mic.groupId == selectedMicGroupId"
+						>
 							{{ mic.label }}
 						</option>
 					</app-form-control-select>
@@ -94,7 +112,18 @@
 					/>
 
 					<p class="help-block">
-						<translate>Volume meter should move only when you hear stuff.</translate>
+						<translate> Volume meter should move only when you hear stuff. </translate>
+
+						<br />
+
+						<translate>
+							If you want to stream normal Desktop audio, you may need to use a
+							virtual cable.
+						</translate>
+
+						<app-link-help page="fireside-streaming#desktop-audio" class="link-help">
+							<translate>How?</translate>
+						</app-link-help>
 					</p>
 
 					<app-expand :when="isInvalidMicConfig">
@@ -122,7 +151,10 @@
 					>
 						<translate>Gib</translate>
 					</app-button>
-					<translate v-else>Click the lock icon next to the url to enable.</translate>
+					<translate v-else>
+						Click the lock icon next to the url to enable. You may need to open this
+						window again or refresh the page to renew your devices.
+					</translate>
 				</template>
 				<template v-else>
 					<app-form-control-select :disabled="firesideHostRtc.isBusy">

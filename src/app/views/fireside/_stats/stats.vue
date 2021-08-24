@@ -67,9 +67,13 @@
 					</translate>
 				</p>
 			</template>
-
-			<app-button v-if="canStream" @click="startStreaming()">Start Streaming</app-button>
 		</app-scroll-scroller>
+
+		<app-button v-if="canStream" class="-start-streaming" @click="startStreaming()">
+			<translate v-if="isPersonallyStreaming"> Edit Stream </translate>
+			<translate v-else> Add a Stream </translate>
+		</app-button>
+
 		<div>
 			<app-card class="-share-card">
 				<p>
@@ -126,4 +130,7 @@
 
 	> input
 		margin-right: 8px
+
+.-start-streaming
+	margin-bottom: auto
 </style>
