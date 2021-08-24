@@ -240,8 +240,14 @@ export default class RouteFireside extends BaseRouteComponent {
 		);
 	}
 
+	get shouldShowStreamingOptions() {
+		return this.canStream || this.isPersonallyStreaming;
+	}
+
 	get canStream() {
-		return !!this.hostRtc;
+		return (
+			!!this.hostRtc && (Screen.isDesktop || (this.user && this.user.permission_level >= 4))
+		);
 	}
 
 	get isPersonallyStreaming() {

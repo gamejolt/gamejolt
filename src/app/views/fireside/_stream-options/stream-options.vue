@@ -19,7 +19,7 @@
 						<translate>Toggle Video Stats</translate>
 					</a>
 
-					<template v-if="canStream">
+					<template v-if="shouldShowStreamingOptions">
 						<a
 							v-if="!isPersonallyStreaming"
 							class="list-group-item has-icon"
