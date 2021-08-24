@@ -10,6 +10,7 @@ import { configShareCard } from '../../../../_common/config/config.service';
 import { number } from '../../../../_common/filters/number';
 import AppGameThumbnail from '../../../../_common/game/thumbnail/thumbnail.vue';
 import AppPopper from '../../../../_common/popper/popper.vue';
+import { ReportModal } from '../../../../_common/report/modal/modal.service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppShareCard from '../../../../_common/share/card/card.vue';
 import { copyShareLink } from '../../../../_common/share/share.service';
@@ -147,8 +148,12 @@ export default class AppCommunitySidebar extends Vue {
 		return this.filteredGames;
 	}
 
+	get shouldShowReport() {
+		return !this.community.hasPerms();
+	}
+
 	copyShareUrl() {
-		copyShareLink(this.shareUrl);
+		copyShareLink(this.shareUrl, 'community');
 	}
 
 	toggleCollaboratorList() {
@@ -184,6 +189,10 @@ export default class AppCommunitySidebar extends Vue {
 
 	toggleGamesList() {
 		this.gameListCollapsed = !this.gameListCollapsed;
+	}
+
+	onClickReport() {
+		ReportModal.show(this.community);
 	}
 
 	@Watch('ignoringSplitTest', { immediate: true })

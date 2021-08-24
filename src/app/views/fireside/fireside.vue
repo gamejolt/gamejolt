@@ -27,6 +27,10 @@
 								<app-user-avatar-img class="-avatar" :user="fireside.user" />
 							</template>
 							<span>'s Fireside</span>
+
+							<span v-if="isDraft" class="-draft-tag tag">
+								<translate>Draft</translate>
+							</span>
 						</small>
 						<br />
 						{{ fireside.title }}
@@ -129,11 +133,7 @@
 		<div class="-split" />
 		<div class="-body" :class="{ '-body-column': isVertical, '-is-streaming': isStreaming }">
 			<div v-if="shouldShowFiresideStats" class="-leading">
-				<app-fireside-stats
-					:fireside="fireside"
-					:status="status"
-					:is-streaming="isStreaming"
-				/>
+				<app-fireside-stats :status="status" :is-streaming="isStreaming" />
 			</div>
 
 			<div
@@ -158,7 +158,7 @@
 								<app-fireside-stream
 									:rtc-user="rtc.focusedUser"
 									:host-rtc="hostRtc"
-									:show-hosts="!shouldShowHosts"
+									:show-overlay-hosts="!shouldShowHosts"
 									:members="overlayChatMembers"
 								/>
 							</template>
@@ -167,7 +167,11 @@
 				</div>
 
 				<div v-if="rtc && shouldShowHosts" class="-hosts-padding">
-					<app-fireside-host-list :host-rtc="hostRtc" />
+					<div class="-hosts">
+						<app-fireside-host-list :host-rtc="hostRtc" />
+					</div>
+
+					<app-fireside-share v-if="!isDraft" class="-share" hide-heading />
 				</div>
 			</div>
 
@@ -488,9 +492,26 @@
 
 .-hosts-padding
 	flex: none
+	width: 100%
 	padding-top: 8px
 	max-width: 100%
 	overflow: hidden
+	display: inline-flex
+	align-items: flex-start
+	grid-gap: 16px
+
+	.-hosts
+		min-width: 0
+		margin-left: auto
+		margin-right: auto
+
+	.-share
+		margin-right: 8px
+		flex: none
+
+	> *
+		margin-top: 0 !important
+		margin-bottom: 0 !important
 
 	.-video-wrapper.-vertical &
 		padding-top: 0
@@ -534,4 +555,7 @@
 		top: -8px
 		pointer-events: none
 		padding: 2px
+
+.-draft-tag
+	margin-left: 4px
 </style>

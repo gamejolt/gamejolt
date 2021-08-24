@@ -86,7 +86,12 @@
 		</div>
 
 		<div class="-community-end small">
-			<app-share-card v-if="useShareCard" :model="community" :url="shareUrl" bleed-padding />
+			<app-share-card
+				v-if="useShareCard"
+				resource="community"
+				:url="shareUrl"
+				bleed-padding
+			/>
 			<app-popper
 				v-else
 				popover-class="fill-darkest"
@@ -113,6 +118,12 @@
 			</app-popper>
 
 			<div class="text-muted">
+				<template v-if="shouldShowReport">
+					<a @click="onClickReport">
+						<translate>Report</translate>
+					</a>
+					<span class="dot-separator" />
+				</template>
 				A community for
 				<app-time-ago :date="community.added_on" without-suffix />
 			</div>

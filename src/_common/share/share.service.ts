@@ -10,10 +10,12 @@ export type ShareProvider =
 	| 'whatsapp'
 	| 'reddit';
 
+export type ShareResource = 'post' | 'community' | 'user' | 'game' | 'fireside';
+
 /**
  * Copies a link to the clipboard and tracks that it was from a share.
  */
-export function copyShareLink(url: string) {
+export function copyShareLink(url: string, resource: ShareResource) {
 	Clipboard.copy(url);
-	trackShareLink(url);
+	trackShareLink(url, { resource });
 }

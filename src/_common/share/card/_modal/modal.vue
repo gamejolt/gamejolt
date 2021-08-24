@@ -21,7 +21,7 @@
 					v-for="i in providers"
 					:key="i"
 					class="-tile"
-					:model="model"
+					:resource="resource"
 					:url="url"
 					:provider="i"
 				/>

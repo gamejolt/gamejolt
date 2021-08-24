@@ -39,7 +39,7 @@
 					<translate>Publish</translate>
 				</app-button>
 				<p class="help-block">
-					<translate v-if="!fireside.community">
+					<translate v-if="fireside && !fireside.community">
 						Your Fireside is current in draft. Only you can view it. Publish it to let
 						everyone join!
 					</translate>
@@ -69,18 +69,8 @@
 			</template>
 		</app-scroll-scroller>
 
-		<div>
-			<app-card class="-share-card">
-				<p>
-					<translate>Share this Fireside</translate>
-				</p>
-				<div class="-copy-controls">
-					<input class="form-control" :value="shareUrl" />
-					<app-button trans @click="copyShareUrl">
-						<translate>Copy</translate>
-					</app-button>
-				</div>
-			</app-card>
+		<div v-if="!isDraft">
+			<app-fireside-share />
 		</div>
 	</div>
 </template>
@@ -115,17 +105,4 @@
 	animation-duration: 2.5s
 	animation-iteration-count: 1
 	animation-fill-mode: forwards
-
-.-share-card
-	margin-bottom: 0px
-	margin-top: 20px
-
-.-copy-controls
-	display: flex
-
-	> input
-		margin-right: 8px
-
-.-start-streaming
-	margin-bottom: auto
 </style>

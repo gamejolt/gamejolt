@@ -70,7 +70,7 @@ export default class AppDiscoverGamesViewNav extends Vue {
 
 	copyShareUrl() {
 		const url = getAbsoluteLink(this.$router, this.game.routeLocation);
-		copyShareLink(url);
+		copyShareLink(url, 'game');
 	}
 
 	report() {

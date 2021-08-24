@@ -73,7 +73,7 @@
 						</div>
 					</div>
 
-					<div v-if="showHosts" class="-overlay-hosts -control">
+					<div v-if="showOverlayHosts" class="-overlay-hosts -control">
 						<app-fireside-host-list
 							hide-thumb-options
 							:host-rtc="hostRtc"
