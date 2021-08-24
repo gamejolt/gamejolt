@@ -81,6 +81,8 @@ module.exports = function (config) {
 		devtool = 'source-map';
 	}
 
+	let isInDocker = !!process.env.GAMEJOLT_IN_DOCKER;
+
 	function stylesLoader(withStylusLoader) {
 		const loaders = ['css-loader', 'postcss-loader'];
 
@@ -119,36 +121,39 @@ module.exports = function (config) {
 		? Promise.resolve({})
 		: new Promise(resolve => {
 				const http = require('http');
-				const req = http.get('http://localhost:4040/api/tunnels', res => {
-					if (res.statusCode !== 200) {
-						return resolve({});
-					}
-
-					res.setEncoding('utf8');
-					let response = '';
-					res.on('data', data => (response += data));
-					res.on('end', () => {
-						try {
-							const parsed = JSON.parse(response);
-
-							const GJ_TUNNELS = {};
-							for (let tunnel of parsed.tunnels) {
-								switch (tunnel.name) {
-									case 'gj-backend (http)':
-										GJ_TUNNELS.backend = tunnel.public_url;
-										break;
-
-									case 'gj-frontend (http)':
-										GJ_TUNNELS.frontend = tunnel.public_url;
-										break;
-								}
-							}
-							resolve(GJ_TUNNELS);
-						} catch (_) {
-							resolve({});
+				const req = http.get(
+					'http://' + (isInDocker ? 'hostnet' : 'localhost') + ':4040/api/tunnels',
+					res => {
+						if (res.statusCode !== 200) {
+							return resolve({});
 						}
-					});
-				});
+
+						res.setEncoding('utf8');
+						let response = '';
+						res.on('data', data => (response += data));
+						res.on('end', () => {
+							try {
+								const parsed = JSON.parse(response);
+
+								const GJ_TUNNELS = {};
+								for (let tunnel of parsed.tunnels) {
+									switch (tunnel.name) {
+										case 'gj-backend (http)':
+											GJ_TUNNELS.backend = tunnel.public_url;
+											break;
+
+										case 'gj-frontend (http)':
+											GJ_TUNNELS.frontend = tunnel.public_url;
+											break;
+									}
+								}
+								resolve(GJ_TUNNELS);
+							} catch (_) {
+								resolve({});
+							}
+						});
+					}
+				);
 				req.on('error', () => resolve({}));
 		  });
 
@@ -161,7 +166,11 @@ module.exports = function (config) {
 		let indexHtml = section === 'app' ? 'index.html' : section + '.html';
 
 		if (shouldUseHMR) {
-			appEntries.push('webpack-dev-server/client?http://localhost:' + config.port + '/');
+			const devServerUrl = isInDocker
+				? 'https://webpack.development.gamejolt.com:443'
+				: 'http://localhost:' + config.port;
+
+			appEntries.push('webpack-dev-server/client?' + devServerUrl + '/');
 			appEntries.push('webpack/hot/dev-server');
 		}
 
@@ -565,15 +574,23 @@ module.exports = function (config) {
 									},
 								],
 							},
-							public: 'development.gamejolt.com',
-							quiet: true,
-							disableHostCheck: hasTunnels,
+							public: isInDocker
+								? 'webpack.development.gamejolt.com'
+								: 'development.gamejolt.com',
+							transportMode: 'ws',
+							// quiet: true,
+							progress: true,
+							disableHostCheck: hasTunnels || isInDocker,
 							compress: hasTunnels,
 							hot: shouldUseHMR,
+							watchOptions: {
+								ignored: /node_modules/,
+								poll: 300,
+							},
 						});
 
 						if (config.ssr !== 'server') {
-							server.listen(port + portOffset, 'localhost');
+							server.listen(port + portOffset, isInDocker ? '0.0.0.0' : '127.0.0.1');
 						}
 						portOffset += 1;
 					}

@@ -52,28 +52,28 @@ export class Environment {
 }
 
 if (GJ_ENVIRONMENT === 'development') {
-	Environment.baseUrl = GJ_TUNNELS.frontend || 'http://localhost:8080';
-	Environment.baseUrlInsecure = GJ_TUNNELS.frontend || 'http://localhost:8080';
-	Environment.wttfBaseUrl = GJ_TUNNELS.frontend || 'http://localhost:8080';
-	Environment.authBaseUrl = GJ_TUNNELS.frontend || 'http://localhost:8080';
-	Environment.checkoutBaseUrl = GJ_TUNNELS.frontend || 'http://localhost:8080';
-	Environment.helpBaseUrl = 'http://localhost:8080/help';
+	Environment.baseUrl = GJ_TUNNELS.frontend || 'https://development.gamejolt.com';
+	Environment.baseUrlInsecure = GJ_TUNNELS.frontend || 'https://development.gamejolt.com';
+	Environment.wttfBaseUrl = GJ_TUNNELS.frontend || 'https://development.gamejolt.com';
+	Environment.authBaseUrl = GJ_TUNNELS.frontend || 'https://development.gamejolt.com';
+	Environment.checkoutBaseUrl = GJ_TUNNELS.frontend || 'https://development.gamejolt.com';
+	Environment.helpBaseUrl = 'https://development.gamejolt.com/help';
 
-	Environment.jamsBaseUrl = 'http://jams.development.gamejolt.com';
-	Environment.jamsIoBaseUrl = 'http://jams.development.gamejolt.io';
-	Environment.firesideBaseUrl = 'http://fireside.development.gamejolt.com';
-	Environment.devBaseUrl = 'http://dev.development.gamejolt.com';
-	Environment.gameserverUrl = 'http://development.gamejolt.net';
-	Environment.mediaserverUrl = 'http://media.development.gamejolt.com';
-	Environment.staticCdnUrl = 'http://development.gamejolt.com';
+	Environment.jamsBaseUrl = 'https://jams.development.gamejolt.com';
+	Environment.jamsIoBaseUrl = 'https://jams.development.gamejolt.io';
+	Environment.firesideBaseUrl = 'https://fireside.development.gamejolt.com';
+	Environment.devBaseUrl = 'https://dev.development.gamejolt.com';
+	Environment.gameserverUrl = 'https://development.gamejolt.net';
+	Environment.mediaserverUrl = 'https://media.development.gamejolt.com';
+	Environment.staticCdnUrl = 'https://development.gamejolt.com';
 
-	Environment.apiHost = GJ_TUNNELS.backend || 'http://development.gamejolt.com';
+	Environment.apiHost = GJ_TUNNELS.backend || 'https://development.gamejolt.com';
 	Environment.uploadHost = Environment.apiHost;
-	Environment.gameserverApiHost = 'http://development.gamejolt.com';
-	Environment.activityStreamHost = 'http://activity.development.gamejolt.com';
-	Environment.chat = 'http://chat.development.gamejolt.com/chatex';
-	Environment.widgetHost = 'http://localhost:8086';
-	Environment.gridHost = 'http://grid.development.gamejolt.com/grid/host';
+	Environment.gameserverApiHost = 'https://development.gamejolt.com';
+	Environment.activityStreamHost = 'https://activity.development.gamejolt.com';
+	Environment.chat = 'https://chat.development.gamejolt.com/chatex';
+	Environment.widgetHost = 'https://localhost:8086';
+	Environment.gridHost = 'https://grid.development.gamejolt.com/grid/host';
 	Environment.recaptchaSiteKey = '6LcwTkEUAAAAAHTT67TB8gkM0ft5hUzz_r_tFFaT';
 }
 
