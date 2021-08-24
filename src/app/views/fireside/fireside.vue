@@ -92,14 +92,36 @@
 										<app-jolticon icon="fireside" :notice="hasExpiryWarning" />
 										<translate>Fireside Info</translate>
 									</a>
-									<a
-										v-if="!shouldShowFiresideStats"
-										class="list-group-item has-icon"
-										@click="onClickShowFiresideStats"
-									>
-										<app-jolticon icon="fireside" :notice="hasExpiryWarning" />
-										<translate>Fireside Info</translate>
-									</a>
+
+									<template v-if="canStream">
+										<a
+											v-if="!isPersonallyStreaming"
+											class="list-group-item has-icon"
+											@click="onClickEditStream"
+										>
+											<app-jolticon icon="notifications" />
+											<translate>Add a Stream</translate>
+										</a>
+										<template v-else>
+											<a
+												class="list-group-item has-icon"
+												@click="onClickEditStream"
+											>
+												<app-jolticon
+													icon="edit"
+													:notice="hasExpiryWarning"
+												/>
+												<translate>Edit Stream</translate>
+											</a>
+											<a
+												class="list-group-item has-icon"
+												@click="onClickStopStreaming"
+											>
+												<app-jolticon icon="remove" notice />
+												<translate>Stop Streaming</translate>
+											</a>
+										</template>
+									</template>
 								</div>
 							</template>
 						</app-popper>
@@ -114,7 +136,6 @@
 					:fireside="fireside"
 					:status="status"
 					:is-streaming="isStreaming"
-					:host-rtc="hostRtc"
 				/>
 			</div>
 

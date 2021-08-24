@@ -69,11 +69,6 @@
 			</template>
 		</app-scroll-scroller>
 
-		<app-button v-if="canStream" class="-start-streaming" @click="startStreaming()">
-			<translate v-if="isPersonallyStreaming"> Edit Stream </translate>
-			<translate v-else> Add a Stream </translate>
-		</app-button>
-
 		<div>
 			<app-card class="-share-card">
 				<p>

@@ -220,6 +220,24 @@ export default class RouteFireside extends BaseRouteComponent {
 		);
 	}
 
+	get canStream() {
+		return !!this.hostRtc;
+	}
+
+	get isPersonallyStreaming() {
+		return this.hostRtc?.isStreaming ?? false;
+	}
+
+	onClickEditStream() {
+		if (this.hostRtc) {
+			StreamSetupModal.show(this.hostRtc);
+		}
+	}
+
+	onClickStopStreaming() {
+		this.hostRtc?.stopStreaming();
+	}
+
 	async routeResolved($payload: RoutePayload) {
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb || {};
