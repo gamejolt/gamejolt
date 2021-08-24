@@ -45,39 +45,64 @@
 						</ul>
 					</div>
 					<div v-if="shouldShowTitleControls" class="-fireside-title-controls">
-						<app-button
-							v-if="shouldShowEditControlButton"
-							v-app-tooltip="$gettext(`Edit Fireside`)"
-							icon="edit"
-							circle
-							sparse
-							@click="onClickEditFireside"
-						/>
-						<app-button
-							v-if="!shouldShowChatMembers"
-							v-app-tooltip="$gettext(`Chat Members`)"
-							icon="users"
-							circle
-							sparse
-							@click="onClickShowChatMembers"
-						/>
-						<div v-if="!shouldShowFiresideStats" class="-stats-btn">
-							<app-button
-								v-app-tooltip="$gettext(`Fireside info`)"
-								icon="fireside"
-								circle
-								sparse
-								:solid="hasExpiryWarning"
-								:primary="hasExpiryWarning"
-								@click="onClickShowFiresideStats"
-							/>
-							<app-jolticon
-								v-if="hasExpiryWarning"
-								icon="notice"
-								notice
-								class="-stats-btn-warn"
-							/>
-						</div>
+						<app-popper>
+							<div class="-stats-btn">
+								<app-button
+									icon="ellipsis-v"
+									circle
+									sparse
+									:solid="hasExpiryWarning && !shouldShowFiresideStats"
+									:primary="hasExpiryWarning && !shouldShowFiresideStats"
+								/>
+								<app-jolticon
+									v-if="hasExpiryWarning && !shouldShowFiresideStats"
+									icon="notice"
+									notice
+									class="-stats-btn-warn"
+								/>
+							</div>
+
+							<template #popover>
+								<div class="list-group list-group-dark">
+									<a class="list-group-item has-icon" @click="onClickCopyLink">
+										<app-jolticon icon="link" />
+										<translate>Copy Link</translate>
+									</a>
+									<a
+										v-if="shouldShowEditControlButton"
+										class="list-group-item has-icon"
+										@click="onClickEditFireside"
+									>
+										<app-jolticon icon="edit" />
+										<translate>Edit Fireside</translate>
+									</a>
+									<a
+										v-if="!shouldShowChatMembers"
+										class="list-group-item has-icon"
+										@click="onClickShowChatMembers"
+									>
+										<app-jolticon icon="users" />
+										<translate>Chat Members</translate>
+									</a>
+									<a
+										v-if="!shouldShowFiresideStats"
+										class="list-group-item has-icon"
+										@click="onClickShowFiresideStats"
+									>
+										<app-jolticon icon="fireside" :notice="hasExpiryWarning" />
+										<translate>Fireside Info</translate>
+									</a>
+									<a
+										v-if="!shouldShowFiresideStats"
+										class="list-group-item has-icon"
+										@click="onClickShowFiresideStats"
+									>
+										<app-jolticon icon="fireside" :notice="hasExpiryWarning" />
+										<translate>Fireside Info</translate>
+									</a>
+								</div>
+							</template>
+						</app-popper>
 					</div>
 				</div>
 			</template>

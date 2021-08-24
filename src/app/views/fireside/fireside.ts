@@ -1,6 +1,7 @@
 import Component from 'vue-class-component';
 import { InjectReactive, ProvideReactive } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { getAbsoluteLink } from '../../../utils/router';
 import { sleep } from '../../../utils/utils';
 import { Api } from '../../../_common/api/api.service';
 import AppAuthJoin from '../../../_common/auth/join/join.vue';
@@ -14,10 +15,12 @@ import AppIllustration from '../../../_common/illustration/illustration.vue';
 import AppLoading from '../../../_common/loading/loading.vue';
 import { Meta } from '../../../_common/meta/meta-service';
 import { AppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
+import AppPopper from '../../../_common/popper/popper.vue';
 import { AppResponsiveDimensions } from '../../../_common/responsive-dimensions/responsive-dimensions';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../_common/scroll/scroller/scroller.vue';
+import { copyShareLink } from '../../../_common/share/share.service';
 import { AppState, AppStore } from '../../../_common/store/app-store';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../_common/user/user-avatar/img/img.vue';
@@ -48,6 +51,7 @@ import { FiresideStatsModal } from './_stats/modal/modal.service';
 import AppFiresideStats from './_stats/stats.vue';
 import { StreamSetupModal } from './_stream-setup/stream-setup-modal.service';
 import AppFiresideStream from './_stream/stream.vue';
+
 type RoutePayload = {
 	fireside: any;
 	streamingAppId: string;
@@ -89,6 +93,7 @@ const FiresideThemeKey = 'fireside';
 		AppFiresideStream,
 		AppScrollScroller,
 		AppFiresideHostList,
+		AppPopper,
 	},
 	directives: {
 		AppTooltip,
@@ -631,6 +636,14 @@ export default class RouteFireside extends BaseRouteComponent {
 	onClickRetry() {
 		this.disconnect();
 		this.tryJoin();
+	}
+
+	onClickCopyLink() {
+		if (!this.fireside) {
+			return;
+		}
+		const url = getAbsoluteLink(this.$router, this.fireside.location);
+		copyShareLink(url);
 	}
 
 	onClickShowChatMembers() {
