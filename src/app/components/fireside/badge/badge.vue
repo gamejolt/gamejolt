@@ -35,15 +35,23 @@
 						<app-user-avatar-img v-else :user="fireside.user" />
 					</div>
 					<div>
-						<div class="tag">
-							<span class="-new-tag" />
-							<translate
-								:translate-n="fireside.member_count || 0"
-								:translate-params="{ count: number(fireside.member_count || 0) }"
-								translate-plural="%{ count } Members"
-							>
-								%{ count } Member
-							</translate>
+						<div>
+							<span class="tag">
+								<span class="-new-tag" />
+								<translate
+									:translate-n="fireside.member_count || 0"
+									:translate-params="{
+										count: number(fireside.member_count || 0),
+									}"
+									translate-plural="%{ count } Members"
+								>
+									%{ count } Member
+								</translate>
+							</span>
+
+							<span v-if="fireside.is_draft" class="tag">
+								<translate> Draft </translate>
+							</span>
 						</div>
 						<div class="-title">
 							{{ fireside.title }}
