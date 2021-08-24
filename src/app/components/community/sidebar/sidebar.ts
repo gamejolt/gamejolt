@@ -153,7 +153,7 @@ export default class AppCommunitySidebar extends Vue {
 	}
 
 	copyShareUrl() {
-		copyShareLink(this.shareUrl);
+		copyShareLink(this.shareUrl, 'community');
 	}
 
 	toggleCollaboratorList() {

@@ -117,7 +117,7 @@
 					<div slot="right">
 						<app-share-card
 							v-if="useShareCard"
-							:model="user"
+							resource="user"
 							:url="shareUrl"
 							bleed-padding
 						/>

@@ -30,7 +30,7 @@ export default class AppFiresideStream extends Vue {
 	rtcUser!: FiresideRTCUser;
 
 	@Prop({ type: Boolean, required: false, default: false })
-	showHosts!: boolean;
+	showOverlayHosts!: boolean;
 
 	@Prop({ type: ChatUserCollection, required: false, default: null })
 	members!: ChatUserCollection | null;
@@ -59,7 +59,7 @@ export default class AppFiresideStream extends Vue {
 	}
 
 	get hasOverlayItems() {
-		return this.showHosts || !!this.members;
+		return this.showOverlayHosts || !!this.members;
 	}
 
 	get memberCount() {

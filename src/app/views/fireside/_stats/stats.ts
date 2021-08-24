@@ -1,19 +1,21 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { InjectReactive, Prop } from 'vue-property-decorator';
+import { getAbsoluteLink } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
 import AppCard from '../../../../_common/card/card.vue';
-import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
-import { Environment } from '../../../../_common/environment/environment.service';
+import { configShareCard } from '../../../../_common/config/config.service';
 import { duration } from '../../../../_common/filters/duration';
-import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { Growls } from '../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../_common/illustration/illustration.vue';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
+import AppShareCard from '../../../../_common/share/card/card.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { RouteStatus } from '../fireside';
+import { FiresideController, FiresideControllerKey } from '../_controller/controller';
+import AppFiresideShare from './_share/share.vue';
 
 @Component({
 	components: {
@@ -21,14 +23,15 @@ import { RouteStatus } from '../fireside';
 		AppProgressBar,
 		AppCard,
 		AppScrollScroller,
+		AppShareCard,
+		AppFiresideShare,
 	},
 	directives: {
 		AppTooltip,
 	},
 })
 export default class AppFiresideStats extends Vue {
-	@Prop({ type: Fireside, required: true })
-	fireside!: Fireside;
+	@InjectReactive(FiresideControllerKey) c!: FiresideController;
 
 	@Prop({ type: String, required: true })
 	status!: RouteStatus;
@@ -45,7 +48,19 @@ export default class AppFiresideStats extends Vue {
 
 	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
 
+	get fireside() {
+		return this.c.fireside;
+	}
+
+	get useShareCard() {
+		return configShareCard.value;
+	}
+
 	get canManage() {
+		if (!this.fireside) {
+			return false;
+		}
+
 		return (
 			this.user?.id === this.fireside.user.id ||
 			this.fireside.community?.hasPerms('community-firesides')
@@ -53,7 +68,7 @@ export default class AppFiresideStats extends Vue {
 	}
 
 	get canPublish() {
-		return this.canManage && this.status === 'joined' && this.fireside.is_draft;
+		return this.canManage && this.status === 'joined' && this.isDraft;
 	}
 
 	get canExtend() {
@@ -65,11 +80,23 @@ export default class AppFiresideStats extends Vue {
 		);
 	}
 
+	get isDraft() {
+		return this.fireside?.is_draft ?? true;
+	}
+
 	get shareUrl() {
-		return Environment.baseUrl + this.$router.resolve(this.fireside.location).href;
+		if (!this.fireside) {
+			return;
+		}
+
+		return getAbsoluteLink(this.$router, this.fireside.location);
 	}
 
 	get shareContent() {
+		if (!this.fireside) {
+			return;
+		}
+
 		return this.$gettextInterpolate('Join the %{ name } Fireside - Game Jolt', {
 			name: this.fireside.title,
 		});
@@ -97,6 +124,10 @@ export default class AppFiresideStats extends Vue {
 	}
 
 	private updateExpiryValues() {
+		if (!this.fireside) {
+			return;
+		}
+
 		this.totalDurationText = duration((Date.now() - this.fireside.added_on) / 1000);
 
 		if (this.fireside.expires_on > Date.now()) {
@@ -119,7 +150,7 @@ export default class AppFiresideStats extends Vue {
 	}
 
 	async onClickPublish() {
-		if (this.status !== 'joined' || !this.fireside.is_draft) {
+		if (this.status !== 'joined' || !this.isDraft || !this.fireside) {
 			return;
 		}
 
@@ -128,7 +159,7 @@ export default class AppFiresideStats extends Vue {
 	}
 
 	async onClickExtend() {
-		if (this.status !== 'joined' || !this.canExtend) {
+		if (this.status !== 'joined' || !this.canExtend || !this.fireside) {
 			return;
 		}
 
@@ -149,9 +180,5 @@ export default class AppFiresideStats extends Vue {
 				)
 			);
 		}
-	}
-
-	copyShareUrl() {
-		Clipboard.copy(this.shareUrl);
 	}
 }

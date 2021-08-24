@@ -20,7 +20,7 @@
 					<app-share-card
 						v-if="useShareCard"
 						class="-share-card"
-						:model="game"
+						resource="game"
 						:url="shareLink"
 						bleed-padding
 					/>

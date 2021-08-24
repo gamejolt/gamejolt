@@ -1,22 +1,22 @@
 import { asyncComponentLoader } from '../../../../utils/utils';
 import { Modal } from '../../../modal/modal.service';
-import { Model } from '../../../model/model.service';
+import { ShareResource } from '../../share.service';
 
 interface ShareModalOptions {
-	model: Model;
+	resource: ShareResource;
 	url: string;
 }
 
 export class ShareModal {
 	static async show(options: ShareModalOptions) {
-		const { model, url } = options;
+		const { resource, url } = options;
 
 		return await Modal.show<void>({
 			modalId: 'Share',
 			component: () =>
 				asyncComponentLoader(import(/* webpackChunkName: "ShareModal" */ './modal.vue')),
 			props: {
-				model,
+				resource,
 				url,
 			},
 			size: 'sm',

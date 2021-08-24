@@ -1,7 +1,7 @@
-import { Component, Prop } from 'vue-property-decorator';
-import { Fireside } from '../../../../../_common/fireside/fireside.model';
+import { Component, Prop, ProvideReactive } from 'vue-property-decorator';
 import { BaseModal } from '../../../../../_common/modal/base';
 import { RouteStatus } from '../../fireside';
+import { FiresideController, FiresideControllerKey } from '../../_controller/controller';
 import AppFiresideStats from '../stats.vue';
 
 @Component({
@@ -10,8 +10,9 @@ import AppFiresideStats from '../stats.vue';
 	},
 })
 export default class AppFiresideStatsModal extends BaseModal {
-	@Prop({ type: Fireside, required: true })
-	fireside!: Fireside;
+	@ProvideReactive(FiresideControllerKey)
+	@Prop({ type: FiresideController, required: true })
+	controller!: FiresideController;
 
 	@Prop({ type: String, required: true })
 	status!: RouteStatus;
