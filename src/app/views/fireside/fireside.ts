@@ -723,7 +723,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	onIsDraftChange() {
 		// We try not to show sharing information while in draft, since links
 		// will redirect them if they don't have permissions.
-		if (this.isDraft || !this.shouldShowHosts) {
+		if (this.isDraft) {
 			return;
 		}
 		trackExperimentEngagement(configShareCard);
