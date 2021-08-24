@@ -148,7 +148,7 @@ export default class AppShareCardTile extends Vue {
 		trackShareLink(this.url, { provider: this.provider, resource: this.resource });
 
 		if (inNewWindow) {
-			Navigate.newWindow(providerLink, {});
+			Navigate.newWindow(providerLink, { width: 800, height: 600 });
 		} else {
 			Navigate.gotoExternal(providerLink);
 		}

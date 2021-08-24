@@ -76,8 +76,13 @@ export class Navigate {
 		 * - `heightFactor = 0.5`
 		 * - `widthFactor = 0.5`
 		 * - `center = true`
+		 *
+		 * Absolute width and height will override the width/height factors if
+		 * passed in.
 		 */
-		externalParams?: {
+		windowOptions?: {
+			width?: number;
+			height?: number;
 			widthFactor?: number;
 			heightFactor?: number;
 			center?: boolean;
@@ -85,23 +90,31 @@ export class Navigate {
 	) {
 		if (GJ_IS_CLIENT) {
 			Navigate.gotoExternal(url);
-		} else if (!externalParams) {
+		} else if (!windowOptions) {
 			window.open(url, '_blank');
 		} else {
-			const { widthFactor = 0.5, heightFactor = 0.5, center = true } = externalParams;
-			let width = Math.round(screen.width * widthFactor);
-			let height = Math.round(screen.height * heightFactor);
+			let { width, height } = windowOptions;
+			const { widthFactor = 0.5, heightFactor = 0.5, center = true } = windowOptions;
+
+			if (!width) {
+				width = Math.round(screen.width * widthFactor);
+			}
+			if (!height) {
+				height = Math.round(screen.height * heightFactor);
+			}
+
 			width = Math.min(screen.width, Math.max(100, width));
 			height = Math.min(screen.height, Math.max(100, height));
-			let options = `width=${width},height=${height}`;
+			const options = [`width=${width}`, `height=${height}`];
 
 			if (center) {
 				const left = Math.max(0, (screen.width - width) / 2);
 				const top = Math.max(0, (screen.height - height) / 2);
-				options += `,left=${left},top=${top}`;
+				options.push(`left=${left}`);
+				options.push(`top=${top}`);
 			}
 
-			window.open(url, '', options);
+			window.open(url, '_blank', options.join(','));
 		}
 	}
 }
