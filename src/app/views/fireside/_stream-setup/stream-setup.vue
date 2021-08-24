@@ -71,8 +71,17 @@
 			</div>
 			<template v-else>
 				<app-form-group name="tempSelectedMicDeviceId" :label="$gettext('Microphone')">
-					<app-form-control-select :disabled="firesideHostRtc.isBusy" class="-mic-input">
-						<option value=""><translate>Microphone (None)</translate></option>
+					<app-form-control-select
+						:disabled="firesideHostRtc.isBusy"
+						class="-mic-input"
+						:class="{ '-hide-indicator': !hasMicAudio }"
+					>
+						<option
+							value=""
+							:disabled="wouldInvalidateIfRemoved('selectedMicDeviceId')"
+						>
+							<translate>Microphone (None)</translate>
+						</option>
 
 						<option v-for="mic of mics" :key="mic.deviceId" :value="mic.deviceId">
 							{{ mic.groupId == selectedDesktopAudioGroupId ? '(Swap) ' : '' }}
@@ -81,6 +90,7 @@
 					</app-form-control-select>
 
 					<app-volume-meter
+						v-if="hasMicAudio"
 						class="-volume-meter"
 						:host-rtc="firesideHostRtc"
 						type="mic"
@@ -91,54 +101,91 @@
 					</p>
 				</app-form-group>
 
-				<app-form-group
-					name="tempSelectedDesktopAudioDeviceId"
-					:label="$gettext('Desktop Audio')"
+				<h5
+					class="-advanced"
+					:class="{ '-disabled': shouldShowAdvancedFormError }"
+					@click="onToggleAdvanced"
 				>
-					<app-form-control-select :disabled="firesideHostRtc.isBusy" class="-mic-input">
-						<option value=""><translate>Desktop Audio (None)</translate></option>
+					<app-jolticon :icon="shouldShowAdvanced ? 'remove' : 'chevron-right'" />
+					<translate>Advanced Settings</translate>
+				</h5>
 
-						<option v-for="mic of mics" :key="mic.deviceId" :value="mic.deviceId">
-							{{ mic.groupId == selectedMicGroupId ? '(Swap) ' : '' }}
-							{{ mic.label }}
-						</option>
-					</app-form-control-select>
+				<p
+					v-if="shouldShowAdvancedFormError"
+					class="help-block error anim-fade-in"
+					:class="{}"
+				>
+					<translate>
+						Removing your Advanced devices will stop your stream. Please select either a
+						Microphone or Virtual Camera input before removing your Advanced devices.
+					</translate>
+				</p>
 
-					<app-volume-meter
-						class="-volume-meter"
-						:host-rtc="firesideHostRtc"
-						type="desktop-audio"
-					/>
+				<app-expand :when="shouldShowAdvanced">
+					<app-form-group
+						name="tempSelectedDesktopAudioDeviceId"
+						:label="$gettext('Desktop Audio')"
+					>
+						<app-form-control-select
+							:disabled="firesideHostRtc.isBusy"
+							class="-mic-input"
+							:class="{ '-hide-indicator': !hasDesktopAudio }"
+						>
+							<option
+								value=""
+								:disabled="wouldInvalidateIfRemoved('selectedDesktopAudioDeviceId')"
+							>
+								<translate>Desktop Audio (None)</translate>
+							</option>
 
-					<p class="help-block">
-						<translate> Volume meter should move only when you hear stuff. </translate>
+							<option v-for="mic of mics" :key="mic.deviceId" :value="mic.deviceId">
+								{{ mic.groupId == selectedMicGroupId ? '(Swap) ' : '' }}
+								{{ mic.label }}
+							</option>
+						</app-form-control-select>
 
-						<br />
+						<app-volume-meter
+							v-if="hasDesktopAudio"
+							class="-volume-meter"
+							:host-rtc="firesideHostRtc"
+							type="desktop-audio"
+						/>
 
-						<translate>
-							If you want to stream normal Desktop audio, you may need to use a
-							virtual cable.
-						</translate>
-
-						<app-link-help page="fireside-streaming#desktop-audio" class="link-help">
-							<translate>How?</translate>
-						</app-link-help>
-					</p>
-
-					<app-expand :when="isInvalidMicConfig">
-						<div class="alert alert-notice sans-margin-bottom">
+						<p class="help-block">
 							<translate>
-								You need to choose two different microphones for your voice and
-								desktop audio.
+								Volume meter should move only when you hear stuff.
 							</translate>
-						</div>
-					</app-expand>
-				</app-form-group>
+
+							<br />
+
+							<translate>
+								If you want to stream normal Desktop audio, you may need to use a
+								virtual cable.
+							</translate>
+
+							<app-link-help
+								page="fireside-streaming#desktop-audio"
+								class="link-help"
+							>
+								<translate>How?</translate>
+							</app-link-help>
+						</p>
+
+						<app-expand :when="isInvalidMicConfig">
+							<div class="alert alert-notice sans-margin-bottom">
+								<translate>
+									You need to choose two different microphones for your voice and
+									desktop audio.
+								</translate>
+							</div>
+						</app-expand>
+					</app-form-group>
+				</app-expand>
 			</template>
 		</template>
 
-		<app-expand :when="shouldShowSelectSpeaker">
-			<app-form-group name="selectedGroupAudioDeviceId" hide-label>
+		<app-expand :when="shouldShowSelectSpeaker && shouldShowAdvanced">
+			<app-form-group name="tempSelectedGroupAudioDeviceId" hide-label>
 				<template v-if="!hasSpeakerPermissions">
 					<translate>
 						To hear your other streaming co-hosts we need access to your speakers.
@@ -212,9 +259,10 @@
 		display: none
 
 .-mic-input
-	border-bottom-left-radius: 0
-	border-bottom-right-radius: 0
-	border-bottom: 0
+	&:not(.-hide-indicator)
+		border-bottom-left-radius: 0
+		border-bottom-right-radius: 0
+		border-bottom: 0
 
 .-volume-meter
 	theme-prop('border-color', 'bg-subtle')
@@ -227,4 +275,11 @@
 .-group-audio-info
 	border-top-left-radius: 0
 	border-top-right-radius: 0
+
+.-advanced
+	user-select: none
+	cursor: pointer
+
+.-disabled
+	cursor: not-allowed
 </style>

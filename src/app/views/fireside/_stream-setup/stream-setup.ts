@@ -19,11 +19,12 @@ const Beeps = [
 
 type FormModel = {
 	selectedWebcamDeviceId: string;
-	tempSelectedMicDeviceId: string | null;
-	tempSelectedDesktopAudioDeviceId: string | null;
 	selectedMicDeviceId: string;
 	selectedDesktopAudioDeviceId: string;
 	selectedGroupAudioDeviceId: string;
+	tempSelectedMicDeviceId: string | null;
+	tempSelectedDesktopAudioDeviceId: string | null;
+	tempSelectedGroupAudioDeviceId: string | null;
 	isStreaming: boolean;
 };
 
@@ -40,6 +41,8 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 	desktopAudioVolume = 0;
 	micAudioVolume = 0;
 	private p_refreshVolumeInterval: NodeJS.Timer | null = null;
+	private p_shouldShowAdvanced = false;
+	private p_showAdvancedFormError = false;
 
 	private networkQualityDebounce: () => void = null as any;
 
@@ -79,11 +82,12 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		}
 	}
 
-	get isChangingTempValues() {
-		return (
-			this.formModel.tempSelectedDesktopAudioDeviceId == this.formModel.selectedMicDeviceId ||
-			this.formModel.tempSelectedMicDeviceId == this.selectedDesktopAudioGroupId
-		);
+	get hasMicAudio() {
+		return this.formModel.selectedMicDeviceId !== '';
+	}
+
+	get hasDesktopAudio() {
+		return this.formModel.selectedDesktopAudioDeviceId !== '';
 	}
 
 	get selectedMicGroupId() {
@@ -151,6 +155,55 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 			this.formModel.selectedDesktopAudioDeviceId !== '' &&
 			this.formModel.selectedMicDeviceId === this.formModel.selectedDesktopAudioDeviceId
 		);
+	}
+
+	get shouldShowAdvancedFormError() {
+		return !this.canToggleAdvanced && this.p_showAdvancedFormError;
+	}
+
+	get canToggleAdvanced() {
+		if (!this.formModel.isStreaming) {
+			return true;
+		}
+
+		return [this.formModel.selectedMicDeviceId, this.formModel.selectedWebcamDeviceId].some(
+			i => i !== ''
+		);
+	}
+
+	wouldInvalidateIfRemoved(fieldToRemove: string) {
+		if (!this.formModel.isStreaming) {
+			return false;
+		}
+
+		const requiresMinimumOne: Record<string, string>[] = [
+			{ selectedWebcamDeviceId: this.formModel.selectedWebcamDeviceId },
+			{ selectedMicDeviceId: this.formModel.selectedMicDeviceId },
+			{ selectedDesktopAudioDeviceId: this.formModel.selectedDesktopAudioDeviceId },
+		];
+
+		const remainingFields = requiresMinimumOne.filter(entry => {
+			const key = entry[0];
+			const value = entry[1];
+
+			return fieldToRemove !== key && value !== '';
+		});
+
+		return remainingFields.length === 0;
+	}
+
+	onToggleAdvanced() {
+		if (this.shouldShowAdvanced && !this.canToggleAdvanced) {
+			this.p_showAdvancedFormError = true;
+			return;
+		}
+
+		this.p_shouldShowAdvanced = !this.p_shouldShowAdvanced;
+		this.p_showAdvancedFormError = false;
+	}
+
+	get shouldShowAdvanced() {
+		return this.p_shouldShowAdvanced;
 	}
 
 	get shouldShowSelectSpeaker() {
@@ -224,8 +277,30 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		// giving it a chance to resolve itself.
 		await sleep(0);
 
-		if (this.isInvalidConfig && this.formModel.isStreaming && !this.isChangingTempValues) {
+		if (this.isInvalidConfig && this.formModel.isStreaming) {
 			this.firesideHostRtc.stopStreaming();
+		}
+	}
+
+	@Watch('shouldShowAdvanced')
+	onShouldShowAdvancedChanged() {
+		const newGroupAudio = this.shouldShowAdvanced
+			? this.formModel.tempSelectedGroupAudioDeviceId ?? ''
+			: '';
+		this.setField('selectedGroupAudioDeviceId', newGroupAudio);
+
+		if (
+			this.shouldShowAdvanced &&
+			// If we have the same ID stored as our currently active mic, change
+			// the temp ID to empty and trigger the watcher for the value.
+			this.formModel.tempSelectedDesktopAudioDeviceId === this.formModel.selectedMicDeviceId
+		) {
+			this.setField('tempSelectedDesktopAudioDeviceId', '');
+		} else {
+			const newDesktopAudio = this.shouldShowAdvanced
+				? this.formModel.tempSelectedDesktopAudioDeviceId ?? ''
+				: '';
+			this.setField('selectedDesktopAudioDeviceId', newDesktopAudio);
 		}
 	}
 
@@ -256,6 +331,14 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		if (newId !== '' && newDesktop?.groupId == oldMic?.groupId) {
 			this.setField('tempSelectedMicDeviceId', oldDesktop?.deviceId ?? '');
 		}
+	}
+
+	@Watch('formModel.tempSelectedGroupAudioDeviceId')
+	onTempSelectedGroupAudioChanged() {
+		this.setField(
+			'selectedGroupAudioDeviceId',
+			this.formModel.tempSelectedDesktopAudioDeviceId ?? ''
+		);
 	}
 
 	@Watch('formModel.selectedWebcamDeviceId')
