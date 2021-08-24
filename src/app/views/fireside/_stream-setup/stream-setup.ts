@@ -1,5 +1,5 @@
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { debounce } from '../../../../utils/utils';
+import { debounce, sleep } from '../../../../utils/utils';
 import { propRequired } from '../../../../utils/vue';
 import { MediaDeviceService } from '../../../../_common/agora/media-device.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
@@ -19,6 +19,8 @@ const Beeps = [
 
 type FormModel = {
 	selectedWebcamDeviceId: string;
+	tempSelectedMicDeviceId: string | null;
+	tempSelectedDesktopAudioDeviceId: string | null;
 	selectedMicDeviceId: string;
 	selectedDesktopAudioDeviceId: string;
 	selectedGroupAudioDeviceId: string;
@@ -48,9 +50,9 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 
 	onInit() {
 		this.setField('selectedWebcamDeviceId', this.firesideHostRtc.selectedWebcamDeviceId);
-		this.setField('selectedMicDeviceId', this.firesideHostRtc.selectedMicDeviceId);
+		this.setField('tempSelectedMicDeviceId', this.firesideHostRtc.selectedMicDeviceId);
 		this.setField(
-			'selectedDesktopAudioDeviceId',
+			'tempSelectedDesktopAudioDeviceId',
 			this.firesideHostRtc.selectedDesktopAudioDeviceId
 		);
 		this.setField(
@@ -77,13 +79,19 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		}
 	}
 
+	get isChangingTempValues() {
+		return (
+			this.formModel.tempSelectedDesktopAudioDeviceId == this.formModel.selectedMicDeviceId ||
+			this.formModel.tempSelectedMicDeviceId == this.selectedDesktopAudioGroupId
+		);
+	}
+
 	get selectedMicGroupId() {
-		return this.mics.find(i => i.deviceId == this.formModel.selectedMicDeviceId)?.groupId;
+		return this.getDeviceFromId(this.formModel.selectedMicDeviceId, 'mic')?.groupId;
 	}
 
 	get selectedDesktopAudioGroupId() {
-		return this.mics.find(i => i.deviceId == this.formModel.selectedDesktopAudioDeviceId)
-			?.groupId;
+		return this.getDeviceFromId(this.formModel.selectedDesktopAudioDeviceId, 'mic')?.groupId;
 	}
 
 	@Watch('canStreamVideo', { immediate: true })
@@ -189,7 +197,7 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 
 		// Need to stream something
 		return (
-			!this.webcams.find(i => i.deviceId == this.formModel.selectedWebcamDeviceId) &&
+			!this.getDeviceFromId(this.formModel.selectedWebcamDeviceId, 'webcam') &&
 			!this.mics.find(
 				i =>
 					i.deviceId == this.formModel.selectedMicDeviceId ||
@@ -198,10 +206,55 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		);
 	}
 
+	private getDeviceFromId(id: string, deviceType: 'mic' | 'webcam' | 'speaker') {
+		switch (deviceType) {
+			case 'mic':
+				return this.mics.find(i => i.deviceId == id);
+			case 'speaker':
+				return this.speakers.find(i => i.deviceId == id);
+			case 'webcam':
+				return this.webcams.find(i => i.deviceId == id);
+		}
+	}
+
 	@Watch('isInvalidConfig')
-	onInvalidConfigChanged() {
-		if (this.isInvalidConfig && this.formModel.isStreaming) {
+	async onInvalidConfigChanged() {
+		// The form will become invalid from the mic and desktop audio tracks
+		// having the same ID, so we need to see if it's still invalid after
+		// giving it a chance to resolve itself.
+		await sleep(0);
+
+		if (this.isInvalidConfig && this.formModel.isStreaming && !this.isChangingTempValues) {
 			this.firesideHostRtc.stopStreaming();
+		}
+	}
+
+	@Watch('formModel.tempSelectedMicDeviceId')
+	onTempSelectedMicChanged() {
+		const oldMic = this.getDeviceFromId(this.formModel.selectedMicDeviceId, 'mic');
+		const oldDesktop = this.getDeviceFromId(this.formModel.selectedDesktopAudioDeviceId, 'mic');
+		const newMic = this.getDeviceFromId(this.formModel.tempSelectedMicDeviceId ?? '', 'mic');
+		const newId = newMic?.deviceId ?? '';
+
+		this.setField('selectedMicDeviceId', newMic?.deviceId ?? '');
+		if (newId !== '' && newMic?.groupId == oldDesktop?.groupId) {
+			this.setField('tempSelectedDesktopAudioDeviceId', oldMic?.deviceId ?? '');
+		}
+	}
+
+	@Watch('formModel.tempSelectedDesktopAudioDeviceId')
+	onTempSelectedDesktopAudioChanged() {
+		const oldMic = this.getDeviceFromId(this.formModel.selectedMicDeviceId, 'mic');
+		const oldDesktop = this.getDeviceFromId(this.formModel.selectedDesktopAudioDeviceId, 'mic');
+		const newDesktop = this.getDeviceFromId(
+			this.formModel.tempSelectedDesktopAudioDeviceId ?? '',
+			'mic'
+		);
+		const newId = newDesktop?.deviceId ?? '';
+
+		this.setField('selectedDesktopAudioDeviceId', newDesktop?.deviceId ?? '');
+		if (newId !== '' && newDesktop?.groupId == oldMic?.groupId) {
+			this.setField('tempSelectedMicDeviceId', oldDesktop?.deviceId ?? '');
 		}
 	}
 

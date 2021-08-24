@@ -2,7 +2,11 @@
 
 <template>
 	<app-form ref="form" name="streamSetupForm">
-		<app-form-group v-if="canStreamVideo" hide-label name="selectedWebcamDeviceId">
+		<app-form-group
+			v-if="canStreamVideo"
+			name="selectedWebcamDeviceId"
+			:label="$gettext('Virtual Camera')"
+		>
 			<template v-if="!hasWebcamPermissions">
 				<p><translate>To stream video we need access to the webcams.</translate></p>
 
@@ -66,16 +70,12 @@
 				</translate>
 			</div>
 			<template v-else>
-				<app-form-group name="selectedMicDeviceId" hide-label>
+				<app-form-group name="tempSelectedMicDeviceId" :label="$gettext('Microphone')">
 					<app-form-control-select :disabled="firesideHostRtc.isBusy" class="-mic-input">
 						<option value=""><translate>Microphone (None)</translate></option>
 
-						<option
-							v-for="mic of mics"
-							:key="mic.deviceId"
-							:value="mic.deviceId"
-							:disabled="mic.groupId == selectedDesktopAudioGroupId"
-						>
+						<option v-for="mic of mics" :key="mic.deviceId" :value="mic.deviceId">
+							{{ mic.groupId == selectedDesktopAudioGroupId ? '(Swap) ' : '' }}
 							{{ mic.label }}
 						</option>
 					</app-form-control-select>
@@ -91,16 +91,15 @@
 					</p>
 				</app-form-group>
 
-				<app-form-group name="selectedDesktopAudioDeviceId" hide-label>
+				<app-form-group
+					name="tempSelectedDesktopAudioDeviceId"
+					:label="$gettext('Desktop Audio')"
+				>
 					<app-form-control-select :disabled="firesideHostRtc.isBusy" class="-mic-input">
 						<option value=""><translate>Desktop Audio (None)</translate></option>
 
-						<option
-							v-for="mic of mics"
-							:key="mic.deviceId"
-							:value="mic.deviceId"
-							:disabled="mic.groupId == selectedMicGroupId"
-						>
+						<option v-for="mic of mics" :key="mic.deviceId" :value="mic.deviceId">
+							{{ mic.groupId == selectedMicGroupId ? '(Swap) ' : '' }}
 							{{ mic.label }}
 						</option>
 					</app-form-control-select>
