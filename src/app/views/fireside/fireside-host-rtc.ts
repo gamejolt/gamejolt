@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { AgoraStreamingClient } from '../../../_common/agora/agora-streaming-client';
 import { MediaDeviceService } from '../../../_common/agora/media-device.service';
 import { Api } from '../../../_common/api/api.service';
@@ -17,11 +16,11 @@ export class FiresideHostRtc {
 	private role: FiresideRole = null as any;
 
 	// The target device ids we want to be streaming to.
-	private p_selectedWebcamDeviceId = '';
-	private p_selectedMicDeviceId = '';
-	private p_selectedDesktopAudioDeviceId = '';
-	private p_selectedGroupAudioDeviceId = '';
-	private p_isStreaming = false;
+	private _selectedWebcamDeviceId = '';
+	private _selectedMicDeviceId = '';
+	private _selectedDesktopAudioDeviceId = '';
+	private _selectedGroupAudioDeviceId = '';
+	private _isStreaming = false;
 
 	private videoPreviewElement: HTMLDivElement | null = null;
 
@@ -57,7 +56,7 @@ export class FiresideHostRtc {
 			RENEW_TOKEN_CHECK_INTERVAL
 		);
 
-		Vue.set(this, 'p_isStreaming', false);
+		this._isStreaming = false;
 	}
 
 	destroy() {
@@ -84,7 +83,7 @@ export class FiresideHostRtc {
 
 		this.videoClient = null;
 		this.chatClient = null;
-		this.p_isStreaming = false;
+		this._isStreaming = false;
 	}
 
 	private async regenerateClients(generation: number) {
@@ -102,7 +101,7 @@ export class FiresideHostRtc {
 			console.log('Regenerating clients');
 			this.areClientsRegenerating = true;
 
-			const wasStreaming = this.p_isStreaming;
+			const wasStreaming = this._isStreaming;
 			this._destroy();
 
 			const myGeneration = this.currentClientGeneration;
@@ -240,13 +239,13 @@ export class FiresideHostRtc {
 	}
 
 	get selectedWebcamDeviceId() {
-		return this.p_selectedWebcamDeviceId;
+		return this._selectedWebcamDeviceId;
 	}
 
 	set selectedWebcamDeviceId(newWebcamDeviceId: string) {
 		console.log('setting webcam device id to ' + newWebcamDeviceId);
-		const videoDeviceChanged = newWebcamDeviceId !== this.p_selectedWebcamDeviceId;
-		this.p_selectedWebcamDeviceId = newWebcamDeviceId;
+		const videoDeviceChanged = newWebcamDeviceId !== this._selectedWebcamDeviceId;
+		this._selectedWebcamDeviceId = newWebcamDeviceId;
 
 		if (videoDeviceChanged) {
 			this.updateWebcamDevice();
@@ -254,12 +253,12 @@ export class FiresideHostRtc {
 	}
 
 	get selectedMicDeviceId() {
-		return this.p_selectedMicDeviceId;
+		return this._selectedMicDeviceId;
 	}
 
 	set selectedMicDeviceId(newMicId: string) {
-		const micChanged = newMicId !== this.p_selectedMicDeviceId;
-		this.p_selectedMicDeviceId = newMicId;
+		const micChanged = newMicId !== this._selectedMicDeviceId;
+		this._selectedMicDeviceId = newMicId;
 
 		if (micChanged) {
 			this.updateMicDevice();
@@ -267,12 +266,12 @@ export class FiresideHostRtc {
 	}
 
 	get selectedDesktopAudioDeviceId() {
-		return this.p_selectedDesktopAudioDeviceId;
+		return this._selectedDesktopAudioDeviceId;
 	}
 
 	set selectedDesktopAudioDeviceId(newSpeakerId: string) {
-		const speakerChanged = newSpeakerId !== this.p_selectedDesktopAudioDeviceId;
-		this.p_selectedDesktopAudioDeviceId = newSpeakerId;
+		const speakerChanged = newSpeakerId !== this._selectedDesktopAudioDeviceId;
+		this._selectedDesktopAudioDeviceId = newSpeakerId;
 
 		if (speakerChanged) {
 			this.updateDesktopAudioDevice();
@@ -280,12 +279,12 @@ export class FiresideHostRtc {
 	}
 
 	get selectedGroupAudioDeviceId() {
-		return this.p_selectedGroupAudioDeviceId;
+		return this._selectedGroupAudioDeviceId;
 	}
 
 	set selectedGroupAudioDeviceId(newSpeakerId: string) {
-		const speakerChanged = newSpeakerId !== this.p_selectedGroupAudioDeviceId;
-		this.p_selectedGroupAudioDeviceId = newSpeakerId;
+		const speakerChanged = newSpeakerId !== this._selectedGroupAudioDeviceId;
+		this._selectedGroupAudioDeviceId = newSpeakerId;
 
 		if (speakerChanged) {
 			this.updateGroupAudioDevice();
@@ -296,13 +295,13 @@ export class FiresideHostRtc {
 		return this.doBusyWork(async () => {
 			let deviceId: string | null;
 
-			if (this.p_selectedWebcamDeviceId === '') {
+			if (this._selectedWebcamDeviceId === '') {
 				deviceId = null;
 			} else {
 				const deviceExists = !!MediaDeviceService.webcams.find(
-					webcam => webcam.deviceId === this.p_selectedWebcamDeviceId
+					webcam => webcam.deviceId === this._selectedWebcamDeviceId
 				);
-				deviceId = deviceExists ? this.p_selectedWebcamDeviceId : null;
+				deviceId = deviceExists ? this._selectedWebcamDeviceId : null;
 			}
 
 			await this.videoClient?.setVideoDevice(deviceId);
@@ -316,13 +315,13 @@ export class FiresideHostRtc {
 		return this.doBusyWork(async () => {
 			let deviceId: string | null;
 
-			if (this.p_selectedMicDeviceId === '') {
+			if (this._selectedMicDeviceId === '') {
 				deviceId = null;
 			} else {
 				const deviceExists = !!MediaDeviceService.mics.find(
-					mic => mic.deviceId === this.p_selectedMicDeviceId
+					mic => mic.deviceId === this._selectedMicDeviceId
 				);
-				deviceId = deviceExists ? this.p_selectedMicDeviceId : null;
+				deviceId = deviceExists ? this._selectedMicDeviceId : null;
 			}
 
 			return this.chatClient?.setMicDevice(deviceId);
@@ -333,13 +332,13 @@ export class FiresideHostRtc {
 		return this.doBusyWork(async () => {
 			let deviceId: string | null;
 
-			if (this.p_selectedDesktopAudioDeviceId === '') {
+			if (this._selectedDesktopAudioDeviceId === '') {
 				deviceId = null;
 			} else {
 				const deviceExists = !!MediaDeviceService.mics.find(
-					mic => mic.deviceId === this.p_selectedDesktopAudioDeviceId
+					mic => mic.deviceId === this._selectedDesktopAudioDeviceId
 				);
-				deviceId = deviceExists ? this.p_selectedDesktopAudioDeviceId : null;
+				deviceId = deviceExists ? this._selectedDesktopAudioDeviceId : null;
 			}
 
 			return this.videoClient?.setVirtualMicDevice(deviceId);
@@ -350,13 +349,13 @@ export class FiresideHostRtc {
 		return this.doBusyWork(async () => {
 			let deviceId: string | null;
 
-			if (this.p_selectedGroupAudioDeviceId === '') {
+			if (this._selectedGroupAudioDeviceId === '') {
 				deviceId = null;
 			} else {
 				const deviceExists = !!MediaDeviceService.speakers.find(
-					speaker => speaker.deviceId === this.p_selectedGroupAudioDeviceId
+					speaker => speaker.deviceId === this._selectedGroupAudioDeviceId
 				);
-				deviceId = deviceExists ? this.p_selectedGroupAudioDeviceId : null;
+				deviceId = deviceExists ? this._selectedGroupAudioDeviceId : null;
 			}
 
 			return this.chatClient?.setSpeakerDevice(deviceId);
@@ -391,7 +390,7 @@ export class FiresideHostRtc {
 	}
 
 	get isStreaming() {
-		return this.p_isStreaming;
+		return this._isStreaming;
 	}
 
 	get isPoorNetworkQuality() {
@@ -409,11 +408,11 @@ export class FiresideHostRtc {
 
 	async startStreaming() {
 		await this.doBusyWork(async () => {
-			if (this.p_isStreaming) {
+			if (this._isStreaming) {
 				return;
 			}
 
-			Vue.set(this, 'p_isStreaming', true);
+			this._isStreaming = true;
 
 			let response: any = null;
 			try {
@@ -438,7 +437,7 @@ export class FiresideHostRtc {
 						'Could not start streaming. Either fireside has ended or your permissions to stream have been revoked.'
 					)
 				);
-				Vue.set(this, 'p_isStreaming', false);
+				this._isStreaming = false;
 				return;
 			}
 
@@ -499,7 +498,7 @@ export class FiresideHostRtc {
 
 	private async _stopStreaming(becomeBusy: boolean) {
 		const busyWork = async () => {
-			if (!this.p_isStreaming) {
+			if (!this._isStreaming) {
 				return;
 			}
 
@@ -526,7 +525,7 @@ export class FiresideHostRtc {
 				return;
 			}
 
-			Vue.set(this, 'p_isStreaming', false);
+			this._isStreaming = false;
 			console.log('Stopped streaming');
 		};
 
