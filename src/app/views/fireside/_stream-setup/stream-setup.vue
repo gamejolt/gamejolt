@@ -24,7 +24,7 @@
 				</p>
 			</template>
 			<app-form-control-select v-else :disabled="firesideHostRtc.isBusy">
-				<option value=""><translate>Video (None)</translate></option>
+				<option value=""><translate>Not Set</translate></option>
 
 				<option v-for="webcam of webcams" :key="webcam.deviceId" :value="webcam.deviceId">
 					{{ webcam.label }}
@@ -80,7 +80,7 @@
 							value=""
 							:disabled="wouldInvalidateIfRemoved('selectedMicDeviceId')"
 						>
-							<translate>Microphone (None)</translate>
+							<translate>Not Set</translate>
 						</option>
 
 						<option v-for="mic of mics" :key="mic.deviceId" :value="mic.deviceId">
@@ -135,7 +135,7 @@
 								value=""
 								:disabled="wouldInvalidateIfRemoved('selectedDesktopAudioDeviceId')"
 							>
-								<translate>Desktop Audio (None)</translate>
+								<translate>Not Set</translate>
 							</option>
 
 							<option v-for="mic of mics" :key="mic.deviceId" :value="mic.deviceId">
@@ -204,7 +204,7 @@
 				</template>
 				<template v-else>
 					<app-form-control-select :disabled="firesideHostRtc.isBusy">
-						<option value=""><translate>Co-Host Audio (None)</translate></option>
+						<option value=""><translate>Not Set</translate></option>
 
 						<option
 							v-for="speaker of speakers"
