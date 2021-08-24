@@ -117,6 +117,8 @@ export default class RouteFireside extends BaseRouteComponent {
 	@ProvideReactive(FiresideRTCKey) rtc: FiresideRTC | null = null;
 	@ProvideReactive(FiresideControllerKey) c: FiresideController = new FiresideController();
 
+	private beforeEachDeregister: Function | null = null;
+
 	private streamingAppId: string | null = null;
 	private gridChannel: FiresideChannel | null = null;
 	private chatChannel: ChatRoomChannel | null = null;
@@ -725,8 +727,31 @@ export default class RouteFireside extends BaseRouteComponent {
 		}
 	}
 
+	@Watch('isPersonallyStreaming')
+	onIsPersonallyStreamingChanged() {
+		if (this.isPersonallyStreaming) {
+			this.beforeEachDeregister ??= this.$router.beforeEach((_to, _from, next) => {
+				if (
+					!window.confirm(
+						this.$gettext(
+							`You are currently streaming to a Fireside. If you leave this page, you will stop streaming. Are you sure you want to leave?`
+						)
+					)
+				) {
+					return next(false);
+				}
+				next();
+			});
+		} else {
+			if (this.beforeEachDeregister) {
+				this.beforeEachDeregister();
+				this.beforeEachDeregister = null;
+			}
+		}
+	}
+
 	@Watch('isDraft')
-	onIsDraftChange() {
+	onIsDraftChanged() {
 		// We try not to show sharing information while in draft, since links
 		// will redirect them if they don't have permissions.
 		if (this.isDraft) {
