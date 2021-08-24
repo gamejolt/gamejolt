@@ -189,9 +189,12 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 
 		// Need to stream something
 		return (
-			this.formModel.selectedWebcamDeviceId === '' &&
-			this.formModel.selectedMicDeviceId === '' &&
-			this.formModel.selectedDesktopAudioDeviceId === ''
+			!this.webcams.find(i => i.deviceId == this.formModel.selectedWebcamDeviceId) &&
+			!this.mics.find(
+				i =>
+					i.deviceId == this.formModel.selectedMicDeviceId ||
+					i.deviceId == this.formModel.selectedDesktopAudioDeviceId
+			)
 		);
 	}
 
