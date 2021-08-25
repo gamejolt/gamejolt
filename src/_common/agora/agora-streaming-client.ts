@@ -107,9 +107,13 @@ export class AgoraStreamingClient {
 
 			remoteUser.audioTrack?.getMediaStreamTrack();
 
-			if (this.audioOutputDeviceId !== null) {
-				remoteUser.audioTrack!.play();
-			}
+			// TODO: Not sure of what other cleanup we need to do for this, but
+			// we should always try to use their default device if they haven't
+			// set up a different one yet.
+			//
+			// if (this.audioOutputDeviceId !== null) {
+			remoteUser.audioTrack!.play();
+			// }
 		};
 		this.client.on('user-published', this._onUserPublishedListener);
 
