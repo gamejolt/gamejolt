@@ -6,6 +6,8 @@ import AppExpand from '../../../../_common/expand/expand.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
 import { BaseForm, FormOnInit } from '../../../../_common/form-vue/form.service';
 import AppForm from '../../../../_common/form-vue/form.vue';
+import AppFormLegend from '../../../../_common/form-vue/legend/legend.vue';
+import AppLoadingFade from '../../../../_common/loading/fade/fade.vue';
 import { FiresideHostRtc } from '../fireside-host-rtc';
 import AppVolumeMeter from './volume-meter.vue';
 
@@ -25,7 +27,6 @@ type FormModel = {
 	tempSelectedMicDeviceId: string | null;
 	tempSelectedDesktopAudioDeviceId: string | null;
 	tempSelectedGroupAudioDeviceId: string | null;
-	isStreaming: boolean;
 };
 
 @Component({
@@ -33,11 +34,14 @@ type FormModel = {
 		AppExpand,
 		AppVolumeMeter,
 		AppFormControlToggle,
+		AppFormLegend,
+		AppLoadingFade,
 	},
 })
 export default class AppStreamSetup extends BaseForm<FormModel> implements FormOnInit {
 	@Prop(propRequired(FiresideHostRtc)) firesideHostRtc!: FiresideHostRtc;
 
+	isStarting = false;
 	desktopAudioVolume = 0;
 	micAudioVolume = 0;
 	private p_refreshVolumeInterval: NodeJS.Timer | null = null;
@@ -64,7 +68,6 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 			'selectedGroupAudioDeviceId',
 			this.firesideHostRtc.selectedGroupAudioDeviceId
 		);
-		this.setField('isStreaming', this.firesideHostRtc.isStreaming);
 	}
 
 	mounted() {
@@ -82,6 +85,10 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		if (this.p_refreshVolumeInterval) {
 			clearInterval(this.p_refreshVolumeInterval);
 		}
+	}
+
+	get isStreaming() {
+		return this.firesideHostRtc.isStreaming;
 	}
 
 	get hasMicAudio() {
@@ -164,7 +171,7 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 	}
 
 	get canToggleAdvanced() {
-		if (!this.formModel.isStreaming) {
+		if (!this.isStreaming) {
 			return true;
 		}
 
@@ -174,7 +181,7 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 	}
 
 	wouldInvalidateIfRemoved(fieldToRemove: string) {
-		if (!this.formModel.isStreaming) {
+		if (!this.isStreaming) {
 			return false;
 		}
 
@@ -202,24 +209,22 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		this.emitClose();
 	}
 
-	onClickStartStreaming() {
-		this.setField('isStreaming', true);
-		this.onIsStreamingChangeRequested();
-	}
-
-	onClickStopStreaming() {
-		this.setField('isStreaming', false);
-		this.onIsStreamingChangeRequested();
-	}
-
-	onIsStreamingChangeRequested() {
-		if (this.formModel.isStreaming) {
-			this.firesideHostRtc.startStreaming();
-		} else {
-			this.firesideHostRtc.stopStreaming();
+	async onClickStartStreaming() {
+		if (this.isStarting) {
+			return;
 		}
+		this.isStarting = true;
 
-		// TODO: making formModel.isStreaming reactive to changes in firesideHostRtc.isStreaming
+		try {
+			await this.firesideHostRtc.startStreaming();
+		} catch {}
+
+		this.isStarting = false;
+
+		// Only close the modal if we were able to start streaming.
+		if (this.firesideHostRtc.isStreaming) {
+			this.emitClose();
+		}
 	}
 
 	get shouldShowAdvanced() {
@@ -297,7 +302,7 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		// giving it a chance to resolve itself.
 		await sleep(0);
 
-		if (this.isInvalidConfig && this.formModel.isStreaming) {
+		if (this.isInvalidConfig && this.isStreaming) {
 			this.firesideHostRtc.stopStreaming();
 		}
 	}
@@ -367,7 +372,7 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 	@Watch('formModel.selectedGroupAudioDeviceId')
 	onSelectedDevicesChanged() {
 		// When streaming, only apply changes to selected devices if the config is valid.
-		if (this.isInvalidConfig && this.firesideHostRtc.isStreaming) {
+		if (this.isInvalidConfig && this.isStreaming) {
 			// TODO: show error status on the form model values that do not match with whats set on firesideHostRtc.
 			return;
 		}
@@ -380,19 +385,14 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		this.firesideHostRtc.selectedGroupAudioDeviceId = this.formModel.selectedGroupAudioDeviceId;
 	}
 
-	@Watch('firesideHostRtc.isStreaming', { immediate: true })
-	onIsStreamingChanged() {
-		this.setField('isStreaming', this.firesideHostRtc.isStreaming);
-	}
-
 	@Watch('firesideHostRtc.isPoorNetworkQuality')
 	onNetworkQualityChanged() {
 		if (!this.networkQualityDebounce) {
 			this.networkQualityDebounce = debounce(() => {
 				if (this.firesideHostRtc.isPoorNetworkQuality) {
-					console.log('network quality is poor');
+					console.log('Network quality is poor.');
 				} else {
-					console.log('network quality is gud');
+					console.log('Network quality is very nice.');
 				}
 			}, 3_000);
 		}

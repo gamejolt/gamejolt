@@ -49,10 +49,23 @@
 						</ul>
 					</div>
 					<div v-if="shouldShowTitleControls" class="-fireside-title-controls">
+						<div
+							v-if="shouldShowStreamingOptions && !isPersonallyStreaming"
+							class="-stats-btn"
+						>
+							<app-button
+								v-app-tooltip="$gettext(`Start Streaming`)"
+								icon="broadcast"
+								circle
+								trans
+								@click="onClickEditStream"
+							/>
+						</div>
+
 						<app-popper>
 							<div class="-stats-btn">
 								<app-button
-									icon="ellipsis-v"
+									icon="cog"
 									circle
 									sparse
 									:solid="hasExpiryWarning && !shouldShowFiresideStats"
@@ -97,31 +110,23 @@
 										<translate>Fireside Info</translate>
 									</a>
 
-									<template v-if="shouldShowStreamingOptions">
+									<template
+										v-if="shouldShowStreamingOptions && isPersonallyStreaming"
+									>
 										<a
-											v-if="!isPersonallyStreaming"
 											class="list-group-item has-icon"
 											@click="onClickEditStream"
 										>
-											<app-jolticon icon="notifications" />
-											<translate>Add a Stream</translate>
+											<app-jolticon icon="edit" />
+											<translate>Stream Settings</translate>
 										</a>
-										<template v-else>
-											<a
-												class="list-group-item has-icon"
-												@click="onClickEditStream"
-											>
-												<app-jolticon icon="edit" />
-												<translate>Edit Stream</translate>
-											</a>
-											<a
-												class="list-group-item has-icon"
-												@click="onClickStopStreaming"
-											>
-												<app-jolticon icon="remove" notice />
-												<translate>Stop Streaming</translate>
-											</a>
-										</template>
+										<a
+											class="list-group-item has-icon"
+											@click="onClickStopStreaming"
+										>
+											<app-jolticon icon="remove" notice />
+											<translate>Stop Streaming</translate>
+										</a>
 									</template>
 								</div>
 							</template>
@@ -154,14 +159,23 @@
 								height: videoHeight + 'px',
 							}"
 						>
-							<template v-if="rtc && rtc.focusedUser">
-								<app-fireside-stream
-									:rtc-user="rtc.focusedUser"
-									:host-rtc="hostRtc"
-									:show-overlay-hosts="!shouldShowHosts"
-									:members="overlayChatMembers"
-								/>
-							</template>
+							<app-popper trigger="right-click">
+								<template v-if="rtc && rtc.focusedUser">
+									<app-fireside-stream
+										:rtc-user="rtc.focusedUser"
+										:host-rtc="hostRtc"
+										:show-overlay-hosts="!shouldShowHosts"
+										:members="overlayChatMembers"
+									/>
+								</template>
+								<template #popover>
+									<div class="list-group">
+										<a class="list-group-item" @click="toggleVideoStats()">
+											<translate>Toggle Video Stats</translate>
+										</a>
+									</div>
+								</template>
+							</app-popper>
 						</div>
 					</div>
 				</div>

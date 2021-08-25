@@ -266,6 +266,10 @@ export default class RouteFireside extends BaseRouteComponent {
 		this.hostRtc?.stopStreaming();
 	}
 
+	toggleVideoStats() {
+		this.rtc!.shouldShowVideoStats = !this.rtc!.shouldShowVideoStats;
+	}
+
 	async routeResolved($payload: RoutePayload) {
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb || {};
@@ -283,7 +287,6 @@ export default class RouteFireside extends BaseRouteComponent {
 		this.setPageTheme();
 
 		const userCanJoin = await this.checkUserCanJoin();
-		console.log(userCanJoin);
 
 		if (!userCanJoin) {
 			this.status = 'unauthorized';
@@ -422,7 +425,6 @@ export default class RouteFireside extends BaseRouteComponent {
 		}
 
 		const frontendCookie = await getCookie('frontend');
-		console.warn('cookie', frontendCookie);
 
 		if (!frontendCookie) {
 			return false;
@@ -510,7 +512,6 @@ export default class RouteFireside extends BaseRouteComponent {
 		}
 
 		if (this.streamingAppId && this.fireside.role.canStream) {
-			console.log('creating host rtc');
 			this.hostRtc = new FiresideHostRtc(
 				this.streamingAppId,
 				this.user.id,

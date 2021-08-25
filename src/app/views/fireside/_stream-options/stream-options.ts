@@ -39,10 +39,6 @@ export default class AppFiresideStreamOptions extends Vue {
 		return this.rtc.users.forEach(i => setAudioPlayback(i, true));
 	}
 
-	toggleVideoStats() {
-		this.rtc.shouldShowVideoStats = !this.rtc.shouldShowVideoStats;
-	}
-
 	get shouldShowStreamingOptions() {
 		return this.canStream || this.isPersonallyStreaming;
 	}

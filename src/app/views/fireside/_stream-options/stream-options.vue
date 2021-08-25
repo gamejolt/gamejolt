@@ -15,23 +15,18 @@
 					<a v-else class="list-group-item" @click="unmuteAll()">
 						<translate>Unmute All</translate>
 					</a>
-					<a class="list-group-item" @click="toggleVideoStats()">
-						<translate>Toggle Video Stats</translate>
-					</a>
 
 					<template v-if="shouldShowStreamingOptions">
 						<a
 							v-if="!isPersonallyStreaming"
-							class="list-group-item has-icon"
+							class="list-group-item"
 							@click="onClickEditStream"
 						>
-							<app-jolticon icon="notifications" />
-							<translate>Add a Stream</translate>
+							<translate>Start Streaming</translate>
 						</a>
 						<template v-else>
-							<a class="list-group-item has-icon" @click="onClickEditStream">
-								<app-jolticon icon="edit" />
-								<translate>Edit Stream</translate>
+							<a class="list-group-item" @click="onClickEditStream">
+								<translate>Stream Settings</translate>
 							</a>
 							<a class="list-group-item has-icon" @click="onClickStopStreaming">
 								<app-jolticon icon="remove" notice />

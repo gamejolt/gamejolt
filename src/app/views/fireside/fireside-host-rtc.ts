@@ -243,7 +243,6 @@ export class FiresideHostRtc {
 	}
 
 	set selectedWebcamDeviceId(newWebcamDeviceId: string) {
-		console.log('setting webcam device id to ' + newWebcamDeviceId);
 		const videoDeviceChanged = newWebcamDeviceId !== this._selectedWebcamDeviceId;
 		this._selectedWebcamDeviceId = newWebcamDeviceId;
 
@@ -426,8 +425,6 @@ export class FiresideHostRtc {
 			} catch (e) {
 				console.warn('Got error while getting streaming tokens to start streaming', e);
 			}
-
-			console.log(response);
 
 			if (!response || !response.success) {
 				console.warn('Could not start streaming', response);

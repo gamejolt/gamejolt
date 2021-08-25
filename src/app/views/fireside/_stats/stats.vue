@@ -32,7 +32,6 @@
 					block
 					primary
 					solid
-					icon="notifications"
 					class="-publish-btn"
 					@click="onClickPublish()"
 				>
@@ -62,8 +61,8 @@
 				</app-button>
 				<p class="help-block">
 					<translate>
-						Firesides stay open for as long as you're around. Throw a log on the fire to
-						keep your fireside going.
+						Firesides stay open for as long as you're around. Stoke the flames to keep
+						your fireside going.
 					</translate>
 				</p>
 			</template>
