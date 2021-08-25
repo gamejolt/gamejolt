@@ -58,16 +58,27 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 	};
 
 	onInit() {
-		this.setField('selectedWebcamDeviceId', this.firesideHostRtc.selectedWebcamDeviceId);
-		this.setField('tempSelectedMicDeviceId', this.firesideHostRtc.selectedMicDeviceId);
-		this.setField(
-			'tempSelectedDesktopAudioDeviceId',
-			this.firesideHostRtc.selectedDesktopAudioDeviceId
-		);
-		this.setField(
-			'tempSelectedGroupAudioDeviceId',
-			this.firesideHostRtc.selectedGroupAudioDeviceId ?? 'default'
-		);
+		const webcamId = this.getDeviceFromId(
+			this.firesideHostRtc.selectedWebcamDeviceId,
+			'webcam'
+		)?.deviceId;
+		const micId = this.getDeviceFromId(
+			this.firesideHostRtc.selectedMicDeviceId,
+			'mic'
+		)?.deviceId;
+		const desktopId = this.getDeviceFromId(
+			this.firesideHostRtc.selectedDesktopAudioDeviceId,
+			'mic'
+		)?.deviceId;
+		const groupId = this.getDeviceFromId(
+			this.firesideHostRtc.selectedGroupAudioDeviceId,
+			'speaker'
+		)?.deviceId;
+
+		this.setField('selectedWebcamDeviceId', webcamId ?? '');
+		this.setField('tempSelectedMicDeviceId', micId ?? '');
+		this.setField('tempSelectedDesktopAudioDeviceId', desktopId ?? '');
+		this.setField('tempSelectedGroupAudioDeviceId', groupId ?? 'default');
 	}
 
 	mounted() {
