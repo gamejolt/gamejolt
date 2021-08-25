@@ -127,10 +127,6 @@ export const configHasAutocomplete = new ConfigOptionBoolean('has_search_autocom
 	conditions: { join: true },
 });
 
-export const configWhoToFollow = new ConfigOptionBoolean('who_to_follow', true, {
-	conditions: { join: true },
-});
-
 export const configDiscoverCommunityChunks = new ConfigOptionBoolean(
 	'discover_community_chunks',
 	false

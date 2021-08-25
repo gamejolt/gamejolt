@@ -6,11 +6,7 @@ import { fuzzysearch } from '../../../utils/string';
 import AppAdWidget from '../../../_common/ad/widget/widget.vue';
 import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
-import {
-	configFYPDefault,
-	configHomeNav,
-	configWhoToFollow,
-} from '../../../_common/config/config.service';
+import { configFYPDefault, configHomeNav } from '../../../_common/config/config.service';
 import { AppConfigLoaded } from '../../../_common/config/loaded';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import AppNavTabList from '../../../_common/nav/tab-list/tab-list.vue';
@@ -24,7 +20,6 @@ import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
 import { AppState, AppStore } from '../../../_common/store/app-store';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppUserCard from '../../../_common/user/card/card.vue';
-import { User } from '../../../_common/user/user.model';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../components/activity/feed/view';
 import AppCommunitySliderPlaceholder from '../../components/community/slider/placeholder/placeholder.vue';
@@ -35,7 +30,6 @@ import { Store } from '../../store';
 import { LibraryModule, LibraryStore } from '../../store/library';
 import { HomeFeedService, HOME_FEED_ACTIVITY, HOME_FEED_FYP } from './home-feed.service';
 import AppHomeFireside from './_fireside/fireside.vue';
-import AppHomeRecommendedUsers from './_recommended/users/users.vue';
 
 class DashGame {
 	constructor(
@@ -60,7 +54,6 @@ export class RouteActivityFeedController {
 		AppUserCard,
 		AppScrollAffix,
 		AppAdWidget,
-		AppHomeRecommendedUsers,
 		AppNavTabList,
 		AppHomeFireside,
 		AppConfigLoaded,
@@ -85,9 +78,6 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	games: DashGame[] = [];
 	gameFilterQuery = '';
 	isShowingAllGames = false;
-	loadingRecommendedUsers = false; // Set to `true` while refreshing users.
-	loadingRecommendedData = true;
-	recommendedUsers: User[] = [];
 
 	readonly Screen = Screen;
 	readonly HomeFeedService = HomeFeedService;
@@ -118,13 +108,6 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 
 	get isShowAllGamesVisible() {
 		return !this.isShowingAllGames && this.games.length > 7 && this.gameFilterQuery === '';
-	}
-
-	get shouldShowRecommendedUsers() {
-		return (
-			configWhoToFollow.value &&
-			(this.loadingRecommendedUsers || this.recommendedUsers.length > 0)
-		);
 	}
 
 	get defaultTab() {
@@ -167,10 +150,6 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	}
 
 	routeResolved(payload: any, _fromCache: boolean) {
-		if (!Screen.isMobile) {
-			trackExperimentEngagement(configWhoToFollow);
-		}
-
 		if (Screen.isLg) {
 			trackExperimentEngagement(configHomeNav);
 		}
@@ -183,39 +162,9 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 			.reverse();
 	}
 
-	mounted() {
-		this.loadRecommendedData();
-	}
-
 	onPostAdded(post: FiresidePost) {
 		if (this.controller.feed) {
 			ActivityFeedService.onPostAdded(this.controller.feed, post, this);
 		}
-	}
-
-	async refreshRecommendedUsers() {
-		this.loadingRecommendedUsers = true;
-
-		const payload = await Api.sendRequest('/web/dash/recommended/refresh', undefined, {
-			detach: true,
-		});
-		if (payload && payload.users) {
-			this.recommendedUsers = User.populate(payload.users);
-		}
-
-		this.loadingRecommendedUsers = false;
-	}
-
-	async loadRecommendedData() {
-		this.loadingRecommendedData = true;
-
-		const payload = await Api.sendRequest('/web/dash/recommended', undefined, { detach: true });
-		if (payload) {
-			if (payload.users) {
-				this.recommendedUsers = User.populate(payload.users);
-			}
-		}
-
-		this.loadingRecommendedData = false;
 	}
 }

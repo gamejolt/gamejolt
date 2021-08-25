@@ -14,7 +14,7 @@
 		</div>
 		<p>
 			<small>
-				<translate>Hang out with people in temporary pop-up chats</translate>
+				<translate>Hang out with your followers in temporary pop-up chats</translate>
 			</small>
 		</p>
 
