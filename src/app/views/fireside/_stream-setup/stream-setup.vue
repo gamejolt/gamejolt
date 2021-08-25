@@ -91,13 +91,13 @@
 								:key="mic.deviceId"
 								:value="mic.deviceId"
 								:disabled="
-									mic.groupId == selectedDesktopAudioGroupId
+									mic.groupId === selectedDesktopAudioGroupId
 										? !canSwapAudioInputs
 										: false
 								"
 							>
 								{{
-									mic.groupId == selectedDesktopAudioGroupId
+									mic.groupId === selectedDesktopAudioGroupId
 										? `[${$gettext('Desktop Audio')}] `
 										: ''
 								}}
@@ -119,49 +119,6 @@
 								wrong input.
 							</translate>
 						</p>
-					</app-form-group>
-
-					<app-form-group
-						name="tempSelectedGroupAudioDeviceId"
-						:label="$gettext('Output Device')"
-					>
-						<template v-if="!hasSpeakerPermissions">
-							<translate>
-								To hear the other people streaming with you, we'll need access to
-								your output device so that we can pipe their beautiful voices into
-								your earholes.
-							</translate>
-
-							<app-button
-								v-if="!speakerPermissionsWerePrompted"
-								@click="onClickPromptSpeakerPermissions"
-							>
-								<translate>Request Permission</translate>
-							</app-button>
-							<translate v-else>
-								Click the lock icon next to the URL in your address bar to enable.
-								You may need to open this window again or refresh the page to renew
-								your devices.
-							</translate>
-						</template>
-						<template v-else>
-							<app-form-control-select :disabled="firesideHostRtc.isBusy">
-								<option
-									v-for="speaker of speakers"
-									:key="speaker.deviceId"
-									:value="speaker.deviceId"
-								>
-									{{ speaker.label }}
-								</option>
-							</app-form-control-select>
-
-							<p class="help-block">
-								<translate>
-									Make sure you choose an output device that is not captured by
-									your desktop audio input device.
-								</translate>
-							</p>
-						</template>
 					</app-form-group>
 
 					<fieldset>
@@ -223,13 +180,13 @@
 											:key="mic.deviceId"
 											:value="mic.deviceId"
 											:disabled="
-												mic.groupId == selectedMicGroupId
+												mic.groupId === selectedMicGroupId
 													? !canSwapAudioInputs
 													: false
 											"
 										>
 											{{
-												mic.groupId == selectedMicGroupId
+												mic.groupId === selectedMicGroupId
 													? `[${$gettext('Microphone')}] `
 													: ''
 											}}
@@ -261,6 +218,49 @@
 											</translate>
 										</div>
 									</app-expand>
+								</app-form-group>
+
+								<app-form-group
+									name="tempSelectedGroupAudioDeviceId"
+									:label="$gettext('Chat Output Device')"
+								>
+									<template v-if="!hasSpeakerPermissions">
+										<translate>
+											To hear the other people streaming with you, we'll need
+											access to your output device so that we can pipe their
+											beautiful voices into your earholes.
+										</translate>
+
+										<app-button
+											v-if="!speakerPermissionsWerePrompted"
+											@click="onClickPromptSpeakerPermissions"
+										>
+											<translate>Request Permission</translate>
+										</app-button>
+										<translate v-else>
+											Click the lock icon next to the URL in your address bar
+											to enable. You may need to open this window again or
+											refresh the page to renew your devices.
+										</translate>
+									</template>
+									<template v-else>
+										<app-form-control-select :disabled="firesideHostRtc.isBusy">
+											<option
+												v-for="speaker of speakers"
+												:key="speaker.deviceId"
+												:value="speaker.deviceId"
+											>
+												{{ speaker.label }}
+											</option>
+										</app-form-control-select>
+
+										<p class="help-block">
+											<translate>
+												Make sure you choose an output device that is not
+												captured by your desktop audio input device.
+											</translate>
+										</p>
+									</template>
 								</app-form-group>
 							</div>
 						</app-expand>
