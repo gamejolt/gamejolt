@@ -117,7 +117,7 @@
 											class="list-group-item has-icon"
 											@click="onClickEditStream"
 										>
-											<app-jolticon icon="edit" />
+											<app-jolticon icon="broadcast" />
 											<translate>Stream Settings</translate>
 										</a>
 										<a
@@ -288,7 +288,7 @@
 						</div>
 						<div class="text-center">
 							<h3>
-								<translate> You are blocked from joining this Fireside </translate>
+								<translate>You are blocked from joining this Fireside</translate>
 							</h3>
 							<p>
 								<router-link :to="{ name: 'home' }">
