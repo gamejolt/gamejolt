@@ -256,10 +256,6 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		return this.p_shouldShowAdvanced;
 	}
 
-	get shouldShowSelectSpeaker() {
-		return this.formModel.selectedDesktopAudioDeviceId !== '';
-	}
-
 	get hasSpeakerPermissions() {
 		return MediaDeviceService.hasSpeakerPermissions;
 	}
@@ -330,13 +326,6 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 
 	@Watch('shouldShowAdvanced')
 	onShouldShowAdvancedChanged() {
-		// TODO: This should be changed, but we'll need to change the template
-		// as well. We should never change their output device from under them.
-		const newGroupAudio = this.shouldShowAdvanced
-			? this.formModel.tempSelectedGroupAudioDeviceId
-			: 'default';
-		this.setField('selectedGroupAudioDeviceId', newGroupAudio);
-
 		if (
 			this.shouldShowAdvanced &&
 			// If we have the same ID stored as our currently active mic, change
