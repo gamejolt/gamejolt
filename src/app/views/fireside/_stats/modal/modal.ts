@@ -2,7 +2,7 @@ import { Component, Prop, ProvideReactive } from 'vue-property-decorator';
 import { BaseModal } from '../../../../../_common/modal/base';
 import { RouteStatus } from '../../fireside';
 import { FiresideHostRtc } from '../../fireside-host-rtc';
-import { FiresideController, FiresideControllerKey } from '../../_controller/controller';
+import { FiresideController, FiresideControllerKey } from '../../controller';
 import AppFiresideStats from '../stats.vue';
 
 @Component({

@@ -2,7 +2,7 @@ import { asyncComponentLoader } from '../../../../../utils/utils';
 import { Modal } from '../../../../../_common/modal/modal.service';
 import { RouteStatus } from '../../fireside';
 import { FiresideHostRtc } from '../../fireside-host-rtc';
-import { FiresideController } from '../../_controller/controller';
+import { FiresideController } from '../../controller';
 
 export class FiresideStatsModal {
 	static async show(

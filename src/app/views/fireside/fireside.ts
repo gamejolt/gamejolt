@@ -47,7 +47,7 @@ import {
 } from './fireside-rtc';
 import AppFiresideChatMembers from './_chat-members/chat-members.vue';
 import { FiresideChatMembersModal } from './_chat-members/modal/modal.service';
-import { FiresideController, FiresideControllerKey } from './_controller/controller';
+import { FiresideController, FiresideControllerKey } from './controller';
 import { FiresideEditModal } from './_edit-modal/edit-modal.service';
 import AppFiresideHostList from './_host-list/host-list.vue';
 import { FiresideStatsModal } from './_stats/modal/modal.service';
