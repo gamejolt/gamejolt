@@ -246,7 +246,7 @@ export class FiresideHostRtc {
 		const videoDeviceChanged = newWebcamDeviceId !== this._selectedWebcamDeviceId;
 		this._selectedWebcamDeviceId = newWebcamDeviceId;
 
-		if (videoDeviceChanged) {
+		if (videoDeviceChanged || newWebcamDeviceId === 'default') {
 			this.updateWebcamDevice();
 		}
 	}
@@ -259,7 +259,7 @@ export class FiresideHostRtc {
 		const micChanged = newMicId !== this._selectedMicDeviceId;
 		this._selectedMicDeviceId = newMicId;
 
-		if (micChanged) {
+		if (micChanged || newMicId === 'default') {
 			this.updateMicDevice();
 		}
 	}
@@ -272,7 +272,7 @@ export class FiresideHostRtc {
 		const speakerChanged = newSpeakerId !== this._selectedDesktopAudioDeviceId;
 		this._selectedDesktopAudioDeviceId = newSpeakerId;
 
-		if (speakerChanged) {
+		if (speakerChanged || newSpeakerId === 'default') {
 			this.updateDesktopAudioDevice();
 		}
 	}
@@ -285,7 +285,7 @@ export class FiresideHostRtc {
 		const speakerChanged = newSpeakerId !== this._selectedGroupAudioDeviceId;
 		this._selectedGroupAudioDeviceId = newSpeakerId;
 
-		if (speakerChanged) {
+		if (speakerChanged || newSpeakerId === 'default') {
 			this.updateGroupAudioDevice();
 		}
 	}
