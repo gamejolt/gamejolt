@@ -159,23 +159,23 @@
 								height: videoHeight + 'px',
 							}"
 						>
-							<app-popper trigger="right-click">
-								<template v-if="rtc && rtc.focusedUser">
+							<template v-if="rtc && rtc.focusedUser">
+								<app-popper trigger="right-click">
 									<app-fireside-stream
 										:rtc-user="rtc.focusedUser"
 										:host-rtc="hostRtc"
 										:show-overlay-hosts="!shouldShowHosts"
 										:members="overlayChatMembers"
 									/>
-								</template>
-								<template #popover>
-									<div class="list-group">
-										<a class="list-group-item" @click="toggleVideoStats()">
-											<translate>Toggle Video Stats</translate>
-										</a>
-									</div>
-								</template>
-							</app-popper>
+									<template #popover>
+										<div class="list-group">
+											<a class="list-group-item" @click="toggleVideoStats()">
+												<translate>Toggle Video Stats</translate>
+											</a>
+										</div>
+									</template>
+								</app-popper>
+							</template>
 						</div>
 					</div>
 				</div>
