@@ -200,6 +200,10 @@ export default class AppPopper extends Vue {
 	beforeDestroy() {
 		// Destroy the popper instance and element before we lose our $refs.
 		this.destroyPopper();
+
+		// Just in case the popover wasn't cleaned up properly.
+		document.removeEventListener('click', this.onClickAway, true);
+		this.removeBackdrop();
 	}
 
 	destroyed() {

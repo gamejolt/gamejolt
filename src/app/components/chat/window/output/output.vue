@@ -21,7 +21,7 @@
 						Your friend is still loading. Encourage them with a message!
 					</translate>
 					<translate v-else-if="room.isFiresideRoom">
-						Waiting for folks to load in. Spark the flames with a message!
+						Waiting for folks to load in. Spark the discussion with a message!
 					</translate>
 					<translate v-else>
 						Waiting for friends to load in. Encourage them with a message!

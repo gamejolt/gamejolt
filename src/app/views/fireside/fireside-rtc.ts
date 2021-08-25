@@ -1,9 +1,7 @@
 import AgoraRTC, { IAgoraRTCClient, IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng';
 import { arrayRemove } from '../../../utils/array';
 import { debounce, sleep } from '../../../utils/utils';
-import { Growls } from '../../../_common/growls/growls.service';
 import { Navigate } from '../../../_common/navigate/navigate.service';
-import { Translate } from '../../../_common/translate/translate.service';
 import { User } from '../../../_common/user/user.model';
 import {
 	FiresideRTCUser,
@@ -462,8 +460,10 @@ function _userJoined(rtc: FiresideRTC, user: FiresideRTCUser) {
 	}
 }
 
-function _userLeft(_rtc: FiresideRTC, _user: FiresideRTCUser) {
-	// Nothing yet.
+function _userLeft(rtc: FiresideRTC, user: FiresideRTCUser) {
+	if (user.userId === rtc.userId) {
+		_handleStreamingEnd(rtc);
+	}
 }
 
 function _handleStreamingBegin(rtc: FiresideRTC) {
@@ -475,15 +475,17 @@ function _handleStreamingBegin(rtc: FiresideRTC) {
 	for (const user of rtc.users) {
 		setAudioPlayback(user, false);
 	}
+}
 
-	Growls.info({
-		title: Translate.$gettext(`Muted Fireside`),
-		message: Translate.$gettext(
-			`Your Fireside has been muted locally since you're streaming in it.`
-		),
-		system: true,
-		sticky: true,
-	});
+function _handleStreamingEnd(rtc: FiresideRTC) {
+	if (rtc.isStreaming) {
+		return;
+	}
+
+	rtc.videoPaused = false;
+	for (const user of rtc.users) {
+		setAudioPlayback(user, true);
+	}
 }
 
 function _updateVolumeLevels(rtc: FiresideRTC) {

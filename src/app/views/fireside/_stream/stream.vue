@@ -76,6 +76,7 @@
 					<div v-if="showOverlayHosts" class="-overlay-hosts -control">
 						<app-fireside-host-list
 							hide-thumb-options
+							:host-rtc="hostRtc"
 							@show-popper="onHostOptionsShow"
 							@hide-popper="onHostOptionsHide"
 						/>

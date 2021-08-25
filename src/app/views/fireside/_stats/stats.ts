@@ -14,7 +14,7 @@ import AppShareCard from '../../../../_common/share/card/card.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { RouteStatus } from '../fireside';
-import { FiresideController, FiresideControllerKey } from '../_controller/controller';
+import { FiresideController, FiresideControllerKey } from '../controller';
 import AppFiresideShare from './_share/share.vue';
 
 @Component({

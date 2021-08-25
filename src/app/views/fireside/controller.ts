@@ -1,4 +1,4 @@
-import { Fireside } from '../../../../_common/fireside/fireside.model';
+import { Fireside } from '../../../_common/fireside/fireside.model';
 
 export const FiresideControllerKey = Symbol('fireside-controller');
 

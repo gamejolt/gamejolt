@@ -17,11 +17,12 @@ import AppIllustration from '../../../_common/illustration/illustration.vue';
 import AppLoading from '../../../_common/loading/loading.vue';
 import { Meta } from '../../../_common/meta/meta-service';
 import { AppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
+import AppPopper from '../../../_common/popper/popper.vue';
 import { AppResponsiveDimensions } from '../../../_common/responsive-dimensions/responsive-dimensions';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../_common/scroll/scroller/scroller.vue';
-import { ShareModal } from '../../../_common/share/card/_modal/modal.service';
+import { copyShareLink } from '../../../_common/share/share.service';
 import { AppState, AppStore } from '../../../_common/store/app-store';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../_common/user/user-avatar/img/img.vue';
@@ -37,6 +38,7 @@ import AppChatWindowOutput from '../../components/chat/window/output/output.vue'
 import AppChatWindowSend from '../../components/chat/window/send/send.vue';
 import { EVENT_UPDATE, FiresideChannel } from '../../components/grid/fireside-channel';
 import { store, Store } from '../../store';
+import { FiresideHostRtc } from './fireside-host-rtc';
 import {
 	destroyFiresideRTC,
 	FiresideRTC,
@@ -45,12 +47,13 @@ import {
 } from './fireside-rtc';
 import AppFiresideChatMembers from './_chat-members/chat-members.vue';
 import { FiresideChatMembersModal } from './_chat-members/modal/modal.service';
-import { FiresideController, FiresideControllerKey } from './_controller/controller';
+import { FiresideController, FiresideControllerKey } from './controller';
 import { FiresideEditModal } from './_edit-modal/edit-modal.service';
 import AppFiresideHostList from './_host-list/host-list.vue';
 import { FiresideStatsModal } from './_stats/modal/modal.service';
 import AppFiresideStats from './_stats/stats.vue';
 import AppFiresideShare from './_stats/_share/share.vue';
+import { StreamSetupModal } from './_stream-setup/stream-setup-modal.service';
 import AppFiresideStream from './_stream/stream.vue';
 
 type RoutePayload = {
@@ -94,6 +97,7 @@ const FiresideThemeKey = 'fireside';
 		AppFiresideStream,
 		AppScrollScroller,
 		AppFiresideHostList,
+		AppPopper,
 		AppFiresideShare,
 	},
 	directives: {
@@ -113,6 +117,9 @@ export default class RouteFireside extends BaseRouteComponent {
 	@ProvideReactive(FiresideRTCKey) rtc: FiresideRTC | null = null;
 	@ProvideReactive(FiresideControllerKey) c: FiresideController = new FiresideController();
 
+	private beforeEachDeregister: Function | null = null;
+
+	private streamingAppId: string | null = null;
 	private gridChannel: FiresideChannel | null = null;
 	private chatChannel: ChatRoomChannel | null = null;
 	private expiryInterval: NodeJS.Timer | null = null;
@@ -120,6 +127,8 @@ export default class RouteFireside extends BaseRouteComponent {
 	private gridPreviousConnectedState: boolean | null = null;
 	status: RouteStatus = 'initial';
 	hasExpiryWarning = false; // Visually shows a warning to the owner when the fireside's time is running low.
+
+	hostRtc: FiresideHostRtc | null = null;
 
 	readonly Screen = Screen;
 	readonly number = number;
@@ -141,10 +150,6 @@ export default class RouteFireside extends BaseRouteComponent {
 			return;
 		}
 		return getAbsoluteLink(this.$router, this.fireside.location);
-	}
-
-	get shouldShowShareShortcut() {
-		return this.fireside && this.shareUrl && !this.isDraft && !this.shouldShowHosts;
 	}
 
 	get routeTitle() {
@@ -237,6 +242,34 @@ export default class RouteFireside extends BaseRouteComponent {
 		);
 	}
 
+	get shouldShowStreamingOptions() {
+		return this.canStream || this.isPersonallyStreaming;
+	}
+
+	get canStream() {
+		return (
+			!!this.hostRtc && (Screen.isDesktop || (this.user && this.user.permission_level >= 4))
+		);
+	}
+
+	get isPersonallyStreaming() {
+		return this.hostRtc?.isStreaming ?? false;
+	}
+
+	onClickEditStream() {
+		if (this.hostRtc) {
+			StreamSetupModal.show(this.hostRtc);
+		}
+	}
+
+	onClickStopStreaming() {
+		this.hostRtc?.stopStreaming();
+	}
+
+	toggleVideoStats() {
+		this.rtc!.shouldShowVideoStats = !this.rtc!.shouldShowVideoStats;
+	}
+
 	async routeResolved($payload: RoutePayload) {
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb || {};
@@ -248,12 +281,12 @@ export default class RouteFireside extends BaseRouteComponent {
 			this.disconnect();
 		}
 
+		this.streamingAppId = $payload.streamingAppId;
 		this.c.fireside = new Fireside($payload.fireside);
 		this.hasExpiryWarning = false;
 		this.setPageTheme();
 
 		const userCanJoin = await this.checkUserCanJoin();
-		console.log(userCanJoin);
 
 		if (!userCanJoin) {
 			this.status = 'unauthorized';
@@ -286,6 +319,11 @@ export default class RouteFireside extends BaseRouteComponent {
 		store.commit('theme/clearPageTheme', FiresideThemeKey);
 
 		this.disconnect();
+
+		if (this.beforeEachDeregister) {
+			this.beforeEachDeregister();
+			this.beforeEachDeregister = null;
+		}
 
 		// This also happens in Disconnect, but make 100% sure we cleared the interval.
 		this.clearExpiryCheck();
@@ -387,7 +425,6 @@ export default class RouteFireside extends BaseRouteComponent {
 		}
 
 		const frontendCookie = await getCookie('frontend');
-		console.warn('cookie', frontendCookie);
 
 		if (!frontendCookie) {
 			return false;
@@ -440,6 +477,7 @@ export default class RouteFireside extends BaseRouteComponent {
 				this.status = 'setup-failed';
 				return;
 			}
+			this.streamingAppId = payload.streamingAppId;
 			this.c.fireside = new Fireside(payload.fireside);
 		} catch (error) {
 			console.debug(`[FIRESIDE] Setup failure 2.`, error);
@@ -471,6 +509,15 @@ export default class RouteFireside extends BaseRouteComponent {
 				return;
 			}
 			this.fireside.role = new FiresideRole(rolePayload.role);
+		}
+
+		if (this.streamingAppId && this.fireside.role.canStream) {
+			this.hostRtc = new FiresideHostRtc(
+				this.streamingAppId,
+				this.user.id,
+				this.fireside.id,
+				this.fireside.role
+			);
 		}
 
 		// --- Join Grid channel.
@@ -559,6 +606,9 @@ export default class RouteFireside extends BaseRouteComponent {
 
 		this.status = 'disconnected';
 
+		this.hostRtc?.destroy();
+		this.hostRtc = null;
+
 		if (this.grid && this.grid.connected && this.gridChannel) {
 			this.gridChannel.leave();
 		}
@@ -570,6 +620,8 @@ export default class RouteFireside extends BaseRouteComponent {
 		}
 
 		this.chatChannel = null;
+
+		StreamSetupModal.close();
 
 		this.destroyRtc();
 
@@ -628,6 +680,7 @@ export default class RouteFireside extends BaseRouteComponent {
 		}
 
 		destroyFiresideRTC(this.rtc);
+
 		this.rtc = null;
 	}
 
@@ -636,15 +689,12 @@ export default class RouteFireside extends BaseRouteComponent {
 		this.tryJoin();
 	}
 
-	onClickShare() {
-		if (!this.fireside || !this.shareUrl) {
+	onClickCopyLink() {
+		if (!this.fireside) {
 			return;
 		}
-
-		ShareModal.show({
-			url: this.shareUrl,
-			model: this.fireside,
-		});
+		const url = getAbsoluteLink(this.$router, this.fireside.location);
+		copyShareLink(url, 'fireside');
 	}
 
 	onClickShowChatMembers() {
@@ -658,7 +708,7 @@ export default class RouteFireside extends BaseRouteComponent {
 		if (!this.fireside) {
 			return;
 		}
-		FiresideStatsModal.show(this.c, this.status, this.isStreaming);
+		FiresideStatsModal.show(this.c, this.status, this.hostRtc, this.isStreaming);
 	}
 
 	onClickEditFireside() {
@@ -683,8 +733,31 @@ export default class RouteFireside extends BaseRouteComponent {
 		}
 	}
 
+	@Watch('isPersonallyStreaming')
+	onIsPersonallyStreamingChanged() {
+		if (this.isPersonallyStreaming) {
+			this.beforeEachDeregister ??= this.$router.beforeEach((_to, _from, next) => {
+				if (
+					!window.confirm(
+						this.$gettext(
+							`You are currently streaming to a Fireside. If you leave this page, you will stop streaming. Are you sure you want to leave?`
+						)
+					)
+				) {
+					return next(false);
+				}
+				next();
+			});
+		} else {
+			if (this.beforeEachDeregister) {
+				this.beforeEachDeregister();
+				this.beforeEachDeregister = null;
+			}
+		}
+	}
+
 	@Watch('isDraft')
-	onIsDraftChange() {
+	onIsDraftChanged() {
 		// We try not to show sharing information while in draft, since links
 		// will redirect them if they don't have permissions.
 		if (this.isDraft) {

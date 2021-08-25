@@ -5,7 +5,7 @@ import AppCard from '../../../../../_common/card/card.vue';
 import { configShareCard } from '../../../../../_common/config/config.service';
 import AppShareCard from '../../../../../_common/share/card/card.vue';
 import { copyShareLink } from '../../../../../_common/share/share.service';
-import { FiresideController, FiresideControllerKey } from '../../_controller/controller';
+import { FiresideController, FiresideControllerKey } from '../../controller';
 
 @Component({
 	components: {

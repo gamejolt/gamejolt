@@ -49,47 +49,88 @@
 						</ul>
 					</div>
 					<div v-if="shouldShowTitleControls" class="-fireside-title-controls">
-						<app-button
-							v-if="shouldShowShareShortcut"
-							v-app-tooltip="$gettext(`Share Link`)"
-							icon="share-airplane"
-							circle
-							sparse
-							@click="onClickShare"
-						/>
-						<app-button
-							v-if="shouldShowEditControlButton"
-							v-app-tooltip="$gettext(`Edit Fireside`)"
-							icon="edit"
-							circle
-							sparse
-							@click="onClickEditFireside"
-						/>
-						<app-button
-							v-if="!shouldShowChatMembers"
-							v-app-tooltip="$gettext(`Chat Members`)"
-							icon="users"
-							circle
-							sparse
-							@click="onClickShowChatMembers"
-						/>
-						<div v-if="!shouldShowFiresideStats" class="-stats-btn">
+						<div
+							v-if="shouldShowStreamingOptions && !isPersonallyStreaming"
+							class="-stats-btn"
+						>
 							<app-button
-								v-app-tooltip="$gettext(`Fireside info`)"
-								icon="fireside"
+								v-app-tooltip="$gettext(`Start Streaming`)"
+								icon="broadcast"
 								circle
-								sparse
-								:solid="hasExpiryWarning"
-								:primary="hasExpiryWarning"
-								@click="onClickShowFiresideStats"
-							/>
-							<app-jolticon
-								v-if="hasExpiryWarning"
-								icon="notice"
-								notice
-								class="-stats-btn-warn"
+								trans
+								@click="onClickEditStream"
 							/>
 						</div>
+
+						<app-popper>
+							<div class="-stats-btn">
+								<app-button
+									icon="cog"
+									circle
+									sparse
+									:solid="hasExpiryWarning && !shouldShowFiresideStats"
+									:primary="hasExpiryWarning && !shouldShowFiresideStats"
+								/>
+								<app-jolticon
+									v-if="hasExpiryWarning && !shouldShowFiresideStats"
+									icon="notice"
+									notice
+									class="-stats-btn-warn"
+								/>
+							</div>
+
+							<template #popover>
+								<div class="list-group list-group-dark">
+									<a class="list-group-item has-icon" @click="onClickCopyLink">
+										<app-jolticon icon="link" />
+										<translate>Copy Link</translate>
+									</a>
+									<a
+										v-if="shouldShowEditControlButton"
+										class="list-group-item has-icon"
+										@click="onClickEditFireside"
+									>
+										<app-jolticon icon="edit" />
+										<translate>Edit Fireside</translate>
+									</a>
+									<a
+										v-if="!shouldShowChatMembers"
+										class="list-group-item has-icon"
+										@click="onClickShowChatMembers"
+									>
+										<app-jolticon icon="users" />
+										<translate>Chat Members</translate>
+									</a>
+									<a
+										v-if="!shouldShowFiresideStats"
+										class="list-group-item has-icon"
+										@click="onClickShowFiresideStats"
+									>
+										<app-jolticon icon="fireside" :notice="hasExpiryWarning" />
+										<translate>Fireside Info</translate>
+									</a>
+
+									<template
+										v-if="shouldShowStreamingOptions && isPersonallyStreaming"
+									>
+										<a
+											class="list-group-item has-icon"
+											@click="onClickEditStream"
+										>
+											<app-jolticon icon="broadcast" />
+											<translate>Stream Settings</translate>
+										</a>
+										<a
+											class="list-group-item has-icon"
+											@click="onClickStopStreaming"
+										>
+											<app-jolticon icon="remove" notice />
+											<translate>Stop Streaming</translate>
+										</a>
+									</template>
+								</div>
+							</template>
+						</app-popper>
 					</div>
 				</div>
 			</template>
@@ -119,11 +160,21 @@
 							}"
 						>
 							<template v-if="rtc && rtc.focusedUser">
-								<app-fireside-stream
-									:rtc-user="rtc.focusedUser"
-									:show-overlay-hosts="!shouldShowHosts"
-									:members="overlayChatMembers"
-								/>
+								<app-popper trigger="right-click">
+									<app-fireside-stream
+										:rtc-user="rtc.focusedUser"
+										:host-rtc="hostRtc"
+										:show-overlay-hosts="!shouldShowHosts"
+										:members="overlayChatMembers"
+									/>
+									<template #popover>
+										<div class="list-group">
+											<a class="list-group-item" @click="toggleVideoStats()">
+												<translate>Toggle Video Stats</translate>
+											</a>
+										</div>
+									</template>
+								</app-popper>
 							</template>
 						</div>
 					</div>
@@ -131,7 +182,7 @@
 
 				<div v-if="rtc && shouldShowHosts" class="-hosts-padding">
 					<div class="-hosts">
-						<app-fireside-host-list />
+						<app-fireside-host-list :host-rtc="hostRtc" />
 					</div>
 
 					<app-fireside-share v-if="!isDraft" class="-share" hide-heading />
@@ -237,7 +288,7 @@
 						</div>
 						<div class="text-center">
 							<h3>
-								<translate> You are blocked from joining this Fireside </translate>
+								<translate>You are blocked from joining this Fireside</translate>
 							</h3>
 							<p>
 								<router-link :to="{ name: 'home' }">
