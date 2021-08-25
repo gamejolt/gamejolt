@@ -96,7 +96,11 @@
 										: false
 								"
 							>
-								{{ mic.groupId == selectedDesktopAudioGroupId ? '(Swap) ' : '' }}
+								{{
+									mic.groupId == selectedDesktopAudioGroupId
+										? `[${$gettext('Desktop Audio')}] `
+										: ''
+								}}
 								{{ mic.label }}
 							</option>
 						</app-form-control-select>
@@ -224,7 +228,11 @@
 													: false
 											"
 										>
-											{{ mic.groupId == selectedMicGroupId ? '(Swap) ' : '' }}
+											{{
+												mic.groupId == selectedMicGroupId
+													? `[${$gettext('Microphone')}] `
+													: ''
+											}}
 											{{ mic.label }}
 										</option>
 									</app-form-control-select>
