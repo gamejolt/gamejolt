@@ -26,7 +26,7 @@ type FormModel = {
 	selectedGroupAudioDeviceId: string;
 	tempSelectedMicDeviceId: string | null;
 	tempSelectedDesktopAudioDeviceId: string | null;
-	tempSelectedGroupAudioDeviceId: string | null;
+	tempSelectedGroupAudioDeviceId: string;
 };
 
 @Component({
@@ -65,8 +65,8 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 			this.firesideHostRtc.selectedDesktopAudioDeviceId
 		);
 		this.setField(
-			'selectedGroupAudioDeviceId',
-			this.firesideHostRtc.selectedGroupAudioDeviceId
+			'tempSelectedGroupAudioDeviceId',
+			this.firesideHostRtc.selectedGroupAudioDeviceId ?? 'default'
 		);
 	}
 
@@ -330,9 +330,11 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 
 	@Watch('shouldShowAdvanced')
 	onShouldShowAdvancedChanged() {
+		// TODO: This should be changed, but we'll need to change the template
+		// as well. We should never change their output device from under them.
 		const newGroupAudio = this.shouldShowAdvanced
-			? this.formModel.tempSelectedGroupAudioDeviceId ?? ''
-			: '';
+			? this.formModel.tempSelectedGroupAudioDeviceId
+			: 'default';
 		this.setField('selectedGroupAudioDeviceId', newGroupAudio);
 
 		if (
@@ -383,7 +385,7 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 	onTempSelectedGroupAudioChanged() {
 		this.setField(
 			'selectedGroupAudioDeviceId',
-			this.formModel.tempSelectedDesktopAudioDeviceId ?? ''
+			this.formModel.tempSelectedGroupAudioDeviceId ?? 'default'
 		);
 	}
 

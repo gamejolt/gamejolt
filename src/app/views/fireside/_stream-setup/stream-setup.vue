@@ -243,10 +243,6 @@
 					</template>
 					<template v-else>
 						<app-form-control-select :disabled="firesideHostRtc.isBusy">
-							<option value="">
-								<translate>Not Set</translate>
-							</option>
-
 							<option
 								v-for="speaker of speakers"
 								:key="speaker.deviceId"

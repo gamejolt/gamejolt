@@ -19,7 +19,7 @@ export class FiresideHostRtc {
 	private _selectedWebcamDeviceId = '';
 	private _selectedMicDeviceId = '';
 	private _selectedDesktopAudioDeviceId = '';
-	private _selectedGroupAudioDeviceId = '';
+	private _selectedGroupAudioDeviceId = 'default';
 	private _isStreaming = false;
 
 	private videoPreviewElement: HTMLDivElement | null = null;
@@ -346,18 +346,12 @@ export class FiresideHostRtc {
 
 	private updateGroupAudioDevice() {
 		return this.doBusyWork(async () => {
-			let deviceId: string | null;
+			const deviceExists = !!MediaDeviceService.speakers.find(
+				speaker => speaker.deviceId === this._selectedGroupAudioDeviceId
+			);
 
-			if (this._selectedGroupAudioDeviceId === '') {
-				deviceId = null;
-			} else {
-				const deviceExists = !!MediaDeviceService.speakers.find(
-					speaker => speaker.deviceId === this._selectedGroupAudioDeviceId
-				);
-				deviceId = deviceExists ? this._selectedGroupAudioDeviceId : null;
-			}
-
-			return this.chatClient?.setSpeakerDevice(deviceId);
+			const deviceId = deviceExists ? this._selectedGroupAudioDeviceId : null;
+			return this.chatClient?.setSpeakerDevice(deviceId ?? 'default');
 		});
 	}
 
