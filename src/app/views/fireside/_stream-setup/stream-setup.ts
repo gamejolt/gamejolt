@@ -46,7 +46,6 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 	micAudioVolume = 0;
 	private p_refreshVolumeInterval: NodeJS.Timer | null = null;
 	private p_shouldShowAdvanced = false;
-	private p_showAdvancedFormError = false;
 
 	private networkQualityDebounce: () => void = null as any;
 
@@ -103,11 +102,11 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 	}
 
 	get hasMicAudio() {
-		return this.formModel.selectedMicDeviceId !== '';
+		return (this.formModel.selectedMicDeviceId ?? '') !== '';
 	}
 
 	get hasDesktopAudio() {
-		return this.formModel.selectedDesktopAudioDeviceId !== '';
+		return (this.formModel.selectedDesktopAudioDeviceId ?? '') !== '';
 	}
 
 	get selectedMicGroupId() {
@@ -177,10 +176,6 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		);
 	}
 
-	get shouldShowAdvancedFormError() {
-		return !this.canToggleAdvanced && this.p_showAdvancedFormError;
-	}
-
 	get canToggleAdvanced() {
 		if (!this.isStreaming) {
 			return true;
@@ -232,13 +227,7 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 	}
 
 	onToggleAdvanced() {
-		if (this.shouldShowAdvanced && !this.canToggleAdvanced) {
-			this.p_showAdvancedFormError = true;
-			return;
-		}
-
 		this.p_shouldShowAdvanced = !this.p_shouldShowAdvanced;
-		this.p_showAdvancedFormError = false;
 	}
 
 	onClickCancel() {
@@ -332,23 +321,6 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 
 		if (this.isInvalidConfig && this.isStreaming) {
 			this.firesideHostRtc.stopStreaming();
-		}
-	}
-
-	@Watch('shouldShowAdvanced')
-	onShouldShowAdvancedChanged() {
-		if (
-			this.shouldShowAdvanced &&
-			// If we have the same ID stored as our currently active mic, change
-			// the temp ID to empty and trigger the watcher for the value.
-			this.formModel.tempSelectedDesktopAudioDeviceId === this.formModel.selectedMicDeviceId
-		) {
-			this.setField('tempSelectedDesktopAudioDeviceId', '');
-		} else {
-			const newDesktopAudio = this.shouldShowAdvanced
-				? this.formModel.tempSelectedDesktopAudioDeviceId ?? ''
-				: '';
-			this.setField('selectedDesktopAudioDeviceId', newDesktopAudio);
 		}
 	}
 

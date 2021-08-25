@@ -123,11 +123,7 @@
 
 					<fieldset>
 						<app-form-legend
-							v-if="
-								shouldShowAdvanced ||
-								shouldShowAdvancedFormError ||
-								!isInvalidConfig
-							"
+							v-if="shouldShowAdvanced || !isInvalidConfig"
 							compact
 							expandable
 							:expanded="shouldShowAdvanced"
@@ -136,18 +132,14 @@
 							<translate>Advanced Settings</translate>
 						</app-form-legend>
 
-						<p v-if="shouldShowAdvancedFormError" class="help-block error anim-fade-in">
-							<translate>
-								Removing your Desktop Audio input will stop your stream. Please
-								select either a Microphone or Camera Source before removing your
-								Desktop Audio.
-							</translate>
-						</p>
-
-						<app-expand :when="shouldShowAdvanced" class="full-bleed">
-							<div class="well sans-rounded fill-offset">
+						<app-expand
+							:when="shouldShowAdvanced || hasDesktopAudio"
+							class="full-bleed"
+						>
+							<div class="-desktop-well well sans-rounded fill-offset">
 								<app-form-group
 									name="tempSelectedDesktopAudioDeviceId"
+									class="sans-margin-bottom"
 									:label="$gettext('Desktop Audio')"
 								>
 									<p class="help-block">
@@ -220,48 +212,52 @@
 									</app-expand>
 								</app-form-group>
 
-								<app-form-group
-									name="tempSelectedGroupAudioDeviceId"
-									:label="$gettext('Chat Output Device')"
-								>
-									<template v-if="!hasSpeakerPermissions">
-										<translate>
-											To hear the other people streaming with you, we'll need
-											access to your output device so that we can pipe their
-											beautiful voices into your earholes.
-										</translate>
-
-										<app-button
-											v-if="!speakerPermissionsWerePrompted"
-											@click="onClickPromptSpeakerPermissions"
-										>
-											<translate>Request Permission</translate>
-										</app-button>
-										<translate v-else>
-											Click the lock icon next to the URL in your address bar
-											to enable. You may need to open this window again or
-											refresh the page to renew your devices.
-										</translate>
-									</template>
-									<template v-else>
-										<app-form-control-select :disabled="firesideHostRtc.isBusy">
-											<option
-												v-for="speaker of speakers"
-												:key="speaker.deviceId"
-												:value="speaker.deviceId"
-											>
-												{{ speaker.label }}
-											</option>
-										</app-form-control-select>
-
-										<p class="help-block">
+								<app-expand :when="shouldShowAdvanced">
+									<app-form-group
+										name="tempSelectedGroupAudioDeviceId"
+										:label="$gettext('Chat Output Device')"
+									>
+										<template v-if="!hasSpeakerPermissions">
 											<translate>
-												Make sure you choose an output device that is not
-												captured by your desktop audio input device.
+												To hear the other people streaming with you, we'll
+												need access to your output device so that we can
+												pipe their beautiful voices into your earholes.
 											</translate>
-										</p>
-									</template>
-								</app-form-group>
+
+											<app-button
+												v-if="!speakerPermissionsWerePrompted"
+												@click="onClickPromptSpeakerPermissions"
+											>
+												<translate>Request Permission</translate>
+											</app-button>
+											<translate v-else>
+												Click the lock icon next to the URL in your address
+												bar to enable. You may need to open this window
+												again or refresh the page to renew your devices.
+											</translate>
+										</template>
+										<template v-else>
+											<app-form-control-select
+												:disabled="firesideHostRtc.isBusy"
+											>
+												<option
+													v-for="speaker of speakers"
+													:key="speaker.deviceId"
+													:value="speaker.deviceId"
+												>
+													{{ speaker.label }}
+												</option>
+											</app-form-control-select>
+
+											<p class="help-block">
+												<translate>
+													Make sure you choose an output device that is
+													not captured by your desktop audio input device.
+												</translate>
+											</p>
+										</template>
+									</app-form-group>
+								</app-expand>
 							</div>
 						</app-expand>
 					</fieldset>
@@ -324,4 +320,8 @@
 	justify-content: flex-end
 	padding-top: $line-height-computed
 	grid-gap: 8px
+
+.-desktop-well
+	margin-bottom: 0
+	padding-bottom: 0
 </style>
