@@ -26,7 +26,7 @@
 					</p>
 				</template>
 				<app-form-control-select v-else :disabled="firesideHostRtc.isBusy">
-					<option value="">
+					<option value="" :disabled="wouldInvalidateIfRemoved('selectedWebcamDeviceId')">
 						<translate>Not Set</translate>
 					</option>
 
@@ -86,7 +86,17 @@
 								<translate>Not Set</translate>
 							</option>
 
-							<option v-for="mic of mics" :key="mic.deviceId" :value="mic.deviceId">
+							<option
+								v-for="mic of mics"
+								:key="mic.deviceId"
+								:value="mic.deviceId"
+								:disabled="
+									mic.groupId == selectedDesktopAudioGroupId
+										? !canSwapAudioInputs
+										: false
+								"
+							>
+								{{ mic.groupId == selectedDesktopAudioGroupId ? '(Swap) ' : '' }}
 								{{ mic.label }}
 							</option>
 						</app-form-control-select>
@@ -109,6 +119,11 @@
 
 					<fieldset>
 						<app-form-legend
+							v-if="
+								shouldShowAdvanced ||
+								shouldShowAdvancedFormError ||
+								!isInvalidConfig
+							"
 							compact
 							expandable
 							:expanded="shouldShowAdvanced"
@@ -160,7 +175,13 @@
 											v-for="mic of mics"
 											:key="mic.deviceId"
 											:value="mic.deviceId"
+											:disabled="
+												mic.groupId == selectedMicGroupId
+													? !canSwapAudioInputs
+													: false
+											"
 										>
+											{{ mic.groupId == selectedMicGroupId ? '(Swap) ' : '' }}
 											{{ mic.label }}
 										</option>
 									</app-form-control-select>

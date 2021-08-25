@@ -175,9 +175,39 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 			return true;
 		}
 
-		return [this.formModel.selectedMicDeviceId, this.formModel.selectedWebcamDeviceId].some(
-			i => i !== ''
-		);
+		return Object.entries(this.requiredFields).some(([_key, value]) => value !== '');
+	}
+
+	// We required at least one of these fields to be filled out.
+	get requiredFields(): Record<string, string> {
+		return {
+			selectedWebcamDeviceId: this.formModel.selectedWebcamDeviceId,
+			selectedMicDeviceId: this.formModel.selectedMicDeviceId,
+		};
+	}
+
+	get audioInputFields(): Record<string, string> {
+		return {
+			selectedMicDeviceId: this.formModel.selectedMicDeviceId,
+			selectedDesktopAudioDeviceId: this.formModel.selectedDesktopAudioDeviceId,
+		};
+	}
+
+	get canSwapAudioInputs() {
+		if (!this.isStreaming) {
+			return true;
+		}
+
+		// If we could potentially swap away from our only valid required
+		// device, we need to check if we'll either get a new one or have a
+		// different device active that meets the form requirements.
+		if (this.formModel.selectedMicDeviceId !== '') {
+			const required = Object.assign({}, this.requiredFields, this.audioInputFields);
+			delete required['selectedMicDeviceId'];
+			return Object.entries(required).some(([_key, value]) => value !== '');
+		}
+
+		return Object.entries(this.audioInputFields).some(([_key, value]) => value !== '');
 	}
 
 	wouldInvalidateIfRemoved(fieldToRemove: string) {
@@ -185,12 +215,7 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 			return false;
 		}
 
-		const required: Record<string, string> = {
-			selectedWebcamDeviceId: this.formModel.selectedWebcamDeviceId,
-			selectedMicDeviceId: this.formModel.selectedMicDeviceId,
-			selectedDesktopAudioDeviceId: this.formModel.selectedDesktopAudioDeviceId,
-		};
-
+		const required = Object.assign({}, this.requiredFields);
 		delete required[fieldToRemove];
 		return Object.entries(required).every(([_key, value]) => value === '');
 	}
@@ -276,11 +301,7 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		// Need to stream something
 		return (
 			!this.getDeviceFromId(this.formModel.selectedWebcamDeviceId, 'webcam') &&
-			!this.mics.find(
-				i =>
-					i.deviceId == this.formModel.selectedMicDeviceId ||
-					i.deviceId == this.formModel.selectedDesktopAudioDeviceId
-			)
+			!this.getDeviceFromId(this.formModel.selectedMicDeviceId, 'mic')
 		);
 	}
 
