@@ -2,6 +2,12 @@
 
 <template>
 	<app-loading-fade :is-loading="isStarting">
+		<div class="alert">
+			<strong>This is a Preview feature.</strong> You are able to stream because we've given
+			you access to test it out. Streaming is not available to everyone just yet. You might
+			experience bugs, issues, or general instability.
+		</div>
+
 		<app-form ref="form" name="streamSetupForm">
 			<app-form-group
 				v-if="canStreamVideo"

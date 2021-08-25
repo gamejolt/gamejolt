@@ -9,12 +9,14 @@
 
 			<template #popover>
 				<div class="list-group">
-					<a v-if="shouldMute" class="list-group-item" @click="muteAll()">
-						<translate>Mute All</translate>
-					</a>
-					<a v-else class="list-group-item" @click="unmuteAll()">
-						<translate>Unmute All</translate>
-					</a>
+					<template v-if="!rtc.isStreaming">
+						<a v-if="shouldMute" class="list-group-item" @click="muteAll()">
+							<translate>Mute All</translate>
+						</a>
+						<a v-else class="list-group-item" @click="unmuteAll()">
+							<translate>Unmute All</translate>
+						</a>
+					</template>
 
 					<template v-if="shouldShowStreamingOptions">
 						<a
