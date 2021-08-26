@@ -179,9 +179,17 @@ function tillConnection(client: GridClient) {
 /**
  * Polls a request until it returns a result, increases the delay time between requests after each failed attempt.
  * @param context Context for logging
+ * @param abortPromise Promise that once fulfilled would cause the polling to abort.
  * @param requestGetter Function that generates a promise that represents the request
  */
-async function pollRequest(context: string, requestGetter: () => Promise<any>): Promise<any> {
+async function pollRequest(
+	context: string,
+	abortPromise: Promise<void>,
+	requestGetter: () => Promise<any>
+): Promise<any> {
+	let aborted = false;
+	abortPromise.then(() => (aborted = true));
+
 	let result = null;
 	let finished = false;
 
@@ -195,6 +203,10 @@ async function pollRequest(context: string, requestGetter: () => Promise<any>): 
 			result = await promise;
 			finished = true;
 		} catch (e) {
+			if (aborted) {
+				finished = true;
+			}
+
 			const sleepMs = Math.min(
 				30_000 + Math.random() * 10_000,
 				Math.random() * delay * 1_000 + 1_000
@@ -214,6 +226,7 @@ export class GridClient {
 	readonly clientId = uuidv4();
 
 	connected = false;
+	isGuest = false;
 	socket: Socket | null = null;
 	channels: Channel[] = [];
 	notificationBacklog: NewNotificationPayload[] = [];
@@ -228,22 +241,81 @@ export class GridClient {
 	viewingCommunityId: number | null = null;
 
 	/**
+	 * If set, will connect as a guest, using this token.
+	 */
+	private guestToken: string | null = null;
+
+	/**
 	 * Store ids of posts the user has featured.
 	 * The Grid client will ignore any incoming feature notifications for posts recorded here,
 	 * because users that feature posts should not get notified about those exact posts.
 	 */
 	private featuredPostIds: Set<number> = new Set<number>();
 
+	/**
+	 * This is used to abort a single connection flow so we can cleanly retry.
+	 */
+	private abortPromise: Promise<void> = null as any;
+	private abortResolver: () => void = null as any;
+
 	constructor() {
+		// Called in order to initialize the abort promise.
+		this.abortCurrentConnectionFlow();
+
 		this.connect();
 	}
 
+	private abortCurrentConnectionFlow() {
+		if (this.abortResolver) {
+			this.abortResolver();
+		}
+
+		this.abortPromise = new Promise(resolve => (this.abortResolver = resolve));
+	}
+
+	async setGuestToken(guestToken: string) {
+		const tokenChanged = this.guestToken !== guestToken;
+		this.guestToken = guestToken;
+
+		console.log('isGuest: ' + this.isGuest);
+		console.log('tokenChanged: ' + tokenChanged);
+
+		if (!this.isGuest || tokenChanged) {
+			await this.disconnect();
+			this.isGuest = true;
+			this.connect();
+		}
+	}
+
+	async unsetGuestToken() {
+		this.guestToken = null;
+
+		if (this.isGuest) {
+			await this.disconnect();
+			this.isGuest = false;
+			this.connect();
+		}
+	}
+
 	private async connect() {
-		const cookie = await getCookie('frontend');
+		let aborted = false;
+		const currentAbortPromise = this.abortPromise;
+		currentAbortPromise.then(() => (aborted = true));
+
 		const user = store.state.app.user;
+		if ((!this.isGuest && !user) || (this.isGuest && !!user)) {
+			return;
+		}
+
+		const authToken = this.isGuest ? this.guestToken : await getCookie('frontend');
+		if (aborted) {
+			console.log('[Grid] Aborted connection (1)');
+			return;
+		}
+
 		const timedOut = store.state.app.isUserTimedOut;
 
-		if (user === null || cookie === undefined || timedOut) {
+		if (!authToken || timedOut) {
 			// Not properly logged in.
 			return;
 		}
@@ -251,9 +323,13 @@ export class GridClient {
 		console.log('[Grid] Connecting...');
 
 		// get hostname from loadbalancer first
-		const hostResult = await pollRequest('Select server', () =>
+		const hostResult = await pollRequest('Select server', currentAbortPromise, () =>
 			Axios.get(Environment.gridHost, { ignoreLoadingBar: true, timeout: 3_000 })
 		);
+		if (aborted) {
+			console.log('[Grid] Aborted connection (2)');
+			return;
+		}
 		const host = `${hostResult.data}/grid/socket`;
 
 		console.log('[Grid] Server selected:', host);
@@ -261,6 +337,13 @@ export class GridClient {
 		// heartbeat is 30 seconds, backend disconnects after 40 seconds
 		this.socket = new Socket(host, {
 			heartbeatIntervalMs: 30_000,
+		});
+
+		// TODO: niiiiils, any reason not to do this?
+		this.socket.onError(() => {
+			if (!aborted) {
+				this.restart(0);
+			}
 		});
 
 		// HACK
@@ -274,8 +357,15 @@ export class GridClient {
 
 		await pollRequest(
 			'Connect to socket',
+			currentAbortPromise,
 			() =>
 				new Promise<void>(resolve => {
+					if (aborted) {
+						resolve();
+						return;
+					}
+
+					// TODO: shouldn't we be throwing an error if the socket is null here?
 					if (this.socket !== null) {
 						this.socket.connect({
 							gj_platform: GJ_IS_CLIENT ? 'client' : 'web',
@@ -286,66 +376,120 @@ export class GridClient {
 				})
 		);
 
-		const userId = user.id.toString();
-		const channel = this.socket.channel('notifications:' + userId, {
-			frontend_cookie: cookie,
-		});
-		this.notificationChannel = channel;
-
-		await pollRequest(
-			'Join user notification channel',
-			() =>
-				new Promise<void>((resolve, reject) => {
-					channel
-						.join()
-						.receive('error', reject)
-						.receive('ok', () => {
-							this.connected = true;
-							this.channels.push(channel);
-							for (const resolver of connectionResolvers) {
-								resolver();
-							}
-							connectionResolvers = [];
-
-							resolve();
-						});
-				})
-		);
-
-		// After successfully connecting to the socket, elect leader.
-		if (this.tabLeader !== null) {
-			await this.tabLeader.kill();
+		if (aborted) {
+			console.log('[Grid] Aborted connection (3)');
+			return;
 		}
-		this.tabLeader = new TabLeader('grid_notification_channel_' + user.id);
-		this.tabLeader.init();
 
-		channel.on('new-notification', (payload: NewNotificationPayload) =>
-			this.handleNotification(payload)
-		);
+		// Guest connections are only used for realtime stuff like fireside state updates.
+		// They don't need to do any more setup work beyond successfully connecting to the socket.
+		if (this.isGuest) {
+			this.markConnected();
+		}
+		// User connections expected to handle a bunch of notification stuff.
+		else if (user) {
+			const userId = user.id.toString();
+			const channel = this.socket.channel('notifications:' + userId, {
+				auth_token: authToken,
+			});
+			this.notificationChannel = channel;
 
-		channel.on('bootstrap', (payload: BootstrapPayload) => {
-			this.handleBootstrap(channel, payload);
-		});
+			await pollRequest(
+				'Join user notification channel',
+				currentAbortPromise,
+				() =>
+					new Promise<void>((resolve, reject) => {
+						channel
+							.join()
+							.receive('error', reject)
+							.receive('ok', () => {
+								this.channels.push(channel);
+								this.markConnected();
+								resolve();
+							});
+					})
+			);
 
-		channel.push('request-bootstrap', {});
+			// TODO: check if we need to kill the tab leader even tho we got aborted.
+			// Not sure when this would happen at the moment.
+			if (aborted) {
+				console.log('[Grid] Aborted connection (4)');
+				return;
+			}
 
-		channel.on('clear-notifications', (payload: ClearNotificationsPayload) => {
-			this.handleClearNotifications(payload);
-		});
+			// After successfully connecting to the socket, elect leader.
+			if (this.tabLeader !== null) {
+				await this.tabLeader.kill();
 
-		channel.on('community-bootstrap', (payload: CommunityBootstrapPayload) => {
-			this.handleCommunityBootstrap(payload);
-		});
+				if (aborted) {
+					console.log('[Grid] Aborted connection (5)');
+					return;
+				}
+			}
 
-		channel.on('sticker-unlock', (payload: StickerUnlockPayload) => {
-			this.handleStickerUnlock(payload);
-		});
+			this.tabLeader = new TabLeader('grid_notification_channel_' + user.id);
+			this.tabLeader.init();
 
-		channel.on('post-updated', (payload: PostUpdatedPayload) => {
-			this.handlePostUpdated(payload);
-		});
+			channel.on('new-notification', (payload: NewNotificationPayload) => {
+				if (aborted) {
+					return;
+				}
 
-		this.joinCommunities();
+				this.handleNotification(payload);
+			});
+
+			channel.on('bootstrap', (payload: BootstrapPayload) => {
+				if (aborted) {
+					return;
+				}
+
+				this.handleBootstrap(channel, payload);
+			});
+
+			channel.push('request-bootstrap', {});
+
+			channel.on('clear-notifications', (payload: ClearNotificationsPayload) => {
+				if (aborted) {
+					return;
+				}
+
+				this.handleClearNotifications(payload);
+			});
+
+			channel.on('community-bootstrap', (payload: CommunityBootstrapPayload) => {
+				if (aborted) {
+					return;
+				}
+
+				this.handleCommunityBootstrap(payload);
+			});
+
+			channel.on('sticker-unlock', (payload: StickerUnlockPayload) => {
+				if (aborted) {
+					return;
+				}
+
+				this.handleStickerUnlock(payload);
+			});
+
+			channel.on('post-updated', (payload: PostUpdatedPayload) => {
+				if (aborted) {
+					return;
+				}
+
+				this.handlePostUpdated(payload);
+			});
+
+			this.joinCommunities(currentAbortPromise);
+		}
+	}
+
+	markConnected() {
+		this.connected = true;
+		for (const resolver of connectionResolvers) {
+			resolver();
+		}
+		connectionResolvers = [];
 	}
 
 	async restart(sleepMs = 2_000) {
@@ -622,45 +766,79 @@ export class GridClient {
 		}
 	}
 
-	async joinCommunities() {
+	joinCommunities(abortPromise: Promise<void>) {
 		console.log('[Grid] Subscribing to community channels...');
 
+		const promises = [];
 		for (const community of store.state.communities) {
-			this.joinCommunity(community);
+			promises.push(this.joinCommunity(abortPromise, community));
 		}
+		return Promise.all(promises);
 	}
 
-	async joinCommunity(community: Community) {
-		const cookie = await getCookie('frontend');
+	async joinCommunity(abortPromise: Promise<void>, community: Community) {
+		let aborted = false;
+		abortPromise.then(() => (aborted = true));
+
+		const authToken = this.isGuest ? this.guestToken : await getCookie('frontend');
+		if (aborted) {
+			console.log(
+				`[Grid] Aborted connection (6) (while joining community: ${community.name}, id: ${community.id}`
+			);
+			return;
+		}
+
+		// TODO: should we make this available for guests too?
 		const user = store.state.app.user;
-		if (this.socket && user && cookie) {
+		if (this.socket && user && authToken) {
 			const userId = user.id.toString();
 
 			const channel = new CommunityChannel(community, this.socket, {
-				frontend_cookie: cookie,
+				auth_token: authToken,
 				user_id: userId,
 			});
 
 			await pollRequest(
 				`Join community channel '${community.name}' (${community.id})`,
+				abortPromise,
 				() =>
 					new Promise<void>((resolve, reject) => {
 						channel
 							.join()
 							.receive('error', reject)
 							.receive('ok', () => {
+								if (aborted) {
+									resolve();
+									return;
+								}
+
 								this.channels.push(channel);
 								resolve();
 							});
 					})
 			);
 
-			channel.on('feature', (payload: CommunityFeaturePayload) =>
-				this.handleCommunityFeature(community.id, payload)
-			);
-			channel.on('new-post', (payload: CommunityNewPostPayload) =>
-				this.handleCommunityNewPost(community.id, payload)
-			);
+			if (aborted) {
+				console.log(
+					`[Grid] Aborted connection (7) (while joining community: ${community.name}, id: ${community.id}`
+				);
+				return;
+			}
+
+			channel.on('feature', (payload: CommunityFeaturePayload) => {
+				if (aborted) {
+					return;
+				}
+
+				this.handleCommunityFeature(community.id, payload);
+			});
+			channel.on('new-post', (payload: CommunityNewPostPayload) => {
+				if (aborted) {
+					return;
+				}
+
+				this.handleCommunityNewPost(community.id, payload);
+			});
 		}
 	}
 
@@ -705,24 +883,32 @@ export class GridClient {
 	async disconnect() {
 		if (this.connected) {
 			console.log('[Grid] Disconnecting...');
+		} else {
+			console.warn('[Grid] Disconnecting (before we got fully connected)');
+		}
 
-			this.connected = false;
-			this.bootstrapReceived = false;
-			this.notificationBacklog = [];
-			this.bootstrapTimestamp = 0;
-			this.channels.forEach(channel => {
-				this.leaveChannel(channel);
-			});
-			this.channels = [];
-			this.notificationChannel = null;
-			if (this.socket !== null) {
-				this.socket.disconnect();
-				this.socket = null;
-			}
+		this.abortCurrentConnectionFlow();
 
-			if (this.tabLeader !== null) {
-				await this.tabLeader.kill();
-			}
+		// Continue attempting to disconnect even if we didn't get fully connected.
+		// This should tear down the channels and socket that may have connected already,
+		// which allows us to cleanly reuse the instance for the next connection.
+
+		this.connected = false;
+		this.bootstrapReceived = false;
+		this.notificationBacklog = [];
+		this.bootstrapTimestamp = 0;
+		this.channels.forEach(channel => {
+			this.leaveChannel(channel);
+		});
+		this.channels = [];
+		this.notificationChannel = null;
+		if (this.socket !== null) {
+			this.socket.disconnect();
+			this.socket = null;
+		}
+
+		if (this.tabLeader !== null) {
+			await this.tabLeader.kill();
 		}
 	}
 

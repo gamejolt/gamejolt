@@ -32,7 +32,7 @@ export class FiresideRTC {
 	finalizeSetupFn: (() => void) | null = null;
 
 	constructor(
-		public readonly userId: number,
+		public readonly userId: number | null,
 		public readonly appId: string,
 		public readonly videoChannel: string,
 		public videoToken: string | null,
@@ -56,7 +56,7 @@ export class FiresideRTC {
 	}
 
 	get isHost() {
-		return this.hosts.find(host => host.id == this.userId) !== undefined;
+		return this.userId && this.hosts.find(host => host.id == this.userId) !== undefined;
 	}
 
 	/**
@@ -64,7 +64,7 @@ export class FiresideRTC {
 	 * only return valid data once everything gets susbcribed to.
 	 */
 	get isStreaming() {
-		return this.users.some(i => i.userId === this.userId);
+		return this.userId && this.users.some(i => i.userId === this.userId);
 	}
 
 	get focusedUser() {
@@ -455,13 +455,13 @@ function _removeUserIfNeeded(rtc: FiresideRTC, user: FiresideRTCUser) {
 }
 
 function _userJoined(rtc: FiresideRTC, user: FiresideRTCUser) {
-	if (user.userId === rtc.userId) {
+	if (rtc.userId && user.userId === rtc.userId) {
 		_handleStreamingBegin(rtc);
 	}
 }
 
 function _userLeft(rtc: FiresideRTC, user: FiresideRTCUser) {
-	if (user.userId === rtc.userId) {
+	if (rtc.userId && user.userId === rtc.userId) {
 		_handleStreamingEnd(rtc);
 	}
 }

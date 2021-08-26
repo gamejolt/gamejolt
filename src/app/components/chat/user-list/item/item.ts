@@ -8,7 +8,8 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import { ScrollInviewConfig } from '../../../../../_common/scroll/inview/config';
 import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { ChatClient, ChatKey, enterChatRoom, isUserOnline, leaveGroupRoom } from '../../client';
+import { ChatStore, ChatStoreKey } from '../../chat-store';
+import { enterChatRoom, isUserOnline, leaveGroupRoom } from '../../client';
 import AppChatNotificationSettings from '../../notification-settings/notification-settings.vue';
 import { ChatRoom, getChatRoomTitle } from '../../room';
 import { ChatUser } from '../../user';
@@ -30,12 +31,16 @@ const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` }
 export default class AppChatUserListItem extends Vue {
 	@Prop(propRequired()) item!: ChatUser | ChatRoom;
 
-	@InjectReactive(ChatKey) chat!: ChatClient;
+	@InjectReactive(ChatStoreKey) chatStore!: ChatStore;
 
 	isInview = false;
 	isHovered = false;
 	readonly InviewConfig = InviewConfig;
 	readonly Screen = Screen;
+
+	get chat() {
+		return this.chatStore.chat!;
+	}
 
 	get roomId() {
 		return this.item instanceof ChatUser ? this.item.room_id : this.item.id;

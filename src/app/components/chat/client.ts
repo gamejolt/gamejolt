@@ -14,8 +14,6 @@ import { ChatUser } from './user';
 import { ChatUserChannel } from './user-channel';
 import { ChatUserCollection } from './user-collection';
 
-export const ChatKey = Symbol('Chat');
-
 export interface ChatNewMessageEvent {
 	message: ChatMessage;
 }
@@ -70,6 +68,7 @@ export class ChatClient {
 
 	id = -1;
 	connected = false;
+	isGuest = false;
 	socket: Socket | null = null;
 	userChannel: ChatUserChannel | null = null;
 
@@ -98,6 +97,11 @@ export class ChatClient {
 
 	messageQueue: ChatMessage[] = [];
 	messageEditing: null | ChatMessage = null;
+
+	/**
+	 * If set, will connect as a guest, using this token.
+	 */
+	guestToken: string | null = null;
 
 	/**
 	 * The session room is stored within their local session. It's their last active room. We reopen
@@ -144,6 +148,7 @@ export class ChatClient {
 function reset(chat: ChatClient) {
 	chat.id = -1;
 	chat.connected = false;
+	chat.isGuest = false;
 	chat.currentUser = null;
 	chat.friendsList = new ChatUserCollection(ChatUserCollection.TYPE_FRIEND);
 	chat.populated = false;
@@ -161,20 +166,54 @@ function reset(chat: ChatClient) {
 	chat.messageQueue = [];
 }
 
+export async function setGuestToken(chat: ChatClient, guestToken: string) {
+	const tokenChanged = chat.guestToken !== guestToken;
+	chat.guestToken = guestToken;
+
+	console.log('isGuest: ' + chat.isGuest);
+	console.log('tokenChanged: ' + tokenChanged);
+
+	if (!chat.isGuest || tokenChanged) {
+		destroy(chat);
+		chat.isGuest = true;
+		connect(chat);
+	}
+}
+
+export async function unsetGuestToken(chat: ChatClient) {
+	chat.guestToken = null;
+
+	if (chat.isGuest) {
+		destroy(chat);
+		chat.isGuest = false;
+		connect(chat);
+	}
+}
+
 function reconnect(chat: ChatClient) {
 	destroy(chat);
 	connect(chat);
 }
 
 async function connect(chat: ChatClient) {
+	console.warn(new Error('trace'));
 	const chatId = ChatClient.nextId++;
 	chat.id = chatId;
 
-	const frontend = await getCookie('frontend');
 	const user = store.state.app.user;
+	if ((!chat.isGuest && !user) || (chat.isGuest && !!user)) {
+		return;
+	}
+
+	const authToken = chat.isGuest ? chat.guestToken : await getCookie('frontend');
+	if (chatId !== chat.id) {
+		console.log('[Chat] Aborted connection (1)');
+		return;
+	}
+
 	const timedOut = store.state.app.isUserTimedOut;
 
-	if (user === null || frontend === undefined || timedOut) {
+	if (!authToken || timedOut) {
 		// Not properly logged in.
 		return;
 	}
@@ -190,16 +229,29 @@ async function connect(chat: ChatClient) {
 			timeout: 3000,
 		});
 
-		const tokenResult = await Axios.post(
-			`${Environment.chat}/token`,
-			{ frontend },
-			{ ignoreLoadingBar: true, timeout: 3000 }
-		);
+		if (chatId !== chat.id) {
+			return null;
+		}
+
+		const params =
+			user && !chat.isGuest
+				? { auth_token: authToken, user_id: user.id }
+				: { auth_token: authToken };
+
+		const tokenResult = await Axios.post(`${Environment.chat}/token`, params, {
+			ignoreLoadingBar: true,
+			timeout: 3000,
+		});
 
 		return { host: hostResult, token: tokenResult };
 	});
 
-	if (!results || chatId !== chat.id) {
+	if (chatId !== chat.id) {
+		console.log('[Chat] Aborted connection (2)');
+		return;
+	}
+
+	if (!results) {
 		return;
 	}
 
@@ -207,6 +259,7 @@ async function connect(chat: ChatClient) {
 	const token = results.token.data.token;
 
 	console.log('[Chat] Server selected:', host);
+	console.log('[Chat] Got token', token);
 
 	// heartbeat is 30 seconds, backend disconnects after 40 seconds
 	chat.socket = new Socket(host, {
@@ -224,17 +277,29 @@ async function connect(chat: ChatClient) {
 	}
 
 	chat.socket.onOpen(() => {
+		if (chatId !== chat.id) {
+			return;
+		}
+
 		chat.connected = true;
 		setChatRoom(chat, undefined);
 	});
 
 	chat.socket.onError((e: any) => {
+		if (chatId !== chat.id) {
+			return;
+		}
+
 		console.warn('[Chat] Got error from socket');
 		console.warn(e);
 		reconnect(chat);
 	});
 
 	chat.socket.onClose(() => {
+		if (chatId !== chat.id) {
+			return;
+		}
+
 		console.warn('[Chat] Socket closed unexpectedly');
 		reconnect(chat);
 	});
@@ -252,17 +317,20 @@ async function connect(chat: ChatClient) {
 	);
 
 	if (chatId !== chat.id) {
+		console.log('[Chat] Aborted connection (3)');
 		return;
 	}
 
-	joinUserChannel(chat, user.id);
+	if (user) {
+		joinUserChannel(chat, user.id);
+	}
 }
 
 export function destroy(chat: ChatClient) {
-	console.log('[Chat] Destroying client');
-
-	if (!chat.connected) {
-		return;
+	if (chat.connected) {
+		console.log('[Grid] Destroying client...');
+	} else {
+		console.warn('[Grid] Destroying client (before we got fully connected)');
 	}
 
 	reset(chat);
@@ -286,6 +354,8 @@ export function destroy(chat: ChatClient) {
 }
 
 async function joinUserChannel(chat: ChatClient, userId: number) {
+	const chatId = chat.id;
+
 	const channel = new ChatUserChannel(userId, chat);
 	const request = `Join user channel ${userId}`;
 
@@ -298,6 +368,10 @@ async function joinUserChannel(chat: ChatClient, userId: number) {
 					.join()
 					.receive('error', reject)
 					.receive('ok', response => {
+						if (chatId !== chat.id) {
+							return;
+						}
+
 						const currentUser = new ChatUser(response.user);
 						const friendsList = new ChatUserCollection(
 							ChatUserCollection.TYPE_FRIEND,
@@ -318,6 +392,8 @@ async function joinUserChannel(chat: ChatClient, userId: number) {
 }
 
 export async function joinInstancedRoomChannel(chat: ChatClient, roomId: number) {
+	const chatId = chat.id;
+
 	const channel = new ChatRoomChannel(roomId, chat);
 	channel.instanced = true;
 
@@ -326,6 +402,10 @@ export async function joinInstancedRoomChannel(chat: ChatClient, roomId: number)
 			.join()
 			.receive('error', reject)
 			.receive('ok', response => {
+				if (chatId !== chat.id) {
+					return;
+				}
+
 				chat.roomChannels[roomId] = channel;
 				channel.room = new ChatRoom(response.room);
 				const messages = response.messages.map((msg: ChatMessage) => new ChatMessage(msg));
@@ -339,6 +419,8 @@ export async function joinInstancedRoomChannel(chat: ChatClient, roomId: number)
 }
 
 async function joinRoomChannel(chat: ChatClient, roomId: number) {
+	const chatId = chat.id;
+
 	const channel = new ChatRoomChannel(roomId, chat);
 
 	if (chat.pollingRoomId === roomId) {
@@ -353,6 +435,10 @@ async function joinRoomChannel(chat: ChatClient, roomId: number) {
 		`Join room channel: ${roomId}`,
 		() =>
 			new Promise<void>((resolve, reject) => {
+				if (chatId !== chat.id) {
+					return;
+				}
+
 				// If the client started polling a different room, stop polling this one.
 				if (chat.pollingRoomId !== roomId) {
 					console.log('[Chat] Stop joining room', roomId);
@@ -363,6 +449,10 @@ async function joinRoomChannel(chat: ChatClient, roomId: number) {
 					.join()
 					.receive('error', reject)
 					.receive('ok', response => {
+						if (chatId !== chat.id) {
+							return;
+						}
+
 						chat.pollingRoomId = -1;
 						chat.roomChannels[roomId] = channel;
 						channel.room = new ChatRoom(response.room);

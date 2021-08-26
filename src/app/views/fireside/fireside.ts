@@ -1,8 +1,9 @@
 import Component from 'vue-class-component';
 import { InjectReactive, ProvideReactive, Watch } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import { Action, State } from 'vuex-class';
 import { getAbsoluteLink } from '../../../utils/router';
 import { sleep } from '../../../utils/utils';
+import { uuidv4 } from '../../../utils/uuid';
 import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
 import AppAuthJoin from '../../../_common/auth/join/join.vue';
@@ -27,17 +28,18 @@ import { AppState, AppStore } from '../../../_common/store/app-store';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../_common/user/user-avatar/img/img.vue';
 import { User } from '../../../_common/user/user.model';
+import { ChatStore, ChatStoreKey, clearChat, loadChat } from '../../components/chat/chat-store';
 import {
-	ChatClient,
-	ChatKey,
 	joinInstancedRoomChannel,
 	leaveChatRoom,
+	setGuestToken as setChatGuestToken,
 } from '../../components/chat/client';
 import { ChatRoomChannel } from '../../components/chat/room-channel';
 import AppChatWindowOutput from '../../components/chat/window/output/output.vue';
 import AppChatWindowSend from '../../components/chat/window/send/send.vue';
 import { EVENT_UPDATE, FiresideChannel } from '../../components/grid/fireside-channel';
 import { store, Store } from '../../store';
+import { FiresideController, FiresideControllerKey } from './controller';
 import { FiresideHostRtc } from './fireside-host-rtc';
 import {
 	destroyFiresideRTC,
@@ -47,7 +49,6 @@ import {
 } from './fireside-rtc';
 import AppFiresideChatMembers from './_chat-members/chat-members.vue';
 import { FiresideChatMembersModal } from './_chat-members/modal/modal.service';
-import { FiresideController, FiresideControllerKey } from './controller';
 import { FiresideEditModal } from './_edit-modal/edit-modal.service';
 import AppFiresideHostList from './_host-list/host-list.vue';
 import { FiresideStatsModal } from './_stats/modal/modal.service';
@@ -113,7 +114,8 @@ const FiresideThemeKey = 'fireside';
 export default class RouteFireside extends BaseRouteComponent {
 	@AppState user!: AppStore['user'];
 	@State grid!: Store['grid'];
-	@InjectReactive(ChatKey) chat!: ChatClient;
+	@Action loadGrid!: Store['loadGrid'];
+	@InjectReactive(ChatStoreKey) chatStore!: ChatStore;
 	@ProvideReactive(FiresideRTCKey) rtc: FiresideRTC | null = null;
 	@ProvideReactive(FiresideControllerKey) c: FiresideController = new FiresideController();
 
@@ -140,6 +142,10 @@ export default class RouteFireside extends BaseRouteComponent {
 	$refs!: {
 		videoWrapper: HTMLDivElement;
 	};
+
+	get chat() {
+		return this.chatStore.chat;
+	}
 
 	get fireside() {
 		return this.c.fireside;
@@ -169,7 +175,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	get chatMessages() {
-		if (!this.chatRoom) {
+		if (!this.chat || !this.chatRoom) {
 			return [];
 		}
 
@@ -177,7 +183,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	get chatQueuedMessages() {
-		if (!this.chatRoom) {
+		if (!this.chat || !this.chatRoom) {
 			return [];
 		}
 
@@ -192,7 +198,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	get chatUsers() {
-		if (!this.chatRoom) {
+		if (!this.chat || !this.chatRoom) {
 			return undefined;
 		}
 		return this.chat.roomMembers[this.chatRoom.id];
@@ -286,16 +292,6 @@ export default class RouteFireside extends BaseRouteComponent {
 		this.hasExpiryWarning = false;
 		this.setPageTheme();
 
-		const userCanJoin = await this.checkUserCanJoin();
-
-		if (!userCanJoin) {
-			this.status = 'unauthorized';
-			console.debug(
-				`[FIRESIDE] User is not authorized to join the Fireside (not logged in/no cookie).`
-			);
-			return;
-		}
-
 		if (this.c.fireside.blocked) {
 			this.status = 'blocked';
 			console.debug(`[Fireside] Blocked from joining blocked user's Fireside.`);
@@ -303,6 +299,14 @@ export default class RouteFireside extends BaseRouteComponent {
 		}
 
 		if (this.c.fireside.isOpen()) {
+			if (!this.grid) {
+				this.loadGrid();
+			}
+
+			if (!this.chat) {
+				loadChat(this.chatStore);
+			}
+
 			// Set up watchers to initiate connection once one of them boots up.
 			this.$watch('chat.connected', () => this.watchChat());
 			this.$watch('grid.connected', () => this.watchGrid());
@@ -319,6 +323,11 @@ export default class RouteFireside extends BaseRouteComponent {
 		store.commit('theme/clearPageTheme', FiresideThemeKey);
 
 		this.disconnect();
+		this.grid?.unsetGuestToken();
+
+		if (this.chat?.isGuest) {
+			clearChat(this.chatStore);
+		}
 
 		if (this.beforeEachDeregister) {
 			this.beforeEachDeregister();
@@ -337,10 +346,32 @@ export default class RouteFireside extends BaseRouteComponent {
 			// Make sure the services are connected.
 			while (!this.grid || !this.grid.connected) {
 				console.debug('[FIRESIDE] Wait for Grid...');
+
+				if (this.grid && !this.user && !this.grid.isGuest) {
+					console.info('[FIRESIDE] Enabling guest access to grid');
+					const authToken = await this.getAuthToken();
+					console.log('Auth token: ' + authToken);
+					if (!authToken) {
+						throw new Error('Could not fetch guest token. This should be impossible');
+					}
+					await this.grid.setGuestToken(authToken);
+				}
+
 				await sleep(250);
 			}
 			while (!this.chat || !this.chat.connected) {
 				console.debug('[FIRESIDE] Wait for Chat...');
+
+				if (this.chat && !this.user && !this.chat.isGuest) {
+					console.info('[FIRESIDE] Enabling guest access to chat');
+					const authToken = await this.getAuthToken();
+					console.log('Auth token: ' + authToken);
+					if (!authToken) {
+						throw new Error('Could not fetch guest token. This should be impossible');
+					}
+					await setChatGuestToken(this.chat, authToken);
+				}
+
 				await sleep(250);
 			}
 
@@ -387,7 +418,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	watchChat() {
-		if (this.chat.connected) {
+		if (this.chat && this.chat.connected) {
 			this.tryJoin();
 		}
 		// Only disconnect when not connected and it previous registered a different state.
@@ -397,7 +428,7 @@ export default class RouteFireside extends BaseRouteComponent {
 			this.disconnect();
 		}
 
-		this.chatPreviousConnectedState = this.chat.connected;
+		this.chatPreviousConnectedState = !!this.chat?.connected;
 	}
 
 	watchGrid() {
@@ -419,30 +450,10 @@ export default class RouteFireside extends BaseRouteComponent {
 		store.commit('theme/setPageTheme', { key: FiresideThemeKey, theme });
 	}
 
-	private async checkUserCanJoin() {
-		if (!this.user) {
-			return false;
-		}
-
-		const frontendCookie = await getCookie('frontend');
-
-		if (!frontendCookie) {
-			return false;
-		}
-
-		return true;
-	}
-
 	private async join() {
 		console.debug(`[FIRESIDE] Joining Fireside.`);
 
 		// --- Make sure common join conditions are met.
-
-		if (!this.user) {
-			console.debug(`[FIRESIDE] User is not logged in.`);
-			this.status = 'unauthorized';
-			return;
-		}
 
 		if (
 			!this.fireside ||
@@ -457,8 +468,8 @@ export default class RouteFireside extends BaseRouteComponent {
 			return;
 		}
 
-		const frontendCookie = await getCookie('frontend');
-		if (!frontendCookie) {
+		const authToken = await this.getAuthToken();
+		if (!authToken) {
 			console.debug(`[FIRESIDE] Setup failure 1.`);
 			this.status = 'setup-failed';
 			return;
@@ -501,33 +512,32 @@ export default class RouteFireside extends BaseRouteComponent {
 
 		// --- Make them join the Fireside (if they aren't already).
 
-		if (!this.fireside.role) {
-			const rolePayload = await Api.sendRequest(`/web/fireside/join/${this.fireside.hash}`);
-			if (!rolePayload || !rolePayload.success || !rolePayload.role) {
-				console.debug(`[FIRESIDE] Failed to acquire a role.`);
-				this.status = 'setup-failed';
-				return;
+		if (this.user) {
+			if (!this.fireside.role) {
+				const rolePayload = await Api.sendRequest(
+					`/web/fireside/join/${this.fireside.hash}`
+				);
+				if (!rolePayload || !rolePayload.success || !rolePayload.role) {
+					console.debug(`[FIRESIDE] Failed to acquire a role.`);
+					this.status = 'setup-failed';
+					return;
+				}
+				this.fireside.role = new FiresideRole(rolePayload.role);
 			}
-			this.fireside.role = new FiresideRole(rolePayload.role);
-		}
 
-		if (this.streamingAppId && this.fireside.role.canStream) {
-			this.hostRtc = new FiresideHostRtc(
-				this.streamingAppId,
-				this.user.id,
-				this.fireside.id,
-				this.fireside.role
-			);
+			if (this.streamingAppId && this.fireside.role.canStream) {
+				this.hostRtc = new FiresideHostRtc(
+					this.streamingAppId,
+					this.user.id,
+					this.fireside.id,
+					this.fireside.role
+				);
+			}
 		}
 
 		// --- Join Grid channel.
 
-		const channel = new FiresideChannel(
-			this.fireside,
-			this.grid.socket,
-			this.user,
-			frontendCookie
-		);
+		const channel = new FiresideChannel(this.fireside, this.grid.socket, this.user, authToken);
 
 		// Subscribe to the update event.
 		channel.on(EVENT_UPDATE, this.onGridUpdateFireside.bind(this));
@@ -574,7 +584,7 @@ export default class RouteFireside extends BaseRouteComponent {
 		}
 
 		this.chatChannel.on('kick_member', (data: any) => {
-			if (data.user_id === this.user!.id) {
+			if (this.user && data.user_id === this.user.id) {
 				Growls.info(this.$gettext(`You've been kicked from the Fireside.`));
 				this.$router.push({ name: 'home' });
 			}
@@ -595,6 +605,20 @@ export default class RouteFireside extends BaseRouteComponent {
 		this.clearExpiryCheck();
 		this.expiryInterval = setInterval(this.expiryCheck.bind(this), 1000);
 		this.expiryCheck();
+	}
+
+	private async getAuthToken() {
+		if (this.user) {
+			return await getCookie('frontend');
+		}
+
+		let token = sessionStorage.getItem('fireside-token');
+		if (!token) {
+			token = uuidv4();
+			sessionStorage.setItem('fireside-token', token);
+		}
+
+		return token;
 	}
 
 	private disconnect() {
@@ -652,7 +676,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	private createOrUpdateRtc(payload: any, checkJoined = true) {
-		if (!this.user || !this.fireside || (checkJoined && this.status !== 'joined')) {
+		if (!this.fireside || (checkJoined && this.status !== 'joined')) {
 			return;
 		}
 
@@ -660,7 +684,7 @@ export default class RouteFireside extends BaseRouteComponent {
 
 		if (this.rtc === null) {
 			this.rtc = new FiresideRTC(
-				this.user.id,
+				this.user?.id || null,
 				payload.streamingAppId,
 				payload.videoChannelName,
 				payload.videoToken,

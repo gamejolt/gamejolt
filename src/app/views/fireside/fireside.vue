@@ -316,7 +316,7 @@
 							:queued-messages="chatQueuedMessages"
 						/>
 
-						<app-chat-window-send class="-chat-window-input" :room="chatRoom" />
+						<app-chat-window-send v-if="chat && chat.currentUser" class="-chat-window-input" :room="chatRoom" />
 					</div>
 				</template>
 			</div>
