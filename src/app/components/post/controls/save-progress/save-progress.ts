@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
-import AppProgressBar from '../../../../../_common/progress/bar/bar';
+import AppProgressBar from '../../../../../_common/progress/bar/bar.vue';
 import { AppProgressPoller } from '../../../../../_common/progress/poller/poller';
 
 @Component({
