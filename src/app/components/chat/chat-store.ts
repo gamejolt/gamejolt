@@ -2,41 +2,35 @@ import { ChatClientLazy } from '../lazy';
 import { ChatClient } from './client';
 
 export const ChatStoreKey = Symbol('chat-store');
-
 export class ChatStore {
 	chat: ChatClient | null = null;
-	wantsChat = false;
-	loadPromise: Promise<void> | null = null;
+
+	// private
+	_wantsChat = false;
+	_loadPromise: Promise<void> | null = null;
 }
 
 export async function loadChat(store: ChatStore) {
-	store.wantsChat = true;
+	store._wantsChat = true;
 
-	if (store.loadPromise) {
-		await store.loadPromise;
+	store._loadPromise ??= _doLoadChat(store);
+	await store._loadPromise;
+}
+
+async function _doLoadChat(store: ChatStore) {
+	const { ChatClient: ChatClient_, destroy } = await ChatClientLazy();
+
+	// Abort if by the time we lazy loaded the chat component we requested to clear it.
+	if (!store._wantsChat) {
 		return;
 	}
 
-	try {
-		store.loadPromise = new Promise(() => {
-			return ChatClientLazy().then(({ ChatClient: ChatClient_, destroy }) => {
-				// Abort if by the time we lazy loaded the chat component we requested to clear it.
-				if (!store.wantsChat) {
-					return;
-				}
-
-				if (store.chat) {
-					destroy(store.chat);
-				}
-
-				store.chat = new ChatClient_();
-			});
-		});
-
-		await store.loadPromise;
-	} finally {
-		store.loadPromise = null;
+	if (store.chat) {
+		destroy(store.chat);
 	}
+
+	store.chat = new ChatClient_();
+	store._loadPromise = null;
 }
 
 /**
@@ -46,18 +40,18 @@ export async function loadChat(store: ChatStore) {
  * The chat instance that was set by the time this function was invoked will be destroyed.
  */
 export async function clearChat(store: ChatStore) {
-	store.wantsChat = false;
+	store._wantsChat = false;
 
 	const chat = store.chat;
 	if (!chat) {
 		return;
 	}
-	const chatId = chat.id;
+
+	// We unset the chat immediately to avoid a race condition
+	// where the chat is cleared multiple times and getting instantiated
+	// between the actual calls to destroy()
+	store.chat = null;
 
 	const { destroy } = await ChatClientLazy();
 	destroy(chat);
-
-	if (chat === store.chat && chatId === chat.id) {
-		store.chat = null;
-	}
 }

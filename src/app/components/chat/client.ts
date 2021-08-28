@@ -2,6 +2,7 @@ import Axios from 'axios';
 import { Channel, Socket } from 'phoenix';
 import Vue from 'vue';
 import { arrayRemove, numberSort } from '../../../utils/array';
+import { CancelToken } from '../../../utils/cancel-token';
 import { sleep } from '../../../utils/utils';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
@@ -27,12 +28,10 @@ export interface ChatNewMessageEvent {
  * request
  */
 async function pollRequest<T>(
-	chat: ChatClient,
 	context: string,
+	cancelToken: CancelToken,
 	requestGetter: () => Promise<T>
 ): Promise<T | null> {
-	const chatId = chat.id;
-
 	let result = null;
 	let finished = false;
 	let delay = 0;
@@ -41,7 +40,7 @@ async function pollRequest<T>(
 
 	while (!finished) {
 		// Abort if our chat server changed.
-		if (chat.id !== chatId) {
+		if (cancelToken.isCanceled) {
 			return null;
 		}
 
@@ -64,9 +63,6 @@ async function pollRequest<T>(
 }
 
 export class ChatClient {
-	static nextId = 1;
-
-	id = -1;
 	connected = false;
 	isGuest = false;
 	socket: Socket | null = null;
@@ -102,6 +98,8 @@ export class ChatClient {
 	 * If set, will connect as a guest, using this token.
 	 */
 	guestToken: string | null = null;
+
+	cancelToken: CancelToken = null as any;
 
 	/**
 	 * The session room is stored within their local session. It's their last active room. We reopen
@@ -140,15 +138,15 @@ export class ChatClient {
 	}
 
 	constructor() {
+		this.cancelToken = new CancelToken();
+
 		reset(this);
 		connect(this);
 	}
 }
 
 function reset(chat: ChatClient) {
-	chat.id = -1;
 	chat.connected = false;
-	chat.isGuest = false;
 	chat.currentUser = null;
 	chat.friendsList = new ChatUserCollection(ChatUserCollection.TYPE_FRIEND);
 	chat.populated = false;
@@ -164,19 +162,18 @@ function reset(chat: ChatClient) {
 	chat.isFocused = true;
 
 	chat.messageQueue = [];
+
+	chat.cancelToken.cancel();
+	chat.cancelToken = new CancelToken();
 }
 
 export async function setGuestToken(chat: ChatClient, guestToken: string) {
 	const tokenChanged = chat.guestToken !== guestToken;
 	chat.guestToken = guestToken;
 
-	console.log('isGuest: ' + chat.isGuest);
-	console.log('tokenChanged: ' + tokenChanged);
-
 	if (!chat.isGuest || tokenChanged) {
-		destroy(chat);
 		chat.isGuest = true;
-		connect(chat);
+		reconnect(chat);
 	}
 }
 
@@ -184,9 +181,8 @@ export async function unsetGuestToken(chat: ChatClient) {
 	chat.guestToken = null;
 
 	if (chat.isGuest) {
-		destroy(chat);
 		chat.isGuest = false;
-		connect(chat);
+		reconnect(chat);
 	}
 }
 
@@ -196,9 +192,7 @@ function reconnect(chat: ChatClient) {
 }
 
 async function connect(chat: ChatClient) {
-	console.warn(new Error('trace'));
-	const chatId = ChatClient.nextId++;
-	chat.id = chatId;
+	const cancelToken = new CancelToken();
 
 	const user = store.state.app.user;
 	if ((!chat.isGuest && !user) || (chat.isGuest && !!user)) {
@@ -206,7 +200,7 @@ async function connect(chat: ChatClient) {
 	}
 
 	const authToken = chat.isGuest ? chat.guestToken : await getCookie('frontend');
-	if (chatId !== chat.id) {
+	if (cancelToken.isCanceled) {
 		console.log('[Chat] Aborted connection (1)');
 		return;
 	}
@@ -220,7 +214,7 @@ async function connect(chat: ChatClient) {
 
 	console.log('[Chat] Connecting...');
 
-	const results = await pollRequest(chat, 'Auth to server', async () => {
+	const results = await pollRequest('Auth to server', cancelToken, async () => {
 		// Do the host check first. This request will get rate limited and only
 		// let a certain number through, which will cause the second one to not
 		// get processed.
@@ -229,7 +223,7 @@ async function connect(chat: ChatClient) {
 			timeout: 3000,
 		});
 
-		if (chatId !== chat.id) {
+		if (cancelToken.isCanceled) {
 			return null;
 		}
 
@@ -246,7 +240,7 @@ async function connect(chat: ChatClient) {
 		return { host: hostResult, token: tokenResult };
 	});
 
-	if (chatId !== chat.id) {
+	if (cancelToken.isCanceled) {
 		console.log('[Chat] Aborted connection (2)');
 		return;
 	}
@@ -259,7 +253,6 @@ async function connect(chat: ChatClient) {
 	const token = results.token.data.token;
 
 	console.log('[Chat] Server selected:', host);
-	console.log('[Chat] Got token', token);
 
 	// heartbeat is 30 seconds, backend disconnects after 40 seconds
 	chat.socket = new Socket(host, {
@@ -277,7 +270,7 @@ async function connect(chat: ChatClient) {
 	}
 
 	chat.socket.onOpen(() => {
-		if (chatId !== chat.id) {
+		if (cancelToken.isCanceled) {
 			return;
 		}
 
@@ -286,7 +279,7 @@ async function connect(chat: ChatClient) {
 	});
 
 	chat.socket.onError((e: any) => {
-		if (chatId !== chat.id) {
+		if (cancelToken.isCanceled) {
 			return;
 		}
 
@@ -296,7 +289,7 @@ async function connect(chat: ChatClient) {
 	});
 
 	chat.socket.onClose(() => {
-		if (chatId !== chat.id) {
+		if (cancelToken.isCanceled) {
 			return;
 		}
 
@@ -305,8 +298,8 @@ async function connect(chat: ChatClient) {
 	});
 
 	await pollRequest(
-		chat,
 		'Connect to socket',
+		cancelToken,
 		() =>
 			new Promise<void>(resolve => {
 				if (chat.socket !== null) {
@@ -316,7 +309,7 @@ async function connect(chat: ChatClient) {
 			})
 	);
 
-	if (chatId !== chat.id) {
+	if (cancelToken.isCanceled) {
 		console.log('[Chat] Aborted connection (3)');
 		return;
 	}
@@ -328,9 +321,9 @@ async function connect(chat: ChatClient) {
 
 export function destroy(chat: ChatClient) {
 	if (chat.connected) {
-		console.log('[Grid] Destroying client...');
+		console.log('[Chat] Destroying client...');
 	} else {
-		console.warn('[Grid] Destroying client (before we got fully connected)');
+		console.warn('[Chat] Destroying client (before we got fully connected)');
 	}
 
 	reset(chat);
@@ -354,21 +347,21 @@ export function destroy(chat: ChatClient) {
 }
 
 async function joinUserChannel(chat: ChatClient, userId: number) {
-	const chatId = chat.id;
+	const cancelToken = chat.cancelToken;
 
 	const channel = new ChatUserChannel(userId, chat);
 	const request = `Join user channel ${userId}`;
 
 	await pollRequest(
-		chat,
 		request,
+		cancelToken,
 		() =>
 			new Promise<void>((resolve, reject) => {
 				channel
 					.join()
 					.receive('error', reject)
 					.receive('ok', response => {
-						if (chatId !== chat.id) {
+						if (cancelToken.isCanceled) {
 							return;
 						}
 
@@ -392,8 +385,7 @@ async function joinUserChannel(chat: ChatClient, userId: number) {
 }
 
 export async function joinInstancedRoomChannel(chat: ChatClient, roomId: number) {
-	const chatId = chat.id;
-
+	const cancelToken = chat.cancelToken;
 	const channel = new ChatRoomChannel(roomId, chat);
 	channel.instanced = true;
 
@@ -402,7 +394,7 @@ export async function joinInstancedRoomChannel(chat: ChatClient, roomId: number)
 			.join()
 			.receive('error', reject)
 			.receive('ok', response => {
-				if (chatId !== chat.id) {
+				if (cancelToken.isCanceled) {
 					return;
 				}
 
@@ -419,7 +411,7 @@ export async function joinInstancedRoomChannel(chat: ChatClient, roomId: number)
 }
 
 async function joinRoomChannel(chat: ChatClient, roomId: number) {
-	const chatId = chat.id;
+	const cancelToken = chat.cancelToken;
 
 	const channel = new ChatRoomChannel(roomId, chat);
 
@@ -431,11 +423,11 @@ async function joinRoomChannel(chat: ChatClient, roomId: number) {
 	chat.pollingRoomId = roomId;
 
 	await pollRequest(
-		chat,
 		`Join room channel: ${roomId}`,
+		cancelToken,
 		() =>
 			new Promise<void>((resolve, reject) => {
-				if (chatId !== chat.id) {
+				if (cancelToken.isCanceled) {
 					return;
 				}
 
@@ -449,7 +441,7 @@ async function joinRoomChannel(chat: ChatClient, roomId: number) {
 					.join()
 					.receive('error', reject)
 					.receive('ok', response => {
-						if (chatId !== chat.id) {
+						if (cancelToken.isCanceled) {
 							return;
 						}
 

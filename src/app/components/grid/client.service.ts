@@ -1,6 +1,7 @@
 import Axios from 'axios';
 import { Channel, Socket } from 'phoenix';
 import { arrayRemove } from '../../../utils/array';
+import { CancelToken } from '../../../utils/cancel-token';
 import { TabLeader } from '../../../utils/tab-leader';
 import { sleep } from '../../../utils/utils';
 import { uuidv4 } from '../../../utils/uuid';
@@ -184,12 +185,9 @@ function tillConnection(client: GridClient) {
  */
 async function pollRequest(
 	context: string,
-	abortPromise: Promise<void>,
+	cancelToken: CancelToken,
 	requestGetter: () => Promise<any>
 ): Promise<any> {
-	let aborted = false;
-	abortPromise.then(() => (aborted = true));
-
 	let result = null;
 	let finished = false;
 
@@ -203,7 +201,7 @@ async function pollRequest(
 			result = await promise;
 			finished = true;
 		} catch (e) {
-			if (aborted) {
+			if (cancelToken.isCanceled) {
 				finished = true;
 			}
 
@@ -255,30 +253,16 @@ export class GridClient {
 	/**
 	 * This is used to abort a single connection flow so we can cleanly retry.
 	 */
-	private abortPromise: Promise<void> = null as any;
-	private abortResolver: () => void = null as any;
+	private cancelToken: CancelToken = null as any;
 
 	constructor() {
-		// Called in order to initialize the abort promise.
-		this.abortCurrentConnectionFlow();
-
+		this.cancelToken = new CancelToken();
 		this.connect();
-	}
-
-	private abortCurrentConnectionFlow() {
-		if (this.abortResolver) {
-			this.abortResolver();
-		}
-
-		this.abortPromise = new Promise(resolve => (this.abortResolver = resolve));
 	}
 
 	async setGuestToken(guestToken: string) {
 		const tokenChanged = this.guestToken !== guestToken;
 		this.guestToken = guestToken;
-
-		console.log('isGuest: ' + this.isGuest);
-		console.log('tokenChanged: ' + tokenChanged);
 
 		if (!this.isGuest || tokenChanged) {
 			await this.disconnect();
@@ -298,9 +282,7 @@ export class GridClient {
 	}
 
 	private async connect() {
-		let aborted = false;
-		const currentAbortPromise = this.abortPromise;
-		currentAbortPromise.then(() => (aborted = true));
+		const cancelToken = this.cancelToken;
 
 		const user = store.state.app.user;
 		if ((!this.isGuest && !user) || (this.isGuest && !!user)) {
@@ -308,7 +290,7 @@ export class GridClient {
 		}
 
 		const authToken = this.isGuest ? this.guestToken : await getCookie('frontend');
-		if (aborted) {
+		if (cancelToken.isCanceled) {
 			console.log('[Grid] Aborted connection (1)');
 			return;
 		}
@@ -323,10 +305,10 @@ export class GridClient {
 		console.log('[Grid] Connecting...');
 
 		// get hostname from loadbalancer first
-		const hostResult = await pollRequest('Select server', currentAbortPromise, () =>
+		const hostResult = await pollRequest('Select server', cancelToken, () =>
 			Axios.get(Environment.gridHost, { ignoreLoadingBar: true, timeout: 3_000 })
 		);
-		if (aborted) {
+		if (cancelToken.isCanceled) {
 			console.log('[Grid] Aborted connection (2)');
 			return;
 		}
@@ -341,7 +323,7 @@ export class GridClient {
 
 		// TODO: niiiiils, any reason not to do this?
 		this.socket.onError(() => {
-			if (!aborted) {
+			if (!cancelToken.isCanceled) {
 				this.restart(0);
 			}
 		});
@@ -357,10 +339,10 @@ export class GridClient {
 
 		await pollRequest(
 			'Connect to socket',
-			currentAbortPromise,
+			cancelToken,
 			() =>
 				new Promise<void>(resolve => {
-					if (aborted) {
+					if (cancelToken.isCanceled) {
 						resolve();
 						return;
 					}
@@ -376,7 +358,7 @@ export class GridClient {
 				})
 		);
 
-		if (aborted) {
+		if (cancelToken.isCanceled) {
 			console.log('[Grid] Aborted connection (3)');
 			return;
 		}
@@ -396,7 +378,7 @@ export class GridClient {
 
 			await pollRequest(
 				'Join user notification channel',
-				currentAbortPromise,
+				cancelToken,
 				() =>
 					new Promise<void>((resolve, reject) => {
 						channel
@@ -412,7 +394,7 @@ export class GridClient {
 
 			// TODO: check if we need to kill the tab leader even tho we got aborted.
 			// Not sure when this would happen at the moment.
-			if (aborted) {
+			if (cancelToken.isCanceled) {
 				console.log('[Grid] Aborted connection (4)');
 				return;
 			}
@@ -421,7 +403,7 @@ export class GridClient {
 			if (this.tabLeader !== null) {
 				await this.tabLeader.kill();
 
-				if (aborted) {
+				if (cancelToken.isCanceled) {
 					console.log('[Grid] Aborted connection (5)');
 					return;
 				}
@@ -431,7 +413,7 @@ export class GridClient {
 			this.tabLeader.init();
 
 			channel.on('new-notification', (payload: NewNotificationPayload) => {
-				if (aborted) {
+				if (cancelToken.isCanceled) {
 					return;
 				}
 
@@ -439,7 +421,7 @@ export class GridClient {
 			});
 
 			channel.on('bootstrap', (payload: BootstrapPayload) => {
-				if (aborted) {
+				if (cancelToken.isCanceled) {
 					return;
 				}
 
@@ -449,7 +431,7 @@ export class GridClient {
 			channel.push('request-bootstrap', {});
 
 			channel.on('clear-notifications', (payload: ClearNotificationsPayload) => {
-				if (aborted) {
+				if (cancelToken.isCanceled) {
 					return;
 				}
 
@@ -457,7 +439,7 @@ export class GridClient {
 			});
 
 			channel.on('community-bootstrap', (payload: CommunityBootstrapPayload) => {
-				if (aborted) {
+				if (cancelToken.isCanceled) {
 					return;
 				}
 
@@ -465,7 +447,7 @@ export class GridClient {
 			});
 
 			channel.on('sticker-unlock', (payload: StickerUnlockPayload) => {
-				if (aborted) {
+				if (cancelToken.isCanceled) {
 					return;
 				}
 
@@ -473,14 +455,14 @@ export class GridClient {
 			});
 
 			channel.on('post-updated', (payload: PostUpdatedPayload) => {
-				if (aborted) {
+				if (cancelToken.isCanceled) {
 					return;
 				}
 
 				this.handlePostUpdated(payload);
 			});
 
-			this.joinCommunities(currentAbortPromise);
+			this.joinCommunities(cancelToken);
 		}
 	}
 
@@ -766,22 +748,19 @@ export class GridClient {
 		}
 	}
 
-	joinCommunities(abortPromise: Promise<void>) {
+	joinCommunities(cancelToken: CancelToken) {
 		console.log('[Grid] Subscribing to community channels...');
 
 		const promises = [];
 		for (const community of store.state.communities) {
-			promises.push(this.joinCommunity(abortPromise, community));
+			promises.push(this.joinCommunity(cancelToken, community));
 		}
 		return Promise.all(promises);
 	}
 
-	async joinCommunity(abortPromise: Promise<void>, community: Community) {
-		let aborted = false;
-		abortPromise.then(() => (aborted = true));
-
+	async joinCommunity(cancelToken: CancelToken, community: Community) {
 		const authToken = this.isGuest ? this.guestToken : await getCookie('frontend');
-		if (aborted) {
+		if (cancelToken.isCanceled) {
 			console.log(
 				`[Grid] Aborted connection (6) (while joining community: ${community.name}, id: ${community.id}`
 			);
@@ -800,14 +779,14 @@ export class GridClient {
 
 			await pollRequest(
 				`Join community channel '${community.name}' (${community.id})`,
-				abortPromise,
+				cancelToken,
 				() =>
 					new Promise<void>((resolve, reject) => {
 						channel
 							.join()
 							.receive('error', reject)
 							.receive('ok', () => {
-								if (aborted) {
+								if (cancelToken.isCanceled) {
 									resolve();
 									return;
 								}
@@ -818,7 +797,7 @@ export class GridClient {
 					})
 			);
 
-			if (aborted) {
+			if (cancelToken.isCanceled) {
 				console.log(
 					`[Grid] Aborted connection (7) (while joining community: ${community.name}, id: ${community.id}`
 				);
@@ -826,14 +805,14 @@ export class GridClient {
 			}
 
 			channel.on('feature', (payload: CommunityFeaturePayload) => {
-				if (aborted) {
+				if (cancelToken.isCanceled) {
 					return;
 				}
 
 				this.handleCommunityFeature(community.id, payload);
 			});
 			channel.on('new-post', (payload: CommunityNewPostPayload) => {
-				if (aborted) {
+				if (cancelToken.isCanceled) {
 					return;
 				}
 
@@ -887,7 +866,8 @@ export class GridClient {
 			console.warn('[Grid] Disconnecting (before we got fully connected)');
 		}
 
-		this.abortCurrentConnectionFlow();
+		this.cancelToken.cancel();
+		this.cancelToken = new CancelToken();
 
 		// Continue attempting to disconnect even if we didn't get fully connected.
 		// This should tear down the channels and socket that may have connected already,

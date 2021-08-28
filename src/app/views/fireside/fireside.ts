@@ -350,7 +350,6 @@ export default class RouteFireside extends BaseRouteComponent {
 				if (this.grid && !this.user && !this.grid.isGuest) {
 					console.info('[FIRESIDE] Enabling guest access to grid');
 					const authToken = await this.getAuthToken();
-					console.log('Auth token: ' + authToken);
 					if (!authToken) {
 						throw new Error('Could not fetch guest token. This should be impossible');
 					}
@@ -365,7 +364,6 @@ export default class RouteFireside extends BaseRouteComponent {
 				if (this.chat && !this.user && !this.chat.isGuest) {
 					console.info('[FIRESIDE] Enabling guest access to chat');
 					const authToken = await this.getAuthToken();
-					console.log('Auth token: ' + authToken);
 					if (!authToken) {
 						throw new Error('Could not fetch guest token. This should be impossible');
 					}
