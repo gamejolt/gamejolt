@@ -192,7 +192,7 @@ function reconnect(chat: ChatClient) {
 }
 
 async function connect(chat: ChatClient) {
-	const cancelToken = new CancelToken();
+	const cancelToken = chat.cancelToken;
 
 	const user = store.state.app.user;
 	if ((!chat.isGuest && !user) || (chat.isGuest && !!user)) {
