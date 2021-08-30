@@ -122,6 +122,12 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 			newState: { ...newState },
 			existingState: { ...user.videoPlayState },
 		});
+
+		// If our play state is what we wanted and a new one hasn't been
+		// assigned, clear out the queued state.
+		if (user.queuedVideoPlayState === newState) {
+			user.queuedVideoPlayState = null;
+		}
 		return;
 	}
 
