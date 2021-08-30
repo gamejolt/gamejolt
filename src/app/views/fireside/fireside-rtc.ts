@@ -202,13 +202,21 @@ async function _setup(rtc: FiresideRTC) {
  */
 function _finalizeSetup(rtc: FiresideRTC) {
 	if (rtc.setupFinalized) {
+		// Run the debounced finalizeSetupFn again if the focusedUserId doesn't
+		// exist or match any of our current hosts.
+		if (!rtc.focusedUser && rtc.finalizeSetupFn) {
+			rtc.finalizeSetupFn();
+		}
 		return;
 	}
 
 	rtc.finalizeSetupFn ??= debounce(() => {
 		_chooseFocusedUser(rtc);
-		rtc.setupFinalized = true;
-		rtc.log(`Setup finalized.`);
+
+		if (!rtc.setupFinalized) {
+			rtc.setupFinalized = true;
+			rtc.log(`Setup finalized.`);
+		}
 	}, 500);
 
 	rtc.log(`Debouncing finalize setup.`);

@@ -376,13 +376,11 @@
 		max-width: none
 
 	&-column
-		flex-direction: column
-
-		.-video
-			flex: none
+		display: grid
+		grid-template-rows: calc(min(33vh, 100vw * 0.625)) 1fr
+		grid-template-columns: 100%
 
 		.-chat
-			flex: auto
 			max-width: unset !important
 
 .-leading
@@ -476,48 +474,46 @@
 	z-index: $zindex-shell-hot-bottom + 1
 	background-color: $black
 
-.-video
-	&-wrapper
-	&-container
-	&-inner
-		display: flex
-		justify-content: center
-		align-items: center
+.-video-wrapper
+.-video-container
+.-video-inner
+	display: flex
+	justify-content: center
+	align-items: center
 
-	&-wrapper
-		flex: 3 0
-		flex-direction: column
-		overflow: hidden
+.-video-wrapper
+	flex: 3 0
+	flex-direction: column
+	overflow: hidden
 
-		&.-vertical
-			flex: 1
-			flex-direction: row
-			max-height: 33vh
+	&.-vertical
+		flex-direction: row
+		flex: none
 
-	&-padding
-		position: relative
-		width: 100%
-		height: 100%
-		padding: 8px
+.-video-padding
+	position: relative
+	width: 100%
+	height: 100%
+	padding: 8px
 
-		.-fullscreen &
-			padding: 0
+	.-fullscreen &
+		padding: 0
 
-	&-container
-		min-height: 0
-		width: 100%
-		height: 100%
-		position: relative
+.-video-container
+	min-height: 0
+	width: 100%
+	height: 100%
+	position: relative
 
-	&-inner
-		rounded-corners-lg()
-		elevate-2()
-		overflow: hidden
-		position: absolute
-		background-color: var(--theme-bg-subtle)
+.-video-inner
+	rounded-corners-lg()
+	elevate-2()
+	overflow: hidden
+	position: absolute
+	background-color: var(--theme-bg-subtle)
 
-		.-fullscreen &
-			border-radius: 0
+	.-fullscreen &
+		border-radius: 0
 
 .-hosts-padding
 	flex: none
