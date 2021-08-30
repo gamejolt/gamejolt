@@ -1,11 +1,46 @@
-import { arrayRemove } from '../../../utils/array';
-import { ScrollInviewConfig } from './config';
-import { ScrollInviewController } from './controller';
-import { AppScrollInview } from './inview';
+<script lang="ts">
+import { inject, provide, reactive } from 'vue';
+import { ScrollInviewConfig, ScrollInviewController } from './inview.vue';
+
+const Key = Symbol();
+
+export type ScrollInviewParentController = ReturnType<typeof createScrollInviewParent>;
+
+export function createScrollInviewParent(scroller: HTMLElement | null) {
+	return reactive({
+		/**
+		 * We need to create a new container for each unique configuration that
+		 * our AppScrollInview children need.
+		 */
+		containers: new Map<ScrollInviewConfig, ScrollInviewContainer>(),
+
+		/**
+		 * We need a different container for each unique "margin" that we need
+		 * to watch for. This function will return a container for the specific
+		 * margin passed in. If it doesn't have one yet for the specific margin,
+		 * it will dynamically create one.
+		 */
+		getContainer(config: ScrollInviewConfig) {
+			const container = this.containers.get(config);
+			if (!container) {
+				const root = scroller;
+				const newContainer = new ScrollInviewContainer(config, root);
+				this.containers.set(config, newContainer);
+				return newContainer;
+			}
+
+			return container;
+		},
+	});
+}
+
+export function useScrollInviewParent() {
+	return inject(Key) as ScrollInviewParentController;
+}
 
 export class ScrollInviewContainer {
-	private items = new WeakMap<Element, AppScrollInview>();
-	private controllers: ScrollInviewController[] = [];
+	private items = new WeakMap<Element, ScrollInviewController>();
+	private controllers = new Set<ScrollInviewController>();
 	private observer: IntersectionObserver = null as any;
 	private queuedChanges: (() => void)[] = [];
 
@@ -23,16 +58,16 @@ export class ScrollInviewContainer {
 		});
 	}
 
-	observeItem(item: AppScrollInview) {
-		this.items.set(item.$el, item);
-		this.controllers.push(item.controller);
-		this.observer.observe(item.$el);
+	observeItem(item: ScrollInviewController) {
+		this.items.set(item.element!, item);
+		this.controllers.add(item);
+		this.observer.observe(item.element!);
 	}
 
-	unobserveItem(item: AppScrollInview) {
-		this.items.delete(item.$el);
-		arrayRemove(this.controllers, i => i === item.controller);
-		this.observer.unobserve(item.$el);
+	unobserveItem(item: ScrollInviewController) {
+		this.items.delete(item.element!);
+		this.controllers.delete(item);
+		this.observer.unobserve(item.element!);
 		this.trackFocused();
 	}
 
@@ -57,13 +92,13 @@ export class ScrollInviewContainer {
 				this.config.emitsOn === 'full-overlap' ? intersectionRatio === 1 : isIntersecting;
 
 			this.queueChange(() => {
-				item.controller.latestThreshold = intersectionRatio;
-				if (isInView !== item.controller.isInview) {
-					item.controller.isInview = isInView;
+				item.latestThreshold = intersectionRatio;
+				if (isInView !== item.isInview) {
+					item.isInview = isInView;
 					if (isInView) {
-						item.emitInView();
+						item.emitChange(true);
 					} else {
-						item.emitOutView();
+						item.emitChange(false);
 					}
 				}
 			});
@@ -114,3 +149,25 @@ export class ScrollInviewContainer {
 		}
 	}
 }
+</script>
+
+<script lang="ts" setup>
+const props = defineProps({
+	// If this is a child of AppScrollScroller, we need to get it as a prop so
+	// we can use that scroll element as the root context.
+	scroller: {
+		type: HTMLElement,
+		default: null,
+	},
+});
+
+const c = createScrollInviewParent(props.scroller);
+provide(Key, c);
+</script>
+
+<template>
+	<!-- TODO(vue3): do we need the div? -->
+	<div>
+		<slot />
+	</div>
+</template>

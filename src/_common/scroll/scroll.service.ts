@@ -153,7 +153,7 @@ export class Scroll {
 		offset: number,
 		options: ScrollToOptions = {}
 	) {
-		let top = this.getScrollTop(document) + element.getBoundingClientRect().top - offset;
+		const top = this.getScrollTop(document) + element.getBoundingClientRect().top - offset;
 		this.scrollTo(top, options);
 	}
 

@@ -8,8 +8,9 @@ import {
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import { AppResponsiveDimensions } from '../../../../../_common/responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import { ScrollInviewConfig } from '../../../../../_common/scroll/inview/config';
-import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
+import AppScrollInview, {
+	ScrollInviewConfig,
+} from '../../../../../_common/scroll/inview/inview.vue';
 import AppSketchfabEmbed from '../../../../../_common/sketchfab/embed/embed.vue';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';

@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { Emit, Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { ContentFocus } from '../../../../../_common/content-focus/content-focus.service';
 import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
@@ -9,8 +10,9 @@ import {
 	AppResponsiveDimensionsChangeEvent,
 } from '../../../../../_common/responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import { ScrollInviewController } from '../../../../../_common/scroll/inview/controller';
-import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
+import AppScrollInview, {
+	createScrollInview,
+} from '../../../../../_common/scroll/inview/inview.vue';
 import {
 	SettingVideoPlayerFeedAutoplay,
 	SettingVideoPlayerVolume,
@@ -71,7 +73,7 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	shouldLoadVideoTimer: null | NodeJS.Timer = null;
 
 	readonly InviewConfigFocused = InviewConfigFocused;
-	readonly focusedController = new ScrollInviewController();
+	readonly focusedController = setup(() => createScrollInview());
 	readonly Screen = Screen;
 
 	get shouldShowLoading() {

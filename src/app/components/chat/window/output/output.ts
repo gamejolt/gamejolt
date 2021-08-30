@@ -1,12 +1,14 @@
 import { nextTick } from 'vue';
+import { setup } from 'vue-class-component';
 import { Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { date } from '../../../../../_common/filters/date';
 import AppIllustration from '../../../../../_common/illustration/illustration.vue';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
-import AppScrollScrollerTS from '../../../../../_common/scroll/scroller/scroller';
-import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
+import AppScrollScroller, {
+	createScroller,
+} from '../../../../../_common/scroll/scroller/scroller.vue';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { EventSubscription } from '../../../../../_common/system/event/event-topic';
 import { ChatClient, ChatKey, loadOlderChatMessages, onNewChatMessage } from '../../client';
@@ -41,17 +43,14 @@ export default class AppChatWindowOutput extends Vue {
 	/** Whether or not we reached the end of the historical messages. */
 	reachedEnd = false;
 	isLoadingOlder = false;
+	shouldScroll = true;
+	scroller = setup(() => createScroller());
 
 	private checkQueuedTimeout?: NodeJS.Timer;
 	private _introEmoji?: string;
 	private newMessage$?: EventSubscription;
-	private shouldScroll = true;
 	private isAutoscrolling = false;
 	private isOnScrollQueued = false;
-
-	declare $refs: {
-		scroller: AppScrollScrollerTS;
-	};
 
 	get allMessages() {
 		return this.messages.concat(this.queuedMessages);
@@ -212,7 +211,7 @@ export default class AppChatWindowOutput extends Vue {
 		// the "scroll handler" and ignore the scroll event since it was
 		// triggered by us.
 		this.isAutoscrolling = true;
-		this.$refs.scroller.scrollTo(this.$el.scrollHeight + 10000);
+		this.scroller.scrollTo(this.$el.scrollHeight + 10000);
 	}
 
 	isNewMessage(message: ChatMessage) {

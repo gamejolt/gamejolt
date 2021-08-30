@@ -1,9 +1,9 @@
-import { DirectiveFunction } from 'vue';
+import { Directive } from 'vue';
 
-export const AppScrollWhen: DirectiveFunction = (el, binding) => {
+export const AppScrollWhen: Directive = (el, binding) => {
 	if (binding.value && binding.value !== binding.oldValue) {
 		el.scrollIntoView({
-			behavior: !!binding.modifiers.animate ? 'smooth' : 'auto',
+			behavior: binding.modifiers.animate ? 'smooth' : 'auto',
 		});
 	}
 };

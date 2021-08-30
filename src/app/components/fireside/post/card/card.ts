@@ -15,8 +15,9 @@ import { MediaItem } from '../../../../../_common/media-item/media-item-model';
 import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import { AppResponsiveDimensions } from '../../../../../_common/responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import { ScrollInviewConfig } from '../../../../../_common/scroll/inview/config';
-import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
+import AppScrollInview, {
+	ScrollInviewConfig,
+} from '../../../../../_common/scroll/inview/inview.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
 import {
 	getVideoPlayerFromSources,

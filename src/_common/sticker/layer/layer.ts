@@ -1,6 +1,7 @@
 import { defineAsyncComponent } from '@vue/runtime-core';
+import { setup } from 'vue-class-component';
 import { Inject, Options, Prop, Provide, Vue } from 'vue-property-decorator';
-import { findVueParent, propOptional } from '../../../utils/vue';
+import { propOptional } from '../../../utils/vue';
 import {
 	ContentFocus,
 	registerContentFocusWatcher,
@@ -11,8 +12,7 @@ import {
 	registerStickerLayer,
 	unregisterStickerLayer,
 } from '../../drawer/drawer-store';
-import AppScrollScrollerTS from '../../scroll/scroller/scroller';
-import AppScrollScroller from '../../scroll/scroller/scroller.vue';
+import { useScroller } from '../../scroll/scroller/scroller.vue';
 import { StickerLayerController, StickerLayerKey } from './layer-controller';
 
 @Options({
@@ -30,6 +30,8 @@ export default class AppStickerLayer extends Vue {
 	@Provide({ to: StickerLayerKey })
 	layer!: StickerLayerController;
 
+	scroller = setup(() => useScroller());
+
 	private focusWatcherDeregister!: () => void;
 
 	created() {
@@ -39,7 +41,7 @@ export default class AppStickerLayer extends Vue {
 	}
 
 	mounted() {
-		this.layer.scroller = findVueParent<AppScrollScrollerTS>(this, AppScrollScroller) ?? null;
+		this.layer.scroller = this.scroller ?? null;
 
 		// We tell the ContentFocus service that content is unfocused when the
 		// mask is active.

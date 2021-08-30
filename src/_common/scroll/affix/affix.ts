@@ -3,8 +3,7 @@ import { propOptional } from '../../../utils/vue';
 import { Ruler } from '../../ruler/ruler-service';
 import { onScreenResize } from '../../screen/screen-service';
 import { EventSubscription } from '../../system/event/event-topic';
-import { ScrollInviewConfig } from '../inview/config';
-import { AppScrollInview } from '../inview/inview';
+import AppScrollInview, { ScrollInviewConfig } from '../inview/inview.vue';
 import { Scroll } from '../scroll.service';
 
 @Options({

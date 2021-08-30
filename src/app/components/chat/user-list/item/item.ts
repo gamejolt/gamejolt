@@ -4,8 +4,9 @@ import { number } from '../../../../../_common/filters/number';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import { ScrollInviewConfig } from '../../../../../_common/scroll/inview/config';
-import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
+import AppScrollInview, {
+	ScrollInviewConfig,
+} from '../../../../../_common/scroll/inview/inview.vue';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { ChatClient, ChatKey, enterChatRoom, isUserOnline, leaveGroupRoom } from '../../client';
 import AppChatNotificationSettings from '../../notification-settings/notification-settings.vue';

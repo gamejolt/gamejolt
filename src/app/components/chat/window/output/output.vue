@@ -7,8 +7,8 @@
 	need to autoscroll if the content changes within the scroller.
 	-->
 	<app-scroll-scroller
-		ref="scroller"
 		v-app-observe-dimensions="tryAutoscroll"
+		:controller="scroller"
 		@scroll="queueOnScroll"
 	>
 		<div
@@ -59,4 +59,3 @@
 </template>
 
 <style lang="stylus" src="./output.styl" scoped></style>
-

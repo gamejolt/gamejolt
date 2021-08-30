@@ -2,8 +2,9 @@ import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import AppPopper from '../../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import { ScrollInviewConfig } from '../../../../../_common/scroll/inview/config';
-import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
+import AppScrollInview, {
+	ScrollInviewConfig,
+} from '../../../../../_common/scroll/inview/inview.vue';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { ChatClient, ChatKey, isUserOnline, tryGetRoomRole } from '../../client';
 import { ChatRoom } from '../../room';

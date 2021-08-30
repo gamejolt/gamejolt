@@ -9,8 +9,7 @@ import {
 	DrawerStoreKey,
 	PointerPosition,
 } from '../../drawer/drawer-store';
-import { ScrollInviewConfig } from '../../scroll/inview/config';
-import { AppScrollInview } from '../../scroll/inview/inview';
+import AppScrollInview, { ScrollInviewConfig } from '../../scroll/inview/inview.vue';
 import {
 	getRectForStickerTarget,
 	registerStickerTarget,

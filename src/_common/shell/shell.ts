@@ -2,7 +2,7 @@ import { Options, Vue } from 'vue-property-decorator';
 import AppGrowls from '../growls/growls.vue';
 import AppLoadingBar from '../loading/bar/bar.vue';
 import AppModals from '../modal/modals.vue';
-import { AppScrollInviewParent } from '../scroll/inview/parent';
+import AppScrollInviewParent from '../scroll/inview/parent.vue';
 import { AppTheme } from '../theme/theme';
 
 @Options({

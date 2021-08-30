@@ -410,10 +410,10 @@ export function getPointerPosition(
 	let scrollLeft = 0;
 	if (layer.scroller) {
 		scrollTop = document.documentElement.scrollTop;
-		scrollTop -= layer.scroller.scrollElement?.scrollTop ?? 0;
+		scrollTop -= layer.scroller.element?.scrollTop ?? 0;
 
 		scrollLeft = document.documentElement.scrollLeft;
-		scrollLeft -= layer.scroller.scrollElement?.scrollLeft ?? 0;
+		scrollLeft -= layer.scroller.element?.scrollLeft ?? 0;
 	}
 
 	const pointerEvent = getPointerEvent(event);

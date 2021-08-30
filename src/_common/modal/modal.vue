@@ -11,7 +11,7 @@
 		@click="dismissBackdrop"
 	>
 		<app-scroll-scroller
-			ref="scroller"
+			:controller="scroller"
 			class="modal"
 			:class="{
 				'modal-sm': modal.size === 'sm',

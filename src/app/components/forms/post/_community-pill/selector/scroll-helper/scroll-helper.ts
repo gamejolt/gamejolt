@@ -1,23 +1,19 @@
 import { h } from 'vue';
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { findRequiredVueParent, propOptional } from '../../../../../../../utils/vue';
-import AppScrollScrollerTS from '../../../../../../../_common/scroll/scroller/scroller';
-import AppScrollScroller from '../../../../../../../_common/scroll/scroller/scroller.vue';
+import { propOptional } from '../../../../../../../utils/vue';
+import { useScroller } from '../../../../../../../_common/scroll/scroller/scroller.vue';
 
 @Options({})
 export class AppScrollHelper extends Vue {
 	@Prop(propOptional(Boolean, false))
 	when!: boolean;
 
-	scrollParent!: AppScrollScrollerTS;
-
-	mounted() {
-		this.scrollParent = findRequiredVueParent<AppScrollScrollerTS>(this, AppScrollScroller);
-	}
+	scrollParent = setup(() => useScroller());
 
 	@Watch('when')
 	onContentChange() {
-		this.scrollParent.scrollTo(0);
+		this.scrollParent?.scrollTo(0);
 	}
 
 	render() {

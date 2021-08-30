@@ -1,4 +1,5 @@
 import { nextTick } from 'vue';
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../api/api.service';
 import AppLoading from '../../../../loading/loading.vue';
@@ -6,8 +7,7 @@ import { BaseModal } from '../../../../modal/base';
 import AppModalTS from '../../../../modal/modal';
 import { Ruler } from '../../../../ruler/ruler-service';
 import { Screen } from '../../../../screen/screen-service';
-import AppScrollScrollerTS from '../../../../scroll/scroller/scroller';
-import AppScrollScroller from '../../../../scroll/scroller/scroller.vue';
+import AppScrollScroller, { createScroller } from '../../../../scroll/scroller/scroller.vue';
 import { Category, ContentEditorGifModal, SearchResult } from './gif-modal.service';
 
 @Options({
@@ -29,11 +29,11 @@ export default class AppContentEditorGifModal extends BaseModal {
 	currentSearchPage = 0;
 	isLastPage = false;
 	hasError = false;
+	contentScroller = setup(() => createScroller());
 
 	readonly Screen = Screen;
 
 	declare $refs: {
-		contentScroller: AppScrollScrollerTS;
 		modal: AppModalTS;
 		search: HTMLInputElement;
 	};
@@ -184,15 +184,13 @@ export default class AppContentEditorGifModal extends BaseModal {
 
 	scrollToTop() {
 		// This has a v-if around it when loading, so it may not be in the DOM.
-		if (this.$refs.contentScroller.$el) {
-			this.$refs.contentScroller.$el.scrollTop = 0;
-		}
+		this.contentScroller.scrollTo(0);
 		this.$refs.modal.scrollTo(0);
 	}
 
 	onContainerScroll() {
 		if (!this.isLoading && this.searchValue.length > 0 && !this.reachedLastPage) {
-			const container = this.$refs.contentScroller.$el as HTMLElement;
+			const container = this.contentScroller.element;
 			if (container) {
 				const height = Ruler.height(container);
 				if (container.scrollHeight < container.scrollTop + height + 100) {

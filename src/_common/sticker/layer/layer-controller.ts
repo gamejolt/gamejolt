@@ -1,6 +1,6 @@
 import { arrayRemove } from '../../../utils/array';
 import { DrawerStore } from '../../drawer/drawer-store';
-import AppScrollScroller from '../../scroll/scroller/scroller';
+import { ScrollController } from '../../scroll/scroller/scroller.vue';
 import AppStickerTarget from '../target/target';
 import { StickerTargetController } from '../target/target-controller';
 
@@ -8,7 +8,7 @@ export const StickerLayerKey = Symbol('sticker-layer');
 
 export class StickerLayerController {
 	relativeScrollTop = 0;
-	scroller: null | AppScrollScroller = null;
+	scroller: null | ScrollController = null;
 	targets: AppStickerTarget[] = [];
 	hoveredTarget: null | AppStickerTarget = null;
 	rects = new WeakMap<AppStickerTarget, StickerLayerTargetRect>();

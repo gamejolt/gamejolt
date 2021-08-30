@@ -48,7 +48,7 @@
 				</div>
 				<app-scroll-scroller
 					v-else
-					ref="contentScroller"
+					:controller="contentScroller"
 					class="gif-content"
 					:class="{
 						'gif-content-noscroll': isLoading && searchResults.length === 0,

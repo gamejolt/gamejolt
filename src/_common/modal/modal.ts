@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../utils/vue';
 import AppBackdrop from '../backdrop/backdrop';
@@ -6,8 +7,7 @@ import { DrawerStore, DrawerStoreKey } from '../drawer/drawer-store';
 import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
 import { Screen } from '../screen/screen-service';
 import AppScrollAffix from '../scroll/affix/affix.vue';
-import AppScrollScrollerTS from '../scroll/scroller/scroller';
-import AppScrollScroller from '../scroll/scroller/scroller.vue';
+import AppScrollScroller, { createScroller } from '../scroll/scroller/scroller.vue';
 import AppStickerLayer from '../sticker/layer/layer.vue';
 import { AppTheme } from '../theme/theme';
 import { BaseModal } from './base';
@@ -30,16 +30,13 @@ export default class AppModal extends Vue {
 
 	modal: Modal = null as any;
 	isHoveringContent = false;
+	scroller = setup(() => createScroller());
 
 	private backdrop?: AppBackdrop;
 	private beforeEachDeregister?: Function;
 	private escapeCallback?: EscapeStackCallback;
 
 	declare $el: HTMLDivElement;
-
-	declare $refs: {
-		scroller: AppScrollScrollerTS;
-	};
 
 	@Emit('close') emitClose() {}
 
@@ -122,6 +119,6 @@ export default class AppModal extends Vue {
 	}
 
 	scrollTo(offsetY: number) {
-		this.$refs.scroller.scrollTo(offsetY);
+		this.scroller.scrollTo(offsetY);
 	}
 }
