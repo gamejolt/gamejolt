@@ -38,6 +38,7 @@ import AppChatWindowOutput from '../../components/chat/window/output/output.vue'
 import AppChatWindowSend from '../../components/chat/window/send/send.vue';
 import { EVENT_UPDATE, FiresideChannel } from '../../components/grid/fireside-channel';
 import { store, Store } from '../../store';
+import { FiresideController, FiresideControllerKey } from './controller';
 import { FiresideHostRtc } from './fireside-host-rtc';
 import {
 	destroyFiresideRTC,
@@ -47,7 +48,6 @@ import {
 } from './fireside-rtc';
 import AppFiresideChatMembers from './_chat-members/chat-members.vue';
 import { FiresideChatMembersModal } from './_chat-members/modal/modal.service';
-import { FiresideController, FiresideControllerKey } from './controller';
 import { FiresideEditModal } from './_edit-modal/edit-modal.service';
 import AppFiresideHostList from './_host-list/host-list.vue';
 import { FiresideStatsModal } from './_stats/modal/modal.service';
@@ -200,6 +200,13 @@ export default class RouteFireside extends BaseRouteComponent {
 
 	get isStreaming() {
 		return !!(this.fireside?.is_streaming && this.rtc && this.rtc.users.length > 0);
+	}
+
+	get shouldFullscreenStream() {
+		if (!this.isStreaming) {
+			return false;
+		}
+		return Screen.isXs && !this.shouldShowChat && !this.isVertical;
 	}
 
 	get shouldShowChat() {

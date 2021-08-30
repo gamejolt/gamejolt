@@ -144,7 +144,7 @@
 			<div
 				v-if="isStreaming && chatRoom"
 				class="-video-wrapper"
-				:class="{ '-vertical': isVertical }"
+				:class="{ '-vertical': isVertical, '-fullscreen': shouldFullscreenStream }"
 			>
 				<div class="-video-padding">
 					<div
@@ -467,6 +467,15 @@
 	width: 100%
 	max-width: 600px
 
+.-fullscreen
+	position: fixed
+	left: 0
+	top: $shell-top-nav-height
+	right: 0
+	bottom: 0
+	z-index: $zindex-shell-hot-bottom + 1
+	background-color: $black
+
 .-video
 	&-wrapper
 	&-container
@@ -491,6 +500,9 @@
 		height: 100%
 		padding: 8px
 
+		.-fullscreen &
+			padding: 0
+
 	&-container
 		min-height: 0
 		width: 100%
@@ -503,6 +515,9 @@
 		overflow: hidden
 		position: absolute
 		background-color: var(--theme-bg-subtle)
+
+		.-fullscreen &
+			border-radius: 0
 
 .-hosts-padding
 	flex: none
