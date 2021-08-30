@@ -8,7 +8,18 @@ import { BaseForm, FormOnInit } from '../../../../_common/form-vue/form.service'
 import AppForm from '../../../../_common/form-vue/form.vue';
 import AppFormLegend from '../../../../_common/form-vue/legend/legend.vue';
 import AppLoadingFade from '../../../../_common/loading/fade/fade.vue';
-import { FiresideHostRtc } from '../fireside-host-rtc';
+import {
+	FiresideHostRTC,
+	getOwnDesktopAudioVolume,
+	getOwnMicAudioVolume,
+	setVideoPreviewElement,
+	setSelectedDesktopAudioDeviceId,
+	setSelectedGroupAudioDeviceId,
+	setSelectedMicDeviceId,
+	setSelectedWebcamDeviceId,
+	startStreaming,
+	stopStreaming,
+} from '../fireside-host-rtc';
 import AppVolumeMeter from './volume-meter.vue';
 
 const Beeps = [
@@ -39,7 +50,7 @@ type FormModel = {
 	},
 })
 export default class AppStreamSetup extends BaseForm<FormModel> implements FormOnInit {
-	@Prop(propRequired(FiresideHostRtc)) firesideHostRtc!: FiresideHostRtc;
+	@Prop(propRequired(FiresideHostRTC)) firesideHostRtc!: FiresideHostRTC;
 
 	isStarting = false;
 	desktopAudioVolume = 0;
@@ -86,8 +97,8 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		MediaDeviceService.detectDevices({ prompt: true, skipIfPrompted: false });
 
 		this.p_refreshVolumeInterval = setInterval(() => {
-			this.desktopAudioVolume = this.firesideHostRtc.getDesktopAudioVolume();
-			this.micAudioVolume = this.firesideHostRtc.getMicAudioVolume();
+			this.desktopAudioVolume = getOwnDesktopAudioVolume(this.firesideHostRtc);
+			this.micAudioVolume = getOwnMicAudioVolume(this.firesideHostRtc);
 		}, 100);
 	}
 
@@ -123,8 +134,9 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		await this.$nextTick();
 
 		console.log('setting video preview element', this.$refs.videoPreview);
-		this.firesideHostRtc.setVideoPreviewElement(
-			this.canStreamVideo ? this.$refs.videoPreview || null : null
+		setVideoPreviewElement(
+			this.firesideHostRtc,
+			this.canStreamVideo ? this.$refs.videoPreview ?? null : null
 		);
 	}
 
@@ -241,7 +253,7 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		this.isStarting = true;
 
 		try {
-			await this.firesideHostRtc.startStreaming();
+			await startStreaming(this.firesideHostRtc);
 		} catch {}
 
 		this.isStarting = false;
@@ -320,7 +332,7 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		await sleep(0);
 
 		if (this.isInvalidConfig && this.isStreaming) {
-			this.firesideHostRtc.stopStreaming();
+			stopStreaming(this.firesideHostRtc);
 		}
 	}
 
@@ -372,25 +384,23 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 			return;
 		}
 
-		console.log('applying changes to selected devices');
-		this.firesideHostRtc.selectedWebcamDeviceId = this.formModel.selectedWebcamDeviceId;
-		this.firesideHostRtc.selectedMicDeviceId = this.formModel.selectedMicDeviceId;
-		this.firesideHostRtc.selectedDesktopAudioDeviceId =
-			this.formModel.selectedDesktopAudioDeviceId;
-		this.firesideHostRtc.selectedGroupAudioDeviceId = this.formModel.selectedGroupAudioDeviceId;
+		const rtc = this.firesideHostRtc;
+
+		setSelectedWebcamDeviceId(rtc, this.formModel.selectedWebcamDeviceId);
+		setSelectedMicDeviceId(rtc, this.formModel.selectedMicDeviceId);
+		setSelectedDesktopAudioDeviceId(rtc, this.formModel.selectedDesktopAudioDeviceId);
+		setSelectedGroupAudioDeviceId(rtc, this.formModel.selectedGroupAudioDeviceId);
 	}
 
 	@Watch('firesideHostRtc.isPoorNetworkQuality')
 	onNetworkQualityChanged() {
-		if (!this.networkQualityDebounce) {
-			this.networkQualityDebounce = debounce(() => {
-				if (this.firesideHostRtc.isPoorNetworkQuality) {
-					console.log('Network quality is poor.');
-				} else {
-					console.log('Network quality is very nice.');
-				}
-			}, 3_000);
-		}
+		this.networkQualityDebounce ??= debounce(() => {
+			if (this.firesideHostRtc.isPoorNetworkQuality) {
+				console.log('Network quality is poor.');
+			} else {
+				console.log('Network quality is very nice.');
+			}
+		}, 3_000);
 
 		this.networkQualityDebounce();
 	}

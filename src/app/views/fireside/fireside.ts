@@ -39,7 +39,12 @@ import AppChatWindowSend from '../../components/chat/window/send/send.vue';
 import { EVENT_UPDATE, FiresideChannel } from '../../components/grid/fireside-channel';
 import { store, Store } from '../../store';
 import { FiresideController, FiresideControllerKey } from './controller';
-import { FiresideHostRtc } from './fireside-host-rtc';
+import {
+	createFiresideHostRTC,
+	destroyFiresideHostRTC,
+	FiresideHostRTC,
+	stopStreaming,
+} from './fireside-host-rtc';
 import {
 	destroyFiresideRTC,
 	FiresideRTC,
@@ -128,7 +133,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	status: RouteStatus = 'initial';
 	hasExpiryWarning = false; // Visually shows a warning to the owner when the fireside's time is running low.
 
-	hostRtc: FiresideHostRtc | null = null;
+	hostRtc: FiresideHostRTC | null = null;
 
 	readonly Screen = Screen;
 	readonly number = number;
@@ -270,7 +275,9 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	onClickStopStreaming() {
-		this.hostRtc?.stopStreaming();
+		if (this.hostRtc) {
+			stopStreaming(this.hostRtc);
+		}
 	}
 
 	toggleVideoStats() {
@@ -327,10 +334,8 @@ export default class RouteFireside extends BaseRouteComponent {
 
 		this.disconnect();
 
-		if (this.beforeEachDeregister) {
-			this.beforeEachDeregister();
-			this.beforeEachDeregister = null;
-		}
+		this.beforeEachDeregister?.();
+		this.beforeEachDeregister = null;
 
 		// This also happens in Disconnect, but make 100% sure we cleared the interval.
 		this.clearExpiryCheck();
@@ -519,7 +524,7 @@ export default class RouteFireside extends BaseRouteComponent {
 		}
 
 		if (this.streamingAppId && this.fireside.role.canStream) {
-			this.hostRtc = new FiresideHostRtc(
+			this.hostRtc = createFiresideHostRTC(
 				this.streamingAppId,
 				this.user.id,
 				this.fireside.id,
@@ -613,8 +618,10 @@ export default class RouteFireside extends BaseRouteComponent {
 
 		this.status = 'disconnected';
 
-		this.hostRtc?.destroy();
-		this.hostRtc = null;
+		if (this.hostRtc) {
+			destroyFiresideHostRTC(this.hostRtc);
+			this.hostRtc = null;
+		}
 
 		if (this.grid && this.grid.connected && this.gridChannel) {
 			this.gridChannel.leave();
@@ -756,10 +763,8 @@ export default class RouteFireside extends BaseRouteComponent {
 				next();
 			});
 		} else {
-			if (this.beforeEachDeregister) {
-				this.beforeEachDeregister();
-				this.beforeEachDeregister = null;
-			}
+			this.beforeEachDeregister?.();
+			this.beforeEachDeregister = null;
 		}
 	}
 

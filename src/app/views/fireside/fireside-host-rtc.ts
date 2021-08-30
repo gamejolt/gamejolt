@@ -9,517 +9,503 @@ import { Translate } from '../../../_common/translate/translate.service';
 const RENEW_TOKEN_CHECK_INTERVAL = 10_000;
 const RENEW_TOKEN_INTERVAL = 60_000;
 
-export class FiresideHostRtc {
-	private appId = '';
-	private userId = 0;
-	private firesideId = 0;
-	private role: FiresideRole = null as any;
+export class FiresideHostRTC {
+	_appId = '';
+	_userId = 0;
+	_firesideId = 0;
+	_role: FiresideRole = null as any;
 
 	// The target device ids we want to be streaming to.
-	private _selectedWebcamDeviceId = '';
-	private _selectedMicDeviceId = '';
-	private _selectedDesktopAudioDeviceId = '';
-	private _selectedGroupAudioDeviceId = 'default';
-	private _isStreaming = false;
+	_selectedWebcamDeviceId = '';
+	_selectedMicDeviceId = '';
+	_selectedDesktopAudioDeviceId = '';
+	_selectedGroupAudioDeviceId = 'default';
+	_isStreaming = false;
 
-	private videoPreviewElement: HTMLDivElement | null = null;
+	_videoPreviewElement: HTMLDivElement | null = null;
 
-	public isBusy = false;
-	private busyPromise: Promise<any> = Promise.resolve();
+	isBusy = false;
+	_busyPromise: Promise<any> = Promise.resolve();
 
-	private videoClient: AgoraStreamingClient | null = null;
-	private chatClient: AgoraStreamingClient | null = null;
+	_videoClient: AgoraStreamingClient | null = null;
+	_chatClient: AgoraStreamingClient | null = null;
 
-	private tokenRenewInterval: NodeJS.Timer | null = null;
-	private areTokensRenewing = false;
-	private lastRenewedTokens = 0;
+	_tokenRenewInterval: NodeJS.Timer | null = null;
+	_areTokensRenewing = false;
+	_lastRenewedTokens = 0;
 
-	// Video and chat rtc clients are created and managed in pairs.
-	// When either client gets disposed for whatever reason, the other client
-	// should also get disposed.
+	// Video and chat rtc clients are created and managed in pairs. When either
+	// client gets disposed for whatever reason, the other client should also
+	// get disposed.
 	//
 	// These are used to keep the clients in sync.
-	private currentClientGeneration = 0;
-	private areClientsRegenerating = false;
-	private destroyed = false;
-
-	constructor(appId: string, userId: number, firesideId: number, role: FiresideRole) {
-		this.appId = appId;
-		this.userId = userId;
-		this.firesideId = firesideId;
-		this.role = role;
-
-		MediaDeviceService.detectDevices({ prompt: false });
-		this.regenerateClients(this.currentClientGeneration);
-		this.tokenRenewInterval = setInterval(
-			() => this.renewTokens(false),
-			RENEW_TOKEN_CHECK_INTERVAL
-		);
-
-		this._isStreaming = false;
-	}
-
-	destroy() {
-		this.destroyed = true;
-
-		if (this.tokenRenewInterval !== null) {
-			clearInterval(this.tokenRenewInterval);
-			this.tokenRenewInterval = null;
-		}
-
-		// In this case, disposing will be done as part of the regenerateClients func.
-		if (this.areClientsRegenerating) {
-			return;
-		}
-
-		this._destroy();
-	}
-
-	private _destroy() {
-		this.currentClientGeneration++;
-
-		this.videoClient?.dispose();
-		this.chatClient?.dispose();
-
-		this.videoClient = null;
-		this.chatClient = null;
-		this._isStreaming = false;
-	}
-
-	private async regenerateClients(generation: number) {
-		if (this.destroyed || generation !== this.currentClientGeneration) {
-			return;
-		}
-
-		try {
-			if (this.areClientsRegenerating) {
-				throw new Error(
-					'Attempted to regenerate clients before the previous ones finished regenerating. It is no longer possible to restore state.'
-				);
-			}
-
-			console.log('Regenerating clients');
-			this.areClientsRegenerating = true;
-
-			const wasStreaming = this._isStreaming;
-			this._destroy();
-
-			const myGeneration = this.currentClientGeneration;
-
-			this.videoClient = new AgoraStreamingClient(this.appId, 'video');
-			this.videoClient.onDisposed = () => this.regenerateClients(myGeneration);
-			this.videoClient.onGibToken = () => this.renewTokens(true);
-			this.chatClient = new AgoraStreamingClient(this.appId, 'chat');
-			this.chatClient.onDisposed = () => this.regenerateClients(myGeneration);
-			this.chatClient.onGibToken = () => this.renewTokens(true);
-
-			// Attempt to configure the new clients similarly to how the old clients were configured.
-			console.log('Reconfiguring clients');
-
-			await Promise.all([
-				this.updateWebcamDevice(),
-				this.updateMicDevice(),
-				this.updateDesktopAudioDevice(),
-				this.updateGroupAudioDevice(),
-			]);
-
-			if (wasStreaming) {
-				// TODO: change this show a modal where you can confirm to resume streaming
-				// it'd suck if you lost connection and then it came back when youre not around.
-				await this.startStreaming();
-			}
-		} catch (e) {
-			console.error('Error while regenerating clients');
-			console.error(e);
-			Navigate.reload();
-		} finally {
-			this.areClientsRegenerating = false;
-		}
-
-		// If we got destroyed while regenerating clients, make sure to tear everything down
-		if (this.destroyed) {
-			this._destroy();
-		}
-	}
-
-	private async renewTokens(force: boolean) {
-		if (this.areTokensRenewing) {
-			return;
-		}
-
-		if (!this.isStreaming) {
-			return;
-		}
-
-		if (!force && Date.now() - this.lastRenewedTokens < RENEW_TOKEN_INTERVAL) {
-			return;
-		}
-
-		const myGeneration = this.currentClientGeneration;
-		this.areTokensRenewing = true;
-
-		try {
-			console.log('Renewing tokens (force: ' + (force ? 'true' : 'false') + ')');
-
-			let response: any = null;
-			try {
-				response = await Api.sendRequest(
-					'/web/dash/fireside/generate-streaming-tokens/' + this.firesideId,
-					{},
-					{ detach: true }
-				);
-			} catch (e) {
-				console.warn('Got error while renewing tokens', e);
-			}
-
-			if (this.currentClientGeneration !== myGeneration) {
-				return;
-			}
-
-			if (!response || !response.success) {
-				console.warn('Failed to renew tokens', response);
-				return;
-			}
-
-			const videoChannelToken = response.videoChannelToken;
-			const chatChannelToken = response.audioChatChannelToken;
-
-			const currentVideoClient = this.videoClient;
-			if (!currentVideoClient || currentVideoClient.isDisposed) {
-				throw new Error('Video client is undefined or disposed');
-			}
-
-			const currentChatClient = this.chatClient;
-			if (!currentChatClient || currentChatClient.isDisposed) {
-				throw new Error('Chat client is undefined or disposed');
-			}
-
-			await Promise.all([
-				currentVideoClient.setToken(videoChannelToken),
-				currentChatClient.setToken(chatChannelToken),
-			]);
-
-			this.lastRenewedTokens = Date.now();
-		} finally {
-			this.areTokensRenewing = false;
-		}
-	}
-
-	// Does some work serially.
-	private doBusyWork<T>(work: () => Promise<T>) {
-		let resolver: (arg: T | PromiseLike<T>) => void;
-		let rejector: (reason: any) => void;
-
-		const p = new Promise<T>((resolve, reject) => {
-			resolver = resolve;
-			rejector = reject;
-		});
-
-		this.busyPromise = this.busyPromise
-			.then(() => (this.isBusy = true))
-			.then(async () => {
-				try {
-					const res = await work();
-					resolver(res);
-				} catch (e) {
-					rejector(e);
-				}
-			})
-			.finally(() => (this.isBusy = false));
-
-		return p;
-	}
+	_currentClientGeneration = 0;
+	_areClientsRegenerating = false;
+	_destroyed = false;
 
 	get canStreamVideo() {
-		return !!this.role.can_stream_video;
+		return !!this._role.can_stream_video;
 	}
 
 	get canStreamAudio() {
-		return !!this.role.can_stream_audio;
-	}
-
-	get selectedWebcamDeviceId() {
-		return this._selectedWebcamDeviceId;
-	}
-
-	set selectedWebcamDeviceId(newWebcamDeviceId: string) {
-		const videoDeviceChanged = newWebcamDeviceId !== this._selectedWebcamDeviceId;
-		this._selectedWebcamDeviceId = newWebcamDeviceId;
-
-		if (videoDeviceChanged) {
-			this.updateWebcamDevice();
-		}
-	}
-
-	get selectedMicDeviceId() {
-		return this._selectedMicDeviceId;
-	}
-
-	set selectedMicDeviceId(newMicId: string) {
-		const micChanged = newMicId !== this._selectedMicDeviceId;
-		this._selectedMicDeviceId = newMicId;
-
-		if (micChanged) {
-			this.updateMicDevice();
-		}
-	}
-
-	get selectedDesktopAudioDeviceId() {
-		return this._selectedDesktopAudioDeviceId;
-	}
-
-	set selectedDesktopAudioDeviceId(newSpeakerId: string) {
-		const speakerChanged = newSpeakerId !== this._selectedDesktopAudioDeviceId;
-		this._selectedDesktopAudioDeviceId = newSpeakerId;
-
-		if (speakerChanged) {
-			this.updateDesktopAudioDevice();
-		}
-	}
-
-	get selectedGroupAudioDeviceId() {
-		return this._selectedGroupAudioDeviceId;
-	}
-
-	set selectedGroupAudioDeviceId(newSpeakerId: string) {
-		const speakerChanged = newSpeakerId !== this._selectedGroupAudioDeviceId;
-		this._selectedGroupAudioDeviceId = newSpeakerId;
-
-		if (speakerChanged) {
-			this.updateGroupAudioDevice();
-		}
-	}
-
-	private updateWebcamDevice() {
-		return this.doBusyWork(async () => {
-			let deviceId: string | null;
-
-			if (this._selectedWebcamDeviceId === '') {
-				deviceId = null;
-			} else {
-				const deviceExists = !!MediaDeviceService.webcams.find(
-					webcam => webcam.deviceId === this._selectedWebcamDeviceId
-				);
-				deviceId = deviceExists ? this._selectedWebcamDeviceId : null;
-			}
-
-			await this.videoClient?.setVideoDevice(deviceId);
-			if (this.videoPreviewElement) {
-				this.videoClient?.previewVideo(this.videoPreviewElement);
-			}
-		});
-	}
-
-	private updateMicDevice() {
-		return this.doBusyWork(async () => {
-			let deviceId: string | null;
-
-			if (this._selectedMicDeviceId === '') {
-				deviceId = null;
-			} else {
-				const deviceExists = !!MediaDeviceService.mics.find(
-					mic => mic.deviceId === this._selectedMicDeviceId
-				);
-				deviceId = deviceExists ? this._selectedMicDeviceId : null;
-			}
-
-			return this.chatClient?.setMicDevice(deviceId);
-		});
-	}
-
-	private updateDesktopAudioDevice() {
-		return this.doBusyWork(async () => {
-			let deviceId: string | null;
-
-			if (this._selectedDesktopAudioDeviceId === '') {
-				deviceId = null;
-			} else {
-				const deviceExists = !!MediaDeviceService.mics.find(
-					mic => mic.deviceId === this._selectedDesktopAudioDeviceId
-				);
-				deviceId = deviceExists ? this._selectedDesktopAudioDeviceId : null;
-			}
-
-			return this.videoClient?.setVirtualMicDevice(deviceId);
-		});
-	}
-
-	private updateGroupAudioDevice() {
-		return this.doBusyWork(async () => {
-			const deviceExists = !!MediaDeviceService.speakers.find(
-				speaker => speaker.deviceId === this._selectedGroupAudioDeviceId
-			);
-
-			const deviceId = deviceExists ? this._selectedGroupAudioDeviceId : null;
-			return this.chatClient?.setSpeakerDevice(deviceId ?? 'default');
-		});
-	}
-
-	setVideoPreviewElement(element: HTMLDivElement | null) {
-		if (this.videoPreviewElement && this.videoPreviewElement !== element) {
-			this.videoPreviewElement.innerHTML = '';
-		}
-
-		this.videoPreviewElement = element;
-		if (this.videoPreviewElement) {
-			this.videoClient?.previewVideo(this.videoPreviewElement);
-		}
-	}
-
-	getDesktopAudioVolume() {
-		if (!this.videoClient || this.videoClient.isDisposed) {
-			return 0;
-		}
-
-		return this.videoClient!.getVirtualAudioInputVolume();
-	}
-
-	getMicAudioVolume() {
-		if (!this.chatClient || this.chatClient.isDisposed) {
-			return 0;
-		}
-
-		return this.chatClient!.getAudioInputVolume();
+		return !!this._role.can_stream_audio;
 	}
 
 	get isStreaming() {
 		return this._isStreaming;
 	}
 
+	get selectedWebcamDeviceId() {
+		return this._selectedWebcamDeviceId;
+	}
+
+	get selectedMicDeviceId() {
+		return this._selectedMicDeviceId;
+	}
+
+	get selectedDesktopAudioDeviceId() {
+		return this._selectedDesktopAudioDeviceId;
+	}
+
+	get selectedGroupAudioDeviceId() {
+		return this._selectedGroupAudioDeviceId;
+	}
+
 	get isPoorNetworkQuality() {
 		if (
-			!this.videoClient ||
-			this.videoClient.isDisposed ||
-			!this.chatClient ||
-			this.chatClient.isDisposed
+			!this._videoClient ||
+			this._videoClient.isDisposed ||
+			!this._chatClient ||
+			this._chatClient.isDisposed
 		) {
 			return true;
 		}
 
-		return this.videoClient.isPoorNetworkQuality || this.chatClient.isPoorNetworkQuality;
+		return this._videoClient.isPoorNetworkQuality || this._chatClient.isPoorNetworkQuality;
+	}
+}
+
+export function createFiresideHostRTC(
+	appId: string,
+	userId: number,
+	firesideId: number,
+	role: FiresideRole
+) {
+	const rtc = new FiresideHostRTC();
+
+	rtc._appId = appId;
+	rtc._userId = userId;
+	rtc._firesideId = firesideId;
+	rtc._role = role;
+	rtc._isStreaming = false;
+
+	MediaDeviceService.detectDevices({ prompt: false });
+
+	_regenerateClients(rtc, rtc._currentClientGeneration);
+
+	rtc._tokenRenewInterval = setInterval(
+		() => _renewTokens(rtc, false),
+		RENEW_TOKEN_CHECK_INTERVAL
+	);
+
+	return rtc;
+}
+
+export function destroyFiresideHostRTC(rtc: FiresideHostRTC) {
+	rtc._currentClientGeneration++;
+
+	rtc._videoClient?.dispose();
+	rtc._chatClient?.dispose();
+
+	rtc._videoClient = null;
+	rtc._chatClient = null;
+	rtc._isStreaming = false;
+}
+
+async function _regenerateClients(rtc: FiresideHostRTC, generation: number) {
+	if (rtc._destroyed || generation !== rtc._currentClientGeneration) {
+		return;
 	}
 
-	async startStreaming() {
-		await this.doBusyWork(async () => {
-			if (this._isStreaming) {
-				return;
+	try {
+		if (rtc._areClientsRegenerating) {
+			throw new Error(
+				'Attempted to regenerate clients before the previous ones finished regenerating. It is no longer possible to restore state.'
+			);
+		}
+
+		console.log('Regenerating clients');
+		rtc._areClientsRegenerating = true;
+
+		const wasStreaming = rtc._isStreaming;
+		destroyFiresideHostRTC(rtc);
+
+		const myGeneration = rtc._currentClientGeneration;
+
+		rtc._videoClient = new AgoraStreamingClient(rtc._appId, 'video');
+		rtc._videoClient.onDisposed = () => _regenerateClients(rtc, myGeneration);
+		rtc._videoClient.onGibToken = () => _renewTokens(rtc, true);
+		rtc._chatClient = new AgoraStreamingClient(rtc._appId, 'chat');
+		rtc._chatClient.onDisposed = () => _regenerateClients(rtc, myGeneration);
+		rtc._chatClient.onGibToken = () => _renewTokens(rtc, true);
+
+		// Attempt to configure the new clients similarly to how the old clients
+		// were configured.
+		console.log('Reconfiguring clients');
+
+		await Promise.all([
+			_updateWebcamDevice(rtc),
+			_updateMicDevice(rtc),
+			_updateDesktopAudioDevice(rtc),
+			_updateGroupAudioDevice(rtc),
+		]);
+
+		if (wasStreaming) {
+			// TODO: change this show a modal where you can confirm to resume
+			// streaming it'd suck if you lost connection and then it came back
+			// when youre not around.
+			await startStreaming(rtc);
+		}
+	} catch (e) {
+		console.error('Error while regenerating clients');
+		console.error(e);
+		Navigate.reload();
+	} finally {
+		rtc._areClientsRegenerating = false;
+	}
+
+	// If we got destroyed while regenerating clients, make sure to tear
+	// everything down
+	if (rtc._destroyed) {
+		destroyFiresideHostRTC(rtc);
+	}
+}
+
+async function _renewTokens(rtc: FiresideHostRTC, force: boolean) {
+	if (rtc._areTokensRenewing) {
+		return;
+	}
+
+	if (!rtc.isStreaming) {
+		return;
+	}
+
+	if (!force && Date.now() - rtc._lastRenewedTokens < RENEW_TOKEN_INTERVAL) {
+		return;
+	}
+
+	const myGeneration = rtc._currentClientGeneration;
+	rtc._areTokensRenewing = true;
+
+	try {
+		console.log('Renewing tokens (force: ' + (force ? 'true' : 'false') + ')');
+
+		let response: any = null;
+		try {
+			response = await Api.sendRequest(
+				'/web/dash/fireside/generate-streaming-tokens/' + rtc._firesideId,
+				{},
+				{ detach: true }
+			);
+		} catch (e) {
+			console.warn('Got error while renewing tokens', e);
+		}
+
+		if (rtc._currentClientGeneration !== myGeneration) {
+			return;
+		}
+
+		if (!response || !response.success) {
+			console.warn('Failed to renew tokens', response);
+			return;
+		}
+
+		const videoChannelToken = response.videoChannelToken;
+		const chatChannelToken = response.audioChatChannelToken;
+
+		const currentVideoClient = rtc._videoClient;
+		if (!currentVideoClient || currentVideoClient.isDisposed) {
+			throw new Error('Video client is undefined or disposed');
+		}
+
+		const currentChatClient = rtc._chatClient;
+		if (!currentChatClient || currentChatClient.isDisposed) {
+			throw new Error('Chat client is undefined or disposed');
+		}
+
+		await Promise.all([
+			currentVideoClient.setToken(videoChannelToken),
+			currentChatClient.setToken(chatChannelToken),
+		]);
+
+		rtc._lastRenewedTokens = Date.now();
+	} finally {
+		rtc._areTokensRenewing = false;
+	}
+}
+
+// Does some work serially.
+function _doBusyWork<T>(rtc: FiresideHostRTC, work: () => Promise<T>) {
+	const p = (async () => {
+		// Wait for any previous work to finish first.
+		await rtc._busyPromise;
+
+		rtc.isBusy = true;
+		try {
+			return await work();
+		} finally {
+			rtc.isBusy = false;
+		}
+	})();
+
+	rtc._busyPromise = p;
+	return p;
+}
+
+export function setSelectedWebcamDeviceId(rtc: FiresideHostRTC, newWebcamDeviceId: string) {
+	const videoDeviceChanged = newWebcamDeviceId !== rtc._selectedWebcamDeviceId;
+	rtc._selectedWebcamDeviceId = newWebcamDeviceId;
+
+	if (videoDeviceChanged) {
+		_updateWebcamDevice(rtc);
+	}
+}
+
+export function setSelectedMicDeviceId(rtc: FiresideHostRTC, newMicId: string) {
+	const micChanged = newMicId !== rtc._selectedMicDeviceId;
+	rtc._selectedMicDeviceId = newMicId;
+
+	if (micChanged) {
+		_updateMicDevice(rtc);
+	}
+}
+
+export function setSelectedDesktopAudioDeviceId(rtc: FiresideHostRTC, newSpeakerId: string) {
+	const speakerChanged = newSpeakerId !== rtc._selectedDesktopAudioDeviceId;
+	rtc._selectedDesktopAudioDeviceId = newSpeakerId;
+
+	if (speakerChanged) {
+		_updateDesktopAudioDevice(rtc);
+	}
+}
+
+export function setSelectedGroupAudioDeviceId(rtc: FiresideHostRTC, newSpeakerId: string) {
+	const speakerChanged = newSpeakerId !== rtc._selectedGroupAudioDeviceId;
+	rtc._selectedGroupAudioDeviceId = newSpeakerId;
+
+	if (speakerChanged) {
+		_updateGroupAudioDevice(rtc);
+	}
+}
+
+function _updateWebcamDevice(rtc: FiresideHostRTC) {
+	return _doBusyWork(rtc, async () => {
+		let deviceId: string | null;
+
+		if (rtc._selectedWebcamDeviceId === '') {
+			deviceId = null;
+		} else {
+			const deviceExists = !!MediaDeviceService.webcams.find(
+				webcam => webcam.deviceId === rtc._selectedWebcamDeviceId
+			);
+			deviceId = deviceExists ? rtc._selectedWebcamDeviceId : null;
+		}
+
+		await rtc._videoClient?.setVideoDevice(deviceId);
+		if (rtc._videoPreviewElement) {
+			rtc._videoClient?.previewVideo(rtc._videoPreviewElement);
+		}
+	});
+}
+
+function _updateMicDevice(rtc: FiresideHostRTC) {
+	return _doBusyWork(rtc, async () => {
+		let deviceId: string | null;
+
+		if (rtc._selectedMicDeviceId === '') {
+			deviceId = null;
+		} else {
+			const deviceExists = !!MediaDeviceService.mics.find(
+				mic => mic.deviceId === rtc._selectedMicDeviceId
+			);
+			deviceId = deviceExists ? rtc._selectedMicDeviceId : null;
+		}
+
+		return rtc._chatClient?.setMicDevice(deviceId);
+	});
+}
+
+function _updateDesktopAudioDevice(rtc: FiresideHostRTC) {
+	return _doBusyWork(rtc, async () => {
+		let deviceId: string | null;
+
+		if (rtc._selectedDesktopAudioDeviceId === '') {
+			deviceId = null;
+		} else {
+			const deviceExists = !!MediaDeviceService.mics.find(
+				mic => mic.deviceId === rtc._selectedDesktopAudioDeviceId
+			);
+			deviceId = deviceExists ? rtc._selectedDesktopAudioDeviceId : null;
+		}
+
+		return rtc._videoClient?.setVirtualMicDevice(deviceId);
+	});
+}
+
+function _updateGroupAudioDevice(rtc: FiresideHostRTC) {
+	return _doBusyWork(rtc, async () => {
+		const deviceExists = !!MediaDeviceService.speakers.find(
+			speaker => speaker.deviceId === rtc._selectedGroupAudioDeviceId
+		);
+
+		const deviceId = deviceExists ? rtc._selectedGroupAudioDeviceId : null;
+		return rtc._chatClient?.setSpeakerDevice(deviceId ?? 'default');
+	});
+}
+
+export function setVideoPreviewElement(rtc: FiresideHostRTC, element: HTMLDivElement | null) {
+	if (rtc._videoPreviewElement && rtc._videoPreviewElement !== element) {
+		rtc._videoPreviewElement.innerHTML = '';
+	}
+
+	rtc._videoPreviewElement = element;
+	if (rtc._videoPreviewElement) {
+		rtc._videoClient?.previewVideo(rtc._videoPreviewElement);
+	}
+}
+
+export function getOwnDesktopAudioVolume(rtc: FiresideHostRTC) {
+	if (!rtc._videoClient || rtc._videoClient.isDisposed) {
+		return 0;
+	}
+
+	return rtc._videoClient!.getVirtualAudioInputVolume();
+}
+
+export function getOwnMicAudioVolume(rtc: FiresideHostRTC) {
+	if (!rtc._chatClient || rtc._chatClient.isDisposed) {
+		return 0;
+	}
+
+	return rtc._chatClient!.getAudioInputVolume();
+}
+
+export async function startStreaming(rtc: FiresideHostRTC) {
+	await _doBusyWork(rtc, async () => {
+		if (rtc._isStreaming) {
+			return;
+		}
+
+		rtc._isStreaming = true;
+
+		let response: any = null;
+		try {
+			response = await Api.sendRequest(
+				'/web/dash/fireside/generate-streaming-tokens/' + rtc._firesideId,
+				{},
+				{
+					detach: true,
+				}
+			);
+		} catch (e) {
+			console.warn('Got error while getting streaming tokens to start streaming', e);
+		}
+
+		if (!response || !response.success) {
+			console.warn('Could not start streaming', response);
+
+			Growls.error(
+				Translate.$gettext(
+					'Could not start streaming. Either fireside has ended or your permissions to stream have been revoked.'
+				)
+			);
+			rtc._isStreaming = false;
+			return;
+		}
+
+		rtc._lastRenewedTokens = Date.now();
+
+		const videoChannel = response.videoChannel;
+		const videoChannelToken = response.videoChannelToken;
+		const chatChannel = response.audioChatChannel;
+		const chatChannelToken = response.audioChatChannelToken;
+
+		try {
+			const currentVideoClient = rtc._videoClient;
+			if (!currentVideoClient || currentVideoClient.isDisposed) {
+				throw new Error('Video client is undefined or disposed');
 			}
 
-			this._isStreaming = true;
-
-			let response: any = null;
-			try {
-				response = await Api.sendRequest(
-					'/web/dash/fireside/generate-streaming-tokens/' + this.firesideId,
-					{},
-					{
-						detach: true,
-					}
-				);
-			} catch (e) {
-				console.warn('Got error while getting streaming tokens to start streaming', e);
+			const currentChatClient = rtc._chatClient;
+			if (!currentChatClient || currentChatClient.isDisposed) {
+				throw new Error('Chat client is undefined or disposed');
 			}
 
-			if (!response || !response.success) {
-				console.warn('Could not start streaming', response);
-
-				Growls.error(
-					Translate.$gettext(
-						'Could not start streaming. Either fireside has ended or your permissions to stream have been revoked.'
+			const [videoResult, chatResult] = await Promise.allSettled([
+				currentVideoClient
+					.joinChannel(videoChannel, videoChannelToken, rtc._userId)
+					.then(() => currentVideoClient.startVideoStream()),
+				currentChatClient
+					.enableAudioPlayback()
+					.then(() =>
+						currentChatClient.joinChannel(chatChannel, chatChannelToken, rtc._userId)
 					)
-				);
-				this._isStreaming = false;
-				return;
+					.then(() => currentChatClient.startChatStream()),
+			]);
+
+			if (videoResult.status !== 'fulfilled') {
+				throw new Error('Video channel failed to start streaming');
 			}
 
-			this.lastRenewedTokens = Date.now();
-
-			const videoChannel = response.videoChannel;
-			const videoChannelToken = response.videoChannelToken;
-			const chatChannel = response.audioChatChannel;
-			const chatChannelToken = response.audioChatChannelToken;
-
-			try {
-				const currentVideoClient = this.videoClient;
-				if (!currentVideoClient || currentVideoClient.isDisposed) {
-					throw new Error('Video client is undefined or disposed');
-				}
-
-				const currentChatClient = this.chatClient;
-				if (!currentChatClient || currentChatClient.isDisposed) {
-					throw new Error('Chat client is undefined or disposed');
-				}
-
-				const [videoResult, chatResult] = await Promise.allSettled([
-					currentVideoClient
-						.joinChannel(videoChannel, videoChannelToken, this.userId)
-						.then(() => currentVideoClient.startVideoStream()),
-					currentChatClient
-						.enableAudioPlayback()
-						.then(() =>
-							currentChatClient.joinChannel(
-								chatChannel,
-								chatChannelToken,
-								this.userId
-							)
-						)
-						.then(() => currentChatClient.startChatStream()),
-				]);
-
-				if (videoResult.status !== 'fulfilled') {
-					throw new Error('Video channel failed to start streaming');
-				}
-
-				if (chatResult.status !== 'fulfilled') {
-					throw new Error('Chat channel failed to start streaming');
-				}
-
-				console.log('Started streaming');
-			} catch (err) {
-				console.error(err);
-				Growls.error(Translate.$gettext('Could not start streaming. Try again later'));
-				await this._stopStreaming(false);
-			}
-		});
-	}
-
-	stopStreaming() {
-		return this._stopStreaming(true);
-	}
-
-	private async _stopStreaming(becomeBusy: boolean) {
-		const busyWork = async () => {
-			if (!this._isStreaming) {
-				return;
+			if (chatResult.status !== 'fulfilled') {
+				throw new Error('Chat channel failed to start streaming');
 			}
 
-			try {
-				const currentVideoClient = this.videoClient;
-				if (!currentVideoClient || currentVideoClient.isDisposed) {
-					throw new Error('Video client is undefined or disposed');
-				}
+			console.log('Started streaming');
+		} catch (err) {
+			console.error(err);
+			Growls.error(Translate.$gettext('Could not start streaming. Try again later'));
+			await _stopStreaming(rtc, false);
+		}
+	});
+}
 
-				const currentChatClient = this.chatClient;
-				if (!currentChatClient || currentChatClient.isDisposed) {
-					throw new Error('Chat client is undefined or disposed');
-				}
+export function stopStreaming(rtc: FiresideHostRTC) {
+	return _stopStreaming(rtc, true);
+}
 
-				// Failure here should end up forcing the app to reload to make absolutely sure they aren't streaming by accident.
-				await Promise.all([
-					currentVideoClient.stopStream().then(() => currentVideoClient.leaveChannel()),
-					currentChatClient.stopStream().then(() => currentChatClient.leaveChannel()),
-				]);
-			} catch (err) {
-				console.error(err);
-				console.error('Failed to stop one or more agora channels. Force reloading...');
-				Navigate.reload();
-				return;
+async function _stopStreaming(rtc: FiresideHostRTC, becomeBusy: boolean) {
+	const busyWork = async () => {
+		if (!rtc._isStreaming) {
+			return;
+		}
+
+		try {
+			const currentVideoClient = rtc._videoClient;
+			if (!currentVideoClient || currentVideoClient.isDisposed) {
+				throw new Error('Video client is undefined or disposed');
 			}
 
-			this._isStreaming = false;
-			console.log('Stopped streaming');
-		};
+			const currentChatClient = rtc._chatClient;
+			if (!currentChatClient || currentChatClient.isDisposed) {
+				throw new Error('Chat client is undefined or disposed');
+			}
 
-		await (becomeBusy ? this.doBusyWork(busyWork) : busyWork());
-	}
+			// Failure here should end up forcing the app to reload to make absolutely sure they aren't streaming by accident.
+			await Promise.all([
+				currentVideoClient.stopStream().then(() => currentVideoClient.leaveChannel()),
+				currentChatClient.stopStream().then(() => currentChatClient.leaveChannel()),
+			]);
+		} catch (err) {
+			console.error(err);
+			console.error('Failed to stop one or more agora channels. Force reloading...');
+			Navigate.reload();
+			return;
+		}
+
+		rtc._isStreaming = false;
+		console.log('Stopped streaming');
+	};
+
+	await (becomeBusy ? _doBusyWork(rtc, busyWork) : busyWork());
 }
