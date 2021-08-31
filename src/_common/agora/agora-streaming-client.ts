@@ -238,8 +238,9 @@ export class AgoraStreamingClient {
 			this.assertNotDisposed();
 
 			this.log('Enabling dual stream mode');
-			// Sometimes this fails if the client is already supposedly enabled, but we
-			// don't have any way of knowing why this failed.. so we try to disable and reenable.
+			// Sometimes this fails if the client is already supposedly enabled,
+			// but we don't have any way of knowing why this failed.. so we try
+			// to disable and reenable.
 			try {
 				await this.client.enableDualStream();
 			} catch (e) {

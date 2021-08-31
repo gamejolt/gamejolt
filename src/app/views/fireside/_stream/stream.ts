@@ -4,9 +4,9 @@ import { number } from '../../../../_common/filters/number';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { ChatUserCollection } from '../../../components/chat/user-collection';
-import { FiresideHostRTC } from '../fireside-host-rtc';
-import { FiresideRTC, FiresideRTCKey } from '../fireside-rtc';
-import { FiresideRTCUser } from '../fireside-rtc-user';
+import { FiresideRTCProducer } from '../../../../_common/fireside/rtc/producer';
+import { FiresideRTC, FiresideRTCKey } from '../../../../_common/fireside/rtc/rtc';
+import { FiresideRTCUser } from '../../../../_common/fireside/rtc/user';
 import AppFiresideDesktopAudio from '../_desktop-audio/desktop-audio.vue';
 import AppFiresideHostList from '../_host-list/host-list.vue';
 import AppFiresideHostThumbIndicator from '../_host-thumb/host-thumb-indicator.vue';
@@ -36,8 +36,8 @@ export default class AppFiresideStream extends Vue {
 	@Prop({ type: ChatUserCollection, required: false, default: null })
 	members!: ChatUserCollection | null;
 
-	@Prop({ type: FiresideHostRTC, required: false })
-	hostRtc?: FiresideHostRTC;
+	@Prop({ type: FiresideRTCProducer, required: false })
+	hostRtc?: FiresideRTCProducer;
 
 	@InjectReactive(FiresideRTCKey) rtc!: FiresideRTC;
 

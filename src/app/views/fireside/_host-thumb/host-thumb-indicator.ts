@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import { Component, InjectReactive, Prop } from 'vue-property-decorator';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
-import { FiresideRTC, FiresideRTCKey } from '../fireside-rtc';
-import { FiresideRTCUser } from '../fireside-rtc-user';
+import { FiresideRTC, FiresideRTCKey } from '../../../../_common/fireside/rtc/rtc';
+import { FiresideRTCUser } from '../../../../_common/fireside/rtc/user';
 
 @Component({
 	components: {

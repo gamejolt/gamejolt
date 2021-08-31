@@ -1,15 +1,15 @@
-import { AgoraStreamingClient } from '../../../_common/agora/agora-streaming-client';
-import { MediaDeviceService } from '../../../_common/agora/media-device.service';
-import { Api } from '../../../_common/api/api.service';
-import { FiresideRole } from '../../../_common/fireside/role/role.model';
-import { Growls } from '../../../_common/growls/growls.service';
-import { Navigate } from '../../../_common/navigate/navigate.service';
-import { Translate } from '../../../_common/translate/translate.service';
+import { AgoraStreamingClient } from '../../agora/agora-streaming-client';
+import { MediaDeviceService } from '../../agora/media-device.service';
+import { Api } from '../../api/api.service';
+import { FiresideRole } from '../role/role.model';
+import { Growls } from '../../growls/growls.service';
+import { Navigate } from '../../navigate/navigate.service';
+import { Translate } from '../../translate/translate.service';
 
 const RENEW_TOKEN_CHECK_INTERVAL = 10_000;
 const RENEW_TOKEN_INTERVAL = 60_000;
 
-export class FiresideHostRTC {
+export class FiresideRTCProducer {
 	_appId = '';
 	_userId = 0;
 	_firesideId = 0;
@@ -91,7 +91,7 @@ export function createFiresideHostRTC(
 	firesideId: number,
 	role: FiresideRole
 ) {
-	const rtc = new FiresideHostRTC();
+	const rtc = new FiresideRTCProducer();
 
 	rtc._appId = appId;
 	rtc._userId = userId;
@@ -111,7 +111,7 @@ export function createFiresideHostRTC(
 	return rtc;
 }
 
-export function destroyFiresideHostRTC(rtc: FiresideHostRTC) {
+export function destroyFiresideHostRTC(rtc: FiresideRTCProducer) {
 	rtc._currentClientGeneration++;
 
 	rtc._videoClient?.dispose();
@@ -122,7 +122,7 @@ export function destroyFiresideHostRTC(rtc: FiresideHostRTC) {
 	rtc._isStreaming = false;
 }
 
-async function _regenerateClients(rtc: FiresideHostRTC, generation: number) {
+async function _regenerateClients(rtc: FiresideRTCProducer, generation: number) {
 	if (rtc._destroyed || generation !== rtc._currentClientGeneration) {
 		return;
 	}
@@ -181,7 +181,7 @@ async function _regenerateClients(rtc: FiresideHostRTC, generation: number) {
 	}
 }
 
-async function _renewTokens(rtc: FiresideHostRTC, force: boolean) {
+async function _renewTokens(rtc: FiresideRTCProducer, force: boolean) {
 	if (rtc._areTokensRenewing) {
 		return;
 	}
@@ -245,7 +245,7 @@ async function _renewTokens(rtc: FiresideHostRTC, force: boolean) {
 }
 
 // Does some work serially.
-function _doBusyWork<T>(rtc: FiresideHostRTC, work: () => Promise<T>) {
+function _doBusyWork<T>(rtc: FiresideRTCProducer, work: () => Promise<T>) {
 	const p = (async () => {
 		// Wait for any previous work to finish first.
 		await rtc._busyPromise;
@@ -262,7 +262,7 @@ function _doBusyWork<T>(rtc: FiresideHostRTC, work: () => Promise<T>) {
 	return p;
 }
 
-export function setSelectedWebcamDeviceId(rtc: FiresideHostRTC, newWebcamDeviceId: string) {
+export function setSelectedWebcamDeviceId(rtc: FiresideRTCProducer, newWebcamDeviceId: string) {
 	const videoDeviceChanged = newWebcamDeviceId !== rtc._selectedWebcamDeviceId;
 	rtc._selectedWebcamDeviceId = newWebcamDeviceId;
 
@@ -271,7 +271,7 @@ export function setSelectedWebcamDeviceId(rtc: FiresideHostRTC, newWebcamDeviceI
 	}
 }
 
-export function setSelectedMicDeviceId(rtc: FiresideHostRTC, newMicId: string) {
+export function setSelectedMicDeviceId(rtc: FiresideRTCProducer, newMicId: string) {
 	const micChanged = newMicId !== rtc._selectedMicDeviceId;
 	rtc._selectedMicDeviceId = newMicId;
 
@@ -280,7 +280,7 @@ export function setSelectedMicDeviceId(rtc: FiresideHostRTC, newMicId: string) {
 	}
 }
 
-export function setSelectedDesktopAudioDeviceId(rtc: FiresideHostRTC, newSpeakerId: string) {
+export function setSelectedDesktopAudioDeviceId(rtc: FiresideRTCProducer, newSpeakerId: string) {
 	const speakerChanged = newSpeakerId !== rtc._selectedDesktopAudioDeviceId;
 	rtc._selectedDesktopAudioDeviceId = newSpeakerId;
 
@@ -289,7 +289,7 @@ export function setSelectedDesktopAudioDeviceId(rtc: FiresideHostRTC, newSpeaker
 	}
 }
 
-export function setSelectedGroupAudioDeviceId(rtc: FiresideHostRTC, newSpeakerId: string) {
+export function setSelectedGroupAudioDeviceId(rtc: FiresideRTCProducer, newSpeakerId: string) {
 	const speakerChanged = newSpeakerId !== rtc._selectedGroupAudioDeviceId;
 	rtc._selectedGroupAudioDeviceId = newSpeakerId;
 
@@ -298,7 +298,7 @@ export function setSelectedGroupAudioDeviceId(rtc: FiresideHostRTC, newSpeakerId
 	}
 }
 
-function _updateWebcamDevice(rtc: FiresideHostRTC) {
+function _updateWebcamDevice(rtc: FiresideRTCProducer) {
 	return _doBusyWork(rtc, async () => {
 		let deviceId: string | null;
 
@@ -318,7 +318,7 @@ function _updateWebcamDevice(rtc: FiresideHostRTC) {
 	});
 }
 
-function _updateMicDevice(rtc: FiresideHostRTC) {
+function _updateMicDevice(rtc: FiresideRTCProducer) {
 	return _doBusyWork(rtc, async () => {
 		let deviceId: string | null;
 
@@ -335,7 +335,7 @@ function _updateMicDevice(rtc: FiresideHostRTC) {
 	});
 }
 
-function _updateDesktopAudioDevice(rtc: FiresideHostRTC) {
+function _updateDesktopAudioDevice(rtc: FiresideRTCProducer) {
 	return _doBusyWork(rtc, async () => {
 		let deviceId: string | null;
 
@@ -352,7 +352,7 @@ function _updateDesktopAudioDevice(rtc: FiresideHostRTC) {
 	});
 }
 
-function _updateGroupAudioDevice(rtc: FiresideHostRTC) {
+function _updateGroupAudioDevice(rtc: FiresideRTCProducer) {
 	return _doBusyWork(rtc, async () => {
 		const deviceExists = !!MediaDeviceService.speakers.find(
 			speaker => speaker.deviceId === rtc._selectedGroupAudioDeviceId
@@ -363,7 +363,7 @@ function _updateGroupAudioDevice(rtc: FiresideHostRTC) {
 	});
 }
 
-export function setVideoPreviewElement(rtc: FiresideHostRTC, element: HTMLDivElement | null) {
+export function setVideoPreviewElement(rtc: FiresideRTCProducer, element: HTMLDivElement | null) {
 	if (rtc._videoPreviewElement && rtc._videoPreviewElement !== element) {
 		rtc._videoPreviewElement.innerHTML = '';
 	}
@@ -374,7 +374,7 @@ export function setVideoPreviewElement(rtc: FiresideHostRTC, element: HTMLDivEle
 	}
 }
 
-export function getOwnDesktopAudioVolume(rtc: FiresideHostRTC) {
+export function getOwnDesktopAudioVolume(rtc: FiresideRTCProducer) {
 	if (!rtc._videoClient || rtc._videoClient.isDisposed) {
 		return 0;
 	}
@@ -382,7 +382,7 @@ export function getOwnDesktopAudioVolume(rtc: FiresideHostRTC) {
 	return rtc._videoClient!.getVirtualAudioInputVolume();
 }
 
-export function getOwnMicAudioVolume(rtc: FiresideHostRTC) {
+export function getOwnMicAudioVolume(rtc: FiresideRTCProducer) {
 	if (!rtc._chatClient || rtc._chatClient.isDisposed) {
 		return 0;
 	}
@@ -390,7 +390,7 @@ export function getOwnMicAudioVolume(rtc: FiresideHostRTC) {
 	return rtc._chatClient!.getAudioInputVolume();
 }
 
-export async function startStreaming(rtc: FiresideHostRTC) {
+export async function startStreaming(rtc: FiresideRTCProducer) {
 	await _doBusyWork(rtc, async () => {
 		if (rtc._isStreaming) {
 			return;
@@ -470,11 +470,11 @@ export async function startStreaming(rtc: FiresideHostRTC) {
 	});
 }
 
-export function stopStreaming(rtc: FiresideHostRTC) {
+export function stopStreaming(rtc: FiresideRTCProducer) {
 	return _stopStreaming(rtc, true);
 }
 
-async function _stopStreaming(rtc: FiresideHostRTC, becomeBusy: boolean) {
+async function _stopStreaming(rtc: FiresideRTCProducer, becomeBusy: boolean) {
 	const busyWork = async () => {
 		if (!rtc._isStreaming) {
 			return;

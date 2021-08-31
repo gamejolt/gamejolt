@@ -9,7 +9,7 @@ import AppForm from '../../../../_common/form-vue/form.vue';
 import AppFormLegend from '../../../../_common/form-vue/legend/legend.vue';
 import AppLoadingFade from '../../../../_common/loading/fade/fade.vue';
 import {
-	FiresideHostRTC,
+	FiresideRTCProducer,
 	getOwnDesktopAudioVolume,
 	getOwnMicAudioVolume,
 	setVideoPreviewElement,
@@ -19,7 +19,7 @@ import {
 	setSelectedWebcamDeviceId,
 	startStreaming,
 	stopStreaming,
-} from '../fireside-host-rtc';
+} from '../../../../_common/fireside/rtc/producer';
 import AppVolumeMeter from './volume-meter.vue';
 
 const Beeps = [
@@ -50,7 +50,7 @@ type FormModel = {
 	},
 })
 export default class AppStreamSetup extends BaseForm<FormModel> implements FormOnInit {
-	@Prop(propRequired(FiresideHostRTC)) firesideHostRtc!: FiresideHostRTC;
+	@Prop(propRequired(FiresideRTCProducer)) firesideHostRtc!: FiresideRTCProducer;
 
 	isStarting = false;
 	desktopAudioVolume = 0;

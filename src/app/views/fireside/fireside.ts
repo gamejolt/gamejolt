@@ -42,15 +42,15 @@ import { FiresideController, FiresideControllerKey } from './controller';
 import {
 	createFiresideHostRTC,
 	destroyFiresideHostRTC,
-	FiresideHostRTC,
+	FiresideRTCProducer,
 	stopStreaming,
-} from './fireside-host-rtc';
+} from '../../../_common/fireside/rtc/producer';
 import {
 	destroyFiresideRTC,
 	FiresideRTC,
 	FiresideRTCKey,
 	renewFiresideRTCToken,
-} from './fireside-rtc';
+} from '../../../_common/fireside/rtc/rtc';
 import AppFiresideChatMembers from './_chat-members/chat-members.vue';
 import { FiresideChatMembersModal } from './_chat-members/modal/modal.service';
 import { FiresideEditModal } from './_edit-modal/edit-modal.service';
@@ -133,7 +133,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	status: RouteStatus = 'initial';
 	hasExpiryWarning = false; // Visually shows a warning to the owner when the fireside's time is running low.
 
-	hostRtc: FiresideHostRTC | null = null;
+	hostRtc: FiresideRTCProducer | null = null;
 
 	readonly Screen = Screen;
 	readonly number = number;

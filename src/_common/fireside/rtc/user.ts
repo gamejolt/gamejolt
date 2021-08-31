@@ -1,8 +1,8 @@
-import { IAgoraRTCRemoteUser, IRemoteAudioTrack, IRemoteVideoTrack } from 'agora-rtc-sdk-ng';
+import type { IAgoraRTCRemoteUser, IRemoteAudioTrack, IRemoteVideoTrack } from 'agora-rtc-sdk-ng';
 import { arrayRemove } from '../../../utils/array';
 import { sleep } from '../../../utils/utils';
-import { User } from '../../../_common/user/user.model';
-import { FiresideRTC } from './fireside-rtc';
+import { User } from '../../user/user.model';
+import { FiresideRTC } from './rtc';
 
 export class FiresideVideoPlayStatePlaying {
 	isPlaying = true;

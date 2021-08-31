@@ -1,11 +1,11 @@
 import { asyncComponentLoader } from '../../../../utils/utils';
 import { Modal } from '../../../../_common/modal/modal.service';
-import { FiresideHostRTC } from '../fireside-host-rtc';
+import { FiresideRTCProducer } from '../../../../_common/fireside/rtc/producer';
 
 const ModalId = 'firesideStreamSetup';
 
 export class StreamSetupModal {
-	static async show(firesideHostRtc: FiresideHostRTC) {
+	static async show(firesideHostRtc: FiresideRTCProducer) {
 		return await Modal.show<void>({
 			modalId: ModalId,
 			component: () =>

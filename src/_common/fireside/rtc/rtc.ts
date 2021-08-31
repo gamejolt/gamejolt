@@ -1,8 +1,8 @@
 import AgoraRTC, { IAgoraRTCClient, IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng';
 import { arrayRemove } from '../../../utils/array';
 import { debounce, sleep } from '../../../utils/utils';
-import { Navigate } from '../../../_common/navigate/navigate.service';
-import { User } from '../../../_common/user/user.model';
+import { Navigate } from '../../navigate/navigate.service';
+import { User } from '../../user/user.model';
 import {
 	FiresideRTCUser,
 	FiresideVideoPlayStateStopped,
@@ -12,7 +12,7 @@ import {
 	stopAudioPlayback,
 	stopDesktopAudioPlayback,
 	updateVolumeLevel,
-} from './fireside-rtc-user';
+} from './user';
 
 export const FiresideRTCKey = Symbol('fireside-rtc');
 
@@ -56,7 +56,7 @@ export class FiresideRTC {
 	}
 
 	get isHost() {
-		return this.hosts.find(host => host.id == this.userId) !== undefined;
+		return this.hosts.find(host => host.id === this.userId) !== undefined;
 	}
 
 	/**
@@ -68,7 +68,7 @@ export class FiresideRTC {
 	}
 
 	get focusedUser() {
-		return this.users.find(remoteUser => remoteUser.userId == this.focusedUserId) || null;
+		return this.users.find(remoteUser => remoteUser.userId === this.focusedUserId) || null;
 	}
 
 	public assertNotOutdated(myGeneration: number) {
@@ -447,7 +447,7 @@ function _findOrAddUser(
 		user = new FiresideRTCUser(
 			rtc,
 			remoteUser.uid,
-			rtc.hosts.find(host => host.id == remoteUser.uid)
+			rtc.hosts.find(host => host.id === remoteUser.uid)
 		);
 		rtc.users.push(user);
 		wasAdded = true;

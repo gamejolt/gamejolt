@@ -1,7 +1,7 @@
 import { Component, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../utils/vue';
 import { BaseModal } from '../../../../_common/modal/base';
-import { FiresideHostRTC } from '../fireside-host-rtc';
+import { FiresideRTCProducer } from '../../../../_common/fireside/rtc/producer';
 import AppStreamSetup from './stream-setup.vue';
 
 @Component({
@@ -10,7 +10,7 @@ import AppStreamSetup from './stream-setup.vue';
 	},
 })
 export default class AppStreamSetupModal extends BaseModal {
-	@Prop(propRequired(FiresideHostRTC)) firesideHostRtc!: FiresideHostRTC;
+	@Prop(propRequired(FiresideRTCProducer)) firesideHostRtc!: FiresideRTCProducer;
 
 	onClose() {
 		this.modal.dismiss();

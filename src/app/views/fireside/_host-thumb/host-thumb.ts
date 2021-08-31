@@ -3,8 +3,8 @@ import { Component, Emit, InjectReactive, Prop } from 'vue-property-decorator';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
-import { FiresideRTC, FiresideRTCKey } from '../fireside-rtc';
-import { FiresideRTCUser, setAudioPlayback } from '../fireside-rtc-user';
+import { FiresideRTC, FiresideRTCKey } from '../../../../_common/fireside/rtc/rtc';
+import { FiresideRTCUser, setAudioPlayback } from '../../../../_common/fireside/rtc/user';
 import AppFiresideVideo from '../_video/video.vue';
 import AppFiresideHostThumbIndicator from './host-thumb-indicator.vue';
 

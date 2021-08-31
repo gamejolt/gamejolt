@@ -4,9 +4,9 @@ import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { FiresideHostRTC, stopStreaming } from '../fireside-host-rtc';
-import { FiresideRTC, FiresideRTCKey } from '../fireside-rtc';
-import { setAudioPlayback } from '../fireside-rtc-user';
+import { FiresideRTCProducer, stopStreaming } from '../../../../_common/fireside/rtc/producer';
+import { FiresideRTC, FiresideRTCKey } from '../../../../_common/fireside/rtc/rtc';
+import { setAudioPlayback } from '../../../../_common/fireside/rtc/user';
 import { StreamSetupModal } from '../_stream-setup/stream-setup-modal.service';
 
 @Component({
@@ -21,8 +21,8 @@ export default class AppFiresideStreamOptions extends Vue {
 	@AppState user!: AppStore['user'];
 	@InjectReactive(FiresideRTCKey) rtc!: FiresideRTC;
 
-	@Prop({ type: FiresideHostRTC, required: false })
-	hostRtc?: FiresideHostRTC;
+	@Prop({ type: FiresideRTCProducer, required: false })
+	hostRtc?: FiresideRTCProducer;
 
 	@Emit('show-popper') emitShowPopper() {}
 	@Emit('hide-popper') emitHidePopper() {}
