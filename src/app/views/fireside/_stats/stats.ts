@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { InjectReactive, Prop } from 'vue-property-decorator';
+import { InjectReactive } from 'vue-property-decorator';
 import { getAbsoluteLink } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
 import AppCard from '../../../../_common/card/card.vue';
@@ -13,8 +13,7 @@ import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue'
 import AppShareCard from '../../../../_common/share/card/card.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { RouteStatus } from '../fireside';
-import { FiresideController, FiresideControllerKey } from '../controller';
+import { FiresideController, FiresideControllerKey } from '../controller/controller';
 import AppFiresideShare from './_share/share.vue';
 
 @Component({
@@ -32,12 +31,6 @@ import AppFiresideShare from './_share/share.vue';
 })
 export default class AppFiresideStats extends Vue {
 	@InjectReactive(FiresideControllerKey) c!: FiresideController;
-
-	@Prop({ type: String, required: true })
-	status!: RouteStatus;
-
-	@Prop({ type: Boolean, required: true })
-	isStreaming!: boolean;
 
 	@AppState user!: AppStore['user'];
 
@@ -68,13 +61,13 @@ export default class AppFiresideStats extends Vue {
 	}
 
 	get canPublish() {
-		return this.canManage && this.status === 'joined' && this.isDraft;
+		return this.canManage && this.c.status === 'joined' && this.isDraft;
 	}
 
 	get canExtend() {
 		return (
 			this.canManage &&
-			this.status === 'joined' &&
+			this.c.status === 'joined' &&
 			this.expiresProgressValue !== null &&
 			this.expiresProgressValue <= 95
 		);
@@ -150,7 +143,7 @@ export default class AppFiresideStats extends Vue {
 	}
 
 	async onClickPublish() {
-		if (this.status !== 'joined' || !this.isDraft || !this.fireside) {
+		if (this.c.status !== 'joined' || !this.isDraft || !this.fireside) {
 			return;
 		}
 
@@ -159,7 +152,7 @@ export default class AppFiresideStats extends Vue {
 	}
 
 	async onClickExtend() {
-		if (this.status !== 'joined' || !this.canExtend || !this.fireside) {
+		if (this.c.status !== 'joined' || !this.canExtend || !this.fireside) {
 			return;
 		}
 

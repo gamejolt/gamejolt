@@ -5,7 +5,11 @@
 		<div class="-click-capture" @click="onClick">
 			<div class="-display-thumb" :class="{ '-hidden': !showingVideoThumb }">
 				<template v-if="showingVideoThumb">
-					<app-fireside-video v-if="!rtc.videoPaused" :rtc-user="host" low-bitrate />
+					<app-fireside-video
+						v-if="c.rtc && !c.rtc.videoPaused"
+						:rtc-user="host"
+						low-bitrate
+					/>
 					<app-jolticon v-else icon="camera" class="-display-thumb-icon" />
 				</template>
 			</div>
@@ -19,7 +23,7 @@
 		</div>
 
 		<!-- We currently only show these when not streaming since the audio streams are handled completely differently when you're a host. -->
-		<div v-if="!rtc.isStreaming" class="-options">
+		<div v-if="c.rtc && !c.rtc.isStreaming" class="-options">
 			<transition>
 				<span
 					v-if="host.micAudioMuted"

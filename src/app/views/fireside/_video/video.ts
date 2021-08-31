@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, InjectReactive, Prop } from 'vue-property-decorator';
-import { FiresideRTC, FiresideRTCKey } from '../../../../_common/fireside/rtc/rtc';
 import {
 	FiresideRTCUser,
 	FiresideVideoLock,
@@ -9,6 +8,7 @@ import {
 	releaseVideoLock,
 	setVideoPlayback,
 } from '../../../../_common/fireside/rtc/user';
+import { FiresideController, FiresideControllerKey } from '../controller/controller';
 
 @Component({})
 export default class AppFiresideVideo extends Vue {
@@ -18,7 +18,7 @@ export default class AppFiresideVideo extends Vue {
 	@Prop({ type: Boolean, required: false, default: false })
 	lowBitrate!: boolean;
 
-	@InjectReactive(FiresideRTCKey) rtc!: FiresideRTC;
+	@InjectReactive(FiresideControllerKey) c!: FiresideController;
 
 	private _myRtcUser!: FiresideRTCUser;
 	private _videoLock: FiresideVideoLock | null = null;
@@ -30,7 +30,7 @@ export default class AppFiresideVideo extends Vue {
 	}
 
 	get isLoadingVideo() {
-		return this.hasVideo && this.rtc.videoClient?.connectionState !== 'CONNECTED';
+		return this.hasVideo && this.c.rtc?.videoClient?.connectionState !== 'CONNECTED';
 	}
 
 	created() {

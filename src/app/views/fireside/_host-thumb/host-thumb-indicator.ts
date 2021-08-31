@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import { Component, InjectReactive, Prop } from 'vue-property-decorator';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
-import { FiresideRTC, FiresideRTCKey } from '../../../../_common/fireside/rtc/rtc';
 import { FiresideRTCUser } from '../../../../_common/fireside/rtc/user';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
+import { FiresideController, FiresideControllerKey } from '../controller/controller';
 
 @Component({
 	components: {
@@ -13,7 +13,7 @@ export default class AppFiresideHostThumbIndicator extends Vue {
 	@Prop({ type: FiresideRTCUser, required: true })
 	host!: FiresideRTCUser;
 
-	@InjectReactive(FiresideRTCKey) rtc!: FiresideRTC;
+	@InjectReactive(FiresideControllerKey) c!: FiresideController;
 
 	get padding() {
 		// Make a nice looking curve, have it snap to a small number of positions.

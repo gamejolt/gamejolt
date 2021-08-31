@@ -1,12 +1,11 @@
 import Vue from 'vue';
-import { Component, InjectReactive, Prop } from 'vue-property-decorator';
+import { Component, InjectReactive, Prop, Watch } from 'vue-property-decorator';
 import { number } from '../../../../_common/filters/number';
+import { FiresideRTCUser } from '../../../../_common/fireside/rtc/user';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { ChatUserCollection } from '../../../components/chat/user-collection';
-import { FiresideRTCProducer } from '../../../../_common/fireside/rtc/producer';
-import { FiresideRTC, FiresideRTCKey } from '../../../../_common/fireside/rtc/rtc';
-import { FiresideRTCUser } from '../../../../_common/fireside/rtc/user';
+import { FiresideController, FiresideControllerKey } from '../controller/controller';
 import AppFiresideDesktopAudio from '../_desktop-audio/desktop-audio.vue';
 import AppFiresideHostList from '../_host-list/host-list.vue';
 import AppFiresideHostThumbIndicator from '../_host-thumb/host-thumb-indicator.vue';
@@ -36,10 +35,7 @@ export default class AppFiresideStream extends Vue {
 	@Prop({ type: ChatUserCollection, required: false, default: null })
 	members!: ChatUserCollection | null;
 
-	@Prop({ type: FiresideRTCProducer, required: false })
-	hostRtc?: FiresideRTCProducer;
-
-	@InjectReactive(FiresideRTCKey) rtc!: FiresideRTC;
+	@InjectReactive(FiresideControllerKey) c!: FiresideController;
 
 	private isHovered = false;
 	private _hideUITimer?: NodeJS.Timer;
@@ -54,7 +50,7 @@ export default class AppFiresideStream extends Vue {
 			return false;
 		}
 
-		return (
+		return !!(
 			(this.hasVideo && this.videoPaused) ||
 			this.isShowingOverlayPopper ||
 			this.isHovered ||
@@ -71,7 +67,7 @@ export default class AppFiresideStream extends Vue {
 	}
 
 	get videoPaused() {
-		return this.rtc.videoPaused;
+		return this.c.rtc?.videoPaused;
 	}
 
 	get hasVideo() {
@@ -79,13 +75,13 @@ export default class AppFiresideStream extends Vue {
 	}
 
 	get isLoadingVideo() {
-		return this.hasVideo && this.rtc.videoClient?.connectionState !== 'CONNECTED';
+		return this.hasVideo && this.c.rtc?.videoClient?.connectionState !== 'CONNECTED';
 	}
 
 	get shouldPlayDesktopAudio() {
 		return (
 			this.hasVideo &&
-			this.rtc.videoClient?.connectionState === 'CONNECTED' &&
+			this.c.rtc?.videoClient?.connectionState === 'CONNECTED' &&
 			this.rtcUser.hasDesktopAudio
 		);
 	}
@@ -175,10 +171,15 @@ export default class AppFiresideStream extends Vue {
 	}
 
 	private pauseVideo() {
-		this.rtc.videoPaused = false;
+		this.c.rtc!.videoPaused = false;
 	}
 
 	private unpauseVideo() {
-		this.rtc.videoPaused = true;
+		this.c.rtc!.videoPaused = true;
+	}
+
+	@Watch('shouldShowUI', { immediate: true })
+	onShouldShowUIChanged() {
+		this.c.isShowingStreamOverlay = this.shouldShowUI;
 	}
 }

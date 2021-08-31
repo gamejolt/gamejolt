@@ -1,16 +1,16 @@
 <script lang="ts" src="./host-list"></script>
 
 <template>
-	<app-scroll-scroller v-if="rtc" class="-fireside-hosts" horizontal>
+	<app-scroll-scroller v-if="c.rtc" class="-fireside-hosts" horizontal>
 		<div class="-fireside-hosts-inner">
 			<app-fireside-stream-options
-				:host-rtc="hostRtc"
+				:host-rtc="c.hostRtc"
 				@show-popper="emitShowPopper"
 				@hide-popper="emitHidePopper"
 			/>
 
 			<app-fireside-host-thumb
-				v-for="host of rtc.users"
+				v-for="host of c.rtc.users"
 				:key="host.userId"
 				class="-host-thumb"
 				:host="host"

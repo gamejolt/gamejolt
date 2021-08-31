@@ -1,16 +1,9 @@
 import { asyncComponentLoader } from '../../../../../utils/utils';
 import { Modal } from '../../../../../_common/modal/modal.service';
-import { RouteStatus } from '../../fireside';
-import { FiresideRTCProducer } from '../../../../../_common/fireside/rtc/producer';
-import { FiresideController } from '../../controller';
+import { FiresideController } from '../../controller/controller';
 
 export class FiresideStatsModal {
-	static async show(
-		controller: FiresideController,
-		status: RouteStatus,
-		hostRtc: FiresideRTCProducer | null,
-		isStreaming: boolean
-	) {
+	static async show(controller: FiresideController) {
 		return await Modal.show<void>({
 			modalId: 'firesideStats',
 			component: () =>
@@ -19,9 +12,6 @@ export class FiresideStatsModal {
 				),
 			props: {
 				controller,
-				status,
-				hostRtc,
-				isStreaming,
 			},
 			size: 'sm',
 		});

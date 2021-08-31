@@ -3,7 +3,7 @@
 <template>
 	<div
 		class="-indicator-wrap"
-		:class="{ '-active-hover': rtc.focusedUserId == host.userId }"
+		:class="{ '-active-hover': c.rtc && c.rtc.focusedUserId === host.userId }"
 		:style="{ padding }"
 	>
 		<div class="-indicator">

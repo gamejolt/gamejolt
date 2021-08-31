@@ -9,7 +9,7 @@
 
 			<template #popover>
 				<div class="list-group">
-					<template v-if="!rtc.isStreaming">
+					<template v-if="c.rtc && !c.rtc.isStreaming">
 						<a v-if="shouldMute" class="list-group-item" @click="muteAll()">
 							<translate>Mute All</translate>
 						</a>
@@ -18,9 +18,9 @@
 						</a>
 					</template>
 
-					<template v-if="shouldShowStreamingOptions">
+					<template v-if="c.shouldShowStreamingOptions">
 						<a
-							v-if="!isPersonallyStreaming"
+							v-if="!c.isPersonallyStreaming"
 							class="list-group-item"
 							@click="onClickEditStream"
 						>

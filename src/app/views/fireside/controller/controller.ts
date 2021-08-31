@@ -1,0 +1,140 @@
+import VueRouter from 'vue-router';
+import { getAbsoluteLink } from '../../../../utils/router';
+import { Fireside } from '../../../../_common/fireside/fireside.model';
+import { FiresideRTCProducer } from '../../../../_common/fireside/rtc/producer';
+import { FiresideRTC } from '../../../../_common/fireside/rtc/rtc';
+import { Screen } from '../../../../_common/screen/screen-service';
+import { copyShareLink } from '../../../../_common/share/share.service';
+import { appStore } from '../../../../_common/store/app-store';
+import { ChatClient } from '../../../components/chat/client';
+import { ChatRoomChannel } from '../../../components/chat/room-channel';
+import { FiresideChannel } from '../../../components/grid/fireside-channel';
+import { FiresideChatMembersModal } from '../_chat-members/modal/modal.service';
+import { FiresideEditModal } from '../_edit-modal/edit-modal.service';
+import { FiresideStatsModal } from '../_stats/modal/modal.service';
+
+export type RouteStatus =
+	| 'initial' // Initial status when route loads.
+	| 'disconnected' // Disconnected from the Fireside (chat/client channels).
+	| 'loading' // Initiated loading to connect to relevant channels.
+	| 'unauthorized' // Cannot join because user is not logged in/has no cookie.
+	| 'expired' // Fireside has expired.
+	| 'setup-failed' // Failed to properly join the Fireside.
+	| 'joined' // Currently joined to the Fireside.
+	| 'blocked'; // Blocked from joining the Fireside (user blocked).
+
+export const FiresideControllerKey = Symbol('fireside-controller');
+
+export class FiresideController {
+	fireside: Fireside | null = null;
+	rtc: FiresideRTC | null = null;
+	hostRtc: FiresideRTCProducer | null = null;
+	status: RouteStatus = 'initial';
+	onRetry: (() => void) | null = null;
+
+	chat: ChatClient | null = null;
+
+	streamingAppId = '';
+	gridChannel: FiresideChannel | null = null;
+	chatChannel: ChatRoomChannel | null = null;
+	expiryInterval: NodeJS.Timer | null = null;
+	chatPreviousConnectedState: boolean | null = null;
+	gridPreviousConnectedState: boolean | null = null;
+	hasExpiryWarning = false; // Visually shows a warning to the owner when the fireside's time is running low.
+
+	isShowingStreamOverlay = false;
+
+	private _locks: FiresideControllerLock[] = [];
+
+	getLock() {
+		const lock = new FiresideControllerLock();
+		this._locks.push(lock);
+		return lock;
+	}
+
+	get user() {
+		return appStore.user;
+	}
+
+	get isDraft() {
+		return this.fireside?.is_draft ?? true;
+	}
+
+	get isStreaming() {
+		return !!(this.fireside?.is_streaming && this.rtc && this.rtc.users.length > 0);
+	}
+
+	get isPersonallyStreaming() {
+		return this.hostRtc?.isStreaming ?? false;
+	}
+
+	get shouldShowStreamingOptions() {
+		return this.canStream || this.isPersonallyStreaming;
+	}
+
+	get canStream() {
+		return (
+			!!this.hostRtc && (Screen.isDesktop || (this.user && this.user.permission_level >= 4))
+		);
+	}
+
+	get chatRoom() {
+		return this.chatChannel?.room;
+	}
+
+	get chatUsers() {
+		if (!this.chatRoom) {
+			return undefined;
+		}
+		return this.chat?.roomMembers[this.chatRoom.id];
+	}
+}
+
+export function createFiresideController(
+	fireside: Fireside,
+	streamingAppId: string,
+	onRetry: (() => void) | null = null
+) {
+	const c = new FiresideController();
+	c.fireside = fireside;
+	c.streamingAppId = streamingAppId;
+	c.onRetry = onRetry;
+	return c;
+}
+
+class FiresideControllerLock {
+	onStreamingChange: (() => void) | null = null;
+}
+
+export function getFiresideLink(c: FiresideController, router: VueRouter) {
+	if (!c.fireside) {
+		return;
+	}
+	return getAbsoluteLink(router, c.fireside.location);
+}
+
+export function copyFiresideLink(c: FiresideController, router: VueRouter) {
+	const url = getFiresideLink(c, router);
+	if (url) {
+		copyShareLink(url, 'fireside');
+	}
+}
+
+export function showFiresideStats(c: FiresideController) {
+	FiresideStatsModal.show(c);
+}
+
+export function showFiresideEdit(c: FiresideController) {
+	FiresideEditModal.show(c);
+}
+
+export function showFiresideMembers(c: FiresideController) {
+	if (!c.chatUsers || !c.chatRoom) {
+		return;
+	}
+	FiresideChatMembersModal.show(c.chatUsers, c.chatRoom);
+}
+
+export function toggleStreamVideoStats(c: FiresideController) {
+	c.rtc!.shouldShowVideoStats = !(c.rtc?.shouldShowVideoStats ?? true);
+}

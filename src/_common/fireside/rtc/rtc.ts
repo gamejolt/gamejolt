@@ -14,8 +14,6 @@ import {
 	updateVolumeLevel,
 } from './user';
 
-export const FiresideRTCKey = Symbol('fireside-rtc');
-
 export class FiresideRTC {
 	generation = 0;
 

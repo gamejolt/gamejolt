@@ -1,23 +1,29 @@
 import { Component, Prop } from 'vue-property-decorator';
-import { Fireside } from '../../../../_common/fireside/fireside.model';
+import AppLoading from '../../../../_common/loading/loading.vue';
 import { BaseModal } from '../../../../_common/modal/base';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import FormFiresideEdit from '../../../components/forms/fireside/edit/edit.vue';
+import { FiresideController } from '../controller/controller';
 
 @Component({
 	components: {
 		FormFiresideEdit,
+		AppLoading,
 	},
 })
 export default class AppFiresideEditModal extends BaseModal {
-	@Prop({ type: Fireside, required: true })
-	fireside!: Fireside;
+	@Prop({ type: FiresideController, required: true })
+	controller!: FiresideController;
 
 	onFormSubmit() {
 		this.modal.resolve();
 	}
 
 	async onClickExtinguish() {
+		if (!this.controller.fireside) {
+			return;
+		}
+
 		const result = await ModalConfirm.show(
 			this.$gettext(`Are you sure you want to extinguish your Fireside?`)
 		);
@@ -25,7 +31,7 @@ export default class AppFiresideEditModal extends BaseModal {
 			return;
 		}
 
-		this.fireside.$extinguish();
+		this.controller.fireside.$extinguish();
 
 		this.modal.resolve();
 	}
