@@ -13,7 +13,7 @@
 			/>
 			<div class="-split" />
 		</template>
-		<div class="-body" :class="{ '-body-column': isVertical, '-is-streaming': c.isStreaming }">
+		<div class="-body" :class="{ '-body-column': isVertical && c.isStreaming, '-is-streaming': c.isStreaming }">
 			<div v-if="shouldShowFiresideStats" class="-leading">
 				<app-fireside-stats />
 			</div>
