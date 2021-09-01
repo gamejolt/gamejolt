@@ -40,7 +40,6 @@ export default class AppFiresideStream extends Vue {
 	private isHovered = false;
 	private _hideUITimer?: NodeJS.Timer;
 	private _ignorePointerTimer?: NodeJS.Timer;
-	private isShowingOverlayPopper = false;
 
 	readonly Screen = Screen;
 	readonly number = number;
@@ -52,7 +51,7 @@ export default class AppFiresideStream extends Vue {
 
 		return !!(
 			(this.hasVideo && this.videoPaused) ||
-			this.isShowingOverlayPopper ||
+			this.c.isShowingOverlayPopper ||
 			this.isHovered ||
 			this._hideUITimer
 		);
@@ -125,11 +124,11 @@ export default class AppFiresideStream extends Vue {
 	}
 
 	onHostOptionsShow() {
-		this.isShowingOverlayPopper = true;
+		this.c.isShowingOverlayPopper = true;
 	}
 
 	onHostOptionsHide() {
-		this.isShowingOverlayPopper = false;
+		this.c.isShowingOverlayPopper = false;
 	}
 
 	private scheduleUIHide(delay: number) {

@@ -188,6 +188,7 @@
 				<app-expand v-if="isVertical" :when="c.isShowingStreamOverlay">
 					<app-fireside-header
 						class="-header"
+						has-overlay-popovers
 						:show-controls="shouldShowTitleControls"
 						:has-info="!shouldShowFiresideStats"
 						:has-edit="shouldShowEditControlButton"

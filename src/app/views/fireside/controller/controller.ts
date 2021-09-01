@@ -46,17 +46,10 @@ export class FiresideController {
 	hasExpiryWarning = false;
 
 	isShowingStreamOverlay = false;
-
-	private _locks: FiresideControllerLock[] = [];
-
-	getLock() {
-		const lock = new FiresideControllerLock();
-		this._locks.push(lock);
-		return lock;
-	}
+	isShowingOverlayPopper = false;
 
 	get user() {
-		return appStore.user;
+		return appStore.state.user;
 	}
 
 	get isDraft() {
@@ -77,7 +70,7 @@ export class FiresideController {
 
 	get canStream() {
 		return (
-			!!this.hostRtc && (Screen.isDesktop || (this.user && this.user.permission_level >= 4))
+			!!this.hostRtc && !!(Screen.isDesktop || (this.user && this.user.permission_level >= 4))
 		);
 	}
 
@@ -101,10 +94,6 @@ export function createFiresideController(
 	const c = new FiresideController(fireside, streamingAppId);
 	c.onRetry = onRetry;
 	return c;
-}
-
-class FiresideControllerLock {
-	onStreamingChange: (() => void) | null = null;
 }
 
 export function getFiresideLink(c: FiresideController, router: VueRouter) {

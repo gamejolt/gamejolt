@@ -32,6 +32,9 @@ export default class AppFiresideHeader extends Vue {
 	showControls!: boolean;
 
 	@Prop({ type: Boolean, required: false, default: false })
+	hasOverlayPopovers!: boolean;
+
+	@Prop({ type: Boolean, required: false, default: false })
 	hasInfo!: boolean;
 
 	@Prop({ type: Boolean, required: false, default: false })
@@ -77,5 +80,15 @@ export default class AppFiresideHeader extends Vue {
 		if (this.c.hostRtc) {
 			stopStreaming(this.c.hostRtc);
 		}
+	}
+
+	onShowPopper() {
+		if (this.hasOverlayPopovers) {
+			this.c.isShowingOverlayPopper = true;
+		}
+	}
+
+	onHidePopper() {
+		this.c.isShowingOverlayPopper = false;
 	}
 }

@@ -60,7 +60,7 @@
 						/>
 					</div>
 
-					<app-popper>
+					<app-popper @show="onShowPopper" @hide="onHidePopper">
 						<div class="-stats-btn">
 							<app-button
 								icon="cog"
