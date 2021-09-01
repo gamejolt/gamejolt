@@ -10,8 +10,6 @@ import { ChatClient } from '../../../components/chat/client';
 import { ChatRoomChannel } from '../../../components/chat/room-channel';
 import { FiresideChannel } from '../../../components/grid/fireside-channel';
 import { FiresideChatMembersModal } from '../_chat-members/modal/modal.service';
-import { FiresideEditModal } from '../_edit-modal/edit-modal.service';
-import { FiresideStatsModal } from '../_stats/modal/modal.service';
 
 export type RouteStatus =
 	| 'initial' // Initial status when route loads.
@@ -26,7 +24,8 @@ export type RouteStatus =
 export const FiresideControllerKey = Symbol('fireside-controller');
 
 export class FiresideController {
-	fireside: Fireside | null = null;
+	constructor(public readonly fireside: Fireside, public readonly streamingAppId: string) {}
+
 	rtc: FiresideRTC | null = null;
 	hostRtc: FiresideRTCProducer | null = null;
 	status: RouteStatus = 'initial';
@@ -34,13 +33,17 @@ export class FiresideController {
 
 	chat: ChatClient | null = null;
 
-	streamingAppId = '';
 	gridChannel: FiresideChannel | null = null;
 	chatChannel: ChatRoomChannel | null = null;
 	expiryInterval: NodeJS.Timer | null = null;
 	chatPreviousConnectedState: boolean | null = null;
 	gridPreviousConnectedState: boolean | null = null;
-	hasExpiryWarning = false; // Visually shows a warning to the owner when the fireside's time is running low.
+
+	/**
+	 * Visually shows a warning to the owner when the fireside's time is running
+	 * low.
+	 */
+	hasExpiryWarning = false;
 
 	isShowingStreamOverlay = false;
 
@@ -95,9 +98,7 @@ export function createFiresideController(
 	streamingAppId: string,
 	onRetry: (() => void) | null = null
 ) {
-	const c = new FiresideController();
-	c.fireside = fireside;
-	c.streamingAppId = streamingAppId;
+	const c = new FiresideController(fireside, streamingAppId);
 	c.onRetry = onRetry;
 	return c;
 }
@@ -118,14 +119,6 @@ export function copyFiresideLink(c: FiresideController, router: VueRouter) {
 	if (url) {
 		copyShareLink(url, 'fireside');
 	}
-}
-
-export function showFiresideStats(c: FiresideController) {
-	FiresideStatsModal.show(c);
-}
-
-export function showFiresideEdit(c: FiresideController) {
-	FiresideEditModal.show(c);
 }
 
 export function showFiresideMembers(c: FiresideController) {

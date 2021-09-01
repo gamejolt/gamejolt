@@ -230,6 +230,8 @@ export default class AppFiresideContainer extends Vue {
 				c.status = 'setup-failed';
 				return;
 			}
+			// TODO: Will this ever change the app ID? Shouldn't the fireside
+			// fetch update the fireside instead of replace?
 			c.streamingAppId = payload.streamingAppId;
 			c.fireside = new Fireside(payload.fireside);
 		} catch (error) {

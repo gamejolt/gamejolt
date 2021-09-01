@@ -11,10 +11,10 @@ import {
 	copyFiresideLink,
 	FiresideController,
 	FiresideControllerKey,
-	showFiresideEdit,
 	showFiresideMembers,
-	showFiresideStats,
 } from '../controller/controller';
+import { FiresideEditModal } from '../_edit-modal/edit-modal.service';
+import { FiresideStatsModal } from '../_stats/modal/modal.service';
 import { StreamSetupModal } from '../_stream-setup/stream-setup-modal.service';
 
 @Component({
@@ -54,7 +54,7 @@ export default class AppFiresideHeader extends Vue {
 	}
 
 	onClickInfo() {
-		showFiresideStats(this.c);
+		FiresideStatsModal.show(this.c);
 	}
 
 	onClickShowChatMembers() {
@@ -66,7 +66,7 @@ export default class AppFiresideHeader extends Vue {
 	}
 
 	onClickEditFireside() {
-		showFiresideEdit(this.c);
+		FiresideEditModal.show(this.c);
 	}
 
 	onClickCopyLink() {

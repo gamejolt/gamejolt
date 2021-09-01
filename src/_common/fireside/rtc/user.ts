@@ -95,9 +95,9 @@ export function releaseVideoLock(user: FiresideRTCUser, lock: FiresideVideoLock)
 export async function setVideoPlayback(user: FiresideRTCUser, newState: FiresideVideoPlayState) {
 	const { rtc } = user;
 
-	if (!rtc.videoClient) {
+	if (!rtc.videoChannel) {
 		rtc.logWarning(
-			'Video client is not initialized, cannot toggle video thumbnail subscription state'
+			'Video channel is not initialized, cannot toggle video thumbnail subscription state'
 		);
 		return;
 	}
@@ -135,7 +135,7 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 
 	if (newState instanceof FiresideVideoPlayStatePlaying) {
 		try {
-			user.videoTrack = await rtc.videoClient.subscribe(user.videoUser, 'video');
+			user.videoTrack = await rtc.videoChannel.agoraClient.subscribe(user.videoUser, 'video');
 
 			// Wait for next tick before playing so that any video playback elements
 			// are first deregistered.
@@ -143,7 +143,7 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 
 			if (user.videoTrack) {
 				user.videoTrack.play(newState.element);
-				rtc.videoClient!.setRemoteVideoStreamType(
+				rtc.videoChannel!.agoraClient.setRemoteVideoStreamType(
 					user.userId,
 					newState.isLowBitrate ? 1 : 0
 				);
@@ -164,7 +164,7 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 				}
 			}
 
-			await rtc.videoClient.unsubscribe(user.videoUser, 'video');
+			await rtc.videoChannel.agoraClient.unsubscribe(user.videoUser, 'video');
 
 			// TODO: we might want to set the video track to null even
 			// before unsubscribing. this is because unsubscribe may fail if
@@ -202,13 +202,17 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 
 export async function startDesktopAudioPlayback(user: FiresideRTCUser) {
 	const { rtc } = user;
+
 	rtc.log(`${user.userId} -> startDesktopAudioPlayback`);
-	if (!user.videoUser || !rtc.videoClient) {
+	if (!user.videoUser || !rtc.videoChannel) {
 		return;
 	}
 
 	try {
-		user.desktopAudioTrack = await rtc.videoClient.subscribe(user.videoUser, 'audio');
+		user.desktopAudioTrack = await rtc.videoChannel.agoraClient.subscribe(
+			user.videoUser,
+			'audio'
+		);
 		user.desktopAudioTrack.play();
 	} catch (e) {
 		rtc.logError('Failed to start desktop audio playback, attempting to gracefully stop.', e);
@@ -235,14 +239,16 @@ export async function stopDesktopAudioPlayback(user: FiresideRTCUser) {
 	}
 	user.desktopAudioTrack = null;
 
-	if (rtc.videoClient) {
-		try {
-			await rtc.videoClient.unsubscribe(user.videoUser, 'audio');
-		} catch (e) {
-			rtc.logWarning(
-				'Failed to unsbuscribe to desktop audio. Most of the times this is not an error. We attempt to unsubscribe even when we know the user should normally be unsubscribed.'
-			);
-		}
+	if (!rtc.videoChannel) {
+		return;
+	}
+
+	try {
+		await rtc.videoChannel.agoraClient.unsubscribe(user.videoUser, 'audio');
+	} catch (e) {
+		rtc.logWarning(
+			'Failed to unsbuscribe to desktop audio. Most of the times this is not an error. We attempt to unsubscribe even when we know the user should normally be unsubscribed.'
+		);
 	}
 }
 
@@ -259,12 +265,15 @@ export function setAudioPlayback(user: FiresideRTCUser, isPlaying: boolean) {
 export async function startAudioPlayback(user: FiresideRTCUser) {
 	const { rtc } = user;
 	rtc.log(`${user.userId} -> startAudioPlayback`);
-	if (!user.audioChatUser || !rtc.audioClient) {
+	if (!user.audioChatUser || !rtc.chatChannel) {
 		return;
 	}
 
 	try {
-		user.micAudioTrack = await rtc.audioClient.subscribe(user.audioChatUser, 'audio');
+		user.micAudioTrack = await rtc.chatChannel.agoraClient.subscribe(
+			user.audioChatUser,
+			'audio'
+		);
 		user.micAudioTrack.play();
 	} catch (e) {
 		rtc.logError('Failed to start video playback, attempting to gracefully stop.', e);
@@ -291,15 +300,17 @@ export async function stopAudioPlayback(user: FiresideRTCUser) {
 	}
 	user.micAudioTrack = null;
 
+	if (!rtc.chatChannel) {
+		return;
+	}
+
 	// Don't care if these fail, best effort.
-	if (rtc.audioClient) {
-		try {
-			await rtc.audioClient.unsubscribe(user.audioChatUser, 'audio');
-		} catch (e) {
-			rtc.logWarning(
-				'Failed to unsbuscribe to mic audio. Most of the times this is not an error. We attempt to unsubscribe even when we know the user should normally be unsubscribed.'
-			);
-		}
+	try {
+		await rtc.chatChannel.agoraClient.unsubscribe(user.audioChatUser, 'audio');
+	} catch (e) {
+		rtc.logWarning(
+			'Failed to unsubscribe to mic audio. Most of the times this is not an error. We attempt to unsubscribe even when we know the user should normally be unsubscribed.'
+		);
 	}
 }
 

@@ -1,8 +1,15 @@
-import AgoraRTC, { IAgoraRTCClient, IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng';
+import AgoraRTC, { IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng';
 import { arrayRemove } from '../../../utils/array';
 import { debounce, sleep } from '../../../utils/utils';
 import { Navigate } from '../../navigate/navigate.service';
 import { User } from '../../user/user.model';
+import {
+	createFiresideRTCChannel,
+	destroyChannel,
+	FiresideRTCChannel,
+	joinChannel,
+	setChannelToken,
+} from './channel';
 import {
 	FiresideRTCUser,
 	FiresideVideoPlayStateStopped,
@@ -14,12 +21,38 @@ import {
 	updateVolumeLevel,
 } from './user';
 
+export const FiresideRTCKey = Symbol('fireside-rtc');
+
+/**
+ * @deprecated replace with the CancelToken
+ */
+class GenerationToken {
+	isRetired = false;
+
+	/**
+	 * Will retire this token and return a new one.
+	 */
+	retire() {
+		this.isRetired = true;
+		return new GenerationToken();
+	}
+
+	/**
+	 * Will throw if this token is retired.
+	 */
+	assert() {
+		if (this.isRetired) {
+			throw new Error('Outdated Fireside RTC detected.');
+		}
+	}
+}
+
 export class FiresideRTC {
-	generation = 0;
+	generation = new GenerationToken();
 
 	readonly users: FiresideRTCUser[] = [];
-	videoClient: IAgoraRTCClient | null = null;
-	audioClient: IAgoraRTCClient | null = null;
+	videoChannel: FiresideRTCChannel | null = null;
+	chatChannel: FiresideRTCChannel | null = null;
 	videoPaused = false;
 	focusedUserId: number | null = null;
 	volumeLevelInterval: NodeJS.Timer | null = null;
@@ -32,10 +65,10 @@ export class FiresideRTC {
 	constructor(
 		public readonly userId: number,
 		public readonly appId: string,
-		public readonly videoChannel: string,
+		public readonly videoChannelName: string,
 		public videoToken: string | null,
-		public readonly audioChatChannel: string,
-		public audioChatToken: string | null,
+		public readonly chatChannelName: string,
+		public chatToken: string | null,
 		public readonly hosts: User[]
 	) {
 		_setup(this);
@@ -68,18 +101,13 @@ export class FiresideRTC {
 	get focusedUser() {
 		return this.users.find(remoteUser => remoteUser.userId === this.focusedUserId) || null;
 	}
-
-	public assertNotOutdated(myGeneration: number) {
-		if (myGeneration !== this.generation) {
-			throw new Error('Outdated Fireside RTC generation detected');
-		}
-	}
 }
 
 export async function destroyFiresideRTC(rtc: FiresideRTC) {
 	rtc.log('Trace(destroy)');
 
-	rtc.generation++;
+	// Don't assign a new one so that we stay in a retired state.
+	rtc.generation.retire();
 
 	try {
 		await Promise.all(
@@ -96,10 +124,12 @@ export async function destroyFiresideRTC(rtc: FiresideRTC) {
 		rtc.logWarning(e);
 	}
 
+	const { videoChannel, chatChannel } = rtc;
+
 	try {
 		await Promise.all([
-			rtc.videoClient ? rtc.videoClient.leave() : Promise.resolve(),
-			rtc.audioClient ? rtc.audioClient.leave() : Promise.resolve(),
+			videoChannel ? destroyChannel(videoChannel) : Promise.resolve(),
+			chatChannel ? destroyChannel(chatChannel) : Promise.resolve(),
 		]);
 	} catch (e) {
 		// reload the page, anything we do now is no longer reliable.
@@ -107,16 +137,13 @@ export async function destroyFiresideRTC(rtc: FiresideRTC) {
 		return;
 	}
 
-	rtc.videoClient?.removeAllListeners();
-	rtc.audioClient?.removeAllListeners();
-
 	if (rtc.volumeLevelInterval !== null) {
 		clearInterval(rtc.volumeLevelInterval);
 		rtc.volumeLevelInterval = null;
 	}
 
-	rtc.videoClient = null;
-	rtc.audioClient = null;
+	rtc.videoChannel = null;
+	rtc.chatChannel = null;
 	rtc.focusedUserId = null;
 	rtc.hosts.splice(0);
 }
@@ -134,21 +161,22 @@ export async function renewFiresideRTCToken(
 ) {
 	rtc.log('Trace(renewToken)');
 
-	if (!rtc.videoClient || !rtc.audioClient) {
-		throw new Error('Video or audio clients are not defined');
+	if (!rtc.videoChannel || !rtc.chatChannel) {
+		throw new Error('Video or chat channels are not defined');
 	}
 
 	rtc.log('Renewing audience tokens');
 	rtc.videoToken = videoToken;
-	rtc.audioChatToken = audioChatToken;
+	rtc.chatToken = audioChatToken;
 
-	if (!rtc.videoToken || !rtc.audioChatToken) {
+	if (!rtc.videoToken || !rtc.chatToken) {
 		rtc.logWarning('Could not get tokens. The stream likely ended.');
 		return;
 	}
 
-	const isVideoDisconnected = rtc.videoClient.connectionState === 'DISCONNECTED';
-	const isAudioDisconnected = rtc.audioClient.connectionState === 'DISCONNECTED';
+	const isVideoDisconnected = rtc.videoChannel.isDisconnected;
+	const isAudioDisconnected = rtc.chatChannel.isDisconnected;
+
 	// If only one of the clients is fully disconnected, just nuke em both and retry.
 	if (isVideoDisconnected !== isAudioDisconnected) {
 		rtc.logError(
@@ -164,8 +192,8 @@ export async function renewFiresideRTCToken(
 	} else {
 		rtc.log('Got new audience tokens. Applying by renewing...');
 		await Promise.all([
-			rtc.videoClient.renewToken(rtc.videoToken),
-			rtc.audioClient.renewToken(rtc.audioChatToken),
+			setChannelToken(rtc.videoChannel, rtc.videoToken),
+			setChannelToken(rtc.chatChannel, rtc.chatToken),
 		]);
 	}
 }
@@ -173,11 +201,10 @@ export async function renewFiresideRTCToken(
 async function _setup(rtc: FiresideRTC) {
 	rtc.log('Trace(setup)');
 
-	rtc.generation++;
-	const currentGen = rtc.generation;
+	const gen = rtc.generation.retire();
+	rtc.generation = gen;
 
 	_createClients(rtc);
-	_setupEvents(rtc);
 
 	for (let i = 0; i < 5; i++) {
 		try {
@@ -187,7 +214,7 @@ async function _setup(rtc: FiresideRTC) {
 			rtc.logError('Failed to join');
 			rtc.logError(e);
 			await sleep(2000);
-			rtc.assertNotOutdated(currentGen);
+			gen.assert();
 			rtc.log('Retrying...');
 		}
 	}
@@ -224,172 +251,150 @@ function _finalizeSetup(rtc: FiresideRTC) {
 function _createClients(rtc: FiresideRTC) {
 	rtc.log('Trace(createClients)');
 
-	(AgoraRTC as any).setParameter('AUDIO_SOURCE_VOLUME_UPDATE_INTERVAL', 100);
-
-	rtc.videoClient = AgoraRTC.createClient({ mode: 'live', codec: 'vp8' });
-	rtc.audioClient = AgoraRTC.createClient({ mode: 'live', codec: 'vp8' });
-
+	(AgoraRTC as any)?.setParameter('AUDIO_SOURCE_VOLUME_UPDATE_INTERVAL', 100);
 	rtc.volumeLevelInterval = setInterval(() => _updateVolumeLevels(rtc), 100);
-}
 
-function _setupEvents(rtc: FiresideRTC) {
-	rtc.log('Trace(setupEvents)');
-	const currentGeneration = rtc.generation;
-	if (!rtc.videoClient || !rtc.audioClient) {
-		throw new Error('Video or audio clients are not defined');
-	}
+	rtc.videoChannel = createFiresideRTCChannel(rtc, rtc.videoChannelName, rtc.videoToken!, {
+		onTrackPublish(remoteUser, mediaType) {
+			rtc.log('Got user published (video channel)');
 
-	rtc.videoClient.on('user-published', (remoteUser, mediaType) => {
-		rtc.assertNotOutdated(currentGeneration);
-		rtc.log('Got user published (video channel)');
+			// To test the lower quality stream
+			// rtc.videoClient!.setRemoteVideoStreamType(remoteUser.uid, 1);
 
-		// To test the lower quality stream
-		// rtc.videoClient!.setRemoteVideoStreamType(remoteUser.uid, 1);
+			const { user, wasAdded } = _findOrAddUser(rtc, remoteUser);
+			if (!user) {
+				rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
+				return;
+			}
 
-		const { user, wasAdded } = _findOrAddUser(rtc, remoteUser);
-		if (!user) {
-			rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
-			return;
-		}
+			user.videoUser = remoteUser;
 
-		user.videoUser = remoteUser;
+			if (mediaType === 'video') {
+				user.hasVideo = true;
+			} else {
+				user.hasDesktopAudio = true;
+			}
 
-		if (mediaType === 'video') {
-			user.hasVideo = true;
-		} else {
-			user.hasDesktopAudio = true;
-		}
+			if (wasAdded) {
+				_userJoined(rtc, user);
+			}
+			_finalizeSetup(rtc);
+		},
+		onTrackUnpublish(remoteUser, mediaType) {
+			rtc.log('Got user unpublished (video channel)');
 
-		if (wasAdded) {
-			_userJoined(rtc, user);
-		}
-		_finalizeSetup(rtc);
-	});
+			const user = rtc.users.find(i => i.userId === remoteUser.uid);
+			if (!user) {
+				rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
+				return;
+			}
 
-	rtc.videoClient.on('user-unpublished', (remoteUser, mediaType) => {
-		rtc.assertNotOutdated(currentGeneration);
-		rtc.log('Got user unpublished (video channel)');
+			if (mediaType === 'video') {
+				setVideoPlayback(user, new FiresideVideoPlayStateStopped());
+				user.hasVideo = false;
+			} else {
+				user.hasDesktopAudio = false;
+			}
 
-		const user = rtc.users.find(i => i.userId === remoteUser.uid);
-		if (!user) {
-			rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
-			return;
-		}
+			_chooseFocusedUser(rtc);
+		},
+		onUserLeave(remoteUser) {
+			rtc.log('Got user left (video channel)');
 
-		if (mediaType === 'video') {
+			const user = rtc.users.find(i => i.userId === remoteUser.uid);
+			if (!user) {
+				rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
+				return;
+			}
+
+			// TODO: this will probably error out because it'll fail to "properly"
+			// unsubscribe from the track.
 			setVideoPlayback(user, new FiresideVideoPlayStateStopped());
+
+			stopDesktopAudioPlayback(user);
+			user.videoUser = null;
 			user.hasVideo = false;
-		} else {
 			user.hasDesktopAudio = false;
-		}
 
-		_chooseFocusedUser(rtc);
+			_removeUserIfNeeded(rtc, user);
+			_chooseFocusedUser(rtc);
+		},
 	});
 
-	rtc.videoClient.on('user-left', remoteUser => {
-		rtc.assertNotOutdated(currentGeneration);
-		rtc.log('Got user left (video channel)');
+	rtc.chatChannel = createFiresideRTCChannel(rtc, rtc.chatChannelName, rtc.chatToken!, {
+		onTrackPublish(remoteUser, mediaType) {
+			rtc.log('got user published (audio chat channel)');
 
-		const user = rtc.users.find(i => i.userId === remoteUser.uid);
-		if (!user) {
-			rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
-			return;
-		}
+			if (mediaType !== 'audio') {
+				rtc.logWarning('Unexpected media type: ' + mediaType + '. Ignoring');
+				return;
+			}
 
-		// TODO: this will probably error out because it'll fail to "properly"
-		// unsubscribe from the track.
-		setVideoPlayback(user, new FiresideVideoPlayStateStopped());
+			const { user, wasAdded } = _findOrAddUser(rtc, remoteUser);
+			if (!user) {
+				rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
+				return;
+			}
 
-		stopDesktopAudioPlayback(user);
-		user.videoUser = null;
-		user.hasVideo = false;
-		user.hasDesktopAudio = false;
+			user.audioChatUser = remoteUser;
+			user.hasMicAudio = true;
 
-		_removeUserIfNeeded(rtc, user);
-		_chooseFocusedUser(rtc);
-	});
+			if (!user.micAudioMuted) {
+				startAudioPlayback(user);
+			}
 
-	rtc.audioClient.on('user-published', (remoteUser, mediaType) => {
-		rtc.assertNotOutdated(currentGeneration);
-		rtc.log('got user published (audio chat channel)');
+			if (wasAdded) {
+				_userJoined(rtc, user);
+			}
+			_finalizeSetup(rtc);
+		},
+		onTrackUnpublish(remoteUser, mediaType) {
+			rtc.log('Got user unpublished (audio channel)');
 
-		if (mediaType !== 'audio') {
-			rtc.logWarning('Unexpected media type: ' + mediaType + '. Ignoring');
-			return;
-		}
+			// This should never trigger.
+			if (mediaType !== 'audio') {
+				rtc.logWarning('Unexpected media type: ' + mediaType + '. Ignoring');
+				return;
+			}
 
-		const { user, wasAdded } = _findOrAddUser(rtc, remoteUser);
-		if (!user) {
-			rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
-			return;
-		}
+			const user = rtc.users.find(i => i.userId === remoteUser.uid);
+			if (!user) {
+				rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
+				return;
+			}
 
-		user.audioChatUser = remoteUser;
-		user.hasMicAudio = true;
+			stopAudioPlayback(user);
+			user.hasMicAudio = false;
 
-		if (!user.micAudioMuted) {
-			startAudioPlayback(user);
-		}
+			_chooseFocusedUser(rtc);
+		},
+		onUserLeave(remoteUser) {
+			rtc.log('Got user left (audio channel)');
 
-		if (wasAdded) {
-			_userJoined(rtc, user);
-		}
-		_finalizeSetup(rtc);
-	});
+			const user = rtc.users.find(i => i.userId === remoteUser.uid);
+			if (!user) {
+				rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
+				return;
+			}
 
-	rtc.audioClient.on('user-unpublished', (remoteUser, mediaType) => {
-		rtc.assertNotOutdated(currentGeneration);
-		rtc.log('Got user unpublished (audio channel)');
+			stopAudioPlayback(user);
+			user.audioChatUser = null;
+			user.hasMicAudio = false;
 
-		// This should never trigger.
-		if (mediaType !== 'audio') {
-			rtc.logWarning('Unexpected media type: ' + mediaType + '. Ignoring');
-			return;
-		}
-
-		const user = rtc.users.find(i => i.userId === remoteUser.uid);
-		if (!user) {
-			rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
-			return;
-		}
-
-		stopAudioPlayback(user);
-		user.hasMicAudio = false;
-
-		_chooseFocusedUser(rtc);
-	});
-
-	rtc.audioClient.on('user-left', remoteUser => {
-		rtc.assertNotOutdated(currentGeneration);
-		rtc.log('Got user left (audio channel)');
-
-		const user = rtc.users.find(i => i.userId === remoteUser.uid);
-		if (!user) {
-			rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
-			return;
-		}
-
-		stopAudioPlayback(user);
-		user.audioChatUser = null;
-		user.hasMicAudio = false;
-
-		_removeUserIfNeeded(rtc, user);
-		_chooseFocusedUser(rtc);
+			_removeUserIfNeeded(rtc, user);
+			_chooseFocusedUser(rtc);
+		},
 	});
 }
 
 async function _join(rtc: FiresideRTC) {
 	rtc.log('Trace(join)');
-	const currentGeneration = rtc.generation;
 
-	if (!rtc.videoClient || !rtc.audioClient) {
-		throw new Error('Video or audio clients are not defined');
+	if (!rtc.videoChannel || !rtc.chatChannel) {
+		throw new Error('Video or audio channels are not defined');
 	}
 
-	const videoClient = rtc.videoClient;
-	const audioClient = rtc.audioClient;
-
-	if (!rtc.videoToken || !rtc.audioChatToken) {
+	if (!rtc.videoToken || !rtc.chatToken) {
 		rtc.log('Audience tokens not provided yet. Not attempting to join');
 		return;
 	}
@@ -397,14 +402,8 @@ async function _join(rtc: FiresideRTC) {
 	// We set ourselves up as an audience member with the "low latency" level,
 	// instead of the ultra low latency which is used for hosts.
 	await Promise.all([
-		rtc.videoClient.setClientRole('audience', { level: 1 }).then(() => {
-			rtc.assertNotOutdated(currentGeneration);
-			return videoClient.join(rtc.appId, rtc.videoChannel, rtc.videoToken, null);
-		}),
-		rtc.audioClient.setClientRole('audience', { level: 1 }).then(() => {
-			rtc.assertNotOutdated(currentGeneration);
-			return audioClient.join(rtc.appId, rtc.audioChatChannel, rtc.audioChatToken, null);
-		}),
+		joinChannel(rtc.videoChannel, rtc.appId, 'audience', rtc.videoToken),
+		joinChannel(rtc.chatChannel, rtc.appId, 'audience', rtc.chatToken),
 	]);
 }
 

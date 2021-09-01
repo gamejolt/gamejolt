@@ -213,7 +213,7 @@ export default class RouteFireside extends BaseRouteComponent {
 		const wrapperHeight = videoWrapper.offsetHeight;
 		const wrapperRatio = wrapperWidth / wrapperHeight;
 
-		const videoStats = this.c?.rtc?.videoClient?.getRemoteVideoStats();
+		const videoStats = this.c?.rtc?.videoChannel?.agoraClient?.getRemoteVideoStats();
 		const receiveWidth = videoStats?.receiveResolutionWidth?.receiveResolutionWidth ?? 16;
 		const receiveHeight = videoStats?.receiveResolutionHeight?.receiveResolutionHeight ?? 9;
 		const receiveRatio = receiveWidth / receiveHeight;
