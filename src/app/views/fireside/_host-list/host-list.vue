@@ -4,7 +4,6 @@
 	<app-scroll-scroller v-if="c.rtc" class="-fireside-hosts" horizontal>
 		<div class="-fireside-hosts-inner">
 			<app-fireside-stream-options
-				:host-rtc="c.hostRtc"
 				@show-popper="emitShowPopper"
 				@hide-popper="emitHidePopper"
 			/>

@@ -3,6 +3,7 @@ import { Component, Emit, InjectReactive, Prop } from 'vue-property-decorator';
 import { FiresideRTCUser, setAudioPlayback } from '../../../../_common/fireside/rtc/user';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import { FiresideController, FiresideControllerKey } from '../controller/controller';
 import AppFiresideVideo from '../_video/video.vue';
@@ -14,6 +15,7 @@ import AppFiresideHostThumbIndicator from './host-thumb-indicator.vue';
 		AppFiresideHostThumbIndicator,
 		AppPopper,
 		AppFiresideVideo,
+		AppUserCardHover,
 	},
 	directives: {
 		AppTooltip,
@@ -57,5 +59,13 @@ export default class AppFiresideHostThumb extends Vue {
 
 	unmute() {
 		setAudioPlayback(this.host, true);
+	}
+
+	onUserCardShow() {
+		this.c.isShowingOverlayPopper = true;
+	}
+
+	onUserCardHide() {
+		this.c.isShowingOverlayPopper = false;
 	}
 }
