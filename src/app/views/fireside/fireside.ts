@@ -20,7 +20,7 @@ import AppScrollScroller from '../../../_common/scroll/scroller/scroller.vue';
 import { AppState, AppStore } from '../../../_common/store/app-store';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../_common/user/user-avatar/img/img.vue';
-import { ChatClient, ChatKey } from '../../components/chat/client';
+import { ChatStore, ChatStoreKey } from '../../components/chat/chat-store';
 import AppChatWindowOutput from '../../components/chat/window/output/output.vue';
 import AppChatWindowSend from '../../components/chat/window/send/send.vue';
 import { store } from '../../store';
@@ -86,7 +86,8 @@ const FiresideThemeKey = 'fireside';
 })
 export default class RouteFireside extends BaseRouteComponent {
 	@AppState user!: AppStore['user'];
-	@InjectReactive(ChatKey) chat!: ChatClient;
+
+	@InjectReactive(ChatStoreKey) chatStore!: ChatStore;
 
 	c: FiresideController | null = null;
 
@@ -121,7 +122,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	get chatMessages() {
-		if (!this.c?.chatRoom) {
+		if (!this.chat || !this.c?.chatRoom) {
 			return [];
 		}
 
@@ -129,7 +130,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	get chatQueuedMessages() {
-		if (!this.c?.chatRoom) {
+		if (!this.chat || !this.c?.chatRoom) {
 			return [];
 		}
 

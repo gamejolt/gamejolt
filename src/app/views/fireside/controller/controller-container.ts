@@ -1,7 +1,8 @@
 import Vue, { CreateElement } from 'vue';
 import { Component, InjectReactive, Prop, ProvideReactive } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import { Action, State } from 'vuex-class';
 import { sleep } from '../../../../utils/utils';
+import { uuidv4 } from '../../../../utils/uuid';
 import { Api } from '../../../../_common/api/api.service';
 import { getCookie } from '../../../../_common/cookie/cookie.service';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
@@ -18,11 +19,11 @@ import {
 import { Growls } from '../../../../_common/growls/growls.service';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { User } from '../../../../_common/user/user.model';
+import { ChatStore, ChatStoreKey, clearChat, loadChat } from '../../../components/chat/chat-store';
 import {
-	ChatClient,
-	ChatKey,
 	joinInstancedRoomChannel,
 	leaveChatRoom,
+	setGuestChatToken,
 } from '../../../components/chat/client';
 import { EVENT_UPDATE, FiresideChannel } from '../../../components/grid/fireside-channel';
 import { Store } from '../../../store';
@@ -31,10 +32,6 @@ import { createFiresideController, FiresideController, FiresideControllerKey } f
 
 @Component({})
 export default class AppFiresideContainer extends Vue {
-	@AppState user!: AppStore['user'];
-	@State grid!: Store['grid'];
-	@InjectReactive(ChatKey) chat!: ChatClient;
-
 	@Prop({ type: FiresideController, required: false })
 	controller?: FiresideController;
 
@@ -44,11 +41,22 @@ export default class AppFiresideContainer extends Vue {
 	@Prop({ type: String, required: false })
 	streamingAppId?: string;
 
+	@AppState user!: AppStore['user'];
+	@State grid!: Store['grid'];
+	@Action loadGrid!: Store['loadGrid'];
+
+	@InjectReactive(ChatStoreKey)
+	chatStore!: ChatStore;
+
 	_controller: FiresideController | null = null;
 
 	@ProvideReactive(FiresideControllerKey)
 	get activeController() {
-		return this.controller ?? this._controller;
+		return this.controller ?? this._controller!;
+	}
+
+	get chat() {
+		return this.chatStore.chat;
 	}
 
 	created() {
@@ -84,23 +92,21 @@ export default class AppFiresideContainer extends Vue {
 
 		c.hasExpiryWarning = false;
 
-		const userCanJoin = await this.checkUserCanJoin();
-
-		if (!userCanJoin) {
-			c.status = 'unauthorized';
-			console.debug(
-				`[FIRESIDE] User is not authorized to join the Fireside (not logged in/no cookie).`
-			);
-			return;
-		}
-
-		if (c.fireside?.blocked) {
+		if (c.fireside.blocked) {
 			c.status = 'blocked';
 			console.debug(`[Fireside] Blocked from joining blocked user's Fireside.`);
 			return;
 		}
 
-		if (c.fireside?.isOpen()) {
+		if (c.fireside.isOpen()) {
+			if (!this.grid) {
+				this.loadGrid();
+			}
+
+			if (!this.chat) {
+				loadChat(this.chatStore);
+			}
+
 			// Set up watchers to initiate connection once one of them boots up.
 			this.$watch('chat.connected', () => this.watchChat());
 			this.$watch('grid.connected', () => this.watchGrid());
@@ -115,13 +121,19 @@ export default class AppFiresideContainer extends Vue {
 
 	destroyed() {
 		this.disconnect();
+		this.grid?.unsetGuestToken();
+
+		if (this.chat?.isGuest) {
+			clearChat(this.chatStore);
+		}
+
 		// This also happens in Disconnect, but make 100% sure we cleared the interval.
 		this.clearExpiryCheck();
 	}
 
 	watchChat() {
 		const c = this.activeController!;
-		if (this.chat.connected) {
+		if (this.chat?.connected) {
 			this.tryJoin();
 		}
 		// Only disconnect when not connected and it previous registered a different state.
@@ -132,12 +144,12 @@ export default class AppFiresideContainer extends Vue {
 		}
 
 		c.chat = this.chat;
-		c.chatPreviousConnectedState = this.chat.connected;
+		c.chatPreviousConnectedState = this.chat?.connected === true;
 	}
 
 	watchGrid() {
 		const c = this.activeController!;
-		if (this.grid && this.grid.connected) {
+		if (this.grid?.connected) {
 			this.tryJoin();
 		}
 		// Only disconnect when not connected and it previous registered a different state.
@@ -147,37 +159,44 @@ export default class AppFiresideContainer extends Vue {
 			this.disconnect();
 		}
 
-		// c.grid = this.grid;
 		c.gridPreviousConnectedState = this.grid?.connected ?? null;
-	}
-
-	private async checkUserCanJoin() {
-		if (!this.user) {
-			return false;
-		}
-
-		const frontendCookie = await getCookie('frontend');
-
-		if (!frontendCookie) {
-			return false;
-		}
-
-		return true;
 	}
 
 	private async tryJoin() {
 		const c = this.activeController!;
+
 		// Only try to join when disconnected (or for the first "initial" load).
 		if (c.status === 'disconnected' || c.status === 'initial') {
 			c.status = 'loading';
 
 			// Make sure the services are connected.
-			while (!this.grid || !this.grid.connected) {
+			while (!this.grid?.connected) {
 				console.debug('[FIRESIDE] Wait for Grid...');
+
+				if (this.grid && !this.user && !this.grid.isGuest) {
+					console.info('[FIRESIDE] Enabling guest access to grid');
+					const authToken = await this.getAuthToken();
+					if (!authToken) {
+						throw new Error('Could not fetch guest token. This should be impossible');
+					}
+					await this.grid.setGuestToken(authToken);
+				}
+
 				await sleep(250);
 			}
-			while (!this.chat || !this.chat.connected) {
+
+			while (!this.chat?.connected) {
 				console.debug('[FIRESIDE] Wait for Chat...');
+
+				if (this.chat && !this.user && !this.chat.isGuest) {
+					console.info('[FIRESIDE] Enabling guest access to chat');
+					const authToken = await this.getAuthToken();
+					if (!authToken) {
+						throw new Error('Could not fetch guest token. This should be impossible');
+					}
+					await setGuestChatToken(this.chat, authToken);
+				}
+
 				await sleep(250);
 			}
 
@@ -190,12 +209,6 @@ export default class AppFiresideContainer extends Vue {
 		const c = this.activeController!;
 
 		// --- Make sure common join conditions are met.
-
-		if (!this.user) {
-			console.debug(`[FIRESIDE] User is not logged in.`);
-			c.status = 'unauthorized';
-			return;
-		}
 
 		if (
 			!c.fireside ||
@@ -210,8 +223,8 @@ export default class AppFiresideContainer extends Vue {
 			return;
 		}
 
-		const frontendCookie = await getCookie('frontend');
-		if (!frontendCookie) {
+		const authToken = await this.getAuthToken();
+		if (!authToken) {
 			console.debug(`[FIRESIDE] Setup failure 1.`);
 			c.status = 'setup-failed';
 			return;
@@ -253,33 +266,30 @@ export default class AppFiresideContainer extends Vue {
 
 		// --- Make them join the Fireside (if they aren't already).
 
-		if (!c.fireside.role) {
-			const rolePayload = await Api.sendRequest(`/web/fireside/join/${c.fireside.hash}`);
-			if (!rolePayload || !rolePayload.success || !rolePayload.role) {
-				console.debug(`[FIRESIDE] Failed to acquire a role.`);
-				c.status = 'setup-failed';
-				return;
+		if (this.user) {
+			if (!c.fireside.role) {
+				const rolePayload = await Api.sendRequest(`/web/fireside/join/${c.fireside.hash}`);
+				if (!rolePayload || !rolePayload.success || !rolePayload.role) {
+					console.debug(`[FIRESIDE] Failed to acquire a role.`);
+					c.status = 'setup-failed';
+					return;
+				}
+				c.fireside.role = new FiresideRole(rolePayload.role);
 			}
-			c.fireside.role = new FiresideRole(rolePayload.role);
-		}
 
-		if (c.streamingAppId && c.fireside?.role.canStream) {
-			c.hostRtc = createFiresideHostRTC(
-				c.streamingAppId,
-				this.user.id,
-				c.fireside.id,
-				c.fireside.role
-			);
+			if (c.streamingAppId && c.fireside?.role.canStream) {
+				c.hostRtc = createFiresideHostRTC(
+					c.streamingAppId,
+					this.user.id,
+					c.fireside.id,
+					c.fireside.role
+				);
+			}
 		}
 
 		// --- Join Grid channel.
 
-		const channel = new FiresideChannel(
-			c.fireside,
-			this.grid.socket,
-			this.user,
-			frontendCookie
-		);
+		const channel = new FiresideChannel(c.fireside, this.grid.socket, this.user, authToken);
 
 		// Subscribe to the update event.
 		channel.on(EVENT_UPDATE, this.onGridUpdateFireside.bind(this));
@@ -323,7 +333,7 @@ export default class AppFiresideContainer extends Vue {
 		}
 
 		c.chatChannel.on('kick_member', (data: any) => {
-			if (data.user_id === this.user!.id) {
+			if (this.user && data.user_id === this.user.id) {
 				Growls.info(this.$gettext(`You've been kicked from the Fireside.`));
 				this.$router.push({ name: 'home' });
 			}
@@ -344,6 +354,20 @@ export default class AppFiresideContainer extends Vue {
 		this.clearExpiryCheck();
 		c.expiryInterval = setInterval(this.expiryCheck.bind(this), 1000);
 		this.expiryCheck();
+	}
+
+	private async getAuthToken() {
+		if (this.user) {
+			return await getCookie('frontend');
+		}
+
+		let token = sessionStorage.getItem('fireside-token');
+		if (!token) {
+			token = uuidv4();
+			sessionStorage.setItem('fireside-token', token);
+		}
+
+		return token;
 	}
 
 	private disconnect() {
@@ -384,7 +408,7 @@ export default class AppFiresideContainer extends Vue {
 
 	private clearExpiryCheck() {
 		const c = this.activeController;
-		if (c?.expiryInterval) {
+		if (c.expiryInterval) {
 			clearInterval(c.expiryInterval);
 			c.expiryInterval = null;
 		}
@@ -407,7 +431,7 @@ export default class AppFiresideContainer extends Vue {
 
 	private createOrUpdateRtc(payload: any, checkJoined = true) {
 		const c = this.activeController;
-		if (!c || !this.user || !c.fireside || (checkJoined && c.status !== 'joined')) {
+		if (!c || !c.fireside || (checkJoined && c.status !== 'joined')) {
 			return;
 		}
 
@@ -415,7 +439,7 @@ export default class AppFiresideContainer extends Vue {
 
 		if (c.rtc === null) {
 			c.rtc = new FiresideRTC(
-				this.user.id,
+				this.user?.id ?? null,
 				payload.streamingAppId,
 				payload.videoChannelName,
 				payload.videoToken,
@@ -431,7 +455,7 @@ export default class AppFiresideContainer extends Vue {
 
 	private destroyRtc() {
 		const c = this.activeController;
-		if (!c?.rtc) {
+		if (!c.rtc) {
 			return;
 		}
 
@@ -447,7 +471,7 @@ export default class AppFiresideContainer extends Vue {
 
 	onGridUpdateFireside(payload: any) {
 		const c = this.activeController;
-		if (!c?.fireside || !payload.fireside) {
+		if (!c.fireside || !payload.fireside) {
 			return;
 		}
 

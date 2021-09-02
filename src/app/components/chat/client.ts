@@ -167,7 +167,7 @@ function reset(chat: ChatClient) {
 	chat.cancelToken = new CancelToken();
 }
 
-export async function setGuestToken(chat: ChatClient, guestToken: string) {
+export async function setGuestChatToken(chat: ChatClient, guestToken: string) {
 	const tokenChanged = chat.guestToken !== guestToken;
 	chat.guestToken = guestToken;
 
@@ -177,7 +177,7 @@ export async function setGuestToken(chat: ChatClient, guestToken: string) {
 	}
 }
 
-export async function unsetGuestToken(chat: ChatClient) {
+export async function unsetGuestChatToken(chat: ChatClient) {
 	chat.guestToken = null;
 
 	if (chat.isGuest) {
