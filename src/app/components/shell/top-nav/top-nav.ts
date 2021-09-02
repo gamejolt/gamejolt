@@ -12,7 +12,7 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../store/index';
-import { ChatClient, ChatKey } from '../../chat/client';
+import { ChatStore, ChatStoreKey } from '../../chat/chat-store';
 import AppSearch from '../../search/search.vue';
 
 const components: any = {
@@ -39,7 +39,7 @@ if (GJ_IS_CLIENT) {
 	},
 })
 export default class AppShellTopNav extends Vue {
-	@InjectReactive(ChatKey) chat!: ChatClient;
+	@InjectReactive(ChatStoreKey) chatStore!: ChatStore;
 
 	@State app!: Store['app'];
 
@@ -64,6 +64,10 @@ export default class AppShellTopNav extends Vue {
 	readonly Connection = Connection;
 	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
 	readonly trackAppPromotionClick = trackAppPromotionClick;
+
+	get chat() {
+		return this.chatStore.chat!;
+	}
 
 	get isTimedOut() {
 		return this.app.isUserTimedOut;

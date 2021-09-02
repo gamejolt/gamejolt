@@ -17,14 +17,8 @@ import { FormValidatorContentNoMediaUpload } from '../../../../../../_common/for
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppShortkey from '../../../../../../_common/shortkey/shortkey.vue';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
-import {
-	ChatClient,
-	ChatKey,
-	setMessageEditing,
-	startTyping,
-	stopTyping,
-	tryGetRoomRole,
-} from '../../../client';
+import { ChatStore, ChatStoreKey } from '../../../chat-store';
+import { setMessageEditing, startTyping, stopTyping, tryGetRoomRole } from '../../../client';
 import { ChatMessage, CHAT_MESSAGE_MAX_CONTENT_LENGTH } from '../../../message';
 import { ChatRoom } from '../../../room';
 
@@ -45,7 +39,7 @@ export type FormModel = {
 	},
 })
 export default class AppChatWindowSendForm extends BaseForm<FormModel> {
-	@InjectReactive(ChatKey) chat!: ChatClient;
+	@InjectReactive(ChatStoreKey) chatStore!: ChatStore;
 	@Prop(propRequired(Boolean)) singleLineMode!: boolean;
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 
@@ -72,14 +66,18 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	@Emit('cancel') emitCancel() {}
 	@Emit('single-line-mode-change') emitSingleLineModeChange(_singleLine: boolean) {}
 
+	get chat() {
+		return this.chatStore.chat!;
+	}
+
 	get contentEditorTempResourceContextData() {
-		if (this.chat && this.room) {
+		if (this.chatStore.chat && this.room) {
 			return { roomId: this.room.id };
 		}
 	}
 
 	get placeholder() {
-		if (this.chat && this.room) {
+		if (this.chatStore.chat && this.room) {
 			if (this.room.isPmRoom && this.room.user) {
 				return this.$gettextInterpolate('Message @%{ username }', {
 					username: this.room.user.username,

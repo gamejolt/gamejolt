@@ -104,6 +104,10 @@ export default class RouteFireside extends BaseRouteComponent {
 		videoWrapper: HTMLDivElement;
 	};
 
+	get chat() {
+		return this.chatStore.chat;
+	}
+
 	get fireside() {
 		return this.c?.fireside;
 	}

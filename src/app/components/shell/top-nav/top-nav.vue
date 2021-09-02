@@ -15,7 +15,7 @@
 				>
 					<app-jolticon icon="menu" />
 					<div
-						v-if="chat && chat.roomNotificationsCount > 0"
+						v-if="chatStore.chat && chat.roomNotificationsCount > 0"
 						class="-notification-chat notification-tag tag tag-highlight"
 					>
 						{{ chat.roomNotificationsCount }}

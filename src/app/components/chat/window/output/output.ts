@@ -12,7 +12,8 @@ import {
 	EventBus,
 	EventBusDeregister,
 } from '../../../../../_common/system/event/event-bus.service';
-import { ChatClient, ChatKey, ChatNewMessageEvent, loadOlderChatMessages } from '../../client';
+import { ChatStore, ChatStoreKey } from '../../chat-store';
+import { ChatNewMessageEvent, loadOlderChatMessages } from '../../client';
 import { ChatMessage, TIMEOUT_CONSIDER_QUEUED } from '../../message';
 import { ChatRoom } from '../../room';
 import AppChatWindowOutputItem from './item/item.vue';
@@ -36,7 +37,7 @@ export default class AppChatWindowOutput extends Vue {
 	@Prop(propRequired(Array)) messages!: ChatMessage[];
 	@Prop(propRequired(Array)) queuedMessages!: ChatMessage[];
 
-	@InjectReactive(ChatKey) chat!: ChatClient;
+	@InjectReactive(ChatStoreKey) chatStore!: ChatStore;
 
 	@AppState user!: AppStore['user'];
 
@@ -54,6 +55,10 @@ export default class AppChatWindowOutput extends Vue {
 	$refs!: {
 		scroller: AppScrollScrollerTS;
 	};
+
+	get chat() {
+		return this.chatStore.chat!;
+	}
 
 	get allMessages() {
 		return this.messages.concat(this.queuedMessages);
