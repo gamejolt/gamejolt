@@ -1,6 +1,7 @@
 import Vue, { CreateElement } from 'vue';
 import { Component, InjectReactive, Prop, ProvideReactive } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
+import { objectPick } from '../../../../utils/object';
 import { sleep } from '../../../../utils/utils';
 import { uuidv4 } from '../../../../utils/uuid';
 import { Api } from '../../../../_common/api/api.service';
@@ -475,7 +476,21 @@ export default class AppFiresideContainer extends Vue {
 			return;
 		}
 
-		c.fireside.assign(payload.fireside);
+		const updated = new Fireside(payload.fireside);
+		Object.assign(
+			c.fireside,
+			objectPick(updated, [
+				'user',
+				'header_media_item',
+				'title',
+				'expires_on',
+				'is_expired',
+				'is_streaming',
+				'is_draft',
+				'member_count',
+			])
+		);
+
 		this.expiryCheck();
 
 		if (c.fireside.is_streaming && payload.streaming_info) {
