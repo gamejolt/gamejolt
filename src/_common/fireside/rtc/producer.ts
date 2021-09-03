@@ -1,13 +1,22 @@
 import { AgoraStreamingClient } from '../../agora/agora-streaming-client';
 import { MediaDeviceService } from '../../agora/media-device.service';
 import { Api } from '../../api/api.service';
-import { FiresideRole } from '../role/role.model';
 import { Growls } from '../../growls/growls.service';
 import { Navigate } from '../../navigate/navigate.service';
+import {
+	SettingStreamProducerDesktopAudio,
+	SettingStreamProducerGroupAudio,
+	SettingStreamProducerMic,
+	SettingStreamProducerWebcam,
+} from '../../settings/settings.service';
 import { Translate } from '../../translate/translate.service';
+import { FiresideRole } from '../role/role.model';
 
 const RENEW_TOKEN_CHECK_INTERVAL = 10_000;
 const RENEW_TOKEN_INTERVAL = 60_000;
+
+export const PRODUCER_UNSET_DEVICE = 'unset';
+export const PRODUCER_DEFAULT_GROUP_AUDIO = 'default';
 
 export class FiresideRTCProducer {
 	_appId = '';
@@ -19,7 +28,7 @@ export class FiresideRTCProducer {
 	_selectedWebcamDeviceId = '';
 	_selectedMicDeviceId = '';
 	_selectedDesktopAudioDeviceId = '';
-	_selectedGroupAudioDeviceId = 'default';
+	_selectedGroupAudioDeviceId = '';
 	_isStreaming = false;
 
 	_videoPreviewElement: HTMLDivElement | null = null;
@@ -109,6 +118,96 @@ export function createFiresideHostRTC(
 	);
 
 	return rtc;
+}
+
+export function assignPreferredProducerDevices(rtc: FiresideRTCProducer) {
+	const { webcams, mics, speakers } = MediaDeviceService;
+
+	const selectedWebcam = SettingStreamProducerWebcam.get();
+	const selectedMic = SettingStreamProducerMic.get();
+	const selectedDesktop = SettingStreamProducerDesktopAudio.get();
+	const selectedGroup = SettingStreamProducerGroupAudio.get();
+
+	const isWebcamUnset = selectedWebcam === PRODUCER_UNSET_DEVICE;
+	const isMicUnset = selectedMic === PRODUCER_UNSET_DEVICE;
+	const isDesktopUnset = selectedDesktop === PRODUCER_UNSET_DEVICE;
+	const isGroupUnset = selectedGroup === PRODUCER_UNSET_DEVICE;
+
+	let preferredWebcam: MediaDeviceInfo | null = null;
+	let preferredMic: MediaDeviceInfo | null = null;
+	let preferredDesktop: MediaDeviceInfo | null = null;
+	let preferredGroup: MediaDeviceInfo | null = null;
+	let fallbackWebcam: MediaDeviceInfo | null = null;
+	let fallbackMic: MediaDeviceInfo | null = null;
+	let fallbackDesktop: MediaDeviceInfo | null = null;
+	let fallbackGroup: MediaDeviceInfo | null = null;
+
+	for (const device of webcams) {
+		if (isWebcamUnset) {
+			break;
+		}
+
+		if (device.deviceId === selectedWebcam) {
+			preferredWebcam = device;
+			break;
+		}
+
+		const label = device.label.toLowerCase();
+		if (!fallbackWebcam && label.includes('obs virtual camera')) {
+			fallbackWebcam = device;
+		} else if (!fallbackWebcam && label.includes('obs')) {
+			fallbackWebcam = device;
+		}
+	}
+
+	for (const device of mics) {
+		if (!isMicUnset && device.deviceId === selectedMic) {
+			preferredMic = device;
+		} else if (!isDesktopUnset && device.deviceId === selectedDesktop) {
+			preferredDesktop = device;
+		}
+
+		if ((preferredMic || isMicUnset) && (preferredDesktop || isDesktopUnset)) {
+			break;
+		}
+
+		const label = device.label.toLowerCase();
+		if (!isMicUnset && !fallbackMic && label.includes('default')) {
+			fallbackMic = device;
+		} else if (!isDesktopUnset && !fallbackDesktop && label.includes('voicemeeter output')) {
+			fallbackDesktop = device;
+		}
+	}
+
+	for (const device of speakers) {
+		if (isGroupUnset) {
+			break;
+		}
+
+		if (device.deviceId === selectedGroup) {
+			preferredGroup = device;
+			break;
+		}
+
+		const label = device.label.toLowerCase();
+		if (!fallbackGroup && label.includes('voicemeeter aux input')) {
+			fallbackGroup = device;
+		}
+	}
+
+	setSelectedWebcamDeviceId(
+		rtc,
+		(preferredWebcam ?? fallbackWebcam)?.deviceId ?? PRODUCER_UNSET_DEVICE
+	);
+	setSelectedMicDeviceId(rtc, (preferredMic ?? fallbackMic)?.deviceId ?? PRODUCER_UNSET_DEVICE);
+	setSelectedDesktopAudioDeviceId(
+		rtc,
+		(preferredDesktop ?? fallbackDesktop)?.deviceId ?? PRODUCER_UNSET_DEVICE
+	);
+	setSelectedGroupAudioDeviceId(
+		rtc,
+		(preferredGroup ?? fallbackGroup)?.deviceId ?? PRODUCER_DEFAULT_GROUP_AUDIO
+	);
 }
 
 export function destroyFiresideHostRTC(rtc: FiresideRTCProducer) {
@@ -262,47 +361,92 @@ function _doBusyWork<T>(rtc: FiresideRTCProducer, work: () => Promise<T>) {
 	return p;
 }
 
-export function setSelectedWebcamDeviceId(rtc: FiresideRTCProducer, newWebcamDeviceId: string) {
+export function setSelectedWebcamDeviceId(
+	rtc: FiresideRTCProducer,
+	newWebcamDeviceId: string,
+	savePref = true
+) {
 	const videoDeviceChanged = newWebcamDeviceId !== rtc._selectedWebcamDeviceId;
 	rtc._selectedWebcamDeviceId = newWebcamDeviceId;
+
+	if (MediaDeviceService.webcams.length > 0 && savePref) {
+		// Only assign the device setting when we actually have devices.
+		SettingStreamProducerWebcam.set(newWebcamDeviceId);
+	}
 
 	if (videoDeviceChanged) {
 		_updateWebcamDevice(rtc);
 	}
 }
 
-export function setSelectedMicDeviceId(rtc: FiresideRTCProducer, newMicId: string) {
+export function setSelectedMicDeviceId(
+	rtc: FiresideRTCProducer,
+	newMicId: string,
+	savePref = true
+) {
 	const micChanged = newMicId !== rtc._selectedMicDeviceId;
 	rtc._selectedMicDeviceId = newMicId;
+
+	if (MediaDeviceService.mics.length > 0 && savePref) {
+		// Only assign the device setting when we actually have devices.
+		SettingStreamProducerMic.set(newMicId);
+	}
 
 	if (micChanged) {
 		_updateMicDevice(rtc);
 	}
 }
 
-export function setSelectedDesktopAudioDeviceId(rtc: FiresideRTCProducer, newSpeakerId: string) {
+export function setSelectedDesktopAudioDeviceId(
+	rtc: FiresideRTCProducer,
+	newSpeakerId: string,
+	savePref = true
+) {
 	const speakerChanged = newSpeakerId !== rtc._selectedDesktopAudioDeviceId;
 	rtc._selectedDesktopAudioDeviceId = newSpeakerId;
+
+	if (MediaDeviceService.mics.length > 0 && savePref) {
+		// Only assign the device setting when we actually have devices.
+		SettingStreamProducerDesktopAudio.set(newSpeakerId);
+	}
 
 	if (speakerChanged) {
 		_updateDesktopAudioDevice(rtc);
 	}
 }
 
-export function setSelectedGroupAudioDeviceId(rtc: FiresideRTCProducer, newSpeakerId: string) {
+export function setSelectedGroupAudioDeviceId(
+	rtc: FiresideRTCProducer,
+	newSpeakerId: string,
+	savePref = true
+) {
 	const speakerChanged = newSpeakerId !== rtc._selectedGroupAudioDeviceId;
 	rtc._selectedGroupAudioDeviceId = newSpeakerId;
+
+	if (MediaDeviceService.speakers.length > 0 && savePref) {
+		// Only assign the device setting when we actually have devices.
+		SettingStreamProducerGroupAudio.set(newSpeakerId);
+	}
 
 	if (speakerChanged) {
 		_updateGroupAudioDevice(rtc);
 	}
 }
 
+export function clearSelectedRecordingDevices(rtc: FiresideRTCProducer) {
+	setSelectedWebcamDeviceId(rtc, PRODUCER_UNSET_DEVICE, false);
+	setSelectedMicDeviceId(rtc, PRODUCER_UNSET_DEVICE, false);
+	setSelectedDesktopAudioDeviceId(rtc, PRODUCER_UNSET_DEVICE, false);
+}
+
 function _updateWebcamDevice(rtc: FiresideRTCProducer) {
 	return _doBusyWork(rtc, async () => {
 		let deviceId: string | null;
 
-		if (rtc._selectedWebcamDeviceId === '') {
+		if (
+			rtc._selectedWebcamDeviceId === '' ||
+			rtc._selectedWebcamDeviceId === PRODUCER_UNSET_DEVICE
+		) {
 			deviceId = null;
 		} else {
 			const deviceExists = !!MediaDeviceService.webcams.find(
@@ -322,7 +466,7 @@ function _updateMicDevice(rtc: FiresideRTCProducer) {
 	return _doBusyWork(rtc, async () => {
 		let deviceId: string | null;
 
-		if (rtc._selectedMicDeviceId === '') {
+		if (rtc._selectedMicDeviceId === '' || rtc._selectedMicDeviceId === PRODUCER_UNSET_DEVICE) {
 			deviceId = null;
 		} else {
 			const deviceExists = !!MediaDeviceService.mics.find(
@@ -339,7 +483,10 @@ function _updateDesktopAudioDevice(rtc: FiresideRTCProducer) {
 	return _doBusyWork(rtc, async () => {
 		let deviceId: string | null;
 
-		if (rtc._selectedDesktopAudioDeviceId === '') {
+		if (
+			rtc._selectedDesktopAudioDeviceId === '' ||
+			rtc._selectedDesktopAudioDeviceId === PRODUCER_UNSET_DEVICE
+		) {
 			deviceId = null;
 		} else {
 			const deviceExists = !!MediaDeviceService.mics.find(
@@ -359,7 +506,7 @@ function _updateGroupAudioDevice(rtc: FiresideRTCProducer) {
 		);
 
 		const deviceId = deviceExists ? rtc._selectedGroupAudioDeviceId : null;
-		return rtc._chatClient?.setSpeakerDevice(deviceId ?? 'default');
+		return rtc._chatClient?.setSpeakerDevice(deviceId ?? PRODUCER_DEFAULT_GROUP_AUDIO);
 	});
 }
 
@@ -496,6 +643,8 @@ async function _stopStreaming(rtc: FiresideRTCProducer, becomeBusy: boolean) {
 				currentVideoClient.stopStream().then(() => currentVideoClient.leaveChannel()),
 				currentChatClient.stopStream().then(() => currentChatClient.leaveChannel()),
 			]);
+
+			clearSelectedRecordingDevices(rtc);
 		} catch (err) {
 			console.error(err);
 			console.error('Failed to stop one or more agora channels. Force reloading...');
