@@ -29,7 +29,12 @@ import {
 import { EVENT_UPDATE, FiresideChannel } from '../../../components/grid/fireside-channel';
 import { Store } from '../../../store';
 import { StreamSetupModal } from '../_stream-setup/stream-setup-modal.service';
-import { createFiresideController, FiresideController, FiresideControllerKey } from './controller';
+import {
+	createFiresideController,
+	FiresideController,
+	FiresideControllerKey,
+	updateFiresideExpiryValues,
+} from './controller';
 
 @Component({})
 export default class AppFiresideContainer extends Vue {
@@ -99,6 +104,9 @@ export default class AppFiresideContainer extends Vue {
 			return;
 		}
 
+		this.setupExpiryInfoInterval();
+		updateFiresideExpiryValues(c);
+
 		if (c.fireside.isOpen()) {
 			if (!this.grid) {
 				this.loadGrid();
@@ -121,6 +129,9 @@ export default class AppFiresideContainer extends Vue {
 	}
 
 	destroyed() {
+		this.activeController!.onRetry = this.onRetry;
+
+		this.destroyExpiryInfoInterval();
 		this.disconnect();
 		this.grid?.unsetGuestToken();
 
@@ -378,7 +389,6 @@ export default class AppFiresideContainer extends Vue {
 		}
 
 		console.debug(`[FIRESIDE] Disconnecting from Fireside.`);
-
 		c.status = 'disconnected';
 
 		if (c.hostRtc) {
@@ -397,11 +407,8 @@ export default class AppFiresideContainer extends Vue {
 		}
 
 		c.chatChannel = null;
-
 		StreamSetupModal.close();
-
 		this.destroyRtc();
-
 		this.clearExpiryCheck();
 
 		console.debug(`[FIRESIDE] Disconnected from Fireside.`);
@@ -428,6 +435,20 @@ export default class AppFiresideContainer extends Vue {
 
 		// Shows an expiry warning on the stats icon (on mobile) when < 60 seconds remain.
 		c.hasExpiryWarning = c.fireside.getExpiryInMs() < 60_000;
+	}
+
+	private destroyExpiryInfoInterval() {
+		const c = this.activeController;
+		if (c.updateInterval) {
+			clearInterval(c.updateInterval);
+			c.updateInterval = null;
+		}
+	}
+
+	private setupExpiryInfoInterval() {
+		const c = this.activeController;
+		this.destroyExpiryInfoInterval();
+		c.updateInterval = setInterval(() => updateFiresideExpiryValues(c), 1000);
 	}
 
 	private createOrUpdateRtc(payload: any, checkJoined = true) {

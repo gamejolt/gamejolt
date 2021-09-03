@@ -1,11 +1,15 @@
 import VueRouter from 'vue-router';
 import { getAbsoluteLink } from '../../../../utils/router';
+import { Api } from '../../../../_common/api/api.service';
+import { duration } from '../../../../_common/filters/duration';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresideRTCProducer } from '../../../../_common/fireside/rtc/producer';
 import { FiresideRTC } from '../../../../_common/fireside/rtc/rtc';
+import { Growls } from '../../../../_common/growls/growls.service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../../_common/share/share.service';
 import { appStore } from '../../../../_common/store/app-store';
+import { Translate } from '../../../../_common/translate/translate.service';
 import { ChatClient } from '../../../components/chat/client';
 import { ChatRoomChannel } from '../../../components/chat/room-channel';
 import { FiresideChannel } from '../../../components/grid/fireside-channel';
@@ -48,8 +52,24 @@ export class FiresideController {
 	isShowingStreamOverlay = false;
 	isShowingOverlayPopper = false;
 
+	updateInterval: NodeJS.Timer | null = null;
+	totalDurationText: string | null = null;
+	expiresDurationText: string | null = null;
+	expiresProgressValue: number | null = null;
+
 	get user() {
 		return appStore.state.user;
+	}
+
+	get chatRoom() {
+		return this.chatChannel?.room;
+	}
+
+	get chatUsers() {
+		if (!this.chatRoom) {
+			return undefined;
+		}
+		return this.chat?.roomMembers[this.chatRoom.id];
 	}
 
 	get isDraft() {
@@ -74,15 +94,28 @@ export class FiresideController {
 		);
 	}
 
-	get chatRoom() {
-		return this.chatChannel?.room;
+	get canManage() {
+		if (!this.fireside) {
+			return false;
+		}
+
+		return (
+			(this.user && this.user.id === this.fireside.user.id) ||
+			this.fireside.community?.hasPerms('community-firesides')
+		);
 	}
 
-	get chatUsers() {
-		if (!this.chatRoom) {
-			return undefined;
-		}
-		return this.chat?.roomMembers[this.chatRoom.id];
+	get canPublish() {
+		return this.canManage && this.status === 'joined' && this.isDraft;
+	}
+
+	get canExtend() {
+		return (
+			this.canManage &&
+			this.status === 'joined' &&
+			this.expiresProgressValue !== null &&
+			this.expiresProgressValue <= 95
+		);
 	}
 }
 
@@ -119,4 +152,63 @@ export function showFiresideMembers(c: FiresideController) {
 
 export function toggleStreamVideoStats(c: FiresideController) {
 	c.rtc!.shouldShowVideoStats = !(c.rtc?.shouldShowVideoStats ?? true);
+}
+
+export async function publishFireside(c: FiresideController) {
+	if (!c || !c.fireside || c.status !== 'joined' || !c.isDraft) {
+		return;
+	}
+
+	await c.fireside.$publish();
+	Growls.success(Translate.$gettext(`Your Fireside is live!`));
+}
+
+export async function extendFireside(c: FiresideController) {
+	if (!c || c.status !== 'joined' || !c.canExtend || !c.fireside) {
+		return;
+	}
+
+	const payload = await Api.sendRequest(
+		`/web/dash/fireside/extend/${c.fireside.hash}`,
+		{},
+		{
+			detach: true,
+		}
+	);
+	if (payload.success && payload.extended) {
+		c.fireside.expires_on = payload.expiresOn;
+		updateFiresideExpiryValues(c);
+	} else {
+		Growls.info(
+			Translate.$gettext(
+				`Settle down there. Wait a couple seconds before playing with the fire again.`
+			)
+		);
+	}
+}
+
+export function updateFiresideExpiryValues(c: FiresideController) {
+	if (!c.fireside) {
+		return;
+	}
+
+	c.totalDurationText = duration((Date.now() - c.fireside.added_on) / 1000);
+
+	if (c.fireside.expires_on > Date.now()) {
+		const expiresInS = c.fireside.getExpiryInMs() / 1000;
+
+		if (expiresInS > 60) {
+			c.expiresDurationText = null;
+		} else {
+			c.expiresDurationText = duration(expiresInS);
+		}
+
+		if (expiresInS > 300) {
+			c.expiresProgressValue = null;
+		} else {
+			c.expiresProgressValue = (expiresInS / 300) * 100;
+		}
+	} else {
+		c.expiresDurationText = null;
+	}
 }
