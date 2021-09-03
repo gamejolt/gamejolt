@@ -11,6 +11,7 @@ const FeaturedTags = [
 	'adventure',
 	'fangame',
 	'fnaf',
+	'fnf',
 	'rpg',
 	'other',
 	'multiplayer',
