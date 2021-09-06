@@ -77,7 +77,7 @@ export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent 
 		}
 
 		await this.community.$remove();
-		await this.leaveCommunityAction(this.community);
+		await this.leaveCommunityAction({ community: this.community, shouldConfirm: false });
 
 		Growls.info(
 			this.$gettext(`Your community has been removed from the site.`),
@@ -101,7 +101,7 @@ export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent 
 		}
 
 		await this.collaborator.$remove();
-		await this.leaveCommunityAction(this.community);
+		await this.leaveCommunityAction({ community: this.community, shouldConfirm: false });
 
 		Growls.success(
 			this.$gettext(`You left the community. You will be missed! ;A;`),
