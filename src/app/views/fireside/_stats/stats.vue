@@ -38,13 +38,9 @@
 					<translate>Publish</translate>
 				</app-button>
 				<p class="help-block">
-					<translate v-if="fireside && !fireside.community">
-						Your Fireside is current in draft. Only you can view it. Publish it to let
+					<translate>
+						Your Fireside is currently in draft. Only you can view it. Publish it to let
 						everyone join!
-					</translate>
-					<translate v-else>
-						Your Fireside is currently in draft. Only you and the community
-						collaborators can view it. Publish it to let everyone join!
 					</translate>
 				</p>
 			</template>

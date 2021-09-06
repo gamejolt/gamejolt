@@ -9,7 +9,6 @@ import { ActivityFeedService } from '../../../../components/activity/feed/feed-s
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import AppCommunitySidebar from '../../../../components/community/sidebar/sidebar.vue';
 import AppFiresideBadgeAdd from '../../../../components/fireside/badge/add/add.vue';
-import AppFiresideBadge from '../../../../components/fireside/badge/badge.vue';
 import { Store } from '../../../../store/index';
 import { CommunitiesViewChannelDeps } from '../channel/channel';
 import {
@@ -29,7 +28,6 @@ import AppCommunitiesViewPageContainer from '../_page-container/page-container.v
 		AppCommunitiesViewPageContainer,
 		AppCommunitySidebar,
 		AppCommunitiesViewFeed,
-		AppFiresideBadge,
 		AppFiresideBadgeAdd,
 	},
 })
@@ -50,7 +48,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	feed: ActivityFeedView | null = null;
 	finishedLoading = false;
-	fireside: Fireside | null = null;
+	userFireside: Fireside | null = null;
 
 	get community() {
 		return this.routeStore.community;
@@ -92,7 +90,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	get canCreateFireside() {
-		return !this.fireside && this.community.hasPerms('community-firesides');
+		return !this.userFireside && this.community.allow_firesides;
 	}
 
 	@Watch('communityState.hasUnreadFeaturedPosts', { immediate: true })
@@ -129,7 +127,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		}
 
 		if ($payload.fireside) {
-			this.fireside = new Fireside($payload.fireside);
+			this.userFireside = new Fireside($payload.userFireside);
 		}
 	}
 

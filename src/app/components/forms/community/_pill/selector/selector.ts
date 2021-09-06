@@ -23,12 +23,15 @@ import { AppScrollHelper } from './scroll-helper/scroll-helper';
 		AppTooltip,
 	},
 })
-export default class AppFormPostCommunityPillSelector extends Vue {
+export default class AppFormsCommunityPillSelector extends Vue {
 	@Prop(propRequired(Array))
 	communities!: Community[];
 
 	@Prop(propOptional(Community, null))
 	initialCommunity!: Community | null;
+
+	@Prop(propOptional(Boolean, true))
+	withChannel!: boolean;
 
 	selectedCommunity: Community | null = null;
 
@@ -42,6 +45,10 @@ export default class AppFormPostCommunityPillSelector extends Vue {
 
 	get isInitial() {
 		return this.selectedCommunity === this.initialCommunity;
+	}
+
+	get shouldShowCommunitySelector() {
+		return !this.selectedCommunity || !this.withChannel;
 	}
 
 	created() {
@@ -59,6 +66,10 @@ export default class AppFormPostCommunityPillSelector extends Vue {
 	selectCommunity(community: Community) {
 		this.selectedCommunity = community;
 		this.emitSelectCommunity(community);
+
+		if (!this.withChannel) {
+			Popper.hideAll();
+		}
 	}
 
 	selectChannel(channel: CommunityChannel) {

@@ -13,8 +13,9 @@ import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue'
 import AppShareCard from '../../../../_common/share/card/card.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { RouteStatus } from '../fireside';
+import { FiresidePublishModal } from '../../../components/fireside/publish-modal/publish-modal.service';
 import { FiresideController, FiresideControllerKey } from '../controller';
+import { RouteStatus } from '../fireside';
 import AppFiresideShare from './_share/share.vue';
 
 @Component({
@@ -151,6 +152,11 @@ export default class AppFiresideStats extends Vue {
 
 	async onClickPublish() {
 		if (this.status !== 'joined' || !this.isDraft || !this.fireside) {
+			return;
+		}
+
+		const result = await FiresidePublishModal.show({ fireside: this.fireside });
+		if (!result || !result.doPublish) {
 			return;
 		}
 

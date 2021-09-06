@@ -5,7 +5,7 @@
 		<slot />
 
 		<a
-			v-if="selectedCommunity"
+			v-if="selectedCommunity && withChannel"
 			slot="header"
 			class="-community-item -selected list-group-item"
 			:class="{ '-initial': isInitial }"
@@ -23,7 +23,7 @@
 
 		<div slot="popover" class="-container">
 			<app-scroll-helper :when="!!selectedCommunity" />
-			<div v-if="!selectedCommunity" class="-communities list-group">
+			<div v-if="shouldShowCommunitySelector" class="-communities list-group">
 				<a
 					v-for="community of communities"
 					:key="community.id"

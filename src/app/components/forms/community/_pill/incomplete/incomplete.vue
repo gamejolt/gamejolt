@@ -1,5 +1,7 @@
+<script lang="ts" src="./incomplete"></script>
+
 <template>
-	<app-form-post-community-pill-selector
+	<app-forms-community-pill-selector
 		:communities="communities"
 		:initial-community="community"
 		@select="emitAdd"
@@ -12,16 +14,16 @@
 				<app-community-verified-tick class="-tick" :community="community" small />
 			</template>
 
-			<span class="-channel" slot="right">
+			<span slot="right" class="-channel">
 				<translate>Select Channel</translate>
 			</span>
 		</app-pill-bi>
-	</app-form-post-community-pill-selector>
+	</app-forms-community-pill-selector>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '../variables.styl'
+@import '~styles/variables'
+@import '../variables.styl'
 
 .-pill
 	height: $pill-height
@@ -42,7 +44,4 @@
 
 .-tick
 	margin-left: 5px
-
 </style>
-
-<script lang="ts" src="./incomplete"></script>

@@ -25,8 +25,7 @@
 
 		<app-communities-view-page-container>
 			<template #default>
-				<app-fireside-badge v-if="fireside" :fireside="fireside" />
-				<app-fireside-badge-add v-else-if="canCreateFireside" :community="community" />
+				<app-fireside-badge-add v-if="canCreateFireside" :community="community" />
 
 				<app-communities-view-feed
 					:feed="feed"

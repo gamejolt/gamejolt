@@ -16,7 +16,7 @@
 					</small>
 					<br />
 					<template v-if="isCommunity">
-						<translate>Start this community's Fireside!</translate>
+						<translate>Start your Fireside in this community!</translate>
 					</template>
 					<template v-else>
 						<translate>Start your Fireside!</translate>

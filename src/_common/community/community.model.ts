@@ -18,6 +18,7 @@ export class Community extends Collaboratable(Model) {
 	description_content!: string;
 	is_verified!: boolean;
 	has_archived_channels!: boolean | null;
+	allow_firesides!: boolean;
 
 	thumbnail?: MediaItem;
 	header?: MediaItem;
