@@ -5,6 +5,7 @@ import { trackUserFollow, UserFollowLocation } from '../../analytics/analytics.s
 import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { number } from '../../filters/number';
 import { Growls } from '../../growls/growls.service';
+import { ModalConfirm } from '../../modal/confirm/confirm-service';
 import { AppStore } from '../../store/app-store';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 import { followUser, unfollowUser, User } from '../user.model';
@@ -95,6 +96,15 @@ export default class AppUserFollowWidget extends Vue {
 			}
 		} else {
 			try {
+				const result = await ModalConfirm.show(
+					this.$gettext(`Are you sure you want to unfollow this user?`),
+					this.$gettext(`Unfollow user?`)
+				);
+
+				if (!result) {
+					return;
+				}
+
 				await unfollowUser(this.user);
 				this.emitUnfollow();
 			} catch (e) {
