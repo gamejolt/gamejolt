@@ -120,19 +120,24 @@ export class FiresideController {
 	}
 
 	/**
-	 * Checks browsers that are incabible of broadcasting. Should suggest
-	 * known-working browser instead of displaying stream-setup form.
+	 * Contains a block-list of browsers/clients that can't broadcast.
+	 *
+	 * Should suggest known-working browser instead of displaying stream-setup
+	 * form.
 	 */
 	get canBrowserStream() {
-		return !(GJ_IS_CLIENT || this.isFirefox || this.isSafari || this.isOpera);
+		return !(GJ_IS_CLIENT || this.isFirefox || this.isSafari);
 	}
 
 	/**
-	 *  When we should suggest a different browser, but not necessarily block
-	 *  them from browsing.
+	 * Contains a block-list of browsers/clients that have issues viewing
+	 * broadcasts.
+	 *
+	 * When we should suggest a different browser, but not necessarily block
+	 * them from browsing.
 	 */
 	get shouldNotViewStreams() {
-		return this.isFirefox || GJ_IS_CLIENT;
+		return GJ_IS_CLIENT || this.isFirefox;
 	}
 
 	private get browser() {
@@ -147,11 +152,6 @@ export class FiresideController {
 	// Can't broadcast - incapable of dual streams
 	private get isSafari() {
 		return this.browser.indexOf('safari') !== -1;
-	}
-
-	// Can't broadcast - incapable of getting device permissions
-	private get isOpera() {
-		return this.browser.indexOf('opera') !== -1 || this.browser.indexOf('opr') !== -1;
 	}
 }
 

@@ -53,7 +53,7 @@ export default class AppFiresideBanner extends Vue {
 			const url = getFiresideLink(this.c, this.$router);
 
 			if (url) {
-				Navigate.gotoExternal(url);
+				Navigate.newWindow(url);
 			}
 		}
 	}
