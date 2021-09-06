@@ -1,4 +1,4 @@
-import { VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
+import { buildUseStore, VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
 import { Api } from '../../_common/api/api.service';
 import { Game } from '../../_common/game/game.model';
 import { MediaItem } from '../../_common/media-item/media-item-model';
@@ -56,3 +56,4 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 }
 
 export const store = new Store();
+export const useStore = buildUseStore<Store>();

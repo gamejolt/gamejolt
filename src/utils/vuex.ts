@@ -1,3 +1,4 @@
+import { InjectionKey } from 'vue';
 import Vuex, {
 	CommitOptions,
 	createStore,
@@ -7,7 +8,20 @@ import Vuex, {
 	Payload,
 	Store,
 	StoreOptions,
+	useStore,
 } from 'vuex';
+
+export const StoreKey: InjectionKey<any> = Symbol();
+
+/**
+ * Returns a function that can be used for any store as the "useStore" function.
+ * Basically a wrapper around the real [useStore] function in order to properly
+ * type it.
+ */
+export function buildUseStore<T>() {
+	// This is the crazy syntax to force to T.
+	return () => useStore(StoreKey) as unknown as T;
+}
 
 // Override dispatch and commit so that we can have them typed with the real mutations/actions.
 interface VuexDispatch<P> {

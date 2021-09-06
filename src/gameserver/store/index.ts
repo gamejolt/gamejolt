@@ -1,5 +1,5 @@
 import { parse } from 'qs';
-import { VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
+import { buildUseStore, VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
 import { Api } from '../../_common/api/api.service';
 import { Environment } from '../../_common/environment/environment.service';
 import { GameBuild } from '../../_common/game/build/build.model';
@@ -119,3 +119,4 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 }
 
 export const store = new Store();
+export const useStore = buildUseStore<Store>();

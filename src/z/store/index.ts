@@ -1,4 +1,4 @@
-import { VuexModule, VuexStore } from '../../utils/vuex';
+import { buildUseStore, VuexModule, VuexStore } from '../../utils/vuex';
 import {
 	Actions as AppActions,
 	AppStore,
@@ -21,3 +21,4 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 }
 
 export const store = new Store();
+export const useStore = buildUseStore<Store>();

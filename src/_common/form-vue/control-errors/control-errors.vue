@@ -1,16 +1,17 @@
 <script lang="ts">
-import { inject, provide, reactive } from 'vue';
+import { computed, inject, provide, reactive } from 'vue';
+import { number } from '../../filters/number';
+import { useForm } from '../form.service';
+import { useFormControlGroup } from '../group/group.vue';
 
-interface Controller {
-	errorMessageOverrides: Record<string, string>;
-}
+type Controller = ReturnType<typeof provideFormControlErrors>;
 
 const Key = Symbol();
 
 export function provideFormControlErrors() {
 	const c = reactive({
-		errorMessageOverrides: {},
-	}) as Controller;
+		errorMessageOverrides: {} as Record<string, string>,
+	});
 
 	provide(Key, c);
 	return c;
@@ -26,11 +27,6 @@ export function setControlErrorsOverride(c: Controller, when: string, message: s
 </script>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
-import { number } from '../../filters/number';
-import { useForm } from '../form.service';
-import { useFormControlGroup } from '../group/group.vue';
-
 const props = defineProps({
 	label: {
 		type: String,

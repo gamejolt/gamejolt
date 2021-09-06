@@ -1,22 +1,18 @@
 <script lang="ts">
-import { inject, provide, reactive } from 'vue';
+import { computed, inject, provide, reactive } from 'vue';
 import { titleCase } from '../../../utils/string';
+import { FormControlController } from '../control/controller';
+import { useForm } from '../form.service';
 
-interface Controller {
-	inputErrors: ErrorBag | null;
-	changed: boolean;
-	readonly name: string;
-	readonly label: string | undefined;
-	readonly humanLabel: string;
-	control: FormControlController | undefined;
-}
+type Controller = ReturnType<typeof provideFormControlGroup>;
 
 const Key = Symbol();
 
 export function provideFormControlGroup() {
 	const c = reactive({
-		inputErrors: null,
+		inputErrors: null, // TODO: Proper type
 		changed: false,
+		control: undefined as FormControlController | undefined,
 		get name() {
 			return props.name;
 		},
@@ -35,7 +31,7 @@ export function provideFormControlGroup() {
 				  })
 				: this.label;
 		},
-	}) as Controller;
+	});
 
 	provide(Key, c);
 	return c;
@@ -47,10 +43,6 @@ export function useFormControlGroup() {
 </script>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
-import { FormControlController } from '../control/controller';
-import { useForm } from '../form.service';
-
 const props = defineProps({
 	name: {
 		type: String,

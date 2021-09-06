@@ -10,7 +10,7 @@ import { AdAdapterBase } from './adapter-base';
 import { AdPlaywireAdapter } from './playwire/playwire-adapter';
 import { AdProperAdapter } from './proper/proper-adapter';
 
-export const AdsControllerKey = Symbol('ads-controller');
+export const AdsControllerKey = Symbol();
 
 // To show ads on the page for dev, just change this to false.
 export const AdsDisabledDev = GJ_BUILD_TYPE === 'development';

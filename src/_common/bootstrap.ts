@@ -2,7 +2,7 @@ import { Component, createApp } from 'vue';
 import { Router } from 'vue-router';
 import { hijackLinks } from '../utils/router';
 import { bootstrapAppTranslations } from '../utils/translations';
-import { VuexStore } from '../utils/vuex';
+import { StoreKey, VuexStore } from '../utils/vuex';
 import { initAnalytics, initAnalyticsRouter } from './analytics/analytics.service';
 import { AppTrackEvent } from './analytics/track-event.directive';
 import AppButton from './button/button.vue';
@@ -56,7 +56,7 @@ export function bootstrapCommon(appComponent: Component, store: VuexStore, route
 
 	bootstrapAppTranslations(app);
 
-	app.use(store);
+	app.use(store, StoreKey);
 	if (router) {
 		app.use(router);
 	}

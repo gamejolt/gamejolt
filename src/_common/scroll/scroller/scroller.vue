@@ -1,4 +1,10 @@
 <script lang="ts">
+import { darken, lighten } from 'polished';
+import { computed, inject, onMounted, PropType, provide, reactive, ref } from 'vue';
+import { GrayLight, GraySubtle, Theme } from '../../theme/theme.model';
+import { useThemeStore } from '../../theme/theme.store';
+import AppScrollInviewParent from '../inview/parent.vue';
+
 export type ScrollController = ReturnType<typeof createScroller>;
 
 const Key = Symbol();
@@ -21,11 +27,6 @@ export function useScroller() {
 </script>
 
 <script lang="ts" setup>
-import { darken, lighten } from 'polished';
-import { computed, inject, onMounted, PropType, provide, reactive, ref } from 'vue';
-import { GrayLight, GraySubtle, Theme } from '../../theme/theme.model';
-import AppScrollInviewParent from '../inview/parent.vue';
-
 const props = defineProps({
 	controller: {
 		type: Object as PropType<ScrollController>,
@@ -42,15 +43,17 @@ const props = defineProps({
 	},
 });
 
+const themeStore = useThemeStore();
+
 // TODO(vue3): can we make this reactive so that it updates what is provided
 // down if the controller given changes somehow?
 provide(Key, props.controller);
 
 const isMounted = ref(GJ_IS_SSR);
 
-// TODO(vue3): this needs to use store to get their theme
 const actualTheme = computed(() => {
-	return defaultTheme;
+	// Use the form/page/user theme, or the default theme if none exist.
+	return themeStore.theme ?? defaultTheme;
 });
 
 const hoverColors = computed<any>(() => ({
@@ -61,44 +64,6 @@ const hoverColors = computed<any>(() => ({
 onMounted(() => {
 	isMounted.value = true;
 });
-
-// @Options({
-// 	components: {
-// 		AppScrollInviewParent,
-// 	},
-// })
-// export default class AppScrollScroller extends Vue {
-// 	@Prop(propOptional(Boolean, false)) thin!: boolean;
-// 	@Prop(propOptional(Boolean, false)) horizontal!: boolean;
-// 	@Prop(propOptional(Boolean, false)) hideScrollbar!: boolean;
-
-// 	@ThemeState
-// 	theme?: ThemeStore['theme'];
-
-// 	isMounted = GJ_IS_SSR;
-// 	scrollElement: HTMLElement | null = null;
-
-// 	get actualTheme() {
-// 		// Use the form/page/user theme, or the default theme if none exist.
-// 		return this.theme || new Theme(null);
-// 	}
-
-// 	get hoverColors() {
-// 		return {
-// 			'--default-hover': `#${this.actualTheme.tintColor(darken(0.2, GrayLight), 0.04)}`,
-// 			'--modal-hover': `#${this.actualTheme.tintColor(lighten(0.15, GraySubtle), 0.04)}`,
-// 		};
-// 	}
-
-// 	mounted() {
-// 		this.scrollElement = this.$el as HTMLElement;
-// 		this.isMounted = true;
-// 	}
-
-// 	scrollTo(offsetY: number) {
-// 		this.$el.scrollTo({ top: offsetY });
-// 	}
-// }
 </script>
 
 <template>

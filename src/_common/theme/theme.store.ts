@@ -1,13 +1,16 @@
+import { useStore } from 'vuex';
 import { namespace } from 'vuex-class';
 import { arrayRemove } from '../../utils/array';
-import { VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
+import { StoreKey, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
 import { appStore } from '../store/app-store';
 import { Theme } from './theme.model';
 
 export const ThemeStoreNamespace = 'theme';
-export const { State: ThemeState, Action: ThemeAction, Mutation: ThemeMutation } = namespace(
-	ThemeStoreNamespace
-);
+export const {
+	State: ThemeState,
+	Action: ThemeAction,
+	Mutation: ThemeMutation,
+} = namespace(ThemeStoreNamespace);
 
 export type ThemeActions = {};
 
@@ -20,6 +23,8 @@ export type ThemeMutations = {
 	'theme/clearPageTheme': string;
 	'theme/setFormTheme': Theme | null;
 };
+
+export const useThemeStore = () => useStore(StoreKey).state.theme as ThemeStore;
 
 interface PageTheme {
 	key: string;
