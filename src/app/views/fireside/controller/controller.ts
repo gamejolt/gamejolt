@@ -58,6 +58,8 @@ export class FiresideController {
 	expiresDurationText: string | null = null;
 	expiresProgressValue: number | null = null;
 
+	_isExtending = false;
+
 	get user() {
 		return appStore.state.user;
 	}
@@ -234,6 +236,13 @@ export function updateFiresideExpiryValues(c: FiresideController) {
 		const expiresInS = c.fireside.getExpiryInMs() / 1000;
 
 		c.hasExpiryWarning = expiresInS < FIRESIDE_EXPIRY_THRESHOLD;
+
+		// Automatically extend for them if we're in a draft and get within 15
+		// seconds of the expiry warning threshold.
+		if (c.isDraft && !c._isExtending && expiresInS < FIRESIDE_EXPIRY_THRESHOLD + 15) {
+			c._isExtending = true;
+			extendFireside(c).finally(() => (c._isExtending = false));
+		}
 
 		if (expiresInS > FIRESIDE_EXPIRY_THRESHOLD) {
 			c.expiresDurationText = null;
