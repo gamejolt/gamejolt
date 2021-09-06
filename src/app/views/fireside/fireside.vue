@@ -2,7 +2,9 @@
 
 <template>
 	<app-fireside-container v-if="c" :controller="c" class="-fireside">
-		<template v-if="!isVertical">
+		<app-fireside-banner />
+
+		<template v-if="!shouldShowHeaderInBody">
 			<app-fireside-header
 				class="-header"
 				:show-controls="shouldShowTitleControls"
@@ -188,7 +190,7 @@
 				class="-chat"
 				:class="{ '-trailing': c.isStreaming }"
 			>
-				<app-expand v-if="isVertical" :when="c.isShowingStreamOverlay">
+				<app-expand v-if="shouldShowHeaderInBody" :when="c.isShowingStreamOverlay">
 					<app-fireside-header
 						class="-header"
 						has-overlay-popovers

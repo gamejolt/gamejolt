@@ -21,8 +21,6 @@ import {
 	updateVolumeLevel,
 } from './user';
 
-export const FiresideRTCKey = Symbol('fireside-rtc');
-
 /**
  * @deprecated replace with the CancelToken
  */

@@ -432,9 +432,6 @@ export default class AppFiresideContainer extends Vue {
 			this.disconnect();
 			c.status = 'expired';
 		}
-
-		// Shows an expiry warning on the stats icon (on mobile) when < 60 seconds remain.
-		c.hasExpiryWarning = c.fireside.getExpiryInMs() < 60_000;
 	}
 
 	private destroyExpiryInfoInterval() {

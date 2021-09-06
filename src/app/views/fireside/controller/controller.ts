@@ -1,8 +1,9 @@
 import VueRouter from 'vue-router';
 import { getAbsoluteLink } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
+import { Device } from '../../../../_common/device/device.service';
 import { duration } from '../../../../_common/filters/duration';
-import { Fireside } from '../../../../_common/fireside/fireside.model';
+import { Fireside, FIRESIDE_EXPIRY_THRESHOLD } from '../../../../_common/fireside/fireside.model';
 import { FiresideRTCProducer } from '../../../../_common/fireside/rtc/producer';
 import { FiresideRTC } from '../../../../_common/fireside/rtc/rtc';
 import { Growls } from '../../../../_common/growls/growls.service';
@@ -117,6 +118,41 @@ export class FiresideController {
 			this.expiresProgressValue <= 95
 		);
 	}
+
+	/**
+	 * Checks browsers that are incabible of broadcasting. Should suggest
+	 * known-working browser instead of displaying stream-setup form.
+	 */
+	get canBrowserStream() {
+		return !(GJ_IS_CLIENT || this.isFirefox || this.isSafari || this.isOpera);
+	}
+
+	/**
+	 *  When we should suggest a different browser, but not necessarily block
+	 *  them from browsing.
+	 */
+	get shouldNotViewStreams() {
+		return this.isFirefox || GJ_IS_CLIENT;
+	}
+
+	private get browser() {
+		return Device.browser().toLowerCase();
+	}
+
+	// Broadcasts and views poorly
+	private get isFirefox() {
+		return this.browser.indexOf('firefox') !== -1;
+	}
+
+	// Can't broadcast - incapable of dual streams
+	private get isSafari() {
+		return this.browser.indexOf('safari') !== -1;
+	}
+
+	// Can't broadcast - incapable of getting device permissions
+	private get isOpera() {
+		return this.browser.indexOf('opera') !== -1 || this.browser.indexOf('opr') !== -1;
+	}
 }
 
 export function createFiresideController(
@@ -197,7 +233,9 @@ export function updateFiresideExpiryValues(c: FiresideController) {
 	if (c.fireside.expires_on > Date.now()) {
 		const expiresInS = c.fireside.getExpiryInMs() / 1000;
 
-		if (expiresInS > 60) {
+		c.hasExpiryWarning = expiresInS < FIRESIDE_EXPIRY_THRESHOLD;
+
+		if (expiresInS > FIRESIDE_EXPIRY_THRESHOLD) {
 			c.expiresDurationText = null;
 		} else {
 			c.expiresDurationText = duration(expiresInS);

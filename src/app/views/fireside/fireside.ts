@@ -30,6 +30,7 @@ import {
 	toggleStreamVideoStats,
 } from './controller/controller';
 import AppFiresideContainer from './controller/controller-container';
+import AppFiresideBanner from './_banner/banner.vue';
 import AppFiresideChatMembers from './_chat-members/chat-members.vue';
 import AppFiresideHeader from './_header/header.vue';
 import AppFiresideHostList from './_host-list/host-list.vue';
@@ -73,6 +74,7 @@ const FiresideThemeKey = 'fireside';
 		AppExpand,
 		AppFiresideHeader,
 		AppFiresideContainer,
+		AppFiresideBanner,
 	},
 	directives: {
 		AppTooltip,
@@ -152,7 +154,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	get shouldShowHeaderInBody() {
-		return this.isVertical;
+		return this.isVertical && !!this.c?.isStreaming;
 	}
 
 	get shouldShowChat() {
