@@ -58,10 +58,6 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 
 	readonly Screen = Screen;
 
-	get isHome() {
-		return !this.section && !this.tag;
-	}
-
 	get section(): string | undefined {
 		return this.$route.params.section?.toLowerCase();
 	}
