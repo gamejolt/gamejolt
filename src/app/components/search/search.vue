@@ -40,8 +40,6 @@ function createSearchController() {
 	const isFocused = ref(false);
 	const isShowingAutocomplete = ref(false);
 	const keydownSpies = ref([] as SearchKeydownSpy[]);
-
-	// TODO(vue3): type this
 	const searchInput = createSearchInput();
 
 	const shouldShowAutocomplete = computed(
