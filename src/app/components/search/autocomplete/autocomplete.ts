@@ -1,7 +1,7 @@
+import { setup } from 'vue-class-component';
 import { Options, Vue, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { debounce } from '../../../../utils/utils';
-import { findRequiredVueParent } from '../../../../utils/vue';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Game } from '../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../_common/game/thumbnail-img/thumbnail-img.vue';
@@ -11,9 +11,8 @@ import { User } from '../../../../_common/user/user.model';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
 import * as _LocalDbGameMod from '../../client/local-db/game/game.model';
 import AppGameCompatIcons from '../../game/compat-icons/compat-icons.vue';
-import AppSearchTS, { SearchKeydownSpy } from '../search';
 import { sendSearch } from '../search-service';
-import AppSearch from '../search.vue';
+import { SearchKeydownSpy, useSearchController } from '../search.vue';
 
 let LocalDbGameMod: typeof _LocalDbGameMod | undefined;
 if (GJ_IS_CLIENT) {
@@ -40,7 +39,7 @@ export default class AppSearchAutocomplete extends Vue {
 	libraryGames: _LocalDbGameMod.LocalDbGame[] = [];
 	items: any[] = [];
 
-	search: AppSearchTS | null = null;
+	search = setup(() => useSearchController()!);
 
 	searchChanges = new EventTopic<string>();
 	searched$ = this.searchChanges.subscribe(
@@ -50,43 +49,37 @@ export default class AppSearchAutocomplete extends Vue {
 	_keydownSpy?: SearchKeydownSpy;
 
 	get isHidden() {
-		return this.search!.isEmpty();
-	}
-
-	created() {
-		this.search = findRequiredVueParent(this, AppSearch) as AppSearchTS;
+		return this.search.isEmpty;
 	}
 
 	mounted() {
-		if (this.search) {
-			this._keydownSpy = (event: KeyboardEvent) => {
-				const min = 0;
-				const max = this.items.length;
+		this._keydownSpy = (event: KeyboardEvent) => {
+			const min = 0;
+			const max = this.items.length;
 
-				if (event.keyCode === KEYCODE_DOWN) {
-					this.selected = Math.min(this.selected + 1, max);
-				} else if (event.keyCode === KEYCODE_UP) {
-					this.selected = Math.max(this.selected - 1, min);
-				} else if (event.keyCode === KEYCODE_ENTER) {
-					this.selectActive();
-				}
-			};
+			if (event.keyCode === KEYCODE_DOWN) {
+				this.selected = Math.min(this.selected + 1, max);
+			} else if (event.keyCode === KEYCODE_UP) {
+				this.selected = Math.max(this.selected - 1, min);
+			} else if (event.keyCode === KEYCODE_ENTER) {
+				this.selectActive();
+			}
+		};
 
-			this.search.setKeydownSpy(this._keydownSpy);
-		}
+		this.search.setKeydownSpy(this._keydownSpy);
 	}
 
 	unmounted() {
 		this.searched$.close();
 
-		if (this.search && this._keydownSpy) {
+		if (this._keydownSpy) {
 			this.search.removeKeydownSpy(this._keydownSpy);
 			this._keydownSpy = undefined;
 		}
 	}
 
 	private async sendSearch(query: string) {
-		if (this.search!.isEmpty()) {
+		if (this.search.isEmpty) {
 			return;
 		}
 
@@ -96,7 +89,7 @@ export default class AppSearchAutocomplete extends Vue {
 		// We only update the payload if the query is still the same as when we sent.
 		// This makes sure we don't step on ourselves while typing fast.
 		// Payloads may not come back sequentially.
-		if (this.search!.query === query) {
+		if (this.search.query === query) {
 			this.games = payload.games;
 			this.users = payload.users;
 			this.libraryGames = payload.libraryGames;
@@ -111,7 +104,7 @@ export default class AppSearchAutocomplete extends Vue {
 	}
 
 	selectActive() {
-		if (this.search!.isEmpty()) {
+		if (this.search.isEmpty) {
 			return;
 		}
 
@@ -131,13 +124,13 @@ export default class AppSearchAutocomplete extends Vue {
 			}
 		}
 
-		this.search!.blur();
+		this.search.blur();
 	}
 
 	viewAll() {
 		this.$router.push({
 			name: 'search.results',
-			query: { q: this.search!.query },
+			query: { q: this.search.query },
 		});
 
 		Analytics.trackEvent('search', 'autocomplete', 'go-all');
@@ -174,7 +167,7 @@ export default class AppSearchAutocomplete extends Vue {
 		// Reset the selected index.
 		this.selected = 0;
 
-		if (this.search!.isEmpty() || !this.app) {
+		if (this.search.isEmpty || !this.app) {
 			return;
 		}
 
