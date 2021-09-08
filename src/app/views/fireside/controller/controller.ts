@@ -8,6 +8,7 @@ import { FiresideRTCProducer } from '../../../../_common/fireside/rtc/producer';
 import { FiresideRTC } from '../../../../_common/fireside/rtc/rtc';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { Screen } from '../../../../_common/screen/screen-service';
+import { SettingStreamDesktopVolume } from '../../../../_common/settings/settings.service';
 import { copyShareLink } from '../../../../_common/share/share.service';
 import { appStore } from '../../../../_common/store/app-store';
 import { Translate } from '../../../../_common/translate/translate.service';
@@ -29,7 +30,9 @@ export type RouteStatus =
 export const FiresideControllerKey = Symbol('fireside-controller');
 
 export class FiresideController {
-	constructor(public readonly fireside: Fireside, public readonly streamingAppId: string) {}
+	constructor(public readonly fireside: Fireside, public readonly streamingAppId: string) {
+		this.desktopVolume = SettingStreamDesktopVolume.get();
+	}
 
 	rtc: FiresideRTC | null = null;
 	hostRtc: FiresideRTCProducer | null = null;
@@ -52,6 +55,16 @@ export class FiresideController {
 
 	isShowingStreamOverlay = false;
 	isShowingOverlayPopper = false;
+
+	_desktopVolume = 1;
+	/** Expects a value from 0 to 1 */
+	get desktopVolume() {
+		return this._desktopVolume;
+	}
+	set desktopVolume(volume: number) {
+		volume = Math.min(1, Math.max(0, volume));
+		this._desktopVolume = volume;
+	}
 
 	updateInterval: NodeJS.Timer | null = null;
 	totalDurationText: string | null = null;
@@ -85,6 +98,13 @@ export class FiresideController {
 
 	get isPersonallyStreaming() {
 		return this.hostRtc?.isStreaming ?? false;
+	}
+
+	get shouldShowVolumeControls() {
+		// If we restrict this in the future, make sure we're not setting the
+		// volume based [SettingStreamDesktopVolume] - otherwise we can end up
+		// muting all desktop streams with no way to change it.
+		return !!this.rtc?.focusedUser?.desktopAudioTrack;
 	}
 
 	get shouldShowStreamingOptions() {
@@ -128,7 +148,7 @@ export class FiresideController {
 	 * form.
 	 */
 	get canBrowserStream() {
-		return !(GJ_IS_CLIENT || this.isFirefox || this.isSafari);
+		return !(GJ_IS_CLIENT /* || this.isFirefox  */ || this.isSafari);
 	}
 
 	/**
@@ -258,4 +278,11 @@ export function updateFiresideExpiryValues(c: FiresideController) {
 	} else {
 		c.expiresDurationText = null;
 	}
+}
+
+/** Expects a value from 0 to 1 */
+export function setFocusedDesktopVolume(c: FiresideController, percent: number) {
+	c.desktopVolume = percent;
+	c.rtc?.focusedUser?.desktopAudioTrack?.setVolume(Math.round(c.desktopVolume * 100));
+	SettingStreamDesktopVolume.set(c.desktopVolume);
 }
