@@ -58,7 +58,11 @@ export type Actions = AppActions &
 		toggleChatPane: void;
 		clearPanes: void;
 		joinCommunity: { community: Community; location?: CommunityJoinLocation };
-		leaveCommunity: { community: Community; location?: CommunityJoinLocation };
+		leaveCommunity: {
+			community: Community;
+			location?: CommunityJoinLocation;
+			shouldConfirm: boolean;
+		};
 	};
 
 export type Mutations = AppMutations &
@@ -490,8 +494,19 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexAction
-	async leaveCommunity({ community, location }: Actions['leaveCommunity']) {
+	async leaveCommunity({ community, location, shouldConfirm }: Actions['leaveCommunity']) {
 		if (community.is_member && !community._removed) {
+			if (shouldConfirm) {
+				const result = await ModalConfirm.show(
+					Translate.$gettext(`Are you sure you want to leave this community?`),
+					Translate.$gettext(`Leave community?`)
+				);
+
+				if (!result) {
+					return;
+				}
+			}
+
 			await leaveCommunity(community, location);
 		}
 

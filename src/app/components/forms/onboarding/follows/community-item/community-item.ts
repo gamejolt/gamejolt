@@ -56,7 +56,11 @@ export default class AppOnboardingFollowsCommunityItem extends Vue {
 		if (!this.community.is_member) {
 			this.joinCommunity({ community: this.community, location: 'onboarding' });
 		} else {
-			this.leaveCommunity({ community: this.community, location: 'onboarding' });
+			this.leaveCommunity({
+				community: this.community,
+				location: 'onboarding',
+				shouldConfirm: false,
+			});
 		}
 	}
 }
