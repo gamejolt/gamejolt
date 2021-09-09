@@ -190,21 +190,38 @@ async function connect(chat: ChatClient) {
 			timeout: 3000,
 		});
 
+		// Parse the host result so that we can rebuild the token url from it.
+		// This is neccessary in order to hit the correct host for the token call.
+		const match = (hostResult.data as string).match(
+			/^(wss?):\/\/(.*?)(?:\/chatex\/socket)?\/?$/
+		);
+		if (!match) {
+			throw new Error(
+				`Invalid looking response from ${Environment.chat}/host: ${hostResult.data}`
+			);
+		}
+
+		const proto = match[1] === 'wss' ? 'https' : 'http';
+		let host = match[2];
+
 		const tokenResult = await Axios.post(
-			`${Environment.chat}/token`,
+			`${proto}://${host}/chatex/token`,
 			{ frontend },
 			{ ignoreLoadingBar: true, timeout: 3000 }
 		);
 
-		return { host: hostResult, token: tokenResult };
+		host = hostResult.data as string;
+		const token = tokenResult.data.token as string;
+
+		return { host, token };
 	});
 
 	if (!results || chatId !== chat.id) {
 		return;
 	}
 
-	const host = `${results.host.data}`;
-	const token = results.token.data.token;
+	const host = results.host;
+	const token = results.token;
 
 	console.log('[Chat] Server selected:', host);
 
