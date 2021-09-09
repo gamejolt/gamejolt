@@ -8,13 +8,9 @@ import { getCookie } from '../../../../_common/cookie/cookie.service';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresideRole } from '../../../../_common/fireside/role/role.model';
 import {
-	createFiresideHostRTC,
-	destroyFiresideHostRTC,
-} from '../../../../_common/fireside/rtc/producer';
-import {
+	createFiresideRTC,
 	destroyFiresideRTC,
-	FiresideRTC,
-	renewFiresideRTCToken,
+	renewRTCAudienceTokens,
 } from '../../../../_common/fireside/rtc/rtc';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
@@ -238,12 +234,19 @@ export default class AppFiresideContainer extends Vue {
 				undefined,
 				{ detach: true }
 			);
+
 			if (!payload.fireside) {
 				console.debug(`[FIRESIDE] Trying to load Fireside, but it was not found.`);
 				c.status = 'setup-failed';
 				return;
 			}
+
 			c.fireside.assign(payload.fireside);
+
+			// If they have a host role, or if this fireside is actively
+			// streaming, we'll get streaming tokens from the fetch payload. In
+			// that case, we want to set up the RTC stuff.
+			this.createOrUpdateRtc(payload, false);
 		} catch (error) {
 			console.debug(`[FIRESIDE] Setup failure 2.`, error);
 			c.status = 'setup-failed';
@@ -266,25 +269,14 @@ export default class AppFiresideContainer extends Vue {
 
 		// --- Make them join the Fireside (if they aren't already).
 
-		if (this.user) {
-			if (!c.fireside.role) {
-				const rolePayload = await Api.sendRequest(`/web/fireside/join/${c.fireside.hash}`);
-				if (!rolePayload || !rolePayload.success || !rolePayload.role) {
-					console.debug(`[FIRESIDE] Failed to acquire a role.`);
-					c.status = 'setup-failed';
-					return;
-				}
-				c.fireside.role = new FiresideRole(rolePayload.role);
+		if (this.user && !c.fireside.role) {
+			const rolePayload = await Api.sendRequest(`/web/fireside/join/${c.fireside.hash}`);
+			if (!rolePayload || !rolePayload.success || !rolePayload.role) {
+				console.debug(`[FIRESIDE] Failed to acquire a role.`);
+				c.status = 'setup-failed';
+				return;
 			}
-
-			if (c.streamingAppId && c.fireside?.role.canStream) {
-				c.hostRtc = createFiresideHostRTC(
-					c.streamingAppId,
-					this.user.id,
-					c.fireside.id,
-					c.fireside.role
-				);
-			}
+			c.fireside.role = new FiresideRole(rolePayload.role);
 		}
 
 		// --- Join Grid channel.
@@ -339,13 +331,16 @@ export default class AppFiresideContainer extends Vue {
 			}
 		});
 
+		// TODO(THIS UPDATED)
 		// Now join the RTC.
-		if (c.fireside.is_streaming) {
-			const streamingPayload = await Api.sendRequest(
-				`/web/fireside/fetch-streaming-info/${c.fireside.hash}`
-			);
-			this.createOrUpdateRtc(streamingPayload, false);
-		}
+		// const canStream = c.streamingAppId && c.fireside?.role?.canStream;
+
+		// if (c.fireside.is_streaming || canStream) {
+		// 	const streamingPayload = await Api.sendRequest(
+		// 		`/web/fireside/fetch-streaming-info/${c.fireside.hash}`
+		// 	);
+		// 	this.createOrUpdateRtc(streamingPayload, false);
+		// }
 
 		c.status = 'joined';
 		console.debug(`[FIRESIDE] Successfully joined Fireside.`);
@@ -380,11 +375,6 @@ export default class AppFiresideContainer extends Vue {
 
 		c.status = 'disconnected';
 
-		if (c.hostRtc) {
-			destroyFiresideHostRTC(c.hostRtc);
-			c.hostRtc = null;
-		}
-
 		if (this.grid && this.grid.connected && c.gridChannel) {
 			c.gridChannel.leave();
 		}
@@ -400,7 +390,6 @@ export default class AppFiresideContainer extends Vue {
 		StreamSetupModal.close();
 
 		this.destroyRtc();
-
 		this.clearExpiryCheck();
 
 		console.debug(`[FIRESIDE] Disconnected from Fireside.`);
@@ -435,21 +424,29 @@ export default class AppFiresideContainer extends Vue {
 			return;
 		}
 
+		// If they don't have tokens yet, then they don't need to set up the RTC
+		// stuff.
+		if (!payload.videoToken || !payload.chatToken) {
+			return;
+		}
+
 		const hosts = User.populate(payload.hosts ?? []);
 
 		if (c.rtc === null) {
-			c.rtc = new FiresideRTC(
+			c.rtc = createFiresideRTC(
+				c.fireside,
+				c.fireside.role,
 				this.user?.id ?? null,
 				payload.streamingAppId,
 				payload.videoChannelName,
 				payload.videoToken,
-				payload.audioChatChannelName,
-				payload.audioChatToken,
+				payload.chatChannelName,
+				payload.chatToken,
 				hosts
 			);
 		} else {
 			// TODO: update hosts when we introduce changing hosts on the fly.
-			renewFiresideRTCToken(c.rtc, payload.videoToken, payload.audioChatToken);
+			renewRTCAudienceTokens(c.rtc, payload.videoToken, payload.chatToken);
 		}
 	}
 
@@ -460,7 +457,6 @@ export default class AppFiresideContainer extends Vue {
 		}
 
 		destroyFiresideRTC(c.rtc);
-
 		c.rtc = null;
 	}
 
@@ -478,6 +474,7 @@ export default class AppFiresideContainer extends Vue {
 		c.fireside.assign(payload.fireside);
 		this.expiryCheck();
 
+		// TODO(CHECK THIS)
 		if (c.fireside.is_streaming && payload.streaming_info) {
 			this.createOrUpdateRtc(payload.streaming_info);
 		} else {

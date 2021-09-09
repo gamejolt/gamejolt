@@ -31,7 +31,7 @@
 						</translate>
 					</p>
 				</template>
-				<app-form-control-select v-else :disabled="firesideHostRtc.isBusy">
+				<app-form-control-select v-else :disabled="producer.isBusy">
 					<option value="" :disabled="wouldInvalidateIfRemoved('selectedWebcamDeviceId')">
 						<translate>Not Set</translate>
 					</option>
@@ -55,7 +55,7 @@
 				<div
 					ref="videoPreview"
 					class="-video-preview"
-					:class="{ '-hidden': !firesideHostRtc.selectedWebcamDeviceId }"
+					:class="{ '-hidden': !producer.selectedWebcamDeviceId }"
 				/>
 			</app-form-group>
 
@@ -81,7 +81,7 @@
 				<template v-else>
 					<app-form-group name="tempSelectedMicDeviceId" :label="$gettext('Microphone')">
 						<app-form-control-select
-							:disabled="firesideHostRtc.isBusy"
+							:disabled="producer.isBusy"
 							class="-mic-input"
 							:class="{ '-hide-indicator': !hasMicAudio }"
 						>
@@ -114,7 +114,7 @@
 						<app-volume-meter
 							v-if="hasMicAudio"
 							class="-volume-meter"
-							:host-rtc="firesideHostRtc"
+							:producer="producer"
 							type="mic"
 						/>
 
@@ -158,7 +158,7 @@
 									</p>
 
 									<app-form-control-select
-										:disabled="firesideHostRtc.isBusy"
+										:disabled="producer.isBusy"
 										class="-mic-input"
 										:class="{ '-hide-indicator': !hasDesktopAudio }"
 									>
@@ -195,7 +195,7 @@
 									<app-volume-meter
 										v-if="hasDesktopAudio"
 										class="-volume-meter"
-										:host-rtc="firesideHostRtc"
+										:producer="producer"
 										type="desktop-audio"
 									/>
 
@@ -243,9 +243,7 @@
 											</translate>
 										</template>
 										<template v-else>
-											<app-form-control-select
-												:disabled="firesideHostRtc.isBusy"
-											>
+											<app-form-control-select :disabled="producer.isBusy">
 												<option
 													v-for="speaker of speakers"
 													:key="speaker.deviceId"
@@ -278,7 +276,7 @@
 				<app-button
 					primary
 					solid
-					:disabled="firesideHostRtc.isBusy || isInvalidConfig"
+					:disabled="producer.isBusy || isInvalidConfig"
 					@click="onClickStartStreaming()"
 				>
 					<translate>Start Streaming</translate>

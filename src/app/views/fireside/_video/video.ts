@@ -30,7 +30,7 @@ export default class AppFiresideVideo extends Vue {
 	}
 
 	get isLoadingVideo() {
-		return this.hasVideo && this.c.rtc?.videoChannel?.isConnected !== true;
+		return this.hasVideo && this.c.rtc?.videoChannel.isConnected !== true;
 	}
 
 	created() {

@@ -74,13 +74,13 @@ export default class AppFiresideStream extends Vue {
 	}
 
 	get isLoadingVideo() {
-		return this.hasVideo && this.c.rtc?.videoChannel?.isConnected !== true;
+		return this.hasVideo && this.c.rtc?.videoChannel.isConnected !== true;
 	}
 
 	get shouldPlayDesktopAudio() {
 		return (
 			this.hasVideo &&
-			this.c.rtc?.videoChannel?.isConnected === true &&
+			this.c.rtc?.videoChannel.isConnected === true &&
 			this.rtcUser.hasDesktopAudio
 		);
 	}

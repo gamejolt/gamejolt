@@ -23,4 +23,13 @@ export class CancelToken {
 	untilCanceled() {
 		return this.cancelPromise;
 	}
+
+	/**
+	 * Will throw if this token is canceled.
+	 */
+	assert() {
+		if (this.isCanceled) {
+			throw new Error('Cancel token is canceled.');
+		}
+	}
 }

@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { propRequired } from '../../../../utils/vue';
 import {
 	FiresideRTCProducer,
 	getOwnDesktopAudioVolume,
@@ -9,8 +8,11 @@ import {
 
 @Component({})
 export default class AppVolumeMeter extends Vue {
-	@Prop(propRequired(FiresideRTCProducer)) hostRtc!: FiresideRTCProducer;
-	@Prop(propRequired(String)) type!: 'mic' | 'desktop-audio';
+	@Prop({ type: FiresideRTCProducer, required: true })
+	producer!: FiresideRTCProducer;
+
+	@Prop({ type: String, required: true })
+	type!: 'mic' | 'desktop-audio';
 
 	private refreshVolumeInterval: NodeJS.Timer | null = null;
 	private volume = 0;
@@ -19,8 +21,8 @@ export default class AppVolumeMeter extends Vue {
 		this.refreshVolumeInterval = setInterval(() => {
 			this.volume =
 				this.type === 'mic'
-					? getOwnMicAudioVolume(this.hostRtc)
-					: getOwnDesktopAudioVolume(this.hostRtc);
+					? getOwnMicAudioVolume(this.producer)
+					: getOwnDesktopAudioVolume(this.producer);
 		}, 100);
 	}
 

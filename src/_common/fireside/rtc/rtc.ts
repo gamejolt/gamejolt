@@ -1,8 +1,11 @@
 import AgoraRTC, { IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng';
 import { arrayRemove } from '../../../utils/array';
+import { CancelToken } from '../../../utils/cancel-token';
 import { debounce, sleep } from '../../../utils/utils';
 import { Navigate } from '../../navigate/navigate.service';
 import { User } from '../../user/user.model';
+import { Fireside } from '../fireside.model';
+import { FiresideRole } from '../role/role.model';
 import {
 	createFiresideRTCChannel,
 	destroyChannel,
@@ -10,6 +13,11 @@ import {
 	joinChannel,
 	setChannelToken,
 } from './channel';
+import {
+	createFiresideRTCProducer,
+	destroyFiresideRTCProducer,
+	FiresideRTCProducer,
+} from './producer';
 import {
 	FiresideRTCUser,
 	FiresideVideoPlayStateStopped,
@@ -23,56 +31,35 @@ import {
 
 export const FiresideRTCKey = Symbol('fireside-rtc');
 
-/**
- * @deprecated replace with the CancelToken
- */
-class GenerationToken {
-	isRetired = false;
-
-	/**
-	 * Will retire this token and return a new one.
-	 */
-	retire() {
-		this.isRetired = true;
-		return new GenerationToken();
-	}
-
-	/**
-	 * Will throw if this token is retired.
-	 */
-	assert() {
-		if (this.isRetired) {
-			throw new Error('Outdated Fireside RTC detected.');
-		}
-	}
-}
-
 export class FiresideRTC {
-	generation = new GenerationToken();
+	generation = new CancelToken();
+
+	// These channels will get created immediately in the setup.
+	videoChannel!: FiresideRTCChannel;
+	chatChannel!: FiresideRTCChannel;
 
 	readonly users: FiresideRTCUser[] = [];
-	videoChannel: FiresideRTCChannel | null = null;
-	chatChannel: FiresideRTCChannel | null = null;
 	videoPaused = false;
 	focusedUserId: number | null = null;
 	volumeLevelInterval: NodeJS.Timer | null = null;
 	shouldShowVideoThumbnails = false;
 	shouldShowVideoStats = false;
+	producer: FiresideRTCProducer | null = null;
 
 	setupFinalized = false;
 	finalizeSetupFn: (() => void) | null = null;
 
 	constructor(
+		public readonly fireside: Fireside,
+		public readonly role: FiresideRole | null,
 		public readonly userId: number | null,
 		public readonly appId: string,
 		public readonly videoChannelName: string,
-		public videoToken: string | null,
+		public videoToken: string,
 		public readonly chatChannelName: string,
-		public chatToken: string | null,
+		public chatToken: string,
 		public readonly hosts: User[]
-	) {
-		_setup(this);
-	}
+	) {}
 
 	log(message: any, ...optionalParams: any[]) {
 		console.log('[FIRESIDE-RTC] ' + message, ...optionalParams);
@@ -101,13 +88,49 @@ export class FiresideRTC {
 	get focusedUser() {
 		return this.users.find(remoteUser => remoteUser.userId === this.focusedUserId) || null;
 	}
+
+	get isPoorNetworkQuality() {
+		return this.videoChannel.isPoorNetworkQuality || this.chatChannel.isPoorNetworkQuality;
+	}
+}
+
+export function createFiresideRTC(
+	fireside: Fireside,
+	role: FiresideRole | null,
+	userId: number | null,
+	appId: string,
+	videoChannelName: string,
+	videoToken: string,
+	chatChannelName: string,
+	chatToken: string,
+	hosts: User[]
+) {
+	const rtc = new FiresideRTC(
+		fireside,
+		role,
+		userId,
+		appId,
+		videoChannelName,
+		videoToken,
+		chatChannelName,
+		chatToken,
+		hosts
+	);
+
+	_setup(rtc);
+	return rtc;
 }
 
 export async function destroyFiresideRTC(rtc: FiresideRTC) {
 	rtc.log('Trace(destroy)');
 
-	// Don't assign a new one so that we stay in a retired state.
-	rtc.generation.retire();
+	// Don't assign a new one so that we stay in a canceled state.
+	rtc.generation.cancel();
+
+	if (rtc.producer) {
+		destroyFiresideRTCProducer(rtc.producer);
+		rtc.producer = null;
+	}
 
 	try {
 		await Promise.all(
@@ -127,10 +150,7 @@ export async function destroyFiresideRTC(rtc: FiresideRTC) {
 	const { videoChannel, chatChannel } = rtc;
 
 	try {
-		await Promise.all([
-			videoChannel ? destroyChannel(videoChannel) : Promise.resolve(),
-			chatChannel ? destroyChannel(chatChannel) : Promise.resolve(),
-		]);
+		await Promise.all([destroyChannel(videoChannel), destroyChannel(chatChannel)]);
 	} catch (e) {
 		// reload the page, anything we do now is no longer reliable.
 		Navigate.reload();
@@ -142,8 +162,6 @@ export async function destroyFiresideRTC(rtc: FiresideRTC) {
 		rtc.volumeLevelInterval = null;
 	}
 
-	rtc.videoChannel = null;
-	rtc.chatChannel = null;
 	rtc.focusedUserId = null;
 	rtc.hosts.splice(0);
 }
@@ -154,25 +172,28 @@ export async function recreateFiresideRTC(rtc: FiresideRTC) {
 	return _setup(rtc);
 }
 
-export async function renewFiresideRTCToken(
+/**
+ * Renews specifically for audience tokens. If they're a host, this will
+ * essentially be ignored.
+ */
+export async function renewRTCAudienceTokens(
 	rtc: FiresideRTC,
-	videoToken: string | null,
-	audioChatToken: string | null
+	videoToken: string,
+	chatToken: string
 ) {
-	rtc.log('Trace(renewToken)');
-
-	if (!rtc.videoChannel || !rtc.chatChannel) {
-		throw new Error('Video or chat channels are not defined');
-	}
-
-	rtc.log('Renewing audience tokens');
-	rtc.videoToken = videoToken;
-	rtc.chatToken = audioChatToken;
-
-	if (!rtc.videoToken || !rtc.chatToken) {
-		rtc.logWarning('Could not get tokens. The stream likely ended.');
+	if (rtc.role?.canStream) {
 		return;
 	}
+
+	return await renewRTCTokens(rtc, videoToken, chatToken);
+}
+
+export async function renewRTCTokens(rtc: FiresideRTC, videoToken: string, chatToken: string) {
+	rtc.log('Trace(renewToken)');
+
+	rtc.log(`Renewing tokens.`);
+	rtc.videoToken = videoToken;
+	rtc.chatToken = chatToken;
 
 	const isVideoDisconnected = rtc.videoChannel.isDisconnected;
 	const isAudioDisconnected = rtc.chatChannel.isDisconnected;
@@ -180,20 +201,20 @@ export async function renewFiresideRTCToken(
 	// If only one of the clients is fully disconnected, just nuke em both and retry.
 	if (isVideoDisconnected !== isAudioDisconnected) {
 		rtc.logError(
-			'Only one of the clients (video or audio) is connected. Recreating both to get them in sync'
+			`Only one of the clients (video or audio) is connected. Recreating both to get them in sync`
 		);
 		recreateFiresideRTC(rtc);
 		return;
 	}
 
 	if (isVideoDisconnected || isAudioDisconnected) {
-		rtc.log('Got new audience tokens. Applying by joining...');
+		rtc.log(`Got new tokens. Applying by joining...`);
 		await _join(rtc);
 	} else {
-		rtc.log('Got new audience tokens. Applying by renewing...');
+		rtc.log(`Got new tokens. Applying by renewing...`);
 		await Promise.all([
-			setChannelToken(rtc.videoChannel, rtc.videoToken),
-			setChannelToken(rtc.chatChannel, rtc.chatToken),
+			setChannelToken(rtc.videoChannel, videoToken),
+			setChannelToken(rtc.chatChannel, chatToken),
 		]);
 	}
 }
@@ -201,10 +222,12 @@ export async function renewFiresideRTCToken(
 async function _setup(rtc: FiresideRTC) {
 	rtc.log('Trace(setup)');
 
-	const gen = rtc.generation.retire();
+	const gen = new CancelToken();
+	rtc.generation.cancel();
 	rtc.generation = gen;
 
 	_createClients(rtc);
+	_createProducer(rtc);
 
 	for (let i = 0; i < 5; i++) {
 		try {
@@ -254,7 +277,7 @@ function _createClients(rtc: FiresideRTC) {
 	(AgoraRTC as any)?.setParameter('AUDIO_SOURCE_VOLUME_UPDATE_INTERVAL', 100);
 	rtc.volumeLevelInterval = setInterval(() => _updateVolumeLevels(rtc), 100);
 
-	rtc.videoChannel = createFiresideRTCChannel(rtc, rtc.videoChannelName, rtc.videoToken!, {
+	rtc.videoChannel = createFiresideRTCChannel(rtc, rtc.videoChannelName, rtc.videoToken, {
 		onTrackPublish(remoteUser, mediaType) {
 			rtc.log('Got user published (video channel)');
 
@@ -321,7 +344,7 @@ function _createClients(rtc: FiresideRTC) {
 		},
 	});
 
-	rtc.chatChannel = createFiresideRTCChannel(rtc, rtc.chatChannelName, rtc.chatToken!, {
+	rtc.chatChannel = createFiresideRTCChannel(rtc, rtc.chatChannelName, rtc.chatToken, {
 		onTrackPublish(remoteUser, mediaType) {
 			rtc.log('got user published (audio chat channel)');
 
@@ -336,7 +359,7 @@ function _createClients(rtc: FiresideRTC) {
 				return;
 			}
 
-			user.audioChatUser = remoteUser;
+			user.chatUser = remoteUser;
 			user.hasMicAudio = true;
 
 			if (!user.micAudioMuted) {
@@ -378,7 +401,7 @@ function _createClients(rtc: FiresideRTC) {
 			}
 
 			stopAudioPlayback(user);
-			user.audioChatUser = null;
+			user.chatUser = null;
 			user.hasMicAudio = false;
 
 			_removeUserIfNeeded(rtc, user);
@@ -387,23 +410,20 @@ function _createClients(rtc: FiresideRTC) {
 	});
 }
 
-async function _join(rtc: FiresideRTC) {
-	rtc.log('Trace(join)');
-
-	if (!rtc.videoChannel || !rtc.chatChannel) {
-		throw new Error('Video or audio channels are not defined');
-	}
-
-	if (!rtc.videoToken || !rtc.chatToken) {
-		rtc.log('Audience tokens not provided yet. Not attempting to join');
+function _createProducer(rtc: FiresideRTC) {
+	if (rtc.role?.canStream !== true) {
 		return;
 	}
 
-	// We set ourselves up as an audience member with the "low latency" level,
-	// instead of the ultra low latency which is used for hosts.
+	rtc.producer = createFiresideRTCProducer(rtc);
+}
+
+async function _join(rtc: FiresideRTC) {
+	rtc.log('Trace(join)');
+
 	await Promise.all([
-		joinChannel(rtc.videoChannel, rtc.appId, 'audience', rtc.videoToken),
-		joinChannel(rtc.chatChannel, rtc.appId, 'audience', rtc.chatToken),
+		joinChannel(rtc.videoChannel, rtc.videoToken),
+		joinChannel(rtc.chatChannel, rtc.chatToken),
 	]);
 }
 
@@ -453,7 +473,7 @@ function _findOrAddUser(
 }
 
 function _removeUserIfNeeded(rtc: FiresideRTC, user: FiresideRTCUser) {
-	if (!user.videoUser && !user.audioChatUser) {
+	if (!user.videoUser && !user.chatUser) {
 		arrayRemove(rtc.users, i => i === user);
 		_userLeft(rtc, user);
 	}

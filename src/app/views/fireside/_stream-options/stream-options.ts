@@ -18,7 +18,9 @@ import { StreamSetupModal } from '../_stream-setup/stream-setup-modal.service';
 })
 export default class AppFiresideStreamOptions extends Vue {
 	@AppState user!: AppStore['user'];
-	@InjectReactive(FiresideControllerKey) c!: FiresideController;
+
+	@InjectReactive(FiresideControllerKey)
+	c!: FiresideController;
 
 	@Emit('show-popper') emitShowPopper() {}
 	@Emit('hide-popper') emitHidePopper() {}
@@ -40,8 +42,10 @@ export default class AppFiresideStreamOptions extends Vue {
 	}
 
 	onClickStopStreaming() {
-		if (this.c.hostRtc) {
-			stopStreaming(this.c.hostRtc);
+		if (!this.c.rtc?.producer) {
+			return;
 		}
+
+		stopStreaming(this.c.rtc.producer);
 	}
 }

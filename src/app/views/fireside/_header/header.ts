@@ -77,9 +77,11 @@ export default class AppFiresideHeader extends Vue {
 	}
 
 	onClickStopStreaming() {
-		if (this.c.hostRtc) {
-			stopStreaming(this.c.hostRtc);
+		if (!this.c.rtc?.producer) {
+			return;
 		}
+
+		stopStreaming(this.c.rtc.producer);
 	}
 
 	onShowPopper() {

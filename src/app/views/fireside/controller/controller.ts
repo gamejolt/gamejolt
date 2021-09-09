@@ -1,7 +1,6 @@
 import VueRouter from 'vue-router';
 import { getAbsoluteLink } from '../../../../utils/router';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
-import { FiresideRTCProducer } from '../../../../_common/fireside/rtc/producer';
 import { FiresideRTC } from '../../../../_common/fireside/rtc/rtc';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../../_common/share/share.service';
@@ -27,7 +26,6 @@ export class FiresideController {
 	constructor(public readonly fireside: Fireside, public readonly streamingAppId: string) {}
 
 	rtc: FiresideRTC | null = null;
-	hostRtc: FiresideRTCProducer | null = null;
 	status: RouteStatus = 'initial';
 	onRetry: (() => void) | null = null;
 
@@ -61,7 +59,7 @@ export class FiresideController {
 	}
 
 	get isPersonallyStreaming() {
-		return this.hostRtc?.isStreaming ?? false;
+		return this.rtc?.isStreaming ?? false;
 	}
 
 	get shouldShowStreamingOptions() {
@@ -70,7 +68,8 @@ export class FiresideController {
 
 	get canStream() {
 		return (
-			!!this.hostRtc && !!(Screen.isDesktop || (this.user && this.user.permission_level >= 4))
+			!!this.rtc?.producer &&
+			!!(Screen.isDesktop || (this.user && this.user.permission_level >= 4))
 		);
 	}
 

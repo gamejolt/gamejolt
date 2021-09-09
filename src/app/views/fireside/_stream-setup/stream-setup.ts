@@ -1,25 +1,22 @@
 import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
 import { debounce, sleep } from '../../../../utils/utils';
-import { propRequired } from '../../../../utils/vue';
 import { MediaDeviceService } from '../../../../_common/agora/media-device.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
+import {
+	setSelectedDesktopAudioDeviceId,
+	setSelectedGroupAudioDeviceId,
+	setSelectedMicDeviceId,
+	setSelectedWebcamDeviceId,
+	setVideoPreviewElement,
+	startStreaming,
+	stopStreaming,
+} from '../../../../_common/fireside/rtc/producer';
 import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
 import { BaseForm, FormOnInit } from '../../../../_common/form-vue/form.service';
 import AppForm from '../../../../_common/form-vue/form.vue';
 import AppFormLegend from '../../../../_common/form-vue/legend/legend.vue';
 import AppLoadingFade from '../../../../_common/loading/fade/fade.vue';
-import {
-	FiresideRTCProducer,
-	getOwnDesktopAudioVolume,
-	getOwnMicAudioVolume,
-	setVideoPreviewElement,
-	setSelectedDesktopAudioDeviceId,
-	setSelectedGroupAudioDeviceId,
-	setSelectedMicDeviceId,
-	setSelectedWebcamDeviceId,
-	startStreaming,
-	stopStreaming,
-} from '../../../../_common/fireside/rtc/producer';
+import { FiresideController } from '../controller/controller';
 import AppVolumeMeter from './volume-meter.vue';
 
 const Beeps = [
@@ -50,38 +47,41 @@ type FormModel = {
 	},
 })
 export default class AppStreamSetup extends BaseForm<FormModel> implements FormOnInit {
-	@Prop(propRequired(FiresideRTCProducer)) firesideHostRtc!: FiresideRTCProducer;
+	@Prop({ type: FiresideController, required: true })
+	c!: FiresideController;
 
 	isStarting = false;
-	desktopAudioVolume = 0;
-	micAudioVolume = 0;
-	private p_refreshVolumeInterval: NodeJS.Timer | null = null;
-	private p_shouldShowAdvanced = false;
-
+	shouldShowAdvanced = false;
 	private networkQualityDebounce: () => void = null as any;
 
-	@Emit('close') emitClose() {}
+	@Emit('close')
+	emitClose() {}
 
 	$refs!: {
 		form: AppForm;
 		videoPreview?: HTMLDivElement;
 	};
 
+	get rtc() {
+		return this.c.rtc!;
+	}
+
+	get producer() {
+		return this.c.rtc!.producer!;
+	}
+
 	onInit() {
 		const webcamId = this.getDeviceFromId(
-			this.firesideHostRtc.selectedWebcamDeviceId,
+			this.producer.selectedWebcamDeviceId,
 			'webcam'
 		)?.deviceId;
-		const micId = this.getDeviceFromId(
-			this.firesideHostRtc.selectedMicDeviceId,
-			'mic'
-		)?.deviceId;
+		const micId = this.getDeviceFromId(this.producer.selectedMicDeviceId, 'mic')?.deviceId;
 		const desktopId = this.getDeviceFromId(
-			this.firesideHostRtc.selectedDesktopAudioDeviceId,
+			this.producer.selectedDesktopAudioDeviceId,
 			'mic'
 		)?.deviceId;
 		const groupId = this.getDeviceFromId(
-			this.firesideHostRtc.selectedGroupAudioDeviceId,
+			this.producer.selectedGroupAudioDeviceId,
 			'speaker'
 		)?.deviceId;
 
@@ -95,21 +95,10 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		// If we don't prompt here, the user can end up denying permissions and
 		// then opening this form again to an empty device list.
 		MediaDeviceService.detectDevices({ prompt: true, skipIfPrompted: false });
-
-		this.p_refreshVolumeInterval = setInterval(() => {
-			this.desktopAudioVolume = getOwnDesktopAudioVolume(this.firesideHostRtc);
-			this.micAudioVolume = getOwnMicAudioVolume(this.firesideHostRtc);
-		}, 100);
-	}
-
-	destroyed() {
-		if (this.p_refreshVolumeInterval) {
-			clearInterval(this.p_refreshVolumeInterval);
-		}
 	}
 
 	get isStreaming() {
-		return this.firesideHostRtc.isStreaming;
+		return this.producer.isStreaming;
 	}
 
 	get hasMicAudio() {
@@ -135,17 +124,17 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 
 		console.log('setting video preview element', this.$refs.videoPreview);
 		setVideoPreviewElement(
-			this.firesideHostRtc,
+			this.producer,
 			this.canStreamVideo ? this.$refs.videoPreview ?? null : null
 		);
 	}
 
 	get canStreamVideo() {
-		return this.firesideHostRtc.canStreamVideo;
+		return this.producer.canStreamVideo;
 	}
 
 	get canStreamAudio() {
-		return this.firesideHostRtc.canStreamAudio;
+		return this.producer.canStreamAudio;
 	}
 
 	get hasWebcamPermissions() {
@@ -239,7 +228,7 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 	}
 
 	onToggleAdvanced() {
-		this.p_shouldShowAdvanced = !this.p_shouldShowAdvanced;
+		this.shouldShowAdvanced = !this.shouldShowAdvanced;
 	}
 
 	onClickCancel() {
@@ -253,19 +242,15 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		this.isStarting = true;
 
 		try {
-			await startStreaming(this.firesideHostRtc);
+			await startStreaming(this.producer);
 		} catch {}
 
 		this.isStarting = false;
 
 		// Only close the modal if we were able to start streaming.
-		if (this.firesideHostRtc.isStreaming) {
+		if (this.producer.isStreaming) {
 			this.emitClose();
 		}
-	}
-
-	get shouldShowAdvanced() {
-		return this.p_shouldShowAdvanced;
 	}
 
 	get hasSpeakerPermissions() {
@@ -332,7 +317,7 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		await sleep(0);
 
 		if (this.isInvalidConfig && this.isStreaming) {
-			stopStreaming(this.firesideHostRtc);
+			stopStreaming(this.producer);
 		}
 	}
 
@@ -378,24 +363,24 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 	@Watch('formModel.selectedDesktopAudioDeviceId')
 	@Watch('formModel.selectedGroupAudioDeviceId')
 	onSelectedDevicesChanged() {
-		// When streaming, only apply changes to selected devices if the config is valid.
+		// When streaming, only apply changes to selected devices if the config
+		// is valid.
 		if (this.isInvalidConfig && this.isStreaming) {
-			// TODO: show error status on the form model values that do not match with whats set on firesideHostRtc.
+			// TODO: show error status on the form model values that do not
+			// match with whats set on [FiresideRTCProducer].
 			return;
 		}
 
-		const rtc = this.firesideHostRtc;
-
-		setSelectedWebcamDeviceId(rtc, this.formModel.selectedWebcamDeviceId);
-		setSelectedMicDeviceId(rtc, this.formModel.selectedMicDeviceId);
-		setSelectedDesktopAudioDeviceId(rtc, this.formModel.selectedDesktopAudioDeviceId);
-		setSelectedGroupAudioDeviceId(rtc, this.formModel.selectedGroupAudioDeviceId);
+		setSelectedWebcamDeviceId(this.producer, this.formModel.selectedWebcamDeviceId);
+		setSelectedMicDeviceId(this.producer, this.formModel.selectedMicDeviceId);
+		setSelectedDesktopAudioDeviceId(this.producer, this.formModel.selectedDesktopAudioDeviceId);
+		setSelectedGroupAudioDeviceId(this.producer, this.formModel.selectedGroupAudioDeviceId);
 	}
 
-	@Watch('firesideHostRtc.isPoorNetworkQuality')
+	@Watch('c.rtc.isPoorNetworkQuality')
 	onNetworkQualityChanged() {
 		this.networkQualityDebounce ??= debounce(() => {
-			if (this.firesideHostRtc.isPoorNetworkQuality) {
+			if (this.rtc.isPoorNetworkQuality) {
 				console.log('Network quality is poor.');
 			} else {
 				console.log('Network quality is very nice.');

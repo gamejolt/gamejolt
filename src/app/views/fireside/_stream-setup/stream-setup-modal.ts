@@ -9,11 +9,8 @@ import AppStreamSetup from './stream-setup.vue';
 	},
 })
 export default class AppStreamSetupModal extends BaseModal {
-	@Prop({ type: FiresideController, required: true }) c!: FiresideController;
-
-	get firesideHostRtc() {
-		return this.c.hostRtc;
-	}
+	@Prop({ type: FiresideController, required: true })
+	c!: FiresideController;
 
 	onClose() {
 		this.modal.dismiss();
