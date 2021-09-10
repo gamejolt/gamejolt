@@ -1,10 +1,15 @@
 import VueRouter from 'vue-router';
 import { getAbsoluteLink } from '../../../../utils/router';
-import { Fireside } from '../../../../_common/fireside/fireside.model';
+import { Api } from '../../../../_common/api/api.service';
+import { Device } from '../../../../_common/device/device.service';
+import { duration } from '../../../../_common/filters/duration';
+import { Fireside, FIRESIDE_EXPIRY_THRESHOLD } from '../../../../_common/fireside/fireside.model';
 import { FiresideRTC } from '../../../../_common/fireside/rtc/rtc';
+import { Growls } from '../../../../_common/growls/growls.service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../../_common/share/share.service';
 import { appStore } from '../../../../_common/store/app-store';
+import { Translate } from '../../../../_common/translate/translate.service';
 import { ChatClient } from '../../../components/chat/client';
 import { ChatRoomChannel } from '../../../components/chat/room-channel';
 import { FiresideChannel } from '../../../components/grid/fireside-channel';
@@ -46,8 +51,26 @@ export class FiresideController {
 	isShowingStreamOverlay = false;
 	isShowingOverlayPopper = false;
 
+	updateInterval: NodeJS.Timer | null = null;
+	totalDurationText: string | null = null;
+	expiresDurationText: string | null = null;
+	expiresProgressValue: number | null = null;
+
+	_isExtending = false;
+
 	get user() {
 		return appStore.state.user;
+	}
+
+	get chatRoom() {
+		return this.chatChannel?.room;
+	}
+
+	get chatUsers() {
+		if (!this.chatRoom) {
+			return undefined;
+		}
+		return this.chat?.roomMembers[this.chatRoom.id];
 	}
 
 	get isDraft() {
@@ -62,6 +85,13 @@ export class FiresideController {
 		return this.rtc?.isStreaming ?? false;
 	}
 
+	get shouldShowVolumeControls() {
+		// If we restrict this in the future, make sure we're not setting the
+		// volume based [SettingStreamDesktopVolume] - otherwise we can end up
+		// muting all desktop streams with no way to change it.
+		return this.rtc?.focusedUser?.hasDesktopAudio === true;
+	}
+
 	get shouldShowStreamingOptions() {
 		return this.canStream || this.isPersonallyStreaming;
 	}
@@ -73,15 +103,63 @@ export class FiresideController {
 		);
 	}
 
-	get chatRoom() {
-		return this.chatChannel?.room;
+	get canManage() {
+		if (!this.fireside) {
+			return false;
+		}
+
+		return (
+			(this.user && this.user.id === this.fireside.user.id) ||
+			this.fireside.community?.hasPerms('community-firesides')
+		);
 	}
 
-	get chatUsers() {
-		if (!this.chatRoom) {
-			return undefined;
-		}
-		return this.chat?.roomMembers[this.chatRoom.id];
+	get canPublish() {
+		return this.canManage && this.status === 'joined' && this.isDraft;
+	}
+
+	get canExtend() {
+		return (
+			this.canManage &&
+			this.status === 'joined' &&
+			this.expiresProgressValue !== null &&
+			this.expiresProgressValue <= 95
+		);
+	}
+
+	/**
+	 * Contains a block-list of browsers/clients that can't broadcast.
+	 *
+	 * Should suggest known-working browser instead of displaying stream-setup
+	 * form.
+	 */
+	get canBrowserStream() {
+		return !(GJ_IS_CLIENT /* || this.isFirefox  */ || this.isSafari);
+	}
+
+	/**
+	 * Contains a block-list of browsers/clients that have issues viewing
+	 * broadcasts.
+	 *
+	 * When we should suggest a different browser, but not necessarily block
+	 * them from browsing.
+	 */
+	get shouldNotViewStreams() {
+		return GJ_IS_CLIENT || this.isFirefox;
+	}
+
+	private get browser() {
+		return Device.browser().toLowerCase();
+	}
+
+	// Broadcasts and views poorly
+	private get isFirefox() {
+		return this.browser.indexOf('firefox') !== -1;
+	}
+
+	// Can't broadcast - incapable of dual streams
+	private get isSafari() {
+		return this.browser.indexOf('safari') !== -1;
 	}
 }
 
@@ -118,4 +196,72 @@ export function showFiresideMembers(c: FiresideController) {
 
 export function toggleStreamVideoStats(c: FiresideController) {
 	c.rtc!.shouldShowVideoStats = !(c.rtc?.shouldShowVideoStats ?? true);
+}
+
+export async function publishFireside(c: FiresideController) {
+	if (!c || !c.fireside || c.status !== 'joined' || !c.isDraft) {
+		return;
+	}
+
+	await c.fireside.$publish();
+	Growls.success(Translate.$gettext(`Your Fireside is live!`));
+}
+
+export async function extendFireside(c: FiresideController) {
+	if (!c || c.status !== 'joined' || !c.canExtend || !c.fireside) {
+		return;
+	}
+
+	const payload = await Api.sendRequest(
+		`/web/dash/fireside/extend/${c.fireside.hash}`,
+		{},
+		{
+			detach: true,
+		}
+	);
+	if (payload.success && payload.extended) {
+		c.fireside.expires_on = payload.expiresOn;
+		updateFiresideExpiryValues(c);
+	} else {
+		Growls.info(
+			Translate.$gettext(
+				`Settle down there. Wait a couple seconds before playing with the fire again.`
+			)
+		);
+	}
+}
+
+export function updateFiresideExpiryValues(c: FiresideController) {
+	if (!c.fireside) {
+		return;
+	}
+
+	c.totalDurationText = duration((Date.now() - c.fireside.added_on) / 1000);
+
+	if (c.fireside.expires_on > Date.now()) {
+		const expiresInS = c.fireside.getExpiryInMs() / 1000;
+
+		c.hasExpiryWarning = expiresInS < FIRESIDE_EXPIRY_THRESHOLD;
+
+		// Automatically extend for them if we're in a draft and get within 15
+		// seconds of the expiry warning threshold.
+		if (c.isDraft && !c._isExtending && expiresInS < FIRESIDE_EXPIRY_THRESHOLD + 15) {
+			c._isExtending = true;
+			extendFireside(c).finally(() => (c._isExtending = false));
+		}
+
+		if (expiresInS > FIRESIDE_EXPIRY_THRESHOLD) {
+			c.expiresDurationText = null;
+		} else {
+			c.expiresDurationText = duration(expiresInS);
+		}
+
+		if (expiresInS > 300) {
+			c.expiresProgressValue = null;
+		} else {
+			c.expiresProgressValue = (expiresInS / 300) * 100;
+		}
+	} else {
+		c.expiresDurationText = null;
+	}
 }

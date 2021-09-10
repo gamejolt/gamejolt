@@ -1,18 +1,32 @@
 import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../utils/vue';
-import { Ruler } from '../../../ruler/ruler-service';
-import { AppTooltip } from '../../../tooltip/tooltip-directive';
-import { ScrubberStage, scrubVideoVolume, VideoPlayerController } from '../controller';
+import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
+import { AppObserveDimensions } from '../observe-dimensions/observe-dimensions.directive';
+import { Ruler } from '../ruler/ruler-service';
+import { AppTooltip } from '../tooltip/tooltip-directive';
+
+export type ScrubberStage = 'start' | 'scrub' | 'end';
+/**
+ * @param percent - scaled from 0 to 1
+ * @param stage - the stage of the scrubber
+ */
+export type ScrubberCallback = {
+	percent: number;
+	stage: ScrubberStage;
+};
 
 @Component({
 	directives: {
 		AppTooltip,
+		AppObserveDimensions,
 	},
 })
-export default class AppVideoPlayerSlider extends Vue {
-	@Prop(propRequired(VideoPlayerController)) player!: VideoPlayerController;
-	@Prop(propOptional(Boolean, false)) vertical!: boolean;
+export default class AppSlider extends Vue {
+	/** Expects to be scaled from 0 to 1. */
+	@Prop({ type: Number, required: true })
+	percent!: number;
+
+	@Prop({ type: Boolean, required: false, default: false })
+	vertical!: boolean;
 
 	isDragging = false;
 
@@ -26,6 +40,8 @@ export default class AppVideoPlayerSlider extends Vue {
 		slider: HTMLElement;
 		thumb: HTMLDivElement;
 	};
+
+	@Emit('scrub') emitScrub(_: ScrubberCallback) {}
 
 	get sliderFilledStyling() {
 		if (this.vertical) {
@@ -65,9 +81,10 @@ export default class AppVideoPlayerSlider extends Vue {
 		return `${this.percentFull}%`;
 	}
 
-	mounted() {
-		this._setThumbOffset('end');
+	async mounted() {
+		await this.$nextTick();
 		this.initVariables();
+		this._setThumbOffset('end');
 	}
 
 	initVariables() {
@@ -84,6 +101,12 @@ export default class AppVideoPlayerSlider extends Vue {
 
 		window.addEventListener('mouseup', this.onWindowMouseUp);
 		window.addEventListener('mousemove', this.onWindowMouseMove);
+		window.addEventListener('touchend', this.onWindowMouseUp, {
+			passive: false,
+		});
+		window.addEventListener('touchmove', this.onWindowMouseMove, {
+			passive: false,
+		});
 	}
 
 	private _onMouseMove(event: MouseEvent) {
@@ -97,7 +120,6 @@ export default class AppVideoPlayerSlider extends Vue {
 		if (!this.isDragging) {
 			return;
 		}
-
 		this._setThumbOffset('end', event);
 		this.isDragging = false;
 	}
@@ -114,19 +136,36 @@ export default class AppVideoPlayerSlider extends Vue {
 	cleanupWindowListeners() {
 		window.removeEventListener('mousemove', this.onWindowMouseMove);
 		window.removeEventListener('mouseup', this.onWindowMouseUp);
+		window.removeEventListener('touchend', this.onWindowMouseUp);
+		window.removeEventListener('touchmove', this.onWindowMouseMove);
 	}
 
 	beforeDestroy() {
 		this.cleanupWindowListeners();
 	}
 
-	private _setThumbOffset(stage: ScrubberStage, event?: MouseEvent) {
+	private _setThumbOffset(stage: ScrubberStage, event?: Event) {
 		let mouseOffset = 0;
+		let pageX: number | null = null;
+		let pageY: number | null = null;
 
-		if (event) {
-			mouseOffset = this.vertical ? event.pageY : event.pageX;
+		if (event instanceof MouseEvent) {
+			pageX = event.pageX;
+			pageY = event.pageY;
+		} else if (event instanceof TouchEvent) {
+			// Prevent page scrolling if we got a touch event.
+			event.preventDefault();
+
+			if (event.changedTouches.length > 0) {
+				pageX = event.changedTouches[0].pageX;
+				pageY = event.changedTouches[0].pageY;
+			}
+		}
+
+		if (pageX && pageY) {
+			mouseOffset = this.vertical ? pageY : pageX;
 		} else {
-			mouseOffset = this.player.volume * this.sliderSize + this.sliderOffset;
+			mouseOffset = this.percent * this.sliderSize + this.sliderOffset;
 		}
 
 		const sliderOffsetStart = -(this.thumbSize / 2);
@@ -147,18 +186,18 @@ export default class AppVideoPlayerSlider extends Vue {
 			this.percentFull = Math.abs(this.percentFull - scale);
 		}
 
-		const scaledPercent = this.percentFull / scale;
-		// set the controller volume with a scale of 0 to 1
-		scrubVideoVolume(this.player, scaledPercent, stage);
+		const scaledPercent = Math.min(1, Math.max(0, this.percentFull / scale));
+		this.emitScrub({ percent: scaledPercent, stage: stage });
 	}
 
-	@Watch('player.volume')
+	@Watch('percent')
 	onVolumeChange() {
 		if (this.isDragging) {
 			return;
 		}
 
-		// Set the thumbTop to match with the current volume level.
+		// If the slider percent changed by external means, set the thumb offset
+		// to match the current slider level.
 		this._setThumbOffset('end');
 	}
 }

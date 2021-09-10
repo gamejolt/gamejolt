@@ -1,23 +1,24 @@
 <script lang="ts" src="./slider"></script>
 
 <template>
-	<div class="-padding">
-		<div class="-mask" @mousedown="onMouseDown" />
+	<div class="-slider">
+		<div class="-mask" @mousedown="onMouseDown" @touchstart="onMouseDown" />
 
 		<div
 			ref="slider"
-			class="-slider"
+			class="-inner"
 			:class="{ '-dragging': isDragging }"
 			:style="sliderStyling"
 		>
-			<div class="-slider-filled" :style="sliderFilledStyling" />
+			<div class="-inner-filled" :style="sliderFilledStyling" />
 
 			<div
 				ref="thumb"
 				v-app-tooltip="readableSliderPercentage"
-				class="-slider-thumb"
+				class="-inner-thumb"
 				:style="thumbStyling"
 				@mousedown="onMouseDown"
+				@touchstart="onMouseDown"
 			/>
 		</div>
 	</div>
@@ -26,7 +27,7 @@
 <style lang="stylus" scoped>
 @import '~styles/variables'
 
-.-padding
+.-slider
 	user-select: none
 	position: relative
 	padding: 8px
@@ -42,7 +43,7 @@
 	z-index: 1
 	cursor: pointer
 
-.-slider
+.-inner
 	border-radius: $border-radius-small
 	position: relative
 	margin: auto
@@ -50,13 +51,14 @@
 	display: flex
 	justify-content: center
 	align-items: center
+	flex: auto
 
 	&-filled
 		position: absolute
 		background-color: $white
 		border-radius: $border-radius-small
 
-.-slider-thumb
+.-inner-thumb
 	position: absolute
 	border-radius: 50%
 	background-color: $white
@@ -64,6 +66,6 @@
 	cursor: pointer
 
 .-dragging
-	.-slider-thumb
+	.-inner-thumb
 		pointer-events: none
 </style>

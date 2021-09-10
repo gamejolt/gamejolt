@@ -259,6 +259,7 @@ export async function startDesktopAudioPlayback(user: FiresideRTCUser) {
 		}
 
 		user._desktopAudioTrack?.play();
+		setUserDesktopAudioVolume(user, rtc.desktopVolume);
 	} catch (e) {
 		rtc.logError('Failed to start desktop audio playback, attempting to gracefully stop.', e);
 
@@ -363,4 +364,9 @@ export function updateVolumeLevel(user: FiresideRTCUser) {
 	}
 
 	user.volumeLevel = user._micAudioTrack.getVolumeLevel();
+}
+
+/** Expects a value from 0 to 1 */
+export function setUserDesktopAudioVolume(user: FiresideRTCUser, percent: number) {
+	user._desktopAudioTrack?.setVolume(Math.round(percent * 100));
 }

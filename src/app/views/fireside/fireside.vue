@@ -2,7 +2,9 @@
 
 <template>
 	<app-fireside-container v-if="c" :controller="c" class="-fireside">
-		<template v-if="!isVertical">
+		<app-fireside-banner />
+
+		<template v-if="!shouldShowHeaderInBody">
 			<app-fireside-header
 				class="-header"
 				:show-controls="shouldShowTitleControls"
@@ -38,18 +40,39 @@
 					>
 						<div
 							class="-video-inner"
+							:class="{
+								'-unsupported': GJ_IS_CLIENT,
+							}"
 							:style="{
 								width: videoWidth + 'px',
 								height: videoHeight + 'px',
 							}"
 						>
-							<template v-if="c.rtc && c.rtc.focusedUser">
+							<template v-if="GJ_IS_CLIENT">
+								<app-illustration
+									v-if="shouldShowHosts && shortestSide > 700"
+									src="~img/ill/no-comments.svg"
+								/>
+
+								<p class="-unsupported-text">
+									<translate>
+										Oh dear... Fireside streams don't work on our client right
+										now.
+									</translate>
+								</p>
+
+								<app-button @click="onClickOpenBrowser()">
+									<translate> Open in Browser </translate>
+								</app-button>
+							</template>
+							<template v-else-if="c.rtc && c.rtc.focusedUser">
 								<app-popper trigger="right-click">
 									<app-fireside-stream
 										:rtc-user="c.rtc.focusedUser"
 										:show-overlay-hosts="!shouldShowHosts"
 										:members="overlayChatMembers"
 									/>
+
 									<template #popover>
 										<div class="list-group">
 											<a class="list-group-item" @click="toggleVideoStats()">
@@ -188,7 +211,7 @@
 				class="-chat"
 				:class="{ '-trailing': c.isStreaming }"
 			>
-				<app-expand v-if="isVertical" :when="c.isShowingStreamOverlay">
+				<app-expand v-if="shouldShowHeaderInBody" :when="c.isShowingStreamOverlay">
 					<app-fireside-header
 						class="-header"
 						has-overlay-popovers
@@ -379,14 +402,25 @@
 	position: relative
 
 .-video-inner
-	rounded-corners-lg()
-	elevate-2()
 	overflow: hidden
 	position: absolute
-	background-color: var(--theme-bg-subtle)
-	-webkit-transform: translateZ(0)
+	flex-direction: column
 
-	.-fullscreen &
+	&.-unsupported
+		padding: $line-height-computed
+
+	&:not(.-unsupported)
+		rounded-corners-lg()
+		elevate-2()
+		background-color: var(--theme-bg-subtle)
+		-webkit-transform: translateZ(0)
+
+.-unsupported-text
+	color: var(--theme-fg-muted)
+	text-align: center
+	font-weight: 600
+
+.-fullscreen &
 	.-body-column &
 		border-radius: 0
 

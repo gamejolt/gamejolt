@@ -3,6 +3,7 @@ import { arrayRemove } from '../../../utils/array';
 import { CancelToken } from '../../../utils/cancel-token';
 import { debounce, sleep } from '../../../utils/utils';
 import { Navigate } from '../../navigate/navigate.service';
+import { SettingStreamDesktopVolume } from '../../settings/settings.service';
 import { User } from '../../user/user.model';
 import { Fireside } from '../fireside.model';
 import { FiresideRole } from '../role/role.model';
@@ -21,6 +22,7 @@ import {
 import {
 	FiresideRTCUser,
 	FiresideVideoPlayStateStopped,
+	setUserDesktopAudioVolume,
 	setUserHasDesktopAudio,
 	setUserHasMicAudio,
 	setUserHasVideo,
@@ -30,7 +32,7 @@ import {
 	updateVolumeLevel,
 } from './user';
 
-export const FiresideRTCKey = Symbol('fireside-rtc');
+export const FiresideRTCKey = Symbol();
 
 export class FiresideRTC {
 	constructor(
@@ -58,6 +60,12 @@ export class FiresideRTC {
 	shouldShowVideoThumbnails = false;
 	shouldShowVideoStats = false;
 	producer: FiresideRTCProducer | null = null;
+
+	_desktopVolume = 1;
+
+	get desktopVolume() {
+		return this._desktopVolume;
+	}
 
 	setupFinalized = false;
 	finalizeSetupFn: (() => void) | null = null;
@@ -124,6 +132,9 @@ export function createFiresideRTC(
 		chatToken,
 		hosts
 	);
+
+	// Initialize based on their pref.
+	setRTCDesktopVolume(rtc, SettingStreamDesktopVolume.get());
 
 	_setup(rtc);
 	return rtc;
@@ -435,5 +446,16 @@ function _removeUserIfNeeded(rtc: FiresideRTC, user: FiresideRTCUser) {
 function _updateVolumeLevels(rtc: FiresideRTC) {
 	for (const user of rtc.users) {
 		updateVolumeLevel(user);
+	}
+}
+
+export function setRTCDesktopVolume(rtc: FiresideRTC, percent: number) {
+	percent = Math.min(1, Math.max(0, percent));
+
+	rtc._desktopVolume = percent;
+	SettingStreamDesktopVolume.set(percent);
+
+	if (rtc.focusedUser) {
+		setUserDesktopAudioVolume(rtc.focusedUser, percent);
 	}
 }

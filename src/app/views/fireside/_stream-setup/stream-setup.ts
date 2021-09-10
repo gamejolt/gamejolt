@@ -3,6 +3,10 @@ import { debounce, sleep } from '../../../../utils/utils';
 import { MediaDeviceService } from '../../../../_common/agora/media-device.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
 import {
+	assignPreferredProducerDevices,
+	clearSelectedRecordingDevices,
+	PRODUCER_DEFAULT_GROUP_AUDIO,
+	PRODUCER_UNSET_DEVICE,
 	setSelectedDesktopAudioDeviceId,
 	setSelectedGroupAudioDeviceId,
 	setSelectedMicDeviceId,
@@ -51,11 +55,14 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 	c!: FiresideController;
 
 	isStarting = false;
-	shouldShowAdvanced = false;
+	private shouldShowAdvanced = false;
+	private _didDetectDevices = false;
+
 	private networkQualityDebounce: () => void = null as any;
 
-	@Emit('close')
-	emitClose() {}
+	readonly PRODUCER_UNSET_DEVICE = PRODUCER_UNSET_DEVICE;
+
+	@Emit('close') emitClose() {}
 
 	$refs!: {
 		form: AppForm;
@@ -85,16 +92,35 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 			'speaker'
 		)?.deviceId;
 
-		this.setField('selectedWebcamDeviceId', webcamId ?? '');
-		this.setField('tempSelectedMicDeviceId', micId ?? '');
-		this.setField('tempSelectedDesktopAudioDeviceId', desktopId ?? '');
-		this.setField('tempSelectedGroupAudioDeviceId', groupId ?? 'default');
+		this.setField('selectedWebcamDeviceId', webcamId ?? PRODUCER_UNSET_DEVICE);
+		this.setField('tempSelectedMicDeviceId', micId ?? PRODUCER_UNSET_DEVICE);
+		this.setField('tempSelectedDesktopAudioDeviceId', desktopId ?? PRODUCER_UNSET_DEVICE);
+		this.setField('tempSelectedGroupAudioDeviceId', groupId ?? PRODUCER_DEFAULT_GROUP_AUDIO);
 	}
 
 	mounted() {
 		// If we don't prompt here, the user can end up denying permissions and
 		// then opening this form again to an empty device list.
-		MediaDeviceService.detectDevices({ prompt: true, skipIfPrompted: false });
+		this._detectDevices();
+	}
+
+	private async _detectDevices() {
+		try {
+			await MediaDeviceService.detectDevices({ prompt: true, skipIfPrompted: false });
+		} finally {
+			assignPreferredProducerDevices(this.producer);
+			this._didDetectDevices = true;
+			// Reinitialize so that the form fields match with our producer.
+			this.onInit();
+		}
+	}
+
+	destroyed() {
+		// If we're not streaming or about to, clear the selected device ids so
+		// that the browser doesn't think we're still recording.
+		if (!(this.isStreaming || this.isStarting)) {
+			clearSelectedRecordingDevices(this.producer);
+		}
 	}
 
 	get isStreaming() {
@@ -102,11 +128,23 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 	}
 
 	get hasMicAudio() {
-		return (this.formModel.selectedMicDeviceId ?? '') !== '';
+		return (
+			(this.formModel.selectedMicDeviceId ?? PRODUCER_UNSET_DEVICE) !== PRODUCER_UNSET_DEVICE
+		);
 	}
 
 	get hasDesktopAudio() {
-		return (this.formModel.selectedDesktopAudioDeviceId ?? '') !== '';
+		return (
+			(this.formModel.selectedDesktopAudioDeviceId ?? PRODUCER_UNSET_DEVICE) !==
+			PRODUCER_UNSET_DEVICE
+		);
+	}
+
+	get hasWebcam() {
+		return (
+			(this.formModel.selectedWebcamDeviceId ?? PRODUCER_UNSET_DEVICE) !==
+			PRODUCER_UNSET_DEVICE
+		);
 	}
 
 	get selectedMicGroupId() {
@@ -171,8 +209,8 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 
 	get isInvalidMicConfig() {
 		return (
-			this.formModel.selectedMicDeviceId !== '' &&
-			this.formModel.selectedDesktopAudioDeviceId !== '' &&
+			this.formModel.selectedMicDeviceId !== PRODUCER_UNSET_DEVICE &&
+			this.formModel.selectedDesktopAudioDeviceId !== PRODUCER_UNSET_DEVICE &&
 			this.formModel.selectedMicDeviceId === this.formModel.selectedDesktopAudioDeviceId
 		);
 	}
@@ -182,7 +220,9 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 			return true;
 		}
 
-		return Object.entries(this.requiredFields).some(([_key, value]) => value !== '');
+		return Object.entries(this.requiredFields).some(
+			([_key, value]) => value !== PRODUCER_UNSET_DEVICE
+		);
 	}
 
 	// We required at least one of these fields to be filled out.
@@ -208,13 +248,17 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		// If we could potentially swap away from our only valid required
 		// device, we need to check if we'll either get a new one or have a
 		// different device active that meets the form requirements.
-		if (this.formModel.selectedMicDeviceId !== '') {
+		if (this.formModel.selectedMicDeviceId !== PRODUCER_UNSET_DEVICE) {
 			const required = Object.assign({}, this.requiredFields, this.audioInputFields);
 			delete required['selectedMicDeviceId'];
-			return Object.entries(required).some(([_key, value]) => value !== '');
+			return Object.entries(required).some(
+				([_key, value]) => value !== PRODUCER_UNSET_DEVICE
+			);
 		}
 
-		return Object.entries(this.audioInputFields).some(([_key, value]) => value !== '');
+		return Object.entries(this.audioInputFields).some(
+			([_key, value]) => value !== PRODUCER_UNSET_DEVICE
+		);
 	}
 
 	wouldInvalidateIfRemoved(fieldToRemove: string) {
@@ -224,7 +268,7 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 
 		const required = Object.assign({}, this.requiredFields);
 		delete required[fieldToRemove];
-		return Object.entries(required).every(([_key, value]) => value === '');
+		return Object.entries(required).every(([_key, value]) => value === PRODUCER_UNSET_DEVICE);
 	}
 
 	onToggleAdvanced() {
@@ -270,7 +314,7 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 	}
 
 	get canMakeNoise() {
-		return this.formModel.selectedGroupAudioDeviceId !== '';
+		return this.formModel.selectedGroupAudioDeviceId !== PRODUCER_DEFAULT_GROUP_AUDIO;
 	}
 
 	makeSomeNoise() {
@@ -298,7 +342,11 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		);
 	}
 
-	private getDeviceFromId(id: string, deviceType: 'mic' | 'webcam' | 'speaker') {
+	private getDeviceFromId(id: string | null, deviceType: 'mic' | 'webcam' | 'speaker') {
+		if (id === null) {
+			return;
+		}
+
 		switch (deviceType) {
 			case 'mic':
 				return this.mics.find(i => i.deviceId == id);
@@ -325,12 +373,15 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 	onTempSelectedMicChanged() {
 		const oldMic = this.getDeviceFromId(this.formModel.selectedMicDeviceId, 'mic');
 		const oldDesktop = this.getDeviceFromId(this.formModel.selectedDesktopAudioDeviceId, 'mic');
-		const newMic = this.getDeviceFromId(this.formModel.tempSelectedMicDeviceId ?? '', 'mic');
-		const newId = newMic?.deviceId ?? '';
+		const newMic = this.getDeviceFromId(this.formModel.tempSelectedMicDeviceId, 'mic');
+		const newId = newMic?.deviceId ?? PRODUCER_UNSET_DEVICE;
 
-		this.setField('selectedMicDeviceId', newMic?.deviceId ?? '');
-		if (newId !== '' && newMic?.groupId == oldDesktop?.groupId) {
-			this.setField('tempSelectedDesktopAudioDeviceId', oldMic?.deviceId ?? '');
+		this.setField('selectedMicDeviceId', newMic?.deviceId ?? PRODUCER_UNSET_DEVICE);
+		if (newId !== PRODUCER_UNSET_DEVICE && newMic?.groupId == oldDesktop?.groupId) {
+			this.setField(
+				'tempSelectedDesktopAudioDeviceId',
+				oldMic?.deviceId ?? PRODUCER_UNSET_DEVICE
+			);
 		}
 	}
 
@@ -339,14 +390,17 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		const oldMic = this.getDeviceFromId(this.formModel.selectedMicDeviceId, 'mic');
 		const oldDesktop = this.getDeviceFromId(this.formModel.selectedDesktopAudioDeviceId, 'mic');
 		const newDesktop = this.getDeviceFromId(
-			this.formModel.tempSelectedDesktopAudioDeviceId ?? '',
+			this.formModel.tempSelectedDesktopAudioDeviceId,
 			'mic'
 		);
-		const newId = newDesktop?.deviceId ?? '';
+		const newId = newDesktop?.deviceId ?? PRODUCER_UNSET_DEVICE;
 
-		this.setField('selectedDesktopAudioDeviceId', newDesktop?.deviceId ?? '');
-		if (newId !== '' && newDesktop?.groupId == oldMic?.groupId) {
-			this.setField('tempSelectedMicDeviceId', oldDesktop?.deviceId ?? '');
+		this.setField(
+			'selectedDesktopAudioDeviceId',
+			newDesktop?.deviceId ?? PRODUCER_UNSET_DEVICE
+		);
+		if (newId !== PRODUCER_UNSET_DEVICE && newDesktop?.groupId == oldMic?.groupId) {
+			this.setField('tempSelectedMicDeviceId', oldDesktop?.deviceId ?? PRODUCER_UNSET_DEVICE);
 		}
 	}
 
@@ -354,7 +408,7 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 	onTempSelectedGroupAudioChanged() {
 		this.setField(
 			'selectedGroupAudioDeviceId',
-			this.formModel.tempSelectedGroupAudioDeviceId ?? 'default'
+			this.formModel.tempSelectedGroupAudioDeviceId ?? PRODUCER_DEFAULT_GROUP_AUDIO
 		);
 	}
 
@@ -363,11 +417,9 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 	@Watch('formModel.selectedDesktopAudioDeviceId')
 	@Watch('formModel.selectedGroupAudioDeviceId')
 	onSelectedDevicesChanged() {
-		// When streaming, only apply changes to selected devices if the config
-		// is valid.
-		if (this.isInvalidConfig && this.isStreaming) {
-			// TODO: show error status on the form model values that do not
-			// match with whats set on [FiresideRTCProducer].
+		// When streaming, only apply changes to selected devices if the config is valid.
+		if ((this.isInvalidConfig && this.isStreaming) || !this._didDetectDevices) {
+			// TODO: show error status on the form model values that do not match with whats set on firesideHostRtc.
 			return;
 		}
 
@@ -377,7 +429,7 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		setSelectedGroupAudioDeviceId(this.producer, this.formModel.selectedGroupAudioDeviceId);
 	}
 
-	@Watch('c.rtc.isPoorNetworkQuality')
+	@Watch('rtc.isPoorNetworkQuality')
 	onNetworkQualityChanged() {
 		this.networkQualityDebounce ??= debounce(() => {
 			if (this.rtc.isPoorNetworkQuality) {

@@ -11,6 +11,7 @@ import { Fireside } from '../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../_common/illustration/illustration.vue';
 import AppLoading from '../../../_common/loading/loading.vue';
 import { Meta } from '../../../_common/meta/meta-service';
+import { Navigate } from '../../../_common/navigate/navigate.service';
 import { AppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppPopper from '../../../_common/popper/popper.vue';
 import { AppResponsiveDimensions } from '../../../_common/responsive-dimensions/responsive-dimensions';
@@ -27,9 +28,11 @@ import { store } from '../../store';
 import {
 	createFiresideController,
 	FiresideController,
+	getFiresideLink,
 	toggleStreamVideoStats,
 } from './controller/controller';
 import AppFiresideContainer from './controller/controller-container';
+import AppFiresideBanner from './_banner/banner.vue';
 import AppFiresideChatMembers from './_chat-members/chat-members.vue';
 import AppFiresideHeader from './_header/header.vue';
 import AppFiresideHostList from './_host-list/host-list.vue';
@@ -73,6 +76,7 @@ const FiresideThemeKey = 'fireside';
 		AppExpand,
 		AppFiresideHeader,
 		AppFiresideContainer,
+		AppFiresideBanner,
 	},
 	directives: {
 		AppTooltip,
@@ -96,6 +100,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	readonly Screen = Screen;
 	readonly number = number;
 	readonly toggleStreamVideoStats = toggleStreamVideoStats;
+	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
 
 	videoWidth = 0;
 	videoHeight = 0;
@@ -152,7 +157,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	get shouldShowHeaderInBody() {
-		return this.isVertical;
+		return this.isVertical && !!this.c?.isStreaming;
 	}
 
 	get shouldShowChat() {
@@ -174,6 +179,10 @@ export default class RouteFireside extends BaseRouteComponent {
 
 	get shouldShowFiresideStats() {
 		return !this.c?.isStreaming && this.c?.status === 'joined' && !Screen.isMobile;
+	}
+
+	get shortestSide() {
+		return Math.min(Screen.width, Screen.height);
 	}
 
 	async routeResolved($payload: RoutePayload) {
@@ -270,6 +279,17 @@ export default class RouteFireside extends BaseRouteComponent {
 	onClickRetry() {
 		if (this.c?.onRetry) {
 			this.c.onRetry();
+		}
+	}
+
+	onClickOpenBrowser() {
+		if (!this.c) {
+			return;
+		}
+
+		const url = getFiresideLink(this.c, this.$router);
+		if (url) {
+			Navigate.newWindow(url);
 		}
 	}
 

@@ -1,6 +1,7 @@
 import Vue, { CreateElement } from 'vue';
 import { Component, InjectReactive, Prop, ProvideReactive } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
+import { objectPick } from '../../../../utils/object';
 import { sleep } from '../../../../utils/utils';
 import { uuidv4 } from '../../../../utils/uuid';
 import { Api } from '../../../../_common/api/api.service';
@@ -24,7 +25,12 @@ import {
 import { EVENT_UPDATE, FiresideChannel } from '../../../components/grid/fireside-channel';
 import { Store } from '../../../store';
 import { StreamSetupModal } from '../_stream-setup/stream-setup-modal.service';
-import { createFiresideController, FiresideController, FiresideControllerKey } from './controller';
+import {
+	createFiresideController,
+	FiresideController,
+	FiresideControllerKey,
+	updateFiresideExpiryValues,
+} from './controller';
 
 @Component({})
 export default class AppFiresideContainer extends Vue {
@@ -94,6 +100,9 @@ export default class AppFiresideContainer extends Vue {
 			return;
 		}
 
+		this.setupExpiryInfoInterval();
+		updateFiresideExpiryValues(c);
+
 		if (c.fireside.isOpen()) {
 			if (!this.grid) {
 				this.loadGrid();
@@ -116,6 +125,9 @@ export default class AppFiresideContainer extends Vue {
 	}
 
 	destroyed() {
+		this.activeController!.onRetry = this.onRetry;
+
+		this.destroyExpiryInfoInterval();
 		this.disconnect();
 		this.grid?.unsetGuestToken();
 
@@ -372,7 +384,6 @@ export default class AppFiresideContainer extends Vue {
 		}
 
 		console.debug(`[FIRESIDE] Disconnecting from Fireside.`);
-
 		c.status = 'disconnected';
 
 		if (this.grid && this.grid.connected && c.gridChannel) {
@@ -386,9 +397,7 @@ export default class AppFiresideContainer extends Vue {
 		}
 
 		c.chatChannel = null;
-
 		StreamSetupModal.close();
-
 		this.destroyRtc();
 		this.clearExpiryCheck();
 
@@ -413,9 +422,20 @@ export default class AppFiresideContainer extends Vue {
 			this.disconnect();
 			c.status = 'expired';
 		}
+	}
 
-		// Shows an expiry warning on the stats icon (on mobile) when < 60 seconds remain.
-		c.hasExpiryWarning = c.fireside.getExpiryInMs() < 60_000;
+	private destroyExpiryInfoInterval() {
+		const c = this.activeController;
+		if (c.updateInterval) {
+			clearInterval(c.updateInterval);
+			c.updateInterval = null;
+		}
+	}
+
+	private setupExpiryInfoInterval() {
+		const c = this.activeController;
+		this.destroyExpiryInfoInterval();
+		c.updateInterval = setInterval(() => updateFiresideExpiryValues(c), 1000);
 	}
 
 	private createOrUpdateRtc(payload: any, checkJoined = true) {
@@ -471,7 +491,21 @@ export default class AppFiresideContainer extends Vue {
 			return;
 		}
 
-		c.fireside.assign(payload.fireside);
+		const updated = new Fireside(payload.fireside);
+		Object.assign(
+			c.fireside,
+			objectPick(updated, [
+				'user',
+				'header_media_item',
+				'title',
+				'expires_on',
+				'is_expired',
+				'is_streaming',
+				'is_draft',
+				'member_count',
+			])
+		);
+
 		this.expiryCheck();
 
 		// TODO(CHECK THIS)

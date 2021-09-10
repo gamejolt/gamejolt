@@ -32,7 +32,10 @@
 					</p>
 				</template>
 				<app-form-control-select v-else :disabled="producer.isBusy">
-					<option value="" :disabled="wouldInvalidateIfRemoved('selectedWebcamDeviceId')">
+					<option
+						:value="PRODUCER_UNSET_DEVICE"
+						:disabled="wouldInvalidateIfRemoved('selectedWebcamDeviceId')"
+					>
 						<translate>Not Set</translate>
 					</option>
 
@@ -55,7 +58,9 @@
 				<div
 					ref="videoPreview"
 					class="-video-preview"
-					:class="{ '-hidden': !producer.selectedWebcamDeviceId }"
+					:class="{
+						'-hidden': !hasWebcam,
+					}"
 				/>
 			</app-form-group>
 
@@ -86,7 +91,7 @@
 							:class="{ '-hide-indicator': !hasMicAudio }"
 						>
 							<option
-								value=""
+								:value="PRODUCER_UNSET_DEVICE"
 								:disabled="wouldInvalidateIfRemoved('selectedMicDeviceId')"
 							>
 								<translate>Not Set</translate>
@@ -163,7 +168,7 @@
 										:class="{ '-hide-indicator': !hasDesktopAudio }"
 									>
 										<option
-											value=""
+											:value="PRODUCER_UNSET_DEVICE"
 											:disabled="
 												wouldInvalidateIfRemoved(
 													'selectedDesktopAudioDeviceId'
