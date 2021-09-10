@@ -18,7 +18,7 @@
 						<div class="-volume list-group-item">
 							<app-slider
 								class="-volume-inner"
-								:percent="c.desktopVolume"
+								:percent="desktopVolume"
 								@scrub="onVolumeScrub"
 							/>
 						</div>
