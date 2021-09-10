@@ -1,4 +1,5 @@
 import AgoraRTC, { IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng';
+import { arrayRemove } from '../../../utils/array';
 import { MediaDeviceService } from '../../agora/media-device.service';
 import { Api } from '../../api/api.service';
 import { Growls } from '../../growls/growls.service';
@@ -12,6 +13,12 @@ import {
 	stopChannelStreaming,
 } from './channel';
 import { FiresideRTC, renewRTCTokens } from './rtc';
+import {
+	FiresideRTCUser,
+	setUserHasDesktopAudio,
+	setUserHasMicAudio,
+	setUserHasVideo,
+} from './user';
 
 const RENEW_TOKEN_INTERVAL = 60_000;
 
@@ -216,7 +223,13 @@ function _doBusyWork<T>(producer: FiresideRTCProducer, work: () => Promise<T>) {
 
 		producer.isBusy = true;
 		try {
-			return await work();
+			const ret = await work();
+
+			// Sync any changes to our local user in the RTC after any work was
+			// done.
+			_syncLocalUserToRTC(producer);
+
+			return ret;
 		} finally {
 			producer.isBusy = false;
 		}
@@ -595,4 +608,77 @@ async function _stopStreaming(producer: FiresideRTCProducer, becomeBusy: boolean
 	};
 
 	await (becomeBusy ? _doBusyWork(producer, busyWork) : busyWork());
+}
+
+/**
+ * While we're streaming, anytime our local tracks change, we want to sync a
+ * fake [FiresideRTCUser] to show us as part of the fireside.
+ */
+function _syncLocalUserToRTC(producer: FiresideRTCProducer) {
+	const {
+		rtc,
+		rtc: { videoChannel, chatChannel },
+	} = producer;
+
+	rtc.log(`Syncing the host user's tracks into RTC.`);
+	let user = rtc.localUser;
+	const hadUser = !!user;
+
+	if (!producer._isStreaming) {
+		if (user) {
+			rtc.log(`Destroying local RTC user since we're no longer streaming.`);
+
+			setUserHasVideo(user, false);
+			setUserHasDesktopAudio(user, false);
+			setUserHasMicAudio(user, false);
+
+			arrayRemove(rtc.users, i => i === user);
+
+			rtc.log(`Destroyed local RTC user.`);
+		}
+
+		rtc.log(`Not streaming, nothing to sync.`);
+		return;
+	}
+
+	const hadVideo = user?.hasVideo === true;
+	const hadDesktopAudio = user?.hasDesktopAudio === true;
+	const hadMicAudio = user?.hasMicAudio === true;
+
+	user ??= new FiresideRTCUser(rtc, rtc.userId!);
+	user._videoTrack = videoChannel._localVideoTrack;
+	user._desktopAudioTrack = videoChannel._localAudioTrack;
+	user._micAudioTrack = chatChannel._localAudioTrack;
+
+	const hasVideo = !!user._videoTrack;
+	const hasDesktopAudio = !!user._desktopAudioTrack;
+	const hasMicAudio = !!user._micAudioTrack;
+
+	if (hadVideo !== hasVideo) {
+		setUserHasVideo(user, hasVideo);
+	}
+	if (hadDesktopAudio !== hasDesktopAudio) {
+		setUserHasDesktopAudio(user, hasDesktopAudio);
+	}
+	if (hadMicAudio !== hasMicAudio) {
+		setUserHasMicAudio(user, hasMicAudio);
+	}
+
+	// Always put us as the first user.
+	arrayRemove(rtc.users, i => i === user);
+	rtc.users.unshift(user);
+
+	// If we just started streaming, choose us as the focused user.
+	if (!hadUser) {
+		rtc.focusedUserId = user.userId;
+	}
+
+	rtc.log(`Synced local user.`, {
+		hasVideo,
+		hasDesktopAudio,
+		hasMicAudio,
+		hadVideo,
+		hadDesktopAudio,
+		hadMicAudio,
+	});
 }

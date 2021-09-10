@@ -1,8 +1,13 @@
-import type { IAgoraRTCRemoteUser, IRemoteAudioTrack, IRemoteVideoTrack } from 'agora-rtc-sdk-ng';
+import type {
+	IAgoraRTCRemoteUser,
+	ILocalAudioTrack,
+	ILocalVideoTrack,
+	IRemoteAudioTrack,
+	IRemoteVideoTrack,
+} from 'agora-rtc-sdk-ng';
 import { arrayRemove } from '../../../utils/array';
 import { sleep } from '../../../utils/utils';
-import { User } from '../../user/user.model';
-import { FiresideRTC } from './rtc';
+import { chooseFocusedRTCUser, FiresideRTC } from './rtc';
 
 export class FiresideVideoPlayStatePlaying {
 	isPlaying = true;
@@ -32,31 +37,65 @@ export class FiresideVideoLock {
 }
 
 export class FiresideRTCUser {
-	videoUser: IAgoraRTCRemoteUser | null = null;
-	chatUser: IAgoraRTCRemoteUser | null = null;
+	constructor(public readonly rtc: FiresideRTC, public readonly userId: number) {
+		// If everyone is currently muted, add new users as muted.
+		this.micAudioMuted = rtc.users.length > 0 ? rtc.users.every(i => i.micAudioMuted) : false;
+	}
+
+	// These won't be assigned if this is the local user.
+	remoteVideoUser: IAgoraRTCRemoteUser | null = null;
+	remoteChatUser: IAgoraRTCRemoteUser | null = null;
+
+	_videoTrack: ILocalVideoTrack | IRemoteVideoTrack | null = null;
+	_desktopAudioTrack: ILocalAudioTrack | IRemoteAudioTrack | null = null;
+	_micAudioTrack: ILocalAudioTrack | IRemoteAudioTrack | null = null;
 
 	hasVideo = false;
-	videoTrack: IRemoteVideoTrack | null = null;
 	videoPlayState: FiresideVideoPlayState = new FiresideVideoPlayStateStopped();
 	queuedVideoPlayState: FiresideVideoPlayState | null = null;
 	readonly videoLocks: FiresideVideoLock[] = [];
 
 	hasDesktopAudio = false;
-	desktopAudioTrack: IRemoteAudioTrack | null = null;
 
 	hasMicAudio = false;
 	micAudioMuted = false;
-	micAudioTrack: IRemoteAudioTrack | null = null;
-
 	volumeLevel = 0;
 
-	constructor(
-		public readonly rtc: FiresideRTC,
-		public readonly userId: number,
-		public readonly userModel: User | undefined
-	) {
-		// If everyone is currently muted, add new users as muted.
-		this.micAudioMuted = rtc.users.length > 0 ? rtc.users.every(i => i.micAudioMuted) : false;
+	get userModel() {
+		return this.rtc.hosts.find(host => host.id === this.userId);
+	}
+}
+
+export function setUserHasVideo(user: FiresideRTCUser, hasVideo: boolean) {
+	if (hasVideo) {
+		user.hasVideo = true;
+	} else {
+		setVideoPlayback(user, new FiresideVideoPlayStateStopped());
+		user.hasVideo = false;
+		chooseFocusedRTCUser(user.rtc);
+	}
+}
+
+export function setUserHasDesktopAudio(user: FiresideRTCUser, hasDesktopAudio: boolean) {
+	if (hasDesktopAudio) {
+		user.hasDesktopAudio = true;
+	} else {
+		user.hasDesktopAudio = false;
+		chooseFocusedRTCUser(user.rtc);
+	}
+}
+
+export function setUserHasMicAudio(user: FiresideRTCUser, hasMicAudio: boolean) {
+	if (hasMicAudio) {
+		user.hasMicAudio = true;
+
+		if (!user.micAudioMuted) {
+			startAudioPlayback(user);
+		}
+	} else {
+		stopAudioPlayback(user);
+		user.hasMicAudio = false;
+		chooseFocusedRTCUser(user.rtc);
 	}
 }
 
@@ -96,7 +135,7 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 	const { rtc } = user;
 
 	// If user doesnt have a video stream to subscribe/unsubscribe to, nothing to do.
-	if (!user.hasVideo || !user.videoUser) {
+	if (!user.hasVideo) {
 		rtc.log('No video or no video client');
 		return;
 	}
@@ -128,27 +167,33 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 
 	if (newState instanceof FiresideVideoPlayStatePlaying) {
 		try {
-			user.videoTrack = await rtc.videoChannel.agoraClient.subscribe(user.videoUser, 'video');
+			// If they're a remote user, we need to subscribe to their video first.
+			if (user.remoteVideoUser) {
+				user._videoTrack = await rtc.videoChannel.agoraClient.subscribe(
+					user.remoteVideoUser,
+					'video'
+				);
+			}
 
 			// Wait for next tick before playing so that any video playback elements
 			// are first deregistered.
 			await sleep(0);
 
-			if (user.videoTrack) {
-				user.videoTrack.play(newState.element);
-				rtc.videoChannel.agoraClient.setRemoteVideoStreamType(
-					user.userId,
-					newState.isLowBitrate ? 1 : 0
-				);
-			}
+			user._videoTrack?.play(newState.element);
+
+			// TODO: Test to make sure this doesn't fail if we're trying to set against a local user.
+			rtc.videoChannel.agoraClient.setRemoteVideoStreamType(
+				user.userId,
+				newState.isLowBitrate ? 1 : 0
+			);
 		} catch (e) {
 			rtc.logError('Failed to subscribe to video for user ' + user.userId, e);
 		}
 	} else if (newState instanceof FiresideVideoPlayStateStopped) {
 		try {
-			if (user.videoTrack?.isPlaying) {
+			if (user._videoTrack?.isPlaying) {
 				try {
-					user.videoTrack.stop();
+					user._videoTrack.stop();
 				} catch (e) {
 					rtc.logWarning(
 						`Got an error while stopping a video track for user ${user.userId}. Tolerating.`,
@@ -157,16 +202,19 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 				}
 			}
 
-			await rtc.videoChannel.agoraClient.unsubscribe(user.videoUser, 'video');
+			// Only unsubscribe for remote users.
+			if (user.remoteVideoUser) {
+				await rtc.videoChannel.agoraClient.unsubscribe(user.remoteVideoUser, 'video');
 
-			// TODO: we might want to set the video track to null even
-			// before unsubscribing. this is because unsubscribe may fail if
-			// we already left the channel or it got disconnected for some
-			// reason. in these cases the video track should still get
-			// unset, however I don't know what happens if the error is
-			// literally with unsubscribing, and the video track remains
-			// intact.
-			user.videoTrack = null;
+				// TODO: we might want to set the video track to null even
+				// before unsubscribing. this is because unsubscribe may fail if
+				// we already left the channel or it got disconnected for some
+				// reason. in these cases the video track should still get
+				// unset, however I don't know what happens if the error is
+				// literally with unsubscribing, and the video track remains
+				// intact.
+				user._videoTrack = null;
+			}
 
 			// Make sure all the locks are released (just in case).
 			for (const lock of user.videoLocks) {
@@ -197,16 +245,17 @@ export async function startDesktopAudioPlayback(user: FiresideRTCUser) {
 	const { rtc } = user;
 
 	rtc.log(`${user.userId} -> startDesktopAudioPlayback`);
-	if (!user.videoUser) {
-		return;
-	}
 
 	try {
-		user.desktopAudioTrack = await rtc.videoChannel.agoraClient.subscribe(
-			user.videoUser,
-			'audio'
-		);
-		user.desktopAudioTrack.play();
+		// Only subscribe for remote users.
+		if (user.remoteVideoUser) {
+			user._desktopAudioTrack = await rtc.videoChannel.agoraClient.subscribe(
+				user.remoteVideoUser,
+				'audio'
+			);
+		}
+
+		user._desktopAudioTrack?.play();
 	} catch (e) {
 		rtc.logError('Failed to start desktop audio playback, attempting to gracefully stop.', e);
 
@@ -217,27 +266,28 @@ export async function startDesktopAudioPlayback(user: FiresideRTCUser) {
 
 export async function stopDesktopAudioPlayback(user: FiresideRTCUser) {
 	const { rtc } = user;
-	rtc.log(`${user.userId} -> stopDesktopAudioPlayback`);
-	if (!user.videoUser) {
-		return;
-	}
 
-	if (user.desktopAudioTrack && user.desktopAudioTrack.isPlaying) {
+	rtc.log(`${user.userId} -> stopDesktopAudioPlayback`);
+
+	if (user._desktopAudioTrack?.isPlaying === true) {
 		rtc.log('Stopping existing desktop audio track');
 		try {
-			user.desktopAudioTrack.stop();
+			user._desktopAudioTrack.stop();
 		} catch (e) {
 			rtc.logWarning('Failed to stop desktop audio track playback', e);
 		}
 	}
-	user.desktopAudioTrack = null;
 
-	try {
-		await rtc.videoChannel.agoraClient.unsubscribe(user.videoUser, 'audio');
-	} catch (e) {
-		rtc.logWarning(
-			'Failed to unsbuscribe to desktop audio. Most of the times this is not an error. We attempt to unsubscribe even when we know the user should normally be unsubscribed.'
-		);
+	// Only unsubscribe for remote users.
+	if (user.remoteVideoUser) {
+		try {
+			user._desktopAudioTrack = null;
+			await rtc.videoChannel.agoraClient.unsubscribe(user.remoteVideoUser, 'audio');
+		} catch (e) {
+			rtc.logWarning(
+				`Failed to unsubscribe to desktop audio. Most of the times this is not an error. We attempt to unsubscribe even when we know the user should normally be unsubscribed.`
+			);
+		}
 	}
 }
 
@@ -253,14 +303,20 @@ export function setAudioPlayback(user: FiresideRTCUser, isPlaying: boolean) {
 
 export async function startAudioPlayback(user: FiresideRTCUser) {
 	const { rtc } = user;
+
 	rtc.log(`${user.userId} -> startAudioPlayback`);
-	if (!user.chatUser) {
+
+	if (!user.remoteChatUser) {
 		return;
 	}
 
 	try {
-		user.micAudioTrack = await rtc.chatChannel.agoraClient.subscribe(user.chatUser, 'audio');
-		user.micAudioTrack.play();
+		user._micAudioTrack = await rtc.chatChannel.agoraClient.subscribe(
+			user.remoteChatUser,
+			'audio'
+		);
+
+		user._micAudioTrack.play();
 	} catch (e) {
 		rtc.logError('Failed to start video playback, attempting to gracefully stop.', e);
 
@@ -271,36 +327,37 @@ export async function startAudioPlayback(user: FiresideRTCUser) {
 
 export async function stopAudioPlayback(user: FiresideRTCUser) {
 	const { rtc } = user;
+
 	rtc.log(`${user.userId} -> stopAudioPlayback`);
-	if (!user.chatUser) {
+
+	if (!user.remoteChatUser) {
 		return;
 	}
 
-	if (user.micAudioTrack?.isPlaying) {
+	if (user._micAudioTrack?.isPlaying) {
 		rtc.log('Stopping existing audio track');
 		try {
-			user.micAudioTrack.stop();
+			user._micAudioTrack.stop();
 		} catch (e) {
 			rtc.logWarning('Failed to stop mic audio track playback', e);
 		}
 	}
-	user.micAudioTrack = null;
 
-	// Don't care if these fail, best effort.
 	try {
-		await rtc.chatChannel.agoraClient.unsubscribe(user.chatUser, 'audio');
+		user._micAudioTrack = null;
+		await rtc.chatChannel.agoraClient.unsubscribe(user.remoteChatUser, 'audio');
 	} catch (e) {
 		rtc.logWarning(
-			'Failed to unsubscribe to mic audio. Most of the times this is not an error. We attempt to unsubscribe even when we know the user should normally be unsubscribed.'
+			`Failed to unsubscribe to mic audio. Most of the times this is not an error. We attempt to unsubscribe even when we know the user should normally be unsubscribed.`
 		);
 	}
 }
 
 export function updateVolumeLevel(user: FiresideRTCUser) {
-	if (!user.chatUser || !user.micAudioTrack?.isPlaying) {
+	if (!user.remoteChatUser || user._micAudioTrack?.isPlaying !== true) {
 		user.volumeLevel = 0;
 		return;
 	}
 
-	user.volumeLevel = user.micAudioTrack.getVolumeLevel();
+	user.volumeLevel = user._micAudioTrack.getVolumeLevel();
 }

@@ -10,7 +10,6 @@ import { FiresideRTC } from './rtc';
 
 type OnTrackPublish = (remoteUser: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video') => void;
 type OnTrackUnpublish = (remoteUser: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video') => void;
-type OnUserLeave = (remoteUser: IAgoraRTCRemoteUser, reason?: string) => void;
 
 export class FiresideRTCChannel {
 	constructor(public readonly rtc: FiresideRTC, public readonly channel: string) {}
@@ -56,11 +55,9 @@ export function createFiresideRTCChannel(
 	{
 		onTrackPublish,
 		onTrackUnpublish,
-		onUserLeave,
 	}: {
 		onTrackPublish?: OnTrackPublish;
 		onTrackUnpublish?: OnTrackUnpublish;
-		onUserLeave?: OnUserLeave;
 	} = {}
 ) {
 	const { generation } = rtc;
@@ -77,11 +74,6 @@ export function createFiresideRTCChannel(
 	c.agoraClient.on('user-unpublished', (...args) => {
 		generation.assert();
 		onTrackUnpublish?.(...args);
-	});
-
-	c.agoraClient.on('user-left', (...args) => {
-		generation.assert();
-		onUserLeave?.(...args);
 	});
 
 	c.agoraClient.on('network-quality', stats => {
