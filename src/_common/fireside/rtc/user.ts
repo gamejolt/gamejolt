@@ -179,7 +179,10 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 			// are first deregistered.
 			await sleep(0);
 
-			user._videoTrack?.play(newState.element);
+			user._videoTrack?.play(newState.element, {
+				// Don't mirror any tracks - local or remote.
+				mirror: false,
+			});
 
 			// TODO: Test to make sure this doesn't fail if we're trying to set against a local user.
 			rtc.videoChannel.agoraClient.setRemoteVideoStreamType(
