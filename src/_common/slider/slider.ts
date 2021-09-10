@@ -149,10 +149,10 @@ export default class AppSlider extends Vue {
 		let pageX: number | null = null;
 		let pageY: number | null = null;
 
-		if (event instanceof MouseEvent) {
+		if (event && event instanceof MouseEvent) {
 			pageX = event.pageX;
 			pageY = event.pageY;
-		} else if (event instanceof TouchEvent) {
+		} else if (event && event instanceof TouchEvent) {
 			// Prevent page scrolling if we got a touch event.
 			event.preventDefault();
 
