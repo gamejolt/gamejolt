@@ -90,7 +90,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	get canCreateFireside() {
-		return !this.userFireside && this.community.allow_firesides;
+		return !this.userFireside && this.community.allow_firesides && !this.community.isBlocked;
 	}
 
 	@Watch('communityState.hasUnreadFeaturedPosts', { immediate: true })

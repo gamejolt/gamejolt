@@ -42,6 +42,11 @@ interface CommunityFeaturePayload {
 	post_id: string;
 }
 
+interface CommunityFeatureFiresidePayload {
+	fireside_id: string;
+	fireside_data: any;
+}
+
 interface CommunityNewPostPayload {
 	channel_id: string;
 }
@@ -661,6 +666,9 @@ export class GridClient {
 			channel.on('new-post', (payload: CommunityNewPostPayload) =>
 				this.handleCommunityNewPost(community.id, payload)
 			);
+			channel.on('feature-fireside', (payload: CommunityFeatureFiresidePayload) =>
+				this.handleCommunityFeatureFireside(community.id, payload)
+			);
 		}
 	}
 
@@ -687,6 +695,41 @@ export class GridClient {
 		communityState.hasUnreadFeaturedPosts = true;
 
 		store.commit('incrementNotificationCount', { count: 1, type: 'activity' });
+	}
+
+	handleCommunityFeatureFireside(_communityId: number, payload: CommunityFeatureFiresidePayload) {
+		const fireside = new Fireside(payload.fireside_data);
+		if (!fireside.community) {
+			console.error('Featured fireside must have a community, but it does not.');
+			return;
+		}
+
+		if (store.state.app.user && fireside.user.id == store.state.app.user.id) {
+			console.log('Suppress featured Fireside notification for Fireside owner.');
+			return;
+		}
+
+		Growls.info({
+			title: Translate.$gettext(`New Featured Fireside!`),
+			message: Translate.$gettextInterpolate(
+				`@%{ username }'s Fireside %{ firesideTitle } was featured in %{ communityName }!`,
+				{
+					username: fireside.user.username,
+					firesideTitle: fireside.title,
+					communityName: fireside.community.name,
+				}
+			),
+			icon: fireside.user.img_avatar,
+			onclick: () => {
+				Analytics.trackEvent(
+					'grid',
+					'notification-click',
+					'fireside-featured-in-community'
+				);
+				router.push(fireside.location);
+			},
+			system: true,
+		});
 	}
 
 	handleCommunityNewPost(communityId: number, payload: CommunityNewPostPayload) {

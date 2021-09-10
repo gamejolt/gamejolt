@@ -31,6 +31,14 @@ export default class FormFiresideAdd extends BaseForm<FormModel> implements Form
 	@Prop({ type: String, required: false, default: undefined }) defaultTitle!: string;
 	@Prop(propOptional(Community, null)) community!: Community | null;
 
+	get canSelectCommunity() {
+		return this.selectableCommunities.length > 0;
+	}
+
+	get selectableCommunities() {
+		return this.communities.filter(c => !c.isBlocked);
+	}
+
 	get selectedCommunity() {
 		if (!this.formModel.community_id) {
 			return undefined;
