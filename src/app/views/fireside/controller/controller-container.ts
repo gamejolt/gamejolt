@@ -508,7 +508,12 @@ export default class AppFiresideContainer extends Vue {
 
 		this.expiryCheck();
 
-		// TODO(CHECK THIS)
+		// We don't update host streaming info through this. Only the audience
+		// streaming info is done through Grid.
+		if (c.fireside.role?.canStream === true) {
+			return;
+		}
+
 		if (c.fireside.is_streaming && payload.streaming_info) {
 			this.createOrUpdateRtc(payload.streaming_info);
 		} else {
