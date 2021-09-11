@@ -50,6 +50,7 @@ export class FiresideController {
 
 	isShowingStreamOverlay = false;
 	isShowingOverlayPopper = false;
+	isShowingStreamSetup = false;
 
 	updateInterval: NodeJS.Timer | null = null;
 	totalDurationText: string | null = null;

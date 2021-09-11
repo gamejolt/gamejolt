@@ -25,7 +25,11 @@
 			</template>
 			<template v-else>
 				<div :key="rtcUser.userId">
-					<app-fireside-video class="-video-player -click-target" :rtc-user="rtcUser" />
+					<app-fireside-video
+						v-if="shouldShowVideo"
+						class="-video-player -click-target"
+						:rtc-user="rtcUser"
+					/>
 					<app-fireside-desktop-audio v-if="shouldPlayDesktopAudio" :rtc-user="rtcUser" />
 					<app-fireside-video-stats
 						v-if="c.rtc && c.rtc.shouldShowVideoStats"

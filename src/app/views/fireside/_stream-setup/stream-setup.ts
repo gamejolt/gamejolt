@@ -78,6 +78,8 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 	}
 
 	onInit() {
+		this.c.isShowingStreamSetup = true;
+
 		const webcamId = this.getDeviceFromId(
 			this.producer.selectedWebcamDeviceId,
 			'webcam'
@@ -121,6 +123,8 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		if (!(this.isStreaming || this.isStarting)) {
 			clearSelectedRecordingDevices(this.producer);
 		}
+
+		this.c.isShowingStreamSetup = false;
 	}
 
 	get isStreaming() {
