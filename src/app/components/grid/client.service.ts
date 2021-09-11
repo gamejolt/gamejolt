@@ -1,6 +1,7 @@
 import Axios from 'axios';
 import { Channel, Socket } from 'phoenix';
 import { arrayRemove } from '../../../utils/array';
+import { ServerTime } from '../../../utils/server-time';
 import { TabLeader } from '../../../utils/tab-leader';
 import { sleep } from '../../../utils/utils';
 import { uuidv4 } from '../../../utils/uuid';
@@ -32,7 +33,12 @@ import { CommunityChannel } from './community-channel';
 export const GRID_EVENT_NEW_STICKER = 'grid-new-sticker-received';
 export const GRID_EVENT_FIRESIDE_START = 'grid-fireside-start';
 
+interface NotificationJoinPayload {
+	server_time: number;
+}
+
 interface NewNotificationPayload {
+	server_time: number;
 	notification_data: {
 		event_item: any;
 	};
@@ -48,6 +54,7 @@ interface CommunityNewPostPayload {
 
 interface BootstrapPayload {
 	status: string;
+	server_time: number;
 	body: {
 		hasNewFriendRequests: boolean;
 		lastNotificationTime: number;
@@ -299,7 +306,11 @@ export class GridClient {
 					channel
 						.join()
 						.receive('error', reject)
-						.receive('ok', () => {
+						.receive('ok', (payload: NotificationJoinPayload) => {
+							if (payload.server_time) {
+								ServerTime.updateOffset(payload.server_time);
+							}
+
 							this.connected = true;
 							this.channels.push(channel);
 							for (const resolver of connectionResolvers) {
@@ -359,6 +370,10 @@ export class GridClient {
 	}
 
 	handleNotification(payload: NewNotificationPayload) {
+		if (payload.server_time) {
+			ServerTime.updateOffset(payload.server_time);
+		}
+
 		if (this.connected) {
 			// If no bootstrap has been received yet, store new notifications in a backlog to process them later
 			// the bootstrap delivers the timestamp of the last event item included in the bootstrap's notification count
@@ -394,6 +409,10 @@ export class GridClient {
 	}
 
 	handleBootstrap(channel: Channel, payload: BootstrapPayload) {
+		if (payload.server_time) {
+			ServerTime.updateOffset(payload.server_time);
+		}
+
 		if (payload.status === 'ok') {
 			console.log('[Grid] Received bootstrap.');
 

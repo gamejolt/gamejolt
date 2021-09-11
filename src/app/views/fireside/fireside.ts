@@ -2,6 +2,7 @@ import Component from 'vue-class-component';
 import { InjectReactive, ProvideReactive, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { getAbsoluteLink } from '../../../utils/router';
+import { ServerTime } from '../../../utils/server-time';
 import { sleep } from '../../../utils/utils';
 import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
@@ -38,6 +39,7 @@ import AppChatWindowOutput from '../../components/chat/window/output/output.vue'
 import AppChatWindowSend from '../../components/chat/window/send/send.vue';
 import { EVENT_UPDATE, FiresideChannel } from '../../components/grid/fireside-channel';
 import { store, Store } from '../../store';
+import { FiresideController, FiresideControllerKey } from './controller';
 import { FiresideHostRtc } from './fireside-host-rtc';
 import {
 	destroyFiresideRTC,
@@ -47,7 +49,6 @@ import {
 } from './fireside-rtc';
 import AppFiresideChatMembers from './_chat-members/chat-members.vue';
 import { FiresideChatMembersModal } from './_chat-members/modal/modal.service';
-import { FiresideController, FiresideControllerKey } from './controller';
 import { FiresideEditModal } from './_edit-modal/edit-modal.service';
 import AppFiresideHostList from './_host-list/host-list.vue';
 import { FiresideStatsModal } from './_stats/modal/modal.service';
@@ -80,6 +81,10 @@ export type RouteStatus =
 	| 'blocked'; // Blocked from joining the Fireside (user blocked).
 
 const FiresideThemeKey = 'fireside';
+
+interface GridChannelJoinPayload {
+	server_time: number;
+}
 
 @Component({
 	name: 'RouteFireside',
@@ -537,7 +542,11 @@ export default class RouteFireside extends BaseRouteComponent {
 				channel
 					.join()
 					.receive('error', reject)
-					.receive('ok', () => {
+					.receive('ok', (payload: GridChannelJoinPayload) => {
+						if (payload.server_time) {
+							ServerTime.updateOffset(payload.server_time);
+						}
+
 						this.gridChannel = channel;
 						this.grid!.channels.push(channel);
 						resolve();
