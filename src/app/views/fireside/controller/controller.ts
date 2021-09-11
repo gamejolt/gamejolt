@@ -86,13 +86,6 @@ export class FiresideController {
 		return this.rtc?.isStreaming ?? false;
 	}
 
-	get shouldShowVolumeControls() {
-		// If we restrict this in the future, make sure we're not setting the
-		// volume based [SettingStreamDesktopVolume] - otherwise we can end up
-		// muting all desktop streams with no way to change it.
-		return this.rtc?.focusedUser?.hasDesktopAudio === true;
-	}
-
 	get shouldShowStreamingOptions() {
 		return this.canStream || this.isPersonallyStreaming;
 	}
@@ -135,7 +128,7 @@ export class FiresideController {
 	 * form.
 	 */
 	get canBrowserStream() {
-		return !(GJ_IS_CLIENT /* || this.isFirefox  */ || this.isSafari);
+		return !(GJ_IS_CLIENT || this.isFirefox || this.isSafari);
 	}
 
 	/**

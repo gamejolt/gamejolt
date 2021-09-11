@@ -95,10 +95,19 @@ export class FiresideRTC {
 
 	/**
 	 * If the current user is currently streaming in this fireside. This will
-	 * only return valid data once everything gets susbcribed to.
+	 * only return valid data once everything gets subscribed to.
 	 */
 	get isStreaming() {
 		return this.localUser !== null;
+	}
+
+	get shouldShowVolumeControls() {
+		return this.focusedUser?.hasDesktopAudio === true && !this.isFocusingMe;
+	}
+
+	get isFocusingMe() {
+		const focusedUser = this.focusedUser;
+		return !!focusedUser && focusedUser.userId === this.localUser?.userId;
 	}
 
 	get focusedUser() {

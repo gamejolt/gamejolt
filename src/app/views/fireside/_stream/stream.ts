@@ -60,7 +60,7 @@ export default class AppFiresideStream extends Vue {
 	get shouldShowVideo() {
 		// We can only show local videos in one place at a time. This will
 		// re-grab the video feed when it gets rebuilt.
-		return !(this.c.isShowingStreamSetup && this.c.user?.id === this.c.rtc?.focusedUserId);
+		return !(this.c.isShowingStreamSetup && this.c.rtc?.isFocusingMe);
 	}
 
 	get hasOverlayItems() {

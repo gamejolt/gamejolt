@@ -21,6 +21,11 @@ export default class AppFiresideDesktopAudio extends Vue {
 	}
 
 	async mounted() {
+		// Don't play desktop audio for our own local user.
+		if (this.c.rtc?.isFocusingMe) {
+			return;
+		}
+
 		await startDesktopAudioPlayback(this.rtcUser);
 	}
 

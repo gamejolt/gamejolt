@@ -1,4 +1,8 @@
-import AgoraRTC, { IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng';
+import AgoraRTC, {
+	IAgoraRTCRemoteUser,
+	ILocalAudioTrack,
+	IRemoteAudioTrack,
+} from 'agora-rtc-sdk-ng';
 import { arrayRemove } from '../../../utils/array';
 import { MediaDeviceService } from '../../agora/media-device.service';
 import { Api } from '../../api/api.service';
@@ -552,7 +556,7 @@ function _updateGroupAudioDevice(producer: FiresideRTCProducer) {
 		const {
 			_selectedGroupAudioDeviceId,
 			rtc,
-			rtc: { chatChannel },
+			rtc: { chatChannel, videoChannel },
 		} = producer;
 
 		const deviceExists = !!MediaDeviceService.speakers.find(
@@ -566,17 +570,39 @@ function _updateGroupAudioDevice(producer: FiresideRTCProducer) {
 
 		rtc.log(`Applying new audio playback device to all remote audio streams.`);
 
-		await Promise.all(
+		if (rtc.localUser) {
+			// Local user isn't stored in the agora client remote users, so we
+			// need to set their devices seperately.
+			const { _micAudioTrack, _desktopAudioTrack } = rtc.localUser;
+
+			if (_micAudioTrack) {
+				await _updatePlaybackDevice(producer, _micAudioTrack);
+			}
+			if (_desktopAudioTrack) {
+				await _updatePlaybackDevice(producer, _desktopAudioTrack);
+			}
+		}
+
+		await Promise.all([
 			chatChannel.agoraClient.remoteUsers.map(remoteUser => {
 				const audioTrack = remoteUser.audioTrack;
 				if (!audioTrack) {
-					rtc.log(`- no audio track for user ${remoteUser.uid}`);
+					rtc.log(`- no microphone track for user ${remoteUser.uid}`);
 					return;
 				}
 
 				return _updateRemoteUserPlaybackDevice(producer, remoteUser);
-			})
-		);
+			}),
+			videoChannel.agoraClient.remoteUsers.map(remoteUser => {
+				const audioTrack = remoteUser.audioTrack;
+				if (!audioTrack) {
+					rtc.log(`- no desktop audio track for user ${remoteUser.uid}`);
+					return;
+				}
+
+				return _updateRemoteUserPlaybackDevice(producer, remoteUser);
+			}),
+		]);
 	});
 }
 
@@ -594,7 +620,17 @@ function _updateRemoteUserPlaybackDevice(
 
 	if (_streamingChatPlaybackDeviceId !== null) {
 		rtc.log(`- applying new audio track for user ${remoteUser.uid}`);
-		return audioTrack.setPlaybackDevice(_streamingChatPlaybackDeviceId);
+		return _updatePlaybackDevice(producer, audioTrack);
+	}
+}
+
+function _updatePlaybackDevice(
+	producer: FiresideRTCProducer,
+	track: ILocalAudioTrack | IRemoteAudioTrack
+) {
+	const deviceId = producer._streamingChatPlaybackDeviceId;
+	if (deviceId !== null) {
+		return track.setPlaybackDevice(deviceId);
 	}
 }
 

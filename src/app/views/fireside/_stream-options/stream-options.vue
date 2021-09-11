@@ -10,7 +10,7 @@
 
 			<template #popover>
 				<div class="list-group">
-					<template v-if="c.shouldShowVolumeControls">
+					<template v-if="shouldShowVolumeControls">
 						<h5 class="-header list-group-item has-icon">
 							<app-jolticon :icon="shouldShowAsMuted ? 'audio-mute' : 'audio'" />
 							<translate>Video Volume</translate>

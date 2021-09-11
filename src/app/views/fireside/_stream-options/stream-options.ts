@@ -37,8 +37,12 @@ export default class AppFiresideStreamOptions extends Vue {
 		return this.c.rtc?.desktopVolume ?? 1;
 	}
 
+	get shouldShowVolumeControls() {
+		return !!this.c.rtc?.shouldShowVolumeControls;
+	}
+
 	get shouldShowAsMuted() {
-		return this.c.shouldShowVolumeControls && this.c.rtc?.desktopVolume === 0;
+		return this.shouldShowVolumeControls && this.desktopVolume === 0;
 	}
 
 	get shouldShowMuteControls() {
