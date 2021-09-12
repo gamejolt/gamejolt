@@ -11,40 +11,27 @@ import { FiresideRole } from '../../../../_common/fireside/role/role.model';
 import {
 	createFiresideRTC,
 	destroyFiresideRTC,
-	renewRTCAudienceTokens,
+	renewRTCAudienceTokens
 } from '../../../../_common/fireside/rtc/rtc';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { User } from '../../../../_common/user/user.model';
-import { ChatStore, ChatStoreKey, clearChat, loadChat } from '../../../components/chat/chat-store';
-import {
-	joinInstancedRoomChannel,
-	leaveChatRoom,
-	setGuestChatToken,
-} from '../../../components/chat/client';
-import { EVENT_UPDATE, FiresideChannel } from '../../../components/grid/fireside-channel';
 import { Store } from '../../../store';
-import { StreamSetupModal } from '../_stream-setup/stream-setup-modal.service';
+import { StreamSetupModal } from '../../../views/fireside/_stream-setup/stream-setup-modal.service';
+import { ChatStore, ChatStoreKey, clearChat, loadChat } from '../../chat/chat-store';
+import { joinInstancedRoomChannel, leaveChatRoom, setGuestChatToken } from '../../chat/client';
+import { EVENT_UPDATE, FiresideChannel } from '../../grid/fireside-channel';
 import {
-	createFiresideController,
 	FiresideController,
 	FiresideControllerKey,
-	updateFiresideExpiryValues,
-} from './controller';
+	updateFiresideExpiryValues
+} from '../controller/controller';
 
 @Component({})
 export default class AppFiresideContainer extends Vue {
-	@Prop({ type: FiresideController, required: false })
-	controller?: FiresideController;
-
-	@Prop({ type: Fireside, required: false })
-	fireside?: Fireside;
-
-	@Prop({ type: String, required: false })
-	streamingAppId?: string;
-
-	@Prop({ type: String, required: false })
-	streamingSessionId?: string;
+	@ProvideReactive(FiresideControllerKey)
+	@Prop({ type: FiresideController, required: true })
+	controller!: FiresideController;
 
 	@AppState user!: AppStore['user'];
 	@State grid!: Store['grid'];
@@ -52,13 +39,6 @@ export default class AppFiresideContainer extends Vue {
 
 	@InjectReactive(ChatStoreKey)
 	chatStore!: ChatStore;
-
-	_controller: FiresideController | null = null;
-
-	@ProvideReactive(FiresideControllerKey)
-	get activeController() {
-		return this.controller ?? this._controller!;
-	}
 
 	get chat() {
 		return this.chatStore.chat;
@@ -69,21 +49,7 @@ export default class AppFiresideContainer extends Vue {
 			throw Error('AppFiresideContainer requires a default slot.');
 		}
 
-		if (!this.controller) {
-			if (!this.fireside || !this.streamingAppId || !this.streamingSessionId) {
-				throw Error(
-					'AppFiresideContainer requires a [fireside], [streamingAppId] and [streamingSessionId] if no controller is provided.'
-				);
-			}
-
-			this._controller = createFiresideController(
-				this.fireside,
-				this.streamingAppId,
-				this.streamingSessionId
-			);
-		}
-
-		this.activeController!.onRetry = this.onRetry;
+		this.controller.onRetry = this.onRetry;
 	}
 
 	render(h: CreateElement) {
@@ -91,7 +57,7 @@ export default class AppFiresideContainer extends Vue {
 	}
 
 	async mounted() {
-		const c = this.activeController!;
+		const c = this.controller;
 		c.chat = this.chat;
 
 		// TODO: Do we want to do this?
@@ -132,7 +98,7 @@ export default class AppFiresideContainer extends Vue {
 	}
 
 	destroyed() {
-		this.activeController!.onRetry = this.onRetry;
+		this.controller.onRetry = this.onRetry;
 
 		this.destroyExpiryInfoInterval();
 		this.disconnect();
@@ -147,7 +113,7 @@ export default class AppFiresideContainer extends Vue {
 	}
 
 	watchChat() {
-		const c = this.activeController!;
+		const c = this.controller;
 		if (this.chat?.connected) {
 			this.tryJoin();
 		}
@@ -163,7 +129,7 @@ export default class AppFiresideContainer extends Vue {
 	}
 
 	watchGrid() {
-		const c = this.activeController!;
+		const c = this.controller;
 		if (this.grid?.connected) {
 			this.tryJoin();
 		}
@@ -178,7 +144,7 @@ export default class AppFiresideContainer extends Vue {
 	}
 
 	private async tryJoin() {
-		const c = this.activeController!;
+		const c = this.controller;
 
 		// Only try to join when disconnected (or for the first "initial" load).
 		if (c.status === 'disconnected' || c.status === 'initial') {
@@ -221,7 +187,7 @@ export default class AppFiresideContainer extends Vue {
 
 	private async join() {
 		console.debug(`[FIRESIDE] Joining Fireside.`);
-		const c = this.activeController!;
+		const c = this.controller;
 
 		// --- Make sure common join conditions are met.
 
@@ -249,7 +215,7 @@ export default class AppFiresideContainer extends Vue {
 
 		try {
 			const payload = await Api.sendRequest(
-				`/web/fireside/fetch/${c.fireside.hash}?session_id=${c.streamingSessionId}`,
+				`/web/fireside/fetch/${c.fireside.hash}`,
 				undefined,
 				{ detach: true }
 			);
@@ -350,17 +316,6 @@ export default class AppFiresideContainer extends Vue {
 			}
 		});
 
-		// TODO(THIS UPDATED)
-		// Now join the RTC.
-		// const canStream = c.streamingAppId && c.fireside?.role?.canStream;
-
-		// if (c.fireside.is_streaming || canStream) {
-		// 	const streamingPayload = await Api.sendRequest(
-		// 		`/web/fireside/fetch-streaming-info/${c.fireside.hash}`
-		// 	);
-		// 	this.createOrUpdateRtc(streamingPayload, false);
-		// }
-
 		c.status = 'joined';
 		console.debug(`[FIRESIDE] Successfully joined Fireside.`);
 
@@ -385,7 +340,7 @@ export default class AppFiresideContainer extends Vue {
 	}
 
 	private disconnect() {
-		const c = this.activeController;
+		const c = this.controller;
 		if (!c || c.status === 'disconnected') {
 			return;
 		}
@@ -412,7 +367,7 @@ export default class AppFiresideContainer extends Vue {
 	}
 
 	private clearExpiryCheck() {
-		const c = this.activeController;
+		const c = this.controller;
 		if (c.expiryInterval) {
 			clearInterval(c.expiryInterval);
 			c.expiryInterval = null;
@@ -420,7 +375,7 @@ export default class AppFiresideContainer extends Vue {
 	}
 
 	private expiryCheck() {
-		const c = this.activeController;
+		const c = this.controller;
 		if (!c || c.status !== 'joined' || !c.fireside) {
 			return;
 		}
@@ -432,7 +387,7 @@ export default class AppFiresideContainer extends Vue {
 	}
 
 	private destroyExpiryInfoInterval() {
-		const c = this.activeController;
+		const c = this.controller;
 		if (c.updateInterval) {
 			clearInterval(c.updateInterval);
 			c.updateInterval = null;
@@ -440,13 +395,13 @@ export default class AppFiresideContainer extends Vue {
 	}
 
 	private setupExpiryInfoInterval() {
-		const c = this.activeController;
+		const c = this.controller;
 		this.destroyExpiryInfoInterval();
 		c.updateInterval = setInterval(() => updateFiresideExpiryValues(c), 1000);
 	}
 
 	private createOrUpdateRtc(payload: any, checkJoined = true) {
-		const c = this.activeController;
+		const c = this.controller;
 		if (!c || !c.fireside || (checkJoined && c.status !== 'joined')) {
 			return;
 		}
@@ -464,8 +419,8 @@ export default class AppFiresideContainer extends Vue {
 				c.fireside,
 				c.fireside.role,
 				this.user?.id ?? null,
-				c.streamingAppId,
-				c.streamingSessionId,
+				payload.streamingAppId,
+				payload.streamingSessionId,
 				payload.videoChannelName,
 				payload.videoToken,
 				payload.chatChannelName,
@@ -479,7 +434,7 @@ export default class AppFiresideContainer extends Vue {
 	}
 
 	private destroyRtc() {
-		const c = this.activeController;
+		const c = this.controller;
 		if (!c.rtc) {
 			return;
 		}
@@ -494,7 +449,7 @@ export default class AppFiresideContainer extends Vue {
 	}
 
 	onGridUpdateFireside(payload: any) {
-		const c = this.activeController;
+		const c = this.controller;
 		if (!c.fireside || !payload.fireside) {
 			return;
 		}

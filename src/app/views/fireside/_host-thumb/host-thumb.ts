@@ -5,7 +5,10 @@ import AppPopper from '../../../../_common/popper/popper.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
-import { FiresideController, FiresideControllerKey } from '../controller/controller';
+import {
+	FiresideController,
+	FiresideControllerKey,
+} from '../../../components/fireside/controller/controller';
 import AppFiresideVideo from '../_video/video.vue';
 import AppFiresideHostThumbIndicator from './host-thumb-indicator.vue';
 

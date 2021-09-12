@@ -15,7 +15,7 @@ import {
 	FiresideController,
 	FiresideControllerKey,
 	publishFireside,
-} from '../controller/controller';
+} from '../../../components/fireside/controller/controller';
 import AppFiresideShare from './_share/share.vue';
 
 @Component({

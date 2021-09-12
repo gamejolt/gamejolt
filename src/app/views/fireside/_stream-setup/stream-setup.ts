@@ -20,7 +20,7 @@ import { BaseForm, FormOnInit } from '../../../../_common/form-vue/form.service'
 import AppForm from '../../../../_common/form-vue/form.vue';
 import AppFormLegend from '../../../../_common/form-vue/legend/legend.vue';
 import AppLoadingFade from '../../../../_common/loading/fade/fade.vue';
-import { FiresideController } from '../controller/controller';
+import { FiresideController } from '../../../components/fireside/controller/controller';
 import AppVolumeMeter from './volume-meter.vue';
 
 const Beeps = [

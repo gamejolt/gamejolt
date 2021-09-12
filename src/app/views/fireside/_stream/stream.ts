@@ -5,7 +5,10 @@ import { FiresideRTCUser } from '../../../../_common/fireside/rtc/user';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { ChatUserCollection } from '../../../components/chat/user-collection';
-import { FiresideController, FiresideControllerKey } from '../controller/controller';
+import {
+	FiresideController,
+	FiresideControllerKey,
+} from '../../../components/fireside/controller/controller';
 import AppFiresideDesktopAudio from '../_desktop-audio/desktop-audio.vue';
 import AppFiresideHostList from '../_host-list/host-list.vue';
 import AppFiresideHostThumbIndicator from '../_host-thumb/host-thumb-indicator.vue';

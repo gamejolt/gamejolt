@@ -10,10 +10,10 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../../_common/share/share.service';
 import { appStore } from '../../../../_common/store/app-store';
 import { Translate } from '../../../../_common/translate/translate.service';
-import { ChatClient } from '../../../components/chat/client';
-import { ChatRoomChannel } from '../../../components/chat/room-channel';
-import { FiresideChannel } from '../../../components/grid/fireside-channel';
-import { FiresideChatMembersModal } from '../_chat-members/modal/modal.service';
+import { FiresideChatMembersModal } from '../../../views/fireside/_chat-members/modal/modal.service';
+import { ChatClient } from '../../chat/client';
+import { ChatRoomChannel } from '../../chat/room-channel';
+import { FiresideChannel } from '../../grid/fireside-channel';
 
 export type RouteStatus =
 	| 'initial' // Initial status when route loads.
@@ -28,11 +28,7 @@ export type RouteStatus =
 export const FiresideControllerKey = Symbol('fireside-controller');
 
 export class FiresideController {
-	constructor(
-		public readonly fireside: Fireside,
-		public readonly streamingAppId: string,
-		public readonly streamingSessionId: string
-	) {}
+	constructor(public readonly fireside: Fireside) {}
 
 	rtc: FiresideRTC | null = null;
 	status: RouteStatus = 'initial';
@@ -163,11 +159,9 @@ export class FiresideController {
 
 export function createFiresideController(
 	fireside: Fireside,
-	streamingAppId: string,
-	streamingSessionId: string,
 	onRetry: (() => void) | null = null
 ) {
-	const c = new FiresideController(fireside, streamingAppId, streamingSessionId);
+	const c = new FiresideController(fireside);
 	c.onRetry = onRetry;
 	return c;
 }
