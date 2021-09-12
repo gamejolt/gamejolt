@@ -10,10 +10,10 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../../_common/share/share.service';
 import { appStore } from '../../../../_common/store/app-store';
 import { Translate } from '../../../../_common/translate/translate.service';
-import { ChatClient } from '../../../components/chat/client';
-import { ChatRoomChannel } from '../../../components/chat/room-channel';
-import { FiresideChannel } from '../../../components/grid/fireside-channel';
-import { FiresideChatMembersModal } from '../_chat-members/modal/modal.service';
+import { FiresideChatMembersModal } from '../../../views/fireside/_chat-members/modal/modal.service';
+import { ChatClient } from '../../chat/client';
+import { ChatRoomChannel } from '../../chat/room-channel';
+import { FiresideChannel } from '../../grid/fireside-channel';
 
 export type RouteStatus =
 	| 'initial' // Initial status when route loads.

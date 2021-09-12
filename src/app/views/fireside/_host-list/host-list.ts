@@ -1,7 +1,10 @@
 import Vue from 'vue';
 import { Component, Emit, InjectReactive, Prop } from 'vue-property-decorator';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
-import { FiresideController, FiresideControllerKey } from '../controller/controller';
+import {
+	FiresideController,
+	FiresideControllerKey,
+} from '../../../components/fireside/controller/controller';
 import AppFiresideHostThumb from '../_host-thumb/host-thumb.vue';
 import AppFiresideStreamOptions from '../_stream-options/stream-options.vue';
 

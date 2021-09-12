@@ -16,20 +16,16 @@ import {
 import { Growls } from '../../../../_common/growls/growls.service';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { User } from '../../../../_common/user/user.model';
-import { ChatStore, ChatStoreKey, clearChat, loadChat } from '../../../components/chat/chat-store';
-import {
-	joinInstancedRoomChannel,
-	leaveChatRoom,
-	setGuestChatToken,
-} from '../../../components/chat/client';
-import { EVENT_UPDATE, FiresideChannel } from '../../../components/grid/fireside-channel';
 import { Store } from '../../../store';
-import { StreamSetupModal } from '../_stream-setup/stream-setup-modal.service';
+import { StreamSetupModal } from '../../../views/fireside/_stream-setup/stream-setup-modal.service';
+import { ChatStore, ChatStoreKey, clearChat, loadChat } from '../../chat/chat-store';
+import { joinInstancedRoomChannel, leaveChatRoom, setGuestChatToken } from '../../chat/client';
+import { EVENT_UPDATE, FiresideChannel } from '../../grid/fireside-channel';
 import {
 	FiresideController,
 	FiresideControllerKey,
 	updateFiresideExpiryValues,
-} from './controller';
+} from '../controller/controller';
 
 @Component({})
 export default class AppFiresideContainer extends Vue {

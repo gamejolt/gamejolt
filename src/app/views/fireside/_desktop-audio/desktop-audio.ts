@@ -5,7 +5,10 @@ import {
 	startDesktopAudioPlayback,
 	stopDesktopAudioPlayback,
 } from '../../../../_common/fireside/rtc/user';
-import { FiresideController, FiresideControllerKey } from '../controller/controller';
+import {
+	FiresideController,
+	FiresideControllerKey,
+} from '../../../components/fireside/controller/controller';
 
 @Component({})
 export default class AppFiresideDesktopAudio extends Vue {

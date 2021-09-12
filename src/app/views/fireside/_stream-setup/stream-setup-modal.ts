@@ -1,7 +1,7 @@
 import { Component, Prop } from 'vue-property-decorator';
 import AppIllustration from '../../../../_common/illustration/illustration.vue';
 import { BaseModal } from '../../../../_common/modal/base';
-import { FiresideController } from '../controller/controller';
+import { FiresideController } from '../../../components/fireside/controller/controller';
 import AppStreamSetup from './stream-setup.vue';
 
 @Component({

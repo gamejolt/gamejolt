@@ -2,7 +2,10 @@ import Vue from 'vue';
 import { Component, InjectReactive, Prop } from 'vue-property-decorator';
 import { FiresideRTCUser } from '../../../../_common/fireside/rtc/user';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
-import { FiresideController, FiresideControllerKey } from '../controller/controller';
+import {
+	FiresideController,
+	FiresideControllerKey,
+} from '../../../components/fireside/controller/controller';
 
 @Component({
 	components: {

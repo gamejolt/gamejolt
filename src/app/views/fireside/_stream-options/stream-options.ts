@@ -8,7 +8,10 @@ import { ScrubberCallback } from '../../../../_common/slider/slider';
 import AppSlider from '../../../../_common/slider/slider.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { FiresideController, FiresideControllerKey } from '../controller/controller';
+import {
+	FiresideController,
+	FiresideControllerKey,
+} from '../../../components/fireside/controller/controller';
 import { StreamSetupModal } from '../_stream-setup/stream-setup-modal.service';
 
 @Component({

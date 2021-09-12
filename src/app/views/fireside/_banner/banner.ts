@@ -8,7 +8,7 @@ import {
 	FiresideController,
 	FiresideControllerKey,
 	getFiresideLink,
-} from '../controller/controller';
+} from '../../../components/fireside/controller/controller';
 
 @Component({
 	components: {

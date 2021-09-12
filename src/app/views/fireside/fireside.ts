@@ -24,14 +24,14 @@ import AppUserAvatarImg from '../../../_common/user/user-avatar/img/img.vue';
 import { ChatStore, ChatStoreKey } from '../../components/chat/chat-store';
 import AppChatWindowOutput from '../../components/chat/window/output/output.vue';
 import AppChatWindowSend from '../../components/chat/window/send/send.vue';
-import { store } from '../../store';
+import AppFiresideContainer from '../../components/fireside/container/container';
 import {
 	createFiresideController,
 	FiresideController,
 	getFiresideLink,
 	toggleStreamVideoStats,
-} from './controller/controller';
-import AppFiresideContainer from './controller/controller-container';
+} from '../../components/fireside/controller/controller';
+import { store } from '../../store';
 import AppFiresideBanner from './_banner/banner.vue';
 import AppFiresideChatMembers from './_chat-members/chat-members.vue';
 import AppFiresideHeader from './_header/header.vue';

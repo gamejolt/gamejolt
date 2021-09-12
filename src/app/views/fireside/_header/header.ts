@@ -12,7 +12,7 @@ import {
 	FiresideController,
 	FiresideControllerKey,
 	showFiresideMembers,
-} from '../controller/controller';
+} from '../../../components/fireside/controller/controller';
 import { FiresideEditModal } from '../_edit-modal/edit-modal.service';
 import { FiresideStatsModal } from '../_stats/modal/modal.service';
 import { StreamSetupModal } from '../_stream-setup/stream-setup-modal.service';
