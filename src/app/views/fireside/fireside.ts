@@ -43,6 +43,7 @@ import AppFiresideStream from './_stream/stream.vue';
 type RoutePayload = {
 	fireside: any;
 	streamingAppId: string;
+	streamingSessionId: string;
 	videoChannelName: string;
 	videoToken: string | null;
 	audioChatChannelName: string;
@@ -194,7 +195,8 @@ export default class RouteFireside extends BaseRouteComponent {
 
 		this.c ??= createFiresideController(
 			new Fireside($payload.fireside),
-			$payload.streamingAppId
+			$payload.streamingAppId,
+			$payload.streamingSessionId
 		);
 
 		this.setPageTheme();

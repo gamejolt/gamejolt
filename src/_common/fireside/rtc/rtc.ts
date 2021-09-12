@@ -40,6 +40,7 @@ export class FiresideRTC {
 		public readonly role: FiresideRole | null,
 		public readonly userId: number | null,
 		public readonly appId: string,
+		public readonly sessionId: string,
 		public readonly videoChannelName: string,
 		public videoToken: string,
 		public readonly chatChannelName: string,
@@ -124,6 +125,7 @@ export function createFiresideRTC(
 	role: FiresideRole | null,
 	userId: number | null,
 	appId: string,
+	sessionId: string,
 	videoChannelName: string,
 	videoToken: string,
 	chatChannelName: string,
@@ -135,6 +137,7 @@ export function createFiresideRTC(
 		role,
 		userId,
 		appId,
+		sessionId,
 		videoChannelName,
 		videoToken,
 		chatChannelName,
@@ -423,16 +426,33 @@ export function chooseFocusedRTCUser(rtc: FiresideRTC) {
 	rtc.focusedUserId = bestUser?.userId || null;
 }
 
+function _parseRemoteUid(remoteUser: IAgoraRTCRemoteUser): number | null {
+	const remoteUid = remoteUser.uid;
+	if (typeof remoteUid !== 'string') {
+		return null;
+	}
+
+	const match = remoteUid.match(/^user:(\d+):[a-z0-9]+$/);
+	if (!match) {
+		return null;
+	}
+
+	return parseInt(match[1]);
+}
+
 function _findOrAddUser(rtc: FiresideRTC, remoteUser: IAgoraRTCRemoteUser) {
-	let user = rtc.users.find(i => i.userId === remoteUser.uid);
+	const remoteUid = _parseRemoteUid(remoteUser);
+	if (!remoteUid) {
+		rtc.logWarning(
+			`Expected remote user uid to be a string of the form 'user:id:hash', got: ${remoteUid}`
+		);
+		return null;
+	}
+
+	let user = rtc.users.find(i => i.userId === remoteUid);
 
 	if (!user) {
-		if (typeof remoteUser.uid !== 'number') {
-			rtc.logWarning('Expected remote user uid to be numeric');
-			return null;
-		}
-
-		user = new FiresideRTCUser(rtc, remoteUser.uid);
+		user = new FiresideRTCUser(rtc, remoteUid);
 		rtc.users.push(user);
 	}
 

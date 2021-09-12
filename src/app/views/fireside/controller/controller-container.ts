@@ -43,6 +43,9 @@ export default class AppFiresideContainer extends Vue {
 	@Prop({ type: String, required: false })
 	streamingAppId?: string;
 
+	@Prop({ type: String, required: false })
+	streamingSessionId?: string;
+
 	@AppState user!: AppStore['user'];
 	@State grid!: Store['grid'];
 	@Action loadGrid!: Store['loadGrid'];
@@ -67,13 +70,17 @@ export default class AppFiresideContainer extends Vue {
 		}
 
 		if (!this.controller) {
-			if (!this.fireside || !this.streamingAppId) {
+			if (!this.fireside || !this.streamingAppId || !this.streamingSessionId) {
 				throw Error(
-					'AppFiresideContainer requires both a [fireside] and [streamingAppId] if no controller is provided.'
+					'AppFiresideContainer requires a [fireside], [streamingAppId] and [streamingSessionId] if no controller is provided.'
 				);
 			}
 
-			this._controller = createFiresideController(this.fireside, this.streamingAppId);
+			this._controller = createFiresideController(
+				this.fireside,
+				this.streamingAppId,
+				this.streamingSessionId
+			);
 		}
 
 		this.activeController!.onRetry = this.onRetry;
@@ -242,7 +249,7 @@ export default class AppFiresideContainer extends Vue {
 
 		try {
 			const payload = await Api.sendRequest(
-				`/web/fireside/fetch/${c.fireside.hash}`,
+				`/web/fireside/fetch/${c.fireside.hash}?session_id=${c.streamingSessionId}`,
 				undefined,
 				{ detach: true }
 			);
@@ -457,7 +464,8 @@ export default class AppFiresideContainer extends Vue {
 				c.fireside,
 				c.fireside.role,
 				this.user?.id ?? null,
-				payload.streamingAppId,
+				c.streamingAppId,
+				c.streamingSessionId,
 				payload.videoChannelName,
 				payload.videoToken,
 				payload.chatChannelName,

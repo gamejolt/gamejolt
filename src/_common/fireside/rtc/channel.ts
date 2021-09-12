@@ -6,6 +6,7 @@ import AgoraRTC, {
 	ILocalVideoTrack,
 	NetworkQuality,
 } from 'agora-rtc-sdk-ng';
+import { uuidv4 } from '../../../utils/uuid';
 import { FiresideRTC } from './rtc';
 
 type OnTrackPublish = (remoteUser: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video') => void;
@@ -86,7 +87,7 @@ export function createFiresideRTCChannel(
 export async function joinChannel(channel: FiresideRTCChannel, token: string) {
 	const {
 		agoraClient,
-		rtc: { appId, userId, generation },
+		rtc: { appId, sessionId, userId, generation },
 	} = channel;
 
 	channel.token = token;
@@ -97,14 +98,16 @@ export async function joinChannel(channel: FiresideRTCChannel, token: string) {
 	generation.assert();
 
 	// TODO: Check if out UID stuff is okay? It should be null for guest.
-	const uid = await agoraClient.join(appId, channel.channel, token, userId);
+	const targetUid = userId ? `user:${userId}:${sessionId}` : `guest:${uuidv4()}`;
+	const resultUid = await agoraClient.join(appId, channel.channel, token, targetUid);
+
 	generation.assert();
 
-	if (userId !== null && uid !== userId) {
-		throw new Error(`Expected uid to be ${userId} but got ${uid}.`);
+	if (userId !== null && targetUid !== resultUid) {
+		throw new Error(`Expected uid to be ${targetUid} but got ${resultUid}.`);
 	}
 
-	return uid;
+	return targetUid;
 }
 
 export async function destroyChannel(channel: FiresideRTCChannel) {
