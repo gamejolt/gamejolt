@@ -1,5 +1,6 @@
 import VueRouter from 'vue-router';
 import { getAbsoluteLink } from '../../../../utils/router';
+import { getCurrentServerTime } from '../../../../utils/server-time';
 import { Api } from '../../../../_common/api/api.service';
 import { Device } from '../../../../_common/device/device.service';
 import { duration } from '../../../../_common/filters/duration';
@@ -226,9 +227,11 @@ export function updateFiresideExpiryValues(c: FiresideController) {
 		return;
 	}
 
-	c.totalDurationText = duration((Date.now() - c.fireside.added_on) / 1000);
+	const now = getCurrentServerTime();
 
-	if (c.fireside.expires_on > Date.now()) {
+	c.totalDurationText = duration((now - c.fireside.added_on) / 1000);
+
+	if (c.fireside.expires_on > now) {
 		const expiresInS = c.fireside.getExpiryInMs() / 1000;
 
 		c.hasExpiryWarning = expiresInS < FIRESIDE_EXPIRY_THRESHOLD;

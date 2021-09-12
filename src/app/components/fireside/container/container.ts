@@ -2,6 +2,7 @@ import Vue, { CreateElement } from 'vue';
 import { Component, InjectReactive, Prop, ProvideReactive } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { objectPick } from '../../../../utils/object';
+import { updateServerTimeOffset } from '../../../../utils/server-time';
 import { sleep } from '../../../../utils/utils';
 import { uuidv4 } from '../../../../utils/uuid';
 import { Api } from '../../../../_common/api/api.service';
@@ -26,6 +27,10 @@ import {
 	FiresideControllerKey,
 	updateFiresideExpiryValues,
 } from '../controller/controller';
+
+interface GridChannelJoinPayload {
+	server_time: number;
+}
 
 @Component({})
 export default class AppFiresideContainer extends Vue {
@@ -276,7 +281,11 @@ export default class AppFiresideContainer extends Vue {
 				channel
 					.join()
 					.receive('error', reject)
-					.receive('ok', () => {
+					.receive('ok', (payload: GridChannelJoinPayload) => {
+						if (payload.server_time) {
+							updateServerTimeOffset(payload.server_time);
+						}
+
 						c.gridChannel = channel;
 						this.grid!.channels.push(channel);
 						resolve();
