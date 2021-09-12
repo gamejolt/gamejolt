@@ -275,7 +275,7 @@ async function _renewTokens(producer: FiresideRTCProducer) {
 	async function _updateHostTokens() {
 		const response = await Api.sendRequest(
 			'/web/dash/fireside/generate-streaming-tokens/' + fireside.id,
-			{ session_id: rtc.sessionId },
+			{ streaming_uid: rtc.streamingUid },
 			{ detach: true }
 		);
 
@@ -300,7 +300,7 @@ async function _renewTokens(producer: FiresideRTCProducer) {
 
 		const response = await Api.sendRequest(
 			'/web/dash/fireside/set-is-streaming/' + fireside.id,
-			{ is_streaming: true, session_id: rtc.sessionId },
+			{ is_streaming: true, streaming_uid: rtc.streamingUid },
 			{ detach: true }
 		);
 
@@ -687,7 +687,7 @@ export async function startStreaming(producer: FiresideRTCProducer) {
 		try {
 			response = await Api.sendRequest(
 				'/web/dash/fireside/set-is-streaming/' + fireside.id,
-				{ is_streaming: true, session_id: rtc.sessionId },
+				{ is_streaming: true, streaming_uid: rtc.streamingUid },
 				{ detach: true }
 			);
 		} catch (e) {
@@ -743,7 +743,7 @@ async function _stopStreaming(producer: FiresideRTCProducer, becomeBusy: boolean
 		try {
 			response = await Api.sendRequest(
 				'/web/dash/fireside/set-is-streaming/' + fireside.id,
-				{ is_streaming: false, session_id: rtc.sessionId },
+				{ is_streaming: false, streaming_uid: rtc.streamingUid },
 				{ detach: true }
 			);
 
@@ -782,7 +782,7 @@ async function _stopStreaming(producer: FiresideRTCProducer, becomeBusy: boolean
 function _syncLocalUserToRTC(producer: FiresideRTCProducer) {
 	const {
 		rtc,
-		rtc: { videoChannel, chatChannel },
+		rtc: { streamingUid, videoChannel, chatChannel },
 	} = producer;
 
 	rtc.log(`Syncing the host user's tracks into RTC.`);
@@ -810,7 +810,7 @@ function _syncLocalUserToRTC(producer: FiresideRTCProducer) {
 	const hadDesktopAudio = user?.hasDesktopAudio === true;
 	const hadMicAudio = user?.hasMicAudio === true;
 
-	user ??= new FiresideRTCUser(rtc, rtc.userId!);
+	user ??= new FiresideRTCUser(rtc, streamingUid);
 	user._videoTrack = videoChannel._localVideoTrack;
 	user._desktopAudioTrack = videoChannel._localAudioTrack;
 	user._micAudioTrack = chatChannel._localAudioTrack;

@@ -37,7 +37,7 @@ export class FiresideVideoLock {
 }
 
 export class FiresideRTCUser {
-	constructor(public readonly rtc: FiresideRTC, public readonly userId: number) {
+	constructor(public readonly rtc: FiresideRTC, public readonly streamingUid: number) {
 		// If everyone is currently muted, add new users as muted.
 		this.micAudioMuted = rtc.users.length > 0 ? rtc.users.every(i => i.micAudioMuted) : false;
 	}
@@ -61,8 +61,18 @@ export class FiresideRTCUser {
 	micAudioMuted = false;
 	volumeLevel = 0;
 
+	get host() {
+		return this.rtc.hosts.find(host => host.streamingUids.indexOf(this.streamingUid) !== -1);
+	}
+
+	// TODO: check all places where this may now be null.
+	get userId() {
+		return this.host?.user.id || null;
+	}
+
+	// TODO: check all places where this may now be null.
 	get userModel() {
-		return this.rtc.hosts.find(host => host.id === this.userId);
+		return this.host?.user || null;
 	}
 }
 

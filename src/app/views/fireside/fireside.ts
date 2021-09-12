@@ -42,13 +42,6 @@ import AppFiresideStream from './_stream/stream.vue';
 
 type RoutePayload = {
 	fireside: any;
-	streamingAppId: string;
-	streamingSessionId: string;
-	videoChannelName: string;
-	videoToken: string | null;
-	audioChatChannelName: string;
-	audioChatToken: string | null;
-	hosts: any[];
 	metaDescription: string;
 	fb: any;
 	twitter: any;
@@ -193,10 +186,7 @@ export default class RouteFireside extends BaseRouteComponent {
 		Meta.twitter = $payload.twitter || {};
 		Meta.twitter.title = this.routeTitle;
 
-		this.c ??= createFiresideController(
-			new Fireside($payload.fireside),
-			$payload.streamingSessionId
-		);
+		this.c ??= createFiresideController(new Fireside($payload.fireside));
 
 		this.setPageTheme();
 	}

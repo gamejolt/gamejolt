@@ -6,7 +6,6 @@ import AgoraRTC, {
 	ILocalVideoTrack,
 	NetworkQuality,
 } from 'agora-rtc-sdk-ng';
-import { uuidv4 } from '../../../utils/uuid';
 import { FiresideRTC } from './rtc';
 
 type OnTrackPublish = (remoteUser: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video') => void;
@@ -16,6 +15,7 @@ export class FiresideRTCChannel {
 	constructor(public readonly rtc: FiresideRTC, public readonly channel: string) {}
 
 	agoraClient!: IAgoraRTCClient;
+	streamingUid: number | null = null;
 	token: string | null = null;
 
 	_localVideoTrack: ILocalVideoTrack | null = null;
@@ -53,6 +53,7 @@ export function createFiresideRTCChannel(
 	rtc: FiresideRTC,
 	channel: string,
 	token: string,
+	streamingUid: number,
 	{
 		onTrackPublish,
 		onTrackUnpublish,
@@ -64,6 +65,7 @@ export function createFiresideRTCChannel(
 	const { generation } = rtc;
 
 	const c = new FiresideRTCChannel(rtc, channel);
+	c.streamingUid = streamingUid;
 	c.token = token;
 	c.agoraClient = AgoraRTC.createClient({ mode: 'live', codec: 'h264' });
 
@@ -87,7 +89,7 @@ export function createFiresideRTCChannel(
 export async function joinChannel(channel: FiresideRTCChannel, token: string) {
 	const {
 		agoraClient,
-		rtc: { appId, sessionId, userId, generation },
+		rtc: { appId, streamingUid, userId, generation },
 	} = channel;
 
 	channel.token = token;
@@ -98,16 +100,13 @@ export async function joinChannel(channel: FiresideRTCChannel, token: string) {
 	generation.assert();
 
 	// TODO: Check if out UID stuff is okay? It should be null for guest.
-	const targetUid = userId ? `user:${userId}:${sessionId}` : `guest:${uuidv4()}`;
-	const resultUid = await agoraClient.join(appId, channel.channel, token, targetUid);
+	const resultUid = await agoraClient.join(appId, channel.channel, token, streamingUid);
 
 	generation.assert();
 
-	if (userId !== null && targetUid !== resultUid) {
-		throw new Error(`Expected uid to be ${targetUid} but got ${resultUid}.`);
+	if (userId !== null && streamingUid !== resultUid) {
+		throw new Error(`Expected uid to be ${streamingUid} but got ${resultUid}.`);
 	}
-
-	return targetUid;
 }
 
 export async function destroyChannel(channel: FiresideRTCChannel) {
