@@ -28,7 +28,7 @@ export type RouteStatus =
 export const FiresideControllerKey = Symbol('fireside-controller');
 
 export class FiresideController {
-	constructor(public readonly fireside: Fireside, public readonly streamingAppId: string) {}
+	constructor(public readonly fireside: Fireside) {}
 
 	rtc: FiresideRTC | null = null;
 	status: RouteStatus = 'initial';
@@ -157,12 +157,8 @@ export class FiresideController {
 	}
 }
 
-export function createFiresideController(
-	fireside: Fireside,
-	streamingAppId: string,
-	onRetry: (() => void) | null = null
-) {
-	const c = new FiresideController(fireside, streamingAppId);
+export function createFiresideController(fireside: Fireside, onRetry: (() => void) | null = null) {
+	const c = new FiresideController(fireside);
 	c.onRetry = onRetry;
 	return c;
 }
