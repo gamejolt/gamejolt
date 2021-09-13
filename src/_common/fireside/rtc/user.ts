@@ -39,7 +39,8 @@ export class FiresideVideoLock {
 export class FiresideRTCUser {
 	constructor(public readonly rtc: FiresideRTC, public readonly userId: number) {
 		// If everyone is currently muted, add new users as muted.
-		this.micAudioMuted = rtc.users.length > 0 ? rtc.users.every(i => i.micAudioMuted) : false;
+		this.micAudioMuted =
+			rtc.muteUsers || (rtc.users.length > 0 ? rtc.users.every(i => i.micAudioMuted) : false);
 	}
 
 	// These won't be assigned if this is the local user.

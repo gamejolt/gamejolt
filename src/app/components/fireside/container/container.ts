@@ -33,7 +33,7 @@ interface GridChannelJoinPayload {
 }
 
 @Component({})
-export default class AppFiresideContainer extends Vue {
+export class AppFiresideContainer extends Vue {
 	@ProvideReactive(FiresideControllerKey)
 	@Prop({ type: FiresideController, required: true })
 	controller!: FiresideController;
@@ -433,7 +433,8 @@ export default class AppFiresideContainer extends Vue {
 				payload.videoToken,
 				payload.chatChannelName,
 				payload.chatToken,
-				hosts
+				hosts,
+				c.muteUsers
 			);
 		} else {
 			// TODO: update hosts when we introduce changing hosts on the fly.

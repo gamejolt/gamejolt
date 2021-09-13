@@ -24,7 +24,7 @@ import AppUserAvatarImg from '../../../_common/user/user-avatar/img/img.vue';
 import { ChatStore, ChatStoreKey } from '../../components/chat/chat-store';
 import AppChatWindowOutput from '../../components/chat/window/output/output.vue';
 import AppChatWindowSend from '../../components/chat/window/send/send.vue';
-import AppFiresideContainer from '../../components/fireside/container/container';
+import { AppFiresideContainer } from '../../components/fireside/container/container';
 import {
 	createFiresideController,
 	FiresideController,
@@ -192,7 +192,7 @@ export default class RouteFireside extends BaseRouteComponent {
 		Meta.twitter = $payload.twitter || {};
 		Meta.twitter.title = this.routeTitle;
 
-		this.c ??= createFiresideController(new Fireside($payload.fireside));
+		this.c ??= createFiresideController(new Fireside($payload.fireside), false);
 
 		this.setPageTheme();
 	}

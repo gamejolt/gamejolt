@@ -44,7 +44,8 @@ export class FiresideRTC {
 		public videoToken: string,
 		public readonly chatChannelName: string,
 		public chatToken: string,
-		public readonly hosts: User[]
+		public readonly hosts: User[],
+		public readonly muteUsers: boolean
 	) {}
 
 	generation = new CancelToken();
@@ -128,7 +129,8 @@ export function createFiresideRTC(
 	videoToken: string,
 	chatChannelName: string,
 	chatToken: string,
-	hosts: User[]
+	hosts: User[],
+	muteUsers: boolean
 ) {
 	const rtc = new FiresideRTC(
 		fireside,
@@ -139,7 +141,8 @@ export function createFiresideRTC(
 		videoToken,
 		chatChannelName,
 		chatToken,
-		hosts
+		hosts,
+		muteUsers
 	);
 
 	// Initialize based on their pref.
