@@ -445,6 +445,7 @@ function _updateDesktopAudioDevice(producer: FiresideRTCProducer) {
 				AEC: false,
 				AGC: false,
 				ANS: false,
+				encoderConfig: 'high_quality_stereo',
 			});
 			track.setVolume(100);
 
