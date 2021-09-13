@@ -10,7 +10,8 @@ import { SettingChatGroupShowMembers } from '../../../../_common/settings/settin
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
 import { Store } from '../../../store/index';
-import { ChatClient, ChatKey, leaveChatRoom } from '../client';
+import { ChatStore, ChatStoreKey } from '../chat-store';
+import { leaveChatRoom } from '../client';
 import { ChatInviteModal } from '../invite-modal/invite-modal.service';
 import AppChatMemberList from '../member-list/member-list.vue';
 import { ChatMessage } from '../message';
@@ -36,7 +37,7 @@ import AppChatWindowSend from './send/send.vue';
 	},
 })
 export default class AppChatWindow extends Vue {
-	@InjectReactive(ChatKey) chat!: ChatClient;
+	@InjectReactive(ChatStoreKey) chatStore!: ChatStore;
 
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 	@Prop(propRequired(Array)) messages!: ChatMessage[];
@@ -49,6 +50,10 @@ export default class AppChatWindow extends Vue {
 	friendAddJolticonVersion = 1;
 
 	readonly Screen = Screen;
+
+	get chat() {
+		return this.chatStore.chat!;
+	}
 
 	get users() {
 		return this.chat.roomMembers[this.room.id];

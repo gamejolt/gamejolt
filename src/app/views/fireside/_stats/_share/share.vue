@@ -14,7 +14,9 @@
 			<translate>Share this Fireside</translate>
 		</p>
 		<div class="-copy-controls">
-			<input class="form-control" :value="shareUrl" />
+			<!-- force update on input so that the URL re-applies and they can't edit -->
+			<input class="form-control" :value="shareUrl" @input="$forceUpdate()" />
+
 			<app-button trans @click="copyShareUrl">
 				<translate>Copy</translate>
 			</app-button>

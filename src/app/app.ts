@@ -10,8 +10,7 @@ import AppErrorPage from '../_common/error/page/page.vue';
 import AppCommonShell from '../_common/shell/shell.vue';
 import { AppState, AppStore } from '../_common/store/app-store';
 import { getTranslationLang } from '../_common/translate/translate.service';
-import { ChatClient, ChatKey } from './components/chat/client';
-import { ChatClientLazy } from './components/lazy';
+import { ChatStore, ChatStoreKey, clearChat, loadChat } from './components/chat/chat-store';
 import AppShell from './components/shell/shell.vue';
 import { Store } from './store';
 
@@ -24,7 +23,7 @@ import { Store } from './store';
 	},
 })
 export default class App extends Vue {
-	@ProvideReactive(ChatKey) chat: null | ChatClient = null;
+	@ProvideReactive(ChatStoreKey) chatStore = new ChatStore();
 	@Provide(CommentStoreManagerKey) commentManager = new CommentStoreManager();
 	@Provide(DrawerStoreKey) drawerStore = new DrawerStore();
 	@Provide(AppPromotionStoreKey) appPromotionStore = new AppPromotionStore();
@@ -70,7 +69,7 @@ export default class App extends Vue {
 		if (isLoggedIn) {
 			this.$store.dispatch('bootstrap');
 			if (!GJ_IS_SSR) {
-				this.initChat();
+				loadChat(this.chatStore);
 				this.$store.dispatch('loadGrid');
 				this.$store.dispatch('loadNotificationState');
 			}
@@ -82,22 +81,7 @@ export default class App extends Vue {
 			this.$store.dispatch('clear');
 			this.$store.dispatch('clearGrid');
 			this.$store.dispatch('clearNotificationState');
-			this.clearChat();
+			clearChat(this.chatStore);
 		}
-	}
-
-	private async initChat() {
-		const { ChatClient: ChatClient_ } = await ChatClientLazy();
-		this.chat = new ChatClient_();
-	}
-
-	private async clearChat() {
-		if (!this.chat) {
-			return;
-		}
-
-		const { destroy } = await ChatClientLazy();
-		destroy(this.chat);
-		this.chat = null;
 	}
 }

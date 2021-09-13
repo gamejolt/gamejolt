@@ -30,7 +30,7 @@
 			<div class="-input">
 				<app-form-control-content
 					ref="editor"
-					:content-context="contentContext"
+					:content-context="room.messagesContentContext"
 					:temp-resource-context-data="contentEditorTempResourceContextData"
 					:placeholder="placeholder"
 					:single-line-mode="singleLineMode"

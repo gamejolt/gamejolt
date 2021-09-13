@@ -8,9 +8,8 @@ import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service'
 import { AppTheme } from '../../../../_common/theme/theme';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
+import { ChatStore, ChatStoreKey } from '../chat-store';
 import {
-	ChatClient,
-	ChatKey,
 	demoteModerator,
 	enterChatRoom,
 	isUserOnline,
@@ -32,12 +31,16 @@ import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vu
 	},
 })
 export default class AppChatUserPopover extends Vue {
-	@InjectReactive(ChatKey) chat!: ChatClient;
+	@InjectReactive(ChatStoreKey) chatStore!: ChatStore;
 	@Prop(propRequired(ChatUser)) user!: ChatUser;
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 
+	get chat() {
+		return this.chatStore.chat!;
+	}
+
 	get isOnline() {
-		if (!this.chat) {
+		if (!this.chatStore.chat) {
 			return null;
 		}
 
@@ -64,7 +67,7 @@ export default class AppChatUserPopover extends Vue {
 	}
 
 	get canModerate() {
-		if (!this.chat || !this.chat.currentUser) {
+		if (!this.chatStore.chat || !this.chat.currentUser) {
 			return false;
 		}
 

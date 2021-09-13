@@ -1,9 +1,13 @@
+import { getCurrentServerTime } from '../../utils/server-time';
 import { Community } from '../community/community.model';
 import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 import { UserBlock } from '../user/block/block.model';
 import { User } from '../user/user.model';
 import { FiresideRole } from './role/role.model';
+
+/** The time remaining in seconds when we want to show expiry warnings */
+export const FIRESIDE_EXPIRY_THRESHOLD = 60;
 
 export class Fireside extends Model {
 	user!: User;
@@ -64,7 +68,7 @@ export class Fireside extends Model {
 	}
 
 	public isOpen() {
-		return !this.is_expired && this.expires_on > Date.now();
+		return !this.is_expired && this.expires_on > getCurrentServerTime();
 	}
 
 	public canJoin() {
@@ -72,7 +76,7 @@ export class Fireside extends Model {
 	}
 
 	public getExpiryInMs() {
-		return this.expires_on - Date.now();
+		return this.expires_on - getCurrentServerTime();
 	}
 
 	$save() {

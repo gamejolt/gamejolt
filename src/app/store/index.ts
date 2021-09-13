@@ -90,7 +90,10 @@ let bootstrapResolver: ((value?: any) => void) | null = null;
 let backdrop: AppBackdrop | null = null;
 export let tillStoreBootstrapped = new Promise(resolve => (bootstrapResolver = resolve));
 
-let gridBootstrapResolvers: ((client: GridClient) => void)[] = [];
+let _wantsGrid = false;
+let _gridLoadPromise: Promise<typeof GridClient> | null = null;
+let _gridBootstrapResolvers: ((client: GridClient) => void)[] = [];
+
 /**
  * Returns a promise that resolves once the Grid client is available.
  */
@@ -99,7 +102,7 @@ export function tillGridBootstrapped() {
 		if (store.state.grid) {
 			resolve(store.state.grid);
 		} else {
-			gridBootstrapResolvers.push(resolve);
+			_gridBootstrapResolvers.push(resolve);
 		}
 	});
 }
@@ -274,12 +277,27 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexAction
 	async loadGrid() {
-		const GridClient_ = await GridClientLazy();
+		if (_wantsGrid) {
+			return;
+		}
+
+		_wantsGrid = true;
+		_gridLoadPromise ??= GridClientLazy();
+
+		const GridClient_ = await _gridLoadPromise;
+
+		// If they disconnected before we loaded it in.
+		if (!_wantsGrid) {
+			return;
+		}
+
 		this._setGrid(new GridClient_());
 	}
 
 	@VuexAction
 	async clearGrid() {
+		_wantsGrid = false;
+
 		if (this.grid) {
 			this.grid.disconnect();
 		}
@@ -561,10 +579,10 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	@VuexMutation
 	private _setGrid(grid: GridClient | null) {
 		if (grid !== null) {
-			for (const resolver of gridBootstrapResolvers) {
+			for (const resolver of _gridBootstrapResolvers) {
 				resolver(grid);
 			}
-			gridBootstrapResolvers = [];
+			_gridBootstrapResolvers = [];
 		}
 
 		this.grid = grid;

@@ -31,8 +31,11 @@
 						</translate>
 					</p>
 				</template>
-				<app-form-control-select v-else :disabled="firesideHostRtc.isBusy">
-					<option value="" :disabled="wouldInvalidateIfRemoved('selectedWebcamDeviceId')">
+				<app-form-control-select v-else :disabled="producer.isBusy">
+					<option
+						:value="PRODUCER_UNSET_DEVICE"
+						:disabled="wouldInvalidateIfRemoved('selectedWebcamDeviceId')"
+					>
 						<translate>Not Set</translate>
 					</option>
 
@@ -55,7 +58,9 @@
 				<div
 					ref="videoPreview"
 					class="-video-preview"
-					:class="{ '-hidden': !firesideHostRtc.selectedWebcamDeviceId }"
+					:class="{
+						'-hidden': !hasWebcam,
+					}"
 				/>
 			</app-form-group>
 
@@ -81,12 +86,12 @@
 				<template v-else>
 					<app-form-group name="tempSelectedMicDeviceId" :label="$gettext('Microphone')">
 						<app-form-control-select
-							:disabled="firesideHostRtc.isBusy"
+							:disabled="producer.isBusy"
 							class="-mic-input"
 							:class="{ '-hide-indicator': !hasMicAudio }"
 						>
 							<option
-								value=""
+								:value="PRODUCER_UNSET_DEVICE"
 								:disabled="wouldInvalidateIfRemoved('selectedMicDeviceId')"
 							>
 								<translate>Not Set</translate>
@@ -114,7 +119,7 @@
 						<app-volume-meter
 							v-if="hasMicAudio"
 							class="-volume-meter"
-							:host-rtc="firesideHostRtc"
+							:producer="producer"
 							type="mic"
 						/>
 
@@ -127,11 +132,54 @@
 						</p>
 					</app-form-group>
 
+					<app-form-group
+						name="tempSelectedGroupAudioDeviceId"
+						:label="$gettext('Output Device')"
+					>
+						<template v-if="!hasSpeakerPermissions">
+							<translate>
+								To hear the other people streaming with you, we'll need access to
+								your output device so that we can pipe their beautiful voices into
+								your earholes.
+							</translate>
+
+							<app-button
+								v-if="!speakerPermissionsWerePrompted"
+								@click="onClickPromptSpeakerPermissions"
+							>
+								<translate>Request Permission</translate>
+							</app-button>
+							<translate v-else>
+								Click the lock icon next to the URL in your address bar to enable.
+								You may need to open this window again or refresh the page to renew
+								your devices.
+							</translate>
+						</template>
+						<template v-else>
+							<app-form-control-select :disabled="producer.isBusy">
+								<option
+									v-for="speaker of speakers"
+									:key="speaker.deviceId"
+									:value="speaker.deviceId"
+								>
+									{{ speaker.label }}
+								</option>
+							</app-form-control-select>
+
+							<p class="help-block">
+								<translate>
+									Make sure you choose an output device that is not captured by
+									your desktop audio input device.
+								</translate>
+							</p>
+						</template>
+					</app-form-group>
+
 					<fieldset>
 						<app-form-legend
 							v-if="shouldShowAdvanced || !isInvalidConfig"
 							compact
-							expandable
+							:expandable="!hasDesktopAudio"
 							:expanded="shouldShowAdvanced"
 							@click.native="onToggleAdvanced"
 						>
@@ -158,12 +206,12 @@
 									</p>
 
 									<app-form-control-select
-										:disabled="firesideHostRtc.isBusy"
+										:disabled="producer.isBusy"
 										class="-mic-input"
 										:class="{ '-hide-indicator': !hasDesktopAudio }"
 									>
 										<option
-											value=""
+											:value="PRODUCER_UNSET_DEVICE"
 											:disabled="
 												wouldInvalidateIfRemoved(
 													'selectedDesktopAudioDeviceId'
@@ -195,7 +243,7 @@
 									<app-volume-meter
 										v-if="hasDesktopAudio"
 										class="-volume-meter"
-										:host-rtc="firesideHostRtc"
+										:producer="producer"
 										type="desktop-audio"
 									/>
 
@@ -217,53 +265,6 @@
 										</div>
 									</app-expand>
 								</app-form-group>
-
-								<app-expand :when="shouldShowAdvanced">
-									<app-form-group
-										name="tempSelectedGroupAudioDeviceId"
-										:label="$gettext('Chat Output Device')"
-									>
-										<template v-if="!hasSpeakerPermissions">
-											<translate>
-												To hear the other people streaming with you, we'll
-												need access to your output device so that we can
-												pipe their beautiful voices into your earholes.
-											</translate>
-
-											<app-button
-												v-if="!speakerPermissionsWerePrompted"
-												@click="onClickPromptSpeakerPermissions"
-											>
-												<translate>Request Permission</translate>
-											</app-button>
-											<translate v-else>
-												Click the lock icon next to the URL in your address
-												bar to enable. You may need to open this window
-												again or refresh the page to renew your devices.
-											</translate>
-										</template>
-										<template v-else>
-											<app-form-control-select
-												:disabled="firesideHostRtc.isBusy"
-											>
-												<option
-													v-for="speaker of speakers"
-													:key="speaker.deviceId"
-													:value="speaker.deviceId"
-												>
-													{{ speaker.label }}
-												</option>
-											</app-form-control-select>
-
-											<p class="help-block">
-												<translate>
-													Make sure you choose an output device that is
-													not captured by your desktop audio input device.
-												</translate>
-											</p>
-										</template>
-									</app-form-group>
-								</app-expand>
 							</div>
 						</app-expand>
 					</fieldset>
@@ -278,7 +279,7 @@
 				<app-button
 					primary
 					solid
-					:disabled="firesideHostRtc.isBusy || isInvalidConfig"
+					:disabled="producer.isBusy || isInvalidConfig"
 					@click="onClickStartStreaming()"
 				>
 					<translate>Start Streaming</translate>

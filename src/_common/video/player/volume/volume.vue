@@ -6,7 +6,12 @@
 			<app-jolticon :icon="isMuted ? 'audio-mute' : 'audio'" />
 		</div>
 
-		<app-player-slider v-if="!Screen.isMobile && hasSlider" :player="player" />
+		<app-slider
+			v-if="!Screen.isMobile && hasSlider"
+			class="-slider"
+			:percent="player.volume"
+			@scrub="onVolumeScrub"
+		/>
 	</div>
 </template>
 
@@ -15,4 +20,7 @@
 
 .-container
 	display: inline-flex
+
+.-slider
+	max-width: 128px
 </style>

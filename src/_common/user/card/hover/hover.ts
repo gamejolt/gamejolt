@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
 import { Api } from '../../../api/api.service';
 import AppPopper from '../../../popper/popper.vue';
 import { Screen } from '../../../screen/screen-service';
@@ -18,6 +18,9 @@ export default class AppUserCardHover extends Vue {
 
 	@Prop(Boolean)
 	disabled?: boolean;
+
+	@Emit('show') emitShow() {}
+	@Emit('hide') emitHide() {}
 
 	isShowing = false;
 	isLoaded = false;
@@ -62,6 +65,7 @@ export default class AppUserCardHover extends Vue {
 	}
 
 	onShow() {
+		this.emitShow();
 		this.isShowing = true;
 		if (!this.isLoaded) {
 			this.fetchCardInfo();
@@ -70,6 +74,7 @@ export default class AppUserCardHover extends Vue {
 
 	onHide() {
 		this.isShowing = false;
+		this.emitHide();
 	}
 
 	async fetchCardInfo() {

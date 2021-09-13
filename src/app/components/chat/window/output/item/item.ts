@@ -12,9 +12,8 @@ import { Screen } from '../../../../../../_common/screen/screen-service';
 import { Theme } from '../../../../../../_common/theme/theme.model';
 import { ThemeState, ThemeStore } from '../../../../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
+import { ChatStore, ChatStoreKey } from '../../../chat-store';
 import {
-	ChatClient,
-	ChatKey,
 	removeMessage,
 	retryFailedQueuedMessage,
 	setMessageEditing,
@@ -46,7 +45,7 @@ export default class AppChatWindowOutputItem extends Vue {
 	@Prop(ChatRoom) room!: ChatRoom;
 	@Prop(propRequired(Boolean)) isNew!: boolean;
 
-	@InjectReactive(ChatKey) chat!: ChatClient;
+	@InjectReactive(ChatStoreKey) chatStore!: ChatStore;
 
 	@ThemeState theme?: ThemeStore['theme'];
 	@ThemeState isDark?: ThemeStore['isDark'];
@@ -59,6 +58,10 @@ export default class AppChatWindowOutputItem extends Vue {
 	messageOptionsVisible = false;
 
 	readonly Screen = Screen;
+
+	get chat() {
+		return this.chatStore.chat!;
+	}
 
 	get actualTheme() {
 		// Use the form/page/user theme, or the default theme if none exist.
