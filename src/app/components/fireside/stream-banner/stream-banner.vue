@@ -1,13 +1,9 @@
 <script lang="ts" src="./stream-banner"></script>
 
 <template>
-	<app-media-item-backdrop
-		v-app-observe-dimensions="onDimensionsChange"
-		class="fireside-stream-banner"
-		:media-item="headerMediaItem"
-	>
+	<div v-app-observe-dimensions="onDimensionsChange" class="fireside-stream-banner">
 		<component :is="location ? 'router-link' : 'a'" class="-link" :to="location">
-			<div v-if="headerMediaItem" class="-header-img" :style="headerImgStyling">
+			<div class="-header-img">
 				<div class="-header-img-mask" />
 			</div>
 
@@ -17,15 +13,9 @@
 						<app-fireside-stream-banner-video :fireside="fireside" />
 					</div>
 				</div>
-
-				<div class="-text">
-					<h2 class="sans-margin">
-						<translate> View the first-ever Game Jolt Concert! </translate>
-					</h2>
-				</div>
 			</div>
 		</component>
-	</app-media-item-backdrop>
+	</div>
 </template>
 
 <style lang="stylus" scoped>
@@ -34,11 +24,13 @@
 
 $-base-padding = ($grid-gutter-width / 2)
 $-xs-padding = ($grid-gutter-width-xs / 2)
+$-blur = 4px
 $-z-index-background = 1
 $-z-index-content = 2
 
 .fireside-stream-banner
 	position: relative
+	overflow: hidden
 
 .-link
 	width: 100%
@@ -54,20 +46,21 @@ $-z-index-content = 2
 
 .-header-img
 	position: absolute
-	top: 0
-	right: 0
-	bottom: 0
-	left: 0
+	top: -($-blur * 2)
+	right: @top
+	bottom: @top
+	left: @top
+	background-image: url('https://m.gjcdn.net/content/2000/8385258-ll-jqqtiifv-v4.png')
 	background-repeat: no-repeat
 	background-size: cover
 	background-position: center
-	filter: blur(6px)
+	filter: blur($-blur)
 	z-index: $-z-index-background
 
 	&-mask
 		width: 100%
 		height: 100%
-		background-color: rgba($black, 0.54)
+		background-color: rgba($black, 0.45)
 
 .-container
 	@extend .-flex-center
@@ -78,16 +71,13 @@ $-z-index-content = 2
 
 	&.-filled
 		padding-top: 0
+		padding-bottom: 0
 
 		.-video-wrapper
 			border-radius: 0
 
 	@media $media-xs
 		padding: $-xs-padding 0
-
-		.-text
-			padding-left: $-xs-padding
-			padding-right: $-xs-padding
 
 	@media $media-sm-up
 		padding: $-base-padding
@@ -107,7 +97,6 @@ $-z-index-content = 2
 	transform: translateZ(0)
 	width: 100%
 	padding-top: (100% / (16 / 9))
-	margin-bottom: $line-height-computed
 
 .-video-inner
 	position: absolute
@@ -123,9 +112,4 @@ $-z-index-content = 2
 	right: 0
 	bottom: 0
 	left: 0
-
-.-text
-	@extend .-flex-center
-	text-align: center
-	text-shadow: 1px 1px 3px rgba($black, 0.5)
 </style>
