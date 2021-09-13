@@ -37,7 +37,7 @@ export default class AppFiresideHostThumb extends Vue {
 	@Emit('hide-popper') emitHidePopper() {}
 
 	get isFocused() {
-		return this.c.rtc?.focusedUserId === this.host.userId;
+		return this.c.rtc?.focusedUid === this.host.streamingUid;
 	}
 
 	get showingVideoThumb() {
@@ -53,7 +53,7 @@ export default class AppFiresideHostThumb extends Vue {
 			return;
 		}
 
-		this.c.rtc.focusedUserId = this.host.userId;
+		this.c.rtc.focusedUid = this.host.streamingUid;
 	}
 
 	mute() {

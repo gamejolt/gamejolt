@@ -12,6 +12,7 @@ import { FiresideRole } from '../../../../_common/fireside/role/role.model';
 import {
 	createFiresideRTC,
 	destroyFiresideRTC,
+	Host,
 	renewRTCAudienceTokens,
 } from '../../../../_common/fireside/rtc/rtc';
 import { Growls } from '../../../../_common/growls/growls.service';
@@ -21,7 +22,7 @@ import { Store } from '../../../store';
 import { StreamSetupModal } from '../../../views/fireside/_stream-setup/stream-setup-modal.service';
 import { ChatStore, ChatStoreKey, clearChat, loadChat } from '../../chat/chat-store';
 import { joinInstancedRoomChannel, leaveChatRoom, setGuestChatToken } from '../../chat/client';
-import { EVENT_UPDATE, FiresideChannel } from '../../grid/fireside-channel';
+import { EVENT_STREAMING_UID, EVENT_UPDATE, FiresideChannel } from '../../grid/fireside-channel';
 import {
 	FiresideController,
 	FiresideControllerKey,
@@ -205,7 +206,7 @@ export class AppFiresideContainer extends Vue {
 
 		try {
 			const payload = await Api.sendRequest(
-				`/web/fireside/fetch/${c.fireside.hash}`,
+				`/web/fireside/fetch-for-streaming/${c.fireside.hash}`,
 				undefined,
 				{ detach: true }
 			);
@@ -264,6 +265,7 @@ export class AppFiresideContainer extends Vue {
 
 		// Subscribe to the update event.
 		channel.on(EVENT_UPDATE, this.onGridUpdateFireside.bind(this));
+		channel.on(EVENT_STREAMING_UID, this.onGridStreamingUidAdded.bind(this));
 
 		try {
 			await new Promise<void>((resolve, reject) => {
@@ -411,7 +413,13 @@ export class AppFiresideContainer extends Vue {
 			return;
 		}
 
-		const hosts = User.populate(payload.hosts ?? []);
+		const hosts: Host[] = [];
+		for (const hostUser of User.populate(payload.hosts ?? []) as User[]) {
+			hosts.push({
+				user: hostUser,
+				streamingUids: payload.streamingUids[hostUser.id] ?? [],
+			});
+		}
 
 		if (c.rtc === null) {
 			c.rtc = createFiresideRTC(
@@ -419,6 +427,7 @@ export class AppFiresideContainer extends Vue {
 				c.fireside.role,
 				this.user?.id ?? null,
 				payload.streamingAppId,
+				payload.streamingUid,
 				payload.videoChannelName,
 				payload.videoToken,
 				payload.chatChannelName,
@@ -480,6 +489,29 @@ export class AppFiresideContainer extends Vue {
 			this.createOrUpdateRtc(payload.streaming_info);
 		} else {
 			this.destroyRtc();
+		}
+	}
+
+	onGridStreamingUidAdded(payload: any) {
+		console.log('grid streaming uid added', payload);
+
+		const c = this.controller;
+		if (!c.rtc || !payload.streaming_uid || !payload.user) {
+			return;
+		}
+
+		const user = new User(payload.user);
+		const host = c.rtc.hosts.find(host => host.user.id == user.id);
+		if (host) {
+			host.user = user;
+			if (host.streamingUids.indexOf(payload.streaming_uid) === -1) {
+				host.streamingUids.push(payload.streaming_uid);
+			}
+		} else {
+			c.rtc.hosts.push({
+				user: user,
+				streamingUids: [payload.streaming_uid],
+			});
 		}
 	}
 }

@@ -42,12 +42,6 @@ import AppFiresideStream from './_stream/stream.vue';
 
 type RoutePayload = {
 	fireside: any;
-	streamingAppId: string;
-	videoChannelName: string;
-	videoToken: string | null;
-	audioChatChannelName: string;
-	audioChatToken: string | null;
-	hosts: any[];
 	metaDescription: string;
 	fb: any;
 	twitter: any;
