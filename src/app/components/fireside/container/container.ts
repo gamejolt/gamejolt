@@ -28,10 +28,6 @@ import {
 	updateFiresideExpiryValues,
 } from '../controller/controller';
 
-interface GridChannelJoinPayload {
-	server_time: number;
-}
-
 @Component({})
 export class AppFiresideContainer extends Vue {
 	@ProvideReactive(FiresideControllerKey)
@@ -78,43 +74,32 @@ export class AppFiresideContainer extends Vue {
 			return;
 		}
 
-		this.setupExpiryInfoInterval();
-		updateFiresideExpiryValues(c);
-
-		if (c.fireside.isOpen()) {
-			if (!this.grid) {
-				this.loadGrid();
-			}
-
-			if (!this.chat) {
-				loadChat(this.chatStore);
-			}
-
-			// Set up watchers to initiate connection once one of them boots up.
-			this.$watch('chat.connected', () => this.watchChat());
-			this.$watch('grid.connected', () => this.watchGrid());
-
-			// Both services may already be connected (watchers wouldn't fire), so try joining manually now.
-			this.tryJoin();
-		} else {
-			c.status = 'expired';
-			console.debug(`[FIRESIDE] Fireside is expired, and cannot be joined.`);
+		if (!this.grid) {
+			this.loadGrid();
 		}
+
+		if (!this.chat) {
+			loadChat(this.chatStore);
+		}
+
+		// Set up watchers to initiate connection once one of them boots up.
+		this.$watch('chat.connected', () => this.watchChat());
+		this.$watch('grid.connected', () => this.watchGrid());
+
+		// Both services may already be connected (watchers wouldn't fire),
+		// so try joining manually now.
+		this.tryJoin();
 	}
 
 	destroyed() {
-		this.controller.onRetry = this.onRetry;
+		this.controller.onRetry = null;
 
-		this.destroyExpiryInfoInterval();
 		this.disconnect();
 		this.grid?.unsetGuestToken();
 
 		if (this.chat?.isGuest) {
 			clearChat(this.chatStore);
 		}
-
-		// This also happens in Disconnect, but make 100% sure we cleared the interval.
-		this.clearExpiryCheck();
 	}
 
 	watchChat() {
@@ -231,6 +216,10 @@ export class AppFiresideContainer extends Vue {
 				return;
 			}
 
+			if (payload.serverTime) {
+				updateServerTimeOffset(payload.serverTime);
+			}
+
 			c.fireside.assign(payload.fireside);
 
 			// If they have a host role, or if this fireside is actively
@@ -281,11 +270,7 @@ export class AppFiresideContainer extends Vue {
 				channel
 					.join()
 					.receive('error', reject)
-					.receive('ok', (payload: GridChannelJoinPayload) => {
-						if (payload.server_time) {
-							updateServerTimeOffset(payload.server_time);
-						}
-
+					.receive('ok', () => {
 						c.gridChannel = channel;
 						this.grid!.channels.push(channel);
 						resolve();
@@ -332,6 +317,9 @@ export class AppFiresideContainer extends Vue {
 		this.clearExpiryCheck();
 		c.expiryInterval = setInterval(this.expiryCheck.bind(this), 1000);
 		this.expiryCheck();
+
+		this.setupExpiryInfoInterval();
+		updateFiresideExpiryValues(c);
 	}
 
 	private async getAuthToken() {
@@ -354,6 +342,9 @@ export class AppFiresideContainer extends Vue {
 			return;
 		}
 
+		this.clearExpiryCheck();
+		this.destroyExpiryInfoInterval();
+
 		console.debug(`[FIRESIDE] Disconnecting from Fireside.`);
 		c.status = 'disconnected';
 
@@ -370,7 +361,6 @@ export class AppFiresideContainer extends Vue {
 		c.chatChannel = null;
 		StreamSetupModal.close();
 		this.destroyRtc();
-		this.clearExpiryCheck();
 
 		console.debug(`[FIRESIDE] Disconnected from Fireside.`);
 	}
