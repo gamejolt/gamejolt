@@ -18,7 +18,7 @@ export default class AppFiresideStreamBannerVideo extends Vue {
 	@Prop({ type: Fireside, required: true })
 	fireside!: Fireside;
 
-	c: FiresideController | null = null;
+	c!: FiresideController;
 	readonly number = number;
 
 	created() {
@@ -26,29 +26,25 @@ export default class AppFiresideStreamBannerVideo extends Vue {
 	}
 
 	get shouldShowStream() {
-		if (GJ_IS_SSR || GJ_IS_CLIENT) {
-			return false;
-		}
-
-		return this.c && this.c.rtc && this.c.rtc.users.some(user => user.hasVideo);
+		return this.c.rtc && this.c.rtc.users.some(user => user.hasVideo);
 	}
 
 	get shouldShowVideo() {
 		// We can only show local videos in one place at a time. This will
 		// re-grab the video feed when it gets rebuilt.
-		return this.c && !(this.c.isShowingStreamSetup && this.c.rtc?.isFocusingMe);
+		return !(this.c.isShowingStreamSetup && this.c.rtc?.isFocusingMe);
 	}
 
 	get memberCount() {
-		return (this.c && this.c.chatUsers?.count) ?? 0;
+		return this.c.chatUsers?.count ?? 0;
 	}
 
 	get focusedUser() {
-		return this.c && this.c.rtc?.focusedUser;
+		return this.c.rtc?.focusedUser;
 	}
 
 	get videoPaused() {
-		return this.c && this.c.rtc?.videoPaused;
+		return this.c.rtc?.videoPaused;
 	}
 
 	get hasVideo() {
@@ -56,6 +52,6 @@ export default class AppFiresideStreamBannerVideo extends Vue {
 	}
 
 	get isLoadingVideo() {
-		return this.hasVideo && this.c && this.c.rtc?.videoChannel.isConnected !== true;
+		return this.hasVideo && this.c.rtc?.videoChannel.isConnected !== true;
 	}
 }

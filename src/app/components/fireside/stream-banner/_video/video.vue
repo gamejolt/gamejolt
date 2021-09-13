@@ -1,7 +1,7 @@
 <script lang="ts" src="./video"></script>
 
 <template>
-	<app-fireside-container v-if="c" class="-stream theme-dark" :controller="c">
+	<app-fireside-container class="-stream theme-dark" :controller="c">
 		<div v-if="c.expiresProgressValue && c.expiresProgressValue < 0">
 			<!-- TODO: make better -->
 			<translate> This Fireside is expired. Thanks for joining us! </translate>
