@@ -11,21 +11,21 @@
 				<div class="-header-img-mask" />
 			</div>
 
-			<app-fireside-container :fireside="fireside">
-				<div class="-container container" :class="{ '-filled': isFilled }">
-					<div ref="videoWrapper" class="-video-wrapper">
-						<div class="-video-inner">
+			<div class="-container container" :class="{ '-filled': isFilled }">
+				<div ref="videoWrapper" class="-video-wrapper">
+					<div class="-video-inner">
+						<app-fireside-container :fireside="fireside">
 							<app-fireside-stream-banner-video />
-						</div>
-					</div>
-
-					<div class="-text">
-						<h2 class="sans-margin">
-							<translate> View the first-ever Game Jolt Concert! </translate>
-						</h2>
+						</app-fireside-container>
 					</div>
 				</div>
-			</app-fireside-container>
+
+				<div class="-text">
+					<h2 class="sans-margin">
+						<translate> View the first-ever Game Jolt Concert! </translate>
+					</h2>
+				</div>
+			</div>
 		</component>
 	</app-media-item-backdrop>
 </template>

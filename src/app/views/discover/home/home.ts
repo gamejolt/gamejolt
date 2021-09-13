@@ -40,7 +40,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	featuredCommunities: Community[] = [];
 
 	get shouldShowFiresideBanner() {
-		return !!this.fireside && !GJ_IS_SSR && !GJ_IS_CLIENT;
+		return !!this.fireside && !this.fireside.is_expired && !GJ_IS_SSR && !GJ_IS_CLIENT;
 	}
 
 	routeCreated() {
