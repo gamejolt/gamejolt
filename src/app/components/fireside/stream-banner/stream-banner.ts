@@ -5,12 +5,12 @@ import AppLoading from '../../../../_common/loading/loading.vue';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/backdrop.vue';
 import { AppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { AppFiresideContainer } from '../container/container';
 import AppFiresideStreamBannerVideo from './_video/video.vue';
 
 @Component({
 	components: {
-		AppFiresideContainer,
+		AppFiresideContainer: async () =>
+			(await import('../container/container')).AppFiresideContainer,
 		AppFiresideStreamBannerVideo,
 		AppLoading,
 		AppMediaItemBackdrop,
