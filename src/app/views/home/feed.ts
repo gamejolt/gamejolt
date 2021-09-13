@@ -8,6 +8,7 @@ import { trackExperimentEngagement } from '../../../_common/analytics/analytics.
 import { Api } from '../../../_common/api/api.service';
 import { configFYPDefault, configHomeNav } from '../../../_common/config/config.service';
 import { AppConfigLoaded } from '../../../_common/config/loaded';
+import { Fireside } from '../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import AppNavTabList from '../../../_common/nav/tab-list/tab-list.vue';
 import {
@@ -24,6 +25,7 @@ import { ActivityFeedService } from '../../components/activity/feed/feed-service
 import { ActivityFeedView } from '../../components/activity/feed/view';
 import AppCommunitySliderPlaceholder from '../../components/community/slider/placeholder/placeholder.vue';
 import AppCommunitySlider from '../../components/community/slider/slider.vue';
+import AppFiresideStreamBanner from '../../components/fireside/stream-banner/stream-banner.vue';
 import AppPageContainer from '../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../components/post/add-button/add-button.vue';
 import { Store } from '../../store';
@@ -59,6 +61,7 @@ export class RouteActivityFeedController {
 		AppConfigLoaded,
 		RouteHomeActivity: () => asyncRouteLoader(import('./activity.vue'), router),
 		RouteHomeFyp: () => asyncRouteLoader(import('./fyp.vue'), router),
+		AppFiresideStreamBanner,
 	},
 	directives: {
 		AppTooltip,
@@ -75,6 +78,7 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	@State unreadActivityCount!: Store['unreadActivityCount'];
 	@LibraryModule.State developerCollection!: LibraryStore['developerCollection'];
 
+	fireside: Fireside | null = null;
 	games: DashGame[] = [];
 	gameFilterQuery = '';
 	isShowingAllGames = false;
@@ -155,6 +159,8 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 		}
 
 		trackExperimentEngagement(configFYPDefault);
+
+		this.fireside = payload.fireside ? new Fireside(payload.fireside) : null;
 
 		this.games = (payload.ownerGames as DashGame[])
 			.map(i => new DashGame(i.id, i.title, i.ownerName, i.createdOn))
