@@ -12,9 +12,9 @@
 					</h1>
 				</div>
 				<div class="-center">
-					<h2 class="-link">
+					<h1 class="-link">
 						<translate>Click here to view the first-ever Game Jolt Concert!</translate>
-					</h2>
+					</h1>
 				</div>
 				<div />
 			</div>
@@ -53,8 +53,14 @@
 	background-color: rgba($black, 0.54)
 	display: flex
 	flex-direction: column
-	grid-gap: $line-height-computed
-	padding: $line-height-computed
+
+	@media $media-xs
+		padding: $line-height-computed * 0.5
+		grid-gap: @padding
+
+	@media $media-sm-up
+		padding: $line-height-computed
+		grid-gap: @padding
 
 	> *
 		flex: 1
