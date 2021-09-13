@@ -11,9 +11,7 @@
 			<app-tag-list />
 		</section>
 
-		<app-expand v-if="Screen.isDesktop" :when="isHome">
-			<app-game-add-banner />
-		</app-expand>
+		<app-game-add-banner v-if="Screen.isDesktop" />
 
 		<app-game-listing
 			v-if="listing"

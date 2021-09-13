@@ -151,5 +151,11 @@ export class TagsInfo {
 			image: require('./images/other.png'),
 			imageSocial: require('./images/other-social.png'),
 		},
+		{
+			id: 'fnf',
+			label: '#fnf',
+			image: require('./images/fnf.png'),
+			imageSocial: require('./images/fnf-social.png'),
+		},
 	];
 }

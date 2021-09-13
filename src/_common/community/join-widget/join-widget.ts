@@ -88,7 +88,11 @@ export default class AppCommunityJoinWidget extends Vue {
 			}
 		} else {
 			try {
-				await this.leaveCommunity({ community: this.community, location: this.location });
+				await this.leaveCommunity({
+					community: this.community,
+					location: this.location,
+					shouldConfirm: true,
+				});
 			} catch (e) {
 				Growls.error(this.$gettext(`For some reason we couldn't leave this community.`));
 			}

@@ -31,6 +31,7 @@ import { Game } from '../../../../_common/game/game.model';
 import '../../../../_common/lazy/placeholder/placeholder.styl';
 import { LinkedAccount, Provider } from '../../../../_common/linked-account/linked-account.model';
 import { Meta } from '../../../../_common/meta/meta-service';
+import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppShareCard from '../../../../_common/share/card/card.vue';
@@ -461,8 +462,17 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		TrophyModal.show(userTrophy);
 	}
 
-	onClickUnfollow() {
+	async onClickUnfollow() {
 		if (this.user) {
+			const result = await ModalConfirm.show(
+				this.$gettext(`Are you sure you want to unfollow this user?`),
+				this.$gettext(`Unfollow user?`)
+			);
+
+			if (!result) {
+				return;
+			}
+
 			unfollowUser(this.user);
 		}
 	}
