@@ -61,7 +61,7 @@ export class FiresideRTC {
 
 	readonly users: FiresideRTCUser[] = [];
 	videoPaused = false;
-	focusedUserId: number | null = null;
+	focusedUid: number | null = null;
 	volumeLevelInterval: NodeJS.Timer | null = null;
 	shouldShowVideoThumbnails = false;
 	shouldShowVideoStats = false;
@@ -92,11 +92,7 @@ export class FiresideRTC {
 	 * Returns a local [FiresideRTCUser] if they're currently streaming.
 	 */
 	get localUser() {
-		if (!this.userId) {
-			return null;
-		}
-
-		return this.users.find(i => i.userId === this.userId) ?? null;
+		return this.users.find(i => i.streamingUid === this.streamingUid) ?? null;
 	}
 
 	/**
@@ -113,11 +109,11 @@ export class FiresideRTC {
 
 	get isFocusingMe() {
 		const focusedUser = this.focusedUser;
-		return !!focusedUser && focusedUser.userId === this.localUser?.userId;
+		return !!focusedUser && focusedUser.streamingUid === this.streamingUid;
 	}
 
 	get focusedUser() {
-		return this.users.find(remoteUser => remoteUser.userId === this.focusedUserId) ?? null;
+		return this.users.find(remoteUser => remoteUser.streamingUid === this.focusedUid) ?? null;
 	}
 
 	get isPoorNetworkQuality() {
@@ -198,7 +194,7 @@ export async function destroyFiresideRTC(rtc: FiresideRTC) {
 		rtc.volumeLevelInterval = null;
 	}
 
-	rtc.focusedUserId = null;
+	rtc.focusedUid = null;
 	rtc.hosts.splice(0);
 }
 
@@ -286,7 +282,7 @@ async function _setup(rtc: FiresideRTC) {
  */
 function _finalizeSetup(rtc: FiresideRTC) {
 	if (rtc.setupFinalized) {
-		// Run the debounced finalizeSetupFn again if the focusedUserId doesn't
+		// Run the debounced finalizeSetupFn again if the focusedUser doesn't
 		// exist or match any of our current hosts.
 		if (!rtc.focusedUser && rtc.finalizeSetupFn) {
 			rtc.finalizeSetupFn();
@@ -341,7 +337,7 @@ function _createChannels(rtc: FiresideRTC) {
 			onTrackUnpublish(remoteUser, mediaType) {
 				rtc.log('Got user unpublished (video channel)');
 
-				const user = rtc.users.find(i => i.userId === remoteUser.uid);
+				const user = rtc.users.find(i => i.streamingUid === remoteUser.uid);
 				if (!user) {
 					rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
 					return;
@@ -392,7 +388,7 @@ function _createChannels(rtc: FiresideRTC) {
 					return;
 				}
 
-				const user = rtc.users.find(i => i.userId === remoteUser.uid);
+				const user = rtc.users.find(i => i.streamingUid === remoteUser.uid);
 				if (!user) {
 					rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
 					return;
@@ -440,7 +436,7 @@ export function chooseFocusedRTCUser(rtc: FiresideRTC) {
 		}
 	}
 
-	rtc.focusedUserId = bestUser?.userId || null;
+	rtc.focusedUid = bestUser?.streamingUid || null;
 }
 
 function _findOrAddUser(rtc: FiresideRTC, remoteUser: IAgoraRTCRemoteUser) {
@@ -449,7 +445,7 @@ function _findOrAddUser(rtc: FiresideRTC, remoteUser: IAgoraRTCRemoteUser) {
 		return null;
 	}
 
-	let user = rtc.users.find(i => i.userId === remoteUser.uid);
+	let user = rtc.users.find(i => i.streamingUid === remoteUser.uid);
 
 	if (!user) {
 		user = new FiresideRTCUser(rtc, remoteUser.uid);

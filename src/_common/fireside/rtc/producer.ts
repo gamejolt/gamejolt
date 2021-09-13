@@ -835,7 +835,8 @@ function _syncLocalUserToRTC(producer: FiresideRTCProducer) {
 
 	// If we just started streaming, choose us as the focused user.
 	if (!hadUser) {
-		rtc.focusedUserId = user.userId;
+		// It shouldn't be possible to not have a user id by this point.
+		rtc.focusedUid = user.streamingUid;
 	}
 
 	rtc.log(`Synced local user.`, {

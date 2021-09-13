@@ -17,7 +17,7 @@ export default class AppFiresideVideoStats extends Vue {
 			[`Members`]: this.c.rtc?.users.length ?? 0,
 		};
 
-		const focusedId = this.c.rtc?.focusedUser?.userId;
+		const focusedId = this.c.rtc?.focusedUser?.streamingUid;
 		if (focusedId && this.videoStats[focusedId]) {
 			Object.assign(stats, this.videoStats[focusedId]);
 		}
