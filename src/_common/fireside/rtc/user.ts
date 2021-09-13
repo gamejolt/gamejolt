@@ -37,7 +37,7 @@ export class FiresideVideoLock {
 }
 
 export class FiresideRTCUser {
-	constructor(public readonly rtc: FiresideRTC, public readonly streamingUid: number) {
+	constructor(public readonly rtc: FiresideRTC, public readonly uid: number) {
 		// If everyone is currently muted, add new users as muted.
 		this.micAudioMuted =
 			rtc.muteUsers || (rtc.users.length > 0 ? rtc.users.every(i => i.micAudioMuted) : false);
@@ -62,17 +62,13 @@ export class FiresideRTCUser {
 	micAudioMuted = false;
 	volumeLevel = 0;
 
-	get host() {
-		return this.rtc.hosts.find(host => host.streamingUids.indexOf(this.streamingUid) !== -1);
-	}
-
 	get userModel() {
-		return this.host?.user ?? null;
+		return this.rtc.hosts.find(host => host.uids.indexOf(this.uid) !== -1)?.user ?? null;
 	}
 }
 
-function userIdForLog(user: FiresideRTCUser) {
-	return `(user: ${user.host?.user.id ?? 'n/a'}, uid: ${user.streamingUid})`;
+function _userIdForLog(user: FiresideRTCUser) {
+	return `(user: ${user.userModel?.id ?? 'n/a'}, uid: ${user.uid})`;
 }
 
 export function setUserHasVideo(user: FiresideRTCUser, hasVideo: boolean) {
@@ -195,11 +191,11 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 
 			// TODO: Test to make sure this doesn't fail if we're trying to set against a local user.
 			rtc.videoChannel.agoraClient.setRemoteVideoStreamType(
-				user.streamingUid,
+				user.uid,
 				newState.isLowBitrate ? 1 : 0
 			);
 		} catch (e) {
-			rtc.logError(`Failed to subscribe to video for user ${userIdForLog(user)}`, e);
+			rtc.logError(`Failed to subscribe to video for user ${_userIdForLog(user)}`, e);
 		}
 	} else if (newState instanceof FiresideVideoPlayStateStopped) {
 		try {
@@ -208,7 +204,7 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 					user._videoTrack.stop();
 				} catch (e) {
 					rtc.logWarning(
-						`Got an error while stopping a video track for user ${userIdForLog(
+						`Got an error while stopping a video track for user ${_userIdForLog(
 							user
 						)}. Tolerating.`,
 						e
@@ -237,7 +233,7 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 			user.videoLocks.splice(0);
 		} catch (e) {
 			rtc.logError(
-				`Failed to subscribe to video thumbnails for user ${userIdForLog(user)}`,
+				`Failed to subscribe to video thumbnails for user ${_userIdForLog(user)}`,
 				e
 			);
 		}
@@ -261,7 +257,7 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 export async function startDesktopAudioPlayback(user: FiresideRTCUser) {
 	const { rtc } = user;
 
-	rtc.log(`${userIdForLog(user)} -> startDesktopAudioPlayback`);
+	rtc.log(`${_userIdForLog(user)} -> startDesktopAudioPlayback`);
 
 	try {
 		// Only subscribe for remote users.
@@ -285,7 +281,7 @@ export async function startDesktopAudioPlayback(user: FiresideRTCUser) {
 export async function stopDesktopAudioPlayback(user: FiresideRTCUser) {
 	const { rtc } = user;
 
-	rtc.log(`${userIdForLog(user)} -> stopDesktopAudioPlayback`);
+	rtc.log(`${_userIdForLog(user)} -> stopDesktopAudioPlayback`);
 
 	if (user._desktopAudioTrack?.isPlaying === true) {
 		rtc.log('Stopping existing desktop audio track');
@@ -322,7 +318,7 @@ export function setAudioPlayback(user: FiresideRTCUser, isPlaying: boolean) {
 export async function startAudioPlayback(user: FiresideRTCUser) {
 	const { rtc } = user;
 
-	rtc.log(`${userIdForLog(user)} -> startAudioPlayback`);
+	rtc.log(`${_userIdForLog(user)} -> startAudioPlayback`);
 
 	if (!user.remoteChatUser) {
 		return;
@@ -346,7 +342,7 @@ export async function startAudioPlayback(user: FiresideRTCUser) {
 export async function stopAudioPlayback(user: FiresideRTCUser) {
 	const { rtc } = user;
 
-	rtc.log(`${userIdForLog(user)} -> stopAudioPlayback`);
+	rtc.log(`${_userIdForLog(user)} -> stopAudioPlayback`);
 
 	if (!user.remoteChatUser) {
 		return;

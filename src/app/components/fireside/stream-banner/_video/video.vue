@@ -6,7 +6,7 @@
 			<!-- TODO: make better -->
 			<translate> This Fireside is expired. Thanks for joining us! </translate>
 		</div>
-		<div v-else-if="focusedUser && hasVideo && shouldShowVideo" :key="focusedUser.streamingUid">
+		<div v-else-if="focusedUser && hasVideo && shouldShowVideo" :key="focusedUser.uid">
 			<app-fireside-video class="-video-player" :rtc-user="focusedUser" />
 		</div>
 		<div v-else class="-center">

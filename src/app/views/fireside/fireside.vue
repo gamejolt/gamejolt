@@ -56,13 +56,13 @@
 
 								<p class="-unsupported-text">
 									<translate>
-										Oh dear... Fireside streams don't work on our client right
+										Oh dear... Fireside streams don't work on the Client right
 										now.
 									</translate>
 								</p>
 
 								<app-button @click="onClickOpenBrowser()">
-									<translate> Open in Browser </translate>
+									<translate>Open in Browser</translate>
 								</app-button>
 							</template>
 							<template v-else-if="c.rtc && c.rtc.focusedUser">

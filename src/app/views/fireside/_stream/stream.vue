@@ -24,7 +24,7 @@
 				</div>
 			</template>
 			<template v-else>
-				<div :key="rtcUser.streamingUid">
+				<div :key="rtcUser.uid">
 					<app-fireside-video
 						v-if="shouldShowVideo"
 						class="-video-player -click-target"

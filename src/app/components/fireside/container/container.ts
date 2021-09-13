@@ -12,7 +12,7 @@ import { FiresideRole } from '../../../../_common/fireside/role/role.model';
 import {
 	createFiresideRTC,
 	destroyFiresideRTC,
-	Host,
+	FiresideRTCHost,
 	renewRTCAudienceTokens,
 } from '../../../../_common/fireside/rtc/rtc';
 import { Growls } from '../../../../_common/growls/growls.service';
@@ -440,13 +440,12 @@ export class AppFiresideContainer extends Vue {
 			return;
 		}
 
-		const hosts: Host[] = [];
-		for (const hostUser of User.populate(payload.hosts ?? []) as User[]) {
-			hosts.push({
-				user: hostUser,
-				streamingUids: payload.streamingUids[hostUser.id] ?? [],
-			});
-		}
+		const hosts: FiresideRTCHost[] = (User.populate(payload.hosts ?? []) as User[]).map(
+			user => ({
+				user,
+				uids: payload.streamingUids[user.id] ?? [],
+			})
+		);
 
 		if (c.rtc === null) {
 			c.rtc = createFiresideRTC(
@@ -520,7 +519,7 @@ export class AppFiresideContainer extends Vue {
 	}
 
 	onGridStreamingUidAdded(payload: any) {
-		console.log('grid streaming uid added', payload);
+		console.debug('[FIRESIDE] Grid streaming uid added.', payload);
 
 		const c = this.activeController;
 		if (!c.rtc || !payload.streaming_uid || !payload.user) {
@@ -528,16 +527,16 @@ export class AppFiresideContainer extends Vue {
 		}
 
 		const user = new User(payload.user);
-		const host = c.rtc.hosts.find(host => host.user.id == user.id);
+		const host = c.rtc.hosts.find(host => host.user.id === user.id);
 		if (host) {
 			host.user = user;
-			if (host.streamingUids.indexOf(payload.streaming_uid) === -1) {
-				host.streamingUids.push(payload.streaming_uid);
+			if (host.uids.indexOf(payload.streaming_uid) === -1) {
+				host.uids.push(payload.streaming_uid);
 			}
 		} else {
 			c.rtc.hosts.push({
 				user: user,
-				streamingUids: [payload.streaming_uid],
+				uids: [payload.streaming_uid],
 			});
 		}
 	}

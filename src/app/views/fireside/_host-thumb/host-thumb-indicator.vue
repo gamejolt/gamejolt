@@ -3,7 +3,7 @@
 <template>
 	<div
 		class="-indicator-wrap"
-		:class="{ '-active-hover': c.rtc && c.rtc.focusedUid === host.streamingUid }"
+		:class="{ '-active-hover': c.rtc && c.rtc.focusedUser === host }"
 		:style="{ padding }"
 	>
 		<div class="-indicator">

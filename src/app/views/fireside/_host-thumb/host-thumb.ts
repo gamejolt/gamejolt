@@ -3,7 +3,6 @@ import { Component, Emit, InjectReactive, Prop } from 'vue-property-decorator';
 import { FiresideRTCUser, setAudioPlayback } from '../../../../_common/fireside/rtc/user';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import {
 	FiresideController,
@@ -18,7 +17,6 @@ import AppFiresideHostThumbIndicator from './host-thumb-indicator.vue';
 		AppFiresideHostThumbIndicator,
 		AppPopper,
 		AppFiresideVideo,
-		AppUserCardHover,
 	},
 	directives: {
 		AppTooltip,
@@ -37,7 +35,7 @@ export default class AppFiresideHostThumb extends Vue {
 	@Emit('hide-popper') emitHidePopper() {}
 
 	get isFocused() {
-		return this.c.rtc?.focusedUid === this.host.streamingUid;
+		return this.c.rtc?.focusedUser === this.host;
 	}
 
 	get showingVideoThumb() {
@@ -53,7 +51,7 @@ export default class AppFiresideHostThumb extends Vue {
 			return;
 		}
 
-		this.c.rtc.focusedUid = this.host.streamingUid;
+		this.c.rtc.focusedUser = this.host;
 	}
 
 	mute() {

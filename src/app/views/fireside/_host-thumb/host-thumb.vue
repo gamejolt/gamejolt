@@ -1,12 +1,7 @@
 <script lang="ts" src="./host-thumb"></script>
 
 <template>
-	<app-user-card-hover
-		class="-thumb"
-		:user="host.userModel"
-		@show="onUserCardShow"
-		@hide="onUserCardHide"
-	>
+	<div class="-thumb">
 		<div class="-click-capture" @click="onClick">
 			<div class="-display-thumb" :class="{ '-hidden': !showingVideoThumb }">
 				<template v-if="showingVideoThumb">
@@ -63,7 +58,7 @@
 				</template>
 			</app-popper>
 		</div>
-	</app-user-card-hover>
+	</div>
 </template>
 
 <style lang="stylus" scoped>

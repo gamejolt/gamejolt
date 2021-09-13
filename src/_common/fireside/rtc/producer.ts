@@ -3,7 +3,6 @@ import AgoraRTC, {
 	ILocalAudioTrack,
 	IRemoteAudioTrack,
 } from 'agora-rtc-sdk-ng';
-import { arrayRemove } from '../../../utils/array';
 import { MediaDeviceService } from '../../agora/media-device.service';
 import { Api } from '../../api/api.service';
 import { Growls } from '../../growls/growls.service';
@@ -22,7 +21,7 @@ import {
 	startChannelStreaming,
 	stopChannelStreaming,
 } from './channel';
-import { FiresideRTC, renewRTCTokens } from './rtc';
+import { chooseFocusedRTCUser, FiresideRTC, renewRTCTokens } from './rtc';
 import {
 	FiresideRTCUser,
 	setUserHasDesktopAudio,
@@ -200,65 +199,6 @@ export function assignPreferredProducerDevices(producer: FiresideRTCProducer) {
 		(preferredGroup ?? fallbackGroup)?.deviceId ?? PRODUCER_DEFAULT_GROUP_AUDIO
 	);
 }
-
-// async function _regenerateClients(producer: FiresideRTCProducer, generation: number) {
-// 	if (producer._destroyed || generation !== producer._currentClientGeneration) {
-// 		return;
-// 	}
-
-// 	try {
-// 		if (producer._areClientsRegenerating) {
-// 			throw new Error(
-// 				'Attempted to regenerate clients before the previous ones finished regenerating. It is no longer possible to restore state.'
-// 			);
-// 		}
-
-// 		console.log('Regenerating clients');
-// 		producer._areClientsRegenerating = true;
-
-// 		const wasStreaming = producer._isStreaming;
-// 		destroyFiresideRTCProducer(producer);
-
-// 		const myGeneration = producer._currentClientGeneration;
-
-// 		producer._videoClient = new AgoraStreamingClient(producer._appId, 'video');
-// 		producer._videoClient.onDisposed = () => _regenerateClients(producer, myGeneration);
-// 		producer._videoClient.onGibToken = () => _renewTokens(producer, true);
-// 		producer._chatClient = new AgoraStreamingClient(producer._appId, 'chat');
-// 		producer._chatClient.onDisposed = () => _regenerateClients(producer, myGeneration);
-// 		producer._chatClient.onGibToken = () => _renewTokens(producer, true);
-
-// 		// Attempt to configure the new clients similarly to how the old clients
-// 		// were configured.
-// 		console.log('Reconfiguring clients');
-
-// 		await Promise.all([
-// 			_updateWebcamDevice(producer),
-// 			_updateMicDevice(producer),
-// 			_updateDesktopAudioDevice(producer),
-// 			_updateGroupAudioDevice(producer),
-// 		]);
-
-// 		if (wasStreaming) {
-// 			// TODO: change this show a modal where you can confirm to resume
-// 			// streaming it'd suck if you lost connection and then it came back
-// 			// when youre not around.
-// 			await startStreaming(producer);
-// 		}
-// 	} catch (e) {
-// 		console.error('Error while regenerating clients');
-// 		console.error(e);
-// 		Navigate.reload();
-// 	} finally {
-// 		producer._areClientsRegenerating = false;
-// 	}
-
-// 	// If we got destroyed while regenerating clients, make sure to tear
-// 	// everything down
-// 	if (producer._destroyed) {
-// 		destroyFiresideRTCProducer(producer);
-// 	}
-// }
 
 async function _renewTokens(producer: FiresideRTCProducer) {
 	if (producer._areTokensRenewing) {
@@ -797,7 +737,12 @@ function _syncLocalUserToRTC(producer: FiresideRTCProducer) {
 			setUserHasDesktopAudio(user, false);
 			setUserHasMicAudio(user, false);
 
-			arrayRemove(rtc.users, i => i === user);
+			rtc.localUser = null;
+
+			if (rtc.focusedUser === user) {
+				rtc.focusedUser = null;
+				chooseFocusedRTCUser(rtc);
+			}
 
 			rtc.log(`Destroyed local RTC user.`);
 		}
@@ -829,14 +774,12 @@ function _syncLocalUserToRTC(producer: FiresideRTCProducer) {
 		setUserHasMicAudio(user, hasMicAudio);
 	}
 
-	// Always put us as the first user.
-	arrayRemove(rtc.users, i => i === user);
-	rtc.users.unshift(user);
+	rtc.localUser = user;
 
 	// If we just started streaming, choose us as the focused user.
 	if (!hadUser) {
-		// It shouldn't be possible to not have a user id by this point.
-		rtc.focusedUid = user.streamingUid;
+		// It shouldn't be possible to not have a streaming UID by this point.
+		rtc.focusedUser = user;
 	}
 
 	rtc.log(`Synced local user.`, {

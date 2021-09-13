@@ -15,7 +15,6 @@ export class FiresideRTCChannel {
 	constructor(public readonly rtc: FiresideRTC, public readonly channel: string) {}
 
 	agoraClient!: IAgoraRTCClient;
-	streamingUid: number | null = null;
 	token: string | null = null;
 
 	_localVideoTrack: ILocalVideoTrack | null = null;
@@ -53,7 +52,6 @@ export function createFiresideRTCChannel(
 	rtc: FiresideRTC,
 	channel: string,
 	token: string,
-	streamingUid: number,
 	{
 		onTrackPublish,
 		onTrackUnpublish,
@@ -65,7 +63,6 @@ export function createFiresideRTCChannel(
 	const { generation } = rtc;
 
 	const c = new FiresideRTCChannel(rtc, channel);
-	c.streamingUid = streamingUid;
 	c.token = token;
 	c.agoraClient = AgoraRTC.createClient({ mode: 'live', codec: 'h264' });
 
@@ -89,7 +86,7 @@ export function createFiresideRTCChannel(
 export async function joinChannel(channel: FiresideRTCChannel, token: string) {
 	const {
 		agoraClient,
-		rtc: { appId, streamingUid, userId, generation },
+		rtc: { appId, streamingUid, generation },
 	} = channel;
 
 	channel.token = token;
@@ -104,7 +101,7 @@ export async function joinChannel(channel: FiresideRTCChannel, token: string) {
 
 	generation.assert();
 
-	if (userId !== null && streamingUid !== resultUid) {
+	if (streamingUid !== resultUid) {
 		throw new Error(`Expected uid to be ${streamingUid} but got ${resultUid}.`);
 	}
 }

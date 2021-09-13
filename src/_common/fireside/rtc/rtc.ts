@@ -34,10 +34,10 @@ import {
 
 export const FiresideRTCKey = Symbol();
 
-export type Host = {
+export interface FiresideRTCHost {
 	user: User;
-	streamingUids: number[];
-};
+	uids: number[];
+}
 
 export class FiresideRTC {
 	constructor(
@@ -50,7 +50,7 @@ export class FiresideRTC {
 		public videoToken: string,
 		public readonly chatChannelName: string,
 		public chatToken: string,
-		public readonly hosts: Host[],
+		public readonly hosts: FiresideRTCHost[],
 		public readonly muteUsers: boolean
 	) {}
 
@@ -60,9 +60,10 @@ export class FiresideRTC {
 	videoChannel!: FiresideRTCChannel;
 	chatChannel!: FiresideRTCChannel;
 
-	readonly users: FiresideRTCUser[] = [];
+	readonly _users: FiresideRTCUser[] = [];
+	focusedUser: FiresideRTCUser | null = null;
+
 	videoPaused = false;
-	focusedUid: number | null = null;
 	volumeLevelInterval: NodeJS.Timer | null = null;
 	shouldShowVideoThumbnails = false;
 	shouldShowVideoStats = false;
@@ -90,10 +91,13 @@ export class FiresideRTC {
 	}
 
 	/**
-	 * Returns a local [FiresideRTCUser] if they're currently streaming.
+	 * The local [FiresideRTCUser] if they're currently streaming.
 	 */
-	get localUser() {
-		return this.users.find(i => i.streamingUid === this.streamingUid) ?? null;
+	localUser: FiresideRTCUser | null = null;
+
+	get users() {
+		// We put the local user first if they're currently streaming.
+		return Object.freeze([...(this.localUser ? [this.localUser] : []), ...this._users]);
 	}
 
 	/**
@@ -109,12 +113,7 @@ export class FiresideRTC {
 	}
 
 	get isFocusingMe() {
-		const focusedUser = this.focusedUser;
-		return !!focusedUser && focusedUser.streamingUid === this.streamingUid;
-	}
-
-	get focusedUser() {
-		return this.users.find(remoteUser => remoteUser.streamingUid === this.focusedUid) ?? null;
+		return this.focusedUser === this.localUser;
 	}
 
 	get isPoorNetworkQuality() {
@@ -132,7 +131,7 @@ export function createFiresideRTC(
 	videoToken: string,
 	chatChannelName: string,
 	chatToken: string,
-	hosts: Host[],
+	hosts: FiresideRTCHost[],
 	muteUsers: boolean
 ) {
 	const rtc = new FiresideRTC(
@@ -197,7 +196,7 @@ export async function destroyFiresideRTC(rtc: FiresideRTC) {
 		rtc.volumeLevelInterval = null;
 	}
 
-	rtc.focusedUid = null;
+	rtc.focusedUser = null;
 	rtc.hosts.splice(0);
 }
 
@@ -312,96 +311,84 @@ function _createChannels(rtc: FiresideRTC) {
 	(AgoraRTC as any)?.setParameter('AUDIO_SOURCE_VOLUME_UPDATE_INTERVAL', 100);
 	rtc.volumeLevelInterval = setInterval(() => _updateVolumeLevels(rtc), 100);
 
-	rtc.videoChannel = createFiresideRTCChannel(
-		rtc,
-		rtc.videoChannelName,
-		rtc.videoToken,
-		rtc.streamingUid,
-		{
-			onTrackPublish(remoteUser, mediaType) {
-				rtc.log('Got user published (video channel)');
+	rtc.videoChannel = createFiresideRTCChannel(rtc, rtc.videoChannelName, rtc.videoToken, {
+		onTrackPublish(remoteUser, mediaType) {
+			rtc.log('Got user published (video channel)');
 
-				const user = _findOrAddUser(rtc, remoteUser);
-				if (!user) {
-					rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
-					return;
-				}
+			const user = _findOrAddUser(rtc, remoteUser);
+			if (!user) {
+				rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
+				return;
+			}
 
-				user.remoteVideoUser = remoteUser;
+			user.remoteVideoUser = remoteUser;
 
-				if (mediaType === 'video') {
-					setUserHasVideo(user, true);
-				} else {
-					setUserHasDesktopAudio(user, true);
-				}
+			if (mediaType === 'video') {
+				setUserHasVideo(user, true);
+			} else {
+				setUserHasDesktopAudio(user, true);
+			}
 
-				_finalizeSetup(rtc);
-			},
-			onTrackUnpublish(remoteUser, mediaType) {
-				rtc.log('Got user unpublished (video channel)');
+			_finalizeSetup(rtc);
+		},
+		onTrackUnpublish(remoteUser, mediaType) {
+			rtc.log('Got user unpublished (video channel)');
 
-				const user = rtc.users.find(i => i.streamingUid === remoteUser.uid);
-				if (!user) {
-					rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
-					return;
-				}
+			const user = rtc.users.find(i => i.uid === remoteUser.uid);
+			if (!user) {
+				rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
+				return;
+			}
 
-				if (mediaType === 'video') {
-					setUserHasVideo(user, false);
-				} else {
-					setUserHasDesktopAudio(user, false);
-				}
+			if (mediaType === 'video') {
+				setUserHasVideo(user, false);
+			} else {
+				setUserHasDesktopAudio(user, false);
+			}
 
-				_removeUserIfNeeded(rtc, user);
-			},
-		}
-	);
+			_removeUserIfNeeded(rtc, user);
+		},
+	});
 
-	rtc.chatChannel = createFiresideRTCChannel(
-		rtc,
-		rtc.chatChannelName,
-		rtc.chatToken,
-		rtc.streamingUid,
-		{
-			onTrackPublish(remoteUser, mediaType) {
-				rtc.log('got user published (audio chat channel)');
+	rtc.chatChannel = createFiresideRTCChannel(rtc, rtc.chatChannelName, rtc.chatToken, {
+		onTrackPublish(remoteUser, mediaType) {
+			rtc.log('got user published (audio chat channel)');
 
-				if (mediaType !== 'audio') {
-					rtc.logWarning('Unexpected media type: ' + mediaType + '. Ignoring');
-					return;
-				}
+			if (mediaType !== 'audio') {
+				rtc.logWarning('Unexpected media type: ' + mediaType + '. Ignoring');
+				return;
+			}
 
-				const user = _findOrAddUser(rtc, remoteUser);
-				if (!user) {
-					rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
-					return;
-				}
+			const user = _findOrAddUser(rtc, remoteUser);
+			if (!user) {
+				rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
+				return;
+			}
 
-				user.remoteChatUser = remoteUser;
-				setUserHasMicAudio(user, true);
+			user.remoteChatUser = remoteUser;
+			setUserHasMicAudio(user, true);
 
-				_finalizeSetup(rtc);
-			},
-			onTrackUnpublish(remoteUser, mediaType) {
-				rtc.log('Got user unpublished (audio channel)');
+			_finalizeSetup(rtc);
+		},
+		onTrackUnpublish(remoteUser, mediaType) {
+			rtc.log('Got user unpublished (audio channel)');
 
-				// This should never trigger.
-				if (mediaType !== 'audio') {
-					rtc.logWarning('Unexpected media type: ' + mediaType + '. Ignoring');
-					return;
-				}
+			// This should never trigger.
+			if (mediaType !== 'audio') {
+				rtc.logWarning('Unexpected media type: ' + mediaType + '. Ignoring');
+				return;
+			}
 
-				const user = rtc.users.find(i => i.streamingUid === remoteUser.uid);
-				if (!user) {
-					rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
-					return;
-				}
+			const user = rtc.users.find(i => i.uid === remoteUser.uid);
+			if (!user) {
+				rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
+				return;
+			}
 
-				setUserHasMicAudio(user, false);
-				_removeUserIfNeeded(rtc, user);
-			},
-		}
-	);
+			setUserHasMicAudio(user, false);
+			_removeUserIfNeeded(rtc, user);
+		},
+	});
 }
 
 function _createProducer(rtc: FiresideRTC) {
@@ -439,7 +426,7 @@ export function chooseFocusedRTCUser(rtc: FiresideRTC) {
 		}
 	}
 
-	rtc.focusedUid = bestUser?.streamingUid || null;
+	rtc.focusedUser = bestUser;
 }
 
 function _findOrAddUser(rtc: FiresideRTC, remoteUser: IAgoraRTCRemoteUser) {
@@ -448,11 +435,11 @@ function _findOrAddUser(rtc: FiresideRTC, remoteUser: IAgoraRTCRemoteUser) {
 		return null;
 	}
 
-	let user = rtc.users.find(i => i.streamingUid === remoteUser.uid);
+	let user = rtc.users.find(i => i.uid === remoteUser.uid);
 
 	if (!user) {
 		user = new FiresideRTCUser(rtc, remoteUser.uid);
-		rtc.users.push(user);
+		rtc._users.push(user);
 	}
 
 	return user;
@@ -467,8 +454,12 @@ function _removeUserIfNeeded(rtc: FiresideRTC, user: FiresideRTCUser) {
 	user.remoteVideoUser = null;
 	user.remoteChatUser = null;
 
-	arrayRemove(rtc.users, i => i === user);
-	chooseFocusedRTCUser(rtc);
+	arrayRemove(rtc._users, i => i === user);
+
+	if (rtc.focusedUser === user) {
+		rtc.focusedUser = null;
+		chooseFocusedRTCUser(rtc);
+	}
 }
 
 function _updateVolumeLevels(rtc: FiresideRTC) {
