@@ -14,9 +14,7 @@
 			<div class="-container container" :class="{ '-filled': isFilled }">
 				<div ref="videoWrapper" class="-video-wrapper">
 					<div class="-video-inner">
-						<app-fireside-container :fireside="fireside">
-							<app-fireside-stream-banner-video />
-						</app-fireside-container>
+						<app-fireside-stream-banner-video :fireside="fireside" />
 					</div>
 				</div>
 

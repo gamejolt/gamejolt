@@ -1,7 +1,7 @@
 <script lang="ts" src="./video"></script>
 
 <template>
-	<router-link class="-stream theme-dark" :to="c.fireside.location">
+	<app-fireside-container v-if="c" class="-stream theme-dark" :controller="c">
 		<div v-if="c.expiresProgressValue && c.expiresProgressValue < 0">
 			<!-- TODO: make better -->
 			<translate> This Fireside is expired. Thanks for joining us! </translate>
@@ -38,7 +38,7 @@
 				</div>
 			</div>
 		</div>
-	</router-link>
+	</app-fireside-container>
 </template>
 
 <style lang="stylus" scoped>
