@@ -8,29 +8,38 @@
 			</app-button>
 		</div>
 
-		<template v-if="c.canBrowserStream">
-			<div class="modal-body">
-				<app-stream-setup v-if="c.canBrowserStream" :c="c" @close="onClose()" />
-			</div>
-		</template>
-		<template v-else>
-			<div class="modal-header">
-				<h2 class="modal-title">
-					<translate>
-						Your browser either cannot broadcast, or will have poor performance.
-					</translate>
-				</h2>
-			</div>
-
+		<template v-if="!c.canBrowserStream">
 			<div class="modal-body">
 				<app-illustration src="~img/ill/no-comments-small.svg">
 					<p>
 						<translate>
+							Your browser either cannot stream, or will have poor performance.
+						</translate>
+					</p>
+					<p>
+						<translate>
 							Please use a different browser, such as Google Chrome or Microsoft Edge,
-							if you want to start a broadcast.
+							if you want to start a stream.
 						</translate>
 					</p>
 				</app-illustration>
+			</div>
+		</template>
+		<template v-else-if="c.isStreamingElsewhere">
+			<div class="modal-body">
+				<app-illustration src="~img/ill/no-comments-small.svg">
+					<p>
+						<translate>
+							You're currently streaming on another device. Stop that stream before
+							starting a new one.
+						</translate>
+					</p>
+				</app-illustration>
+			</div>
+		</template>
+		<template v-else>
+			<div class="modal-body">
+				<app-stream-setup :c="c" @close="onClose()" />
 			</div>
 		</template>
 	</app-modal>

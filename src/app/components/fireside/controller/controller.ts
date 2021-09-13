@@ -87,6 +87,20 @@ export class FiresideController {
 		return this.rtc?.isStreaming ?? false;
 	}
 
+	get isStreamingElsewhere() {
+		if (!this.rtc || !this.rtc.userId) {
+			return false;
+		}
+
+		const user = this.rtc.users.find(i => i.userModel?.id === this.rtc?.userId);
+		if (!user) {
+			return false;
+		}
+
+		// User is in the list of RTC users, but they are not streaming locally.
+		return !this.isPersonallyStreaming;
+	}
+
 	get shouldShowStreamingOptions() {
 		return this.canStream || this.isPersonallyStreaming;
 	}
