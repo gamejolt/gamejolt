@@ -18,11 +18,17 @@ export default class AppFiresideStreamBannerVideo extends Vue {
 	@Prop({ type: Fireside, required: true })
 	fireside!: Fireside;
 
-	c!: FiresideController;
+	// Gets assigned with a real controller immediately, but needs this to not
+	// break reactivity.
+	c: FiresideController = null as any;
 	readonly number = number;
 
 	created() {
 		this.c = createFiresideController(this.fireside, true);
+	}
+
+	get isBeforeScheduledTime() {
+		return false;
 	}
 
 	get shouldShowStream() {
@@ -32,7 +38,7 @@ export default class AppFiresideStreamBannerVideo extends Vue {
 	get shouldShowVideo() {
 		// We can only show local videos in one place at a time. This will
 		// re-grab the video feed when it gets rebuilt.
-		return !(this.c.isShowingStreamSetup && this.c.rtc?.isFocusingMe);
+		return this.hasVideo && !(this.c.isShowingStreamSetup && this.c.rtc?.isFocusingMe);
 	}
 
 	get memberCount() {

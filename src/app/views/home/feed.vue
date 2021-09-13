@@ -144,6 +144,8 @@
 				<app-community-slider v-else :communities="communities" with-add-button />
 			</template>
 
+			<app-fireside-stream-banner v-if="fireside" class="-concert" :fireside="fireside" />
+
 			<div v-if="!hasSimpleHome" class="full-bleed-xs">
 				<app-nav-tab-list center class="-inline-menu">
 					<ul>
@@ -190,6 +192,15 @@
 <style lang="stylus" scoped>
 @import '~styles/variables'
 @import '~styles-lib/mixins'
+
+.-concert
+	margin-bottom: $line-height-computed
+
+	@media $media-xs
+		full-bleed-xs()
+
+	@media $media-sm-up
+		rounded-corners-lg()
 
 .-menu
 	margin-bottom: $line-height-computed

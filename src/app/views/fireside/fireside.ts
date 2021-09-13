@@ -2,9 +2,11 @@ import Component from 'vue-class-component';
 import { InjectReactive, Watch } from 'vue-property-decorator';
 import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
+import { AppAuthRequired } from '../../../_common/auth/auth-required-directive';
 import AppAuthJoin from '../../../_common/auth/join/join.vue';
 import AppCommunityThumbnailImg from '../../../_common/community/thumbnail/img/img.vue';
 import { configShareCard } from '../../../_common/config/config.service';
+import { Environment } from '../../../_common/environment/environment.service';
 import AppExpand from '../../../_common/expand/expand.vue';
 import { number } from '../../../_common/filters/number';
 import { Fireside } from '../../../_common/fireside/fireside.model';
@@ -75,6 +77,7 @@ const FiresideThemeKey = 'fireside';
 	directives: {
 		AppTooltip,
 		AppObserveDimensions,
+		AppAuthRequired,
 	},
 })
 @RouteResolver({
@@ -103,6 +106,12 @@ export default class RouteFireside extends BaseRouteComponent {
 	$refs!: {
 		videoWrapper: HTMLDivElement;
 	};
+
+	get loginUrl() {
+		return (
+			Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath)
+		);
+	}
 
 	get chat() {
 		return this.chatStore.chat;
