@@ -5,29 +5,31 @@
 		<app-scroll-scroller thin>
 			<app-illustration src="~img/ill/end-of-feed.svg" />
 
-			<template v-if="!c.isDraft && !c.isStreaming">
-				<div v-if="c.expiresProgressValue !== null" class="-burnout-bar">
-					<app-progress-bar :percent="c.expiresProgressValue" thin />
+			<template v-if="!c.isDraft">
+				<template v-if="!c.isStreaming">
+					<div v-if="c.expiresProgressValue !== null" class="-burnout-bar">
+						<app-progress-bar :percent="c.expiresProgressValue" thin />
+					</div>
+					<div v-else class="-burnout-bar-placeholder" />
+				</template>
+
+				<div v-if="c.totalDurationText" class="text-center">
+					<span><translate>Fireside active for:</translate></span>
+					<span>
+						<b>{{ c.totalDurationText }}</b>
+					</span>
 				</div>
-				<div v-else class="-burnout-bar-placeholder" />
+
+				<div
+					v-if="!c.isStreaming && c.expiresDurationText"
+					class="text-center -burnout-timer"
+				>
+					<span><translate>Fire burns out in:</translate></span>
+					<span>
+						<b>{{ c.expiresDurationText }}</b>
+					</span>
+				</div>
 			</template>
-
-			<div v-if="c.totalDurationText" class="text-center">
-				<span><translate>Fireside active for:</translate></span>
-				<span>
-					<b>{{ c.totalDurationText }}</b>
-				</span>
-			</div>
-
-			<div
-				v-if="!c.isDraft && !c.isStreaming && c.expiresDurationText"
-				class="text-center -burnout-timer"
-			>
-				<span><translate>Fire burns out in:</translate></span>
-				<span>
-					<b>{{ c.expiresDurationText }}</b>
-				</span>
-			</div>
 
 			<template v-if="c.canPublish">
 				<app-button
