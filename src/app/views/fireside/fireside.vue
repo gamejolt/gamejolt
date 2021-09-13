@@ -299,7 +299,7 @@
 
 	&-column
 		display: grid
-		grid-template-rows: calc(min(33vh, (100vw / (16 / 9)))) 1fr
+		grid-template-rows: calc(min(33vh, calc(100vw / 1.7777))) 1fr
 		grid-template-columns: 100%
 		padding: 0
 

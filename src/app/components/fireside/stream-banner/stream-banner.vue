@@ -75,7 +75,7 @@ $-z-index-content = 2
 	@extend .-flex-center
 	position: relative
 	flex-direction: column
-	width: calc(min(70vh * (16 / 9), 100%)) !important
+	width: calc(min(70vh * 1.7777, 100%)) !important
 	z-index: $-z-index-content
 
 	&.-filled
