@@ -753,12 +753,16 @@ export class GridClient {
 
 		const promises = [];
 		for (const community of store.state.communities) {
-			promises.push(this.joinCommunity(cancelToken, community));
+			promises.push(this._joinCommunity(cancelToken, community));
 		}
 		return Promise.all(promises);
 	}
 
-	async joinCommunity(cancelToken: CancelToken, community: Community) {
+	joinCommunity(community: Community) {
+		return this._joinCommunity(this.cancelToken, community);
+	}
+
+	private async _joinCommunity(cancelToken: CancelToken, community: Community) {
 		const authToken = this.isGuest ? this.guestToken : await getCookie('frontend');
 		if (cancelToken.isCanceled) {
 			console.log(
