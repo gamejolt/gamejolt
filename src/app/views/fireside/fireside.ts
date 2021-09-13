@@ -199,7 +199,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	calcIsVertical() {
-		if (Screen.isMobile) {
+		if (Screen.isMobile && !GJ_IS_SSR) {
 			this.isVertical = window.screen.height > window.screen.width;
 		} else {
 			this.isVertical = Screen.height > Screen.width;
@@ -286,6 +286,10 @@ export default class RouteFireside extends BaseRouteComponent {
 
 	@Watch('c.isPersonallyStreaming')
 	onIsPersonallyStreamingChanged() {
+		if (GJ_IS_SSR) {
+			return;
+		}
+
 		if (!this.c || this.c.isPersonallyStreaming) {
 			this.beforeEachDeregister ??= this.$router.beforeEach((_to, _from, next) => {
 				if (

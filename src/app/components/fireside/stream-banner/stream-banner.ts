@@ -4,14 +4,10 @@ import { Fireside } from '../../../../_common/fireside/fireside.model';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/backdrop.vue';
 import { AppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppFiresideStreamBannerVideo from './_video/video.vue';
 
 @Component({
 	components: {
-		AppFiresideContainer: async () =>
-			(await import('../container/container')).AppFiresideContainer,
-		AppFiresideStreamBannerVideo,
+		AppFiresideStreamBannerVideo: () => import('./_video/video.vue'),
 		AppLoading,
 		AppMediaItemBackdrop,
 	},
@@ -24,8 +20,6 @@ export default class AppFiresideStreamBanner extends Vue {
 	fireside!: Fireside;
 
 	isFilled = false;
-
-	readonly Screen = Screen;
 
 	$refs!: {
 		videoWrapper: HTMLDivElement;

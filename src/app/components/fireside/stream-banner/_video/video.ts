@@ -1,43 +1,31 @@
 import Vue from 'vue';
-import { Component, InjectReactive } from 'vue-property-decorator';
+import { Component, Prop } from 'vue-property-decorator';
 import { number } from '../../../../../_common/filters/number';
+import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import AppLoading from '../../../../../_common/loading/loading.vue';
-import AppFiresideDesktopAudio from '../../../../views/fireside/_desktop-audio/desktop-audio.vue';
-import AppFiresideHostList from '../../../../views/fireside/_host-list/host-list.vue';
-import AppFiresideHostThumbIndicator from '../../../../views/fireside/_host-thumb/host-thumb-indicator.vue';
-import AppFiresideVideoStats from '../../../../views/fireside/_video-stats/video-stats.vue';
 import AppFiresideVideo from '../../../../views/fireside/_video/video.vue';
-import {
-	FiresideController,
-	FiresideControllerKey,
-	getFiresideLink,
-} from '../../controller/controller';
+import { AppFiresideContainer } from '../../container/container';
+import { createFiresideController, FiresideController } from '../../controller/controller';
 
 @Component({
 	components: {
-		AppFiresideHostList,
-		AppFiresideHostThumbIndicator,
 		AppLoading,
 		AppFiresideVideo,
-		AppFiresideDesktopAudio,
-		AppFiresideVideoStats,
+		AppFiresideContainer,
 	},
 })
 export default class AppFiresideStreamBannerVideo extends Vue {
-	@InjectReactive(FiresideControllerKey) c!: FiresideController;
+	@Prop({ type: Fireside, required: true })
+	fireside!: Fireside;
 
-	readonly Screen = Screen;
+	c!: FiresideController;
 	readonly number = number;
 
-	get url() {
-		return getFiresideLink(this.c, this.$router);
+	created() {
+		this.c = createFiresideController(this.fireside, true);
 	}
 
 	get shouldShowStream() {
-		if (GJ_IS_SSR || GJ_IS_CLIENT) {
-			return false;
-		}
-
 		return this.c.rtc && this.c.rtc.users.some(user => user.hasVideo);
 	}
 
