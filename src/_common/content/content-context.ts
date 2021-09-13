@@ -11,7 +11,8 @@ export type ContentContext =
 	| 'forum-post'
 	| 'community-description'
 	| 'chat-message'
-	| 'community-channel-description';
+	| 'community-channel-description'
+	| 'fireside-chat-message';
 
 enum ContextCapabilityType {
 	TextBold,
@@ -253,6 +254,18 @@ export class ContextCapabilities {
 					ContextCapabilityType.Mention,
 					ContextCapabilityType.Gif,
 					ContextCapabilityType.Sticker,
+				]);
+			case 'fireside-chat-message':
+				return new ContextCapabilities([
+					ContextCapabilityType.TextBold,
+					ContextCapabilityType.TextItalic,
+					ContextCapabilityType.TextLink,
+					ContextCapabilityType.TextCode,
+					ContextCapabilityType.TextStrike,
+					ContextCapabilityType.Spoiler,
+					ContextCapabilityType.Emoji,
+					ContextCapabilityType.Tag,
+					ContextCapabilityType.Mention,
 				]);
 		}
 		throw new Error('Context capabilities undefined for context ' + context);

@@ -2,7 +2,6 @@ import Component from 'vue-class-component';
 import { Emit, InjectReactive, Prop, Watch } from 'vue-property-decorator';
 import { isMac } from '../../../../../../utils/utils';
 import { propRequired } from '../../../../../../utils/vue';
-import { ContentContext } from '../../../../../../_common/content/content-context';
 import { ContentDocument } from '../../../../../../_common/content/content-document';
 import { ContentRules } from '../../../../../../_common/content/content-editor/content-rules';
 import {
@@ -44,7 +43,6 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 
 	readonly Screen = Screen;
-	readonly contentContext: ContentContext = 'chat-message';
 	// Allow images to be up to 100px in height so that image and a chat message fit into the editor without scrolling.
 	readonly displayRules = new ContentRules({ maxMediaWidth: 125, maxMediaHeight: 100 });
 

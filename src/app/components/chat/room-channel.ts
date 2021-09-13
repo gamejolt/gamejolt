@@ -228,7 +228,7 @@ export class ChatRoomChannel extends Channel {
 		const textMark = new MarkObject('code');
 		text.marks.push(textMark);
 		const p = new ContentObject('paragraph', [text]);
-		const doc = new ContentDocument('chat-message', [p]);
+		const doc = new ContentDocument(this.room.messagesContentContext, [p]);
 
 		const json = doc.toJson();
 
