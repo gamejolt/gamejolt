@@ -3,7 +3,8 @@
 
 <template>
 	<div>
-		<app-discover-home-banner :is-loading="!isRouteBootstrapped" :item="featuredItem" />
+		<app-fireside-stream-banner v-if="!GJ_IS_SSR && !GJ_IS_CLIENT" />
+		<app-discover-home-banner v-else :is-loading="!isRouteBootstrapped" :item="featuredItem" />
 
 		<section class="section fill-backdrop">
 			<app-discover-home-communities

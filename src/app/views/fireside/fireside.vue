@@ -301,9 +301,13 @@
 		display: grid
 		grid-template-rows: calc(min(33vh, (100vw / (16 / 9)))) 1fr
 		grid-template-columns: 100%
+		padding: 0
 
 		.-chat
 			max-width: unset !important
+
+		.-chat-window
+			border-radius: 0
 
 .-leading
 .-chat
@@ -415,14 +419,14 @@
 		background-color: var(--theme-bg-subtle)
 		-webkit-transform: translateZ(0)
 
+	.-fullscreen &
+	.-body-column &
+		border-radius: 0
+
 .-unsupported-text
 	color: var(--theme-fg-muted)
 	text-align: center
 	font-weight: 600
-
-.-fullscreen &
-	.-body-column &
-		border-radius: 0
 
 .-hosts-padding
 	flex: none

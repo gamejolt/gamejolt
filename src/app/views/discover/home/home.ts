@@ -9,6 +9,7 @@ import AppLoading from '../../../../_common/loading/loading.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
+import AppFiresideStreamBanner from '../../../components/fireside/stream-banner/stream-banner.vue';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { Store } from '../../../store/index';
 import AppDiscoverHomeBanner from './_banner/banner.vue';
@@ -21,6 +22,7 @@ import AppDiscoverHomeCommunities from './_communities/communities.vue';
 		AppDiscoverHomeCommunities,
 		AppAuthJoin: AppAuthJoinLazy,
 		AppLoading,
+		AppFiresideStreamBanner,
 	},
 })
 @RouteResolver({

@@ -1,3 +1,4 @@
+import { getCurrentServerTime } from '../../utils/server-time';
 import { Community } from '../community/community.model';
 import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
@@ -67,7 +68,7 @@ export class Fireside extends Model {
 	}
 
 	public isOpen() {
-		return !this.is_expired && this.expires_on > Date.now();
+		return !this.is_expired && this.expires_on > getCurrentServerTime();
 	}
 
 	public canJoin() {
@@ -75,7 +76,7 @@ export class Fireside extends Model {
 	}
 
 	public getExpiryInMs() {
-		return this.expires_on - Date.now();
+		return this.expires_on - getCurrentServerTime();
 	}
 
 	$save() {
