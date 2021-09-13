@@ -234,8 +234,17 @@
 							:queued-messages="chatQueuedMessages"
 						/>
 
+						<div v-if="!user" class="-login fill-backdrop">
+							<div class="alert">
+								<p>
+									You must be
+									<a v-app-auth-required :href="loginUrl">logged in</a>
+									to Game Jolt to chat.
+								</p>
+							</div>
+						</div>
 						<app-chat-window-send
-							v-if="chat && chat.currentUser"
+							v-else-if="chat && chat.currentUser"
 							class="-chat-window-input"
 							:room="c.chatRoom"
 						/>
@@ -493,4 +502,13 @@
 	flex-direction: column
 	height: 100%
 	overflow: hidden
+
+.-login
+	padding: ($grid-gutter-width-xs / 2)
+
+	> *
+		margin: 0
+
+	@media $media-sm-up
+		padding: ($grid-gutter-width / 2)
 </style>
