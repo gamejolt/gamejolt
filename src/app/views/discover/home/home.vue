@@ -3,7 +3,8 @@
 
 <template>
 	<div>
-		<app-fireside-stream-banner v-if="!GJ_IS_SSR && !GJ_IS_CLIENT" />
+		<!-- TODO: We should be checking if the Fireside is actually expired or not. -->
+		<app-fireside-stream-banner v-if="shouldShowFiresideBanner" :fireside="fireside" />
 		<app-discover-home-banner v-else :is-loading="!isRouteBootstrapped" :item="featuredItem" />
 
 		<section class="section fill-backdrop">

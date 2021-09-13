@@ -10,7 +10,7 @@
 
 			<app-fireside-host-thumb
 				v-for="host of c.rtc.users"
-				:key="host.userId"
+				:key="host.streamingUid"
 				class="-host-thumb"
 				:host="host"
 				:hide-options="hideThumbOptions"

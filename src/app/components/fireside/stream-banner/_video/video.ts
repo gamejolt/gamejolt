@@ -1,7 +1,6 @@
 import Vue from 'vue';
-import { Component, InjectReactive, Prop } from 'vue-property-decorator';
+import { Component, InjectReactive } from 'vue-property-decorator';
 import { number } from '../../../../../_common/filters/number';
-import { FiresideRTCUser } from '../../../../../_common/fireside/rtc/user';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import AppFiresideDesktopAudio from '../../../../views/fireside/_desktop-audio/desktop-audio.vue';
 import AppFiresideHostList from '../../../../views/fireside/_host-list/host-list.vue';
@@ -25,9 +24,6 @@ import {
 	},
 })
 export default class AppFiresideStreamBannerVideo extends Vue {
-	@Prop({ type: FiresideRTCUser, required: true })
-	rtcUser!: FiresideRTCUser;
-
 	@InjectReactive(FiresideControllerKey) c!: FiresideController;
 
 	readonly Screen = Screen;
@@ -35,6 +31,14 @@ export default class AppFiresideStreamBannerVideo extends Vue {
 
 	get url() {
 		return getFiresideLink(this.c, this.$router);
+	}
+
+	get shouldShowStream() {
+		if (GJ_IS_SSR || GJ_IS_CLIENT) {
+			return false;
+		}
+
+		return this.c.rtc && this.c.rtc.users.some(user => user.hasVideo);
 	}
 
 	get shouldShowVideo() {
@@ -47,12 +51,16 @@ export default class AppFiresideStreamBannerVideo extends Vue {
 		return this.c.chatUsers?.count ?? 0;
 	}
 
+	get focusedUser() {
+		return this.c.rtc?.focusedUser;
+	}
+
 	get videoPaused() {
 		return this.c.rtc?.videoPaused;
 	}
 
 	get hasVideo() {
-		return this.rtcUser.hasVideo;
+		return this.focusedUser?.hasVideo === true;
 	}
 
 	get isLoadingVideo() {

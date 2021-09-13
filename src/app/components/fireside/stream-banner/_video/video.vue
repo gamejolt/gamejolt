@@ -2,11 +2,23 @@
 
 <template>
 	<router-link class="-stream theme-dark" :to="c.fireside.location">
-		<div v-if="hasVideo && shouldShowVideo" :key="rtcUser.userId">
-			<app-fireside-video class="-video-player" :rtc-user="rtcUser" />
+		<div v-if="c.expiresProgressValue && c.expiresProgressValue < 0">
+			<!-- TODO: make better -->
+			<translate> This Fireside is expired. Thanks for joining us! </translate>
+		</div>
+		<div v-else-if="focusedUser && hasVideo && shouldShowVideo" :key="focusedUser.streamingUid">
+			<app-fireside-video class="-video-player" :rtc-user="focusedUser" />
 		</div>
 		<div v-else class="-center">
-			<app-loading stationary centered hide-label />
+			<!-- TODO: Replace with an image -->
+			<app-loading
+				class="sans-margin"
+				style="color: var(--theme-fg); font-weight: 600"
+				centered
+				stationary
+				:hide-label="!c.rtc"
+				:label="$gettext('Stay tuned for the next artist!')"
+			/>
 		</div>
 
 		<div class="-overlay">

@@ -11,37 +11,19 @@
 				<div class="-header-img-mask" />
 			</div>
 
-			<div v-if="!controller" class="-placeholder" />
-			<app-fireside-container
-				v-else
-				class="-container container"
-				:class="{ '-filled': isFilled }"
-				:controller="controller"
-			>
-				<div ref="videoWrapper" class="-video-wrapper">
-					<div class="-video-inner">
-						<app-fireside-stream-banner-video
-							v-if="focusedUser && shouldShowStream"
-							:rtc-user="focusedUser"
-						/>
-						<div v-else class="-video-placeholder">
-							<!-- TODO: Replace with an image -->
-							<app-loading
-								class="sans-margin"
-								style="color: var(--theme-fg); font-weight: 600"
-								centered
-								stationary
-								:hide-label="!controller.rtc"
-								:label="$gettext('Stay tuned for the next artist!')"
-							/>
+			<app-fireside-container :fireside="fireside">
+				<div class="-container container" :class="{ '-filled': isFilled }">
+					<div ref="videoWrapper" class="-video-wrapper">
+						<div class="-video-inner">
+							<app-fireside-stream-banner-video />
 						</div>
 					</div>
-				</div>
 
-				<div class="-text">
-					<h2 class="sans-margin">
-						<translate> View the first-ever Game Jolt Concert! </translate>
-					</h2>
+					<div class="-text">
+						<h2 class="sans-margin">
+							<translate> View the first-ever Game Jolt Concert! </translate>
+						</h2>
+					</div>
 				</div>
 			</app-fireside-container>
 		</component>
