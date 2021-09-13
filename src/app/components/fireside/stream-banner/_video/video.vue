@@ -22,7 +22,7 @@
 		<div v-else>
 			<img
 				class="-img"
-				src="~img/fireside/concert.png"
+				src="https://i.gjcdn.net/data/fireside/posts/44/71/2769571/media/be_right_back-kcc92q46.gif"
 				:alt="$gettext('Stay tuned for the next artist!')"
 			/>
 		</div>
