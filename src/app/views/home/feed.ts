@@ -6,7 +6,7 @@ import { fuzzysearch } from '../../../utils/string';
 import AppAdWidget from '../../../_common/ad/widget/widget.vue';
 import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
-import { configFYPDefault, configHomeNav } from '../../../_common/config/config.service';
+import { configHomeNav } from '../../../_common/config/config.service';
 import { AppConfigLoaded } from '../../../_common/config/loaded';
 import { Fireside } from '../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
@@ -157,8 +157,6 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 		if (Screen.isLg) {
 			trackExperimentEngagement(configHomeNav);
 		}
-
-		trackExperimentEngagement(configFYPDefault);
 
 		this.fireside = payload.fireside ? new Fireside(payload.fireside) : null;
 
