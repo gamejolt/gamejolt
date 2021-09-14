@@ -35,8 +35,8 @@
 						<app-user-avatar-img v-else :user="fireside.user" />
 					</div>
 					<div>
-						<div>
-							<span class="tag">
+						<div v-if="fireside.is_draft">
+							<!-- <span class="tag">
 								<span class="-new-tag" />
 								<translate
 									:translate-n="fireside.member_count || 0"
@@ -47,9 +47,9 @@
 								>
 									%{ count } Member
 								</translate>
-							</span>
+							</span> -->
 
-							<span v-if="fireside.is_draft" class="tag">
+							<span class="tag">
 								<translate> Draft </translate>
 							</span>
 						</div>

@@ -54,7 +54,7 @@
 		>
 			<template v-if="shouldShowUI">
 				<div class="-overlay-inner">
-					<div v-if="memberCount" class="-overlay-members">
+					<!-- <div v-if="memberCount" class="-overlay-members">
 						<translate
 							:translate-n="memberCount"
 							:translate-params="{ count: number(memberCount) }"
@@ -62,7 +62,7 @@
 						>
 							%{ count } member
 						</translate>
-					</div>
+					</div> -->
 
 					<div class="-overlay-playback">
 						<div

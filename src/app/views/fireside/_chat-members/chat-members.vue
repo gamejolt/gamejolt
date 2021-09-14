@@ -4,7 +4,7 @@
 	<div class="-chat-members">
 		<h3 class="sans-margin-top">
 			<translate>Members</translate>
-			<span class="badge">{{ chatUsers.count }}</span>
+			<!-- <span class="badge">{{ chatUsers.count }}</span> -->
 		</h3>
 		<app-scroll-scroller class="-chat-members-scroller">
 			<app-chat-member-list

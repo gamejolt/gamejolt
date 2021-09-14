@@ -35,7 +35,14 @@
 					{{ fireside.title }}
 				</h2>
 				<div v-if="hasChatStats && c.chatUsers" class="-fireside-title-member-stats">
-					<ul class="stat-list">
+					<app-button
+						v-app-tooltip="$gettext(`Show Members`)"
+						icon="users"
+						circle
+						trans
+						@click="onClickShowChatMembers"
+					/>
+					<!-- <ul class="stat-list">
 						<a @click="onClickShowChatMembers">
 							<li class="stat-big stat-big-smaller">
 								<div class="stat-big-label">Members</div>
@@ -44,7 +51,7 @@
 								</div>
 							</li>
 						</a>
-					</ul>
+					</ul> -->
 				</div>
 				<div v-if="showControls" class="-fireside-title-controls">
 					<div
