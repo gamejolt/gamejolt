@@ -174,6 +174,8 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 				return this.$gettext('fan games');
 			case 'fnaf':
 				return this.$gettext(`Five Nights at Freddy's (FNaF) games`);
+			case 'fnf':
+				return this.$gettext(`Friday Night Funkin' (FNF) games`);
 			case 'scifi':
 				return this.$gettext('science fiction games');
 			case 'retro':
