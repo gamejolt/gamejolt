@@ -34,7 +34,7 @@
 					<br />
 					{{ fireside.title }}
 				</h2>
-				<div v-if="hasChatStats && c.chatUsers" class="-fireside-title-member-stats">
+				<div v-if="hasChatStats && c.chatUsers">
 					<app-button
 						v-app-tooltip="$gettext(`Show Members`)"
 						icon="users"
@@ -150,11 +150,6 @@
 	h2
 		text-overflow()
 		flex: auto
-
-	&-member-stats
-		flex: none
-		margin-left: 12px
-		margin-right: 24px
 
 	&-controls
 		flex: none
