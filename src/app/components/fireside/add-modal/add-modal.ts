@@ -71,7 +71,7 @@ export default class AppFiresideAddModal extends BaseModal {
 			if (payload.errors && payload.errors['rate-limit']) {
 				Growls.error(
 					this.$gettext(
-						`Cannot create a new Fireside... yet. Try again in a couple minutes.`
+						`Cannot create a new fireside... yet. Try again in a couple minutes.`
 					)
 				);
 				return;
