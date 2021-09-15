@@ -304,7 +304,7 @@ export default class RouteFireside extends BaseRouteComponent {
 				if (
 					!window.confirm(
 						this.$gettext(
-							`You are currently streaming to a Fireside. If you leave this page, you will stop streaming. Are you sure you want to leave?`
+							`You are currently streaming to a fireside. If you leave this page, you will stop streaming. Are you sure you want to leave?`
 						)
 					)
 				) {

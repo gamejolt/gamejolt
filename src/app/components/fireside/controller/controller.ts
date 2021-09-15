@@ -18,13 +18,13 @@ import { FiresideChannel } from '../../grid/fireside-channel';
 
 export type RouteStatus =
 	| 'initial' // Initial status when route loads.
-	| 'disconnected' // Disconnected from the Fireside (chat/client channels).
+	| 'disconnected' // Disconnected from the fireside (chat/client channels).
 	| 'loading' // Initiated loading to connect to relevant channels.
 	| 'unauthorized' // Cannot join because user is not logged in/has no cookie.
 	| 'expired' // Fireside has expired.
-	| 'setup-failed' // Failed to properly join the Fireside.
-	| 'joined' // Currently joined to the Fireside.
-	| 'blocked'; // Blocked from joining the Fireside (user blocked).
+	| 'setup-failed' // Failed to properly join the fireside.
+	| 'joined' // Currently joined to the fireside.
+	| 'blocked'; // Blocked from joining the fireside (user blocked).
 
 export const FiresideControllerKey = Symbol('fireside-controller');
 
@@ -213,7 +213,7 @@ export async function publishFireside(c: FiresideController) {
 	}
 
 	await c.fireside.$publish();
-	Growls.success(Translate.$gettext(`Your Fireside is live!`));
+	Growls.success(Translate.$gettext(`Your fireside is live!`));
 }
 
 export async function extendFireside(c: FiresideController, growlOnFail = true) {

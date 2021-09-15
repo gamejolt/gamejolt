@@ -18,7 +18,7 @@
 					</h4>
 					<p class="help-block">
 						<translate>
-							Extinguishing your Fireside immediately closes it, skipping the time
+							Extinguishing your fireside immediately closes it, skipping the time
 							that is left. All current members will also have to go back home right
 							away.
 						</translate>

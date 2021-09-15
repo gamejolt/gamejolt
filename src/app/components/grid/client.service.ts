@@ -870,14 +870,14 @@ export class GridClient {
 		}
 
 		if (store.state.app.user && fireside.user.id == store.state.app.user.id) {
-			console.log('Suppress featured Fireside notification for Fireside owner.');
+			console.log('Suppress featured fireside notification for fireside owner.');
 			return;
 		}
 
 		Growls.info({
 			title: Translate.$gettext(`New Featured Fireside!`),
 			message: Translate.$gettextInterpolate(
-				`@%{ username }'s Fireside %{ firesideTitle } was featured in %{ communityName }!`,
+				`@%{ username }'s fireside %{ firesideTitle } was featured in %{ communityName }!`,
 				{
 					username: fireside.user.username,
 					firesideTitle: fireside.title,

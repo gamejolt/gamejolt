@@ -7,15 +7,6 @@
 				<translate>Close</translate>
 			</app-button>
 		</div>
-		<div class="modal-header">
-			<h2 class="modal-title">
-				<small>
-					<translate>Stoke the Flames</translate>
-				</small>
-				<br />
-				<translate>Start your Fireside</translate>
-			</h2>
-		</div>
 		<div class="modal-body">
 			<app-loading v-if="isLoading" centered />
 			<form-fireside-add

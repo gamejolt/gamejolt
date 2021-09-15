@@ -4,13 +4,13 @@
 	<app-form>
 		<app-form-group
 			name="auto_feature"
-			:label="$gettext(`Automatically feature in Community?`)"
+			:label="$gettext(`Automatically feature in community?`)"
 		>
 			<app-form-control-toggle class="pull-right" />
 
 			<p class="help-block">
 				<translate>
-					Will automatically feature this Fireside in the selected Community when it gets
+					Will automatically feature this fireside in the selected community when it gets
 					published.
 				</translate>
 			</p>

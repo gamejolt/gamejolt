@@ -9,7 +9,7 @@
 		</div>
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<translate>Publish your Fireside</translate>
+				<translate>Publish your fireside</translate>
 			</h2>
 		</div>
 		<div class="modal-body">

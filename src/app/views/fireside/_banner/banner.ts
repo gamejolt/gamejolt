@@ -1,13 +1,11 @@
 import Vue from 'vue';
 import { Component, InjectReactive } from 'vue-property-decorator';
 import AppExpand from '../../../../_common/expand/expand.vue';
-import { Navigate } from '../../../../_common/navigate/navigate.service';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import {
 	extendFireside,
 	FiresideController,
 	FiresideControllerKey,
-	getFiresideLink,
 } from '../../../components/fireside/controller/controller';
 
 @Component({
@@ -25,7 +23,19 @@ export default class AppFiresideBanner extends Vue {
 	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
 
 	get shouldShowBanner() {
-		return this.isExpiring || this.shouldNotViewStreams;
+		if (this.isExpiring) {
+			return true;
+		}
+
+		if (this.shouldNotViewStreams && !this.GJ_IS_CLIENT) {
+			return true;
+		}
+
+		return false;
+	}
+
+	get hasOnClick() {
+		return this.isExpiring;
 	}
 
 	get isExpiring() {
@@ -42,19 +52,9 @@ export default class AppFiresideBanner extends Vue {
 		return this.c.isStreaming && this.c.shouldNotViewStreams;
 	}
 
-	get hasOnClick() {
-		return this.isExpiring || (this.shouldNotViewStreams && GJ_IS_CLIENT);
-	}
-
 	onClickBanner() {
 		if (this.isExpiring) {
 			this.extendFireside();
-		} else if (this.shouldNotViewStreams && GJ_IS_CLIENT) {
-			const url = getFiresideLink(this.c, this.$router);
-
-			if (url) {
-				Navigate.newWindow(url);
-			}
 		}
 	}
 

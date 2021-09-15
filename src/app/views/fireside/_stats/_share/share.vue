@@ -11,7 +11,7 @@
 	/>
 	<app-card v-else class="-share-card">
 		<p>
-			<translate>Share this Fireside</translate>
+			<translate>Share this fireside</translate>
 		</p>
 		<div class="-copy-controls">
 			<!-- force update on input so that the URL re-applies and they can't edit -->

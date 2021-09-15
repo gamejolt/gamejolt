@@ -4,7 +4,7 @@
 	<app-form name="firesideAddForm">
 		<app-form-group name="title" hide-label>
 			<div class="help-block">
-				<translate>Give your Fireside a snappy title to draw people in.</translate>
+				<translate>Give your fireside a snappy title to draw people in.</translate>
 			</div>
 			<app-form-control
 				v-app-focus-when
@@ -22,7 +22,7 @@
 			<app-form-group name="community_id" hide-label>
 				<div class="help-block">
 					<translate>
-						Select a community that represents what your Fireside's content will be
+						Select a community that represents what your fireside's content will be
 						like. PLS MAKE BETTER TEXT help
 					</translate>
 				</div>
@@ -44,13 +44,13 @@
 			<template v-if="showAdvancedCommunityOptions">
 				<app-form-group
 					name="auto_feature"
-					:label="$gettext(`Automatically feature in Community?`)"
+					:label="$gettext(`Automatically feature in community?`)"
 				>
 					<app-form-control-toggle class="pull-right" />
 
 					<p class="help-block">
 						<translate>
-							Will automatically feature this Fireside in the selected Community when
+							Will automatically feature this fireside in the selected community when
 							it gets published.
 						</translate>
 					</p>
@@ -58,13 +58,13 @@
 
 				<app-form-group
 					name="add_community_as_cohosts"
-					:label="$gettext(`Add Community collaborators as Fireside co-hosts?`)"
+					:label="$gettext(`Add community collaborators as fireside co-hosts?`)"
 				>
 					<app-form-control-toggle class="pull-right" />
 
 					<p class="help-block">
 						<translate>
-							Will add all Community collaborators as Fireside co-hosts and chat
+							Will add all community collaborators as fireside co-hosts and chat
 							moderators when it gets created.
 						</translate>
 					</p>

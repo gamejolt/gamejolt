@@ -3,7 +3,7 @@
 
 <template>
 	<div>
-		<!-- TODO: We should be checking if the Fireside is actually expired or not. -->
+		<!-- TODO: We should be checking if the fireside is actually expired or not. -->
 		<app-fireside-stream-banner v-if="shouldShowFiresideBanner" :fireside="fireside" />
 		<app-discover-home-banner v-else :is-loading="!isRouteBootstrapped" :item="featuredItem" />
 

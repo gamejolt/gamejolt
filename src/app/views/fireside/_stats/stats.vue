@@ -33,7 +33,7 @@
 
 			<template v-if="c.canPublish">
 				<app-button
-					v-app-tooltip.bottom="$gettext(`Make your Fireside public`)"
+					v-app-tooltip.bottom="$gettext(`Make your fireside public`)"
 					block
 					primary
 					solid
@@ -44,7 +44,7 @@
 				</app-button>
 				<p class="help-block">
 					<translate>
-						Your Fireside is currently in draft. Only you can view it. Publish it to let
+						Your fireside is currently in draft. Only you can view it. Publish it to let
 						everyone join!
 					</translate>
 				</p>
@@ -52,7 +52,7 @@
 
 			<template v-if="!c.isDraft && !c.isStreaming && c.canExtend">
 				<app-button
-					v-app-tooltip.bottom="$gettext(`Extend the duration of your Fireside`)"
+					v-app-tooltip.bottom="$gettext(`Extend the duration of your fireside`)"
 					block
 					icon="fireside"
 					class="-extend-btn"

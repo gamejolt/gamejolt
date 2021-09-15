@@ -73,7 +73,7 @@ export class AppFiresideContainer extends Vue {
 
 		if (c.fireside.blocked) {
 			c.status = 'blocked';
-			console.debug(`[Fireside] Blocked from joining blocked user's Fireside.`);
+			console.debug(`[Fireside] Blocked from joining blocked user's fireside.`);
 			return;
 		}
 
@@ -179,7 +179,7 @@ export class AppFiresideContainer extends Vue {
 	}
 
 	private async join() {
-		console.debug(`[FIRESIDE] Joining Fireside.`);
+		console.debug(`[FIRESIDE] Joining fireside.`);
 		const c = this.controller;
 
 		// --- Make sure common join conditions are met.
@@ -214,7 +214,7 @@ export class AppFiresideContainer extends Vue {
 			);
 
 			if (!payload.fireside) {
-				console.debug(`[FIRESIDE] Trying to load Fireside, but it was not found.`);
+				console.debug(`[FIRESIDE] Trying to load fireside, but it was not found.`);
 				c.status = 'setup-failed';
 				return;
 			}
@@ -238,7 +238,7 @@ export class AppFiresideContainer extends Vue {
 		// Maybe they are blocked now?
 		if (c.fireside.blocked) {
 			c.status = 'blocked';
-			console.debug(`[Fireside] Blocked from joining blocked user's Fireside.`);
+			console.debug(`[Fireside] Blocked from joining blocked user's fireside.`);
 			return;
 		}
 
@@ -249,7 +249,7 @@ export class AppFiresideContainer extends Vue {
 			return;
 		}
 
-		// --- Make them join the Fireside (if they aren't already).
+		// --- Make them join the fireside (if they aren't already).
 
 		if (this.user && !c.fireside.role) {
 			const rolePayload = await Api.sendRequest(`/web/fireside/join/${c.fireside.hash}`);
@@ -309,15 +309,15 @@ export class AppFiresideContainer extends Vue {
 
 		c.chatChannel.on('kick_member', (data: any) => {
 			if (this.user && data.user_id === this.user.id) {
-				Growls.info(this.$gettext(`You've been kicked from the Fireside.`));
+				Growls.info(this.$gettext(`You've been kicked from the fireside.`));
 				this.$router.push({ name: 'home' });
 			}
 		});
 
 		c.status = 'joined';
-		console.debug(`[FIRESIDE] Successfully joined Fireside.`);
+		console.debug(`[FIRESIDE] Successfully joined fireside.`);
 
-		// Set up the expiry interval to check if the Fireside is expired.
+		// Set up the expiry interval to check if the fireside is expired.
 		this.clearExpiryCheck();
 		c.expiryInterval = setInterval(this.expiryCheck.bind(this), 1000);
 		this.expiryCheck();
@@ -349,7 +349,7 @@ export class AppFiresideContainer extends Vue {
 		this.clearExpiryCheck();
 		this.destroyExpiryInfoInterval();
 
-		console.debug(`[FIRESIDE] Disconnecting from Fireside.`);
+		console.debug(`[FIRESIDE] Disconnecting from fireside.`);
 		c.status = 'disconnected';
 
 		if (this.grid && this.grid.connected && c.gridChannel) {
@@ -366,7 +366,7 @@ export class AppFiresideContainer extends Vue {
 		StreamSetupModal.close();
 		this.destroyRtc();
 
-		console.debug(`[FIRESIDE] Disconnected from Fireside.`);
+		console.debug(`[FIRESIDE] Disconnected from fireside.`);
 	}
 
 	private clearExpiryCheck() {

@@ -69,7 +69,7 @@ export default class AppHomeFireside extends Vue {
 				this.firesides = [];
 			}
 		} catch (error) {
-			console.error('Failed to refresh Fireside data.', error);
+			console.error('Failed to refresh fireside data.', error);
 		}
 
 		this.isLoading = false;

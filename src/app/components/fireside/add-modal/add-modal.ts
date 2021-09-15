@@ -92,7 +92,7 @@ export default class AppFiresideAddModal extends BaseModal {
 
 	private showGenericError() {
 		Growls.error(
-			this.$gettext(`Couldn't created your Fireside. Reload the page and try again.`)
+			this.$gettext(`Couldn't created your fireside. Reload the page and try again.`)
 		);
 	}
 }
