@@ -2,10 +2,7 @@
 
 <template>
 	<app-form name="firesideAddForm">
-		<app-form-group name="title" hide-label>
-			<div class="help-block">
-				<translate>Give your fireside a snappy title to draw people in.</translate>
-			</div>
+		<app-form-group name="title" :label="$gettext(`Title`)">
 			<app-form-control
 				v-app-focus-when
 				type="text"
@@ -16,14 +13,19 @@
 				:validate-on="['blur']"
 			/>
 			<app-form-control-errors />
+			<div class="help-block">
+				<translate>Give your fireside a snappy title to draw everyone in!</translate>
+			</div>
 		</app-form-group>
 
 		<template v-if="canSelectCommunity">
-			<app-form-group name="community_id" hide-label>
+			<app-form-group name="community_id" :label="$gettext(`Start in a community?`)">
 				<div class="help-block">
+					<strong>
+						<translate>Make sure you read the community's rules!</translate>
+					</strong>
 					<translate>
-						Select a community that represents what your fireside's content will be
-						like. PLS MAKE BETTER TEXT help
+						Only communities that allow firesides will show up here.
 					</translate>
 				</div>
 
@@ -50,8 +52,9 @@
 
 					<p class="help-block">
 						<translate>
-							Will automatically feature this fireside in the selected community when
-							it gets published.
+							Will automatically feature this fireside in your selected community when
+							it gets published. This will notify every member in the community that
+							the fireside has started.
 						</translate>
 					</p>
 				</app-form-group>
@@ -64,8 +67,8 @@
 
 					<p class="help-block">
 						<translate>
-							Will add all community collaborators as fireside co-hosts and chat
-							moderators when it gets created.
+							This will let every collaborator in the community moderate the chat and
+							stream with you.
 						</translate>
 					</p>
 				</app-form-group>

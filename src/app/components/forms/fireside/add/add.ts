@@ -71,10 +71,11 @@ export default class FormFiresideAdd extends BaseForm<FormModel> implements Form
 	private setCommunity(community: Community) {
 		this.setField('community_id', community.id);
 
-		// Community mods that have this option probably want to have it enabled by default.
-		this.setField('auto_feature', this.showAdvancedCommunityOptions);
-		// Reset this field when the community changes.
-		this.setField('add_community_as_cohosts', false);
+		// Community mods that have this option probably want to have it enabled
+		// by default.
+		const isCollaborator = this.showAdvancedCommunityOptions;
+		this.setField('auto_feature', isCollaborator);
+		this.setField('add_community_as_cohosts', isCollaborator);
 	}
 
 	onDraftSubmit() {
