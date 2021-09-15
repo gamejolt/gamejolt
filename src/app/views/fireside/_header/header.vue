@@ -6,26 +6,26 @@
 			<div class="-fireside-title">
 				<h2 class="sans-margin-top" :class="{ h3: Screen.isXs }">
 					<small class="-subtitle">
+						<router-link
+							:to="{
+								name: 'profile.overview',
+								params: { username: fireside.user.username },
+							}"
+						>
+							@{{ fireside.user.username }}
+						</router-link>
+						<app-user-avatar-img class="-avatar" :user="fireside.user" />
+						<span>'s Fireside</span>
+
 						<template v-if="fireside.community">
-							<router-link :to="fireside.community.routeLocation">
-								{{ fireside.community.name }}
-							</router-link>
+							<span>in </span>
 							<div class="-avatar -community-avatar">
 								<app-community-thumbnail-img :community="fireside.community" />
 							</div>
-						</template>
-						<template v-else>
-							<router-link
-								:to="{
-									name: 'profile.overview',
-									params: { username: fireside.user.username },
-								}"
-							>
-								@{{ fireside.user.username }}
+							<router-link :to="fireside.community.routeLocation">
+								{{ fireside.community.name }}
 							</router-link>
-							<app-user-avatar-img class="-avatar" :user="fireside.user" />
 						</template>
-						<span>'s Fireside</span>
 
 						<span v-if="c.isDraft" class="-draft-tag tag">
 							<translate>Draft</translate>
