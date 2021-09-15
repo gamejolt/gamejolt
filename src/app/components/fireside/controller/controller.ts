@@ -15,6 +15,7 @@ import { FiresideChatMembersModal } from '../../../views/fireside/_chat-members/
 import { ChatClient } from '../../chat/client';
 import { ChatRoomChannel } from '../../chat/room-channel';
 import { FiresideChannel } from '../../grid/fireside-channel';
+import { FiresidePublishModal } from '../publish-modal/publish-modal.service';
 
 export type RouteStatus =
 	| 'initial' // Initial status when route loads.
@@ -208,16 +209,23 @@ export function toggleStreamVideoStats(c: FiresideController) {
 }
 
 export async function publishFireside(c: FiresideController) {
-	if (!c || !c.fireside || c.status !== 'joined' || !c.isDraft) {
+	if (!c.fireside || c.status !== 'joined' || !c.isDraft) {
 		return;
 	}
 
+	const { fireside } = c;
+	const ret = await FiresidePublishModal.show({ fireside });
+	if (ret?.doPublish !== true) {
+		return;
+	}
+
+	// TODO: We need to pass the auto-feature flag through here.
 	await c.fireside.$publish();
 	Growls.success(Translate.$gettext(`Your fireside is live!`));
 }
 
 export async function extendFireside(c: FiresideController, growlOnFail = true) {
-	if (!c || c.status !== 'joined' || !c.canExtend || !c.fireside) {
+	if (c.status !== 'joined' || !c.canExtend || !c.fireside) {
 		return;
 	}
 

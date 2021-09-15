@@ -18,11 +18,14 @@ export class FiresidePublishModal {
 		const { fireside } = options;
 
 		// Show simple "yes/no" confirm modal if they can't change anything regarding the community link.
-		if (!fireside.community || !fireside.community.hasPerms('community-firesides')) {
+		if (!fireside.community?.hasPerms('community-firesides')) {
 			const result = await ModalConfirm.show(
 				Translate.$gettext(`Do you want to publish this fireside for the world to see?`)
 			);
-			return { doPublish: result === true, autoFeature: false } as FiresidePublishModalResult;
+			return {
+				doPublish: result === true,
+				autoFeature: false,
+			} as FiresidePublishModalResult;
 		}
 
 		// Show a more complex modal for community options before publishing.

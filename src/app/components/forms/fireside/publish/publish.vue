@@ -10,8 +10,8 @@
 
 			<p class="help-block">
 				<translate>
-					Will automatically feature this fireside in the selected community when it gets
-					published.
+					Will automatically feature this fireside in your selected community. This will
+					notify every member in the community that the fireside has started.
 				</translate>
 			</p>
 		</app-form-group>
