@@ -7,14 +7,20 @@ import {
 	SettingVideoPlayerFeedMuted,
 	SettingVideoPlayerMuted,
 } from '../../../settings/settings.service';
+import { ScrubberCallback } from '../../../slider/slider';
+import AppSlider from '../../../slider/slider.vue';
 import { AppTooltip } from '../../../tooltip/tooltip-directive';
-import { setVideoMuted, trackVideoPlayerEvent, VideoPlayerController } from '../controller';
-import AppPlayerSlider from '../slider/slider.vue';
+import {
+	scrubVideoVolume,
+	setVideoMuted,
+	trackVideoPlayerEvent,
+	VideoPlayerController,
+} from '../controller';
 
 @Component({
 	components: {
 		AppPopper,
-		AppPlayerSlider,
+		AppSlider,
 	},
 	directives: {
 		AppTooltip,
@@ -25,6 +31,14 @@ export default class AppPlayerVolume extends Vue {
 	@Prop(propOptional(Boolean, false)) hasSlider!: boolean;
 
 	readonly Screen = Screen;
+
+	get isMuted() {
+		if (this.player.altControlsBehavior) {
+			return this.player.muted;
+		} else {
+			return this.player.volume === 0;
+		}
+	}
 
 	onClickMute() {
 		let currentState = true;
@@ -42,11 +56,7 @@ export default class AppPlayerVolume extends Vue {
 		);
 	}
 
-	get isMuted() {
-		if (this.player.altControlsBehavior) {
-			return this.player.muted;
-		} else {
-			return this.player.volume === 0;
-		}
+	onVolumeScrub({ percent, stage }: ScrubberCallback) {
+		scrubVideoVolume(this.player, percent, stage);
 	}
 }

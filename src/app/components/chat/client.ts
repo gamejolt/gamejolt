@@ -2,6 +2,7 @@ import Axios from 'axios';
 import { Channel, Socket } from 'phoenix';
 import Vue from 'vue';
 import { arrayRemove, numberSort } from '../../../utils/array';
+import { CancelToken } from '../../../utils/cancel-token';
 import { sleep } from '../../../utils/utils';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
@@ -13,8 +14,6 @@ import { ChatRoomChannel } from './room-channel';
 import { ChatUser } from './user';
 import { ChatUserChannel } from './user-channel';
 import { ChatUserCollection } from './user-collection';
-
-export const ChatKey = Symbol('Chat');
 
 export interface ChatNewMessageEvent {
 	message: ChatMessage;
@@ -29,12 +28,10 @@ export interface ChatNewMessageEvent {
  * request
  */
 async function pollRequest<T>(
-	chat: ChatClient,
 	context: string,
+	cancelToken: CancelToken,
 	requestGetter: () => Promise<T>
 ): Promise<T | null> {
-	const chatId = chat.id;
-
 	let result = null;
 	let finished = false;
 	let delay = 0;
@@ -43,7 +40,7 @@ async function pollRequest<T>(
 
 	while (!finished) {
 		// Abort if our chat server changed.
-		if (chat.id !== chatId) {
+		if (cancelToken.isCanceled) {
 			return null;
 		}
 
@@ -66,10 +63,8 @@ async function pollRequest<T>(
 }
 
 export class ChatClient {
-	static nextId = 1;
-
-	id = -1;
 	connected = false;
+	isGuest = false;
 	socket: Socket | null = null;
 	userChannel: ChatUserChannel | null = null;
 
@@ -98,6 +93,13 @@ export class ChatClient {
 
 	messageQueue: ChatMessage[] = [];
 	messageEditing: null | ChatMessage = null;
+
+	/**
+	 * If set, will connect as a guest, using this token.
+	 */
+	guestToken: string | null = null;
+
+	cancelToken: CancelToken = null as any;
 
 	/**
 	 * The session room is stored within their local session. It's their last active room. We reopen
@@ -136,13 +138,14 @@ export class ChatClient {
 	}
 
 	constructor() {
+		this.cancelToken = new CancelToken();
+
 		reset(this);
 		connect(this);
 	}
 }
 
 function reset(chat: ChatClient) {
-	chat.id = -1;
 	chat.connected = false;
 	chat.currentUser = null;
 	chat.friendsList = new ChatUserCollection(ChatUserCollection.TYPE_FRIEND);
@@ -159,6 +162,28 @@ function reset(chat: ChatClient) {
 	chat.isFocused = true;
 
 	chat.messageQueue = [];
+
+	chat.cancelToken.cancel();
+	chat.cancelToken = new CancelToken();
+}
+
+export async function setGuestChatToken(chat: ChatClient, guestToken: string) {
+	const tokenChanged = chat.guestToken !== guestToken;
+	chat.guestToken = guestToken;
+
+	if (!chat.isGuest || tokenChanged) {
+		chat.isGuest = true;
+		reconnect(chat);
+	}
+}
+
+export async function unsetGuestChatToken(chat: ChatClient) {
+	chat.guestToken = null;
+
+	if (chat.isGuest) {
+		chat.isGuest = false;
+		reconnect(chat);
+	}
 }
 
 function reconnect(chat: ChatClient) {
@@ -167,21 +192,29 @@ function reconnect(chat: ChatClient) {
 }
 
 async function connect(chat: ChatClient) {
-	const chatId = ChatClient.nextId++;
-	chat.id = chatId;
+	const cancelToken = chat.cancelToken;
 
-	const frontend = await getCookie('frontend');
 	const user = store.state.app.user;
+	if ((!chat.isGuest && !user) || (chat.isGuest && !!user)) {
+		return;
+	}
+
+	const authToken = chat.isGuest ? chat.guestToken : await getCookie('frontend');
+	if (cancelToken.isCanceled) {
+		console.log('[Chat] Aborted connection (1)');
+		return;
+	}
+
 	const timedOut = store.state.app.isUserTimedOut;
 
-	if (user === null || frontend === undefined || timedOut) {
+	if (!authToken || timedOut) {
 		// Not properly logged in.
 		return;
 	}
 
 	console.log('[Chat] Connecting...');
 
-	const results = await pollRequest(chat, 'Auth to server', async () => {
+	const results = await pollRequest('Auth to server', cancelToken, async () => {
 		// Do the host check first. This request will get rate limited and only
 		// let a certain number through, which will cause the second one to not
 		// get processed.
@@ -190,16 +223,29 @@ async function connect(chat: ChatClient) {
 			timeout: 3000,
 		});
 
-		const tokenResult = await Axios.post(
-			`${Environment.chat}/token`,
-			{ frontend },
-			{ ignoreLoadingBar: true, timeout: 3000 }
-		);
+		if (cancelToken.isCanceled) {
+			return null;
+		}
+
+		const params =
+			user && !chat.isGuest
+				? { auth_token: authToken, user_id: user.id }
+				: { auth_token: authToken };
+
+		const tokenResult = await Axios.post(`${Environment.chat}/token`, params, {
+			ignoreLoadingBar: true,
+			timeout: 3000,
+		});
 
 		return { host: hostResult, token: tokenResult };
 	});
 
-	if (!results || chatId !== chat.id) {
+	if (cancelToken.isCanceled) {
+		console.log('[Chat] Aborted connection (2)');
+		return;
+	}
+
+	if (!results) {
 		return;
 	}
 
@@ -224,24 +270,36 @@ async function connect(chat: ChatClient) {
 	}
 
 	chat.socket.onOpen(() => {
+		if (cancelToken.isCanceled) {
+			return;
+		}
+
 		chat.connected = true;
 		setChatRoom(chat, undefined);
 	});
 
 	chat.socket.onError((e: any) => {
+		if (cancelToken.isCanceled) {
+			return;
+		}
+
 		console.warn('[Chat] Got error from socket');
 		console.warn(e);
 		reconnect(chat);
 	});
 
 	chat.socket.onClose(() => {
+		if (cancelToken.isCanceled) {
+			return;
+		}
+
 		console.warn('[Chat] Socket closed unexpectedly');
 		reconnect(chat);
 	});
 
 	await pollRequest(
-		chat,
 		'Connect to socket',
+		cancelToken,
 		() =>
 			new Promise<void>(resolve => {
 				if (chat.socket !== null) {
@@ -251,18 +309,21 @@ async function connect(chat: ChatClient) {
 			})
 	);
 
-	if (chatId !== chat.id) {
+	if (cancelToken.isCanceled) {
+		console.log('[Chat] Aborted connection (3)');
 		return;
 	}
 
-	joinUserChannel(chat, user.id);
+	if (user) {
+		joinUserChannel(chat, user.id);
+	}
 }
 
 export function destroy(chat: ChatClient) {
-	console.log('[Chat] Destroying client');
-
-	if (!chat.connected) {
-		return;
+	if (chat.connected) {
+		console.log('[Chat] Destroying client...');
+	} else {
+		console.warn('[Chat] Destroying client (before we got fully connected)');
 	}
 
 	reset(chat);
@@ -286,18 +347,24 @@ export function destroy(chat: ChatClient) {
 }
 
 async function joinUserChannel(chat: ChatClient, userId: number) {
+	const cancelToken = chat.cancelToken;
+
 	const channel = new ChatUserChannel(userId, chat);
 	const request = `Join user channel ${userId}`;
 
 	await pollRequest(
-		chat,
 		request,
+		cancelToken,
 		() =>
 			new Promise<void>((resolve, reject) => {
 				channel
 					.join()
 					.receive('error', reject)
 					.receive('ok', response => {
+						if (cancelToken.isCanceled) {
+							return;
+						}
+
 						const currentUser = new ChatUser(response.user);
 						const friendsList = new ChatUserCollection(
 							ChatUserCollection.TYPE_FRIEND,
@@ -318,6 +385,7 @@ async function joinUserChannel(chat: ChatClient, userId: number) {
 }
 
 export async function joinInstancedRoomChannel(chat: ChatClient, roomId: number) {
+	const cancelToken = chat.cancelToken;
 	const channel = new ChatRoomChannel(roomId, chat);
 	channel.instanced = true;
 
@@ -326,6 +394,10 @@ export async function joinInstancedRoomChannel(chat: ChatClient, roomId: number)
 			.join()
 			.receive('error', reject)
 			.receive('ok', response => {
+				if (cancelToken.isCanceled) {
+					return;
+				}
+
 				chat.roomChannels[roomId] = channel;
 				channel.room = new ChatRoom(response.room);
 				const messages = response.messages.map((msg: ChatMessage) => new ChatMessage(msg));
@@ -339,6 +411,8 @@ export async function joinInstancedRoomChannel(chat: ChatClient, roomId: number)
 }
 
 async function joinRoomChannel(chat: ChatClient, roomId: number) {
+	const cancelToken = chat.cancelToken;
+
 	const channel = new ChatRoomChannel(roomId, chat);
 
 	if (chat.pollingRoomId === roomId) {
@@ -349,10 +423,14 @@ async function joinRoomChannel(chat: ChatClient, roomId: number) {
 	chat.pollingRoomId = roomId;
 
 	await pollRequest(
-		chat,
 		`Join room channel: ${roomId}`,
+		cancelToken,
 		() =>
 			new Promise<void>((resolve, reject) => {
+				if (cancelToken.isCanceled) {
+					return;
+				}
+
 				// If the client started polling a different room, stop polling this one.
 				if (chat.pollingRoomId !== roomId) {
 					console.log('[Chat] Stop joining room', roomId);
@@ -363,6 +441,10 @@ async function joinRoomChannel(chat: ChatClient, roomId: number) {
 					.join()
 					.receive('error', reject)
 					.receive('ok', response => {
+						if (cancelToken.isCanceled) {
+							return;
+						}
+
 						chat.pollingRoomId = -1;
 						chat.roomChannels[roomId] = channel;
 						channel.room = new ChatRoom(response.room);

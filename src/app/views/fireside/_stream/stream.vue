@@ -24,11 +24,15 @@
 				</div>
 			</template>
 			<template v-else>
-				<div :key="rtcUser.userId">
-					<app-fireside-video class="-video-player -click-target" :rtc-user="rtcUser" />
+				<div :key="rtcUser.uid">
+					<app-fireside-video
+						v-if="shouldShowVideo"
+						class="-video-player -click-target"
+						:rtc-user="rtcUser"
+					/>
 					<app-fireside-desktop-audio v-if="shouldPlayDesktopAudio" :rtc-user="rtcUser" />
 					<app-fireside-video-stats
-						v-if="rtc.shouldShowVideoStats"
+						v-if="c.rtc && c.rtc.shouldShowVideoStats"
 						@click.native.capture.stop
 					/>
 				</div>
@@ -76,7 +80,6 @@
 					<div v-if="showOverlayHosts" class="-overlay-hosts -control">
 						<app-fireside-host-list
 							hide-thumb-options
-							:host-rtc="hostRtc"
 							@show-popper="onHostOptionsShow"
 							@hide-popper="onHostOptionsHide"
 						/>

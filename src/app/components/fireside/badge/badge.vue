@@ -77,6 +77,7 @@
 	overflow: hidden
 	padding: 10px 15px
 	elevate-hover-2()
+	-webkit-transform: translateZ(0)
 
 	&:hover
 		.-header

@@ -39,7 +39,8 @@ import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
 import { unfollowUser, User } from '../../../../_common/user/user.model';
-import { ChatClient, ChatKey, enterChatRoom } from '../../../components/chat/client';
+import { ChatStore, ChatStoreKey } from '../../../components/chat/chat-store';
+import { enterChatRoom } from '../../../components/chat/client';
 import AppCommentOverview from '../../../components/comment/overview/overview.vue';
 import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
 import AppGameList from '../../../components/game/list/list.vue';
@@ -83,7 +84,7 @@ import { RouteStore, RouteStoreModule } from '../profile.store';
 	resolver: ({ route }) => Api.sendRequest('/web/profile/overview/@' + route.params.username),
 })
 export default class RouteProfileOverview extends BaseRouteComponent {
-	@InjectReactive(ChatKey) chat?: ChatClient;
+	@InjectReactive(ChatStoreKey) chatStore!: ChatStore;
 	@Inject(CommentStoreManagerKey) commentManager!: CommentStoreManager;
 
 	@State
@@ -157,6 +158,10 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	readonly User = User;
 	readonly UserFriendship = UserFriendship;
 	readonly Screen = Screen;
+
+	get chat() {
+		return this.chatStore.chat;
+	}
 
 	get routeTitle() {
 		if (this.user) {

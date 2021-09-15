@@ -110,6 +110,7 @@ if (cluster.isMaster) {
 				'render',
 				total - context.prefetchTime + 'ms',
 				req.url,
+				req.headers['host'],
 				req.headers['user-agent']
 			);
 

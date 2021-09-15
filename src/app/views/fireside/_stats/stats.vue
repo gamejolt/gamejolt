@@ -5,28 +5,33 @@
 		<app-scroll-scroller thin>
 			<app-illustration src="~img/ill/end-of-feed.svg" />
 
-			<template v-if="!isStreaming">
-				<div v-if="expiresProgressValue !== null" class="-burnout-bar">
-					<app-progress-bar :percent="expiresProgressValue" thin />
+			<template v-if="!c.isDraft">
+				<template v-if="!c.isStreaming">
+					<div v-if="c.expiresProgressValue !== null" class="-burnout-bar">
+						<app-progress-bar :percent="c.expiresProgressValue" thin />
+					</div>
+					<div v-else class="-burnout-bar-placeholder" />
+				</template>
+
+				<div v-if="c.totalDurationText" class="text-center">
+					<span><translate>Fireside active for:</translate></span>
+					<span>
+						<b>{{ c.totalDurationText }}</b>
+					</span>
 				</div>
-				<div v-else class="-burnout-bar-placeholder" />
+
+				<div
+					v-if="!c.isStreaming && c.expiresDurationText"
+					class="text-center -burnout-timer"
+				>
+					<span><translate>Fire burns out in:</translate></span>
+					<span>
+						<b>{{ c.expiresDurationText }}</b>
+					</span>
+				</div>
 			</template>
 
-			<div v-if="totalDurationText" class="text-center">
-				<span><translate>Fireside active for:</translate></span>
-				<span>
-					<b>{{ totalDurationText }}</b>
-				</span>
-			</div>
-
-			<div v-if="!isStreaming && expiresDurationText" class="text-center -burnout-timer">
-				<span><translate>Fire burns out in:</translate></span>
-				<span>
-					<b>{{ expiresDurationText }}</b>
-				</span>
-			</div>
-
-			<template v-if="canPublish">
+			<template v-if="c.canPublish">
 				<app-button
 					v-app-tooltip.bottom="$gettext(`Make your Fireside public`)"
 					block
@@ -45,7 +50,7 @@
 				</p>
 			</template>
 
-			<template v-if="!isStreaming && canExtend">
+			<template v-if="!c.isDraft && !c.isStreaming && c.canExtend">
 				<app-button
 					v-app-tooltip.bottom="$gettext(`Extend the duration of your Fireside`)"
 					block
@@ -64,7 +69,7 @@
 			</template>
 		</app-scroll-scroller>
 
-		<div v-if="!isDraft">
+		<div v-if="!c.isDraft">
 			<app-fireside-share />
 		</div>
 	</div>

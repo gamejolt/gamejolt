@@ -1,11 +1,15 @@
 import { asyncComponentLoader } from '../../../../utils/utils';
 import { Modal } from '../../../../_common/modal/modal.service';
-import { FiresideHostRtc } from '../fireside-host-rtc';
+import { FiresideController } from '../../../components/fireside/controller/controller';
 
 const ModalId = 'firesideStreamSetup';
 
 export class StreamSetupModal {
-	static async show(firesideHostRtc: FiresideHostRtc) {
+	static async show(c: FiresideController) {
+		if (!c.rtc?.producer) {
+			return;
+		}
+
 		return await Modal.show<void>({
 			modalId: ModalId,
 			component: () =>
@@ -13,7 +17,7 @@ export class StreamSetupModal {
 					import(/* webpackChunkName: "FiresideStreamSetup" */ './stream-setup-modal.vue')
 				),
 			props: {
-				firesideHostRtc,
+				c,
 			},
 			size: 'sm',
 			noBackdropClose: true,

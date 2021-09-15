@@ -18,7 +18,8 @@ import AppUserFollowWidget from '../../../_common/user/follow/widget.vue';
 import { UserFriendship } from '../../../_common/user/friendship/friendship.model';
 import AppUserAvatar from '../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../_common/user/verified-tick/verified-tick.vue';
-import { ChatClient, ChatKey, isUserOnline } from '../../components/chat/client';
+import { ChatStore, ChatStoreKey } from '../../components/chat/chat-store';
+import { isUserOnline } from '../../components/chat/client';
 import { IntentService } from '../../components/intent/intent.service';
 import AppPageHeaderControls from '../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../components/page-header/page-header.vue';
@@ -85,7 +86,7 @@ const ProfileThemeKey = 'profile';
 	},
 })
 export default class RouteProfile extends BaseRouteComponent {
-	@InjectReactive(ChatKey) chat?: ChatClient;
+	@InjectReactive(ChatStoreKey) chatStore!: ChatStore;
 
 	@State
 	app!: Store['app'];
@@ -111,6 +112,10 @@ export default class RouteProfile extends BaseRouteComponent {
 	readonly UserFriendship = UserFriendship;
 	readonly Environment = Environment;
 	readonly Screen = Screen;
+
+	get chat() {
+		return this.chatStore.chat;
+	}
 
 	/**
 	 * The cover height changes when we switch to not showing the full cover, so
