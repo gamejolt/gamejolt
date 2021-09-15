@@ -126,7 +126,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			});
 		}
 
-		if ($payload.fireside) {
+		if ($payload.userFireside) {
 			this.userFireside = new Fireside($payload.userFireside);
 		}
 	}
