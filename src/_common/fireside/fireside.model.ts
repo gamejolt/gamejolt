@@ -91,8 +91,12 @@ export class Fireside extends Model {
 		return this.$_save(`/web/dash/fireside/save/` + this.hash, 'fireside');
 	}
 
-	$publish() {
-		return this.$_save(`/web/dash/fireside/publish/` + this.hash, 'fireside');
+	$publish({ autoFeature }: { autoFeature?: boolean } = {}) {
+		return this.$_save(`/web/dash/fireside/publish/` + this.hash, 'fireside', {
+			data: {
+				auto_feature: autoFeature ?? false,
+			},
+		});
 	}
 
 	$extinguish() {

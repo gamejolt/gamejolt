@@ -219,8 +219,7 @@ export async function publishFireside(c: FiresideController) {
 		return;
 	}
 
-	// TODO: We need to pass the auto-feature flag through here.
-	await c.fireside.$publish();
+	await c.fireside.$publish({ autoFeature: ret.autoFeature });
 	Growls.success(Translate.$gettext(`Your fireside is live!`));
 }
 
