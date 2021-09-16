@@ -24,14 +24,22 @@
 
 			<template v-if="displayFiresides.length">
 				<hr v-if="!userFireside" />
-				<div :style="gridStyling">
-					<app-fireside-avatar
-						v-for="fireside of displayFiresides"
-						:key="fireside.id"
-						:fireside="fireside"
-						@expired="onFiresideExpired()"
-					/>
-				</div>
+				<component
+					:is="shouldDisplaySingleRow ? 'app-scroll-scroller' : 'div'"
+					:class="{ '-scroller': shouldDisplaySingleRow }"
+					horizontal
+				>
+					<div :class="{ '-scroller-inner': shouldDisplaySingleRow }">
+						<div :style="gridStyling">
+							<app-fireside-avatar
+								v-for="fireside of displayFiresides"
+								:key="fireside.id"
+								:fireside="fireside"
+								@expired="onFiresideExpired()"
+							/>
+						</div>
+					</div>
+				</component>
 			</template>
 		</div>
 	</app-loading-fade>
@@ -49,6 +57,22 @@
 
 	h4
 		margin-bottom: 0
+
+.-scroller
+	@media $media-xs
+		full-bleed-xs()
+
+		.-scroller-inner
+			padding: 0 ($grid-gutter-width-xs / 2)
+
+	@media $media-sm-up
+		full-bleed()
+
+		.-scroller-inner
+			padding: 0 ($grid-gutter-width / 2)
+
+.-scroller-inner
+	display: inline-block
 
 .-list
 	margin-bottom: $line-height-computed

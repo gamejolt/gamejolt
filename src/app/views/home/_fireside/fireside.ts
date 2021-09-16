@@ -4,6 +4,7 @@ import { Emit, Prop } from 'vue-property-decorator';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import AppLoadingFade from '../../../../_common/loading/fade/fade.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
+import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import AppFiresideAvatar from '../../../components/fireside/avatar/avatar.vue';
 import AppFiresideBadgeAdd from '../../../components/fireside/badge/add/add.vue';
 import AppFiresideBadgePlaceholder from '../../../components/fireside/badge/placeholder/placeholder.vue';
@@ -14,6 +15,7 @@ import AppFiresideBadgePlaceholder from '../../../components/fireside/badge/plac
 		AppLoadingFade,
 		AppFiresideBadgeAdd,
 		AppFiresideBadgePlaceholder,
+		AppScrollScroller,
 	},
 })
 export default class AppHomeFireside extends Vue {
@@ -52,7 +54,7 @@ export default class AppHomeFireside extends Vue {
 		return {
 			display: 'grid',
 			gridTemplateColumns: `repeat(${this.gridColumns}, 1fr)`,
-			gridGap: '8px',
+			gridGap: '16px',
 		};
 	}
 

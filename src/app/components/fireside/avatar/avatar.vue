@@ -212,6 +212,7 @@ $-zindex-popper = 4
 	letter-spacing: 1px
 	background-color: var(--theme-bg-offset)
 	font-size: $-tag-font-size
+	white-space: nowrap
 	position: absolute
 	bottom: -($-tag-offset)
 	z-index: $-zindex-tag
