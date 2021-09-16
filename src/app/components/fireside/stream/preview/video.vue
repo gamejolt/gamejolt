@@ -7,24 +7,11 @@
 
 			<div class="-overlay">
 				<div class="-center">
-					<h1 class="-live">
+					<div class="-live">
 						<translate>LIVE</translate>
-					</h1>
+					</div>
 				</div>
-				<div class="-center">
-					<h1 class="-link">
-						<translate>Click here to view the first-ever Game Jolt Concert!</translate>
-					</h1>
-				</div>
-				<div />
 			</div>
-		</div>
-		<div v-else>
-			<img
-				class="-img"
-				src="https://i.gjcdn.net/data/fireside/posts/44/71/2769571/media/be_right_back-kcc92q46.gif"
-				:alt="$gettext('Stay tuned for the next artist!')"
-			/>
 		</div>
 	</app-fireside-container>
 </template>
@@ -32,10 +19,6 @@
 <style lang="stylus" scoped>
 @import '~styles/variables'
 @import '~styles-lib/mixins'
-
-.-img
-	width: 100%
-	height: 100%
 
 .-stream
 .-video-player
@@ -46,7 +29,6 @@
 	bottom: 0
 	left: 0
 	color: var(--theme-fg)
-	text-shadow: 1px 1px 3px $black
 
 .-overlay
 	z-index: 1
@@ -71,21 +53,15 @@
 	align-items: center
 
 .-live
-.-link
-	margin: 0
-
-.-live
 	rounded-corners-lg()
+	margin: 0
+	padding: 4px 8px
+	font-size: $font-size-h1
 	font-weight: 700
+	font-family: $font-family-heading
 	text-shadow: none
 	box-shadow: 1px 1px 3px $black
-	padding: 4px 8px
 	letter-spacing: 2px
 	color: $white
 	background-color: $gj-overlay-notice
-
-.-link
-	font-weight: 600
-	color: var(--theme-fg)
-	text-align: center
 </style>

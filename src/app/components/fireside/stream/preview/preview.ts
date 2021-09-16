@@ -1,40 +1,23 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
-import AppLoading from '../../../../../_common/loading/loading.vue';
-import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 
+/**
+ * This is a thin wrapper around showing a fireside preview video.
+ *
+ * IMPORTANT: Make sure to not load any agora stuff in here, it all has to be
+ * lazy loaded.
+ */
 @Component({
 	components: {
-		AppFiresideStreamBannerVideo: () => import('./video.vue'),
-		AppLoading,
-	},
-	directives: {
-		AppObserveDimensions,
+		AppFiresideStreamPreviewVideo: () => import('./video.vue'),
 	},
 })
-export default class AppFiresideStreamBanner extends Vue {
+export default class AppFiresideStreamPreview extends Vue {
 	@Prop({ type: Fireside, required: true })
 	fireside!: Fireside;
 
-	isFilled = false;
-
-	$refs!: {
-		videoWrapper: HTMLDivElement;
-	};
-
 	get location() {
 		return this.fireside.location;
-	}
-
-	onDimensionsChange() {
-		const container = this.$el;
-		const video = this.$refs.videoWrapper;
-		if (!container || !video) {
-			this.isFilled = false;
-			return;
-		}
-
-		this.isFilled = Math.floor(container.clientWidth) <= Math.ceil(video.clientWidth);
 	}
 }

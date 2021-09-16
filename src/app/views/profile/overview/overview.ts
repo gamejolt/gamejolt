@@ -10,12 +10,12 @@ import {
 	CommentStoreModel,
 	lockCommentStore,
 	releaseCommentStore,
-	setCommentCount,
+	setCommentCount
 } from '../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../_common/comment/modal/modal.service';
 import {
 	CommentThreadModal,
-	CommentThreadModalPermalinkDeregister,
+	CommentThreadModalPermalinkDeregister
 } from '../../../../_common/comment/thread/modal.service';
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
@@ -43,6 +43,7 @@ import { ChatStore, ChatStoreKey } from '../../../components/chat/chat-store';
 import { enterChatRoom } from '../../../components/chat/client';
 import AppCommentOverview from '../../../components/comment/overview/overview.vue';
 import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
+import AppFiresideStreamPreview from '../../../components/fireside/stream/preview/preview.vue';
 import AppGameList from '../../../components/game/list/list.vue';
 import AppGameListPlaceholder from '../../../components/game/list/placeholder/placeholder.vue';
 import AppPageContainer from '../../../components/page-container/page-container.vue';
@@ -69,6 +70,7 @@ import { RouteStore, RouteStoreModule } from '../profile.store';
 		AppTrophyThumbnail,
 		AppFiresideBadge,
 		AppShareCard,
+		AppFiresideStreamPreview,
 	},
 	directives: {
 		AppTooltip,

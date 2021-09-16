@@ -384,6 +384,8 @@
 					<!-- Fireside -->
 					<app-fireside-badge v-if="shouldShowFireside" :fireside="fireside" />
 
+					<app-fireside-stream-preview v-if="shouldShowFireside" :fireside="fireside" />
+
 					<router-view />
 				</app-page-container>
 			</div>
