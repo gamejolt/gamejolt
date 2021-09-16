@@ -27,8 +27,18 @@
 							</router-link>
 						</template>
 
-						<span v-if="c.isDraft" class="-draft-tag tag">
+						<span v-if="c.isDraft" class="-tag tag">
 							<translate>Draft</translate>
+						</span>
+
+						<span
+							v-if="
+								fireside.primaryCommunityLink &&
+								fireside.primaryCommunityLink.isFeatured
+							"
+							class="-tag tag"
+						>
+							<translate>Featured</translate>
 						</span>
 					</small>
 					<br />
@@ -208,7 +218,7 @@
 		pointer-events: none
 		padding: 2px
 
-.-draft-tag
+.-tag
 	margin-left: 4px
 
 .-extras-header
