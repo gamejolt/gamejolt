@@ -10,6 +10,7 @@ import { ActivityFeedService } from '../../../../components/activity/feed/feed-s
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import AppCommunitySidebar from '../../../../components/community/sidebar/sidebar.vue';
 import AppFiresideBadgeAdd from '../../../../components/fireside/badge/add/add.vue';
+import { FiresideTeaserEvent } from '../../../../components/fireside/teaser/teaser';
 import AppFiresideTeaser from '../../../../components/fireside/teaser/teaser.vue';
 import { Store } from '../../../../store/index';
 import { CommunitiesViewChannelDeps } from '../channel/channel';
@@ -171,40 +172,10 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		await declineCollaboration(this.routeStore);
 	}
 
-	onFiresideEject(fireside: Fireside) {
-		this.removeFireside(fireside);
-	}
-
-	onFiresideFeature(fireside: Fireside) {
-		this.removeFireside(fireside);
-		const link = fireside.community_links.find(c => c.community.id === this.community.id);
-		const insertIndex = this.displayablePreviewFiresides.findIndex(i => {
-			const linkInList = i.community_links.find(c => c.community.id === this.community.id);
-			return (
-				!linkInList ||
-				!link ||
-				!linkInList.featured_on ||
-				!link.featured_on ||
-				linkInList.featured_on < link.featured_on
-			);
-		});
-
-		if (insertIndex === -1) {
-			// If no firesides are featured in this community, move the newly
-			// featured fireside to the front.
-			this.previewFiresides.unshift(fireside);
-		} else {
-			// Insert the fireside into the list, positioned at the end of the featured items.
-			this.previewFiresides.splice(insertIndex, 0, fireside);
+	onFiresideEject({ fireside, community }: FiresideTeaserEvent) {
+		if (community.community.id !== this.community.id) {
+			return;
 		}
-	}
-
-	onFiresideUnfeature(fireside: Fireside) {
-		this.removeFireside(fireside);
-		this.previewFiresides.push(fireside);
-	}
-
-	private removeFireside(fireside: Fireside) {
 		arrayRemove(this.previewFiresides, i => i === fireside);
 	}
 }

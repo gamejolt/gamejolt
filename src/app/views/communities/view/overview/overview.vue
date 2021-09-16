@@ -32,9 +32,8 @@
 						v-for="fireside in displayablePreviewFiresides"
 						:key="fireside.id"
 						:fireside="fireside"
+						:community="community"
 						@eject="onFiresideEject"
-						@feature="onFiresideFeature"
-						@unfeature="onFiresideUnfeature"
 					/>
 				</div>
 
