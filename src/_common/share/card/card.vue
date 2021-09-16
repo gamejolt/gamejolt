@@ -11,7 +11,8 @@
 			</h4>
 
 			<div class="-content-row">
-				<input class="-url form-control" :value="url" />
+				<!-- force update on input so that the URL re-applies and they can't edit -->
+				<input class="-url form-control" :value="url" @input="$forceUpdate()" />
 
 				<app-button class="-copy" @click="copyLink()">
 					<translate>Copy</translate>

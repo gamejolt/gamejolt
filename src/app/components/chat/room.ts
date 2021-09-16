@@ -1,3 +1,4 @@
+import { ContentContext } from '../../../_common/content/content-context';
 import { Translate } from '../../../_common/translate/translate.service';
 import { ChatClient } from './client';
 import { ChatRole } from './role';
@@ -58,6 +59,14 @@ export class ChatRoom {
 	 */
 	get canElectModerators() {
 		return this.isFiresideRoom;
+	}
+
+	get messagesContentContext(): ContentContext {
+		if (this.type === 'fireside_group') {
+			return 'fireside-chat-message';
+		}
+
+		return 'chat-message';
 	}
 
 	/**

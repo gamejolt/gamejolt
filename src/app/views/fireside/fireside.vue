@@ -1,150 +1,36 @@
 <script lang="ts" src="./fireside"></script>
 
 <template>
-	<div class="-fireside">
-		<div class="-header">
-			<template v-if="fireside">
-				<div class="-fireside-title">
-					<h2 class="sans-margin-top" :class="{ h3: Screen.isXs }">
-						<small class="-subtitle">
-							<template v-if="fireside.community">
-								<router-link :to="fireside.community.routeLocation">
-									{{ fireside.community.name }}
-								</router-link>
-								<div class="-avatar -community-avatar">
-									<app-community-thumbnail-img :community="fireside.community" />
-								</div>
-							</template>
-							<template v-else>
-								<router-link
-									:to="{
-										name: 'profile.overview',
-										params: { username: fireside.user.username },
-									}"
-								>
-									@{{ fireside.user.username }}
-								</router-link>
-								<app-user-avatar-img class="-avatar" :user="fireside.user" />
-							</template>
-							<span>'s Fireside</span>
+	<app-fireside-container v-if="c" :controller="c" class="-fireside">
+		<app-fireside-banner />
 
-							<span v-if="isDraft" class="-draft-tag tag">
-								<translate>Draft</translate>
-							</span>
-						</small>
-						<br />
-						{{ fireside.title }}
-					</h2>
-					<div
-						v-if="shouldShowChatMemberStats && chatUsers"
-						class="-fireside-title-member-stats"
-					>
-						<ul class="stat-list">
-							<a @click="onClickShowChatMembers">
-								<li class="stat-big stat-big-smaller">
-									<div class="stat-big-label">Members</div>
-									<div class="stat-big-digit">{{ number(chatUsers.count) }}</div>
-								</li>
-							</a>
-						</ul>
-					</div>
-					<div v-if="shouldShowTitleControls" class="-fireside-title-controls">
-						<div
-							v-if="shouldShowStreamingOptions && !isPersonallyStreaming"
-							class="-stats-btn"
-						>
-							<app-button
-								v-app-tooltip="$gettext(`Start Streaming`)"
-								icon="broadcast"
-								circle
-								trans
-								@click="onClickEditStream"
-							/>
-						</div>
-
-						<app-popper>
-							<div class="-stats-btn">
-								<app-button
-									icon="cog"
-									circle
-									sparse
-									:solid="hasExpiryWarning && !shouldShowFiresideStats"
-									:primary="hasExpiryWarning && !shouldShowFiresideStats"
-								/>
-								<app-jolticon
-									v-if="hasExpiryWarning && !shouldShowFiresideStats"
-									icon="notice"
-									notice
-									class="-stats-btn-warn"
-								/>
-							</div>
-
-							<template #popover>
-								<div class="list-group list-group-dark">
-									<a class="list-group-item has-icon" @click="onClickCopyLink">
-										<app-jolticon icon="link" />
-										<translate>Copy Link</translate>
-									</a>
-									<a
-										v-if="shouldShowEditControlButton"
-										class="list-group-item has-icon"
-										@click="onClickEditFireside"
-									>
-										<app-jolticon icon="edit" />
-										<translate>Edit Fireside</translate>
-									</a>
-									<a
-										v-if="!shouldShowChatMembers"
-										class="list-group-item has-icon"
-										@click="onClickShowChatMembers"
-									>
-										<app-jolticon icon="users" />
-										<translate>Chat Members</translate>
-									</a>
-									<a
-										v-if="!shouldShowFiresideStats"
-										class="list-group-item has-icon"
-										@click="onClickShowFiresideStats"
-									>
-										<app-jolticon icon="fireside" :notice="hasExpiryWarning" />
-										<translate>Fireside Info</translate>
-									</a>
-
-									<template
-										v-if="shouldShowStreamingOptions && isPersonallyStreaming"
-									>
-										<a
-											class="list-group-item has-icon"
-											@click="onClickEditStream"
-										>
-											<app-jolticon icon="broadcast" />
-											<translate>Stream Settings</translate>
-										</a>
-										<a
-											class="list-group-item has-icon"
-											@click="onClickStopStreaming"
-										>
-											<app-jolticon icon="remove" notice />
-											<translate>Stop Streaming</translate>
-										</a>
-									</template>
-								</div>
-							</template>
-						</app-popper>
-					</div>
-				</div>
-			</template>
-		</div>
-		<div class="-split" />
-		<div class="-body" :class="{ '-body-column': isVertical, '-is-streaming': isStreaming }">
+		<template v-if="!shouldShowHeaderInBody">
+			<app-fireside-header
+				class="-header"
+				:show-controls="shouldShowTitleControls"
+				:has-info="!shouldShowFiresideStats"
+				:has-edit="shouldShowEditControlButton"
+				:has-chat="!shouldShowChatMembers"
+				:has-chat-stats="shouldShowChatMemberStats"
+			/>
+			<div class="-split" />
+		</template>
+		<div
+			class="-body"
+			:class="{ '-body-column': isVertical && c.isStreaming, '-is-streaming': c.isStreaming }"
+		>
 			<div v-if="shouldShowFiresideStats" class="-leading">
-				<app-fireside-stats :status="status" :is-streaming="isStreaming" />
+				<app-fireside-stats />
 			</div>
 
 			<div
-				v-if="isStreaming && chatRoom"
+				v-if="c.isStreaming && c.chatRoom"
 				class="-video-wrapper"
-				:class="{ '-vertical': isVertical }"
+				:class="{
+					'-vertical': isVertical,
+					'-fullscreen': shouldFullscreenStream,
+					'-has-cbar': !Screen.isXs,
+				}"
 			>
 				<div class="-video-padding">
 					<div
@@ -154,19 +40,39 @@
 					>
 						<div
 							class="-video-inner"
+							:class="{
+								'-unsupported': GJ_IS_CLIENT,
+							}"
 							:style="{
 								width: videoWidth + 'px',
 								height: videoHeight + 'px',
 							}"
 						>
-							<template v-if="rtc && rtc.focusedUser">
+							<template v-if="GJ_IS_CLIENT">
+								<app-illustration
+									v-if="shouldShowHosts && shortestSide > 700"
+									src="~img/ill/no-comments.svg"
+								/>
+
+								<p class="-unsupported-text">
+									<translate>
+										Oh dear... Fireside streams don't work on the Client right
+										now.
+									</translate>
+								</p>
+
+								<app-button @click="onClickOpenBrowser()">
+									<translate>Open in Browser</translate>
+								</app-button>
+							</template>
+							<template v-else-if="c.rtc && c.rtc.focusedUser">
 								<app-popper trigger="right-click">
 									<app-fireside-stream
-										:rtc-user="rtc.focusedUser"
-										:host-rtc="hostRtc"
+										:rtc-user="c.rtc.focusedUser"
 										:show-overlay-hosts="!shouldShowHosts"
 										:members="overlayChatMembers"
 									/>
+
 									<template #popover>
 										<div class="list-group">
 											<a class="list-group-item" @click="toggleVideoStats()">
@@ -180,16 +86,16 @@
 					</div>
 				</div>
 
-				<div v-if="rtc && shouldShowHosts" class="-hosts-padding">
+				<div v-if="c.rtc && shouldShowHosts" class="-hosts-padding">
 					<div class="-hosts">
-						<app-fireside-host-list :host-rtc="hostRtc" />
+						<app-fireside-host-list />
 					</div>
 
-					<app-fireside-share v-if="!isDraft" class="-share" hide-heading />
+					<app-fireside-share v-if="!c.isDraft" class="-share" hide-heading />
 				</div>
 			</div>
 
-			<template v-if="status === 'loading' || status === 'initial'">
+			<template v-if="c.status === 'loading' || c.status === 'initial'">
 				<div key="loading" class="-message-wrapper">
 					<div class="-message">
 						<app-illustration src="~img/ill/end-of-feed.svg">
@@ -202,7 +108,7 @@
 				</div>
 			</template>
 
-			<template v-else-if="status === 'unauthorized'">
+			<template v-else-if="c.status === 'unauthorized'">
 				<div key="unauthorized" class="-message-wrapper">
 					<div class="-message">
 						<h2 class="section-header text-center">
@@ -223,7 +129,7 @@
 				</div>
 			</template>
 
-			<template v-else-if="status === 'expired'">
+			<template v-else-if="c.status === 'expired'">
 				<div key="expired" class="-message-wrapper">
 					<div class="-message">
 						<app-illustration src="~img/ill/no-comments-small.svg">
@@ -240,7 +146,7 @@
 				</div>
 			</template>
 
-			<template v-else-if="status === 'setup-failed'">
+			<template v-else-if="c.status === 'setup-failed'">
 				<div key="setup-failed" class="-message-wrapper">
 					<div class="-message">
 						<app-illustration src="~img/ill/maintenance.svg">
@@ -259,7 +165,7 @@
 				</div>
 			</template>
 
-			<template v-else-if="status === 'disconnected'">
+			<template v-else-if="c.status === 'disconnected'">
 				<div key="disconnected" class="-message-wrapper">
 					<div class="-message">
 						<app-illustration src="~img/ill/no-comments-small.svg">
@@ -280,7 +186,7 @@
 				</div>
 			</template>
 
-			<template v-else-if="status === 'blocked'">
+			<template v-else-if="c.status === 'blocked'">
 				<div key="blocked" class="-message-wrapper">
 					<div class="-message">
 						<div class="text-center">
@@ -288,7 +194,7 @@
 						</div>
 						<div class="text-center">
 							<h3>
-								<translate>You are blocked from joining this Fireside</translate>
+								<translate> You are blocked from joining this Fireside </translate>
 							</h3>
 							<p>
 								<router-link :to="{ name: 'home' }">
@@ -303,30 +209,55 @@
 				v-else-if="shouldShowChat"
 				key="chat"
 				class="-chat"
-				:class="{ '-trailing': isStreaming }"
+				:class="{ '-trailing': c.isStreaming }"
 			>
-				<template v-if="status === 'joined'">
+				<app-expand v-if="shouldShowHeaderInBody" :when="c.isShowingStreamOverlay">
+					<app-fireside-header
+						class="-header"
+						has-overlay-popovers
+						:show-controls="shouldShowTitleControls"
+						:has-info="!shouldShowFiresideStats"
+						:has-edit="shouldShowEditControlButton"
+						:has-chat="!shouldShowChatMembers"
+						:has-chat-stats="shouldShowChatMemberStats"
+					/>
+				</app-expand>
+
+				<div v-if="c.status === 'joined'" class="-chat-wrapper">
 					<div class="-chat-window">
 						<app-chat-window-output
-							v-if="chatRoom"
+							v-if="c.chatRoom"
 							ref="output"
 							class="-chat-window-output fill-backdrop"
-							:room="chatRoom"
+							:room="c.chatRoom"
 							:messages="chatMessages"
 							:queued-messages="chatQueuedMessages"
 						/>
 
-						<app-chat-window-send class="-chat-window-input" :room="chatRoom" />
+						<div v-if="!user" class="-login fill-backdrop">
+							<div class="alert">
+								<p>
+									You must be
+									<a v-app-auth-required :href="loginUrl">logged in</a>
+									to Game Jolt to chat.
+								</p>
+							</div>
+						</div>
+						<app-chat-window-send
+							v-else-if="chat && chat.currentUser"
+							class="-chat-window-input"
+							:room="c.chatRoom"
+						/>
 					</div>
-				</template>
+				</div>
 			</div>
 			<div v-if="shouldShowChatMembers" class="-trailing">
 				<div class="-chat-members">
-					<app-fireside-chat-members :chat-users="chatUsers" :chat-room="chatRoom" />
+					<app-fireside-chat-members :chat-users="c.chatUsers" :chat-room="c.chatRoom" />
 				</div>
 			</div>
 		</div>
-	</div>
+	</app-fireside-container>
 </template>
 
 <style lang="stylus" scoped>
@@ -376,14 +307,16 @@
 		max-width: none
 
 	&-column
-		flex-direction: column
-
-		.-video
-			flex: none
+		display: grid
+		grid-template-rows: calc(min(33vh, calc(100vw / 1.7777))) 1fr
+		grid-template-columns: 100%
+		padding: 0
 
 		.-chat
-			flex: auto
 			max-width: unset !important
+
+		.-chat-window
+			border-radius: 0
 
 .-leading
 .-chat
@@ -416,37 +349,6 @@
 	position: relative
 	overflow: visible !important
 
-.-fireside-title
-	display: flex
-	align-items: center
-
-	h2
-		text-overflow()
-		flex: auto
-
-	&-member-stats
-		flex: none
-		margin-left: 12px
-		margin-right: 24px
-
-	&-controls
-		flex: none
-		margin-left: 12px
-		white-space: nowrap
-
-.-subtitle
-	*
-		vertical-align: middle
-
-.-avatar
-	width: 16px
-	height: 16px
-	display: inline-block
-
-.-community-avatar
-	overflow: hidden
-	border-radius: 50%
-
 .-message-wrapper
 	position: absolute
 	top: 0
@@ -467,42 +369,73 @@
 	width: 100%
 	max-width: 600px
 
-.-video
-	&-wrapper
-	&-container
-	&-inner
-		display: flex
-		justify-content: center
-		align-items: center
+.-fullscreen
+	position: fixed
+	left: 0
+	top: $shell-top-nav-height
+	right: 0
+	bottom: 0
+	z-index: $zindex-shell-hot-bottom + 1
+	background-color: $black
 
-	&-wrapper
-		flex: 3 0
-		flex-direction: column
-		overflow: hidden
+	&.-has-cbar
+		left: $shell-cbar-width
 
-		&.-vertical
-			flex: 1
-			flex-direction: row
-			max-height: 33vh
+.-video-wrapper
+.-video-container
+.-video-inner
+	display: flex
+	justify-content: center
+	align-items: center
 
-	&-padding
-		position: relative
-		width: 100%
-		height: 100%
-		padding: 8px
+.-video-wrapper
+	flex: 3 0
+	flex-direction: column
+	overflow: hidden
 
-	&-container
-		min-height: 0
-		width: 100%
-		height: 100%
-		position: relative
+	&.-vertical
+		flex-direction: row
+		flex: none
 
-	&-inner
+.-video-padding
+	position: relative
+	width: 100%
+	height: 100%
+	padding: 8px
+
+	.-fullscreen &
+	.-body-column &
+		background-color: $black
+		padding: 0
+
+.-video-container
+	min-height: 0
+	width: 100%
+	height: 100%
+	position: relative
+
+.-video-inner
+	overflow: hidden
+	position: absolute
+	flex-direction: column
+
+	&.-unsupported
+		padding: $line-height-computed
+
+	&:not(.-unsupported)
 		rounded-corners-lg()
 		elevate-2()
-		overflow: hidden
-		position: absolute
 		background-color: var(--theme-bg-subtle)
+		-webkit-transform: translateZ(0)
+
+	.-fullscreen &
+	.-body-column &
+		border-radius: 0
+
+.-unsupported-text
+	color: var(--theme-fg-muted)
+	text-align: center
+	font-weight: 600
 
 .-hosts-padding
 	flex: none
@@ -531,6 +464,19 @@
 		padding-top: 0
 		padding-right: 8px
 
+.-chat-wrapper
+	position: relative
+	height: 100%
+
+	.-body-column &
+	.-is-streaming &
+		margin-left: -($grid-gutter-width-xs / 2)
+		margin-right: -($grid-gutter-width-xs / 2)
+
+		@media $media-sm-up
+			margin-left: -($grid-gutter-width / 2)
+			margin-right: -($grid-gutter-width / 2)
+
 .-chat-window
 	position: absolute
 	top: 0
@@ -557,19 +503,12 @@
 	height: 100%
 	overflow: hidden
 
-.-stats-btn
-	display: inline-block
-	position: relative
+.-login
+	padding: ($grid-gutter-width-xs / 2)
 
-	&-warn
-		change-bg('bg-offset')
-		rounded-corners()
-		position: absolute
-		left: -8px
-		top: -8px
-		pointer-events: none
-		padding: 2px
+	> *
+		margin: 0
 
-.-draft-tag
-	margin-left: 4px
+	@media $media-sm-up
+		padding: ($grid-gutter-width / 2)
 </style>

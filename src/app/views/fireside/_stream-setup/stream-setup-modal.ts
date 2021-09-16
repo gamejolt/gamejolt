@@ -1,16 +1,18 @@
 import { Component, Prop } from 'vue-property-decorator';
-import { propRequired } from '../../../../utils/vue';
+import AppIllustration from '../../../../_common/illustration/illustration.vue';
 import { BaseModal } from '../../../../_common/modal/base';
-import { FiresideHostRtc } from '../fireside-host-rtc';
+import { FiresideController } from '../../../components/fireside/controller/controller';
 import AppStreamSetup from './stream-setup.vue';
 
 @Component({
 	components: {
 		AppStreamSetup,
+		AppIllustration,
 	},
 })
 export default class AppStreamSetupModal extends BaseModal {
-	@Prop(propRequired(FiresideHostRtc)) firesideHostRtc!: FiresideHostRtc;
+	@Prop({ type: FiresideController, required: true })
+	c!: FiresideController;
 
 	onClose() {
 		this.modal.dismiss();

@@ -7,11 +7,11 @@ import {
 	SettingVideoPlayerMuted,
 	SettingVideoPlayerVolume,
 } from '../../settings/settings.service';
+import { ScrubberStage } from '../../slider/slider';
 import { VideoSourceArray } from '../video';
 
 export type VideoPlayerControllerContext = 'feed' | 'page' | 'gif' | null;
 export type VideoPlayerState = 'paused' | 'playing';
-export type ScrubberStage = 'start' | 'scrub' | 'end';
 
 export function getVideoPlayerFromSources(
 	item: { mp4?: string; webm?: string },

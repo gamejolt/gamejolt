@@ -7,7 +7,7 @@ import { Theme } from '../../../../../_common/theme/theme.model';
 import { ThemeState, ThemeStore } from '../../../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../../store/index';
-import { ChatClient, ChatKey } from '../../../chat/client';
+import { ChatStore, ChatStoreKey } from '../../../chat/chat-store';
 import AppShellCbarItem from '../item/item.vue';
 
 @Component({
@@ -19,7 +19,7 @@ import AppShellCbarItem from '../item/item.vue';
 	},
 })
 export default class AppShellCbarControls extends Vue {
-	@InjectReactive(ChatKey) chat?: ChatClient;
+	@InjectReactive(ChatStoreKey) chatStore!: ChatStore;
 
 	@AppState user!: AppStore['user'];
 	@ThemeState theme?: ThemeStore['theme'];
@@ -32,6 +32,10 @@ export default class AppShellCbarControls extends Vue {
 	};
 
 	readonly Screen = Screen;
+
+	get chat() {
+		return this.chatStore.chat;
+	}
 
 	get highlight() {
 		const theme = this.activeCommunity?.theme || this.theme || new Theme(null);
