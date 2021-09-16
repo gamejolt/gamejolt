@@ -144,8 +144,6 @@
 				<app-community-slider v-else :communities="communities" with-add-button />
 			</template>
 
-			<app-fireside-stream-banner v-if="fireside" class="-concert" :fireside="fireside" />
-
 			<div v-if="!hasSimpleHome" class="full-bleed-xs">
 				<app-nav-tab-list center class="-inline-menu">
 					<ul>

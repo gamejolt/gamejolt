@@ -12,7 +12,7 @@ import {
 	FiresideController,
 	FiresideControllerKey,
 } from '../../../components/fireside/controller/controller';
-import { StreamSetupModal } from '../_stream-setup/stream-setup-modal.service';
+import { StreamSetupModal } from '../../../components/fireside/stream/setup/setup-modal.service';
 
 @Component({
 	components: {

@@ -3,14 +3,14 @@ import { Component, Prop } from 'vue-property-decorator';
 import { number } from '../../../../../_common/filters/number';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import AppLoading from '../../../../../_common/loading/loading.vue';
-import AppFiresideVideo from '../../../../views/fireside/_video/video.vue';
 import { AppFiresideContainer } from '../../container/container';
 import { createFiresideController, FiresideController } from '../../controller/controller';
+import AppFiresideStreamVideo from '../video/video.vue';
 
 @Component({
 	components: {
 		AppLoading,
-		AppFiresideVideo,
+		AppFiresideStreamVideo,
 		AppFiresideContainer,
 	},
 })

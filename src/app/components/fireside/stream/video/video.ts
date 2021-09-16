@@ -7,14 +7,11 @@ import {
 	getVideoLock,
 	releaseVideoLock,
 	setVideoPlayback,
-} from '../../../../_common/fireside/rtc/user';
-import {
-	FiresideController,
-	FiresideControllerKey,
-} from '../../../components/fireside/controller/controller';
+} from '../../../../../_common/fireside/rtc/user';
+import { FiresideController, FiresideControllerKey } from '../../controller/controller';
 
 @Component({})
-export default class AppFiresideVideo extends Vue {
+export default class AppFiresideStreamVideo extends Vue {
 	@Prop({ type: FiresideRTCUser, required: true })
 	rtcUser!: FiresideRTCUser;
 

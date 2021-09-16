@@ -1,6 +1,6 @@
-import { asyncComponentLoader } from '../../../../utils/utils';
-import { Modal } from '../../../../_common/modal/modal.service';
-import { FiresideController } from '../../../components/fireside/controller/controller';
+import { asyncComponentLoader } from '../../../../../utils/utils';
+import { Modal } from '../../../../../_common/modal/modal.service';
+import { FiresideController } from '../../controller/controller';
 
 const ModalId = 'firesideStreamSetup';
 
@@ -14,7 +14,7 @@ export class StreamSetupModal {
 			modalId: ModalId,
 			component: () =>
 				asyncComponentLoader(
-					import(/* webpackChunkName: "FiresideStreamSetup" */ './stream-setup-modal.vue')
+					import(/* webpackChunkName: "FiresideStreamSetup" */ './setup-modal.vue')
 				),
 			props: {
 				c,

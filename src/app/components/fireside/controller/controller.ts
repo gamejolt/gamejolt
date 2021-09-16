@@ -11,7 +11,6 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../../_common/share/share.service';
 import { appStore } from '../../../../_common/store/app-store';
 import { Translate } from '../../../../_common/translate/translate.service';
-import { FiresideChatMembersModal } from '../../../views/fireside/_chat-members/modal/modal.service';
 import { ChatClient } from '../../chat/client';
 import { ChatRoomChannel } from '../../chat/room-channel';
 import { FiresideChannel } from '../../grid/fireside-channel';
@@ -195,13 +194,6 @@ export function copyFiresideLink(c: FiresideController, router: VueRouter) {
 	if (url) {
 		copyShareLink(url, 'fireside');
 	}
-}
-
-export function showFiresideMembers(c: FiresideController) {
-	if (!c.chatUsers || !c.chatRoom) {
-		return;
-	}
-	FiresideChatMembersModal.show(c.chatUsers, c.chatRoom);
 }
 
 export function toggleStreamVideoStats(c: FiresideController) {

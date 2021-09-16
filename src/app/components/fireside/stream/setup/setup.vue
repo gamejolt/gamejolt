@@ -1,4 +1,4 @@
-<script lang="ts" src="./stream-setup"></script>
+<script lang="ts" src="./setup"></script>
 
 <template>
 	<app-loading-fade :is-loading="isStarting">

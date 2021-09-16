@@ -16,11 +16,11 @@ import {
 	copyFiresideLink,
 	FiresideController,
 	FiresideControllerKey,
-	showFiresideMembers,
 } from '../../../components/fireside/controller/controller';
+import { StreamSetupModal } from '../../../components/fireside/stream/setup/setup-modal.service';
+import { FiresideChatMembersModal } from '../_chat-members/modal/modal.service';
 import { FiresideEditModal } from '../_edit-modal/edit-modal.service';
 import { FiresideStatsModal } from '../_stats/modal/modal.service';
-import { StreamSetupModal } from '../_stream-setup/stream-setup-modal.service';
 
 @Component({
 	components: {
@@ -76,7 +76,11 @@ export default class AppFiresideHeader extends Vue {
 	}
 
 	onClickShowChatMembers() {
-		showFiresideMembers(this.c);
+		if (!this.c.chatUsers || !this.c.chatRoom) {
+			return;
+		}
+
+		FiresideChatMembersModal.show(this.c.chatUsers, this.c.chatRoom);
 	}
 
 	onClickEditStream() {

@@ -1,7 +1,7 @@
 import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
-import { debounce, sleep } from '../../../../utils/utils';
-import { MediaDeviceService } from '../../../../_common/agora/media-device.service';
-import AppExpand from '../../../../_common/expand/expand.vue';
+import { debounce, sleep } from '../../../../../utils/utils';
+import { MediaDeviceService } from '../../../../../_common/agora/media-device.service';
+import AppExpand from '../../../../../_common/expand/expand.vue';
 import {
 	assignPreferredProducerDevices,
 	clearSelectedRecordingDevices,
@@ -14,13 +14,13 @@ import {
 	setVideoPreviewElement,
 	startStreaming,
 	stopStreaming,
-} from '../../../../_common/fireside/rtc/producer';
-import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
-import { BaseForm, FormOnInit } from '../../../../_common/form-vue/form.service';
-import AppForm from '../../../../_common/form-vue/form.vue';
-import AppFormLegend from '../../../../_common/form-vue/legend/legend.vue';
-import AppLoadingFade from '../../../../_common/loading/fade/fade.vue';
-import { FiresideController } from '../../../components/fireside/controller/controller';
+} from '../../../../../_common/fireside/rtc/producer';
+import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
+import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.service';
+import AppForm from '../../../../../_common/form-vue/form.vue';
+import AppFormLegend from '../../../../../_common/form-vue/legend/legend.vue';
+import AppLoadingFade from '../../../../../_common/loading/fade/fade.vue';
+import { FiresideController } from '../../controller/controller';
 import AppVolumeMeter from './volume-meter.vue';
 
 const Beeps = [

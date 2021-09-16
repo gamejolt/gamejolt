@@ -1,12 +1,12 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { Fireside } from '../../../../_common/fireside/fireside.model';
-import AppLoading from '../../../../_common/loading/loading.vue';
-import { AppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
+import { Fireside } from '../../../../../_common/fireside/fireside.model';
+import AppLoading from '../../../../../_common/loading/loading.vue';
+import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 
 @Component({
 	components: {
-		AppFiresideStreamBannerVideo: () => import('./_video/video.vue'),
+		AppFiresideStreamBannerVideo: () => import('./video.vue'),
 		AppLoading,
 	},
 	directives: {

@@ -1,4 +1,4 @@
-<script lang="ts" src="./stream-banner"></script>
+<script lang="ts" src="./preview"></script>
 
 <template>
 	<div v-app-observe-dimensions="onDimensionsChange" class="fireside-stream-banner">

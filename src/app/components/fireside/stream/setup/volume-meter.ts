@@ -4,7 +4,7 @@ import {
 	FiresideRTCProducer,
 	getOwnDesktopAudioVolume,
 	getOwnMicAudioVolume,
-} from '../../../../_common/fireside/rtc/producer';
+} from '../../../../../_common/fireside/rtc/producer';
 
 @Component({})
 export default class AppVolumeMeter extends Vue {

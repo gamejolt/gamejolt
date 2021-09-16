@@ -3,7 +3,7 @@
 <template>
 	<app-fireside-container class="-stream theme-dark" :controller="c">
 		<div v-if="focusedUser && shouldShowVideo" :key="focusedUser.uid">
-			<app-fireside-video class="-video-player" :rtc-user="focusedUser" />
+			<app-fireside-stream-video class="-video-player" :rtc-user="focusedUser" />
 
 			<div class="-overlay">
 				<div class="-center">

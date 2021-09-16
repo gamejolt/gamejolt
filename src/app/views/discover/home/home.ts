@@ -5,12 +5,10 @@ import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
 import { configDiscoverCommunityChunks } from '../../../../_common/config/config.service';
 import { Environment } from '../../../../_common/environment/environment.service';
-import { Fireside } from '../../../../_common/fireside/fireside.model';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
-import AppFiresideStreamBanner from '../../../components/fireside/stream-banner/stream-banner.vue';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { Store } from '../../../store/index';
 import AppDiscoverHomeBanner from './_banner/banner.vue';
@@ -23,7 +21,6 @@ import AppDiscoverHomeCommunities from './_communities/communities.vue';
 		AppDiscoverHomeCommunities,
 		AppAuthJoin: AppAuthJoinLazy,
 		AppLoading,
-		AppFiresideStreamBanner,
 	},
 })
 @RouteResolver({
@@ -36,16 +33,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	@State app!: Store['app'];
 
 	featuredItem: FeaturedItem | null = null;
-	fireside: Fireside | null = null;
 	featuredCommunities: Community[] = [];
-
-	get shouldShowFiresideBanner() {
-		if (GJ_IS_SSR || GJ_IS_CLIENT) {
-			return false;
-		}
-
-		return !!this.fireside && !this.fireside.is_expired;
-	}
 
 	routeCreated() {
 		Meta.setTitle(null);
@@ -73,7 +61,6 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		};
 
 		this.featuredItem = $payload.featuredItem ? new FeaturedItem($payload.featuredItem) : null;
-		this.fireside = $payload.fireside ? new Fireside($payload.fireside) : null;
 
 		if ($payload.isFollowingFeatured && this.featuredItem) {
 			if (this.featuredItem.game) {

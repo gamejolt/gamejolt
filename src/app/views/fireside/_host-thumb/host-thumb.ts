@@ -8,7 +8,7 @@ import {
 	FiresideController,
 	FiresideControllerKey,
 } from '../../../components/fireside/controller/controller';
-import AppFiresideVideo from '../_video/video.vue';
+import AppFiresideStreamVideo from '../../../components/fireside/stream/video/video.vue';
 import AppFiresideHostThumbIndicator from './host-thumb-indicator.vue';
 
 @Component({
@@ -16,7 +16,7 @@ import AppFiresideHostThumbIndicator from './host-thumb-indicator.vue';
 		AppUserAvatarImg,
 		AppFiresideHostThumbIndicator,
 		AppPopper,
-		AppFiresideVideo,
+		AppFiresideStreamVideo,
 	},
 	directives: {
 		AppTooltip,

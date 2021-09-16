@@ -1,4 +1,4 @@
-<script lang="ts" src="./stream-setup-modal"></script>
+<script lang="ts" src="./setup-modal"></script>
 
 <template>
 	<app-modal>

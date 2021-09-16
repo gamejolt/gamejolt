@@ -1,9 +1,6 @@
 import Vue from 'vue';
 import { Component, InjectReactive } from 'vue-property-decorator';
-import {
-	FiresideController,
-	FiresideControllerKey,
-} from '../../../components/fireside/controller/controller';
+import { FiresideController, FiresideControllerKey } from '../../controller/controller';
 
 @Component({})
 export default class AppFiresideVideoStats extends Vue {
