@@ -475,6 +475,7 @@ export class AppFiresideContainer extends Vue {
 				'is_streaming',
 				'is_draft',
 				'member_count',
+				'community_links',
 			])
 		);
 

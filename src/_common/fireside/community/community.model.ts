@@ -17,7 +17,7 @@ export class FiresideCommunity extends Model {
 	}
 
 	get isFeatured() {
-		return this.featured_on;
+		return !!this.featured_on;
 	}
 }
 

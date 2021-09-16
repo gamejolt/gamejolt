@@ -111,6 +111,7 @@
 	align-items: center
 
 .-title
+	line-clamp(2)
 	font-weight: bolder
 	font-size: $font-size-h4
 

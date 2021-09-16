@@ -27,6 +27,17 @@
 			<template #default>
 				<app-fireside-badge-add v-if="canCreateFireside" :community="community" />
 
+				<div v-if="previewFiresides.length > 0" class="-preview">
+					<app-fireside-teaser
+						v-for="fireside in displayablePreviewFiresides"
+						:key="fireside.id"
+						:fireside="fireside"
+						@eject="onFiresideEject"
+						@feature="onFiresideFeature"
+						@unfeature="onFiresideUnfeature"
+					/>
+				</div>
+
 				<app-communities-view-feed
 					:feed="feed"
 					@add-post="onPostAdded"
@@ -39,3 +50,13 @@
 		</app-communities-view-page-container>
 	</div>
 </template>
+
+<style lang="stylus" scoped>
+@import '~styles/variables'
+
+.-preview
+	display: grid
+	grid-template-columns: repeat(5, 1fr)
+	grid-gap: $line-height-computed
+	margin-bottom: $line-height-computed
+</style>

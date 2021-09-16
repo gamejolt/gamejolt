@@ -44,10 +44,13 @@ export class Fireside extends Model {
 	}
 
 	get community() {
-		if (this.community_links.length > 0) {
-			return this.community_links[0].community;
-		}
+		return this.primaryCommunityLink?.community ?? null;
+	}
 
+	get primaryCommunityLink() {
+		if (this.community_links.length > 0) {
+			return this.community_links[0];
+		}
 		return null;
 	}
 
@@ -101,6 +104,26 @@ export class Fireside extends Model {
 
 	$extinguish() {
 		return this.$_save(`/web/dash/fireside/extinguish/` + this.hash, 'fireside');
+	}
+
+	$feature() {
+		if (!this.primaryCommunityLink) {
+			return;
+		}
+		return this.$_save(
+			`/web/communities/manage/feature-fireside/${this.primaryCommunityLink.id}`,
+			'fireside'
+		);
+	}
+
+	$unfeature() {
+		if (!this.primaryCommunityLink) {
+			return;
+		}
+		return this.$_save(
+			`/web/communities/manage/unfeature-fireside/${this.primaryCommunityLink.id}`,
+			'fireside'
+		);
 	}
 }
 
