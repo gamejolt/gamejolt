@@ -6,11 +6,12 @@ export class FiresideCommunity extends Model {
 	community!: Community;
 
 	added_on!: number;
-	featured_on: number | null = null;
+	featured_on!: number | null;
 
 	constructor(data: Partial<FiresideCommunity> = {}) {
 		super(data);
 
+		this.featured_on = data.featured_on ?? null;
 		if (data.community) {
 			this.community = new Community(data.community);
 		}
