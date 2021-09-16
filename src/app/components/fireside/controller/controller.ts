@@ -263,7 +263,7 @@ export function updateFiresideExpiryValues(c: FiresideController) {
 
 		// Automatically extend for them if we're in a draft and get within 15
 		// seconds of the expiry warning threshold.
-		if (/* c.isDraft && */ !c._isExtending && expiresInS < FIRESIDE_EXPIRY_THRESHOLD + 15) {
+		if (c.isDraft && !c._isExtending && expiresInS < FIRESIDE_EXPIRY_THRESHOLD + 15) {
 			c._isExtending = true;
 			// Don't show growls if this fails.
 			extendFireside(c, false);
