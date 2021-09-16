@@ -28,11 +28,10 @@
 				<app-fireside-badge-add v-if="canCreateFireside" :community="community" />
 
 				<div v-if="previewFiresides.length > 0" class="-preview">
-					<app-fireside-teaser
+					<app-fireside-avatar
 						v-for="fireside in displayablePreviewFiresides"
 						:key="fireside.id"
 						:fireside="fireside"
-						:community="community"
 						@eject="onFiresideEject"
 					/>
 				</div>

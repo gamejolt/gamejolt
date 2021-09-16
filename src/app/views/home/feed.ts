@@ -8,6 +8,7 @@ import { trackExperimentEngagement } from '../../../_common/analytics/analytics.
 import { Api } from '../../../_common/api/api.service';
 import { configHomeNav } from '../../../_common/config/config.service';
 import { AppConfigLoaded } from '../../../_common/config/loaded';
+import { Fireside } from '../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import AppNavTabList from '../../../_common/nav/tab-list/tab-list.vue';
 import {
@@ -18,12 +19,14 @@ import {
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
 import { AppState, AppStore } from '../../../_common/store/app-store';
+import { EventBus, EventBusDeregister } from '../../../_common/system/event/event-bus.service';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppUserCard from '../../../_common/user/card/card.vue';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../components/activity/feed/view';
 import AppCommunitySliderPlaceholder from '../../components/community/slider/placeholder/placeholder.vue';
 import AppCommunitySlider from '../../components/community/slider/slider.vue';
+import { GRID_EVENT_FIRESIDE_START } from '../../components/grid/client.service';
 import AppPageContainer from '../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../components/post/add-button/add-button.vue';
 import { Store } from '../../store';
@@ -78,6 +81,12 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	games: DashGame[] = [];
 	gameFilterQuery = '';
 	isShowingAllGames = false;
+
+	firesideStartDeregister: EventBusDeregister | null = null;
+	isLoadingFiresides = true;
+	isFiresidesBootstrapped = false;
+	userFireside: Fireside | null = null;
+	firesides: Fireside[] = [];
 
 	readonly Screen = Screen;
 	readonly HomeFeedService = HomeFeedService;
@@ -158,11 +167,42 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 			.map(i => new DashGame(i.id, i.title, i.ownerName, i.createdOn))
 			.sort((a, b) => numberSort(a.createdOn, b.createdOn))
 			.reverse();
+
+		this.refreshFiresides();
+		this.firesideStartDeregister = EventBus.on(GRID_EVENT_FIRESIDE_START, () =>
+			this.refreshFiresides()
+		);
+	}
+
+	routeDestroyed() {
+		if (this.firesideStartDeregister) {
+			this.firesideStartDeregister();
+			this.firesideStartDeregister = null;
+		}
 	}
 
 	onPostAdded(post: FiresidePost) {
 		if (this.controller.feed) {
 			ActivityFeedService.onPostAdded(this.controller.feed, post, this);
 		}
+	}
+
+	async refreshFiresides() {
+		if (!this.user) {
+			return;
+		}
+
+		this.isLoadingFiresides = true;
+		try {
+			const payload = await Api.sendRequest(`/web/fireside/user-list`, undefined, {
+				detach: true,
+			});
+			this.userFireside = payload.userFireside ? new Fireside(payload.userFireside) : null;
+			this.firesides = payload.firesides ? Fireside.populate(payload.firesides) : [];
+		} catch (error) {
+			console.error('Failed to refresh fireside data.', error);
+		}
+		this.isLoadingFiresides = false;
+		this.isFiresidesBootstrapped = true;
 	}
 }

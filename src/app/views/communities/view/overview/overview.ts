@@ -9,9 +9,9 @@ import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import AppCommunitySidebar from '../../../../components/community/sidebar/sidebar.vue';
+import { FiresideAvatarEvent } from '../../../../components/fireside/avatar/avatar';
+import AppFiresideAvatar from '../../../../components/fireside/avatar/avatar.vue';
 import AppFiresideBadgeAdd from '../../../../components/fireside/badge/add/add.vue';
-import { FiresideTeaserEvent } from '../../../../components/fireside/teaser/teaser';
-import AppFiresideTeaser from '../../../../components/fireside/teaser/teaser.vue';
 import { Store } from '../../../../store/index';
 import { CommunitiesViewChannelDeps } from '../channel/channel';
 import {
@@ -32,7 +32,7 @@ import AppCommunitiesViewPageContainer from '../_page-container/page-container.v
 		AppCommunitySidebar,
 		AppCommunitiesViewFeed,
 		AppFiresideBadgeAdd,
-		AppFiresideTeaser,
+		AppFiresideAvatar,
 	},
 })
 @RouteResolver({
@@ -172,7 +172,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		await declineCollaboration(this.routeStore);
 	}
 
-	onFiresideEject({ fireside, community }: FiresideTeaserEvent) {
+	onFiresideEject({ fireside, community }: FiresideAvatarEvent) {
 		if (community.community.id !== this.community.id) {
 			return;
 		}

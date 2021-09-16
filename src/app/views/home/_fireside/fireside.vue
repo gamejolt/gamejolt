@@ -7,7 +7,7 @@
 				<translate>Firesides</translate>
 			</h4>
 			<span class="help-inline">
-				<a class="link-unstyled" @click="refresh()">
+				<a class="link-unstyled" @click="emitRequestRefresh()">
 					<translate>Refresh</translate>
 				</a>
 			</span>
@@ -18,29 +18,20 @@
 			</small>
 		</p>
 
-		<template v-if="isInitialLoading">
-			<app-fireside-badge-placeholder />
-			<hr />
-			<app-fireside-badge-placeholder />
-			<app-fireside-badge-placeholder />
-		</template>
-
+		<app-fireside-badge-placeholder v-if="showPlaceholders" />
 		<div v-else class="-list">
-			<app-fireside-badge
-				v-if="userFireside"
-				:fireside="userFireside"
-				@expire="onFiresideExpired()"
-			/>
-			<app-fireside-badge-add v-else />
+			<app-fireside-badge-add v-if="!userFireside" />
 
-			<template v-if="firesides.length">
-				<hr />
-				<app-fireside-badge
-					v-for="fireside of firesides"
-					:key="fireside.id"
-					:fireside="fireside"
-					@expire="onFiresideExpired()"
-				/>
+			<template v-if="displayFiresides.length">
+				<hr v-if="!userFireside" />
+				<div :style="gridStyling">
+					<app-fireside-avatar
+						v-for="fireside of displayFiresides"
+						:key="fireside.id"
+						:fireside="fireside"
+						@expired="onFiresideExpired()"
+					/>
+				</div>
 			</template>
 		</div>
 	</app-loading-fade>

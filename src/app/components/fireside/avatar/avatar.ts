@@ -1,7 +1,6 @@
 import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
-import { Community } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
 import { FiresideCommunity } from '../../../../_common/fireside/community/community.model';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
@@ -13,7 +12,7 @@ import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import { CommunityEjectFiresideModal } from '../../community/eject-fireside/modal/modal.service';
 
-export interface FiresideTeaserEvent {
+export interface FiresideAvatarEvent {
 	fireside: Fireside;
 	community: FiresideCommunity;
 }
@@ -29,18 +28,31 @@ export interface FiresideTeaserEvent {
 		AppTooltip,
 	},
 })
-export default class AppFiresideTeaser extends Vue {
+export default class AppFiresideAvatar extends Vue {
 	@Prop({ type: Fireside, required: true })
 	fireside!: Fireside;
 
-	@Prop({ type: Fireside, required: false, default: null })
-	community!: Community | null;
+	canEmitExpiry = true;
+	expiryCheck: NodeJS.Timer | null = null;
 
 	private isLoading = false;
 
-	@Emit('eject') emitEject(_: FiresideTeaserEvent) {}
-	@Emit('featured') emitFeatured(_: FiresideTeaserEvent) {}
-	@Emit('unfeatured') emitUnfeatured(_: FiresideTeaserEvent) {}
+	@Emit('eject') emitEject(_: FiresideAvatarEvent) {}
+	@Emit('featured') emitFeatured(_: FiresideAvatarEvent) {}
+	@Emit('unfeatured') emitUnfeatured(_: FiresideAvatarEvent) {}
+	@Emit('expire') emitExpire() {}
+
+	mounted() {
+		this.setupCheck();
+	}
+
+	destroyed() {
+		this.destroyExpiryCheck();
+	}
+
+	get community() {
+		return this.fireside.community;
+	}
 
 	get isLive() {
 		return this.fireside.is_streaming;
@@ -127,5 +139,41 @@ export default class AppFiresideTeaser extends Vue {
 			});
 		}
 		this.isLoading = false;
+	}
+
+	private setupCheck() {
+		// If the fireside is unjoinable from the get go, never emit expiry.
+		if (!this.fireside.isOpen()) {
+			this.canEmitExpiry = false;
+		} else if (!GJ_IS_SSR) {
+			this.canEmitExpiry = true;
+			this.destroyExpiryCheck();
+			setInterval(this.checkExpiry.bind(this), 1000);
+		}
+	}
+
+	// Set up a watch here, so that when we refetch info about the fireside
+	// without recreating this component, we reset the expiry checks.
+	@Watch('fireside', { deep: true })
+	watchFireside() {
+		this.setupCheck();
+	}
+
+	private checkExpiry() {
+		if (!this.canEmitExpiry) {
+			return;
+		}
+
+		if (!this.fireside.isOpen()) {
+			this.canEmitExpiry = false;
+			this.emitExpire();
+		}
+	}
+
+	private destroyExpiryCheck() {
+		if (this.expiryCheck) {
+			clearInterval(this.expiryCheck);
+			this.expiryCheck = null;
+		}
 	}
 }

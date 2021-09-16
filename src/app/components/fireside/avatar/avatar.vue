@@ -1,13 +1,7 @@
-<script lang="ts" src="./teaser"></script>
+<script lang="ts" src="./avatar"></script>
 
 <template>
-	<div class="fireside-teaser">
-		<router-link
-			v-app-tooltip="`${fireside.user.display_name} (@${fireside.user.username})`"
-			class="-link"
-			:to="fireside.location"
-		/>
-
+	<div class="fireside-avatar">
 		<div class="-header">
 			<div class="-avatar">
 				<div class="-avatar-inner">
@@ -56,6 +50,10 @@
 				</div>
 			</div>
 
+			<div v-if="community" class="-community">
+				<app-community-thumbnail-img class="-community-img" :community="community" />
+			</div>
+
 			<div class="-tag" :class="{ '-live': isLive }">
 				<app-jolticon v-if="isFeaturedInCommunity" icon="star" />
 
@@ -67,6 +65,12 @@
 		<div class="-title">
 			{{ title }}
 		</div>
+
+		<router-link
+			v-app-tooltip="`${fireside.user.display_name} (@${fireside.user.username})`"
+			class="-link"
+			:to="fireside.location"
+		/>
 	</div>
 </template>
 
@@ -81,8 +85,12 @@ $-tag-padding-horizontal = 6px
 $-tag-offset = ($-tag-font-size * 0.5) + ($-tag-padding-vertical * 2)
 $-anim-size = 8px
 $-border-color = var(--theme-fg)
+$-zindex-community = 1
+$-zindex-tag = 2
+$-zindex-link = 3
+$-zindex-popper = 4
 
-.fireside-teaser
+.fireside-avatar
 	position: relative
 	display: flex
 	flex-direction: column
@@ -97,7 +105,7 @@ $-border-color = var(--theme-fg)
 .-link
 	position: absolute
 	inset: 0
-	z-index: 1
+	z-index: $-zindex-link
 
 .-header
 	position: relative
@@ -150,12 +158,12 @@ $-border-color = var(--theme-fg)
 	visibility: hidden
 	opacity: 0
 	will-change: visibility, opacity
-	z-index: 2
+	z-index: $-zindex-popper
 	cursor: pointer
 
 	&:hover
-		background-color: var(--theme-link)
-		color: var(--theme-link-hover)
+		background-color: var(--theme-bi-bg)
+		color: var(--theme-bi-fg)
 
 	&-header
 		font-family: $font-family-heading
@@ -180,6 +188,22 @@ $-border-color = var(--theme-fg)
 	.jolticon
 		margin: 0
 
+.-community
+	elevate-1()
+	width: 25%
+	height: @width
+	border: $border-width-large solid $-border-color
+	background-color: $-border-color
+	position: absolute
+	bottom: $-tag-offset + 2px
+	left: 5%
+	margin-left: -2px
+	z-index: $-zindex-community
+
+	&
+	&-img
+		img-circle()
+
 .-tag
 	rounded-corners()
 	elevate-1()
@@ -190,6 +214,7 @@ $-border-color = var(--theme-fg)
 	font-size: $-tag-font-size
 	position: absolute
 	bottom: -($-tag-offset)
+	z-index: $-zindex-tag
 
 	&.-live
 		background-color: $gj-overlay-notice

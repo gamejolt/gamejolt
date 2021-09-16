@@ -124,7 +124,13 @@
 			</template>
 
 			<template v-if="!Screen.isMobile" #right>
-				<app-home-fireside />
+				<app-home-fireside
+					:user-fireside="userFireside"
+					:firesides="firesides"
+					:is-loading="isLoadingFiresides"
+					:show-placeholders="!isFiresidesBootstrapped"
+					@request-refresh="refreshFiresides()"
+				/>
 
 				<app-scroll-affix>
 					<div class="-ad">
@@ -143,6 +149,15 @@
 				<app-community-slider-placeholder v-if="!isRouteBootstrapped" :num="1" />
 				<app-community-slider v-else :communities="communities" with-add-button />
 			</template>
+
+			<app-home-fireside
+				v-if="Screen.isMobile"
+				:user-fireside="userFireside"
+				:firesides="firesides"
+				:is-loading="isLoadingFiresides"
+				:show-placeholders="!isFiresidesBootstrapped"
+				@request-refresh="refreshFiresides()"
+			/>
 
 			<div v-if="!hasSimpleHome" class="full-bleed-xs">
 				<app-nav-tab-list center class="-inline-menu">
