@@ -251,13 +251,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	get shouldShowTitleControls() {
-		return (
-			this.c &&
-			this.c.status === 'joined' &&
-			(!this.shouldShowChatMembers ||
-				!this.shouldShowFiresideStats ||
-				this.shouldShowEditControlButton)
-		);
+		return this.c && this.c.status === 'joined';
 	}
 
 	get shouldShowEditControlButton() {

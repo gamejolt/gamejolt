@@ -60,7 +60,11 @@
 						/>
 					</div>
 
-					<app-popper @show="onShowPopper" @hide="onHidePopper">
+					<app-popper
+						popover-class="fill-darkest"
+						@show="onShowPopper"
+						@hide="onHidePopper"
+					>
 						<div class="-stats-btn">
 							<app-button
 								icon="cog"
@@ -123,6 +127,30 @@
 										<translate>Stop Streaming</translate>
 									</a>
 								</template>
+
+								<div v-for="i in manageableCommunities" :key="i.id">
+									<hr />
+
+									<h5 class="-extras-header list-group-item has-icon">
+										<app-community-thumbnail-img :community="i.community" />
+										{{ i.community.name }}
+									</h5>
+
+									<a class="list-group-item has-icon" @click="toggleFeatured(i)">
+										<app-jolticon icon="star" />
+
+										<translate v-if="i.isFeatured">
+											Unfeature fireside
+										</translate>
+										<translate v-else>Feature fireside</translate>
+									</a>
+
+									<a class="list-group-item has-icon" @click="ejectFireside(i)">
+										<app-jolticon icon="eject" />
+
+										<translate>Eject fireside</translate>
+									</a>
+								</div>
 							</div>
 						</template>
 					</app-popper>
@@ -182,4 +210,24 @@
 
 .-draft-tag
 	margin-left: 4px
+
+.-extras-header
+	font-family: $font-family-heading
+	font-size: $font-size-tiny
+	font-weight: normal
+	letter-spacing: 0.1em
+	line-height: 1
+	text-transform: uppercase
+	margin-top: 0
+	margin-bottom: 0
+
+	img
+		width: $list-group-icon-width * 0.8
+		height: $list-group-icon-width * 0.8
+		border-radius: 50%
+		display: inline-block
+		position: relative
+		left: -($list-group-icon-width - 1px)
+		top: -2px
+		margin-right: -($list-group-icon-width - 5px)
 </style>
