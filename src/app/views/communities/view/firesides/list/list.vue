@@ -2,7 +2,7 @@
 
 <template>
 	<div class="follower-list">
-		<div v-if="!firesides.length || true" :style="gridStyling">
+		<div v-if="!firesides.length" :style="gridStyling">
 			<app-fireside-avatar-base
 				v-for="i of placeholderCount"
 				:key="i"
