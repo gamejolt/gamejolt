@@ -24,6 +24,10 @@ export default class AppFiresideAvatarBase extends Vue {
 	@Prop({ type: Community, required: false, default: null })
 	community!: Community | null;
 
+	// Expects a CSS border-style attribute.
+	@Prop({ type: String, required: false, default: null })
+	borderStyle!: string | null;
+
 	get hasTag() {
 		if (this.isPlaceholder) {
 			return true;

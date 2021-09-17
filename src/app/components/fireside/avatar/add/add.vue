@@ -1,7 +1,7 @@
 <script lang="ts" src="./add"></script>
 
 <template>
-	<app-fireside-avatar-base>
+	<app-fireside-avatar-base border-style="dashed">
 		<template #avatar>
 			<app-jolticon icon="add" />
 		</template>

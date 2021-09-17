@@ -7,7 +7,11 @@
 				<div class="-avatar-inner">
 					<div v-if="isLive" class="-avatar-anim" />
 
-					<app-media-item-backdrop class="-avatar-img" :media-item="avatarMediaItem">
+					<app-media-item-backdrop
+						class="-avatar-img"
+						:media-item="avatarMediaItem"
+						:style="{ 'border-style': borderStyle }"
+					>
 						<slot v-if="!isPlaceholder" name="avatar" />
 					</app-media-item-backdrop>
 
