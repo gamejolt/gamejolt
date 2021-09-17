@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Emit, Prop } from 'vue-property-decorator';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 
 /**
@@ -17,7 +17,16 @@ export default class AppFiresideStreamPreview extends Vue {
 	@Prop({ type: Fireside, required: true })
 	fireside!: Fireside;
 
+	@Prop({ type: Boolean, required: false, default: true })
+	showLive!: Fireside;
+
+	@Emit('changed') emitChanged(_hasVideo: boolean, _isStreaming: boolean) {}
+
 	get location() {
 		return this.fireside.location;
+	}
+
+	onVideoChanged(hasVideo: boolean, isStreaming: boolean) {
+		this.emitChanged(hasVideo, isStreaming);
 	}
 }

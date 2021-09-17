@@ -174,9 +174,14 @@ export class FiresideController {
 
 export function createFiresideController(
 	fireside: Fireside,
-	muteUsers: boolean,
+	options: {
+		muteUsers: boolean;
+	} = {
+		muteUsers: false,
+	},
 	onRetry: (() => void) | null = null
 ) {
+	const { muteUsers } = options;
 	const c = new FiresideController(fireside, muteUsers);
 	c.onRetry = onRetry;
 	return c;

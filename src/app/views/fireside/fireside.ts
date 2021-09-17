@@ -195,7 +195,9 @@ export default class RouteFireside extends BaseRouteComponent {
 		Meta.twitter = $payload.twitter || {};
 		Meta.twitter.title = this.routeTitle;
 
-		this.c ??= createFiresideController(new Fireside($payload.fireside), false);
+		this.c ??= createFiresideController(new Fireside($payload.fireside), {
+			muteUsers: false,
+		});
 
 		this.setPageTheme();
 	}

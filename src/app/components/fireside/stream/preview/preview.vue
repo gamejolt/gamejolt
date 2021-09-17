@@ -5,7 +5,11 @@
 		<router-link class="-link" :to="location">
 			<div ref="videoWrapper" class="-video-wrapper">
 				<div class="-video-inner">
-					<app-fireside-stream-preview-video :fireside="fireside" />
+					<app-fireside-stream-preview-video
+						:fireside="fireside"
+						:show-live="showLive"
+						@changed="onVideoChanged"
+					/>
 				</div>
 			</div>
 		</router-link>

@@ -6,13 +6,14 @@
 			<app-fireside-stream-video class="-video-player" :rtc-user="focusedUser" />
 
 			<div class="-overlay">
-				<div class="-center">
+				<div v-if="showLive" class="-center">
 					<div class="-live">
 						<translate>LIVE</translate>
 					</div>
 				</div>
 			</div>
 		</div>
+		<div v-else />
 	</app-fireside-container>
 </template>
 

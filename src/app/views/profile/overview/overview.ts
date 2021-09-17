@@ -10,12 +10,12 @@ import {
 	CommentStoreModel,
 	lockCommentStore,
 	releaseCommentStore,
-	setCommentCount
+	setCommentCount,
 } from '../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../_common/comment/modal/modal.service';
 import {
 	CommentThreadModal,
-	CommentThreadModalPermalinkDeregister
+	CommentThreadModalPermalinkDeregister,
 } from '../../../../_common/comment/thread/modal.service';
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
@@ -34,6 +34,8 @@ import { Meta } from '../../../../_common/meta/meta-service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
+import { ScrollInviewConfig } from '../../../../_common/scroll/inview/config';
+import { AppScrollInview } from '../../../../_common/scroll/inview/inview';
 import AppShareCard from '../../../../_common/share/card/card.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
@@ -43,7 +45,6 @@ import { ChatStore, ChatStoreKey } from '../../../components/chat/chat-store';
 import { enterChatRoom } from '../../../components/chat/client';
 import AppCommentOverview from '../../../components/comment/overview/overview.vue';
 import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
-import AppFiresideStreamPreview from '../../../components/fireside/stream/preview/preview.vue';
 import AppGameList from '../../../components/game/list/list.vue';
 import AppGameListPlaceholder from '../../../components/game/list/placeholder/placeholder.vue';
 import AppPageContainer from '../../../components/page-container/page-container.vue';
@@ -52,6 +53,11 @@ import AppTrophyThumbnail from '../../../components/trophy/thumbnail/thumbnail.v
 import AppUserKnownFollowers from '../../../components/user/known-followers/known-followers.vue';
 import { Store } from '../../../store/index';
 import { RouteStore, RouteStoreModule } from '../profile.store';
+
+const FiresideScrollInviewConfig = new ScrollInviewConfig({
+	emitsOn: 'partial-overlap',
+	trackFocused: false,
+});
 
 @Component({
 	name: 'RouteProfileOverview',
@@ -70,7 +76,7 @@ import { RouteStore, RouteStoreModule } from '../profile.store';
 		AppTrophyThumbnail,
 		AppFiresideBadge,
 		AppShareCard,
-		AppFiresideStreamPreview,
+		AppScrollInview,
 	},
 	directives: {
 		AppTooltip,
@@ -154,12 +160,16 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	knownFollowers: User[] = [];
 	knownFollowerCount = 0;
 	fireside: Fireside | null = null;
+	isFiresideInview = false;
+	firesideHasVideo = false;
+	maintainFiresideOutviewSpace = false;
 
 	permalinkWatchDeregister?: CommentThreadModalPermalinkDeregister;
 
 	readonly User = User;
 	readonly UserFriendship = UserFriendship;
 	readonly Screen = Screen;
+	readonly FiresideScrollInviewConfig = FiresideScrollInviewConfig;
 
 	get chat() {
 		return this.chatStore.chat;
@@ -312,7 +322,14 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	}
 
 	get shouldShowFireside() {
-		return this.fireside && this.fireside.canJoin();
+		return !!this.fireside && this.fireside.canJoin();
+	}
+
+	get canShowFiresidePreview() {
+		return (
+			this.shouldShowFireside &&
+			(this.isFiresideInview ? this.firesideHasVideo : this.maintainFiresideOutviewSpace)
+		);
 	}
 
 	getLinkedAccount(provider: Provider) {
@@ -418,6 +435,20 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 				enterChatRoom(this.chat, chatUser.room_id);
 			}
 		}
+	}
+
+	onFiresideInview() {
+		this.isFiresideInview = true;
+		this.maintainFiresideOutviewSpace = false;
+	}
+
+	onFiresideOutview() {
+		this.maintainFiresideOutviewSpace = this.canShowFiresidePreview;
+		this.isFiresideInview = false;
+	}
+
+	onFiresideBadgeChanged(hasVideo: boolean, _isStreaming: boolean) {
+		this.firesideHasVideo = hasVideo;
 	}
 
 	async toggleShowAllCommunities() {

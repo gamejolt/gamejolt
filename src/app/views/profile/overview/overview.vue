@@ -291,15 +291,17 @@
 							</h4>
 
 							<div class="-trophies">
-								<app-trophy-thumbnail
-									v-for="trophy of previewTrophies"
-									:key="trophy.key"
-									class="-trophy"
-									:trophy="trophy.trophy"
-									no-difficulty
-									no-highlight
-									@click.native="onClickTrophy(trophy)"
-								/>
+								<template v-if="previewTrophies">
+									<app-trophy-thumbnail
+										v-for="trophy of previewTrophies"
+										:key="trophy.key"
+										class="-trophy"
+										:trophy="trophy.trophy"
+										no-difficulty
+										no-highlight
+										@click.native="onClickTrophy(trophy)"
+									/>
+								</template>
 
 								<router-link
 									v-if="shouldShowMoreTrophies"
@@ -382,9 +384,18 @@
 					</template>
 
 					<!-- Fireside -->
-					<app-fireside-badge v-if="shouldShowFireside" :fireside="fireside" />
-
-					<app-fireside-stream-preview v-if="shouldShowFireside" :fireside="fireside" />
+					<app-scroll-inview
+						v-if="shouldShowFireside"
+						:config="FiresideScrollInviewConfig"
+						@inview="onFiresideInview"
+						@outview="onFiresideOutview"
+					>
+						<app-fireside-badge
+							:fireside="fireside"
+							:show-preview="canShowFiresidePreview"
+							@changed="onFiresideBadgeChanged"
+						/>
+					</app-scroll-inview>
 
 					<router-view />
 				</app-page-container>
