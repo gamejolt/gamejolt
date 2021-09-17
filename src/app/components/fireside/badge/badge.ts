@@ -26,7 +26,7 @@ import AppFiresideStreamPreview from '../stream/preview/preview.vue';
 })
 export default class AppFiresideBadge extends Vue {
 	@Prop({ type: Fireside, required: true })
-	fireside!: Fireside;
+	fireside!: Fireside | null;
 
 	@Prop({ type: Boolean, required: false, default: null })
 	showPreview!: boolean | null;
@@ -38,6 +38,7 @@ export default class AppFiresideBadge extends Vue {
 	expiryCheck: NodeJS.Timer | null = null;
 	isStreaming = false;
 	hasVideo = false;
+	hadInitialFireside = true;
 
 	containerHeight = 70;
 
@@ -47,12 +48,28 @@ export default class AppFiresideBadge extends Vue {
 		badge: HTMLDivElement;
 	};
 
+	get shouldDisplay() {
+		return !!this.fireside || (this.hadInitialFireside && this.canExpandPreview);
+	}
+
+	get location() {
+		return this.fireside?.location ?? null;
+	}
+
+	get headerMediaItem() {
+		return this.fireside?.header_media_item ?? null;
+	}
+
 	get avatarTooltip() {
+		if (!this.fireside) {
+			return;
+		}
+
 		return this.fireside.user.display_name + ' (@' + this.fireside.user.username + ')';
 	}
 
 	get theme() {
-		return this.fireside.user.theme;
+		return this.fireside?.user.theme ?? null;
 	}
 
 	get canExpandPreview() {
@@ -60,6 +77,10 @@ export default class AppFiresideBadge extends Vue {
 		// we'll probably never want to show the preview and shouldn't even let
 		// it connect to the RTC.
 		return this.showPreview !== null;
+	}
+
+	created() {
+		this.hadInitialFireside = !!this.fireside;
 	}
 
 	mounted() {
@@ -72,7 +93,7 @@ export default class AppFiresideBadge extends Vue {
 
 	private setupCheck() {
 		// If the fireside is unjoinable from the get go, never emit expiry.
-		if (!this.fireside.isOpen()) {
+		if (this.fireside && !this.fireside.isOpen()) {
 			this.canEmitExpiry = false;
 		} else if (!GJ_IS_SSR) {
 			this.canEmitExpiry = true;
@@ -93,7 +114,8 @@ export default class AppFiresideBadge extends Vue {
 			return;
 		}
 
-		if (!this.fireside.isOpen()) {
+		if (!this.fireside || !this.fireside.isOpen()) {
+			this.onFiresidePreviewChanged(false, false);
 			this.canEmitExpiry = false;
 			this.emitExpire();
 		}

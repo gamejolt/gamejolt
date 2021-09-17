@@ -160,6 +160,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	knownFollowers: User[] = [];
 	knownFollowerCount = 0;
 	fireside: Fireside | null = null;
+	hadInitialFireside = false;
 	isFiresideInview = false;
 	firesideHasVideo = false;
 	maintainFiresideOutviewSpace = false;
@@ -322,7 +323,9 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	}
 
 	get shouldShowFireside() {
-		return !!this.fireside && this.fireside.canJoin();
+		// Keep the FiresideBadge around so we don't mess with their scroll
+		// position when a fireside expires.
+		return (!!this.fireside && this.fireside.canJoin()) || this.hadInitialFireside;
 	}
 
 	get canShowFiresidePreview() {
@@ -396,6 +399,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		}
 		if ($payload.fireside) {
 			this.fireside = new Fireside($payload.fireside);
+			this.hadInitialFireside = !!this.fireside;
 		}
 
 		this.overviewPayload($payload);

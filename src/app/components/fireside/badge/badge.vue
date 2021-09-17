@@ -1,8 +1,8 @@
 <script lang="ts" src="./badge"></script>
 
 <template>
-	<app-theme :theme="theme">
-		<router-link :to="fireside.location">
+	<app-theme v-if="shouldDisplay" :theme="theme">
+		<component :is="fireside && !fireside.is_expired ? 'router-link' : 'div'" :to="location">
 			<div class="-fireside-badge fill-darkest">
 				<div
 					ref="badge"
@@ -10,16 +10,15 @@
 					class="-fireside-badge-padding"
 				>
 					<app-media-item-backdrop
-						v-if="fireside.header_media_item"
+						v-if="headerMediaItem"
 						class="-backdrop"
-						:media-item="fireside.header_media_item"
+						:media-item="headerMediaItem"
 						radius="lg"
 					>
 						<div
 							class="-header"
 							:style="{
-								'background-image':
-									'url(' + fireside.header_media_item.mediaserver_url + ')',
+								'background-image': 'url(' + headerMediaItem.mediaserver_url + ')',
 							}"
 						>
 							<div class="-header-overlay" />
@@ -33,10 +32,10 @@
 
 					<div class="-content">
 						<div v-app-tooltip.left="avatarTooltip" class="-avatar">
-							<app-user-avatar-img :user="fireside.user" />
+							<app-user-avatar-img v-if="fireside" :user="fireside.user" />
 						</div>
 						<div>
-							<div>
+							<div v-if="fireside && !fireside.is_expired">
 								<span class="tag">
 									<span class="-new-tag" />
 									<translate
@@ -65,10 +64,15 @@
 								</span>
 							</div>
 							<div class="-title">
-								{{ fireside.title }}
+								<template v-if="fireside && !fireside.is_expired">
+									{{ fireside.title }}
+								</template>
+								<translate v-else>
+									This fireside has expired. See you next time!
+								</translate>
 							</div>
 						</div>
-						<div v-if="isStreaming" class="-live">
+						<div v-if="fireside && isStreaming" class="-live">
 							<translate>LIVE</translate>
 						</div>
 					</div>
@@ -83,6 +87,7 @@
 					</app-expand>
 
 					<app-fireside-stream-preview
+						v-if="fireside && !fireside.is_expired"
 						class="-preview-inner"
 						:class="{ '-hidden': !showPreview }"
 						:style="{ 'margin-top': -containerHeight + 'px' }"
@@ -92,7 +97,7 @@
 					/>
 				</div>
 			</div>
-		</router-link>
+		</component>
 	</app-theme>
 </template>
 
