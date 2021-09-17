@@ -31,7 +31,7 @@
 					>
 						<p class="help-block">
 							<translate>
-								Your video must be between 1 second and 15 minutes long.
+								Your video must be between 1 second and 30 minutes long.
 							</translate>
 							<br />
 							<translate> Videos must be bigger than 200x200. </translate>
