@@ -25,7 +25,25 @@
 
 		<app-communities-view-page-container>
 			<template #default>
-				<app-fireside-badge-add v-if="canCreateFireside" :community="community" />
+				<div v-if="community.allow_firesides || previewFiresides.length > 0">
+					<div class="-firesides-header">
+						<h4 class="section-header">
+							<translate>Firesides</translate>
+						</h4>
+
+						<app-button
+							trans
+							:to="{
+								name: 'communities.view.firesides',
+								params: { path: community.path },
+							}"
+						>
+							<translate>View All</translate>
+						</app-button>
+					</div>
+
+					<app-fireside-badge-add v-if="canCreateFireside" :community="community" />
+				</div>
 
 				<div v-if="previewFiresides.length > 0" class="-preview">
 					<app-fireside-avatar
@@ -57,4 +75,8 @@
 	grid-template-columns: repeat(5, 1fr)
 	grid-gap: $line-height-computed
 	margin-bottom: $line-height-computed
+
+.-firesides-header
+	display: flex
+	justify-content: space-between
 </style>

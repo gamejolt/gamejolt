@@ -29,7 +29,7 @@
 
 .-title
 	lazy-placeholder-block()
-	width: 80%
+	width: 60%
 
 .-subtle
 	background-color: var(--theme-bg-subtle)
