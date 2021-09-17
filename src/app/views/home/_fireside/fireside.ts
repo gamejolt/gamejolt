@@ -5,16 +5,16 @@ import { Fireside } from '../../../../_common/fireside/fireside.model';
 import AppLoadingFade from '../../../../_common/loading/fade/fade.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
+import AppFiresideAvatarAdd from '../../../components/fireside/avatar/add/add.vue';
 import AppFiresideAvatar from '../../../components/fireside/avatar/avatar.vue';
-import AppFiresideBadgeAdd from '../../../components/fireside/badge/add/add.vue';
-import AppFiresideBadgePlaceholder from '../../../components/fireside/badge/placeholder/placeholder.vue';
+import AppFiresideAvatarBase from '../../../components/fireside/avatar/_base/base.vue';
 
 @Component({
 	components: {
 		AppFiresideAvatar,
 		AppLoadingFade,
-		AppFiresideBadgeAdd,
-		AppFiresideBadgePlaceholder,
+		AppFiresideAvatarAdd,
+		AppFiresideAvatarBase,
 		AppScrollScroller,
 	},
 })

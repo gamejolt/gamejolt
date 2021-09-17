@@ -34,6 +34,9 @@ export default class AppFiresideAvatar extends Vue {
 	@Prop({ type: Fireside, required: true })
 	fireside!: Fireside;
 
+	@Prop({ type: Boolean, required: false, default: false })
+	hideCommunity!: boolean;
+
 	canEmitExpiry = true;
 	expiryCheck: NodeJS.Timer | null = null;
 

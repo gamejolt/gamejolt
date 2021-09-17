@@ -53,6 +53,7 @@
 						v-for="fireside in displayablePreviewFiresides"
 						:key="fireside.id"
 						:fireside="fireside"
+						hide-community
 						@eject="onFiresideEject"
 					/>
 				</div>

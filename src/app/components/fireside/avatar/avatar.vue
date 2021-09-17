@@ -3,7 +3,7 @@
 <template>
 	<app-fireside-avatar-base
 		:avatar-media-item="fireside.user.avatar_media_item"
-		:community="community"
+		:community="hideCommunity ? null : community"
 		:is-live="isLive"
 	>
 		<template #extras>

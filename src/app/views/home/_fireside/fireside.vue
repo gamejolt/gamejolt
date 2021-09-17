@@ -18,29 +18,33 @@
 			</small>
 		</p>
 
-		<app-fireside-badge-placeholder v-if="showPlaceholders" />
-		<div v-else class="-list">
-			<app-fireside-badge-add v-if="!userFireside" />
-
-			<template v-if="displayFiresides.length">
-				<hr v-if="!userFireside" />
-				<component
-					:is="shouldDisplaySingleRow ? 'app-scroll-scroller' : 'div'"
-					:class="{ '-scroller': shouldDisplaySingleRow }"
-					horizontal
-				>
-					<div :class="{ '-scroller-inner': shouldDisplaySingleRow }">
-						<div :style="gridStyling">
+		<div class="-list">
+			<component
+				:is="shouldDisplaySingleRow ? 'app-scroll-scroller' : 'div'"
+				:class="{ '-scroller': shouldDisplaySingleRow }"
+				horizontal
+			>
+				<div :class="{ '-scroller-inner': shouldDisplaySingleRow }">
+					<div :style="gridStyling">
+						<template v-if="showPlaceholders">
+							<app-fireside-avatar-base
+								v-for="i of gridColumns"
+								:key="i"
+								:is-placeholder="true"
+							/>
+						</template>
+						<template v-else>
+							<app-fireside-avatar-add v-if="!userFireside" />
 							<app-fireside-avatar
 								v-for="fireside of displayFiresides"
 								:key="fireside.id"
 								:fireside="fireside"
 								@expired="onFiresideExpired()"
 							/>
-						</div>
+						</template>
 					</div>
-				</component>
-			</template>
+				</div>
+			</component>
 		</div>
 	</app-loading-fade>
 </template>

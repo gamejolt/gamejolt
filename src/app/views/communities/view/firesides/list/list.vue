@@ -15,6 +15,7 @@
 					v-for="fireside of firesides"
 					:key="fireside.id"
 					:fireside="fireside"
+					hide-community
 				/>
 			</div>
 
