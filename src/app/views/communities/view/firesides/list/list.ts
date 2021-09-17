@@ -5,13 +5,13 @@ import { Fireside } from '../../../../../../_common/fireside/fireside.model';
 import AppLoading from '../../../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppFiresideAvatar from '../../../../../components/fireside/avatar/avatar.vue';
-import AppFiresideAvatarPlaceholder from '../../../../../components/fireside/avatar/placeholder.vue';
+import AppFiresideAvatarBase from '../../../../../components/fireside/avatar/_base/base.vue';
 
 @Component({
 	components: {
 		AppFiresideAvatar,
 		AppLoading,
-		AppFiresideAvatarPlaceholder,
+		AppFiresideAvatarBase,
 	},
 })
 export default class AppFiresidesList extends Vue {

@@ -25,7 +25,7 @@
 
 		<app-communities-view-page-container>
 			<template #default>
-				<div v-if="community.allow_firesides || previewFiresides.length > 0">
+				<div v-if="community.allow_firesides || displayablePreviewFiresides.length > 0">
 					<div class="-firesides-header">
 						<h4 class="section-header">
 							<translate>Firesides</translate>
@@ -41,11 +41,14 @@
 							<translate>View All</translate>
 						</app-button>
 					</div>
-
-					<app-fireside-badge-add v-if="canCreateFireside" :community="community" />
 				</div>
 
-				<div v-if="previewFiresides.length > 0" class="-preview">
+				<div
+					v-if="displayablePreviewFiresides.length > 0 || canCreateFireside"
+					class="-preview"
+				>
+					<app-fireside-avatar-add v-if="canCreateFireside" :community="community" />
+
 					<app-fireside-avatar
 						v-for="fireside in displayablePreviewFiresides"
 						:key="fireside.id"

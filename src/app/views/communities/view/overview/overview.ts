@@ -9,9 +9,9 @@ import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import AppCommunitySidebar from '../../../../components/community/sidebar/sidebar.vue';
+import AppFiresideAvatarAdd from '../../../../components/fireside/avatar/add/add.vue';
 import { FiresideAvatarEvent } from '../../../../components/fireside/avatar/avatar';
 import AppFiresideAvatar from '../../../../components/fireside/avatar/avatar.vue';
-import AppFiresideBadgeAdd from '../../../../components/fireside/badge/add/add.vue';
 import { Store } from '../../../../store/index';
 import { CommunitiesViewChannelDeps } from '../channel/channel';
 import {
@@ -31,8 +31,8 @@ import AppCommunitiesViewPageContainer from '../_page-container/page-container.v
 		AppCommunitiesViewPageContainer,
 		AppCommunitySidebar,
 		AppCommunitiesViewFeed,
-		AppFiresideBadgeAdd,
 		AppFiresideAvatar,
+		AppFiresideAvatarAdd,
 	},
 })
 @RouteResolver({

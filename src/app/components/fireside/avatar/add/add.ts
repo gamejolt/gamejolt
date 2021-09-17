@@ -1,22 +1,21 @@
 import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { Component, Prop } from 'vue-property-decorator';
 import { Community } from '../../../../../_common/community/community.model';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
-import { AppTheme } from '../../../../../_common/theme/theme';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { FiresideAddModal } from '../../add-modal/add-modal.service';
+import AppFiresideAvatarBase from '../_base/base.vue';
 
 @Component({
 	components: {
-		AppTheme,
+		AppFiresideAvatarBase,
 	},
 	directives: {
 		AppTooltip,
 	},
 })
-export default class AppFiresideBadgeAdd extends Vue {
+export default class AppFiresideAvatarAdd extends Vue {
 	@AppState user!: AppStore['user'];
 
 	@Prop({ type: Community, required: false, default: undefined })
@@ -38,7 +37,7 @@ export default class AppFiresideBadgeAdd extends Vue {
 		header: HTMLDivElement;
 	};
 
-	async onClickBadge() {
+	async onClick() {
 		const fireside = await FiresideAddModal.show({ community: this.community });
 		if (fireside instanceof Fireside) {
 			this.$router.push(fireside.location);

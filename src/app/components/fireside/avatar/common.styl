@@ -59,6 +59,9 @@ $-zindex-popper = 4
 		right: 0
 		bottom: 0
 		left: 0
+		display: flex
+		justify-content: center
+		align-items: center
 
 .-avatar-anim
 	img-circle()
@@ -66,7 +69,7 @@ $-zindex-popper = 4
 	animation-name: live-splash
 	animation-duration: 1s
 	animation-iteration-count: infinite
-	animation-timing-function: $weak-ease-out
+	animation-timing-function: $ease-out-back
 	will-change: inset, background-color, opacity
 
 .-extras
@@ -158,17 +161,14 @@ $-zindex-popper = 4
 
 @keyframes live-splash
 	0%
-		animation-timing-function: $strong-ease-out
 		background-color: $-border-color
 		inset: 0
 		opacity: 1
 
 	10%
-		animation-timing-function: $strong-ease-out
 		background-color: $-border-color
 
 	20%
-		animation-timing-function: $strong-ease-out
 		background-color: $-border-color
 		inset: -($-anim-size * 0.2)
 		opacity: 1

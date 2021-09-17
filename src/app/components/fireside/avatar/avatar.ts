@@ -11,6 +11,7 @@ import AppPopper from '../../../../_common/popper/popper.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import { CommunityEjectFiresideModal } from '../../community/eject-fireside/modal/modal.service';
+import AppFiresideAvatarBase from './_base/base.vue';
 
 export interface FiresideAvatarEvent {
 	fireside: Fireside;
@@ -23,6 +24,7 @@ export interface FiresideAvatarEvent {
 		AppPopper,
 		AppMediaItemBackdrop,
 		AppCommunityThumbnailImg,
+		AppFiresideAvatarBase,
 	},
 	directives: {
 		AppTooltip,
