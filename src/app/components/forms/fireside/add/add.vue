@@ -19,13 +19,11 @@
 		</app-form-group>
 
 		<template v-if="canSelectCommunity">
-			<app-form-group name="community_id" :label="$gettext(`Start in a community?`)">
+			<app-form-group name="community_id" :label="$gettext(`Show in a community?`)">
 				<div class="help-block">
-					<strong>
-						<translate>Make sure you read the community's rules!</translate>
-					</strong>
 					<translate>
-						Only communities that allow firesides will show up here.
+						You can only start firesides in communities that allow it. Select one of the
+						communities you're a member of to get started.
 					</translate>
 				</div>
 
@@ -52,9 +50,9 @@
 
 					<p class="help-block">
 						<translate>
-							Will automatically feature this fireside in your selected community when
-							it gets published. This will notify every member in the community that
-							the fireside has started.
+							Automatically feature this fireside in your selected community when it
+							gets published. This will notify every member in the community that the
+							fireside has started.
 						</translate>
 					</p>
 				</app-form-group>
@@ -67,8 +65,8 @@
 
 					<p class="help-block">
 						<translate>
-							This will let every collaborator in the community moderate the chat and
-							stream with you.
+							This will allow every collaborator in the community to moderate the chat
+							and stream with you.
 						</translate>
 					</p>
 				</app-form-group>
