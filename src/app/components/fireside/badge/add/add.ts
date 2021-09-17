@@ -5,11 +5,15 @@ import { Community } from '../../../../../_common/community/community.model';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { AppTheme } from '../../../../../_common/theme/theme';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { FiresideAddModal } from '../../add-modal/add-modal.service';
 
 @Component({
 	components: {
 		AppTheme,
+	},
+	directives: {
+		AppTooltip,
 	},
 })
 export default class AppFiresideBadgeAdd extends Vue {
@@ -25,6 +29,10 @@ export default class AppFiresideBadgeAdd extends Vue {
 
 	get isCommunity() {
 		return this.community !== undefined;
+	}
+
+	get isDisabled() {
+		return !!this.community && !this.community.is_member;
 	}
 
 	$refs!: {
