@@ -415,10 +415,11 @@ export class AppFiresideContainer extends Vue {
 			return;
 		}
 
+		const streamingUids = (payload.streamingUids ??= []);
 		const hosts: FiresideRTCHost[] = (User.populate(payload.hosts ?? []) as User[]).map(
 			user => ({
 				user,
-				uids: payload.streamingUids[user.id] ?? [],
+				uids: streamingUids[user.id] ?? [],
 			})
 		);
 
