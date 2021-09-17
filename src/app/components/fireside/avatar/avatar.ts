@@ -2,13 +2,13 @@ import Vue from 'vue';
 import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
+import { number } from '../../../../_common/filters/number';
 import { FiresideCommunity } from '../../../../_common/fireside/community/community.model';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { Growls } from '../../../../_common/growls/growls.service';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/backdrop.vue';
 import { Popper } from '../../../../_common/popper/popper.service';
 import AppPopper from '../../../../_common/popper/popper.vue';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import { CommunityEjectFiresideModal } from '../../community/eject-fireside/modal/modal.service';
 import AppFiresideAvatarBase from './_base/base.vue';
@@ -26,9 +26,6 @@ export interface FiresideAvatarEvent {
 		AppCommunityThumbnailImg,
 		AppFiresideAvatarBase,
 	},
-	directives: {
-		AppTooltip,
-	},
 })
 export default class AppFiresideAvatar extends Vue {
 	@Prop({ type: Fireside, required: true })
@@ -41,6 +38,8 @@ export default class AppFiresideAvatar extends Vue {
 	expiryCheck: NodeJS.Timer | null = null;
 
 	private isLoading = false;
+
+	readonly number = number;
 
 	@Emit('eject') emitEject(_: FiresideAvatarEvent) {}
 	@Emit('featured') emitFeatured(_: FiresideAvatarEvent) {}
@@ -83,6 +82,11 @@ export default class AppFiresideAvatar extends Vue {
 			this.manageableCommunities.find(i => i.community.id === this.community!.id)
 				?.isFeatured === true
 		);
+	}
+
+	get userString() {
+		const { display_name, username } = this.fireside.user;
+		return `${display_name} (@${username})`;
 	}
 
 	async toggleFeatured(community: FiresideCommunity) {

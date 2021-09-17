@@ -18,7 +18,10 @@
 							<hr v-if="index !== 0" />
 
 							<h5 class="-extras-header list-group-item has-icon">
-								<app-community-thumbnail-img :community="i.community" />
+								<app-community-thumbnail-img
+									class="-img"
+									:community="i.community"
+								/>
 								{{ i.community.name }}
 							</h5>
 
@@ -58,10 +61,40 @@
 		</template>
 
 		<template #link>
-			<router-link
-				v-app-tooltip="`${fireside.user.display_name} (@${fireside.user.username})`"
-				:to="fireside.location"
-			/>
+			<app-popper popover-class="fill-darkest" trigger="hover" :show-delay="500">
+				<template #default>
+					<router-link class="-link" :to="fireside.location" />
+				</template>
+
+				<template #popover>
+					<div class="list-group list-group-dark">
+						<router-link
+							v-if="community"
+							class="-extras-header list-group-item has-icon"
+							:to="community.routeLocation"
+						>
+							<app-community-thumbnail-img class="-img" :community="community" />
+							{{ community.name }}
+						</router-link>
+
+						<router-link class="-extras-header list-group-item" :to="fireside.user.url">
+							{{ userString }}
+						</router-link>
+
+						<div class="-extras-header list-group-item">
+							<translate
+								:translate-n="fireside.member_count || 0"
+								:translate-params="{
+									count: number(fireside.member_count || 0),
+								}"
+								translate-plural="%{ count } members"
+							>
+								%{ count } member
+							</translate>
+						</div>
+					</div>
+				</template>
+			</app-popper>
 		</template>
 	</app-fireside-avatar-base>
 </template>
