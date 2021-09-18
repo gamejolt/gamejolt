@@ -27,6 +27,9 @@ export default class AppFiresideAvatarAdd extends Vue {
 	}
 
 	get isDisabled() {
+		if (!this.user) {
+			return false;
+		}
 		return !!this.community && !this.community.is_member;
 	}
 
@@ -37,6 +40,10 @@ export default class AppFiresideAvatarAdd extends Vue {
 	async onClick() {
 		if (!this.user) {
 			AuthModal.show();
+			return;
+		}
+
+		if (this.isDisabled) {
 			return;
 		}
 

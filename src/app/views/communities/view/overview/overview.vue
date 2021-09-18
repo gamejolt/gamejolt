@@ -43,21 +43,23 @@
 					</div>
 				</div>
 
-				<div
-					v-if="displayablePreviewFiresides.length > 0 || canCreateFireside"
-					class="-firesides-grid"
-					:style="firesidesGridStyling"
-				>
-					<app-fireside-avatar-add v-if="canCreateFireside" :community="community" />
+				<app-loading-fade :is-loading="!isRouteBootstrapped">
+					<div
+						v-if="displayablePreviewFiresides.length > 0 || canCreateFireside"
+						class="-firesides-grid"
+						:style="firesidesGridStyling"
+					>
+						<app-fireside-avatar-add v-if="canCreateFireside" :community="community" />
 
-					<app-fireside-avatar
-						v-for="fireside in displayablePreviewFiresides"
-						:key="fireside.id"
-						:fireside="fireside"
-						hide-community
-						@eject="onFiresideEject"
-					/>
-				</div>
+						<app-fireside-avatar
+							v-for="fireside in displayablePreviewFiresides"
+							:key="fireside.id"
+							:fireside="fireside"
+							hide-community
+							@eject="onFiresideEject"
+						/>
+					</div>
+				</app-loading-fade>
 
 				<app-communities-view-feed
 					:feed="feed"

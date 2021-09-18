@@ -4,6 +4,7 @@ import { arrayRemove } from '../../../../../utils/array';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Growls } from '../../../../../_common/growls/growls.service';
+import AppLoadingFade from '../../../../../_common/loading/fade/fade.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
@@ -33,6 +34,7 @@ import AppCommunitiesViewPageContainer from '../_page-container/page-container.v
 		AppCommunitiesViewFeed,
 		AppFiresideAvatar,
 		AppFiresideAvatarAdd,
+		AppLoadingFade,
 	},
 })
 @RouteResolver({
