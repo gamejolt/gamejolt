@@ -25,7 +25,11 @@
 								{{ i.community.name }}
 							</h5>
 
-							<a class="list-group-item has-icon" @click="toggleFeatured(i)">
+							<a
+								v-if="canFeatureCommunity(i.community)"
+								class="list-group-item has-icon"
+								@click="toggleFeatured(i)"
+							>
 								<app-jolticon icon="star" />
 
 								<translate v-if="i.isFeatured"> Unfeature fireside </translate>

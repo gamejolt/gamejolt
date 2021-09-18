@@ -1,4 +1,5 @@
 import { getCurrentServerTime } from '../../utils/server-time';
+import { Collaboratable } from '../collaborator/collaboratable';
 import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 import { UserBlock } from '../user/block/block.model';
@@ -9,7 +10,7 @@ import { FiresideRole } from './role/role.model';
 /** The time remaining in seconds when we want to show expiry warnings */
 export const FIRESIDE_EXPIRY_THRESHOLD = 60;
 
-export class Fireside extends Model {
+export class Fireside extends Collaboratable(Model) {
 	user!: User;
 	community_links: FiresideCommunity[] = [];
 	header_media_item: MediaItem | null = null;

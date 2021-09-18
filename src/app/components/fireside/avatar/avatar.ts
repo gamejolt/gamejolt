@@ -1,6 +1,11 @@
 import Vue from 'vue';
 import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
+import {
+	canCommunityEjectFireside,
+	canCommunityFeatureFireside,
+	Community,
+} from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
 import { number } from '../../../../_common/filters/number';
 import { FiresideCommunity } from '../../../../_common/fireside/community/community.model';
@@ -71,9 +76,7 @@ export default class AppFiresideAvatar extends Vue {
 	}
 
 	get manageableCommunities() {
-		return this.fireside.community_links.filter(i =>
-			i.community.hasPerms('community-firesides')
-		);
+		return this.fireside.community_links.filter(i => canCommunityEjectFireside(i.community));
 	}
 
 	get isFeaturedInCommunity() {
@@ -89,9 +92,13 @@ export default class AppFiresideAvatar extends Vue {
 		return `${display_name} (@${username})`;
 	}
 
+	canFeatureCommunity(community: Community) {
+		return canCommunityFeatureFireside(community);
+	}
+
 	async toggleFeatured(community: FiresideCommunity) {
 		Popper.hideAll();
-		if (!community.community.hasPerms('community-firesides')) {
+		if (!this.canFeatureCommunity(community.community)) {
 			return;
 		}
 
@@ -123,7 +130,7 @@ export default class AppFiresideAvatar extends Vue {
 
 	async ejectFireside(community: FiresideCommunity) {
 		Popper.hideAll();
-		if (!community.community.hasPerms('community-firesides')) {
+		if (!canCommunityEjectFireside(community.community)) {
 			return;
 		}
 

@@ -2,6 +2,10 @@ import VueRouter from 'vue-router';
 import { getAbsoluteLink } from '../../../../utils/router';
 import { getCurrentServerTime } from '../../../../utils/server-time';
 import { Api } from '../../../../_common/api/api.service';
+import {
+	canCommunityEjectFireside,
+	canCommunityFeatureFireside,
+} from '../../../../_common/community/community.model';
 import { Device } from '../../../../_common/device/device.service';
 import { duration } from '../../../../_common/filters/duration';
 import { Fireside, FIRESIDE_EXPIRY_THRESHOLD } from '../../../../_common/fireside/fireside.model';
@@ -112,28 +116,42 @@ export class FiresideController {
 		);
 	}
 
-	get canManage() {
-		if (!this.fireside) {
-			return false;
-		}
+	get isOwner() {
+		return !!this.user && this.user.id === this.fireside.user.id;
+	}
 
-		return (
-			(this.user && this.user.id === this.fireside.user.id) ||
-			this.fireside.community?.hasPerms('community-firesides')
-		);
+	get canCommunityFeature() {
+		return !!this.fireside.community && canCommunityFeatureFireside(this.fireside.community);
+	}
+
+	get canCommunityEject() {
+		return !!this.fireside.community && canCommunityEjectFireside(this.fireside.community);
+	}
+
+	get canEdit() {
+		return this.isOwner || this.fireside.hasPerms('fireside-edit');
 	}
 
 	get canPublish() {
-		return this.canManage && this.status === 'joined' && this.isDraft;
+		const role = this.fireside.role?.role;
+		return (
+			(this.isOwner || role === 'host' || role === 'cohost') &&
+			this.status === 'joined' &&
+			this.isDraft
+		);
 	}
 
 	get canExtend() {
 		return (
-			this.canManage &&
 			this.status === 'joined' &&
 			this.expiresProgressValue !== null &&
-			this.expiresProgressValue <= 95
+			this.expiresProgressValue <= 95 &&
+			this.fireside.hasPerms('fireside-extend')
 		);
+	}
+
+	get canExtinguish() {
+		return this.isOwner || this.fireside.hasPerms('fireside-extinguish');
 	}
 
 	/**

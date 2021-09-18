@@ -256,16 +256,6 @@ export default class RouteFireside extends BaseRouteComponent {
 		return this.c && this.c.status === 'joined';
 	}
 
-	get shouldShowEditControlButton() {
-		return !!(
-			this.c?.status === 'joined' &&
-			this.user &&
-			this.fireside &&
-			(this.user.id === this.fireside.user.id ||
-				this.fireside.community?.hasPerms('community-firesides'))
-		);
-	}
-
 	toggleVideoStats() {
 		if (this.c) {
 			toggleStreamVideoStats(this.c);

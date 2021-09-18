@@ -98,7 +98,7 @@
 									<translate>Copy Link</translate>
 								</a>
 								<a
-									v-if="hasEdit"
+									v-if="canEdit"
 									class="list-group-item has-icon"
 									@click="onClickEditFireside"
 								>

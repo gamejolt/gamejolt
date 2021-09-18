@@ -9,7 +9,6 @@
 				class="-header"
 				:show-controls="shouldShowTitleControls"
 				:has-info="!shouldShowFiresideStats"
-				:has-edit="shouldShowEditControlButton"
 				:has-chat="!shouldShowChatMembers"
 				:has-chat-stats="shouldShowChatMemberStats"
 			/>
@@ -216,7 +215,6 @@
 						has-overlay-popovers
 						:show-controls="shouldShowTitleControls"
 						:has-info="!shouldShowFiresideStats"
-						:has-edit="shouldShowEditControlButton"
 						:has-chat="!shouldShowChatMembers"
 						:has-chat-stats="shouldShowChatMemberStats"
 					/>

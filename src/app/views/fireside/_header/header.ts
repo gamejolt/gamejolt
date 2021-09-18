@@ -46,9 +46,6 @@ export default class AppFiresideHeader extends Vue {
 	hasChat!: boolean;
 
 	@Prop({ type: Boolean, required: false, default: false })
-	hasEdit!: boolean;
-
-	@Prop({ type: Boolean, required: false, default: false })
 	hasChatStats!: boolean;
 
 	@InjectReactive(FiresideControllerKey)
@@ -59,6 +56,10 @@ export default class AppFiresideHeader extends Vue {
 
 	get fireside() {
 		return this.c.fireside;
+	}
+
+	get canEdit() {
+		return this.c.canEdit;
 	}
 
 	get manageableCommunities() {

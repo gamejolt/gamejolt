@@ -284,3 +284,11 @@ export function getCommunityChannelBackground(
 			assertNever(presetType);
 	}
 }
+
+export function canCommunityFeatureFireside(community: Community) {
+	return !!community.hasPerms(['community-firesides', 'community-features']);
+}
+
+export function canCommunityEjectFireside(community: Community) {
+	return !!community.hasPerms('community-firesides');
+}

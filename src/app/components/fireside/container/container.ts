@@ -464,10 +464,24 @@ export class AppFiresideContainer extends Vue {
 			return;
 		}
 
-		const updated = new Fireside(payload.fireside);
+		const updatedFireside = new Fireside(payload.fireside);
+		const oldCommunityLinks = c.fireside.community_links;
+
+		for (const updatedLink of updatedFireside.community_links) {
+			const oldLink = oldCommunityLinks.find(
+				i => i.community.id === updatedLink.community.id
+			);
+			if (!oldLink) {
+				continue;
+			}
+			// Preserve the old Community model from the link, otherwise we will
+			// overwrite perms.
+			Object.assign(updatedLink, objectPick(oldLink, ['community']));
+		}
+
 		Object.assign(
 			c.fireside,
-			objectPick(updated, [
+			objectPick(updatedFireside, [
 				'user',
 				'header_media_item',
 				'title',

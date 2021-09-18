@@ -12,7 +12,7 @@
 			<template v-else>
 				<form-fireside-edit :model="controller.fireside" @submit="onFormSubmit" />
 
-				<div class="-danger-zone well fill-offset">
+				<div v-if="canExtinguish" class="-danger-zone well fill-offset">
 					<h4 class="sans-margin-top">
 						<translate>Extinguish Fireside</translate>
 					</h4>
