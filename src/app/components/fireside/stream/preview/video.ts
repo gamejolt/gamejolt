@@ -3,6 +3,8 @@ import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
 import { number } from '../../../../../_common/filters/number';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import AppLoading from '../../../../../_common/loading/loading.vue';
+import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list.vue';
+import { User } from '../../../../../_common/user/user.model';
 import { AppFiresideContainer } from '../../container/container';
 import { createFiresideController, FiresideController } from '../../controller/controller';
 import AppFiresideStreamVideo from '../video/video.vue';
@@ -12,6 +14,7 @@ import AppFiresideStreamVideo from '../video/video.vue';
 		AppLoading,
 		AppFiresideStreamVideo,
 		AppFiresideContainer,
+		AppUserAvatarList,
 	},
 })
 export default class AppFiresideStreamPreviewVideo extends Vue {
@@ -19,7 +22,10 @@ export default class AppFiresideStreamPreviewVideo extends Vue {
 	fireside!: Fireside;
 
 	@Prop({ type: Boolean, required: false, default: true })
-	showLive!: Fireside;
+	showLive!: boolean;
+
+	@Prop({ type: Boolean, required: false, default: true })
+	showLiveUsers!: boolean;
 
 	// Gets assigned with a real controller immediately, but needs this to not
 	// break reactivity.
@@ -34,6 +40,20 @@ export default class AppFiresideStreamPreviewVideo extends Vue {
 		this.c = createFiresideController(this.fireside, {
 			muteUsers: true,
 		});
+	}
+
+	get rtcUsers() {
+		if (!this.c || !this.c.rtc) {
+			return [];
+		}
+		const users: User[] = [];
+		this.c.rtc.users.forEach(i => {
+			if (!i.userModel || i.userModel === this.fireside.user) {
+				return;
+			}
+			users.push(i.userModel);
+		});
+		return users;
 	}
 
 	get focusedUser() {

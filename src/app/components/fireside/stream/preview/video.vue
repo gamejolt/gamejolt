@@ -11,6 +11,9 @@
 						<translate>LIVE</translate>
 					</div>
 				</div>
+				<div v-if="showLiveUsers" class="-live-users">
+					<app-user-avatar-list :users="rtcUsers" sm inline />
+				</div>
 			</div>
 		</div>
 		<div v-else />
@@ -34,21 +37,10 @@
 .-overlay
 	z-index: 1
 	background-color: rgba($black, 0.54)
-	display: flex
-	flex-direction: column
-
-	@media $media-xs
-		padding: $line-height-computed * 0.5
-		grid-gap: @padding
-
-	@media $media-sm-up
-		padding: $line-height-computed
-		grid-gap: @padding
-
-	> *
-		flex: 1
 
 .-center
+	width: 100%
+	height: 100%
 	display: flex
 	justify-content: center
 	align-items: center
@@ -65,4 +57,9 @@
 	letter-spacing: 2px
 	color: $white
 	background-color: $gj-overlay-notice
+
+.-live-users
+	position: absolute
+	right: 16px
+	bottom: 0
 </style>

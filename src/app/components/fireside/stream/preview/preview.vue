@@ -8,6 +8,7 @@
 					<app-fireside-stream-preview-video
 						:fireside="fireside"
 						:show-live="showLive"
+						:show-live-users="showLiveUsers"
 						@changed="onVideoChanged"
 					/>
 				</div>

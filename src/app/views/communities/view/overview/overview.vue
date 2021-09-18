@@ -25,7 +25,7 @@
 
 		<app-communities-view-page-container>
 			<template #default>
-				<div v-if="community.allow_firesides || displayablePreviewFiresides.length > 0">
+				<div v-if="displayablePreviewFiresides.length > 0 || community.allow_firesides">
 					<div class="-firesides-header">
 						<h4 class="section-header">
 							<translate>Firesides</translate>
@@ -45,7 +45,8 @@
 
 				<div
 					v-if="displayablePreviewFiresides.length > 0 || canCreateFireside"
-					class="-preview"
+					class="-firesides-grid"
+					:style="firesidesGridStyling"
 				>
 					<app-fireside-avatar-add v-if="canCreateFireside" :community="community" />
 
@@ -74,9 +75,8 @@
 <style lang="stylus" scoped>
 @import '~styles/variables'
 
-.-preview
+.-firesides-grid
 	display: grid
-	grid-template-columns: repeat(5, 1fr)
 	grid-gap: $line-height-computed
 	margin-bottom: $line-height-computed
 

@@ -20,6 +20,9 @@ export default class AppFiresideStreamPreview extends Vue {
 	@Prop({ type: Boolean, required: false, default: true })
 	showLive!: Fireside;
 
+	@Prop({ type: Boolean, required: false, default: false })
+	showLiveUsers!: Fireside;
+
 	@Emit('changed') emitChanged(_hasVideo: boolean, _isStreaming: boolean) {}
 
 	get location() {

@@ -98,8 +98,19 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		return !this.userFireside && this.community.allow_firesides && !this.community.isBlocked;
 	}
 
+	get firesidesGridColumns() {
+		return 5;
+	}
+
+	get firesidesGridStyling() {
+		return {
+			gridTemplateColumns: `repeat(${this.firesidesGridColumns}, 1fr)`,
+		};
+	}
+
 	get displayablePreviewFiresides() {
-		return Object.freeze(this.previewFiresides.slice(0, 5));
+		const perRow = this.firesidesGridColumns - (this.canCreateFireside ? 1 : 0);
+		return Object.freeze(this.previewFiresides.slice(0, perRow));
 	}
 
 	@Watch('communityState.hasUnreadFeaturedPosts', { immediate: true })

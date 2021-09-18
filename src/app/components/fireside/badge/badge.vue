@@ -93,6 +93,7 @@
 						:style="{ 'margin-top': -containerHeight + 'px' }"
 						:fireside="fireside"
 						:show-live="false"
+						show-live-users
 						@changed="onFiresidePreviewChanged"
 					/>
 				</div>
