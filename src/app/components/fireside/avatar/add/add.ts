@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { AuthModal } from '../../../../../_common/auth/auth-modal.service';
 import { Community } from '../../../../../_common/community/community.model';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
@@ -21,10 +22,6 @@ export default class AppFiresideAvatarAdd extends Vue {
 	@Prop({ type: Community, required: false, default: undefined })
 	community!: Community | undefined;
 
-	get theme() {
-		return this.user?.theme;
-	}
-
 	get isCommunity() {
 		return this.community !== undefined;
 	}
@@ -38,6 +35,11 @@ export default class AppFiresideAvatarAdd extends Vue {
 	};
 
 	async onClick() {
+		if (!this.user) {
+			AuthModal.show();
+			return;
+		}
+
 		const fireside = await FiresideAddModal.show({ community: this.community });
 		if (fireside instanceof Fireside) {
 			this.$router.push(fireside.location);
