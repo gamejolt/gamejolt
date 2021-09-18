@@ -33,6 +33,8 @@ export default class AppHomeFireside extends Vue {
 
 	@Emit('request-refresh') emitRequestRefresh() {}
 
+	readonly Screen = Screen;
+
 	get displayFiresides() {
 		const list = Array.apply([], this.firesides) as Fireside[];
 		if (this.userFireside) {

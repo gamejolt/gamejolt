@@ -134,8 +134,6 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			fromCache
 		);
 
-		console.warn($payload);
-
 		this.finishedLoading = true;
 
 		if (this.routeTitle) {

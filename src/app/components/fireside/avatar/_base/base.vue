@@ -9,8 +9,8 @@
 
 					<app-media-item-backdrop
 						class="-avatar-img"
+						:class="{ '-dashed': borderStyle === 'dashed' }"
 						:media-item="avatarMediaItem"
-						:style="{ 'border-style': borderStyle }"
 					>
 						<slot v-if="!isPlaceholder" name="avatar" />
 					</app-media-item-backdrop>
@@ -48,6 +48,10 @@
 
 .-subtle
 	background-color: var(--theme-bg-subtle)
+	border-color: var(--theme-bg-subtle)
+
+.-dashed
+	border-style: dashed
 	border-color: var(--theme-bg-subtle)
 
 .-link

@@ -3,7 +3,7 @@
 <template>
 	<app-loading-fade :is-loading="isLoading">
 		<div class="-header">
-			<h4 class="section-header">
+			<h4 class="section-header" :class="{ h6: Screen.isXs }">
 				<translate>Firesides</translate>
 			</h4>
 			<span class="help-inline">
@@ -12,7 +12,7 @@
 				</a>
 			</span>
 		</div>
-		<p>
+		<p class="hidden-xs">
 			<small>
 				<translate>Hang out with your followers in temporary pop-up chats</translate>
 			</small>

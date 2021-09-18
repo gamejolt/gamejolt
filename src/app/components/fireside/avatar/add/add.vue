@@ -7,11 +7,7 @@
 		</template>
 
 		<template #tag>
-			<translate>CREATE</translate>
-		</template>
-
-		<template #title>
-			<translate>New fireside</translate>
+			<translate>START</translate>
 		</template>
 
 		<template #link>
