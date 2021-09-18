@@ -12,11 +12,6 @@
 				</a>
 			</span>
 		</div>
-		<p class="hidden-xs">
-			<small>
-				<translate>Hang out with your followers in temporary pop-up chats</translate>
-			</small>
-		</p>
 
 		<div class="-list">
 			<component

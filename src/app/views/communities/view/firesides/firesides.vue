@@ -2,12 +2,19 @@
 
 <template>
 	<app-communities-view-page-container full>
-		<div v-if="!community.allow_firesides" class="alert alert-info">
-			<translate> This community doesn't allow firesides in it. </translate>
-		</div>
-		<div v-else-if="isRouteBootstrapped && firesides.length === 0" class="alert alert-info">
-			<translate> There are no firesides in this community yet. </translate>
-		</div>
+		<app-illustration v-if="!community.allow_firesides" src="~img/ill/no-comments.svg">
+			<p>
+				<translate>This community doesn't allow firesides.</translate>
+			</p>
+		</app-illustration>
+		<app-illustration
+			v-else-if="isRouteBootstrapped && firesides.length === 0"
+			src="~img/ill/no-comments.svg"
+		>
+			<p>
+				<translate>There are no active firesides in this community yet.</translate>
+			</p>
+		</app-illustration>
 		<app-firesides-list v-else :url="loadUrl" :initial-firesides="firesides" />
 	</app-communities-view-page-container>
 </template>

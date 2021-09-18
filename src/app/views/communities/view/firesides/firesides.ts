@@ -2,6 +2,7 @@ import { Component, Inject } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
+import AppIllustration from '../../../../../_common/illustration/illustration.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
@@ -16,6 +17,7 @@ function getFetchUrl(route: Route) {
 	components: {
 		AppCommunitiesViewPageContainer,
 		AppFiresidesList,
+		AppIllustration,
 	},
 })
 @RouteResolver({
