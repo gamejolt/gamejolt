@@ -46,13 +46,17 @@
 <style lang="stylus" scoped>
 @import '../common'
 
+.fireside-avatar
+	&:not(.-placeholder)
+		pressy()
+
 .-subtle
 	background-color: var(--theme-bg-subtle)
 	border-color: var(--theme-bg-subtle)
 
 .-dashed
 	border-style: dashed
-	border-color: var(--theme-bg-subtle)
+	border-color: var(--theme-fg-muted)
 
 .-link
 	> *

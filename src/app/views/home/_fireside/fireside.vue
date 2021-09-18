@@ -72,6 +72,7 @@
 
 .-scroller-inner
 	display: inline-block
+	width: 100%
 
 .-list
 	margin-bottom: $line-height-computed
