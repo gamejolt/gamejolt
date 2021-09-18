@@ -20,19 +20,8 @@
 
 		<!-- Need the div so that we can target the last child in the container. -->
 		<div>
-			<div v-for="(item, i) of feed.items" :key="item.id" class="-item">
+			<div v-for="item of feed.items" :key="item.id" class="-item">
 				<app-activity-feed-item :item="item" />
-
-				<div
-					v-if="shouldShowAd(i)"
-					class="-ad-container well fill-offset full-bleed-xs text-center"
-				>
-					<app-ad-widget
-						size="rectangle"
-						placement="content"
-						:meta="{ staticSize: true }"
-					/>
-				</div>
 			</div>
 		</div>
 

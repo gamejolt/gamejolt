@@ -121,7 +121,7 @@
 					<translate>Posts</translate>
 				</h3>
 
-				<app-activity-feed :feed="feed" show-ads />
+				<app-activity-feed :feed="feed" />
 			</template>
 		</app-page-container>
 	</section>

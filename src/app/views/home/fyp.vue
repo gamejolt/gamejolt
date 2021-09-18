@@ -22,7 +22,7 @@
 					</app-button>
 				</router-link>
 			</div>
-			<app-activity-feed v-else :feed="feed" show-ads @load-more="onLoadMore" />
+			<app-activity-feed v-else :feed="feed" @load-more="onLoadMore" />
 		</div>
 	</div>
 </template>

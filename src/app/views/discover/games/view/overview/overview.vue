@@ -263,7 +263,7 @@
 
 				<app-activity-feed-placeholder v-if="!feed || !feed.isBootstrapped" />
 				<template v-else>
-					<app-activity-feed v-if="feed.hasItems" :feed="feed" show-ads />
+					<app-activity-feed v-if="feed.hasItems" :feed="feed" />
 					<div v-else class="alert">
 						<translate>
 							Nothing has been posted to this project page yet. Maybe check back
