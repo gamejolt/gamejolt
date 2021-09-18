@@ -131,12 +131,6 @@
 					:show-placeholders="!isFiresidesBootstrapped"
 					@request-refresh="refreshFiresides()"
 				/>
-
-				<app-scroll-affix>
-					<div class="-ad">
-						<app-ad-widget size="video" placement="side" />
-					</div>
-				</app-scroll-affix>
 			</template>
 
 			<app-post-add-button @add="onPostAdded" />

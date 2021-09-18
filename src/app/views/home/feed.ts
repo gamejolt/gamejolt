@@ -3,7 +3,6 @@ import { State } from 'vuex-class';
 import { router } from '..';
 import { numberSort } from '../../../utils/array';
 import { fuzzysearch } from '../../../utils/string';
-import AppAdWidget from '../../../_common/ad/widget/widget.vue';
 import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
 import { configHomeNav } from '../../../_common/config/config.service';
@@ -56,7 +55,6 @@ export class RouteActivityFeedController {
 		AppPostAddButton,
 		AppUserCard,
 		AppScrollAffix,
-		AppAdWidget,
 		AppNavTabList,
 		AppHomeFireside,
 		AppConfigLoaded,
