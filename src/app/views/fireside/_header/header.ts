@@ -8,6 +8,7 @@ import { stopStreaming } from '../../../../_common/fireside/rtc/producer';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { Popper } from '../../../../_common/popper/popper.service';
 import AppPopper from '../../../../_common/popper/popper.vue';
+import { ReportModal } from '../../../../_common/report/modal/modal.service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
@@ -102,6 +103,10 @@ export default class AppFiresideHeader extends Vue {
 		}
 
 		stopStreaming(this.c.rtc.producer);
+	}
+
+	onClickReport() {
+		ReportModal.show(this.fireside);
 	}
 
 	onShowPopper() {

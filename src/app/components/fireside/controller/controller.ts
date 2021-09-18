@@ -154,6 +154,10 @@ export class FiresideController {
 		return this.isOwner || this.fireside.hasPerms('fireside-extinguish');
 	}
 
+	get canReport() {
+		return !this.canExtinguish;
+	}
+
 	/**
 	 * Contains a block-list of browsers/clients that can't broadcast.
 	 *

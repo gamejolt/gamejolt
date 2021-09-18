@@ -138,6 +138,15 @@
 									</a>
 								</template>
 
+								<a
+									v-if="c.canReport"
+									class="list-group-item has-icon"
+									@click="onClickReport"
+								>
+									<app-jolticon icon="flag" notice />
+									<translate>Report Fireside</translate>
+								</a>
+
 								<div v-for="i in manageableCommunities" :key="i.id">
 									<hr />
 
