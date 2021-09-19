@@ -203,6 +203,10 @@ export default class AppReportForm extends BaseForm<FormModel> implements FormOn
 								text: this.$gettext('Title'),
 							},
 							{
+								checkValue: 'fireside/chat',
+								text: this.$gettext('Chat messages'),
+							},
+							{
 								checkValue: 'fireside/audio-video',
 								text: this.$gettext('Audio or video stream'),
 							},
@@ -215,6 +219,10 @@ export default class AppReportForm extends BaseForm<FormModel> implements FormOn
 							{
 								checkValue: 'fireside/title',
 								text: this.$gettext('Title'),
+							},
+							{
+								checkValue: 'fireside/chat',
+								text: this.$gettext('Chat messages'),
 							},
 							{
 								checkValue: 'fireside/audio-video',
