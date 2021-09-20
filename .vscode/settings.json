@@ -63,7 +63,6 @@
 	"vetur.validation.template": false,
 	"vetur.validation.templateProps": true,
 	"volar.codeLens.pugTools": false,
-	"volar.tsPlugin": true,
 	"volar.autoCompleteRefs": false,
 	"volar.codeLens.references": false,
 	"volar.codeLens.scriptSetupTools": false,
