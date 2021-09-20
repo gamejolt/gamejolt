@@ -155,7 +155,7 @@ export class FiresideController {
 	}
 
 	get canReport() {
-		return !this.canExtinguish;
+		return !(this.fireside.hasPerms() || this.fireside.community?.hasPerms() === true);
 	}
 
 	/**
