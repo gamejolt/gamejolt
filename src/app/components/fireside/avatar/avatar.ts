@@ -143,7 +143,7 @@ export default class AppFiresideAvatar extends Vue {
 			this.isLoading = true;
 			const response = await Api.sendRequest(
 				`/web/communities/manage/eject-fireside/${community.id}`,
-				{ notifyUser: result.notifyUser, reason: result.reason }
+				result
 			);
 			if (response.fireside) {
 				this.fireside.assign(response.fireside);

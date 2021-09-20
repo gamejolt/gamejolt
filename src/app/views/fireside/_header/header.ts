@@ -155,7 +155,7 @@ export default class AppFiresideHeader extends Vue {
 		try {
 			const response = await Api.sendRequest(
 				`/web/communities/manage/eject-fireside/${community.id}`,
-				{ notifyUser: result.notifyUser, reason: result.reason }
+				result
 			);
 			if (response.fireside) {
 				this.fireside.assign(response.fireside);
