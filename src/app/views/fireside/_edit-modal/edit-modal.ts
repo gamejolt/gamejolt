@@ -19,8 +19,12 @@ export default class AppFiresideEditModal extends BaseModal {
 		this.modal.resolve();
 	}
 
+	get canExtinguish() {
+		return this.controller.canExtinguish;
+	}
+
 	async onClickExtinguish() {
-		if (!this.controller.fireside) {
+		if (!this.controller.fireside || !this.canExtinguish) {
 			return;
 		}
 

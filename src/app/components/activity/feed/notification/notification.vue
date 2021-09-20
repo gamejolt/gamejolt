@@ -4,7 +4,7 @@
 	<div>
 		<template v-if="shouldShow">
 			<div class="notification-item">
-				<div @click.stop="go" class="notification-container">
+				<div class="notification-container" @click.stop="go">
 					<router-link :to="notification.routeLocation">
 						<app-timeline-list-item :is-new="isNew">
 							<div
@@ -21,7 +21,7 @@
 									/>
 								</div>
 							</div>
-							<div v-else-if="notification.from_model" slot="bubble">
+							<div v-else-if="fromIsUser" slot="bubble">
 								<app-user-card-hover
 									:user="notification.from_model"
 									:disabled="!feed.shouldShowUserCards"
@@ -32,7 +32,9 @@
 							<div
 								v-else-if="
 									notification.type ===
-									Notification.TYPE_POST_FEATURED_IN_COMMUNITY
+										Notification.TYPE_POST_FEATURED_IN_COMMUNITY ||
+									notification.type ===
+										Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY
 								"
 								slot="bubble"
 							>
@@ -56,7 +58,9 @@
 							<div class="-container">
 								<div class="-main">
 									<div
-										class="timeline-list-item-title timeline-list-item-title-small"
+										class="
+											timeline-list-item-title timeline-list-item-title-small
+										"
 										v-html="titleText"
 									/>
 
@@ -101,6 +105,14 @@
 													{{
 														notification.action_model.fireside_post.getShortLead()
 													}}
+												</span>
+												<span
+													v-else-if="
+														notification.type ===
+														Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY
+													"
+												>
+													{{ notification.to_model.title }}
 												</span>
 												<span
 													v-else-if="

@@ -124,13 +124,13 @@
 			</template>
 
 			<template v-if="!Screen.isMobile" #right>
-				<app-home-fireside />
-
-				<app-scroll-affix>
-					<div class="-ad">
-						<app-ad-widget size="video" placement="side" />
-					</div>
-				</app-scroll-affix>
+				<app-home-fireside
+					:user-fireside="userFireside"
+					:firesides="firesides"
+					:is-loading="isLoadingFiresides"
+					:show-placeholders="!isFiresidesBootstrapped"
+					@request-refresh="refreshFiresides()"
+				/>
 			</template>
 
 			<app-post-add-button @add="onPostAdded" />
@@ -144,7 +144,14 @@
 				<app-community-slider v-else :communities="communities" with-add-button />
 			</template>
 
-			<app-fireside-stream-banner v-if="fireside" class="-concert" :fireside="fireside" />
+			<app-home-fireside
+				v-if="Screen.isMobile"
+				:user-fireside="userFireside"
+				:firesides="firesides"
+				:is-loading="isLoadingFiresides"
+				:show-placeholders="!isFiresidesBootstrapped"
+				@request-refresh="refreshFiresides()"
+			/>
 
 			<div v-if="!hasSimpleHome" class="full-bleed-xs">
 				<app-nav-tab-list center class="-inline-menu">

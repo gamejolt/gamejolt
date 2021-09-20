@@ -1,17 +1,18 @@
 import { getCurrentServerTime } from '../../utils/server-time';
-import { Community } from '../community/community.model';
+import { Collaboratable } from '../collaborator/collaboratable';
 import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 import { UserBlock } from '../user/block/block.model';
 import { User } from '../user/user.model';
+import { FiresideCommunity } from './community/community.model';
 import { FiresideRole } from './role/role.model';
 
 /** The time remaining in seconds when we want to show expiry warnings */
 export const FIRESIDE_EXPIRY_THRESHOLD = 60;
 
-export class Fireside extends Model {
+export class Fireside extends Collaboratable(Model) {
 	user!: User;
-	community!: Community;
+	community_links: FiresideCommunity[] = [];
 	header_media_item: MediaItem | null = null;
 	role: FiresideRole | null = null;
 	user_block?: UserBlock | null;
@@ -43,6 +44,17 @@ export class Fireside extends Model {
 		};
 	}
 
+	get community() {
+		return this.primaryCommunityLink?.community ?? null;
+	}
+
+	get primaryCommunityLink() {
+		if (this.community_links.length > 0) {
+			return this.community_links[0];
+		}
+		return null;
+	}
+
 	constructor(data: any = {}) {
 		super(data);
 
@@ -62,8 +74,8 @@ export class Fireside extends Model {
 			this.role = new FiresideRole(data.role);
 		}
 
-		if (data.community) {
-			this.community = new Community(data.community);
+		if (data.community_links) {
+			this.community_links = FiresideCommunity.populate(data.community_links);
 		}
 	}
 
@@ -83,12 +95,36 @@ export class Fireside extends Model {
 		return this.$_save(`/web/dash/fireside/save/` + this.hash, 'fireside');
 	}
 
-	$publish() {
-		return this.$_save(`/web/dash/fireside/publish/` + this.hash, 'fireside');
+	$publish({ autoFeature }: { autoFeature?: boolean } = {}) {
+		return this.$_save(`/web/dash/fireside/publish/` + this.hash, 'fireside', {
+			data: {
+				auto_feature: autoFeature ?? false,
+			},
+		});
 	}
 
 	$extinguish() {
 		return this.$_save(`/web/dash/fireside/extinguish/` + this.hash, 'fireside');
+	}
+
+	$feature() {
+		if (!this.primaryCommunityLink) {
+			return;
+		}
+		return this.$_save(
+			`/web/communities/manage/feature-fireside/${this.primaryCommunityLink.id}`,
+			'fireside'
+		);
+	}
+
+	$unfeature() {
+		if (!this.primaryCommunityLink) {
+			return;
+		}
+		return this.$_save(
+			`/web/communities/manage/unfeature-fireside/${this.primaryCommunityLink.id}`,
+			'fireside'
+		);
 	}
 }
 

@@ -5,7 +5,7 @@
 		<div class="-click-capture" @click="onClick">
 			<div class="-display-thumb" :class="{ '-hidden': !showingVideoThumb }">
 				<template v-if="showingVideoThumb">
-					<app-fireside-video
+					<app-fireside-stream-video
 						v-if="c.rtc && !c.rtc.videoPaused"
 						:rtc-user="host"
 						low-bitrate

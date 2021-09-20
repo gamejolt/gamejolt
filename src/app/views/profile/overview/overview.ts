@@ -34,6 +34,8 @@ import { Meta } from '../../../../_common/meta/meta-service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
+import { ScrollInviewConfig } from '../../../../_common/scroll/inview/config';
+import { AppScrollInview } from '../../../../_common/scroll/inview/inview';
 import AppShareCard from '../../../../_common/share/card/card.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
@@ -52,6 +54,11 @@ import AppUserKnownFollowers from '../../../components/user/known-followers/know
 import { Store } from '../../../store/index';
 import { RouteStore, RouteStoreModule } from '../profile.store';
 
+const FiresideScrollInviewConfig = new ScrollInviewConfig({
+	emitsOn: 'partial-overlap',
+	trackFocused: false,
+});
+
 @Component({
 	name: 'RouteProfileOverview',
 	components: {
@@ -69,6 +76,7 @@ import { RouteStore, RouteStoreModule } from '../profile.store';
 		AppTrophyThumbnail,
 		AppFiresideBadge,
 		AppShareCard,
+		AppScrollInview,
 	},
 	directives: {
 		AppTooltip,
@@ -152,12 +160,17 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	knownFollowers: User[] = [];
 	knownFollowerCount = 0;
 	fireside: Fireside | null = null;
+	hadInitialFireside = false;
+	isFiresideInview = false;
+	firesideHasVideo = false;
+	maintainFiresideOutviewSpace = false;
 
 	permalinkWatchDeregister?: CommentThreadModalPermalinkDeregister;
 
 	readonly User = User;
 	readonly UserFriendship = UserFriendship;
 	readonly Screen = Screen;
+	readonly FiresideScrollInviewConfig = FiresideScrollInviewConfig;
 
 	get chat() {
 		return this.chatStore.chat;
@@ -310,7 +323,16 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	}
 
 	get shouldShowFireside() {
-		return this.fireside && this.fireside.canJoin();
+		// Keep the FiresideBadge around so we don't mess with their scroll
+		// position when a fireside expires.
+		return (!!this.fireside && this.fireside.canJoin()) || this.hadInitialFireside;
+	}
+
+	get canShowFiresidePreview() {
+		return (
+			this.shouldShowFireside &&
+			(this.isFiresideInview ? this.firesideHasVideo : this.maintainFiresideOutviewSpace)
+		);
 	}
 
 	getLinkedAccount(provider: Provider) {
@@ -377,6 +399,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		}
 		if ($payload.fireside) {
 			this.fireside = new Fireside($payload.fireside);
+			this.hadInitialFireside = !!this.fireside;
 		}
 
 		this.overviewPayload($payload);
@@ -416,6 +439,20 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 				enterChatRoom(this.chat, chatUser.room_id);
 			}
 		}
+	}
+
+	onFiresideInview() {
+		this.isFiresideInview = true;
+		this.maintainFiresideOutviewSpace = false;
+	}
+
+	onFiresideOutview() {
+		this.maintainFiresideOutviewSpace = this.canShowFiresidePreview;
+		this.isFiresideInview = false;
+	}
+
+	onFiresideBadgeChanged(hasVideo: boolean, _isStreaming: boolean) {
+		this.firesideHasVideo = hasVideo;
 	}
 
 	async toggleShowAllCommunities() {

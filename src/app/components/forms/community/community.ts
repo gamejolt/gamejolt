@@ -2,6 +2,7 @@ import { Component } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
 import { Community } from '../../../../_common/community/community.model';
 import AppFormControlTheme from '../../../../_common/form-vue/control/theme/theme.vue';
+import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
 import {
 	BaseForm,
 	FormOnInit,
@@ -16,6 +17,7 @@ import AppPostAddButtonFormControl from '../../post/add-button/form-control/form
 	components: {
 		AppPostAddButtonFormControl,
 		AppFormControlTheme,
+		AppFormControlToggle,
 	},
 })
 export default class FormCommunity

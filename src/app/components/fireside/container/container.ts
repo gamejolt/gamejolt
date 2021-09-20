@@ -19,7 +19,6 @@ import { Growls } from '../../../../_common/growls/growls.service';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { User } from '../../../../_common/user/user.model';
 import { Store } from '../../../store';
-import { StreamSetupModal } from '../../../views/fireside/_stream-setup/stream-setup-modal.service';
 import { ChatStore, ChatStoreKey, clearChat, loadChat } from '../../chat/chat-store';
 import { joinInstancedRoomChannel, leaveChatRoom, setGuestChatToken } from '../../chat/client';
 import { EVENT_STREAMING_UID, EVENT_UPDATE, FiresideChannel } from '../../grid/fireside-channel';
@@ -28,6 +27,7 @@ import {
 	FiresideControllerKey,
 	updateFiresideExpiryValues,
 } from '../controller/controller';
+import { StreamSetupModal } from '../stream/setup/setup-modal.service';
 
 @Component({})
 export class AppFiresideContainer extends Vue {
@@ -73,7 +73,7 @@ export class AppFiresideContainer extends Vue {
 
 		if (c.fireside.blocked) {
 			c.status = 'blocked';
-			console.debug(`[Fireside] Blocked from joining blocked user's Fireside.`);
+			console.debug(`[Fireside] Blocked from joining blocked user's fireside.`);
 			return;
 		}
 
@@ -179,7 +179,7 @@ export class AppFiresideContainer extends Vue {
 	}
 
 	private async join() {
-		console.debug(`[FIRESIDE] Joining Fireside.`);
+		console.debug(`[FIRESIDE] Joining fireside.`);
 		const c = this.controller;
 
 		// --- Make sure common join conditions are met.
@@ -214,7 +214,7 @@ export class AppFiresideContainer extends Vue {
 			);
 
 			if (!payload.fireside) {
-				console.debug(`[FIRESIDE] Trying to load Fireside, but it was not found.`);
+				console.debug(`[FIRESIDE] Trying to load fireside, but it was not found.`);
 				c.status = 'setup-failed';
 				return;
 			}
@@ -238,7 +238,7 @@ export class AppFiresideContainer extends Vue {
 		// Maybe they are blocked now?
 		if (c.fireside.blocked) {
 			c.status = 'blocked';
-			console.debug(`[Fireside] Blocked from joining blocked user's Fireside.`);
+			console.debug(`[Fireside] Blocked from joining blocked user's fireside.`);
 			return;
 		}
 
@@ -249,7 +249,7 @@ export class AppFiresideContainer extends Vue {
 			return;
 		}
 
-		// --- Make them join the Fireside (if they aren't already).
+		// --- Make them join the fireside (if they aren't already).
 
 		if (this.user && !c.fireside.role) {
 			const rolePayload = await Api.sendRequest(`/web/fireside/join/${c.fireside.hash}`);
@@ -309,15 +309,15 @@ export class AppFiresideContainer extends Vue {
 
 		c.chatChannel.on('kick_member', (data: any) => {
 			if (this.user && data.user_id === this.user.id) {
-				Growls.info(this.$gettext(`You've been kicked from the Fireside.`));
+				Growls.info(this.$gettext(`You've been kicked from the fireside.`));
 				this.$router.push({ name: 'home' });
 			}
 		});
 
 		c.status = 'joined';
-		console.debug(`[FIRESIDE] Successfully joined Fireside.`);
+		console.debug(`[FIRESIDE] Successfully joined fireside.`);
 
-		// Set up the expiry interval to check if the Fireside is expired.
+		// Set up the expiry interval to check if the fireside is expired.
 		this.clearExpiryCheck();
 		c.expiryInterval = setInterval(this.expiryCheck.bind(this), 1000);
 		this.expiryCheck();
@@ -349,7 +349,7 @@ export class AppFiresideContainer extends Vue {
 		this.clearExpiryCheck();
 		this.destroyExpiryInfoInterval();
 
-		console.debug(`[FIRESIDE] Disconnecting from Fireside.`);
+		console.debug(`[FIRESIDE] Disconnecting from fireside.`);
 		c.status = 'disconnected';
 
 		if (this.grid && this.grid.connected && c.gridChannel) {
@@ -366,7 +366,7 @@ export class AppFiresideContainer extends Vue {
 		StreamSetupModal.close();
 		this.destroyRtc();
 
-		console.debug(`[FIRESIDE] Disconnected from Fireside.`);
+		console.debug(`[FIRESIDE] Disconnected from fireside.`);
 	}
 
 	private clearExpiryCheck() {
@@ -415,10 +415,11 @@ export class AppFiresideContainer extends Vue {
 			return;
 		}
 
+		const streamingUids = payload.streamingUids ?? [];
 		const hosts: FiresideRTCHost[] = (User.populate(payload.hosts ?? []) as User[]).map(
 			user => ({
 				user,
-				uids: payload.streamingUids[user.id] ?? [],
+				uids: streamingUids[user.id] ?? [],
 			})
 		);
 
@@ -463,10 +464,24 @@ export class AppFiresideContainer extends Vue {
 			return;
 		}
 
-		const updated = new Fireside(payload.fireside);
+		const updatedFireside = new Fireside(payload.fireside);
+		const oldCommunityLinks = c.fireside.community_links;
+
+		for (const updatedLink of updatedFireside.community_links) {
+			const oldLink = oldCommunityLinks.find(
+				i => i.community.id === updatedLink.community.id
+			);
+			if (!oldLink) {
+				continue;
+			}
+			// Preserve the old Community model from the link, otherwise we will
+			// overwrite perms.
+			Object.assign(updatedLink, objectPick(oldLink, ['community']));
+		}
+
 		Object.assign(
 			c.fireside,
-			objectPick(updated, [
+			objectPick(updatedFireside, [
 				'user',
 				'header_media_item',
 				'title',
@@ -475,6 +490,7 @@ export class AppFiresideContainer extends Vue {
 				'is_streaming',
 				'is_draft',
 				'member_count',
+				'community_links',
 			])
 		);
 

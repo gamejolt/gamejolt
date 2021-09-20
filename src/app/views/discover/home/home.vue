@@ -3,9 +3,7 @@
 
 <template>
 	<div>
-		<!-- TODO: We should be checking if the Fireside is actually expired or not. -->
-		<app-fireside-stream-banner v-if="shouldShowFiresideBanner" :fireside="fireside" />
-		<app-discover-home-banner v-else :is-loading="!isRouteBootstrapped" :item="featuredItem" />
+		<app-discover-home-banner :is-loading="!isRouteBootstrapped" :item="featuredItem" />
 
 		<section class="section fill-backdrop">
 			<app-discover-home-communities

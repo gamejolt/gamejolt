@@ -1,49 +1,86 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Emit, Prop, Watch } from 'vue-property-decorator';
-import { propRequired } from '../../../../utils/vue';
-import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
+import AppExpand from '../../../../_common/expand/expand.vue';
 import { number } from '../../../../_common/filters/number';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/backdrop.vue';
+import { AppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
 import { AppTheme } from '../../../../_common/theme/theme';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
+import AppFiresideStreamPreview from '../stream/preview/preview.vue';
 
 @Component({
 	components: {
 		AppTheme,
 		AppMediaItemBackdrop,
 		AppUserAvatarImg,
-		AppCommunityThumbnailImg,
+		AppFiresideStreamPreview,
+		AppExpand,
 	},
 	directives: {
 		AppTooltip,
+		AppObserveDimensions,
 	},
 })
 export default class AppFiresideBadge extends Vue {
-	@Prop(propRequired(Fireside)) fireside!: Fireside;
+	@Prop({ type: Fireside, required: true })
+	fireside!: Fireside | null;
+
+	@Prop({ type: Boolean, required: false, default: null })
+	showPreview!: boolean | null;
 
 	@Emit('expire') emitExpire() {}
+	@Emit('changed') emitChanged(_hasVideo: boolean, _isStreaming: boolean) {}
 
 	canEmitExpiry = true;
 	expiryCheck: NodeJS.Timer | null = null;
+	isStreaming = false;
+	hasVideo = false;
+	hadInitialFireside = true;
+
+	containerHeight = 70;
 
 	readonly number = number;
 
+	$refs!: {
+		badge: HTMLDivElement;
+	};
+
+	get shouldDisplay() {
+		return !!this.fireside || (this.hadInitialFireside && this.canExpandPreview);
+	}
+
+	get location() {
+		return this.fireside?.location ?? null;
+	}
+
+	get headerMediaItem() {
+		return this.fireside?.header_media_item ?? null;
+	}
+
 	get avatarTooltip() {
-		if (this.fireside.community) {
-			return this.fireside.community.name;
+		if (!this.fireside) {
+			return;
 		}
+
 		return this.fireside.user.display_name + ' (@' + this.fireside.user.username + ')';
 	}
 
 	get theme() {
-		if (this.fireside.community) {
-			return this.fireside.community.theme;
-		}
+		return this.fireside?.user.theme ?? null;
+	}
 
-		return this.fireside.user.theme;
+	get canExpandPreview() {
+		// We want to react to showPreview changes. If showPreview is null,
+		// we'll probably never want to show the preview and shouldn't even let
+		// it connect to the RTC.
+		return this.showPreview !== null;
+	}
+
+	created() {
+		this.hadInitialFireside = !!this.fireside;
 	}
 
 	mounted() {
@@ -55,8 +92,8 @@ export default class AppFiresideBadge extends Vue {
 	}
 
 	private setupCheck() {
-		// If the Fireside is unjoinable from the get go, never emit expiry.
-		if (!this.fireside.isOpen()) {
+		// If the fireside is unjoinable from the get go, never emit expiry.
+		if (this.fireside && !this.fireside.isOpen()) {
 			this.canEmitExpiry = false;
 		} else if (!GJ_IS_SSR) {
 			this.canEmitExpiry = true;
@@ -77,7 +114,8 @@ export default class AppFiresideBadge extends Vue {
 			return;
 		}
 
-		if (!this.fireside.isOpen()) {
+		if (!this.fireside || !this.fireside.isOpen()) {
+			this.onFiresidePreviewChanged(false, false);
 			this.canEmitExpiry = false;
 			this.emitExpire();
 		}
@@ -88,5 +126,15 @@ export default class AppFiresideBadge extends Vue {
 			clearInterval(this.expiryCheck);
 			this.expiryCheck = null;
 		}
+	}
+
+	onFiresidePreviewChanged(hasVideo: boolean, isStreaming: boolean) {
+		this.emitChanged(hasVideo, isStreaming);
+		this.hasVideo = hasVideo;
+		this.isStreaming = isStreaming;
+	}
+
+	onBadgeDimensionsChanged() {
+		this.containerHeight = this.$refs.badge.clientHeight;
 	}
 }

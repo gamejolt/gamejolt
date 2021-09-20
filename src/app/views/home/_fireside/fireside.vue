@@ -3,45 +3,43 @@
 <template>
 	<app-loading-fade :is-loading="isLoading">
 		<div class="-header">
-			<h4 class="section-header">
+			<h4 class="section-header" :class="{ h6: Screen.isXs }">
 				<translate>Firesides</translate>
 			</h4>
 			<span class="help-inline">
-				<a class="link-unstyled" @click="refresh()">
+				<a class="link-unstyled" @click="emitRequestRefresh()">
 					<translate>Refresh</translate>
 				</a>
 			</span>
 		</div>
-		<p>
-			<small>
-				<translate>Hang out with your followers in temporary pop-up chats</translate>
-			</small>
-		</p>
 
-		<template v-if="isInitialLoading">
-			<app-fireside-badge-placeholder />
-			<hr />
-			<app-fireside-badge-placeholder />
-			<app-fireside-badge-placeholder />
-		</template>
-
-		<div v-else class="-list">
-			<app-fireside-badge
-				v-if="userFireside"
-				:fireside="userFireside"
-				@expire="onFiresideExpired()"
-			/>
-			<app-fireside-badge-add v-else />
-
-			<template v-if="firesides.length">
-				<hr />
-				<app-fireside-badge
-					v-for="fireside of firesides"
-					:key="fireside.id"
-					:fireside="fireside"
-					@expire="onFiresideExpired()"
-				/>
-			</template>
+		<div class="-list">
+			<component
+				:is="shouldDisplaySingleRow ? 'app-scroll-scroller' : 'div'"
+				:class="{ '-scroller': shouldDisplaySingleRow }"
+				horizontal
+			>
+				<div :class="{ '-scroller-inner': shouldDisplaySingleRow }">
+					<div :style="gridStyling">
+						<template v-if="showPlaceholders">
+							<app-fireside-avatar-base
+								v-for="i of gridColumns"
+								:key="i"
+								:is-placeholder="true"
+							/>
+						</template>
+						<template v-else>
+							<app-fireside-avatar-add v-if="!userFireside" />
+							<app-fireside-avatar
+								v-for="fireside of displayFiresides"
+								:key="fireside.id"
+								:fireside="fireside"
+								@expired="onFiresideExpired()"
+							/>
+						</template>
+					</div>
+				</div>
+			</component>
 		</div>
 	</app-loading-fade>
 </template>
@@ -58,6 +56,23 @@
 
 	h4
 		margin-bottom: 0
+
+.-scroller
+	@media $media-xs
+		full-bleed-xs()
+
+		.-scroller-inner
+			padding: 0 ($grid-gutter-width-xs / 2)
+
+	@media $media-sm-up
+		full-bleed()
+
+		.-scroller-inner
+			padding: 0 ($grid-gutter-width / 2)
+
+.-scroller-inner
+	display: inline-block
+	width: 100%
 
 .-list
 	margin-bottom: $line-height-computed

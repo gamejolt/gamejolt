@@ -3,7 +3,6 @@ import { State } from 'vuex-class';
 import { router } from '..';
 import { numberSort } from '../../../utils/array';
 import { fuzzysearch } from '../../../utils/string';
-import AppAdWidget from '../../../_common/ad/widget/widget.vue';
 import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
 import { configHomeNav } from '../../../_common/config/config.service';
@@ -19,13 +18,14 @@ import {
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
 import { AppState, AppStore } from '../../../_common/store/app-store';
+import { EventBus, EventBusDeregister } from '../../../_common/system/event/event-bus.service';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppUserCard from '../../../_common/user/card/card.vue';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../components/activity/feed/view';
 import AppCommunitySliderPlaceholder from '../../components/community/slider/placeholder/placeholder.vue';
 import AppCommunitySlider from '../../components/community/slider/slider.vue';
-import AppFiresideStreamBanner from '../../components/fireside/stream-banner/stream-banner.vue';
+import { GRID_EVENT_FIRESIDE_START } from '../../components/grid/client.service';
 import AppPageContainer from '../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../components/post/add-button/add-button.vue';
 import { Store } from '../../store';
@@ -55,13 +55,11 @@ export class RouteActivityFeedController {
 		AppPostAddButton,
 		AppUserCard,
 		AppScrollAffix,
-		AppAdWidget,
 		AppNavTabList,
 		AppHomeFireside,
 		AppConfigLoaded,
 		RouteHomeActivity: () => asyncRouteLoader(import('./activity.vue'), router),
 		RouteHomeFyp: () => asyncRouteLoader(import('./fyp.vue'), router),
-		AppFiresideStreamBanner,
 	},
 	directives: {
 		AppTooltip,
@@ -78,10 +76,15 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	@State unreadActivityCount!: Store['unreadActivityCount'];
 	@LibraryModule.State developerCollection!: LibraryStore['developerCollection'];
 
-	fireside: Fireside | null = null;
 	games: DashGame[] = [];
 	gameFilterQuery = '';
 	isShowingAllGames = false;
+
+	firesideStartDeregister: EventBusDeregister | null = null;
+	isLoadingFiresides = true;
+	isFiresidesBootstrapped = false;
+	userFireside: Fireside | null = null;
+	firesides: Fireside[] = [];
 
 	readonly Screen = Screen;
 	readonly HomeFeedService = HomeFeedService;
@@ -158,17 +161,46 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 			trackExperimentEngagement(configHomeNav);
 		}
 
-		this.fireside = payload.fireside ? new Fireside(payload.fireside) : null;
-
 		this.games = (payload.ownerGames as DashGame[])
 			.map(i => new DashGame(i.id, i.title, i.ownerName, i.createdOn))
 			.sort((a, b) => numberSort(a.createdOn, b.createdOn))
 			.reverse();
+
+		this.refreshFiresides();
+		this.firesideStartDeregister = EventBus.on(GRID_EVENT_FIRESIDE_START, () =>
+			this.refreshFiresides()
+		);
+	}
+
+	routeDestroyed() {
+		if (this.firesideStartDeregister) {
+			this.firesideStartDeregister();
+			this.firesideStartDeregister = null;
+		}
 	}
 
 	onPostAdded(post: FiresidePost) {
 		if (this.controller.feed) {
 			ActivityFeedService.onPostAdded(this.controller.feed, post, this);
 		}
+	}
+
+	async refreshFiresides() {
+		if (!this.user) {
+			return;
+		}
+
+		this.isLoadingFiresides = true;
+		try {
+			const payload = await Api.sendRequest(`/web/fireside/user-list`, undefined, {
+				detach: true,
+			});
+			this.userFireside = payload.userFireside ? new Fireside(payload.userFireside) : null;
+			this.firesides = payload.firesides ? Fireside.populate(payload.firesides) : [];
+		} catch (error) {
+			console.error('Failed to refresh fireside data.', error);
+		}
+		this.isLoadingFiresides = false;
+		this.isFiresidesBootstrapped = true;
 	}
 }

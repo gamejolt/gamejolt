@@ -6,29 +6,39 @@
 			<div class="-fireside-title">
 				<h2 class="sans-margin-top" :class="{ h3: Screen.isXs }">
 					<small class="-subtitle">
+						<router-link
+							:to="{
+								name: 'profile.overview',
+								params: { username: fireside.user.username },
+							}"
+						>
+							@{{ fireside.user.username }}
+						</router-link>
+						<app-user-avatar-img class="-avatar" :user="fireside.user" />
+						<span>'s Fireside</span>
+
 						<template v-if="fireside.community">
-							<router-link :to="fireside.community.routeLocation">
-								{{ fireside.community.name }}
-							</router-link>
+							<span>in </span>
 							<div class="-avatar -community-avatar">
 								<app-community-thumbnail-img :community="fireside.community" />
 							</div>
-						</template>
-						<template v-else>
-							<router-link
-								:to="{
-									name: 'profile.overview',
-									params: { username: fireside.user.username },
-								}"
-							>
-								@{{ fireside.user.username }}
+							<router-link :to="fireside.community.routeLocation">
+								{{ fireside.community.name }}
 							</router-link>
-							<app-user-avatar-img class="-avatar" :user="fireside.user" />
 						</template>
-						<span>'s Fireside</span>
 
-						<span v-if="c.isDraft" class="-draft-tag tag">
+						<span v-if="c.isDraft" class="-tag tag">
 							<translate>Draft</translate>
+						</span>
+
+						<span
+							v-if="
+								fireside.primaryCommunityLink &&
+								fireside.primaryCommunityLink.isFeatured
+							"
+							class="-tag tag"
+						>
+							<translate>Featured</translate>
 						</span>
 					</small>
 					<br />
@@ -60,7 +70,11 @@
 						/>
 					</div>
 
-					<app-popper @show="onShowPopper" @hide="onHidePopper">
+					<app-popper
+						popover-class="fill-darkest"
+						@show="onShowPopper"
+						@hide="onHidePopper"
+					>
 						<div class="-stats-btn">
 							<app-button
 								icon="cog"
@@ -84,7 +98,7 @@
 									<translate>Copy Link</translate>
 								</a>
 								<a
-									v-if="hasEdit"
+									v-if="canEdit"
 									class="list-group-item has-icon"
 									@click="onClickEditFireside"
 								>
@@ -123,6 +137,39 @@
 										<translate>Stop Streaming</translate>
 									</a>
 								</template>
+
+								<a
+									v-if="c.canReport"
+									class="list-group-item has-icon"
+									@click="onClickReport"
+								>
+									<app-jolticon icon="flag" notice />
+									<translate>Report Fireside</translate>
+								</a>
+
+								<div v-for="i in manageableCommunities" :key="i.id">
+									<hr />
+
+									<h5 class="-extras-header list-group-item has-icon">
+										<app-community-thumbnail-img :community="i.community" />
+										{{ i.community.name }}
+									</h5>
+
+									<a class="list-group-item has-icon" @click="toggleFeatured(i)">
+										<app-jolticon icon="star" />
+
+										<translate v-if="i.isFeatured">
+											Unfeature fireside
+										</translate>
+										<translate v-else>Feature fireside</translate>
+									</a>
+
+									<a class="list-group-item has-icon" @click="ejectFireside(i)">
+										<app-jolticon icon="eject" />
+
+										<translate>Eject fireside</translate>
+									</a>
+								</div>
 							</div>
 						</template>
 					</app-popper>
@@ -180,6 +227,26 @@
 		pointer-events: none
 		padding: 2px
 
-.-draft-tag
+.-tag
 	margin-left: 4px
+
+.-extras-header
+	font-family: $font-family-heading
+	font-size: $font-size-tiny
+	font-weight: normal
+	letter-spacing: 0.1em
+	line-height: 1
+	text-transform: uppercase
+	margin-top: 0
+	margin-bottom: 0
+
+	img
+		width: $list-group-icon-width * 0.8
+		height: $list-group-icon-width * 0.8
+		border-radius: 50%
+		display: inline-block
+		position: relative
+		left: -($list-group-icon-width - 1px)
+		top: -2px
+		margin-right: -($list-group-icon-width - 5px)
 </style>

@@ -12,13 +12,13 @@
 			<template v-else>
 				<form-fireside-edit :model="controller.fireside" @submit="onFormSubmit" />
 
-				<div class="-danger-zone well fill-offset">
+				<div v-if="canExtinguish" class="-danger-zone well fill-offset">
 					<h4 class="sans-margin-top">
 						<translate>Extinguish Fireside</translate>
 					</h4>
 					<p class="help-block">
 						<translate>
-							Extinguishing your Fireside immediately closes it, skipping the time
+							Extinguishing your fireside immediately closes it, skipping the time
 							that is left. All current members will also have to go back home right
 							away.
 						</translate>

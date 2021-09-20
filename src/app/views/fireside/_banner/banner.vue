@@ -14,19 +14,14 @@
 		>
 			<div class="-message">
 				<translate v-if="isExpiring">
-					Your Fireside is expiring soon. Click here to stoke the flames!
+					Your fireside is expiring soon. Click here to stoke the flames!
 				</translate>
 				<template v-else-if="shouldNotViewStreams">
 					<translate>
-						Your browser is either unsupported for viewing Fireside streams, or will
-						have reduced performance. Please use a browser such as Google Chrome or
-						Microsoft Edge for the best viewing experience.
+						Your browser is known to have reduced performance while viewing fireside
+						streams. Please use a browser such as Google Chrome or Microsoft Edge for
+						the best viewing experience.
 					</translate>
-
-					<template v-if="GJ_IS_CLIENT">
-						<br />
-						<translate> Click here to open your default browser. </translate>
-					</template>
 				</template>
 			</div>
 		</div>

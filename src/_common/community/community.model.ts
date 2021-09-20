@@ -18,6 +18,7 @@ export class Community extends Collaboratable(Model) {
 	description_content!: string;
 	is_verified!: boolean;
 	has_archived_channels!: boolean | null;
+	allow_firesides!: boolean;
 
 	thumbnail?: MediaItem;
 	header?: MediaItem;
@@ -282,4 +283,12 @@ export function getCommunityChannelBackground(
 		default:
 			assertNever(presetType);
 	}
+}
+
+export function canCommunityFeatureFireside(community: Community) {
+	return !!community.hasPerms(['community-firesides', 'community-features']);
+}
+
+export function canCommunityEjectFireside(community: Community) {
+	return !!community.hasPerms('community-firesides');
 }

@@ -4,6 +4,7 @@ import {
 	NotificationType,
 } from '../community/user-notification/user-notification.model';
 import { currency } from '../filters/currency';
+import { FiresideCommunity } from '../fireside/community/community.model';
 import { Fireside } from '../fireside/fireside.model';
 import { FiresidePostCommunity } from '../fireside/post/community/community.model';
 import { FiresidePost } from '../fireside/post/post-model';
@@ -118,6 +119,19 @@ export class NotificationText {
 				);
 			}
 
+			case Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY: {
+				return _process(
+					Translate.$gettextInterpolate(
+						`Your Fireside in the <em>%{ community }</em> community has been featured!`,
+						{
+							community: (notification.action_model as FiresideCommunity).community
+								.name,
+						},
+						!plaintext
+					)
+				);
+			}
+
 			case Notification.TYPE_COMMUNITY_USER_NOTIFICATION:
 				{
 					const userNotification = notification.action_model as CommunityUserNotification;
@@ -137,6 +151,16 @@ export class NotificationText {
 							return _process(
 								Translate.$gettextInterpolate(
 									`Your post has been <b>ejected</b> from the <em>%{ community }</em> community.`,
+									{
+										community: userNotification.community.name,
+									},
+									!plaintext
+								)
+							);
+						case NotificationType.FIRESIDES_EJECT:
+							return _process(
+								Translate.$gettextInterpolate(
+									`Your Fireside has been <b>ejected</b> from the <em>%{ community }</em> community.`,
 									{
 										community: userNotification.community.name,
 									},
@@ -430,23 +454,13 @@ export class NotificationText {
 
 			case Notification.TYPE_FIRESIDE_START: {
 				if (notification.action_model instanceof Fireside) {
-					if (notification.action_model.community instanceof Community) {
-						return _process(
-							Translate.$gettextInterpolate(
-								`A new Fireside was started in <em>%{ name }</em>.`,
-								{ name: notification.action_model.community.name },
-								!plaintext
-							)
-						);
-					} else {
-						return _process(
-							Translate.$gettextInterpolate(
-								`<em>%{ subject }</em> started up a new Fireside.`,
-								this.getTranslationValues(notification),
-								!plaintext
-							)
-						);
-					}
+					return _process(
+						Translate.$gettextInterpolate(
+							`<em>%{ subject }</em> started up a new Fireside.`,
+							this.getTranslationValues(notification),
+							!plaintext
+						)
+					);
 				}
 
 				break;

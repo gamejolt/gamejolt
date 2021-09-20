@@ -443,7 +443,7 @@
 		<template v-if="isLoaded">
 			<app-scroll-scroller v-if="shouldShowCommunities" class="-communities" horizontal thin>
 				<transition-group class="-communities-list" tag="div">
-					<app-form-post-community-pill-incomplete
+					<app-forms-community-pill-incomplete
 						v-if="incompleteDefaultCommunity"
 						key="incomplete"
 						class="-community-pill anim-fade-in-enlarge no-animate-leave"
@@ -452,7 +452,7 @@
 						@add="attachIncompleteCommunity"
 					/>
 
-					<app-form-post-community-pill
+					<app-forms-community-pill
 						v-for="{ community, channel } of attachedCommunities"
 						:key="community.id"
 						class="-community-pill anim-fade-in-enlarge no-animate-leave"
@@ -463,7 +463,7 @@
 					/>
 
 					<template v-if="!wasPublished && canAddCommunity">
-						<app-form-post-community-pill-add
+						<app-forms-community-pill-add
 							key="add"
 							v-app-scroll-when="scrollingKey"
 							class="-community-pill anim-fade-in-enlarge no-animate-leave"
@@ -630,7 +630,7 @@
 <style lang="stylus" scoped>
 @import '~styles/variables'
 @import '~styles-lib/mixins'
-@import './_community-pill/variables'
+@import '../community/_pill/variables'
 
 .form-group:last-child
 	margin-bottom: 10px

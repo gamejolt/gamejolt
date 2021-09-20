@@ -9,11 +9,11 @@ import {
 	FiresideController,
 	FiresideControllerKey,
 } from '../../../components/fireside/controller/controller';
-import AppFiresideDesktopAudio from '../_desktop-audio/desktop-audio.vue';
+import AppFiresideDesktopAudio from '../../../components/fireside/stream/desktop-audio/desktop-audio.vue';
+import AppFiresideVideoStats from '../../../components/fireside/stream/video-stats/video-stats.vue';
+import AppFiresideVideo from '../../../components/fireside/stream/video/video.vue';
 import AppFiresideHostList from '../_host-list/host-list.vue';
 import AppFiresideHostThumbIndicator from '../_host-thumb/host-thumb-indicator.vue';
-import AppFiresideVideoStats from '../_video-stats/video-stats.vue';
-import AppFiresideVideo from '../_video/video.vue';
 
 const UIHideTimeout = 2000;
 const UIHideTimeoutMovement = 2000;

@@ -1,78 +1,68 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { Api } from '../../../../_common/api/api.service';
+import { Emit, Prop } from 'vue-property-decorator';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import AppLoadingFade from '../../../../_common/loading/fade/fade.vue';
-import { AppState, AppStore } from '../../../../_common/store/app-store';
-import { EventBus, EventBusDeregister } from '../../../../_common/system/event/event-bus.service';
-import AppFiresideBadgeAdd from '../../../components/fireside/badge/add/add.vue';
-import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
-import AppFiresideBadgePlaceholder from '../../../components/fireside/badge/placeholder/placeholder.vue';
-import { GRID_EVENT_FIRESIDE_START } from '../../../components/grid/client.service';
+import { Screen } from '../../../../_common/screen/screen-service';
+import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
+import AppFiresideAvatarAdd from '../../../components/fireside/avatar/add/add.vue';
+import AppFiresideAvatar from '../../../components/fireside/avatar/avatar.vue';
+import AppFiresideAvatarBase from '../../../components/fireside/avatar/_base/base.vue';
 
 @Component({
 	components: {
-		AppFiresideBadge,
+		AppFiresideAvatar,
 		AppLoadingFade,
-		AppFiresideBadgeAdd,
-		AppFiresideBadgePlaceholder,
+		AppFiresideAvatarAdd,
+		AppFiresideAvatarBase,
+		AppScrollScroller,
 	},
 })
 export default class AppHomeFireside extends Vue {
-	@AppState user!: AppStore['user'];
+	@Prop({ type: Array, required: true })
+	firesides!: Fireside[];
 
-	userFireside: Fireside | null = null;
-	firesides: Fireside[] = [];
-	isLoading = true;
-	isInitialLoading = true;
+	@Prop({ type: Boolean, required: true })
+	isLoading!: boolean;
 
-	firesideStartDeregister: EventBusDeregister | null = null;
+	@Prop({ type: Fireside, required: false, default: null })
+	userFireside!: Fireside | null;
 
-	mounted() {
-		this.refresh();
+	@Prop({ type: Boolean, required: false, default: false })
+	showPlaceholders!: boolean;
 
-		this.firesideStartDeregister = EventBus.on(GRID_EVENT_FIRESIDE_START, () => this.refresh());
+	@Emit('request-refresh') emitRequestRefresh() {}
+
+	readonly Screen = Screen;
+
+	get displayFiresides() {
+		const list = Array.apply([], this.firesides) as Fireside[];
+		if (this.userFireside) {
+			list.unshift(this.userFireside);
+		}
+
+		return Object.freeze(this.shouldDisplaySingleRow ? list.slice(0, this.gridColumns) : list);
 	}
 
-	destroyed() {
-		if (this.firesideStartDeregister) {
-			this.firesideStartDeregister();
-			this.firesideStartDeregister = null;
-		}
+	get shouldDisplaySingleRow() {
+		return Screen.isMobile;
+	}
+
+	get gridColumns() {
+		return Screen.isMobile ? 5 : 3;
+	}
+
+	get gridStyling() {
+		return {
+			display: 'grid',
+			gridTemplateColumns: `repeat(${this.gridColumns}, 1fr)`,
+			gridGap: '16px',
+		};
 	}
 
 	onFiresideExpired() {
 		// When a fireside expired while showing it here, refresh the list.
 		// It will be excluded from the next fetch.
-		this.refresh();
-	}
-
-	async refresh() {
-		if (!this.user) {
-			return;
-		}
-
-		this.isLoading = true;
-
-		try {
-			const payload = await Api.sendRequest(`/web/fireside/user-list`, undefined, {
-				detach: true,
-			});
-			if (payload.userFireside) {
-				this.userFireside = new Fireside(payload.userFireside);
-			} else {
-				this.userFireside = null;
-			}
-			if (payload.firesides) {
-				this.firesides = Fireside.populate(payload.firesides);
-			} else {
-				this.firesides = [];
-			}
-		} catch (error) {
-			console.error('Failed to refresh Fireside data.', error);
-		}
-
-		this.isLoading = false;
-		this.isInitialLoading = false;
+		this.emitRequestRefresh();
 	}
 }

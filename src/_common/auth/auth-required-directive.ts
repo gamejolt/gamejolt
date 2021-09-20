@@ -1,5 +1,4 @@
 import { DirectiveOptions } from 'vue';
-import { Analytics } from '../analytics/analytics.service';
 import { appStore } from '../store/app-store';
 import { AuthModal } from './auth-modal.service';
 
@@ -18,7 +17,6 @@ export const AppAuthRequired: DirectiveOptions = {
 				e.preventDefault();
 
 				AuthModal.show();
-				Analytics.trackEvent('auth-required-modal', 'shown');
 			},
 			true
 		);

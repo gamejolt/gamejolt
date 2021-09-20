@@ -2,6 +2,10 @@ import VueRouter from 'vue-router';
 import { getAbsoluteLink } from '../../../../utils/router';
 import { getCurrentServerTime } from '../../../../utils/server-time';
 import { Api } from '../../../../_common/api/api.service';
+import {
+	canCommunityEjectFireside,
+	canCommunityFeatureFireside,
+} from '../../../../_common/community/community.model';
 import { Device } from '../../../../_common/device/device.service';
 import { duration } from '../../../../_common/filters/duration';
 import { Fireside, FIRESIDE_EXPIRY_THRESHOLD } from '../../../../_common/fireside/fireside.model';
@@ -11,20 +15,20 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../../_common/share/share.service';
 import { appStore } from '../../../../_common/store/app-store';
 import { Translate } from '../../../../_common/translate/translate.service';
-import { FiresideChatMembersModal } from '../../../views/fireside/_chat-members/modal/modal.service';
 import { ChatClient } from '../../chat/client';
 import { ChatRoomChannel } from '../../chat/room-channel';
 import { FiresideChannel } from '../../grid/fireside-channel';
+import { FiresidePublishModal } from '../publish-modal/publish-modal.service';
 
 export type RouteStatus =
 	| 'initial' // Initial status when route loads.
-	| 'disconnected' // Disconnected from the Fireside (chat/client channels).
+	| 'disconnected' // Disconnected from the fireside (chat/client channels).
 	| 'loading' // Initiated loading to connect to relevant channels.
 	| 'unauthorized' // Cannot join because user is not logged in/has no cookie.
 	| 'expired' // Fireside has expired.
-	| 'setup-failed' // Failed to properly join the Fireside.
-	| 'joined' // Currently joined to the Fireside.
-	| 'blocked'; // Blocked from joining the Fireside (user blocked).
+	| 'setup-failed' // Failed to properly join the fireside.
+	| 'joined' // Currently joined to the fireside.
+	| 'blocked'; // Blocked from joining the fireside (user blocked).
 
 export const FiresideControllerKey = Symbol('fireside-controller');
 
@@ -112,28 +116,46 @@ export class FiresideController {
 		);
 	}
 
-	get canManage() {
-		if (!this.fireside) {
-			return false;
-		}
+	get isOwner() {
+		return !!this.user && this.user.id === this.fireside.user.id;
+	}
 
-		return (
-			(this.user && this.user.id === this.fireside.user.id) ||
-			this.fireside.community?.hasPerms('community-firesides')
-		);
+	get canCommunityFeature() {
+		return !!this.fireside.community && canCommunityFeatureFireside(this.fireside.community);
+	}
+
+	get canCommunityEject() {
+		return !!this.fireside.community && canCommunityEjectFireside(this.fireside.community);
+	}
+
+	get canEdit() {
+		return this.isOwner || this.fireside.hasPerms('fireside-edit');
 	}
 
 	get canPublish() {
-		return this.canManage && this.status === 'joined' && this.isDraft;
+		const role = this.fireside.role?.role;
+		return (
+			(this.isOwner || role === 'host' || role === 'cohost') &&
+			this.status === 'joined' &&
+			this.isDraft
+		);
 	}
 
 	get canExtend() {
 		return (
-			this.canManage &&
 			this.status === 'joined' &&
 			this.expiresProgressValue !== null &&
-			this.expiresProgressValue <= 95
+			this.expiresProgressValue <= 95 &&
+			this.fireside.hasPerms('fireside-extend')
 		);
+	}
+
+	get canExtinguish() {
+		return this.isOwner || this.fireside.hasPerms('fireside-extinguish');
+	}
+
+	get canReport() {
+		return !(this.fireside.hasPerms() || this.fireside.community?.hasPerms() === true);
 	}
 
 	/**
@@ -174,9 +196,14 @@ export class FiresideController {
 
 export function createFiresideController(
 	fireside: Fireside,
-	muteUsers: boolean,
+	options: {
+		muteUsers: boolean;
+	} = {
+		muteUsers: false,
+	},
 	onRetry: (() => void) | null = null
 ) {
+	const { muteUsers } = options;
 	const c = new FiresideController(fireside, muteUsers);
 	c.onRetry = onRetry;
 	return c;
@@ -196,28 +223,27 @@ export function copyFiresideLink(c: FiresideController, router: VueRouter) {
 	}
 }
 
-export function showFiresideMembers(c: FiresideController) {
-	if (!c.chatUsers || !c.chatRoom) {
-		return;
-	}
-	FiresideChatMembersModal.show(c.chatUsers, c.chatRoom);
-}
-
 export function toggleStreamVideoStats(c: FiresideController) {
 	c.rtc!.shouldShowVideoStats = !(c.rtc?.shouldShowVideoStats ?? true);
 }
 
 export async function publishFireside(c: FiresideController) {
-	if (!c || !c.fireside || c.status !== 'joined' || !c.isDraft) {
+	if (!c.fireside || c.status !== 'joined' || !c.isDraft) {
 		return;
 	}
 
-	await c.fireside.$publish();
-	Growls.success(Translate.$gettext(`Your Fireside is live!`));
+	const { fireside } = c;
+	const ret = await FiresidePublishModal.show({ fireside });
+	if (ret?.doPublish !== true) {
+		return;
+	}
+
+	await c.fireside.$publish({ autoFeature: ret.autoFeature });
+	Growls.success(Translate.$gettext(`Your fireside is live!`));
 }
 
 export async function extendFireside(c: FiresideController, growlOnFail = true) {
-	if (!c || c.status !== 'joined' || !c.canExtend || !c.fireside) {
+	if (c.status !== 'joined' || !c.canExtend || !c.fireside) {
 		return;
 	}
 

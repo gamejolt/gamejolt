@@ -195,7 +195,9 @@ export default class RouteFireside extends BaseRouteComponent {
 		Meta.twitter = $payload.twitter || {};
 		Meta.twitter.title = this.routeTitle;
 
-		this.c ??= createFiresideController(new Fireside($payload.fireside), false);
+		this.c ??= createFiresideController(new Fireside($payload.fireside), {
+			muteUsers: false,
+		});
 
 		this.setPageTheme();
 	}
@@ -246,28 +248,12 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	private setPageTheme() {
-		const theme = this.fireside?.community?.theme ?? this.fireside?.user?.theme ?? null;
+		const theme = this.fireside?.user?.theme ?? null;
 		store.commit('theme/setPageTheme', { key: FiresideThemeKey, theme });
 	}
 
 	get shouldShowTitleControls() {
-		return (
-			this.c &&
-			this.c.status === 'joined' &&
-			(!this.shouldShowChatMembers ||
-				!this.shouldShowFiresideStats ||
-				this.shouldShowEditControlButton)
-		);
-	}
-
-	get shouldShowEditControlButton() {
-		return !!(
-			this.c?.status === 'joined' &&
-			this.user &&
-			this.fireside &&
-			(this.user.id === this.fireside.user.id ||
-				this.fireside.community?.hasPerms('community-firesides'))
-		);
+		return this.c && this.c.status === 'joined';
 	}
 
 	toggleVideoStats() {
@@ -304,7 +290,7 @@ export default class RouteFireside extends BaseRouteComponent {
 				if (
 					!window.confirm(
 						this.$gettext(
-							`You are currently streaming to a Fireside. If you leave this page, you will stop streaming. Are you sure you want to leave?`
+							`You are currently streaming to a fireside. If you leave this page, you will stop streaming. Are you sure you want to leave?`
 						)
 					)
 				) {

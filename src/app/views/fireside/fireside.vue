@@ -9,7 +9,6 @@
 				class="-header"
 				:show-controls="shouldShowTitleControls"
 				:has-info="!shouldShowFiresideStats"
-				:has-edit="shouldShowEditControlButton"
 				:has-chat="!shouldShowChatMembers"
 				:has-chat-stats="shouldShowChatMemberStats"
 			/>
@@ -56,13 +55,12 @@
 
 								<p class="-unsupported-text">
 									<translate>
-										Oh dear... Fireside streams don't work on the Client right
-										now.
+										Oh no... Fireside streams don't work on the Client yet.
 									</translate>
 								</p>
 
 								<app-button @click="onClickOpenBrowser()">
-									<translate>Open in Browser</translate>
+									<translate>Open Fireside in Browser</translate>
 								</app-button>
 							</template>
 							<template v-else-if="c.rtc && c.rtc.focusedUser">
@@ -101,7 +99,7 @@
 						<app-illustration src="~img/ill/end-of-feed.svg">
 							<app-loading
 								centered
-								:label="$gettext(`Traveling to the Fireside...`)"
+								:label="$gettext(`Traveling to the fireside...`)"
 							/>
 						</app-illustration>
 					</div>
@@ -134,7 +132,7 @@
 					<div class="-message">
 						<app-illustration src="~img/ill/no-comments-small.svg">
 							<p>
-								<translate>This Fireside's fire has burned out.</translate>
+								<translate>This fireside's fire has burned out.</translate>
 							</p>
 							<p>
 								<router-link :to="{ name: 'home' }">
@@ -151,7 +149,7 @@
 					<div class="-message">
 						<app-illustration src="~img/ill/maintenance.svg">
 							<p>
-								<translate>Could not reach this Fireside.</translate>
+								<translate>Could not reach this fireside.</translate>
 								<br />
 								<translate>Maybe try finding it again?</translate>
 							</p>
@@ -171,7 +169,7 @@
 						<app-illustration src="~img/ill/no-comments-small.svg">
 							<p>
 								<translate>
-									You have been disconnected from Fireside services.
+									You have been disconnected from fireside services.
 								</translate>
 								<br /><br />
 								<small>
@@ -194,7 +192,7 @@
 						</div>
 						<div class="text-center">
 							<h3>
-								<translate> You are blocked from joining this Fireside </translate>
+								<translate>You are blocked from joining this fireside</translate>
 							</h3>
 							<p>
 								<router-link :to="{ name: 'home' }">
@@ -217,7 +215,6 @@
 						has-overlay-popovers
 						:show-controls="shouldShowTitleControls"
 						:has-info="!shouldShowFiresideStats"
-						:has-edit="shouldShowEditControlButton"
 						:has-chat="!shouldShowChatMembers"
 						:has-chat-stats="shouldShowChatMemberStats"
 					/>
@@ -308,7 +305,7 @@
 
 	&-column
 		display: grid
-		grid-template-rows: calc(min(33vh, calc(100vw / 1.7777))) 1fr
+		grid-template-rows: calc(min(33vh, calc((100vw / 1.7777)))) 1fr
 		grid-template-columns: 100%
 		padding: 0
 

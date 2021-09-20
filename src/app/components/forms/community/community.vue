@@ -39,9 +39,7 @@
 			<div class="help-block">
 				<p>
 					<strong>
-						<translate>
-							Once a URL path is chosen it cannot be changed!
-						</translate>
+						<translate>Once a URL path is chosen it cannot be changed!</translate>
 					</strong>
 				</p>
 			</div>
@@ -76,6 +74,22 @@
 				<translate>
 					Give your page a splash of color! When people view this community, they'll be
 					switched to this theme.
+				</translate>
+			</p>
+		</app-form-group>
+
+		<app-form-group name="allow_firesides" :label="$gettext(`Allow community firesides?`)">
+			<app-form-control-toggle class="pull-right" />
+
+			<p class="help-block">
+				<translate>
+					Will allow any member of the community to start a fireside in this community.
+				</translate>
+			</p>
+			<p class="help-block">
+				<translate>
+					You are able to eject firesides at any time, and blocked users will not be able
+					to create any firesides in your community.
 				</translate>
 			</p>
 		</app-form-group>

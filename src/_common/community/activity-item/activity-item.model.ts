@@ -52,6 +52,9 @@ export class CommunityActivityItem extends Model {
 	public static TYPE_FIRESIDE_START_DRAFT = 'fireside/start-draft';
 	public static TYPE_FIRESIDE_PUBLISH = 'fireside/publish';
 	public static TYPE_FIRESIDE_EXTINGUISH = 'fireside/extinguish';
+	public static TYPE_FIRESIDE_FEATURE = 'fireside/feature';
+	public static TYPE_FIRESIDE_UNFEATURE = 'fireside/unfeature';
+	public static TYPE_FIRESIDE_EJECT = 'fireside/eject';
 
 	type!: string;
 	added_on!: number;
@@ -122,6 +125,9 @@ export class CommunityActivityItem extends Model {
 				case CommunityActivityItem.TYPE_FIRESIDE_START_DRAFT:
 				case CommunityActivityItem.TYPE_FIRESIDE_PUBLISH:
 				case CommunityActivityItem.TYPE_FIRESIDE_EXTINGUISH:
+				case CommunityActivityItem.TYPE_FIRESIDE_FEATURE:
+				case CommunityActivityItem.TYPE_FIRESIDE_UNFEATURE:
+				case CommunityActivityItem.TYPE_FIRESIDE_EJECT:
 					this.action_resource = new Fireside(data.action_resource);
 					break;
 			}
@@ -134,12 +140,15 @@ export class CommunityActivityItem extends Model {
 				return { icon: 'heart-filled', color: 'notice' };
 
 			case CommunityActivityItem.TYPE_POST_FEATURE:
+			case CommunityActivityItem.TYPE_FIRESIDE_FEATURE:
 				return { icon: 'star', color: '' };
 			case CommunityActivityItem.TYPE_POST_UNFEATURE:
+			case CommunityActivityItem.TYPE_FIRESIDE_UNFEATURE:
 				return { icon: 'star', color: '' };
 			case CommunityActivityItem.TYPE_POST_MOVE:
 				return { icon: 'arrow-forward', color: '' };
 			case CommunityActivityItem.TYPE_POST_EJECT:
+			case CommunityActivityItem.TYPE_FIRESIDE_EJECT:
 				return { icon: 'eject', color: 'notice' };
 
 			case CommunityActivityItem.TYPE_MOD_INVITE:
