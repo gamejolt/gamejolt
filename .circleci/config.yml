@@ -50,7 +50,7 @@ jobs:
 
             npm i -g yarn
             yarn --version
-            yarn cache clear
+            yarn cache clean
 
       # Ignoring engines because @typescript/estlint requires node>=12,
       # but atm we can't upgrade because appdmg is broken (and abandoned).
