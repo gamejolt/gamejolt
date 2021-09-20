@@ -72,6 +72,41 @@
 						</p>
 					</div>
 
+					<div
+						v-if="needsApproveLogin"
+						class="alert alert-notice anim-fade-in-enlarge no-animate-leave"
+					>
+						<p>
+							<translate>
+								Yo, this is the first time we're seeing you trying to log in from
+								this location / device.
+							</translate>
+						</p>
+						<p>
+							<translate>
+								To protect your account we've blocked this login. Check your email
+								to allow this log in.
+							</translate>
+						</p>
+					</div>
+
+					<div
+						v-if="approvedLoginRejected"
+						class="alert alert-notice anim-fade-in-enlarge no-animate-leave"
+					>
+						<p>
+							<translate>
+								Yo, logging in from this device / location has been blocked.
+							</translate>
+						</p>
+						<p>
+							<translate :translate-params="{ email: 'contact@gamejolt.com' }">
+								If you did not do this (or blocked the login by mistake), contact us
+								at %{ email } right away. Your account may be compromised.
+							</translate>
+						</p>
+					</div>
+
 					<app-loading
 						v-if="state.isProcessing"
 						:label="$gettext('Figuring this all out...')"

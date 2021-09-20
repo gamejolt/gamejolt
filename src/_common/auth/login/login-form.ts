@@ -24,6 +24,8 @@ export default class AppAuthLoginForm extends BaseForm<any> implements FormOnSub
 
 	invalidLogin = false;
 	blockedLogin = false;
+	needsApproveLogin = false;
+	approvedLoginRejected = false;
 
 	readonly Connection = Connection;
 	readonly Environment = Environment;
@@ -35,6 +37,8 @@ export default class AppAuthLoginForm extends BaseForm<any> implements FormOnSub
 	resetErrors() {
 		this.invalidLogin = false;
 		this.blockedLogin = false;
+		this.needsApproveLogin = false;
+		this.approvedLoginRejected = false;
 	}
 
 	async onSubmit() {
@@ -48,6 +52,10 @@ export default class AppAuthLoginForm extends BaseForm<any> implements FormOnSub
 					this.invalidLogin = true;
 				} else if (response.reason === 'blocked') {
 					this.blockedLogin = true;
+				} else if (response.reason === 'approve-login') {
+					this.needsApproveLogin = true;
+				} else if (response.reason === 'approve-login-rejected') {
+					this.approvedLoginRejected = true;
 				}
 			}
 		}
