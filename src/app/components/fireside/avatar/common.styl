@@ -27,7 +27,10 @@ $-zindex-popper = 4
 
 .-link
 	position: absolute
-	inset: 0
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
 	z-index: $-zindex-link
 
 .-header
@@ -66,11 +69,14 @@ $-zindex-popper = 4
 .-avatar-anim
 	img-circle()
 	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
 	animation-name: live-splash
 	animation-duration: 1s
 	animation-iteration-count: infinite
 	animation-timing-function: $ease-out-back
-	will-change: inset, background-color, opacity
 
 .-extras
 	img-circle()
@@ -83,7 +89,6 @@ $-zindex-popper = 4
 	padding: 4px
 	visibility: hidden
 	opacity: 0
-	will-change: visibility, opacity
 	z-index: $-zindex-popper
 	cursor: pointer
 
@@ -162,7 +167,6 @@ $-zindex-popper = 4
 @keyframes live-splash
 	0%
 		background-color: $-border-color
-		inset: 0
 		opacity: 1
 
 	10%
@@ -170,7 +174,7 @@ $-zindex-popper = 4
 
 	20%
 		background-color: $-border-color
-		inset: -($-anim-size * 0.2)
+		transform: scale(1.04)
 		opacity: 1
 
 	25%
@@ -179,4 +183,4 @@ $-zindex-popper = 4
 	100%
 		background-color: var(--theme-link)
 		opacity: 0
-		inset: -($-anim-size)
+		transform: scale(1.15)
