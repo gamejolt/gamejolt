@@ -19,16 +19,16 @@ jobs:
             echo 'export PATH=$PATH:$GOROOT/bin:$GOPATH/bin' >> $BASH_ENV
 
       - run:
-          name: Install Node 10.x
+          name: Install Node 10.24.1
           command: |
             set +e
-            wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-            nvm install 10
-            nvm use 10
-            npm i -g yarn
+            nvm install 10.24.1
+            nvm use 10.24.1
+            nvm alias default 10.24.1
 
             echo 'export NVM_DIR="$HOME/.nvm"' >> $BASH_ENV
             echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> $BASH_ENV
@@ -38,6 +38,8 @@ jobs:
           command: |
             node --version
             npm --version
+
+            npm i -g yarn
             yarn --version
 
       # Ignoring engines because @typescript/estlint requires node>=12,
