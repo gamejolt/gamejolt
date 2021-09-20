@@ -18,6 +18,22 @@ jobs:
             echo 'export GOPATH=$HOME/go' >> $BASH_ENV
             echo 'export PATH=$PATH:$GOROOT/bin:$GOPATH/bin' >> $BASH_ENV
 
+      - run:
+          name: Install Node 10.x
+          command: |
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            nvm install 10
+            nvm use 10
+            npm i -g yarn
+
+      - run:
+          name: Debug
+            node --version
+            npm --version
+            yarn --version
+
       # Ignoring engines because @typescript/estlint requires node>=12,
       # but atm we can't upgrade because appdmg is broken (and abandoned).
       # TODO: fix this properly
