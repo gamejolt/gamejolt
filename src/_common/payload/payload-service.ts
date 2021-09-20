@@ -5,7 +5,6 @@ import { Growls } from '../growls/growls.service';
 import { Seo } from '../seo/seo.service';
 import { WithAppStore } from '../store/app-store';
 import { Translate } from '../translate/translate.service';
-import { UserApprovedLoginGrowl } from '../user/approved-login-growl/approved-login-growl.service';
 
 export type PayloadFormErrors = { [errorId: string]: boolean };
 
@@ -174,10 +173,6 @@ export class Payload {
 		if (typeof data.user !== 'undefined') {
 			if (data.user === null) {
 				this.store.commit('app/clearUser');
-
-				if (data.requireApprovedLogin) {
-					UserApprovedLoginGrowl.show();
-				}
 			} else {
 				// There is a circular dependency if we import at top.
 				const User = require('../user/user.model').User;
