@@ -36,12 +36,12 @@ export default class AppHomeFireside extends Vue {
 	readonly Screen = Screen;
 
 	get displayFiresides() {
-		const list = Array.apply([], this.firesides) as Fireside[];
+		const list = [...this.firesides];
 		if (this.userFireside) {
 			list.unshift(this.userFireside);
 		}
 
-		return Object.freeze(this.shouldDisplaySingleRow ? list.slice(0, this.gridColumns) : list);
+		return this.shouldDisplaySingleRow ? list.slice(0, this.gridColumns) : list;
 	}
 
 	get shouldDisplaySingleRow() {

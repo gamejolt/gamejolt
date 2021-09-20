@@ -20,23 +20,21 @@
 				horizontal
 			>
 				<div :class="{ '-scroller-inner': shouldDisplaySingleRow }">
-					<div :style="gridStyling">
-						<template v-if="showPlaceholders">
-							<app-fireside-avatar-base
-								v-for="i of gridColumns"
-								:key="i"
-								:is-placeholder="true"
-							/>
-						</template>
-						<template v-else>
-							<app-fireside-avatar-add v-if="!userFireside" />
-							<app-fireside-avatar
-								v-for="fireside of displayFiresides"
-								:key="fireside.id"
-								:fireside="fireside"
-								@expired="onFiresideExpired()"
-							/>
-						</template>
+					<div v-if="showPlaceholders" key="placeholders" :style="gridStyling">
+						<app-fireside-avatar-base
+							v-for="i of gridColumns"
+							:key="i"
+							is-placeholder
+						/>
+					</div>
+					<div v-else key="list" :style="gridStyling">
+						<app-fireside-avatar-add v-if="!userFireside" key="add" />
+						<app-fireside-avatar
+							v-for="fireside of displayFiresides"
+							:key="fireside.id"
+							:fireside="fireside"
+							@expired="onFiresideExpired()"
+						/>
 					</div>
 				</div>
 			</component>
