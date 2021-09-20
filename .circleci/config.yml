@@ -21,15 +21,20 @@ jobs:
       - run:
           name: Install Node 10.24.1
           command: |
-            set +e
+            echo "Installing NVM"
             curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
             export NVM_DIR="$HOME/.nvm"
+
+            echo "Activating NVM"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+            echo "Installing Node"
             nvm install 10.24.1
             nvm use 10.24.1
             nvm alias default 10.24.1
 
+            echo "Setting up Node env"
             echo 'export NVM_DIR="$HOME/.nvm"' >> $BASH_ENV
             echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> $BASH_ENV
 
