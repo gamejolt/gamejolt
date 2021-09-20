@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import { Component, Emit, Prop, Provide, Watch } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../utils/vue';
-import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
+import { propRequired } from '../../../../utils/vue';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
 import { EventItem } from '../../../../_common/event-item/event-item.model';
@@ -26,7 +25,6 @@ const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height *
 		AppLoading,
 		AppActivityFeedItem,
 		AppActivityFeedNewButton,
-		AppAdWidget,
 		AppExpand,
 		AppScrollInview,
 		AppIllustration,
@@ -36,8 +34,6 @@ export default class AppActivityFeed extends Vue {
 	@Prop(propRequired(ActivityFeedView))
 	@Provide(ActivityFeedKey)
 	feed!: ActivityFeedView;
-
-	@Prop(propOptional(Boolean, false)) showAds!: boolean;
 
 	isNewButtonInview = false;
 
@@ -123,31 +119,12 @@ export default class AppActivityFeed extends Vue {
 		return !this.feed.reachedEnd && !this.feed.isLoadingMore && this.feed.hasItems;
 	}
 
-	get shouldShowAds() {
-		return this.showAds && this.$ad.shouldShow;
-	}
-
 	get lastPostScrollId() {
 		return this.feed.state.endScrollId;
 	}
 
 	get newCount() {
 		return this.feed.newCount;
-	}
-
-	shouldShowAd(index: number) {
-		// Show an ad after this many posts at the beginning of the feed.
-		const firstAd = 2;
-
-		// Show an ad every X posts thereafter.
-		const adGap = 5;
-
-		if (!this.shouldShowAds) {
-			return false;
-		}
-
-		++index;
-		return index === firstAd || (index - firstAd) % adGap === 0;
 	}
 
 	onNewButtonInview() {
