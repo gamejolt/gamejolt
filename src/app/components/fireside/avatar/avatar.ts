@@ -15,6 +15,7 @@ import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/backdr
 import { Popper } from '../../../../_common/popper/popper.service';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
+import AppChatUserOnlineStatus from '../../chat/user-online-status/user-online-status.vue';
 import { CommunityEjectFiresideModal } from '../../community/eject-fireside/modal/modal.service';
 import AppFiresideAvatarBase from './_base/base.vue';
 
@@ -30,6 +31,7 @@ export interface FiresideAvatarEvent {
 		AppMediaItemBackdrop,
 		AppCommunityThumbnailImg,
 		AppFiresideAvatarBase,
+		AppChatUserOnlineStatus,
 	},
 })
 export default class AppFiresideAvatar extends Vue {
