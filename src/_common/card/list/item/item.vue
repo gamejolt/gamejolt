@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, getCurrentInstance, toRefs } from 'vue';
+import { computed, toRefs, useSlots } from 'vue';
 import { Screen } from '../../../screen/screen-service';
 import AppCard from '../../card.vue';
 import { useCardList } from '../list.vue';
@@ -20,12 +20,13 @@ const props = defineProps({
 	},
 });
 
+const slots = useSlots();
 const list = useCardList()!;
 const { isDraggable } = toRefs(list);
 
 const isActive = computed(() => props.forceActive || list.activeItem === props.item);
 // TODO(vue3): check
-const isExpandable = computed(() => !!getCurrentInstance()?.slots.body);
+const isExpandable = computed(() => !!slots.body);
 
 function onClick() {
 	if (!isExpandable.value) {
