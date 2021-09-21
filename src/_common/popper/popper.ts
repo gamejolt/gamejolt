@@ -259,6 +259,20 @@ export default class AppPopper extends Vue {
 		this.show();
 	}
 
+	onPopoverEnter(event: PointerEvent) {
+		if (this.noHoverPopover) {
+			return;
+		}
+		this.onMouseEnter(event);
+	}
+
+	onPopoverLeave(event: PointerEvent) {
+		if (this.noHoverPopover) {
+			return;
+		}
+		this.onMouseLeave(event);
+	}
+
 	onMouseEnter(event: PointerEvent) {
 		// We never want this to trigger on 'touch' or 'pen' inputs.
 		if (TouchablePointerTypes.includes(event.pointerType)) {
