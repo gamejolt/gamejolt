@@ -164,6 +164,38 @@ $-zindex-popper = 4
 	text-align: center
 	color: var(--theme-fg)
 
+.-tooltip
+	padding: 8px
+
+	hr
+		margin: 12px -8px
+
+	&-row
+		display: flex
+		flex-direction: row
+		align-items: center
+		grid-gap: 4px
+
+		&:not(:last-child)
+			margin-bottom: 4px
+
+	&-img
+		flex: none
+		display: inline-block
+		border-radius: 50%
+		width: 16px
+		height: 16px
+
+	&-members
+		font-weight: 700
+
+	&-user
+	&-community
+		font-size: $font-size-small
+
+	&-community
+		color: var(--theme-fg-muted)
+
 @keyframes live-splash
 	0%
 		background-color: $-border-color
