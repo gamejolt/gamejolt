@@ -77,6 +77,15 @@ export default class AppPopper extends Vue {
 	trigger!: ActualTrigger | 'right-click';
 
 	/**
+	 * Normally we allow the cursor to move over the actual popover element that
+	 * shows. Setting this to true will disable this functionality and the
+	 * popover will hide immediately when you hover away from the trigger
+	 * element.
+	 */
+	@Prop({ type: Boolean })
+	noHoverPopover!: boolean;
+
+	/**
 	 * We want the popper to be 'display: fixed' if we use it on a fixed parent.
 	 * This should prevent stuttering on scroll if the popper is attached to the nav.
 	 */
