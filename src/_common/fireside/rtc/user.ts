@@ -7,6 +7,7 @@ import type {
 } from 'agora-rtc-sdk-ng';
 import { arrayRemove } from '../../../utils/array';
 import { sleep } from '../../../utils/utils';
+import { updateTrackPlaybackDevice } from './producer';
 import { chooseFocusedRTCUser, FiresideRTC } from './rtc';
 
 export class FiresideVideoPlayStatePlaying {
@@ -266,9 +267,16 @@ export async function startDesktopAudioPlayback(user: FiresideRTCUser) {
 				user.remoteVideoUser,
 				'audio'
 			);
+
+			// Make sure the track is using their playback device if they have
+			// chosen one in the producer.
+			if (rtc.producer) {
+				updateTrackPlaybackDevice(rtc.producer, user._desktopAudioTrack);
+			}
+
+			user._desktopAudioTrack.play();
 		}
 
-		user._desktopAudioTrack?.play();
 		setUserDesktopAudioVolume(user, rtc.desktopVolume);
 	} catch (e) {
 		rtc.logError('Failed to start desktop audio playback, attempting to gracefully stop.', e);
@@ -329,6 +337,12 @@ export async function startAudioPlayback(user: FiresideRTCUser) {
 			user.remoteChatUser,
 			'audio'
 		);
+
+		// Make sure the track is using their playback device if they have
+		// chosen one in the producer.
+		if (rtc.producer) {
+			updateTrackPlaybackDevice(rtc.producer, user._micAudioTrack);
+		}
 
 		user._micAudioTrack.play();
 	} catch (e) {
