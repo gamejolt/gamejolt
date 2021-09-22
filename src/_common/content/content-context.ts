@@ -289,6 +289,7 @@ export function getMediaItemTypeForContext(context: ContentContext) {
 		case 'community-description':
 			return MediaItem.TYPE_COMMUNITY_DESCRIPTION;
 		case 'chat-message':
+		case 'fireside-chat-message':
 			return MediaItem.TYPE_CHAT_MESSAGE;
 		case 'community-channel-description':
 			return MediaItem.TYPE_COMMUNITY_CHANNEL_DESCRIPTION;
