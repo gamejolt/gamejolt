@@ -1,6 +1,7 @@
 import { Component, Inject, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { arrayRemove } from '../../../../../utils/array';
+import { canCreateFiresides } from '../../../../../_common/community/community.model';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Growls } from '../../../../../_common/growls/growls.service';
@@ -97,7 +98,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	get canCreateFireside() {
-		return !this.userFireside && this.community.allow_firesides && !this.community.isBlocked;
+		return canCreateFiresides(this.community);
 	}
 
 	get firesidesGridColumns() {
