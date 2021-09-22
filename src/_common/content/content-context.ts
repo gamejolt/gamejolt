@@ -266,6 +266,8 @@ export class ContextCapabilities {
 					ContextCapabilityType.Emoji,
 					ContextCapabilityType.Tag,
 					ContextCapabilityType.Mention,
+					ContextCapabilityType.Gif,
+					ContextCapabilityType.Media,
 				]);
 		}
 		throw new Error('Context capabilities undefined for context ' + context);
