@@ -20,6 +20,7 @@ import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.servi
 import AppForm from '../../../../../_common/form-vue/form.vue';
 import AppFormLegend from '../../../../../_common/form-vue/legend/legend.vue';
 import AppLoadingFade from '../../../../../_common/loading/fade/fade.vue';
+import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import { FiresideController } from '../../controller/controller';
 import AppVolumeMeter from './volume-meter.vue';
 
@@ -156,7 +157,6 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		// Wait to let the video element get mounted
 		await this.$nextTick();
 
-		console.log('setting video preview element', this.$refs.videoPreview);
 		setVideoPreviewElement(
 			this.producer,
 			this.canStreamVideo ? this.$refs.videoPreview ?? null : null
@@ -255,6 +255,14 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		return Object.entries(this.audioInputFields).some(
 			([_key, value]) => value !== PRODUCER_UNSET_DEVICE
 		);
+	}
+
+	openHelpLink(event: Event) {
+		if (event.currentTarget instanceof HTMLAnchorElement) {
+			Navigate.newWindow(event.currentTarget.href!);
+			event.stopPropagation();
+			event.preventDefault();
+		}
 	}
 
 	wouldInvalidateIfRemoved(fieldToRemove: string) {
