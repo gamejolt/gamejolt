@@ -11,7 +11,7 @@ import Vuex, {
 	useStore,
 } from 'vuex';
 
-export const StoreKey: InjectionKey<any> = Symbol();
+export const StoreKey: InjectionKey<any> = Symbol('vuex');
 
 /**
  * Returns a function that can be used for any store as the "useStore" function.

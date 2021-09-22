@@ -12,7 +12,7 @@ const props = defineProps({
 });
 
 const root = ref<HTMLInputElement>();
-const group = useFormControlGroup();
+const group = useFormControlGroup()!;
 
 const c = provideFormControl<any>(null, { multi: true });
 

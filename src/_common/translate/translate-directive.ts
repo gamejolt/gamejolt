@@ -1,0 +1,71 @@
+import { Directive, VNode } from '@vue/runtime-core';
+import { DirectiveBinding } from 'vue';
+import { uuidv4 } from '../../utils/uuid';
+import { $gettextInterpolate, getTranslation, getTranslationLang } from './translate.service';
+
+// TODO(vue3): I think we should get rid of this since there's no way the
+// translations will work with the way vue does the scope stuff.
+
+export const TranslateDirective: Directive<HTMLElement, Record<string, string | number>> = {
+	beforeMount(el, binding, vnode) {
+		// TODO(vue3): do we still need this with the better diffing?
+		if (!vnode.key) {
+			vnode.key = uuidv4();
+		}
+
+		// We use the raw HTML and don't trim so that it can be picked up as-is
+		// by the extractor. (David note: this is how it was being done before,
+		// I don't know if we actually want to trim or not once the extractor is
+		// working)
+		const msgid = el.innerHTML;
+		el.dataset.msgid = msgid;
+		el.dataset.currentLanguage = getTranslationLang();
+
+		console.log('msgid', msgid);
+
+		_updateTranslation(el, binding, vnode);
+	},
+	updated(el, binding, vnode) {
+		let shouldUpdate = false;
+
+		// If the language changed.
+		const currentLanguage = getTranslationLang();
+		if (el.dataset.currentLanguage !== currentLanguage) {
+			el.dataset.currentLanguage = currentLanguage;
+			shouldUpdate = true;
+		} else if (binding.value !== binding.oldValue) {
+			shouldUpdate = true;
+		}
+
+		if (shouldUpdate) {
+			_updateTranslation(el, binding, vnode);
+		}
+	},
+};
+
+function _updateTranslation(
+	el: HTMLElement,
+	binding: DirectiveBinding<Record<string, string | number>>,
+	vnode: VNode
+) {
+	const attrs = vnode.props ?? {};
+	console.log('attrs', attrs);
+	const msgid = el.dataset.msgid as string;
+	const translateN = attrs['translate-n'];
+	const translatePlural = attrs['translate-plural'];
+	const enableHTMLEscaping = attrs['render-html'] !== 'true';
+	const isPlural = translateN !== undefined && translatePlural !== undefined;
+
+	if (!isPlural && (translateN !== undefined || translatePlural)) {
+		throw new Error(
+			`"translate-n" and "translate-plural" attributes must be used together: ${msgid}.`
+		);
+	}
+
+	const context = binding.value && typeof binding.value === 'object' ? binding.value : {};
+
+	let translation = getTranslation(msgid, translateN, isPlural ? translatePlural : null);
+	translation = $gettextInterpolate(translation, context, enableHTMLEscaping);
+
+	el.innerHTML = translation;
+}

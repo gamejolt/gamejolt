@@ -1,4 +1,5 @@
 import { defineAsyncComponent } from '@vue/runtime-core';
+import { ref } from 'vue';
 import { setup } from 'vue-class-component';
 import { Inject, Options, Prop, Provide, Vue } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
@@ -27,15 +28,14 @@ export default class AppStickerLayer extends Vue {
 	@Inject({ from: DrawerStoreKey })
 	drawer!: DrawerStore;
 
-	@Provide({ to: StickerLayerKey })
+	@Provide({ to: StickerLayerKey, reactive: true })
 	layer!: StickerLayerController;
 
-	scroller = setup(() => useScroller());
+	scroller = setup(() => ref(useScroller()));
 
 	private focusWatcherDeregister!: () => void;
 
 	created() {
-		// TODO(vue3): does this need to be elsewhere if it's being provided?
 		this.layer = new StickerLayerController(this.drawer);
 		registerStickerLayer(this.drawer, this.layer);
 	}

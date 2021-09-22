@@ -22,9 +22,9 @@ provide(Key, c);
 </script>
 
 <script lang="ts">
-import { inject, provide, reactive, ref, toRefs } from 'vue';
+import { inject, InjectionKey, provide, reactive, ref, toRefs } from 'vue';
 
-const Key = Symbol();
+const Key: InjectionKey<CardListController> = Symbol('card-list');
 export type CardListController = ReturnType<typeof createCardListController>;
 
 function createCardListController(p: typeof props, e: typeof emit) {
@@ -46,7 +46,7 @@ function createCardListController(p: typeof props, e: typeof emit) {
 }
 
 export function useCardList() {
-	return inject<CardListController>(Key);
+	return inject(Key)!;
 }
 </script>
 

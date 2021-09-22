@@ -1,24 +1,21 @@
 <script lang="ts">
-import { computed, inject, provide, reactive } from 'vue';
+import { computed, inject, InjectionKey, provide, reactive } from 'vue';
 import { number } from '../../filters/number';
 import { useForm } from '../form.service';
 import { useFormControlGroup } from '../group/group.vue';
 
-type Controller = ReturnType<typeof provideFormControlErrors>;
+type Controller = ReturnType<typeof createFormControlErrors>;
 
-const Key = Symbol();
+const Key: InjectionKey<Controller> = Symbol('form-control-errors');
 
-export function provideFormControlErrors() {
-	const c = reactive({
+export function createFormControlErrors() {
+	return reactive({
 		errorMessageOverrides: {} as Record<string, string>,
 	});
-
-	provide(Key, c);
-	return c;
 }
 
 export function useFormControlErrors() {
-	return inject(Key) as Controller;
+	return inject(Key, null);
 }
 
 export function setControlErrorsOverride(c: Controller, when: string, message: string) {
@@ -41,7 +38,8 @@ const props = defineProps({
 	},
 });
 
-const c = provideFormControlErrors();
+const c = createFormControlErrors();
+provide(Key, c);
 
 // These are default messages that don't need any extra validation data. They
 // are also common enough to be applied to all elements.
@@ -66,7 +64,7 @@ const ErrorMessagesBase: Record<string, string> = {
 };
 
 const form = useForm();
-const group = useFormControlGroup();
+const group = useFormControlGroup()!;
 
 const _label = computed(() => {
 	const ourLabel = props.label;

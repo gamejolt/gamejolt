@@ -1,8 +1,8 @@
 import {
 	RouteResolverOptions,
+	RouteStoreOptions,
 	RouteStoreResolveCallback,
 } from '../src/_common/route/route-component';
-import { RouteStoreOptions } from '../src/_common/route/route-store';
 
 declare module '@vue/runtime-core' {
 	interface ComponentCustomOptions {

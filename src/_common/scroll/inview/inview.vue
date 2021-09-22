@@ -1,4 +1,7 @@
 <script lang="ts">
+import { onMounted, onUnmounted, PropType, reactive, watch } from 'vue';
+import { useScrollInviewParent } from './parent.vue';
+
 export type ScrollInviewEmitsOn = 'full-overlap' | 'partial-overlap';
 
 /**
@@ -70,9 +73,6 @@ export class ScrollInviewConfig {
 </script>
 
 <script lang="ts" setup>
-import { onMounted, onUnmounted, PropType, reactive } from 'vue';
-import { useScrollInviewParent } from './parent.vue';
-
 const props = defineProps({
 	config: {
 		type: ScrollInviewConfig,
@@ -94,7 +94,7 @@ const emit = defineEmits({
 	outview: () => true,
 });
 
-const parent = useScrollInviewParent();
+const parent = useScrollInviewParent()!;
 
 const onChange: ChangeHandler = visible => {
 	if (visible) {
@@ -104,16 +104,25 @@ const onChange: ChangeHandler = visible => {
 	}
 };
 
-onMounted(() => {
+onMounted(async () => {
 	// Set up the controller with the props from the component.
 	props.controller._changeHandlers.add(onChange);
-	parent.getContainer(props.config).observeItem(props.controller);
 });
 
 onUnmounted(() => {
 	parent.getContainer(props.config).unobserveItem(props.controller);
 	props.controller._changeHandlers.delete(onChange);
 });
+
+// The ref will be assigned to this once it's fully rendered.
+watch(
+	() => props.controller.element,
+	newElement => {
+		if (newElement) {
+			parent.getContainer(props.config).observeItem(props.controller);
+		}
+	}
+);
 </script>
 
 <template>

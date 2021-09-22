@@ -1,8 +1,8 @@
 <script lang="ts">
-import { inject, provide, reactive } from 'vue';
+import { inject, InjectionKey, provide, reactive } from 'vue';
 import { ScrollInviewConfig, ScrollInviewController } from './inview.vue';
 
-const Key = Symbol();
+const Key: InjectionKey<ScrollInviewParentController> = Symbol('scroll-inview-parent');
 
 export type ScrollInviewParentController = ReturnType<typeof createScrollInviewParent>;
 
@@ -35,7 +35,7 @@ export function createScrollInviewParent(scroller: HTMLElement | null) {
 }
 
 export function useScrollInviewParent() {
-	return inject(Key) as ScrollInviewParentController;
+	return inject(Key, null);
 }
 
 export class ScrollInviewContainer {
@@ -65,9 +65,13 @@ export class ScrollInviewContainer {
 	}
 
 	unobserveItem(item: ScrollInviewController) {
-		this.items.delete(item.element!);
+		const { element } = item;
+		if (element) {
+			this.items.delete(element);
+			this.observer.unobserve(element);
+		}
+
 		this.controllers.delete(item);
-		this.observer.unobserve(item.element!);
 		this.trackFocused();
 	}
 

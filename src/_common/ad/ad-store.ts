@@ -1,4 +1,4 @@
-import { inject, onUnmounted, provide } from '@vue/runtime-core';
+import { inject, InjectionKey, onUnmounted, provide } from '@vue/runtime-core';
 import { reactive } from 'vue';
 import { RouteLocationNormalized, useRouter } from 'vue-router';
 import { objectEquals } from '../../utils/object';
@@ -10,7 +10,7 @@ import { AdAdapterBase } from './adapter-base';
 import { AdPlaywireAdapter } from './playwire/playwire-adapter';
 import { AdProperAdapter } from './proper/proper-adapter';
 
-export const AdsControllerKey = Symbol();
+export const AdsControllerKey: InjectionKey<AdsController> = Symbol('ads');
 
 // To show ads on the page for dev, just change this to false.
 export const AdsDisabledDev = GJ_BUILD_TYPE === 'development';
@@ -88,10 +88,6 @@ class AdsController {
 	}
 }
 
-export function useAdsController() {
-	return inject(AdsControllerKey) as AdsController;
-}
-
 export function createAdsController() {
 	const c = reactive(new AdsController()) as AdsController;
 	provide(AdsControllerKey, c);
@@ -129,6 +125,10 @@ export function createAdsController() {
 	});
 
 	return c;
+}
+
+export function useAdsController() {
+	return inject(AdsControllerKey)!;
 }
 
 export function setPageAdsSettings(c: AdsController, container: AdSettingsContainer) {

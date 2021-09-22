@@ -38,7 +38,7 @@ const PostThemeKey = 'post';
 			return intentRedirect;
 		}
 
-		const postHash = FiresidePost.pullHashFromUrl(route.params.slug);
+		const postHash = FiresidePost.pullHashFromUrl(route.params.slug.toString());
 		const payload = await Api.sendRequest('/web/posts/view/' + postHash);
 
 		if (payload?.post) {
@@ -92,7 +92,7 @@ export default class RoutePost extends BaseRouteComponent {
 	}
 
 	routeCreated() {
-		const hash = FiresidePost.pullHashFromUrl(this.$route.params.slug);
+		const hash = FiresidePost.pullHashFromUrl(this.$route.params.slug.toString());
 		this.post = Registry.find<FiresidePost>('FiresidePost', i => i.hash === hash);
 		this.setPageTheme();
 	}

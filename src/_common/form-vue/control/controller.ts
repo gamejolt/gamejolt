@@ -17,14 +17,14 @@ export interface FormControlController<T = any> {
 	applyValue: (value: T) => void;
 }
 
-const Key = Symbol();
+const Key = Symbol('form-control');
 
 export function provideFormControl<T>(
 	initialValue: T,
 	{ multi = false }: { multi?: boolean } = {}
 ) {
 	const form = useForm();
-	const group = useFormControlGroup();
+	const group = useFormControlGroup()!;
 
 	const id = computed(() => {
 		const id = `${form.name}-${group.name}`;

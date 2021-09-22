@@ -2,8 +2,11 @@ import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import { Game } from '../../../../../_common/game/game.model';
-import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
-import { WithRouteStore } from '../../../../../_common/route/route-store';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+	WithRouteStore,
+} from '../../../../../_common/route/route-component';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';

@@ -8,8 +8,11 @@ import { Environment } from '../../../_common/environment/environment.service';
 import { number } from '../../../_common/filters/number';
 import AppPopper from '../../../_common/popper/popper.vue';
 import { ReportModal } from '../../../_common/report/modal/modal.service';
-import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
-import { WithRouteStore } from '../../../_common/route/route-store';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+	WithRouteStore,
+} from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
@@ -159,7 +162,7 @@ export default class RouteProfile extends BaseRouteComponent {
 
 	routeCreated() {
 		// This isn't needed by SSR or anything, so it's fine to call it here.
-		this.bootstrapUser(this.$route.params.username);
+		this.bootstrapUser(this.$route.params.username.toString());
 		this.setPageTheme();
 	}
 

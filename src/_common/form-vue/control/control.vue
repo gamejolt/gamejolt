@@ -33,7 +33,7 @@ const props = defineProps({
 // TODO(vue3): validation as composition somehow
 
 const root = ref<HTMLInputElement>();
-const group = useFormControlGroup();
+const group = useFormControlGroup()!;
 
 const c = provideFormControl('');
 

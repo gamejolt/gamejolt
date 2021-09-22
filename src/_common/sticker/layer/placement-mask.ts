@@ -1,3 +1,4 @@
+import { ref } from 'vue';
 import { setup } from 'vue-class-component';
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../utils/vue';
@@ -32,7 +33,7 @@ export default class AppStickerLayerPlacementMask extends Vue {
 	hasCalculated = false;
 	width = 0;
 	height = 0;
-	private parentScroller = setup(() => useScroller());
+	private parentScroller = setup(() => ref(useScroller()));
 
 	get viewbox() {
 		return `0 0 ${this.width} ${this.height}`;

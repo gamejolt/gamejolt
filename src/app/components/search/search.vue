@@ -20,8 +20,6 @@ import AppShortkey from '../../../_common/shortkey/shortkey.vue';
 import AppSearchInput, { createSearchInput } from './input/input.vue';
 import { Search } from './search-service';
 
-const AppSearchAutocomplete = defineAsyncComponent(() => import('./autocomplete/autocomplete.vue'));
-
 const KEYCODE_UP = 38;
 const KEYCODE_DOWN = 40;
 const KEYCODE_ENTER = 13;
@@ -32,9 +30,9 @@ export type SearchKeydownSpy = (event: KeyboardEvent) => void;
 
 let searchIterator = 0;
 
-const Key: InjectionKey<Controller> = Symbol();
+const Key: InjectionKey<Controller> = Symbol('search');
 
-function createSearchController() {
+function createSearchController(p: typeof props) {
 	const id = ref(++searchIterator);
 	const query = ref(Search.query);
 	const isFocused = ref(false);
@@ -43,13 +41,13 @@ function createSearchController() {
 	const searchInput = createSearchInput();
 
 	const shouldShowAutocomplete = computed(
-		() => !props.autocompleteDisabled && configHasAutocomplete.value
+		() => !p.autocompleteDisabled && configHasAutocomplete.value
 	);
 
 	const isEmpty = computed(() => !query.value.trim());
 
 	onMounted(() => {
-		if (props.autofocus) {
+		if (p.autofocus) {
 			focus();
 		}
 	});
@@ -99,11 +97,13 @@ function createSearchController() {
 }
 
 export function useSearchController() {
-	return inject(Key);
+	return inject(Key, null);
 }
 </script>
 
 <script lang="ts" setup>
+const AppSearchAutocomplete = defineAsyncComponent(() => import('./autocomplete/autocomplete.vue'));
+
 const props = defineProps({
 	autocompleteDisabled: {
 		type: Boolean,
@@ -113,7 +113,7 @@ const props = defineProps({
 	},
 });
 
-const c = createSearchController();
+const c = createSearchController(props);
 provide(Key, c);
 
 const router = useRouter();

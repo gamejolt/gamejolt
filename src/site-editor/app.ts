@@ -1,7 +1,7 @@
 import { Options, Vue } from 'vue-property-decorator';
-import { loadCurrentLanguage } from '../utils/translations';
 import AppErrorPage from '../_common/error/page/page.vue';
 import AppCommonShell from '../_common/shell/shell.vue';
+import { loadCurrentLanguage } from '../_common/translate/translate.service';
 import AppSiteEditor from './components/site-editor/site-editor.vue';
 
 @Options({
@@ -13,6 +13,6 @@ import AppSiteEditor from './components/site-editor/site-editor.vue';
 })
 export default class App extends Vue {
 	mounted() {
-		loadCurrentLanguage(this);
+		loadCurrentLanguage();
 	}
 }

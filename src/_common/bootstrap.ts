@@ -1,7 +1,6 @@
 import { Component, createApp } from 'vue';
 import { Router } from 'vue-router';
 import { hijackLinks } from '../utils/router';
-import { bootstrapAppTranslations } from '../utils/translations';
 import { StoreKey, VuexStore } from '../utils/vuex';
 import { initAnalytics, initAnalyticsRouter } from './analytics/analytics.service';
 import { AppTrackEvent } from './analytics/track-event.directive';
@@ -15,6 +14,8 @@ import { initMetaService } from './meta/meta-service';
 import { Payload } from './payload/payload-service';
 import { Referrer } from './referrer/referrer.service';
 import { SettingThemeAlwaysOurs, SettingThemeDark } from './settings/settings.service';
+import { initTranslations } from './translate/translate.service';
+import Translate from './translate/translate.vue';
 
 /**
  * Bootstraps common services and returns a "createApp" function that our entry
@@ -54,7 +55,7 @@ export function bootstrapCommon(appComponent: Component, store: VuexStore, route
 	app.config.globalProperties.GJ_IS_CLIENT = GJ_IS_CLIENT;
 	app.config.globalProperties.GJ_IS_SSR = GJ_IS_SSR;
 
-	bootstrapAppTranslations(app);
+	initTranslations(app);
 
 	app.use(store, StoreKey);
 	if (router) {

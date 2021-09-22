@@ -53,7 +53,7 @@ export interface FormController<T = any> {
 	_emitChanged: () => void;
 }
 
-const Key = Symbol();
+const Key = Symbol('form');
 
 export function defineFormProps<T>() {
 	return {

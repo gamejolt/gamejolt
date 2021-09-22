@@ -1,15 +1,15 @@
 <script lang="ts">
-import { computed, inject, provide, reactive } from 'vue';
+import { computed, inject, InjectionKey, provide, reactive } from 'vue';
 import { titleCase } from '../../../utils/string';
 import { FormControlController } from '../control/controller';
 import { useForm } from '../form.service';
 
-type Controller = ReturnType<typeof provideFormControlGroup>;
+type Controller = ReturnType<typeof createFormControlGroup>;
 
-const Key = Symbol();
+const Key: InjectionKey<Controller> = Symbol('form-control-group');
 
-export function provideFormControlGroup() {
-	const c = reactive({
+export function createFormControlGroup() {
+	return reactive({
 		inputErrors: null, // TODO: Proper type
 		changed: false,
 		control: undefined as FormControlController | undefined,
@@ -32,13 +32,10 @@ export function provideFormControlGroup() {
 				: this.label;
 		},
 	});
-
-	provide(Key, c);
-	return c;
 }
 
 export function useFormControlGroup() {
-	return inject(Key) as Controller;
+	return inject(Key, null);
 }
 </script>
 
@@ -65,7 +62,9 @@ const props = defineProps({
 });
 
 const form = useForm();
-const c = provideFormControlGroup();
+
+const c = createFormControlGroup();
+provide(Key, c);
 
 const labelClasses = computed(() => [props.labelClass, { 'sr-only': props.hideLabel }]);
 </script>

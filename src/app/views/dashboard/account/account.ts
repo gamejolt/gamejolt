@@ -4,8 +4,11 @@ import { Api } from '../../../../_common/api/api.service';
 import AppEditableOverlay from '../../../../_common/editable-overlay/editable-overlay.vue';
 import AppExpand from '../../../../_common/expand/expand.vue';
 import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
-import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
-import { WithRouteStore } from '../../../../_common/route/route-store';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+	WithRouteStore,
+} from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
 import AppPageHeader from '../../../components/page-header/page-header.vue';

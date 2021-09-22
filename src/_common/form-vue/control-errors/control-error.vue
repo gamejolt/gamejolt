@@ -13,7 +13,7 @@ const props = defineProps({
 	},
 });
 
-const errors = useFormControlErrors();
+const errors = useFormControlErrors()!;
 
 watch(
 	() => props.message,

@@ -1,7 +1,6 @@
 import { setup } from 'vue-class-component';
 import { Options, Provide, Vue, Watch } from 'vue-property-decorator';
 import { AppPromotionStore, AppPromotionStoreKey } from '../utils/mobile-app';
-import { loadCurrentLanguage } from '../utils/translations';
 import { createAdsController } from '../_common/ad/ad-store';
 import { Analytics } from '../_common/analytics/analytics.service';
 import { CommentStoreManager, CommentStoreManagerKey } from '../_common/comment/comment-store';
@@ -10,7 +9,7 @@ import { DrawerStore, DrawerStoreKey } from '../_common/drawer/drawer-store';
 import AppErrorPage from '../_common/error/page/page.vue';
 import AppCommonShell from '../_common/shell/shell.vue';
 import { AppState, AppStore } from '../_common/store/app-store';
-import { getTranslationLang } from '../_common/translate/translate.service';
+import { getTranslationLang, loadCurrentLanguage } from '../_common/translate/translate.service';
 import { ChatClient, ChatKey } from './components/chat/client';
 import { ChatClientLazy } from './components/lazy';
 import AppShell from './components/shell/shell.vue';
@@ -67,7 +66,7 @@ export default class App extends Vue {
 			performance.measure('gj-shell-mounted', 'gj-start');
 		});
 
-		loadCurrentLanguage(this);
+		loadCurrentLanguage();
 	}
 
 	/**

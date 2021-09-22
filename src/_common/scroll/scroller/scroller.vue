@@ -1,13 +1,13 @@
 <script lang="ts">
 import { darken, lighten } from 'polished';
-import { computed, inject, onMounted, PropType, provide, reactive, ref } from 'vue';
+import { computed, inject, InjectionKey, onMounted, PropType, provide, reactive, ref } from 'vue';
 import { GrayLight, GraySubtle, Theme } from '../../theme/theme.model';
 import { useThemeStore } from '../../theme/theme.store';
 import AppScrollInviewParent from '../inview/parent.vue';
 
 export type ScrollController = ReturnType<typeof createScroller>;
 
-const Key = Symbol();
+const Key: InjectionKey<ScrollController> = Symbol('scroller');
 const defaultTheme = new Theme(null);
 
 export function createScroller() {
@@ -22,7 +22,7 @@ export function createScroller() {
 }
 
 export function useScroller() {
-	return inject(Key) as ScrollController | undefined;
+	return inject(Key, null);
 }
 </script>
 

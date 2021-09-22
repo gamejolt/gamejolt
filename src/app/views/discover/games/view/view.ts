@@ -19,8 +19,11 @@ import {
 } from '../../../../../_common/comment/comment-store';
 import { HistoryTick } from '../../../../../_common/history-tick/history-tick-service';
 import { PartnerReferral } from '../../../../../_common/partner-referral/partner-referral-service';
-import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
-import { WithRouteStore } from '../../../../../_common/route/route-store';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+	WithRouteStore,
+} from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import { EventSubscription } from '../../../../../_common/system/event/event-topic';

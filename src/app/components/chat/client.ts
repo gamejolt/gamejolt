@@ -13,7 +13,7 @@ import { ChatUser } from './user';
 import { ChatUserChannel } from './user-channel';
 import { ChatUserCollection } from './user-collection';
 
-export const ChatKey = Symbol('Chat');
+export const ChatKey = Symbol('chat');
 
 export const onNewChatMessage = new EventTopic<ChatMessage>();
 

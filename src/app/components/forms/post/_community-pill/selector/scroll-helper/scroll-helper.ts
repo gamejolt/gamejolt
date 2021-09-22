@@ -1,4 +1,4 @@
-import { h } from 'vue';
+import { h, ref } from 'vue';
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propOptional } from '../../../../../../../utils/vue';
@@ -9,7 +9,7 @@ export class AppScrollHelper extends Vue {
 	@Prop(propOptional(Boolean, false))
 	when!: boolean;
 
-	scrollParent = setup(() => useScroller());
+	scrollParent = setup(() => ref(useScroller()));
 
 	@Watch('when')
 	onContentChange() {
