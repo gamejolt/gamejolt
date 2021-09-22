@@ -19,7 +19,7 @@ jobs:
             echo 'export PATH=$PATH:$GOROOT/bin:$GOPATH/bin' >> $BASH_ENV
 
       - run:
-          name: Install Node 14.17.6
+          name: Install Node 10.24.1
           command: |
             echo "Uninstalling preinstalled version of Node"
             brew uninstall --ignore-dependencies node
@@ -34,9 +34,9 @@ jobs:
             [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"
 
             echo "Installing Node"
-            nvm install 14.17.6
-            nvm use 14.17.6
-            nvm alias default 14.17.6
+            nvm install 10.24.1
+            nvm use 10.24.1
+            nvm alias default 10.24.1
 
             echo "Setting up Node env"
             echo 'export NVM_DIR="$HOME/.nvm"' >> $BASH_ENV
