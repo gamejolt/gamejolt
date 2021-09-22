@@ -61,7 +61,7 @@ jobs:
       # For some reason, ignoring engines causes node gyp compilation errors with fsevents.
       - run: yarn install
 
-      # - run: yarn run client-build-osx
+      - run: yarn run client-build-osx
       # # To make a test package, comment out the previous line and uncomment this line.
       # # - run: yarn run client-build-osx --useTestPackage
 
