@@ -292,3 +292,15 @@ export function canCommunityFeatureFireside(community: Community) {
 export function canCommunityEjectFireside(community: Community) {
 	return !!community.hasPerms('community-firesides');
 }
+
+export function canCreateFiresides(community: Community) {
+	if (community.hasPerms('community-firesides')) {
+		return true;
+	}
+
+	if (community.isBlocked) {
+		return false;
+	}
+
+	return community.allow_firesides;
+}
