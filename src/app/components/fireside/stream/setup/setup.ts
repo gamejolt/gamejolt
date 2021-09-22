@@ -23,14 +23,6 @@ import AppLoadingFade from '../../../../../_common/loading/fade/fade.vue';
 import { FiresideController } from '../../controller/controller';
 import AppVolumeMeter from './volume-meter.vue';
 
-const Beeps = [
-	new Audio(require('./beep1.ogg')),
-	new Audio(require('./beep2.ogg')),
-	new Audio(require('./beep3.ogg')),
-	new Audio(require('./beep4.ogg')),
-	new Audio(require('./beep5.ogg')),
-];
-
 type FormModel = {
 	selectedWebcamDeviceId: string;
 	selectedMicDeviceId: string;
@@ -315,20 +307,6 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 
 	onClickPromptSpeakerPermissions() {
 		MediaDeviceService.detectSpeakers({ prompt: true, skipIfPrompted: false });
-	}
-
-	get canMakeNoise() {
-		return this.formModel.selectedGroupAudioDeviceId !== PRODUCER_DEFAULT_GROUP_AUDIO;
-	}
-
-	makeSomeNoise() {
-		if (!this.canMakeNoise) {
-			return;
-		}
-
-		const beep = Beeps[Math.floor(Math.random() * Beeps.length)];
-		(beep as any).setSinkId(this.formModel.selectedGroupAudioDeviceId);
-		beep.play();
 	}
 
 	/**
