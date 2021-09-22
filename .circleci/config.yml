@@ -19,7 +19,7 @@ jobs:
             echo 'export PATH=$PATH:$GOROOT/bin:$GOPATH/bin' >> $BASH_ENV
 
       - run:
-          name: Install Node 10.24.1
+          name: Install Node 14.17.6
           command: |
             echo "Uninstalling preinstalled version of Node"
             brew uninstall --ignore-dependencies node
@@ -34,9 +34,9 @@ jobs:
             [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"
 
             echo "Installing Node"
-            nvm install 10.24.1
-            nvm use 10.24.1
-            nvm alias default 10.24.1
+            nvm install 14.17.6
+            nvm use 14.17.6
+            nvm alias default 14.17.6
 
             echo "Setting up Node env"
             echo 'export NVM_DIR="$HOME/.nvm"' >> $BASH_ENV
@@ -61,7 +61,7 @@ jobs:
       # For some reason, ignoring engines causes node gyp compilation errors with fsevents.
       - run: yarn install
 
-      - run: yarn run client-build-osx
+      # - run: yarn run client-build-osx
       # # To make a test package, comment out the previous line and uncomment this line.
       # # - run: yarn run client-build-osx --useTestPackage
 
@@ -94,8 +94,8 @@ jobs:
             echo 'export GOPATH=$HOME/go' >> $BASH_ENV
             echo 'export PATH=$PATH:$GOROOT/bin:$GOPATH/bin' >> $BASH_ENV
 
-      # - run: yarn install --ignore-engines
-      # - run: yarn run client-build-linux64
+      - run: yarn install
+      - run: yarn run client-build-linux64
       # To make a test package, comment out the previous line and uncomment this line.
       # - run: yarn run client-build-linux64 --useTestPackage
 
