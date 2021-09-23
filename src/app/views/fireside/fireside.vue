@@ -214,7 +214,6 @@
 						class="-header"
 						has-overlay-popovers
 						:show-controls="shouldShowTitleControls"
-						:has-info="!shouldShowFiresideStats"
 						:has-chat="!shouldShowChatMembers"
 						:has-chat-stats="shouldShowChatMemberStats"
 					/>

@@ -11,6 +11,7 @@ import { duration } from '../../../../_common/filters/duration';
 import { Fireside, FIRESIDE_EXPIRY_THRESHOLD } from '../../../../_common/fireside/fireside.model';
 import { FiresideRTC } from '../../../../_common/fireside/rtc/rtc';
 import { Growls } from '../../../../_common/growls/growls.service';
+import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../../_common/share/share.service';
 import { appStore } from '../../../../_common/store/app-store';
@@ -264,6 +265,23 @@ export async function extendFireside(c: FiresideController, growlOnFail = true) 
 			)
 		);
 	}
+}
+
+export async function extinguishFireside(c: FiresideController) {
+	if (!c.fireside || !c.canExtinguish) {
+		return;
+	}
+
+	const result = await ModalConfirm.show(
+		Translate.$gettext(
+			`Are you sure you want to extinguish your Fireside? This will immediately close it and send all members home.`
+		)
+	);
+	if (!result) {
+		return;
+	}
+
+	await c.fireside.$extinguish();
 }
 
 export function updateFiresideExpiryValues(c: FiresideController) {

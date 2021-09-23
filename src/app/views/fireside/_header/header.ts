@@ -15,13 +15,14 @@ import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import { CommunityEjectFiresideModal } from '../../../components/community/eject-fireside/modal/modal.service';
 import {
 	copyFiresideLink,
+	extinguishFireside,
 	FiresideController,
 	FiresideControllerKey,
+	publishFireside,
 } from '../../../components/fireside/controller/controller';
 import { StreamSetupModal } from '../../../components/fireside/stream/setup/setup-modal.service';
 import { FiresideChatMembersModal } from '../_chat-members/modal/modal.service';
 import { FiresideEditModal } from '../_edit-modal/edit-modal.service';
-import { FiresideStatsModal } from '../_stats/modal/modal.service';
 
 @Component({
 	components: {
@@ -39,9 +40,6 @@ export default class AppFiresideHeader extends Vue {
 
 	@Prop({ type: Boolean, required: false, default: false })
 	hasOverlayPopovers!: boolean;
-
-	@Prop({ type: Boolean, required: false, default: false })
-	hasInfo!: boolean;
 
 	@Prop({ type: Boolean, required: false, default: false })
 	hasChat!: boolean;
@@ -73,8 +71,8 @@ export default class AppFiresideHeader extends Vue {
 		);
 	}
 
-	onClickInfo() {
-		FiresideStatsModal.show(this.c);
+	get shouldShowStreamSettings() {
+		return this.c.shouldShowStreamingOptions && this.c.isPersonallyStreaming;
 	}
 
 	onClickShowChatMembers() {
@@ -93,6 +91,10 @@ export default class AppFiresideHeader extends Vue {
 		FiresideEditModal.show(this.c);
 	}
 
+	onClickPublish() {
+		publishFireside(this.c);
+	}
+
 	onClickCopyLink() {
 		copyFiresideLink(this.c, this.$router);
 	}
@@ -103,6 +105,10 @@ export default class AppFiresideHeader extends Vue {
 		}
 
 		stopStreaming(this.c.rtc.producer);
+	}
+
+	onClickExtinguish() {
+		extinguishFireside(this.c);
 	}
 
 	onClickReport() {
