@@ -41,8 +41,7 @@
 							<translate>Featured</translate>
 						</span>
 					</small>
-					<br />
-					{{ fireside.title }}
+					<div :title="fireside.title">{{ fireside.title }}</div>
 				</h2>
 				<div v-if="hasChatStats && c.chatUsers" class="-fireside-title-member-stats">
 					<ul class="stat-list">
@@ -62,7 +61,7 @@
 						class="-stats-btn"
 					>
 						<app-button
-							v-app-tooltip="$gettext(`Start Streaming`)"
+							v-app-tooltip="$gettext(`Start Stream / Voice Chat`)"
 							icon="broadcast"
 							circle
 							trans

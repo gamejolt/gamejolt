@@ -101,7 +101,6 @@ export abstract class MediaDeviceService {
 			console.log('skipping because was already prompted');
 			return;
 		}
-		this.p_webcamsWasPrompted ||= effectiveOptions.prompt;
 
 		try {
 			const cameras = await AgoraRTC.getCameras(!effectiveOptions.prompt);
@@ -119,6 +118,8 @@ export abstract class MediaDeviceService {
 			console.warn('Error while getting webcams: ', e);
 			this.p_webcams = [];
 			this.p_webcamsPermissionError = this.isPermissionError(e);
+		} finally {
+			this.p_webcamsWasPrompted ||= effectiveOptions.prompt;
 		}
 	}
 
@@ -134,7 +135,6 @@ export abstract class MediaDeviceService {
 			console.log('skipping because was already prompted');
 			return;
 		}
-		this.p_micsWasPrompted ||= effectiveOptions.prompt;
 
 		try {
 			const mics = await AgoraRTC.getMicrophones(!effectiveOptions.prompt);
@@ -152,6 +152,8 @@ export abstract class MediaDeviceService {
 			console.warn('Error while getting mics: ', e);
 			this.p_mics = [];
 			this.p_micsPermissionError = this.isPermissionError(e);
+		} finally {
+			this.p_micsWasPrompted ||= effectiveOptions.prompt;
 		}
 	}
 
@@ -167,7 +169,6 @@ export abstract class MediaDeviceService {
 			console.log('skipping because was already prompted');
 			return;
 		}
-		this.p_speakersWasPrompted ||= effectiveOptions.prompt;
 
 		try {
 			const speakers = await AgoraRTC.getPlaybackDevices(!effectiveOptions.prompt);
@@ -185,6 +186,8 @@ export abstract class MediaDeviceService {
 			console.warn('Error while getting speakers: ', e);
 			this.p_speakers = [];
 			this.p_speakersPermissionError = this.isPermissionError(e);
+		} finally {
+			this.p_speakersWasPrompted ||= effectiveOptions.prompt;
 		}
 	}
 
