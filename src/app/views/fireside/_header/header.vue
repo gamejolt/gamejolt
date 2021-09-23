@@ -41,8 +41,7 @@
 							<translate>Featured</translate>
 						</span>
 					</small>
-					<br />
-					{{ fireside.title }}
+					<div :title="fireside.title">{{ fireside.title }}</div>
 				</h2>
 				<div v-if="hasChatStats && c.chatUsers" class="-fireside-title-member-stats">
 					<ul class="stat-list">
@@ -62,7 +61,7 @@
 						class="-stats-btn"
 					>
 						<app-button
-							v-app-tooltip="$gettext(`Start Streaming`)"
+							v-app-tooltip="$gettext(`Start Stream / Voice Chat`)"
 							icon="broadcast"
 							circle
 							trans
@@ -76,35 +75,20 @@
 						@hide="onHidePopper"
 					>
 						<div class="-stats-btn">
-							<app-button
-								icon="cog"
-								circle
-								sparse
-								:solid="c.hasExpiryWarning && hasInfo"
-								:primary="c.hasExpiryWarning && hasInfo"
-							/>
-							<app-jolticon
-								v-if="c.hasExpiryWarning && hasInfo"
-								icon="notice"
-								notice
-								class="-stats-btn-warn"
-							/>
+							<app-button icon="cog" circle sparse solid />
 						</div>
 
 						<template #popover>
 							<div class="list-group list-group-dark">
-								<a class="list-group-item has-icon" @click="onClickCopyLink">
+								<a
+									v-if="!fireside.is_draft"
+									class="list-group-item has-icon"
+									@click="onClickCopyLink"
+								>
 									<app-jolticon icon="link" />
 									<translate>Copy Link</translate>
 								</a>
-								<a
-									v-if="canEdit"
-									class="list-group-item has-icon"
-									@click="onClickEditFireside"
-								>
-									<app-jolticon icon="edit" />
-									<translate>Edit Fireside</translate>
-								</a>
+
 								<a
 									v-if="hasChat"
 									class="list-group-item has-icon"
@@ -113,39 +97,61 @@
 									<app-jolticon icon="users" />
 									<translate>Chat Members</translate>
 								</a>
-								<a
-									v-if="hasInfo"
-									class="list-group-item has-icon"
-									@click="onClickInfo"
-								>
-									<app-jolticon icon="fireside" :notice="c.hasExpiryWarning" />
-									<translate>Fireside Info</translate>
-								</a>
-
-								<template
-									v-if="c.shouldShowStreamingOptions && c.isPersonallyStreaming"
-								>
-									<a class="list-group-item has-icon" @click="onClickEditStream">
-										<app-jolticon icon="broadcast" />
-										<translate>Stream Settings</translate>
-									</a>
-									<a
-										class="list-group-item has-icon"
-										@click="onClickStopStreaming"
-									>
-										<app-jolticon icon="remove" notice />
-										<translate>Stop Streaming</translate>
-									</a>
-								</template>
 
 								<a
 									v-if="c.canReport"
 									class="list-group-item has-icon"
 									@click="onClickReport"
 								>
-									<app-jolticon icon="flag" notice />
+									<app-jolticon icon="flag" />
 									<translate>Report Fireside</translate>
 								</a>
+
+								<a
+									v-if="canEdit"
+									class="list-group-item has-icon"
+									@click="onClickEditFireside"
+								>
+									<app-jolticon icon="edit" />
+									<translate>Edit Fireside</translate>
+								</a>
+
+								<template v-if="shouldShowStreamSettings">
+									<a class="list-group-item has-icon" @click="onClickEditStream">
+										<app-jolticon icon="broadcast" />
+										<translate>Stream Settings</translate>
+									</a>
+								</template>
+
+								<template v-if="c.canPublish">
+									<hr />
+									<a class="list-group-item has-icon" @click="onClickPublish">
+										<app-jolticon icon="notifications" highlight />
+										<translate>Publish Fireside</translate>
+									</a>
+								</template>
+
+								<template v-if="shouldShowStreamSettings || c.canExtinguish">
+									<hr />
+
+									<a
+										v-if="shouldShowStreamSettings"
+										class="list-group-item has-icon"
+										@click="onClickStopStreaming"
+									>
+										<app-jolticon icon="plug" notice />
+										<translate>Stop Streaming</translate>
+									</a>
+
+									<a
+										v-if="c.canExtinguish"
+										class="list-group-item has-icon"
+										@click="onClickExtinguish"
+									>
+										<app-jolticon icon="remove" notice />
+										<translate>Extinguish Fireside</translate>
+									</a>
+								</template>
 
 								<template v-if="!fireside.is_draft">
 									<div v-for="i in manageableCommunities" :key="i.id">
