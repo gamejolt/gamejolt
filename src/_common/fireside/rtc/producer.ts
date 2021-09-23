@@ -517,10 +517,10 @@ function _updateGroupAudioDevice(producer: FiresideRTCProducer) {
 			const { _micAudioTrack, _desktopAudioTrack } = rtc.localUser;
 
 			if (_micAudioTrack) {
-				await _updatePlaybackDevice(producer, _micAudioTrack);
+				await updateTrackPlaybackDevice(producer, _micAudioTrack);
 			}
 			if (_desktopAudioTrack) {
-				await _updatePlaybackDevice(producer, _desktopAudioTrack);
+				await updateTrackPlaybackDevice(producer, _desktopAudioTrack);
 			}
 		}
 
@@ -561,17 +561,24 @@ function _updateRemoteUserPlaybackDevice(
 
 	if (_streamingChatPlaybackDeviceId !== null) {
 		rtc.log(`- applying new audio track for user ${remoteUser.uid}`);
-		return _updatePlaybackDevice(producer, audioTrack);
+		return updateTrackPlaybackDevice(producer, audioTrack);
 	}
 }
 
-function _updatePlaybackDevice(
+/**
+ * This should be called anytime a new track is joined, or if the playback
+ * device is updated.
+ */
+export async function updateTrackPlaybackDevice(
 	producer: FiresideRTCProducer,
 	track: ILocalAudioTrack | IRemoteAudioTrack
 ) {
 	const deviceId = producer._streamingChatPlaybackDeviceId;
 	if (deviceId !== null) {
-		return track.setPlaybackDevice(deviceId);
+		try {
+			// This will throw an error if they're not on Chrome.
+			return track.setPlaybackDevice(deviceId);
+		} catch {}
 	}
 }
 

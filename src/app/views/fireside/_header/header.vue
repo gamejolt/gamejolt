@@ -147,29 +147,37 @@
 									<translate>Report Fireside</translate>
 								</a>
 
-								<div v-for="i in manageableCommunities" :key="i.id">
-									<hr />
+								<template v-if="!fireside.is_draft">
+									<div v-for="i in manageableCommunities" :key="i.id">
+										<hr />
 
-									<h5 class="-extras-header list-group-item has-icon">
-										<app-community-thumbnail-img :community="i.community" />
-										{{ i.community.name }}
-									</h5>
+										<h5 class="-extras-header list-group-item has-icon">
+											<app-community-thumbnail-img :community="i.community" />
+											{{ i.community.name }}
+										</h5>
 
-									<a class="list-group-item has-icon" @click="toggleFeatured(i)">
-										<app-jolticon icon="star" />
+										<a
+											class="list-group-item has-icon"
+											@click="toggleFeatured(i)"
+										>
+											<app-jolticon icon="star" />
 
-										<translate v-if="i.isFeatured">
-											Unfeature fireside
-										</translate>
-										<translate v-else>Feature fireside</translate>
-									</a>
+											<translate v-if="i.isFeatured">
+												Unfeature fireside
+											</translate>
+											<translate v-else>Feature fireside</translate>
+										</a>
 
-									<a class="list-group-item has-icon" @click="ejectFireside(i)">
-										<app-jolticon icon="eject" />
+										<a
+											class="list-group-item has-icon"
+											@click="ejectFireside(i)"
+										>
+											<app-jolticon icon="eject" />
 
-										<translate>Eject fireside</translate>
-									</a>
-								</div>
+											<translate>Eject fireside</translate>
+										</a>
+									</div>
+								</template>
 							</div>
 						</template>
 					</app-popper>

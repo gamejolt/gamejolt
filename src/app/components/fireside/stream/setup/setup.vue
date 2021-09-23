@@ -2,11 +2,14 @@
 
 <template>
 	<app-loading-fade :is-loading="isStarting">
-		<div class="alert">
-			<strong>This is a Preview feature.</strong> You are able to stream because we've given
-			you access to test it out. Streaming is not available to everyone just yet. You might
-			experience bugs, issues, or general instability.
-		</div>
+		<a class="-intro" href="https://gamejolt.com/p/fgjtydpu" @click="openHelpLink">
+			<div class="-intro-subtitle">
+				<translate>Stream on Game Jolt with your friends!</translate>
+			</div>
+			<div class="-intro-title">
+				<translate>Read the streaming setup guide to get started</translate>
+			</div>
+		</a>
 
 		<app-form ref="form" name="streamSetupForm">
 			<app-form-group
@@ -53,6 +56,12 @@
 						You can use the virtual camera in OBS or Streamlabs to capture your gameplay
 						and make it available for streaming on Game Jolt.
 					</translate>
+
+					<br />
+
+					<a href="https://gamejolt.com/p/3pt3kxnn" @click="openHelpLink">
+						<translate>Learn more about streaming your gameplay or screen</translate>
+					</a>
 				</p>
 
 				<div
@@ -203,6 +212,17 @@
 											game/desktop from the audio of the other people in the
 											stream.
 										</translate>
+
+										<br />
+
+										<a
+											href="https://gamejolt.com/p/fcqbv3ff"
+											@click="openHelpLink"
+										>
+											<translate>
+												Learn more about streaming your desktop/game audio
+											</translate>
+										</a>
 									</p>
 
 									<app-form-control-select
@@ -331,4 +351,25 @@
 .-desktop-well
 	margin-bottom: 0
 	padding-bottom: 0
+
+.-intro
+	rounded-corners()
+	change-bg('bi-bg')
+	elevate-1()
+	pressy()
+	display: block
+	padding: 8px
+	color: var(--theme-bi-fg)
+	margin-bottom: $line-height-computed
+	cursor: pointer
+	user-select: none
+
+	&:hover
+		elevate-hover-2()
+
+	&-subtitle
+		font-size: $font-size-small
+
+	&-title
+		font-size: $font-size-large
 </style>

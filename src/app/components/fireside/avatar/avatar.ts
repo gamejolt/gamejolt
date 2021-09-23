@@ -74,7 +74,7 @@ export default class AppFiresideAvatar extends Vue {
 	}
 
 	get canModerate() {
-		return !this.isLoading && this.manageableCommunities.length > 0;
+		return !this.isLoading && !this.fireside.is_draft && this.manageableCommunities.length > 0;
 	}
 
 	get manageableCommunities() {

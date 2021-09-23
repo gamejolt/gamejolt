@@ -20,16 +20,9 @@ import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.servi
 import AppForm from '../../../../../_common/form-vue/form.vue';
 import AppFormLegend from '../../../../../_common/form-vue/legend/legend.vue';
 import AppLoadingFade from '../../../../../_common/loading/fade/fade.vue';
+import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import { FiresideController } from '../../controller/controller';
 import AppVolumeMeter from './volume-meter.vue';
-
-const Beeps = [
-	new Audio(require('./beep1.ogg')),
-	new Audio(require('./beep2.ogg')),
-	new Audio(require('./beep3.ogg')),
-	new Audio(require('./beep4.ogg')),
-	new Audio(require('./beep5.ogg')),
-];
 
 type FormModel = {
 	selectedWebcamDeviceId: string;
@@ -164,7 +157,6 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		// Wait to let the video element get mounted
 		await this.$nextTick();
 
-		console.log('setting video preview element', this.$refs.videoPreview);
 		setVideoPreviewElement(
 			this.producer,
 			this.canStreamVideo ? this.$refs.videoPreview ?? null : null
@@ -265,6 +257,14 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		);
 	}
 
+	openHelpLink(event: Event) {
+		if (event.currentTarget instanceof HTMLAnchorElement) {
+			Navigate.newWindow(event.currentTarget.href!);
+			event.stopPropagation();
+			event.preventDefault();
+		}
+	}
+
 	wouldInvalidateIfRemoved(fieldToRemove: string) {
 		if (!this.isStreaming) {
 			return false;
@@ -315,20 +315,6 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 
 	onClickPromptSpeakerPermissions() {
 		MediaDeviceService.detectSpeakers({ prompt: true, skipIfPrompted: false });
-	}
-
-	get canMakeNoise() {
-		return this.formModel.selectedGroupAudioDeviceId !== PRODUCER_DEFAULT_GROUP_AUDIO;
-	}
-
-	makeSomeNoise() {
-		if (!this.canMakeNoise) {
-			return;
-		}
-
-		const beep = Beeps[Math.floor(Math.random() * Beeps.length)];
-		(beep as any).setSinkId(this.formModel.selectedGroupAudioDeviceId);
-		beep.play();
 	}
 
 	/**
