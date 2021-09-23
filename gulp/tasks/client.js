@@ -16,6 +16,12 @@ const http = require('http');
 const escape = require('shell-escape');
 const tar = require('tar');
 
+const sleep = function (ms) {
+	return new Promise(resolve => {
+		setTimeout(resolve, ms);
+	});
+};
+
 module.exports = config => {
 	// We can skip all this stuff if not doing a client build.
 	if (!config.client) {
@@ -38,7 +44,7 @@ module.exports = config => {
 		parseInt(versionStuff[3]),
 	];
 
-	const gjpushVersion = 'v0.4.0';
+	const gjpushVersion = 'v0.5.0';
 	const gjGameId = config.developmentEnv ? 1000 : 362412;
 	let gjGamePazckageId;
 	let gjGameInstallerPackageId;
@@ -348,19 +354,44 @@ module.exports = config => {
 	 * Pushes the single package to GJ.
 	 */
 	gulp.task('client:gjpush-package', cb => {
-		// GJPUSH!
-		// We trust the exit codes to tell us if something went wrong because a non 0 exit code will make this throw.
-		cp.execFileSync(gjpushExecutable, [
-			'-g',
-			gjGameId,
-			'-p',
-			gjGamePackageId,
-			'-r',
-			packageJson.version,
-			path.join(config.clientBuildDir, config.platformArch + '-package.tar.gz'),
-		]);
+		const gjPush = async function () {
+			// GJPUSH!
+			// We trust the exit codes to tell us if something went wrong because a non 0 exit code will make this throw.
+			cp.execFileSync(gjpushExecutable, [
+				'--no-resume',
+				'-g',
+				gjGameId,
+				'-p',
+				gjGamePackageId,
+				'-r',
+				packageJson.version,
+				path.join(config.clientBuildDir, config.platformArch + '-package.tar.gz'),
+			]);
+		};
 
-		cb();
+		const retryGjPush = async function () {
+			let err = null;
+			for (let i = 0; i < 3; i++) {
+				if (i !== 0) {
+					await sleep(5000 + Math.floor(Math.random() * 10000));
+				}
+
+				try {
+					await gjPush();
+					break;
+				} catch (e) {
+					err = e;
+				}
+			}
+
+			if (err) {
+				throw err;
+			}
+		};
+
+		retryGjPush()
+			.then(() => cb())
+			.catch(e => cb(e));
 	});
 
 	let joltronSrc = '';
@@ -781,17 +812,42 @@ module.exports = config => {
 		}
 		installerFile = path.join(config.clientBuildDir, installerFile);
 
-		cp.execFileSync(gjpushExecutable, [
-			'-g',
-			gjGameId,
-			'-p',
-			gjGameInstallerPackageId,
-			'-r',
-			packageJson.version,
-			installerFile,
-		]);
+		const gjPush = async function () {
+			cp.execFileSync(gjpushExecutable, [
+				'--no-resume',
+				'-g',
+				gjGameId,
+				'-p',
+				gjGameInstallerPackageId,
+				'-r',
+				packageJson.version,
+				installerFile,
+			]);
+		};
 
-		cb();
+		const retryGjPush = async function () {
+			let err = null;
+			for (let i = 0; i < 3; i++) {
+				if (i !== 0) {
+					await sleep(5000 + Math.floor(Math.random() * 10000));
+				}
+
+				try {
+					await gjPush();
+					break;
+				} catch (e) {
+					err = e;
+				}
+			}
+
+			if (err) {
+				throw err;
+			}
+		};
+
+		retryGjPush()
+			.then(() => cb())
+			.catch(e => cb(e));
 	});
 
 	if (!config.noGjPush) {
