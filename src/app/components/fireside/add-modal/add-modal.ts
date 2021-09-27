@@ -70,9 +70,7 @@ export default class AppFiresideAddModal extends BaseModal {
 		if (!payload.success) {
 			if (payload.errors && payload.errors['rate-limit']) {
 				Growls.error(
-					this.$gettext(
-						`Cannot create a new fireside... yet. Try again in a couple minutes.`
-					)
+					this.$gettext(`You must wait a few minutes before creating another fireside.`)
 				);
 				return;
 			}
@@ -91,8 +89,6 @@ export default class AppFiresideAddModal extends BaseModal {
 	}
 
 	private showGenericError() {
-		Growls.error(
-			this.$gettext(`Couldn't create your fireside. Reload the page and try again.`)
-		);
+		Growls.error(this.$gettext(`Couldn't create your fireside. Reload and try again.`));
 	}
 }
