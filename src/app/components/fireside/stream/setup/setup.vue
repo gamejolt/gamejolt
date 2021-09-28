@@ -89,13 +89,15 @@
 							type="mic"
 						/>
 
-						<p class="help-block">
-							<translate>
-								The volume meter should only move when you're speaking. If it's
-								moving with the sounds your device is making, you've chosen the
-								wrong input.
-							</translate>
-						</p>
+						<app-expand :when="hasMicAudio">
+							<p class="help-block">
+								<translate>
+									The volume meter should only move when you're speaking. If it's
+									moving with the sounds your device is making, you've chosen the
+									wrong input.
+								</translate>
+							</p>
+						</app-expand>
 					</template>
 				</app-form-group>
 
@@ -104,7 +106,10 @@
 					:label="$gettext('Audio Output Device')"
 				>
 					<template v-if="!hasSpeakerPermissions">
-						<div class="alert" :class="{ 'alert-notice': speakerPermissionsWerePrompted }">
+						<div
+							class="alert"
+							:class="{ 'alert-notice': speakerPermissionsWerePrompted }"
+						>
 							<p>
 								<translate>
 									To hear the other people streaming with you, we'll need access
@@ -147,7 +152,10 @@
 			<template v-if="canStreamVideo">
 				<app-form-group name="selectedWebcamDeviceId" :label="$gettext('Video Source')">
 					<template v-if="!hasWebcamPermissions">
-						<div class="alert" :class="{ 'alert-notice': webcamPermissionsWerePrompted }">
+						<div
+							class="alert"
+							:class="{ 'alert-notice': webcamPermissionsWerePrompted }"
+						>
 							<p>
 								<translate>
 									To stream video we need access to your video source/camera.
@@ -295,14 +303,16 @@
 								type="desktop-audio"
 							/>
 
-							<p class="help-block">
-								<translate>
-									The volume meter should only move when you hear audio from your
-									game/desktop. If it's moving when you hear the other people in
-									the stream, it is set up incorrectly and people will hear an
-									echo when viewing your stream.
-								</translate>
-							</p>
+							<app-expand :when="hasDesktopAudio">
+								<p class="help-block">
+									<translate>
+										The volume meter should only move when you hear audio from
+										your game/desktop. If it's moving when you hear the other
+										people in the stream, it is set up incorrectly and people
+										will hear an echo when viewing your stream.
+									</translate>
+								</p>
+							</app-expand>
 
 							<app-expand :when="isInvalidMicConfig">
 								<div class="alert alert-notice sans-margin-bottom">
@@ -376,7 +386,6 @@
 
 .-desktop-well
 	margin-bottom: 0
-	padding-bottom: 0
 
 .-intro
 	rounded-corners()
