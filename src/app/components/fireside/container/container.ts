@@ -35,9 +35,6 @@ export class AppFiresideContainer extends Vue {
 	@Prop({ type: FiresideController, required: true })
 	controller!: FiresideController;
 
-	@Prop({ type: Boolean, required: false, default: false })
-	muteUsers!: boolean;
-
 	@AppState user!: AppStore['user'];
 	@State grid!: Store['grid'];
 	@Action loadGrid!: Store['loadGrid'];
@@ -228,7 +225,7 @@ export class AppFiresideContainer extends Vue {
 			// If they have a host role, or if this fireside is actively
 			// streaming, we'll get streaming tokens from the fetch payload. In
 			// that case, we want to set up the RTC stuff.
-			this.createOrUpdateRtc(payload, false);
+			this.upsertRtc(payload, false);
 		} catch (error) {
 			console.debug(`[FIRESIDE] Setup failure 2.`, error);
 			c.status = 'setup-failed';
@@ -403,7 +400,7 @@ export class AppFiresideContainer extends Vue {
 		c.updateInterval = setInterval(() => updateFiresideExpiryValues(c), 1000);
 	}
 
-	private createOrUpdateRtc(payload: any, checkJoined = true) {
+	private upsertRtc(payload: any, checkJoined = true) {
 		const c = this.controller;
 		if (!c || !c.fireside || (checkJoined && c.status !== 'joined')) {
 			return;
@@ -435,7 +432,7 @@ export class AppFiresideContainer extends Vue {
 				payload.chatChannelName,
 				payload.chatToken,
 				hosts,
-				c.muteUsers
+				{ isMuted: c.isMuted }
 			);
 		} else {
 			// TODO: update hosts when we introduce changing hosts on the fly.
@@ -503,7 +500,7 @@ export class AppFiresideContainer extends Vue {
 		}
 
 		if (c.fireside.is_streaming && payload.streaming_info) {
-			this.createOrUpdateRtc(payload.streaming_info);
+			this.upsertRtc(payload.streaming_info);
 		} else {
 			this.destroyRtc();
 		}

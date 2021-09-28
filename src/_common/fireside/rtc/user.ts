@@ -41,7 +41,7 @@ export class FiresideRTCUser {
 	constructor(public readonly rtc: FiresideRTC, public readonly uid: number) {
 		// If everyone is currently muted, add new users as muted.
 		this.micAudioMuted =
-			rtc.muteUsers || (rtc.users.length > 0 ? rtc.users.every(i => i.micAudioMuted) : false);
+			rtc.isMuted || (rtc.users.length > 0 ? rtc.users.every(i => i.micAudioMuted) : false);
 	}
 
 	// These won't be assigned if this is the local user.

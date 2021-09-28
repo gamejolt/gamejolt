@@ -39,6 +39,8 @@ export interface FiresideRTCHost {
 	uids: number[];
 }
 
+type Options = { isMuted?: boolean };
+
 export class FiresideRTC {
 	constructor(
 		public readonly fireside: Fireside,
@@ -51,8 +53,12 @@ export class FiresideRTC {
 		public readonly chatChannelName: string,
 		public chatToken: string,
 		public readonly hosts: FiresideRTCHost[],
-		public readonly muteUsers: boolean
-	) {}
+		{ isMuted }: Options
+	) {
+		this.isMuted = isMuted ?? false;
+	}
+
+	readonly isMuted;
 
 	generation = new CancelToken();
 
@@ -132,7 +138,7 @@ export function createFiresideRTC(
 	chatChannelName: string,
 	chatToken: string,
 	hosts: FiresideRTCHost[],
-	muteUsers: boolean
+	options: Options = {}
 ) {
 	const rtc = new FiresideRTC(
 		fireside,
@@ -145,7 +151,7 @@ export function createFiresideRTC(
 		chatChannelName,
 		chatToken,
 		hosts,
-		muteUsers
+		options
 	);
 
 	// Initialize based on their pref.

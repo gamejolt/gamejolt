@@ -33,8 +33,14 @@ export type RouteStatus =
 
 export const FiresideControllerKey = Symbol('fireside-controller');
 
+type Options = { isMuted?: boolean };
+
 export class FiresideController {
-	constructor(public readonly fireside: Fireside, public readonly muteUsers: boolean) {}
+	constructor(public readonly fireside: Fireside, { isMuted }: Options) {
+		this.isMuted = isMuted ?? false;
+	}
+
+	readonly isMuted;
 
 	rtc: FiresideRTC | null = null;
 	status: RouteStatus = 'initial';
@@ -195,19 +201,8 @@ export class FiresideController {
 	}
 }
 
-export function createFiresideController(
-	fireside: Fireside,
-	options: {
-		muteUsers: boolean;
-	} = {
-		muteUsers: false,
-	},
-	onRetry: (() => void) | null = null
-) {
-	const { muteUsers } = options;
-	const c = new FiresideController(fireside, muteUsers);
-	c.onRetry = onRetry;
-	return c;
+export function createFiresideController(fireside: Fireside, options: Options = {}) {
+	return new FiresideController(fireside, options);
 }
 
 export function getFiresideLink(c: FiresideController, router: VueRouter) {

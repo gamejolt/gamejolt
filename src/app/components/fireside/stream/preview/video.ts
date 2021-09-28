@@ -37,9 +37,7 @@ export default class AppFiresideStreamPreviewVideo extends Vue {
 	@Emit('changed') emitChanged(_hasVideo: boolean, _isStreaming: boolean) {}
 
 	created() {
-		this.c = createFiresideController(this.fireside, {
-			muteUsers: true,
-		});
+		this.c = createFiresideController(this.fireside, { isMuted: true });
 	}
 
 	get rtcUsers() {
