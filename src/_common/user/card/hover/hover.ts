@@ -19,6 +19,12 @@ export default class AppUserCardHover extends Vue {
 	@Prop(Boolean)
 	disabled?: boolean;
 
+	@Prop({ type: Number, default: 500 })
+	hoverDelay!: number;
+
+	@Prop({ type: Boolean })
+	noStats!: boolean;
+
 	@Emit('show') emitShow() {}
 	@Emit('hide') emitHide() {}
 
@@ -43,7 +49,7 @@ export default class AppUserCardHover extends Vue {
 			: {
 					placement: 'top',
 					trigger: 'hover',
-					showDelay: 500,
+					showDelay: this.hoverDelay,
 					block: true,
 			  };
 	}
@@ -67,7 +73,7 @@ export default class AppUserCardHover extends Vue {
 	onShow() {
 		this.emitShow();
 		this.isShowing = true;
-		if (!this.isLoaded) {
+		if (!this.isLoaded && !this.noStats) {
 			this.fetchCardInfo();
 		}
 	}
