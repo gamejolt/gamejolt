@@ -42,6 +42,16 @@
 					</app-form-group>
 
 					<div
+						v-if="tryAgain"
+						class="alert alert-notice anim-fade-in-enlarge no-animate-leave"
+					>
+						<p><translate>Oops, we can't log you in right now.</translate></p>
+						<p>
+							<translate>Try again in a few minutes, sorry about that!</translate>
+						</p>
+					</div>
+
+					<div
 						v-if="invalidLogin"
 						class="alert alert-notice anim-fade-in-enlarge no-animate-leave"
 					>
