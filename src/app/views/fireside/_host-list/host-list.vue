@@ -8,10 +8,7 @@
 				@hide-popper="emitHidePopper"
 			/>
 
-			<template v-if="canInviteCohosts">
-				<app-fireside-stream-invite />
-				<app-fireside-stream-remove />
-			</template>
+			<app-fireside-cohost-manage v-if="canManageCohosts" />
 
 			<app-fireside-host-thumb
 				v-for="host of c.rtc.users"

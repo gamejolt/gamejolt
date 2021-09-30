@@ -1,4 +1,4 @@
-<script lang="ts" src="./remove-modal"></script>
+<script lang="ts" src="./manage-modal"></script>
 
 <template>
 	<app-modal>
@@ -11,7 +11,7 @@
 
 			<div class="modal-header">
 				<h2 class="modal-title">
-					<translate>Choose Members</translate>
+					<translate>Manage Cohosts</translate>
 				</h2>
 			</div>
 
@@ -29,7 +29,6 @@
 								v-for="user of filteredUsers"
 								:key="user.id"
 								class="-user-list-item"
-								@click="toggle(user)"
 							>
 								<div class="-avatar">
 									<app-user-avatar-img :user="user" />
@@ -41,11 +40,21 @@
 									</div>
 									<div class="-username">@{{ user.username }}</div>
 								</div>
-								<div class="-radio" :class="{ '-active': selected(user) }">
+
+								<app-button
+									:disabled="isUserProcessing(user)"
+									:solid="isCohost(user)"
+									:primary="isCohost(user)"
+									@click="processUser(user)"
+								>
+									<translate v-if="!isCohost(user)">Add</translate>
+									<translate v-else>Remove</translate>
+								</app-button>
+								<!-- <div class="-radio" :class="{ '-active': selected(user) }">
 									<app-jolticon
 										:icon="selected(user) ? 'checkbox' : 'box-empty'"
 									/>
-								</div>
+								</div> -->
 							</div>
 						</div>
 					</app-scroll-scroller>
@@ -53,7 +62,7 @@
 			</div>
 		</template>
 
-		<template #footer>
+		<!-- <template #footer>
 			<div class="-bottom">
 				<app-user-avatar-list
 					v-if="selectedUsers.length > 0"
@@ -63,10 +72,10 @@
 				/>
 
 				<app-button primary block :disabled="selectedUsers.length < 1" @click="invite">
-					<translate>Remove Cohosts</translate>
+					<translate>Invite Cohosts</translate>
 				</app-button>
 			</div>
-		</template>
+		</template> -->
 	</app-modal>
 </template>
 

@@ -148,7 +148,7 @@ export class FiresideController {
 		return this.rtc.hosts.map(i => i.user).filter(i => i.id != this.user?.id);
 	}
 
-	get canInviteCohosts() {
+	get canManageCohosts() {
 		return this.isOwner || this.fireside.hasPerms('fireside-collaborators');
 	}
 

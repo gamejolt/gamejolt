@@ -5,18 +5,18 @@ import {
 	FiresideController,
 	FiresideControllerKey,
 } from '../../../../components/fireside/controller/controller';
-import { CohostRemoveModal } from './remove-modal.service';
+import { CohostManageModal } from './manage-modal.service';
 
 @Component({
 	directives: {
 		AppTooltip,
 	},
 })
-export default class AppFiresideStreamRemove extends Vue {
+export default class AppFiresideCohostManage extends Vue {
 	@InjectReactive(FiresideControllerKey)
 	c!: FiresideController;
 
-	openRemoveModal() {
-		CohostRemoveModal.show(this.c);
+	openManageModal() {
+		CohostManageModal.show(this.c);
 	}
 }

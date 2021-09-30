@@ -1,8 +1,8 @@
-<script lang="ts" src="./invite"></script>
+<script lang="ts" src="./manage"></script>
 
 <template>
 	<div class="-options-wrap">
-		<div v-app-tooltip="$gettext(`Invite Cohosts`)" class="-options" @click="openInviteModal">
+		<div v-app-tooltip="$gettext('Manage Cohosts')" class="-options" @click="openManageModal">
 			<app-jolticon class="-icon" icon="add" />
 		</div>
 	</div>
