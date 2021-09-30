@@ -568,6 +568,7 @@ export class AppFiresideContainer extends Vue {
 						throw new Error(response);
 					}
 
+					// TODO: DODO: Make better
 					// Manually update our role to something where we can stream.
 					if (c.fireside.role) {
 						c.fireside.role.role = 'cohost';
@@ -587,12 +588,28 @@ export class AppFiresideContainer extends Vue {
 					// Grab a producer if we don't have one and we're now able
 					// to stream.
 					c.rtc.producer ??= createFiresideRTCProducer(c.rtc);
+
+					// TODO: DODO: phrasing?
+					Growls.info(
+						this.$gettext(
+							`You've been added as a cohost for this fireside. You can start streaming or voice chatting!`
+						)
+					);
 				} else if (c.rtc.producer) {
 					// If our role doesn't allow us to stream and we have a
 					// producer, tear it down and clean it up.
 					await stopStreaming(c.rtc.producer);
 					destroyFiresideRTCProducer(c.rtc.producer);
 					c.rtc.producer = null;
+
+					// TODO: DODO: If this Fireside was a draft, we may need to
+					// re-initialize this component to see if they still have
+					// permissions to view it.
+
+					// TODO: DODO: phrasing?
+					Growls.info(
+						this.$gettext(`You've been removed as a cohost for this fireside.`)
+					);
 				}
 			}
 		}

@@ -28,6 +28,7 @@ export default class AppFiresideCohostManageModal extends BaseModal {
 
 	filterQuery = '';
 	usersProcessing: (ChatUser | User)[] = [];
+	isOpen = true;
 
 	get users() {
 		return [...this.controller.cohostableChatUsers, ...this.controller.unCohostableUsers].sort(
@@ -46,6 +47,10 @@ export default class AppFiresideCohostManageModal extends BaseModal {
 				fuzzysearch(filter, i.display_name.toLowerCase()) ||
 				fuzzysearch(filter, i.username.toLowerCase())
 		);
+	}
+
+	destroyed() {
+		this.isOpen = false;
 	}
 
 	isUserProcessing(user: ChatUser | User) {
@@ -71,18 +76,20 @@ export default class AppFiresideCohostManageModal extends BaseModal {
 		this.usersProcessing.push(user);
 
 		try {
-			const isCohost = this.isCohost(user);
-			if (isCohost) {
+			const wasCohost = this.isCohost(user);
+			if (wasCohost) {
 				await removeFiresideCohost(this.controller.fireside, user.id);
 			} else {
 				await inviteFiresideCohost(this.controller.fireside, user.id);
 			}
 
 			while (
-				(isCohost && this.controller.unCohostableUsers.includes(user as User)) ||
-				(!isCohost && this.controller.cohostableChatUsers.includes(user as ChatUser))
+				(wasCohost && this.controller.unCohostableUsers.includes(user as User)) ||
+				(!wasCohost && this.controller.cohostableChatUsers.includes(user as ChatUser))
 			) {
-				console.warn('waiting to check cohost status...');
+				if (!this.isOpen) {
+					break;
+				}
 				await sleep(250);
 			}
 		} finally {

@@ -11,7 +11,7 @@
 
 			<div class="modal-header">
 				<h2 class="modal-title">
-					<translate>Manage Cohosts</translate>
+					<translate>Add or Remove Co-hosts</translate>
 				</h2>
 			</div>
 
@@ -29,7 +29,9 @@
 							src="~img/ill/no-comments-small.svg"
 						>
 							<p>
-								<translate>There are no users in chat you can manage.</translate>
+								<translate>
+									There are no co-hosts to remove or chat users to invite.
+								</translate>
 							</p>
 						</app-illustration>
 						<div v-else class="-user-list">

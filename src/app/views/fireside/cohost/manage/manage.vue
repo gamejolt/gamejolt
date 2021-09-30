@@ -2,8 +2,12 @@
 
 <template>
 	<div class="-options-wrap">
-		<div v-app-tooltip="$gettext('Manage Cohosts')" class="-options" @click="openManageModal">
-			<app-jolticon class="-icon" icon="users" />
+		<div
+			v-app-tooltip="$gettext('Invite to Stream / Voice Chat')"
+			class="-options"
+			@click="openManageModal"
+		>
+			<app-jolticon class="-icon" icon="add" />
 		</div>
 	</div>
 </template>

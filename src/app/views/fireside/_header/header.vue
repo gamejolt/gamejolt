@@ -121,8 +121,8 @@
 									class="list-group-item has-icon"
 									@click="onClickManageCohosts"
 								>
-									<app-jolticon icon="users" />
-									<translate>Manage Cohosts</translate>
+									<app-jolticon icon="add" />
+									<translate>Invite to Stream / Voice Chat</translate>
 								</a>
 
 								<template v-if="shouldShowStreamSettings">
