@@ -527,7 +527,7 @@ export class AppFiresideContainer extends Vue {
 		const priorHosts = c.rtc?.hosts ?? [];
 		const newHosts = this.getHostsFromStreamingInfo(payload.streaming_info)?.map(newHost => {
 			const priorHost = priorHosts.find(i => i.user.id === newHost.user.id);
-			if (priorHost != null) {
+			if (priorHost) {
 				// Transfer over all previously assigned uids to the new host.
 				newHost.uids.push(...priorHost.uids);
 				arrayUnique(newHost.uids);
@@ -570,7 +570,6 @@ export class AppFiresideContainer extends Vue {
 						throw new Error(response);
 					}
 
-					// TODO: DODO: Make better
 					// Manually update our role to something where we can stream.
 					if (c.fireside.role) {
 						c.fireside.role.role = 'cohost';
@@ -591,10 +590,9 @@ export class AppFiresideContainer extends Vue {
 					// to stream.
 					c.rtc.producer ??= createFiresideRTCProducer(c.rtc);
 
-					// TODO: DODO: phrasing?
 					Growls.info(
 						this.$gettext(
-							`You've been added as a cohost for this fireside. You can start streaming or voice chatting!`
+							`You've been added as a host to this fireside. Hop into the stream!`
 						)
 					);
 				} else if (c.rtc.producer) {
@@ -604,14 +602,11 @@ export class AppFiresideContainer extends Vue {
 					destroyFiresideRTCProducer(c.rtc.producer);
 					c.rtc.producer = null;
 
-					// TODO: DODO: If this Fireside was a draft, we may need to
+					// TODO: If this Fireside was a draft, we may need to
 					// re-initialize this component to see if they still have
 					// permissions to view it.
 
-					// TODO: DODO: phrasing?
-					Growls.info(
-						this.$gettext(`You've been removed as a cohost for this fireside.`)
-					);
+					Growls.info(this.$gettext(`You've been removed as a host for this fireside.`));
 				}
 			}
 		}
