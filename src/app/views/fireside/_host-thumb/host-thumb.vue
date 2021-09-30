@@ -23,8 +23,7 @@
 				<div class="-active-indicator" :class="{ '-active': isFocused }" />
 			</div>
 
-			<!-- We currently only show these when not streaming since the audio streams are handled completely differently when you're a host. -->
-			<div v-if="c.rtc && !c.rtc.isStreaming" class="-options">
+			<div v-if="!isMe" class="-options">
 				<transition>
 					<span
 						v-if="host.micAudioMuted"

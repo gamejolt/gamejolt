@@ -32,10 +32,6 @@ export default class AppFiresideStreamOptions extends Vue {
 	@Emit('show-popper') emitShowPopper() {}
 	@Emit('hide-popper') emitHidePopper() {}
 
-	get hasOptions() {
-		return this.shouldShowMuteControls || this.c.shouldShowStreamingOptions;
-	}
-
 	get desktopVolume() {
 		return this.c.rtc?.desktopVolume ?? 1;
 	}
@@ -46,10 +42,6 @@ export default class AppFiresideStreamOptions extends Vue {
 
 	get shouldShowAsMuted() {
 		return this.shouldShowVolumeControls && this.desktopVolume === 0;
-	}
-
-	get shouldShowMuteControls() {
-		return this.c.rtc && !this.c.rtc.isStreaming;
 	}
 
 	get shouldMute() {
