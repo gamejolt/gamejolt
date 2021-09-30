@@ -59,6 +59,13 @@ export default class AppFiresideCohostManageModal extends BaseModal {
 		return this.usersProcessing.some(chatUser => chatUser.id === user.id);
 	}
 
+	isUserStreaming(user: ChatUser | User) {
+		return (
+			this.isCohost(user) &&
+			this.controller.rtc?.users.some(i => i.userModel?.id === user.id) === true
+		);
+	}
+
 	isCohost(user: ChatUser | User) {
 		return user instanceof User;
 	}

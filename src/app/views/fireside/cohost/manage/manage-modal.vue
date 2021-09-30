@@ -41,15 +41,21 @@
 									<div class="-username">@{{ user.username }}</div>
 								</div>
 
-								<app-button
-									:disabled="isUserProcessing(user)"
-									:solid="isCohost(user)"
-									:primary="isCohost(user)"
-									@click="processUser(user)"
-								>
-									<translate v-if="!isCohost(user)">Add</translate>
-									<translate v-else>Remove</translate>
-								</app-button>
+								<div class="-action">
+									<div v-if="isUserStreaming(user)" class="-live">
+										<translate>LIVE</translate>
+									</div>
+
+									<app-button
+										:disabled="isUserProcessing(user)"
+										:solid="isCohost(user)"
+										:primary="isCohost(user)"
+										@click="processUser(user)"
+									>
+										<translate v-if="!isCohost(user)">Add</translate>
+										<translate v-else>Remove</translate>
+									</app-button>
+								</div>
 								<!-- <div class="-radio" :class="{ '-active': selected(user) }">
 									<app-jolticon
 										:icon="selected(user) ? 'checkbox' : 'box-empty'"
@@ -146,4 +152,22 @@ $-height = 40px
 
 .-bottom
 	padding-bottom: $line-height-computed
+
+.-action
+	display: inline-flex
+	grid-gap: 12px
+	align-items: center
+
+.-live
+	rounded-corners-lg()
+	margin: 0
+	padding: 4px 8px
+	font-size: $font-size-h3
+	font-weight: 700
+	font-family: $font-family-heading
+	text-shadow: none
+	box-shadow: 1px 1px 3px $black
+	letter-spacing: 2px
+	color: $white
+	background-color: $gj-overlay-notice
 </style>
