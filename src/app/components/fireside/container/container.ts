@@ -1,6 +1,7 @@
 import Vue, { CreateElement } from 'vue';
 import { Component, InjectReactive, Prop, ProvideReactive } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
+import { arrayUnique } from '../../../../utils/array';
 import { objectPick } from '../../../../utils/object';
 import { updateServerTimeOffset } from '../../../../utils/server-time';
 import { sleep } from '../../../../utils/utils';
@@ -9,6 +10,11 @@ import { Api } from '../../../../_common/api/api.service';
 import { getCookie } from '../../../../_common/cookie/cookie.service';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresideRole } from '../../../../_common/fireside/role/role.model';
+import {
+	createFiresideRTCProducer,
+	destroyFiresideRTCProducer,
+	stopStreaming,
+} from '../../../../_common/fireside/rtc/producer';
 import {
 	createFiresideRTC,
 	destroyFiresideRTC,
@@ -225,7 +231,7 @@ export class AppFiresideContainer extends Vue {
 			// If they have a host role, or if this fireside is actively
 			// streaming, we'll get streaming tokens from the fetch payload. In
 			// that case, we want to set up the RTC stuff.
-			this.upsertRtc(payload, false);
+			this.upsertRtc(payload, { checkJoined: false });
 		} catch (error) {
 			console.debug(`[FIRESIDE] Setup failure 2.`, error);
 			c.status = 'setup-failed';
@@ -400,7 +406,16 @@ export class AppFiresideContainer extends Vue {
 		c.updateInterval = setInterval(() => updateFiresideExpiryValues(c), 1000);
 	}
 
-	private upsertRtc(payload: any, checkJoined = true) {
+	private async upsertRtc(
+		payload: any,
+		options: {
+			checkJoined?: boolean;
+			hosts?: FiresideRTCHost[];
+		} = {
+			checkJoined: true,
+		}
+	) {
+		const { checkJoined = true, hosts } = options;
 		const c = this.controller;
 		if (!c || !c.fireside || (checkJoined && c.status !== 'joined')) {
 			return;
@@ -412,18 +427,9 @@ export class AppFiresideContainer extends Vue {
 			return;
 		}
 
-		const streamingUids = payload.streamingUids ?? [];
-		const hosts: FiresideRTCHost[] = (User.populate(payload.hosts ?? []) as User[]).map(
-			user => ({
-				user,
-				uids: streamingUids[user.id] ?? [],
-			})
-		);
-
 		if (c.rtc === null) {
 			c.rtc = createFiresideRTC(
 				c.fireside,
-				c.fireside.role,
 				this.user?.id ?? null,
 				payload.streamingAppId,
 				payload.streamingUid,
@@ -431,13 +437,29 @@ export class AppFiresideContainer extends Vue {
 				payload.videoToken,
 				payload.chatChannelName,
 				payload.chatToken,
-				hosts,
+				hosts ?? this.getHostsFromStreamingInfo(payload) ?? [],
 				{ isMuted: c.isMuted }
 			);
+		} else if (c.fireside.role?.canStream === true) {
+			c.rtc.producer ??= createFiresideRTCProducer(c.rtc);
 		} else {
-			// TODO: update hosts when we introduce changing hosts on the fly.
 			renewRTCAudienceTokens(c.rtc, payload.videoToken, payload.chatToken);
 		}
+	}
+
+	private getHostsFromStreamingInfo(streamingInfo: any) {
+		if (!streamingInfo.hosts) {
+			return;
+		}
+
+		const streamingUids = streamingInfo.streamingUids ?? [];
+		const hosts: FiresideRTCHost[] = (User.populate(streamingInfo.hosts ?? []) as User[]).map(
+			user => ({
+				user,
+				uids: streamingUids[user.id] ?? [],
+			})
+		);
+		return hosts;
 	}
 
 	private destroyRtc() {
@@ -455,7 +477,7 @@ export class AppFiresideContainer extends Vue {
 		this.tryJoin();
 	}
 
-	onGridUpdateFireside(payload: any) {
+	async onGridUpdateFireside(payload: any) {
 		const c = this.controller;
 		if (!c.fireside || !payload.fireside) {
 			return;
@@ -491,6 +513,73 @@ export class AppFiresideContainer extends Vue {
 			])
 		);
 
+		const priorHosts = c.rtc?.hosts ?? [];
+		const newHosts = this.getHostsFromStreamingInfo(payload.streaming_info)?.map(newHost => {
+			const priorHost = priorHosts.find(i => i.user.id === newHost.user.id);
+			if (priorHost != null) {
+				// Transfer over all previously assigned uids to the new host.
+				newHost.uids.push(...priorHost.uids);
+				arrayUnique(newHost.uids);
+			}
+			return newHost;
+		});
+
+		// Don't do anything if we don't have an RTC yet or if there was an
+		// issue creating new hosts.
+		if (c.rtc && newHosts) {
+			const wasHost = priorHosts.some(host => host.user.id === this.user?.id);
+			const isHost = newHosts.some(host => host.user.id === this.user?.id);
+
+			if (newHosts.length > 0) {
+				// Replace our old hosts with the new ones we just got.
+				c.rtc.hosts.splice(0, c.rtc.hosts.length);
+				c.rtc.hosts.push(...newHosts);
+			}
+
+			// If our host state changed, we need to update anything else
+			// depending on streaming.
+			if (isHost !== wasHost) {
+				try {
+					// If this fails, we're unable to stream.
+					const response = await Api.sendRequest(
+						'/web/dash/fireside/generate-streaming-tokens/' + c.fireside.id,
+						{ streaming_uid: c.rtc.streamingUid },
+						{ detach: true }
+					);
+
+					if (response?.success !== true) {
+						throw new Error(response);
+					}
+
+					// Manually update our role to something where we can stream.
+					if (c.fireside.role) {
+						c.fireside.role.role = 'cohost';
+						c.fireside.role.can_stream_audio = true;
+						c.fireside.role.can_stream_video = true;
+					}
+				} catch (_) {
+					// If our host state changed, downgrade ourselves to an audience member.
+					if (!isHost && wasHost && c.fireside.role) {
+						c.fireside.role.role = 'audience';
+						c.fireside.role.can_stream_audio = false;
+						c.fireside.role.can_stream_video = false;
+					}
+				}
+
+				if (c.fireside.role?.canStream === true) {
+					// Grab a producer if we don't have one and we're now able
+					// to stream.
+					c.rtc.producer ??= createFiresideRTCProducer(c.rtc);
+				} else if (c.rtc.producer) {
+					// If our role doesn't allow us to stream and we have a
+					// producer, tear it down and clean it up.
+					await stopStreaming(c.rtc.producer);
+					destroyFiresideRTCProducer(c.rtc.producer);
+					c.rtc.producer = null;
+				}
+			}
+		}
+
 		this.expiryCheck();
 
 		// We don't update host streaming info through this. Only the audience
@@ -500,7 +589,7 @@ export class AppFiresideContainer extends Vue {
 		}
 
 		if (c.fireside.is_streaming && payload.streaming_info) {
-			this.upsertRtc(payload.streaming_info);
+			this.upsertRtc(payload.streaming_info, { hosts: newHosts });
 		} else {
 			this.destroyRtc();
 		}

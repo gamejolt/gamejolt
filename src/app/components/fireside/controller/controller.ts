@@ -127,6 +127,31 @@ export class FiresideController {
 		return !!this.user && this.user.id === this.fireside.user.id;
 	}
 
+	get cohostableChatUsers() {
+		if (!this.rtc) {
+			return [];
+		}
+
+		const currentHosts = this.rtc.hosts;
+		return (
+			this.chatUsers?.collection.filter(
+				chatUser => !currentHosts.some(host => host.user.id === chatUser.id)
+			) ?? []
+		);
+	}
+
+	get unCohostableUsers() {
+		if (!this.rtc) {
+			return [];
+		}
+
+		return this.rtc.hosts.map(i => i.user).filter(i => i.id != this.user?.id);
+	}
+
+	get canInviteCohosts() {
+		return this.isOwner || this.fireside.hasPerms('fireside-collaborators');
+	}
+
 	get canCommunityFeature() {
 		return !!this.fireside.community && canCommunityFeatureFireside(this.fireside.community);
 	}

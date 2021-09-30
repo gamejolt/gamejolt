@@ -6,7 +6,6 @@ import { Navigate } from '../../navigate/navigate.service';
 import { SettingStreamDesktopVolume } from '../../settings/settings.service';
 import { User } from '../../user/user.model';
 import { Fireside } from '../fireside.model';
-import { FiresideRole } from '../role/role.model';
 import {
 	createFiresideRTCChannel,
 	destroyChannel,
@@ -44,7 +43,6 @@ type Options = { isMuted?: boolean };
 export class FiresideRTC {
 	constructor(
 		public readonly fireside: Fireside,
-		public readonly role: FiresideRole | null,
 		public readonly userId: number | null,
 		public readonly appId: string,
 		public readonly streamingUid: number,
@@ -101,6 +99,10 @@ export class FiresideRTC {
 	 */
 	localUser: FiresideRTCUser | null = null;
 
+	get role() {
+		return this.fireside.role;
+	}
+
 	get users() {
 		// We put the local user first if they're currently streaming.
 		return Object.freeze([...(this.localUser ? [this.localUser] : []), ...this._users]);
@@ -129,7 +131,6 @@ export class FiresideRTC {
 
 export function createFiresideRTC(
 	fireside: Fireside,
-	role: FiresideRole | null,
 	userId: number | null,
 	appId: string,
 	streamingUid: number,
@@ -142,7 +143,6 @@ export function createFiresideRTC(
 ) {
 	const rtc = new FiresideRTC(
 		fireside,
-		role,
 		userId,
 		appId,
 		streamingUid,

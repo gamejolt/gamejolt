@@ -1,4 +1,5 @@
 import { getCurrentServerTime } from '../../utils/server-time';
+import { Api } from '../api/api.service';
 import { Collaboratable } from '../collaborator/collaboratable';
 import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
@@ -129,3 +130,12 @@ export class Fireside extends Collaboratable(Model) {
 }
 
 Model.create(Fireside);
+
+export function inviteFiresideCohost(fireside: Fireside, cohostId: number) {
+	return Api.sendRequest(`/web/dash/fireside/add-cohost/${fireside.id}/${cohostId}`, {});
+}
+
+export function removeFiresideCohost(fireside: Fireside, cohostId: number) {
+	return Api.sendRequest(`/web/dash/fireside/remove-cohost/${fireside.id}/${cohostId}`, {});
+	//
+}

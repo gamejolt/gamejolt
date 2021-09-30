@@ -8,6 +8,11 @@
 				@hide-popper="emitHidePopper"
 			/>
 
+			<template v-if="canInviteCohosts">
+				<app-fireside-stream-invite />
+				<app-fireside-stream-remove />
+			</template>
+
 			<app-fireside-host-thumb
 				v-for="host of c.rtc.users"
 				:key="host.uid"

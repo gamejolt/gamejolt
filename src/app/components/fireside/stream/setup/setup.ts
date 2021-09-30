@@ -5,6 +5,7 @@ import AppExpand from '../../../../../_common/expand/expand.vue';
 import {
 	assignPreferredProducerDevices,
 	clearSelectedRecordingDevices,
+	FiresideRTCProducer,
 	PRODUCER_DEFAULT_GROUP_AUDIO,
 	PRODUCER_UNSET_DEVICE,
 	setSelectedDesktopAudioDeviceId,
@@ -22,6 +23,7 @@ import AppFormLegend from '../../../../../_common/form-vue/legend/legend.vue';
 import AppLoadingFade from '../../../../../_common/loading/fade/fade.vue';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import { FiresideController } from '../../controller/controller';
+import { StreamSetupModal } from './setup-modal.service';
 import AppVolumeMeter from './volume-meter.vue';
 
 type FormModel = {
@@ -50,6 +52,7 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 	isStarting = false;
 	private shouldShowAdvanced = false;
 	private _didDetectDevices = false;
+	private _producer!: FiresideRTCProducer;
 
 	private networkQualityDebounce: () => void = null as any;
 
@@ -66,11 +69,14 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		return this.c.rtc!;
 	}
 
+	// This could potentially get cleared out if the user loses their hosting
+	// permissions in the middle of streaming.
 	get producer() {
 		return this.c.rtc!.producer!;
 	}
 
 	onInit() {
+		this._producer = this.producer;
 		this.c.isShowingStreamSetup = true;
 
 		const webcamId = this.getDeviceFromId(
@@ -114,14 +120,14 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 		// If we're not streaming or about to, clear the selected device ids so
 		// that the browser doesn't think we're still recording.
 		if (!(this.isStreaming || this.isStarting)) {
-			clearSelectedRecordingDevices(this.producer);
+			clearSelectedRecordingDevices(this._producer);
 		}
 
 		this.c.isShowingStreamSetup = false;
 	}
 
 	get isStreaming() {
-		return this.producer.isStreaming;
+		return this.producer?.isStreaming === true;
 	}
 
 	get hasMicAudio() {
@@ -150,6 +156,15 @@ export default class AppStreamSetup extends BaseForm<FormModel> implements FormO
 
 	get selectedDesktopAudioGroupId() {
 		return this.getDeviceFromId(this.formModel.selectedDesktopAudioDeviceId, 'mic')?.groupId;
+	}
+
+	@Watch('producer')
+	onProducerChanged() {
+		// The only way this should trigger is if we get removed as a cohost
+		// while we're creating/modifying a stream setup.
+		if (!this.producer) {
+			StreamSetupModal.close();
+		}
 	}
 
 	@Watch('canStreamVideo', { immediate: true })
