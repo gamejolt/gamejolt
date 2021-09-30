@@ -100,16 +100,6 @@ $-height = 40px
 	&:last-child
 		border-bottom: 0
 
-	&:hover
-		.-radio
-			color: var(--theme-link-hover)
-
-.-radio
-	color: var(--theme-bg-subtle)
-
-	&.-active
-		color: var(--theme-highlight)
-
 .-avatar
 	flex: none
 	width: $-height
@@ -129,19 +119,6 @@ $-height = 40px
 .-username
 	theme-prop('color', 'fg-muted')
 	font-size: $font-size-small
-
-.-button
-	flex: none
-	margin-left: $-h-padding
-
-.-selected-users
-	display: flex
-	justify-content: center
-	margin-top: -10px
-	margin-bottom: 4px
-
-.-bottom
-	padding-bottom: $line-height-computed
 
 .-action
 	display: inline-flex

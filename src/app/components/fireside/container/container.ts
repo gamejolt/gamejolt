@@ -314,9 +314,11 @@ export class AppFiresideContainer extends Vue {
 				{ detach: true }
 			);
 
-			if (!payload.fireside && assignRouteStatus) {
+			if (!payload.fireside) {
 				console.debug(`[FIRESIDE] Trying to load fireside, but it was not found.`);
-				c.status = 'setup-failed';
+				if (assignRouteStatus) {
+					c.status = 'setup-failed';
+				}
 				return false;
 			}
 
@@ -331,8 +333,8 @@ export class AppFiresideContainer extends Vue {
 			// that case, we want to set up the RTC stuff.
 			this.upsertRtc(payload, { checkJoined: false });
 		} catch (error) {
+			console.debug(`[FIRESIDE] Setup failure 2.`, error);
 			if (assignRouteStatus) {
-				console.debug(`[FIRESIDE] Setup failure 2.`, error);
 				c.status = 'setup-failed';
 			}
 			return false;
