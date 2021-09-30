@@ -6,6 +6,7 @@ import {
 	inviteFiresideCohost,
 	removeFiresideCohost,
 } from '../../../../../_common/fireside/fireside.model';
+import AppIllustration from '../../../../../_common/illustration/illustration.vue';
 import { BaseModal } from '../../../../../_common/modal/base';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
 import AppUserAvatarImg from '../../../../../_common/user/user-avatar/img/img.vue';
@@ -19,6 +20,7 @@ import { FiresideController } from '../../../../components/fireside/controller/c
 		AppScrollScroller,
 		AppUserAvatarImg,
 		AppUserAvatarList,
+		AppIllustration,
 	},
 })
 export default class AppFiresideCohostManageModal extends BaseModal {
@@ -45,15 +47,6 @@ export default class AppFiresideCohostManageModal extends BaseModal {
 				fuzzysearch(filter, i.username.toLowerCase())
 		);
 	}
-
-	// toggle(user: ChatUser | User) {
-	// 	const index = this.selectedUsers.findIndex(chatUser => chatUser.id === user.id);
-	// 	if (index !== -1) {
-	// 		this.selectedUsers.splice(index, 1);
-	// 	} else {
-	// 		this.selectedUsers.push(user);
-	// 	}
-	// }
 
 	isUserProcessing(user: ChatUser | User) {
 		return this.usersProcessing.some(chatUser => chatUser.id === user.id);

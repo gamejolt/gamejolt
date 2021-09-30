@@ -21,6 +21,7 @@ import {
 	publishFireside,
 } from '../../../components/fireside/controller/controller';
 import { StreamSetupModal } from '../../../components/fireside/stream/setup/setup-modal.service';
+import { CohostManageModal } from '../cohost/manage/manage-modal.service';
 import { FiresideChatMembersModal } from '../_chat-members/modal/modal.service';
 import { FiresideEditModal } from '../_edit-modal/edit-modal.service';
 
@@ -89,6 +90,10 @@ export default class AppFiresideHeader extends Vue {
 
 	onClickEditFireside() {
 		FiresideEditModal.show(this.c);
+	}
+
+	onClickManageCohosts() {
+		CohostManageModal.show(this.c);
 	}
 
 	onClickPublish() {

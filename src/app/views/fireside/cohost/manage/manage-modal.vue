@@ -24,7 +24,15 @@
 					/>
 
 					<app-scroll-scroller>
-						<div class="-user-list">
+						<app-illustration
+							v-if="filteredUsers.length === 0"
+							src="~img/ill/no-comments-small.svg"
+						>
+							<p>
+								<translate>There are no users in chat you can manage.</translate>
+							</p>
+						</app-illustration>
+						<div v-else class="-user-list">
 							<div
 								v-for="user of filteredUsers"
 								:key="user.id"
@@ -56,32 +64,12 @@
 										<translate v-else>Remove</translate>
 									</app-button>
 								</div>
-								<!-- <div class="-radio" :class="{ '-active': selected(user) }">
-									<app-jolticon
-										:icon="selected(user) ? 'checkbox' : 'box-empty'"
-									/>
-								</div> -->
 							</div>
 						</div>
 					</app-scroll-scroller>
 				</div>
 			</div>
 		</template>
-
-		<!-- <template #footer>
-			<div class="-bottom">
-				<app-user-avatar-list
-					v-if="selectedUsers.length > 0"
-					class="-selected-users"
-					:users="selectedUsers"
-					sm
-				/>
-
-				<app-button primary block :disabled="selectedUsers.length < 1" @click="invite">
-					<translate>Invite Cohosts</translate>
-				</app-button>
-			</div>
-		</template> -->
 	</app-modal>
 </template>
 
