@@ -209,32 +209,8 @@ export class AppFiresideContainer extends Vue {
 
 		// --- Refetch fireside information and check that it's not yet expired.
 
-		try {
-			const payload = await Api.sendRequest(
-				`/web/fireside/fetch-for-streaming/${c.fireside.hash}`,
-				undefined,
-				{ detach: true }
-			);
-
-			if (!payload.fireside) {
-				console.debug(`[FIRESIDE] Trying to load fireside, but it was not found.`);
-				c.status = 'setup-failed';
-				return;
-			}
-
-			if (payload.serverTime) {
-				updateServerTimeOffset(payload.serverTime);
-			}
-
-			c.fireside.assign(payload.fireside);
-
-			// If they have a host role, or if this fireside is actively
-			// streaming, we'll get streaming tokens from the fetch payload. In
-			// that case, we want to set up the RTC stuff.
-			this.upsertRtc(payload, { checkJoined: false });
-		} catch (error) {
-			console.debug(`[FIRESIDE] Setup failure 2.`, error);
-			c.status = 'setup-failed';
+		const canProceed = await this._fetchForStreaming({ assignRouteStatus: true });
+		if (!canProceed) {
 			return;
 		}
 
@@ -327,6 +303,41 @@ export class AppFiresideContainer extends Vue {
 
 		this.setupExpiryInfoInterval();
 		updateFiresideExpiryValues(c);
+	}
+
+	private async _fetchForStreaming({ assignRouteStatus = true }) {
+		const c = this.controller;
+		try {
+			const payload = await Api.sendRequest(
+				`/web/fireside/fetch-for-streaming/${c.fireside.hash}`,
+				undefined,
+				{ detach: true }
+			);
+
+			if (!payload.fireside && assignRouteStatus) {
+				console.debug(`[FIRESIDE] Trying to load fireside, but it was not found.`);
+				c.status = 'setup-failed';
+				return false;
+			}
+
+			if (payload.serverTime) {
+				updateServerTimeOffset(payload.serverTime);
+			}
+
+			c.fireside.assign(payload.fireside);
+
+			// If they have a host role, or if this fireside is actively
+			// streaming, we'll get streaming tokens from the fetch payload. In
+			// that case, we want to set up the RTC stuff.
+			this.upsertRtc(payload, { checkJoined: false });
+		} catch (error) {
+			if (assignRouteStatus) {
+				console.debug(`[FIRESIDE] Setup failure 2.`, error);
+				c.status = 'setup-failed';
+			}
+			return false;
+		}
+		return true;
 	}
 
 	private async getAuthToken() {
@@ -440,9 +451,7 @@ export class AppFiresideContainer extends Vue {
 				hosts ?? this.getHostsFromStreamingInfo(payload) ?? [],
 				{ isMuted: c.isMuted }
 			);
-		} else if (c.fireside.role?.canStream === true) {
-			c.rtc.producer ??= createFiresideRTCProducer(c.rtc);
-		} else {
+		} else if (!c.rtc.producer) {
 			renewRTCAudienceTokens(c.rtc, payload.videoToken, payload.chatToken);
 		}
 	}
@@ -524,14 +533,13 @@ export class AppFiresideContainer extends Vue {
 			return newHost;
 		});
 
-		// Don't do anything if we don't have an RTC yet or if there was an
-		// issue creating new hosts.
-		if (c.rtc && newHosts) {
+		if (newHosts) {
 			const wasHost = priorHosts.some(host => host.user.id === this.user?.id);
 			const isHost = newHosts.some(host => host.user.id === this.user?.id);
 
-			if (newHosts.length > 0) {
-				// Replace our old hosts with the new ones we just got.
+			if (c.rtc && newHosts.length > 0) {
+				// If we have an RTC, replace our old hosts with the new ones we
+				// just got.
 				c.rtc.hosts.splice(0, c.rtc.hosts.length);
 				c.rtc.hosts.push(...newHosts);
 			}
@@ -539,8 +547,17 @@ export class AppFiresideContainer extends Vue {
 			// If our host state changed, we need to update anything else
 			// depending on streaming.
 			if (isHost !== wasHost) {
+				// If we don't actually have an RTC created yet, take us through
+				// the normal Host initialization.
+				if (!c.rtc) {
+					await this._fetchForStreaming({ assignRouteStatus: false });
+					this.expiryCheck();
+					return;
+				}
+
 				try {
-					// If this fails, we're unable to stream.
+					// Validate our streamingUid. If this fails, we're unable to
+					// stream.
 					const response = await Api.sendRequest(
 						'/web/dash/fireside/generate-streaming-tokens/' + c.fireside.id,
 						{ streaming_uid: c.rtc.streamingUid },
