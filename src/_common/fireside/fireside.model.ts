@@ -131,11 +131,10 @@ export class Fireside extends Collaboratable(Model) {
 
 Model.create(Fireside);
 
-export function inviteFiresideCohost(fireside: Fireside, cohostId: number) {
-	return Api.sendRequest(`/web/dash/fireside/add-cohost/${fireside.id}/${cohostId}`, {});
+export function inviteFiresideHost(fireside: Fireside, hostId: number) {
+	return Api.sendRequest(`/web/dash/fireside/add-host/${fireside.id}`, { host_id: hostId });
 }
 
-export function removeFiresideCohost(fireside: Fireside, cohostId: number) {
-	return Api.sendRequest(`/web/dash/fireside/remove-cohost/${fireside.id}/${cohostId}`, {});
-	//
+export function removeFiresideHost(fireside: Fireside, hostId: number) {
+	return Api.sendRequest(`/web/dash/fireside/remove-host/${fireside.id}`, { host_id: hostId });
 }

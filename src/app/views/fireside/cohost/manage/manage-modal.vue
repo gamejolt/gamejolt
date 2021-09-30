@@ -11,7 +11,7 @@
 
 			<div class="modal-header">
 				<h2 class="modal-title">
-					<translate>Add or Remove Co-hosts</translate>
+					<translate>Manage Hosts</translate>
 				</h2>
 			</div>
 
@@ -23,52 +23,44 @@
 						placeholder="Filter..."
 					/>
 
-					<app-scroll-scroller>
-						<app-illustration
-							v-if="filteredUsers.length === 0"
-							src="~img/ill/no-comments-small.svg"
-						>
-							<p>
-								<translate>
-									There are no co-hosts to remove or chat users to invite.
-								</translate>
-							</p>
-						</app-illustration>
-						<div v-else class="-user-list">
-							<div
-								v-for="user of filteredUsers"
-								:key="user.id"
-								class="-user-list-item"
-							>
-								<div class="-avatar">
-									<app-user-avatar-img :user="user" />
+					<app-illustration
+						v-if="filteredUsers.length === 0"
+						src="~img/ill/no-comments-small.svg"
+					>
+						<p>
+							<translate>There are no people here.</translate>
+						</p>
+					</app-illustration>
+					<div v-else class="-user-list">
+						<div v-for="user of filteredUsers" :key="user.id" class="-user-list-item">
+							<div class="-avatar">
+								<app-user-avatar-img :user="user" />
+							</div>
+
+							<div class="-label">
+								<div class="-name">
+									{{ user.display_name }}
+								</div>
+								<div class="-username">@{{ user.username }}</div>
+							</div>
+
+							<div class="-action">
+								<div v-if="isUserStreaming(user)" class="-live">
+									<translate>LIVE</translate>
 								</div>
 
-								<div class="-label">
-									<div class="-name">
-										{{ user.display_name }}
-									</div>
-									<div class="-username">@{{ user.username }}</div>
-								</div>
-
-								<div class="-action">
-									<div v-if="isUserStreaming(user)" class="-live">
-										<translate>LIVE</translate>
-									</div>
-
-									<app-button
-										:disabled="isUserProcessing(user)"
-										:solid="isCohost(user)"
-										:primary="isCohost(user)"
-										@click="processUser(user)"
-									>
-										<translate v-if="!isCohost(user)">Add</translate>
-										<translate v-else>Remove</translate>
-									</app-button>
-								</div>
+								<app-button
+									:disabled="isUserProcessing(user)"
+									:solid="isHost(user)"
+									:primary="isHost(user)"
+									@click="processUser(user)"
+								>
+									<translate v-if="!isHost(user)">Add</translate>
+									<translate v-else>Remove</translate>
+								</app-button>
 							</div>
 						</div>
-					</app-scroll-scroller>
+					</div>
 				</div>
 			</div>
 		</template>
@@ -95,7 +87,6 @@ $-height = 40px
 	overflow: hidden
 	border-bottom-width: $border-width-small
 	border-bottom-style: solid
-	cursor: pointer
 
 	&:last-child
 		border-bottom: 0
@@ -126,7 +117,7 @@ $-height = 40px
 	align-items: center
 
 .-live
-	rounded-corners-lg()
+	rounded-corners()
 	margin: 0
 	padding: 4px 8px
 	font-size: $font-size-h3

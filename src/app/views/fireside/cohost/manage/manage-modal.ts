@@ -3,12 +3,12 @@ import { stringSort } from '../../../../../utils/array';
 import { fuzzysearch } from '../../../../../utils/string';
 import { sleep } from '../../../../../utils/utils';
 import {
-	inviteFiresideCohost,
-	removeFiresideCohost,
+	inviteFiresideHost,
+	removeFiresideHost,
 } from '../../../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../../../_common/illustration/illustration.vue';
 import { BaseModal } from '../../../../../_common/modal/base';
-import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
+import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import AppUserAvatarImg from '../../../../../_common/user/user-avatar/img/img.vue';
 import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../../_common/user/user.model';
@@ -17,22 +17,49 @@ import { FiresideController } from '../../../../components/fireside/controller/c
 
 @Component({
 	components: {
-		AppScrollScroller,
 		AppUserAvatarImg,
 		AppUserAvatarList,
 		AppIllustration,
 	},
 })
 export default class AppFiresideCohostManageModal extends BaseModal {
-	@Prop({ type: FiresideController, required: true }) controller!: FiresideController;
+	@Prop({ type: FiresideController, required: true })
+	controller!: FiresideController;
+
+	@AppState user!: AppStore['user'];
 
 	filterQuery = '';
 	usersProcessing: (ChatUser | User)[] = [];
 	isOpen = true;
 
+	get rtc() {
+		return this.controller.rtc;
+	}
+
+	get hostableChatUsers() {
+		if (!this.rtc) {
+			return [];
+		}
+
+		const currentHosts = this.rtc.hosts;
+		return (
+			this.controller.chatUsers?.collection.filter(
+				i => !currentHosts.some(host => host.user.id === i.id)
+			) ?? []
+		);
+	}
+
+	get unhostableUsers() {
+		if (!this.rtc) {
+			return [];
+		}
+
+		return this.rtc.hosts.map(i => i.user).filter(i => i.id !== this.user?.id);
+	}
+
 	get users() {
-		return [...this.controller.cohostableChatUsers, ...this.controller.unCohostableUsers].sort(
-			(a, b) => stringSort(a.display_name, b.display_name)
+		return [...this.hostableChatUsers, ...this.unhostableUsers].sort((a, b) =>
+			stringSort(a.display_name, b.display_name)
 		);
 	}
 
@@ -58,13 +85,10 @@ export default class AppFiresideCohostManageModal extends BaseModal {
 	}
 
 	isUserStreaming(user: ChatUser | User) {
-		return (
-			this.isCohost(user) &&
-			this.controller.rtc?.users.some(i => i.userModel?.id === user.id) === true
-		);
+		return this.isHost(user) && this.rtc?.users.some(i => i.userModel?.id === user.id) === true;
 	}
 
-	isCohost(user: ChatUser | User) {
+	isHost(user: ChatUser | User) {
 		return user instanceof User;
 	}
 
@@ -76,16 +100,17 @@ export default class AppFiresideCohostManageModal extends BaseModal {
 		this.usersProcessing.push(user);
 
 		try {
-			const wasCohost = this.isCohost(user);
-			if (wasCohost) {
-				await removeFiresideCohost(this.controller.fireside, user.id);
+			const wasHost = this.isHost(user);
+			if (wasHost) {
+				await removeFiresideHost(this.controller.fireside, user.id);
 			} else {
-				await inviteFiresideCohost(this.controller.fireside, user.id);
+				await inviteFiresideHost(this.controller.fireside, user.id);
 			}
 
+			// We will get a grid message that will update the RTC host list.
 			while (
-				(wasCohost && this.controller.unCohostableUsers.includes(user as User)) ||
-				(!wasCohost && this.controller.cohostableChatUsers.includes(user as ChatUser))
+				(wasHost && this.unhostableUsers.includes(user as User)) ||
+				(!wasHost && this.hostableChatUsers.includes(user as ChatUser))
 			) {
 				if (!this.isOpen) {
 					break;
