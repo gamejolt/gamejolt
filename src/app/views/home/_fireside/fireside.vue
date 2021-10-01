@@ -13,7 +13,7 @@
 			</span>
 		</div>
 
-		<template v-if="featuredFireside">
+		<template v-if="featuredFireside && Screen.isDesktop">
 			<app-fireside-badge :fireside="featuredFireside" show-preview />
 		</template>
 
