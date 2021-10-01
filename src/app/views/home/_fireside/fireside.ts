@@ -8,6 +8,7 @@ import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue'
 import AppFiresideAvatarAdd from '../../../components/fireside/avatar/add/add.vue';
 import AppFiresideAvatar from '../../../components/fireside/avatar/avatar.vue';
 import AppFiresideAvatarBase from '../../../components/fireside/avatar/_base/base.vue';
+import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
 
 @Component({
 	components: {
@@ -16,6 +17,7 @@ import AppFiresideAvatarBase from '../../../components/fireside/avatar/_base/bas
 		AppFiresideAvatarAdd,
 		AppFiresideAvatarBase,
 		AppScrollScroller,
+		AppFiresideBadge,
 	},
 })
 export default class AppHomeFireside extends Vue {
@@ -24,6 +26,9 @@ export default class AppHomeFireside extends Vue {
 
 	@Prop({ type: Boolean, required: true })
 	isLoading!: boolean;
+
+	@Prop({ type: Fireside, required: false, default: null })
+	featuredFireside!: Fireside | null;
 
 	@Prop({ type: Fireside, required: false, default: null })
 	userFireside!: Fireside | null;

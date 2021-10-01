@@ -13,6 +13,10 @@
 			</span>
 		</div>
 
+		<template v-if="featuredFireside">
+			<app-fireside-badge :fireside="featuredFireside" show-preview />
+		</template>
+
 		<div class="-list">
 			<component
 				:is="shouldDisplaySingleRow ? 'app-scroll-scroller' : 'div'"

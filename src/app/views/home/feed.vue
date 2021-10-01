@@ -125,6 +125,7 @@
 
 			<template v-if="!Screen.isMobile" #right>
 				<app-home-fireside
+					:featured-fireside="featuredFireside"
 					:user-fireside="userFireside"
 					:firesides="firesides"
 					:is-loading="isLoadingFiresides"

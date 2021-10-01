@@ -83,6 +83,7 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	firesideStartDeregister: EventBusDeregister | null = null;
 	isLoadingFiresides = true;
 	isFiresidesBootstrapped = false;
+	featuredFireside: Fireside | null = null;
 	userFireside: Fireside | null = null;
 	firesides: Fireside[] = [];
 
@@ -197,6 +198,9 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 			});
 			this.userFireside = payload.userFireside ? new Fireside(payload.userFireside) : null;
 			this.firesides = payload.firesides ? Fireside.populate(payload.firesides) : [];
+			this.featuredFireside = payload.featuredFireside
+				? new Fireside(payload.featuredFireside)
+				: null;
 		} catch (error) {
 			console.error('Failed to refresh fireside data.', error);
 		}
