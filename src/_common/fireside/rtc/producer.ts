@@ -391,11 +391,11 @@ function _updateWebcamDevice(producer: FiresideRTCProducer) {
 
 			const track = await AgoraRTC.createCameraVideoTrack({
 				cameraId: deviceId,
-				optimizationMode: 'motion',
+				optimizationMode: 'detail',
 				encoderConfig: {
 					bitrateMax: 5_000,
-					width: { max: 1280 },
-					height: { max: 720 },
+					width: { max: 1280, ideal: 1280 },
+					height: { max: 720, ideal: 720 },
 					frameRate: { max: 30 },
 				},
 			});
