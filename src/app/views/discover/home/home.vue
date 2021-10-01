@@ -6,6 +6,28 @@
 		<app-discover-home-banner :is-loading="!isRouteBootstrapped" :item="featuredItem" />
 
 		<section class="section fill-backdrop">
+			<template v-if="featuredFireside">
+				<div class="container">
+					<div class="text-center">
+						<h2 class="section-header">
+							<translate>Featured Fireside</translate>
+						</h2>
+						<p>
+							<translate>Stream together with your friends in firesides!</translate>
+						</p>
+						<hr class="underbar underbar-center" />
+					</div>
+
+					<div class="row">
+						<div class="col-lg-10 col-centered">
+							<app-fireside-badge :fireside="featuredFireside" show-preview />
+						</div>
+					</div>
+				</div>
+
+				<br />
+			</template>
+
 			<app-discover-home-communities
 				:is-loading="!isRouteBootstrapped"
 				:communities="featuredCommunities"
