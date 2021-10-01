@@ -116,6 +116,15 @@
 									<translate>Edit Fireside</translate>
 								</a>
 
+								<a
+									v-if="c.canManageCohosts"
+									class="list-group-item has-icon"
+									@click="onClickManageCohosts"
+								>
+									<app-jolticon icon="friends" />
+									<translate>Manage Hosts</translate>
+								</a>
+
 								<template v-if="shouldShowStreamSettings">
 									<a class="list-group-item has-icon" @click="onClickEditStream">
 										<app-jolticon icon="broadcast" />

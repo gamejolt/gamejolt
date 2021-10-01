@@ -5,6 +5,7 @@ import {
 	FiresideController,
 	FiresideControllerKey,
 } from '../../../components/fireside/controller/controller';
+import AppFiresideCohostManage from '../cohost/manage/manage.vue';
 import AppFiresideHostThumb from '../_host-thumb/host-thumb.vue';
 import AppFiresideStreamOptions from '../_stream-options/stream-options.vue';
 
@@ -13,6 +14,7 @@ import AppFiresideStreamOptions from '../_stream-options/stream-options.vue';
 		AppFiresideHostThumb,
 		AppScrollScroller,
 		AppFiresideStreamOptions,
+		AppFiresideCohostManage,
 	},
 })
 export default class AppFiresideHostList extends Vue {
@@ -23,4 +25,8 @@ export default class AppFiresideHostList extends Vue {
 
 	@Emit('show-popper') emitShowPopper() {}
 	@Emit('hide-popper') emitHidePopper() {}
+
+	get canManageCohosts() {
+		return this.c.canManageCohosts;
+	}
 }

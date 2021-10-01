@@ -127,6 +127,10 @@ export class FiresideController {
 		return !!this.user && this.user.id === this.fireside.user.id;
 	}
 
+	get canManageCohosts() {
+		return this.isOwner || this.fireside.hasPerms('fireside-collaborators');
+	}
+
 	get canCommunityFeature() {
 		return !!this.fireside.community && canCommunityFeatureFireside(this.fireside.community);
 	}

@@ -40,6 +40,10 @@ export default class AppFiresideHostThumb extends Vue {
 		return this.c.rtc?.focusedUser === this.host;
 	}
 
+	get isMe() {
+		return this.c.rtc?.localUser === this.host;
+	}
+
 	get showingVideoThumb() {
 		return !this.isFocused && this.host.hasVideo;
 	}

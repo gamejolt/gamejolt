@@ -8,6 +8,8 @@
 				@hide-popper="emitHidePopper"
 			/>
 
+			<app-fireside-cohost-manage v-if="canManageCohosts" />
+
 			<app-fireside-host-thumb
 				v-for="host of c.rtc.users"
 				:key="host.uid"
@@ -35,7 +37,7 @@
 	&-inner
 		display: inline-flex
 		justify-content: center
-		grid-gap: 16px
+		grid-gap: 8px
 		height: var(--fireside-host-size)
 
 .-host-thumb
