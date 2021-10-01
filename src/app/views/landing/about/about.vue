@@ -128,7 +128,7 @@
 							</p>
 
 							<div class="well fill-darkest">
-								<h5 class="section-header">Dark Backgrounds</h5>
+								<h5 class="section-header">Full Logo</h5>
 
 								<br />
 
@@ -162,45 +162,10 @@
 								</div>
 							</div>
 
-							<div class="well fill-offset">
-								<h5 class="section-header">Light Backgrounds</h5>
-
-								<br />
-
-								<div class="visible-xs text-center">
-									<img
-										src="./gamejolt-logo-light-1x.png"
-										alt="Game Jolt Logo Light"
-									/>
-								</div>
-								<div class="hidden-xs text-center">
-									<img
-										src="./gamejolt-logo-light-2x.png"
-										alt="Game Jolt Logo Light"
-									/>
-								</div>
-
-								<br />
-
-								<div class="text-right">
-									<span v-for="(size, i) of ['1x', '2x', '3x', '4x']" :key="size">
-										<a
-											:href="
-												assetUrls['./gamejolt-logo-light-' + size + '.png']
-											"
-											target="_blank"
-										>
-											{{ size }}
-										</a>
-										<span v-if="i !== 3" class="dot-separator" />
-									</span>
-								</div>
-							</div>
-
 							<div class="row">
 								<div class="col-sm-6">
 									<div class="well fill-darkest">
-										<h5 class="section-header">Bolt - Dark Backgrounds</h5>
+										<h5 class="section-header">Bolt</h5>
 
 										<br />
 
@@ -222,41 +187,6 @@
 													:href="
 														assetUrls[
 															'./gamejolt-bolt-dark-' + size + '.png'
-														]
-													"
-													target="_blank"
-												>
-													{{ size }}
-												</a>
-												<span v-if="i !== 3" class="dot-separator" />
-											</span>
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-6">
-									<div class="well fill-offset">
-										<h5 class="section-header">Bolt - Light Backgrounds</h5>
-
-										<br />
-
-										<div class="text-center">
-											<img
-												src="./gamejolt-bolt-light-2x.png"
-												alt="Game Jolt Bolt Light"
-											/>
-										</div>
-
-										<br />
-
-										<div class="text-right">
-											<span
-												v-for="(size, i) of ['1x', '2x', '3x', '4x']"
-												:key="size"
-											>
-												<a
-													:href="
-														assetUrls[
-															'./gamejolt-bolt-light-' + size + '.png'
 														]
 													"
 													target="_blank"
@@ -313,7 +243,7 @@
 									</div>
 								</div>
 								<div class="col-sm-6">
-									<div class="well fill-offset">
+									<div class="well fill-gray">
 										<h5 class="section-header">Bolt - Light Backgrounds</h5>
 
 										<br />
