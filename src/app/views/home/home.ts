@@ -32,14 +32,14 @@ import { HomeFeedService } from './home-feed.service';
 				Growls.error({
 					sticky: true,
 					message: Translate.$gettext(
-						'This login request has been expired. Try logging in again.'
+						`This login attempt has expired. Try logging in again.`
 					),
 				});
 			} else if (approveLoginError === 'already-rejected') {
 				Growls.error({
 					sticky: true,
 					message: Translate.$gettextInterpolate(
-						'This login request has already been rejected. If this not your doing or is a mistake, contact us at %{ email } to undo the block.',
+						`The device you're logging in from has been blocked. If you did not do this, or blocked the login by mistake, contact us at %{ email } right away. Your account may be compromised.`,
 						{ email: 'contact@gamejolt.com' }
 					),
 				});
@@ -57,13 +57,13 @@ import { HomeFeedService } from './home-feed.service';
 			if (rejectLoginError === 'expired') {
 				Growls.error({
 					sticky: true,
-					message: Translate.$gettext('This login request has been expired.'),
+					message: Translate.$gettext('This login request has expired.'),
 				});
 			} else if (rejectLoginError === 'already-approved') {
 				Growls.error({
 					sticky: true,
 					message: Translate.$gettextInterpolate(
-						'This login request has already been approved. If this was not your doing, contact us at %{ email } right away. Your account may be compromised.',
+						`The device you're logging in from has already been approved. If you did not do this, or blocked the login by mistake, contact us at %{ email } right away. Your account may be compromised.`,
 						{ email: 'contact@gamejolt.com' }
 					),
 				});

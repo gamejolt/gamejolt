@@ -45,7 +45,11 @@
 						v-if="tryAgain"
 						class="alert alert-notice anim-fade-in-enlarge no-animate-leave"
 					>
-						<p><translate>Oops, we can't log you in right now.</translate></p>
+						<p>
+							<translate>
+								Something went wrong on our end while trying to log you in.
+							</translate>
+						</p>
 						<p>
 							<translate>Try again in a few minutes, sorry about that!</translate>
 						</p>
@@ -88,14 +92,13 @@
 					>
 						<p>
 							<translate>
-								Yo, this is the first time we're seeing you trying to log in from
-								this location / device.
+								It seems like you're logging in from a new device or location.
 							</translate>
 						</p>
 						<p>
 							<translate>
-								To protect your account we've blocked this login. Check your email
-								to allow this log in.
+								To protect your account, you need to approve this login attempt.
+								We've sent you an email to approve this login.
 							</translate>
 						</p>
 					</div>
@@ -106,12 +109,12 @@
 					>
 						<p>
 							<translate>
-								Yo, logging in from this device / location has been blocked.
+								The device you're logging in from has been blocked.
 							</translate>
 						</p>
 						<p>
 							<translate :translate-params="{ email: 'contact@gamejolt.com' }">
-								If you did not do this (or blocked the login by mistake), contact us
+								If you did not do this, or blocked the login by mistake, contact us
 								at %{ email } right away. Your account may be compromised.
 							</translate>
 						</p>
