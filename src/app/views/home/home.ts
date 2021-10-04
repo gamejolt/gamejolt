@@ -9,6 +9,7 @@ import {
 	RouteResolver,
 } from '../../../_common/route/route-component';
 import { AppState, AppStore } from '../../../_common/store/app-store';
+import { IntentService } from '../../components/intent/intent.service';
 import { HomeFeedService } from './home-feed.service';
 
 @Component({
@@ -20,7 +21,15 @@ import { HomeFeedService } from './home-feed.service';
 })
 @RouteResolver({
 	lazy: true,
-	resolver: () => Api.sendRequest('/web/touch'),
+	deps: { query: IntentService.APPROVED_LOGIN_QUERY_PARAMS },
+	resolver: async ({ route }) => {
+		const intentRedirect = IntentService.checkApprovedLoginIntent(route);
+		if (intentRedirect) {
+			return intentRedirect;
+		}
+
+		return await Api.sendRequest('/web/touch');
+	},
 })
 export default class RouteHome extends BaseRouteComponent {
 	@AppState
