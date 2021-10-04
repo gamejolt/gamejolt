@@ -32,7 +32,6 @@ export class IntentService {
 	}
 
 	static checkApprovedLoginIntent(route: Route) {
-		console.log(route);
 		const approveLoginError = route.query.approve_login_error ?? null;
 		if (approveLoginError) {
 			if (approveLoginError === 'expired') {
