@@ -61,7 +61,7 @@ jobs:
       # For some reason, ignoring engines causes node gyp compilation errors with fsevents.
       - run: yarn install
 
-      - run: yarn run client-build-osx
+      # - run: yarn run client-build-osx
       # # To make a test package, comment out the previous line and uncomment this line.
       # # - run: yarn run client-build-osx --useTestPackage
 
@@ -80,10 +80,14 @@ jobs:
           command: git submodule update --init --recursive
 
       - run:
-          name: Install OpenGL dev dependencies
+          name: Update and upgrade
           command: |
             sudo apt-get update
-            sudo apt-get install -y libgl1-mesa-dev xorg-dev
+            sudo apt-get upgrade
+
+      - run:
+          name: Install OpenGL dev dependencies
+          command: sudo apt-get install -y libgl1-mesa-dev xorg-dev
 
       - run:
           name: Install Go 1.10.8
@@ -94,10 +98,10 @@ jobs:
             echo 'export GOPATH=$HOME/go' >> $BASH_ENV
             echo 'export PATH=$PATH:$GOROOT/bin:$GOPATH/bin' >> $BASH_ENV
 
-      # - run: yarn install
-      # - run: yarn run client-build-linux64
-      # # To make a test package, comment out the previous line and uncomment this line.
-      # # - run: yarn run client-build-linux64 --useTestPackage
+      - run: yarn install
+      - run: yarn run client-build-linux64
+      # To make a test package, comment out the previous line and uncomment this line.
+      # - run: yarn run client-build-linux64 --useTestPackage
 
       - store_artifacts:
           path: ./build/prod-client-build/linux64-package.tar.gz
