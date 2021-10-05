@@ -44,7 +44,7 @@ export default class RouteJoinAlmost extends BaseRouteComponent {
 		sessionStorage.removeItem('signup-username');
 		sessionStorage.removeItem('signup-password');
 
-		if (!response.success) {
+		if (!response.success || !response.user) {
 			Growls.error({
 				message: this.$gettext(`Couldn't log you in for some reason.`),
 				sticky: true,

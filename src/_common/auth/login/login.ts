@@ -20,7 +20,13 @@ export default class AppAuthLogin extends Vue {
 
 	readonly Connection = Connection;
 
-	onLoggedIn() {
+	onLoggedIn(_formModel: any, response: any) {
+		// When we get a token, we are expected to solve a captcha and pass it back.
+		if (response.token) {
+			return;
+		}
+
+		// Otherwise, log them in!
 		authOnLogin('email');
 
 		if (this.redirectTo) {
