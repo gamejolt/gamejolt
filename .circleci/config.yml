@@ -42,6 +42,20 @@ jobs:
             echo 'export NVM_DIR="$HOME/.nvm"' >> $BASH_ENV
             echo '[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"' >> $BASH_ENV
 
+      # We need to use a newer cacert bundle with git to make "go get" commands trust gopkg.in
+      # This is because the circleci images don't backport security fixes (ofc),
+      # and Lets Encrypt root cert expired on September 31st, 2021.
+      - run:
+          name: Update cacerts
+          command: |
+            HOMEBREW_NO_AUTO_UPDATE=1 brew install curl
+            HOMEBREW_NO_AUTO_UPDATE=1 brew upgrade git
+            HOMEBREW_NO_AUTO_UPDATE=1 brew upgrade openssl
+            export PATH="/usr/local/opt/curl/bin:$PATH"
+            echo 'PATH="/usr/local/opt/curl/bin:$PATH"' >> $BASH_ENV
+            curl https://curl.se/ca/cacert.pem -o /etc/ssl/curl-cacert.pem
+            git config --global http.sslCAInfo /etc/ssl/curl-cacert.pem
+
       - run:
           name: Debug
           command: |
@@ -61,9 +75,9 @@ jobs:
       # For some reason, ignoring engines causes node gyp compilation errors with fsevents.
       - run: yarn install
 
-      # - run: yarn run client-build-osx
-      # # To make a test package, comment out the previous line and uncomment this line.
-      # # - run: yarn run client-build-osx --useTestPackage
+      - run: yarn run client-build-osx
+      # To make a test package, comment out the previous line and uncomment this line.
+      # - run: yarn run client-build-osx --useTestPackage
 
       - store_artifacts:
           path: ./build/prod-client-build/osx64-package.tar.gz
