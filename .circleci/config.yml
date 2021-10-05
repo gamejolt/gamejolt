@@ -53,7 +53,7 @@ jobs:
             HOMEBREW_NO_AUTO_UPDATE=1 brew upgrade openssl
             export PATH="/usr/local/opt/curl/bin:$PATH"
             echo 'PATH="/usr/local/opt/curl/bin:$PATH"' >> $BASH_ENV
-            curl https://curl.se/ca/cacert.pem -o /etc/ssl/curl-cacert.pem
+            sudo curl https://curl.se/ca/cacert.pem -o /etc/ssl/curl-cacert.pem
             git config --global http.sslCAInfo /etc/ssl/curl-cacert.pem
 
       - run:
