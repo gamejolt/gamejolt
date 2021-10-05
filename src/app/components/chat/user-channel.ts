@@ -72,8 +72,10 @@ export class ChatUserChannel extends Channel {
 		presence.onJoin(this.onFriendJoin.bind(this));
 		presence.onLeave(this.onFriendLeave.bind(this));
 		presence.onSync(() =>
-			presence.list((id: string, _presence: UserPresence) => {
-				this.client.friendsList.online(+id);
+			this.client.friendsList.doBatchWork(() => {
+				presence.list((id: string, _presence: UserPresence) => {
+					this.client.friendsList.online(+id);
+				});
 			})
 		);
 	}
