@@ -66,6 +66,7 @@ export default class AppAuthLoginForm
 		this.invalidCaptcha = false;
 		this.needsApproveLogin = false;
 		this.approvedLoginRejected = false;
+		this.tryAgain = false;
 	}
 
 	onLoad($payload: any) {
