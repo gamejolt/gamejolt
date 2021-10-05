@@ -42,6 +42,20 @@
 					</app-form-group>
 
 					<div
+						v-if="tryAgain"
+						class="alert alert-notice anim-fade-in-enlarge no-animate-leave"
+					>
+						<p>
+							<translate>
+								Something went wrong on our end while trying to log you in.
+							</translate>
+						</p>
+						<p>
+							<translate>Try again in a few minutes, sorry about that!</translate>
+						</p>
+					</div>
+
+					<div
 						v-if="invalidLogin"
 						class="alert alert-notice anim-fade-in-enlarge no-animate-leave"
 					>
@@ -79,6 +93,40 @@
 						<p>
 							<translate>
 								Oh no, your captcha couldn't be validated. Please try again.
+							</translate>
+						</p>
+					</div>
+
+					<div
+						v-if="needsApproveLogin"
+						class="alert alert-notice anim-fade-in-enlarge no-animate-leave"
+					>
+						<p>
+							<translate>
+								It seems like you're logging in from a new device or location.
+							</translate>
+						</p>
+						<p>
+							<translate>
+								To protect your account, you need to approve this login attempt.
+								We've sent you an email to approve this login.
+							</translate>
+						</p>
+					</div>
+
+					<div
+						v-if="approvedLoginRejected"
+						class="alert alert-notice anim-fade-in-enlarge no-animate-leave"
+					>
+						<p>
+							<translate>
+								The device you're logging in from has been blocked.
+							</translate>
+						</p>
+						<p>
+							<translate :translate-params="{ email: 'contact@gamejolt.com' }">
+								If you did not do this, or blocked the login by mistake, contact us
+								at %{ email } right away. Your account may be compromised.
 							</translate>
 						</p>
 					</div>

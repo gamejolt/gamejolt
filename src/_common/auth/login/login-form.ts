@@ -37,6 +37,9 @@ export default class AppAuthLoginForm
 	invalidLogin = false;
 	blockedLogin = false;
 	invalidCaptcha = false;
+	needsApproveLogin = false;
+	approvedLoginRejected = false;
+	tryAgain = false;
 
 	$refs!: {
 		form: AppForm;
@@ -61,6 +64,8 @@ export default class AppAuthLoginForm
 		this.invalidLogin = false;
 		this.blockedLogin = false;
 		this.invalidCaptcha = false;
+		this.needsApproveLogin = false;
+		this.approvedLoginRejected = false;
 	}
 
 	onLoad($payload: any) {
@@ -106,6 +111,15 @@ export default class AppAuthLoginForm
 					case 'captcha':
 					case 'token': // Technically the session expired, but it's a captcha error.
 						this.invalidCaptcha = true;
+						break;
+					case 'approve-login':
+						this.needsApproveLogin = true;
+						break;
+					case 'approve-login-rejected':
+						this.approvedLoginRejected = true;
+						break;
+					case 'try-again':
+						this.tryAgain = true;
 						break;
 				}
 			}
