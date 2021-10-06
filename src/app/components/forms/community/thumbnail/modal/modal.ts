@@ -1,7 +1,8 @@
-import { Community } from '../../../../../../_common/community/community.model';
-import { BaseModal } from '../../../../../../_common/modal/base';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
+import { propRequired } from '../../../../../../utils/vue';
+import { Community } from '../../../../../../_common/community/community.model';
+import { BaseModal } from '../../../../../../_common/modal/base';
 import FormCommunityThumbnail from '../thumbnail.vue';
 
 @Component({
@@ -10,8 +11,7 @@ import FormCommunityThumbnail from '../thumbnail.vue';
 	},
 })
 export default class AppCommunityThumbnailModal extends BaseModal {
-	@Prop(Community)
-	community!: Community;
+	@Prop(propRequired(Community)) community!: Community;
 
 	// We don't want to close the modal after they've uploaded a thumbnail since they can set a crop
 	// after. We want to auto-close it after they've saved the crop, though.

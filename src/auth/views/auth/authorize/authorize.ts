@@ -1,7 +1,7 @@
-import { Api } from '../../../../_common/api/api.service';
-import { Auth } from '../../../../_common/auth/auth.service';
-import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Component } from 'vue-property-decorator';
+import { Api } from '../../../../_common/api/api.service';
+import { authOnLogin, redirectToOnboarding } from '../../../../_common/auth/auth.service';
+import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 
 @Component({
 	name: 'RouteAuthAuthorize',
@@ -33,7 +33,8 @@ export default class RouteAuthAuthorize extends BaseRouteComponent {
 
 		// Redirect them to onboarding.
 		if (this.isSuccess) {
-			Auth.redirectOnboarding();
+			authOnLogin('email');
+			redirectToOnboarding();
 		}
 	}
 }

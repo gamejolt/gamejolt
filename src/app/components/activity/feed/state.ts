@@ -13,6 +13,11 @@ export interface ActivityFeedStateOptions {
 	type: 'Notification' | 'EventItem';
 
 	/**
+	 * A name to identify the feed. Used in tick tracking.
+	 */
+	name: string;
+
+	/**
 	 * The URL to hit to load more from the feed.
 	 */
 	url: string;
@@ -21,10 +26,16 @@ export interface ActivityFeedStateOptions {
 	 * A timestamp of when the notifications in this feed were last viewed.
 	 */
 	notificationWatermark?: number;
+
+	/**
+	 * Skips sending item-viewed ticks when items in this feed are viewed.
+	 */
+	suppressTicks?: boolean;
 }
 
 export class ActivityFeedState {
 	feedType: 'Notification' | 'EventItem';
+	feedName: string;
 	items: ActivityFeedItem[] = [];
 	users: { [k: number]: User } = {};
 	games: { [k: number]: Game } = {};
@@ -34,6 +45,7 @@ export class ActivityFeedState {
 	isLoadingMore = false;
 	isLoadingNew = false;
 	reachedEnd = false;
+	suppressTicks = false;
 	readonly loadMoreUrl: string;
 
 	get startScrollId() {
@@ -48,7 +60,9 @@ export class ActivityFeedState {
 
 	constructor(options: ActivityFeedStateOptions) {
 		this.feedType = options.type;
+		this.feedName = options.name;
 		this.loadMoreUrl = options.url;
+		this.suppressTicks = options.suppressTicks ?? false;
 
 		if (typeof options.notificationWatermark !== 'undefined') {
 			this.notificationWatermark = options.notificationWatermark;
@@ -108,7 +122,9 @@ export class ActivityFeedState {
 		}
 
 		this.viewedItems.push(item.id);
-		item.$viewed();
+		if (!this.suppressTicks) {
+			item.$viewed(this.feedName);
+		}
 	}
 
 	/**

@@ -109,7 +109,7 @@ export class TooltipModel {
 			this.isActive = !this.isActive;
 			// Prevent 'AppShellAccountPopover' from opening wallet balance link.
 			event.preventDefault();
-			// Prevent 'AppEventItemControlsFiresidePostStats' from opening post view.
+			// Prevent 'AppPostControlsStats' from opening post view.
 			event.stopPropagation();
 		} else {
 			this.isActive = false;

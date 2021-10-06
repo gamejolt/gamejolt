@@ -1,71 +1,34 @@
+<script lang="ts" src="./list"></script>
+
 <template>
 	<div>
-		<app-page-header>
-			<!--
-			Animation scope.
-		-->
-			<div
-				:class="{
-					'-has-spotlight': spotlight,
-				}"
-				:key="section + (tag || '')"
-			>
-				<img
-					v-if="spotlight"
-					class="-spotlight hidden-xs anim-fade-in-enlarge"
-					:src="spotlight"
-					alt=""
-				/>
-
-				<div class="-header-content anim-fade-in-right">
-					<h1>
-						<template v-if="section !== 'by-date'">
-							{{ listTitle }}
-						</template>
-						<template v-else>
-							<template v-if="!dateRange">
-								<span v-translate="{ date }">
-									Games published
-									<small>on %{ date }</small>
-								</span>
-							</template>
-							<template v-else>
-								<span
-									v-translate="{
-										dateStart: dateRange[0],
-										dateEnd: dateRange[1],
-									}"
-								>
-									Games published
-									<small>between %{ dateStart } and %{ dateEnd }</small>
-								</span>
-							</template>
-						</template>
-					</h1>
-
-					<p class="-list-desc text-muted small">
-						{{ listDescription }}
-					</p>
-				</div>
+		<section v-if="section !== 'by-date'" class="fill-offset">
+			<div class="container-xl">
+				<h2 class="text-center">
+					<translate>Browse Games</translate>
+				</h2>
 			</div>
-		</app-page-header>
-
-		<section class="fill-dark" v-if="section !== 'by-date'">
 			<app-tag-list />
 		</section>
+
+		<app-game-add-banner v-if="Screen.isDesktop" />
 
 		<app-game-listing
 			v-if="listing"
 			:listing="listing"
-			:include-featured-section="true"
+			:filtering="filtering"
+			include-featured-section
 			:hide-section-nav="section === 'by-date'"
 			:is-loading="isRouteLoading"
+			infinite
+			@load="loadMore"
 		>
-			<div class="alert alert-info anim-fade-in-enlarge" v-if="section === 'new'">
-				<div v-translate>
-					Newly added games are not moderated, curated, or vetted by the community. You can find a
-					goldmine of undiscovered talent or you may see some of the scariest shit of your life.
-				</div>
+			<div v-if="section === 'new'" class="alert alert-info anim-fade-in-enlarge">
+				<translate>
+					Newly added games are not moderated, curated, or vetted by the community. You
+					can find a goldmine of undiscovered talent or you may see some of the scariest
+					shit of your life.
+				</translate>
 			</div>
 
 			<app-game-grid :games="listing.games" :show-ads="true" event-label="browse-games" />
@@ -74,7 +37,7 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
 
 $-spotlight-size = 58px
 
@@ -90,5 +53,3 @@ $-spotlight-size = 58px
 	.-has-spotlight .-header-content
 		margin-left: $-spotlight-size + $grid-gutter-width
 </style>
-
-<script lang="ts" src="./list"></script>

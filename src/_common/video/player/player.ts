@@ -13,6 +13,7 @@ import {
 } from '../../responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../screen/screen-service';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
+import { VideoSourceArray } from '../video';
 import {
 	queueVideoTimeChange,
 	scrubVideoVolume,
@@ -20,7 +21,6 @@ import {
 	trackVideoPlayerEvent,
 	VideoPlayerController,
 	VideoPlayerControllerContext,
-	VideoPlayerSource,
 } from './controller';
 import AppPlayerFullscreen from './fullscreen/fullscreen.vue';
 import AppPlayerPlayback from './playback/playback.vue';
@@ -43,7 +43,34 @@ const UIHideTimeout = 400;
  */
 const UIHideTimeoutMovement = 2000;
 
-function createReadableTimestamp(time: number) {
+/**
+ * Returns as format `m:ss`, or the remaining seconds with 's' appended if
+ * duration is lower than 60 seconds, e.g. `1:23` or `42s`.
+ *
+ * @param time should be duration in milliseconds.
+ */
+export function createDenseReadableTimestamp(time: number) {
+	time /= 1000;
+	const minutes = Math.floor(time / 60);
+	const displayMinutes = minutes <= 0 ? '' : `${minutes}:`;
+	let seconds = Math.floor(time % 60).toString();
+
+	// Pad the seconds with 0 while we still have minutes.
+	if (minutes >= 1) {
+		seconds = seconds.padStart(2, '0');
+	} else {
+		seconds += 's';
+	}
+
+	return `${displayMinutes}${seconds}`;
+}
+
+/**
+ * Always returns as format `m:ss`, e.g. `1:23` or `0:04`.
+ *
+ * @param time should be duration in milliseconds.
+ */
+export function createReadableTimestamp(time: number) {
 	time /= 1000;
 	const minutes = Math.floor(time / 60);
 	const seconds = Math.floor(time % 60)
@@ -71,7 +98,7 @@ function createReadableTimestamp(time: number) {
 })
 export default class AppVideoPlayer extends Vue {
 	@Prop(propRequired(MediaItem)) mediaItem!: MediaItem;
-	@Prop(propRequired(Array)) manifests!: VideoPlayerSource[];
+	@Prop(propRequired(Array)) manifests!: VideoSourceArray;
 	@Prop(propOptional(Boolean, false)) autoplay!: boolean;
 	@Prop(propOptional(Number, 0)) startTime!: number;
 	@Prop(propOptional(String, null)) context!: VideoPlayerControllerContext;
@@ -291,7 +318,15 @@ export default class AppVideoPlayer extends Vue {
 	syncWithState() {
 		if (this.player.queuedFullScreenChange !== null) {
 			if (this.player.queuedFullScreenChange) {
-				this.$el.requestFullscreen();
+				if (this.player.altControlsBehavior) {
+					const video: any = this.$el.querySelector('video');
+					// iOS Safari doesn't allow us to go fullscreen through our
+					// preferred way, so we need to use their fullscreen method
+					// and player controls instead.
+					video?.webkitEnterFullscreen();
+				} else {
+					this.$el.requestFullscreen();
+				}
 			} else {
 				document.exitFullscreen();
 			}

@@ -1,7 +1,6 @@
 import { Location, Route } from 'vue-router/types/router';
 import { Api } from '../../api/api.service';
 import { Perm } from '../../collaborator/collaboratable';
-import { COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING } from '../../community/channel/channel-permissions';
 import { CommunityChannel } from '../../community/channel/channel.model';
 import { Community } from '../../community/community.model';
 import { ContentContainerModel } from '../../content/content-container-model';
@@ -21,9 +20,8 @@ import { constructStickerCounts, StickerCount } from '../../sticker/sticker-coun
 import { Translate } from '../../translate/translate.service';
 import { User } from '../../user/user.model';
 import { FiresidePostCommunity } from './community/community.model';
+import { FiresidePostEmbed } from './embed/embed.model';
 import { FiresidePostLike } from './like/like-model';
-import { FiresidePostSketchfab } from './sketchfab/sketchfab-model';
-import { FiresidePostTag } from './tag/tag-model';
 import { FiresidePostVideo } from './video/video-model';
 
 interface FiresidePostPublishedPlatform {
@@ -42,13 +40,12 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	static readonly TYPE_TEXT = 'text';
 	static readonly TYPE_MEDIA = 'media';
 	static readonly TYPE_VIDEO = 'video';
-	static readonly TYPE_SKETCHFAB = 'sketchfab';
 
 	static readonly STATUS_DRAFT = 'draft';
 	static readonly STATUS_ACTIVE = 'active';
 	static readonly STATUS_REMOVED = 'removed';
+	static readonly STATUS_TEMP = 'temp';
 
-	type!: 'text' | 'media' | 'video' | 'sketchfab' | 'comment-video';
 	hash!: string;
 	status!: string;
 	added_on!: number;
@@ -67,6 +64,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	url!: string;
 	view_count?: number;
 	is_pinned!: boolean;
+	is_processing!: boolean;
 
 	/**
 	 * If the post has an article saved, whether or not it's loaded in yet.
@@ -77,17 +75,16 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	leadStr!: string;
 	article_content!: string;
 
-	tags: FiresidePostTag[] = [];
 	communities: FiresidePostCommunity[] = [];
 	media: MediaItem[] = [];
 	videos: FiresidePostVideo[] = [];
-	sketchfabs: FiresidePostSketchfab[] = [];
 	user_like?: FiresidePostLike | null;
 	key_groups: KeyGroup[] = [];
 	poll!: Poll | null;
 	platforms_published_to: FiresidePostPublishedPlatform[] = [];
 	stickers: StickerPlacement[] = [];
 	sticker_counts: StickerCount[] = [];
+	embeds: FiresidePostEmbed[] = [];
 
 	// Used for forms and saving.
 	key_group_ids: number[] = [];
@@ -107,10 +104,6 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 			this.game = new Game(data.game);
 		}
 
-		if (data.tags) {
-			this.tags = FiresidePostTag.populate(data.tags);
-		}
-
 		if (data.communities) {
 			this.communities = FiresidePostCommunity.populate(data.communities);
 		}
@@ -121,10 +114,6 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 
 		if (data.videos) {
 			this.videos = FiresidePostVideo.populate(data.videos);
-		}
-
-		if (data.sketchfabs) {
-			this.sketchfabs = FiresidePostSketchfab.populate(data.sketchfabs);
 		}
 
 		if (data.user_like) {
@@ -150,6 +139,10 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 
 		if (data.sticker_counts) {
 			this.sticker_counts = constructStickerCounts(data.sticker_counts);
+		}
+
+		if (data.embeds) {
+			this.embeds = FiresidePostEmbed.populate(data.embeds);
 		}
 
 		Registry.store('FiresidePost', this);
@@ -178,10 +171,6 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 
 	get hasMedia() {
 		return this.media.length > 0;
-	}
-
-	get hasSketchfab() {
-		return this.sketchfabs.length > 0;
 	}
 
 	get hasVideo() {
@@ -213,11 +202,6 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 
 	static pullHashFromUrl(url: string) {
 		return url.substring(url.lastIndexOf('-') + 1);
-	}
-
-	async fetchLikes(): Promise<FiresidePostLike[]> {
-		const response = await Api.sendRequest(`/web/posts/likes/${this.id}`);
-		return FiresidePostLike.populate(response.likes);
 	}
 
 	get routeLocation(): Location {
@@ -319,11 +303,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 			return true;
 		}
 		for (const community of this.communities) {
-			if (
-				!community.channel?.permissions.canPerform(
-					COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING
-				)
-			) {
+			if (!community.channel?.canPost) {
 				return false;
 			}
 		}
@@ -331,10 +311,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	}
 
 	getShortLead(length = 70) {
-		let lead = this.leadStr
-			.replace('\r\n', ' ')
-			.replace('\r', ' ')
-			.replace('\n', ' ');
+		let lead = this.leadStr.replace('\r\n', ' ').replace('\r', ' ').replace('\n', ' ');
 		if (lead.length > length) {
 			lead = lead.substr(0, length - 3).trim() + '...';
 		}
@@ -540,6 +517,6 @@ export async function loadArticleIntoPost(post: FiresidePost) {
 	return post;
 }
 
-export function $viewPost(post: FiresidePost) {
-	HistoryTick.sendBeacon('fireside-post', post.id);
+export function $viewPost(post: FiresidePost, sourceFeed?: string) {
+	HistoryTick.sendBeacon('fireside-post', post.id, { sourceFeed });
 }

@@ -3,7 +3,7 @@ import { Component, Prop } from 'vue-property-decorator';
 import { Connection } from '../../connection/connection-service';
 import { Environment } from '../../environment/environment.service';
 import { Navigate } from '../../navigate/navigate.service';
-import { Auth } from '../auth.service';
+import { authOnLogin, redirectToDashboard } from '../auth.service';
 import AppAuthLoginForm from './login-form.vue';
 
 @Component({
@@ -20,7 +20,15 @@ export default class AppAuthLogin extends Vue {
 
 	readonly Connection = Connection;
 
-	onLoggedIn() {
+	onLoggedIn(_formModel: any, response: any) {
+		// When we get a token, we are expected to solve a captcha and pass it back.
+		if (response.token) {
+			return;
+		}
+
+		// Otherwise, log them in!
+		authOnLogin('email');
+
 		if (this.redirectTo) {
 			// We don't want them to be able to put in an offsite link as the
 			// redirect URL. So we only open up certain domains. Otherwise we
@@ -28,17 +36,17 @@ export default class AppAuthLogin extends Vue {
 
 			// Subdomain redirect: jams.gamejolt.io, fireside.gamejolt.com, etc.
 			// This also handles main domain.
-			if (this.redirectTo.search(/^https?:\/\/([a-zA-Z\.]+\.)?gamejolt.(com|io)/) !== -1) {
+			if (this.redirectTo.search(/^https?:\/\/([a-zA-Z.]+\.)?gamejolt.(com|io)/) !== -1) {
 				Navigate.goto(this.redirectTo);
 				return;
 			}
 
 			// Normal redirect, within the gamejolt.com domain.
-			// This is domain-less so we we'll redirect to the path.
+			// This is domain-less so we'll redirect to the path.
 			Navigate.goto(Environment.baseUrl + this.redirectTo);
 			return;
 		}
 
-		Auth.redirectDashboard();
+		redirectToDashboard();
 	}
 }

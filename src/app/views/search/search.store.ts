@@ -6,6 +6,7 @@ import { SearchPayload } from '../../components/search/payload-service';
 import { Search } from '../../components/search/search-service';
 import { store } from '../../store';
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 type RouteActions = {};
 
 type RouteMutations = {

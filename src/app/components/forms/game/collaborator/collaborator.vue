@@ -1,7 +1,11 @@
+<script lang="ts" src="./collaborator"></script>
+
 <template>
 	<app-form name="collaboratorForm">
-		<app-form-group name="username" :label="$gettext(`Username`)" v-if="method === 'add'">
-			<app-form-control
+		<app-form-group v-if="method === 'add'" name="username" :label="$gettext(`Username`)">
+			<app-form-control-prefixed-input
+				v-app-focus-when
+				prefix="@"
 				:rules="{
 					max: 100,
 					availability: {
@@ -10,7 +14,6 @@
 					},
 				}"
 				:validate-on="['blur']"
-				v-app-focus-when
 			/>
 
 			<app-form-control-errors :label="$gettext('username')">
@@ -28,8 +31,8 @@
 					<translate>Full Collaborator</translate>
 					&mdash;
 					<translate class="help-inline">
-						They will be able to access and modify everything for the game. They won't be able to
-						add other collaborators.
+						They will be able to access and modify everything for the game. They won't
+						be able to add other collaborators.
 					</translate>
 				</label>
 			</div>
@@ -39,9 +42,9 @@
 					<translate>Community Manager</translate>
 					&mdash;
 					<translate class="help-inline">
-						They will be able to modify the game description, details, maturity, and media, as well
-						as post devlogs. They won't be able to modify packages, game API, key groups, sales, or
-						access analytics.
+						They will be able to modify the game description, details, maturity, and
+						media, as well as post devlogs. They won't be able to modify packages, game
+						API, key groups, sales, or access analytics.
 					</translate>
 				</label>
 			</div>
@@ -54,5 +57,3 @@
 		</app-form-button>
 	</app-form>
 </template>
-
-<script lang="ts" src="./collaborator"></script>

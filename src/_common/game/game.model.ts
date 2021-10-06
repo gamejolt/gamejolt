@@ -22,7 +22,7 @@ export interface CustomMessage {
 }
 
 function pluckBuilds(packages: GamePackage[], func: (build: GameBuild) => boolean) {
-	let pluckedBuilds: GameBuild[] = [];
+	const pluckedBuilds: GameBuild[] = [];
 
 	packages.forEach((_package: GamePackage) => {
 		if (!_package._builds) {
@@ -330,7 +330,7 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 	}
 
 	static pluckInstallableBuilds(packages: GamePackage[], os: string, arch?: string): GameBuild[] {
-		let pluckedBuilds: GameBuild[] = [];
+		const pluckedBuilds: GameBuild[] = [];
 
 		packages.forEach(_package => {
 			// Don't include builds for packages that aren't bought yet.
@@ -388,45 +388,6 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 		}
 
 		return builds[0];
-	}
-
-	async $follow() {
-		this.is_following = true;
-		++this.follower_count;
-
-		try {
-			return await Api.sendRequest(
-				'/web/library/games/add/followed',
-				{
-					game_id: this.id,
-					timestamp: Date.now(),
-				},
-				{
-					detach: true,
-				}
-			);
-		} catch (e) {
-			this.is_following = false;
-			--this.follower_count;
-			throw e;
-		}
-	}
-
-	async $unfollow() {
-		this.is_following = false;
-		--this.follower_count;
-
-		try {
-			return await this.$_remove('/web/library/games/remove/followed/' + this.id, {
-				data: {
-					timestamp: Date.now(),
-				},
-			});
-		} catch (e) {
-			this.is_following = true;
-			++this.follower_count;
-			throw e;
-		}
 	}
 
 	$save() {
@@ -502,3 +463,42 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 }
 
 Model.create(Game);
+
+export async function followGame(game: Game) {
+	game.is_following = true;
+	++game.follower_count;
+
+	try {
+		return await Api.sendRequest(
+			'/web/library/games/add/followed',
+			{
+				game_id: game.id,
+				timestamp: Date.now(),
+			},
+			{
+				detach: true,
+			}
+		);
+	} catch (e) {
+		game.is_following = false;
+		--game.follower_count;
+		throw e;
+	}
+}
+
+export async function unfollowGame(game: Game) {
+	game.is_following = false;
+	--game.follower_count;
+
+	try {
+		return await game.$_remove('/web/library/games/remove/followed/' + game.id, {
+			data: {
+				timestamp: Date.now(),
+			},
+		});
+	} catch (e) {
+		game.is_following = true;
+		++game.follower_count;
+		throw e;
+	}
+}

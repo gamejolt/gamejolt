@@ -8,8 +8,6 @@ import { Analytics } from '../../analytics/analytics.service';
 import {
 	DrawerStore,
 	DrawerStoreKey,
-	setCanUnlockNewStickers,
-	setDrawerHidden,
 	setDrawerOpen,
 	setDrawerStoreActiveItem,
 	setDrawerStoreHeight,
@@ -20,7 +18,6 @@ import { Screen } from '../../screen/screen-service';
 import AppScrollScroller from '../../scroll/scroller/scroller.vue';
 import { EventSubscription } from '../../system/event/event-topic';
 import AppStickerCard from '../card/card.vue';
-import { StickerCollectModal } from '../collect/modal/modal.service';
 import { Sticker } from '../sticker.model';
 import AppSticker from '../sticker.vue';
 import AppStickerLayerDrawerItem from './drawer-item.vue';
@@ -80,19 +77,8 @@ export default class AppStickerLayerDrawer extends Vue {
 		}
 	}
 
-	get hasHalloweenStickers() {
-		return this.drawerStore.drawerItems.some(i => i.sticker.is_type_halloween_candy);
-	}
-
 	get stickerSheets() {
-		return [
-			...this.chunkStickers(
-				this.drawerStore.drawerItems.filter(i => i.sticker.is_type_halloween_candy)
-			),
-			...this.chunkStickers(
-				this.drawerStore.drawerItems.filter(i => !i.sticker.is_type_halloween_candy)
-			),
-		];
+		return this.chunkStickers(this.drawerStore.drawerItems);
 	}
 
 	private chunkStickers(stickers: StickerCount[]) {
@@ -138,13 +124,9 @@ export default class AppStickerLayerDrawer extends Vue {
 	}
 
 	get styles() {
-		const HalloweenTextHeight = this.hasHalloweenStickers ? 25 : 0;
 		const numRowsShowing = Screen.isPointerMouse ? 2.3 : 2;
 
 		return {
-			halloweenText: {
-				height: `${HalloweenTextHeight}px`,
-			},
 			shell: [
 				{
 					transform: `translateY(0)`,
@@ -152,9 +134,7 @@ export default class AppStickerLayerDrawer extends Vue {
 					maxWidth: Screen.isXs ? 'unset' : `calc(100% - 64px)`,
 					// Max-height of 2 sticker rows
 					maxHeight: Screen.isPointerMouse
-						? `${this.drawerPadding * 2 +
-								this.stickerSize * numRowsShowing +
-								HalloweenTextHeight}px`
+						? `${this.drawerPadding * 2 + this.stickerSize * numRowsShowing}px`
 						: null,
 				},
 				// Shift the drawer down when there's an item being dragged and the drawer container is not being hovered.
@@ -172,20 +152,14 @@ export default class AppStickerLayerDrawer extends Vue {
 				maxWidth: Screen.isXs ? 'unset' : `calc(100% - 64px)`,
 				// Max-height of 2 sticker rows
 				maxHeight: Screen.isPointerMouse
-					? this.drawerPadding * 2 +
-					  this.stickerSize * numRowsShowing +
-					  HalloweenTextHeight +
-					  'px'
+					? this.drawerPadding * 2 + this.stickerSize * numRowsShowing + 'px'
 					: null,
 			},
 			dimensions: {
 				minWidth: Screen.isXs ? 'unset' : '400px',
 				minHeight: `${this.stickerSize}px`,
 				maxHeight: Screen.isPointerMouse
-					? this.drawerPadding +
-					  this.stickerSize * numRowsShowing +
-					  HalloweenTextHeight +
-					  'px'
+					? this.drawerPadding + this.stickerSize * numRowsShowing + 'px'
 					: undefined,
 				paddingBottom: `${this.drawerPadding}px`,
 			},
@@ -200,15 +174,6 @@ export default class AppStickerLayerDrawer extends Vue {
 				marginBottom: this.stickerSpacing + 'px',
 			},
 		};
-	}
-
-	get canPurchaseStickers() {
-		const { stickerCurrency, stickerCost } = this.drawerStore;
-		if (!stickerCurrency || !stickerCost) {
-			return false;
-		}
-
-		return stickerCurrency > stickerCost;
 	}
 
 	mounted() {
@@ -359,25 +324,6 @@ export default class AppStickerLayerDrawer extends Vue {
 		this.stickersPerRow = Math.floor(
 			(this.$refs.content.offsetWidth - this.drawerPadding * 2) / this.stickerSize
 		);
-	}
-
-	async onClickPurchase() {
-		if (!this.drawerStore.stickerCurrency) {
-			return;
-		}
-
-		Analytics.trackEvent('sticker-drawer', 'purchase-stickers');
-		setDrawerHidden(this.drawerStore, true);
-
-		const remainingBalance = await StickerCollectModal.show();
-		if (remainingBalance !== undefined && remainingBalance < this.drawerStore.stickerCurrency) {
-			// If stickers were redeemed, un-hide the drawer so we can start placing stickers.
-			setDrawerHidden(this.drawerStore, false);
-			setCanUnlockNewStickers(this.drawerStore, false);
-		} else {
-			// otherwise, hide and clear the drawer.
-			setDrawerOpen(this.drawerStore, false);
-		}
 	}
 
 	@Watch('isLoading')

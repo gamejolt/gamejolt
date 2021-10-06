@@ -1,7 +1,7 @@
 <script lang="ts" src="./communities"></script>
 
 <template>
-	<div :class="isInSplit ? 'container' : 'container-xl'">
+	<div class="container">
 		<div class="text-center">
 			<h2 class="section-header">
 				<translate>Browse Communities</translate>
@@ -9,39 +9,45 @@
 
 			<p>
 				<translate>
-					Find a community to create and explore fanart, videos, walkthroughs and more!
+					Find a community to create and explore gaming videos, fanart, discussions and
+					more!
 				</translate>
 			</p>
 
 			<hr class="underbar underbar-center" />
-			<br />
 		</div>
 
-		<template v-if="isInSplit">
+		<div v-if="isLoading" class="row">
+			<div v-for="i of 8" :key="i" class="col-sm-6 col-md-4 col-lg-3">
+				<app-community-card-placeholder />
+			</div>
+		</div>
+		<template v-else>
+			<template v-if="hasChunks && filteredCommunities.top.length > 0">
+				<div class="row">
+					<template v-for="community of filteredCommunities.top">
+						<app-community-chunk
+							:key="community.id"
+							class="-chunk"
+							:community="community"
+						/>
+					</template>
+				</div>
+			</template>
+
+			<br />
+
 			<div class="row">
 				<div
 					v-for="community of slicedCommunities"
 					:key="community.id"
-					class="-item col-sm-6 col-md-4 col-lg-3 anim-fade-in"
+					class="col-sm-6 col-md-4 col-lg-3 anim-fade-in"
 				>
 					<app-community-card
 						v-app-track-event="`home:communities:click`"
 						:community="community"
+						:track-goto="hasChunks"
 						elevate
-					/>
-				</div>
-			</div>
-		</template>
-		<template v-else>
-			<div class="row">
-				<div
-					v-for="community of slicedCommunities"
-					:key="community.id"
-					class="col-xs-6 col-sm-3 col-md-2"
-				>
-					<app-discover-home-communities-item
-						v-app-track-event="`home:communities:click`"
-						:community="community"
 					/>
 				</div>
 			</div>
@@ -59,3 +65,11 @@
 		</div>
 	</div>
 </template>
+
+<style lang="stylus" scoped>
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+
+.-chunk
+	margin-bottom: $grid-gutter-width
+</style>

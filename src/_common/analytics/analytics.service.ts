@@ -1,164 +1,139 @@
+import {
+	Analytics as FirebaseAnalytics,
+	initializeAnalytics,
+	logEvent,
+	setCurrentScreen,
+	setUserId,
+} from 'firebase/analytics';
 import VueRouter from 'vue-router';
 import { arrayRemove } from '../../utils/array';
-import { Environment } from '../environment/environment.service';
-import { appStore } from '../store/app-store';
+import { AppPromotionSource } from '../../utils/mobile-app';
+import { AuthMethod } from '../auth/auth.service';
+import { CommentVote } from '../comment/vote/vote-model';
+import { ConfigOption } from '../config/config.service';
+import { getFirebaseApp } from '../firebase/firebase.service';
+import { ShareProvider, ShareResource } from '../share/share.service';
+import { WithAppStore } from '../store/app-store';
 import { EventBus } from '../system/event/event-bus.service';
 
-const ga: any = (typeof window !== 'undefined' && (window as any).ga) || function() {};
+export const SOCIAL_NETWORK_FB = 'facebook';
+export const SOCIAL_NETWORK_TWITTER = 'twitter';
 
-// Force HTTPS tracking beacons.
-ga('set', 'forceSSL', true);
+export const SOCIAL_ACTION_LIKE = 'like';
+export const SOCIAL_ACTION_SEND = 'send';
+export const SOCIAL_ACTION_TWEET = 'tweet';
+export const SOCIAL_ACTION_FOLLOW = 'follow';
 
-// Allow file:// and chrome-extension:// protocols for Client or App.
-// https://discuss.atom.io/t/google-analytics-in-atom-shell/14109/7
-ga('set', 'checkProtocolTask', null);
+export type CommunityOpenSource = 'communityChunk' | 'card' | 'cbar' | 'thumbnail';
+export type PostOpenSource = 'communityChunk' | 'postRecommendation' | 'feed';
+export type PostControlsLocation = 'feed' | 'broadcast' | 'postPage';
+export type UserFollowLocation =
+	| 'feed'
+	| 'postPage'
+	| 'postLike'
+	| 'card'
+	| 'profilePage'
+	| 'userList'
+	| 'gameFollow';
+export type GameFollowLocation = 'thumbnail' | 'gamePage' | 'badge' | 'homeBanner' | 'library';
+export type CommunityJoinLocation = 'onboarding' | 'card' | 'communityPage' | 'homeBanner' | 'cbar';
 
-// IP masking.
-// https://developers.google.com/analytics/devguides/collection/analyticsjs/ip-anonymization
-ga('set', 'anonymizeIp', true);
+/**
+ * How long we wait (in ms) before we track another experiment engagement for
+ * the same config option.
+ */
+const EXP_ENGAGEMENT_EXPIRY = 5 * 60 * 1_000;
 
-class PageTracker {
-	pageViewRecorded = false;
+let _store: WithAppStore;
+let _pageViewRecorded = false;
 
-	get normalizedId() {
-		return this.id.replace(/[-_:]/g, '');
-	}
-
-	constructor(public id = '') {}
+let _analytics: FirebaseAnalytics;
+function _getFirebaseAnalytics() {
+	_analytics ??= initializeAnalytics(getFirebaseApp(), { config: { send_page_view: false } });
+	return _analytics;
 }
 
-export class Analytics {
-	static readonly SOCIAL_NETWORK_FB = 'facebook';
-	static readonly SOCIAL_NETWORK_TWITTER = 'twitter';
-	static readonly SOCIAL_NETWORK_TWITCH = 'twitch';
-	static readonly SOCIAL_NETWORK_YOUTUBE = 'youtube';
+function _getStoreUser() {
+	return _store.state.app.user;
+}
 
-	static readonly SOCIAL_ACTION_LIKE = 'like';
-	static readonly SOCIAL_ACTION_SHARE = 'share';
-	static readonly SOCIAL_ACTION_SEND = 'send';
-	static readonly SOCIAL_ACTION_TWEET = 'tweet';
-	static readonly SOCIAL_ACTION_FOLLOW = 'follow';
-	static readonly SOCIAL_ACTION_SUBSCRIBE = 'subscribe';
-	static readonly SOCIAL_ACTION_UNSUBSCRIBE = 'unsubscribe';
+function _shouldTrack() {
+	const user = _getStoreUser();
 
-	private static pageTrackers = [new PageTracker()];
-	private static addedTrackers: string[] = [];
-
-	static initRouter(router: VueRouter) {
-		// Reset all page trackers since we're starting the page route.
-		router.beforeEach((_to, _from, next) => {
-			this.pageTrackers.forEach(i => (i.pageViewRecorded = false));
-			next();
-		});
-
-		EventBus.on('routeChangeAfter', () => {
-			const analyticsPath = router.currentRoute.meta.analyticsPath;
-
-			// Track the page view using the analyticsPath if we have one
-			// assigned to the route meta.
-			if (analyticsPath) {
-				this.trackPageview(analyticsPath);
-				return;
-			}
-
-			this.trackPageview(router.currentRoute.fullPath);
-		});
+	// If they're not a normal user, don't track.
+	if (GJ_BUILD_TYPE === 'production' && user && user.permission_level > 0) {
+		return false;
 	}
 
-	private static get appUser() {
-		return appStore.state.user;
+	return true;
+}
+
+/**
+ * Initializes the analytics for use with the current app.
+ */
+export function initAnalytics(store: WithAppStore) {
+	if (GJ_IS_SSR || GJ_IS_CLIENT) {
+		return;
 	}
 
-	private static get shouldTrack() {
-		const user = this.appUser;
+	_store = store;
 
-		// If they're not a normal user, don't track.
-		if (Environment.buildType === 'production' && user && user.permission_level > 0) {
-			return false;
-		}
-
-		return true;
-	}
-
-	private static get commonOptions() {
-		return {
-			// Whether or not logged in.
-			dimension1: this.appUser ? 'user' : 'guest',
-		};
-	}
-
-	private static ga(...args: any[]) {
-		if (GJ_IS_SSR) {
-			return;
-		}
-
-		return new Promise(resolve => {
-			let called = false;
-			function cb() {
-				if (!called) {
-					called = true;
-					resolve();
-				}
-			}
-
-			// If we set hitCallback to true for the options of this call, then
-			// we want to be alerted when the command is finished. We limit it
-			// with a timeout in this case.
-			const lastArg = args[args.length - 1];
-			if (typeof lastArg === 'object' && lastArg.hitCallback) {
-				// This will ensure that resolve() gets called at least within 1s.
-				lastArg.hitCallback = cb;
-				window.setTimeout(cb, 1000);
-				ga(...args);
+	_store.watch(
+		state => state.app.user,
+		user => {
+			if (user?.id) {
+				_trackUserId(user.id);
 			} else {
-				// Otherwise do it immediately.
-				ga(...args);
-				cb();
+				_untrackUserId();
 			}
-		});
+		}
+	);
+}
+
+/**
+ * Can be called to hook into the router to track pageviews automatically.
+ */
+export function initAnalyticsRouter(router: VueRouter) {
+	if (GJ_IS_SSR || GJ_IS_CLIENT) {
+		return;
 	}
 
-	static trackPageview(path?: string, force = false) {
-		if (GJ_IS_SSR) {
+	// Reset all page trackers since we're starting the page route.
+	router.beforeEach((_to, _from, next) => {
+		_pageViewRecorded = false;
+		next();
+	});
+
+	EventBus.on('routeChangeAfter', () => {
+		const route = router.currentRoute;
+		const analyticsPath = route.meta.analyticsPath;
+
+		// Track the page view using the analyticsPath if we have one
+		// assigned to the route meta.
+		if (analyticsPath) {
+			_trackPageview(analyticsPath);
 			return;
 		}
 
-		// Gotta make sure the system has a chance to compile the title into the page.
-		window.setTimeout(() => {
-			this.pageTrackers.forEach(i => this._trackPageview(i, path, force));
-		});
+		_trackPageview(route.fullPath);
+	});
+}
+
+function _trackPageview(path?: string) {
+	if (GJ_IS_SSR || GJ_IS_CLIENT) {
+		return;
 	}
 
-	private static _trackPageview(tracker: PageTracker, path?: string, force?: boolean) {
-		if (!this.shouldTrack) {
+	// Gotta make sure the system has a chance to compile the title into the page.
+	window.setTimeout(() => {
+		if (!_shouldTrack()) {
 			console.log('Skip tracking page view since not a normal user.');
 			return;
 		}
 
-		// Don't track the page view if it already was and we're not forcing it.
-		if (tracker.pageViewRecorded && !force) {
+		// Don't track the page view if it already was.
+		if (_pageViewRecorded) {
 			return;
-		}
-
-		let method = 'send';
-
-		// Did they pass in a tracker other than the default?
-		if (tracker.id !== '') {
-			// Prefix the method with the tracker.
-			method = tracker.normalizedId + '.' + method;
-
-			// If we haven't added this tracker yet in GA, let's do so.
-			if (this.addedTrackers.indexOf(tracker.id) === -1) {
-				// Save that we have this tracker set.
-				this.addedTrackers.push(tracker.id);
-
-				// Now add it in GA.
-				if (Environment.buildType === 'development') {
-					console.log('Create new tracker: ' + tracker.id);
-				} else {
-					this.ga('create', tracker.id, 'auto', { name: tracker.normalizedId });
-				}
-			}
 		}
 
 		// If no path passed in, then pull it from the location.
@@ -166,120 +141,286 @@ export class Analytics {
 			path = window.location.pathname + window.location.search + window.location.hash;
 		}
 
-		// Pull the title.
-		const title = window.document.title;
-
-		const options = {
-			...this.commonOptions,
-			page: path,
-			title: title,
-		};
+		const analytics = _getFirebaseAnalytics();
 
 		// Now track the page view.
-		if (Environment.buildType === 'development') {
-			console.log(`Track page view: tracker(${tracker.id}) | ${JSON.stringify(options)}`);
+		if (GJ_BUILD_TYPE === 'development') {
+			console.log(`Track page view: ${path}`);
 		} else {
-			this.ga(method, 'pageview', { ...options });
+			// We have to manually log the page_view event. Setting the current
+			// screen will set that screen variable for all future events.
+			setCurrentScreen(analytics, path);
+			logEvent(_getFirebaseAnalytics(), 'page_view', { page_path: path, page_title: path });
 		}
 
-		tracker.pageViewRecorded = true;
+		_pageViewRecorded = true;
+	});
+}
+
+/**
+ * Sets the current user ID into analytics.
+ */
+function _trackUserId(id: number) {
+	setUserId(_getFirebaseAnalytics(), `${id}`);
+}
+
+/**
+ * When the user is no longer logged in, can use this to unset the user from
+ * analytics.
+ */
+function _untrackUserId() {
+	// TODO: Check to make sure this actually works.
+	setUserId(_getFirebaseAnalytics(), '');
+}
+
+function _trackEvent(
+	name: string,
+	eventParams: Record<string, string | number | boolean | undefined>
+) {
+	if (GJ_IS_SSR || GJ_IS_CLIENT) {
+		return;
 	}
 
-	static async trackEvent(category: string, action: string, label?: string, value?: string) {
-		if (!this.shouldTrack) {
-			console.log('Skip tracking event since not a normal user.');
-			return;
-		}
+	// We prefix with `x_` so that we know it is one of our own events.
+	logEvent(_getFirebaseAnalytics(), `x_${name}`, eventParams);
+	console.log(`Track event.`, name, eventParams);
+}
 
-		if (Environment.buildType === 'development') {
-			console.log(
-				`Track event: ${category}:${action || '-'}:${label || '-'}:${value || '-'}`
-			);
-		} else {
-			const options = {
-				...this.commonOptions,
-				nonInteraction: 1,
-				hitCallback: true,
-			};
+const _expEngagements: { time: number; configOption: ConfigOption }[] = [];
 
-			await this.ga('send', 'event', category, action, label, value, options);
-		}
+function _getExperimentKey(option: ConfigOption) {
+	// Limits:
+	// https://support.google.com/analytics/answer/9267744?hl=en
+	return 'exp_' + option.name.substr(0, 35);
+}
+
+function _getExperimentValue(option: ConfigOption) {
+	const value = option.isOverridden
+		? `overridden-${option.value}`
+		: option.isExcluded
+		? 'excluded'
+		: `${option.value}`;
+
+	// Limits:
+	// https://support.google.com/analytics/answer/9267744?hl=en
+	return value.substr(0, 95);
+}
+
+/**
+ * Used to track anytime they see an actual experiment or engage with it in any
+ * way. This allows us to know when they actually saw an experiment vs just
+ * knowing that they MIGHT see an experiment.
+ *
+ * We rate limit this so that it doesn't trigger too much.
+ */
+export function trackExperimentEngagement(option: ConfigOption) {
+	// If we already tracked an experiment engagement for this config option
+	// within the expiry time, we want to ignore.
+	const prevEngagement = _expEngagements.find(
+		i => i.configOption === option && i.time > Date.now() - EXP_ENGAGEMENT_EXPIRY
+	);
+	if (prevEngagement) {
+		return;
 	}
 
-	static async trackError(action: string, label?: string, value?: string) {
-		this.trackEvent('errors', action, label, value);
+	_trackEvent('experiment_engagement', {
+		[_getExperimentKey(option)]: _getExperimentValue(option),
+	});
+
+	arrayRemove(_expEngagements, i => i.configOption === option);
+	_expEngagements.push({ configOption: option, time: Date.now() });
+}
+
+export function trackLogin(method: AuthMethod) {
+	if (GJ_IS_SSR || GJ_IS_CLIENT) {
+		return;
 	}
 
-	static async trackSocial(network: string, action: string, target: string) {
-		if (!this.shouldTrack) {
-			console.log('Skip tracking social event since not a normal user.');
-			return;
-		}
+	logEvent(_getFirebaseAnalytics(), 'login', { method });
+}
 
-		if (Environment.buildType === 'development') {
-			console.log(`Track social event: ${network}:${action}:${target}`);
-		} else {
-			await this.ga('send', 'social', network, action, target, {
-				...this.commonOptions,
-				hitCallback: true,
-			});
-		}
+export function trackJoin(method: AuthMethod) {
+	if (GJ_IS_SSR || GJ_IS_CLIENT) {
+		return;
 	}
 
-	static async trackTiming(category: string, timingVar: string, value: number, label?: string) {
-		if (!this.shouldTrack) {
-			console.log('Skip tracking timing event since not a normal user.');
-			return;
-		}
+	logEvent(_getFirebaseAnalytics(), 'sign_up', { method });
+}
 
-		console.info(`Timing (${category}${label ? ':' + label : ''}) ${timingVar} = ${value}`);
+export function trackAppPromotionClick(options: { source: AppPromotionSource }) {
+	_trackEvent('app_promotion_click', {
+		source: options.source,
+	});
+}
 
-		if (Environment.buildType === 'production') {
-			await this.ga('send', 'timing', category, timingVar, value, label, {
-				...this.commonOptions,
-				hitCallback: true,
-			});
-		}
+export function trackGotoCommunity(params: {
+	source: CommunityOpenSource;
+	id?: number;
+	path?: string;
+	channel?: string;
+}) {
+	_trackEvent('goto_community', params);
+}
+
+export function trackPostOpen(params: { source: PostOpenSource }) {
+	_trackEvent('post_open', params);
+}
+
+export function trackPostLike(
+	liked: boolean,
+	params: { failed: boolean; location: PostControlsLocation }
+) {
+	const { failed, location } = params;
+
+	let type = liked ? 'like' : 'unlike';
+	if (failed) {
+		type += '_fail';
 	}
 
-	static setCurrentExperiment(experiment: string, variation: string | number) {
-		// If the chosen variation is -1, then they weren't chosen to run in this experiment, so we skip tracking.
-		if (variation === -1 || variation === '-1') {
-			return;
-		}
+	_trackEvent(`post_${type}`, { location });
+}
 
-		if (!this.shouldTrack) {
-			console.log('Skip setting experiment since not a normal user.');
-			return;
-		}
+export function trackCommentVote(vote: number, params: { failed: boolean; toggled: boolean }) {
+	const { failed, toggled } = params;
 
-		if (Environment.buildType === 'development') {
-			console.log(`Set new experiment: ${experiment} = ${variation}`);
-		} else {
-			ga('set', 'expId', experiment);
-			ga('set', 'expVar', '' + variation);
-		}
+	let type = '';
+	if (vote === CommentVote.VOTE_UPVOTE) {
+		type = 'like';
+	} else if (vote === CommentVote.VOTE_DOWNVOTE) {
+		type = 'dislike';
+	} else {
+		return;
 	}
 
-	static attachAdditionalPageTracker(trackingId: string) {
-		const index = this.pageTrackers.findIndex(i => i.id === trackingId);
-		if (index !== -1) {
-			return;
-		}
-
-		if (Environment.buildType === 'development') {
-			console.log(`Attached additional tracker: ${trackingId}`);
-		}
-
-		const tracker = new PageTracker(trackingId);
-		this.pageTrackers.push(tracker);
+	if (failed) {
+		type += '_fail';
 	}
 
-	static detachAdditionalPageTracker(trackingId: string) {
-		if (Environment.buildType === 'development') {
-			console.log(`Detached additional tracker: ${trackingId}`);
-		}
+	_trackEvent(`comment_${type}`, { toggled });
+}
 
-		arrayRemove(this.pageTrackers, i => i.id === trackingId);
+export function trackUserFollow(
+	followed: boolean,
+	params: { failed: boolean; location: UserFollowLocation }
+) {
+	const { failed, location } = params;
+
+	let type = followed ? 'follow' : 'unfollow';
+	if (failed) {
+		type += '_fail';
+	}
+
+	_trackEvent(`user_${type}`, { location });
+}
+
+export function trackGameFollow(
+	followed: boolean,
+	params: { failed: boolean; location: GameFollowLocation }
+) {
+	const { failed, location } = params;
+
+	let type = followed ? 'follow' : 'unfollow';
+	if (failed) {
+		type += '_fail';
+	}
+
+	_trackEvent(`game_${type}`, { location });
+}
+
+export function trackCommunityJoin(
+	joined: boolean,
+	params: { failed: boolean; location: CommunityJoinLocation }
+) {
+	const { failed, location } = params;
+
+	let type = joined ? 'join' : 'leave';
+	if (failed) {
+		type += '_fail';
+	}
+
+	_trackEvent(`community_${type}`, { location });
+}
+
+export function trackCommentAdd() {
+	_trackEvent('comment_add', {});
+}
+
+export function trackPostPublish() {
+	_trackEvent('post_publish', {});
+}
+
+export function trackShareLink(
+	url: string,
+	params: { resource: ShareResource; provider?: ShareProvider }
+) {
+	const { provider, resource } = params;
+	const method = provider ? 'external' : 'copy';
+
+	_trackEvent('share_link', {
+		url: encodeURI(url),
+		method,
+		provider,
+		resource,
+	});
+}
+
+/**
+ * @deprecated This is left here so that old code doesn't break.
+ */
+export class Analytics {
+	static trackEvent(category: string, action: string, label?: string, value?: string) {
+		return;
+
+		// if (!this.shouldTrack) {
+		// 	console.log('Skip tracking event since not a normal user.');
+		// 	return;
+		// }
+
+		// if (Environment.buildType === 'development') {
+		// 	console.log(
+		// 		`Track event: ${category}:${action || '-'}:${label || '-'}:${value || '-'}`
+		// 	);
+		// } else {
+		// 	const options = {
+		// 		nonInteraction: 1,
+		// 		hitCallback: true,
+		// 	};
+
+		// 	this.ga('send', 'event', category, action, label, value, options);
+		// }
+	}
+
+	static trackSocial(network: string, action: string, target: string) {
+		return;
+
+		// if (!this.shouldTrack) {
+		// 	console.log('Skip tracking social event since not a normal user.');
+		// 	return;
+		// }
+
+		// if (Environment.buildType === 'development') {
+		// 	console.log(`Track social event: ${network}:${action}:${target}`);
+		// } else {
+		// 	this.ga('send', 'social', network, action, target, {
+		// 		hitCallback: true,
+		// 	});
+		// }
+	}
+
+	static trackTiming(category: string, timingVar: string, value: number, label?: string) {
+		return;
+
+		// if (!this.shouldTrack) {
+		// 	console.log('Skip tracking timing event since not a normal user.');
+		// 	return;
+		// }
+
+		// console.info(`Timing (${category}${label ? ':' + label : ''}) ${timingVar} = ${value}`);
+
+		// if (Environment.buildType === 'production') {
+		// 	this.ga('send', 'timing', category, timingVar, value, label, {
+		// 		hitCallback: true,
+		// 	});
+		// }
 	}
 }

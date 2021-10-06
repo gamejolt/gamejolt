@@ -1,3 +1,5 @@
+<script lang="ts" src="./gif-modal"></script>
+
 <template>
 	<app-modal ref="modal" tabindex="0">
 		<div class="modal-controls">
@@ -15,18 +17,23 @@
 			<template v-else>
 				<div class="input-container">
 					<app-button
+						v-if="shouldShowResetButton"
 						sparse
 						trans
 						icon="chevron-left"
-						v-if="shouldShowResetButton"
 						@click="onClickReset"
 					/>
 					<div class="search-bar">
 						<app-jolticon icon="search" class="search-icon text-muted" />
-						<div v-if="shouldShowResetButton" class="search-clear" @click="onClickReset">
+						<div
+							v-if="shouldShowResetButton"
+							class="search-clear"
+							@click="onClickReset"
+						>
 							<app-jolticon class="-icon" icon="remove" />
 						</div>
 						<input
+							ref="search"
 							class="search form-control"
 							:placeholder="$gettext('Search Tenor...')"
 							:disabled="loadingCategories"
@@ -82,6 +89,7 @@
 								</div>
 							</div>
 							<template v-if="isLoading">
+								<!-- prettier-ignore -->
 								<div
 									v-for="i of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]"
 									:key="i"
@@ -113,5 +121,3 @@
 </template>
 
 <style lang="stylus" src="./gif-modal.styl" scoped></style>
-
-<script lang="ts" src="./gif-modal"></script>

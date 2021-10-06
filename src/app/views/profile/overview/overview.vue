@@ -1,9 +1,11 @@
+<script lang="ts" src="./overview"></script>
+
 <template>
 	<div v-if="user">
 		<!--
 			If this user is banned, we show very little.
 		-->
-		<section class="section fill-notice" v-if="!user.status">
+		<section v-if="!user.status" class="section fill-notice">
 			<div class="container">
 				<h2 class="-banned-header">
 					<translate>profile.banned_message_html</translate>
@@ -42,7 +44,7 @@
 				</app-expand>
 			</div>
 		</section>
-		<section class="section fill-backdrop" v-else>
+		<section v-else class="section fill-backdrop">
 			<div>
 				<app-page-container xl order="left,main,right">
 					<div slot="left">
@@ -62,10 +64,10 @@
 								this when the user changes.
 							-->
 							<app-fade-collapse
+								:key="user.bio_content"
 								:collapse-height="200"
 								:is-open="showFullDescription"
 								:animate="false"
-								:key="user.bio_content"
 								@require-change="canToggleDescription = $event"
 								@expand="showFullDescription = true"
 							>
@@ -74,8 +76,8 @@
 
 							<p>
 								<a
-									class="hidden-text-expander"
 									v-if="canToggleDescription"
+									class="hidden-text-expander"
 									@click="showFullDescription = !showFullDescription"
 								/>
 							</p>
@@ -113,6 +115,13 @@
 					</div>
 
 					<div slot="right">
+						<app-share-card
+							v-if="useShareCard"
+							resource="user"
+							:url="shareUrl"
+							bleed-padding
+						/>
+
 						<app-user-known-followers
 							v-if="shouldShowKnownFollowers"
 							:users="knownFollowers"
@@ -143,14 +152,6 @@
 									}"
 								>
 									{{ gamesCount | number }} Games
-								</app-button>
-
-								<app-button
-									v-if="videosCount > 0"
-									block
-									:to="{ name: 'profile.videos' }"
-								>
-									{{ videosCount | number }} Videos
 								</app-button>
 							</template>
 
@@ -195,19 +196,6 @@
 									<translate>Website</translate>
 								</app-link-external>
 							</div>
-							<template v-if="youtubeChannels.length">
-								<div v-for="channel of youtubeChannels" :key="channel.id">
-									<app-link-external
-										class="link-unstyled"
-										:href="
-											`https://www.youtube.com/channel/${channel.channel_id}`
-										"
-									>
-										<app-jolticon icon="youtube" />
-										{{ channel.title }}
-									</app-link-external>
-								</div>
-							</template>
 
 							<br />
 							<br />
@@ -216,7 +204,7 @@
 						<!-- Communities -->
 						<template v-if="hasCommunitiesSection">
 							<div class="clearfix">
-								<div class="pull-right" v-if="canShowMoreCommunities">
+								<div v-if="canShowMoreCommunities" class="pull-right">
 									<app-button
 										trans
 										:disabled="isLoadingAllCommunities"
@@ -238,18 +226,18 @@
 										v-for="i in previewCommunityCount"
 										:key="i"
 										class="-community-item -community-thumb-placeholder"
-									></div>
+									/>
 								</template>
 								<template v-else>
 									<router-link
 										v-for="community of shownCommunities"
 										:key="community.id"
+										v-app-tooltip.bottom="community.name"
 										class="-community-item link-unstyled"
 										:to="{
 											name: 'communities.view.overview',
 											params: { path: community.path },
 										}"
-										v-app-tooltip.bottom="community.name"
 									>
 										<app-community-thumbnail-img
 											class="-community-thumb"
@@ -303,21 +291,23 @@
 							</h4>
 
 							<div class="-trophies">
-								<app-trophy-thumbnail
-									class="-trophy"
-									v-for="trophy of previewTrophies"
-									:key="trophy.key"
-									:trophy="trophy.trophy"
-									no-difficulty
-									no-highlight
-									@click.native="onClickTrophy(trophy)"
-								/>
+								<template v-if="previewTrophies">
+									<app-trophy-thumbnail
+										v-for="trophy of previewTrophies"
+										:key="trophy.key"
+										class="-trophy"
+										:trophy="trophy.trophy"
+										no-difficulty
+										no-highlight
+										@click.native="onClickTrophy(trophy)"
+									/>
+								</template>
 
 								<router-link
 									v-if="shouldShowMoreTrophies"
+									v-app-tooltip="$gettext(`View All Trophies...`)"
 									class="-trophies-more -trophy link-unstyled"
 									:to="{ name: 'profile.trophies' }"
-									v-app-tooltip="$gettext(`View All Trophies...`)"
 								>
 									+{{ moreTrophyCount }}
 								</router-link>
@@ -392,6 +382,20 @@
 							</div>
 						</app-expand>
 					</template>
+
+					<!-- Fireside -->
+					<app-scroll-inview
+						v-if="shouldShowFireside"
+						:config="FiresideScrollInviewConfig"
+						@inview="onFiresideInview"
+						@outview="onFiresideOutview"
+					>
+						<app-fireside-badge
+							:fireside="fireside"
+							:show-preview="canShowFiresidePreview"
+							@changed="onFiresideBadgeChanged"
+						/>
+					</app-scroll-inview>
 
 					<router-view />
 				</app-page-container>
@@ -470,5 +474,3 @@
 	position: relative
 	cursor: pointer
 </style>
-
-<script lang="ts" src="./overview"></script>

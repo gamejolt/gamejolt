@@ -10,9 +10,7 @@
 			</router-link>
 			<div class="text-muted small">
 				<p>
-					<translate>
-						Marvel at your collection of beautiful stickers.
-					</translate>
+					<translate> Marvel at your collection of beautiful stickers. </translate>
 				</p>
 			</div>
 		</app-page-header>
@@ -25,25 +23,6 @@
 							<strong>{{ stickerProgress }}% to next sticker</strong>
 						</app-progress-bar>
 
-						<template v-if="stickersBuyableAmount > 0">
-							<p>
-								<translate
-									:translate-n="stickersBuyableAmount"
-									:translate-params="{ count: number(stickersBuyableAmount) }"
-									translate-plural="You currently have enough points to unlock %{ count } new stickers!"
-								>
-									You currently have enough points to unlock %{ count } new
-									sticker!
-								</translate>
-							</p>
-							<p>
-								<app-button @click="onCollect">
-									<translate>Unlock Stickers</translate>
-								</app-button>
-							</p>
-							<br />
-						</template>
-
 						<p class="small">
 							<translate>
 								Get more stickers by liking posts on Game Jolt. Every time you like
@@ -54,33 +33,13 @@
 					</div>
 					<div class="col-md-8 col-md-pull-4">
 						<template v-if="hasStickersInCollection">
-							<div v-if="halloweenStickers.length">
-								<div class="-candy-stickers well">
-									<p>
-										<b>
-											Trick or Treat on Game Jolt with candy stickers!
-										</b>
-										During Halloween weekend, all stickers you unlock will be
-										candy that you can hand out to other Game Jolt users for
-										trick or treating.
-									</p>
-									<div class="-collection">
-										<app-sticker-card
-											v-for="stickerCount of halloweenStickers"
-											:key="stickerCount.sticker_id"
-											:sticker="stickerCount.sticker"
-											:label="`x${stickerCount.count}`"
-										/>
-									</div>
-								</div>
-							</div>
-
-							<div v-if="normalStickers.length" class="-collection">
+							<div class="-collection">
 								<app-sticker-card
-									v-for="stickerCount of normalStickers"
+									v-for="stickerCount of stickerCollection"
 									:key="stickerCount.sticker_id"
 									:sticker="stickerCount.sticker"
 									:label="`x${stickerCount.count}`"
+									:is-new="newStickerIds.includes(stickerCount.sticker_id)"
 								/>
 							</div>
 						</template>
@@ -107,18 +66,4 @@
 	grid-template-columns: repeat(auto-fill, $card-width)
 	justify-content: space-between
 	grid-gap: $card-margin * 2
-
-.-candy-stickers
-	border: $border-width-large dashed var(--theme-link)
-	margin-left: -($grid-gutter-width-xs / 2)
-	margin-right: @margin-left
-
-	@media $media-xs
-		border-radius: 0
-		border-left: 0
-		border-right: 0
-
-	@media $media-sm-up
-		margin-left: -($grid-gutter-width / 2)
-		margin-right: @margin-left
 </style>

@@ -22,7 +22,9 @@
 			>
 				{{ count }}
 			</span>
-			<app-jolticon icon="notifications" />
+			<div v-if="hasNewUnlockedStickers" class="-new-tag anim-fade-enter anim-fade-leave" />
+			<app-jolticon icon="bell-filled" />
+			<div ref="newStickerAnimContainer" class="-new-sticker-anim-container" />
 		</a>
 
 		<template v-if="feed && isShowing">
@@ -36,13 +38,20 @@
 					<br />
 					<app-loading centered />
 				</template>
-				<template v-else-if="!feed.hasItems">
-					<div class="alert">
-						<translate>You don't have any notifications yet.</translate>
-					</div>
-				</template>
 				<template v-else>
-					<app-activity-feed :feed="feed" />
+					<app-shell-notification-popover-sticker-nav-item
+						v-if="totalStickersCount > 0"
+						:sticker-count="totalStickersCount"
+						:has-new="hasNewUnlockedStickers"
+					/>
+					<template v-if="!feed.hasItems">
+						<div class="alert">
+							<translate>You don't have any notifications yet.</translate>
+						</div>
+					</template>
+					<template v-else>
+						<app-activity-feed :feed="feed" />
+					</template>
 				</template>
 			</div>
 			<div class="fill-darker" slot="footer">
@@ -68,4 +77,26 @@
 .-header
 	padding: $popover-spacing
 	text-align: right
+
+.-new-sticker-anim-container
+	position: absolute
+	left: 14px
+	top: 16px
+	user-select: none
+	pointer-events: none
+	z-index: 3
+
+.-new-tag
+	border-radius: 50%
+	width: 12px
+	height: 12px
+	display: block
+	change-bg('highlight')
+	position: absolute
+	bottom: 10px
+	right: 4px
+	display: block
+	border-color: var(--theme-darkest)
+	border-width: 2px
+	border-style: solid
 </style>

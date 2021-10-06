@@ -32,6 +32,9 @@ export default class AppCommunityChannelCard extends Vue {
 	@Prop(propOptional(Boolean, false)) isUnread!: boolean;
 	@Prop(propOptional(String)) sort!: string;
 	@Prop(propOptional(Boolean, false)) isLocked!: boolean;
+	@Prop(propOptional(Boolean, false)) isUnpublished!: boolean;
+	@Prop(propOptional(Boolean, false)) isArchived!: boolean;
+	@Prop(propOptional(String)) channelType?: string;
 
 	cardHeight = CARD_HEIGHT;
 

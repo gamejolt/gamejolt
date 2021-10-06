@@ -77,6 +77,15 @@ export default class AppPopper extends Vue {
 	trigger!: ActualTrigger | 'right-click';
 
 	/**
+	 * Normally we allow the cursor to move over the actual popover element that
+	 * shows. Setting this to true will disable this functionality and the
+	 * popover will hide immediately when you hover away from the trigger
+	 * element.
+	 */
+	@Prop({ type: Boolean })
+	noHoverPopover!: boolean;
+
+	/**
 	 * We want the popper to be 'display: fixed' if we use it on a fixed parent.
 	 * This should prevent stuttering on scroll if the popper is attached to the nav.
 	 */
@@ -200,6 +209,10 @@ export default class AppPopper extends Vue {
 	beforeDestroy() {
 		// Destroy the popper instance and element before we lose our $refs.
 		this.destroyPopper();
+
+		// Just in case the popover wasn't cleaned up properly.
+		document.removeEventListener('click', this.onClickAway, true);
+		this.removeBackdrop();
 	}
 
 	destroyed() {
@@ -244,6 +257,20 @@ export default class AppPopper extends Vue {
 
 		Popper.hideAll();
 		this.show();
+	}
+
+	onPopoverEnter(event: PointerEvent) {
+		if (this.noHoverPopover) {
+			return;
+		}
+		this.onMouseEnter(event);
+	}
+
+	onPopoverLeave(event: PointerEvent) {
+		if (this.noHoverPopover) {
+			return;
+		}
+		this.onMouseLeave(event);
 	}
 
 	onMouseEnter(event: PointerEvent) {
@@ -316,6 +343,13 @@ export default class AppPopper extends Vue {
 		this.isVisible = true;
 		await this.$nextTick();
 
+		// Don't create the popper if we managed to remove it during the
+		// previous await.
+		if (!this.$el || !this.$refs.popper) {
+			this.isVisible = false;
+			return;
+		}
+
 		this.popperInstance = createPopper(this.$el, this.$refs.popper, this.popperOptions);
 
 		document.body.appendChild(this.$refs.popper);
@@ -339,10 +373,10 @@ export default class AppPopper extends Vue {
 		this.isHiding = false;
 	}
 
-	private show() {
+	private async show() {
 		this.emitShow();
 		this.clearHideTimeout();
-		this.createPopper();
+		await this.createPopper();
 
 		// If we are tracking a particular element's width, then we set this popover to be the same
 		// width as the element. We don't track width when it's an XS screen since we do a full
@@ -382,7 +416,7 @@ export default class AppPopper extends Vue {
 	}
 
 	private addBackdrop() {
-		if (Screen.isXs && !this.mobileBackdrop) {
+		if (Screen.isXs && this.isVisible && !this.mobileBackdrop) {
 			this.mobileBackdrop = Backdrop.push({ className: 'popper-backdrop' });
 		}
 	}

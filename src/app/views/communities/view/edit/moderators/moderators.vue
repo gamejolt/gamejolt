@@ -1,13 +1,16 @@
+<script lang="ts" src="./moderators"></script>
+
 <template>
 	<app-communities-view-page-container>
 		<h2 class="section-header">
-			<translate>Moderators</translate>
+			<translate>Collaborators</translate>
 		</h2>
 
 		<div class="page-help">
 			<p>
 				<translate>
-					Assign moderators and choose their access level to help manage your community.
+					Assign collaborators and choose their access level to help manage your
+					community.
 				</translate>
 			</p>
 		</div>
@@ -34,14 +37,15 @@
 				<div class="card-meta">
 					<span class="tag">
 						<template v-if="collaborator.role === Collaborator.ROLE_EQUAL_COLLABORATOR">
-							<translate>Collaborator</translate>
+							<translate>Full Collaborator</translate>
+						</template>
+						<template v-else-if="collaborator.role === Collaborator.ROLE_JAM_ORGANIZER">
+							<translate>Jam Organizer</translate>
 						</template>
 						<template v-else-if="collaborator.role === Collaborator.ROLE_MODERATOR">
 							<translate>Moderator</translate>
 						</template>
-						<template v-else>
-							-
-						</template>
+						<template v-else> - </template>
 					</span>
 
 					<template v-if="collaborator.status !== Collaborator.STATUS_ACTIVE">
@@ -69,5 +73,3 @@
 		</app-card-list>
 	</app-communities-view-page-container>
 </template>
-
-<script lang="ts" src="./moderators"></script>

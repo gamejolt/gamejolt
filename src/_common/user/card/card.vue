@@ -70,9 +70,9 @@
 					<app-user-follow-widget
 						v-if="user.id !== app.user.id"
 						:user="user"
+						location="card"
 						block
 						hide-count
-						event-label="user-card"
 					/>
 					<app-button
 						v-else
@@ -88,7 +88,7 @@
 			</div>
 		</div>
 
-		<div class="-stats -well">
+		<div v-if="!noStats" class="-stats -well">
 			<app-loading v-if="isLoading" class="sans-margin" centered />
 			<ul v-else class="stat-list">
 				<li class="stat-big stat-big-smaller">
@@ -123,19 +123,19 @@
 						</div>
 					</router-link>
 				</li>
-				<li v-if="videoCount" class="stat-big stat-big-smaller">
+				<li v-if="likeCount" class="stat-big stat-big-smaller">
 					<router-link
 						class="link-unstyled"
 						:to="{
-							name: 'profile.videos',
+							name: 'profile.overview',
 							params: { username: user.username },
 						}"
 					>
 						<div class="stat-big-label">
-							<translate>Videos</translate>
+							<translate>Likes</translate>
 						</div>
 						<div class="stat-big-digit">
-							{{ number(videoCount) }}
+							{{ fuzzynumber(likeCount) }}
 						</div>
 					</router-link>
 				</li>

@@ -14,17 +14,26 @@ const Threshold = 50;
 
 @Component({})
 export default class AppFadeCollapse extends Vue {
-	@Prop(Number)
+	@Prop({ type: Number, required: true })
 	collapseHeight!: number;
 
-	@Prop(Boolean)
-	isOpen?: boolean;
+	@Prop({ type: Boolean, default: false, required: false })
+	isOpen!: boolean;
 
-	@Prop({ type: Boolean, default: true })
-	animate?: boolean;
+	@Prop({ type: Boolean, default: true, required: false })
+	animate!: boolean;
 
-	@Prop(String)
-	size?: 'sm';
+	@Prop({ type: String, required: false })
+	size!: 'sm';
+
+	@Prop({ type: Boolean, default: false, required: false })
+	ignoreThreshold!: boolean;
+
+	@Emit('require-change')
+	emitRequireChange(_isRequired: boolean) {}
+
+	@Emit('expand')
+	emitExpand(_e: Event) {}
 
 	isCollapsed = false;
 	private isPrimed = false;
@@ -33,19 +42,14 @@ export default class AppFadeCollapse extends Vue {
 
 	$el!: HTMLDivElement;
 
-	@Emit('require-change')
-	emitRequireChange(_isRequired: boolean) {}
-
-	@Emit('expand')
-	emitExpand(_e: Event) {}
-
 	async mounted() {
 		// Let it compile DOM and wait for any images to be resized.
 		await sleep(0);
 
 		// Take threshold into account only if our collapse height is big enough
 		// for threshold to matter.
-		const threshold = this.collapseHeight > Threshold * 2 ? Threshold : 0;
+		const threshold =
+			!this.ignoreThreshold && this.collapseHeight > Threshold * 2 ? Threshold : 0;
 
 		if (this.collapseHeight && this.$el.scrollHeight - threshold > this.collapseHeight) {
 			this.isRequired = true;

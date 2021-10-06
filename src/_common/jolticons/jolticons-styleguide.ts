@@ -171,6 +171,19 @@ export default class AppJolticonsStyleguide extends Vue {
 			'star',
 			'crown',
 			'audio-mute',
+			'message',
+			'home',
+			'sticker-filled',
+			'comment-filled',
+			'eject',
+			'medal',
+			'camera',
+			'details',
+			'phone',
+			'bell-filled',
+			'bell-unfilled',
+			'communities-2x2',
+			'communities-3x3',
 		]
 			.sort()
 			.filter(i => i.indexOf(this.filter) !== -1);

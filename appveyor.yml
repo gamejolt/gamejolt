@@ -35,6 +35,11 @@ install:
 
   - git submodule update --init --recursive
 
+  # Get code signing cert
+  - ps: |
+      Set-Content $env:APPVEYOR_BUILD_FOLDER\gulp\tasks\client\certs\cert.pfx.b64 $env:GJ_CERT
+      CertUtil -Decode $env:APPVEYOR_BUILD_FOLDER\gulp\tasks\client\certs\cert.pfx.b64 $env:APPVEYOR_BUILD_FOLDER\gulp\tasks\client\certs\cert.pfx
+
   # Make InnoSetup and MinGW tools accessible from path
   - set PATH=C:\Program Files (x86)\Inno Setup 5;C:\MinGW\bin;%GOROOT%\bin;%GOPATH%\bin;%PATH%
   - echo %PATH%

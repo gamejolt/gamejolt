@@ -1,3 +1,5 @@
+<script lang="ts" src="./community"></script>
+
 <template>
 	<app-form name="detailsForm">
 		<app-form-group name="name" :label="$gettext(`Name`)">
@@ -36,7 +38,9 @@
 			/>
 			<div class="help-block">
 				<p>
-					<strong><translate>Once a URL path is chosen it cannot be changed!</translate></strong>
+					<strong>
+						<translate>Once a URL path is chosen it cannot be changed!</translate>
+					</strong>
 				</p>
 			</div>
 			<app-form-control-errors />
@@ -68,17 +72,31 @@
 			<app-form-control-theme class="pull-right" @changed="onThemeChanged()" />
 			<p class="help-block">
 				<translate>
-					Give your page a splash of color! When people view this community, they'll be switched to
-					this theme.
+					Give your page a splash of color! When people view this community, they'll be
+					switched to this theme.
 				</translate>
 			</p>
 		</app-form-group>
 
-		<app-form-button>
+		<app-form-group name="allow_firesides" :label="$gettext(`Allow community firesides?`)">
+			<app-form-control-toggle class="pull-right" />
+
+			<p class="help-block">
+				<translate>
+					Will allow any member of the community to start a fireside in this community.
+				</translate>
+			</p>
+			<p class="help-block">
+				<translate>
+					You are able to eject firesides at any time, and blocked users will not be able
+					to create any firesides in your community.
+				</translate>
+			</p>
+		</app-form-group>
+
+		<app-form-button show-when-valid>
 			<translate v-if="method === 'add'">Create</translate>
 			<translate v-else>Save Details</translate>
 		</app-form-button>
 	</app-form>
 </template>
-
-<script lang="ts" src="./community"></script>

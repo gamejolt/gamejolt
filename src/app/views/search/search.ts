@@ -23,9 +23,6 @@ import './search.styl';
 		AppSearch,
 		AppPagination,
 	},
-	filters: {
-		number,
-	},
 })
 @WithRouteStore({
 	store,
@@ -51,6 +48,7 @@ export default class RouteSearch extends BaseRouteComponent {
 	readonly Screen = Screen;
 	readonly Search = Search;
 	readonly Scroll = Scroll;
+	readonly number = number;
 
 	get routeTitle() {
 		if (this.route.query.q) {

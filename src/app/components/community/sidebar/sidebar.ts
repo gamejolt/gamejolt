@@ -2,13 +2,18 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { getAbsoluteLink } from '../../../../utils/router';
+import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
-import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
 import { Community } from '../../../../_common/community/community.model';
-import { Environment } from '../../../../_common/environment/environment.service';
+import { configShareCard } from '../../../../_common/config/config.service';
 import { number } from '../../../../_common/filters/number';
 import AppGameThumbnail from '../../../../_common/game/thumbnail/thumbnail.vue';
 import AppPopper from '../../../../_common/popper/popper.vue';
+import { ReportModal } from '../../../../_common/report/modal/modal.service';
+import { Screen } from '../../../../_common/screen/screen-service';
+import AppShareCard from '../../../../_common/share/card/card.vue';
+import { copyShareLink } from '../../../../_common/share/share.service';
 import { AppSocialFacebookLike } from '../../../../_common/social/facebook/like/like';
 import { AppSocialTwitterShare } from '../../../../_common/social/twitter/share/share';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
@@ -33,6 +38,7 @@ const GAME_LIST_COLLAPSED_COUNT = 3;
 		AppSocialFacebookLike,
 		AppTimeAgo,
 		AppGameList,
+		AppShareCard,
 	},
 })
 export default class AppCommunitySidebar extends Vue {
@@ -69,6 +75,14 @@ export default class AppCommunitySidebar extends Vue {
 		this.currentCollaboratorCount = collaboratorCount;
 	}
 
+	get useShareCard() {
+		return configShareCard.value && !this.ignoringSplitTest;
+	}
+
+	get ignoringSplitTest() {
+		return Screen.isMobile;
+	}
+
 	get shouldShowKnownMembers() {
 		return !!this.app.user && this.data.knownMembers && this.data.knownMembers.length > 0;
 	}
@@ -78,7 +92,7 @@ export default class AppCommunitySidebar extends Vue {
 	}
 
 	get shareUrl() {
-		return Environment.baseUrl + this.$router.resolve(this.community.routeLocation).href;
+		return getAbsoluteLink(this.$router, this.community.routeLocation);
 	}
 
 	get shareContent() {
@@ -134,8 +148,12 @@ export default class AppCommunitySidebar extends Vue {
 		return this.filteredGames;
 	}
 
+	get shouldShowReport() {
+		return !this.community.hasPerms();
+	}
+
 	copyShareUrl() {
-		Clipboard.copy(this.shareUrl);
+		copyShareLink(this.shareUrl, 'community');
 	}
 
 	toggleCollaboratorList() {
@@ -171,5 +189,17 @@ export default class AppCommunitySidebar extends Vue {
 
 	toggleGamesList() {
 		this.gameListCollapsed = !this.gameListCollapsed;
+	}
+
+	onClickReport() {
+		ReportModal.show(this.community);
+	}
+
+	@Watch('ignoringSplitTest', { immediate: true })
+	trackExperiment() {
+		if (this.ignoringSplitTest) {
+			return;
+		}
+		trackExperimentEngagement(configShareCard);
 	}
 }

@@ -1,103 +1,67 @@
+<script lang="ts" src="./edit"></script>
+
 <template>
-	<app-form name="communityChannelFormEdit">
-		<!-- Show the current backgroud image if there is one -->
-		<div v-if="formModel.background" class="form-group">
-			<label class="control-label">
-				<translate>Current Channel Background Image</translate>
-			</label>
-
-			<div class="-background-preview">
-				<img
-					:src="formModel.background.mediaserver_url"
-					:alt="formModel.background.mediaserver_url"
-				/>
+	<app-form ref="form" name="communityChannelFormEdit">
+		<app-form-group name="display_title" :label="$gettext(`Display Name`)" optional>
+			<div class="help-block">
+				<translate>
+					This should be short and to the point. If you don't fill in a display name,
+					we'll use your channel's URL path as its name.
+				</translate>
 			</div>
 
-			<br />
-
-			<div class="clearfix">
-				<app-button @click="clearBackground">
-					<translate>Clear Background</translate>
-				</app-button>
-			</div>
-		</div>
-
-		<app-form-group
-			name="file"
-			:label="
-				!formModel.background
-					? $gettext('Upload Background Image')
-					: $gettext('Change Background Image')
-			"
-			:optional="true"
-		>
-			<p class="help-block" v-translate>
-				Your image must be a PNG or JPG.
-				<br />
-				<strong>PNGs are highly recommended as they produce a lossless image.</strong>
-			</p>
-
-			<p class="help-block" v-translate="{ dimensions: maxWidth + '×' + maxHeight }">
-				Your background image must be smaller than
-				<code>%{dimensions}</code>.
-				<br />
-				<strong>Images are cropped to a ratio of 3.8 ÷ 1.</strong>
-			</p>
-
-			<app-form-control-upload
-				:rules="{
-					filesize: maxFilesize,
-					max_img_dimensions: [maxWidth, maxHeight],
-				}"
-				accept=".png,.jpg,.jpeg,.webp"
+			<app-form-control
+				:rules="{ min: 3, max: 30 }"
+				:validate-on="['blur']"
+				:placeholder="formModel.title"
 			/>
 
 			<app-form-control-errors />
 		</app-form-group>
 
-		<app-form-group name="permission_posting" :label="$gettext('Channel posting permissions')">
-			<div class="help-inline">
-				<span v-translate>
-					Choose who can post to this channel.
-				</span>
-			</div>
-			<div
-				class="radio"
-				v-for="(permissionDisplay, permission) of permissionPostingOptions"
-				:key="permission"
-			>
-				<label>
-					<app-form-control-radio :value="permission" />
-					{{ permissionDisplay }}
-				</label>
-			</div>
-			<app-form-control-errors />
+		<app-form-group name="title" :label="$gettext(`URL Path`)">
+			<app-form-control
+				type="text"
+				:rules="{
+					pattern: /^[a-z0-9_]+$/i,
+					min: 3,
+					max: 30,
+					availability: {
+						url: titleAvailabilityUrl,
+					},
+				}"
+				data-vv-delay="500"
+			/>
+			<app-form-control-errors>
+				<app-form-control-error
+					when="availability"
+					:message="
+						$gettext('A channel in this community with that URL path already exists.')
+					"
+				/>
+
+				<app-form-control-error
+					when="pattern"
+					:message="
+						$gettext(
+							'Channel URL paths can only contain numbers, letters, and underscores (_).'
+						)
+					"
+				/>
+			</app-form-control-errors>
 		</app-form-group>
 
-		<app-form-button>
+		<app-community-channel-card-edit
+			:background="formModel.background"
+			@click="onClickEditBackground"
+		/>
+
+		<br />
+
+		<app-form-community-channel-permissions v-if="shouldShowPermissions" />
+
+		<app-form-button show-when-valid>
 			<translate>Save Channel</translate>
 		</app-form-button>
-		<app-button trans @click="onRename">
-			<translate>Rename Channel</translate>
-		</app-button>
 	</app-form>
 </template>
-
-<style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-@require '../../../../community/channel/card/variables'
-
-.-background-preview
-	rounded-corners-lg()
-	display: flex
-	align-items: center
-	width: $card-width
-	height: $card-height
-	overflow: hidden
-
-	img
-		width: 100%
-</style>
-
-<script lang="ts" src="./edit"></script>

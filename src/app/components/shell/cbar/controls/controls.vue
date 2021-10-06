@@ -73,6 +73,8 @@
 		pressy()
 		img-circle()
 		background-color: var(--theme-bg-offset)
+		position: relative
+		z-index: 1
 
 		>>> .jolticon
 			color: var(--theme-lighter)

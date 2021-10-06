@@ -1,3 +1,5 @@
+<script lang="ts" src="./linked-accounts"></script>
+
 <template>
 	<div>
 		<div class="row linked-accounts-list">
@@ -46,56 +48,14 @@
 					:account="tumblrAccount"
 					:disabled="loading"
 					provider="tumblr"
+					show-tumblr-blog
 					@link="onLink"
 					@sync="onLink"
 					@unlink="onUnlink"
 					@link-tumblr-blog="onLinkTumblrBlog"
 					@unlink-tumblr-blog="onUnlinkTumblrBlog"
-					show-tumblr-blog
 				/>
-			</div>
-		</div>
-
-		<div class="row">
-			<div class="col-md-8 col-lg-6">
-				<h3><translate>YouTube Channels</translate></h3>
-
-				<p class="page-help">
-					<translate>
-						You can link your YouTube channels in order to post video comments on games.
-					</translate>
-				</p>
-
-				<div class="list-group" v-if="channels.length > 0">
-					<div
-						class="list-group-item clearfix"
-						style="display: flex; align-items: center;"
-						v-for="channel of channels"
-						:key="channel.id"
-					>
-						<div style="flex: auto">
-							<strong>
-								<a :href="channel.link" target="_blank">
-									{{ channel.title }}
-								</a>
-							</strong>
-						</div>
-						<div style="flex: none">
-							<app-button trans @click="unlinkYouTubeChannel(channel)">
-								<translate>Unlink</translate>
-							</app-button>
-						</div>
-					</div>
-				</div>
-
-				<div>
-					<app-button primary icon="link" @click="linkYouTubeChannel()">
-						<translate>Link YouTube Channel</translate>
-					</app-button>
-				</div>
 			</div>
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./linked-accounts"></script>

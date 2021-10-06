@@ -1,5 +1,6 @@
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
+import { propRequired } from '../../../../../utils/vue';
 import { Community } from '../../../../../_common/community/community.model';
 import { BaseModal } from '../../../../../_common/modal/base';
 import { CommunitySidebarData } from '../sidebar-data';
@@ -11,12 +12,7 @@ import AppCommunitySidebar from '../sidebar.vue';
 	},
 })
 export default class AppCommunitySidebarModal extends BaseModal {
-	@Prop(Boolean)
-	isEditing!: boolean;
-
-	@Prop(CommunitySidebarData)
-	data!: CommunitySidebarData;
-
-	@Prop(Community)
-	community!: Community;
+	@Prop(propRequired(Boolean)) isEditing!: boolean;
+	@Prop(propRequired(CommunitySidebarData)) data!: CommunitySidebarData;
+	@Prop(propRequired(Community)) community!: Community;
 }

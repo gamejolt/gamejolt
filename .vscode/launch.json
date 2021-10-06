@@ -1,6 +1,7 @@
 {
 	"version": "0.2.0",
-	"configurations": [{
+	"configurations": [
+		{
 			"type": "node",
 			"request": "launch",
 			"name": "Launch Server",
@@ -10,14 +11,14 @@
 			"name": "Launch Site in Chrome",
 			"type": "chrome",
 			"request": "launch",
-			"url": "http://localhost:8080",
+			"url": "https://development.gamejolt.com",
 			"webRoot": "${workspaceRoot}"
 		},
 		{
 			"name": "Launch Site Login in Chrome",
 			"type": "chrome",
 			"request": "launch",
-			"url": "http://localhost:8080/login",
+			"url": "https://development.gamejolt.com/login",
 			"webRoot": "${workspaceRoot}"
 		},
 		{

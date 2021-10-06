@@ -8,57 +8,70 @@
 		@inview="isInview = true"
 		@outview="isInview = false"
 	>
-		<component
-			:is="component"
-			v-if="isInview"
-			v-bind="componentProps"
-			class="-item"
-			:class="{
-				active: isActive,
-			}"
-			:title="hoverTitle"
-			v-on="componentEvents"
+		<app-popper
+			popover-class="fill-darkest"
+			trigger="right-click"
+			placement="bottom"
+			block
+			fixed
+			hide-on-state-change
 		>
-			<template v-if="!user">
-				<span
-					v-if="isHovered || Screen.isXs"
-					v-app-tooltip="$gettext('Leave Room')"
-					class="-action"
-					@click.stop.prevent="leaveRoom"
-				>
-					<app-jolticon icon="remove" class="middle" />
+			<template #default>
+				<span>
+					<a
+						v-if="isInview"
+						class="-item"
+						:class="{
+							active: isActive,
+						}"
+						:title="hoverTitle"
+						v-on="componentEvents"
+					>
+						<span v-if="notificationsCount" class="tag tag-highlight notifications-tag">
+							{{ notificationsCountLocalized }}
+						</span>
+
+						<div class="shell-nav-icon">
+							<div class="-avatar">
+								<template v-if="user">
+									<img :src="user.img_avatar" />
+									<app-chat-user-online-status
+										v-if="isOnline !== null"
+										class="-avatar-status"
+										:is-online="isOnline"
+										:size="12"
+									/>
+								</template>
+								<div v-else class="-group-icon">
+									<app-jolticon icon="users" />
+								</div>
+							</div>
+						</div>
+
+						<div class="shell-nav-label">
+							{{ title }}
+							<span v-if="meta" class="tiny text-muted">{{ meta }}</span>
+						</div>
+					</a>
 				</span>
 			</template>
 
-			<span v-if="notificationsCount" class="tag tag-highlight notifications-tag">
-				{{ notificationsCountLocalized }}
-			</span>
+			<template #popover>
+				<div class="fill-darker">
+					<div class="list-group list-group-dark">
+						<app-chat-notification-settings :room-id="roomId" :is-pm-room="!!user" />
 
-			<div class="shell-nav-icon">
-				<div class="-avatar">
-					<template v-if="user">
-						<img :src="user.img_avatar" />
-						<app-chat-user-online-status
-							v-if="isOnline !== null"
-							class="-avatar-status"
-							:is-online="isOnline"
-							:size="12"
-						/>
-					</template>
-					<div v-else class="-group-icon">
-						<app-jolticon icon="users" />
+						<template v-if="!user">
+							<hr />
+							<a class="list-group-item has-icon" @click="leaveRoom">
+								<app-jolticon icon="logout" notice />
+								<translate>Leave Room</translate>
+							</a>
+						</template>
 					</div>
 				</div>
-			</div>
-
-			<div class="shell-nav-label">
-				<span v-if="isOwner" v-app-tooltip="`Room Owner`">
-					<app-jolticon icon="crown" />
-				</span>
-				{{ title }}
-				<span v-if="meta" class="tiny">{{ meta }}</span>
-			</div>
-		</component>
+			</template>
+		</app-popper>
 	</app-scroll-inview>
 </template>
 

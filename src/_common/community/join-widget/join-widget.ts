@@ -3,12 +3,13 @@ import { Component, Prop } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { GridClient } from '../../../app/components/grid/client.service';
 import { Store } from '../../../app/store';
+import { CommunityJoinLocation } from '../../analytics/analytics.service';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { number } from '../../filters/number';
 import { Growls } from '../../growls/growls.service';
 import { AppStore } from '../../store/app-store';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
-import { $joinCommunity, $leaveCommunity, Community } from '../community.model';
+import { Community } from '../community.model';
 
 @Component({
 	directives: {
@@ -17,12 +18,20 @@ import { $joinCommunity, $leaveCommunity, Community } from '../community.model';
 	},
 })
 export default class AppCommunityJoinWidget extends Vue {
-	@Prop(Community) community!: Community;
-	@Prop(Boolean) block?: boolean;
-	@Prop(Boolean) hideCount?: boolean;
-	@Prop({ type: String, required: false, default: 'global' })
-	eventLabel!: string;
-	@Prop(Boolean) solid?: boolean;
+	@Prop({ type: Community, required: true })
+	community!: Community;
+
+	@Prop({ type: String, required: true })
+	location!: CommunityJoinLocation;
+
+	@Prop({ type: Boolean, required: false, default: false })
+	block?: boolean;
+
+	@Prop({ type: Boolean, required: false, default: false })
+	hideCount?: boolean;
+
+	@Prop({ type: Boolean, required: false, default: false })
+	solid?: boolean;
 
 	@State app!: AppStore;
 	@State grid!: GridClient;
@@ -65,8 +74,7 @@ export default class AppCommunityJoinWidget extends Vue {
 
 		if (!this.community.is_member) {
 			try {
-				await $joinCommunity(this.community);
-				this.joinCommunity(this.community);
+				await this.joinCommunity({ community: this.community, location: this.location });
 			} catch (e) {
 				console.log(e);
 				let message = this.$gettext(
@@ -80,8 +88,11 @@ export default class AppCommunityJoinWidget extends Vue {
 			}
 		} else {
 			try {
-				await $leaveCommunity(this.community);
-				this.leaveCommunity(this.community);
+				await this.leaveCommunity({
+					community: this.community,
+					location: this.location,
+					shouldConfirm: true,
+				});
 			} catch (e) {
 				Growls.error(this.$gettext(`For some reason we couldn't leave this community.`));
 			}

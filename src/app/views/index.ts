@@ -1,11 +1,11 @@
 import { initRouter } from '../../utils/router';
 import { store } from '../store/index';
 import { routeBadgeFeatured } from './badge/featured/featured.route';
-import { routeBasement } from './basement/basement.route';
 import { routeCommunitiesView } from './communities/view/view.route';
 import { routeDash } from './dashboard/dashboard.route';
 import { routeDiscover } from './discover/discover.route';
 import { routeDownload } from './download/download.route';
+import { routeFireside } from './fireside/fireside.route';
 import { routeForums } from './forums/forums.route';
 import { routeHome } from './home/home.route';
 import { routeIntent } from './intent/intent.route';
@@ -42,8 +42,8 @@ const routes = [
 	routeWeplay,
 	routeWelcome,
 	routeBadgeFeatured,
-	routeBasement,
 	routeTimeout,
+	routeFireside,
 ];
 
 export const router = initRouter(routes);
@@ -57,5 +57,12 @@ router.beforeEach((to, _from, next) => {
 	} else {
 		store.commit('showShell');
 	}
+
+	if (to.matched.some(record => record.meta.noFooter)) {
+		store.commit('hideFooter');
+	} else {
+		store.commit('showFooter');
+	}
+
 	next();
 });

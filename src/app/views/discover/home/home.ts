@@ -1,35 +1,29 @@
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
+import { configDiscoverCommunityChunks } from '../../../../_common/config/config.service';
 import { Environment } from '../../../../_common/environment/environment.service';
-import { Game } from '../../../../_common/game/game.model';
+import { Fireside } from '../../../../_common/fireside/fireside.model';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
-import AppGameGrid from '../../../components/game/grid/grid.vue';
-import AppGameGridPlaceholder from '../../../components/game/grid/placeholder/placeholder.vue';
+import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
 import { AppAuthJoinLazy } from '../../../components/lazy';
-import {
-	hasCommunitiesHomeSplitTest,
-	trackCommunitiesHomeSplitTest,
-} from '../../../components/split-test/split-test-service';
 import { Store } from '../../../store/index';
 import AppDiscoverHomeBanner from './_banner/banner.vue';
 import AppDiscoverHomeCommunities from './_communities/communities.vue';
-import AppDiscoverHomeTags from './_tags/tags.vue';
 
 @Component({
 	name: 'RouteDiscoverHome',
 	components: {
 		AppDiscoverHomeBanner,
-		AppDiscoverHomeTags,
 		AppDiscoverHomeCommunities,
-		AppGameGrid,
-		AppGameGridPlaceholder,
 		AppAuthJoin: AppAuthJoinLazy,
 		AppLoading,
+		AppFiresideBadge,
 	},
 })
 @RouteResolver({
@@ -43,22 +37,14 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 
 	featuredItem: FeaturedItem | null = null;
 	featuredCommunities: Community[] = [];
-	games: Game[] = [];
-
-	get isInSplit() {
-		return hasCommunitiesHomeSplitTest(this.$route);
-	}
-
-	get slicedGames() {
-		return this.games.slice(0, 6);
-	}
+	featuredFireside: Fireside | null = null;
 
 	routeCreated() {
 		Meta.setTitle(null);
 	}
 
 	routeResolved($payload: any) {
-		trackCommunitiesHomeSplitTest(this.$route);
+		trackExperimentEngagement(configDiscoverCommunityChunks);
 
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb;
@@ -89,6 +75,8 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		}
 
 		this.featuredCommunities = Community.populate($payload.communities);
-		this.games = Game.populate($payload.games);
+		this.featuredFireside = $payload.featuredFireside
+			? new Fireside($payload.featuredFireside)
+			: null;
 	}
 }

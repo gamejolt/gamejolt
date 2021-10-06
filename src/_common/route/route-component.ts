@@ -5,6 +5,7 @@ import VueRouter, { RawLocation, Route } from 'vue-router';
 import { arrayRemove } from '../../utils/array';
 import { LocationRedirect } from '../../utils/router';
 import { asyncComponentLoader } from '../../utils/utils';
+import { ensureConfig } from '../config/config.service';
 import { HistoryCache } from '../history/cache/cache.service';
 import { Meta } from '../meta/meta-service';
 import { Navigate } from '../navigate/navigate.service';
@@ -358,7 +359,6 @@ export class BaseRouteComponent extends Vue {
 		if (options.hasResolver) {
 			const resolver = Resolver.startResolve(this.$options, to);
 			this.isRouteLoading = true;
-			this.disableRouteTitleSuffix = false;
 
 			const { fromCache, payload } = await getPayload(this.$options, to, useCache);
 			resolver.payload = payload;
@@ -545,7 +545,11 @@ async function getPayload(
 	}
 
 	try {
-		const payload = await resolverFunc({ route });
+		// We try to load the config during route resolution to make sure we can
+		// use the config within any views. It won't do anything if it has
+		// already loaded.
+		const [payload] = await Promise.all([resolverFunc({ route }), ensureConfig()]);
+
 		resolveStore(route, payload, false);
 		return { fromCache: false, payload };
 	} catch (e) {

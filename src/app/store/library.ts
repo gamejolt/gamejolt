@@ -1,8 +1,8 @@
 import { namespace } from 'vuex-class';
 import { VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
-import { Analytics } from '../../_common/analytics/analytics.service';
+import { Analytics, trackGameFollow } from '../../_common/analytics/analytics.service';
 import { GamePlaylist } from '../../_common/game-playlist/game-playlist.model';
-import { Game } from '../../_common/game/game.model';
+import { Game, unfollowGame } from '../../_common/game/game.model';
 import { Growls } from '../../_common/growls/growls.service';
 import { ModalConfirm } from '../../_common/modal/confirm/confirm-service';
 import { Scroll } from '../../_common/scroll/scroll.service';
@@ -184,7 +184,7 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 	async editPlaylist(collection: Actions['library/editPlaylist']) {
 		// If we're viewing the playlist we're editing, we want to sync the
 		// new URL after.
-		let syncUrlAfter = isViewingCollection(collection);
+		const syncUrlAfter = isViewingCollection(collection);
 
 		if (await GamePlaylistSaveModal.show(collection)) {
 			if (syncUrlAfter) {
@@ -320,8 +320,9 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 			return false;
 		}
 
+		let failed = false;
 		try {
-			await game.$unfollow();
+			await unfollowGame(game);
 
 			Growls.success(
 				Translate.$gettextInterpolate(
@@ -333,9 +334,12 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 
 			return true;
 		} catch (e) {
+			failed = true;
 			Growls.error(
 				Translate.$gettext(`Uh-oh, something has prevented you from unfollowing this game.`)
 			);
+		} finally {
+			trackGameFollow(false, { failed, location: 'library' });
 		}
 
 		return false;

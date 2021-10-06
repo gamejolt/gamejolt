@@ -3,8 +3,6 @@ import { TrophyModal } from '../../app/components/trophy/modal/modal.service';
 import { assertNever } from '../../utils/utils';
 import { Collaborator } from '../collaborator/collaborator.model';
 import { Comment, getCommentUrl } from '../comment/comment-model';
-import { CommentVideoModal } from '../comment/video/modal/modal.service';
-import { CommentVideo } from '../comment/video/video-model';
 import { Community } from '../community/community.model';
 import {
 	CommunityUserNotification,
@@ -12,8 +10,11 @@ import {
 } from '../community/user-notification/user-notification.model';
 import { Environment } from '../environment/environment.service';
 import { EventItem } from '../event-item/event-item.model';
+import { FiresideCommunity } from '../fireside/community/community.model';
+import { Fireside } from '../fireside/fireside.model';
 import { FiresidePostCommunity } from '../fireside/post/community/community.model';
 import { FiresidePost } from '../fireside/post/post-model';
+import { FiresideStreamNotification } from '../fireside/stream-notification/stream-notification.model';
 import { ForumPost } from '../forum/post/post.model';
 import { ForumTopic } from '../forum/topic/topic.model';
 import { GameLibraryGame } from '../game-library/game/game.model';
@@ -33,7 +34,9 @@ import { UserSiteTrophy } from '../user/trophy/site-trophy.model';
 import { UserBaseTrophy } from '../user/trophy/user-base-trophy.model';
 import { User } from '../user/user.model';
 
-function getRouteLocationForModel(model: Game | User | FiresidePost | Community): RawLocation {
+function getRouteLocationForModel(
+	model: Game | User | FiresidePost | Community | Fireside
+): RawLocation {
 	if (model instanceof User) {
 		return model.url;
 	} else if (model instanceof Game) {
@@ -42,6 +45,8 @@ function getRouteLocationForModel(model: Game | User | FiresidePost | Community)
 		return model.routeLocation;
 	} else if (model instanceof Community) {
 		return model.routeLocation;
+	} else if (model instanceof Fireside) {
+		return model.location;
 	}
 	return '';
 }
@@ -61,16 +66,14 @@ export class Notification extends Model {
 	static TYPE_USER_FOLLOW = 'user-follow';
 	static TYPE_COLLABORATOR_INVITE = 'collaborator-invite';
 	static TYPE_MENTION = 'mention';
-	static TYPE_COMMENT_VIDEO_ADD = 'comment-video-add';
 	static TYPE_GAME_TROPHY_ACHIEVED = 'game-trophy-achieved';
 	static TYPE_SITE_TROPHY_ACHIEVED = 'site-trophy-achieved';
 	static TYPE_COMMUNITY_USER_NOTIFICATION = 'community-user-notification';
+	static TYPE_FIRESIDE_START = 'fireside-start';
+	static TYPE_FIRESIDE_STREAM_NOTIFICATION = 'fireside-stream-notification';
+	static TYPE_FIRESIDE_FEATURED_IN_COMMUNITY = 'fireside-featured-in-community';
 
-	static ACTIVITY_FEED_TYPES = [
-		EventItem.TYPE_POST_ADD,
-		EventItem.TYPE_COMMENT_VIDEO_ADD,
-		EventItem.TYPE_GAME_PUBLISH,
-	];
+	static ACTIVITY_FEED_TYPES = [EventItem.TYPE_POST_ADD];
 
 	static NOTIFICATION_FEED_TYPES = [
 		Notification.TYPE_COMMENT_ADD,
@@ -87,6 +90,7 @@ export class Notification extends Model {
 		Notification.TYPE_GAME_TROPHY_ACHIEVED,
 		Notification.TYPE_SITE_TROPHY_ACHIEVED,
 		Notification.TYPE_COMMUNITY_USER_NOTIFICATION,
+		Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY,
 	];
 
 	user_id!: number;
@@ -112,14 +116,16 @@ export class Notification extends Model {
 		| Subscription
 		| Collaborator
 		| Mention
-		| CommentVideo
 		| UserGameTrophy
 		| UserSiteTrophy
-		| CommunityUserNotification;
+		| CommunityUserNotification
+		| Fireside
+		| FiresideStreamNotification
+		| FiresideCommunity;
 
 	to_resource!: string | null;
 	to_resource_id!: number | null;
-	to_model?: Game | User | FiresidePost | ForumTopic | Sellable | Community;
+	to_model?: Game | User | FiresidePost | ForumTopic | Sellable | Community | Fireside;
 
 	// Generated in constructor.
 	is_user_based = false;
@@ -159,6 +165,8 @@ export class Notification extends Model {
 			this.to_model = new Sellable(data.to_resource_model);
 		} else if (data.to_resource === 'Community') {
 			this.to_model = new Community(data.to_resource_model);
+		} else if (data.to_resource === 'Fireside') {
+			this.to_model = new Fireside(data.to_resource_model);
 		}
 
 		if (this.type === Notification.TYPE_COMMENT_ADD) {
@@ -199,9 +207,6 @@ export class Notification extends Model {
 		} else if (this.type === Notification.TYPE_MENTION) {
 			this.action_model = new Mention(data.action_resource_model);
 			this.is_user_based = true;
-		} else if (this.type === Notification.TYPE_COMMENT_VIDEO_ADD) {
-			this.action_model = new CommentVideo(data.action_resource_model);
-			this.is_user_based = true;
 		} else if (this.type === Notification.TYPE_GAME_TROPHY_ACHIEVED) {
 			this.action_model = new UserGameTrophy(data.action_resource_model);
 			this.is_user_based = true;
@@ -211,6 +216,13 @@ export class Notification extends Model {
 		} else if (this.type === Notification.TYPE_COMMUNITY_USER_NOTIFICATION) {
 			this.action_model = new CommunityUserNotification(data.action_resource_model);
 			this.is_community_based = true;
+		} else if (this.type === Notification.TYPE_FIRESIDE_START) {
+			this.action_model = new Fireside(data.action_resource_model);
+			this.is_user_based = true;
+		} else if (this.type === Notification.TYPE_FIRESIDE_STREAM_NOTIFICATION) {
+			this.action_model = new FiresideStreamNotification(data.action_resource_model);
+		} else if (this.type === Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY) {
+			this.action_model = new FiresideCommunity(data.action_resource_model);
 		}
 
 		// Keep memory clean after bootstrapping the models.
@@ -245,6 +257,8 @@ export class Notification extends Model {
 					case NotificationType.POSTS_MOVE:
 					case NotificationType.POSTS_EJECT:
 						return getRouteLocationForModel(this.to_model as FiresidePost);
+					case NotificationType.FIRESIDES_EJECT:
+						return getRouteLocationForModel(this.to_model as Fireside);
 				}
 				break;
 
@@ -286,6 +300,17 @@ export class Notification extends Model {
 						return assertNever(mention.resource);
 				}
 			}
+
+			case Notification.TYPE_FIRESIDE_START:
+				return getRouteLocationForModel(this.action_model as Fireside);
+
+			case Notification.TYPE_FIRESIDE_STREAM_NOTIFICATION:
+				return getRouteLocationForModel(
+					(this.action_model as FiresideStreamNotification).fireside
+				);
+
+			case Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY:
+				return getRouteLocationForModel(this.to_model as Fireside);
 		}
 
 		// Must pull asynchronously when they click on the notification.
@@ -304,10 +329,6 @@ export class Notification extends Model {
 	async go(router: VueRouter) {
 		if (this.routeLocation) {
 			router.push(this.routeLocation);
-		} else if (this.type === Notification.TYPE_COMMENT_VIDEO_ADD) {
-			if (this.action_model instanceof CommentVideo) {
-				CommentVideoModal.show(this.action_model);
-			}
 		} else if (
 			this.type === Notification.TYPE_GAME_TROPHY_ACHIEVED ||
 			this.type === Notification.TYPE_SITE_TROPHY_ACHIEVED

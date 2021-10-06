@@ -87,8 +87,6 @@
 						<br />
 					</div>
 
-					<!-- No need for sketchfab -->
-
 					<div class="tiny text-muted">
 						<app-time-ago v-if="post.isActive" :date="post.published_on" />
 					</div>
@@ -109,7 +107,7 @@
 						<br />
 					</template>
 
-					<app-event-item-controls :post="post" event-label="broadcast" />
+					<app-post-controls :post="post" location="broadcast" event-label="broadcast" />
 
 					<br />
 					<br />

@@ -3,10 +3,14 @@ import { arrayShuffle } from '../../../../../utils/array';
 import { LocationRedirect } from '../../../../../utils/router';
 import { titleCase } from '../../../../../utils/string';
 import { Api } from '../../../../../_common/api/api.service';
+import AppExpand from '../../../../../_common/expand/expand.vue';
 import { date } from '../../../../../_common/filters/date';
 import { fuzzynumber } from '../../../../../_common/filters/fuzzynumber';
+import AppGameAddBanner from '../../../../../_common/game/add-banner/add-banner.vue';
+import { HistoryCache } from '../../../../../_common/history/cache/cache.service';
 import { Meta } from '../../../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import {
 	checkGameFilteringRoute,
@@ -19,6 +23,8 @@ import AppPageHeader from '../../../../components/page-header/page-header.vue';
 import AppTagList from '../../../../components/tag/list/list.vue';
 import { TagsInfo } from '../../../../components/tag/tags-info.service';
 
+const listingKey = 'CachedListing';
+
 @Component({
 	name: 'RouteDiscoverGamesList',
 	components: {
@@ -26,6 +32,8 @@ import { TagsInfo } from '../../../../components/tag/tags-info.service';
 		AppTagList,
 		AppGameListing,
 		AppGameGrid,
+		AppExpand,
+		AppGameAddBanner,
 	},
 	directives: {
 		AppTooltip,
@@ -48,25 +56,25 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 	filtering: GameFilteringContainer | null = null;
 	listing: GameListingContainer | null = null;
 
-	get section() {
-		return this.$route.params.section && this.$route.params.section.toLowerCase();
+	readonly Screen = Screen;
+
+	get section(): string | undefined {
+		return this.$route.params.section?.toLowerCase();
 	}
 
-	get tag() {
-		return this.$route.params.tag && this.$route.params.tag.toLowerCase();
+	get tag(): string | undefined {
+		return this.$route.params.tag?.toLowerCase();
 	}
 
 	get spotlight() {
 		if (this.tag) {
-			const info = TagsInfo.tags.find(i => i.id === this.tag);
-			return info && info.image;
+			return TagsInfo.tags.find(i => i.id === this.tag)?.image;
 		}
 	}
 
 	get spotlightSocial() {
 		if (this.tag) {
-			const info = TagsInfo.tags.find(i => i.id === this.tag);
-			return info && info.imageSocial;
+			return TagsInfo.tags.find(i => i.id === this.tag)?.imageSocial;
 		}
 	}
 
@@ -87,7 +95,6 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 
 	get routeTitle() {
 		let title = this.listTitle;
-
 		let onlyBrowser = false;
 
 		if (this.filtering) {
@@ -130,7 +137,7 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 			});
 		}
 
-		let onlyFree = this.filtering && this.filtering.getFilter('price') === 'free';
+		const onlyFree = this.filtering && this.filtering.getFilter('price') === 'free';
 
 		const title = this.$gettextInterpolate('%{ listOf } %{ free } %{ gamesType }', {
 			listOf: this.displayListOf,
@@ -144,14 +151,14 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 
 	get displayListOf() {
 		switch (this.section) {
-			case 'featured':
-				return this.$gettext('Featured');
+			case 'hot':
+				return this.$gettext('Find great');
 			case 'best':
 				return this.$gettext('Best');
 			case 'new':
 				return this.$gettext('Newest');
 			default:
-				return this.$gettext('Find great');
+				return this.$gettext('Featured');
 		}
 	}
 
@@ -167,6 +174,8 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 				return this.$gettext('fan games');
 			case 'fnaf':
 				return this.$gettext(`Five Nights at Freddy's (FNaF) games`);
+			case 'fnf':
+				return this.$gettext(`Friday Night Funkin' (FNF) games`);
 			case 'scifi':
 				return this.$gettext('science fiction games');
 			case 'retro':
@@ -193,7 +202,7 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 	get listDescription() {
 		if (!this.section) {
 			return this.$gettextInterpolate(
-				`Find the hottest trending %{ gamesType } on Game Jolt.`,
+				`Browse our featured list of %{ gamesType }, curated by Game Jolt.`,
 				{
 					gamesType: this.displayGamesType,
 				}
@@ -202,9 +211,9 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 			return this.$gettextInterpolate(`Find the newest %{ gamesType } on Game Jolt.`, {
 				gamesType: this.displayGamesType,
 			});
-		} else if (this.section === 'featured') {
+		} else if (this.section === 'hot') {
 			return this.$gettextInterpolate(
-				`Browse our featured list of %{ gamesType }, currated by Game Jolt.`,
+				`Find the hottest trending %{ gamesType } on Game Jolt.`,
 				{
 					gamesType: this.displayGamesType,
 				}
@@ -253,13 +262,28 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 	}
 
 	routeCreated() {
-		this.process();
+		if (!this.filtering || !this.listing) {
+			this.filtering = new GameFilteringContainer(this.$route);
+			this.filtering.isPersistent = true;
+
+			// A stub listing to show before we load.
+			this.listing =
+				HistoryCache.get(this.$route, listingKey)?.data ?? new GameListingContainer();
+		}
+
+		this.filtering.init(this.$route);
 	}
 
 	routeResolved($payload: any) {
-		if (this.listing && $payload) {
+		this.filtering!.init(this.$route);
+
+		const cachedListing = HistoryCache.get(this.$route, listingKey);
+		if (cachedListing?.data) {
+			this.listing = cachedListing.data;
+		} else {
+			this.listing = new GameListingContainer();
 			this.listing.processPayload(this.$route, $payload);
-			this.process();
+			HistoryCache.store(this.$route, this.listing, listingKey);
 		}
 
 		if ($payload) {
@@ -279,17 +303,18 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		}
 	}
 
-	/**
-	 * Gets called before the payload and after.
-	 */
-	process() {
-		if (!this.listing || !this.filtering) {
-			this.filtering = new GameFilteringContainer(this.$route);
-			this.filtering.isPersistent = true;
-
-			this.listing = new GameListingContainer(this.filtering);
+	async loadMore() {
+		if (!this.filtering || !this.listing || this.listing.isLoadingMore) {
+			return;
 		}
 
-		this.filtering.init(this.$route);
+		this.listing.isLoadingMore = true;
+
+		const page = this.listing.currentPage + 1;
+		const payload = await Api.sendRequest(
+			'/web/discover/games?' + this.filtering.getQueryString(this.$route, { page })
+		);
+		this.listing.processPagePayload(page, payload);
+		this.listing.isLoadingMore = false;
 	}
 }

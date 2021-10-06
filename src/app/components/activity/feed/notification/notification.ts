@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
 import '../../../../../_common/comment/comment.styl';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
 import {
@@ -20,6 +19,7 @@ import { BaseTrophy } from '../../../../../_common/trophy/base-trophy.model';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
 import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
+import { User } from '../../../../../_common/user/user.model';
 import { getTrophyImg } from '../../../trophy/thumbnail/thumbnail';
 import { ActivityFeedItem } from '../item-service';
 import { ActivityFeedKey, ActivityFeedView } from '../view';
@@ -39,14 +39,18 @@ import { ActivityFeedKey, ActivityFeedView } from '../view';
 	},
 })
 export default class AppActivityFeedNotification extends Vue {
-	@Prop(propRequired(ActivityFeedItem)) item!: ActivityFeedItem;
+	@Prop({ type: ActivityFeedItem, required: true })
+	item!: ActivityFeedItem;
 
 	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
-	notification!: Notification;
 	canToggleContent = false;
 	readonly Screen = Screen;
 	readonly Notification = Notification;
+
+	get notification() {
+		return this.item.feedItem as Notification;
+	}
 
 	get isNew() {
 		return this.feed.isItemUnread(this.item);
@@ -83,6 +87,7 @@ export default class AppActivityFeedNotification extends Vue {
 			Notification.TYPE_COMMENT_ADD,
 			Notification.TYPE_COMMENT_ADD_OBJECT_OWNER,
 			Notification.TYPE_POST_FEATURED_IN_COMMUNITY,
+			Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY,
 			Notification.TYPE_GAME_TROPHY_ACHIEVED,
 			Notification.TYPE_SITE_TROPHY_ACHIEVED,
 		].includes(this.notification.type);
@@ -97,8 +102,8 @@ export default class AppActivityFeedNotification extends Vue {
 		}
 	}
 
-	created() {
-		this.notification = this.item.feedItem as Notification;
+	get fromIsUser() {
+		return this.notification.from_model instanceof User;
 	}
 
 	go() {

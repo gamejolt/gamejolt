@@ -161,6 +161,87 @@ export default class AppReportForm extends BaseForm<FormModel> implements FormOn
 						text: this.$gettext('Other'),
 					},
 				];
+
+			case 'Community':
+				return [
+					{
+						radioValue: 'spam',
+						text: this.$gettext(`It is spam or unwanted commercial content`),
+					},
+					{
+						radioValue: 'abuse',
+						text: this.$gettext('Encourages posting of hate speech or graphic content'),
+					},
+					{
+						radioValue: 'harassment',
+						text: this.$gettext(
+							`This community is used to create targeted harassment or bullying`
+						),
+					},
+					{
+						radioValue: 'no-moderation',
+						text: this.$gettext(
+							'This community is not actively moderated by its moderators'
+						),
+					},
+					{
+						radioValue: 'other',
+						text: this.$gettext('Other'),
+					},
+				];
+
+			case 'Fireside':
+				return [
+					{
+						radioValue: 'abuse',
+						text: this.$gettext(
+							'Fireside is used to show/promote hate speech or graphic content'
+						),
+						contexts: [
+							{
+								checkValue: 'fireside/title',
+								text: this.$gettext('Title'),
+							},
+							{
+								checkValue: 'fireside/chat',
+								text: this.$gettext('Chat messages'),
+							},
+							{
+								checkValue: 'fireside/audio-video',
+								text: this.$gettext('Audio or video stream'),
+							},
+						],
+					},
+					{
+						radioValue: 'explicit',
+						text: this.$gettext('Fireside contains explicit or sensitive material'),
+						contexts: [
+							{
+								checkValue: 'fireside/title',
+								text: this.$gettext('Title'),
+							},
+							{
+								checkValue: 'fireside/chat',
+								text: this.$gettext('Chat messages'),
+							},
+							{
+								checkValue: 'fireside/audio-video',
+								text: this.$gettext('Audio or video stream'),
+							},
+						],
+					},
+					{
+						radioValue: 'no-moderation',
+						text: this.$gettext(
+							"This fireside's chat is not actively moderated by its moderators"
+						),
+					},
+					{
+						radioValue: 'other',
+						text: this.$gettext('Other'),
+					},
+				];
+
 			case 'User':
 				return [
 					{
@@ -307,7 +388,7 @@ export default class AppReportForm extends BaseForm<FormModel> implements FormOn
 		let hasErrors = false;
 
 		// Check that if we have contexts to choose from, at least one of them is selected.
-		if (!!this.formModel.reason) {
+		if (this.formModel.reason) {
 			const reason = this.reasons.find(i => i.radioValue === this.formModel.reason);
 			if (!reason) {
 				throw new Error('Invalid reason selected.');
@@ -331,9 +412,9 @@ export default class AppReportForm extends BaseForm<FormModel> implements FormOn
 			resourceName: this.type,
 			resourceId: this.resource.id,
 			reason: this.formModel.reason,
-			context: this.formModel.context,
+			context: this.formModel.context as string[] | undefined,
 			description: this.formModel.description,
-			source: this.formModel.source,
+			source: this.formModel.source as string | undefined,
 		};
 
 		// Clear out context if the current reason doesn't have a context option.

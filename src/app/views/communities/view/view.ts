@@ -1,8 +1,12 @@
-import { Component, Provide, Watch } from 'vue-property-decorator';
+import { Component, Inject, Provide, Watch } from 'vue-property-decorator';
 import { Action, Mutation, State } from 'vuex-class';
-import { enforceLocation } from '../../../../utils/router';
+import {
+	AppPromotionStore,
+	AppPromotionStoreKey,
+	setAppPromotionCohort,
+} from '../../../../utils/mobile-app';
+import { enforceLocation, getAbsoluteLink } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
-import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
 import { Collaborator } from '../../../../_common/collaborator/collaborator.model';
 import { Community, isEditingCommunity } from '../../../../_common/community/community.model';
 import AppCommunityJoinWidget from '../../../../_common/community/join-widget/join-widget.vue';
@@ -15,6 +19,7 @@ import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
+import { copyShareLink } from '../../../../_common/share/share.service';
 import {
 	ContextPane,
 	SidebarMutation,
@@ -36,9 +41,9 @@ import {
 	setChannelPathFromRoute,
 	setCommunity,
 } from './view.store';
-import AppCommunitiesViewCard from './_card/card.vue';
 import AppCommunitiesViewContext from './_context/context.vue';
 import AppEditableThumbnail from './_editable-thumbnail/editable-thumbnail.vue';
+import AppMobileHeader from './_mobile-header/mobile-header.vue';
 import AppNavChannels from './_nav/channels/channels.vue';
 
 export const CommunityThemeKey = 'community';
@@ -54,7 +59,7 @@ export const CommunityThemeKey = 'community';
 		AppCommunityPerms,
 		AppPopper,
 		AppCommunityVerifiedTick,
-		AppCommunitiesViewCard,
+		AppMobileHeader,
 		AppNavChannels,
 		AppEditableThumbnail,
 		AppEditableOverlay,
@@ -79,6 +84,7 @@ export const CommunityThemeKey = 'community';
 })
 export default class RouteCommunitiesView extends BaseRouteComponent {
 	@Provide(CommunityRouteStoreKey) routeStore = new CommunityRouteStore();
+	@Inject(AppPromotionStoreKey) appPromotion!: AppPromotionStore;
 
 	@AppState user!: AppStore['user'];
 	@Mutation setActiveCommunity!: Store['setActiveCommunity'];
@@ -118,8 +124,12 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 		return this.user && this.user.isMod;
 	}
 
+	get competitionHeader() {
+		return this.routeStore.channel?.competition?.header ?? null;
+	}
+
 	get coverMediaItem() {
-		return this.community.header || null;
+		return this.competitionHeader ?? this.community.header ?? null;
 	}
 
 	get coverEditable() {
@@ -135,6 +145,10 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	}
 
 	get isShowingHeader() {
+		if (this.routeStore.channel?.type === 'competition') {
+			return !!this.competitionHeader && !this.isEditing;
+		}
+
 		if (!this.coverMediaItem) {
 			return false;
 		}
@@ -162,6 +176,8 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 		if (this.contextPane) {
 			this.contextPane.props = { routeStore: this.routeStore };
 		}
+
+		setAppPromotionCohort(this.appPromotion, 'community');
 	}
 
 	routeResolved($payload: any) {
@@ -206,8 +222,7 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	}
 
 	copyShareUrl() {
-		Clipboard.copy(
-			Environment.baseUrl + this.$router.resolve(this.routeStore.community.routeLocation).href
-		);
+		const url = getAbsoluteLink(this.$router, this.community.routeLocation);
+		copyShareLink(url, 'community');
 	}
 }

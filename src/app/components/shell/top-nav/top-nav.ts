@@ -1,6 +1,9 @@
 import Vue from 'vue';
 import { Component, InjectReactive } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
+import { shouldShowAppPromotion } from '../../../../utils/mobile-app';
+import { trackAppPromotionClick } from '../../../../_common/analytics/analytics.service';
+import { AppConfigLoaded } from '../../../../_common/config/loaded';
 import { Connection } from '../../../../_common/connection/connection-service';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { AppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
@@ -9,7 +12,7 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../store/index';
-import { ChatClient, ChatKey } from '../../chat/client';
+import { ChatStore, ChatStoreKey } from '../../chat/chat-store';
 import AppSearch from '../../search/search.vue';
 
 const components: any = {
@@ -20,10 +23,12 @@ const components: any = {
 	AppShellNotificationPopover: () => import('../notification-popover/notification-popover.vue'),
 	AppSearch,
 	AppThemeSvg,
+	AppConfigLoaded,
 };
 
 if (GJ_IS_CLIENT) {
-	components.AppClientHistoryNavigator = require('../../../../_common/client/history-navigator/history-navigator.vue').default;
+	components.AppClientHistoryNavigator =
+		require('../../../../_common/client/history-navigator/history-navigator.vue').default;
 }
 
 @Component({
@@ -34,7 +39,7 @@ if (GJ_IS_CLIENT) {
 	},
 })
 export default class AppShellTopNav extends Vue {
-	@InjectReactive(ChatKey) chat!: ChatClient;
+	@InjectReactive(ChatStoreKey) chatStore!: ChatStore;
 
 	@State app!: Store['app'];
 
@@ -57,13 +62,19 @@ export default class AppShellTopNav extends Vue {
 	readonly Environment = Environment;
 	readonly Screen = Screen;
 	readonly Connection = Connection;
+	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
+	readonly trackAppPromotionClick = trackAppPromotionClick;
+
+	get chat() {
+		return this.chatStore.chat!;
+	}
 
 	get isTimedOut() {
 		return this.app.isUserTimedOut;
 	}
 
 	get shouldShowSearch() {
-		return !Screen.isXs && this.$route.name !== 'discover.communities' && !this.isTimedOut;
+		return !Screen.isXs && !this.isTimedOut;
 	}
 
 	get shouldShowMenu() {
@@ -76,6 +87,14 @@ export default class AppShellTopNav extends Vue {
 
 	get shouldShowMoreMenu() {
 		return !Screen.isXs && !this.isTimedOut;
+	}
+
+	get shouldShowAppPromotion() {
+		return shouldShowAppPromotion(this.$route);
+	}
+
+	get humanizedActivityCount() {
+		return this.unreadActivityCount < 100 ? this.unreadActivityCount : '99+';
 	}
 
 	get minColWidth() {

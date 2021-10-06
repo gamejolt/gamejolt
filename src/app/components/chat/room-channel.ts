@@ -2,6 +2,9 @@ import { Channel, Presence, Socket } from 'phoenix';
 import Vue from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { Analytics } from '../../../_common/analytics/analytics.service';
+import { ContentDocument } from '../../../_common/content/content-document';
+import { ContentObject } from '../../../_common/content/content-object';
+import { MarkObject } from '../../../_common/content/mark-object';
 import {
 	ChatClient,
 	isInChatRoom,
@@ -27,6 +30,10 @@ interface MemberLeavePayload {
 	user_id: number;
 }
 
+interface MemberKickedPayload {
+	user_id: number;
+}
+
 interface OwnerSyncPayload {
 	owner_id: number;
 }
@@ -38,6 +45,11 @@ interface UpdateTitlePayload {
 export class ChatRoomChannel extends Channel {
 	room!: ChatRoom;
 	roomId: number;
+	/**
+	 * An instanced room channel is for a room that can be opened anywhere on the site,
+	 * outside of and in addition to the active chat in the chat sidebar.
+	 */
+	instanced: boolean;
 	readonly client: ChatClient;
 	readonly socket: Socket;
 
@@ -48,6 +60,7 @@ export class ChatRoomChannel extends Channel {
 		this.client = client;
 		this.roomId = roomId;
 		this.socket = socket;
+		this.instanced = false;
 		(this.socket as any).channels.push(this);
 
 		this.setupPresence();
@@ -60,10 +73,13 @@ export class ChatRoomChannel extends Channel {
 		this.on('owner_sync', this.onOwnerSync.bind(this));
 		this.on('member_add', this.onMemberAdd.bind(this));
 		this.on('update_title', this.onUpdateTitle.bind(this));
+		this.on('kick_member', this.onMemberKicked.bind(this));
 
 		this.onClose(() => {
 			if (isInChatRoom(this.client, roomId)) {
-				setChatRoom(this.client, undefined);
+				if (!this.instanced) {
+					setChatRoom(this.client, undefined);
+				}
 
 				// Reset the room we were in
 				Vue.delete(this.client.roomMembers, roomId);
@@ -116,12 +132,27 @@ export class ChatRoomChannel extends Channel {
 
 		processNewChatOutput(this.client, this.roomId, [message], false);
 		updateChatRoomLastMessageOn(this.client, message);
+
+		while (this.room.isFiresideRoom && this.client.messages[this.roomId].length > 100) {
+			this.client.messages[this.roomId].shift();
+		}
 	}
 
 	private onUserUpdated(data: Partial<ChatUser>) {
 		const updatedUser = new ChatUser(data);
-		if (this.room && isInChatRoom(this.client, this.roomId) && this.room.isGroupRoom) {
-			this.client.roomMembers[this.roomId].update(updatedUser);
+		if (this.room && this.room.isGroupRoom) {
+			if (isInChatRoom(this.client, this.roomId)) {
+				this.client.roomMembers[this.roomId].update(updatedUser);
+			}
+
+			this.room.updateRoleForUser(updatedUser);
+
+			// Sync the user update to the list of messages.
+			for (const message of this.client.messages[this.roomId]) {
+				if (message.user.id === updatedUser.id) {
+					Object.assign(message.user, updatedUser);
+				}
+			}
 		}
 	}
 
@@ -175,11 +206,7 @@ export class ChatRoomChannel extends Channel {
 
 	private onUserLeave(presenceId: string, currentPresence: RoomPresence | undefined) {
 		// If the user has left all devices.
-		if (
-			currentPresence &&
-			currentPresence.metas.length === 0 &&
-			this.client.roomMembers[this.roomId]
-		) {
+		if (currentPresence?.metas.length === 0 && this.client.roomMembers[this.roomId]) {
 			const userId = +presenceId;
 			this.client.roomMembers[this.roomId].offline(userId);
 		}
@@ -194,6 +221,25 @@ export class ChatRoomChannel extends Channel {
 		arrayRemove(this.room.members, i => i.id === data.user_id);
 	}
 
+	private onMemberKicked(data: MemberKickedPayload) {
+		// Generate doc for the message that contains "[removed]".
+		const text = new ContentObject('text');
+		text.text = '[removed]';
+		const textMark = new MarkObject('code');
+		text.marks.push(textMark);
+		const p = new ContentObject('paragraph', [text]);
+		const doc = new ContentDocument(this.room.messagesContentContext, [p]);
+
+		const json = doc.toJson();
+
+		// Mark all messages by the kicked member as "removed".
+		for (const message of this.client.messages[this.roomId]) {
+			if (message.user.id === data.user_id) {
+				message.content = json;
+			}
+		}
+	}
+
 	private onMemberAdd(data: MemberAddPayload) {
 		const roomMembers = this.client.roomMembers[this.roomId];
 
@@ -205,6 +251,7 @@ export class ChatRoomChannel extends Channel {
 			}
 
 			this.room.members.push(user);
+			this.room.updateRoleForUser(user);
 		}
 	}
 
@@ -217,12 +264,15 @@ export class ChatRoomChannel extends Channel {
 	}
 
 	private syncPresentUsers(presence: Presence, room: ChatRoom) {
-		presence.list((id: string, roomPresence: RoomPresence) => {
-			const roomMembers = this.client.roomMembers[room.id];
-			const user = roomMembers.get(+id) || new ChatUser(roomPresence.user);
-			user.typing = roomPresence.metas.some(meta => meta.typing);
-			roomMembers.update(user);
-			roomMembers.online(+id);
+		const roomMembers = this.client.roomMembers[room.id];
+
+		roomMembers.doBatchWork(() => {
+			presence.list((id: string, roomPresence: RoomPresence) => {
+				const user = roomMembers.get(+id) ?? new ChatUser(roomPresence.user);
+				user.typing = roomPresence.metas.some(meta => meta.typing);
+				roomMembers.update(user);
+				roomMembers.online(+id);
+			});
 		});
 	}
 }

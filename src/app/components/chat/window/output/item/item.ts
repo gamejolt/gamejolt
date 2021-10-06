@@ -12,15 +12,16 @@ import { Screen } from '../../../../../../_common/screen/screen-service';
 import { Theme } from '../../../../../../_common/theme/theme.model';
 import { ThemeState, ThemeStore } from '../../../../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
+import { ChatStore, ChatStoreKey } from '../../../chat-store';
 import {
-	ChatClient,
-	ChatKey,
 	removeMessage,
 	retryFailedQueuedMessage,
 	setMessageEditing,
+	userCanModerateOtherUser,
 } from '../../../client';
 import { ChatMessage } from '../../../message';
 import { ChatRoom } from '../../../room';
+import AppChatUserPopover from '../../../user-popover/user-popover.vue';
 
 export interface ChatMessageEditEvent {
 	message: ChatMessage;
@@ -30,6 +31,7 @@ export interface ChatMessageEditEvent {
 	components: {
 		AppContentViewer,
 		AppPopper,
+		AppChatUserPopover,
 	},
 	directives: {
 		AppTooltip,
@@ -43,7 +45,7 @@ export default class AppChatWindowOutputItem extends Vue {
 	@Prop(ChatRoom) room!: ChatRoom;
 	@Prop(propRequired(Boolean)) isNew!: boolean;
 
-	@InjectReactive(ChatKey) chat!: ChatClient;
+	@InjectReactive(ChatStoreKey) chatStore!: ChatStore;
 
 	@ThemeState theme?: ThemeStore['theme'];
 	@ThemeState isDark?: ThemeStore['isDark'];
@@ -53,8 +55,13 @@ export default class AppChatWindowOutputItem extends Vue {
 	readonly displayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 });
 
 	singleLineMode = true;
+	messageOptionsVisible = false;
 
 	readonly Screen = Screen;
+
+	get chat() {
+		return this.chatStore.chat!;
+	}
 
 	get actualTheme() {
 		// Use the form/page/user theme, or the default theme if none exist.
@@ -116,6 +123,42 @@ export default class AppChatWindowOutputItem extends Vue {
 		return null;
 	}
 
+	get shouldShowMessageOptions() {
+		return this.canRemoveMessage || this.canEditMessage;
+	}
+
+	get canRemoveMessage() {
+		if (!this.chat.currentUser) {
+			return false;
+		}
+
+		// The owner of the message can remove it.
+		if (this.chat.currentUser.id === this.message.user.id) {
+			return true;
+		}
+
+		// Mods/Room owners can also remove the message.
+		return userCanModerateOtherUser(
+			this.chat,
+			this.room,
+			this.chat.currentUser,
+			this.message.user
+		);
+	}
+
+	get canEditMessage() {
+		// Only content messages can be edited.
+		if (this.message.type !== 'content') {
+			return false;
+		}
+		if (!this.chat.currentUser) {
+			return false;
+		}
+
+		// Only the owner of the message can edit.
+		return this.chat.currentUser.id === this.message.user.id;
+	}
+
 	startEdit() {
 		setMessageEditing(this.chat, this.message);
 		Popper.hideAll();
@@ -141,6 +184,6 @@ export default class AppChatWindowOutputItem extends Vue {
 		}
 
 		setMessageEditing(this.chat, null);
-		removeMessage(this.chat, this.message.id);
+		removeMessage(this.chat, this.room, this.message.id);
 	}
 }

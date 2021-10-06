@@ -104,6 +104,7 @@ export interface RequestOptions {
 
 export class Api {
 	static apiHost: string = Environment.apiHost;
+	static uploadHost: string = Environment.uploadHost;
 	static apiPath = '/site-api';
 
 	static async sendRequest(
@@ -161,7 +162,8 @@ export class Api {
 		}
 
 		const method = sanitizedPostData ? 'POST' : 'GET';
-		const url = (options.apiHost || this.apiHost) + (options.apiPath || this.apiPath) + uri;
+		const apiHost = options.apiHost ?? (options.file ? this.uploadHost : this.apiHost);
+		const url = apiHost + (options.apiPath ?? this.apiPath) + uri;
 
 		const requestPromise = this.createRequest(method, url, sanitizedPostData, options);
 

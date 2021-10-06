@@ -15,7 +15,7 @@
 				>
 					<app-jolticon icon="menu" />
 					<div
-						v-if="chat && chat.roomNotificationsCount > 0"
+						v-if="chatStore.chat && chat.roomNotificationsCount > 0"
 						class="-notification-chat notification-tag tag tag-highlight"
 					>
 						{{ chat.roomNotificationsCount }}
@@ -45,20 +45,35 @@
 						v-if="unreadActivityCount > 0"
 						class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
 					>
-						{{ unreadActivityCount < 100 ? unreadActivityCount : '99+' }}
+						{{ humanizedActivityCount }}
 					</span>
 				</router-link>
 
 				<router-link
 					v-if="shouldShowExplore"
 					v-app-track-event="`top-nav:main-menu:discover`"
-					class="-explore navbar-item"
+					class="navbar-item"
 					:class="{ active: $route.name === 'discover.home' }"
 					:to="{ name: 'discover.home' }"
 				>
-					<app-jolticon icon="compass-needle" class="-explore-icon" />
+					<app-jolticon icon="compass-needle" class="-section-icon" />
 					<strong class="text-upper">
 						<translate>Explore</translate>
+					</strong>
+				</router-link>
+
+				<router-link
+					v-if="!Screen.isXs"
+					v-app-track-event="`top-nav:main-menu:store`"
+					class="navbar-item"
+					:class="{ active: ($route.name || '').startsWith('discover.games.') }"
+					:to="{
+						name: 'discover.games.list._fetch',
+						params: { section: null },
+					}"
+				>
+					<strong class="text-upper">
+						<translate>Store</translate>
 					</strong>
 				</router-link>
 
@@ -78,6 +93,17 @@
 					<template #popover>
 						<div class="list-group-dark">
 							<router-link
+								v-if="shouldShowAppPromotion && !Screen.isXs"
+								class="list-group-item has-icon offline-disable"
+								:to="{ name: 'landing.app' }"
+								@click.native="
+									trackAppPromotionClick({ source: 'top-nav-options' })
+								"
+							>
+								<app-jolticon icon="world" />
+								<translate>Get the App</translate>
+							</router-link>
+							<router-link
 								v-if="!GJ_IS_CLIENT && !Screen.isXs"
 								v-app-track-event="`sidebar:client`"
 								class="list-group-item has-icon offline-disable"
@@ -94,15 +120,6 @@
 								<app-jolticon icon="forums" />
 								<translate>Forums</translate>
 							</router-link>
-							<a
-								v-app-track-event="`sidebar:jams`"
-								class="list-group-item has-icon offline-disable"
-								:href="Environment.jamsBaseUrl"
-								target="_blank"
-							>
-								<app-jolticon icon="jams" />
-								<translate>Jams</translate>
-							</a>
 						</div>
 					</template>
 				</app-popper>
@@ -110,10 +127,10 @@
 		</div>
 
 		<div class="navbar-center">
-			<div class="-search">
+			<app-config-loaded class="-search">
 				<!-- Search Input -->
 				<app-search v-if="shouldShowSearch" />
-			</div>
+			</app-config-loaded>
 		</div>
 
 		<!--
@@ -127,6 +144,14 @@
 			class="navbar-right"
 			:style="{ 'min-width': minColWidth }"
 		>
+			<div v-if="shouldShowAppPromotion && !Screen.isXs" class="-button">
+				<app-button
+					:to="{ name: 'landing.app' }"
+					@click.native="trackAppPromotionClick({ source: 'top-nav' })"
+				>
+					<translate>Get App</translate>
+				</app-button>
+			</div>
 			<div v-app-observe-dimensions="checkColWidths" class="-col">
 				<template v-if="app.user">
 					<!-- Notifications -->
@@ -212,7 +237,7 @@
 			top: 0
 			right: 0
 
-.-explore-icon
+.-section-icon
 	position: relative
 	top: 2px
 
@@ -223,6 +248,12 @@
 	padding-left: 24px
 	padding-right: 24px
 	max-width: 600px
+
+.-button
+	display: flex
+	align-items: center
+	justify-content: center
+	margin-right: 12px
 
 .navbar-left
 .navbar-right

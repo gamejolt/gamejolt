@@ -3,7 +3,7 @@
 
 #define MyAppName "Game Jolt Client"
 #define MyAppVersion "{{APP_VERSION}}"
-#define MyAppPublisher "Lucent Web Creative, LLC"
+#define MyAppPublisher "Game Jolt Inc."
 #define MyAppURL "https://gamejolt.com/"
 #define MyAppExeName "GameJoltClient.exe"
 

@@ -4,13 +4,8 @@ import { propRequired } from '../../../../../utils/vue';
 import { ContentDocument } from '../../../../../_common/content/content-document';
 import { AppContentEditorLazy } from '../../../../../_common/content/content-editor/content-editor-lazy';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import {
-	ChatClient,
-	ChatKey,
-	editMessage,
-	queueChatMessage,
-	setMessageEditing,
-} from '../../client';
+import { ChatStore, ChatStoreKey } from '../../chat-store';
+import { editMessage, queueChatMessage, setMessageEditing } from '../../client';
 import { ChatMessage } from '../../message';
 import { ChatRoom } from '../../room';
 import AppChatWindowSendForm from './form/form.vue';
@@ -22,12 +17,16 @@ import AppChatWindowSendForm from './form/form.vue';
 	},
 })
 export default class AppChatWindowSend extends Vue {
-	@InjectReactive(ChatKey) chat!: ChatClient;
+	@InjectReactive(ChatStoreKey) chatStore!: ChatStore;
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 
 	singleLineMode = true;
 
 	readonly Screen = Screen;
+
+	get chat() {
+		return this.chatStore.chat!;
+	}
 
 	get isSingleLineMode() {
 		// We always want to be in multiline mode for phones:
@@ -49,17 +48,14 @@ export default class AppChatWindowSend extends Vue {
 			message.content = contentJson;
 		}
 
-		editMessage(this.chat, message);
+		editMessage(this.chat, this.room, message);
 	}
 
 	sendMessage(message: ChatMessage) {
 		const doc = ContentDocument.fromJson(message.content);
 		if (doc instanceof ContentDocument) {
 			const contentJson = doc.toJson();
-			const room = this.chat.room;
-			if (room) {
-				queueChatMessage(this.chat, contentJson, room.id);
-			}
+			queueChatMessage(this.chat, 'content', contentJson, this.room.id);
 		}
 	}
 

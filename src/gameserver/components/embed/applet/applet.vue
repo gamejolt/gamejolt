@@ -1,5 +1,7 @@
+<script lang="ts" src="./applet"></script>
+
 <template>
-	<div style="margin: 0 auto; text-align: center;">
+	<div style="margin: 0 auto; text-align: center">
 		<applet
 			:code="build.java_class_name"
 			:archive="javaArchive"
@@ -7,7 +9,12 @@
 			:width="embedWidth"
 			:height="embedHeight"
 		>
-			<param v-for="param of build.params" :name="param.name" :value="param.value" />
+			<param
+				v-for="param of build.params"
+				:key="param"
+				:name="param.name"
+				:value="param.value"
+			/>
 
 			<param name="gjapi_username" :value="username" />
 			<param name="gjapi_token" :value="token" />
@@ -28,5 +35,3 @@
 		</applet>
 	</div>
 </template>
-
-<script lang="ts" src="./applet"></script>

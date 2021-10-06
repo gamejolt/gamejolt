@@ -40,6 +40,23 @@ export default class FormProfile extends BaseForm<User> implements FormOnLoad, F
 		return '/web/dash/profile/save';
 	}
 
+	get mentionsSettingOptions() {
+		return [
+			{
+				value: 2,
+				text: this.$gettext(`No one`),
+			},
+			{
+				value: 0,
+				text: this.$gettext(`People you know`),
+			},
+			{
+				value: 1,
+				text: this.$gettext(`Everyone`),
+			},
+		];
+	}
+
 	destroyed() {
 		this.setFormTheme(null);
 	}

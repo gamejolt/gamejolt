@@ -42,9 +42,9 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-@require '../../forms/post/_community-pill/variables'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+@import '../../forms/community/_pill/variables'
 
 .-hp
 	display: flex

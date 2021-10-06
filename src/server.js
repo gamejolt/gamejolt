@@ -58,6 +58,7 @@ if (cluster.isMaster) {
 
 	// If testing ssr prod build locally, remove this if so that static assets are served properly.
 	if (!isProd) {
+		// eslint-disable-next-line no-inner-declarations
 		function serve(path) {
 			return express.static(resolve(path), {
 				maxAge: 0,
@@ -109,6 +110,7 @@ if (cluster.isMaster) {
 				'render',
 				total - context.prefetchTime + 'ms',
 				req.url,
+				req.headers['host'],
 				req.headers['user-agent']
 			);
 

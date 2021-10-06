@@ -17,11 +17,6 @@
 				:style="styles.dimensions"
 			>
 				<app-loading-fade :is-loading="isLoading">
-					<template v-if="hasHalloweenStickers">
-						<div class="-halloween-text" :style="styles.halloweenText">
-							<b>Trick or treat on Game Jolt with candy stickers!</b>
-						</div>
-					</template>
 					<component
 						:is="drawerNavigationComponent"
 						class="-scroller"
@@ -55,12 +50,7 @@
 										</translate>
 									</p>
 									<template v-if="drawerStore.hasLoaded">
-										<template v-if="canPurchaseStickers">
-											<app-button solid primary @click="onClickPurchase()">
-												Get Stickers
-											</app-button>
-										</template>
-										<p v-else>
+										<p>
 											<translate>
 												Use Game Jolt, like some posts, and you might get
 												some.
@@ -119,11 +109,6 @@
 
 .-scroller
 	height: 100%
-
-.-halloween-text
-	font-size: $font-size-small
-	text-align: center
-	height: 15px
 
 .-drawer
 	&-outer

@@ -1,5 +1,7 @@
+<script lang="ts" src="./silverlight"></script>
+
 <template>
-	<div style="position: relative; text-align: center;">
+	<div style="position: relative; text-align: center">
 		<object
 			data="data:application/x-silverlight-2,"
 			type="application/x-silverlight-2"
@@ -33,5 +35,3 @@
 		</object>
 	</div>
 </template>
-
-<script lang="ts" src="./silverlight"></script>

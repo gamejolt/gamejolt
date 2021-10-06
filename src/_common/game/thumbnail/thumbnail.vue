@@ -11,7 +11,7 @@
 				<slot />
 
 				<template v-if="shouldShowControls">
-					<app-game-follow-widget :game="game" overlay circle event-label="game-thumb" />
+					<app-game-follow-widget :game="game" overlay circle location="thumbnail" />
 
 					<app-game-playlist-add-to-widget
 						:game="game"

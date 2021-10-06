@@ -1,3 +1,5 @@
+<script lang="ts" src="./page-header"></script>
+
 <template>
 	<header
 		class="section page-header"
@@ -43,7 +45,7 @@
 					/>
 				</div>
 			</app-editable-overlay>
-			<div class="-cover-img" v-else-if="!!coverMediaItem">
+			<div v-else-if="!!coverMediaItem" class="-cover-img">
 				<app-media-item-cover
 					:media-item="coverMediaItem"
 					:max-height="coverMaxHeight"
@@ -51,7 +53,7 @@
 				/>
 			</div>
 
-			<div class="page-header-cover-buttons" v-if="showCoverButtons">
+			<div v-if="showCoverButtons" class="page-header-cover-buttons">
 				<div class="page-header-cover-buttons-inner">
 					<svg class="page-header-cover-buttons-edge -left" viewBox="0 0 10 10">
 						<path
@@ -89,7 +91,11 @@
 					</div>
 				</div>
 
-				<div v-if="hasSpotlight" class="page-header-spotlight" :class="{ dark: spotlightDark }">
+				<div
+					v-if="hasSpotlight"
+					class="page-header-spotlight"
+					:class="{ dark: spotlightDark }"
+				>
 					<slot name="spotlight" />
 				</div>
 			</div>
@@ -130,5 +136,3 @@
 </template>
 
 <style lang="stylus" src="./page-header.styl" scoped></style>
-
-<script lang="ts" src="./page-header"></script>

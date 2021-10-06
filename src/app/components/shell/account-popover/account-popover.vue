@@ -12,10 +12,6 @@
 	>
 		<a class="navbar-item navbar-avatar" :class="{ active: isShowing }">
 			<app-user-avatar-img :user="app.user" />
-			<div
-				v-if="shouldShowNew"
-				class="-new-tag -new-tag-account anim-fade-enter anim-fade-leave"
-			/>
 		</a>
 
 		<template v-if="isShowing" #popover>
@@ -52,14 +48,6 @@
 					>
 						<translate>Edit Account</translate>
 					</router-link>
-					<router-link
-						v-app-track-event="`account-popover:stickers`"
-						class="list-group-item offline-disable"
-						:to="{ name: 'dash.stickers' }"
-					>
-						<translate>Stickers</translate>
-						<span v-if="shouldShowNewStickers" class="-new-tag -new-tag-list" />
-					</router-link>
 					<a
 						v-app-track-event="`account-popover:token`"
 						class="list-group-item offline-disable"
@@ -85,16 +73,6 @@
 						</small>
 						<translate>Dark Mode</translate>
 					</a>
-				</div>
-
-				<div class="account-popover-button offline-disable">
-					<app-button
-						v-app-track-event="`account-popover:add-game`"
-						block
-						:to="{ name: 'dash.games.add' }"
-					>
-						<translate>Add Game</translate>
-					</app-button>
 				</div>
 
 				<div class="account-popover-separator" />
@@ -136,9 +114,9 @@
 				</template>
 
 				<!--
-				We do slightly different styling here whether we're in client or not.
-				Enough changes to require different markup.
-			-->
+					We do slightly different styling here whether we're in client or not.
+					Enough changes to require different markup.
+				-->
 				<template v-if="!GJ_IS_CLIENT">
 					<div class="account-popover-separator" />
 
@@ -217,24 +195,4 @@
 
 	&-currency
 		theme-prop('color', 'highlight')
-
-.-new-tag
-	border-radius: 50%
-	width: 12px
-	height: 12px
-	display: block
-	change-bg('highlight')
-
-	&-account
-		position: absolute
-		bottom: 10px
-		right: 13px
-		display: block
-		border-color: var(--theme-darkest)
-		border-width: 2px
-		border-style: solid
-
-	&-list
-		float: right
-		margin-top: 4px
 </style>

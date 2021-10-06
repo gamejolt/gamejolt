@@ -56,7 +56,7 @@
 							<span
 								v-if="
 									userFriendship &&
-										userFriendship.state === UserFriendship.STATE_FRIENDS
+									userFriendship.state === UserFriendship.STATE_FRIENDS
 								"
 								v-app-tooltip="$gettext('profile.friend_tooltip')"
 								class="tag tag-highlight"
@@ -143,14 +143,6 @@
 										</span>
 									</a>
 								</li>
-								<li v-if="videosCount > 0">
-									<router-link
-										:to="{ name: 'profile.videos' }"
-										active-class="active"
-									>
-										<translate>Videos</translate>
-									</router-link>
-								</li>
 								<li>
 									<router-link
 										:to="{ name: 'profile.library' }"
@@ -196,8 +188,8 @@
 											<a
 												v-if="
 													userFriendship &&
-														userFriendship.state ===
-															UserFriendship.STATE_FRIENDS
+													userFriendship.state ===
+														UserFriendship.STATE_FRIENDS
 												"
 												class="list-group-item has-icon"
 												@click="removeFriend()"
@@ -216,9 +208,7 @@
 											<a
 												v-if="app.user && app.user.permission_level > 0"
 												class="list-group-item has-icon"
-												:href="
-													`${Environment.baseUrl}/moderate/users/view/${user.id}`
-												"
+												:href="`${Environment.baseUrl}/moderate/users/view/${user.id}`"
 												target="_blank"
 											>
 												<app-jolticon icon="cog" />
@@ -236,7 +226,7 @@
 							v-if="shouldShowFollow"
 							:user="user"
 							block
-							event-label="profile"
+							location="profilePage"
 						/>
 						<app-button
 							v-else-if="shouldShowEdit"

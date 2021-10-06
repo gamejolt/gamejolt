@@ -16,6 +16,12 @@ const http = require('http');
 const escape = require('shell-escape');
 const tar = require('tar');
 
+const sleep = function (ms) {
+	return new Promise(resolve => {
+		setTimeout(resolve, ms);
+	});
+};
+
 module.exports = config => {
 	// We can skip all this stuff if not doing a client build.
 	if (!config.isClient) {
@@ -38,7 +44,7 @@ module.exports = config => {
 		parseInt(versionStuff[3]),
 	];
 
-	const gjpushVersion = 'v0.2.0';
+	const gjpushVersion = 'v0.5.0';
 	const gjGameId = config.developmentEnv ? 1000 : 362412;
 	let gjGamePazckageId;
 	let gjGameInstallerPackageId;
@@ -348,46 +354,71 @@ module.exports = config => {
 	 * Pushes the single package to GJ.
 	 */
 	gulp.task('client:gjpush-package', cb => {
-		// GJPUSH!
-		// We trust the exit codes to tell us if something went wrong because a non 0 exit code will make this throw.
-		cp.execFileSync(gjpushExecutable, [
-			'-g',
-			gjGameId,
-			'-p',
-			gjGamePackageId,
-			'-r',
-			packageJson.version,
-			path.join(config.clientBuildDir, config.platformArch + '-package.tar.gz'),
-		]);
+		const gjPush = async function () {
+			// GJPUSH!
+			// We trust the exit codes to tell us if something went wrong because a non 0 exit code will make this throw.
+			cp.execFileSync(gjpushExecutable, [
+				'--no-resume',
+				'-g',
+				gjGameId,
+				'-p',
+				gjGamePackageId,
+				'-r',
+				packageJson.version,
+				path.join(config.clientBuildDir, config.platformArch + '-package.tar.gz'),
+			]);
+		};
 
-		cb();
+		const retryGjPush = async function () {
+			let err = null;
+			for (let i = 0; i < 3; i++) {
+				if (i !== 0) {
+					await sleep(5000 + Math.floor(Math.random() * 10000));
+				}
+
+				try {
+					await gjPush();
+					break;
+				} catch (e) {
+					err = e;
+				}
+			}
+
+			if (err) {
+				throw err;
+			}
+		};
+
+		retryGjPush()
+			.then(() => cb())
+			.catch(e => cb(e));
 	});
 
 	let joltronSrc = '';
 
-	const joltronRepoDir = path.join(
-		process.env.GOPATH,
-		'src',
-		'github.com',
-		'gamejolt',
-		'joltron'
-	);
-
-	if (!fs.existsSync(joltronRepoDir)) {
-		console.log('Creating gopath dirs: ' + joltronRepoDir);
-		if (config.platform === 'win') {
-			cp.execSync('mkdir "' + joltronRepoDir + '"');
-		} else {
-			cp.execSync('mkdir -p "' + joltronRepoDir + '"');
-		}
-	}
-
-	joltronSrc = path.join(joltronRepoDir, 'joltron');
-	if (config.platform === 'win') {
-		joltronSrc += '.exe';
-	}
-
 	gulp.task('client:get-joltron', () => {
+		const joltronRepoDir = path.join(
+			process.env.GOPATH,
+			'src',
+			'github.com',
+			'gamejolt',
+			'joltron'
+		);
+
+		if (!fs.existsSync(joltronRepoDir)) {
+			console.log('Creating gopath dirs: ' + joltronRepoDir);
+			if (config.platform === 'win') {
+				cp.execSync('mkdir "' + joltronRepoDir + '"');
+			} else {
+				cp.execSync('mkdir -p "' + joltronRepoDir + '"');
+			}
+		}
+
+		joltronSrc = path.join(joltronRepoDir, 'joltron');
+		if (config.platform === 'win') {
+			joltronSrc += '.exe';
+		}
+
 		return new Promise((resolve, reject) => {
 			const gitStatus = 'git -C ' + joltronRepoDir + ' status';
 			let gitClone =
@@ -433,7 +464,7 @@ module.exports = config => {
 							},
 							StringFileInfo: {
 								Comments: '',
-								CompanyName: 'Lucent Web Creative, LLC',
+								CompanyName: 'Game Jolt Inc.',
 								FileDescription: 'Game Jolt Client',
 								FileVersion: joltronVersionArray.join('.'),
 								InternalName: 'GameJoltClient',
@@ -781,17 +812,42 @@ module.exports = config => {
 		}
 		installerFile = path.join(config.clientBuildDir, installerFile);
 
-		cp.execFileSync(gjpushExecutable, [
-			'-g',
-			gjGameId,
-			'-p',
-			gjGameInstallerPackageId,
-			'-r',
-			packageJson.version,
-			installerFile,
-		]);
+		const gjPush = async function () {
+			cp.execFileSync(gjpushExecutable, [
+				'--no-resume',
+				'-g',
+				gjGameId,
+				'-p',
+				gjGameInstallerPackageId,
+				'-r',
+				packageJson.version,
+				installerFile,
+			]);
+		};
 
-		cb();
+		const retryGjPush = async function () {
+			let err = null;
+			for (let i = 0; i < 3; i++) {
+				if (i !== 0) {
+					await sleep(5000 + Math.floor(Math.random() * 10000));
+				}
+
+				try {
+					await gjPush();
+					break;
+				} catch (e) {
+					err = e;
+				}
+			}
+
+			if (err) {
+				throw err;
+			}
+		};
+
+		retryGjPush()
+			.then(() => cb())
+			.catch(e => cb(e));
 	});
 
 	if (!config.noGjPush) {

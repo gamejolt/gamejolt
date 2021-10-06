@@ -3,18 +3,13 @@ import { Component, Inject, Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
-import {
-	DrawerStore,
-	DrawerStoreKey,
-	handleNewStickerNotification,
-	setDrawerOpen,
-} from '../../drawer/drawer-store';
+import { DrawerStore, DrawerStoreKey, setDrawerOpen } from '../../drawer/drawer-store';
 import { fuzzynumber } from '../../filters/fuzzynumber';
 import { LikersModal } from '../../likers/modal.service';
 import { Model } from '../../model/model.service';
 import { Screen } from '../../screen/screen-service';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
-import { canCommentOnModel, Comment } from '../comment-model';
+import { addCommentVote, canCommentOnModel, Comment, removeCommentVote } from '../comment-model';
 import { CommentThreadModal } from '../thread/modal.service';
 import { CommentVote } from '../vote/vote-model';
 
@@ -81,11 +76,8 @@ export default class AppCommentControls extends Vue {
 		return this.comment.user_vote && this.comment.user_vote.vote === CommentVote.VOTE_DOWNVOTE;
 	}
 
-	async onUpvoteClick() {
-		const payload = await this.voteComment(CommentVote.VOTE_UPVOTE);
-		if (payload.success && payload.newSticker) {
-			handleNewStickerNotification(this.drawer);
-		}
+	onUpvoteClick() {
+		this.voteComment(CommentVote.VOTE_UPVOTE);
 	}
 
 	onDownvoteClick() {
@@ -94,9 +86,9 @@ export default class AppCommentControls extends Vue {
 
 	voteComment(vote: number) {
 		if (!this.comment.user_vote || this.comment.user_vote.vote !== vote) {
-			return this.comment.$vote(vote);
+			return addCommentVote(this.comment, vote);
 		} else {
-			return this.comment.$removeVote();
+			return removeCommentVote(this.comment);
 		}
 	}
 

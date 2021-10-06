@@ -15,6 +15,7 @@ import {
 	SettingThemeAlwaysOurs,
 	SettingThemeDark,
 } from '../../../../_common/settings/settings.service';
+import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { ThemeMutation, ThemeState, ThemeStore } from '../../../../_common/theme/theme.store';
 
 let ClientAutoStartMod: typeof _ClientAutoStartMod | undefined;
@@ -37,6 +38,7 @@ type FormModel = {
 	autostart_client: boolean;
 	theme_dark: boolean;
 	theme_always_ours: boolean;
+	sticker_sounds: boolean;
 };
 
 @Component({
@@ -45,12 +47,15 @@ type FormModel = {
 	},
 })
 export default class FormSettings extends BaseForm<FormModel> implements FormOnInit {
+	@AppState user!: AppStore['user'];
 	@ThemeState isDark!: ThemeStore['isDark'];
 	@ThemeState alwaysOurs!: ThemeStore['alwaysOurs'];
 	@ThemeMutation setDark!: ThemeStore['setDark'];
 	@ThemeMutation setAlwaysOurs!: ThemeStore['setAlwaysOurs'];
 
 	warnOnDiscard = false;
+
+	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
 
 	get canClientAutostart() {
 		return ClientAutoStartMod && ClientAutoStartMod.ClientAutoStart.canAutoStart;

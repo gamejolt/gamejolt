@@ -1,5 +1,7 @@
+<script lang="ts" src="./header"></script>
+
 <template>
-	<app-form name="headerForm" ref="form">
+	<app-form ref="form" name="headerForm">
 		<app-form-group
 			name="file"
 			:label="$gettext(`Upload New Header`)"
@@ -7,17 +9,17 @@
 		>
 			<p class="help-block">
 				<translate>
-					Headers are the big, banner-like images that adorn the tops of pages. For your header to
-					look its best on all devices, make sure anything important is located near the center of
-					the image.
+					Headers are the big, banner-like images that adorn the tops of pages. For your
+					header to look its best on all devices, make sure anything important is located
+					near the center of the image.
 				</translate>
 			</p>
-			<p class="help-block" v-translate>
+			<p v-translate class="help-block">
 				Your image must be a PNG or JPG.
 				<br />
 				<strong>PNGs are highly recommended as they produce a lossless image.</strong>
 			</p>
-			<p class="help-block strong" v-translate="{ dimensions: '2000×500' }">
+			<p v-translate="{ dimensions: '2000×500' }" class="help-block strong">
 				The recommended size for a header image is
 				<code>%{dimensions}</code>
 				(ratio of 4 ÷ 1).
@@ -42,9 +44,9 @@
 		</app-form-group>
 
 		<app-form-group
+			v-if="formModel.header && !formModel.file"
 			name="header_crop"
 			:label="$gettext(`Crop Current Header`)"
-			v-if="formModel.header && !formModel.file"
 		>
 			<div class="form-control-static">
 				<app-form-control-crop
@@ -71,5 +73,3 @@
 		</template>
 	</app-form>
 </template>
-
-<script lang="ts" src="./header"></script>

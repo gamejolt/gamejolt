@@ -1,13 +1,14 @@
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { Analytics } from '../../analytics/analytics.service';
+import { trackUserFollow, UserFollowLocation } from '../../analytics/analytics.service';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { number } from '../../filters/number';
 import { Growls } from '../../growls/growls.service';
+import { ModalConfirm } from '../../modal/confirm/confirm-service';
 import { AppStore } from '../../store/app-store';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
-import { User } from '../user.model';
+import { followUser, unfollowUser, User } from '../user.model';
 
 @Component({
 	directives: {
@@ -16,29 +17,28 @@ import { User } from '../user.model';
 	},
 })
 export default class AppUserFollowWidget extends Vue {
-	@Prop(User)
+	@Prop({ type: User, required: true })
 	user!: User;
 
-	@Prop(Boolean)
-	overlay?: boolean;
+	@Prop({ type: String, required: true })
+	location!: UserFollowLocation;
 
-	@Prop(Boolean)
-	circle?: boolean;
+	@Prop({ type: Boolean, required: false, default: false })
+	overlay!: boolean;
 
-	@Prop(Boolean)
-	block?: boolean;
+	@Prop({ type: Boolean, required: false, default: false })
+	circle!: boolean;
 
-	@Prop(Boolean)
-	sm?: boolean;
+	@Prop({ type: Boolean, required: false, default: false })
+	block!: boolean;
 
-	@Prop(Boolean)
-	hideCount?: boolean;
+	@Prop({ type: Boolean, required: false, default: false })
+	sm!: boolean;
 
-	@Prop({ type: String, required: false, default: 'global' })
-	eventLabel!: string;
+	@Prop({ type: Boolean, required: false, default: false })
+	hideCount!: boolean;
 
-	@State
-	app!: AppStore;
+	@State app!: AppStore;
 
 	@Emit('follow')
 	emitFollow() {}
@@ -81,26 +81,37 @@ export default class AppUserFollowWidget extends Vue {
 			return;
 		}
 
-		const category = 'user-follow';
-		const action = this.user.is_following ? 'unfollow' : 'follow';
-		const label = this.eventLabel;
-		Analytics.trackEvent(category, action, label);
-
+		let failed = false;
 		if (!this.user.is_following) {
 			try {
-				await this.user.$follow();
+				await followUser(this.user);
 				this.emitFollow();
 			} catch (e) {
+				failed = true;
 				Growls.error(
 					this.$gettext(`Something has prevented you from following this user.`)
 				);
+			} finally {
+				trackUserFollow(true, { failed, location: this.location });
 			}
 		} else {
 			try {
-				await this.user.$unfollow();
+				const result = await ModalConfirm.show(
+					this.$gettext(`Are you sure you want to unfollow this user?`),
+					this.$gettext(`Unfollow user?`)
+				);
+
+				if (!result) {
+					return;
+				}
+
+				await unfollowUser(this.user);
 				this.emitUnfollow();
 			} catch (e) {
+				failed = true;
 				Growls.error(this.$gettext(`For some reason we couldn't unfollow this user.`));
+			} finally {
+				trackUserFollow(false, { failed, location: this.location });
 			}
 		}
 	}

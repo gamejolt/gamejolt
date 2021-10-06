@@ -12,6 +12,8 @@ const KEYCODE_DOWN = 40;
 const KEYCODE_ENTER = 13;
 const KEYCODE_ESC = 27;
 
+export type SearchKeydownSpy = (event: KeyboardEvent) => void;
+
 let searchIterator = 0;
 
 @Component({
@@ -23,24 +25,25 @@ let searchIterator = 0;
 	},
 })
 export default class AppSearch extends Vue {
-	@Prop({ type: Boolean, default: false })
-	autocompleteDisabled!: boolean;
-
-	@Prop(Boolean)
-	autofocus!: boolean;
+	@Prop({ type: Boolean, default: false }) autocompleteDisabled!: boolean;
+	@Prop(Boolean) autofocus!: boolean;
 
 	id = ++searchIterator;
 
 	query = '';
 	isFocused = false;
 	isShowingAutocomplete = false;
-	keydownSpies: Function[] = [];
+	keydownSpies: SearchKeydownSpy[] = [];
 
 	$refs!: {
 		searchInput: AppSearchInputTS;
 	};
 
 	readonly Search = Search;
+
+	get shouldShowAutcomplete() {
+		return !this.autocompleteDisabled;
+	}
 
 	created() {
 		this.query = Search.query;
@@ -75,11 +78,11 @@ export default class AppSearch extends Vue {
 	/**
 	 * Ability to set watchers for when a keydown event fires.
 	 */
-	setKeydownSpy(fn: Function) {
+	setKeydownSpy(fn: SearchKeydownSpy) {
 		this.keydownSpies.push(fn);
 	}
 
-	removeKeydownSpy(fn: Function) {
+	removeKeydownSpy(fn: SearchKeydownSpy) {
 		arrayRemove(this.keydownSpies, i => i === fn);
 	}
 
@@ -98,7 +101,7 @@ export default class AppSearch extends Vue {
 		// If autocomplete is disabled, then we want to submit the form on enter.
 		// Normally the autocomplete will take control of the submission since they
 		// technically highlight what they want in autocomplete and go to it.
-		if (this.autocompleteDisabled && event.keyCode === KEYCODE_ENTER) {
+		if (!this.shouldShowAutcomplete && event.keyCode === KEYCODE_ENTER) {
 			this.blur();
 			this.$router.push({ name: 'search.results', query: { q: this.query } });
 		}
@@ -116,14 +119,14 @@ export default class AppSearch extends Vue {
 
 	onFocus() {
 		this.isFocused = true;
-		if (!this.autocompleteDisabled) {
+		if (this.shouldShowAutcomplete) {
 			this.isShowingAutocomplete = true;
 		}
 	}
 
 	onBlur() {
 		this.isFocused = false;
-		if (!this.autocompleteDisabled) {
+		if (this.shouldShowAutcomplete) {
 			this.isShowingAutocomplete = false;
 		}
 	}

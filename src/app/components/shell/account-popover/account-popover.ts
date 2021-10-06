@@ -51,14 +51,6 @@ export default class AppShellAccountPopover extends Vue {
 	@Action
 	logout!: Store['logout'];
 
-	get shouldShowNew() {
-		return this.shouldShowNewStickers;
-	}
-
-	get shouldShowNewStickers() {
-		return this.drawer.canUnlockNewStickers;
-	}
-
 	onShow() {
 		this.isShowing = true;
 		this.getWallet();

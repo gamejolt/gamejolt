@@ -11,7 +11,9 @@ export type ContentContext =
 	| 'user-bio'
 	| 'forum-post'
 	| 'community-description'
-	| 'chat-message';
+	| 'chat-message'
+	| 'community-channel-description'
+	| 'fireside-chat-message';
 
 enum ContextCapabilityType {
 	TextBold,
@@ -38,6 +40,7 @@ enum ContextCapabilityType {
 	HorizontalRule,
 	Spoiler,
 	Heading,
+	Sticker,
 }
 
 export class ContextCapabilities {
@@ -51,7 +54,8 @@ export class ContextCapabilities {
 			this.blockquote ||
 			this.list ||
 			this.hr ||
-			this.spoiler
+			this.spoiler ||
+			this.sticker
 		);
 	}
 	get hasAnyText() {
@@ -127,6 +131,9 @@ export class ContextCapabilities {
 	get gif() {
 		return this.hasCapability(ContextCapabilityType.Gif);
 	}
+	get sticker() {
+		return this.hasCapability(ContextCapabilityType.Sticker);
+	}
 
 	private constructor(capabilities: ContextCapabilityType[]) {
 		this.capabilities = capabilities;
@@ -174,6 +181,7 @@ export class ContextCapabilities {
 				]);
 			case 'game-description':
 			case 'community-description':
+			case 'community-channel-description':
 				return new ContextCapabilities([
 					ContextCapabilityType.TextBold,
 					ContextCapabilityType.TextItalic,
@@ -246,6 +254,21 @@ export class ContextCapabilities {
 					ContextCapabilityType.Tag,
 					ContextCapabilityType.Mention,
 					ContextCapabilityType.Gif,
+					ContextCapabilityType.Sticker,
+				]);
+			case 'fireside-chat-message':
+				return new ContextCapabilities([
+					ContextCapabilityType.TextBold,
+					ContextCapabilityType.TextItalic,
+					ContextCapabilityType.TextLink,
+					ContextCapabilityType.TextCode,
+					ContextCapabilityType.TextStrike,
+					ContextCapabilityType.Spoiler,
+					ContextCapabilityType.Emoji,
+					ContextCapabilityType.Tag,
+					ContextCapabilityType.Mention,
+					ContextCapabilityType.Gif,
+					ContextCapabilityType.Media,
 				]);
 
 			default:
@@ -269,7 +292,10 @@ export function getMediaItemTypeForContext(context: ContentContext) {
 		case 'community-description':
 			return MediaItem.TYPE_COMMUNITY_DESCRIPTION;
 		case 'chat-message':
+		case 'fireside-chat-message':
 			return MediaItem.TYPE_CHAT_MESSAGE;
+		case 'community-channel-description':
+			return MediaItem.TYPE_COMMUNITY_CHANNEL_DESCRIPTION;
 	}
 	throw new Error('There is no matching media item type for the context ' + context);
 }

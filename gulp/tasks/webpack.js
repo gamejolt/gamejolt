@@ -2,6 +2,7 @@ const gulp = require('gulp');
 const gutil = require('gulp-util');
 const path = require('path');
 const os = require('os');
+const { readFileSync } = require('fs');
 
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -19,10 +20,10 @@ const OptimizeCssnanoPlugin = require('@intervolga/optimize-cssnano-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 
-module.exports = function(config) {
+module.exports = function (config) {
 	let base = path.resolve(config.projectBase);
 
-	let noop = function() {};
+	let noop = function () {};
 	let devNoop = !config.production ? noop : undefined;
 	let prodNoop = config.production ? noop : undefined;
 
@@ -80,6 +81,8 @@ module.exports = function(config) {
 		devtool = 'source-map';
 	}
 
+	let isInDocker = !!process.env.GAMEJOLT_IN_DOCKER;
+
 	function stylesLoader(withStylusLoader) {
 		const loaders = ['css-loader', 'postcss-loader'];
 
@@ -118,49 +121,56 @@ module.exports = function(config) {
 		? Promise.resolve({})
 		: new Promise(resolve => {
 				const http = require('http');
-				const req = http.get('http://localhost:4040/api/tunnels', res => {
-					if (res.statusCode !== 200) {
-						return resolve({});
-					}
-
-					res.setEncoding('utf8');
-					let response = '';
-					res.on('data', data => (response += data));
-					res.on('end', () => {
-						try {
-							const parsed = JSON.parse(response);
-
-							const GJ_TUNNELS = {};
-							for (let tunnel of parsed.tunnels) {
-								switch (tunnel.name) {
-									case 'gj-backend (http)':
-										GJ_TUNNELS.backend = tunnel.public_url;
-										break;
-
-									case 'gj-frontend (http)':
-										GJ_TUNNELS.frontend = tunnel.public_url;
-										break;
-								}
-							}
-							resolve(GJ_TUNNELS);
-						} catch (_) {
-							resolve({});
+				const req = http.get(
+					'http://' + (isInDocker ? 'hostnet' : 'localhost') + ':4040/api/tunnels',
+					res => {
+						if (res.statusCode !== 200) {
+							return resolve({});
 						}
-					});
-				});
+
+						res.setEncoding('utf8');
+						let response = '';
+						res.on('data', data => (response += data));
+						res.on('end', () => {
+							try {
+								const parsed = JSON.parse(response);
+
+								const GJ_TUNNELS = {};
+								for (let tunnel of parsed.tunnels) {
+									switch (tunnel.name) {
+										case 'gj-backend (http)':
+											GJ_TUNNELS.backend = tunnel.public_url;
+											break;
+
+										case 'gj-frontend (http)':
+											GJ_TUNNELS.frontend = tunnel.public_url;
+											break;
+									}
+								}
+								resolve(GJ_TUNNELS);
+							} catch (_) {
+								resolve({});
+							}
+						});
+					}
+				);
 				req.on('error', () => resolve({}));
 		  });
 
 	let webpackSectionConfigs = {};
 	let webpackSectionTasks = [];
-	Object.keys(config.sections).forEach(function(section) {
+	Object.keys(config.sections).forEach(function (section) {
 		const sectionConfig = config.sections[section];
 
 		let appEntries = ['./' + section + '/main.ts'];
 		let indexHtml = section === 'app' ? 'index.html' : section + '.html';
 
 		if (shouldUseHMR) {
-			appEntries.push('webpack-dev-server/client?http://localhost:' + config.port + '/');
+			const devServerUrl = isInDocker
+				? 'https://webpack.development.gamejolt.com:443'
+				: 'http://localhost:' + config.port;
+
+			appEntries.push('webpack-dev-server/client?' + devServerUrl + '/');
 			appEntries.push('webpack/hot/dev-server');
 		}
 
@@ -247,6 +257,15 @@ module.exports = function(config) {
 			externals: externals,
 			module: {
 				rules: [
+					// We don't want to import firebase ever on server for now.
+					...(config.ssr === 'server'
+						? [
+								{
+									test: /node_modules\/@?firebase\/.+/,
+									loader: 'null-loader',
+								},
+						  ]
+						: []),
 					{
 						test: /\.vue$/,
 						loader: 'vue-loader',
@@ -462,6 +481,12 @@ module.exports = function(config) {
 								_analytics: sectionConfig.analytics !== false,
 								_scripts: sectionConfig.scripts,
 								_bodyClass: sectionConfig.bodyClass || '',
+								_perfPolyfill: readFileSync(
+									path.resolve(
+										base,
+										'node_modules/first-input-delay/dist/first-input-delay.min.js'
+									)
+								),
 							},
 					  }),
 				webAppManifest ? new WebpackPwaManifest(webAppManifest) : noop,
@@ -494,9 +519,9 @@ module.exports = function(config) {
 			],
 		};
 
-		gulp.task('compile:' + section, function(cb) {
+		gulp.task('compile:' + section, function (cb) {
 			let compiler = webpack(webpackSectionConfigs[section]);
-			compiler.run(function(err, stats) {
+			compiler.run(function (err, stats) {
 				if (err) {
 					throw new gutil.PluginError('webpack:build', err);
 				}
@@ -518,7 +543,7 @@ module.exports = function(config) {
 
 	gulp.task(
 		'watch',
-		gulp.series('clean', function(cb) {
+		gulp.series('clean', function (cb) {
 			const buildSections = config.buildSection.split(',');
 			let port = parseInt(config.port),
 				portOffset = 0;
@@ -555,15 +580,23 @@ module.exports = function(config) {
 									},
 								],
 							},
-							public: 'development.gamejolt.com',
-							quiet: true,
-							disableHostCheck: hasTunnels,
+							public: isInDocker
+								? 'webpack.development.gamejolt.com'
+								: 'development.gamejolt.com',
+							transportMode: 'ws',
+							// quiet: true,
+							progress: true,
+							disableHostCheck: hasTunnels || isInDocker,
 							compress: hasTunnels,
 							hot: shouldUseHMR,
+							watchOptions: {
+								ignored: /node_modules/,
+								poll: 300,
+							},
 						});
 
 						if (config.ssr !== 'server') {
-							server.listen(port + portOffset, 'localhost');
+							server.listen(port + portOffset, isInDocker ? '0.0.0.0' : '127.0.0.1');
 						}
 						portOffset += 1;
 					}

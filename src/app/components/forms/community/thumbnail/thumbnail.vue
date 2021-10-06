@@ -1,5 +1,7 @@
+<script lang="ts" src="./thumbnail"></script>
+
 <template>
-	<app-form name="thumbnailForm" ref="form">
+	<app-form ref="form" name="thumbnailForm">
 		<app-form-group
 			name="file"
 			:label="$gettext(`Upload New Thumbnail`)"
@@ -9,10 +11,12 @@
 				<translate>Your image must be a PNG or JPG.</translate>
 				<br />
 				<strong>
-					<translate>PNGs are highly recommended as they produce a lossless image.</translate>
+					<translate>
+						PNGs are highly recommended as they produce a lossless image.
+					</translate>
 				</strong>
 			</p>
-			<p class="help-block strong" v-translate="{ dimensions: '1000×1000' }">
+			<p v-translate="{ dimensions: '1000×1000' }" class="help-block strong">
 				The recommended size for a community thumbnail is
 				<code>%{dimensions}</code>
 				.
@@ -32,9 +36,9 @@
 		</app-form-group>
 
 		<app-form-group
+			v-if="formModel.thumbnail && !formModel.file"
 			name="thumbnail_crop"
 			:label="$gettext('Your Uploaded Thumbnail')"
-			v-if="formModel.thumbnail && !formModel.file"
 		>
 			<div class="form-control-static">
 				<app-form-control-crop
@@ -59,5 +63,3 @@
 		</template>
 	</app-form>
 </template>
-
-<script lang="ts" src="./thumbnail"></script>

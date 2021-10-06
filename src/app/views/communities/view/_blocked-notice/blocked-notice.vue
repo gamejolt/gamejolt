@@ -1,3 +1,5 @@
+<script lang="ts" src="./blocked-notice"></script>
+
 <template>
 	<div v-if="community.isBlocked" class="alert alert-notice">
 		<p>
@@ -18,16 +20,14 @@
 
 		<div>
 			<translate>
-				You are unable to create any new posts in this community until your block gets lifted or
-				expires.
+				You are unable to create any new posts in this community until your block gets
+				lifted or expires.
 			</translate>
 		</div>
 
 		<div v-if="community.user_block && community.user_block.doesExpire">
 			Your block will expire in
-			<b><app-time-ago :date="community.user_block.expires_on" without-suffix/></b>
+			<b><app-time-ago :date="community.user_block.expires_on" without-suffix /></b>
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./blocked-notice"></script>

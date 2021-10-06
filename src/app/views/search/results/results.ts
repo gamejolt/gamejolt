@@ -1,4 +1,5 @@
 import { Component } from 'vue-property-decorator';
+import AppCommunityThumbnail from '../../../../_common/community/thumbnail/thumbnail.vue';
 import { number } from '../../../../_common/filters/number';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -20,11 +21,9 @@ import { RouteStore, routeStore, RouteStoreModule } from '../search.store';
 		AppUserCard,
 		AppGameList,
 		AppGameGrid,
+		AppCommunityThumbnail,
 		AppActivityFeed: AppActivityFeedLazy,
 		AppActivityFeedPlaceholder,
-	},
-	filters: {
-		number,
 	},
 })
 @RouteResolver({
@@ -50,9 +49,14 @@ export default class RouteSearchResults extends BaseRouteComponent {
 
 	readonly Search = Search;
 	readonly Screen = Screen;
+	readonly number = number;
 
 	get slicedUsers() {
 		return Screen.isXs ? this.searchPayload.users : this.searchPayload.users.slice(0, 2);
+	}
+
+	get slicedCommunities() {
+		return this.searchPayload.communities.slice(0, 6);
 	}
 
 	routeResolved($payload: any, fromCache: boolean) {
@@ -64,8 +68,11 @@ export default class RouteSearchResults extends BaseRouteComponent {
 			this.feed,
 			{
 				type: 'EventItem',
+				name: 'search',
 				url: `/web/posts/fetch/search/${encodeURIComponent(this.$route.query.q + '')}`,
 				shouldShowFollow: true,
+				itemsPerPage: $payload.postsPerPage,
+				shouldShowDates: false,
 			},
 			$payload.posts,
 			fromCache

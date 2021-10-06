@@ -1,7 +1,9 @@
+<script lang="ts" src="./placeholder"></script>
+
 <template>
 	<div :class="{ 'scrollable-grid-xs': scrollable }">
 		<div class="game-grid-items">
-			<div class="game-grid-item" v-for="i of count" :key="i">
+			<div v-for="i of count" :key="i" class="game-grid-item">
 				<app-game-thumbnail-placeholder />
 			</div>
 		</div>
@@ -9,7 +11,5 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '../grid'
+@import '../grid'
 </style>
-
-<script lang="ts" src="./placeholder"></script>

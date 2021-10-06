@@ -1,3 +1,5 @@
+<script lang="ts" src="./card"></script>
+
 <template>
 	<div class="-card">
 		<img class="-img" :src="sticker.img_url" />
@@ -13,15 +15,18 @@
 				{{ label }}
 			</div>
 		</div>
+		<div v-if="isNew" class="-new-indicator">
+			<span v-app-tooltip.touchable="$gettext(`Newly unlocked!`)" class="-new-icon" />
+		</div>
 
 		<slot />
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-@require './variables'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+@import './variables'
 
 .-card
 	change-bg('bg-offset')
@@ -45,12 +50,26 @@
 
 .-rarity
 	font-weight: bold
+
 	&-uncommon
 		color: #1bb804
+
 	&-rare
 		color: #18a5f2
+
 	&-epic
 		color: #ffbc56
-</style>
 
-<script lang="ts" src="./card"></script>
+.-new-indicator
+	position: absolute
+	top: 12px
+	right: 12px
+
+.-new-icon
+	display: block
+	width: 12px
+	height: 12px
+	border-radius: 50%
+	background-color: var(--theme-bi-bg)
+	elevate-2()
+</style>

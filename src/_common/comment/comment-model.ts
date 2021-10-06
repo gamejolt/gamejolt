@@ -1,3 +1,4 @@
+import { trackCommentVote } from '../analytics/analytics.service';
 import { Api } from '../api/api.service';
 import { ContentDocument } from '../content/content-document';
 import { Environment } from '../environment/environment.service';
@@ -8,7 +9,6 @@ import { Model } from '../model/model.service';
 import { constructStickerCounts, StickerCount } from '../sticker/sticker-count';
 import { Subscription } from '../subscription/subscription.model';
 import { User } from '../user/user.model';
-import { CommentVideo } from './video/video-model';
 import { CommentVote } from './vote/vote-model';
 
 export class Comment extends Model {
@@ -31,7 +31,6 @@ export class Comment extends Model {
 	posted_on!: number;
 	modified_on?: number;
 	lang!: string;
-	videos: CommentVideo[] = [];
 	subscription?: Subscription;
 	is_pinned!: boolean;
 	comment_content!: string;
@@ -48,10 +47,6 @@ export class Comment extends Model {
 
 		if (data.user) {
 			this.user = new User(data.user);
-		}
-
-		if (data.videos) {
-			this.videos = CommentVideo.populate(data.videos);
 		}
 
 		if (data.user_vote) {
@@ -86,61 +81,6 @@ export class Comment extends Model {
 			return this.$_remove(`/comments/remove/${this.id}`, {
 				detach: true,
 			});
-		}
-	}
-
-	async $vote(vote: number) {
-		// Don't do anything if they are setting the same vote.
-		if (this.user_vote && this.user_vote.vote === vote) {
-			return;
-		}
-
-		const newVote = new CommentVote({ comment_id: this.id, vote });
-
-		const previousVote = this.user_vote;
-		const hadPreviousVote = !!previousVote;
-		this.user_vote = newVote;
-
-		// We only show upvotes. So we only want to change when it's upvoted, or we decrement 1 if
-		// they had previously set it to upvote and are changing to downvote to signify the removal
-		// of the upvote only.
-		let operation = 0;
-		if (vote === CommentVote.VOTE_UPVOTE) {
-			operation = 1;
-		} else if (hadPreviousVote) {
-			// Their previous vote had to be an upvote in this case.
-			operation = -1;
-		}
-		this.votes += operation;
-
-		try {
-			return await newVote.$save();
-		} catch (e) {
-			this.votes -= operation;
-			this.user_vote = previousVote;
-			Growls.error(`Can't do that now. Try again later?`);
-		}
-	}
-
-	async $removeVote() {
-		if (!this.user_vote) {
-			return;
-		}
-
-		const previousVote = this.user_vote;
-
-		// Votes only show upvotes, so don't modify vote count if it was a downvote.
-		if (previousVote.vote === CommentVote.VOTE_UPVOTE) {
-			--this.votes;
-		}
-		this.user_vote = undefined;
-
-		try {
-			return await previousVote.$remove();
-		} catch (e) {
-			this.user_vote = previousVote;
-			++this.votes;
-			Growls.error(`Can't do that now. Try again later?`);
 		}
 	}
 
@@ -272,4 +212,67 @@ export async function getCommentUrl(commentId: number): Promise<string> {
 	}
 
 	return response.url;
+}
+
+export async function addCommentVote(comment: Comment, vote: number) {
+	// Don't do anything if they are setting the same vote.
+	if (comment.user_vote && comment.user_vote.vote === vote) {
+		return;
+	}
+
+	const newVote = new CommentVote({ comment_id: comment.id, vote });
+
+	const previousVote = comment.user_vote;
+	const hadPreviousVote = !!previousVote;
+	comment.user_vote = newVote;
+
+	// We only show upvotes. So we only want to change when it's upvoted, or we decrement 1 if
+	// they had previously set it to upvote and are changing to downvote to signify the removal
+	// of the upvote only.
+	let operation = 0;
+	if (vote === CommentVote.VOTE_UPVOTE) {
+		operation = 1;
+	} else if (hadPreviousVote) {
+		// Their previous vote had to be an upvote in this case.
+		operation = -1;
+	}
+	comment.votes += operation;
+
+	let failed = false;
+	try {
+		return await newVote.$save();
+	} catch (e) {
+		failed = true;
+		comment.votes -= operation;
+		comment.user_vote = previousVote;
+		Growls.error(`Can't do that now. Try again later?`);
+	} finally {
+		trackCommentVote(vote, { failed, toggled: false });
+	}
+}
+
+export async function removeCommentVote(comment: Comment) {
+	if (!comment.user_vote) {
+		return;
+	}
+
+	const previousVote = comment.user_vote;
+
+	// Votes only show upvotes, so don't modify vote count if it was a downvote.
+	if (previousVote.vote === CommentVote.VOTE_UPVOTE) {
+		--comment.votes;
+	}
+	comment.user_vote = undefined;
+
+	let failed = false;
+	try {
+		return await previousVote.$remove();
+	} catch (e) {
+		failed = true;
+		comment.user_vote = previousVote;
+		++comment.votes;
+		Growls.error(`Can't do that now. Try again later?`);
+	} finally {
+		trackCommentVote(previousVote.vote, { failed, toggled: true });
+	}
 }

@@ -20,7 +20,8 @@ export type ContentObjectType =
 	| 'listItem'
 	| 'spoiler'
 	| 'heading'
-	| 'gif';
+	| 'gif'
+	| 'sticker';
 
 export class ContentObject extends ContentNode {
 	public type!: ContentObjectType;
@@ -28,8 +29,8 @@ export class ContentObject extends ContentNode {
 	public attrs!: { [key: string]: any };
 	public marks!: MarkObject[];
 
-	constructor(type: ContentObjectType) {
-		super();
+	constructor(type: ContentObjectType, content: ContentObject[] = []) {
+		super(content);
 
 		this.type = type;
 
@@ -48,6 +49,7 @@ export class ContentObject extends ContentNode {
 			case 'embed':
 			case 'mediaItem':
 			case 'gif':
+			case 'sticker':
 				return true;
 		}
 
@@ -137,6 +139,7 @@ export class ContentObject extends ContentNode {
 			case 'hr':
 			case 'paragraph':
 			case 'gif':
+			case 'sticker':
 				length++;
 				break;
 			case 'embed':

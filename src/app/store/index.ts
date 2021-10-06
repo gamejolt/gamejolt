@@ -1,14 +1,11 @@
 import { Route } from 'vue-router';
 import { sync } from 'vuex-router-sync';
 import { VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
+import { CommunityJoinLocation } from '../../_common/analytics/analytics.service';
 import { Api } from '../../_common/api/api.service';
 import { Backdrop } from '../../_common/backdrop/backdrop.service';
 import AppBackdrop from '../../_common/backdrop/backdrop.vue';
-import {
-	$joinCommunity,
-	$leaveCommunity,
-	Community,
-} from '../../_common/community/community.model';
+import { Community, joinCommunity, leaveCommunity } from '../../_common/community/community.model';
 import { Connection } from '../../_common/connection/connection-service';
 import { ContentFocus } from '../../_common/content-focus/content-focus.service';
 import { FiresidePost } from '../../_common/fireside/post/post-model';
@@ -60,8 +57,12 @@ export type Actions = AppActions &
 		toggleRightPane: void;
 		toggleChatPane: void;
 		clearPanes: void;
-		joinCommunity: Community;
-		leaveCommunity: Community;
+		joinCommunity: { community: Community; location?: CommunityJoinLocation };
+		leaveCommunity: {
+			community: Community;
+			location?: CommunityJoinLocation;
+			shouldConfirm: boolean;
+		};
 	};
 
 export type Mutations = AppMutations &
@@ -72,22 +73,27 @@ export type Mutations = AppMutations &
 	_ClientLibraryMod.Mutations & {
 		showShell: void;
 		hideShell: void;
+		showFooter: void;
+		hideFooter: void;
 		setHasContentSidebar: boolean;
 		setNotificationCount: { type: UnreadItemType; count: number };
 		incrementNotificationCount: { type: UnreadItemType; count: number };
-		setFriendRequestCount: number;
-		changeFriendRequestCount: number;
+		setHasNewFriendRequests: boolean;
+		setHasNewUnlockedStickers: boolean;
 		setActiveCommunity: Community;
 		clearActiveCommunity: void;
 		viewCommunity: Community;
 		featuredPost: FiresidePost;
 	};
 
-let bootstrapResolver: (() => void) | null = null;
+let bootstrapResolver: ((value?: any) => void) | null = null;
 let backdrop: AppBackdrop | null = null;
 export let tillStoreBootstrapped = new Promise(resolve => (bootstrapResolver = resolve));
 
-let gridBootstrapResolvers: ((client: GridClient) => void)[] = [];
+let _wantsGrid = false;
+let _gridLoadPromise: Promise<typeof GridClient> | null = null;
+let _gridBootstrapResolvers: ((client: GridClient) => void)[] = [];
+
 /**
  * Returns a promise that resolves once the Grid client is available.
  */
@@ -96,7 +102,7 @@ export function tillGridBootstrapped() {
 		if (store.state.grid) {
 			resolve(store.state.grid);
 		} else {
-			gridBootstrapResolvers.push(resolve);
+			_gridBootstrapResolvers.push(resolve);
 		}
 	});
 }
@@ -139,12 +145,14 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	isLibraryBootstrapped = false;
 	isShellBootstrapped = false;
 	isShellHidden = false;
+	isFooterHidden = false;
 
 	/** Unread items in the activity feed. */
 	unreadActivityCount = 0;
 	/** Unread items in the notification feed. */
 	unreadNotificationsCount = 0;
-	friendRequestCount = 0;
+	hasNewFriendRequests = false;
+	hasNewUnlockedStickers = false;
 	notificationState: ActivityFeedState | null = null;
 
 	mobileCbarShowing = false;
@@ -178,6 +186,10 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		}
 
 		return this.mobileCbarShowing || !Screen.isXs;
+	}
+
+	get hasFooter() {
+		return !this.isFooterHidden;
 	}
 
 	/**
@@ -265,12 +277,27 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexAction
 	async loadGrid() {
-		const GridClient_ = await GridClientLazy();
+		if (_wantsGrid) {
+			return;
+		}
+
+		_wantsGrid = true;
+		_gridLoadPromise ??= GridClientLazy();
+
+		const GridClient_ = await _gridLoadPromise;
+
+		// If they disconnected before we loaded it in.
+		if (!_wantsGrid) {
+			return;
+		}
+
 		this._setGrid(new GridClient_());
 	}
 
 	@VuexAction
 	async clearGrid() {
+		_wantsGrid = false;
+
 		if (this.grid) {
 			this.grid.disconnect();
 		}
@@ -282,6 +309,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	async loadNotificationState() {
 		const state = new ActivityFeedState({
 			type: 'Notification',
+			name: 'notification',
 			url: `/web/dash/activity/more/notifications`,
 		});
 
@@ -393,6 +421,16 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
+	hideFooter() {
+		this.isFooterHidden = true;
+	}
+
+	@VuexMutation
+	showFooter() {
+		this.isFooterHidden = false;
+	}
+
+	@VuexMutation
 	setHasContentSidebar(isShowing: Mutations['setHasContentSidebar']) {
 		// We use this to scooch the footer over to make room for the sidebar content, but we only care about
 		// that when the sidebar isn't behaving as an overlay - which is currently only on the Lg breakpoint.
@@ -422,13 +460,13 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	setFriendRequestCount(amount: Mutations['setFriendRequestCount']) {
-		this.friendRequestCount = amount;
+	setHasNewFriendRequests(has: Mutations['setHasNewFriendRequests']) {
+		this.hasNewFriendRequests = has;
 	}
 
 	@VuexMutation
-	changeFriendRequestCount(amount: Mutations['changeFriendRequestCount']) {
-		this.friendRequestCount += amount;
+	setHasNewUnlockedStickers(has: Mutations['setHasNewUnlockedStickers']) {
+		this.hasNewUnlockedStickers = has;
 	}
 
 	@VuexMutation
@@ -451,19 +489,16 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexAction
-	async joinCommunity(community: Actions['joinCommunity']) {
+	async joinCommunity({ community, location }: Actions['joinCommunity']) {
 		if (community._removed) {
 			return;
 		}
 
 		if (!community.is_member) {
-			await $joinCommunity(community);
+			await joinCommunity(community, location);
 		}
 
-		if (this.grid) {
-			await this.grid.joinCommunity(community);
-		}
-
+		this.grid?.joinCommunity(community);
 		this._joinCommunity(community);
 	}
 
@@ -477,15 +512,23 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexAction
-	async leaveCommunity(community: Actions['leaveCommunity']) {
+	async leaveCommunity({ community, location, shouldConfirm }: Actions['leaveCommunity']) {
 		if (community.is_member && !community._removed) {
-			await $leaveCommunity(community);
+			if (shouldConfirm) {
+				const result = await ModalConfirm.show(
+					Translate.$gettext(`Are you sure you want to leave this community?`),
+					Translate.$gettext(`Leave community?`)
+				);
+
+				if (!result) {
+					return;
+				}
+			}
+
+			await leaveCommunity(community, location);
 		}
 
-		if (this.grid) {
-			await this.grid.leaveCommunity(community);
-		}
-
+		this.grid?.leaveCommunity(community);
 		this._leaveCommunity(community);
 	}
 
@@ -536,10 +579,10 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	@VuexMutation
 	private _setGrid(grid: GridClient | null) {
 		if (grid !== null) {
-			for (const resolver of gridBootstrapResolvers) {
+			for (const resolver of _gridBootstrapResolvers) {
 				resolver(grid);
 			}
-			gridBootstrapResolvers = [];
+			_gridBootstrapResolvers = [];
 		}
 
 		this.grid = grid;

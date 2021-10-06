@@ -12,7 +12,7 @@ import { User } from '../../../../_common/user/user.model';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
 import * as _LocalDbGameMod from '../../client/local-db/game/game.model';
 import AppGameCompatIcons from '../../game/compat-icons/compat-icons.vue';
-import AppSearchTS from '../search';
+import AppSearchTS, { SearchKeydownSpy } from '../search';
 import { Search } from '../search-service';
 import AppSearch from '../search.vue';
 
@@ -33,8 +33,7 @@ const KEYCODE_ENTER = 13;
 	},
 })
 export default class AppSearchAutocomplete extends Vue {
-	@State
-	app!: AppStore;
+	@State app!: AppStore;
 
 	selected = 0;
 	games: Game[] = [];
@@ -49,7 +48,7 @@ export default class AppSearchAutocomplete extends Vue {
 		debounce((query: string) => this.sendSearch(query), 500)
 	);
 
-	_keydownSpy?: Function;
+	_keydownSpy?: SearchKeydownSpy;
 
 	get isHidden() {
 		return this.search!.isEmpty();

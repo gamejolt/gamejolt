@@ -7,22 +7,18 @@ import {
 	SettingVideoPlayerMuted,
 	SettingVideoPlayerVolume,
 } from '../../settings/settings.service';
+import { ScrubberStage } from '../../slider/slider';
+import { VideoSourceArray } from '../video';
 
 export type VideoPlayerControllerContext = 'feed' | 'page' | 'gif' | null;
 export type VideoPlayerState = 'paused' | 'playing';
-export type ScrubberStage = 'start' | 'scrub' | 'end';
-
-export type VideoPlayerSource = {
-	src: string;
-	type: string;
-};
 
 export function getVideoPlayerFromSources(
 	item: { mp4?: string; webm?: string },
 	context: VideoPlayerControllerContext = null,
 	poster?: string
 ) {
-	const sources: VideoPlayerSource[] = [];
+	const sources: VideoSourceArray = [];
 	if (item.mp4) {
 		sources.push({ src: item.mp4, type: 'video/mp4' });
 	}
@@ -34,6 +30,7 @@ export function getVideoPlayerFromSources(
 }
 
 export class VideoPlayerController {
+	muted: boolean;
 	volume: number;
 	duration = 0;
 	state: VideoPlayerState = 'paused';
@@ -51,8 +48,25 @@ export class VideoPlayerController {
 	queuedFullScreenChange: null | boolean = null;
 	queuedPlaybackChange: null | VideoPlayerState = null;
 
+	/**
+	 * iOS Safari doesn't allow us to:
+	 * - Directly change the volume of an HTMLVideoElement
+	 * - Request to make elements fullscreen in a normal way.
+	 *
+	 * If we're not able to go fullscreen our preferred way, we should be
+	 * changing the way our controls work slightly to support both muting
+	 * through external methods and going fullscreen with their controls.
+	 */
+	get altControlsBehavior() {
+		if (GJ_IS_SSR) {
+			return false;
+		}
+
+		return !document.fullscreenEnabled;
+	}
+
 	constructor(
-		public sources: VideoPlayerSource[],
+		public sources: VideoSourceArray,
 		public context: VideoPlayerControllerContext,
 		public poster?: string
 	) {
@@ -80,6 +94,7 @@ export class VideoPlayerController {
 				this.queuedPlaybackChange = 'paused';
 				break;
 		}
+		this.muted = this.volume === 0;
 		this.state = this.queuedPlaybackChange;
 	}
 }
@@ -164,7 +179,11 @@ export function scrubVideoVolume(
 }
 
 export function setVideoMuted(player: VideoPlayerController, mute: boolean) {
-	setVideoVolume(player, mute ? 0 : getVolumeSetting(player));
+	if (player.altControlsBehavior) {
+		player.muted = mute;
+	} else {
+		setVideoVolume(player, mute ? 0 : getVolumeSetting(player));
+	}
 
 	if (player.context === 'feed') {
 		SettingVideoPlayerFeedMuted.set(mute);

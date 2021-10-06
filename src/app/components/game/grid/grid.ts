@@ -56,8 +56,7 @@ export default class AppGameGrid extends Vue {
 			return games;
 		}
 
-		let rowSize = this.rowSize;
-		let chunkSize = Math.max(1, Math.floor(games.length / rowSize)) * rowSize;
+		let chunkSize = Math.max(1, Math.floor(games.length / this.rowSize)) * this.rowSize;
 
 		// Subtract one for the ad slot.
 		if (Screen.isDesktop && this.shouldShowAds) {
@@ -85,20 +84,12 @@ export default class AppGameGrid extends Vue {
 		}
 
 		const numGames = this.processedGames.length;
-		const rowSize = this.rowSize;
-		const remainder = numGames % rowSize;
 
 		index = index + 1;
 		if (Screen.isDesktop) {
-			// Only show a trailing ad if there's more than 20 games shown in
-			// the grid.
-			if (numGames <= 20) {
-				return false;
-			}
-
-			// Show an add if we're in the last row of games. Since it's desktop
-			// display, this will pull it to the right of the row.
-			if (numGames - index === remainder) {
+			// Show every X games. This index will set it to be the the third
+			// placement in the row which looks pretty good.
+			if (index % 13 === 0) {
 				return true;
 			}
 		} else if (Screen.isSm) {

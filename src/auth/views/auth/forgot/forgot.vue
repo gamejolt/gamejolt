@@ -1,11 +1,11 @@
+<script lang="ts" src="./forgot"></script>
+
 <template>
 	<div>
 		<h2 class="section-header anim-fade-in-enlarge">
-			<translate>auth.forgot.heading</translate>
+			<translate>Trouble logging in?</translate>
 		</h2>
 
-		<form-retrieve-login @submit="onSubmitted"></form-retrieve-login>
+		<form-retrieve-login @submit="onSubmitted" />
 	</div>
 </template>
-
-<script lang="ts" src="./forgot"></script>

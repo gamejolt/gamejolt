@@ -2,7 +2,6 @@ import { Component, InjectReactive } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../_common/api/api.service';
 import { BlockModal } from '../../../_common/block/modal/modal.service';
-import { Clipboard } from '../../../_common/clipboard/clipboard-service';
 import { CommentModal } from '../../../_common/comment/modal/modal.service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { number } from '../../../_common/filters/number';
@@ -11,6 +10,7 @@ import { ReportModal } from '../../../_common/report/modal/modal.service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { WithRouteStore } from '../../../_common/route/route-store';
 import { Screen } from '../../../_common/screen/screen-service';
+import { copyShareLink } from '../../../_common/share/share.service';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { Translate } from '../../../_common/translate/translate.service';
@@ -18,7 +18,8 @@ import AppUserFollowWidget from '../../../_common/user/follow/widget.vue';
 import { UserFriendship } from '../../../_common/user/friendship/friendship.model';
 import AppUserAvatar from '../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../_common/user/verified-tick/verified-tick.vue';
-import { ChatClient, ChatKey, isUserOnline } from '../../components/chat/client';
+import { ChatStore, ChatStoreKey } from '../../components/chat/chat-store';
+import { isUserOnline } from '../../components/chat/client';
 import { IntentService } from '../../components/intent/intent.service';
 import AppPageHeaderControls from '../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../components/page-header/page-header.vue';
@@ -85,16 +86,13 @@ const ProfileThemeKey = 'profile';
 	},
 })
 export default class RouteProfile extends BaseRouteComponent {
-	@InjectReactive(ChatKey) chat?: ChatClient;
+	@InjectReactive(ChatStoreKey) chatStore!: ChatStore;
 
 	@State
 	app!: Store['app'];
 
 	@RouteStoreModule.State
 	user!: RouteStore['user'];
-
-	@RouteStoreModule.State
-	videosCount!: RouteStore['videosCount'];
 
 	@RouteStoreModule.State
 	trophyCount!: RouteStore['trophyCount'];
@@ -114,6 +112,10 @@ export default class RouteProfile extends BaseRouteComponent {
 	readonly UserFriendship = UserFriendship;
 	readonly Environment = Environment;
 	readonly Screen = Screen;
+
+	get chat() {
+		return this.chatStore.chat;
+	}
 
 	/**
 	 * The cover height changes when we switch to not showing the full cover, so
@@ -194,7 +196,8 @@ export default class RouteProfile extends BaseRouteComponent {
 		if (!this.user) {
 			return;
 		}
-		Clipboard.copy(Environment.baseUrl + this.user.url);
+		const url = Environment.baseUrl + this.user.url;
+		copyShareLink(url, 'user');
 	}
 
 	report() {

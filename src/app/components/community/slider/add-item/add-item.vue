@@ -5,8 +5,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '../common'
-@require '~common/jolticons/jolticons'
+@import '../common'
+@import '~common/jolticons/jolticons'
 
 .-item
 	position: relative
@@ -19,7 +19,7 @@
 		vertical-align: top
 
 	>>> .jolticon
-		@extend .jolticon-3x
+		@extend .jolticon-2x
 
 	&:not(.-disabled)
 		// Undoes pressy()

@@ -8,32 +8,36 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import { SettingChatGroupShowMembers } from '../../../../_common/settings/settings.service';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
 import { Store } from '../../../store/index';
-import { ChatClient, ChatKey, leaveChatRoom } from '../client';
+import { ChatStore, ChatStoreKey } from '../chat-store';
+import { leaveChatRoom } from '../client';
 import { ChatInviteModal } from '../invite-modal/invite-modal.service';
+import AppChatMemberList from '../member-list/member-list.vue';
 import { ChatMessage } from '../message';
 import { ChatRoom, getChatRoomTitle } from '../room';
-import { ChatRoomDetailsModal } from '../room-details-modal/room-details-modal.service';
-import AppChatUserList from '../user-list/user-list.vue';
 import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vue';
+import AppChatWindowMenu from './menu/menu.vue';
 import AppChatWindowOutput from './output/output.vue';
 import AppChatWindowSend from './send/send.vue';
 
 @Component({
 	components: {
 		AppScrollScroller,
-		AppChatUserList,
 		AppChatUserOnlineStatus,
 		AppChatWindowSend,
 		AppChatWindowOutput,
 		AppFadeCollapse,
+		AppChatWindowMenu,
+		AppChatMemberList,
+		AppUserVerifiedTick,
 	},
 	directives: {
 		AppTooltip,
 	},
 })
 export default class AppChatWindow extends Vue {
-	@InjectReactive(ChatKey) chat!: ChatClient;
+	@InjectReactive(ChatStoreKey) chatStore!: ChatStore;
 
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 	@Prop(propRequired(Array)) messages!: ChatMessage[];
@@ -47,10 +51,8 @@ export default class AppChatWindow extends Vue {
 
 	readonly Screen = Screen;
 
-	get isOwner() {
-		return (
-			this.room && this.chat.currentUser && this.room.owner_id === this.chat.currentUser.id
-		);
+	get chat() {
+		return this.chatStore.chat!;
 	}
 
 	get users() {
@@ -100,14 +102,6 @@ export default class AppChatWindow extends Vue {
 		} else {
 			this.toggleLeftPane();
 		}
-	}
-
-	editTitle() {
-		if (!this.isOwner) {
-			return;
-		}
-
-		ChatRoomDetailsModal.show(this.room);
 	}
 
 	toggleUsers() {

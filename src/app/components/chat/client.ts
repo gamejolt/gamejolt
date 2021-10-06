@@ -2,6 +2,7 @@ import Axios from 'axios';
 import { Channel, Socket } from 'phoenix';
 import Vue from 'vue';
 import { arrayRemove, numberSort } from '../../../utils/array';
+import { CancelToken } from '../../../utils/cancel-token';
 import { sleep } from '../../../utils/utils';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
@@ -13,8 +14,6 @@ import { ChatRoomChannel } from './room-channel';
 import { ChatUser } from './user';
 import { ChatUserChannel } from './user-channel';
 import { ChatUserCollection } from './user-collection';
-
-export const ChatKey = Symbol('Chat');
 
 export interface ChatNewMessageEvent {
 	message: ChatMessage;
@@ -28,13 +27,11 @@ export interface ChatNewMessageEvent {
  * @param requestGetter Function that generates a promise that represents the
  * request
  */
-async function pollRequest(
-	chat: ChatClient,
+async function pollRequest<T>(
 	context: string,
-	requestGetter: () => Promise<any>
-): Promise<any> {
-	const chatId = chat.id;
-
+	cancelToken: CancelToken,
+	requestGetter: () => Promise<T>
+): Promise<T | null> {
 	let result = null;
 	let finished = false;
 	let delay = 0;
@@ -43,7 +40,7 @@ async function pollRequest(
 
 	while (!finished) {
 		// Abort if our chat server changed.
-		if (chat.id !== chatId) {
+		if (cancelToken.isCanceled) {
 			return null;
 		}
 
@@ -52,9 +49,11 @@ async function pollRequest(
 			result = await promise;
 			finished = true;
 		} catch (e) {
-			const sleepMs = Math.min(30000, Math.random() * delay * 1000 + 1000);
-			console.error(`[Chat] Failed request [${context}]. Reattempt in ${sleepMs} ms.`);
-			await sleep(sleepMs);
+			if (delay < 30_000) {
+				delay += 1_000 + 1_000 * Math.random();
+			}
+			console.error(`[Chat] Failed request [${context}]. Reattempt in ${delay} ms.`);
+			await sleep(delay);
 		}
 
 		delay++;
@@ -64,10 +63,8 @@ async function pollRequest(
 }
 
 export class ChatClient {
-	static nextId = 1;
-
-	id = -1;
 	connected = false;
+	isGuest = false;
 	socket: Socket | null = null;
 	userChannel: ChatUserChannel | null = null;
 
@@ -98,6 +95,13 @@ export class ChatClient {
 	messageEditing: null | ChatMessage = null;
 
 	/**
+	 * If set, will connect as a guest, using this token.
+	 */
+	guestToken: string | null = null;
+
+	cancelToken: CancelToken = null as any;
+
+	/**
 	 * The session room is stored within their local session. It's their last active room. We reopen
 	 * it when entering the chat again.
 	 */
@@ -116,20 +120,32 @@ export class ChatClient {
 
 	get roomNotificationsCount() {
 		let count = 0;
-		for (const val of Object.values(this.notifications)) {
-			count += val || 0;
+
+		for (const roomId in this.notifications) {
+			const channel = this.roomChannels[roomId];
+
+			if (
+				// Only count for non-instanced channels.
+				(channel === undefined || !channel.instanced) &&
+				Object.prototype.hasOwnProperty.call(this.notifications, roomId)
+			) {
+				const roomCount = this.notifications[roomId];
+				count += roomCount || 0;
+			}
 		}
+
 		return count;
 	}
 
 	constructor() {
+		this.cancelToken = new CancelToken();
+
 		reset(this);
 		connect(this);
 	}
 }
 
 function reset(chat: ChatClient) {
-	chat.id = -1;
 	chat.connected = false;
 	chat.currentUser = null;
 	chat.friendsList = new ChatUserCollection(ChatUserCollection.TYPE_FRIEND);
@@ -146,6 +162,28 @@ function reset(chat: ChatClient) {
 	chat.isFocused = true;
 
 	chat.messageQueue = [];
+
+	chat.cancelToken.cancel();
+	chat.cancelToken = new CancelToken();
+}
+
+export async function setGuestChatToken(chat: ChatClient, guestToken: string) {
+	const tokenChanged = chat.guestToken !== guestToken;
+	chat.guestToken = guestToken;
+
+	if (!chat.isGuest || tokenChanged) {
+		chat.isGuest = true;
+		reconnect(chat);
+	}
+}
+
+export async function unsetGuestChatToken(chat: ChatClient) {
+	chat.guestToken = null;
+
+	if (chat.isGuest) {
+		chat.isGuest = false;
+		reconnect(chat);
+	}
 }
 
 function reconnect(chat: ChatClient) {
@@ -154,37 +192,65 @@ function reconnect(chat: ChatClient) {
 }
 
 async function connect(chat: ChatClient) {
-	const chatId = ChatClient.nextId++;
-	chat.id = chatId;
+	const cancelToken = chat.cancelToken;
 
-	const frontend = await getCookie('frontend');
 	const user = store.state.app.user;
+	if ((!chat.isGuest && !user) || (chat.isGuest && !!user)) {
+		return;
+	}
+
+	const authToken = chat.isGuest ? chat.guestToken : await getCookie('frontend');
+	if (cancelToken.isCanceled) {
+		console.log('[Chat] Aborted connection (1)');
+		return;
+	}
+
 	const timedOut = store.state.app.isUserTimedOut;
 
-	if (user === null || frontend === undefined || timedOut) {
+	if (!authToken || timedOut) {
 		// Not properly logged in.
 		return;
 	}
 
 	console.log('[Chat] Connecting...');
 
-	const [hostResult, tokenResult] = await pollRequest(chat, 'Auth to server', () => {
-		return Promise.all([
-			Axios.get(`${Environment.chat}/host`, { ignoreLoadingBar: true, timeout: 3000 }),
-			Axios.post(
-				`${Environment.chat}/token`,
-				{ frontend },
-				{ ignoreLoadingBar: true, timeout: 3000 }
-			),
-		]);
+	const results = await pollRequest('Auth to server', cancelToken, async () => {
+		// Do the host check first. This request will get rate limited and only
+		// let a certain number through, which will cause the second one to not
+		// get processed.
+		const hostResult = await Axios.get(`${Environment.chat}/host`, {
+			ignoreLoadingBar: true,
+			timeout: 3000,
+		});
+
+		if (cancelToken.isCanceled) {
+			return null;
+		}
+
+		const params =
+			user && !chat.isGuest
+				? { auth_token: authToken, user_id: user.id }
+				: { auth_token: authToken };
+
+		const tokenResult = await Axios.post(`${Environment.chat}/token`, params, {
+			ignoreLoadingBar: true,
+			timeout: 3000,
+		});
+
+		return { host: hostResult, token: tokenResult };
 	});
 
-	if (chatId !== chat.id) {
+	if (cancelToken.isCanceled) {
+		console.log('[Chat] Aborted connection (2)');
 		return;
 	}
 
-	const host = `${hostResult.data}`;
-	const token = tokenResult.data.token;
+	if (!results) {
+		return;
+	}
+
+	const host = `${results.host.data}`;
+	const token = results.token.data.token;
 
 	console.log('[Chat] Server selected:', host);
 
@@ -204,26 +270,38 @@ async function connect(chat: ChatClient) {
 	}
 
 	chat.socket.onOpen(() => {
+		if (cancelToken.isCanceled) {
+			return;
+		}
+
 		chat.connected = true;
 		setChatRoom(chat, undefined);
 	});
 
 	chat.socket.onError((e: any) => {
+		if (cancelToken.isCanceled) {
+			return;
+		}
+
 		console.warn('[Chat] Got error from socket');
 		console.warn(e);
 		reconnect(chat);
 	});
 
 	chat.socket.onClose(() => {
+		if (cancelToken.isCanceled) {
+			return;
+		}
+
 		console.warn('[Chat] Socket closed unexpectedly');
 		reconnect(chat);
 	});
 
 	await pollRequest(
-		chat,
 		'Connect to socket',
+		cancelToken,
 		() =>
-			new Promise(resolve => {
+			new Promise<void>(resolve => {
 				if (chat.socket !== null) {
 					chat.socket.connect();
 				}
@@ -231,18 +309,21 @@ async function connect(chat: ChatClient) {
 			})
 	);
 
-	if (chatId !== chat.id) {
+	if (cancelToken.isCanceled) {
+		console.log('[Chat] Aborted connection (3)');
 		return;
 	}
 
-	joinUserChannel(chat, user.id);
+	if (user) {
+		joinUserChannel(chat, user.id);
+	}
 }
 
 export function destroy(chat: ChatClient) {
-	console.log('[Chat] Destroying client');
-
-	if (!chat.connected) {
-		return;
+	if (chat.connected) {
+		console.log('[Chat] Destroying client...');
+	} else {
+		console.warn('[Chat] Destroying client (before we got fully connected)');
 	}
 
 	reset(chat);
@@ -266,18 +347,24 @@ export function destroy(chat: ChatClient) {
 }
 
 async function joinUserChannel(chat: ChatClient, userId: number) {
+	const cancelToken = chat.cancelToken;
+
 	const channel = new ChatUserChannel(userId, chat);
 	const request = `Join user channel ${userId}`;
 
 	await pollRequest(
-		chat,
 		request,
+		cancelToken,
 		() =>
-			new Promise((resolve, reject) => {
+			new Promise<void>((resolve, reject) => {
 				channel
 					.join()
 					.receive('error', reject)
 					.receive('ok', response => {
+						if (cancelToken.isCanceled) {
+							return;
+						}
+
 						const currentUser = new ChatUser(response.user);
 						const friendsList = new ChatUserCollection(
 							ChatUserCollection.TYPE_FRIEND,
@@ -297,7 +384,35 @@ async function joinUserChannel(chat: ChatClient, userId: number) {
 	);
 }
 
+export async function joinInstancedRoomChannel(chat: ChatClient, roomId: number) {
+	const cancelToken = chat.cancelToken;
+	const channel = new ChatRoomChannel(roomId, chat);
+	channel.instanced = true;
+
+	await new Promise<void>((resolve, reject) => {
+		channel
+			.join()
+			.receive('error', reject)
+			.receive('ok', response => {
+				if (cancelToken.isCanceled) {
+					return;
+				}
+
+				chat.roomChannels[roomId] = channel;
+				channel.room = new ChatRoom(response.room);
+				const messages = response.messages.map((msg: ChatMessage) => new ChatMessage(msg));
+				messages.reverse();
+				setupRoom(chat, channel.room, messages);
+				resolve();
+			});
+	});
+
+	return channel;
+}
+
 async function joinRoomChannel(chat: ChatClient, roomId: number) {
+	const cancelToken = chat.cancelToken;
+
 	const channel = new ChatRoomChannel(roomId, chat);
 
 	if (chat.pollingRoomId === roomId) {
@@ -308,10 +423,14 @@ async function joinRoomChannel(chat: ChatClient, roomId: number) {
 	chat.pollingRoomId = roomId;
 
 	await pollRequest(
-		chat,
 		`Join room channel: ${roomId}`,
+		cancelToken,
 		() =>
-			new Promise((resolve, reject) => {
+			new Promise<void>((resolve, reject) => {
+				if (cancelToken.isCanceled) {
+					return;
+				}
+
 				// If the client started polling a different room, stop polling this one.
 				if (chat.pollingRoomId !== roomId) {
 					console.log('[Chat] Stop joining room', roomId);
@@ -322,6 +441,10 @@ async function joinRoomChannel(chat: ChatClient, roomId: number) {
 					.join()
 					.receive('error', reject)
 					.receive('ok', response => {
+						if (cancelToken.isCanceled) {
+							return;
+						}
+
 						chat.pollingRoomId = -1;
 						chat.roomChannels[roomId] = channel;
 						channel.room = new ChatRoom(response.room);
@@ -399,24 +522,33 @@ function leaveChannel(chat: ChatClient, channel: Channel) {
 	}
 }
 
-export function leaveChatRoom(chat: ChatClient) {
+export function leaveChatRoom(chat: ChatClient, room: ChatRoom | null = null) {
 	if (chat.messageEditing) {
 		setMessageEditing(chat, null);
 	}
 
-	if (!chat.room) {
+	if (room === null) {
+		room = chat.room;
+	}
+
+	if (!room) {
 		return;
 	}
 
-	const channel = chat.roomChannels[chat.room.id];
+	const channel = chat.roomChannels[room.id];
 	if (channel) {
-		delete chat.roomChannels[chat.room.id];
+		delete chat.roomChannels[room.id];
 		leaveChannel(chat, channel);
 		chat.pollingRoomId = -1;
 	}
 }
 
-export function queueChatMessage(chat: ChatClient, content: string, roomId: number) {
+export function queueChatMessage(
+	chat: ChatClient,
+	type: ChatMessageType,
+	content: string,
+	roomId: number
+) {
 	if (chat.currentUser === null) {
 		return;
 	}
@@ -424,10 +556,10 @@ export function queueChatMessage(chat: ChatClient, content: string, roomId: numb
 	const tempId = Math.floor(Math.random() * Date.now());
 	const message = new ChatMessage({
 		id: tempId,
-		type: ChatMessage.TypeNormal,
 		user_id: chat.currentUser.id,
 		user: chat.currentUser,
 		room_id: roomId,
+		type,
 		content,
 		logged_on: new Date(),
 		_isQueued: true,
@@ -485,20 +617,21 @@ export function setTimeSplit(chat: ChatClient, roomId: number, message: ChatMess
 function outputMessage(
 	chat: ChatClient,
 	roomId: number,
-	type: ChatMessageType,
 	message: ChatMessage,
 	isHistorical: boolean
 ) {
-	if (!chat.room || !isInChatRoom(chat, roomId)) {
+	const isInstanced = isRoomInstanced(chat, roomId);
+	if (!isInstanced && (!chat.room || !isInChatRoom(chat, roomId))) {
 		return;
 	}
 
-	message.type = type;
 	message.logged_on = new Date(message.logged_on);
 	setTimeSplit(chat, roomId, message);
 
-	if (!chat.room.isPrivateRoom && !isHistorical) {
-		newChatNotification(chat, roomId);
+	if (!isHistorical) {
+		if (isInstanced || (chat.room && !chat.room.isPrivateRoom)) {
+			newChatNotification(chat, roomId);
+		}
 	}
 
 	// Push it into the room's message list.
@@ -506,7 +639,7 @@ function outputMessage(
 }
 
 function setupRoom(chat: ChatClient, room: ChatRoom, messages: ChatMessage[]) {
-	if (!isInChatRoom(chat, room.id)) {
+	if (isRoomInstanced(chat, room.id) || !isInChatRoom(chat, room.id)) {
 		if (room.type === ChatRoom.ROOM_PM) {
 			// We need to rename the room to the username
 			const friend = chat.friendsList.getByRoom(room.id);
@@ -522,7 +655,10 @@ function setupRoom(chat: ChatClient, room: ChatRoom, messages: ChatMessage[]) {
 			new ChatUserCollection(ChatUserCollection.TYPE_ROOM, room.members || [], chat)
 		);
 
-		setChatRoom(chat, room);
+		// Only set the room as "the" active room when it's not instanced.
+		if (!isRoomInstanced(chat, room.id)) {
+			setChatRoom(chat, room);
+		}
 		processNewChatOutput(chat, room.id, messages, true);
 	}
 }
@@ -538,7 +674,7 @@ export function processNewChatOutput(
 	}
 
 	messages.forEach(message => {
-		outputMessage(chat, message.room_id, ChatMessage.TypeNormal, message, isHistorical);
+		outputMessage(chat, message.room_id, message, isHistorical);
 
 		if (!isHistorical) {
 			// Emit an event that we've sent out a new message.
@@ -555,6 +691,7 @@ export function processNewChatOutput(
 function sendChatMessage(chat: ChatClient, message: ChatMessage) {
 	message._error = false;
 	message._isProcessing = true;
+
 	chat.roomChannels[message.room_id]
 		.push('message', { content: message.content })
 		.receive('ok', data => {
@@ -573,6 +710,15 @@ function sendChatMessage(chat: ChatClient, message: ChatMessage) {
 			message._error = true;
 			message._isProcessing = false;
 		});
+}
+
+function isRoomInstanced(chat: ChatClient, roomId: number) {
+	const channel = chat.roomChannels[roomId];
+	if (!channel) {
+		return false;
+	}
+
+	return channel.instanced;
 }
 
 /** Set the message that is currently being edited, or 'null' to clear the state. */
@@ -645,6 +791,32 @@ export function isUserOnline(chat: ChatClient, userId: number): null | boolean {
 export function setChatFocused(chat: ChatClient, focused: boolean) {
 	chat.isFocused = focused;
 
+	if (chat.currentUser) {
+		// Update focused for current room.
+		if (chat.room) {
+			if (chat.isFocused) {
+				chat.roomChannels[chat.room.id].push('focus', { roomId: chat.room.id });
+			} else {
+				chat.roomChannels[chat.room.id].push('unfocus', { roomId: chat.room.id });
+			}
+		}
+
+		// Update focused for all instanced rooms.
+		for (const roomId in chat.roomChannels) {
+			if (Object.prototype.hasOwnProperty.call(chat.roomChannels, roomId)) {
+				const roomChannel = chat.roomChannels[roomId];
+				if (roomChannel.instanced) {
+					const channelRoomId = roomChannel.room.id;
+					if (chat.isFocused) {
+						chat.roomChannels[channelRoomId].push('focus', { roomId: channelRoomId });
+					} else {
+						chat.roomChannels[channelRoomId].push('unfocus', { roomId: channelRoomId });
+					}
+				}
+			}
+		}
+	}
+
 	if (chat.room && chat.currentUser) {
 		if (chat.isFocused) {
 			chat.roomChannels[chat.room.id].push('focus', { roomId: chat.room.id });
@@ -671,28 +843,18 @@ export async function leaveGroupRoom(chat: ChatClient, room: ChatRoom) {
 		throw new Error(`Can't leave non-group rooms.`);
 	}
 
-	chat.userChannel?.push('group_leave', { room_id: room.id }).receive('ok', _response => {
-		if (isInChatRoom(chat, room.id)) {
-			leaveChatRoom(chat);
-		}
+	chat.userChannel?.push('group_leave', { room_id: room.id });
+}
+
+export function removeMessage(chat: ChatClient, room: ChatRoom, msgId: number) {
+	chat.roomChannels[room.id].push('message_remove', { id: msgId });
+}
+
+export function editMessage(chat: ChatClient, room: ChatRoom, message: ChatMessage) {
+	chat.roomChannels[room.id].push('message_update', {
+		content: message.content,
+		id: message.id,
 	});
-}
-
-export function removeMessage(chat: ChatClient, msgId: number) {
-	const room = chat.room;
-	if (room) {
-		chat.roomChannels[room.id].push('message_remove', { id: msgId });
-	}
-}
-
-export function editMessage(chat: ChatClient, message: ChatMessage) {
-	const room = chat.room;
-	if (room) {
-		chat.roomChannels[room.id].push('message_update', {
-			content: message.content,
-			id: message.id,
-		});
-	}
 }
 
 export function editChatRoomTitle(chat: ChatClient, title: string) {
@@ -704,23 +866,23 @@ export function editChatRoomTitle(chat: ChatClient, title: string) {
 	}
 }
 
-export function startTyping(chat: ChatClient) {
-	const room = chat.room;
-	if (room) {
-		chat.roomChannels[room.id].push('start_typing', {});
-	}
+export function startTyping(chat: ChatClient, room: ChatRoom) {
+	chat.roomChannels[room.id].push('start_typing', {});
 }
 
-export function stopTyping(chat: ChatClient) {
-	const room = chat.room;
-	if (room) {
-		chat.roomChannels[room.id].push('stop_typing', {});
-	}
+export function stopTyping(chat: ChatClient, room: ChatRoom) {
+	chat.roomChannels[room.id].push('stop_typing', {});
 }
 
 export function isInChatRoom(chat: ChatClient, roomId?: number) {
+	// When no room id is passed in, just check if the user is in any room.
 	if (!roomId) {
 		return !!chat.room;
+	}
+
+	// Instanced rooms are always active, and the user is in all instanced rooms.
+	if (isRoomInstanced(chat, roomId)) {
+		return true;
 	}
 
 	return chat.room ? chat.room.id === roomId : false;
@@ -741,4 +903,94 @@ export function updateChatRoomLastMessageOn(chat: ChatClient, message: ChatMessa
 	if (groupRoom) {
 		groupRoom.last_message_on = time;
 	}
+}
+
+export function kickGroupMember(chat: ChatClient, room: ChatRoom, memberId: number) {
+	chat.roomChannels[room.id].push('kick_member', { member_id: memberId });
+}
+
+/**
+ * Called when something internal changes that would require us to resort our
+ * member arrays.
+ *
+ * For example, if a friend goes online/offline, we resort the room member lists
+ * to reflect that status.
+ */
+export function recollectChatRoomMembers(chat: ChatClient) {
+	Object.values(chat.roomMembers).forEach(i => i.recollect());
+}
+
+/**
+ * Attempts to get the role for a user in a room.
+ * This is only possible if the role is bootstrapped onto the input user,
+ * or if the user is currently in the room.
+ */
+export function tryGetRoomRole(chat: ChatClient, room: ChatRoom, user: ChatUser) {
+	if (room.owner_id === user.id) {
+		return 'owner';
+	}
+
+	// The room userCollection always has the most up to date role information.
+	const roomUser = chat.roomMembers[room.id].get(user);
+	if (roomUser && roomUser.role !== null) {
+		return roomUser.role;
+	}
+
+	// See if the role is set onto the room.
+	const roomRole = room.roles.find(i => i.user_id === user.id);
+	if (roomRole && roomRole.role) {
+		return roomRole.role;
+	}
+
+	// We try to fall back to the input role.
+	// This could be from a message from a user no longer in the room.
+	if (user.role !== null) {
+		return user.role;
+	}
+
+	// If no role could be found, just return user.
+	return 'user';
+}
+
+/**
+ * Returns whether `user` can moderate `otherUser` within the given `room`.
+ */
+export function userCanModerateOtherUser(
+	chat: ChatClient,
+	room: ChatRoom,
+	user: ChatUser,
+	otherUser: ChatUser
+) {
+	// Cannot moderate yourself.
+	if (user.id === otherUser.id) {
+		return false;
+	}
+
+	const userRole = tryGetRoomRole(chat, room, user);
+	const otherUserRole = tryGetRoomRole(chat, room, otherUser);
+
+	// Owners can always moderate.
+	if (userRole === 'owner') {
+		return true;
+	}
+
+	// Normal users cannot moderate.
+	if (userRole === null || userRole === 'user') {
+		return false;
+	}
+
+	// Mods can only moderate users.
+	if (otherUserRole !== 'user') {
+		return false;
+	}
+
+	return userRole === 'moderator';
+}
+
+export function promoteToModerator(chat: ChatClient, room: ChatRoom, memberId: number) {
+	chat.roomChannels[room.id].push('promote_moderator', { member_id: memberId });
+}
+
+export function demoteModerator(chat: ChatClient, room: ChatRoom, memberId: number) {
+	chat.roomChannels[room.id].push('demote_moderator', { member_id: memberId });
 }

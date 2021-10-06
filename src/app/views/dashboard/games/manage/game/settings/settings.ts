@@ -1,8 +1,12 @@
 import { Component } from 'vue-property-decorator';
+import { Api } from '../../../../../../../_common/api/api.service';
 import AppExpand from '../../../../../../../_common/expand/expand.vue';
 import { Game } from '../../../../../../../_common/game/game.model';
 import { Growls } from '../../../../../../../_common/growls/growls.service';
-import { BaseRouteComponent } from '../../../../../../../_common/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from '../../../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { AppState, AppStore } from '../../../../../../../_common/store/app-store';
 import FormGameSettings from '../../../../../../components/forms/game/settings/settings.vue';
@@ -14,6 +18,11 @@ import { RouteStore, RouteStoreModule } from '../../manage.store';
 		FormGameSettings,
 		AppExpand,
 	},
+})
+@RouteResolver({
+	deps: { params: ['id'] },
+	resolver: ({ route }) =>
+		Api.sendRequest(`/web/dash/developer/games/settings/view/${route.params.id}`),
 })
 export default class RouteDashGamesManageGameSettings extends BaseRouteComponent {
 	@AppState
@@ -37,6 +46,8 @@ export default class RouteDashGamesManageGameSettings extends BaseRouteComponent
 	@RouteStoreModule.Action
 	leaveProject!: RouteStore['leaveProject'];
 
+	hasCompetitionEntries = false;
+
 	get routeTitle() {
 		if (this.game) {
 			return this.$gettextInterpolate('Settings for %{ game }', {
@@ -56,6 +67,10 @@ export default class RouteDashGamesManageGameSettings extends BaseRouteComponent
 
 	get isCollaborator() {
 		return this.user!.id !== this.game.developer.id;
+	}
+
+	routeResolved($payload: any) {
+		this.hasCompetitionEntries = $payload.hasCompetitionEntries;
 	}
 
 	onSaved() {

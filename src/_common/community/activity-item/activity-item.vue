@@ -207,6 +207,99 @@
 						<em>Unlinked</em> a game from this community.
 					</span>
 
+					<span
+						v-else-if="
+							item.type === CommunityActivityItem.TYPE_COMPETITION_EDIT_SETTINGS
+						"
+						v-translate
+					>
+						<em>Edited</em> a jam in this community.
+					</span>
+					<span
+						v-else-if="item.type === CommunityActivityItem.TYPE_COMPETITION_EDIT_VOTING"
+						v-translate
+					>
+						<em>Edited</em> voting settings for a jam in this community.
+					</span>
+					<span
+						v-else-if="
+							item.type === CommunityActivityItem.TYPE_COMPETITION_VOTING_SET_ACTIVE
+						"
+						v-translate="{
+							action: getExtraData('is-active')
+								? $gettext(`Activated`)
+								: $gettext(`Deactivated`),
+						}"
+					>
+						<em>%{ action }</em> voting for a jam in this community.
+					</span>
+					<span
+						v-else-if="
+							item.type === CommunityActivityItem.TYPE_COMPETITION_ENTRY_GIVE_AWARD
+						"
+						v-translate="{ award: getExtraData('award-name') }"
+					>
+						<em>Awarded</em> the <i>%{ award }</i> award to an entry.
+					</span>
+					<span
+						v-else-if="
+							item.type === CommunityActivityItem.TYPE_COMPETITION_ENTRY_REMOVE
+						"
+						v-translate
+					>
+						<em>Hid</em> an entry from its jam.
+					</span>
+					<span
+						v-else-if="
+							item.type === CommunityActivityItem.TYPE_COMPETITION_ENTRY_UNREMOVE
+						"
+						v-translate
+					>
+						<em>Readmitted</em> an entry to its jam.
+					</span>
+					<span
+						v-else-if="item.type === CommunityActivityItem.TYPE_FIRESIDE_START"
+						v-translate
+					>
+						<em>Started</em> a Fireside in this community.
+					</span>
+					<span
+						v-else-if="item.type === CommunityActivityItem.TYPE_FIRESIDE_START_DRAFT"
+						v-translate
+					>
+						<em>Started</em> a Fireside in <em>draft</em> mode in this community.
+					</span>
+					<span
+						v-else-if="item.type === CommunityActivityItem.TYPE_FIRESIDE_PUBLISH"
+						v-translate
+					>
+						<em>Published</em> a Fireside in this community.
+					</span>
+					<span
+						v-else-if="item.type === CommunityActivityItem.TYPE_FIRESIDE_EXTINGUISH"
+						v-translate
+					>
+						<em>Extinguished</em> this community's Fireside.
+					</span>
+					<span
+						v-else-if="item.type === CommunityActivityItem.TYPE_FIRESIDE_FEATURE"
+						v-translate
+					>
+						<em>Featured</em> a Fireside.
+					</span>
+					<span
+						v-else-if="item.type === CommunityActivityItem.TYPE_FIRESIDE_UNFEATURE"
+						v-translate
+					>
+						<em>Unfeatured</em> a Fireside.
+					</span>
+					<span
+						v-else-if="item.type === CommunityActivityItem.TYPE_FIRESIDE_EJECT"
+						v-translate
+					>
+						<em>Ejected</em> a Fireside from this community.
+					</span>
+
 					<!-- Adds a row to display the given reason for an action.  -->
 					<template v-if="hasReason">
 						<br />

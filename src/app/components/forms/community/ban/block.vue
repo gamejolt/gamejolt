@@ -3,7 +3,8 @@
 <template>
 	<app-form name="communityBlockForm">
 		<app-form-group name="username">
-			<app-form-control
+			<app-form-control-prefixed-input
+				prefix="@"
 				type="text"
 				:rules="{
 					max: 100,
@@ -43,10 +44,14 @@
 			</div>
 			<app-form-control
 				type="text"
+				html-list-id="block-user-reasons-list"
 				:rules="{
 					max: 100,
 				}"
 			/>
+			<datalist id="block-user-reasons-list">
+				<option v-for="optionStr of otherOptions" :key="optionStr" :value="optionStr" />
+			</datalist>
 			<app-form-control-errors />
 		</app-form-group>
 

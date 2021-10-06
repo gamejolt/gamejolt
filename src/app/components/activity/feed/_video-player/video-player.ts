@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Emit, Inject, Prop, Watch } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
 import { ContentFocus } from '../../../../../_common/content-focus/content-focus.service';
 import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
 import AppLoading from '../../../../../_common/loading/loading.vue';
@@ -23,8 +22,10 @@ import {
 	trackVideoPlayerEvent,
 	VideoPlayerController,
 } from '../../../../../_common/video/player/controller';
+import { createDenseReadableTimestamp } from '../../../../../_common/video/player/player';
 import { VideoSourceArray } from '../../../../../_common/video/video';
 import AppVideo from '../../../../../_common/video/video.vue';
+import { AppVideoPlayerShakaLazy } from '../../../lazy';
 import { ActivityFeedItem } from '../item-service';
 import { InviewConfigFocused } from '../item/item';
 import { ActivityFeedKey, ActivityFeedView } from '../view';
@@ -44,12 +45,19 @@ const LoadDelay = 300;
 		AppMediaItemBackdrop,
 		AppLoading,
 		AppVideo,
+		AppVideoPlayerShakaLazy,
 	},
 })
 export default class AppActivityFeedVideoPlayer extends Vue {
-	@Prop(propRequired(ActivityFeedItem)) feedItem!: ActivityFeedItem;
-	@Prop(propRequired(MediaItem)) mediaItem!: MediaItem;
-	@Prop(propRequired(Array)) videoSources!: VideoSourceArray;
+	@Prop({ type: ActivityFeedItem, required: true })
+	feedItem!: ActivityFeedItem;
+
+	@Prop({ type: MediaItem, required: true })
+	mediaItem!: MediaItem;
+
+	@Prop({ type: Array, required: true })
+	manifests!: VideoSourceArray;
+
 	@Inject(ActivityFeedKey) feed!: ActivityFeedView;
 
 	autoplay = SettingVideoPlayerFeedAutoplay.get();
@@ -109,15 +117,23 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 		return this.shouldshowGeneralControls;
 	}
 
+	get isMuted() {
+		if (!this.player) {
+			return false;
+		}
+		return this.player.volume === 0 || this.player.muted;
+	}
+
 	get shouldShowMuteControl() {
-		return this.shouldshowGeneralControls || this.player?.volume === 0;
+		return this.shouldshowGeneralControls || this.isMuted;
 	}
 
 	get remainingTime() {
 		if (!this.player) {
 			return null;
 		}
-		return Math.ceil((this.player.duration - this.player.currentTime) / 1000) + 's';
+
+		return createDenseReadableTimestamp(this.player.duration - this.player.currentTime);
 	}
 
 	get currentTime() {
@@ -179,14 +195,12 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 
 		scrubVideoVolume(
 			this.player,
-			this.player.volume ? 0 : SettingVideoPlayerVolume.get(),
+			!this.isMuted ? 0 : Math.max(0.25, SettingVideoPlayerVolume.get()),
 			'end'
 		);
-		trackVideoPlayerEvent(
-			this.player,
-			!this.player.volume ? 'mute' : 'unmute',
-			'click-control'
-		);
+		this.player.muted = this.player.volume === 0;
+
+		trackVideoPlayerEvent(this.player, this.isMuted ? 'mute' : 'unmute', 'click-control');
 	}
 
 	mounted() {
@@ -239,7 +253,7 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	@Watch('shouldLoadVideo')
 	onShouldLoadVideoChange() {
 		if (this.shouldLoadVideo) {
-			this.player = new VideoPlayerController(this.videoSources, 'feed');
+			this.player = new VideoPlayerController(this.manifests, 'feed');
 			this.autoplay = SettingVideoPlayerFeedAutoplay.get();
 		} else {
 			this.player = null;

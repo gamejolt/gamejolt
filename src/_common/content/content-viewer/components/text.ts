@@ -25,7 +25,16 @@ export class AppContentViewerText extends Vue {
 	}
 
 	get text() {
-		return this.data.text;
+		const text = this.data.text;
+
+		if (text && text?.length > 64 && this.isLink) {
+			const rules = this.owner.getContentRules();
+			if (rules.truncateLinks) {
+				return text.substr(0, 64) + '…';
+			}
+		}
+
+		return text;
 	}
 
 	get isBold() {

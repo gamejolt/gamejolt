@@ -1,5 +1,7 @@
+<script lang="ts" src="./description"></script>
+
 <template>
-	<app-form name="descriptionForm">
+	<app-form name="communityDescriptionForm">
 		<app-form-group name="description_content" hide-label>
 			<app-form-control-content
 				:placeholder="$gettext(`Write your community description here...`)"
@@ -17,10 +19,8 @@
 			<app-form-control-errors />
 		</app-form-group>
 
-		<app-form-button>
+		<app-form-button show-when-valid>
 			<translate>Save Description</translate>
 		</app-form-button>
 	</app-form>
 </template>
-
-<script lang="ts" src="./description"></script>

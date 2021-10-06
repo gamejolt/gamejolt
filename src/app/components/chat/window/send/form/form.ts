@@ -2,7 +2,6 @@ import Component from 'vue-class-component';
 import { Emit, InjectReactive, Prop, Watch } from 'vue-property-decorator';
 import { isMac } from '../../../../../../utils/utils';
 import { propRequired } from '../../../../../../utils/vue';
-import { ContentContext } from '../../../../../../_common/content/content-context';
 import { ContentDocument } from '../../../../../../_common/content/content-document';
 import { ContentRules } from '../../../../../../_common/content/content-editor/content-rules';
 import {
@@ -14,12 +13,11 @@ import AppFormControlContent from '../../../../../../_common/form-vue/control/co
 import AppForm from '../../../../../../_common/form-vue/form';
 import { BaseForm } from '../../../../../../_common/form-vue/form.service';
 import { FormValidatorContentNoMediaUpload } from '../../../../../../_common/form-vue/validators/content_no_media_upload';
-import { AppObserveDimensions } from '../../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppShortkey from '../../../../../../_common/shortkey/shortkey.vue';
-import { EventBus } from '../../../../../../_common/system/event/event-bus.service';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
-import { ChatClient, ChatKey, setMessageEditing, startTyping, stopTyping } from '../../../client';
+import { ChatStore, ChatStoreKey } from '../../../chat-store';
+import { setMessageEditing, startTyping, stopTyping, tryGetRoomRole } from '../../../client';
 import { ChatMessage, CHAT_MESSAGE_MAX_CONTENT_LENGTH } from '../../../message';
 import { ChatRoom } from '../../../room';
 
@@ -37,26 +35,23 @@ export type FormModel = {
 	},
 	directives: {
 		AppTooltip,
-		AppObserveDimensions,
 	},
 })
 export default class AppChatWindowSendForm extends BaseForm<FormModel> {
-	@InjectReactive(ChatKey) chat!: ChatClient;
+	@InjectReactive(ChatStoreKey) chatStore!: ChatStore;
 	@Prop(propRequired(Boolean)) singleLineMode!: boolean;
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 
 	readonly Screen = Screen;
-	readonly contentContext: ContentContext = 'chat-message';
 	// Allow images to be up to 100px in height so that image and a chat message fit into the editor without scrolling.
 	readonly displayRules = new ContentRules({ maxMediaWidth: 125, maxMediaHeight: 100 });
 
 	isEditorFocused = false;
-
 	// Don't show "Do you want to save" when dismissing the form.
 	warnOnDiscard = false;
-
 	typing = false;
 
+	private nextMessageTimeout: NodeJS.Timer | null = null;
 	private escapeCallback?: EscapeStackCallback;
 	private typingTimeout!: NodeJS.Timer;
 
@@ -65,26 +60,25 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		editor: AppFormControlContentTS;
 	};
 
-	@Emit('submit')
-	emitSubmit(_content: FormModel) {}
+	@Emit('submit') emitSubmit(_content: FormModel) {}
+	@Emit('cancel') emitCancel() {}
+	@Emit('single-line-mode-change') emitSingleLineModeChange(_singleLine: boolean) {}
 
-	@Emit('cancel')
-	emitCancel() {}
-
-	@Emit('single-line-mode-change')
-	emitSingleLineModeChange(_singleLine: boolean) {}
+	get chat() {
+		return this.chatStore.chat!;
+	}
 
 	get contentEditorTempResourceContextData() {
-		if (this.chat && this.chat.room) {
-			return { roomId: this.chat.room.id };
+		if (this.chatStore.chat && this.room) {
+			return { roomId: this.room.id };
 		}
 	}
 
 	get placeholder() {
-		if (this.chat && this.chat.room) {
-			if (this.chat.room.isPmRoom && this.chat.room.user) {
+		if (this.chatStore.chat && this.room) {
+			if (this.room.isPmRoom && this.room.user) {
 				return this.$gettextInterpolate('Message @%{ username }', {
-					username: this.chat.room.user.username,
+					username: this.room.user.username,
 				});
 			}
 		}
@@ -93,18 +87,6 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 
 	get shouldShiftEditor() {
 		return Screen.isXs && this.isEditorFocused;
-	}
-
-	get typingDisplayNames() {
-		const usersOnline = this.chat.roomMembers[this.room.id];
-		if (!usersOnline || usersOnline.collection.length === 0) {
-			return [];
-		}
-
-		return usersOnline.collection
-			.filter(user => user.typing)
-			.filter(user => user.id !== this.chat.currentUser?.id)
-			.map(user => user.display_name);
 	}
 
 	get hasContent() {
@@ -129,7 +111,7 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	}
 
 	get isSendButtonDisabled() {
-		if (!this.valid || !this.hasContent) {
+		if (!this.valid || !this.hasContent || this.nextMessageTimeout !== null) {
 			return true;
 		}
 
@@ -142,6 +124,45 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 
 	get editorModelId() {
 		return this.formModel.id || null;
+	}
+
+	get typingText() {
+		const usersOnline = this.chat.roomMembers[this.room.id];
+		if (!usersOnline || usersOnline.collection.length === 0) {
+			return [];
+		}
+
+		const typingNames = usersOnline.collection
+			.filter(user => user.typing)
+			.filter(user => user.id !== this.chat.currentUser?.id)
+			.map(user => user.display_name);
+
+		const displayNamePlaceholderValues = {
+			user1: typingNames[0],
+			user2: typingNames[1],
+			user3: typingNames[2],
+		};
+
+		if (typingNames.length > 3) {
+			return this.$gettext(`Several people are typing...`);
+		} else if (typingNames.length === 3) {
+			return this.$gettextInterpolate(
+				`%{ user1 }, %{ user2 } and %{ user3 } are typing...`,
+				displayNamePlaceholderValues
+			);
+		} else if (typingNames.length === 2) {
+			return this.$gettextInterpolate(
+				`%{ user1 } and %{ user2 } are typing...`,
+				displayNamePlaceholderValues
+			);
+		} else if (typingNames.length === 1) {
+			return this.$gettextInterpolate(
+				`%{ user1 } is typing...`,
+				displayNamePlaceholderValues
+			);
+		}
+
+		return '';
 	}
 
 	@Watch('chat.messageEditing')
@@ -205,6 +226,9 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		if (this.hasFormErrors) {
 			return;
 		}
+		if (this.nextMessageTimeout !== null) {
+			return;
+		}
 
 		// Manually check for if media is uploading here.
 		// We don't want to put the rule directly on the form cause showing form errors
@@ -219,12 +243,39 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 
 		// Refocus editor after submitting message with enter.
 		this.$refs.editor.focus();
+
+		this.applyNextMessageTimeout();
+	}
+
+	private applyNextMessageTimeout() {
+		if (!this.room.isFiresideRoom) {
+			return;
+		}
+
+		// For fireside rooms, timeout the user from sending another message for 1.5s.
+		// Do not do this for the owner/mods.
+		if (this.chat.currentUser?.id === this.room.owner_id) {
+			return;
+		}
+		if (this.chat.currentUser) {
+			const userRole = tryGetRoomRole(this.chat, this.room, this.chat.currentUser);
+			if (userRole === 'owner' || userRole === 'moderator') {
+				return;
+			}
+		}
+
+		this.nextMessageTimeout = setTimeout(() => {
+			if (this.nextMessageTimeout) {
+				clearTimeout(this.nextMessageTimeout);
+				this.nextMessageTimeout = null;
+			}
+		}, 1500);
 	}
 
 	onChange(_value: string) {
 		if (!this.typing) {
 			this.typing = true;
-			startTyping(this.chat);
+			startTyping(this.chat, this.room);
 		} else {
 			clearTimeout(this.typingTimeout);
 		}
@@ -235,17 +286,8 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		this.emitSingleLineModeChange(false);
 	}
 
-	async onFocusEditor() {
-		const wasShifted = this.shouldShiftEditor;
-
+	onFocusEditor() {
 		this.isEditorFocused = true;
-
-		// Wait until the editor controls are visible.
-		await this.$nextTick();
-		if (!wasShifted && this.shouldShiftEditor) {
-			// We want to emit this event here too, to make sure we scroll down when the controls pop up on mobile.
-			this.onInputResize();
-		}
 	}
 
 	onBlurEditor() {
@@ -256,10 +298,6 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		if (!this.isEditorFocused) {
 			this.$refs.editor.focus();
 		}
-	}
-
-	onInputResize() {
-		EventBus.emit('Chat.inputResize');
 	}
 
 	onUpKeyPressed(event: KeyboardEvent) {
@@ -281,35 +319,6 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 
 			setMessageEditing(this.chat, lastMessage);
 		}
-	}
-
-	getTypingText() {
-		const displayNamePlaceholderValues = {
-			user1: this.typingDisplayNames[0],
-			user2: this.typingDisplayNames[1],
-			user3: this.typingDisplayNames[2],
-		};
-
-		if (this.typingDisplayNames.length > 3) {
-			return this.$gettext(`Several people are typing...`);
-		} else if (this.typingDisplayNames.length === 3) {
-			return this.$gettextInterpolate(
-				`%{ user1 }, %{ user2 } and %{ user3 } are typing...`,
-				displayNamePlaceholderValues
-			);
-		} else if (this.typingDisplayNames.length === 2) {
-			return this.$gettextInterpolate(
-				`%{ user1 } and %{ user2 } are typing...`,
-				displayNamePlaceholderValues
-			);
-		} else if (this.typingDisplayNames.length === 1) {
-			return this.$gettextInterpolate(
-				`%{ user1 } is typing...`,
-				displayNamePlaceholderValues
-			);
-		}
-
-		return '';
 	}
 
 	async cancelEditing() {
@@ -334,6 +343,6 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 
 	private disableTypingTimeout() {
 		this.typing = false;
-		stopTyping(this.chat);
+		stopTyping(this.chat, this.room);
 	}
 }

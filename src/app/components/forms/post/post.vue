@@ -23,16 +23,6 @@
 			>
 				<translate>Video</translate>
 			</app-button>
-
-			<app-button
-				trans
-				:primary="enabledSketchfab"
-				:solid="enabledSketchfab"
-				icon="sketchfab"
-				@click="enableSketchfab()"
-			>
-				Sketchfab
-			</app-button>
 		</div>
 		<div v-else class="well fill-offset full-bleed">
 			<!-- Images -->
@@ -62,44 +52,9 @@
 				:was-published="wasPublished"
 				@delete="onDisableVideoAttachment"
 				@video-change="onVideoChanged"
-				@video-url-change="onVideoUrlChanged"
 				@video-status-change="onUploadingVideoStatusChanged"
 				@video-provider-change="onVideoProviderChanged"
 			/>
-
-			<!-- Sketchfab -->
-			<fieldset v-else-if="enabledSketchfab">
-				<app-form-legend compact deletable @delete="disableAttachments()">
-					<translate>Embed Sketchfab model</translate>
-				</app-form-legend>
-
-				<app-form-group
-					v-app-focus-when="!wasPublished"
-					name="sketchfab_id"
-					hide-label
-					:label="$gettext(`Sketchfab Model URL`)"
-				>
-					<p class="help-block">
-						<translate>Enter your Sketchfab model's URL or ID. For example:</translate>
-						<br />
-						<code>
-							https://sketchfab.com/3d-models/your-model-name-ID
-						</code>
-					</p>
-
-					<app-form-control
-						type="text"
-						:rules="{
-							pattern: SKETCHFAB_FIELD_REGEX,
-						}"
-					/>
-					<app-form-control-errors />
-					<div v-if="hasValidSketchfabModelId">
-						<br />
-						<app-sketchfab-embed :sketchfab-id="sketchfabId" />
-					</div>
-				</app-form-group>
-			</fieldset>
 		</div>
 
 		<!-- Post title (short) -->
@@ -488,7 +443,7 @@
 		<template v-if="isLoaded">
 			<app-scroll-scroller v-if="shouldShowCommunities" class="-communities" horizontal thin>
 				<transition-group class="-communities-list" tag="div">
-					<app-form-post-community-pill-incomplete
+					<app-forms-community-pill-incomplete
 						v-if="incompleteDefaultCommunity"
 						key="incomplete"
 						class="-community-pill anim-fade-in-enlarge no-animate-leave"
@@ -497,7 +452,7 @@
 						@add="attachIncompleteCommunity"
 					/>
 
-					<app-form-post-community-pill
+					<app-forms-community-pill
 						v-for="{ community, channel } of attachedCommunities"
 						:key="community.id"
 						class="-community-pill anim-fade-in-enlarge no-animate-leave"
@@ -508,7 +463,7 @@
 					/>
 
 					<template v-if="!wasPublished && canAddCommunity">
-						<app-form-post-community-pill-add
+						<app-forms-community-pill-add
 							key="add"
 							v-app-scroll-when="scrollingKey"
 							class="-community-pill anim-fade-in-enlarge no-animate-leave"
@@ -530,6 +485,15 @@
 				<div class="-community-pill-placeholder" />
 			</div>
 		</template>
+
+		<div v-if="!wasPublished" class="-error-no-channel">
+			<div class="-caret" :class="{ '-hide': !hasChannelError }" />
+			<app-expand :when="hasChannelError">
+				<div class="-error -earmark alert alert-notice">
+					<translate> Choose a channel to post to. </translate>
+				</div>
+			</app-expand>
+		</div>
 
 		<!-- Author options -->
 		<template v-if="shouldShowAuthorOptions">
@@ -558,7 +522,7 @@
 						v-if="formModel.as_game_owner"
 						v-app-tooltip.touchable="
 							model.game.developer.display_name +
-								` (@${model.game.developer.username})`
+							` (@${model.game.developer.username})`
 						"
 						class="-author-avatar pull-right"
 					>
@@ -663,4 +627,187 @@
 	</app-form>
 </template>
 
-<style lang="stylus" src="./post.styl" scoped></style>
+<style lang="stylus" scoped>
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+@import '../community/_pill/variables'
+
+.form-group:last-child
+	margin-bottom: 10px
+
+.-attachment-controls
+	margin-bottom: $line-height-computed
+
+	@media $media-xs
+		white-space: nowrap
+		overflow-x: scroll
+		overflow-y: hidden
+
+.-upload-input
+	display: none
+
+.-lead-form-group
+	margin-bottom: 10px
+
+.-hp
+	display: flex
+	align-items: center
+	margin-top: 5px
+
+	&-label
+		theme-prop('color', 'fg-muted')
+		flex: none
+		margin-right: 10px
+		font-size: $font-size-small
+		font-weight: bold
+
+	&-bar
+		flex: auto
+
+		.progress
+			margin-bottom: 0
+
+	&-count
+		theme-prop('color', 'notice')
+		flex: none
+		margin-left: 10px
+		font-size: $font-size-small
+		font-weight: bold
+
+.-channels
+	margin-top: 10px
+
+.-channels
+.-error
+.-community-message
+	margin-bottom: 10px
+
+.-error-no-channel
+	position: relative
+
+	.alert
+		padding: 10px !important
+
+	.-caret
+		caret(color: var(--theme-notice), direction: 'up', size: 5px)
+		left: 15%
+		transition: opacity 200ms
+
+		&.-hide
+			opacity: 0
+
+.-poll-option
+	display: flex
+
+	.form-group
+		flex-grow: 1
+		margin-bottom: ($font-size-base / 2)
+
+	&-remove
+		width: 40px
+		line-height: $input-height-base
+		text-align: center
+
+.-poll-duration
+	.form-group
+		margin-bottom: 0
+
+.-linked-accounts
+	.form-group
+		margin-bottom: 0
+
+.-linked-account
+	display: flex
+	align-items: center
+	margin-top: 10px
+
+	&-icon
+		flex: none
+		margin-right: 10px
+
+	&-label
+		flex: auto
+		margin-right: 10px
+
+	&-toggle
+		flex: none
+
+.-communities
+	margin: 10px 0
+
+	&-list
+		white-space: nowrap
+		display: flex
+		align-items: center
+		margin-bottom: 4px
+
+		&-placeholder
+			margin: 10px 0 14px
+
+		.v-leave
+			display: none
+			position: absolute
+
+.-community-pill
+	flex-shrink: 0
+
+	&-placeholder
+		change-bg('bg-subtle')
+		rounded-corners()
+		width: 138px
+		height: $pill-height
+
+	// Need to apply to the button inside the pill add component too
+	&
+	>>> .button
+		height: 28px
+		margin-bottom: 0
+
+.-author-avatar
+	width: $input-height-base
+	margin-right: 8px
+
+@media $media-xs
+	.-controls
+		display: flex
+		flex-direction: column
+
+		&-attachments
+			display: flex
+			justify-content: center
+			margin-bottom: $line-height-computed
+			padding: 10px 0
+			border-top: $border-width-base solid var(--theme-bg-subtle)
+			border-bottom: $border-width-base solid var(--theme-bg-subtle)
+
+			> :not(:first-child)
+				margin-left: 10px
+
+		&-submit
+			display: flex
+
+			&-button
+				flex: 1 0
+				margin-right: 10px
+				margin-left: 10px
+
+				&:first-of-type
+					margin-left: 0
+
+				&:last-of-type
+					margin-right: 0
+
+@media $media-sm-up
+	.-controls
+		display: flex
+		flex-direction: row
+
+		&-attachments
+			flex: auto
+
+		&-submit
+			flex: none
+
+			&-button
+				display: inline-block
+</style>

@@ -1,3 +1,4 @@
+import { readableColor } from 'polished';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
@@ -14,19 +15,26 @@ import { Store } from '../../../../../store';
 	},
 })
 export default class AppOnboardingFollowsCommunityItem extends Vue {
-	@Prop(Community)
+	@Prop({ type: Community, required: true })
 	community!: Community;
 
-	@Action
-	joinCommunity!: Store['joinCommunity'];
+	@Action joinCommunity!: Store['joinCommunity'];
+	@Action leaveCommunity!: Store['leaveCommunity'];
 
-	@Action
-	leaveCommunity!: Store['leaveCommunity'];
+	readonly readableColor = readableColor;
 
 	get highlight() {
 		const highlight = this.community.theme && this.community.theme.highlight_;
 		if (highlight) {
 			return '#' + highlight;
+		}
+		return null;
+	}
+
+	get highlightFg() {
+		const highlightFg = this.community.theme && this.community.theme.highlightFg_;
+		if (highlightFg) {
+			return '#' + highlightFg;
 		}
 		return null;
 	}
@@ -46,9 +54,13 @@ export default class AppOnboardingFollowsCommunityItem extends Vue {
 		);
 
 		if (!this.community.is_member) {
-			this.joinCommunity(this.community);
+			this.joinCommunity({ community: this.community, location: 'onboarding' });
 		} else {
-			this.leaveCommunity(this.community);
+			this.leaveCommunity({
+				community: this.community,
+				location: 'onboarding',
+				shouldConfirm: false,
+			});
 		}
 	}
 }

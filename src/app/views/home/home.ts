@@ -2,14 +2,15 @@ import { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
 import { router } from '..';
 import { Api } from '../../../_common/api/api.service';
+import { Meta } from '../../../_common/meta/meta-service';
 import {
 	asyncRouteLoader,
 	BaseRouteComponent,
 	RouteResolver,
 } from '../../../_common/route/route-component';
 import { AppState, AppStore } from '../../../_common/store/app-store';
-import { routeDiscoverHome } from '../discover/home/home.route';
-import { routeHome } from './home.route';
+import { IntentService } from '../../components/intent/intent.service';
+import { HomeFeedService } from './home-feed.service';
 
 @Component({
 	name: 'RouteHome',
@@ -20,7 +21,15 @@ import { routeHome } from './home.route';
 })
 @RouteResolver({
 	lazy: true,
-	resolver: () => Api.sendRequest('/web/touch'),
+	deps: { query: IntentService.APPROVED_LOGIN_QUERY_PARAMS },
+	resolver: async ({ route }) => {
+		const intentRedirect = IntentService.checkApprovedLoginIntent(route);
+		if (intentRedirect) {
+			return intentRedirect;
+		}
+
+		return await Api.sendRequest('/web/touch');
+	},
 })
 export default class RouteHome extends BaseRouteComponent {
 	@AppState
@@ -29,11 +38,26 @@ export default class RouteHome extends BaseRouteComponent {
 	@AppState
 	userBootstrapped!: AppStore['userBootstrapped'];
 
+	routeCreated() {
+		Meta.setTitle(null);
+	}
+
 	routeResolved() {
 		// The route content, but not the path, changes depending on the user
 		// state - so we need to track the page view through a analyticsPath
 		// meta value that aligns with our route content.
-		this.$route.meta.analyticsPath = this.user ? routeHome.path : routeDiscoverHome.path;
+		let analyticsPath = '/discover';
+		if (this.user) {
+			if (this.$route.params?.tab === HomeFeedService.fypTab) {
+				analyticsPath = '/fyp';
+			} else if (this.$route.params?.tab === HomeFeedService.activityTab) {
+				analyticsPath = '/'; // For clarification purposes that "activity" => "/".
+			} else {
+				analyticsPath = '/';
+			}
+		}
+
+		this.$route.meta.analyticsPath = analyticsPath;
 	}
 
 	render(h: CreateElement) {

@@ -14,7 +14,8 @@ import {
 } from '../../../_common/sidebar/sidebar.store';
 import AppStickerLayer from '../../../_common/sticker/layer/layer.vue';
 import { BannerModule, BannerStore, Store } from '../../store/index';
-import { ChatClient, ChatKey, setChatFocused } from '../chat/client';
+import { ChatStore, ChatStoreKey } from '../chat/chat-store';
+import { setChatFocused } from '../chat/client';
 import AppShellBody from './body/body.vue';
 import AppShellCbar from './cbar/cbar.vue';
 import AppShellHotBottom from './hot-bottom/hot-bottom.vue';
@@ -44,62 +45,39 @@ if (GJ_IS_CLIENT) {
 	components,
 })
 export default class AppShell extends Vue {
-	@InjectReactive(ChatKey) chat!: ChatClient;
+	@InjectReactive(ChatStoreKey) chatStore!: ChatStore;
 	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
 
-	@State
-	app!: Store['app'];
+	@State app!: Store['app'];
+	@State isShellHidden!: Store['isShellHidden'];
+	@State hasTopBar!: Store['hasTopBar'];
+	@State hasSidebar!: Store['hasSidebar'];
+	@State hasCbar!: Store['hasCbar'];
+	@State visibleLeftPane!: Store['visibleLeftPane'];
+	@State visibleRightPane!: Store['visibleRightPane'];
+	@State unreadActivityCount!: Store['unreadActivityCount'];
+	@State unreadNotificationsCount!: Store['unreadNotificationsCount'];
 
-	@State
-	isShellHidden!: Store['isShellHidden'];
+	@BannerModule.State hasBanner!: BannerStore['hasBanner'];
 
-	@State
-	hasTopBar!: Store['hasTopBar'];
+	@SidebarState activeContextPane!: SidebarStore['activeContextPane'];
+	@SidebarState hideOnRouteChange!: SidebarStore['hideOnRouteChange'];
+	@SidebarState showOnRouteChange!: SidebarStore['showOnRouteChange'];
 
-	@State
-	hasSidebar!: Store['hasSidebar'];
+	@SidebarMutation showContextOnRouteChange!: SidebarStore['showContextOnRouteChange'];
 
-	@State
-	hasCbar!: Store['hasCbar'];
-
-	@State
-	visibleLeftPane!: Store['visibleLeftPane'];
-
-	@State
-	visibleRightPane!: Store['visibleRightPane'];
-
-	@State
-	unreadActivityCount!: Store['unreadActivityCount'];
-
-	@State
-	unreadNotificationsCount!: Store['unreadNotificationsCount'];
-
-	@BannerModule.State
-	hasBanner!: BannerStore['hasBanner'];
-
-	@SidebarState
-	activeContextPane!: SidebarStore['activeContextPane'];
-
-	@SidebarState
-	hideOnRouteChange!: SidebarStore['hideOnRouteChange'];
-
-	@SidebarState
-	showOnRouteChange!: SidebarStore['showOnRouteChange'];
-
-	@SidebarMutation
-	showContextOnRouteChange!: SidebarStore['showContextOnRouteChange'];
-
-	@Action
-	showContextPane!: Store['showContextPane'];
-
-	@Action
-	clearPanes!: Store['clearPanes'];
+	@Action showContextPane!: Store['showContextPane'];
+	@Action clearPanes!: Store['clearPanes'];
 
 	readonly Connection = Connection;
 	readonly Screen = Screen;
 
+	get chat() {
+		return this.chatStore.chat!;
+	}
+
 	get totalChatNotificationsCount() {
-		return this.chat ? this.chat.roomNotificationsCount : 0;
+		return this.chatStore.chat ? this.chat.roomNotificationsCount : 0;
 	}
 
 	get ssrShouldShowSidebar() {
@@ -135,7 +113,7 @@ export default class AppShell extends Vue {
 		this.$watch(
 			() => ContentFocus.isWindowFocused,
 			isFocused => {
-				if (!this.chat) {
+				if (!this.chatStore.chat) {
 					return;
 				}
 

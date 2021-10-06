@@ -53,6 +53,10 @@ export class Modal {
 		arrayRemove(Modal.modals, item => item.id === modal.id);
 	}
 
+	static findByModalId(modalId: string) {
+		return this.modals.filter(modal => modal.modalId === modalId);
+	}
+
 	constructor(public id: number, private _resolve: Function, options: ModalOptions) {
 		this.size = options.size;
 		this.component = options.component;

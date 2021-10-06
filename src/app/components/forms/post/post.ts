@@ -3,11 +3,12 @@ import { determine } from 'jstimezonedetect';
 import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../utils/array';
 import { propOptional } from '../../../../utils/vue';
+import { trackPostPublish } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
-import AppCommunityChannelSelect from '../../../../_common/community/channel/select/select.vue';
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
+import AppExpand from '../../../../_common/expand/expand.vue';
 import { FiresidePostCommunity } from '../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { FiresidePostVideo } from '../../../../_common/fireside/post/video/video-model';
@@ -37,19 +38,14 @@ import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppScrollWhen } from '../../../../_common/scroll/scroll-when.directive';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
-import {
-	getSketchfabIdFromInput,
-	SKETCHFAB_FIELD_VALIDATION_REGEX,
-} from '../../../../_common/sketchfab/embed/embed';
-import AppSketchfabEmbed from '../../../../_common/sketchfab/embed/embed.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { Timezone, TimezoneData } from '../../../../_common/timezone/timezone.service';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import AppVideoEmbed from '../../../../_common/video/embed/embed.vue';
-import AppFormPostCommunityPillAdd from './_community-pill/add/add.vue';
-import AppFormPostCommunityPill from './_community-pill/community-pill.vue';
-import AppFormPostCommunityPillIncomplete from './_community-pill/incomplete/incomplete.vue';
+import AppFormsCommunityPillAdd from '../community/_pill/add/add.vue';
+import AppFormsCommunityPill from '../community/_pill/community-pill.vue';
+import AppFormsCommunityPillIncomplete from '../community/_pill/incomplete/incomplete.vue';
 import AppFormPostMedia from './_media/media.vue';
 import { VideoStatus } from './_video/video';
 import AppFormPostVideo from './_video/video.vue';
@@ -58,9 +54,7 @@ type FormPostModel = FiresidePost & {
 	mediaItemIds: number[];
 	publishToPlatforms: number[] | null;
 	key_group_ids: number[];
-	video_url: string;
 	video_id: number;
-	sketchfab_id: string;
 	attached_communities: { community_id: number; channel_id: number }[];
 
 	poll_item_count: number;
@@ -88,20 +82,19 @@ type FormPostModel = FiresidePost & {
 		AppFormControlToggle,
 		AppFormControlUpload,
 		AppFormLegend,
-		AppSketchfabEmbed,
 		AppVideoEmbed,
 		AppLoading,
 		AppUserAvatarImg,
 		AppProgressBar,
 		AppFormPostMedia,
-		AppFormPostCommunityPill,
-		AppFormPostCommunityPillAdd,
-		AppFormPostCommunityPillIncomplete,
+		AppFormsCommunityPill,
+		AppFormsCommunityPillAdd,
+		AppFormsCommunityPillIncomplete,
 		AppCommunityPill,
-		AppCommunityChannelSelect,
 		AppFormControlContent,
 		AppScrollScroller,
 		AppFormPostVideo,
+		AppExpand,
 	},
 	directives: {
 		AppFocusWhen,
@@ -109,8 +102,10 @@ type FormPostModel = FiresidePost & {
 		AppTooltip,
 	},
 })
-export default class FormPost extends BaseForm<FormPostModel>
-	implements FormOnInit, FormOnLoad, FormOnSubmit, FormOnSubmitSuccess, FormOnSubmitError {
+export default class FormPost
+	extends BaseForm<FormPostModel>
+	implements FormOnInit, FormOnLoad, FormOnSubmit, FormOnSubmitSuccess, FormOnSubmitError
+{
 	modelClass = FiresidePost as any;
 
 	@AppState
@@ -125,8 +120,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 	$refs!: {
 		form: AppForm;
 	};
-
-	readonly SKETCHFAB_FIELD_REGEX = SKETCHFAB_FIELD_VALIDATION_REGEX;
 
 	readonly MAX_POLL_ITEMS = 10;
 	readonly MIN_POLL_DURATION = 5;
@@ -146,6 +139,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 	publishToPlatforms: number[] | null = null;
 	isShowingMorePollOptions = false;
 	accessPermissionsEnabled = false;
+	isNewPost = false;
 	isSavedDraftPost = false;
 	leadLengthLimit = 255;
 	articleLengthLimit = 50_000;
@@ -190,21 +184,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 	get enabledVideo() {
 		return this.enabledAttachments && this.attachmentType === FiresidePost.TYPE_VIDEO;
-	}
-
-	get enabledSketchfab() {
-		return this.enabledAttachments && this.attachmentType === FiresidePost.TYPE_SKETCHFAB;
-	}
-
-	get hasValidSketchfabModelId() {
-		return (
-			this.formModel.sketchfab_id &&
-			this.formModel.sketchfab_id.match(this.SKETCHFAB_FIELD_REGEX)
-		);
-	}
-
-	get sketchfabId() {
-		return getSketchfabIdFromInput(this.formModel.sketchfab_id);
 	}
 
 	get hasOptionalData() {
@@ -368,13 +347,10 @@ export default class FormPost extends BaseForm<FormPostModel>
 	async onInit() {
 		const model = this.model!;
 
-		// Store if the post was a saved draft post (not a new draft post)
-		if (model.status === FiresidePost.STATUS_DRAFT && model.hasLead) {
-			this.isSavedDraftPost = true;
-		}
+		this.isNewPost = model.status === FiresidePost.STATUS_TEMP;
+		this.isSavedDraftPost = model.status === FiresidePost.STATUS_DRAFT;
 
-		// Don't overwrite setting on a draft post because the user has already made a choice for this setting.
-		if (model.status !== FiresidePost.STATUS_DRAFT) {
+		if (this.isNewPost) {
 			this.setField('post_to_user_profile', true);
 		}
 
@@ -382,9 +358,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 		if (model.videos.length) {
 			this.enableVideo();
-		} else if (model.sketchfabs.length) {
-			this.setField('sketchfab_id', model.sketchfabs[0].sketchfab_id);
-			this.enableSketchfab();
 		} else if (model.hasMedia) {
 			this.enableImages();
 		} else if (this.attachmentType !== '') {
@@ -526,6 +499,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 	onPublishSubmit() {
 		this.setField('status', FiresidePost.STATUS_ACTIVE);
+		trackPostPublish();
 	}
 
 	async onSubmit() {
@@ -558,24 +532,12 @@ export default class FormPost extends BaseForm<FormPostModel>
 			if (this.videoProvider === FiresidePostVideo.PROVIDER_GAMEJOLT) {
 				// Unset the video url for linked videos and set the video id for uploaded videos
 				// to signal to the backend that the attached video should be kept.
-				this.setField('video_url', '');
 				this.setField('video_id', this.formModel.videos[0].id);
-			} else if (this.videoProvider === FiresidePostVideo.PROVIDER_YOUTUBE) {
-				// Make sure to unset the video id for uploaded videos.
-				this.setField('video_id', 0);
 			} else {
-				this.setField('video_url', '');
 				this.setField('video_id', 0);
 			}
 		} else {
-			this.setField('video_url', '');
 			this.setField('video_id', 0);
-		}
-
-		if (this.attachmentType === FiresidePost.TYPE_SKETCHFAB && this.formModel.sketchfab_id) {
-			this.setField('sketchfab_id', this.sketchfabId);
-		} else {
-			this.setField('sketchfab_id', '');
 		}
 
 		if (!this.accessPermissionsEnabled) {
@@ -657,17 +619,10 @@ export default class FormPost extends BaseForm<FormPostModel>
 		this.attachmentType = FiresidePost.TYPE_VIDEO;
 	}
 
-	enableSketchfab() {
-		this.enabledAttachments = true;
-		this.attachmentType = FiresidePost.TYPE_SKETCHFAB;
-	}
-
 	disableAttachments() {
 		this.enabledAttachments = false;
 		this.attachmentType = '';
 
-		this.setField('video_url', '');
-		this.setField('sketchfab_id', '');
 		this.setField('media', []);
 		this.setField('videos', []);
 	}
@@ -842,7 +797,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 	}
 
 	async onPaste(e: ClipboardEvent) {
-		// Do not react to paste events when videos/sketchfab is selected.
+		// Do not react to paste events when "Images" is not selected.
 		if (!!this.attachmentType && this.attachmentType !== FiresidePost.TYPE_MEDIA) {
 			return;
 		}
@@ -911,10 +866,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 		} else {
 			this.setField('videos', [video]);
 		}
-	}
-
-	onVideoUrlChanged(url: string) {
-		this.setField('video_url', url);
 	}
 
 	onUploadingVideoStatusChanged(status: VideoStatus) {

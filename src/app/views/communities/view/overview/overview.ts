@@ -1,12 +1,19 @@
 import { Component, Inject, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
+import { arrayRemove } from '../../../../../utils/array';
+import { canCreateFiresides } from '../../../../../_common/community/community.model';
+import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Growls } from '../../../../../_common/growls/growls.service';
+import AppLoadingFade from '../../../../../_common/loading/fade/fade.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import AppCommunitySidebar from '../../../../components/community/sidebar/sidebar.vue';
+import AppFiresideAvatarAdd from '../../../../components/fireside/avatar/add/add.vue';
+import { FiresideAvatarEvent } from '../../../../components/fireside/avatar/avatar';
+import AppFiresideAvatar from '../../../../components/fireside/avatar/avatar.vue';
 import { Store } from '../../../../store/index';
 import { CommunitiesViewChannelDeps } from '../channel/channel';
 import {
@@ -26,6 +33,9 @@ import AppCommunitiesViewPageContainer from '../_page-container/page-container.v
 		AppCommunitiesViewPageContainer,
 		AppCommunitySidebar,
 		AppCommunitiesViewFeed,
+		AppFiresideAvatar,
+		AppFiresideAvatarAdd,
+		AppLoadingFade,
 	},
 })
 @RouteResolver({
@@ -45,6 +55,8 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	feed: ActivityFeedView | null = null;
 	finishedLoading = false;
+	previewFiresides: Fireside[] = [];
+	userFireside: Fireside | null = null;
 
 	get community() {
 		return this.routeStore.community;
@@ -85,6 +97,25 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		return this.canAcceptCollaboration ? '' : this.$gettext(`You are in too many communities.`);
 	}
 
+	get canCreateFireside() {
+		return canCreateFiresides(this.community);
+	}
+
+	get firesidesGridColumns() {
+		return 5;
+	}
+
+	get firesidesGridStyling() {
+		return {
+			gridTemplateColumns: `repeat(${this.firesidesGridColumns}, 1fr)`,
+		};
+	}
+
+	get displayablePreviewFiresides() {
+		const perRow = this.firesidesGridColumns - (this.canCreateFireside ? 1 : 0);
+		return Object.freeze(this.previewFiresides.slice(0, perRow));
+	}
+
 	@Watch('communityState.hasUnreadFeaturedPosts', { immediate: true })
 	onChannelUnreadChanged() {
 		if (this.feed && this.feed.newCount === 0 && this.communityState.hasUnreadFeaturedPosts) {
@@ -117,6 +148,14 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 				communityId: this.community.id,
 			});
 		}
+
+		if ($payload.userFireside) {
+			this.userFireside = new Fireside($payload.userFireside);
+		}
+
+		if ($payload.previewFiresides) {
+			this.previewFiresides = Fireside.populate($payload.previewFiresides);
+		}
 	}
 
 	loadedNew() {
@@ -137,11 +176,18 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		}
 
 		await acceptCollaboration(this.routeStore, this.user);
-		this.joinCommunity(this.community);
+		this.joinCommunity({ community: this.community });
 		Growls.success(this.$gettext(`You are now a collaborator on this community!`));
 	}
 
 	async declineCollaboration() {
 		await declineCollaboration(this.routeStore);
+	}
+
+	onFiresideEject({ fireside, community }: FiresideAvatarEvent) {
+		if (community.community.id !== this.community.id) {
+			return;
+		}
+		arrayRemove(this.previewFiresides, i => i === fireside);
 	}
 }

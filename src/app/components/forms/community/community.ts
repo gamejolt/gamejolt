@@ -2,6 +2,7 @@ import { Component } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
 import { Community } from '../../../../_common/community/community.model';
 import AppFormControlTheme from '../../../../_common/form-vue/control/theme/theme.vue';
+import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
 import {
 	BaseForm,
 	FormOnInit,
@@ -16,10 +17,13 @@ import AppPostAddButtonFormControl from '../../post/add-button/form-control/form
 	components: {
 		AppPostAddButtonFormControl,
 		AppFormControlTheme,
+		AppFormControlToggle,
 	},
 })
-export default class FormCommunity extends BaseForm<Community>
-	implements FormOnInit, FormOnSubmitSuccess {
+export default class FormCommunity
+	extends BaseForm<Community>
+	implements FormOnInit, FormOnSubmitSuccess
+{
 	modelClass = Community;
 
 	@Action
@@ -45,7 +49,7 @@ export default class FormCommunity extends BaseForm<Community>
 		// When creating a community you get auto joined to it,
 		// but aside from the actual join operation we also do other things
 		// in this store action so we gotta call it anyways.
-		this.joinCommunity(community);
+		this.joinCommunity({ community });
 
 		this.$router.push(community.routeEditLocation);
 	}

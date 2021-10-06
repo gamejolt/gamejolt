@@ -5,7 +5,9 @@ import AppCommunityChannelSelect from '../../../../../_common/community/channel/
 import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { BaseModal } from '../../../../../_common/modal/base';
+import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { REASON_OTHER } from '../../../../../_common/user/action-reasons';
 import { FormModel } from '../form/form';
 import FormCommunityMovePost from '../form/form.vue';
 import { CommunityMovePostModalResult } from './modal.service';
@@ -78,6 +80,15 @@ export default class AppCommunityMovePostModal extends BaseModal {
 			reason: hasReason ? this.reasonFormModel.reason : null,
 			reasonType: hasReason ? this.reasonFormModel.reasonType : null,
 		} as CommunityMovePostModalResult;
+
+		// Add custom options entry to list of options.
+		if (result.reasonType === REASON_OTHER && result.reason) {
+			const options = getDatalistOptions(
+				'community-move-post',
+				this.firesidePostCommunity.community.id.toString()
+			);
+			options.unshiftItem(result.reason);
+		}
 
 		this.modal.resolve(result);
 	}

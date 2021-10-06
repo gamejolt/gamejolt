@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
-import { Analytics } from '../../../../../_common/analytics/analytics.service';
+import { trackGotoCommunity } from '../../../../../_common/analytics/analytics.service';
 import { Community } from '../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
@@ -30,7 +30,8 @@ import AppShellCbarItem from '../item/item.vue';
 	},
 })
 export default class AppShellCbarCommunity extends Vue {
-	@Prop(Community) community!: Community;
+	@Prop({ type: Community, required: true })
+	community!: Community;
 
 	@AppState user!: AppStore['user'];
 	@ThemeState userTheme!: ThemeStore['userTheme'];
@@ -86,24 +87,31 @@ export default class AppShellCbarCommunity extends Vue {
 
 	async onLeaveCommunityClick() {
 		Popper.hideAll();
-		await this.leaveCommunity(this.community);
+		await this.leaveCommunity({
+			community: this.community,
+			location: 'cbar',
+			shouldConfirm: true,
+		});
 	}
 
 	async onJoinCommunityClick() {
 		Popper.hideAll();
-		await this.joinCommunity(this.community);
+		await this.joinCommunity({ community: this.community, location: 'cbar' });
 	}
 
 	onCommunityClick(event: Event) {
 		if (this.isActive) {
 			this.toggleLeftPane('context');
-			Analytics.trackEvent('cbar-community', 'toggle-context');
 
 			// Prevent the click from triggering a route change.
 			event.preventDefault();
 		} else {
 			this.showContextOnRouteChange(true);
 		}
+	}
+
+	onGotoCommunity() {
+		trackGotoCommunity({ source: 'cbar', id: this.community.id, path: this.community.path });
 	}
 
 	gotoModerate() {

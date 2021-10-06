@@ -11,8 +11,6 @@ interface SsrContext {
 }
 
 export class Environment {
-	static env: 'production' | 'development' = GJ_ENVIRONMENT;
-	static buildType: 'production' | 'development' = GJ_BUILD_TYPE;
 	static isClient = GJ_IS_CLIENT;
 	static isSecure = isSecure;
 
@@ -38,37 +36,44 @@ export class Environment {
 	static devBaseUrl = 'http://dev.gamejolt.com';
 	static gameserverUrl = (isSecure ? 'https' : 'http') + '://gamejolt.net';
 	static mediaserverUrl = 'https://m.gjcdn.net';
+	static staticCdnUrl = 'https://s.gjcdn.net';
 
 	static apiHost = 'https://gamejolt.com';
+	static uploadHost = 'https://upload.gamejolt.com';
 	static gameserverApiHost = 'https://gamejolt.net';
 	static activityStreamHost = 'https://activity.gamejolt.com';
 	static chat = 'https://chatex.gamejolt.com/chatex';
 	static widgetHost = 'https://widgets.gamejolt.com';
 	static gridHost = 'https://grid.gamejolt.com/grid/host';
 	static recaptchaSiteKey = '6Led_UAUAAAAAB_ptIOOlAF5DFK9YM7Qi_7z8iKk';
+
+	static firebaseAppId = '1:1065321331780:web:37c4d21c84f1a69ad3d011';
+	static firebaseMeasurementId = 'G-ZV3SVDN43D';
 }
 
 if (GJ_ENVIRONMENT === 'development') {
-	Environment.baseUrl = GJ_TUNNELS.frontend || 'http://localhost:8080';
-	Environment.baseUrlInsecure = GJ_TUNNELS.frontend || 'http://localhost:8080';
-	Environment.wttfBaseUrl = GJ_TUNNELS.frontend || 'http://localhost:8080';
-	Environment.authBaseUrl = GJ_TUNNELS.frontend || 'http://localhost:8080';
-	Environment.checkoutBaseUrl = GJ_TUNNELS.frontend || 'http://localhost:8080';
-	Environment.helpBaseUrl = 'http://localhost:8080/help';
+	Environment.baseUrl = GJ_TUNNELS.frontend || 'https://development.gamejolt.com';
+	Environment.baseUrlInsecure = GJ_TUNNELS.frontend || 'https://development.gamejolt.com';
+	Environment.wttfBaseUrl = GJ_TUNNELS.frontend || 'https://development.gamejolt.com';
+	Environment.authBaseUrl = GJ_TUNNELS.frontend || 'https://development.gamejolt.com';
+	Environment.checkoutBaseUrl = GJ_TUNNELS.frontend || 'https://development.gamejolt.com';
+	Environment.helpBaseUrl = 'https://development.gamejolt.com/help';
 
-	Environment.jamsBaseUrl = 'http://jams.development.gamejolt.com';
-	Environment.jamsIoBaseUrl = 'http://jams.development.gamejolt.io';
-	Environment.firesideBaseUrl = 'http://fireside.development.gamejolt.com';
-	Environment.devBaseUrl = 'http://dev.development.gamejolt.com';
-	Environment.gameserverUrl = 'http://development.gamejolt.net';
-	Environment.mediaserverUrl = 'http://media.development.gamejolt.com';
+	Environment.jamsBaseUrl = 'https://jams.development.gamejolt.com';
+	Environment.jamsIoBaseUrl = 'https://jams.development.gamejolt.io';
+	Environment.firesideBaseUrl = 'https://fireside.development.gamejolt.com';
+	Environment.devBaseUrl = 'https://dev.development.gamejolt.com';
+	Environment.gameserverUrl = 'https://development.gamejolt.net';
+	Environment.mediaserverUrl = 'https://media.development.gamejolt.com';
+	Environment.staticCdnUrl = 'https://development.gamejolt.com';
 
-	Environment.apiHost = GJ_TUNNELS.backend || 'http://development.gamejolt.com';
-	Environment.gameserverApiHost = 'http://development.gamejolt.com';
-	Environment.activityStreamHost = 'http://activity.development.gamejolt.com';
-	Environment.chat = 'http://chat.development.gamejolt.com/chatex';
-	Environment.widgetHost = 'http://localhost:8086';
-	Environment.gridHost = 'http://grid.development.gamejolt.com/grid/host';
+	Environment.apiHost = GJ_TUNNELS.backend || 'https://development.gamejolt.com';
+	Environment.uploadHost = Environment.apiHost;
+	Environment.gameserverApiHost = 'https://development.gamejolt.com';
+	Environment.activityStreamHost = 'https://activity.development.gamejolt.com';
+	Environment.chat = 'https://chat.development.gamejolt.com/chatex';
+	Environment.widgetHost = 'https://localhost:8086';
+	Environment.gridHost = 'https://grid.development.gamejolt.com/grid/host';
 	Environment.recaptchaSiteKey = '6LcwTkEUAAAAAHTT67TB8gkM0ft5hUzz_r_tFFaT';
 }
 
@@ -85,4 +90,8 @@ if (GJ_IS_CLIENT) {
 		Environment.checkoutBaseUrl = 'chrome-extension://game-jolt-client/checkout.html#';
 		Environment.clientSectionUrl = 'chrome-extension://game-jolt-client/client.html#';
 	}
+
+	// We have different firebase app for Client.
+	Environment.firebaseAppId = '1:1065321331780:web:b58ac57b00c1d538d3d011';
+	Environment.firebaseMeasurementId = 'G-PJSN27C1K6';
 }

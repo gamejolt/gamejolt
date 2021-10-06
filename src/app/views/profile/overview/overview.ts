@@ -1,6 +1,6 @@
-import { Component, Inject, InjectReactive } from 'vue-property-decorator';
+import { Component, Inject, InjectReactive, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
-import { Mutation } from 'vuex-class/lib/bindings';
+import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import AppCommentAddButton from '../../../../_common/comment/add-button/add-button.vue';
 import { Comment } from '../../../../_common/comment/comment-model';
@@ -13,27 +13,38 @@ import {
 	setCommentCount,
 } from '../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../_common/comment/modal/modal.service';
-import { CommentThreadModal } from '../../../../_common/comment/thread/modal.service';
+import {
+	CommentThreadModal,
+	CommentThreadModalPermalinkDeregister,
+} from '../../../../_common/comment/thread/modal.service';
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
 import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/verified-tick.vue';
+import { configShareCard } from '../../../../_common/config/config.service';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
+import { Environment } from '../../../../_common/environment/environment.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
 import { number } from '../../../../_common/filters/number';
+import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { Game } from '../../../../_common/game/game.model';
 import '../../../../_common/lazy/placeholder/placeholder.styl';
 import { LinkedAccount, Provider } from '../../../../_common/linked-account/linked-account.model';
 import { Meta } from '../../../../_common/meta/meta-service';
+import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
+import { ScrollInviewConfig } from '../../../../_common/scroll/inview/config';
+import { AppScrollInview } from '../../../../_common/scroll/inview/inview';
+import AppShareCard from '../../../../_common/share/card/card.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
-import { User } from '../../../../_common/user/user.model';
-import { YoutubeChannel } from '../../../../_common/youtube/channel/channel-model';
-import { ChatClient, ChatKey, enterChatRoom } from '../../../components/chat/client';
+import { unfollowUser, User } from '../../../../_common/user/user.model';
+import { ChatStore, ChatStoreKey } from '../../../components/chat/chat-store';
+import { enterChatRoom } from '../../../components/chat/client';
 import AppCommentOverview from '../../../components/comment/overview/overview.vue';
+import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
 import AppGameList from '../../../components/game/list/list.vue';
 import AppGameListPlaceholder from '../../../components/game/list/placeholder/placeholder.vue';
 import AppPageContainer from '../../../components/page-container/page-container.vue';
@@ -42,6 +53,11 @@ import AppTrophyThumbnail from '../../../components/trophy/thumbnail/thumbnail.v
 import AppUserKnownFollowers from '../../../components/user/known-followers/known-followers.vue';
 import { Store } from '../../../store/index';
 import { RouteStore, RouteStoreModule } from '../profile.store';
+
+const FiresideScrollInviewConfig = new ScrollInviewConfig({
+	emitsOn: 'partial-overlap',
+	trackFocused: false,
+});
 
 @Component({
 	name: 'RouteProfileOverview',
@@ -58,6 +74,9 @@ import { RouteStore, RouteStoreModule } from '../profile.store';
 		AppUserKnownFollowers,
 		AppCommunityVerifiedTick,
 		AppTrophyThumbnail,
+		AppFiresideBadge,
+		AppShareCard,
+		AppScrollInview,
 	},
 	directives: {
 		AppTooltip,
@@ -73,7 +92,7 @@ import { RouteStore, RouteStoreModule } from '../profile.store';
 	resolver: ({ route }) => Api.sendRequest('/web/profile/overview/@' + route.params.username),
 })
 export default class RouteProfileOverview extends BaseRouteComponent {
-	@InjectReactive(ChatKey) chat?: ChatClient;
+	@InjectReactive(ChatStoreKey) chatStore!: ChatStore;
 	@Inject(CommentStoreManagerKey) commentManager!: CommentStoreManager;
 
 	@State
@@ -81,12 +100,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 	@State
 	grid!: Store['grid'];
-
-	@State
-	friendRequestCount!: Store['friendRequestCount'];
-
-	@Mutation
-	setFriendRequestCount!: Store['setFriendRequestCount'];
 
 	@RouteStoreModule.State
 	user!: RouteStore['user'];
@@ -102,9 +115,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 	@RouteStoreModule.State
 	placeholderCommunitiesCount!: RouteStore['placeholderCommunitiesCount'];
-
-	@RouteStoreModule.State
-	videosCount!: RouteStore['videosCount'];
 
 	@RouteStoreModule.State
 	userFriendship!: RouteStore['userFriendship'];
@@ -146,22 +156,47 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	communities: Community[] = [];
 	allCommunities: Community[] | null = null;
 	overviewComments: Comment[] = [];
-	youtubeChannels: YoutubeChannel[] = [];
 	linkedAccounts: LinkedAccount[] = [];
 	knownFollowers: User[] = [];
 	knownFollowerCount = 0;
+	fireside: Fireside | null = null;
+	hadInitialFireside = false;
+	isFiresideInview = false;
+	firesideHasVideo = false;
+	maintainFiresideOutviewSpace = false;
 
-	permalinkWatchDeregister?: Function;
+	permalinkWatchDeregister?: CommentThreadModalPermalinkDeregister;
 
 	readonly User = User;
 	readonly UserFriendship = UserFriendship;
 	readonly Screen = Screen;
+	readonly FiresideScrollInviewConfig = FiresideScrollInviewConfig;
+
+	get chat() {
+		return this.chatStore.chat;
+	}
 
 	get routeTitle() {
 		if (this.user) {
 			return `${this.user.display_name} (@${this.user.username})`;
 		}
 		return null;
+	}
+
+	get useShareCard() {
+		return configShareCard.value && !this.ignoringSplitTest;
+	}
+
+	get ignoringSplitTest() {
+		return Screen.isMobile;
+	}
+
+	get shareUrl() {
+		if (!this.user) {
+			return Environment.baseUrl;
+		}
+
+		return Environment.baseUrl + this.user.url;
 	}
 
 	get canAddAsFriend() {
@@ -177,19 +212,13 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	}
 
 	get hasQuickButtonsSection() {
-		return (
-			this.canAddAsFriend ||
-			this.canMessage ||
-			(Screen.isMobile && (this.gamesCount > 0 || this.videosCount > 0))
-		);
+		return this.canAddAsFriend || this.canMessage || (Screen.isMobile && this.gamesCount > 0);
 	}
 
 	get hasLinksSection() {
 		return (
 			this.user &&
-			(this.youtubeChannels.length > 0 ||
-				(this.linkedAccounts && this.linkedAccounts.length > 0) ||
-				this.user.web_site)
+			((this.linkedAccounts && this.linkedAccounts.length > 0) || this.user.web_site)
 		);
 	}
 
@@ -293,6 +322,19 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		return this.user && this.user.blocked_you;
 	}
 
+	get shouldShowFireside() {
+		// Keep the FiresideBadge around so we don't mess with their scroll
+		// position when a fireside expires.
+		return (!!this.fireside && this.fireside.canJoin()) || this.hadInitialFireside;
+	}
+
+	get canShowFiresidePreview() {
+		return (
+			this.shouldShowFireside &&
+			(this.isFiresideInview ? this.firesideHasVideo : this.maintainFiresideOutviewSpace)
+		);
+	}
+
 	getLinkedAccount(provider: Provider) {
 		if (
 			this.user &&
@@ -314,7 +356,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		this.games = [];
 		this.communities = [];
 		this.allCommunities = null;
-		this.youtubeChannels = [];
 		this.linkedAccounts = [];
 		this.overviewComments = [];
 	}
@@ -332,7 +373,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		this.showFullDescription = false;
 		this.showAllCommunities = false;
 		this.isLoadingAllCommunities = false;
-		this.youtubeChannels = YoutubeChannel.populate($payload.youtubeChannels);
 		this.games = Game.populate($payload.developerGamesTeaser);
 		this.communities = Community.populate($payload.communities);
 		this.linkedAccounts = LinkedAccount.populate($payload.linkedAccounts);
@@ -356,6 +396,10 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		}
 		if ($payload.knownFollowerCount) {
 			this.knownFollowerCount = $payload.knownFollowerCount;
+		}
+		if ($payload.fireside) {
+			this.fireside = new Fireside($payload.fireside);
+			this.hadInitialFireside = !!this.fireside;
 		}
 
 		this.overviewPayload($payload);
@@ -395,6 +439,20 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 				enterChatRoom(this.chat, chatUser.room_id);
 			}
 		}
+	}
+
+	onFiresideInview() {
+		this.isFiresideInview = true;
+		this.maintainFiresideOutviewSpace = false;
+	}
+
+	onFiresideOutview() {
+		this.maintainFiresideOutviewSpace = this.canShowFiresidePreview;
+		this.isFiresideInview = false;
+	}
+
+	onFiresideBadgeChanged(hasVideo: boolean, _isStreaming: boolean) {
+		this.firesideHasVideo = hasVideo;
 	}
 
 	async toggleShowAllCommunities() {
@@ -441,8 +499,19 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		TrophyModal.show(userTrophy);
 	}
 
-	onClickUnfollow() {
-		this.user?.$unfollow();
+	async onClickUnfollow() {
+		if (this.user) {
+			const result = await ModalConfirm.show(
+				this.$gettext(`Are you sure you want to unfollow this user?`),
+				this.$gettext(`Unfollow user?`)
+			);
+
+			if (!result) {
+				return;
+			}
+
+			unfollowUser(this.user);
+		}
 	}
 
 	async onFriendRequestAccept() {
@@ -457,5 +526,13 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		if (rejected) {
 			this.grid?.pushViewNotifications('friend-requests');
 		}
+	}
+
+	@Watch('ignoringSplitTest', { immediate: true })
+	trackExperiment() {
+		if (this.ignoringSplitTest) {
+			return;
+		}
+		trackExperimentEngagement(configShareCard);
 	}
 }

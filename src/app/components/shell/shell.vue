@@ -26,7 +26,7 @@
 		<app-shell-sidebar v-if="hasSidebar" />
 		<app-shell-banner v-if="!isShellHidden" />
 
-		<app-chat-windows v-if="chat" />
+		<app-chat-windows v-if="chatStore.chat" />
 
 		<div v-if="GJ_IS_CLIENT" key="shell-client">
 			<app-client-base />

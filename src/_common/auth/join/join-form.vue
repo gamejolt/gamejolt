@@ -1,3 +1,5 @@
+<script lang="ts" src="./join-form"></script>
+
 <template>
 	<div
 		:class="{
@@ -5,13 +7,6 @@
 		}"
 	>
 		<div class="auth-form-container">
-			<p class="page-help">
-				By signing up, you agree to the
-				<a :href="Environment.baseUrl + '/terms'">Terms of Use</a> and
-				<a :href="Environment.baseUrl + '/privacy'">Privacy Policy</a>, including the
-				<a :href="Environment.baseUrl + '/cookies'">Cookie Policy</a>.
-			</p>
-
 			<div class="anim-fade-in">
 				<app-button
 					class="-google"
@@ -22,17 +17,6 @@
 				>
 					<img src="../google-icon.svg" alt="" />
 					<span><translate>Sign up with Google</translate></span>
-				</app-button>
-
-				<app-button
-					class="-fb"
-					block
-					solid
-					:disabled="Connection.isClientOffline || blocked"
-					@click="linkedChoose('facebook')"
-				>
-					<img src="../fb-icon.png" alt="" />
-					<span><translate>Continue with Facebook</translate></span>
 				</app-button>
 			</div>
 
@@ -56,7 +40,11 @@
 						<app-form-control-errors />
 					</app-form-group>
 
-					<app-form-group name="username" :label="$gettext('Username')" :hide-label="true">
+					<app-form-group
+						name="username"
+						:label="$gettext('Username')"
+						:hide-label="true"
+					>
 						<app-form-control
 							type="text"
 							:disabled="blocked"
@@ -64,7 +52,9 @@
 								min: 3,
 								max: 30,
 								pattern: 'username',
-								availability: { url: '/web/auth/check-field-availability/username' },
+								availability: {
+									url: '/web/auth/check-field-availability/username',
+								},
 							}"
 							:validate-on="['blur']"
 							:placeholder="$gettext('Username')"
@@ -73,7 +63,11 @@
 						<app-form-control-errors />
 					</app-form-group>
 
-					<app-form-group name="password" :label="$gettext('Password')" :hide-label="true">
+					<app-form-group
+						name="password"
+						:label="$gettext('Password')"
+						:hide-label="true"
+					>
 						<app-form-control
 							type="password"
 							:disabled="blocked"
@@ -95,20 +89,24 @@
 					</div>
 				</fieldset>
 
-				<div class="alert alert-notice -blocked-message" v-if="blocked">
+				<div v-if="blocked" class="alert alert-notice -blocked-message">
 					<translate>You must wait 15 minutes before creating another account.</translate>
 				</div>
 			</app-form>
 		</div>
+
+		<p class="page-help">
+			By signing up, you agree to the
+			<a :href="Environment.baseUrl + '/terms'">Terms of Use</a> and
+			<a :href="Environment.baseUrl + '/privacy'">Privacy Policy</a>, including the
+			<a :href="Environment.baseUrl + '/cookies'">Cookie Policy</a>.
+		</p>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '../auth-form'
+@import '../auth-form'
 
 .-blocked-message
 	margin-top: 5px
-
 </style>
-
-<script lang="ts" src="./join-form"></script>

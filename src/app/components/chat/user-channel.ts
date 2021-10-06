@@ -2,11 +2,13 @@ import { Channel, Presence, Socket } from 'phoenix';
 import Vue from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { TabLeader } from '../../../utils/tab-leader';
+import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
 import {
 	ChatClient,
 	isInChatRoom,
 	leaveChatRoom,
 	newChatNotification,
+	recollectChatRoomMembers,
 	updateChatRoomLastMessageOn,
 } from './client';
 import { ChatMessage } from './message';
@@ -70,8 +72,10 @@ export class ChatUserChannel extends Channel {
 		presence.onJoin(this.onFriendJoin.bind(this));
 		presence.onLeave(this.onFriendLeave.bind(this));
 		presence.onSync(() =>
-			presence.list((id: string, _presence: UserPresence) => {
-				this.client.friendsList.online(+id);
+			this.client.friendsList.doBatchWork(() => {
+				presence.list((id: string, _presence: UserPresence) => {
+					this.client.friendsList.online(+id);
+				});
 			})
 		);
 	}
@@ -81,20 +85,23 @@ export class ChatUserChannel extends Channel {
 		if (!currentPresence) {
 			const userId = +presenceId;
 			this.client.friendsList.online(userId);
+			recollectChatRoomMembers(this.client);
 		}
 	}
 
 	private onFriendLeave(presenceId: string, currentPresence: UserPresence | undefined) {
 		// If the user has left all devices.
-		if (currentPresence && currentPresence.metas.length === 0) {
+		if (currentPresence?.metas.length === 0) {
 			const userId = +presenceId;
 			this.client.friendsList.offline(userId);
+			recollectChatRoomMembers(this.client);
 		}
 	}
 
 	private onFriendAdd(data: Partial<ChatUser>) {
 		const newFriend = new ChatUser(data);
 		this.client.friendsList.add(newFriend);
+		recollectChatRoomMembers(this.client);
 	}
 
 	private onFriendRemove(data: FriendRemovePayload) {
@@ -106,6 +113,7 @@ export class ChatUserChannel extends Channel {
 		}
 
 		this.client.friendsList.remove(userId);
+		recollectChatRoomMembers(this.client);
 	}
 
 	private onFriendUpdated(data: Partial<ChatUser>) {
@@ -115,11 +123,16 @@ export class ChatUserChannel extends Channel {
 			const friend = this.client.friendsList.get(userId);
 			data.isOnline = friend?.isOnline;
 			this.client.friendsList.update(new ChatUser(data));
+			recollectChatRoomMembers(this.client);
 		}
 	}
 
 	private onRoomLeave(data: RoomIdPayload) {
 		arrayRemove(this.client.groupRooms, i => i.id === data.room_id);
+
+		if (isInChatRoom(this.client, data.room_id)) {
+			leaveChatRoom(this.client, this.client.roomChannels[data.room_id].room);
+		}
 	}
 
 	private onNotification(data: Partial<ChatMessage>) {
@@ -129,14 +142,18 @@ export class ChatUserChannel extends Channel {
 		// If the notification key is null, set it to 1.
 		newChatNotification(this.client, message.room_id);
 		updateChatRoomLastMessageOn(this.client, message);
-
-		// Don't show growls/system notifications unless it's a message from a
-		// friend for now.
-		if (!this.client.friendsList.getByRoom(message.room_id)) {
-			return;
+		// Play message received sound, but only on the tab leader.
+		let shouldPlay = this.tabLeader.isLeader;
+		// For client, only play when window is focussed.
+		if (GJ_IS_CLIENT) {
+			shouldPlay = ContentFocus.isWindowFocused;
+		}
+		if (shouldPlay) {
+			message.playNotificationSound();
 		}
 
-		ChatNotificationGrowl.show(this.client, message, this.tabLeader.isLeader);
+		const room = this.client.groupRooms.find(i => i.id === message.room_id);
+		ChatNotificationGrowl.show(this.client, message, room, this.tabLeader.isLeader);
 	}
 
 	private onYouUpdated(data: Partial<ChatUser>) {

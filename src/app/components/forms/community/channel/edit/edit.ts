@@ -1,4 +1,5 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Emit, Prop } from 'vue-property-decorator';
+import { propRequired } from '../../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
 import AppFormControlUpload from '../../../../../../_common/form-vue/control/upload/upload.vue';
@@ -7,10 +8,10 @@ import {
 	FormOnLoad,
 	FormOnSubmitSuccess,
 } from '../../../../../../_common/form-vue/form.service';
-import { Growls } from '../../../../../../_common/growls/growls.service';
 import { AppImgResponsive } from '../../../../../../_common/img/responsive/responsive';
-import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
-import { CommunityChannelRenameModal } from '../../../../community/channel/rename-modal/rename-modal.service';
+import { CommunityChannelBackgroundModal } from '../../../../community/channel/background-modal/background-modal.service';
+import AppCommunityChannelCardEdit from '../../../../community/channel/card/edit/edit.vue';
+import AppFormCommunityChannelPermissions from '../_permissions/permissions.vue';
 
 class FormModel extends CommunityChannel {
 	permission_posting = 'all';
@@ -20,12 +21,13 @@ class FormModel extends CommunityChannel {
 	components: {
 		AppImgResponsive,
 		AppFormControlUpload,
+		AppFormCommunityChannelPermissions,
+		AppCommunityChannelCardEdit,
 	},
 })
 export default class FormCommunityChannelEdit extends BaseForm<FormModel>
 	implements FormOnLoad, FormOnSubmitSuccess {
-	@Prop(Community)
-	community!: Community;
+	@Prop(propRequired(Community)) community!: Community;
 
 	maxFilesize = 0;
 	maxWidth = 0;
@@ -33,15 +35,24 @@ export default class FormCommunityChannelEdit extends BaseForm<FormModel>
 
 	modelClass = FormModel;
 
+	@Emit('background-change') emitBackgroundChange(_model: CommunityChannel) {}
+
+	get competitionId() {
+		return this.model!.competition?.id;
+	}
+
 	get loadUrl() {
 		return `/web/dash/communities/channels/save/${this.community.id}/${this.formModel.id}`;
 	}
 
-	get permissionPostingOptions() {
-		return {
-			all: this.$gettext('Everyone'),
-			mods: this.$gettext('Moderators only'),
-		};
+	get titleAvailabilityUrl() {
+		return `/web/dash/communities/channels/check-field-availability/${this.community.id}/${
+			this.model!.id
+		}`;
+	}
+
+	get shouldShowPermissions() {
+		return this.model && !this.model.is_archived;
 	}
 
 	onLoad(payload: any) {
@@ -53,45 +64,11 @@ export default class FormCommunityChannelEdit extends BaseForm<FormModel>
 	}
 
 	onSubmitSuccess() {
-		this.$emit('save');
+		this.emitBackgroundChange(this.formModel);
 	}
 
-	async clearBackground() {
-		const result = await ModalConfirm.show(
-			this.$gettext(`Do you really want to remove this channel's background image?`)
-		);
-
-		if (!result) {
-			return;
-		}
-
-		// It's important we save on the base model!
-		// This way we don't overwrite the form model with the current values from the server.
-		// They may have made changes and just want to clear the image and then save their form.
-		// Doing it in this order allows them to do that.
-		await this.model!.$clearBackground();
-
-		this.setField('background', this.model!.background);
-		this.$emit('clear');
-	}
-
-	async onRename() {
-		const channel = await CommunityChannelRenameModal.show(
-			this.model!,
-			this.community,
-			this.community.channels!
-		);
-
-		if (channel) {
-			// Overwrite the current form's model with the new title.
-			// Since the modal wasn't part of this form, it doesn't update automatically.
-			this.setField('title', channel.title);
-
-			Growls.success({
-				message: this.$gettextInterpolate(`Renamed channel to %{ title }.`, {
-					title: channel.title,
-				}),
-			});
-		}
+	async onClickEditBackground() {
+		await CommunityChannelBackgroundModal.show(this.formModel);
+		this.emitBackgroundChange(this.formModel);
 	}
 }

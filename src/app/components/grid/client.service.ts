@@ -1,6 +1,7 @@
 import Axios from 'axios';
 import { Channel, Socket } from 'phoenix';
 import { arrayRemove } from '../../../utils/array';
+import { CancelToken } from '../../../utils/cancel-token';
 import { TabLeader } from '../../../utils/tab-leader';
 import { sleep } from '../../../utils/utils';
 import { uuidv4 } from '../../../utils/uuid';
@@ -8,14 +9,18 @@ import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Community } from '../../../_common/community/community.model';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
+import { Fireside } from '../../../_common/fireside/fireside.model';
 import { FiresidePostCommunity } from '../../../_common/fireside/post/community/community.model';
+import { FiresidePostGotoGrowl } from '../../../_common/fireside/post/goto-growl/goto-growl.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
+import { FiresideStreamNotification } from '../../../_common/fireside/stream-notification/stream-notification.model';
 import { GameTrophy } from '../../../_common/game/trophy/trophy.model';
 import { Growls } from '../../../_common/growls/growls.service';
 import { Notification } from '../../../_common/notification/notification-model';
 import { NotificationText } from '../../../_common/notification/notification-text.service';
 import { SettingFeedNotifications } from '../../../_common/settings/settings.service';
 import { SiteTrophy } from '../../../_common/site/trophy/trophy.model';
+import { EventBus } from '../../../_common/system/event/event-bus.service';
 import { Translate } from '../../../_common/translate/translate.service';
 import { UserGameTrophy } from '../../../_common/user/trophy/game-trophy.model';
 import { UserSiteTrophy } from '../../../_common/user/trophy/site-trophy.model';
@@ -24,6 +29,9 @@ import { store } from '../../store/index';
 import { router } from '../../views';
 import { getTrophyImg } from '../trophy/thumbnail/thumbnail';
 import { CommunityChannel } from './community-channel';
+
+export const GRID_EVENT_NEW_STICKER = 'grid-new-sticker-received';
+export const GRID_EVENT_FIRESIDE_START = 'grid-fireside-start';
 
 interface NewNotificationPayload {
 	notification_data: {
@@ -35,6 +43,11 @@ interface CommunityFeaturePayload {
 	post_id: string;
 }
 
+interface CommunityFeatureFiresidePayload {
+	fireside_id: string;
+	fireside_data: any;
+}
+
 interface CommunityNewPostPayload {
 	channel_id: string;
 }
@@ -42,13 +55,14 @@ interface CommunityNewPostPayload {
 interface BootstrapPayload {
 	status: string;
 	body: {
-		friendRequestCount: number;
+		hasNewFriendRequests: boolean;
 		lastNotificationTime: number;
 		notificationCount: number;
 		activityUnreadCount: number;
 		notificationUnreadCount: number;
 		unreadFeaturedCommunities: { [communityId: number]: number };
 		unreadCommunities: number[];
+		hasNewUnlockedStickers: boolean;
 	};
 }
 
@@ -72,7 +86,9 @@ type ClearNotificationsType =
 	| 'community-featured'
 	// For an individual community channel.
 	| 'community-channel'
-	| 'friend-requests';
+	| 'friend-requests'
+	// For the user's unviewed automatically unlocked stickers.
+	| 'stickers';
 
 interface ClearNotificationsPayload {
 	type: ClearNotificationsType;
@@ -83,6 +99,20 @@ interface ClearNotificationsPayload {
 interface ClearNotificationsData {
 	channelId?: number;
 	communityId?: number;
+}
+
+interface StickerUnlockPayload {
+	sticker_img_urls: string[];
+}
+
+interface PostUpdatedPayload {
+	post_id: number;
+	/** Contains payload data for a `FiresidePost` resource. */
+	post_data: any;
+	/** `true` when the post was just published in the chain of events. */
+	was_published: boolean;
+	/** (Only set when `was_published` is true) Indicate whether this post was scheduled before it was automatically published. */
+	was_scheduled: boolean;
 }
 
 export interface ClearNotificationsEventData extends ClearNotificationsPayload {
@@ -126,9 +156,10 @@ function clearNotifications(type: ClearNotificationsType, data: ClearNotificatio
 			}
 			break;
 		case 'friend-requests':
-			// This event gets fired every time the user accepts/rejects a friendship.
-			// The only action we need to take here is to decrease the global friendship number by 1.
-			store.commit('changeFriendRequestCount', -1);
+			store.commit('setHasNewFriendRequests', false);
+			break;
+		case 'stickers':
+			store.commit('setHasNewUnlockedStickers', false);
 			break;
 	}
 }
@@ -142,7 +173,7 @@ let connectionResolvers: (() => void)[] = [];
  * Resolves once Grid is fully connected.
  */
 function tillConnection(client: GridClient) {
-	return new Promise(resolve => {
+	return new Promise<void>(resolve => {
 		if (client.connected) {
 			resolve();
 		} else {
@@ -154,9 +185,14 @@ function tillConnection(client: GridClient) {
 /**
  * Polls a request until it returns a result, increases the delay time between requests after each failed attempt.
  * @param context Context for logging
+ * @param abortPromise Promise that once fulfilled would cause the polling to abort.
  * @param requestGetter Function that generates a promise that represents the request
  */
-async function pollRequest(context: string, requestGetter: () => Promise<any>): Promise<any> {
+async function pollRequest(
+	context: string,
+	cancelToken: CancelToken,
+	requestGetter: () => Promise<any>
+): Promise<any> {
 	let result = null;
 	let finished = false;
 
@@ -170,6 +206,10 @@ async function pollRequest(context: string, requestGetter: () => Promise<any>): 
 			result = await promise;
 			finished = true;
 		} catch (e) {
+			if (cancelToken.isCanceled) {
+				finished = true;
+			}
+
 			const sleepMs = Math.min(
 				30_000 + Math.random() * 10_000,
 				Math.random() * delay * 1_000 + 1_000
@@ -189,6 +229,7 @@ export class GridClient {
 	readonly clientId = uuidv4();
 
 	connected = false;
+	isGuest = false;
 	socket: Socket | null = null;
 	channels: Channel[] = [];
 	notificationBacklog: NewNotificationPayload[] = [];
@@ -203,22 +244,65 @@ export class GridClient {
 	viewingCommunityId: number | null = null;
 
 	/**
+	 * If set, will connect as a guest, using this token.
+	 */
+	private guestToken: string | null = null;
+
+	/**
 	 * Store ids of posts the user has featured.
 	 * The Grid client will ignore any incoming feature notifications for posts recorded here,
 	 * because users that feature posts should not get notified about those exact posts.
 	 */
 	private featuredPostIds: Set<number> = new Set<number>();
 
+	/**
+	 * This is used to abort a single connection flow so we can cleanly retry.
+	 */
+	private cancelToken: CancelToken = null as any;
+
 	constructor() {
+		this.cancelToken = new CancelToken();
 		this.connect();
 	}
 
+	async setGuestToken(guestToken: string) {
+		const tokenChanged = this.guestToken !== guestToken;
+		this.guestToken = guestToken;
+
+		if (!this.isGuest || tokenChanged) {
+			await this.disconnect();
+			this.isGuest = true;
+			this.connect();
+		}
+	}
+
+	async unsetGuestToken() {
+		this.guestToken = null;
+
+		if (this.isGuest) {
+			await this.disconnect();
+			this.isGuest = false;
+			this.connect();
+		}
+	}
+
 	private async connect() {
-		const cookie = await getCookie('frontend');
+		const cancelToken = this.cancelToken;
+
 		const user = store.state.app.user;
+		if ((!this.isGuest && !user) || (this.isGuest && !!user)) {
+			return;
+		}
+
+		const authToken = this.isGuest ? this.guestToken : await getCookie('frontend');
+		if (cancelToken.isCanceled) {
+			console.log('[Grid] Aborted connection (1)');
+			return;
+		}
+
 		const timedOut = store.state.app.isUserTimedOut;
 
-		if (user === null || cookie === undefined || timedOut) {
+		if (!authToken || timedOut) {
 			// Not properly logged in.
 			return;
 		}
@@ -226,9 +310,13 @@ export class GridClient {
 		console.log('[Grid] Connecting...');
 
 		// get hostname from loadbalancer first
-		const hostResult = await pollRequest('Select server', () =>
+		const hostResult = await pollRequest('Select server', cancelToken, () =>
 			Axios.get(Environment.gridHost, { ignoreLoadingBar: true, timeout: 3_000 })
 		);
+		if (cancelToken.isCanceled) {
+			console.log('[Grid] Aborted connection (2)');
+			return;
+		}
 		const host = `${hostResult.data}/grid/socket`;
 
 		console.log('[Grid] Server selected:', host);
@@ -236,6 +324,13 @@ export class GridClient {
 		// heartbeat is 30 seconds, backend disconnects after 40 seconds
 		this.socket = new Socket(host, {
 			heartbeatIntervalMs: 30_000,
+		});
+
+		// TODO: niiiiils, any reason not to do this?
+		this.socket.onError(() => {
+			if (!cancelToken.isCanceled) {
+				this.restart(0);
+			}
 		});
 
 		// HACK
@@ -249,67 +344,139 @@ export class GridClient {
 
 		await pollRequest(
 			'Connect to socket',
+			cancelToken,
 			() =>
-				new Promise(resolve => {
+				new Promise<void>(resolve => {
+					if (cancelToken.isCanceled) {
+						resolve();
+						return;
+					}
+
+					// TODO: shouldn't we be throwing an error if the socket is null here?
 					if (this.socket !== null) {
-						this.socket.connect();
+						this.socket.connect({
+							gj_platform: GJ_IS_CLIENT ? 'client' : 'web',
+							gj_platform_version: GJ_VERSION,
+						});
 					}
 					resolve();
 				})
 		);
 
-		const userId = user.id.toString();
-		const channel = this.socket.channel('notifications:' + userId, {
-			frontend_cookie: cookie,
-		});
-		this.notificationChannel = channel;
-
-		await pollRequest(
-			'Join user notification channel',
-			() =>
-				new Promise((resolve, reject) => {
-					channel
-						.join()
-						.receive('error', reject)
-						.receive('ok', () => {
-							this.connected = true;
-							this.channels.push(channel);
-							for (const resolver of connectionResolvers) {
-								resolver();
-							}
-							connectionResolvers = [];
-
-							resolve();
-						});
-				})
-		);
-
-		// After successfully connecting to the socket, elect leader.
-		if (this.tabLeader !== null) {
-			await this.tabLeader.kill();
+		if (cancelToken.isCanceled) {
+			console.log('[Grid] Aborted connection (3)');
+			return;
 		}
-		this.tabLeader = new TabLeader('grid_notification_channel_' + user.id);
-		this.tabLeader.init();
 
-		channel.on('new-notification', (payload: NewNotificationPayload) =>
-			this.handleNotification(payload)
-		);
+		// Guest connections are only used for realtime stuff like fireside state updates.
+		// They don't need to do any more setup work beyond successfully connecting to the socket.
+		if (this.isGuest) {
+			this.markConnected();
+		}
+		// User connections expected to handle a bunch of notification stuff.
+		else if (user) {
+			const userId = user.id.toString();
+			const channel = this.socket.channel('notifications:' + userId, {
+				auth_token: authToken,
+			});
+			this.notificationChannel = channel;
 
-		channel.on('bootstrap', (payload: BootstrapPayload) => {
-			this.handleBootstrap(channel, payload);
-		});
+			await pollRequest(
+				'Join user notification channel',
+				cancelToken,
+				() =>
+					new Promise<void>((resolve, reject) => {
+						channel
+							.join()
+							.receive('error', reject)
+							.receive('ok', () => {
+								this.channels.push(channel);
+								this.markConnected();
+								resolve();
+							});
+					})
+			);
 
-		channel.push('request-bootstrap', { user_id: userId });
+			// TODO: check if we need to kill the tab leader even tho we got aborted.
+			// Not sure when this would happen at the moment.
+			if (cancelToken.isCanceled) {
+				console.log('[Grid] Aborted connection (4)');
+				return;
+			}
 
-		channel.on('clear-notifications', (payload: ClearNotificationsPayload) => {
-			this.handleClearNotifications(payload);
-		});
+			// After successfully connecting to the socket, elect leader.
+			if (this.tabLeader !== null) {
+				await this.tabLeader.kill();
 
-		channel.on('community-bootstrap', (payload: CommunityBootstrapPayload) => {
-			this.handleCommunityBootstrap(payload);
-		});
+				if (cancelToken.isCanceled) {
+					console.log('[Grid] Aborted connection (5)');
+					return;
+				}
+			}
 
-		this.joinCommunities();
+			this.tabLeader = new TabLeader('grid_notification_channel_' + user.id);
+			this.tabLeader.init();
+
+			channel.on('new-notification', (payload: NewNotificationPayload) => {
+				if (cancelToken.isCanceled) {
+					return;
+				}
+
+				this.handleNotification(payload);
+			});
+
+			channel.on('bootstrap', (payload: BootstrapPayload) => {
+				if (cancelToken.isCanceled) {
+					return;
+				}
+
+				this.handleBootstrap(channel, payload);
+			});
+
+			channel.push('request-bootstrap', {});
+
+			channel.on('clear-notifications', (payload: ClearNotificationsPayload) => {
+				if (cancelToken.isCanceled) {
+					return;
+				}
+
+				this.handleClearNotifications(payload);
+			});
+
+			channel.on('community-bootstrap', (payload: CommunityBootstrapPayload) => {
+				if (cancelToken.isCanceled) {
+					return;
+				}
+
+				this.handleCommunityBootstrap(payload);
+			});
+
+			channel.on('sticker-unlock', (payload: StickerUnlockPayload) => {
+				if (cancelToken.isCanceled) {
+					return;
+				}
+
+				this.handleStickerUnlock(payload);
+			});
+
+			channel.on('post-updated', (payload: PostUpdatedPayload) => {
+				if (cancelToken.isCanceled) {
+					return;
+				}
+
+				this.handlePostUpdated(payload);
+			});
+
+			this.joinCommunities(cancelToken);
+		}
+	}
+
+	markConnected() {
+		this.connected = true;
+		for (const resolver of connectionResolvers) {
+			resolver();
+		}
+		connectionResolvers = [];
 	}
 
 	async restart(sleepMs = 2_000) {
@@ -324,7 +491,7 @@ export class GridClient {
 
 	handleNotification(payload: NewNotificationPayload) {
 		if (this.connected) {
-			// if no bootstrap has been received yet, store new notifications in a backlog to process them later
+			// If no bootstrap has been received yet, store new notifications in a backlog to process them later
 			// the bootstrap delivers the timestamp of the last event item included in the bootstrap's notification count
 			// all event notifications received before the timestamp from the bootstrap will be ignored
 			if (!this.bootstrapReceived) {
@@ -333,17 +500,18 @@ export class GridClient {
 				const data = payload.notification_data.event_item;
 				const notification = new Notification(data);
 
-				// only handle if timestamp is newer than the bootstrap timestamp
+				// Only handle if timestamp is newer than the bootstrap timestamp
 				if (notification.added_on > this.bootstrapTimestamp) {
 					switch (notification.type) {
-						case Notification.TYPE_FRIENDSHIP_CANCEL:
-							// this special type of notification only decrements the friend request number
-							store.commit('changeFriendRequestCount', -1);
+						case Notification.TYPE_FRIENDSHIP_REQUEST:
+							// For an incoming friend request, set that they have a new friend request.
+							store.commit('setHasNewFriendRequests', true);
+							this.spawnNotification(notification);
 							break;
 
-						case Notification.TYPE_FRIENDSHIP_REQUEST:
-							// for an incoming friend request, increase the friend request number
-							store.commit('changeFriendRequestCount', 1);
+						case Notification.TYPE_FIRESIDE_START:
+							// Emit event that different components can pick up to update their views.
+							EventBus.emit(GRID_EVENT_FIRESIDE_START, notification.action_model);
 							this.spawnNotification(notification);
 							break;
 
@@ -374,7 +542,8 @@ export class GridClient {
 				count: payload.body.notificationUnreadCount,
 			});
 
-			store.commit('setFriendRequestCount', payload.body.friendRequestCount);
+			store.commit('setHasNewFriendRequests', payload.body.hasNewFriendRequests);
+			store.commit('setHasNewUnlockedStickers', payload.body.hasNewUnlockedStickers);
 			this.bootstrapTimestamp = payload.body.lastNotificationTime;
 
 			this.bootstrapReceived = true;
@@ -450,6 +619,23 @@ export class GridClient {
 		clearNotifications(type, data);
 	}
 
+	handleStickerUnlock({ sticker_img_urls }: StickerUnlockPayload) {
+		if (!store.state.hasNewUnlockedStickers) {
+			store.commit('setHasNewUnlockedStickers', true);
+		}
+
+		EventBus.emit(GRID_EVENT_NEW_STICKER, sticker_img_urls);
+	}
+
+	handlePostUpdated({ post_data, was_scheduled, was_published }: PostUpdatedPayload) {
+		const post = new FiresidePost(post_data);
+
+		if (was_published) {
+			// Send out a growl to let the user know that their post was updated.
+			FiresidePostGotoGrowl.show(post, was_scheduled ? 'scheduled-publish' : 'publish');
+		}
+	}
+
 	spawnNotification(notification: Notification) {
 		const feedType = notification.feedType;
 		if (feedType !== '') {
@@ -512,14 +698,6 @@ export class GridClient {
 				} else {
 					title = Translate.$gettext('New Post');
 				}
-			} else if (notification.type === Notification.TYPE_COMMENT_VIDEO_ADD) {
-				if (notification.from_model instanceof User) {
-					title = Translate.$gettextInterpolate(`New Video by @%{ username }`, {
-						username: notification.from_model.username,
-					});
-				} else {
-					title = Translate.$gettext('New Video');
-				}
 			} else if (notification.type === Notification.TYPE_GAME_TROPHY_ACHIEVED) {
 				if (
 					notification.action_model instanceof UserGameTrophy &&
@@ -542,6 +720,18 @@ export class GridClient {
 				if (notification.action_model instanceof FiresidePostCommunity) {
 					icon = notification.action_model.community.img_thumbnail;
 				}
+			} else if (notification.type === Notification.TYPE_FIRESIDE_START) {
+				if (notification.action_model instanceof Fireside) {
+					title = notification.action_model.title;
+					if (notification.action_model.community instanceof Community) {
+						icon = notification.action_model.community.img_thumbnail;
+					}
+				}
+			} else if (notification.type === Notification.TYPE_FIRESIDE_STREAM_NOTIFICATION) {
+				if (notification.action_model instanceof FiresideStreamNotification) {
+					title = Translate.$gettext('Fireside Stream');
+					icon = notification.action_model.users[0].img_avatar;
+				}
 			}
 
 			Growls.info({
@@ -556,58 +746,94 @@ export class GridClient {
 			});
 		} else {
 			// Received a notification that cannot be parsed properly...
-			Growls.info({
-				title: Translate.$gettext('New Notification'),
-				message: Translate.$gettext('You have a new notification.'),
-				icon: undefined,
-				onclick: () => {
-					Analytics.trackEvent('grid', 'notification-click', notification.type);
-					router.push('/notifications');
-				},
-				system: isSystem,
-			});
+			console.error(
+				'[Grid] Received notification that cannot be displayed.',
+				notification.type
+			);
 		}
 	}
 
-	async joinCommunities() {
+	joinCommunities(cancelToken: CancelToken) {
 		console.log('[Grid] Subscribing to community channels...');
 
+		const promises = [];
 		for (const community of store.state.communities) {
-			this.joinCommunity(community);
+			promises.push(this._joinCommunity(cancelToken, community));
 		}
+		return Promise.all(promises);
 	}
 
-	async joinCommunity(community: Community) {
-		const cookie = await getCookie('frontend');
+	joinCommunity(community: Community) {
+		return this._joinCommunity(this.cancelToken, community);
+	}
+
+	private async _joinCommunity(cancelToken: CancelToken, community: Community) {
+		const authToken = this.isGuest ? this.guestToken : await getCookie('frontend');
+		if (cancelToken.isCanceled) {
+			console.log(
+				`[Grid] Aborted connection (6) (while joining community: ${community.name}, id: ${community.id}`
+			);
+			return;
+		}
+
+		// TODO: should we make this available for guests too?
 		const user = store.state.app.user;
-		if (this.socket && user && cookie) {
+		if (this.socket && user && authToken) {
 			const userId = user.id.toString();
 
 			const channel = new CommunityChannel(community, this.socket, {
-				frontend_cookie: cookie,
+				auth_token: authToken,
 				user_id: userId,
 			});
 
 			await pollRequest(
 				`Join community channel '${community.name}' (${community.id})`,
+				cancelToken,
 				() =>
-					new Promise((resolve, reject) => {
+					new Promise<void>((resolve, reject) => {
 						channel
 							.join()
 							.receive('error', reject)
 							.receive('ok', () => {
+								if (cancelToken.isCanceled) {
+									resolve();
+									return;
+								}
+
 								this.channels.push(channel);
 								resolve();
 							});
 					})
 			);
 
-			channel.on('feature', (payload: CommunityFeaturePayload) =>
-				this.handleCommunityFeature(community.id, payload)
-			);
-			channel.on('new-post', (payload: CommunityNewPostPayload) =>
-				this.handleCommunityNewPost(community.id, payload)
-			);
+			if (cancelToken.isCanceled) {
+				console.log(
+					`[Grid] Aborted connection (7) (while joining community: ${community.name}, id: ${community.id}`
+				);
+				return;
+			}
+
+			channel.on('feature', (payload: CommunityFeaturePayload) => {
+				if (cancelToken.isCanceled) {
+					return;
+				}
+
+				this.handleCommunityFeature(community.id, payload);
+			});
+			channel.on('new-post', (payload: CommunityNewPostPayload) => {
+				if (cancelToken.isCanceled) {
+					return;
+				}
+
+				this.handleCommunityNewPost(community.id, payload);
+			});
+			channel.on('feature-fireside', (payload: CommunityFeatureFiresidePayload) => {
+				if (cancelToken.isCanceled) {
+					return;
+				}
+
+				this.handleCommunityFeatureFireside(community.id, payload);
+			});
 		}
 	}
 
@@ -636,6 +862,41 @@ export class GridClient {
 		store.commit('incrementNotificationCount', { count: 1, type: 'activity' });
 	}
 
+	handleCommunityFeatureFireside(_communityId: number, payload: CommunityFeatureFiresidePayload) {
+		const fireside = new Fireside(payload.fireside_data);
+		if (!fireside.community) {
+			console.error('Featured fireside must have a community, but it does not.');
+			return;
+		}
+
+		if (store.state.app.user && fireside.user.id == store.state.app.user.id) {
+			console.log('Suppress featured fireside notification for fireside owner.');
+			return;
+		}
+
+		Growls.info({
+			title: Translate.$gettext(`New Featured Fireside!`),
+			message: Translate.$gettextInterpolate(
+				`@%{ username }'s fireside %{ firesideTitle } was featured in %{ communityName }!`,
+				{
+					username: fireside.user.username,
+					firesideTitle: fireside.title,
+					communityName: fireside.community.name,
+				}
+			),
+			icon: fireside.user.img_avatar,
+			onclick: () => {
+				Analytics.trackEvent(
+					'grid',
+					'notification-click',
+					'fireside-featured-in-community'
+				);
+				router.push(fireside.location);
+			},
+			system: true,
+		});
+	}
+
 	handleCommunityNewPost(communityId: number, payload: CommunityNewPostPayload) {
 		const channelId = parseInt(payload.channel_id, 10);
 		const communityState = store.state.communityStates.getCommunityState(communityId);
@@ -652,24 +913,33 @@ export class GridClient {
 	async disconnect() {
 		if (this.connected) {
 			console.log('[Grid] Disconnecting...');
+		} else {
+			console.warn('[Grid] Disconnecting (before we got fully connected)');
+		}
 
-			this.connected = false;
-			this.bootstrapReceived = false;
-			this.notificationBacklog = [];
-			this.bootstrapTimestamp = 0;
-			this.channels.forEach(channel => {
-				this.leaveChannel(channel);
-			});
-			this.channels = [];
-			this.notificationChannel = null;
-			if (this.socket !== null) {
-				this.socket.disconnect();
-				this.socket = null;
-			}
+		this.cancelToken.cancel();
+		this.cancelToken = new CancelToken();
 
-			if (this.tabLeader !== null) {
-				await this.tabLeader.kill();
-			}
+		// Continue attempting to disconnect even if we didn't get fully connected.
+		// This should tear down the channels and socket that may have connected already,
+		// which allows us to cleanly reuse the instance for the next connection.
+
+		this.connected = false;
+		this.bootstrapReceived = false;
+		this.notificationBacklog = [];
+		this.bootstrapTimestamp = 0;
+		this.channels.forEach(channel => {
+			this.leaveChannel(channel);
+		});
+		this.channels = [];
+		this.notificationChannel = null;
+		if (this.socket !== null) {
+			this.socket.disconnect();
+			this.socket = null;
+		}
+
+		if (this.tabLeader !== null) {
+			await this.tabLeader.kill();
 		}
 	}
 
@@ -710,7 +980,6 @@ export class GridClient {
 		if (this.notificationChannel) {
 			this.viewingCommunityId = communityId;
 			this.notificationChannel.push('request-community-bootstrap', {
-				user_id: store.state.app.user!.id.toString(),
 				community_id: communityId.toString(),
 			});
 		}
