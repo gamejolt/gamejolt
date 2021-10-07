@@ -1,5 +1,6 @@
 import { Component, Prop } from 'vue-property-decorator';
 import AppGrecaptchaWidget from '../../../auth/components/grecaptcha/widget/widget.vue';
+import { trackLoginCaptcha } from '../../analytics/analytics.service';
 import { Api } from '../../api/api.service';
 import { Connection } from '../../connection/connection-service';
 import { Environment } from '../../environment/environment.service';
@@ -30,6 +31,7 @@ export default class AppAuthLoginForm
 
 	captchaToken: string | null = null;
 	captchaResponse: string | null = null;
+	captchaCounter = 0;
 	/** How many attempts the user has until they get blocked. */
 	attempts = 5;
 
@@ -90,12 +92,18 @@ export default class AppAuthLoginForm
 					detach: true,
 				}
 			);
+
+			if (response.success === true) {
+				trackLoginCaptcha(this.formModel.username, 'solved', this.captchaCounter);
+			}
 		} else {
 			response = await Api.sendRequest('/web/auth/login', this.formModel);
 
 			// If we got a token with the response, the server requests us to solve a captcha.
 			if (response.token) {
 				this.captchaToken = response.token;
+				this.captchaCounter++;
+				trackLoginCaptcha(this.formModel.username, 'presented', this.captchaCounter);
 			}
 		}
 
@@ -112,6 +120,7 @@ export default class AppAuthLoginForm
 					case 'captcha':
 					case 'token': // Technically the session expired, but it's a captcha error.
 						this.invalidCaptcha = true;
+						trackLoginCaptcha(this.formModel.username, 'failed', this.captchaCounter);
 						break;
 					case 'approve-login':
 						this.needsApproveLogin = true;
