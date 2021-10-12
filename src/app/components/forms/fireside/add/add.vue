@@ -10,6 +10,7 @@
 					min: 4,
 					max: 100,
 				}"
+				:placeholder="defaultTitle"
 				:validate-on="['blur']"
 			/>
 			<app-form-control-errors />

@@ -56,7 +56,6 @@ export default class FormFiresideAdd extends BaseForm<FormModel> implements Form
 	}
 
 	onInit() {
-		this.setField('title', this.defaultTitle);
 		this.setField('is_draft', false);
 
 		if (this.community) {
