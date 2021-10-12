@@ -24,7 +24,6 @@ export default class AppAuthLoginForm extends BaseForm<any> implements FormOnSub
 
 	invalidLogin = false;
 	blockedLogin = false;
-	needsApproveLogin = false;
 	approvedLoginRejected = false;
 	tryAgain = false;
 
@@ -38,7 +37,6 @@ export default class AppAuthLoginForm extends BaseForm<any> implements FormOnSub
 	resetErrors() {
 		this.invalidLogin = false;
 		this.blockedLogin = false;
-		this.needsApproveLogin = false;
 		this.approvedLoginRejected = false;
 		this.tryAgain = false;
 	}
@@ -55,7 +53,8 @@ export default class AppAuthLoginForm extends BaseForm<any> implements FormOnSub
 				} else if (response.reason === 'blocked') {
 					this.blockedLogin = true;
 				} else if (response.reason === 'approve-login') {
-					this.needsApproveLogin = true;
+					sessionStorage.setItem('login-polling-token', response.loginPollingToken);
+					this.$router.push({ name: 'auth.approve-login' });
 				} else if (response.reason === 'approve-login-rejected') {
 					this.approvedLoginRejected = true;
 				} else if (response.reason === 'try-again') {
