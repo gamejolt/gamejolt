@@ -78,7 +78,8 @@
 			</p>
 		</app-form-group>
 
-		<app-form-group name="allow_firesides" :label="$gettext(`Allow community firesides?`)">
+		<!-- Temporarely disabled -->
+		<!-- <app-form-group name="allow_firesides" :label="$gettext(`Allow community firesides?`)">
 			<app-form-control-toggle class="pull-right" />
 
 			<p class="help-block">
@@ -92,7 +93,7 @@
 					to create any firesides in your community.
 				</translate>
 			</p>
-		</app-form-group>
+		</app-form-group> -->
 
 		<app-form-button show-when-valid>
 			<translate v-if="method === 'add'">Create</translate>
