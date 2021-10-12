@@ -6,8 +6,8 @@
 			'auth-form-overlay': overlay,
 		}"
 	>
-		<div class="auth-form-container">
-			<app-form class="auth-form" name="loginForm">
+		<div v-show="showForm" class="auth-form-container">
+			<app-form ref="form" class="auth-form" name="loginForm">
 				<fieldset :disabled="Connection.isClientOffline">
 					<!-- Min not needed since the login will fail if incorrect
 					anyway. -->
@@ -61,9 +61,9 @@
 					>
 						<p><translate>Incorrect username or password.</translate></p>
 						<p>
-							<translate>
-								Please note, after 5 incorrect login attempts you will be locked out
-								of your account for 1 hour.
+							<translate :translate-params="{ attempts }">
+								Please note, after %{ attempts } incorrect login attempts you will
+								be locked out of your account for 1 hour.
 							</translate>
 						</p>
 						<p>
@@ -82,6 +82,17 @@
 							<translate>
 								Whoa, there! You've tried to log in too many times and just straight
 								up failed. You'll have to cool down a bit before trying again.
+							</translate>
+						</p>
+					</div>
+
+					<div
+						v-if="invalidCaptcha"
+						class="alert alert-notice anim-fade-in-enlarge no-animate-leave"
+					>
+						<p>
+							<translate>
+								Oh no, your captcha couldn't be validated. Please try again.
 							</translate>
 						</p>
 					</div>
@@ -133,6 +144,9 @@
 					<span><translate>Sign in with Google</translate></span>
 				</app-button>
 			</div>
+		</div>
+		<div v-if="!showForm">
+			<app-grecaptcha-widget @response="onRecaptchaResponse" />
 		</div>
 	</div>
 </template>

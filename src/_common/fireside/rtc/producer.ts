@@ -389,14 +389,50 @@ function _updateWebcamDevice(producer: FiresideRTCProducer) {
 				return null;
 			}
 
+			let width = 1280;
+			let height = 720;
+			let fps = 30;
+			let bitrate = 5_000;
+			let mode = 'motion' as 'motion' | 'detail';
+			const parts = window.location.search.replace('?', '').split('&');
+
+			const _parseInt = (value: string, defaultValue: number) => {
+				const intValue = parseInt(value);
+				return !intValue || isNaN(intValue) ? defaultValue : intValue;
+			};
+
+			for (const part of parts) {
+				const [key, value] = part.split('=');
+				if (!key || !value) {
+					continue;
+				}
+
+				if (key === 'width') {
+					width = _parseInt(value, width);
+					rtc.log(`Override width: ${width}`);
+				} else if (key === 'height') {
+					height = _parseInt(value, height);
+					rtc.log(`Override height: ${height}`);
+				} else if (key === 'fps') {
+					fps = _parseInt(value, fps);
+					rtc.log(`Override fps: ${fps}`);
+				} else if (key === 'bitrate') {
+					bitrate = _parseInt(value, bitrate);
+					rtc.log(`Override bitrate: ${bitrate}`);
+				} else if (key === 'mode' && (value === 'motion' || value === 'detail')) {
+					mode = value;
+					rtc.log(`Override mode: ${mode}`);
+				}
+			}
+
 			const track = await AgoraRTC.createCameraVideoTrack({
 				cameraId: deviceId,
-				optimizationMode: 'motion',
+				optimizationMode: mode,
 				encoderConfig: {
-					bitrateMax: 5_000,
-					width: { max: 1280, ideal: 1280 },
-					height: { max: 720, ideal: 720 },
-					frameRate: { max: 30 },
+					bitrateMax: bitrate,
+					width: { max: width, ideal: width },
+					height: { max: height, ideal: height },
+					frameRate: { max: fps },
 				},
 			});
 

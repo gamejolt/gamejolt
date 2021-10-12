@@ -251,7 +251,6 @@ export class ChatRoomChannel extends Channel {
 			}
 
 			this.room.members.push(user);
-
 			this.room.updateRoleForUser(user);
 		}
 	}
@@ -265,12 +264,15 @@ export class ChatRoomChannel extends Channel {
 	}
 
 	private syncPresentUsers(presence: Presence, room: ChatRoom) {
-		presence.list((id: string, roomPresence: RoomPresence) => {
-			const roomMembers = this.client.roomMembers[room.id];
-			const user = roomMembers.get(+id) || new ChatUser(roomPresence.user);
-			user.typing = roomPresence.metas.some(meta => meta.typing);
-			roomMembers.update(user);
-			roomMembers.online(+id);
+		const roomMembers = this.client.roomMembers[room.id];
+
+		roomMembers.doBatchWork(() => {
+			presence.list((id: string, roomPresence: RoomPresence) => {
+				const user = roomMembers.get(+id) ?? new ChatUser(roomPresence.user);
+				user.typing = roomPresence.metas.some(meta => meta.typing);
+				roomMembers.update(user);
+				roomMembers.online(+id);
+			});
 		});
 	}
 }

@@ -364,6 +364,18 @@ export function trackShareLink(
 	});
 }
 
+export function trackLoginCaptcha(
+	username: string,
+	status: 'presented' | 'solved' | 'failed',
+	counter: number
+) {
+	_trackEvent('login_captcha', {
+		username,
+		status,
+		counter,
+	});
+}
+
 /**
  * @deprecated This is left here so that old code doesn't break.
  */
