@@ -71,7 +71,6 @@
 									v-app-tooltip="$gettext('profile.offline_tooltip')"
 									class="tag"
 								>
-									<app-jolticon icon="chat-offline" />
 									<translate>profile.offline_tag</translate>
 								</span>
 								<span
@@ -79,7 +78,6 @@
 									v-app-tooltip="$gettext('profile.online_tooltip')"
 									class="tag tag-highlight"
 								>
-									<app-jolticon icon="chat-online" />
 									<translate>profile.online_tag</translate>
 								</span>
 							</template>
