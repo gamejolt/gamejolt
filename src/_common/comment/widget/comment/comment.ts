@@ -1,5 +1,6 @@
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { findRequiredVueParent, propOptional, propRequired } from '../../../../utils/vue';
+import { propOptional, propRequired } from '../../../../utils/vue';
 import { AppAuthRequired } from '../../../auth/auth-required-directive';
 import { Clipboard } from '../../../clipboard/clipboard-service';
 import { Collaborator } from '../../../collaborator/collaborator.model';
@@ -24,8 +25,7 @@ import { Comment, getCommentBlockReason } from '../../comment-model';
 import AppCommentContent from '../../content/content.vue';
 import AppCommentControls from '../../controls/controls.vue';
 import AppCommentWidgetCommentBlocked from '../comment-blocked/comment-blocked.vue';
-import AppCommentWidgetTS from '../widget';
-import AppCommentWidget from '../widget.vue';
+import { useCommentWidget } from '../widget.vue';
 
 let CommentNum = 0;
 
@@ -69,7 +69,7 @@ export default class AppCommentWidgetComment extends Vue {
 	isEditing = false;
 	hasBypassedBlock = false;
 
-	widget!: AppCommentWidgetTS;
+	widget = setup(() => useCommentWidget()!);
 
 	declare $el: HTMLDivElement;
 	declare $refs: {
@@ -77,10 +77,6 @@ export default class AppCommentWidgetComment extends Vue {
 	};
 
 	readonly Environment = Environment;
-
-	created() {
-		this.widget = findRequiredVueParent(this, AppCommentWidget) as AppCommentWidgetTS;
-	}
 
 	mounted() {
 		// Scroll it into view if it's active.
@@ -221,7 +217,7 @@ export default class AppCommentWidgetComment extends Vue {
 
 	onCommentEdit(comment: Comment) {
 		this.isEditing = false;
-		this.widget._onCommentEdit(comment);
+		this.widget.onCommentEdit(comment);
 	}
 
 	async removeComment() {
@@ -243,11 +239,11 @@ export default class AppCommentWidgetComment extends Vue {
 			return;
 		}
 
-		this.widget._onCommentRemove(this.comment);
+		this.widget.onCommentRemove(this.comment);
 	}
 
 	async pinComment() {
-		await this.widget._pinComment(this.comment);
+		await this.widget.pinComment(this.comment);
 	}
 
 	onFollowClick() {

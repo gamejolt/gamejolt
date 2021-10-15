@@ -1,10 +1,11 @@
+import { InjectionKey } from '@vue/runtime-core';
 import { arrayGroupBy, arrayRemove, numberSort } from '../../utils/array';
 import { Api } from '../api/api.service';
 import { showSuccessGrowl } from '../growls/growls.service';
 import { Translate } from '../translate/translate.service';
 import { Comment, fetchComments } from './comment-model';
 
-export const CommentStoreManagerKey = Symbol('comment-store');
+export const CommentStoreManagerKey: InjectionKey<CommentStoreManager> = Symbol('comment-store');
 
 export class CommentStoreModel {
 	totalCount = 0;

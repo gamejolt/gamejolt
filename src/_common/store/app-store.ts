@@ -1,5 +1,6 @@
+import { useStore } from 'vuex';
 import { Action, Mutation, namespace, State } from 'vuex-class';
-import { VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
+import { StoreKey, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
 import { Environment } from '../environment/environment.service';
 import { Navigate } from '../navigate/navigate.service';
 import { UserTimeout } from '../user/timeout/timeout.model';
@@ -26,6 +27,8 @@ export type Mutations = {
 	'app/redirect': string;
 	'app/setTimeout': UserTimeout;
 };
+
+export const useAppStore = () => useStore(StoreKey).state.app as AppStore;
 
 interface UserConsents {
 	ads?: boolean;

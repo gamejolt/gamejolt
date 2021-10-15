@@ -13,8 +13,8 @@ export default class TooltipComponent extends Vue {
 
 	declare $el: HTMLDivElement;
 
-	private _popperInstance: null | Instance = null;
-	private _popperTimeout: null | NodeJS.Timer = null;
+	private popperInstance: null | Instance = null;
+	private popperTimeout: null | NodeJS.Timer = null;
 
 	beforeUnmount() {
 		this.destroyPopper();
@@ -44,13 +44,13 @@ export default class TooltipComponent extends Vue {
 			strategy: 'absolute',
 		};
 
-		if (!this._popperInstance) {
-			this._popperInstance = createPopper(this.tooltip.el, this.$el, options);
+		if (!this.popperInstance) {
+			this.popperInstance = createPopper(this.tooltip.el, this.$el, options);
 		} else {
 			this.clearPopperTimeout();
-			this._popperInstance.setOptions(options);
+			this.popperInstance.setOptions(options);
 			// Set the popper reference element to the new tooltip element.
-			this._popperInstance.state.elements.reference = this.tooltip.el;
+			this.popperInstance.state.elements.reference = this.tooltip.el;
 		}
 	}
 
@@ -58,21 +58,21 @@ export default class TooltipComponent extends Vue {
 		// Making sure the popper is positioned where it should be if the text
 		// content changes. We only want to do this if the tooltip is active though,
 		// otherwise we might update positioning to a non-existant reference element.
-		if (this._popperInstance && this.tooltip && this.tooltip.isActive) {
-			this._popperInstance.update();
+		if (this.popperInstance && this.tooltip && this.tooltip.isActive) {
+			this.popperInstance.update();
 		}
 
 		// Schedule to destroy the popper so that we don't keep checking scroll
 		// position if not needed. Needs to be longer than our transition speed.
-		if (!this._popperTimeout) {
-			this._popperTimeout = setTimeout(() => this.destroyPopper(), 300);
+		if (!this.popperTimeout) {
+			this.popperTimeout = setTimeout(() => this.destroyPopper(), 300);
 		}
 	}
 
 	private clearPopperTimeout() {
-		if (this._popperTimeout) {
-			clearTimeout(this._popperTimeout);
-			this._popperTimeout = null;
+		if (this.popperTimeout) {
+			clearTimeout(this.popperTimeout);
+			this.popperTimeout = null;
 		}
 	}
 
@@ -80,9 +80,9 @@ export default class TooltipComponent extends Vue {
 		// Just in case it might still be scheduled.
 		this.clearPopperTimeout();
 
-		if (this._popperInstance) {
-			this._popperInstance.destroy();
-			this._popperInstance = null;
+		if (this.popperInstance) {
+			this.popperInstance.destroy();
+			this.popperInstance = null;
 		}
 	}
 }

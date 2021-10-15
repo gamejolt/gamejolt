@@ -3,7 +3,7 @@ import { Analytics } from '../analytics/analytics.service';
 import { appStore } from '../store/app-store';
 import { AuthModal } from './auth-modal.service';
 
-export const AppAuthRequired: Directive<HTMLElement> = {
+export const AppAuthRequired: Directive<HTMLElement, void> = {
 	beforeMount(el) {
 		el.addEventListener(
 			'click',
