@@ -23,13 +23,18 @@
 				</translate>
 			</p>
 		</div>
-		<div v-else class="-error alert alert-notice">
-			<translate v-if="isExpired">Oh no! This login request has expired.</translate>
-			<translate v-else-if="isRejected">Oh no! This login request got rejected.</translate>
-			<app-button sparse class="-back-button" :to="{ name: 'auth.login' }">
+		<template v-else>
+			<div class="-error alert alert-notice">
+				<translate v-if="isExpired">Oh no! This login request has expired.</translate>
+				<translate v-else-if="isRejected">
+					Oh no! This login request got rejected.
+				</translate>
+			</div>
+
+			<app-button class="-back-button" :to="{ name: 'auth.login' }" block>
 				<translate>Go Back</translate>
 			</app-button>
-		</div>
+		</template>
 
 		<!--
 			We poll to see if their account gets authorized or not.
@@ -45,6 +50,8 @@
 </template>
 
 <style lang="stylus" scoped>
+@import '~styles/variables'
+
 .-polling
 	display: flex
 	flex-direction: column
@@ -59,7 +66,6 @@
 	align-items: center
 	justify-content: center
 
-	.-back-button
-		margin-top: 0
-		margin-left: 5px
+.-back-button
+	border-bottom: $border-width-base solid !important
 </style>
