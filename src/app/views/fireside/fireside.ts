@@ -1,11 +1,12 @@
 import Component from 'vue-class-component';
-import { InjectReactive, Watch } from 'vue-property-decorator';
+import { Inject, InjectReactive, Watch } from 'vue-property-decorator';
 import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
 import { AppAuthRequired } from '../../../_common/auth/auth-required-directive';
 import AppAuthJoin from '../../../_common/auth/join/join.vue';
 import AppCommunityThumbnailImg from '../../../_common/community/thumbnail/img/img.vue';
 import { configShareCard } from '../../../_common/config/config.service';
+import { DrawerStore, DrawerStoreKey, setDrawerOpen } from '../../../_common/drawer/drawer-store';
 import { Environment } from '../../../_common/environment/environment.service';
 import AppExpand from '../../../_common/expand/expand.vue';
 import { number } from '../../../_common/filters/number';
@@ -20,6 +21,9 @@ import { AppResponsiveDimensions } from '../../../_common/responsive-dimensions/
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../_common/scroll/scroller/scroller.vue';
+import AppStickerReactions from '../../../_common/sticker/reactions/reactions.vue';
+import { StickerTargetController } from '../../../_common/sticker/target/target-controller';
+import AppStickerTarget from '../../../_common/sticker/target/target.vue';
 import { AppState, AppStore } from '../../../_common/store/app-store';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../_common/user/user-avatar/img/img.vue';
@@ -73,6 +77,8 @@ const FiresideThemeKey = 'fireside';
 		AppFiresideHeader,
 		AppFiresideContainer,
 		AppFiresideBanner,
+		AppStickerTarget,
+		AppStickerReactions,
 	},
 	directives: {
 		AppTooltip,
@@ -89,8 +95,10 @@ export default class RouteFireside extends BaseRouteComponent {
 	@AppState user!: AppStore['user'];
 
 	@InjectReactive(ChatStoreKey) chatStore!: ChatStore;
+	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
 
 	c: FiresideController | null = null;
+	stickerTargetController: StickerTargetController | null = null;
 
 	private beforeEachDeregister: Function | null = null;
 
@@ -195,7 +203,9 @@ export default class RouteFireside extends BaseRouteComponent {
 		Meta.twitter = $payload.twitter || {};
 		Meta.twitter.title = this.routeTitle;
 
-		this.c ??= createFiresideController(new Fireside($payload.fireside));
+		const fireside = new Fireside($payload.fireside);
+		this.c ??= createFiresideController(fireside);
+		this.stickerTargetController = new StickerTargetController(fireside);
 
 		this.setPageTheme();
 	}
@@ -310,5 +320,9 @@ export default class RouteFireside extends BaseRouteComponent {
 			return;
 		}
 		trackExperimentEngagement(configShareCard);
+	}
+
+	onClickPlaceSticker() {
+		setDrawerOpen(this.drawerStore, true);
 	}
 }

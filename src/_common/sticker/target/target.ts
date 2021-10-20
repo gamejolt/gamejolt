@@ -24,7 +24,7 @@ import AppStickerReactions from '../reactions/reactions.vue';
 import AppSticker from '../sticker.vue';
 import { getStickerModelResourceName, StickerTargetController } from './target-controller';
 
-export type ValidStickerResource = 'Comment' | 'Fireside_Post' | 'MediaItem';
+export type ValidStickerResource = 'Comment' | 'Fireside_Post' | 'MediaItem' | 'Fireside';
 
 const InviewConfig = new ScrollInviewConfig();
 

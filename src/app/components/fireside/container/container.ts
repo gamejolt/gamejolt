@@ -27,13 +27,23 @@ import { User } from '../../../../_common/user/user.model';
 import { Store } from '../../../store';
 import { ChatStore, ChatStoreKey, clearChat, loadChat } from '../../chat/chat-store';
 import { joinInstancedRoomChannel, leaveChatRoom, setGuestChatToken } from '../../chat/client';
-import { EVENT_STREAMING_UID, EVENT_UPDATE, FiresideChannel } from '../../grid/fireside-channel';
+import {
+	EVENT_STICKER_PLACEMENT,
+	EVENT_STREAMING_UID,
+	EVENT_UPDATE,
+	FiresideChannel,
+} from '../../grid/fireside-channel';
 import {
 	FiresideController,
 	FiresideControllerKey,
 	updateFiresideExpiryValues,
 } from '../controller/controller';
 import { StreamSetupModal } from '../stream/setup/setup-modal.service';
+
+interface GridStickerPlacementPayload {
+	sticker_id: number;
+	img_url: string;
+}
 
 @Component({})
 export class AppFiresideContainer extends Vue {
@@ -247,6 +257,7 @@ export class AppFiresideContainer extends Vue {
 		// Subscribe to the update event.
 		channel.on(EVENT_UPDATE, this.onGridUpdateFireside.bind(this));
 		channel.on(EVENT_STREAMING_UID, this.onGridStreamingUidAdded.bind(this));
+		channel.on(EVENT_STICKER_PLACEMENT, this.onGridStickerPlacement.bind(this));
 
 		try {
 			await new Promise<void>((resolve, reject) => {
@@ -647,5 +658,11 @@ export class AppFiresideContainer extends Vue {
 				uids: [payload.streaming_uid],
 			});
 		}
+	}
+
+	onGridStickerPlacement(payload: GridStickerPlacementPayload) {
+		console.debug('[FIRESIDE] Grid sticker placement received.', payload);
+
+		this.controller.fireside.addStickerToCount(payload.sticker_id, payload.img_url);
 	}
 }

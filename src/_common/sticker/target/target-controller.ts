@@ -1,4 +1,5 @@
 import { Comment } from '../../comment/comment-model';
+import { Fireside } from '../../fireside/fireside.model';
 import { FiresidePost } from '../../fireside/post/post-model';
 import { MediaItem } from '../../media-item/media-item-model';
 import { Model } from '../../model/model.service';
@@ -43,7 +44,7 @@ export class StickerTargetController {
 	}
 
 	constructor(
-		public readonly model: FiresidePost | Comment | MediaItem,
+		public readonly model: FiresidePost | Comment | MediaItem | Fireside,
 		parent?: StickerTargetController
 	) {
 		if (parent) {
@@ -81,6 +82,8 @@ export function getStickerModelResourceName(model: Model): ValidStickerResource 
 		return 'MediaItem';
 	} else if (model instanceof FiresidePost) {
 		return 'Fireside_Post';
+	} else if (model instanceof Fireside) {
+		return 'Fireside';
 	}
 	throw new Error('Stickers targets cannot attach to that type of model');
 }

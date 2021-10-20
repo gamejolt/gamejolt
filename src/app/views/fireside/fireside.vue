@@ -37,7 +37,8 @@
 						v-app-observe-dimensions="onDimensionsChange"
 						class="-video-container"
 					>
-						<div
+						<app-sticker-target
+							:controller="stickerTargetController"
 							class="-video-inner"
 							:class="{
 								'-unsupported': GJ_IS_CLIENT,
@@ -80,7 +81,7 @@
 									</template>
 								</app-popper>
 							</template>
-						</div>
+						</app-sticker-target>
 					</div>
 				</div>
 
@@ -88,6 +89,8 @@
 					<div class="-hosts">
 						<app-fireside-host-list />
 					</div>
+
+					<app-button icon="sticker" circle @click="onClickPlaceSticker" />
 
 					<app-fireside-share v-if="!c.isDraft" class="-share" hide-heading />
 				</div>
@@ -209,6 +212,8 @@
 				class="-chat"
 				:class="{ '-trailing': c.isStreaming }"
 			>
+				<app-sticker-reactions :controller="stickerTargetController" />
+
 				<app-expand v-if="shouldShowHeaderInBody" :when="c.isShowingStreamOverlay">
 					<app-fireside-header
 						class="-header"
