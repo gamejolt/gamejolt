@@ -78,6 +78,7 @@
 			</p>
 		</app-form-group>
 
+		<!-- DISABLED_ALLOW_FIRESIDES -->
 		<!-- Temporarely disabled -->
 		<!-- <app-form-group name="allow_firesides" :label="$gettext(`Allow community firesides?`)">
 			<app-form-control-toggle class="pull-right" />

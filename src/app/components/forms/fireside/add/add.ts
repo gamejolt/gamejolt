@@ -47,6 +47,9 @@ export default class FormFiresideAdd extends BaseForm<FormModel> implements Form
 	}
 
 	get showAdvancedCommunityOptions() {
+		// DISABLED_ALLOW_FIRESIDES
+		// Currently, we never show these options and default them to true when processing the form.
+		return false;
 		const community = this.selectedCommunity;
 		if (!community) {
 			return false;
