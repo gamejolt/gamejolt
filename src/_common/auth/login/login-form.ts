@@ -121,8 +121,7 @@ export default class AppAuthLoginForm
 						trackLoginCaptcha(this.formModel.username, 'failed', this.captchaCounter);
 						break;
 					case 'approve-login':
-						sessionStorage.setItem('login-polling-token', response.loginPollingToken);
-						this.$router.push({ name: 'auth.approve-login' });
+						this.$emit('needs-approved-login', response.loginPollingToken);
 						break;
 					case 'approve-login-rejected':
 						this.approvedLoginRejected = true;

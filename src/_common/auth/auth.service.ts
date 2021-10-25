@@ -30,6 +30,26 @@ export function redirectToDashboard() {
 	Navigate.goto(Environment.wttfBaseUrl);
 }
 
+export function getRedirectUrl(redirectTo: string): string | null {
+	if (redirectTo) {
+		// We don't want them to be able to put in an offsite link as the
+		// redirect URL. So we only open up certain domains. Otherwise we
+		// simply attach it to the main domain.
+
+		// Subdomain redirect: jams.gamejolt.io, fireside.gamejolt.com, etc.
+		// This also handles main domain.
+		if (redirectTo.search(/^https?:\/\/([a-zA-Z.]+\.)?gamejolt.(com|io)/) !== -1) {
+			return redirectTo;
+		}
+
+		// Normal redirect, within the gamejolt.com domain.
+		// This is domain-less so we'll redirect to the path.
+		return Environment.baseUrl + redirectTo;
+	}
+
+	return null;
+}
+
 export function authOnJoin(method: AuthMethod) {
 	trackJoin(method);
 	configSaveJoinOptions();

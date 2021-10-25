@@ -1,14 +1,37 @@
 import { Component } from 'vue-property-decorator';
-import { authOnLogin, redirectToDashboard } from '../../../../_common/auth/auth.service';
+import { LocationRedirect } from '../../../../utils/router';
+import {
+	authOnLogin,
+	getRedirectUrl,
+	redirectToDashboard,
+} from '../../../../_common/auth/auth.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
+import { Navigate } from '../../../../_common/navigate/navigate.service';
 import { AppProgressPoller } from '../../../../_common/progress/poller/poller';
-import { BaseRouteComponent } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 
 @Component({
 	name: 'RouteApproveLogin',
 	components: {
 		AppProgressPoller,
 		AppLoading,
+	},
+})
+@RouteResolver({
+	async resolver({ route }) {
+		if (!GJ_IS_SSR) {
+			const pollingToken = sessionStorage.getItem('login-polling-token');
+			if (!pollingToken) {
+				return new LocationRedirect({
+					name: 'auth.login',
+					query: { redirect: route.query.redirect || undefined },
+				});
+			}
+
+			sessionStorage.removeItem('login-polling-token');
+			return pollingToken;
+		}
+		return null;
 	},
 })
 export default class RouteApproveLogin extends BaseRouteComponent {
@@ -25,22 +48,19 @@ export default class RouteApproveLogin extends BaseRouteComponent {
 		return !this.isExpired && !this.isRejected;
 	}
 
-	routeCreated() {
-		if (!GJ_IS_SSR) {
-			this.pollingToken = sessionStorage.getItem('login-polling-token');
-			if (!this.pollingToken) {
-				this.$router.push({ name: 'auth.login' });
-				return;
-			}
-
-			sessionStorage.removeItem('login-polling-token');
-		}
+	routeResolved(pollingToken: string | null) {
+		this.pollingToken = pollingToken;
 	}
 
 	async onApproved() {
-		// TODO: the approved login flow does not respect AppAuthLogin's redirectTo property
-		// since we've been navigated away.
 		authOnLogin('email');
+
+		const location = getRedirectUrl(this.$route.query.redirect as string);
+		if (location) {
+			Navigate.goto(location);
+			return;
+		}
+
 		redirectToDashboard();
 	}
 
