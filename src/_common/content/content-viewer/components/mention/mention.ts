@@ -11,6 +11,7 @@ import { ContentOwner } from '../../../content-owner';
 export default class AppContentViewerMention extends Vue {
 	@Prop(String)
 	username!: string;
+
 	@Prop(Object)
 	owner!: ContentOwner;
 

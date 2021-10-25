@@ -5,6 +5,7 @@ import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import AppCommunitySidebar from '../../../../components/community/sidebar/sidebar.vue';
@@ -31,6 +32,9 @@ import AppCommunitiesViewPageContainer from '../_page-container/page-container.v
 		AppCommunitiesViewFeed,
 		AppFiresideBadge,
 		AppFiresideBadgeAdd,
+	},
+	directives: {
+		AppTooltip,
 	},
 })
 @RouteResolver({

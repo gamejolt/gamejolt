@@ -1,6 +1,6 @@
 import { h } from 'vue';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import AppLinkExternal from '../../../link/external/external.vue';
+import AppLinkExternal from '../../../link/external.vue';
 import { ContentObject } from '../../content-object';
 import { ContentOwner } from '../../content-owner';
 import AppContentViewerMention from './mention/mention.vue';
@@ -88,7 +88,9 @@ export class AppContentViewerText extends Vue {
 				elementAttrs.title = attrs.href;
 			}
 
-			vnode = h(AppLinkExternal, elementAttrs, children);
+			vnode = h(AppLinkExternal, elementAttrs, {
+				default: () => children,
+			});
 		} else if (this.isMention) {
 			const attrs = this.getMarkAttrs('mention');
 			const children = [vnode];
@@ -96,13 +98,21 @@ export class AppContentViewerText extends Vue {
 			vnode = h(
 				AppContentViewerMention,
 				{ username: attrs.username, owner: this.owner },
-				children
+				{
+					default: () => children,
+				}
 			);
 		} else if (this.isTag) {
 			const attrs = this.getMarkAttrs('tag');
 			const children = [vnode];
 
-			vnode = h(AppContentViewerTag, { tag: attrs.tag, owner: this.owner }, children);
+			vnode = h(
+				AppContentViewerTag,
+				{ tag: attrs.tag, owner: this.owner },
+				{
+					default: () => children,
+				}
+			);
 		}
 
 		if (this.isBold) {

@@ -1,4 +1,4 @@
-import { nextTick } from 'vue';
+import { inject, InjectionKey, nextTick, provide, reactive } from 'vue';
 import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Provide, Vue, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../utils/vue';
@@ -22,6 +22,32 @@ import { ActivityFeedKey, ActivityFeedView } from './view';
 const InviewConfigShowNew = new ScrollInviewConfig({ margin: `-${Scroll.offsetTop}px` });
 const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height * 1.5}px` });
 
+export type ActivityFeedInterface = ReturnType<typeof createActivityFeedInterface>;
+export const ActivityFeedInterfaceKey: InjectionKey<ActivityFeedInterface> =
+	Symbol('activity-feed-interface');
+
+/**
+ * This is used to set up an interface with child components to be able to let
+ * us know about state changes.
+ */
+function createActivityFeedInterface(hooks: {
+	onPostEdited: (eventItem: EventItem) => void;
+	onPostPublished: (eventItem: EventItem) => void;
+	onPostRemoved: (eventItem: EventItem) => void;
+	onPostFeatured: (eventItem: EventItem, community: Community) => void;
+	onPostUnfeatured: (eventItem: EventItem, community: Community) => void;
+	onPostMovedChannel: (eventItem: EventItem, movedTo: CommunityChannel) => void;
+	onPostRejected: (eventItem: EventItem, community: Community) => void;
+	onPostPinned: (eventItem: EventItem) => void;
+	onPostUnpinned: (eventItem: EventItem) => void;
+}) {
+	return reactive({ ...hooks });
+}
+
+export function useActivityFeedInterface() {
+	return inject(ActivityFeedInterfaceKey, null);
+}
+
 @Options({
 	components: {
 		AppLoading,
@@ -40,7 +66,25 @@ export default class AppActivityFeed extends Vue {
 
 	ads = setup(() => useAdsController());
 
-	@Prop(propOptional(Boolean, false)) showAds!: boolean;
+	feedInterface = setup(() => {
+		const c = createActivityFeedInterface({
+			onPostEdited: this.onPostEdited,
+			onPostPublished: this.onPostPublished,
+			onPostRemoved: this.onPostRemoved,
+			onPostFeatured: this.onPostFeatured,
+			onPostUnfeatured: this.onPostUnfeatured,
+			onPostMovedChannel: this.onPostMovedChannel,
+			onPostRejected: this.onPostRejected,
+			onPostPinned: this.onPostPinned,
+			onPostUnpinned: this.onPostUnpinned,
+		});
+
+		provide(ActivityFeedInterfaceKey, c);
+		return c;
+	});
+
+	@Prop(propOptional(Boolean, false))
+	showAds!: boolean;
 
 	isNewButtonInview = false;
 

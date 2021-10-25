@@ -8,14 +8,13 @@ import AppButton from './button/button.vue';
 import { ensureConfig } from './config/config.service';
 import { initConnectionService } from './connection/connection-service';
 import AppJolticon from './jolticon/jolticon.vue';
-import AppLinkExternal from './link/external/external.vue';
+import AppLinkExternal from './link/external.vue';
 import AppLinkHelp from './link/help/help.vue';
 import { initMetaService } from './meta/meta-service';
 import { Payload } from './payload/payload-service';
 import { Referrer } from './referrer/referrer.service';
 import { SettingThemeAlwaysOurs, SettingThemeDark } from './settings/settings.service';
 import { initTranslations } from './translate/translate.service';
-import Translate from './translate/translate.vue';
 
 /**
  * Bootstraps common services and returns a "createApp" function that our entry

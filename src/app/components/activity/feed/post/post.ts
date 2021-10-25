@@ -1,7 +1,6 @@
-import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Inject, Options, Prop, Provide, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { RouteLocationDefinition } from '../../../../../utils/router';
-import { findRequiredVueParent } from '../../../../../utils/vue';
 import { trackPostOpen } from '../../../../../_common/analytics/analytics.service';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
@@ -25,7 +24,7 @@ import { canPlaceStickerOnFiresidePost } from '../../../../../_common/sticker/pl
 import AppStickerReactions from '../../../../../_common/sticker/reactions/reactions.vue';
 import {
 	StickerTargetController,
-	StickerTargetParentControllerKey
+	StickerTargetParentControllerKey,
 } from '../../../../../_common/sticker/target/target-controller';
 import AppStickerTarget from '../../../../../_common/sticker/target/target.vue';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
@@ -36,9 +35,8 @@ import { Store } from '../../../../store';
 import AppFiresidePostEmbed from '../../../fireside/post/embed/embed.vue';
 import AppPollVoting from '../../../poll/voting/voting.vue';
 import AppPostControls from '../../../post/controls/controls.vue';
-import AppActivityFeedTS from '../feed';
+import { ActivityFeedInterface, ActivityFeedInterfaceKey } from '../feed';
 import { feedShouldBlockPost } from '../feed-service';
-import AppActivityFeed from '../feed.vue';
 import { ActivityFeedItem } from '../item-service';
 import AppActivityFeedPostMedia from '../post/media/media.vue';
 import AppActivityFeedPostText from '../post/text/text.vue';
@@ -84,6 +82,9 @@ export default class AppActivityFeedPost extends Vue {
 	@Inject({ from: ActivityFeedKey })
 	feed!: ActivityFeedView;
 
+	@Inject({ from: ActivityFeedInterfaceKey })
+	feedInterface!: ActivityFeedInterface;
+
 	@Provide({ to: StickerTargetParentControllerKey, reactive: true })
 	stickerTargetController = this.post ? new StickerTargetController(this.post) : null;
 
@@ -92,7 +93,6 @@ export default class AppActivityFeedPost extends Vue {
 	canToggleLead = false;
 	hasBypassedBlock = false;
 
-	private feedComponent!: AppActivityFeedTS;
 	private queryParams: Record<string, string> = {};
 
 	readonly Screen = Screen;
@@ -224,14 +224,6 @@ export default class AppActivityFeedPost extends Vue {
 		return new ContentRules({ truncateLinks: true });
 	}
 
-	mounted() {
-		this.feedComponent = findRequiredVueParent(this, AppActivityFeed) as AppActivityFeedTS;
-	}
-
-	unmounted() {
-		this.feedComponent = undefined as any;
-	}
-
 	onResize() {
 		this.emitResize(this.$el.offsetHeight);
 	}
@@ -310,39 +302,39 @@ export default class AppActivityFeedPost extends Vue {
 	}
 
 	onPostEdited(item: EventItem) {
-		this.feedComponent.onPostEdited(item);
+		this.feedInterface.onPostEdited(item);
 	}
 
 	onPostPublished(item: EventItem) {
-		this.feedComponent.onPostPublished(item);
+		this.feedInterface.onPostPublished(item);
 	}
 
 	onPostRemoved(item: EventItem) {
-		this.feedComponent.onPostRemoved(item);
+		this.feedInterface.onPostRemoved(item);
 	}
 
 	onPostFeatured(item: EventItem, community: Community) {
-		this.feedComponent.onPostFeatured(item, community);
+		this.feedInterface.onPostFeatured(item, community);
 	}
 
 	onPostUnfeatured(item: EventItem, community: Community) {
-		this.feedComponent.onPostUnfeatured(item, community);
+		this.feedInterface.onPostUnfeatured(item, community);
 	}
 
 	onPostMovedChannel(item: EventItem, movedTo: CommunityChannel) {
-		this.feedComponent.onPostMovedChannel(item, movedTo);
+		this.feedInterface.onPostMovedChannel(item, movedTo);
 	}
 
 	onPostRejected(item: EventItem, community: Community) {
-		this.feedComponent.onPostRejected(item, community);
+		this.feedInterface.onPostRejected(item, community);
 	}
 
 	onPostPinned(item: EventItem) {
-		this.feedComponent.onPostPinned(item);
+		this.feedInterface.onPostPinned(item);
 	}
 
 	onPostUnpinned(item: EventItem) {
-		this.feedComponent.onPostUnpinned(item);
+		this.feedInterface.onPostUnpinned(item);
 	}
 
 	getChannelRoute(postCommunity: FiresidePostCommunity) {
