@@ -171,7 +171,8 @@
 											{{ i.community.name }}
 										</h5>
 
-										<a
+										<!--DISABLED_ALLOW_FIRESIDES -->
+										<!-- <a
 											class="list-group-item has-icon"
 											@click="toggleFeatured(i)"
 										>
@@ -181,7 +182,7 @@
 												Unfeature fireside
 											</translate>
 											<translate v-else>Feature fireside</translate>
-										</a>
+										</a> -->
 
 										<a
 											class="list-group-item has-icon"
