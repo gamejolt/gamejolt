@@ -1,9 +1,8 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Connection } from '../../connection/connection-service';
-import { Environment } from '../../environment/environment.service';
 import { Navigate } from '../../navigate/navigate.service';
-import { authOnLogin, redirectToDashboard } from '../auth.service';
+import { authOnLogin, getRedirectUrl, redirectToDashboard } from '../auth.service';
 import AppAuthLoginForm from './login-form.vue';
 
 @Component({
@@ -29,24 +28,20 @@ export default class AppAuthLogin extends Vue {
 		// Otherwise, log them in!
 		authOnLogin('email');
 
-		if (this.redirectTo) {
-			// We don't want them to be able to put in an offsite link as the
-			// redirect URL. So we only open up certain domains. Otherwise we
-			// simply attach it to the main domain.
-
-			// Subdomain redirect: jams.gamejolt.io, fireside.gamejolt.com, etc.
-			// This also handles main domain.
-			if (this.redirectTo.search(/^https?:\/\/([a-zA-Z.]+\.)?gamejolt.(com|io)/) !== -1) {
-				Navigate.goto(this.redirectTo);
-				return;
-			}
-
-			// Normal redirect, within the gamejolt.com domain.
-			// This is domain-less so we'll redirect to the path.
-			Navigate.goto(Environment.baseUrl + this.redirectTo);
+		const location = getRedirectUrl(this.redirectTo);
+		if (location) {
+			Navigate.goto(location);
 			return;
 		}
 
 		redirectToDashboard();
+	}
+
+	onNeedsApprovedLogin(loginPollingToken: string) {
+		sessionStorage.setItem('login-polling-token', loginPollingToken);
+		this.$router.push({
+			name: 'auth.approve-login',
+			query: { redirect: this.redirectTo || undefined },
+		});
 	}
 }

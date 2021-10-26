@@ -39,7 +39,6 @@ export default class AppAuthLoginForm
 	invalidLogin = false;
 	blockedLogin = false;
 	invalidCaptcha = false;
-	needsApproveLogin = false;
 	approvedLoginRejected = false;
 	tryAgain = false;
 
@@ -66,7 +65,6 @@ export default class AppAuthLoginForm
 		this.invalidLogin = false;
 		this.blockedLogin = false;
 		this.invalidCaptcha = false;
-		this.needsApproveLogin = false;
 		this.approvedLoginRejected = false;
 		this.tryAgain = false;
 	}
@@ -123,7 +121,7 @@ export default class AppAuthLoginForm
 						trackLoginCaptcha(this.formModel.username, 'failed', this.captchaCounter);
 						break;
 					case 'approve-login':
-						this.needsApproveLogin = true;
+						this.$emit('needs-approved-login', response.loginPollingToken);
 						break;
 					case 'approve-login-rejected':
 						this.approvedLoginRejected = true;
