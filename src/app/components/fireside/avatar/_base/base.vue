@@ -5,8 +5,6 @@
 		<div class="-header">
 			<div class="-avatar">
 				<div class="-avatar-inner">
-					<div v-if="isLive" class="-avatar-anim" />
-
 					<app-media-item-backdrop
 						class="-avatar-img"
 						:class="{ '-dashed': borderStyle === 'dashed' }"
