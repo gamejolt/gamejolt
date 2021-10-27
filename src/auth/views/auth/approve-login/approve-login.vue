@@ -3,19 +3,17 @@
 <template>
 	<div class="anim-fade-in-up">
 		<h2 class="section-header">
-			<translate>New Login Location</translate>
+			<translate>You must approve this device</translate>
 		</h2>
 
 		<p>
-			<translate>It seems like you're logging in from a new device or location.</translate>
-		</p>
-		<p>
-			<translate>We've sent you an email to approve this login.</translate>
+			<translate>
+				We've sent you an email with a link to approve this device. We are doing this in
+				order to protect your account.
+			</translate>
 		</p>
 
 		<div v-if="isPolling" class="-polling">
-			<app-loading big hide-label class="-loading" />
-			<p class="small text-muted"><translate>Waiting for email verification...</translate></p>
 			<p class="small text-muted">
 				<translate>
 					If you don't see the email within a few minutes, please check your spam folder.
@@ -25,7 +23,9 @@
 		</div>
 		<template v-else>
 			<div class="-error alert alert-notice">
-				<translate v-if="isExpired">Oh no! This login request has expired.</translate>
+				<translate v-if="isExpired">
+					Oh no! This login request has expired. Please try logging in again.
+				</translate>
 				<translate v-else-if="isRejected">
 					Oh no! This login request got rejected.
 				</translate>
