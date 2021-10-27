@@ -8,6 +8,7 @@ import {
 import AppFiresideCohostManage from '../cohost/manage/manage.vue';
 import AppFiresideHostThumb from '../_host-thumb/host-thumb.vue';
 import AppFiresideStreamOptions from '../_stream-options/stream-options.vue';
+import AppFiresideHostListStickerButton from './sticker-button/sticker-button.vue';
 
 @Component({
 	components: {
@@ -15,6 +16,7 @@ import AppFiresideStreamOptions from '../_stream-options/stream-options.vue';
 		AppScrollScroller,
 		AppFiresideStreamOptions,
 		AppFiresideCohostManage,
+		AppFiresideHostListStickerButton,
 	},
 })
 export default class AppFiresideHostList extends Vue {
@@ -25,8 +27,13 @@ export default class AppFiresideHostList extends Vue {
 
 	@Emit('show-popper') emitShowPopper() {}
 	@Emit('hide-popper') emitHidePopper() {}
+	@Emit('sticker') emitSticker() {}
 
 	get canManageCohosts() {
 		return this.c.canManageCohosts;
+	}
+
+	onClickStickerButton() {
+		this.emitSticker();
 	}
 }

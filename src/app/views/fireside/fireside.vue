@@ -87,10 +87,8 @@
 
 				<div v-if="c.rtc && shouldShowHosts" class="-hosts-padding">
 					<div class="-hosts">
-						<app-fireside-host-list />
+						<app-fireside-host-list @sticker="onClickPlaceSticker" />
 					</div>
-
-					<app-button icon="sticker" circle @click="onClickPlaceSticker" />
 
 					<app-fireside-share v-if="!c.isDraft" class="-share" hide-heading />
 				</div>

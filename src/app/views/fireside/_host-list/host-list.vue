@@ -19,6 +19,8 @@
 				@show-popper="emitShowPopper"
 				@hide-popper="emitHidePopper"
 			/>
+
+			<app-fireside-host-list-sticker-button @click.native="onClickStickerButton" />
 		</div>
 	</app-scroll-scroller>
 </template>
