@@ -43,6 +43,7 @@ import { StreamSetupModal } from '../stream/setup/setup-modal.service';
 interface GridStickerPlacementPayload {
 	sticker_id: number;
 	img_url: string;
+	user_id: number;
 }
 
 @Component({})
