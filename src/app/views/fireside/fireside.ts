@@ -6,7 +6,7 @@ import { AppAuthRequired } from '../../../_common/auth/auth-required-directive';
 import AppAuthJoin from '../../../_common/auth/join/join.vue';
 import AppCommunityThumbnailImg from '../../../_common/community/thumbnail/img/img.vue';
 import { configShareCard } from '../../../_common/config/config.service';
-import { DrawerStore, DrawerStoreKey, setDrawerOpen } from '../../../_common/drawer/drawer-store';
+import { DrawerStore, DrawerStoreKey } from '../../../_common/drawer/drawer-store';
 import { Environment } from '../../../_common/environment/environment.service';
 import AppExpand from '../../../_common/expand/expand.vue';
 import { number } from '../../../_common/filters/number';
@@ -186,6 +186,10 @@ export default class RouteFireside extends BaseRouteComponent {
 		return !this.isVertical && !Screen.isMobile;
 	}
 
+	get shouldShowReactions() {
+		return !Screen.isMobile;
+	}
+
 	get shouldShowFiresideStats() {
 		return !this.c?.isStreaming && this.c?.status === 'joined' && !Screen.isMobile;
 	}
@@ -317,9 +321,5 @@ export default class RouteFireside extends BaseRouteComponent {
 			return;
 		}
 		trackExperimentEngagement(configShareCard);
-	}
-
-	onClickPlaceSticker() {
-		setDrawerOpen(this.drawerStore, true);
 	}
 }

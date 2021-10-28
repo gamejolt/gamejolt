@@ -87,7 +87,7 @@
 
 				<div v-if="c.rtc && shouldShowHosts" class="-hosts-padding">
 					<div class="-hosts">
-						<app-fireside-host-list @sticker="onClickPlaceSticker" />
+						<app-fireside-host-list />
 					</div>
 
 					<app-fireside-share v-if="!c.isDraft" class="-share" hide-heading />
@@ -210,7 +210,11 @@
 				class="-chat"
 				:class="{ '-trailing': c.isStreaming }"
 			>
-				<app-sticker-reactions class="-reactions" :controller="c.stickerTargetController" />
+				<app-sticker-reactions
+					v-if="shouldShowReactions"
+					class="-reactions"
+					:controller="c.stickerTargetController"
+				/>
 
 				<app-expand v-if="shouldShowHeaderInBody" :when="c.isShowingStreamOverlay">
 					<app-fireside-header

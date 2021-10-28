@@ -1,5 +1,10 @@
 import Vue from 'vue';
-import { Component, Emit, InjectReactive, Prop } from 'vue-property-decorator';
+import { Component, Emit, Inject, InjectReactive, Prop } from 'vue-property-decorator';
+import {
+	DrawerStore,
+	DrawerStoreKey,
+	setDrawerOpen,
+} from '../../../../_common/drawer/drawer-store';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import {
 	FiresideController,
@@ -24,16 +29,16 @@ export default class AppFiresideHostList extends Vue {
 	hideThumbOptions!: boolean;
 
 	@InjectReactive(FiresideControllerKey) c!: FiresideController;
+	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
 
 	@Emit('show-popper') emitShowPopper() {}
 	@Emit('hide-popper') emitHidePopper() {}
-	@Emit('sticker') emitSticker() {}
 
 	get canManageCohosts() {
 		return this.c.canManageCohosts;
 	}
 
 	onClickStickerButton() {
-		this.emitSticker();
+		setDrawerOpen(this.drawerStore, true);
 	}
 }

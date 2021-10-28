@@ -1,5 +1,5 @@
 import Vue, { CreateElement } from 'vue';
-import { Component, InjectReactive, Prop, ProvideReactive } from 'vue-property-decorator';
+import { Component, Inject, InjectReactive, Prop, ProvideReactive } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { arrayUnique } from '../../../../utils/array';
 import { objectPick } from '../../../../utils/object';
@@ -8,6 +8,11 @@ import { sleep } from '../../../../utils/utils';
 import { uuidv4 } from '../../../../utils/uuid';
 import { Api } from '../../../../_common/api/api.service';
 import { getCookie } from '../../../../_common/cookie/cookie.service';
+import {
+	DrawerStore,
+	DrawerStoreKey,
+	setStickerStreak,
+} from '../../../../_common/drawer/drawer-store';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresideRole } from '../../../../_common/fireside/role/role.model';
 import {
@@ -44,8 +49,8 @@ import { StreamSetupModal } from '../stream/setup/setup-modal.service';
 
 interface GridStickerPlacementPayload {
 	user_id: number;
-	sticker_placement: Partial<StickerPlacement>;
 	streak: number;
+	sticker_placement: Partial<StickerPlacement>;
 }
 
 @Component({})
@@ -60,6 +65,9 @@ export class AppFiresideContainer extends Vue {
 
 	@InjectReactive(ChatStoreKey)
 	chatStore!: ChatStore;
+
+	@Inject(DrawerStoreKey)
+	drawerStore!: DrawerStore;
 
 	get chat() {
 		return this.chatStore.chat;
@@ -112,6 +120,7 @@ export class AppFiresideContainer extends Vue {
 
 	destroyed() {
 		this.controller.onRetry = null;
+		this.drawerStore.streak = null;
 
 		this.disconnect();
 		this.grid?.unsetGuestToken();
@@ -664,9 +673,11 @@ export class AppFiresideContainer extends Vue {
 	}
 
 	onGridStickerPlacement(payload: GridStickerPlacementPayload) {
-		console.debug('[FIRESIDE] Grid sticker placement received.', payload);
+		console.debug('[FIRESIDE] Grid sticker placement received.', payload, payload.streak);
 		const c = this.controller;
 		const placement = new StickerPlacement(payload.sticker_placement);
+
+		setStickerStreak(this.drawerStore, placement.sticker, payload.streak);
 
 		// This happens automatically when we're placing our own sticker. Ignore
 		// it here so we don't do it twice.
