@@ -44,6 +44,8 @@ interface GridStickerPlacementPayload {
 	sticker_id: number;
 	img_url: string;
 	user_id: number;
+	sticker_pos_x: number;
+	sticker_pos_y: number;
 }
 
 @Component({})
