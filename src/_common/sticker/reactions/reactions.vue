@@ -4,7 +4,10 @@
 	<div
 		v-app-tooltip="controller.isLive ? null : $gettext(`View Stickers`)"
 		class="sticker-reactions"
-		:class="{ '-active': controller.shouldShow, '-live': controller.isLive }"
+		:class="{
+			'-active': showBorder,
+			'-live': controller.isLive,
+		}"
 		@click.stop="onClick"
 	>
 		<app-sticker-reactions-item
@@ -30,9 +33,9 @@
 	&:not(.-live)
 		cursor: pointer
 
-	&:hover
-		rounded-corners()
-		background-color: var(--theme-bg-offset)
+		&:hover
+			rounded-corners()
+			background-color: var(--theme-bg-offset)
 
 .-active
 	rounded-corners()

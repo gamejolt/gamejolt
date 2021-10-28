@@ -24,6 +24,14 @@ export default class AppStickerReactions extends Vue {
 
 	private animate = false;
 
+	get canShowBorder() {
+		return !this.controller.isLive;
+	}
+
+	get showAsActive() {
+		return this.canShowBorder && this.controller.shouldShow;
+	}
+
 	get shouldAnimate() {
 		return this.animate;
 	}
