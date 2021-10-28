@@ -210,7 +210,7 @@
 				class="-chat"
 				:class="{ '-trailing': c.isStreaming }"
 			>
-				<app-sticker-reactions :controller="c.stickerTargetController" />
+				<app-sticker-reactions class="-reactions" :controller="c.stickerTargetController" />
 
 				<app-expand v-if="shouldShowHeaderInBody" :when="c.isShowingStreamOverlay">
 					<app-fireside-header
@@ -467,8 +467,15 @@
 	position: relative
 	height: 100%
 
-	.-body-column &
-	.-is-streaming &
+.-body-column
+	.-reactions
+		margin-top: 0
+		margin-bottom: 0
+
+.-body-column
+.-is-streaming
+	.-chat-wrapper
+	.-reactions
 		margin-left: -($grid-gutter-width-xs / 2)
 		margin-right: -($grid-gutter-width-xs / 2)
 

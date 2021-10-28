@@ -2,9 +2,9 @@
 
 <template>
 	<div
-		v-app-tooltip="$gettext(`View Stickers`)"
+		v-app-tooltip="controller.isLive ? null : $gettext(`View Stickers`)"
 		class="sticker-reactions"
-		:class="{ '-active': controller.shouldShow }"
+		:class="{ '-active': controller.shouldShow, '-live': controller.isLive }"
 		@click.stop="onClick"
 	>
 		<app-sticker-reactions-item
@@ -24,8 +24,10 @@
 	display: inline-flex
 	flex-wrap: wrap
 	margin: 4px 0 8px 0
-	cursor: pointer
 	border: $border-width-small solid transparent
+
+	&:not(.-live)
+		cursor: pointer
 
 	&:hover
 		rounded-corners()
