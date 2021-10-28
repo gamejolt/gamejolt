@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Inject, InjectReactive, Prop, Watch } from 'vue-property-decorator';
 import { DrawerStore, DrawerStoreKey } from '../../../../_common/drawer/drawer-store';
+import { fuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import { number } from '../../../../_common/filters/number';
 import { FiresideRTCUser } from '../../../../_common/fireside/rtc/user';
 import AppLoading from '../../../../_common/loading/loading.vue';
@@ -53,6 +54,10 @@ export default class AppFiresideStream extends Vue {
 
 	get stickerStreak() {
 		return this.drawerStore.streak;
+	}
+
+	get streakCount() {
+		return fuzzynumber(this.stickerStreak?.count ?? 0);
 	}
 
 	get shouldShowUI() {

@@ -93,7 +93,11 @@
 			class="-combo"
 			:class="{ '-fade': shouldShowUI }"
 		>
-			<div class="badge">x{{ stickerStreak.count }}</div>
+			<div class="badge">
+				<translate v-if="Screen.isDesktop">STREAK</translate>
+				x{{ streakCount }}
+			</div>
+
 			<img
 				draggable="false"
 				onmousedown="return false"
@@ -203,7 +207,6 @@
 	right: @top
 	display: inline-flex
 	grid-gap: 4px
-	font-size: $font-size-tiny
 	font-weight: bold
 	color: white
 	align-items: center
@@ -213,11 +216,22 @@
 	&.-fade
 		opacity: 0.45
 
-	> img
-		width: 32px
+	&
+	> *
+		font-size: $font-size-base
+		user-select: none
+		pointer-events: none
+
+	img
+		width: 56px
 		height: @width
 
-		@media $media-mobile
+	@media $media-mobile
+		&
+		> *
+			font-size: $font-size-tiny
+
+		img
 			width: 24px
 			height: @width
 </style>
