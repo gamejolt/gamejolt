@@ -45,6 +45,7 @@ import { StreamSetupModal } from '../stream/setup/setup-modal.service';
 interface GridStickerPlacementPayload {
 	user_id: number;
 	sticker_placement: Partial<StickerPlacement>;
+	streak: number;
 }
 
 @Component({})
