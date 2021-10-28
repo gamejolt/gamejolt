@@ -23,6 +23,7 @@ import {
 } from '../../../../_common/fireside/rtc/rtc';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { StickerPlacement } from '../../../../_common/sticker/placement/placement.model';
+import { addStickerToTarget } from '../../../../_common/sticker/target/target-controller';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { User } from '../../../../_common/user/user.model';
 import { Store } from '../../../store';
@@ -663,7 +664,14 @@ export class AppFiresideContainer extends Vue {
 
 	onGridStickerPlacement(payload: GridStickerPlacementPayload) {
 		console.debug('[FIRESIDE] Grid sticker placement received.', payload);
+		const c = this.controller;
+		const placement = new StickerPlacement(payload.sticker_placement);
 
-		this.controller.fireside.addStickerToCount(payload.sticker_id, payload.img_url);
+		// This happens automatically when we're placing our own sticker. Ignore
+		// it here so we don't do it twice.
+		if (payload.user_id !== this.user?.id) {
+			addStickerToTarget(c.stickerTargetController, placement);
+			c.fireside.addStickerToCount(placement.sticker);
+		}
 	}
 }

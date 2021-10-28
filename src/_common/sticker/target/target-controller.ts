@@ -28,6 +28,12 @@ export class StickerTargetController {
 	private _shouldShow = false;
 
 	get shouldShow() {
+		// Stickers in a Live context will show, fade, then remove themselves
+		// automatically. Always show Live stickers.
+		if (this.isLive) {
+			return true;
+		}
+
 		return Boolean(this._shouldShow || this.parent?.shouldShow || this.layer?.isShowingDrawer);
 	}
 
@@ -40,12 +46,17 @@ export class StickerTargetController {
 	 * in based on this state changing.
 	 */
 	get shouldLoad() {
-		return this.shouldShow && this.isInview && !this.hasLoadedStickers;
+		return !this.isLive && this.shouldShow && this.isInview && !this.hasLoadedStickers;
 	}
 
 	constructor(
 		public readonly model: FiresidePost | Comment | MediaItem | Fireside,
-		parent?: StickerTargetController
+		parent?: StickerTargetController,
+		/**
+		 * Used to know if we should fade-out stickers after they've been
+		 * placed, and if we should fetch previous placement data or not.
+		 */
+		public readonly isLive = false
 	) {
 		if (parent) {
 			this.parent = parent;
@@ -92,6 +103,22 @@ export function addStickerToTarget(controller: StickerTargetController, sticker:
 	controller.stickers.push(sticker);
 	controller.newStickers.push(sticker);
 
-	// Anytime we add new stickers to the target, show all the stickers again.
-	toggleStickersShouldShow(controller, false, true);
+	// Anytime we add new stickers to a non-Live target, show all the stickers again.
+	if (!controller.isLive) {
+		toggleStickersShouldShow(controller, false, true);
+	}
+}
+/// Use by stickers in a Live context to remove themselves after their animations finish.
+export function removeStickerFromTarget(
+	controller: StickerTargetController,
+	sticker: StickerPlacement
+) {
+	let index = controller.stickers.indexOf(sticker);
+	if (index !== -1) {
+		controller.stickers.splice(index, 1);
+	}
+	index = controller.newStickers.indexOf(sticker);
+	if (index !== -1) {
+		controller.newStickers.splice(index, 1);
+	}
 }

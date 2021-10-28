@@ -29,6 +29,11 @@ export default class AppStickerReactions extends Vue {
 	}
 
 	onClick() {
+		// Stickers in a Live context will automatically remove themselves - do nothing.
+		if (this.controller.isLive) {
+			return;
+		}
+
 		toggleStickersShouldShow(this.controller, true);
 
 		if (this.controller.shouldShow) {

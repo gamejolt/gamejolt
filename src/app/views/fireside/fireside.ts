@@ -22,7 +22,6 @@ import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../_common/scroll/scroller/scroller.vue';
 import AppStickerReactions from '../../../_common/sticker/reactions/reactions.vue';
-import { StickerTargetController } from '../../../_common/sticker/target/target-controller';
 import AppStickerTarget from '../../../_common/sticker/target/target.vue';
 import { AppState, AppStore } from '../../../_common/store/app-store';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
@@ -98,7 +97,6 @@ export default class RouteFireside extends BaseRouteComponent {
 	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
 
 	c: FiresideController | null = null;
-	stickerTargetController: StickerTargetController | null = null;
 
 	private beforeEachDeregister: Function | null = null;
 
@@ -205,7 +203,6 @@ export default class RouteFireside extends BaseRouteComponent {
 
 		const fireside = new Fireside($payload.fireside);
 		this.c ??= createFiresideController(fireside);
-		this.stickerTargetController = new StickerTargetController(fireside);
 
 		this.setPageTheme();
 	}

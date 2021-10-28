@@ -4,6 +4,7 @@ import { Collaboratable } from '../collaborator/collaboratable';
 import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 import { constructStickerCounts, StickerCount } from '../sticker/sticker-count';
+import { Sticker } from '../sticker/sticker.model';
 import { UserBlock } from '../user/block/block.model';
 import { User } from '../user/user.model';
 import { FiresideCommunity } from './community/community.model';
@@ -98,14 +99,14 @@ export class Fireside extends Collaboratable(Model) {
 		return this.expires_on - getCurrentServerTime();
 	}
 
-	public addStickerToCount(stickerId: number, imgUrl: string) {
-		const existingEntry = this.sticker_counts.find(i => i.stickerId === stickerId);
+	public addStickerToCount(sticker: Sticker) {
+		const existingEntry = this.sticker_counts.find(i => i.stickerId === sticker.id);
 		if (existingEntry) {
 			existingEntry.count++;
 		} else {
 			this.sticker_counts.push({
-				stickerId,
-				imgUrl,
+				stickerId: sticker.id,
+				imgUrl: sticker.img_url,
 				count: 1,
 			});
 		}

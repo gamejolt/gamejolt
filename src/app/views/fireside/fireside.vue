@@ -38,7 +38,7 @@
 						class="-video-container"
 					>
 						<app-sticker-target
-							:controller="stickerTargetController"
+							:controller="c.stickerTargetController"
 							class="-video-inner"
 							:class="{
 								'-unsupported': GJ_IS_CLIENT,
@@ -210,7 +210,7 @@
 				class="-chat"
 				:class="{ '-trailing': c.isStreaming }"
 			>
-				<app-sticker-reactions :controller="stickerTargetController" />
+				<app-sticker-reactions :controller="c.stickerTargetController" />
 
 				<app-expand v-if="shouldShowHeaderInBody" :when="c.isShowingStreamOverlay">
 					<app-fireside-header
