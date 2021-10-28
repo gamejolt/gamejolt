@@ -93,7 +93,7 @@
 			class="-combo"
 			:class="{ '-fade': shouldShowUI }"
 		>
-			<div class="badge">
+			<div class="badge" :class="{ '-hot-streak': stickerStreak.count >= 5 }">
 				<translate v-if="Screen.isDesktop">STREAK</translate>
 				x{{ streakCount }}
 			</div>
@@ -249,6 +249,18 @@
 .-keep-animating
 	animation-play-state: running
 	animation-iteration-count: infinite
+
+.-hot-streak
+	animation-name: hot-streak
+	animation-duration: 1s
+	animation-iteration-count: infinite
+
+@keyframes hot-streak
+	0%
+		transform: scale(1)
+
+	50%
+		transform: scale(1.1)
 
 @keyframes new-indicator
 	0%
