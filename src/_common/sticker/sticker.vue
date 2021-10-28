@@ -19,6 +19,8 @@
 <style lang="stylus" scoped>
 @import '~styles/variables'
 
+$-base-scale = scale(0.8)
+
 .-sticker
 	position: absolute
 	z-index: 2
@@ -34,8 +36,9 @@
 .-live
 	// Keep this at 0 or the image may flicker before removing itself.
 	opacity: 0
+	transform: $-base-scale
 	animation-name: live-fade
-	animation-duration: 2s
+	animation-duration: 3.5s
 	animation-timing-function: $strong-ease-out
 
 .-clickable
@@ -44,10 +47,13 @@
 @keyframes live-fade
 	0%
 		opacity: 1
+		transform: scale(1)
 
-	40%
+	10%
 		opacity: 0.8
+		transform: scale(1.3)
 
 	100%
 		opacity: 0
+		transform: $-base-scale
 </style>

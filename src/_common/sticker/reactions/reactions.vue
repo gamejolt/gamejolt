@@ -12,6 +12,7 @@
 			:key="stickerId"
 			:img-url="imgUrl"
 			:count="count"
+			:animate="shouldAnimate"
 		/>
 	</div>
 </template>
