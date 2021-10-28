@@ -2,7 +2,7 @@
 
 <template>
 	<app-loading-fade :is-loading="isStarting">
-		<a class="-intro" href="https://gamejolt.com/p/fgjtydpu" @click="openHelpLink">
+		<a class="-intro" href="https://gamejolt.com/p/qewgmbtc" @click="openHelpLink">
 			<div class="-intro-subtitle">
 				<translate>Voice chat and livestream on Game Jolt with your friends!</translate>
 			</div>
@@ -212,7 +212,7 @@
 
 							<br />
 
-							<a href="https://gamejolt.com/p/3pt3kxnn" @click="openHelpLink">
+							<a href="https://gamejolt.com/p/qewgmbtc" @click="openHelpLink">
 								<translate> Learn how to stream your gameplay or screen </translate>
 							</a>
 						</p>
@@ -256,7 +256,7 @@
 
 								<br />
 
-								<a href="https://gamejolt.com/p/fcqbv3ff" @click="openHelpLink">
+								<a href="https://gamejolt.com/p/qewgmbtc" @click="openHelpLink">
 									<translate>
 										Learn how to stream your desktop/game audio
 									</translate>

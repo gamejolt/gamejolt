@@ -286,6 +286,10 @@ export function getCommunityChannelBackground(
 }
 
 export function canCommunityFeatureFireside(community: Community) {
+	// DISABLED_ALLOW_FIRESIDES
+	// Allows us to hide all feature/unfeature options since all Firesides are
+	// currently always featured.
+	return false;
 	return !!community.hasPerms(['community-firesides', 'community-features']);
 }
 

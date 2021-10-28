@@ -98,23 +98,6 @@
 					</div>
 
 					<div
-						v-if="needsApproveLogin"
-						class="alert alert-notice anim-fade-in-enlarge no-animate-leave"
-					>
-						<p>
-							<translate>
-								It seems like you're logging in from a new device or location.
-							</translate>
-						</p>
-						<p>
-							<translate>
-								To protect your account, you need to approve this login attempt.
-								We've sent you an email to approve this login.
-							</translate>
-						</p>
-					</div>
-
-					<div
 						v-if="approvedLoginRejected"
 						class="alert alert-notice anim-fade-in-enlarge no-animate-leave"
 					>

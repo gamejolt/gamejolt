@@ -723,9 +723,6 @@ export class GridClient {
 			} else if (notification.type === Notification.TYPE_FIRESIDE_START) {
 				if (notification.action_model instanceof Fireside) {
 					title = notification.action_model.title;
-					if (notification.action_model.community instanceof Community) {
-						icon = notification.action_model.community.img_thumbnail;
-					}
 				}
 			} else if (notification.type === Notification.TYPE_FIRESIDE_STREAM_NOTIFICATION) {
 				if (notification.action_model instanceof FiresideStreamNotification) {
