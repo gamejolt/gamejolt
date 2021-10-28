@@ -87,6 +87,20 @@
 				</div>
 			</template>
 		</div>
+
+		<div
+			v-if="stickerStreak && stickerStreak.count > 1"
+			class="-combo"
+			:class="{ '-fade': shouldShowUI }"
+		>
+			<div class="badge">x{{ stickerStreak.count }}</div>
+			<img
+				draggable="false"
+				onmousedown="return false"
+				style="user-drag: none"
+				:src="stickerStreak.sticker.img_url"
+			/>
+		</div>
 	</div>
 </template>
 
@@ -182,4 +196,28 @@
 
 	&-icon
 		font-size: 60px
+
+.-combo
+	position: absolute
+	top: 16px
+	right: @top
+	display: inline-flex
+	grid-gap: 4px
+	font-size: $font-size-tiny
+	font-weight: bold
+	color: white
+	align-items: center
+	z-index: 2
+	transition: opacity 200ms $strong-ease-out
+
+	&.-fade
+		opacity: 0.45
+
+	> img
+		width: 32px
+		height: @width
+
+		@media $media-mobile
+			width: 24px
+			height: @width
 </style>

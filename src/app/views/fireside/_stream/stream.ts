@@ -1,9 +1,11 @@
 import Vue from 'vue';
-import { Component, InjectReactive, Prop, Watch } from 'vue-property-decorator';
+import { Component, Inject, InjectReactive, Prop, Watch } from 'vue-property-decorator';
+import { DrawerStore, DrawerStoreKey } from '../../../../_common/drawer/drawer-store';
 import { number } from '../../../../_common/filters/number';
 import { FiresideRTCUser } from '../../../../_common/fireside/rtc/user';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
+import AppSticker from '../../../../_common/sticker/sticker.vue';
 import { ChatUserCollection } from '../../../components/chat/user-collection';
 import {
 	FiresideController,
@@ -26,6 +28,7 @@ const UITransitionTime = 200;
 		AppFiresideVideo,
 		AppFiresideDesktopAudio,
 		AppFiresideVideoStats,
+		AppSticker,
 	},
 })
 export default class AppFiresideStream extends Vue {
@@ -39,6 +42,7 @@ export default class AppFiresideStream extends Vue {
 	members!: ChatUserCollection | null;
 
 	@InjectReactive(FiresideControllerKey) c!: FiresideController;
+	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
 
 	private isHovered = false;
 	private _hideUITimer?: NodeJS.Timer;
@@ -46,6 +50,10 @@ export default class AppFiresideStream extends Vue {
 
 	readonly Screen = Screen;
 	readonly number = number;
+
+	get stickerStreak() {
+		return this.drawerStore.streak;
+	}
 
 	get shouldShowUI() {
 		if (GJ_IS_SSR) {
