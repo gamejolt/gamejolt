@@ -5,7 +5,7 @@
 		v-app-tooltip="controller.isLive ? null : $gettext(`View Stickers`)"
 		class="sticker-reactions"
 		:class="{
-			'-active': showBorder,
+			'-active': showAsActive,
 			'-live': controller.isLive,
 		}"
 		@click.stop="onClick"
