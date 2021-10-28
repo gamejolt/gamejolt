@@ -12,9 +12,8 @@ export default class AppStickerReactionsItem extends Vue {
 	timer: NodeJS.Timer | null = null;
 	$el!: HTMLDivElement;
 
-	get shouldAnimate() {
-		return !!this.timer;
-	}
+	hasQueuedTimer = false;
+	shouldAnimate = false;
 
 	get displayCount() {
 		return fuzzynumber(this.count);
@@ -27,13 +26,26 @@ export default class AppStickerReactionsItem extends Vue {
 	}
 
 	private animateItem() {
-		this.clearTimer();
 		if (!this.animate) {
+			this.clearTimer();
 			return;
 		}
 
+		if (this.timer != null) {
+			this.hasQueuedTimer = true;
+			return;
+		}
+
+		this.shouldAnimate = true;
 		this.timer = setTimeout(() => {
 			this.clearTimer();
+			if (this.hasQueuedTimer) {
+				this.hasQueuedTimer = false;
+				this.animateItem();
+				return;
+			}
+
+			this.shouldAnimate = false;
 		}, 2_000);
 	}
 
