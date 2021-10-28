@@ -89,7 +89,7 @@
 		</div>
 
 		<div
-			v-if="stickerStreak && stickerStreak.count > 1"
+			v-if="stickerStreak && stickerStreak.count > 0"
 			class="-combo"
 			:class="{ '-fade': shouldShowUI }"
 		>
@@ -99,6 +99,8 @@
 			</div>
 
 			<img
+				class="-combo-sticker"
+				:class="{ '-keep-animating': shouldAnimateStreak }"
 				draggable="false"
 				onmousedown="return false"
 				style="user-drag: none"
@@ -234,4 +236,45 @@
 		img
 			width: 24px
 			height: @width
+
+.-combo-sticker
+	animation-name: new-indicator
+	// Make sure this is the same, or lower, than the TS file.
+	animation-duration: 1s
+	animation-timing-function: $ease-in-out-back
+	animation-iteration-count: 1
+	animation-play-state: paused
+	transform: rotate(0), scale(1)
+
+.-keep-animating
+	animation-play-state: running
+	animation-iteration-count: infinite
+
+@keyframes new-indicator
+	0%
+		transform: rotate(0) scale(1)
+
+	// Slide to the left
+	30%
+		transform: rotate(-25deg) scale(1.1)
+
+	33%
+		transform: rotate(-15deg) scale(1.1)
+
+	36%
+		transform: rotate(-20deg) scale(1.1)
+
+	// Slide to the right
+	63%
+		transform: rotate(25deg) scale(1.1)
+
+	66%
+		transform: rotate(15deg) scale(1.1)
+
+	69%
+		transform: rotate(20deg) scale(1.1)
+
+	// Criss cross
+	100%
+		transform: rotate(0deg) scale(1)
 </style>

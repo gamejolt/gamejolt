@@ -10,7 +10,6 @@ export default class AppStickerReactionsItem extends Vue {
 	@Prop(propOptional(Boolean, false)) animate!: boolean;
 
 	timer: NodeJS.Timer | null = null;
-	$el!: HTMLDivElement;
 
 	hasQueuedTimer = false;
 	shouldAnimate = false;
