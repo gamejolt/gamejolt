@@ -22,6 +22,7 @@ import {
 	renewRTCAudienceTokens,
 } from '../../../../_common/fireside/rtc/rtc';
 import { Growls } from '../../../../_common/growls/growls.service';
+import { StickerPlacement } from '../../../../_common/sticker/placement/placement.model';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { User } from '../../../../_common/user/user.model';
 import { Store } from '../../../store';
@@ -41,11 +42,8 @@ import {
 import { StreamSetupModal } from '../stream/setup/setup-modal.service';
 
 interface GridStickerPlacementPayload {
-	sticker_id: number;
-	img_url: string;
 	user_id: number;
-	sticker_pos_x: number;
-	sticker_pos_y: number;
+	sticker_placement: Partial<StickerPlacement>;
 }
 
 @Component({})
