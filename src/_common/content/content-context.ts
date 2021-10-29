@@ -268,6 +268,7 @@ export class ContextCapabilities {
 					ContextCapabilityType.Mention,
 					ContextCapabilityType.Gif,
 					ContextCapabilityType.Media,
+					ContextCapabilityType.Sticker,
 				]);
 		}
 		throw new Error('Context capabilities undefined for context ' + context);
