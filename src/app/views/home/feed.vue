@@ -144,17 +144,33 @@
 				"
 			>
 				<p class="lead text-center anim-fade-in-down" style="max-width: 550px">
-					A door appeared. It's locked.
-					<br />
-					I wonder what it could mean...
+					<template v-if="!eventFireside">
+						A door appeared. It's locked.
+						<br />
+						I wonder what it could mean...
+					</template>
+					<template v-else>
+						The door is open...
+						<br />
+						What could be inside?
+					</template>
 				</p>
 
 				<div style="width: 150px">
 					<img
+						v-if="!eventFireside"
 						class="img-responsive anim-fade-in-enlarge"
 						width="267"
 						height="400"
-						src="~img/halloween2020/door.png"
+						src="~img/halloween2021/door-closed.png"
+						alt="The Game Jolt Basement"
+					/>
+					<img
+						v-else
+						class="img-responsive anim-fade-in-enlarge"
+						width="267"
+						height="400"
+						src="~img/halloween2021/door-open.png"
 						alt="The Game Jolt Basement"
 					/>
 				</div>

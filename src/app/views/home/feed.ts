@@ -86,6 +86,7 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	featuredFireside: Fireside | null = null;
 	userFireside: Fireside | null = null;
 	firesides: Fireside[] = [];
+	eventFireside: Fireside | null = null;
 
 	readonly Screen = Screen;
 	readonly HomeFeedService = HomeFeedService;
@@ -171,6 +172,10 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 		this.firesideStartDeregister = EventBus.on(GRID_EVENT_FIRESIDE_START, () =>
 			this.refreshFiresides()
 		);
+
+		if (payload.eventFireside) {
+			this.eventFireside = new Fireside(payload.eventFireside);
+		}
 	}
 
 	routeDestroyed() {
