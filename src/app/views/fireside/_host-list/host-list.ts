@@ -31,6 +31,8 @@ export default class AppFiresideHostList extends Vue {
 	@InjectReactive(FiresideControllerKey) c!: FiresideController;
 	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
 
+	canPlaceStickers = !GJ_IS_CLIENT;
+
 	@Emit('show-popper') emitShowPopper() {}
 	@Emit('hide-popper') emitHidePopper() {}
 
