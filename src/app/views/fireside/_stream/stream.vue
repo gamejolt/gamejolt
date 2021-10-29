@@ -89,7 +89,7 @@
 		</div>
 
 		<div
-			v-if="stickerStreak && stickerStreak.count > 0"
+			v-if="stickerStreak && stickerStreak.count > 1"
 			class="-combo"
 			:class="{ '-fade': shouldShowUI }"
 		>

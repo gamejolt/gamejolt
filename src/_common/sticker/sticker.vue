@@ -38,7 +38,7 @@ $-base-scale = scale(0.8)
 	opacity: 0
 	transform: $-base-scale
 	animation-name: live-fade
-	animation-duration: 3.5s
+	animation-duration: 8.5s
 	animation-timing-function: $strong-ease-out
 
 .-clickable
@@ -47,11 +47,15 @@ $-base-scale = scale(0.8)
 @keyframes live-fade
 	0%
 		opacity: 1
-		transform: scale(1)
+		transform: scale(1.2)
 
 	10%
-		opacity: 0.8
-		transform: scale(1.3)
+		opacity: 1
+		transform: scale(1)
+
+	60%
+		opacity: 1
+		transform: scale(1)
 
 	100%
 		opacity: 0
