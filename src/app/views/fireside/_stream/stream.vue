@@ -93,7 +93,13 @@
 			class="-combo"
 			:class="{ '-fade': shouldShowUI }"
 		>
-			<div class="badge" :class="{ '-hot-streak': stickerStreak.count >= 5 }">
+			<div
+				class="badge"
+				:class="{
+					'-hot-streak': stickerStreak.count >= 5,
+					'-super-hot-streak': stickerStreak.count >= 10,
+				}"
+			>
 				<translate v-if="Screen.isDesktop">STREAK</translate>
 				x{{ streakCount }}
 			</div>
@@ -255,6 +261,12 @@
 	animation-duration: 1s
 	animation-iteration-count: infinite
 
+.-super-hot-streak
+	animation-name: super-hot-streak-animation
+	animation-iteration-count: infinite
+	animation-duration: 4s
+	animation-direction: alternate
+
 @keyframes hot-streak
 	0%
 		transform: scale(1)
@@ -289,4 +301,35 @@
 	// Criss cross
 	100%
 		transform: rotate(0deg) scale(1)
+
+@keyframes super-hot-streak-animation
+	0%
+		background: orange
+		color: black
+		transform: scale(1)
+
+	20%
+		background: violet
+		color: white
+		transform: scale(1.1)
+
+	40%
+		background: blue
+		color: white
+		transform: scale(1)
+
+	60%
+		background: cyan
+		color: black
+		transform: scale(1.1)
+
+	80%
+		background: green
+		color: white
+		transform: scale(1)
+
+	100%
+		background: yellow
+		color: black
+		transform: scale(1.1)
 </style>
