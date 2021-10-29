@@ -6,6 +6,7 @@ import {
 	DrawerStoreKey,
 	setDrawerOpen,
 } from '../../../../_common/drawer/drawer-store';
+import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import {
 	FiresideController,
@@ -35,7 +36,9 @@ export default class AppFiresideHostList extends Vue {
 	@InjectReactive(FiresideControllerKey) c!: FiresideController;
 	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
 
-	canPlaceStickers = !GJ_IS_CLIENT;
+	get canPlaceStickers() {
+		return !GJ_IS_CLIENT && !!this.c.user && !Screen.isMobile;
+	}
 
 	@Emit('show-popper') emitShowPopper() {}
 	@Emit('hide-popper') emitHidePopper() {}

@@ -9,6 +9,7 @@ import { configShareCard } from '../../../_common/config/config.service';
 import { DrawerStore, DrawerStoreKey } from '../../../_common/drawer/drawer-store';
 import { Environment } from '../../../_common/environment/environment.service';
 import AppExpand from '../../../_common/expand/expand.vue';
+import AppFadeCollapse from '../../../_common/fade-collapse/fade-collapse.vue';
 import { number } from '../../../_common/filters/number';
 import { Fireside } from '../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../_common/illustration/illustration.vue';
@@ -78,6 +79,7 @@ const FiresideThemeKey = 'fireside';
 		AppFiresideBanner,
 		AppStickerTarget,
 		AppStickerReactions,
+		AppFadeCollapse,
 	},
 	directives: {
 		AppTooltip,

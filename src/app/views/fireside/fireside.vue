@@ -210,11 +210,13 @@
 				class="-chat"
 				:class="{ '-trailing': c.isStreaming }"
 			>
-				<app-sticker-reactions
+				<app-fade-collapse
 					v-if="shouldShowReactions"
 					class="-reactions"
-					:controller="c.stickerTargetController"
-				/>
+					:collapse-height="100"
+				>
+					<app-sticker-reactions :controller="c.stickerTargetController" />
+				</app-fade-collapse>
 
 				<app-expand v-if="shouldShowHeaderInBody" :when="c.isShowingStreamOverlay">
 					<app-fireside-header
