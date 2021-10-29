@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Emit, Inject, InjectReactive, Prop } from 'vue-property-decorator';
+import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import {
 	DrawerStore,
 	DrawerStoreKey,
@@ -22,6 +23,9 @@ import AppFiresideHostListStickerButton from './sticker-button/sticker-button.vu
 		AppFiresideStreamOptions,
 		AppFiresideCohostManage,
 		AppFiresideHostListStickerButton,
+	},
+	directives: {
+		AppAuthRequired,
 	},
 })
 export default class AppFiresideHostList extends Vue {
