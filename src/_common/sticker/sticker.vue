@@ -3,6 +3,7 @@
 <template>
 	<div ref="outer" class="-sticker" @click.stop="onClickRemove">
 		<div
+			ref="live"
 			:class="{
 				'-live': isLive,
 			}"

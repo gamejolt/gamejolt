@@ -13,6 +13,7 @@ export default class AppSticker extends Vue {
 
 	$refs!: {
 		outer: HTMLDivElement;
+		live: HTMLDivElement;
 		inner: HTMLImageElement;
 	};
 
@@ -27,7 +28,7 @@ export default class AppSticker extends Vue {
 		this.onUpdateStickerPlacement();
 		if (this.isLive) {
 			// Don't attach to the outer ref, since it may have an animation attached by its parent.
-			this.$refs.inner.addEventListener(
+			this.$refs.live.addEventListener(
 				'animationend',
 				_ => {
 					if (this.controller) {
