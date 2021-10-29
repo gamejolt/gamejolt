@@ -19,6 +19,11 @@
 				@show-popper="emitShowPopper"
 				@hide-popper="emitHidePopper"
 			/>
+
+			<app-fireside-host-list-sticker-button
+				v-if="canPlaceStickers"
+				@click.native="onClickStickerButton"
+			/>
 		</div>
 	</app-scroll-scroller>
 </template>

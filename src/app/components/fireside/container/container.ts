@@ -1,5 +1,5 @@
 import Vue, { CreateElement } from 'vue';
-import { Component, InjectReactive, Prop, ProvideReactive } from 'vue-property-decorator';
+import { Component, Inject, InjectReactive, Prop, ProvideReactive } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { arrayUnique } from '../../../../utils/array';
 import { objectPick } from '../../../../utils/object';
@@ -8,6 +8,11 @@ import { sleep } from '../../../../utils/utils';
 import { uuidv4 } from '../../../../utils/uuid';
 import { Api } from '../../../../_common/api/api.service';
 import { getCookie } from '../../../../_common/cookie/cookie.service';
+import {
+	DrawerStore,
+	DrawerStoreKey,
+	setStickerStreak,
+} from '../../../../_common/drawer/drawer-store';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresideRole } from '../../../../_common/fireside/role/role.model';
 import {
@@ -22,18 +27,31 @@ import {
 	renewRTCAudienceTokens,
 } from '../../../../_common/fireside/rtc/rtc';
 import { Growls } from '../../../../_common/growls/growls.service';
+import { StickerPlacement } from '../../../../_common/sticker/placement/placement.model';
+import { addStickerToTarget } from '../../../../_common/sticker/target/target-controller';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { User } from '../../../../_common/user/user.model';
 import { Store } from '../../../store';
 import { ChatStore, ChatStoreKey, clearChat, loadChat } from '../../chat/chat-store';
 import { joinInstancedRoomChannel, leaveChatRoom, setGuestChatToken } from '../../chat/client';
-import { EVENT_STREAMING_UID, EVENT_UPDATE, FiresideChannel } from '../../grid/fireside-channel';
+import {
+	EVENT_STICKER_PLACEMENT,
+	EVENT_STREAMING_UID,
+	EVENT_UPDATE,
+	FiresideChannel,
+} from '../../grid/fireside-channel';
 import {
 	FiresideController,
 	FiresideControllerKey,
 	updateFiresideExpiryValues,
 } from '../controller/controller';
 import { StreamSetupModal } from '../stream/setup/setup-modal.service';
+
+interface GridStickerPlacementPayload {
+	user_id: number;
+	streak: number;
+	sticker_placement: Partial<StickerPlacement>;
+}
 
 @Component({})
 export class AppFiresideContainer extends Vue {
@@ -47,6 +65,9 @@ export class AppFiresideContainer extends Vue {
 
 	@InjectReactive(ChatStoreKey)
 	chatStore!: ChatStore;
+
+	@Inject(DrawerStoreKey)
+	drawerStore!: DrawerStore;
 
 	get chat() {
 		return this.chatStore.chat;
@@ -99,6 +120,7 @@ export class AppFiresideContainer extends Vue {
 
 	destroyed() {
 		this.controller.onRetry = null;
+		this.drawerStore.streak = null;
 
 		this.disconnect();
 		this.grid?.unsetGuestToken();
@@ -247,6 +269,7 @@ export class AppFiresideContainer extends Vue {
 		// Subscribe to the update event.
 		channel.on(EVENT_UPDATE, this.onGridUpdateFireside.bind(this));
 		channel.on(EVENT_STREAMING_UID, this.onGridStreamingUidAdded.bind(this));
+		channel.on(EVENT_STICKER_PLACEMENT, this.onGridStickerPlacement.bind(this));
 
 		try {
 			await new Promise<void>((resolve, reject) => {
@@ -646,6 +669,21 @@ export class AppFiresideContainer extends Vue {
 				user: user,
 				uids: [payload.streaming_uid],
 			});
+		}
+	}
+
+	onGridStickerPlacement(payload: GridStickerPlacementPayload) {
+		console.debug('[FIRESIDE] Grid sticker placement received.', payload, payload.streak);
+		const c = this.controller;
+		const placement = new StickerPlacement(payload.sticker_placement);
+
+		setStickerStreak(this.drawerStore, placement.sticker, payload.streak);
+
+		// This happens automatically when we're placing our own sticker. Ignore
+		// it here so we don't do it twice.
+		if (payload.user_id !== this.user?.id) {
+			addStickerToTarget(c.stickerTargetController, placement);
+			c.fireside.addStickerToCount(placement.sticker);
 		}
 	}
 }

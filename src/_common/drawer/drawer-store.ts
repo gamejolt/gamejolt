@@ -18,6 +18,11 @@ import { Translate } from '../translate/translate.service';
 
 export const DrawerStoreKey = Symbol('drawer-store');
 
+interface StickerStreak {
+	sticker: Sticker;
+	count: number;
+}
+
 export class DrawerStore {
 	layers: StickerLayerController[] = [];
 	drawerItems: StickerCount[] = [];
@@ -35,6 +40,7 @@ export class DrawerStore {
 	stickerCost: number | null = null;
 	isLoading = false;
 	hasLoaded = false;
+	streak: StickerStreak | null = null;
 
 	_waitingForFrame = false;
 	_onPointerMove: ((event: MouseEvent | TouchEvent) => void) | null = null;
@@ -45,6 +51,13 @@ export class DrawerStore {
 		// The active layer is always the last to be added to the stack.
 		return this.layers[this.layers.length - 1];
 	}
+}
+
+export function setStickerStreak(store: DrawerStore, sticker: Sticker, count: number) {
+	store.streak = {
+		sticker,
+		count,
+	};
 }
 
 /**
