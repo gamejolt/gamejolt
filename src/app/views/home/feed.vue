@@ -156,23 +156,24 @@
 					</template>
 				</p>
 
-				<div style="width: 150px">
+				<div style="width: 200px">
 					<img
 						v-if="!eventFireside"
 						class="img-responsive anim-fade-in-enlarge"
-						width="267"
-						height="400"
+						width="488"
+						height="431"
 						src="~img/halloween2021/door-closed.png"
 						alt="The Game Jolt Basement"
 					/>
-					<img
-						v-else
-						class="img-responsive anim-fade-in-enlarge"
-						width="267"
-						height="400"
-						src="~img/halloween2021/door-open.png"
-						alt="The Game Jolt Basement"
-					/>
+					<router-link v-else :to="eventFireside.location">
+						<img
+							class="img-responsive anim-fade-in-enlarge"
+							width="488"
+							height="431"
+							src="~img/halloween2021/door-open.png"
+							alt="The Game Jolt Basement"
+						/>
+					</router-link>
 				</div>
 			</div>
 
