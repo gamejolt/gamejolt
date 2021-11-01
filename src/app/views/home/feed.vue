@@ -134,49 +134,6 @@
 				/>
 			</template>
 
-			<div
-				v-if="!GJ_IS_CLIENT"
-				style="
-					display: flex;
-					flex-direction: column;
-					align-items: center;
-					margin-bottom: 40px;
-				"
-			>
-				<p class="lead text-center anim-fade-in-down" style="max-width: 550px">
-					<template v-if="!eventFireside">
-						A door appeared. It's locked.
-						<br />
-						I wonder what it could mean...
-					</template>
-					<template v-else>
-						The door is open...
-						<br />
-						What could be inside?
-					</template>
-				</p>
-
-				<div style="width: 200px">
-					<img
-						v-if="!eventFireside"
-						class="img-responsive anim-fade-in-enlarge"
-						width="488"
-						height="431"
-						src="~img/halloween2021/door-closed.png"
-						alt="The Game Jolt Basement"
-					/>
-					<router-link v-else :to="eventFireside.location">
-						<img
-							class="img-responsive anim-fade-in-enlarge"
-							width="488"
-							height="431"
-							src="~img/halloween2021/door-open.png"
-							alt="The Game Jolt Basement"
-						/>
-					</router-link>
-				</div>
-			</div>
-
 			<app-post-add-button @add="onPostAdded" />
 
 			<template v-if="Screen.isXs">
