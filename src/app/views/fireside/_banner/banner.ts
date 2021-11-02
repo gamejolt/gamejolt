@@ -18,23 +18,11 @@ export default class AppFiresideBanner extends Vue {
 	@InjectReactive(FiresideControllerKey)
 	c!: FiresideController;
 
-	private _isLoading = false;
+	private isLoading = false;
 
 	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
 
 	get shouldShowBanner() {
-		if (this.isExpiring) {
-			return true;
-		}
-
-		if (this.shouldNotViewStreams && !this.GJ_IS_CLIENT) {
-			return true;
-		}
-
-		return false;
-	}
-
-	get hasOnClick() {
 		return this.isExpiring;
 	}
 
@@ -44,30 +32,24 @@ export default class AppFiresideBanner extends Vue {
 			this.c.hasExpiryWarning &&
 			this.c.canExtend &&
 			!this.c.isStreaming &&
-			!this._isLoading
+			!this.isLoading
 		);
 	}
 
-	get shouldNotViewStreams() {
-		return this.c.isStreaming && this.c.shouldNotViewStreams;
-	}
-
 	onClickBanner() {
-		if (this.isExpiring) {
-			this.extendFireside();
-		}
+		this.extendFireside();
 	}
 
 	private async extendFireside() {
-		if (this._isLoading) {
+		if (this.isLoading) {
 			return;
 		}
 
 		try {
-			this._isLoading = true;
+			this.isLoading = true;
 			await extendFireside(this.c);
 		} finally {
-			this._isLoading = false;
+			this.isLoading = false;
 		}
 	}
 }
