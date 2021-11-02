@@ -42,7 +42,7 @@ export default class AppChatMemberListItem extends Vue {
 	}
 
 	get isOnline() {
-		if (!this.chatStore.chat) {
+		if (!this.chatStore.chat || this.room.isFiresideRoom) {
 			return null;
 		}
 
