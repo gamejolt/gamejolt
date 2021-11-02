@@ -80,6 +80,10 @@ export default class AppChatWindowOutputItem extends Vue {
 	}
 
 	get loggedOn() {
+		if (!this.room.shouldShowTimestamp) {
+			return null;
+		}
+
 		return {
 			template: date(this.message.logged_on, 'shortTime'),
 			tooltip: date(this.message.logged_on, 'medium'),

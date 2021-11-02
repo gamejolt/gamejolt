@@ -15,4 +15,6 @@ export default class FormFiresidePublish extends BaseForm<FormModel> implements 
 	onInit() {
 		this.setField('auto_feature', true);
 	}
+
+	showAdvancedCommunityOptions = false;
 }

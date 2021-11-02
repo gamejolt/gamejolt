@@ -54,6 +54,10 @@ export class ChatRoom {
 		return this.type === ChatRoom.ROOM_FIRESIDE_GROUP;
 	}
 
+	get shouldShowTimestamp() {
+		return !this.isFiresideRoom;
+	}
+
 	/**
 	 * Returns whether members of the room can be made moderators.
 	 */

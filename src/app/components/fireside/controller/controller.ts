@@ -192,14 +192,14 @@ export class FiresideController {
 	 * them from browsing.
 	 */
 	get shouldNotViewStreams() {
-		return GJ_IS_CLIENT || this.isFirefox;
+		return GJ_IS_CLIENT;
 	}
 
 	private get browser() {
 		return Device.browser().toLowerCase();
 	}
 
-	// Broadcasts and views poorly
+	// Can't broadcast properly - incapable of selecting an output device
 	private get isFirefox() {
 		return this.browser.indexOf('firefox') !== -1;
 	}
