@@ -26,7 +26,9 @@ export default class AppFiresideHostThumbIndicator extends Vue {
 
 		const accuracy = 7;
 		const volumeSnapped = Math.round(volumeAdjusted * accuracy) / accuracy;
-		const clamped = Math.min(1, Math.max(0, volumeSnapped)) * 5;
+		// Doing either ceil or floor here will help with weird half-value
+		// padding jank depending on the browser.
+		const clamped = Math.ceil(Math.min(1, Math.max(0, volumeSnapped)) * 10);
 		return `calc( max( ${clamped}px, ${clamped}% ))`;
 	}
 }
