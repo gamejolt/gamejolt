@@ -192,7 +192,7 @@ export class FiresideController {
 	 * them from browsing.
 	 */
 	get shouldNotViewStreams() {
-		return GJ_IS_CLIENT || this.isFirefox;
+		return GJ_IS_CLIENT;
 	}
 
 	private get browser() {
