@@ -20,10 +20,10 @@
 @import '~styles-lib/mixins'
 
 .-indicator-color
-	z-index: 1
+	z-index: 0
 
 .-indicator
-	z-index: 2
+	z-index: 1
 
 .-indicator
 .-indicator-wrap
