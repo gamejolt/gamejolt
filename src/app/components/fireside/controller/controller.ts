@@ -199,7 +199,7 @@ export class FiresideController {
 		return Device.browser().toLowerCase();
 	}
 
-	// Broadcasts and views poorly
+	// Can't broadcast properly - incapable of selecting an output device
 	private get isFirefox() {
 		return this.browser.indexOf('firefox') !== -1;
 	}
