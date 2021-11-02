@@ -3,6 +3,7 @@
 <template>
 	<app-form>
 		<app-form-group
+			v-if="showAdvancedCommunityOptions"
 			name="auto_feature"
 			:label="$gettext(`Automatically feature in community?`)"
 		>
