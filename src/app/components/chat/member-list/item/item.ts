@@ -57,4 +57,9 @@ export default class AppChatMemberListItem extends Vue {
 		const role = tryGetRoomRole(this.chat, this.room, this.user);
 		return role === 'moderator';
 	}
+
+	get isStaff() {
+		// In public rooms, display staff member status.
+		return !this.room.isPrivateRoom && this.user.permission_level > 0;
+	}
 }
