@@ -1,4 +1,3 @@
-import { Environment } from '../../environment/environment.service';
 import { Navigate } from '../../navigate/navigate.service';
 import { WithAppStore } from '../../store/app-store';
 import { User } from '../../user/user.model';
@@ -42,7 +41,7 @@ export class ClientUser {
 		// This hack will not hold if we have other sections under the 'client' section that need to redirect to auth if not logged in.
 		const fromSection = Navigate.currentClientSection;
 		if (!Navigate.isRedirecting && (!fromSection || fromSection !== 'client')) {
-			Navigate.goto(Environment.authBaseUrl + '/login');
+			// Navigate.goto(Environment.authBaseUrl + '/login');
 		}
 	}
 }

@@ -576,11 +576,17 @@ module.exports = function (config) {
 							},
 							public: isInDocker
 								? 'webpack.development.gamejolt.com'
-								: 'development.gamejolt.com',
+								: 'localhost:' + config.port,
 							transportMode: 'ws',
 							// quiet: true,
 							progress: true,
-							disableHostCheck: hasTunnels || isInDocker,
+							// allowedHosts: [
+							// 	'development.gamejolt.com',
+							// 	'.development.gamejolt.com',
+							// 	'localhost',
+							// 	'localhost:' + config.port,
+							// ],
+							disableHostCheck: hasTunnels,
 							compress: hasTunnels,
 							hot: shouldUseHMR,
 							watchOptions: {
