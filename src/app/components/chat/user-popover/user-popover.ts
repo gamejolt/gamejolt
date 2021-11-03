@@ -82,8 +82,27 @@ export default class AppChatUserPopover extends Vue {
 			return false;
 		}
 
+		// In public rooms, staff members cannot lose their mod status.
+		if (!this.room.isPrivateRoom && this.user.permission_level > 0) {
+			return false;
+		}
+
 		// Only the owner of the room can promote/demote moderators.
 		return this.chat.currentUser.id === this.room.owner_id;
+	}
+
+	get canKick() {
+		// Cannot kick one of your mods, gotta demote first.
+		if (this.isModerator) {
+			return false;
+		}
+
+		// In public rooms, staff members can never get kicked.
+		if (!this.room.isPrivateRoom && this.user.permission_level > 0) {
+			return false;
+		}
+
+		return true;
 	}
 
 	onClickSendMessage() {
