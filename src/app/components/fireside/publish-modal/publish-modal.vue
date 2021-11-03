@@ -9,10 +9,13 @@
 		</div>
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<translate>Publish your fireside</translate>
+				<translate>Publish your fireside?</translate>
 			</h2>
 		</div>
 		<div class="modal-body">
+			<p>
+				<translate>This will make it visible for everyone.</translate>
+			</p>
 			<form-fireside-publish :fireside="fireside" @submit="onFormSubmit" />
 		</div>
 	</app-modal>

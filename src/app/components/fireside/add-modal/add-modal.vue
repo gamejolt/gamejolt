@@ -10,8 +10,8 @@
 		<div class="modal-body">
 			<p class="lead">
 				<translate>
-					Firesides are temporary pop-up chats where you can hang out with your followers,
-					friends, and communities!
+					Firesides are temporary pop-up rooms where you can chat and stream with your
+					friends, followers, and communities!
 				</translate>
 			</p>
 

@@ -24,7 +24,7 @@ import AppStickerReactions from '../reactions/reactions.vue';
 import AppSticker from '../sticker.vue';
 import { getStickerModelResourceName, StickerTargetController } from './target-controller';
 
-export type ValidStickerResource = 'Comment' | 'Fireside_Post' | 'MediaItem';
+export type ValidStickerResource = 'Comment' | 'Fireside_Post' | 'MediaItem' | 'Fireside';
 
 const InviewConfig = new ScrollInviewConfig();
 
@@ -147,6 +147,11 @@ export default class AppStickerTarget extends Vue {
 	}
 
 	getStickerAnimationDelay(placement: StickerPlacement) {
+		// Immediately show stickers if we're in a Live context.
+		if (this.controller.isLive) {
+			return 'unset';
+		}
+
 		// If the sticker was placed since we last rendered the stickers, we
 		// don't want it to delay or it'll feel broken/slow. We wait a little
 		// bit just because it looks a bit later after placing to wait.

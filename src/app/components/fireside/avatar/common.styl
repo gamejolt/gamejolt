@@ -66,18 +66,6 @@ $-zindex-popper = 4
 		justify-content: center
 		align-items: center
 
-.-avatar-anim
-	img-circle()
-	position: absolute
-	top: 0
-	right: 0
-	bottom: 0
-	left: 0
-	animation-name: live-splash
-	animation-duration: 1s
-	animation-iteration-count: infinite
-	animation-timing-function: $ease-out-back
-
 .-extras
 	img-circle()
 	elevate-1()
@@ -195,24 +183,3 @@ $-zindex-popper = 4
 
 	&-community
 		color: var(--theme-fg-muted)
-
-@keyframes live-splash
-	0%
-		background-color: $-border-color
-		opacity: 1
-
-	10%
-		background-color: $-border-color
-
-	20%
-		background-color: $-border-color
-		transform: scale(1.04)
-		opacity: 1
-
-	25%
-		background-color: var(--theme-link)
-
-	100%
-		background-color: var(--theme-link)
-		opacity: 0
-		transform: scale(1.15)

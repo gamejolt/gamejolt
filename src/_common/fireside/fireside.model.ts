@@ -3,6 +3,8 @@ import { Api } from '../api/api.service';
 import { Collaboratable } from '../collaborator/collaboratable';
 import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
+import { constructStickerCounts, StickerCount } from '../sticker/sticker-count';
+import { Sticker } from '../sticker/sticker.model';
 import { UserBlock } from '../user/block/block.model';
 import { User } from '../user/user.model';
 import { FiresideCommunity } from './community/community.model';
@@ -17,6 +19,7 @@ export class Fireside extends Collaboratable(Model) {
 	header_media_item: MediaItem | null = null;
 	role: FiresideRole | null = null;
 	user_block?: UserBlock | null;
+	sticker_counts: StickerCount[] = [];
 
 	hash!: string;
 	title!: string;
@@ -78,6 +81,10 @@ export class Fireside extends Collaboratable(Model) {
 		if (data.community_links) {
 			this.community_links = FiresideCommunity.populate(data.community_links);
 		}
+
+		if (data.sticker_counts) {
+			this.sticker_counts = constructStickerCounts(data.sticker_counts);
+		}
 	}
 
 	public isOpen() {
@@ -90,6 +97,19 @@ export class Fireside extends Collaboratable(Model) {
 
 	public getExpiryInMs() {
 		return this.expires_on - getCurrentServerTime();
+	}
+
+	public addStickerToCount(sticker: Sticker) {
+		const existingEntry = this.sticker_counts.find(i => i.stickerId === sticker.id);
+		if (existingEntry) {
+			existingEntry.count++;
+		} else {
+			this.sticker_counts.push({
+				stickerId: sticker.id,
+				imgUrl: sticker.img_url,
+				count: 1,
+			});
+		}
 	}
 
 	$save() {

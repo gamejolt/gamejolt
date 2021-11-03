@@ -1,4 +1,5 @@
 import AgoraRTC, {
+	AudienceLatencyLevelType,
 	IAgoraRTCClient,
 	IAgoraRTCRemoteUser,
 	ILocalAudioTrack,
@@ -10,6 +11,10 @@ import { FiresideRTC } from './rtc';
 
 type OnTrackPublish = (remoteUser: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video') => void;
 type OnTrackUnpublish = (remoteUser: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video') => void;
+
+// Everyone on ultra-low latency to try to mitigate the amount of delay between
+// chat audio and video.
+const DefaultAudienceLevel: AudienceLatencyLevelType = 2;
 
 export class FiresideRTCChannel {
 	constructor(public readonly rtc: FiresideRTC, public readonly channel: string) {}
@@ -93,7 +98,7 @@ export async function joinChannel(channel: FiresideRTCChannel, token: string) {
 
 	// 1 = "low latency" which is used for audience role. It will always use
 	// ultra-low latency when role is host.
-	await agoraClient.setClientRole('audience', { level: 1 });
+	await agoraClient.setClientRole('audience', { level: DefaultAudienceLevel });
 	generation.assert();
 
 	// TODO: Check if out UID stuff is okay? It should be null for guest.
@@ -286,7 +291,7 @@ export async function stopChannelStreaming(channel: FiresideRTCChannel) {
 	}
 
 	rtc.log(`Setting client role back to audience.`);
-	await agoraClient.setClientRole('audience', { level: 1 });
+	await agoraClient.setClientRole('audience', { level: DefaultAudienceLevel });
 	generation.assert();
 
 	rtc.log(`Stopped streaming.`);

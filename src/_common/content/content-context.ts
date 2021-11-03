@@ -269,6 +269,7 @@ export class ContextCapabilities {
 					ContextCapabilityType.Mention,
 					ContextCapabilityType.Gif,
 					ContextCapabilityType.Media,
+					ContextCapabilityType.Sticker,
 				]);
 
 			default:

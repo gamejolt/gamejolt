@@ -14,6 +14,7 @@ import { Growls } from '../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../../_common/share/share.service';
+import { StickerTargetController } from '../../../../_common/sticker/target/target-controller';
 import { appStore } from '../../../../_common/store/app-store';
 import { Translate } from '../../../../_common/translate/translate.service';
 import { ChatClient } from '../../chat/client';
@@ -36,7 +37,11 @@ export const FiresideControllerKey = Symbol('fireside-controller');
 type Options = { isMuted?: boolean };
 
 export class FiresideController {
-	constructor(public readonly fireside: Fireside, { isMuted }: Options) {
+	constructor(
+		public readonly fireside: Fireside,
+		public readonly stickerTargetController: StickerTargetController,
+		{ isMuted }: Options
+	) {
 		this.isMuted = isMuted ?? false;
 	}
 
@@ -187,14 +192,14 @@ export class FiresideController {
 	 * them from browsing.
 	 */
 	get shouldNotViewStreams() {
-		return GJ_IS_CLIENT || this.isFirefox;
+		return GJ_IS_CLIENT;
 	}
 
 	private get browser() {
 		return Device.browser().toLowerCase();
 	}
 
-	// Broadcasts and views poorly
+	// Can't broadcast properly - incapable of selecting an output device
 	private get isFirefox() {
 		return this.browser.indexOf('firefox') !== -1;
 	}
@@ -206,7 +211,11 @@ export class FiresideController {
 }
 
 export function createFiresideController(fireside: Fireside, options: Options = {}) {
-	return new FiresideController(fireside, options);
+	return new FiresideController(
+		fireside,
+		new StickerTargetController(fireside, undefined, true),
+		options
+	);
 }
 
 export function getFiresideLink(c: FiresideController, router: VueRouter) {

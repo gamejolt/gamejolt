@@ -1,9 +1,12 @@
 import Vue from 'vue';
-import { Component, InjectReactive, Prop, Watch } from 'vue-property-decorator';
+import { Component, Inject, InjectReactive, Prop, Watch } from 'vue-property-decorator';
+import { DrawerStore, DrawerStoreKey } from '../../../../_common/drawer/drawer-store';
+import { fuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import { number } from '../../../../_common/filters/number';
 import { FiresideRTCUser } from '../../../../_common/fireside/rtc/user';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
+import AppSticker from '../../../../_common/sticker/sticker.vue';
 import { ChatUserCollection } from '../../../components/chat/user-collection';
 import {
 	FiresideController,
@@ -26,6 +29,7 @@ const UITransitionTime = 200;
 		AppFiresideVideo,
 		AppFiresideDesktopAudio,
 		AppFiresideVideoStats,
+		AppSticker,
 	},
 })
 export default class AppFiresideStream extends Vue {
@@ -39,6 +43,7 @@ export default class AppFiresideStream extends Vue {
 	members!: ChatUserCollection | null;
 
 	@InjectReactive(FiresideControllerKey) c!: FiresideController;
+	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
 
 	private isHovered = false;
 	private _hideUITimer?: NodeJS.Timer;
@@ -46,6 +51,18 @@ export default class AppFiresideStream extends Vue {
 
 	readonly Screen = Screen;
 	readonly number = number;
+
+	streakTimer: NodeJS.Timer | null = null;
+	hasQueuedStreakAnimation = false;
+	shouldAnimateStreak = false;
+
+	get stickerStreak() {
+		return this.drawerStore.streak;
+	}
+
+	get streakCount() {
+		return fuzzynumber(this.stickerStreak?.count ?? 0);
+	}
 
 	get shouldShowUI() {
 		if (GJ_IS_SSR) {
@@ -140,6 +157,37 @@ export default class AppFiresideStream extends Vue {
 		this.c.isShowingOverlayPopper = false;
 	}
 
+	private animateStickerStreak() {
+		if (!this.streakCount) {
+			this.clearStreakTimer();
+			return;
+		}
+
+		if (this.streakTimer != null) {
+			this.hasQueuedStreakAnimation = true;
+			return;
+		}
+
+		this.shouldAnimateStreak = true;
+		this.streakTimer = setTimeout(() => {
+			this.clearStreakTimer();
+			if (this.hasQueuedStreakAnimation) {
+				this.hasQueuedStreakAnimation = false;
+				this.animateStickerStreak();
+				return;
+			}
+
+			this.shouldAnimateStreak = false;
+		}, 2_000);
+	}
+
+	private clearStreakTimer() {
+		if (this.streakTimer) {
+			clearTimeout(this.streakTimer);
+		}
+		this.streakTimer = null;
+	}
+
 	private scheduleUIHide(delay: number) {
 		if (!this.shouldShowUI) {
 			this.startIgnoringPointer();
@@ -189,5 +237,12 @@ export default class AppFiresideStream extends Vue {
 	@Watch('shouldShowUI', { immediate: true })
 	onShouldShowUIChanged() {
 		this.c.isShowingStreamOverlay = this.shouldShowUI;
+	}
+
+	@Watch('stickerStreak')
+	onStreakCountChanged() {
+		if (this.stickerStreak) {
+			this.animateStickerStreak();
+		}
 	}
 }

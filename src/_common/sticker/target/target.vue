@@ -20,6 +20,8 @@
 					class="-sticker -sticker-animate"
 					:style="{ 'animation-delay': getStickerAnimationDelay(sticker) }"
 					:sticker="sticker"
+					:controller="controller"
+					:is-clickable="!controller.isLive"
 				/>
 			</div>
 		</transition>

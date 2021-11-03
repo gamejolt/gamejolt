@@ -10,20 +10,22 @@
 					min: 4,
 					max: 100,
 				}"
-				:validate-on="['blur']"
+				:placeholder="defaultTitle"
+				@blur.native="onBlurTitle"
 			/>
 			<app-form-control-errors />
 			<div class="help-block">
-				<translate>Give your fireside a snappy title to draw everyone in!</translate>
+				<translate>Let everyone know what you're doing in this fireside.</translate>
 			</div>
 		</app-form-group>
 
 		<template v-if="canSelectCommunity">
-			<app-form-group name="community_id" :label="$gettext(`Show in a community?`)">
+			<app-form-group name="community_id" :label="$gettext(`Start in a community?`)">
 				<div class="help-block">
 					<translate>
-						You can only start firesides in communities that allow it. Select one of the
-						communities you're a member of to get started.
+						You can start firesides in communities you collaborate on. If you do,
+						community members will be notified and other collaborators can stream with
+						you.
 					</translate>
 				</div>
 

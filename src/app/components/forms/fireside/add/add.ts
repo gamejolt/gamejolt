@@ -47,6 +47,9 @@ export default class FormFiresideAdd extends BaseForm<FormModel> implements Form
 	}
 
 	get showAdvancedCommunityOptions() {
+		// DISABLED_ALLOW_FIRESIDES
+		// Currently, we never show these options and default them to true when processing the form.
+		return false;
 		const community = this.selectedCommunity;
 		if (!community) {
 			return false;
@@ -56,7 +59,6 @@ export default class FormFiresideAdd extends BaseForm<FormModel> implements Form
 	}
 
 	onInit() {
-		this.setField('title', this.defaultTitle);
 		this.setField('is_draft', false);
 
 		if (this.community) {
@@ -66,6 +68,10 @@ export default class FormFiresideAdd extends BaseForm<FormModel> implements Form
 			this.setField('auto_feature', false);
 			this.setField('add_community_as_cohosts', false);
 		}
+	}
+
+	onBlurTitle() {
+		this.setField('title', this.formModel.title.trim());
 	}
 
 	private setCommunity(community: Community) {

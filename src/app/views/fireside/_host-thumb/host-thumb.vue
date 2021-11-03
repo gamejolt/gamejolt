@@ -134,6 +134,7 @@
 	left: 8px
 	right: 8px
 	grid-gap: 4px
+	z-index: 2
 
 	&-spacer
 		flex: auto

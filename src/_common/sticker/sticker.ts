@@ -3,22 +3,41 @@ import Component from 'vue-class-component';
 import { Emit, Prop, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../utils/vue';
 import { StickerPlacement } from './placement/placement.model';
+import { removeStickerFromTarget, StickerTargetController } from './target/target-controller';
 
 @Component({})
 export default class AppSticker extends Vue {
 	@Prop(propRequired(StickerPlacement)) sticker!: StickerPlacement;
+	@Prop(propOptional(StickerTargetController, null)) controller!: StickerTargetController | null;
 	@Prop(propOptional(Boolean, true)) isClickable!: boolean;
 
 	$refs!: {
 		outer: HTMLDivElement;
+		live: HTMLDivElement;
 		inner: HTMLImageElement;
 	};
 
 	@Emit('click')
 	emitClick() {}
 
+	get isLive() {
+		return this.controller?.isLive == true;
+	}
+
 	mounted() {
 		this.onUpdateStickerPlacement();
+		if (this.isLive) {
+			// Don't attach to the outer ref, since it may have an animation attached by its parent.
+			this.$refs.live.addEventListener(
+				'animationend',
+				_ => {
+					if (this.controller) {
+						removeStickerFromTarget(this.controller, this.sticker);
+					}
+				},
+				true
+			);
+		}
 	}
 
 	@Watch('sticker.position_x')

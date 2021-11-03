@@ -37,7 +37,8 @@
 						v-app-observe-dimensions="onDimensionsChange"
 						class="-video-container"
 					>
-						<div
+						<app-sticker-target
+							:controller="c.stickerTargetController"
 							class="-video-inner"
 							:class="{
 								'-unsupported': GJ_IS_CLIENT,
@@ -80,7 +81,7 @@
 									</template>
 								</app-popper>
 							</template>
-						</div>
+						</app-sticker-target>
 					</div>
 				</div>
 
@@ -209,6 +210,14 @@
 				class="-chat"
 				:class="{ '-trailing': c.isStreaming }"
 			>
+				<app-fade-collapse
+					v-if="shouldShowReactions"
+					class="-reactions"
+					:collapse-height="100"
+				>
+					<app-sticker-reactions :controller="c.stickerTargetController" />
+				</app-fade-collapse>
+
 				<app-expand v-if="shouldShowHeaderInBody" :when="c.isShowingStreamOverlay">
 					<app-fireside-header
 						class="-header"
@@ -464,8 +473,15 @@
 	position: relative
 	height: 100%
 
-	.-body-column &
-	.-is-streaming &
+.-body-column
+	.-reactions
+		margin-top: 0
+		margin-bottom: 0
+
+.-body-column
+.-is-streaming
+	.-chat-wrapper
+	.-reactions
 		margin-left: -($grid-gutter-width-xs / 2)
 		margin-right: -($grid-gutter-width-xs / 2)
 
