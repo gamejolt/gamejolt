@@ -59,7 +59,7 @@ export default class AppStyleguideColor extends Vue {
 				'theme-darker',
 				'theme-dark',
 				'theme-gray',
-				'theme-gray',
+				'theme-gray-subtle',
 				'theme-light',
 				'theme-lighter',
 				'theme-lightest',
