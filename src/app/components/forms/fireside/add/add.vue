@@ -11,6 +11,7 @@
 					max: 100,
 				}"
 				:placeholder="defaultTitle"
+				@blur.native="onBlurTitle"
 			/>
 			<app-form-control-errors />
 			<div class="help-block">

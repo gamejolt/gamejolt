@@ -70,6 +70,10 @@ export default class FormFiresideAdd extends BaseForm<FormModel> implements Form
 		}
 	}
 
+	onBlurTitle() {
+		this.setField('title', this.formModel.title.trim());
+	}
+
 	private setCommunity(community: Community) {
 		this.setField('community_id', community.id);
 
