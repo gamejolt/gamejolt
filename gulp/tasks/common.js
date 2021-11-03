@@ -59,7 +59,8 @@ module.exports = (config, projectBase) => {
 	} else if (config.isApp) {
 		config.sections = filterSections(i => i.app);
 	} else {
-		config.sections = filterSections(i => !i.client && !i.app);
+		// app sections ONLY work for the app
+		config.sections = filterSections(i => !i.app);
 	}
 
 	if (argv['section']) {
