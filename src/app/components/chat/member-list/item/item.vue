@@ -33,7 +33,7 @@
 							<app-jolticon icon="crown" />
 						</span>
 						<span v-else-if="isStaff" v-app-tooltip="$gettext(`Game Jolt Staff`)">
-							<app-jolticon icon="bolt-filled" />
+							<app-jolticon icon="gamejolt" />
 						</span>
 						<span v-else-if="isModerator" v-app-tooltip="$gettext(`Moderator`)">
 							<app-jolticon icon="star" />
