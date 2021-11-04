@@ -1,3 +1,5 @@
+import { Api } from '../../api/api.service';
+import { Environment } from '../../environment/environment.service';
 import { Navigate } from '../../navigate/navigate.service';
 import { WithAppStore } from '../../store/app-store';
 import { User } from '../../user/user.model';
@@ -11,8 +13,18 @@ export class ClientUser {
 			const user = new User(JSON.parse(localUser));
 			store.commit('app/setUser', user);
 		} else if (Navigate.currentClientSection !== 'auth') {
-			// Must be logged in to use client.
-			this.authRedirect();
+			if (GJ_WITH_LOCALSTOAGE_AUTH_REDIRECT) {
+				// Must be logged in to use client.
+				this.authRedirect();
+			} else {
+				Api.sendRequest('/web/touch', null, { detach: true, processPayload: false }).then(
+					response => {
+						if (!response || !response.data || !response.data.user) {
+							this.authRedirect();
+						}
+					}
+				);
+			}
 		}
 
 		// When the app user changes in the store, freeze it into local storage so we can bootstrap
@@ -41,7 +53,7 @@ export class ClientUser {
 		// This hack will not hold if we have other sections under the 'client' section that need to redirect to auth if not logged in.
 		const fromSection = Navigate.currentClientSection;
 		if (!Navigate.isRedirecting && (!fromSection || fromSection !== 'client')) {
-			// Navigate.goto(Environment.authBaseUrl + '/login');
+			Navigate.goto(Environment.authBaseUrl + '/login');
 		}
 	}
 }
