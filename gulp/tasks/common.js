@@ -47,6 +47,12 @@ module.exports = (config, projectBase) => {
 
 	config.port = config.port || argv.port || 8080;
 
+	// On start, the client redirects to auth when it doesnt have a user in localstorage,
+	// and redirects to app when it does.
+	// When watching the client (as opposed to building it fully), this is undesired because
+	// at the time of writing we are limited to watching one section at a time in the client.
+	config.withLocalStorageAuthRedirect = argv.withLocalStorageAuthRedirect || !config.watching;
+
 	config.translationSections = config.translationSections || [];
 	config.buildSection = argv['section'] || 'app';
 

@@ -11,3 +11,4 @@ declare const GJ_TUNNELS: {
 	backend?: string;
 	frontend?: string;
 };
+declare const GJ_WITH_LOCALSTOAGE_AUTH_REDIRECT: boolean;
