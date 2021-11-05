@@ -1,16 +1,16 @@
-import { EditorView } from 'prosemirror-view';
 import Vue from 'vue';
-import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
+import { Component, Emit, InjectReactive, Prop, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../api/api.service';
 import AppLoading from '../../../../loading/loading.vue';
 import { Screen } from '../../../../screen/screen-service';
 import AppUserAvatarImg from '../../../../user/user-avatar/img/img.vue';
 import { User } from '../../../../user/user.model';
 import AppUserVerifiedTick from '../../../../user/verified-tick/verified-tick.vue';
-import { ContentEditorService } from '../../content-editor.service';
-import { BasicMentionRegex } from '../../plugins/input-rules/detect-mention-suggestion';
-import { ContentEditorSchema } from '../../schemas/content-editor-schema';
+import {
+	ContentEditorController,
+	ContentEditorControllerKey,
+	editorInsertMention,
+} from '../../content-editor-controller';
 import ContentEditorMentionCache from './cache.service';
 
 @Component({
@@ -21,29 +21,31 @@ import ContentEditorMentionCache from './cache.service';
 	},
 })
 export default class AppContentEditorControlsMentionAutocomplete extends Vue {
-	@Prop(propRequired(Object)) view!: EditorView<ContentEditorSchema>;
-	@Prop(propRequired(Number)) stateCounter!: number;
-	@Prop(propRequired(Number)) canShow!: number;
+	@Prop({ type: Boolean, required: true })
+	canShow!: boolean;
 
-	visible = false;
-	top = 'auto';
-	bottom = 'auto';
-	left = 'auto';
+	@InjectReactive(ContentEditorControllerKey)
+	controller!: ContentEditorController;
 
 	query = ''; // Currently active suggestion query
 	selectedIndex = 0;
 	isListening = false; // If we are listening to the document keydown event, to be able to unbind it later.
-	isInverted = false; // If the list is inverted due to screen size constraints. It shows above the control instead if below.
 	remoteSuggestionDebounceTimeout: NodeJS.Timer | null = null; // Timeout between requests to search backend
 	isLoading = false; // Loading more users from backend
 	users: User[] = [];
 
 	readonly Screen = Screen;
 
+	@Emit('insert') emitInsert() {}
+
 	$refs!: {
 		container: HTMLElement;
 		list: HTMLDivElement;
 	};
+
+	get view() {
+		return this.controller.view;
+	}
 
 	get displayUsers() {
 		if (this.isInverted) {
@@ -56,11 +58,37 @@ export default class AppContentEditorControlsMentionAutocomplete extends Vue {
 		return this.visible && (this.isLoading || this.users.length > 0);
 	}
 
-	@Emit('users-change')
-	emitUsersChange(_num: number) {}
+	get visible() {
+		return this.controller.capabilities.hasMentionControls && this.canShow;
+	}
+
+	get isInverted() {
+		// If the text control is more than 50% down the page, open the control
+		// above ("inverted")
+		return this.controller.scope.cursorStartTop ?? 0 / Screen.height >= 0.5;
+	}
+
+	get styling() {
+		const {
+			scope: { cursorStartTop },
+			window: { top, left },
+		} = this.controller;
+		const offset = (cursorStartTop ?? top) - top + 30 + 'px';
+
+		return {
+			top: this.isInverted ? 'auto' : offset,
+			bottom: this.isInverted ? offset : 'auto',
+			left: this.Screen.isXs ? `-${left}px` : 'auto',
+			visibility: this.showControl ? 'visible' : 'hidden',
+		};
+	}
+
+	get mention() {
+		return this.controller.capabilities.mention;
+	}
 
 	mounted() {
-		this.update();
+		this.onMentionChanged();
 		document.addEventListener('keydown', this.onKeyDown);
 		this.isListening = true;
 	}
@@ -77,53 +105,14 @@ export default class AppContentEditorControlsMentionAutocomplete extends Vue {
 		}
 	}
 
-	@Watch('canShow')
-	@Watch('stateCounter')
-	private update() {
-		if (this.canShow && this.view instanceof EditorView) {
-			const state = this.view.state;
-			const node = ContentEditorService.getSelectedNode(this.view.state);
-
-			if (node !== null && node.isText) {
-				// Get all text from the beginning of the doc to the end of the selection.
-				// Then from the end of that slice, get the mention text.
-				const slice = state.doc.slice(0, state.selection.from);
-				const text = ContentEditorService.getFragmentText(slice.content);
-				const matches = BasicMentionRegex.exec(text);
-
-				if (matches && matches.length >= 2) {
-					const start = this.view.coordsAtPos(state.selection.from);
-
-					const box = this.$refs.container.offsetParent!.getBoundingClientRect();
-					// If the text control is more than 50% down the page, open the control above ("inverted")
-					const relativeYPos = box.top / Screen.height;
-					if (relativeYPos >= 0.5) {
-						this.isInverted = true;
-						this.top = 'auto';
-						this.bottom = start.top - box.top + 30 + 'px';
-					} else {
-						this.isInverted = false;
-						this.top = start.top - box.top + 30 + 'px';
-						this.bottom = 'auto';
-					}
-
-					if (this.Screen.isXs) {
-						// On mobile, we want to position the element to the left border of the screen
-						this.left = '-' + box.left + 'px';
-					} else {
-						this.left = 'auto';
-					}
-
-					this.query = matches[1];
-					this.updateSuggestions(this.query);
-					this.visible = true;
-
-					return;
-				}
-			}
+	@Watch('mention')
+	private onMentionChanged() {
+		if (!this.visible) {
+			return;
 		}
 
-		this.visible = false;
+		this.query = this.mention;
+		this.updateSuggestions(this.query);
 	}
 
 	private async updateSuggestions(query: string) {
@@ -210,26 +199,8 @@ export default class AppContentEditorControlsMentionAutocomplete extends Vue {
 		}
 	}
 
-	onClickInsert(user: User) {
-		this.insertUser(user);
-	}
-
-	@Watch('users.length')
-	onUserLengthChange() {
-		this.emitUsersChange(this.users.length);
-	}
-
 	insertUser(user: User) {
-		if (this.visible && this.canShow) {
-			// start - end include the @query text, it gets replaced with the insertText call.
-			const start = this.view.state.selection.from - this.query.length - 1;
-			const end = this.view.state.selection.from;
-
-			const tr = this.view.state.tr;
-			tr.insertText('@' + user.username + ' ', start, end); // Add space to the end.
-			this.view.dispatch(tr);
-
-			this.$emit('insert', user);
-		}
+		editorInsertMention(this.controller, user.username);
+		this.emitInsert();
 	}
 }

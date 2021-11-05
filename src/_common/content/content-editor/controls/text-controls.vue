@@ -20,7 +20,7 @@
 					v-app-tooltip="$gettext('Bold (Ctrl+B)')"
 					class="control-button"
 					:class="{
-						'control-button-active': hasMark('strong'),
+						'control-button-active': hasMark('bold'),
 					}"
 					@click.prevent="onClickBold"
 					@mousedown.prevent
@@ -32,7 +32,7 @@
 					v-app-tooltip="$gettext('Italic (Ctrl+I)')"
 					class="control-button"
 					:class="{
-						'control-button-active': hasMark('em'),
+						'control-button-active': hasMark('italic'),
 					}"
 					@click.prevent="onClickItalic"
 					@mousedown.prevent
@@ -56,7 +56,7 @@
 					v-app-tooltip="$gettext(isAutolink ? 'Autolinked' : 'Link (Ctrl+K)')"
 					class="control-button"
 					:class="{
-						'control-button-active': hasMark('link'),
+						'control-button-active': hasMark('link') || isAutolink,
 					}"
 					@click.prevent="onClickLink"
 					@mousedown.prevent

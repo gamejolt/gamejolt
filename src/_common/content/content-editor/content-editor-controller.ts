@@ -17,6 +17,13 @@ import { ContentEditorSchema } from './schemas/content-editor-schema';
 
 export const ContentEditorControllerKey = Symbol('content-editor-controller');
 
+type Coordinates = {
+	left: number;
+	right: number;
+	top: number;
+	bottom: number;
+};
+
 export class ContentEditorController {
 	view: EditorView<ContentEditorSchema> | null = null;
 	contextCapabilities = ContextCapabilities.getEmpty();
@@ -24,15 +31,30 @@ export class ContentEditorController {
 	scope = new ContentEditorScope();
 	capabilities = new ContentEditorScopeCapabilities();
 	hydrator = new ContentHydrator();
+
+	constructor(public readonly updateWindow: () => void) {}
+
+	/**
+	 * The distance between the top of the editor container and the top of the cursor.
+	 */
+	get relativeCursorTop() {
+		const windowTop = this.window.top;
+		const cursorTop = this.scope.cursorStartTop ?? windowTop;
+		return cursorTop - windowTop;
+	}
 }
 
 class ContentEditorWindow {
 	width: number;
 	height: number;
+	left: number;
+	top: number;
 
 	constructor(data?: Partial<ContentEditorWindow>) {
 		this.width = data?.width ?? 0;
 		this.height = data?.height ?? 0;
+		this.left = data?.left ?? 0;
+		this.top = data?.top ?? 0;
 	}
 }
 
@@ -43,10 +65,9 @@ class ContentEditorWindow {
 class ContentEditorScope {
 	isFocused: boolean;
 	hasSelection: boolean;
-	cursorStartTop: number | null;
-	cursorStartBottom: number | null;
-	cursorEndTop: number | null;
-	cursorEndBottom: number | null;
+	headingLevel: number | null;
+	cursorStart: Coordinates | null;
+	cursorEnd: Coordinates | null;
 	bold: boolean;
 	italic: boolean;
 	strike: boolean;
@@ -59,10 +80,9 @@ class ContentEditorScope {
 	constructor(data?: Partial<ContentEditorScope>) {
 		this.isFocused = data?.isFocused ?? false;
 		this.hasSelection = data?.hasSelection ?? false;
-		this.cursorStartTop = data?.cursorStartTop ?? null;
-		this.cursorStartBottom = data?.cursorStartBottom ?? null;
-		this.cursorEndTop = data?.cursorEndTop ?? null;
-		this.cursorEndBottom = data?.cursorEndBottom ?? null;
+		this.headingLevel = data?.headingLevel ?? null;
+		this.cursorStart = data?.cursorStart ?? null;
+		this.cursorEnd = data?.cursorEnd ?? null;
 		this.bold = data?.bold ?? false;
 		this.italic = data?.italic ?? false;
 		this.strike = data?.strike ?? false;
@@ -71,6 +91,31 @@ class ContentEditorScope {
 		this.code = data?.code ?? false;
 		this.h1 = data?.h1 ?? false;
 		this.h2 = data?.h2 ?? false;
+	}
+
+	get cursorStartTop() {
+		return this.cursorStart?.top ?? null;
+	}
+
+	get cursorStartBottom() {
+		return this.cursorStart?.bottom ?? null;
+	}
+
+	get cursorEndTop() {
+		return this.cursorEnd?.top ?? null;
+	}
+
+	get cursorEndBottom() {
+		return this.cursorEnd?.bottom ?? null;
+	}
+
+	get cursorStartHeight() {
+		const top = this.cursorStartTop;
+		const bottom = this.cursorStartBottom;
+		if (top === null || bottom === null) {
+			return 0;
+		}
+		return bottom - top;
 	}
 }
 
@@ -116,10 +161,35 @@ class ContentEditorScopeCapabilities {
 		this.hr = data?.hr ?? false;
 		this.mention = data?.mention ?? '';
 	}
+
+	get hasInlineControls() {
+		return this.emoji;
+	}
+
+	get hasTextControls() {
+		return this.bold || this.italic || this.strike || this.code || this.h1 || this.h2;
+	}
+
+	get hasBlockControls() {
+		return (
+			this.list ||
+			this.media ||
+			this.embed ||
+			this.codeBlock ||
+			this.blockquote ||
+			this.spoiler ||
+			this.hr
+		);
+	}
+
+	get hasMentionControls() {
+		return this.mention.length > 0;
+	}
 }
 
-export function editorSyncWindow(c: ContentEditorController, width: number, height: number) {
-	c.window = new ContentEditorWindow({ width, height });
+export function editorSyncWindow(c: ContentEditorController, rect: DOMRect) {
+	const { width, height, left, top } = rect;
+	c.window = new ContentEditorWindow({ width, height, left, top });
 
 	if (GJ_IS_APP) {
 		const msg = ContentEditorAppAdapterMessage.syncWindow(c);
@@ -192,13 +262,18 @@ export function editorSyncScope(
 		node?.isText &&
 		marksForSelection.some(i => i.type.name === 'link' && !!i.attrs.autolink);
 
+	// App doesn't really care about the correct xy coordinates of the editor
+	// window, but others may need it to update any floating controls.
+	if (!GJ_IS_APP) {
+		c.updateWindow();
+	}
+
 	c.scope = new ContentEditorScope({
 		isFocused,
 		hasSelection,
-		cursorStartTop: coordsStart?.top,
-		cursorStartBottom: coordsStart?.bottom,
-		cursorEndTop: coordsEnd?.top,
-		cursorEndBottom: coordsEnd?.bottom,
+		headingLevel,
+		cursorStart: coordsStart,
+		cursorEnd: coordsEnd,
 		bold: hasMark('strong'),
 		italic: hasMark('em'),
 		strike: hasMark('strike'),
@@ -466,6 +541,7 @@ export function editorUploadImageFile(c: ContentEditorController, file: File | n
 
 	const uploadTask = new MediaUploadTask(c, uuidv4(), thumbnail).withFile(file);
 	editorMediaUploadInsert(c, uploadTask);
+	return true;
 }
 
 export function editorToggleMark(
@@ -658,6 +734,14 @@ export function editorInsertGif(c: ContentEditorController, gif: SearchResult) {
 			url: gif.url,
 		})
 	);
+}
+
+export function editorInsertEmbed(c: ContentEditorController) {
+	if (!c.capabilities.embed) {
+		return;
+	}
+
+	_insertNewBlockNode(c, schema => schema.nodes.embed.create());
 }
 
 export function editorInsertMention(c: ContentEditorController, username: string) {

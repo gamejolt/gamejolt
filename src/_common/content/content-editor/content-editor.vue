@@ -42,11 +42,7 @@
 					</span>
 				</transition>
 
-				<app-content-editor-inset-controls
-					v-if="!GJ_IS_APP"
-					:view="view"
-					:state-counter="stateCounter"
-				>
+				<app-content-editor-inset-controls v-if="!GJ_IS_APP">
 					<transition name="fade">
 						<app-content-editor-controls-gif v-if="shouldShowGifButton" />
 					</transition>
@@ -65,25 +61,17 @@
 			<transition name="fade">
 				<app-content-editor-block-controls
 					v-if="shouldShowControls"
-					:editor="this"
-					:state-counter="stateCounter"
 					:collapsed="controlsCollapsed"
 					@collapsed-change="onControlsCollapsedChanged"
 				/>
 			</transition>
 			<transition name="fade">
-				<app-content-editor-text-controls
-					v-if="shouldShowTextControls"
-					:state-counter="stateCounter"
-				/>
+				<app-content-editor-text-controls v-if="shouldShowTextControls" />
 			</transition>
 			<transition name="fade">
 				<app-content-editor-controls-mention-autocomplete
-					:can-show="canShowMentionSuggestions"
-					:view="view"
-					:state-counter="stateCounter"
+					:can-show="canShowMention"
 					@insert="onInsertMention"
-					@users-change="onMentionUsersChange"
 				/>
 			</transition>
 		</template>
