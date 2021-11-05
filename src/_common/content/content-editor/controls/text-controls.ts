@@ -1,13 +1,17 @@
-import { lift, toggleMark, wrapIn } from 'prosemirror-commands';
-import { MarkType, Node } from 'prosemirror-model';
 import Vue from 'vue';
 import { Component, InjectReactive, Watch } from 'vue-property-decorator';
 import { Screen } from '../../../screen/screen-service';
 import { AppTooltip } from '../../../tooltip/tooltip-directive';
-import { ContentEditorController, ContentEditorControllerKey } from '../content-editor-controller';
+import {
+	ContentEditorController,
+	ContentEditorControllerKey,
+	editorLink,
+	editorToggleHeading,
+	editorToggleMark,
+	editorUnlink,
+} from '../content-editor-controller';
 import { ContentEditorService } from '../content-editor.service';
 import { ContentEditorLinkModal } from '../modals/link/link-modal.service';
-import { ContentEditorSchema } from '../schemas/content-editor-schema';
 
 @Component({
 	directives: {
@@ -37,7 +41,7 @@ export default class AppContentEditorTextControls extends Vue {
 	}
 
 	get shouldShowHeading() {
-		return this.contextCapabilities.heading && (this.isInHeading || this.testWrapInHeading());
+		return this.contextCapabilities.heading;
 	}
 
 	mounted() {
@@ -113,97 +117,41 @@ export default class AppContentEditorTextControls extends Vue {
 		return !!this.controller.scope[markType];
 	}
 
-	private dispatchMark(mark: MarkType<ContentEditorSchema>, attrs?: { [key: string]: any }) {
-		toggleMark(mark, attrs)(this.view.state, tr => {
-			this.view.dispatch(tr);
-		});
-	}
-
 	onClickBold() {
-		this.dispatchMark(this.view.state.schema.marks.strong);
+		editorToggleMark(this.controller, this.view.state.schema.marks.strong);
 	}
 
 	onClickItalic() {
-		this.dispatchMark(this.view.state.schema.marks.em);
+		editorToggleMark(this.controller, this.view.state.schema.marks.em);
 	}
 
 	onClickStrikethrough() {
-		this.dispatchMark(this.view.state.schema.marks.strike);
+		editorToggleMark(this.controller, this.view.state.schema.marks.strike);
 	}
 
 	onClickCode() {
-		this.dispatchMark(this.view.state.schema.marks.code);
+		editorToggleMark(this.controller, this.view.state.schema.marks.code);
 	}
 
 	async onClickLink() {
-		if (this.hasMark('link') || this.isAutolink) {
+		if (this.isAutolink) {
+			return;
+		}
+
+		if (this.hasMark('link')) {
 			// Remove the link mark
-			this.dispatchMark(this.view.state.schema.marks.link);
+			editorUnlink(this.controller);
 		} else {
 			const selectedText = ContentEditorService.getSelectedText(this.view.state);
 			const result = await ContentEditorLinkModal.show(selectedText);
+
 			if (result) {
-				this.dispatchMark(this.view.state.schema.marks.link, {
-					href: result.href,
-					title: result.title,
-				});
+				editorLink(this.controller, result.href);
 			}
 		}
 	}
 
-	testWrapInHeading() {
-		return wrapIn(this.view.state.schema.nodes.heading, { level: 1 })(this.view.state);
-	}
-
-	testIsInHeading(node: Node<ContentEditorSchema>) {
-		if (!this.contextCapabilities.heading) {
-			return false;
-		}
-		return ContentEditorService.isContainedInNode(
-			this.view.state,
-			node,
-			this.view.state.schema.nodes.heading
-		);
-	}
-
-	liftFromHeading() {
-		const node = ContentEditorService.getSelectedNode(this.view.state);
-		if (node !== null) {
-			let lifted;
-			do {
-				lifted = lift(this.view.state, this.view.dispatch);
-			} while (lifted && this.testIsInHeading(node));
-		}
-	}
-
-	doWrapInHeading(level: number) {
-		wrapIn(this.view.state.schema.nodes.heading, { level })(
-			this.view.state,
-			this.view.dispatch
-		);
-	}
-
-	onClickHeading(level: number) {
-		if (this.isInHeading) {
-			if (level === this.headingLevel) {
-				this.liftFromHeading();
-			} else {
-				const node = ContentEditorService.getSelectedNode(this.view.state);
-				if (node instanceof Node) {
-					const headingParentNode = this.testIsInHeading(node);
-					if (headingParentNode instanceof Node) {
-						const nodePos = ContentEditorService.findNodePosition(
-							this.view.state,
-							headingParentNode
-						);
-						const tr = this.view.state.tr;
-						tr.setNodeMarkup(nodePos, undefined, { level });
-						this.view.dispatch(tr);
-					}
-				}
-			}
-		} else {
-			this.doWrapInHeading(level);
-		}
+	onClickHeading(level: 2 | 1) {
+		editorToggleHeading(this.controller, level);
 	}
 }

@@ -544,16 +544,26 @@ export function editorUploadImageFile(c: ContentEditorController, file: File | n
 	return true;
 }
 
+export function editorGetLink(c: ContentEditorController): string | null {
+	return editorGetSelectedNode(c)?.marks.find(i => !!i.attrs.href)?.attrs.href ?? null;
+}
+
+function canMark(
+	c: ContentEditorController,
+	mark: MarkType<ContentEditorSchema> | ContentEditorSchema
+) {
+	const type = mark instanceof ContentEditorSchema ? mark : mark.name;
+	return Object.entries(c.capabilities).some(([key, value]) => key === type && !!value);
+}
+
 export function editorToggleMark(
 	c: ContentEditorController,
 	mark: MarkType<ContentEditorSchema>,
 	attrs?: { [key: string]: any }
 ) {
-	if (!c.view) {
+	if (!c.view || !canMark(c, mark)) {
 		return;
 	}
-
-	// TODO: Check against capabilities before doing this?
 
 	toggleMark(mark, attrs)(c.view.state, tr => c.view?.dispatch(tr));
 }
