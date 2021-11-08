@@ -391,6 +391,7 @@
 						@outview="onFiresideOutview"
 					>
 						<app-fireside-badge
+							:key="fireside"
 							:fireside="fireside"
 							:show-preview="canShowFiresidePreview"
 							@changed="onFiresideBadgeChanged"

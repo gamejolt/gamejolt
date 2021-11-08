@@ -397,10 +397,9 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		if ($payload.knownFollowerCount) {
 			this.knownFollowerCount = $payload.knownFollowerCount;
 		}
-		if ($payload.fireside) {
-			this.fireside = new Fireside($payload.fireside);
-			this.hadInitialFireside = !!this.fireside;
-		}
+
+		this.fireside = $payload.fireside ? new Fireside($payload.fireside) : null;
+		this.hadInitialFireside = !!this.fireside;
 
 		this.overviewPayload($payload);
 	}
