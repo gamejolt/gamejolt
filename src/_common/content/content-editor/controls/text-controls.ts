@@ -5,12 +5,12 @@ import { AppTooltip } from '../../../tooltip/tooltip-directive';
 import {
 	ContentEditorController,
 	ContentEditorControllerKey,
+	editorGetSelectedText,
 	editorLink,
 	editorToggleHeading,
 	editorToggleMark,
 	editorUnlink,
 } from '../content-editor-controller';
-import { ContentEditorService } from '../content-editor.service';
 import { ContentEditorLinkModal } from '../modals/link/link-modal.service';
 
 @Component({
@@ -142,7 +142,7 @@ export default class AppContentEditorTextControls extends Vue {
 			// Remove the link mark
 			editorUnlink(this.controller);
 		} else {
-			const selectedText = ContentEditorService.getSelectedText(this.view.state);
+			const selectedText = editorGetSelectedText(this.controller);
 			const result = await ContentEditorLinkModal.show(selectedText);
 
 			if (result) {

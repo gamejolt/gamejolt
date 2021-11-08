@@ -72,6 +72,7 @@
 				<app-content-editor-controls-mention-autocomplete
 					:can-show="canShowMention"
 					@insert="onInsertMention"
+					@user-change="onMentionUsersChange"
 				/>
 			</transition>
 		</template>

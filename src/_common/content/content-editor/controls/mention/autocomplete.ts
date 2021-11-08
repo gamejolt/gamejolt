@@ -37,6 +37,7 @@ export default class AppContentEditorControlsMentionAutocomplete extends Vue {
 	readonly Screen = Screen;
 
 	@Emit('insert') emitInsert() {}
+	@Emit('user-change') emitUserChange(_count: number) {}
 
 	$refs!: {
 		container: HTMLElement;
@@ -108,6 +109,7 @@ export default class AppContentEditorControlsMentionAutocomplete extends Vue {
 	@Watch('mention')
 	private onMentionChanged() {
 		if (!this.visible) {
+			this.emitUserChange(0);
 			return;
 		}
 

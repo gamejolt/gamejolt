@@ -16,11 +16,11 @@ import { ContentOwner } from '../content-owner';
 import {
 	ContentEditorController,
 	ContentEditorControllerKey,
+	editorEnsureEndNode,
 	editorFocus,
 	editorSyncScope,
 	editorSyncWindow,
 } from './content-editor-controller';
-import { ContentEditorService } from './content-editor.service';
 import { ContentRules } from './content-rules';
 import { ContentTempResource } from './content-temp-resource.service';
 import AppContentEditorBlockControls from './controls/block-controls.vue';
@@ -107,8 +107,12 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	/**
 	 * Indicates whether we want to currently show the mention suggestion panel.
 	 * Values > 0 indicate true.
+	 *
+	 * This and [mentionUserCount] are both checked elsewhere to prevent certain
+	 * mouse/keyboard events from triggering.
 	 */
 	canShowMentionSuggestions = 0;
+	mentionUserCount = 0;
 
 	/**
 	 * If no model id if gets passed in, we store a temp model's id here.
@@ -336,10 +340,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 
 		// Make sure we have a paragraph when loading in a new state
 		if (!this.disabled || view.state.doc.childCount === 0) {
-			const tr = ContentEditorService.ensureEndNode(
-				view.state.tr,
-				view.state.schema.nodes.paragraph
-			);
+			const tr = editorEnsureEndNode(view.state.tr, view.state.schema.nodes.paragraph);
 			if (tr instanceof Transaction) {
 				view.dispatch(tr);
 			}
@@ -481,6 +482,10 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	onInsertMention() {
 		this.highlightCurrentSelection();
 		this.canShowMentionSuggestions = 0; // Hide control
+	}
+
+	onMentionUsersChange(num: number) {
+		this.mentionUserCount = num;
 	}
 
 	onScroll() {

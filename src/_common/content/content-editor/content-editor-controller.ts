@@ -1,6 +1,6 @@
 import { lift, toggleMark, wrapIn } from 'prosemirror-commands';
 import { Fragment, Mark, MarkType, Node, NodeType } from 'prosemirror-model';
-import { Selection, TextSelection, Transaction } from 'prosemirror-state';
+import { EditorState, Selection, TextSelection, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import Vue from 'vue';
 import { isImage } from '../../../utils/image';
@@ -298,7 +298,7 @@ export function editorSyncScope(
 		contextCapabilities.mention &&
 		node?.isText &&
 		!hasSelection &&
-		!_checkNodeIsCode(node, parentNode)
+		!editorIsNodeCode(node, parentNode)
 	) {
 		const slice = doc.slice(0, selection.from);
 		const sliceText = _getFragmentText(slice.content);
@@ -478,13 +478,14 @@ export function editorGetMarksForSelection(c: ContentEditorController) {
  */
 export function editorResolveNodePosition(
 	c: ContentEditorController,
-	node: Node<ContentEditorSchema>
+	node: Node<ContentEditorSchema>,
+	newState?: EditorState<ContentEditorSchema>
 ) {
 	if (!c.view) {
 		throw new Error('No view yet.');
 	}
 
-	const { doc } = c.view.state;
+	const doc = newState?.doc ?? c.view.state.doc;
 
 	// TODO: Is there a faster way to do this using prosemirror?
 	let found = -1;
@@ -548,20 +549,12 @@ export function editorGetLink(c: ContentEditorController): string | null {
 	return editorGetSelectedNode(c)?.marks.find(i => !!i.attrs.href)?.attrs.href ?? null;
 }
 
-function canMark(
-	c: ContentEditorController,
-	mark: MarkType<ContentEditorSchema> | ContentEditorSchema
-) {
-	const type = mark instanceof ContentEditorSchema ? mark : mark.name;
-	return Object.entries(c.capabilities).some(([key, value]) => key === type && !!value);
-}
-
 export function editorToggleMark(
 	c: ContentEditorController,
 	mark: MarkType<ContentEditorSchema>,
 	attrs?: { [key: string]: any }
 ) {
-	if (!c.view || !canMark(c, mark)) {
+	if (!c.view || !_canMark(c, mark)) {
 		return;
 	}
 
@@ -860,6 +853,29 @@ export function editorMediaUploadCancel(uploadTask: MediaUploadTask) {
 }
 
 /**
+ * Returns whether the node passed in is within a code mark or code block.
+ */
+export function editorIsNodeCode(
+	node: Node<ContentEditorSchema>,
+	parentNode: null | Node<ContentEditorSchema>
+) {
+	if (node.type.name === 'text') {
+		return (
+			node.marks.some(i => i.type.name === 'code') || parentNode?.type.name === 'codeBlock'
+		);
+	}
+
+	return false;
+}
+
+export function editorGetSelectedText(c: ContentEditorController) {
+	if (!c.view) {
+		return '';
+	}
+	return _getFragmentText(c.view.state.selection.content().content);
+}
+
+/**
  * Replaces the selection with a new inline node.
  */
 function _insertNewInlineNode(
@@ -913,22 +929,6 @@ function _insertNewBlockNode(
 }
 
 /**
- * Returns whether the node passed in is within a code mark or code block.
- */
-function _checkNodeIsCode(
-	node: Node<ContentEditorSchema>,
-	parentNode: null | Node<ContentEditorSchema>
-) {
-	if (node.type.name === 'text') {
-		return (
-			node.marks.some(i => i.type.name === 'code') || parentNode?.type.name === 'codeBlock'
-		);
-	}
-
-	return false;
-}
-
-/**
  * Returns the string of text content within the fragment passed in.
  */
 function _getFragmentText(frag: Fragment<ContentEditorSchema> | Node<ContentEditorSchema>) {
@@ -948,4 +948,12 @@ function _getFragmentText(frag: Fragment<ContentEditorSchema> | Node<ContentEdit
 	});
 
 	return text;
+}
+
+function _canMark(
+	c: ContentEditorController,
+	mark: MarkType<ContentEditorSchema> | ContentEditorSchema
+) {
+	const type = mark instanceof ContentEditorSchema ? mark : mark.name;
+	return Object.entries(c.capabilities).some(([key, value]) => key === type && !!value);
 }
