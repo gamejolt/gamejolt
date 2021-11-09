@@ -41,7 +41,8 @@ export default class AppContentEditorTextControls extends Vue {
 	}
 
 	get shouldShowHeading() {
-		return this.contextCapabilities.heading;
+		const { h1, h2 } = this.controller.capabilities;
+		return h1 && h2;
 	}
 
 	mounted() {

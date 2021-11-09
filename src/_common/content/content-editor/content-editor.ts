@@ -103,7 +103,6 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	 * Gets updated through the update-is-empty-plugin.
 	 */
 	isEmpty = true;
-
 	/**
 	 * Indicates whether we want to currently show the mention suggestion panel.
 	 * Values > 0 indicate true.
@@ -436,6 +435,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	}
 
 	private async highlightCurrentSelection() {
+		console.warn('highlightCurrentSelection');
 		// TODO: Not sure we need this anymore - might already be handled in the
 		// editor functions.
 		return;

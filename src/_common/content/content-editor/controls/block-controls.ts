@@ -52,8 +52,6 @@ export default class AppContentEditorBlockControls extends Vue {
 	}
 
 	get isOverflowingBottom() {
-		// TODO: Can cause flickering because the `top` value is updated before
-		// the window height.
 		return this.controller.window.height - this.top < 24;
 	}
 

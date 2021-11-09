@@ -481,11 +481,11 @@ export function editorResolveNodePosition(
 	node: Node<ContentEditorSchema>,
 	newState?: EditorState<ContentEditorSchema>
 ) {
-	if (!c.view) {
-		throw new Error('No view yet.');
+	if (!c.view && !newState) {
+		throw new Error('No view yet or new state provided.');
 	}
 
-	const doc = newState?.doc ?? c.view.state.doc;
+	const doc = newState?.doc ?? c.view!.state.doc;
 
 	// TODO: Is there a faster way to do this using prosemirror?
 	let found = -1;
@@ -869,10 +869,11 @@ export function editorIsNodeCode(
 }
 
 export function editorGetSelectedText(c: ContentEditorController) {
-	if (!c.view) {
+	const { selection } = c.view?.state ?? {};
+	if (!c.view || selection?.empty !== false) {
 		return '';
 	}
-	return _getFragmentText(c.view.state.selection.content().content);
+	return _getFragmentText(selection.content().content);
 }
 
 /**

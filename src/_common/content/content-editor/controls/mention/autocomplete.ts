@@ -66,15 +66,15 @@ export default class AppContentEditorControlsMentionAutocomplete extends Vue {
 	get isInverted() {
 		// If the text control is more than 50% down the page, open the control
 		// above ("inverted")
-		return this.controller.scope.cursorStartTop ?? 0 / Screen.height >= 0.5;
+		return (this.controller.window.top ?? 0) / Screen.height >= 0.5;
 	}
 
 	get styling() {
 		const {
-			scope: { cursorStartTop },
-			window: { top, left },
+			relativeCursorTop,
+			window: { left },
 		} = this.controller;
-		const offset = (cursorStartTop ?? top) - top + 30 + 'px';
+		const offset = relativeCursorTop + 30 + 'px';
 
 		return {
 			top: this.isInverted ? 'auto' : offset,
@@ -89,7 +89,7 @@ export default class AppContentEditorControlsMentionAutocomplete extends Vue {
 	}
 
 	mounted() {
-		this.onMentionChanged();
+		this.onMentionChange();
 		document.addEventListener('keydown', this.onKeyDown);
 		this.isListening = true;
 	}
@@ -107,7 +107,7 @@ export default class AppContentEditorControlsMentionAutocomplete extends Vue {
 	}
 
 	@Watch('mention')
-	private onMentionChanged() {
+	private onMentionChange() {
 		if (!this.visible) {
 			this.emitUserChange(0);
 			return;
@@ -115,6 +115,11 @@ export default class AppContentEditorControlsMentionAutocomplete extends Vue {
 
 		this.query = this.mention;
 		this.updateSuggestions(this.query);
+	}
+
+	@Watch('users.length')
+	onUsersLengthChange() {
+		this.emitUserChange(this.users.length);
 	}
 
 	private async updateSuggestions(query: string) {

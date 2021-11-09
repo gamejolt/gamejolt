@@ -39,7 +39,7 @@ export function getContentEditorKeymap(editor: AppContentEditor, schema: Content
 			return true;
 		},
 		// Add/remove link
-		'Mod-k': showLinkModal(c, capabilities),
+		'Mod-k': showLinkModal(c),
 		ArrowRight: exitInlineCode(c, false),
 		Space: exitInlineCode(c, true),
 	} as { [k: string]: any };

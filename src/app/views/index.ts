@@ -2,7 +2,6 @@ import { initRouter } from '../../utils/router';
 import { store } from '../store/index';
 import { routeBadgeFeatured } from './badge/featured/featured.route';
 import { routeCommunitiesView } from './communities/view/view.route';
-import { routeContentedor } from './contentedor/contentedor.route';
 import { routeDash } from './dashboard/dashboard.route';
 import { routeDiscover } from './discover/discover.route';
 import { routeDownload } from './download/download.route';
@@ -45,7 +44,6 @@ const routes = [
 	routeBadgeFeatured,
 	routeTimeout,
 	routeFireside,
-	routeContentedor,
 ];
 
 export const router = initRouter(routes);

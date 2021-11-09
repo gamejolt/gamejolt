@@ -17,7 +17,7 @@
 						:key="user.id"
 						class="-suggestion"
 						:class="{ '-suggestion-selected': isSelected(user.id) }"
-						@click.prevent="onClickInsert(user)"
+						@click.prevent="insertUser(user)"
 					>
 						<div v-if="user.is_following" class="-follow-indicator">
 							<small class="text-muted">
