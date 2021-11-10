@@ -1,6 +1,11 @@
 import { EditorState } from 'prosemirror-state';
-import { ContextCapabilities } from '../../../content-context';
-import { ContentEditorService } from '../../content-editor.service';
+import {
+	ContentEditorController,
+	editorGetParentNode,
+	editorGetSelectedNode,
+	editorIsNodeCode,
+	editorResolveNodePosition,
+} from '../../content-editor-controller';
 import { ContentEditorSchema } from '../../schemas/content-editor-schema';
 import { PMDispatch } from './keymap';
 
@@ -9,33 +14,34 @@ import { PMDispatch } from './keymap';
  * This makes sure there is an easy way to enter non-code text at the end of a block without having to
  * manually remove the code mark from the last character(s) in the code text.
  */
-export function exitInlineCode(
-	capabilities: ContextCapabilities,
-	schema: ContentEditorSchema,
-	spacePressed: boolean
-) {
-	return function(state: EditorState<ContentEditorSchema>, dispatch: PMDispatch | undefined) {
-		if (!dispatch || !state.selection.empty || !capabilities.textCode) {
+export function exitInlineCode(c: ContentEditorController, spacePressed: boolean) {
+	return function (state: EditorState<ContentEditorSchema>, dispatch: PMDispatch | undefined) {
+		if (!dispatch || c.scope.hasSelection || !c.capabilities.code) {
+			return false;
+		}
+
+		const selectedNode = editorGetSelectedNode(c);
+		if (selectedNode === null) {
 			return false;
 		}
 
 		// This check also ensures that the selection is at the end of the current block.
 		// When the selection is at the end of a text node with the code mark, and there are text nodes after it,
 		// the selection is treated as being at the start of the next one.
-		if (!ContentEditorService.checkCurrentNodeIsCode(state)) {
-			return false;
-		}
-
-		const selectedNode = ContentEditorService.getSelectedNode(state);
-		if (selectedNode === null) {
+		if (!editorIsNodeCode(selectedNode, editorGetParentNode(c, selectedNode))) {
 			return false;
 		}
 
 		// Only perform an action when the selection is at the end of the code.
-		const pos = ContentEditorService.findNodePosition(state, selectedNode);
+		const pos = editorResolveNodePosition(c, selectedNode);
 		const end = pos + selectedNode.nodeSize;
-
-		if (end !== state.selection.from) {
+		const {
+			selection: { from },
+			schema: {
+				marks: { code },
+			},
+		} = state;
+		if (end !== from) {
 			return false;
 		}
 
@@ -48,13 +54,13 @@ export function exitInlineCode(
 
 			// Move space at the end of the inline code outside.
 			const tr = state.tr;
-			tr.removeMark(state.selection.from - 1, state.selection.from, schema.marks.code);
+			tr.removeMark(from - 1, from, code);
 			dispatch(tr);
 		} else {
 			// Insert a space at the end of the current block.
 			const tr = state.tr;
-			tr.insertText(' ', state.selection.from);
-			tr.removeMark(state.selection.from, state.selection.from + 1, schema.marks.code);
+			tr.insertText(' ', from);
+			tr.removeMark(from, from + 1, code);
 			dispatch(tr);
 		}
 

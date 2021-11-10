@@ -1,39 +1,42 @@
-import { EditorView } from 'prosemirror-view';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { Prop, Watch } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../utils/vue';
-import { ContentEditorSchema } from '../schemas/content-editor-schema';
+import { InjectReactive } from 'vue-property-decorator';
+import { ContentEditorController, ContentEditorControllerKey } from '../content-editor-controller';
 
 @Component({})
 export default class AppContentEditorInsetControls extends Vue {
-	@Prop(propOptional(EditorView)) view!: EditorView<ContentEditorSchema>;
-	@Prop(propRequired(Number)) stateCounter!: number;
+	@InjectReactive(ContentEditorControllerKey)
+	controller!: ContentEditorController;
 
-	visible = false;
-	top = 0;
-	boxHeight = 0;
-
+	private oldTop = 0;
 	$refs!: {
 		container: HTMLDivElement;
 	};
 
 	get shouldShow() {
-		return this.visible && this.top > -8 && this.boxHeight - this.top > 12;
+		return !!this.view && !this.isOverflowing;
 	}
 
-	@Watch('stateCounter')
-	update() {
-		if (this.view instanceof EditorView) {
-			const start = this.view.coordsAtPos(this.view.state.selection.from);
+	get view() {
+		return this.controller.view;
+	}
 
-			const box = this.$refs.container.offsetParent!.getBoundingClientRect();
-			this.boxHeight = box.height;
-			this.top = start.top - box.top;
+	get isOverflowing() {
+		return this.top <= -8 || this.controller.window.height - this.top <= 12;
+	}
 
-			this.visible = true;
-		} else {
-			this.visible = false;
+	get top() {
+		const {
+			scope: { cursorStartHeight, isFocused },
+			relativeCursorTop,
+		} = this.controller;
+
+		// Helps to smooth animations when focus changes.
+		if (!isFocused) {
+			return this.oldTop;
 		}
+
+		this.oldTop = relativeCursorTop - cursorStartHeight / 2;
+		return this.oldTop;
 	}
 }

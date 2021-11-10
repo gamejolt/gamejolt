@@ -1,20 +1,21 @@
-import { Node } from 'prosemirror-model';
-import { Selection } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
 import Vue from 'vue';
-import { Component, InjectReactive, Prop, Watch } from 'vue-property-decorator';
+import { Component, Emit, InjectReactive, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../utils/vue';
 import { Growls } from '../../../growls/growls.service';
 import { Screen } from '../../../screen/screen-service';
 import { AppTooltip } from '../../../tooltip/tooltip-directive';
-import AppContentEditorTS from '../content-editor';
 import {
 	ContentEditorController,
 	ContentEditorControllerKey,
+	editorInsertBlockquote,
+	editorInsertBulletList,
+	editorInsertCodeBlock,
+	editorInsertEmbed,
+	editorInsertHr,
+	editorInsertNumberedList,
+	editorInsertSpoiler,
 	editorUploadImageFile,
 } from '../content-editor-controller';
-import { ContentEditorService } from '../content-editor.service';
-import { ContentEditorSchema } from '../schemas/content-editor-schema';
 
 @Component({
 	components: {},
@@ -23,19 +24,16 @@ import { ContentEditorSchema } from '../schemas/content-editor-schema';
 	},
 })
 export default class AppContentEditorBlockControls extends Vue {
-	@Prop(propRequired(Number)) stateCounter!: number;
 	@Prop(propRequired(Boolean)) collapsed!: boolean;
-	@Prop(propRequired(Object)) editor!: AppContentEditorTS;
 
 	@InjectReactive(ContentEditorControllerKey)
 	controller!: ContentEditorController;
 
-	visible = false;
-	top = 0;
-	left = 0;
-	boxHeight = 100;
+	private oldTop = 0;
 
 	readonly Screen = Screen;
+
+	@Emit('collapsed-change') emitCollapsedChange(_isCollapsed: boolean) {}
 
 	$refs!: {
 		container: HTMLElement;
@@ -50,88 +48,42 @@ export default class AppContentEditorBlockControls extends Vue {
 	}
 
 	get shouldShow() {
-		return this.visible && this.top > -24 && this.boxHeight - this.top > 24;
+		return this.visible && this.top >= -24 && !this.isOverflowingBottom;
 	}
 
-	mounted() {
-		this.update();
+	get isOverflowingBottom() {
+		return this.controller.window.height - this.top < 24;
 	}
 
-	@Watch('stateCounter')
-	private update() {
-		if (this.view instanceof EditorView) {
-			const state = this.view.state;
-			const node = ContentEditorService.getSelectedNode(this.view.state);
-
-			if (node !== null && node.type.name === 'paragraph' && state.selection.empty) {
-				this.visible = true;
-
-				const start = this.view.coordsAtPos(state.selection.from);
-
-				// Offset the controls if there's a heading node.
-				const headingNode = this.testIsInHeading(node);
-				if (headingNode instanceof Node) {
-					if (headingNode.attrs.level === 1) {
-						start.top += 8;
-					} else {
-						start.top += 6;
-					}
-				}
-
-				const box = this.$refs.container.offsetParent!.getBoundingClientRect();
-				this.boxHeight = box.height;
-
-				this.top = start.top - box.top - 8;
-				this.left = -32;
-
-				return;
-			}
-		}
-		this.visible = false;
-		this.setCollapsed(true);
-	}
-
-	testIsInHeading(node: Node<ContentEditorSchema>) {
-		if (!this.contextCapabilities.heading) {
+	get visible() {
+		if (!this.controller.scope.isFocused || this.controller.scope.hasSelection) {
 			return false;
 		}
-		return ContentEditorService.isContainedInNode(
-			this.view.state,
-			node,
-			this.view.state.schema.nodes.heading
-		);
+
+		return this.controller.capabilities.hasBlockControls;
 	}
 
-	private setCollapsed(value: boolean) {
-		this.$emit('collapsed-change', value);
+	get top() {
+		// Use the previous value if our new scope doesn't allow block controls.
+		if (!this.visible) {
+			return this.oldTop;
+		}
+
+		const {
+			scope: { cursorStartHeight },
+			relativeCursorTop,
+		} = this.controller;
+
+		// AppButton line-height is ~36px by default
+		const buttonHeight = 36;
+
+		const heightDiff = buttonHeight - cursorStartHeight;
+		this.oldTop = relativeCursorTop - heightDiff / 2;
+		return this.oldTop;
 	}
 
 	onClickExpand() {
-		this.setCollapsed(!this.collapsed);
-	}
-
-	/**
-	 * Replaces the empty paragraph with the new node.
-	 */
-	private insertNewNode(newNode: Node<ContentEditorSchema>) {
-		const tr = this.view.state.tr;
-		tr.replaceWith(
-			this.view.state.selection.from - 1,
-			this.view.state.selection.to + 1,
-			newNode
-		);
-
-		const resolvedCursorPos = tr.doc.resolve(this.view.state.selection.from);
-		const selection = Selection.near(resolvedCursorPos);
-		tr.setSelection(selection);
-		ContentEditorService.ensureEndNode(tr, this.view.state.schema.nodes.paragraph);
-
-		this.view.focus();
-		this.view.dispatch(tr);
-
-		this.setCollapsed(true);
-
-		this.editor.emitInsertBlockNode(newNode.type.name);
+		this.emitCollapsedChange(!this.collapsed);
 	}
 
 	onClickMedia() {
@@ -165,43 +117,37 @@ export default class AppContentEditorBlockControls extends Vue {
 	}
 
 	onClickEmbed() {
-		const newNode = this.view.state.schema.nodes.embed.create();
-		this.insertNewNode(newNode);
+		this.emitCollapsedChange(true);
+		editorInsertEmbed(this.controller);
 	}
 
 	onClickCodeBlock() {
-		const newNode = this.view.state.schema.nodes.codeBlock.create();
-		this.insertNewNode(newNode);
+		this.emitCollapsedChange(true);
+		editorInsertCodeBlock(this.controller);
 	}
 
 	onClickBlockquote() {
-		const contentNode = this.view.state.schema.nodes.paragraph.create();
-		const newNode = this.view.state.schema.nodes.blockquote.create({}, contentNode);
-		this.insertNewNode(newNode);
+		this.emitCollapsedChange(true);
+		editorInsertBlockquote(this.controller);
 	}
 
 	onClickHr() {
-		const newNode = this.view.state.schema.nodes.hr.create();
-		this.insertNewNode(newNode);
+		this.emitCollapsedChange(true);
+		editorInsertHr(this.controller);
 	}
 
 	onClickSpoiler() {
-		const contentNode = this.view.state.schema.nodes.paragraph.create();
-		const newNode = this.view.state.schema.nodes.spoiler.create({}, contentNode);
-		this.insertNewNode(newNode);
+		this.emitCollapsedChange(true);
+		editorInsertSpoiler(this.controller);
 	}
 
 	onClickBulletList() {
-		const contentNode = this.view.state.schema.nodes.paragraph.create();
-		const listItemNode = this.view.state.schema.nodes.listItem.create({}, contentNode);
-		const newNode = this.view.state.schema.nodes.bulletList.create({}, listItemNode);
-		this.insertNewNode(newNode);
+		this.emitCollapsedChange(true);
+		editorInsertBulletList(this.controller);
 	}
 
 	onClickOrderedList() {
-		const contentNode = this.view.state.schema.nodes.paragraph.create();
-		const listItemNode = this.view.state.schema.nodes.listItem.create({}, contentNode);
-		const newNode = this.view.state.schema.nodes.orderedList.create({}, listItemNode);
-		this.insertNewNode(newNode);
+		this.emitCollapsedChange(true);
+		editorInsertNumberedList(this.controller);
 	}
 }

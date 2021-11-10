@@ -21,6 +21,7 @@ export type PMKeymapCommand = (
 ) => boolean;
 
 export function getContentEditorKeymap(editor: AppContentEditor, schema: ContentEditorSchema) {
+	const c = editor.controller;
 	const capabilities = editor.contextCapabilities;
 	const keymap = {
 		'Mod-z': undo,
@@ -28,7 +29,7 @@ export function getContentEditorKeymap(editor: AppContentEditor, schema: Content
 		'Mod-b': toggleMark(schema.marks.strong),
 		'Mod-i': toggleMark(schema.marks.em),
 		'Mod-`': toggleMark(schema.marks.code),
-		'Shift-Enter': chainCommands(exitCodeStart(capabilities), exitCode, insertHardBreak),
+		'Shift-Enter': chainCommands(exitCodeStart(c), exitCode, insertHardBreak),
 		'Mod-Enter': multiLineEnter(editor),
 		// open emoji panel
 		'Mod-e': () => {
@@ -38,16 +39,16 @@ export function getContentEditorKeymap(editor: AppContentEditor, schema: Content
 			return true;
 		},
 		// Add/remove link
-		'Mod-k': showLinkModal(capabilities, schema),
-		ArrowRight: exitInlineCode(capabilities, schema, false),
-		Space: exitInlineCode(capabilities, schema, true),
+		'Mod-k': showLinkModal(c),
+		ArrowRight: exitInlineCode(c, false),
+		Space: exitInlineCode(c, true),
 	} as { [k: string]: any };
 
 	const enterCommands = [] as PMKeymapCommand[];
 	enterCommands.push(singleLineEnter(editor));
 
 	if (capabilities.heading) {
-		enterCommands.push(splitHeading());
+		enterCommands.push(splitHeading(c));
 	}
 
 	if (capabilities.list) {

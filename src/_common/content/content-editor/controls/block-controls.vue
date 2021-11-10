@@ -6,7 +6,7 @@
 		class="content-editor-controls"
 		:style="{
 			top: top + 'px',
-			left: left + 'px',
+			left: '-32px',
 		}"
 		:class="{
 			'controls-desktop': !Screen.isXs,

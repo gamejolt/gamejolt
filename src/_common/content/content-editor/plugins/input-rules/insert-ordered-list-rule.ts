@@ -1,14 +1,21 @@
 import { InputRule } from 'prosemirror-inputrules';
 import { EditorState, Selection } from 'prosemirror-state';
-import { ContentEditorService } from '../../content-editor.service';
+import {
+	ContentEditorController,
+	editorGetParentNode,
+	editorGetSelectedNode,
+	editorIsNodeCode,
+} from '../../content-editor-controller';
 import { ContentEditorSchema } from '../../schemas/content-editor-schema';
 
-export function insertOrderedListRule() {
+export function insertOrderedListRule(c: ContentEditorController) {
 	return new InputRule(
 		/^1\. $/,
 		(state: EditorState<ContentEditorSchema>, _match: string[], start: number, end: number) => {
 			// We don't want to insert lists inside code text.
-			if (ContentEditorService.checkCurrentNodeIsCode(state)) {
+			const currentNode = editorGetSelectedNode(c);
+			const parent = currentNode ? editorGetParentNode(c, currentNode) : null;
+			if (currentNode && editorIsNodeCode(currentNode, parent)) {
 				return null;
 			}
 

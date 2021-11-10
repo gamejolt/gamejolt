@@ -390,6 +390,8 @@ export default class FormPost
 
 		if (model.has_article) {
 			this.longEnabled = true;
+			// Initialize this so ContentEditor doesn't complain while loading in.
+			this.setField('article_content', '');
 		}
 
 		await this.fetchTimezones();

@@ -1,16 +1,7 @@
 <script lang="ts" src="./autocomplete"></script>
 
 <template>
-	<div
-		ref="container"
-		:style="{
-			top: top,
-			left: left,
-			bottom: bottom,
-			visibility: showControl ? 'visible' : 'hidden',
-		}"
-		class="-container"
-	>
+	<div ref="container" :style="styling" class="-container">
 		<transition name="fade">
 			<div v-if="visible" ref="list" class="-autocomplete">
 				<app-loading
@@ -26,7 +17,7 @@
 						:key="user.id"
 						class="-suggestion"
 						:class="{ '-suggestion-selected': isSelected(user.id) }"
-						@click.prevent="onClickInsert(user)"
+						@click.prevent="insertUser(user)"
 					>
 						<div v-if="user.is_following" class="-follow-indicator">
 							<small class="text-muted">
