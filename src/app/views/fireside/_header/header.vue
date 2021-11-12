@@ -1,10 +1,13 @@
 <script lang="ts" src="./header"></script>
 
 <template>
-	<div class="fireside-header">
+	<div class="fireside-header" :class="{ '-overlay': isOverlay }">
 		<template v-if="fireside">
 			<div class="-fireside-title">
-				<h2 class="sans-margin-top" :class="{ h3: Screen.isXs }">
+				<h2
+					class="sans-margin-top"
+					:class="{ h3: Screen.isXs, 'sans-margin-bottom': isOverlay }"
+				>
 					<small class="-subtitle">
 						<router-link
 							:to="{
@@ -41,7 +44,9 @@
 							<translate>Featured</translate>
 						</span>
 					</small>
-					<div :title="fireside.title">{{ fireside.title }}</div>
+					<div class="-fireside-title-text" :title="fireside.title">
+						{{ fireside.title }}
+					</div>
 				</h2>
 				<div v-if="hasChatStats && c.chatUsers" class="-fireside-title-member-stats">
 					<ul class="stat-list">
@@ -69,134 +74,11 @@
 						/>
 					</div>
 
-					<app-popper
-						popover-class="fill-darkest"
-						@show="onShowPopper"
-						@hide="onHidePopper"
-					>
+					<app-fireside-settings-popper @show="onShowPopper" @hide="onHidePopper">
 						<div class="-stats-btn">
-							<app-button icon="cog" circle sparse solid />
+							<app-button icon="ellipsis-v" circle sparse solid />
 						</div>
-
-						<template #popover>
-							<div class="list-group list-group-dark">
-								<a
-									v-if="!fireside.is_draft"
-									class="list-group-item has-icon"
-									@click="onClickCopyLink"
-								>
-									<app-jolticon icon="link" />
-									<translate>Copy Link</translate>
-								</a>
-
-								<a
-									v-if="hasChat"
-									class="list-group-item has-icon"
-									@click="onClickShowChatMembers"
-								>
-									<app-jolticon icon="users" />
-									<translate>Chat Members</translate>
-								</a>
-
-								<a
-									v-if="c.canReport"
-									class="list-group-item has-icon"
-									@click="onClickReport"
-								>
-									<app-jolticon icon="flag" />
-									<translate>Report Fireside</translate>
-								</a>
-
-								<a
-									v-if="canEdit"
-									class="list-group-item has-icon"
-									@click="onClickEditFireside"
-								>
-									<app-jolticon icon="edit" />
-									<translate>Edit Fireside</translate>
-								</a>
-
-								<a
-									v-if="c.canManageCohosts"
-									class="list-group-item has-icon"
-									@click="onClickManageCohosts"
-								>
-									<app-jolticon icon="friends" />
-									<translate>Manage Hosts</translate>
-								</a>
-
-								<template v-if="shouldShowStreamSettings">
-									<a class="list-group-item has-icon" @click="onClickEditStream">
-										<app-jolticon icon="broadcast" />
-										<translate>Stream Settings</translate>
-									</a>
-								</template>
-
-								<template v-if="c.canPublish">
-									<hr />
-									<a class="list-group-item has-icon" @click="onClickPublish">
-										<app-jolticon icon="notifications" highlight />
-										<translate>Publish Fireside</translate>
-									</a>
-								</template>
-
-								<template v-if="shouldShowStreamSettings || c.canExtinguish">
-									<hr />
-
-									<a
-										v-if="shouldShowStreamSettings"
-										class="list-group-item has-icon"
-										@click="onClickStopStreaming"
-									>
-										<app-jolticon icon="plug" notice />
-										<translate>Stop Streaming</translate>
-									</a>
-
-									<a
-										v-if="c.canExtinguish"
-										class="list-group-item has-icon"
-										@click="onClickExtinguish"
-									>
-										<app-jolticon icon="remove" notice />
-										<translate>Extinguish Fireside</translate>
-									</a>
-								</template>
-
-								<template v-if="!fireside.is_draft">
-									<div v-for="i in manageableCommunities" :key="i.id">
-										<hr />
-
-										<h5 class="-extras-header list-group-item has-icon">
-											<app-community-thumbnail-img :community="i.community" />
-											{{ i.community.name }}
-										</h5>
-
-										<!--DISABLED_ALLOW_FIRESIDES -->
-										<!-- <a
-											class="list-group-item has-icon"
-											@click="toggleFeatured(i)"
-										>
-											<app-jolticon icon="star" />
-
-											<translate v-if="i.isFeatured">
-												Unfeature fireside
-											</translate>
-											<translate v-else>Feature fireside</translate>
-										</a> -->
-
-										<a
-											class="list-group-item has-icon"
-											@click="ejectFireside(i)"
-										>
-											<app-jolticon icon="eject" />
-
-											<translate>Eject fireside</translate>
-										</a>
-									</div>
-								</template>
-							</div>
-						</template>
-					</app-popper>
+					</app-fireside-settings-popper>
 				</div>
 			</div>
 		</template>
@@ -207,10 +89,22 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 
+.-overlay
+	*
+		text-shadow: 1px 1px 3px rgba($black, 0.5)
+
+		&:not(a)
+			color: white
+
+	.-subtitle
+		font-weight: 600
+		opacity: 0.75
+
 .-fireside-title
 	display: flex
 	align-items: center
 
+	&-text
 	h2
 		text-overflow()
 		flex: auto

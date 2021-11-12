@@ -30,18 +30,18 @@ import AppFiresideHostListStickerButton from './sticker-button/sticker-button.vu
 	},
 })
 export default class AppFiresideHostList extends Vue {
-	@Prop({ type: Boolean, required: false, default: false })
+	@Prop({ type: Boolean, default: false })
 	hideThumbOptions!: boolean;
 
 	@InjectReactive(FiresideControllerKey) c!: FiresideController;
 	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
 
+	@Emit('show-popper') emitShowPopper() {}
+	@Emit('hide-popper') emitHidePopper() {}
+
 	get canPlaceStickers() {
 		return !GJ_IS_CLIENT && !!this.c.user && !Screen.isMobile;
 	}
-
-	@Emit('show-popper') emitShowPopper() {}
-	@Emit('hide-popper') emitHidePopper() {}
 
 	get canManageCohosts() {
 		return this.c.canManageCohosts;

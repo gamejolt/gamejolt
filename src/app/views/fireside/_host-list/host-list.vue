@@ -35,15 +35,17 @@
 
 .-fireside-hosts
 	--fireside-host-size: 100px
+	--fireside-host-gap: 8px
 	width: 100%
 
-	@media $media-xs
-		--fireside-host-size: 70px
+	@media $media-mobile
+		--fireside-host-size: 60px
+		--fireside-host-gap: 4px
 
 	&-inner
 		display: inline-flex
 		justify-content: center
-		grid-gap: 8px
+		grid-gap: var(--fireside-host-gap)
 		height: var(--fireside-host-size)
 
 .-host-thumb

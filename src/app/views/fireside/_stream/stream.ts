@@ -3,11 +3,13 @@ import { Component, Inject, InjectReactive, Prop, Watch } from 'vue-property-dec
 import { DrawerStore, DrawerStoreKey } from '../../../../_common/drawer/drawer-store';
 import { fuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import { number } from '../../../../_common/filters/number';
+import { setRTCDesktopVolume } from '../../../../_common/fireside/rtc/rtc';
 import { FiresideRTCUser } from '../../../../_common/fireside/rtc/user';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
+import { ScrubberCallback } from '../../../../_common/slider/slider';
+import AppSlider from '../../../../_common/slider/slider.vue';
 import AppSticker from '../../../../_common/sticker/sticker.vue';
-import { ChatUserCollection } from '../../../components/chat/user-collection';
 import {
 	FiresideController,
 	FiresideControllerKey,
@@ -15,6 +17,7 @@ import {
 import AppFiresideDesktopAudio from '../../../components/fireside/stream/desktop-audio/desktop-audio.vue';
 import AppFiresideVideoStats from '../../../components/fireside/stream/video-stats/video-stats.vue';
 import AppFiresideVideo from '../../../components/fireside/stream/video/video.vue';
+import AppFiresideHeader from '../_header/header.vue';
 import AppFiresideHostList from '../_host-list/host-list.vue';
 import AppFiresideHostThumbIndicator from '../_host-thumb/host-thumb-indicator.vue';
 
@@ -23,12 +26,14 @@ const UIHideTimeoutMovement = 2000;
 const UITransitionTime = 200;
 @Component({
 	components: {
+		AppFiresideDesktopAudio,
+		AppFiresideHeader,
 		AppFiresideHostList,
 		AppFiresideHostThumbIndicator,
-		AppLoading,
 		AppFiresideVideo,
-		AppFiresideDesktopAudio,
 		AppFiresideVideoStats,
+		AppLoading,
+		AppSlider,
 		AppSticker,
 	},
 })
@@ -36,11 +41,11 @@ export default class AppFiresideStream extends Vue {
 	@Prop({ type: FiresideRTCUser, required: true })
 	rtcUser!: FiresideRTCUser;
 
-	@Prop({ type: Boolean, required: false, default: false })
-	showOverlayHosts!: boolean;
+	@Prop({ type: Boolean, default: false })
+	hasHeader!: boolean;
 
-	@Prop({ type: ChatUserCollection, required: false, default: null })
-	members!: ChatUserCollection | null;
+	@Prop({ type: Boolean, default: false })
+	hasHosts!: boolean;
 
 	@InjectReactive(FiresideControllerKey) c!: FiresideController;
 	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
@@ -64,6 +69,14 @@ export default class AppFiresideStream extends Vue {
 		return fuzzynumber(this.stickerStreak?.count ?? 0);
 	}
 
+	get desktopVolume() {
+		return this.c.rtc?.desktopVolume ?? 1;
+	}
+
+	get hasVolumeControls() {
+		return !!this.c.rtc?.shouldShowVolumeControls;
+	}
+
 	get shouldShowUI() {
 		if (GJ_IS_SSR) {
 			return false;
@@ -84,15 +97,15 @@ export default class AppFiresideStream extends Vue {
 	}
 
 	get hasOverlayItems() {
-		return this.showOverlayHosts || !!this.members;
+		return this.hasVolumeControls || this.hasHeader;
 	}
 
 	get memberCount() {
-		return this.members?.count;
+		return this.c.chatUsers?.count ?? 1;
 	}
 
 	get videoPaused() {
-		return this.c.rtc?.videoPaused;
+		return this.c.rtc?.videoPaused === true;
 	}
 
 	get hasVideo() {
@@ -111,10 +124,6 @@ export default class AppFiresideStream extends Vue {
 		);
 	}
 
-	get shouldShowOverlayPlayback() {
-		return this.hasVideo;
-	}
-
 	onMouseOut() {
 		this.scheduleUIHide(UIHideTimeout);
 	}
@@ -128,7 +137,7 @@ export default class AppFiresideStream extends Vue {
 
 		// Don't alter video playback here when we have overlays to use tap
 		// interactions with.
-		if (this.hasOverlayItems) {
+		if (!this.videoPaused) {
 			return;
 		}
 
@@ -155,6 +164,10 @@ export default class AppFiresideStream extends Vue {
 
 	onHostOptionsHide() {
 		this.c.isShowingOverlayPopper = false;
+	}
+
+	onVolumeScrub({ percent }: ScrubberCallback) {
+		setRTCDesktopVolume(this.c.rtc!, percent);
 	}
 
 	private animateStickerStreak() {

@@ -8,7 +8,6 @@
 			<app-fireside-header
 				class="-header"
 				:show-controls="shouldShowTitleControls"
-				:has-info="!shouldShowFiresideStats"
 				:has-chat="!shouldShowChatMembers"
 				:has-chat-stats="shouldShowChatMemberStats"
 			/>
@@ -77,8 +76,10 @@
 									<app-popper trigger="right-click">
 										<app-fireside-stream
 											:rtc-user="c.rtc.focusedUser"
-											:show-overlay-hosts="!shouldShowHosts"
-											:members="overlayChatMembers"
+											:has-header="
+												shouldShowHeaderInBody || shouldFullscreenStream
+											"
+											:has-hosts="shouldFullscreenStream"
 										/>
 
 										<template #popover>
@@ -231,14 +232,11 @@
 					<app-sticker-reactions :controller="c.stickerTargetController" />
 				</app-fade-collapse>
 
-				<app-expand v-if="shouldShowHeaderInBody" :when="c.isShowingStreamOverlay">
-					<app-fireside-header
-						class="-header"
-						has-overlay-popovers
-						:show-controls="shouldShowTitleControls"
-						:has-chat="!shouldShowChatMembers"
-						:has-chat-stats="shouldShowChatMemberStats"
-					/>
+				<!-- TODO: Hook into the ContentEditorController so we can hide only when editing a message -->
+				<app-expand v-if="!shouldShowHosts" :when="c.isShowingStreamOverlay">
+					<div class="-mobile-hosts">
+						<app-fireside-host-list />
+					</div>
 				</app-expand>
 
 				<div v-if="c.status === 'joined'" class="-chat-wrapper">
@@ -481,6 +479,13 @@
 	.-video-wrapper.-vertical &
 		padding-top: 0
 		padding-right: 8px
+
+.-mobile-hosts
+	// TODO: Get the host list to pad itself - seems to be overflowing active indicator currently.
+	padding-top: 6px
+	padding-bottom: 20px
+	display: flex
+	justify-content: center
 
 .-chat-wrapper
 	position: relative
