@@ -17,6 +17,7 @@ import AppLoading from '../../../_common/loading/loading.vue';
 import { Meta } from '../../../_common/meta/meta-service';
 import { Navigate } from '../../../_common/navigate/navigate.service';
 import { AppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
+import { Popper } from '../../../_common/popper/popper.service';
 import AppPopper from '../../../_common/popper/popper.vue';
 import { AppResponsiveDimensions } from '../../../_common/responsive-dimensions/responsive-dimensions';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
@@ -268,6 +269,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	toggleVideoStats() {
 		if (this.c) {
 			toggleStreamVideoStats(this.c);
+			Popper.hideAll();
 		}
 	}
 
