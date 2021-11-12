@@ -101,6 +101,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	c: FiresideController | null = null;
 
 	private beforeEachDeregister: Function | null = null;
+	private canShowMobileHosts = true;
 
 	readonly Screen = Screen;
 	readonly number = number;
@@ -174,11 +175,15 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	get shouldShowChatMemberStats() {
-		return this.shouldShowHosts && !!this.c?.isStreaming;
+		return this.shouldShowDesktopHosts && !!this.c?.isStreaming;
 	}
 
-	get shouldShowHosts() {
+	get shouldShowDesktopHosts() {
 		return !this.isVertical && !Screen.isMobile;
+	}
+
+	get shouldShowMobileHosts() {
+		return this.canShowMobileHosts && !!this.c?.isStreaming;
 	}
 
 	get shouldShowReactions() {
@@ -281,6 +286,10 @@ export default class RouteFireside extends BaseRouteComponent {
 		if (url) {
 			Navigate.newWindow(url);
 		}
+	}
+
+	onChatEditorFocusChange(isFocused: boolean) {
+		this.canShowMobileHosts = !isFocused;
 	}
 
 	@Watch('c.isPersonallyStreaming')

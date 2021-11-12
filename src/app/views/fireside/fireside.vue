@@ -58,7 +58,7 @@
 							>
 								<template v-if="GJ_IS_CLIENT">
 									<app-illustration
-										v-if="shouldShowHosts && shortestSide > 700"
+										v-if="shouldShowDesktopHosts && shortestSide > 700"
 										src="~img/ill/no-comments.svg"
 									/>
 
@@ -99,7 +99,7 @@
 					</div>
 				</div>
 
-				<div v-if="c.rtc && shouldShowHosts" class="-hosts-padding">
+				<div v-if="c.rtc && shouldShowDesktopHosts" class="-hosts-padding">
 					<div class="-hosts">
 						<app-fireside-host-list />
 					</div>
@@ -232,10 +232,9 @@
 					<app-sticker-reactions :controller="c.stickerTargetController" />
 				</app-fade-collapse>
 
-				<!-- TODO: Hook into the ContentEditorController so we can hide only when editing a message -->
-				<app-expand v-if="!shouldShowHosts" :when="c.isShowingStreamOverlay">
+				<app-expand v-if="!shouldShowDesktopHosts" :when="shouldShowMobileHosts">
 					<div class="-mobile-hosts">
-						<app-fireside-host-list />
+						<app-fireside-host-list hide-thumb-options />
 					</div>
 				</app-expand>
 
@@ -263,6 +262,7 @@
 							v-else-if="chat && chat.currentUser"
 							class="-chat-window-input"
 							:room="c.chatRoom"
+							@focus-change="onChatEditorFocusChange"
 						/>
 					</div>
 				</div>
@@ -481,7 +481,6 @@
 		padding-right: 8px
 
 .-mobile-hosts
-	// TODO: Get the host list to pad itself - seems to be overflowing active indicator currently.
 	padding-top: 6px
 	padding-bottom: 20px
 	display: flex

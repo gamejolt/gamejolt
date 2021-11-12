@@ -54,7 +54,11 @@ export default class AppFiresideSettingsPopper extends Vue {
 	}
 
 	get shouldShowStreamSettings() {
-		return this.c.shouldShowStreamingOptions && this.c.isPersonallyStreaming;
+		return this.c.shouldShowStreamingOptions;
+	}
+
+	get isStreaming() {
+		return this.c.isPersonallyStreaming;
 	}
 
 	get shouldMute() {

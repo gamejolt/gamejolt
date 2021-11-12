@@ -3,9 +3,6 @@
 <template>
 	<app-popper popover-class="fill-darkest" @show="emitShow" @hide="emitHide">
 		<slot />
-		<!-- <div class="-stats-btn">
-			<app-button icon="ellipsis-v" circle sparse solid />
-		</div> -->
 
 		<template #popover>
 			<div class="list-group list-group-dark">
@@ -54,7 +51,8 @@
 				<template v-if="shouldShowStreamSettings">
 					<a class="list-group-item has-icon" @click="onClickEditStream">
 						<app-jolticon icon="broadcast" />
-						<translate>Stream Settings</translate>
+						<translate v-if="isStreaming">Stream Settings</translate>
+						<translate v-else>Start Stream / Voice Chat</translate>
 					</a>
 				</template>
 
@@ -66,11 +64,11 @@
 					</a>
 				</template>
 
-				<template v-if="shouldShowStreamSettings || c.canExtinguish">
+				<template v-if="isStreaming || c.canExtinguish">
 					<hr />
 
 					<a
-						v-if="shouldShowStreamSettings"
+						v-if="isStreaming"
 						class="list-group-item has-icon"
 						@click="onClickStopStreaming"
 					>
