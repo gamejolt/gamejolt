@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, InjectReactive, Prop } from 'vue-property-decorator';
+import { Component, InjectReactive, Prop, Watch } from 'vue-property-decorator';
 import {
 	FiresideRTCUser,
 	FiresideVideoLock,
@@ -24,13 +24,28 @@ export default class AppFiresideStreamVideo extends Vue {
 	private _videoLock: FiresideVideoLock | null = null;
 
 	$el!: HTMLDivElement;
+	$refs!: {
+		video: HTMLDivElement;
+		canvas: HTMLCanvasElement;
+	};
 
 	get hasVideo() {
 		return this._myRtcUser.hasVideo;
 	}
 
+	get pausedFrameData() {
+		if (this.shouldPlayVideo) {
+			return null;
+		}
+		return this._myRtcUser.pausedFrameData;
+	}
+
 	get isLoadingVideo() {
 		return this.hasVideo && this.c.rtc?.videoChannel.isConnected !== true;
+	}
+
+	get shouldPlayVideo() {
+		return this.c.rtc?.videoPaused !== true;
 	}
 
 	created() {
@@ -38,14 +53,22 @@ export default class AppFiresideStreamVideo extends Vue {
 	}
 
 	mounted() {
-		this._videoLock = getVideoLock(this._myRtcUser);
-		setVideoPlayback(
-			this._myRtcUser,
-			new FiresideVideoPlayStatePlaying(this.$el, this.lowBitrate)
-		);
+		this.onShouldPlayVideoChange();
 	}
 
 	destroyed() {
+		this.releaseLocks();
+	}
+
+	private getLocks() {
+		this._videoLock = getVideoLock(this._myRtcUser);
+		setVideoPlayback(
+			this._myRtcUser,
+			new FiresideVideoPlayStatePlaying(this.$refs.video, this.lowBitrate)
+		);
+	}
+
+	private releaseLocks() {
 		// We want to give a new lock some time to get acquired before shutting
 		// the stream down.
 		setTimeout(() => {
@@ -53,5 +76,29 @@ export default class AppFiresideStreamVideo extends Vue {
 				releaseVideoLock(this._myRtcUser, this._videoLock);
 			}
 		}, 0);
+	}
+
+	@Watch('pausedFrameData')
+	private async onFrameDataChange() {
+		if (this.pausedFrameData) {
+			const {
+				$refs: { canvas },
+				pausedFrameData: { width, height },
+			} = this;
+
+			canvas.width = width;
+			canvas.height = height;
+			const context = canvas.getContext('2d')!;
+			context.putImageData(this.pausedFrameData, 0, 0, 0, 0, width, height);
+		}
+	}
+
+	@Watch('shouldPlayVideo')
+	private onShouldPlayVideoChange() {
+		if (this.shouldPlayVideo) {
+			this.getLocks();
+		} else {
+			this.releaseLocks();
+		}
 	}
 }

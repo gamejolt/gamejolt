@@ -61,6 +61,10 @@ export default class AppFiresideStream extends Vue {
 	hasQueuedStreakAnimation = false;
 	shouldAnimateStreak = false;
 
+	$refs!: {
+		paused?: HTMLDivElement;
+	};
+
 	get stickerStreak() {
 		return this.drawerStore.streak;
 	}
@@ -117,10 +121,15 @@ export default class AppFiresideStream extends Vue {
 	}
 
 	get shouldPlayDesktopAudio() {
+		if (!this.c.rtc) {
+			return false;
+		}
+
 		return (
 			this.hasVideo &&
-			this.c.rtc?.videoChannel.isConnected === true &&
-			this.rtcUser.hasDesktopAudio
+			this.c.rtc.videoChannel.isConnected &&
+			this.rtcUser.hasDesktopAudio &&
+			!this.c.rtc.videoPaused
 		);
 	}
 
@@ -132,16 +141,12 @@ export default class AppFiresideStream extends Vue {
 		this.scheduleUIHide(UIHideTimeoutMovement);
 	}
 
-	onVideoClick() {
+	onVideoClick(event: Event) {
 		this.scheduleUIHide(UIHideTimeout);
 
-		// Don't alter video playback here when we have overlays to use tap
-		// interactions with.
-		if (!this.videoPaused) {
-			return;
+		if (event.target === this.$refs.paused) {
+			this.togglePlayback();
 		}
-
-		this.togglePlayback();
 	}
 
 	onOverlayTap(event: Event) {

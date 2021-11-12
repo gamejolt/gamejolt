@@ -58,6 +58,7 @@ export class FiresideRTCUser {
 	readonly videoLocks: FiresideVideoLock[] = [];
 
 	hasDesktopAudio = false;
+	pausedFrameData: ImageData | null = null;
 
 	hasMicAudio = false;
 	micAudioMuted = false;
@@ -202,6 +203,7 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 		try {
 			if (user._videoTrack?.isPlaying) {
 				try {
+					user.pausedFrameData = user._videoTrack.getCurrentFrameData();
 					user._videoTrack.stop();
 				} catch (e) {
 					rtc.logWarning(

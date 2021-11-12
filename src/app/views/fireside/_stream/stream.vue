@@ -9,14 +9,7 @@
 		@click="onVideoClick"
 	>
 		<template v-if="hasVideo">
-			<template v-if="videoPaused">
-				<transition>
-					<div class="-paused-indicator -click-target anim-fade-leave-shrink">
-						<app-jolticon class="-paused-indicator-icon" icon="play" />
-					</div>
-				</transition>
-			</template>
-			<template v-else-if="isLoadingVideo">
+			<template v-if="isLoadingVideo">
 				<div class="-overlay -visible-center">
 					<app-loading centered stationary no-color hide-label />
 				</div>
@@ -51,9 +44,20 @@
 			@click.capture="onOverlayTap"
 		>
 			<template v-if="shouldShowUI">
+				<template v-if="videoPaused">
+					<transition>
+						<div
+							ref="paused"
+							class="-paused-indicator -click-target anim-fade-leave-shrink"
+						>
+							<app-jolticon class="-paused-indicator-icon" icon="play" />
+						</div>
+					</transition>
+				</template>
+
 				<div class="-overlay-inner">
-					<div class="-overlay-top -control">
-						<div v-if="hasHeader" style="flex: auto; overflow: hidden">
+					<div v-if="hasHeader" class="-overlay-top -control">
+						<div style="flex: auto; overflow: hidden">
 							<app-fireside-header is-overlay />
 							<div class="-overlay-members">
 								<translate
@@ -67,7 +71,9 @@
 						</div>
 					</div>
 
-					<div class="-overlay-bottom -control">
+					<div class="-flex-spacer" />
+
+					<div class="-overlay-bottom -control" @click.stop>
 						<div class="-video-controls">
 							<div v-if="hasVideo">
 								<app-button
@@ -135,8 +141,8 @@
 
 $-text-shadow = 1px 1px 3px rgba($black, 0.5)
 $-z-overlay = 1
+$-z-control = 3
 $-z-combo = 2
-$-z-paused = 2
 
 .jolticon
 	text-shadow: $-text-shadow
@@ -172,6 +178,9 @@ $-z-paused = 2
 	flex-direction: column
 	padding: 8px
 
+	> *
+		z-index: $-z-control
+
 .-visible-center
 	opacity: 1 !important
 	display: flex
@@ -197,16 +206,20 @@ $-z-paused = 2
 .-overlay-top
 	display: flex
 	align-items: flex-start
-	margin-bottom: auto
 
 .-overlay-bottom
 	display: flex
 	align-items: flex-end
+	width: min-content
 
 .-control
 	&
 	>>>
 		user-select: none
+
+.-flex-spacer
+	margin: auto
+	pointer-events: none
 
 .-paused-indicator
 	position: absolute
@@ -217,11 +230,10 @@ $-z-paused = 2
 	display: flex
 	align-items: center
 	justify-content: center
-	z-index: $-z-paused
-	pointer-events: none
 
 	&-icon
 		font-size: 60px
+		pointer-events: none
 
 .-video-controls
 	display: flex
