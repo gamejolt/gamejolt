@@ -106,6 +106,7 @@ export default class AppFiresideSettingsPopper extends Vue {
 			return;
 		}
 
+		Popper.hideAll();
 		stopStreaming(this.c.rtc.producer);
 	}
 
