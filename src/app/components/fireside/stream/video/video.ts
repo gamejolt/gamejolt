@@ -23,7 +23,6 @@ export default class AppFiresideStreamVideo extends Vue {
 	private _myRtcUser!: FiresideRTCUser;
 	private _videoLock: FiresideVideoLock | null = null;
 
-	$el!: HTMLDivElement;
 	$refs!: {
 		video: HTMLDivElement;
 		canvas: HTMLCanvasElement;
@@ -54,6 +53,7 @@ export default class AppFiresideStreamVideo extends Vue {
 
 	mounted() {
 		this.onShouldPlayVideoChange();
+		this.onFrameDataChange();
 	}
 
 	destroyed() {
@@ -79,7 +79,7 @@ export default class AppFiresideStreamVideo extends Vue {
 	}
 
 	@Watch('pausedFrameData')
-	private async onFrameDataChange() {
+	private onFrameDataChange() {
 		if (this.pausedFrameData) {
 			const {
 				$refs: { canvas },
@@ -89,6 +89,7 @@ export default class AppFiresideStreamVideo extends Vue {
 			canvas.width = width;
 			canvas.height = height;
 			const context = canvas.getContext('2d')!;
+			context.clearRect(0, 0, width, height);
 			context.putImageData(this.pausedFrameData, 0, 0, 0, 0, width, height);
 		}
 	}

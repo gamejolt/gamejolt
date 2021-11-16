@@ -2,16 +2,12 @@
 
 <template>
 	<div class="-video-player">
-		<div ref="video" :class="{ '-hide': !shouldPlayVideo }" />
-		<canvas ref="canvas" :class="{ '-hide': shouldPlayVideo }" />
+		<div ref="video" />
+		<canvas v-show="!shouldPlayVideo" ref="canvas" />
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-.-hide
-	display: none
-	visibility: hidden
-
 .-video-player
 	position: relative
 

@@ -101,7 +101,7 @@ export default class AppFiresideStream extends Vue {
 	}
 
 	get hasOverlayItems() {
-		return this.hasVolumeControls || this.hasHeader;
+		return this.hasVideo || this.hasVolumeControls || this.hasHeader;
 	}
 
 	get memberCount() {
