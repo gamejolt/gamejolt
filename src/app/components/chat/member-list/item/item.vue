@@ -28,13 +28,18 @@
 				</div>
 
 				<div class="shell-nav-label">
-					<span v-if="isOwner" v-app-tooltip="$gettext(`Room Owner`)">
-						<app-jolticon icon="crown" />
+					<span class="-row-icon">
+						<span v-if="isOwner" v-app-tooltip="$gettext(`Room Owner`)">
+							<app-jolticon icon="crown" />
+						</span>
+						<span v-else-if="isStaff" v-app-tooltip="$gettext(`Game Jolt Staff`)">
+							<app-jolticon icon="gamejolt" />
+						</span>
+						<span v-else-if="isModerator" v-app-tooltip="$gettext(`Moderator`)">
+							<app-jolticon icon="star" />
+						</span>
 					</span>
-					<span v-else-if="isModerator" v-app-tooltip="$gettext(`Moderator`)">
-						<app-jolticon icon="star" />
-					</span>
-					{{ user.display_name }}
+					<span>{{ user.display_name }}</span>
 					<span class="tiny text-muted">@{{ user.username }}</span>
 				</div>
 			</a>
@@ -54,6 +59,9 @@
 	height: 50px
 	overflow: hidden
 	rounded-corners()
+
+.-row-icon
+	vertical-align: middle
 
 .-avatar
 	position: relative

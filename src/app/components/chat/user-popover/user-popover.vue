@@ -13,7 +13,7 @@
 			<div class="-names">
 				<div class="-displayname">
 					<b>{{ user.display_name }}</b>
-					<app-user-verified-tick :user="user" />
+					<app-user-verified-tick class="-verified-icon" :user="user" />
 				</div>
 				<div class="-username text-muted">@{{ user.username }}</div>
 			</div>
@@ -29,12 +29,12 @@
 			</div>
 
 			<div v-if="isOwner" class="-status">
-				<app-jolticon icon="crown" />
+				<app-jolticon class="-status-icon" icon="crown" />
 				&nbsp;
 				<translate>Room Owner</translate>
 			</div>
 			<div v-else-if="isModerator" class="-status">
-				<app-jolticon icon="star" />
+				<app-jolticon class="-status-icon" icon="star" />
 				&nbsp;
 				<translate>Moderator</translate>
 			</div>
@@ -68,7 +68,7 @@
 					</template>
 				</template>
 
-				<template v-if="!isModerator">
+				<template v-if="canKick">
 					<hr />
 					<a class="list-group-item has-icon" @click="onClickKick">
 						<app-jolticon icon="logout" notice />
@@ -95,6 +95,10 @@
 	.-names
 		margin-top: 4px
 		text-align: center
+
+		.-displayname
+			.-verified-icon
+				vertical-align: middle
 
 	.-username
 		font-size: $font-size-small
@@ -139,9 +143,9 @@
 		justify-content: center
 		user-select: none
 
+		&-icon
+			vertical-align: middle
+
 		&-bubble
 			margin-right: 4px
-
-		*
-			vertical-align: middle
 </style>
