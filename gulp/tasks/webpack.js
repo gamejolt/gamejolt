@@ -385,6 +385,9 @@ module.exports = function (config) {
 						(!config.developmentEnv && !config.watching) || config.withUpdater
 					),
 					GJ_IS_WATCHING: JSON.stringify(config.watching),
+					GJ_WITH_LOCALSTOAGE_AUTH_REDIRECT: JSON.stringify(
+						config.withLocalStorageAuthRedirect
+					),
 				}),
 				new CopyWebpackPlugin([
 					{
@@ -576,11 +579,11 @@ module.exports = function (config) {
 							},
 							public: isInDocker
 								? 'webpack.development.gamejolt.com'
-								: 'development.gamejolt.com',
+								: 'localhost:' + config.port,
 							transportMode: 'ws',
 							// quiet: true,
 							progress: true,
-							disableHostCheck: hasTunnels || isInDocker,
+							disableHostCheck: true,
 							compress: hasTunnels,
 							hot: shouldUseHMR,
 							watchOptions: {

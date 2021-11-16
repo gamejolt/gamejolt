@@ -1,5 +1,5 @@
-import { Analytics } from '../_common/analytics/analytics.service';
 import * as OfflinePluginRuntime from 'offline-plugin/runtime';
+import { Analytics } from '../_common/analytics/analytics.service';
 import { createApp } from './bootstrap';
 
 const { app, router, store } = createApp();
