@@ -8,6 +8,7 @@
 			@panstart="panStart"
 			@panmove="pan"
 			@panend="panEnd"
+			@touchmove.native="onTouchMove"
 		>
 			<div class="-container">
 				<div ref="slider" class="-slider">
