@@ -11,12 +11,23 @@
 					<p>
 						<b><translate>This game was removed from the site.</translate></b>
 					</p>
-					<p>
-						<translate>
-							We have received a DMCA takedown notice and were required to remove it
-							from the site. Only you are able to view it.
-						</translate>
-					</p>
+					<template v-if="game.locked_status === GAME_LOCKED_STATUS_DMCA">
+						<p key="locked-reason-dmca">
+							<translate>
+								We have received a DMCA takedown notice and were required to remove
+								it from the site. Only you are able to view it.
+							</translate>
+						</p>
+					</template>
+					<template v-else-if="game.locked_status === GAME_LOCKED_STATUS_ADULT">
+						<p key="locked-reason-adult">
+							<translate>
+								This game contains adult content that is against our community
+								guidelines. Only you are able to view it. Users that have purchased
+								your game will still be able to download packages they own.
+							</translate>
+						</p>
+					</template>
 				</div>
 			</div>
 		</section>
