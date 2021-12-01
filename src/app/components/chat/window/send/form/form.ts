@@ -63,6 +63,7 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	@Emit('submit') emitSubmit(_content: FormModel) {}
 	@Emit('cancel') emitCancel() {}
 	@Emit('single-line-mode-change') emitSingleLineModeChange(_singleLine: boolean) {}
+	@Emit('focus-change') emitFocusChange(_focused: boolean) {}
 
 	get chat() {
 		return this.chatStore.chat!;
@@ -288,10 +289,12 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 
 	onFocusEditor() {
 		this.isEditorFocused = true;
+		this.emitFocusChange(true);
 	}
 
 	onBlurEditor() {
 		this.isEditorFocused = false;
+		this.emitFocusChange(false);
 	}
 
 	onTabKeyPressed() {

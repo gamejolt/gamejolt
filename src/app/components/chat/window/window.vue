@@ -127,7 +127,7 @@
 				</div>
 
 				<div v-if="chat.currentUser" class="chat-window-send-container">
-					<app-chat-window-send :room="room" />
+					<app-chat-window-send :room="room" @focus-change="emitFocusChange" />
 				</div>
 			</div>
 		</div>

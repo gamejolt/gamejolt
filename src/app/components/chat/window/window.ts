@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, InjectReactive, Prop } from 'vue-property-decorator';
+import { Component, Emit, InjectReactive, Prop } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
 import { propRequired } from '../../../../utils/vue';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
@@ -50,6 +50,8 @@ export default class AppChatWindow extends Vue {
 	friendAddJolticonVersion = 1;
 
 	readonly Screen = Screen;
+
+	@Emit('focus-change') emitFocusChange(_focused: boolean) {}
 
 	get chat() {
 		return this.chatStore.chat!;

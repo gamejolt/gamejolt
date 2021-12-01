@@ -17,6 +17,7 @@ import AppLoading from '../../../_common/loading/loading.vue';
 import { Meta } from '../../../_common/meta/meta-service';
 import { Navigate } from '../../../_common/navigate/navigate.service';
 import { AppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
+import { Popper } from '../../../_common/popper/popper.service';
 import AppPopper from '../../../_common/popper/popper.vue';
 import { AppResponsiveDimensions } from '../../../_common/responsive-dimensions/responsive-dimensions';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
@@ -101,6 +102,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	c: FiresideController | null = null;
 
 	private beforeEachDeregister: Function | null = null;
+	private canShowMobileHosts = true;
 
 	readonly Screen = Screen;
 	readonly number = number;
@@ -153,13 +155,6 @@ export default class RouteFireside extends BaseRouteComponent {
 		return this.chat.messageQueue.filter(i => i.room_id === this.c?.chatRoom?.id);
 	}
 
-	get overlayChatMembers() {
-		if (this.shouldShowHosts) {
-			return;
-		}
-		return this.c?.chatUsers;
-	}
-
 	get shouldFullscreenStream() {
 		if (!this.c?.isStreaming) {
 			return false;
@@ -181,11 +176,15 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	get shouldShowChatMemberStats() {
-		return this.shouldShowHosts && !!this.c?.isStreaming;
+		return this.shouldShowDesktopHosts && !!this.c?.isStreaming;
 	}
 
-	get shouldShowHosts() {
+	get shouldShowDesktopHosts() {
 		return !this.isVertical && !Screen.isMobile;
+	}
+
+	get shouldShowMobileHosts() {
+		return this.canShowMobileHosts && !!this.c?.isStreaming;
 	}
 
 	get shouldShowReactions() {
@@ -270,6 +269,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	toggleVideoStats() {
 		if (this.c) {
 			toggleStreamVideoStats(this.c);
+			Popper.hideAll();
 		}
 	}
 
@@ -288,6 +288,10 @@ export default class RouteFireside extends BaseRouteComponent {
 		if (url) {
 			Navigate.newWindow(url);
 		}
+	}
+
+	onChatEditorFocusChange(isFocused: boolean) {
+		this.canShowMobileHosts = !isFocused;
 	}
 
 	@Watch('c.isPersonallyStreaming')

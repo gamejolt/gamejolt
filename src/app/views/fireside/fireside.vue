@@ -8,7 +8,6 @@
 			<app-fireside-header
 				class="-header"
 				:show-controls="shouldShowTitleControls"
-				:has-info="!shouldShowFiresideStats"
 				:has-chat="!shouldShowChatMembers"
 				:has-chat-stats="shouldShowChatMemberStats"
 			/>
@@ -37,55 +36,70 @@
 						v-app-observe-dimensions="onDimensionsChange"
 						class="-video-container"
 					>
-						<app-sticker-target
-							:controller="c.stickerTargetController"
+						<div
 							class="-video-inner"
-							:class="{
-								'-unsupported': GJ_IS_CLIENT,
-							}"
 							:style="{
 								width: videoWidth + 'px',
 								height: videoHeight + 'px',
 							}"
 						>
-							<template v-if="GJ_IS_CLIENT">
-								<app-illustration
-									v-if="shouldShowHosts && shortestSide > 700"
-									src="~img/ill/no-comments.svg"
-								/>
-
-								<p class="-unsupported-text">
-									<translate>
-										Oh no... Fireside streams don't work on the Client yet.
-									</translate>
-								</p>
-
-								<app-button @click="onClickOpenBrowser()">
-									<translate>Open Fireside in Browser</translate>
-								</app-button>
-							</template>
-							<template v-else-if="c.rtc && c.rtc.focusedUser">
-								<app-popper trigger="right-click">
-									<app-fireside-stream
-										:rtc-user="c.rtc.focusedUser"
-										:show-overlay-hosts="!shouldShowHosts"
-										:members="overlayChatMembers"
+							<app-sticker-target
+								class="-video-inner"
+								:controller="c.stickerTargetController"
+								:class="{
+									'-unsupported': GJ_IS_CLIENT,
+								}"
+								:style="{
+									top: 0,
+									right: 0,
+									bottom: 0,
+									left: 0,
+								}"
+							>
+								<template v-if="GJ_IS_CLIENT">
+									<app-illustration
+										v-if="shouldShowDesktopHosts && shortestSide > 700"
+										src="~img/ill/no-comments.svg"
 									/>
 
-									<template #popover>
-										<div class="list-group">
-											<a class="list-group-item" @click="toggleVideoStats()">
-												<translate>Toggle Video Stats</translate>
-											</a>
-										</div>
-									</template>
-								</app-popper>
-							</template>
-						</app-sticker-target>
+									<p class="-unsupported-text">
+										<translate>
+											Oh no... Fireside streams don't work on the Client yet.
+										</translate>
+									</p>
+
+									<app-button @click="onClickOpenBrowser()">
+										<translate>Open Fireside in Browser</translate>
+									</app-button>
+								</template>
+								<template v-else-if="c.rtc && c.rtc.focusedUser">
+									<app-popper trigger="right-click">
+										<app-fireside-stream
+											:rtc-user="c.rtc.focusedUser"
+											:has-header="
+												shouldShowHeaderInBody || shouldFullscreenStream
+											"
+											:has-hosts="shouldFullscreenStream"
+										/>
+
+										<template #popover>
+											<div class="list-group">
+												<a
+													class="list-group-item"
+													@click="toggleVideoStats()"
+												>
+													<translate>Toggle Video Stats</translate>
+												</a>
+											</div>
+										</template>
+									</app-popper>
+								</template>
+							</app-sticker-target>
+						</div>
 					</div>
 				</div>
 
-				<div v-if="c.rtc && shouldShowHosts" class="-hosts-padding">
+				<div v-if="c.rtc && shouldShowDesktopHosts" class="-hosts-padding">
 					<div class="-hosts">
 						<app-fireside-host-list />
 					</div>
@@ -218,14 +232,10 @@
 					<app-sticker-reactions :controller="c.stickerTargetController" />
 				</app-fade-collapse>
 
-				<app-expand v-if="shouldShowHeaderInBody" :when="c.isShowingStreamOverlay">
-					<app-fireside-header
-						class="-header"
-						has-overlay-popovers
-						:show-controls="shouldShowTitleControls"
-						:has-chat="!shouldShowChatMembers"
-						:has-chat-stats="shouldShowChatMemberStats"
-					/>
+				<app-expand v-if="!shouldShowDesktopHosts" :when="shouldShowMobileHosts">
+					<div class="-mobile-hosts">
+						<app-fireside-host-list hide-thumb-options />
+					</div>
 				</app-expand>
 
 				<div v-if="c.status === 'joined'" class="-chat-wrapper">
@@ -252,6 +262,7 @@
 							v-else-if="chat && chat.currentUser"
 							class="-chat-window-input"
 							:room="c.chatRoom"
+							@focus-change="onChatEditorFocusChange"
 						/>
 					</div>
 				</div>
@@ -468,6 +479,12 @@
 	.-video-wrapper.-vertical &
 		padding-top: 0
 		padding-right: 8px
+
+.-mobile-hosts
+	padding-top: 6px
+	padding-bottom: 20px
+	display: flex
+	justify-content: center
 
 .-chat-wrapper
 	position: relative

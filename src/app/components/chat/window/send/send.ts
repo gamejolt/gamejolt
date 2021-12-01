@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, InjectReactive, Prop, Watch } from 'vue-property-decorator';
+import { Component, Emit, InjectReactive, Prop, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { ContentDocument } from '../../../../../_common/content/content-document';
 import { AppContentEditorLazy } from '../../../../../_common/content/content-editor/content-editor-lazy';
@@ -23,6 +23,8 @@ export default class AppChatWindowSend extends Vue {
 	singleLineMode = true;
 
 	readonly Screen = Screen;
+
+	@Emit('focus-change') emitFocusChange(_focused: boolean) {}
 
 	get chat() {
 		return this.chatStore.chat!;

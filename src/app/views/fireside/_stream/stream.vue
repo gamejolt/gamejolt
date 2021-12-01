@@ -9,16 +9,7 @@
 		@click="onVideoClick"
 	>
 		<template v-if="hasVideo">
-			<template v-if="videoPaused">
-				<transition>
-					<template v-if="!hasOverlayItems">
-						<div class="-paused-indicator -click-target anim-fade-leave-shrink">
-							<app-jolticon class="-paused-indicator-icon" icon="play" />
-						</div>
-					</template>
-				</transition>
-			</template>
-			<template v-else-if="isLoadingVideo">
+			<template v-if="isLoadingVideo">
 				<div class="-overlay -visible-center">
 					<app-loading centered stationary no-color hide-label />
 				</div>
@@ -53,37 +44,65 @@
 			@click.capture="onOverlayTap"
 		>
 			<template v-if="shouldShowUI">
-				<div class="-overlay-inner">
-					<div v-if="memberCount" class="-overlay-members">
-						<translate
-							:translate-n="memberCount"
-							:translate-params="{ count: number(memberCount) }"
-							translate-plural="%{ count } members"
-						>
-							%{ count } member
-						</translate>
-					</div>
-
-					<div class="-overlay-playback">
+				<template v-if="videoPaused">
+					<transition>
 						<div
-							v-if="shouldShowOverlayPlayback"
-							class="-overlay-playback-inner"
-							@click="togglePlayback"
+							ref="paused"
+							class="-paused-indicator -click-target anim-fade-leave-shrink"
 						>
-							<app-jolticon
-								class="-paused-indicator-icon"
-								:icon="videoPaused ? 'play' : 'pause'"
-							/>
+							<app-jolticon class="-paused-indicator-icon" icon="play" />
+						</div>
+					</transition>
+				</template>
+
+				<div class="-overlay-inner">
+					<div v-if="hasHeader" class="-overlay-top -control">
+						<div style="flex: auto; overflow: hidden">
+							<app-fireside-header is-overlay />
+							<div class="-overlay-members">
+								<translate
+									:translate-n="memberCount"
+									:translate-params="{ count: number(memberCount) }"
+									translate-plural="%{ count } members"
+								>
+									%{ count } member
+								</translate>
+							</div>
 						</div>
 					</div>
 
-					<div v-if="showOverlayHosts" class="-overlay-hosts -control">
-						<app-fireside-host-list
-							hide-thumb-options
-							@show-popper="onHostOptionsShow"
-							@hide-popper="onHostOptionsHide"
-						/>
+					<div class="-flex-spacer" />
+
+					<div class="-overlay-bottom -control" @click.stop>
+						<div class="-video-controls">
+							<div v-if="hasVideo">
+								<app-button
+									circle
+									trans
+									overlay
+									:icon="videoPaused ? 'play' : 'pause'"
+									@click.capture.stop="togglePlayback"
+								/>
+							</div>
+
+							<div v-if="hasVolumeControls" class="-volume">
+								<app-jolticon icon="audio" />
+								<app-slider
+									class="-volume-slider"
+									:percent="desktopVolume"
+									@scrub="onVolumeScrub"
+								/>
+							</div>
+						</div>
 					</div>
+
+					<app-fireside-host-list
+						v-if="hasHosts"
+						class="-hosts"
+						hide-thumb-options
+						@show-popper="onHostOptionsShow"
+						@hide-popper="onHostOptionsHide"
+					/>
 				</div>
 			</template>
 		</div>
@@ -120,6 +139,14 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 
+$-text-shadow = 1px 1px 3px rgba($black, 0.5)
+$-z-overlay = 1
+$-z-control = 3
+$-z-combo = 2
+
+.jolticon
+	text-shadow: $-text-shadow
+
 .-stream
 .-video-player
 	&
@@ -130,10 +157,10 @@
 		bottom: 0
 		left: 0
 		color: var(--theme-fg)
-		text-shadow: 1px 1px 3px rgba($black, 0.5)
+		text-shadow: $-text-shadow
 
 	> .-overlay
-		z-index: 1
+		z-index: $-z-overlay
 		opacity: 0
 		transition: all 200ms $strong-ease-out
 
@@ -149,10 +176,10 @@
 	width: 100%
 	display: flex
 	flex-direction: column
-	padding: 8px 0
+	padding: 8px
 
 	> *
-		flex: 1
+		z-index: $-z-control
 
 .-visible-center
 	opacity: 1 !important
@@ -173,28 +200,26 @@
 	left: 0
 
 .-overlay-members
-	padding: 0 8px
+	opacity: 0.75
 	font-weight: bold
 
-.-overlay-playback
-	flex: auto
+.-overlay-top
 	display: flex
-	align-items: center
-	justify-content: center
-	min-height: 0
+	align-items: flex-start
 
-	&-inner
-		padding: 16px
-		margin: -(@padding)
-
-.-overlay-hosts
+.-overlay-bottom
 	display: flex
 	align-items: flex-end
+	width: min-content
 
 .-control
 	&
 	>>>
 		user-select: none
+
+.-flex-spacer
+	margin: auto
+	pointer-events: none
 
 .-paused-indicator
 	position: absolute
@@ -208,6 +233,25 @@
 
 	&-icon
 		font-size: 60px
+		pointer-events: none
+
+.-video-controls
+	display: flex
+	align-items: center
+	flex: 1
+	grid-gap: 12px
+
+	.-volume
+		display: inline-flex
+		align-items: center
+		flex: auto
+		grid-gap: 4px
+
+		&-slider
+			max-width: 200px
+
+.-hosts
+	margin-top: 8px
 
 .-combo
 	position: absolute
@@ -218,7 +262,7 @@
 	font-weight: bold
 	color: white
 	align-items: center
-	z-index: 2
+	z-index: $-z-combo
 	transition: opacity 200ms $strong-ease-out
 
 	&.-fade
