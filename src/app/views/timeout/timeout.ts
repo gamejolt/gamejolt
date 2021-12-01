@@ -12,6 +12,7 @@ import { AppMutation, AppState, appStore, AppStore } from '../../../_common/stor
 import { AppThemeSvg } from '../../../_common/theme/svg/svg';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import { UserTimeout } from '../../../_common/user/timeout/timeout.model';
+import AppTimeoutCountdown from '../../components/timeout/countdown/countdown.vue';
 
 @Component({
 	name: 'RouteTimeout',
@@ -21,6 +22,7 @@ import { UserTimeout } from '../../../_common/user/timeout/timeout.model';
 		AppLinkHelp,
 		AppContactLink,
 		AppIllustration,
+		AppTimeoutCountdown,
 	},
 })
 @RouteResolver({
