@@ -25,7 +25,8 @@ export default class AppTimeoutCountdown extends Vue {
 	}
 
 	updateDisplayText() {
-		let diff = this.expiresOn - Date.now();
+		const totalDiff = this.expiresOn - Date.now();
+		let diff = totalDiff;
 
 		/**
 		 * Base display:
@@ -65,14 +66,14 @@ export default class AppTimeoutCountdown extends Vue {
 			hours = Math.floor(diff / hoursInMil);
 		}
 
-		if (hours > 0) {
+		if (totalDiff >= hoursInMil) {
 			const hoursStr = hours.toString(10).padStart(2, '0');
 			components.push(hoursStr);
 			diff -= hours * hoursInMil;
 		}
 
-		const mins = Math.floor(diff / minsInMil);
-		if (mins > 0) {
+		if (totalDiff >= minsInMil) {
+			const mins = Math.floor(diff / minsInMil);
 			const minsStr = mins.toString(10).padStart(2, '0');
 			components.push(minsStr);
 			diff -= mins * minsInMil;
@@ -80,7 +81,7 @@ export default class AppTimeoutCountdown extends Vue {
 
 		const seconds = Math.floor(diff / secondsInMil);
 		// Only pad the seconds display if we have at least the minute display as well.
-		if (components.length > 0) {
+		if (totalDiff >= minsInMil) {
 			const secondsStr = seconds.toString(10).padStart(2, '0');
 			components.push(secondsStr);
 		} else {
