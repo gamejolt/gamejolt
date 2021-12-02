@@ -179,11 +179,8 @@ export function scrubVideoVolume(
 }
 
 export function setVideoMuted(player: VideoPlayerController, mute: boolean) {
-	if (player.altControlsBehavior) {
-		player.muted = mute;
-	} else {
-		setVideoVolume(player, mute ? 0 : getVolumeSetting(player));
-	}
+	player.muted = mute;
+	setVideoVolume(player, mute ? 0 : getVolumeSetting(player));
 
 	if (player.context === 'feed') {
 		SettingVideoPlayerFeedMuted.set(mute);
