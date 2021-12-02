@@ -9,7 +9,7 @@ import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-se
 import { Popper } from '../../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../../../_common/screen/screen-service';
-import { Theme } from '../../../../../../_common/theme/theme.model';
+import { DefaultTheme } from '../../../../../../_common/theme/theme.model';
 import { ThemeState, ThemeStore } from '../../../../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { ChatStore, ChatStoreKey } from '../../../chat-store';
@@ -65,7 +65,7 @@ export default class AppChatWindowOutputItem extends Vue {
 
 	get actualTheme() {
 		// Use the form/page/user theme, or the default theme if none exist.
-		return this.theme || new Theme(null);
+		return this.theme ?? DefaultTheme;
 	}
 
 	get isSingleLineMode() {

@@ -323,3 +323,8 @@ export class Theme extends Model {
 }
 
 Model.create(Theme);
+
+/**
+ * Default theme to be used by the whole app. Uses our main theme tint.
+ */
+export const DefaultTheme = new Theme({ tint: '4800ff' });
