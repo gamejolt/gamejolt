@@ -7,7 +7,7 @@ import AppFormControlTheme from '../../../../_common/form-vue/control/theme/them
 import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
 import { BaseForm, FormOnLoad, FormOnSubmitError } from '../../../../_common/form-vue/form.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
-import { Theme } from '../../../../_common/theme/theme.model';
+import { DefaultTheme } from '../../../../_common/theme/theme.model';
 import { ThemeMutation, ThemeStore } from '../../../../_common/theme/theme.store';
 import { User } from '../../../../_common/user/user.model';
 
@@ -81,6 +81,6 @@ export default class FormProfile extends BaseForm<User> implements FormOnLoad, F
 
 	onThemeChanged() {
 		// Default would be the default theme for site.
-		this.setFormTheme(this.formModel.theme || new Theme());
+		this.setFormTheme(this.formModel.theme ?? DefaultTheme);
 	}
 }

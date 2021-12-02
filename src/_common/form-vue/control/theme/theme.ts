@@ -5,7 +5,12 @@ import AppLoading from '../../../loading/loading.vue';
 import AppPopper from '../../../popper/popper.vue';
 import AppThemeBubble from '../../../theme/bubble/bubble.vue';
 import { ThemePreset } from '../../../theme/preset/preset.model';
-import { makeThemeFromColor, makeThemeFromPreset, Theme } from '../../../theme/theme.model';
+import {
+	DefaultTheme,
+	makeThemeFromColor,
+	makeThemeFromPreset,
+	Theme,
+} from '../../../theme/theme.model';
 import { AppTooltip } from '../../../tooltip/tooltip-directive';
 import BaseFormControl from '../base';
 
@@ -31,7 +36,7 @@ export default class AppFormControlTheme extends BaseFormControl {
 	customSelection: VueColor = { hex: null };
 
 	get currentTheme() {
-		return this.controlVal || new Theme();
+		return this.controlVal ?? DefaultTheme;
 	}
 
 	get highlight() {

@@ -2,7 +2,7 @@ import { darken, lighten } from 'polished';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
-import { GrayLight, GraySubtle, Theme } from '../../theme/theme.model';
+import { DefaultTheme, GrayLight, GraySubtle } from '../../theme/theme.model';
 import { ThemeState, ThemeStore } from '../../theme/theme.store';
 import { AppScrollInviewParent } from '../inview/parent';
 
@@ -24,7 +24,7 @@ export default class AppScrollScroller extends Vue {
 
 	get actualTheme() {
 		// Use the form/page/user theme, or the default theme if none exist.
-		return this.theme || new Theme(null);
+		return this.theme ?? DefaultTheme;
 	}
 
 	get hoverColors() {

@@ -3,7 +3,7 @@ import { Component, InjectReactive } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
-import { Theme } from '../../../../../_common/theme/theme.model';
+import { DefaultTheme } from '../../../../../_common/theme/theme.model';
 import { ThemeState, ThemeStore } from '../../../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../../store/index';
@@ -38,7 +38,7 @@ export default class AppShellCbarControls extends Vue {
 	}
 
 	get highlight() {
-		const theme = this.activeCommunity?.theme || this.theme || new Theme(null);
+		const theme = this.activeCommunity?.theme ?? this.theme ?? DefaultTheme;
 		if (theme) {
 			return '#' + theme.darkHighlight_;
 		}
