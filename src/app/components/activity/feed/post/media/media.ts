@@ -44,6 +44,10 @@ export default class AppActivityFeedPostMedia extends Vue implements LightboxMed
 	private lightbox?: AppLightboxTS;
 	readonly Screen = Screen;
 
+	$refs!: {
+		slider: HTMLElement;
+	};
+
 	get isHydrated() {
 		return this.feed.isItemHydrated(this.item);
 	}
@@ -106,10 +110,9 @@ export default class AppActivityFeedPostMedia extends Vue implements LightboxMed
 
 	private _updateSliderOffset(extraOffsetPx = 0) {
 		const pagePercent = this.page - 1;
-		const pagePx = (this.$refs.slider as HTMLElement).offsetWidth * -pagePercent;
-		(this.$refs.slider as HTMLElement).style.transform = `translate3d( ${
-			pagePx + extraOffsetPx
-		}px, 0, 0 )`;
+		const slider = this.$refs.slider;
+		const pagePx = slider.offsetWidth * -pagePercent;
+		slider.style.transform = `translate3d( ${pagePx + extraOffsetPx}px, 0, 0 )`;
 	}
 
 	panStart() {
@@ -120,6 +123,12 @@ export default class AppActivityFeedPostMedia extends Vue implements LightboxMed
 		if (!this.isWaitingForFrame) {
 			this.isWaitingForFrame = true;
 			window.requestAnimationFrame(() => this._panTick(event));
+		}
+	}
+
+	onTouchMove(event: Event) {
+		if (this.isDragging) {
+			event.preventDefault();
 		}
 	}
 

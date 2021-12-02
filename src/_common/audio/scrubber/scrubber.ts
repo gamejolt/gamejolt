@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-
 import { Ruler } from '../../ruler/ruler-service';
 
 if (!GJ_IS_SSR) {
@@ -18,6 +17,10 @@ export default class AppAudioScrubber extends Vue {
 	private timebarLeft = 0;
 	private timebarWidth = 0;
 	private scrubPos = -1;
+
+	$refs!: {
+		timebar?: HTMLElement;
+	};
 
 	get unfilledRight() {
 		if (this.scrubPos !== -1) {
@@ -50,7 +53,7 @@ export default class AppAudioScrubber extends Vue {
 	}
 
 	panStart(event: HammerInput) {
-		const timebar = this.$refs.timebar as HTMLElement;
+		const timebar = this.$refs.timebar;
 		if (!timebar) {
 			return;
 		}
@@ -74,13 +77,19 @@ export default class AppAudioScrubber extends Vue {
 		event.preventDefault();
 	}
 
+	onTouchMove(event: Event) {
+		if (this.isDragging) {
+			event.preventDefault();
+		}
+	}
+
 	panEnd() {
 		this.$emit('seek', this.scrubPos);
 		this.isDragging = false;
 	}
 
 	private calcScrubPos(event: HammerInput) {
-		const timebar = this.$refs.timebar as HTMLElement;
+		const timebar = this.$refs.timebar;
 		if (!this.isDragging || !timebar) {
 			return;
 		}

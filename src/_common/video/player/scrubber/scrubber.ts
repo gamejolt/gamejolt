@@ -13,6 +13,7 @@ if (!GJ_IS_SSR) {
 export default class AppVideoPlayerScrubber extends Vue {
 	@Prop(propRequired(VideoPlayerController)) player!: VideoPlayerController;
 
+	private isDragging = false;
 	private timebarLeft = 0;
 	private timebarWidth = 0;
 	timestampOffset = 0;
@@ -48,6 +49,7 @@ export default class AppVideoPlayerScrubber extends Vue {
 	}
 
 	panStart(event: HammerInput) {
+		this.isDragging = true;
 		this.initTimebarData();
 		scrubVideo(this.player, this.calcScrubPos(event), 'start');
 
@@ -59,7 +61,14 @@ export default class AppVideoPlayerScrubber extends Vue {
 		scrubVideo(this.player, this.calcScrubPos(event), 'scrub');
 	}
 
+	onTouchMove(event: Event) {
+		if (this.isDragging) {
+			event.preventDefault();
+		}
+	}
+
 	panEnd(event: HammerInput) {
+		this.isDragging = false;
 		scrubVideo(this.player, this.calcScrubPos(event), 'end');
 	}
 
