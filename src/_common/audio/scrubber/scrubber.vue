@@ -10,6 +10,7 @@
 		@panend="panEnd"
 		@tap="tap"
 		@touchmove.native="onTouchMove"
+		@touchend.native="isDragging = false"
 	>
 		<div ref="timebar" class="audio-scrubber-timebar">
 			<div class="audio-scrubber-timebar-handle" :style="{ right: unfilledRight }" />

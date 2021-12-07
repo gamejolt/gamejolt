@@ -9,6 +9,7 @@
 		@panend="panEnd"
 		@tap="tap"
 		@touchmove.native="onTouchMove"
+		@touchend.native="isDragging = false"
 		@click.native.capture.prevent
 	>
 		<div ref="timebar" class="-timebar" :class="{ '-dragging': player.isScrubbing }">
