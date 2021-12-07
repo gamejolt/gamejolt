@@ -554,7 +554,7 @@ export function editorToggleMark(
 	mark: MarkType<ContentEditorSchema>,
 	attrs?: { [key: string]: any }
 ) {
-	if (!c.view || !_canMark(c, mark)) {
+	if (!c.view) {
 		return;
 	}
 
@@ -949,12 +949,4 @@ function _getFragmentText(frag: Fragment<ContentEditorSchema> | Node<ContentEdit
 	});
 
 	return text;
-}
-
-function _canMark(
-	c: ContentEditorController,
-	mark: MarkType<ContentEditorSchema> | ContentEditorSchema
-) {
-	const type = mark instanceof ContentEditorSchema ? mark : mark.name;
-	return Object.entries(c.capabilities).some(([key, value]) => key === type && !!value);
 }
