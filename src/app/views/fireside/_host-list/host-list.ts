@@ -15,6 +15,7 @@ import {
 import AppFiresideCohostManage from '../cohost/manage/manage.vue';
 import AppFiresideHostThumb from '../_host-thumb/host-thumb.vue';
 import AppFiresideStreamOptions from '../_stream-options/stream-options.vue';
+import AppFiresideStreamPlayback from '../_stream-playback/stream-playback.vue';
 import AppFiresideHostListStickerButton from './sticker-button/sticker-button.vue';
 
 @Component({
@@ -24,6 +25,7 @@ import AppFiresideHostListStickerButton from './sticker-button/sticker-button.vu
 		AppFiresideStreamOptions,
 		AppFiresideCohostManage,
 		AppFiresideHostListStickerButton,
+		AppFiresideStreamPlayback,
 	},
 	directives: {
 		AppAuthRequired,
@@ -32,6 +34,9 @@ import AppFiresideHostListStickerButton from './sticker-button/sticker-button.vu
 export default class AppFiresideHostList extends Vue {
 	@Prop({ type: Boolean, default: false })
 	hideThumbOptions!: boolean;
+
+	@Prop({ type: Boolean, default: false })
+	showPlayback!: boolean;
 
 	@InjectReactive(FiresideControllerKey) c!: FiresideController;
 	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
