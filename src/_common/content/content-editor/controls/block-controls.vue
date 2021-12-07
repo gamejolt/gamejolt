@@ -1,10 +1,12 @@
+<script lang="ts" src="./block-controls"></script>
+
 <template>
 	<div
 		ref="container"
 		class="content-editor-controls"
 		:style="{
-			top: this.top + 'px',
-			left: this.left + 'px',
+			top: top + 'px',
+			left: '-32px',
 		}"
 		:class="{
 			'controls-desktop': !Screen.isXs,
@@ -18,74 +20,74 @@
 			<div v-if="shouldShow">
 				<template v-if="Screen.isXs">
 					<button
-						v-if="capabilities.media"
+						v-if="contextCapabilities.media"
+						v-app-tooltip="$gettext('Add an image or GIF')"
 						type="button"
 						class="control-button"
 						@click="onClickMedia"
-						v-app-tooltip="$gettext('Add an image or GIF')"
 					>
 						<app-jolticon icon="screenshot" />
 					</button>
 					<button
-						v-if="capabilities.hasAnyEmbed"
+						v-if="contextCapabilities.hasAnyEmbed"
+						v-app-tooltip="$gettext('Add an embed')"
 						type="button"
 						class="control-button"
 						@click="onClickEmbed"
-						v-app-tooltip="$gettext('Add an embed')"
 					>
 						<app-jolticon icon="embed" />
 					</button>
 					<button
-						v-if="capabilities.codeBlock"
+						v-if="contextCapabilities.codeBlock"
+						v-app-tooltip="$gettext('Add a code block')"
 						type="button"
 						class="control-button"
 						@click="onClickCodeBlock"
-						v-app-tooltip="$gettext('Add a code block')"
 					>
 						<app-jolticon icon="brackets" />
 					</button>
 					<button
-						v-if="capabilities.blockquote"
+						v-if="contextCapabilities.blockquote"
+						v-app-tooltip="$gettext('Add a quote')"
 						type="button"
 						class="control-button"
 						@click="onClickBlockquote"
-						v-app-tooltip="$gettext('Add a quote')"
 					>
 						<app-jolticon icon="blockquote" />
 					</button>
 					<button
-						v-if="capabilities.spoiler"
+						v-if="contextCapabilities.spoiler"
+						v-app-tooltip="$gettext('Add a spoiler')"
 						type="button"
 						class="control-button"
 						@click="onClickSpoiler"
-						v-app-tooltip="$gettext('Add a spoiler')"
 					>
 						<app-jolticon icon="inactive" />
 					</button>
 					<button
-						v-if="capabilities.hr"
+						v-if="contextCapabilities.hr"
+						v-app-tooltip="$gettext('Add a separator')"
 						type="button"
 						class="control-button"
 						@click="onClickHr"
-						v-app-tooltip="$gettext('Add a separator')"
 					>
 						<app-jolticon icon="hr" />
 					</button>
 					<button
-						v-if="capabilities.list"
+						v-if="contextCapabilities.list"
+						v-app-tooltip="$gettext('Add a bulleted list')"
 						type="button"
 						class="control-button"
 						@click="onClickBulletList"
-						v-app-tooltip="$gettext('Add a bulleted list')"
 					>
 						<app-jolticon icon="bullet-list" />
 					</button>
 					<button
-						v-if="capabilities.list"
+						v-if="contextCapabilities.list"
+						v-app-tooltip="$gettext('Add a numbered list')"
 						type="button"
 						class="control-button"
 						@click="onClickOrderedList"
-						v-app-tooltip="$gettext('Add a numbered list')"
 					>
 						<app-jolticon icon="numbered-list" />
 					</button>
@@ -102,79 +104,79 @@
 						@click="onClickExpand"
 					/>
 					<transition name="fade">
-						<span v-if="!this.collapsed">
-							<span class="dot-separator"></span>
+						<span v-if="!collapsed">
+							<span class="dot-separator" />
 							<app-button
-								v-if="capabilities.media"
+								v-if="contextCapabilities.media"
+								v-app-tooltip="$gettext('Add an image or GIF')"
 								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
 								solid
 								icon="screenshot"
 								@click="onClickMedia"
-								v-app-tooltip="$gettext('Add an image or GIF')"
 							/>
 							<app-button
-								v-if="capabilities.hasAnyEmbed"
+								v-if="contextCapabilities.hasAnyEmbed"
+								v-app-tooltip="$gettext('Add an embed')"
 								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
 								solid
 								icon="embed"
 								@click="onClickEmbed"
-								v-app-tooltip="$gettext('Add an embed')"
 							/>
 							<app-button
-								v-if="capabilities.codeBlock"
+								v-if="contextCapabilities.codeBlock"
+								v-app-tooltip="$gettext('Add a code block')"
 								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
 								solid
 								icon="brackets"
 								@click="onClickCodeBlock"
-								v-app-tooltip="$gettext('Add a code block')"
 							/>
 							<app-button
-								v-if="capabilities.blockquote"
+								v-if="contextCapabilities.blockquote"
+								v-app-tooltip="$gettext('Add a quote')"
 								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
 								solid
 								icon="blockquote"
 								@click="onClickBlockquote"
-								v-app-tooltip="$gettext('Add a quote')"
 							/>
 							<app-button
-								v-if="capabilities.spoiler"
+								v-if="contextCapabilities.spoiler"
+								v-app-tooltip="$gettext('Add a spoiler')"
 								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
 								solid
 								icon="inactive"
 								@click="onClickSpoiler"
-								v-app-tooltip="$gettext('Add a spoiler')"
 							/>
 							<app-button
-								v-if="capabilities.hr"
+								v-if="contextCapabilities.hr"
+								v-app-tooltip="$gettext('Add a separator')"
 								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
 								solid
 								icon="hr"
 								@click="onClickHr"
-								v-app-tooltip="$gettext('Add a separator')"
 							/>
 							<app-button
-								v-if="capabilities.list"
+								v-if="contextCapabilities.list"
+								v-app-tooltip="$gettext('Add a bulleted list')"
 								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
 								solid
 								icon="bullet-list"
 								@click="onClickBulletList"
-								v-app-tooltip="$gettext('Add a bulleted list')"
 							/>
 							<app-button
-								v-if="capabilities.list"
+								v-if="contextCapabilities.list"
+								v-app-tooltip="$gettext('Add a numbered list')"
 								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
 								solid
 								icon="numbered-list"
 								@click="onClickOrderedList"
-								v-app-tooltip="$gettext('Add a numbered list')"
 							/>
 						</span>
 					</transition>
@@ -184,6 +186,65 @@
 	</div>
 </template>
 
-<style lang="stylus" src="./controls.styl" scoped></style>
+<style lang="stylus" scoped>
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+@import './variables'
 
-<script lang="ts" src="./controls"></script>
+.content-editor-controls
+	position: absolute
+	z-index: $zindex-content-editor
+
+	&:hover
+		outline: 0 solid transparent !important
+
+.-add-button
+	transition: transform 0.2s ease
+
+.-add-button-rotated
+	transform: rotate(-45deg)
+
+.fade-enter-active
+.fade-leave-active
+	transition: opacity 0.2s
+
+.fade-enter
+.fade-leave-to
+	opacity: 0
+
+.controls-mobile
+	position: fixed
+	top: auto !important
+	bottom: 0 !important
+	left: 0 !important
+	right: 0 !important
+
+	& > div
+		display: flex
+		justify-content: center
+		align-items: center
+		change-bg('bg-offset')
+		theme-prop('border-color', 'bg-subtle')
+		padding-left: 4px
+		padding-right: 4px
+
+		& > .control-button
+			padding-top: 0
+			padding-bottom: 0
+
+		& > .control-button > span
+			margin: $controls-margin-vertical $controls-margin-horizontal
+			font-size: $controls-font-size !important
+
+.control-button
+	cursor: pointer
+	display: inline-block
+	pressy()
+	background-color: transparent
+	border-style: none
+
+.btn-stagger
+	for i in 2 .. 40
+		&:nth-child({i})
+			animation-delay: 20ms * i
+</style>

@@ -1,8 +1,7 @@
 import { Mark, MarkType, Node } from 'prosemirror-model';
 import { EditorState, Plugin, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { ContextCapabilities } from '../../content-context';
-import { ContentEditorService } from '../content-editor.service';
+import { ContentEditorController, editorResolveNodePosition } from '../content-editor-controller';
 import { ContentEditorSchema } from '../schemas/content-editor-schema';
 import { UrlDetector } from './url-detector';
 
@@ -18,15 +17,16 @@ type TextCell = {
 
 export default class UpdateAutolinkPlugin extends Plugin {
 	private view!: EditorView<ContentEditorSchema>;
-	private capabilities: ContextCapabilities;
 
-	constructor(capabilities: ContextCapabilities) {
+	constructor(private readonly c: ContentEditorController) {
 		super({});
-
-		this.capabilities = capabilities;
 
 		this.spec.view = this.viewSetter.bind(this);
 		this.spec.appendTransaction = this.appendTransaction;
+	}
+
+	get capabilities() {
+		return this.c.contextCapabilities;
 	}
 
 	viewSetter(view: EditorView<ContentEditorSchema>) {
@@ -53,7 +53,7 @@ export default class UpdateAutolinkPlugin extends Plugin {
 		// urls should be autolinked
 
 		for (const paragraph of paragraphs) {
-			const paragraphPos = ContentEditorService.findNodePosition(newState, paragraph);
+			const paragraphPos = editorResolveNodePosition(this.c, paragraph, newState);
 
 			// Check if the paragraph changed compared to the last state.
 			// -1 to not include the doc node.

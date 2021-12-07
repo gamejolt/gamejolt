@@ -1,7 +1,11 @@
 import { InputRule } from 'prosemirror-inputrules';
 import { EditorState } from 'prosemirror-state';
 import AppContentEditor from '../../content-editor';
-import { ContentEditorService } from '../../content-editor.service';
+import {
+	editorGetParentNode,
+	editorGetSelectedNode,
+	editorIsNodeCode,
+} from '../../content-editor-controller';
 import { ContentEditorSchema } from '../../schemas/content-editor-schema';
 
 export const BasicMentionRegex = /@([\w_-]+)$/i;
@@ -10,13 +14,15 @@ export function detectMentionSuggestionRule(editor: AppContentEditor) {
 	return new InputRule(
 		BasicMentionRegex,
 		(
-			state: EditorState<ContentEditorSchema>,
+			_state: EditorState<ContentEditorSchema>,
 			_match: string[],
 			_start: number,
 			_end: number
 		) => {
 			// We don't want to insert mentions inside code text.
-			if (ContentEditorService.checkCurrentNodeIsCode(state)) {
+			const currentNode = editorGetSelectedNode(editor.controller);
+			const parent = currentNode ? editorGetParentNode(editor.controller, currentNode) : null;
+			if (currentNode && editorIsNodeCode(currentNode, parent)) {
 				return null;
 			}
 

@@ -69,6 +69,11 @@ const config = {
 			title: 'Game Jolt - Games for the love of it',
 			bodyClass: 'main-body',
 		},
+		editor: {
+			title: 'Editor',
+			app: true,
+			analytics: false,
+		},
 	},
 	translations: 'site-translations',
 	translationSections: {

@@ -34,7 +34,7 @@ module.exports = function (config) {
 	let shouldExtractCss = config.ssr || config.production;
 
 	let externals = {};
-	if (!config.client) {
+	if (config.isWeb) {
 		// When building for site, we don't want any of these imports accidentally being pulled in.
 		// Setting these to empty object strings causes the require to return an empty object.
 		externals['client-voodoo'] = '{}';
@@ -63,7 +63,7 @@ module.exports = function (config) {
 	let webpackTarget = 'web';
 	if (config.ssr === 'server') {
 		webpackTarget = 'node';
-	} else if (config.client) {
+	} else if (config.isClient) {
 		webpackTarget = 'node-webkit';
 	}
 
@@ -188,17 +188,21 @@ module.exports = function (config) {
 
 		// If we need to test prod ssr build locally we should comment out this bit,
 		// otherwise it'll attempt to fetch the chunks from our cdn.
-		if (!config.client && config.production) {
+		if (config.isWeb && config.production) {
 			publicPath = config.staticCdn + publicPath;
-		} else if (config.client && !config.watching) {
+		} else if (config.isClient && !config.watching) {
 			// On linux/win we put all the files in a folder called "package".
 			if (config.platform !== 'osx') {
 				publicPath = '/package/';
 			}
 		}
+		// In app build, we always serve from relative path.
+		else if (config.isApp && config.production) {
+			publicPath = '';
+		}
 
 		let webAppManifest = undefined;
-		if (config.ssr !== 'server' && !config.client && sectionConfig.webAppManifest) {
+		if (config.ssr !== 'server' && config.isWeb && sectionConfig.webAppManifest) {
 			webAppManifest = sectionConfig.webAppManifest;
 
 			for (const icon of webAppManifest.icons) {
@@ -207,7 +211,7 @@ module.exports = function (config) {
 		}
 
 		let hasOfflineSupport =
-			config.ssr !== 'server' && !config.client && config.production && sectionConfig.offline;
+			config.ssr !== 'server' && config.isWeb && config.production && sectionConfig.offline;
 
 		webpackSectionConfigs[section] = {
 			mode: config.production ? 'production' : 'development',
@@ -373,7 +377,8 @@ module.exports = function (config) {
 						!config.developmentEnv ? 'production' : 'development'
 					),
 					GJ_BUILD_TYPE: JSON.stringify(config.production ? 'production' : 'development'),
-					GJ_IS_CLIENT: JSON.stringify(!!config.client),
+					GJ_IS_CLIENT: JSON.stringify(!!config.isClient),
+					GJ_IS_APP: JSON.stringify(!!config.isApp),
 					GJ_IS_SSR: JSON.stringify(config.ssr === 'server'),
 					GJ_VERSION: JSON.stringify(
 						require(path.resolve(process.cwd(), 'package.json')).version
@@ -397,9 +402,8 @@ module.exports = function (config) {
 					},
 				]),
 				// Copy over stupid client stuff that's needed.
-				!config.client
-					? noop
-					: new CopyWebpackPlugin([
+				config.isClient
+					? new CopyWebpackPlugin([
 							{
 								from: path.join(base, 'package.json'),
 								to: 'package.json',
@@ -419,7 +423,8 @@ module.exports = function (config) {
 								from: 'update-hook.js',
 								to: 'update-hook.js',
 							},
-					  ]),
+					  ])
+					: noop,
 				devNoop ||
 					new ImageMinimizerPlugin({
 						minimizerOptions: {
@@ -473,9 +478,10 @@ module.exports = function (config) {
 							// Our own vars for injection into template.
 							templateParameters: {
 								_section: section,
-								_isClient: config.client,
+								_isClient: config.isClient,
 								_title: sectionConfig.title,
 								_crawl: !!sectionConfig.crawl,
+								_analytics: sectionConfig.analytics !== false,
 								_scripts: sectionConfig.scripts,
 								_bodyClass: sectionConfig.bodyClass || '',
 								_perfPolyfill: readFileSync(
@@ -490,12 +496,12 @@ module.exports = function (config) {
 				prodNoop || new FriendlyErrorsWebpackPlugin(),
 				// Make the client bundle for both normal prod builds or client ssr builds.
 				// We want to compare the manifests from the two builds.
-				(config.ssr === 'client' || config.production) && !config.client
+				(config.ssr === 'client' || config.production) && config.isWeb
 					? new VueSSRClientPlugin({
 							filename: 'vue-ssr-client-manifest-' + section + '.json',
 					  })
 					: noop,
-				config.ssr === 'server' && !config.client
+				config.ssr === 'server' && config.isWeb
 					? new VueSSRServerPlugin({
 							filename: 'vue-ssr-server-bundle-' + section + '.json',
 					  })
@@ -608,7 +614,7 @@ module.exports = function (config) {
 
 	webpackSectionTasks.unshift('translations:compile');
 
-	if (config.client && !config.watching) {
+	if (config.isClient && !config.watching) {
 		webpackSectionTasks.push('client');
 	}
 

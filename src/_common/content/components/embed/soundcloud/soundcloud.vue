@@ -1,3 +1,5 @@
+<script lang="ts" src="./soundcloud"></script>
+
 <template>
 	<iframe
 		nwdisable
@@ -7,7 +9,5 @@
 		scrolling="no"
 		frameborder="no"
 		:src="embedSrc"
-	></iframe>
+	/>
 </template>
-
-<script lang="ts" src="./soundcloud"></script>

@@ -24,7 +24,7 @@ const sleep = function (ms) {
 
 module.exports = config => {
 	// We can skip all this stuff if not doing a client build.
-	if (!config.client) {
+	if (!config.isClient) {
 		return;
 	}
 

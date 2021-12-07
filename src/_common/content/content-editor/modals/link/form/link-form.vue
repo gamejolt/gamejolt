@@ -1,7 +1,9 @@
+<script lang="ts" src="./link-form"></script>
+
 <template>
 	<app-form name="contentEditorLinkForm">
 		<app-form-group name="href" :optional="false" :label="$gettext(`Link Destination`)">
-			<app-form-control placeholder="https://example.com" v-app-focus-when />
+			<app-form-control v-app-focus-when placeholder="https://example.com" />
 		</app-form-group>
 
 		<!-- <app-form-group
@@ -18,5 +20,3 @@
 		</app-form-button>
 	</app-form>
 </template>
-
-<script lang="ts" src="./link-form"></script>

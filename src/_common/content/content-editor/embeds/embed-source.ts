@@ -11,7 +11,7 @@ export abstract class EmbedSource {
 	 * example: returns the YouTube video id from a YouTube video link.
 	 * Returns `false` if the link does not match the source or is invalid.
 	 */
-	abstract async getLinkSource(
+	abstract getLinkSource(
 		capabilities: ContextCapabilities,
 		hydrator: ContentHydrator,
 		link: string

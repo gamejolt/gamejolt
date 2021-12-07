@@ -9,8 +9,7 @@ import { LinkData } from './link-modal.service';
 	},
 })
 export default class AppContentEditorLinkModal extends BaseModal {
-	@Prop(String)
-	selectedText!: string;
+	@Prop(String) selectedText!: string;
 
 	linkData: LinkData = {
 		href: '',
@@ -41,7 +40,7 @@ export default class AppContentEditorLinkModal extends BaseModal {
 
 		if (!this.isValidUrl(data.href)) {
 			// Insert protocol if none given
-			if (!/^[a-z][a-z0-9+\-\.]*:\/\//i.test(data.href)) {
+			if (!/^[a-z][a-z0-9+\-.]*:\/\//i.test(data.href)) {
 				data.href = '//' + data.href;
 			}
 		}

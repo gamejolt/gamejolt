@@ -50,7 +50,7 @@ export default class AppContentEmbed extends Vue {
 	};
 
 	get capabilities() {
-		return this.owner.getCapabilities();
+		return this.owner.getContextCapabilities();
 	}
 
 	get hydrator() {
