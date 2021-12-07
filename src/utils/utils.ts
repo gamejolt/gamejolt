@@ -1,5 +1,3 @@
-import { isError } from 'util';
-
 export type RequireContextMap = { [k: string]: string };
 
 export function importContext(r: WebpackContext) {
@@ -64,10 +62,6 @@ export function assertNever(x: never): never {
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type Primitives = Number | String | Boolean;
 export type Properties<T, U> = { [K in keyof T]: T[K] extends U ? K : never }[keyof T];
-
-export function isErrnoException(err: any): err is NodeJS.ErrnoException {
-	return isError(err) && typeof (err as any).code === 'string' && !!(err as any).code;
-}
 
 export function isPromise(obj: any) {
 	return (

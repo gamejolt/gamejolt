@@ -111,10 +111,11 @@ module.exports = function (config) {
 			loaders.push({
 				loader: 'stylus-loader',
 				options: {
-					paths: ['src/'],
-					'resolve url': true,
-					'include css': true,
-					preferPathResolver: 'webpack',
+					stylusOptions: {
+						include: ['src/'],
+						resolveURL: true,
+						includeCSS: true,
+					},
 				},
 			});
 		} else if (withSass) {
@@ -212,6 +213,16 @@ module.exports = function (config) {
 		let hasOfflineSupport =
 			config.ssr !== 'server' && !config.client && config.production && sectionConfig.offline;
 
+		const optimization = {};
+
+		// TODO(vue3) check ssr to see if we need to disable chunk splitting?
+		// In ssr, we only want to do chunk splitting in the client bundle,
+		// otherwise, we only want to do chunk splitting when doing a prod build.
+		if (config.ssr === 'client' || (!config.ssr && config.production)) {
+			// Splits the runtime into its own chunk for long-term caching.
+			optimization.runtimeChunk = 'single';
+		}
+
 		webpackSectionConfigs[section] = {
 			mode: config.production ? 'production' : 'development',
 			entry,
@@ -227,29 +238,32 @@ module.exports = function (config) {
 			output: {
 				publicPath: publicPath,
 				path: path.resolve(base, config.buildDir),
-				filename:
-					config.production || config.ssr
-						? section + '.[name].[contenthash:8].js'
-						: section + '.[name].js',
-				chunkFilename:
-					config.production || config.ssr
-						? section + '.[name].[contenthash:8].js'
-						: section + '.[name].js',
-				sourceMapFilename:
-					config.production || config.ssr
-						? 'maps/[name].[contenthash:8].map'
-						: 'maps/[name].map',
-				libraryTarget: libraryTarget,
+				filename: section + '.[name].[contenthash:8].js',
+				chunkFilename: section + '.[name].[contenthash:8].js',
+				sourceMapFilename: 'maps/[name].[contenthash:8].map',
+				assetModuleFilename: 'assets/[name].[contenthash:8].[ext][query]',
+				library: {
+					type: libraryTarget,
+					name: 'GJ',
+				},
 			},
 			resolve: {
 				extensions: ['.tsx', '.ts', '.js', '.styl', '.vue'],
 				modules: [path.resolve(base, 'src/vendor'), 'node_modules'],
 				alias: {
 					// Always "app" base img.
-					img: path.resolve(base, 'src/app/img'),
-					styles: path.resolve(base, 'src/' + section + '/styles'),
-					'styles-lib': path.resolve(base, 'src/_styles/common'),
-					common: path.resolve(base, 'src/_common'),
+					'~img': path.resolve(base, 'src/app/img'),
+					'~styles': path.resolve(base, 'src/' + section + '/styles'),
+					'~styles-lib': path.resolve(base, 'src/_styles'),
+					// stylus-loader actually rewrites paths that start with ~
+					// to use the non~ version...
+					'styles-lib': path.resolve(base, 'src/_styles'),
+					'~common': path.resolve(base, 'src/_common'),
+				},
+				// These are node packages that client may use, but we want to
+				// basically ignore in web builds.
+				fallback: {
+					path: false,
 				},
 			},
 			externals: externals,
@@ -343,57 +357,22 @@ module.exports = function (config) {
 					},
 					{
 						test: /\.(png|jpe?g|gif|svg|ogg|mp4)(\?.*)?$/,
-						use: [
-							{
-								loader: 'file-loader',
-								options: {
-									name: 'assets/[name].[hash:8].[ext]',
-								},
-							},
-						],
+						type: 'asset/resource',
 						exclude: /node_modules/,
 					},
 					{
 						test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-						use: [
-							{
-								loader: 'file-loader',
-								options: {
-									name: 'assets/[name].[hash:8].[ext]',
-								},
-							},
-						],
+						type: 'asset/resource',
 					},
-					{
-						test: /\.json$/,
-						resourceQuery: /file/,
-						loader: 'file-loader',
-						type: 'javascript/auto',
-						options: {
-							name: 'assets/[name].[hash:8].[ext]',
-						},
-					},
+					// {
+					// 	test: /\.json$/,
+					// 	resourceQuery: /file/,
+					// 	type: 'javascript/auto',
+					// },
 				],
 			},
 			devtool,
-			optimization:
-				// In ssr, we only want to do chunk splitting in the client bundle,
-				// otherwise, we only want to do chunk splitting when doing a prod build.
-				config.ssr === 'client' || (!config.ssr && config.production)
-					? {
-							splitChunks: {
-								// Does chunk splitting logic for entry point chunks as well.
-								// https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
-								//
-								// When building for ssr it fails splitting css chunks when using 'all' or 'async'.
-								// The chunk is split correctly but isnt loaded into the initial page. instead of being included as a 'preload',
-								// it includes it as a 'prefetch'. Not sure where the issue is, so at the moment we just resort to 'initial'.
-								chunks: config.ssr ? 'initial' : 'all',
-							},
-							// Splits the runtime into its own chunk for long-term caching.
-							runtimeChunk: 'single',
-					  }
-					: undefined,
+			optimization,
 			plugins: [
 				new VueLoaderPlugin(),
 				prodNoop || new webpack.ProgressPlugin(),
@@ -421,13 +400,15 @@ module.exports = function (config) {
 					),
 					GJ_IS_WATCHING: JSON.stringify(config.watching),
 				}),
-				new CopyWebpackPlugin([
-					{
-						context: path.resolve(base, 'src/static-assets'),
-						from: '**/*',
-						to: 'static-assets',
-					},
-				]),
+				new CopyWebpackPlugin({
+					patterns: [
+						{
+							context: path.resolve(base, 'src/static-assets'),
+							from: '**/*',
+							to: 'static-assets',
+						},
+					],
+				}),
 				// Copy over stupid client stuff that's needed.
 				!config.client
 					? noop
@@ -473,7 +454,6 @@ module.exports = function (config) {
 							],
 						},
 					}),
-				!shouldUseHMR ? noop : new webpack.HotModuleReplacementPlugin(),
 				!shouldExtractCss
 					? noop
 					: new MiniCssExtractPlugin({
@@ -543,13 +523,13 @@ module.exports = function (config) {
 							},
 					  })
 					: noop,
-				devNoop || new webpack.HashedModuleIdsPlugin(),
 				config.write ? new WriteFilePlugin() : noop,
 				config.analyzeBundle ? new BundleAnalyzerPlugin({ openAnalyzer: true }) : noop,
 			],
 		};
 
 		gulp.task('compile:' + section, function (cb) {
+			// TODO(vue3): might need to close this now?
 			let compiler = webpack(webpackSectionConfigs[section]);
 			compiler.run(function (err, stats) {
 				if (err) {
@@ -598,27 +578,30 @@ module.exports = function (config) {
 
 						let compiler = webpack(sectionConfig);
 
-						let server = new WebpackDevServer(compiler, {
-							historyApiFallback: {
-								rewrites: [
-									{
-										from: /./,
-										to:
-											buildSection === 'app'
-												? '/index.html'
-												: '/' + buildSection + '.html',
-									},
-								],
+						let server = new WebpackDevServer(
+							{
+								historyApiFallback: {
+									rewrites: [
+										{
+											from: /./,
+											to:
+												buildSection === 'app'
+													? '/index.html'
+													: '/' + buildSection + '.html',
+										},
+									],
+								},
+								host: 'development.gamejolt.com',
+								// quiet: true,
+								allowedHosts: 'all',
+								compress: hasTunnels,
+								hot: shouldUseHMR,
 							},
-							public: 'development.gamejolt.com',
-							quiet: true,
-							disableHostCheck: hasTunnels,
-							compress: hasTunnels,
-							hot: shouldUseHMR,
-						});
+							compiler
+						);
 
 						if (config.ssr !== 'server') {
-							server.listen(port + portOffset, 'localhost');
+							server.start(port + portOffset, 'localhost');
 						}
 						portOffset += 1;
 					}

@@ -1,4 +1,4 @@
-import * as nodePath from 'path';
+import type * as nodePath from 'path';
 
 const STORAGE_PREFIX = 'settings.';
 

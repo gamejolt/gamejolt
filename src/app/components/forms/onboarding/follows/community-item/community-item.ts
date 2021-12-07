@@ -1,4 +1,3 @@
-import { readableColor } from 'polished';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
 import { Analytics } from '../../../../../../_common/analytics/analytics.service';
@@ -18,8 +17,6 @@ export default class AppOnboardingFollowsCommunityItem extends Vue {
 
 	@Action joinCommunity!: Store['joinCommunity'];
 	@Action leaveCommunity!: Store['leaveCommunity'];
-
-	readonly readableColor = readableColor;
 
 	get highlight() {
 		const highlight = this.community.theme && this.community.theme.highlight_;

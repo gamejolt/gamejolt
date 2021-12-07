@@ -67,7 +67,7 @@
 <style lang="stylus" scoped>
 @import '~styles/variables'
 @import '~styles-lib/mixins'
-@import '~styles-lib/tables'
+@import '~styles-lib/common/tables'
 
 .-content
 	::v-deep(h1:first-child)
@@ -80,4 +80,3 @@
 		img-responsive()
 		rounded-corners-lg()
 </style>
-
