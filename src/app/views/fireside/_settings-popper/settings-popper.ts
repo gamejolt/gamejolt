@@ -57,6 +57,15 @@ export default class AppFiresideSettingsPopper extends Vue {
 		return this.c.shouldShowStreamingOptions;
 	}
 
+	get hasMuteControls() {
+		if (!this.c.rtc) {
+			return false;
+		}
+		// Accessing `_users` here instead of `users` so we don't count
+		// ourselves.
+		return this.c.rtc._users.length > 0;
+	}
+
 	get isStreaming() {
 		return this.c.isPersonallyStreaming;
 	}
