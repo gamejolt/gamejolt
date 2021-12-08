@@ -9,6 +9,7 @@
 			@panmove="pan"
 			@panend="panEnd"
 			@touchmove.native="onTouchMove"
+			@touchend.native="isDragging = false"
 		>
 			<div class="-container">
 				<div ref="slider" class="-slider">
