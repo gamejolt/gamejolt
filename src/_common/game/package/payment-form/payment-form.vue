@@ -175,10 +175,10 @@
 												</div>
 												<div class="small">
 													<translate>Balance:</translate>
-													{{ currency(walletBalance) }}
+													{{ formatCurrency(walletBalance) }}
 
 													<span v-if="walletTax > 0" class="text-muted">
-														+{{ currency(walletTax) }}
+														+{{ formatCurrency(walletTax) }}
 														<translate>tax</translate>
 													</span>
 												</div>
@@ -223,7 +223,7 @@
 															class="text-muted"
 														>
 															+{{
-																currency(
+																formatCurrency(
 																	cardsTax[cards[0].id].amount
 																)
 															}}
@@ -266,7 +266,7 @@
 																class="text-muted"
 															>
 																+{{
-																	currency(
+																	formatCurrency(
 																		cardsTax[card.id].amount
 																	)
 																}}
@@ -413,7 +413,7 @@
 								v-if="calculatedAddressTax && addressTaxAmount > 0"
 								class="anim-fade-in small"
 							>
-								+{{ currency(addressTaxAmount) }}
+								+{{ formatCurrency(addressTaxAmount) }}
 								<translate>tax</translate>
 								<app-jolticon
 									v-app-tooltip.touchable="
@@ -441,7 +441,7 @@
 							>
 								<translate>Buy Using Wallet</translate>
 								<small v-if="calculatedAddressTax">
-									{{ currency(formModel.amount * 100 + addressTaxAmount) }}
+									{{ formatCurrency(formModel.amount * 100 + addressTaxAmount) }}
 								</small>
 							</app-button>
 						</div>

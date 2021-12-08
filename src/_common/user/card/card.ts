@@ -31,8 +31,8 @@ export default class AppUserCard extends Vue {
 
 	@State app!: AppStore;
 
-	readonly number = formatNumber;
-	readonly fuzzynumber = formatFuzzynumber;
+	readonly formatNumber = formatNumber;
+	readonly formatFuzzynumber = formatFuzzynumber;
 
 	get followerCount() {
 		return this.user.follower_count || 0;

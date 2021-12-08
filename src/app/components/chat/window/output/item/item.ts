@@ -51,7 +51,7 @@ export default class AppChatWindowOutputItem extends Vue {
 	singleLineMode = true;
 	messageOptionsVisible = false;
 
-	readonly date = formatDate;
+	readonly formatDate = formatDate;
 	readonly ChatMessage = ChatMessage;
 	readonly displayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 });
 	readonly Screen = Screen;

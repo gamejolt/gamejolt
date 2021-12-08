@@ -26,7 +26,7 @@ export default class FormCommunityCompetitionEdit
 	modelClass = CommunityCompetition;
 	timezoneService: FormTimezoneService<CommunityCompetition> | null = null;
 
-	readonly date = formatDate;
+	readonly formatDate = formatDate;
 
 	get endsOnControlRules() {
 		const rules = {

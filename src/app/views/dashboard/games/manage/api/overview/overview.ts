@@ -37,8 +37,8 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 		'user-count': number;
 	} = {} as any;
 
-	readonly number = formatNumber;
-	readonly duration = formatDuration;
+	readonly formatNumber = formatNumber;
+	readonly formatDuration = formatDuration;
 
 	get routeTitle() {
 		if (this.game) {

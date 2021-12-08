@@ -28,7 +28,7 @@
 					</div>
 
 					<div
-						v-translate="{ count: number(community.member_count) }"
+						v-translate="{ count: formatNumber(community.member_count) }"
 						class="-header-members"
 						:translate-n="community.member_count"
 						translate-plural="<b>%{count}</b> members"

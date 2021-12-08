@@ -12,5 +12,5 @@ import { Store } from '../../store/index';
 export default class AppGameCoverCredits extends Vue {
 	@State coverGame: Store['coverGame'];
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 }

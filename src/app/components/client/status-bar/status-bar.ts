@@ -32,7 +32,7 @@ export default class AppClientStatusBar extends Vue {
 
 	updaterWarningDismissed = false;
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	get clientUpdateStatus() {
 		return ClientUpdater.clientUpdateStatus;

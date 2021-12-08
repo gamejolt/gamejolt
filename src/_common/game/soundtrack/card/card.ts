@@ -28,7 +28,7 @@ export default class AppGameSoundtrackCard extends Vue {
 	isShowingSoundtrack = false;
 	canToggleSoundtrack = false;
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 	readonly Screen = Screen;
 
 	@Watch('isPlaying')

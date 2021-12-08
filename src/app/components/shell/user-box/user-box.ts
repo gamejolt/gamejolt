@@ -16,5 +16,5 @@ import { Store } from '../../../store/index';
 export default class AppShellUserBox extends Vue {
 	@State app!: Store['app'];
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 }

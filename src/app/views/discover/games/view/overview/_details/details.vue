@@ -42,11 +42,11 @@
 						name: 'discover.games.list._fetch-date',
 						params: {
 							section: 'by-date',
-							date: date(game.published_on, 'yyyy-LL-dd'),
+							date: formatDate(game.published_on, 'yyyy-LL-dd'),
 						},
 					}"
 				>
-					{{ date(game.published_on, 'longDate') }}
+					{{ formatDate(game.published_on, 'longDate') }}
 				</router-link>
 			</app-lazy-placeholder>
 		</div>

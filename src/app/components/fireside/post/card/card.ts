@@ -66,7 +66,7 @@ export default class AppPostCard extends Vue {
 	};
 
 	readonly GJ_IS_SSR = GJ_IS_SSR;
-	readonly fuzzynumber = formatFuzzynumber;
+	readonly formatFuzzynumber = formatFuzzynumber;
 	readonly InviewConfig = _InviewConfig;
 
 	readonly aspectRatio = AppPostCardAspectRatio;

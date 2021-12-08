@@ -158,7 +158,7 @@
 			<div class="alert alert-notice">
 				<translate
 					:translate-params="{
-						max: number(20000),
+						max: formatNumber(20000),
 					}"
 				>
 					You can only have a max of %{ max } keys in a single key group.

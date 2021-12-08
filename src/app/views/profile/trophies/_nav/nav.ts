@@ -27,7 +27,7 @@ export default class AppProfileTrophiesNav extends Vue {
 	@RouteStoreModule.State
 	trophyCount!: RouteStore['trophyCount'];
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	get hasGames() {
 		return this.games.length > 0;

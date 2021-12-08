@@ -38,7 +38,7 @@ export default class FormAvatar
 	minSize = 0;
 	maxSize = 0;
 
-	readonly filesize = formatFilesize;
+	readonly formatFilesize = formatFilesize;
 	readonly Screen = Screen;
 
 	declare $refs: {

@@ -47,7 +47,7 @@ export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteCompone
 
 	currentFilter = 'all';
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	get routeTitle() {
 		if (this.game) {

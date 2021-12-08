@@ -42,7 +42,7 @@ export default class AppMobileHeader extends Vue {
 
 	readonly Environment = Environment;
 	readonly Screen = Screen;
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	get community() {
 		return this.routeStore.community;

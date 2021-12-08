@@ -82,8 +82,8 @@ export default class AppGamePackageCard extends Vue {
 	};
 
 	readonly AppGamePackageCard = AppGamePackageCard;
-	readonly currency = formatCurrency;
-	readonly filesize = formatFilesize;
+	readonly formatCurrency = formatCurrency;
+	readonly formatFilesize = formatFilesize;
 
 	get metaComponent() {
 		return AppGamePackageCard.hook.meta;

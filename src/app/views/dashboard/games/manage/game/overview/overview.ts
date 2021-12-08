@@ -61,7 +61,7 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 	hasBuildsProcessing = false;
 
 	readonly Game = Game;
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	get routeTitle() {
 		if (this.game) {

@@ -38,14 +38,17 @@
 						<strong><translate>Viewed</translate></strong>
 					</h5>
 					<p>
-						{{ number(keyGroup.viewed_count || 0) }} /
-						{{ number(keyGroup.key_count || 0) }}
+						{{ formatNumber(keyGroup.viewed_count || 0) }} /
+						{{ formatNumber(keyGroup.key_count || 0) }}
 						<small>
 							({{
-								number((keyGroup.viewed_count || 0) / (keyGroup.key_count || 0), {
-									style: 'percent',
-									maximumFractionDigits: 2,
-								})
+								formatNumber(
+									(keyGroup.viewed_count || 0) / (keyGroup.key_count || 0),
+									{
+										style: 'percent',
+										maximumFractionDigits: 2,
+									}
+								)
 							}})
 						</small>
 					</p>
@@ -59,14 +62,17 @@
 						<strong><translate>Claimed</translate></strong>
 					</h5>
 					<p>
-						{{ number(keyGroup.claimed_count || 0) }} /
-						{{ number(keyGroup.key_count || 0) }}
+						{{ formatNumber(keyGroup.claimed_count || 0) }} /
+						{{ formatNumber(keyGroup.key_count || 0) }}
 						<small>
 							({{
-								number((keyGroup.claimed_count || 0) / (keyGroup.key_count || 0), {
-									style: 'percent',
-									maximumFractionDigits: 2,
-								})
+								formatNumber(
+									(keyGroup.claimed_count || 0) / (keyGroup.key_count || 0),
+									{
+										style: 'percent',
+										maximumFractionDigits: 2,
+									}
+								)
 							}})
 						</small>
 					</p>

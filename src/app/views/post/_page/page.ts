@@ -103,7 +103,7 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 	private lightbox?: AppLightboxTS;
 
 	readonly Screen = Screen;
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	declare $refs: {
 		'sticker-scroll': HTMLDivElement;

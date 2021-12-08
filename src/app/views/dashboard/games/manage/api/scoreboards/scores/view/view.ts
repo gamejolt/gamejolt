@@ -28,8 +28,8 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends BaseRo
 	score: UserGameScore = null as any;
 	scoreTable: GameScoreTable = null as any;
 
-	readonly number = formatNumber;
-	readonly date = formatDate;
+	readonly formatNumber = formatNumber;
+	readonly formatDate = formatDate;
 
 	get routeTitle() {
 		if (this.game) {

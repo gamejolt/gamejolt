@@ -12,7 +12,7 @@
 			</div>
 			<div class="user-box-exp-stats-next">
 				Next in
-				<strong>{{ number(app.user.experience_next) }}</strong>
+				<strong>{{ formatNumber(app.user.experience_next) }}</strong>
 				EXP
 			</div>
 		</div>

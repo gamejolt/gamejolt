@@ -84,7 +84,7 @@
 
 						<app-jolticon icon="heart-filled" :class="{ '-liked': likedPost }" />
 						<span class="-details-likes">
-							{{ fuzzynumber(post.like_count) }}
+							{{ formatFuzzynumber(post.like_count) }}
 						</span>
 					</div>
 				</div>

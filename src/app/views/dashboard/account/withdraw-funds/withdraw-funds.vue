@@ -9,7 +9,7 @@
 						</div>
 						<div class="stat-big-digit">
 							<a @click="isShowingRevenueBreakdown = !isShowingRevenueBreakdown">
-								{{ currency(revenueTotal) }}
+								{{ formatCurrency(revenueTotal) }}
 							</a>
 						</div>
 					</div>
@@ -20,7 +20,7 @@
 							<translate>Pending Revenue</translate>
 						</div>
 						<div class="stat-big-digit">
-							{{ currency(revenuePendingActivation) }}
+							{{ formatCurrency(revenuePendingActivation) }}
 							<app-jolticon
 								class="text-muted"
 								icon="help-circle"
@@ -38,7 +38,7 @@
 						<div class="stat-big-label">
 							<translate>Wallet Balance</translate>
 						</div>
-						<div class="stat-big-digit">{{ currency(walletBalance) }}</div>
+						<div class="stat-big-digit">{{ formatCurrency(walletBalance) }}</div>
 					</div>
 				</div>
 			</div>
@@ -50,18 +50,18 @@
 						<tbody>
 							<tr>
 								<th><translate>Revenue To Date</translate></th>
-								<td class="text-right">{{ currency(revenueTotal) }}</td>
+								<td class="text-right">{{ formatCurrency(revenueTotal) }}</td>
 							</tr>
 							<tr>
 								<th><translate>Pending Revenue</translate></th>
 								<td class="text-right">
-									{{ currency(revenuePendingActivation) }}
+									{{ formatCurrency(revenuePendingActivation) }}
 								</td>
 							</tr>
 							<tr>
 								<th><translate>Total Revenue</translate></th>
 								<td class="text-right">
-									{{ currency(revenueTotal + revenuePendingActivation) }}
+									{{ formatCurrency(revenueTotal + revenuePendingActivation) }}
 								</td>
 							</tr>
 						</tbody>
@@ -71,11 +71,13 @@
 						<tbody>
 							<tr>
 								<th><translate>Withdrawals Processing</translate></th>
-								<td class="text-right">{{ currency(revenuePendingWithdraw) }}</td>
+								<td class="text-right">
+									{{ formatCurrency(revenuePendingWithdraw) }}
+								</td>
 							</tr>
 							<tr>
 								<th><translate>Withdrawn To Date</translate></th>
-								<td class="text-right">{{ currency(revenueWithdrawn) }}</td>
+								<td class="text-right">{{ formatCurrency(revenueWithdrawn) }}</td>
 							</tr>
 						</tbody>
 					</table>
@@ -83,11 +85,11 @@
 						<tbody>
 							<tr>
 								<th><translate>Wallet Purchases</translate></th>
-								<td class="text-right">{{ currency(revenueSpent) }}</td>
+								<td class="text-right">{{ formatCurrency(revenueSpent) }}</td>
 							</tr>
 							<tr>
 								<th><translate>Wallet Balance</translate></th>
-								<td class="text-right">{{ currency(walletBalance) }}</td>
+								<td class="text-right">{{ formatCurrency(walletBalance) }}</td>
 							</tr>
 						</tbody>
 					</table>
@@ -95,7 +97,7 @@
 			</app-expand>
 
 			<div v-if="revenuePendingWithdraw > 0" class="alert alert-info">
-				<p v-translate="{ amount: currency(revenuePendingWithdraw) }">
+				<p v-translate="{ amount: formatCurrency(revenuePendingWithdraw) }">
 					You have pending withdrawals amounting to
 					<b>%{ amount }</b>
 					.
@@ -103,7 +105,7 @@
 			</div>
 
 			<div v-if="revenuePending" class="alert alert-info">
-				<p v-translate="{ amount: currency(revenuePending) }">
+				<p v-translate="{ amount: formatCurrency(revenuePending) }">
 					You currently have
 					<b>%{ amount }</b>
 					pending withdrawal.

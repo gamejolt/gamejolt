@@ -21,7 +21,7 @@
 				:class="{ 'blip-active': comment.user_vote, mobile: Screen.isXs }"
 				@click="showLikers()"
 			>
-				{{ fuzzynumber(comment.votes) }}
+				{{ formatFuzzynumber(comment.votes) }}
 			</a>
 			<span v-else class="blip-missing" />
 

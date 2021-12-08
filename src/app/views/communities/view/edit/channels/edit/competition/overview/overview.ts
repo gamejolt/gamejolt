@@ -39,7 +39,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends
 	isLoading = true;
 
 	readonly Environment = Environment;
-	readonly duration = formatDuration;
+	readonly formatDuration = formatDuration;
 
 	get channel() {
 		return this.routeStore.channel!;

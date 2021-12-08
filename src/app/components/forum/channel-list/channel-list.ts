@@ -25,7 +25,7 @@ export default class AppForumChannelList extends Vue {
 	latestPosts!: ForumPost[];
 	@Prop(Number) postCountPerPage!: number;
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 	readonly Screen = Screen;
 
 	get indexedPosts() {

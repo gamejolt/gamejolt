@@ -49,7 +49,7 @@ export default class RouteSearchResults extends BaseRouteComponent {
 
 	readonly Search = Search;
 	readonly Screen = Screen;
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	get slicedUsers() {
 		return Screen.isXs ? this.searchPayload.users : this.searchPayload.users.slice(0, 2);

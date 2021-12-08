@@ -31,7 +31,7 @@ export default class AppCommentControls extends Vue {
 	drawer!: DrawerStore;
 
 	readonly Screen = Screen;
-	readonly fuzzynumber = formatFuzzynumber;
+	readonly formatFuzzynumber = formatFuzzynumber;
 
 	get votingTooltip() {
 		const userHasVoted = !!this.comment.user_vote;

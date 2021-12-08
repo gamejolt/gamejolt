@@ -27,7 +27,7 @@ export default class AppForumTopicList extends Vue {
 	@Prop(Boolean) useUpvotes!: boolean;
 	@Prop(Number) postCountPerPage!: number;
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 	readonly Screen = Screen;
 
 	getPostPage(topic: ForumTopic) {

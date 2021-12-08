@@ -24,7 +24,7 @@
 			>
 				<translate
 					:translate-n="numPatching || 0"
-					:translate-params="{ count: number(numPatching || 0) }"
+					:translate-params="{ count: formatNumber(numPatching || 0) }"
 					translate-plural="%{ count } Downloads"
 				>
 					%{ count } Download

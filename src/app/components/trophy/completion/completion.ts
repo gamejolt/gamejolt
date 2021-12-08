@@ -22,7 +22,7 @@ export default class AppTrophyCompletion extends Vue {
 	@Prop({ type: Boolean, default: true })
 	isLoggedInUser!: boolean;
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	get completionRate() {
 		return Math.ceil((this.achieved / this.total) * 100);

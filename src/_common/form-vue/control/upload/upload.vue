@@ -53,7 +53,7 @@
 			<template v-else>
 				<app-progress-bar :percent="progress * 100">
 					<template v-if="progress < 0.99">
-						{{ number(progress, { style: 'percent' }) }}
+						{{ formatNumber(progress, { style: 'percent' }) }}
 					</template>
 					<template v-else>
 						<translate>Processing...</translate>

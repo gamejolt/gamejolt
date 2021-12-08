@@ -102,7 +102,7 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 
 	readonly Screen = Screen;
 	readonly Environment = Environment;
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	get loginUrl() {
 		return (

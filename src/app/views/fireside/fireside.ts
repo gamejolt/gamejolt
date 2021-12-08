@@ -117,7 +117,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	hasExpiryWarning = false; // Visually shows a warning to the owner when the fireside's time is running low.
 
 	readonly Screen = Screen;
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	videoWidth = 0;
 	videoHeight = 0;

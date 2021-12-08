@@ -7,8 +7,8 @@
 				<span
 					v-if="isLoggedInUser"
 					v-translate="{
-						achieved: number(achieved),
-						total: number(total),
+						achieved: formatNumber(achieved),
+						total: formatNumber(total),
 					}"
 				>
 					You've achieved
@@ -20,8 +20,8 @@
 				<span
 					v-else
 					v-translate="{
-						achieved: number(achieved),
-						total: number(total),
+						achieved: formatNumber(achieved),
+						total: formatNumber(total),
 					}"
 				>
 					They've achieved
@@ -38,7 +38,7 @@
 			<div class="clearfix">
 				<div class="pull-left">
 					<div class="stat-big stat-big-smaller" style="margin-bottom: 0">
-						<div class="stat-big-digit">{{ number(completionRate) }}%</div>
+						<div class="stat-big-digit">{{ formatNumber(completionRate) }}%</div>
 						<div class="stat-big-label">
 							<translate>trophies.completion.completion_label</translate>
 						</div>
@@ -48,7 +48,7 @@
 					<div class="stat-big stat-big-smaller text-right" style="margin-bottom: 0">
 						<div class="stat-big-digit">
 							<app-jolticon icon="exp" class="text-muted" />
-							{{ number(experience) }}
+							{{ formatNumber(experience) }}
 						</div>
 						<div class="stat-big-label">
 							<translate>trophies.completion.exp_gained_label</translate>

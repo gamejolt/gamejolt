@@ -51,7 +51,7 @@ export default class AppCommunityCompetitionEntryModal extends BaseModal {
 	isLoading = true;
 
 	readonly Screen = Screen;
-	readonly date = formatDate;
+	readonly formatDate = formatDate;
 
 	get title() {
 		return this.m_entry ? this.m_entry.resource.title : this.$gettext(`Loading...`);

@@ -6,6 +6,6 @@ import { formatNumber } from '../../../../../_common/filters/number';
 export default class AppAnalyticsReportSimpleStat extends Vue {
 	@Prop(Object) reportData!: any;
 
-	readonly number = formatNumber;
-	readonly currency = formatCurrency;
+	readonly formatNumber = formatNumber;
+	readonly formatCurrency = formatCurrency;
 }

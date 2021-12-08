@@ -18,7 +18,7 @@ export default class FormGameSong extends BaseForm<GameSong> implements FormOnIn
 
 	maxFilesize = 0;
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	get loadUrl() {
 		return `/web/dash/developer/games/music/save/${this.game.id}`;

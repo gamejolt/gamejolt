@@ -24,7 +24,7 @@
 				</thead>
 				<tbody>
 					<tr v-for="(val, i) of reportData.data" :key="i">
-						<td>{{ number(i + 1) }}.</td>
+						<td>{{ formatNumber(i + 1) }}.</td>
 						<th>
 							<template v-if="isScalarLabel(val)">
 								{{ val.label }}
@@ -43,7 +43,7 @@
 							</router-link>
 						</th>
 						<td class="text-right">
-							{{ number(val.value) }}
+							{{ formatNumber(val.value) }}
 						</td>
 						<td>
 							<div
@@ -52,7 +52,7 @@
 							/>
 							<small>
 								{{
-									number(val.value / reportData.total, {
+									formatNumber(val.value / reportData.total, {
 										style: 'percent',
 										maximumFractionDigits: 2,
 									})

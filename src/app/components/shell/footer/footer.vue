@@ -156,7 +156,7 @@
 						/>
 					</p>
 
-					<p class="tiny">&copy; {{ date(curDate, 'yyyy') }} Game Jolt Inc.</p>
+					<p class="tiny">&copy; {{ formatDate(curDate, 'yyyy') }} Game Jolt Inc.</p>
 
 					<p v-if="GJ_IS_CLIENT" class="tiny text-muted">
 						<a class="link-muted" @click="showSystemReport">

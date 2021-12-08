@@ -16,5 +16,5 @@ export default class AppShellNotificationPopoverStickerNavItem extends Vue {
 	@Prop(propRequired(Number)) stickerCount!: number;
 	@Prop(propRequired(Boolean)) hasNew!: boolean;
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 }

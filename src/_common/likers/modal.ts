@@ -25,7 +25,7 @@ export default class AppLikesModal extends BaseModal {
 	@Prop(Object)
 	resource?: LikersResource;
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	reachedEnd = false;
 	isLoading = false;

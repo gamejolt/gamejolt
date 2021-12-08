@@ -94,7 +94,7 @@ export default class AppActivityFeed extends Vue {
 	private scroll!: number;
 	readonly InviewConfigShowNew = InviewConfigShowNew;
 	readonly InviewConfigLoadMore = InviewConfigLoadMore;
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 	readonly Scroll = Scroll;
 
 	declare $el: HTMLDivElement;

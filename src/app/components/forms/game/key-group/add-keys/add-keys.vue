@@ -4,7 +4,8 @@
 			name="amount"
 			:label="$gettext(`# of Keys to Generate`)"
 			v-if="
-				keyGroup.type === KeyGroup.TYPE_ANONYMOUS || keyGroup.type === KeyGroup.TYPE_ANONYMOUS_CLAIM
+				keyGroup.type === KeyGroup.TYPE_ANONYMOUS ||
+				keyGroup.type === KeyGroup.TYPE_ANONYMOUS_CLAIM
 			"
 		>
 			<app-form-control
@@ -58,7 +59,7 @@
 			<div class="alert alert-notice">
 				<translate
 					:translate-params="{
-						max: number(20000),
+						max: formatNumber(20000),
 					}"
 				>
 					You can only have a max of %{ max } keys in a single key group.

@@ -5,8 +5,8 @@
 		<p v-if="pageCount > 0 && currentPage > 0" class="text-muted small">
 			<translate
 				:translate-params="{
-					count: number(pageCount),
-					page: number(currentPage),
+					count: formatNumber(pageCount),
+					page: formatNumber(currentPage),
 				}"
 			>
 				Page %{ page } of %{ count }

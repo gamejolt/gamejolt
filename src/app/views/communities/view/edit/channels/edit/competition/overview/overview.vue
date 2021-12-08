@@ -28,7 +28,7 @@
 				<template v-else>
 					<translate>It ran for about</translate>
 				</template>
-				{{ duration(competitionRuntime, 'en') }}
+				{{ formatDuration(competitionRuntime, 'en') }}
 			</span>
 
 			<br />
@@ -42,7 +42,7 @@
 					<template v-else>
 						<translate>Voting lasted for about</translate>
 					</template>
-					{{ duration(competitionVotingRuntime, 'en') }}
+					{{ formatDuration(competitionVotingRuntime, 'en') }}
 				</template>
 				<template v-else>
 					<i><translate>Voting is disabled.</translate></i>

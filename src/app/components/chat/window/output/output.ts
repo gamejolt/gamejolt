@@ -49,7 +49,7 @@ export default class AppChatWindowOutput extends Vue {
 	private isAutoscrolling = false;
 	private isOnScrollQueued = false;
 
-	readonly date = formatDate;
+	readonly formatDate = formatDate;
 
 	get allMessages() {
 		return this.messages.concat(this.queuedMessages);

@@ -16,7 +16,9 @@
 			<label class="control-label"><translate>Current PayPal Account</translate></label>
 			<div class="form-static">{{ user.paypal_email_address }}</div>
 			<p class="help-block">
-				<translate>You can link a different PayPal account in your payment setup.</translate>
+				<translate
+					>You can link a different PayPal account in your payment setup.</translate
+				>
 				<router-link :to="{ name: 'dash.account.financials' }">
 					<translate>Go to your financials page.</translate>
 				</router-link>
@@ -25,7 +27,7 @@
 
 		<app-form-group name="amount" :label="$gettext(`dash.funds.withdraw.amount_label`)">
 			<p class="help-block above">
-				<translate :translate-params="{ amount: currency(minAmount * 100) }">
+				<translate :translate-params="{ amount: formatCurrency(minAmount * 100) }">
 					The minimum amount you can withdraw at this time is %{ amount }.
 				</translate>
 			</p>

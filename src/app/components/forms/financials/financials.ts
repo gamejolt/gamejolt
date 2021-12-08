@@ -62,7 +62,7 @@ export default class FormFinancials
 	maxPayout = 0;
 	minWithdraw = 0;
 
-	readonly currency = formatCurrency;
+	readonly formatCurrency = formatCurrency;
 
 	get loadUrl() {
 		return `/web/dash/financials/save`;

@@ -28,7 +28,7 @@
 				<app-progress-bar :percent="getItemPercentage(item) * 100">
 					<span v-if="!shouldObscureResults" class="-progress-percent">
 						{{
-							number(getItemPercentage(item), {
+							formatNumber(getItemPercentage(item), {
 								style: 'percent',
 								maximumFractionDigits: 0,
 							})
@@ -60,7 +60,7 @@
 			<span class="text-muted">
 				<translate
 					:translate-n="poll.vote_count || 0"
-					:translate-params="{ votes: number(poll.vote_count || 0) }"
+					:translate-params="{ votes: formatNumber(poll.vote_count || 0) }"
 					translate-plural="%{ votes } votes"
 				>
 					%{ votes } vote

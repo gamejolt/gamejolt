@@ -86,9 +86,9 @@ export default class FormGameBuild
 	buildLaunchOptions: GameBuildLaunchOption[] = [];
 	wasChanged = false;
 
-	readonly number = formatNumber;
-	readonly fuzzynumber = formatFuzzynumber;
-	readonly filesize = formatFilesize;
+	readonly formatNumber = formatNumber;
+	readonly formatFuzzynumber = formatFuzzynumber;
+	readonly formatFilesize = formatFilesize;
 	readonly GameBuild = GameBuild;
 
 	declare $refs: {

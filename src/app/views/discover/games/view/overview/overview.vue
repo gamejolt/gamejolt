@@ -35,7 +35,7 @@
 
 					<h4 class="section-header">
 						<translate>Comments</translate>
-						<small v-if="commentsCount > 0">({{ number(commentsCount) }})</small>
+						<small v-if="commentsCount > 0">({{ formatNumber(commentsCount) }})</small>
 					</h4>
 
 					<app-comment-add-button

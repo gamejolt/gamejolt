@@ -40,7 +40,7 @@
 
 				<div class="-follow-counts small">
 					<router-link
-						v-translate="{ count: number(followingCount || 0) }"
+						v-translate="{ count: formatNumber(followingCount || 0) }"
 						:to="{
 							name: 'profile.following',
 							params: { username: user.username },
@@ -53,7 +53,7 @@
 					</router-link>
 					<span class="dot-separator" />
 					<router-link
-						v-translate="{ count: number(followerCount) }"
+						v-translate="{ count: formatNumber(followerCount) }"
 						:to="{
 							name: 'profile.followers',
 							params: { username: user.username },
@@ -103,7 +103,7 @@
 							<translate>Posts</translate>
 						</div>
 						<div class="stat-big-digit">
-							{{ number(postCount) }}
+							{{ formatNumber(postCount) }}
 						</div>
 					</router-link>
 				</li>
@@ -119,7 +119,7 @@
 							<translate>Games</translate>
 						</div>
 						<div class="stat-big-digit">
-							{{ number(gameCount) }}
+							{{ formatNumber(gameCount) }}
 						</div>
 					</router-link>
 				</li>
@@ -135,7 +135,7 @@
 							<translate>Likes</translate>
 						</div>
 						<div class="stat-big-digit">
-							{{ fuzzynumber(likeCount) }}
+							{{ formatFuzzynumber(likeCount) }}
 						</div>
 					</router-link>
 				</li>

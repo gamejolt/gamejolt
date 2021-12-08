@@ -32,7 +32,7 @@ export default class AppPollVoting extends Vue {
 	now = Date.now();
 	private dateRefresh: NodeJS.Timer | null = null;
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	get shouldObscureResults() {
 		return this.poll.is_private && !this.isOwner;

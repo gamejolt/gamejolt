@@ -45,7 +45,7 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 	sellables: { [x: number]: Sellable } = {};
 
 	readonly GamePackage = GamePackage;
-	readonly currency = formatCurrency;
+	readonly formatCurrency = formatCurrency;
 
 	get hasAllPerms() {
 		return this.game.hasPerms('all');

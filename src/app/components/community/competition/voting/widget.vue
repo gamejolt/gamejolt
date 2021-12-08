@@ -228,7 +228,7 @@
 								</td>
 								<td>
 									{{
-										number(voteResult.rating, {
+										formatNumber(voteResult.rating, {
 											minimumFractionDigits: 2,
 											maximumFractionDigits: 2,
 										})

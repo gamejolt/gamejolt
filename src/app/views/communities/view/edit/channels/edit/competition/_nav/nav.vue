@@ -54,7 +54,7 @@
 				<translate>Entries</translate>
 				&nbsp;
 				<span class="tag">
-					{{ number(competition.entry_count) }}
+					{{ formatNumber(competition.entry_count) }}
 				</span>
 			</router-link>
 		</li>

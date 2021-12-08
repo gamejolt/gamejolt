@@ -44,7 +44,7 @@ export default class AppShellAccountPopover extends Vue {
 
 	readonly Screen = Screen;
 	readonly Connection = Connection;
-	readonly currency = formatCurrency;
+	readonly formatCurrency = formatCurrency;
 
 	@Action
 	logout!: Store['logout'];

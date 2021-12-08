@@ -28,14 +28,14 @@
 					<td>
 						{{ order.items[0].sellable ? order.items[0].sellable.title : '-' }}
 					</td>
-					<td :title="date(order.completed_on, 'medium')">
-						{{ date(order.completed_on, 'mediumDate') }}
+					<td :title="formatDate(order.completed_on, 'medium')">
+						{{ formatDate(order.completed_on, 'mediumDate') }}
 					</td>
 					<td class="text-right">
 						<span v-if="order._is_refunded" class="tag tag-notice">
 							<translate>Refunded</translate>
 						</span>
-						{{ currency(order.total_amount) }}
+						{{ formatCurrency(order.total_amount) }}
 					</td>
 				</tr>
 			</tbody>

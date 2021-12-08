@@ -47,7 +47,7 @@ export default class AppGameListing extends Vue {
 
 	inviewConfig = new ScrollInviewConfig();
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 	readonly Environment = Environment;
 	readonly Screen = Screen;
 	readonly Scroll = Scroll;

@@ -34,13 +34,13 @@
 					<li class="stat-big stat-big-smaller">
 						<div class="stat-big-label">Topics</div>
 						<div class="stat-big-digit">
-							{{ number(channel.topics_count || 0) }}
+							{{ formatNumber(channel.topics_count || 0) }}
 						</div>
 					</li>
 					<li class="stat-big stat-big-smaller">
 						<div class="stat-big-label">Replies</div>
 						<div class="stat-big-digit">
-							{{ number(channel.replies_count || 0) }}
+							{{ formatNumber(channel.replies_count || 0) }}
 						</div>
 					</li>
 				</ul>
@@ -118,8 +118,8 @@
 						<span class="text-muted small">
 							<translate
 								:translate-params="{
-									currentPage: number(currentPage),
-									count: number(listableTopicsCount),
+									currentPage: formatNumber(currentPage),
+									count: formatNumber(listableTopicsCount),
 								}"
 								:translate-n="listableTopicsCount"
 								translate-plural="Page %{ currentPage } of %{ count } topics."

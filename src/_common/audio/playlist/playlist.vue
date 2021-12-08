@@ -36,9 +36,9 @@
 				-->
 				<div class="-scrubber-playtime">
 					<span v-if="currentTime && duration" class="text-muted">
-						{{ time(currentTime || 0) }}
+						{{ formatTime(currentTime || 0) }}
 						/
-						{{ time(duration || 0) }}
+						{{ formatTime(duration || 0) }}
 					</span>
 					<span v-else>&nbsp;</span>
 				</div>

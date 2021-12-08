@@ -40,7 +40,7 @@
 					</div>
 					<div class="col-sm-6">
 						<p class="footer-copyright">
-							&copy; {{ date(curDate, 'yyyy') }} Game Jolt Inc.
+							&copy; {{ formatDate(curDate, 'yyyy') }} Game Jolt Inc.
 						</p>
 					</div>
 				</div>

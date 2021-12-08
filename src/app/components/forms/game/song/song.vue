@@ -9,11 +9,11 @@
 			<p class="help-block">
 				<translate
 					:translate-params="{
-						maxFilesize: number(maxFilesize / 1024 / 1024),
+						maxFilesize: formatNumber(maxFilesize / 1024 / 1024),
 					}"
 				>
-					Song uploads are currently capped at %{ maxFilesize }MB per file. Only MP3s are supported
-					at this time.
+					Song uploads are currently capped at %{ maxFilesize }MB per file. Only MP3s are
+					supported at this time.
 				</translate>
 			</p>
 

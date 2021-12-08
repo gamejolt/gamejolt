@@ -5,5 +5,5 @@ import { formatNumber } from '../../../../../_common/filters/number';
 export default class AppAnalyticsReportRatingBreakdown extends Vue {
 	@Prop(Object) reportData!: any;
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 }

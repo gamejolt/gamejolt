@@ -38,7 +38,7 @@ export default class AppCommunityCompetitionVotingWidget extends Vue {
 
 	moreVoteResultInfoVisible = false;
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	get loginUrl() {
 		let url =

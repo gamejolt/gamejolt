@@ -28,7 +28,7 @@ export default class RouteCommunitiesViewEditChannelsCompetition extends BaseRou
 	routeStore!: CommunityRouteStore;
 
 	readonly Screen = Screen;
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	get channel() {
 		return this.routeStore.channel!;

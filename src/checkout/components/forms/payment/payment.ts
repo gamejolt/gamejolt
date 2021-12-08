@@ -57,7 +57,7 @@ export default class FormPayment extends BaseForm<any> implements FormOnInit, Fo
 		/\d/,
 	];
 	readonly expMask = [/\d/, /\d/, '/', /\d/, /\d/];
-	readonly currency = formatCurrency;
+	readonly formatCurrency = formatCurrency;
 
 	onInit() {
 		this.setField('country', 'us');

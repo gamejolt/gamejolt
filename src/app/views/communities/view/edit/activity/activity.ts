@@ -37,7 +37,7 @@ export default class RouteCommunitiesViewEditActivity extends BaseRouteComponent
 	isAtEnd = false;
 	isLoading = false;
 
-	readonly date = formatDate;
+	readonly formatDate = formatDate;
 
 	routeResolved($payload: any) {
 		this.handlePayload($payload);

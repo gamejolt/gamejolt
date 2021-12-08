@@ -59,7 +59,7 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 		state: 'all',
 	};
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 	readonly Environment = Environment;
 	readonly KeyGroup = KeyGroup;
 

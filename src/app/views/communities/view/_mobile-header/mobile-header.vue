@@ -22,7 +22,7 @@
 				<div class="-members small">
 					<router-link
 						v-app-track-event="`community-mobile-header:community-members`"
-						v-translate="{ count: number(memberCount) }"
+						v-translate="{ count: formatNumber(memberCount) }"
 						:translate-n="memberCount"
 						translate-plural="<b>%{count}</b> members"
 						:to="{

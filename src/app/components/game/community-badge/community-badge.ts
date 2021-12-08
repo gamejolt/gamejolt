@@ -14,5 +14,5 @@ export default class AppGameCommunityBadge extends Vue {
 	@Prop(Community)
 	community!: Community;
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 }

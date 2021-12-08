@@ -17,7 +17,7 @@
 			<p class="small">
 				<translate
 					:translate-params="{
-						date: date(account.tos_signed_developer_timestamp, 'medium'),
+						date: formatDate(account.tos_signed_developer_timestamp, 'medium'),
 					}"
 				>
 					You have agreed to our Distribution Agreement on %{ date }.

@@ -8,7 +8,7 @@ export default class AppGamePackageCardMoreOptions extends Vue {
 	@Prop(GamePackageCardModel) card!: GamePackageCardModel;
 
 	readonly emulatorInfo = GameBuild.emulatorInfo;
-	readonly filesize = formatFilesize;
+	readonly formatFilesize = formatFilesize;
 
 	@Emit('click')
 	emitClick(_build: GameBuild) {}

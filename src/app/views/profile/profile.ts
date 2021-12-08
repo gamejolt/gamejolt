@@ -112,7 +112,7 @@ export default class RouteProfile extends BaseRouteComponent {
 	readonly UserFriendship = UserFriendship;
 	readonly Environment = Environment;
 	readonly Screen = Screen;
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	/**
 	 * The cover height changes when we switch to not showing the full cover, so

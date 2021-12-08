@@ -143,7 +143,7 @@
 
 					<div class="text-center">
 						<strong>
-							{{ date(startTime, 'LLLL yyyy') }}
+							{{ formatDate(startTime, 'LLLL yyyy') }}
 						</strong>
 					</div>
 
@@ -198,10 +198,10 @@
 									</div>
 									<div class="stat-big-digit">
 										<template v-if="metric.type === 'number'">
-											{{ number(metricData[metric.key].total) }}
+											{{ formatNumber(metricData[metric.key].total) }}
 										</template>
 										<template v-else-if="metric.type === 'currency'">
-											{{ currency(metricData[metric.key].total) }}
+											{{ formatCurrency(metricData[metric.key].total) }}
 										</template>
 									</div>
 								</div>

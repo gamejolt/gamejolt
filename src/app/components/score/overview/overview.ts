@@ -40,7 +40,7 @@ export default class AppScoreOverview extends Vue {
 	userScoreExperience = 0;
 
 	readonly Screen = Screen;
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	// Even.
 	get scoresLeft() {

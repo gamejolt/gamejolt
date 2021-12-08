@@ -28,5 +28,5 @@ export default class AppCommentContent extends Vue {
 	showFullContent = false;
 	stickerTargetController = new StickerTargetController(this.comment);
 
-	readonly date = formatDate;
+	readonly formatDate = formatDate;
 }

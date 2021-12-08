@@ -53,11 +53,11 @@
 					</span>
 
 					<span v-if="sellable.type === 'paid'" class="text-muted">
-						({{ currency(price) }} or more)
+						({{ formatCurrency(price) }} or more)
 
 						<span
 							v-app-tooltip.touchable="
-								`The developer has set the price of this game to ${currency(
+								`The developer has set the price of this game to ${formatCurrency(
 									price
 								)}, but you are able to support them by giving more.`
 							"

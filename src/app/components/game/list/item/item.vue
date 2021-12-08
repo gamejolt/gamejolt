@@ -39,7 +39,7 @@
 			<div class="-followers -spacing text-muted">
 				<translate
 					:translate-n="game.follower_count || 0"
-					:translate-params="{ count: number(game.follower_count || 0) }"
+					:translate-params="{ count: formatNumber(game.follower_count || 0) }"
 					translate-plural="%{ count } followers"
 				>
 					%{ count } follower

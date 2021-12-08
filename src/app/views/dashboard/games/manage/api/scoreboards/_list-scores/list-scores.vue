@@ -33,7 +33,7 @@
 							}"
 							class="table-primary-link"
 						>
-							{{ number(score.sort) }}
+							{{ formatNumber(score.sort) }}
 						</router-link>
 					</td>
 					<td v-if="!isForUser">
@@ -58,7 +58,7 @@
 						</span>
 					</td>
 					<td class="small">
-						{{ date(score.logged_on, 'medium') }}
+						{{ formatDate(score.logged_on, 'medium') }}
 					</td>
 					<td class="text-right">
 						<div class="table-controls">

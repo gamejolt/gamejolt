@@ -6,8 +6,8 @@
 			<translate
 				:translate-n="gamesCount"
 				:translate-params="{
-					count: number(gamesCount),
-					page: number(currentPage),
+					count: formatNumber(gamesCount),
+					page: formatNumber(currentPage),
 				}"
 				translate-plural="Page %{ page } of %{ count } games."
 			>
@@ -59,4 +59,3 @@
 </template>
 
 <style lang="stylus" src="./grid.styl"></style>
-

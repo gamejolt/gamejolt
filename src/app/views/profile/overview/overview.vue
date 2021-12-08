@@ -95,7 +95,9 @@
 
 							<h4 class="section-header">
 								<translate>Shouts</translate>
-								<small v-if="commentsCount">({{ number(commentsCount) }})</small>
+								<small v-if="commentsCount"
+									>({{ formatNumber(commentsCount) }})</small
+								>
 							</h4>
 
 							<app-comment-add-button
@@ -144,7 +146,7 @@
 										params: { id: user.username },
 									}"
 								>
-									{{ number(gamesCount) }} Games
+									{{ formatNumber(gamesCount) }} Games
 								</app-button>
 							</template>
 
@@ -204,7 +206,7 @@
 										@click="toggleShowAllCommunities"
 									>
 										<translate>View All</translate>
-										<small>({{ number(communitiesCount) }})</small>
+										<small>({{ formatNumber(communitiesCount) }})</small>
 									</app-button>
 								</div>
 
@@ -260,7 +262,7 @@
 										}"
 									>
 										<translate>View All</translate>
-										<small>({{ number(gamesCount) }})</small>
+										<small>({{ formatNumber(gamesCount) }})</small>
 									</app-button>
 								</div>
 

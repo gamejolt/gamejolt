@@ -17,7 +17,7 @@
 		<div>
 			<div v-for="item of items" :key="item.item.id">
 				<div v-if="item.timesplit" class="-date-split">
-					<span class="-inner">{{ date(item.item.added_on, 'mediumDate') }}</span>
+					<span class="-inner">{{ formatDate(item.item.added_on, 'mediumDate') }}</span>
 				</div>
 
 				<app-community-activity-item

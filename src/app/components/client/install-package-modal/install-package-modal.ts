@@ -25,7 +25,7 @@ export default class AppClientInstallPackageModal extends BaseModal {
 	isLoading = true;
 	packageData: GamePackagePayloadModel = null as any;
 
-	readonly filesize = formatFilesize;
+	readonly formatFilesize = formatFilesize;
 
 	get buildsByPackage(): { [packageId: number]: GameBuild } {
 		const builds = this.packageData.installableBuilds;

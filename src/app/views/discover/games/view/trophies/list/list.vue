@@ -25,7 +25,7 @@
 									>
 										<translate>game.trophies.all_tab</translate>
 										<span class="badge hidden-xs">
-											{{ number(trophies.length) }}
+											{{ formatNumber(trophies.length) }}
 										</span>
 									</a>
 								</li>
@@ -36,7 +36,7 @@
 									>
 										<translate>game.trophies.achieved_tab</translate>
 										<span class="badge hidden-xs">
-											{{ number(filteredTrophies.achieved.length) }}
+											{{ formatNumber(filteredTrophies.achieved.length) }}
 										</span>
 									</a>
 								</li>
@@ -47,7 +47,7 @@
 									>
 										<translate>game.trophies.unachieved_tab</translate>
 										<span class="badge hidden-xs">
-											{{ number(filteredTrophies.unachieved.length) }}
+											{{ formatNumber(filteredTrophies.unachieved.length) }}
 										</span>
 									</a>
 								</li>

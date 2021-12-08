@@ -29,7 +29,7 @@
 								:class="{ mobile: Screen.isXs }"
 								@click="openComments()"
 							>
-								{{ fuzzynumber(commentsCount) }}
+								{{ formatFuzzynumber(commentsCount) }}
 							</a>
 							<span v-else class="blip-missing" />
 						</div>

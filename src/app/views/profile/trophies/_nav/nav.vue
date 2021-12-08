@@ -22,7 +22,7 @@
 					active-class="active"
 				>
 					<translate>All Trophies</translate>
-					<span class="badge">{{ number(trophyCount) }}</span>
+					<span class="badge">{{ formatNumber(trophyCount) }}</span>
 				</router-link>
 			</li>
 			<li>
@@ -33,7 +33,7 @@
 					active-class="active"
 				>
 					<translate>Game Jolt Trophies</translate>
-					<span class="badge">{{ number(siteTrophyCount) }}</span>
+					<span class="badge">{{ formatNumber(siteTrophyCount) }}</span>
 				</router-link>
 			</li>
 		</ul>
@@ -51,7 +51,7 @@
 							class="badge"
 							:class="{ 'badge-notice': gameHasUnviewedTrophies(item.id) }"
 						>
-							{{ number(item.trophyCount) }}
+							{{ formatNumber(item.trophyCount) }}
 						</span>
 						{{ item.title }}
 					</template>

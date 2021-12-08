@@ -7,11 +7,13 @@
 			<span
 				v-else
 				v-app-tooltip="
-					date(item.added_on, 'fullDate') + ' ' + date(item.added_on, 'shortTime')
+					formatDate(item.added_on, 'fullDate') +
+					' ' +
+					formatDate(item.added_on, 'shortTime')
 				"
 				class="-time"
 			>
-				{{ date(item.added_on, 'shortTime') }}
+				{{ formatDate(item.added_on, 'shortTime') }}
 			</span>
 		</span>
 
@@ -36,7 +38,9 @@
 					</template>
 					<span
 						v-app-tooltip="
-							date(item.added_on, 'fullDate') + ' ' + date(item.added_on, 'shortTime')
+							formatDate(item.added_on, 'fullDate') +
+							' ' +
+							formatDate(item.added_on, 'shortTime')
 						"
 						class="-user-sub-date"
 					>
@@ -48,12 +52,12 @@
 						</span>
 						<span
 							v-if="isToday || isYesterday"
-							v-translate="{ time: date(item.added_on, 'shortTime') }"
+							v-translate="{ time: formatDate(item.added_on, 'shortTime') }"
 						>
 							at %{ time }
 						</span>
 						<span v-else>
-							{{ date(item.added_on, 'shortDate') }}
+							{{ formatDate(item.added_on, 'shortDate') }}
 						</span>
 					</span>
 				</span>

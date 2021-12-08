@@ -38,7 +38,7 @@ export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponen
 	isAdding = false;
 
 	readonly KeyGroup = KeyGroup;
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	get routeTitle() {
 		if (this.game) {

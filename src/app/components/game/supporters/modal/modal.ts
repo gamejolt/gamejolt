@@ -22,7 +22,7 @@ export default class AppSupportersModal extends BaseModal {
 	@Prop(Number)
 	supporterCount!: number;
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	reachedEnd = false;
 	isLoading = false;

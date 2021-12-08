@@ -50,7 +50,7 @@ export default class RouteSearch extends BaseRouteComponent {
 	readonly Screen = Screen;
 	readonly Search = Search;
 	readonly Scroll = Scroll;
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	get routeTitle() {
 		if (this.$route.query.q) {

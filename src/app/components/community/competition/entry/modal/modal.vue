@@ -34,7 +34,7 @@
 						</div>
 						<div class="-entered-date">
 							<translate>Entered on</translate>
-							<b>{{ date(m_entry.added_on, 'short') }}</b>
+							<b>{{ formatDate(m_entry.added_on, 'short') }}</b>
 							<i class="text-muted">
 								(<app-time-ago :date="m_entry.added_on" strict />)
 							</i>

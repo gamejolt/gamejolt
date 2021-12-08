@@ -12,7 +12,7 @@
 					<li v-for="build of packagePayload.builds" :key="build.id">
 						{{ build.primary_file.filename }}
 						<small class="text-muted">
-							({{ filesize(build.primary_file.filesize) }})
+							({{ formatFilesize(build.primary_file.filesize) }})
 						</small>
 
 						<span
@@ -24,9 +24,7 @@
 								{{ packageCard.platformSupportInfo[os].tooltip }}
 							</template>
 
-							<template v-if="is64BitOnly(build, os)">
-								64-bit
-							</template>
+							<template v-if="is64BitOnly(build, os)"> 64-bit </template>
 						</span>
 					</li>
 				</ul>

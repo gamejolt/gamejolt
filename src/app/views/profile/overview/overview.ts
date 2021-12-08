@@ -151,7 +151,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	readonly User = User;
 	readonly UserFriendship = UserFriendship;
 	readonly Screen = Screen;
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	get routeTitle() {
 		if (this.user) {

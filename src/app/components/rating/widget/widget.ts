@@ -36,7 +36,7 @@ export default class AppRatingWidget extends Vue {
 	@Prop(String)
 	eventLabel?: string;
 
-	readonly fuzzynumber = formatFuzzynumber;
+	readonly formatFuzzynumber = formatFuzzynumber;
 
 	get hasLiked() {
 		return this.userRating && this.userRating.rating === GameRating.RATING_LIKE;

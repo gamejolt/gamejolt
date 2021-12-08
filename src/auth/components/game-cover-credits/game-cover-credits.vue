@@ -19,7 +19,7 @@
 				<div class="-followers text-muted">
 					<translate
 						:translate-n="coverGame.follower_count || 0"
-						:translate-params="{ count: number(coverGame.follower_count || 0) }"
+						:translate-params="{ count: formatNumber(coverGame.follower_count || 0) }"
 						translate-plural="%{ count } followers"
 					>
 						%{ count } follower

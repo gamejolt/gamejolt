@@ -38,7 +38,7 @@
 						class="text-muted"
 					>
 						<app-jolticon icon="exp" class="middle" />
-						{{ number(trophy.experience) }}
+						{{ formatNumber(trophy.experience) }}
 						<translate class="small">leveling.exp</translate>
 					</span>
 

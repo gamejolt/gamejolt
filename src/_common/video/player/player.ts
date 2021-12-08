@@ -112,7 +112,7 @@ export default class AppVideoPlayer extends Vue {
 	private responsiveHeight = -1;
 	private responsiveWidth = -1;
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 	readonly Screen = Screen;
 
 	declare $el: HTMLDivElement;

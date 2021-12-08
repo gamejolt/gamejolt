@@ -21,7 +21,7 @@ export default class FormWithdrawFunds
 
 	warnOnDiscard = false;
 
-	readonly currency = formatCurrency;
+	readonly formatCurrency = formatCurrency;
 
 	onInit() {
 		this.setField('email_address', this.paypalEmail);

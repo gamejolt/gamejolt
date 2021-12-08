@@ -28,7 +28,7 @@ export default class RouteDashGamesManageApiDataStorageItemsView extends BaseRou
 
 	item: GameDataStoreItem = null as any;
 
-	readonly date = formatDate;
+	readonly formatDate = formatDate;
 
 	get routeTitle() {
 		if (this.game) {

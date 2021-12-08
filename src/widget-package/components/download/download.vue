@@ -39,7 +39,7 @@
 			>
 				Download
 				<small v-if="platformSupportInfo[showcasedOs].arch === '64'"> 64-bit </small>
-				<small>({{ filesize(downloadableBuild.primary_file.filesize) }})</small>
+				<small>({{ formatFilesize(downloadableBuild.primary_file.filesize) }})</small>
 				<app-jolticon class="jolticon-addon" :icon="showcasedOsIcon" />
 			</app-button>
 
@@ -108,7 +108,7 @@
 								<small v-if="extraBuild.arch === '64'">64-bit</small>
 
 								<small class="text-muted">
-									({{ filesize(extraBuild.build.primary_file.filesize) }})
+									({{ formatFilesize(extraBuild.build.primary_file.filesize) }})
 								</small>
 							</app-button>
 							<br />
@@ -127,8 +127,8 @@
 					</span>
 					<span v-else>
 						This developer suggests paying
-						<strong>{{ currency(price) }} </strong>, but you're able to pay what you
-						want.
+						<strong>{{ formatCurrency(price) }} </strong>, but you're able to pay what
+						you want.
 					</span>
 				</p>
 

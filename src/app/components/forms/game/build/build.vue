@@ -11,8 +11,11 @@
 				<div class="stat-big-label">
 					<translate>dash.games.releases.builds.downloads_label</translate>
 				</div>
-				<div class="stat-big-digit" :title="number(buildDownloadCounts[model.id] || 0)">
-					{{ number(buildDownloadCounts[model.id] || 0) }}
+				<div
+					class="stat-big-digit"
+					:title="formatNumber(buildDownloadCounts[model.id] || 0)"
+				>
+					{{ formatNumber(buildDownloadCounts[model.id] || 0) }}
 				</div>
 			</div>
 		</div>
@@ -20,7 +23,9 @@
 		<div class="card-title">
 			<h5>
 				{{ model.primary_file.filename }}
-				<small class="text-muted">({{ filesize(model.primary_file.filesize) }})</small>
+				<small class="text-muted"
+					>({{ formatFilesize(model.primary_file.filesize) }})</small
+				>
 			</h5>
 		</div>
 

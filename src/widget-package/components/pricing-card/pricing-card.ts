@@ -9,7 +9,7 @@ export default class AppPricingCard extends Vue {
 	@State price!: NonNullable<Store['price']>;
 	@State originalPrice!: NonNullable<Store['originalPrice']>;
 
-	readonly currency = formatCurrency;
+	readonly formatCurrency = formatCurrency;
 
 	get discount() {
 		const price = this.price;

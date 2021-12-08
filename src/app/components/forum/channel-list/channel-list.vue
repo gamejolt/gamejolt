@@ -6,7 +6,7 @@
 			<div class="col-sm-9 col-md-7">
 				<h4>
 					<span v-if="channel.notifications_count" class="tag tag-highlight">
-						{{ number(channel.notifications_count || 0) }}
+						{{ formatNumber(channel.notifications_count || 0) }}
 					</span>
 					<router-link
 						class="link-unstyled"
@@ -24,7 +24,7 @@
 			</div>
 			<div class="col-sm-3 col-md-2 text-muted small" :class="{ 'text-right': !Screen.isXs }">
 				<span
-					v-translate="{ count: number(channel.topics_count || 0) }"
+					v-translate="{ count: formatNumber(channel.topics_count || 0) }"
 					:translate-n="channel.topics_count || 0"
 					translate-plural="<b>%{ count }</b> Topics"
 				>
@@ -36,7 +36,7 @@
 				<span class="hidden-sm hidden-md hidden-lg dot-separator" />
 
 				<span
-					v-translate="{ count: number(channel.replies_count || 0) }"
+					v-translate="{ count: formatNumber(channel.replies_count || 0) }"
 					:translate-n="channel.replies_count || 0"
 					translate-plural="<b>%{ count }</b> Replies"
 				>

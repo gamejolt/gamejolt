@@ -76,7 +76,7 @@ export default class AppFormPostVideo
 	uploadCancelToken: CancelTokenSource | null = null;
 
 	readonly FiresidePostVideo = FiresidePostVideo;
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	declare $refs: {
 		form: AppFormTS;

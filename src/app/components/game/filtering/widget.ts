@@ -20,7 +20,7 @@ export default class AppGameFilteringWidget extends Vue {
 
 	hovered: any = {};
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	get filters() {
 		return ['price', 'os', 'browser', 'maturity', 'status', 'partners'];

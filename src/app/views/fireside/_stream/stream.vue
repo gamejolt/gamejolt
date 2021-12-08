@@ -51,7 +51,7 @@
 					<div v-if="memberCount" class="-overlay-members">
 						<translate
 							:translate-n="memberCount"
-							:translate-params="{ count: number(memberCount) }"
+							:translate-params="{ count: formatNumber(memberCount) }"
 							translate-plural="%{ count } members"
 						>
 							%{ count } member

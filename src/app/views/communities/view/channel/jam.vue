@@ -23,8 +23,8 @@
 					</h1>
 
 					<div v-if="!competition.hasEnded" class="-header-subtitle text-muted">
-						Submissions are open <b>{{ date(competition.starts_on) }}</b> to
-						<b>{{ date(competition.ends_on) }}</b>
+						Submissions are open <b>{{ formatDate(competition.starts_on) }}</b> to
+						<b>{{ formatDate(competition.ends_on) }}</b>
 					</div>
 				</div>
 				<div class="-header-end">

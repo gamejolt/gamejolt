@@ -25,7 +25,7 @@ export default class AppCommunityCardBase extends Vue {
 
 	@AppState user!: AppStore['user'];
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 	readonly Environment = Environment;
 
 	get memberCount() {

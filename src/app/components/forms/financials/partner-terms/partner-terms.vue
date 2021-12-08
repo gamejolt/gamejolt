@@ -61,7 +61,7 @@
 			<p class="small">
 				<translate
 					:translate-params="{
-						date: date(account.tos_signed_partner_timestamp, 'medium'),
+						date: formatDate(account.tos_signed_partner_timestamp, 'medium'),
 					}"
 				>
 					You have agreed to our Partner Agreement on %{ date }.

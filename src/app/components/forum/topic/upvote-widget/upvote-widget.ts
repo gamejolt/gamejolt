@@ -14,8 +14,8 @@ import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 export default class AppForumTopicUpvoteWidget extends Vue {
 	@Prop(ForumTopic) topic!: ForumTopic;
 
-	readonly number = formatNumber;
-	readonly fuzzynumber = formatFuzzynumber;
+	readonly formatNumber = formatNumber;
+	readonly formatFuzzynumber = formatFuzzynumber;
 
 	get canUpvote() {
 		return this.topic.can_upvote;

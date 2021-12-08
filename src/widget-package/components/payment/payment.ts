@@ -19,8 +19,8 @@ import AppModal from '../modal/modal.vue';
 	},
 })
 export default class AppPayment extends Vue {
-	readonly ucwords = formatUcwords;
-	readonly currency = formatCurrency;
+	readonly formatUcwords = formatUcwords;
+	readonly formatCurrency = formatCurrency;
 
 	@State app!: Store['app'];
 	@State game!: Store['game'];

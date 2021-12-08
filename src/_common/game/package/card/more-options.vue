@@ -32,7 +32,7 @@
 			</small>
 
 			<small class="text-muted">
-				({{ filesize(extraBuild.build.primary_file.filesize) }})
+				({{ formatFilesize(extraBuild.build.primary_file.filesize) }})
 			</small>
 
 			<!-- If the version is different than the main release, then show it. -->

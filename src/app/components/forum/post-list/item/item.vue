@@ -57,8 +57,8 @@
 
 			<p v-if="post.modified_by_user && post.modified_on" class="text-muted small">
 				<translate>Last modified on</translate>
-				<span :title="date(post.modified_on, 'medium')">
-					{{ date(post.modified_on, 'longDate') }}
+				<span :title="formatDate(post.modified_on, 'medium')">
+					{{ formatDate(post.modified_on, 'longDate') }}
 				</span>
 				<translate>by</translate>
 				<router-link
@@ -194,7 +194,7 @@
 					<translate
 						:translate-n="totalReplyCount - replies.length"
 						:translate-params="{
-							count: number(totalReplyCount - replies.length),
+							count: formatNumber(totalReplyCount - replies.length),
 						}"
 						translate-plural="+%{ count } more hidden"
 					>

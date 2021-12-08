@@ -87,7 +87,7 @@
 				<app-progress-bar :percent="uploadProgress * 100" />
 
 				<translate>Uploading...</translate>
-				{{ number(uploadProgress, { style: 'percent' }) }}
+				{{ formatNumber(uploadProgress, { style: 'percent' }) }}
 
 				<app-button
 					class="pull-right"

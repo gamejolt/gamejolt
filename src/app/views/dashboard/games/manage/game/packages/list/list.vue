@@ -121,7 +121,7 @@
 								<template
 									v-if="sellables[pkg.id] && sellables[pkg.id].pricings[0].amount"
 								>
-									{{ currency(sellables[pkg.id].pricings[0].amount) }}
+									{{ formatCurrency(sellables[pkg.id].pricings[0].amount) }}
 								</template>
 								<template v-else>
 									<translate>None</translate>
@@ -138,7 +138,7 @@
 									<translate>Price</translate>
 								</strong>
 								&mdash;
-								{{ currency(sellables[pkg.id].pricings[0].amount) }}
+								{{ formatCurrency(sellables[pkg.id].pricings[0].amount) }}
 							</template>
 							<template v-else>
 								<span class="tag">

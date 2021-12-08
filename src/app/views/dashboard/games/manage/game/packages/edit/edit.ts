@@ -70,7 +70,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 
 	GamePackage = GamePackage;
 	GameRelease = GameRelease;
-	number = formatNumber;
+	formatNumber = formatNumber;
 
 	get hasBuildsPerms() {
 		return this.game && this.game.hasPerms('builds');

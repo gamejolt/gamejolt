@@ -152,7 +152,7 @@ export default class RouteCommunitiesViewChannelJamEntries extends BaseRouteComp
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	entries: CommunityCompetitionEntry[] = [];
 	perPage = 50;

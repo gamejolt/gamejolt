@@ -11,7 +11,7 @@ export default class AppCommunityCompetitionDate extends Vue {
 
 	timezones: { [region: string]: (TimezoneData & { label?: string })[] } = null as any;
 
-	readonly formatDate = formatDate;
+	readonly formatformatDate = formatDate;
 
 	get offsetDate() {
 		// date is UTC, add the set offset, and remove the local timezone offset.

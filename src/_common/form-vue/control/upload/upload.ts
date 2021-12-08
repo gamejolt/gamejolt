@@ -26,7 +26,7 @@ export default class AppFormControlUpload extends BaseFormControl {
 	controlVal: File | File[] | null = [];
 	isDropActive = false;
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	get validationRules() {
 		let rules: any = {};

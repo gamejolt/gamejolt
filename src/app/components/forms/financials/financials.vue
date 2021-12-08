@@ -219,7 +219,7 @@
 				<p class="help-block">
 					<translate
 						:translate-params="{
-							max: currency(maxPayout),
+							max: formatCurrency(maxPayout),
 						}"
 					>
 						The max you can set this to is %{ max } USD.

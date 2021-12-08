@@ -24,8 +24,8 @@ export default class RouteDashAccountPurchasesList extends BaseRouteComponent {
 
 	orders: Order[] = [];
 
-	readonly date = formatDate;
-	readonly currency = formatCurrency;
+	readonly formatDate = formatDate;
+	readonly formatCurrency = formatCurrency;
 
 	get routeTitle() {
 		return this.heading;

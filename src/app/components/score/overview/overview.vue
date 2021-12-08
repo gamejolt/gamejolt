@@ -20,7 +20,9 @@
 					>
 						<translate>scores.overview.heading</translate>
 					</router-link>
-					<small v-if="scoreTables.length > 1">({{ number(scoreTables.length) }})</small>
+					<small v-if="scoreTables.length > 1"
+						>({{ formatNumber(scoreTables.length) }})</small
+					>
 				</h2>
 
 				<hr class="underbar" />
@@ -80,7 +82,7 @@
 							>
 								<div class="stat-big stat-big-smaller pull-right text-right">
 									<div class="stat-big-digit stat-big-highlight">
-										#{{ number(userScorePlacement) }}
+										#{{ formatNumber(userScorePlacement) }}
 									</div>
 									<div class="stat-big-label">Current Rank</div>
 								</div>
@@ -95,7 +97,7 @@
 
 								<div>
 									<app-jolticon icon="exp" class="text-muted middle" />
-									{{ number(userScoreExperience || 0) }}
+									{{ formatNumber(userScoreExperience || 0) }}
 									<span class="initialism">
 										<translate>leveling.exp</translate>
 									</span>

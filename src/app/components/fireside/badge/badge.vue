@@ -39,7 +39,9 @@
 							<span class="-new-tag" />
 							<translate
 								:translate-n="fireside.member_count || 0"
-								:translate-params="{ count: number(fireside.member_count || 0) }"
+								:translate-params="{
+									count: formatNumber(fireside.member_count || 0),
+								}"
 								translate-plural="%{ count } Members"
 							>
 								%{ count } Member

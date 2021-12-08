@@ -31,7 +31,7 @@ export default class AppCommunityChunk extends Vue {
 	items: EventItem[] = [];
 	isLoadingPosts = true;
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 	readonly Screen = Screen;
 	readonly preferredCardsPerRow = 5;
 	readonly postOpenSource: PostOpenSource = 'communityChunk';

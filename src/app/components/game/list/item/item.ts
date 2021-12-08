@@ -19,7 +19,7 @@ export default class AppGameListItem extends Vue {
 	@Prop(String)
 	eventLabel?: string;
 
-	number = formatNumber;
+	formatNumber = formatNumber;
 
 	get url() {
 		return this.game.getUrl();

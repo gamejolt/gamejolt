@@ -18,7 +18,7 @@
 				<translate
 					:translate-n="competition.entry_count"
 					:translate-params="{
-						count: number(competition.entry_count),
+						count: formatNumber(competition.entry_count),
 					}"
 					translate-plural="%{ count } Entries"
 				>

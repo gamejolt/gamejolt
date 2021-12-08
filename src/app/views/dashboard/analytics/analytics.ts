@@ -105,9 +105,9 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 	nextYear = 0;
 
 	readonly Screen = Screen;
-	readonly number = formatNumber;
-	readonly currency = formatCurrency;
-	readonly date = formatDate;
+	readonly formatNumber = formatNumber;
+	readonly formatCurrency = formatCurrency;
+	readonly formatDate = formatDate;
 
 	get routeTitle() {
 		return this.$gettext('Analytics');

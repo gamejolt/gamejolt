@@ -70,7 +70,7 @@ export default class FormFinancialsManagedAccount
 
 	readonly StripeFileUploadUrl = 'https://uploads.stripe.com/v1/files';
 	readonly Geo = Geo;
-	readonly currency = formatCurrency;
+	readonly formatCurrency = formatCurrency;
 
 	declare $refs: {
 		individual: AppFinancialsManagedAccountPersonTS;

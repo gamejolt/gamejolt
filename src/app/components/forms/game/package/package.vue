@@ -417,7 +417,7 @@
 						<tr>
 							<th><translate>Start</translate></th>
 							<td>
-								{{ date(saleStartLocal, 'medium') }}
+								{{ formatDate(saleStartLocal, 'medium') }}
 								<app-time-ago
 									:date="promotionalPricing.start"
 									is-future
@@ -428,7 +428,7 @@
 						<tr>
 							<th><translate>End</translate></th>
 							<td>
-								{{ date(saleEndLocal, 'medium') }}
+								{{ formatDate(saleEndLocal, 'medium') }}
 								<app-time-ago
 									:date="promotionalPricing.end"
 									is-future
@@ -439,7 +439,7 @@
 						<tr>
 							<th><translate>Price</translate></th>
 							<td>
-								{{ currency(promotionalPricing.amount) }}
+								{{ formatCurrency(promotionalPricing.amount) }}
 								<small class="text-muted">
 									{{
 										(

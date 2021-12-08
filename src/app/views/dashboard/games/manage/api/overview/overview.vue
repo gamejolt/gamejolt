@@ -51,7 +51,7 @@
 							<translate>dash.games.api.overview.sessions_active_label</translate>
 						</div>
 						<div class="stat-big-digit">
-							{{ number(numActiveSessions) }}
+							{{ formatNumber(numActiveSessions) }}
 						</div>
 					</div>
 				</div>
@@ -61,7 +61,7 @@
 							<translate>dash.games.api.overview.sessions_time_label</translate>
 						</div>
 						<div class="stat-big-digit">
-							{{ duration(sessionStats.time || 0) }}
+							{{ formatDuration(sessionStats.time || 0) }}
 						</div>
 					</div>
 				</div>
@@ -71,7 +71,7 @@
 							<translate>dash.games.api.overview.sessions_avg_label</translate>
 						</div>
 						<div class="stat-big-digit">
-							{{ duration(sessionStats.avg || 0) }}
+							{{ formatDuration(sessionStats.avg || 0) }}
 						</div>
 					</div>
 				</div>
@@ -81,7 +81,7 @@
 							<translate>dash.games.api.overview.sessions_users_label</translate>
 						</div>
 						<div class="stat-big-digit">
-							{{ number(sessionStats['user-count']) }}
+							{{ formatNumber(sessionStats['user-count']) }}
 						</div>
 					</div>
 				</div>
@@ -105,7 +105,7 @@
 							<translate>dash.games.api.overview.trophies_label</translate>
 						</div>
 						<div class="stat-big-digit">
-							{{ number(numActiveTrophies) }}
+							{{ formatNumber(numActiveTrophies) }}
 						</div>
 					</div>
 				</div>
@@ -125,7 +125,7 @@
 								<translate>dash.games.api.overview.na</translate>
 							</template>
 							<template v-else>
-								{{ number(totalTrophyExp) }}
+								{{ formatNumber(totalTrophyExp) }}
 								<translate>leveling.exp</translate>
 							</template>
 						</div>
@@ -137,7 +137,7 @@
 							<translate>dash.games.api.overview.trophies_achieved_label</translate>
 						</div>
 						<div class="stat-big-digit">
-							{{ number(totalAchievedTrophies) }}
+							{{ formatNumber(totalAchievedTrophies) }}
 						</div>
 					</div>
 				</div>
@@ -147,7 +147,7 @@
 							<translate>dash.games.api.overview.trophies_users_label</translate>
 						</div>
 						<div class="stat-big-digit">
-							{{ number(totalUsersWithTrophies) }}
+							{{ formatNumber(totalUsersWithTrophies) }}
 						</div>
 					</div>
 				</div>
@@ -177,7 +177,7 @@
 							/>
 						</div>
 						<div class="stat-big-digit">
-							{{ number(totalScores) }}
+							{{ formatNumber(totalScores) }}
 						</div>
 					</div>
 				</div>
@@ -193,7 +193,7 @@
 							/>
 						</div>
 						<div class="stat-big-digit">
-							{{ number(totalUsersWithScores) }}
+							{{ formatNumber(totalUsersWithScores) }}
 						</div>
 					</div>
 				</div>
@@ -223,7 +223,7 @@
 							/>
 						</div>
 						<div class="stat-big-digit">
-							{{ number(numGlobalItems) }}
+							{{ formatNumber(numGlobalItems) }}
 						</div>
 					</div>
 				</div>

@@ -26,7 +26,7 @@ export default class AppCommunityCompetitionEntryGrid extends Vue {
 	category?: CommunityCompetitionVotingCategory;
 	@Prop(propOptional(Boolean, false)) showRemove!: boolean;
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	get placeholderCount() {
 		const iterators = [];

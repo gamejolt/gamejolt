@@ -456,7 +456,7 @@ const {
 				<translate
 					v-if="displayMode === 'comments'"
 					:translate-n="totalCommentsCount"
-					:translate-params="{ count: number(totalCommentsCount) }"
+					:translate-params="{ count: formatNumber(totalCommentsCount) }"
 					translate-plural="%{ count } comments"
 				>
 					1 comment
@@ -464,7 +464,7 @@ const {
 				<translate
 					v-else
 					:translate-n="totalCommentsCount"
-					:translate-params="{ count: number(totalCommentsCount) }"
+					:translate-params="{ count: formatNumber(totalCommentsCount) }"
 					translate-plural="%{ count } shouts"
 				>
 					1 shout

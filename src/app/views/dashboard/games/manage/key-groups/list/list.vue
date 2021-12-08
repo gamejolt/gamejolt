@@ -78,13 +78,16 @@
 										<div class="key-groups-progress small text-muted">
 											<div>
 												<strong><translate>Viewed</translate></strong>
-												{{ number(group.viewed_count || 0) }} /
-												{{ number(group.key_count || 0) }}
+												{{ formatNumber(group.viewed_count || 0) }} /
+												{{ formatNumber(group.key_count || 0) }}
 												({{
-													number(group.viewed_count / group.key_count, {
-														style: 'percent',
-														maximumFractionDigits: 2,
-													})
+													formatNumber(
+														group.viewed_count / group.key_count,
+														{
+															style: 'percent',
+															maximumFractionDigits: 2,
+														}
+													)
 												}})
 											</div>
 											<app-progress-bar
@@ -97,13 +100,16 @@
 
 											<div>
 												<strong><translate>Claimed</translate></strong>
-												{{ number(group.claimed_count || 0) }} /
-												{{ number(group.key_count || 0) }}
+												{{ formatNumber(group.claimed_count || 0) }} /
+												{{ formatNumber(group.key_count || 0) }}
 												({{
-													number(group.claimed_count / group.key_count, {
-														style: 'percent',
-														maximumFractionDigits: 2,
-													})
+													formatNumber(
+														group.claimed_count / group.key_count,
+														{
+															style: 'percent',
+															maximumFractionDigits: 2,
+														}
+													)
 												}})
 											</div>
 											<app-progress-bar

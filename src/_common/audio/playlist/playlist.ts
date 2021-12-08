@@ -21,7 +21,7 @@ export default class AppAudioPlaylist extends Vue {
 	pausedSong: GameSong | null = null;
 	pausedSongTime = 0;
 
-	readonly time = formatTime;
+	readonly formatTime = formatTime;
 
 	declare $refs: {
 		player: AppAudioPlayer;

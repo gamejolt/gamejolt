@@ -19,7 +19,7 @@ export default class AppTrophyList extends Vue {
 	@Prop(Array) trophies!: GameTrophy[];
 	@Prop(Array) achieved!: UserGameTrophy[];
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	get achievedIndexed() {
 		return UserGameTrophy.indexAchieved(this.achieved);

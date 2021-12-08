@@ -15,7 +15,7 @@ export default class FormGameKeyGroupAddKeys extends BaseForm<any> implements Fo
 
 	warnOnDiscard = false;
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 	readonly KeyGroup = KeyGroup;
 
 	onSubmit() {

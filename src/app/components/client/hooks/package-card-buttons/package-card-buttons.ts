@@ -73,7 +73,7 @@ export default class AppClientPackageCardButtons extends Vue {
 
 	readonly PatchState = LocalDbPackagePatchState;
 	readonly RemoveState = LocalDbPackageRemoveState;
-	readonly filesize = formatFilesize;
+	readonly formatFilesize = formatFilesize;
 
 	@Emit('click')
 	emitClick(_data: { build: GameBuild; fromExtraSection?: boolean }) {}

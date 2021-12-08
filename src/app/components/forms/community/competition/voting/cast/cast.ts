@@ -30,7 +30,7 @@ export default class FormCommunityCompetitionVotingCast extends Vue {
 	hasVoted = false;
 	isSaving = false;
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	get overallRating() {
 		// With overall rating type, there is only 1 vote, which is also the overall.

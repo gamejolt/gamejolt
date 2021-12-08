@@ -46,7 +46,7 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 	currentPage = 1;
 	listableTopicsCount = 0;
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 	readonly Scroll = Scroll;
 	readonly Screen = Screen;
 

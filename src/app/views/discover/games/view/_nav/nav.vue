@@ -17,7 +17,7 @@
 					<a @click="showComments()">
 						<translate>Comments</translate>
 						<span v-if="commentsCount" class="badge">
-							{{ number(commentsCount) }}
+							{{ formatNumber(commentsCount) }}
 						</span>
 					</a>
 				</li>
@@ -29,7 +29,7 @@
 					>
 						<translate>Followers</translate>
 						<span class="badge">
-							{{ number(game.follower_count) }}
+							{{ formatNumber(game.follower_count) }}
 						</span>
 					</router-link>
 				</li>
@@ -55,7 +55,7 @@
 						active-class="active"
 					>
 						<translate>games.view.trophies_tab</translate>
-						<span class="badge">{{ number(trophiesCount) }}</span>
+						<span class="badge">{{ formatNumber(trophiesCount) }}</span>
 					</router-link>
 				</li>
 

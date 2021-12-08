@@ -102,7 +102,7 @@
 								<translate>dash.games.overview.stats_views</translate>
 							</div>
 							<div class="stat-big-digit">
-								{{ number(viewCount) }}
+								{{ formatNumber(viewCount) }}
 							</div>
 						</div>
 					</div>
@@ -112,7 +112,7 @@
 								<translate>dash.games.overview.stats_plays</translate>
 							</div>
 							<div class="stat-big-digit">
-								{{ number(downloadCount) }}
+								{{ formatNumber(downloadCount) }}
 							</div>
 						</div>
 					</div>
@@ -122,7 +122,7 @@
 								<translate>Likes</translate>
 							</div>
 							<div class="stat-big-digit">
-								{{ number(likeCount) }}
+								{{ formatNumber(likeCount) }}
 							</div>
 						</div>
 					</div>
@@ -142,7 +142,7 @@
 								<translate>dash.games.overview.stats_comments</translate>
 							</div>
 							<div class="stat-big-digit">
-								{{ number(commentCount) }}
+								{{ formatNumber(commentCount) }}
 							</div>
 						</div>
 					</div>
@@ -152,7 +152,7 @@
 								<translate>dash.games.overview.stats_followers</translate>
 							</div>
 							<div class="stat-big-digit">
-								{{ number(game.follower_count) }}
+								{{ formatNumber(game.follower_count) }}
 							</div>
 						</div>
 					</div>

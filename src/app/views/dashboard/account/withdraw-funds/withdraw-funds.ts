@@ -47,8 +47,8 @@ export default class RouteDashAccountWithdrawFunds extends BaseRouteComponent {
 	isShowingRevenueBreakdown = false;
 
 	readonly Screen = Screen;
-	readonly currency = formatCurrency;
-	readonly number = formatNumber;
+	readonly formatCurrency = formatCurrency;
+	readonly formatNumber = formatNumber;
 
 	get routeTitle() {
 		return this.heading;

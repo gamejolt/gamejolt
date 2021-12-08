@@ -12,8 +12,8 @@ import { Store } from '../../store/index';
 	},
 })
 export default class AppIncludedItems extends Vue {
-	readonly ucwords = formatUcwords;
-	readonly filesize = formatFilesize;
+	readonly formatUcwords = formatUcwords;
+	readonly formatFilesize = formatFilesize;
 
 	@State package!: Store['package'];
 	@State packagePayload!: Store['packagePayload'];

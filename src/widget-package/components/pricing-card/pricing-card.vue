@@ -1,35 +1,27 @@
 <script lang="ts" src="./pricing-card"></script>
 
 <template>
-	<div class="-card " :class="sellable.is_owned ? 'fill-highlight' : 'fill-gray'">
+	<div class="-card" :class="sellable.is_owned ? 'fill-highlight' : 'fill-gray'">
 		<template v-if="sellable.is_owned">
-			<strong>
-				OWNED
-			</strong>
+			<strong> OWNED </strong>
 		</template>
 		<template v-else>
 			<template v-if="sellable.type === 'paid'">
 				<span v-if="originalPrice" class="-discount"> -{{ discount }}% </span>
 				<strong class="-amount">
-					{{ currency(price) }}
+					{{ formatCurrency(price) }}
 				</strong>
 				<span v-if="originalPrice" class="-amount -amount-old">
-					{{ currency(originalPrice) }}
+					{{ formatCurrency(originalPrice) }}
 				</span>
 				<br />
-				<span class="-tag -muted">
-					or more
-				</span>
+				<span class="-tag -muted"> or more </span>
 			</template>
 			<template v-else-if="sellable.type === 'pwyw'">
-				<span class="-tag">
-					name your price
-				</span>
+				<span class="-tag"> name your price </span>
 			</template>
 			<template v-else-if="sellable.type === 'free'">
-				<strong class="-amount">
-					FREE
-				</strong>
+				<strong class="-amount"> FREE </strong>
 			</template>
 		</template>
 	</div>

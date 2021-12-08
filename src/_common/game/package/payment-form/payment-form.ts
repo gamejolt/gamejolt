@@ -85,7 +85,7 @@ export default class FormGamePackagePayment
 	minOrderAmount = 50;
 
 	readonly Screen = Screen;
-	readonly currency = formatCurrency;
+	readonly formatCurrency = formatCurrency;
 
 	@Emit('bought')
 	emitBought() {}

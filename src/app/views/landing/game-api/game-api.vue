@@ -38,7 +38,7 @@
 					<div class="col-lg-2" v-if="totalScores">
 						<div class="stat-big">
 							<div class="stat-big-digit">
-								{{ number(totalScores) }}
+								{{ formatNumber(totalScores) }}
 							</div>
 							<div class="stat-big-label">Scores Logged</div>
 						</div>
@@ -46,7 +46,7 @@
 					<div class="col-lg-2">
 						<div class="stat-big" v-if="totalAchievedTrophies">
 							<div class="stat-big-digit">
-								{{ number(totalAchievedTrophies) }}
+								{{ formatNumber(totalAchievedTrophies) }}
 							</div>
 							<div class="stat-big-label">Trophies Achieved</div>
 						</div>
@@ -54,7 +54,7 @@
 					<div class="col-lg-2">
 						<div class="stat-big" v-if="sessionTime">
 							<div class="stat-big-digit">
-								{{ number(sessionTime) }}
+								{{ formatNumber(sessionTime) }}
 							</div>
 							<div class="stat-big-label">Hours Logged</div>
 						</div>

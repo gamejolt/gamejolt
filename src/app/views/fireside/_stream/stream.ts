@@ -44,7 +44,7 @@ export default class AppFiresideStream extends Vue {
 	private isShowingOverlayPopper = false;
 
 	readonly Screen = Screen;
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	get shouldShowUI() {
 		if (GJ_IS_SSR) {

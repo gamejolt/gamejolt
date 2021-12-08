@@ -10,7 +10,7 @@
 		<div class="card-meta">
 			<translate
 				:translate-n="songs.length"
-				:translate-params="{ count: number(songs.length) }"
+				:translate-params="{ count: formatNumber(songs.length) }"
 				translate-plural="%{ count } songs"
 			>
 				%{ count } song
@@ -43,7 +43,11 @@
 		/>
 
 		<div class="card-controls">
-			<app-button primary @click="download" v-app-track-event="`game-soundtrack-card:download`">
+			<app-button
+				primary
+				@click="download"
+				v-app-track-event="`game-soundtrack-card:download`"
+			>
 				<translate>Download</translate>
 				<app-jolticon icon="musical-note-double" class="jolticon-addon" />
 			</app-button>

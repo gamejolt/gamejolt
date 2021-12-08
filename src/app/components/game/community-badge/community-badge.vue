@@ -37,7 +37,9 @@
 						<div v-if="community.member_count > 0" class="-member-count">
 							<translate
 								:translate-n="community.member_count || 0"
-								:translate-params="{ count: number(community.member_count || 0) }"
+								:translate-params="{
+									count: formatNumber(community.member_count || 0),
+								}"
 								translate-plural="%{ count } Members"
 							>
 								%{ count } Member

@@ -13,8 +13,8 @@
 
 				<p v-if="comment.modified_on" class="text-muted small">
 					<b><translate>Last modified on</translate></b>
-					<span :title="date(comment.modified_on, 'medium')">
-						{{ date(comment.modified_on, 'longDate') }}
+					<span :title="formatDate(comment.modified_on, 'medium')">
+						{{ formatDate(comment.modified_on, 'longDate') }}
 					</span>
 				</p>
 			</app-fade-collapse>

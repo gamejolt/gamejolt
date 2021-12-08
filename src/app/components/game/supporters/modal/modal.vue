@@ -10,14 +10,16 @@
 			<h2 class="modal-title">
 				<translate
 					:translate-n="supporterCount"
-					:translate-params="{ count: number(supporterCount) }"
+					:translate-params="{ count: formatNumber(supporterCount) }"
 					translate-plural="%{ count } supporters"
 				>
 					1 supporter
 				</translate>
 			</h2>
 			<p>
-				<translate>The kind people that supported by paying more than the minimum.</translate>
+				<translate
+					>The kind people that supported by paying more than the minimum.</translate
+				>
 			</p>
 		</div>
 

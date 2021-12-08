@@ -27,7 +27,7 @@ export default class AppFiresideBadge extends Vue {
 	canEmitExpiry = true;
 	expiryCheck: NodeJS.Timer | null = null;
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	get avatarTooltip() {
 		if (this.fireside.community) {

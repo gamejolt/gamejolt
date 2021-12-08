@@ -18,7 +18,7 @@ export default class AppGamePackageCardButtons extends Vue {
 	@Prop(GamePackageCardModel) card!: GamePackageCardModel;
 
 	readonly Screen = Screen;
-	readonly filesize = formatFilesize;
+	readonly formatFilesize = formatFilesize;
 
 	@Emit('click')
 	emitClick(_data: { build: GameBuild; fromExtraSection: boolean }) {}

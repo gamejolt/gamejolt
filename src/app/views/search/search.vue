@@ -55,7 +55,7 @@
 							>
 								<translate>Communities</translate>
 								<span class="badge">{{
-									number(searchPayload.communitiesCount)
+									formatNumber(searchPayload.communitiesCount)
 								}}</span>
 							</router-link>
 						</li>
@@ -65,7 +65,9 @@
 								active-class="active"
 							>
 								<translate>search.results.users_tab</translate>
-								<span class="badge">{{ number(searchPayload.usersCount) }}</span>
+								<span class="badge">{{
+									formatNumber(searchPayload.usersCount)
+								}}</span>
 							</router-link>
 						</li>
 						<li v-if="searchPayload.gamesCount">
@@ -74,7 +76,9 @@
 								active-class="active"
 							>
 								<translate>search.results.games_tab</translate>
-								<span class="badge">{{ number(searchPayload.gamesCount) }}</span>
+								<span class="badge">{{
+									formatNumber(searchPayload.gamesCount)
+								}}</span>
 							</router-link>
 						</li>
 					</ul>

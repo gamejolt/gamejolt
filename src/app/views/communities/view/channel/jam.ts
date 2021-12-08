@@ -61,8 +61,8 @@ export default class RouteCommunitiesViewChannelJam extends BaseRouteComponent {
 	user!: AppStore['user'];
 
 	readonly Screen = Screen;
-	readonly number = formatNumber;
-	readonly date = formatDate;
+	readonly formatNumber = formatNumber;
+	readonly formatDate = formatDate;
 
 	canToggleDescription = false;
 	isDescriptionOpen = false;

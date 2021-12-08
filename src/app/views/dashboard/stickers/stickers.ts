@@ -53,7 +53,7 @@ export default class RouteDashStickers extends BaseRouteComponent {
 	@State grid!: Store['grid'];
 
 	readonly Screen = Screen;
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	balance = 0;
 	stickerCollection: StickerCount[] = [];

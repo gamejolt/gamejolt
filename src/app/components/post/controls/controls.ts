@@ -90,8 +90,8 @@ export default class AppPostControls extends Vue {
 
 	readonly GJ_IS_CLIENT!: boolean;
 	readonly Screen = Screen;
-	readonly fuzzynumber = formatFuzzynumber;
-	readonly number = formatNumber;
+	readonly formatFuzzynumber = formatFuzzynumber;
+	readonly formatNumber = formatNumber;
 
 	@Emit('post-edit') emitPostEdit() {}
 	@Emit('post-publish') emitPostPublish() {}

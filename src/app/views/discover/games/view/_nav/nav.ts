@@ -44,7 +44,7 @@ export default class AppDiscoverGamesViewNav extends Vue {
 	app!: Store['app'];
 
 	readonly Screen = Screen;
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	get hasAnyPerms() {
 		return this.game && this.game.hasPerms();

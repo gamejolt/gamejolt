@@ -15,7 +15,7 @@ import { User } from '../../../../_common/user/user.model';
 export default class AppUserLevelWidget extends Vue {
 	@Prop(User) user!: User;
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	get tooltip() {
 		return this.$gettextInterpolate('%{ percentage }% progress to next level', {

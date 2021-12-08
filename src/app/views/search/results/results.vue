@@ -21,7 +21,7 @@
 						>
 							<translate>Communities</translate>
 						</router-link>
-						<small>({{ number(searchPayload.communitiesCount) }})</small>
+						<small>({{ formatNumber(searchPayload.communitiesCount) }})</small>
 					</h3>
 
 					<div class="scrollable-grid-xs">
@@ -57,7 +57,7 @@
 					>
 						<translate>search.results.games_heading</translate>
 					</router-link>
-					<small>({{ number(searchPayload.gamesCount) }})</small>
+					<small>({{ formatNumber(searchPayload.gamesCount) }})</small>
 				</h3>
 
 				<app-game-grid
@@ -99,7 +99,7 @@
 					>
 						<translate>search.results.users_heading</translate>
 					</router-link>
-					<small>({{ number(searchPayload.usersCount) }})</small>
+					<small>({{ formatNumber(searchPayload.usersCount) }})</small>
 				</h3>
 
 				<div class="scrollable-grid-xs">

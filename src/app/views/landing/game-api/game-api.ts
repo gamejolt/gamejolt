@@ -25,7 +25,7 @@ export default class RouteLandingGameApi extends BaseRouteComponent {
 	totalAchievedTrophies = 0;
 	sessionTime = 0;
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	routeResolved($payload: any) {
 		this.totalScores = $payload.totalScores || 0;

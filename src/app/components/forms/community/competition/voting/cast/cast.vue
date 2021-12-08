@@ -75,7 +75,7 @@
 								<translate>n/a</translate>
 							</template>
 							<template v-else>
-								{{ number(overallRating, { maximumFractionDigits: 2 }) }}
+								{{ formatNumber(overallRating, { maximumFractionDigits: 2 }) }}
 							</template>
 						</b>
 					</div>

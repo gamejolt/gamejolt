@@ -17,7 +17,7 @@
 						<h5 class="forum-topic-list-item-title">
 							<!-- Notifications -->
 							<span v-if="!!topic.notifications.length" class="tag tag-highlight">
-								{{ number(topic.notifications.length) }}
+								{{ formatNumber(topic.notifications.length) }}
 							</span>
 
 							<!-- Pinned -->
@@ -71,7 +71,7 @@
 						:class="{ 'text-right': !Screen.isXs }"
 					>
 						<span
-							v-translate="{ count: number(topic.replies_count || 0) }"
+							v-translate="{ count: formatNumber(topic.replies_count || 0) }"
 							:translate-n="topic.replies_count || 0"
 							translate-plural="<b>%{ count }</b> Replies"
 						>
@@ -81,7 +81,7 @@
 						<br class="hidden-xs" />
 						<span class="hidden-sm hidden-md hidden-lg dot-separator" />
 						<span
-							v-translate="{ count: number(topic.followers_count || 0) }"
+							v-translate="{ count: formatNumber(topic.followers_count || 0) }"
 							:translate-n="topic.followers_count || 0"
 							translate-plural="<b>%{ count }</b> Followers"
 						>

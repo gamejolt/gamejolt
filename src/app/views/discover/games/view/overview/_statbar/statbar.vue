@@ -11,8 +11,8 @@
 			</div>
 			<app-lazy-placeholder :when="isOverviewLoaded">
 				<span class="lazy-placeholder"></span>
-				<span class="-metric" :title="number(profileCount)">
-					<strong>{{ fuzzynumber(profileCount) }}</strong>
+				<span class="-metric" :title="formatNumber(profileCount)">
+					<strong>{{ formatFuzzynumber(profileCount) }}</strong>
 				</span>
 			</app-lazy-placeholder>
 		</div>
@@ -27,8 +27,8 @@
 				</div>
 				<app-lazy-placeholder :when="isOverviewLoaded">
 					<span class="lazy-placeholder"></span>
-					<span class="-metric" :title="number(likeCount)">
-						<strong>{{ fuzzynumber(likeCount) }}</strong>
+					<span class="-metric" :title="formatNumber(likeCount)">
+						<strong>{{ formatFuzzynumber(likeCount) }}</strong>
 					</span>
 				</app-lazy-placeholder>
 			</a>

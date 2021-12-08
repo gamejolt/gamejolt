@@ -32,7 +32,7 @@ export default class AppCommunityActivityItem extends Vue {
 	@Prop(propRequired(Boolean)) showIcon!: boolean;
 
 	readonly Screen = Screen;
-	readonly date = formatDate;
+	readonly formatDate = formatDate;
 	readonly CommunityActivityItem = CommunityActivityItem;
 
 	get loggedOn() {

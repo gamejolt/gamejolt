@@ -20,7 +20,7 @@
 				@click="showLikers()"
 				v-app-tooltip="$gettext(`View all people that liked this game`)"
 			>
-				{{ fuzzynumber(game.like_count) }}
+				{{ formatFuzzynumber(game.like_count) }}
 			</a>
 			<span v-else class="blip-missing" />
 		</template>

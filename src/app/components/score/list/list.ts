@@ -21,5 +21,5 @@ export default class AppScoreList extends Vue {
 	@Prop(Number) step?: number;
 
 	readonly Environment = Environment;
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 }

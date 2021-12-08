@@ -33,7 +33,7 @@
 				<div class="-member-counts small">
 					<router-link
 						v-app-track-event="`community-card:community-members`"
-						v-translate="{ count: number(memberCount) }"
+						v-translate="{ count: formatNumber(memberCount) }"
 						:translate-n="memberCount"
 						translate-plural="<b>%{count}</b> members"
 						:to="{

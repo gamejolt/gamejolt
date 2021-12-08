@@ -36,7 +36,7 @@ export default class FormCommunityCompetitionVotingEdit
 	timezoneService: FormTimezoneService<CommunityCompetition> | null = null;
 	saveMethod: '$saveVoting' = '$saveVoting';
 
-	readonly date = formatDate;
+	readonly formatDate = formatDate;
 
 	@Emit('cancel')
 	emitCancel() {}

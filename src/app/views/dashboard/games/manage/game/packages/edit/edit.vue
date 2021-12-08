@@ -56,14 +56,18 @@
 			<div class="row">
 				<div class="col-sm-8">
 					<div
-						v-if="game._is_devlog && package.visibility === GamePackage.VISIBILITY_PUBLIC"
+						v-if="
+							game._is_devlog && package.visibility === GamePackage.VISIBILITY_PUBLIC
+						"
 						class="alert alert-notice"
 					>
 						<app-jolticon icon="notice" />
 						<span v-translate>
-							<strong>This package won't show up on your devlog-only game page.</strong>
-							Switch your game page to early access or complete from the Overview/Setup page for it
-							to show.
+							<strong
+								>This package won't show up on your devlog-only game page.</strong
+							>
+							Switch your game page to early access or complete from the
+							Overview/Setup page for it to show.
 						</span>
 						<router-link
 							:to="{
@@ -80,7 +84,8 @@
 					<h3
 						:class="{
 							'section-header': !(
-								game._is_devlog && package.visibility === GamePackage.VISIBILITY_PUBLIC
+								game._is_devlog &&
+								package.visibility === GamePackage.VISIBILITY_PUBLIC
 							),
 						}"
 					>
@@ -107,17 +112,15 @@
 
 						<template v-if="buildsProcessingCount > 0">
 							<app-progress-poller
-								:url="
-									`/web/dash/developer/games/packages/poll-processing-builds/${game.id}/${package.id}/${buildsProcessingCount}`
-								"
+								:url="`/web/dash/developer/games/packages/poll-processing-builds/${game.id}/${package.id}/${buildsProcessingCount}`"
 								@complete="onBuildsProcessed($event)"
 							/>
 
 							<div class="alert">
 								<app-jolticon icon="notice" />
 								<translate>
-									This package has builds that are still processing. They will be available in the
-									package as soon as they're finished processing.
+									This package has builds that are still processing. They will be
+									available in the package as soon as they're finished processing.
 								</translate>
 							</div>
 						</template>
@@ -134,14 +137,16 @@
 					<div class="page-help">
 						<p>
 							<translate>
-								Releases represent new versions of your package. If you update a package, you should
-								add a release. You can group all of the new builds for different platforms into a
-								single new release.
+								Releases represent new versions of your package. If you update a
+								package, you should add a release. You can group all of the new
+								builds for different platforms into a single new release.
 							</translate>
 						</p>
 						<p>
 							<app-link-help page="dev-packages" class="link-help">
-								<translate>dash.games.packages.manage.releases.page_help_link</translate>
+								<translate
+									>dash.games.packages.manage.releases.page_help_link</translate
+								>
 							</app-link-help>
 						</p>
 					</div>
@@ -197,7 +202,11 @@
 								<template v-if="release.status === GameRelease.STATUS_HIDDEN">
 									<span
 										v-if="!release.isScheduled"
-										v-app-tooltip="$gettext(`dash.games.packages.manage.releases.hidden_tooltip`)"
+										v-app-tooltip="
+											$gettext(
+												`dash.games.packages.manage.releases.hidden_tooltip`
+											)
+										"
 										class="tag"
 									>
 										<app-jolticon icon="inactive" />
@@ -216,28 +225,39 @@
 											<translate>Scheduled</translate>
 										</span>
 
-										<app-time-ago :date="release.scheduled_for" without-suffix />
+										<app-time-ago
+											:date="release.scheduled_for"
+											without-suffix
+										/>
 									</template>
 								</template>
 
 								<span
 									v-if="release.status === GameRelease.STATUS_PUBLISHED"
-									v-app-tooltip="$gettext(`dash.games.packages.manage.releases.published_tooltip`)"
+									v-app-tooltip="
+										$gettext(
+											`dash.games.packages.manage.releases.published_tooltip`
+										)
+									"
 									class="tag tag-highlight"
 								>
 									<app-jolticon icon="active" />
-									<translate>dash.games.packages.manage.releases.published_tag</translate>
+									<translate
+										>dash.games.packages.manage.releases.published_tag</translate
+									>
 								</span>
 
 								<span class="dot-separator" />
 
 								<template v-if="!release.build_count">
-									<translate>dash.games.packages.manage.releases.builds_count_none</translate>
+									<translate
+										>dash.games.packages.manage.releases.builds_count_none</translate
+									>
 								</template>
 								<template v-else>
 									<translate
 										:translate-params="{
-											count: number(release.build_count),
+											count: formatNumber(release.build_count),
 										}"
 										:translate-n="release.build_count"
 										translate-plural="%{ count } builds"
@@ -253,7 +273,10 @@
 										primary
 										:to="{
 											name: 'dash.games.manage.game.packages.release.edit',
-											params: { packageId: package.id, releaseId: release.id },
+											params: {
+												packageId: package.id,
+												releaseId: release.id,
+											},
 										}"
 									>
 										<translate>Edit Release</translate>
@@ -265,7 +288,10 @@
 										trans
 										:to="{
 											name: 'dash.analytics',
-											params: { resource: 'Game_Release', resourceId: release.id },
+											params: {
+												resource: 'Game_Release',
+												resourceId: release.id,
+											},
 										}"
 									>
 										<translate>Analytics</translate>
@@ -275,7 +301,9 @@
 						</app-card>
 					</div>
 
-					<app-dash-game-wizard-controls :disabled="!game._is_devlog && !game.has_active_builds" />
+					<app-dash-game-wizard-controls
+						:disabled="!game._is_devlog && !game.has_active_builds"
+					/>
 				</div>
 			</div>
 		</template>

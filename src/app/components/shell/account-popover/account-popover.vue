@@ -107,7 +107,7 @@
 							<translate>Wallet Balance</translate>
 							&mdash;
 							<span class="account-popover-currency">
-								{{ currency(walletAmount) }}
+								{{ formatCurrency(walletAmount) }}
 							</span>
 						</router-link>
 					</div>

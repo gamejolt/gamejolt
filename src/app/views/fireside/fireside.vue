@@ -39,7 +39,9 @@
 							<a @click="onClickShowChatMembers">
 								<li class="stat-big stat-big-smaller">
 									<div class="stat-big-label">Members</div>
-									<div class="stat-big-digit">{{ number(chatUsers.count) }}</div>
+									<div class="stat-big-digit">
+										{{ formatNumber(chatUsers.count) }}
+									</div>
 								</li>
 							</a>
 						</ul>

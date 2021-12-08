@@ -29,7 +29,7 @@
 							<translate>dash.games.data_store.items.view.date_label</translate>
 						</th>
 						<td>
-							{{ date(item.posted_on, 'medium') }}
+							{{ formatDate(item.posted_on, 'medium') }}
 						</td>
 					</tr>
 					<tr>

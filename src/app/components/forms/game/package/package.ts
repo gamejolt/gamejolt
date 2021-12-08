@@ -78,8 +78,8 @@ export default class FormGamePackage
 	timezones: { [region: string]: (TimezoneData & { label?: string })[] } = {};
 
 	readonly GamePackage = GamePackage;
-	readonly date = formatDate;
-	readonly currency = formatCurrency;
+	readonly formatDate = formatDate;
+	readonly formatCurrency = formatCurrency;
 
 	@Emit('salecancel')
 	emitSaleCancel(_formModel: FormGamePackageModel) {}

@@ -64,8 +64,8 @@ export default class AppForumPostListItem extends Vue {
 	totalReplyCount = 0;
 
 	readonly InviewConfig = InviewConfig;
-	readonly date = formatDate;
-	readonly number = formatNumber;
+	readonly formatDate = formatDate;
+	readonly formatNumber = formatNumber;
 	readonly Environment = Environment;
 
 	@Emit('replied')

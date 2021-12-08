@@ -29,7 +29,7 @@ export default class FormGameKeyGroup
 	@Prop(Game) game!: Game;
 	@Prop(Array) packages!: GamePackage[];
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 	readonly KeyGroup = KeyGroup;
 	readonly GamePackage = GamePackage;
 

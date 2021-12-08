@@ -7,7 +7,7 @@
 
 			<span class="dot-separator" />
 
-			<translate :translate-params="{ date: date(order.completed_on, 'medium') }">
+			<translate :translate-params="{ date: formatDate(order.completed_on, 'medium') }">
 				Ordered on %{date}
 			</translate>
 		</p>
@@ -19,7 +19,7 @@
 		<div v-if="order._is_refunded && firstRefund" class="alert alert-notice">
 			<translate
 				:translate-params="{
-					date: date(firstRefund.created_on, 'medium'),
+					date: formatDate(firstRefund.created_on, 'medium'),
 				}"
 			>
 				This order was refunded on %{ date }.
@@ -85,7 +85,7 @@
 					</template>
 					<template v-else-if="payment.method === OrderPayment.METHOD_WALLET">
 						<span class="tag"> Wallet </span>
-						{{ currency(payment.amount) }}
+						{{ formatCurrency(payment.amount) }}
 					</template>
 				</div>
 			</div>
@@ -98,17 +98,17 @@
 					<tbody>
 						<tr>
 							<th><translate>Subtotal</translate></th>
-							<td>{{ currency(order.amount) }}</td>
+							<td>{{ formatCurrency(order.amount) }}</td>
 						</tr>
 						<tr v-if="order.tax_amount">
 							<th><translate>Tax</translate></th>
-							<td>{{ currency(order.tax_amount) }}</td>
+							<td>{{ formatCurrency(order.tax_amount) }}</td>
 						</tr>
 					</tbody>
 					<tfoot>
 						<tr>
 							<th><translate>Total</translate></th>
-							<td>{{ currency(order.total_amount) }}</td>
+							<td>{{ formatCurrency(order.total_amount) }}</td>
 						</tr>
 					</tfoot>
 				</table>
@@ -124,7 +124,7 @@
 				</span>
 				{{ item.sellable.title }}
 				&mdash;
-				<small>{{ currency(item.amount) }}</small>
+				<small>{{ formatCurrency(item.amount) }}</small>
 			</h4>
 
 			<div

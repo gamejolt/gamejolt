@@ -15,7 +15,7 @@ export default class AppPartnerTerms extends Vue {
 	showAgreement = false;
 	termsTemplate: string = require('../../../../../lib/terms/partner/global.md');
 
-	readonly date = formatDate;
+	readonly formatDate = formatDate;
 
 	@Emit('accepted')
 	emitAccepted() {}

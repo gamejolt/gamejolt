@@ -37,8 +37,8 @@ export default class RouteDashAccountPurchasesView extends BaseRouteComponent {
 
 	readonly Geo = Geo;
 	readonly OrderPayment = OrderPayment;
-	readonly date = formatDate;
-	readonly currency = formatCurrency;
+	readonly formatDate = formatDate;
+	readonly formatCurrency = formatCurrency;
 	readonly Screen = Screen;
 
 	get routeTitle() {

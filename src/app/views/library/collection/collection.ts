@@ -118,7 +118,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 	metaTitle = '';
 
 	readonly Screen = Screen;
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	get routeTitle() {
 		if (this.metaTitle) {

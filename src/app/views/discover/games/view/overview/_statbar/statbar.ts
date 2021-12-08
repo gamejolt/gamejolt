@@ -29,8 +29,8 @@ export default class AppDiscoverGamesViewOverviewStatbar extends Vue {
 	@RouteStoreModule.State
 	userRating!: RouteStore['userRating'];
 
-	readonly number = formatNumber;
-	readonly fuzzynumber = formatFuzzynumber;
+	readonly formatNumber = formatNumber;
+	readonly formatFuzzynumber = formatFuzzynumber;
 
 	get likeCount() {
 		return this.game.like_count;

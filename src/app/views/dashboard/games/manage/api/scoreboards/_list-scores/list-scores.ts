@@ -19,8 +19,8 @@ export default class AppManageGameListScores extends Vue {
 	@Emit('remove')
 	emitRemove(_score: UserGameScore) {}
 
-	readonly date = formatDate;
-	readonly number = formatNumber;
+	readonly formatDate = formatDate;
+	readonly formatNumber = formatNumber;
 
 	async removeScore(score: UserGameScore) {
 		const result = await ModalConfirm.show(

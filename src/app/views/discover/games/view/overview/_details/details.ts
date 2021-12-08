@@ -17,7 +17,7 @@ export default class AppDiscoverGamesViewOverviewDetails extends Vue {
 	@RouteStoreModule.State
 	linkedAccounts!: RouteStore['linkedAccounts'];
 
-	readonly date = formatDate;
+	readonly formatDate = formatDate;
 
 	get creationTool() {
 		if (

@@ -10,7 +10,7 @@
 			<h2 class="modal-title">
 				<translate
 					:translate-n="realCount"
-					:translate-params="{ count: number(realCount) }"
+					:translate-params="{ count: formatNumber(realCount) }"
 					translate-plural="%{ count } likes"
 				>
 					1 like

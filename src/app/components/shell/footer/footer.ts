@@ -26,7 +26,7 @@ export default class AppShellFooter extends Vue {
 	curDate = new Date();
 
 	readonly Screen = Screen;
-	readonly date = formatDate;
+	readonly formatDate = formatDate;
 	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
 	readonly trackAppPromotionClick = trackAppPromotionClick;
 

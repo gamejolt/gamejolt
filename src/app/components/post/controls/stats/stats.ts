@@ -15,7 +15,7 @@ export default class AppPostControlsStats extends Vue {
 
 	@AppState user!: AppStore['user'];
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	get hasPerms() {
 		if (!this.user) {

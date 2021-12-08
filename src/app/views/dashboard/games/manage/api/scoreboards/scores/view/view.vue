@@ -67,14 +67,14 @@
 						<th>
 							<translate>dash.games.scores.view.sort_label</translate>
 						</th>
-						<td>{{ number(score.sort) }}</td>
+						<td>{{ formatNumber(score.sort) }}</td>
 					</tr>
 					<tr>
 						<th>
 							<translate>dash.games.scores.view.date_label</translate>
 						</th>
 						<td>
-							{{ date(score.logged_on, 'medium') }}
+							{{ formatDate(score.logged_on, 'medium') }}
 						</td>
 					</tr>
 					<tr>

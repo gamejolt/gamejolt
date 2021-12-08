@@ -8,7 +8,7 @@ export default class AppCommunitiesEditCompetitionNav extends Vue {
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	get competition() {
 		return this.routeStore.competition!;

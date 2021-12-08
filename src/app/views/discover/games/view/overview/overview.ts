@@ -196,7 +196,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 	readonly Screen = Screen;
 	readonly Environment = Environment;
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 
 	get routeTitle() {
 		if (this.game) {

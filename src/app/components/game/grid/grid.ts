@@ -36,7 +36,7 @@ export default class AppGameGrid extends Vue {
 
 	id = ++idCounter;
 
-	readonly number = formatNumber;
+	readonly formatNumber = formatNumber;
 	readonly Screen = Screen;
 
 	get shouldShowAds() {

@@ -37,7 +37,7 @@ export default class App extends Vue {
 
 	readonly Connection = Connection;
 	readonly Environment = Environment;
-	readonly date = formatDate;
+	readonly formatDate = formatDate;
 
 	mounted() {
 		// Will load the user in asynchronously so that the user-bar in the
