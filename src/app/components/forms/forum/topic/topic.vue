@@ -1,3 +1,5 @@
+<script lang="ts" src="./topic"></script>
+
 <template>
 	<app-form name="forumTopicForm">
 		<app-form-group name="title" :label="$gettext('Title')">
@@ -29,5 +31,3 @@
 		</app-button>
 	</app-form>
 </template>
-
-<script lang="ts" src="./topic"></script>
