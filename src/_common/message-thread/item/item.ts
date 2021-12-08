@@ -29,5 +29,5 @@ export default class AppMessageThreadItem extends Vue {
 	@Prop(propOptional(Boolean, false)) isShowingReplies!: boolean;
 	@Prop(propOptional(Boolean, false)) isBlocked!: boolean;
 
-	readonly formatformatDate = formatDate;
+	readonly formatDate = formatDate;
 }
