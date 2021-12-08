@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Emit, Prop } from 'vue-property-decorator';
 import { arrayRemove, arrayUnique } from '../../utils/array';
 import { Api } from '../api/api.service';
 import { PayloadFormErrors } from '../payload/payload-service';
@@ -63,6 +63,13 @@ export const CommonFormComponents = {
 export class BaseForm<T> extends Vue {
 	@Prop({ type: Object, required: false }) model?: Readonly<T>;
 
+	// Some components, like Modals, might try to attach their own
+	// NavigationGuard callbacks so they can close themselves.
+	//
+	// Since we may require confirmation to change our route, they should
+	// instead do any cleanup when this emit triggers.
+	@Emit('route-change') emitRouteChange() {}
+
 	formModel: Readonly<T> = {} as T;
 	modelClass?: { new (data?: T): T } = undefined;
 	resetOnSubmit = false;
@@ -117,6 +124,8 @@ export class BaseForm<T> extends Vue {
 					return next(false);
 				}
 			}
+
+			this.emitRouteChange();
 			next();
 		});
 	}

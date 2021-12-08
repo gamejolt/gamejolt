@@ -26,6 +26,7 @@ import { Modal } from './modal.service';
 export default class AppModal extends Vue {
 	@Prop(Number) index!: number;
 	@Prop(Object) theme?: any;
+	@Prop({ type: Boolean, default: false }) ignoreRouter!: boolean;
 
 	@Inject({ from: DrawerStoreKey, default: null }) drawer!: null | DrawerStore;
 
@@ -65,10 +66,12 @@ export default class AppModal extends Vue {
 			});
 		}
 
-		this.beforeEachDeregister = this.$router.beforeEach((_to, _from, next) => {
-			this.dismissRouteChange();
-			next();
-		});
+		if (!this.ignoreRouter) {
+			this.beforeEachDeregister = this.$router.beforeEach((_to, _from, next) => {
+				this.dismissRouteChange();
+				next();
+			});
+		}
 
 		this.escapeCallback = () => this.dismissEsc();
 		EscapeStack.register(this.escapeCallback);

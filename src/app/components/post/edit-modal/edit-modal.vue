@@ -1,7 +1,7 @@
 <script lang="ts" src="./edit-modal"></script>
 
 <template>
-	<app-modal>
+	<app-modal ignore-router>
 		<div class="modal-controls">
 			<app-button :disabled="closeButtonDisabled" @click="modal.dismiss()">
 				<translate>Close</translate>
@@ -16,6 +16,7 @@
 					:model="post"
 					:default-community="community"
 					:default-channel="channel"
+					@route-change="onRouteChange"
 					@submit="onSubmitted"
 					@video-upload-status-change="onVideoUploadStatusChanged"
 				/>

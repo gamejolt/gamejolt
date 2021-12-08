@@ -41,6 +41,10 @@ export default class AppPostEditModal extends BaseModal {
 		}
 	}
 
+	onRouteChange() {
+		this.modal.dismiss();
+	}
+
 	onSubmitted(post: FiresidePost) {
 		this.modal.resolve(post);
 	}
