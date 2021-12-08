@@ -1,5 +1,4 @@
-import { App, computed, createApp, DirectiveBinding, ref } from 'vue';
-import AppTooltip from './tooltip.vue';
+import { DirectiveBinding, markRaw, reactive, ref } from 'vue';
 
 // Same thing as Placement (from @popperjs) or TooltipPlacement
 export const TooltipAllowedPlacements: TooltipPlacement[] = [
@@ -47,114 +46,106 @@ export type TooltipDirectiveValue =
 
 type TooltipDirectiveBinding = DirectiveBinding<TooltipDirectiveValue>;
 
-export class TooltipController {
-	text = '';
-	placement: TooltipPlacement = 'top';
-	isActive = false;
-	touchable = false;
+export type TooltipController = ReturnType<typeof makeTooltipController>;
 
-	constructor(public el: HTMLElement, binding: TooltipDirectiveBinding) {
-		if ('touchable' in binding.modifiers) {
-			this.touchable = true;
-		}
+export function makeTooltipController(el: HTMLElement, binding: TooltipDirectiveBinding) {
+	const state = reactive({
+		el: markRaw(el),
+		text: '',
+		placement: 'top' as TooltipPlacement,
+		isActive: false,
+		touchable: false,
+		update({ modifiers, value }: TooltipDirectiveBinding) {
+			// The placement for poppers can be added as a modifier or in the
+			// binding.value as { content: string, placement: string}.
+			let newPlacement: TooltipPlacement;
+			const keys = Object.keys(modifiers);
+			if (typeof value !== 'string' && value?.placement) {
+				newPlacement = value.placement;
+			} else {
+				newPlacement = (keys.find((i: any) => TooltipAllowedPlacements.includes(i)) ??
+					'top') as TooltipPlacement;
+			}
 
-		// Give the element a negative tabindex, or use its own, allowing focus events to work.
-		if (this.touchable) {
-			el.tabIndex = el.tabIndex ?? -1;
-			el.style.outline = 'none';
-		}
+			state.placement = newPlacement;
+			if (!value) {
+				state.text = '';
+			} else {
+				state.text = typeof value === 'string' ? value : value.content;
+			}
+		},
+		destroy() {
+			state.el.removeEventListener('pointerenter', _onMouseEnter);
+			state.el.removeEventListener('pointerleave', _onMouseLeave);
+			state.el.removeEventListener('click', _onClick);
+			state.el.removeEventListener('focusout', _onFocusOut);
+			state.isActive = false;
+		},
+	});
 
-		el.addEventListener('pointerenter', this.onMouseEnter);
-		el.addEventListener('pointerleave', this.onMouseLeave);
-		el.addEventListener('click', this.onClick);
-		el.addEventListener('focusout', this.onFocusOut);
-		this.update(binding);
+	if ('touchable' in binding.modifiers) {
+		state.touchable = true;
 	}
 
-	update({ modifiers, value }: TooltipDirectiveBinding) {
-		// The placement for poppers can be added as a modifier or in the
-		// binding.value as { content: string, placement: string}.
-		let placement: TooltipPlacement;
-		const keys = Object.keys(modifiers);
-		if (typeof value !== 'string' && value?.placement) {
-			placement = value.placement;
-		} else {
-			placement = (keys.find((i: any) => TooltipAllowedPlacements.includes(i)) ??
-				'top') as TooltipPlacement;
-		}
-
-		this.placement = placement;
-		if (!value) {
-			this.text = '';
-		} else {
-			this.text = typeof value === 'string' ? value : value.content;
-		}
+	// Give the element a negative tabindex, or use its own, allowing focus events to work.
+	if (state.touchable) {
+		el.tabIndex = el.tabIndex ?? -1;
+		el.style.outline = 'none';
 	}
 
-	private onMouseEnter = (event: PointerEvent) => {
+	el.addEventListener('pointerenter', _onMouseEnter);
+	el.addEventListener('pointerleave', _onMouseLeave);
+	el.addEventListener('click', _onClick);
+	el.addEventListener('focusout', _onFocusOut);
+	state.update(binding);
+
+	function _onMouseEnter(event: PointerEvent) {
 		// We never want this to trigger on 'touch' or 'pen' inputs.
 		if (TouchablePointerTypes.includes(event.pointerType)) {
 			return;
 		}
 
-		this.isActive = true;
-		_assignActiveTooltip(this);
-	};
+		state.isActive = true;
+		_assignActiveTooltip(state);
+	}
 
-	private onMouseLeave = (event: PointerEvent) => {
+	function _onMouseLeave(event: PointerEvent) {
 		// We never want this to trigger on 'touch' or 'pen' inputs.
 		if (TouchablePointerTypes.includes(event.pointerType)) {
 			return;
 		}
 
-		this.isActive = false;
-		_assignActiveTooltip(this);
-	};
+		state.isActive = false;
+		_assignActiveTooltip(state);
+	}
 
-	private onClick = (event: Event) => {
-		if (this.touchable) {
-			this.isActive = !this.isActive;
+	function _onClick(event: Event) {
+		if (state.touchable) {
+			state.isActive = !state.isActive;
 			// Prevent 'AppShellAccountPopover' from opening wallet balance link.
 			event.preventDefault();
 			// Prevent 'AppPostControlsStats' from opening post view.
 			event.stopPropagation();
 		} else {
-			this.isActive = false;
+			state.isActive = false;
 		}
 
-		_assignActiveTooltip(this);
-	};
-
-	private onFocusOut = () => {
-		this.isActive = false;
-	};
-
-	destroy() {
-		this.el.removeEventListener('pointerenter', this.onMouseEnter);
-		this.el.removeEventListener('pointerleave', this.onMouseLeave);
-		this.el.removeEventListener('click', this.onClick);
-		this.el.removeEventListener('focusout', this.onFocusOut);
-		this.isActive = false;
-	}
-}
-
-let _tooltipApp: null | App = null;
-const _tooltipController = ref<null | TooltipController>(null);
-
-function _getTooltipSingleton() {
-	if (!_tooltipApp) {
-		// TODO(vue3): i have no clue if this will work...
-		_tooltipApp = createApp(AppTooltip, {
-			controller: computed(() => _tooltipController.value),
-		});
-
-		// Mount it into the DOM.
-		_tooltipApp.mount(document.body);
+		_assignActiveTooltip(state);
 	}
 
-	return _tooltipController;
+	function _onFocusOut() {
+		state.isActive = false;
+	}
+
+	return state;
 }
+
+const _activeTooltip = ref<null | TooltipController>(null);
 
 function _assignActiveTooltip(tooltip: TooltipController) {
-	_getTooltipSingleton().value = tooltip;
+	_activeTooltip.value = tooltip;
+}
+
+export function getActiveTooltip() {
+	return _activeTooltip.value;
 }

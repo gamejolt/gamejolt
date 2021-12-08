@@ -1,5 +1,9 @@
 import { Directive } from 'vue';
-import { TooltipController, TooltipDirectiveValue } from './tooltip-controller';
+import {
+	makeTooltipController,
+	TooltipController,
+	TooltipDirectiveValue,
+} from './tooltip-controller';
 
 const state = new WeakMap<HTMLElement, TooltipController>();
 
@@ -10,7 +14,7 @@ const state = new WeakMap<HTMLElement, TooltipController>();
  */
 export const AppTooltip: Directive<HTMLElement, TooltipDirectiveValue> = {
 	beforeMount(el, binding) {
-		const tooltip = new TooltipController(el, binding);
+		const tooltip = makeTooltipController(el, binding);
 		state.set(el, tooltip);
 	},
 	updated(el, binding) {

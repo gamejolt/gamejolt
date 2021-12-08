@@ -1,6 +1,8 @@
 <script lang="ts" src="./shell"></script>
 
 <template>
+	<app-tooltip-portal />
+
 	<app-scroll-inview-parent>
 		<slot />
 
