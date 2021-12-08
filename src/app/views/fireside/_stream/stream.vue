@@ -40,7 +40,7 @@
 		<div
 			v-if="hasOverlayItems"
 			class="-overlay"
-			:class="{ '-darken': shouldShowUI }"
+			:class="{ '-darken': shouldDarkenAll }"
 			@click.capture="onOverlayTap"
 		>
 			<template v-if="shouldShowUI">
@@ -56,7 +56,11 @@
 				</template>
 
 				<div class="-overlay-inner">
-					<div v-if="hasHeader" class="-overlay-top -control">
+					<div
+						v-if="hasHeader"
+						class="-overlay-top -control"
+						:class="{ '-fade-top': !shouldDarkenAll }"
+					>
 						<div style="flex: auto; overflow: hidden">
 							<app-fireside-header is-overlay />
 							<div class="-overlay-members">
@@ -73,36 +77,43 @@
 
 					<div class="-flex-spacer" />
 
-					<div class="-overlay-bottom -control" @click.stop>
-						<div class="-video-controls">
-							<div v-if="hasVideo">
-								<app-button
-									circle
-									trans
-									overlay
-									:icon="videoPaused ? 'play' : 'pause'"
-									@click.capture.stop="togglePlayback"
-								/>
-							</div>
+					<div
+						:class="{
+							'-fade-bottom': !shouldDarkenAll,
+						}"
+					>
+						<div class="-overlay-bottom -control" @click.stop>
+							<div class="-video-controls">
+								<div v-if="hasVideo && !hasHosts">
+									<app-button
+										circle
+										trans
+										overlay
+										:icon="videoPaused ? 'play' : 'pause'"
+										@click.capture.stop="togglePlayback"
+									/>
+								</div>
 
-							<div v-if="hasVolumeControls" class="-volume">
-								<app-jolticon icon="audio" />
-								<app-slider
-									class="-volume-slider"
-									:percent="desktopVolume"
-									@scrub="onVolumeScrub"
-								/>
+								<div v-if="hasVolumeControls" class="-volume">
+									<app-jolticon icon="audio" />
+									<app-slider
+										class="-volume-slider"
+										:percent="desktopVolume"
+										@scrub="onVolumeScrub"
+									/>
+								</div>
 							</div>
 						</div>
-					</div>
 
-					<app-fireside-host-list
-						v-if="hasHosts"
-						class="-hosts"
-						hide-thumb-options
-						@show-popper="onHostOptionsShow"
-						@hide-popper="onHostOptionsHide"
-					/>
+						<app-fireside-host-list
+							v-if="hasHosts"
+							class="-hosts"
+							hide-thumb-options
+							:show-playback="hasVideo"
+							@show-popper="onHostOptionsShow"
+							@hide-popper="onHostOptionsHide"
+						/>
+					</div>
 				</div>
 			</template>
 		</div>
@@ -140,6 +151,8 @@
 @import '~styles-lib/mixins'
 
 $-text-shadow = 1px 1px 3px rgba($black, 0.5)
+$-overlay-bg = rgba($black, 0.5)
+$-base-padding = 8px
 $-z-overlay = 1
 $-z-control = 3
 $-z-combo = 2
@@ -161,12 +174,11 @@ $-z-combo = 2
 
 	> .-overlay
 		z-index: $-z-overlay
-		opacity: 0
-		transition: all 200ms $strong-ease-out
+		background-color: transparent
+		transition: background-color 200ms $strong-ease-out
 
 		&.-darken
-			opacity: 1
-			background-color: rgba($black, 0.5)
+			background-color: $-overlay-bg
 
 .-click-target
 	cursor: pointer
@@ -176,7 +188,7 @@ $-z-combo = 2
 	width: 100%
 	display: flex
 	flex-direction: column
-	padding: 8px
+	padding: $-base-padding
 
 	> *
 		z-index: $-z-control
@@ -211,6 +223,28 @@ $-z-combo = 2
 	display: flex
 	align-items: flex-end
 	width: min-content
+
+.-fade-top
+.-fade-bottom
+	position: relative
+	background-color: $-overlay-bg
+	margin: -($-base-padding)
+	padding: $-base-padding
+
+	&::after
+		content: ''
+		position: absolute
+		left: 0
+		right: 0
+		height: $-base-padding
+
+.-fade-top::after
+	bottom: -($-base-padding)
+	background: linear-gradient(to bottom, $-overlay-bg, rgba($black, 0))
+
+.-fade-bottom::after
+	top: -($-base-padding)
+	background: linear-gradient(to top, $-overlay-bg, rgba($black, 0))
 
 .-control
 	&

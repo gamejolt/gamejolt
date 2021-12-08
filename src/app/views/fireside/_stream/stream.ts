@@ -120,6 +120,17 @@ export default class AppFiresideStream extends Vue {
 		return this.hasVideo && this.c.rtc?.videoChannel.isConnected !== true;
 	}
 
+	// When we want to darken the whole stream overlay instead of only sections.
+	get shouldDarkenAll() {
+		if (!this.shouldShowUI) {
+			return false;
+		}
+
+		// If we're displaying any of this large content, or we're paused,
+		// darken the whole overlay instead of individual rows.
+		return this.videoPaused || this.hasHeader || this.hasHosts;
+	}
+
 	get shouldPlayDesktopAudio() {
 		if (!this.c.rtc) {
 			return false;
