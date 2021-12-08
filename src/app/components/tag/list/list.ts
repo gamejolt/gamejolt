@@ -28,7 +28,6 @@ const FeaturedTags = [
 	'puzzle',
 	'strategy',
 	'sports',
-	'adult',
 ];
 
 @Component({
