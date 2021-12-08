@@ -16,7 +16,7 @@
 			<div class="score-list-content">
 				<div class="score-list-rank">
 					<span class="score-list-rank-sign">#</span>
-					{{ ((startRank || 1) + (step ? i * step : i)) | number }}
+					{{ number((startRank || 1) + (step ? i * step : i)) }}
 				</div>
 				<div class="score-list-title" :title="score.score">
 					{{ score.score }}

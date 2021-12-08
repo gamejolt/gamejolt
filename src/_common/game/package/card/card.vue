@@ -9,13 +9,13 @@
 					-{{ salePercentageOff }}%
 				</span>
 				<strong class="game-package-card-pricing-amount">
-					{{ pricing.amount | currency }}
+					{{ currency(pricing.amount) }}
 				</strong>
 				<span
 					v-if="sale"
 					class="game-package-card-pricing-amount game-package-card-pricing-amount-old"
 				>
-					{{ saleOldPricing.amount | currency }}
+					{{ currency(saleOldPricing.amount) }}
 				</span>
 			</div>
 
@@ -186,7 +186,7 @@
 			<div class="package-card-well">
 				<div v-for="build of builds" :key="build.id">
 					{{ build.primary_file.filename }}
-					<small class="text-muted">({{ build.primary_file.filesize | filesize }})</small>
+					<small class="text-muted">({{ filesize(build.primary_file.filesize) }})</small>
 
 					<span
 						v-for="os of ['windows', 'mac', 'linux', 'other']"

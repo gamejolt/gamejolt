@@ -1,3 +1,5 @@
+<script lang="ts" src="./view"></script>
+
 <template>
 	<div v-if="isRouteBootstrapped">
 		<h2 class="section-header">
@@ -65,14 +67,14 @@
 						<th>
 							<translate>dash.games.scores.view.sort_label</translate>
 						</th>
-						<td>{{ score.sort | number }}</td>
+						<td>{{ number(score.sort) }}</td>
 					</tr>
 					<tr>
 						<th>
 							<translate>dash.games.scores.view.date_label</translate>
 						</th>
 						<td>
-							{{ score.logged_on | date('medium') }}
+							{{ date(score.logged_on, 'medium') }}
 						</td>
 					</tr>
 					<tr>
@@ -80,10 +82,7 @@
 							<translate>dash.games.scores.view.data_label</translate>
 						</th>
 						<td>
-							<pre v-if="score.extra_data" class="small">
-							{{ score.extra_data }}
-						</pre
-							>
+							<pre v-if="score.extra_data" class="small">{{ score.extra_data }}</pre>
 							<span v-else class="small text-muted">
 								<translate>dash.games.scores.view.data_none_help</translate>
 							</span>
@@ -94,5 +93,3 @@
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./view"></script>

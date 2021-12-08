@@ -2,7 +2,7 @@ import { Inject, Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../_common/api/api.service';
 import { CommunityActivityItem } from '../../../../../../_common/community/activity-item/activity-item.model';
 import AppCommunityActivityItem from '../../../../../../_common/community/activity-item/activity-item.vue';
-import { date } from '../../../../../../_common/filters/date';
+import { formatDate } from '../../../../../../_common/filters/date';
 import AppLoading from '../../../../../../_common/loading/loading.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
@@ -22,9 +22,6 @@ type ActivityItem = {
 		AppCommunityActivityItem,
 		AppLoading,
 	},
-	filters: {
-		date,
-	},
 })
 @RouteResolver({
 	deps: { params: ['id'] },
@@ -39,6 +36,8 @@ export default class RouteCommunitiesViewEditActivity extends BaseRouteComponent
 	items: ActivityItem[] = [];
 	isAtEnd = false;
 	isLoading = false;
+
+	readonly date = formatDate;
 
 	routeResolved($payload: any) {
 		this.handlePayload($payload);
@@ -94,7 +93,10 @@ export default class RouteCommunitiesViewEditActivity extends BaseRouteComponent
 				// Compare to the last item in the list.
 				// When it's a different day, have a full split (user and time).
 				const lastItem = this.items[this.items.length - 1].item;
-				if (date(lastItem.added_on, 'mediumDate') !== date(item.added_on, 'mediumDate')) {
+				if (
+					formatDate(lastItem.added_on, 'mediumDate') !==
+					formatDate(item.added_on, 'mediumDate')
+				) {
 					newItem.timesplit = true;
 					newItem.usersplit = true;
 				} else {

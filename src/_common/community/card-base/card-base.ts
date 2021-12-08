@@ -2,7 +2,7 @@ import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
 import { trackGotoCommunity } from '../../analytics/analytics.service';
 import { Environment } from '../../environment/environment.service';
-import { number } from '../../filters/number';
+import { formatNumber } from '../../filters/number';
 import { AppState, AppStore } from '../../store/app-store';
 import { AppTheme } from '../../theme/theme';
 import { Community, isEditingCommunity } from '../community.model';
@@ -25,7 +25,7 @@ export default class AppCommunityCardBase extends Vue {
 
 	@AppState user!: AppStore['user'];
 
-	readonly number = number;
+	readonly number = formatNumber;
 	readonly Environment = Environment;
 
 	get memberCount() {

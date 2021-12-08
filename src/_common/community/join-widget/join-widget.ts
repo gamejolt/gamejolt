@@ -4,7 +4,7 @@ import { GridClient } from '../../../app/components/grid/client.service';
 import { Store } from '../../../app/store';
 import { CommunityJoinLocation } from '../../analytics/analytics.service';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
-import { number } from '../../filters/number';
+import { formatNumber } from '../../filters/number';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { AppStore } from '../../store/app-store';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
@@ -41,7 +41,7 @@ export default class AppCommunityJoinWidget extends Vue {
 
 	get badge() {
 		return !this.hideCount && this.community.member_count
-			? number(this.community.member_count)
+			? formatNumber(this.community.member_count)
 			: '';
 	}
 

@@ -4,7 +4,7 @@ import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { getDeviceArch, getDeviceOS } from '../../../../../_common/device/device.service';
 import AppExpand from '../../../../../_common/expand/expand.vue';
-import { filesize } from '../../../../../_common/filters/filesize';
+import { formatFilesize } from '../../../../../_common/filters/filesize';
 import { GameBuild } from '../../../../../_common/game/build/build.model';
 import { Game } from '../../../../../_common/game/game.model';
 import { GamePackageCardModel } from '../../../../../_common/game/package/card/card.model';
@@ -34,9 +34,6 @@ import {
 	},
 	directives: {
 		AppTooltip,
-	},
-	filters: {
-		filesize,
 	},
 })
 export default class AppClientPackageCardButtons extends Vue {
@@ -76,6 +73,7 @@ export default class AppClientPackageCardButtons extends Vue {
 
 	readonly PatchState = LocalDbPackagePatchState;
 	readonly RemoveState = LocalDbPackageRemoveState;
+	readonly filesize = formatFilesize;
 
 	@Emit('click')
 	emitClick(_data: { build: GameBuild; fromExtraSection?: boolean }) {}

@@ -1,5 +1,5 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { number } from '../../../../../_common/filters/number';
+import { formatNumber } from '../../../../../_common/filters/number';
 import AppListGroupSelector from '../../../../../_common/list-group/selector/selector.vue';
 import { RouteStore, RouteStoreModule } from '../../profile.store';
 
@@ -12,9 +12,6 @@ export type TrophyNavGame = {
 @Options({
 	components: {
 		AppListGroupSelector,
-	},
-	filters: {
-		number,
 	},
 })
 export default class AppProfileTrophiesNav extends Vue {
@@ -29,6 +26,8 @@ export default class AppProfileTrophiesNav extends Vue {
 
 	@RouteStoreModule.State
 	trophyCount!: RouteStore['trophyCount'];
+
+	readonly number = formatNumber;
 
 	get hasGames() {
 		return this.games.length > 0;

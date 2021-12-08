@@ -1,5 +1,5 @@
 import { Options, Prop } from 'vue-property-decorator';
-import { number } from '../../../../../_common/filters/number';
+import { formatNumber } from '../../../../../_common/filters/number';
 import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
 import { BaseForm, FormOnInit, FormOnLoad } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
@@ -18,7 +18,7 @@ export default class FormGameSong extends BaseForm<GameSong> implements FormOnIn
 
 	maxFilesize = 0;
 
-	number = number;
+	readonly number = formatNumber;
 
 	get loadUrl() {
 		return `/web/dash/developer/games/music/save/${this.game.id}`;

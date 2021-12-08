@@ -1,7 +1,7 @@
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import AppExpand from '../../../../../../../_common/expand/expand.vue';
-import { number } from '../../../../../../../_common/filters/number';
+import { formatNumber } from '../../../../../../../_common/filters/number';
 import { Game } from '../../../../../../../_common/game/game.model';
 import AppGraphWidget from '../../../../../../../_common/graph/widget/widget.vue';
 import AppProgressBar from '../../../../../../../_common/progress/bar/bar.vue';
@@ -30,9 +30,6 @@ import { RouteStore, RouteStoreModule } from '../../manage.store';
 	},
 	directives: {
 		AppTooltip,
-	},
-	filters: {
-		number,
 	},
 })
 @RouteResolver({
@@ -64,6 +61,7 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 	hasBuildsProcessing = false;
 
 	readonly Game = Game;
+	readonly number = formatNumber;
 
 	get routeTitle() {
 		if (this.game) {
@@ -87,7 +85,7 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 			return '-';
 		}
 
-		return number(this.likeCount / this.voteCount, {
+		return formatNumber(this.likeCount / this.voteCount, {
 			style: 'percent',
 			maximumFractionDigits: 2,
 		});

@@ -2,7 +2,7 @@ import { Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { propOptional, propRequired } from '../../../../utils/vue';
 import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
-import { number } from '../../../../_common/filters/number';
+import { formatNumber } from '../../../../_common/filters/number';
 import { Game } from '../../../../_common/game/game.model';
 import { PollItem } from '../../../../_common/poll/item/item.model';
 import { Poll } from '../../../../_common/poll/poll.model';
@@ -32,7 +32,7 @@ export default class AppPollVoting extends Vue {
 	now = Date.now();
 	private dateRefresh: NodeJS.Timer | null = null;
 
-	readonly number = number;
+	readonly number = formatNumber;
 
 	get shouldObscureResults() {
 		return this.poll.is_private && !this.isOwner;

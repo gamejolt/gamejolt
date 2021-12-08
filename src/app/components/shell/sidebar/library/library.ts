@@ -5,7 +5,7 @@ import { shouldShowAppPromotion } from '../../../../../utils/mobile-app';
 import { trackAppPromotionClick } from '../../../../../_common/analytics/analytics.service';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import AppExpand from '../../../../../_common/expand/expand.vue';
-import { number } from '../../../../../_common/filters/number';
+import { formatNumber } from '../../../../../_common/filters/number';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
 import AppShortkey from '../../../../../_common/shortkey/shortkey.vue';
@@ -46,11 +46,11 @@ export default class AppShellSidebarLibrary extends Vue {
 	readonly trackAppPromotionClick = trackAppPromotionClick;
 
 	get collectionsLength() {
-		return number(this.collections.length);
+		return formatNumber(this.collections.length);
 	}
 
 	get bundleCollectionsLength() {
-		return number(this.bundleCollections.length);
+		return formatNumber(this.bundleCollections.length);
 	}
 
 	get filteredBundleCollections() {

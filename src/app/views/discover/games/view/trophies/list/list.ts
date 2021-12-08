@@ -1,7 +1,7 @@
 import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../../../../../_common/api/api.service';
-import { number } from '../../../../../../../_common/filters/number';
+import { formatNumber } from '../../../../../../../_common/filters/number';
 import { GameTrophy } from '../../../../../../../_common/game/trophy/trophy.model';
 import AppNavTabList from '../../../../../../../_common/nav/tab-list/tab-list.vue';
 import {
@@ -20,9 +20,6 @@ import { RouteStore, RouteStoreModule } from '../../view.store';
 		AppTrophyCompletion,
 		AppTrophyList,
 		AppNavTabList,
-	},
-	filters: {
-		number,
 	},
 })
 @RouteResolver({
@@ -49,6 +46,8 @@ export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteCompone
 	};
 
 	currentFilter = 'all';
+
+	readonly number = formatNumber;
 
 	get routeTitle() {
 		if (this.game) {

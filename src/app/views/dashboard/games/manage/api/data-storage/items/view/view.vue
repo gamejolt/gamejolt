@@ -1,3 +1,5 @@
+<script lang="ts" src="./view"></script>
+
 <template>
 	<div v-if="isRouteBootstrapped">
 		<h2 class="section-header">
@@ -27,7 +29,7 @@
 							<translate>dash.games.data_store.items.view.date_label</translate>
 						</th>
 						<td>
-							{{ item.posted_on | date('medium') }}
+							{{ date(item.posted_on, 'medium') }}
 						</td>
 					</tr>
 					<tr>
@@ -43,5 +45,3 @@
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./view"></script>

@@ -15,7 +15,7 @@ import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/im
 import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/verified-tick.vue';
 import AppEditableOverlay from '../../../../_common/editable-overlay/editable-overlay.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
-import { number } from '../../../../_common/filters/number';
+import { formatNumber } from '../../../../_common/filters/number';
 import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
@@ -116,7 +116,7 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	}
 
 	get communityMemberCount() {
-		return number(this.community.member_count);
+		return formatNumber(this.community.member_count);
 	}
 
 	get isEditing() {

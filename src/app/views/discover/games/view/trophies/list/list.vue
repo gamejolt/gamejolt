@@ -19,10 +19,13 @@
 						<app-nav-tab-list v-if="filteredTrophies.achieved.length">
 							<ul>
 								<li>
-									<a :class="{ active: currentFilter === 'all' }" @click="currentFilter = 'all'">
+									<a
+										:class="{ active: currentFilter === 'all' }"
+										@click="currentFilter = 'all'"
+									>
 										<translate>game.trophies.all_tab</translate>
 										<span class="badge hidden-xs">
-											{{ trophies.length | number }}
+											{{ number(trophies.length) }}
 										</span>
 									</a>
 								</li>
@@ -33,7 +36,7 @@
 									>
 										<translate>game.trophies.achieved_tab</translate>
 										<span class="badge hidden-xs">
-											{{ filteredTrophies.achieved.length | number }}
+											{{ number(filteredTrophies.achieved.length) }}
 										</span>
 									</a>
 								</li>
@@ -44,7 +47,7 @@
 									>
 										<translate>game.trophies.unachieved_tab</translate>
 										<span class="badge hidden-xs">
-											{{ filteredTrophies.unachieved.length | number }}
+											{{ number(filteredTrophies.unachieved.length) }}
 										</span>
 									</a>
 								</li>
@@ -56,7 +59,9 @@
 						</div>
 
 						<app-trophy-list
-							:trophies="currentFilter === 'all' ? trophies : filteredTrophies[currentFilter]"
+							:trophies="
+								currentFilter === 'all' ? trophies : filteredTrophies[currentFilter]
+							"
 							:achieved="achieved"
 						/>
 					</div>

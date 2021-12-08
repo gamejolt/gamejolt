@@ -1,7 +1,7 @@
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
-import { currency } from '../../../../_common/filters/currency';
+import { formatCurrency } from '../../../../_common/filters/currency';
 import AppForm from '../../../../_common/form-vue/form';
 import {
 	BaseForm,
@@ -37,9 +37,6 @@ interface FormModel {
 	directives: {
 		AppTooltip,
 	},
-	filters: {
-		currency,
-	},
 })
 export default class FormFinancials
 	extends BaseForm<FormModel>
@@ -65,7 +62,7 @@ export default class FormFinancials
 	maxPayout = 0;
 	minWithdraw = 0;
 
-	currency = currency;
+	readonly currency = formatCurrency;
 
 	get loadUrl() {
 		return `/web/dash/financials/save`;

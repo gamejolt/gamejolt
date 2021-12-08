@@ -1,7 +1,7 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { propOptional } from '../../../../../utils/vue';
-import { number } from '../../../../../_common/filters/number';
+import { formatNumber } from '../../../../../_common/filters/number';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { SidebarState, SidebarStore } from '../../../../../_common/sidebar/sidebar.store';
 import { Store } from '../../../../store/index';
@@ -20,7 +20,7 @@ export default class AppShellCbarItem extends Vue {
 	readonly Screen = Screen;
 
 	get notificationCountText() {
-		return this.notificationCount > 99 ? '99+' : number(this.notificationCount);
+		return this.notificationCount > 99 ? '99+' : formatNumber(this.notificationCount);
 	}
 
 	// We want a context indicator only for non-control items that are the current active item (selected or active route).

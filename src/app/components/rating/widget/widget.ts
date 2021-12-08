@@ -1,7 +1,7 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
-import { fuzzynumber } from '../../../../_common/filters/fuzzynumber';
+import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import { Game } from '../../../../_common/game/game.model';
 import { GameRating } from '../../../../_common/game/rating/rating.model';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
@@ -22,9 +22,6 @@ export const onRatingWidgetChange = new EventTopic<RatingWidgetOnChangePayload>(
 		AppAuthRequired,
 		AppTooltip,
 	},
-	filters: {
-		fuzzynumber,
-	},
 })
 export default class AppRatingWidget extends Vue {
 	@Prop(Game)
@@ -38,6 +35,8 @@ export default class AppRatingWidget extends Vue {
 
 	@Prop(String)
 	eventLabel?: string;
+
+	readonly fuzzynumber = formatFuzzynumber;
 
 	get hasLiked() {
 		return this.userRating && this.userRating.rating === GameRating.RATING_LIKE;

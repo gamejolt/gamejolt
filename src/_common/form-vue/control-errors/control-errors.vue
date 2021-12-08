@@ -1,6 +1,6 @@
 <script lang="ts">
 import { computed, inject, InjectionKey, provide, reactive } from 'vue';
-import { number } from '../../filters/number';
+import { formatNumber } from '../../filters/number';
 import { useForm } from '../form.service';
 import { useFormControlGroup } from '../group/group.vue';
 
@@ -122,11 +122,13 @@ function _processMessage(rule: string, label: string) {
 	// This way we can message on it better.
 	switch (rule) {
 		case 'max':
-			message = 'Please enter a {} shorter than or equal to ' + number(data) + ' characters.';
+			message =
+				'Please enter a {} shorter than or equal to ' + formatNumber(data) + ' characters.';
 			break;
 
 		case 'min':
-			message = 'Please enter a {} longer than or equal to ' + number(data) + ' characters.';
+			message =
+				'Please enter a {} longer than or equal to ' + formatNumber(data) + ' characters.';
 			break;
 
 		case 'pattern':
@@ -142,7 +144,7 @@ function _processMessage(rule: string, label: string) {
 		case 'filesize':
 			message =
 				'The chosen {} exceeds the maximum file size of ' +
-				number(data / 1024 / 1024) +
+				formatNumber(data / 1024 / 1024) +
 				'MB.';
 			break;
 
@@ -154,14 +156,15 @@ function _processMessage(rule: string, label: string) {
 				if (width && height) {
 					message =
 						'The dimensions of your {} must be exactly ' +
-						number(width) +
+						formatNumber(width) +
 						'x' +
-						number(height) +
+						formatNumber(height) +
 						'px.';
 				} else if (width) {
-					message = 'The width of your {} must be exactly ' + number(width) + 'px.';
+					message = 'The width of your {} must be exactly ' + formatNumber(width) + 'px.';
 				} else if (height) {
-					message = 'The height of your {} must be exactly ' + number(height) + 'px.';
+					message =
+						'The height of your {} must be exactly ' + formatNumber(height) + 'px.';
 				}
 			}
 			break;
@@ -175,21 +178,21 @@ function _processMessage(rule: string, label: string) {
 					message =
 						'What is this, a center for ants!? ' +
 						'The dimensions of your {} must be at least ' +
-						number(width) +
+						formatNumber(width) +
 						'x' +
-						number(height) +
+						formatNumber(height) +
 						'px.';
 				} else if (width) {
 					message =
 						'What is this, a center for ants!? ' +
 						'The width of your {} must be at least ' +
-						number(width) +
+						formatNumber(width) +
 						'px.';
 				} else if (height) {
 					message =
 						'What is this, a center for ants!? ' +
 						'The height of your {} must be at least ' +
-						number(height) +
+						formatNumber(height) +
 						'px.';
 				}
 			}
@@ -204,21 +207,21 @@ function _processMessage(rule: string, label: string) {
 					message =
 						'Your {} is too large. ' +
 						'The dimensions must be no greater than ' +
-						number(width) +
+						formatNumber(width) +
 						'x' +
-						number(height) +
+						formatNumber(height) +
 						'px.';
 				} else if (width) {
 					message =
 						'Your {} is too wide. ' +
 						'The width must be no greater than ' +
-						number(width) +
+						formatNumber(width) +
 						'px.';
 				} else if (height) {
 					message =
 						'Your {} is too tall. ' +
 						'The height must be no greater than ' +
-						number(height) +
+						formatNumber(height) +
 						'px.';
 				}
 			}
@@ -228,7 +231,7 @@ function _processMessage(rule: string, label: string) {
 			message =
 				'Your {} has an incorrect aspect ratio. ' +
 				'Its width divided by height must be exactly ' +
-				number(data) +
+				formatNumber(data) +
 				'.';
 			break;
 
@@ -236,7 +239,7 @@ function _processMessage(rule: string, label: string) {
 			message =
 				'Your {} has an incorrect aspect ratio. ' +
 				'Its width divided by height must be at least ' +
-				number(data) +
+				formatNumber(data) +
 				'.';
 			break;
 
@@ -244,7 +247,7 @@ function _processMessage(rule: string, label: string) {
 			message =
 				'Your {} has an incorrect aspect ratio. ' +
 				'Its width divided by height must be no greater than ' +
-				number(data) +
+				formatNumber(data) +
 				'.';
 			break;
 	}

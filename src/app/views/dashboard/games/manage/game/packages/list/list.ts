@@ -4,7 +4,7 @@ import { Api } from '../../../../../../../../_common/api/api.service';
 import AppCardListDraggable from '../../../../../../../../_common/card/list/draggable/draggable.vue';
 import AppCardListItem from '../../../../../../../../_common/card/list/item/item.vue';
 import AppCardList from '../../../../../../../../_common/card/list/list.vue';
-import { currency } from '../../../../../../../../_common/filters/currency';
+import { formatCurrency } from '../../../../../../../../_common/filters/currency';
 import { GamePackage } from '../../../../../../../../_common/game/package/package.model';
 import { showSuccessGrowl } from '../../../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
@@ -31,9 +31,6 @@ import { RouteStore, RouteStoreModule } from '../../../manage.store';
 	directives: {
 		AppTooltip,
 	},
-	filters: {
-		currency,
-	},
 })
 @RouteResolver({
 	deps: {},
@@ -47,7 +44,8 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 	packages: GamePackage[] = [];
 	sellables: { [x: number]: Sellable } = {};
 
-	GamePackage = GamePackage;
+	readonly GamePackage = GamePackage;
+	readonly currency = formatCurrency;
 
 	get hasAllPerms() {
 		return this.game.hasPerms('all');

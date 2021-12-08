@@ -1,6 +1,6 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
-import { date } from '../../filters/date';
+import { formatDate } from '../../filters/date';
 import { AppTimeAgo } from '../../time/ago/ago';
 import AppTimelineListItem from '../../timeline-list/item/item.vue';
 import AppUserCardHover from '../../user/card/hover/hover.vue';
@@ -29,5 +29,5 @@ export default class AppMessageThreadItem extends Vue {
 	@Prop(propOptional(Boolean, false)) isShowingReplies!: boolean;
 	@Prop(propOptional(Boolean, false)) isBlocked!: boolean;
 
-	dateFilter = date;
+	readonly formatDate = formatDate;
 }

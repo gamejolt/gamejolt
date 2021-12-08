@@ -3,7 +3,7 @@ import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../utils/vue';
 import { ContentRules } from '../../../../../../_common/content/content-editor/content-rules';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
-import { date } from '../../../../../../_common/filters/date';
+import { formatDate } from '../../../../../../_common/filters/date';
 import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import { Popper } from '../../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../../_common/popper/popper.vue';
@@ -36,9 +36,6 @@ export interface ChatMessageEditEvent {
 	directives: {
 		AppTooltip,
 	},
-	filters: {
-		date,
-	},
 })
 export default class AppChatWindowOutputItem extends Vue {
 	@Prop(ChatMessage) message!: ChatMessage;
@@ -51,13 +48,12 @@ export default class AppChatWindowOutputItem extends Vue {
 	@ThemeState theme?: ThemeStore['theme'];
 	@ThemeState isDark?: ThemeStore['isDark'];
 
-	readonly date = date;
-	readonly ChatMessage = ChatMessage;
-	readonly displayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 });
-
 	singleLineMode = true;
 	messageOptionsVisible = false;
 
+	readonly date = formatDate;
+	readonly ChatMessage = ChatMessage;
+	readonly displayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 });
 	readonly Screen = Screen;
 
 	get actualTheme() {
@@ -78,8 +74,8 @@ export default class AppChatWindowOutputItem extends Vue {
 
 	get loggedOn() {
 		return {
-			template: date(this.message.logged_on, 'shortTime'),
-			tooltip: date(this.message.logged_on, 'medium'),
+			template: formatDate(this.message.logged_on, 'shortTime'),
+			tooltip: formatDate(this.message.logged_on, 'medium'),
 		};
 	}
 
@@ -113,7 +109,7 @@ export default class AppChatWindowOutputItem extends Vue {
 		if (this.message.edited_on) {
 			return {
 				display: '(edited)',
-				tooltip: date(this.message.edited_on!, 'medium'),
+				tooltip: formatDate(this.message.edited_on!, 'medium'),
 			};
 		}
 

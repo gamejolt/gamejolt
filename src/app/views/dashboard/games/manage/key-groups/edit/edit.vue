@@ -38,38 +38,42 @@
 						<strong><translate>Viewed</translate></strong>
 					</h5>
 					<p>
-						{{ keyGroup.viewed_count || 0 | number }} /
-						{{ keyGroup.key_count || 0 | number }}
+						{{ number(keyGroup.viewed_count || 0) }} /
+						{{ number(keyGroup.key_count || 0) }}
 						<small>
 							({{
-								(keyGroup.viewed_count / keyGroup.key_count)
-									| number({ style: 'percent', maximumFractionDigits: 2 })
+								number((keyGroup.viewed_count || 0) / (keyGroup.key_count || 0), {
+									style: 'percent',
+									maximumFractionDigits: 2,
+								})
 							}})
 						</small>
 					</p>
 
 					<app-progress-bar
 						thin
-						:percent="(keyGroup.viewed_count / keyGroup.key_count) * 100"
+						:percent="((keyGroup.viewed_count || 0) / (keyGroup.key_count || 0)) * 100"
 					/>
 
 					<h5>
 						<strong><translate>Claimed</translate></strong>
 					</h5>
 					<p>
-						{{ keyGroup.claimed_count || 0 | number }} /
-						{{ keyGroup.key_count || 0 | number }}
+						{{ number(keyGroup.claimed_count || 0) }} /
+						{{ number(keyGroup.key_count || 0) }}
 						<small>
 							({{
-								(keyGroup.claimed_count / keyGroup.key_count)
-									| number({ style: 'percent', maximumFractionDigits: 2 })
+								number((keyGroup.claimed_count || 0) / (keyGroup.key_count || 0), {
+									style: 'percent',
+									maximumFractionDigits: 2,
+								})
 							}})
 						</small>
 					</p>
 
 					<app-progress-bar
 						thin
-						:percent="(keyGroup.claimed_count / keyGroup.key_count) * 100"
+						:percent="((keyGroup.claimed_count || 0) / (keyGroup.key_count || 0)) * 100"
 					/>
 
 					<hr />

@@ -23,7 +23,7 @@
 						<translate>Dislike</translate>
 					</td>
 					<td class="text-right">
-						{{ reportData.data[i] || 0 | number }}
+						{{ number(reportData.data[i] || 0) }}
 					</td>
 					<td>
 						<div
@@ -34,8 +34,10 @@
 						/>
 						<small>
 							{{
-								reportData.data[i] / reportData.total ||
-								0 | number({ style: 'percent', maximumFractionDigits: 2 })
+								number(reportData.data[i] / reportData.total || 0, {
+									style: 'percent',
+									maximumFractionDigits: 2,
+								})
 							}}
 						</small>
 					</td>

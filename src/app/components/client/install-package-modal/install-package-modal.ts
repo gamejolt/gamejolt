@@ -2,7 +2,7 @@ import { Options, Prop } from 'vue-property-decorator';
 import { arrayIndexBy } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
 import { getDeviceArch, getDeviceOS } from '../../../../_common/device/device.service';
-import { filesize } from '../../../../_common/filters/filesize';
+import { formatFilesize } from '../../../../_common/filters/filesize';
 import { GameBuild } from '../../../../_common/game/build/build.model';
 import { Game } from '../../../../_common/game/game.model';
 import AppGamePackageCard from '../../../../_common/game/package/card/card.vue';
@@ -16,9 +16,6 @@ import { ClientLibraryAction, ClientLibraryStore } from '../../../store/client-l
 		AppLoading,
 		AppGamePackageCard,
 	},
-	filters: {
-		filesize,
-	},
 })
 export default class AppClientInstallPackageModal extends BaseModal {
 	@Prop(Game) game!: Game;
@@ -27,6 +24,8 @@ export default class AppClientInstallPackageModal extends BaseModal {
 
 	isLoading = true;
 	packageData: GamePackagePayloadModel = null as any;
+
+	readonly filesize = formatFilesize;
 
 	get buildsByPackage(): { [packageId: number]: GameBuild } {
 		const builds = this.packageData.installableBuilds;

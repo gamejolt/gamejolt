@@ -2,7 +2,7 @@ import { Inject, Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { CommunityCompetitionVotingCategory } from '../../../../../../../../../_common/community/competition/voting-category/voting-category.model';
 import { Environment } from '../../../../../../../../../_common/environment/environment.service';
-import { duration } from '../../../../../../../../../_common/filters/duration';
+import { formatDuration } from '../../../../../../../../../_common/filters/duration';
 import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
@@ -39,7 +39,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends
 	isLoading = true;
 
 	readonly Environment = Environment;
-	readonly duration = duration;
+	readonly duration = formatDuration;
 
 	get channel() {
 		return this.routeStore.channel!;

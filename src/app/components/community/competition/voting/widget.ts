@@ -9,7 +9,7 @@ import { CommunityCompetitionEntry } from '../../../../../_common/community/comp
 import { CommunityCompetitionEntryVote } from '../../../../../_common/community/competition/entry/vote/vote.model';
 import { CommunityCompetitionVotingCategory } from '../../../../../_common/community/competition/voting-category/voting-category.model';
 import { Environment } from '../../../../../_common/environment/environment.service';
-import { number } from '../../../../../_common/filters/number';
+import { formatNumber } from '../../../../../_common/filters/number';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
@@ -22,9 +22,6 @@ import FormCommunityCompetitionVotingCast from '../../../forms/community/competi
 	},
 	directives: {
 		AppTooltip,
-	},
-	filters: {
-		number,
 	},
 })
 export default class AppCommunityCompetitionVotingWidget extends Vue {
@@ -41,7 +38,7 @@ export default class AppCommunityCompetitionVotingWidget extends Vue {
 
 	moreVoteResultInfoVisible = false;
 
-	readonly number = number;
+	readonly number = formatNumber;
 
 	get loginUrl() {
 		let url =

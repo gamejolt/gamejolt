@@ -4,7 +4,7 @@ import { Store } from '../../../../../auth/store/index';
 import { PostControlsLocation, trackPostLike } from '../../../../analytics/analytics.service';
 import { AppAuthRequired } from '../../../../auth/auth-required-directive';
 import { DrawerStore, DrawerStoreKey } from '../../../../drawer/drawer-store';
-import { fuzzynumber } from '../../../../filters/fuzzynumber';
+import { formatFuzzynumber } from '../../../../filters/fuzzynumber';
 import { showErrorGrowl } from '../../../../growls/growls.service';
 import { LikersModal } from '../../../../likers/modal.service';
 import { Screen } from '../../../../screen/screen-service';
@@ -51,7 +51,7 @@ export default class AppFiresidePostLikeWidget extends Vue {
 	emitChange(_value: boolean) {}
 
 	get likeCount() {
-		return fuzzynumber(this.post.like_count);
+		return formatFuzzynumber(this.post.like_count);
 	}
 
 	get liked() {

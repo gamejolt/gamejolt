@@ -1,6 +1,6 @@
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
-import { date } from '../../../../../../../../../_common/filters/date';
+import { formatDate } from '../../../../../../../../../_common/filters/date';
 import { GameDataStoreItem } from '../../../../../../../../../_common/game/data-store/item/item.model';
 import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
@@ -11,9 +11,6 @@ import { RouteStore, RouteStoreModule } from '../../../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageApiDataStorageItemsView',
-	filters: {
-		date,
-	},
 })
 @RouteResolver({
 	deps: { params: ['item'] },
@@ -30,6 +27,8 @@ export default class RouteDashGamesManageApiDataStorageItemsView extends BaseRou
 	game!: RouteStore['game'];
 
 	item: GameDataStoreItem = null as any;
+
+	readonly date = formatDate;
 
 	get routeTitle() {
 		if (this.game) {

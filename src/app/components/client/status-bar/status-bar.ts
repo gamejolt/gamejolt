@@ -1,7 +1,7 @@
 import { Options, Vue, Watch } from 'vue-property-decorator';
 import { ClientUpdater } from '../../../../_common/client/client-updater.service';
 import { Client } from '../../../../_common/client/client.service';
-import { number } from '../../../../_common/filters/number';
+import { formatNumber } from '../../../../_common/filters/number';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
 import AppClientStatusBarPatchItem from './patch-item/patch-item.vue';
@@ -12,9 +12,6 @@ import AppClientStatusBarPatchItem from './patch-item/patch-item.vue';
 	},
 	directives: {
 		AppTooltip,
-	},
-	filters: {
-		number,
 	},
 })
 export default class AppClientStatusBar extends Vue {
@@ -35,7 +32,7 @@ export default class AppClientStatusBar extends Vue {
 
 	updaterWarningDismissed = false;
 
-	readonly number = number;
+	readonly number = formatNumber;
 
 	get clientUpdateStatus() {
 		return ClientUpdater.clientUpdateStatus;

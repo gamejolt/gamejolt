@@ -4,7 +4,7 @@ import { propOptional } from '../../../../utils/vue';
 import { useAdsController } from '../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
 import { AppCondenseWhitespace } from '../../../../_common/condense-whitespace';
-import { number } from '../../../../_common/filters/number';
+import { formatNumber } from '../../../../_common/filters/number';
 import { Game } from '../../../../_common/game/game.model';
 import AppGameThumbnail from '../../../../_common/game/thumbnail/thumbnail.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -36,7 +36,7 @@ export default class AppGameGrid extends Vue {
 
 	id = ++idCounter;
 
-	readonly number = number;
+	readonly number = formatNumber;
 	readonly Screen = Screen;
 
 	get shouldShowAds() {

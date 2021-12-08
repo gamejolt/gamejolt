@@ -1,5 +1,5 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { number } from '../../../../../_common/filters/number';
+import { formatNumber } from '../../../../../_common/filters/number';
 import { Game } from '../../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
@@ -19,7 +19,7 @@ export default class AppGameListItem extends Vue {
 	@Prop(String)
 	eventLabel?: string;
 
-	number = number;
+	number = formatNumber;
 
 	get url() {
 		return this.game.getUrl();

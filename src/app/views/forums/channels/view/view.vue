@@ -34,13 +34,13 @@
 					<li class="stat-big stat-big-smaller">
 						<div class="stat-big-label">Topics</div>
 						<div class="stat-big-digit">
-							{{ channel.topics_count || 0 | number }}
+							{{ number(channel.topics_count || 0) }}
 						</div>
 					</li>
 					<li class="stat-big stat-big-smaller">
 						<div class="stat-big-label">Replies</div>
 						<div class="stat-big-digit">
-							{{ channel.replies_count || 0 | number }}
+							{{ number(channel.replies_count || 0) }}
 						</div>
 					</li>
 				</ul>

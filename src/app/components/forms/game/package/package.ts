@@ -2,8 +2,8 @@ import { addWeeks, startOfDay, startOfTomorrow } from 'date-fns';
 import { determine } from 'jstimezonedetect';
 import { Emit, Options, Prop, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
-import { currency } from '../../../../../_common/filters/currency';
-import { date } from '../../../../../_common/filters/date';
+import { formatCurrency } from '../../../../../_common/filters/currency';
+import { formatDate } from '../../../../../_common/filters/date';
 import AppFormControlDate from '../../../../../_common/form-vue/control/date/date.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
 import {
@@ -45,10 +45,6 @@ type FormGamePackageModel = GamePackage & {
 		AppGamePerms,
 		AppTimeAgo,
 	},
-	filters: {
-		date,
-		currency,
-	},
 })
 export default class FormGamePackage
 	extends BaseForm<FormGamePackageModel>
@@ -81,7 +77,9 @@ export default class FormGamePackage
 	promotionalPricing: SellablePricing | null = null;
 	timezones: { [region: string]: (TimezoneData & { label?: string })[] } = {};
 
-	GamePackage = GamePackage;
+	readonly GamePackage = GamePackage;
+	readonly date = formatDate;
+	readonly currency = formatCurrency;
 
 	@Emit('salecancel')
 	emitSaleCancel(_formModel: FormGamePackageModel) {}

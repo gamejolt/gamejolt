@@ -2,7 +2,7 @@ import { Options, Prop, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
-import { currency } from '../../../../_common/filters/currency';
+import { formatCurrency } from '../../../../_common/filters/currency';
 import { AppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';
 import { BaseForm, FormOnInit, FormOnSubmit } from '../../../../_common/form-vue/form.service';
 import { Geo, Region } from '../../../../_common/geo/geo.service';
@@ -20,9 +20,6 @@ import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 		AppTooltip,
 		AppFocusWhen,
 	},
-	filters: {
-		currency,
-	},
 })
 export default class FormPayment extends BaseForm<any> implements FormOnInit, FormOnSubmit {
 	@State app!: AppStore;
@@ -38,7 +35,7 @@ export default class FormPayment extends BaseForm<any> implements FormOnInit, Fo
 	calculatedTax = false;
 	taxAmount = 0;
 
-	ccMask = [
+	readonly ccMask = [
 		/\d/,
 		/\d/,
 		/\d/,
@@ -59,7 +56,8 @@ export default class FormPayment extends BaseForm<any> implements FormOnInit, Fo
 		/\d/,
 		/\d/,
 	];
-	expMask = [/\d/, /\d/, '/', /\d/, /\d/];
+	readonly expMask = [/\d/, /\d/, '/', /\d/, /\d/];
+	readonly currency = formatCurrency;
 
 	onInit() {
 		this.setField('country', 'us');

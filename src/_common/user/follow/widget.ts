@@ -2,7 +2,7 @@ import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { trackUserFollow, UserFollowLocation } from '../../analytics/analytics.service';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
-import { number } from '../../filters/number';
+import { formatNumber } from '../../filters/number';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { AppStore } from '../../store/app-store';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
@@ -56,7 +56,7 @@ export default class AppUserFollowWidget extends Vue {
 
 	get badge() {
 		return !this.circle && !this.hideCount && this.user.follower_count
-			? number(this.user.follower_count)
+			? formatNumber(this.user.follower_count)
 			: '';
 	}
 

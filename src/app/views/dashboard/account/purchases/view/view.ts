@@ -1,8 +1,8 @@
 import { Options } from 'vue-property-decorator';
 import { arrayGroupBy, arrayIndexBy } from '../../../../../../utils/array';
 import { Api } from '../../../../../../_common/api/api.service';
-import { currency } from '../../../../../../_common/filters/currency';
-import { date } from '../../../../../../_common/filters/date';
+import { formatCurrency } from '../../../../../../_common/filters/currency';
+import { formatDate } from '../../../../../../_common/filters/date';
 import { Game } from '../../../../../../_common/game/game.model';
 import { GamePackage } from '../../../../../../_common/game/package/package.model';
 import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
@@ -18,9 +18,6 @@ import { routeStore, RouteStore, RouteStoreModule } from '../../account.store';
 	name: 'RouteDashAccountPurchasesView',
 	components: {
 		AppGameThumbnailImg,
-	},
-	filters: {
-		currency,
 	},
 })
 @RouteResolver({
@@ -40,7 +37,8 @@ export default class RouteDashAccountPurchasesView extends BaseRouteComponent {
 
 	readonly Geo = Geo;
 	readonly OrderPayment = OrderPayment;
-	readonly date = date;
+	readonly date = formatDate;
+	readonly currency = formatCurrency;
 	readonly Screen = Screen;
 
 	get routeTitle() {

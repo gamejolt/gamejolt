@@ -233,7 +233,7 @@
 			v-if="calculatedTax && taxAmount > 0"
 			class="anim-fade-in no-animate-leave text-center"
 		>
-			+{{ taxAmount | currency }} taxes
+			+{{ currency(taxAmount) }} taxes
 			<span
 				v-app-tooltip="
 					$gettext(`We are required to collect taxes on orders for certain regions.`)
@@ -256,7 +256,7 @@
 			block
 			:disabled="!valid"
 		>
-			Pay {{ (order.amount + taxAmount) | currency }}
+			Pay {{ currency(order.amount + taxAmount) }}
 		</app-form-button>
 
 		<app-loading

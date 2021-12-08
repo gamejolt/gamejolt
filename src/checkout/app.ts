@@ -6,7 +6,7 @@ import AppContactLink from '../_common/contact-link/contact-link.vue';
 import AppCookieBanner from '../_common/cookie/banner/banner.vue';
 import { Environment } from '../_common/environment/environment.service';
 import AppErrorPage from '../_common/error/page/page.vue';
-import { date } from '../_common/filters/date';
+import { formatDate } from '../_common/filters/date';
 import AppCommonShell from '../_common/shell/shell.vue';
 import { loadCurrentLanguage } from '../_common/translate/translate.service';
 import AppUserBar from '../_common/user/user-bar/user-bar.vue';
@@ -29,9 +29,6 @@ if (GJ_IS_CLIENT) {
 
 @Options({
 	components,
-	filters: {
-		date,
-	},
 })
 export default class App extends Vue {
 	@State app!: Store['app'];
@@ -40,6 +37,7 @@ export default class App extends Vue {
 
 	readonly Connection = Connection;
 	readonly Environment = Environment;
+	readonly date = formatDate;
 
 	mounted() {
 		// Will load the user in asynchronously so that the user-bar in the

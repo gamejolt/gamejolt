@@ -2,7 +2,7 @@
 
 <template>
 	<div>
-		{{ offsetDate | date('mediumDate') }}
-		{{ offsetDate | date('shortTime') }}
+		{{ formatDate(offsetDate, 'mediumDate') }}
+		{{ formatDate(offsetDate, 'shortTime') }}
 	</div>
 </template>

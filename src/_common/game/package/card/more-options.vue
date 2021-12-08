@@ -11,9 +11,7 @@
 		>
 			<app-jolticon :icon="extraBuild.icon" />
 
-			<!--
-			We show the filename if it's an "Other" build.
-		-->
+			<!-- We show the filename if it's an "Other" build. -->
 			<template v-if="!extraBuild.build.os_other">
 				<translate v-if="extraBuild.build.type === 'downloadable'"> Download </translate>
 				<translate
@@ -34,12 +32,10 @@
 			</small>
 
 			<small class="text-muted">
-				({{ extraBuild.build.primary_file.filesize | filesize }})
+				({{ filesize(extraBuild.build.primary_file.filesize) }})
 			</small>
 
-			<!--
-			If the version is different than the main release, then show it.
-		-->
+			<!-- If the version is different than the main release, then show it. -->
 			<span v-if="extraBuild.build.game_release_id !== card.showcasedRelease.id" class="tiny">
 				<em>v{{ extraBuild.build._release.version_number }}</em>
 			</span>

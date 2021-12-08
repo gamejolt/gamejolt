@@ -4,7 +4,7 @@ import { Api } from '../../../../_common/api/api.service';
 import * as _ClientMod from '../../../../_common/client/client.service';
 import { Connection } from '../../../../_common/connection/connection-service';
 import { DrawerStore, DrawerStoreKey } from '../../../../_common/drawer/drawer-store';
-import { currency } from '../../../../_common/filters/currency';
+import { formatCurrency } from '../../../../_common/filters/currency';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { SettingThemeDark } from '../../../../_common/settings/settings.service';
@@ -30,9 +30,6 @@ if (GJ_IS_CLIENT) {
 	directives: {
 		AppTooltip,
 	},
-	filters: {
-		currency,
-	},
 })
 export default class AppShellAccountPopover extends Vue {
 	@Inject({ from: DrawerStoreKey })
@@ -47,6 +44,7 @@ export default class AppShellAccountPopover extends Vue {
 
 	readonly Screen = Screen;
 	readonly Connection = Connection;
+	readonly currency = formatCurrency;
 
 	@Action
 	logout!: Store['logout'];

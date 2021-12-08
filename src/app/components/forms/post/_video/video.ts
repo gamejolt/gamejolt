@@ -2,7 +2,7 @@ import { CancelTokenSource } from 'axios';
 import { Emit, Options, Prop, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
-import { number } from '../../../../../_common/filters/number';
+import { formatNumber } from '../../../../../_common/filters/number';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { FiresidePostVideo } from '../../../../../_common/fireside/post/video/video-model';
 import AppFormControlUploadTS from '../../../../../_common/form-vue/control/upload/upload';
@@ -76,7 +76,7 @@ export default class AppFormPostVideo
 	uploadCancelToken: CancelTokenSource | null = null;
 
 	readonly FiresidePostVideo = FiresidePostVideo;
-	readonly number = number;
+	readonly number = formatNumber;
 
 	declare $refs: {
 		form: AppFormTS;

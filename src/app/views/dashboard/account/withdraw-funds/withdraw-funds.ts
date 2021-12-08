@@ -1,8 +1,8 @@
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import AppExpand from '../../../../../_common/expand/expand.vue';
-import { currency } from '../../../../../_common/filters/currency';
-import { number } from '../../../../../_common/filters/number';
+import { formatCurrency } from '../../../../../_common/filters/currency';
+import { formatNumber } from '../../../../../_common/filters/number';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
@@ -21,15 +21,11 @@ import { routeStore, RouteStore, RouteStoreModule } from '../account.store';
 	directives: {
 		AppTooltip,
 	},
-	filters: {
-		currency,
-		number,
-	},
 })
 @RouteResolver({
 	deps: {},
 	resolver: () => Api.sendRequest('/web/dash/funds'),
-	resolveStore({}) {
+	resolveStore() {
 		routeStore.commit('setHeading', Translate.$gettext(`dash.funds.withdraw.page_title`));
 	},
 })
@@ -51,8 +47,8 @@ export default class RouteDashAccountWithdrawFunds extends BaseRouteComponent {
 	isShowingRevenueBreakdown = false;
 
 	readonly Screen = Screen;
-	readonly currency = currency;
-	readonly number = number;
+	readonly currency = formatCurrency;
+	readonly number = formatNumber;
 
 	get routeTitle() {
 		return this.heading;

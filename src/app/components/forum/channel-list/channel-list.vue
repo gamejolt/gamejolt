@@ -6,7 +6,7 @@
 			<div class="col-sm-9 col-md-7">
 				<h4>
 					<span v-if="channel.notifications_count" class="tag tag-highlight">
-						{{ channel.notifications_count || 0 | number }}
+						{{ number(channel.notifications_count || 0) }}
 					</span>
 					<router-link
 						class="link-unstyled"

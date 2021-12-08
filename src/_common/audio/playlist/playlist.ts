@@ -1,6 +1,6 @@
 import { nextTick } from 'vue';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { time } from '../../filters/time';
+import { formatTime } from '../../filters/time';
 import { GameSong } from '../../game/song/song.model';
 import { AppAudioPlayer } from '../player/player';
 import AppAudioScrubber from '../scrubber/scrubber.vue';
@@ -9,9 +9,6 @@ import AppAudioScrubber from '../scrubber/scrubber.vue';
 	components: {
 		AppAudioPlayer,
 		AppAudioScrubber,
-	},
-	filters: {
-		time,
 	},
 })
 export default class AppAudioPlaylist extends Vue {
@@ -23,6 +20,8 @@ export default class AppAudioPlaylist extends Vue {
 	currentTime = 0;
 	pausedSong: GameSong | null = null;
 	pausedSongTime = 0;
+
+	readonly time = formatTime;
 
 	declare $refs: {
 		player: AppAudioPlayer;

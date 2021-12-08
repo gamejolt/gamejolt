@@ -1,5 +1,5 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { number } from '../../../../_common/filters/number';
+import { formatNumber } from '../../../../_common/filters/number';
 import { GameTrophy } from '../../../../_common/game/trophy/trophy.model';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
@@ -14,13 +14,12 @@ import AppTrophyThumbnail from '../thumbnail/thumbnail.vue';
 	directives: {
 		AppTooltip,
 	},
-	filters: {
-		number,
-	},
 })
 export default class AppTrophyList extends Vue {
 	@Prop(Array) trophies!: GameTrophy[];
 	@Prop(Array) achieved!: UserGameTrophy[];
+
+	readonly number = formatNumber;
 
 	get achievedIndexed() {
 		return UserGameTrophy.indexAchieved(this.achieved);

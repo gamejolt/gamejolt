@@ -21,8 +21,8 @@ import {
 	DrawerStoreKey,
 	setDrawerOpen,
 } from '../../../../_common/drawer/drawer-store';
-import { fuzzynumber } from '../../../../_common/filters/fuzzynumber';
-import { number } from '../../../../_common/filters/number';
+import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
+import { formatNumber } from '../../../../_common/filters/number';
 import AppFiresidePostLikeWidget from '../../../../_common/fireside/post/like/widget/widget.vue';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -90,8 +90,8 @@ export default class AppPostControls extends Vue {
 
 	readonly GJ_IS_CLIENT!: boolean;
 	readonly Screen = Screen;
-	readonly fuzzynumber = fuzzynumber;
-	readonly number = number;
+	readonly fuzzynumber = formatFuzzynumber;
+	readonly number = formatNumber;
 
 	@Emit('post-edit') emitPostEdit() {}
 	@Emit('post-publish') emitPostPublish() {}

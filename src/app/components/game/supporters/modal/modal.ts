@@ -1,6 +1,6 @@
 import { Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
-import { number } from '../../../../../_common/filters/number';
+import { formatNumber } from '../../../../../_common/filters/number';
 import { Game } from '../../../../../_common/game/game.model';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import { BaseModal } from '../../../../../_common/modal/base';
@@ -22,7 +22,7 @@ export default class AppSupportersModal extends BaseModal {
 	@Prop(Number)
 	supporterCount!: number;
 
-	readonly number = number;
+	readonly number = formatNumber;
 
 	reachedEnd = false;
 	isLoading = false;

@@ -10,10 +10,10 @@
 			</div>
 			<div class="stat-big-digit">
 				<template v-if="reportData.fieldType === 'number'">
-					{{ reportData.data | number }}
+					{{ number(reportData.data) }}
 				</template>
 				<template v-else-if="reportData.fieldType === 'currency'">
-					{{ reportData.data | currency }}
+					{{ currency(reportData.data) }}
 				</template>
 			</div>
 		</div>

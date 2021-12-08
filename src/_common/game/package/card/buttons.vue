@@ -17,7 +17,7 @@
 				<translate>64-bit</translate>
 			</small>
 			<small class="hidden-xs">
-				({{ card.downloadableBuild.primary_file.filesize | filesize }})
+				({{ filesize(card.downloadableBuild.primary_file.filesize) }})
 			</small>
 			<app-jolticon class="jolticon-addon" :icon="card.showcasedOsIcon" />
 		</app-button>

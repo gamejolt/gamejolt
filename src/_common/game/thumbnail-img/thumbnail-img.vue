@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import { computed, PropType, ref } from 'vue';
 import { ContentFocus } from '../../content-focus/content-focus.service';
+import { AppImgResponsive } from '../../img/responsive/responsive';
 import AppMediaItemBackdrop from '../../media-item/backdrop/backdrop.vue';
 import { Screen } from '../../screen/screen-service';
 import { getVideoPlayerFromSources } from '../../video/player/controller';
+import AppVideo from '../../video/video.vue';
 import { Game } from '../game.model';
 
 const props = defineProps({
@@ -60,14 +62,14 @@ function imgLoadChange(isLoaded: boolean) {
 				<app-jolticon class="-icon" icon="game" />
 
 				<div v-if="mediaItem && !hideMedia" class="-media">
-					<app-img-responsive
+					<AppImgResponsive
 						class="-img"
 						:src="mediaItem.mediaserver_url"
 						alt=""
 						@imgloadchange="imgLoadChange"
 					/>
 
-					<app-video
+					<AppVideo
 						v-if="hasVideo && videoController"
 						class="-video"
 						:player="videoController"

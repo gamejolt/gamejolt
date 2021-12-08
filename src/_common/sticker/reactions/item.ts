@@ -1,6 +1,6 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../utils/vue';
-import { fuzzynumber } from '../../filters/fuzzynumber';
+import { formatFuzzynumber } from '../../filters/fuzzynumber';
 
 @Options({})
 export default class AppStickerReactionsItem extends Vue {
@@ -8,6 +8,6 @@ export default class AppStickerReactionsItem extends Vue {
 	@Prop(propRequired(String)) imgUrl!: string;
 
 	get displayCount() {
-		return fuzzynumber(this.count);
+		return formatFuzzynumber(this.count);
 	}
 }

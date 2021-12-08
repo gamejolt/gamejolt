@@ -2,7 +2,7 @@ import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
 import { propRequired } from '../../../../utils/vue';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
-import { number } from '../../../../_common/filters/number';
+import { formatNumber } from '../../../../_common/filters/number';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import { SettingChatGroupShowMembers } from '../../../../_common/settings/settings.service';
@@ -61,7 +61,7 @@ export default class AppChatWindow extends Vue {
 	}
 
 	get membersCount() {
-		return number(this.room.members.length);
+		return formatNumber(this.room.members.length);
 	}
 
 	addGroup() {

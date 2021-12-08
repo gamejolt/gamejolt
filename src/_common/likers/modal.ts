@@ -2,7 +2,7 @@ import { Options, Prop } from 'vue-property-decorator';
 import AppUserList from '../../app/components/user/list/list.vue';
 import { Api } from '../api/api.service';
 import { Comment } from '../comment/comment-model';
-import { number } from '../filters/number';
+import { formatNumber } from '../filters/number';
 import { FiresidePost } from '../fireside/post/post-model';
 import { Game } from '../game/game.model';
 import AppLoading from '../loading/loading.vue';
@@ -25,7 +25,7 @@ export default class AppLikesModal extends BaseModal {
 	@Prop(Object)
 	resource?: LikersResource;
 
-	readonly number = number;
+	readonly number = formatNumber;
 
 	reachedEnd = false;
 	isLoading = false;

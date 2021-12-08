@@ -1,7 +1,7 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { RawLocation } from 'vue-router';
+import { RouteLocationRaw } from 'vue-router';
 import { propRequired } from '../../../utils/vue';
-import { date } from '../../filters/date';
+import { formatDate } from '../../filters/date';
 import { Fireside } from '../../fireside/fireside.model';
 import { FiresidePost } from '../../fireside/post/post-model';
 import { Game } from '../../game/game.model';
@@ -22,9 +22,6 @@ import { CommunityActivityItem } from './activity-item.model';
 		AppTimeAgo,
 		AppUserAvatar,
 	},
-	filters: {
-		date,
-	},
 	directives: {
 		AppTooltip,
 	},
@@ -35,11 +32,11 @@ export default class AppCommunityActivityItem extends Vue {
 	@Prop(propRequired(Boolean)) showIcon!: boolean;
 
 	readonly Screen = Screen;
-	readonly date = date;
+	readonly date = formatDate;
 	readonly CommunityActivityItem = CommunityActivityItem;
 
 	get loggedOn() {
-		return date(this.item.added_on, 'medium');
+		return formatDate(this.item.added_on, 'medium');
 	}
 
 	get shouldShowIcon() {
@@ -63,15 +60,20 @@ export default class AppCommunityActivityItem extends Vue {
 	}
 
 	get isToday() {
-		return date(this.item.added_on, 'mediumDate') === date(Date.now(), 'mediumDate');
+		return (
+			formatDate(this.item.added_on, 'mediumDate') === formatDate(Date.now(), 'mediumDate')
+		);
 	}
 
 	get isYesterday() {
 		const oneDay = 24 * 60 * 60 * 1000;
-		return date(this.item.added_on, 'mediumDate') === date(Date.now() - oneDay, 'mediumDate');
+		return (
+			formatDate(this.item.added_on, 'mediumDate') ===
+			formatDate(Date.now() - oneDay, 'mediumDate')
+		);
 	}
 
-	get actionTo(): RawLocation | undefined {
+	get actionTo(): RouteLocationRaw | undefined {
 		if (this.item.action_resource instanceof FiresidePost) {
 			return this.item.action_resource.routeLocation;
 		} else if (this.item.action_resource instanceof User) {

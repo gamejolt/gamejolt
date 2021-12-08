@@ -9,7 +9,7 @@
 						</div>
 						<div class="stat-big-digit">
 							<a @click="isShowingRevenueBreakdown = !isShowingRevenueBreakdown">
-								{{ revenueTotal | currency }}
+								{{ currency(revenueTotal) }}
 							</a>
 						</div>
 					</div>
@@ -20,7 +20,7 @@
 							<translate>Pending Revenue</translate>
 						</div>
 						<div class="stat-big-digit">
-							{{ revenuePendingActivation | currency }}
+							{{ currency(revenuePendingActivation) }}
 							<app-jolticon
 								class="text-muted"
 								icon="help-circle"
@@ -38,7 +38,7 @@
 						<div class="stat-big-label">
 							<translate>Wallet Balance</translate>
 						</div>
-						<div class="stat-big-digit">{{ walletBalance | currency }}</div>
+						<div class="stat-big-digit">{{ currency(walletBalance) }}</div>
 					</div>
 				</div>
 			</div>
@@ -50,16 +50,18 @@
 						<tbody>
 							<tr>
 								<th><translate>Revenue To Date</translate></th>
-								<td class="text-right">{{ revenueTotal | currency }}</td>
+								<td class="text-right">{{ currency(revenueTotal) }}</td>
 							</tr>
 							<tr>
 								<th><translate>Pending Revenue</translate></th>
-								<td class="text-right">{{ revenuePendingActivation | currency }}</td>
+								<td class="text-right">
+									{{ currency(revenuePendingActivation) }}
+								</td>
 							</tr>
 							<tr>
 								<th><translate>Total Revenue</translate></th>
 								<td class="text-right">
-									{{ (revenueTotal + revenuePendingActivation) | currency }}
+									{{ currency(revenueTotal + revenuePendingActivation) }}
 								</td>
 							</tr>
 						</tbody>
@@ -69,11 +71,11 @@
 						<tbody>
 							<tr>
 								<th><translate>Withdrawals Processing</translate></th>
-								<td class="text-right">{{ revenuePendingWithdraw | currency }}</td>
+								<td class="text-right">{{ currency(revenuePendingWithdraw) }}</td>
 							</tr>
 							<tr>
 								<th><translate>Withdrawn To Date</translate></th>
-								<td class="text-right">{{ revenueWithdrawn | currency }}</td>
+								<td class="text-right">{{ currency(revenueWithdrawn) }}</td>
 							</tr>
 						</tbody>
 					</table>
@@ -81,11 +83,11 @@
 						<tbody>
 							<tr>
 								<th><translate>Wallet Purchases</translate></th>
-								<td class="text-right">{{ revenueSpent | currency }}</td>
+								<td class="text-right">{{ currency(revenueSpent) }}</td>
 							</tr>
 							<tr>
 								<th><translate>Wallet Balance</translate></th>
-								<td class="text-right">{{ walletBalance | currency }}</td>
+								<td class="text-right">{{ currency(walletBalance) }}</td>
 							</tr>
 						</tbody>
 					</table>

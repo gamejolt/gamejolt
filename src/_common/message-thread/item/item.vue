@@ -61,7 +61,7 @@
 						</div>
 
 						<div class="-meta-sub">
-							<small class="text-muted" :title="dateFilter(date, 'medium')">
+							<small class="text-muted" :title="formatDate(date, 'medium')">
 								<app-time-ago :date="date" />
 							</small>
 						</div>

@@ -5,7 +5,7 @@ import { Api } from '../../../api/api.service';
 import { getDeviceArch, getDeviceOS } from '../../../device/device.service';
 import { Environment } from '../../../environment/environment.service';
 import AppExpand from '../../../expand/expand.vue';
-import { currency } from '../../../filters/currency';
+import { formatCurrency } from '../../../filters/currency';
 import { AppFocusWhen } from '../../../form-vue/focus-when.directive';
 import AppForm from '../../../form-vue/form';
 import {
@@ -44,9 +44,6 @@ type CheckoutType = 'cc-stripe' | 'paypal' | 'wallet';
 	directives: {
 		AppTooltip,
 		AppFocusWhen,
-	},
-	filters: {
-		currency,
 	},
 })
 export default class FormGamePackagePayment
@@ -88,6 +85,7 @@ export default class FormGamePackagePayment
 	minOrderAmount = 50;
 
 	readonly Screen = Screen;
+	readonly currency = formatCurrency;
 
 	@Emit('bought')
 	emitBought() {}
@@ -122,13 +120,13 @@ export default class FormGamePackagePayment
 	}
 
 	get formattedAmount() {
-		return currency(this.pricing.amount);
+		return formatCurrency(this.pricing.amount);
 	}
 
 	get minOrderMessage() {
 		return this.$gettextInterpolate(
 			`Because of payment processing fees, we are not able to sell this game for less than %{ amount }. You can click the link below to grab the download for free, though!`,
-			{ amount: currency(this.minOrderAmount) }
+			{ amount: formatCurrency(this.minOrderAmount) }
 		);
 	}
 

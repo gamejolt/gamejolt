@@ -3,7 +3,7 @@ import { propOptional, propRequired } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { DrawerStore, DrawerStoreKey, setDrawerOpen } from '../../drawer/drawer-store';
-import { fuzzynumber } from '../../filters/fuzzynumber';
+import { formatFuzzynumber } from '../../filters/fuzzynumber';
 import { LikersModal } from '../../likers/modal.service';
 import { Model } from '../../model/model.service';
 import { Screen } from '../../screen/screen-service';
@@ -31,7 +31,7 @@ export default class AppCommentControls extends Vue {
 	drawer!: DrawerStore;
 
 	readonly Screen = Screen;
-	readonly fuzzynumber = fuzzynumber;
+	readonly fuzzynumber = formatFuzzynumber;
 
 	get votingTooltip() {
 		const userHasVoted = !!this.comment.user_vote;

@@ -1,7 +1,7 @@
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
-import { date } from '../../../../../../../../../_common/filters/date';
-import { number } from '../../../../../../../../../_common/filters/number';
+import { formatDate } from '../../../../../../../../../_common/filters/date';
+import { formatNumber } from '../../../../../../../../../_common/filters/number';
 import { GameScoreTable } from '../../../../../../../../../_common/game/score-table/score-table.model';
 import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
@@ -13,10 +13,6 @@ import { RouteStore, RouteStoreModule } from '../../../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageApiScoreboardsScoresView',
-	filters: {
-		number,
-		date,
-	},
 })
 @RouteResolver({
 	deps: { params: ['score'] },
@@ -31,6 +27,9 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends BaseRo
 
 	score: UserGameScore = null as any;
 	scoreTable: GameScoreTable = null as any;
+
+	readonly number = formatNumber;
+	readonly date = formatDate;
 
 	get routeTitle() {
 		if (this.game) {

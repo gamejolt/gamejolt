@@ -1,5 +1,5 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { duration } from '../../../../_common/filters/duration';
+import { formatDuration } from '../../../../_common/filters/duration';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import { LocalDbPackage, LocalDbPackagePatchState } from '../local-db/package/package.model';
 
@@ -47,7 +47,7 @@ export default class AppClientInstallProgress extends Vue {
 			this.packageProgress.timeLeft &&
 			this.packageProgress.timeLeft !== Infinity
 		) {
-			return `~${duration(this.packageProgress.timeLeft)}`;
+			return `~${formatDuration(this.packageProgress.timeLeft)}`;
 		}
 		return '--';
 	}

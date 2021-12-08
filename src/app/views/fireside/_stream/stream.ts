@@ -1,5 +1,5 @@
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
-import { number } from '../../../../_common/filters/number';
+import { formatNumber } from '../../../../_common/filters/number';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { ChatUserCollection } from '../../../components/chat/user-collection';
@@ -44,7 +44,7 @@ export default class AppFiresideStream extends Vue {
 	private isShowingOverlayPopper = false;
 
 	readonly Screen = Screen;
-	readonly number = number;
+	readonly number = formatNumber;
 
 	get shouldShowUI() {
 		if (GJ_IS_SSR) {

@@ -150,10 +150,6 @@
 
 				<hr />
 
-				<!--<pre>{{ stripeMeta | json }}</pre>-->
-				<!--<pre>{{ stripe.current.verification | json }}</pre>-->
-				<!--<pre>{{ formModel | json }}</pre>-->
-
 				<!--
 					Individual Account Setup
 				-->

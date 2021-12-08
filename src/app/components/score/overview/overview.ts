@@ -1,7 +1,7 @@
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
-import { number } from '../../../../_common/filters/number';
+import { formatNumber } from '../../../../_common/filters/number';
 import { Game } from '../../../../_common/game/game.model';
 import { GameScoreTable } from '../../../../_common/game/score-table/score-table.model';
 import { Popper } from '../../../../_common/popper/popper.service';
@@ -19,9 +19,6 @@ import AppScoreboardSelector from '../scoreboard-selector/scoreboard-selector.vu
 		AppScoreboardSelector,
 		AppScoreList,
 		AppUserAvatar,
-	},
-	filters: {
-		number,
 	},
 })
 export default class AppScoreOverview extends Vue {
@@ -43,6 +40,7 @@ export default class AppScoreOverview extends Vue {
 	userScoreExperience = 0;
 
 	readonly Screen = Screen;
+	readonly number = formatNumber;
 
 	// Even.
 	get scoresLeft() {

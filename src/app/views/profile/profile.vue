@@ -117,7 +117,7 @@
 									>
 										<translate>Following</translate>
 										<span class="badge">
-											{{ user.following_count | number }}
+											{{ number(user.following_count) }}
 										</span>
 									</router-link>
 								</li>
@@ -128,7 +128,7 @@
 									>
 										<translate>Followers</translate>
 										<span class="badge">
-											{{ user.follower_count | number }}
+											{{ number(user.follower_count) }}
 										</span>
 									</router-link>
 								</li>
@@ -139,7 +139,7 @@
 									<a @click="showComments()">
 										<translate>Shouts</translate>
 										<span class="badge">
-											{{ commentsCount | number }}
+											{{ number(commentsCount) }}
 										</span>
 									</a>
 								</li>
@@ -158,7 +158,7 @@
 									>
 										<translate>Trophies</translate>
 										<span class="badge">
-											{{ trophyCount | number }}
+											{{ number(trophyCount) }}
 										</span>
 									</router-link>
 								</li>

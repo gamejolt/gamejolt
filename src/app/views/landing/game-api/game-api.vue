@@ -16,8 +16,9 @@
 				<div class="row">
 					<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
 						<p>
-							By implementing the Game Jolt Game API you can add trophies, leaderboards, cloud data
-							storage, and sessions to your games to get players coming back for more!
+							By implementing the Game Jolt Game API you can add trophies,
+							leaderboards, cloud data storage, and sessions to your games to get
+							players coming back for more!
 						</p>
 
 						<div class="text-center">
@@ -37,7 +38,7 @@
 					<div class="col-lg-2" v-if="totalScores">
 						<div class="stat-big">
 							<div class="stat-big-digit">
-								{{ totalScores | number }}
+								{{ number(totalScores) }}
 							</div>
 							<div class="stat-big-label">Scores Logged</div>
 						</div>
@@ -45,7 +46,7 @@
 					<div class="col-lg-2">
 						<div class="stat-big" v-if="totalAchievedTrophies">
 							<div class="stat-big-digit">
-								{{ totalAchievedTrophies | number }}
+								{{ number(totalAchievedTrophies) }}
 							</div>
 							<div class="stat-big-label">Trophies Achieved</div>
 						</div>
@@ -53,7 +54,7 @@
 					<div class="col-lg-2">
 						<div class="stat-big" v-if="sessionTime">
 							<div class="stat-big-digit">
-								{{ sessionTime | number }}
+								{{ number(sessionTime) }}
 							</div>
 							<div class="stat-big-label">Hours Logged</div>
 						</div>
@@ -73,9 +74,9 @@
 						<h4 class="text-center">Leaderboards</h4>
 
 						<p>
-							Implement leaderboards in your game to allow anyone to battle it out for the top
-							spots. You create the leaderboards, you control the scoring. You can even allow guests
-							to score without a Game Jolt account.
+							Implement leaderboards in your game to allow anyone to battle it out for
+							the top spots. You create the leaderboards, you control the scoring. You
+							can even allow guests to score without a Game Jolt account.
 						</p>
 					</div>
 
@@ -87,8 +88,8 @@
 						<h4 class="text-center">Trophies</h4>
 
 						<p>
-							Feed into your player base's hunger for trophy hunting. Trophies will sync to their
-							Game Jolt profile for all to see as badges of honor.
+							Feed into your player base's hunger for trophy hunting. Trophies will
+							sync to their Game Jolt profile for all to see as badges of honor.
 						</p>
 					</div>
 
@@ -100,8 +101,9 @@
 						<h4 class="text-center">Cloud Data Storage</h4>
 
 						<p>
-							Sync saved games, user-created levels, friend lists, debug logs--save any bit of data
-							to the player's account, or globally for your game. The clouds are the limit!
+							Sync saved games, user-created levels, friend lists, debug logs--save
+							any bit of data to the player's account, or globally for your game. The
+							clouds are the limit!
 						</p>
 					</div>
 
@@ -115,9 +117,9 @@
 						<h4 class="text-center">Sessions</h4>
 
 						<p>
-							Track when and how long each player is active in your game. You can then view stats
-							such as avg. play time per session, total time played across users, and even see how
-							many people are playing your game in real time.
+							Track when and how long each player is active in your game. You can then
+							view stats such as avg. play time per session, total time played across
+							users, and even see how many people are playing your game in real time.
 						</p>
 					</div>
 				</div>

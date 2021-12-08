@@ -39,7 +39,11 @@ export type TooltipPlacement =
 
 const TouchablePointerTypes = ['touch', 'pen'];
 
-export type TooltipDirectiveValue = string | { content: string; placement?: TooltipPlacement };
+export type TooltipDirectiveValue =
+	| string
+	| undefined
+	| null
+	| { content: string; placement?: TooltipPlacement };
 
 type TooltipDirectiveBinding = DirectiveBinding<TooltipDirectiveValue>;
 
@@ -80,7 +84,11 @@ export class TooltipController {
 		}
 
 		this.placement = placement;
-		this.text = typeof value === 'string' ? value : value.content;
+		if (!value) {
+			this.text = '';
+		} else {
+			this.text = typeof value === 'string' ? value : value.content;
+		}
 	}
 
 	private onMouseEnter = (event: PointerEvent) => {

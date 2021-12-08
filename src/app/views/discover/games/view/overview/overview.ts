@@ -20,7 +20,7 @@ import {
 import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../../../_common/environment/environment.service';
 import AppFadeCollapse from '../../../../../../_common/fade-collapse/fade-collapse.vue';
-import { number } from '../../../../../../_common/filters/number';
+import { formatNumber } from '../../../../../../_common/filters/number';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
 import AppGameExternalPackageCard from '../../../../../../_common/game/external-package/card/card.vue';
 import { Game } from '../../../../../../_common/game/game.model';
@@ -78,9 +78,6 @@ import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue
 		AppGamePerms,
 		AppContentViewer,
 		AppUserKnownFollowers,
-	},
-	filters: {
-		number,
 	},
 })
 @RouteResolver({
@@ -199,6 +196,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 	readonly Screen = Screen;
 	readonly Environment = Environment;
+	readonly number = formatNumber;
 
 	get routeTitle() {
 		if (this.game) {

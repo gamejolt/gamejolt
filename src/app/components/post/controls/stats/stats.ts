@@ -1,5 +1,5 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { number } from '../../../../../_common/filters/number';
+import { formatNumber } from '../../../../../_common/filters/number';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
@@ -15,7 +15,7 @@ export default class AppPostControlsStats extends Vue {
 
 	@AppState user!: AppStore['user'];
 
-	readonly number = number;
+	readonly number = formatNumber;
 
 	get hasPerms() {
 		if (!this.user) {

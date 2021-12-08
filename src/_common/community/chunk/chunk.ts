@@ -5,7 +5,7 @@ import { propRequired } from '../../../utils/vue';
 import { PostOpenSource, trackGotoCommunity } from '../../analytics/analytics.service';
 import { Api } from '../../api/api.service';
 import { EventItem } from '../../event-item/event-item.model';
-import { number } from '../../filters/number';
+import { formatNumber } from '../../filters/number';
 import AppMediaItemBackdrop from '../../media-item/backdrop/backdrop.vue';
 import { Screen } from '../../screen/screen-service';
 import AppScrollScroller from '../../scroll/scroller/scroller.vue';
@@ -31,7 +31,7 @@ export default class AppCommunityChunk extends Vue {
 	items: EventItem[] = [];
 	isLoadingPosts = true;
 
-	readonly number = number;
+	readonly number = formatNumber;
 	readonly Screen = Screen;
 	readonly preferredCardsPerRow = 5;
 	readonly postOpenSource: PostOpenSource = 'communityChunk';

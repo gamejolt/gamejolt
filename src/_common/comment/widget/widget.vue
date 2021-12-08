@@ -16,7 +16,7 @@ import { useRoute } from 'vue-router';
 import { AppAuthRequired as vAppAuthRequired } from '../../auth/auth-required-directive';
 import { Collaborator } from '../../collaborator/collaborator.model';
 import { Environment } from '../../environment/environment.service';
-import { number } from '../../filters/number';
+import { formatNumber } from '../../filters/number';
 import AppIllustration from '../../illustration/illustration.vue';
 import AppLoading from '../../loading/loading.vue';
 import AppMessageThreadAdd from '../../message-thread/add/add.vue';

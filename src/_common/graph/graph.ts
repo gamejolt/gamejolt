@@ -1,6 +1,6 @@
 import * as Chart from 'chart.js';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { date } from '../filters/date';
+import { formatDate } from '../filters/date';
 import { ThemeState, ThemeStore } from '../theme/theme.store';
 
 // Try to match site styling.
@@ -207,7 +207,7 @@ export default class AppGraph extends Vue {
 
 				for (const row of series.data) {
 					if (i === 0) {
-						this.graphData.labels.push(date(row[0], 'LLL dd'));
+						this.graphData.labels.push(formatDate(row[0], 'LLL dd'));
 					}
 
 					dataset.data.push(row[1]);

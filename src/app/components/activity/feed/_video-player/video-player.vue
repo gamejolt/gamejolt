@@ -112,7 +112,7 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 @import '../variables'
-@import '../../../../_common/video/player/common'
+@import '../../../../../_common/video/player/common'
 
 $-zindex-backdrop = 0
 $-zindex-video = 1

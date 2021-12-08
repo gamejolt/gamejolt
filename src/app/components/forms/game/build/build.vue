@@ -12,7 +12,7 @@
 					<translate>dash.games.releases.builds.downloads_label</translate>
 				</div>
 				<div class="stat-big-digit" :title="number(buildDownloadCounts[model.id] || 0)">
-					{{ (buildDownloadCounts[model.id] || 0) | fuzzynumber }}
+					{{ number(buildDownloadCounts[model.id] || 0) }}
 				</div>
 			</div>
 		</div>
@@ -20,7 +20,7 @@
 		<div class="card-title">
 			<h5>
 				{{ model.primary_file.filename }}
-				<small class="text-muted">({{ model.primary_file.filesize | filesize }})</small>
+				<small class="text-muted">({{ filesize(model.primary_file.filesize) }})</small>
 			</h5>
 		</div>
 

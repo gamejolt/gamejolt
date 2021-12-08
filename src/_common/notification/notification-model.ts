@@ -1,4 +1,4 @@
-import { RawLocation, Router } from 'vue-router';
+import { RouteLocationRaw, Router } from 'vue-router';
 import { TrophyModal } from '../../app/components/trophy/modal/modal.service';
 import { assertNever } from '../../utils/utils';
 import { Collaborator } from '../collaborator/collaborator.model';
@@ -35,7 +35,7 @@ import { User } from '../user/user.model';
 
 function getRouteLocationForModel(
 	model: Game | User | FiresidePost | Community | Fireside
-): RawLocation {
+): RouteLocationRaw {
 	if (model instanceof User) {
 		return model.url;
 	} else if (model instanceof Game) {
@@ -217,14 +217,14 @@ export class Notification extends Model {
 			this.action_model = new FiresideStreamNotification(data.action_resource_model);
 		}
 
-		// Keep memory clean after bootstrapping the models.
-		const that: any = this;
-		delete that['from_resource_model'];
-		delete that['action_resource_model'];
-		delete that['to_resource_model'];
+		// Keep memory clean after bootstrapping the models (the super
+		// constructor will assign all data).
+		delete (this as any).from_resource_model;
+		delete (this as any).action_resource_model;
+		delete (this as any).to_resource_model;
 	}
 
-	get routeLocation(): RawLocation {
+	get routeLocation(): RouteLocationRaw {
 		switch (this.type) {
 			case Notification.TYPE_FRIENDSHIP_REQUEST:
 			case Notification.TYPE_FRIENDSHIP_ACCEPT:

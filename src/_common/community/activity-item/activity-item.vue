@@ -11,7 +11,7 @@
 				"
 				class="-time"
 			>
-				{{ item.added_on | date('shortTime') }}
+				{{ date(item.added_on, 'shortTime') }}
 			</span>
 		</span>
 

@@ -12,7 +12,7 @@
 		/>
 
 		<span class="blip" :class="{ 'blip-active': isUpvoted }">
-			{{ upvoteCount | fuzzynumber }}
+			{{ fuzzynumber(upvoteCount) }}
 		</span>
 	</span>
 </template>

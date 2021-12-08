@@ -28,8 +28,7 @@ import { VideoSourceArray } from '../../../../../_common/video/video';
 import AppVideo from '../../../../../_common/video/video.vue';
 import { AppVideoPlayerShakaLazy } from '../../../lazy';
 import { ActivityFeedItem } from '../item-service';
-import { InviewConfigFocused } from '../item/item';
-import { ActivityFeedKey, ActivityFeedView } from '../view';
+import { ActivityFeedKey, ActivityFeedView, InviewConfigFocused } from '../view';
 
 /**
  * How much time in ms to wait before loading the video player in once this item

@@ -4,7 +4,7 @@ import { Api } from '../../../../../../../_common/api/api.service';
 import { Clipboard } from '../../../../../../../_common/clipboard/clipboard-service';
 import { Environment } from '../../../../../../../_common/environment/environment.service';
 import AppExpand from '../../../../../../../_common/expand/expand.vue';
-import { number } from '../../../../../../../_common/filters/number';
+import { formatNumber } from '../../../../../../../_common/filters/number';
 import { GamePackage } from '../../../../../../../_common/game/package/package.model';
 import {
 	showErrorGrowl,
@@ -36,9 +36,6 @@ import { RouteStore, RouteStoreModule } from '../../manage.store';
 	directives: {
 		AppTooltip,
 	},
-	filters: {
-		number,
-	},
 })
 @RouteResolver({
 	deps: { params: ['keyGroupId'] },
@@ -61,9 +58,10 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 		filter: '',
 		state: 'all',
 	};
-	number = number;
-	Environment = Environment;
-	KeyGroup = KeyGroup;
+
+	readonly number = formatNumber;
+	readonly Environment = Environment;
+	readonly KeyGroup = KeyGroup;
 
 	get routeTitle() {
 		if (this.keyGroup) {

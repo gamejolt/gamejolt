@@ -1,5 +1,5 @@
 import { Directive } from 'vue';
-import { TooltipDirectiveValue, TooltipController } from './tooltip-controller';
+import { TooltipController, TooltipDirectiveValue } from './tooltip-controller';
 
 const state = new WeakMap<HTMLElement, TooltipController>();
 

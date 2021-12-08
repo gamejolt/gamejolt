@@ -1,6 +1,6 @@
 import { Options, Prop } from 'vue-property-decorator';
 import AppExpand from '../../../../../_common/expand/expand.vue';
-import { number } from '../../../../../_common/filters/number';
+import { formatNumber } from '../../../../../_common/filters/number';
 import {
 	BaseForm,
 	FormOnInit,
@@ -18,9 +18,6 @@ import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 	directives: {
 		AppTooltip,
 	},
-	filters: {
-		number,
-	},
 })
 export default class FormGameKeyGroup
 	extends BaseForm<KeyGroup>
@@ -30,12 +27,11 @@ export default class FormGameKeyGroup
 	resetOnSubmit = true;
 
 	@Prop(Game) game!: Game;
-
 	@Prop(Array) packages!: GamePackage[];
 
-	number = number;
-	KeyGroup = KeyGroup;
-	GamePackage = GamePackage;
+	readonly number = formatNumber;
+	readonly KeyGroup = KeyGroup;
+	readonly GamePackage = GamePackage;
 
 	get arePackagesChosen() {
 		return this.formModel.package_ids.length > 0;

@@ -1,14 +1,11 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { date } from '../../../../../_common/filters/date';
+import { formatDate } from '../../../../../_common/filters/date';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { UserStripeManagedAccount } from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
 
 @Options({
 	directives: {
 		AppTooltip,
-	},
-	filters: {
-		date,
 	},
 })
 export default class AppDeveloperTerms extends Vue {
@@ -18,7 +15,7 @@ export default class AppDeveloperTerms extends Vue {
 	showAgreement = false;
 	termsTemplate: string = require('../../../../../lib/terms/distribution-agreement/global.md');
 
-	readonly date = date;
+	readonly date = formatDate;
 
 	@Emit('accepted')
 	emitAccepted() {}

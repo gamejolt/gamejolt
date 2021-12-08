@@ -7,7 +7,6 @@ import { Collaborator } from '../../../collaborator/collaborator.model';
 import { Environment } from '../../../environment/environment.service';
 import AppExpand from '../../../expand/expand.vue';
 import AppFadeCollapse from '../../../fade-collapse/fade-collapse.vue';
-import { number } from '../../../filters/number';
 import AppMessageThreadAdd from '../../../message-thread/add/add.vue';
 import AppMessageThreadItem from '../../../message-thread/item/item.vue';
 import AppMessageThread from '../../../message-thread/message-thread.vue';
@@ -49,9 +48,6 @@ let CommentNum = 0;
 	directives: {
 		AppTooltip,
 		AppAuthRequired,
-	},
-	filters: {
-		number,
 	},
 })
 export default class AppCommentWidgetComment extends Vue {

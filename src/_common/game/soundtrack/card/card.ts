@@ -4,7 +4,7 @@ import AppAudioPlaylist from '../../../audio/playlist/playlist.vue';
 import AppCard from '../../../card/card.vue';
 import { Environment } from '../../../environment/environment.service';
 import AppFadeCollapse from '../../../fade-collapse/fade-collapse.vue';
-import { number } from '../../../filters/number';
+import { formatNumber } from '../../../filters/number';
 import { Navigate } from '../../../navigate/navigate.service';
 import { Screen } from '../../../screen/screen-service';
 import { Game } from '../../game.model';
@@ -28,7 +28,7 @@ export default class AppGameSoundtrackCard extends Vue {
 	isShowingSoundtrack = false;
 	canToggleSoundtrack = false;
 
-	readonly number = number;
+	readonly number = formatNumber;
 	readonly Screen = Screen;
 
 	@Watch('isPlaying')

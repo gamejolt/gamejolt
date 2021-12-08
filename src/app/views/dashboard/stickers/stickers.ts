@@ -3,7 +3,7 @@ import { State } from 'vuex-class';
 import { numberSort } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
 import { DrawerStore, DrawerStoreKey } from '../../../../_common/drawer/drawer-store';
-import { number } from '../../../../_common/filters/number';
+import { formatNumber } from '../../../../_common/filters/number';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
@@ -53,7 +53,7 @@ export default class RouteDashStickers extends BaseRouteComponent {
 	@State grid!: Store['grid'];
 
 	readonly Screen = Screen;
-	readonly number = number;
+	readonly number = formatNumber;
 
 	balance = 0;
 	stickerCollection: StickerCount[] = [];

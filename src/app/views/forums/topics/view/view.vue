@@ -246,8 +246,8 @@
 						<hr />
 
 						<p v-if="topic.replies_count > perPage" class="text-muted small">
-							Page {{ currentPage | number }} of
-							{{ topic.replies_count | number }} replies.
+							Page {{ number(currentPage) }} of
+							{{ number(topic.replies_count) }} replies.
 						</p>
 
 						<app-message-thread-pagination

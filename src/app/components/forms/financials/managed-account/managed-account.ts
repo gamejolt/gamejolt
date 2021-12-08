@@ -3,7 +3,7 @@ import { Options } from 'vue-property-decorator';
 import { loadScript } from '../../../../../utils/utils';
 import { Api } from '../../../../../_common/api/api.service';
 import AppExpand from '../../../../../_common/expand/expand.vue';
-import { currency } from '../../../../../_common/filters/currency';
+import { formatCurrency } from '../../../../../_common/filters/currency';
 import { BaseForm, FormOnInit, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
 import { Geo } from '../../../../../_common/geo/geo.service';
 import AppLoading from '../../../../../_common/loading/loading.vue';
@@ -70,7 +70,7 @@ export default class FormFinancialsManagedAccount
 
 	readonly StripeFileUploadUrl = 'https://uploads.stripe.com/v1/files';
 	readonly Geo = Geo;
-	readonly currency = currency;
+	readonly currency = formatCurrency;
 
 	declare $refs: {
 		individual: AppFinancialsManagedAccountPersonTS;

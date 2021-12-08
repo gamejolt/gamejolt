@@ -5,8 +5,8 @@ import { Clipboard } from '../../../clipboard/clipboard-service';
 import { AppCountdown } from '../../../countdown/countdown';
 import AppExpand from '../../../expand/expand.vue';
 import AppFadeCollapse from '../../../fade-collapse/fade-collapse.vue';
-import { currency } from '../../../filters/currency';
-import { filesize } from '../../../filters/filesize';
+import { formatCurrency } from '../../../filters/currency';
+import { formatFilesize } from '../../../filters/filesize';
 import { LinkedKey } from '../../../linked-key/linked-key.model';
 import { SellablePricing } from '../../../sellable/pricing/pricing.model';
 import { Sellable } from '../../../sellable/sellable.model';
@@ -33,10 +33,6 @@ import { GamePackageCardModel } from './card.model';
 	},
 	directives: {
 		AppTooltip,
-	},
-	filters: {
-		currency,
-		filesize,
 	},
 })
 export default class AppGamePackageCard extends Vue {
@@ -86,6 +82,8 @@ export default class AppGamePackageCard extends Vue {
 	};
 
 	readonly AppGamePackageCard = AppGamePackageCard;
+	readonly currency = formatCurrency;
+	readonly filesize = formatFilesize;
 
 	get metaComponent() {
 		return AppGamePackageCard.hook.meta;

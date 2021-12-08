@@ -2,7 +2,7 @@ import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../_common/api/api.service';
 import AppCard from '../../../../../../../../_common/card/card.vue';
 import AppExpand from '../../../../../../../../_common/expand/expand.vue';
-import { number } from '../../../../../../../../_common/filters/number';
+import { formatNumber } from '../../../../../../../../_common/filters/number';
 import AppGamePackageCard from '../../../../../../../../_common/game/package/card/card.vue';
 import { GamePackagePayloadModel } from '../../../../../../../../_common/game/package/package-payload.model';
 import { GamePackage } from '../../../../../../../../_common/game/package/package.model';
@@ -70,7 +70,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 
 	GamePackage = GamePackage;
 	GameRelease = GameRelease;
-	number = number;
+	number = formatNumber;
 
 	get hasBuildsPerms() {
 		return this.game && this.game.hasPerms('builds');

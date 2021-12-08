@@ -12,12 +12,6 @@ import AppActivityFeedItemPlaceholder from './placeholder/placeholder.vue';
 const InviewConfig = new ScrollInviewConfig();
 const InviewConfigHydration = new ScrollInviewConfig({ margin: `${Screen.height}px` });
 
-/**
- * Can be used by the various feed components to track whether or not they're
- * the focused feed component.
- */
-export const InviewConfigFocused = new ScrollInviewConfig({ trackFocused: true });
-
 @Options({
 	components: {
 		AppScrollInview,

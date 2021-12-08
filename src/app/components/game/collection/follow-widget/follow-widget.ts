@@ -1,6 +1,6 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
-import { number } from '../../../../../_common/filters/number';
+import { formatNumber } from '../../../../../_common/filters/number';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { LibraryModule, LibraryStore } from '../../../../store/library';
@@ -61,7 +61,7 @@ export default class AppGameCollectionFollowWidget extends Vue {
 
 	get badge() {
 		return !this.circle && this.isFollowing && this.followerCount
-			? number(this.followerCount)
+			? formatNumber(this.followerCount)
 			: '';
 	}
 

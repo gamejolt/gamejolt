@@ -1,7 +1,7 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
-import { number } from '../../../../_common/filters/number';
+import { formatNumber } from '../../../../_common/filters/number';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { Store } from '../../../store/index';
 import { GameFilteringContainer } from './container';
@@ -9,9 +9,6 @@ import { GameFilteringContainer } from './container';
 @Options({
 	components: {
 		AppPopper,
-	},
-	filters: {
-		number,
 	},
 })
 export default class AppGameFilteringWidget extends Vue {
@@ -22,6 +19,8 @@ export default class AppGameFilteringWidget extends Vue {
 	app!: Store['app'];
 
 	hovered: any = {};
+
+	readonly number = formatNumber;
 
 	get filters() {
 		return ['price', 'os', 'browser', 'maturity', 'status', 'partners'];

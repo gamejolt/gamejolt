@@ -4,7 +4,7 @@ import { Api } from '../../../../_common/api/api.service';
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
 import { Community } from '../../../../_common/community/community.model';
 import { Environment } from '../../../../_common/environment/environment.service';
-import { number } from '../../../../_common/filters/number';
+import { formatNumber } from '../../../../_common/filters/number';
 import AppGameThumbnail from '../../../../_common/game/thumbnail/thumbnail.vue';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { AppSocialFacebookLike } from '../../../../_common/social/facebook/like/like';
@@ -76,7 +76,7 @@ export default class AppCommunitySidebar extends Vue {
 	}
 
 	get membersYouKnowCount() {
-		return number(this.sidebarData.knownMemberCount);
+		return formatNumber(this.sidebarData.knownMemberCount);
 	}
 
 	get shareUrl() {

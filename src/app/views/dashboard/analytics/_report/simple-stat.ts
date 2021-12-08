@@ -1,13 +1,11 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { currency } from '../../../../../_common/filters/currency';
-import { number } from '../../../../../_common/filters/number';
+import { formatCurrency } from '../../../../../_common/filters/currency';
+import { formatNumber } from '../../../../../_common/filters/number';
 
-@Options({
-	filters: {
-		number,
-		currency,
-	},
-})
+@Options({})
 export default class AppAnalyticsReportSimpleStat extends Vue {
 	@Prop(Object) reportData!: any;
+
+	readonly number = formatNumber;
+	readonly currency = formatCurrency;
 }

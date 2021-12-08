@@ -63,7 +63,7 @@
 							<template v-if="item.data.length > 50"> ... </template>
 						</td>
 						<td class="small">
-							{{ item.posted_on | date('medium') }}
+							{{ date(item.posted_on, 'medium') }}
 						</td>
 						<td class="text-right">
 							<div class="table-controls">

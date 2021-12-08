@@ -3,7 +3,7 @@ import { State } from 'vuex-class';
 import { enforceLocation } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
 import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
-import { number } from '../../../../_common/filters/number';
+import { formatNumber } from '../../../../_common/filters/number';
 import { GameBundle } from '../../../../_common/game-bundle/game-bundle.model';
 import { GamePlaylist } from '../../../../_common/game-playlist/game-playlist.model';
 import { Game } from '../../../../_common/game/game.model';
@@ -47,9 +47,6 @@ const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 	directives: {
 		AppTooltip,
 		AppAuthRequired,
-	},
-	filters: {
-		number,
 	},
 })
 @RouteResolver({
@@ -121,6 +118,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 	metaTitle = '';
 
 	readonly Screen = Screen;
+	readonly number = formatNumber;
 
 	get routeTitle() {
 		if (this.metaTitle) {

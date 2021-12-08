@@ -1,7 +1,7 @@
 import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../../../_common/api/api.service';
-import { number } from '../../../../../_common/filters/number';
+import { formatNumber } from '../../../../../_common/filters/number';
 import { ForumChannel } from '../../../../../_common/forum/channel/channel.model';
 import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
@@ -22,9 +22,6 @@ import { Store } from '../../../../store/index';
 		AppPagination,
 		AppForumBreadcrumbs,
 		AppNavTabList,
-	},
-	filters: {
-		number,
 	},
 })
 @RouteResolver({
@@ -49,7 +46,7 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 	currentPage = 1;
 	listableTopicsCount = 0;
 
-	readonly number = number;
+	readonly number = formatNumber;
 	readonly Scroll = Scroll;
 	readonly Screen = Screen;
 

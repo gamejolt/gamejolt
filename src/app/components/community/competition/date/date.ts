@@ -1,19 +1,17 @@
 import { determine } from 'jstimezonedetect';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../../utils/vue';
-import { date } from '../../../../../_common/filters/date';
+import { formatDate } from '../../../../../_common/filters/date';
 import { Timezone, TimezoneData } from '../../../../../_common/timezone/timezone.service';
 
-@Options({
-	filters: {
-		date,
-	},
-})
+@Options({})
 export default class AppCommunityCompetitionDate extends Vue {
 	@Prop(propRequired(Number)) date!: number;
 	@Prop(propOptional(String)) timezone?: string;
 
 	timezones: { [region: string]: (TimezoneData & { label?: string })[] } = null as any;
+
+	readonly formatDate = formatDate;
 
 	get offsetDate() {
 		// date is UTC, add the set offset, and remove the local timezone offset.

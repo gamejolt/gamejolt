@@ -8,8 +8,8 @@ import { CommunityCompetitionEntrySubmitModal } from '../../../../../_common/com
 import { CommunityCompetitionVotingCategory } from '../../../../../_common/community/competition/voting-category/voting-category.model';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
-import { date } from '../../../../../_common/filters/date';
-import { number } from '../../../../../_common/filters/number';
+import { formatDate } from '../../../../../_common/filters/date';
+import { formatNumber } from '../../../../../_common/filters/number';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../../_common/illustration/illustration.vue';
 import {
@@ -60,9 +60,9 @@ export default class RouteCommunitiesViewChannelJam extends BaseRouteComponent {
 	@AppState
 	user!: AppStore['user'];
 
-	readonly number = number;
 	readonly Screen = Screen;
-	readonly date = date;
+	readonly number = formatNumber;
+	readonly date = formatDate;
 
 	canToggleDescription = false;
 	isDescriptionOpen = false;

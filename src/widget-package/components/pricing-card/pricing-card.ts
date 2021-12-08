@@ -1,6 +1,6 @@
 import { Options, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { currency } from '../../../_common/filters/currency';
+import { formatCurrency } from '../../../_common/filters/currency';
 import { Store } from '../../store/index';
 
 @Options({})
@@ -9,7 +9,7 @@ export default class AppPricingCard extends Vue {
 	@State price!: NonNullable<Store['price']>;
 	@State originalPrice!: NonNullable<Store['originalPrice']>;
 
-	readonly currency = currency;
+	readonly currency = formatCurrency;
 
 	get discount() {
 		const price = this.price;

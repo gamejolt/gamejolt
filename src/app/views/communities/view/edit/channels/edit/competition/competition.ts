@@ -1,5 +1,5 @@
 import { Inject, Options } from 'vue-property-decorator';
-import { number } from '../../../../../../../../_common/filters/number';
+import { formatNumber } from '../../../../../../../../_common/filters/number';
 import AppNavTabList from '../../../../../../../../_common/nav/tab-list/tab-list.vue';
 import {
 	BaseRouteComponent,
@@ -18,9 +18,6 @@ import AppCommunitiesEditCompetitionNav from './_nav/nav.vue';
 		AppNavTabList,
 		AppCommunitiesEditCompetitionNav,
 	},
-	filters: {
-		number,
-	},
 })
 @RouteResolver({
 	// A lot of components and displays in the child routes need timezone info, so just fetch it here.
@@ -31,6 +28,7 @@ export default class RouteCommunitiesViewEditChannelsCompetition extends BaseRou
 	routeStore!: CommunityRouteStore;
 
 	readonly Screen = Screen;
+	readonly number = formatNumber;
 
 	get channel() {
 		return this.routeStore.channel!;

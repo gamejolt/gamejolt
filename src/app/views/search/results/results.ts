@@ -1,6 +1,6 @@
 import { Options } from 'vue-property-decorator';
 import AppCommunityThumbnail from '../../../../_common/community/thumbnail/thumbnail.vue';
-import { number } from '../../../../_common/filters/number';
+import { formatNumber } from '../../../../_common/filters/number';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppUserCard from '../../../../_common/user/card/card.vue';
@@ -49,7 +49,7 @@ export default class RouteSearchResults extends BaseRouteComponent {
 
 	readonly Search = Search;
 	readonly Screen = Screen;
-	readonly number = number;
+	readonly number = formatNumber;
 
 	get slicedUsers() {
 		return Screen.isXs ? this.searchPayload.users : this.searchPayload.users.slice(0, 2);

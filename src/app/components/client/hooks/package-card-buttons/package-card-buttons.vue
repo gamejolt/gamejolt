@@ -76,7 +76,7 @@
 			@click="installClick(card.downloadableBuild)"
 		>
 			<translate>Install</translate>
-			<small>({{ card.downloadableBuild.primary_file.filesize | filesize }})</small>
+			<small>({{ filesize(card.downloadableBuild.primary_file.filesize) }})</small>
 		</app-button>
 
 		<!-- Game is installing or installed -->
@@ -205,7 +205,7 @@
 							<app-jolticon icon="html5" />
 							<translate>Quick Play</translate>
 							<small class="text-muted">
-								({{ card.browserBuild.primary_file.filesize | filesize }})
+								({{ filesize(card.browserBuild.primary_file.filesize) }})
 							</small>
 						</a>
 					</template>

@@ -8,7 +8,7 @@ import {
 } from '../../../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../../../_common/comment/modal/modal.service';
 import { Environment } from '../../../../../../_common/environment/environment.service';
-import { number } from '../../../../../../_common/filters/number';
+import { formatNumber } from '../../../../../../_common/filters/number';
 import AppPopper from '../../../../../../_common/popper/popper.vue';
 import { ReportModal } from '../../../../../../_common/report/modal/modal.service';
 import { Screen } from '../../../../../../_common/screen/screen-service';
@@ -22,9 +22,6 @@ import { RouteStore, RouteStoreModule } from '../view.store';
 		AppPopper,
 		AppGamePerms,
 		AppGameModLinks,
-	},
-	filters: {
-		number,
 	},
 })
 export default class AppDiscoverGamesViewNav extends Vue {
@@ -47,6 +44,7 @@ export default class AppDiscoverGamesViewNav extends Vue {
 	app!: Store['app'];
 
 	readonly Screen = Screen;
+	readonly number = formatNumber;
 
 	get hasAnyPerms() {
 		return this.game && this.game.hasPerms();

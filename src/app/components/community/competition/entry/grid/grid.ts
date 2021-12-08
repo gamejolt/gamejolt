@@ -7,7 +7,7 @@ import {
 import { CommunityCompetitionEntry } from '../../../../../../_common/community/competition/entry/entry.model';
 import { CommunityCompetitionVotingCategory } from '../../../../../../_common/community/competition/voting-category/voting-category.model';
 import { AppCondenseWhitespace } from '../../../../../../_common/condense-whitespace';
-import { number } from '../../../../../../_common/filters/number';
+import { formatNumber } from '../../../../../../_common/filters/number';
 import AppCommunityCompetitionEntryThumbnail from '../thumbnail/thumbnail.vue';
 
 @Options({
@@ -26,7 +26,7 @@ export default class AppCommunityCompetitionEntryGrid extends Vue {
 	category?: CommunityCompetitionVotingCategory;
 	@Prop(propOptional(Boolean, false)) showRemove!: boolean;
 
-	readonly number = number;
+	readonly number = formatNumber;
 
 	get placeholderCount() {
 		const iterators = [];

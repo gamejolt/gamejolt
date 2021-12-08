@@ -3,7 +3,7 @@ import {
 	CommunityCompetition,
 	CompetitionPeriodVoting,
 } from '../../../../../../_common/community/competition/competition.model';
-import { date } from '../../../../../../_common/filters/date';
+import { formatDate } from '../../../../../../_common/filters/date';
 import AppFormControlDate from '../../../../../../_common/form-vue/control/date/date.vue';
 import { FormTimezoneService } from '../../../../../../_common/form-vue/control/date/form-timezone.service';
 import { BaseForm, FormOnInit } from '../../../../../../_common/form-vue/form.service';
@@ -18,9 +18,6 @@ import AppCommunityCompetitionDate from '../../../../community/competition/date/
 		AppLoading,
 		AppCommunityCompetitionDate,
 	},
-	filters: {
-		date,
-	},
 })
 export default class FormCommunityCompetitionEdit
 	extends BaseForm<CommunityCompetition>
@@ -28,6 +25,8 @@ export default class FormCommunityCompetitionEdit
 {
 	modelClass = CommunityCompetition;
 	timezoneService: FormTimezoneService<CommunityCompetition> | null = null;
+
+	readonly date = formatDate;
 
 	get endsOnControlRules() {
 		const rules = {

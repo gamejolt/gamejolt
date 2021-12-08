@@ -1,5 +1,5 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { date as dateFilter } from '../filters/date';
+import { formatDate } from '../filters/date';
 import AppDatepickerDay from './day.vue';
 import AppDatepickerMonth from './month.vue';
 
@@ -18,7 +18,7 @@ export class DatepickerDate {
 		this.now = new Date();
 		this.mode = this.picker.pickerMode;
 		this.date = date;
-		this.label = dateFilter(
+		this.label = formatDate(
 			this.date,
 			this.mode === 'day' ? this.picker.formatDay : this.picker.formatMonth
 		);

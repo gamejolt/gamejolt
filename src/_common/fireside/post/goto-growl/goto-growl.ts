@@ -1,5 +1,5 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { RawLocation } from 'vue-router';
+import { RouteLocationRaw } from 'vue-router';
 import { Game } from '../../../game/game.model';
 import { AppTimeAgo } from '../../../time/ago/ago';
 import { FiresidePost } from '../post-model';
@@ -33,11 +33,11 @@ export default class AppFiresidePostGotoGrowl extends Vue {
 		return !this.post.isScheduled && this.post.status === FiresidePost.STATUS_DRAFT;
 	}
 
-	get draftsLocation(): RawLocation {
+	get draftsLocation(): RouteLocationRaw {
 		return this.getFeedLocation('draft');
 	}
 
-	get scheduledLocation(): RawLocation {
+	get scheduledLocation(): RouteLocationRaw {
 		return this.getFeedLocation('scheduled');
 	}
 
@@ -70,7 +70,7 @@ export default class AppFiresidePostGotoGrowl extends Vue {
 		);
 	}
 
-	getFeedLocation(tab: string): RawLocation {
+	getFeedLocation(tab: string): RouteLocationRaw {
 		if (this.post.game instanceof Game) {
 			return {
 				name: 'dash.games.manage.devlog',

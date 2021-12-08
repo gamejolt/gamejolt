@@ -1,6 +1,6 @@
 import { Options, Vue } from 'vue-property-decorator';
-import { fuzzynumber } from '../../../../../../../_common/filters/fuzzynumber';
-import { number } from '../../../../../../../_common/filters/number';
+import { formatFuzzynumber } from '../../../../../../../_common/filters/fuzzynumber';
+import { formatNumber } from '../../../../../../../_common/filters/number';
 import { AppLazyPlaceholder } from '../../../../../../../_common/lazy/placeholder/placeholder';
 import { LikersModal } from '../../../../../../../_common/likers/modal.service';
 import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
@@ -29,8 +29,8 @@ export default class AppDiscoverGamesViewOverviewStatbar extends Vue {
 	@RouteStoreModule.State
 	userRating!: RouteStore['userRating'];
 
-	readonly number = number;
-	readonly fuzzynumber = fuzzynumber;
+	readonly number = formatNumber;
+	readonly fuzzynumber = formatFuzzynumber;
 
 	get likeCount() {
 		return this.game.like_count;

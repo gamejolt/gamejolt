@@ -85,7 +85,7 @@
 					</template>
 					<template v-else-if="payment.method === OrderPayment.METHOD_WALLET">
 						<span class="tag"> Wallet </span>
-						{{ payment.amount | currency }}
+						{{ currency(payment.amount) }}
 					</template>
 				</div>
 			</div>
@@ -98,17 +98,17 @@
 					<tbody>
 						<tr>
 							<th><translate>Subtotal</translate></th>
-							<td>{{ order.amount | currency }}</td>
+							<td>{{ currency(order.amount) }}</td>
 						</tr>
 						<tr v-if="order.tax_amount">
 							<th><translate>Tax</translate></th>
-							<td>{{ order.tax_amount | currency }}</td>
+							<td>{{ currency(order.tax_amount) }}</td>
 						</tr>
 					</tbody>
 					<tfoot>
 						<tr>
 							<th><translate>Total</translate></th>
-							<td>{{ order.total_amount | currency }}</td>
+							<td>{{ currency(order.total_amount) }}</td>
 						</tr>
 					</tfoot>
 				</table>
@@ -124,7 +124,7 @@
 				</span>
 				{{ item.sellable.title }}
 				&mdash;
-				<small>{{ item.amount | currency }}</small>
+				<small>{{ currency(item.amount) }}</small>
 			</h4>
 
 			<div

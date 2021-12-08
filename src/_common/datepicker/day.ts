@@ -1,7 +1,7 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { arrayChunk } from '../../utils/array';
 import { findRequiredVueParent } from '../../utils/vue';
-import { date as dateFilter } from '../filters/date';
+import { formatDate } from '../filters/date';
 import AppDatepickerTS, { DatepickerDate } from './datepicker';
 import AppDatepicker from './datepicker.vue';
 
@@ -19,7 +19,7 @@ export default class AppDatepickerDay extends Vue {
 	emitSelected(_date: Date) {}
 
 	get title() {
-		return dateFilter(this.modelValue, this.parent.formatDayTitle);
+		return formatDate(this.modelValue, this.parent.formatDayTitle);
 	}
 
 	get labels() {
@@ -28,8 +28,8 @@ export default class AppDatepickerDay extends Vue {
 
 		for (let i = 0; i < 7; i++) {
 			labels[i] = {
-				abbr: dateFilter(days[i].date, this.parent.formatDayHeader),
-				full: dateFilter(days[i].date, this.parent.formatDayName),
+				abbr: formatDate(days[i].date, this.parent.formatDayHeader),
+				full: formatDate(days[i].date, this.parent.formatDayName),
 			};
 		}
 

@@ -1,7 +1,7 @@
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { AppVideoPlayerShakaLazy } from '../../../app/components/lazy';
 import { propOptional, propRequired } from '../../../utils/vue';
-import { number } from '../../filters/number';
+import { formatNumber } from '../../filters/number';
 import { AppImgResponsive } from '../../img/responsive/responsive';
 import AppLoading from '../../loading/loading.vue';
 import AppMediaItemBackdrop from '../../media-item/backdrop/backdrop.vue';
@@ -112,7 +112,7 @@ export default class AppVideoPlayer extends Vue {
 	private responsiveHeight = -1;
 	private responsiveWidth = -1;
 
-	readonly number = number;
+	readonly number = formatNumber;
 	readonly Screen = Screen;
 
 	declare $el: HTMLDivElement;

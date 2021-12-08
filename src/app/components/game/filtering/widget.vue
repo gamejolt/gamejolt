@@ -24,7 +24,7 @@
 									"
 									class="badge badge-highlight"
 								>
-									{{ filtering.filters[filter].length | number }}
+									{{ number(filtering.filters[filter].length) }}
 								</span>
 							</template>
 

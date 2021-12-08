@@ -1,7 +1,7 @@
 import { formatDistanceStrict, formatDistanceToNow } from 'date-fns';
 import { h } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { date } from '../../filters/date';
+import { formatDate } from '../../filters/date';
 
 @Options({})
 export class AppTimeAgo extends Vue {
@@ -68,7 +68,7 @@ export class AppTimeAgo extends Vue {
 			secondsUntilUpdate = 300;
 		}
 
-		this.fixedTime = date(this.date, 'medium');
+		this.fixedTime = formatDate(this.date, 'medium');
 
 		if (!GJ_IS_SSR) {
 			this.timeout = window.setTimeout(() => this.refresh(), secondsUntilUpdate * 1000);

@@ -1,4 +1,4 @@
-import { inject, InjectionKey, nextTick, provide, reactive } from 'vue';
+import { inject, nextTick, provide, reactive } from 'vue';
 import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Provide, Vue, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../utils/vue';
@@ -8,7 +8,7 @@ import { CommunityChannel } from '../../../../_common/community/channel/channel.
 import { Community } from '../../../../_common/community/community.model';
 import { EventItem } from '../../../../_common/event-item/event-item.model';
 import AppExpand from '../../../../_common/expand/expand.vue';
-import { number } from '../../../../_common/filters/number';
+import { formatNumber } from '../../../../_common/filters/number';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import AppIllustration from '../../../../_common/illustration/illustration.vue';
 import AppLoading from '../../../../_common/loading/loading.vue';
@@ -17,14 +17,12 @@ import AppScrollInview, { ScrollInviewConfig } from '../../../../_common/scroll/
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppActivityFeedItem from './item/item.vue';
 import AppActivityFeedNewButton from './new-button/new-button.vue';
-import { ActivityFeedKey, ActivityFeedView } from './view';
+import { ActivityFeedInterfaceKey, ActivityFeedKey, ActivityFeedView } from './view';
 
 const InviewConfigShowNew = new ScrollInviewConfig({ margin: `-${Scroll.offsetTop}px` });
 const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height * 1.5}px` });
 
 export type ActivityFeedInterface = ReturnType<typeof createActivityFeedInterface>;
-export const ActivityFeedInterfaceKey: InjectionKey<ActivityFeedInterface> =
-	Symbol('activity-feed-interface');
 
 /**
  * This is used to set up an interface with child components to be able to let
@@ -96,7 +94,7 @@ export default class AppActivityFeed extends Vue {
 	private scroll!: number;
 	readonly InviewConfigShowNew = InviewConfigShowNew;
 	readonly InviewConfigLoadMore = InviewConfigLoadMore;
-	readonly number = number;
+	readonly number = formatNumber;
 	readonly Scroll = Scroll;
 
 	declare $el: HTMLDivElement;

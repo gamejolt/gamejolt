@@ -2,7 +2,7 @@ import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
 import AppContentViewer from '../../content/content-viewer/content-viewer.vue';
 import AppFadeCollapse from '../../fade-collapse/fade-collapse.vue';
-import { date } from '../../filters/date';
+import { formatDate } from '../../filters/date';
 import AppStickerControlsOverlay from '../../sticker/controls-overlay/controls-overlay.vue';
 import AppStickerReactions from '../../sticker/reactions/reactions.vue';
 import { StickerTargetController } from '../../sticker/target/target-controller';
@@ -18,9 +18,6 @@ import '../comment.styl';
 		AppStickerReactions,
 		AppStickerControlsOverlay,
 	},
-	filters: {
-		date,
-	},
 })
 export default class AppCommentContent extends Vue {
 	@Prop(propRequired(Comment)) comment!: Comment;
@@ -31,5 +28,5 @@ export default class AppCommentContent extends Vue {
 	showFullContent = false;
 	stickerTargetController = new StickerTargetController(this.comment);
 
-	readonly date = date;
+	readonly date = formatDate;
 }

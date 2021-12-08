@@ -4,9 +4,9 @@ import { findRequiredVueParent } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
 import AppCardListItem from '../../../../../_common/card/list/item/item.vue';
 import AppExpand from '../../../../../_common/expand/expand.vue';
-import { filesize } from '../../../../../_common/filters/filesize';
-import { fuzzynumber } from '../../../../../_common/filters/fuzzynumber';
-import { number } from '../../../../../_common/filters/number';
+import { formatFilesize } from '../../../../../_common/filters/filesize';
+import { formatFuzzynumber } from '../../../../../_common/filters/fuzzynumber';
+import { formatNumber } from '../../../../../_common/filters/number';
 import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
 import AppForm from '../../../../../_common/form-vue/form';
 import { BaseForm, FormOnInit, FormOnLoad } from '../../../../../_common/form-vue/form.service';
@@ -45,10 +45,6 @@ type GameBuildFormModel = GameBuild & {
 	},
 	directives: {
 		AppTooltip,
-	},
-	filters: {
-		fuzzynumber,
-		filesize,
 	},
 })
 export default class FormGameBuild
@@ -90,7 +86,9 @@ export default class FormGameBuild
 	buildLaunchOptions: GameBuildLaunchOption[] = [];
 	wasChanged = false;
 
-	readonly number = number;
+	readonly number = formatNumber;
+	readonly fuzzynumber = formatFuzzynumber;
+	readonly filesize = formatFilesize;
 	readonly GameBuild = GameBuild;
 
 	declare $refs: {

@@ -1,4 +1,4 @@
-export function time(time?: number) {
+export function formatTime(time?: number) {
 	if (typeof time !== 'undefined') {
 		// Because I'm too stupid to write unit tests.
 		// time = 8.456456;  // Should be 0:08

@@ -1,7 +1,7 @@
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../utils/vue';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
-import { number } from '../../../../_common/filters/number';
+import { formatNumber } from '../../../../_common/filters/number';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/backdrop.vue';
 import { AppTheme } from '../../../../_common/theme/theme';
@@ -27,7 +27,7 @@ export default class AppFiresideBadge extends Vue {
 	canEmitExpiry = true;
 	expiryCheck: NodeJS.Timer | null = null;
 
-	readonly number = number;
+	readonly number = formatNumber;
 
 	get avatarTooltip() {
 		if (this.fireside.community) {

@@ -245,13 +245,13 @@
 						<div class="stat-big-label">
 							<translate>library.collection.followers_label</translate>
 						</div>
-						<div class="stat-big-digit">{{ followerCount | number }}</div>
+						<div class="stat-big-digit">{{ number(followerCount) }}</div>
 					</li>
 					<li class="stat-big stat-big-smaller">
 						<div class="stat-big-label">
 							<translate>library.collection.games_label</translate>
 						</div>
-						<div class="stat-big-digit">{{ listing.gamesCount | number }}</div>
+						<div class="stat-big-digit">{{ number(listing.gamesCount) }}</div>
 					</li>
 				</ul>
 			</template>

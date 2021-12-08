@@ -1,6 +1,6 @@
 import { Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
-import { currency } from '../../../../_common/filters/currency';
+import { formatCurrency } from '../../../../_common/filters/currency';
 import { BaseForm, FormOnInit, FormOnSubmit } from '../../../../_common/form-vue/form.service';
 import { User } from '../../../../_common/user/user.model';
 
@@ -21,7 +21,7 @@ export default class FormWithdrawFunds
 
 	warnOnDiscard = false;
 
-	readonly currency = currency;
+	readonly currency = formatCurrency;
 
 	onInit() {
 		this.setField('email_address', this.paypalEmail);

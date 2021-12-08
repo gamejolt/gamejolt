@@ -22,7 +22,7 @@ import AppCommunityVerifiedTick from '../../../../_common/community/verified-tic
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import AppExpand from '../../../../_common/expand/expand.vue';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
-import { number } from '../../../../_common/filters/number';
+import { formatNumber } from '../../../../_common/filters/number';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { Game } from '../../../../_common/game/game.model';
 import '../../../../_common/lazy/placeholder/placeholder.styl';
@@ -65,9 +65,6 @@ import { RouteStore, RouteStoreModule } from '../profile.store';
 	},
 	directives: {
 		AppTooltip,
-	},
-	filters: {
-		number,
 	},
 })
 @RouteResolver({
@@ -154,6 +151,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	readonly User = User;
 	readonly UserFriendship = UserFriendship;
 	readonly Screen = Screen;
+	readonly number = formatNumber;
 
 	get routeTitle() {
 		if (this.user) {

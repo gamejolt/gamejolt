@@ -1,6 +1,6 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { arrayIndexByFunc } from '../../../../utils/array';
-import { number } from '../../../../_common/filters/number';
+import { formatNumber } from '../../../../_common/filters/number';
 import { ForumCategory } from '../../../../_common/forum/category/category.model';
 import { ForumChannel } from '../../../../_common/forum/channel/channel.model';
 import { ForumPost } from '../../../../_common/forum/post/post.model';
@@ -17,9 +17,6 @@ import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified
 		AppTimeAgo,
 		AppUserVerifiedTick,
 	},
-	filters: {
-		number,
-	},
 })
 export default class AppForumChannelList extends Vue {
 	@Prop(ForumCategory) category!: ForumCategory;
@@ -28,7 +25,7 @@ export default class AppForumChannelList extends Vue {
 	latestPosts!: ForumPost[];
 	@Prop(Number) postCountPerPage!: number;
 
-	readonly number = number;
+	readonly number = formatNumber;
 	readonly Screen = Screen;
 
 	get indexedPosts() {

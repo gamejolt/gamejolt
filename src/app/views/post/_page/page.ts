@@ -1,11 +1,11 @@
 import { Emit, Options, Prop, Provide, Vue, Watch } from 'vue-property-decorator';
-import { RawLocation } from 'vue-router';
+import { RouteLocationRaw } from 'vue-router';
 import { arrayRemove } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import { CommunityUserNotification } from '../../../../_common/community/user-notification/user-notification.model';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
-import { number } from '../../../../_common/filters/number';
+import { formatNumber } from '../../../../_common/filters/number';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import {
 	$viewPostVideo,
@@ -103,7 +103,7 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 	private lightbox?: AppLightboxTS;
 
 	readonly Screen = Screen;
-	readonly number = number;
+	readonly number = formatNumber;
 
 	declare $refs: {
 		'sticker-scroll': HTMLDivElement;
@@ -148,7 +148,7 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 			this.$router.replace({
 				...this.$route,
 				query: { ...this.$route.query, t: undefined },
-			} as RawLocation);
+			} as RouteLocationRaw);
 		}
 	}
 

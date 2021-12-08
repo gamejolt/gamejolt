@@ -17,7 +17,7 @@
 						<h5 class="forum-topic-list-item-title">
 							<!-- Notifications -->
 							<span v-if="!!topic.notifications.length" class="tag tag-highlight">
-								{{ topic.notifications.length | number }}
+								{{ number(topic.notifications.length) }}
 							</span>
 
 							<!-- Pinned -->

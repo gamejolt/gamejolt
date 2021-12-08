@@ -1,11 +1,9 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { number } from '../../../../../_common/filters/number';
+import { formatNumber } from '../../../../../_common/filters/number';
 
-@Options({
-	filters: {
-		number,
-	},
-})
+@Options({})
 export default class AppAnalyticsReportRatingBreakdown extends Vue {
 	@Prop(Object) reportData!: any;
+
+	readonly number = formatNumber;
 }

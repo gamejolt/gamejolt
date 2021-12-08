@@ -3,7 +3,7 @@ import {
 	CommunityUserNotification,
 	NotificationType,
 } from '../community/user-notification/user-notification.model';
-import { currency } from '../filters/currency';
+import { formatCurrency } from '../filters/currency';
 import { Fireside } from '../fireside/fireside.model';
 import { FiresidePostCommunity } from '../fireside/post/community/community.model';
 import { FiresidePost } from '../fireside/post/post-model';
@@ -280,7 +280,7 @@ export class NotificationText {
 				const orderItem = notification.action_model as OrderItem;
 				const translationValues = {
 					object: sellable.title,
-					amount: currency(orderItem.amount),
+					amount: formatCurrency(orderItem.amount),
 					subject: this.getSubjectTranslationValue(notification),
 				};
 

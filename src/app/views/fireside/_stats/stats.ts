@@ -3,7 +3,7 @@ import { Api } from '../../../../_common/api/api.service';
 import AppCard from '../../../../_common/card/card.vue';
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
 import { Environment } from '../../../../_common/environment/environment.service';
-import { duration } from '../../../../_common/filters/duration';
+import { formatDuration } from '../../../../_common/filters/duration';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../_common/illustration/illustration.vue';
@@ -95,7 +95,7 @@ export default class AppFiresideStats extends Vue {
 	}
 
 	private updateExpiryValues() {
-		this.totalDurationText = duration((Date.now() - this.fireside.added_on) / 1000);
+		this.totalDurationText = formatDuration((Date.now() - this.fireside.added_on) / 1000);
 
 		if (this.fireside.expires_on > Date.now()) {
 			const expiresInS = this.fireside.getExpiryInMs() / 1000;
@@ -103,7 +103,7 @@ export default class AppFiresideStats extends Vue {
 			if (expiresInS > 60) {
 				this.expiresDurationText = null;
 			} else {
-				this.expiresDurationText = duration(expiresInS);
+				this.expiresDurationText = formatDuration(expiresInS);
 			}
 
 			if (expiresInS > 300) {

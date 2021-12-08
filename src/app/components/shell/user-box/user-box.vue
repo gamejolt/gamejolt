@@ -6,15 +6,13 @@
 				<em>{{ app.user.level }}</em>
 				<span class="user-box-exp-stats-help">
 					[
-					<app-link-help page="user-exp">
-						?
-					</app-link-help>
+					<app-link-help page="user-exp"> ? </app-link-help>
 					]
 				</span>
 			</div>
 			<div class="user-box-exp-stats-next">
 				Next in
-				<strong>{{ app.user.experience_next | number }}</strong>
+				<strong>{{ number(app.user.experience_next) }}</strong>
 				EXP
 			</div>
 		</div>

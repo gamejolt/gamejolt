@@ -3,7 +3,7 @@ import { shouldShowAppPromotion } from '../../../../utils/mobile-app';
 import { trackAppPromotionClick } from '../../../../_common/analytics/analytics.service';
 import AppAppButtons from '../../../../_common/app-buttons/app-buttons.vue';
 import AppContactLink from '../../../../_common/contact-link/contact-link.vue';
-import { date } from '../../../../_common/filters/date';
+import { formatDate } from '../../../../_common/filters/date';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
 import AppTranslateLangSelector from '../../../../_common/translate/lang-selector/lang-selector.vue';
@@ -26,7 +26,7 @@ export default class AppShellFooter extends Vue {
 	curDate = new Date();
 
 	readonly Screen = Screen;
-	readonly date = date;
+	readonly date = formatDate;
 	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
 	readonly trackAppPromotionClick = trackAppPromotionClick;
 

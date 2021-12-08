@@ -6,8 +6,8 @@ import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import AppExpand from '../../../../../_common/expand/expand.vue';
-import { date } from '../../../../../_common/filters/date';
-import { number } from '../../../../../_common/filters/number';
+import { formatDate } from '../../../../../_common/filters/date';
+import { formatNumber } from '../../../../../_common/filters/number';
 import { ForumPost } from '../../../../../_common/forum/post/post.model';
 import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
@@ -44,10 +44,6 @@ const InviewConfig = new ScrollInviewConfig();
 	directives: {
 		AppTooltip,
 	},
-	filters: {
-		date,
-		number,
-	},
 })
 export default class AppForumPostListItem extends Vue {
 	@Prop(ForumTopic) topic!: ForumTopic;
@@ -68,8 +64,8 @@ export default class AppForumPostListItem extends Vue {
 	totalReplyCount = 0;
 
 	readonly InviewConfig = InviewConfig;
-	readonly date = date;
-	readonly number = number;
+	readonly date = formatDate;
+	readonly number = formatNumber;
 	readonly Environment = Environment;
 
 	@Emit('replied')

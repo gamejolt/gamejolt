@@ -5,7 +5,7 @@ import {
 	trackGameFollow,
 } from '../../../../_common/analytics/analytics.service';
 import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
-import { number } from '../../../../_common/filters/number';
+import { formatNumber } from '../../../../_common/filters/number';
 import { followGame, Game, unfollowGame } from '../../../../_common/game/game.model';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppPopper from '../../../../_common/popper/popper.vue';
@@ -77,7 +77,7 @@ export default class AppGameFollowWidget extends Vue {
 
 	get badge() {
 		return !this.circle && !this.hideCount && this.game.follower_count
-			? number(this.game.follower_count)
+			? formatNumber(this.game.follower_count)
 			: '';
 	}
 

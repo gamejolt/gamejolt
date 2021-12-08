@@ -1,8 +1,11 @@
+import { InjectionKey } from 'vue';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
 import { EventItem } from '../../../../_common/event-item/event-item.model';
 import { Notification } from '../../../../_common/notification/notification-model';
+import { ScrollInviewConfig } from '../../../../_common/scroll/inview/inview.vue';
+import { ActivityFeedInterface } from './feed';
 import { ActivityFeedInput, ActivityFeedItem } from './item-service';
 import { ActivityFeedState } from './state';
 
@@ -32,6 +35,15 @@ export interface ActivityFeedViewOptions {
 }
 
 export const ActivityFeedKey = Symbol('activity-feed');
+
+export const ActivityFeedInterfaceKey: InjectionKey<ActivityFeedInterface> =
+	Symbol('activity-feed-interface');
+
+/**
+ * Can be used by the various feed components to track whether or not they're
+ * the focused feed component.
+ */
+export const InviewConfigFocused = new ScrollInviewConfig({ trackFocused: true });
 
 export class ActivityFeedView {
 	/**

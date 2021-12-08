@@ -1,7 +1,7 @@
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
-import { duration } from '../../../../../../../_common/filters/duration';
-import { number } from '../../../../../../../_common/filters/number';
+import { formatDuration } from '../../../../../../../_common/filters/duration';
+import { formatNumber } from '../../../../../../../_common/filters/number';
 import {
 	BaseRouteComponent,
 	RouteResolver,
@@ -13,10 +13,6 @@ import { RouteStore, RouteStoreModule } from '../../manage.store';
 	name: 'RouteDashGamesManageApiOverview',
 	directives: {
 		AppTooltip,
-	},
-	filters: {
-		number,
-		duration,
 	},
 })
 @RouteResolver({
@@ -40,6 +36,9 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 		time: number;
 		'user-count': number;
 	} = {} as any;
+
+	readonly number = formatNumber;
+	readonly duration = formatDuration;
 
 	get routeTitle() {
 		if (this.game) {

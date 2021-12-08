@@ -7,7 +7,7 @@ import { CommunityCompetition } from '../../../../../../_common/community/compet
 import { CommunityCompetitionEntry } from '../../../../../../_common/community/competition/entry/entry.model';
 import { CommunityCompetitionEntryVote } from '../../../../../../_common/community/competition/entry/vote/vote.model';
 import { CommunityCompetitionVotingCategory } from '../../../../../../_common/community/competition/voting-category/voting-category.model';
-import { date } from '../../../../../../_common/filters/date';
+import { formatDate } from '../../../../../../_common/filters/date';
 import AppLoading from '../../../../../../_common/loading/loading.vue';
 import { BaseModal } from '../../../../../../_common/modal/base';
 import { Screen } from '../../../../../../_common/screen/screen-service';
@@ -51,7 +51,7 @@ export default class AppCommunityCompetitionEntryModal extends BaseModal {
 	isLoading = true;
 
 	readonly Screen = Screen;
-	readonly date = date;
+	readonly date = formatDate;
 
 	get title() {
 		return this.m_entry ? this.m_entry.resource.title : this.$gettext(`Loading...`);

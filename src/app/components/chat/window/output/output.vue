@@ -34,7 +34,7 @@
 			<div v-app-observe-dimensions="tryAutoscroll">
 				<div v-for="message of allMessages" :key="message.id">
 					<div v-if="message.dateSplit" class="-date-split">
-						<span class="-inner">{{ message.logged_on | date('mediumDate') }}</span>
+						<span class="-inner">{{ date(message.logged_on, 'mediumDate') }}</span>
 					</div>
 
 					<hr v-if="!message.dateSplit && !message.combine" class="-hr" />

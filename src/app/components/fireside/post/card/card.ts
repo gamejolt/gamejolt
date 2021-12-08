@@ -5,7 +5,7 @@ import { ContentFocus } from '../../../../../_common/content-focus/content-focus
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
-import { fuzzynumber } from '../../../../../_common/filters/fuzzynumber';
+import { formatFuzzynumber } from '../../../../../_common/filters/fuzzynumber';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
 import AppJolticon from '../../../../../_common/jolticon/jolticon.vue';
@@ -66,7 +66,7 @@ export default class AppPostCard extends Vue {
 	};
 
 	readonly GJ_IS_SSR = GJ_IS_SSR;
-	readonly fuzzynumber = fuzzynumber;
+	readonly fuzzynumber = formatFuzzynumber;
 	readonly InviewConfig = _InviewConfig;
 
 	readonly aspectRatio = AppPostCardAspectRatio;

@@ -1,3 +1,5 @@
+<script lang="ts" src="./details"></script>
+
 <template>
 	<div>
 		<div class="-metadata">
@@ -5,24 +7,13 @@
 				<translate>Development Stage</translate>
 			</div>
 			<app-lazy-placeholder tag="span" :when="game.development_status">
-				<span class="lazy-placeholder" style="width: 80px"></span>
+				<span class="lazy-placeholder" style="width: 80px" />
 
 				<span class="-metadata-value">
-					<translate v-if="game._is_devlog">
-						Devlog
-					</translate>
-
-					<translate v-if="game._is_wip">
-						Early Access
-					</translate>
-
-					<translate v-if="game._is_finished">
-						Complete
-					</translate>
-
-					<translate class="tag tag-notice" v-if="game.canceled">
-						Canceled
-					</translate>
+					<translate v-if="game._is_devlog">Devlog</translate>
+					<translate v-if="game._is_wip">Early Access</translate>
+					<translate v-if="game._is_finished">Complete</translate>
+					<translate v-if="game.canceled" class="tag tag-notice">Canceled</translate>
 				</span>
 			</app-lazy-placeholder>
 		</div>
@@ -32,19 +23,19 @@
 				<translate>Engine/Language</translate>
 			</div>
 			<app-lazy-placeholder tag="span" :when="creationTool">
-				<span class="lazy-placeholder" style="width: 100px"></span>
+				<span class="lazy-placeholder" style="width: 100px" />
 				<span class="-metadata-value">
 					{{ creationTool }}
 				</span>
 			</app-lazy-placeholder>
 		</div>
 
-		<div class="-metadata" v-if="game.published_on">
+		<div v-if="game.published_on" class="-metadata">
 			<div class="-metadata-label">
 				<translate>Published On</translate>
 			</div>
 			<app-lazy-placeholder tag="span" :when="game.published_on">
-				<span class="lazy-placeholder" style="width: 120px"></span>
+				<span class="lazy-placeholder" style="width: 120px" />
 				<router-link
 					class="-metadata-value"
 					:to="{
@@ -55,14 +46,14 @@
 						},
 					}"
 				>
-					{{ game.published_on | date('longDate') }}
+					{{ date(game.published_on, 'longDate') }}
 				</router-link>
 			</app-lazy-placeholder>
 		</div>
 
 		<br />
 
-		<ul class="list-unstyled" v-if="hasLinksSection">
+		<ul v-if="hasLinksSection" class="list-unstyled">
 			<li v-if="game.web_site">
 				<app-jolticon icon="world" />
 				<app-link-external :href="game.web_site">
@@ -108,5 +99,3 @@
 .-metadata-value
 	font-weight: bold
 </style>
-
-<script lang="ts" src="./details"></script>

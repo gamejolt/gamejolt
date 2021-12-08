@@ -7,11 +7,11 @@
 		<div class="user-level-widget-experience fill-offset text-right">
 			<div class="stat-big stat-big-smaller">
 				<div class="stat-big-label">Current EXP</div>
-				<div class="stat-big-digit">{{ user.experience | number }} EXP</div>
+				<div class="stat-big-digit">{{ number(user.experience) }} EXP</div>
 			</div>
 			<div class="stat-big stat-big-smaller">
 				<div class="stat-big-label">Next Level in</div>
-				<div class="stat-big-digit">{{ user.experience_next | number }} EXP</div>
+				<div class="stat-big-digit">{{ number(user.experience_next) }} EXP</div>
 			</div>
 		</div>
 		<app-progress-bar

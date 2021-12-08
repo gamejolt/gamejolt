@@ -1,8 +1,8 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { propOptional, propRequired } from '../../../utils/vue';
-import { fuzzynumber } from '../../filters/fuzzynumber';
-import { number } from '../../filters/number';
+import { formatFuzzynumber } from '../../filters/fuzzynumber';
+import { formatNumber } from '../../filters/number';
 import AppLoading from '../../loading/loading.vue';
 import { AppStore } from '../../store/app-store';
 import { AppTheme } from '../../theme/theme';
@@ -31,8 +31,8 @@ export default class AppUserCard extends Vue {
 
 	@State app!: AppStore;
 
-	readonly number = number;
-	readonly fuzzynumber = fuzzynumber;
+	readonly number = formatNumber;
+	readonly fuzzynumber = formatFuzzynumber;
 
 	get followerCount() {
 		return this.user.follower_count || 0;

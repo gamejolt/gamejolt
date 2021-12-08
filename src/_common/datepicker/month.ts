@@ -1,7 +1,7 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { arrayChunk } from '../../utils/array';
 import { findRequiredVueParent } from '../../utils/vue';
-import { date as dateFilter } from '../filters/date';
+import { formatDate } from '../filters/date';
 import AppDatepickerTS, { DatepickerDate } from './datepicker';
 import AppDatepicker from './datepicker.vue';
 
@@ -16,7 +16,7 @@ export default class AppDatepickerMonth extends Vue {
 	emitUpdate(_date: Date) {}
 
 	get title() {
-		return dateFilter(this.modelValue, this.parent.formatMonthTitle);
+		return formatDate(this.modelValue, this.parent.formatMonthTitle);
 	}
 
 	get rows() {

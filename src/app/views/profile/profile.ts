@@ -5,7 +5,7 @@ import { BlockModal } from '../../../_common/block/modal/modal.service';
 import { Clipboard } from '../../../_common/clipboard/clipboard-service';
 import { CommentModal } from '../../../_common/comment/modal/modal.service';
 import { Environment } from '../../../_common/environment/environment.service';
-import { number } from '../../../_common/filters/number';
+import { formatNumber } from '../../../_common/filters/number';
 import AppPopper from '../../../_common/popper/popper.vue';
 import { ReportModal } from '../../../_common/report/modal/modal.service';
 import {
@@ -47,9 +47,6 @@ const ProfileThemeKey = 'profile';
 	},
 	directives: {
 		AppTooltip,
-	},
-	filters: {
-		number,
 	},
 })
 @WithRouteStore({
@@ -115,6 +112,7 @@ export default class RouteProfile extends BaseRouteComponent {
 	readonly UserFriendship = UserFriendship;
 	readonly Environment = Environment;
 	readonly Screen = Screen;
+	readonly number = formatNumber;
 
 	/**
 	 * The cover height changes when we switch to not showing the full cover, so

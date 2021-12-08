@@ -2,8 +2,8 @@ import { Options, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Environment } from '../../../_common/environment/environment.service';
-import { currency } from '../../../_common/filters/currency';
-import { filesize } from '../../../_common/filters/filesize';
+import { formatCurrency } from '../../../_common/filters/currency';
+import { filesiformatFilesizem '../../../_common/filters/filesize';
 import { GameBuild } from '../../../_common/game/build/build.model';
 import { HistoryTick } from '../../../_common/history-tick/history-tick-service';
 import { Sellable } from '../../../_common/sellable/sellable.model';
@@ -40,8 +40,7 @@ export default class AppDownload extends Vue {
 	clickedBuild?: GameBuild;
 
 	readonly GameBuild = GameBuild;
-	readonly filesize = filesize;
-	readonly currency = currency;
+	readonly filesize = filesiformatFilesizedonly currency = formatCurrency;
 
 	// "Convenience" I guess
 	get hasBrowserBuild() {

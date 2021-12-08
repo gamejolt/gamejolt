@@ -6,7 +6,7 @@ import {
 	VotingType,
 	VotingUserRestriction,
 } from '../../../../../../../_common/community/competition/competition.model';
-import { date } from '../../../../../../../_common/filters/date';
+import { formatDate } from '../../../../../../../_common/filters/date';
 import AppFormControlDate from '../../../../../../../_common/form-vue/control/date/date.vue';
 import { FormTimezoneService } from '../../../../../../../_common/form-vue/control/date/form-timezone.service';
 import AppFormControlToggle from '../../../../../../../_common/form-vue/control/toggle/toggle.vue';
@@ -27,9 +27,6 @@ type RadioOption<T> = {
 		AppLoading,
 		AppFormControlToggle,
 	},
-	filters: {
-		date,
-	},
 })
 export default class FormCommunityCompetitionVotingEdit
 	extends BaseForm<CommunityCompetition>
@@ -38,6 +35,8 @@ export default class FormCommunityCompetitionVotingEdit
 	modelClass = CommunityCompetition;
 	timezoneService: FormTimezoneService<CommunityCompetition> | null = null;
 	saveMethod: '$saveVoting' = '$saveVoting';
+
+	readonly date = formatDate;
 
 	@Emit('cancel')
 	emitCancel() {}

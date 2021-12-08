@@ -16,7 +16,7 @@ const humanizer = humanizeDuration.humanizer({
 	},
 });
 
-export function duration(time: number, language = 'shortEn'): string {
+export function formatDuration(time: number, language = 'shortEn'): string {
 	if (typeof time !== 'undefined') {
 		const timeS = time * 1000;
 		if (language === 'shortEn') {

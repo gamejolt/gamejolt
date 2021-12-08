@@ -2,9 +2,9 @@ import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
-import { currency } from '../../../../_common/filters/currency';
-import { date as dateFilter } from '../../../../_common/filters/date';
-import { number } from '../../../../_common/filters/number';
+import { formatCurrency } from '../../../../_common/filters/currency';
+import { formatDate } from '../../../../_common/filters/date';
+import { formatNumber } from '../../../../_common/filters/number';
 import { Game } from '../../../../_common/game/game.model';
 import { GamePackage } from '../../../../_common/game/package/package.model';
 import { GameRelease } from '../../../../_common/game/release/release.model';
@@ -64,11 +64,6 @@ import {
 	directives: {
 		AppScrollTo,
 	},
-	filters: {
-		number,
-		currency,
-		date: dateFilter,
-	},
 })
 @RouteResolver({
 	cache: false,
@@ -110,6 +105,9 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 	nextYear = 0;
 
 	readonly Screen = Screen;
+	readonly number = formatNumber;
+	readonly currency = formatCurrency;
+	readonly date = formatDate;
 
 	get routeTitle() {
 		return this.$gettext('Analytics');

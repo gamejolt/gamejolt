@@ -6,7 +6,7 @@ import { CommunityCompetition } from '../../../../../../../_common/community/com
 import { CommunityCompetitionEntry } from '../../../../../../../_common/community/competition/entry/entry.model';
 import { CommunityCompetitionEntryVote } from '../../../../../../../_common/community/competition/entry/vote/vote.model';
 import { CommunityCompetitionVotingCategory } from '../../../../../../../_common/community/competition/voting-category/voting-category.model';
-import { number } from '../../../../../../../_common/filters/number';
+import { formatNumber } from '../../../../../../../_common/filters/number';
 import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
 import AppLoadingFade from '../../../../../../../_common/loading/fade/fade.vue';
 import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
@@ -17,9 +17,6 @@ import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directi
 	},
 	directives: {
 		AppTooltip,
-	},
-	filters: {
-		number,
 	},
 })
 export default class FormCommunityCompetitionVotingCast extends Vue {
@@ -33,7 +30,7 @@ export default class FormCommunityCompetitionVotingCast extends Vue {
 	hasVoted = false;
 	isSaving = false;
 
-	readonly number = number;
+	readonly number = formatNumber;
 
 	get overallRating() {
 		// With overall rating type, there is only 1 vote, which is also the overall.

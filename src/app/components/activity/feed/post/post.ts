@@ -10,7 +10,6 @@ import AppContentViewer from '../../../../../_common/content/content-viewer/cont
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
-import { number } from '../../../../../_common/filters/number';
 import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
@@ -35,13 +34,13 @@ import { Store } from '../../../../store';
 import AppFiresidePostEmbed from '../../../fireside/post/embed/embed.vue';
 import AppPollVoting from '../../../poll/voting/voting.vue';
 import AppPostControls from '../../../post/controls/controls.vue';
-import { ActivityFeedInterface, ActivityFeedInterfaceKey } from '../feed';
+import type { ActivityFeedInterface } from '../feed';
 import { feedShouldBlockPost } from '../feed-service';
 import { ActivityFeedItem } from '../item-service';
 import AppActivityFeedPostMedia from '../post/media/media.vue';
 import AppActivityFeedPostText from '../post/text/text.vue';
 import AppActivityFeedPostVideo from '../post/video/video.vue';
-import { ActivityFeedKey, ActivityFeedView } from '../view';
+import { ActivityFeedInterfaceKey, ActivityFeedKey, ActivityFeedView } from '../view';
 import AppActivityFeedPostBlocked from './blocked/blocked.vue';
 import AppActivityFeedPostTime from './time/time.vue';
 
@@ -70,9 +69,6 @@ import AppActivityFeedPostTime from './time/time.vue';
 	},
 	directives: {
 		AppObserveDimensions,
-	},
-	filters: {
-		number,
 	},
 })
 export default class AppActivityFeedPost extends Vue {

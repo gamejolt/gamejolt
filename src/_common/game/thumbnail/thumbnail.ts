@@ -5,7 +5,7 @@ import AppGameCompatIcons from '../../../app/components/game/compat-icons/compat
 import AppGameFollowWidget from '../../../app/components/game/follow-widget/follow-widget.vue';
 import AppGameModLinks from '../../../app/components/game/mod-links/mod-links.vue';
 import { propOptional, propRequired } from '../../../utils/vue';
-import { currency } from '../../filters/currency';
+import { formatCurrency } from '../../filters/currency';
 import AppPopper from '../../popper/popper.vue';
 import { Screen } from '../../screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '../../scroll/inview/inview.vue';
@@ -102,11 +102,11 @@ export default class AppGameThumbnail extends Vue {
 	}
 
 	get pricingAmount() {
-		return this.pricing && currency(this.pricing.amount);
+		return this.pricing && formatCurrency(this.pricing.amount);
 	}
 
 	get oldPricingAmount() {
-		return this.saleOldPricing && currency(this.saleOldPricing.amount);
+		return this.saleOldPricing && formatCurrency(this.saleOldPricing.amount);
 	}
 
 	get showModTools() {

@@ -1,7 +1,7 @@
 import { Options, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { filesize } from '../../../_common/filters/filesize';
-import { ucwords } from '../../../_common/filters/ucwords';
+import { formatFilesize } from '../../../_common/filters/filesize';
+import { formatUcwords } from '../../../_common/filters/ucwords';
 import { GameBuild } from '../../../_common/game/build/build.model';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../store/index';
@@ -12,8 +12,8 @@ import { Store } from '../../store/index';
 	},
 })
 export default class AppIncludedItems extends Vue {
-	readonly ucwords = ucwords;
-	readonly filesize = filesize;
+	readonly ucwords = formatUcwords;
+	readonly filesize = formatFilesize;
 
 	@State package!: Store['package'];
 	@State packagePayload!: Store['packagePayload'];

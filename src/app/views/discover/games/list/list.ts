@@ -4,8 +4,8 @@ import { RouteLocationRedirect } from '../../../../../utils/router';
 import { titleCase } from '../../../../../utils/string';
 import { Api } from '../../../../../_common/api/api.service';
 import AppExpand from '../../../../../_common/expand/expand.vue';
-import { date } from '../../../../../_common/filters/date';
-import { fuzzynumber } from '../../../../../_common/filters/fuzzynumber';
+import { formatDate } from '../../../../../_common/filters/date';
+import { formatFuzzynumber } from '../../../../../_common/filters/fuzzynumber';
 import AppGameAddBanner from '../../../../../_common/game/add-banner/add-banner.vue';
 import { HistoryCache } from '../../../../../_common/history/cache/cache.service';
 import { Meta } from '../../../../../_common/meta/meta-service';
@@ -85,15 +85,15 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 	get dateRange(): [string, string] | undefined {
 		if (this.section === 'by-date' && this.$route.params.endDate) {
 			return [
-				date(new Date(this.$route.params.date), 'mediumDate'),
-				date(new Date(this.$route.params.endDate), 'mediumDate'),
+				formatDate(new Date(this.$route.params.date), 'mediumDate'),
+				formatDate(new Date(this.$route.params.endDate), 'mediumDate'),
 			];
 		}
 	}
 
 	get date() {
 		if (this.section === 'by-date' && !this.$route.params.endDate) {
-			return date(new Date(this.$route.params.date), 'mediumDate');
+			return formatDate(new Date(this.$route.params.date), 'mediumDate');
 		}
 	}
 
@@ -246,7 +246,7 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 			return this.listDescription;
 		}
 
-		const count = fuzzynumber(this.listing.gamesCount);
+		const count = formatFuzzynumber(this.listing.gamesCount);
 		const gameTitles = arrayShuffle(this.listing.games.slice())
 			.slice(0, 5)
 			.map(game => game.title)

@@ -5,7 +5,7 @@ import { Api } from '../../../../../_common/api/api.service';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
-import { number } from '../../../../../_common/filters/number';
+import { formatNumber } from '../../../../../_common/filters/number';
 import { ForumChannel } from '../../../../../_common/forum/channel/channel.model';
 import { ForumPost } from '../../../../../_common/forum/post/post.model';
 import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
@@ -60,9 +60,6 @@ import { Store } from '../../../../store/index';
 		AppTooltip,
 		AppScrollTo,
 	},
-	filters: {
-		number,
-	},
 })
 @RouteResolver({
 	cache: true,
@@ -105,6 +102,7 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 
 	readonly Screen = Screen;
 	readonly Environment = Environment;
+	readonly number = formatNumber;
 
 	get loginUrl() {
 		return (

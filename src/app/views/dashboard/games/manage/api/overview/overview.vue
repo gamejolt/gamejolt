@@ -7,15 +7,15 @@
 		<div class="page-help">
 			<p>
 				<translate>
-					The Game API lets you spice up your game with scoreboards, trophies, cloud data storage,
-					session logging, and more.
+					The Game API lets you spice up your game with scoreboards, trophies, cloud data
+					storage, session logging, and more.
 				</translate>
 			</p>
 			<p>
 				<translate>
-					You can check the links below to see if the community has already written an API library
-					or plugin for the engine/tool/language you use. Of course, you can always write one
-					yourself and share it in the forums!
+					You can check the links below to see if the community has already written an API
+					library or plugin for the engine/tool/language you use. Of course, you can
+					always write one yourself and share it in the forums!
 				</translate>
 			</p>
 			<p>
@@ -51,7 +51,7 @@
 							<translate>dash.games.api.overview.sessions_active_label</translate>
 						</div>
 						<div class="stat-big-digit">
-							{{ numActiveSessions | number }}
+							{{ number(numActiveSessions) }}
 						</div>
 					</div>
 				</div>
@@ -61,7 +61,7 @@
 							<translate>dash.games.api.overview.sessions_time_label</translate>
 						</div>
 						<div class="stat-big-digit">
-							{{ sessionStats.time || 0 | duration }}
+							{{ duration(sessionStats.time || 0) }}
 						</div>
 					</div>
 				</div>
@@ -71,7 +71,7 @@
 							<translate>dash.games.api.overview.sessions_avg_label</translate>
 						</div>
 						<div class="stat-big-digit">
-							{{ sessionStats.avg || 0 | duration }}
+							{{ duration(sessionStats.avg || 0) }}
 						</div>
 					</div>
 				</div>
@@ -81,7 +81,7 @@
 							<translate>dash.games.api.overview.sessions_users_label</translate>
 						</div>
 						<div class="stat-big-digit">
-							{{ sessionStats['user-count'] | number }}
+							{{ number(sessionStats['user-count']) }}
 						</div>
 					</div>
 				</div>
@@ -89,7 +89,10 @@
 		</div>
 
 		<h2>
-			<router-link class="link-unstyled" :to="{ name: 'dash.games.manage.api.trophies.list' }">
+			<router-link
+				class="link-unstyled"
+				:to="{ name: 'dash.games.manage.api.trophies.list' }"
+			>
 				<translate>dash.games.api.overview.trophies_heading</translate>
 			</router-link>
 		</h2>
@@ -102,7 +105,7 @@
 							<translate>dash.games.api.overview.trophies_label</translate>
 						</div>
 						<div class="stat-big-digit">
-							{{ numActiveTrophies | number }}
+							{{ number(numActiveTrophies) }}
 						</div>
 					</div>
 				</div>
@@ -112,7 +115,9 @@
 							<translate>dash.games.api.overview.trophies_exp_label</translate>
 							<app-jolticon
 								icon="help-circle"
-								v-app-tooltip.touchable="$gettext(`dash.games.api.overview.trophies_exp_tooltip`)"
+								v-app-tooltip.touchable="
+									$gettext(`dash.games.api.overview.trophies_exp_tooltip`)
+								"
 							/>
 						</div>
 						<div class="stat-big-digit">
@@ -120,7 +125,7 @@
 								<translate>dash.games.api.overview.na</translate>
 							</template>
 							<template v-else>
-								{{ totalTrophyExp | number }}
+								{{ number(totalTrophyExp) }}
 								<translate>leveling.exp</translate>
 							</template>
 						</div>
@@ -132,7 +137,7 @@
 							<translate>dash.games.api.overview.trophies_achieved_label</translate>
 						</div>
 						<div class="stat-big-digit">
-							{{ totalAchievedTrophies | number }}
+							{{ number(totalAchievedTrophies) }}
 						</div>
 					</div>
 				</div>
@@ -142,7 +147,7 @@
 							<translate>dash.games.api.overview.trophies_users_label</translate>
 						</div>
 						<div class="stat-big-digit">
-							{{ totalUsersWithTrophies | number }}
+							{{ number(totalUsersWithTrophies) }}
 						</div>
 					</div>
 				</div>
@@ -150,7 +155,10 @@
 		</div>
 
 		<h2>
-			<router-link class="link-unstyled" :to="{ name: 'dash.games.manage.api.scoreboards.list' }">
+			<router-link
+				class="link-unstyled"
+				:to="{ name: 'dash.games.manage.api.scoreboards.list' }"
+			>
 				<translate>dash.games.api.overview.scores_heading</translate>
 			</router-link>
 		</h2>
@@ -163,11 +171,13 @@
 							<translate>dash.games.api.overview.scores_label</translate>
 							<app-jolticon
 								icon="help-circle"
-								v-app-tooltip.touchable="$gettext(`dash.games.api.overview.scores_tooltip`)"
+								v-app-tooltip.touchable="
+									$gettext(`dash.games.api.overview.scores_tooltip`)
+								"
 							/>
 						</div>
 						<div class="stat-big-digit">
-							{{ totalScores | number }}
+							{{ number(totalScores) }}
 						</div>
 					</div>
 				</div>
@@ -177,11 +187,13 @@
 							<translate>dash.games.api.overview.scores_users_label</translate>
 							<app-jolticon
 								icon="help-circle"
-								v-app-tooltip.touchable="$gettext(`dash.games.api.overview.scores_users_tooltip`)"
+								v-app-tooltip.touchable="
+									$gettext(`dash.games.api.overview.scores_users_tooltip`)
+								"
 							/>
 						</div>
 						<div class="stat-big-digit">
-							{{ totalUsersWithScores | number }}
+							{{ number(totalUsersWithScores) }}
 						</div>
 					</div>
 				</div>
@@ -205,11 +217,13 @@
 							<translate>dash.games.api.overview.data_items_label</translate>
 							<app-jolticon
 								icon="help-circle"
-								v-app-tooltip.touchable="$gettext(`dash.games.api.overview.data_items_tooltip`)"
+								v-app-tooltip.touchable="
+									$gettext(`dash.games.api.overview.data_items_tooltip`)
+								"
 							/>
 						</div>
 						<div class="stat-big-digit">
-							{{ numGlobalItems | number }}
+							{{ number(numGlobalItems) }}
 						</div>
 					</div>
 				</div>

@@ -7,7 +7,7 @@ import {
 	useAdsController,
 } from '../../../_common/ad/ad-store';
 import AppExpand from '../../../_common/expand/expand.vue';
-import { number } from '../../../_common/filters/number';
+import { formatNumber } from '../../../_common/filters/number';
 import AppPagination from '../../../_common/pagination/pagination.vue';
 import { BaseRouteComponent, WithRouteStore } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
@@ -50,7 +50,7 @@ export default class RouteSearch extends BaseRouteComponent {
 	readonly Screen = Screen;
 	readonly Search = Search;
 	readonly Scroll = Scroll;
-	readonly number = number;
+	readonly number = formatNumber;
 
 	get routeTitle() {
 		if (this.$route.query.q) {

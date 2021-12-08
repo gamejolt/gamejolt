@@ -1,7 +1,7 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../utils/vue';
 import { Environment } from '../../../../_common/environment/environment.service';
-import { number } from '../../../../_common/filters/number';
+import { formatNumber } from '../../../../_common/filters/number';
 import AppLoadingFade from '../../../../_common/loading/fade/fade.vue';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import AppNavTabList from '../../../../_common/nav/tab-list/tab-list.vue';
@@ -47,7 +47,7 @@ export default class AppGameListing extends Vue {
 
 	inviewConfig = new ScrollInviewConfig();
 
-	readonly number = number;
+	readonly number = formatNumber;
 	readonly Environment = Environment;
 	readonly Screen = Screen;
 	readonly Scroll = Scroll;

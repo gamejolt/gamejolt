@@ -2,7 +2,7 @@ import { nextTick } from 'vue';
 import { setup } from 'vue-class-component';
 import { Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
-import { date } from '../../../../../_common/filters/date';
+import { formatDate } from '../../../../../_common/filters/date';
 import AppIllustration from '../../../../../_common/illustration/illustration.vue';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
@@ -26,9 +26,6 @@ import AppChatWindowOutputItem from './item/item.vue';
 	directives: {
 		AppObserveDimensions,
 	},
-	filters: {
-		date,
-	},
 })
 export default class AppChatWindowOutput extends Vue {
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
@@ -51,6 +48,8 @@ export default class AppChatWindowOutput extends Vue {
 	private newMessage$?: EventSubscription;
 	private isAutoscrolling = false;
 	private isOnScrollQueued = false;
+
+	readonly date = formatDate;
 
 	get allMessages() {
 		return this.messages.concat(this.queuedMessages);

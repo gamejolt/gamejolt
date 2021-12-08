@@ -1,5 +1,5 @@
 import { Options, Prop } from 'vue-property-decorator';
-import { number } from '../../../filters/number';
+import { formatNumber } from '../../../filters/number';
 import AppProgressBar from '../../../progress/bar/bar.vue';
 import BaseFormControl from '../controller';
 import AppFormControlUploadFileTS from './file';
@@ -9,9 +9,6 @@ import AppFormControlUploadFile from './file.vue';
 	components: {
 		AppProgressBar,
 		AppFormControlUploadFile,
-	},
-	filters: {
-		number,
 	},
 })
 export default class AppFormControlUpload extends BaseFormControl {
@@ -28,6 +25,8 @@ export default class AppFormControlUpload extends BaseFormControl {
 
 	controlVal: File | File[] | null = [];
 	isDropActive = false;
+
+	readonly number = formatNumber;
 
 	get validationRules() {
 		let rules: any = {};

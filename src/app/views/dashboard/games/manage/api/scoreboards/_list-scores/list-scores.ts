@@ -1,6 +1,6 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { date } from '../../../../../../../../_common/filters/date';
-import { number } from '../../../../../../../../_common/filters/number';
+import { formatDate } from '../../../../../../../../_common/filters/date';
+import { formatNumber } from '../../../../../../../../_common/filters/number';
 import { GameScoreTable } from '../../../../../../../../_common/game/score-table/score-table.model';
 import { ModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import AppPopper from '../../../../../../../../_common/popper/popper.vue';
@@ -10,10 +10,6 @@ import { UserGameScore } from '../../../../../../../../_common/user/game-score/g
 	components: {
 		AppPopper,
 	},
-	filters: {
-		date,
-		number,
-	},
 })
 export default class AppManageGameListScores extends Vue {
 	@Prop(GameScoreTable) scoreTable!: GameScoreTable;
@@ -22,6 +18,9 @@ export default class AppManageGameListScores extends Vue {
 
 	@Emit('remove')
 	emitRemove(_score: UserGameScore) {}
+
+	readonly date = formatDate;
+	readonly number = formatNumber;
 
 	async removeScore(score: UserGameScore) {
 		const result = await ModalConfirm.show(

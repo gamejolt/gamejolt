@@ -1,6 +1,6 @@
 import { Options, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
-import { filesize } from '../../../../_common/filters/filesize';
+import { formatFilesize } from '../../../../_common/filters/filesize';
 import AppFormControlCrop from '../../../../_common/form-vue/control/crop/crop.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
 import AppFormControlUpload from '../../../../_common/form-vue/control/upload/upload.vue';
@@ -38,7 +38,7 @@ export default class FormAvatar
 	minSize = 0;
 	maxSize = 0;
 
-	readonly filesize = filesize;
+	readonly filesize = formatFilesize;
 	readonly Screen = Screen;
 
 	declare $refs: {

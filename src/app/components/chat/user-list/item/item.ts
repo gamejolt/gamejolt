@@ -1,6 +1,6 @@
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
-import { number } from '../../../../../_common/filters/number';
+import { formatNumber } from '../../../../../_common/filters/number';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
@@ -55,7 +55,7 @@ export default class AppChatUserListItem extends Vue {
 	}
 
 	get notificationsCountLocalized() {
-		return number(this.notificationsCount);
+		return formatNumber(this.notificationsCount);
 	}
 
 	get isOnline() {
