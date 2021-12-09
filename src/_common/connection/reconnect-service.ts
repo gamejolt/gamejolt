@@ -5,24 +5,13 @@ const TIMEOUT_GROW = 1.5;
 const TIMEOUT_MAX = 30000;
 
 export class ConnectionReconnect {
-	private checkUrl: string;
-
-	private failFn: Function;
-	private successFn: Function;
+	// Just an image, so should be pretty lightweight.
+	private checkUrl = 'https://s.gamejolt.com/img/offline-connection-check.png';
 
 	private timeoutMs = TIMEOUT_INITIAL;
 	private timeoutHandle?: NodeJS.Timer;
 
-	constructor(failFn: Function, successFn: Function) {
-		// Just an image, so should be pretty lightweight.
-		this.checkUrl = 'https://s.gamejolt.com/img/offline-connection-check.png';
-
-		this.failFn = failFn;
-		this.successFn = successFn;
-		this.timeoutMs = TIMEOUT_INITIAL;
-
-		this.check();
-	}
+	constructor(private failFn: () => void, private successFn: () => void) {}
 
 	async check() {
 		try {

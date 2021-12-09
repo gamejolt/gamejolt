@@ -1,5 +1,5 @@
 <script lang="ts">
-import { onMounted, onUnmounted, PropType, reactive, watch } from 'vue';
+import { onMounted, onUnmounted, PropType, reactive, ref, watch } from 'vue';
 import { useScrollInviewParent } from './parent.vue';
 
 export type ScrollInviewEmitsOn = 'full-overlap' | 'partial-overlap';
@@ -32,6 +32,10 @@ export function createScrollInview() {
 
 		emitChange(visible: boolean) {
 			this._changeHandlers.forEach(i => i(visible));
+		},
+
+		_setElement(element: HTMLElement) {
+			this.element = element;
 		},
 	});
 
@@ -114,19 +118,19 @@ onUnmounted(() => {
 	props.controller._changeHandlers.delete(onChange);
 });
 
+const root = ref<HTMLElement | undefined>();
+
 // The ref will be assigned to this once it's fully rendered.
-watch(
-	() => props.controller.element,
-	newElement => {
-		if (newElement) {
-			parent.getContainer(props.config).observeItem(props.controller);
-		}
+watch(root, newElement => {
+	if (newElement) {
+		props.controller._setElement(newElement);
+		parent.getContainer(props.config).observeItem(props.controller);
 	}
-);
+});
 </script>
 
 <template>
-	<component :is="tag" ref="controller.element">
+	<component :is="tag" ref="root">
 		<slot />
 	</component>
 </template>

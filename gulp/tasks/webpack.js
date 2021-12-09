@@ -81,7 +81,7 @@ module.exports = function (config) {
 		devtool = 'source-map';
 	}
 
-	function stylesLoader({ withStylus, withSass, withModules } = {}) {
+	function stylesLoader({ withStylus, withModules } = {}) {
 		const loaders = [
 			{
 				loader: 'css-loader',
@@ -117,10 +117,6 @@ module.exports = function (config) {
 						includeCSS: true,
 					},
 				},
-			});
-		} else if (withSass) {
-			loaders.push({
-				loader: 'sass-loader',
 			});
 		}
 
@@ -316,18 +312,6 @@ module.exports = function (config) {
 						],
 					},
 					{
-						test: /\.scss$/,
-						oneOf: [
-							{
-								resourceQuery: /module/,
-								use: stylesLoader({ withSass: true, withModules: true }),
-							},
-							{
-								use: stylesLoader({ withSass: true }),
-							},
-						],
-					},
-					{
 						test: /\.styl(us)?$/,
 						oneOf: [
 							{
@@ -364,11 +348,6 @@ module.exports = function (config) {
 						test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
 						type: 'asset/resource',
 					},
-					// {
-					// 	test: /\.json$/,
-					// 	resourceQuery: /file/,
-					// 	type: 'javascript/auto',
-					// },
 				],
 			},
 			devtool,
