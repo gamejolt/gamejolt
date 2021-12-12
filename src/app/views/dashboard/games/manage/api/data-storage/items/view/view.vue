@@ -19,7 +19,8 @@
 							<translate>dash.games.data_store.items.view.key_label</translate>
 						</th>
 						<td>
-							<code>{{ item.key }}</code>
+							<code @click="copyKey">{{ item.shortenedKey }}</code>
+							(<translate>Click to copy the key</translate>)
 						</td>
 					</tr>
 					<tr>
