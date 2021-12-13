@@ -1,6 +1,5 @@
 import { nextTick } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { findRequiredVueParent } from '../../../utils/vue';
 import { AppImgResponsive } from '../../img/responsive/responsive';
 import AppMediaItemBackdrop from '../../media-item/backdrop/backdrop.vue';
 import { onScreenResize, Screen } from '../../screen/screen-service';
@@ -9,9 +8,7 @@ import { EventSubscription } from '../../system/event/event-topic';
 import AppVideoEmbed from '../../video/embed/embed.vue';
 import { getVideoPlayerFromSources } from '../../video/player/controller';
 import AppVideo from '../../video/video.vue';
-import AppLightboxTS from '../lightbox';
 import { LightboxConfig, LightboxMediaModel } from '../lightbox-helpers';
-import AppLightbox from '../lightbox.vue';
 
 @Options({
 	components: {
@@ -26,8 +23,6 @@ export default class AppLightboxItem extends Vue {
 	@Prop(Object) item!: LightboxMediaModel;
 	@Prop(Number) itemIndex!: number;
 	@Prop(Number) activeIndex!: number;
-
-	lightbox!: AppLightboxTS;
 
 	isActive = false;
 	isNext = false;
@@ -63,6 +58,10 @@ export default class AppLightboxItem extends Vue {
 		return this.item.getMediaItem()!;
 	}
 
+	// get lightbox() {
+	// 	return getActiveLightbox();
+	// }
+
 	get videoController() {
 		const sources = {
 			mp4: this.mediaItem.mediaserver_url_mp4,
@@ -72,7 +71,6 @@ export default class AppLightboxItem extends Vue {
 	}
 
 	async mounted() {
-		this.lightbox = findRequiredVueParent(this, AppLightbox) as AppLightboxTS;
 		await this.calcActive();
 		await this.calcDimensions();
 

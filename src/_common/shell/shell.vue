@@ -1,6 +1,7 @@
 <script lang="ts" src="./shell"></script>
 
 <template>
+	<app-lightbox-portal />
 	<app-tooltip-portal />
 
 	<app-scroll-inview-parent>

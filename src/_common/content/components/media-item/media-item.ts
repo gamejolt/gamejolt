@@ -1,5 +1,4 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { findVueParent } from '../../../../utils/vue';
 import { AppImgResponsive } from '../../../img/responsive/responsive';
 import AppLoading from '../../../loading/loading.vue';
 import AppMediaItemBackdrop from '../../../media-item/backdrop/backdrop.vue';
@@ -8,7 +7,6 @@ import { AppResponsiveDimensions } from '../../../responsive-dimensions/responsi
 import { ContentEditorLinkModal } from '../../content-editor/modals/link/link-modal.service';
 import { ContentOwner } from '../../content-owner';
 import AppContentViewerTS from '../../content-viewer/content-viewer';
-import AppContentViewer from '../../content-viewer/content-viewer.vue';
 import AppBaseContentComponent from '../base/base-content-component.vue';
 
 @Options({
@@ -142,8 +140,8 @@ export default class AppContentMediaItem extends Vue {
 	}
 
 	mounted() {
-		this.contentViewerParent =
-			findVueParent<AppContentViewerTS>(this, AppContentViewer) || null;
+		// this.contentViewerParent =
+		// 	findVueParent<AppContentViewerTS>(this, AppContentViewer) || null;
 	}
 
 	onRemoved() {

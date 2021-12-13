@@ -1,7 +1,8 @@
+import { computed } from 'vue';
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
-import AppLightboxTS from '../../lightbox/lightbox';
-import { createLightbox, LightboxMediaSource } from '../../lightbox/lightbox-helpers';
+import { createLightbox } from '../../lightbox/lightbox-helpers';
 import { MediaItem } from '../../media-item/media-item-model';
 import { ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
@@ -15,16 +16,22 @@ import { AppContentViewerBaseComponent } from './components/base-component';
 		AppContentViewerBaseComponent,
 	},
 })
-export default class AppContentViewer extends Vue implements ContentOwner, LightboxMediaSource {
+export default class AppContentViewer extends Vue implements ContentOwner {
 	@Prop(propRequired(String)) source!: string;
 	@Prop(propOptional(Boolean, false)) disableLightbox!: boolean;
 	@Prop(propOptional(ContentRules)) displayRules?: ContentRules;
 
 	doc: ContentDocument | null = null;
 	hydrator: ContentHydrator = new ContentHydrator();
-
-	private lightbox?: AppLightboxTS;
 	lightboxMediaItem: MediaItem | null = null;
+
+	lightbox = setup(() => {
+		return createLightbox(this.items);
+	});
+
+	items = computed(() => {
+		return this.lightboxMediaItem ? [this.lightboxMediaItem] : [];
+	});
 
 	get owner() {
 		return this;
@@ -39,10 +46,6 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 
 	created() {
 		this.updatedSource();
-	}
-
-	unmounted() {
-		this.closeLightbox();
 	}
 
 	getContext() {
@@ -101,49 +104,7 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 
 	// -- Lightbox stuff --
 	onItemFullscreen(item: MediaItem) {
-		if (!this.lightbox) {
-			this.lightboxMediaItem = item;
-			this.createLightbox();
-		}
-	}
-
-	getActiveIndex() {
-		return 0;
-	}
-
-	getItemCount() {
-		return this.lightboxMediaItem ? 1 : 0;
-	}
-
-	getActiveItem(): any {
-		return this.lightboxMediaItem;
-	}
-
-	getItems(): any[] {
-		return this.lightboxMediaItem ? [this.lightboxMediaItem] : [];
-	}
-
-	// unused, needed for LightboxMediaSource
-	goNext() {}
-	goPrev() {}
-
-	createLightbox() {
-		if (this.lightbox) {
-			return;
-		}
-		this.lightbox = createLightbox(this);
-	}
-
-	onLightboxClose() {
-		this.lightbox = undefined;
-		this.lightboxMediaItem = null;
-	}
-
-	private closeLightbox() {
-		if (!this.lightbox) {
-			return;
-		}
-
-		this.lightbox.close();
+		this.lightboxMediaItem = item;
+		this.lightbox.show();
 	}
 }

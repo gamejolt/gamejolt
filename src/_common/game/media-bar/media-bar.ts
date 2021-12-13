@@ -1,11 +1,10 @@
-import { nextTick } from 'vue';
+import { computed, nextTick } from 'vue';
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Analytics } from '../../analytics/analytics.service';
 import { showErrorGrowl } from '../../growls/growls.service';
 import AppLightboxItem from '../../lightbox/item/item.vue';
-import AppLightboxTS from '../../lightbox/lightbox';
-import { createLightbox, LightboxMediaSource } from '../../lightbox/lightbox-helpers';
-import AppLightbox from '../../lightbox/lightbox.vue';
+import { createLightbox } from '../../lightbox/lightbox-helpers';
 import AppLoading from '../../loading/loading.vue';
 import AppScrollScroller from '../../scroll/scroller/scroller.vue';
 import { MediaBarItemMaxHeight } from './item/item';
@@ -15,39 +14,46 @@ import AppGameMediaBarItem from './item/item.vue';
 	components: {
 		AppLoading,
 		AppLightboxItem,
-		AppLightbox,
 		AppScrollScroller,
 		AppGameMediaBarItem,
 	},
 })
-export default class AppGameMediaBar extends Vue implements LightboxMediaSource {
+export default class AppGameMediaBar extends Vue {
 	@Prop(Array) mediaItems!: any[];
 
 	private urlChecked = false;
-	private lightbox?: AppLightboxTS;
 
-	activeItem: any | null = null;
-	activeIndex: number | null = null;
+	lightbox = setup(() => {
+		// TODO(vue3): This doesn't seem to be reactive if our [mediaItems] prop changes.
+		//
+		// http://localhost:8080/games/tea-time-with-luap-sere-make-the-world-right/863#screenshot-1663
+		const items = computed(() => this.mediaItems);
+		return createLightbox(items);
+	});
+
 	mediaBarHeight = MediaBarItemMaxHeight + 40;
+
+	get activeItem() {
+		if (!this.lightbox.isShowing) {
+			return null;
+		}
+		return this.lightbox.activeItem;
+	}
 
 	@Watch('activeItem')
 	activeItemChange() {
-		if (this.activeItem && !this.lightbox) {
-			this.createLightbox();
-		} else if (!this.activeItem && this.lightbox) {
-			this.closeLightbox();
-		}
-
 		let hash = '';
 		if (this.activeItem) {
-			if (this.activeItem.media_type === 'image') {
+			const type = this.activeItem.getMediaType();
+
+			if (type === 'image') {
 				hash = '#screenshot-';
-			} else if (this.activeItem.media_type === 'video') {
+			} else if (type === 'video') {
 				hash = '#video-';
-			} else if (this.activeItem.media_type === 'sketchfab') {
+			} else if (type === 'sketchfab') {
 				hash = '#sketchfab-';
 			}
-			hash += this.activeItem.id;
+			hash += this.activeItem.getModelId();
 		}
 
 		if (this.$router) {
@@ -66,33 +72,6 @@ export default class AppGameMediaBar extends Vue implements LightboxMediaSource 
 		}
 	}
 
-	unmounted() {
-		this.closeLightbox();
-	}
-
-	onLightboxClose() {
-		this.lightbox = undefined;
-		this.activeItem = null;
-		this.activeIndex = null;
-		this.trackEvent('close');
-	}
-
-	getActiveIndex() {
-		return this.activeIndex!;
-	}
-
-	getItemCount() {
-		return this.mediaItems.length;
-	}
-
-	getActiveItem() {
-		return this.activeItem;
-	}
-
-	getItems() {
-		return this.mediaItems;
-	}
-
 	setActiveItem(item: any) {
 		let index = item;
 		if (typeof item === 'object') {
@@ -103,27 +82,12 @@ export default class AppGameMediaBar extends Vue implements LightboxMediaSource 
 		this.trackEvent('item-click', index);
 	}
 
-	goNext() {
-		if (this.activeIndex === null || this.activeIndex + 1 >= this.mediaItems.length) {
-			return;
-		}
-
-		this.go(this.activeIndex + 1);
-		this.trackEvent('next');
-	}
-
-	goPrev() {
-		if (this.activeIndex === null || this.activeIndex - 1 < 0) {
-			return;
-		}
-
-		this.go(this.activeIndex - 1);
-		this.trackEvent('prev');
-	}
-
 	go(index: number) {
-		this.activeIndex = index;
-		this.activeItem = this.mediaItems[this.activeIndex];
+		if (this.lightbox.isShowing) {
+			this.lightbox.gotoPage(index);
+		} else {
+			this.lightbox.show(index);
+		}
 	}
 
 	private checkUrl() {
@@ -175,21 +139,6 @@ export default class AppGameMediaBar extends Vue implements LightboxMediaSource 
 				}
 			}
 		}
-	}
-
-	private createLightbox() {
-		if (this.lightbox) {
-			return;
-		}
-		this.lightbox = createLightbox(this);
-	}
-
-	private closeLightbox() {
-		if (!this.lightbox) {
-			return;
-		}
-		this.lightbox.close();
-		this.lightbox = undefined;
 	}
 
 	private trackEvent(action: string, label?: string) {

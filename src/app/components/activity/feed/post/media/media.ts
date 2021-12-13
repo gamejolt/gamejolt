@@ -1,12 +1,9 @@
+import { computed } from 'vue';
+import { setup } from 'vue-class-component';
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { Analytics } from '../../../../../../_common/analytics/analytics.service';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
-import AppLightboxTS from '../../../../../../_common/lightbox/lightbox';
-import {
-	createLightbox,
-	LightboxMediaSource,
-} from '../../../../../../_common/lightbox/lightbox-helpers';
-import { MediaItem } from '../../../../../../_common/media-item/media-item-model';
+import { createLightbox } from '../../../../../../_common/lightbox/lightbox-helpers';
 import AppMediaItemPost from '../../../../../../_common/media-item/post/post.vue';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppEventItemMediaIndicator from '../../../../event-item/media-indicator/media-indicator.vue';
@@ -25,7 +22,7 @@ import { ActivityFeedKey, ActivityFeedView } from '../../view';
 		AppEventItemMediaIndicator,
 	},
 })
-export default class AppActivityFeedPostMedia extends Vue implements LightboxMediaSource {
+export default class AppActivityFeedPostMedia extends Vue {
 	@Prop({ type: ActivityFeedItem, required: true })
 	item!: ActivityFeedItem;
 
@@ -39,42 +36,13 @@ export default class AppActivityFeedPostMedia extends Vue implements LightboxMed
 	feed!: ActivityFeedView;
 
 	page = 1;
-	activeMediaItem: MediaItem | null = null;
 	isDragging = false;
 	isWaitingForFrame = false;
-	private lightbox?: AppLightboxTS;
+	lightbox = setup(() => createLightbox(computed(() => this.post.media)));
 	readonly Screen = Screen;
 
 	get isHydrated() {
 		return this.feed.isItemHydrated(this.item);
-	}
-
-	created() {
-		this.activeMediaItem = this.post.media[0];
-	}
-
-	unmounted() {
-		this.closeLightbox();
-	}
-
-	onLightboxClose() {
-		this.lightbox = undefined;
-	}
-
-	getActiveIndex() {
-		return this.page - 1;
-	}
-
-	getActiveItem() {
-		return this.activeMediaItem!;
-	}
-
-	getItemCount() {
-		return this.post.media.length;
-	}
-
-	getItems() {
-		return this.post.media;
 	}
 
 	goNext() {
@@ -84,7 +52,6 @@ export default class AppActivityFeedPostMedia extends Vue implements LightboxMed
 		}
 
 		this.page = Math.min(this.page + 1, this.post.media.length);
-		this.activeMediaItem = this.post.media[this.page - 1];
 		this._updateSliderOffset();
 		Analytics.trackEvent('activity-feed', 'media-next');
 	}
@@ -96,7 +63,6 @@ export default class AppActivityFeedPostMedia extends Vue implements LightboxMed
 		}
 
 		this.page = Math.max(this.page - 1, 1);
-		this.activeMediaItem = this.post.media[this.page - 1];
 		this._updateSliderOffset();
 		Analytics.trackEvent('activity-feed', 'media-prev');
 	}
@@ -158,27 +124,8 @@ export default class AppActivityFeedPostMedia extends Vue implements LightboxMed
 		this._updateSliderOffset();
 	}
 
-	getIsActiveMediaItem(item: MediaItem) {
-		return this.activeMediaItem?.id === item.id;
-	}
-
 	onClickFullscreen() {
-		this.createLightbox();
+		this.lightbox.show(this.page - 1);
 		Analytics.trackEvent('activity-feed', 'media-fullscreen');
-	}
-
-	private createLightbox() {
-		if (this.lightbox) {
-			return;
-		}
-		this.lightbox = createLightbox(this);
-	}
-
-	private closeLightbox() {
-		if (!this.lightbox) {
-			return;
-		}
-		this.lightbox.close();
-		this.lightbox = undefined;
 	}
 }

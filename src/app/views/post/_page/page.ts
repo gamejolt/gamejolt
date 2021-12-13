@@ -1,3 +1,5 @@
+import { computed } from 'vue';
+import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Provide, Vue, Watch } from 'vue-property-decorator';
 import { RouteLocationRaw } from 'vue-router';
 import { arrayRemove } from '../../../../utils/array';
@@ -13,8 +15,7 @@ import {
 } from '../../../../_common/fireside/post/video/video-model';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { AppImgResponsive } from '../../../../_common/img/responsive/responsive';
-import AppLightboxTS from '../../../../_common/lightbox/lightbox';
-import { createLightbox, LightboxMediaSource } from '../../../../_common/lightbox/lightbox-helpers';
+import { createLightbox } from '../../../../_common/lightbox/lightbox-helpers';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/backdrop.vue';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppMediaItemPost from '../../../../_common/media-item/post/post.vue';
@@ -81,7 +82,7 @@ import AppPostPageRecommendations from './recommendations/recommendations.vue';
 		AppTooltip,
 	},
 })
-export default class AppPostPage extends Vue implements LightboxMediaSource {
+export default class AppPostPage extends Vue {
 	@Prop({ type: FiresidePost, required: true })
 	post!: FiresidePost;
 
@@ -100,7 +101,10 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 	activeImageIndex = 0;
 	videoStartTime = 0;
 	isPlayerFilled = false;
-	private lightbox?: AppLightboxTS;
+
+	private lightbox = setup(() => {
+		return createLightbox(computed(() => this.items));
+	});
 
 	readonly Screen = Screen;
 	readonly formatNumber = formatNumber;
@@ -174,14 +178,6 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 		this.recommendedPosts = FiresidePost.populate(payload.posts);
 	}
 
-	unmounted() {
-		this.closeLightbox();
-	}
-
-	onLightboxClose() {
-		this.lightbox = undefined;
-	}
-
 	getActiveIndex() {
 		return this.activeImageIndex;
 	}
@@ -194,7 +190,7 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 		return this.post.media.length;
 	}
 
-	getItems() {
+	get items() {
 		return this.post.media;
 	}
 
@@ -226,7 +222,7 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 
 	onClickFullscreen(mediaItem: MediaItem) {
 		this.activeImageIndex = this.post.media.findIndex(i => i.id === mediaItem.id);
-		this.createLightbox();
+		this.lightbox.show();
 	}
 
 	onVideoPlay() {
@@ -237,21 +233,6 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 
 	scrollToStickers() {
 		Scroll.to(this.$refs['sticker-scroll'], { preventDirections: ['down'] });
-	}
-
-	private createLightbox() {
-		if (this.lightbox) {
-			return;
-		}
-		this.lightbox = createLightbox(this);
-	}
-
-	private closeLightbox() {
-		if (!this.lightbox) {
-			return;
-		}
-		this.lightbox.close();
-		this.lightbox = undefined;
 	}
 
 	onDismissNotification(notification: CommunityUserNotification) {

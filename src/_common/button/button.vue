@@ -19,7 +19,7 @@
 			'-disabled': disabled,
 		}"
 		:to="to"
-		:disabled="disabled"
+		:disabled="disabled === true ? 'disabled' : null"
 	>
 		<span v-if="badge" class="-badge">{{ badge }}</span>
 		<app-jolticon v-if="icon" class="-icon" :icon="icon" :big="lg" />

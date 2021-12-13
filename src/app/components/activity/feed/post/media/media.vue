@@ -12,11 +12,11 @@
 			<div class="-container">
 				<div ref="slider" class="-slider">
 					<app-media-item-post
-						v-for="mediaItem of post.media"
+						v-for="(mediaItem, index) of post.media"
 						:key="mediaItem.id"
 						:media-item="mediaItem"
 						:is-post-hydrated="isHydrated"
-						:is-active="getIsActiveMediaItem(mediaItem)"
+						:is-active="index === page - 1"
 						:can-place-sticker="canPlaceSticker"
 						restrict-device-max-height
 						inline

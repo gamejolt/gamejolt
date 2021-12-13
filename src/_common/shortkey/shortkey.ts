@@ -7,7 +7,7 @@ export default class AppShortkey extends Vue {
 	shortkey!: string;
 
 	@Emit('press')
-	emitPress(e: KeyboardEvent) {}
+	emitPress(_e: KeyboardEvent) {}
 
 	mounted() {
 		this.callback = this.callback.bind(this);

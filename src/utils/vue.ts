@@ -3,6 +3,9 @@ import { PropOptions } from 'vue-class-component';
 
 type Constructor<T> = { new (): T };
 
+/**
+ * @deprecated This no longer works with Vue 3.
+ */
 export function findVueParent<T extends ComponentPublicInstance>(
 	component: ComponentPublicInstance,
 	parentType: Constructor<T>
@@ -18,6 +21,9 @@ export function findVueParent<T extends ComponentPublicInstance>(
 	return undefined;
 }
 
+/**
+ * @deprecated This no longer works with Vue 3.
+ */
 export function findRequiredVueParent<T extends ComponentPublicInstance>(
 	component: ComponentPublicInstance,
 	parentType: Constructor<T>

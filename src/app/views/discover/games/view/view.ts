@@ -28,7 +28,7 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import { EventSubscription } from '../../../../../_common/system/event/event-topic';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { Translate } from '../../../../../_common/translate/translate.service';
+import { getTranslation } from '../../../../../_common/translate/translate.service';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verified-tick.vue';
@@ -80,11 +80,11 @@ const GameThemeKey = 'game';
 			route,
 			{
 				intent: 'follow-game',
-				message: Translate.$gettext(`You're now following this game.`),
+				message: getTranslation(`You're now following this game.`),
 			},
 			{
 				intent: 'decline-game-collaboration',
-				message: Translate.$gettext(`You've declined the invitation to collaborate.`),
+				message: getTranslation(`You've declined the invitation to collaborate.`),
 			}
 		);
 		if (intentRedirect) {
@@ -164,9 +164,9 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	private ratingChange$?: EventSubscription;
 
 	private roleNames: { [k: string]: string } = {
-		[Collaborator.ROLE_EQUAL_COLLABORATOR]: this.$gettext('an equal collaborator'),
-		[Collaborator.ROLE_COMMUNITY_MANAGER]: this.$gettext('a community manager'),
-		[Collaborator.ROLE_DEVELOPER]: this.$gettext('a developer'),
+		[Collaborator.ROLE_EQUAL_COLLABORATOR]: getTranslation('an equal collaborator'),
+		[Collaborator.ROLE_COMMUNITY_MANAGER]: getTranslation('a community manager'),
+		[Collaborator.ROLE_DEVELOPER]: getTranslation('a developer'),
 	};
 
 	get roleName() {
