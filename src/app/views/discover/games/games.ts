@@ -1,5 +1,6 @@
 import { h } from 'vue';
 import { Inject, Options } from 'vue-property-decorator';
+import { RouterView } from 'vue-router';
 import {
 	AppPromotionStore,
 	AppPromotionStoreKey,
@@ -19,6 +20,6 @@ export default class RouteDiscoverGames extends BaseRouteComponent {
 	}
 
 	render() {
-		return h('router-view');
+		return h(RouterView);
 	}
 }

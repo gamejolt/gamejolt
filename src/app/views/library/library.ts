@@ -1,5 +1,6 @@
 import { h } from 'vue';
 import { Options } from 'vue-property-decorator';
+import { RouterView } from 'vue-router';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { User } from '../../../_common/user/user.model';
 
@@ -13,6 +14,6 @@ import { User } from '../../../_common/user/user.model';
 })
 export default class RouteLibrary extends BaseRouteComponent {
 	render() {
-		return h('router-view');
+		return h(RouterView);
 	}
 }

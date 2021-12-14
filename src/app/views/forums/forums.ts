@@ -1,5 +1,6 @@
 import { h } from 'vue';
 import { Options } from 'vue-property-decorator';
+import { RouterView } from 'vue-router';
 import { BaseRouteComponent } from '../../../_common/route/route-component';
 import './forums-content.styl';
 
@@ -8,6 +9,6 @@ import './forums-content.styl';
 })
 export default class RouteForums extends BaseRouteComponent {
 	render() {
-		return h('router-view', { class: 'route-forums' });
+		return h(RouterView, { class: 'route-forums' });
 	}
 }
