@@ -93,19 +93,30 @@
 					<translate>You must wait 15 minutes before creating another account.</translate>
 				</div>
 			</app-form>
-		</div>
 
-		<p class="page-help">
-			By signing up, you agree to the
-			<a :href="Environment.baseUrl + '/terms'">Terms of Use</a> and
-			<a :href="Environment.baseUrl + '/privacy'">Privacy Policy</a>, including the
-			<a :href="Environment.baseUrl + '/cookies'">Cookie Policy</a>.
-		</p>
+			<div class="-terms">
+				By signing up, you agree to the
+				<a :href="Environment.baseUrl + '/terms'">Terms of Use</a> and
+				<a :href="Environment.baseUrl + '/privacy'">Privacy Policy</a>, including the
+				<a :href="Environment.baseUrl + '/cookies'">Cookie Policy</a>.
+			</div>
+		</div>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
 @import '../auth-form'
+
+// 4px is the spacing below form groups/the submit button
+.-terms
+	font-size: 12px
+	margin-top: 16px - 4px
+
+	@media $media-sm-up
+		margin-top: 24px - 4px
+
+	.auth-form-overlay &
+		text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3)
 
 .-blocked-message
 	margin-top: 5px

@@ -1,24 +1,27 @@
 import { Route } from 'vue-router';
 
-export type AppPromotionSource = 'footer' | 'top-nav' | 'top-nav-options' | 'sidebar' | 'landing';
+export type AppPromotionSource =
+	| 'footer'
+	| 'top-nav'
+	| 'top-nav-options'
+	| 'sidebar'
+	| 'landing'
+	| 'home-hero';
 export type AppPromotionCohort = 'store' | 'community';
 
 export const AppPromotionStoreKey = Symbol();
 
-// We currently are trying to show it in as many places as possible.
 export function shouldShowAppPromotion(route: Route) {
 	if (GJ_IS_CLIENT) {
 		return false;
 	}
 
 	const name = route.name ?? '';
-	return (
-		name.startsWith('communities.') ||
-		name === 'home' ||
-		name === 'discover.home' ||
-		name === 'discover.communities' ||
-		name === 'post'
-	);
+	if (name === 'landing.app') {
+		return false;
+	}
+
+	return true;
 }
 
 const storageKey = 'app-promotion-cohort';

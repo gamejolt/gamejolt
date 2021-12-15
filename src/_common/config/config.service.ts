@@ -133,6 +133,10 @@ export const configHomeNav = new ConfigOptionString('home_nav', 'default', {
 	conditions: { join: true },
 });
 
+export const configGuestHome = new ConfigOptionString('web_guest_home', 'default', {
+	validValues: ['default', 'hero'],
+});
+
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());
 }
