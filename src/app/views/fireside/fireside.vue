@@ -432,7 +432,7 @@
 
 .-video-inner
 	overflow: hidden
-	position: absolute
+	position: absolute !important
 	flex-direction: column
 
 	&.-unsupported
