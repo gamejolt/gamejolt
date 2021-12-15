@@ -57,7 +57,6 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 				if (!this.user) {
 					trackExperimentEngagement(configGuestHome);
 					this.split = configGuestHome.value;
-					this.split = 'hero';
 				} else {
 					this.split = 'default';
 				}

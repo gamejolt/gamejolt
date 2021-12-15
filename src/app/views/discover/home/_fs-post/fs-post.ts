@@ -46,12 +46,6 @@ export default class AppHomeFsPost extends Vue {
 		return this.post.videos[0];
 	}
 
-	get bgStyle() {
-		return {
-			backgroundImage: `url('${this.mediaItem.mediaserver_url}')`,
-		};
-	}
-
 	mounted() {
 		if (this.video?.postCardVideo) {
 			this.videoController = new VideoPlayerController(this.video.postCardVideo, null);

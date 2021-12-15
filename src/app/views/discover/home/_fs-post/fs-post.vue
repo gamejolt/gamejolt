@@ -70,7 +70,7 @@
 		opacity: 1
 
 .-shade
-	background-color: rgba(0, 0, 0, 0.4)
+	background-color: rgba(0, 0, 0, 0.5)
 
 .-video
 	position: relative

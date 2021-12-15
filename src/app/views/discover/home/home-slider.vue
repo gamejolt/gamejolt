@@ -2,74 +2,72 @@
 <script lang="ts" src="./home-slider"></script>
 
 <template>
-	<div>
-		<div class="-fs">
-			<div class="container -content">
-				<app-theme-svg
-					v-if="Screen.isXs"
-					class="-logo"
-					src="~img/game-jolt-logo.svg"
-					width="328"
-					height="36"
-					alt=""
-					strict-colors
-				/>
+	<div class="-fs" :style="{ '--screen-height': `${Screen.height}px` }">
+		<div class="container -content">
+			<app-theme-svg
+				v-if="Screen.isXs"
+				class="-logo"
+				src="~img/game-jolt-logo.svg"
+				width="328"
+				height="36"
+				alt=""
+				strict-colors
+			/>
 
-				<div class="-hero-text -text-shadow">
-					Discover gaming communities filled with millions of videos, art, disussions and
-					more on Game Jolt
-				</div>
-
-				<div class="-auth-island">
-					<template v-if="Screen.isXs">
-						<div class="-app-buttons">
-							<app-app-buttons justified source="home-hero" />
-						</div>
-
-						<div class="-links -text-shadow">
-							<a :href="Environment.authBaseUrl + '/join'">
-								<translate>Sign up</translate>
-							</a>
-							<translate>or</translate>
-							<a :href="Environment.authBaseUrl + '/login'">
-								<translate>Log in</translate>
-							</a>
-						</div>
-					</template>
-					<template v-else>
-						<div class="-form">
-							<app-auth-join overlay />
-						</div>
-
-						<div class="-trouble-text -text-shadow">
-							<translate>Already have an account?</translate>
-							<a :href="Environment.authBaseUrl + '/login'">
-								<translate>Log in!</translate>
-							</a>
-						</div>
-
-						<div class="-app-buttons">
-							<app-app-buttons justified source="home-hero" />
-						</div>
-					</template>
-				</div>
+			<div class="-hero-text -text-shadow">
+				Discover gaming communities filled with millions of videos, art, disussions and more
+				on Game Jolt
 			</div>
 
-			<div v-if="firstPost && secondPost" class="-posts">
-				<app-home-fs-post
-					:key="firstPost.id"
-					class="-post"
-					:class="{ '-transition': transitioningPosts }"
-					:post="firstPost"
-				/>
-				<app-home-fs-post
-					:key="secondPost.id"
-					class="-post"
-					:class="{ '-transition': transitioningPosts }"
-					:post="secondPost"
-					@loaded="onNextPostLoaded()"
-				/>
+			<div class="-auth-island">
+				<template v-if="Screen.isXs">
+					<div class="-app-buttons">
+						<app-app-buttons justified source="home-hero" />
+					</div>
+
+					<div class="-links -text-shadow">
+						<a :href="Environment.authBaseUrl + '/join'">
+							<translate>Sign up</translate>
+						</a>
+						<translate>or</translate>
+						<a :href="Environment.authBaseUrl + '/login'">
+							<translate>Log in</translate>
+						</a>
+					</div>
+				</template>
+				<template v-else>
+					<div class="-form">
+						<app-auth-join overlay />
+					</div>
+
+					<div class="-trouble-text -text-shadow">
+						<translate>Already have an account?</translate>
+						<a :href="Environment.authBaseUrl + '/login'">
+							<translate>Log in!</translate>
+						</a>
+					</div>
+
+					<div class="-app-buttons">
+						<app-app-buttons justified source="home-hero" />
+					</div>
+				</template>
 			</div>
+		</div>
+
+		<div v-if="firstPost && secondPost" class="-posts">
+			<app-home-fs-post
+				:key="firstPost.id"
+				class="-post"
+				:class="{ '-transition': transitioningPosts }"
+				:post="firstPost"
+			/>
+			<app-home-fs-post
+				:key="secondPost.id"
+				class="-post"
+				:class="{ '-transition': transitioningPosts }"
+				:post="secondPost"
+				@loaded="onNextPostLoaded()"
+			/>
 		</div>
 	</div>
 </template>
@@ -82,7 +80,7 @@
 	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3)
 
 .-fs
-	--fs-height: 'calc(100vh - %s)' % $shell-top-nav-height
+	--fs-height: 'calc(var(--screen-height) - %s)' % $shell-top-nav-height
 	position: relative
 	min-height: var(--fs-height)
 	display: flex
