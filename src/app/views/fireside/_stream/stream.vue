@@ -227,24 +227,14 @@ $-z-combo = 2
 .-fade-top
 .-fade-bottom
 	position: relative
-	background-color: $-overlay-bg
 	margin: -($-base-padding)
 	padding: $-base-padding
 
-	&::after
-		content: ''
-		position: absolute
-		left: 0
-		right: 0
-		height: $-base-padding
+.-fade-top
+	background: linear-gradient(to bottom, rgba($black 0.8), rgba($black 0.35) 60%, rgba($black, 0))
 
-.-fade-top::after
-	bottom: -($-base-padding)
-	background: linear-gradient(to bottom, $-overlay-bg, rgba($black, 0))
-
-.-fade-bottom::after
-	top: -($-base-padding)
-	background: linear-gradient(to top, $-overlay-bg, rgba($black, 0))
+.-fade-bottom
+	background: linear-gradient(to top, rgba($black 0.8), rgba($black 0.35) 60%, rgba($black, 0))
 
 .-control
 	&

@@ -15,14 +15,16 @@
 					<translate>Copy Link</translate>
 				</a>
 
-				<a v-if="shouldMute" class="list-group-item" @click="muteAll()">
-					<app-jolticon icon="audio-mute" />
-					<translate>Mute All Users</translate>
-				</a>
-				<a v-else class="list-group-item" @click="unmuteAll()">
-					<app-jolticon icon="audio" />
-					<translate>Unmute All Users</translate>
-				</a>
+				<template v-if="hasMuteControls">
+					<a v-if="shouldMute" class="list-group-item" @click="muteAll()">
+						<app-jolticon icon="audio-mute" />
+						<translate>Mute All Users</translate>
+					</a>
+					<a v-else class="list-group-item" @click="unmuteAll()">
+						<app-jolticon icon="audio" />
+						<translate>Unmute All Users</translate>
+					</a>
+				</template>
 
 				<a class="list-group-item has-icon" @click="onClickShowChatMembers">
 					<app-jolticon icon="users" />

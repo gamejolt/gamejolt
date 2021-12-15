@@ -65,6 +65,10 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	@Emit('single-line-mode-change') emitSingleLineModeChange(_singleLine: boolean) {}
 	@Emit('focus-change') emitFocusChange(_focused: boolean) {}
 
+	created() {
+		this.setField('content', '');
+	}
+
 	get chat() {
 		return this.chatStore.chat!;
 	}

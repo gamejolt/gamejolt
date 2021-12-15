@@ -8,8 +8,10 @@ import { BaseForm, FormOnLoad } from '../../../../../../_common/form-vue/form.se
 		AppFormControlContent,
 	},
 })
-export default class FormCommunityChannelDescription extends BaseForm<CommunityChannel>
-	implements FormOnLoad {
+export default class FormCommunityChannelDescription
+	extends BaseForm<CommunityChannel>
+	implements FormOnLoad
+{
 	modelClass = CommunityChannel;
 	saveMethod = '$saveDescription' as const;
 	lengthLimit = 5_000;
@@ -20,5 +22,6 @@ export default class FormCommunityChannelDescription extends BaseForm<CommunityC
 
 	onLoad(payload: any) {
 		this.lengthLimit = payload.lengthLimit;
+		this.setField('description_content', this.model?.description_content ?? '');
 	}
 }

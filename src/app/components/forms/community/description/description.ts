@@ -19,5 +19,6 @@ export default class FormCommunityDescription extends BaseForm<Community> implem
 
 	onLoad(payload: any) {
 		this.lengthLimit = payload.lengthLimit;
+		this.setField('description_content', this.model?.description_content ?? '');
 	}
 }
