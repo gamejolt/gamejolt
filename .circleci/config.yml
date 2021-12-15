@@ -75,9 +75,9 @@ jobs:
       # For some reason, ignoring engines causes node gyp compilation errors with fsevents.
       - run: yarn install
 
-      - run: yarn run client-build-osx
+      - run: yarn run client-build-osx --push-build
       # To make a test package, comment out the previous line and uncomment this line.
-      # - run: yarn run client-build-osx --useTestPackage
+      # - run: yarn run client-build-osx --use-test-package --push-build
 
       - store_artifacts:
           path: ./build/prod-client-build/osx64-package.tar.gz
@@ -113,9 +113,9 @@ jobs:
             echo 'export PATH=$PATH:$GOROOT/bin:$GOPATH/bin' >> $BASH_ENV
 
       - run: yarn install
-      - run: yarn run client-build-linux64
+      - run: yarn run client-build-linux64 --push-build
       # To make a test package, comment out the previous line and uncomment this line.
-      # - run: yarn run client-build-linux64 --useTestPackage
+      # - run: yarn run client-build-linux64 --use-test-package --push-build
 
       - store_artifacts:
           path: ./build/prod-client-build/linux64-package.tar.gz

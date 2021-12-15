@@ -51,9 +51,9 @@ install:
 
 build_script:
   - yarn install --ignore-engines
-  - yarn run client-build-win
+  - yarn run client-build-win --push-build
   # To make a test package, comment out the previous line and uncomment this line.
-  # - yarn run client-build-win --useTestPackage
+  # - yarn run client-build-win --use-test-package --push-build
 
 test: off
 
