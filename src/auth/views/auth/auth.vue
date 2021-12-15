@@ -1,3 +1,5 @@
+<script lang="ts" src="./auth"></script>
+
 <template>
 	<div
 		id="auth-container"
@@ -7,29 +9,26 @@
 	>
 		<transition>
 			<app-cover-img
-				class="anim-fade-leave"
 				v-if="shouldShowCoverImage && coverMediaItem"
+				class="anim-fade-leave"
 				:img-url="coverMediaItem.img_url"
 			/>
 		</transition>
 
 		<div class="auth-scroll-container">
 			<div class="auth-logo text-center anim-fade-in-enlarge stagger">
-				<a :href="!GJ_IS_CLIENT ? Environment.baseUrl + '/' : Environment.authBaseUrl + '/login'">
-					<app-theme-svg
-						src="~img/game-jolt-logo.svg"
-						width="164"
-						height="18"
-						alt=""
-						class="visible-xs"
-						strict-colors
-					/>
+				<a
+					:href="
+						!GJ_IS_CLIENT
+							? Environment.baseUrl + '/'
+							: Environment.authBaseUrl + '/login'
+					"
+				>
 					<app-theme-svg
 						src="~img/game-jolt-logo.svg"
 						width="328"
 						height="36"
 						alt=""
-						class="hidden-xs"
 						strict-colors
 					/>
 				</a>
@@ -37,12 +36,12 @@
 
 			<div class="container-fluid">
 				<div class="auth-island">
-					<div class="alert alert-notice" v-if="Connection.isClientOffline">
+					<div v-if="Connection.isClientOffline" class="alert alert-notice">
 						<p>
 							<app-jolticon icon="offline" />
 							<translate>
-								We're having trouble connecting to Game Jolt. Please check your connection to the
-								Internet.
+								We're having trouble connecting to Game Jolt. Please check your
+								connection to the Internet.
 							</translate>
 						</p>
 					</div>
@@ -74,10 +73,10 @@
 					<translate>auth.legal.privacy</translate>
 				</a>
 				<a
+					v-if="!GJ_IS_CLIENT"
 					class="link-unstyled anim-fade-in stagger"
 					:href="Environment.baseUrl + '/cookies'"
 					target="_blank"
-					v-if="!GJ_IS_CLIENT"
 				>
 					<translate>Cookie Policy</translate>
 				</a>
@@ -89,5 +88,3 @@
 </template>
 
 <style lang="stylus" src="./auth.styl" scoped></style>
-
-<script lang="ts" src="./auth"></script>

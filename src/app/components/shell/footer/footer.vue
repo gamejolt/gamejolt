@@ -10,9 +10,7 @@
 						<br class="visible-xs" />
 						Test the beta version of the Game Jolt app.
 					</p>
-					<p>
-						<app-app-buttons source="footer" />
-					</p>
+					<app-app-buttons source="footer" centered />
 				</div>
 
 				<br />

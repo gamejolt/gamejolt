@@ -12,12 +12,12 @@ export class Model {
 	_progress: ProgressEvent | null = null;
 
 	// We need to create some methods dynamically on the model.
-	static populate: (rows: any[]) => any[];
+	static populate: <T = any>(rows: T[]) => T[];
 	assign!: (other: any) => void;
 
 	static create(self: any) {
 		// These need to be created dynamically for each model type.
-		self.populate = function(rows: any[]): any[] {
+		self.populate = function (rows: any[]): any[] {
 			const models: any[] = [];
 			if (rows && Array.isArray(rows) && rows.length) {
 				for (const row of rows) {
@@ -27,7 +27,7 @@ export class Model {
 			return models;
 		};
 
-		self.prototype.assign = function(this: any, other: any) {
+		self.prototype.assign = function (this: any, other: any) {
 			// Some times the model constructors add new fields when populating.
 			// This way we retain those fields.
 			const newObj = new self(other);
