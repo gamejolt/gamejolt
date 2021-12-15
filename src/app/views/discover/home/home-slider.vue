@@ -2,7 +2,7 @@
 <script lang="ts" src="./home-slider"></script>
 
 <template>
-	<div class="-fs" :style="{ '--screen-height': `${Screen.height}px` }">
+	<div class="-fs theme-dark" :style="{ '--screen-height': `${height}px` }">
 		<div class="container -content">
 			<app-theme-svg
 				v-if="Screen.isXs"
@@ -15,8 +15,8 @@
 			/>
 
 			<div class="-hero-text -text-shadow">
-				Discover gaming communities filled with millions of videos, art, disussions and more
-				on Game Jolt
+				Discover gaming communities filled with millions of videos, art and discussions on
+				Game Jolt
 			</div>
 
 			<div class="-auth-island">
@@ -69,6 +69,15 @@
 				@loaded="onNextPostLoaded()"
 			/>
 		</div>
+
+		<transition>
+			<app-home-fs-post-meta
+				v-if="bylinePost"
+				:key="bylinePost.id"
+				class="-byline anim-fade-enter-up anim-fade-leave"
+				:post="bylinePost"
+			/>
+		</transition>
 	</div>
 </template>
 
@@ -86,6 +95,8 @@
 	display: flex
 	align-items: center
 	justify-content: center
+	color: var(--theme-fg)
+	background-color: var(--theme-bg)
 
 .-content
 	position: relative
@@ -150,4 +161,11 @@
 	&.-transition
 		transition: transform 1.5s
 		transform: translateY(-100%)
+
+.-byline
+	position: absolute
+	bottom: 0
+	left: 0
+	right: 0
+	z-index: 1
 </style>

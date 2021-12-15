@@ -17,11 +17,13 @@ export function shouldShowAppPromotion(route: Route) {
 	}
 
 	const name = route.name ?? '';
-	if (name === 'landing.app') {
-		return false;
-	}
-
-	return true;
+	return (
+		name.startsWith('communities.') ||
+		name === 'home' ||
+		name === 'discover.home' ||
+		name === 'discover.communities' ||
+		name === 'post'
+	);
 }
 
 const storageKey = 'app-promotion-cohort';

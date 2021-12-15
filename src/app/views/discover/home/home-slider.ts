@@ -7,8 +7,10 @@ import { Environment } from '../../../../_common/environment/environment.service
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
+import { AppTheme } from '../../../../_common/theme/theme';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { Store } from '../../../store/index';
+import AppHomeFsPostMeta from './_fs-post-meta/fs-post-meta.vue';
 import AppHomeFsPost from './_fs-post/fs-post.vue';
 
 @Component({
@@ -16,7 +18,9 @@ import AppHomeFsPost from './_fs-post/fs-post.vue';
 	components: {
 		AppAuthJoin: AppAuthJoinLazy,
 		AppHomeFsPost,
+		AppHomeFsPostMeta,
 		AppAppButtons,
+		AppTheme,
 		AppThemeSvg,
 	},
 })
@@ -35,8 +39,18 @@ export default class AppHomeSlider extends Vue {
 	shouldTransitionPosts = false;
 	transitioningPosts = false;
 
+	height = 0;
+
 	readonly Environment = Environment;
 	readonly Screen = Screen;
+
+	get bylinePost() {
+		if (!this.firstPost || !this.secondPost) {
+			return null;
+		}
+
+		return this.transitioningPosts ? this.secondPost : this.firstPost;
+	}
 
 	created() {
 		this.$watch(
@@ -57,6 +71,20 @@ export default class AppHomeSlider extends Vue {
 					setTimeout(() => this.next(), 2_000);
 				}
 			}
+		);
+
+		this.$watch(
+			() => Screen.height,
+			screenHeight => {
+				// The mobile address bar takes up space and when they scroll,
+				// it's pretty jarring to have the whole screen shift around.
+				// This only allows any screen shifts if the content area
+				// changed more than 100px.
+				if (Math.abs(screenHeight - this.height) > 100) {
+					this.height = screenHeight;
+				}
+			},
+			{ immediate: true }
 		);
 	}
 

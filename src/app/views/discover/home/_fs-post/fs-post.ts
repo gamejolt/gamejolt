@@ -3,21 +3,17 @@ import { Component, Emit, Prop } from 'vue-property-decorator';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/backdrop.vue';
-import AppUserAvatarImg from '../../../../../_common/user/user-avatar/img/img.vue';
 import {
 	getVideoPlayerFromSources,
 	VideoPlayerController,
 } from '../../../../../_common/video/player/controller';
 import AppVideo from '../../../../../_common/video/video.vue';
-import AppCommunityOverlayPill from '../_community-overlay-pill/community-overlay-pill.vue';
 
 @Component({
 	components: {
 		AppMediaItemBackdrop,
 		AppImgResponsive,
 		AppVideo,
-		AppUserAvatarImg,
-		AppCommunityOverlayPill,
 	},
 })
 export default class AppHomeFsPost extends Vue {
