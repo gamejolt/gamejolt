@@ -27,6 +27,7 @@ jobs:
         with:
           node-version: '16.4.2'
           architecture: 'x86'
+          cache: 'yarn'
       - run: node --version
       - run: yarn --version
 
@@ -40,4 +41,7 @@ jobs:
         shell: cmd
       - run: gcc -v
 
+      - run: echo %PATH%
+
       - run: yarn install --ignore-engines
+      - run: yarn run client-build-win
