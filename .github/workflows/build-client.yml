@@ -36,7 +36,7 @@ jobs:
       - run: go version
 
       # Enable VS2015 toolset
-      - run: '"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86'
+      - run: '"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" -arch=x86'
       - run: gcc -v
 
       - run: yarn install --ignore-engines
