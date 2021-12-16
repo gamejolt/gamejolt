@@ -40,7 +40,7 @@ module.exports = config => {
 
 	const gjpushVersion = 'v0.5.0';
 	const gjGameId = config.developmentEnv ? 1000 : 362412;
-	let gjGamePazckageId;
+	let gjGamePackageId;
 	let gjGameInstallerPackageId;
 	if (config.developmentEnv) {
 		if (!config.useTestPackage) {
@@ -262,22 +262,22 @@ module.exports = config => {
 	 * Gets the prebuilt ffmpeg library and installs it into the package.
 	 */
 	async function setupPrebuiltFFmpeg() {
-		// TODO: download and cache the correct things for os/arch
-		const cachePathZip = path.resolve(
+		const cachePath = path.resolve(
 			config.clientBuildCacheDir,
-			'ffmpeg-prebuilt-${nwjsVersion}-linux-x64.zip'
-		);
-		const cachePathExtracted = path.resolve(
-			config.clientBuildCacheDir,
-			'ffmpeg-prebuilt-${nwjsVersion}-linux-x64'
+			`ffmpeg-prebuilt-${nwjsVersion}-${config.platformArch}`
 		);
 
-		if (!(await fs.pathExists(cachePathExtracted))) {
-			const url = `https://github.com/iteufel/nwjs-ffmpeg-prebuilt/releases/download/${nwjsVersion}/${nwjsVersion}-linux-x64.zip`;
+		// If we don't have it in cache yet, get it.
+		if (!(await fs.pathExists(cachePath))) {
+			let url = `https://github.com/iteufel/nwjs-ffmpeg-prebuilt/releases/download/${nwjsVersion}/${nwjsVersion}`;
+			url += `-${config.platform}`;
+			url += `-${config.arch === 32 ? 'ia32' : 'x64'}.zip`;
 			console.log(`Downloading ffmpeg-prebuilt for nwjs: ${url}`);
 
+			const cachePathZip = cachePath + '.zip';
+
 			await downloadFile(url, cachePathZip);
-			await unzip(cachePathZip, cachePathExtracted);
+			await unzip(cachePathZip, cachePath);
 		}
 
 		console.log('Installing ffmpeg-prebuilt to the package directory');
@@ -285,7 +285,7 @@ module.exports = config => {
 		const base = path.resolve(config.clientBuildDir, 'build', config.platformArch);
 
 		let to, filename;
-		if (config.platform === 'windows') {
+		if (config.platform === 'win') {
 			filename = 'ffmpeg.dll';
 			to = path.resolve(base, filename);
 		} else if (config.platform === 'osx') {
@@ -297,7 +297,7 @@ module.exports = config => {
 			to = path.resolve(base, 'lib', filename);
 		}
 
-		await fs.copy(path.resolve(cachePathExtracted, filename), to);
+		await fs.copy(path.resolve(cachePath, filename), to);
 	}
 
 	/**
@@ -422,7 +422,7 @@ module.exports = config => {
 		const gitClone =
 			'git clone --branch ' +
 			joltronVersion +
-			' git@github.com:gamejolt/joltron ' +
+			' https://github.com/gamejolt/joltron.git ' +
 			joltronRepoDir;
 
 		// Do status first, if it fails it means the repo doesn't exist, so try
