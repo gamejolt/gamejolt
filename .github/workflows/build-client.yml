@@ -1,0 +1,40 @@
+name: Build Client
+
+on:
+  push:
+    branches:
+      - 'nwjs-0.55.0-ffmpeg'
+
+jobs:
+  build-win32:
+    strategy:
+      matrix:
+        targetplatform: [x86]
+
+    runs-on: windows-2016
+
+    # env:
+    #   GOPATH: 'C:\gopath'
+    #   GOROOT: 'C:\go110-x86'
+    #   nodejs_version: '14.17.4'
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 'nodejs 14.17.4'
+          architecture: x86
+      - run: node --version
+      - run: yarn --version
+
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '1.10.8'
+      - run: go version
+
+      # Enable VS2015 toolset
+      - run: call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
+      - run: gcc -v
+
+      - run: yarn install --ignore-engines
