@@ -6,7 +6,7 @@ image: Visual Studio 2015
 environment:
   GOPATH: C:\gopath
   GOROOT: C:\go110-x86
-  nodejs_version: '14.17.4'
+  nodejs_version: '16.4.2'
 
 stack: go 1.10
 
@@ -16,7 +16,7 @@ branches:
 
 install:
   # Software we need - provided by Appveyor's VS2015 image:
-  # Node 14.17.4
+  # Node 16.4.2
   # Yarn 1.9.4
   # Go 1.10.8
   # InnoSetup 5.x Unicode

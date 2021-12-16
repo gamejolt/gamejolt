@@ -86,7 +86,7 @@ jobs:
 
   build-linux:
     docker:
-      - image: circleci/node:14.17
+      - image: circleci/node:16.4.2
     steps:
       - checkout
       - run:

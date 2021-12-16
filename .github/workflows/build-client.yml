@@ -16,7 +16,7 @@ jobs:
     # env:
     #   GOPATH: 'C:\gopath'
     #   GOROOT: 'C:\go110-x86'
-    #   nodejs_version: '14.17.4'
+    #   nodejs_version: '16.4.2'
 
     steps:
       - uses: actions/checkout@v2
@@ -25,7 +25,8 @@ jobs:
 
       - uses: actions/setup-node@v2
         with:
-          node-version: 'nodejs 14.17.4'
+          node-version: '16.4.2'
+          architecture: 'x86'
       - run: node --version
       - run: yarn --version
 
