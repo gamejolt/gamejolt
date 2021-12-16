@@ -20,11 +20,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
       - uses: actions/setup-node@v2
         with:
           node-version: 'nodejs 14.17.4'
-          architecture: x86
       - run: node --version
       - run: yarn --version
 
