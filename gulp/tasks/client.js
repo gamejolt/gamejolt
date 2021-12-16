@@ -599,6 +599,8 @@ module.exports = config => {
 			platform = 'linux';
 		}
 
+		// TODO: check to make sure these archive files are still correct, they should be relative paths
+
 		// Figure out the archive file list.
 		const archiveFiles = (await readdirp.promise(buildDir))
 			.map(i => './' + i.path.replace(/\\/g, '/'))
