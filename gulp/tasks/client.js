@@ -290,8 +290,11 @@ module.exports = config => {
 			to = path.resolve(base, filename);
 		} else if (config.platform === 'osx') {
 			filename = 'libffmpeg.dylib';
-			// TODO: I don't know the inner folder path yet
-			to = path.resolve(base, filename);
+			to = path.resolve(
+				base,
+				'Game Jolt Client.app/Contents/Frameworks/nwjs Framework.framework/Versions/Current',
+				filename
+			);
 		} else if (config.platform === 'linux') {
 			filename = 'libffmpeg.so';
 			to = path.resolve(base, 'lib', filename);
