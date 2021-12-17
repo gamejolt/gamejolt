@@ -191,10 +191,10 @@ module.exports = function (config) {
 		if (config.isWeb && config.production) {
 			publicPath = config.staticCdn + publicPath;
 		} else if (config.isClient && !config.watching) {
-			// On linux/win we put all the files in a folder called "package".
-			if (config.platform !== 'osx') {
-				publicPath = '/package/';
-			}
+			// All files go into a folder called "package" to make it easy to
+			// separate out from the nwjs stuff.
+			// TODO: make sure this is okay
+			publicPath = '/package/';
 		}
 		// In app build, we always serve from relative path.
 		else if (config.isApp && config.production) {
@@ -613,10 +613,6 @@ module.exports = function (config) {
 	}
 
 	webpackSectionTasks.unshift('translations:compile');
-
-	if (config.isClient && !config.watching) {
-		webpackSectionTasks.push('client');
-	}
 
 	gulp.task('default', gulp.series(webpackSectionTasks));
 };

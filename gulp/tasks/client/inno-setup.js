@@ -17,43 +17,30 @@ function shellEscape(str) {
 	return str.replace(/ /g, '\\ ');
 }
 
-class InnoSetup {
-	constructor(appDir, outDir, version, gameUID, certFile, certPw) {
-		this.appDir = appDir;
-		this.outDir = outDir;
-		this.version = version;
-		this.gameUID = gameUID;
-		this.certFile = certFile;
-		this.certPw = certPw;
-	}
+module.exports.buildInnoSetup = async (appDir, outDir, version, gameUID, certFile, certPw) => {
+	let script = await readFile(resolvePath(__dirname, 'vendor/gamejolt.iss'), {
+		encoding: 'utf8',
+	});
 
-	async build() {
-		let script = await readFile(resolvePath(__dirname, 'vendor/gamejolt.iss'), {
-			encoding: 'utf8',
-		});
+	script = script
+		.replace(/\{\{ICON_DIR\}\}/g, shellEscape(resolvePath(__dirname, 'icons')))
+		.replace(/\{\{APP_DIR\}\}/g, shellEscape(appDir))
+		.replace(/\{\{OUT_DIR\}\}/g, shellEscape(outDir))
+		.replace(/\{\{GAME_UID\}\}/g, gameUID)
+		.replace(/\{\{APP_VERSION\}\}/g, version);
 
-		script = script
-			.replace(/\{\{ICON_DIR\}\}/g, shellEscape(resolvePath(__dirname, 'icons')))
-			.replace(/\{\{APP_DIR\}\}/g, shellEscape(this.appDir))
-			.replace(/\{\{OUT_DIR\}\}/g, shellEscape(this.outDir))
-			.replace(/\{\{GAME_UID\}\}/g, this.gameUID)
-			.replace(/\{\{APP_VERSION\}\}/g, this.version);
+	const scriptFile = resolvePath(__dirname, 'vendor/tmp-gamejolt.iss');
+	await writeFile(scriptFile, script, { encoding: 'utf8' });
 
-		const scriptFile = resolvePath(__dirname, 'vendor/tmp-gamejolt.iss');
-		await writeFile(scriptFile, script, { encoding: 'utf8' });
-
-		await cp('iscc.exe', [
-			'/Ssigntool=' +
-				shellEscape(resolvePath(__dirname, 'vendor/signtool.exe')) +
-				' sign /f ' +
-				shellEscape(this.certFile) +
-				' /p ' +
-				this.certPw +
-				' /t http://timestamp.digicert.com $f',
-			'/Q',
-			scriptFile,
-		]);
-	}
-}
-
-module.exports = InnoSetup;
+	await cp('iscc.exe', [
+		'/Ssigntool=' +
+			shellEscape(resolvePath(__dirname, 'vendor/signtool.exe')) +
+			' sign /f ' +
+			shellEscape(certFile) +
+			' /p ' +
+			certPw +
+			' /t http://timestamp.digicert.com $f',
+		'/Q',
+		scriptFile,
+	]);
+};

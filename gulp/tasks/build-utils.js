@@ -23,6 +23,11 @@ module.exports.createTarGz = async (src, dest) => {
 	);
 };
 
+module.exports.extractTarGz = async (src, dest) => {
+	await fs.mkdirp(dest);
+	await tar.x({ file: src, gzip: true, cwd: path.resolve(dest, '..') });
+};
+
 module.exports.unzip = (src, dest) => {
 	const zip = new AdmZip(src);
 	zip.extractAllTo(dest, true);
@@ -101,3 +106,32 @@ module.exports.tryWithBackoff = async (cb, times) => {
 		throw err;
 	}
 };
+
+function isObject(item) {
+	return item && typeof item === 'object' && !Array.isArray(item);
+}
+
+/**
+ * Deep merge to plain javascript objects, returning a new one.
+ */
+function mergeDeep(target, source) {
+	if (!isObject(target) || !isObject(source)) {
+		return {};
+	}
+
+	const ret = { ...target };
+
+	for (const key in source) {
+		if (isObject(source[key])) {
+			if (!ret[key]) {
+				ret[key] = {};
+			}
+			ret[key] = mergeDeep(ret[key], source[key]);
+		} else {
+			ret[key] = source[key];
+		}
+	}
+
+	return ret;
+}
+module.exports.mergeDeep = mergeDeep;

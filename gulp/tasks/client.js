@@ -6,7 +6,8 @@ const path = require('path');
 const readdirp = require('readdirp');
 const cp = require('child_process');
 const http = require('http');
-
+const { buildInnoSetup } = require('./client/inno-setup');
+const { NwBuilder } = require('./client/nw-builder');
 const {
 	sleep,
 	createTarGz,
@@ -22,7 +23,7 @@ module.exports = config => {
 		return;
 	}
 
-	const packageJson = require(path.resolve(config.projectBase, 'package.json'));
+	const packageJson = require(path.resolve(config.buildDir, 'package.json'));
 
 	// Takes the joltron version specified in package.json and expands it into joltronVersionArray. e.g. v2.0.1-beta into [2, 0, 1]
 	// The joltron version will specify the loader variant to signal the backend to use the correct variant when offering updates to joltron itself.
@@ -173,150 +174,107 @@ module.exports = config => {
 	async function buildNwjs() {
 		console.log('Building nwjs');
 
-		const NwBuilder = require('nw-builder');
+		// const NwBuilder = require('nw-builder');
 
-		// We want the name to be:
-		// 'game-jolt-client' on linux - because kebabs rock
-		// 'GameJoltClient' on win - so it shows up well in process list and stuff
-		// 'Game Jolt Client' on mac - so it shows up well in Applications folder.
-		// note that on mac, the installer will unpack a self updating app and contain this NW executable entirely within itself.
-		let appName = 'game-jolt-client';
-		if (config.platform === 'win') {
-			appName = 'GameJoltClient';
-		} else if (config.platform === 'osx') {
-			appName = 'Game Jolt Client';
-		}
+		const nw = new NwBuilder(config, packageJson);
 
-		const nw = new NwBuilder({
-			version: nwjsVersion,
-			flavor: config.production && !config.useTestPackage ? 'normal' : 'sdk',
-			files: config.buildDir + '/**/*',
-			buildDir: config.clientBuildDir,
-			cacheDir: config.clientBuildCacheDir,
-			platforms: [config.platformArch],
-			appName: appName,
-			buildType: () => 'build',
-			appVersion: packageJson.version,
-			macZip: false, // Use a app.nw folder instead of ZIP file
-			macIcns: path.resolve(__dirname, 'client/icons/mac.icns'),
-			macPlist: {
-				CFBundleIdentifier: 'com.gamejolt.client',
-			},
-			winIco: path.resolve(__dirname, 'client/icons/winico.ico'),
+		// // We want the name to be:
+		// // 'game-jolt-client' on linux - because kebabs rock
+		// // 'GameJoltClient' on win - so it shows up well in process list and stuff
+		// // 'Game Jolt Client' on mac - so it shows up well in Applications folder.
+		// // note that on mac, the installer will unpack a self updating app and contain this NW executable entirely within itself.
+		// let appName = 'game-jolt-client';
+		// if (config.platform === 'win') {
+		// 	appName = 'GameJoltClient';
+		// } else if (config.platform === 'osx') {
+		// 	appName = 'Game Jolt Client';
+		// }
 
-			// Tells it not to merge the app zip into the executable. Easier updating this way.
-			mergeApp: false,
-		});
+		// const nw = new NwBuilder({
+		// 	version: nwjsVersion,
+		// 	flavor: config.production && !config.useTestPackage ? 'normal' : 'sdk',
+		// 	files: config.buildDir + '/**/*',
+		// 	buildDir: config.clientBuildDir,
+		// 	cacheDir: config.clientBuildCacheDir,
+		// 	platforms: [config.platformArch],
+		// 	appName: appName,
+		// 	buildType: () => 'build',
+		// 	appVersion: packageJson.version,
+		// 	macZip: false, // Use a app.nw folder instead of ZIP file
+		// 	macIcns: path.resolve(__dirname, 'client/icons/mac.icns'),
+		// 	macPlist: {
+		// 		CFBundleIdentifier: 'com.gamejolt.client',
+		// 	},
+		// 	winIco: path.resolve(__dirname, 'client/icons/winico.ico'),
 
-		nw.on('log', console.log);
+		// 	// Tells it not to merge the app zip into the executable. Easier updating this way.
+		// 	mergeApp: false,
+		// });
 
-		return nw.build();
+		// nw.on('log', console.log);
+
+		await nw.build();
 	}
 
-	/**
-	 * On windows and linux the app is packaged into an package.nw file,
-	 * but for easier debugging we want to unpack it into the build folder
-	 */
-	async function unpackNw() {
-		console.log('Unpacking nw');
+	// /**
+	//  * On windows and linux the app is packaged into an package.nw file,
+	//  * but for easier debugging we want to unpack it into the build folder
+	//  */
+	// async function unpackNw() {
+	// 	console.log('Unpacking nw');
 
-		// We don't do this on mac.
-		if (config.platform === 'osx') {
-			console.log(`Skipping since we're on mac`);
-			return;
-		}
+	// 	// We don't do this on mac.
+	// 	if (config.platform === 'osx') {
+	// 		console.log(`Skipping since we're on mac`);
+	// 		return;
+	// 	}
 
-		const base = path.resolve(config.clientBuildDir, 'build', config.platformArch);
-		const packageNw = path.resolve(base, 'package.nw');
+	// 	const base = path.resolve(config.clientBuildDir, 'build', config.platformArch);
+	// 	const packageNw = path.resolve(base, 'package.nw');
 
-		if (!(await fs.pathExists(packageNw))) {
-			throw new Error(`Couldn't find package.nw.`);
-		}
+	// 	if (!(await fs.pathExists(packageNw))) {
+	// 		throw new Error(`Couldn't find package.nw.`);
+	// 	}
 
-		console.log('Unzipping from package.nw to ' + path.resolve(base, 'package'));
-		console.log('base: ' + base + ', packageNw: ' + packageNw);
+	// 	console.log('Unzipping from package.nw to ' + path.resolve(base, 'package'));
+	// 	console.log('base: ' + base + ', packageNw: ' + packageNw);
 
-		await unzip(packageNw, path.resolve(base, 'package'));
+	// 	await unzip(packageNw, path.resolve(base, 'package'));
 
-		// This solves an issue on windows where for some reason we get
-		// permission errors when moving the node_modules folder.
-		await sleep(1000);
+	// 	// This solves an issue on windows where for some reason we get
+	// 	// permission errors when moving the node_modules folder.
+	// 	await sleep(1000);
 
-		// We pull some stuff out of the package folder into the main folder.
-		await fs.move(
-			path.resolve(base, 'package', 'node_modules'),
-			path.resolve(base, 'node_modules')
-		);
+	// 	// We pull some stuff out of the package folder into the main folder.
+	// 	await fs.move(
+	// 		path.resolve(base, 'package', 'node_modules'),
+	// 		path.resolve(base, 'node_modules')
+	// 	);
 
-		await fs.move(
-			path.resolve(base, 'package', 'package.json'),
-			path.resolve(base, 'package.json')
-		);
+	// 	await fs.move(
+	// 		path.resolve(base, 'package', 'package.json'),
+	// 		path.resolve(base, 'package.json')
+	// 	);
 
-		// For some reason unlinking package.nw fails so we just move it out of
-		// the way instead.
-		await moveToTrash(packageNw);
-	}
+	// 	// For some reason unlinking package.nw fails so we just move it out of
+	// 	// the way instead.
+	// 	await moveToTrash(packageNw);
+	// }
 
-	/**
-	 * Gets the prebuilt ffmpeg library and installs it into the package.
-	 */
-	async function setupPrebuiltFFmpeg() {
-		const cachePath = path.resolve(
-			config.clientBuildCacheDir,
-			`ffmpeg-prebuilt-${nwjsVersion}-${config.platformArch}`
-		);
+	// /**
+	//  * Makes the zipped package.
+	//  *
+	//  * Note: this is not the package shipped with joltron so it doesn't use the
+	//  * auto updater. It's essentially the "game" people upload to GJ.
+	//  */
+	// async function zipPackage() {
+	// 	console.log('Zipping up our package');
 
-		// If we don't have it in cache yet, get it.
-		if (!(await fs.pathExists(cachePath))) {
-			let url = `https://github.com/iteufel/nwjs-ffmpeg-prebuilt/releases/download/${nwjsVersion}/${nwjsVersion}`;
-			url += `-${config.platform}`;
-			url += `-${config.arch === 32 ? 'ia32' : 'x64'}.zip`;
-			console.log(`Downloading ffmpeg-prebuilt for nwjs: ${url}`);
-
-			const cachePathZip = cachePath + '.zip';
-
-			await downloadFile(url, cachePathZip);
-			await unzip(cachePathZip, cachePath);
-		}
-
-		console.log('Installing ffmpeg-prebuilt to the package directory');
-
-		const base = path.resolve(config.clientBuildDir, 'build', config.platformArch);
-
-		let to, filename;
-		if (config.platform === 'win') {
-			filename = 'ffmpeg.dll';
-			to = path.resolve(base, filename);
-		} else if (config.platform === 'osx') {
-			filename = 'libffmpeg.dylib';
-			to = path.resolve(
-				base,
-				'Game Jolt Client.app/Contents/Frameworks/nwjs Framework.framework/Versions/Current',
-				filename
-			);
-		} else if (config.platform === 'linux') {
-			filename = 'libffmpeg.so';
-			to = path.resolve(base, 'lib', filename);
-		}
-
-		await fs.copy(path.resolve(cachePath, filename), to);
-	}
-
-	/**
-	 * Makes the zipped package.
-	 *
-	 * Note: this is not the package shipped with joltron so it doesn't use the
-	 * auto updater. It's essentially the "game" people upload to GJ.
-	 */
-	async function zipPackage() {
-		console.log('Zipping up our package');
-
-		await createTarGz(
-			path.resolve(config.clientBuildDir, 'build', config.platformArch),
-			path.resolve(config.clientBuildDir, config.platformArch + '-package.tar.gz')
-		);
-	}
+	// 	await createTarGz(
+	// 		path.resolve(config.clientBuildDir, 'build', config.platformArch),
+	// 		path.resolve(config.clientBuildDir, config.platformArch + '-package.tar.gz')
+	// 	);
+	// }
 
 	/**
 	 * Downloads the gjpush binary used to push the package and installers to GJ
@@ -545,18 +503,17 @@ module.exports = config => {
 			buildId = build.id;
 		}
 
+		await fs.mkdirp(path.resolve(config.clientBuildDir, 'dist'));
+
 		// This is joltron's data directory for this client build
 		const buildDir = path.resolve(
 			config.clientBuildDir,
-			'build',
+			'dist',
 			'data-' + gjGamePackageId + '-' + buildId
 		);
 
 		// Rename our build folder (which is the contents of our package zip)
-		await fs.rename(
-			path.resolve(config.clientBuildDir, 'build', config.platformArch),
-			buildDir
-		);
+		await fs.rename(path.resolve(config.clientBuildDir, 'build'), buildDir);
 
 		// Next up we want to fetch the same joltron version as the client build
 		// is using, even if there is a newer version of joltron released. This
@@ -601,8 +558,6 @@ module.exports = config => {
 		} else {
 			platform = 'linux';
 		}
-
-		// TODO: check to make sure these archive files are still correct, they should be relative paths
 
 		// Figure out the archive file list.
 		const archiveFiles = (await readdirp.promise(buildDir))
@@ -660,7 +615,7 @@ module.exports = config => {
 
 			// We copy the entire joltron folder we generated in the previous
 			// step into the app's Contents/Resources/app folder.
-			const buildDir = path.resolve(config.clientBuildDir, 'build');
+			const buildDir = path.resolve(config.clientBuildDir, 'dist');
 			const appDir = path.resolve(clientApp, 'Contents', 'Resources', 'app');
 
 			// TODO: check to make sure it copies the hidden dot files too
@@ -724,28 +679,27 @@ module.exports = config => {
 			await _createDmg();
 		} else if (config.platform === 'win') {
 			const manifest = JSON.parse(
-				await fs.readFile(path.resolve(config.clientBuildDir, 'build', '.manifest'), {
+				await fs.readFile(path.resolve(config.clientBuildDir, 'dist', '.manifest'), {
 					encoding: 'utf8',
 				})
 			);
 
-			const InnoSetup = require('./client/inno-setup');
 			const certFile = config.production
 				? path.resolve(__dirname, 'client/certs/cert.pfx')
 				: path.resolve(__dirname, 'client/vendor/cert.pfx');
 			const certPw = config.production ? process.env['GJ_CERT_PASS'] : 'GJ123456';
-			const builder = new InnoSetup(
-				path.resolve(config.clientBuildDir, 'build'),
+
+			await buildInnoSetup(
+				path.resolve(config.clientBuildDir, 'dist'),
 				path.resolve(config.clientBuildDir),
 				packageJson.version,
 				manifest.gameInfo.uid,
 				certFile,
 				certPw.trim()
 			);
-			await builder.build();
 		} else {
 			await createTarGz(
-				path.join(config.clientBuildDir, 'build'),
+				path.join(config.clientBuildDir, 'dist'),
 				path.join(config.clientBuildDir, 'GameJoltClient.tar.gz')
 			);
 		}
@@ -789,12 +743,11 @@ module.exports = config => {
 		await tryWithBackoff(gjPush, 3);
 	}
 
-	gulp.task('client', async () => {
+	gulp.task('package-client', async () => {
 		await setupNodeModules();
 		await buildNwjs();
-		await unpackNw();
-		await setupPrebuiltFFmpeg();
-		await zipPackage();
+		// await unpackNw();
+		// await zipPackage();
 
 		if (config.pushBuild) {
 			await getPushTools();
