@@ -112,7 +112,7 @@ jobs:
         with:
           name: client-build
 
-      - run: tar -cvf client-build.tar -C build/prod-client
+      - run: tar -xvf client-build.tar -C build/prod-client
 
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
