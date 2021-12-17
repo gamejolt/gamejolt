@@ -17,6 +17,14 @@ jobs:
       GOPATH: 'C:\go'
 
     steps:
+      - name: Set up ssh-agent
+        env:
+          SSH_KEY: ${{secrets.SSH_KEY}}
+        run: |
+          eval `ssh-agent -s`
+          ssh-add - <<< "${SSH_KEY}"
+        shell: cmd
+
       - uses: actions/checkout@v2
         with:
           submodules: recursive
@@ -44,3 +52,13 @@ jobs:
 
       - run: yarn install --ignore-engines
       - run: yarn run client-build-win
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: win32
+          path: build\prod-client-build\GameJoltClientSetup.exe
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: win32-package
+          path: build\prod-client-build\win32-package.tar.gz
