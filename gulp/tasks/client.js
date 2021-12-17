@@ -723,15 +723,13 @@ module.exports = config => {
 			// Finally, create a dmg out of the entire app.
 			await _createDmg();
 		} else if (config.platform === 'win') {
-			return;
-
 			const manifest = JSON.parse(
 				await fs.readFile(path.resolve(config.clientBuildDir, 'build', '.manifest'), {
 					encoding: 'utf8',
 				})
 			);
 
-			const InnoSetup = require('./client/inno-setup').default;
+			const InnoSetup = require('./client/inno-setup');
 			const certFile = config.production
 				? path.resolve(__dirname, 'client/certs/cert.pfx')
 				: path.resolve(__dirname, 'client/vendor/cert.pfx');
