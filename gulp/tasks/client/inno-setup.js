@@ -1,10 +1,10 @@
-const { execFile } = require('child_process');
-const { readFile, writeFile } = require('fs-extra');
-const { resolve: resolvePath } = require('path');
+var fs = require('fs-extra');
+var path = require('path');
+var childProcess = require('child_process');
 
 function cp(cmd, args) {
 	return new Promise(function (resolve, reject) {
-		execFile(cmd, args, function (err, stdout, stderr) {
+		childProcess.execFile(cmd, args, function (err, stdout, stderr) {
 			if (err || stderr) {
 				return reject(err || stderr);
 			}
@@ -17,43 +17,41 @@ function shellEscape(str) {
 	return str.replace(/ /g, '\\ ');
 }
 
-class InnoSetup {
-	constructor(appDir, outDir, version, gameUID, certFile, certPw) {
-		this.appDir = appDir;
-		this.outDir = outDir;
-		this.version = version;
-		this.gameUID = gameUID;
-		this.certFile = certFile;
-		this.certPw = certPw;
-	}
+const InnoSetup = function (appDir, outDir, version, gameUID, certFile, certPw) {
+	this.appDir = appDir;
+	this.outDir = outDir;
+	this.version = version;
+	this.gameUID = gameUID;
+	this.certFile = certFile;
+	this.certPw = certPw;
+};
 
-	async build() {
-		let script = await readFile(resolvePath(__dirname, 'vendor/gamejolt.iss'), {
-			encoding: 'utf8',
-		});
+InnoSetup.prototype.build = async () => {
+	let script = await fs.readFile(path.resolve(__dirname, 'vendor/gamejolt.iss'), {
+		encoding: 'utf8',
+	});
 
-		script = script
-			.replace(/\{\{ICON_DIR\}\}/g, shellEscape(resolvePath(__dirname, 'icons')))
-			.replace(/\{\{APP_DIR\}\}/g, shellEscape(this.appDir))
-			.replace(/\{\{OUT_DIR\}\}/g, shellEscape(this.outDir))
-			.replace(/\{\{GAME_UID\}\}/g, this.gameUID)
-			.replace(/\{\{APP_VERSION\}\}/g, this.version);
+	script = script
+		.replace(/\{\{ICON_DIR\}\}/g, shellEscape(path.resolve(__dirname, 'icons')))
+		.replace(/\{\{APP_DIR\}\}/g, shellEscape(this.appDir))
+		.replace(/\{\{OUT_DIR\}\}/g, shellEscape(this.outDir))
+		.replace(/\{\{GAME_UID\}\}/g, this.gameUID)
+		.replace(/\{\{APP_VERSION\}\}/g, this.version);
 
-		const scriptFile = resolvePath(__dirname, 'vendor/tmp-gamejolt.iss');
-		await writeFile(scriptFile, script, { encoding: 'utf8' });
+	const scriptFile = path.resolve(__dirname, 'vendor/tmp-gamejolt.iss');
+	await fs.writeFile(scriptFile, script, { encoding: 'utf8' });
 
-		await cp('iscc.exe', [
-			'/Ssigntool=' +
-				shellEscape(resolvePath(__dirname, 'vendor/signtool.exe')) +
-				' sign /f ' +
-				shellEscape(this.certFile) +
-				' /p ' +
-				this.certPw +
-				' /t http://timestamp.digicert.com $f',
-			'/Q',
-			scriptFile,
-		]);
-	}
-}
+	await cp('iscc.exe', [
+		'/Ssigntool=' +
+			shellEscape(path.resolve(__dirname, 'vendor/signtool.exe')) +
+			' sign /f ' +
+			shellEscape(this.certFile) +
+			' /p ' +
+			this.certPw +
+			' /t http://timestamp.digicert.com $f',
+		'/Q',
+		scriptFile,
+	]);
+};
 
 module.exports = InnoSetup;
