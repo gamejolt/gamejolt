@@ -21,12 +21,10 @@ jobs:
         env:
           SSH_KEY: ${{secrets.SSH_KEY}}
         run: |
-          Get-Service ssh-agent | Set-Service -StartupType Manual
-          Start-Service ssh-agent
-          Get-Service ssh-agent
-          $fileContent = "${SSH_KEY}"
-          Set-Content %USERPROFILE%\.ssh\id_rsa
-          ssh-add "%USERPROFILE%\.ssh\id_rsa"
+          $fileContent = "-----BEGIN RSA PRIVATE KEY-----`n"
+          $fileContent += $env:SSH_KEY.Replace(' ', "`n")
+          $fileContent += "`n-----END RSA PRIVATE KEY-----`n"
+          Set-Content %USERPROFILE%\.ssh\id_rsa $fileContent
 
       - uses: actions/checkout@v2
         with:
