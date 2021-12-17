@@ -17,15 +17,10 @@ jobs:
       GOPATH: 'C:\go'
 
     steps:
-      - name: Set up ssh-agent
-        env:
-          SSH_KEY: ${{secrets.SSH_KEY}}
-        run: |
-          echo ${HOME}
-          $fileContent = "-----BEGIN RSA PRIVATE KEY-----`n"
-          $fileContent += $env:SSH_KEY.Replace(' ', "`n")
-          $fileContent += "`n-----END RSA PRIVATE KEY-----`n"
-          Set-Content ${HOME}\.ssh\id_rsa $fileContent
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
 
       - uses: actions/checkout@v2
         with:
