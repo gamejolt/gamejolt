@@ -31,8 +31,8 @@ jobs:
 
       - name: Install code signing cert
         run: |
-          Set-Content ${{ env.GITHUB_WORKSPACE }}\gulp\tasks\client\certs\cert.pfx.b64 ${{ secrets.GJ_CERT }}
-          CertUtil -Decode ${{ env.GITHUB_WORKSPACE }}\gulp\tasks\client\certs\cert.pfx.b64 ${{ env.GITHUB_WORKSPACE }}\gulp\tasks\client\certs\cert.pfx
+          Set-Content gulp\tasks\client\certs\cert.pfx.b64 ${{ secrets.GJ_CERT }}
+          CertUtil -Decode gulp\tasks\client\certs\cert.pfx.b64 gulp\tasks\client\certs\cert.pfx
 
       - uses: actions/setup-node@v2
         with:
