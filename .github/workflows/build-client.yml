@@ -21,9 +21,10 @@ jobs:
         env:
           SSH_KEY: ${{secrets.SSH_KEY}}
         run: |
-          eval `ssh-agent -s`
-          ssh-add - <<< "${SSH_KEY}"
-        shell: cmd
+          Start-Service ssh-agent
+          $fileContent = "${SSH_KEY}"
+          Set-Content %USERPROFILE%\.ssh\id_rsa
+          ssh-add "%USERPROFILE%\.ssh\id_rsa"
 
       - uses: actions/checkout@v2
         with:
