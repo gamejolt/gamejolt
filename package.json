@@ -10,7 +10,7 @@
 		"client": "nw build/dev-client",
 		"client-build-dev": "gulp --development --client --arch=64",
 		"client-build-dev-full": "GJPUSH_TOKEN=admin_token yarn run client-build-dev --with-updater",
-		"client-build": "gulp --production --client",
+		"client-build": "gulp --production --client --section auth",
 		"client-build-win": "gulp package-client --production --client --arch=32",
 		"client-build-osx": "gulp package-client --production --client --arch=64",
 		"client-build-linux": "gulp package-client --production --client --arch=64",
