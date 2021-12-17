@@ -112,6 +112,7 @@ jobs:
         with:
           name: client-build
 
+      - run: mkdir -p build/prod-client
       - run: tar -xvf client-build.tar -C build/prod-client
 
       - name: Install SSH key
