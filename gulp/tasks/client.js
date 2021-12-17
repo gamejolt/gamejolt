@@ -723,6 +723,8 @@ module.exports = config => {
 			// Finally, create a dmg out of the entire app.
 			await _createDmg();
 		} else if (config.platform === 'win') {
+			return;
+
 			const manifest = JSON.parse(
 				await fs.readFile(path.resolve(config.clientBuildDir, 'build', '.manifest'), {
 					encoding: 'utf8',
