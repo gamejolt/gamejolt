@@ -11,6 +11,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16.4.2'
+          cache: yarn
+      - run: node --version
+      - run: yarn --version
 
       - run: yarn install
       - run: yarn run client-build
@@ -52,8 +61,8 @@ jobs:
   #     - uses: actions/setup-node@v2
   #       with:
   #         node-version: '16.4.2'
-  #         architecture: 'x86'
-  #         cache: 'yarn'
+  #         architecture: x86
+  #         cache: yarn
   #     - run: node --version
   #     - run: yarn --version
 
