@@ -30,73 +30,80 @@ jobs:
           name: client-build
           path: build/prod-client/client-build.tar
 
-  # build-win:
-  #   needs: build-frontend
+  build-win:
+    needs: build-frontend
 
-  #   strategy:
-  #     matrix:
-  #       targetplatform: [x86]
+    strategy:
+      matrix:
+        targetplatform: [x86]
 
-  #   runs-on: windows-2016
+    runs-on: windows-2016
 
-  #   env:
-  #     GOPATH: 'C:\go'
-  #     GJ_PUSH_TOKEN: ${{ secrets.GJ_PUSH_TOKEN }}
-  #     GJ_CERT_PASS: ${{ secrets.GJ_CERT_PASS }}
+    env:
+      GOPATH: 'C:\go'
+      GJ_PUSH_TOKEN: ${{ secrets.GJ_PUSH_TOKEN }}
+      GJ_CERT_PASS: ${{ secrets.GJ_CERT_PASS }}
 
-  #   steps:
-  #     - uses: actions/download-artifact@v2
-  #       with:
-  #         name: client-build
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: client-build
 
-  #     - name: Install SSH key
-  #       uses: shimataro/ssh-key-action@v2
-  #       with:
-  #         key: ${{ secrets.SSH_KEY }}
-  #         known_hosts: ${{ secrets.KNOWN_HOSTS }}
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
-  #     - uses: actions/checkout@v2
-  #       with:
-  #         submodules: recursive
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
-  #     - name: Install code signing cert
-  #       run: |
-  #         Set-Content gulp\tasks\client\certs\cert.pfx.b64 ${{ secrets.GJ_CERT }}
-  #         CertUtil -Decode gulp\tasks\client\certs\cert.pfx.b64 gulp\tasks\client\certs\cert.pfx
+      - name: Install code signing cert
+        run: |
+          Set-Content gulp\tasks\client\certs\cert.pfx.b64 ${{ secrets.GJ_CERT }}
+          CertUtil -Decode gulp\tasks\client\certs\cert.pfx.b64 gulp\tasks\client\certs\cert.pfx
 
-  #     - uses: actions/setup-node@v2
-  #       with:
-  #         node-version: '16.4.2'
-  #         architecture: x86
-  #         cache: yarn
-  #     - run: node --version
-  #     - run: yarn --version
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16.4.2'
+          architecture: x86
+          cache: yarn
+      - run: node --version
+      - run: yarn --version
 
-  #     - uses: actions/setup-go@v2
-  #       with:
-  #         go-version: '1.10.8'
-  #     - run: go version
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '1.10.8'
+      - run: go version
 
-  #     # Enable VS2015 toolset
-  #     - run: 'call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86'
-  #       shell: cmd
-  #     - run: gcc -v
+      - uses: actions/download-artifact@v2
+        with:
+          name: client-build
 
-  #     - run: echo %PATH%
-  #       shell: cmd
+      - run: mkdir build/prod-client
+      - run: tar -xvf client-build.tar -C build/prod-client
 
-  #     - run: yarn install --ignore-engines
-  #     - run: yarn run client-build-win
+      # Enable VS2015 toolset
+      - run: 'call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86'
+        shell: cmd
+      - run: gcc -v
 
-  #     - uses: actions/upload-artifact@v2
-  #       with:
-  #         name: win32
-  #         path: build\prod-client-build\GameJoltClientSetup.exe
+      - run: echo %PATH%
+        shell: cmd
 
-  #     - uses: actions/upload-artifact@v2
-  #       with:
-  #         name: win32-package
-  #         path: build\prod-client-build\win32-package.tar.gz
+      - run: yarn install --ignore-engines
+      - run: yarn run client-build-win
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: win32
+          path: build\prod-client-build\GameJoltClientSetup.exe
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: win32-package
+          path: build\prod-client-build\win32-package.tar.gz
 
   build-linux:
     needs: build-frontend
