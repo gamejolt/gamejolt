@@ -45,10 +45,6 @@ jobs:
       GJ_CERT_PASS: ${{ secrets.GJ_CERT_PASS }}
 
     steps:
-      - uses: actions/download-artifact@v2
-        with:
-          name: client-build
-
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
         with:
