@@ -212,66 +212,6 @@ module.exports = config => {
 			await nw.build();
 		}
 
-		// /**
-		//  * On windows and linux the app is packaged into an package.nw file,
-		//  * but for easier debugging we want to unpack it into the build folder
-		//  */
-		// async function unpackNw() {
-		// 	console.log('Unpacking nw');
-
-		// 	// We don't do this on mac.
-		// 	if (config.platform === 'osx') {
-		// 		console.log(`Skipping since we're on mac`);
-		// 		return;
-		// 	}
-
-		// 	const base = path.resolve(config.clientBuildDir, 'build', config.platformArch);
-		// 	const packageNw = path.resolve(base, 'package.nw');
-
-		// 	if (!(await fs.pathExists(packageNw))) {
-		// 		throw new Error(`Couldn't find package.nw.`);
-		// 	}
-
-		// 	console.log('Unzipping from package.nw to ' + path.resolve(base, 'package'));
-		// 	console.log('base: ' + base + ', packageNw: ' + packageNw);
-
-		// 	await unzip(packageNw, path.resolve(base, 'package'));
-
-		// 	// This solves an issue on windows where for some reason we get
-		// 	// permission errors when moving the node_modules folder.
-		// 	await sleep(1000);
-
-		// 	// We pull some stuff out of the package folder into the main folder.
-		// 	await fs.move(
-		// 		path.resolve(base, 'package', 'node_modules'),
-		// 		path.resolve(base, 'node_modules')
-		// 	);
-
-		// 	await fs.move(
-		// 		path.resolve(base, 'package', 'package.json'),
-		// 		path.resolve(base, 'package.json')
-		// 	);
-
-		// 	// For some reason unlinking package.nw fails so we just move it out of
-		// 	// the way instead.
-		// 	await moveToTrash(packageNw);
-		// }
-
-		// /**
-		//  * Makes the zipped package.
-		//  *
-		//  * Note: this is not the package shipped with joltron so it doesn't use the
-		//  * auto updater. It's essentially the "game" people upload to GJ.
-		//  */
-		// async function zipPackage() {
-		// 	console.log('Zipping up our package');
-
-		// 	await createTarGz(
-		// 		path.resolve(config.clientBuildDir, 'build', config.platformArch),
-		// 		path.resolve(config.clientBuildDir, config.platformArch + '-package.tar.gz')
-		// 	);
-		// }
-
 		/**
 		 * Downloads the gjpush binary used to push the package and installers to GJ
 		 * automatically.
@@ -746,8 +686,6 @@ module.exports = config => {
 
 		await setupNodeModules();
 		await buildNwjs();
-		// await unpackNw();
-		// await zipPackage();
 
 		if (config.pushBuild) {
 			await getPushTools();

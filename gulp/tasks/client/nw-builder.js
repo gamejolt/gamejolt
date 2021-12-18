@@ -26,6 +26,11 @@ class NwBuilder {
 
 		await this._setupNwjs();
 		await this._setupPrebuiltFFmpeg();
+
+		if (this.config.platform === 'win') {
+			this._buildWindows();
+		}
+
 		await this._packageApp();
 	}
 
@@ -145,6 +150,26 @@ class NwBuilder {
 			)} -> ${to}`
 		);
 		await fs.copy(path.resolve(cachePath, filename), to);
+	}
+
+	async _buildWindows() {
+		const rcedit = require('rcedit');
+		const outputExe = path.resolve(this._buildDir, 'nw.exe');
+		const winIco = path.resolve(__dirname, 'icons/winico.ico');
+
+		console.log(`Modifying nw.exe with rcedit.`);
+
+		await rcedit(outputExe, {
+			'file-version': this.packageJson.version,
+			'product-version': this.packageJson.version,
+			icon: winIco,
+			'version-string': {
+				FileDescription: 'Game Jolt',
+				LegalCopyright: `Copyright ${new Date().getFullYear()} Game Jolt Inc.`,
+				ProductName: 'Game Jolt',
+				OriginalFilename: '',
+			},
+		});
 	}
 
 	async _packageApp() {

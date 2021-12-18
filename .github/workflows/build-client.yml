@@ -76,6 +76,7 @@ jobs:
         with:
           name: client-build
 
+      # I guess windows doesn't need -p flag
       - run: mkdir build/prod-client
       - run: tar -xvf client-build.tar -C build/prod-client
 

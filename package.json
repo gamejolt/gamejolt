@@ -10,7 +10,7 @@
 		"client": "nw build/dev-client",
 		"client-build-dev": "gulp --development --client --arch=64",
 		"client-build-dev-full": "GJPUSH_TOKEN=admin_token yarn run client-build-dev --with-updater",
-		"client-build": "gulp --production --client --section auth",
+		"client-build": "gulp --production --client",
 		"client-build-win": "gulp package-client --production --client --arch=32",
 		"client-build-osx": "gulp package-client --production --client --arch=64",
 		"client-build-linux": "gulp package-client --production --client --arch=64",
@@ -161,7 +161,8 @@
 		"imagemin-gifsicle": "7.0.0",
 		"imagemin-jpegtran": "7.0.0",
 		"imagemin-optipng": "8.0.0",
-		"imagemin-svgo": "8.0.0"
+		"imagemin-svgo": "8.0.0",
+		"rcedit": "3.0.1"
 	},
 	"dependencies": {
 		"axios": "0.19.2",
