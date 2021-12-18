@@ -67,15 +67,16 @@ class NwBuilder {
 		const nwVersion = `v${NWJS_VERSION}`;
 		const flavor = this.config.production && !this.config.useTestPackage ? 'normal' : 'sdk';
 
-		let filename = [
+		const folder = [
 			flavor === 'sdk' ? 'nwjs-sdk' : 'nwjs',
 			nwVersion,
 			this.config.platform,
 			this.config.arch === 32 ? 'ia32' : 'x64',
 		].join('-');
-		const cachePath = path.resolve(this.config.clientBuildCacheDir, filename);
 
-		filename += this.config.platform === 'linux' ? '.tar.gz' : '.zip';
+		const cachePath = path.resolve(this.config.clientBuildCacheDir, folder);
+
+		const filename = folder + (this.config.platform === 'linux' ? '.tar.gz' : '.zip');
 		const cachePathArchive = path.resolve(this.config.clientBuildCacheDir, filename);
 
 		// If we don't have it in cache yet, get it.
@@ -86,7 +87,7 @@ class NwBuilder {
 			await downloadFile(url, cachePathArchive);
 
 			if (cachePathArchive.endsWith('.zip')) {
-				await unzip(cachePathArchive, cachePath);
+				await unzip(cachePathArchive, this.config.clientBuildCacheDir);
 			} else {
 				await extractTarGz(cachePathArchive, cachePath);
 			}

@@ -741,6 +741,9 @@ module.exports = config => {
 			await tryWithBackoff(gjPush, 3);
 		}
 
+		// Clean the build folder to start fresh.
+		await fs.remove(config.clientBuildDir);
+
 		await setupNodeModules();
 		await buildNwjs();
 		// await unpackNw();
