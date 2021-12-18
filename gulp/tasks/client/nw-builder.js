@@ -21,6 +21,9 @@ class NwBuilder {
 	}
 
 	async build() {
+		// Ensure our cache dir.
+		await fs.mkdirp(path.resolve(this.config.clientBuildCacheDir));
+
 		await this._setupNwjs();
 		await this._setupPrebuiltFFmpeg();
 		await this._packageApp();
