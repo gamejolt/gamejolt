@@ -103,7 +103,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      GOPATH: ${{ env.HOME }}/go
+      GOPATH: /home/runner/go
       GJ_PUSH_TOKEN: ${{ secrets.GJ_PUSH_TOKEN }}
       GJ_CERT_PASS: ${{ secrets.GJ_CERT_PASS }}
 
@@ -140,12 +140,12 @@ jobs:
       - run: yarn install --ignore-engines
       - run: yarn run client-build-linux
 
-      # - uses: actions/upload-artifact@v2
-      #   with:
-      #     name: win32
-      #     path: build\prod-client-build\GameJoltClientSetup.exe
+      - uses: actions/upload-artifact@v2
+        with:
+          name: linux64
+          path: build/prod-client-build/GameJoltClient.tar.gz
 
-      # - uses: actions/upload-artifact@v2
-      #   with:
-      #     name: win32-package
-      #     path: build\prod-client-build\win32-package.tar.gz
+      - uses: actions/upload-artifact@v2
+        with:
+          name: linux64-package
+          path: build/prod-client-build/linux64-package.tar.gz
