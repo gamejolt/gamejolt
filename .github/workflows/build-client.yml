@@ -154,7 +154,7 @@ jobs:
     runs-on: macos-latest
 
     env:
-      GOPATH: /home/runner/go
+      GOPATH: /Users/runner/go
       GJ_PUSH_TOKEN: ${{ secrets.GJ_PUSH_TOKEN }}
       GJ_CERT_PASS: ${{ secrets.GJ_CERT_PASS }}
 
