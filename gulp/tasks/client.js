@@ -562,6 +562,7 @@ module.exports = config => {
 				// // The . after the build dir makes it also copy hidden dot files
 				// cp.execSync('cp -a "' + path.join(buildDir, '.') + '" "' + appDir + '"');
 
+				// TODO: use simple-plist
 				// The info plist in our template has placeholder we need to replace
 				// with this build's version.
 				const infoPlistFile = path.join(clientApp, 'Contents', 'Info.plist');

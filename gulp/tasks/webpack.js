@@ -383,9 +383,6 @@ module.exports = function (config) {
 					GJ_VERSION: JSON.stringify(
 						require(path.resolve(process.cwd(), 'package.json')).version
 					),
-					GJ_MANIFEST_URL: JSON.stringify(
-						require(path.resolve(process.cwd(), 'package.json')).clientManifestUrl
-					),
 					GJ_WITH_UPDATER: JSON.stringify(
 						(!config.developmentEnv && !config.watching) || config.withUpdater
 					),

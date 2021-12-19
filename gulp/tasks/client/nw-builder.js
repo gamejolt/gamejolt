@@ -1,6 +1,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const plist = require('simple-plist');
+const readdirp = require('readdirp');
 const { extractTarGz, downloadFile, unzip, createTarGz, mergeDeep } = require('../build-utils');
 
 const NWJS_VERSION = '0.55.0';
@@ -29,9 +30,9 @@ class NwBuilder {
 		await this._setupPrebuiltFFmpeg();
 
 		if (this.config.platform === 'win') {
-			this._buildWindows();
+			await this._buildWindows();
 		} else if (this.config.platform === 'osx') {
-			this._buildMac();
+			await this._buildMac();
 		}
 
 		await this._packageApp();
@@ -41,16 +42,46 @@ class NwBuilder {
 		return path.resolve(this.config.clientBuildDir, 'build');
 	}
 
-	get _packageDir() {
-		return path.resolve(this._buildDir, 'package');
-	}
-
 	get _packagedFile() {
 		return path.resolve(
 			this.config.clientBuildDir,
 			this.config.platformArch + '-package.tar.gz'
 		);
 	}
+
+	/**
+	 * This is the main directory that all the files are in for nwjs.
+	 */
+	get _macAppDir() {
+		return path.resolve(this._buildDir, 'nwjs.app');
+	}
+
+	/**
+	 * This is the directory that nwjs puts all the chrome data on mac.
+	 */
+	get _macFrameworkDir() {
+		if (!this.__macCurrentDir) {
+			const versionsDir = path.resolve(
+				this._macAppDir,
+				'Contents',
+				'Frameworks',
+				'nwjs Framework.framework',
+				'Versions'
+			);
+
+			// The Current file contains the version.
+			const chromeVersion = fs
+				.readFileSync(path.resolve(versionsDir, 'Current'), {
+					encoding: 'utf8',
+				})
+				.replace(/\s+/g, '');
+
+			this.__macCurrentDir = path.resolve(versionsDir, chromeVersion);
+		}
+
+		return this.__macCurrentDir;
+	}
+	__macCurrentDir = null;
 
 	/**
 	 * We want the name to be:
@@ -136,11 +167,7 @@ class NwBuilder {
 			to = path.resolve(this._buildDir, filename);
 		} else if (this.config.platform === 'osx') {
 			filename = 'libffmpeg.dylib';
-			to = path.resolve(
-				this._buildDir,
-				'nwjs.app/Contents/Frameworks/nwjs Framework.framework/Versions/Current',
-				filename
-			);
+			to = path.resolve(this._macFrameworkDir, filename);
 		} else if (this.config.platform === 'linux') {
 			filename = 'libffmpeg.so';
 			to = path.resolve(this._buildDir, 'lib', filename);
@@ -176,92 +203,88 @@ class NwBuilder {
 	}
 
 	async _buildMac() {
-		const iconPath = path.resolve(this._buildDir, 'Contents', 'Resources', 'app.icns');
-
-		console.log(`Copying macOS icon to ${iconPath}`);
-		await fs.remove(iconPath);
-		await fs.copy(path.resolve(__dirname, 'icons/mac.icns'), iconPath);
-
-		// List of files to rename in format
-		// {path: "path/to/File", keysToUpdate: ["plist", "keys", "to", "change"]}
 		const bundleId = 'com.gamejolt.client';
-		const frameworkHelperDir = path.resolve(
-			this._buildDir,
-			'Contents',
-			'Frameworks',
-			'nwjs Framework.framework',
-			'Helpers'
-		);
+		const frameworkHelperDir = path.resolve(this._macFrameworkDir, 'Helpers');
+
+		// Update the icons.
+		const iconPath = path.resolve(this._macAppDir, 'Contents', 'Resources');
+		const icons = ['app.icns', 'document.icns'];
+
+		for (const icon of icons) {
+			console.log(`Copying macOS icon (${icon}) to ${iconPath}`);
+			await fs.copy(path.resolve(__dirname, 'icons/mac.icns'), path.resolve(iconPath, icon));
+		}
+
+		// Rename main app executable.
+		const oldExec = path.resolve(this._macAppDir, 'Contents', 'MacOS', 'nwjs');
+		const newExec = path.resolve(this._macAppDir, 'Contents', 'MacOS', this._appName);
+		console.log(`Renaming inner app executable: ${oldExec} -> ${newExec}`);
+		await fs.move(oldExec, newExec);
+
+		// Gotta update all the plists for the inner apps that nwjs uses.
 		const infoPlistPaths = [
 			{
-				path: path.resolve(this._buildDir, 'Contents', 'Info.plist'),
+				path: path.resolve(this._macAppDir, 'Contents', 'Info.plist'),
 				keysToUpdate: {
 					CFBundleDisplayName: this._appName,
 					CFBundleExecutable: this._appName,
 					CFBundleIdentifier: bundleId,
 					CFBundleName: this._appName,
 					CFBundleShortVersionString: this.packageJson.version,
+					// This is apparently no longer used, but we want to override NWJS.
+					CFBundleSignature: '????',
 				},
 			},
 		];
 
-		infoPlistPaths.push(
-			{
-				path: path.join(
-					frameworkHelperDir,
-					'nwjs Helper (GPU).app',
-					'Contents',
-					'Info.plist'
-				),
-				keysToUpdate: {
-					CFBundleDisplayName: this._appName,
-					CFBundleExecutable: this._appName,
-					CFBundleIdentifier: `${bundleId}.helper`,
-					CFBundleName: this._appName,
-					CFBundleShortVersionString: this.packageJson.version,
+		const entries = readdirp(frameworkHelperDir, {
+			directoryFilter: i => i.basename.startsWith('nwjs Helper'),
+			type: 'directories',
+			depth: 1,
+		});
+
+		for await (const entry of entries) {
+			const newFilename = entry.basename.replace(/^nwjs/, 'Game Jolt');
+			const newPath = path.resolve(path.dirname(entry.fullPath), newFilename);
+			const helperName = newFilename.replace(/\.app/, '');
+
+			const renames = [
+				// Executable.
+				{
+					from: path.resolve(
+						entry.fullPath,
+						'Contents',
+						'MacOS',
+						entry.basename.replace(/\.app/, '')
+					),
+					to: path.resolve(entry.fullPath, 'Contents', 'MacOS', helperName),
 				},
-			},
-			{
-				path: path.join(
-					frameworkHelperDir,
-					'nwjs Helper (Plugin).app',
-					'Contents',
-					'Info.plist'
-				),
-				keysToUpdate: {
-					CFBundleDisplayName: this._appName,
-					CFBundleExecutable: this._appName,
-					CFBundleIdentifier: `${bundleId}.helper.plugin`,
-					CFBundleName: this._appName,
-					CFBundleShortVersionString: this.packageJson.version,
-				},
-			},
-			{
-				path: path.join(
-					frameworkHelperDir,
-					'nwjs Helper (Renderer).app',
-					'Contents',
-					'Info.plist'
-				),
-				keysToUpdate: {
-					CFBundleDisplayName: this._appName,
-					CFBundleExecutable: this._appName,
-					CFBundleIdentifier: `${bundleId}.helper.renderer`,
-					CFBundleName: this._appName,
-					CFBundleShortVersionString: this.packageJson.version,
-				},
-			},
-			{
-				path: path.join(frameworkHelperDir, 'nwjs Helper.app', 'Contents', 'Info.plist'),
-				keysToUpdate: {
-					CFBundleDisplayName: this._appName,
-					CFBundleExecutable: this._appName,
-					CFBundleIdentifier: `${bundleId}.helper`,
-					CFBundleName: this._appName,
-					CFBundleShortVersionString: this.packageJson.version,
-				},
+				// Folder.
+				{ from: entry.fullPath, to: newPath },
+			];
+
+			for (const { from, to } of renames) {
+				console.log(`Move nwjs helper: ${from} -> ${to}`);
+				await fs.move(from, to);
 			}
-		);
+
+			let helperBundleId = `${bundleId}.helper`;
+			const matches = helperName.match(/\((.+?)\)/);
+			if (matches) {
+				helperBundleId += `.${matches[1].toLowerCase()}`;
+			}
+
+			infoPlistPaths.push({
+				path: path.resolve(newPath, 'Contents', 'Info.plist'),
+				keysToUpdate: {
+					CFBundleDisplayName: helperName,
+					CFBundleExecutable: helperName,
+					CFBundleIdentifier: helperBundleId,
+					CFBundleName: helperName,
+					CFBundleShortVersionString: this.packageJson.version,
+				},
+			});
+		}
 
 		for (const { path, keysToUpdate } of infoPlistPaths) {
 			console.log(`Update Info.plist at ${path}`);
@@ -272,27 +295,38 @@ class NwBuilder {
 	}
 
 	async _packageApp() {
-		const appFiles = this.config.buildDir;
+		let packageDir = path.resolve(this._buildDir, 'package');
+		if (this.config.platform === 'osx') {
+			packageDir = path.resolve(
+				this._buildDir,
+				'nwjs.app',
+				'Contents',
+				'Resources',
+				'app.nw',
+				'package'
+			);
+		}
+
 		let from = '',
 			to = '';
 
 		// Copy our app build files into a new folder to start packaging things up.
-		from = appFiles;
-		to = this._packageDir;
+		from = this.config.buildDir;
+		to = packageDir;
 		console.log(`Copying app files: ${from} -> ${to}`);
 		await fs.copy(from, to);
 
 		console.log(`Writing our package.json`);
-		await fs.remove(path.resolve(this._packageDir, 'package.json'));
+		await fs.remove(path.resolve(packageDir, 'package.json'));
 		await fs.writeFile(
-			path.resolve(this._buildDir, 'package.json'),
+			path.resolve(packageDir, '..', 'package.json'),
 			JSON.stringify(this.packageJson),
 			{ encoding: 'utf8' }
 		);
 
-		// We pull some stuff out of the package folder into the main folder.
-		from = path.resolve(this._packageDir, 'node_modules');
-		to = path.resolve(this._buildDir, 'node_modules');
+		// We pull some stuff out of the package folder up one directory.
+		from = path.resolve(packageDir, 'node_modules');
+		to = path.resolve(packageDir, '..', 'node_modules');
 		console.log(`Moving node_modules out of package dir: ${from} -> ${to}`);
 		await fs.move(from, to);
 
