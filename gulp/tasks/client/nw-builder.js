@@ -1,5 +1,6 @@
 const fs = require('fs-extra');
 const path = require('path');
+const plist = require('simple-plist');
 const { extractTarGz, downloadFile, unzip, createTarGz, mergeDeep } = require('../build-utils');
 
 const NWJS_VERSION = '0.55.0';
@@ -29,6 +30,8 @@ class NwBuilder {
 
 		if (this.config.platform === 'win') {
 			this._buildWindows();
+		} else if (this.config.platform === 'osx') {
+			this._buildMac();
 		}
 
 		await this._packageApp();
@@ -170,6 +173,102 @@ class NwBuilder {
 				OriginalFilename: '',
 			},
 		});
+	}
+
+	async _buildMac() {
+		const iconPath = path.resolve(this._buildDir, 'Contents', 'Resources', 'app.icns');
+
+		console.log(`Copying macOS icon to ${iconPath}`);
+		await fs.remove(iconPath);
+		await fs.copy(path.resolve(__dirname, 'icons/mac.icns'), iconPath);
+
+		// List of files to rename in format
+		// {path: "path/to/File", keysToUpdate: ["plist", "keys", "to", "change"]}
+		const bundleId = 'com.gamejolt.client';
+		const frameworkHelperDir = path.resolve(
+			this._buildDir,
+			'Contents',
+			'Frameworks',
+			'nwjs Framework.framework',
+			'Helpers'
+		);
+		const infoPlistPaths = [
+			{
+				path: path.resolve(this._buildDir, 'Contents', 'Info.plist'),
+				keysToUpdate: {
+					CFBundleDisplayName: this._appName,
+					CFBundleExecutable: this._appName,
+					CFBundleIdentifier: bundleId,
+					CFBundleName: this._appName,
+					CFBundleShortVersionString: this.packageJson.version,
+				},
+			},
+		];
+
+		infoPlistPaths.push(
+			{
+				path: path.join(
+					frameworkHelperDir,
+					'nwjs Helper (GPU).app',
+					'Contents',
+					'Info.plist'
+				),
+				keysToUpdate: {
+					CFBundleDisplayName: this._appName,
+					CFBundleExecutable: this._appName,
+					CFBundleIdentifier: `${bundleId}.helper`,
+					CFBundleName: this._appName,
+					CFBundleShortVersionString: this.packageJson.version,
+				},
+			},
+			{
+				path: path.join(
+					frameworkHelperDir,
+					'nwjs Helper (Plugin).app',
+					'Contents',
+					'Info.plist'
+				),
+				keysToUpdate: {
+					CFBundleDisplayName: this._appName,
+					CFBundleExecutable: this._appName,
+					CFBundleIdentifier: `${bundleId}.helper.plugin`,
+					CFBundleName: this._appName,
+					CFBundleShortVersionString: this.packageJson.version,
+				},
+			},
+			{
+				path: path.join(
+					frameworkHelperDir,
+					'nwjs Helper (Renderer).app',
+					'Contents',
+					'Info.plist'
+				),
+				keysToUpdate: {
+					CFBundleDisplayName: this._appName,
+					CFBundleExecutable: this._appName,
+					CFBundleIdentifier: `${bundleId}.helper.renderer`,
+					CFBundleName: this._appName,
+					CFBundleShortVersionString: this.packageJson.version,
+				},
+			},
+			{
+				path: path.join(frameworkHelperDir, 'nwjs Helper.app', 'Contents', 'Info.plist'),
+				keysToUpdate: {
+					CFBundleDisplayName: this._appName,
+					CFBundleExecutable: this._appName,
+					CFBundleIdentifier: `${bundleId}.helper`,
+					CFBundleName: this._appName,
+					CFBundleShortVersionString: this.packageJson.version,
+				},
+			}
+		);
+
+		for (const { path, keysToUpdate } of infoPlistPaths) {
+			console.log(`Update Info.plist at ${path}`);
+
+			const plistData = Object.assign({}, plist.readFileSync(path), keysToUpdate);
+			plist.writeFileSync(path, plistData);
+		}
 	}
 
 	async _packageApp() {
