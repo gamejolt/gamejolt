@@ -94,7 +94,6 @@
 		"mini-css-extract-plugin": "0.4.4",
 		"minimist": "1.2.0",
 		"null-loader": "0.1.1",
-		"nw-builder": "github:gamejolt/nw-builder#skip-merge-app",
 		"offline-plugin": "5.0.6",
 		"phoenix": "1.5.1",
 		"pofile": "1.0.11",
@@ -158,7 +157,6 @@
 		"write-file-webpack-plugin": "4.5.0"
 	},
 	"optionalDependencies": {
-		"appdmg": "0.6.2",
 		"imagemin-gifsicle": "7.0.0",
 		"imagemin-jpegtran": "7.0.0",
 		"imagemin-optipng": "8.0.0",

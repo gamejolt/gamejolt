@@ -168,47 +168,9 @@ module.exports = config => {
 		 * This will do the actual nwjs build.
 		 */
 		async function buildNwjs() {
-			console.log('Building nwjs');
-
-			// const NwBuilder = require('nw-builder');
+			console.log('Building NW.js');
 
 			const nw = new NwBuilder(config, packageJson);
-
-			// // We want the name to be:
-			// // 'game-jolt-client' on linux - because kebabs rock
-			// // 'GameJoltClient' on win - so it shows up well in process list and stuff
-			// // 'Game Jolt Client' on mac - so it shows up well in Applications folder.
-			// // note that on mac, the installer will unpack a self updating app and contain this NW executable entirely within itself.
-			// let appName = 'game-jolt-client';
-			// if (config.platform === 'win') {
-			// 	appName = 'GameJoltClient';
-			// } else if (config.platform === 'osx') {
-			// 	appName = 'Game Jolt Client';
-			// }
-
-			// const nw = new NwBuilder({
-			// 	version: nwjsVersion,
-			// 	flavor: config.production && !config.useTestPackage ? 'normal' : 'sdk',
-			// 	files: config.buildDir + '/**/*',
-			// 	buildDir: config.clientBuildDir,
-			// 	cacheDir: config.clientBuildCacheDir,
-			// 	platforms: [config.platformArch],
-			// 	appName: appName,
-			// 	buildType: () => 'build',
-			// 	appVersion: packageJson.version,
-			// 	macZip: false, // Use a app.nw folder instead of ZIP file
-			// 	macIcns: path.resolve(__dirname, 'client/icons/mac.icns'),
-			// 	macPlist: {
-			// 		CFBundleIdentifier: 'com.gamejolt.client',
-			// 	},
-			// 	winIco: path.resolve(__dirname, 'client/icons/winico.ico'),
-
-			// 	// Tells it not to merge the app zip into the executable. Easier updating this way.
-			// 	mergeApp: false,
-			// });
-
-			// nw.on('log', console.log);
-
 			await nw.build();
 		}
 
@@ -542,6 +504,9 @@ module.exports = config => {
 			console.log('Creating installer');
 
 			if (config.platform === 'osx') {
+				// TODO: need to get working without appdmg library
+				return;
+
 				// On mac we need to create an app that when run will execute joltron.
 				// We have a template app we use that contains the minimal setup
 				// required.
