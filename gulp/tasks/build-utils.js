@@ -1,9 +1,9 @@
-const AdmZip = require('adm-zip');
 const { spawn } = require('child_process');
 const { https } = require('follow-redirects');
 const fs = require('fs-extra');
 const tar = require('tar');
 const path = require('path');
+const os = require('os');
 
 module.exports.sleep = ms => {
 	return new Promise(resolve => {
@@ -28,13 +28,12 @@ module.exports.extractTarGz = async (src, dest) => {
 	await tar.x({ file: src, gzip: true, cwd: path.resolve(dest, '..') });
 };
 
-module.exports.unzip = (src, dest) => {
-	const zip = new AdmZip(src);
-	zip.extractAllTo(dest, true);
-
-	// It's synchronous, but we want to pretend it's async so that we can change
-	// in future easily.
-	return Promise.resolve();
+module.exports.unzip = async (src, dest) => {
+	if (os.platform() === 'win32') {
+		await this.runShell(`tar -xf "${path.normalize(src)}" -C "${path.normalize(dest)}"`);
+	} else {
+		await this.runShell(`unzip -o "${path.normalize(src)}" -d "${path.normalize(dest)}"`);
+	}
 };
 
 module.exports.runShell = (command, options = {}) => {

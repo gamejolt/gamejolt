@@ -54,7 +54,6 @@
 		"@types/write-file-atomic": "2.1.1",
 		"@typescript-eslint/eslint-plugin": "3.7.0",
 		"@typescript-eslint/parser": "3.7.0",
-		"adm-zip": "0.5.9",
 		"agora-rtc-sdk-ng": "4.5.0",
 		"autoprefixer": "9.3.1",
 		"autosize": "4.0.2",
@@ -157,6 +156,7 @@
 		"write-file-webpack-plugin": "4.5.0"
 	},
 	"optionalDependencies": {
+		"appdmg": "argv-minus-one/node-appdmg#node-12-temporary-fix",
 		"imagemin-gifsicle": "7.0.0",
 		"imagemin-jpegtran": "7.0.0",
 		"imagemin-optipng": "8.0.0",
@@ -195,6 +195,12 @@
 			}
 		},
 		"win": {
+			"main": "chrome-extension://game-jolt-client/package/index.html#/",
+			"window": {
+				"icon": "package/static-assets/client/icon-256x256.png"
+			}
+		},
+		"osx": {
 			"main": "chrome-extension://game-jolt-client/package/index.html#/",
 			"window": {
 				"icon": "package/static-assets/client/icon-256x256.png"

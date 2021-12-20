@@ -63,28 +63,15 @@ class NwBuilder {
 	 * This is the directory that nwjs puts all the chrome data on mac.
 	 */
 	get _macFrameworkDir() {
-		if (!this.__macCurrentDir) {
-			const versionsDir = path.resolve(
-				this._macAppDir,
-				'Contents',
-				'Frameworks',
-				'nwjs Framework.framework',
-				'Versions'
-			);
-
-			// The Current file contains the version.
-			const chromeVersion = fs
-				.readFileSync(path.resolve(versionsDir, 'Current'), {
-					encoding: 'utf8',
-				})
-				.replace(/\s+/g, '');
-
-			this.__macCurrentDir = path.resolve(versionsDir, chromeVersion);
-		}
-
-		return this.__macCurrentDir;
+		return path.resolve(
+			this._macAppDir,
+			'Contents',
+			'Frameworks',
+			'nwjs Framework.framework',
+			'Versions',
+			'Current'
+		);
 	}
-	__macCurrentDir = null;
 
 	/**
 	 * We want the name to be:
@@ -247,7 +234,7 @@ class NwBuilder {
 		});
 
 		for await (const entry of entries) {
-			const newFilename = entry.basename.replace(/^nwjs/, 'Game Jolt');
+			const newFilename = entry.basename.replace(/^nwjs/, 'Game Jolt Client');
 			const newPath = path.resolve(path.dirname(entry.fullPath), newFilename);
 			const helperName = newFilename.replace(/\.app/, '');
 

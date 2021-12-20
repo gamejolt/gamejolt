@@ -281,7 +281,7 @@ module.exports = config => {
 			const gitClone =
 				'git clone --branch ' +
 				joltronVersion +
-				' git@github.com:gamejolt/joltron.git ' +
+				' https://github.com/gamejolt/joltron.git ' +
 				joltronRepoDir;
 
 			// Do status first, if it fails it means the repo doesn't exist, so try
@@ -504,9 +504,6 @@ module.exports = config => {
 			console.log('Creating installer');
 
 			if (config.platform === 'osx') {
-				// TODO: need to get working without appdmg library
-				return;
-
 				// On mac we need to create an app that when run will execute joltron.
 				// We have a template app we use that contains the minimal setup
 				// required.
@@ -546,7 +543,8 @@ module.exports = config => {
 						target: path.resolve(config.clientBuildDir, 'GameJoltClient.dmg'),
 						basepath: config.projectBase,
 						specification: {
-							title: 'Game Jolt Client',
+							// DO NOT ADD ANY SPACES (or chinese characters) - the background will disappear apparently
+							title: 'GameJolt',
 							icon: path.resolve(__dirname, 'client/icons/mac.icns'),
 							background: path.resolve(__dirname, 'client/icons/dmg-background.png'),
 							'icon-size': 80,
