@@ -238,11 +238,7 @@ async function _renewTokens(producer: FiresideRTCProducer) {
 			return;
 		}
 
-		const response = await Api.sendRequest(
-			'/web/dash/fireside/set-is-streaming/' + fireside.id,
-			{ is_streaming: true, streaming_uid: rtc.streamingUid },
-			{ detach: true }
-		);
+		const response = await _updateSetIsStreaming(producer);
 
 		if (response?.success !== true) {
 			throw new Error(response);
@@ -437,13 +433,47 @@ function _updateWebcamDevice(producer: FiresideRTCProducer) {
 			});
 
 			rtc.log(`Video webcam track ID: ${track.getTrackId()}`);
+
 			return track;
 		});
+
+		// No need to await on this. its not essential.
+		_updateSetIsStreaming(producer);
 
 		if (producer._videoPreviewElement) {
 			previewChannelVideo(videoChannel, producer._videoPreviewElement);
 		}
 	});
+}
+
+async function _updateSetIsStreaming(producer: FiresideRTCProducer) {
+	const { rtc } = producer;
+
+	let response: any = null;
+
+	try {
+		response = await Api.sendRequest(
+			'/web/dash/fireside/set-is-streaming/' + rtc.fireside.id,
+			{
+				is_streaming: producer._isStreaming,
+				streaming_uid: rtc.streamingUid,
+				has_video:
+					producer.selectedWebcamDeviceId !== PRODUCER_UNSET_DEVICE &&
+					rtc.videoChannel._localVideoTrack !== null,
+				has_mic_audio:
+					producer.selectedMicDeviceId !== PRODUCER_UNSET_DEVICE &&
+					rtc.chatChannel._localAudioTrack !== null,
+				has_desktop_audio:
+					producer.selectedDesktopAudioDeviceId !== PRODUCER_UNSET_DEVICE &&
+					rtc.videoChannel._localAudioTrack !== null,
+			},
+			{ detach: true }
+		);
+	} catch (e) {
+		rtc.logWarning(`Got error while trying to set what we're streaming.`, e);
+	}
+
+	return response;
 }
 
 function _updateDesktopAudioDevice(producer: FiresideRTCProducer) {
@@ -486,8 +516,12 @@ function _updateDesktopAudioDevice(producer: FiresideRTCProducer) {
 			track.setVolume(100);
 
 			rtc.log(`Desktop audio track ID: ${track.getTrackId()}`);
+
 			return track;
 		});
+
+		// No need to await on this. its not essential.
+		_updateSetIsStreaming(producer);
 	});
 }
 
@@ -523,8 +557,12 @@ function _updateMicDevice(producer: FiresideRTCProducer) {
 			track.setVolume(100);
 
 			rtc.log(`Mic track ID: ${track.getTrackId()}`);
+
 			return track;
 		});
+
+		// No need to await on this. its not essential.
+		_updateSetIsStreaming(producer);
 	});
 }
 
@@ -664,19 +702,10 @@ export async function startStreaming(producer: FiresideRTCProducer) {
 
 		const {
 			rtc,
-			rtc: { fireside, videoChannel, chatChannel, generation },
+			rtc: { videoChannel, chatChannel, generation },
 		} = producer;
 
-		let response: any = null;
-		try {
-			response = await Api.sendRequest(
-				'/web/dash/fireside/set-is-streaming/' + fireside.id,
-				{ is_streaming: true, streaming_uid: rtc.streamingUid },
-				{ detach: true }
-			);
-		} catch (e) {
-			rtc.logWarning(`Got error while trying to set that we're streaming.`, e);
-		}
+		const response = await _updateSetIsStreaming(producer);
 
 		if (response?.success !== true || generation.isCanceled) {
 			rtc.logWarning(`Couldn't start streaming.`, response);
@@ -718,24 +747,15 @@ async function _stopStreaming(producer: FiresideRTCProducer, becomeBusy: boolean
 
 		const {
 			rtc,
-			rtc: { fireside, videoChannel, chatChannel },
+			rtc: { videoChannel, chatChannel },
 		} = producer;
 
 		// This just sets the backend to know that they stopped streaming
 		// immediately. We don't need to refresh or anything if it fails.
-		let response: any = null;
-		try {
-			response = await Api.sendRequest(
-				'/web/dash/fireside/set-is-streaming/' + fireside.id,
-				{ is_streaming: false, streaming_uid: rtc.streamingUid },
-				{ detach: true }
-			);
+		const response = await _updateSetIsStreaming(producer);
 
-			if (response?.success !== true) {
-				throw new Error(`API did not return success.`);
-			}
-		} catch (e) {
-			rtc.logWarning(`Got error while setting that we're not streaming.`, e);
+		if (response?.success !== true) {
+			throw new Error(`API did not return success.`);
 		}
 
 		// Failure here should end up forcing the app to reload to make
