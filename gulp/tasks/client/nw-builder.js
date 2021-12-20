@@ -26,6 +26,9 @@ class NwBuilder {
 		// Ensure our cache dir.
 		await fs.mkdirp(path.resolve(this.config.clientBuildCacheDir));
 
+		// macOS needs product string
+		this.packageJson['product_string'] = this._appName;
+
 		await this._setupNwjs();
 		await this._setupPrebuiltFFmpeg();
 
