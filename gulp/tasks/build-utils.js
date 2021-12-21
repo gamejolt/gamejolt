@@ -37,7 +37,7 @@ module.exports.unzip = async (src, dest) => {
 		);
 	} else {
 		await this.runShell('unzip', {
-			args: ['-o', path.resolve(src), '-d', path.resolve(dest)],
+			args: ['-o', src, '-d', dest],
 		});
 	}
 };
