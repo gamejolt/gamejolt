@@ -181,7 +181,7 @@ export class FiresideController {
 	 * form.
 	 */
 	get canBrowserStream() {
-		return !(GJ_IS_CLIENT || this.isFirefox || this.isSafari);
+		return !(this.isFirefox || this.isSafari);
 	}
 
 	/**
