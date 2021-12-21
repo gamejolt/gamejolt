@@ -39,7 +39,7 @@ jobs:
 
     env:
       GOPATH: 'C:\go'
-      GJ_PUSH_TOKEN: ${{ secrets.GJ_PUSH_TOKEN }}
+      GJPUSH_TOKEN: ${{ secrets.GJ_PUSH_TOKEN }}
       GJ_CERT_PASS: ${{ secrets.GJ_CERT_PASS }}
 
     steps:
@@ -84,8 +84,7 @@ jobs:
         shell: cmd
 
       - run: yarn install
-      - run: yarn run client-build-win
-      - run: yarn run client-push
+      - run: yarn run client-package --push-build
 
       - uses: actions/upload-artifact@v2
         with:
@@ -103,7 +102,7 @@ jobs:
 
     env:
       GOPATH: /home/runner/go
-      GJ_PUSH_TOKEN: ${{ secrets.GJ_PUSH_TOKEN }}
+      GJPUSH_TOKEN: ${{ secrets.GJ_PUSH_TOKEN }}
       GJ_CERT_PASS: ${{ secrets.GJ_CERT_PASS }}
 
     steps:
@@ -138,8 +137,7 @@ jobs:
       - run: tar -xvf client-build.tar -C build/prod-client
 
       - run: yarn install
-      - run: yarn run client-build-linux
-      - run: yarn run client-push
+      - run: yarn run client-package --push-build
 
       - uses: actions/upload-artifact@v2
         with:
@@ -157,7 +155,7 @@ jobs:
 
     env:
       GOPATH: /Users/runner/go
-      GJ_PUSH_TOKEN: ${{ secrets.GJ_PUSH_TOKEN }}
+      GJPUSH_TOKEN: ${{ secrets.GJ_PUSH_TOKEN }}
       GJ_CERT_PASS: ${{ secrets.GJ_CERT_PASS }}
 
     steps:
@@ -187,8 +185,7 @@ jobs:
       - run: tar -xvf client-build.tar -C build/prod-client
 
       - run: yarn install
-      - run: yarn run client-build-osx
-      - run: yarn run client-push
+      - run: yarn run client-package --push-build
 
       - uses: actions/upload-artifact@v2
         with:

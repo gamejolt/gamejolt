@@ -57,6 +57,19 @@ module.exports = config => {
 	}
 	const nwjsVersion = '0.55.0';
 
+	let gjpushExecutable = '';
+	switch (config.platform) {
+		case 'win':
+			gjpushExecutable = path.resolve(config.clientBuildDir, 'gjpush.exe');
+			break;
+		case 'osx':
+			gjpushExecutable = path.resolve(config.clientBuildDir, 'gjpush');
+			break;
+		default:
+			gjpushExecutable = path.resolve(config.clientBuildDir, 'gjpush');
+			break;
+	}
+
 	/**
 	 * Function to issue an authenticated service API request and return the
 	 * result as json.
@@ -68,7 +81,7 @@ module.exports = config => {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: process.env.GJ_PUSH_TOKEN,
+				Authorization: process.env.GJPUSH_TOKEN,
 			},
 		};
 
@@ -113,6 +126,91 @@ module.exports = config => {
 
 			const nw = new NwBuilder(config, packageJson);
 			await nw.build();
+		}
+
+		/**
+		 * Downloads the gjpush binary used to push the package and installers to GJ
+		 * automatically.
+		 */
+		async function getPushTools() {
+			console.log('Getting push tools');
+
+			// In development we want to grab a development variant of it,
+			// so we simply copy it over from its Go repo into our build dir.
+			if (config.developmentEnv) {
+				await fs.copy(
+					path.resolve(
+						process.env.GOPATH,
+						'src',
+						'github.com',
+						'gamejolt',
+						'cli',
+						path.basename(gjpushExecutable)
+					),
+					gjpushExecutable
+				);
+
+				console.log('Got development tools');
+				return;
+			}
+
+			// In prod we fetch the binary from the github releases page. It is
+			// zipped on Github because we didn't want to have OS specific filenames
+			// like gjpush-win32.exe so we distinguish the OS by the zip name which
+			// then contains gjpush.exe for windows or just gjpush for mac/linux.
+			let remoteExecutable = '';
+			switch (config.platform) {
+				case 'win':
+					remoteExecutable = 'windows.zip';
+					break;
+				case 'osx':
+					remoteExecutable = 'osx.zip';
+					break;
+				default:
+					remoteExecutable = 'linux.zip';
+					break;
+			}
+
+			const gjpushZip = path.resolve(config.clientBuildDir, 'gjpush.zip');
+
+			await downloadFile(
+				`https://github.com/gamejolt/cli/releases/download/${gjpushVersion}/${remoteExecutable}`,
+				gjpushZip
+			);
+
+			await unzip(gjpushZip, config.clientBuildDir);
+
+			// Ensure the gjpush binary is executable.
+			await fs.chmod(gjpushExecutable, '0755');
+		}
+
+		/**
+		 * Pushes the single package to GJ.
+		 */
+		async function pushPackage() {
+			console.log('Pushing the package to Game Jolt');
+
+			// We trust the exit codes to tell us if something went wrong
+			// because a non 0 exit code will make this throw.
+			const gjPush = () =>
+				runShell(gjpushExecutable, {
+					args: [
+						'--no-resume',
+						'-g',
+						gjGameId,
+						'-p',
+						gjGamePackageId,
+						'-r',
+						packageJson.version,
+						path.resolve(
+							config.clientBuildDir,
+							config.platformArch + '-package.tar.gz'
+						),
+					],
+				});
+
+			// Let's try to be resilient to network failures by trying a few times.
+			await tryWithBackoff(gjPush, 3);
 		}
 
 		/**
@@ -229,37 +327,45 @@ module.exports = config => {
 		async function setupJoltron() {
 			console.log('Setting up Joltron');
 
+			// If we want to skip gjpush to test the packaging we need to provide
+			// the build ID ourselves because we won't be hitting service-api to get
+			// it.
+			let buildId = 739828;
+
 			// We need to know our build ID for the package zip we just uploaded,
 			// because the build id is part of the game UID ("packageId-buildId)"
 			// which we need for joltron's manifest file. So we can use the service
 			// API to query it!
+			if (config.pushBuild) {
+				// First step is getting the release ID matching the version we just
+				// uploaded.
+				const releasePayload = await sendApiRequest(
+					'/releases/by-version/' + gjGamePackageId + '/' + packageJson.version
+				);
 
-			// First step is getting the release ID matching the version we just
-			// uploaded.
-			const releasePayload = await sendApiRequest(
-				'/releases/by-version/' + gjGamePackageId + '/' + packageJson.version
-			);
+				// Then find the builds for that version.
+				const buildPayload = await sendApiRequest(
+					'/releases/builds/' +
+						releasePayload.release.id +
+						'?game_id=' +
+						gjGameId +
+						'&package_id=' +
+						gjGamePackageId
+				);
 
-			// Then find the builds for that version.
-			const buildPayload = await sendApiRequest(
-				'/releases/builds/' +
-					releasePayload.release.id +
-					'?game_id=' +
-					gjGameId +
-					'&package_id=' +
-					gjGamePackageId
-			);
+				// The build matching the filename we just uploaded is the build ID
+				// we're after.
+				const build = buildPayload.builds.data.find(i => {
+					return (
+						i && i.file && i.file.filename === config.platformArch + '-package.tar.gz'
+					);
+				});
+				if (!build) {
+					throw new Error('Could not get build');
+				}
 
-			// The build matching the filename we just uploaded is the build ID
-			// we're after.
-			const build = data.builds.data.find(i => {
-				return i && i.file && i.file.filename === config.platformArch + '-package.tar.gz';
-			});
-			if (!build) {
-				throw new Error('Could not get build');
+				buildId = build.id;
 			}
-
-			const buildId = build.id;
 
 			await fs.mkdirp(path.resolve(config.clientBuildDir, 'dist'));
 
@@ -465,123 +571,12 @@ module.exports = config => {
 			}
 		}
 
-		// Clean the build folder to start fresh.
-		await fs.remove(config.clientBuildDir);
-
-		await buildNwjs();
-		await getJoltron();
-		await setupJoltron();
-		await createInstaller();
-
-		console.log('Done with client build.');
-	});
-
-	gulp.task('push-client', async () => {
-		let gjpushExecutable = '';
-		switch (config.platform) {
-			case 'win':
-				gjpushExecutable = path.resolve(config.clientBuildDir, 'gjpush.exe');
-				break;
-			case 'osx':
-				gjpushExecutable = path.resolve(config.clientBuildDir, 'gjpush');
-				break;
-			default:
-				gjpushExecutable = path.resolve(config.clientBuildDir, 'gjpush');
-				break;
-		}
-
-		/**
-		 * Downloads the gjpush binary used to push the package and installers to GJ
-		 * automatically.
-		 */
-		async function getPushTools() {
-			console.log('Getting push tools');
-
-			// In development we want to grab a development variant of it,
-			// so we simply copy it over from its Go repo into our build dir.
-			if (config.developmentEnv) {
-				await fs.copy(
-					path.resolve(
-						process.env.GOPATH,
-						'src',
-						'github.com',
-						'gamejolt',
-						'cli',
-						path.basename(gjpushExecutable)
-					),
-					gjpushExecutable
-				);
-
-				console.log('Got development tools');
-				return;
-			}
-
-			// In prod we fetch the binary from the github releases page. It is
-			// zipped on Github because we didn't want to have OS specific filenames
-			// like gjpush-win32.exe so we distinguish the OS by the zip name which
-			// then contains gjpush.exe for windows or just gjpush for mac/linux.
-			let remoteExecutable = '';
-			switch (config.platform) {
-				case 'win':
-					remoteExecutable = 'windows.zip';
-					break;
-				case 'osx':
-					remoteExecutable = 'osx.zip';
-					break;
-				default:
-					remoteExecutable = 'linux.zip';
-					break;
-			}
-
-			const gjpushZip = path.resolve(config.clientBuildDir, 'gjpush.zip');
-
-			await downloadFile(
-				`https://github.com/gamejolt/cli/releases/download/${gjpushVersion}/${remoteExecutable}`,
-				gjpushZip
-			);
-
-			await unzip(gjpushZip, config.clientBuildDir);
-
-			// Ensure the gjpush binary is executable.
-			await fs.chmod(gjpushExecutable, '0755');
-		}
-
-		/**
-		 * Pushes the single package to GJ.
-		 */
-		async function pushPackage() {
-			console.log('Pushing the package to Game Jolt');
-
-			// We trust the exit codes to tell us if something went wrong
-			// because a non 0 exit code will make this throw.
-			const gjPush = () =>
-				runShell(gjpushExecutable, {
-					args: [
-						'--no-resume',
-						'-g',
-						gjGameId,
-						'-p',
-						gjGamePackageId,
-						'-r',
-						packageJson.version,
-						path.resolve(
-							config.clientBuildDir,
-							config.platformArch + '-package.tar.gz'
-						),
-					],
-				});
-
-			// Let's try to be resilient to network failures by trying a few times.
-			await tryWithBackoff(gjPush, 3);
-		}
-
 		/**
 		 * Pushes the installer to GJ.
 		 */
 		async function pushInstaller() {
 			console.log('Pushing installer to Game Jolt');
 
-			// TODO this is probably broken for windows/linux
 			let installerFile = '';
 			switch (config.platform) {
 				case 'win':
@@ -614,12 +609,24 @@ module.exports = config => {
 			await tryWithBackoff(gjPush, 3);
 		}
 
-		console.log('Pushing client build.');
+		// Clean the build folder to start fresh.
+		await fs.remove(config.clientBuildDir);
 
-		await getPushTools();
-		await pushPackage();
-		await pushInstaller();
+		await buildNwjs();
 
-		console.log('Finished push.');
+		if (config.pushBuild) {
+			await getPushTools();
+			await pushPackage();
+		}
+
+		await getJoltron();
+		await setupJoltron();
+		await createInstaller();
+
+		if (config.pushBuild) {
+			await pushInstaller();
+		}
+
+		console.log('Done with client build.');
 	});
 };

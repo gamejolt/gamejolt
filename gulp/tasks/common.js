@@ -29,6 +29,9 @@ module.exports = (config, projectBase) => {
 	config.isApp = argv.app || false;
 	config.isWeb = !config.isClient && !config.isApp;
 
+	// To push the new build to our servers, pass this flag in.
+	config.pushBuild = argv['push-build'] || false;
+
 	// If true, the client package will be pushed to the test package.
 	config.useTestPackage = argv['use-test-package'] || false;
 
