@@ -43,6 +43,7 @@ export default class AppKeyGame extends Vue {
 	bundle: GameBundle | null = null;
 	keyGroup: KeyGroup | null = null;
 	packagePayload: GamePackagePayloadModel | null = null;
+	gameIsLocked = false;
 
 	canToggleDescription = false;
 	showingFullDescription = false;
@@ -57,6 +58,7 @@ export default class AppKeyGame extends Vue {
 		this.game = new Game(this.payload.game);
 		this.bundle = this.payload.bundle ? new GameBundle(this.payload.bundle) : null;
 		this.keyGroup = this.payload.keyGroup ? new KeyGroup(this.payload.keyGroup) : null;
+		this.gameIsLocked = this.payload.gameIsLocked ?? false;
 		this.setPageTheme();
 
 		if (
