@@ -7,7 +7,7 @@
 		"dev": "gulp watch",
 		"devd": "gulp watch --development",
 		"translations": "gulp translations:compile",
-		"client": "nw build/dev-client",
+		"client": "nw use 0.55.0-sdk && nw build/dev-client",
 		"client-build": "gulp --production --client",
 		"client-package": "gulp package-client --production --client",
 		"app-build": "gulp --production --app",

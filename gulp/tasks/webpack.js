@@ -408,6 +408,15 @@ module.exports = function (config) {
 							},
 					  ])
 					: noop,
+				config.isClient && config.watching
+					? new CopyWebpackPlugin([
+							// Needed for running the client locally.
+							{
+								from: '../package.json',
+								to: 'package.json',
+							},
+					  ])
+					: noop,
 				devNoop ||
 					new ImageMinimizerPlugin({
 						minimizerOptions: {
