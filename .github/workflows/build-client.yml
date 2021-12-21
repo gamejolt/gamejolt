@@ -85,6 +85,7 @@ jobs:
 
       - run: yarn install
       - run: yarn run client-build-win
+      - run: yarn run client-push
 
       - uses: actions/upload-artifact@v2
         with:
@@ -138,6 +139,7 @@ jobs:
 
       - run: yarn install
       - run: yarn run client-build-linux
+      - run: yarn run client-push
 
       - uses: actions/upload-artifact@v2
         with:
@@ -186,6 +188,7 @@ jobs:
 
       - run: yarn install
       - run: yarn run client-build-osx
+      - run: yarn run client-push
 
       - uses: actions/upload-artifact@v2
         with:

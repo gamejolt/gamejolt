@@ -29,9 +29,6 @@ module.exports = (config, projectBase) => {
 	config.isApp = argv.app || false;
 	config.isWeb = !config.isClient && !config.isApp;
 
-	// To push the new build to our servers, pass this flag in.
-	config.pushBuild = argv['push-build'] || false;
-
 	// If true, the client package will be pushed to the test package.
 	config.useTestPackage = argv['use-test-package'] || false;
 
@@ -101,20 +98,22 @@ module.exports = (config, projectBase) => {
 		config.clientBuildDir = config.buildDir + '-build';
 		config.clientBuildCacheDir = config.buildDir + '-cache';
 
-		config.arch = argv.arch || '64';
-
 		// Get our platform that we are building on.
 		switch (os.type()) {
 			case 'Linux':
 				config.platform = 'linux';
+				config.arch = '64';
 				break;
 
 			case 'Windows_NT':
 				config.platform = 'win';
+				config.arch = '32';
+
 				break;
 
 			case 'Darwin':
 				config.platform = 'osx';
+				config.arch = '64';
 				break;
 
 			default:

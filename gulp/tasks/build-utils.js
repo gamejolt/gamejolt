@@ -30,6 +30,7 @@ module.exports.extractTarGz = async (src, dest) => {
 
 module.exports.unzip = async (src, dest) => {
 	if (os.platform() === 'win32') {
+		await fs.mkdirp(path.resolve(dest));
 		await this.runShell('tar', {
 			args: ['-xf', path.resolve(src), '-C', path.resolve(dest)],
 		});
@@ -41,7 +42,7 @@ module.exports.unzip = async (src, dest) => {
 };
 
 module.exports.shellEscape = str => {
-	return str.replace(/ /g, '\\ ');
+	return `${str}`.replace(/ /g, '\\ ');
 };
 
 module.exports.runShell = (command, options = {}) => {
@@ -100,7 +101,7 @@ module.exports.tryWithBackoff = async (cb, times) => {
 	let err = null;
 	for (let i = 0; i < times; i++) {
 		if (i !== 0) {
-			await sleep(5000 + Math.floor(Math.random() * 10000));
+			await this.sleep(5000 + Math.floor(Math.random() * 10000));
 		}
 
 		try {
