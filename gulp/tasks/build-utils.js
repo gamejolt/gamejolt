@@ -30,11 +30,11 @@ module.exports.extractTarGz = async (src, dest) => {
 
 module.exports.unzip = async (src, dest) => {
 	if (os.platform() === 'win32') {
-		await this.runShell('tar', {
-			// --force-local will allow windows file paths with : in them.
-			// https://stackoverflow.com/questions/12823499/windows-command-line-tar-cannot-connect-to-d-resolve-failed-with-chef-knife/37996249
-			args: ['--force-local', '-xf', path.resolve(src), '-C', path.resolve(dest)],
-		});
+		await this.runShell(
+			`powershell -command "Expand-Archive ${this.shellEscape(src)} ${this.shellEscape(
+				dest
+			)}"`
+		);
 	} else {
 		await this.runShell('unzip', {
 			args: ['-o', path.resolve(src), '-d', path.resolve(dest)],
