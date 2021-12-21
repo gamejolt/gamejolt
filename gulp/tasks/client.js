@@ -18,6 +18,10 @@ const {
 } = require('./build-utils');
 
 module.exports = config => {
+	if (!config.isClient) {
+		return;
+	}
+
 	const packageJson = require(path.resolve(__dirname, '../../package.json'));
 
 	// Takes the joltron version specified in package.json and expands it into joltronVersionArray. e.g. v2.0.1-beta into [2, 0, 1]
