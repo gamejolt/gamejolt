@@ -30,18 +30,29 @@ module.exports.extractTarGz = async (src, dest) => {
 
 module.exports.unzip = async (src, dest) => {
 	if (os.platform() === 'win32') {
-		await this.runShell(`tar -xf "${path.normalize(src)}" -C "${path.normalize(dest)}"`);
+		await this.runShell('tar', {
+			args: ['-xf', path.resolve(src), '-C', path.resolve(dest)],
+		});
 	} else {
-		await this.runShell(`unzip -o "${path.normalize(src)}" -d "${path.normalize(dest)}"`);
+		await this.runShell('unzip', {
+			args: ['-o', path.resolve(src), '-d', path.resolve(dest)],
+		});
 	}
+};
+
+module.exports.shellEscape = str => {
+	return str.replace(/ /g, '\\ ');
 };
 
 module.exports.runShell = (command, options = {}) => {
 	const cwd = options.cwd || null;
+	const args = options.args || [];
+
+	if (args.length > 0) {
+		command += ' ' + args.map(i => this.shellEscape(i)).join(' ');
+	}
 
 	const child = spawn(command, {
-		// env: options.env,
-		// cwd: template(options.cwd)(context),
 		cwd,
 		shell: true,
 		stdio: 'inherit',

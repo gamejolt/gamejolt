@@ -2,7 +2,14 @@ const fs = require('fs-extra');
 const path = require('path');
 const plist = require('simple-plist');
 const readdirp = require('readdirp');
-const { extractTarGz, downloadFile, unzip, createTarGz, mergeDeep } = require('../build-utils');
+const {
+	extractTarGz,
+	downloadFile,
+	unzip,
+	createTarGz,
+	mergeDeep,
+	runShell,
+} = require('../build-utils');
 
 const NWJS_VERSION = '0.55.0';
 
@@ -10,24 +17,28 @@ class NwBuilder {
 	constructor(buildConfig, packageJson) {
 		this.config = buildConfig;
 
-		const overrides = packageJson.platformOverrides[this.config.platform];
-		if (overrides) {
-			console.log(`Overriding package.json for current platform.`, overrides);
-			packageJson = mergeDeep(packageJson, overrides);
-		} else {
-			console.log(`No package overrides.`);
-		}
+		const jsonOverrides = {
+			main: 'chrome-extension://game-jolt-client/package/index.html#/',
+			window: {
+				icon: 'package/static-assets/client/icon-256x256.png',
+			},
+		};
 
+		console.log(`Overriding package.json for client build.`, jsonOverrides);
+		packageJson = mergeDeep(packageJson, jsonOverrides);
+
+		// We don't need these bundled in.
+		delete packageJson.devDependencies;
+		delete packageJson.optionalDependencies;
+		delete packageJson.scripts;
 		delete packageJson.platformOverrides;
+
 		this.packageJson = packageJson;
 	}
 
 	async build() {
 		// Ensure our cache dir.
 		await fs.mkdirp(path.resolve(this.config.clientBuildCacheDir));
-
-		// macOS needs product string
-		this.packageJson['product_string'] = this._appName;
 
 		await this._setupNwjs();
 		await this._setupPrebuiltFFmpeg();
@@ -285,17 +296,11 @@ class NwBuilder {
 	}
 
 	async _packageApp() {
-		let packageDir = path.resolve(this._buildDir, 'package');
+		let appDir = path.resolve(this._buildDir);
 		if (this.config.platform === 'osx') {
-			packageDir = path.resolve(
-				this._buildDir,
-				'nwjs.app',
-				'Contents',
-				'Resources',
-				'app.nw',
-				'package'
-			);
+			appDir = path.resolve(this._buildDir, 'nwjs.app', 'Contents', 'Resources', 'app.nw');
 		}
+		const packageDir = path.resolve(appDir, 'package');
 
 		let from = '',
 			to = '';
@@ -307,18 +312,33 @@ class NwBuilder {
 		await fs.copy(from, to);
 
 		console.log(`Writing our package.json`);
-		await fs.remove(path.resolve(packageDir, 'package.json'));
-		await fs.writeFile(
-			path.resolve(packageDir, '..', 'package.json'),
-			JSON.stringify(this.packageJson),
-			{ encoding: 'utf8' }
-		);
+		await fs.writeFile(path.resolve(appDir, 'package.json'), JSON.stringify(this.packageJson), {
+			encoding: 'utf8',
+		});
 
-		// We pull some stuff out of the package folder up one directory.
-		from = path.resolve(packageDir, 'node_modules');
-		to = path.resolve(packageDir, '..', 'node_modules');
-		console.log(`Moving node_modules out of package dir: ${from} -> ${to}`);
-		await fs.move(from, to);
+		// Install node modules.
+		console.log('Installing node_modules.');
+		let commands = [
+			{
+				command: 'yarn',
+				args: ['--cwd', appDir, '--production', '--ignore-scripts'],
+			},
+			// We have to run client-voodoo's post install to get the joltron
+			// binaries in.
+			{
+				command: 'yarn',
+				args: [
+					'--cwd',
+					path.resolve(appDir, 'node_modules/client-voodoo'),
+					'run',
+					'postinstall',
+				],
+			},
+		];
+
+		for (const { command, args } of commands) {
+			await runShell(command, { args });
+		}
 
 		// We need to rename the executable file to our app name.
 		if (this.config.platform === 'linux') {

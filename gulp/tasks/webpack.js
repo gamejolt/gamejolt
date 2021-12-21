@@ -401,21 +401,7 @@ module.exports = function (config) {
 				// Copy over stupid client stuff that's needed.
 				config.isClient
 					? new CopyWebpackPlugin([
-							{
-								from: path.join(base, 'package.json'),
-								to: 'package.json',
-								transform: (content, _path) => {
-									const pkg = JSON.parse(content);
-
-									// We don't want to install dev/optional deps into the client build.
-									// We only need those when building the client, not for runtime.
-									delete pkg.devDependencies;
-									delete pkg.optionalDependencies;
-									delete pkg.scripts;
-
-									return JSON.stringify(pkg);
-								},
-							},
+							// TODO: Check if this is used anymore
 							{
 								from: 'update-hook.js',
 								to: 'update-hook.js',

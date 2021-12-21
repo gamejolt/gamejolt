@@ -169,6 +169,7 @@
 		"fs-extra": "7.0.0",
 		"write-file-atomic": "2.3.0"
 	},
+	"product_string": "Game Jolt Client",
 	"main": "chrome-extension://game-jolt-client/index.html#/",
 	"domain": "game-jolt-client",
 	"window": {
@@ -186,25 +187,5 @@
 	},
 	"joltronVersion": "v2.2.8-beta.1.loader",
 	"chromium-args": "--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments",
-	"user-agent": "GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36",
-	"platformOverrides": {
-		"linux": {
-			"main": "chrome-extension://game-jolt-client/package/index.html#/",
-			"window": {
-				"icon": "package/static-assets/client/icon-256x256.png"
-			}
-		},
-		"win": {
-			"main": "chrome-extension://game-jolt-client/package/index.html#/",
-			"window": {
-				"icon": "package/static-assets/client/icon-256x256.png"
-			}
-		},
-		"osx": {
-			"main": "chrome-extension://game-jolt-client/package/index.html#/",
-			"window": {
-				"icon": "package/static-assets/client/icon-256x256.png"
-			}
-		}
-	}
+	"user-agent": "GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36"
 }

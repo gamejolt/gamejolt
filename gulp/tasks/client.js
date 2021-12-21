@@ -19,7 +19,7 @@ const {
 
 module.exports = config => {
 	gulp.task('package-client', async () => {
-		const packageJson = require(path.resolve(config.buildDir, 'package.json'));
+		const packageJson = require(path.resolve(__dirname, '../../package.json'));
 
 		// Takes the joltron version specified in package.json and expands it into joltronVersionArray. e.g. v2.0.1-beta into [2, 0, 1]
 		// The joltron version will specify the loader variant to signal the backend to use the correct variant when offering updates to joltron itself.
@@ -58,9 +58,6 @@ module.exports = config => {
 		}
 		const nwjsVersion = '0.55.0';
 
-		const clientVoodooDir = path.resolve(config.buildDir, 'node_modules', 'client-voodoo');
-		const trashDir = path.resolve(config.clientBuildDir, '.trash');
-
 		let gjpushExecutable = '';
 		switch (config.platform) {
 			case 'win':
@@ -76,21 +73,6 @@ module.exports = config => {
 
 		// This will get set if we end up getting joltron within the build.
 		let joltronSrc = '';
-
-		async function moveToTrash(src) {
-			try {
-				await fs.mkdirp(trashDir);
-			} catch (e) {
-				console.log(e);
-				console.log(e.code);
-			}
-
-			const filename = path.basename(src);
-			const dest = path.resolve(trashDir, filename + '-' + Date.now());
-
-			console.log(`Moving ${filename} to ${dest}`);
-			await fs.move(src, dest);
-		}
 
 		/**
 		 * Function to issue an authenticated service API request and return the
@@ -121,47 +103,6 @@ module.exports = config => {
 					.on('error', reject)
 					.end();
 			});
-		}
-
-		/**
-		 * We need to set up our node modules before doing the nwjs build,
-		 * specifically for what we need for client.
-		 */
-		async function setupNodeModules() {
-			console.log('Setting up node modules');
-
-			let commands = [
-				'yarn --cwd ' + path.normalize(config.buildDir) + ' --production --ignore-scripts',
-				// We have to run client-voodoo's post install to get the joltron
-				// binaries in.
-				'yarn --cwd ' + clientVoodooDir + ' run postinstall',
-			];
-
-			if (!config.production) {
-				// When creating a development build sometimes we need some
-				// dependencies to be built in as is. this allows us to make builds
-				// without having to publish a billion versions every time we want
-				// to test something.
-				const devDependenciesToAddAsIs = ['client-voodoo'];
-				for (let depName of devDependenciesToAddAsIs) {
-					const devDep = path.resolve(config.projectBase, 'node_modules', depName);
-					const buildDep = path.resolve(config.buildDir, 'node_modules', depName);
-
-					if (config.platform === 'win') {
-						commands.push('xcopy /E /Y /I ' + devDep + ' ' + buildDep);
-					} else {
-						commands.push(
-							'rm -rf ' + buildDep,
-							'mkdir -p ' + buildDep,
-							'cp -r ' + devDep + ' ' + path.dirname(buildDep)
-						);
-					}
-				}
-			}
-
-			for (const command of commands) {
-				await runShell(command);
-			}
 		}
 
 		/**
@@ -341,18 +282,24 @@ module.exports = config => {
 			let commands = [];
 			if (config.platform === 'win') {
 				commands = [
-					path.join('build', 'deps.bat'),
-					path.join('build', 'build.bat') + ' -l' + (config.development ? 'd' : ''),
+					{ command: path.join('build', 'deps.bat'), args: [] },
+					{
+						command: path.join('build', 'build.bat'),
+						args: [`-l${config.development ? 'd' : ''}`],
+					},
 				];
 			} else {
 				commands = [
-					path.join('build', 'deps.sh'),
-					path.join('build', 'build.sh') + ' -l' + (config.development ? 'd' : ''),
+					{ command: path.join('build', 'deps.sh'), args: [] },
+					{
+						command: path.join('build', 'build.sh'),
+						args: [`-l${config.development ? 'd' : ''}`],
+					},
 				];
 			}
 
-			for (const command of commands) {
-				await runShell(command, { cwd: joltronRepoDir });
+			for (const { command, args } of commands) {
+				await runShell(command, { args, cwd: joltronRepoDir });
 			}
 		}
 
@@ -648,7 +595,6 @@ module.exports = config => {
 		// Clean the build folder to start fresh.
 		await fs.remove(config.clientBuildDir);
 
-		await setupNodeModules();
 		await buildNwjs();
 
 		if (config.pushBuild) {

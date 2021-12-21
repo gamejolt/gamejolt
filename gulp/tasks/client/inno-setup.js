@@ -1,6 +1,7 @@
 const { execFile } = require('child_process');
 const { readFile, writeFile } = require('fs-extra');
 const { resolve: resolvePath } = require('path');
+const { shellEscape } = require('../build-utils');
 
 function cp(cmd, args) {
 	return new Promise(function (resolve, reject) {
@@ -11,10 +12,6 @@ function cp(cmd, args) {
 			resolve();
 		});
 	});
-}
-
-function shellEscape(str) {
-	return str.replace(/ /g, '\\ ');
 }
 
 module.exports.buildInnoSetup = async (appDir, outDir, version, gameUID, certFile, certPw) => {
