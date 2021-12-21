@@ -44,13 +44,16 @@
 			@click.capture="onOverlayTap"
 		>
 			<template v-if="shouldShowUI">
-				<template v-if="videoPaused">
+				<template v-if="videoPaused || showMutedIndicator">
 					<transition>
 						<div
 							ref="paused"
 							class="-paused-indicator -click-target anim-fade-leave-shrink"
 						>
-							<app-jolticon class="-paused-indicator-icon" icon="play" />
+							<app-jolticon
+								class="-paused-indicator-icon"
+								:icon="showMutedIndicator ? 'audio-mute' : 'play'"
+							/>
 						</div>
 					</transition>
 				</template>
@@ -258,6 +261,7 @@ $-z-combo = 2
 	&-icon
 		font-size: 60px
 		pointer-events: none
+		color: white
 
 .-video-controls
 	display: flex

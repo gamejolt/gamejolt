@@ -89,6 +89,7 @@ export default class AppFiresideStream extends Vue {
 		return !!(
 			(this.hasVideo && this.videoPaused) ||
 			this.c.isShowingOverlayPopper ||
+			this.showMutedIndicator ||
 			this.isHovered ||
 			this._hideUITimer
 		);
@@ -110,6 +111,10 @@ export default class AppFiresideStream extends Vue {
 
 	get videoPaused() {
 		return this.c.rtc?.videoPaused === true;
+	}
+
+	get showMutedIndicator() {
+		return this.c.rtc?.shouldShowMutedIndicator === true;
 	}
 
 	get hasVideo() {
