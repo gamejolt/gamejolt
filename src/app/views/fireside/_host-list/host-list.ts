@@ -45,7 +45,7 @@ export default class AppFiresideHostList extends Vue {
 	@Emit('hide-popper') emitHidePopper() {}
 
 	get canPlaceStickers() {
-		return !GJ_IS_CLIENT && !!this.c.user && !Screen.isMobile;
+		return !!this.c.user && !Screen.isMobile;
 	}
 
 	get canManageCohosts() {

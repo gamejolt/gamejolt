@@ -20,8 +20,6 @@ export default class AppFiresideBanner extends Vue {
 
 	private isLoading = false;
 
-	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
-
 	get shouldShowBanner() {
 		return this.isExpiring;
 	}

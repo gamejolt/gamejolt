@@ -36,8 +36,6 @@ export default class AppFiresideStats extends Vue {
 
 	@AppState user!: AppStore['user'];
 
-	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
-
 	get fireside() {
 		return this.c.fireside;
 	}
