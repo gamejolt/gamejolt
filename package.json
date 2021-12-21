@@ -9,7 +9,7 @@
 		"translations": "gulp translations:compile",
 		"client": "nw build/dev-client",
 		"client-build-dev": "gulp --development --client",
-		"client-build-dev-full": "GJPUSH_TOKEN=admin_token yarn run client-build-dev --with-updater",
+		"client-build-dev-full": "GJ_PUSH_TOKEN=admin_token yarn run client-build-dev --with-updater",
 		"client-build": "gulp --production --client",
 		"client-build-win": "gulp package-client --production --client",
 		"client-build-osx": "gulp package-client --production --client",

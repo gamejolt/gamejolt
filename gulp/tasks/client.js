@@ -68,7 +68,7 @@ module.exports = config => {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: process.env.GJPUSH_TOKEN,
+				Authorization: process.env.GJ_PUSH_TOKEN,
 			},
 		};
 
