@@ -41,6 +41,13 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 
 	split: null | 'default' | 'hero' = null;
 
+	get routeTitle() {
+		if (this.user) {
+			return this.$gettext(`Explore`);
+		}
+		return null;
+	}
+
 	routeCreated() {
 		Meta.setTitle(null);
 
