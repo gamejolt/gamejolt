@@ -663,10 +663,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-16.3.1.tgz#24691fa2b0c3ec8c0d34bfcfd495edac5593ebb4"
   integrity sha512-N87VuQi7HEeRJkhzovao/JviiqKjDKMVKxKMfUvSKw+MbkbW8R0nA3fi/MQhhlxV2fQ+2ReM+/Nt4efdrJx3zA==
 
-"@types/nw.js@0.13.8":
-  version "0.13.8"
-  resolved "https://registry.yarnpkg.com/@types/nw.js/-/nw.js-0.13.8.tgz#c9504e2cc07de621dceb5db62dfea44b9d0bfd7d"
-  integrity sha512-Rz+gdTuXKwAvbRYo4ck6B1OKmCou8Rf3+WRLd5UI0ddPx9p1ullhG+Wb9YP7otaazLn+Z2VC8ZkiLwNROmPv7g==
+"@types/nw.js@0.13.14":
+  version "0.13.14"
+  resolved "https://registry.yarnpkg.com/@types/nw.js/-/nw.js-0.13.14.tgz#d2587e2f09cdf09043f3f530b78b68a26622f3d5"
+  integrity sha512-nFTwPKY0yw40H32KkVtGr2gd3LOJL5CWCXEn0nmroJlKptTs8io4V3+lmkeLyeCa5LvCVDh1gwj5Ew9/M0E6PQ==
   dependencies:
     "@types/node" "*"
 

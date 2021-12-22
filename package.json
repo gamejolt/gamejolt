@@ -30,7 +30,7 @@
 		"@types/hammerjs": "2.0.36",
 		"@types/jstimezonedetect": "1.0.1",
 		"@types/node": "10.11.3",
-		"@types/nw.js": "0.13.8",
+		"@types/nw.js": "0.13.14",
 		"@types/phoenix": "1.4.4",
 		"@types/prismjs": "1.16.0",
 		"@types/prosemirror-commands": "1.0.1",

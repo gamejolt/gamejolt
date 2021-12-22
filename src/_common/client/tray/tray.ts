@@ -71,7 +71,7 @@ export class AppClientTray extends Vue {
 		this.tray = new nw.Tray({
 			title: 'Game Jolt Client',
 			// This has to be a relative path, hence the removal of the first /.
-			icon: require(`./icon${Screen.isHiDpi ? '-2x' : ''}-2x.png`).substr(1),
+			icon: require(`./icon${Screen.isHiDpi ? '-2x' : ''}.png`).substr(1),
 		});
 
 		Navigate.registerDestructor(() => {
