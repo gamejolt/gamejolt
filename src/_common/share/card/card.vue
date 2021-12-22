@@ -80,4 +80,5 @@ h4
 
 .-url
 	flex: auto
+	height: $button-md-line-height
 </style>

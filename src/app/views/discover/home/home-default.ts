@@ -1,9 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import { Community } from '../../../../_common/community/community.model';
-import { configDiscoverCommunityChunks } from '../../../../_common/config/config.service';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
@@ -37,8 +35,4 @@ export default class AppHomeDefault extends Vue {
 
 	@Prop(Fireside)
 	featuredFireside!: Fireside | null;
-
-	created() {
-		trackExperimentEngagement(configDiscoverCommunityChunks);
-	}
 }

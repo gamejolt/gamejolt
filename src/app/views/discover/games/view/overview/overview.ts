@@ -1,7 +1,6 @@
-import { Component, Inject, Watch } from 'vue-property-decorator';
+import { Component, Inject } from 'vue-property-decorator';
 import { getAbsoluteLink } from '../../../../../../utils/router';
 import AppAdWidget from '../../../../../../_common/ad/widget/widget.vue';
-import { trackExperimentEngagement } from '../../../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCard from '../../../../../../_common/card/card.vue';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
@@ -17,7 +16,6 @@ import {
 	CommentThreadModal,
 	CommentThreadModalPermalinkDeregister,
 } from '../../../../../../_common/comment/thread/modal.service';
-import { configShareCard } from '../../../../../../_common/config/config.service';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../../../_common/environment/environment.service';
 import AppFadeCollapse from '../../../../../../_common/fade-collapse/fade-collapse.vue';
@@ -216,14 +214,6 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 		return null;
 	}
 
-	get useShareCard() {
-		return configShareCard.value && !this.ignoringSplitTest;
-	}
-
-	get ignoringSplitTest() {
-		return Screen.isMobile;
-	}
-
 	get hasAnyPerms() {
 		return this.game.hasPerms();
 	}
@@ -321,13 +311,5 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 			this.setOverviewComments(Comment.populate($payload.comments));
 		}
-	}
-
-	@Watch('ignoringSplitTest', { immediate: true })
-	trackExperiment() {
-		if (this.ignoringSplitTest) {
-			return;
-		}
-		trackExperimentEngagement(configShareCard);
 	}
 }
