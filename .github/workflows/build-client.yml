@@ -202,9 +202,11 @@ jobs:
       - build-win
       - build-linux
       - build-mac
-    uses: distributhor/workflow-webhook@v2.0.2
-    env:
-      GITHUB_EVENT_NAME: client_build
-      webhook_url: ${{ secrets.CLIENT_BUILD_WEBHOOK_URL }}
-      webhook_secret: ${{ secrets.CLIENT_BUILD_WEBHOOK_SECRET }}
-      webhook_type: json
+
+    steps:
+      - uses: distributhor/workflow-webhook@v2.0.2
+        env:
+          GITHUB_EVENT_NAME: client_build
+          webhook_url: ${{ secrets.CLIENT_BUILD_WEBHOOK_URL }}
+          webhook_secret: ${{ secrets.CLIENT_BUILD_WEBHOOK_SECRET }}
+          webhook_type: json
