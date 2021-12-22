@@ -180,6 +180,7 @@
 							</router-link>
 						</app-game-perms>
 						<app-game-perms
+							v-if="!game.is_locked"
 							v-app-tooltip.bottom="
 								$gettext(`Manage your game keys and give access to users.`)
 							"
