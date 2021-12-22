@@ -196,20 +196,3 @@ jobs:
         with:
           name: macos64-package
           path: build/prod-client-build/osx64-package.tar.gz
-
-  make-packages:
-    needs:
-      - build-win
-      - build-linux
-      - build-mac
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Send webhook to pull artifacts
-        uses: distributhor/workflow-webhook@v2.0.2
-        env:
-          GITHUB_EVENT_NAME: client_build
-          webhook_url: ${{ secrets.CLIENT_BUILD_WEBHOOK_URL }}
-          webhook_secret: ${{ secrets.CLIENT_BUILD_WEBHOOK_SECRET }}
-          webhook_type: json
-          data: '{ "github_run_id": ${{ github.run_id }} }'
