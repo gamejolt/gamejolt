@@ -165,7 +165,6 @@
 		"fs-extra": "7.0.0",
 		"write-file-atomic": "2.3.0"
 	},
-	"product_string": "Game Jolt Client",
 	"main": "chrome-extension://game-jolt-client/index.html#/",
 	"domain": "game-jolt-client",
 	"window": {

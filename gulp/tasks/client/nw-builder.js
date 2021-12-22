@@ -22,6 +22,8 @@ class NwBuilder {
 			window: {
 				icon: 'package/static-assets/client/icon-256x256.png',
 			},
+			// Needed on mac, and should only be done during actual build.
+			product_string: 'Game Jolt Client',
 		};
 
 		console.log(`Overriding package.json for client build.`, jsonOverrides);
