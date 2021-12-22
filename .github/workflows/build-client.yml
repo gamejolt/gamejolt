@@ -202,7 +202,7 @@ jobs:
       - build-win
       - build-linux
       - build-mac
-    runs_on: ubuntu-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Send webhook to pull artifacts
