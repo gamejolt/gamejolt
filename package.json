@@ -116,6 +116,7 @@
 		"style-loader": "0.23.1",
 		"stylus": "0.54.5",
 		"stylus-loader": "3.0.2",
+		"tar": "6.1.11",
 		"text-mask-addons": "3.8.0",
 		"text-mask-core": "5.1.2",
 		"thread-loader": "1.2.0",

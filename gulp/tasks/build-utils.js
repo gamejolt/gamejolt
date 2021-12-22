@@ -1,6 +1,7 @@
 const { spawn } = require('child_process');
 const { https } = require('follow-redirects');
 const fs = require('fs-extra');
+const tar = require('tar');
 const path = require('path');
 const os = require('os');
 
@@ -10,13 +11,21 @@ module.exports.sleep = ms => {
 	});
 };
 
-module.exports.createTarGz = (src, dest) => {
-	return this.runShell('tar', { args: ['-czf', dest, '-C', src, '.'] });
+module.exports.createTarGz = async (src, dest) => {
+	await tar.c(
+		{
+			file: dest,
+			gzip: true,
+			cwd: path.resolve(src),
+			portable: true,
+		},
+		['./']
+	);
 };
 
 module.exports.extractTarGz = async (src, dest) => {
 	await fs.mkdirp(dest);
-	await this.runShell('tar', { args: ['-xzf', src, '-C', dest] });
+	await tar.x({ file: src, gzip: true, cwd: path.resolve(dest, '..') });
 };
 
 module.exports.unzip = async (src, dest) => {
