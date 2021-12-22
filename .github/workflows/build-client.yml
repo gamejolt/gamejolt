@@ -212,3 +212,4 @@ jobs:
           webhook_url: ${{ secrets.CLIENT_BUILD_WEBHOOK_URL }}
           webhook_secret: ${{ secrets.CLIENT_BUILD_WEBHOOK_SECRET }}
           webhook_type: json
+          data: '{ "github_run_id": ${{ github.run_id }} }'
