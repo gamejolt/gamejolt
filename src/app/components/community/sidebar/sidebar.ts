@@ -3,19 +3,12 @@ import Component from 'vue-class-component';
 import { Prop, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { getAbsoluteLink } from '../../../../utils/router';
-import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
-import { configShareCard } from '../../../../_common/config/config.service';
 import { number } from '../../../../_common/filters/number';
 import AppGameThumbnail from '../../../../_common/game/thumbnail/thumbnail.vue';
-import AppPopper from '../../../../_common/popper/popper.vue';
 import { ReportModal } from '../../../../_common/report/modal/modal.service';
-import { Screen } from '../../../../_common/screen/screen-service';
 import AppShareCard from '../../../../_common/share/card/card.vue';
-import { copyShareLink } from '../../../../_common/share/share.service';
-import { AppSocialFacebookLike } from '../../../../_common/social/facebook/like/like';
-import { AppSocialTwitterShare } from '../../../../_common/social/twitter/share/share';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
 import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
@@ -33,9 +26,6 @@ const GAME_LIST_COLLAPSED_COUNT = 3;
 		AppUserAvatarList,
 		AppGameThumbnail,
 		AppUserCardHover,
-		AppPopper,
-		AppSocialTwitterShare,
-		AppSocialFacebookLike,
 		AppTimeAgo,
 		AppGameList,
 		AppShareCard,
@@ -73,14 +63,6 @@ export default class AppCommunitySidebar extends Vue {
 	@Watch('data.collaboratorCount', { immediate: true })
 	onCollaboratorsCountUpdated(collaboratorCount: number) {
 		this.currentCollaboratorCount = collaboratorCount;
-	}
-
-	get useShareCard() {
-		return configShareCard.value && !this.ignoringSplitTest;
-	}
-
-	get ignoringSplitTest() {
-		return Screen.isMobile;
 	}
 
 	get shouldShowKnownMembers() {
@@ -152,10 +134,6 @@ export default class AppCommunitySidebar extends Vue {
 		return !this.community.hasPerms();
 	}
 
-	copyShareUrl() {
-		copyShareLink(this.shareUrl, 'community');
-	}
-
 	toggleCollaboratorList() {
 		if (this.isLoadingMoreCollaborators) {
 			return;
@@ -193,13 +171,5 @@ export default class AppCommunitySidebar extends Vue {
 
 	onClickReport() {
 		ReportModal.show(this.community);
-	}
-
-	@Watch('ignoringSplitTest', { immediate: true })
-	trackExperiment() {
-		if (this.ignoringSplitTest) {
-			return;
-		}
-		trackExperimentEngagement(configShareCard);
 	}
 }

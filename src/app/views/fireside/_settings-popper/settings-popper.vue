@@ -120,4 +120,24 @@
 <style lang="stylus" scoped>
 @import '~styles/variables'
 @import '~styles-lib/mixins'
+
+.-extras-header
+	font-family: $font-family-heading
+	font-size: $font-size-tiny
+	font-weight: normal
+	letter-spacing: 0.1em
+	line-height: 1
+	text-transform: uppercase
+	margin-top: 0
+	margin-bottom: 0
+
+	img
+		width: $list-group-icon-width * 0.8
+		height: $list-group-icon-width * 0.8
+		border-radius: 50%
+		display: inline-block
+		position: relative
+		left: -($list-group-icon-width - 1px)
+		top: -2px
+		margin-right: -($list-group-icon-width - 5px)
 </style>

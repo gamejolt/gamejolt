@@ -1,9 +1,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { InjectReactive } from 'vue-property-decorator';
-import { getAbsoluteLink } from '../../../../utils/router';
 import AppCard from '../../../../_common/card/card.vue';
-import { configShareCard } from '../../../../_common/config/config.service';
 import AppIllustration from '../../../../_common/illustration/illustration.vue';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
@@ -16,7 +14,7 @@ import {
 	FiresideControllerKey,
 	publishFireside,
 } from '../../../components/fireside/controller/controller';
-import AppFiresideShare from './_share/share.vue';
+import AppFiresideShare from '../_share/share.vue';
 
 @Component({
 	components: {
@@ -40,28 +38,6 @@ export default class AppFiresideStats extends Vue {
 
 	get fireside() {
 		return this.c.fireside;
-	}
-
-	get useShareCard() {
-		return configShareCard.value;
-	}
-
-	get shareUrl() {
-		if (!this.fireside) {
-			return;
-		}
-
-		return getAbsoluteLink(this.$router, this.fireside.location);
-	}
-
-	get shareContent() {
-		if (!this.fireside) {
-			return;
-		}
-
-		return this.$gettextInterpolate('Join the %{ name } Fireside - Game Jolt', {
-			name: this.fireside.title,
-		});
 	}
 
 	onClickPublish() {
