@@ -86,36 +86,7 @@
 		</div>
 
 		<div class="-community-end small">
-			<app-share-card
-				v-if="useShareCard"
-				resource="community"
-				:url="shareUrl"
-				bleed-padding
-			/>
-			<app-popper
-				v-else
-				popover-class="fill-darkest"
-				@show="isShowingShare = true"
-				@hide="isShowingShare = false"
-			>
-				<a>
-					<translate>Share this community</translate>
-				</a>
-
-				<div v-if="isShowingShare" slot="popover" class="well sans-margin">
-					<div v-if="!GJ_IS_CLIENT" class="social-widgets">
-						<app-social-twitter-share :url="shareUrl" :content="shareContent" />
-
-						<span class="dot-separator" />
-
-						<app-social-facebook-like :url="shareUrl" />
-					</div>
-
-					<app-button block @click="copyShareUrl">
-						<translate>Copy Link</translate>
-					</app-button>
-				</div>
-			</app-popper>
+			<app-share-card resource="community" :url="shareUrl" bleed-padding />
 
 			<div class="text-muted">
 				<template v-if="shouldShowReport">

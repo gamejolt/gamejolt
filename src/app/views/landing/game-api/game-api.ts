@@ -28,6 +28,10 @@ export default class RouteLandingGameApi extends BaseRouteComponent {
 	totalAchievedTrophies = 0;
 	sessionTime = 0;
 
+	get routeTitle() {
+		return this.$gettext(`Game API`);
+	}
+
 	routeResolved($payload: any) {
 		this.totalScores = $payload.totalScores || 0;
 		this.totalAchievedTrophies = $payload.totalAchievedTrophies || 0;

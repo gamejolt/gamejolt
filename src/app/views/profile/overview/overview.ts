@@ -1,6 +1,5 @@
-import { Component, Inject, InjectReactive, Watch } from 'vue-property-decorator';
+import { Component, Inject, InjectReactive } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
-import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import AppCommentAddButton from '../../../../_common/comment/add-button/add-button.vue';
 import { Comment } from '../../../../_common/comment/comment-model';
@@ -20,7 +19,6 @@ import {
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
 import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/verified-tick.vue';
-import { configShareCard } from '../../../../_common/config/config.service';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
@@ -181,14 +179,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 			return `${this.user.display_name} (@${this.user.username})`;
 		}
 		return null;
-	}
-
-	get useShareCard() {
-		return configShareCard.value && !this.ignoringSplitTest;
-	}
-
-	get ignoringSplitTest() {
-		return Screen.isMobile;
 	}
 
 	get shareUrl() {
@@ -525,13 +515,5 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		if (rejected) {
 			this.grid?.pushViewNotifications('friend-requests');
 		}
-	}
-
-	@Watch('ignoringSplitTest', { immediate: true })
-	trackExperiment() {
-		if (this.ignoringSplitTest) {
-			return;
-		}
-		trackExperimentEngagement(configShareCard);
 	}
 }

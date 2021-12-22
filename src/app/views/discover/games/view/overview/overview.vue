@@ -18,7 +18,6 @@
 					<app-discover-games-view-overview-statbar />
 
 					<app-share-card
-						v-if="useShareCard"
 						class="-share-card"
 						resource="game"
 						:url="shareLink"

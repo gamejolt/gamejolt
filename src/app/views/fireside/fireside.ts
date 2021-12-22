@@ -1,11 +1,9 @@
 import Component from 'vue-class-component';
 import { Inject, InjectReactive, Watch } from 'vue-property-decorator';
-import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
 import { AppAuthRequired } from '../../../_common/auth/auth-required-directive';
 import AppAuthJoin from '../../../_common/auth/join/join.vue';
 import AppCommunityThumbnailImg from '../../../_common/community/thumbnail/img/img.vue';
-import { configShareCard } from '../../../_common/config/config.service';
 import { DrawerStore, DrawerStoreKey } from '../../../_common/drawer/drawer-store';
 import { Environment } from '../../../_common/environment/environment.service';
 import AppExpand from '../../../_common/expand/expand.vue';
@@ -43,8 +41,8 @@ import AppFiresideBanner from './_banner/banner.vue';
 import AppFiresideChatMembers from './_chat-members/chat-members.vue';
 import AppFiresideHeader from './_header/header.vue';
 import AppFiresideHostList from './_host-list/host-list.vue';
+import AppFiresideShare from './_share/share.vue';
 import AppFiresideStats from './_stats/stats.vue';
-import AppFiresideShare from './_stats/_share/share.vue';
 import AppFiresideStream from './_stream/stream.vue';
 
 type RoutePayload = {
@@ -316,15 +314,5 @@ export default class RouteFireside extends BaseRouteComponent {
 			this.beforeEachDeregister?.();
 			this.beforeEachDeregister = null;
 		}
-	}
-
-	@Watch('c.isDraft')
-	onIsDraftChanged() {
-		// We try not to show sharing information while in draft, since links
-		// will redirect them if they don't have permissions.
-		if (!this.c || this.c.isDraft) {
-			return;
-		}
-		trackExperimentEngagement(configShareCard);
 	}
 }

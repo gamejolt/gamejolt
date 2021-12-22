@@ -188,7 +188,7 @@
 					@sticker="scrollToStickers()"
 				/>
 
-				<div v-if="useShareCard" class="-share">
+				<div class="-share">
 					<app-share-card resource="post" :url="post.url" offset-color />
 				</div>
 

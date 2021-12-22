@@ -115,12 +115,7 @@
 					</div>
 
 					<div slot="right">
-						<app-share-card
-							v-if="useShareCard"
-							resource="user"
-							:url="shareUrl"
-							bleed-padding
-						/>
+						<app-share-card resource="user" :url="shareUrl" bleed-padding />
 
 						<app-user-known-followers
 							v-if="shouldShowKnownFollowers"

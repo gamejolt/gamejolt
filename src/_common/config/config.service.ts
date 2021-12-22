@@ -121,8 +121,6 @@ export class ConfigOptionString<T extends string = string> extends ConfigOption<
 	}
 }
 
-export const configShareCard = new ConfigOptionBoolean('web_share_card', true);
-
 export const configDiscoverCommunityChunks = new ConfigOptionBoolean(
 	'discover_community_chunks',
 	false

@@ -1,5 +1,5 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 // Have to put all the sizing information here.
 make-button-size(size)
@@ -55,7 +55,6 @@ make-button-size(size)
 .button
 	pressy()
 	display: inline-block
-	text-transform: uppercase
 	font-family: $font-family-base
 	vertical-align: middle
 	cursor: pointer
@@ -73,11 +72,14 @@ make-button-size(size)
 		text-decoration: none
 		cursor: pointer
 
-		>>> .jolticon-addon, >>> small
+		>>> .jolticon-addon
+		>>> small
 			theme-prop('color', 'bi-fg', true)
 
 	// Disabled state.
-	&.-disabled, &[disabled], fieldset[disabled] &
+	&.-disabled
+	&[disabled]
+	fieldset[disabled] &
 		cursor: not-allowed
 		opacity: 0.5
 		transform: none
@@ -148,7 +150,8 @@ make-button-size(size)
  * Overlay buttons
  */
 .-overlay
-	&.-outline, &.-trans
+	&.-outline
+	&.-trans
 		color: $dark-theme-fg
 		background-color: rgba($black, 0.65)
 
@@ -184,7 +187,9 @@ make-button-size(size)
 		width: 100%
 		text-align: center
 
-	.-block-xs + .-block-xs, .-block-xs + .button-block, .button-block + .-block-xs
+	.-block-xs + .-block-xs
+	.-block-xs + .button-block
+	.button-block + .-block-xs
 		margin-top: 5px
 
 /**
