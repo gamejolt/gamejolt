@@ -412,7 +412,7 @@ module.exports = config => {
 			if (config.platform === 'win') {
 				executable = 'GameJoltClient.exe';
 			} else if (config.platform === 'osx') {
-				executable = 'Game Jolt Client.app/Contents/MacOS/nwjs';
+				executable = 'Game Jolt Client.app/Contents/MacOS/Game Jolt Client';
 			} else {
 				executable = 'game-jolt-client';
 			}
