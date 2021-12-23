@@ -435,10 +435,6 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	}
 
 	private async highlightCurrentSelection() {
-		console.warn('highlightCurrentSelection');
-		// TODO: Not sure we need this anymore - might already be handled in the
-		// editor functions.
-		return;
 		// When an outside control got clicked, store the previous selection,
 		// focus the editor and then apply the selection.
 		// We do this so the focused text doesn't visibly lose focus after the outside control
