@@ -10,8 +10,11 @@ main();
 async function main() {
 	console.log('Current version:', version);
 
-	const operation = ['major', 'minor', 'patch', 'prod'].find(i => argv.includes(i));
-	if (operation === 'prod' && !version.endsWith('-stage')) {
+	const operations = ['major', 'minor', 'patch', 'prod'];
+	const operation = operations.find(i => argv.includes(i));
+	if (!operation) {
+		throw new Error(`You must specify a valid operation: ${operations}`);
+	} else if (operation === 'prod' && !version.endsWith('-stage')) {
 		throw new Error(
 			`You can't release a production build from a production build. Make a staging release and test it first, and then release the production build from that.`
 		);
@@ -30,7 +33,7 @@ async function main() {
 	await runShell('git add', { args: [packageFile] });
 	await runShell('git commit', { args: ['-m', `Release: ${newVersion}`] });
 	await runShell('git tag', `release/${newVersion}`);
-	await runShell('git push origin --tags');
+	// await runShell('git push origin --tags');
 
 	console.log(`Version has been bumped to: ${newVersion}`);
 }
