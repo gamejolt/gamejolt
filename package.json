@@ -10,6 +10,7 @@
 		"client": "nw use 0.55.0-sdk && nw build/dev-client",
 		"client-build": "gulp --production --client",
 		"client-package": "gulp package-client --production --client",
+		"client-release": "node scripts/client-release.js",
 		"app-build": "gulp --production --app",
 		"ssr-server": "gulp --ssr server",
 		"ssr-client": "gulp --ssr client",
