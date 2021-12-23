@@ -11,8 +11,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - run: echo "${{ github.ref_name }}"
-
       - uses: actions/checkout@v2
         with:
           submodules: recursive
@@ -87,7 +85,13 @@ jobs:
         shell: cmd
 
       - run: yarn install
+
+      # Package for release
       - run: yarn run client-package --push-build
+        if: 'startsWith(github.ref_name, 'release/')'
+      # Or for stage
+      - run: yarn run client-package --use-test-package --push-build
+        if: startsWith(github.ref_name, 'stage/')
 
       - uses: actions/upload-artifact@v2
         with:
@@ -140,7 +144,13 @@ jobs:
       - run: tar -xvf client-build.tar -C build/prod-client
 
       - run: yarn install
+
+      # Package for release
       - run: yarn run client-package --push-build
+        if: 'startsWith(github.ref_name, 'release/')'
+      # Or for stage
+      - run: yarn run client-package --use-test-package --push-build
+        if: startsWith(github.ref_name, 'stage/')
 
       - uses: actions/upload-artifact@v2
         with:
@@ -188,7 +198,13 @@ jobs:
       - run: tar -xvf client-build.tar -C build/prod-client
 
       - run: yarn install
+
+      # Package for release
       - run: yarn run client-package --push-build
+        if: 'startsWith(github.ref_name, 'release/')'
+      # Or for stage
+      - run: yarn run client-package --use-test-package --push-build
+        if: startsWith(github.ref_name, 'stage/')
 
       - uses: actions/upload-artifact@v2
         with:
