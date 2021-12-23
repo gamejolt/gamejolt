@@ -11,6 +11,7 @@ import { AppPromotionSource } from '../../utils/mobile-app';
 import { AuthMethod } from '../auth/auth.service';
 import { CommentVote } from '../comment/vote/vote-model';
 import { ConfigOption } from '../config/config.service';
+import { DeviceArch, DeviceOs } from '../device/device.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
 import { ShareProvider, ShareResource } from '../share/share.service';
 import { WithAppStore } from '../store/app-store';
@@ -247,10 +248,17 @@ export function trackJoin(method: AuthMethod) {
 	logEvent(_getFirebaseAnalytics(), 'sign_up', { method });
 }
 
-export function trackAppPromotionClick(options: { source: AppPromotionSource }) {
+export function trackAppPromotionClick(options: {
+	source: AppPromotionSource;
+	platform: 'desktop' | 'mobile';
+}) {
 	_trackEvent('app_promotion_click', {
 		source: options.source,
 	});
+}
+
+export function trackAppDownload(options: { platform: DeviceOs; arch: DeviceArch }) {
+	_trackEvent('app_download', options);
 }
 
 export function trackGotoCommunity(params: {

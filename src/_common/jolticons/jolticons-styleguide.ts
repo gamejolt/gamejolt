@@ -184,6 +184,8 @@ export default class AppJolticonsStyleguide extends Vue {
 			'bell-unfilled',
 			'communities-2x2',
 			'communities-3x3',
+			'whatsapp',
+			'facebook-messenger',
 		]
 			.sort()
 			.filter(i => i.indexOf(this.filter) !== -1);

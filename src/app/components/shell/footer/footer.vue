@@ -24,14 +24,27 @@
 								<li v-if="shouldShowAppPromotion">
 									<router-link
 										:to="{ name: 'landing.app' }"
-										@click.native="trackAppPromotionClick({ source: 'footer' })"
+										@click.native="
+											trackAppPromotionClick({
+												source: 'footer',
+												platform: 'mobile',
+											})
+										"
 									>
 										<translate>Mobile App</translate>
 									</router-link>
 								</li>
-								<li>
-									<router-link :to="{ name: 'landing.client' }">
-										<translate>Client</translate>
+								<li v-if="!GJ_IS_CLIENT">
+									<router-link
+										:to="{ name: 'landing.client' }"
+										@click.native="
+											trackAppPromotionClick({
+												source: 'footer',
+												platform: 'desktop',
+											})
+										"
+									>
+										<translate>Desktop App</translate>
 									</router-link>
 								</li>
 								<li>

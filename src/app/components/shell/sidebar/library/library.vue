@@ -114,31 +114,42 @@
 			</li>
 		</ul>
 
-		<ul v-if="Screen.isXs" class="shell-nav">
-			<li v-if="shouldShowAppPromotion" class="offline-disable">
+		<ul v-if="Screen.isSm && shouldShowAppPromotion" class="shell-nav">
+			<li class="offline-disable">
 				<router-link
 					:to="{ name: 'landing.app' }"
-					@click.native="trackAppPromotionClick({ source: 'sidebar' })"
+					@click.native="
+						trackAppPromotionClick({
+							source: 'sidebar',
+							platform: 'mobile',
+						})
+					"
 				>
 					<span class="shell-nav-icon">
-						<app-jolticon icon="world" />
+						<app-jolticon icon="phone" />
 					</span>
 					<span class="shell-nav-label">
-						<translate>Get the App</translate>
+						<translate>Get the Mobile App</translate>
 					</span>
 				</router-link>
 			</li>
+		</ul>
+		<ul v-else-if="!GJ_IS_CLIENT && Screen.isDesktop" class="shell-nav">
 			<li class="offline-disable">
 				<router-link
-					v-app-track-event="`sidebar:forums`"
-					:to="{ name: 'forums.landing.overview' }"
-					:class="{ active: $route.name && $route.name.indexOf('forums') === 0 }"
+					:to="{ name: 'landing.client' }"
+					@click.native="
+						trackAppPromotionClick({
+							source: 'sidebar',
+							platform: 'desktop',
+						})
+					"
 				>
 					<span class="shell-nav-icon">
-						<app-jolticon icon="forums" />
+						<app-jolticon icon="client" />
 					</span>
 					<span class="shell-nav-label">
-						<translate>Forums</translate>
+						<translate>Get the Desktop App</translate>
 					</span>
 				</router-link>
 			</li>
