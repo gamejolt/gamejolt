@@ -46,9 +46,6 @@
 							<app-sticker-target
 								class="-video-inner"
 								:controller="c.stickerTargetController"
-								:class="{
-									'-unsupported': GJ_IS_CLIENT,
-								}"
 								:style="{
 									top: 0,
 									right: 0,
@@ -56,23 +53,7 @@
 									left: 0,
 								}"
 							>
-								<template v-if="GJ_IS_CLIENT">
-									<app-illustration
-										v-if="shouldShowDesktopHosts && shortestSide > 700"
-										src="~img/ill/no-comments.svg"
-									/>
-
-									<p class="-unsupported-text">
-										<translate>
-											Oh no... Fireside streams don't work on the Client yet.
-										</translate>
-									</p>
-
-									<app-button @click="onClickOpenBrowser()">
-										<translate>Open Fireside in Browser</translate>
-									</app-button>
-								</template>
-								<template v-else-if="c.rtc && c.rtc.focusedUser">
+								<template v-if="c.rtc && c.rtc.focusedUser">
 									<app-popper trigger="right-click">
 										<app-fireside-stream
 											:rtc-user="c.rtc.focusedUser"
@@ -434,24 +415,14 @@
 	overflow: hidden
 	position: absolute !important
 	flex-direction: column
-
-	&.-unsupported
-		padding: $line-height-computed
-
-	&:not(.-unsupported)
-		rounded-corners-lg()
-		elevate-2()
-		background-color: var(--theme-bg-subtle)
-		-webkit-transform: translateZ(0)
+	rounded-corners-lg()
+	elevate-2()
+	background-color: var(--theme-bg-subtle)
+	-webkit-transform: translateZ(0)
 
 	.-fullscreen &
 	.-body-column &
 		border-radius: 0
-
-.-unsupported-text
-	color: var(--theme-fg-muted)
-	text-align: center
-	font-weight: 600
 
 .-hosts-padding
 	flex: none

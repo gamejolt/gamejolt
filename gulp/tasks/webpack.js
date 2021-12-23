@@ -191,10 +191,10 @@ module.exports = function (config) {
 		if (config.isWeb && config.production) {
 			publicPath = config.staticCdn + publicPath;
 		} else if (config.isClient && !config.watching) {
-			// On linux/win we put all the files in a folder called "package".
-			if (config.platform !== 'osx') {
-				publicPath = '/package/';
-			}
+			// All files go into a folder called "package" to make it easy to
+			// separate out from the nwjs stuff.
+			// TODO: make sure this is okay
+			publicPath = '/package/';
 		}
 		// In app build, we always serve from relative path.
 		else if (config.isApp && config.production) {
@@ -383,9 +383,6 @@ module.exports = function (config) {
 					GJ_VERSION: JSON.stringify(
 						require(path.resolve(process.cwd(), 'package.json')).version
 					),
-					GJ_MANIFEST_URL: JSON.stringify(
-						require(path.resolve(process.cwd(), 'package.json')).clientManifestUrl
-					),
 					GJ_WITH_UPDATER: JSON.stringify(
 						(!config.developmentEnv && !config.watching) || config.withUpdater
 					),
@@ -404,24 +401,19 @@ module.exports = function (config) {
 				// Copy over stupid client stuff that's needed.
 				config.isClient
 					? new CopyWebpackPlugin([
-							{
-								from: path.join(base, 'package.json'),
-								to: 'package.json',
-								transform: (content, _path) => {
-									const pkg = JSON.parse(content);
-
-									// We don't want to install dev/optional deps into the client build.
-									// We only need those when building the client, not for runtime.
-									delete pkg.devDependencies;
-									delete pkg.optionalDependencies;
-									delete pkg.scripts;
-
-									return JSON.stringify(pkg);
-								},
-							},
+							// TODO: Check if this is used anymore
 							{
 								from: 'update-hook.js',
 								to: 'update-hook.js',
+							},
+					  ])
+					: noop,
+				config.isClient && config.watching
+					? new CopyWebpackPlugin([
+							// Needed for running the client locally.
+							{
+								from: '../package.json',
+								to: 'package.json',
 							},
 					  ])
 					: noop,
@@ -613,10 +605,6 @@ module.exports = function (config) {
 	}
 
 	webpackSectionTasks.unshift('translations:compile');
-
-	if (config.isClient && !config.watching) {
-		webpackSectionTasks.push('client');
-	}
 
 	gulp.task('default', gulp.series(webpackSectionTasks));
 };

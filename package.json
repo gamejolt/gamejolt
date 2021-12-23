@@ -1,19 +1,16 @@
 {
 	"name": "game-jolt-client",
-	"version": "0.76.2",
+	"version": "1.0.0-pre1",
 	"scripts": {
 		"postinstall": "yarn run translations",
 		"start": "gulp watch",
 		"dev": "gulp watch",
 		"devd": "gulp watch --development",
 		"translations": "gulp translations:compile",
-		"client": "nw build/dev-client",
-		"client-build-dev": "gulp --development --client --arch=64",
-		"client-build-dev-full": "GJPUSH_TOKEN=admin_token yarn run client-build-dev --withUpdater",
-		"client-build-win": "gulp --production --client --arch=32",
-		"client-build-osx": "gulp --production --client --arch=64",
-		"client-build-linux32": "gulp --production --client --arch=32",
-		"client-build-linux64": "gulp --production --client --arch=64",
+		"client": "nw use 0.55.0-sdk && nw build/dev-client",
+		"client-build": "gulp --production --client",
+		"client-package": "gulp package-client --production --client",
+		"client-release": "node scripts/client-release.js",
 		"app-build": "gulp --production --app",
 		"ssr-server": "gulp --ssr server",
 		"ssr-client": "gulp --ssr client",
@@ -30,12 +27,11 @@
 		"@types/codemirror": "0.0.91",
 		"@types/express": "4.17.0",
 		"@types/fs-extra": "5.0.4",
-		"@types/fs-readdir-recursive": "1.0.0",
 		"@types/grecaptcha": "2.0.35",
 		"@types/hammerjs": "2.0.36",
 		"@types/jstimezonedetect": "1.0.1",
 		"@types/node": "10.11.3",
-		"@types/nw.js": "0.13.8",
+		"@types/nw.js": "0.13.14",
 		"@types/phoenix": "1.4.4",
 		"@types/prismjs": "1.16.0",
 		"@types/prosemirror-commands": "1.0.1",
@@ -68,7 +64,6 @@
 		"css-element-queries": "1.2.1",
 		"css-loader": "1.0.1",
 		"date-fns": "2.12.0",
-		"decompress-zip": "0.3.1",
 		"eslint": "7.5.0",
 		"eslint-plugin-vue": "7.9.0",
 		"express": "4.17.1",
@@ -77,17 +72,13 @@
 		"first-input-delay": "0.1.3",
 		"follow-redirects": "1.4.1",
 		"friendly-errors-webpack-plugin": "1.7.0",
-		"fs-readdir-recursive": "1.1.0",
+		"readdirp": "3.6.0",
 		"gulp": "gulpjs/gulp#4.0",
 		"gulp-angular-gettext": "2.2.0",
 		"gulp-clean": "0.3.2",
-		"gulp-gzip": "1.4.0",
 		"gulp-load-plugins": "1.5.0",
 		"gulp-plumber": "1.1.0",
-		"gulp-shell": "0.6.3",
-		"gulp-tar": "2.0.0",
 		"gulp-util": "3.0.8",
-		"gulp-zip": "4.0.0",
 		"hammerjs": "2.0.8",
 		"html-loader": "0.5.5",
 		"html-webpack-plugin": "3.2.0",
@@ -95,13 +86,10 @@
 		"image-minimizer-webpack-plugin": "1.0.0",
 		"jquery": "3.5.0",
 		"jstimezonedetect": "1.0.6",
-		"lodash": "3.9.3",
 		"markdown-loader": "4.0.0",
 		"mini-css-extract-plugin": "0.4.4",
 		"minimist": "1.2.0",
-		"mv": "2.1.1",
 		"null-loader": "0.1.1",
-		"nw-builder": "github:gamejolt/nw-builder#skip-merge-app",
 		"offline-plugin": "5.0.6",
 		"phoenix": "1.5.1",
 		"pofile": "1.0.11",
@@ -122,14 +110,14 @@
 		"resize-observer-polyfill": "1.5.1",
 		"sanitize-html": "1.19.1",
 		"shaka-player": "3.0.5",
-		"shell-escape": "0.2.0",
+		"simple-plist": "1.3.0",
 		"smoothscroll-polyfill": "0.4.4",
 		"spectrum-colorpicker": "1.8.0",
 		"string-replace-loader": "2.1.1",
 		"style-loader": "0.23.1",
 		"stylus": "0.54.5",
 		"stylus-loader": "3.0.2",
-		"tar": "4.4.10",
+		"tar": "6.1.11",
 		"text-mask-addons": "3.8.0",
 		"text-mask-core": "5.1.2",
 		"thread-loader": "1.2.0",
@@ -165,11 +153,12 @@
 		"write-file-webpack-plugin": "4.5.0"
 	},
 	"optionalDependencies": {
-		"appdmg": "0.6.2",
+		"appdmg": "argv-minus-one/node-appdmg#node-12-temporary-fix",
 		"imagemin-gifsicle": "7.0.0",
 		"imagemin-jpegtran": "7.0.0",
 		"imagemin-optipng": "8.0.0",
-		"imagemin-svgo": "8.0.0"
+		"imagemin-svgo": "8.0.0",
+		"rcedit": "3.0.1"
 	},
 	"dependencies": {
 		"axios": "0.19.2",
@@ -192,22 +181,7 @@
 	"webkit": {
 		"plugin": true
 	},
-	"clientManifestUrl": "https://d.gamejolt.net/data/client/manifest-2.json",
 	"joltronVersion": "v2.2.8-beta.1.loader",
 	"chromium-args": "--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments",
-	"user-agent": "GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36",
-	"platformOverrides": {
-		"linux": {
-			"main": "chrome-extension://game-jolt-client/package/index.html#/",
-			"window": {
-				"icon": "package/static-assets/client/icon-256x256.png"
-			}
-		},
-		"win": {
-			"main": "chrome-extension://game-jolt-client/package/index.html#/",
-			"window": {
-				"icon": "package/static-assets/client/icon-256x256.png"
-			}
-		}
-	}
+	"user-agent": "GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36"
 }

@@ -105,7 +105,6 @@ export default class RouteFireside extends BaseRouteComponent {
 	readonly Screen = Screen;
 	readonly number = number;
 	readonly toggleStreamVideoStats = toggleStreamVideoStats;
-	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
 
 	videoWidth = 0;
 	videoHeight = 0;
