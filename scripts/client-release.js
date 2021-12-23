@@ -1,4 +1,4 @@
-const { runShell } = require('../gulp/tasks/build-utils');
+const { runShell, execShell } = require('../gulp/tasks/build-utils');
 const { version } = require('../package.json');
 const path = require('path');
 const { readFile, writeFile } = require('fs-extra');
@@ -9,6 +9,13 @@ main();
 
 async function main() {
 	console.log('Current version:', version);
+
+	const branch = (await execShell('git branch --show-current')).trim();
+	console.log('Current branch:', branch);
+
+	if (branch !== 'main') {
+		throw new Error(`You must be on the main branch to release.`);
+	}
 
 	const operations = ['major', 'minor', 'patch', 'prod'];
 	const operation = operations.find(i => argv.includes(i));

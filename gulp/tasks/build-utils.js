@@ -1,4 +1,4 @@
-const { spawn } = require('child_process');
+const { spawn, exec } = require('child_process');
 const { https } = require('follow-redirects');
 const fs = require('fs-extra');
 const tar = require('tar');
@@ -67,6 +67,34 @@ module.exports.runShell = (command, options = {}) => {
 			}
 
 			reject(`Command failed (${command}) with exit code ${code}`);
+		});
+	});
+};
+
+/**
+ * Similar to runShell, only using exec instead of spawn.
+ * Use this to get string output from command lines.
+ * Throws if stuff's logged in stderr.
+ */
+module.exports.execShell = (command, options = {}) => {
+	const cwd = options.cwd || null;
+	const args = options.args || [];
+
+	if (args.length > 0) {
+		command += ' ' + args.map(i => this.shellEscape(i)).join(' ');
+	}
+
+	return new Promise((resolve, reject) => {
+		exec(command, { cwd }, (error, stdout, stderr) => {
+			if (error) {
+				return reject(error);
+			}
+
+			if (stderr) {
+				return reject(stderr);
+			}
+
+			return resolve(stdout);
 		});
 	});
 };
