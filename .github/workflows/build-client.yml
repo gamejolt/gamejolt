@@ -4,7 +4,6 @@ on:
   push:
     tags:
       - 'release/**'
-      - 'stage/**'
 
 jobs:
   build-frontend:
@@ -86,12 +85,13 @@ jobs:
 
       - run: yarn install
 
-      # Package for release
+      # Production release
       - run: yarn run client-package --push-build
-        if: startsWith(github.ref_name, 'release/')
-      # Or for stage
+        if: ${{ !endsWith(github.ref_name, '-stage') }}
+
+      # Stage release
       - run: yarn run client-package --use-test-package --push-build
-        if: startsWith(github.ref_name, 'stage/')
+        if: ${{ endsWith(github.ref_name, '-stage') }}
 
       - uses: actions/upload-artifact@v2
         with:
@@ -145,12 +145,13 @@ jobs:
 
       - run: yarn install
 
-      # Package for release
+      # Production release
       - run: yarn run client-package --push-build
-        if: startsWith(github.ref_name, 'release/')
-      # Or for stage
+        if: ${{ !endsWith(github.ref_name, '-stage') }}
+
+      # Stage release
       - run: yarn run client-package --use-test-package --push-build
-        if: startsWith(github.ref_name, 'stage/')
+        if: ${{ endsWith(github.ref_name, '-stage') }}
 
       - uses: actions/upload-artifact@v2
         with:
@@ -199,12 +200,13 @@ jobs:
 
       - run: yarn install
 
-      # Package for release
+      # Production release
       - run: yarn run client-package --push-build
-        if: startsWith(github.ref_name, 'release/')
-      # Or for stage
+        if: ${{ !endsWith(github.ref_name, '-stage') }}
+
+      # Stage release
       - run: yarn run client-package --use-test-package --push-build
-        if: startsWith(github.ref_name, 'stage/')
+        if: ${{ endsWith(github.ref_name, '-stage') }}
 
       - uses: actions/upload-artifact@v2
         with:
