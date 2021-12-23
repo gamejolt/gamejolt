@@ -11,7 +11,7 @@
 
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<translate>Share</translate>
+				<translate>Share to</translate>
 			</h2>
 		</div>
 
@@ -28,7 +28,7 @@
 			</div>
 
 			<app-button class="-copy" @click="copyLink()">
-				<translate>Copy Link</translate>
+				<translate>Copy link</translate>
 			</app-button>
 		</div>
 	</app-modal>

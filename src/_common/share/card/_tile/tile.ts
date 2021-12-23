@@ -21,8 +21,10 @@ export default class AppShareCardTile extends Vue {
 	get icon() {
 		switch (this.provider) {
 			case 'facebook':
-			case 'fb_messenger':
 				return 'facebook';
+
+			case 'fb_messenger':
+				return 'facebook-messenger';
 
 			case 'twitter':
 				return 'twitter-bird';
@@ -34,7 +36,7 @@ export default class AppShareCardTile extends Vue {
 				return 'phone';
 
 			case 'whatsapp':
-				return 'comment-filled';
+				return 'whatsapp';
 
 			case 'reddit':
 				return 'reddit';
