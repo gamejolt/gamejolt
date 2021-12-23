@@ -1,8 +1,8 @@
 import { UAParser } from 'ua-parser-js';
 import { makeObservableService } from '../../utils/vue';
 
-type DeviceOs = 'windows' | 'mac' | 'linux' | 'other';
-type DeviceArch = '32' | '64';
+export type DeviceOs = 'windows' | 'mac' | 'linux' | 'other';
+export type DeviceArch = '32' | '64';
 
 export class Device {
 	static ua?: string;
@@ -103,7 +103,9 @@ export class Device {
 			// Because of a bug where 32-bit node versions will always report 32 instead of the OS arch.
 			// http://blog.differentpla.net/blog/2013/03/10/processor-architew6432/
 			if (this.os() === 'windows') {
-				return arch === 'x64' || process.env.hasOwnProperty('PROCESSOR_ARCHITEW6432') ? '64' : '32';
+				return arch === 'x64' || process.env.hasOwnProperty('PROCESSOR_ARCHITEW6432')
+					? '64'
+					: '32';
 			}
 
 			if (arch === 'x64') {
@@ -116,7 +118,9 @@ export class Device {
 		if (typeof this._arch === 'undefined') {
 			const result = this._getResult();
 			const arch =
-				result.cpu && result.cpu.architecture ? result.cpu.architecture.toLowerCase() : null;
+				result.cpu && result.cpu.architecture
+					? result.cpu.architecture.toLowerCase()
+					: null;
 
 			if (Device.ARCH_64.indexOf(arch!) !== -1) {
 				this._arch = '64';

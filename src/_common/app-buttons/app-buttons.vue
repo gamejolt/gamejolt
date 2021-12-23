@@ -6,7 +6,7 @@
 			class="-button"
 			:href="appPromotion.playStoreUrl"
 			target="_blank"
-			@click="trackAppPromotionClick({ source })"
+			@click="trackAppPromotionClick({ source, platform: 'mobile' })"
 		>
 			<img
 				src="./button-play-store.png"
@@ -19,7 +19,7 @@
 			class="-button"
 			:href="appPromotion.appStoreUrl"
 			target="_blank"
-			@click="trackAppPromotionClick({ source })"
+			@click="trackAppPromotionClick({ source, platform: 'mobile' })"
 		>
 			<img
 				src="./button-app-store.svg"
