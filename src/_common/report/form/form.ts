@@ -61,6 +61,12 @@ export default class AppReportForm extends BaseForm<FormModel> implements FormOn
 						),
 					},
 					{
+						radioValue: 'explicit',
+						text: this.$gettext(
+							'It is pornographic or contains sexually explicit material'
+						),
+					},
+					{
 						radioValue: 'stolen',
 						text: this.$gettext('Game does not belong to this developer'),
 						source: {
