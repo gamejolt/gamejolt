@@ -32,7 +32,7 @@ async function main() {
 
 	await runShell('git add', { args: [packageFile] });
 	await runShell('git commit', { args: ['-m', `Release: ${newVersion}`] });
-	await runShell('git tag', `release/${newVersion}`);
+	await runShell('git tag', { args: [`release/${newVersion}`] });
 	// await runShell('git push origin --tags');
 
 	console.log(`Version has been bumped to: ${newVersion}`);
