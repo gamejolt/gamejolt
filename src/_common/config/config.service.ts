@@ -135,6 +135,8 @@ export const configGuestHome = new ConfigOptionString('web_guest_home', 'default
 	validValues: ['default', 'hero'],
 });
 
+export const configClientAllowStreaming = new ConfigOptionBoolean('client_allow_streaming', false);
+
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());
 }
