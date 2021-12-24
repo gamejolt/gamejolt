@@ -38,7 +38,7 @@ async function main() {
 	await writeFile(packageFile, packageJson, { encoding: 'utf8' });
 
 	await runShell('git add', { args: [packageFile] });
-	await runShell('git commit', { args: ['-m', `Release: ${newVersion}`] });
+	await runShell(`git commit -m "Release: ${newVersion}"`);
 	await runShell('git tag', { args: [`release/${newVersion}`] });
 	await runShell('git push');
 	await runShell('git push', { args: ['origin', `release/${newVersion}`] });
