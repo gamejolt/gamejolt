@@ -6,6 +6,7 @@ import {
 	canCommunityEjectFireside,
 	canCommunityFeatureFireside,
 } from '../../../../_common/community/community.model';
+import { configClientAllowStreaming } from '../../../../_common/config/config.service';
 import { Device } from '../../../../_common/device/device.service';
 import { duration } from '../../../../_common/filters/duration';
 import { Fireside, FIRESIDE_EXPIRY_THRESHOLD } from '../../../../_common/fireside/fireside.model';
@@ -181,18 +182,11 @@ export class FiresideController {
 	 * form.
 	 */
 	get canBrowserStream() {
-		return !(GJ_IS_CLIENT || this.isFirefox || this.isSafari);
-	}
+		if (GJ_IS_CLIENT) {
+			return configClientAllowStreaming.value;
+		}
 
-	/**
-	 * Contains a block-list of browsers/clients that have issues viewing
-	 * broadcasts.
-	 *
-	 * When we should suggest a different browser, but not necessarily block
-	 * them from browsing.
-	 */
-	get shouldNotViewStreams() {
-		return GJ_IS_CLIENT;
+		return !(this.isFirefox || this.isSafari);
 	}
 
 	private get browser() {
