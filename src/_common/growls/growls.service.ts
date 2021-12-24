@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { makeObservableService } from '../../utils/vue';
+import { Client } from '../client/client-exports';
 import { Translate } from '../translate/translate.service';
 
 export interface GrowlOptions {
@@ -98,6 +99,8 @@ export class Growls {
 		});
 
 		notification.onclick = (event: any) => {
+			Client?.show();
+
 			if (options.onclick) {
 				options.onclick(event);
 				notification.close();

@@ -1,9 +1,10 @@
+import { Component } from 'vue-property-decorator';
+import { Client } from '../../../../../_common/client/client-exports';
+import * as _ClientMod from '../../../../../_common/client/client.service';
 import { Growls } from '../../../../../_common/growls/growls.service';
+import AppLoading from '../../../../../_common/loading/loading.vue';
 import { AppProgressPoller } from '../../../../../_common/progress/poller/poller';
 import { BaseRouteComponent } from '../../../../../_common/route/route-component';
-import AppLoading from '../../../../../_common/loading/loading.vue';
-import { Component } from 'vue-property-decorator';
-import * as _ClientMod from '../../../../../_common/client/client.service';
 
 let ClientMod: typeof _ClientMod | undefined;
 if (GJ_IS_CLIENT) {
@@ -44,9 +45,7 @@ export default class RouteAuthLinkedAccountPoll extends BaseRouteComponent {
 		this.isPolling = false;
 
 		// Focus back to the Client.
-		if (ClientMod) {
-			ClientMod.Client.show();
-		}
+		Client?.show();
 	}
 
 	failed() {
