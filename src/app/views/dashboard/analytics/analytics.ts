@@ -232,7 +232,7 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 		);
 
 		for (const i in data) {
-			this.$set(this.metricData, i, data[i]);
+			this.metricData[i] = data[i];
 		}
 	}
 
@@ -246,7 +246,7 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 		);
 
 		for (const i in data) {
-			this.$set(this.metricData, i, data[i]);
+			this.metricData[i] = data[i];
 		}
 	}
 
