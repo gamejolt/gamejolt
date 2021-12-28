@@ -2,7 +2,7 @@ import { RouteRecordRaw } from 'vue-router';
 
 const routeLandingGameApiDocContent: RouteRecordRaw = {
 	name: 'landing.game-api-doc',
-	path: ':path(.*)*',
+	path: ':path*',
 	component: () =>
 		import(/* webpackChunkName: "routeLandingGameApiDoc" */ './game-api-doc-content'),
 };

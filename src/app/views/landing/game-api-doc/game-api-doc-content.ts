@@ -15,7 +15,7 @@ const paths = importContext(
 @RouteResolver({
 	async resolver({ route }) {
 		// First check the path as is, then check with "index".
-		let path = route.params.path;
+		let path = (route.params.path as string[]).join('/');
 		if (!path) {
 			path = 'index';
 		}

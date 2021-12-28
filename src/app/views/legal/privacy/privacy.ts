@@ -1,13 +1,12 @@
 import { Options } from 'vue-property-decorator';
+import template from '../../../../lib/terms/privacy/global.md';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
-
-const templateMd: string = require('../../../../lib/terms/privacy/global.md');
 
 @Options({
 	name: 'RouteLegalPrivacy',
 })
 export default class RouteLegalPrivacy extends BaseRouteComponent {
-	readonly template = templateMd;
+	readonly template = template;
 
 	get routeTitle() {
 		return this.$gettext('Privacy Policy');

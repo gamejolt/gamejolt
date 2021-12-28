@@ -1,8 +1,7 @@
 import { h } from 'vue';
 import { Options } from 'vue-property-decorator';
+import template from '../../../../lib/terms/terms/global.md';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
-
-const template: string = require('../../../../lib/terms/terms/global.md');
 
 @Options({
 	name: 'RouteLegalTerms',

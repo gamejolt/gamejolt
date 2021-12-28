@@ -1,6 +1,16 @@
+<script lang="ts" setup>
+import AppLoading from '../loading.vue';
+
+defineProps({
+	isLoading: {
+		type: Boolean,
+	},
+});
+</script>
+
 <template>
 	<div class="loading-fade" :class="{ 'loading-fade-loading': isLoading }">
-		<div class="loading-fade-img" v-if="isLoading">
+		<div v-if="isLoading" class="loading-fade-img">
 			<app-loading centered hide-label stationary />
 		</div>
 		<div class="loading-fade-content">
@@ -28,5 +38,3 @@
 			opacity: 0.5
 			pointer-events: none
 </style>
-
-<script lang="ts" src="./fade"></script>

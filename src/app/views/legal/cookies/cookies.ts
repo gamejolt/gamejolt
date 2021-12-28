@@ -1,13 +1,12 @@
 import { Options } from 'vue-property-decorator';
+import template from '../../../../lib/terms/cookies/global.md';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
-
-const templateMd: string = require('../../../../lib/terms/cookies/global.md');
 
 @Options({
 	name: 'RouteLegalCookies',
 })
 export default class RouteLegalCookies extends BaseRouteComponent {
-	readonly template = templateMd;
+	readonly template = template;
 
 	get routeTitle() {
 		return this.$gettext('Cookie Policy');

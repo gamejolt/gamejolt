@@ -1,8 +1,7 @@
 import { h } from 'vue';
 import { Options } from 'vue-property-decorator';
+import template from '../../../../lib/terms/ads/global.md';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
-
-const template: string = require('../../../../lib/terms/ads/global.md');
 
 @Options({
 	name: 'RouteLegalAds',

@@ -1,6 +1,15 @@
-import { reactive, Ref } from '@vue/reactivity';
-import { onMounted, onUnmounted, PropType, provide } from '@vue/runtime-core';
-import { computed, inject, nextTick, ref } from 'vue';
+import {
+	computed,
+	inject,
+	nextTick,
+	onMounted,
+	onUnmounted,
+	PropType,
+	provide,
+	reactive,
+	ref,
+	Ref,
+} from 'vue';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { useRouter } from 'vue-router';
 import { arrayRemove, arrayUnique } from '../../utils/array';

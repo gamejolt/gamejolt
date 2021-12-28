@@ -4,7 +4,7 @@ export default { name: 'AppForm' };
 </script>
 
 <script lang="ts" setup>
-import { computed, PropType } from '@vue/runtime-core';
+import { computed, PropType } from 'vue';
 import AppLoadingFade from '../loading/fade/fade.vue';
 import AppLoading from '../loading/loading.vue';
 import { FormController } from './form.service';

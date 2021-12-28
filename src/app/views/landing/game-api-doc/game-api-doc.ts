@@ -10,7 +10,7 @@ import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
 	},
 })
 export default class RouteLandingGameApiDoc extends BaseRouteComponent {
-	nav = nav;
+	readonly nav = nav;
 
 	get routeTitle() {
 		return this.$gettext(`Game API Documentation`);
