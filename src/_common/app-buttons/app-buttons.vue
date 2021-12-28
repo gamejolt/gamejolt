@@ -9,7 +9,7 @@
 			@click="trackAppPromotionClick({ source })"
 		>
 			<img
-				src="./button-play-store.png"
+				:src="require('./button-play-store.png')"
 				:width="564 * (60 / 168)"
 				:height="60"
 				alt="Get it on Google Play"
@@ -22,7 +22,7 @@
 			@click="trackAppPromotionClick({ source })"
 		>
 			<img
-				src="./button-app-store.svg"
+				:src="require('./button-app-store.svg')"
 				:width="120 * (60 / 40)"
 				:height="60"
 				alt="Download on the App Store"

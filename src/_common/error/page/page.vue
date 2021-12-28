@@ -2,7 +2,7 @@
 	<div>
 		<section class="container error-page" v-if="error">
 			<div class="ararat">
-				<img src="./ararat.png" :width="416 / 2" :height="760 / 2" alt="" />
+				<img :src="require('./ararat.png')" :width="416 / 2" :height="760 / 2" alt="" />
 			</div>
 			<component :is="page" />
 			<br />

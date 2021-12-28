@@ -9,7 +9,7 @@
 			alt=""
 			@error="hasError = true"
 		/>
-		<img v-else src="../guest.png" class="img-responsive" alt="" />
+		<img v-else :src="require('../guest.png')" class="img-responsive" alt="" />
 	</span>
 </template>
 

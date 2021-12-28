@@ -25,7 +25,7 @@
 		</template>
 		<template v-else>
 			<template v-if="entryCount === 0">
-				<app-illustration src="~img/ill/no-comments-small.svg">
+				<app-illustration :src="require('~img/ill/no-comments-small.svg')">
 					<p>
 						<translate v-if="competition.periodNum >= CompetitionPeriodVoting">
 							No new entries can be submitted to the jam, and none have been submitted

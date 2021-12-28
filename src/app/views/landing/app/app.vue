@@ -27,7 +27,13 @@
 
 		<section class="section">
 			<div class="container text-center">
-				<img class="-phones" src="./phones.png" width="385" height="300" alt="" />
+				<img
+					class="-phones"
+					:src="require('./phones.png')"
+					width="385"
+					height="300"
+					alt=""
+				/>
 			</div>
 		</section>
 

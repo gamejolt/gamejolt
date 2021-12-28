@@ -6,7 +6,7 @@
 					<img
 						:width="1068 / (Screen.isXs ? 4 : 2)"
 						:height="108 / (Screen.isXs ? 4 : 2)"
-						src="./logo.png"
+						:src="require('./logo.png')"
 						alt="Redlight"
 					/>
 				</h1>
@@ -26,7 +26,7 @@
 						"
 					/>
 
-					<span class="dot-separator hidden-xs"></span>
+					<span class="dot-separator hidden-xs" />
 
 					<app-social-facebook-like />
 				</div>
@@ -45,8 +45,8 @@
 							</p>
 
 							<p>
-								We've created a unique platform for AAA studios and non-indie publishers. Members
-								will
+								We've created a unique platform for AAA studios and non-indie
+								publishers. Members will
 								<strong>vote on your games</strong>
 								in the Redlight program to judge if they're
 								<strong>good enough quality to be redlit</strong>
@@ -55,9 +55,7 @@
 						</div>
 					</div>
 
-					<h1 class="text-center">
-						The process is simple and direct!
-					</h1>
+					<h1 class="text-center">The process is simple and direct!</h1>
 
 					<hr class="underbar underbar-center" />
 					<br />
@@ -65,12 +63,13 @@
 					<div class="row">
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<img src="./laptop.svg" alt="" />
+								<img :src="require('./laptop.svg')" alt="" />
 							</div>
 
 							<p class="text-center">
 								<b>
-									Create a Game Jolt account yourself directly. No need for an account manager.
+									Create a Game Jolt account yourself directly. No need for an
+									account manager.
 									<em>Finally!</em>
 								</b>
 							</p>
@@ -78,7 +77,7 @@
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<img src="./poster.svg" alt="" />
+								<img :src="require('./poster.svg')" alt="" />
 							</div>
 
 							<p class="text-center">
@@ -90,15 +89,18 @@
 							</p>
 						</div>
 
-						<div class="landing-break-sm"></div>
+						<div class="landing-break-sm" />
 
 						<div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-0">
 							<div class="landing-graphic">
-								<img src="./shout.svg" alt="" />
+								<img :src="require('./shout.svg')" alt="" />
 							</div>
 
 							<p class="text-center">
-								<b>Let your fans know that you're on Redlight and require their help directly.</b>
+								<b>
+									Let your fans know that you're on Redlight and require their
+									help directly.
+								</b>
 							</p>
 						</div>
 					</div>
@@ -108,7 +110,7 @@
 			<section class="section fill-offset">
 				<div class="container">
 					<div class="row">
-						<div class="col-lg-1"></div>
+						<div class="col-lg-1" />
 						<div class="col-sm-7 col-md-6 col-lg-5">
 							<h2 class="section-header">
 								Optional Steps
@@ -119,7 +121,8 @@
 
 							<p>
 								<app-jolticon icon="checkbox" />
-								Desperately fumble around trying to get votes from anywhere on the internet.
+								Desperately fumble around trying to get votes from anywhere on the
+								internet.
 							</p>
 							<p>
 								<app-jolticon icon="checkbox" />
@@ -127,7 +130,8 @@
 							</p>
 							<p>
 								<app-jolticon icon="checkbox" />
-								Include the Game Jolt Redlight logo on your game pages across all other platforms.
+								Include the Game Jolt Redlight logo on your game pages across all
+								other platforms.
 							</p>
 							<p>
 								<app-jolticon icon="checkbox" />
@@ -135,27 +139,31 @@
 							</p>
 							<p>
 								<app-jolticon icon="checkbox" />
-								Upload said demo to all platforms to direct traffic to your Game Jolt Redlight page.
+								Upload said demo to all platforms to direct traffic to your Game
+								Jolt Redlight page.
 							</p>
 							<p>
 								<app-jolticon icon="checkbox" />
-								Wipe away the tears and include Redlight every time you tweet, whether your tweet is
-								related or not.
+								Wipe away the tears and include Redlight every time you tweet,
+								whether your tweet is related or not.
 							</p>
 							<p>
 								<app-jolticon icon="checkbox" />
-								Employ a team of people devoted to Redlight. After all, you have the money.
+								Employ a team of people devoted to Redlight. After all, you have the
+								money.
 							</p>
 							<p>
 								<app-jolticon icon="checkbox" />
 								Once you're redlit,
-								<router-link :to="{ name: 'landing.indieaf' }">get indie AF!</router-link>
+								<router-link :to="{ name: 'landing.indieaf' }">
+									get indie AF!
+								</router-link>
 							</p>
 						</div>
-						<div class="col-md-1"></div>
+						<div class="col-md-1" />
 						<div class="col-sm-5">
 							<div class="landing-graphic-full hidden-xs">
-								<img src="./redlight-comic.png" alt="" />
+								<img :src="require('./redlight-comic.png')" alt="" />
 							</div>
 						</div>
 					</div>
@@ -167,8 +175,8 @@
 					<div class="row">
 						<div class="col-sm-7 col-centered">
 							<p class="lead">
-								Redlight simultaneously prevents our marketplace from becoming overly saturated
-								while
+								Redlight simultaneously prevents our marketplace from becoming
+								overly saturated while
 								<strong>maintaining the high standards</strong>
 								our users have come to expect from a Game Jolt game.
 							</p>
@@ -177,14 +185,15 @@
 							<hr class="underbar underbar-center" />
 
 							<p>
-								Do you love indie games, but also love AAA? Do you have a massive library of games
-								built up on Game Jolt and don't want to use other platforms for your AAA content?
+								Do you love indie games, but also love AAA? Do you have a massive
+								library of games built up on Game Jolt and don't want to use other
+								platforms for your AAA content?
 							</p>
 
 							<p>
 								<strong>Help us spread the word!</strong>
-								Tweet at all your favorite game publishers and AAA studios. Get them on board. Join
-								the
+								Tweet at all your favorite game publishers and AAA studios. Get them
+								on board. Join the
 								<strong>#REDLIGHT</strong>
 								movement.
 							</p>
@@ -192,7 +201,7 @@
 							<div class="social-widgets">
 								<app-social-twitter-share :content="tweet" />
 
-								<span class="dot-separator hidden-xs"></span>
+								<span class="dot-separator hidden-xs" />
 
 								<app-social-facebook-like />
 							</div>
@@ -231,16 +240,19 @@
 							<br />
 							<h4 class="sans-margin-top">What is Redlight?</h4>
 							<p>
-								Game Jolt Redlight is a system that enlists the community's help in choosing new
-								games to be released on Game Jolt. Publishers and AAA studios upload their games to
-								seek a critical mass of community support in order to get selected for distribution.
+								Game Jolt Redlight is a system that enlists the community's help in
+								choosing new games to be released on Game Jolt. Publishers and AAA
+								studios upload their games to seek a critical mass of community
+								support in order to get selected for distribution.
 							</p>
 
 							<br />
-							<h4 class="sans-margin-top">Who should submit their games to Redlight?</h4>
+							<h4 class="sans-margin-top">
+								Who should submit their games to Redlight?
+							</h4>
 							<p>
-								AAA studios and non-indie publishers looking to expand their audience to niche indie
-								gamers.
+								AAA studios and non-indie publishers looking to expand their
+								audience to niche indie gamers.
 							</p>
 
 							<br />
@@ -249,15 +261,16 @@
 							</h4>
 							<ol>
 								<li>
-									Publicly tweet at the developers/publishers until they add their games to
-									Redlight.
+									Publicly tweet at the developers/publishers until they add their
+									games to Redlight.
 								</li>
 								<li>Repeat this process on several different accounts.</li>
 							</ol>
 
 							<br />
 							<h4 class="sans-margin-top">
-								There's a game on Redlight that I really want to see succeed. What can I do?
+								There's a game on Redlight that I really want to see succeed. What
+								can I do?
 							</h4>
 							<p>Go tell your friends; be super annoying about it.</p>
 
@@ -266,7 +279,9 @@
 							<p>Games only. So don't try to upload your desktop application.</p>
 
 							<br />
-							<h4 class="sans-margin-top">What do I need in order to submit my game?</h4>
+							<h4 class="sans-margin-top">
+								What do I need in order to submit my game?
+							</h4>
 							<ul>
 								<li>Create a Game Jolt account</li>
 								<li>Set up your marketplace account</li>
@@ -279,25 +294,29 @@
 							</ul>
 
 							<br />
-							<h4 class="sans-margin-top">Are there any restrictions on what can be submitted?</h4>
+							<h4 class="sans-margin-top">
+								Are there any restrictions on what can be submitted?
+							</h4>
 							<p>You must have distribution rights for the game.</p>
 
 							<br />
 							<h4 class="sans-margin-top">How can I get more votes for my game?</h4>
 							<p>
-								Pay influencers to talk about it constantly. Make sure they include the Redlight
-								link at the beginning, middle, and end of their videos. And in their descriptions.
-								And in their twitter bios.
+								Pay influencers to talk about it constantly. Make sure they include
+								the Redlight link at the beginning, middle, and end of their videos.
+								And in their descriptions. And in their twitter bios.
 							</p>
 
 							<br />
 							<h4 class="sans-margin-top">
-								How are games ranked on Redlight? How will I know if my game gets redlit?
+								How are games ranked on Redlight? How will I know if my game gets
+								redlit?
 							</h4>
 							<p>
-								It's a completely new and unique system. Games are ranked by the number of up-votes
-								from the community. Once your game is submitted, you will receive an e-mail at the
-								address associated with your account, notifying you when Redlit.
+								It's a completely new and unique system. Games are ranked by the
+								number of up-votes from the community. Once your game is submitted,
+								you will receive an e-mail at the address associated with your
+								account, notifying you when Redlit.
 							</p>
 
 							<br />
@@ -308,28 +327,26 @@
 								<router-link :to="{ name: 'landing.marketplace' }">
 									Visit gamejolt.com/marketplace
 								</router-link>
-								for questions about selling on Game Jolt and taxes. If you don't find an answer
-								there, email us. We'll just direct you to the forums.
+								for questions about selling on Game Jolt and taxes. If you don't
+								find an answer there, email us. We'll just direct you to the forums.
 							</p>
 
 							<br />
 							<h4 class="sans-margin-top">Does Redlight cost money to submit to?</h4>
 							<p>
-								For the initial months, we've decided to waive the $5,000-$10,000 submission fee.
-								We'll continue discussing this internally to see if we should add a few extra zeros
-								in there. This is obviously for QA reasons. Only people who make good games have
-								money.
+								For the initial months, we've decided to waive the $5,000-$10,000
+								submission fee. We'll continue discussing this internally to see if
+								we should add a few extra zeros in there. This is obviously for QA
+								reasons. Only people who make good games have money.
 							</p>
 						</div>
 					</div>
 				</div>
 			</section>
 
-			<section class="section fill-offset" v-if="!user">
+			<section v-if="!user" class="section fill-offset">
 				<div class="container">
-					<h1 class="section-header text-center">
-						Join
-					</h1>
+					<h1 class="section-header text-center">Join</h1>
 
 					<hr class="underbar underbar-center" />
 					<br />

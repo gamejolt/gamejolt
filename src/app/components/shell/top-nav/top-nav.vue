@@ -36,11 +36,11 @@
 				>
 					<app-theme-svg
 						v-if="!Screen.isMobile"
-						src="~img/game-jolt-logo.svg"
+						:src="require('~img/game-jolt-logo.svg')"
 						alt=""
 						strict-colors
 					/>
-					<app-theme-svg v-else src="~img/jolt.svg" alt="" strict-colors />
+					<app-theme-svg v-else :src="require('~img/jolt.svg')" alt="" strict-colors />
 					<span
 						v-if="unreadActivityCount > 0"
 						class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"

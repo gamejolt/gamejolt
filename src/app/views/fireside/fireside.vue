@@ -131,7 +131,7 @@
 			<template v-if="status === 'loading' || status === 'initial'">
 				<div class="-message-wrapper">
 					<div class="-message">
-						<app-illustration src="~img/ill/end-of-feed.svg">
+						<app-illustration :src="require('~img/ill/end-of-feed.svg')">
 							<app-loading
 								centered
 								:label="$gettext(`Traveling to the Fireside...`)"
@@ -165,7 +165,7 @@
 			<template v-else-if="status === 'expired'">
 				<div class="-message-wrapper">
 					<div class="-message">
-						<app-illustration src="~img/ill/no-comments-small.svg">
+						<app-illustration :src="require('~img/ill/no-comments-small.svg')">
 							<p>
 								<translate>This Fireside's fire has burned out.</translate>
 							</p>
@@ -182,7 +182,7 @@
 			<template v-else-if="status === 'setup-failed'">
 				<div class="-message-wrapper">
 					<div class="-message">
-						<app-illustration src="~img/ill/maintenance.svg">
+						<app-illustration :src="require('~img/ill/maintenance.svg')">
 							<p>
 								<translate>Could not reach this Fireside.</translate>
 								<br />
@@ -201,7 +201,7 @@
 			<template v-else-if="status === 'disconnected'">
 				<div class="-message-wrapper">
 					<div class="-message">
-						<app-illustration src="~img/ill/no-comments-small.svg">
+						<app-illustration :src="require('~img/ill/no-comments-small.svg')">
 							<p>
 								<translate>
 									You have been disconnected from Fireside services.

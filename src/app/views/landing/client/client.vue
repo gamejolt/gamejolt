@@ -18,7 +18,12 @@
 				<div class="row">
 					<div class="col-lg-6 col-centered">
 						<h1>
-							<app-theme-svg class="bolt" src="~img/jolt.svg" alt="" strict-colors />
+							<app-theme-svg
+								class="bolt"
+								:src="require('~img/jolt.svg')"
+								alt=""
+								strict-colors
+							/>
 							Client
 							<sup>PREVIEW</sup>
 						</h1>
@@ -115,7 +120,7 @@
 				<div v-if="showMascot" class="container">
 					<img
 						class="client-presentation-mascot"
-						src="./clyde-video-overlay.png"
+						:src="require('./clyde-video-overlay.png')"
 						width="178"
 						height="130"
 						alt="Clyde Slicker"
@@ -125,7 +130,7 @@
 					<div class="container text-center">
 						<img
 							class="img-responsive"
-							src="./client-presentation.jpg"
+							:src="require('./client-presentation.jpg')"
 							alt="Game Jolt Client"
 						/>
 					</div>
@@ -190,7 +195,7 @@
 							<div class="col-sm-6">
 								<img
 									class="img-responsive"
-									src="./install-shot.jpg"
+									:src="require('./install-shot.jpg')"
 									alt="Install Fast"
 								/>
 							</div>
@@ -221,7 +226,7 @@
 							<div class="col-sm-6 col-sm-pull-6">
 								<img
 									class="img-responsive"
-									src="./auto-update-shot.jpg"
+									:src="require('./auto-update-shot.jpg')"
 									alt="Auto Update"
 								/>
 							</div>
@@ -244,7 +249,11 @@
 								</p>
 							</div>
 							<div class="col-sm-6">
-								<img class="img-responsive" src="./chat-shot.jpg" alt="Chat" />
+								<img
+									class="img-responsive"
+									:src="require('./chat-shot.jpg')"
+									alt="Chat"
+								/>
 							</div>
 						</div>
 					</div>
@@ -270,7 +279,7 @@
 							<div class="col-sm-6 col-sm-pull-6">
 								<img
 									class="img-responsive"
-									src="./offline-mode-shot.jpg"
+									:src="require('./offline-mode-shot.jpg')"
 									alt="Offline Mode"
 								/>
 							</div>
@@ -295,7 +304,7 @@
 							<div class="col-sm-6">
 								<img
 									class="img-responsive"
-									src="./html-games-shot.jpg"
+									:src="require('./html-games-shot.jpg')"
 									alt="HTML Games"
 								/>
 							</div>
@@ -328,7 +337,7 @@
 							<div class="col-sm-6 col-sm-pull-6">
 								<img
 									class="img-responsive"
-									src="./open-source-shot.jpg"
+									:src="require('./open-source-shot.jpg')"
 									alt="Open Source"
 								/>
 							</div>
@@ -356,7 +365,7 @@
 							<div class="col-sm-6">
 								<img
 									class="img-responsive"
-									src="./full-site-shot.jpg"
+									:src="require('./full-site-shot.jpg')"
 									alt="Game Jolt"
 								/>
 							</div>

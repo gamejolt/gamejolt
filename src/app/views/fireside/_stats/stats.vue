@@ -3,7 +3,7 @@
 <template>
 	<div class="fireside-stats">
 		<app-scroll-scroller thin>
-			<app-illustration src="~img/ill/end-of-feed.svg" />
+			<app-illustration :src="require('~img/ill/end-of-feed.svg')" />
 
 			<template v-if="!isStreaming">
 				<div v-if="expiresProgressValue !== null" class="-burnout-bar">

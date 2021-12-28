@@ -130,7 +130,7 @@
 				<div v-if="!Screen.isXs" class="footer-jolt">
 					<router-link :to="{ name: 'home' }">
 						<app-theme-svg
-							src="~img/jolt.svg"
+							:src="require('~img/jolt.svg')"
 							alt=""
 							width="68"
 							height="72"

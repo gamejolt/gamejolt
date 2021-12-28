@@ -12,7 +12,7 @@
 			<img
 				v-if="shouldShowLogo"
 				class="-logo"
-				src="./intro.gif"
+				:src="require('./intro.gif')"
 				width="328"
 				height="36"
 				alt="Game Jolt"

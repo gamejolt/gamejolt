@@ -1,9 +1,16 @@
+<script lang="ts" src="./marketplace"></script>
+
 <template>
 	<div>
 		<section class="section landing-header text-center">
 			<div class="container">
 				<h1>
-					<app-theme-svg class="bolt" src="~img/jolt.svg" alt="" strict-colors />
+					<app-theme-svg
+						class="bolt"
+						:src="require('~img/jolt.svg')"
+						alt=""
+						strict-colors
+					/>
 					Marketplace
 				</h1>
 
@@ -21,13 +28,13 @@
 					<div class="row">
 						<div class="col-sm-10 col-md-8 col-lg-6 col-centered text-center">
 							<p class="lead">
-								Game Jolt has been one of the largest communities focused solely on indies and
-								hobbyists since 2008.
+								Game Jolt has been one of the largest communities focused solely on
+								indies and hobbyists since 2008.
 							</p>
 
 							<p>
-								We set out to create a new kind marketplace, one that is indie focused, where we all
-								care about each other's success.
+								We set out to create a new kind marketplace, one that is indie
+								focused, where we all care about each other's success.
 							</p>
 						</div>
 					</div>
@@ -36,32 +43,30 @@
 
 			<section class="section">
 				<div class="container">
-					<h1 class="section-header text-center">
-						This is how it works...
-					</h1>
+					<h1 class="section-header text-center">This is how it works...</h1>
 					<hr class="underbar underbar-center" />
 					<br />
 
 					<div class="row">
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg src="./revenue-share.svg" alt="" />
+								<app-theme-svg :src="require('./revenue-share.svg')" alt="" />
 							</div>
 
 							<h4 class="text-center">Revenue Split</h4>
 
 							<p>
-								As a developer, you set the percentage you'd like to give to Game Jolt, as long as
-								it's
+								As a developer, you set the percentage you'd like to give to Game
+								Jolt, as long as it's
 								<strong>less than 10%</strong>
-								. It's up to you. We will never guilt you into giving us more&mdash;in fact, you
-								can't!
+								. It's up to you. We will never guilt you into giving us
+								more&mdash;in fact, you can't!
 							</p>
 						</div>
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg src="./taxes.svg" alt="" />
+								<app-theme-svg :src="require('./taxes.svg')" alt="" />
 							</div>
 
 							<h4 class="text-center">Taxes</h4>
@@ -69,35 +74,35 @@
 							<p>We will take care of taxes (including VAT) so you don't have to!</p>
 						</div>
 
-						<div class="landing-break-sm"></div>
+						<div class="landing-break-sm" />
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg src="./payouts.svg" alt="" />
+								<app-theme-svg :src="require('./payouts.svg')" alt="" />
 							</div>
 
 							<h4 class="text-center">Payouts</h4>
 
 							<p>
-								Withdraw your earnings whenever you'd like or keep them in your Game Jolt Wallet to
-								buy games from other indies.
+								Withdraw your earnings whenever you'd like or keep them in your Game
+								Jolt Wallet to buy games from other indies.
 							</p>
 						</div>
 
-						<div class="landing-break-md landing-break-lg"></div>
+						<div class="landing-break-md landing-break-lg" />
 
 						<div class="col-sm-6 col-md-4 col-md-offset-4">
 							<div class="landing-graphic">
-								<app-theme-svg src="./wallet.svg" alt="" />
+								<app-theme-svg :src="require('./wallet.svg')" alt="" />
 							</div>
 
 							<h4 class="text-center">Game Jolt Wallet</h4>
 
 							<p>
-								Your earnings accumulate in your Wallet. Developers have the option of supporting
-								one another by using funds from their Wallet to buy games without paying any payment
-								processing fees. Additionally, when using your Wallet to buy games, we won't take a
-								cut from the sale!
+								Your earnings accumulate in your Wallet. Developers have the option
+								of supporting one another by using funds from their Wallet to buy
+								games without paying any payment processing fees. Additionally, when
+								using your Wallet to buy games, we won't take a cut from the sale!
 							</p>
 						</div>
 					</div>
@@ -111,80 +116,84 @@
 					<div class="row">
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg src="./selling-options.svg" alt="" />
+								<app-theme-svg :src="require('./selling-options.svg')" alt="" />
 							</div>
 
 							<h4 class="text-center">Selling Options</h4>
 
 							<p>
-								Sell your game, artpack, levels, soundtrack; we've got you covered! You can assign
-								an individual price to each item on your game page or choose the pay-what-you-want
-								model.
+								Sell your game, artpack, levels, soundtrack; we've got you covered!
+								You can assign an individual price to each item on your game page or
+								choose the pay-what-you-want model.
 							</p>
 						</div>
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg src="./keys.svg" alt="" />
+								<app-theme-svg :src="require('./keys.svg')" alt="" />
 							</div>
 
 							<h4 class="text-center">Flexible Key Management</h4>
 
 							<p>
-								Control who has access to your game's packages through keys. Assign testers to your
-								game, allowing them to get auto-updates through the
-								<router-link :to="{ name: 'landing.client' }">Game Jolt Client</router-link>
-								. Track press keys, and see when they view your games. Generate keys for prizes,
-								bundles, etc.
+								Control who has access to your game's packages through keys. Assign
+								testers to your game, allowing them to get auto-updates through the
+								<router-link :to="{ name: 'landing.client' }">
+									Game Jolt Client
+								</router-link>
+								. Track press keys, and see when they view your games. Generate keys
+								for prizes, bundles, etc.
 							</p>
 						</div>
 
-						<div class="landing-break-sm"></div>
+						<div class="landing-break-sm" />
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg src="./early-access.svg" alt="" />
+								<app-theme-svg :src="require('./early-access.svg')" alt="" />
 							</div>
 
 							<h4 class="text-center">Early Access</h4>
 
 							<p>
-								Accept support at any stage of development by assigning pay what you want or a fixed
-								price for your work in progress builds. Through your game's devlog, keep your
-								supporters up to date with what you're working on, and gather feedback from early
-								testers.
+								Accept support at any stage of development by assigning pay what you
+								want or a fixed price for your work in progress builds. Through your
+								game's devlog, keep your supporters up to date with what you're
+								working on, and gather feedback from early testers.
 							</p>
 						</div>
 
-						<div class="landing-break-md landing-break-lg"></div>
+						<div class="landing-break-md landing-break-lg" />
 
 						<div class="col-sm-6 col-md-4 col-md-offset-2">
 							<div class="landing-graphic">
-								<app-theme-svg src="./analytics.svg" alt="" />
+								<app-theme-svg :src="require('./analytics.svg')" alt="" />
 							</div>
 
 							<h4 class="text-center">Powerful Analytics</h4>
 
 							<p>
-								View detailed analytics for your game's sales, views, downloads, and even installs
-								done through the Client. Find out what operating systems/devices your games are
-								being downloaded on, geographical details of your audience, and which referring
-								sites your sales are coming from.
+								View detailed analytics for your game's sales, views, downloads, and
+								even installs done through the Client. Find out what operating
+								systems/devices your games are being downloaded on, geographical
+								details of your audience, and which referring sites your sales are
+								coming from.
 							</p>
 						</div>
 
-						<div class="landing-break-sm"></div>
+						<div class="landing-break-sm" />
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg src="./supporter-focused.svg" alt="" />
+								<app-theme-svg :src="require('./supporter-focused.svg')" alt="" />
 							</div>
 
 							<h4 class="text-center">Supporter Focused</h4>
 
 							<p>
-								As a reminder that we're all in this together, when people choose to buy your games
-								for more than the asking price, they will show up as Supporters on your game pages!
+								As a reminder that we're all in this together, when people choose to
+								buy your games for more than the asking price, they will show up as
+								Supporters on your game pages!
 							</p>
 						</div>
 					</div>
@@ -193,9 +202,7 @@
 
 			<section class="section">
 				<div class="container">
-					<h1 class="section-header text-center" translate>
-						Start Selling Your Games
-					</h1>
+					<h1 class="section-header text-center">Start Selling Your Games</h1>
 
 					<hr class="underbar underbar-center" />
 					<br />
@@ -207,9 +214,7 @@
 								<br />
 							</template>
 							<div v-else class="text-center">
-								<p>
-									Get started at
-								</p>
+								<p>Get started at</p>
 								<p>
 									<app-button primary :to="{ name: 'dash.account.financials' }">
 										Marketplace Account Setup
@@ -231,5 +236,3 @@
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./marketplace"></script>

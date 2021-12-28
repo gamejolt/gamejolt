@@ -8,7 +8,7 @@
 					<app-theme-svg
 						v-app-tooltip="$gettext('This is a lightning bolt!')"
 						class="bolt anim-fade-in-down"
-						src="~img/jolt.svg"
+						:src="require('~img/jolt.svg')"
 						alt=""
 						strict-colors
 					/>
@@ -83,14 +83,22 @@
 							<div class="-staff">
 								<div class="-staff-item">
 									<a href="https://gamejolt.com/@thoro">
-										<img src="./thoro.jpg" alt="thoro" class="-avatar" />
+										<img
+											:src="require('./thoro.jpg')"
+											alt="thoro"
+											class="-avatar"
+										/>
 									</a>
 									<strong>Yaprak</strong> <small>@thoro</small> <br />
 									Co-founder / CEO
 								</div>
 								<div class="-staff-item">
 									<a href="https://gamejolt.com/@cros">
-										<img src="./cros.jpg" alt="cros" class="-avatar" />
+										<img
+											:src="require('./cros.jpg')"
+											alt="cros"
+											class="-avatar"
+										/>
 									</a>
 									<strong>David</strong> <small>@cros</small> <br />
 									Co-founder / CTO
@@ -134,13 +142,13 @@
 
 								<div class="visible-xs text-center">
 									<img
-										src="./gamejolt-logo-dark-1x.png"
+										:src="require('./gamejolt-logo-dark-1x.png')"
 										alt="Game Jolt Logo Dark"
 									/>
 								</div>
 								<div class="hidden-xs text-center">
 									<img
-										src="./gamejolt-logo-dark-2x.png"
+										:src="require('./gamejolt-logo-dark-2x.png')"
 										alt="Game Jolt Logo Dark"
 									/>
 								</div>
@@ -169,13 +177,13 @@
 
 								<div class="visible-xs text-center">
 									<img
-										src="./gamejolt-logo-light-1x.png"
+										:src="require('./gamejolt-logo-light-1x.png')"
 										alt="Game Jolt Logo Light"
 									/>
 								</div>
 								<div class="hidden-xs text-center">
 									<img
-										src="./gamejolt-logo-light-2x.png"
+										:src="require('./gamejolt-logo-light-2x.png')"
 										alt="Game Jolt Logo Light"
 									/>
 								</div>
@@ -206,7 +214,7 @@
 
 										<div class="text-center">
 											<img
-												src="./gamejolt-bolt-dark-2x.png"
+												:src="require('./gamejolt-bolt-dark-2x.png')"
 												alt="Game Jolt Bolt Dark"
 											/>
 										</div>
@@ -241,7 +249,7 @@
 
 										<div class="text-center">
 											<img
-												src="./gamejolt-bolt-light-2x.png"
+												:src="require('./gamejolt-bolt-light-2x.png')"
 												alt="Game Jolt Bolt Light"
 											/>
 										</div>
@@ -285,7 +293,7 @@
 
 										<div class="text-center">
 											<img
-												src="./gamejolt-bolt-white-2x.png"
+												:src="require('./gamejolt-bolt-white-2x.png')"
 												alt="Game Jolt Bolt White"
 											/>
 										</div>
@@ -320,7 +328,7 @@
 
 										<div class="text-center">
 											<img
-												src="./gamejolt-bolt-black-2x.png"
+												:src="require('./gamejolt-bolt-black-2x.png')"
 												alt="Game Jolt Bolt Black"
 											/>
 										</div>

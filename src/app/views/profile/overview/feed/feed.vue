@@ -70,12 +70,10 @@
 
 		<app-illustration
 			v-if="isLikeFeed && isLikeFeedDisabled && !isOwner"
-			src="~img/ill/no-comments.svg"
+			:src="require('~img/ill/no-comments.svg')"
 		>
 			<p>
-				<translate>
-					This user has made their liked posts private.
-				</translate>
+				<translate> This user has made their liked posts private. </translate>
 			</p>
 		</app-illustration>
 		<app-activity-feed-placeholder v-else-if="!feed || !feed.isBootstrapped" />
@@ -88,23 +86,17 @@
 				@publish-post="onPostPublished"
 				@remove-post="onPostRemoved"
 			/>
-			<app-illustration v-else src="~img/ill/no-comments.svg">
+			<app-illustration v-else :src="require('~img/ill/no-comments.svg')">
 				<p>
 					<template v-if="isOwner">
-						<translate v-if="isLikeFeed">
-							You haven't liked anything yet.
-						</translate>
-						<translate v-else>
-							You haven't posted anything yet.
-						</translate>
+						<translate v-if="isLikeFeed"> You haven't liked anything yet. </translate>
+						<translate v-else> You haven't posted anything yet. </translate>
 					</template>
 					<template v-else>
 						<translate v-if="isLikeFeed">
 							This user hasn't liked anything yet.
 						</translate>
-						<translate v-else>
-							This user hasn't posted anything yet.
-						</translate>
+						<translate v-else> This user hasn't posted anything yet. </translate>
 					</template>
 				</p>
 			</app-illustration>

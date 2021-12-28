@@ -281,11 +281,6 @@ module.exports = function (config) {
 							compilerOptions: {
 								whitespace: 'preserve',
 							},
-							transformAssetUrls: {
-								img: 'src',
-								'app-theme-svg': 'src',
-								'app-illustration': 'src',
-							},
 						},
 					},
 					{

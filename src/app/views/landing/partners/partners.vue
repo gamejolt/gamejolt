@@ -1,9 +1,16 @@
+<script lang="ts" src="./partners"></script>
+
 <template>
 	<div>
 		<section class="section landing-header text-center">
 			<div class="container">
 				<h1>
-					<app-theme-svg class="bolt" src="~img/jolt.svg" alt="" strict-colors />
+					<app-theme-svg
+						class="bolt"
+						:src="require('~img/jolt.svg')"
+						alt=""
+						strict-colors
+					/>
 					Partners
 				</h1>
 
@@ -32,7 +39,7 @@
 					<div class="row">
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg src="./supporting-indies.svg" alt="" />
+								<app-theme-svg :src="require('./supporting-indies.svg')" alt="" />
 							</div>
 
 							<h4 class="text-center">Indies supporting indies</h4>
@@ -46,7 +53,7 @@
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg src="./revenue-share.svg" alt="" />
+								<app-theme-svg :src="require('./revenue-share.svg')" alt="" />
 							</div>
 
 							<h4 class="text-center">Revenue Share</h4>
@@ -59,11 +66,11 @@
 							</p>
 						</div>
 
-						<div class="landing-break-sm"></div>
+						<div class="landing-break-sm" />
 
 						<div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-0">
 							<div class="landing-graphic">
-								<app-theme-svg src="./access-any-game.svg" alt="" />
+								<app-theme-svg :src="require('./access-any-game.svg')" alt="" />
 							</div>
 
 							<h4 class="text-center">Access any game</h4>
@@ -154,5 +161,3 @@
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./partners"></script>

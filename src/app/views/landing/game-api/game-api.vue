@@ -1,10 +1,12 @@
+<script lang="ts" src="./game-api"></script>
+
 <template>
 	<div>
 		<section class="section landing-header text-center">
 			<div class="container">
 				<h1>
 					<app-theme-svg
-						src="~img/jolt.svg"
+						:src="require('~img/jolt.svg')"
 						alt=""
 						:width="17 * 3"
 						:height="18 * 3"
@@ -34,8 +36,8 @@
 		<section class="section">
 			<div class="container">
 				<div class="row text-center">
-					<div class="col-lg-3"></div>
-					<div class="col-lg-2" v-if="totalScores">
+					<div class="col-lg-3" />
+					<div v-if="totalScores" class="col-lg-2">
 						<div class="stat-big">
 							<div class="stat-big-digit">
 								{{ formatNumber(totalScores) }}
@@ -44,7 +46,7 @@
 						</div>
 					</div>
 					<div class="col-lg-2">
-						<div class="stat-big" v-if="totalAchievedTrophies">
+						<div v-if="totalAchievedTrophies" class="stat-big">
 							<div class="stat-big-digit">
 								{{ formatNumber(totalAchievedTrophies) }}
 							</div>
@@ -52,7 +54,7 @@
 						</div>
 					</div>
 					<div class="col-lg-2">
-						<div class="stat-big" v-if="sessionTime">
+						<div v-if="sessionTime" class="stat-big">
 							<div class="stat-big-digit">
 								{{ formatNumber(sessionTime) }}
 							</div>
@@ -68,7 +70,10 @@
 				<div class="row">
 					<div class="col-lg-4">
 						<div class="landing-graphic">
-							<app-theme-svg src="./leaderboards.svg" alt="Leaderboards" />
+							<app-theme-svg
+								:src="require('./leaderboards.svg')"
+								alt="Leaderboards"
+							/>
 						</div>
 
 						<h4 class="text-center">Leaderboards</h4>
@@ -82,7 +87,7 @@
 
 					<div class="col-lg-4">
 						<div class="landing-graphic">
-							<app-theme-svg src="./trophies.svg" alt="Trophies" />
+							<app-theme-svg :src="require('./trophies.svg')" alt="Trophies" />
 						</div>
 
 						<h4 class="text-center">Trophies</h4>
@@ -95,7 +100,10 @@
 
 					<div class="col-lg-4">
 						<div class="landing-graphic">
-							<app-theme-svg src="./data-storage.svg" alt="Data Storage" />
+							<app-theme-svg
+								:src="require('./data-storage.svg')"
+								alt="Data Storage"
+							/>
 						</div>
 
 						<h4 class="text-center">Cloud Data Storage</h4>
@@ -107,11 +115,11 @@
 						</p>
 					</div>
 
-					<div class="landing-break-lg"></div>
+					<div class="landing-break-lg" />
 
 					<div class="col-lg-4 col-centered-lg">
 						<div class="landing-graphic">
-							<app-theme-svg src="./sessions.svg" alt="Sessions" />
+							<app-theme-svg :src="require('./sessions.svg')" alt="Sessions" />
 						</div>
 
 						<h4 class="text-center">Sessions</h4>
@@ -138,5 +146,3 @@
 		</section>
 	</div>
 </template>
-
-<script lang="ts" src="./game-api"></script>

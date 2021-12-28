@@ -25,7 +25,7 @@
 					"
 				>
 					<app-theme-svg
-						src="~img/game-jolt-logo.svg"
+						:src="require('~img/game-jolt-logo.svg')"
 						width="164"
 						height="18"
 						alt=""
@@ -33,7 +33,7 @@
 						strict-colors
 					/>
 					<app-theme-svg
-						src="~img/game-jolt-logo.svg"
+						:src="require('~img/game-jolt-logo.svg')"
 						width="328"
 						height="36"
 						alt=""

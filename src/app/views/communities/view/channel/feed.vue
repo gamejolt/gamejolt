@@ -10,7 +10,7 @@
 			</h1>
 
 			<div v-if="channel.visibility === 'draft'">
-				<app-illustration src="~img/ill/no-comments.svg">
+				<app-illustration :src="require('~img/ill/no-comments.svg')">
 					<translate>
 						This is a draft channel. When it gets published, the post feed will appear
 						here.

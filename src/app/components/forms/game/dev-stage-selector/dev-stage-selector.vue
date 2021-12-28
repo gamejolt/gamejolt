@@ -65,21 +65,21 @@
 					<div class="dev-stage-selector-mascot">
 						<img
 							v-if="stage === Game.DEVELOPMENT_STATUS_DEVLOG"
-							src="./mascot-devlog.png"
+							:src="require('./mascot-devlog.png')"
 							width="68"
 							height="68"
 							alt=""
 						/>
 						<img
 							v-else-if="stage === Game.DEVELOPMENT_STATUS_WIP"
-							src="./mascot-early-access.png"
+							:src="require('./mascot-early-access.png')"
 							width="48"
 							height="46"
 							alt=""
 						/>
 						<img
 							v-else-if="stage === Game.DEVELOPMENT_STATUS_FINISHED"
-							src="./mascot-complete.png"
+							:src="require('./mascot-complete.png')"
 							width="52"
 							height="54"
 							alt=""

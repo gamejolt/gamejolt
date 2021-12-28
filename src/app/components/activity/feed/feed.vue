@@ -57,7 +57,7 @@
 
 			<app-loading v-if="feed.isLoadingMore" class="-bottom-loading loading-centered" />
 
-			<app-illustration v-if="feed.reachedEnd" src="~img/ill/end-of-feed.svg">
+			<app-illustration v-if="feed.reachedEnd" :src="require('~img/ill/end-of-feed.svg')">
 				<p>
 					<translate>
 						You've found a clearing at the end of this feed. Should you set up camp?

@@ -9,7 +9,7 @@
 				</h1>
 				<img
 					class="forum-header-landing-mascot"
-					src="./butterflies.png"
+					:src="require('./butterflies.png')"
 					width="218"
 					height="146"
 					alt="The Social Butterflies"

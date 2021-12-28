@@ -7,7 +7,7 @@
 				<translate>Entries</translate>
 			</h2>
 
-			<app-illustration src="~img/ill/no-comments.svg">
+			<app-illustration :src="require('~img/ill/no-comments.svg')">
 				<p>
 					<translate>No entries have been submitted to this jam yet...</translate>
 				</p>

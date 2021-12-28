@@ -556,7 +556,7 @@ const {
 
 			<app-loading v-if="isLoading" class="loading-centered" />
 			<div v-else-if="shouldShowEmptyMessage">
-				<app-illustration src="~img/ill/no-comments.svg">
+				<app-illustration :src="require('~img/ill/no-comments.svg')">
 					<p>
 						<translate v-if="shouldShowAdd">
 							Everyone else seems to be in sleep mode, why don't you start the
