@@ -252,7 +252,7 @@ export class GameFilteringContainer {
 	getQueryString(route: RouteLocationNormalized, options: { page?: number } = {}) {
 		const queryPieces: string[] = [];
 
-		queryPieces.push('section=' + (route.params.section ?? 'featured'));
+		queryPieces.push('section=' + (route.params.section || 'featured'));
 
 		if (route.query.sort) {
 			queryPieces.push('sort=' + route.query.sort);
