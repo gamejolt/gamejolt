@@ -19,6 +19,9 @@ const WebpackPwaManifest = require('webpack-pwa-manifest');
 const OptimizeCssnanoPlugin = require('@intervolga/optimize-cssnano-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
+
+const noopDirectiveTransform = () => ({ props: [] });
 
 module.exports = function (config) {
 	let base = path.resolve(config.projectBase);
@@ -62,6 +65,8 @@ module.exports = function (config) {
 
 	let webpackTarget = 'web';
 	if (config.ssr === 'server') {
+		// Will tell webpack to handle dynamic imports in a node-style way, and
+		// tells vue-loader to emit server-oriented code.
 		webpackTarget = 'node';
 	} else if (config.client) {
 		webpackTarget = 'node-webkit';
@@ -69,6 +74,7 @@ module.exports = function (config) {
 
 	let libraryTarget = 'var';
 	if (config.ssr === 'server') {
+		// Tells the server to use node-style exports.
 		libraryTarget = 'commonjs2';
 	}
 
@@ -280,6 +286,10 @@ module.exports = function (config) {
 						options: {
 							compilerOptions: {
 								whitespace: 'preserve',
+								directiveTransforms: {
+									// TODO(vue3): do them all and do this better
+									translate: noopDirectiveTransform,
+								},
 							},
 						},
 					},
@@ -465,6 +475,11 @@ module.exports = function (config) {
 					  }),
 				webAppManifest ? new WebpackPwaManifest(webAppManifest) : noop,
 				prodNoop || new FriendlyErrorsWebpackPlugin(),
+				config.ssr === 'server' && !config.client
+					? new WebpackManifestPlugin({
+							fileName: 'vue-ssr-server-manifest-' + section + '.json',
+					  })
+					: noop,
 				// TODO(vue3)
 				// Make the client bundle for both normal prod builds or client ssr builds.
 				// We want to compare the manifests from the two builds.

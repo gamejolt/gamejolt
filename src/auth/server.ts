@@ -15,15 +15,15 @@ export default async (context: any) => {
 	// Wait until the route has resolved all possible async components and
 	// hooks.
 	await router.isReady();
-	const matchedComponents = router.currentRoute.value.matched.flatMap(record =>
-		Object.values(record.components)
-	);
-	console.log(`got ${matchedComponents.length} matched route components`);
+	// const matchedComponents = router.currentRoute.value.matched.flatMap(record =>
+	// 	Object.values(record.components)
+	// );
+	// console.log(`got ${matchedComponents.length} matched route components`);
 
-	if (!matchedComponents.length) {
-		console.log('no matched routes');
-		throw { code: 404 };
-	}
+	// if (!matchedComponents.length) {
+	// 	console.log('no matched routes');
+	// 	throw { code: 404 };
+	// }
 
 	try {
 		// const componentState = await Promise.all(
@@ -49,7 +49,7 @@ export default async (context: any) => {
 
 		context.prefetchTime = Date.now() - s;
 
-		return app;
+		return { app };
 	} catch (e) {
 		throw { code: 500 };
 	}

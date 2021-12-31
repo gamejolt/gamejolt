@@ -46,7 +46,7 @@ const _currentTranslations = computed(
 export function initTranslations(app: App) {
 	// Initialize our starting values. [loadCurrentLanguage] should be called
 	// once the app is mounted to switch to their real language.
-	_language.value = localStorage?.getItem(LangStorageKey) ?? 'en_US';
+	_language.value = (!GJ_IS_SSR && localStorage.getItem(LangStorageKey)) || 'en_US';
 	_translations.value = require('../../translations/en_US/main.json');
 
 	// Convenience to make it easier to translate in templates.

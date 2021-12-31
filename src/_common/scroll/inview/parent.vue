@@ -1,5 +1,5 @@
 <script lang="ts">
-import { inject, InjectionKey, provide, reactive } from 'vue';
+import { inject, InjectionKey, PropType, provide, reactive } from 'vue';
 import { ScrollInviewConfig, ScrollInviewController } from './inview.vue';
 
 const Key: InjectionKey<ScrollInviewParentController> = Symbol('scroll-inview-parent');
@@ -160,7 +160,7 @@ const props = defineProps({
 	// If this is a child of AppScrollScroller, we need to get it as a prop so
 	// we can use that scroll element as the root context.
 	scroller: {
-		type: HTMLElement,
+		type: Object as PropType<HTMLElement>,
 		default: null,
 	},
 });

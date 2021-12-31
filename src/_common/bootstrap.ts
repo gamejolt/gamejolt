@@ -1,4 +1,4 @@
-import { Component, createApp } from 'vue';
+import { Component, createApp, createSSRApp } from 'vue';
 import { Router } from 'vue-router';
 import { hijackLinks } from '../utils/router';
 import { StoreKey, VuexStore } from '../utils/vuex';
@@ -21,7 +21,7 @@ import { initTranslations } from './translate/translate.service';
  * point can call to get what it needs.
  */
 export function bootstrapCommon(appComponent: Component, store: VuexStore, router?: Router) {
-	const app = createApp(appComponent);
+	const app = GJ_IS_SSR ? createSSRApp(appComponent) : createApp(appComponent);
 
 	// Try to start loading this as soon as possible.
 	ensureConfig();
