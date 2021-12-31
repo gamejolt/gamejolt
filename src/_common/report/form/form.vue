@@ -1,7 +1,7 @@
 <script lang="ts" src="./form"></script>
 
 <template>
-	<app-form name="reportForm">
+	<app-form :controller="form">
 		<app-form-group name="reason" :label="$gettext(`What's the reason?`)">
 			<div v-for="reason of reasons" :key="reason.radioValue">
 				<div class="radio">
@@ -19,9 +19,7 @@
 					<app-form-group name="source" hide-label>
 						<app-form-control
 							type="text"
-							:rules="{
-								max: maxLengthSource,
-							}"
+							:validators="[validateMaxLength(maxLengthSource)]"
 							:placeholder="reason.source.placeholder"
 						/>
 
@@ -72,9 +70,7 @@
 		>
 			<app-form-control-textarea
 				type="text"
-				:rules="{
-					max: maxLengthDescription,
-				}"
+				:validators="[validateMaxLength(maxLengthDescription)]"
 			/>
 
 			<app-form-control-errors :label="$gettext(`description`)" />

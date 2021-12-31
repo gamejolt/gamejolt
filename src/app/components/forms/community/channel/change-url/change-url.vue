@@ -1,7 +1,7 @@
 <script lang="ts" src="./change-url"></script>
 
 <template>
-	<app-form name="communityChannelForm">
+	<app-form :controller="form">
 		<div>
 			<app-form-community-channel-title :community="community" hide-label />
 		</div>

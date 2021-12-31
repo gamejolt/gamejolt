@@ -2,7 +2,7 @@ import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { GameScoreTable } from '../../../../../../../_common/game/score-table/score-table.model';
-import AppLoadingFade from '../../../../../../../_common/loading/fade/fade.vue';
+import AppLoadingFade from '../../../../../../../_common/loading/AppLoadingFade.vue';
 import AppNavTabList from '../../../../../../../_common/nav/tab-list/tab-list.vue';
 import { Popper } from '../../../../../../../_common/popper/popper.service';
 import {

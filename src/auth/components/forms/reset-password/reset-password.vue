@@ -1,5 +1,5 @@
 <template>
-	<app-form name="resetPasswordForm">
+	<app-form :controller="form">
 		<fieldset :disabled="Connection.isClientOffline">
 			<app-form-group
 				name="password"
@@ -12,10 +12,7 @@
 
 				<app-form-control
 					type="password"
-					:rules="{
-						min: 4,
-						max: 30,
-					}"
+					:validators="[validateMinLength(4), validateMaxLength(300)]"
 					:validate-on="['blur']"
 					:placeholder="$gettext('auth.reset_password.password_label')"
 				/>

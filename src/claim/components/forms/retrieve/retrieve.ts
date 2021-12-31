@@ -10,7 +10,9 @@ export default class FormRetrieve extends BaseForm<any> implements FormOnSubmit 
 	@Prop(GameBundle) bundle!: GameBundle;
 	@Prop(Game) game!: Game;
 
-	warnOnDiscard = false;
+	created() {
+		this.form.warnOnDiscard = false;
+	}
 
 	onSubmit() {
 		let url = '/claim/retrieve';

@@ -1,8 +1,8 @@
 import Axios from 'axios';
 import { App, computed, ref } from 'vue';
 import { arrayIndexBy } from '../../utils/array';
+import AppTranslate from './AppTranslate.vue';
 import { TranslateDirective } from './translate-directive';
-import TranslateComponent from './translate.vue';
 
 const LangStorageKey = 'lang';
 const InterpolationRegex = /%\{((?:.|\n)+?)\}/g;
@@ -55,7 +55,7 @@ export function initTranslations(app: App) {
 	app.config.globalProperties.$gettextInterpolate = $gettextInterpolate;
 
 	// Add into the global app for convenience of usage.
-	app.component('Translate', TranslateComponent);
+	app.component('Translate', AppTranslate);
 	app.directive('Translate', TranslateDirective);
 }
 

@@ -1,7 +1,7 @@
 <script lang="ts" src="./form"></script>
 
 <template>
-	<app-form name="communityEjectPostForm">
+	<app-form :controller="form">
 		<app-form-group
 			name="notifyUser"
 			:label="$gettext(`Do you also want to notify the author that their post got ejected?`)"
@@ -43,9 +43,7 @@
 			<app-form-control
 				type="text"
 				html-list-id="eject-post-reasons-list"
-				:rules="{
-					max: 100,
-				}"
+				:validators="[validateMaxLength(100)]"
 			/>
 			<datalist id="eject-post-reasons-list">
 				<option v-for="optionStr of otherOptions" :key="optionStr" :value="optionStr" />

@@ -1,7 +1,7 @@
 <script lang="ts" src="./preset-background"></script>
 
 <template>
-	<app-form ref="form" name="presetBackgroundForm">
+	<app-form :controller="form">
 		<app-form-group
 			name="file"
 			:label="
@@ -40,10 +40,10 @@
 			</p>
 
 			<app-form-control-upload
-				:rules="{
-					filesize: maxFilesize,
-					max_img_dimensions: [maxWidth, maxHeight],
-				}"
+				:validators="[
+					validateFilesize(maxFilesize),
+					validateImageMaxDimensions({ width: maxWidth, height: maxHeight }),
+				]"
 				accept=".png,.jpg,.jpeg,.webp"
 				@changed="backgroundSelected()"
 			/>

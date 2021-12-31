@@ -1,7 +1,7 @@
 import { Options, Prop } from 'vue-property-decorator';
-import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
-import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
-import { BaseForm, FormOnInit, FormOnLoad } from '../../../../../_common/form-vue/form.service';
+import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
+import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
 import { GameTrophy } from '../../../../../_common/game/trophy/trophy.model';
 import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
@@ -14,12 +14,11 @@ import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-servi
 		AppFormControlUpload,
 	},
 })
-export default class FormGameTrophy extends BaseForm<GameTrophy> implements FormOnInit, FormOnLoad {
+export default class FormGameTrophy extends BaseForm<GameTrophy> implements FormOnLoad {
 	@Prop(Game) game!: Game;
 	@Prop(Number) difficulty!: number;
 
 	modelClass = GameTrophy;
-	resetOnSubmit = true;
 
 	maxFilesize = 0;
 	maxWidth = 0;
@@ -48,6 +47,10 @@ export default class FormGameTrophy extends BaseForm<GameTrophy> implements Form
 				value: GameTrophy.DIFFICULTY_PLATINUM,
 			},
 		];
+	}
+
+	created() {
+		this.form.resetOnSubmit = true;
 	}
 
 	onInit() {

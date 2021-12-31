@@ -1,7 +1,7 @@
 <template>
-	<app-form name="songForm">
+	<app-form :controller="form">
 		<app-form-group name="title" :label="$gettext(`dash.games.music.form.title_label`)">
-			<app-form-control type="text" :rules="{ max: 150 }" />
+			<app-form-control type="text" :validators="[validateMaxLength(150)]" />
 			<app-form-control-errors />
 		</app-form-group>
 
@@ -17,12 +17,7 @@
 				</translate>
 			</p>
 
-			<app-form-control-upload
-				:rules="{
-					filesize: maxFilesize,
-				}"
-				accept=".mp3"
-			/>
+			<app-form-control-upload :validators="[validateFilesize(maxFilesize)]" accept=".mp3" />
 
 			<app-form-control-errors :label="$gettext(`dash.games.music.form.file_error_label`)" />
 		</app-form-group>

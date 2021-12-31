@@ -1,7 +1,6 @@
 import { Options, Prop } from 'vue-property-decorator';
-import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
-import AppForm from '../../../../../_common/form-vue/form';
-import { BaseForm, FormOnInit, FormOnLoad } from '../../../../../_common/form-vue/form.service';
+import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
 import { GameScreenshot } from '../../../../../_common/game/screenshot/screenshot.model';
 
@@ -10,18 +9,10 @@ import { GameScreenshot } from '../../../../../_common/game/screenshot/screensho
 		AppFormControlUpload,
 	},
 })
-export default class FormGameImage
-	extends BaseForm<GameScreenshot>
-	implements FormOnInit, FormOnLoad
-{
+export default class FormGameImage extends BaseForm<GameScreenshot> implements FormOnLoad {
 	modelClass = GameScreenshot;
-	resetOnSubmit = true;
 
 	@Prop(Game) game!: Game;
-
-	declare $refs: {
-		form: AppForm;
-	};
 
 	maxFilesize = 0;
 	maxWidth = 0;
@@ -29,6 +20,10 @@ export default class FormGameImage
 
 	get loadUrl() {
 		return `/web/dash/developer/games/media/save/image/${this.game.id}`;
+	}
+
+	created() {
+		this.form.resetOnSubmit = true;
 	}
 
 	onInit() {
@@ -43,6 +38,6 @@ export default class FormGameImage
 
 	imagesSelected() {
 		// When images are selected, submit the form immediately.
-		this.$refs.form.submit();
+		this.form.submit();
 	}
 }

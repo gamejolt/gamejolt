@@ -6,8 +6,8 @@ import {
 	configSaveOverrides,
 	ConfigService,
 } from '../../../../_common/config/config.service';
-import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
-import { BaseForm, FormOnInit } from '../../../../_common/form-vue/form.service';
+import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
+import { BaseForm } from '../../../../_common/form-vue/form.service';
 
 type FormModel = Record<string, boolean | string>;
 
@@ -16,13 +16,14 @@ type FormModel = Record<string, boolean | string>;
 		AppFormControlToggle,
 	},
 })
-export default class FormSettingsDev extends BaseForm<FormModel> implements FormOnInit {
-	warnOnDiscard = false;
-
+export default class FormSettingsDev extends BaseForm<FormModel> {
 	get tests(): (ConfigOptionBoolean | ConfigOptionString)[] {
 		return ConfigService.options.filter(
 			i => i instanceof ConfigOptionBoolean || i instanceof ConfigOptionString
 		);
+	}
+	created() {
+		this.form.warnOnDiscard = false;
 	}
 
 	onInit() {

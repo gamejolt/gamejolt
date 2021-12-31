@@ -1,16 +1,14 @@
 <template>
-	<app-form name="communityBlockForm">
+	<app-form :controller="form">
 		<app-form-group name="username">
-			<app-form-control-prefixed-input
+			<app-form-control
 				prefix="@"
-				type="text"
-				:rules="{
-					max: 100,
-					availability: {
+				:validators="[
+					validateMaxLength(100),
+					validateAvailability({
 						url: `/web/dash/blocks/check-field-availability`,
-						initVal: undefined,
-					},
-				}"
+					}),
+				]"
 				:validate-on="['blur']"
 			/>
 

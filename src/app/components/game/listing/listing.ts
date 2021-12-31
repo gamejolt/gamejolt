@@ -2,7 +2,7 @@ import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../utils/vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../_common/filters/number';
-import AppLoadingFade from '../../../../_common/loading/fade/fade.vue';
+import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import AppNavTabList from '../../../../_common/nav/tab-list/tab-list.vue';
 import AppPagination from '../../../../_common/pagination/pagination.vue';

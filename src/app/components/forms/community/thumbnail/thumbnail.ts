@@ -1,10 +1,9 @@
 import { Options, Watch } from 'vue-property-decorator';
 import { Community } from '../../../../../_common/community/community.model';
 import { formatFilesize } from '../../../../../_common/filters/filesize';
-import AppFormControlCrop from '../../../../../_common/form-vue/control/crop/crop.vue';
-import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
-import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
-import AppFormTS from '../../../../../_common/form-vue/form';
+import AppFormControlCrop from '../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
+import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
+import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
 	BaseForm,
 	FormOnBeforeSubmit,
@@ -27,9 +26,7 @@ export default class FormCommunityThumbnail
 	implements FormOnLoad, FormOnBeforeSubmit
 {
 	modelClass = Community;
-	reloadOnSubmit = true;
-	warnOnDiscard = false;
-	saveMethod: '$saveThumbnail' = '$saveThumbnail';
+	saveMethod = '$saveThumbnail' as const;
 
 	maxFilesize = 0;
 	minSize = 0;
@@ -37,10 +34,6 @@ export default class FormCommunityThumbnail
 
 	readonly formatFilesize = formatFilesize;
 	readonly Screen = Screen;
-
-	declare $refs: {
-		form: AppFormTS;
-	};
 
 	get loadUrl() {
 		return `/web/dash/communities/design/save-thumbnail/${this.model!.id}`;
@@ -53,6 +46,11 @@ export default class FormCommunityThumbnail
 	@Watch('crop')
 	onCropChange() {
 		this.setField('thumbnail_crop', this.crop);
+	}
+
+	created() {
+		this.form.warnOnDiscard = false;
+		this.form.reloadOnSubmit = true;
 	}
 
 	onLoad(payload: any) {
@@ -68,7 +66,7 @@ export default class FormCommunityThumbnail
 
 	thumbnailSelected() {
 		if (this.formModel.file) {
-			this.$refs.form.submit();
+			this.form.submit();
 		}
 	}
 }

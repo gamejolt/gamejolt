@@ -1,6 +1,9 @@
 <template>
-	<app-form name="domainForm">
-		<app-form-group name="domain_type" :label="$gettext(`How would you like to access your site?`)">
+	<app-form :controller="form">
+		<app-form-group
+			name="domain_type"
+			:label="$gettext(`How would you like to access your site?`)"
+		>
 			<div class="radio">
 				<label>
 					<app-form-control-radio value="io" />
@@ -12,7 +15,11 @@
 					<app-form-control-radio value="af" />
 					<span v-html="afUrl"></span>
 					&mdash;
-					<router-link :to="{ name: 'landing.indieaf' }" target="_blank" class="link-help small">
+					<router-link
+						:to="{ name: 'landing.indieaf' }"
+						target="_blank"
+						class="link-help small"
+					>
 						<translate>Learn more about being indie.AF</translate>
 					</router-link>
 				</label>
@@ -33,14 +40,14 @@
 			<app-form-group name="domain" :label="$gettext(`Domain`)">
 				<app-form-control
 					placeholder="example.com"
-					:rules="{
-						max: 100,
-						pattern: 'domain',
-						availability: {
+					:validators="[
+						validateMaxLength(100),
+						validateDomain(),
+						validateAvailability({
 							url: '/web/dash/sites/check-field-availability/domain',
 							initVal: model.domain,
-						},
-					}"
+						}),
+					]"
 				/>
 
 				<app-form-control-errors />
@@ -54,15 +61,15 @@
 
 			<p>
 				<translate>
-					In order to set up your custom domain you'll need to point its DNS over to us. Look for
-					the DNS options in your registrar's control panel.
+					In order to set up your custom domain you'll need to point its DNS over to us.
+					Look for the DNS options in your registrar's control panel.
 				</translate>
 			</p>
 
 			<p>
 				<translate>
-					If you'd like your main root/apex domain to point to us (such as example.com), you'll have
-					to set two DNS entries for your domain.
+					If you'd like your main root/apex domain to point to us (such as example.com),
+					you'll have to set two DNS entries for your domain.
 				</translate>
 			</p>
 
@@ -102,16 +109,16 @@
 
 			<p>
 				<translate>
-					This will set up your DNS to redirect your root/apex domain (example.com) over to a www
-					subdomain (www.example.com). This ensures that people hit the correct host when trying to
-					view your custom domain site.
+					This will set up your DNS to redirect your root/apex domain (example.com) over
+					to a www subdomain (www.example.com). This ensures that people hit the correct
+					host when trying to view your custom domain site.
 				</translate>
 			</p>
 
 			<p>
 				<translate>
-					If you'd like to point a subdomain over to us (such as mygame.mystudio.com), you will only
-					have to set one entry for the subdomain portion of your domain.
+					If you'd like to point a subdomain over to us (such as mygame.mystudio.com), you
+					will only have to set one entry for the subdomain portion of your domain.
 				</translate>
 			</p>
 
@@ -138,16 +145,17 @@
 			<p>
 				<strong>
 					<translate>
-						Note that it could take up to 24 hours for your domain registrar to propagate these
-						changes across the internet and for your site to be accessible using your custom domain.
+						Note that it could take up to 24 hours for your domain registrar to
+						propagate these changes across the internet and for your site to be
+						accessible using your custom domain.
 					</translate>
 				</strong>
 			</p>
 
 			<p>
 				<translate>
-					If you're having trouble, send an email to contact@gamejolt.com with all the information
-					you can and we'll help you out!
+					If you're having trouble, send an email to contact@gamejolt.com with all the
+					information you can and we'll help you out!
 				</translate>
 			</p>
 		</app-expand>

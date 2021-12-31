@@ -67,5 +67,6 @@
 	"volar.codeLens.references": false,
 	"volar.codeLens.scriptSetupTools": false,
 	"volar.preferredTagNameCase": "pascal",
-	"editor.linkedEditing": true
+	"editor.linkedEditing": true,
+	"editor.semanticHighlighting.enabled": true
 }

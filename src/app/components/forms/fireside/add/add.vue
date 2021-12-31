@@ -1,7 +1,7 @@
 <script lang="ts" src="./add"></script>
 
 <template>
-	<app-form name="firesideAddForm">
+	<app-form :controller="form">
 		<app-form-group name="title" hide-label>
 			<div class="help-block">
 				<translate>Give your Fireside a snappy title to draw people in.</translate>
@@ -9,10 +9,7 @@
 			<app-form-control
 				v-app-focus-when
 				type="text"
-				:rules="{
-					min: 4,
-					max: 100,
-				}"
+				:validators="[validateMinLength(4), validateMaxLength(100)]"
 				:validate-on="['blur']"
 			/>
 			<app-form-control-errors />

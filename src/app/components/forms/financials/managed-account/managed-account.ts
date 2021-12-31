@@ -4,7 +4,7 @@ import { loadScript } from '../../../../../utils/utils';
 import { Api } from '../../../../../_common/api/api.service';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import { formatCurrency } from '../../../../../_common/filters/currency';
-import { BaseForm, FormOnInit, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
+import { BaseForm, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
 import { Geo } from '../../../../../_common/geo/geo.service';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import { UserStripeManagedAccount } from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
@@ -51,9 +51,8 @@ const PERSON_REQUIREMENT_FIELD = new RegExp(`^(person_.*?)\\.`);
 })
 export default class FormFinancialsManagedAccount
 	extends BaseForm<FormModel>
-	implements FormOnInit, FormOnSubmit
+	implements FormOnSubmit
 {
-	resetOnSubmit = true;
 	scriptLoaded = false;
 	isLoaded = false;
 
@@ -76,6 +75,10 @@ export default class FormFinancialsManagedAccount
 		individual: AppFinancialsManagedAccountPersonTS;
 		representative: AppFinancialsManagedAccountPersonTS;
 	};
+
+	created() {
+		this.form.resetOnSubmit = true;
+	}
 
 	async onInit() {
 		if (!this.scriptLoaded) {

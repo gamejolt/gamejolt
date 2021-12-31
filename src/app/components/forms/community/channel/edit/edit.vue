@@ -1,7 +1,7 @@
 <script lang="ts" src="./edit"></script>
 
 <template>
-	<app-form ref="form" name="communityChannelFormEdit">
+	<app-form :controller="form">
 		<app-form-group name="display_title" :label="$gettext(`Display Name`)" optional>
 			<div class="help-block">
 				<translate>
@@ -11,7 +11,7 @@
 			</div>
 
 			<app-form-control
-				:rules="{ min: 3, max: 30 }"
+				:validators="[validateMinLength(3), validateMaxLength(30)]"
 				:validate-on="['blur']"
 				:placeholder="formModel.title"
 			/>
@@ -22,14 +22,14 @@
 		<app-form-group name="title" :label="$gettext(`URL Path`)">
 			<app-form-control
 				type="text"
-				:rules="{
-					pattern: /^[a-z0-9_]+$/i,
-					min: 3,
-					max: 30,
-					availability: {
+				:validators="[
+					validateMinLength(3),
+					validateMaxLength(30),
+					validatePattern(/^[a-z0-9_]+$/i),
+					validateAvailability({
 						url: titleAvailabilityUrl,
-					},
-				}"
+					}),
+				]"
 				data-vv-delay="500"
 			/>
 			<app-form-control-errors>

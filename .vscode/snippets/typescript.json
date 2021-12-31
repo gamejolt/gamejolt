@@ -60,7 +60,7 @@
 			"import { Options } from 'vue-property-decorator';",
 			"",
 			"@Options({})",
-			"export class Form${1:Login} extends BaseForm<$2> implements FormOnInit {",
+			"export class Form${1:Login} extends BaseForm<$2> {",
 			"\tmodelClass = $2;",
 			"",
 			"\tonInit() {",

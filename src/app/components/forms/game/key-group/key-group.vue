@@ -1,7 +1,7 @@
 <script lang="ts" src="./key-group"></script>
 
 <template>
-	<app-form name="keyGroupForm">
+	<app-form :controller="form">
 		<app-form-group v-if="method === 'add'" name="type" :label="$gettext(`Key Type`)">
 			<div class="radio">
 				<label>
@@ -59,12 +59,7 @@
 					This is just so you can keep track of your groups. It won't be shown to users.
 				</translate>
 			</p>
-			<app-form-control
-				type="text"
-				:rules="{
-					max: 150,
-				}"
-			/>
+			<app-form-control type="text" :validators="[validateMaxLength(150)]" />
 		</app-form-group>
 
 		<app-form-group
@@ -82,10 +77,7 @@
 				step="1"
 				min="1"
 				max="20000"
-				:rules="{
-					min_value: 1,
-					max_value: 20000,
-				}"
+				:validators="[validateMinValue(1), validateMaxValue(20000)]"
 			/>
 			<app-form-control-errors />
 		</app-form-group>
@@ -98,12 +90,7 @@
 			<p class="help-block">
 				<translate>Paste one email address per line, or separate them by commas.</translate>
 			</p>
-			<app-form-control-textarea
-				rows="10"
-				:rules="{
-					max: 25000,
-				}"
-			/>
+			<app-form-control-textarea rows="10" :validators="[validateMaxLength(25000)]" />
 			<app-form-control-errors />
 		</app-form-group>
 
@@ -115,12 +102,7 @@
 			<p class="help-block">
 				<translate>Paste one username per line, or separate them by commas.</translate>
 			</p>
-			<app-form-control-textarea
-				rows="10"
-				:rules="{
-					max: 25000,
-				}"
-			/>
+			<app-form-control-textarea rows="10" :validators="[validateMaxLength(25000)]" />
 			<app-form-control-errors />
 		</app-form-group>
 

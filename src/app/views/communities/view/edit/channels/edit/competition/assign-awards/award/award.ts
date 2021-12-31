@@ -5,7 +5,7 @@ import { CommunityCompetitionAward } from '../../../../../../../../../../_common
 import { CommunityCompetitionEntryAward } from '../../../../../../../../../../_common/community/competition/entry/award/award.model';
 import { CommunityCompetitionEntry } from '../../../../../../../../../../_common/community/competition/entry/entry.model';
 import { showErrorGrowl } from '../../../../../../../../../../_common/growls/growls.service';
-import AppLoadingFade from '../../../../../../../../../../_common/loading/fade/fade.vue';
+import AppLoadingFade from '../../../../../../../../../../_common/loading/AppLoadingFade.vue';
 import AppLoading from '../../../../../../../../../../_common/loading/loading.vue';
 import AppPagination from '../../../../../../../../../../_common/pagination/pagination.vue';
 import {

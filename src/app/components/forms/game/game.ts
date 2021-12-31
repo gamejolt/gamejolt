@@ -1,8 +1,9 @@
 import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import AppExpand from '../../../../_common/expand/expand.vue';
-import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
-import { BaseForm, FormOnInit, FormOnLoad } from '../../../../_common/form-vue/form.service';
+import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
+import { BaseForm, FormOnLoad } from '../../../../_common/form-vue/form.service';
+import { validateUrlPath } from '../../../../_common/form-vue/validators';
 import { Game } from '../../../../_common/game/game.model';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../store/index';
@@ -20,17 +21,18 @@ import AppDashGameWizardControls from './wizard-controls/wizard-controls.vue';
 		AppTooltip,
 	},
 })
-export default class FormGame extends BaseForm<Game> implements FormOnInit, FormOnLoad {
+export default class FormGame extends BaseForm<Game> implements FormOnLoad {
 	@State
 	app!: Store['app'];
 
 	// We need to reset all the "is published", "has builds" stuff.
 	modelClass = Game;
-	resetOnSubmit = true;
 
 	account: any = null;
 	categories: any = null;
 	engines: any = null;
+
+	readonly validateUrlPath = validateUrlPath;
 
 	get hasAllPerms() {
 		// If we're currently adding the game - we automatically have permission for it.
@@ -97,11 +99,13 @@ export default class FormGame extends BaseForm<Game> implements FormOnInit, Form
 	}
 
 	onInit() {
+		this.form.resetOnSubmit = true;
+
 		if (this.method === 'add') {
 			this.setField('referrals_enabled', true);
 
 			// No need to reset on submit during game add. It causes a flicker.
-			this.resetOnSubmit = false;
+			this.form.resetOnSubmit = false;
 		}
 	}
 

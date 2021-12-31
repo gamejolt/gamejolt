@@ -1,7 +1,7 @@
 <script lang="ts" src="./dev"></script>
 
 <template>
-	<app-form ref="form" name="settingsFormDev" @changed="onChange">
+	<app-form :controller="form" @changed="onChange">
 		<fieldset id="settings-dev">
 			<legend>
 				<translate>Dev</translate>

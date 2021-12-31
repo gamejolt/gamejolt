@@ -1,5 +1,5 @@
 import { Options, Prop } from 'vue-property-decorator';
-import { BaseForm, FormOnInit, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
+import { BaseForm, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
 import { GameSketchfab } from '../../../../../_common/game/sketchfab/sketchfab.model';
 import {
@@ -13,17 +13,12 @@ import AppSketchfabEmbed from '../../../../../_common/sketchfab/embed/embed.vue'
 		AppSketchfabEmbed,
 	},
 })
-export default class FormGameSketchfab
-	extends BaseForm<GameSketchfab>
-	implements FormOnInit, FormOnSubmit
-{
+export default class FormGameSketchfab extends BaseForm<GameSketchfab> implements FormOnSubmit {
 	@Prop(Game) game!: Game;
 
 	readonly SKETCHFAB_FIELD_REGEX = SKETCHFAB_FIELD_VALIDATION_REGEX;
 
 	modelClass = GameSketchfab;
-	resetOnSubmit = true;
-	warnOnDiscard = false;
 
 	get sketchfabId() {
 		return getSketchfabIdFromInput(this.formModel.sketchfab_id);
@@ -34,6 +29,11 @@ export default class FormGameSketchfab
 			this.formModel.sketchfab_id &&
 			this.formModel.sketchfab_id.match(this.SKETCHFAB_FIELD_REGEX)
 		);
+	}
+
+	created() {
+		this.form.warnOnDiscard = false;
+		this.form.resetOnSubmit = true;
 	}
 
 	onInit() {

@@ -1,6 +1,6 @@
 import { Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../api/api.service';
-import AppFormControlToggle from '../../form-vue/control/toggle/toggle.vue';
+import AppFormControlToggle from '../../form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm, FormOnSubmit } from '../../form-vue/form.service';
 import { User } from '../../user/user.model';
 

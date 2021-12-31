@@ -1,7 +1,7 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
-import AppLoadingFade from '../../../../_common/loading/fade/fade.vue';
+import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 
 @Options({
 	components: {

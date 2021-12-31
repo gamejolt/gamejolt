@@ -1,6 +1,6 @@
 import { Options, Prop, Watch } from 'vue-property-decorator';
 import { REGEX_VIDEO, REGEX_VIMEO, REGEX_YOUTUBE } from '../../../../../utils/regex';
-import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.service';
+import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
 import { GameVideo } from '../../../../../_common/game/video/video.model';
 import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
@@ -14,12 +14,10 @@ type FormModel = GameVideo & {
 		AppVideoEmbed,
 	},
 })
-export default class FormGameVideo extends BaseForm<FormModel> implements FormOnInit {
+export default class FormGameVideo extends BaseForm<FormModel> {
 	@Prop(Game) game!: Game;
 
 	modelClass = GameVideo as any;
-	resetOnSubmit = true;
-	warnOnDiscard = false;
 
 	readonly REGEX_VIDEO = REGEX_VIDEO;
 
@@ -42,6 +40,11 @@ export default class FormGameVideo extends BaseForm<FormModel> implements FormOn
 		if (vimeoMatch) {
 			return { id: vimeoMatch[vimeoMatch.length - 1], type: GameVideo.TYPE_VIMEO };
 		}
+	}
+
+	created() {
+		this.form.warnOnDiscard = false;
+		this.form.resetOnSubmit = true;
 	}
 
 	onInit() {

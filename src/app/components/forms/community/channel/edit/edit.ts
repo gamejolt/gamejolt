@@ -2,7 +2,7 @@ import { Emit, Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
-import AppFormControlUpload from '../../../../../../_common/form-vue/control/upload/upload.vue';
+import AppFormControlUpload from '../../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
 	BaseForm,
 	FormOnLoad,

@@ -8,7 +8,7 @@
 			</translate>
 		</div>
 
-		<app-form name="communityCompetitionVotingEditForm">
+		<app-form :controller="form">
 			<template v-if="timezoneService && timezoneService.loaded">
 				<app-form-group name="voting_ends_on" :label="$gettext(`Voting End Date and Time`)">
 					<p class="help-block">
@@ -21,9 +21,7 @@
 
 					<app-form-control-date
 						:timezone-offset="timezoneService.activeTimezoneOffset"
-						:rules="{
-							min_date: formModel.ends_on,
-						}"
+						:validators="[validateMinDate(formModel.ends_on)]"
 					/>
 					<app-form-control-errors />
 				</app-form-group>

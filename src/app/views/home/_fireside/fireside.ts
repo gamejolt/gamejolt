@@ -1,7 +1,7 @@
 import { Options, Vue } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
-import AppLoadingFade from '../../../../_common/loading/fade/fade.vue';
+import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { EventSubscription } from '../../../../_common/system/event/event-topic';
 import AppFiresideBadgeAdd from '../../../components/fireside/badge/add/add.vue';

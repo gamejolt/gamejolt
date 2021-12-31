@@ -4,7 +4,7 @@
 	<div class="container">
 		<h1 class="section-header">Generate your Featured Badge!</h1>
 
-		<app-form name="featured-badge">
+		<app-form :controller="form">
 			<div class="-form">
 				<div class="-selectors">
 					<!-- SVG File Selector -->

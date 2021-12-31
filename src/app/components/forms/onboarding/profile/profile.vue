@@ -1,7 +1,7 @@
 <script lang="ts" src="./profile"></script>
 
 <template>
-	<app-form name="onboardingForm">
+	<app-form :controller="form">
 		<div class="-form">
 			<section class="-message">
 				<h3 class="section-header">
@@ -26,15 +26,15 @@
 							<div class="-at text-muted">@</div>
 							<app-form-control
 								type="text"
-								:rules="{
-									min: 3,
-									max: 30,
-									pattern: 'username',
-									availability: {
+								:validators="[
+									validateMinLength(3),
+									validateMaxLength(30),
+									validateUsername(),
+									validateAvailability({
 										url: '/web/dash/profile/check-field-availability/username',
 										initVal: user.username,
-									},
-								}"
+									}),
+								]"
 								:validate-on="['blur']"
 							/>
 						</div>

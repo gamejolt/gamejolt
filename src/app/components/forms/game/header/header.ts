@@ -1,7 +1,6 @@
 import { Options, Watch } from 'vue-property-decorator';
-import AppFormControlCrop from '../../../../../_common/form-vue/control/crop/crop.vue';
-import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
-import AppForm from '../../../../../_common/form-vue/form';
+import AppFormControlCrop from '../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
+import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
 	BaseForm,
 	FormOnBeforeSubmit,
@@ -25,7 +24,7 @@ export default class FormGameHeader
 	implements FormOnLoad, FormOnBeforeSubmit
 {
 	modelClass = Game as any;
-	saveMethod = '$saveHeader' as '$saveHeader';
+	saveMethod = '$saveHeader' as const;
 
 	maxFilesize = 0;
 	minAspectRatio = 0;
@@ -34,10 +33,6 @@ export default class FormGameHeader
 	minHeight = 0;
 	maxWidth = 0;
 	maxHeight = 0;
-
-	declare $refs: {
-		form: AppForm;
-	};
 
 	get loadUrl() {
 		return `/web/dash/developer/games/header/save/${this.model!.id}`;
@@ -85,7 +80,7 @@ export default class FormGameHeader
 
 	headerSelected() {
 		if (this.formModel.file) {
-			this.$refs.form.submit();
+			this.form.submit();
 		}
 	}
 }

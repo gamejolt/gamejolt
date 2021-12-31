@@ -1,7 +1,7 @@
 <script lang="ts" src="./trophy"></script>
 
 <template>
-	<app-form name="trophyForm">
+	<app-form :controller="form">
 		<!--
 			Show the current image if there is one.
 		-->
@@ -59,10 +59,10 @@
 			</p>
 
 			<app-form-control-upload
-				:rules="{
-					filesize: maxFilesize,
-					max_img_dimensions: [maxWidth, maxHeight],
-				}"
+				:validators="[
+					validateFilesize(maxFilesize),
+					validateImageMaxDimensions({ width: maxWidth, height: maxHeight }),
+				]"
 				accept=".png,.jpg,.jpeg,.webp"
 			/>
 
@@ -72,12 +72,7 @@
 		</app-form-group>
 
 		<app-form-group name="title" :label="$gettext(`dash.games.trophies.form.title_label`)">
-			<app-form-control
-				type="text"
-				:rules="{
-					max: 150,
-				}"
-			/>
+			<app-form-control type="text" :validators="[validateMaxLength(150)]" />
 			<app-form-control-errors />
 		</app-form-group>
 
@@ -85,12 +80,7 @@
 			name="description"
 			:label="$gettext(`dash.games.trophies.form.description_label`)"
 		>
-			<app-form-control-textarea
-				rows="3"
-				:rules="{
-					max: 1500,
-				}"
-			/>
+			<app-form-control-textarea rows="3" :validators="[validateMaxLength(1500)]" />
 			<app-form-control-errors />
 		</app-form-group>
 

@@ -1,7 +1,7 @@
 import { Options, Prop } from 'vue-property-decorator';
 import { formatNumber } from '../../../../../_common/filters/number';
-import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
-import { BaseForm, FormOnInit, FormOnLoad } from '../../../../../_common/form-vue/form.service';
+import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
 import { GameSong } from '../../../../../_common/game/song/song.model';
 
@@ -10,11 +10,10 @@ import { GameSong } from '../../../../../_common/game/song/song.model';
 		AppFormControlUpload,
 	},
 })
-export default class FormGameSong extends BaseForm<GameSong> implements FormOnInit, FormOnLoad {
+export default class FormGameSong extends BaseForm<GameSong> implements FormOnLoad {
 	@Prop(Game) game!: Game;
 
 	modelClass = GameSong;
-	warnOnDiscard = false;
 
 	maxFilesize = 0;
 
@@ -30,6 +29,10 @@ export default class FormGameSong extends BaseForm<GameSong> implements FormOnIn
 		} else {
 			return this.$gettext('dash.games.music.form.change_file_label');
 		}
+	}
+
+	created() {
+		this.form.warnOnDiscard = false;
 	}
 
 	onInit() {

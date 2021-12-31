@@ -2,7 +2,7 @@ import { Options, Prop, Watch } from 'vue-property-decorator';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
-import AppLoadingFade from '../../../../_common/loading/fade/fade.vue';
+import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import { BaseModal } from '../../../../_common/modal/base';
 import FormPost from '../../forms/post/post.vue';
 import { VideoStatus } from '../../forms/post/_video/video';

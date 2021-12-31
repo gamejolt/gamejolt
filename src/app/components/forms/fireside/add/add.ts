@@ -1,6 +1,6 @@
 import { Options, Prop } from 'vue-property-decorator';
 import { AppFocusWhen } from '../../../../../_common/form-vue/focus-when.directive';
-import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.service';
+import { BaseForm } from '../../../../../_common/form-vue/form.service';
 
 type FormModel = {
 	title: string;
@@ -12,7 +12,7 @@ type FormModel = {
 		AppFocusWhen,
 	},
 })
-export default class FormFiresideAdd extends BaseForm<FormModel> implements FormOnInit {
+export default class FormFiresideAdd extends BaseForm<FormModel> {
 	@Prop({ type: String, required: false })
 	defaultTitle?: string;
 

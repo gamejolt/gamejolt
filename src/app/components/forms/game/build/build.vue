@@ -103,7 +103,7 @@
 		</template>
 
 		<template #body>
-			<app-form ref="form" name="buildForm">
+			<app-form :controller="form">
 				<div
 					v-if="model.type === GameBuild.TYPE_APPLET"
 					class="alert alert-notice sans-margin"
@@ -262,10 +262,9 @@
 									<div class="col-sm-9">
 										<div class="input-group input-group-sm">
 											<app-form-control
-												maxlength="500"
-												:rules="{
-													max: 500,
-												}"
+												:validators="[
+													validateMaxLength(500)
+												]"
 												@changed="onBuildFieldChanged"
 											/>
 											<!--  TODO: this doesn't register when the file is selected to clear the error -->

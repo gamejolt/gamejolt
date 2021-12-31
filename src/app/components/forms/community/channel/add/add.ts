@@ -4,8 +4,7 @@ import { Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
-import AppFormTS from '../../../../../../_common/form-vue/form';
-import { BaseForm, FormOnInit } from '../../../../../../_common/form-vue/form.service';
+import { BaseForm } from '../../../../../../_common/form-vue/form.service';
 import { AppState, AppStore } from '../../../../../../_common/store/app-store';
 import AppFormCommunityChannelPermissions from '../_permissions/permissions.vue';
 
@@ -19,7 +18,7 @@ class FormModel extends CommunityChannel {
 		AppFormCommunityChannelPermissions,
 	},
 })
-export default class FormCommunityChannelAdd extends BaseForm<FormModel> implements FormOnInit {
+export default class FormCommunityChannelAdd extends BaseForm<FormModel> {
 	@Prop(propRequired(Community)) community!: Community;
 	@Prop(propRequired(Array)) channels!: CommunityChannel[];
 	@Prop(propRequired(Array)) archivedChannels!: CommunityChannel[];
@@ -28,12 +27,7 @@ export default class FormCommunityChannelAdd extends BaseForm<FormModel> impleme
 	user!: AppStore['user'];
 
 	modelClass = FormModel;
-	resetOnSubmit = true;
 	isTitleInitial = true;
-
-	declare $refs: {
-		form: AppFormTS;
-	};
 
 	get types() {
 		return [
@@ -68,6 +62,10 @@ export default class FormCommunityChannelAdd extends BaseForm<FormModel> impleme
 	get shouldShowType() {
 		// TODO: for now, only site mods (and wittleriri) are allowed to create jam channels.
 		return this.user && (this.user.permission_level >= 3 || this.user.id === 5027906);
+	}
+
+	created() {
+		this.form.resetOnSubmit = true;
 	}
 
 	isTitleTaken(title: string) {
@@ -132,13 +130,13 @@ export default class FormCommunityChannelAdd extends BaseForm<FormModel> impleme
 			// Validate the form manually once the title field is valid.
 			if (title.length >= 3) {
 				await nextTick();
-				this.$refs.form.validate();
+				this.form.validate();
 			}
 		} else {
 			this.setField('title', '');
 
 			await nextTick();
-			this.$refs.form.validate();
+			this.form.validate();
 		}
 	}
 

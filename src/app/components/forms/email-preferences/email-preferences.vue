@@ -1,17 +1,17 @@
 <script lang="ts" src="./email-preferences"></script>
 
 <template>
-	<app-form name="emailPreferencesForm">
+	<app-form :controller="form">
 		<app-form-group name="email_address">
 			<app-form-control
 				type="email"
-				:rules="{
-					max: 200,
-					availability: {
+				:validators="[
+					validateMaxLength(200),
+					validateAvailability({
 						url: '/web/dash/email-preferences/check-field-availability/email_address',
 						initVal: model.email_address,
-					},
-				}"
+					}),
+				]"
 				:validate-on="['blur']"
 			/>
 			<app-form-control-errors />

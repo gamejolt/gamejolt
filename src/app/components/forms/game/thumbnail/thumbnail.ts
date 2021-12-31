@@ -1,7 +1,6 @@
 import { Options, Watch } from 'vue-property-decorator';
-import AppFormControlCrop from '../../../../../_common/form-vue/control/crop/crop.vue';
-import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
-import AppForm from '../../../../../_common/form-vue/form';
+import AppFormControlCrop from '../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
+import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
 	BaseForm,
 	FormOnBeforeSubmit,
@@ -24,19 +23,13 @@ export default class FormGameThumbnail
 	implements FormOnLoad, FormOnBeforeSubmit
 {
 	modelClass = Game as any;
-	resetOnSubmit = true;
-	warnOnDiscard = false;
-	saveMethod = '$saveThumbnail' as '$saveThumbnail';
+	saveMethod = '$saveThumbnail' as const;
 	maxFilesize = 0;
 	minWidth = 0;
 	minHeight = 0;
 	maxWidth = 0;
 	maxHeight = 0;
 	cropAspectRatio = 0;
-
-	declare $refs: {
-		form: AppForm;
-	};
 
 	get loadUrl() {
 		return `/web/dash/developer/games/thumbnail/save/${this.model!.id}`;
@@ -51,6 +44,11 @@ export default class FormGameThumbnail
 	@Watch('crop')
 	onCropChange() {
 		this.setField('thumb_crop', this.crop);
+	}
+
+	created() {
+		this.form.warnOnDiscard = false;
+		this.form.resetOnSubmit = true;
 	}
 
 	onLoad(payload: any) {
@@ -92,7 +90,7 @@ export default class FormGameThumbnail
 
 	thumbSelected() {
 		if (this.formModel.file) {
-			this.$refs.form.submit();
+			this.form.submit();
 		}
 	}
 }

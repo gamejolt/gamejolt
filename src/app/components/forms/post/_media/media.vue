@@ -2,7 +2,7 @@
 
 <template>
 	<app-loading-fade :is-loading="isLoading">
-		<app-form ref="form" name="postMediaForm">
+		<app-form :controller="form">
 			<app-form-group
 				name="image"
 				class="sans-margin-bottom"
@@ -56,10 +56,10 @@
 				<app-form-control-upload
 					ref="upload"
 					class="-upload-input"
-					:rules="{
-						filesize: maxFilesize,
-						max_img_dimensions: [maxWidth, maxHeight],
-					}"
+					:validators="[
+						validateFilesize(maxFilesize),
+						validateImageMaxDimensions({ width: maxWidth, height: maxHeight }),
+					]"
 					accept=".png,.jpg,.jpeg,.gif,.webp"
 					multiple
 					@changed="mediaSelected()"

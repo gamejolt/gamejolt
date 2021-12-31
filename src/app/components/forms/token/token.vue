@@ -1,12 +1,9 @@
 <template>
-	<app-form name="tokenForm">
+	<app-form :controller="form">
 		<app-form-group name="token" :label="$gettext('Game Token')">
 			<app-form-control
 				type="text"
-				:rules="{
-					min: 4,
-					max: 30,
-				}"
+				:validators="[validateMinLength(4), validateMaxLength(30)]"
 				autocomplete="off"
 				v-app-focus-when
 			/>

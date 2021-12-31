@@ -1,8 +1,7 @@
-
 <script lang="ts" src="./follows"></script>
 
 <template>
-	<app-form name="onboardingFollows">
+	<app-form :controller="form">
 		<div class="-form">
 			<section class="-message">
 				<h3 class="section-header">

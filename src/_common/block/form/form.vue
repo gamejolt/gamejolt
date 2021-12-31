@@ -1,5 +1,5 @@
 <template>
-	<app-form name="blockForm">
+	<app-form :controller="form">
 		<div>
 			<p>
 				<span v-translate="{ username: user.username }">
@@ -10,8 +10,8 @@
 
 			<p>
 				<translate>
-					They won't be able to follow you, send you a friend request, or reply to your posts and
-					comments.
+					They won't be able to follow you, send you a friend request, or reply to your
+					posts and comments.
 				</translate>
 			</p>
 

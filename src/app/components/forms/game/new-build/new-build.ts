@@ -1,8 +1,7 @@
 import { Options, Prop, Watch } from 'vue-property-decorator';
 import AppExpand from '../../../../../_common/expand/expand.vue';
-import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
-import AppForm from '../../../../../_common/form-vue/form';
-import { BaseForm, FormOnInit, FormOnLoad } from '../../../../../_common/form-vue/form.service';
+import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
 import { GameBuild } from '../../../../../_common/game/build/build.model';
 import { Game } from '../../../../../_common/game/game.model';
 import { GamePackage } from '../../../../../_common/game/package/package.model';
@@ -20,22 +19,15 @@ type NewGameBuildFormModel = GameBuild & {
 })
 export default class FormGameNewBuild
 	extends BaseForm<NewGameBuildFormModel>
-	implements FormOnInit, FormOnLoad
+	implements FormOnLoad
 {
 	modelClass = GameBuild as any;
-	resetOnSubmit = true;
-	reloadOnSubmit = true;
-	warnOnDiscard = false;
 
 	@Prop(String) type!: 'downloadable' | 'browser';
 	@Prop(Game) game!: Game;
 	@Prop(GamePackage) package!: GamePackage;
 	@Prop(GameRelease) release!: GameRelease;
 	@Prop(Array) builds!: GameBuild[];
-
-	declare $refs: {
-		form: AppForm;
-	};
 
 	maxFilesize = 0;
 	restrictedPlatforms: string[] = [];
@@ -79,6 +71,11 @@ export default class FormGameNewBuild
 		return this.hasCustomError('browserType');
 	}
 
+	created() {
+		this.form.reloadOnSubmit = true;
+		this.form.warnOnDiscard = false;
+	}
+
 	onInit() {
 		// Set the game ID on the form model from the game passed in.
 		this.setField('type', this.type);
@@ -101,7 +98,7 @@ export default class FormGameNewBuild
 
 		// ROM types can change, so we pull from server.
 		if (this.romTypes) {
-			for (let ext of this.romTypes) {
+			for (const ext of this.romTypes) {
 				this.browserTypes[ext] = GameBuild.TYPE_ROM;
 			}
 		}
@@ -121,6 +118,6 @@ export default class FormGameNewBuild
 			return;
 		}
 
-		this.$refs.form.submit();
+		this.form.submit();
 	}
 }

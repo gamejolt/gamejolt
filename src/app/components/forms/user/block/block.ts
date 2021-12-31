@@ -1,7 +1,6 @@
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
-import AppFormControlPrefixedInput from '../../../../../_common/form-vue/control/prefixed-input/prefixed-input.vue';
-import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
+import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import {
 	BaseForm,
 	FormOnSubmit,
@@ -17,14 +16,15 @@ interface FormModel {
 @Options({
 	components: {
 		AppFormControlToggle,
-		AppFormControlPrefixedInput,
 	},
 })
 export default class FormUserBlock
 	extends BaseForm<FormModel>
 	implements FormOnSubmit, FormOnSubmitSuccess
 {
-	resetOnSubmit = true;
+	created() {
+		this.form.resetOnSubmit = true;
+	}
 
 	onSubmit() {
 		return Api.sendRequest(`/web/dash/blocks/add`, this.formModel);

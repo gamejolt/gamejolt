@@ -1,7 +1,7 @@
 <script lang="ts" src="./header"></script>
 
 <template>
-	<app-form ref="form" name="headerForm">
+	<app-form :controller="form">
 		<app-form-group
 			name="file"
 			:label="$gettext(`Upload New Header`)"
@@ -31,11 +31,11 @@
 			</p>
 
 			<app-form-control-upload
-				:rules="{
-					filesize: maxFilesize,
-					min_img_dimensions: [minWidth, minHeight],
-					max_img_dimensions: [maxWidth, maxHeight],
-				}"
+				:validators="[
+					validateFilesize(maxFilesize),
+					validateImageMinDimensions({ width: minWidth, height: minHeight }),
+					validateImageMaxDimensions({ width: maxWidth, height: maxHeight }),
+				]"
 				accept=".png,.jpg,.jpeg,.webp"
 				@changed="headerSelected()"
 			/>

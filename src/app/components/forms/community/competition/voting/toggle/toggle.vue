@@ -1,7 +1,7 @@
 <script lang="ts" src="./toggle"></script>
 
 <template>
-	<app-form name="communityCompetitionVotingToggleForm">
+	<app-form :controller="form">
 		<app-form-group name="is_voting_enabled" hide-label>
 			<p class="help-block">
 				<span v-translate>
@@ -11,7 +11,7 @@
 				</span>
 			</p>
 
-			<app-form-control-toggle :disabled="state.isProcessing" @changed="onToggle" />
+			<app-form-control-toggle :disabled="form.isProcessing" @changed="onToggle" />
 		</app-form-group>
 	</app-form>
 </template>

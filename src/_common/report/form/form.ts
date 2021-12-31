@@ -2,7 +2,7 @@ import { Options, Prop } from 'vue-property-decorator';
 import { arrayRemove } from '../../../utils/array';
 import { Api } from '../../api/api.service';
 import { FiresidePost } from '../../fireside/post/post-model';
-import AppFormControlTextarea from '../../form-vue/control/textarea/textarea.vue';
+import AppFormControlTextarea from '../../form-vue/controls/AppFormControlTextarea.vue';
 import { BaseForm, FormOnSubmit } from '../../form-vue/form.service';
 import { Game } from '../../game/game.model';
 
@@ -21,8 +21,6 @@ interface FormModel {
 export default class AppReportForm extends BaseForm<FormModel> implements FormOnSubmit {
 	@Prop(String) type!: string;
 	@Prop(Object) resource!: any;
-
-	warnOnDiscard = false;
 
 	// Default values, get overwritten from backend.
 	maxLengthDescription = 200;
@@ -284,6 +282,10 @@ export default class AppReportForm extends BaseForm<FormModel> implements FormOn
 		}
 
 		throw new Error('Resource has no reasons defined.');
+	}
+
+	created() {
+		this.form.warnOnDiscard = false;
 	}
 
 	async mounted() {

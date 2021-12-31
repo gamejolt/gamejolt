@@ -1,10 +1,12 @@
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
-import { BaseForm, FormOnInit, FormOnSubmit } from '../../../../_common/form-vue/form.service';
+import { BaseForm, FormOnSubmit } from '../../../../_common/form-vue/form.service';
 
 @Options({})
-export default class FormSetPassword extends BaseForm<any> implements FormOnInit, FormOnSubmit {
-	warnOnDiscard = false;
+export default class FormSetPassword extends BaseForm<any> implements FormOnSubmit {
+	created() {
+		this.form.warnOnDiscard = false;
+	}
 
 	onInit() {
 		this.setField('password', '');

@@ -1,5 +1,5 @@
 <template>
-	<app-form name="mediaForm" ref="form">
+	<app-form :controller="form">
 		<app-form-group
 			v-if="method === 'add'"
 			name="file"
@@ -10,15 +10,17 @@
 				<translate>Your image must be a PNG or JPG.</translate>
 				<br />
 				<strong>
-					<translate>PNGs are highly recommended as they produce a lossless image.</translate>
+					<translate>
+						PNGs are highly recommended as they produce a lossless image.
+					</translate>
 				</strong>
 			</p>
 
 			<app-form-control-upload
-				:rules="{
-					filesize: maxFilesize,
-					max_img_dimensions: [maxWidth, maxHeight],
-				}"
+				:validators="[
+					validateFilesize(maxFilesize),
+					validateImageMaxDimensions({ width: maxWidth, height: maxHeight }),
+				]"
 				accept=".png,.jpg,.jpeg,.webp"
 				:multiple="true"
 				@changed="imagesSelected()"
@@ -33,7 +35,7 @@
 			:label="$gettext(`dash.games.media.image.form.caption_label`)"
 			:optional="true"
 		>
-			<app-form-control type="text" :rules="{ max: 200 }" />
+			<app-form-control type="text" :validators="[validateMaxLength(200)]" />
 			<app-form-control-errors />
 			<p class="help-block">
 				<translate>dash.games.media.image.form.caption_help</translate>

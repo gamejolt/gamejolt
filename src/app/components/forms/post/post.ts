@@ -13,22 +13,24 @@ import AppExpand from '../../../../_common/expand/expand.vue';
 import { FiresidePostCommunity } from '../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { FiresidePostVideo } from '../../../../_common/fireside/post/video/video-model';
-import AppFormControlCheckbox from '../../../../_common/form-vue/control/checkbox/checkbox.vue';
-import AppFormControlContent from '../../../../_common/form-vue/control/content/content.vue';
-import AppFormControlDate from '../../../../_common/form-vue/control/date/date.vue';
-import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
-import AppFormControlUpload from '../../../../_common/form-vue/control/upload/upload.vue';
+import AppFormLegend from '../../../../_common/form-vue/AppFormLegend.vue';
+import AppFormControlContent from '../../../../_common/form-vue/controls/AppFormControlContent.vue';
+import AppFormControlDate from '../../../../_common/form-vue/controls/AppFormControlDate.vue';
+import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
+import AppFormControlUpload from '../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import { AppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';
-import AppForm from '../../../../_common/form-vue/form';
 import {
 	BaseForm,
-	FormOnInit,
 	FormOnLoad,
 	FormOnSubmit,
 	FormOnSubmitError,
 	FormOnSubmitSuccess,
 } from '../../../../_common/form-vue/form.service';
-import AppFormLegend from '../../../../_common/form-vue/legend/legend.vue';
+import {
+	validateContentMaxLength,
+	validateContentNoActiveUploads,
+	validateContentRequired,
+} from '../../../../_common/form-vue/validators';
 import { GameVideo } from '../../../../_common/game/video/video.model';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import { KeyGroup } from '../../../../_common/key-group/key-group.model';
@@ -78,7 +80,6 @@ type FormPostModel = FiresidePost & {
 
 @Options({
 	components: {
-		AppFormControlCheckbox,
 		AppFormControlDate,
 		AppFormControlToggle,
 		AppFormControlUpload,
@@ -105,7 +106,7 @@ type FormPostModel = FiresidePost & {
 })
 export default class FormPost
 	extends BaseForm<FormPostModel>
-	implements FormOnInit, FormOnLoad, FormOnSubmit, FormOnSubmitSuccess, FormOnSubmitError
+	implements FormOnLoad, FormOnSubmit, FormOnSubmitSuccess, FormOnSubmitError
 {
 	modelClass = FiresidePost as any;
 
@@ -117,10 +118,6 @@ export default class FormPost
 
 	@Prop(propOptional(CommunityChannel, null))
 	defaultChannel!: CommunityChannel | null;
-
-	declare $refs: {
-		form: AppForm;
-	};
 
 	readonly MAX_POLL_ITEMS = 10;
 	readonly MIN_POLL_DURATION = 5;
@@ -155,6 +152,9 @@ export default class FormPost
 	readonly GameVideo = GameVideo;
 	readonly Screen = Screen;
 	readonly FiresidePostVideo = FiresidePostVideo;
+	readonly validateContentRequired = validateContentRequired;
+	readonly validateContentMaxLength = validateContentMaxLength;
+	readonly validateContentNoActiveUploads = validateContentNoActiveUploads;
 
 	@Emit('video-upload-status-change')
 	emitVideoUploadStatusChange(_status: VideoStatus) {}
@@ -642,12 +642,12 @@ export default class FormPost
 			this.setField(('poll_item' + (i + 1)) as any, '');
 		}
 
-		this.changed = true;
+		this.form.changed = true;
 	}
 
 	removePoll() {
 		this.setField('poll_item_count', 0);
-		this.changed = true;
+		this.form.changed = true;
 	}
 
 	removePollItem(idx: number) {
@@ -660,7 +660,7 @@ export default class FormPost
 		}
 
 		this.setField('poll_item_count', this.formModel.poll_item_count - 1);
-		this.changed = true;
+		this.form.changed = true;
 	}
 
 	addPollItem() {
@@ -670,7 +670,7 @@ export default class FormPost
 
 		this.setField(('poll_item' + (this.formModel.poll_item_count + 1)) as any, '');
 		this.setField('poll_item_count', this.formModel.poll_item_count + 1);
-		this.changed = true;
+		this.form.changed = true;
 	}
 
 	enableAccessPermissions() {
@@ -688,13 +688,13 @@ export default class FormPost
 
 		this.now = Date.now();
 		this.setField('scheduled_for_timezone', determine().name());
-		this.changed = true;
+		this.form.changed = true;
 	}
 
 	removeSchedule() {
 		this.setField('scheduled_for_timezone', null);
 		this.setField('scheduled_for', null);
-		this.changed = true;
+		this.form.changed = true;
 	}
 
 	togglePublishingToPlatforms() {
@@ -729,7 +729,7 @@ export default class FormPost
 			this.publishToPlatforms.push(id);
 		}
 
-		this.changed = true;
+		this.form.changed = true;
 	}
 
 	getLinkedAccountDisplayName(account: LinkedAccount) {

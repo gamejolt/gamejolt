@@ -1,8 +1,7 @@
 import { Options, Watch } from 'vue-property-decorator';
 import { Community } from '../../../../../_common/community/community.model';
-import AppFormControlCrop from '../../../../../_common/form-vue/control/crop/crop.vue';
-import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
-import AppForm from '../../../../../_common/form-vue/form';
+import AppFormControlCrop from '../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
+import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
 	BaseForm,
 	FormOnBeforeSubmit,
@@ -25,7 +24,6 @@ export default class FormCommunityHeader
 	implements FormOnLoad, FormOnBeforeSubmit
 {
 	modelClass = Community as any;
-	saveMethod = '$saveHeader' as '$saveHeader' | '$clearHeader';
 
 	maxFilesize = 0;
 	minAspectRatio = 0;
@@ -34,10 +32,6 @@ export default class FormCommunityHeader
 	minHeight = 0;
 	maxWidth = 0;
 	maxHeight = 0;
-
-	declare $refs: {
-		form: AppForm;
-	};
 
 	get loadUrl() {
 		return `/web/dash/communities/design/save_header/${this.model!.id}`;
@@ -52,6 +46,10 @@ export default class FormCommunityHeader
 		this.setField('header_crop', this.crop);
 	}
 
+	created() {
+		this.form.saveMethod = '$saveHeader';
+	}
+
 	onLoad(payload: any) {
 		this.maxFilesize = payload.maxFilesize;
 		this.minAspectRatio = payload.minAspectRatio;
@@ -63,7 +61,7 @@ export default class FormCommunityHeader
 	}
 
 	onBeforeSubmit() {
-		if (this.saveMethod === '$saveHeader') {
+		if (this.form.saveMethod === '$saveHeader') {
 			// Backend expects this field.
 			this.setField('crop' as any, this.formModel.header_crop);
 		}
@@ -75,15 +73,15 @@ export default class FormCommunityHeader
 		);
 
 		if (result) {
-			this.saveMethod = '$clearHeader';
-			this.$refs.form.submit();
+			this.form.saveMethod = '$clearHeader';
+			this.form.submit();
 		}
 	}
 
 	headerSelected() {
 		if (this.formModel.file) {
-			this.saveMethod = '$saveHeader';
-			this.$refs.form.submit();
+			this.form.saveMethod = '$saveHeader';
+			this.form.submit();
 		}
 	}
 }

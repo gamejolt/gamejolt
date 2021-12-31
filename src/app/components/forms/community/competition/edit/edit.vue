@@ -1,7 +1,7 @@
 <script lang="ts" src="./edit"></script>
 
 <template>
-	<app-form name="communityCompetitionFormEdit">
+	<app-form :controller="form">
 		<fieldset>
 			<app-form-legend>
 				<translate>Date and Time</translate>
@@ -69,10 +69,10 @@
 
 						<app-form-control-date
 							:timezone-offset="timezoneService.activeTimezoneOffset"
-							:rules="{
-								min_date: timezoneService.now,
-								max_date: formModel.ends_on,
-							}"
+							:validators="[
+								validateMinDate(timezoneService.now),
+								validateMaxDate(formModel.ends_on),
+							]"
 						/>
 						<app-form-control-errors />
 					</template>
@@ -100,7 +100,7 @@
 
 						<app-form-control-date
 							:timezone-offset="timezoneService.activeTimezoneOffset"
-							:rules="endsOnControlRules"
+							:validators="endsOnControlValidators"
 						/>
 						<app-form-control-errors />
 					</template>

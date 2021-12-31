@@ -1,7 +1,7 @@
 <template>
-	<app-form name="forumTopicForm">
+	<app-form :controller="form">
 		<app-form-group name="title" :label="$gettext('Title')">
-			<app-form-control type="text" :rules="{ max: 300 }" />
+			<app-form-control type="text" :validators="[validateMaxLength(300)]" />
 
 			<app-form-control-errors />
 		</app-form-group>
@@ -9,10 +9,7 @@
 		<app-form-group name="text_content" :label="$gettext('Topic Content')">
 			<app-form-control-content
 				content-context="forum-post"
-				:rules="{
-					content_required: true,
-					content_no_media_uploads: true,
-				}"
+				:validators="[validateContentRequired(), validateContentNoActiveUploads()]"
 				:validate-on="['blur']"
 			/>
 

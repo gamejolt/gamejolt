@@ -3,15 +3,14 @@ import { determine } from 'jstimezonedetect';
 import { Emit, Options, Prop } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../utils/array';
 import AppCardList from '../../../../../_common/card/list/list.vue';
-import AppFormControlDate from '../../../../../_common/form-vue/control/date/date.vue';
-import AppForm from '../../../../../_common/form-vue/form';
+import AppFormLegend from '../../../../../_common/form-vue/AppFormLegend.vue';
+import AppFormControlDate from '../../../../../_common/form-vue/controls/AppFormControlDate.vue';
 import {
 	BaseForm,
-	FormOnInit,
 	FormOnLoad,
 	FormOnSubmitSuccess,
 } from '../../../../../_common/form-vue/form.service';
-import AppFormLegend from '../../../../../_common/form-vue/legend/legend.vue';
+import { validateSemver } from '../../../../../_common/form-vue/validators';
 import { GameBuild } from '../../../../../_common/game/build/build.model';
 import { GameBuildLaunchOption } from '../../../../../_common/game/build/launch-option/launch-option.model';
 import { Game } from '../../../../../_common/game/game.model';
@@ -40,7 +39,7 @@ type GameReleaseFormModel = GameRelease & {
 })
 export default class FormGameRelease
 	extends BaseForm<GameReleaseFormModel>
-	implements FormOnInit, FormOnLoad, FormOnSubmitSuccess
+	implements FormOnLoad, FormOnSubmitSuccess
 {
 	modelClass = GameRelease as any;
 
@@ -65,16 +64,13 @@ export default class FormGameRelease
 	@Prop(Boolean)
 	areWebBuildsLockedBySellable!: boolean;
 
-	declare $refs: {
-		form: AppForm;
-	};
-
 	buildForms: FormGameBuildTS[] = [];
 	timezones: { [region: string]: (TimezoneData & { label?: string })[] } = null as any;
 	now = 0;
 
 	readonly Screen = Screen;
 	readonly GameRelease = GameRelease;
+	readonly validateSemver = validateSemver;
 
 	@Emit('unpublish-release')
 	emitUnpublishRelease(_release: GameReleaseFormModel) {}
@@ -179,7 +175,7 @@ export default class FormGameRelease
 	async save() {
 		// Save all the managed build forms before saving the release.
 		await Promise.all(this.buildForms.filter(i => !i.isDeprecated).map(i => i.save()));
-		this.$refs.form.submit();
+		this.form.submit();
 	}
 
 	async savePublished() {
@@ -226,13 +222,13 @@ export default class FormGameRelease
 
 		this.now = Date.now();
 		this.setField('scheduled_for_timezone', determine().name());
-		this.changed = true;
+		this.form.changed = true;
 	}
 
 	removeSchedule() {
 		this.setField('scheduled_for_timezone', null);
 		this.setField('scheduled_for', null);
-		this.changed = true;
+		this.form.changed = true;
 	}
 
 	private async fetchTimezones() {

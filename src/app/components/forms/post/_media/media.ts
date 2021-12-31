@@ -1,9 +1,8 @@
 import { Emit, Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
-import AppFormControlUploadTS from '../../../../../_common/form-vue/control/upload/upload';
-import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
-import AppForm from '../../../../../_common/form-vue/form';
+import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import AppFormControlUploadTS from '../../../../../_common/form-vue/controls/upload/upload';
 import {
 	BaseForm,
 	FormOnSubmit,
@@ -11,7 +10,7 @@ import {
 	FormOnSubmitSuccess,
 } from '../../../../../_common/form-vue/form.service';
 import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
-import AppLoadingFade from '../../../../../_common/loading/fade/fade.vue';
+import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import { MediaItem } from '../../../../../_common/media-item/media-item-model';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
 import AppFormPostMediaItem from './item/item.vue';
@@ -55,11 +54,9 @@ export default class AppFormPostMedia
 	@Prop(Boolean)
 	loading?: boolean;
 
-	resetOnSubmit = true;
 	isDropActive = false;
 
 	declare $refs: {
-		form: AppForm;
 		upload: AppFormControlUploadTS;
 	};
 
@@ -76,7 +73,7 @@ export default class AppFormPostMedia
 	emitRemove(_mediaItem: MediaItem) {}
 
 	get isLoading() {
-		return this.state.isProcessing || this.loading;
+		return this.form.isProcessing || this.loading;
 	}
 
 	get internalItems() {
@@ -87,13 +84,17 @@ export default class AppFormPostMedia
 		this.emitSort(mediaItems);
 	}
 
+	created() {
+		this.form.resetOnSubmit = true;
+	}
+
 	onInit() {
 		this.setField('image', null);
 	}
 
 	mediaSelected() {
 		if (this.formModel.image !== null) {
-			this.$refs.form.submit();
+			this.form.submit();
 		}
 	}
 

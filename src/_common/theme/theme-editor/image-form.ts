@@ -1,8 +1,7 @@
 import { Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../api/api.service';
-import AppFormControlUpload from '../../form-vue/control/upload/upload.vue';
-import AppForm from '../../form-vue/form';
-import { BaseForm, FormOnInit, FormOnLoad, FormOnSubmit } from '../../form-vue/form.service';
+import AppFormControlUpload from '../../form-vue/controls/upload/AppFormControlUpload.vue';
+import { BaseForm, FormOnLoad, FormOnSubmit } from '../../form-vue/form.service';
 
 interface FormModel {
 	type: string;
@@ -18,17 +17,10 @@ interface FormModel {
 })
 export default class FormThemeEditorImage
 	extends BaseForm<FormModel>
-	implements FormOnInit, FormOnLoad, FormOnSubmit
+	implements FormOnLoad, FormOnSubmit
 {
-	resetOnSubmit = true;
-	warnOnDiscard = false;
-
 	@Prop(String) type!: string;
 	@Prop(Number) parentId!: number;
-
-	declare $refs: {
-		form: AppForm;
-	};
 
 	maxFilesize = 0;
 	maxWidth = 0;
@@ -40,6 +32,11 @@ export default class FormThemeEditorImage
 
 	get loadData() {
 		return this.formModel;
+	}
+
+	created() {
+		this.form.warnOnDiscard = false;
+		this.form.resetOnSubmit = true;
 	}
 
 	onInit() {
@@ -54,7 +51,7 @@ export default class FormThemeEditorImage
 	}
 
 	submit() {
-		this.$refs.form.submit();
+		this.form.submit();
 	}
 
 	onSubmit() {

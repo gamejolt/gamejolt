@@ -1,7 +1,7 @@
 <script lang="ts" src="./description"></script>
 
 <template>
-	<app-form ref="form" name="descriptionForm">
+	<app-form :controller="form">
 		<app-form-group name="description_content" :label="$gettext('Description')">
 			<template #label>
 				<app-jolticon icon="edit" />
@@ -14,11 +14,11 @@
 				:placeholder="$gettext(`Write your game description here...`)"
 				content-context="game-description"
 				:model-id="model.id"
-				:rules="{
-					content_required: true,
-					content_no_media_uploads: true,
-					max_content_length: [lengthLimit],
-				}"
+				:validators="[
+					validateContentRequired(),
+					validateContentNoActiveUploads(),
+					validateContentMaxLength(lengthLimit),
+				]"
 				:max-height="0"
 				:validate-on="['blur']"
 			/>

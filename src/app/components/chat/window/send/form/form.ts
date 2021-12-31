@@ -9,10 +9,10 @@ import {
 	EscapeStack,
 	EscapeStackCallback,
 } from '../../../../../../_common/escape-stack/escape-stack.service';
-import AppFormControlContentTS from '../../../../../../_common/form-vue/control/content/content';
-import AppFormControlContent from '../../../../../../_common/form-vue/control/content/content.vue';
-import AppForm from '../../../../../../_common/form-vue/form';
+import AppFormControlContent from '../../../../../../_common/form-vue/controls/AppFormControlContent.vue';
+import AppFormControlContentTS from '../../../../../../_common/form-vue/controls/content/content';
 import { BaseForm } from '../../../../../../_common/form-vue/form.service';
+import { validateContentMaxLength } from '../../../../../../_common/form-vue/validators';
 import { FormValidatorContentNoMediaUpload } from '../../../../../../_common/form-vue/validators/content_no_media_upload';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppShortkey from '../../../../../../_common/shortkey/shortkey.vue';
@@ -57,8 +57,6 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	readonly displayRules = new ContentRules({ maxMediaWidth: 125, maxMediaHeight: 100 });
 
 	isEditorFocused = false;
-	// Don't show "Do you want to save" when dismissing the form.
-	warnOnDiscard = false;
 	typing = false;
 
 	private nextMessageTimeout: NodeJS.Timer | null = null;
@@ -66,9 +64,10 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	private typingTimeout!: NodeJS.Timer;
 
 	declare $refs: {
-		form: AppForm;
 		editor: AppFormControlContentTS;
 	};
+
+	readonly validateContentMaxLength = validateContentMaxLength;
 
 	@Emit('submit') emitSubmit(_content: FormModel) {}
 	@Emit('cancel') emitCancel() {}
@@ -203,6 +202,10 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		this.$refs.editor.focus();
 	}
 
+	created() {
+		this.form.warnOnDiscard = false;
+	}
+
 	async submitMessage() {
 		let doc;
 
@@ -229,9 +232,10 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	}
 
 	async onSubmit() {
-		if (this.hasFormErrors) {
+		if (!this.form.valid) {
 			return;
 		}
+
 		if (this.nextMessageTimeout !== null) {
 			return;
 		}
@@ -344,7 +348,7 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 
 		// Wait for errors, then clear them.
 		await nextTick();
-		this.$refs.form.clearErrors();
+		this.form.clearErrors();
 	}
 
 	private disableTypingTimeout() {

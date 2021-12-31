@@ -21,7 +21,7 @@
 			</app-form-legend>
 
 			<template v-if="videoStatus === 'idle'">
-				<app-form ref="form" name="postVideoGameJoltForm">
+				<app-form :controller="form">
 					<app-form-group
 						name="video"
 						class="sans-margin-bottom"
@@ -72,9 +72,7 @@
 						<app-form-control-upload
 							ref="upload"
 							class="-upload-input"
-							:rules="{
-								filesize: maxFilesize,
-							}"
+							:validators="[validateFilesize(maxFilesize)]"
 							:accept="allowedFiletypesString"
 							@changed="videoSelected()"
 						/>

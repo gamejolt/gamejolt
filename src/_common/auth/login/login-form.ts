@@ -3,6 +3,7 @@ import { Api } from '../../api/api.service';
 import { Connection } from '../../connection/connection-service';
 import { Environment } from '../../environment/environment.service';
 import { BaseForm, FormOnSubmit } from '../../form-vue/form.service';
+import { validateUsername } from '../../form-vue/validators';
 import { Provider } from '../../linked-account/linked-account.model';
 import { LinkedAccounts } from '../../linked-account/linked-accounts.service';
 import AppLoading from '../../loading/loading.vue';
@@ -20,13 +21,16 @@ export default class AppAuthLoginForm extends BaseForm<any> implements FormOnSub
 	@Prop(Boolean)
 	overlay?: boolean;
 
-	warnOnDiscard = false;
-
 	invalidLogin = false;
 	blockedLogin = false;
 
 	readonly Connection = Connection;
 	readonly Environment = Environment;
+	readonly validateUsername = validateUsername;
+
+	created() {
+		this.form.warnOnDiscard = false;
+	}
 
 	onChanged() {
 		this.resetErrors();

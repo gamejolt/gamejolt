@@ -1,11 +1,8 @@
 import { Options } from 'vue-property-decorator';
-import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
-import {
-	BaseForm,
-	FormOnBeforeSubmit,
-	FormOnInit,
-} from '../../../../_common/form-vue/form.service';
-import AppLoadingFade from '../../../../_common/loading/fade/fade.vue';
+import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
+import { BaseForm, FormOnBeforeSubmit } from '../../../../_common/form-vue/form.service';
+import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import { User } from '../../../../_common/user/user.model';
 
 interface FormModel extends User {
@@ -20,10 +17,10 @@ interface FormModel extends User {
 })
 export default class FormEmailPreferences
 	extends BaseForm<FormModel>
-	implements FormOnInit, FormOnBeforeSubmit
+	implements FormOnBeforeSubmit
 {
 	modelClass = User as any;
-	saveMethod: '$saveEmailPreferences' = '$saveEmailPreferences';
+	saveMethod = '$saveEmailPreferences' as const;
 
 	isTogglingEmails = false;
 
@@ -31,51 +28,51 @@ export default class FormEmailPreferences
 		return [
 			{
 				key: 'notify_user_follows',
-				label: this.$gettext(`When someone follows you.`),
+				label: $gettext(`When someone follows you.`),
 			},
 			{
 				key: 'notify_mentions',
-				label: this.$gettext(`When you're mentioned through a @mention.`),
+				label: $gettext(`When you're mentioned through a @mention.`),
 			},
 			{
 				key: 'notify_comment_replies',
-				label: this.$gettext(`When someone replies to one of your comments.`),
+				label: $gettext(`When someone replies to one of your comments.`),
 			},
 			{
 				key: 'notify_followed_game_updates',
-				label: this.$gettext(`New posts from stuff you follow.`),
+				label: $gettext(`New posts from stuff you follow.`),
 			},
 			{
 				key: 'notify_friendships',
-				label: this.$gettext(`When someone sends you a friend request.`),
+				label: $gettext(`When someone sends you a friend request.`),
 			},
 			{
 				key: 'notify_private_messages',
-				label: this.$gettext(`When someone sends you a private message.`),
+				label: $gettext(`When someone sends you a private message.`),
 			},
 			{
 				key: 'notify_comments',
-				label: this.$gettext(`When someone comments on one of your games or posts.`),
+				label: $gettext(`When someone comments on one of your games or posts.`),
 			},
 			{
 				key: 'notify_ratings',
-				label: this.$gettext(`When someone likes one of your games.`),
+				label: $gettext(`When someone likes one of your games.`),
 			},
 			{
 				key: 'notify_game_follows',
-				label: this.$gettext(`When someone follows one of your games.`),
+				label: $gettext(`When someone follows one of your games.`),
 			},
 			{
 				key: 'notify_sales',
-				label: this.$gettext(`When someone buys one of your games.`),
+				label: $gettext(`When someone buys one of your games.`),
 			},
 			{
 				key: 'notify_collaborator_invites',
-				label: this.$gettext(`When you're invited to collaborate on a game.`),
+				label: $gettext(`When you're invited to collaborate on a game.`),
 			},
 			{
 				key: 'notify_forum_posts',
-				label: this.$gettext(`When someone replies to a forum topic you're following.`),
+				label: $gettext(`When someone replies to a forum topic you're following.`),
 			},
 		];
 	}

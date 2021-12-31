@@ -1,7 +1,7 @@
 <script lang="ts" src="./release"></script>
 
 <template>
-	<app-form ref="form" class="game-release-form" name="releaseForm">
+	<app-form class="game-release-form" :controller="form">
 		<app-form-group
 			name="version_number"
 			:title="$gettext('dash.games.releases.form.version_number_label')"
@@ -20,15 +20,15 @@
 			</div>
 
 			<app-form-control
-				data-vv-delay="500"
-				:rules="{
-					pattern: 'semver',
-					max: 50,
-					availability: {
+				:validators="[
+					validateSemver(),
+					validateMaxLength(50),
+					validateAvailability({
 						url: `/web/dash/developer/games/releases/check-field-availability/${game.id}/${package.id}/version_number`,
 						initVal: model.version_number,
-					},
-				}"
+					}),
+				]"
+				data-vv-delay="500"
 			/>
 			<app-form-control-errors />
 		</app-form-group>
@@ -165,9 +165,7 @@
 				<app-form-group name="scheduled_for" :label="$gettext(`Date and time`)">
 					<app-form-control-date
 						:timezone-offset="scheduledTimezoneOffset"
-						:rules="{
-							min_date: now,
-						}"
+						:validators="[validateMinDate(now)]"
 					/>
 					<app-form-control-errors :label="$gettext(`scheduled for`)" />
 				</app-form-group>

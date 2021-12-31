@@ -1,7 +1,7 @@
 <script lang="ts" src="./managed-account"></script>
 
 <template>
-	<app-form name="managedAccountForm" class="form-dashboard-managed-account">
+	<app-form :controller="form" class="form-dashboard-managed-account">
 		<app-loading v-if="!isLoaded" />
 
 		<div v-if="isLoaded">
@@ -216,7 +216,7 @@
 				</div>
 			</app-expand>
 
-			<app-loading v-if="state.isProcessing" :label="$gettext(`Processing...`)" />
+			<app-loading v-if="form.isProcessing" :label="$gettext(`Processing...`)" />
 
 			<app-form-button v-if="!isComplete && !isVerificationPending">
 				<translate>Save and Continue</translate>

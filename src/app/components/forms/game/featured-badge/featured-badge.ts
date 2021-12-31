@@ -2,11 +2,7 @@ import { Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
 import { Environment } from '../../../../../_common/environment/environment.service';
-import AppFormControlRadio from '../../../../../_common/form-vue/control/radio/radio.vue';
-import AppFormControlTextarea from '../../../../../_common/form-vue/control/textarea/textarea.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
-import AppForm from '../../../../../_common/form-vue/form.vue';
-import AppFormGroup from '../../../../../_common/form-vue/group/group.vue';
 import { Game } from '../../../../../_common/game/game.model';
 
 interface FormModel {
@@ -14,14 +10,7 @@ interface FormModel {
 	size: Record<'width' | 'height', string>;
 }
 
-@Options({
-	components: {
-		AppForm,
-		AppFormGroup,
-		AppFormControlRadio,
-		AppFormControlTextarea,
-	},
-})
+@Options({})
 export default class FormGameFeaturedBadge extends BaseForm<FormModel> {
 	@Prop(propRequired(Game)) game!: Game;
 

@@ -1,12 +1,9 @@
 <template>
-	<app-form name="forumPostForm" ref="form">
+	<app-form :controller="form">
 		<app-form-group name="text_content" :label="$gettext('Post Content')" :hide-label="true">
 			<app-form-control-content
 				content-context="forum-post"
-				:rules="{
-					content_required: true,
-					content_no_media_uploads: true,
-				}"
+				:validators="[validateContentRequired(), validateContentNoActiveUploads()]"
 				:max-height="0"
 				:validate-on="['blur']"
 			/>

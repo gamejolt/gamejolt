@@ -7,9 +7,8 @@ import AppExpand from '../../../../../_common/expand/expand.vue';
 import { formatFilesize } from '../../../../../_common/filters/filesize';
 import { formatFuzzynumber } from '../../../../../_common/filters/fuzzynumber';
 import { formatNumber } from '../../../../../_common/filters/number';
-import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
-import AppForm from '../../../../../_common/form-vue/form';
-import { BaseForm, FormOnInit, FormOnLoad } from '../../../../../_common/form-vue/form.service';
+import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
+import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
 import { GameBuild } from '../../../../../_common/game/build/build.model';
 import { GameBuildLaunchOption } from '../../../../../_common/game/build/launch-option/launch-option.model';
 import { Game } from '../../../../../_common/game/game.model';
@@ -47,13 +46,8 @@ type GameBuildFormModel = GameBuild & {
 		AppTooltip,
 	},
 })
-export default class FormGameBuild
-	extends BaseForm<GameBuildFormModel>
-	implements FormOnInit, FormOnLoad
-{
+export default class FormGameBuild extends BaseForm<GameBuildFormModel> implements FormOnLoad {
 	modelClass = GameBuild as any;
-	resetOnSubmit = true;
-	reloadOnSubmit = true;
 
 	@Prop(Game)
 	game!: Game;
@@ -90,10 +84,6 @@ export default class FormGameBuild
 	readonly formatFuzzynumber = formatFuzzynumber;
 	readonly formatFilesize = formatFilesize;
 	readonly GameBuild = GameBuild;
-
-	declare $refs: {
-		form: AppForm;
-	};
 
 	@Emit('remove-build')
 	emitRemoveBuild(_formModel: GameBuildFormModel) {}
@@ -251,6 +241,8 @@ export default class FormGameBuild
 	}
 
 	created() {
+		this.form.reloadOnSubmit = true;
+
 		this.releaseForm = findRequiredVueParent(this, FormGameRelease) as FormGameReleaseTS;
 		this.releaseForm.buildForms.push(this);
 	}
@@ -287,7 +279,7 @@ export default class FormGameBuild
 
 	// This is called by the release form.
 	public save() {
-		return this.$refs.form.submit();
+		return this.form.submit();
 	}
 
 	isPlatformDisabled(platform: string) {

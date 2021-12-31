@@ -7,10 +7,8 @@ import { Environment } from '../../../environment/environment.service';
 import AppExpand from '../../../expand/expand.vue';
 import { formatCurrency } from '../../../filters/currency';
 import { AppFocusWhen } from '../../../form-vue/focus-when.directive';
-import AppForm from '../../../form-vue/form';
 import {
 	BaseForm,
-	FormOnInit,
 	FormOnSubmit,
 	FormOnSubmitError,
 	FormOnSubmitSuccess,
@@ -18,7 +16,7 @@ import {
 import { Geo, Region } from '../../../geo/geo.service';
 import { showErrorGrowl } from '../../../growls/growls.service';
 import { HistoryTick } from '../../../history-tick/history-tick-service';
-import AppLoadingFade from '../../../loading/fade/fade.vue';
+import AppLoadingFade from '../../../loading/AppLoadingFade.vue';
 import AppLoading from '../../../loading/loading.vue';
 import { Navigate } from '../../../navigate/navigate.service';
 import { OrderPayment } from '../../../order/payment/payment.model';
@@ -48,7 +46,7 @@ type CheckoutType = 'cc-stripe' | 'paypal' | 'wallet';
 })
 export default class FormGamePackagePayment
 	extends BaseForm<any>
-	implements FormOnInit, FormOnSubmit, FormOnSubmitSuccess, FormOnSubmitError
+	implements FormOnSubmit, FormOnSubmitSuccess, FormOnSubmitError
 {
 	@Prop(Game) game!: Game;
 	@Prop(GamePackage) package!: GamePackage;
@@ -61,12 +59,7 @@ export default class FormGamePackagePayment
 	@State
 	app!: AppStore;
 
-	declare $refs: {
-		form: AppForm;
-	};
-
-	warnOnDiscard = false;
-
+	// TODO(vue3)
 	isLoaded = false;
 	isLoadingMethods = true;
 	isProcessing = false;
@@ -157,6 +150,10 @@ export default class FormGamePackagePayment
 		return true;
 	}
 
+	created() {
+		this.form.warnOnDiscard = false;
+	}
+
 	onInit() {
 		// If they don't have a default pricing amount set for this sellable,
 		// just do $1.
@@ -232,7 +229,7 @@ export default class FormGamePackagePayment
 		if (this.addresses.length) {
 			if (checkoutType === 'paypal') {
 				this.checkoutPaypal();
-				this.$refs.form.submit();
+				this.form.submit();
 				return;
 			} else if (checkoutType === 'wallet') {
 				this.checkoutWallet();

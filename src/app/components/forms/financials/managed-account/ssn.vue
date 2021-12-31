@@ -1,3 +1,5 @@
+<script lang="ts" src="./ssn"></script>
+
 <template>
 	<div>
 		<template v-if="parent.requiresField(namePrefix + '.id_number')">
@@ -10,19 +12,20 @@
 						: 'Foreign Tax Identification Number'
 				"
 			>
-				<p class="help-block" v-if="countryCode === 'us'">
+				<p v-if="countryCode === 'us'" class="help-block">
 					<translate>
-						We are required by the IRS to collect your Social Security Number (SSN) or Individual
-						Taxpayer Identification Number (ITIN) for tax purposes. For security reasons, we use
-						Stripe to store this information, it will not be stored on Game Jolt's servers.
+						We are required by the IRS to collect your Social Security Number (SSN) or
+						Individual Taxpayer Identification Number (ITIN) for tax purposes. For
+						security reasons, we use Stripe to store this information, it will not be
+						stored on Game Jolt's servers.
 					</translate>
 				</p>
 
-				<p class="help-block" v-if="countryCode !== 'us'">
+				<p v-if="countryCode !== 'us'" class="help-block">
 					<translate>
-						We are required by the IRS to collect your Tax Identification Number (TIN) for tax
-						purposes. For security reasons, we use Stripe to store this information, it will not be
-						stored on Game Jolt's servers.
+						We are required by the IRS to collect your Tax Identification Number (TIN)
+						for tax purposes. For security reasons, we use Stripe to store this
+						information, it will not be stored on Game Jolt's servers.
 					</translate>
 				</p>
 
@@ -30,7 +33,10 @@
 				<app-form-control-errors />
 			</app-form-group>
 
-			<div v-if="parent.getStripeField(namePrefix + '.id_number_provided')" class="form-horizontal">
+			<div
+				v-if="parent.getStripeField(namePrefix + '.id_number_provided')"
+				class="form-horizontal"
+			>
 				<div class="form-group">
 					<label class="control-label col-sm-4">
 						<template v-if="countryCode === 'us'">
@@ -57,32 +63,35 @@
 						: 'Foreign Tax Identification Number - Last 4 Digits'
 				"
 			>
-				<p class="help-block" v-if="countryCode === 'us'">
+				<p v-if="countryCode === 'us'" class="help-block">
 					<translate>
-						We are required by the IRS to collect a Social Security Number (SSN) or Individual
-						Taxpayer Identification Number (ITIN) for tax purposes. For security reasons, we use
-						Stripe to store this information, it will not be stored on Game Jolt's servers.
+						We are required by the IRS to collect a Social Security Number (SSN) or
+						Individual Taxpayer Identification Number (ITIN) for tax purposes. For
+						security reasons, we use Stripe to store this information, it will not be
+						stored on Game Jolt's servers.
 					</translate>
 				</p>
 
-				<p class="help-block" v-if="countryCode !== 'us'">
+				<p v-if="countryCode !== 'us'" class="help-block">
 					<translate>
-						We are required by the IRS to collect a Tax Identification Number (TIN) for tax
-						purposes. For security reasons, we use Stripe to store this information, it will not be
-						stored on Game Jolt's servers.
+						We are required by the IRS to collect a Tax Identification Number (TIN) for
+						tax purposes. For security reasons, we use Stripe to store this information,
+						it will not be stored on Game Jolt's servers.
 					</translate>
 				</p>
 
 				<app-form-control
 					type="text"
 					placeholder="1234"
-					:rules="{
-						pattern: /^\d{4}/,
-					}"
+					:validators="[validatePattern(/^\d{4}/)]"
 				/>
 				<app-form-control-errors
 					:label="
-						$gettext(countryCode === 'us' ? '4 digits of SSN / ITIN' : '4 digits of Foreign Tax ID')
+						$gettext(
+							countryCode === 'us'
+								? '4 digits of SSN / ITIN'
+								: '4 digits of Foreign Tax ID'
+						)
 					"
 				/>
 			</app-form-group>
@@ -108,5 +117,3 @@
 		</template>
 	</div>
 </template>
-
-<script lang="ts" src="./ssn"></script>

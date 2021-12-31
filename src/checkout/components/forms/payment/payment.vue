@@ -1,7 +1,7 @@
 <script lang="ts" src="./payment"></script>
 
 <template>
-	<app-form name="paymentForm">
+	<app-form :controller="form">
 		<div class="row">
 			<div class="col-sm-6 col-centered">
 				<div v-if="cards.length" class="card-list full-bleed-xs">
@@ -95,25 +95,11 @@
 											type="text"
 											class="has-icon"
 											placeholder="mm/yy"
-											:rules="{
-												cc_exp: true,
-												cc_exp_expired: true,
-											}"
+											:validators="[validateCreditCardExpiration()]"
 											:mask="expMask"
 											:validate-on="['blur']"
 										/>
-										<app-form-control-errors>
-											<app-form-control-error
-												when="cc_exp"
-												:message="
-													$gettext(`Please enter a valid expiration.`)
-												"
-											/>
-											<app-form-control-error
-												when="cc_exp_expired"
-												:message="$gettext(`This card has expired.`)"
-											/>
-										</app-form-control-errors>
+										<app-form-control-errors />
 									</app-form-group>
 								</div>
 								<div class="right-col">
@@ -123,15 +109,15 @@
 											type="text"
 											class="has-icon"
 											placeholder="cvc"
-											:rules="{
-												max: 4,
-												pattern: /^[0-9]*$/,
-											}"
+											:validators="[
+												validateMaxLength(4),
+												validatePattern(/^[0-9]*$/),
+											]"
 											:validate-on="['blur']"
 										/>
 										<app-form-control-errors>
 											<app-form-control-error
-												when="ccCvc"
+												when="pattern"
 												:message="$gettext(`Please enter a valid cvc.`)"
 											/>
 										</app-form-control-errors>
@@ -251,7 +237,7 @@
 		</app-expand>
 
 		<app-form-button
-			v-if="!valid || (calculatedTax && !state.isProcessing)"
+			v-if="!valid || (calculatedTax && !form.isProcessing)"
 			lg
 			block
 			:disabled="!valid"
@@ -260,7 +246,7 @@
 		</app-form-button>
 
 		<app-loading
-			v-if="state.isProcessing"
+			v-if="form.isProcessing"
 			class="loading-centered"
 			:label="$gettext(`Processing...`)"
 		/>

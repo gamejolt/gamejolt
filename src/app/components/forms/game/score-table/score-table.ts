@@ -1,6 +1,6 @@
 import { Options, Prop } from 'vue-property-decorator';
-import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
-import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.service';
+import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
+import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
 import { GameScoreTable } from '../../../../../_common/game/score-table/score-table.model';
 
@@ -9,7 +9,7 @@ import { GameScoreTable } from '../../../../../_common/game/score-table/score-ta
 		AppFormControlToggle,
 	},
 })
-export default class FormGameScoreTable extends BaseForm<GameScoreTable> implements FormOnInit {
+export default class FormGameScoreTable extends BaseForm<GameScoreTable> {
 	@Prop(Game) game!: Game;
 
 	modelClass = GameScoreTable;

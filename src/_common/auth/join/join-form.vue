@@ -24,15 +24,17 @@
 				<translate>or</translate>
 			</div>
 
-			<app-form class="auth-form" name="joinForm">
+			<app-form class="auth-form" :controller="form">
 				<fieldset :disabled="Connection.isClientOffline">
 					<app-form-group name="email" :label="$gettext('Email')" :hide-label="true">
 						<app-form-control
 							type="email"
 							:disabled="blocked"
-							:rules="{
-								availability: { url: '/web/auth/check-field-availability/email' },
-							}"
+							:validators="[
+								validateAvailability({
+									url: '/web/auth/check-field-availability/email',
+								}),
+							]"
 							:validate-on="['blur']"
 							:placeholder="$gettext('Email')"
 						/>
@@ -48,14 +50,14 @@
 						<app-form-control
 							type="text"
 							:disabled="blocked"
-							:rules="{
-								min: 3,
-								max: 30,
-								pattern: 'username',
-								availability: {
+							:validators="[
+								validateMinLength(3),
+								validateMaxLength(30),
+								validateUsername(),
+								validateAvailability({
 									url: '/web/auth/check-field-availability/username',
-								},
-							}"
+								}),
+							]"
 							:validate-on="['blur']"
 							:placeholder="$gettext('Username')"
 						/>
@@ -71,10 +73,7 @@
 						<app-form-control
 							type="password"
 							:disabled="blocked"
-							:rules="{
-								min: 4,
-								max: 300,
-							}"
+							:validators="[validateMinLength(4), validateMaxLength(300)]"
 							:validate-on="['blur']"
 							:placeholder="$gettext('Password')"
 						/>

@@ -1,7 +1,7 @@
 import { Emit, Options, Prop, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { Community } from '../../../../../_common/community/community.model';
-import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.service';
+import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
 import {
 	getCommunityMovePostReasons,
@@ -16,7 +16,7 @@ export type FormModel = {
 };
 
 @Options({})
-export default class FormCommunityMovePost extends BaseForm<FormModel> implements FormOnInit {
+export default class FormCommunityMovePost extends BaseForm<FormModel> {
 	@Prop(propRequired(Community)) community!: Community;
 
 	@Emit('change') emitChange(_form: FormModel) {}

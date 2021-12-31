@@ -1,10 +1,9 @@
 import { Options, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { formatFilesize } from '../../../../_common/filters/filesize';
-import AppFormControlCrop from '../../../../_common/form-vue/control/crop/crop.vue';
-import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
-import AppFormControlUpload from '../../../../_common/form-vue/control/upload/upload.vue';
-import AppForm from '../../../../_common/form-vue/form';
+import AppFormControlCrop from '../../../../_common/form-vue/controls/AppFormControlCrop.vue';
+import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
+import AppFormControlUpload from '../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
 	BaseForm,
 	FormOnBeforeSubmit,
@@ -30,9 +29,7 @@ export default class FormAvatar
 	implements FormOnLoad, FormOnBeforeSubmit
 {
 	modelClass = User;
-	reloadOnSubmit = true;
-	warnOnDiscard = false;
-	saveMethod: '$saveAvatar' = '$saveAvatar';
+	saveMethod = '$saveAvatar' as const;
 
 	maxFilesize = 0;
 	minSize = 0;
@@ -40,10 +37,6 @@ export default class FormAvatar
 
 	readonly formatFilesize = formatFilesize;
 	readonly Screen = Screen;
-
-	declare $refs: {
-		form: AppForm;
-	};
 
 	get loadUrl() {
 		return `/web/dash/avatar/save`;
@@ -64,6 +57,11 @@ export default class FormAvatar
 		this.setField('avatar_crop', this.crop);
 	}
 
+	created() {
+		this.form.warnOnDiscard = false;
+		this.form.reloadOnSubmit = true;
+	}
+
 	onLoad(payload: any) {
 		this.maxFilesize = payload.maxFilesize;
 		this.minSize = payload.minSize;
@@ -77,7 +75,7 @@ export default class FormAvatar
 
 	avatarSelected() {
 		if (this.formModel.file) {
-			this.$refs.form.submit();
+			this.form.submit();
 		}
 	}
 

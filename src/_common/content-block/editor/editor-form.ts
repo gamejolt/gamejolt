@@ -1,5 +1,5 @@
 import { Options, Prop, Watch } from 'vue-property-decorator';
-import AppFormControlMarkdown from '../../form-vue/control/markdown/markdown.vue';
+import AppFormControlMarkdown from '../../form-vue/controls/markdown/AppFormControlMarkdown.vue';
 import { BaseForm } from '../../form-vue/form.service';
 import { SiteContentBlock } from '../../site/content-block/content-block-model';
 
@@ -10,7 +10,6 @@ import { SiteContentBlock } from '../../site/content-block/content-block-model';
 })
 export default class FormContentBlockEditor extends BaseForm<SiteContentBlock> {
 	modelClass = SiteContentBlock;
-	warnOnDiscard = false;
 
 	@Prop(String) mode!: string;
 
@@ -20,5 +19,9 @@ export default class FormContentBlockEditor extends BaseForm<SiteContentBlock> {
 			// TODO: why are we setting on the model directly? Is this a bug?
 			(this.model as SiteContentBlock).content_markdown! = content;
 		}
+	}
+
+	created() {
+		this.form.warnOnDiscard = false;
 	}
 }

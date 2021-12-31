@@ -1,23 +1,25 @@
+<script lang="ts" src="./avatar"></script>
+
 <template>
-	<app-form name="avatarForm" ref="form">
+	<app-form :controller="form">
 		<app-form-group name="file" :label="$gettext(`Upload New Avatar`)" :optional="true">
-			<p class="help-block" v-translate>
+			<p v-translate class="help-block">
 				Your image must be a PNG or JPG.
 				<br />
 				<strong>PNGs are highly recommended as they produce a lossless image.</strong>
 			</p>
-			<p class="help-block strong" v-translate="{ dimensions: '1000×1000' }">
+			<p v-translate="{ dimensions: '1000×1000' }" class="help-block strong">
 				The recommended size for an avatar is
 				<code>%{dimensions}</code>
 				.
 			</p>
 
 			<app-form-control-upload
-				:rules="{
-					filesize: maxFilesize,
-					min_img_dimensions: [minSize, minSize],
-					max_img_dimensions: [maxSize, maxSize],
-				}"
+				:validators="[
+					validateFilesize(maxFilesize),
+					validateImageMinDimensions({ width: minSize, height: minSize }),
+					validateImageMaxDimensions({ width: maxSize, height: maxSize }),
+				]"
 				accept=".png,.jpg,.jpeg,.webp"
 				@changed="avatarSelected()"
 			/>
@@ -26,9 +28,9 @@
 		</app-form-group>
 
 		<app-form-group
+			v-if="formModel.avatar_media_item && !formModel.file"
 			name="avatar_crop"
 			:label="$gettext('Your Uploaded Avatar')"
-			v-if="formModel.avatar_media_item && !formModel.file"
 		>
 			<div class="form-control-static">
 				<app-form-control-crop
@@ -44,7 +46,7 @@
 			</div>
 		</app-form-group>
 
-		<template v-if="formModel.avatar_media_item && !hasFormErrors">
+		<template v-if="formModel.avatar_media_item && form.valid">
 			<div>
 				<app-form-button>
 					<translate>Save</translate>
@@ -63,8 +65,8 @@
 			<app-form-control-toggle class="pull-right" @changed="gravatarToggled()" />
 			<p class="help-block">
 				<translate>
-					By default we fallback to using Gravatar if you have one. If you would like to disable the
-					Gravatar fallback, you can toggle this on.
+					By default we fallback to using Gravatar if you have one. If you would like to
+					disable the Gravatar fallback, you can toggle this on.
 				</translate>
 				<app-link-external href="https://gravatar.com" class="link-help">
 					<translate>What is Gravatar?</translate>
@@ -73,5 +75,3 @@
 		</app-form-group>
 	</app-form>
 </template>
-
-<script lang="ts" src="./avatar"></script>

@@ -8,7 +8,7 @@ import { CommunityCompetitionEntryVote } from '../../../../../../../_common/comm
 import { CommunityCompetitionVotingCategory } from '../../../../../../../_common/community/competition/voting-category/voting-category.model';
 import { formatNumber } from '../../../../../../../_common/filters/number';
 import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
-import AppLoadingFade from '../../../../../../../_common/loading/fade/fade.vue';
+import AppLoadingFade from '../../../../../../../_common/loading/AppLoadingFade.vue';
 import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 
 @Options({

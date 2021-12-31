@@ -3,6 +3,7 @@ import { Api } from '../../api/api.service';
 import { Connection } from '../../connection/connection-service';
 import { Environment } from '../../environment/environment.service';
 import { BaseForm, FormOnSubmit, FormOnSubmitSuccess } from '../../form-vue/form.service';
+import { validateUsername } from '../../form-vue/validators';
 import { Provider } from '../../linked-account/linked-account.model';
 import { LinkedAccounts } from '../../linked-account/linked-accounts.service';
 import AppLoading from '../../loading/loading.vue';
@@ -33,10 +34,13 @@ export default class AppAuthJoinForm
 	@Prop(Boolean)
 	blocked?: boolean;
 
-	warnOnDiscard = false;
-
 	readonly Connection = Connection;
 	readonly Environment = Environment;
+	readonly validateUsername = validateUsername;
+
+	created() {
+		this.form.warnOnDiscard = false;
+	}
 
 	onSubmit() {
 		return Api.sendRequest('/web/auth/join', this.formModel);

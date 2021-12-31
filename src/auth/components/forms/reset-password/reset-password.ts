@@ -1,16 +1,18 @@
 import { Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { Connection } from '../../../../_common/connection/connection-service';
-import { BaseForm, FormOnInit, FormOnSubmit } from '../../../../_common/form-vue/form.service';
+import { BaseForm, FormOnSubmit } from '../../../../_common/form-vue/form.service';
 
 @Options({})
-export default class FormResetPassword extends BaseForm<any> implements FormOnInit, FormOnSubmit {
+export default class FormResetPassword extends BaseForm<any> implements FormOnSubmit {
 	@Prop(Number) userId!: number;
 	@Prop(String) token!: string;
 
-	warnOnDiscard = false;
-
 	readonly Connection = Connection;
+
+	created() {
+		this.form.warnOnDiscard = false;
+	}
 
 	onInit() {
 		this.setField('password', '');

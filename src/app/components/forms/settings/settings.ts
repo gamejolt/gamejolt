@@ -1,7 +1,7 @@
 import { Options, Watch } from 'vue-property-decorator';
 import * as _ClientAutoStartMod from '../../../../_common/client/autostart/autostart.service';
-import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
-import { BaseForm, FormOnInit } from '../../../../_common/form-vue/form.service';
+import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
+import { BaseForm } from '../../../../_common/form-vue/form.service';
 import {
 	SettingAnimatedThumbnails,
 	SettingAutostartClient,
@@ -46,14 +46,12 @@ type FormModel = {
 		AppFormControlToggle,
 	},
 })
-export default class FormSettings extends BaseForm<FormModel> implements FormOnInit {
+export default class FormSettings extends BaseForm<FormModel> {
 	@AppState user!: AppStore['user'];
 	@ThemeState isDark!: ThemeStore['isDark'];
 	@ThemeState alwaysOurs!: ThemeStore['alwaysOurs'];
 	@ThemeMutation setDark!: ThemeStore['setDark'];
 	@ThemeMutation setAlwaysOurs!: ThemeStore['setAlwaysOurs'];
-
-	warnOnDiscard = false;
 
 	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
 
@@ -63,6 +61,10 @@ export default class FormSettings extends BaseForm<FormModel> implements FormOnI
 
 	get browserNotificationsDisabled() {
 		return (Notification as any).permission === 'denied';
+	}
+
+	created() {
+		this.form.warnOnDiscard = false;
 	}
 
 	onInit() {

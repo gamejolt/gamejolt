@@ -1,5 +1,5 @@
 <template>
-	<app-form name="headerForm" ref="form">
+	<app-form :controller="form">
 		<app-form-group
 			name="file"
 			:label="$gettext(`Upload New Header`)"
@@ -7,9 +7,9 @@
 		>
 			<p class="help-block">
 				<translate>
-					Headers are the big, banner-like images that adorn the tops of pages. For your header to
-					look its best on all devices, make sure anything important is located near the center of
-					the image.
+					Headers are the big, banner-like images that adorn the tops of pages. For your
+					header to look its best on all devices, make sure anything important is located
+					near the center of the image.
 				</translate>
 			</p>
 			<p class="help-block" v-translate>
@@ -29,11 +29,11 @@
 			</p>
 
 			<app-form-control-upload
-				:rules="{
-					filesize: maxFilesize,
-					min_img_dimensions: [minWidth, minHeight],
-					max_img_dimensions: [maxWidth, maxHeight],
-				}"
+				:validators="[
+					validateFilesize(maxFilesize),
+					validateImageMinDimensions({ width: minWidth, height: minHeight }),
+					validateImageMaxDimensions({ width: maxWidth, height: maxHeight }),
+				]"
 				accept=".png,.jpg,.jpeg,.webp"
 				@changed="headerSelected()"
 			/>

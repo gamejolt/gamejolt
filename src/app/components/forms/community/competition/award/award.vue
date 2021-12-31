@@ -1,15 +1,15 @@
 <script lang="ts" src="./award"></script>
 
 <template>
-	<app-form name="communityCompetitionAwardForm">
+	<app-form :controller="form">
 		<app-form-group name="name" :label="$gettext(`Award Name`)">
 			<app-form-control
-				:rules="{
-					max: 50,
-					availability: {
+				:validators="[
+					validateMaxLength(50),
+					validateAvailability({
 						url: nameAvailabilityUrl,
-					},
-				}"
+					}),
+				]"
 				:validate-on="['blur']"
 				:placeholder="$gettext(`1st Place, Best Graphics, etc...`)"
 			/>
@@ -17,7 +17,7 @@
 		</app-form-group>
 
 		<app-form-group name="description" :label="$gettext(`Award Description`)" optional>
-			<app-form-control-textarea :rules="{ max: 250 }" />
+			<app-form-control-textarea :validators="[validateMaxLength(250)]" />
 			<app-form-control-errors />
 
 			<p class="help-block">

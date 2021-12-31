@@ -1,12 +1,12 @@
 import { Options, Watch } from 'vue-property-decorator';
 import { importContext } from '../../../utils/utils';
-import AppFormControlSelect from '../../form-vue/control/select/select.vue';
-import AppFormControlTextarea from '../../form-vue/control/textarea/textarea.vue';
-import AppFormControlTheme from '../../form-vue/control/theme/theme.vue';
-import AppFormControlToggle from '../../form-vue/control/toggle/toggle.vue';
+import AppForm from '../../form-vue/AppForm.vue';
+import AppFormGroup from '../../form-vue/AppFormGroup.vue';
+import AppFormControlSelect from '../../form-vue/controls/AppFormControlSelect.vue';
+import AppFormControlTextarea from '../../form-vue/controls/AppFormControlTextarea.vue';
+import AppFormControlTheme from '../../form-vue/controls/AppFormControlTheme.vue';
+import AppFormControlToggle from '../../form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm } from '../../form-vue/form.service';
-import AppForm from '../../form-vue/form.vue';
-import AppFormGroup from '../../form-vue/group/group.vue';
 import { AppTheme } from '../theme';
 import { Theme } from '../theme.model';
 import { ThemeState, ThemeStore } from '../theme.store';

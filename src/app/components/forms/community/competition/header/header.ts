@@ -1,8 +1,7 @@
 import { Options, Watch } from 'vue-property-decorator';
 import { CommunityCompetition } from '../../../../../../_common/community/competition/competition.model';
-import AppFormControlCrop from '../../../../../../_common/form-vue/control/crop/crop.vue';
-import AppFormControlUpload from '../../../../../../_common/form-vue/control/upload/upload.vue';
-import AppFormTS from '../../../../../../_common/form-vue/form';
+import AppFormControlCrop from '../../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
+import AppFormControlUpload from '../../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
 	BaseForm,
 	FormOnBeforeSubmit,
@@ -25,7 +24,7 @@ export default class FormCommunityCompetitionHeader
 	implements FormOnLoad, FormOnBeforeSubmit
 {
 	modelClass = CommunityCompetition as any;
-	saveMethod: '$saveHeader' = '$saveHeader';
+	saveMethod = '$saveHeader' as const;
 
 	maxFilesize = 0;
 	minAspectRatio = 0;
@@ -34,10 +33,6 @@ export default class FormCommunityCompetitionHeader
 	minHeight = 0;
 	maxWidth = 0;
 	maxHeight = 0;
-
-	declare $refs: {
-		form: AppFormTS;
-	};
 
 	get loadUrl() {
 		return `/web/dash/communities/competitions/header/save/${this.model!.id}`;
@@ -83,7 +78,7 @@ export default class FormCommunityCompetitionHeader
 
 	headerSelected() {
 		if (this.formModel.file) {
-			this.$refs.form.submit();
+			this.form.submit();
 		}
 	}
 }

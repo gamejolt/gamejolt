@@ -1,7 +1,7 @@
 <script lang="ts" src="./post"></script>
 
 <template>
-	<app-form v-if="model" ref="form" name="postForm">
+	<app-form v-if="model" :controller="form">
 		<!-- Attachments -->
 		<div v-if="!enabledAttachments" class="-attachment-controls">
 			<app-button
@@ -74,10 +74,7 @@
 				"
 				:model-id="model.id"
 				:min-height="72"
-				:rules="{
-					content_required: true,
-					max_content_length: [leadLengthLimit],
-				}"
+				:validators="[validateContentRequired(), validateContentMaxLength(leadLengthLimit)]"
 				:validate-on="['blur']"
 				@paste="onPaste"
 			/>
@@ -112,10 +109,10 @@
 						:placeholder="$gettext(`Write your article here...`)"
 						content-context="fireside-post-article"
 						:model-id="model.id"
-						:rules="{
-							content_no_media_uploads: true,
-							max_content_length: [articleLengthLimit],
-						}"
+						:validators="[
+							validateContentNoActiveUploads(),
+							validateContentMaxLength(articleLengthLimit),
+						]"
 						:max-height="0"
 					/>
 
@@ -136,9 +133,7 @@
 					<app-form-group :name="'poll_item' + i" :label="$gettext(`choice`)" hide-label>
 						<app-form-control
 							type="text"
-							:rules="{
-								max: 64,
-							}"
+							:validators="[validateMaxLength(64)]"
 							:placeholder="$gettextInterpolate('Choice %{ num }', { num: i })"
 							:disabled="!isPollEditable"
 						/>
@@ -183,10 +178,7 @@
 								min="0"
 								max="14"
 								:disabled="!isPollEditable"
-								:rules="{
-									min_value: 0,
-									max_value: 14,
-								}"
+								:validators="[validateMinValue(0), validateMaxValue(14)]"
 							/>
 						</app-form-group>
 					</div>
@@ -199,10 +191,7 @@
 								min="0"
 								max="23"
 								:disabled="!isPollEditable"
-								:rules="{
-									min_value: 0,
-									max_value: 23,
-								}"
+								:validators="[validateMinValue(0), validateMaxValue(23)]"
 							/>
 						</app-form-group>
 					</div>
@@ -215,10 +204,7 @@
 								min="0"
 								max="59"
 								:disabled="!isPollEditable"
-								:rules="{
-									min_value: 0,
-									max_value: 59,
-								}"
+								:validators="[validateMinValue(0), validateMaxValue(59)]"
 							/>
 						</app-form-group>
 					</div>
@@ -302,9 +288,7 @@
 				<app-form-group name="scheduled_for" :label="$gettext(`Date and time`)">
 					<app-form-control-date
 						:timezone-offset="scheduledTimezoneOffset"
-						:rules="{
-							min_date: now,
-						}"
+						:validators="[validateMinDate(now)]"
 					/>
 					<app-form-control-errors :label="$gettext(`scheduled for`)" />
 				</app-form-group>

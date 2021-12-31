@@ -1,18 +1,16 @@
 <script lang="ts" src="./block"></script>
 
 <template>
-	<app-form name="communityBlockForm">
+	<app-form :controller="form">
 		<app-form-group name="username">
-			<app-form-control-prefixed-input
+			<app-form-control
 				prefix="@"
-				type="text"
-				:rules="{
-					max: 100,
-					availability: {
+				:validators="[
+					validateMaxLength(100),
+					validateAvailability({
 						url: `/web/dash/communities/blocks/check-field-availability/${community.id}`,
-						initVal: undefined,
-					},
-				}"
+					}),
+				]"
 				:validate-on="['blur']"
 				:disabled="usernameLocked"
 			/>
@@ -43,11 +41,8 @@
 				</span>
 			</div>
 			<app-form-control
-				type="text"
 				html-list-id="block-user-reasons-list"
-				:rules="{
-					max: 100,
-				}"
+				:validators="[validateMaxLength(100)]"
 			/>
 			<datalist id="block-user-reasons-list">
 				<option v-for="optionStr of otherOptions" :key="optionStr" :value="optionStr" />

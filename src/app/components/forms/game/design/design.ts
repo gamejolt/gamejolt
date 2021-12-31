@@ -1,6 +1,6 @@
 import { Options, Watch } from 'vue-property-decorator';
 import AppEditableOverlay from '../../../../../_common/editable-overlay/editable-overlay.vue';
-import AppFormControlTheme from '../../../../../_common/form-vue/control/theme/theme.vue';
+import AppFormControlTheme from '../../../../../_common/form-vue/controls/AppFormControlTheme.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
@@ -19,7 +19,7 @@ import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
 })
 export default class FormGameDesign extends BaseForm<Game> {
 	modelClass = Game as any;
-	saveMethod: '$saveDesign' = '$saveDesign';
+	saveMethod = '$saveDesign' as const;
 
 	@ThemeState userTheme!: ThemeStore['userTheme'];
 	@ThemeMutation setFormTheme!: ThemeStore['setFormTheme'];

@@ -1,7 +1,7 @@
 <script lang="ts" src="./financials"></script>
 
 <template>
-	<app-form ref="form" name="financialsForm" class="form-dashboard-financials">
+	<app-form :controller="form" class="form-dashboard-financials">
 		<template v-if="!isVerified">
 			<div class="alert">
 				<translate>
@@ -142,11 +142,11 @@
 					step="1"
 					max="10"
 					min="0"
-					:rules="{
-						pattern: /^\d+$/,
-						max_value: 10,
-						min_value: 0,
-					}"
+					:validators="[
+						validatePattern(/^\d+$/),
+						validateMaxValue(10),
+						validateMinValue(0),
+					]"
 				/>
 				<app-form-control-errors
 					label="percentage"
@@ -194,10 +194,7 @@
 					<app-form-control
 						type="currency"
 						step="1"
-						:rules="{
-							min_value: 0,
-							max_value: maxWallet / 100,
-						}"
+						:validators="[validateMinValue(0), validateMaxValue(maxWallet / 100)]"
 					/>
 				</div>
 				<app-form-control-errors :label="$gettext('sum to keep in your wallet')" />
@@ -232,10 +229,7 @@
 					<span class="input-group-addon">$</span>
 					<app-form-control
 						type="currency"
-						:rules="{
-							min_value: 0,
-							max_value: maxPayout / 100,
-						}"
+						:validators="[validateMinValue(0), validateMaxValue(maxPayout / 100)]"
 					/>
 				</div>
 				<app-form-control-errors :label="$gettext('minimum payout')" />

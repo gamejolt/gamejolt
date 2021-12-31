@@ -1,5 +1,7 @@
-import { ComponentPublicInstance, PropType } from 'vue';
+import { ComponentPublicInstance, PropType, Ref } from 'vue';
 import { PropOptions } from 'vue-class-component';
+
+export type MaybeRef<T> = Ref<T> | T;
 
 type Constructor<T> = { new (): T };
 

@@ -1,7 +1,7 @@
 <script lang="ts" src="./form"></script>
 
 <template>
-	<app-form name="communityMovePostForm">
+	<app-form :controller="form">
 		<app-form-group
 			name="notifyUser"
 			:label="$gettext(`Do you want to notify the author that their post got moved?`)"
@@ -39,9 +39,7 @@
 			<app-form-control
 				type="text"
 				html-list-id="move-post-reasons-list"
-				:rules="{
-					max: 100,
-				}"
+				:validators="[validateMaxLength(100)]"
 			/>
 			<datalist id="move-post-reasons-list">
 				<option v-for="optionStr of otherOptions" :key="optionStr" :value="optionStr" />

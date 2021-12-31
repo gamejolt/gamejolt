@@ -1,17 +1,17 @@
 <script lang="ts" src="./description"></script>
 
 <template>
-	<app-form name="communityDescriptionForm">
+	<app-form :controller="form">
 		<app-form-group name="description_content" hide-label>
 			<app-form-control-content
 				:placeholder="$gettext(`Write your community description here...`)"
 				content-context="community-description"
 				:model-id="model.id"
-				:rules="{
-					content_required: true,
-					content_no_media_uploads: true,
-					max_content_length: [lengthLimit],
-				}"
+				:validators="[
+					validateContentRequired(),
+					validateContentNoActiveUploads(),
+					validateContentMaxLength(lengthLimit),
+				]"
 				:max-height="0"
 				:validate-on="['blur']"
 			/>

@@ -1,3 +1,5 @@
+<script lang="ts" src="./document"></script>
+
 <template>
 	<div v-if="parent.requiresField(prefix)">
 		<!--
@@ -6,12 +8,12 @@
 		<div
 			v-if="
 				!parent.getStripeField(prefix + '.front') ||
-					parent.getStripeField(prefix + '.details_code')
+				parent.getStripeField(prefix + '.details_code')
 			"
 		>
 			<hr />
 
-			<div class="alert" v-if="parent.getStripeField(prefix + '.details')">
+			<div v-if="parent.getStripeField(prefix + '.details')" class="alert">
 				<app-jolticon icon="notice" />
 				{{ parent.getStripeField(prefix + '.details') }}
 			</div>
@@ -27,17 +29,14 @@
 						a utility bill.
 					</translate>
 					<em>
-						<translate
-							>Only .png or .jpg is accepted and it must be smaller than
-							8MB.</translate
-						>
+						<translate>
+							Only .png or .jpg is accepted and it must be smaller than 8MB.
+						</translate>
 					</em>
 				</p>
 				<app-form-control-upload
 					ref="document-input"
-					:rules="{
-						filesize: 8 * 1024 * 1024,
-					}"
+					:validators="[validateFilesize(8 * 1024 * 1024)]"
 					accept=".png,.jpg,.jpeg"
 				/>
 				<app-form-control-errors />
@@ -47,7 +46,7 @@
 		<div
 			v-if="
 				parent.getStripeField(prefix + '.front') &&
-					!parent.getStripeField(prefix + '.details_code')
+				!parent.getStripeField(prefix + '.details_code')
 			"
 			class="form-horizontal"
 		>
@@ -62,5 +61,3 @@
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./document"></script>

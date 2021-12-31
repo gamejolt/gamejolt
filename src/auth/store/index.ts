@@ -8,21 +8,25 @@ import {
 	appStore,
 	Mutations as AppMutations,
 } from '../../_common/store/app-store';
+import { ThemeActions, ThemeMutations, ThemeStore } from '../../_common/theme/theme.store';
 
-export type Actions = AppActions & {
-	bootstrap: undefined;
-};
+export type Actions = AppActions &
+	ThemeActions & {
+		bootstrap: undefined;
+	};
 
-export type Mutations = AppMutations & {
-	showCoverImage: undefined;
-	hideCoverImage: undefined;
-	processPayload: any;
-};
+export type Mutations = AppMutations &
+	ThemeMutations & {
+		showCoverImage: undefined;
+		hideCoverImage: undefined;
+		processPayload: any;
+	};
 
 @VuexModule({
 	store: true,
 	modules: {
 		app: appStore,
+		theme: new ThemeStore(),
 	},
 })
 export class Store extends VuexStore<Store, Actions, Mutations> {

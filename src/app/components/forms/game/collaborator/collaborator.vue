@@ -1,18 +1,18 @@
 <script lang="ts" src="./collaborator"></script>
 
 <template>
-	<app-form name="collaboratorForm">
+	<app-form :controller="form">
 		<app-form-group v-if="method === 'add'" name="username" :label="$gettext(`Username`)">
-			<app-form-control-prefixed-input
+			<app-form-control
 				v-app-focus-when
 				prefix="@"
-				:rules="{
-					max: 100,
-					availability: {
+				:validators="[
+					validateMaxLength(100),
+					validateAvailability({
 						url: `/web/dash/developer/games/collaborators/check-field-availability`,
 						initVal: undefined,
-					},
-				}"
+					}),
+				]"
 				:validate-on="['blur']"
 			/>
 

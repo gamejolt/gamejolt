@@ -1,8 +1,9 @@
 import { Options } from 'vue-property-decorator';
 import { ContentDocument } from '../../../../../_common/content/content-document';
 import AppEditableOverlay from '../../../../../_common/editable-overlay/editable-overlay.vue';
-import AppFormControlContent from '../../../../../_common/form-vue/control/content/content.vue';
+import AppFormControlContent from '../../../../../_common/form-vue/controls/AppFormControlContent.vue';
 import { FormOnLoad, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
+import { validateUsername } from '../../../../../_common/form-vue/validators';
 import Onboarding, { OnboardingStep } from '../../../../../_common/onboarding/onboarding.service';
 import { AppThemeSvg } from '../../../../../_common/theme/svg/svg';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
@@ -36,6 +37,8 @@ export default class FormOnboardingProfile
 
 	bootstrappedAvatar = false;
 	hasSelectedAvatar = false;
+
+	readonly validateUsername = validateUsername;
 
 	get loadUrl() {
 		return '/web/onboarding/profile';

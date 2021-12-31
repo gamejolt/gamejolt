@@ -1,8 +1,9 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { findRequiredVueParent, propRequired } from '../../../../../utils/vue';
-import AppFormControlUploadTS from '../../../../../_common/form-vue/control/upload/upload';
-import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
+import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import AppFormControlUploadTS from '../../../../../_common/form-vue/controls/upload/upload';
 import { CommonFormComponents } from '../../../../../_common/form-vue/form.service';
+import { validateFilesize } from '../../../../../_common/form-vue/validators';
 import FormFinancialsManagedAccountTS from './managed-account';
 import FormFinancialsManagedAccount from './managed-account.vue';
 
@@ -20,6 +21,8 @@ export default class AppFinancialsManagedAccountDocument extends Vue {
 	type!: 'id' | 'additional';
 
 	parent: FormFinancialsManagedAccountTS = null as any;
+
+	readonly validateFilesize = validateFilesize;
 
 	get prefix() {
 		return `${this.namePrefix}.${this.type === 'id' ? 'document' : 'additional_document'}`;

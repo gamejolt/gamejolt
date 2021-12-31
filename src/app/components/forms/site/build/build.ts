@@ -1,13 +1,7 @@
 import { Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
-import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
-import AppForm from '../../../../../_common/form-vue/form';
-import {
-	BaseForm,
-	FormOnInit,
-	FormOnLoad,
-	FormOnSubmit,
-} from '../../../../../_common/form-vue/form.service';
+import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import { BaseForm, FormOnLoad, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
 import { SiteBuild } from '../../../../../_common/site/build/build-model';
 import { Site } from '../../../../../_common/site/site-model';
 
@@ -18,23 +12,22 @@ import { Site } from '../../../../../_common/site/site-model';
 })
 export default class FormDashSiteBuild
 	extends BaseForm<SiteBuild>
-	implements FormOnInit, FormOnLoad, FormOnSubmit
+	implements FormOnLoad, FormOnSubmit
 {
 	modelClass = SiteBuild;
-	resetOnSubmit = true;
-	warnOnDiscard = false;
 
 	@Prop(Site) site!: Site;
 
 	maxFilesize = 0;
 	progress = 0;
 
-	declare $refs: {
-		form: AppForm;
-	};
-
 	get loadUrl() {
 		return `/web/dash/sites/upload-build/${this.site.id}`;
+	}
+
+	created() {
+		this.form.warnOnDiscard = false;
+		this.form.resetOnSubmit = true;
 	}
 
 	onInit() {
@@ -47,7 +40,7 @@ export default class FormDashSiteBuild
 	}
 
 	onFileSelect() {
-		this.$refs.form.submit();
+		this.form.submit();
 	}
 
 	onSubmit() {

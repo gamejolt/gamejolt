@@ -1,5 +1,5 @@
 <template>
-	<app-form name="addKeys">
+	<app-form :controller="form">
 		<app-form-group
 			name="amount"
 			:label="$gettext(`# of Keys to Generate`)"
@@ -13,10 +13,7 @@
 				step="1"
 				min="1"
 				:max="20000 - keyGroup.key_count"
-				:rules="{
-					min_value: 1,
-					max_value: 20000 - keyGroup.key_count,
-				}"
+				:validators="[validateMinValue(1), validateMaxValue(20000 - keyGroup.key_count)]"
 			/>
 			<app-form-control-errors />
 		</app-form-group>
@@ -29,12 +26,7 @@
 			<p class="help-block">
 				<translate>Paste one email address per line, or separate them by commas.</translate>
 			</p>
-			<app-form-control-textarea
-				rows="10"
-				:rules="{
-					max: 25000,
-				}"
-			/>
+			<app-form-control-textarea rows="10" :validators="[validateMaxLength(25000)]" />
 			<app-form-control-errors />
 		</app-form-group>
 
@@ -46,12 +38,7 @@
 			<p class="help-block">
 				<translate>Paste one username per line, or separate them by commas.</translate>
 			</p>
-			<app-form-control-textarea
-				rows="10"
-				:rules="{
-					max: 25000,
-				}"
-			/>
+			<app-form-control-textarea rows="10" :validators="[validateMaxLength(25000)]" />
 			<app-form-control-errors />
 		</app-form-group>
 

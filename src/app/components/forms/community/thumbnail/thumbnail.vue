@@ -1,7 +1,7 @@
 <script lang="ts" src="./thumbnail"></script>
 
 <template>
-	<app-form ref="form" name="thumbnailForm">
+	<app-form :controller="form">
 		<app-form-group
 			name="file"
 			:label="$gettext(`Upload New Thumbnail`)"
@@ -23,11 +23,11 @@
 			</p>
 
 			<app-form-control-upload
-				:rules="{
-					filesize: maxFilesize,
-					min_img_dimensions: [minSize, minSize],
-					max_img_dimensions: [maxSize, maxSize],
-				}"
+				:validators="[
+					validateFilesize(maxFilesize),
+					validateImageMinDimensions({ width: minSize, height: minSize }),
+					validateImageMaxDimensions({ width: maxSize, height: maxSize }),
+				]"
 				accept=".png,.jpg,.jpeg,.webp"
 				@changed="thumbnailSelected()"
 			/>
@@ -54,7 +54,7 @@
 			</div>
 		</app-form-group>
 
-		<template v-if="formModel.thumbnail && !hasFormErrors">
+		<template v-if="formModel.thumbnail && form.valid">
 			<div>
 				<app-form-button>
 					<translate>Save</translate>

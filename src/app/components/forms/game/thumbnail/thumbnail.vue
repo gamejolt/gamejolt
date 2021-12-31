@@ -1,5 +1,5 @@
 <template>
-	<app-form name="thumbnailForm" ref="form">
+	<app-form :controller="form">
 		<!--
 		They are required to upload a media item if there is none set yet.
 	-->
@@ -27,11 +27,11 @@
 			</p>
 
 			<app-form-control-upload
-				:rules="{
-					filesize: maxFilesize,
-					min_img_dimensions: [minWidth, minHeight],
-					max_img_dimensions: [maxWidth, maxHeight],
-				}"
+				:validators="[
+					validateFilesize(maxFilesize),
+					validateImageMinDimensions({ width: minWidth, height: minHeight }),
+					validateImageMaxDimensions({ width: maxWidth, height: maxHeight }),
+				]"
 				accept=".png,.jpg,.jpeg,.gif,.webp"
 				@changed="thumbSelected()"
 			/>
@@ -51,12 +51,15 @@
 			<div
 				class="alert"
 				v-if="
-					canCrop && formModel.thumbnail_media_item && formModel.thumbnail_media_item.is_animated
+					canCrop &&
+					formModel.thumbnail_media_item &&
+					formModel.thumbnail_media_item.is_animated
 				"
 			>
 				<p>
 					<translate>
-						Animated thumbnails can't be cropped manually. We set a default crop for you instead.
+						Animated thumbnails can't be cropped manually. We set a default crop for you
+						instead.
 					</translate>
 				</p>
 			</div>
@@ -72,7 +75,9 @@
 					:disabled="formModel.thumbnail_media_item.is_animated"
 				/>
 
-				<app-form-control-errors :label="$gettext(`dash.games.thumbnail.crop_error_label`)" />
+				<app-form-control-errors
+					:label="$gettext(`dash.games.thumbnail.crop_error_label`)"
+				/>
 			</div>
 			<div v-else>
 				<img :src="formModel.thumbnail_media_item.img_url" alt="" />

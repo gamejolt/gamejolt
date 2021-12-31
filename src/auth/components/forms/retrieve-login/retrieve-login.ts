@@ -5,10 +5,13 @@ import { BaseForm, FormOnSubmit } from '../../../../_common/form-vue/form.servic
 
 @Options({})
 export default class FormRetrieveLogin extends BaseForm<any> implements FormOnSubmit {
-	warnOnDiscard = false;
 	invalidEmail = false;
 
 	readonly Connection = Connection;
+
+	created() {
+		this.form.warnOnDiscard = false;
+	}
 
 	onChanged() {
 		this.invalidEmail = false;

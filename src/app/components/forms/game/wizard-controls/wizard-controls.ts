@@ -1,9 +1,8 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { findVueParent } from '../../../../../utils/vue';
-import AppFormButton from '../../../../../_common/form-vue/button/button.vue';
-import AppFormTS from '../../../../../_common/form-vue/form';
-import AppForm from '../../../../../_common/form-vue/form.vue';
+import AppForm from '../../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
 import { RouteStore, RouteStoreName } from '../../../../views/dashboard/games/manage/manage.store';
 
 @Options({
@@ -19,6 +18,7 @@ export default class AppDashGameWizardControls extends Vue {
 	// exist.
 	@State(RouteStoreName) manageRoute?: RouteStore;
 
+	// TODO(vue3)
 	form?: AppFormTS;
 
 	created() {

@@ -1,5 +1,5 @@
 <template>
-	<app-form name="contentEditorLinkForm">
+	<app-form :controller="form">
 		<app-form-group name="href" :optional="false" :label="$gettext(`Link Destination`)">
 			<app-form-control placeholder="https://example.com" v-app-focus-when />
 		</app-form-group>

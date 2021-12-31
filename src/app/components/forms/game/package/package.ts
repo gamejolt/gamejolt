@@ -4,18 +4,17 @@ import { Emit, Options, Prop, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { formatCurrency } from '../../../../../_common/filters/currency';
 import { formatDate } from '../../../../../_common/filters/date';
-import AppFormControlDate from '../../../../../_common/form-vue/control/date/date.vue';
-import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
+import AppFormLegend from '../../../../../_common/form-vue/AppFormLegend.vue';
+import AppFormControlDate from '../../../../../_common/form-vue/controls/AppFormControlDate.vue';
+import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import {
 	BaseForm,
 	FormOnBeforeSubmit,
-	FormOnInit,
 	FormOnLoad,
 } from '../../../../../_common/form-vue/form.service';
-import AppFormLegend from '../../../../../_common/form-vue/legend/legend.vue';
 import { Game } from '../../../../../_common/game/game.model';
 import { GamePackage } from '../../../../../_common/game/package/package.model';
-import AppLoadingFade from '../../../../../_common/loading/fade/fade.vue';
+import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { SellablePricing } from '../../../../../_common/sellable/pricing/pricing.model';
 import { Sellable } from '../../../../../_common/sellable/sellable.model';
@@ -48,11 +47,9 @@ type FormGamePackageModel = GamePackage & {
 })
 export default class FormGamePackage
 	extends BaseForm<FormGamePackageModel>
-	implements FormOnInit, FormOnLoad, FormOnBeforeSubmit
+	implements FormOnLoad, FormOnBeforeSubmit
 {
 	modelClass = GamePackage as any;
-	resetOnSubmit = true;
-	reloadOnSubmit = true;
 
 	@AppState
 	user!: AppStore['user'];
@@ -141,6 +138,10 @@ export default class FormGamePackage
 		if (this.formModel.pricing_type === 'pwyw' && !state) {
 			this.setField('price', null);
 		}
+	}
+
+	created() {
+		this.form.reloadOnSubmit = true;
 	}
 
 	async onInit() {

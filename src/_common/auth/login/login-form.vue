@@ -7,19 +7,18 @@
 		}"
 	>
 		<div class="auth-form-container">
-			<app-form class="auth-form" name="loginForm">
+			<app-form class="auth-form" :controller="form">
 				<fieldset :disabled="Connection.isClientOffline">
-					<!-- Min not needed since the login will fail if incorrect
-					anyway. -->
 					<app-form-group
 						name="username"
 						:label="$gettext('Username')"
 						:hide-label="true"
 					>
+						<!-- Min not needed since the login will fail if incorrect anyway. -->
 						<app-form-control
 							type="text"
 							:placeholder="$gettext('Username')"
-							:rules="{ max: 30, pattern: 'username' }"
+							:validators="[validateMaxLength(30), validateUsername()]"
 							@changed="onChanged"
 						/>
 
@@ -34,7 +33,7 @@
 						<app-form-control
 							type="password"
 							:placeholder="$gettext('Password')"
-							:rules="{ max: 300 }"
+							:validators="[validateMaxLength(300)]"
 							@changed="onChanged"
 						/>
 
@@ -73,7 +72,7 @@
 					</div>
 
 					<app-loading
-						v-if="state.isProcessing"
+						v-if="form.isProcessing"
 						:label="$gettext('Figuring this all out...')"
 						:centered="true"
 					/>

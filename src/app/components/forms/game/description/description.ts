@@ -2,13 +2,17 @@ import { Options, Prop, Watch } from 'vue-property-decorator';
 import { ContentDocument } from '../../../../../_common/content/content-document';
 import { ContentWriter } from '../../../../../_common/content/content-writer';
 import AppExpand from '../../../../../_common/expand/expand.vue';
-import AppFormControlContent from '../../../../../_common/form-vue/control/content/content.vue';
-import AppForm from '../../../../../_common/form-vue/form';
+import AppFormControlContent from '../../../../../_common/form-vue/controls/AppFormControlContent.vue';
 import {
 	BaseForm,
 	FormOnLoad,
 	FormOnSubmitSuccess,
 } from '../../../../../_common/form-vue/form.service';
+import {
+	validateContentMaxLength,
+	validateContentNoActiveUploads,
+	validateContentRequired,
+} from '../../../../../_common/form-vue/validators';
 import { Game } from '../../../../../_common/game/game.model';
 import { AppGamePerms } from '../../../game/perms/perms';
 import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
@@ -36,15 +40,15 @@ export default class FormGameDescription
 	tags!: string[];
 
 	modelClass = Game;
-	saveMethod = '$saveDescription' as '$saveDescription';
+	saveMethod = '$saveDescription' as const;
 
 	isFnafDetected = false;
 	isDisabled = false;
 	lengthLimit = 50_000;
 
-	declare $refs: {
-		form: AppForm;
-	};
+	readonly validateContentRequired = validateContentRequired;
+	readonly validateContentMaxLength = validateContentMaxLength;
+	readonly validateContentNoActiveUploads = validateContentNoActiveUploads;
 
 	get loadUrl() {
 		return `/web/dash/developer/games/description/save/${this.model!.id}`;

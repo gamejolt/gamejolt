@@ -19,7 +19,6 @@ export default class FormCommunityChannelChangeUrl extends BaseForm<FormModel> {
 	@Prop(propRequired(Array)) channels!: CommunityChannel[];
 
 	modelClass = CommunityChannel;
-	resetOnSubmit = true;
 
 	get isValid() {
 		if (!this.valid) {
@@ -34,5 +33,9 @@ export default class FormCommunityChannelChangeUrl extends BaseForm<FormModel> {
 				.map(i => i.title.toLowerCase().trim())
 				.includes(this.formModel.title.toLowerCase().trim())
 		);
+	}
+
+	created() {
+		this.form.resetOnSubmit = true;
 	}
 }

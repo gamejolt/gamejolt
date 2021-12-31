@@ -3,9 +3,13 @@ import { Emit, Options, Prop } from 'vue-property-decorator';
 import { trackCommentAdd } from '../../analytics/analytics.service';
 import { ContentContext } from '../../content/content-context';
 import { ContentRules } from '../../content/content-editor/content-rules';
-import AppFormControlContent from '../../form-vue/control/content/content.vue';
-import AppForm from '../../form-vue/form';
-import { BaseForm, FormOnInit, FormOnLoad, FormOnSubmitSuccess } from '../../form-vue/form.service';
+import AppFormControlContent from '../../form-vue/controls/AppFormControlContent.vue';
+import { BaseForm, FormOnLoad, FormOnSubmitSuccess } from '../../form-vue/form.service';
+import {
+	validateContentMaxLength,
+	validateContentNoActiveUploads,
+	validateContentRequired,
+} from '../../form-vue/validators';
 import { Model } from '../../model/model.service';
 import { Screen } from '../../screen/screen-service';
 import { Comment, getCommentModelResourceName } from '../comment-model';
@@ -18,7 +22,7 @@ import '../comment.styl';
 })
 export default class FormComment
 	extends BaseForm<Comment>
-	implements FormOnInit, FormOnLoad, FormOnSubmitSuccess
+	implements FormOnLoad, FormOnSubmitSuccess
 {
 	@Prop(Model)
 	commentModel!: Model;
@@ -32,13 +36,12 @@ export default class FormComment
 	@Prop(String)
 	placeholder?: string;
 
-	declare $refs: {
-		form: AppForm;
-	};
-
 	modelClass = Comment;
-	resetOnSubmit = true;
 	lengthLimit = 5_000;
+
+	readonly validateContentRequired = validateContentRequired;
+	readonly validateContentMaxLength = validateContentMaxLength;
+	readonly validateContentNoActiveUploads = validateContentNoActiveUploads;
 
 	get loadUrl() {
 		return `/comments/save`;
@@ -91,8 +94,12 @@ export default class FormComment
 
 			// Wait for errors, then clear them.
 			await nextTick();
-			this.$refs.form.clearErrors();
+			this.form.clearErrors();
 		}
+	}
+
+	created() {
+		this.form.resetOnSubmit = true;
 	}
 
 	onLoad(payload: any) {

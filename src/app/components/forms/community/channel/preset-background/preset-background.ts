@@ -5,9 +5,8 @@ import {
 	CommunityPresetChannelType,
 	getCommunityChannelBackground,
 } from '../../../../../../_common/community/community.model';
-import AppFormControlCrop from '../../../../../../_common/form-vue/control/crop/crop.vue';
-import AppFormControlUpload from '../../../../../../_common/form-vue/control/upload/upload.vue';
-import AppForm from '../../../../../../_common/form-vue/form';
+import AppFormControlCrop from '../../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
+import AppFormControlUpload from '../../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
 	BaseForm,
 	FormOnBeforeSubmit,
@@ -40,10 +39,6 @@ export default class FormCommunityChannelPresetBackground
 	minHeight = 0;
 	maxWidth = 0;
 	maxHeight = 0;
-
-	declare $refs: {
-		form: AppForm;
-	};
 
 	get loadUrl() {
 		return `/web/dash/communities/channels/save-preset-background/${this.formModel.id}`;
@@ -87,7 +82,7 @@ export default class FormCommunityChannelPresetBackground
 
 	backgroundSelected() {
 		if (this.formModel.file) {
-			this.$refs.form.submit();
+			this.form.submit();
 		}
 	}
 

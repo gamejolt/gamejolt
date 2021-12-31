@@ -1,7 +1,7 @@
 <script lang="ts" src="./payment-form"></script>
 
 <template>
-	<app-form ref="form" name="gamePackagePayment">
+	<app-form :controller="form">
 		<template v-if="checkoutStep === 'primary'">
 			<div v-if="partner" class="alert full-bleed">
 				<span v-translate="{ user: partner.display_name }">
@@ -61,9 +61,7 @@
 								<app-form-control
 									type="currency"
 									step="1"
-									:rules="{
-										min_value: _minOrderAmount,
-									}"
+									:validators="[validateMinValue(_minOrderAmount)]"
 								/>
 							</span>
 

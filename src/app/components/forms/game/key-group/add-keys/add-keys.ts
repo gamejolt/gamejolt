@@ -13,10 +13,12 @@ import { KeyGroup } from '../../../../../../_common/key-group/key-group.model';
 export default class FormGameKeyGroupAddKeys extends BaseForm<any> implements FormOnSubmit {
 	@Prop(KeyGroup) keyGroup!: KeyGroup;
 
-	warnOnDiscard = false;
-
 	readonly formatNumber = formatNumber;
 	readonly KeyGroup = KeyGroup;
+
+	created() {
+		this.form.warnOnDiscard = false;
+	}
 
 	onSubmit() {
 		return Api.sendRequest(

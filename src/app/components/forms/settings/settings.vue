@@ -1,7 +1,7 @@
 <script lang="ts" src="./settings"></script>
 
 <template>
-	<app-form ref="form" name="settingsForm" @changed="onChange">
+	<app-form :controller="form" @changed="onChange">
 		<fieldset v-if="GJ_IS_CLIENT" id="settings-client">
 			<legend>
 				<translate>settings.client</translate>
@@ -51,7 +51,7 @@
 				:label="$gettext('settings.max_download_count_label')"
 				:hide-label="true"
 			>
-				<app-form-control type="number" :rules="{ min_value: 1 }" />
+				<app-form-control type="number" :validators="[validateMinValue(1)]" />
 				<p class="help-block">
 					<translate>settings.max_download_count_help</translate>
 				</p>
@@ -76,7 +76,7 @@
 				:label="$gettext('settings.max_extract_count_label')"
 				:hide-label="true"
 			>
-				<app-form-control type="number" :rules="{ min_value: 1 }" />
+				<app-form-control type="number" :validators="[validateMinValue(1)]" />
 				<p class="help-block">
 					<translate>settings.max_extract_count_help</translate>
 				</p>

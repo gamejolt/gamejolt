@@ -6,7 +6,7 @@ import AppCardListDraggable from '../../../../../../../_common/card/list/draggab
 import AppCardListItem from '../../../../../../../_common/card/list/item/item.vue';
 import AppCardList from '../../../../../../../_common/card/list/list.vue';
 import { GameSong } from '../../../../../../../_common/game/song/song.model';
-import AppLoadingFade from '../../../../../../../_common/loading/fade/fade.vue';
+import AppLoadingFade from '../../../../../../../_common/loading/AppLoadingFade.vue';
 import { ModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,

@@ -2,9 +2,8 @@ import { Options, Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
 import { Community } from '../../../../../_common/community/community.model';
-import AppFormControlPrefixedInput from '../../../../../_common/form-vue/control/prefixed-input/prefixed-input.vue';
-import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
-import { BaseForm, FormOnInit, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
+import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
+import { BaseForm, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
 import {
@@ -25,17 +24,12 @@ interface FormModel {
 @Options({
 	components: {
 		AppFormControlToggle,
-		AppFormControlPrefixedInput,
 	},
 })
-export default class FormCommunityBlock
-	extends BaseForm<FormModel>
-	implements FormOnInit, FormOnSubmit
-{
+export default class FormCommunityBlock extends BaseForm<FormModel> implements FormOnSubmit {
 	@Prop(propRequired(Community)) community!: Community;
 	@Prop(propOptional(User, null)) user?: User | null;
 
-	resetOnSubmit = true;
 	usernameLocked = false;
 	otherOptions: string[] = [];
 
@@ -56,6 +50,10 @@ export default class FormCommunityBlock
 
 	get showReasonOther() {
 		return this.formModel.reasonType === REASON_OTHER;
+	}
+
+	created() {
+		this.form.resetOnSubmit = true;
 	}
 
 	onInit() {

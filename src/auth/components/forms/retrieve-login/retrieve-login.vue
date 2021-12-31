@@ -1,7 +1,7 @@
 <script lang="ts" src="./retrieve-login"></script>
 
 <template>
-	<app-form name="retrieveLoginForm">
+	<app-form :controller="form">
 		<fieldset :disabled="Connection.isClientOffline">
 			<app-form-group name="email" :label="$gettext('Email or Username')" hide-label>
 				<p class="help-block">

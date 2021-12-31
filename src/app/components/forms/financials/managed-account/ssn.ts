@@ -1,6 +1,7 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../../../../utils/vue';
 import { CommonFormComponents } from '../../../../../_common/form-vue/form.service';
+import { validatePattern } from '../../../../../_common/form-vue/validators';
 import FormFinancialsManagedAccountTS from './managed-account';
 import FormFinancialsManagedAccount from './managed-account.vue';
 
@@ -17,6 +18,9 @@ export default class AppFinancialsManagedAccountSsn extends Vue {
 	@Prop(String) countryCode!: string;
 
 	parent: FormFinancialsManagedAccountTS = null as any;
+
+	readonly validatePattern = validatePattern;
+
 	created() {
 		this.parent = findRequiredVueParent(
 			this,

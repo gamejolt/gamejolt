@@ -1,16 +1,14 @@
 <script lang="ts" src="./community"></script>
 
 <template>
-	<app-form name="detailsForm">
+	<app-form :controller="form">
 		<app-form-group name="name" :label="$gettext(`Name`)">
 			<div class="help-block">
 				<translate>Choose a short and descriptive name for your community.</translate>
 			</div>
 			<app-form-control
 				type="text"
-				:rules="{
-					max: 100,
-				}"
+				:validators="[validateMaxLength(100)]"
 				:disabled="method === 'edit' && formModel.game"
 			/>
 			<app-form-control-errors />
@@ -25,23 +23,21 @@
 					</translate>
 				</p>
 			</div>
-			<app-form-control-prefixed-input
+			<app-form-control
 				prefix="gamejolt.com/c/"
-				:rules="{
-					pattern: 'urlPath',
-					max: 50,
-					availability: {
+				:validators="[
+					validateUrlPath(),
+					validateMaxLength(50),
+					validateAvailability({
 						url: '/web/dash/communities/check-field-availability/path',
-					},
-				}"
+					}),
+				]"
 				data-vv-delay="500"
 			/>
 			<div class="help-block">
 				<p>
 					<strong>
-						<translate>
-							Once a URL path is chosen it cannot be changed!
-						</translate>
+						<translate> Once a URL path is chosen it cannot be changed! </translate>
 					</strong>
 				</p>
 			</div>
@@ -59,12 +55,7 @@
 				<translate>Customize the placeholder message for post creations.</translate>
 			</div>
 
-			<app-post-add-button-form-control
-				:placeholder="$gettext(`Share your creations!`)"
-				:rules="{
-					max: 100,
-				}"
-			/>
+			<AppPostAddButtonFormControl />
 
 			<app-form-control-errors />
 		</app-form-group>

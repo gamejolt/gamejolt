@@ -1,11 +1,11 @@
 <template>
-	<app-form name="themeEditorImageForm" ref="form">
+	<app-form :controller="form">
 		<app-form-group name="file" :hide-label="true">
 			<app-form-control-upload
-				:rules="{
-					filesize: maxFilesize,
-					max_img_dimensions: [maxWidth, maxHeight],
-				}"
+				:validators="[
+					validateFilesize(maxFilesize),
+					validateImageMaxDimensions({ width: maxWidth, height: maxHeight }),
+				]"
 				accept=".png,.jpg,.jpeg,.gif"
 				:upload-link-label="$gettext(`Upload a PNG, JPG, or GIF image.`)"
 				@changed="submit"

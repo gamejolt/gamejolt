@@ -1,6 +1,6 @@
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
-import AppLoadingFade from '../../../../../_common/loading/fade/fade.vue';
+import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';

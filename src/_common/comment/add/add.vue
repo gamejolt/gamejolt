@@ -1,17 +1,17 @@
 <script lang="ts" src="./add"></script>
 
 <template>
-	<app-form ref="form" name="commentAddForm">
+	<app-form :controller="form">
 		<app-form-group name="comment_content" :label="$gettext('Leave a Comment')" hide-label>
 			<app-form-control-content
 				:placeholder="placeholder || $gettext(`Leave a comment...`)"
 				:content-context="contentContext"
 				:autofocus="autofocus"
-				:rules="{
-					content_required: true,
-					content_no_media_uploads: true,
-					max_content_length: [lengthLimit],
-				}"
+				:validators="[
+					validateContentRequired(),
+					validateContentNoActiveUploads(),
+					validateContentMaxLength(lengthLimit),
+				]"
 				:validate-on="['blur']"
 				:max-height="maxHeight"
 				:display-rules="displayRules"

@@ -1,7 +1,7 @@
 <script lang="ts" src="./address"></script>
 
 <template>
-	<app-form name="userAddressForm">
+	<app-form :controller="form">
 		<div class="row">
 			<div class="col-sm-6">
 				<app-form-group name="country" :label="$gettext('Country')">

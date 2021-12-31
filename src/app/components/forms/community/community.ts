@@ -1,16 +1,13 @@
 import { Options } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
 import { Community } from '../../../../_common/community/community.model';
-import AppFormControlTheme from '../../../../_common/form-vue/control/theme/theme.vue';
-import {
-	BaseForm,
-	FormOnInit,
-	FormOnSubmitSuccess,
-} from '../../../../_common/form-vue/form.service';
+import AppFormControlTheme from '../../../../_common/form-vue/controls/AppFormControlTheme.vue';
+import { BaseForm, FormOnSubmitSuccess } from '../../../../_common/form-vue/form.service';
+import { validateUrlPath } from '../../../../_common/form-vue/validators';
 import { Theme } from '../../../../_common/theme/theme.model';
 import { ThemeMutation, ThemeState, ThemeStore } from '../../../../_common/theme/theme.store';
 import { Store } from '../../../store';
-import AppPostAddButtonFormControl from '../../post/add-button/form-control/form-control.vue';
+import AppPostAddButtonFormControl from '../../post/add-button/AppPostAddButtonFormControl.vue';
 
 @Options({
 	components: {
@@ -18,10 +15,7 @@ import AppPostAddButtonFormControl from '../../post/add-button/form-control/form
 		AppFormControlTheme,
 	},
 })
-export default class FormCommunity
-	extends BaseForm<Community>
-	implements FormOnInit, FormOnSubmitSuccess
-{
+export default class FormCommunity extends BaseForm<Community> implements FormOnSubmitSuccess {
 	modelClass = Community;
 
 	@Action
@@ -33,8 +27,10 @@ export default class FormCommunity
 	@ThemeState
 	userTheme!: ThemeStore['userTheme'];
 
-	onInit() {
-		this.warnOnDiscard = this.method === 'edit';
+	readonly validateUrlPath = validateUrlPath;
+
+	created() {
+		this.form.warnOnDiscard = this.method === 'edit';
 	}
 
 	onSubmitSuccess(response: any) {

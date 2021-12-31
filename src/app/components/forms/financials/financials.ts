@@ -2,10 +2,8 @@ import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
 import { formatCurrency } from '../../../../_common/filters/currency';
-import AppForm from '../../../../_common/form-vue/form';
 import {
 	BaseForm,
-	FormOnInit,
 	FormOnLoad,
 	FormOnSubmit,
 	FormOnSubmitError,
@@ -40,15 +38,8 @@ interface FormModel {
 })
 export default class FormFinancials
 	extends BaseForm<FormModel>
-	implements FormOnInit, FormOnSubmit, FormOnLoad, FormOnSubmitError
+	implements FormOnSubmit, FormOnLoad, FormOnSubmitError
 {
-	resetOnSubmit = true;
-	reloadOnSubmit = true;
-
-	declare $refs: {
-		form: AppForm;
-	};
-
 	// We will set this to which agreement we should show them depending on
 	// their account type.
 	whichAgreement: 'developer' | 'partner' = null as any;
@@ -78,6 +69,10 @@ export default class FormFinancials
 
 	get isVerified() {
 		return this.account && this.account.is_verified;
+	}
+
+	created() {
+		this.form.reloadOnSubmit = true;
 	}
 
 	onInit() {
@@ -114,7 +109,7 @@ export default class FormFinancials
 
 	async acceptTerms(type: 'partner' | 'developer') {
 		this.setField('tos_type', type);
-		this.$refs.form.submit();
+		this.form.submit();
 	}
 
 	onSubmit() {

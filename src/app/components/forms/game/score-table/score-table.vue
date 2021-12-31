@@ -1,7 +1,7 @@
 <template>
-	<app-form name="scoreTableForm">
+	<app-form :controller="form">
 		<app-form-group name="name" :label="$gettext(`dash.games.scoreboard.form.name_label`)">
-			<app-form-control type="text" :rules="{ max: 50 }" />
+			<app-form-control type="text" :validators="[validateMaxLength(50)]" />
 			<app-form-control-errors />
 		</app-form-group>
 
@@ -10,7 +10,7 @@
 			:optional="true"
 			:label="$gettext(`dash.games.scoreboard.form.description_label`)"
 		>
-			<app-form-control-textarea rows="5" :rules="{ max: 250 }" />
+			<app-form-control-textarea rows="5" :validators="[validateMaxLength(250)]" />
 			<app-form-control-errors />
 		</app-form-group>
 

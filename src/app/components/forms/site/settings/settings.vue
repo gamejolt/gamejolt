@@ -1,39 +1,32 @@
+import { validateGaTrackingId } from '../../../../../_common/form-vue/validators';
 <template>
-	<app-form name="settingsForm">
+	<app-form :controller="form">
 		<app-form-group name="title" :label="$gettext(`Page Title`)" :optional="true">
 			<div class="help-block" v-if="!formModel.game_id">
 				<translate>
-					You can override the default title for your site. This will show in search engines, and in
-					the tab bar of browsers. By default it's your display name.
+					You can override the default title for your site. This will show in search
+					engines, and in the tab bar of browsers. By default it's your display name.
 				</translate>
 			</div>
 			<div class="help-block" v-else>
 				<translate>
-					You can override the default title for your site. This will show in search engines, and in
-					the tab bar of browsers. By default it's the title of your game.
+					You can override the default title for your site. This will show in search
+					engines, and in the tab bar of browsers. By default it's the title of your game.
 				</translate>
 			</div>
 
-			<app-form-control
-				:rules="{
-					max: 100,
-				}"
-			/>
+			<app-form-control :validators="[validateMaxLength(100)]" />
 			<app-form-control-errors />
 		</app-form-group>
 
 		<app-form-group name="description" :label="$gettext(`Description`)" :optional="true">
 			<div class="help-block">
 				<translate>
-					Search engines show this as the description under the page title in search results.
+					Search engines show this as the description under the page title in search
+					results.
 				</translate>
 			</div>
-			<app-form-control-textarea
-				rows="3"
-				:rules="{
-					max: 250,
-				}"
-			/>
+			<app-form-control-textarea rows="3" :validators="[validateMaxLength(250)]" />
 			<app-form-control-errors />
 		</app-form-group>
 
@@ -43,10 +36,7 @@
 			:optional="true"
 		>
 			<app-form-control
-				:rules="{
-					max: 30,
-					pattern: 'gaTrackingId',
-				}"
+				:validators="[validateMaxLength(30), validateGaTrackingId()]"
 				:placeholder="$gettext(`dash.games.settings.ga_tracking_id_placeholder`)"
 			/>
 
@@ -57,9 +47,9 @@
 			<div class="help-block">
 				<p>
 					<translate>
-						Use Google Analytics to track a multitude of stats and get tons of information about
-						your site. Just enter your Google Analytics tracking ID here and we'll start sending
-						data over there right away.
+						Use Google Analytics to track a multitude of stats and get tons of
+						information about your site. Just enter your Google Analytics tracking ID
+						here and we'll start sending data over there right away.
 					</translate>
 				</p>
 				<p>

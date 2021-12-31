@@ -4,7 +4,8 @@ import { Api } from '../../../../_common/api/api.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
 import { formatCurrency } from '../../../../_common/filters/currency';
 import { AppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';
-import { BaseForm, FormOnInit, FormOnSubmit } from '../../../../_common/form-vue/form.service';
+import { BaseForm, FormOnSubmit } from '../../../../_common/form-vue/form.service';
+import { validateCreditCardExpiration } from '../../../../_common/form-vue/validators';
 import { Geo, Region } from '../../../../_common/geo/geo.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Order } from '../../../../_common/order/order.model';
@@ -21,13 +22,11 @@ import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 		AppFocusWhen,
 	},
 })
-export default class FormPayment extends BaseForm<any> implements FormOnInit, FormOnSubmit {
+export default class FormPayment extends BaseForm<any> implements FormOnSubmit {
 	@State app!: AppStore;
 
 	@Prop(Array) cards!: any[];
 	@Prop(Order) order!: Order;
-
-	warnOnDiscard = false;
 
 	stripeError: string | null = null;
 	countries = Geo.getCountries();
@@ -58,6 +57,11 @@ export default class FormPayment extends BaseForm<any> implements FormOnInit, Fo
 	];
 	readonly expMask = [/\d/, /\d/, '/', /\d/, /\d/];
 	readonly formatCurrency = formatCurrency;
+	readonly validateCreditCardExpiration = validateCreditCardExpiration;
+
+	created() {
+		this.form.warnOnDiscard = false;
+	}
 
 	onInit() {
 		this.setField('country', 'us');

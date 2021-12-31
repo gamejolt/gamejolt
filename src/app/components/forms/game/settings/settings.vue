@@ -1,5 +1,5 @@
 <template>
-	<app-form name="settingsForm">
+	<app-form :controller="form">
 		<app-form-group
 			name="ga_tracking_id"
 			:label="$gettext(`dash.games.settings.ga_tracking_id_label`)"
@@ -7,10 +7,7 @@
 		>
 			<app-form-control
 				type="text"
-				:rules="{
-					max: 30,
-					pattern: 'gaTrackingId',
-				}"
+				:validators="[validateMaxLength(30), validateGaTrackingId()]"
 				:placeholder="$gettext(`dash.games.settings.ga_tracking_id_placeholder`)"
 			/>
 
@@ -18,14 +15,15 @@
 				:label="$gettext(`dash.games.settings.ga_tracking_id_error_label`)"
 			/>
 
-			<div class="help-block" v-translate>
+			<div class="help-block">
 				<p>
 					Use
 					<app-link-external href="http://google.com/analytics">
 						Google Analytics
 					</app-link-external>
-					to track a multitude of stats and get tons of information about your game page. Just enter
-					your Google Analytics tracking ID here and we'll start sending data over there right away.
+					to track a multitude of stats and get tons of information about your game page.
+					Just enter your Google Analytics tracking ID here and we'll start sending data
+					over there right away.
 				</p>
 
 				<p><strong>Here's how to set get started:</strong></p>
@@ -80,8 +78,8 @@
 				</p>
 				<p>
 					<translate>
-						Only do this if you don't want to monetize your game, or if your game is subject to a
-						license that doesn't allow monetization.
+						Only do this if you don't want to monetize your game, or if your game is
+						subject to a license that doesn't allow monetization.
 					</translate>
 				</p>
 			</div>
@@ -100,29 +98,34 @@
 			</div>
 		</div>
 
-		<app-form-group name="comments_enabled" :label="$gettext(`dash.games.settings.comments_label`)">
+		<app-form-group
+			name="comments_enabled"
+			:label="$gettext(`dash.games.settings.comments_label`)"
+		>
 			<app-form-control-toggle class="pull-right" />
 			<div class="help-block">
 				<p>
 					<strong>
 						<translate>
-							Turning this off will disable comments for this game and hide any comments already on
-							the page.
+							Turning this off will disable comments for this game and hide any
+							comments already on the page.
 						</translate>
 					</strong>
 				</p>
 
 				<p>
 					<translate>
-						The community will no longer be able to give you feedback via comments, but you may
-						prefer this if your game contains sensitive or controversial material.
+						The community will no longer be able to give you feedback via comments, but
+						you may prefer this if your game contains sensitive or controversial
+						material.
 					</translate>
 				</p>
 
 				<p>
 					<translate>
-						This will never remove comments from your game page—merely hide them. If you allow
-						comments again in the future, all previously hidden comments will be restored.
+						This will never remove comments from your game page—merely hide them. If you
+						allow comments again in the future, all previously hidden comments will be
+						restored.
 					</translate>
 				</p>
 			</div>
@@ -135,16 +138,16 @@
 				<p>
 					<strong>
 						<translate>
-							Turning this off will disable ratings for this game and hide any ratings already on
-							the page.
+							Turning this off will disable ratings for this game and hide any ratings
+							already on the page.
 						</translate>
 					</strong>
 				</p>
 				<p>
 					<translate>
-						Your game's voltage will be calculated as if it had received no likes or dislikes. If
-						you allow ratings in the future, the old ratings will be reapplied and your voltage will
-						be recalculated.
+						Your game's voltage will be calculated as if it had received no likes or
+						dislikes. If you allow ratings in the future, the old ratings will be
+						reapplied and your voltage will be recalculated.
 					</translate>
 				</p>
 			</div>

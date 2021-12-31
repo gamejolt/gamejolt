@@ -8,7 +8,7 @@ import { GameBundle } from '../../../../_common/game-bundle/game-bundle.model';
 import { GamePlaylist } from '../../../../_common/game-playlist/game-playlist.model';
 import { Game } from '../../../../_common/game/game.model';
 import { Jam } from '../../../../_common/jam/jam.model';
-import AppLoadingFade from '../../../../_common/loading/fade/fade.vue';
+import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';

@@ -1,5 +1,5 @@
 <template>
-	<app-form class="form-dash-site-build" name="siteBuildForm" ref="form">
+	<app-form class="form-dash-site-build" :controller="form">
 		<app-form-group name="file" :hide-label="true">
 			<p class="help-block">
 				<translate
@@ -7,15 +7,13 @@
 						maxFilesize: maxFilesize / 1024 / 1024,
 					}"
 				>
-					Static site uploads are currently capped at %{ maxFilesize }MB. Please upload a .zip file
-					with an index.html file in the root of the folder.
+					Static site uploads are currently capped at %{ maxFilesize }MB. Please upload a
+					.zip file with an index.html file in the root of the folder.
 				</translate>
 			</p>
 
 			<app-form-control-upload
-				:rules="{
-					size: maxFilesize,
-				}"
+				:validators="[validateFilesize(maxFilesize)]"
 				accept=".zip"
 				:upload-link-label="$gettext(`Upload a .zip file.`)"
 				@changed="onFileSelect"

@@ -7,8 +7,6 @@ export default abstract class OnboardingComponent<T>
 	extends BaseForm<T>
 	implements FormOnSubmitSuccess
 {
-	warnOnDiscard = false;
-
 	@Prop(User)
 	user!: User;
 
@@ -28,6 +26,7 @@ export default abstract class OnboardingComponent<T>
 	}
 
 	created() {
+		this.form.warnOnDiscard = false;
 		Onboarding.startStep(this.stepName);
 	}
 

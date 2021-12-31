@@ -5,21 +5,19 @@ import { Api } from '../../../../../_common/api/api.service';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { FiresidePostVideo } from '../../../../../_common/fireside/post/video/video-model';
-import AppFormControlUploadTS from '../../../../../_common/form-vue/control/upload/upload';
-import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
+import AppFormLegend from '../../../../../_common/form-vue/AppFormLegend.vue';
+import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import AppFormControlUploadTS from '../../../../../_common/form-vue/controls/upload/upload';
 import { AppFocusWhen } from '../../../../../_common/form-vue/focus-when.directive';
-import AppFormTS from '../../../../../_common/form-vue/form';
 import {
 	BaseForm,
-	FormOnInit,
 	FormOnLoad,
 	FormOnSubmit,
 	FormOnSubmitError,
 	FormOnSubmitSuccess,
 } from '../../../../../_common/form-vue/form.service';
-import AppFormLegend from '../../../../../_common/form-vue/legend/legend.vue';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
-import AppLoadingFade from '../../../../../_common/loading/fade/fade.vue';
+import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { Payload } from '../../../../../_common/payload/payload-service';
 import AppProgressBar from '../../../../../_common/progress/bar/bar.vue';
@@ -59,7 +57,7 @@ export const enum VideoStatus {
 })
 export default class AppFormPostVideo
 	extends BaseForm<FormModel>
-	implements FormOnSubmit, FormOnLoad, FormOnSubmitError, FormOnSubmitSuccess, FormOnInit
+	implements FormOnSubmit, FormOnLoad, FormOnSubmitError, FormOnSubmitSuccess
 {
 	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
 	@Prop(propRequired(Boolean)) wasPublished!: boolean;
@@ -79,7 +77,6 @@ export default class AppFormPostVideo
 	readonly formatNumber = formatNumber;
 
 	declare $refs: {
-		form: AppFormTS;
 		upload: AppFormControlUploadTS;
 	};
 
@@ -141,7 +138,7 @@ export default class AppFormPostVideo
 			return VideoStatus.COMPLETE;
 		}
 
-		if (this.state.isProcessing) {
+		if (this.form.isProcessing) {
 			return VideoStatus.UPLOADING;
 		}
 
@@ -208,7 +205,7 @@ export default class AppFormPostVideo
 
 	videoSelected() {
 		if (this.formModel.video !== null) {
-			this.$refs.form.submit();
+			this.form.submit();
 		}
 	}
 

@@ -1,7 +1,7 @@
 <script lang="ts" src="./profile"></script>
 
 <template>
-	<app-form name="profileForm">
+	<app-form :controller="form">
 		<app-form-group name="theme" :label="$gettext(`Color Theme`)">
 			<app-form-control-theme class="pull-right" @changed="onThemeChanged()" />
 			<p class="help-block">
@@ -19,15 +19,15 @@
 		>
 			<app-form-control
 				type="text"
-				:rules="{
-					min: 3,
-					max: 30,
-					pattern: 'username',
-					availability: {
+				:validators="[
+					validateMinLength(3),
+					validateMaxLength(30),
+					validateUsername(),
+					validateAvailability({
 						url: '/web/dash/profile/check-field-availability/username',
 						initVal: model.username,
-					},
-				}"
+					}),
+				]"
 				:validate-on="['blur']"
 			/>
 
@@ -73,13 +73,13 @@
 		>
 			<app-form-control
 				type="text"
-				:rules="{
-					max: 100,
-					availability: {
+				:validators="[
+					validateMaxLength(100),
+					validateAvailability({
 						url: '/web/dash/profile/check-field-availability/name',
 						initVal: model.name,
-					},
-				}"
+					}),
+				]"
 				:validate-on="['blur']"
 			/>
 
@@ -99,12 +99,7 @@
 			:label="$gettext(`dash.profile.edit.website_label`)"
 			:optional="true"
 		>
-			<app-form-control
-				type="url"
-				:rules="{
-					max: 250,
-				}"
-			/>
+			<app-form-control type="url" :validators="[validateMaxLength(250)]" />
 			<app-form-control-errors />
 		</app-form-group>
 
@@ -118,9 +113,7 @@
 				:disabled="isBioLocked"
 				:model-id="model.id"
 				:max-height="0"
-				:rules="{
-					max_content_length: [bioLengthLimit],
-				}"
+				:validators="[validateContentMaxLength(bioLengthLimit)]"
 			/>
 
 			<app-form-control-errors />

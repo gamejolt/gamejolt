@@ -21,8 +21,6 @@ export const TranslateDirective: Directive<HTMLElement, Record<string, string | 
 		el.dataset.msgid = msgid;
 		el.dataset.currentLanguage = getTranslationLang();
 
-		console.log('msgid', msgid);
-
 		_updateTranslation(el, binding, vnode);
 	},
 	updated(el, binding, vnode) {
@@ -49,7 +47,6 @@ function _updateTranslation(
 	vnode: VNode
 ) {
 	const attrs = vnode.props ?? {};
-	console.log('attrs', attrs);
 	const msgid = el.dataset.msgid as string;
 	const translateN = attrs['translate-n'];
 	const translatePlural = attrs['translate-plural'];

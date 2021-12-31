@@ -1,7 +1,7 @@
 <script lang="ts" src="./package"></script>
 
 <template>
-	<app-form name="packageForm">
+	<app-form :controller="form">
 		<app-loading-fade :is-loading="isProcessing">
 			<app-form-group name="title" :label="$gettext(`dash.games.packages.form.title_label`)">
 				<p class="help-block">
@@ -13,14 +13,14 @@
 
 				<app-form-control
 					max="150"
-					data-vv-delay="500"
-					:rules="{
-						max: 150,
-						availability: {
+					:validators="[
+						validateMaxLength(150),
+						validateAvailability({
 							url: `/web/dash/developer/games/packages/check-field-availability/${game.id}/title`,
 							initVal: method === 'edit' ? model.title || game.title : undefined,
-						},
-					}"
+						}),
+					]"
+					data-vv-delay="500"
 					:disabled="!hasBuildsPerms"
 				/>
 
@@ -47,7 +47,7 @@
 				<div v-else>
 					<app-form-control-textarea
 						rows="2"
-						:rules="{ max: 750 }"
+						:validators="[validateMaxLength(750)]"
 						:disabled="!hasBuildsPerms"
 					/>
 					<app-form-control-errors />
@@ -236,9 +236,7 @@
 							<app-form-control
 								type="currency"
 								step="1"
-								:rules="{
-									min_value: minPrice / 100,
-								}"
+								:validators="[validateMinValue(minPrice / 100)]"
 								:disabled="!formModel.has_suggested_price || !hasSalesPerms"
 							/>
 						</div>
@@ -257,9 +255,7 @@
 					<app-form-control
 						type="currency"
 						step="1"
-						:rules="{
-							min_value: minPrice / 100,
-						}"
+						:validators="[validateMinValue(minPrice / 100)]"
 						:disabled="!hasSalesPerms"
 					/>
 				</div>
@@ -348,9 +344,7 @@
 							>
 								<app-form-control-date
 									:timezone-offset="saleTimezoneOffset"
-									:rules="{
-										min_date: now,
-									}"
+									:validators="[validateMinDate(now)]"
 								/>
 								<app-form-control-errors :label="$gettext(`start time`)" />
 							</app-form-group>
@@ -359,9 +353,7 @@
 						<app-form-group name="sale_end" :label="$gettext(`End`)">
 							<app-form-control-date
 								:timezone-offset="saleTimezoneOffset"
-								:rules="{
-									min_date: formModel.sale_start,
-								}"
+								:validators="[validateMinDate(formModel.sale_start)]"
 							/>
 							<app-form-control-errors :label="$gettext(`end time`)" />
 						</app-form-group>
@@ -372,10 +364,10 @@
 								<app-form-control
 									type="currency"
 									step="1"
-									:rules="{
-										min_value: minPrice / 100,
-										max_value: formModel.price - 0.01,
-									}"
+									:validators="[
+										validateMinValue(minPrice / 100),
+										validateMaxValue(formModel.price - 0.01),
+									]"
 								/>
 							</div>
 

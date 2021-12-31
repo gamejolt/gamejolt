@@ -1,7 +1,7 @@
 <script lang="ts" src="./game"></script>
 
 <template>
-	<app-form name="gameForm">
+	<app-form :controller="form">
 		<div v-if="stage === 'dev-status'">
 			<p class="page-help">
 				<translate>
@@ -17,9 +17,7 @@
 				<app-form-group name="title" :label="$gettext(`dash.games.form.title_label`)">
 					<app-form-control
 						type="text"
-						:rules="{
-							max: 250,
-						}"
+						:validators="[validateMaxLength(250)]"
 						:disabled="!hasAllPerms"
 					/>
 					<app-form-control-errors />
@@ -28,15 +26,15 @@
 				<app-form-group name="path" :label="$gettext(`URL Path`)">
 					<app-form-control
 						type="text"
-						data-vv-delay="500"
-						:rules="{
-							pattern: 'urlPath',
-							max: 50,
-							availability: {
+						:validators="[
+							validateUrlPath(),
+							validateMaxLength(50),
+							validateAvailability({
 								url: '/web/dash/developer/games/check-field-availability/path',
 								initVal: method === 'edit' ? model.path : undefined,
-							},
-						}"
+							}),
+						]"
+						data-vv-delay="500"
 						:disabled="!hasAllPerms"
 					/>
 
@@ -66,9 +64,7 @@
 				>
 					<app-form-control
 						type="url"
-						:rules="{
-							max: 250,
-						}"
+						:validators="[validateMaxLength(250)]"
 						:disabled="!hasAllPerms"
 					/>
 					<app-form-control-errors />
@@ -98,9 +94,7 @@
 					>
 						<app-form-control
 							type="text"
-							:rules="{
-								max: 200,
-							}"
+							:validators="[validateMaxLength(200)]"
 							:disabled="!hasBuildsPerms"
 						/>
 

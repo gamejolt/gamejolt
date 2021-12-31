@@ -1,13 +1,7 @@
 <template>
-	<app-form name="playlistForm">
+	<app-form :controller="form">
 		<app-form-group name="name" :label="$gettext('library.playlists.form.name_label')">
-			<app-form-control
-				type="text"
-				:rules="{
-					max: 100,
-				}"
-				v-app-focus-when
-			/>
+			<app-form-control type="text" :validators="[validateMaxLength(100)]" v-app-focus-when />
 			<app-form-control-errors />
 		</app-form-group>
 

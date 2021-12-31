@@ -2,7 +2,7 @@ import { Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../../utils/vue';
 import { CommunityCompetition } from '../../../../../../../_common/community/competition/competition.model';
 import { CommunityCompetitionVotingCategory } from '../../../../../../../_common/community/competition/voting-category/voting-category.model';
-import AppFormControlTextarea from '../../../../../../../_common/form-vue/control/textarea/textarea.vue';
+import AppFormControlTextarea from '../../../../../../../_common/form-vue/controls/AppFormControlTextarea.vue';
 import { BaseForm, FormOnBeforeSubmit } from '../../../../../../../_common/form-vue/form.service';
 
 @Options({

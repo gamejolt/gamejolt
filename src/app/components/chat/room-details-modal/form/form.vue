@@ -1,7 +1,7 @@
 <script lang="ts" src="./form"></script>
 
 <template>
-	<app-form name="roomDetailsForm">
+	<app-form :controller="form">
 		<div class="-form">
 			<app-form-group
 				name="title"
@@ -12,7 +12,10 @@
 			>
 				<app-form-control
 					type="text"
-					:rules="{ min: titleMinLength, max: titleMaxLength }"
+					:validators="[
+						validateMinLength(titleMinLength),
+						validateMaxLength(titleMaxLength),
+					]"
 					:validate-on="['blur']"
 					:placeholder="$gettext(`Empty group title`)"
 				/>

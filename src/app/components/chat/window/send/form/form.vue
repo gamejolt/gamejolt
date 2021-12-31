@@ -1,7 +1,7 @@
 <script lang="ts" src="./form"></script>
 
 <template>
-	<app-form ref="form" name="chat-send-form">
+	<app-form :controller="form">
 		<app-shortkey shortkey="tab" @press="onTabKeyPressed" />
 
 		<div class="-top-indicators">
@@ -34,9 +34,7 @@
 					:temp-resource-context-data="contentEditorTempResourceContextData"
 					:placeholder="placeholder"
 					:single-line-mode="singleLineMode"
-					:rules="{
-						max_content_length: maxContentLength,
-					}"
+					:validators="[validateContentMaxLength(maxContentLength)]"
 					:max-height="160"
 					:display-rules="displayRules"
 					:compact="Screen.isXs"

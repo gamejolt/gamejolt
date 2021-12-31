@@ -12,7 +12,7 @@
 				own!
 			</p>
 
-			<app-form name="theme-svg">
+			<app-form :controller="form">
 				<div class="-selectors">
 					<!-- SVG File Selector -->
 					<app-form-group name="file" class="-selectors-item" label="Select SVG File">

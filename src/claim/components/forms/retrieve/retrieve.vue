@@ -1,5 +1,5 @@
 <template>
-	<app-form name="retrieveForm">
+	<app-form :controller="form">
 		<app-form-group name="email" :label="$gettext('Email Address')">
 			<app-form-control type="email" :validate-on="['blur']" />
 

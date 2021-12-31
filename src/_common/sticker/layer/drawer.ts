@@ -13,7 +13,7 @@ import {
 	setDrawerStoreHeight,
 } from '../../drawer/drawer-store';
 import { EscapeStack, EscapeStackCallback } from '../../escape-stack/escape-stack.service';
-import AppLoadingFade from '../../loading/fade/fade.vue';
+import AppLoadingFade from '../../loading/AppLoadingFade.vue';
 import { onScreenResize, Screen } from '../../screen/screen-service';
 import AppScrollScroller from '../../scroll/scroller/scroller.vue';
 import { EventSubscription } from '../../system/event/event-topic';

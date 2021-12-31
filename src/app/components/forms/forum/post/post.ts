@@ -1,8 +1,12 @@
 import { nextTick } from 'vue';
 import { Emit, Options, Prop } from 'vue-property-decorator';
-import AppFormControlContent from '../../../../../_common/form-vue/control/content/content.vue';
-import AppForm from '../../../../../_common/form-vue/form';
-import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.service';
+import AppFormControlContent from '../../../../../_common/form-vue/controls/AppFormControlContent.vue';
+import { BaseForm } from '../../../../../_common/form-vue/form.service';
+import {
+	validateContentMaxLength,
+	validateContentNoActiveUploads,
+	validateContentRequired,
+} from '../../../../../_common/form-vue/validators';
 import { ForumPost } from '../../../../../_common/forum/post/post.model';
 import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
 
@@ -11,19 +15,22 @@ import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
 		AppFormControlContent,
 	},
 })
-export default class FormForumPost extends BaseForm<ForumPost> implements FormOnInit {
+export default class FormForumPost extends BaseForm<ForumPost> {
 	@Prop(ForumTopic) topic!: ForumTopic;
 	@Prop(ForumPost) replyTo?: ForumPost;
 
-	declare $refs: {
-		form: AppForm;
-	};
-
 	modelClass = ForumPost;
-	resetOnSubmit = true;
+
+	readonly validateContentRequired = validateContentRequired;
+	readonly validateContentMaxLength = validateContentMaxLength;
+	readonly validateContentNoActiveUploads = validateContentNoActiveUploads;
 
 	@Emit('cancel')
 	emitCancel() {}
+
+	created() {
+		this.form.resetOnSubmit = true;
+	}
 
 	async onInit() {
 		this.setField('topic_id', this.topic.id);
@@ -37,7 +44,7 @@ export default class FormForumPost extends BaseForm<ForumPost> implements FormOn
 
 			// Wait for errors to appear, then clear them.
 			await nextTick();
-			this.$refs.form.clearErrors();
+			this.form.clearErrors();
 		}
 	}
 

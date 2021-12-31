@@ -1,5 +1,5 @@
 <template>
-	<app-form name="changePasswordForm">
+	<app-form :controller="form">
 		<app-form-group
 			v-if="requiresOld"
 			name="old_password"
@@ -7,10 +7,7 @@
 		>
 			<app-form-control
 				type="password"
-				:rules="{
-					min: 4,
-					max: 30,
-				}"
+				:validators="[validateMinLength(4), validateMaxLength(300)]"
 				:validate-on="['blur']"
 			/>
 
@@ -25,10 +22,7 @@
 		<app-form-group name="password" :label="$gettext(`dash.change_pass.password_label`)">
 			<app-form-control
 				type="password"
-				:rules="{
-					min: 4,
-					max: 30,
-				}"
+				:validators="[validateMinLength(4), validateMaxLength(300)]"
 				:validate-on="['blur']"
 			/>
 
@@ -43,7 +37,7 @@
 				type="password"
 				:rules="{
 					min: 4,
-					max: 30,
+					max: 300,
 					confirmed: 'password',
 				}"
 				:validate-on="['blur']"

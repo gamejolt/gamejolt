@@ -1,5 +1,5 @@
 <template>
-	<app-form name="withdrawFundsForm">
+	<app-form :controller="form">
 		<div class="alert"><translate>dash.funds.withdraw.form_help_html</translate></div>
 
 		<app-form-group
@@ -16,9 +16,9 @@
 			<label class="control-label"><translate>Current PayPal Account</translate></label>
 			<div class="form-static">{{ user.paypal_email_address }}</div>
 			<p class="help-block">
-				<translate
-					>You can link a different PayPal account in your payment setup.</translate
-				>
+				<translate>
+					You can link a different PayPal account in your payment setup.
+				</translate>
 				<router-link :to="{ name: 'dash.account.financials' }">
 					<translate>Go to your financials page.</translate>
 				</router-link>
@@ -36,10 +36,10 @@
 				<app-form-control
 					type="currency"
 					step="1"
-					:rules="{
-						min_value: minAmount,
-						max_value: withdrawableAmount,
-					}"
+					:validators="[
+						validateMinValue(minAmount),
+						validateMaxValue(withdrawableAmount),
+					]"
 				/>
 			</div>
 			<app-form-control-errors />

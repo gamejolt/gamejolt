@@ -7,11 +7,11 @@ import {
 	VotingUserRestriction,
 } from '../../../../../../../_common/community/competition/competition.model';
 import { formatDate } from '../../../../../../../_common/filters/date';
-import AppFormControlDate from '../../../../../../../_common/form-vue/control/date/date.vue';
-import { FormTimezoneService } from '../../../../../../../_common/form-vue/control/date/form-timezone.service';
-import AppFormControlToggle from '../../../../../../../_common/form-vue/control/toggle/toggle.vue';
-import { BaseForm, FormOnInit } from '../../../../../../../_common/form-vue/form.service';
-import AppFormLegend from '../../../../../../../_common/form-vue/legend/legend.vue';
+import AppFormLegend from '../../../../../../../_common/form-vue/AppFormLegend.vue';
+import AppFormControlDate from '../../../../../../../_common/form-vue/controls/AppFormControlDate.vue';
+import AppFormControlToggle from '../../../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
+import { FormTimezoneService } from '../../../../../../../_common/form-vue/form-timezone.service';
+import { BaseForm } from '../../../../../../../_common/form-vue/form.service';
 import AppLoading from '../../../../../../../_common/loading/loading.vue';
 
 type RadioOption<T> = {
@@ -28,13 +28,10 @@ type RadioOption<T> = {
 		AppFormControlToggle,
 	},
 })
-export default class FormCommunityCompetitionVotingEdit
-	extends BaseForm<CommunityCompetition>
-	implements FormOnInit
-{
+export default class FormCommunityCompetitionVotingEdit extends BaseForm<CommunityCompetition> {
 	modelClass = CommunityCompetition;
 	timezoneService: FormTimezoneService<CommunityCompetition> | null = null;
-	saveMethod: '$saveVoting' = '$saveVoting';
+	saveMethod = '$saveVoting' as const;
 
 	readonly formatDate = formatDate;
 
@@ -98,7 +95,7 @@ export default class FormCommunityCompetitionVotingEdit
 			// End date plus 1 day.
 			this.setField('voting_ends_on', this.formModel.ends_on + 1000 * 60 * 60 * 24);
 			await nextTick();
-			this.changed = false;
+			this.form.changed = false;
 		}
 
 		this.timezoneService = new FormTimezoneService(this);

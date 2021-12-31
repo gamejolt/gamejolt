@@ -2,10 +2,16 @@ import { formatDistanceToNow } from 'date-fns';
 import { Options } from 'vue-property-decorator';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
-import AppFormControlContent from '../../../../_common/form-vue/control/content/content.vue';
-import AppFormControlTheme from '../../../../_common/form-vue/control/theme/theme.vue';
-import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
+import AppFormControlContent from '../../../../_common/form-vue/controls/AppFormControlContent.vue';
+import AppFormControlTheme from '../../../../_common/form-vue/controls/AppFormControlTheme.vue';
+import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm, FormOnLoad, FormOnSubmitError } from '../../../../_common/form-vue/form.service';
+import {
+	validateContentMaxLength,
+	validateContentNoActiveUploads,
+	validateContentRequired,
+	validateUsername,
+} from '../../../../_common/form-vue/validators';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Theme } from '../../../../_common/theme/theme.model';
 import { ThemeMutation, ThemeStore } from '../../../../_common/theme/theme.store';
@@ -22,8 +28,6 @@ import { User } from '../../../../_common/user/user.model';
 })
 export default class FormProfile extends BaseForm<User> implements FormOnLoad, FormOnSubmitError {
 	modelClass = User;
-	resetOnSubmit = true;
-	reloadOnSubmit = true;
 
 	@ThemeMutation
 	setFormTheme!: ThemeStore['setFormTheme'];
@@ -34,7 +38,11 @@ export default class FormProfile extends BaseForm<User> implements FormOnLoad, F
 	isBioLocked = false;
 	bioLengthLimit = 5_000;
 
-	Environment = Environment;
+	readonly Environment = Environment;
+	readonly validateUsername = validateUsername;
+	readonly validateContentRequired = validateContentRequired;
+	readonly validateContentMaxLength = validateContentMaxLength;
+	readonly validateContentNoActiveUploads = validateContentNoActiveUploads;
 
 	get loadUrl() {
 		return '/web/dash/profile/save';
@@ -55,6 +63,10 @@ export default class FormProfile extends BaseForm<User> implements FormOnLoad, F
 				text: this.$gettext(`Everyone`),
 			},
 		];
+	}
+
+	created() {
+		this.form.reloadOnSubmit = true;
 	}
 
 	unmounted() {

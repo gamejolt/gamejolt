@@ -1,6 +1,6 @@
 import { Emit, Options } from 'vue-property-decorator';
 import AppExpand from '../../../../../_common/expand/expand.vue';
-import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.service';
+import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
 import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
 
@@ -15,7 +15,7 @@ type MaturityField = {
 		AppDashGameWizardControls,
 	},
 })
-export default class FormGameMaturity extends BaseForm<Game> implements FormOnInit {
+export default class FormGameMaturity extends BaseForm<Game> {
 	modelClass = Game;
 
 	age: MaturityField[] = [
@@ -243,9 +243,11 @@ export default class FormGameMaturity extends BaseForm<Game> implements FormOnIn
 	@Emit('changed')
 	emitChanged(_game: Game) {}
 
-	onInit() {
-		this.saveMethod = '$saveMaturity';
+	created() {
+		this.form.saveMethod = '$saveMaturity';
+	}
 
+	onInit() {
 		const fields: (keyof Game)[] = [
 			'tigrs_age',
 			'tigrs_cartoon_violence',
@@ -263,7 +265,7 @@ export default class FormGameMaturity extends BaseForm<Game> implements FormOnIn
 			'tigrs_gambling',
 		];
 
-		for (let field of fields) {
+		for (const field of fields) {
 			(this.formModel as any)[field] = this.formModel[field] || 0;
 		}
 	}

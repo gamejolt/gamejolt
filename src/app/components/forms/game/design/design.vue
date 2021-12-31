@@ -1,7 +1,7 @@
 <script lang="ts" src="./design"></script>
 
 <template>
-	<app-form name="designForm">
+	<app-form :controller="form">
 		<div class="row">
 			<div class="col-sm-6">
 				<h4 class="sans-margin-top">

@@ -1,9 +1,9 @@
 <script lang="ts" src="./video"></script>
 
 <template>
-	<app-form name="mediaForm">
+	<app-form :controller="form">
 		<app-form-group name="_url" :label="$gettext(`dash.games.media.video.form.url_label`)">
-			<app-form-control type="text" :rules="{ pattern: REGEX_VIDEO }" />
+			<app-form-control type="text" :validators="[validatePattern(REGEX_VIDEO)]" />
 
 			<app-form-control-errors
 				:label="$gettext(`dash.games.media.video.form.url_error_label`)"
@@ -27,7 +27,7 @@
 		</app-form-group>
 
 		<app-form-group name="title" :label="$gettext(`dash.games.media.video.form.title_label`)">
-			<app-form-control type="text" :rules="{ max: 150 }" />
+			<app-form-control type="text" :validators="[validateMaxLength(150)]" />
 			<app-form-control-errors />
 		</app-form-group>
 
@@ -36,7 +36,7 @@
 			:label="$gettext(`dash.games.media.video.form.description_label`)"
 			:optional="true"
 		>
-			<app-form-control-textarea rows="5" :rules="{ max: 2500 }" />
+			<app-form-control-textarea rows="5" :validators="[validateMaxLength(2500)]" />
 			<app-form-control-errors />
 		</app-form-group>
 

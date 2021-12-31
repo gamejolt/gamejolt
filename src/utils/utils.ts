@@ -63,6 +63,8 @@ export function assertNever(x: never): never {
 export type Primitives = Number | String | Boolean;
 export type Properties<T, U> = { [K in keyof T]: T[K] extends U ? K : never }[keyof T];
 
+export type MaybePromise<T> = T | Promise<T> | PromiseLike<T>;
+
 export function isPromise(obj: any) {
 	return (
 		!!obj &&

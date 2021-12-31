@@ -1,12 +1,9 @@
 <template>
-	<app-form name="setPasswordForm">
+	<app-form :controller="form">
 		<app-form-group name="password">
 			<app-form-control
 				type="password"
-				:rules="{
-					min: 4,
-					max: 30,
-				}"
+				:validators="[validateMinLength(4), validateMaxLength(30)]"
 				:validate-on="['blur']"
 			/>
 			<app-form-control-errors />
