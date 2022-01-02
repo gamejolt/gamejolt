@@ -7,7 +7,7 @@ import { BaseRouteComponent } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import { AppThemeSvg } from '../../../_common/theme/svg/svg';
 import AppTranslateLangSelector from '../../../_common/translate/lang-selector/lang-selector.vue';
-import AppCoverImg from '../../components/cover-img/cover-img.vue';
+import AppCoverImg from '../../components/AppCoverImg.vue';
 import AppGameCoverCredits from '../../components/game-cover-credits/game-cover-credits.vue';
 import { store, Store } from '../../store/index';
 import './auth-content.styl';

@@ -1,3 +1,29 @@
+<script lang="ts" setup>
+import { ref, watch } from 'vue';
+import { ImgHelper } from '../../_common/img/helper/helper-service';
+
+const props = defineProps({
+	imgUrl: {
+		type: String,
+		required: true,
+	},
+});
+
+const isLoaded = ref(false);
+
+if (!GJ_IS_SSR) {
+	watch(
+		() => props.imgUrl,
+		async imgUrl => {
+			isLoaded.value = false;
+			await ImgHelper.loaded(imgUrl);
+			isLoaded.value = true;
+		},
+		{ immediate: true }
+	);
+}
+</script>
+
 <template>
 	<div>
 		<div class="cover-img-container">
@@ -7,9 +33,9 @@
 					'background-image': `url('${imgUrl}')`,
 				}"
 				:class="{ loaded: isLoaded }"
-			></div>
+			/>
 		</div>
-		<div class="cover-img-highlight anim-fade-in" :class="{ loaded: isLoaded }"></div>
+		<div class="cover-img-highlight anim-fade-in" :class="{ loaded: isLoaded }" />
 	</div>
 </template>
 
@@ -49,5 +75,3 @@
 		@media $media-sm-up
 			background-image: linear-gradient(to right, rgba($gj-pink, 0.15) 0, rgba($gj-pink, 0) 25%, rgba($gj-blue, 0) 75%, rgba($gj-blue, 0.15) 100%)
 </style>
-
-<script lang="ts" src="./cover-img"></script>
