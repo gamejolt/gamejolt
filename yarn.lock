@@ -2291,6 +2291,13 @@ builtin-modules@^1.0.0, builtin-modules@^1.1.0:
   resolved "https://registry.yarnpkg.com/builtin-modules/-/builtin-modules-1.1.1.tgz#270f076c5a72c02f5b65a47df94c5fe3a278892f"
   integrity sha1-Jw8HbFpywC9bZaR9+Uxf46J4iS8=
 
+bundle-runner@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/bundle-runner/-/bundle-runner-0.0.1.tgz#d05ff2e3921e2ea3ec810d6b327eeb466ff4483b"
+  integrity sha512-xevhXw77nJ7wjCRTyo1JYumUNUiZmD0CJEummyLUJbdhub4bZWuplS+Y7nlMq5V9sKJQW+dV/LZR/SlxS5f4LQ==
+  dependencies:
+    source-map "^0.7.3"
+
 bytes@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/bytes/-/bytes-3.0.0.tgz#d32815404d689699f85a4ea4fa8755dd13a96048"
@@ -12229,6 +12236,13 @@ vlq@^0.2.1:
   resolved "https://registry.yarnpkg.com/vlq/-/vlq-0.2.3.tgz#8f3e4328cf63b1540c0d67e1b2778386f8975b26"
   integrity sha512-DRibZL6DsNhIgYQ+wNdWDL2SL3bKPlVrRiBqV5yuMm++op8W4kGFtaQfCs4KEJn0wBZcHVHJ3eoywX8983k1ow==
 
+vue-bundle-renderer@0.3.4:
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/vue-bundle-renderer/-/vue-bundle-renderer-0.3.4.tgz#646d52c28af71c1c6f724f227cf06ca0544c823d"
+  integrity sha512-WKYTMMugT/rU5/CLOMGo2TIeYMY4hv8Z+s8PwK4BxgyFaj34pJ3V9zkEMwX8b9P7QSGjw+9zMRvbq6vtlGPnfA==
+  dependencies:
+    bundle-runner "^0.0.1"
+
 vue-class-component@8.0.0-rc.1:
   version "8.0.0-rc.1"
   resolved "https://registry.yarnpkg.com/vue-class-component/-/vue-class-component-8.0.0-rc.1.tgz#db692cd97656eb9a08206c03d0b7398cdb1d9420"
@@ -12436,6 +12450,11 @@ webpack-manifest-plugin@4.0.2:
   dependencies:
     tapable "^2.0.0"
     webpack-sources "^2.2.0"
+
+webpack-node-externals@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/webpack-node-externals/-/webpack-node-externals-3.0.0.tgz#1a3407c158d547a9feb4229a9e3385b7b60c9917"
+  integrity sha512-LnL6Z3GGDPht/AigwRh2dvL9PQPFQ8skEpVrWZXLWBYmqcaojHNN0onvHzie6rq7EWKrrBfPYqNEzTJgiwEQDQ==
 
 webpack-pwa-manifest@3.7.1:
   version "3.7.1"

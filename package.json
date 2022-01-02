@@ -156,7 +156,7 @@
 		"webpack": "5.64.4",
 		"webpack-bundle-analyzer": "3.8.0",
 		"webpack-dev-server": "4.6.0",
-		"webpack-manifest-plugin": "4.0.2",
+		"webpack-node-externals": "3.0.0",
 		"webpack-pwa-manifest": "3.7.1",
 		"write-file-webpack-plugin": "4.5.0"
 	},

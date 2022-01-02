@@ -1,5 +1,5 @@
 const argv = require('minimist')(process.argv);
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
 const http = require('http');
 const express = require('express');
@@ -29,26 +29,34 @@ const buildDir = process.env.BUNDLE_DIR || resolve(path.join('..', 'build'));
 // 		cluster.fork();
 // 	});
 // } else {
+const { renderToString } = require('vue/server-renderer');
+
 console.log(`Worker ${process.pid} started`);
 
 const section = argv.section ?? 'app';
 const serverBuildPath = path.join(buildDir, isProd ? 'prod-server' : 'dev-server');
 const clientBuildPath = path.join(buildDir, isProd ? 'prod' : 'dev');
 
-const serverManifest = require(path.join(
-	serverBuildPath,
-	'vue-ssr-server-manifest-' + section + '.json'
-));
-console.log('server manifest', serverManifest);
+// const serverManifest = require(path.join(
+// 	serverBuildPath,
+// 	'vue-ssr-server-manifest-' + section + '.json'
+// ));
+// console.log('server manifest', serverManifest);
 // const clientManifest = require(path.join(
 // 	clientBuildPath,
 // 	'vue-ssr-client-manifest-' + section + '.json'
 // ));
 
-const appPath = path.join(serverBuildPath, serverManifest['server.js']);
+const entryFile = fs.readdirSync(serverBuildPath).find(i => i.startsWith(`${section}.server.`));
+if (!entryFile) {
+	throw new Error(`Couldn't find the entry file for the app.`);
+}
+const appPath = path.resolve(serverBuildPath, entryFile);
 const createApp = require(appPath).GJ.default;
 
-const { renderToString } = require('vue/server-renderer');
+const template = fs.readFileSync(resolve('./index-ssr.html'), 'utf-8');
+console.log(template);
+
 const server = express();
 
 // const renderer = createBundleRenderer(serverBundle, {
@@ -94,8 +102,9 @@ server.get('*', async (req, res) => {
 
 	try {
 		let renderContext = {};
-		const appContent = await renderToString(app);
+		const appContent = await renderToString(app, renderContext);
 		console.log('app content', appContent);
+		console.log('context', renderContext);
 
 		res.set('Content-Type', 'text/html');
 		res.end(appContent);

@@ -19,7 +19,7 @@ const WebpackPwaManifest = require('webpack-pwa-manifest');
 const OptimizeCssnanoPlugin = require('@intervolga/optimize-cssnano-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
-const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
+const nodeExternals = require('webpack-node-externals');
 
 const noopDirectiveTransform = () => ({ props: [] });
 
@@ -36,31 +36,50 @@ module.exports = function (config) {
 	// We only extract css for client SSR or prod builds.
 	let shouldExtractCss = config.ssr || config.production;
 
-	let externals = {};
+	let appExternals = {};
 	if (!config.client) {
 		// When building for site, we don't want any of these imports accidentally being pulled in.
 		// Setting these to empty object strings causes the require to return an empty object.
-		externals['client-voodoo'] = '{}';
-		externals['sanitize-filename'] = '{}';
+		appExternals['client-voodoo'] = '{}';
+		appExternals['sanitize-filename'] = '{}';
 
 		// fs-extra and write-file-atomic is used by the client to write the localdb json file.
-		externals['fs-extra'] = '{}';
-		externals['write-file-atomic'] = '{}';
+		appExternals['fs-extra'] = '{}';
+		appExternals['write-file-atomic'] = '{}';
 	} else {
 		// This format sets the externals to just straight up "require('axios')" so it can pull it
 		// directly and not pull in through webpack's build process. We need this for axios since it
 		// treats it as a "node" project instead of "browser". It didn't work to include axios in
 		// here, but rather just its own dependencies.
-		externals['follow-redirects'] = 'commonjs follow-redirects';
-		externals['is-buffer'] = 'commonjs is-buffer';
+		appExternals['follow-redirects'] = 'commonjs follow-redirects';
+		appExternals['is-buffer'] = 'commonjs is-buffer';
 
 		// We don't want to pull client-voodoo into the build so that it can get proper paths
 		// through variables like __dirname and such.
-		externals['client-voodoo'] = 'commonjs client-voodoo';
+		appExternals['client-voodoo'] = 'commonjs client-voodoo';
 
 		// fs-extra and write-file-atomic is used by the client to write the localdb json file.
-		externals['fs-extra'] = 'commonjs fs-extra';
-		externals['write-file-atomic'] = 'commonjs write-file-atomic';
+		appExternals['fs-extra'] = 'commonjs fs-extra';
+		appExternals['write-file-atomic'] = 'commonjs write-file-atomic';
+	}
+
+	const externals = [appExternals];
+
+	// For SSR we want most of the modules to be required from the node_modules
+	// folder instead of being bundled into the build. This makes a faster build
+	// and also allows vue to work properly on the server.
+	if (config.ssr === 'server') {
+		externals.push(
+			nodeExternals({
+				allowlist: [
+					/\.(css|vue)$/,
+					// These modules for whatever reason don't work being
+					// required server-side directly and must be bundled into
+					// the build.
+					/^@popperjs/,
+				],
+			})
+		);
 	}
 
 	let webpackTarget = 'web';
@@ -475,11 +494,16 @@ module.exports = function (config) {
 					  }),
 				webAppManifest ? new WebpackPwaManifest(webAppManifest) : noop,
 				prodNoop || new FriendlyErrorsWebpackPlugin(),
-				config.ssr === 'server' && !config.client
-					? new WebpackManifestPlugin({
-							fileName: 'vue-ssr-server-manifest-' + section + '.json',
-					  })
-					: noop,
+				// (config.ssr === 'client' || config.production) && !config.client
+				// 	? new WebpackManifestPlugin({
+				// 			fileName: 'vue-ssr-client-manifest-' + section + '.json',
+				// 	  })
+				// 	: noop,
+				// config.ssr === 'server' && !config.client
+				// 	? new WebpackManifestPlugin({
+				// 			fileName: 'vue-ssr-server-manifest-' + section + '.json',
+				// 	  })
+				// 	: noop,
 				// TODO(vue3)
 				// Make the client bundle for both normal prod builds or client ssr builds.
 				// We want to compare the manifests from the two builds.
