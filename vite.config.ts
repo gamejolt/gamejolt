@@ -36,6 +36,7 @@ export default defineConfig({
 			mode: [MarkdownMode.HTML],
 		}),
 	],
+	root: 'src',
 	server: {
 		port: 8080,
 	},
