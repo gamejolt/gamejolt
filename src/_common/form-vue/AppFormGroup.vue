@@ -23,7 +23,7 @@ const Key: InjectionKey<FormGroupController> = Symbol('form-control-group');
 export function createFormGroup($props: typeof props) {
 	const { name, label, optional } = toRefs($props);
 
-	const form = useForm();
+	const form = useForm()!;
 
 	const changed = ref(false);
 	const control = ref(undefined as FormControlController | undefined);
@@ -120,7 +120,7 @@ const props = defineProps({
 	},
 });
 
-const form = useForm();
+const form = useForm()!;
 
 const c = createFormGroup(props);
 provide(Key, c);
