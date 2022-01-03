@@ -140,12 +140,6 @@ export class TagsInfo {
 			imageSocial: require('./images/strategysim-social.png'),
 		},
 		{
-			id: 'adult',
-			label: '#adult',
-			image: require('./images/adult.png'),
-			imageSocial: require('./images/adult-social.png'),
-		},
-		{
 			id: 'other',
 			label: '#other',
 			image: require('./images/other.png'),
