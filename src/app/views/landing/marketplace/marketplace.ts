@@ -12,6 +12,7 @@ import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { imageJolt } from '../../../img/images';
 import { Store } from '../../../store/index';
+import socialImage from './social.png';
 
 @Options({
 	name: 'RouteLandingMarketplace',
@@ -45,7 +46,7 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb;
 		Meta.twitter = $payload.twitter;
-		Meta.fb.image = Meta.twitter.image = require('./social.png');
+		Meta.fb.image = Meta.twitter.image = socialImage;
 
 		this.firesidePosts = FiresidePost.populate($payload.firesidePosts);
 		this.games = Game.populate($payload.games);
