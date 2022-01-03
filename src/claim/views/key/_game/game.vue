@@ -116,9 +116,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .game-cover
 	margin-top: -($grid-gutter-width / 2)
 	margin-right: -($grid-gutter-width-xs / 2)

@@ -1,5 +1,6 @@
 import { Options, Watch } from 'vue-property-decorator';
-import { importContext } from '../../../utils/utils';
+import * as illustrations from '../../../app/img/ill/illustrations';
+import { imageGameJoltClientLogo, imageGameJoltLogo, imageJolt } from '../../../app/img/images';
 import AppForm from '../../form-vue/AppForm.vue';
 import AppFormGroup from '../../form-vue/AppFormGroup.vue';
 import AppFormControlSelect from '../../form-vue/controls/AppFormControlSelect.vue';
@@ -43,12 +44,12 @@ export default class AppThemeSvgStyleguide extends BaseForm<FormModel> {
 	customSvg = '';
 	customSelection: VueColor = { hex: null };
 
-	readonly SvgList = [
-		require('../../../app/img/game-jolt-logo.svg'),
-		require('../../../app/img/game-jolt-client-logo.svg'),
-		require('../../../app/img/jolt.svg'),
-		...Object.values(importContext(require.context('../../../app/img/ill/', true, /\.svg$/))),
-	];
+	readonly SvgList = {
+		imageGameJoltLogo,
+		imageGameJoltClientLogo,
+		imageJolt,
+		...illustrations,
+	};
 	readonly FillList = [
 		'fill-offset',
 		'fill-backdrop',

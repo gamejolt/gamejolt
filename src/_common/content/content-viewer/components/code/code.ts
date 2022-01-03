@@ -1,10 +1,10 @@
 import { h } from 'vue';
+import Prism from 'vue-prism-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { ContentObject } from '../../../content-object';
 import { ContentOwner } from '../../../content-owner';
 import { renderChildren } from '../base-component';
 import './code.styl';
-const Prism = require('vue-prism-component');
 
 const LANGUAGE_MAP = {
 	js: 'javascript',

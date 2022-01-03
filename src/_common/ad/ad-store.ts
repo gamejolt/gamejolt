@@ -76,7 +76,7 @@ class AdsController {
 	}
 
 	get shouldShow() {
-		if (GJ_IS_CLIENT || GJ_IS_SSR) {
+		if (GJ_IS_DESKTOP_APP || import.meta.env.SSR) {
 			return false;
 		}
 
@@ -92,7 +92,7 @@ export function createAdsController() {
 	const c = reactive(new AdsController()) as AdsController;
 	provide(AdsControllerKey, c);
 
-	if (GJ_IS_CLIENT || GJ_IS_SSR || AdsDisabledDev) {
+	if (GJ_IS_DESKTOP_APP || import.meta.env.SSR || AdsDisabledDev) {
 		return c;
 	}
 

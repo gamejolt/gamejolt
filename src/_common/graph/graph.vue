@@ -12,8 +12,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .graph
 	padding: ($grid-gutter-width-xs / 2)
 	margin-bottom: $line-height-computed

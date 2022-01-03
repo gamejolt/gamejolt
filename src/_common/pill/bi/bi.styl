@@ -1,5 +1,3 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
 
 $-separator-width = 20px
 // It looks a bit better if the right bit slightly overlaps
@@ -69,7 +67,8 @@ $-separator-overlap = 2px
 			height: 100%
 
 // Basic button stuff common to both left and right sides.
-.-left, .-right
+.-left
+.-right
 	color: var(--theme-fg)
 
 	&:not(.-no-hover)

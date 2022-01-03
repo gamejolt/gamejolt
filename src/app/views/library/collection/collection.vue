@@ -373,9 +373,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .library-collection-header
 	.collection-copy
 		margin-bottom: $font-size-base

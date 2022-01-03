@@ -46,9 +46,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .popper-content
 	display: flex
 	flex-direction: column

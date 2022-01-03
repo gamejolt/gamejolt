@@ -112,8 +112,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .-danger-zone
 	h4:first-of-type
 		margin-top: 0

@@ -24,9 +24,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .user-level-widget-level
 	float: left
 	padding: 10px 0

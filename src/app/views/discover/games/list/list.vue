@@ -39,8 +39,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 $-spotlight-size = 58px
 
 .-list-desc

@@ -1,5 +1,6 @@
 import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { imageGameJoltLogo } from '../../../app/img/images';
 import { redirectToDashboard } from '../../../_common/auth/auth.service';
 import { Connection } from '../../../_common/connection/connection-service';
 import { Environment } from '../../../_common/environment/environment.service';
@@ -43,4 +44,5 @@ export default class RouteAuth extends BaseRouteComponent {
 	readonly Environment = Environment;
 	readonly Connection = Connection;
 	readonly Screen = Screen;
+	readonly imageGameJoltLogo = imageGameJoltLogo;
 }

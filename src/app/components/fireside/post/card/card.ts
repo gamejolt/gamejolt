@@ -16,13 +16,13 @@ import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/
 import { AppResponsiveDimensions } from '../../../../../_common/responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollInview, {
-	ScrollInviewConfig,
+ScrollInviewConfig
 } from '../../../../../_common/scroll/inview/inview.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
 import {
-	getVideoPlayerFromSources,
-	VideoPlayerController,
-	VideoPlayerControllerContext,
+getVideoPlayerFromSources,
+VideoPlayerController,
+VideoPlayerControllerContext
 } from '../../../../../_common/video/player/controller';
 import AppVideo from '../../../../../_common/video/video.vue';
 
@@ -65,7 +65,6 @@ export default class AppPostCard extends Vue {
 		card: HTMLElement;
 	};
 
-	readonly GJ_IS_SSR = GJ_IS_SSR;
 	readonly formatFuzzynumber = formatFuzzynumber;
 	readonly InviewConfig = _InviewConfig;
 
@@ -84,8 +83,8 @@ export default class AppPostCard extends Vue {
 	videoHeight = '100%';
 	leadHeight = 0;
 
-	isBootstrapped = GJ_IS_SSR;
-	isHydrated = GJ_IS_SSR;
+	isBootstrapped = import.meta.env.SSR;
+	isHydrated = import.meta.env.SSR;
 
 	get shouldPlayVideo() {
 		return this.isHydrated && ContentFocus.hasFocus;

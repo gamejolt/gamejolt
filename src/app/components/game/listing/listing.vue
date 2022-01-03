@@ -101,9 +101,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .game-listing
 	.-filtering-well
 		change-bg('bg-offset')

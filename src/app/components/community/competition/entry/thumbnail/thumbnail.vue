@@ -65,9 +65,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-container
 	margin-bottom: 24px
 

@@ -7,7 +7,7 @@ export const AppPromotionStoreKey = Symbol('app-promotion');
 
 // We currently are trying to show it in as many places as possible.
 export function shouldShowAppPromotion(route: RouteLocationNormalized) {
-	if (GJ_IS_CLIENT) {
+	if (GJ_IS_DESKTOP_APP) {
 		return false;
 	}
 
@@ -24,7 +24,7 @@ export function shouldShowAppPromotion(route: RouteLocationNormalized) {
 const storageKey = 'app-promotion-cohort';
 
 export class AppPromotionStore {
-	cohort: AppPromotionCohort | null = !GJ_IS_SSR
+	cohort: AppPromotionCohort | null = !import.meta.env.SSR
 		? (sessionStorage.getItem(storageKey) as AppPromotionCohort | null)
 		: null;
 
@@ -67,7 +67,7 @@ export function setAppPromotionCohort(store: AppPromotionStore, cohort: AppPromo
 
 	store.cohort = cohort;
 
-	if (!GJ_IS_SSR) {
+	if (!import.meta.env.SSR) {
 		sessionStorage.setItem(storageKey, cohort);
 	}
 }

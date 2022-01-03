@@ -49,9 +49,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-game-header
 	clearfix()
 	margin-bottom: $grid-gutter-width

@@ -19,6 +19,7 @@ import { Model } from '../../../../_common/model/model.service';
 import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
+import { illNoCommentsSmall } from '../../../img/ill/illustrations';
 
 @Options({
 	components: {
@@ -45,6 +46,8 @@ export default class AppCommentOverview extends Vue {
 
 	@Emit('reload-comments')
 	emitReloadComments() {}
+
+	readonly illNoCommentsSmall = illNoCommentsSmall;
 
 	get displayComments() {
 		return this.comments.filter(c => getCommentBlockReason(c) === false);

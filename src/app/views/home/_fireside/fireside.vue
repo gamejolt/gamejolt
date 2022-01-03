@@ -47,9 +47,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-header
 	display: flex
 	justify-content: space-between

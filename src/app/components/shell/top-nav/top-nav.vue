@@ -23,7 +23,7 @@
 				</a>
 
 				<!-- History Navigator (for desktop client) -->
-				<app-client-history-navigator v-if="GJ_IS_CLIENT" />
+				<app-client-history-navigator v-if="GJ_IS_DESKTOP_APP" />
 
 				<router-link
 					v-app-track-event="`top-nav:main-menu:home`"
@@ -36,11 +36,11 @@
 				>
 					<app-theme-svg
 						v-if="!Screen.isMobile"
-						:src="require('~img/game-jolt-logo.svg')"
+						:src="imageGameJoltLogo"
 						alt=""
 						strict-colors
 					/>
-					<app-theme-svg v-else :src="require('~img/jolt.svg')" alt="" strict-colors />
+					<app-theme-svg v-else :src="imageJolt" alt="" strict-colors />
 					<span
 						v-if="unreadActivityCount > 0"
 						class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
@@ -102,7 +102,7 @@
 								<translate>Get the App</translate>
 							</router-link>
 							<router-link
-								v-if="!GJ_IS_CLIENT && !Screen.isXs"
+								v-if="!GJ_IS_DESKTOP_APP && !Screen.isXs"
 								v-app-track-event="`sidebar:client`"
 								class="list-group-item has-icon offline-disable"
 								:to="{ name: 'landing.client' }"
@@ -200,9 +200,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 #shell-top-nav
 	position: fixed
 	z-index: $zindex-shell-top-nav

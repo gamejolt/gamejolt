@@ -3,16 +3,24 @@ import { GameTrophy } from '../../../../_common/game/trophy/trophy.model';
 import { AppImgResponsive } from '../../../../_common/img/responsive/responsive';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { BaseTrophy } from '../../../../_common/trophy/base-trophy.model';
+import bronzeSecretImage from './bronze-secret.png';
+import bronzeImage from './bronze.png';
+import goldSecretImage from './gold-secret.png';
+import goldImage from './gold.png';
+import platinumSecretImage from './platinum-secret.png';
+import platinumImage from './platinum.png';
+import silverSecretImage from './silver-secret.png';
+import silverImage from './silver.png';
 
 const imgMapping: any = {
-	bronze: require('./bronze.png'),
-	'bronze-secret': require('./bronze-secret.png'),
-	silver: require('./silver.png'),
-	'silver-secret': require('./silver-secret.png'),
-	gold: require('./gold.png'),
-	'gold-secret': require('./gold-secret.png'),
-	platinum: require('./platinum.png'),
-	'platinum-secret': require('./platinum-secret.png'),
+	bronze: bronzeImage,
+	'bronze-secret': bronzeSecretImage,
+	silver: silverImage,
+	'silver-secret': silverSecretImage,
+	gold: goldImage,
+	'gold-secret': goldSecretImage,
+	platinum: platinumImage,
+	'platinum-secret': platinumSecretImage,
 };
 
 export function getTrophyImg(trophy: BaseTrophy) {

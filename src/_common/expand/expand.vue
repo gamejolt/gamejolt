@@ -7,8 +7,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-
 .expand
 	overflow: hidden
 	transition: height 600ms $strong-ease-out

@@ -15,9 +15,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 $jolticon-size = 16px
 
 .-vertical-align

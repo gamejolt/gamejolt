@@ -49,7 +49,7 @@ const themeStore = useThemeStore();
 // down if the controller given changes somehow?
 provide(Key, props.controller);
 
-const isMounted = ref(GJ_IS_SSR);
+const isMounted = ref(import.meta.env.SSR);
 
 const actualTheme = computed(() => {
 	// Use the form/page/user theme, or the default theme if none exist.
@@ -84,9 +84,6 @@ onMounted(() => {
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 // 6px appears to be the width for the 'thin' scrollbar on Firefox
 $-size-default = 9px
 $-size-thin = 7px

@@ -34,9 +34,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .colorpicker
 	display: inline-block
 	vertical-align: middle

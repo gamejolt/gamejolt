@@ -9,9 +9,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .loading-bar
 	position: fixed
 	top: 0

@@ -34,8 +34,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .-included-items
 	p
 	ul

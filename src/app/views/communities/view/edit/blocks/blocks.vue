@@ -129,9 +129,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .table
 	margin-top: 20px
 

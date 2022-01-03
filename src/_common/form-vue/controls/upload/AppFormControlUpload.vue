@@ -39,7 +39,7 @@ const validators = computed(() => {
 	return _validators;
 });
 
-const form = useForm<any>()!;
+const form = useForm()!;
 const group = useFormGroup()!;
 const c = createFormControl([] as File | File[] | null, validators);
 
@@ -303,9 +303,6 @@ async function getFiles(e: DragEvent) {
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .form-control-upload
 	rounded-corners-lg()
 	theme-prop('border-color', 'bg-subtle')

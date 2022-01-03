@@ -7,8 +7,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .inset-controls-container
 	position: absolute
 	display: flex

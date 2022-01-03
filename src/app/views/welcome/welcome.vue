@@ -36,9 +36,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-welcome
 	change-bg('darkest')
 	min-height: 100vh

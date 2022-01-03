@@ -4,7 +4,7 @@ import { Ruler } from '../../../ruler/ruler-service';
 import { scrubVideo, VideoPlayerController } from '../controller';
 
 // TODO(vue3)
-// if (!GJ_IS_SSR) {
+// if (!import.meta.env.SSR) {
 // 	const VueTouch = require('vue-touch');
 // 	VueGlobal.use(VueTouch);
 // }

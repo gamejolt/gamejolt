@@ -84,9 +84,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-editing
 	// Make sure the X button fits properly, usually not a problem unless the image is super wide.
 	min-height: 44px

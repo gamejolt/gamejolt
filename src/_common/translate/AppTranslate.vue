@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref, useSlots } from 'vue';
+import { computed, PropType, ref, useSlots } from 'vue';
 import { uuidv4 } from '../../utils/uuid';
 import { $gettextInterpolate, getTranslation } from './translate.service';
 
@@ -17,7 +17,7 @@ const props = defineProps({
 		default: undefined,
 	},
 	translateParams: {
-		type: Object,
+		type: Object as PropType<Record<string, any>>,
 		default: undefined,
 	},
 	translateComment: {

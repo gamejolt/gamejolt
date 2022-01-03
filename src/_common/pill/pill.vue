@@ -10,9 +10,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .pill
 	rounded-corners()
 	change-bg('bg-offset')

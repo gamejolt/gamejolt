@@ -30,7 +30,7 @@
 							<a :href="Environment.baseUrl + '/privacy'" target="_blank">
 								Privacy Policy
 							</a>
-							<template v-if="!GJ_IS_CLIENT">
+							<template v-if="!GJ_IS_DESKTOP_APP">
 								&nbsp; | &nbsp;
 								<a :href="Environment.baseUrl + '/cookies'" target="_blank">
 									Cookie Policy

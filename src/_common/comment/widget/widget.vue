@@ -13,6 +13,7 @@ import {
 	watch,
 } from 'vue';
 import { useRoute } from 'vue-router';
+import { illNoComments } from '../../../app/img/ill/illustrations';
 import { AppAuthRequired as vAppAuthRequired } from '../../auth/auth-required-directive';
 import { Collaborator } from '../../collaborator/collaborator.model';
 import { Environment } from '../../environment/environment.service';
@@ -368,7 +369,7 @@ export function useCommentWidget() {
 <script lang="ts" setup>
 const props = defineProps({
 	model: {
-		type: Model,
+		type: Object as PropType<Model>,
 		required: true,
 	},
 	onlyAdd: {
@@ -556,7 +557,7 @@ const {
 
 			<app-loading v-if="isLoading" class="loading-centered" />
 			<div v-else-if="shouldShowEmptyMessage">
-				<app-illustration :src="require('~img/ill/no-comments.svg')">
+				<app-illustration :src="illNoComments">
 					<p>
 						<translate v-if="shouldShowAdd">
 							Everyone else seems to be in sleep mode, why don't you start the

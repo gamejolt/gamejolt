@@ -204,11 +204,11 @@ export class ActivityFeedView {
 	}
 
 	isItemBootstrapped(item: ActivityFeedItem) {
-		return GJ_IS_SSR || this.getItemState(item).isBootstrapped;
+		return import.meta.env.SSR || this.getItemState(item).isBootstrapped;
 	}
 
 	isItemHydrated(item: ActivityFeedItem) {
-		return GJ_IS_SSR || this.getItemState(item).isHydrated;
+		return import.meta.env.SSR || this.getItemState(item).isHydrated;
 	}
 
 	setItemHeight(item: ActivityFeedItem, height: string | null) {

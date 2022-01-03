@@ -24,7 +24,7 @@ const { user } = toRefs(useAppStore());
 </template>
 
 <style lang="stylus" scoped>
-@require '../add-button'
+@import '../add-button'
 
 .post-add-button
 	margin-bottom: 0

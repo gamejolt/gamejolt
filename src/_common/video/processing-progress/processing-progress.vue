@@ -43,17 +43,12 @@
 				Your video is currently being processed. This could take some time depending on the
 				size of your video.
 			</translate>
-			<translate v-if="post.isActive">
-				We will publish your post once it's ready.
-			</translate>
+			<translate v-if="post.isActive"> We will publish your post once it's ready. </translate>
 		</div>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-preview
 	change-bg('bg-offset')
 	rounded-corners-lg()

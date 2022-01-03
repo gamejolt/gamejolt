@@ -1,4 +1,5 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+import { html } from '../../../../../lib/terms/partner/global.md';
 import { formatDate } from '../../../../../_common/filters/date';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { UserStripeManagedAccount } from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
@@ -13,7 +14,7 @@ export default class AppPartnerTerms extends Vue {
 
 	checked = false;
 	showAgreement = false;
-	termsTemplate: string = require('../../../../../lib/terms/partner/global.md');
+	termsTemplate = html;
 
 	readonly formatDate = formatDate;
 

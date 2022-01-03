@@ -102,8 +102,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .address-form
 	position: absolute
 	top: 0
@@ -113,4 +111,3 @@
 	padding: $shell-padding
 	z-index: 1
 </style>
-

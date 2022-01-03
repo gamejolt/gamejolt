@@ -34,7 +34,6 @@
 
 <style lang="stylus" scoped>
 @import '../card'
-@import '~styles-lib/mixins'
 
 .-avatar
 	change-bg('bg-subtle')

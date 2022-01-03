@@ -34,8 +34,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .-item
 	@media $media-sm
 		&:nth-child(2n+1)

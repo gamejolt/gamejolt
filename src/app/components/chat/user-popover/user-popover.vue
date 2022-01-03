@@ -81,9 +81,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .chat-user-popover
 	.-info-container
 		padding: 16px

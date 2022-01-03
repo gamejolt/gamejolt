@@ -264,9 +264,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-leaderboard-ad
 	padding-bottom: 8px
 	margin-bottom: $line-height-computed

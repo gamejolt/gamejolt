@@ -24,9 +24,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 $-size = 40px
 $-spacing = 4px
 $-size-sm = 24px

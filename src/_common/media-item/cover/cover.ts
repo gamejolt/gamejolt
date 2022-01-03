@@ -5,7 +5,7 @@ import { Screen } from '../../screen/screen-service';
 import AppMediaItemBackdrop from '../backdrop/backdrop.vue';
 import { MediaItem } from '../media-item-model';
 
-const ResizeSensor = require('css-element-queries/src/ResizeSensor');
+import ResizeSensor from 'css-element-queries/src/ResizeSensor';
 
 @Options({
 	components: {
@@ -25,7 +25,7 @@ export default class AppMediaItemCover extends Vue {
 	emitLoaded() {}
 
 	created() {
-		if (GJ_IS_SSR) {
+		if (import.meta.env.SSR) {
 			this.recalcHeight();
 			this.isLoaded = true;
 		}

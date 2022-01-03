@@ -9,9 +9,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .translate-lang-selector
 	theme-prop('color', 'light')
 	theme-prop('border-color', 'light')

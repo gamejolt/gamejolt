@@ -73,7 +73,6 @@
 
 <style lang="stylus" scoped>
 @import './variables'
-@import '~styles-lib/mixins'
 
 .-items
 	white-space: nowrap

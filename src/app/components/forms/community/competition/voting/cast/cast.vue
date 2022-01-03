@@ -143,9 +143,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-category-label
 	padding-top: 16px
 	text-align: right

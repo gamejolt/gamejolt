@@ -29,9 +29,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .sticker-target
 	position: relative
 	// Needs to be lower than the z-index of elements we want above the stickers.

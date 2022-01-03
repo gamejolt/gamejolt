@@ -23,7 +23,7 @@ export default class AppGameMaturityBlock extends Vue {
 		return (
 			this.game &&
 			this.game.tigrs_age === 3 &&
-			!GJ_IS_SSR &&
+			!import.meta.env.SSR &&
 			SettingRestrictedBrowsing.get() &&
 			!this.game.is_following &&
 			!this.game.hasPerms() &&

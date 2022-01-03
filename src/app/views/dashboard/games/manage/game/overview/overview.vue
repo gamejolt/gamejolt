@@ -176,9 +176,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-graph
 	::v-deep(.graph)
 		rounded-corners-lg()

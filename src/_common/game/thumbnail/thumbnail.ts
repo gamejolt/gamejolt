@@ -41,8 +41,8 @@ export default class AppGameThumbnail extends Vue {
 
 	@State app!: AppStore;
 
-	isBootstrapped = GJ_IS_SSR;
-	isHydrated = GJ_IS_SSR;
+	isBootstrapped = import.meta.env.SSR;
+	isHydrated = import.meta.env.SSR;
 	readonly InviewConfig = InviewConfig;
 	readonly Screen = Screen;
 	readonly Game = Game;

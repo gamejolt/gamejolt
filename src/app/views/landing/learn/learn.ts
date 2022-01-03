@@ -4,6 +4,7 @@ import { BaseRouteComponent } from '../../../../_common/route/route-component';
 import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { AppAuthJoinLazy } from '../../../components/lazy';
+import { imageJolt } from '../../../img/images';
 import { Store } from '../../../store/index';
 
 @Options({
@@ -18,4 +19,6 @@ import { Store } from '../../../store/index';
 })
 export default class RouteLandingLearn extends BaseRouteComponent {
 	@State app!: Store['app'];
+
+	readonly imageJolt = imageJolt;
 }

@@ -50,9 +50,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-notification
 	margin-top: 8px
 	full-bleed-xs()

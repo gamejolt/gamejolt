@@ -74,9 +74,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 $-height = 50px
 $-avatar-height = 40px
 $-v-padding = 16px

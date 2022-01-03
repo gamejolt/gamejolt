@@ -1,5 +1,3 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
 
 .timepicker
 	td
@@ -32,11 +30,15 @@
 		font-size: $font-size-base
 		line-height: $line-height-base
 
-		&:hover, &:focus, &:active
+		&:hover
+		&:focus
+		&:active
 			text-decoration: none
 			outline: none
 
-		&.disabled, &[disabled], fieldset[disabled] &
+		&.disabled
+		&[disabled]
+		fieldset[disabled] &
 			cursor: not-allowed
 			pointer-events: none // Future-proof disabling of clicks
 			opacity: 0.65

@@ -32,16 +32,13 @@
 			</div>
 		</div>
 	</div>
-	<app-illustration v-else-if="!hasComments" :src="require('~img/ill/no-comments-small.svg')" sm>
+	<app-illustration v-else-if="!hasComments" :src="illNoCommentsSmall" sm>
 		<translate v-if="displayMode === 'comments'">No comments yet.</translate>
 		<translate v-else-if="displayMode === 'shouts'">No shouts yet.</translate>
 	</app-illustration>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .comment-overview .-comment-container:not(:last-child)
 	border-bottom-width: $border-width-large
 	border-bottom-style: solid

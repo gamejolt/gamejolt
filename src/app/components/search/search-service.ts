@@ -19,7 +19,7 @@ export async function sendSearch(query: string, options: SearchOptions = { type:
 	searchPromises.push(_searchSite(query, options));
 
 	// If we're in client, let's try to search their installed games.
-	if (GJ_IS_CLIENT && options.type && options.type === 'typeahead') {
+	if (GJ_IS_DESKTOP_APP && options.type && options.type === 'typeahead') {
 		searchPromises.push(_searchInstalledGames(query));
 	}
 

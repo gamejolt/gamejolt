@@ -2,16 +2,8 @@ import { toRef } from 'vue';
 import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { ModelClassType } from '../model/model.service';
-import AppForm, { createForm, FormController } from './AppForm.vue';
-import AppFormButton from './AppFormButton.vue';
-import AppFormControl from './AppFormControl.vue';
-import AppFormControlError from './AppFormControlError.vue';
-import AppFormControlErrors from './AppFormControlErrors.vue';
-import AppFormGroup from './AppFormGroup.vue';
-import AppFormControlCheckbox from './controls/AppFormControlCheckbox.vue';
-import AppFormControlRadio from './controls/AppFormControlRadio.vue';
-import AppFormControlSelect from './controls/AppFormControlSelect.vue';
-import AppFormControlTextarea from './controls/AppFormControlTextarea.vue';
+import { createForm, FormController } from './AppForm.vue';
+import { CommonFormComponents } from './form-common';
 import {
 	validateAvailability,
 	validateFilesize,
@@ -48,28 +40,13 @@ export interface FormOnSubmitError {
 	onSubmitError(response: any): void;
 }
 
-export const CommonFormComponents = {
-	AppForm,
-	AppFormControl,
-	AppFormControlSelect,
-	AppFormControlTextarea,
-	AppFormControlRadio,
-	AppFormControlCheckbox,
-	AppFormGroup,
-	AppFormControlErrors,
-	AppFormControlError,
-	AppFormButton,
-};
-
 /**
  * This is a wrapper now around a FormController.
  *
  * @deprecated use composition functions instead
  */
 @Options({
-	components: {
-		...CommonFormComponents,
-	},
+	components: CommonFormComponents,
 })
 export class BaseForm<T> extends Vue {
 	@Prop({ type: Object, required: false })

@@ -7,9 +7,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-discover
 	pressy()
 	display: flex

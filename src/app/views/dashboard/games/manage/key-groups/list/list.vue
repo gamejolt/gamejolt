@@ -154,8 +154,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .key-groups-progress
 	@media $media-sm-up
 		text-align: right

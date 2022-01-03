@@ -6,9 +6,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .user-avatar
 	display: block
 	position: relative

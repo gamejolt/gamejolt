@@ -54,7 +54,7 @@ class ScreenService {
 	/**
 	 * If it's Retina/HiDPI or not.
 	 */
-	isHiDpi = GJ_IS_SSR
+	isHiDpi = import.meta.env.SSR
 		? false
 		: window.matchMedia(
 				'only screen and (-webkit-min-device-pixel-ratio: ' +
@@ -74,14 +74,14 @@ class ScreenService {
 					'dpi)'
 		  ).matches;
 
-	isPointerMouse = GJ_IS_SSR
+	isPointerMouse = import.meta.env.SSR
 		? true
 		: window.matchMedia('not screen and (pointer: coarse)').matches;
 }
 
 export const Screen = reactive(new ScreenService()) as ScreenService;
 
-if (!GJ_IS_SSR) {
+if (!import.meta.env.SSR) {
 	// Check the breakpoints on app load.
 	_onResize();
 

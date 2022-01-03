@@ -11,13 +11,13 @@ abstract class SettingBase<T extends SettingType> {
 	public abstract get(): T;
 
 	protected _set(val: string) {
-		if (!GJ_IS_SSR) {
+		if (!import.meta.env.SSR) {
 			localStorage.setItem(STORAGE_PREFIX + this.key, val);
 		}
 	}
 
 	protected _get() {
-		if (!GJ_IS_SSR && localStorage.getItem(STORAGE_PREFIX + this.key) !== null) {
+		if (!import.meta.env.SSR && localStorage.getItem(STORAGE_PREFIX + this.key) !== null) {
 			return localStorage.getItem(STORAGE_PREFIX + this.key);
 		} else {
 			return this.defaultValue;

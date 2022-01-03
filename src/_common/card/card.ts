@@ -1,7 +1,6 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional } from '../../utils/vue';
-
-require('./card.styl');
+import './card.styl';
 
 @Options({})
 export default class AppCard extends Vue {

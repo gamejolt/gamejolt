@@ -12,7 +12,7 @@ const props = defineProps({
 	},
 });
 
-const form = useForm<any>()!;
+const form = useForm()!;
 const group = useFormGroup()!;
 const c = createFormControl<any>(undefined, toRef(props, 'validators'), { multi: true });
 

@@ -20,9 +20,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 ::v-deep(.timeline-list-item-split)
 	full-bleed()
 </style>

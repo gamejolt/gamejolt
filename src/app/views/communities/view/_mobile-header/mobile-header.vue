@@ -117,9 +117,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 $-thumbnail-size = 80px
 $-thumbnail-size-sm = 48px
 $-bg-color-base = var(--theme-bg)

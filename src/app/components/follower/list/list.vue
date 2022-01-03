@@ -25,9 +25,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-list
 	display: grid
 	grid-template-columns: repeat(auto-fill, minmax(250px, 1fr))

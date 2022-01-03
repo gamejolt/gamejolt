@@ -57,9 +57,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-thumb
 .-click-capture
 	position: relative

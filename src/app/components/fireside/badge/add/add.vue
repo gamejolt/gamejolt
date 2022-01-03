@@ -28,9 +28,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-backdrop
 	// For some reason we need position static
 	// so the backdrop can get the height.

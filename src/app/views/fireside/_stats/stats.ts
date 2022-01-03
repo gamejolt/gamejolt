@@ -11,6 +11,7 @@ import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { illEndOfFeed } from '../../../img/ill/illustrations';
 import { RouteStatus } from '../fireside';
 
 @Options({
@@ -41,7 +42,7 @@ export default class AppFiresideStats extends Vue {
 	expiresDurationText: string | null = null;
 	expiresProgressValue: number | null = null;
 
-	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
+	readonly illEndOfFeed = illEndOfFeed;
 
 	get canManage() {
 		return (

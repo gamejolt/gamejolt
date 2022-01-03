@@ -8,7 +8,7 @@
 					<div class="col-lg-offset-1 col-lg-11">
 						<h1>
 							<app-theme-svg
-								:src="require('~img/jolt.svg')"
+								:src="imageJolt"
 								alt=""
 								:width="17 * 3"
 								:height="18 * 3"
@@ -65,9 +65,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-@import '~styles-lib/common/tables'
+// TODO(vue3): check the path
+@import '../../../../_styles/common/tables'
 
 .-content
 	::v-deep(h1:first-child)

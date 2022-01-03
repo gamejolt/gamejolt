@@ -20,8 +20,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-
 .-icon
 	float: left
 

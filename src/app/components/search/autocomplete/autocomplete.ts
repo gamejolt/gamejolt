@@ -15,7 +15,7 @@ import { sendSearch } from '../search-service';
 import { SearchKeydownSpy, useSearchController } from '../search.vue';
 
 let LocalDbGameMod: typeof _LocalDbGameMod | undefined;
-if (GJ_IS_CLIENT) {
+if (GJ_IS_DESKTOP_APP) {
 	LocalDbGameMod = require('../../client/local-db/game/game.model');
 }
 

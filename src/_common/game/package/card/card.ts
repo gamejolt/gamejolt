@@ -141,7 +141,7 @@ export default class AppGamePackageCard extends Vue {
 	buildClick(build: GameBuild, fromExtraSection = false) {
 		// For client, if they clicked in the "options" section, then skip
 		// showing payment form. Just take them directly to site.
-		if (GJ_IS_CLIENT && fromExtraSection) {
+		if (GJ_IS_DESKTOP_APP && fromExtraSection) {
 			this.doBuildClick(build, fromExtraSection);
 		} else if (this.sellable.type === 'pwyw' && this.canBuy) {
 			this.showPayment(build, fromExtraSection);

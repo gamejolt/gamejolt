@@ -3,9 +3,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .button-placeholder
 	rounded-corners()
 	change-bg('bg-subtle')

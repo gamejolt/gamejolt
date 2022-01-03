@@ -128,9 +128,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-heading
 	clearfix()
 	margin-top: $line-height-computed

@@ -181,9 +181,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-fill
 	position: absolute
 	top: 0

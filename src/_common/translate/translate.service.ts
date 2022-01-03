@@ -1,8 +1,11 @@
 import Axios from 'axios';
 import { App, computed, ref } from 'vue';
+import defaultTranslations from '../../translations/en_US/main.json';
 import { arrayIndexBy } from '../../utils/array';
 import AppTranslate from './AppTranslate.vue';
 import { TranslateDirective } from './translate-directive';
+
+const _translationUrls = import.meta.globEager('../../translations/*/main.json?url');
 
 const LangStorageKey = 'lang';
 const InterpolationRegex = /%\{((?:.|\n)+?)\}/g;
@@ -46,8 +49,8 @@ const _currentTranslations = computed(
 export function initTranslations(app: App) {
 	// Initialize our starting values. [loadCurrentLanguage] should be called
 	// once the app is mounted to switch to their real language.
-	_language.value = (!GJ_IS_SSR && localStorage.getItem(LangStorageKey)) || 'en_US';
-	_translations.value = require('../../translations/en_US/main.json');
+	_language.value = (!import.meta.env.SSR && localStorage.getItem(LangStorageKey)) || 'en_US';
+	_translations.value = defaultTranslations;
 
 	// Convenience to make it easier to translate in templates.
 	app.config.globalProperties.$gettext = $gettext;
@@ -72,7 +75,8 @@ export async function loadCurrentLanguage() {
 	// Don't use webpack to require directly. If we did it would generate
 	// new files for each section that we built for.
 	const response = await Axios({
-		url: require('../../translations/' + _language.value + '/main.json?file'),
+		// TODO(vue3): eh?
+		url: _translationUrls.default['../../translations/' + _language.value + '/main.json?url'],
 		ignoreLoadingBar: true,
 	});
 

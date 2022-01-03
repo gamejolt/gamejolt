@@ -23,12 +23,12 @@ const props = defineProps({
 	},
 });
 
-const isThumbnailLoaded = ref(GJ_IS_SSR);
+const isThumbnailLoaded = ref(import.meta.env.SSR);
 
 const mediaItem = computed(() => props.game.thumbnail_media_item);
 
 const hasVideo = computed(
-	() => mediaItem.value?.is_animated && Screen.isDesktop && !GJ_IS_SSR && props.animate
+	() => mediaItem.value?.is_animated && Screen.isDesktop && !import.meta.env.SSR && props.animate
 );
 
 const shouldPlayVideo = computed(() => hasVideo.value && ContentFocus.hasFocus);
@@ -82,9 +82,6 @@ function imgLoadChange(isLoaded: boolean) {
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .game-thumbnail-img
 	rounded-corners-lg()
 	change-bg('bg-offset')

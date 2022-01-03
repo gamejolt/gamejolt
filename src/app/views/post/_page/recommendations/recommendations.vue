@@ -52,9 +52,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 $-grid-gap = 16px
 
 .post-page-recommendations

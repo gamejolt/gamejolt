@@ -61,9 +61,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 $trophy-list-thumbnail-size-xs = 70px
 $trophy-list-thumbnail-size = 100px
 $trophy-list-gutter-xs = ($grid-gutter-width-xs / 2)

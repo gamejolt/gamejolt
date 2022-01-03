@@ -88,7 +88,7 @@ export default class AppPostControls extends Vue {
 	shouldShowFollowState = false;
 	private commentStore: null | CommentStoreModel = null;
 
-	readonly GJ_IS_CLIENT!: boolean;
+	readonly GJ_IS_DESKTOP_APP!: boolean;
 	readonly Screen = Screen;
 	readonly formatFuzzynumber = formatFuzzynumber;
 	readonly formatNumber = formatNumber;

@@ -1,5 +1,3 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
 
 .route-landing-client
 	overflow-x: hidden
@@ -72,7 +70,8 @@
 		position: relative
 		z-index: 2
 
-		&, h5
+		&
+		h5
 			theme-prop('color', 'highlight-fg')
 
 		h5
@@ -107,7 +106,8 @@
 		position: relative
 		z-index: 1
 
-		&, h5
+		&
+		h5
 			color: $white
 
 		&::before

@@ -4,7 +4,7 @@
 	<app-lightbox-portal />
 	<app-tooltip-portal />
 
-	<app-scroll-inview-parent>
+	<app-scroll-inview-parent v-bind="$attrs">
 		<slot />
 
 		<app-theme />

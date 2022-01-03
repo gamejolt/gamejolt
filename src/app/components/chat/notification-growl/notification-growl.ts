@@ -14,6 +14,6 @@ import { ChatMessage } from '../message';
 	},
 })
 export default class AppChatNotificationGrowl extends Vue {
-	@Prop(propRequired(ChatClient)) chat!: ChatClient;
-	@Prop(propRequired(ChatMessage)) message!: ChatMessage;
+	@Prop(propRequired(Object)) chat!: ChatClient;
+	@Prop(propRequired(Object)) message!: ChatMessage;
 }

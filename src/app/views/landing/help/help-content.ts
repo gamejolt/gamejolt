@@ -1,14 +1,10 @@
 import { h } from 'vue';
 import { Options } from 'vue-property-decorator';
 import { RouteLocationRedirect } from '../../../../utils/router';
-import { importContext } from '../../../../utils/utils';
 import { PayloadError } from '../../../../_common/payload/payload-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 
-// We don't emit files since we just want to pull the directory listing.
-const paths = importContext(
-	require.context('!file-loader?-emitFile!../../../../lib/doc-help/src/', true, /\.md$/)
-);
+const paths = import.meta.glob('../../../../lib/doc-help/src/**/*.md');
 
 @Options({
 	name: 'RouteLandingHelp',
@@ -21,20 +17,10 @@ const paths = importContext(
 			return new RouteLocationRedirect({ name: 'home' });
 		}
 
-		if (paths[`./${path}.md`]) {
-			return (
-				await import(
-					/* webpackChunkName: "helpContent" */
-					`../../../../lib/doc-help/src/${path}.md`
-				)
-			).default;
-		} else if (paths[`./${path}/index.md`]) {
-			return (
-				await import(
-					/* webpackChunkName: "helpContent" */
-					`../../../../lib/doc-help/src/${path}/index.md`
-				)
-			).default;
+		if (paths[`../../../../lib/doc-help/src/${path}.md`]) {
+			return (await paths[`../../../../lib/doc-help/src/${path}.md`]()).html;
+		} else if (paths[`../../../../lib/doc-help/src/${path}/index.md`]) {
+			return (await paths[`../../../../lib/doc-help/src/${path}/index.md`]()).html;
 		}
 
 		return PayloadError.fromHttpError(404);

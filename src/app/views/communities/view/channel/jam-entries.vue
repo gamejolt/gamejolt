@@ -7,7 +7,7 @@
 				<translate>Entries</translate>
 			</h2>
 
-			<app-illustration :src="require('~img/ill/no-comments.svg')">
+			<app-illustration :src="illNoComments">
 				<p>
 					<translate>No entries have been submitted to this jam yet...</translate>
 				</p>
@@ -114,9 +114,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-sort
 	color: var(--theme-link)
 	cursor: pointer

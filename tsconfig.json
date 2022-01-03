@@ -1,6 +1,6 @@
 {
 	"compilerOptions": {
-		"target": "es5",
+		"target": "esnext",
 		"module": "esnext",
 		"moduleResolution": "node",
 		"isolatedModules": true,
@@ -14,6 +14,9 @@
 		"sourceMap": true,
 		"importHelpers": true,
 		"downlevelIteration": true,
+		"resolveJsonModule": true,
+		"useDefineForClassFields": false,
+		"esModuleInterop": true,
 		"lib": ["esnext", "dom", "dom.iterable", "scripthost"]
 	},
 	"exclude": ["build", "node_modules", ".cache"]

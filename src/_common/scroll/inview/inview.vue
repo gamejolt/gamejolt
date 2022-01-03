@@ -79,7 +79,7 @@ export class ScrollInviewConfig {
 <script lang="ts" setup>
 const props = defineProps({
 	config: {
-		type: ScrollInviewConfig,
+		type: Object as PropType<ScrollInviewConfig>,
 		required: true,
 	},
 	tag: {

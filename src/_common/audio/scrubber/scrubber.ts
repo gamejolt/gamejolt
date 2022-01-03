@@ -2,7 +2,7 @@ import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Ruler } from '../../ruler/ruler-service';
 
 // TODO(vue3)
-// if (!GJ_IS_SSR) {
+// if (!import.meta.env.SSR) {
 // 	const VueTouch = require('vue-touch');
 // 	VueGlobal.use(VueTouch);
 // }

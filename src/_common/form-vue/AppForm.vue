@@ -71,8 +71,8 @@ export function provideForm(form: FormController) {
 	provide(Key, form);
 }
 
-export function useForm<T>() {
-	return inject(Key, null) as FormController<T | null>;
+export function useForm<T = any>() {
+	return inject(Key, null) as FormController<T> | null;
 }
 
 export function createForm<T>({

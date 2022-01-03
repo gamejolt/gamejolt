@@ -1,5 +1,6 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { importContext } from '../../utils/utils';
+
+const images = import.meta.globEager('./*.gif');
 
 @Options({})
 export default class AppLoading extends Vue {
@@ -11,8 +12,6 @@ export default class AppLoading extends Vue {
 	@Prop(Boolean) stationary!: boolean;
 	@Prop(Boolean) centered!: boolean;
 
-	images = importContext(require.context('./', false, /\.gif$/));
-
 	get img() {
 		const img =
 			'loading' +
@@ -20,6 +19,6 @@ export default class AppLoading extends Vue {
 			(this.noColor ? '-bw' : '') +
 			(this.big ? '-2x' : '');
 
-		return this.images[`./${img}.gif`];
+		return images[`./${img}.gif`].default;
 	}
 }

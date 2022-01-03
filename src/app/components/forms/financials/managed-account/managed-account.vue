@@ -228,9 +228,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .form-dashboard-managed-account
 	// Less spacing.
 	::v-deep(.form-horizontal)

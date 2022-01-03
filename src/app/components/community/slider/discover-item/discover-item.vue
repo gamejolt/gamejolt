@@ -8,7 +8,6 @@
 
 <style lang="stylus" scoped>
 @import '../common'
-@import '~common/jolticons/jolticons'
 
 .-item
 	position: relative
@@ -21,11 +20,9 @@
 		vertical-align: top
 
 	::v-deep(.jolticon)
-		@extend .jolticon-3x
+		font-size: $jolticon-size * 3
 
 		@media $media-mobile
-			// @extend .jolticon-2x
-			// extend doesn't work for some reason in media queries..
 			margin: 0 4px
 			font-size: $jolticon-size * 2
 

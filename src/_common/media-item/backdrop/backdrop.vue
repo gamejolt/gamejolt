@@ -4,7 +4,7 @@ import { MediaItem } from '../media-item-model';
 
 const props = defineProps({
 	mediaItem: {
-		type: MediaItem,
+		type: Object as PropType<MediaItem>,
 		default: undefined,
 	},
 	radius: {
@@ -38,9 +38,6 @@ const wrapperStyling = computed(() => {
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .media-item-backdrop
 	position: relative
 	z-index: 0

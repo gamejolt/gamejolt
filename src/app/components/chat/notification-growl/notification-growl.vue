@@ -18,9 +18,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .-container
 	display: flex
 
@@ -45,7 +42,6 @@
 .-header
 	text-overflow()
 	margin-bottom: 8px
-
 </style>
 
 <script lang="ts" src="./notification-growl"></script>

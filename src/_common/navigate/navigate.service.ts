@@ -45,7 +45,7 @@ export class Navigate {
 
 		this.callDestructors();
 
-		if (GJ_IS_CLIENT) {
+		if (GJ_IS_DESKTOP_APP) {
 			nw.Window.get().reload();
 		} else {
 			window.location.reload();
@@ -60,7 +60,7 @@ export class Navigate {
 	}
 
 	static gotoExternal(href: string) {
-		if (GJ_IS_CLIENT) {
+		if (GJ_IS_DESKTOP_APP) {
 			nw.Shell.openExternal(href);
 		} else {
 			this.goto(href);
@@ -68,7 +68,7 @@ export class Navigate {
 	}
 
 	static newWindow(url: string) {
-		if (GJ_IS_CLIENT) {
+		if (GJ_IS_DESKTOP_APP) {
 			Navigate.gotoExternal(url);
 		} else {
 			window.open(url, '_blank');

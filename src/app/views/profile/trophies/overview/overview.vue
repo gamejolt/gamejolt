@@ -108,8 +108,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .-level-widget
 	max-width: 340px
 	width: 100%

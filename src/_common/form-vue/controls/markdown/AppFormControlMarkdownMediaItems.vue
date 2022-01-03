@@ -141,9 +141,6 @@ function copyLink(mediaItem: MediaItem) {
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .form-markdown-editor-media-items
 	change-bg('bg')
 	theme-prop('border-color', 'bg-subtle')

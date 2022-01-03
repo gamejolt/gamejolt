@@ -12,7 +12,7 @@ import { getActiveLightbox } from './lightbox-helpers';
 const lightboxClass = 'media-bar-lightbox-open';
 
 // TODO(vue3)
-// if (!GJ_IS_SSR) {
+// if (!import.meta.env.SSR) {
 // 	const VueTouch = require('vue-touch');
 // 	VueGlobal.use(VueTouch);
 // }

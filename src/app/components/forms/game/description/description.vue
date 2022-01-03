@@ -80,7 +80,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
 @import '../../../../../_styles/common/forms'
 
 .-label

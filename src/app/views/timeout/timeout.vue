@@ -6,7 +6,7 @@
 			<div class="-content">
 				<div class="-centered">
 					<app-theme-svg
-						:src="require('~img/game-jolt-logo.svg')"
+						:src="imageGameJoltLogo"
 						alt="Game Jolt"
 						:width="164 * logoScale"
 						:height="18 * logoScale"
@@ -17,7 +17,7 @@
 
 				<template v-if="timeout && timeout.getIsActive()">
 					<div class="-centered">
-						<app-illustration :src="require('~img/ill/time-out.svg')">
+						<app-illustration :src="illTimeOut">
 							<p>
 								<translate>You've been put in time-out.</translate>
 							</p>
@@ -97,9 +97,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-main
 	display: flex
 	align-items: center

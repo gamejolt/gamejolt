@@ -61,9 +61,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 $-v-padding = 15px
 $-h-padding = 20px
 $-height = 44px

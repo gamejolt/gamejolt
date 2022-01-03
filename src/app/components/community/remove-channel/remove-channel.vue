@@ -60,8 +60,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .-where-to
 	display: inline-block
 	line-height: $button-md-line-height

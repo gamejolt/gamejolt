@@ -22,7 +22,7 @@ const components: any = {
 };
 
 let ClientHistoryNavigatorMod: typeof _ClientHistoryNavigatorMod | undefined;
-if (GJ_IS_CLIENT) {
+if (GJ_IS_DESKTOP_APP) {
 	ClientHistoryNavigatorMod = require('../_common/client/history-navigator/history-navigator.service');
 	components.AppClientBase = require('../_common/client/base/base.vue').default;
 }

@@ -279,7 +279,7 @@ export class GridClient {
 				new Promise<void>(resolve => {
 					if (this.socket !== null) {
 						this.socket.connect({
-							gj_platform: GJ_IS_CLIENT ? 'client' : 'web',
+							gj_platform: GJ_IS_DESKTOP_APP ? 'client' : 'web',
 							gj_platform_version: GJ_VERSION,
 						});
 					}
@@ -515,7 +515,7 @@ export class GridClient {
 		// In Client when the feed notifications setting is disabled, don't show them notifications.
 		// On site we only use it to disable native browser notifications, but still try to show in
 		// the Growl.
-		if (GJ_IS_CLIENT && !SettingFeedNotifications.get()) {
+		if (GJ_IS_DESKTOP_APP && !SettingFeedNotifications.get()) {
 			return;
 		}
 

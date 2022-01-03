@@ -112,7 +112,7 @@ class Resolver {
 export async function asyncRouteLoader(loader: Promise<any>, router: Router) {
 	// TODO(vue3): who knows what I'm supposed to do here...
 	const component = defineAsyncComponent(() => loader);
-	if (!GJ_IS_SSR) {
+	if (!import.meta.env.SSR) {
 		return component;
 	}
 
@@ -211,7 +211,7 @@ function _setupBeforeRouteEnter(options: ComponentOptions) {
 			const hasCache = resolverOptions.cache ? HistoryCache.has(to, name) : false;
 			const resolver = Resolver.startResolve(options, to);
 
-			if (resolverOptions.lazy && !hasCache && !GJ_IS_SSR) {
+			if (resolverOptions.lazy && !hasCache && !import.meta.env.SSR) {
 				promise = getPayload(options, to, false);
 			} else {
 				const { payload } = await getPayload(options, to, !!resolverOptions.cache);
@@ -222,7 +222,7 @@ function _setupBeforeRouteEnter(options: ComponentOptions) {
 				// this data within the server.js file. We can pull from
 				// all server locations from this options. Kind of
 				// hacky, though.
-				if (GJ_IS_SSR) {
+				if (import.meta.env.SSR) {
 					options.__RESOLVER__ = resolver;
 				}
 			}
@@ -231,7 +231,7 @@ function _setupBeforeRouteEnter(options: ComponentOptions) {
 				// SSR still calls next() but won't re-render the route
 				// component, so it's pointless to do things here.
 				// Instead we do it in the component created() func.
-				if (GJ_IS_SSR) {
+				if (import.meta.env.SSR) {
 					return;
 				}
 
@@ -299,7 +299,7 @@ export class BaseRouteComponent extends Vue {
 			}
 		});
 
-		if (GJ_IS_SSR) {
+		if (import.meta.env.SSR) {
 			// In SSR we have to store the resolver for each route component
 			// somewhere. Since we don't have an instance we instead put it into
 			// the component's static options. Yay for hacks! Let's use it and
@@ -466,7 +466,7 @@ export class BaseRouteComponent extends Vue {
 			} else if (payload instanceof RouteLocationRedirect) {
 				// We want to clear out all current resolvers before doing the
 				// redirect. They will re-resolve after the route changes.
-				if (GJ_IS_SSR) {
+				if (import.meta.env.SSR) {
 					this.$store.commit('app/redirect', this.$router.resolve(payload.location).href);
 				} else {
 					Resolver.clearResolvers();
@@ -592,7 +592,7 @@ async function getPayload(
 		}
 	}
 
-	if (!GJ_IS_SSR && useCache) {
+	if (!import.meta.env.SSR && useCache) {
 		const cache = HistoryCache.get(route, componentOptions.name);
 		if (cache) {
 			resolveStore(route, cache.data, true);

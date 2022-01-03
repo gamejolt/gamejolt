@@ -46,11 +46,11 @@ export default class App extends Vue {
 	// we can hydrate the component. On browser we want to set the "app" in the
 	// index template.
 	get id() {
-		return GJ_IS_SSR ? 'app' : undefined;
+		return import.meta.env.SSR ? 'app' : undefined;
 	}
 
 	created() {
-		if (!GJ_IS_SSR) {
+		if (!import.meta.env.SSR) {
 			performance.measure('gj-shell-init', 'gj-start');
 			const lang = getTranslationLang();
 			if (lang !== 'en_US') {
@@ -78,13 +78,13 @@ export default class App extends Vue {
 
 		if (isLoggedIn) {
 			this.$store.dispatch('bootstrap');
-			if (!GJ_IS_SSR) {
+			if (!import.meta.env.SSR) {
 				this.initChat();
 				this.$store.dispatch('loadGrid');
 				this.$store.dispatch('loadNotificationState');
 			}
 
-			if (GJ_IS_CLIENT) {
+			if (GJ_IS_DESKTOP_APP) {
 				this.$store.dispatch('clientLibrary/bootstrap');
 			}
 		} else {

@@ -11,7 +11,7 @@ import { ActivityFeedItem } from '../../item-service';
 import { ActivityFeedKey, ActivityFeedView } from '../../view';
 
 // TODO(vue3)
-// if (!GJ_IS_SSR) {
+// if (!import.meta.env.SSR) {
 // 	const VueTouch = require('vue-touch');
 // 	VueGlobal.use(VueTouch);
 // }

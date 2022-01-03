@@ -2,7 +2,11 @@
 	<div class="media-item-cover-container" :class="{ '-blur': blur }">
 		<section class="section media-item-cover" :class="{ loaded: isLoaded }">
 			<div class="media-item-cover-img">
-				<app-media-item-backdrop class="-backdrop" :media-item="mediaItem" :style="{ height }">
+				<app-media-item-backdrop
+					class="-backdrop"
+					:media-item="mediaItem"
+					:style="{ height }"
+				>
 					<app-img-responsive
 						v-show="isLoaded"
 						:src="mediaItem.mediaserver_url"
@@ -20,9 +24,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .-backdrop
 	display: flex
 	align-items: center

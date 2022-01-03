@@ -1,7 +1,7 @@
 import { Inject, Options, Vue } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
-import * as _ClientMod from '../../../../_common/client/client.service';
+import { Client } from '../../../../_common/client/client-exports';
 import { Connection } from '../../../../_common/connection/connection-service';
 import { DrawerStore, DrawerStoreKey } from '../../../../_common/drawer/drawer-store';
 import { formatCurrency } from '../../../../_common/filters/currency';
@@ -15,11 +15,6 @@ import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import { Store } from '../../../store/index';
 import { UserTokenModal } from '../../user/token-modal/token-modal.service';
 import AppShellUserBox from '../user-box/user-box.vue';
-
-let ClientMod: typeof _ClientMod | undefined;
-if (GJ_IS_CLIENT) {
-	ClientMod = require('../../../../_common/client/client.service');
-}
 
 @Options({
 	components: {
@@ -75,8 +70,6 @@ export default class AppShellAccountPopover extends Vue {
 	}
 
 	quit() {
-		if (ClientMod) {
-			ClientMod.Client.quit();
-		}
+		Client?.quit();
 	}
 }

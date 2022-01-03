@@ -44,7 +44,7 @@ const props = defineProps({
 		default: 200,
 	},
 	displayRules: {
-		type: ContentRules,
+		type: Object as PropType<ContentRules>,
 		default: null,
 	},
 	focusEnd: {
@@ -107,9 +107,6 @@ function focus() {
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .content-control
 	cursor: text
 	// Add a min height because app-content-editor is a lazy control.

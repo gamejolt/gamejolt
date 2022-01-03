@@ -151,8 +151,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 // Needed for the icons to show correctly.
 .game-dash-nav
 	li > a

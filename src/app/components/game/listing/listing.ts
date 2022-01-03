@@ -51,7 +51,6 @@ export default class AppGameListing extends Vue {
 	readonly Environment = Environment;
 	readonly Screen = Screen;
 	readonly Scroll = Scroll;
-	readonly GJ_IS_SSR = GJ_IS_SSR;
 
 	@Emit('load')
 	emitLoad() {}

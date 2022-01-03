@@ -7,7 +7,11 @@
 		<div id="shell">
 			<div id="header" class="theme-dark">
 				<app-user-bar :user="app.user" site="main" :hide-site-selector="true">
-					<app-button v-if="GJ_IS_CLIENT" icon="chevron-left" @click="navigateBack()">
+					<app-button
+						v-if="GJ_IS_DESKTOP_APP"
+						icon="chevron-left"
+						@click="navigateBack()"
+					>
 						<translate>Back to Game</translate>
 					</app-button>
 				</app-user-bar>
@@ -19,7 +23,7 @@
 				</app-error-page>
 			</div>
 
-			<app-client-base v-if="GJ_IS_CLIENT" />
+			<app-client-base v-if="GJ_IS_DESKTOP_APP" />
 		</div>
 
 		<footer id="footer">
@@ -36,7 +40,7 @@
 							<a :href="Environment.baseUrl + '/privacy'" target="_blank">
 								Privacy Policy
 							</a>
-							<template v-if="!GJ_IS_CLIENT">
+							<template v-if="!GJ_IS_DESKTOP_APP">
 								&nbsp; | &nbsp;
 								<a :href="Environment.baseUrl + '/cookies'" target="_blank">
 									Cookie Policy

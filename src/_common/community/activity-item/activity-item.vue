@@ -313,9 +313,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 $-left-size = 54px
 $-avatar-size = 40px
 

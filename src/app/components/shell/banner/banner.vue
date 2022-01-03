@@ -21,9 +21,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-banner
 	position: fixed
 	padding-left: ($grid-gutter-width-xs / 2)

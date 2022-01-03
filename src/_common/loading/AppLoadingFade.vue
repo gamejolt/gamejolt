@@ -20,8 +20,6 @@ defineProps({
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-
 .loading-fade
 	position: relative
 

@@ -19,7 +19,7 @@ import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { ThemeMutation, ThemeState, ThemeStore } from '../../../../_common/theme/theme.store';
 
 let ClientAutoStartMod: typeof _ClientAutoStartMod | undefined;
-if (GJ_IS_CLIENT) {
+if (GJ_IS_DESKTOP_APP) {
 	ClientAutoStartMod = require('../../../../_common/client/autostart/autostart.service');
 }
 
@@ -53,8 +53,6 @@ export default class FormSettings extends BaseForm<FormModel> {
 	@ThemeMutation setDark!: ThemeStore['setDark'];
 	@ThemeMutation setAlwaysOurs!: ThemeStore['setAlwaysOurs'];
 
-	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
-
 	get canClientAutostart() {
 		return ClientAutoStartMod && ClientAutoStartMod.ClientAutoStart.canAutoStart;
 	}
@@ -75,7 +73,7 @@ export default class FormSettings extends BaseForm<FormModel> {
 		this.setField('theme_dark', SettingThemeDark.get());
 		this.setField('theme_always_ours', SettingThemeAlwaysOurs.get());
 
-		if (GJ_IS_CLIENT) {
+		if (GJ_IS_DESKTOP_APP) {
 			this.setField('game_install_dir', SettingGameInstallDir.get());
 			this.setField('queue_when_playing', SettingQueueWhenPlaying.get());
 
@@ -132,7 +130,7 @@ export default class FormSettings extends BaseForm<FormModel> {
 		this.setDark(this.formModel.theme_dark);
 		this.setAlwaysOurs(this.formModel.theme_always_ours);
 
-		if (GJ_IS_CLIENT) {
+		if (GJ_IS_DESKTOP_APP) {
 			SettingGameInstallDir.set(this.formModel.game_install_dir);
 			SettingMaxDownloadCount.set(this.formModel.max_download_count);
 			SettingMaxExtractCount.set(this.formModel.max_extract_count);

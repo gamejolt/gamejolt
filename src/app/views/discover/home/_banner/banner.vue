@@ -145,9 +145,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 -gutter()
 	padding-left: ($grid-gutter-width-xs / 2)
 	padding-right: ($grid-gutter-width-xs / 2)

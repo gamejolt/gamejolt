@@ -22,7 +22,7 @@ export default class AppUserCardHover extends Vue {
 	isLoaded = false;
 
 	get isDisabled() {
-		return Screen.isXs || GJ_IS_CLIENT || !!this.disabled || GJ_IS_SSR;
+		return Screen.isXs || GJ_IS_DESKTOP_APP || !!this.disabled || import.meta.env.SSR;
 	}
 
 	get shouldShow() {

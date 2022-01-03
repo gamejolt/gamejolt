@@ -41,9 +41,6 @@ defineProps({
 </template>
 
 <style lang="stylus">
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .tab-list
 	full-bleed-xs()
 	position: relative

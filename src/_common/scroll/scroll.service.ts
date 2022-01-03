@@ -2,10 +2,11 @@ import { Ruler } from '../ruler/ruler-service';
 import { Screen } from '../screen/screen-service';
 import { AppAutoscrollAnchor } from './auto-scroll/anchor';
 
-// Polyfill smooth scrolling.
-if (!GJ_IS_SSR) {
-	require('smoothscroll-polyfill').polyfill();
-}
+// TODO(vue3)
+// // Polyfill smooth scrolling.
+// if (!import.meta.env.SSR) {
+// 	require('smoothscroll-polyfill').polyfill();
+// }
 
 export type ScrollContext = HTMLElement | HTMLDocument;
 
@@ -112,7 +113,7 @@ export class Scroll {
 	 * Scrolls to the element passed in.
 	 */
 	static to(input: string | number | HTMLElement, options: ScrollToOptions = {}) {
-		if (GJ_IS_SSR) {
+		if (import.meta.env.SSR) {
 			return;
 		}
 

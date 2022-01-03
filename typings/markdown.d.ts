@@ -1,4 +1,6 @@
 declare module '*.md' {
-	const content: string;
-	export default content;
+	const attributes: Record<string, unknown>;
+	const html: string;
+
+	export { attributes, html };
 }

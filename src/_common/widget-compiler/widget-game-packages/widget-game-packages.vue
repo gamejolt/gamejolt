@@ -16,8 +16,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .widget-compiler-widget-game-packages
 	max-width: 500px
 	margin: 0 auto

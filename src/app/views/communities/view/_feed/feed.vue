@@ -67,7 +67,7 @@
 					What are you waiting for? %{ message } Make people happy.
 				</div>
 				<div v-else-if="channel.is_archived">
-					<app-illustration :src="require('~img/ill/no-comments-small.svg')">
+					<app-illustration :src="illNoCommentsSmall">
 						<p>
 							<translate>Shhh. This channel is archived.</translate>
 						</p>

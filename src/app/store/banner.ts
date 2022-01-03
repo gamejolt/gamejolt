@@ -40,7 +40,7 @@ class NotificationsBanner extends Banner {
 	}
 
 	get isActive() {
-		if (Screen.isXs || GJ_IS_SSR || GJ_IS_CLIENT) {
+		if (Screen.isXs || import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
 			return false;
 		}
 
@@ -103,7 +103,7 @@ class OfflineBanner extends Banner {
 // 	}
 
 // 	get isActive() {
-// 		if (GJ_IS_SSR) {
+// 		if (import.meta.env.SSR) {
 // 			return false;
 // 		}
 

@@ -41,7 +41,7 @@ export class GamePlayModal {
 
 		// Will open the gameserver in their browser.
 		if (
-			GJ_IS_CLIENT &&
+			GJ_IS_DESKTOP_APP &&
 			build.type !== GameBuild.TYPE_HTML &&
 			build.type !== GameBuild.TYPE_ROM
 		) {
@@ -56,7 +56,7 @@ export class GamePlayModal {
 		// We also open the game in a new tab if it's not https enabled so the
 		// site doesn't complain about mixed security elements.
 		// In the client however we can continue to embed because we don't have cookie issues.
-		if (!build.https_enabled || !GJ_IS_CLIENT) {
+		if (!build.https_enabled || !GJ_IS_DESKTOP_APP) {
 			// We have to open the window first before getting the URL. The
 			// browser will block the popup unless it's done directly in the
 			// onclick handler. Once we have the download URL we can direct the

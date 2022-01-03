@@ -205,8 +205,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
 @import '../variables'
 @import '../common'
 

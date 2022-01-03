@@ -10,8 +10,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 $-font-size-xs = 16px
 $-font-size = 19px
 

@@ -1,5 +1,3 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
 
 .tag
 	rounded-corners-sm()
@@ -35,11 +33,13 @@
 			vertical-align: baseline
 
 .tag-highlight
-	&, &:hover
+	&
+	&:hover
 		change-bg('highlight')
 		theme-prop('color', 'highlight-fg')
 
 .tag-notice
-	&, &:hover
+	&
+	&:hover
 		change-bg('notice')
 		theme-prop('color', 'notice-fg')

@@ -142,7 +142,7 @@ export class ChatUserChannel extends Channel {
 		// Play message received sound, but only on the tab leader.
 		let shouldPlay = this.tabLeader.isLeader;
 		// For client, only play when window is focussed.
-		if (GJ_IS_CLIENT) {
+		if (GJ_IS_DESKTOP_APP) {
 			shouldPlay = ContentFocus.isWindowFocused;
 		}
 		if (shouldPlay) {

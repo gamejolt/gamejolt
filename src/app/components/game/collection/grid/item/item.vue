@@ -5,40 +5,35 @@
 
 			<div class="game-collection-title h4">
 				<template v-if="collection.type === 'developer'">
-					<span v-if="notOwner" v-translate="{ developer: '@' + collection.owner.username }">
+					<span
+						v-if="notOwner"
+						v-translate="{ developer: '@' + collection.owner.username }"
+					>
 						Games Made
 						<small>by %{ developer }</small>
 					</span>
-					<translate v-else>
-						Your Games
-					</translate>
+					<translate v-else> Your Games </translate>
 				</template>
 				<template v-else-if="collection.type === 'followed'">
 					<span v-if="notOwner" v-translate="{ user: '@' + collection.owner.username }">
 						Games Followed
 						<small>by %{ user }</small>
 					</span>
-					<translate v-else>
-						Your Followed Games
-					</translate>
+					<translate v-else> Your Followed Games </translate>
 				</template>
 				<template v-else-if="collection.type === 'owned'">
 					<span v-if="notOwner" v-translate="{ user: '@' + collection.owner.username }">
 						Games Owned
 						<small>by %{ user }</small>
 					</span>
-					<translate v-else>
-						Your Owned Games
-					</translate>
+					<translate v-else> Your Owned Games </translate>
 				</template>
 				<template v-else-if="collection.type === 'recommended'">
 					<span v-if="notOwner" v-translate="{ user: '@' + collection.owner.username }">
 						Daily Mix
 						<small>for %{ user }</small>
 					</span>
-					<translate v-else>
-						Your Daily Mix
-					</translate>
+					<translate v-else> Your Daily Mix </translate>
 				</template>
 				<template v-else>
 					{{ collection.name }}
@@ -49,9 +44,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .game-collection-grid-item
 	margin-bottom: $grid-gutter-width-xs
 

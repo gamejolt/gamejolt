@@ -123,7 +123,7 @@ export default class RouteDownload extends BaseRouteComponent {
 		this._setAdSettings();
 
 		// Don't download on SSR.
-		if (GJ_IS_SSR) {
+		if (import.meta.env.SSR) {
 			return;
 		}
 

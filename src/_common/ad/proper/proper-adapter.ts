@@ -30,7 +30,7 @@ export class AdProperAdapter extends AdAdapterBase {
 	}
 
 	run(cb: () => void) {
-		if (GJ_IS_SSR) {
+		if (import.meta.env.SSR) {
 			return;
 		}
 

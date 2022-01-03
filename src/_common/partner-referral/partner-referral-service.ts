@@ -2,7 +2,7 @@ import { RouteLocationNormalized } from 'vue-router';
 
 export class PartnerReferral {
 	static trackReferrer(resource: string, resourceId: number, route: RouteLocationNormalized) {
-		if (GJ_IS_SSR) {
+		if (import.meta.env.SSR) {
 			return;
 		}
 
@@ -13,7 +13,7 @@ export class PartnerReferral {
 	}
 
 	static getReferrer(resource: string, resourceId: number) {
-		if (GJ_IS_SSR) {
+		if (import.meta.env.SSR) {
 			return null;
 		}
 

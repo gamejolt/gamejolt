@@ -96,7 +96,7 @@
 
 				<template v-if="isShowingShare" #popover>
 					<div class="well sans-margin">
-						<div v-if="!GJ_IS_CLIENT" class="social-widgets">
+						<div v-if="!GJ_IS_DESKTOP_APP" class="social-widgets">
 							<app-social-twitter-share :url="shareUrl" :content="shareContent" />
 
 							<span class="dot-separator" />
@@ -120,9 +120,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-mod-list-entry
 	margin-bottom: ($line-height-computed / 4)
 

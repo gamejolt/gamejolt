@@ -91,8 +91,6 @@
 
 <style lang="stylus" scoped>
 @import '../../variables'
-@import '~styles/variables'
-@import '~styles-lib/mixins'
 
 $-button-height = 48px
 $-button-width = 40px

@@ -6,6 +6,8 @@ import {
 } from '../../utils/mobile-app';
 import { propRequired } from '../../utils/vue';
 import { trackAppPromotionClick } from '../analytics/analytics.service';
+import appStoreImage from './button-app-store.svg';
+import playStoreImage from './button-play-store.png';
 
 @Options({})
 export default class AppAppButtons extends Vue {
@@ -15,4 +17,6 @@ export default class AppAppButtons extends Vue {
 	appPromotion!: AppPromotionStore;
 
 	readonly trackAppPromotionClick = trackAppPromotionClick;
+	readonly playStoreImage = playStoreImage;
+	readonly appStoreImage = appStoreImage;
 }

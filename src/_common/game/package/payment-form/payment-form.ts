@@ -95,11 +95,11 @@ export default class FormGamePackagePayment
 	}
 
 	get isDownloading() {
-		return this.operation === 'download' && !GJ_IS_CLIENT;
+		return this.operation === 'download' && !GJ_IS_DESKTOP_APP;
 	}
 
 	get isInstalling() {
-		return this.operation === 'download' && GJ_IS_CLIENT;
+		return this.operation === 'download' && GJ_IS_DESKTOP_APP;
 	}
 
 	get pricing() {
@@ -390,7 +390,7 @@ export default class FormGamePackagePayment
 	}
 
 	onSubmitSuccess(response: any) {
-		if (GJ_IS_CLIENT) {
+		if (GJ_IS_DESKTOP_APP) {
 			// Our checkout can be done in client.
 			if (this.checkoutType === OrderPayment.METHOD_CC_STRIPE) {
 				Navigate.goto(Environment.checkoutBaseUrl + '/checkout/' + response.cart.id);

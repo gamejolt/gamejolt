@@ -5,9 +5,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .fireside-badge-placeholder
 	clearfix()
 	full-bleed-xs()

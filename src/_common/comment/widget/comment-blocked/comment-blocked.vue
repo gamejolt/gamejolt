@@ -17,9 +17,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .alert
 	display: flex
 	justify-content: space-between

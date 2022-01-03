@@ -4,7 +4,7 @@ export class MicrodataContainer {
 	set(microdata: any) {
 		this.microdata = microdata;
 
-		if (GJ_IS_SSR) {
+		if (import.meta.env.SSR) {
 			return;
 		}
 
@@ -24,7 +24,7 @@ export class MicrodataContainer {
 	clear() {
 		this.microdata = undefined;
 
-		if (GJ_IS_SSR) {
+		if (import.meta.env.SSR) {
 			return;
 		}
 

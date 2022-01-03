@@ -14,9 +14,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .editable-overlay
 	position: relative
 	z-index: 1

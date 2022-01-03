@@ -25,8 +25,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-
 .game-cover-buttons
 	display: block
 	position: relative

@@ -19,8 +19,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .growl-container
 	position: fixed
 	bottom: $growl-spacing

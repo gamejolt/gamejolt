@@ -24,8 +24,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .-padding
 	user-select: none
 	position: relative

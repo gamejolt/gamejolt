@@ -19,7 +19,9 @@
 		"ssr": "cd src && node server.js",
 		"check": "tsc --noEmit",
 		"analyze-bundle": "gulp --analyze-bundle",
-		"lint": "eslint --ext .js,.vue src"
+		"lint": "eslint --ext .js,.vue src",
+		"build:web": "vite build --outDir build/web",
+		"build:server": "vite build --outDir build/server --ssr src/auth/server.ts"
 	},
 	"devDependencies": {
 		"@intervolga/optimize-cssnano-plugin": "1.0.6",
@@ -54,6 +56,7 @@
 		"@types/write-file-atomic": "2.1.1",
 		"@typescript-eslint/eslint-plugin": "3.7.0",
 		"@typescript-eslint/parser": "3.7.0",
+		"@vitejs/plugin-vue": "2.0.1",
 		"agora-rtc-sdk-ng": "4.5.0",
 		"autoprefixer": "9.3.1",
 		"autosize": "4.0.2",
@@ -140,6 +143,8 @@
 		"typescript": "4.3.5",
 		"ua-parser-js": "0.7.21",
 		"undertaker-forward-reference": "1.0.2",
+		"vite": "2.7.10",
+		"vite-plugin-markdown": "2.0.2",
 		"vue": "3.2.26",
 		"vue-class-component": "8.0.0-rc.1",
 		"vue-color": "2.7.1",

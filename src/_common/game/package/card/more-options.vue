@@ -40,7 +40,7 @@
 				<em>v{{ extraBuild.build._release.version_number }}</em>
 			</span>
 
-			<small v-if="GJ_IS_CLIENT && extraBuild.type !== 'html'" class="text-muted">
+			<small v-if="GJ_IS_DESKTOP_APP && extraBuild.type !== 'html'" class="text-muted">
 				<br />
 				<em>
 					<translate>(will open in browser)</translate>

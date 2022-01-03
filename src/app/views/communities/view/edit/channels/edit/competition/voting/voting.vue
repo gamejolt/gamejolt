@@ -295,9 +295,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-category-controls
 	display: flex
 	justify-content: flex-end

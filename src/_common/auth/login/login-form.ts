@@ -8,6 +8,7 @@ import { Provider } from '../../linked-account/linked-account.model';
 import { LinkedAccounts } from '../../linked-account/linked-accounts.service';
 import AppLoading from '../../loading/loading.vue';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
+import googleImage from '../google-icon.svg';
 
 @Options({
 	components: {
@@ -27,6 +28,7 @@ export default class AppAuthLoginForm extends BaseForm<any> implements FormOnSub
 	readonly Connection = Connection;
 	readonly Environment = Environment;
 	readonly validateUsername = validateUsername;
+	readonly googleImage = googleImage;
 
 	created() {
 		this.form.warnOnDiscard = false;

@@ -1,3 +1,5 @@
+<script lang="ts" src="./jolticon"></script>
+
 <template>
 	<span
 		class="jolticon"
@@ -7,7 +9,7 @@
 			highlight ? 'highlight' : undefined,
 			notice ? 'notice' : undefined,
 		]"
-	></span>
+	/>
 </template>
 
-<script lang="ts" src="./jolticon"></script>
+<style lang="stylus" src="../jolticons/jolticons.styl"></style>

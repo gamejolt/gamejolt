@@ -55,8 +55,6 @@ export default class AppCommunitySidebar extends Vue {
 	isShowingShare = false;
 	gameListCollapsed = true;
 
-	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
-
 	@Watch('sidebarData.collaborators', { immediate: true, deep: true })
 	onCollaboratorsUpdated(collaborators: User[]) {
 		this.currentCollaborators = collaborators;

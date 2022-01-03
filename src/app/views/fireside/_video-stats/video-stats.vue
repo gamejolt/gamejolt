@@ -14,9 +14,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-video-stats
 	rounded-corners()
 	elevate-2()

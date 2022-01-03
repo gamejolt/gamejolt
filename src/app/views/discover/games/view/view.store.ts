@@ -90,7 +90,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 	knownFollowerCount = 0;
 
 	canToggleDescription = false;
-	showDetails = GJ_IS_SSR;
+	showDetails = import.meta.env.SSR;
 
 	overviewComments: Comment[] = [];
 
@@ -134,7 +134,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 		let builds = Game.pluckBrowserBuilds(this.packages);
 
 		// On Client we only want to include HTML games.
-		if (GJ_IS_CLIENT) {
+		if (GJ_IS_DESKTOP_APP) {
 			builds = builds.filter(item => item.type === GameBuild.TYPE_HTML);
 		}
 
@@ -162,7 +162,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 				},
 			}).href;
 
-			if (GJ_IS_CLIENT) {
+			if (GJ_IS_DESKTOP_APP) {
 				// The client urls are prefixed with a hashtag (#) that needs to be removed when referring to external links
 				urlPath = urlPath.slice(1);
 			}

@@ -77,9 +77,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-nav
 	margin-bottom: 0
 	padding-top: ($line-height-computed / 2)

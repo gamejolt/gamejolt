@@ -5,8 +5,7 @@
 </template>
 
 <style lang="stylus">
-@import '~styles/variables'
-@import '~styles-lib/mixins'
+// TODO(vue3): does this kind of import work anymore in vite?
 @import '~codemirror/lib/codemirror.css'
 
 // Based on Splash of Gray

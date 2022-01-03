@@ -8,9 +8,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .sticker-controls-overlay
 	position: relative
 	// Needs to be higher than the z-index of AppStickerTarget

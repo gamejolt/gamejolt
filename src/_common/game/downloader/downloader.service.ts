@@ -41,7 +41,7 @@ export class GameDownloader {
 		});
 
 		// Client needs to download externally.
-		if (GJ_IS_CLIENT) {
+		if (GJ_IS_DESKTOP_APP) {
 			let urlPath = router.resolve({
 				name: 'download',
 				params: {

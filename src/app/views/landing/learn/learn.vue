@@ -8,7 +8,7 @@
 					<app-theme-svg
 						v-app-tooltip="$gettext('This is a lightning bolt.')"
 						class="bolt anim-fade-in-down"
-						:src="require('~img/jolt.svg')"
+						:src="imageJolt"
 						alt=""
 						strict-colors
 					/>
@@ -489,8 +489,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .route-landing-learn .landing-body
 	.loading
 		color: $white

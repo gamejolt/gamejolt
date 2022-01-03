@@ -28,9 +28,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-uncommitted
 	filter: drop-shadow(2px 2px 2.5px black)
 

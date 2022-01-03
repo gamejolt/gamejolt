@@ -123,9 +123,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .pagination
 	display: inline-flex
 	user-select: none

@@ -31,6 +31,7 @@ import { ChatRoomChannel } from '../../components/chat/room-channel';
 import AppChatWindowOutput from '../../components/chat/window/output/output.vue';
 import AppChatWindowSend from '../../components/chat/window/send/send.vue';
 import { EVENT_UPDATE, FiresideChannel } from '../../components/grid/fireside-channel';
+import { illEndOfFeed, illMaintenance, illNoCommentsSmall } from '../../img/ill/illustrations';
 import { store, Store } from '../../store';
 import {
 	destroyFiresideRTC,
@@ -118,6 +119,9 @@ export default class RouteFireside extends BaseRouteComponent {
 
 	readonly Screen = Screen;
 	readonly formatNumber = formatNumber;
+	readonly illEndOfFeed = illEndOfFeed;
+	readonly illMaintenance = illMaintenance;
+	readonly illNoCommentsSmall = illNoCommentsSmall;
 
 	videoWidth = 0;
 	videoHeight = 0;

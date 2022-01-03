@@ -143,9 +143,6 @@ function clear() {
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .-current
 	display: block
 	width: $input-height-base

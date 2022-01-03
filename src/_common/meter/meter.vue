@@ -26,9 +26,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 $meter-blip-count = 10
 
 .meter-blip

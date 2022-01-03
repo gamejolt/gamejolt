@@ -5,12 +5,7 @@
 		<section class="section landing-header text-center">
 			<div class="container">
 				<h1>
-					<app-theme-svg
-						class="bolt"
-						:src="require('~img/jolt.svg')"
-						alt=""
-						strict-colors
-					/>
+					<app-theme-svg class="bolt" :src="imageJolt" alt="" strict-colors />
 					Partners
 				</h1>
 

@@ -22,7 +22,7 @@ class MetaService extends MetaContainer {
 	titleSuffix = originalSuffix;
 
 	_title = '';
-	_originalTitle = !GJ_IS_SSR ? document.title : null;
+	_originalTitle = !import.meta.env.SSR ? document.title : null;
 	_base = new MetaContainer();
 	_fb = new FbMetaContainer();
 	_twitter = new TwitterMetaContainer();
@@ -130,7 +130,7 @@ function _updatePageTitle() {
 	}
 
 	if (title) {
-		if (!GJ_IS_SSR) {
+		if (!import.meta.env.SSR) {
 			document.title = title;
 		}
 		Meta._title = title;

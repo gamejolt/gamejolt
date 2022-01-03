@@ -21,9 +21,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .community-card-placeholder
 	rounded-corners-lg()
 	margin-bottom: $line-height-computed

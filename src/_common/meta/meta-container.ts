@@ -12,7 +12,7 @@ export class MetaContainer {
 	set(name: string, content: string | null) {
 		this._storeField(name, content);
 
-		if (GJ_IS_SSR) {
+		if (import.meta.env.SSR) {
 			return;
 		}
 
@@ -44,7 +44,7 @@ export class MetaContainer {
 		if (!this._fields[name]) {
 			const field = new MetaField();
 
-			if (!GJ_IS_SSR) {
+			if (!import.meta.env.SSR) {
 				const elem = document.head.querySelector<HTMLMetaElement>(
 					`meta[${this._attr}="${name}"]`
 				);

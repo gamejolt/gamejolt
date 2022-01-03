@@ -10,7 +10,6 @@
 
 <style lang="stylus" scoped>
 @import '../variables'
-@import '~styles-lib/mixins'
 
 .-video-embed
 	change-bg('bg-offset')

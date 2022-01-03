@@ -40,9 +40,6 @@
 </template>
 
 <style lang="stylus">
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .modal-header
 	padding: $modal-padding-xs
 	padding-bottom: 0
@@ -92,9 +89,6 @@
 </style>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 -fullscreen()
 	top: 0
 	right: 0

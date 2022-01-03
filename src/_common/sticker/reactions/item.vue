@@ -12,9 +12,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-item
 	rounded-corners()
 	background-color: var(--theme-bg-offset)

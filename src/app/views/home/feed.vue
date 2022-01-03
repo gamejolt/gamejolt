@@ -197,9 +197,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-menu
 	margin-bottom: $line-height-computed
 	margin-left: -8px

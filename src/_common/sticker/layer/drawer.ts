@@ -23,7 +23,7 @@ import AppSticker from '../sticker.vue';
 import AppStickerLayerDrawerItem from './drawer-item.vue';
 
 // TODO(vue3)
-// if (!GJ_IS_SSR) {
+// if (!import.meta.env.SSR) {
 // 	const VueTouch = require('vue-touch');
 // 	VueGlobal.use(VueTouch);
 // }

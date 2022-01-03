@@ -128,9 +128,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 $-zindex-backdrop = 0
 $-zindex-video = 1
 $-zindex-ui = 2

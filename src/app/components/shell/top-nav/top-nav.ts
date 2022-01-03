@@ -11,6 +11,7 @@ import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { imageGameJoltLogo, imageJolt } from '../../../img/images';
 import { Store } from '../../../store/index';
 import { ChatClient, ChatKey } from '../../chat/client';
 import AppSearch from '../../search/search.vue';
@@ -31,9 +32,10 @@ const components: any = {
 	AppConfigLoaded,
 };
 
-if (GJ_IS_CLIENT) {
-	components.AppClientHistoryNavigator =
-		require('../../../../_common/client/history-navigator/history-navigator.vue').default;
+if (GJ_IS_DESKTOP_APP) {
+	components.AppClientHistoryNavigator = (
+		await import('../../../../_common/client/history-navigator/history-navigator.vue')
+	).default;
 }
 
 @Options({
@@ -68,8 +70,9 @@ export default class AppShellTopNav extends Vue {
 	readonly Environment = Environment;
 	readonly Screen = Screen;
 	readonly Connection = Connection;
-	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
 	readonly trackAppPromotionClick = trackAppPromotionClick;
+	readonly imageJolt = imageJolt;
+	readonly imageGameJoltLogo = imageGameJoltLogo;
 
 	get isTimedOut() {
 		return this.app.isUserTimedOut;

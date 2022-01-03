@@ -23,8 +23,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .-colors
 	display: inline-block
 	border-radius: 7px

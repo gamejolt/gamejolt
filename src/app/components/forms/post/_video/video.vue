@@ -116,7 +116,6 @@
 
 <style lang="stylus" scoped>
 @import '../_media/variables'
-@import '~styles-lib/mixins'
 
 .-placeholder-text
 	lazy-placeholder-inline()

@@ -15,6 +15,7 @@ import AppActivityFeedPlaceholder from '../../../../components/activity/feed/pla
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { AppActivityFeedLazy } from '../../../../components/lazy';
 import AppPostAddButton from '../../../../components/post/add-button/add-button.vue';
+import { illNoCommentsSmall } from '../../../../img/ill/illustrations';
 import { Store } from '../../../../store';
 import { CommunityRouteStore, CommunityRouteStoreKey, isVirtualChannel } from '../view.store';
 import AppBlockedNotice from '../_blocked-notice/blocked-notice.vue';
@@ -44,6 +45,8 @@ export default class AppCommunitiesViewFeed extends Vue {
 
 	@Emit('add-post') emitAddPost(_post: FiresidePost) {}
 	@Emit('load-new') emitLoadNew() {}
+
+	readonly illNoCommentsSmall = illNoCommentsSmall;
 
 	get community() {
 		return this.routeStore.community;

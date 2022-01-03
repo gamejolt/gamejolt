@@ -35,7 +35,9 @@
 					<router-link
 						v-app-track-event="`account-popover:library`"
 						class="list-group-item"
-						:to="{ name: GJ_IS_CLIENT ? 'library.installed' : 'library.overview' }"
+						:to="{
+							name: GJ_IS_DESKTOP_APP ? 'library.installed' : 'library.overview',
+						}"
 					>
 						<translate>Game Library</translate>
 					</router-link>
@@ -117,7 +119,7 @@
 					We do slightly different styling here whether we're in client or not.
 					Enough changes to require different markup.
 				-->
-				<template v-if="!GJ_IS_CLIENT">
+				<template v-if="!GJ_IS_DESKTOP_APP">
 					<div class="account-popover-separator" />
 
 					<div class="list-group-dark">
@@ -167,9 +169,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .account-popover
 	min-width: 250px
 	$account-popover-padding = 10px

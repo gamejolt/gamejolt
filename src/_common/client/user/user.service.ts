@@ -1,7 +1,6 @@
 import { Environment } from '../../environment/environment.service';
 import { Navigate } from '../../navigate/navigate.service';
 import { WithAppStore } from '../../store/app-store';
-import { User } from '../../user/user.model';
 
 export class ClientUser {
 	static init(store: WithAppStore) {
@@ -9,8 +8,7 @@ export class ClientUser {
 		// This way they can access client offline with their previous user.
 		const localUser = localStorage.getItem('user');
 		if (localUser) {
-			const user = new User(JSON.parse(localUser));
-			store.commit('app/setUser', user);
+			store.commit('app/setUser', JSON.parse(localUser));
 		} else if (Navigate.currentClientSection !== 'auth') {
 			// Must be logged in to use client.
 			this.authRedirect();

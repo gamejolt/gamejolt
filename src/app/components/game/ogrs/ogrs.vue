@@ -27,9 +27,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .game-ogrs
 	rounded-corners()
 	margin-bottom: $font-size-base

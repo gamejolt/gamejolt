@@ -387,9 +387,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-banned-header
 	margin-top: 0
 

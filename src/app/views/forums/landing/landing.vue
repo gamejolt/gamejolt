@@ -45,8 +45,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .forum-header-landing
 	position: relative
 

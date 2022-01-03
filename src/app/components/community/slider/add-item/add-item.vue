@@ -8,7 +8,6 @@
 
 <style lang="stylus" scoped>
 @import '../common'
-@import '~common/jolticons/jolticons'
 
 .-item
 	position: relative
@@ -21,7 +20,7 @@
 		vertical-align: top
 
 	::v-deep(.jolticon)
-		@extend .jolticon-3x
+		font-size: $jolticon-size * 3
 
 	&:not(.-disabled)
 		// Undoes pressy()

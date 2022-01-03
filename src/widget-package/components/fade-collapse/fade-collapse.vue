@@ -9,8 +9,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .-fade-collapse
 	position: relative
 	overflow: hidden

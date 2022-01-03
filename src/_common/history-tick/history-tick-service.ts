@@ -36,7 +36,7 @@ export class HistoryTick {
 	}
 
 	static sendBeacon(type: string, resourceId?: number, options: BeaconOptions = {}) {
-		if (GJ_IS_SSR) {
+		if (import.meta.env.SSR) {
 			return;
 		}
 

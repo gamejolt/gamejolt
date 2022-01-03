@@ -15,6 +15,7 @@ import AppLoading from '../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '../../../../_common/scroll/inview/inview.vue';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
+import { illEndOfFeed } from '../../../img/ill/illustrations';
 import AppActivityFeedItem from './item/item.vue';
 import AppActivityFeedNewButton from './new-button/new-button.vue';
 import { ActivityFeedInterfaceKey, ActivityFeedKey, ActivityFeedView } from './view';
@@ -92,10 +93,12 @@ export default class AppActivityFeed extends Vue {
 	 * set a default so that vue doesn't watch it.
 	 */
 	private scroll!: number;
+
 	readonly InviewConfigShowNew = InviewConfigShowNew;
 	readonly InviewConfigLoadMore = InviewConfigLoadMore;
 	readonly formatNumber = formatNumber;
 	readonly Scroll = Scroll;
+	readonly illEndOfFeed = illEndOfFeed;
 
 	declare $el: HTMLDivElement;
 

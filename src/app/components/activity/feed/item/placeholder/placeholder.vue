@@ -34,7 +34,6 @@
 
 <style lang="stylus" scoped>
 @import '../../post/post'
-@import '~styles-lib/mixins'
 
 // Gotta override the border hover styling of event items.
 .-item

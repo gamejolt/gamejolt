@@ -14,9 +14,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .community-card-create-placeholder
 	width: 100%
 	max-width: 250px

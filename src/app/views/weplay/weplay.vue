@@ -10,17 +10,16 @@
 						<h1>STAJOLTIA</h1>
 						<p class="lead">
 							<strong>
-								<em>
-									The future of gaming is we.
-								</em>
+								<em> The future of gaming is we. </em>
 							</strong>
 						</p>
 						<p class="lead">
-							Introducing Stajoltia, a new gaming platform from Game Jolt for playing video games
-							across all kinds of screens.
+							Introducing Stajoltia, a new gaming platform from Game Jolt for playing
+							video games across all kinds of screens.
 						</p>
 						<span class="text-muted">
-							(phone screens, watch screens, computer screens, window screens and more!)
+							(phone screens, watch screens, computer screens, window screens and
+							more!)
 						</span>
 					</div>
 				</div>
@@ -49,7 +48,9 @@
 					<div class="player-info">
 						<span class="text-muted">
 							Currently playing:
-							<a href="https://gamejolt.com/games/eggnogg/42742" target="_blank">EGGNOGG+</a>
+							<a href="https://gamejolt.com/games/eggnogg/42742" target="_blank"
+								>EGGNOGG+</a
+							>
 						</span>
 						<div class="controller-wire" />
 						<div />
@@ -143,13 +144,15 @@
 								Game where you want, when you want.
 							</h2>
 							<p>
-								Play across multiple devices including laptops, desktops, and select phones and
-								tablets.
+								Play across multiple devices including laptops, desktops, and select
+								phones and tablets.
 							</p>
 							<p class="help-block">
-								*High speed internet connection and a phat stack of disposable income required.
+								*High speed internet connection and a phat stack of disposable
+								income required.
 								<br />
-								**If you don't have either, don't worry we'll sell your personal data in exchange!
+								**If you don't have either, don't worry we'll sell your personal
+								data in exchange!
 							</p>
 						</div>
 						<div class="well desc-item">
@@ -158,8 +161,8 @@
 								Up to 4K HDR at 60 FPS. PSYCHE!
 							</h2>
 							<p>
-								Enjoy gaming the way you love, with beautiful 4K HDR graphics and smooth frame
-								rates. Passing G.A.S. to you at 60 FPS.
+								Enjoy gaming the way you love, with beautiful 4K HDR graphics and
+								smooth frame rates. Passing G.A.S. to you at 60 FPS.
 							</p>
 							<p class="help-block">
 								* Gameplay experience may vary because this is not possible.
@@ -171,21 +174,17 @@
 								New ways to play through Twitch and beyond.
 							</h2>
 							<p>
-								Go from watching someone in a video to playing someone else's game in seconds, with
-								even more innovative experiences to come.
+								Go from watching someone in a video to playing someone else's game
+								in seconds, with even more innovative experiences to come.
 							</p>
-							<p class="help-block">
-								* For select--but only one--game(s).
-							</p>
+							<p class="help-block">* For select--but only one--game(s).</p>
 						</div>
 						<div class="well desc-item">
 							<h2>
 								<app-jolticon class="-icon" icon="bolt-unfilled" highlight />
 								Play instaJOLTly.
 							</h2>
-							<p>
-								No updates, no downloads. Jump right into the game.
-							</p>
+							<p>No updates, no downloads. Jump right into the game.</p>
 						</div>
 						<div class="well desc-item">
 							<h2>
@@ -193,7 +192,8 @@
 								Money? Never heard of it.
 							</h2>
 							<p>
-								Subscriptions and paying for games is of the past! Stajoltia is completely free!
+								Subscriptions and paying for games is of the past! Stajoltia is
+								completely free!
 							</p>
 						</div>
 						<div class="well desc-item">
@@ -202,8 +202,8 @@
 								Always getting better.
 							</h2>
 							<p>
-								Stajoltia's G.A.S. streaming infrastructure evolves to meet the demands of players,
-								developers, and internet trolls.
+								Stajoltia's G.A.S. streaming infrastructure evolves to meet the
+								demands of players, developers, and internet trolls.
 							</p>
 						</div>
 					</div>
@@ -215,8 +215,8 @@
 			<div class="container">
 				<div class="content">
 					<div class="footer-desc lead">
-						We are redefining how you play games by converting to a cutting edge G.A.S. based
-						infrastructure. Step away from the cloud and smell the future of we.
+						We are redefining how you play games by converting to a cutting edge G.A.S.
+						based infrastructure. Step away from the cloud and smell the future of we.
 						<br />
 						<br />
 						Play with trillions of earth's inhabitants at once using any web browser!
@@ -228,9 +228,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 @keyframes logopulse {
   0% {
 	filter: drop-shadow(0 0 20px var(--theme-notice));
@@ -380,7 +377,6 @@
 .footer-desc
 	text-align: center
 	max-width: 650px
-
 </style>
 
 <script lang="ts" src="./weplay"></script>

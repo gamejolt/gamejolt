@@ -68,7 +68,11 @@
 
 				<div v-if="staticEnabled" class="alert full-bleed-xs">
 					<p>
-						<strong><translate>Your static site is turned on and active.</translate></strong>
+						<strong
+							><translate
+								>Your static site is turned on and active.</translate
+							></strong
+						>
 					</p>
 					<p><translate>You can upload new static site builds at any time.</translate></p>
 				</div>
@@ -110,9 +114,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .active-tab
 	.jolticon
 		theme-prop('color', 'link')

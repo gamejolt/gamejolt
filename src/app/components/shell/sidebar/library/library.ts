@@ -42,7 +42,6 @@ export default class AppShellSidebarLibrary extends Vue {
 
 	readonly Environment = Environment;
 	readonly Screen = Screen;
-	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
 	readonly trackAppPromotionClick = trackAppPromotionClick;
 
 	get collectionsLength() {

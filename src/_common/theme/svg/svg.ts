@@ -33,7 +33,7 @@ export class AppThemeSvg extends Vue {
 	}
 
 	get processedSvg() {
-		if (GJ_IS_SSR) {
+		if (import.meta.env.SSR) {
 			return this.src;
 		}
 

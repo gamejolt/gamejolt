@@ -1,4 +1,4 @@
-export const isClient = GJ_IS_CLIENT;
+export const isClient = GJ_IS_DESKTOP_APP;
 export const isSecure = typeof window !== 'undefined' && window.location.protocol === 'https:';
 
 interface SsrContext {
@@ -11,7 +11,7 @@ interface SsrContext {
 }
 
 export class Environment {
-	static isClient = GJ_IS_CLIENT;
+	static isClient = GJ_IS_DESKTOP_APP;
 	static isSecure = isSecure;
 
 	static ssrContext: SsrContext = {
@@ -51,6 +51,9 @@ export class Environment {
 	static firebaseMeasurementId = 'G-ZV3SVDN43D';
 }
 
+// TODO(vue3): fix this up, or remove it
+const GJ_TUNNELS = {} as any;
+
 if (GJ_ENVIRONMENT === 'development') {
 	Environment.baseUrl = GJ_TUNNELS.frontend || 'http://localhost:8080';
 	Environment.baseUrlInsecure = GJ_TUNNELS.frontend || 'http://localhost:8080';
@@ -77,7 +80,7 @@ if (GJ_ENVIRONMENT === 'development') {
 	Environment.recaptchaSiteKey = '6LcwTkEUAAAAAHTT67TB8gkM0ft5hUzz_r_tFFaT';
 }
 
-if (GJ_IS_CLIENT) {
+if (GJ_IS_DESKTOP_APP) {
 	// When it gets packaged up for production, the URL changes.
 	if (window.location.href.search(/^chrome-extension:\/\/game-jolt-client\/package\//) !== -1) {
 		Environment.wttfBaseUrl = 'chrome-extension://game-jolt-client/package/index.html#';

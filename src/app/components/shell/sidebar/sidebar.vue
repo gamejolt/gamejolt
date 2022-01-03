@@ -13,9 +13,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 #shell-sidebar
 	display: flex
 	flex-direction: column

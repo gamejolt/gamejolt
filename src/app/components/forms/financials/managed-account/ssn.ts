@@ -1,6 +1,6 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../../../../utils/vue';
-import { CommonFormComponents } from '../../../../../_common/form-vue/form.service';
+import { CommonFormComponents } from '../../../../../_common/form-vue/form-common';
 import { validatePattern } from '../../../../../_common/form-vue/validators';
 import FormFinancialsManagedAccountTS from './managed-account';
 import FormFinancialsManagedAccount from './managed-account.vue';

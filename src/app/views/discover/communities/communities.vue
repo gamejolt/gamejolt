@@ -46,8 +46,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .-item
 	margin-bottom: $line-height-computed * 1.5
 

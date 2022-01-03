@@ -12,7 +12,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
 @import '../variables'
 
 .-add

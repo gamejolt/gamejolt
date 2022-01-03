@@ -28,7 +28,7 @@ export function checkGameFilteringRoute(route: RouteLocationNormalized) {
 	});
 
 	// We only do work if the URL is bare with no filters set yet.
-	if (!paramFiltersFound && !GJ_IS_SSR) {
+	if (!paramFiltersFound && !import.meta.env.SSR) {
 		const storageKey = window.sessionStorage.getItem(STORAGE_KEY);
 		if (storageKey) {
 			console.log('from storage');
@@ -323,7 +323,7 @@ export class GameFilteringContainer {
 
 	private saveFilters() {
 		// Early out if this isn't a persisent filtering container.
-		if (!this.isPersistent && !GJ_IS_SSR) {
+		if (!this.isPersistent && !import.meta.env.SSR) {
 			return;
 		}
 

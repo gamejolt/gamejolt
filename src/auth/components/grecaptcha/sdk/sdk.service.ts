@@ -2,7 +2,7 @@ export class GrecaptchaSdk {
 	private static bootstrapPromise: Promise<void> | null = null;
 
 	static load() {
-		if (GJ_IS_SSR) {
+		if (import.meta.env.SSR) {
 			return;
 		}
 

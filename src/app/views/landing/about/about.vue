@@ -8,7 +8,7 @@
 					<app-theme-svg
 						v-app-tooltip="$gettext('This is a lightning bolt!')"
 						class="bolt anim-fade-in-down"
-						:src="require('~img/jolt.svg')"
+						:src="imageJolt"
 						alt=""
 						strict-colors
 					/>
@@ -83,22 +83,14 @@
 							<div class="-staff">
 								<div class="-staff-item">
 									<a href="https://gamejolt.com/@thoro">
-										<img
-											:src="require('./thoro.jpg')"
-											alt="thoro"
-											class="-avatar"
-										/>
+										<img :src="profileThoro" alt="thoro" class="-avatar" />
 									</a>
 									<strong>Yaprak</strong> <small>@thoro</small> <br />
 									Co-founder / CEO
 								</div>
 								<div class="-staff-item">
 									<a href="https://gamejolt.com/@cros">
-										<img
-											:src="require('./cros.jpg')"
-											alt="cros"
-											class="-avatar"
-										/>
+										<img :src="profileCros" alt="cros" class="-avatar" />
 									</a>
 									<strong>David</strong> <small>@cros</small> <br />
 									Co-founder / CTO
@@ -142,13 +134,13 @@
 
 								<div class="visible-xs text-center">
 									<img
-										:src="require('./gamejolt-logo-dark-1x.png')"
+										:src="assetUrls['./gamejolt-logo-dark-1x.png'].default"
 										alt="Game Jolt Logo Dark"
 									/>
 								</div>
 								<div class="hidden-xs text-center">
 									<img
-										:src="require('./gamejolt-logo-dark-2x.png')"
+										:src="assetUrls['./gamejolt-logo-dark-2x.png'].default"
 										alt="Game Jolt Logo Dark"
 									/>
 								</div>
@@ -160,6 +152,7 @@
 										<a
 											:href="
 												assetUrls['./gamejolt-logo-dark-' + size + '.png']
+													.default
 											"
 											target="_blank"
 										>
@@ -177,13 +170,13 @@
 
 								<div class="visible-xs text-center">
 									<img
-										:src="require('./gamejolt-logo-light-1x.png')"
+										:src="assetUrls['./gamejolt-logo-light-1x.png'].default"
 										alt="Game Jolt Logo Light"
 									/>
 								</div>
 								<div class="hidden-xs text-center">
 									<img
-										:src="require('./gamejolt-logo-light-2x.png')"
+										:src="assetUrls['./gamejolt-logo-light-2x.png'].default"
 										alt="Game Jolt Logo Light"
 									/>
 								</div>
@@ -195,6 +188,7 @@
 										<a
 											:href="
 												assetUrls['./gamejolt-logo-light-' + size + '.png']
+													.default
 											"
 											target="_blank"
 										>
@@ -214,7 +208,9 @@
 
 										<div class="text-center">
 											<img
-												:src="require('./gamejolt-bolt-dark-2x.png')"
+												:src="
+													assetUrls['./gamejolt-bolt-dark-2x.png'].default
+												"
 												alt="Game Jolt Bolt Dark"
 											/>
 										</div>
@@ -230,7 +226,7 @@
 													:href="
 														assetUrls[
 															'./gamejolt-bolt-dark-' + size + '.png'
-														]
+														].default
 													"
 													target="_blank"
 												>
@@ -249,7 +245,10 @@
 
 										<div class="text-center">
 											<img
-												:src="require('./gamejolt-bolt-light-2x.png')"
+												:src="
+													assetUrls['./gamejolt-bolt-light-2x.png']
+														.default
+												"
 												alt="Game Jolt Bolt Light"
 											/>
 										</div>
@@ -265,7 +264,7 @@
 													:href="
 														assetUrls[
 															'./gamejolt-bolt-light-' + size + '.png'
-														]
+														].default
 													"
 													target="_blank"
 												>
@@ -293,7 +292,10 @@
 
 										<div class="text-center">
 											<img
-												:src="require('./gamejolt-bolt-white-2x.png')"
+												:src="
+													assetUrls['./gamejolt-bolt-white-2x.png']
+														.default
+												"
 												alt="Game Jolt Bolt White"
 											/>
 										</div>
@@ -309,7 +311,7 @@
 													:href="
 														assetUrls[
 															'./gamejolt-bolt-white-' + size + '.png'
-														]
+														].default
 													"
 													target="_blank"
 												>
@@ -328,7 +330,10 @@
 
 										<div class="text-center">
 											<img
-												:src="require('./gamejolt-bolt-black-2x.png')"
+												:src="
+													assetUrls['./gamejolt-bolt-black-2x.png']
+														.default
+												"
 												alt="Game Jolt Bolt Black"
 											/>
 										</div>
@@ -344,7 +349,7 @@
 													:href="
 														assetUrls[
 															'./gamejolt-bolt-black-' + size + '.png'
-														]
+														].default
 													"
 													target="_blank"
 												>
@@ -386,9 +391,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-color-hex-code
 	font-family: $font-family-monospace
 	font-weight: bold

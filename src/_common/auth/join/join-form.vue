@@ -15,7 +15,7 @@
 					:disabled="Connection.isClientOffline || blocked"
 					@click="linkedChoose('google')"
 				>
-					<img :src="require('../google-icon.svg')" alt="" />
+					<img :src="googleImage" alt="" />
 					<span><translate>Sign up with Google</translate></span>
 				</app-button>
 			</div>

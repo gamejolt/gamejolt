@@ -17,5 +17,6 @@ import AppTooltipPortal from '../tooltip/tooltip-portal.vue';
 		AppTooltipPortal,
 		AppLightboxPortal,
 	},
+	inheritAttrs: false,
 })
 export default class AppCommonShell extends Vue {}

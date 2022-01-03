@@ -18,8 +18,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .-placement-mask
 	z-index: $zindex-sticker-layer
 </style>

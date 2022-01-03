@@ -1,10 +1,10 @@
-@require '~styles/variables'
-@require '../../../_styles/animation/fade/fade-in'
-@require '../../../_common/auth/auth-form'
+@import '../../../_styles/animation/fade/fade-in'
+@import '../../../_common/auth/auth-form'
 
 #auth-container
 	&.has-cover-img
-		.error, .alert
+		.error
+		.alert
 			text-shadow: none
 
 	// We want all the forms in the auth section to match the auth-form styling.
@@ -25,7 +25,8 @@
 		margin-bottom: 10px
 
 	.auth-line-thru
-		&::before, &::after
+		&::before
+		&::after
 			border-color: rgba($white, 0.5)
 
 	.auth-page-links

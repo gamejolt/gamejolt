@@ -71,7 +71,7 @@ function _shouldTrack() {
  * Initializes the analytics for use with the current app.
  */
 export function initAnalytics(store: WithAppStore) {
-	if (GJ_IS_SSR || GJ_IS_CLIENT) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
 		return;
 	}
 
@@ -93,7 +93,7 @@ export function initAnalytics(store: WithAppStore) {
  * Can be called to hook into the router to track pageviews automatically.
  */
 export function initAnalyticsRouter(router: Router) {
-	if (GJ_IS_SSR || GJ_IS_CLIENT) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
 		return;
 	}
 
@@ -119,7 +119,7 @@ export function initAnalyticsRouter(router: Router) {
 }
 
 function _trackPageview(path?: string) {
-	if (GJ_IS_SSR || GJ_IS_CLIENT) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
 		return;
 	}
 
@@ -176,7 +176,7 @@ function _trackEvent(
 	name: string,
 	eventParams: Record<string, string | number | boolean | undefined>
 ) {
-	if (GJ_IS_SSR || GJ_IS_CLIENT) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
 		return;
 	}
 
@@ -231,7 +231,7 @@ export function trackExperimentEngagement(option: ConfigOption) {
 }
 
 export function trackLogin(method: AuthMethod) {
-	if (GJ_IS_SSR || GJ_IS_CLIENT) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
 		return;
 	}
 
@@ -239,7 +239,7 @@ export function trackLogin(method: AuthMethod) {
 }
 
 export function trackJoin(method: AuthMethod) {
-	if (GJ_IS_SSR || GJ_IS_CLIENT) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
 		return;
 	}
 

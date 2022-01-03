@@ -21,7 +21,7 @@ import { initTranslations } from './translate/translate.service';
  * point can call to get what it needs.
  */
 export function bootstrapCommon(appComponent: Component, store: VuexStore, router?: Router) {
-	const app = GJ_IS_SSR ? createSSRApp(appComponent) : createApp(appComponent);
+	const app = import.meta.env.SSR ? createSSRApp(appComponent) : createApp(appComponent);
 
 	// Try to start loading this as soon as possible.
 	ensureConfig();
@@ -49,10 +49,14 @@ export function bootstrapCommon(appComponent: Component, store: VuexStore, route
 	app.component('AppLinkHelp', AppLinkHelp);
 	app.directive('AppTrackEvent', AppTrackEvent);
 
-	// Set some constants so we can use them in templates.
+	// We want our "env" constants to be available in vue templates.
 	app.config.globalProperties.GJ_SECTION = GJ_SECTION;
-	app.config.globalProperties.GJ_IS_CLIENT = GJ_IS_CLIENT;
-	app.config.globalProperties.GJ_IS_SSR = GJ_IS_SSR;
+	app.config.globalProperties.GJ_ENVIRONMENT = GJ_ENVIRONMENT;
+	app.config.globalProperties.GJ_BUILD_TYPE = GJ_BUILD_TYPE;
+	app.config.globalProperties.GJ_IS_DESKTOP_APP = GJ_IS_DESKTOP_APP;
+	app.config.globalProperties.GJ_IS_SSR = import.meta.env.SSR;
+	app.config.globalProperties.GJ_VERSION = GJ_VERSION;
+	app.config.globalProperties.GJ_WITH_UPDATER = GJ_WITH_UPDATER;
 
 	initTranslations(app);
 

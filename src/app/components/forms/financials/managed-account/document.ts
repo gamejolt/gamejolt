@@ -2,7 +2,7 @@ import { Options, Prop, Vue } from 'vue-property-decorator';
 import { findRequiredVueParent, propRequired } from '../../../../../utils/vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import AppFormControlUploadTS from '../../../../../_common/form-vue/controls/upload/upload';
-import { CommonFormComponents } from '../../../../../_common/form-vue/form.service';
+import { CommonFormComponents } from '../../../../../_common/form-vue/form-common';
 import { validateFilesize } from '../../../../../_common/form-vue/validators';
 import FormFinancialsManagedAccountTS from './managed-account';
 import FormFinancialsManagedAccount from './managed-account.vue';

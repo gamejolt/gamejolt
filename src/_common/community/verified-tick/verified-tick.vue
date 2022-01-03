@@ -11,8 +11,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-
 $jolticon-size = 16px
 
 .-small

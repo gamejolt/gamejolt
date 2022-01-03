@@ -6,7 +6,7 @@ import { Payload } from '../payload/payload-service';
 let _hasWebpSupport: null | Promise<boolean> = null;
 const hasWebpSupport = () => {
 	if (!_hasWebpSupport) {
-		_hasWebpSupport = GJ_IS_SSR
+		_hasWebpSupport = import.meta.env.SSR
 			? // SSR passes through the webp support from the client.
 			  Promise.resolve(Environment.ssrContext.accept.includes('image/webp'))
 			: // For normal clients we have to test for it by loading in a webp
@@ -184,11 +184,11 @@ export class Api {
 		// For SSR we pass in the frontend cookie of "ssr" so that the server
 		// knows that this is an SSR request and shouldn't store session data.
 		const headers: any = {};
-		if (GJ_IS_SSR) {
+		if (import.meta.env.SSR) {
 			headers.cookie = 'frontend=ssr;';
 		}
 
-		if (GJ_IS_CLIENT) {
+		if (GJ_IS_DESKTOP_APP) {
 			// Modify all HTTP requests to include the client version.
 			headers['x-gj-client-version'] = GJ_VERSION;
 		}

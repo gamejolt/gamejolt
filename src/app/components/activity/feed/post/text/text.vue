@@ -36,7 +36,6 @@
 
 <style lang="stylus" scoped>
 @import '../../variables'
-@import '~styles-lib/mixins'
 
 .page-cut
 	@media $media-sm-up

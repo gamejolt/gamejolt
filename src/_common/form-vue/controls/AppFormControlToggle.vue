@@ -39,9 +39,6 @@ function toggle() {
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 $-toggle-width = $input-height-base * 2 // + $toggle-padding * 2
 $-knob-border-width = 2px
 

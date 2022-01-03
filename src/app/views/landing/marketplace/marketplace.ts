@@ -10,6 +10,7 @@ import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/rou
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
 import { AppAuthJoinLazy } from '../../../components/lazy';
+import { imageJolt } from '../../../img/images';
 import { Store } from '../../../store/index';
 
 @Options({
@@ -33,6 +34,7 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 	games: Game[] = [];
 
 	readonly Screen = Screen;
+	readonly imageJolt = imageJolt;
 
 	get routeTitle() {
 		return 'Sell Your Games';

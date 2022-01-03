@@ -24,8 +24,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .chat-notification-settings
 	.-header
 		font-family: $font-family-heading

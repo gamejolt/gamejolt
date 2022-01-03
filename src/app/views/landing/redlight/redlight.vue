@@ -363,9 +363,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .redlight-landing-body
 	$redlight-red = #ff3300
 

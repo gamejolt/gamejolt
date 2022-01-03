@@ -12,9 +12,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .-known-followers
 	display: flex
 	margin-bottom: $line-height-computed
@@ -29,7 +26,6 @@
 .-known-followers-text
 	@media $media-xs
 		font-size: $font-size-small
-
 </style>
 
 <script lang="ts" src="./known-followers"></script>

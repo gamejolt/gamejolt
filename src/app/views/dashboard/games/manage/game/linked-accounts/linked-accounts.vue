@@ -85,7 +85,6 @@
 </template>
 
 <style lang="stylus" scoped>
-
 .-facebook-page
 	> h5
 		margin-top: 20px

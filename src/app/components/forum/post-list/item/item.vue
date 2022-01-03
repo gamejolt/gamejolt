@@ -207,9 +207,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .forum-post
 	&-replied-to-button
 		rounded-corners()

@@ -39,7 +39,7 @@ export default class RouteSettings extends BaseRouteComponent {
 	get sections() {
 		const sections: any = {};
 
-		if (GJ_IS_CLIENT) {
+		if (GJ_IS_DESKTOP_APP) {
 			sections.client = this.$gettext('settings.client');
 		}
 

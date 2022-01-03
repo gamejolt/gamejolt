@@ -18,8 +18,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .-status-container
 	position: relative
 

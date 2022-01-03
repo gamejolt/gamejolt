@@ -4,6 +4,7 @@ import { formatNumber } from '../../../../_common/filters/number';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { imageJolt } from '../../../img/images';
 
 @Options({
 	name: 'RouteLandingGameApi',
@@ -26,6 +27,8 @@ export default class RouteLandingGameApi extends BaseRouteComponent {
 	sessionTime = 0;
 
 	readonly formatNumber = formatNumber;
+	readonly imageJolt = imageJolt;
+	readonly assetPaths = import.meta.globEager('./*.svg');
 
 	routeResolved($payload: any) {
 		this.totalScores = $payload.totalScores || 0;

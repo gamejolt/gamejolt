@@ -15,8 +15,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-
 .-ad
 	width: 300px
 	margin-bottom: $line-height-computed

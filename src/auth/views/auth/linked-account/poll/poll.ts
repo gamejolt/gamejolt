@@ -1,14 +1,9 @@
 import { Options } from 'vue-property-decorator';
-import * as _ClientMod from '../../../../../_common/client/client.service';
+import { Client } from '../../../../../_common/client/client-exports';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import { AppProgressPoller } from '../../../../../_common/progress/poller/poller';
 import { BaseRouteComponent } from '../../../../../_common/route/route-component';
-
-let ClientMod: typeof _ClientMod | undefined;
-if (GJ_IS_CLIENT) {
-	ClientMod = require('../../../../../_common/client/client.service');
-}
 
 @Options({
 	name: 'RouteAuthLinkedAccountPoll',
@@ -44,9 +39,7 @@ export default class RouteAuthLinkedAccountPoll extends BaseRouteComponent {
 		this.isPolling = false;
 
 		// Focus back to the Client.
-		if (ClientMod) {
-			ClientMod.Client.show();
-		}
+		Client?.show();
 	}
 
 	failed() {

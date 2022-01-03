@@ -52,7 +52,7 @@ export class AppStore extends VuexStore<AppStore, Actions, Mutations> {
 		if (this.user) {
 			this.user.assign(user);
 		} else {
-			this.user = user;
+			this.user = new User(user);
 		}
 
 		if (user.timeout) {
@@ -104,7 +104,7 @@ export class AppStore extends VuexStore<AppStore, Actions, Mutations> {
 
 	@VuexMutation
 	redirect(location: Mutations['app/redirect']) {
-		if (GJ_IS_SSR) {
+		if (import.meta.env.SSR) {
 			Environment.ssrContext.redirect = location;
 		} else {
 			Navigate.goto(location);

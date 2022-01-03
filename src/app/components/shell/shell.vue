@@ -28,14 +28,14 @@
 
 		<app-chat-windows v-if="chat" />
 
-		<div v-if="GJ_IS_CLIENT" key="shell-client">
+		<div v-if="GJ_IS_DESKTOP_APP" key="shell-client">
 			<app-client-base />
 			<app-shell-client />
 		</div>
 
 		<app-shell-hot-bottom>
 			<app-minbar v-show="!visibleRightPane" />
-			<app-client-status-bar v-if="GJ_IS_CLIENT" key="shell-client-status-bar" />
+			<app-client-status-bar v-if="GJ_IS_DESKTOP_APP" key="shell-client-status-bar" />
 		</app-shell-hot-bottom>
 	</div>
 </template>

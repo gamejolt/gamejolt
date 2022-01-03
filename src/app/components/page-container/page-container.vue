@@ -1,9 +1,6 @@
 <script lang="ts" src="./page-container"></script>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 $-main-max-width = 650px
 
 // Because flexbox allows the columns to flexibly size, we need to do a manual

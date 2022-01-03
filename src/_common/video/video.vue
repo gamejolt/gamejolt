@@ -27,8 +27,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .video
 	position: relative
 

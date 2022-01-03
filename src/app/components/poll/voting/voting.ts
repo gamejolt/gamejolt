@@ -91,7 +91,7 @@ export default class AppPollVoting extends Vue {
 	}
 
 	private clearInterval() {
-		if (!GJ_IS_SSR) {
+		if (!import.meta.env.SSR) {
 			if (this.dateRefresh) {
 				clearInterval(this.dateRefresh);
 				this.dateRefresh = null;
@@ -100,7 +100,7 @@ export default class AppPollVoting extends Vue {
 	}
 
 	private setInterval() {
-		if (!GJ_IS_SSR) {
+		if (!import.meta.env.SSR) {
 			this.clearInterval();
 			this.dateRefresh = setInterval(async () => {
 				this.now = Date.now();

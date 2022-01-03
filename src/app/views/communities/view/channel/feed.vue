@@ -10,7 +10,7 @@
 			</h1>
 
 			<div v-if="channel.visibility === 'draft'">
-				<app-illustration :src="require('~img/ill/no-comments.svg')">
+				<app-illustration :src="illNoComments">
 					<translate>
 						This is a draft channel. When it gets published, the post feed will appear
 						here.
@@ -28,9 +28,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-text-overflow
 	text-overflow()
 	max-width: 100%

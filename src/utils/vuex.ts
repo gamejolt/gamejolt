@@ -92,86 +92,88 @@ export function VuexModule(options: VuexModuleOptions = {}) {
 	const decorators = queuedDecorators;
 	queuedDecorators = [];
 
-	// A function that returns a function. Will be used as a constructor
+	// A function that returns a class. Will be used as a constructor
 	// function.
 	return (target: any): any =>
-		() => {
-			const state: any = {};
+		class _VuexModule {
+			constructor() {
+				const state: any = {};
 
-			// These are private helpers. Don't want them to show in vue-devtools.
-			Object.defineProperties(state, {
-				__vuexGetters: { enumerable: false, writable: true, value: [] },
-				__vuexArgGetters: { enumerable: false, writable: true, value: [] },
-				__vuexMutations: { enumerable: false, writable: true, value: [] },
-				__vuexActions: { enumerable: false, writable: true, value: [] },
-				__vuexGetterScope: { enumerable: false, writable: true },
-				__vuexActionScope: { enumerable: false, writable: true },
-				__vuexMutationScope: { enumerable: false, writable: true },
-			});
-
-			const storeOptions: Module<any, any> = {
-				modules: options.modules || {},
-				namespaced: !options.store,
-				state,
-				actions: {},
-				mutations: {},
-			};
-
-			// Copy over state.
-			const instance = new target();
-			for (const key of Object.getOwnPropertyNames(instance)) {
-				if (!(key in storeInstance)) {
-					state[key] = instance[key];
-				}
-			}
-
-			// Copy over getters.
-			for (const key of Object.getOwnPropertyNames(target.prototype)) {
-				if (key in Vuex.Store.prototype) {
-					continue;
-				}
-
-				const desc = Object.getOwnPropertyDescriptor(target.prototype, key);
-				const getter = desc && desc.get;
-				if (!getter) {
-					continue;
-				}
-
-				// We define getters on the state. We don't put them into vuex
-				// getters. This way they're available from any scope for any other
-				// getter, action, mutation, etc. Vuex getters are a bit mad to work
-				// with and can only be used in certain vuex scopes so they have
-				// limited usefulness.
-				Object.defineProperty(state, key, {
-					enumerable: true,
-					get: () => {
-						const scope = getGetterScope(state);
-						return getter.apply(scope);
-					},
+				// These are private helpers. Don't want them to show in vue-devtools.
+				Object.defineProperties(state, {
+					__vuexGetters: { enumerable: false, writable: true, value: [] },
+					__vuexArgGetters: { enumerable: false, writable: true, value: [] },
+					__vuexMutations: { enumerable: false, writable: true, value: [] },
+					__vuexActions: { enumerable: false, writable: true, value: [] },
+					__vuexGetterScope: { enumerable: false, writable: true },
+					__vuexActionScope: { enumerable: false, writable: true },
+					__vuexMutationScope: { enumerable: false, writable: true },
 				});
 
-				state.__vuexGetters.push(key);
-			}
+				const storeOptions: Module<any, any> = {
+					modules: options.modules || {},
+					namespaced: !options.store,
+					state,
+					actions: {},
+					mutations: {},
+				};
 
-			// Apply the mutation and action decorators.
-			for (const cb of decorators) {
-				cb(storeOptions);
-			}
+				// Copy over state.
+				const instance = new target();
+				for (const key of Object.getOwnPropertyNames(instance)) {
+					if (!(key in storeInstance)) {
+						state[key] = instance[key];
+					}
+				}
 
-			// Create the store instance. If it's the main store, we create it, if
-			// it's not the main store we just use our options object.
-			if (!options.store) {
-				return storeOptions;
-			} else {
-				const _instance = createStore(storeOptions) as VuexStore;
+				// Copy over getters.
+				for (const key of Object.getOwnPropertyNames(target.prototype)) {
+					if (key in Vuex.Store.prototype) {
+						continue;
+					}
 
-				// Overload this so that we do our own replace state handler.
-				_instance.replaceState = (newState: any) =>
-					replaceState(_instance, newState, _instance.state);
+					const desc = Object.getOwnPropertyDescriptor(target.prototype, key);
+					const getter = desc && desc.get;
+					if (!getter) {
+						continue;
+					}
 
-				_instance.getServerState = () => getServerState(_instance);
+					// We define getters on the state. We don't put them into vuex
+					// getters. This way they're available from any scope for any other
+					// getter, action, mutation, etc. Vuex getters are a bit mad to work
+					// with and can only be used in certain vuex scopes so they have
+					// limited usefulness.
+					Object.defineProperty(state, key, {
+						enumerable: true,
+						get: () => {
+							const scope = getGetterScope(state);
+							return getter.apply(scope);
+						},
+					});
 
-				return _instance;
+					state.__vuexGetters.push(key);
+				}
+
+				// Apply the mutation and action decorators.
+				for (const cb of decorators) {
+					cb(storeOptions);
+				}
+
+				// Create the store instance. If it's the main store, we create it, if
+				// it's not the main store we just use our options object.
+				if (!options.store) {
+					return storeOptions;
+				} else {
+					const _instance = createStore(storeOptions) as VuexStore;
+
+					// Overload this so that we do our own replace state handler.
+					_instance.replaceState = (newState: any) =>
+						replaceState(_instance, newState, _instance.state);
+
+					_instance.getServerState = () => getServerState(_instance);
+
+					return _instance;
+				}
 			}
 		};
 }

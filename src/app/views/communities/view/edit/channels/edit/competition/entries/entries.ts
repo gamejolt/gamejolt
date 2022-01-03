@@ -23,6 +23,7 @@ import AppUserAvatarImg from '../../../../../../../../../_common/user/user-avata
 import AppUserVerifiedTick from '../../../../../../../../../_common/user/verified-tick/verified-tick.vue';
 import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/date.vue';
 import { CommunityCompetitionEntryModal } from '../../../../../../../../components/community/competition/entry/modal/modal.service';
+import { illNoCommentsSmall } from '../../../../../../../../img/ill/illustrations';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view.store';
 
 type Payload = {
@@ -127,6 +128,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 
 	readonly CompetitionPeriodPreComp = CompetitionPeriodPreComp;
 	readonly CompetitionPeriodVoting = CompetitionPeriodVoting;
+	readonly illNoCommentsSmall = illNoCommentsSmall;
 
 	get competition() {
 		return this.routeStore.competition!;

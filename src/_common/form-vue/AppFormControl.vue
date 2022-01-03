@@ -57,7 +57,7 @@ export function createFormControl<T>(
 	inputValidators: Ref<FormValidator[]>,
 	{ multi = false }: { multi?: boolean } = {}
 ) {
-	const form = useForm<any>();
+	const form = useForm()!;
 	const group = useFormGroup()!;
 
 	const controlVal = ref(initialValue) as Ref<T>;
@@ -389,8 +389,6 @@ function recalcPositioning() {
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-
 .-container
 	position: relative
 

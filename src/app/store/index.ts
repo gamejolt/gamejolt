@@ -111,7 +111,7 @@ const modules: any = {
 	sidebar: new SidebarStore(),
 };
 
-if (GJ_IS_CLIENT) {
+if (GJ_IS_DESKTOP_APP) {
 	const m: typeof _ClientLibraryMod = require('./client-library');
 	modules.clientLibrary = new m.ClientLibraryStore();
 }
@@ -236,7 +236,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 		this._setBootstrapped();
 
-		if (!GJ_IS_CLIENT && !GJ_IS_SSR) {
+		if (!GJ_IS_DESKTOP_APP && !import.meta.env.SSR) {
 			BroadcastModal.check();
 		}
 	}
@@ -653,7 +653,7 @@ registerFocusWatcher(
 
 // If we were offline, but we're online now, make sure our library is bootstrapped. Remember we
 // always have an app user even if we were offline.
-if (GJ_IS_CLIENT) {
+if (GJ_IS_DESKTOP_APP) {
 	store.watch(
 		() => Connection.isOffline,
 		(isOffline, prev) => {

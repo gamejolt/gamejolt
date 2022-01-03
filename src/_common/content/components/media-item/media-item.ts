@@ -120,7 +120,7 @@ export default class AppContentMediaItem extends Vue {
 
 	get shouldShowPlaceholder() {
 		// Never show the placeholder for SSR, because the events to clear it are not fired.
-		return !this.imageLoaded && !GJ_IS_SSR;
+		return !this.imageLoaded && !import.meta.env.SSR;
 	}
 
 	get shouldUseMediaserver() {

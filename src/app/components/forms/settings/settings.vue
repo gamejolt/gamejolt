@@ -2,7 +2,7 @@
 
 <template>
 	<app-form :controller="form" @changed="onChange">
-		<fieldset v-if="GJ_IS_CLIENT" id="settings-client">
+		<fieldset v-if="GJ_IS_DESKTOP_APP" id="settings-client">
 			<legend>
 				<translate>settings.client</translate>
 			</legend>

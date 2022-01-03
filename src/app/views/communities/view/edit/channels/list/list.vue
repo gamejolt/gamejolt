@@ -97,8 +97,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .-archived-heading
 	margin-top: 24px
 	user-select: none

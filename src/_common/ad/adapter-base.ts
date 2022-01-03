@@ -17,7 +17,7 @@ export abstract class AdAdapterBase {
 	 * first ad display (lazy initialization).
 	 */
 	protected runOnce(cb: () => void) {
-		if (GJ_IS_SSR || this.ranOnce) {
+		if (import.meta.env.SSR || this.ranOnce) {
 			return;
 		}
 

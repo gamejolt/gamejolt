@@ -143,9 +143,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-controls
 	margin-top: $shell-padding * 2
 

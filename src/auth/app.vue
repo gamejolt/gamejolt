@@ -8,6 +8,6 @@
 			</app-error-page>
 		</div>
 
-		<app-client-base v-if="GJ_IS_CLIENT" />
+		<app-client-base v-if="GJ_IS_DESKTOP_APP" />
 	</app-common-shell>
 </template>

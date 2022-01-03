@@ -16,7 +16,7 @@
 			class="-container anim-fade-in no-animate-leave"
 		>
 			<div v-if="shouldShowIntro" class="-intro">
-				<app-illustration :src="require('~img/ill/no-chat.svg')">
+				<app-illustration :src="illNoChat">
 					<translate v-if="room.isPmRoom">
 						Your friend is still loading. Encourage them with a message!
 					</translate>

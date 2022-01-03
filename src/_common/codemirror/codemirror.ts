@@ -32,7 +32,7 @@ export default class AppCodemirror extends Vue {
 		}
 
 		// Codemirror doesn't work in SSR, so bootstrap it in mounted().
-		const CodeMirror = require('codemirror');
+		const CodeMirror = await import('codemirror');
 		this.editor = CodeMirror.fromTextArea(this.$el, this._options);
 		this.editor.setValue(this.value || '');
 

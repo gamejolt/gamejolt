@@ -17,8 +17,6 @@
 
 <style lang="stylus" scoped>
 @import '../variables'
-@import '~styles/variables'
-@import '~styles-lib/mixins'
 
 .game-thumbnail-placeholder
 	margin-bottom: $grid-gutter-width-xs

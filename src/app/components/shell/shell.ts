@@ -38,10 +38,10 @@ const components: any = {
 	AppStickerLayer,
 };
 
-if (GJ_IS_CLIENT) {
-	components.AppClientBase = require('../../../_common/client/base/base.vue').default;
-	components.AppShellClient = require('./client/client.vue').default;
-	components.AppClientStatusBar = require('../client/status-bar/status-bar.vue').default;
+if (GJ_IS_DESKTOP_APP) {
+	components.AppClientBase = await import('../../../_common/client/base/base.vue');
+	components.AppShellClient = await import('./client/client.vue');
+	components.AppClientStatusBar = await import('../client/status-bar/status-bar.vue');
 }
 
 @Options({
@@ -83,7 +83,7 @@ export default class AppShell extends Vue {
 	}
 
 	get ssrShouldShowSidebar() {
-		return GJ_IS_SSR && this.$route.name?.indexOf('communities.view') === 0;
+		return import.meta.env.SSR && this.$route.name?.indexOf('communities.view') === 0;
 	}
 
 	mounted() {

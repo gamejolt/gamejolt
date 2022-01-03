@@ -21,7 +21,7 @@ export class AppImgResponsive extends Vue {
 	emitChange(_isLoaded: boolean) {}
 
 	created() {
-		if (GJ_IS_SSR) {
+		if (import.meta.env.SSR) {
 			this.processedSrc = this.src;
 		}
 	}

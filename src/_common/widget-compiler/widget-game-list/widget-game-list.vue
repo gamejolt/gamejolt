@@ -12,8 +12,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .-game-list
 	text-align: center
 

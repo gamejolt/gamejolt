@@ -6,7 +6,7 @@
 			<div class="container">
 				<h1>
 					<app-theme-svg
-						:src="require('~img/jolt.svg')"
+						:src="imageJolt"
 						alt=""
 						:width="17 * 3"
 						:height="18 * 3"
@@ -71,7 +71,7 @@
 					<div class="col-lg-4">
 						<div class="landing-graphic">
 							<app-theme-svg
-								:src="require('./leaderboards.svg')"
+								:src="assetPaths['./leaderboards.svg'].default"
 								alt="Leaderboards"
 							/>
 						</div>
@@ -87,7 +87,10 @@
 
 					<div class="col-lg-4">
 						<div class="landing-graphic">
-							<app-theme-svg :src="require('./trophies.svg')" alt="Trophies" />
+							<app-theme-svg
+								:src="assetPaths['./trophies.svg'].default"
+								alt="Trophies"
+							/>
 						</div>
 
 						<h4 class="text-center">Trophies</h4>
@@ -101,7 +104,7 @@
 					<div class="col-lg-4">
 						<div class="landing-graphic">
 							<app-theme-svg
-								:src="require('./data-storage.svg')"
+								:src="assetPaths['./data-storage.svg'].default"
 								alt="Data Storage"
 							/>
 						</div>
@@ -119,7 +122,10 @@
 
 					<div class="col-lg-4 col-centered-lg">
 						<div class="landing-graphic">
-							<app-theme-svg :src="require('./sessions.svg')" alt="Sessions" />
+							<app-theme-svg
+								:src="assetPaths['./sessions.svg'].default"
+								alt="Sessions"
+							/>
 						</div>
 
 						<h4 class="text-center">Sessions</h4>

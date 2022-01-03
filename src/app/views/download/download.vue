@@ -37,9 +37,7 @@
 				</h2>
 
 				<p class="small text-muted">
-					<translate>
-						Your download will begin in just a moment...
-					</translate>
+					<translate> Your download will begin in just a moment... </translate>
 				</p>
 
 				<!--
@@ -78,8 +76,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 // We want to keep the top part as thin as possible.
 .-section
 	padding-top: $line-height-computed

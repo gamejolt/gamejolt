@@ -81,7 +81,7 @@ export default class AppMediaItemPost extends Vue {
 	get itemStyling() {
 		const style: any = {};
 
-		if (!GJ_IS_SSR) {
+		if (!import.meta.env.SSR) {
 			Object.assign(style, {
 				maxWidth: this.mediaItem.width + 'px',
 				maxHeight: this.mediaItem.height + 'px',
@@ -92,7 +92,7 @@ export default class AppMediaItemPost extends Vue {
 	}
 
 	get deviceMaxHeight() {
-		if (GJ_IS_SSR || !this.restrictDeviceMaxHeight) {
+		if (import.meta.env.SSR || !this.restrictDeviceMaxHeight) {
 			return;
 		}
 

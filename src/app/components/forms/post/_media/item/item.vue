@@ -9,8 +9,7 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '../variables'
-@require '~styles-lib/mixins'
+@import '../variables'
 
 .-item
 	rounded-corners-lg()

@@ -60,7 +60,7 @@ function _addGrowl(type: GrowlType, options: GrowlOptions) {
 
 	// If we're a client or have notifications permissions in browser, we want
 	// to instead show this as a system notification.
-	if (options.system && (GJ_IS_CLIENT || (Notification as any).permission === 'granted')) {
+	if (options.system && (GJ_IS_DESKTOP_APP || (Notification as any).permission === 'granted')) {
 		return _createSystemNotification(options);
 	}
 

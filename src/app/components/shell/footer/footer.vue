@@ -87,7 +87,7 @@
 										<translate>legal.privacy</translate>
 									</router-link>
 								</li>
-								<li v-if="!GJ_IS_CLIENT">
+								<li v-if="!GJ_IS_DESKTOP_APP">
 									<router-link :to="{ name: 'legal.cookies' }">
 										<translate>Cookie Policy</translate>
 									</router-link>
@@ -130,7 +130,7 @@
 				<div v-if="!Screen.isXs" class="footer-jolt">
 					<router-link :to="{ name: 'home' }">
 						<app-theme-svg
-							:src="require('~img/jolt.svg')"
+							:src="imageJolt"
 							alt=""
 							width="68"
 							height="72"
@@ -158,7 +158,7 @@
 
 					<p class="tiny">&copy; {{ formatDate(curDate, 'yyyy') }} Game Jolt Inc.</p>
 
-					<p v-if="GJ_IS_CLIENT" class="tiny text-muted">
+					<p v-if="GJ_IS_DESKTOP_APP" class="tiny text-muted">
 						<a class="link-muted" @click="showSystemReport">
 							<translate>footer.send_system_report</translate>
 						</a>
@@ -187,9 +187,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 #footer
 	change-bg('darkest')
 	padding-top: $grid-gutter-width * 0.5

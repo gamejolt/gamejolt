@@ -68,10 +68,7 @@
 			</ul>
 		</app-nav-tab-list>
 
-		<app-illustration
-			v-if="isLikeFeed && isLikeFeedDisabled && !isOwner"
-			:src="require('~img/ill/no-comments.svg')"
-		>
+		<app-illustration v-if="isLikeFeed && isLikeFeedDisabled && !isOwner" :src="illNoComments">
 			<p>
 				<translate> This user has made their liked posts private. </translate>
 			</p>
@@ -86,7 +83,7 @@
 				@publish-post="onPostPublished"
 				@remove-post="onPostRemoved"
 			/>
-			<app-illustration v-else :src="require('~img/ill/no-comments.svg')">
+			<app-illustration v-else :src="illNoComments">
 				<p>
 					<template v-if="isOwner">
 						<translate v-if="isLikeFeed"> You haven't liked anything yet. </translate>

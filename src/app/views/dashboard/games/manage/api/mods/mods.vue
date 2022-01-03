@@ -10,9 +10,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-content
 	::v-deep(h1)
 		margin-top: 0

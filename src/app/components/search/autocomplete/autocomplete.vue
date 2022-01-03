@@ -103,9 +103,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .search-autocomplete-popover
 	.search-user-avatar
 	.search-game-thumbnail

@@ -133,8 +133,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .-header
 	font-family: $font-family-heading
 	font-size: $font-size-tiny

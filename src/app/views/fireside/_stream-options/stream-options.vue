@@ -25,9 +25,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-stream-options-wrap
 	display: flex
 	align-items: flex-start

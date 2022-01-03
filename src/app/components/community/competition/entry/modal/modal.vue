@@ -122,9 +122,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-section
 	margin-bottom: 24px
 

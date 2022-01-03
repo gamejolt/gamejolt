@@ -25,9 +25,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .fill-offset .form-dash-site-build
 	.link-muted
 		color: $black

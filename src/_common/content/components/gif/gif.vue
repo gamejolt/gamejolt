@@ -33,9 +33,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-outer
 	width: 100%
 	display: flex

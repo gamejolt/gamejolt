@@ -85,8 +85,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .-heading
 	margin-top: 24px
 

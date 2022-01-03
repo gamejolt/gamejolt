@@ -47,7 +47,7 @@ export default class AppFiresideStream extends Vue {
 	readonly formatNumber = formatNumber;
 
 	get shouldShowUI() {
-		if (GJ_IS_SSR) {
+		if (import.meta.env.SSR) {
 			return false;
 		}
 

@@ -8,7 +8,7 @@
 		}"
 	>
 		<transition>
-			<app-cover-img
+			<AppCoverImg
 				v-if="shouldShowCoverImage && coverMediaItem"
 				class="anim-fade-leave"
 				:img-url="coverMediaItem.img_url"
@@ -19,13 +19,13 @@
 			<div class="auth-logo text-center anim-fade-in-enlarge stagger">
 				<a
 					:href="
-						!GJ_IS_CLIENT
+						!GJ_IS_DESKTOP_APP
 							? Environment.baseUrl + '/'
 							: Environment.authBaseUrl + '/login'
 					"
 				>
 					<app-theme-svg
-						:src="require('~img/game-jolt-logo.svg')"
+						:src="imageGameJoltLogo"
 						width="164"
 						height="18"
 						alt=""
@@ -33,7 +33,7 @@
 						strict-colors
 					/>
 					<app-theme-svg
-						:src="require('~img/game-jolt-logo.svg')"
+						:src="imageGameJoltLogo"
 						width="328"
 						height="36"
 						alt=""
@@ -60,7 +60,7 @@
 			</div>
 
 			<div
-				v-if="!GJ_IS_CLIENT && shouldShowCoverImage && Screen.isDesktop"
+				v-if="!GJ_IS_DESKTOP_APP && shouldShowCoverImage && Screen.isDesktop"
 				class="-game-credits anim-fade-in-up"
 			>
 				<app-game-cover-credits :game="coverGame" />
@@ -82,7 +82,7 @@
 					<translate>auth.legal.privacy</translate>
 				</a>
 				<a
-					v-if="!GJ_IS_CLIENT"
+					v-if="!GJ_IS_DESKTOP_APP"
 					class="link-unstyled anim-fade-in stagger"
 					:href="Environment.baseUrl + '/cookies'"
 					target="_blank"

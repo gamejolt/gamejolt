@@ -47,8 +47,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .-channel-select
 	margin-bottom: $line-height-computed
 </style>

@@ -15,7 +15,7 @@ export class BroadcastModal {
 
 	static async check() {
 		const user = appStore.state.user;
-		if (!user || !SettingBroadcastModal.get() || GJ_IS_SSR || Screen.isXs) {
+		if (!user || !SettingBroadcastModal.get() || import.meta.env.SSR || Screen.isXs) {
 			return;
 		}
 

@@ -31,7 +31,7 @@ const emit = defineEmits({
 	'after-submit': (_e: Event, _result: boolean) => true,
 });
 
-const form = useForm();
+const form = useForm()!;
 
 const isShowingSuccess = ref(false);
 

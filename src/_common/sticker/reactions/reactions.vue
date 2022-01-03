@@ -17,9 +17,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .sticker-reactions
 	display: inline-flex
 	flex-wrap: wrap

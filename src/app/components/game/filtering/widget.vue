@@ -93,9 +93,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .game-filtering-widget
 	.jolticon-box-empty
 	.jolticon-radio-circle

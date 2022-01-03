@@ -12,6 +12,8 @@ import { AppMutation, AppState, appStore, AppStore } from '../../../_common/stor
 import { AppThemeSvg } from '../../../_common/theme/svg/svg';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import { UserTimeout } from '../../../_common/user/timeout/timeout.model';
+import { illTimeOut } from '../../img/ill/illustrations';
+import { imageGameJoltLogo } from '../../img/images';
 
 @Options({
 	name: 'RouteTimeout',
@@ -47,6 +49,9 @@ export default class RouteTimeout extends BaseRouteComponent {
 	isExpired = false;
 	updateTimer?: NodeJS.Timer;
 	isClearingResource = false;
+
+	readonly imageGameJoltLogo = imageGameJoltLogo;
+	readonly illTimeOut = illTimeOut;
 
 	get routeTitle() {
 		return this.$gettext(`You've been put in time-out.`);

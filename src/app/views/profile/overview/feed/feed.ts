@@ -14,6 +14,7 @@ import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { AppActivityFeedLazy } from '../../../../components/lazy';
 import AppPostAddButton from '../../../../components/post/add-button/add-button.vue';
 import AppUserSpawnDay from '../../../../components/user/spawn-day/spawn-day.vue';
+import { illNoComments } from '../../../../img/ill/illustrations';
 import { Store } from '../../../../store/index';
 import { RouteStore, RouteStoreModule } from '../../profile.store';
 
@@ -57,6 +58,8 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 	@RouteStoreModule.State user!: RouteStore['user'];
 
 	feed: ActivityFeedView | null = null;
+
+	readonly illNoComments = illNoComments;
 
 	get isOwner() {
 		return this.app.user && this.user?.id === this.app.user.id;

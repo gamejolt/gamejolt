@@ -47,9 +47,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .add-to-playlist-popover
 	.loading
 		margin-top: $line-height-computed

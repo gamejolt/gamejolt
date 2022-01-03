@@ -55,7 +55,7 @@ export default class AppGameSoundtrackCard extends Vue {
 			query: { game: this.game.id + '' },
 		};
 
-		if (GJ_IS_CLIENT) {
+		if (GJ_IS_DESKTOP_APP) {
 			// Gotta go past the first char since it's # in client.
 			Navigate.gotoExternal(
 				Environment.baseUrl + this.$router.resolve(location).href.substr(1)

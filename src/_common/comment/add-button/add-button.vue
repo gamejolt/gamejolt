@@ -7,9 +7,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .comment-add-button
 	input-placeholder-button()
 	change-bg('bg')

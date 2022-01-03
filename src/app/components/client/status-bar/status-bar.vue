@@ -67,9 +67,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .status-bar
 	padding: 0 10px
 	height: $status-bar-height

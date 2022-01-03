@@ -11,7 +11,7 @@ const props = defineProps({
 
 const isLoaded = ref(false);
 
-if (!GJ_IS_SSR) {
+if (!import.meta.env.SSR) {
 	watch(
 		() => props.imgUrl,
 		async imgUrl => {
@@ -40,8 +40,6 @@ if (!GJ_IS_SSR) {
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-
 .cover-img
 	&, &-container, &-highlight
 		position: absolute

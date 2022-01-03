@@ -243,9 +243,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .form-dashboard-financials
 	::v-deep(.done-icon)
 		theme-prop('color', 'link')

@@ -12,14 +12,14 @@ class ConnectionService {
 	}
 
 	get isClientOffline() {
-		return GJ_IS_CLIENT && this.isOffline;
+		return GJ_IS_DESKTOP_APP && this.isOffline;
 	}
 }
 
 export const Connection = reactive(new ConnectionService()) as ConnectionService;
 
 export function initConnectionService(store: WithAppStore) {
-	if (GJ_IS_SSR) {
+	if (import.meta.env.SSR) {
 		return;
 	}
 

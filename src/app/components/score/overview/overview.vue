@@ -166,9 +166,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .score-overview-user-best
 	.well
 	.alert

@@ -2,7 +2,7 @@
 	<div>
 		<section class="container error-page" v-if="error">
 			<div class="ararat">
-				<img :src="require('./ararat.png')" :width="416 / 2" :height="760 / 2" alt="" />
+				<img :src="errorImage" :width="416 / 2" :height="760 / 2" alt="" />
 			</div>
 			<component :is="page" />
 			<br />
@@ -14,8 +14,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-
 .error-page
 	text-align: center
 

@@ -16,9 +16,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .tag-thumbnail
 	display: block
 	margin-bottom: $line-height-computed

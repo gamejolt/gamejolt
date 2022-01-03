@@ -612,8 +612,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
 @import './_community-pill/variables'
 
 .form-group:last-child

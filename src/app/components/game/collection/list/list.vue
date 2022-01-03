@@ -30,8 +30,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .game-collection-list
 	// Override from the grid to make this smaller.
 	.game-collection-title

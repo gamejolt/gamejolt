@@ -22,9 +22,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 $-offset-width = 110px
 $-content-width = 650px
 // Subtracting 31px gives us the exact content

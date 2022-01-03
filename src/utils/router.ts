@@ -20,9 +20,9 @@ export function initRouter(appRoutes: RouteRecordRaw[]) {
 	const routes = [...appRoutes, routeError404];
 
 	let history: RouterHistory;
-	if (GJ_IS_CLIENT) {
+	if (GJ_IS_DESKTOP_APP) {
 		history = createWebHashHistory();
-	} else if (GJ_IS_SSR) {
+	} else if (import.meta.env.SSR) {
 		history = createMemoryHistory();
 	} else {
 		history = createWebHistory();
@@ -41,7 +41,7 @@ export function initRouter(appRoutes: RouteRecordRaw[]) {
  * be in router-link and tries to route them if it points to a correct route.
  */
 export function hijackLinks(router: Router, host: string) {
-	if (GJ_IS_SSR) {
+	if (import.meta.env.SSR) {
 		return;
 	}
 
@@ -97,7 +97,7 @@ export function hijackLinks(router: Router, host: string) {
 			return;
 		}
 
-		if (GJ_IS_CLIENT) {
+		if (GJ_IS_DESKTOP_APP) {
 			const isGameJoltPath = /^https?:\/\/gamejolt\./.test(href);
 			if (isGameJoltPath) {
 				const nonClientPaths = [
@@ -137,7 +137,7 @@ function guardHijackEvent(e: any): 'passthrough' | 'window' | 'handle' {
 
 	// don't redirect with control keys
 	if (ke.metaKey || ke.altKey || ke.ctrlKey || ke.shiftKey) {
-		if (GJ_IS_CLIENT) {
+		if (GJ_IS_DESKTOP_APP) {
 			// If in client, we should pop open a new window. Gotta make sure that if it's a
 			// client-relative link, we need to replace with the correct host.
 			return 'window';
@@ -165,7 +165,7 @@ function guardHijackEvent(e: any): 'passthrough' | 'window' | 'handle' {
 
 function newWindow(e: Event, url: string) {
 	Navigate.gotoExternal(url);
-	if (GJ_IS_CLIENT) {
+	if (GJ_IS_DESKTOP_APP) {
 		e.preventDefault();
 	}
 }

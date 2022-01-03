@@ -22,9 +22,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-fireside-hosts
 	--fireside-host-size: 100px
 	width: 100%

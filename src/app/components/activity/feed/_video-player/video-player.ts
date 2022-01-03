@@ -85,15 +85,15 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	}
 
 	get height() {
-		return GJ_IS_SSR ? null : `${this.responsiveHeight}px`;
+		return import.meta.env.SSR ? null : `${this.responsiveHeight}px`;
 	}
 
 	get width() {
-		return GJ_IS_SSR ? null : `${this.responsiveWidth}px`;
+		return import.meta.env.SSR ? null : `${this.responsiveWidth}px`;
 	}
 
 	get maxPlayerHeight() {
-		if (GJ_IS_SSR) {
+		if (import.meta.env.SSR) {
 			return;
 		}
 

@@ -7,8 +7,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .modals
 	position: relative
 	z-index: $zindex-modal

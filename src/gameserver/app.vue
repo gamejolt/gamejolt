@@ -19,8 +19,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .-build-embed
 	margin: 0
 	padding: 0

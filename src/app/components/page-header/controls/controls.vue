@@ -13,8 +13,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-
 .-controls
 	display: flex
 	align-items: center

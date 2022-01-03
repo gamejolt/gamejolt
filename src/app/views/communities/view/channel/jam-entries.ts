@@ -16,6 +16,7 @@ import {
 	CommunityCompetitionEntryModal,
 	CommunityCompetitionEntryModalHashDeregister,
 } from '../../../../components/community/competition/entry/modal/modal.service';
+import { illNoComments } from '../../../../img/ill/illustrations';
 import {
 	CommunityRouteStore,
 	CommunityRouteStoreKey,
@@ -110,7 +111,9 @@ function makeRequest(route: RouteLocationNormalized) {
 		query.push(['page', page]);
 	}
 
-	const seed = GJ_IS_SSR ? null : sessionStorage.getItem(getSeedSessionStorageKey(route));
+	const seed = import.meta.env.SSR
+		? null
+		: sessionStorage.getItem(getSeedSessionStorageKey(route));
 	if (seed) {
 		query.push(['seed', seed]);
 	}
@@ -153,6 +156,7 @@ export default class RouteCommunitiesViewChannelJamEntries extends BaseRouteComp
 	routeStore!: CommunityRouteStore;
 
 	readonly formatNumber = formatNumber;
+	readonly illNoComments = illNoComments;
 
 	entries: CommunityCompetitionEntry[] = [];
 	perPage = 50;
@@ -332,7 +336,7 @@ export default class RouteCommunitiesViewChannelJamEntries extends BaseRouteComp
 
 		// If we receive a seed from backend, store it so it can be sent with the next request.
 		const seed = $payload.seed;
-		if (seed && !GJ_IS_SSR) {
+		if (seed && !import.meta.env.SSR) {
 			sessionStorage.setItem(getSeedSessionStorageKey(this.$route), seed);
 		}
 	}

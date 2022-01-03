@@ -7,9 +7,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 // Don't show the message thread split for the last item in the list.
 ::v-deep(.message-thread-item:last-of-type .timeline-list-item-split)
 	display: none

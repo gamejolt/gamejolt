@@ -25,8 +25,8 @@ export default class AppActivityFeedVideoEmbed extends Vue {
 	@Emit('play')
 	emitPlay() {}
 
-	isShowingVideo = GJ_IS_SSR;
-	shouldAutoplay = !GJ_IS_SSR;
+	isShowingVideo = import.meta.env.SSR;
+	shouldAutoplay = !import.meta.env.SSR;
 
 	play() {
 		this.isShowingVideo = true;

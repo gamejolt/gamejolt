@@ -34,9 +34,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 $-image-width = 120px
 $-spacing = 8px
 $-padding = 8px

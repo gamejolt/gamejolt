@@ -126,8 +126,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .-spacer
 	margin-top: $line-height-computed
 

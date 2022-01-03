@@ -9,6 +9,7 @@ import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/rou
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppScrollTo } from '../../../../_common/scroll/to/to.directive';
 import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
+import { imageJolt } from '../../../img/images';
 
 @Options({
 	name: 'RouteLandingClient',
@@ -32,6 +33,7 @@ export default class RouteLandingClient extends BaseRouteComponent {
 	readonly platform = getDeviceOS();
 	readonly arch = getDeviceArch();
 	readonly Screen = Screen;
+	readonly imageJolt = imageJolt;
 
 	routeResolved(payload: any) {
 		this.packageData = new GamePackagePayloadModel(payload.packageData);

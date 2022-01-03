@@ -12,8 +12,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
 @import '../../../../components/community/channel/card/variables'
 
 .sidebar-context-channels

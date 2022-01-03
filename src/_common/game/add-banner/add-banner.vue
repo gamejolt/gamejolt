@@ -19,8 +19,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .add-game-banner
 	.-row
 		display: flex

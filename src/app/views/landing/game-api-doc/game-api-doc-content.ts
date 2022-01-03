@@ -1,39 +1,28 @@
 import { h } from 'vue';
 import { Options } from 'vue-property-decorator';
-import { importContext } from '../../../../utils/utils';
 import { PayloadError } from '../../../../_common/payload/payload-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 
-// We don't emit files since we just want to pull the directory listing.
-const paths = importContext(
-	require.context('!file-loader?-emitFile!../../../../lib/doc-game-api/v1.x/', true, /\.md$/)
-);
+const paths = import.meta.glob('../../../../lib/doc-game-api/v1.x/**/*.md');
 
 @Options({
 	name: 'RouteLandingGameApiDoc',
 })
 @RouteResolver({
 	async resolver({ route }) {
+		console.log(route.params.path);
 		// First check the path as is, then check with "index".
-		let path = (route.params.path as string[]).join('/');
+		let path = ((route.params.path || []) as string[]).join('/');
 		if (!path) {
 			path = 'index';
 		}
 
-		if (paths[`./${path}.md`]) {
-			return (
-				await import(
-					/* webpackChunkName: "gameApiDocContent" */
-					`../../../../lib/doc-game-api/v1.x/${path}.md`
-				)
-			).default;
-		} else if (paths[`./${path}/index.md`]) {
-			return (
-				await import(
-					/* webpackChunkName: "gameApiDocContent" */
-					`../../../../lib/doc-game-api/v1.x/${path}/index.md`
-				)
-			).default;
+		console.log(paths);
+
+		if (paths[`../../../../lib/doc-game-api/v1.x/${path}.md`]) {
+			return (await paths[`../../../../lib/doc-game-api/v1.x/${path}.md`]()).html;
+		} else if (paths[`../../../../lib/doc-game-api/v1.x/${path}/index.md`]) {
+			return (await paths[`../../../../lib/doc-game-api/v1.x/${path}/index.md`]()).html;
 		}
 
 		return PayloadError.fromHttpError(404);

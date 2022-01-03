@@ -7,9 +7,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .manage-game-nav-required
 	@media $media-md
 		position: absolute

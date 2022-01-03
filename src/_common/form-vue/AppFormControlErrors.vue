@@ -63,7 +63,7 @@ const ErrorMessagesBase: Record<string, string> = {
 	content_no_media_uploads: `We are uploading your images...`,
 };
 
-const form = useForm();
+const form = useForm()!;
 const group = useFormGroup()!;
 
 const _label = computed(() => (props.label || group.humanLabel || '').toLowerCase());

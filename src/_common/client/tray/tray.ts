@@ -1,10 +1,12 @@
 import { h } from 'vue';
-import { Options } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Navigate } from '../../navigate/navigate.service';
 import { Screen } from '../../screen/screen-service';
 import { AppStore } from '../../store/app-store';
 import { Client } from '../client.service';
+
+const trayIcons = import.meta.globEager('./icon*.png');
 
 @Options({})
 export class AppClientTray extends Vue {
@@ -71,7 +73,8 @@ export class AppClientTray extends Vue {
 		this.tray = new nw.Tray({
 			title: 'Game Jolt Client',
 			// This has to be a relative path, hence the removal of the first /.
-			icon: require(`./icon${Screen.isHiDpi ? '-2x' : ''}-2x.png`).substr(1),
+			// TODO(vue3): check to make sure this still works
+			icon: trayIcons[`./icon${Screen.isHiDpi ? '-2x' : ''}.png`].substr(1),
 		});
 
 		Navigate.registerDestructor(() => {

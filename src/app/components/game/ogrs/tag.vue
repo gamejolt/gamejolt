@@ -25,8 +25,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .game-ogrs-tag
 	display: inline-block
 	margin-bottom: 0

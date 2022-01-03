@@ -4,7 +4,7 @@ import { Scroll } from '../scroll.service';
 
 export function initScrollBehavior(): RouterScrollBehavior {
 	// Should tell the browser that we want to handle our own scrolling.
-	if (!GJ_IS_SSR) {
+	if (!import.meta.env.SSR) {
 		if ('scrollRestoration' in history) {
 			history.scrollRestoration = 'manual';
 		}

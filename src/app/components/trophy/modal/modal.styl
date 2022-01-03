@@ -1,5 +1,3 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
 
 .-content
 	position: relative
@@ -73,12 +71,12 @@
 		vertical-align: middle
 
 .-subtitle-link
-
 	&:hover
 		text-decoration: none
 
 	& *
 		vertical-align: middle
+
 	// Override user hover card display block
 	& > div
 		display: inline-block !important
@@ -103,5 +101,6 @@
 	width: $line-height-computed
 	height: $line-height-computed
 	display: inline-block
+
 	& > span
 		display: inline-block

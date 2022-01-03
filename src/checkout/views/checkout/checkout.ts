@@ -60,7 +60,7 @@ export default class RouteCheckout extends BaseRouteComponent {
 		// For client, the orders are always done as a user.
 		// We will always go back to game page in those cases.
 		// For non-users on site they may have to go to a key page.
-		if (GJ_IS_CLIENT) {
+		if (GJ_IS_DESKTOP_APP) {
 			redirect = Environment.wttfBaseUrl + '/games/' + this.game.slug + '/' + this.game.id;
 		} else {
 			redirect = response.redirectUrl;

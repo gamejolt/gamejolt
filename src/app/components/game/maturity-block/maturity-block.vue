@@ -53,9 +53,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .game-maturity-block
 	@media $media-sm-up
 		text-align: center

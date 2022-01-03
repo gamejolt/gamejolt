@@ -49,9 +49,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-title
 .-path
 	text-overflow()

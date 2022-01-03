@@ -1,11 +1,11 @@
-@require '../../../../_styles/mixins/compiled-content'
+@import '../../../../_styles/mixins/compiled-content'
 
 .forum-post-content
 	compiled-content($font-size-base)
 
 	pre
 		padding-left: ($forum-post-list-icon-size / 2) + $forum-post-list-avatar-margin
-		margin-left: - @padding-left
+		margin-left: -(@padding-left)
 
 		.form-markdown-editor-preview&
 			// Reset the padding to what it is in scaffolding.styl

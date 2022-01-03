@@ -61,7 +61,7 @@ export function setDeviceUserAgent(userAgent: string) {
 }
 
 export function getDeviceOS(): DeviceOs {
-	if (GJ_IS_CLIENT) {
+	if (GJ_IS_DESKTOP_APP) {
 		const os = require('os');
 		const type = os.type();
 		if (type === 'Linux') {
@@ -94,7 +94,7 @@ export function getDeviceOS(): DeviceOs {
 }
 
 export function getDeviceArch(): DeviceArch {
-	if (GJ_IS_CLIENT) {
+	if (GJ_IS_DESKTOP_APP) {
 		const arch = require('os').arch();
 
 		// Because of a bug where 32-bit node versions will always report 32 instead of the OS arch.
@@ -130,7 +130,7 @@ export function getDeviceArch(): DeviceArch {
 }
 
 export function getDeviceBrowser() {
-	if (GJ_IS_CLIENT) {
+	if (GJ_IS_DESKTOP_APP) {
 		return 'Client';
 	}
 

@@ -14,7 +14,7 @@ function resolve(file) {
 
 const numWorkers = require('os').cpus().length;
 const isProd = process.env.NODE_ENV === 'production' || argv.production;
-const buildDir = process.env.BUNDLE_DIR || resolve(path.join('..', 'build'));
+const buildDir = process.env.BUNDLE_DIR || resolve('build');
 
 // if (cluster.isMaster) {
 // 	console.log(`Master ${process.pid} is running`);
@@ -34,8 +34,10 @@ const { renderToString } = require('vue/server-renderer');
 console.log(`Worker ${process.pid} started`);
 
 const section = argv.section ?? 'app';
-const serverBuildPath = path.join(buildDir, isProd ? 'prod-server' : 'dev-server');
-const clientBuildPath = path.join(buildDir, isProd ? 'prod' : 'dev');
+// const serverBuildPath = path.join(buildDir, isProd ? 'prod-server' : 'dev-server');
+// const clientBuildPath = path.join(buildDir, isProd ? 'prod' : 'dev');
+const serverBuildPath = path.join(buildDir, 'server');
+const webBuildPath = path.join(buildDir, 'web');
 
 // const serverManifest = require(path.join(
 // 	serverBuildPath,
@@ -47,17 +49,25 @@ const clientBuildPath = path.join(buildDir, isProd ? 'prod' : 'dev');
 // 	'vue-ssr-client-manifest-' + section + '.json'
 // ));
 
-const entryFile = fs.readdirSync(serverBuildPath).find(i => i.startsWith(`${section}.server.`));
-if (!entryFile) {
-	throw new Error(`Couldn't find the entry file for the app.`);
-}
-const appPath = path.resolve(serverBuildPath, entryFile);
-const createApp = require(appPath).GJ.default;
+// const entryFile = fs.readdirSync(serverBuildPath).find(i => i.startsWith(`${section}.server.`));
+// if (!entryFile) {
+// 	throw new Error(`Couldn't find the entry file for the app.`);
+// }
+// const appPath = path.resolve(serverBuildPath, entryFile);
+// const createApp = require(appPath).GJ.default;
 
-const template = fs.readFileSync(resolve('./index-ssr.html'), 'utf-8');
-console.log(template);
+const rawTemplate = fs.readFileSync(path.resolve(webBuildPath, 'index.html'), 'utf-8');
+console.log(rawTemplate);
+
+const createApp = require(path.resolve(serverBuildPath, 'server.js')).default;
 
 const server = express();
+
+// const vite = await createViteServer({
+// 	server: { middlewareMode: 'ssr' },
+// });
+
+// server.use(vite.middlewares);
 
 // const renderer = createBundleRenderer(serverBundle, {
 // 	runInNewContext: true,
@@ -80,7 +90,7 @@ if (!isProd) {
 		});
 	}
 
-	server.use(serve(clientBuildPath));
+	server.use(serve(webBuildPath));
 }
 
 // Randomize so we don't all restart at same time.
@@ -96,21 +106,37 @@ server.get('*', async (req, res) => {
 		ua: req.headers['user-agent'],
 		accept: req.headers['accept'] || '',
 	};
-
-	const s = Date.now();
-	const { app } = await createApp(context);
+	let template = rawTemplate;
 
 	try {
+		const s = Date.now();
+
+		console.log('context', context);
+
+		// Apply Vite HTML transforms. This injects the Vite HMR client, and also
+		// applies HTML transforms from Vite plugins, e.g. global preambles from
+		// @vitejs/plugin-react
+		// template = await vite.transformIndexHtml(context.url, template);
+
+		// Load the server entry file.
+		// const { render } = await vite.ssrLoadModule('/src/auth/server.ts');
+
+		// const appContent = await render(context.url);
+		// const html = template.replace(`<!--ssr-outlet-->`, appContent);
+
+		const { app } = await createApp(context);
 		let renderContext = {};
 		const appContent = await renderToString(app, renderContext);
 		console.log('app content', appContent);
 		console.log('context', renderContext);
+		const html = template.replace(`<!--ssr-outlet-->`, appContent);
 
 		res.set('Content-Type', 'text/html');
-		res.end(appContent);
+		res.end(html);
 	} catch (e) {
-		console.error('caught', e);
-		res.status(500).end('Internal Server Error');
+		// vite.ssrFixStacktrace(e);
+		console.error(e);
+		res.status(500).end(e.message);
 	}
 
 	// renderer.renderToString(context, (err, html) => {

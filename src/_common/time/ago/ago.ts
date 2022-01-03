@@ -70,7 +70,7 @@ export class AppTimeAgo extends Vue {
 
 		this.fixedTime = formatDate(this.date, 'medium');
 
-		if (!GJ_IS_SSR) {
+		if (!import.meta.env.SSR) {
 			this.timeout = window.setTimeout(() => this.refresh(), secondsUntilUpdate * 1000);
 		}
 	}

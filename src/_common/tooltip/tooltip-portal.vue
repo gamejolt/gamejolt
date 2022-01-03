@@ -108,9 +108,6 @@ function _destroyPopper() {
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .tooltip
 	position: absolute
 	top: 0

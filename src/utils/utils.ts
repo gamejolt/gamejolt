@@ -1,11 +1,5 @@
 export type RequireContextMap = { [k: string]: string };
 
-export function importContext(r: WebpackContext) {
-	const map: RequireContextMap = {};
-	r.keys().forEach(key => (map[key] = r(key)));
-	return map;
-}
-
 export function loadScript(src: string) {
 	return new Promise((resolve, reject) => {
 		const script = window.document.createElement('script');

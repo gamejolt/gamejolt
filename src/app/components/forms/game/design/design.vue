@@ -69,9 +69,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-thumb-overlay
 	rounded-corners-lg()
 	overflow: hidden

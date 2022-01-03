@@ -10,7 +10,7 @@ import { router } from './views/index';
 export function createApp() {
 	const app = bootstrapCommon(App, store, router);
 
-	if (GJ_IS_CLIENT) {
+	if (GJ_IS_DESKTOP_APP) {
 		require('./bootstrap-client');
 	}
 

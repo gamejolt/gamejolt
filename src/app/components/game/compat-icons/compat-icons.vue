@@ -12,9 +12,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-icon
 	theme-prop('color', 'bg-subtle')
 	position: relative

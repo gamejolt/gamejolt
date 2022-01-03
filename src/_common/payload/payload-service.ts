@@ -106,7 +106,7 @@ export class Payload {
 
 			return data.payload;
 		} catch (error) {
-			if (!GJ_IS_SSR) {
+			if (!import.meta.env.SSR) {
 				console.error('Payload error', error);
 			}
 
@@ -147,7 +147,7 @@ export class Payload {
 	private static checkPayloadVersion(data: any, options: RequestOptions) {
 		// We ignore completely if we're in the client.
 		// We don't want the client refreshing when an update to site is pushed out.
-		if (options.ignorePayloadVersion || GJ_IS_CLIENT || GJ_IS_SSR) {
+		if (options.ignorePayloadVersion || GJ_IS_DESKTOP_APP || import.meta.env.SSR) {
 			return;
 		}
 
@@ -174,9 +174,7 @@ export class Payload {
 			if (data.user === null) {
 				this.store.commit('app/clearUser');
 			} else {
-				// There is a circular dependency if we import at top.
-				const User = require('../user/user.model').User;
-				this.store.commit('app/setUser', new User(data.user));
+				this.store.commit('app/setUser', data.user);
 			}
 		}
 	}
@@ -205,7 +203,7 @@ export class Payload {
 
 	private static checkClientForceUpgrade(data: any) {
 		// We ignore completely if we're not in the client.
-		if (!GJ_IS_CLIENT) {
+		if (!GJ_IS_DESKTOP_APP) {
 			return;
 		}
 
@@ -221,7 +219,7 @@ export class Payload {
 			// reload.
 		} else if (error.type === PayloadError.ERROR_NOT_LOGGED) {
 			const redirect = encodeURIComponent(
-				GJ_IS_SSR ? Environment.ssrContext.url : window.location.href
+				import.meta.env.SSR ? Environment.ssrContext.url : window.location.href
 			);
 			const location = Environment.authBaseUrl + '/login?redirect=' + redirect;
 			this.store.commit('app/redirect', location);

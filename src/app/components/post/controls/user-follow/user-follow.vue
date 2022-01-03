@@ -24,8 +24,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .-user-follow
 	display: flex
 	margin-top: $grid-gutter-width * 0.5

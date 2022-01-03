@@ -20,9 +20,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .theme-editor-image
 	padding: 8px 15px
 

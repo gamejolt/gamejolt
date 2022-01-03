@@ -7,12 +7,12 @@ import { formatDate } from '../../../../_common/filters/date';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
 import AppTranslateLangSelector from '../../../../_common/translate/lang-selector/lang-selector.vue';
-import * as _ClientSystemReportModalMod from '../../client/system-report-modal/system-report-modal.service';
+import { imageJolt } from '../../../img/images';
 
-let ClientSystemReportModalMod: typeof _ClientSystemReportModalMod | undefined;
-if (GJ_IS_CLIENT) {
-	ClientSystemReportModalMod = require('../../client/system-report-modal/system-report-modal.service');
-}
+const ClientSystemReportModal = GJ_IS_DESKTOP_APP
+	? (await import('../../client/system-report-modal/system-report-modal.service'))
+			.ClientSystemReportModal
+	: undefined;
 
 @Options({
 	components: {
@@ -27,8 +27,8 @@ export default class AppShellFooter extends Vue {
 
 	readonly Screen = Screen;
 	readonly formatDate = formatDate;
-	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
 	readonly trackAppPromotionClick = trackAppPromotionClick;
+	readonly imageJolt = imageJolt;
 
 	get clientVersion() {
 		return GJ_VERSION;
@@ -39,8 +39,6 @@ export default class AppShellFooter extends Vue {
 	}
 
 	async showSystemReport() {
-		if (ClientSystemReportModalMod) {
-			ClientSystemReportModalMod.ClientSystemReportModal.show();
-		}
+		ClientSystemReportModal?.show();
 	}
 }

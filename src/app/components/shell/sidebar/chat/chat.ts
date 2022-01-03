@@ -5,6 +5,7 @@ import { formatNumber } from '../../../../../_common/filters/number';
 import AppIllustration from '../../../../../_common/illustration/illustration.vue';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
+import { illMaintenance } from '../../../../img/ill/illustrations';
 import { Store } from '../../../../store';
 import { ChatClient, ChatKey, enterChatRoom, leaveChatRoom } from '../../../chat/client';
 import { sortByLastMessageOn } from '../../../chat/user-collection';
@@ -31,6 +32,7 @@ export default class AppShellSidebarChat extends Vue {
 	private escapeCallback?: () => void;
 
 	readonly Screen = Screen;
+	readonly illMaintenance = illMaintenance;
 
 	get friends() {
 		return this.chat.friendsList.collection;

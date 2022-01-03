@@ -56,8 +56,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .-container
 	position: absolute
 	top: 0

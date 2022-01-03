@@ -42,8 +42,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .-guidelines
 	font-size: $font-size-small
 	margin-bottom: 8px

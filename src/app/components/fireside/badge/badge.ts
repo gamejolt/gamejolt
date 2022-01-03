@@ -56,7 +56,7 @@ export default class AppFiresideBadge extends Vue {
 		// If the Fireside is unjoinable from the get go, never emit expiry.
 		if (!this.fireside.isOpen()) {
 			this.canEmitExpiry = false;
-		} else if (!GJ_IS_SSR) {
+		} else if (!import.meta.env.SSR) {
 			this.canEmitExpiry = true;
 			this.destroyExpiryCheck();
 			setInterval(this.checkExpiry.bind(this), 1000);

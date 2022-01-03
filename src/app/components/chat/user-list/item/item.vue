@@ -76,9 +76,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-container
 	height: 50px
 	overflow: hidden

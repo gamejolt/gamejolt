@@ -1,7 +1,7 @@
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { findVueParent } from '../../../../../utils/vue';
-import AppForm from '../../../../../_common/form-vue/AppForm.vue';
+import { useForm } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
 import { RouteStore, RouteStoreName } from '../../../../views/dashboard/games/manage/manage.store';
 
@@ -18,12 +18,7 @@ export default class AppDashGameWizardControls extends Vue {
 	// exist.
 	@State(RouteStoreName) manageRoute?: RouteStore;
 
-	// TODO(vue3)
-	form?: AppFormTS;
-
-	created() {
-		this.form = findVueParent(this, AppForm) as AppFormTS;
-	}
+	form = setup(() => useForm());
 
 	get isWizard() {
 		return !this.manageRoute || this.manageRoute.isWizard;
@@ -34,7 +29,7 @@ export default class AppDashGameWizardControls extends Vue {
 	}
 
 	get canProceed() {
-		return !this.form || !this.form.hasErrors || this.disabled;
+		return !this.form || this.form.valid || this.disabled;
 	}
 
 	async next(_e: Event, formResult?: boolean) {

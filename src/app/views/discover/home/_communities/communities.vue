@@ -63,9 +63,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-chunk
 	margin-bottom: $grid-gutter-width
 </style>

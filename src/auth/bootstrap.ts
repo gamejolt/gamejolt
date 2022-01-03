@@ -11,6 +11,6 @@ export function createApp() {
 	return { app, store, router };
 }
 
-if (GJ_IS_CLIENT) {
-	require('./bootstrap-client');
+if (GJ_IS_DESKTOP_APP) {
+	await import('./bootstrap-client');
 }

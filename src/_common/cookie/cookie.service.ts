@@ -1,7 +1,7 @@
 export function getCookie(name: string): Promise<string | undefined> {
 	return new Promise(resolve => {
 		// Within Client we have to access it this way.
-		if (GJ_IS_CLIENT) {
+		if (GJ_IS_DESKTOP_APP) {
 			const win = nw.Window.get();
 			win.cookies.get(
 				{

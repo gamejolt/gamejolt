@@ -53,7 +53,7 @@
 		</ul>
 
 		<ul v-if="app.user" class="shell-nav">
-			<li v-if="GJ_IS_CLIENT">
+			<li v-if="GJ_IS_DESKTOP_APP">
 				<router-link
 					v-app-track-event="`sidebar:collection:installed`"
 					:to="{ name: 'library.installed' }"
@@ -247,8 +247,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 #shell-sidebar-library
 	padding-top: 16px
 

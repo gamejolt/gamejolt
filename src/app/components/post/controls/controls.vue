@@ -109,9 +109,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .post-controls
 	display: flex
 	flex-direction: column

@@ -12,8 +12,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-
 .widget-compiler-widget-soundcloud
 	display: block
 	margin-bottom: $line-height-computed

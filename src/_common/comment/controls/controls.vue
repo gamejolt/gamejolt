@@ -74,8 +74,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .-control-margin
 	margin-left: 8px
 

@@ -10,6 +10,7 @@ import { Model } from '../model/model.service';
 import { Theme } from '../theme/theme.model';
 import { UserBlock } from '../user/block/block.model';
 import { CommunityChannel } from './channel/channel.model';
+import noThumbImage from './no-thumb.png';
 
 export class Community extends Collaboratable(Model) {
 	name!: string;
@@ -74,7 +75,7 @@ export class Community extends Collaboratable(Model) {
 		if (this.thumbnail instanceof MediaItem) {
 			return this.thumbnail.mediaserver_url;
 		}
-		return require('./no-thumb.png');
+		return noThumbImage;
 	}
 
 	get routeLocation(): RouteLocationDefinition {

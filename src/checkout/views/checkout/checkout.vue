@@ -1,7 +1,10 @@
 <template>
 	<section class="container" v-if="isRouteBootstrapped">
 		<div class="game-cover">
-			<app-media-item-cover v-if="game.header_media_item" :media-item="game.header_media_item" />
+			<app-media-item-cover
+				v-if="game.header_media_item"
+				:media-item="game.header_media_item"
+			/>
 		</div>
 
 		<div class="text-center">
@@ -18,7 +21,9 @@
 				<translate>by</translate>
 				<a
 					class="link-unstyled"
-					:href="Environment.baseUrl + `/profile/${game.developer.slug}/${game.developer.id}`"
+					:href="
+						Environment.baseUrl + `/profile/${game.developer.slug}/${game.developer.id}`
+					"
 				>
 					{{ game.developer.display_name }}
 				</a>
@@ -31,9 +36,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .game-cover
 	margin-top: -($grid-gutter-width / 2)
 	margin-right: -($grid-gutter-width-xs / 2)

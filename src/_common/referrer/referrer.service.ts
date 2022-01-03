@@ -28,7 +28,7 @@ export class Referrer {
 	static init(router: Router) {
 		this.isInitialized = true;
 
-		if (!GJ_IS_SSR && window.document.referrer) {
+		if (!import.meta.env.SSR && window.document.referrer) {
 			this._referrer = window.document.referrer;
 
 			router.beforeEach((_to, _from, next) => {

@@ -22,8 +22,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
 @import '../common'
 
 // sync with the refresh rate for the time poller

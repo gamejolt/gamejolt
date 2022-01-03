@@ -102,9 +102,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .forum-channel-list-item
 	margin-bottom: $font-size-base * 2
 

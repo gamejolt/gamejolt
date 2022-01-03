@@ -115,9 +115,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .payment-form
 	margin-bottom: $shell-padding
 

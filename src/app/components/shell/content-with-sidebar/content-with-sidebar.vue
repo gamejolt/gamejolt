@@ -12,9 +12,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .content-with-sidebar--content
 	// Make it full-size height at least, so that the footer doesn't cut things off weird.
 	min-height: 'calc(100vh - %s)' % $shell-top-nav-height

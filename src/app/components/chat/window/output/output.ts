@@ -11,6 +11,7 @@ import AppScrollScroller, {
 } from '../../../../../_common/scroll/scroller/scroller.vue';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { EventSubscription } from '../../../../../_common/system/event/event-topic';
+import { illNoChat } from '../../../../img/ill/illustrations';
 import { ChatClient, ChatKey, loadOlderChatMessages, onNewChatMessage } from '../../client';
 import { ChatMessage, TIMEOUT_CONSIDER_QUEUED } from '../../message';
 import { ChatRoom } from '../../room';
@@ -50,6 +51,7 @@ export default class AppChatWindowOutput extends Vue {
 	private isOnScrollQueued = false;
 
 	readonly formatDate = formatDate;
+	readonly illNoChat = illNoChat;
 
 	get allMessages() {
 		return this.messages.concat(this.queuedMessages);

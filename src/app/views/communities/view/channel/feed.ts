@@ -7,6 +7,7 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
+import { illNoComments } from '../../../../img/ill/illustrations';
 import { Store } from '../../../../store';
 import {
 	CommunityRouteStore,
@@ -51,6 +52,7 @@ export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent 
 	disableRouteTitleSuffix = true;
 
 	readonly Screen = Screen;
+	readonly illNoComments = illNoComments;
 
 	get community() {
 		return this.routeStore.community;

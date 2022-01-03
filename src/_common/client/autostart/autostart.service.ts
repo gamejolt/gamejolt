@@ -12,7 +12,7 @@ export class ClientAutoStart {
 	}
 
 	static get canAutoStart() {
-		if (GJ_IS_WATCHING) {
+		if (GJ_BUILD_TYPE === 'development') {
 			return false;
 		}
 

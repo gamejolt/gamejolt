@@ -25,7 +25,9 @@
 									<router-link
 										:to="{
 											name: 'discover.games.view.scores.list',
-											params: Object.assign({}, $route.params, { type: 'best' }),
+											params: Object.assign({}, $route.params, {
+												type: 'best',
+											}),
 										}"
 										active-class="active"
 										v-app-no-autoscroll="true"
@@ -37,7 +39,9 @@
 									<router-link
 										:to="{
 											name: 'discover.games.view.scores.list',
-											params: Object.assign({}, $route.params, { type: 'user' }),
+											params: Object.assign({}, $route.params, {
+												type: 'user',
+											}),
 										}"
 										active-class="active"
 										v-app-no-autoscroll="true"
@@ -57,7 +61,11 @@
 									<app-score-list :scores="scoresLeft" :step="2" />
 								</div>
 								<div class="col-sm-6">
-									<app-score-list :scores="scoresRight" :start-rank="2" :step="2" />
+									<app-score-list
+										:scores="scoresRight"
+										:start-rank="2"
+										:step="2"
+									/>
 								</div>
 							</div>
 						</app-loading-fade>
@@ -103,9 +111,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 // Put some extra spacing in here because of the affixed game header.
 .gj-scroll-affixed .-score-selector-nav
 	margin-top: $shell-top-nav-height + 10px !important

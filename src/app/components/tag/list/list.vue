@@ -11,8 +11,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .-list
 	white-space: nowrap
 	text-align: center

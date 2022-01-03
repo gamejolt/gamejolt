@@ -2,8 +2,8 @@
 	<div class="cookie-banner fill-darker" v-if="shouldShow">
 		<p>
 			<translate>
-				We use cookies to ensure you get the best personalized experience on our website as well as
-				keeping you signed into your account.
+				We use cookies to ensure you get the best personalized experience on our website as
+				well as keeping you signed into your account.
 			</translate>
 			<a class="link-help" :href="Environment.baseUrl + '/cookies'" @click="close()">
 				<translate>Learn more</translate>
@@ -18,9 +18,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 $-width = 450px
 
 .cookie-banner

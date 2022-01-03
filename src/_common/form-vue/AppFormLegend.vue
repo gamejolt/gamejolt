@@ -39,9 +39,6 @@ const emit = defineEmits({
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .-compact
 	position: relative
 	font-size: $font-size-base

@@ -56,9 +56,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .font-selector
 	&-font-list
 		margin: 0

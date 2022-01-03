@@ -9,7 +9,7 @@
 			@click="trackAppPromotionClick({ source })"
 		>
 			<img
-				:src="require('./button-play-store.png')"
+				:src="playStoreImage"
 				:width="564 * (60 / 168)"
 				:height="60"
 				alt="Get it on Google Play"
@@ -22,7 +22,7 @@
 			@click="trackAppPromotionClick({ source })"
 		>
 			<img
-				:src="require('./button-app-store.svg')"
+				:src="appStoreImage"
 				:width="120 * (60 / 40)"
 				:height="60"
 				alt="Download on the App Store"
@@ -32,9 +32,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .app-buttons
 	text-align: center
 

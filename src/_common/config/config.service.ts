@@ -84,7 +84,7 @@ export abstract class ConfigOption<T extends ValueType = any> {
 
 export class ConfigOptionBoolean extends ConfigOption<boolean> {
 	get value() {
-		if (GJ_IS_SSR) {
+		if (import.meta.env.SSR) {
 			return this.defaultValue;
 		}
 
@@ -105,7 +105,7 @@ export class ConfigOptionString<T extends string = string> extends ConfigOption<
 	}
 
 	get value() {
-		if (GJ_IS_SSR) {
+		if (import.meta.env.SSR) {
 			return this.defaultValue;
 		}
 
@@ -157,7 +157,7 @@ export function ensureConfig() {
 
 let _initPromise: Promise<void> | null = null;
 async function _init() {
-	if (GJ_IS_SSR) {
+	if (import.meta.env.SSR) {
 		ConfigService.isLoaded = true;
 		return;
 	}
@@ -194,7 +194,7 @@ async function _init() {
  * what was active when they first joined.
  */
 export function configSaveJoinOptions() {
-	if (GJ_IS_SSR) {
+	if (import.meta.env.SSR) {
 		return;
 	}
 
@@ -206,7 +206,7 @@ export function configSaveJoinOptions() {
 
 let _joinOptions: undefined | string[];
 function _getJoinOptions() {
-	if (GJ_IS_SSR) {
+	if (import.meta.env.SSR) {
 		return [];
 	}
 
@@ -217,7 +217,7 @@ type Overrides = Record<string, ValueType>;
 let _overrides: undefined | Overrides;
 
 export function configSaveOverrides(overrides: Overrides) {
-	if (GJ_IS_SSR) {
+	if (import.meta.env.SSR) {
 		return;
 	}
 
@@ -228,7 +228,7 @@ export function configSaveOverrides(overrides: Overrides) {
 }
 
 function _configGetOverrides(): Overrides {
-	if (GJ_IS_SSR) {
+	if (import.meta.env.SSR) {
 		return {};
 	}
 

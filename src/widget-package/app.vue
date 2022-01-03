@@ -38,9 +38,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .shell
 	rounded-corners()
 	padding: $shell-padding
@@ -50,4 +47,3 @@
 .theme-light
 	theme-prop('background-color', 'bg-offset')
 </style>
-

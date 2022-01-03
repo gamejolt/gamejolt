@@ -244,9 +244,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-rank-display
 	font-size: $font-size-large
 </style>

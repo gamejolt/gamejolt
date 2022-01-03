@@ -36,8 +36,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .game-filtering-tags
 	margin-bottom: $line-height-computed
 

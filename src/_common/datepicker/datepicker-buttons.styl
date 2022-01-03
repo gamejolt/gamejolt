@@ -1,14 +1,17 @@
-@require '~styles/variables'
 
 datepicker-button-variant(color, background, hover-background)
 	color: color
 	background-color: background
 
-	&:hover, &:focus, &:active, &.active
+	&:hover
+	&:focus
+	&:active
+	&.active
 		color: color
 		background-color: hover-background
 
-	&:active, &.active
+	&:active
+	&.active
 		background-image: none
 
 	.badge
@@ -37,11 +40,15 @@ datepicker-button-variant(color, background, hover-background)
 		padding-left: 10px
 		padding-right: 10px
 
-	&:hover, &:focus, &:active
+	&:hover
+	&:focus
+	&:active
 		text-decoration: none
 		outline: none
 
-	&.disabled, &[disabled], fieldset[disabled] &
+	&.disabled
+	&[disabled]
+	fieldset[disabled] &
 		cursor: not-allowed
 		pointer-events: none // Future-proof disabling of clicks
 		opacity: 0.4
@@ -75,6 +82,8 @@ datepicker-button-variant(color, background, hover-background)
 	.datepicker-btn-block + .datepicker-btn-block
 		margin-top: 5px
 
-	input[type='submit'], input[type='reset'], input[type='button']
+	input[type='submit']
+	input[type='reset']
+	input[type='button']
 		&.datepicker-btn-block
 			width: 100%

@@ -37,9 +37,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 $-reactions-padding = ($grid-gutter-width / 2) * 0.75
 $-reactions-padding-xs = ($grid-gutter-width-xs / 2) * 0.75
 

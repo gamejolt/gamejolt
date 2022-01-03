@@ -11,8 +11,8 @@ const components: any = {
 	AppCookieBanner,
 };
 
-if (GJ_IS_CLIENT) {
-	components.AppClientBase = require('../_common/client/base/base.vue').default;
+if (GJ_IS_DESKTOP_APP) {
+	components.AppClientBase = await import('../_common/client/base/base.vue');
 }
 
 @Options({

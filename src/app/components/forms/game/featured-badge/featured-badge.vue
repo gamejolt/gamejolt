@@ -52,9 +52,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-form
 	display: flex
 	flex-direction: column

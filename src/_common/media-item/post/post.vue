@@ -51,9 +51,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-stickers
 	width: 100%
 	height: 100%

@@ -109,8 +109,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .platform-list
 	margin-left: 12px
 </style>

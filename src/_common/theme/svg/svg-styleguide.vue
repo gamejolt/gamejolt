@@ -80,9 +80,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 #styleguide-theme-svg
 	rounded-corners-lg()
 	change-bg('bg')

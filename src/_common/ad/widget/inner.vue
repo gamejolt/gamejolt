@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, PropType, ref } from 'vue';
 import { FiresidePost } from '../../fireside/post/post-model';
 import { Game } from '../../game/game.model';
 import { User } from '../../user/user.model';
@@ -21,7 +21,7 @@ function _generateSlotId() {
 
 const props = defineProps({
 	adSlot: {
-		type: AdSlot,
+		type: Object as PropType<AdSlot>,
 		required: true,
 	},
 });

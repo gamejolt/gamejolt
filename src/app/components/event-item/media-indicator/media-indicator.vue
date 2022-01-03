@@ -14,9 +14,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .event-item-media-indicator
 	display: flex
 	justify-content: center

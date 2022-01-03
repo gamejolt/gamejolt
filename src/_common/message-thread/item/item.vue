@@ -85,9 +85,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-meta
 	margin-bottom: 1em
 

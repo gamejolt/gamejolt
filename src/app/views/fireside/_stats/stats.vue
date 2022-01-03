@@ -3,7 +3,7 @@
 <template>
 	<div class="fireside-stats">
 		<app-scroll-scroller thin>
-			<app-illustration :src="require('~img/ill/end-of-feed.svg')" />
+			<app-illustration :src="illEndOfFeed" />
 
 			<template v-if="!isStreaming">
 				<div v-if="expiresProgressValue !== null" class="-burnout-bar">
@@ -85,9 +85,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .fireside-stats
 	display: flex
 	flex-direction: column

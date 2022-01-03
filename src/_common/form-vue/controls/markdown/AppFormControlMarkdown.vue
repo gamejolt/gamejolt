@@ -192,7 +192,7 @@ const props = defineProps({
 	},
 });
 
-const form = useForm<any>()!;
+const form = useForm()!;
 const group = useFormGroup()!;
 const c = createFormControl('', toRef(props, 'validators'));
 
@@ -287,9 +287,6 @@ function onChange(event: Event) {
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .form-control-markdown
 	& > nav
 		margin-bottom: 0
