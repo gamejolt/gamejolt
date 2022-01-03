@@ -3,29 +3,6 @@ import { ref, toRef } from 'vue';
 import { createFormControl, defineFormControlProps } from '../AppFormControl.vue';
 import { useFormGroup } from '../AppFormGroup.vue';
 
-// @Options({})
-// export default class AppFormControlTextarea extends BaseFormControl {
-// 	@Prop(Array)
-// 	validateOn!: string[];
-// 	@Prop(Number)
-// 	validateDelay!: number;
-
-// 	controlVal = '';
-
-// 	get validationRules() {
-// 		return {
-// 			...this.baseRules,
-// 		};
-// 	}
-
-// 	onChange(value: string) {
-// 		this.applyValue(value);
-// 	}
-
-// 	@Emit('paste')
-// 	emitPaste(_event: ClipboardEvent) {}
-// }
-
 const props = defineProps({
 	...defineFormControlProps(),
 });
