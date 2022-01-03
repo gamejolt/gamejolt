@@ -33,7 +33,7 @@
 					<div class="row">
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg :src="require('./gamers.svg')" alt="" />
+								<app-theme-svg :src="assetPaths['./gamers.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Gamers</h4>
@@ -47,7 +47,7 @@
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg :src="require('./lpers.svg')" alt="" />
+								<app-theme-svg :src="assetPaths['./lpers.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Let's Players</h4>
@@ -63,7 +63,10 @@
 
 						<div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-0">
 							<div class="landing-graphic">
-								<app-theme-svg :src="require('./developers.svg')" alt="" />
+								<app-theme-svg
+									:src="assetPaths['./developers.svg'].default"
+									alt=""
+								/>
 							</div>
 
 							<h4 class="text-center">Studios</h4>
@@ -152,7 +155,7 @@
 						<div class="col-md-1" />
 						<div class="col-sm-5">
 							<div class="landing-graphic-full hidden-xs">
-								<app-theme-svg :src="require('./discover.svg')" alt="" />
+								<app-theme-svg :src="assetPaths['./discover.svg'].default" alt="" />
 							</div>
 						</div>
 					</div>
@@ -164,7 +167,7 @@
 					<div class="row">
 						<div class="col-sm-5 col-sm-push-7 col-md-push-0">
 							<div class="landing-graphic-full hidden-xs">
-								<app-theme-svg :src="require('./interact.svg')" alt="" />
+								<app-theme-svg :src="assetPaths['./interact.svg'].default" alt="" />
 							</div>
 						</div>
 						<div class="col-md-1" />
@@ -226,7 +229,7 @@
 						<div class="col-md-1" />
 						<div class="col-sm-5">
 							<div class="landing-graphic-full hidden-xs">
-								<app-theme-svg :src="require('./support.svg')" alt="" />
+								<app-theme-svg :src="assetPaths['./support.svg'].default" alt="" />
 							</div>
 						</div>
 					</div>
@@ -238,7 +241,7 @@
 					<div class="row">
 						<div class="col-sm-5 col-sm-push-7 col-md-push-0">
 							<div class="landing-graphic-full hidden-xs">
-								<app-theme-svg :src="require('./feeds.svg')" alt="" />
+								<app-theme-svg :src="assetPaths['./feeds.svg'].default" alt="" />
 							</div>
 						</div>
 						<div class="col-md-1" />
@@ -316,7 +319,7 @@
 						<div class="col-md-1" />
 						<div class="col-sm-5">
 							<div class="landing-graphic-full hidden-xs">
-								<app-theme-svg :src="require('./organize.svg')" alt="" />
+								<app-theme-svg :src="assetPaths['./organize.svg'].default" alt="" />
 							</div>
 						</div>
 					</div>
@@ -328,7 +331,10 @@
 					<div class="row">
 						<div class="col-sm-5 col-sm-push-7 col-md-push-0">
 							<div class="landing-graphic-full hidden-xs">
-								<app-theme-svg :src="require('./achievements.svg')" alt="" />
+								<app-theme-svg
+									:src="assetPaths['./achievements.svg'].default"
+									alt=""
+								/>
 							</div>
 						</div>
 						<div class="col-md-1" />
@@ -364,7 +370,7 @@
 					<div class="row">
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg :src="require('./friends.svg')" alt="" />
+								<app-theme-svg :src="assetPaths['./friends.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Friends</h4>
@@ -378,7 +384,7 @@
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg :src="require('./chat.svg')" alt="" />
+								<app-theme-svg :src="assetPaths['./chat.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Chat</h4>
@@ -393,7 +399,7 @@
 
 						<div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-0">
 							<div class="landing-graphic">
-								<app-theme-svg :src="require('./forums.svg')" alt="" />
+								<app-theme-svg :src="assetPaths['./forums.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Forums</h4>
@@ -434,25 +440,25 @@
 					<div class="landing-graphic-full">
 						<img
 							class="visible-lg"
-							:src="require('./device-montage.png')"
+							:src="assetPaths['./device-montage.png'].default"
 							alt=""
 							style="margin: 0 auto; max-width: none; width: 912px; height: 484px"
 						/>
 						<img
 							class="visible-md"
-							:src="require('./device-montage.png')"
+							:src="assetPaths['./device-montage.png'].default"
 							alt=""
 							style="margin: 0 auto; max-width: none; width: 912px; height: 484px"
 						/>
 						<img
 							class="visible-sm"
-							:src="require('./device-montage.png')"
+							:src="assetPaths['./device-montage.png'].default"
 							alt=""
 							style="margin: 0 auto; max-width: none; width: 684px; height: 363px"
 						/>
 						<img
 							class="visible-xs"
-							:src="require('./device-montage.png')"
+							:src="assetPaths['./device-montage.png'].default"
 							alt=""
 							style="margin: 0 auto; max-width: none; width: 228px; height: 121px"
 						/>

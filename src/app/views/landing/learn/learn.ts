@@ -21,4 +21,5 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 	@State app!: Store['app'];
 
 	readonly imageJolt = imageJolt;
+	readonly assetPaths = import.meta.globEager('./*.(svg|png)');
 }

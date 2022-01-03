@@ -35,6 +35,7 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 
 	readonly Screen = Screen;
 	readonly imageJolt = imageJolt;
+	readonly assetPaths = import.meta.globEager('./*.svg');
 
 	get routeTitle() {
 		return 'Sell Your Games';

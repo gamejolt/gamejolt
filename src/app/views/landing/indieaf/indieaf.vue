@@ -4,7 +4,11 @@
 			<div class="container">
 				<p class="lead">Don't you want to be</p>
 
-				<img class="img-responsive indieaf-logo" :src="require('./header.jpg')" alt="" />
+				<img
+					class="img-responsive indieaf-logo"
+					:src="assetPaths['./header.jpg'].default"
+					alt=""
+				/>
 			</div>
 		</div>
 
@@ -60,14 +64,14 @@
 							<div class="col-xs-7">
 								<img
 									class="img-responsive"
-									:src="require('./site-io.jpg')"
+									:src="assetPaths['./site-io.jpg'].default"
 									alt=""
 								/>
 							</div>
 							<div class="col-xs-5">
 								<img
 									class="img-responsive"
-									:src="require('./bogusdude.svg')"
+									:src="assetPaths['./bogusdude.svg'].default"
 									alt=""
 								/>
 							</div>
@@ -76,14 +80,14 @@
 							<div class="col-xs-7">
 								<img
 									class="img-responsive"
-									:src="require('./site-af.jpg')"
+									:src="assetPaths['./site-af.jpg'].default"
 									alt=""
 								/>
 							</div>
 							<div class="col-xs-5">
 								<img
 									class="img-responsive"
-									:src="require('./cooldude.svg')"
+									:src="assetPaths['./cooldude.svg'].default"
 									alt=""
 								/>
 							</div>
@@ -103,13 +107,21 @@
 						<br />
 
 						<div class="indieaf-vs-row">
-							<img class="indieaf-vs-img" :src="require('./vs.png')" alt="" />
+							<img
+								class="indieaf-vs-img"
+								:src="assetPaths['./vs.png'].default"
+								alt=""
+							/>
 							<div class="indieaf-vs-col left"><strong>gamejolt.io</strong></div>
 							<div class="indieaf-vs-col right"><strong>indie.af</strong></div>
 						</div>
 
 						<div class="indieaf-vs-row">
-							<img class="indieaf-vs-img" :src="require('./vs.png')" alt="" />
+							<img
+								class="indieaf-vs-img"
+								:src="assetPaths['./vs.png'].default"
+								alt=""
+							/>
 							<div class="indieaf-vs-col left">Trendy, but also bogus</div>
 							<div class="indieaf-vs-col right">
 								Not bogus, not trendy. Radical AF!
@@ -117,7 +129,11 @@
 						</div>
 
 						<div class="indieaf-vs-row">
-							<img class="indieaf-vs-img" :src="require('./vs.png')" alt="" />
+							<img
+								class="indieaf-vs-img"
+								:src="assetPaths['./vs.png'].default"
+								alt=""
+							/>
 							<div class="indieaf-vs-col left">
 								Sounds like
 								<em>ew</em>
@@ -126,25 +142,41 @@
 						</div>
 
 						<div class="indieaf-vs-row">
-							<img class="indieaf-vs-img" :src="require('./vs.png')" alt="" />
+							<img
+								class="indieaf-vs-img"
+								:src="assetPaths['./vs.png'].default"
+								alt=""
+							/>
 							<div class="indieaf-vs-col left">Child's play</div>
 							<div class="indieaf-vs-col right">Grown up AF!</div>
 						</div>
 
 						<div class="indieaf-vs-row">
-							<img class="indieaf-vs-img" :src="require('./vs.png')" alt="" />
+							<img
+								class="indieaf-vs-img"
+								:src="assetPaths['./vs.png'].default"
+								alt=""
+							/>
 							<div class="indieaf-vs-col left">People wonder why it's not .com</div>
 							<div class="indieaf-vs-col right">.af AF!</div>
 						</div>
 
 						<div class="indieaf-vs-row">
-							<img class="indieaf-vs-img" :src="require('./vs.png')" alt="" />
+							<img
+								class="indieaf-vs-img"
+								:src="assetPaths['./vs.png'].default"
+								alt=""
+							/>
 							<div class="indieaf-vs-col left">Over saturated</div>
 							<div class="indieaf-vs-col right">No one is using AF!</div>
 						</div>
 
 						<div class="indieaf-vs-row">
-							<img class="indieaf-vs-img" :src="require('./vs.png')" alt="" />
+							<img
+								class="indieaf-vs-img"
+								:src="assetPaths['./vs.png'].default"
+								alt=""
+							/>
 							<div class="indieaf-vs-col left">
 								Are you a startup, or are you indie?
 							</div>

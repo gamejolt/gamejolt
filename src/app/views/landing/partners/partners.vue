@@ -34,21 +34,27 @@
 					<div class="row">
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg :src="require('./supporting-indies.svg')" alt="" />
+								<app-theme-svg
+									:src="assetPaths['./supporting-indies.svg'].default"
+									alt=""
+								/>
 							</div>
 
 							<h4 class="text-center">Indies supporting indies</h4>
 
 							<p>
 								When you promote games from your favorite indie game developers on
-								your YouTube or Twitch channels, they’ll support you right back!
+								your YouTube or Twitch channels, they'll support you right back!
 								Feel that indie fellowship.
 							</p>
 						</div>
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg :src="require('./revenue-share.svg')" alt="" />
+								<app-theme-svg
+									:src="assetPaths['./revenue-share.svg'].default"
+									alt=""
+								/>
 							</div>
 
 							<h4 class="text-center">Revenue Share</h4>
@@ -65,7 +71,10 @@
 
 						<div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-0">
 							<div class="landing-graphic">
-								<app-theme-svg :src="require('./access-any-game.svg')" alt="" />
+								<app-theme-svg
+									:src="assetPaths['./access-any-game.svg'].default"
+									alt=""
+								/>
 							</div>
 
 							<h4 class="text-center">Access any game</h4>

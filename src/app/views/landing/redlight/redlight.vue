@@ -6,7 +6,7 @@
 					<img
 						:width="1068 / (Screen.isXs ? 4 : 2)"
 						:height="108 / (Screen.isXs ? 4 : 2)"
-						:src="require('./logo.png')"
+						:src="assetPaths['./logo.png'].default"
 						alt="Redlight"
 					/>
 				</h1>
@@ -63,7 +63,7 @@
 					<div class="row">
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<img :src="require('./laptop.svg')" alt="" />
+								<img :src="assetPaths['./laptop.svg'].default" alt="" />
 							</div>
 
 							<p class="text-center">
@@ -77,7 +77,7 @@
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<img :src="require('./poster.svg')" alt="" />
+								<img :src="assetPaths['./poster.svg'].default" alt="" />
 							</div>
 
 							<p class="text-center">
@@ -93,7 +93,7 @@
 
 						<div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-0">
 							<div class="landing-graphic">
-								<img :src="require('./shout.svg')" alt="" />
+								<img :src="assetPaths['./shout.svg'].default" alt="" />
 							</div>
 
 							<p class="text-center">
@@ -163,7 +163,7 @@
 						<div class="col-md-1" />
 						<div class="col-sm-5">
 							<div class="landing-graphic-full hidden-xs">
-								<img :src="require('./redlight-comic.png')" alt="" />
+								<img :src="assetPaths['./redlight-comic.png'].default" alt="" />
 							</div>
 						</div>
 					</div>

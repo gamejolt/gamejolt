@@ -45,7 +45,7 @@
 					<div class="row">
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg :src="require('./revenue-share.svg')" alt="" />
+								<app-theme-svg :src="assetPaths['./revenue-share.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Revenue Split</h4>
@@ -61,7 +61,7 @@
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg :src="require('./taxes.svg')" alt="" />
+								<app-theme-svg :src="assetPaths['./taxes.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Taxes</h4>
@@ -73,7 +73,7 @@
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg :src="require('./payouts.svg')" alt="" />
+								<app-theme-svg :src="assetPaths['./payouts.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Payouts</h4>
@@ -88,7 +88,7 @@
 
 						<div class="col-sm-6 col-md-4 col-md-offset-4">
 							<div class="landing-graphic">
-								<app-theme-svg :src="require('./wallet.svg')" alt="" />
+								<app-theme-svg :src="assetPaths['./wallet.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Game Jolt Wallet</h4>
@@ -111,7 +111,7 @@
 					<div class="row">
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg :src="require('./selling-options.svg')" alt="" />
+								<app-theme-svg :src="assetPaths['./selling-options.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Selling Options</h4>
@@ -125,7 +125,7 @@
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg :src="require('./keys.svg')" alt="" />
+								<app-theme-svg :src="assetPaths['./keys.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Flexible Key Management</h4>
@@ -145,7 +145,7 @@
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg :src="require('./early-access.svg')" alt="" />
+								<app-theme-svg :src="assetPaths['./early-access.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Early Access</h4>
@@ -162,7 +162,7 @@
 
 						<div class="col-sm-6 col-md-4 col-md-offset-2">
 							<div class="landing-graphic">
-								<app-theme-svg :src="require('./analytics.svg')" alt="" />
+								<app-theme-svg :src="assetPaths['./analytics.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Powerful Analytics</h4>
@@ -180,7 +180,7 @@
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg :src="require('./supporter-focused.svg')" alt="" />
+								<app-theme-svg :src="assetPaths['./supporter-focused.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Supporter Focused</h4>

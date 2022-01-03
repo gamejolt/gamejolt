@@ -115,7 +115,7 @@
 				<div v-if="showMascot" class="container">
 					<img
 						class="client-presentation-mascot"
-						:src="require('./clyde-video-overlay.png')"
+						:src="assetPaths['./clyde-video-overlay.png'].default"
 						width="178"
 						height="130"
 						alt="Clyde Slicker"
@@ -125,7 +125,7 @@
 					<div class="container text-center">
 						<img
 							class="img-responsive"
-							:src="require('./client-presentation.jpg')"
+							:src="assetPaths['./client-presentation.jpg'].default"
 							alt="Game Jolt Client"
 						/>
 					</div>
@@ -190,7 +190,7 @@
 							<div class="col-sm-6">
 								<img
 									class="img-responsive"
-									:src="require('./install-shot.jpg')"
+									:src="assetPaths['./install-shot.jpg'].default"
 									alt="Install Fast"
 								/>
 							</div>
@@ -221,7 +221,7 @@
 							<div class="col-sm-6 col-sm-pull-6">
 								<img
 									class="img-responsive"
-									:src="require('./auto-update-shot.jpg')"
+									:src="assetPaths['./auto-update-shot.jpg'].default"
 									alt="Auto Update"
 								/>
 							</div>
@@ -246,7 +246,7 @@
 							<div class="col-sm-6">
 								<img
 									class="img-responsive"
-									:src="require('./chat-shot.jpg')"
+									:src="assetPaths['./chat-shot.jpg'].default"
 									alt="Chat"
 								/>
 							</div>
@@ -274,7 +274,7 @@
 							<div class="col-sm-6 col-sm-pull-6">
 								<img
 									class="img-responsive"
-									:src="require('./offline-mode-shot.jpg')"
+									:src="assetPaths['./offline-mode-shot.jpg'].default"
 									alt="Offline Mode"
 								/>
 							</div>
@@ -299,7 +299,7 @@
 							<div class="col-sm-6">
 								<img
 									class="img-responsive"
-									:src="require('./html-games-shot.jpg')"
+									:src="assetPaths['./html-games-shot.jpg'].default"
 									alt="HTML Games"
 								/>
 							</div>
@@ -332,7 +332,7 @@
 							<div class="col-sm-6 col-sm-pull-6">
 								<img
 									class="img-responsive"
-									:src="require('./open-source-shot.jpg')"
+									:src="assetPaths['./open-source-shot.jpg'].default"
 									alt="Open Source"
 								/>
 							</div>
@@ -360,7 +360,7 @@
 							<div class="col-sm-6">
 								<img
 									class="img-responsive"
-									:src="require('./full-site-shot.jpg')"
+									:src="assetPaths['./full-site-shot.jpg'].default"
 									alt="Game Jolt"
 								/>
 							</div>

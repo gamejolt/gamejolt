@@ -77,6 +77,8 @@ export class BaseForm<T> extends Vue {
 			model: toRef(this.$props as any, 'model'),
 			modelClass: this.modelClass,
 			saveMethod: this.saveMethod,
+			// TODO(vue3): it seems the "this" binding it not correct, so I'm
+			// not sure how we're gonna fix
 			onInit: () => this.onInit(),
 			onBeforeSubmit: () => (this as Partial<FormOnBeforeSubmit>).onBeforeSubmit?.(),
 			onSubmit: async () => await (this as Partial<FormOnSubmit>).onSubmit?.(),

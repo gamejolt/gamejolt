@@ -5,6 +5,7 @@ import { AppSocialFacebookLike } from '../../../../_common/social/facebook/like/
 import { AppSocialTwitterShare } from '../../../../_common/social/twitter/share/share';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { AppAuthJoinLazy } from '../../../components/lazy';
+import socialImage from './social.png';
 
 function getRandomInt(min: number, max: number) {
 	min = Math.ceil(min);
@@ -59,6 +60,7 @@ export default class RouteLandingRedlight extends BaseRouteComponent {
 	readonly slogan = this.slogans[getRandomInt(0, this.slogans.length)];
 	readonly chosenHandle = this.handles[getRandomInt(0, this.handles.length)];
 	readonly tweet = `Hey @${this.chosenHandle}! I think your games would be a good fit for Game Jolt #redlight #gamedev`;
+	readonly assetPaths = import.meta.globEager('./*.(svg|png)');
 
 	readonly Screen = Screen;
 
@@ -81,6 +83,6 @@ export default class RouteLandingRedlight extends BaseRouteComponent {
 			description: Meta.description,
 		};
 
-		Meta.fb.image = Meta.twitter.image = require('./social.png');
+		Meta.fb.image = Meta.twitter.image = socialImage;
 	}
 }

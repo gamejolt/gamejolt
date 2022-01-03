@@ -29,7 +29,7 @@
 			<div class="container text-center">
 				<img
 					class="-phones"
-					:src="require('./phones.png')"
+					:src="phonesImage"
 					width="385"
 					height="300"
 					alt=""

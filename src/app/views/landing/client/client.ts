@@ -34,6 +34,7 @@ export default class RouteLandingClient extends BaseRouteComponent {
 	readonly arch = getDeviceArch();
 	readonly Screen = Screen;
 	readonly imageJolt = imageJolt;
+	readonly assetPaths = import.meta.globEager('./*.(jpg|png)');
 
 	routeResolved(payload: any) {
 		this.packageData = new GamePackagePayloadModel(payload.packageData);
