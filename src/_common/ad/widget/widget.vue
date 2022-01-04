@@ -52,7 +52,7 @@ function _makeAdSlot() {
 	</div>
 </template>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 .-ad-widget
 	text-align: center
 
