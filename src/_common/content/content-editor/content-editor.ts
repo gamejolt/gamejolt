@@ -1,17 +1,18 @@
-import { DOMParser, Node } from 'prosemirror-model';
-import { EditorState, Plugin, Selection, Transaction } from 'prosemirror-state';
+import { DOMParser } from 'prosemirror-model';
+import { EditorState, Plugin, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import 'prosemirror-view/style/prosemirror.css';
 import ResizeObserver from 'resize-observer-polyfill';
-import { nextTick } from 'vue';
-import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { computed, nextTick, triggerRef } from 'vue';
+import { setup } from 'vue-class-component';
+import { Emit, Options, Prop, Provide, Vue, Watch } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
 import AppScrollScroller from '../../scroll/scroller/scroller.vue';
 import { ContentContext, ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
 import { ContentFormatAdapter, ProsemirrorEditorFormat } from '../content-format-adapter';
 import { ContentHydrator } from '../content-hydrator';
-import { ContentOwner } from '../content-owner';
+import { ContentOwnerControllerKey, createContentOwnerController } from '../content-owner';
 import { ContentEditorService } from './content-editor.service';
 import { ContentRules } from './content-rules';
 import { ContentTempResource } from './content-temp-resource.service';
@@ -39,7 +40,7 @@ import { ContentEditorSchema, generateSchema } from './schemas/content-editor-sc
 		AppScrollScroller,
 	},
 })
-export default class AppContentEditor extends Vue implements ContentOwner {
+export default class AppContentEditor extends Vue {
 	@Prop(String)
 	contentContext!: ContentContext;
 
@@ -82,6 +83,40 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	@Prop(propOptional(ContentRules)) displayRules?: ContentRules;
 
 	@Prop(propOptional(Boolean, false)) focusEnd!: boolean;
+
+	@Provide({ to: ContentOwnerControllerKey })
+	ownerController = setup(() => {
+		const modelId = computed(() => {
+			const props = this.$props as this;
+
+			if (props.modelId === null) {
+				if (!this._tempModelId) {
+					new Promise<number>(() =>
+						ContentTempResource.getTempModelId(
+							this.contentContext,
+							this.tempResourceContextData
+						)
+					).then(id => {
+						// Get the temp ID, assign it, then trigger this to update again.
+						this._tempModelId = id;
+						if (this.ownerController.modelId) {
+							triggerRef(modelId);
+						}
+					});
+				}
+				return this._tempModelId;
+			} else {
+				return this.modelId;
+			}
+		});
+
+		return createContentOwnerController({
+			contentRules: computed(() => {
+				return (this.$props as this).displayRules ?? null;
+			}),
+			modelId,
+		});
+	});
 
 	$_veeValidate = {
 		value: () => this.value,
@@ -190,32 +225,6 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 		return !this.disabled && this.capabilities.gif && this.isFocused;
 	}
 
-	getContext() {
-		return this.contentContext;
-	}
-
-	getHydrator() {
-		return this.hydrator;
-	}
-
-	getCapabilities() {
-		return this.capabilities;
-	}
-
-	async getModelId() {
-		if (this.modelId === null) {
-			if (!this._tempModelId) {
-				this._tempModelId = await ContentTempResource.getTempModelId(
-					this.contentContext,
-					this.tempResourceContextData
-				);
-			}
-			return this._tempModelId;
-		} else {
-			return this.modelId;
-		}
-	}
-
 	@Watch('value')
 	public onSourceUpdated() {
 		if (this._sourceControlVal !== this.value) {
@@ -304,7 +313,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 			this.view.destroy();
 		}
 
-		const nodeViews = buildNodeViews(this);
+		const nodeViews = buildNodeViews(this.ownerController);
 		const eventHandlers = buildEvents(this);
 		this.view = new EditorView<ContentEditorSchema>(this.$refs.doc, {
 			state,
@@ -331,18 +340,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 		return this.view!;
 	}
 
-	public getContent() {
-		if (this.view instanceof EditorView) {
-			const data = ContentFormatAdapter.adaptOut(
-				this.view.state.doc.toJSON() as ProsemirrorEditorFormat,
-				this.contentContext
-			);
-			return data;
-		}
-		return null;
-	}
-
-	public async setContent(doc: ContentDocument) {
+	private async setContent(doc: ContentDocument) {
 		if (doc.context !== this.contentContext) {
 			throw new Error(
 				`The passed in content context is invalid. ${doc.context} != ${this.contentContext}`
@@ -461,14 +459,5 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 		}
 
 		this.stateCounter++;
-	}
-
-	getContentRules() {
-		if (this.displayRules) {
-			return this.displayRules;
-		}
-
-		// Return default values.
-		return new ContentRules();
 	}
 }

@@ -1,22 +1,18 @@
 import { h } from 'vue';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { ContentObject } from '../../content-object';
-import { ContentOwner } from '../../content-owner';
 import { renderChildren } from './base-component';
 
 @Options({})
 export class AppContentViewerList extends Vue {
-	@Prop(ContentObject)
+	@Prop({ type: ContentObject })
 	contentData!: ContentObject;
-
-	@Prop(Object)
-	owner!: ContentOwner;
 
 	render() {
 		if (this.contentData.type === 'bulletList') {
-			return h('ul', {}, renderChildren(this.owner, this.contentData.content));
+			return h('ul', {}, renderChildren(this.contentData.content));
 		} else if (this.contentData.type === 'orderedList') {
-			return h('ol', {}, renderChildren(this.owner, this.contentData.content));
+			return h('ol', {}, renderChildren(this.contentData.content));
 		}
 		// Shouldn't happen because child type is guarded by renderChildren
 		throw new Error('Unknown list type encountered.');

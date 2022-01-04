@@ -1,5 +1,5 @@
 import { EditorView } from 'prosemirror-view';
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { Api } from '../../../api/api.service';
 import { showErrorGrowl } from '../../../growls/growls.service';
 import AppLoading from '../../../loading/loading.vue';
@@ -8,7 +8,7 @@ import AppProgressBar from '../../../progress/bar/bar.vue';
 import { getMediaItemTypeForContext } from '../../content-context';
 import { ContentEditorService } from '../../content-editor/content-editor.service';
 import { ContentEditorSchema } from '../../content-editor/schemas/content-editor-schema';
-import { ContentOwner } from '../../content-owner';
+import { ContentOwnerController, ContentOwnerControllerKey } from '../../content-owner';
 
 @Options({
 	components: {
@@ -20,18 +20,18 @@ export default class AppContentMediaUpload extends Vue {
 	@Prop(String)
 	uploadId!: string;
 
-	@Prop(EditorView)
+	@Prop({ type: EditorView })
 	editorView!: EditorView<ContentEditorSchema>;
 
-	@Prop(Object)
-	owner!: ContentOwner;
+	@Inject({ from: ContentOwnerControllerKey })
+	owner!: ContentOwnerController;
 
 	src = '';
 	uploadProgress = 0;
 	uploadProcessing = false;
 
 	get placeholderMaxHeight() {
-		const maxHeight = this.owner.getContentRules().maxMediaHeight;
+		const maxHeight = this.owner.contentRules.maxMediaHeight;
 		if (maxHeight !== null) {
 			return maxHeight;
 		}
@@ -97,8 +97,9 @@ export default class AppContentMediaUpload extends Vue {
 	private async uploadFile(file: File) {
 		this.uploadProgress = 0;
 		this.uploadProcessing = false;
-		const itemType = getMediaItemTypeForContext(this.owner.getContext());
-		const parentId = await this.owner.getModelId();
+		const itemType = getMediaItemTypeForContext(this.owner.context);
+		// TODO(vue3): test this
+		const parentId = this.owner.modelId;
 		const payload = await Api.sendRequest(
 			'/web/dash/media-items/add-one',
 			{

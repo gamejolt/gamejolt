@@ -2,7 +2,7 @@
 
 <template>
 	<div class="content-viewer" :class="viewerStyleClass">
-		<app-content-viewer-base-component v-if="doc" :content="doc.content" :owner="owner" />
+		<app-content-viewer-base-component v-if="controller.doc" :content="controller.content" />
 	</div>
 </template>
 

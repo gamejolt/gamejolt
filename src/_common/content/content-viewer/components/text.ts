@@ -1,18 +1,18 @@
 import { h } from 'vue';
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import AppLinkExternal from '../../../link/external.vue';
 import { ContentObject } from '../../content-object';
-import { ContentOwner } from '../../content-owner';
+import { ContentOwnerController, ContentOwnerControllerKey } from '../../content-owner';
 import AppContentViewerMention from './mention/mention.vue';
 import AppContentViewerTag from './tag/tag.vue';
 
 @Options({})
 export class AppContentViewerText extends Vue {
-	@Prop(ContentObject)
+	@Prop({ type: ContentObject })
 	contentData!: ContentObject;
 
-	@Prop(Object)
-	owner!: ContentOwner;
+	@Inject({ from: ContentOwnerControllerKey })
+	owner!: ContentOwnerController;
 
 	hasMark(mark: string) {
 		return this.contentData.marks && this.contentData.marks.some(m => m.type === mark);
@@ -29,7 +29,7 @@ export class AppContentViewerText extends Vue {
 		const text = this.contentData.text;
 
 		if (text && text?.length > 64 && this.isLink) {
-			const rules = this.owner.getContentRules();
+			const rules = this.owner.contentRules;
 			if (rules.truncateLinks) {
 				return text.substr(0, 64) + '…';
 			}
@@ -97,7 +97,7 @@ export class AppContentViewerText extends Vue {
 
 			vnode = h(
 				AppContentViewerMention,
-				{ username: attrs.username, owner: this.owner },
+				{ username: attrs.username },
 				{
 					default: () => children,
 				}
@@ -108,7 +108,7 @@ export class AppContentViewerText extends Vue {
 
 			vnode = h(
 				AppContentViewerTag,
-				{ tag: attrs.tag, owner: this.owner },
+				{ tag: attrs.tag },
 				{
 					default: () => children,
 				}

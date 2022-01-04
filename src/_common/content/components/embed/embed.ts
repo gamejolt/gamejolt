@@ -1,10 +1,10 @@
-import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { arrayShuffle } from '../../../../utils/array';
 import { showErrorGrowl } from '../../../growls/growls.service';
 import AppLoading from '../../../loading/loading.vue';
 import AppVideoEmbed from '../../../video/embed/embed.vue';
 import { ContentEmbedService } from '../../content-editor/content-embed.service';
-import { ContentOwner } from '../../content-owner';
+import { ContentOwnerController, ContentOwnerControllerKey } from '../../content-owner';
 import AppBaseContentComponent from '../base/base-content-component.vue';
 import AppContentEmbedSketchfab from './sketchfab/sketchfab.vue';
 import AppContentEmbedSoundcloud from './soundcloud/soundcloud.vue';
@@ -25,9 +25,6 @@ export default class AppContentEmbed extends Vue {
 	@Prop(String)
 	source!: string;
 
-	@Prop(Object)
-	owner!: ContentOwner;
-
 	@Prop(Boolean)
 	isEditing!: boolean;
 
@@ -40,6 +37,9 @@ export default class AppContentEmbed extends Vue {
 	loading = false;
 	previewEmbeds: any[] = [];
 
+	@Inject({ from: ContentOwnerControllerKey })
+	owner!: ContentOwnerController;
+
 	@Emit('removed') emitRemoved() {}
 	@Emit('update-attrs') emitUpdateAttrs(_attrs: Record<string, any>) {}
 
@@ -48,11 +48,11 @@ export default class AppContentEmbed extends Vue {
 	};
 
 	get capabilities() {
-		return this.owner.getCapabilities();
+		return this.owner.capabilities;
 	}
 
 	get hydrator() {
-		return this.owner.getHydrator();
+		return this.owner.hydrator;
 	}
 
 	get hasContent() {

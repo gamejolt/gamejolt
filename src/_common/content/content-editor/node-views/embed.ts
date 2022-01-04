@@ -18,8 +18,8 @@ export class EmbedNodeView extends HydratableNodeView {
 		this.node = node;
 		// Update the vue component's props from the new node
 		if (this.vueComponent instanceof AppContentEmbed) {
-			this.vueComponent!.$props.source = this.node.attrs.source;
-			this.vueComponent!.$props.type = this.node.attrs.type;
+			(this.vueComponent!.$props as AppContentEmbed).source = this.node.attrs.source;
+			(this.vueComponent!.$props as AppContentEmbed).type = this.node.attrs.type;
 		}
 		// Don't handle updates to this node, so it doesn't get redrawn.
 		return !node.attrs.type;
@@ -30,7 +30,6 @@ export class EmbedNodeView extends HydratableNodeView {
 			propsData: {
 				type: this.node.attrs.type,
 				source: this.node.attrs.source,
-				owner: this.owner,
 				isDisabled: ContentEditorService.isDisabled(this.view),
 			},
 		});

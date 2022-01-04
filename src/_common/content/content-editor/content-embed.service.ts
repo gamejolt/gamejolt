@@ -1,4 +1,4 @@
-import { ContentOwner } from '../content-owner';
+import { ContentOwnerController } from '../content-owner';
 import { EmbedSource } from './embeds/embed-source';
 import { SketchfabModelEmbed } from './embeds/sketchfab-model';
 import { SoundcloudSongEmbed } from './embeds/soundcloud-song';
@@ -44,7 +44,7 @@ export class ContentEmbedService {
 	}
 
 	public static async getEmbedData(
-		owner: ContentOwner,
+		owner: ContentOwnerController,
 		input: string
 	): Promise<EmbedData | undefined> {
 		input = input.trim();
@@ -54,8 +54,8 @@ export class ContentEmbedService {
 		// Go through all lines of pasted content individually
 		// This also has to take capabilities into account
 
-		const capabilities = owner.getCapabilities();
-		const hydrator = owner.getHydrator();
+		const capabilities = owner.capabilities;
+		const hydrator = owner.hydrator;
 		for (const line of lines) {
 			for (const source of this.sources) {
 				const linkSource = await source.getLinkSource(capabilities, hydrator, line);

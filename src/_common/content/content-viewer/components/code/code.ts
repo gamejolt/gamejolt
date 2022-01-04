@@ -2,7 +2,6 @@ import { h } from 'vue';
 import Prism from 'vue-prism-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { ContentObject } from '../../../content-object';
-import { ContentOwner } from '../../../content-owner';
 import { renderChildren } from '../base-component';
 import './code.styl';
 
@@ -30,11 +29,8 @@ const LANGUAGE_MAP = {
 
 @Options({})
 export class AppContentViewerCodeBlock extends Vue {
-	@Prop(ContentObject)
+	@Prop({ type: ContentObject })
 	contentData!: ContentObject;
-
-	@Prop(Object)
-	owner!: ContentOwner;
 
 	isPrismLoaded = false;
 
@@ -97,7 +93,7 @@ export class AppContentViewerCodeBlock extends Vue {
 		return h(
 			'pre',
 			{ class: 'content-viewer-code-block content-viewer-nocode' },
-			renderChildren(this.owner, this.contentData.content)
+			renderChildren(this.contentData.content)
 		);
 	}
 

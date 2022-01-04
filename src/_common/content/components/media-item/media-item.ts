@@ -1,12 +1,14 @@
-import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+import { toRef } from 'vue';
+import { setup } from 'vue-class-component';
+import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { AppImgResponsive } from '../../../img/responsive/responsive';
+import { createLightbox } from '../../../lightbox/lightbox-helpers';
 import AppLoading from '../../../loading/loading.vue';
 import AppMediaItemBackdrop from '../../../media-item/backdrop/backdrop.vue';
 import { MediaItem } from '../../../media-item/media-item-model';
 import { AppResponsiveDimensions } from '../../../responsive-dimensions/responsive-dimensions';
 import { ContentEditorLinkModal } from '../../content-editor/modals/link/link-modal.service';
-import { ContentOwner } from '../../content-owner';
-import AppContentViewerTS from '../../content-viewer/content-viewer';
+import { ContentOwnerController, ContentOwnerControllerKey } from '../../content-owner';
 import AppBaseContentComponent from '../base/base-content-component.vue';
 
 @Options({
@@ -37,20 +39,22 @@ export default class AppContentMediaItem extends Vue {
 	@Prop(String)
 	href!: string;
 
-	@Prop(Object)
-	owner!: ContentOwner;
-
 	@Prop(Boolean)
 	isEditing!: boolean;
 
 	@Prop(Boolean)
 	isDisabled!: boolean;
 
+	@Inject({ from: ContentOwnerControllerKey })
+	owner!: ContentOwnerController;
+
 	mediaItem: MediaItem | null = null;
 	hasError = false;
 	imageLoaded = false;
 
-	contentViewerParent: AppContentViewerTS | null = null;
+	lightbox = setup(() => {
+		return createLightbox(toRef(this, 'lightboxItems'));
+	});
 
 	@Emit('removed') emitRemoved() {}
 	@Emit('update-attrs') emitUpdateAttrs(_attrs: Record<string, any>) {}
@@ -58,6 +62,10 @@ export default class AppContentMediaItem extends Vue {
 	declare $refs: {
 		container: HTMLDivElement;
 	};
+
+	get lightboxItems() {
+		return this.mediaItem ? [this.mediaItem] : [];
+	}
 
 	get title() {
 		if (this.mediaItem && this.hasCaption) {
@@ -100,11 +108,11 @@ export default class AppContentMediaItem extends Vue {
 	}
 
 	get canFullscreenItem() {
-		if (!this.contentViewerParent || !this.mediaItem || this.hasLink) {
+		if (!this.mediaItem || this.hasLink) {
 			return false;
 		}
 
-		return !this.contentViewerParent.disableLightbox;
+		return !this.owner.disableLightbox;
 	}
 
 	get displayHref() {
@@ -130,18 +138,13 @@ export default class AppContentMediaItem extends Vue {
 	}
 
 	created() {
-		this.owner.getHydrator().useData('media-item-id', this.mediaItemId.toString(), data => {
+		this.owner.hydrator.useData('media-item-id', this.mediaItemId.toString(), data => {
 			if (data) {
 				this.mediaItem = new MediaItem(data);
 			} else {
 				this.hasError = true;
 			}
 		});
-	}
-
-	mounted() {
-		// this.contentViewerParent =
-		// 	findVueParent<AppContentViewerTS>(this, AppContentViewer) || null;
 	}
 
 	onRemoved() {
@@ -161,7 +164,7 @@ export default class AppContentMediaItem extends Vue {
 
 	get maxWidth() {
 		const { container } = this.$refs;
-		const maxOwnerWidth = this.owner.getContentRules().maxMediaWidth;
+		const maxOwnerWidth = this.owner.contentRules.maxMediaWidth;
 		if (maxOwnerWidth !== null) {
 			return Math.min(maxOwnerWidth, container ? container.clientWidth : this.mediaItemWidth);
 		}
@@ -170,7 +173,7 @@ export default class AppContentMediaItem extends Vue {
 	}
 
 	get maxHeight() {
-		const maxOwnerHeight = this.owner.getContentRules().maxMediaHeight;
+		const maxOwnerHeight = this.owner.contentRules.maxMediaHeight;
 		if (maxOwnerHeight !== null) {
 			return Math.min(maxOwnerHeight, this.mediaItemHeight);
 		}
@@ -191,6 +194,6 @@ export default class AppContentMediaItem extends Vue {
 			return;
 		}
 
-		this.contentViewerParent!.onItemFullscreen(this.mediaItem!);
+		this.lightbox.show();
 	}
 }

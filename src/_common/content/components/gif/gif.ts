@@ -1,4 +1,4 @@
-import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../../utils/vue';
 import { ContentFocus } from '../../../content-focus/content-focus.service';
 import { AppResponsiveDimensions } from '../../../responsive-dimensions/responsive-dimensions';
@@ -6,7 +6,7 @@ import { Screen } from '../../../screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '../../../scroll/inview/inview.vue';
 import { getVideoPlayerFromSources } from '../../../video/player/controller';
 import AppVideo from '../../../video/video.vue';
-import { ContentOwner } from '../../content-owner';
+import { ContentOwnerController, ContentOwnerControllerKey } from '../../content-owner';
 import AppBaseContentComponent from '../base/base-content-component.vue';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height * 0.25}px` });
@@ -25,9 +25,11 @@ export default class AppContentGif extends Vue {
 	@Prop(propRequired(Number)) height!: number;
 	@Prop(propRequired(String)) service!: string;
 	@Prop(propRequired(Object)) media!: any;
-	@Prop(propRequired(Object)) owner!: ContentOwner;
 	@Prop(propRequired(Boolean)) isEditing!: boolean;
 	@Prop(propRequired(Boolean)) isDisabled!: boolean;
+
+	@Inject({ from: ContentOwnerControllerKey })
+	owner!: ContentOwnerController;
 
 	declare $refs: {
 		container: HTMLElement;
@@ -58,7 +60,7 @@ export default class AppContentGif extends Vue {
 
 	get maxWidth() {
 		const { container } = this.$refs;
-		const maxOwnerWidth = this.owner.getContentRules().maxMediaWidth;
+		const maxOwnerWidth = this.owner.contentRules.maxMediaWidth;
 		if (maxOwnerWidth !== null) {
 			return Math.min(maxOwnerWidth, container ? container.clientWidth : this.width);
 		}
@@ -67,7 +69,7 @@ export default class AppContentGif extends Vue {
 	}
 
 	get maxHeight() {
-		const maxOwnerHeight = this.owner.getContentRules().maxMediaHeight;
+		const maxOwnerHeight = this.owner.contentRules.maxMediaHeight;
 		if (maxOwnerHeight !== null) {
 			return Math.min(maxOwnerHeight, this.height);
 		}
