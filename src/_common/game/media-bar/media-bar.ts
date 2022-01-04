@@ -23,15 +23,11 @@ export default class AppGameMediaBar extends Vue {
 
 	private urlChecked = false;
 
-	lightbox = setup(() => {
-		// TODO(vue3): This doesn't seem to be reactive if our [mediaItems] prop changes.
-		//
-		// http://localhost:8080/games/tea-time-with-luap-sere-make-the-world-right/863#screenshot-1663
-		const items = computed(() => this.mediaItems);
-		return createLightbox(items);
-	});
-
 	mediaBarHeight = MediaBarItemMaxHeight + 40;
+
+	lightbox = setup(() => {
+		return createLightbox(computed(() => (this.$props as this).mediaItems));
+	});
 
 	get activeItem() {
 		if (!this.lightbox.isShowing) {

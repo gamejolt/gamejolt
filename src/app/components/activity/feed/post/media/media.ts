@@ -38,7 +38,11 @@ export default class AppActivityFeedPostMedia extends Vue {
 	page = 1;
 	isDragging = false;
 	isWaitingForFrame = false;
-	lightbox = setup(() => createLightbox(computed(() => this.post.media)));
+
+	lightbox = setup(() => {
+		return createLightbox(computed(() => (this.$props as this).post.media));
+	});
+
 	readonly Screen = Screen;
 
 	get isHydrated() {

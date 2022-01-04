@@ -1,4 +1,4 @@
-import { computed, onUnmounted, reactive, Ref, ref } from 'vue';
+import { computed, ComputedRef, onUnmounted, reactive, readonly, ref, Ref } from 'vue';
 import { MediaItem } from '../media-item/media-item-model';
 
 export const LightboxConfig = {
@@ -26,7 +26,7 @@ export interface LightboxMediaModel {
  */
 export function createLightbox(items: Ref<LightboxMediaModel[]>) {
 	const _page = ref(1);
-	const isShowing = ref(false);
+	const isShowing = computed(() => _compareLightbox(lightbox)) as ComputedRef<boolean>;
 
 	const index = computed(() => _page.value - 1);
 	const length = computed(() => items.value.length);
@@ -49,10 +49,12 @@ export function createLightbox(items: Ref<LightboxMediaModel[]>) {
 
 	const lightbox = reactive({
 		index,
-		items,
+		items: readonly(items),
 		length,
 		activeItem,
-		isShowing,
+		// TODO(vue3): This doesn't seem to actually get marked as readonly.
+		// Typing is strange with this.
+		isShowing: readonly(isShowing),
 		gotoPage,
 		goNext() {
 			gotoPage(index.value + 1);
@@ -68,7 +70,6 @@ export function createLightbox(items: Ref<LightboxMediaModel[]>) {
 		},
 		close() {
 			_assignActiveLightbox(null);
-			isShowing.value = false;
 		},
 	});
 
@@ -77,8 +78,12 @@ export function createLightbox(items: Ref<LightboxMediaModel[]>) {
 
 const _activeLightbox = ref<null | LightboxController>(null);
 
-function _assignActiveLightbox(tooltip: LightboxController | null) {
-	_activeLightbox.value = tooltip;
+function _assignActiveLightbox(lightbox: LightboxController | null) {
+	_activeLightbox.value = lightbox;
+}
+
+function _compareLightbox(lightbox: LightboxController) {
+	return _activeLightbox.value === lightbox;
 }
 
 export function getActiveLightbox() {

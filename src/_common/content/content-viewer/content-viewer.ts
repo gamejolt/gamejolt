@@ -1,4 +1,4 @@
-import { computed } from 'vue';
+import { toRef } from 'vue';
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
@@ -26,12 +26,12 @@ export default class AppContentViewer extends Vue implements ContentOwner {
 	lightboxMediaItem: MediaItem | null = null;
 
 	lightbox = setup(() => {
-		return createLightbox(this.items);
+		return createLightbox(toRef(this, 'items'));
 	});
 
-	items = computed(() => {
+	get items() {
 		return this.lightboxMediaItem ? [this.lightboxMediaItem] : [];
-	});
+	}
 
 	get owner() {
 		return this;

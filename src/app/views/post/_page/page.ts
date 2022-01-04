@@ -98,12 +98,11 @@ export default class AppPostPage extends Vue {
 	stickerTargetController = new StickerTargetController(this.post);
 
 	recommendedPosts: FiresidePost[] = [];
-	activeImageIndex = 0;
 	videoStartTime = 0;
 	isPlayerFilled = false;
 
 	private lightbox = setup(() => {
-		return createLightbox(computed(() => this.items));
+		return createLightbox(computed(() => (this.$props as this).post.media));
 	});
 
 	readonly Screen = Screen;
@@ -178,30 +177,6 @@ export default class AppPostPage extends Vue {
 		this.recommendedPosts = FiresidePost.populate(payload.posts);
 	}
 
-	getActiveIndex() {
-		return this.activeImageIndex;
-	}
-
-	getActiveItem() {
-		return this.post.media[this.activeImageIndex];
-	}
-
-	getItemCount() {
-		return this.post.media.length;
-	}
-
-	get items() {
-		return this.post.media;
-	}
-
-	goNext() {
-		this.activeImageIndex = Math.min(this.activeImageIndex + 1, this.post.media.length - 1);
-	}
-
-	goPrev() {
-		this.activeImageIndex = Math.max(this.activeImageIndex - 1, 0);
-	}
-
 	onVideoProcessingComplete(payload: any) {
 		if (payload.video && this.video) {
 			this.video.assign(payload.video);
@@ -221,8 +196,8 @@ export default class AppPostPage extends Vue {
 	}
 
 	onClickFullscreen(mediaItem: MediaItem) {
-		this.activeImageIndex = this.post.media.findIndex(i => i.id === mediaItem.id);
-		this.lightbox.show();
+		const index = this.post.media.findIndex(i => i.id === mediaItem.id);
+		this.lightbox.show(index !== -1 ? index : null);
 	}
 
 	onVideoPlay() {

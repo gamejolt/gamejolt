@@ -76,7 +76,6 @@ watch(
 		}
 
 		_onShow();
-		lightbox.value.isShowing = true;
 	},
 	{ deep: true }
 );
