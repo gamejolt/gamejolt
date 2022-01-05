@@ -8,8 +8,7 @@ import { createPopper, Instance, Options as PopperOptions } from '@popperjs/core
 import { nextTick } from 'vue';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propOptional } from '../../utils/vue';
-import { Backdrop } from '../backdrop/backdrop.service';
-import AppBackdrop from '../backdrop/backdrop.vue';
+import { Backdrop, BackdropController } from '../backdrop/backdrop.service';
 import { AppObserveDimensions } from '../observe-dimensions/observe-dimensions.directive';
 import { Screen } from '../screen/screen-service';
 import AppScrollScroller from '../scroll/scroller/scroller.vue';
@@ -145,7 +144,7 @@ export default class AppPopper extends Vue {
 	declare $el: HTMLDivElement;
 	private hideTimeout?: NodeJS.Timer;
 	private showDelayTimer?: NodeJS.Timer;
-	private mobileBackdrop: AppBackdrop | null = null;
+	private mobileBackdrop: BackdropController | null = null;
 
 	@Emit('trigger-clicked') emitTriggerClicked(_event: MouseEvent) {}
 	@Emit('context-menu') emitContextMenu(_event: MouseEvent) {}
@@ -391,7 +390,7 @@ export default class AppPopper extends Vue {
 
 	private removeBackdrop() {
 		if (this.mobileBackdrop) {
-			Backdrop.remove(this.mobileBackdrop);
+			this.mobileBackdrop.remove();
 			this.mobileBackdrop = null;
 		}
 	}

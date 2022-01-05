@@ -3,8 +3,7 @@ import { sync } from 'vuex-router-sync';
 import { buildUseStore, VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
 import { CommunityJoinLocation } from '../../_common/analytics/analytics.service';
 import { Api } from '../../_common/api/api.service';
-import { Backdrop } from '../../_common/backdrop/backdrop.service';
-import AppBackdrop from '../../_common/backdrop/backdrop.vue';
+import { Backdrop, BackdropController } from '../../_common/backdrop/backdrop.service';
 import { Community, joinCommunity, leaveCommunity } from '../../_common/community/community.model';
 import { Connection } from '../../_common/connection/connection-service';
 import {
@@ -86,7 +85,7 @@ export type Mutations = AppMutations &
 	};
 
 let bootstrapResolver: ((value?: any) => void) | null = null;
-let backdrop: AppBackdrop | null = null;
+let backdrop: BackdropController | null = null;
 export let tillStoreBootstrapped = new Promise(resolve => (bootstrapResolver = resolve));
 
 let gridBootstrapResolvers: ((client: GridClient) => void)[] = [];
@@ -382,10 +381,10 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 			}
 
 			this._addBackdrop();
-			backdrop!.$on('clicked', () => {
+			backdrop!.onClicked = () => {
 				this._clearPanes();
 				this.checkBackdrop();
-			});
+			};
 		} else if (backdrop) {
 			this._removeBackdrop();
 		}
@@ -631,7 +630,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 			return;
 		}
 
-		Backdrop.remove(backdrop);
+		backdrop.remove();
 		backdrop = null;
 	}
 }

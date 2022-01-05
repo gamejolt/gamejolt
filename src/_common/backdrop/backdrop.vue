@@ -1,7 +1,7 @@
 <script lang="ts" src="./backdrop"></script>
 
 <template>
-	<div class="backdrop" :class="className" @click="emitClicked()" />
+	<div class="backdrop" :class="className" @click="onClicked" />
 </template>
 
 <style lang="stylus" scoped>

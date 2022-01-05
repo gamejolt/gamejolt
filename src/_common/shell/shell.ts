@@ -1,4 +1,5 @@
 import { Options, Vue } from 'vue-property-decorator';
+import AppBackdropPortal from '../backdrop/backdrop-portal.vue';
 import AppGrowls from '../growls/growls.vue';
 import AppLightboxPortal from '../lightbox/lightbox-portal.vue';
 import AppLoadingBar from '../loading/bar/bar.vue';
@@ -16,6 +17,7 @@ import AppTooltipPortal from '../tooltip/tooltip-portal.vue';
 		AppModals,
 		AppTooltipPortal,
 		AppLightboxPortal,
+		AppBackdropPortal,
 	},
 	inheritAttrs: false,
 })

@@ -1,6 +1,6 @@
 import { setup } from 'vue-class-component';
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
-import AppBackdrop from '../backdrop/backdrop';
+import { Backdrop, BackdropController } from '../backdrop/backdrop.service';
 import { DrawerStore, DrawerStoreKey } from '../drawer/drawer-store';
 import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
 import { Screen } from '../screen/screen-service';
@@ -31,9 +31,11 @@ export default class AppModal extends Vue {
 	isHoveringContent = false;
 	scroller = setup(() => createScroller());
 
-	private backdrop?: AppBackdrop;
+	private backdrop?: BackdropController;
 	private beforeEachDeregister?: Function;
 	private escapeCallback?: EscapeStackCallback;
+
+	declare $el: HTMLDivElement;
 
 	@Emit('close') emitClose() {}
 
@@ -48,11 +50,10 @@ export default class AppModal extends Vue {
 
 	mounted() {
 		if (!this.modal.noBackdrop) {
-			// TODO(vue3)
-			// this.backdrop = Backdrop.push({
-			// 	context: this.$el,
-			// 	className: 'modal-backdrop',
-			// });
+			this.backdrop = Backdrop.push({
+				context: this.$el,
+				className: 'modal-backdrop',
+			});
 		}
 
 		this.beforeEachDeregister = this.$router.beforeEach((_to, _from, next) => {

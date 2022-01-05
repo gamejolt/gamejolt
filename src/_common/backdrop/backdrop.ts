@@ -1,15 +1,21 @@
-import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional } from '../../utils/vue';
-import { Backdrop } from './backdrop.service';
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { BackdropController } from './backdrop.service';
 
 @Options({})
 export default class AppBackdrop extends Vue {
-	@Prop(propOptional(String)) className?: string;
+	@Prop({ type: Object }) controller!: BackdropController;
 
-	@Emit('clicked')
-	emitClicked() {}
+	get className() {
+		return this.controller.className;
+	}
+
+	onClicked() {
+		if (this.controller.onClicked) {
+			this.controller.onClicked();
+		}
+	}
 
 	remove() {
-		Backdrop.remove(this);
+		this.controller.remove();
 	}
 }

@@ -3,6 +3,7 @@
 <template>
 	<app-lightbox-portal />
 	<app-tooltip-portal />
+	<app-backdrop-portal />
 
 	<app-scroll-inview-parent v-bind="$attrs">
 		<slot />
