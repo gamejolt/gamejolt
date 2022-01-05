@@ -1,11 +1,14 @@
-import { computed } from 'vue';
-import { setup } from 'vue-class-component';
-import { Options, Prop, Provide, Vue, Watch } from 'vue-property-decorator';
+import { computed, provide } from 'vue';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
 import { ContentDocument } from '../content-document';
 import { ContentRules } from '../content-editor/content-rules';
 import { ContentHydrator } from '../content-hydrator';
-import { ContentOwnerControllerKey, createContentOwnerController } from '../content-owner';
+import {
+	ContentOwnerController,
+	ContentOwnerControllerKey,
+	createContentOwnerController,
+} from '../content-owner';
 import { AppContentViewerBaseComponent } from './components/base-component';
 
 @Options({
@@ -18,17 +21,8 @@ export default class AppContentViewer extends Vue {
 	@Prop(propOptional(Boolean, false)) disableLightbox!: boolean;
 	@Prop(propOptional(ContentRules)) displayRules?: ContentRules;
 
-	@Provide({ to: ContentOwnerControllerKey })
-	controller = setup(() => {
-		return createContentOwnerController({
-			contentRules: computed(() => {
-				return (this.$props as this).displayRules ?? null;
-			}),
-			disableLightbox: computed(() => {
-				return (this.$props as this).disableLightbox === true;
-			}),
-		});
-	});
+	// Gets provided down during [created].
+	controller!: ContentOwnerController;
 
 	get viewerStyleClass() {
 		if (!this.controller.doc) {
@@ -38,6 +32,17 @@ export default class AppContentViewer extends Vue {
 	}
 
 	created() {
+		this.controller = createContentOwnerController({
+			contentRules: computed(() => {
+				return (this.$props as this).displayRules ?? null;
+			}),
+			disableLightbox: computed(() => {
+				return (this.$props as this).disableLightbox === true;
+			}),
+		});
+
+		provide(ContentOwnerControllerKey, this.controller);
+
 		this.updatedSource();
 	}
 

@@ -1,18 +1,22 @@
+import { provide } from '@vue/runtime-core';
 import { DOMParser } from 'prosemirror-model';
 import { EditorState, Plugin, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import 'prosemirror-view/style/prosemirror.css';
 import ResizeObserver from 'resize-observer-polyfill';
 import { computed, nextTick, triggerRef } from 'vue';
-import { setup } from 'vue-class-component';
-import { Emit, Options, Prop, Provide, Vue, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
 import AppScrollScroller from '../../scroll/scroller/scroller.vue';
 import { ContentContext, ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
 import { ContentFormatAdapter, ProsemirrorEditorFormat } from '../content-format-adapter';
 import { ContentHydrator } from '../content-hydrator';
-import { ContentOwnerControllerKey, createContentOwnerController } from '../content-owner';
+import {
+	ContentOwnerController,
+	ContentOwnerControllerKey,
+	createContentOwnerController,
+} from '../content-owner';
 import { ContentEditorService } from './content-editor.service';
 import { ContentRules } from './content-rules';
 import { ContentTempResource } from './content-temp-resource.service';
@@ -84,39 +88,8 @@ export default class AppContentEditor extends Vue {
 
 	@Prop(propOptional(Boolean, false)) focusEnd!: boolean;
 
-	@Provide({ to: ContentOwnerControllerKey })
-	ownerController = setup(() => {
-		const modelId = computed(() => {
-			const props = this.$props as this;
-
-			if (props.modelId === null) {
-				if (!this._tempModelId) {
-					new Promise<number>(() =>
-						ContentTempResource.getTempModelId(
-							this.contentContext,
-							this.tempResourceContextData
-						)
-					).then(id => {
-						// Get the temp ID, assign it, then trigger this to update again.
-						this._tempModelId = id;
-						if (this.ownerController.modelId) {
-							triggerRef(modelId);
-						}
-					});
-				}
-				return this._tempModelId;
-			} else {
-				return this.modelId;
-			}
-		});
-
-		return createContentOwnerController({
-			contentRules: computed(() => {
-				return (this.$props as this).displayRules ?? null;
-			}),
-			modelId,
-		});
-	});
+	// Gets provided all the way down during [created].
+	ownerController!: ContentOwnerController;
 
 	$_veeValidate = {
 		value: () => this.value,
@@ -253,6 +226,40 @@ export default class AppContentEditor extends Vue {
 		const doc = new ContentDocument(this.contentContext, []);
 		this.setContent(doc);
 		this.isEmpty = true;
+	}
+
+	created() {
+		// TODO(vue3): make sure this works once we can test content editor
+		const modelId = computed(() => {
+			const props = this.$props as this;
+
+			if (props.modelId === null) {
+				if (!this._tempModelId) {
+					new Promise<number>(() =>
+						ContentTempResource.getTempModelId(
+							this.contentContext,
+							this.tempResourceContextData
+						)
+					).then(id => {
+						// Get the temp ID, assign it, then trigger this to update again.
+						this._tempModelId = id;
+						triggerRef(modelId);
+					});
+				}
+				return this._tempModelId;
+			} else {
+				return this.modelId;
+			}
+		});
+
+		this.ownerController = createContentOwnerController({
+			contentRules: computed(() => {
+				return (this.$props as this).displayRules ?? null;
+			}),
+			modelId,
+		});
+
+		provide(ContentOwnerControllerKey, this.ownerController);
 	}
 
 	async mounted() {
