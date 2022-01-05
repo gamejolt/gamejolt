@@ -1,8 +1,7 @@
 import { toRef } from 'vue';
-import { setup } from 'vue-class-component';
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { AppImgResponsive } from '../../../img/responsive/responsive';
-import { createLightbox } from '../../../lightbox/lightbox-helpers';
+import { createLightbox, LightboxController } from '../../../lightbox/lightbox-helpers';
 import AppLoading from '../../../loading/loading.vue';
 import AppMediaItemBackdrop from '../../../media-item/backdrop/backdrop.vue';
 import { MediaItem } from '../../../media-item/media-item-model';
@@ -48,13 +47,10 @@ export default class AppContentMediaItem extends Vue {
 	@Inject({ from: ContentOwnerControllerKey })
 	owner!: ContentOwnerController;
 
+	lightbox!: LightboxController;
 	mediaItem: MediaItem | null = null;
 	hasError = false;
 	imageLoaded = false;
-
-	lightbox = setup(() => {
-		return createLightbox(toRef(this, 'lightboxItems'));
-	});
 
 	@Emit('removed') emitRemoved() {}
 	@Emit('update-attrs') emitUpdateAttrs(_attrs: Record<string, any>) {}
@@ -138,6 +134,8 @@ export default class AppContentMediaItem extends Vue {
 	}
 
 	created() {
+		this.lightbox = createLightbox(toRef(this, 'lightboxItems'));
+
 		this.owner.hydrator.useData('media-item-id', this.mediaItemId.toString(), data => {
 			if (data) {
 				this.mediaItem = new MediaItem(data);
