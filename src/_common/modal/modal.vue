@@ -19,7 +19,7 @@
 				'modal-full': modal.size === 'full',
 			}"
 		>
-			<component :is="!drawer ? 'div' : AppStickerLayer" class="modal-sticker-layer">
+			<component :is="!drawer ? 'div' : 'app-sticker-layer'" class="modal-sticker-layer">
 				<app-theme
 					class="modal-content"
 					:theme="theme"

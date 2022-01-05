@@ -25,8 +25,6 @@ export default class AppModal extends Vue {
 	@Inject({ from: ModalKey })
 	modal!: Modal;
 
-	readonly AppStickerLayer = AppStickerLayer;
-
 	@Inject({ from: DrawerStoreKey, default: null })
 	drawer!: null | DrawerStore;
 
@@ -36,8 +34,6 @@ export default class AppModal extends Vue {
 	private backdrop?: AppBackdrop;
 	private beforeEachDeregister?: Function;
 	private escapeCallback?: EscapeStackCallback;
-
-	// declare $el: HTMLDivElement;
 
 	@Emit('close') emitClose() {}
 
