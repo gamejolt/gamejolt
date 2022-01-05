@@ -1,3 +1,4 @@
+import { defineAsyncComponent } from 'vue';
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../utils/vue';
@@ -43,7 +44,9 @@ let CommentNum = 0;
 		FormComment,
 
 		// Since it's recursive it needs to be able to resolve itself.
-		AppCommentWidgetComment: () => Promise.resolve(AppCommentWidgetComment),
+		AppCommentWidgetComment: defineAsyncComponent({
+			loader: () => Promise.resolve(AppCommentWidgetComment),
+		}),
 	},
 	directives: {
 		AppTooltip,
