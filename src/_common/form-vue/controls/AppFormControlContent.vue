@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { PropType, toRef } from 'vue';
 import { ContentContext } from '../../content/content-context';
+import AppContentEditor from '../../content/content-editor/content-editor.vue';
 import { ContentRules } from '../../content/content-editor/content-rules';
 import { createFormControl, defineFormControlProps } from '../AppFormControl.vue';
 import { useFormGroup } from '../AppFormGroup.vue';

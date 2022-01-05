@@ -1,5 +1,4 @@
-import { toRef } from 'vue';
-import { setup } from 'vue-class-component';
+import { computed, toRef } from 'vue';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { ModelClassType } from '../model/model.service';
 import { createForm, FormController } from './AppForm.vue';
@@ -71,32 +70,7 @@ export class BaseForm<T> extends Vue {
 	readonly validateImageMaxDimensions = validateImageMaxDimensions;
 	readonly validatePattern = validatePattern;
 
-	form = setup(() => {
-		const c: FormController = createForm<T>({
-			// TODO(vue3): will this actually work??
-			model: toRef(this.$props as any, 'model'),
-			modelClass: this.modelClass,
-			saveMethod: this.saveMethod,
-			// TODO(vue3): it seems the "this" binding it not correct, so I'm
-			// not sure how we're gonna fix
-			onInit: () => this.onInit(),
-			onBeforeSubmit: () => (this as Partial<FormOnBeforeSubmit>).onBeforeSubmit?.(),
-			onSubmit: async () => await (this as Partial<FormOnSubmit>).onSubmit?.(),
-			onSubmitError: response =>
-				(this as Partial<FormOnSubmitError>).onSubmitError?.(response),
-			onLoad: response => (this as Partial<FormOnLoad>).onLoad?.(response),
-			loadUrl: (this as Partial<FormOnLoad>).loadUrl,
-			loadData: (this as Partial<FormOnLoad>).loadData,
-			onSubmitSuccess: response => {
-				// We set up a submit handler on every form component
-				// automatically. This is to reproduce that effect.
-				(this as Partial<FormOnSubmitSuccess>).onSubmitSuccess?.(response);
-				this.emitSubmit(c.formModel.value, response);
-			},
-		});
-
-		return c;
-	});
+	form!: FormController<T>;
 
 	get method() {
 		return this.form.method;
@@ -128,6 +102,28 @@ export class BaseForm<T> extends Vue {
 
 	get valid() {
 		return this.form.valid;
+	}
+
+	created() {
+		this.form = createForm<T>({
+			model: toRef(this.$props as this, 'model'),
+			modelClass: this.modelClass,
+			saveMethod: computed(() => this.saveMethod),
+			loadUrl: computed(() => (this as Partial<FormOnLoad>).loadUrl),
+			loadData: computed(() => (this as Partial<FormOnLoad>).loadData),
+			onInit: () => this.onInit(),
+			onBeforeSubmit: () => (this as Partial<FormOnBeforeSubmit>).onBeforeSubmit?.(),
+			onSubmit: async () => await (this as Partial<FormOnSubmit>).onSubmit?.(),
+			onSubmitError: response =>
+				(this as Partial<FormOnSubmitError>).onSubmitError?.(response),
+			onLoad: response => (this as Partial<FormOnLoad>).onLoad?.(response),
+			onSubmitSuccess: response => {
+				// We used to set up a submit handler on every form component
+				// automatically. This is to reproduce that effect.
+				(this as Partial<FormOnSubmitSuccess>).onSubmitSuccess?.(response);
+				this.emitSubmit(this.form.formModel, response);
+			},
+		});
 	}
 
 	onInit() {}

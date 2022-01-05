@@ -89,8 +89,8 @@ export function createForm<T>({
 }: {
 	model: Ref<T | undefined>;
 	modelClass?: ModelClassType<T>;
-	saveMethod?: MaybeRef<keyof T>;
-	loadUrl?: MaybeRef<string>;
+	saveMethod?: MaybeRef<keyof T | undefined>;
+	loadUrl?: MaybeRef<string | undefined>;
 	loadData?: MaybeRef<any>;
 	resetOnSubmit?: MaybeRef<boolean>;
 	warnOnDiscard?: MaybeRef<boolean>;
@@ -130,10 +130,10 @@ export function createForm<T>({
 		() => _groups.value.every(i => i.valid) && customErrors.value.length === 0
 	);
 
-	_init();
-
 	let _routeChangeDeregister: () => void | undefined;
 	onMounted(() => {
+		_init();
+
 		if (!warnOnDiscard.value) {
 			return;
 		}
