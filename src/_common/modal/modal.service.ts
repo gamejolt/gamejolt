@@ -1,4 +1,4 @@
-import { Component, reactive } from 'vue';
+import { Component, markRaw, reactive } from 'vue';
 import { arrayRemove } from '../../utils/array';
 import { Popper } from '../popper/popper.service';
 
@@ -29,7 +29,7 @@ export class Modal<T = any> {
 
 	constructor(public id: number, private _resolve: (value?: T) => void, options: ModalOptions) {
 		this.size = options.size;
-		this.component = options.component;
+		this.component = markRaw(options.component);
 		this.props = options.props;
 		this.noBackdrop = options.noBackdrop;
 		this.noBackdropClose = options.noBackdropClose;
