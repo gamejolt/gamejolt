@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import AppContentViewer from '../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../_common/environment/environment.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
@@ -34,7 +34,7 @@ import AppPostControls from '../post/controls/controls.vue';
 		AppCommentWidgetLazy,
 	},
 })
-export default class AppBroadcastModal extends BaseModal {
+export default class AppBroadcastModal extends mixins(BaseModal) {
 	@Prop({ type: Array, required: true })
 	posts!: FiresidePost[];
 

@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { Game } from '../../../../../_common/game/game.model';
@@ -15,7 +15,7 @@ const UsersPerPage = 20;
 		AppUserList,
 	},
 })
-export default class AppSupportersModal extends BaseModal {
+export default class AppSupportersModal extends mixins(BaseModal) {
 	@Prop(Game)
 	game!: Game;
 

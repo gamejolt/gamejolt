@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
 import { BaseModal } from '../../modal/base';
 import { Model } from '../../model/model.service';
@@ -11,7 +11,7 @@ import { DisplayMode } from './modal.service';
 		AppCommentWidget,
 	},
 })
-export default class AppCommentModal extends BaseModal {
+export default class AppCommentModal extends mixins(BaseModal) {
 	@Prop(String)
 	displayMode!: DisplayMode;
 

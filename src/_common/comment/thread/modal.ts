@@ -1,4 +1,4 @@
-import { Emit, Inject, Options, Prop } from 'vue-property-decorator';
+import { Emit, Inject, mixins, Options, Prop } from 'vue-property-decorator';
 import { Analytics } from '../../analytics/analytics.service';
 import AppMessageThreadAdd from '../../message-thread/add/add.vue';
 import { BaseModal } from '../../modal/base';
@@ -23,7 +23,7 @@ import AppCommentWidget from '../widget/widget.vue';
 		AppMessageThreadAdd,
 	},
 })
-export default class AppCommentThreadModal extends BaseModal {
+export default class AppCommentThreadModal extends mixins(BaseModal) {
 	@Prop(Number)
 	commentId!: number;
 

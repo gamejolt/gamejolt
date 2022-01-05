@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../utils/vue';
 import { Community } from '../../../../_common/community/community.model';
 import { BaseModal } from '../../../../_common/modal/base';
@@ -10,7 +10,7 @@ import FormCommunityBlock from '../../forms/community/ban/block.vue';
 		FormCommunityBlock,
 	},
 })
-export default class AppCommunityBlocKUserModal extends BaseModal {
+export default class AppCommunityBlocKUserModal extends mixins(BaseModal) {
 	@Prop(propRequired(Community)) community!: Community;
 	@Prop(propRequired(User)) user!: User;
 

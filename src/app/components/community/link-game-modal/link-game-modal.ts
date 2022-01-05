@@ -1,10 +1,10 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
 import { Game } from '../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../_common/game/thumbnail-img/thumbnail-img.vue';
-import { Growls, showErrorGrowl } from '../../../../_common/growls/growls.service';
+import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { BaseModal } from '../../../../_common/modal/base';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
@@ -18,7 +18,7 @@ import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 		AppTooltip,
 	},
 })
-export default class AppCommunityLinkGameModal extends BaseModal {
+export default class AppCommunityLinkGameModal extends mixins(BaseModal) {
 	@Prop(propRequired(Community)) community!: Community;
 
 	page = 1;

@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import { BaseModal } from '../../../../../_common/modal/base';
 import { RouteStatus } from '../../fireside';
@@ -9,7 +9,7 @@ import AppFiresideStats from '../stats.vue';
 		AppFiresideStats,
 	},
 })
-export default class AppFiresideStatsModal extends BaseModal {
+export default class AppFiresideStatsModal extends mixins(BaseModal) {
 	@Prop({ type: Fireside, required: true })
 	fireside!: Fireside;
 

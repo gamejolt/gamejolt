@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import AppUserList from '../../app/components/user/list/list.vue';
 import { Api } from '../api/api.service';
 import { Comment } from '../comment/comment-model';
@@ -18,7 +18,7 @@ const UsersPerPage = 20;
 		AppUserList,
 	},
 })
-export default class AppLikesModal extends BaseModal {
+export default class AppLikesModal extends mixins(BaseModal) {
 	@Prop(Number)
 	count!: number;
 

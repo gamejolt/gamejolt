@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import AppBlockForm from '../../block/form/form.vue';
 import { Comment } from '../../comment/comment-model';
 import { FiresidePost } from '../../fireside/post/post-model';
@@ -16,7 +16,7 @@ import AppReportForm from '../form/form.vue';
 		AppBlockForm,
 	},
 })
-export default class AppReportModal extends BaseModal {
+export default class AppReportModal extends mixins(BaseModal) {
 	@Prop(Object)
 	resource!: Comment | User | Game | FiresidePost | ForumTopic | ForumPost;
 

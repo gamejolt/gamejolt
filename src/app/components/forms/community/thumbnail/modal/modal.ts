@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../utils/vue';
 import { Community } from '../../../../../../_common/community/community.model';
 import { BaseModal } from '../../../../../../_common/modal/base';
@@ -9,7 +9,7 @@ import FormCommunityThumbnail from '../thumbnail.vue';
 		FormCommunityThumbnail,
 	},
 })
-export default class AppCommunityThumbnailModal extends BaseModal {
+export default class AppCommunityThumbnailModal extends mixins(BaseModal) {
 	@Prop(propRequired(Community)) community!: Community;
 
 	// We don't want to close the modal after they've uploaded a thumbnail since they can set a crop

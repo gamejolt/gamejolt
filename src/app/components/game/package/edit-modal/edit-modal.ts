@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Game } from '../../../../../_common/game/game.model';
 import { GamePackage } from '../../../../../_common/game/package/package.model';
 import { BaseModal } from '../../../../../_common/modal/base';
@@ -10,7 +10,7 @@ import FormGamePackage from '../../../forms/game/package/package.vue';
 		FormGamePackage,
 	},
 })
-export default class AppGamePackageEditModal extends BaseModal {
+export default class AppGamePackageEditModal extends mixins(BaseModal) {
 	@Prop(Game) game?: Game;
 	@Prop(GamePackage) gamePackage?: GamePackage;
 	@Prop(Sellable) sellable?: Sellable;

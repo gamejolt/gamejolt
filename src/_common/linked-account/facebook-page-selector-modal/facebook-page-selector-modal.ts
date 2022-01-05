@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { stringSort } from '../../../utils/array';
 import { Api } from '../../api/api.service';
 import AppLoading from '../../loading/loading.vue';
@@ -12,7 +12,7 @@ import AppLinkedAccount from '../linked-account.vue';
 		AppLoading,
 	},
 })
-export default class AppModalFacebookPageSelector extends BaseModal {
+export default class AppModalFacebookPageSelector extends mixins(BaseModal) {
 	@Prop(String)
 	message!: string;
 

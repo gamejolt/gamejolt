@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import { BaseModal } from '../../../../../_common/modal/base';
@@ -8,7 +8,7 @@ import { BaseModal } from '../../../../../_common/modal/base';
 		AppLoading,
 	},
 })
-export default class AppArchiveFileSelectorModal extends BaseModal {
+export default class AppArchiveFileSelectorModal extends mixins(BaseModal) {
 	@Prop(Number) gameId!: number;
 	@Prop(Number) packageId!: number;
 	@Prop(Number) releaseId!: number;

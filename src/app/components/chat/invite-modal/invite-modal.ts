@@ -1,4 +1,4 @@
-import { Inject, Options, Prop } from 'vue-property-decorator';
+import { Inject, mixins, Options, Prop } from 'vue-property-decorator';
 import { fuzzysearch } from '../../../../utils/string';
 import { propOptional, propRequired } from '../../../../utils/vue';
 import { BaseModal } from '../../../../_common/modal/base';
@@ -16,7 +16,7 @@ import { ChatUser } from '../user';
 		AppUserAvatarList,
 	},
 })
-export default class AppChatInviteModal extends BaseModal {
+export default class AppChatInviteModal extends mixins(BaseModal) {
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 	@Prop(propRequired(Array)) friends!: ChatUser[];
 	@Prop(propOptional(ChatUser, null)) initialUser!: ChatUser | null;

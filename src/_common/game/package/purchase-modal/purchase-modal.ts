@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { VuexStore } from '../../../../utils/vuex';
 import { Analytics } from '../../../analytics/analytics.service';
 import { showSuccessGrowl } from '../../../growls/growls.service';
@@ -19,7 +19,7 @@ import FormGamePackagePayment from '../payment-form/payment-form.vue';
 		FormGamePackagePayment,
 	},
 })
-export default class AppGamePackagePurchaseModal extends BaseModal {
+export default class AppGamePackagePurchaseModal extends mixins(BaseModal) {
 	@Prop(Game) game!: Game;
 	@Prop(GamePackage) package!: GamePackage;
 	@Prop(GameBuild) build!: GameBuild | null;

@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Game } from '../../../../../_common/game/game.model';
 import { GameScreenshot } from '../../../../../_common/game/screenshot/screenshot.model';
 import { GameSketchfab } from '../../../../../_common/game/sketchfab/sketchfab.model';
@@ -17,7 +17,7 @@ import FormGameVideo from '../../../forms/game/video/video.vue';
 		FormGameSketchfab,
 	},
 })
-export default class AppGameMediaItemAddModal extends BaseModal {
+export default class AppGameMediaItemAddModal extends mixins(BaseModal) {
 	@Prop(Game) game!: Game;
 
 	tab: 'image' | 'video' | 'sketchfab' = 'image';

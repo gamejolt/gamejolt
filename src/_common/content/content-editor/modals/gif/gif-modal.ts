@@ -1,6 +1,6 @@
 import { nextTick } from 'vue';
 import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
+import { mixins, Options } from 'vue-property-decorator';
 import { Api } from '../../../../api/api.service';
 import AppLoading from '../../../../loading/loading.vue';
 import { BaseModal } from '../../../../modal/base';
@@ -16,7 +16,7 @@ import { Category, ContentEditorGifModal, SearchResult } from './gif-modal.servi
 		AppScrollScroller,
 	},
 })
-export default class AppContentEditorGifModal extends BaseModal {
+export default class AppContentEditorGifModal extends mixins(BaseModal) {
 	private searchTimeout: NodeJS.Timer | null = null;
 	categories: Category[] = [];
 	searchResults: SearchResult[] = [];

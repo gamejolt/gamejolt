@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import {
 	Community,
@@ -13,7 +13,7 @@ import FormCommunityChannelPresetBackground from '../../../forms/community/chann
 		FormCommunityChannelPresetBackground,
 	},
 })
-export default class AppCommunityChannelPresetBackgroundModal extends BaseModal {
+export default class AppCommunityChannelPresetBackgroundModal extends mixins(BaseModal) {
 	@Prop(propRequired(Community)) community!: Community;
 	@Prop(propRequired(String)) presetType!: CommunityPresetChannelType;
 

@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { GamePlaylist } from '../../../../_common/game-playlist/game-playlist.model';
 import { BaseModal } from '../../../../_common/modal/base';
 import FormPlaylist from '../../forms/playlist/playlist.vue';
@@ -9,7 +9,7 @@ import { GameCollection } from '../../game/collection/collection.model';
 		FormPlaylist,
 	},
 })
-export default class AppGamePlaylistSaveModal extends BaseModal {
+export default class AppGamePlaylistSaveModal extends mixins(BaseModal) {
 	@Prop(GameCollection) collection?: GameCollection;
 
 	onSaved(_formModel: GamePlaylist, response: any) {

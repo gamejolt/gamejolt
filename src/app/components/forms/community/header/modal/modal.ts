@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../utils/vue';
 import { Community } from '../../../../../../_common/community/community.model';
 import { BaseModal } from '../../../../../../_common/modal/base';
@@ -9,7 +9,7 @@ import FormCommunityHeader from '../header.vue';
 		FormCommunityHeader,
 	},
 })
-export default class AppCommunityHeaderModal extends BaseModal {
+export default class AppCommunityHeaderModal extends mixins(BaseModal) {
 	@Prop(propRequired(Community)) community!: Community;
 
 	// We don't want to close the modal after they've uploaded a header since they can set a crop

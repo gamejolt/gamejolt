@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import { BaseModal } from '../../../../_common/modal/base';
@@ -27,7 +27,7 @@ import AppTrophyThumbnail from '../thumbnail/thumbnail.vue';
 		AppTooltip,
 	},
 })
-export default class AppTrophyModal extends BaseModal {
+export default class AppTrophyModal extends mixins(BaseModal) {
 	@State
 	app!: AppStore;
 

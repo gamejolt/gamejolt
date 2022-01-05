@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { arrayIndexBy } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
 import { getDeviceArch, getDeviceOS } from '../../../../_common/device/device.service';
@@ -17,7 +17,7 @@ import { ClientLibraryAction, ClientLibraryStore } from '../../../store/client-l
 		AppGamePackageCard,
 	},
 })
-export default class AppClientInstallPackageModal extends BaseModal {
+export default class AppClientInstallPackageModal extends mixins(BaseModal) {
 	@Prop(Game) game!: Game;
 
 	@ClientLibraryAction packageInstall!: ClientLibraryStore['packageInstall'];

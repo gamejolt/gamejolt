@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Game } from '../../../../_common/game/game.model';
 import { BaseModal } from '../../../../_common/modal/base';
 import FormGameHeader from '../../forms/game/header/header.vue';
@@ -8,7 +8,7 @@ import FormGameHeader from '../../forms/game/header/header.vue';
 		FormGameHeader,
 	},
 })
-export default class AppGameHeaderEditModal extends BaseModal {
+export default class AppGameHeaderEditModal extends mixins(BaseModal) {
 	@Prop(Game)
 	game!: Game;
 

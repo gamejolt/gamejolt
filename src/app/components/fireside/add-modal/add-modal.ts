@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
@@ -13,7 +13,7 @@ import FormFiresideAdd from '../../forms/fireside/add/add.vue';
 		AppLoading,
 	},
 })
-export default class AppFiresideAddModal extends BaseModal {
+export default class AppFiresideAddModal extends mixins(BaseModal) {
 	@Prop({ type: Community, required: false })
 	community?: Community;
 

@@ -1,8 +1,8 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { BaseModal } from '../../../../_common/modal/base';
 
 @Options({})
-export default class AppClientAntiVirusModal extends BaseModal {
+export default class AppClientAntiVirusModal extends mixins(BaseModal) {
 	@Prop(String)
 	title?: string;
 

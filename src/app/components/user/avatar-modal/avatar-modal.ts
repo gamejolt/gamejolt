@@ -1,4 +1,4 @@
-import { Options } from 'vue-property-decorator';
+import { mixins, Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { BaseModal } from '../../../../_common/modal/base';
 import { Store } from '../../../store/index';
@@ -9,6 +9,6 @@ import FormAvatar from '../../forms/avatar/avatar.vue';
 		FormAvatar,
 	},
 })
-export default class AppUserAvatarModal extends BaseModal {
+export default class AppUserAvatarModal extends mixins(BaseModal) {
 	@State app!: Store['app'];
 }

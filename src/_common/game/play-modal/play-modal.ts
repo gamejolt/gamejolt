@@ -1,11 +1,11 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { addMinbarItem, removeMinbarItem } from '../../minbar/minbar.service';
 import { BaseModal } from '../../modal/base';
 import { Game } from '../game.model';
 import { GameRatingGrowl } from '../rating-growl/rating-growl.service';
 
 @Options({})
-export default class AppGamePlayModal extends BaseModal {
+export default class AppGamePlayModal extends mixins(BaseModal) {
 	@Prop(Game)
 	game!: Game;
 

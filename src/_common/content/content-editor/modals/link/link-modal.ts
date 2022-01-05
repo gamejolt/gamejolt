@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { BaseModal } from '../../../../modal/base';
 import AppFormContentEditorLink from './form/link-form.vue';
 import { LinkData } from './link-modal.service';
@@ -8,7 +8,7 @@ import { LinkData } from './link-modal.service';
 		AppFormContentEditorLink,
 	},
 })
-export default class AppContentEditorLinkModal extends BaseModal {
+export default class AppContentEditorLinkModal extends mixins(BaseModal) {
 	@Prop(String)
 	selectedText!: string;
 

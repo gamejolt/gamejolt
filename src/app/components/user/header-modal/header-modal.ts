@@ -1,4 +1,4 @@
-import { Options } from 'vue-property-decorator';
+import { mixins, Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { BaseModal } from '../../../../_common/modal/base';
 import { User } from '../../../../_common/user/user.model';
@@ -10,7 +10,7 @@ import FormUserHeader from '../../forms/user-header/header.vue';
 		FormUserHeader,
 	},
 })
-export default class AppUserHeaderModal extends BaseModal {
+export default class AppUserHeaderModal extends mixins(BaseModal) {
 	@State
 	app!: Store['app'];
 

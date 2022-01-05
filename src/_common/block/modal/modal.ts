@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { showInfoGrowl } from '../../growls/growls.service';
 import { BaseModal } from '../../modal/base';
 import { User } from '../../user/user.model';
@@ -9,7 +9,7 @@ import AppBlockForm from '../form/form.vue';
 		AppBlockForm,
 	},
 })
-export default class AppReportModal extends BaseModal {
+export default class AppReportModal extends mixins(BaseModal) {
 	@Prop(User)
 	user!: User;
 

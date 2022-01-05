@@ -1,4 +1,4 @@
-import { Options } from 'vue-property-decorator';
+import { mixins, Options } from 'vue-property-decorator';
 import { BaseModal } from '../modal/base';
 import AppAuthJoin from './join/join.vue';
 
@@ -7,4 +7,4 @@ import AppAuthJoin from './join/join.vue';
 		AppAuthJoin,
 	},
 })
-export default class AppAuthModal extends BaseModal {}
+export default class AppAuthModal extends mixins(BaseModal) {}

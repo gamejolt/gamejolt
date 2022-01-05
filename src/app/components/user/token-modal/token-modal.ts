@@ -1,4 +1,4 @@
-import { Options } from 'vue-property-decorator';
+import { mixins, Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
@@ -14,7 +14,7 @@ import FormToken from '../../forms/token/token.vue';
 		FormToken,
 	},
 })
-export default class AppUserTokenModal extends BaseModal {
+export default class AppUserTokenModal extends mixins(BaseModal) {
 	token = '';
 	isChanging = false;
 

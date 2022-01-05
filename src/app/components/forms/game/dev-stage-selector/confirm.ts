@@ -1,9 +1,9 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Game } from '../../../../../_common/game/game.model';
 import { BaseModal } from '../../../../../_common/modal/base';
 
 @Options({})
-export default class AppGameDevStageConfirmModal extends BaseModal {
+export default class AppGameDevStageConfirmModal extends mixins(BaseModal) {
 	@Prop(Game) game!: Game;
 	@Prop(Number) stage!: number;
 

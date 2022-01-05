@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Game } from '../../../../_common/game/game.model';
 import { BaseModal } from '../../../../_common/modal/base';
 import FormGameThumbnail from '../../forms/game/thumbnail/thumbnail.vue';
@@ -8,7 +8,7 @@ import FormGameThumbnail from '../../forms/game/thumbnail/thumbnail.vue';
 		FormGameThumbnail,
 	},
 })
-export default class AppGameThumbnailModal extends BaseModal {
+export default class AppGameThumbnailModal extends mixins(BaseModal) {
 	@Prop(Game) game!: Game;
 
 	// We don't want to close the modal after they've uploaded a thumbnail since they can set a crop

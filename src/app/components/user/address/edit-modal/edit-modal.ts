@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { BaseModal } from '../../../../../_common/modal/base';
 import { UserAddress } from '../../../../../_common/user/address/address.model';
 import FormAddress from '../../../forms/address/address.vue';
@@ -8,7 +8,7 @@ import FormAddress from '../../../forms/address/address.vue';
 		FormAddress,
 	},
 })
-export default class AppUserAddressEditModal extends BaseModal {
+export default class AppUserAddressEditModal extends mixins(BaseModal) {
 	@Prop(UserAddress) address!: UserAddress;
 
 	onSaved(address: UserAddress) {

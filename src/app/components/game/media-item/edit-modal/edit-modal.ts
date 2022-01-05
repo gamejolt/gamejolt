@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { Game } from '../../../../../_common/game/game.model';
@@ -21,7 +21,7 @@ import { GameMediaItemEditModalRemoveCallback } from './edit-modal.service';
 		AppTooltip,
 	},
 })
-export default class AppGameMediaItemEditModal extends BaseModal {
+export default class AppGameMediaItemEditModal extends mixins(BaseModal) {
 	@Prop(Game) game!: Game;
 	@Prop(Object) item!: Media;
 	@Prop(Function) onRemove!: GameMediaItemEditModalRemoveCallback;

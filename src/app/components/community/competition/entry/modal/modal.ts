@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { numberSort } from '../../../../../../utils/array';
 import { propOptional } from '../../../../../../utils/vue';
 import { Api } from '../../../../../../_common/api/api.service';
@@ -34,7 +34,7 @@ import AppCommunityCompetitionVotingWidget from '../../voting/widget.vue';
 		AppTooltip,
 	},
 })
-export default class AppCommunityCompetitionEntryModal extends BaseModal {
+export default class AppCommunityCompetitionEntryModal extends mixins(BaseModal) {
 	@Prop(propOptional(CommunityCompetitionEntry)) entry?: CommunityCompetitionEntry;
 	@Prop(propOptional(Number)) entryId?: number;
 

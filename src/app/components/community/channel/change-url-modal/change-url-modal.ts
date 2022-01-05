@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
@@ -10,7 +10,7 @@ import FormCommunityChannelChangeUrl from '../../../forms/community/channel/chan
 		FormCommunityChannelChangeUrl,
 	},
 })
-export default class AppCommunityChannelChangeUrlModal extends BaseModal {
+export default class AppCommunityChannelChangeUrlModal extends mixins(BaseModal) {
 	@Prop(propRequired(CommunityChannel)) channel!: CommunityChannel;
 	@Prop(propRequired(Community)) community!: Community;
 	@Prop(propRequired(Array)) channels!: CommunityChannel[];

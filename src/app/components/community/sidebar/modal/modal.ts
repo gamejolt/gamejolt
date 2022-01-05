@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { Community } from '../../../../../_common/community/community.model';
 import { BaseModal } from '../../../../../_common/modal/base';
@@ -10,7 +10,7 @@ import AppCommunitySidebar from '../sidebar.vue';
 		AppCommunitySidebar,
 	},
 })
-export default class AppCommunitySidebarModal extends BaseModal {
+export default class AppCommunitySidebarModal extends mixins(BaseModal) {
 	@Prop(propRequired(Boolean))
 	isEditing!: boolean;
 

@@ -1,4 +1,4 @@
-import { Options, Prop, Watch } from 'vue-property-decorator';
+import { mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
@@ -15,7 +15,7 @@ import AppPostAddPlaceholder from '../add-placeholder/add-placeholder.vue';
 		AppLoadingFade,
 	},
 })
-export default class AppPostEditModal extends BaseModal {
+export default class AppPostEditModal extends mixins(BaseModal) {
 	@Prop([FiresidePost, Promise])
 	postProvider!: FiresidePost | Promise<FiresidePost>;
 
