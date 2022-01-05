@@ -16,8 +16,9 @@
 											name: 'dash.games.manage.devlog',
 											query: {},
 										}"
-										active-class="active"
-										exact
+										:class="{
+											active: tab === 'active',
+										}"
 									>
 										<translate>Posts</translate>
 									</router-link>
@@ -30,8 +31,9 @@
 												tab: 'draft',
 											},
 										}"
-										active-class="active"
-										exact
+										:class="{
+											active: tab === 'draft',
+										}"
 									>
 										<translate>Draft Posts</translate>
 									</router-link>
@@ -44,8 +46,9 @@
 												tab: 'scheduled',
 											},
 										}"
-										active-class="active"
-										exact
+										:class="{
+											active: tab === 'scheduled',
+										}"
 									>
 										<translate>Scheduled Posts</translate>
 									</router-link>
@@ -64,13 +67,17 @@
 							/>
 							<div v-else class="alert">
 								<template v-if="tab === 'active'">
-									<p><translate>You haven't published any posts yet.</translate></p>
+									<p>
+										<translate>You haven't published any posts yet.</translate>
+									</p>
 								</template>
 								<template v-else-if="tab === 'draft'">
 									<p><translate>You don't have any draft posts.</translate></p>
 								</template>
 								<template v-else-if="tab === 'scheduled'">
-									<p><translate>You don't have any scheduled posts.</translate></p>
+									<p>
+										<translate>You don't have any scheduled posts.</translate>
+									</p>
 								</template>
 							</div>
 						</template>

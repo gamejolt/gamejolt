@@ -11,8 +11,7 @@
 							id: community.id,
 						},
 					}"
-					active-class="active"
-					exact
+					exact-active-class="active"
 				>
 					<translate>Details</translate>
 				</router-link>

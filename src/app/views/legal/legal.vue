@@ -19,11 +19,7 @@
 								</router-link>
 							</li>
 							<li>
-								<router-link
-									:to="{ name: 'legal.privacy' }"
-									active-class="active"
-									exact
-								>
+								<router-link :to="{ name: 'legal.privacy' }" active-class="active">
 									<translate>Privacy Policy</translate>
 								</router-link>
 							</li>

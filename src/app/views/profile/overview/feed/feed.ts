@@ -61,6 +61,13 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 
 	readonly illNoComments = illNoComments;
 
+	get tab() {
+		if (this.$route.params.feedSection === 'likes') {
+			return 'likes';
+		}
+		return this.$route.query.tab || 'active';
+	}
+
 	get isOwner() {
 		return this.app.user && this.user?.id === this.app.user.id;
 	}

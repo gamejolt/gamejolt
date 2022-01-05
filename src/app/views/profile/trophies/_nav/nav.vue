@@ -8,8 +8,7 @@
 					:to="{
 						name: 'profile.trophies',
 					}"
-					active-class="active"
-					exact
+					exact-active-class="active"
 				>
 					<translate>Latest Activity</translate>
 				</router-link>
@@ -19,7 +18,7 @@
 					:to="{
 						name: 'profile.trophies.all',
 					}"
-					active-class="active"
+					exact-active-class="active"
 				>
 					<translate>All Trophies</translate>
 					<span class="badge">{{ formatNumber(trophyCount) }}</span>
@@ -30,7 +29,7 @@
 					:to="{
 						name: 'profile.trophies.site',
 					}"
-					active-class="active"
+					exact-active-class="active"
 				>
 					<translate>Game Jolt Trophies</translate>
 					<span class="badge">{{ formatNumber(siteTrophyCount) }}</span>

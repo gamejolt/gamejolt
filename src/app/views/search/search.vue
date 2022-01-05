@@ -42,8 +42,7 @@
 						<li>
 							<router-link
 								:to="{ name: 'search.results', query: { q: query } }"
-								active-class="active"
-								exact
+								exact-active-class="active"
 							>
 								<translate>search.results.overview_tab</translate>
 							</router-link>
@@ -51,7 +50,7 @@
 						<li v-if="searchPayload.communitiesCount">
 							<router-link
 								:to="{ name: 'search.communities', query: { q: query } }"
-								active-class="active"
+								exact-active-class="active"
 							>
 								<translate>Communities</translate>
 								<span class="badge">{{
@@ -62,7 +61,7 @@
 						<li v-if="searchPayload.usersCount">
 							<router-link
 								:to="{ name: 'search.users', query: { q: query } }"
-								active-class="active"
+								exact-active-class="active"
 							>
 								<translate>search.results.users_tab</translate>
 								<span class="badge">{{
@@ -73,7 +72,7 @@
 						<li v-if="searchPayload.gamesCount">
 							<router-link
 								:to="{ name: 'search.games', query: { q: query } }"
-								active-class="active"
+								exact-active-class="active"
 							>
 								<translate>search.results.games_tab</translate>
 								<span class="badge">{{

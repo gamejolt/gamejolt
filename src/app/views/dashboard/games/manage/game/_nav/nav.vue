@@ -9,8 +9,7 @@
 						name: 'dash.games.manage.game.overview',
 						query: $route.query,
 					}"
-					active-class="active"
-					exact
+					exact-active-class="active"
 				>
 					<translate>Overview</translate>
 				</router-link>

@@ -7,8 +7,7 @@
 				:to="{
 					name: 'communities.view.edit.channels.competition.overview',
 				}"
-				active-class="active"
-				exact
+				exact-active-class="active"
 			>
 				<app-jolticon icon="info-circle" />
 				<translate>Overview</translate>

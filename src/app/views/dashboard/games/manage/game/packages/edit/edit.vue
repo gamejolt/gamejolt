@@ -31,8 +31,7 @@
 						:to="{
 							name: 'dash.games.manage.game.packages.edit',
 						}"
-						active-class="active"
-						exact
+						exact-active-class="active"
 					>
 						<translate>Edit Package</translate>
 					</router-link>
@@ -42,7 +41,7 @@
 						:to="{
 							name: 'dash.games.manage.game.packages.edit.widget',
 						}"
-						active-class="active"
+						exact-active-class="active"
 					>
 						<translate>Widget</translate>
 					</router-link>

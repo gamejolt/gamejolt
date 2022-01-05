@@ -23,8 +23,9 @@
 								channel: channel.title,
 							},
 						}"
-						active-class="active"
-						exact
+						:class="{
+							active: tab === 'new',
+						}"
 					>
 						<translate>New</translate>
 					</router-link>
@@ -41,8 +42,9 @@
 								sort: 'hot',
 							},
 						}"
-						active-class="active"
-						exact
+						:class="{
+							active: tab === 'hot',
+						}"
 					>
 						<translate>Hot</translate>
 					</router-link>

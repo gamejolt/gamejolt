@@ -15,8 +15,9 @@
 							name: 'profile.overview',
 							query: {},
 						}"
-						active-class="active"
-						exact
+						:class="{
+							active: tab === 'active',
+						}"
 					>
 						<translate>Posts</translate>
 					</router-link>
@@ -28,8 +29,9 @@
 							query: {},
 							params: { feedSection: 'likes' },
 						}"
-						active-class="active"
-						exact
+						:class="{
+							active: tab === 'likes',
+						}"
 					>
 						<translate>Likes</translate>
 						<app-jolticon v-if="isLikeFeedDisabled" icon="subscribed" />
@@ -44,8 +46,9 @@
 									tab: 'draft',
 								},
 							}"
-							active-class="active"
-							exact
+							:class="{
+								active: tab === 'draft',
+							}"
 						>
 							<translate>Draft Posts</translate>
 						</router-link>
@@ -58,8 +61,9 @@
 									tab: 'scheduled',
 								},
 							}"
-							active-class="active"
-							exact
+							:class="{
+								active: tab === 'scheduled',
+							}"
 						>
 							<translate>Scheduled Posts</translate>
 						</router-link>

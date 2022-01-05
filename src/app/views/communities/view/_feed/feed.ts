@@ -60,6 +60,13 @@ export default class AppCommunitiesViewFeed extends Vue {
 		return this.routeStore.channel!;
 	}
 
+	get tab() {
+		if (this.$route.query.sort === 'hot') {
+			return 'hot';
+		}
+		return 'new';
+	}
+
 	get shouldShowPostAdd() {
 		if (this.community.isBlocked) {
 			return false;
