@@ -2,6 +2,8 @@ import { Component, reactive } from 'vue';
 import { arrayRemove } from '../../utils/array';
 import { Popper } from '../popper/popper.service';
 
+export const ModalKey = Symbol('modal-key');
+
 export interface ModalOptions {
 	component: Component;
 	modalId: string;
@@ -66,6 +68,8 @@ export function showModal<T>(options: ModalOptions) {
 			Popper.hideAll();
 			++Modals.incrementer;
 			const modal = new Modal(Modals.incrementer, resolve, options);
+			// TODO(vue3): This should be wrapped in a `markRaw` after fixing
+			// bugs with modal props.d
 			Modals.modals.push(modal);
 		}
 	});

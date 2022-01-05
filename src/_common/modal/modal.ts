@@ -1,8 +1,6 @@
 import { setup } from 'vue-class-component';
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
-import { findRequiredVueParent } from '../../utils/vue';
 import AppBackdrop from '../backdrop/backdrop';
-import { Backdrop } from '../backdrop/backdrop.service';
 import { DrawerStore, DrawerStoreKey } from '../drawer/drawer-store';
 import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
 import { Screen } from '../screen/screen-service';
@@ -10,8 +8,7 @@ import AppScrollAffix from '../scroll/affix/affix.vue';
 import AppScrollScroller, { createScroller } from '../scroll/scroller/scroller.vue';
 import AppStickerLayer from '../sticker/layer/layer.vue';
 import { AppTheme } from '../theme/theme';
-import { BaseModal } from './base';
-import { Modal } from './modal.service';
+import { Modal, ModalKey } from './modal.service';
 
 @Options({
 	components: {
@@ -25,10 +22,14 @@ export default class AppModal extends Vue {
 	@Prop(Number) index!: number;
 	@Prop(Object) theme?: any;
 
+	@Inject({ from: ModalKey })
+	modal!: Modal;
+
+	readonly AppStickerLayer = AppStickerLayer;
+
 	@Inject({ from: DrawerStoreKey, default: null })
 	drawer!: null | DrawerStore;
 
-	modal: Modal = null as any;
 	isHoveringContent = false;
 	scroller = setup(() => createScroller());
 
@@ -36,7 +37,7 @@ export default class AppModal extends Vue {
 	private beforeEachDeregister?: Function;
 	private escapeCallback?: EscapeStackCallback;
 
-	declare $el: HTMLDivElement;
+	// declare $el: HTMLDivElement;
 
 	@Emit('close') emitClose() {}
 
@@ -49,17 +50,13 @@ export default class AppModal extends Vue {
 		return !!this.$slots.footer;
 	}
 
-	created() {
-		const parent = findRequiredVueParent(this, BaseModal);
-		this.modal = parent.modal;
-	}
-
 	mounted() {
 		if (!this.modal.noBackdrop) {
-			this.backdrop = Backdrop.push({
-				context: this.$el,
-				className: 'modal-backdrop',
-			});
+			// TODO(vue3)
+			// this.backdrop = Backdrop.push({
+			// 	context: this.$el,
+			// 	className: 'modal-backdrop',
+			// });
 		}
 
 		this.beforeEachDeregister = this.$router.beforeEach((_to, _from, next) => {

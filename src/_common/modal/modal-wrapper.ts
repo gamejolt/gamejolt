@@ -4,9 +4,11 @@ import { Modal } from './modal.service';
 
 @Options({})
 export class AppModalWrapper extends Vue {
-	@Prop(Modal) modal!: Modal;
+	@Prop({ type: Modal }) modal!: Modal;
 
 	render() {
+		// TODO(vue3): These props don't seem to be passed through properly for
+		// things like AppLikesModal.
 		return h(this.modal.component, {
 			modal: this.modal,
 			...this.modal.props,

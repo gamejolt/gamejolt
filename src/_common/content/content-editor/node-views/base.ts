@@ -54,6 +54,7 @@ export abstract class BaseNodeView implements NodeView {
 		if (vm.$props !== undefined) {
 			vm.$props.isEditing = true;
 		}
+		// TODO(vue3): This won't work, will it?
 		vm.$mount(container);
 		vm.$on('removed', () => {
 			this.removeMe();
