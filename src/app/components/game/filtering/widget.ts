@@ -31,11 +31,11 @@ export default class AppGameFilteringWidget extends Vue {
 	}
 
 	onMouseover(filter: string, option: any) {
-		this.$set(this.hovered, filter, option);
+		this.hovered[filter] = option;
 	}
 
 	onMouseout(filter: string) {
-		this.$set(this.hovered, filter, null);
+		this.hovered[filter] = null;
 	}
 
 	toggleFilterOption(filter: string, option: any) {
