@@ -11,6 +11,7 @@ const FeaturedTags = [
 	'adventure',
 	'fangame',
 	'fnaf',
+	'undertale',
 	'fnf',
 	'rpg',
 	'other',
