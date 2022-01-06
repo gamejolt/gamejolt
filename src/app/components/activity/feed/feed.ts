@@ -63,27 +63,11 @@ export default class AppActivityFeed extends Vue {
 	@Provide({ to: ActivityFeedKey })
 	feed!: ActivityFeedView;
 
-	ads = setup(() => useAdsController());
-
-	feedInterface = setup(() => {
-		const c = createActivityFeedInterface({
-			onPostEdited: this.onPostEdited,
-			onPostPublished: this.onPostPublished,
-			onPostRemoved: this.onPostRemoved,
-			onPostFeatured: this.onPostFeatured,
-			onPostUnfeatured: this.onPostUnfeatured,
-			onPostMovedChannel: this.onPostMovedChannel,
-			onPostRejected: this.onPostRejected,
-			onPostPinned: this.onPostPinned,
-			onPostUnpinned: this.onPostUnpinned,
-		});
-
-		provide(ActivityFeedInterfaceKey, c);
-		return c;
-	});
-
 	@Prop(propOptional(Boolean, false))
 	showAds!: boolean;
+
+	ads = setup(() => useAdsController());
+	feedInterface!: ActivityFeedInterface;
 
 	isNewButtonInview = false;
 
@@ -128,6 +112,22 @@ export default class AppActivityFeed extends Vue {
 
 	@Emit('load-more')
 	emitLoadMore() {}
+
+	created() {
+		this.feedInterface = createActivityFeedInterface({
+			onPostEdited: this.onPostEdited,
+			onPostPublished: this.onPostPublished,
+			onPostRemoved: this.onPostRemoved,
+			onPostFeatured: this.onPostFeatured,
+			onPostUnfeatured: this.onPostUnfeatured,
+			onPostMovedChannel: this.onPostMovedChannel,
+			onPostRejected: this.onPostRejected,
+			onPostPinned: this.onPostPinned,
+			onPostUnpinned: this.onPostUnpinned,
+		});
+
+		provide(ActivityFeedInterfaceKey, this.feedInterface);
+	}
 
 	mounted() {
 		window.addEventListener('scroll', this.onScroll);
