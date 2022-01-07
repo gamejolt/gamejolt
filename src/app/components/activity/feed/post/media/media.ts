@@ -33,7 +33,6 @@ export default class AppActivityFeedPostMedia extends Vue {
 
 	page = 1;
 	isDragging = false;
-	isWaitingForFrame = false;
 
 	lightbox = setup(() => {
 		return createLightbox(computed(() => (this.$props as this).post.media));
@@ -87,15 +86,6 @@ export default class AppActivityFeedPostMedia extends Vue {
 	}
 
 	pan(event: AppTouchInput) {
-		if (!this.isWaitingForFrame) {
-			this.isWaitingForFrame = true;
-			window.requestAnimationFrame(() => this._panTick(event));
-		}
-	}
-
-	private _panTick(event: AppTouchInput) {
-		this.isWaitingForFrame = false;
-
 		// In case the animation frame was retrieved after we stopped dragging.
 		if (!this.isDragging) {
 			return;

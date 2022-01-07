@@ -57,7 +57,6 @@ const activeMediaType = computed(() => {
 
 let resize$: EventSubscription | null = null;
 let escapeCallback: EscapeStackCallback | null = null;
-let waitingForFrame = false;
 
 // We need to watch for changes of the lightbox instance and its data.
 watch(
@@ -96,7 +95,6 @@ function _onClose() {
 
 	currentSliderOffset = 0;
 	isDragging.value = false;
-	waitingForFrame = false;
 }
 
 function goNext() {
@@ -134,15 +132,6 @@ function panStart() {
 }
 
 function pan(event: AppTouchInput) {
-	if (!waitingForFrame) {
-		waitingForFrame = true;
-		window.requestAnimationFrame(() => panTick(event));
-	}
-}
-
-function panTick(event: AppTouchInput) {
-	waitingForFrame = false;
-
 	// In case the animation frame was retrieved after we stopped dragging.
 	if (!isDragging.value) {
 		return;

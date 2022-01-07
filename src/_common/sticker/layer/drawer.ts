@@ -41,7 +41,6 @@ export default class AppStickerLayerDrawer extends Vue {
 	sheetPage = 1;
 	isSwiping = false;
 	private stickersPerRow = 5;
-	private isWaitingForFrame = false;
 	private touchedSticker: Sticker | null = null;
 	private resize$: EventSubscription | undefined;
 	private escapeCallback?: EscapeStackCallback;
@@ -255,14 +254,6 @@ export default class AppStickerLayerDrawer extends Vue {
 			this.isSwiping = false;
 			return;
 		}
-		if (!this.isWaitingForFrame) {
-			this.isWaitingForFrame = true;
-			window.requestAnimationFrame(() => this._panTick(event));
-		}
-	}
-
-	private _panTick(event: AppTouchInput) {
-		this.isWaitingForFrame = false;
 
 		// In case the animation frame was retrieved after we stopped dragging.
 		if (!this.isSwiping) {

@@ -46,11 +46,26 @@ interface PanOptions {
 	direction?: AppTouchDirection;
 	threshold?: number;
 }
-
-const MAX_INTERVAL = 25;
 </script>
 
 <script lang="ts" setup>
+const props = defineProps({
+	panOptions: {
+		required: false,
+		type: Object,
+		default: <PanOptions>{
+			direction: 'all',
+			threshold: 10,
+		},
+	},
+});
+
+const emit = defineEmits({
+	panstart: null,
+	panmove: (_event: AppTouchInput) => true,
+	panend: (_event: AppTouchInput) => true,
+});
+
 const listenerEvents = new Map<
 	keyof HTMLElementEventMap,
 	[EventListenerOrEventListenerObject, AddEventListenerOptions]
@@ -126,23 +141,6 @@ const listenerEvents = new Map<
 	],
 ]);
 
-const props = defineProps({
-	panOptions: {
-		required: false,
-		type: Object,
-		default: <PanOptions>{
-			direction: 'all',
-			threshold: 10,
-		},
-	},
-});
-
-const emit = defineEmits({
-	panstart: null,
-	panmove: (_event: AppTouchInput) => true,
-	panend: (_event: AppTouchInput) => true,
-});
-
 let isDragging = false;
 let startCoords: TimestampedCoordinates | null = null;
 let lastCoords: TimestampedCoordinates | null = null;
@@ -151,6 +149,7 @@ let attachedListeners: typeof listenerEvents | null = null;
 
 let didEmitStart = false;
 let didEmitEnd = false;
+let waitingForFrame = false;
 
 onUnmounted(() => {
 	cleanup();
@@ -201,21 +200,27 @@ function onPanStart(event: FlexibleTouchEvent) {
 }
 
 function onPanMove(event: FlexibleTouchEvent) {
+	if (!waitingForFrame) {
+		waitingForFrame = true;
+		window.requestAnimationFrame(() => _handlePanMove(event));
+	}
+}
+
+function _handlePanMove(event: FlexibleTouchEvent) {
+	waitingForFrame = false;
+
 	if (!startCoords) {
 		return;
 	}
 
-	const data = getMovementData(event, !isDragging);
+	const data = getMovementData(event);
+	const { deltaX, deltaY, absDeltaX, absDeltaY, timestamp } = data;
 
-	const { deltaX, deltaY, timestamp } = data;
-	const msDiff = !lastCoords ? 0 : timestamp - lastCoords.timestamp;
 	const { x: startX, y: startY } = startCoords;
-
 	lastCoords = { x: startX + deltaX, y: startY + deltaY, timestamp };
 
 	if (!isDragging) {
 		const threshold_ = threshold.value;
-		const { absDeltaX, absDeltaY } = data;
 
 		const canHorizontal_ = canHorizontal.value;
 		const canVertical_ = canVertical.value;
@@ -249,9 +254,7 @@ function onPanMove(event: FlexibleTouchEvent) {
 		emitPanStart();
 	}
 
-	if (msDiff >= MAX_INTERVAL) {
-		emit('panmove', getEmittableData(event, data));
-	}
+	emit('panmove', getEmittableData(event, data));
 }
 
 function onPanEnd(event: FlexibleTouchEvent, force = false) {
@@ -261,7 +264,7 @@ function onPanEnd(event: FlexibleTouchEvent, force = false) {
 	}
 
 	if (!didEmitEnd && (isDragging || force)) {
-		const data = getMovementData(event, true);
+		const data = getMovementData(event);
 		emitPanEnd(getEmittableData(event, data));
 	}
 }
@@ -272,7 +275,7 @@ function onTouchMove(event: TouchEvent) {
 		return;
 	}
 
-	const data = getMovementData(event, true);
+	const data = getMovementData(event);
 	const { absDeltaX, absDeltaY } = data;
 
 	const shouldPrevent =
@@ -293,26 +296,19 @@ function getCoordinatesFromEvent(event: FlexibleTouchEvent): TimestampedCoordina
 		screenY = event.screenY;
 	} else if (isTouchEvent(event)) {
 		const touches = [...event.touches, ...event.changedTouches];
-		const touch = touches.length > 0 ? touches[0] : null;
+		const touch = touches.length > 0 ? touches[0] : lastMovementData;
 		if (touch) {
 			screenX = touch.screenX;
 			screenY = touch.screenY;
-		} else if (lastMovementData) {
-			screenX = lastMovementData.screenX;
-			screenY = lastMovementData.screenY;
 		}
 	}
 
 	return { x: screenX, y: screenY, timestamp: now() };
 }
 
-function getMovementData(event: FlexibleTouchEvent, ignoreInterval = false) {
+function getMovementData(event: FlexibleTouchEvent) {
 	const { x: screenX, y: screenY, timestamp } = getCoordinatesFromEvent(event);
 	const msDiff = !lastCoords ? 0 : timestamp - lastCoords.timestamp;
-
-	if (!ignoreInterval && lastMovementData && msDiff < MAX_INTERVAL) {
-		return lastMovementData;
-	}
 
 	const { x: startX = screenX, y: startY = screenY } = startCoords || {};
 
@@ -409,7 +405,9 @@ function cleanup() {
 	startCoords = null;
 	lastCoords = null;
 	lastMovementData = null;
+
 	didEmitStart = false;
+	waitingForFrame = false;
 
 	for (const [name, [callback, options]] of attachedListeners || listenerEvents) {
 		window.removeEventListener(name, callback, options);
