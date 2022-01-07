@@ -1,29 +1,6 @@
 import { Node, NodeSpec } from 'prosemirror-model';
 import { emptyGif } from '../../../../../../utils/image';
 
-export const GJ_EMOJIS = [
-	'sleeping',
-	'bucktooth',
-	'crossed',
-	'crying',
-	'dizzy',
-	'grin',
-	'guh',
-	'huh',
-	'innocent',
-	'mah',
-	'ninja',
-	'ohyou',
-	'omg',
-	'ouch',
-	'psychotic',
-	'smile',
-	'snooty',
-	'tongue',
-	'wha',
-	'yush',
-];
-
 export const gjEmoji = {
 	attrs: { type: { default: 'grin' } },
 	group: 'inline',
@@ -38,7 +15,6 @@ export const gjEmoji = {
 		'img',
 		{
 			'emoji-type': node.attrs.type,
-			class: 'emoji emoji-' + node.attrs.type,
 			title: ':' + node.attrs.type + ':',
 			src: emptyGif,
 		},

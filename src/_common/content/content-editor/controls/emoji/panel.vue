@@ -3,11 +3,13 @@
 <template>
 	<div class="inset-container-controls">
 		<transition name="fade">
-			<span
+			<AppEmoji
 				v-if="visible"
 				v-app-tooltip="panelVisible ? '' : $gettext('Insert Emoji')"
 				class="emoji-button"
-				:class="spanClass"
+				:class="{
+					'emoji-button-active': panelVisible,
+				}"
 				tabindex="1"
 				@click="onButtonClick"
 				@mousedown="onMouseDown"
@@ -30,7 +32,7 @@
 					:title="':' + emoji + ':'"
 					@click="onClickEmoji(emoji)"
 				>
-					<span :class="'emoji-selector emoji emoji-' + emoji" />
+					<AppEmoji :emoji="emoji" />
 				</div>
 			</div>
 		</transition>

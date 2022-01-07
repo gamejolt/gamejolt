@@ -1,5 +1,6 @@
 import { h } from 'vue';
 import { Options, Prop, Vue } from 'vue-property-decorator';
+import AppEmoji from '../../../emoji/AppEmoji.vue';
 import { ContentObject } from '../../content-object';
 
 @Options({})
@@ -8,8 +9,8 @@ export class AppContentViewerGJEmoji extends Vue {
 	contentData!: ContentObject;
 
 	render() {
-		return h('span', {
-			class: 'emoji emoji-' + this.contentData.attrs.type,
+		return h(AppEmoji, {
+			emoji: this.contentData.attrs.type,
 			title: `:${this.contentData.attrs.type}:`,
 		});
 	}

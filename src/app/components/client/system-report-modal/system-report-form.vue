@@ -6,7 +6,7 @@
 					Paste the link to your ticket here. It's optional, but without it we can't get
 					back to you if we need more info to solve it.
 				</translate>
-				<span class="emoji emoji-huh" />
+				<AppEmoji emoji="huh" />
 			</p>
 
 			<app-form-control

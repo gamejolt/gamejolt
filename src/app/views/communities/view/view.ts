@@ -1,3 +1,4 @@
+import { markRaw } from 'vue';
 import { Inject, Options, Provide, Watch } from 'vue-property-decorator';
 import { Action, Mutation, State } from 'vuex-class';
 import {
@@ -103,7 +104,7 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 
 	readonly Environment = Environment;
 	readonly Screen = Screen;
-	readonly sidebarComponent = AppCommunitiesViewContext;
+	readonly sidebarComponent = markRaw(AppCommunitiesViewContext);
 
 	contextPane: ContextPane | null = null;
 

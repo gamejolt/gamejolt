@@ -2,6 +2,7 @@ import { IClientOSInfo } from 'client-voodoo';
 import { mixins, Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { ClientLogger } from '../../../../_common/client/logger/logger.service';
+import AppEmoji from '../../../../_common/emoji/AppEmoji.vue';
 import { BaseForm, FormOnSubmit } from '../../../../_common/form-vue/form.service';
 import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
 import { LocalDbGame } from '../local-db/game/game.model';
@@ -17,7 +18,11 @@ interface FormModel {
 
 class Wrapper extends BaseForm<FormModel> {}
 
-@Options({})
+@Options({
+	components: {
+		AppEmoji,
+	},
+})
 export default class FormClientSystemReport extends mixins(Wrapper) implements FormOnSubmit {
 	@ClientLibraryState
 	games!: ClientLibraryStore['gamesById'];

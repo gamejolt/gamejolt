@@ -1,11 +1,14 @@
 import { EditorView } from 'prosemirror-view';
 import { nextTick } from 'vue';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import AppEmoji, { GJ_EMOJIS } from '../../../../emoji/AppEmoji.vue';
 import { AppTooltip } from '../../../../tooltip/tooltip-directive';
 import { ContentEditorSchema } from '../../schemas/content-editor-schema';
-import { GJ_EMOJIS } from '../../schemas/specs/nodes/gj-emoji-nodespec';
 
 @Options({
+	components: {
+		AppEmoji,
+	},
 	directives: {
 		AppTooltip,
 	},
@@ -36,14 +39,6 @@ export default class AppContentEditorControlsEmojiPanel extends Vue {
 	@Watch('stateCounter')
 	update() {
 		this.visible = this.canInsertEmoji();
-	}
-
-	get spanClass() {
-		let className = 'emoji emoji-' + this.emoji;
-		if (this.panelVisible) {
-			className += ' emoji-button-active';
-		}
-		return className;
 	}
 
 	get emojis() {

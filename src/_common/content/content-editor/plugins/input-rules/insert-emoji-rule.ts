@@ -1,8 +1,8 @@
 import { InputRule } from 'prosemirror-inputrules';
 import { EditorState } from 'prosemirror-state';
+import { GJ_EMOJIS } from '../../../../emoji/AppEmoji.vue';
 import { ContentEditorService } from '../../content-editor.service';
 import { ContentEditorSchema } from '../../schemas/content-editor-schema';
-import { GJ_EMOJIS } from '../../schemas/specs/nodes/gj-emoji-nodespec';
 
 export function insertEmojiRule() {
 	const emojiRegex = GJ_EMOJIS.join('|');
