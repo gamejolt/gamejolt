@@ -51,6 +51,7 @@ export interface FormController<T = any> {
 	// Internal.
 	_groups: FormGroupController[];
 	_onControlChanged: () => void;
+	_initLazy: (overrides: Partial<CreateFormOptions<T>>) => void;
 }
 
 const Key: InjectionKey<FormController> = Symbol('form');
@@ -75,18 +76,7 @@ export function useForm<T = any>() {
 	return inject(Key, null) as FormController<T> | null;
 }
 
-export function createForm<T>({
-	model,
-	modelClass,
-	onInit,
-	onLoad,
-	onBeforeSubmit,
-	onSubmit,
-	onSubmitSuccess,
-	onSubmitError,
-	onChange,
-	...options
-}: {
+interface CreateFormOptions<T> {
 	model: Ref<T | undefined>;
 	modelClass?: ModelClassType<T>;
 	saveMethod?: MaybeRef<keyof T | undefined>;
@@ -102,18 +92,34 @@ export function createForm<T>({
 	onSubmitSuccess?: (response: any) => void;
 	onSubmitError?: (response: any) => void;
 	onChange?: (formModel: any) => void;
-}) {
+}
+
+export function createForm<T>({
+	model,
+	modelClass,
+	onInit,
+	onLoad,
+	onBeforeSubmit,
+	onSubmit,
+	onSubmitSuccess,
+	onSubmitError,
+	onChange,
+	...options
+}: CreateFormOptions<T>) {
 	const router = useRouter();
 
 	const name = uuidv4();
 
 	const formModel = ref(_makeFormModel() as T);
-	const saveMethod = ref(options.saveMethod);
 	const resetOnSubmit = ref(options.resetOnSubmit || false);
 	const warnOnDiscard = ref(options.warnOnDiscard || true);
 	const reloadOnSubmit = ref(options.reloadOnSubmit || false);
-	const loadUrl = ref(options.loadUrl);
-	const loadData = ref(options.loadData);
+
+	// These are only specified as "let" because we need to allow them to be
+	// lazy initialized.
+	let saveMethod = ref(options.saveMethod);
+	let loadUrl = ref(options.loadUrl);
+	let loadData = ref(options.loadData);
 
 	const method = ref(model.value ? 'edit' : 'add');
 	const changed = ref(false);
@@ -129,6 +135,44 @@ export function createForm<T>({
 	const valid = computed(
 		() => _groups.value.every(i => i.valid) && customErrors.value.length === 0
 	);
+
+	/**
+	 * This is purely for {@link BaseForm} to initialize lazily since it doesn't
+	 * have access to "this" inside the setup function. Don't ever call this in
+	 * your normal forms.
+	 */
+	function _initLazy(overrides: Partial<CreateFormOptions<T>>) {
+		if (overrides.modelClass) {
+			modelClass = overrides.modelClass;
+		}
+		if (overrides.saveMethod) {
+			saveMethod = ref(overrides.saveMethod);
+		}
+		if (overrides.loadUrl) {
+			loadUrl = ref(overrides.loadUrl);
+		}
+		if (overrides.loadData) {
+			loadData = ref(overrides.loadData);
+		}
+		if (overrides.onInit) {
+			onInit = overrides.onInit;
+		}
+		if (overrides.onBeforeSubmit) {
+			onBeforeSubmit = overrides.onBeforeSubmit;
+		}
+		if (overrides.onSubmit) {
+			onSubmit = overrides.onSubmit;
+		}
+		if (overrides.onSubmitError) {
+			onSubmitError = overrides.onSubmitError;
+		}
+		if (overrides.onLoad) {
+			onLoad = overrides.onLoad;
+		}
+		if (overrides.onSubmitSuccess) {
+			onSubmitSuccess = overrides.onSubmitSuccess;
+		}
+	}
 
 	let _routeChangeDeregister: () => void | undefined;
 	onMounted(() => {
@@ -334,6 +378,7 @@ export function createForm<T>({
 
 		_groups,
 		_onControlChanged,
+		_initLazy,
 	}) as FormController<T>;
 
 	return c;

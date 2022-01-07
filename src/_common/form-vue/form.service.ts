@@ -1,7 +1,8 @@
 import { computed, toRef } from 'vue';
+import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { ModelClassType } from '../model/model.service';
-import { createForm, FormController } from './AppForm.vue';
+import { createForm } from './AppForm.vue';
 import { CommonFormComponents } from './form-common';
 import {
 	validateAvailability,
@@ -70,31 +71,26 @@ export class BaseForm<T> extends Vue {
 	readonly validateImageMaxDimensions = validateImageMaxDimensions;
 	readonly validatePattern = validatePattern;
 
-	private form_: null | FormController<T> = null;
-
-	// We make sure the getters below have fallbacks for when the form isn't
-	// constructed yet. This happens when the child class calls these parent
-	// getters within their own getter functions.
-
-	get form() {
-		// This is what the base classes will call into, so we make this always available.
-		return this.form_!;
-	}
+	form = setup(() =>
+		createForm<T>({
+			model: toRef(this.$props as this, 'model'),
+		})
+	);
 
 	get method() {
-		return this.form_?.method ?? 'add';
+		return this.form.method;
 	}
 
 	get changed() {
-		return this.form_?.changed ?? false;
+		return this.form.changed;
 	}
 
 	get isLoaded() {
-		return this.form_?.isLoaded ?? false;
+		return this.form.isLoaded;
 	}
 
 	get serverErrors() {
-		return this.form_?.serverErrors ?? {};
+		return this.form.serverErrors;
 	}
 
 	get loadUrl(): undefined | string {
@@ -106,16 +102,15 @@ export class BaseForm<T> extends Vue {
 	}
 
 	get formModel() {
-		return (this.form_?.formModel ?? {}) as Readonly<T>;
+		return (this.form.formModel ?? {}) as T;
 	}
 
 	get valid() {
-		return this.form_?.valid ?? true;
+		return this.form.valid;
 	}
 
 	created() {
-		this.form_ = createForm<T>({
-			model: toRef(this.$props as this, 'model'),
+		this.form._initLazy({
 			modelClass: this.modelClass,
 			saveMethod: computed(() => this.saveMethod),
 			loadUrl: computed(() => (this as Partial<FormOnLoad>).loadUrl),
@@ -130,7 +125,7 @@ export class BaseForm<T> extends Vue {
 				// We used to set up a submit handler on every form component
 				// automatically. This is to reproduce that effect.
 				(this as Partial<FormOnSubmitSuccess>).onSubmitSuccess?.(response);
-				this.emitSubmit(this.form_!.formModel, response);
+				this.emitSubmit(this.formModel as any, response);
 			},
 		});
 	}
@@ -143,20 +138,20 @@ export class BaseForm<T> extends Vue {
 	 * now.
 	 */
 	setField<K extends keyof T>(key: K, value: T[K]) {
-		if (this.form_?.formModel) {
-			this.form_.formModel[key] = value;
+		if (this.formModel) {
+			this.formModel[key] = value;
 		}
 	}
 
 	setCustomError(error: string) {
-		this.form_?.setCustomError(error);
+		this.form.setCustomError(error);
 	}
 
 	clearCustomError(error: string) {
-		this.form_?.clearCustomError(error);
+		this.form.clearCustomError(error);
 	}
 
 	hasCustomError(error: string) {
-		return this.form_?.hasCustomError(error) ?? false;
+		return this.form.hasCustomError(error);
 	}
 }
