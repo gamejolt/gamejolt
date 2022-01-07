@@ -10,6 +10,7 @@ import { Meta } from '../../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
 import { AppAuthJoinLazy } from '../../../components/lazy';
+import socialImage from '../../../img/social/social-share-header.png';
 import { Store } from '../../../store/index';
 import AppDiscoverHomeBanner from './_banner/banner.vue';
 import AppDiscoverHomeCommunities from './_communities/communities.vue';
@@ -45,7 +46,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb;
 		Meta.twitter = $payload.twitter;
-		Meta.fb.image = Meta.twitter.image = require('../../../img/social/social-share-header.png');
+		Meta.fb.image = Meta.twitter.image = socialImage;
 		Meta.fb.url = Meta.twitter.url = Environment.baseUrl;
 
 		Meta.microdata = {

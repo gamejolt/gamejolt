@@ -11,7 +11,9 @@ export function createApp() {
 	const app = bootstrapCommon(App, store, router);
 
 	if (GJ_IS_DESKTOP_APP) {
-		require('./bootstrap-client');
+		// TODO: we need to do this through a dynamic import, but then this
+		// function would need to be async
+		// require('./bootstrap-client');
 	}
 
 	GamePlayModal.init({ canMinimize: true });

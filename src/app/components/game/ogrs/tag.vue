@@ -19,7 +19,13 @@
 				alt=""
 				strict-colors
 			/>
-			<img class="-logo" :src="require('./ogrs-logo.svg')" width="76" height="8" alt="OGRS" />
+			<img
+				class="-logo"
+				:src="assetPaths['./ogrs-logo.svg'].default"
+				width="76"
+				height="8"
+				alt="OGRS"
+			/>
 		</template>
 	</div>
 </template>

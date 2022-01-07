@@ -8,11 +8,12 @@ import { GameMediaItemAddModal } from '../../../../../../components/game/media-i
 import { GameMediaItemEditModal } from '../../../../../../components/game/media-item/edit-modal/edit-modal.service';
 import { Media, RouteStore, RouteStoreModule } from '../../manage.store';
 
-const draggable = require('vuedraggable');
+// TODO(vue3)
+// const draggable = require('vuedraggable');
 
 @Options({
 	components: {
-		draggable,
+		// draggable,
 		AppScrollScroller,
 		AppGameMediaBarItem,
 		AppEditableOverlay,

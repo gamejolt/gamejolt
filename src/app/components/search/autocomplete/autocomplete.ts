@@ -9,14 +9,14 @@ import { AppStore } from '../../../../_common/store/app-store';
 import { EventTopic } from '../../../../_common/system/event/event-topic';
 import { User } from '../../../../_common/user/user.model';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
-import * as _LocalDbGameMod from '../../client/local-db/game/game.model';
+import type * as LocalDbGameModType from '../../client/local-db/game/game.model';
 import AppGameCompatIcons from '../../game/compat-icons/compat-icons.vue';
 import { sendSearch } from '../search-service';
 import { SearchKeydownSpy, useSearchController } from '../search.vue';
 
-let LocalDbGameMod: typeof _LocalDbGameMod | undefined;
+let LocalDbGameMod: typeof LocalDbGameModType | undefined;
 if (GJ_IS_DESKTOP_APP) {
-	LocalDbGameMod = require('../../client/local-db/game/game.model');
+	LocalDbGameMod = await import('../../client/local-db/game/game.model');
 }
 
 const KEYCODE_UP = 38;
@@ -36,7 +36,7 @@ export default class AppSearchAutocomplete extends Vue {
 	selected = 0;
 	games: Game[] = [];
 	users: User[] = [];
-	libraryGames: _LocalDbGameMod.LocalDbGame[] = [];
+	libraryGames: LocalDbGameModType.LocalDbGame[] = [];
 	items: any[] = [];
 
 	search = setup(() => useSearchController()!);
@@ -154,7 +154,7 @@ export default class AppSearchAutocomplete extends Vue {
 		Analytics.trackEvent('search', 'autocomplete', 'go-user');
 	}
 
-	selectLibraryGame(localGame: _LocalDbGameMod.LocalDbGame) {
+	selectLibraryGame(localGame: LocalDbGameModType.LocalDbGame) {
 		this.$router.push({
 			name: 'discover.games.view.overview',
 			params: { slug: localGame.slug, id: localGame.id + '' },

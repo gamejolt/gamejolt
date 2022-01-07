@@ -1,5 +1,5 @@
 import { mixins, Options, Watch } from 'vue-property-decorator';
-import * as _ClientAutoStartMod from '../../../../_common/client/autostart/autostart.service';
+import { ClientAutoStart } from '../../../../_common/client/safe-exports';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm } from '../../../../_common/form-vue/form.service';
 import {
@@ -17,11 +17,6 @@ import {
 } from '../../../../_common/settings/settings.service';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { ThemeMutation, ThemeState, ThemeStore } from '../../../../_common/theme/theme.store';
-
-let ClientAutoStartMod: typeof _ClientAutoStartMod | undefined;
-if (GJ_IS_DESKTOP_APP) {
-	ClientAutoStartMod = require('../../../../_common/client/autostart/autostart.service');
-}
 
 type FormModel = {
 	chat_notify_friends_online: boolean;
@@ -56,7 +51,7 @@ export default class FormSettings extends mixins(Wrapper) {
 	@ThemeMutation setAlwaysOurs!: ThemeStore['setAlwaysOurs'];
 
 	get canClientAutostart() {
-		return ClientAutoStartMod && ClientAutoStartMod.ClientAutoStart.canAutoStart;
+		return ClientAutoStart?.canAutoStart;
 	}
 
 	get browserNotificationsDisabled() {
@@ -138,13 +133,13 @@ export default class FormSettings extends mixins(Wrapper) {
 			SettingMaxExtractCount.set(this.formModel.max_extract_count);
 			SettingQueueWhenPlaying.set(this.formModel.queue_when_playing);
 
-			if (ClientAutoStartMod && this.canClientAutostart) {
+			if (ClientAutoStart && this.canClientAutostart) {
 				SettingAutostartClient.set(this.formModel.autostart_client);
 
 				if (this.formModel.autostart_client) {
-					ClientAutoStartMod.ClientAutoStart.set();
+					ClientAutoStart.set();
 				} else {
-					ClientAutoStartMod.ClientAutoStart.clear();
+					ClientAutoStart.clear();
 				}
 			}
 

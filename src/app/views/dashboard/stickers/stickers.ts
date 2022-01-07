@@ -12,6 +12,7 @@ import AppStickerCard from '../../../../_common/sticker/card/card.vue';
 import { Sticker } from '../../../../_common/sticker/sticker.model';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { Store } from '../../../store';
+import backgroundImage from './background.png';
 
 export type InitPayload = {
 	balance: number;
@@ -75,13 +76,12 @@ export default class RouteDashStickers extends BaseRouteComponent {
 
 	get coverMediaItem() {
 		// Create fake media item resource to pass into the page header.
-		const url = require('./background.png');
 		return new MediaItem({
 			is_animated: false,
 			width: 1240,
 			height: 409,
-			img_url: url,
-			mediaserver_url: url,
+			img_url: backgroundImage,
+			mediaserver_url: backgroundImage,
 		});
 	}
 

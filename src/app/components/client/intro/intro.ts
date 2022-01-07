@@ -8,6 +8,8 @@ import Onboarding from '../../../../_common/onboarding/onboarding.service';
 import { onRouteChangeAfter } from '../../../../_common/route/route-component';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { EventSubscription } from '../../../../_common/system/event/event-topic';
+import introGif from './intro.gif';
+import introOgg from './intro.ogg';
 
 @Options({
 	components: {
@@ -30,6 +32,7 @@ export default class AppClientIntro extends Vue {
 	};
 
 	readonly Connection = Connection;
+	readonly introGif = introGif;
 
 	@Emit('finish')
 	emitFinish() {}
@@ -122,7 +125,7 @@ export default class AppClientIntro extends Vue {
 
 	private startAudio() {
 		return new Promise<void>(resolve => {
-			const audio = new Audio(require('./intro.ogg'));
+			const audio = new Audio(introOgg);
 			audio.volume = 0.15;
 
 			const playHandler = () => {

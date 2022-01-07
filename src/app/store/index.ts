@@ -111,8 +111,8 @@ const modules: any = {
 };
 
 if (GJ_IS_DESKTOP_APP) {
-	const m: typeof _ClientLibraryMod = require('./client-library');
-	modules.clientLibrary = new m.ClientLibraryStore();
+	const mod = await import('./client-library');
+	modules.clientLibrary = new mod.ClientLibraryStore();
 }
 
 // the two types an event notification can assume, either "activity" for the post activity feed or "notifications"

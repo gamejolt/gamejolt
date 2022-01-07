@@ -6,6 +6,7 @@ import { AppSocialFacebookLike } from '../../../../_common/social/facebook/like/
 import { AppSocialTwitterShare } from '../../../../_common/social/twitter/share/share';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { AppAuthJoinLazy } from '../../../components/lazy';
+import socialImage from './social.png';
 
 @Options({
 	name: 'RouteLandingIndieaf',
@@ -45,6 +46,6 @@ export default class RouteLandingIndieaf extends BaseRouteComponent {
 			description: Meta.description,
 		};
 
-		Meta.fb.image = Meta.twitter.image = require('./social.png');
+		Meta.fb.image = Meta.twitter.image = socialImage;
 	}
 }

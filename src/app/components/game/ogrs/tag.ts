@@ -11,6 +11,8 @@ export default class AppGameOgrsTag extends Vue {
 	@Prop(Game) game!: Game;
 	@Prop(Boolean) full?: boolean;
 
+	readonly assetPaths = import.meta.globEager('./*.svg');
+
 	get imgTag() {
 		if (this.game) {
 			if (this.game.tigrs_age === 1) {
@@ -26,11 +28,11 @@ export default class AppGameOgrsTag extends Vue {
 	}
 
 	get imgUrl() {
-		return require(`./${this.imgTag}.svg`);
+		return this.assetPaths[`./${this.imgTag}.svg`].default;
 	}
 
 	get imgTagUrl() {
-		return require(`./${this.imgTag}-tag.svg`);
+		return this.assetPaths[`./${this.imgTag}-tag.svg`].default;
 	}
 
 	get imgTagHeight() {

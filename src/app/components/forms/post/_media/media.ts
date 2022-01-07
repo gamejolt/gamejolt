@@ -15,7 +15,8 @@ import { MediaItem } from '../../../../../_common/media-item/media-item-model';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
 import AppFormPostMediaItem from './item/item.vue';
 
-const draggable = require('vuedraggable');
+// TODO(vue3)
+// const draggable = require('vuedraggable');
 
 interface FormModel {
 	image: File[] | null;
@@ -26,7 +27,7 @@ class Wrapper extends BaseForm<FormModel> {}
 
 @Options({
 	components: {
-		draggable,
+		// draggable,
 		AppScrollScroller,
 		AppImgResponsive,
 		AppFormPostMediaItem,

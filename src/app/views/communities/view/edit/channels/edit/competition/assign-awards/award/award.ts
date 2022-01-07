@@ -40,14 +40,15 @@ function makeRequest(route: RouteLocationNormalized, page = 1, filterValue = '')
 	return Api.sendRequest(url);
 }
 
-const draggable = require('vuedraggable');
+// TODO(vue3)
+// const draggable = require('vuedraggable');
 
 @Options({
 	name: 'RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAward',
 	components: {
 		AppLoading,
 		AppLoadingFade,
-		draggable,
+		// draggable,
 		AppPagination,
 	},
 	directives: {

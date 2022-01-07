@@ -105,7 +105,7 @@
 							</template>
 						</div>
 						<div v-if="reachedLastPage" class="end-of-scroll">
-							<img :src="require('./mascot-complete.png')" title="♥" />
+							<img :src="mascotImage" title="♥" />
 							<span class="text-muted">
 								These are not the GIFs you are looking for!
 							</span>

@@ -11,9 +11,18 @@ const Client = GJ_IS_DESKTOP_APP ? (await import('./client.service')).Client : n
 const ClientHistoryNavigator = GJ_IS_DESKTOP_APP
 	? (await import('./history-navigator/history-navigator.service')).ClientHistoryNavigator
 	: null;
+const ClientAutoStart = GJ_IS_DESKTOP_APP
+	? (await import('./autostart/autostart.service')).ClientAutoStart
+	: null;
 const AppClientHistoryNavigator = GJ_IS_DESKTOP_APP
 	? (await import('./history-navigator/history-navigator.vue')).default
 	: AppNoop;
 const AppClientBase = GJ_IS_DESKTOP_APP ? (await import('./base/base.vue')).default : AppNoop;
 
-export { Client, ClientHistoryNavigator, AppClientHistoryNavigator, AppClientBase };
+export {
+	Client,
+	ClientHistoryNavigator,
+	ClientAutoStart,
+	AppClientHistoryNavigator,
+	AppClientBase,
+};

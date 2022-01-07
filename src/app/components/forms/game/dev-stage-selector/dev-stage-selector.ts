@@ -18,7 +18,8 @@ export default class AppGameDevStageSelector extends Vue {
 		Game.DEVELOPMENT_STATUS_FINISHED,
 	];
 
-	Game = Game;
+	readonly Game = Game;
+	readonly assetPaths = import.meta.globEager('./*.png');
 
 	@Emit('select')
 	emitSelect(_stage: number) {}

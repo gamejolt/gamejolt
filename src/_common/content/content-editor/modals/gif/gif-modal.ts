@@ -9,6 +9,7 @@ import { Ruler } from '../../../../ruler/ruler-service';
 import { Screen } from '../../../../screen/screen-service';
 import AppScrollScroller, { createScroller } from '../../../../scroll/scroller/scroller.vue';
 import { Category, ContentEditorGifModal, SearchResult } from './gif-modal.service';
+import mascotImage from './mascot-complete.png';
 
 @Options({
 	components: {
@@ -32,6 +33,7 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 	contentScroller = setup(() => createScroller());
 
 	readonly Screen = Screen;
+	readonly mascotImage = mascotImage;
 
 	declare $refs: {
 		modal: AppModalTS;

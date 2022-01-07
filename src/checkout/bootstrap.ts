@@ -12,5 +12,5 @@ export function createApp() {
 }
 
 if (GJ_IS_DESKTOP_APP) {
-	require('./bootstrap-client');
+	await import('./bootstrap-client');
 }

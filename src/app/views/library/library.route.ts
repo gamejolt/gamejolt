@@ -5,7 +5,7 @@ import { routeLibraryOverview } from './overview/overview.route';
 const children: RouteRecordRaw[] = [routeLibraryOverview, ...routeLibraryCollectionRoutes];
 
 if (GJ_IS_DESKTOP_APP) {
-	children.push(require('./installed/installed.route').routeLibraryInstalled);
+	children.push((await import('./installed/installed.route')).routeLibraryInstalled);
 }
 
 export const routeLibrary: RouteRecordRaw = {
