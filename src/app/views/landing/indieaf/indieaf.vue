@@ -1,3 +1,5 @@
+<script lang="ts" src="./indieaf"></script>
+
 <template>
 	<div class="route-landing-indieaf fill-darkest">
 		<div class="indieaf-header">
@@ -269,6 +271,9 @@
 	</div>
 </template>
 
-<style lang="stylus" src="./indieaf.styl" scoped></style>
+<!-- Import the font we use on this page through a normal CSS import. -->
+<style lang="css">
+@import url('https://fonts.googleapis.com/css?family=Megrim');
+</style>
 
-<script lang="ts" src="./indieaf"></script>
+<style lang="stylus" src="./indieaf.styl" scoped></style>

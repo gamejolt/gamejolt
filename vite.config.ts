@@ -12,9 +12,6 @@ const stylusOptions = {
 		// Import common mixins.
 		path.resolve(__dirname, 'src/_styles/mixins.styl'),
 	],
-	// TODO(vue3): does this work?
-	url: true,
-	css: true,
 };
 
 // TODO(vue3): we need a way to remove client-related code completely
