@@ -14,6 +14,7 @@ import {
 } from 'vue';
 import { useRouter } from 'vue-router';
 import { arrayRemove, arrayUnique } from '../../utils/array';
+import { CancelToken } from '../../utils/cancel-token';
 import { uuidv4 } from '../../utils/uuid';
 import { MaybeRef } from '../../utils/vue';
 import { Api } from '../api/api.service';
@@ -51,6 +52,7 @@ export interface FormController<T = any> {
 	// Internal.
 	_groups: FormGroupController[];
 	_onControlChanged: () => void;
+	_validationToken: null | CancelToken;
 	_initLazy: (overrides: Partial<CreateFormOptions<T>>) => void;
 }
 
@@ -131,6 +133,7 @@ export function createForm<T>({
 	const serverErrors = ref({} as PayloadFormErrors);
 	const customErrors = ref([] as string[]);
 	const _groups = ref([] as FormGroupController[]);
+	let _validationToken: null | CancelToken = null;
 
 	const valid = computed(
 		() => _groups.value.every(i => i.valid) && customErrors.value.length === 0
@@ -250,10 +253,10 @@ export function createForm<T>({
 	}
 
 	function clearErrors() {
-		// TODO(vue3)
-		// for (const control of this.controls) {
-		// 	control.$validator.errorBag.clear();
-		// }
+		// TODO(vue3): test to make sure this works
+		for (const group of _groups.value) {
+			group.clearError();
+		}
 	}
 
 	function setCustomError(error: string) {
@@ -269,6 +272,9 @@ export function createForm<T>({
 	}
 
 	async function validate() {
+		_validationToken?.cancel();
+		_validationToken = new CancelToken();
+
 		// Simply validate all the controls.
 		await Promise.all(_groups.value.map(i => i.validate()));
 	}
@@ -277,7 +283,7 @@ export function createForm<T>({
 		changed.value = true;
 		onChange?.(formModel.value);
 
-		// TODO(vue3): should be validate before calling the onChange or after?
+		// TODO(vue3): should we validate before calling the onChange or after?
 		validate();
 	}
 
@@ -378,6 +384,7 @@ export function createForm<T>({
 
 		_groups,
 		_onControlChanged,
+		_validationToken,
 		_initLazy,
 	}) as FormController<T>;
 

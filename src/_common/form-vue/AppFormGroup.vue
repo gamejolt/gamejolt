@@ -47,13 +47,13 @@ export function createFormGroup($props: typeof props) {
 	);
 
 	/**
-	 * Validate this single control. Calling [FormController.validate] will call
-	 * this for every field in the form.
+	 * Validate this single control. Calling {@link FormController.validate}
+	 * will call this for every field in the form.
 	 */
 	async function validate() {
 		// Only validate if a control has attached to this already.
 		if (!control.value) {
-			return true;
+			return;
 		}
 
 		const { controlVal, validators } = unref(control)!;
@@ -61,15 +61,24 @@ export function createFormGroup($props: typeof props) {
 		for (const validator of validators) {
 			const result = await validator(controlVal);
 
+			// If this validation run is no longer active, ignore the result of
+			// this validation and early-out.
+			if (form._validationToken?.isCanceled) {
+				return;
+			}
+
 			// The first error is the one that gets frozen.
 			if (result) {
 				error.value = result;
-				return false;
+				return;
 			}
 		}
 
 		error.value = null;
-		return true;
+	}
+
+	function clearError() {
+		error.value = null;
 	}
 
 	const c = reactive({
@@ -85,6 +94,7 @@ export function createFormGroup($props: typeof props) {
 		humanLabel,
 		optional,
 		validate,
+		clearError,
 	});
 
 	form._groups.push(c);
