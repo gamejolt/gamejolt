@@ -36,7 +36,7 @@ const props = defineProps({
 	},
 });
 
-const backgroundImage = computed(() => assetPaths[`./${props.emoji}/.png`].default);
+const backgroundImage = computed(() => assetPaths[`./${props.emoji}.png`].default);
 </script>
 
 <template>
