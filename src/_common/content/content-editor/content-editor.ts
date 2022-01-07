@@ -1,6 +1,6 @@
 import { provide } from '@vue/runtime-core';
-import { DOMParser } from 'prosemirror-model';
-import { EditorState, Plugin, Transaction } from 'prosemirror-state';
+import { DOMParser, Node } from 'prosemirror-model';
+import { EditorState, Plugin, Selection, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import 'prosemirror-view/style/prosemirror.css';
 import ResizeObserver from 'resize-observer-polyfill';
@@ -114,9 +114,9 @@ export default class AppContentEditor extends Vue {
 	canShowMentionSuggestions = 0; // Indicates whether we want to currently show the mention suggestion panel. Values > 0 indicate true.
 	mentionUserCount = 0;
 
-	_tempModelId: number | null = null; // If no model id if gets passed in, we store a temp model's id here
+	tempModelId_: number | null = null; // If no model id if gets passed in, we store a temp model's id here
 	// Keep a copy of the json version of the doc, to only set the content if the external source changed.
-	_sourceControlVal: string | null = null;
+	sourceControlVal_: string | null = null;
 
 	declare $refs: {
 		editor: HTMLElement;
@@ -201,8 +201,8 @@ export default class AppContentEditor extends Vue {
 
 	@Watch('value')
 	public onSourceUpdated() {
-		if (this._sourceControlVal !== this.value) {
-			this._sourceControlVal = this.value;
+		if (this.sourceControlVal_ !== this.value) {
+			this.sourceControlVal_ = this.value;
 			// When we receive an empty string as the document json, the caller probably wants to clear the document.
 			if (this.value === '') {
 				this.reset();
@@ -218,12 +218,12 @@ export default class AppContentEditor extends Vue {
 			state.doc.toJSON() as ProsemirrorEditorFormat,
 			this.contentContext
 		).toJson();
-		this._sourceControlVal = source;
+		this.sourceControlVal_ = source;
 		this.emitInput(source);
 	}
 
 	private reset() {
-		this._tempModelId = null;
+		this.tempModelId_ = null;
 		const doc = new ContentDocument(this.contentContext, []);
 		this.setContent(doc);
 		this.isEmpty = true;
@@ -235,7 +235,7 @@ export default class AppContentEditor extends Vue {
 			const props = this.$props as this;
 
 			if (props.modelId === null) {
-				if (!this._tempModelId) {
+				if (!this.tempModelId_) {
 					new Promise<number>(() =>
 						ContentTempResource.getTempModelId(
 							this.contentContext,
@@ -243,11 +243,11 @@ export default class AppContentEditor extends Vue {
 						)
 					).then(id => {
 						// Get the temp ID, assign it, then trigger this to update again.
-						this._tempModelId = id;
+						this.tempModelId_ = id;
 						triggerRef(modelId);
 					});
 				}
-				return this._tempModelId;
+				return this.tempModelId_;
 			} else {
 				return this.modelId;
 			}
