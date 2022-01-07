@@ -1,10 +1,10 @@
-import { Emit, Prop } from 'vue-property-decorator';
+import { Emit, mixins, Prop } from 'vue-property-decorator';
 import { BaseForm, FormOnSubmitSuccess } from '../../../../_common/form-vue/form.service';
 import Onboarding, { OnboardingStep } from '../../../../_common/onboarding/onboarding.service';
 import { User } from '../../../../_common/user/user.model';
 
-export default abstract class OnboardingComponent<T>
-	extends BaseForm<T>
+export default abstract class OnboardingComponent
+	extends mixins(BaseForm)
 	implements FormOnSubmitSuccess
 {
 	@Prop(User)

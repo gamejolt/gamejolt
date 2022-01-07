@@ -1,4 +1,4 @@
-import { Options } from 'vue-property-decorator';
+import { mixins, Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import AppExpand from '../../../../_common/expand/expand.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
@@ -9,6 +9,8 @@ import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../store/index';
 import AppGameDevStageSelector from './dev-stage-selector/dev-stage-selector.vue';
 import AppDashGameWizardControls from './wizard-controls/wizard-controls.vue';
+
+class Wrapper extends BaseForm<Game> {}
 
 @Options({
 	components: {
@@ -21,7 +23,7 @@ import AppDashGameWizardControls from './wizard-controls/wizard-controls.vue';
 		AppTooltip,
 	},
 })
-export default class FormGame extends BaseForm<Game> implements FormOnLoad {
+export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 	@State
 	app!: Store['app'];
 

@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
 import { Community } from '../../../../../_common/community/community.model';
@@ -21,12 +21,14 @@ interface FormModel {
 	ejectPosts: boolean;
 }
 
+class Wrapper extends BaseForm<FormModel> {}
+
 @Options({
 	components: {
 		AppFormControlToggle,
 	},
 })
-export default class FormCommunityBlock extends BaseForm<FormModel> implements FormOnSubmit {
+export default class FormCommunityBlock extends mixins(Wrapper) implements FormOnSubmit {
 	@Prop(propRequired(Community)) community!: Community;
 	@Prop(propOptional(User, null)) user?: User | null;
 

@@ -1,5 +1,5 @@
 import { formatDistanceToNow } from 'date-fns';
-import { Options } from 'vue-property-decorator';
+import { mixins, Options } from 'vue-property-decorator';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
 import AppFormControlContent from '../../../../_common/form-vue/controls/AppFormControlContent.vue';
@@ -17,6 +17,8 @@ import { Theme } from '../../../../_common/theme/theme.model';
 import { ThemeMutation, ThemeStore } from '../../../../_common/theme/theme.store';
 import { User } from '../../../../_common/user/user.model';
 
+class Wrapper extends BaseForm<User> {}
+
 @Options({
 	components: {
 		AppLoading,
@@ -26,7 +28,7 @@ import { User } from '../../../../_common/user/user.model';
 		AppFormControlContent,
 	},
 })
-export default class FormProfile extends BaseForm<User> implements FormOnLoad, FormOnSubmitError {
+export default class FormProfile extends mixins(Wrapper) implements FormOnLoad, FormOnSubmitError {
 	modelClass = User;
 
 	@ThemeMutation

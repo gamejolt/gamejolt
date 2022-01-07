@@ -1,4 +1,4 @@
-import { Options } from 'vue-property-decorator';
+import { mixins, Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import {
@@ -13,13 +13,15 @@ interface FormModel {
 	removeComments: boolean;
 }
 
+class Wrapper extends BaseForm<FormModel> {}
+
 @Options({
 	components: {
 		AppFormControlToggle,
 	},
 })
 export default class FormUserBlock
-	extends BaseForm<FormModel>
+	extends mixins(Wrapper)
 	implements FormOnSubmit, FormOnSubmitSuccess
 {
 	created() {

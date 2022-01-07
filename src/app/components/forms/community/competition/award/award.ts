@@ -1,9 +1,11 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../utils/vue';
 import { CommunityCompetitionAward } from '../../../../../../_common/community/competition/award/award.model';
 import { CommunityCompetition } from '../../../../../../_common/community/competition/competition.model';
 import AppFormControlTextarea from '../../../../../../_common/form-vue/controls/AppFormControlTextarea.vue';
 import { BaseForm, FormOnBeforeSubmit } from '../../../../../../_common/form-vue/form.service';
+
+class Wrapper extends BaseForm<CommunityCompetitionAward> {}
 
 @Options({
 	components: {
@@ -11,7 +13,7 @@ import { BaseForm, FormOnBeforeSubmit } from '../../../../../../_common/form-vue
 	},
 })
 export default class FormCommunityCompetitionAward
-	extends BaseForm<CommunityCompetitionAward>
+	extends mixins(Wrapper)
 	implements FormOnBeforeSubmit
 {
 	@Prop(propRequired(CommunityCompetition)) competition!: CommunityCompetition;

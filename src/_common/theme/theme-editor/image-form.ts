@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../api/api.service';
 import AppFormControlUpload from '../../form-vue/controls/upload/AppFormControlUpload.vue';
 import { BaseForm, FormOnLoad, FormOnSubmit } from '../../form-vue/form.service';
@@ -10,13 +10,15 @@ interface FormModel {
 	_progress: ProgressEvent | null;
 }
 
+class Wrapper extends BaseForm<FormModel> {}
+
 @Options({
 	components: {
 		AppFormControlUpload,
 	},
 })
 export default class FormThemeEditorImage
-	extends BaseForm<FormModel>
+	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnSubmit
 {
 	@Prop(String) type!: string;

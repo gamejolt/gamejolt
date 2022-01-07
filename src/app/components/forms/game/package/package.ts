@@ -1,6 +1,6 @@
 import { addWeeks, startOfDay, startOfTomorrow } from 'date-fns';
 import { determine } from 'jstimezonedetect';
-import { Emit, Options, Prop, Watch } from 'vue-property-decorator';
+import { Emit, mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { formatCurrency } from '../../../../../_common/filters/currency';
 import { formatDate } from '../../../../../_common/filters/date';
@@ -35,6 +35,8 @@ type FormGamePackageModel = GamePackage & {
 	has_suggested_price: boolean;
 };
 
+class Wrapper extends BaseForm<FormGamePackageModel> {}
+
 @Options({
 	components: {
 		AppFormLegend,
@@ -46,7 +48,7 @@ type FormGamePackageModel = GamePackage & {
 	},
 })
 export default class FormGamePackage
-	extends BaseForm<FormGamePackageModel>
+	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnBeforeSubmit
 {
 	modelClass = GamePackage as any;

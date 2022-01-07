@@ -1,5 +1,5 @@
 import { nextTick } from 'vue';
-import { Emit, Options, Prop } from 'vue-property-decorator';
+import { Emit, mixins, Options, Prop } from 'vue-property-decorator';
 import { trackCommentAdd } from '../../analytics/analytics.service';
 import { ContentContext } from '../../content/content-context';
 import { ContentRules } from '../../content/content-editor/content-rules';
@@ -15,13 +15,15 @@ import { Screen } from '../../screen/screen-service';
 import { Comment, getCommentModelResourceName } from '../comment-model';
 import '../comment.styl';
 
+class Wrapper extends BaseForm<Comment> {}
+
 @Options({
 	components: {
 		AppFormControlContent,
 	},
 })
 export default class FormComment
-	extends BaseForm<Comment>
+	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnSubmitSuccess
 {
 	@Prop(Model)

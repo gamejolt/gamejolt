@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { arrayRemove } from '../../../utils/array';
 import { Api } from '../../api/api.service';
 import { FiresidePost } from '../../fireside/post/post-model';
@@ -13,12 +13,14 @@ interface FormModel {
 	source: string;
 }
 
+class Wrapper extends BaseForm<FormModel> {}
+
 @Options({
 	components: {
 		AppFormControlTextarea,
 	},
 })
-export default class AppReportForm extends BaseForm<FormModel> implements FormOnSubmit {
+export default class AppReportForm extends mixins(Wrapper) implements FormOnSubmit {
 	@Prop(String) type!: string;
 	@Prop(Object) resource!: any;
 

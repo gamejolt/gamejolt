@@ -1,4 +1,4 @@
-import { Options } from 'vue-property-decorator';
+import { mixins, Options } from 'vue-property-decorator';
 import {
 	CommunityCompetition,
 	CompetitionPeriodVoting,
@@ -12,6 +12,8 @@ import { validateMaxDate, validateMinDate } from '../../../../../../_common/form
 import AppLoading from '../../../../../../_common/loading/loading.vue';
 import AppCommunityCompetitionDate from '../../../../community/competition/date/date.vue';
 
+class Wrapper extends BaseForm<CommunityCompetition> {}
+
 @Options({
 	components: {
 		AppFormLegend,
@@ -20,7 +22,7 @@ import AppCommunityCompetitionDate from '../../../../community/competition/date/
 		AppCommunityCompetitionDate,
 	},
 })
-export default class FormCommunityCompetitionEdit extends BaseForm<CommunityCompetition> {
+export default class FormCommunityCompetitionEdit extends mixins(Wrapper) {
 	modelClass = CommunityCompetition;
 	timezoneService: FormTimezoneService<CommunityCompetition> | null = null;
 

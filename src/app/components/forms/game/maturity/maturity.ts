@@ -1,4 +1,4 @@
-import { Emit, Options } from 'vue-property-decorator';
+import { Emit, mixins, Options } from 'vue-property-decorator';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
@@ -9,13 +9,15 @@ type MaturityField = {
 	description?: string;
 };
 
+class Wrapper extends BaseForm<Game> {}
+
 @Options({
 	components: {
 		AppExpand,
 		AppDashGameWizardControls,
 	},
 })
-export default class FormGameMaturity extends BaseForm<Game> {
+export default class FormGameMaturity extends mixins(Wrapper) {
 	modelClass = Game;
 
 	age: MaturityField[] = [

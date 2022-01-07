@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
@@ -7,6 +7,8 @@ import { GameTrophy } from '../../../../../_common/game/trophy/trophy.model';
 import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 
+class Wrapper extends BaseForm<GameTrophy> {}
+
 @Options({
 	components: {
 		AppImgResponsive,
@@ -14,7 +16,7 @@ import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-servi
 		AppFormControlUpload,
 	},
 })
-export default class FormGameTrophy extends BaseForm<GameTrophy> implements FormOnLoad {
+export default class FormGameTrophy extends mixins(Wrapper) implements FormOnLoad {
 	@Prop(Game) game!: Game;
 	@Prop(Number) difficulty!: number;
 

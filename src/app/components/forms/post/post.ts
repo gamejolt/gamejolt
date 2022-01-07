@@ -1,7 +1,7 @@
 import { addWeeks, startOfDay } from 'date-fns';
 import { determine } from 'jstimezonedetect';
 import { nextTick } from 'vue';
-import { Emit, Options, Prop, Watch } from 'vue-property-decorator';
+import { Emit, mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../utils/array';
 import { propOptional } from '../../../../utils/vue';
 import { trackPostPublish } from '../../../../_common/analytics/analytics.service';
@@ -78,6 +78,8 @@ type FormPostModel = FiresidePost & {
 	poll_item10: string;
 };
 
+class Wrapper extends BaseForm<FormPostModel> {}
+
 @Options({
 	components: {
 		AppFormControlDate,
@@ -105,7 +107,7 @@ type FormPostModel = FiresidePost & {
 	},
 })
 export default class FormPost
-	extends BaseForm<FormPostModel>
+	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnSubmit, FormOnSubmitSuccess, FormOnSubmitError
 {
 	modelClass = FiresidePost as any;

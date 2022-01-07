@@ -1,4 +1,4 @@
-import { Options, Prop, Watch } from 'vue-property-decorator';
+import { mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { ContentDocument } from '../../../../../_common/content/content-document';
 import { ContentWriter } from '../../../../../_common/content/content-writer';
 import AppExpand from '../../../../../_common/expand/expand.vue';
@@ -23,6 +23,8 @@ type DescriptionFormModel = Game & {
 	autotag_skip?: boolean;
 };
 
+class Wrapper extends BaseForm<DescriptionFormModel> {}
+
 @Options({
 	components: {
 		AppExpand,
@@ -33,7 +35,7 @@ type DescriptionFormModel = Game & {
 	},
 })
 export default class FormGameDescription
-	extends BaseForm<DescriptionFormModel>
+	extends mixins(Wrapper)
 	implements FormOnSubmitSuccess, FormOnLoad
 {
 	@Prop(Array)

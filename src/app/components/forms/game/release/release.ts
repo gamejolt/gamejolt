@@ -1,6 +1,6 @@
 import { addWeeks, startOfDay } from 'date-fns';
 import { determine } from 'jstimezonedetect';
-import { Emit, Options, Prop } from 'vue-property-decorator';
+import { Emit, mixins, Options, Prop } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../utils/array';
 import AppCardList from '../../../../../_common/card/list/list.vue';
 import AppFormLegend from '../../../../../_common/form-vue/AppFormLegend.vue';
@@ -28,6 +28,8 @@ type GameReleaseFormModel = GameRelease & {
 	should_publish: boolean;
 };
 
+class Wrapper extends BaseForm<GameReleaseFormModel> {}
+
 @Options({
 	components: {
 		AppCardList,
@@ -38,7 +40,7 @@ type GameReleaseFormModel = GameRelease & {
 	},
 })
 export default class FormGameRelease
-	extends BaseForm<GameReleaseFormModel>
+	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnSubmitSuccess
 {
 	modelClass = GameRelease as any;

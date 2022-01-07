@@ -1,4 +1,4 @@
-import { Options, Watch } from 'vue-property-decorator';
+import { mixins, Options, Watch } from 'vue-property-decorator';
 import AppFormControlCrop from '../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
@@ -13,6 +13,8 @@ type FormModel = Game & {
 	header_crop: any;
 };
 
+class Wrapper extends BaseForm<FormModel> {}
+
 @Options({
 	components: {
 		AppFormControlUpload,
@@ -20,7 +22,7 @@ type FormModel = Game & {
 	},
 })
 export default class FormGameHeader
-	extends BaseForm<FormModel>
+	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnBeforeSubmit
 {
 	modelClass = Game as any;

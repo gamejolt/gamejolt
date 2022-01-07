@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { formatCurrency } from '../../../../_common/filters/currency';
 import { BaseForm, FormOnSubmit } from '../../../../_common/form-vue/form.service';
@@ -9,11 +9,10 @@ interface WithdrawFundsFormModel {
 	amount: number;
 }
 
+class Wrapper extends BaseForm<WithdrawFundsFormModel> {}
+
 @Options({})
-export default class FormWithdrawFunds
-	extends BaseForm<WithdrawFundsFormModel>
-	implements FormOnSubmit
-{
+export default class FormWithdrawFunds extends mixins(Wrapper) implements FormOnSubmit {
 	@Prop(User) user!: User;
 	@Prop(String) paypalEmail!: string;
 	@Prop(Number) minAmount!: number;

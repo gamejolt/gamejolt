@@ -1,5 +1,5 @@
 import { CancelTokenSource } from 'axios';
-import { Emit, Options, Prop, Watch } from 'vue-property-decorator';
+import { Emit, mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
 import { formatNumber } from '../../../../../_common/filters/number';
@@ -41,6 +41,8 @@ export const enum VideoStatus {
 	COMPLETE = 'complete',
 }
 
+class Wrapper extends BaseForm<FormModel> {}
+
 @Options({
 	components: {
 		AppLoadingFade,
@@ -56,7 +58,7 @@ export const enum VideoStatus {
 	},
 })
 export default class AppFormPostVideo
-	extends BaseForm<FormModel>
+	extends mixins(Wrapper)
 	implements FormOnSubmit, FormOnLoad, FormOnSubmitError, FormOnSubmitSuccess
 {
 	@Prop(propRequired(FiresidePost)) post!: FiresidePost;

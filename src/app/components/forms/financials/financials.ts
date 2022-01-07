@@ -1,4 +1,4 @@
-import { Options } from 'vue-property-decorator';
+import { mixins, Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
 import { formatCurrency } from '../../../../_common/filters/currency';
@@ -25,6 +25,8 @@ interface FormModel {
 	percentage_split: number;
 }
 
+class Wrapper extends BaseForm<FormModel> {}
+
 @Options({
 	components: {
 		AppExpand,
@@ -37,7 +39,7 @@ interface FormModel {
 	},
 })
 export default class FormFinancials
-	extends BaseForm<FormModel>
+	extends mixins(Wrapper)
 	implements FormOnSubmit, FormOnLoad, FormOnSubmitError
 {
 	// We will set this to which agreement we should show them depending on

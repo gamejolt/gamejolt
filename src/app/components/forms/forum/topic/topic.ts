@@ -1,4 +1,4 @@
-import { Emit, Options, Prop } from 'vue-property-decorator';
+import { Emit, mixins, Options, Prop } from 'vue-property-decorator';
 import AppFormControlContent from '../../../../../_common/form-vue/controls/AppFormControlContent.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import {
@@ -9,12 +9,14 @@ import {
 import { ForumChannel } from '../../../../../_common/forum/channel/channel.model';
 import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
 
+class Wrapper extends BaseForm<ForumTopic> {}
+
 @Options({
 	components: {
 		AppFormControlContent,
 	},
 })
-export default class FormForumTopic extends BaseForm<ForumTopic> {
+export default class FormForumTopic extends mixins(Wrapper) {
 	@Prop(ForumChannel) channel!: ForumChannel;
 
 	modelClass = ForumTopic;

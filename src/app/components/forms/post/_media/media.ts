@@ -1,4 +1,4 @@
-import { Emit, Options, Prop } from 'vue-property-decorator';
+import { Emit, mixins, Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
@@ -22,6 +22,8 @@ interface FormModel {
 	_progress: ProgressEvent | null;
 }
 
+class Wrapper extends BaseForm<FormModel> {}
+
 @Options({
 	components: {
 		draggable,
@@ -33,7 +35,7 @@ interface FormModel {
 	},
 })
 export default class AppFormPostMedia
-	extends BaseForm<FormModel>
+	extends mixins(Wrapper)
 	implements FormOnSubmit, FormOnSubmitSuccess, FormOnSubmitError
 {
 	@Prop(FiresidePost)

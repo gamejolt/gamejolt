@@ -1,5 +1,5 @@
 import { IClientOSInfo } from 'client-voodoo';
-import { Options } from 'vue-property-decorator';
+import { mixins, Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { ClientLogger } from '../../../../_common/client/logger/logger.service';
 import { BaseForm, FormOnSubmit } from '../../../../_common/form-vue/form.service';
@@ -15,8 +15,10 @@ interface FormModel {
 	localdb_packages: { [id: number]: LocalDbPackage };
 }
 
+class Wrapper extends BaseForm<FormModel> {}
+
 @Options({})
-export default class FormClientSystemReport extends BaseForm<FormModel> implements FormOnSubmit {
+export default class FormClientSystemReport extends mixins(Wrapper) implements FormOnSubmit {
 	@ClientLibraryState
 	games!: ClientLibraryStore['gamesById'];
 

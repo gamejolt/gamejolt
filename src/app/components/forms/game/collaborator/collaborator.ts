@@ -1,15 +1,17 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
 import { AppFocusWhen } from '../../../../../_common/form-vue/focus-when.directive';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
+
+class Wrapper extends BaseForm<Collaborator> {}
 
 @Options({
 	directives: {
 		AppFocusWhen,
 	},
 })
-export default class FormGameCollaborator extends BaseForm<Collaborator> {
+export default class FormGameCollaborator extends mixins(Wrapper) {
 	modelClass = Collaborator;
 	saveMethod = '$invite' as const;
 

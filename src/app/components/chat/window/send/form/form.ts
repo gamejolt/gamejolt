@@ -1,5 +1,5 @@
 import { nextTick } from 'vue';
-import { Emit, Inject, Options, Prop, Watch } from 'vue-property-decorator';
+import { Emit, Inject, mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { isMac } from '../../../../../../utils/utils';
 import { propRequired } from '../../../../../../utils/vue';
 import { ContentContext } from '../../../../../../_common/content/content-context';
@@ -35,6 +35,8 @@ export type FormModel = {
 	id?: number;
 };
 
+class Wrapper extends BaseForm<FormModel> {}
+
 @Options({
 	components: {
 		AppFormControlContent,
@@ -44,7 +46,7 @@ export type FormModel = {
 		AppTooltip,
 	},
 })
-export default class AppChatWindowSendForm extends BaseForm<FormModel> {
+export default class AppChatWindowSendForm extends mixins(Wrapper) {
 	@Prop(propRequired(Boolean)) singleLineMode!: boolean;
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 

@@ -1,10 +1,12 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { Connection } from '../../../../_common/connection/connection-service';
 import { BaseForm, FormOnSubmit } from '../../../../_common/form-vue/form.service';
 
+class Wrapper extends BaseForm<any> {}
+
 @Options({})
-export default class FormResetPassword extends BaseForm<any> implements FormOnSubmit {
+export default class FormResetPassword extends mixins(Wrapper) implements FormOnSubmit {
 	@Prop(Number) userId!: number;
 	@Prop(String) token!: string;
 

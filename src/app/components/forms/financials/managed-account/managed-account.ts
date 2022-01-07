@@ -1,5 +1,5 @@
 import * as StripeData from 'stripe';
-import { Options } from 'vue-property-decorator';
+import { mixins, Options } from 'vue-property-decorator';
 import { loadScript } from '../../../../../utils/utils';
 import { Api } from '../../../../../_common/api/api.service';
 import AppExpand from '../../../../../_common/expand/expand.vue';
@@ -41,6 +41,8 @@ type PersonRelationship = keyof NonNullable<StripeData.accounts.IPerson['relatio
 // Person requirement fields start with the person id, which looks like "person_ID"
 const PERSON_REQUIREMENT_FIELD = new RegExp(`^(person_.*?)\\.`);
 
+class Wrapper extends BaseForm<FormModel> {}
+
 @Options({
 	components: {
 		AppLoading,
@@ -49,10 +51,7 @@ const PERSON_REQUIREMENT_FIELD = new RegExp(`^(person_.*?)\\.`);
 		AppFinancialsManagedAccountCompanyDetails,
 	},
 })
-export default class FormFinancialsManagedAccount
-	extends BaseForm<FormModel>
-	implements FormOnSubmit
-{
+export default class FormFinancialsManagedAccount extends mixins(Wrapper) implements FormOnSubmit {
 	scriptLoaded = false;
 	isLoaded = false;
 

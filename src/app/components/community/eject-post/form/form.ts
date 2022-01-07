@@ -1,4 +1,4 @@
-import { Emit, Options, Prop, Watch } from 'vue-property-decorator';
+import { Emit, mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { Community } from '../../../../../_common/community/community.model';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
@@ -15,8 +15,10 @@ export type FormModel = {
 	reason: string | null;
 };
 
+class Wrapper extends BaseForm<FormModel> {}
+
 @Options({})
-export default class FormCommunityEjectPost extends BaseForm<FormModel> {
+export default class FormCommunityEjectPost extends mixins(Wrapper) {
 	@Prop(propRequired(Community)) community!: Community;
 
 	@Emit('change') emitChange(_form: FormModel) {}

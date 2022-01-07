@@ -1,4 +1,4 @@
-import { Options, Watch } from 'vue-property-decorator';
+import { mixins, Options, Watch } from 'vue-property-decorator';
 import { Community } from '../../../../../_common/community/community.model';
 import AppFormControlCrop from '../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
@@ -13,6 +13,8 @@ type FormModel = Community & {
 	header_crop: any;
 };
 
+class Wrapper extends BaseForm<FormModel> {}
+
 @Options({
 	components: {
 		AppFormControlUpload,
@@ -20,7 +22,7 @@ type FormModel = Community & {
 	},
 })
 export default class FormCommunityHeader
-	extends BaseForm<FormModel>
+	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnBeforeSubmit
 {
 	modelClass = Community as any;

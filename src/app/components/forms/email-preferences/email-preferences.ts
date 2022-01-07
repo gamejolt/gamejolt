@@ -1,4 +1,4 @@
-import { Options } from 'vue-property-decorator';
+import { mixins, Options } from 'vue-property-decorator';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm, FormOnBeforeSubmit } from '../../../../_common/form-vue/form.service';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
@@ -9,16 +9,15 @@ interface FormModel extends User {
 	notifications: string[];
 }
 
+class Wrapper extends BaseForm<FormModel> {}
+
 @Options({
 	components: {
 		AppFormControlToggle,
 		AppLoadingFade,
 	},
 })
-export default class FormEmailPreferences
-	extends BaseForm<FormModel>
-	implements FormOnBeforeSubmit
-{
+export default class FormEmailPreferences extends mixins(Wrapper) implements FormOnBeforeSubmit {
 	modelClass = User as any;
 	saveMethod = '$saveEmailPreferences' as const;
 

@@ -1,4 +1,4 @@
-import { Options, Prop, Watch } from 'vue-property-decorator';
+import { mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
@@ -11,16 +11,15 @@ type NewGameBuildFormModel = GameBuild & {
 	file: File;
 };
 
+class Wrapper extends BaseForm<NewGameBuildFormModel> {}
+
 @Options({
 	components: {
 		AppFormControlUpload,
 		AppExpand,
 	},
 })
-export default class FormGameNewBuild
-	extends BaseForm<NewGameBuildFormModel>
-	implements FormOnLoad
-{
+export default class FormGameNewBuild extends mixins(Wrapper) implements FormOnLoad {
 	modelClass = GameBuild as any;
 
 	@Prop(String) type!: 'downloadable' | 'browser';

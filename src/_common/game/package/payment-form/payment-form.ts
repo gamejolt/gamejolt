@@ -1,4 +1,4 @@
-import { Emit, Options, Prop, Watch } from 'vue-property-decorator';
+import { Emit, mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { arrayIndexBy } from '../../../../utils/array';
 import { Api } from '../../../api/api.service';
@@ -32,6 +32,8 @@ import { GamePackage } from '../package.model';
 
 type CheckoutType = 'cc-stripe' | 'paypal' | 'wallet';
 
+class Wrapper extends BaseForm<any> {}
+
 @Options({
 	components: {
 		AppLoading,
@@ -45,7 +47,7 @@ type CheckoutType = 'cc-stripe' | 'paypal' | 'wallet';
 	},
 })
 export default class FormGamePackagePayment
-	extends BaseForm<any>
+	extends mixins(Wrapper)
 	implements FormOnSubmit, FormOnSubmitSuccess, FormOnSubmitError
 {
 	@Prop(Game) game!: Game;

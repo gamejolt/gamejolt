@@ -1,6 +1,6 @@
 import { determine } from 'jstimezonedetect';
 import { nextTick } from 'vue';
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
@@ -13,12 +13,14 @@ class FormModel extends CommunityChannel {
 	timezone: string | null = null;
 }
 
+class Wrapper extends BaseForm<FormModel> {}
+
 @Options({
 	components: {
 		AppFormCommunityChannelPermissions,
 	},
 })
-export default class FormCommunityChannelAdd extends BaseForm<FormModel> {
+export default class FormCommunityChannelAdd extends mixins(Wrapper) {
 	@Prop(propRequired(Community)) community!: Community;
 	@Prop(propRequired(Array)) channels!: CommunityChannel[];
 	@Prop(propRequired(Array)) archivedChannels!: CommunityChannel[];

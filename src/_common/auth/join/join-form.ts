@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../api/api.service';
 import { Connection } from '../../connection/connection-service';
 import { Environment } from '../../environment/environment.service';
@@ -17,6 +17,8 @@ export type FormModel = {
 	token: string;
 };
 
+class Wrapper extends BaseForm<FormModel> {}
+
 @Options({
 	components: {
 		AppLoading,
@@ -26,7 +28,7 @@ export type FormModel = {
 	},
 })
 export default class AppAuthJoinForm
-	extends BaseForm<FormModel>
+	extends mixins(Wrapper)
 	implements FormOnSubmit, FormOnSubmitSuccess
 {
 	@Prop(Boolean)

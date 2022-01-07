@@ -1,4 +1,4 @@
-import { Options, Prop, Watch } from 'vue-property-decorator';
+import { mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { REGEX_VIDEO, REGEX_VIMEO, REGEX_YOUTUBE } from '../../../../../utils/regex';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
@@ -9,12 +9,14 @@ type FormModel = GameVideo & {
 	_url: string;
 };
 
+class Wrapper extends BaseForm<FormModel> {}
+
 @Options({
 	components: {
 		AppVideoEmbed,
 	},
 })
-export default class FormGameVideo extends BaseForm<FormModel> {
+export default class FormGameVideo extends mixins(Wrapper) {
 	@Prop(Game) game!: Game;
 
 	modelClass = GameVideo as any;

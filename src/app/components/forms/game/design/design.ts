@@ -1,4 +1,4 @@
-import { Options, Watch } from 'vue-property-decorator';
+import { mixins, Options, Watch } from 'vue-property-decorator';
 import AppEditableOverlay from '../../../../../_common/editable-overlay/editable-overlay.vue';
 import AppFormControlTheme from '../../../../../_common/form-vue/controls/AppFormControlTheme.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
@@ -9,6 +9,8 @@ import { ThemeMutation, ThemeState, ThemeStore } from '../../../../../_common/th
 import { GameThumbnailModal } from '../../../game/thumbnail-modal/thumbnail-modal.service';
 import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
 
+class Wrapper extends BaseForm<Game> {}
+
 @Options({
 	components: {
 		AppFormControlTheme,
@@ -17,7 +19,7 @@ import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
 		AppDashGameWizardControls,
 	},
 })
-export default class FormGameDesign extends BaseForm<Game> {
+export default class FormGameDesign extends mixins(Wrapper) {
 	modelClass = Game as any;
 	saveMethod = '$saveDesign' as const;
 

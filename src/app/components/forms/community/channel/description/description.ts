@@ -1,4 +1,4 @@
-import { Options } from 'vue-property-decorator';
+import { mixins, Options } from 'vue-property-decorator';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import AppFormControlContent from '../../../../../../_common/form-vue/controls/AppFormControlContent.vue';
 import { BaseForm, FormOnLoad } from '../../../../../../_common/form-vue/form.service';
@@ -8,15 +8,14 @@ import {
 	validateContentRequired,
 } from '../../../../../../_common/form-vue/validators';
 
+class Wrapper extends BaseForm<CommunityChannel> {}
+
 @Options({
 	components: {
 		AppFormControlContent,
 	},
 })
-export default class FormCommunityChannelDescription
-	extends BaseForm<CommunityChannel>
-	implements FormOnLoad
-{
+export default class FormCommunityChannelDescription extends mixins(Wrapper) implements FormOnLoad {
 	modelClass = CommunityChannel;
 	saveMethod = '$saveDescription' as const;
 	lengthLimit = 5_000;

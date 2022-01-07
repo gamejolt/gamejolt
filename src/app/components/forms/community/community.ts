@@ -1,4 +1,4 @@
-import { Options } from 'vue-property-decorator';
+import { mixins, Options } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
 import { Community } from '../../../../_common/community/community.model';
 import AppFormControlTheme from '../../../../_common/form-vue/controls/AppFormControlTheme.vue';
@@ -9,13 +9,15 @@ import { ThemeMutation, ThemeState, ThemeStore } from '../../../../_common/theme
 import { Store } from '../../../store';
 import AppPostAddButtonFormControl from '../../post/add-button/AppPostAddButtonFormControl.vue';
 
+class Wrapper extends BaseForm<Community> {}
+
 @Options({
 	components: {
 		AppPostAddButtonFormControl,
 		AppFormControlTheme,
 	},
 })
-export default class FormCommunity extends BaseForm<Community> implements FormOnSubmitSuccess {
+export default class FormCommunity extends mixins(Wrapper) implements FormOnSubmitSuccess {
 	modelClass = Community;
 
 	@Action

@@ -1,15 +1,17 @@
 import { nextTick } from 'vue';
-import { Emit, Options } from 'vue-property-decorator';
+import { Emit, mixins, Options } from 'vue-property-decorator';
 import { CommunityCompetition } from '../../../../../../../_common/community/competition/competition.model';
 import AppFormControlToggle from '../../../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm } from '../../../../../../../_common/form-vue/form.service';
+
+class Wrapper extends BaseForm<CommunityCompetition> {}
 
 @Options({
 	components: {
 		AppFormControlToggle,
 	},
 })
-export default class FormCommunityCompetitionVotingToggle extends BaseForm<CommunityCompetition> {
+export default class FormCommunityCompetitionVotingToggle extends mixins(Wrapper) {
 	modelClass = CommunityCompetition;
 	saveMethod = '$saveVotingEnabled' as const;
 

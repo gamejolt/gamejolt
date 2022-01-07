@@ -1,16 +1,18 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
 import { GameSong } from '../../../../../_common/game/song/song.model';
 
+class Wrapper extends BaseForm<GameSong> {}
+
 @Options({
 	components: {
 		AppFormControlUpload,
 	},
 })
-export default class FormGameSong extends BaseForm<GameSong> implements FormOnLoad {
+export default class FormGameSong extends mixins(Wrapper) implements FormOnLoad {
 	@Prop(Game) game!: Game;
 
 	modelClass = GameSong;

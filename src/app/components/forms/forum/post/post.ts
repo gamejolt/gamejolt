@@ -1,5 +1,5 @@
 import { nextTick } from 'vue';
-import { Emit, Options, Prop } from 'vue-property-decorator';
+import { Emit, mixins, Options, Prop } from 'vue-property-decorator';
 import AppFormControlContent from '../../../../../_common/form-vue/controls/AppFormControlContent.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import {
@@ -10,12 +10,14 @@ import {
 import { ForumPost } from '../../../../../_common/forum/post/post.model';
 import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
 
+class Wrapper extends BaseForm<ForumPost> {}
+
 @Options({
 	components: {
 		AppFormControlContent,
 	},
 })
-export default class FormForumPost extends BaseForm<ForumPost> {
+export default class FormForumPost extends mixins(Wrapper) {
 	@Prop(ForumTopic) topic!: ForumTopic;
 	@Prop(ForumPost) replyTo?: ForumPost;
 

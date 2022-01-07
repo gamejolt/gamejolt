@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { BaseForm, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
 import { GameSketchfab } from '../../../../../_common/game/sketchfab/sketchfab.model';
@@ -8,12 +8,14 @@ import {
 } from '../../../../../_common/sketchfab/embed/embed';
 import AppSketchfabEmbed from '../../../../../_common/sketchfab/embed/embed.vue';
 
+class Wrapper extends BaseForm<GameSketchfab> {}
+
 @Options({
 	components: {
 		AppSketchfabEmbed,
 	},
 })
-export default class FormGameSketchfab extends BaseForm<GameSketchfab> implements FormOnSubmit {
+export default class FormGameSketchfab extends mixins(Wrapper) implements FormOnSubmit {
 	@Prop(Game) game!: Game;
 
 	readonly SKETCHFAB_FIELD_REGEX = SKETCHFAB_FIELD_VALIDATION_REGEX;

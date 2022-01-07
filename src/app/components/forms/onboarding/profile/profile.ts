@@ -1,4 +1,4 @@
-import { Options } from 'vue-property-decorator';
+import { mixins, Options } from 'vue-property-decorator';
 import { ContentDocument } from '../../../../../_common/content/content-document';
 import AppEditableOverlay from '../../../../../_common/editable-overlay/editable-overlay.vue';
 import AppFormControlContent from '../../../../../_common/form-vue/controls/AppFormControlContent.vue';
@@ -24,7 +24,7 @@ export type FormModel = {
 	},
 })
 export default class FormOnboardingProfile
-	extends OnboardingComponent<FormModel>
+	extends mixins(OnboardingComponent)
 	implements FormOnLoad, FormOnSubmit
 {
 	stepName = 'profile' as OnboardingStep;

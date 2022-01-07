@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../api/api.service';
 import { Connection } from '../../connection/connection-service';
 import { Environment } from '../../environment/environment.service';
@@ -10,6 +10,8 @@ import AppLoading from '../../loading/loading.vue';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 import googleImage from '../google-icon.svg';
 
+class Wrapper extends BaseForm<any> {}
+
 @Options({
 	components: {
 		AppLoading,
@@ -18,7 +20,7 @@ import googleImage from '../google-icon.svg';
 		AppTooltip,
 	},
 })
-export default class AppAuthLoginForm extends BaseForm<any> implements FormOnSubmit {
+export default class AppAuthLoginForm extends mixins(Wrapper) implements FormOnSubmit {
 	@Prop(Boolean)
 	overlay?: boolean;
 

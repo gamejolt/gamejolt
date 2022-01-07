@@ -1,4 +1,4 @@
-import { Emit, Options, Prop } from 'vue-property-decorator';
+import { Emit, mixins, Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
@@ -17,6 +17,8 @@ class FormModel extends CommunityChannel {
 	permission_posting = 'all';
 }
 
+class Wrapper extends BaseForm<FormModel> {}
+
 @Options({
 	components: {
 		AppImgResponsive,
@@ -26,7 +28,7 @@ class FormModel extends CommunityChannel {
 	},
 })
 export default class FormCommunityChannelEdit
-	extends BaseForm<FormModel>
+	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnSubmitSuccess
 {
 	@Prop(propRequired(Community)) community!: Community;

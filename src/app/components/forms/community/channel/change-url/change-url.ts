@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
@@ -9,12 +9,14 @@ type FormModel = {
 	title: string;
 };
 
+class Wrapper extends BaseForm<FormModel> {}
+
 @Options({
 	components: {
 		AppFormCommunityChannelTitle,
 	},
 })
-export default class FormCommunityChannelChangeUrl extends BaseForm<FormModel> {
+export default class FormCommunityChannelChangeUrl extends mixins(Wrapper) {
 	@Prop(propRequired(Community)) community!: Community;
 	@Prop(propRequired(Array)) channels!: CommunityChannel[];
 

@@ -1,4 +1,4 @@
-import { Options, Prop, Watch } from 'vue-property-decorator';
+import { mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../utils/vue';
 import {
 	Community,
@@ -19,6 +19,8 @@ type FormModel = Community & {
 	background_crop: any;
 };
 
+class Wrapper extends BaseForm<FormModel> {}
+
 @Options({
 	components: {
 		AppFormControlUpload,
@@ -26,7 +28,7 @@ type FormModel = Community & {
 	},
 })
 export default class FormCommunityChannelPresetBackground
-	extends BaseForm<FormModel>
+	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnBeforeSubmit, FormOnSubmit
 {
 	@Prop(propRequired(String)) presetType!: CommunityPresetChannelType;

@@ -1,4 +1,4 @@
-import { Emit, Options, Prop, Watch } from 'vue-property-decorator';
+import { Emit, mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../utils/array';
 import { findRequiredVueParent } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
@@ -33,6 +33,8 @@ type GameBuildFormModel = GameBuild & {
 	launch_other: string;
 };
 
+class Wrapper extends BaseForm<GameBuildFormModel> {}
+
 @Options({
 	components: {
 		AppCardListItem,
@@ -46,7 +48,7 @@ type GameBuildFormModel = GameBuild & {
 		AppTooltip,
 	},
 })
-export default class FormGameBuild extends BaseForm<GameBuildFormModel> implements FormOnLoad {
+export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad {
 	modelClass = GameBuild as any;
 
 	@Prop(Game)

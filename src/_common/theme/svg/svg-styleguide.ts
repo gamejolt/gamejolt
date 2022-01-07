@@ -1,4 +1,4 @@
-import { Options, Watch } from 'vue-property-decorator';
+import { mixins, Options, Watch } from 'vue-property-decorator';
 import * as illustrations from '../../../app/img/ill/illustrations';
 import { imageGameJoltClientLogo, imageGameJoltLogo, imageJolt } from '../../../app/img/images';
 import AppForm from '../../form-vue/AppForm.vue';
@@ -25,6 +25,8 @@ interface FormModel {
 	strictColors?: boolean;
 }
 
+class Wrapper extends BaseForm<FormModel> {}
+
 @Options({
 	components: {
 		AppTheme,
@@ -37,7 +39,7 @@ interface FormModel {
 		AppFormControlTextarea,
 	},
 })
-export default class AppThemeSvgStyleguide extends BaseForm<FormModel> {
+export default class AppThemeSvgStyleguide extends mixins(Wrapper) {
 	@ThemeState('theme')
 	storeTheme!: ThemeStore['theme'];
 

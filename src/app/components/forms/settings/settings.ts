@@ -1,4 +1,4 @@
-import { Options, Watch } from 'vue-property-decorator';
+import { mixins, Options, Watch } from 'vue-property-decorator';
 import * as _ClientAutoStartMod from '../../../../_common/client/autostart/autostart.service';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm } from '../../../../_common/form-vue/form.service';
@@ -41,12 +41,14 @@ type FormModel = {
 	sticker_sounds: boolean;
 };
 
+class Wrapper extends BaseForm<FormModel> {}
+
 @Options({
 	components: {
 		AppFormControlToggle,
 	},
 })
-export default class FormSettings extends BaseForm<FormModel> {
+export default class FormSettings extends mixins(Wrapper) {
 	@AppState user!: AppStore['user'];
 	@ThemeState isDark!: ThemeStore['isDark'];
 	@ThemeState alwaysOurs!: ThemeStore['alwaysOurs'];

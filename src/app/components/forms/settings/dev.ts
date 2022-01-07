@@ -1,4 +1,4 @@
-import { Options } from 'vue-property-decorator';
+import { mixins, Options } from 'vue-property-decorator';
 import {
 	ConfigOption,
 	ConfigOptionBoolean,
@@ -11,12 +11,14 @@ import { BaseForm } from '../../../../_common/form-vue/form.service';
 
 type FormModel = Record<string, boolean | string>;
 
+class Wrapper extends BaseForm<FormModel> {}
+
 @Options({
 	components: {
 		AppFormControlToggle,
 	},
 })
-export default class FormSettingsDev extends BaseForm<FormModel> {
+export default class FormSettingsDev extends mixins(Wrapper) {
 	get tests(): (ConfigOptionBoolean | ConfigOptionString)[] {
 		return ConfigService.options.filter(
 			i => i instanceof ConfigOptionBoolean || i instanceof ConfigOptionString

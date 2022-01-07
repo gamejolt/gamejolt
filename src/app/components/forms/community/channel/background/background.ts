@@ -1,4 +1,4 @@
-import { Options, Watch } from 'vue-property-decorator';
+import { mixins, Options, Watch } from 'vue-property-decorator';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import AppFormControlCrop from '../../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
 import AppFormControlUpload from '../../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
@@ -13,6 +13,8 @@ type FormModel = CommunityChannel & {
 	background_crop: any;
 };
 
+class Wrapper extends BaseForm<FormModel> {}
+
 @Options({
 	components: {
 		AppFormControlUpload,
@@ -20,7 +22,7 @@ type FormModel = CommunityChannel & {
 	},
 })
 export default class FormCommunityChannelBackground
-	extends BaseForm<FormModel>
+	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnBeforeSubmit
 {
 	modelClass = CommunityChannel as any;

@@ -25,7 +25,7 @@ export default class RouteWelcome extends BaseRouteComponent {
 	isSocialRegistration = false;
 
 	currentStep = 0;
-	steps: (new () => OnboardingComponent<any>)[] = [FormOnboardingProfile, FormOnboardingFollows];
+	steps: (new () => OnboardingComponent)[] = [FormOnboardingProfile, FormOnboardingFollows];
 
 	get routeTitle() {
 		return this.$gettext('Welcome to Game Jolt!');

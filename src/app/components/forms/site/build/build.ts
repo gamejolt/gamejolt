@@ -1,19 +1,18 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import { BaseForm, FormOnLoad, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
 import { SiteBuild } from '../../../../../_common/site/build/build-model';
 import { Site } from '../../../../../_common/site/site-model';
 
+class Wrapper extends BaseForm<SiteBuild> {}
+
 @Options({
 	components: {
 		AppFormControlUpload,
 	},
 })
-export default class FormDashSiteBuild
-	extends BaseForm<SiteBuild>
-	implements FormOnLoad, FormOnSubmit
-{
+export default class FormDashSiteBuild extends mixins(Wrapper) implements FormOnLoad, FormOnSubmit {
 	modelClass = SiteBuild;
 
 	@Prop(Site) site!: Site;

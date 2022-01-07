@@ -1,4 +1,4 @@
-import { Options, Prop, Watch } from 'vue-property-decorator';
+import { mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
@@ -12,6 +12,8 @@ import { Order } from '../../../../_common/order/order.model';
 import { AppStore } from '../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 
+class Wrapper extends BaseForm<any> {}
+
 @Options({
 	components: {
 		AppExpand,
@@ -22,7 +24,7 @@ import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 		AppFocusWhen,
 	},
 })
-export default class FormPayment extends BaseForm<any> implements FormOnSubmit {
+export default class FormPayment extends mixins(Wrapper) implements FormOnSubmit {
 	@State app!: AppStore;
 
 	@Prop(Array) cards!: any[];

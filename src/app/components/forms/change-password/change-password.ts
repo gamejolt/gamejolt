@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { BaseForm, FormOnSubmit } from '../../../../_common/form-vue/form.service';
 
@@ -8,8 +8,10 @@ type FormModel = {
 	confirm_password: string;
 };
 
+class Wrapper extends BaseForm<FormModel> {}
+
 @Options({})
-export default class FormChangePassword extends BaseForm<FormModel> implements FormOnSubmit {
+export default class FormChangePassword extends mixins(Wrapper) implements FormOnSubmit {
 	@Prop({ type: Boolean, default: true })
 	requiresOld!: boolean;
 

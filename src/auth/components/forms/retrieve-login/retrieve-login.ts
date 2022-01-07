@@ -1,10 +1,12 @@
-import { Options } from 'vue-property-decorator';
+import { mixins, Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { Connection } from '../../../../_common/connection/connection-service';
 import { BaseForm, FormOnSubmit } from '../../../../_common/form-vue/form.service';
 
+class Wrapper extends BaseForm<any> {}
+
 @Options({})
-export default class FormRetrieveLogin extends BaseForm<any> implements FormOnSubmit {
+export default class FormRetrieveLogin extends mixins(Wrapper) implements FormOnSubmit {
 	invalidEmail = false;
 
 	readonly Connection = Connection;

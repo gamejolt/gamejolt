@@ -1,4 +1,4 @@
-import { Options } from 'vue-property-decorator';
+import { mixins, Options } from 'vue-property-decorator';
 import { Community } from '../../../../../_common/community/community.model';
 import { FormOnBeforeSubmit, FormOnLoad } from '../../../../../_common/form-vue/form.service';
 import Onboarding, { OnboardingStep } from '../../../../../_common/onboarding/onboarding.service';
@@ -13,7 +13,7 @@ import AppOnboardingFollowsCommunityItem from './community-item/community-item.v
 	},
 })
 export default class FormOnboardingFollows
-	extends OnboardingComponent<any>
+	extends mixins(OnboardingComponent)
 	implements FormOnLoad, FormOnBeforeSubmit
 {
 	stepName = 'follows' as OnboardingStep;

@@ -1,4 +1,4 @@
-import { Options, Watch } from 'vue-property-decorator';
+import { mixins, Options, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { formatFilesize } from '../../../../_common/filters/filesize';
 import AppFormControlCrop from '../../../../_common/form-vue/controls/AppFormControlCrop.vue';
@@ -17,6 +17,8 @@ type FormModel = User & {
 	avatar_crop?: any;
 };
 
+class Wrapper extends BaseForm<FormModel> {}
+
 @Options({
 	components: {
 		AppFormControlUpload,
@@ -24,10 +26,7 @@ type FormModel = User & {
 		AppFormControlToggle,
 	},
 })
-export default class FormAvatar
-	extends BaseForm<FormModel>
-	implements FormOnLoad, FormOnBeforeSubmit
-{
+export default class FormAvatar extends mixins(Wrapper) implements FormOnLoad, FormOnBeforeSubmit {
 	modelClass = User;
 	saveMethod = '$saveAvatar' as const;
 

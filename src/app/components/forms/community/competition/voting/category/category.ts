@@ -1,9 +1,11 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../../utils/vue';
 import { CommunityCompetition } from '../../../../../../../_common/community/competition/competition.model';
 import { CommunityCompetitionVotingCategory } from '../../../../../../../_common/community/competition/voting-category/voting-category.model';
 import AppFormControlTextarea from '../../../../../../../_common/form-vue/controls/AppFormControlTextarea.vue';
 import { BaseForm, FormOnBeforeSubmit } from '../../../../../../../_common/form-vue/form.service';
+
+class Wrapper extends BaseForm<CommunityCompetitionVotingCategory> {}
 
 @Options({
 	components: {
@@ -11,7 +13,7 @@ import { BaseForm, FormOnBeforeSubmit } from '../../../../../../../_common/form-
 	},
 })
 export default class FormCommunityCompetitionVotingCategory
-	extends BaseForm<CommunityCompetitionVotingCategory>
+	extends mixins(Wrapper)
 	implements FormOnBeforeSubmit
 {
 	@Prop(propRequired(CommunityCompetition)) competition!: CommunityCompetition;

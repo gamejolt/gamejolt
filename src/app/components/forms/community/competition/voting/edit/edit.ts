@@ -1,5 +1,5 @@
 import { nextTick } from 'vue';
-import { Emit, Options } from 'vue-property-decorator';
+import { Emit, mixins, Options } from 'vue-property-decorator';
 import {
 	CommunityCompetition,
 	CompetitionPeriodVoting,
@@ -20,6 +20,8 @@ type RadioOption<T> = {
 	helpText?: string;
 };
 
+class Wrapper extends BaseForm<CommunityCompetition> {}
+
 @Options({
 	components: {
 		AppFormLegend,
@@ -28,7 +30,7 @@ type RadioOption<T> = {
 		AppFormControlToggle,
 	},
 })
-export default class FormCommunityCompetitionVotingEdit extends BaseForm<CommunityCompetition> {
+export default class FormCommunityCompetitionVotingEdit extends mixins(Wrapper) {
 	modelClass = CommunityCompetition;
 	timezoneService: FormTimezoneService<CommunityCompetition> | null = null;
 	saveMethod = '$saveVoting' as const;

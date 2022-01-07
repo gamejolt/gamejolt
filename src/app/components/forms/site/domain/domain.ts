@@ -1,4 +1,4 @@
-import { Options, Prop } from 'vue-property-decorator';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
@@ -11,13 +11,15 @@ interface FormModel {
 	type: string;
 }
 
+class Wrapper extends BaseForm<FormModel> {}
+
 @Options({
 	components: {
 		AppFormControlToggle,
 		AppExpand,
 	},
 })
-export default class FormSiteDomain extends BaseForm<FormModel> {
+export default class FormSiteDomain extends mixins(Wrapper) {
 	@Prop(User) user!: User;
 	@Prop(Game) game?: Game;
 

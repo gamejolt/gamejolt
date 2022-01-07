@@ -1,4 +1,4 @@
-import { Options, Watch } from 'vue-property-decorator';
+import { mixins, Options, Watch } from 'vue-property-decorator';
 import { Community } from '../../../../../_common/community/community.model';
 import { formatFilesize } from '../../../../../_common/filters/filesize';
 import AppFormControlCrop from '../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
@@ -14,6 +14,8 @@ type FormModel = Community & {
 	thumbnail_crop?: any;
 };
 
+class Wrapper extends BaseForm<FormModel> {}
+
 @Options({
 	components: {
 		AppFormControlUpload,
@@ -22,7 +24,7 @@ type FormModel = Community & {
 	},
 })
 export default class FormCommunityThumbnail
-	extends BaseForm<FormModel>
+	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnBeforeSubmit
 {
 	modelClass = Community;
