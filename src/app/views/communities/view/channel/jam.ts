@@ -1,3 +1,4 @@
+import { defineAsyncComponent } from 'vue';
 import { Inject, Options } from 'vue-property-decorator';
 import { router } from '../../..';
 import { arrayRemove } from '../../../../../utils/array';
@@ -40,8 +41,9 @@ import AppCommunitiesViewPageContainer from '../_page-container/page-container.v
 		AppFadeCollapse,
 		AppContentViewer,
 		AppCommunityPerms,
-		RouteCommunitiesViewChannelJamEntries: () =>
-			asyncRouteLoader(import('./jam-entries.vue'), router),
+		RouteCommunitiesViewChannelJamEntries: defineAsyncComponent(() =>
+			asyncRouteLoader(router, import('./jam-entries.vue'))
+		),
 	},
 })
 @RouteResolver({

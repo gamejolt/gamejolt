@@ -1,3 +1,4 @@
+import { defineAsyncComponent } from 'vue';
 import { Inject, Options } from 'vue-property-decorator';
 import { router } from '../../..';
 import { Api } from '../../../../../_common/api/api.service';
@@ -24,8 +25,12 @@ export const CommunitiesViewChannelDeps = {
 @Options({
 	name: 'RouteCommunitiesViewChannel',
 	components: {
-		RouteCommunitiesViewChannelFeed: () => asyncRouteLoader(import('./feed.vue'), router),
-		RouteCommunitiesViewChannelJam: () => asyncRouteLoader(import('./jam.vue'), router),
+		RouteCommunitiesViewChannelFeed: defineAsyncComponent(() =>
+			asyncRouteLoader(router, import('./feed.vue'))
+		),
+		RouteCommunitiesViewChannelJam: defineAsyncComponent(() =>
+			asyncRouteLoader(router, import('./jam.vue'))
+		),
 	},
 })
 @RouteResolver({
