@@ -46,7 +46,7 @@ export interface FormController<T = any> {
 	clearErrors: () => void;
 	setCustomError: (error: string) => void;
 	clearCustomError: (error: string) => void;
-	hasCustomError: (error: string) => void;
+	hasCustomError: (error: string) => boolean;
 
 	// Internal.
 	_groups: FormGroupController[];

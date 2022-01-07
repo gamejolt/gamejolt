@@ -42,7 +42,7 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 			return true;
 		}
 
-		return this.model && this.model.hasPerms('all');
+		return this.model?.hasPerms('all');
 	}
 
 	get hasBuildsPerms() {
@@ -51,7 +51,7 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 			return true;
 		}
 
-		return this.model && this.model.hasPerms('builds');
+		return this.model?.hasPerms('builds');
 	}
 
 	get hasSalesPerms() {
@@ -60,7 +60,7 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 			return true;
 		}
 
-		return this.model && this.model.hasPerms('sales');
+		return this.model?.hasPerms('sales');
 	}
 
 	get loadUrl() {

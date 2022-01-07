@@ -26,7 +26,7 @@ export default class FormCommunityCompetitionVotingToggle extends mixins(Wrapper
 			this.form.changed = false;
 		} else {
 			// Submit toggle.
-			await this._onSubmit();
+			await this.form.submit();
 		}
 	}
 }

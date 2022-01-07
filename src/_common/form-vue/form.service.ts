@@ -70,22 +70,31 @@ export class BaseForm<T> extends Vue {
 	readonly validateImageMaxDimensions = validateImageMaxDimensions;
 	readonly validatePattern = validatePattern;
 
-	form!: FormController<T>;
+	private form_: null | FormController<T> = null;
+
+	// We make sure the getters below have fallbacks for when the form isn't
+	// constructed yet. This happens when the child class calls these parent
+	// getters within their own getter functions.
+
+	get form() {
+		// This is what the base classes will call into, so we make this always available.
+		return this.form_!;
+	}
 
 	get method() {
-		return this.form.method;
+		return this.form_?.method ?? 'add';
 	}
 
 	get changed() {
-		return this.form.changed;
+		return this.form_?.changed ?? false;
 	}
 
 	get isLoaded() {
-		return this.form.isLoaded;
+		return this.form_?.isLoaded ?? false;
 	}
 
 	get serverErrors() {
-		return this.form.serverErrors;
+		return this.form_?.serverErrors ?? {};
 	}
 
 	get loadUrl(): undefined | string {
@@ -97,15 +106,15 @@ export class BaseForm<T> extends Vue {
 	}
 
 	get formModel() {
-		return this.form.formModel as Readonly<T>;
+		return (this.form_?.formModel ?? {}) as Readonly<T>;
 	}
 
 	get valid() {
-		return this.form.valid;
+		return this.form_?.valid ?? true;
 	}
 
 	created() {
-		this.form = createForm<T>({
+		this.form_ = createForm<T>({
 			model: toRef(this.$props as this, 'model'),
 			modelClass: this.modelClass,
 			saveMethod: computed(() => this.saveMethod),
@@ -121,95 +130,12 @@ export class BaseForm<T> extends Vue {
 				// We used to set up a submit handler on every form component
 				// automatically. This is to reproduce that effect.
 				(this as Partial<FormOnSubmitSuccess>).onSubmitSuccess?.(response);
-				this.emitSubmit(this.form.formModel, response);
+				this.emitSubmit(this.form_!.formModel, response);
 			},
 		});
 	}
 
 	onInit() {}
-
-	// created() {
-	// 	this.privateInit();
-	// }
-
-	// mounted() {
-	// 	if (!this.warnOnDiscard) {
-	// 		return;
-	// 	}
-
-	// 	this.changeDeregister = this.$router.beforeEach((_to, _from, next) => {
-	// 		if (this.changed) {
-	// 			if (
-	// 				!window.confirm(
-	// 					this.$gettext(`Are you sure you want to discard your unsaved changes?`)
-	// 				)
-	// 			) {
-	// 				return next(false);
-	// 			}
-	// 		}
-	// 		next();
-	// 	});
-	// }
-
-	// unmounted() {
-	// 	if (this.changeDeregister) {
-	// 		this.changeDeregister();
-	// 		this.changeDeregister = undefined;
-	// 	}
-	// }
-
-	// private privateInit() {
-	// 	// Is a base model defined? If so, then we're editing.
-	// 	if (this.model) {
-	// 		this.method = 'edit';
-
-	// 		// If a model class was assigned to this form, then create a copy of
-	// 		// it on the instance. Otherwise just copy the object.
-	// 		if (this.modelClass) {
-	// 			this.formModel = new this.modelClass(this.model);
-	// 		} else {
-	// 			this.formModel = Object.assign({}, this.model);
-	// 		}
-	// 	} else {
-	// 		// If we have a model class, then create a new one.
-	// 		if (this.modelClass) {
-	// 			this.formModel = new this.modelClass();
-	// 		} else {
-	// 			// Otherwise, just use an empty object as the form's model.
-	// 			this.formModel = {} as T;
-	// 		}
-	// 	}
-
-	// 	// This is the main way for forms to initialize.
-	// 	if ((this as any).onInit) {
-	// 		(this as any).onInit();
-	// 	}
-
-	// 	this._load();
-	// }
-
-	// private async _load() {
-	// 	if (this.isLoaded && !this.reloadOnSubmit) {
-	// 		return;
-	// 	}
-
-	// 	this.isLoaded = null;
-	// 	if (!this.loadUrl) {
-	// 		return;
-	// 	}
-
-	// 	this.isLoaded = false;
-
-	// 	const payload = await Api.sendRequest(this.loadUrl, this.loadData || undefined, {
-	// 		detach: true,
-	// 	});
-
-	// 	this.isLoaded = true;
-	// 	this.isLoadedBootstrapped = true;
-	// 	if ((this as any).onLoad) {
-	// 		(this as any).onLoad(payload);
-	// 	}
-	// }
 
 	/**
 	 * We used to call this to let vue know that a field changed. With vue 3 we
@@ -217,107 +143,20 @@ export class BaseForm<T> extends Vue {
 	 * now.
 	 */
 	setField<K extends keyof T>(key: K, value: T[K]) {
-		if (this.form.formModel) {
-			this.form.formModel[key] = value;
+		if (this.form_?.formModel) {
+			this.form_.formModel[key] = value;
 		}
 	}
 
 	setCustomError(error: string) {
-		this.form.setCustomError(error);
+		this.form_?.setCustomError(error);
 	}
 
 	clearCustomError(error: string) {
-		this.form.clearCustomError(error);
+		this.form_?.clearCustomError(error);
 	}
 
 	hasCustomError(error: string) {
-		return this.form.hasCustomError(error);
+		return this.form_?.hasCustomError(error) ?? false;
 	}
-
-	// async _onSubmit() {
-	// 	if (this.state.isProcessing) {
-	// 		return false;
-	// 	}
-
-	// 	this.state.isProcessing = true;
-
-	// 	let response: any;
-
-	// 	try {
-	// 		if ((this as any).onBeforeSubmit) {
-	// 			(this as any).onBeforeSubmit();
-	// 		}
-
-	// 		if ((this as any).onSubmit) {
-	// 			const _response = await (this as any).onSubmit();
-	// 			if (_response.success === false) {
-	// 				throw _response;
-	// 			}
-
-	// 			response = _response;
-	// 		} else if (this.modelClass) {
-	// 			response = await (this.formModel as any)[this.saveMethod || '$save']();
-
-	// 			// Copy it back to the base model.
-	// 			if (this.model) {
-	// 				Object.assign(this.model, this.formModel);
-	// 			}
-	// 		}
-
-	// 		if ((this as any).onSubmitSuccess) {
-	// 			(this as any).onSubmitSuccess(response);
-	// 		}
-
-	// 		// Reset our state.
-	// 		this.state.isProcessing = false;
-	// 		this.changed = false;
-	// 		this.attemptedSubmit = false;
-	// 		this.serverErrors = {};
-
-	// 		// Show successful form submission.
-	// 		this._showSuccess();
-
-	// 		// Send the new model back into the submit handler.
-	// 		this.emitSubmit(this.formModel, response);
-
-	// 		// If we should reset on successful submit, let's do that now.
-	// 		if (this.resetOnSubmit) {
-	// 			this.privateInit();
-
-	// 			// Reset again in case init triggered changes.
-	// 			this.changed = false;
-	// 		}
-
-	// 		return true;
-	// 	} catch (_response) {
-	// 		console.error('Form error', _response);
-
-	// 		// Store the server validation errors.
-	// 		if (_response && _response.errors) {
-	// 			this.serverErrors = _response.errors;
-	// 		}
-
-	// 		if ((this as any).onSubmitError) {
-	// 			(this as any).onSubmitError(_response);
-	// 		}
-
-	// 		// Reset our processing state.
-	// 		this.state.isProcessing = false;
-	// 		return false;
-	// 	}
-	// }
-
-	// private _showSuccess() {
-	// 	// Reset the timeout if it's already showing.
-	// 	if (this.successClearTimeout) {
-	// 		clearTimeout(this.successClearTimeout);
-	// 	}
-
-	// 	this.state.isShowingSuccess = true;
-
-	// 	this.successClearTimeout = setTimeout(() => {
-	// 		this.state.isShowingSuccess = false;
-	// 		this.successClearTimeout = undefined;
-	// 	}, 2000);
-	// }
 }

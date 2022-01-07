@@ -154,6 +154,10 @@ const props = defineProps({
 		type: Number,
 		default: 0,
 	},
+	prefix: {
+		type: String,
+		default: null,
+	},
 	mask: {
 		type: Array as PropType<(string | RegExp)[]>,
 		default: () => [],
@@ -174,7 +178,7 @@ const group = useFormGroup()!;
 const c = createFormControl('', toRef(props, 'validators'));
 
 const root = ref<HTMLInputElement>();
-const prefix = ref<HTMLSpanElement>();
+const prefixElement = ref<HTMLSpanElement>();
 
 const originalInputPaddingTop = ref(0);
 const originalInputPaddingLeft = ref(0);
@@ -197,11 +201,11 @@ function onChange() {
 	c.applyValue(root.value?.value ?? '');
 }
 
-useResizeObserver({ target: prefix, callback: recalcPositioning });
+useResizeObserver({ target: prefixElement, callback: recalcPositioning });
 
 onMounted(() => {
 	// If there's a prefix.
-	if (root.value && prefix.value) {
+	if (root.value && prefixElement.value) {
 		const styles = window.getComputedStyle(root.value);
 		originalInputPaddingTop.value = parseFloat(styles.paddingTop || '0');
 		originalInputPaddingLeft.value = parseFloat(styles.paddingLeft || '0');
@@ -213,8 +217,8 @@ onMounted(() => {
 });
 
 function recalcPositioning() {
-	if (prefix.value) {
-		paddingLeft.value = Ruler.outerWidth(prefix.value) + originalOffsetLeft.value + 'px';
+	if (prefixElement.value) {
+		paddingLeft.value = Ruler.outerWidth(prefixElement.value) + originalOffsetLeft.value + 'px';
 	}
 }
 
@@ -379,7 +383,7 @@ function recalcPositioning() {
 		/>
 		<span
 			v-if="prefix"
-			ref="prefix"
+			ref="prefixElement"
 			class="-prefix text-muted"
 			:style="{ top: `${originalOffsetTop}px`, left: `${originalOffsetLeft}px` }"
 		>

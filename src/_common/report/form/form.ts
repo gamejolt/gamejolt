@@ -311,7 +311,7 @@ export default class AppReportForm extends mixins(Wrapper) implements FormOnSubm
 		let hasErrors = false;
 
 		// Check that if we have contexts to choose from, at least one of them is selected.
-		if (!!this.formModel.reason) {
+		if (this.formModel.reason) {
 			const reason = this.reasons.find(i => i.radioValue === this.formModel.reason);
 			if (!reason) {
 				throw new Error('Invalid reason selected.');
@@ -342,12 +342,12 @@ export default class AppReportForm extends mixins(Wrapper) implements FormOnSubm
 
 		// Clear out context if the current reason doesn't have a context option.
 		if (!data.context || !this.reasons.find(i => i.radioValue === data.reason)!.contexts) {
-			delete data.context;
+			delete (data as any).context;
 		}
 
 		// Clear out source if the current reason doesn't have a source option.
 		if (!data.source || !this.reasons.find(i => i.radioValue === data.reason)!.source) {
-			delete data.source;
+			delete (data as any).source;
 		}
 
 		return Api.sendRequest('/web/report/submit', data, {
