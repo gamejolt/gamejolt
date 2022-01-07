@@ -232,7 +232,9 @@ function _setupBeforeRouteEnter(options: ComponentOptions) {
 			return;
 		}
 
-		this._onRouteChange(to, from);
+		//  We want the route to resolve, and then perform this as a sort of
+		//  "after route update."
+		setTimeout(() => this._onRouteChange(to, from));
 	};
 }
 
