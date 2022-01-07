@@ -22,8 +22,8 @@
 					</div>
 				</a>
 
-				<!-- History Navigator (for desktop client) -->
-				<app-client-history-navigator v-if="GJ_IS_DESKTOP_APP" />
+				<!-- History Navigator (for desktop app) -->
+				<app-client-history-navigator />
 
 				<router-link
 					v-app-track-event="`top-nav:main-menu:home`"

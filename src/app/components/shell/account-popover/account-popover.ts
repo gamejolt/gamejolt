@@ -1,7 +1,7 @@
 import { Inject, Options, Vue } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
-import { Client } from '../../../../_common/client/client-exports';
+import { Client } from '../../../../_common/client/safe-exports';
 import { Connection } from '../../../../_common/connection/connection-service';
 import { DrawerStore, DrawerStoreKey } from '../../../../_common/drawer/drawer-store';
 import { formatCurrency } from '../../../../_common/filters/currency';

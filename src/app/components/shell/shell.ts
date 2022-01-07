@@ -1,12 +1,13 @@
 import { defineAsyncComponent, nextTick } from 'vue';
 import { Inject, Options, Vue, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
+import { AppClientBase } from '../../../_common/client/safe-exports';
 import { Connection } from '../../../_common/connection/connection-service';
 import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
 import { DrawerStore, DrawerStoreKey, setDrawerOpen } from '../../../_common/drawer/drawer-store';
 import { Meta } from '../../../_common/meta/meta-service';
 import AppMinbar from '../../../_common/minbar/minbar.vue';
-import { Screen } from '../../../_common/screen/screen-service';
+import { Screen, triggerOnScreenResize } from '../../../_common/screen/screen-service';
 import {
 	SidebarMutation,
 	SidebarState,
@@ -15,6 +16,7 @@ import {
 import AppStickerLayer from '../../../_common/sticker/layer/layer.vue';
 import { BannerModule, BannerStore, Store } from '../../store/index';
 import { ChatClient, ChatKey, setChatFocused } from '../chat/client';
+import { AppClientShell, AppClientStatusBar } from '../client/safe-exports';
 import AppShellBody from './body/body.vue';
 import AppShellCbar from './cbar/cbar.vue';
 import AppShellHotBottom from './hot-bottom/hot-bottom.vue';
@@ -22,30 +24,25 @@ import './shell.styl';
 import AppShellSidebar from './sidebar/sidebar.vue';
 import AppShellTopNav from './top-nav/top-nav.vue';
 
-const components: any = {
-	AppShellTopNav,
-	AppShellBody,
-	AppShellSidebar,
-	AppShellHotBottom,
-	AppShellCbar,
-	AppMinbar,
-	AppShellBanner: defineAsyncComponent(
-		() => import(/* webpackChunkName: "shell" */ './banner/banner.vue')
-	),
-	AppChatWindows: defineAsyncComponent(
-		() => import(/* webpackChunkName: "chat" */ '../chat/windows/windows.vue')
-	),
-	AppStickerLayer,
-};
-
-if (GJ_IS_DESKTOP_APP) {
-	components.AppClientBase = await import('../../../_common/client/base/base.vue');
-	components.AppShellClient = await import('./client/client.vue');
-	components.AppClientStatusBar = await import('../client/status-bar/status-bar.vue');
-}
-
 @Options({
-	components,
+	components: {
+		AppShellTopNav,
+		AppShellBody,
+		AppShellSidebar,
+		AppShellHotBottom,
+		AppShellCbar,
+		AppMinbar,
+		AppShellBanner: defineAsyncComponent(
+			() => import(/* webpackChunkName: "shell" */ './banner/banner.vue')
+		),
+		AppChatWindows: defineAsyncComponent(
+			() => import(/* webpackChunkName: "chat" */ '../chat/windows/windows.vue')
+		),
+		AppStickerLayer,
+		AppClientBase,
+		AppClientShell,
+		AppClientStatusBar,
+	},
 })
 export default class AppShell extends Vue {
 	@Inject({ from: ChatKey })
@@ -138,7 +135,7 @@ export default class AppShell extends Vue {
 	@Watch('hasCbar')
 	async onShouldShowChange() {
 		await nextTick();
-		Screen._onResize();
+		triggerOnScreenResize();
 	}
 
 	// Keep the title up to date with notification counts.

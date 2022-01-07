@@ -30,7 +30,7 @@
 
 		<div v-if="GJ_IS_DESKTOP_APP" key="shell-client">
 			<app-client-base />
-			<app-shell-client />
+			<app-client-shell />
 		</div>
 
 		<app-shell-hot-bottom>

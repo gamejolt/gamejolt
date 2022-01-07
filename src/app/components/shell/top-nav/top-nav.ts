@@ -3,6 +3,7 @@ import { Inject, Options, Vue } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { shouldShowAppPromotion } from '../../../../utils/mobile-app';
 import { trackAppPromotionClick } from '../../../../_common/analytics/analytics.service';
+import { AppClientHistoryNavigator } from '../../../../_common/client/safe-exports';
 import { AppConfigLoaded } from '../../../../_common/config/loaded';
 import { Connection } from '../../../../_common/connection/connection-service';
 import { Environment } from '../../../../_common/environment/environment.service';
@@ -16,30 +17,23 @@ import { Store } from '../../../store/index';
 import { ChatClient, ChatKey } from '../../chat/client';
 import AppSearch from '../../search/search.vue';
 
-const components: any = {
-	AppPopper,
-	AppShellAccountPopover: defineAsyncComponent(
-		() => import('../account-popover/account-popover.vue')
-	),
-	AppShellFriendRequestPopover: defineAsyncComponent(
-		() => import('../friend-request-popover/friend-request-popover.vue')
-	),
-	AppShellNotificationPopover: defineAsyncComponent(
-		() => import('../notification-popover/notification-popover.vue')
-	),
-	AppSearch,
-	AppThemeSvg,
-	AppConfigLoaded,
-};
-
-if (GJ_IS_DESKTOP_APP) {
-	components.AppClientHistoryNavigator = (
-		await import('../../../../_common/client/history-navigator/history-navigator.vue')
-	).default;
-}
-
 @Options({
-	components,
+	components: {
+		AppPopper,
+		AppShellAccountPopover: defineAsyncComponent(
+			() => import('../account-popover/account-popover.vue')
+		),
+		AppShellFriendRequestPopover: defineAsyncComponent(
+			() => import('../friend-request-popover/friend-request-popover.vue')
+		),
+		AppShellNotificationPopover: defineAsyncComponent(
+			() => import('../notification-popover/notification-popover.vue')
+		),
+		AppSearch,
+		AppThemeSvg,
+		AppConfigLoaded,
+		AppClientHistoryNavigator,
+	},
 	directives: {
 		AppTooltip,
 		AppObserveDimensions,
@@ -110,7 +104,7 @@ export default class AppShellTopNav extends Vue {
 			return null;
 		}
 
-		return this.baseMinColWidth && this.baseMinColWidth + 'px';
+		return this.baseMinColWidth + 'px';
 	}
 
 	// Every time either the left or right column's dimensions changes, we run

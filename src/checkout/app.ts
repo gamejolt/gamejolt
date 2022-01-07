@@ -1,6 +1,6 @@
 import { Options, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import * as _ClientHistoryNavigatorMod from '../_common/client/history-navigator/history-navigator.service';
+import { AppClientBase, ClientHistoryNavigator } from '../_common/client/safe-exports';
 import { Connection } from '../_common/connection/connection-service';
 import AppContactLink from '../_common/contact-link/contact-link.vue';
 import AppCookieBanner from '../_common/cookie/banner/banner.vue';
@@ -19,13 +19,8 @@ const components: any = {
 	AppUserBar,
 	AppCookieBanner,
 	AppContactLink,
+	AppClientBase,
 };
-
-let ClientHistoryNavigatorMod: typeof _ClientHistoryNavigatorMod | undefined;
-if (GJ_IS_DESKTOP_APP) {
-	ClientHistoryNavigatorMod = require('../_common/client/history-navigator/history-navigator.service');
-	components.AppClientBase = require('../_common/client/base/base.vue').default;
-}
 
 @Options({
 	components,
@@ -48,8 +43,6 @@ export default class App extends Vue {
 	}
 
 	navigateBack() {
-		if (ClientHistoryNavigatorMod) {
-			ClientHistoryNavigatorMod.ClientHistoryNavigator.back();
-		}
+		ClientHistoryNavigator?.back();
 	}
 }

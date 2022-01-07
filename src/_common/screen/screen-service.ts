@@ -134,3 +134,11 @@ async function _onResize() {
 	// Emit every time we resize.
 	onScreenResize.next();
 }
+
+/**
+ * Can be used to tell the Screen service to check sizing again in case things
+ * have shifted around without the screen actually resizing.
+ */
+export function triggerOnScreenResize() {
+	_onResize();
+}
