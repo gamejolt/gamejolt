@@ -1,4 +1,4 @@
-import { h, resolveComponent } from 'vue';
+import { defineAsyncComponent, h, resolveComponent } from 'vue';
 import { Options } from 'vue-property-decorator';
 import { router } from '..';
 import { Api } from '../../../_common/api/api.service';
@@ -14,8 +14,10 @@ import { HomeFeedService } from './home-feed.service';
 @Options({
 	name: 'RouteHome',
 	components: {
-		RouteHomeFeed: () => asyncRouteLoader(import('./feed.vue'), router),
-		RouteDiscoverHome: () => asyncRouteLoader(import('../discover/home/home.vue'), router),
+		RouteHomeFeed: defineAsyncComponent(() => asyncRouteLoader(router, import('./feed.vue'))),
+		RouteDiscoverHome: defineAsyncComponent(() =>
+			asyncRouteLoader(router, import('../discover/home/home.vue'))
+		),
 	},
 })
 @RouteResolver({

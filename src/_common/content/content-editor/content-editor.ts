@@ -91,10 +91,11 @@ export default class AppContentEditor extends Vue {
 	// Gets provided all the way down during [created].
 	ownerController!: ContentOwnerController;
 
-	$_veeValidate = {
-		value: () => this.value,
-		name: () => 'app-content-editor',
-	};
+	// TODO(vue3)
+	// $_veeValidate = {
+	// 	value: () => this.value,
+	// 	name: () => 'app-content-editor',
+	// };
 
 	view: EditorView<ContentEditorSchema> | null = null;
 	schema: ContentEditorSchema | null = null;

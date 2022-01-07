@@ -6,8 +6,8 @@ import { routeLegalPrivacy } from './privacy/privacy.route';
 import { routeLegalTerms } from './terms/terms.route';
 
 export const routeLegal: RouteRecordRaw = {
-	name: 'legal',
-	path: '',
+	// TODO(vue3): better solution
+	path: '/legal',
 	component: () => import(/* webpackChunkName: "routeLegal" */ './legal.vue'),
 	children: [
 		routeLegalPrivacy,

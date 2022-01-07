@@ -17,6 +17,8 @@ const stylusOptions = {
 	css: true,
 };
 
+// TODO(vue3): we need a way to remove client-related code completely
+
 // https://vitejs.dev/config/
 export default defineConfig({
 	plugins: [

@@ -1,3 +1,4 @@
+import { defineAsyncComponent } from 'vue';
 import { Options, Provide } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { router } from '..';
@@ -64,8 +65,10 @@ export class RouteActivityFeedController {
 		AppNavTabList,
 		AppHomeFireside,
 		AppConfigLoaded,
-		RouteHomeActivity: () => asyncRouteLoader(import('./activity.vue'), router),
-		RouteHomeFyp: () => asyncRouteLoader(import('./fyp.vue'), router),
+		RouteHomeActivity: defineAsyncComponent(() =>
+			asyncRouteLoader(router, import('./activity.vue'))
+		),
+		RouteHomeFyp: defineAsyncComponent(() => asyncRouteLoader(router, import('./fyp.vue'))),
 	},
 	directives: {
 		AppTooltip,

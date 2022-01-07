@@ -14,7 +14,8 @@ import { routeLandingPartners } from './partners/partners.route';
 import { routeLandingRedlight } from './redlight/redlight.route';
 
 export const routeLanding: RouteRecordRaw = {
-	path: '',
+	// TODO(vue3): better solution
+	path: '/landing',
 	component: RouteLanding,
 	children: [
 		routeLandingApp,

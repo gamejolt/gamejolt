@@ -5,7 +5,8 @@ import { routeDiscoverGames } from './games/games.route';
 import { routeDiscoverHome } from './home/home.route';
 
 export const routeDiscover: RouteRecordRaw = {
-	path: '',
+	// TODO(vue3): better solution
+	path: '/discover',
 	component: RouteDiscover,
 	children: [routeDiscoverHome, routeDiscoverGames, routeDiscoverCommunities],
 };
