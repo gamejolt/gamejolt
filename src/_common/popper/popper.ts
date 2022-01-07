@@ -129,8 +129,8 @@ export default class AppPopper extends Vue {
 	height!: string;
 
 	declare $refs: {
-		trigger: any;
-		popper: any;
+		trigger: HTMLElement;
+		popper: HTMLElement;
 	};
 
 	isHiding = false;
@@ -300,7 +300,10 @@ export default class AppPopper extends Vue {
 	}
 
 	private onClickAway(event: MouseEvent) {
-		if (this.$refs.popper.contains(event.target) || this.$refs.trigger.contains(event.target)) {
+		if (
+			event.target instanceof Node &&
+			(this.$refs.popper.contains(event.target) || this.$refs.trigger.contains(event.target))
+		) {
 			return;
 		}
 
@@ -326,10 +329,6 @@ export default class AppPopper extends Vue {
 		this.clearHideTimeout();
 
 		// Clean up any remaining popper elements and instances
-		if (this.$refs.popper) {
-			this.$refs.popper.remove();
-		}
-
 		if (this.popperInstance) {
 			this.popperInstance.destroy();
 			this.popperInstance = null;
