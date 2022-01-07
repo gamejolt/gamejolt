@@ -6,20 +6,16 @@ import { FiresidePost } from '../../../../../../_common/fireside/post/post-model
 import { createLightbox } from '../../../../../../_common/lightbox/lightbox-helpers';
 import AppMediaItemPost from '../../../../../../_common/media-item/post/post.vue';
 import { Screen } from '../../../../../../_common/screen/screen-service';
+import AppTouch, { AppTouchInput } from '../../../../../../_common/touch/AppTouch.vue';
 import AppEventItemMediaIndicator from '../../../../event-item/media-indicator/media-indicator.vue';
 import { ActivityFeedItem } from '../../item-service';
 import { ActivityFeedKey, ActivityFeedView } from '../../view';
-
-// TODO(vue3)
-// if (!import.meta.env.SSR) {
-// 	const VueTouch = require('vue-touch');
-// 	VueGlobal.use(VueTouch);
-// }
 
 @Options({
 	components: {
 		AppMediaItemPost,
 		AppEventItemMediaIndicator,
+		AppTouch,
 	},
 })
 export default class AppActivityFeedPostMedia extends Vue {
@@ -44,6 +40,10 @@ export default class AppActivityFeedPostMedia extends Vue {
 	});
 
 	readonly Screen = Screen;
+
+	declare $refs: {
+		slider: HTMLElement;
+	};
 
 	get isHydrated() {
 		return this.feed.isItemHydrated(this.item);
@@ -77,24 +77,23 @@ export default class AppActivityFeedPostMedia extends Vue {
 
 	private _updateSliderOffset(extraOffsetPx = 0) {
 		const pagePercent = this.page - 1;
-		const pagePx = (this.$refs.slider as HTMLElement).offsetWidth * -pagePercent;
-		(this.$refs.slider as HTMLElement).style.transform = `translate3d( ${
-			pagePx + extraOffsetPx
-		}px, 0, 0 )`;
+		const slider = this.$refs.slider;
+		const pagePx = slider.offsetWidth * -pagePercent;
+		slider.style.transform = `translate3d( ${pagePx + extraOffsetPx}px, 0, 0 )`;
 	}
 
 	panStart() {
 		this.isDragging = true;
 	}
 
-	pan(event: HammerInput) {
+	pan(event: AppTouchInput) {
 		if (!this.isWaitingForFrame) {
 			this.isWaitingForFrame = true;
 			window.requestAnimationFrame(() => this._panTick(event));
 		}
 	}
 
-	private _panTick(event: HammerInput) {
+	private _panTick(event: AppTouchInput) {
 		this.isWaitingForFrame = false;
 
 		// In case the animation frame was retrieved after we stopped dragging.
@@ -105,7 +104,7 @@ export default class AppActivityFeedPostMedia extends Vue {
 		this._updateSliderOffset(event.deltaX);
 	}
 
-	panEnd(event: HammerInput) {
+	panEnd(event: AppTouchInput) {
 		this.isDragging = false;
 
 		// Make sure we moved at a high enough velocity and/or distance to register the "swipe".

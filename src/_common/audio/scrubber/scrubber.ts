@@ -1,18 +1,18 @@
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Ruler } from '../../ruler/ruler-service';
+import AppTouch, { AppTouchInput } from '../../touch/AppTouch.vue';
 
-// TODO(vue3)
-// if (!import.meta.env.SSR) {
-// 	const VueTouch = require('vue-touch');
-// 	VueGlobal.use(VueTouch);
-// }
-
-@Options({})
+@Options({
+	components: {
+		AppTouch,
+	},
+})
 export default class AppAudioScrubber extends Vue {
 	@Prop(Number) currentTime!: number;
 	@Prop(Number) duration!: number;
 
-	private isDragging = false;
+	isDragging = false;
+
 	private startX = 0;
 	private timebarLeft = 0;
 	private timebarWidth = 0;
@@ -20,6 +20,10 @@ export default class AppAudioScrubber extends Vue {
 
 	@Emit('seek')
 	emitSeek(_pos: number) {}
+
+	declare $refs: {
+		timebar?: HTMLElement;
+	};
 
 	get unfilledRight() {
 		if (this.scrubPos !== -1) {
@@ -46,13 +50,13 @@ export default class AppAudioScrubber extends Vue {
 		}
 	}
 
-	tap(event: HammerInput) {
+	tap(event: AppTouchInput) {
 		this.panStart(event);
 		this.panEnd();
 	}
 
-	panStart(event: HammerInput) {
-		const timebar = this.$refs.timebar as HTMLElement;
+	panStart(event: AppTouchInput) {
+		const timebar = this.$refs.timebar;
 		if (!timebar) {
 			return;
 		}
@@ -69,7 +73,7 @@ export default class AppAudioScrubber extends Vue {
 		this.calcScrubPos(event);
 	}
 
-	pan(event: HammerInput) {
+	pan(event: AppTouchInput) {
 		this.calcScrubPos(event);
 
 		// Will tell the browser to not select text while dragging.
@@ -81,8 +85,8 @@ export default class AppAudioScrubber extends Vue {
 		this.isDragging = false;
 	}
 
-	private calcScrubPos(event: HammerInput) {
-		const timebar = this.$refs.timebar as HTMLElement;
+	private calcScrubPos(event: AppTouchInput) {
+		const timebar = this.$refs.timebar;
 		if (!this.isDragging || !timebar) {
 			return;
 		}

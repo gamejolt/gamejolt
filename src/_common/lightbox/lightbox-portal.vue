@@ -5,19 +5,13 @@ import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.s
 import { onScreenResize, Screen } from '../screen/screen-service';
 import AppShortkey from '../shortkey/shortkey.vue';
 import { EventSubscription } from '../system/event/event-topic';
+import AppTouch, { AppTouchInput } from '../touch/AppTouch.vue';
 import AppLightboxItem from './item/item.vue';
 import { getActiveLightbox } from './lightbox-helpers';
 
 // The class we add to the document body when we have an active lightbox.
 const lightboxClass = 'media-bar-lightbox-open';
 
-// TODO(vue3)
-// if (!import.meta.env.SSR) {
-// 	const VueTouch = require('vue-touch');
-// 	VueGlobal.use(VueTouch);
-// }
-
-// const lightboxInstance = ref<null | Instance>(null);
 const root = ref<null | HTMLElement>(null);
 const slider = ref<null | HTMLElement>(null);
 
@@ -139,14 +133,14 @@ function panStart() {
 	isDragging.value = true;
 }
 
-function pan(event: HammerInput) {
+function pan(event: AppTouchInput) {
 	if (!waitingForFrame) {
 		waitingForFrame = true;
 		window.requestAnimationFrame(() => panTick(event));
 	}
 }
 
-function panTick(event: HammerInput) {
+function panTick(event: AppTouchInput) {
 	waitingForFrame = false;
 
 	// In case the animation frame was retrieved after we stopped dragging.
@@ -161,7 +155,7 @@ function panTick(event: HammerInput) {
 	slider.value.style.transform = `translate3d( ${currentSliderOffset + event.deltaX}px, 0, 0 )`;
 }
 
-function panEnd(event: HammerInput) {
+function panEnd(event: AppTouchInput) {
 	isDragging.value = false;
 
 	// $el.classList.remove('dragging');
@@ -194,7 +188,7 @@ function panEnd(event: HammerInput) {
 
 <template>
 	<div v-if="lightbox" ref="root" :class="{ dragging: isDragging }">
-		<v-touch
+		<AppTouch
 			class="media-bar-lightbox theme-dark"
 			:pan-options="{ threshold: 0 }"
 			@panstart="panStart"
@@ -242,7 +236,7 @@ function panEnd(event: HammerInput) {
 					/>
 				</div>
 			</div>
-		</v-touch>
+		</AppTouch>
 	</div>
 </template>
 

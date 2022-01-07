@@ -1,7 +1,7 @@
 <script lang="ts" src="./scrubber"></script>
 
 <template>
-	<v-touch
+	<AppTouch
 		class="player-control"
 		:pan-options="{ direction: 'horizontal', threshold: 0 }"
 		@panstart="panStart"
@@ -18,7 +18,7 @@
 				<div class="-timebar-filled" :style="{ right: filledRight }" />
 			</div>
 		</div>
-	</v-touch>
+	</AppTouch>
 </template>
 
 <style lang="stylus" scoped>

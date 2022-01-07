@@ -1,15 +1,13 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propRequired } from '../../../../utils/vue';
 import { Ruler } from '../../../ruler/ruler-service';
+import AppTouch, { AppTouchInput } from '../../../touch/AppTouch.vue';
 import { scrubVideo, VideoPlayerController } from '../controller';
-
-// TODO(vue3)
-// if (!import.meta.env.SSR) {
-// 	const VueTouch = require('vue-touch');
-// 	VueGlobal.use(VueTouch);
-// }
-
-@Options({})
+@Options({
+	components: {
+		AppTouch,
+	},
+})
 export default class AppVideoPlayerScrubber extends Vue {
 	@Prop(propRequired(VideoPlayerController)) player!: VideoPlayerController;
 
@@ -42,12 +40,12 @@ export default class AppVideoPlayerScrubber extends Vue {
 		return 100 - bufferedPos * 100 + '%';
 	}
 
-	tap(event: HammerInput) {
+	tap(event: AppTouchInput) {
 		this.initTimebarData();
 		this.panEnd(event);
 	}
 
-	panStart(event: HammerInput) {
+	panStart(event: AppTouchInput) {
 		this.initTimebarData();
 		scrubVideo(this.player, this.calcScrubPos(event), 'start');
 
@@ -55,11 +53,11 @@ export default class AppVideoPlayerScrubber extends Vue {
 		event.preventDefault();
 	}
 
-	pan(event: HammerInput) {
+	pan(event: AppTouchInput) {
 		scrubVideo(this.player, this.calcScrubPos(event), 'scrub');
 	}
 
-	panEnd(event: HammerInput) {
+	panEnd(event: AppTouchInput) {
 		scrubVideo(this.player, this.calcScrubPos(event), 'end');
 	}
 
@@ -70,7 +68,7 @@ export default class AppVideoPlayerScrubber extends Vue {
 		this.timebarLeft = left;
 	}
 
-	private calcScrubPos(event: HammerInput) {
+	private calcScrubPos(event: AppTouchInput) {
 		const pos = (event.center.x - this.timebarLeft) / this.timebarWidth;
 		return Math.max(Math.min(pos, 1), 0);
 	}

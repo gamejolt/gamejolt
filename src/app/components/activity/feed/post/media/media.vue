@@ -2,7 +2,7 @@
 
 <template>
 	<div class="post-media">
-		<v-touch
+		<AppTouch
 			class="-lightbox"
 			:pan-options="{ direction: 'horizontal' }"
 			@panstart="panStart"
@@ -39,7 +39,7 @@
 					<app-jolticon icon="chevron-right" />
 				</div>
 			</template>
-		</v-touch>
+		</AppTouch>
 
 		<app-event-item-media-indicator
 			v-if="post.media.length > 1"

@@ -17,16 +17,11 @@ import AppLoadingFade from '../../loading/AppLoadingFade.vue';
 import { onScreenResize, Screen } from '../../screen/screen-service';
 import AppScrollScroller from '../../scroll/scroller/scroller.vue';
 import { EventSubscription } from '../../system/event/event-topic';
+import AppTouch, { AppTouchInput } from '../../touch/AppTouch.vue';
 import AppStickerCard from '../card/card.vue';
 import { Sticker } from '../sticker.model';
 import AppSticker from '../sticker.vue';
 import AppStickerLayerDrawerItem from './drawer-item.vue';
-
-// TODO(vue3)
-// if (!import.meta.env.SSR) {
-// 	const VueTouch = require('vue-touch');
-// 	VueGlobal.use(VueTouch);
-// }
 
 @Options({
 	components: {
@@ -67,7 +62,7 @@ export default class AppStickerLayerDrawer extends Vue {
 		if (Screen.isPointerMouse) {
 			return 'div';
 		} else {
-			return 'v-touch';
+			return AppTouch;
 		}
 	}
 
@@ -244,22 +239,18 @@ export default class AppStickerLayerDrawer extends Vue {
 		this.touchedSticker = null;
 	}
 
-	panStart(event: HammerInput) {
+	panStart(event: AppTouchInput) {
 		const { deltaX, deltaY } = event;
 		if (Math.abs(deltaX) > Math.abs(deltaY)) {
 			this.isSwiping = true;
 		} else if (this.touchedSticker) {
-			setDrawerStoreActiveItem(
-				this.drawerStore,
-				this.touchedSticker,
-				event.changedPointers[0]
-			);
+			setDrawerStoreActiveItem(this.drawerStore, this.touchedSticker, event.pointer);
 		} else {
 			return false;
 		}
 	}
 
-	pan(event: HammerInput) {
+	pan(event: AppTouchInput) {
 		if (this.drawerStore.isDragging) {
 			this.isSwiping = false;
 			return;
@@ -270,7 +261,7 @@ export default class AppStickerLayerDrawer extends Vue {
 		}
 	}
 
-	private _panTick(event: HammerInput) {
+	private _panTick(event: AppTouchInput) {
 		this.isWaitingForFrame = false;
 
 		// In case the animation frame was retrieved after we stopped dragging.
@@ -281,7 +272,7 @@ export default class AppStickerLayerDrawer extends Vue {
 		this._updateSliderOffset(event.deltaX);
 	}
 
-	panEnd(event: HammerInput) {
+	panEnd(event: AppTouchInput) {
 		this.isSwiping = false;
 
 		// Make sure we moved at a high enough velocity and/or distance to register the "swipe".
