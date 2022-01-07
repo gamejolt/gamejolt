@@ -21,12 +21,12 @@ export const GJ_EMOJIS = [
 	'wha',
 	'yush',
 ] as const;
+
+const assetPaths = import.meta.globEager('./*.png');
 </script>
 
 <script lang="ts" setup>
 import { computed, PropType } from 'vue';
-
-const assetPaths = import.meta.globEager('./*.png');
 
 const props = defineProps({
 	emoji: {
@@ -40,10 +40,7 @@ const backgroundImage = computed(() => assetPaths[`./${props.emoji}.png`].defaul
 </script>
 
 <template>
-	<span
-		:class="`emoji emoji-${emoji}`"
-		:style="{ backgroundImage: `url('${backgroundImage}')` }"
-	/>
+	<span class="emoji" :style="{ backgroundImage: `url('${backgroundImage}')` }" />
 </template>
 
 <style lang="stylus" scoped>

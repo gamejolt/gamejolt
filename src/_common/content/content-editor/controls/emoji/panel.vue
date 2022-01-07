@@ -10,6 +10,7 @@
 				:class="{
 					'emoji-button-active': panelVisible,
 				}"
+				:emoji="emoji"
 				tabindex="1"
 				@click="onButtonClick"
 				@mousedown="onMouseDown"
