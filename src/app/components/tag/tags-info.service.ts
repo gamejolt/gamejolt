@@ -151,5 +151,11 @@ export class TagsInfo {
 			image: require('./images/fnf.png'),
 			imageSocial: require('./images/fnf-social.png'),
 		},
+		{
+			id: 'undertale',
+			label: '#undertale',
+			image: require('./images/undertale.png'),
+			imageSocial: require('./images/undertale-social.png'),
+		},
 	];
 }
