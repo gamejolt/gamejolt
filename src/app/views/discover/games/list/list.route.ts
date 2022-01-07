@@ -1,7 +1,6 @@
 import { RouteRecordRaw } from 'vue-router';
 
 const SectionRegex = 'featured|new|fresh|hot|best|worst';
-const DateRegex = '\\d{4}\\-\\d{2}\\-\\d{2}';
 
 export const routeDiscoverGamesListSection: RouteRecordRaw = {
 	name: 'discover.games.list._fetch',
@@ -17,6 +16,6 @@ export const routeDiscoverGamesListTag: RouteRecordRaw = {
 
 export const routeDiscoverGamesListDate: RouteRecordRaw = {
 	name: 'discover.games.list._fetch-date',
-	path: `:section(by\\-date)/:date(${DateRegex})(:)?:endDate(${DateRegex})?`,
+	path: `:section(by\\-date)/:date(\\d{4}\\-\\d{2}\\-\\d{2})`,
 	component: () => import(/* webpackChunkName: "routeDiscoverGamesList" */ './list.vue'),
 };

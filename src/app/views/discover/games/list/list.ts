@@ -82,17 +82,8 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		}
 	}
 
-	get dateRange(): [string, string] | undefined {
-		if (this.section === 'by-date' && this.$route.params.endDate) {
-			return [
-				formatDate(new Date(this.$route.params.date), 'mediumDate'),
-				formatDate(new Date(this.$route.params.endDate), 'mediumDate'),
-			];
-		}
-	}
-
 	get date() {
-		if (this.section === 'by-date' && !this.$route.params.endDate) {
+		if (this.section === 'by-date') {
 			return formatDate(new Date(this.$route.params.date), 'mediumDate');
 		}
 	}
@@ -123,16 +114,6 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		if (this.section === 'worst') {
 			// Excuse me with this?
 			return 'Ṣ̢̖͇͈͙̹̦Y̱͍͉S̺̳̞͠Y̸̱͚̙͕̺̺ͅS͎̘̲͕̹̀ͅT͉͕̺̲ͅE͓̱̥̠̰̱͚M̪̙̪̥̹ͅ ͏̼̲̫̰E͇̺̩̼R͏̗͙Ŕ͖̦͕Ơ̰̱͖̗̯̞R҉̻̯̠͚';
-		}
-
-		if (this.dateRange) {
-			return this.$gettextInterpolate(
-				'Games published between %{ dateStart } and %{ dateEnd }',
-				{
-					dateStart: this.dateRange[0],
-					dateEnd: this.dateRange[1],
-				}
-			);
 		}
 
 		if (this.date) {
