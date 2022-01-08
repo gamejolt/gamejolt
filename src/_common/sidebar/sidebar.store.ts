@@ -1,12 +1,14 @@
-import Vue from 'vue';
+import Vue, { Component, markRaw } from 'vue';
 import { namespace } from 'vuex-class';
 import { arrayRemove } from '../../utils/array';
 import { VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
 
 const SidebarStoreNamespace = 'sidebar';
-export const { State: SidebarState, Action: SidebarAction, Mutation: SidebarMutation } = namespace(
-	SidebarStoreNamespace
-);
+export const {
+	State: SidebarState,
+	Action: SidebarAction,
+	Mutation: SidebarMutation,
+} = namespace(SidebarStoreNamespace);
 
 export type SidebarActions = Record<string, any>;
 
@@ -17,7 +19,11 @@ export type SidebarMutations = {
 };
 
 export class ContextPane {
-	constructor(public readonly component: typeof Vue, public props: Record<string, any> = {}) {}
+	readonly component: Component;
+
+	constructor(component: Component, public props: Record<string, any> = {}) {
+		this.component = markRaw(component);
+	}
 }
 
 /**
