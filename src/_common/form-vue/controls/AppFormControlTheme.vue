@@ -5,7 +5,12 @@ import AppLoading from '../../loading/loading.vue';
 import AppPopper from '../../popper/popper.vue';
 import AppThemeBubble from '../../theme/bubble/bubble.vue';
 import { ThemePreset } from '../../theme/preset/preset.model';
-import { makeThemeFromColor, makeThemeFromPreset, Theme } from '../../theme/theme.model';
+import {
+	DefaultTheme,
+	makeThemeFromColor,
+	makeThemeFromPreset,
+	Theme,
+} from '../../theme/theme.model';
 import { AppTooltip as vAppTooltip } from '../../tooltip/tooltip-directive';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import { createFormControl, defineFormControlProps } from '../AppFormControl.vue';
@@ -25,7 +30,7 @@ const activeTab = ref('preset' as 'preset' | 'custom');
 const customSelection = ref({ hex: null } as VueColor);
 
 const currentTheme = computed(() => {
-	return c.controlVal || new Theme();
+	return c.controlVal || DefaultTheme;
 });
 
 const highlight = computed(() => {

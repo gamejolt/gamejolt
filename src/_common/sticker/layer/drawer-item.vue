@@ -12,6 +12,10 @@
 			/>
 		</div>
 
+		<div v-if="currentStreak > 1" class="-pocket-left badge fill-dark">
+			<div class="-rarity">x{{ currentStreak }}</div>
+		</div>
+
 		<div v-if="!hideCount" class="-pocket badge fill-dark">
 			<div
 				class="-rarity"
@@ -38,6 +42,12 @@
 
 .-peeled
 	filter: contrast(0)
+
+.-pocket-left
+	position: absolute
+	top: 0
+	left: 0
+	pointer-events: none
 
 .-pocket
 	position: absolute

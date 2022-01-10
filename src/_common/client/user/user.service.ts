@@ -1,3 +1,4 @@
+import { Api } from '../../api/api.service';
 import { Environment } from '../../environment/environment.service';
 import { Navigate } from '../../navigate/navigate.service';
 import { WithAppStore } from '../../store/app-store';
@@ -10,8 +11,18 @@ export class ClientUser {
 		if (localUser) {
 			store.commit('app/setUser', JSON.parse(localUser));
 		} else if (Navigate.currentClientSection !== 'auth') {
-			// Must be logged in to use client.
-			this.authRedirect();
+			if (GJ_WITH_LOCALSTOAGE_AUTH_REDIRECT) {
+				// Must be logged in to use client.
+				this.authRedirect();
+			} else {
+				Api.sendRequest('/web/touch', null, { detach: true, processPayload: false }).then(
+					response => {
+						if (!response || !response.data || !response.data.user) {
+							this.authRedirect();
+						}
+					}
+				);
+			}
 		}
 
 		// When the app user changes in the store, freeze it into local storage so we can bootstrap

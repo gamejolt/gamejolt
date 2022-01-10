@@ -1,8 +1,8 @@
 import { reactive } from '@vue/reactivity';
 import { UAParser } from 'ua-parser-js';
 
-type DeviceOs = 'windows' | 'mac' | 'linux' | 'other';
-type DeviceArch = '32' | '64';
+export type DeviceOs = 'windows' | 'mac' | 'linux' | 'other';
+export type DeviceArch = '32' | '64';
 
 // Keep all these lowercase.
 const OS_WINDOWS = ['windows', 'windows phone', 'windows mobile'];

@@ -7,7 +7,8 @@ import AppLoading from '../../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { illMaintenance } from '../../../../img/ill/illustrations';
 import { Store } from '../../../../store';
-import { ChatClient, ChatKey, enterChatRoom, leaveChatRoom } from '../../../chat/client';
+import { ChatStore, ChatStoreKey } from '../../../chat/chat-store';
+import { enterChatRoom, leaveChatRoom } from '../../../chat/client';
 import { sortByLastMessageOn } from '../../../chat/user-collection';
 import AppChatUserList from '../../../chat/user-list/user-list.vue';
 import AppChatWindows from '../../../chat/windows/windows.vue';
@@ -21,8 +22,8 @@ import AppChatWindows from '../../../chat/windows/windows.vue';
 	},
 })
 export default class AppShellSidebarChat extends Vue {
-	@Inject({ from: ChatKey })
-	chat!: ChatClient;
+	@Inject({ from: ChatStoreKey })
+	chatStore!: ChatStore;
 
 	@State visibleLeftPane!: Store['visibleLeftPane'];
 	@Action toggleLeftPane!: Store['toggleLeftPane'];
@@ -33,6 +34,10 @@ export default class AppShellSidebarChat extends Vue {
 
 	readonly Screen = Screen;
 	readonly illMaintenance = illMaintenance;
+
+	get chat() {
+		return this.chatStore.chat!;
+	}
 
 	get friends() {
 		return this.chat.friendsList.collection;

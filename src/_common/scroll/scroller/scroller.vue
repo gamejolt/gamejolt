@@ -1,14 +1,13 @@
 <script lang="ts">
 import { darken, lighten } from 'polished';
 import { computed, inject, InjectionKey, onMounted, PropType, provide, reactive, ref } from 'vue';
-import { GrayLight, GraySubtle, Theme } from '../../theme/theme.model';
+import { DefaultTheme, GrayLight, GraySubtle } from '../../theme/theme.model';
 import { useThemeStore } from '../../theme/theme.store';
 import AppScrollInviewParent from '../inview/parent.vue';
 
 export type ScrollController = ReturnType<typeof createScroller>;
 
 const Key: InjectionKey<ScrollController> = Symbol('scroller');
-const defaultTheme = new Theme(null);
 
 export function createScroller() {
 	const element = ref<HTMLElement>();
@@ -53,7 +52,7 @@ const isMounted = ref(import.meta.env.SSR);
 
 const actualTheme = computed(() => {
 	// Use the form/page/user theme, or the default theme if none exist.
-	return themeStore.theme ?? defaultTheme;
+	return themeStore.theme ?? DefaultTheme;
 });
 
 const hoverColors = computed<any>(() => ({

@@ -6,7 +6,8 @@ import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../../_common/scroll/inview/inview.vue';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { ChatClient, ChatKey, isUserOnline, tryGetRoomRole } from '../../client';
+import { ChatStore, ChatStoreKey } from '../../chat-store';
+import { isUserOnline, tryGetRoomRole } from '../../client';
 import { ChatRoom } from '../../room';
 import { ChatUser } from '../../user';
 import AppChatUserOnlineStatus from '../../user-online-status/user-online-status.vue';
@@ -26,19 +27,23 @@ const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` }
 	},
 })
 export default class AppChatMemberListItem extends Vue {
-	@Inject({ from: ChatKey })
-	chat!: ChatClient;
-
 	@Prop(propRequired(ChatUser)) user!: ChatUser;
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
+
+	@Inject({ from: ChatStoreKey })
+	chatStore!: ChatStore;
 
 	readonly InviewConfig = InviewConfig;
 	readonly Screen = Screen;
 
 	isInview = false;
 
+	get chat() {
+		return this.chatStore.chat!;
+	}
+
 	get isOnline() {
-		if (!this.chat) {
+		if (!this.chatStore.chat || this.room.isFiresideRoom) {
 			return null;
 		}
 
@@ -52,5 +57,10 @@ export default class AppChatMemberListItem extends Vue {
 	get isModerator() {
 		const role = tryGetRoomRole(this.chat, this.room, this.user);
 		return role === 'moderator';
+	}
+
+	get isStaff() {
+		// In public rooms, display staff member status.
+		return !this.room.isPrivateRoom && this.user.permission_level > 0;
 	}
 }

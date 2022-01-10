@@ -6,7 +6,12 @@ import AppLoading from '../../../loading/loading.vue';
 import { MediaItem } from '../../../media-item/media-item-model';
 import AppProgressBar from '../../../progress/bar/bar.vue';
 import { getMediaItemTypeForContext } from '../../content-context';
+import {
+	editorMediaUploadCancel,
+	editorMediaUploadFinalize,
+} from '../../content-editor/content-editor-controller';
 import { ContentEditorService } from '../../content-editor/content-editor.service';
+import { MediaUploadTask } from '../../content-editor/media-upload-task';
 import { ContentEditorSchema } from '../../content-editor/schemas/content-editor-schema';
 import { ContentOwnerController, ContentOwnerControllerKey } from '../../content-owner';
 
@@ -26,9 +31,8 @@ export default class AppContentMediaUpload extends Vue {
 	@Inject({ from: ContentOwnerControllerKey })
 	owner!: ContentOwnerController;
 
-	src = '';
-	uploadProgress = 0;
-	uploadProcessing = false;
+	// We pull from the upload task cache to populate this.
+	task: MediaUploadTask = null as any;
 
 	get placeholderMaxHeight() {
 		const maxHeight = this.owner.contentRules.maxMediaHeight;
@@ -38,19 +42,19 @@ export default class AppContentMediaUpload extends Vue {
 		return 260;
 	}
 
-	async mounted() {
-		let file = ContentEditorService.UploadFileCache[this.uploadId]!;
+	created() {
+		this.task = ContentEditorService.UploadTaskCache[this.uploadId]!;
+	}
 
-		// Only preview the image if it's smaller than 5 Mb.
-		if (file.size < 5000000) {
-			const reader = new FileReader();
-			reader.onloadend = () => {
-				if (reader.result !== null) {
-					this.src = reader.result.toString();
-				}
-			};
-			reader.readAsDataURL(file);
+	mounted() {
+		// In the app, we don't handle the upload. The app will do it all.
+		if (!GJ_IS_DESKTOP_APP) {
+			this.uploadFile();
 		}
+	}
+
+	private async uploadFile() {
+		let file = this.task.file!;
 
 		// Non-alphanumeric chars get removed.
 		let name = (file.name || 'pasted_image').replace(/ /g, '_').replace(/\.[^/.]+$/, '');
@@ -67,39 +71,26 @@ export default class AppContentMediaUpload extends Vue {
 
 		// Start uploading media item
 		try {
-			const mediaItem = await this.uploadFile(file);
+			const mediaItem = await this.doUpload(file);
 			if (mediaItem instanceof MediaItem) {
-				const nodePos = this.findTargetNodePos();
-				if (nodePos !== -1) {
-					const tr = this.editorView.state.tr;
-					tr.setNodeMarkup(nodePos, this.editorView.state.schema.nodes.mediaItem, {
-						id: mediaItem.id,
-						width: mediaItem.width,
-						height: mediaItem.height,
-						align: 'center',
-						caption: '',
-					});
-					this.editorView.dispatch(tr);
-				}
+				editorMediaUploadFinalize(this.task, mediaItem);
 			}
 		} catch (error) {
-			this.removeNode();
+			editorMediaUploadCancel(this.task);
 
 			showErrorGrowl({
 				title: this.$gettext('Oh no!'),
 				message: this.$gettext('Something went wrong while uploading your image.'),
 			});
-		} finally {
-			ContentEditorService.UploadFileCache[this.uploadId] = undefined;
 		}
 	}
 
-	private async uploadFile(file: File) {
-		this.uploadProgress = 0;
-		this.uploadProcessing = false;
+	private async doUpload(file: File) {
+		this.task.progress = 0;
+		this.task.isProcessing = false;
+
 		const itemType = getMediaItemTypeForContext(this.owner.context);
-		// TODO(vue3): test this
-		const parentId = this.owner.modelId;
+		const parentId = await this.owner.modelId;
 		const payload = await Api.sendRequest(
 			'/web/dash/media-items/add-one',
 			{
@@ -112,68 +103,42 @@ export default class AppContentMediaUpload extends Vue {
 				detach: true,
 			}
 		);
-		if (payload.success && payload.mediaItem) {
-			return new MediaItem(payload.mediaItem);
-		} else if (!payload.success && payload.errors.file) {
-			const sizePayload = await Api.sendRequest('/web/dash/media-items', undefined, {
-				detach: true,
-			});
 
-			const maxWidth = sizePayload.maxWidth;
-			const maxHeight = sizePayload.maxHeight;
-			const maxFilesize = sizePayload.maxFilesize;
-
-			showErrorGrowl({
-				title: this.$gettext('Oh no!'),
-				message: this.$gettextInterpolate(
-					"It looks like your image's filesize or dimensions are too large. Its filesize must be less than %{ filesize } and its dimensions less than %{ width }×%{ height }",
-					{ width: maxWidth, height: maxHeight, size: maxFilesize }
-				),
-			});
-
-			this.removeNode();
-
-			return;
+		if (!payload.success || !payload.mediaItem) {
+			throw new Error('Failed to upload file.');
 		}
 
-		throw new Error('General failure while uploading file.');
-	}
+		return new MediaItem(payload.mediaItem);
 
-	private removeNode() {
-		const nodePos = this.findTargetNodePos();
-		if (nodePos !== -1) {
-			const tr = this.editorView.state.tr;
-			tr.delete(nodePos, nodePos + 1);
-			this.editorView.dispatch(tr);
-		}
+		// TODO: We should be getting this info before instead of showing after the failure.
+
+		//  else if (!payload.success && payload.errors.file) {
+		// 	const sizePayload = await Api.sendRequest('/web/dash/media-items', undefined, {
+		// 		detach: true,
+		// 	});
+
+		// 	const maxWidth = sizePayload.maxWidth;
+		// 	const maxHeight = sizePayload.maxHeight;
+		// 	const maxFilesize = sizePayload.maxFilesize;
+
+		// 	Growls.error({
+		// 		title: this.$gettext('Oh no!'),
+		// 		message: this.$gettextInterpolate(
+		// 			"It looks like your image's filesize or dimensions are too large. Its filesize must be less than %{ filesize } and its dimensions less than %{ width }×%{ height }",
+		// 			{ width: maxWidth, height: maxHeight, size: maxFilesize }
+		// 		),
+		// 	});
+
+		// 	editorRemoveMediaUpload(this.task);
+		// 	return;
+		// }
 	}
 
 	private handleProgressEvent(e: ProgressEvent | null) {
 		if (e !== null) {
-			this.uploadProgress = e.loaded / e.total;
-			if (this.uploadProgress >= 1) {
-				this.uploadProgress = 1;
-				this.uploadProcessing = true;
-			}
+			this.task.updateProgress(e.loaded / e.total);
 		} else {
-			this.uploadProgress = 1;
-			this.uploadProcessing = true;
+			this.task.updateProgress(1);
 		}
-	}
-
-	private findTargetNodePos() {
-		// Loops through nodes trying to find the mediaUpload node with a matching uploadId
-		for (let i = 0; i < this.editorView.state.doc.nodeSize; i++) {
-			const node = this.editorView.state.doc.nodeAt(i);
-			if (
-				node !== null &&
-				node !== undefined &&
-				node.type.name === 'mediaUpload' &&
-				node.attrs.uploadId === this.uploadId
-			) {
-				return i;
-			}
-		}
-		return -1;
 	}
 }

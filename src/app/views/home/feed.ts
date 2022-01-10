@@ -4,15 +4,11 @@ import { State } from 'vuex-class';
 import { router } from '..';
 import { numberSort } from '../../../utils/array';
 import { fuzzysearch } from '../../../utils/string';
-import AppAdWidget from '../../../_common/ad/widget/widget.vue';
 import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
-import {
-	configFYPDefault,
-	configHomeNav,
-	configWhoToFollow,
-} from '../../../_common/config/config.service';
+import { configHomeNav } from '../../../_common/config/config.service';
 import { AppConfigLoaded } from '../../../_common/config/loaded';
+import { Fireside } from '../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import AppNavTabList from '../../../_common/nav/tab-list/tab-list.vue';
 import {
@@ -23,20 +19,20 @@ import {
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
 import { AppState, AppStore } from '../../../_common/store/app-store';
+import { EventSubscription } from '../../../_common/system/event/event-topic';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppUserCard from '../../../_common/user/card/card.vue';
-import { User } from '../../../_common/user/user.model';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../components/activity/feed/view';
 import AppCommunitySliderPlaceholder from '../../components/community/slider/placeholder/placeholder.vue';
 import AppCommunitySlider from '../../components/community/slider/slider.vue';
+import { onFiresideStart } from '../../components/grid/client.service';
 import AppPageContainer from '../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../components/post/add-button/add-button.vue';
 import { Store } from '../../store';
 import { LibraryModule, LibraryStore } from '../../store/library';
 import { HomeFeedService, HOME_FEED_ACTIVITY, HOME_FEED_FYP } from './home-feed.service';
 import AppHomeFireside from './_fireside/fireside.vue';
-import AppHomeRecommendedUsers from './_recommended/users/users.vue';
 
 class DashGame {
 	constructor(
@@ -60,8 +56,6 @@ export class RouteActivityFeedController {
 		AppPostAddButton,
 		AppUserCard,
 		AppScrollAffix,
-		AppAdWidget,
-		AppHomeRecommendedUsers,
 		AppNavTabList,
 		AppHomeFireside,
 		AppConfigLoaded,
@@ -88,9 +82,14 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	games: DashGame[] = [];
 	gameFilterQuery = '';
 	isShowingAllGames = false;
-	loadingRecommendedUsers = false; // Set to `true` while refreshing users.
-	loadingRecommendedData = true;
-	recommendedUsers: User[] = [];
+
+	isLoadingFiresides = true;
+	isFiresidesBootstrapped = false;
+	featuredFireside: Fireside | null = null;
+	userFireside: Fireside | null = null;
+	firesides: Fireside[] = [];
+	eventFireside: Fireside | null = null;
+	private firesideStart$?: EventSubscription;
 
 	readonly Screen = Screen;
 	readonly HomeFeedService = HomeFeedService;
@@ -121,13 +120,6 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 
 	get isShowAllGamesVisible() {
 		return !this.isShowingAllGames && this.games.length > 7 && this.gameFilterQuery === '';
-	}
-
-	get shouldShowRecommendedUsers() {
-		return (
-			configWhoToFollow.value &&
-			(this.loadingRecommendedUsers || this.recommendedUsers.length > 0)
-		);
 	}
 
 	get defaultTab() {
@@ -170,24 +162,25 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	}
 
 	routeResolved(payload: any, _fromCache: boolean) {
-		if (!Screen.isMobile) {
-			trackExperimentEngagement(configWhoToFollow);
-		}
-
 		if (Screen.isLg) {
 			trackExperimentEngagement(configHomeNav);
 		}
-
-		trackExperimentEngagement(configFYPDefault);
 
 		this.games = (payload.ownerGames as DashGame[])
 			.map(i => new DashGame(i.id, i.title, i.ownerName, i.createdOn))
 			.sort((a, b) => numberSort(a.createdOn, b.createdOn))
 			.reverse();
+
+		this.refreshFiresides();
+		this.firesideStart$ = onFiresideStart.subscribe(() => this.refreshFiresides());
+
+		if (payload.eventFireside) {
+			this.eventFireside = new Fireside(payload.eventFireside);
+		}
 	}
 
-	mounted() {
-		this.loadRecommendedData();
+	routeDestroyed() {
+		this.firesideStart$?.close();
 	}
 
 	onPostAdded(post: FiresidePost) {
@@ -196,29 +189,25 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 		}
 	}
 
-	async refreshRecommendedUsers() {
-		this.loadingRecommendedUsers = true;
-
-		const payload = await Api.sendRequest('/web/dash/recommended/refresh', undefined, {
-			detach: true,
-		});
-		if (payload && payload.users) {
-			this.recommendedUsers = User.populate(payload.users);
+	async refreshFiresides() {
+		if (!this.user) {
+			return;
 		}
 
-		this.loadingRecommendedUsers = false;
-	}
-
-	async loadRecommendedData() {
-		this.loadingRecommendedData = true;
-
-		const payload = await Api.sendRequest('/web/dash/recommended', undefined, { detach: true });
-		if (payload) {
-			if (payload.users) {
-				this.recommendedUsers = User.populate(payload.users);
-			}
+		this.isLoadingFiresides = true;
+		try {
+			const payload = await Api.sendRequest(`/web/fireside/user-list`, undefined, {
+				detach: true,
+			});
+			this.userFireside = payload.userFireside ? new Fireside(payload.userFireside) : null;
+			this.firesides = payload.firesides ? Fireside.populate(payload.firesides) : [];
+			this.featuredFireside = payload.featuredFireside
+				? new Fireside(payload.featuredFireside)
+				: null;
+		} catch (error) {
+			console.error('Failed to refresh fireside data.', error);
 		}
-
-		this.loadingRecommendedData = false;
+		this.isLoadingFiresides = false;
+		this.isFiresidesBootstrapped = true;
 	}
 }

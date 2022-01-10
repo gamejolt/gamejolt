@@ -58,10 +58,6 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 
 	readonly Screen = Screen;
 
-	get isHome() {
-		return !this.section && !this.tag;
-	}
-
 	get section(): string | undefined {
 		return this.$route.params.section?.toLowerCase();
 	}
@@ -159,6 +155,8 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 				return this.$gettext('fan games');
 			case 'fnaf':
 				return this.$gettext(`Five Nights at Freddy's (FNaF) games`);
+			case 'fnf':
+				return this.$gettext(`Friday Night Funkin' (FNF) games`);
 			case 'scifi':
 				return this.$gettext('science fiction games');
 			case 'retro':
@@ -169,8 +167,6 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 				return this.$gettext('alt games');
 			case 'roguelike':
 				return this.$gettext('roguelike games');
-			case 'adult':
-				return this.$gettext('adult / porn games');
 			default:
 				return this.$gettextInterpolate(`%{ category } games`, {
 					category: this.tag,

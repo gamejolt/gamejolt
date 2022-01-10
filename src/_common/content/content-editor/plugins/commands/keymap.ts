@@ -21,35 +21,37 @@ export type PMKeymapCommand = (
 ) => boolean;
 
 export function getContentEditorKeymap(editor: AppContentEditor, schema: ContentEditorSchema) {
+	const c = editor.controller;
+	const capabilities = editor.contextCapabilities;
 	const keymap = {
 		'Mod-z': undo,
 		'Shift-Mod-z': redo,
 		'Mod-b': toggleMark(schema.marks.strong),
 		'Mod-i': toggleMark(schema.marks.em),
 		'Mod-`': toggleMark(schema.marks.code),
-		'Shift-Enter': chainCommands(exitCodeStart(editor.capabilities), exitCode, insertHardBreak),
+		'Shift-Enter': chainCommands(exitCodeStart(c), exitCode, insertHardBreak),
 		'Mod-Enter': multiLineEnter(editor),
 		// open emoji panel
 		'Mod-e': () => {
-			if (editor.capabilities.emoji) {
+			if (capabilities.emoji) {
 				editor.showEmojiPanel();
 			}
 			return true;
 		},
 		// Add/remove link
-		'Mod-k': showLinkModal(editor.capabilities, schema),
-		ArrowRight: exitInlineCode(editor.capabilities, schema, false),
-		Space: exitInlineCode(editor.capabilities, schema, true),
+		'Mod-k': showLinkModal(c),
+		ArrowRight: exitInlineCode(c, false),
+		Space: exitInlineCode(c, true),
 	} as { [k: string]: any };
 
 	const enterCommands = [] as PMKeymapCommand[];
 	enterCommands.push(singleLineEnter(editor));
 
-	if (editor.capabilities.heading) {
-		enterCommands.push(splitHeading());
+	if (capabilities.heading) {
+		enterCommands.push(splitHeading(c));
 	}
 
-	if (editor.capabilities.list) {
+	if (capabilities.list) {
 		enterCommands.push(splitListItem(schema.nodes.listItem));
 		keymap['Shift-Tab'] = ContentListService.liftListItem(schema.nodes.listItem);
 		keymap['Tab'] = sinkListItem(schema.nodes.listItem);

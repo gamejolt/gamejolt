@@ -85,33 +85,15 @@
 		</div>
 
 		<div class="-community-end small">
-			<app-popper
-				popover-class="fill-darkest"
-				@show="isShowingShare = true"
-				@hide="isShowingShare = false"
-			>
-				<a>
-					<translate>Share this community</translate>
-				</a>
-
-				<template v-if="isShowingShare" #popover>
-					<div class="well sans-margin">
-						<div v-if="!GJ_IS_DESKTOP_APP" class="social-widgets">
-							<app-social-twitter-share :url="shareUrl" :content="shareContent" />
-
-							<span class="dot-separator" />
-
-							<app-social-facebook-like :url="shareUrl" />
-						</div>
-
-						<app-button block @click="copyShareUrl">
-							<translate>Copy Link</translate>
-						</app-button>
-					</div>
-				</template>
-			</app-popper>
+			<app-share-card resource="community" :url="shareUrl" bleed-padding />
 
 			<div class="text-muted">
+				<template v-if="shouldShowReport">
+					<a @click="onClickReport">
+						<translate>Report</translate>
+					</a>
+					<span class="dot-separator" />
+				</template>
 				A community for
 				<app-time-ago :date="community.added_on" without-suffix />
 			</div>

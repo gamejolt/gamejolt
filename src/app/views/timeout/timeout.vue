@@ -28,13 +28,10 @@
 								<translate>
 									You will be allowed back on Game Jolt again in:
 								</translate>
+							</p>
+							<p class="text-center">
 								<strong>
-									<app-time-ago
-										:date="timeout.expires_on"
-										strict
-										is-future
-										without-suffix
-									/>
+									<app-timeout-countdown :expires-on="timeout.expires_on" />
 								</strong>
 							</p>
 						</template>
@@ -88,8 +85,10 @@
 					</p>
 				</template>
 				<template v-else>
-					<p>You're no longer in time-out, yay!</p>
-					<app-button @click="onClickLeave">Go To Game Jolt</app-button>
+					<div class="text-center">
+						<p>You're no longer in time-out, yay!</p>
+						<app-button @click="onClickLeave">Go To Game Jolt</app-button>
+					</div>
 				</template>
 			</div>
 		</div>

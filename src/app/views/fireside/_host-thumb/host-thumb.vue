@@ -1,58 +1,64 @@
 <script lang="ts" src="./host-thumb"></script>
 
 <template>
-	<div v-app-tooltip="tooltip" class="-thumb">
-		<div class="-click-capture" @click="onClick">
-			<div class="-display-thumb" :class="{ '-hidden': !showingVideoThumb }">
-				<template v-if="showingVideoThumb">
-					<app-fireside-video v-if="!rtc.videoPaused" :rtc-user="host" low-bitrate />
-					<app-jolticon v-else icon="camera" class="-display-thumb-icon" />
-				</template>
+	<div class="-thumb">
+		<app-user-card-hover :user="host.userModel" :hover-delay="0" no-stats>
+			<div class="-click-capture" @click="onClick">
+				<div class="-display-thumb" :class="{ '-hidden': !showingVideoThumb }">
+					<template v-if="showingVideoThumb">
+						<app-fireside-stream-video
+							v-if="c.rtc && !c.rtc.videoPaused"
+							:rtc-user="host"
+							low-bitrate
+						/>
+						<app-jolticon v-else icon="camera" class="-display-thumb-icon" />
+					</template>
+				</div>
+
+				<div class="-avatar-wrap" :class="{ '-full': !showingVideoThumb }">
+					<app-fireside-host-thumb-indicator :host="host" />
+				</div>
+
+				<div class="-spacer" />
+				<div class="-active-indicator" :class="{ '-active': isFocused }" />
 			</div>
 
-			<div class="-avatar-wrap" :class="{ '-full': !showingVideoThumb }">
-				<app-fireside-host-thumb-indicator :host="host" />
-			</div>
+			<div v-if="!isMe" class="-options">
+				<transition>
+					<span
+						v-if="host.micAudioMuted"
+						v-app-tooltip="$gettext(`Muted`)"
+						class="-option -option-warn anim-fade-enter-enlarge anim-fade-leave-shrink"
+					>
+						<app-jolticon icon="audio-mute" />
+					</span>
+				</transition>
 
-			<div class="-spacer" />
-			<div class="-active-indicator" :class="{ '-active': isFocused }" />
-		</div>
+				<div class="-options-spacer" />
 
-		<div class="-options">
-			<transition>
-				<span
-					v-if="host.micAudioMuted"
-					v-app-tooltip="$gettext(`Muted`)"
-					class="-option -option-warn anim-fade-enter-enlarge anim-fade-leave-shrink"
+				<app-popper
+					v-if="!hideOptions"
+					placement="top"
+					@show="emitShowPopper"
+					@hide="emitHidePopper"
 				>
-					<app-jolticon icon="audio-mute" />
-				</span>
-			</transition>
+					<a v-app-tooltip="$gettext('Options')" class="-option -option-show-hover">
+						<app-jolticon icon="cog" />
+					</a>
 
-			<div class="-options-spacer" />
-
-			<app-popper
-				v-if="!hideOptions"
-				placement="top"
-				@show="emitShowPopper"
-				@hide="emitHidePopper"
-			>
-				<a v-app-tooltip="$gettext('Options')" class="-option -option-show-hover">
-					<app-jolticon icon="cog" />
-				</a>
-
-				<template #popover>
-					<div class="list-group">
-						<a v-if="!host.micAudioMuted" class="list-group-item" @click="mute()">
-							<translate>Mute</translate>
-						</a>
-						<a v-else class="list-group-item" @click="unmute()">
-							<translate>Unmute</translate>
-						</a>
-					</div>
-				</template>
-			</app-popper>
-		</div>
+					<template #popover>
+						<div class="list-group">
+							<a v-if="!host.micAudioMuted" class="list-group-item" @click="mute()">
+								<translate>Mute</translate>
+							</a>
+							<a v-else class="list-group-item" @click="unmute()">
+								<translate>Unmute</translate>
+							</a>
+						</div>
+					</template>
+				</app-popper>
+			</div>
+		</app-user-card-hover>
 	</div>
 </template>
 
@@ -125,6 +131,7 @@
 	left: 8px
 	right: 8px
 	grid-gap: 4px
+	z-index: 2
 
 	&-spacer
 		flex: auto

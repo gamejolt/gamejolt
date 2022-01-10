@@ -54,6 +54,7 @@ export function bootstrapCommon(appComponent: Component, store: VuexStore, route
 	app.config.globalProperties.GJ_ENVIRONMENT = GJ_ENVIRONMENT;
 	app.config.globalProperties.GJ_BUILD_TYPE = GJ_BUILD_TYPE;
 	app.config.globalProperties.GJ_IS_DESKTOP_APP = GJ_IS_DESKTOP_APP;
+	app.config.globalProperties.GJ_IS_MOBILE_APP = GJ_IS_MOBILE_APP;
 	app.config.globalProperties.GJ_IS_SSR = import.meta.env.SSR;
 	app.config.globalProperties.GJ_VERSION = GJ_VERSION;
 	app.config.globalProperties.GJ_WITH_UPDATER = GJ_WITH_UPDATER;

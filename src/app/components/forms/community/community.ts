@@ -2,9 +2,10 @@ import { mixins, Options } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
 import { Community } from '../../../../_common/community/community.model';
 import AppFormControlTheme from '../../../../_common/form-vue/controls/AppFormControlTheme.vue';
+import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm, FormOnSubmitSuccess } from '../../../../_common/form-vue/form.service';
 import { validateUrlPath } from '../../../../_common/form-vue/validators';
-import { Theme } from '../../../../_common/theme/theme.model';
+import { DefaultTheme } from '../../../../_common/theme/theme.model';
 import { ThemeMutation, ThemeState, ThemeStore } from '../../../../_common/theme/theme.store';
 import { Store } from '../../../store';
 import AppPostAddButtonFormControl from '../../post/add-button/AppPostAddButtonFormControl.vue';
@@ -15,6 +16,7 @@ class Wrapper extends BaseForm<Community> {}
 	components: {
 		AppPostAddButtonFormControl,
 		AppFormControlTheme,
+		AppFormControlToggle,
 	},
 })
 export default class FormCommunity extends mixins(Wrapper) implements FormOnSubmitSuccess {
@@ -61,6 +63,6 @@ export default class FormCommunity extends mixins(Wrapper) implements FormOnSubm
 	onThemeChanged() {
 		// Default theme would be the user theme. Don't want to fallback to page theme otherwise
 		// when clearing theme it'll show the page theme.
-		this.setFormTheme(this.formModel.theme || this.userTheme || new Theme());
+		this.setFormTheme(this.formModel.theme ?? this.userTheme ?? DefaultTheme);
 	}
 }

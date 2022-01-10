@@ -1,6 +1,6 @@
-import { reactive } from '@vue/reactivity';
-import { Component } from '@vue/runtime-core';
+import { Component, reactive } from 'vue';
 import { arrayRemove } from '../../utils/array';
+import { Client } from '../client/safe-exports';
 import { Translate } from '../translate/translate.service';
 
 export type GrowlType = 'info' | 'success' | 'error';
@@ -88,6 +88,8 @@ function _createSystemNotification(options: GrowlOptions) {
 	});
 
 	notification.onclick = event => {
+		Client?.show();
+
 		if (options.onClick) {
 			options.onClick(event);
 			notification.close();

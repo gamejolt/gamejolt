@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
+import { routeAuthApproveLogin } from './approve-login/approve-login.route';
 import RouteAuth from './auth.vue';
 import { routeAuthAuthorize } from './authorize/authorize.route';
 import { routeAuthForgotSent } from './forgot-sent/forgot-sent.route';
@@ -23,5 +24,6 @@ export const routeAuth: RouteRecordRaw = {
 		routeAuthResetPassword,
 		routeAuthAuthorize,
 		routeAuthLinkedAccount,
+		routeAuthApproveLogin,
 	],
 };

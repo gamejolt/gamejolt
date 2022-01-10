@@ -122,14 +122,6 @@ export class ConfigOptionString<T extends string = string> extends ConfigOption<
 	}
 }
 
-export const configHasAutocomplete = new ConfigOptionBoolean('has_search_autocomplete', true, {
-	conditions: { join: true },
-});
-
-export const configWhoToFollow = new ConfigOptionBoolean('who_to_follow', true, {
-	conditions: { join: true },
-});
-
 export const configDiscoverCommunityChunks = new ConfigOptionBoolean(
 	'discover_community_chunks',
 	false
@@ -140,9 +132,11 @@ export const configHomeNav = new ConfigOptionString('home_nav', 'default', {
 	conditions: { join: true },
 });
 
-export const configFYPDefault = new ConfigOptionBoolean('fyp_default', false, {
-	conditions: { join: true },
+export const configGuestHome = new ConfigOptionString('web_guest_home', 'default', {
+	validValues: ['default', 'hero'],
 });
+
+export const configClientAllowStreaming = new ConfigOptionBoolean('client_allow_streaming', false);
 
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());

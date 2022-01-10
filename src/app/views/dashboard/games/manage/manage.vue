@@ -8,15 +8,33 @@
 					<p>
 						<app-jolticon icon="notice" big />
 					</p>
-					<p>
-						<b><translate>This game was removed from the site.</translate></b>
-					</p>
-					<p>
-						<translate>
-							We have received a DMCA takedown notice and were required to remove it
-							from the site. Only you are able to view it.
-						</translate>
-					</p>
+					<template v-if="game.locked_status === GAME_LOCKED_STATUS_DMCA">
+						<div key="locked-reason-dmca">
+							<p>
+								<b><translate>This game was removed from the site.</translate></b>
+							</p>
+							<p>
+								<translate>
+									We have received a DMCA takedown notice and were required to
+									remove it from the site. Only you are able to view it.
+								</translate>
+							</p>
+						</div>
+					</template>
+					<template v-else-if="game.locked_status === GAME_LOCKED_STATUS_ADULT">
+						<div key="locked-reason-adult">
+							<p>
+								<b><translate>This page is made private.</translate></b>
+							</p>
+							<p>
+								<translate>
+									The game page has been removed from Game Jolt's public listings.
+									You have access to this page and its contents until December 31,
+									2022.
+								</translate>
+							</p>
+						</div>
+					</template>
 				</div>
 			</div>
 		</section>
@@ -162,6 +180,7 @@
 							</router-link>
 						</app-game-perms>
 						<app-game-perms
+							v-if="!game.is_locked"
 							v-app-tooltip.bottom="
 								$gettext(`Manage your game keys and give access to users.`)
 							"

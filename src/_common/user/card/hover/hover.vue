@@ -5,7 +5,7 @@
 		<slot />
 
 		<template v-if="shouldShow" #popover>
-			<app-user-card class="-card" :user="user" :is-loading="!isLoaded" />
+			<app-user-card class="-card" :user="user" :is-loading="!isLoaded" :no-stats="noStats" />
 		</template>
 	</component>
 </template>

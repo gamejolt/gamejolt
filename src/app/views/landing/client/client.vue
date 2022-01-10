@@ -2,29 +2,17 @@
 
 <template>
 	<div class="route-landing-client">
-		<div class="alert alert-notice alert-well sans-margin">
-			<div class="container text-center">
-				<p>
-					This is a
-					<strong>pre-release</strong>
-					. The Client isn't yet finished. Constructive feedback and ideas are welcome to
-					help shape the best experience ever.
-				</p>
-			</div>
-		</div>
-
 		<section class="section landing-header text-center">
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-6 col-centered">
 						<h1>
 							<app-theme-svg class="bolt" :src="imageJolt" alt="" strict-colors />
-							Client
-							<sup>PREVIEW</sup>
+							Desktop App
 						</h1>
-						<p>
-							Effortlessly install too many games (and counting!), keep them updated
-							automatically, and use the whole site without opening a browser.
+						<p class="lead">
+							Stay up to date with your favorite gaming communities and content
+							creators
 						</p>
 					</div>
 				</div>
@@ -44,7 +32,7 @@
 										We detected you are running on
 										<strong>{{ detectedPlatformDisplay }} {{ arch }}bit</strong>
 										<br />
-										Oof! looks like the client is incompatible with it.
+										Oof! looks like the desktop app is incompatible with it.
 									</p>
 
 									<p>Did we get it wrong? Download the correct version below:</p>
@@ -60,7 +48,6 @@
 					<div class="header-download-buttons">
 						<app-button
 							v-if="shouldOfferWindows"
-							v-app-track-event="`client-landing:download:win`"
 							primary
 							lg
 							@click="download(platform, '32')"
@@ -71,7 +58,6 @@
 
 						<app-button
 							v-if="shouldOfferMac"
-							v-app-track-event="`client-landing:download:mac`"
 							primary
 							lg
 							@click="download(platform, '64')"
@@ -82,7 +68,6 @@
 
 						<app-button
 							v-if="shouldOfferLinux"
-							v-app-track-event="`client-landing:download:linux`"
 							primary
 							lg
 							@click="download(platform, arch)"
@@ -101,11 +86,6 @@
 					<br />
 					or download for
 					<a v-app-scroll-to href="#all-downloads">other platforms</a>
-					<br />
-					<br />
-					<app-jolticon icon="windows" class="text-muted" />
-					<app-jolticon icon="mac" class="text-muted" />
-					<app-jolticon icon="linux" class="text-muted" />
 				</div>
 			</div>
 		</section>
@@ -125,249 +105,14 @@
 					<div class="container text-center">
 						<img
 							class="img-responsive"
+							width="1300"
+							height="893"
 							:src="assetPaths['./client-presentation.jpg'].default"
 							alt="Game Jolt Client"
 						/>
 					</div>
 				</div>
 			</section>
-
-			<section class="features-stripe">
-				<div class="container text-center">
-					<div class="row">
-						<div class="features-stripe-col col-sm-3 col-lg-2 col-lg-offset-2">
-							<p><app-jolticon icon="game" class="jolticon-4x" /></p>
-							<h5><strong>One Click Play</strong></h5>
-							<p class="small">
-								No more dealing with zip or (
-								<em>shudder</em>
-								) rar files! Click to install, click Launch to play.
-							</p>
-						</div>
-						<div class="features-stripe-col col-sm-3 col-lg-2">
-							<p><app-jolticon icon="download-box" class="jolticon-4x" /></p>
-							<h5><strong>Auto Updates</strong></h5>
-							<p class="small">
-								Client keeps your installed games up-to-date with the latest
-								versions.
-							</p>
-						</div>
-						<div class="features-stripe-col col-sm-3 col-lg-2">
-							<p><app-jolticon icon="offline" class="jolticon-4x" /></p>
-							<h5><strong>Offline Mode</strong></h5>
-							<p class="small">
-								Play your installed games even when you're not online. Even on the
-								toilet!
-							</p>
-						</div>
-						<div class="features-stripe-col col-sm-3 col-lg-2">
-							<p><app-jolticon icon="html5" class="jolticon-4x" /></p>
-							<h5><strong>HTML Support</strong></h5>
-							<p class="small">Play HTML and WebGL games in the Client.</p>
-						</div>
-					</div>
-				</div>
-			</section>
-
-			<div class="highlight-rows">
-				<section class="section">
-					<div class="container">
-						<div class="row">
-							<div class="col-sm-6">
-								<h2 class="section-header">
-									<app-jolticon icon="game" class="jolticon-2x" />
-									One Click Play
-								</h2>
-								<p>
-									Client is the easiest, speediest way to install and play Game
-									Jolt games. Click "Install" and Client will download and unpack
-									the right files for your OS. Then click "Launch" to play, simple
-									as that. So try out a bunch of games,
-									<em>fast</em>
-									.
-								</p>
-							</div>
-							<div class="col-sm-6">
-								<img
-									class="img-responsive"
-									:src="assetPaths['./install-shot.jpg'].default"
-									alt="Install Fast"
-								/>
-							</div>
-						</div>
-					</div>
-				</section>
-
-				<section class="section">
-					<div class="container">
-						<div class="row">
-							<div class="col-sm-6 col-sm-push-6">
-								<h2 class="section-header">
-									<app-jolticon icon="download-box" class="jolticon-2x" />
-									Auto Updates
-								</h2>
-								<p>Never miss a release!</p>
-								<p>
-									Client keeps your installed games up to date, so you'll always
-									play the latest versions. Your game library syncs up with your
-									Game Jolt account, so you can access your playlists and receive
-									notifications, as well.
-								</p>
-								<p>
-									Even the Client itself auto-updates, so you'll always be
-									browsing your favorite site using the latest version.
-								</p>
-							</div>
-							<div class="col-sm-6 col-sm-pull-6">
-								<img
-									class="img-responsive"
-									:src="assetPaths['./auto-update-shot.jpg'].default"
-									alt="Auto Update"
-								/>
-							</div>
-						</div>
-					</div>
-				</section>
-
-				<section class="section">
-					<div class="container">
-						<div class="row">
-							<div class="col-sm-6">
-								<h2 class="section-header">
-									<app-jolticon icon="users" class="jolticon-2x" />
-									Chat Integration
-								</h2>
-								<p>Chat with the Game Jolt community using Client!</p>
-								<p>
-									Never miss a message again. Get notifications when friends
-									message you. No more excuses.
-								</p>
-							</div>
-							<div class="col-sm-6">
-								<img
-									class="img-responsive"
-									:src="assetPaths['./chat-shot.jpg'].default"
-									alt="Chat"
-								/>
-							</div>
-						</div>
-					</div>
-				</section>
-
-				<section class="section">
-					<div class="container">
-						<div class="row">
-							<div class="col-sm-6 col-sm-push-6">
-								<h2 class="section-header">
-									<app-jolticon icon="offline" class="jolticon-2x" />
-									Offline Mode
-								</h2>
-								<p>
-									Play your installed games any time, even when you're not online.
-								</p>
-								<p>
-									Neither power outage nor shoddy wifi will stand in the way of
-									your gaming! Client will sync your library and update your games
-									the next time you connect.
-								</p>
-							</div>
-							<div class="col-sm-6 col-sm-pull-6">
-								<img
-									class="img-responsive"
-									:src="assetPaths['./offline-mode-shot.jpg'].default"
-									alt="Offline Mode"
-								/>
-							</div>
-						</div>
-					</div>
-				</section>
-
-				<section class="section">
-					<div class="container">
-						<div class="row">
-							<div class="col-sm-6">
-								<h2 class="section-header">
-									<app-jolticon icon="html5" class="jolticon-2x" />
-									HTML Support
-								</h2>
-								<p>
-									Quick play HTML (and WebGL) games without ever needing to open a
-									browser window. You'll almost never have to leave the comfort of
-									Client!
-								</p>
-							</div>
-							<div class="col-sm-6">
-								<img
-									class="img-responsive"
-									:src="assetPaths['./html-games-shot.jpg'].default"
-									alt="HTML Games"
-								/>
-							</div>
-						</div>
-					</div>
-				</section>
-
-				<section class="section">
-					<div class="container">
-						<div class="row">
-							<div class="col-sm-6 col-sm-push-6">
-								<h2 class="section-header">
-									<app-jolticon icon="world" class="jolticon-2x" />
-									Open Source
-								</h2>
-								<p>
-									Wanna know what we're putting on your desktop? Client is fully
-									open source!
-								</p>
-								<p>
-									You can view us working on the project, pull it and make changes
-									for the fun of it, release customized versions of the client, or
-									even help fix bugs at the
-									<app-link-external href="https://github.com/gamejolt/gamejolt">
-										GitHub repository
-									</app-link-external>
-									.
-								</p>
-							</div>
-							<div class="col-sm-6 col-sm-pull-6">
-								<img
-									class="img-responsive"
-									:src="assetPaths['./open-source-shot.jpg'].default"
-									alt="Open Source"
-								/>
-							</div>
-						</div>
-					</div>
-				</section>
-
-				<section class="section">
-					<div class="container">
-						<div class="row">
-							<div class="col-sm-6">
-								<h2 class="section-header">
-									<app-jolticon icon="gamejolt" class="jolticon-2x" />
-									Access All of Game Jolt
-								</h2>
-								<p>
-									Client is not just a downloader app; it's the
-									<strong>whole Game Jolt site on your desktop.</strong>
-									Browse, search, and find games. Chat with friends and receive
-									notifications. Even upload files, manage games, and edit pages
-									right in Client.
-								</p>
-								<p>It's pretty much all you've ever dreamed of, most likely.</p>
-							</div>
-							<div class="col-sm-6">
-								<img
-									class="img-responsive"
-									:src="assetPaths['./full-site-shot.jpg'].default"
-									alt="Game Jolt"
-								/>
-							</div>
-						</div>
-					</div>
-				</section>
-			</div>
 
 			<section id="all-downloads" class="download-footer">
 				<div class="container text-center">
@@ -419,30 +164,105 @@
 							</div>
 						</div>
 					</div>
-					<br />
-
-					<p class="lead">Play games. Make games.</p>
-				</div>
-			</section>
-
-			<section class="section fill-dark">
-				<div class="container text-center">
-					<div class="row">
-						<p class="sans-margin">
-							<strong>Found a bug?</strong>
-							Post it in the
-							<app-link-external
-								href="https://github.com/gamejolt/issue-tracker/issues"
-							>
-								issue tracker
-							</app-link-external>
-							.
-						</p>
-					</div>
 				</div>
 			</section>
 		</div>
 	</div>
 </template>
 
-<style lang="stylus" src="./client.styl" scoped></style>
+<style lang="stylus" scoped>
+.route-landing-client
+	overflow-x: hidden
+	overflow-y: hidden
+
+	.header-download-buttons
+		display: flex
+		justify-content: center
+		flex-direction: column
+		margin: 0 auto
+		max-width: 370px
+
+		@media $media-md-up
+			max-width: 100%
+			flex-direction: row
+
+		> *
+			display: block
+			margin: 5px 10px
+
+			@media $media-md-up
+				margin: 0 10px
+
+	section.client-presentation
+		position: relative
+
+		.container
+			position: relative
+
+	.client-presentation-mascot
+		display: block
+		position: absolute
+		top: 20px
+		right: 40px
+		margin-top: -(130px)
+		z-index: 2
+
+	.client-presentation-inner
+		position: relative
+		overflow: hidden
+
+		&::before
+			change-bg('dark')
+			content: ''
+			display: block
+			position: absolute
+			top: 0
+			left: -30%
+			width: 160%
+			height: 400px
+			z-index: 0
+			transform: rotate(-8deg)
+
+		.container
+			z-index: 1
+
+		img
+			theme-prop('border-color', 'gray')
+			margin-top: 20px
+			border-width: $border-width-large
+			border-style: solid
+			rounded-corners-lg()
+
+	section.download-footer
+		margin-top: 150px
+		margin-bottom: 90px
+		position: relative
+		z-index: 1
+
+		&
+		h5
+			color: $white
+
+		&::before
+			change-bg('darkest')
+			content: ''
+			display: block
+			position: absolute
+			top: -80px
+			bottom: -80px
+			left: -30%
+			width: 160%
+			z-index: 0
+			transform: rotate(8deg)
+
+		.container
+			position: relative
+			z-index: 1
+
+	@media $media-xs
+		.download-footer-col
+			margin-bottom: $grid-gutter-width
+
+			&:last-child
+				margin-bottom: 0
+</style>

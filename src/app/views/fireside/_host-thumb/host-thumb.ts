@@ -1,10 +1,14 @@
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import { FiresideRTCUser, setAudioPlayback } from '../../../../_common/fireside/rtc/user';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
-import { FiresideRTC, FiresideRTCKey } from '../fireside-rtc';
-import { FiresideRTCUser, setAudioPlayback } from '../fireside-rtc-user';
-import AppFiresideVideo from '../_video/video.vue';
+import {
+	FiresideController,
+	FiresideControllerKey,
+} from '../../../components/fireside/controller/controller';
+import AppFiresideStreamVideo from '../../../components/fireside/stream/video/video.vue';
 import AppFiresideHostThumbIndicator from './host-thumb-indicator.vue';
 
 @Options({
@@ -12,7 +16,8 @@ import AppFiresideHostThumbIndicator from './host-thumb-indicator.vue';
 		AppUserAvatarImg,
 		AppFiresideHostThumbIndicator,
 		AppPopper,
-		AppFiresideVideo,
+		AppFiresideStreamVideo,
+		AppUserCardHover,
 	},
 	directives: {
 		AppTooltip,
@@ -25,14 +30,18 @@ export default class AppFiresideHostThumb extends Vue {
 	@Prop({ type: Boolean, required: false, default: false })
 	hideOptions!: boolean;
 
-	@Inject({ from: FiresideRTCKey })
-	rtc!: FiresideRTC;
+	@Inject({ from: FiresideControllerKey })
+	c!: FiresideController;
 
 	@Emit('show-popper') emitShowPopper() {}
 	@Emit('hide-popper') emitHidePopper() {}
 
 	get isFocused() {
-		return this.rtc.focusedUserId === this.host.userId;
+		return this.c.rtc?.focusedUser === this.host;
+	}
+
+	get isMe() {
+		return this.c.rtc?.localUser === this.host;
 	}
 
 	get showingVideoThumb() {
@@ -44,11 +53,11 @@ export default class AppFiresideHostThumb extends Vue {
 	}
 
 	onClick() {
-		if (this.isFocused) {
+		if (this.isFocused || !this.c.rtc) {
 			return;
 		}
 
-		this.rtc.focusedUserId = this.host.userId;
+		this.c.rtc.focusedUser = this.host;
 	}
 
 	mute() {
@@ -57,5 +66,13 @@ export default class AppFiresideHostThumb extends Vue {
 
 	unmute() {
 		setAudioPlayback(this.host, true);
+	}
+
+	onUserCardShow() {
+		this.c.isShowingOverlayPopper = true;
+	}
+
+	onUserCardHide() {
+		this.c.isShowingOverlayPopper = false;
 	}
 }

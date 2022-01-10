@@ -3,7 +3,7 @@ import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { sleep } from '../../../utils/utils';
 import { Ruler } from '../../ruler/ruler-service';
 import { onScreenResize, Screen } from '../../screen/screen-service';
-import { EventSubscription } from '../../system/event/event-topic';
+import { useEventSubscription } from '../../system/event/event-topic';
 import { ImgHelper } from '../helper/helper-service';
 
 const WIDTH_HEIGHT_REGEX = /\/(\d+)x(\d+)\//;
@@ -15,7 +15,6 @@ export class AppImgResponsive extends Vue {
 
 	private initialized = false;
 	private processedSrc = '';
-	private resize$: EventSubscription | undefined;
 
 	@Emit('imgloadchange')
 	emitChange(_isLoaded: boolean) {}
@@ -24,11 +23,11 @@ export class AppImgResponsive extends Vue {
 		if (import.meta.env.SSR) {
 			this.processedSrc = this.src;
 		}
+
+		useEventSubscription(onScreenResize, () => this.updateSrc());
 	}
 
 	async mounted() {
-		this.resize$ = onScreenResize.subscribe(() => this.updateSrc());
-
 		// Make sure the view is compiled.
 		await nextTick();
 		this.updateSrc();
@@ -39,10 +38,6 @@ export class AppImgResponsive extends Vue {
 			class: 'img-responsive',
 			src: this.processedSrc,
 		});
-	}
-
-	unmounted() {
-		this.resize$?.close();
 	}
 
 	@Watch('src')

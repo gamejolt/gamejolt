@@ -4,7 +4,7 @@ import AppFormControlTheme from '../../../../../_common/form-vue/controls/AppFor
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
-import { Theme } from '../../../../../_common/theme/theme.model';
+import { DefaultTheme } from '../../../../../_common/theme/theme.model';
 import { ThemeMutation, ThemeState, ThemeStore } from '../../../../../_common/theme/theme.store';
 import { GameThumbnailModal } from '../../../game/thumbnail-modal/thumbnail-modal.service';
 import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
@@ -50,6 +50,6 @@ export default class FormGameDesign extends mixins(Wrapper) {
 	onThemeChanged() {
 		// Default theme would be the user theme. Don't want to fallback to page theme otherwise
 		// when clearing theme it'll show the page theme.
-		this.setFormTheme(this.formModel.theme || this.userTheme || new Theme());
+		this.setFormTheme(this.formModel.theme ?? this.userTheme ?? DefaultTheme);
 	}
 }

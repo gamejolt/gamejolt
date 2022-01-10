@@ -36,7 +36,7 @@ export default class AppUserVerifiedTick extends Vue {
 
 	get tooltip() {
 		if (this.user.is_verified) {
-			return this.$gettext('Verified Account');
+			return this.$gettext(`Verified Account`);
 		}
 	}
 }

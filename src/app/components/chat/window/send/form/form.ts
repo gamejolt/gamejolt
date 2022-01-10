@@ -2,7 +2,6 @@ import { nextTick } from 'vue';
 import { Emit, Inject, mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { isMac } from '../../../../../../utils/utils';
 import { propRequired } from '../../../../../../utils/vue';
-import { ContentContext } from '../../../../../../_common/content/content-context';
 import { ContentDocument } from '../../../../../../_common/content/content-document';
 import { ContentRules } from '../../../../../../_common/content/content-editor/content-rules';
 import {
@@ -17,14 +16,8 @@ import { FormValidatorContentNoMediaUpload } from '../../../../../../_common/for
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppShortkey from '../../../../../../_common/shortkey/shortkey.vue';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
-import {
-	ChatClient,
-	ChatKey,
-	setMessageEditing,
-	startTyping,
-	stopTyping,
-	tryGetRoomRole,
-} from '../../../client';
+import { ChatStore, ChatStoreKey } from '../../../chat-store';
+import { setMessageEditing, startTyping, stopTyping, tryGetRoomRole } from '../../../client';
 import { ChatMessage, CHAT_MESSAGE_MAX_CONTENT_LENGTH } from '../../../message';
 import { ChatRoom } from '../../../room';
 
@@ -50,11 +43,10 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 	@Prop(propRequired(Boolean)) singleLineMode!: boolean;
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 
-	@Inject({ from: ChatKey })
-	chat!: ChatClient;
+	@Inject({ from: ChatStoreKey })
+	chatStore!: ChatStore;
 
 	readonly Screen = Screen;
-	readonly contentContext: ContentContext = 'chat-message';
 	// Allow images to be up to 100px in height so that image and a chat message fit into the editor without scrolling.
 	readonly displayRules = new ContentRules({ maxMediaWidth: 125, maxMediaHeight: 100 });
 
@@ -74,6 +66,11 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 	@Emit('submit') emitSubmit(_content: FormModel) {}
 	@Emit('cancel') emitCancel() {}
 	@Emit('single-line-mode-change') emitSingleLineModeChange(_singleLine: boolean) {}
+	@Emit('focus-change') emitFocusChange(_focused: boolean) {}
+
+	get chat() {
+		return this.chatStore.chat!;
+	}
 
 	get contentEditorTempResourceContextData() {
 		if (this.chat && this.room) {
@@ -114,7 +111,7 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 	}
 
 	get maxContentLength() {
-		return [CHAT_MESSAGE_MAX_CONTENT_LENGTH];
+		return CHAT_MESSAGE_MAX_CONTENT_LENGTH;
 	}
 
 	get isSendButtonDisabled() {
@@ -206,6 +203,7 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 
 	created() {
 		this.form.warnOnDiscard = false;
+		this.setField('content', '');
 	}
 
 	async submitMessage() {
@@ -300,10 +298,12 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 
 	onFocusEditor() {
 		this.isEditorFocused = true;
+		this.emitFocusChange(true);
 	}
 
 	onBlurEditor() {
 		this.isEditorFocused = false;
+		this.emitFocusChange(false);
 	}
 
 	onTabKeyPressed() {

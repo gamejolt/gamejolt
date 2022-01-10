@@ -1,7 +1,13 @@
 <script lang="ts" src="./content-editor"></script>
 
 <template>
-	<div ref="editor" class="content-editor" tabindex="0" @focus="onFocusOuter">
+	<div
+		ref="editor"
+		v-app-observe-dimensions="onDimensionsChange"
+		class="content-editor"
+		tabindex="0"
+		@focus="onFocusOuter"
+	>
 		<div
 			class="content-container"
 			:class="{
@@ -36,59 +42,188 @@
 					</span>
 				</transition>
 
-				<app-content-editor-controls-inset-container
-					:view="view"
-					:state-counter="stateCounter"
-				>
+				<app-content-editor-inset-controls v-if="!GJ_IS_MOBILE_APP">
 					<transition name="fade">
-						<app-content-editor-controls-gif-controls
-							v-if="shouldShowGifButton"
-							:view="view"
-							:state-counter="stateCounter"
-						/>
+						<app-content-editor-controls-gif v-if="shouldShowGifButton" />
 					</transition>
 					<transition name="fade">
-						<app-content-editor-controls-emoji-panel
+						<app-content-editor-controls-emoji
 							v-if="shouldShowEmojiPanel"
 							ref="emojiPanel"
-							:view="view"
-							:state-counter="stateCounter"
-							@visibility-changed="onEmojiPanelVisibilityChanged"
+							@visibility-change="onEmojiPanelVisibilityChanged"
 						/>
 					</transition>
-				</app-content-editor-controls-inset-container>
+				</app-content-editor-inset-controls>
 			</app-scroll-scroller>
 		</div>
 
-		<transition name="fade">
-			<app-content-editor-block-controls
-				v-if="shouldShowControls"
-				:capabilities="capabilities"
-				:view="view"
-				:editor="this"
-				:state-counter="stateCounter"
-				:collapsed="controlsCollapsed"
-				@collapsed-changed="onControlsCollapsedChanged"
-			/>
-		</transition>
-		<transition name="fade">
-			<app-content-editor-text-controls
-				v-if="shouldShowTextControls"
-				:capabilities="capabilities"
-				:view="view"
-				:state-counter="stateCounter"
-			/>
-		</transition>
-		<transition name="fade">
-			<app-content-editor-controls-mention-autocomplete-controls
-				:can-show="canShowMentionSuggestions"
-				:view="view"
-				:state-counter="stateCounter"
-				@insert="onInsertMention"
-				@users-change="onMentionUsersChange"
-			/>
-		</transition>
+		<template v-if="!GJ_IS_MOBILE_APP">
+			<transition name="fade">
+				<app-content-editor-block-controls
+					v-if="shouldShowControls"
+					:collapsed="controlsCollapsed"
+					@collapsed-change="onControlsCollapsedChanged"
+				/>
+			</transition>
+			<transition name="fade">
+				<app-content-editor-text-controls v-if="shouldShowTextControls" />
+			</transition>
+			<transition name="fade">
+				<app-content-editor-controls-mention-autocomplete
+					:can-show="canShowMention"
+					@insert="onInsertMention"
+					@user-change="onMentionUsersChange"
+				/>
+			</transition>
+		</template>
 	</div>
 </template>
 
-<style lang="stylus" src="./content-editor.styl" scoped></style>
+<style lang="stylus" scoped>
+.content-container
+	position: relative
+
+	&-scroller
+		// Spacing for the scrollbar side
+		margin-right: 4px
+		// Add extra padding to get total spacing equal to '.form-control' padding.
+		padding-right: $padding-base-horizontal - @margin-right
+
+	// Gutter space to not overlay potential content
+	&-gutter-1
+		padding-right: 32px
+
+	&-gutter-2
+		padding-right: 64px
+
+.content-editor
+	position: relative
+	padding-top: 8px
+	padding-bottom: 8px
+	padding-right: 0
+
+.content-placeholder
+	top: 4px
+	left: 4px
+	position: absolute
+	font-style: italic
+	pointer-events: none
+	user-select: none
+
+.disabled
+	theme-prop('color', 'fg-muted')
+
+// Do not show dotted selection outline
+::v-deep(.ProseMirror)
+	outline: 0 solid transparent !important
+
+// Override prosemirror selection border around selected nodes
+::v-deep(.ProseMirror-selectednode)
+	theme-prop('outline-color', 'bi-bg') !important
+
+::v-deep(.content-editor-spoiler)
+	change-bg('bg-offset')
+	rounded-corners-lg()
+	font-size: $font-size-base
+	padding-top: 1px
+	border: $border-width-small dashed var(--theme-bg-subtle)
+	position: relative
+
+	&::before
+		theme-prop('color', 'fg-muted')
+		content: 'Spoiler'
+		position: absolute
+		top: 2px
+		right: 5px
+		font-size: $font-size-tiny
+		text-transform: uppercase
+
+::v-deep(.content-editor-spoiler:after)
+	content: none
+
+// Give each paragraph a 10px margin, except the first and last.
+::v-deep(p)
+	margin-top: 10px
+	margin-bottom: 10px
+
+	&:first-child
+		margin-top: 4px
+
+	&:last-child
+		margin-bottom: 4px
+
+::v-deep(code)
+	white-space: pre-wrap
+
+::v-deep(td)
+	border-width: $border-width-small
+	border-style: solid
+	padding: 4px
+	min-width: 2em
+
+::v-deep(th)
+	padding: 4px
+
+::v-deep(blockquote::before)
+	white-space: normal
+
+::v-deep(blockquote::after)
+	white-space: normal
+
+::v-deep(table)
+	table-layout: fixed
+	width: 100%
+
+	& > tr:first-child
+		& > td
+		& > th
+			border-top-width: 0
+
+	& > tr > th
+		border-width: 0 $border-width-small $border-width-large 0
+		border-bottom-style: solid
+		border-right-style: dashed
+		theme-prop('border-color', 'fg-muted')
+
+	& > tr > th:last-child
+		border-right-width: 0
+
+	& > tr > td
+		border-width: $border-width-small $border-width-small 0 0
+		border-top-style: solid
+		border-right-style: dashed
+		theme-prop('border-color', 'fg-muted')
+
+	& > tr > td:last-child
+		border-right-width: 0
+
+.fade-enter-active
+.fade-leave-active
+	transition: opacity 200ms $strong-ease-out
+
+.fade-enter-from
+.fade-leave-to
+	opacity: 0
+
+::v-deep(a)
+	cursor: inherit
+
+	&:hover
+		theme-prop('color', 'link')
+
+::v-deep(.content-editor-mention)
+	theme-prop('color', 'link')
+
+::v-deep(.content-editor-tag)
+	theme-prop('color', 'link')
+
+::v-deep(.content-editor-link)
+	theme-prop('color', 'link')
+
+// Add a minimal margin to media items so they don't directly border the top of the editor
+::v-deep(.media-item)
+	margin-top: ($line-height-computed / 3)
+
+::v-deep(img.emoji)
+	border-radius: 0
+</style>

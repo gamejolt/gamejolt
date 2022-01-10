@@ -9,7 +9,7 @@ import {
 	reactive,
 	Ref,
 	ref,
-	toRef,
+	toRefs,
 	watch,
 } from 'vue';
 import { useResizeObserver } from '../../utils/hooks/useResizeObserver';
@@ -171,11 +171,12 @@ const props = defineProps({
 	},
 });
 
+const { validators } = toRefs(props);
+
 // TODO(vue3): can we do the text masking in a way that tree shakes it away when not used?
-// TODO(vue3): validation as composition somehow
 
 const group = useFormGroup()!;
-const c = createFormControl('', toRef(props, 'validators'));
+const c = createFormControl('', validators);
 
 const root = ref<HTMLInputElement>();
 const prefixElement = ref<HTMLSpanElement>();

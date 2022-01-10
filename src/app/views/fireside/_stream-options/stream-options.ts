@@ -1,37 +1,40 @@
 import { Emit, Inject, Options, Vue } from 'vue-property-decorator';
-import AppPopper from '../../../../_common/popper/popper.vue';
+import { stopStreaming } from '../../../../_common/fireside/rtc/producer';
+import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { FiresideRTC, FiresideRTCKey } from '../fireside-rtc';
-import { setAudioPlayback } from '../fireside-rtc-user';
+import {
+	FiresideController,
+	FiresideControllerKey,
+} from '../../../components/fireside/controller/controller';
+import { StreamSetupModal } from '../../../components/fireside/stream/setup/setup-modal.service';
+import AppFiresideSettingsPopper from '../_settings-popper/settings-popper.vue';
 
 @Options({
 	components: {
-		AppPopper,
+		AppFiresideSettingsPopper,
 	},
 	directives: {
 		AppTooltip,
 	},
 })
 export default class AppFiresideStreamOptions extends Vue {
-	@Inject({ from: FiresideRTCKey })
-	rtc!: FiresideRTC;
+	@AppState user!: AppStore['user'];
+
+	@Inject({ from: FiresideControllerKey })
+	c!: FiresideController;
 
 	@Emit('show-popper') emitShowPopper() {}
 	@Emit('hide-popper') emitHidePopper() {}
 
-	get shouldMute() {
-		return this.rtc.users.some(i => !i.micAudioMuted);
+	onClickEditStream() {
+		StreamSetupModal.show(this.c);
 	}
 
-	muteAll() {
-		return this.rtc.users.forEach(i => setAudioPlayback(i, false));
-	}
+	onClickStopStreaming() {
+		if (!this.c.rtc?.producer) {
+			return;
+		}
 
-	unmuteAll() {
-		return this.rtc.users.forEach(i => setAudioPlayback(i, true));
-	}
-
-	toggleVideoStats() {
-		this.rtc.shouldShowVideoStats = !this.rtc.shouldShowVideoStats;
+		stopStreaming(this.c.rtc.producer);
 	}
 }

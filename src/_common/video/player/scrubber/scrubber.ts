@@ -3,6 +3,7 @@ import { propRequired } from '../../../../utils/vue';
 import { Ruler } from '../../../ruler/ruler-service';
 import AppTouch, { AppTouchInput } from '../../../touch/AppTouch.vue';
 import { scrubVideo, VideoPlayerController } from '../controller';
+
 @Options({
 	components: {
 		AppTouch,

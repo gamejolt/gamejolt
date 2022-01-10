@@ -88,7 +88,7 @@
 			</div>
 		</div>
 
-		<div class="-stats -well">
+		<div v-if="!noStats" class="-stats -well">
 			<app-loading v-if="isLoading" class="sans-margin" centered />
 			<ul v-else class="stat-list">
 				<li class="stat-big stat-big-smaller">

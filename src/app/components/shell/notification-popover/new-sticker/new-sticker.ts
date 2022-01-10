@@ -10,6 +10,7 @@ export default class AppShellNotificationPopoverNewSticker extends Vue {
 	};
 
 	mounted() {
+		// TODO(vue3)
 		// Self-destroy after animation finishes.
 		this.$refs.newSticker.addEventListener('animationend', () => {
 			this.$destroy();

@@ -96,8 +96,8 @@
 .theme-gray
 	background-color: var(--theme-gray)
 
-.theme-gray
-	background-color: var(--theme-gray)
+.theme-gray-subtle
+	background-color: var(--theme-gray-subtle)
 
 .theme-light
 	background-color: var(--theme-light)

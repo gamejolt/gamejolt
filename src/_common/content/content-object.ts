@@ -143,10 +143,10 @@ export class ContentObject extends ContentNode {
 				length++;
 				break;
 			case 'embed':
-				length += this.attrs.source.length;
+				length += (this.attrs.source as string).length;
 				break;
 			case 'mediaItem':
-				length += this.attrs.caption.length + 1;
+				length += (this.attrs.caption as string).length + 1;
 				break;
 		}
 

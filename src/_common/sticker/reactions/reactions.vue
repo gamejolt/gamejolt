@@ -2,9 +2,12 @@
 
 <template>
 	<div
-		v-app-tooltip="$gettext(`View Stickers`)"
+		v-app-tooltip="controller.isLive ? null : $gettext(`View Stickers`)"
 		class="sticker-reactions"
-		:class="{ '-active': controller.shouldShow }"
+		:class="{
+			'-active': showAsActive,
+			'-live': controller.isLive,
+		}"
 		@click.stop="onClick"
 	>
 		<app-sticker-reactions-item
@@ -12,6 +15,7 @@
 			:key="stickerId"
 			:img-url="imgUrl"
 			:count="count"
+			:animate="shouldAnimate"
 		/>
 	</div>
 </template>
@@ -21,12 +25,14 @@
 	display: inline-flex
 	flex-wrap: wrap
 	margin: 4px 0 8px 0
-	cursor: pointer
 	border: $border-width-small solid transparent
 
-	&:hover
-		rounded-corners()
-		background-color: var(--theme-bg-offset)
+	&:not(.-live)
+		cursor: pointer
+
+		&:hover
+			rounded-corners()
+			background-color: var(--theme-bg-offset)
 
 .-active
 	rounded-corners()

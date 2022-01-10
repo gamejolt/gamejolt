@@ -1,7 +1,15 @@
 <script lang="ts" src="./add"></script>
 
 <template>
-	<app-theme :theme="theme">
+	<app-theme
+		v-app-tooltip.touchable="
+			!community || community.is_member
+				? null
+				: $gettext(`Only members of this community can create a fireside in it.`)
+		"
+		:theme="theme"
+		:class="{ '-disabled': isDisabled }"
+	>
 		<div class="-fireside-badge fill-darkest" @click="onClickBadge">
 			<div class="-backdrop">
 				<div ref="header" class="-header">
@@ -16,10 +24,10 @@
 					</small>
 					<br />
 					<template v-if="isCommunity">
-						<translate>Start this community's Fireside!</translate>
+						<translate>Start a fireside in this community!</translate>
 					</template>
 					<template v-else>
-						<translate>Start your Fireside!</translate>
+						<translate>Start a fireside!</translate>
 					</template>
 				</h4>
 			</div>
@@ -28,6 +36,13 @@
 </template>
 
 <style lang="stylus" scoped>
+.-disabled
+	cursor: not-allowed
+
+	> *
+		pointer-events: none
+		filter: brightness(0.4)
+
 .-backdrop
 	// For some reason we need position static
 	// so the backdrop can get the height.

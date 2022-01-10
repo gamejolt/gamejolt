@@ -20,6 +20,7 @@ import { Community } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
 import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/verified-tick.vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
+import { Environment } from '../../../../_common/environment/environment.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
 import { formatNumber } from '../../../../_common/filters/number';
@@ -28,13 +29,17 @@ import { Game } from '../../../../_common/game/game.model';
 import '../../../../_common/lazy/placeholder/placeholder.styl';
 import { LinkedAccount, Provider } from '../../../../_common/linked-account/linked-account.model';
 import { Meta } from '../../../../_common/meta/meta-service';
+import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
+import AppScrollInview, { ScrollInviewConfig } from '../../../../_common/scroll/inview/inview.vue';
+import AppShareCard from '../../../../_common/share/card/card.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
-import { User } from '../../../../_common/user/user.model';
-import { ChatClient, ChatKey, enterChatRoom } from '../../../components/chat/client';
+import { unfollowUser, User } from '../../../../_common/user/user.model';
+import { ChatStore, ChatStoreKey } from '../../../components/chat/chat-store';
+import { enterChatRoom } from '../../../components/chat/client';
 import AppCommentOverview from '../../../components/comment/overview/overview.vue';
 import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
 import AppGameList from '../../../components/game/list/list.vue';
@@ -45,6 +50,11 @@ import AppTrophyThumbnail from '../../../components/trophy/thumbnail/thumbnail.v
 import AppUserKnownFollowers from '../../../components/user/known-followers/known-followers.vue';
 import { Store } from '../../../store/index';
 import { RouteStore, RouteStoreModule } from '../profile.store';
+
+const FiresideScrollInviewConfig = new ScrollInviewConfig({
+	emitsOn: 'partial-overlap',
+	trackFocused: false,
+});
 
 @Options({
 	name: 'RouteProfileOverview',
@@ -62,6 +72,8 @@ import { RouteStore, RouteStoreModule } from '../profile.store';
 		AppCommunityVerifiedTick,
 		AppTrophyThumbnail,
 		AppFiresideBadge,
+		AppShareCard,
+		AppScrollInview,
 	},
 	directives: {
 		AppTooltip,
@@ -74,8 +86,8 @@ import { RouteStore, RouteStoreModule } from '../profile.store';
 	resolver: ({ route }) => Api.sendRequest('/web/profile/overview/@' + route.params.username),
 })
 export default class RouteProfileOverview extends BaseRouteComponent {
-	@Inject({ from: ChatKey })
-	chat?: ChatClient;
+	@Inject({ from: ChatStoreKey })
+	chatStore!: ChatStore;
 
 	@Inject({ from: CommentStoreManagerKey })
 	commentManager!: CommentStoreManager;
@@ -145,6 +157,10 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	knownFollowers: User[] = [];
 	knownFollowerCount = 0;
 	fireside: Fireside | null = null;
+	hadInitialFireside = false;
+	isFiresideInview = false;
+	firesideHasVideo = false;
+	maintainFiresideOutviewSpace = false;
 
 	permalinkWatchDeregister?: CommentThreadModalPermalinkDeregister;
 
@@ -152,12 +168,25 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	readonly UserFriendship = UserFriendship;
 	readonly Screen = Screen;
 	readonly formatNumber = formatNumber;
+	readonly FiresideScrollInviewConfig = FiresideScrollInviewConfig;
+
+	get chat() {
+		return this.chatStore.chat;
+	}
 
 	get routeTitle() {
 		if (this.user) {
 			return `${this.user.display_name} (@${this.user.username})`;
 		}
 		return null;
+	}
+
+	get shareUrl() {
+		if (!this.user) {
+			return Environment.baseUrl;
+		}
+
+		return Environment.baseUrl + this.user.url;
 	}
 
 	get canAddAsFriend() {
@@ -284,7 +313,16 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	}
 
 	get shouldShowFireside() {
-		return this.fireside && this.fireside.canJoin();
+		// Keep the FiresideBadge around so we don't mess with their scroll
+		// position when a fireside expires.
+		return (!!this.fireside && this.fireside.canJoin()) || this.hadInitialFireside;
+	}
+
+	get canShowFiresidePreview() {
+		return (
+			this.shouldShowFireside &&
+			(this.isFiresideInview ? this.firesideHasVideo : this.maintainFiresideOutviewSpace)
+		);
 	}
 
 	getLinkedAccount(provider: Provider) {
@@ -349,9 +387,9 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		if ($payload.knownFollowerCount) {
 			this.knownFollowerCount = $payload.knownFollowerCount;
 		}
-		if ($payload.fireside) {
-			this.fireside = new Fireside($payload.fireside);
-		}
+
+		this.fireside = $payload.fireside ? new Fireside($payload.fireside) : null;
+		this.hadInitialFireside = !!this.fireside;
 
 		this.overviewPayload($payload);
 	}
@@ -390,6 +428,20 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 				enterChatRoom(this.chat, chatUser.room_id);
 			}
 		}
+	}
+
+	onFiresideInview() {
+		this.isFiresideInview = true;
+		this.maintainFiresideOutviewSpace = false;
+	}
+
+	onFiresideOutview() {
+		this.maintainFiresideOutviewSpace = this.canShowFiresidePreview;
+		this.isFiresideInview = false;
+	}
+
+	onFiresideBadgeChanged(hasVideo: boolean, _isStreaming: boolean) {
+		this.firesideHasVideo = hasVideo;
 	}
 
 	async toggleShowAllCommunities() {
@@ -436,8 +488,19 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		TrophyModal.show(userTrophy);
 	}
 
-	onClickUnfollow() {
-		this.user?.$unfollow();
+	async onClickUnfollow() {
+		if (this.user) {
+			const result = await ModalConfirm.show(
+				this.$gettext(`Are you sure you want to unfollow this user?`),
+				this.$gettext(`Unfollow user?`)
+			);
+
+			if (!result) {
+				return;
+			}
+
+			unfollowUser(this.user);
+		}
 	}
 
 	async onFriendRequestAccept() {

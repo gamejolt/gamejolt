@@ -56,6 +56,7 @@ export default defineConfig({
 	define: {
 		GJ_SECTION: JSON.stringify('auth'),
 		GJ_IS_DESKTOP_APP: JSON.stringify(false),
+		GJ_IS_MOBILE_APP: JSON.stringify(false),
 		GJ_ENVIRONMENT: JSON.stringify('production'),
 		GJ_BUILD_TYPE: JSON.stringify('development'),
 		GJ_VERSION: JSON.stringify('0.1.0'),

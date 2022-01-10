@@ -1,9 +1,7 @@
-import { Node } from 'prosemirror-model';
-import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { ContextCapabilities } from '../../content-context';
+import { imageMimeTypes } from '../../../../utils/image';
 import AppContentEditorTS from '../content-editor';
-import { ContentEditorService } from '../content-editor.service';
+import { ContentEditorController, editorUploadImageFile } from '../content-editor-controller';
 import { dropEventHandler } from './drop-event-handler';
 import { focusEventHandler } from './focus-event-handler';
 import { keydownEventHandler } from './keydown-event-handler';
@@ -15,10 +13,11 @@ type EventHandlers = {
 
 export default function buildEvents(editor: AppContentEditorTS): EventHandlers {
 	const handlers = {} as EventHandlers;
+	const c = editor.controller;
 
-	if (editor.capabilities.media) {
-		handlers.paste = pasteEventHandler(editor.capabilities);
-		handlers.drop = dropEventHandler(editor.capabilities);
+	if (c.contextCapabilities.media) {
+		handlers.paste = pasteEventHandler(c);
+		handlers.drop = dropEventHandler(c);
 	}
 	handlers.focus = focusEventHandler(editor);
 	handlers.keydown = keydownEventHandler(editor);
@@ -26,21 +25,21 @@ export default function buildEvents(editor: AppContentEditorTS): EventHandlers {
 	return handlers;
 }
 
-export function canPasteImages(state: EditorState, capabilities: ContextCapabilities) {
-	// Image uploads are not allowed in code blocks.
-	const selectedNode = ContentEditorService.getSelectedNode(state);
-	if (selectedNode instanceof Node) {
-		if (capabilities.codeBlock) {
-			const isInCodeBlock =
-				ContentEditorService.isContainedInNode(
-					state,
-					selectedNode,
-					state.schema.nodes.codeBlock
-				) instanceof Node;
-			if (isInCodeBlock) {
-				return false;
+export function handleImageUploads(c: ContentEditorController, items: DataTransferItemList) {
+	let handled = false;
+
+	for (let i = 0; i < items.length; i++) {
+		const transferItem = items[i];
+
+		if (
+			transferItem.kind === 'file' &&
+			imageMimeTypes.includes(transferItem.type.toLowerCase())
+		) {
+			const result = editorUploadImageFile(c, transferItem.getAsFile());
+			if (result) {
+				handled = true;
 			}
 		}
 	}
-	return true;
+	return handled;
 }

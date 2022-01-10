@@ -22,13 +22,40 @@ export default class AppStickerReactions extends Vue {
 
 	@Emit('show') emitShow() {}
 
+	private animate = false;
+
+	get canShowBorder() {
+		return !this.controller.isLive;
+	}
+
+	get showAsActive() {
+		return this.canShowBorder && this.controller.shouldShow;
+	}
+
+	get shouldAnimate() {
+		return this.animate;
+	}
+
 	get reactions() {
 		return [...this.controller.model.sticker_counts].sort((a, b) =>
 			numberSort(b.count, a.count)
 		);
 	}
 
+	mounted() {
+		//  Wait for a little bit before setting this. We want new reactions to
+		//  animate themselves, but not the initial ones.
+		setTimeout(() => {
+			this.animate = this.controller.isLive;
+		}, 1_000);
+	}
+
 	onClick() {
+		// Stickers in a Live context will automatically remove themselves - do nothing.
+		if (this.controller.isLive) {
+			return;
+		}
+
 		toggleStickersShouldShow(this.controller, true);
 
 		if (this.controller.shouldShow) {

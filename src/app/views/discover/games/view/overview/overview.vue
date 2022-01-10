@@ -17,6 +17,13 @@
 				<template #left>
 					<app-discover-games-view-overview-statbar />
 
+					<app-share-card
+						class="-share-card"
+						resource="game"
+						:url="shareLink"
+						bleed-padding
+					/>
+
 					<app-user-known-followers
 						v-if="isOverviewLoaded"
 						:users="knownFollowers"
@@ -250,7 +257,7 @@
 
 				<app-activity-feed-placeholder v-if="!feed || !feed.isBootstrapped" />
 				<template v-else>
-					<app-activity-feed v-if="feed.hasItems" :feed="feed" show-ads />
+					<app-activity-feed v-if="feed.hasItems" :feed="feed" />
 					<div v-else class="alert">
 						<translate>
 							Nothing has been posted to this project page yet. Maybe check back

@@ -20,7 +20,7 @@
 		vertical-align: top
 
 	::v-deep(.jolticon)
-		font-size: $jolticon-size * 3
+		font-size: $jolticon-size * 2
 
 		@media $media-mobile
 			margin: 0 4px

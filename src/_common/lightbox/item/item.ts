@@ -4,7 +4,7 @@ import { AppImgResponsive } from '../../img/responsive/responsive';
 import AppMediaItemBackdrop from '../../media-item/backdrop/backdrop.vue';
 import { onScreenResize, Screen } from '../../screen/screen-service';
 import AppSketchfabEmbed from '../../sketchfab/embed/embed.vue';
-import { EventSubscription } from '../../system/event/event-topic';
+import { useEventSubscription } from '../../system/event/event-topic';
 import AppVideoEmbed from '../../video/embed/embed.vue';
 import { getVideoPlayerFromSources } from '../../video/player/controller';
 import AppVideo from '../../video/video.vue';
@@ -31,8 +31,6 @@ export default class AppLightboxItem extends Vue {
 
 	maxWidth = 0;
 	maxHeight = 0;
-
-	private resize$: EventSubscription | undefined;
 
 	declare $refs: {
 		caption: HTMLDivElement;
@@ -70,17 +68,15 @@ export default class AppLightboxItem extends Vue {
 		return getVideoPlayerFromSources(sources, 'gif', this.mediaItem.mediaserver_url);
 	}
 
+	created() {
+		useEventSubscription(onScreenResize, () => this.calcDimensions());
+	}
+
 	async mounted() {
 		await this.calcActive();
 		await this.calcDimensions();
 
-		this.resize$ = onScreenResize.subscribe(() => this.calcDimensions());
-
 		this.initialized = true;
-	}
-
-	unmounted() {
-		this.resize$?.close();
 	}
 
 	@Watch('activeIndex')

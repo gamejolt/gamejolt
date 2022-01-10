@@ -60,7 +60,11 @@ export type Actions = AppActions &
 		toggleChatPane: void;
 		clearPanes: void;
 		joinCommunity: { community: Community; location?: CommunityJoinLocation };
-		leaveCommunity: { community: Community; location?: CommunityJoinLocation };
+		leaveCommunity: {
+			community: Community;
+			location?: CommunityJoinLocation;
+			shouldConfirm: boolean;
+		};
 	};
 
 export type Mutations = AppMutations &
@@ -88,7 +92,10 @@ let bootstrapResolver: ((value?: any) => void) | null = null;
 let backdrop: BackdropController | null = null;
 export let tillStoreBootstrapped = new Promise(resolve => (bootstrapResolver = resolve));
 
-let gridBootstrapResolvers: ((client: GridClient) => void)[] = [];
+let _wantsGrid = false;
+let _gridLoadPromise: Promise<typeof GridClient> | null = null;
+let _gridBootstrapResolvers: ((client: GridClient) => void)[] = [];
+
 /**
  * Returns a promise that resolves once the Grid client is available.
  */
@@ -97,7 +104,7 @@ export function tillGridBootstrapped() {
 		if (store.state.grid) {
 			resolve(store.state.grid);
 		} else {
-			gridBootstrapResolvers.push(resolve);
+			_gridBootstrapResolvers.push(resolve);
 		}
 	});
 }
@@ -272,12 +279,27 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexAction
 	async loadGrid() {
-		const GridClient_ = await GridClientLazy();
+		if (_wantsGrid) {
+			return;
+		}
+
+		_wantsGrid = true;
+		_gridLoadPromise ??= GridClientLazy();
+
+		const GridClient_ = await _gridLoadPromise;
+
+		// If they disconnected before we loaded it in.
+		if (!_wantsGrid) {
+			return;
+		}
+
 		this._setGrid(new GridClient_());
 	}
 
 	@VuexAction
 	async clearGrid() {
+		_wantsGrid = false;
+
 		if (this.grid) {
 			this.grid.disconnect();
 		}
@@ -492,8 +514,19 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexAction
-	async leaveCommunity({ community, location }: Actions['leaveCommunity']) {
+	async leaveCommunity({ community, location, shouldConfirm }: Actions['leaveCommunity']) {
 		if (community.is_member && !community._removed) {
+			if (shouldConfirm) {
+				const result = await ModalConfirm.show(
+					Translate.$gettext(`Are you sure you want to leave this community?`),
+					Translate.$gettext(`Leave community?`)
+				);
+
+				if (!result) {
+					return;
+				}
+			}
+
 			await leaveCommunity(community, location);
 		}
 
@@ -548,10 +581,10 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	@VuexMutation
 	private _setGrid(grid: GridClient | null) {
 		if (grid !== null) {
-			for (const resolver of gridBootstrapResolvers) {
+			for (const resolver of _gridBootstrapResolvers) {
 				resolver(grid);
 			}
-			gridBootstrapResolvers = [];
+			_gridBootstrapResolvers = [];
 		}
 
 		this.grid = grid;

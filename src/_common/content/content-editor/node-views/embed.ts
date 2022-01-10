@@ -26,6 +26,7 @@ export class EmbedNodeView extends HydratableNodeView {
 	}
 
 	mounted() {
+		// TODO(vue3)
 		this.vueComponent = new AppContentEmbed({
 			propsData: {
 				type: this.node.attrs.type,

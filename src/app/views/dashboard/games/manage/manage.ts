@@ -67,6 +67,8 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 	populate!: RouteStore['populate'];
 
 	readonly Game = Game;
+	readonly GAME_LOCKED_STATUS_DMCA = Game.LOCKED_STATUS_DMCA;
+	readonly GAME_LOCKED_STATUS_ADULT = Game.LOCKED_STATUS_ADULT;
 
 	routeResolved() {
 		this.setPageTheme();

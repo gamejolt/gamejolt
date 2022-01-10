@@ -29,6 +29,9 @@ export default class AppUserCard extends Vue {
 	@Prop(propOptional(Boolean, false)) isLoading!: boolean;
 	@Prop(propOptional(Boolean, false)) elevate!: boolean;
 
+	@Prop({ type: Boolean })
+	noStats!: boolean;
+
 	@State app!: AppStore;
 
 	readonly formatNumber = formatNumber;

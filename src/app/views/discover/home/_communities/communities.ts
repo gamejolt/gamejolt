@@ -8,7 +8,6 @@ import AppCommunityCard from '../../../../../_common/community/card/card.vue';
 import AppCommunityChunkPlaceholder from '../../../../../_common/community/chunk/chunk-placeholder.vue';
 import AppCommunityChunk from '../../../../../_common/community/chunk/chunk.vue';
 import { Community } from '../../../../../_common/community/community.model';
-import { configDiscoverCommunityChunks } from '../../../../../_common/config/config.service';
 import { Screen } from '../../../../../_common/screen/screen-service';
 
 const EmphasizedCommunityIDs = [
@@ -38,10 +37,6 @@ export default class AppDiscoverHomeCommunities extends Vue {
 
 	@State app!: Store['app'];
 
-	get hasChunks() {
-		return configDiscoverCommunityChunks.value;
-	}
-
 	get filteredCommunities() {
 		const localCommunities = this.communities.map(i => i);
 		const emphasizedCommunities: Community[] = [];
@@ -49,7 +44,7 @@ export default class AppDiscoverHomeCommunities extends Vue {
 
 		localCommunities.forEach(i => {
 			const index = EmphasizedCommunityIDs.indexOf(i.id);
-			if (index === -1 || !this.hasChunks) {
+			if (index === -1) {
 				normalCommunities.push(i);
 			} else {
 				emphasizedCommunities.push(i);

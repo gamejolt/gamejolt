@@ -1,6 +1,4 @@
 const gulp = require('gulp');
-const shell = require('gulp-shell');
-const path = require('path');
 
 const config = {
 	staticCdn: 'https://s.gjcdn.net',
@@ -68,6 +66,11 @@ const config = {
 		z: {
 			title: 'Game Jolt - Games for the love of it',
 			bodyClass: 'main-body',
+		},
+		editor: {
+			title: 'Editor',
+			app: true,
+			analytics: false,
 		},
 	},
 	translations: 'site-translations',

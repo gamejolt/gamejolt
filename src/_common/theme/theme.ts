@@ -1,7 +1,7 @@
 import { transparentize } from 'polished';
 import { h } from 'vue';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { Theme } from './theme.model';
+import { DefaultTheme, Theme } from './theme.model';
 import { ThemeState, ThemeStore } from './theme.store';
 
 let inc = 0;
@@ -31,7 +31,7 @@ export class AppTheme extends Vue {
 		const selector = this.$slots.default ? '#' + id : ':root';
 		let styles = '';
 
-		const theme = this.theme || this.storeTheme || new Theme();
+		const theme = this.theme ?? this.storeTheme ?? DefaultTheme;
 
 		function genVar(varname: string, value: string) {
 			return `

@@ -74,7 +74,7 @@ export class AppClientTray extends Vue {
 			title: 'Game Jolt Client',
 			// This has to be a relative path, hence the removal of the first /.
 			// TODO(vue3): check to make sure this still works
-			icon: trayIcons[`./icon${Screen.isHiDpi ? '-2x' : ''}.png`].substr(1),
+			icon: trayIcons[`./icon${Screen.isHiDpi ? '-2x' : ''}.png`].default.substr(1),
 		});
 
 		Navigate.registerDestructor(() => {

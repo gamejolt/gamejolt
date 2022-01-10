@@ -10,9 +10,7 @@
 						<br class="visible-xs" />
 						Test the beta version of the Game Jolt app.
 					</p>
-					<p>
-						<app-app-buttons source="footer" />
-					</p>
+					<app-app-buttons source="footer" />
 				</div>
 
 				<br />
@@ -26,14 +24,27 @@
 								<li v-if="shouldShowAppPromotion">
 									<router-link
 										:to="{ name: 'landing.app' }"
-										@click="trackAppPromotionClick({ source: 'footer' })"
+										@click="
+											trackAppPromotionClick({
+												source: 'footer',
+												platform: 'mobile',
+											})
+										"
 									>
 										<translate>Mobile App</translate>
 									</router-link>
 								</li>
-								<li>
-									<router-link :to="{ name: 'landing.client' }">
-										<translate>Client</translate>
+								<li v-if="!GJ_IS_DESKTOP_APP">
+									<router-link
+										:to="{ name: 'landing.client' }"
+										@click="
+											trackAppPromotionClick({
+												source: 'footer',
+												platform: 'desktop',
+											})
+										"
+									>
+										<translate>Desktop App</translate>
 									</router-link>
 								</li>
 								<li>
@@ -175,10 +186,6 @@
 
 					<p class="small text-muted">
 						<translate>footer.translations</translate>
-						<!-- <br />
-						<app-link-external href="https://poeditor.com/join/project/B4nWT6EgnD">
-							<translate>footer.translations_help</translate>
-						</app-link-external> -->
 					</p>
 				</div>
 			</div>

@@ -7,23 +7,22 @@
 				<translate>Close</translate>
 			</app-button>
 		</div>
-		<div class="modal-header">
-			<h2 class="modal-title">
-				<small>
-					<translate>Stoke the Flames</translate>
-				</small>
-				<br />
-				<template v-if="community">
-					<translate>Start your Community's Fireside</translate>
-				</template>
-				<template v-else>
-					<translate>Start your Fireside</translate>
-				</template>
-			</h2>
-		</div>
 		<div class="modal-body">
+			<p class="lead">
+				<translate>
+					Firesides are temporary pop-up rooms where you can chat and stream with your
+					friends, followers, and communities!
+				</translate>
+			</p>
+
 			<app-loading v-if="isLoading" centered />
-			<form-fireside-add v-else :default-title="defaultTitle" @submit="onSubmit" />
+			<form-fireside-add
+				v-else
+				:community="community"
+				:default-title="defaultTitle"
+				:communities="communities"
+				@submit="onSubmit"
+			/>
 		</div>
 	</app-modal>
 </template>

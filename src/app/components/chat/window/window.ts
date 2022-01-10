@@ -1,4 +1,4 @@
-import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
 import { propRequired } from '../../../../utils/vue';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
@@ -9,7 +9,8 @@ import { SettingChatGroupShowMembers } from '../../../../_common/settings/settin
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
 import { Store } from '../../../store/index';
-import { ChatClient, ChatKey, leaveChatRoom } from '../client';
+import { ChatStore, ChatStoreKey } from '../chat-store';
+import { leaveChatRoom } from '../client';
 import { ChatInviteModal } from '../invite-modal/invite-modal.service';
 import AppChatMemberList from '../member-list/member-list.vue';
 import { ChatMessage } from '../message';
@@ -39,8 +40,8 @@ export default class AppChatWindow extends Vue {
 	@Prop(propRequired(Array)) messages!: ChatMessage[];
 	@Prop(propRequired(Array)) queuedMessages!: ChatMessage[];
 
-	@Inject({ from: ChatKey })
-	chat!: ChatClient;
+	@Inject({ from: ChatStoreKey })
+	chatStore!: ChatStore;
 
 	@Action toggleLeftPane!: Store['toggleLeftPane'];
 
@@ -49,6 +50,13 @@ export default class AppChatWindow extends Vue {
 	friendAddJolticonVersion = 1;
 
 	readonly Screen = Screen;
+
+	@Emit('focus-change')
+	emitFocusChange(_focused: boolean) {}
+
+	get chat() {
+		return this.chatStore.chat!;
+	}
 
 	get users() {
 		return this.chat.roomMembers[this.room.id];

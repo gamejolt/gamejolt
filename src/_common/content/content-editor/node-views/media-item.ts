@@ -1,9 +1,10 @@
-import { ContentEditorService } from '../content-editor.service';
 import AppContentMediaItem from '../../components/media-item/media-item.vue';
+import { ContentEditorService } from '../content-editor.service';
 import { HydratableNodeView } from './hydratable';
 
 export class MediaItemNodeView extends HydratableNodeView {
 	mounted() {
+		// TODO(vue3)
 		const vm = new AppContentMediaItem({
 			propsData: {
 				mediaItemId: this.node.attrs.id,

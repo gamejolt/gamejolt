@@ -12,6 +12,7 @@ import { AppMutation, AppState, appStore, AppStore } from '../../../_common/stor
 import { AppThemeSvg } from '../../../_common/theme/svg/svg';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import { UserTimeout } from '../../../_common/user/timeout/timeout.model';
+import AppTimeoutCountdown from '../../components/timeout/countdown/countdown.vue';
 import { illTimeOut } from '../../img/ill/illustrations';
 import { imageGameJoltLogo } from '../../img/images';
 
@@ -23,6 +24,7 @@ import { imageGameJoltLogo } from '../../img/images';
 		AppLinkHelp,
 		AppContactLink,
 		AppIllustration,
+		AppTimeoutCountdown,
 	},
 })
 @RouteResolver({

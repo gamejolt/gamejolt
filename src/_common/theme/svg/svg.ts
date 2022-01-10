@@ -4,7 +4,7 @@ import { h } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { arrayUnique } from '../../../utils/array';
 import { propOptional } from '../../../utils/vue';
-import { Theme } from '../theme.model';
+import { DefaultTheme, Theme } from '../theme.model';
 import { ThemeState, ThemeStore } from '../theme.store';
 
 const SvgGraysRegex = /#([a-f\d]{1,2})\1{2}\b/gi;
@@ -83,7 +83,7 @@ export class AppThemeSvg extends Vue {
 			// If we have no theme from the prop or the ThemeStore, that means
 			// we're using the default theme colors and only need to replace our
 			// highlight/backlight colors.
-			const { highlight, backlight } = new Theme();
+			const { highlight, backlight } = DefaultTheme;
 
 			svgData = String(svgData)
 				.replace(/#2f7f6f/gi, this.isDark ? '#' + highlight : '#' + backlight)

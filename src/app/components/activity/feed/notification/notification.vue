@@ -21,7 +21,7 @@
 										/>
 									</div>
 								</template>
-								<template v-else-if="notification.from_model">
+								<template v-else-if="fromIsUser">
 									<app-user-card-hover
 										:user="notification.from_model"
 										:disabled="!feed.shouldShowUserCards"
@@ -32,7 +32,9 @@
 								<template
 									v-else-if="
 										notification.type ===
-										Notification.TYPE_POST_FEATURED_IN_COMMUNITY
+											Notification.TYPE_POST_FEATURED_IN_COMMUNITY ||
+										notification.type ===
+											Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY
 									"
 								>
 									<div class="-community-thumb">
@@ -103,6 +105,14 @@
 													{{
 														notification.action_model.fireside_post.getShortLead()
 													}}
+												</span>
+												<span
+													v-else-if="
+														notification.type ===
+														Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY
+													"
+												>
+													{{ notification.to_model.title }}
 												</span>
 												<span
 													v-else-if="

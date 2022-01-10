@@ -2,7 +2,6 @@ import { Inject, Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../_common/api/api.service';
 import { BlockModal } from '../../../_common/block/modal/modal.service';
-import { Clipboard } from '../../../_common/clipboard/clipboard-service';
 import { CommentModal } from '../../../_common/comment/modal/modal.service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { formatNumber } from '../../../_common/filters/number';
@@ -14,14 +13,16 @@ import {
 	WithRouteStore,
 } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
+import { copyShareLink } from '../../../_common/share/share.service';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
-import { Translate } from '../../../_common/translate/translate.service';
+import { $gettext } from '../../../_common/translate/translate.service';
 import AppUserFollowWidget from '../../../_common/user/follow/widget.vue';
 import { UserFriendship } from '../../../_common/user/friendship/friendship.model';
 import AppUserAvatar from '../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../_common/user/verified-tick/verified-tick.vue';
-import { ChatClient, ChatKey, isUserOnline } from '../../components/chat/client';
+import { ChatStore, ChatStoreKey } from '../../components/chat/chat-store';
+import { isUserOnline } from '../../components/chat/client';
 import { IntentService } from '../../components/intent/intent.service';
 import AppPageHeaderControls from '../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../components/page-header/page-header.vue';
@@ -63,15 +64,15 @@ const ProfileThemeKey = 'profile';
 			route,
 			{
 				intent: 'follow-user',
-				message: Translate.$gettext(`You're now following this user.`),
+				message: $gettext(`You're now following this user.`),
 			},
 			{
 				intent: 'accept-friend-request',
-				message: Translate.$gettext(`You are now friends with this user!`),
+				message: $gettext(`You are now friends with this user!`),
 			},
 			{
 				intent: 'decline-friend-request',
-				message: Translate.$gettext(`You've declined this user's friend request.`),
+				message: $gettext(`You've declined this user's friend request.`),
 			}
 		);
 		if (intentRedirect) {
@@ -85,8 +86,8 @@ const ProfileThemeKey = 'profile';
 	},
 })
 export default class RouteProfile extends BaseRouteComponent {
-	@Inject({ from: ChatKey })
-	chat?: ChatClient;
+	@Inject({ from: ChatStoreKey })
+	chatStore!: ChatStore;
 
 	@State
 	app!: Store['app'];
@@ -113,6 +114,10 @@ export default class RouteProfile extends BaseRouteComponent {
 	readonly Environment = Environment;
 	readonly Screen = Screen;
 	readonly formatNumber = formatNumber;
+
+	get chat() {
+		return this.chatStore.chat;
+	}
 
 	/**
 	 * The cover height changes when we switch to not showing the full cover, so
@@ -193,7 +198,8 @@ export default class RouteProfile extends BaseRouteComponent {
 		if (!this.user) {
 			return;
 		}
-		Clipboard.copy(Environment.baseUrl + this.user.url);
+		const url = Environment.baseUrl + this.user.url;
+		copyShareLink(url, 'user');
 	}
 
 	report() {

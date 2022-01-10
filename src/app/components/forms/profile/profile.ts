@@ -13,7 +13,7 @@ import {
 	validateUsername,
 } from '../../../../_common/form-vue/validators';
 import AppLoading from '../../../../_common/loading/loading.vue';
-import { Theme } from '../../../../_common/theme/theme.model';
+import { DefaultTheme } from '../../../../_common/theme/theme.model';
 import { ThemeMutation, ThemeStore } from '../../../../_common/theme/theme.store';
 import { User } from '../../../../_common/user/user.model';
 
@@ -95,6 +95,6 @@ export default class FormProfile extends mixins(Wrapper) implements FormOnLoad, 
 
 	onThemeChanged() {
 		// Default would be the default theme for site.
-		this.setFormTheme(this.formModel.theme || new Theme());
+		this.setFormTheme(this.formModel.theme ?? DefaultTheme);
 	}
 }

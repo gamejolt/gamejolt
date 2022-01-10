@@ -1,8 +1,10 @@
+<script lang="ts" src="./base-content-component"></script>
+
 <template>
 	<div class="base-content-component">
 		<div v-if="isEditing" class="-controls theme-dark">
 			<app-button
-				v-if="showEdit"
+				v-if="!GJ_IS_MOBILE_APP && showEdit"
 				circle
 				overlay
 				icon="edit"
@@ -33,5 +35,3 @@
 		top: 4px
 		right: 4px
 </style>
-
-<script lang="ts" src="./base-content-component"></script>

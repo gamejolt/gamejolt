@@ -29,11 +29,11 @@
     </rdf:RDF>
   </metadata>
   <g
-     style="opacity:1"
+     style="display:inline;opacity:1"
      id="layer2">
     <path
-       id="rect817"
-       d="M 12,0 C 10.338,0 9,1.338 9,3 V 6 H 6.5 V 9 H 9 v 7 h 3 V 9 h 2.75 L 15,6 H 12 V 3.5 C 12,3.223 12.223,3 12.5,3 H 15 V 0.125 Z"
-       style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:7.5;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+       id="path5699"
+       d="M 8,0 C 3.581722,0 0,3.581722 0,8 c 0.00457341,3.923191 2.8533909,7.264182 6.7265625,7.888672 V 10.361328 H 4.7128906 V 7.9433594 H 6.7265625 V 5.5273438 c 0,-1.3388984 1.0790704,-2.4160157 2.4179687,-2.4160157 l 2.4160158,0.099609 V 5.5273438 H 9.546875 c -0.2231497,0 -0.4023438,0.1791939 -0.4023438,0.4023437 V 7.9433594 H 11.560547 L 11.359375,10.361328 H 9.1445312 v 5.548828 C 13.076949,15.341713 15.996251,11.973288 16,8 16,3.581722 12.418278,0 8,0 Z"
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:240;stroke-linecap:round;stroke-linejoin:round" />
   </g>
 </svg>

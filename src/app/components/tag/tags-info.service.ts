@@ -142,16 +142,22 @@ export class TagsInfo {
 			imageSocial: images['./images/strategysim-social.png'].default,
 		},
 		{
-			id: 'adult',
-			label: '#adult',
-			image: images['./images/adult.png'].default,
-			imageSocial: images['./images/adult-social.png'].default,
-		},
-		{
 			id: 'other',
 			label: '#other',
 			image: images['./images/other.png'].default,
 			imageSocial: images['./images/other-social.png'].default,
+		},
+		{
+			id: 'fnf',
+			label: '#fnf',
+			image: images['./images/fnf.png'].default,
+			imageSocial: images['./images/fnf-social.png'].default,
+		},
+		{
+			id: 'undertale',
+			label: '#undertale',
+			image: images['./images/undertale.png'].default,
+			imageSocial: images['./images/undertale-social.png'].default,
 		},
 	];
 }

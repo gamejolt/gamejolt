@@ -1,3 +1,4 @@
+import { assertNever } from '../../utils/utils';
 import { MediaItem } from '../media-item/media-item-model';
 
 export type ContentContext =
@@ -11,7 +12,8 @@ export type ContentContext =
 	| 'forum-post'
 	| 'community-description'
 	| 'chat-message'
-	| 'community-channel-description';
+	| 'community-channel-description'
+	| 'fireside-chat-message';
 
 enum ContextCapabilityType {
 	TextBold,
@@ -254,8 +256,25 @@ export class ContextCapabilities {
 					ContextCapabilityType.Gif,
 					ContextCapabilityType.Sticker,
 				]);
+			case 'fireside-chat-message':
+				return new ContextCapabilities([
+					ContextCapabilityType.TextBold,
+					ContextCapabilityType.TextItalic,
+					ContextCapabilityType.TextLink,
+					ContextCapabilityType.TextCode,
+					ContextCapabilityType.TextStrike,
+					ContextCapabilityType.Spoiler,
+					ContextCapabilityType.Emoji,
+					ContextCapabilityType.Tag,
+					ContextCapabilityType.Mention,
+					ContextCapabilityType.Gif,
+					ContextCapabilityType.Media,
+					ContextCapabilityType.Sticker,
+				]);
+
+			default:
+				assertNever(context);
 		}
-		throw new Error('Context capabilities undefined for context ' + context);
 	}
 }
 
@@ -274,6 +293,7 @@ export function getMediaItemTypeForContext(context: ContentContext) {
 		case 'community-description':
 			return MediaItem.TYPE_COMMUNITY_DESCRIPTION;
 		case 'chat-message':
+		case 'fireside-chat-message':
 			return MediaItem.TYPE_CHAT_MESSAGE;
 		case 'community-channel-description':
 			return MediaItem.TYPE_COMMUNITY_CHANNEL_DESCRIPTION;

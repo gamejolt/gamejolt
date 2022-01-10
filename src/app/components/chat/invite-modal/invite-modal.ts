@@ -5,7 +5,8 @@ import { BaseModal } from '../../../../_common/modal/base';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
-import { addGroupMembers, addGroupRoom, ChatClient, ChatKey } from '../client';
+import { ChatStore, ChatStoreKey } from '../chat-store';
+import { addGroupMembers, addGroupRoom } from '../client';
 import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
 
@@ -21,11 +22,15 @@ export default class AppChatInviteModal extends mixins(BaseModal) {
 	@Prop(propRequired(Array)) friends!: ChatUser[];
 	@Prop(propOptional(ChatUser, null)) initialUser!: ChatUser | null;
 
-	@Inject({ from: ChatKey })
-	chat!: ChatClient;
+	@Inject({ from: ChatStoreKey })
+	chatStore!: ChatStore;
 
 	filterQuery = '';
 	selectedUsers: ChatUser[] = this.initialUser ? [this.initialUser] : [];
+
+	get chat() {
+		return this.chatStore.chat!;
+	}
 
 	get filteredUsers() {
 		if (!this.filterQuery) {

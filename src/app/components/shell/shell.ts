@@ -15,7 +15,8 @@ import {
 } from '../../../_common/sidebar/sidebar.store';
 import AppStickerLayer from '../../../_common/sticker/layer/layer.vue';
 import { BannerModule, BannerStore, Store } from '../../store/index';
-import { ChatClient, ChatKey, setChatFocused } from '../chat/client';
+import { ChatStore, ChatStoreKey } from '../chat/chat-store';
+import { setChatFocused } from '../chat/client';
 import { AppClientShell, AppClientStatusBar } from '../client/safe-exports';
 import AppShellBody from './body/body.vue';
 import AppShellCbar from './cbar/cbar.vue';
@@ -45,8 +46,8 @@ import AppShellTopNav from './top-nav/top-nav.vue';
 	},
 })
 export default class AppShell extends Vue {
-	@Inject({ from: ChatKey })
-	chat!: ChatClient;
+	@Inject({ from: ChatStoreKey })
+	chatStore!: ChatStore;
 
 	@Inject({ from: DrawerStoreKey })
 	drawerStore!: DrawerStore;
@@ -75,8 +76,12 @@ export default class AppShell extends Vue {
 	readonly Connection = Connection;
 	readonly Screen = Screen;
 
+	get chat() {
+		return this.chatStore.chat!;
+	}
+
 	get totalChatNotificationsCount() {
-		return this.chat ? this.chat.roomNotificationsCount : 0;
+		return this.chatStore.chat ? this.chat.roomNotificationsCount : 0;
 	}
 
 	get ssrShouldShowSidebar() {
@@ -111,8 +116,8 @@ export default class AppShell extends Vue {
 
 		this.$watch(
 			() => ContentFocus.isWindowFocused,
-			isFocused => {
-				if (!this.chat) {
+			(isFocused: boolean) => {
+				if (!this.chatStore.chat) {
 					return;
 				}
 

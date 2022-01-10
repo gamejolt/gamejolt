@@ -1,3 +1,5 @@
+<script lang="ts" src="./topic"></script>
+
 <template>
 	<app-form :controller="form">
 		<app-form-group name="title" :label="$gettext('Title')">
@@ -26,5 +28,3 @@
 		</app-button>
 	</app-form>
 </template>
-
-<script lang="ts" src="./topic"></script>

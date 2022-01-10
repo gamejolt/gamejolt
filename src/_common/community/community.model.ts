@@ -20,6 +20,7 @@ export class Community extends Collaboratable(Model) {
 	description_content!: string;
 	is_verified!: boolean;
 	has_archived_channels!: boolean | null;
+	allow_firesides!: boolean;
 
 	thumbnail?: MediaItem;
 	header?: MediaItem;
@@ -284,4 +285,28 @@ export function getCommunityChannelBackground(
 		default:
 			assertNever(presetType);
 	}
+}
+
+export function canCommunityFeatureFireside(community: Community) {
+	// DISABLED_ALLOW_FIRESIDES
+	// Allows us to hide all feature/unfeature options since all Firesides are
+	// currently always featured.
+	return false;
+	return !!community.hasPerms(['community-firesides', 'community-features']);
+}
+
+export function canCommunityEjectFireside(community: Community) {
+	return !!community.hasPerms('community-firesides');
+}
+
+export function canCreateFiresides(community: Community) {
+	if (community.hasPerms('community-firesides')) {
+		return true;
+	}
+
+	if (community.isBlocked) {
+		return false;
+	}
+
+	return community.allow_firesides;
 }

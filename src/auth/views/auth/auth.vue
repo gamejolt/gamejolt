@@ -26,18 +26,9 @@
 				>
 					<app-theme-svg
 						:src="imageGameJoltLogo"
-						width="164"
-						height="18"
-						alt=""
-						class="visible-xs"
-						strict-colors
-					/>
-					<app-theme-svg
-						:src="imageGameJoltLogo"
 						width="328"
 						height="36"
 						alt=""
-						class="hidden-xs"
 						strict-colors
 					/>
 				</a>

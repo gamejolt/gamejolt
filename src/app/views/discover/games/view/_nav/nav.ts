@@ -1,17 +1,17 @@
 import { Inject, Options, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
+import { getAbsoluteLink } from '../../../../../../utils/router';
 import {
 	CommentStoreManager,
 	CommentStoreManagerKey,
 	getCommentStore,
 } from '../../../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../../../_common/comment/modal/modal.service';
-import { Environment } from '../../../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../../../_common/filters/number';
 import AppPopper from '../../../../../../_common/popper/popper.vue';
 import { ReportModal } from '../../../../../../_common/report/modal/modal.service';
 import { Screen } from '../../../../../../_common/screen/screen-service';
+import { copyShareLink } from '../../../../../../_common/share/share.service';
 import AppGameModLinks from '../../../../../components/game/mod-links/mod-links.vue';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import { Store } from '../../../../../store/index';
@@ -67,7 +67,8 @@ export default class AppDiscoverGamesViewNav extends Vue {
 	}
 
 	copyShareUrl() {
-		Clipboard.copy(Environment.baseUrl + this.$router.resolve(this.game.routeLocation).href);
+		const url = getAbsoluteLink(this.$router, this.game.routeLocation);
+		copyShareLink(url, 'game');
 	}
 
 	report() {

@@ -1,6 +1,12 @@
 import { Options } from 'vue-property-decorator';
+import { trackAppDownload } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
-import { getDeviceArch, getDeviceOS } from '../../../../_common/device/device.service';
+import {
+	DeviceArch,
+	DeviceOs,
+	getDeviceArch,
+	getDeviceOS,
+} from '../../../../_common/device/device.service';
 import { Game } from '../../../../_common/game/game.model';
 import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
 import { HistoryTick } from '../../../../_common/history-tick/history-tick-service';
@@ -41,8 +47,10 @@ export default class RouteLandingClient extends BaseRouteComponent {
 		this.fallbackUrl = payload.clientGameUrl;
 	}
 
+	disableRouteTitleSuffix = true;
+
 	get routeTitle() {
-		return `Game Jolt Client`;
+		return `Game Jolt Desktop App`;
 	}
 
 	get detectedPlatformDisplay() {
@@ -50,7 +58,7 @@ export default class RouteLandingClient extends BaseRouteComponent {
 			case 'windows':
 				return 'Windows';
 			case 'mac':
-				return 'Mac OS X';
+				return 'macOS';
 			case 'linux':
 				return 'Linux';
 			default:
@@ -69,7 +77,7 @@ export default class RouteLandingClient extends BaseRouteComponent {
 			return false;
 		}
 
-		// On Linux and OS X only 64 bit is supported.
+		// On Linux and macOS only 64 bit is supported.
 		return this.arch === '32';
 	}
 
@@ -101,8 +109,9 @@ export default class RouteLandingClient extends BaseRouteComponent {
 		return true;
 	}
 
-	async download(platform: string, arch: string) {
+	async download(platform: DeviceOs, arch: DeviceArch) {
 		HistoryTick.sendBeacon('client-download');
+		trackAppDownload({ platform, arch });
 
 		const downloadUrl = await this.getDownloadUrl(platform, arch);
 		if (downloadUrl === null) {

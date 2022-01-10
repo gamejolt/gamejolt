@@ -1,11 +1,16 @@
 import { RouteLocationNormalized } from 'vue-router';
 
-export type AppPromotionSource = 'footer' | 'top-nav' | 'top-nav-options' | 'sidebar' | 'landing';
+export type AppPromotionSource =
+	| 'footer'
+	| 'top-nav'
+	| 'top-nav-options'
+	| 'sidebar'
+	| 'landing'
+	| 'home-hero';
 export type AppPromotionCohort = 'store' | 'community';
 
 export const AppPromotionStoreKey = Symbol('app-promotion');
 
-// We currently are trying to show it in as many places as possible.
 export function shouldShowAppPromotion(route: RouteLocationNormalized) {
 	if (GJ_IS_DESKTOP_APP) {
 		return false;

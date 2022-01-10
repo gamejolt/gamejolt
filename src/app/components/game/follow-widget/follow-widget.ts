@@ -8,6 +8,7 @@ import { AppAuthRequired } from '../../../../_common/auth/auth-required-directiv
 import { formatNumber } from '../../../../_common/filters/number';
 import { followGame, Game, unfollowGame } from '../../../../_common/game/game.model';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
+import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserFollowSuggestion } from '../../../../_common/user/follow/suggestion.service';
@@ -127,6 +128,15 @@ export default class AppGameFollowWidget extends Vue {
 		} else {
 			if (this.isShowingFollowPopover) {
 				this.onFollowPopoverDismissed();
+			}
+
+			const result = await ModalConfirm.show(
+				this.$gettext(`Are you sure you want to unfollow this game?`),
+				this.$gettext(`Unfollow game?`)
+			);
+
+			if (!result) {
+				return;
 			}
 
 			try {

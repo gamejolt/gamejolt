@@ -2,11 +2,11 @@ import { Inject, Options, Vue } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
-import { Theme } from '../../../../../_common/theme/theme.model';
+import { DefaultTheme } from '../../../../../_common/theme/theme.model';
 import { ThemeState, ThemeStore } from '../../../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../../store/index';
-import { ChatClient, ChatKey } from '../../../chat/client';
+import { ChatStore, ChatStoreKey } from '../../../chat/chat-store';
 import AppShellCbarItem from '../item/item.vue';
 
 @Options({
@@ -18,8 +18,8 @@ import AppShellCbarItem from '../item/item.vue';
 	},
 })
 export default class AppShellCbarControls extends Vue {
-	@Inject({ from: ChatKey })
-	chat?: ChatClient;
+	@Inject({ from: ChatStoreKey })
+	chatStore!: ChatStore;
 
 	@AppState user!: AppStore['user'];
 	@ThemeState theme?: ThemeStore['theme'];
@@ -33,8 +33,12 @@ export default class AppShellCbarControls extends Vue {
 
 	readonly Screen = Screen;
 
+	get chat() {
+		return this.chatStore.chat;
+	}
+
 	get highlight() {
-		const theme = this.activeCommunity?.theme || this.theme || new Theme(null);
+		const theme = this.activeCommunity?.theme ?? this.theme ?? DefaultTheme;
 		if (theme) {
 			return '#' + theme.darkHighlight_;
 		}

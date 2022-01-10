@@ -30,5 +30,6 @@ export default class FormCommunityChannelDescription extends mixins(Wrapper) imp
 
 	onLoad(payload: any) {
 		this.lengthLimit = payload.lengthLimit;
+		this.setField('description_content', this.model?.description_content ?? '');
 	}
 }

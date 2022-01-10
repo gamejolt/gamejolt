@@ -156,20 +156,20 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 	}
 
 	private resetAdding() {
-		this.$set(this, 'isAdding', {
+		this.isAdding = {
 			[GameTrophy.DIFFICULTY_BRONZE]: false,
 			[GameTrophy.DIFFICULTY_SILVER]: false,
 			[GameTrophy.DIFFICULTY_GOLD]: false,
 			[GameTrophy.DIFFICULTY_PLATINUM]: false,
-		});
+		};
 	}
 
 	private resetActive() {
-		this.$set(this, 'activeItem', {
+		this.activeItem = {
 			[GameTrophy.DIFFICULTY_BRONZE]: null,
 			[GameTrophy.DIFFICULTY_SILVER]: null,
 			[GameTrophy.DIFFICULTY_GOLD]: null,
 			[GameTrophy.DIFFICULTY_PLATINUM]: null,
-		});
+		};
 	}
 }

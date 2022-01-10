@@ -1,4 +1,4 @@
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Api } from '../../../api/api.service';
 import AppPopper from '../../../popper/popper.vue';
 import { Screen } from '../../../screen/screen-service';
@@ -18,11 +18,20 @@ export default class AppUserCardHover extends Vue {
 	@Prop(Boolean)
 	disabled?: boolean;
 
+	@Prop({ type: Number, default: 500 })
+	hoverDelay!: number;
+
+	@Prop({ type: Boolean })
+	noStats!: boolean;
+
+	@Emit('show') emitShow() {}
+	@Emit('hide') emitHide() {}
+
 	isShowing = false;
 	isLoaded = false;
 
 	get isDisabled() {
-		return Screen.isXs || GJ_IS_DESKTOP_APP || !!this.disabled || import.meta.env.SSR;
+		return Screen.isXs || !!this.disabled || import.meta.env.SSR;
 	}
 
 	get shouldShow() {
@@ -39,7 +48,7 @@ export default class AppUserCardHover extends Vue {
 			: {
 					placement: 'top',
 					trigger: 'hover',
-					showDelay: 500,
+					showDelay: this.hoverDelay,
 					block: true,
 			  };
 	}
@@ -61,14 +70,16 @@ export default class AppUserCardHover extends Vue {
 	}
 
 	onShow() {
+		this.emitShow();
 		this.isShowing = true;
-		if (!this.isLoaded) {
+		if (!this.isLoaded && !this.noStats) {
 			this.fetchCardInfo();
 		}
 	}
 
 	onHide() {
 		this.isShowing = false;
+		this.emitHide();
 	}
 
 	async fetchCardInfo() {

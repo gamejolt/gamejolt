@@ -30,6 +30,10 @@ export default class RouteLandingGameApi extends BaseRouteComponent {
 	readonly imageJolt = imageJolt;
 	readonly assetPaths = import.meta.globEager('./*.svg');
 
+	get routeTitle() {
+		return this.$gettext(`Game API`);
+	}
+
 	routeResolved($payload: any) {
 		this.totalScores = $payload.totalScores || 0;
 		this.totalAchievedTrophies = $payload.totalAchievedTrophies || 0;

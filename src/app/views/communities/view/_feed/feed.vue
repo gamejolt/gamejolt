@@ -57,7 +57,6 @@
 			<app-activity-feed
 				v-if="feed.hasItems"
 				:feed="feed"
-				show-ads
 				@unfeature-post="onPostUnfeatured"
 				@reject-post="onPostRejected"
 				@move-channel-post="onPostMovedChannel"

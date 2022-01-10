@@ -7,7 +7,7 @@ import AppLoading from '../../../../_common/loading/loading.vue';
 import { Notification } from '../../../../_common/notification/notification-model';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { EventSubscription } from '../../../../_common/system/event/event-topic';
+import { useEventSubscription } from '../../../../_common/system/event/event-topic';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../store';
 import { ActivityFeedView } from '../../activity/feed/view';
@@ -38,7 +38,6 @@ export default class AppShellNotificationPopover extends Vue {
 	isLoading = true;
 	feed: ActivityFeedView | null = null;
 	totalStickersCount = 0;
-	private newStickers$?: EventSubscription;
 
 	readonly Connection = Connection;
 
@@ -58,12 +57,8 @@ export default class AppShellNotificationPopover extends Vue {
 		return (Screen.isXs && this.$route.name === 'notifications') || this.isShowing;
 	}
 
-	mounted() {
-		this.newStickers$ = onNewStickers.subscribe(this.onNewStickers.bind(this));
-	}
-
-	unmounted() {
-		this.newStickers$?.close();
+	created() {
+		useEventSubscription(onNewStickers, this.onNewStickers.bind(this));
 	}
 
 	/**
@@ -142,6 +137,7 @@ export default class AppShellNotificationPopover extends Vue {
 	 * Handles the Grid event of new sticker unlocks to show animations.
 	 */
 	private async onNewStickers(stickerImgUrls: string[]) {
+		// TODO(vue3)
 		for (const stickerImgUrl of stickerImgUrls) {
 			// Create new sticker animation component.
 			const stickerEl = new AppShellAccountPopoverNewSticker({

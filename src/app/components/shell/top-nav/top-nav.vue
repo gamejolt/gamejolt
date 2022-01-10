@@ -15,7 +15,7 @@
 				>
 					<app-jolticon icon="menu" />
 					<div
-						v-if="chat && chat.roomNotificationsCount > 0"
+						v-if="chatStore.chat && chat.roomNotificationsCount > 0"
 						class="-notification-chat notification-tag tag tag-highlight"
 					>
 						{{ chat.roomNotificationsCount }}
@@ -93,23 +93,34 @@
 					<template #popover>
 						<div class="list-group-dark">
 							<router-link
-								v-if="shouldShowAppPromotion && !Screen.isXs"
 								class="list-group-item has-icon offline-disable"
 								:to="{ name: 'landing.app' }"
-								@click="trackAppPromotionClick({ source: 'top-nav-options' })"
+								@click="
+									trackAppPromotionClick({
+										source: 'top-nav-options',
+										platform: 'mobile',
+									})
+								"
 							>
-								<app-jolticon icon="world" />
-								<translate>Get the App</translate>
+								<app-jolticon icon="phone" />
+								<translate>Get the Mobile App</translate>
 							</router-link>
+
 							<router-link
-								v-if="!GJ_IS_DESKTOP_APP && !Screen.isXs"
-								v-app-track-event="`sidebar:client`"
+								v-if="!GJ_IS_DESKTOP_APP"
 								class="list-group-item has-icon offline-disable"
 								:to="{ name: 'landing.client' }"
+								@click="
+									trackAppPromotionClick({
+										source: 'top-nav-options',
+										platform: 'desktop',
+									})
+								"
 							>
 								<app-jolticon icon="client" />
-								<translate>Client</translate>
+								<translate>Get the Desktop App</translate>
 							</router-link>
+
 							<router-link
 								v-app-track-event="`sidebar:forums`"
 								class="list-group-item has-icon offline-disable"
@@ -142,14 +153,37 @@
 			class="navbar-right"
 			:style="{ 'min-width': minColWidth }"
 		>
-			<div v-if="shouldShowAppPromotion && !Screen.isXs" class="-button">
-				<app-button
-					:to="{ name: 'landing.app' }"
-					@click="trackAppPromotionClick({ source: 'top-nav' })"
-				>
-					<translate>Get App</translate>
-				</app-button>
-			</div>
+			<template v-if="Screen.isSm && shouldShowAppPromotion">
+				<div class="-button">
+					<app-button
+						:to="{ name: 'landing.app' }"
+						@click="
+							trackAppPromotionClick({
+								source: 'top-nav',
+								platform: 'mobile',
+							})
+						"
+					>
+						<translate>Get App</translate>
+					</app-button>
+				</div>
+			</template>
+			<template v-else-if="!GJ_IS_DESKTOP_APP && Screen.isDesktop">
+				<div class="-button">
+					<app-button
+						:to="{ name: 'landing.client' }"
+						@click="
+							trackAppPromotionClick({
+								source: 'top-nav',
+								platform: 'desktop',
+							})
+						"
+					>
+						<translate>Get App</translate>
+					</app-button>
+				</div>
+			</template>
+
 			<div v-app-observe-dimensions="checkColWidths" class="-col">
 				<template v-if="app.user">
 					<!-- Notifications -->

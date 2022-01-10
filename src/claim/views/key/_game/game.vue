@@ -44,7 +44,7 @@
 			<p>~ Warm thanks from both {{ game.developer.display_name }} and the Game Jolt team.</p>
 		</div>
 
-		<template v-if="!bundle">
+		<template v-if="!bundle && !gameIsLocked">
 			<div v-if="!app.user" class="alert full-bleed full-bleed-xs text-center">
 				<p>
 					<a :href="loginUrl">

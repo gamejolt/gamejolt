@@ -14,7 +14,7 @@ import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { imageGameJoltLogo, imageJolt } from '../../../img/images';
 import { Store } from '../../../store/index';
-import { ChatClient, ChatKey } from '../../chat/client';
+import { ChatStore, ChatStoreKey } from '../../chat/chat-store';
 import AppSearch from '../../search/search.vue';
 
 @Options({
@@ -40,8 +40,8 @@ import AppSearch from '../../search/search.vue';
 	},
 })
 export default class AppShellTopNav extends Vue {
-	@Inject({ from: ChatKey })
-	chat!: ChatClient;
+	@Inject({ from: ChatStoreKey })
+	chatStore!: ChatStore;
 
 	@State app!: Store['app'];
 
@@ -67,6 +67,10 @@ export default class AppShellTopNav extends Vue {
 	readonly trackAppPromotionClick = trackAppPromotionClick;
 	readonly imageJolt = imageJolt;
 	readonly imageGameJoltLogo = imageGameJoltLogo;
+
+	get chat() {
+		return this.chatStore.chat!;
+	}
 
 	get isTimedOut() {
 		return this.app.isUserTimedOut;

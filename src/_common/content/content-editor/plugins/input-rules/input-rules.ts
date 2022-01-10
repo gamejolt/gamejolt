@@ -7,15 +7,17 @@ import { insertOrderedListRule } from './insert-ordered-list-rule';
 
 export function createInputRules(editor: AppContentEditor) {
 	const rules = [] as InputRule[];
+	const capabilities = editor.contextCapabilities;
+	const controller = editor.controller;
 
-	if (editor.capabilities.emoji) {
-		rules.push(insertEmojiRule());
+	if (capabilities.emoji) {
+		rules.push(insertEmojiRule(controller));
 	}
-	if (editor.capabilities.list) {
-		rules.push(insertOrderedListRule());
-		rules.push(insertBulletListRule());
+	if (capabilities.list) {
+		rules.push(insertOrderedListRule(controller));
+		rules.push(insertBulletListRule(controller));
 	}
-	if (editor.capabilities.mention) {
+	if (capabilities.mention) {
 		rules.push(detectMentionSuggestionRule(editor));
 	}
 

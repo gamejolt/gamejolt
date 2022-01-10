@@ -4,6 +4,7 @@ import { HydratableNodeView } from './hydratable';
 
 export class GifNodeView extends HydratableNodeView {
 	mounted() {
+		// TODO(vue3)
 		const vm = new AppContentGif({
 			propsData: {
 				gifId: this.node.attrs.id,

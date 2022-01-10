@@ -2,7 +2,7 @@ import { nextTick } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Ruler } from '../../ruler/ruler-service';
 import { onScreenResize } from '../../screen/screen-service';
-import { EventSubscription } from '../../system/event/event-topic';
+import { useEventSubscription } from '../../system/event/event-topic';
 
 const VIDEO_RATIO = 0.5625; // 16:9
 
@@ -18,15 +18,12 @@ export default class AppVideoEmbed extends Vue {
 	width: number | 'auto' = 'auto';
 	height: number | 'auto' = 'auto';
 
-	private resize$: EventSubscription | undefined;
+	created() {
+		useEventSubscription(onScreenResize, () => this.recalculateDimensions());
+	}
 
 	mounted() {
 		this.recalculateDimensions();
-		this.resize$ = onScreenResize.subscribe(() => this.recalculateDimensions());
-	}
-
-	unmounted() {
-		this.resize$?.close();
 	}
 
 	@Watch('videoId', { immediate: true })

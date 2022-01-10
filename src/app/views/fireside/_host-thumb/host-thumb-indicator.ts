@@ -1,7 +1,10 @@
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import { FiresideRTCUser } from '../../../../_common/fireside/rtc/user';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
-import { FiresideRTC, FiresideRTCKey } from '../fireside-rtc';
-import { FiresideRTCUser } from '../fireside-rtc-user';
+import {
+	FiresideController,
+	FiresideControllerKey,
+} from '../../../components/fireside/controller/controller';
 
 @Options({
 	components: {
@@ -12,8 +15,8 @@ export default class AppFiresideHostThumbIndicator extends Vue {
 	@Prop({ type: FiresideRTCUser, required: true })
 	host!: FiresideRTCUser;
 
-	@Inject({ from: FiresideRTCKey })
-	rtc!: FiresideRTC;
+	@Inject({ from: FiresideControllerKey })
+	c!: FiresideController;
 
 	get padding() {
 		// Make a nice looking curve, have it snap to a small number of positions.
@@ -23,7 +26,9 @@ export default class AppFiresideHostThumbIndicator extends Vue {
 
 		const accuracy = 7;
 		const volumeSnapped = Math.round(volumeAdjusted * accuracy) / accuracy;
-		const clamped = Math.min(1, Math.max(0, volumeSnapped)) * 5;
+		// Doing either ceil or floor here will help with weird half-value
+		// padding jank depending on the browser.
+		const clamped = Math.ceil(Math.min(1, Math.max(0, volumeSnapped)) * 10);
 		return `calc( max( ${clamped}px, ${clamped}% ))`;
 	}
 }

@@ -4,14 +4,17 @@ import {
 	AppPromotionStore,
 	AppPromotionStoreKey,
 } from '../../utils/mobile-app';
-import { propRequired } from '../../utils/vue';
 import { trackAppPromotionClick } from '../analytics/analytics.service';
 import appStoreImage from './button-app-store.svg';
 import playStoreImage from './button-play-store.png';
 
 @Options({})
 export default class AppAppButtons extends Vue {
-	@Prop(propRequired(String)) source!: AppPromotionSource;
+	@Prop({ type: String, required: true })
+	source!: AppPromotionSource;
+
+	@Prop({ type: Boolean })
+	justified!: boolean;
 
 	@Inject({ from: AppPromotionStoreKey })
 	appPromotion!: AppPromotionStore;

@@ -10,6 +10,7 @@ import {
 } from '../community/user-notification/user-notification.model';
 import { Environment } from '../environment/environment.service';
 import { EventItem } from '../event-item/event-item.model';
+import { FiresideCommunity } from '../fireside/community/community.model';
 import { Fireside } from '../fireside/fireside.model';
 import { FiresidePostCommunity } from '../fireside/post/community/community.model';
 import { FiresidePost } from '../fireside/post/post-model';
@@ -70,6 +71,7 @@ export class Notification extends Model {
 	static TYPE_COMMUNITY_USER_NOTIFICATION = 'community-user-notification';
 	static TYPE_FIRESIDE_START = 'fireside-start';
 	static TYPE_FIRESIDE_STREAM_NOTIFICATION = 'fireside-stream-notification';
+	static TYPE_FIRESIDE_FEATURED_IN_COMMUNITY = 'fireside-featured-in-community';
 
 	static ACTIVITY_FEED_TYPES = [EventItem.TYPE_POST_ADD];
 
@@ -88,6 +90,7 @@ export class Notification extends Model {
 		Notification.TYPE_GAME_TROPHY_ACHIEVED,
 		Notification.TYPE_SITE_TROPHY_ACHIEVED,
 		Notification.TYPE_COMMUNITY_USER_NOTIFICATION,
+		Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY,
 	];
 
 	user_id!: number;
@@ -117,11 +120,12 @@ export class Notification extends Model {
 		| UserSiteTrophy
 		| CommunityUserNotification
 		| Fireside
-		| FiresideStreamNotification;
+		| FiresideStreamNotification
+		| FiresideCommunity;
 
 	to_resource!: string | null;
 	to_resource_id!: number | null;
-	to_model?: Game | User | FiresidePost | ForumTopic | Sellable | Community;
+	to_model?: Game | User | FiresidePost | ForumTopic | Sellable | Community | Fireside;
 
 	// Generated in constructor.
 	is_user_based = false;
@@ -161,6 +165,8 @@ export class Notification extends Model {
 			this.to_model = new Sellable(data.to_resource_model);
 		} else if (data.to_resource === 'Community') {
 			this.to_model = new Community(data.to_resource_model);
+		} else if (data.to_resource === 'Fireside') {
+			this.to_model = new Fireside(data.to_resource_model);
 		}
 
 		if (this.type === Notification.TYPE_COMMENT_ADD) {
@@ -215,6 +221,8 @@ export class Notification extends Model {
 			this.is_user_based = true;
 		} else if (this.type === Notification.TYPE_FIRESIDE_STREAM_NOTIFICATION) {
 			this.action_model = new FiresideStreamNotification(data.action_resource_model);
+		} else if (this.type === Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY) {
+			this.action_model = new FiresideCommunity(data.action_resource_model);
 		}
 
 		// Keep memory clean after bootstrapping the models (the super
@@ -249,6 +257,8 @@ export class Notification extends Model {
 					case NotificationType.POSTS_MOVE:
 					case NotificationType.POSTS_EJECT:
 						return getRouteLocationForModel(this.to_model as FiresidePost);
+					case NotificationType.FIRESIDES_EJECT:
+						return getRouteLocationForModel(this.to_model as Fireside);
 				}
 				break;
 
@@ -298,6 +308,9 @@ export class Notification extends Model {
 				return getRouteLocationForModel(
 					(this.action_model as FiresideStreamNotification).fireside
 				);
+
+			case Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY:
+				return getRouteLocationForModel(this.to_model as Fireside);
 		}
 
 		// Must pull asynchronously when they click on the notification.

@@ -5,6 +5,7 @@ import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { BaseModal } from '../../../../_common/modal/base';
+import { FormModel } from '../../forms/fireside/add/add';
 import FormFiresideAdd from '../../forms/fireside/add/add.vue';
 
 @Options({
@@ -19,17 +20,14 @@ export default class AppFiresideAddModal extends mixins(BaseModal) {
 
 	isLoading = true;
 	nameSuggestion: string | null = null;
+	communities: Community[] = [];
 
 	get defaultTitle() {
 		return this.nameSuggestion ?? undefined;
 	}
 
 	get requestUri() {
-		let requestUri = `/web/dash/fireside/add`;
-		if (this.community) {
-			requestUri += '?community_id=' + this.community.id;
-		}
-		return requestUri;
+		return `/web/dash/fireside/add`;
 	}
 
 	async mounted() {
@@ -46,21 +44,32 @@ export default class AppFiresideAddModal extends mixins(BaseModal) {
 			this.nameSuggestion = payload.nameSuggestion;
 		}
 
+		if (payload.targetableCommunities) {
+			this.communities = Community.populate(payload.targetableCommunities);
+		} else {
+			this.communities = [];
+		}
+
 		this.isLoading = false;
 	}
 
-	async onSubmit(formData: any) {
-		const title = formData.title;
-		const isDraft = formData.is_draft;
-		const payload = await Api.sendRequest(this.requestUri, { title, is_draft: isDraft });
+	async onSubmit(formData: FormModel) {
+		const payloadData = {
+			title: formData.title,
+			is_draft: formData.is_draft,
+		} as any;
+		if (formData.community_id) {
+			payloadData['community_id'] = formData.community_id;
+			payloadData['auto_feature'] = formData.auto_feature;
+			payloadData['add_community_as_cohosts'] = formData.add_community_as_cohosts;
+		}
+
+		const payload = await Api.sendRequest(this.requestUri, payloadData);
 
 		if (!payload.success) {
-			console.log(payload);
 			if (payload.errors && payload.errors['rate-limit']) {
 				showErrorGrowl(
-					this.$gettext(
-						`Cannot create a new Fireside... yet. Try again in a couple minutes.`
-					)
+					this.$gettext(`You must wait a few minutes before creating another fireside.`)
 				);
 				return;
 			}
@@ -79,8 +88,6 @@ export default class AppFiresideAddModal extends mixins(BaseModal) {
 	}
 
 	private showGenericError() {
-		showErrorGrowl(
-			this.$gettext(`Couldn't created your Fireside. Reload the page and try again.`)
-		);
+		showErrorGrowl(this.$gettext(`Couldn't create your fireside. Reload and try again.`));
 	}
 }

@@ -31,4 +31,10 @@ export default class RouteLandingAbout extends BaseRouteComponent {
 		'#31d6ff': 'white',
 		'#ff3fac': 'white',
 	};
+
+	disableRouteTitleSuffix = true;
+
+	get routeTitle() {
+		return this.$gettext(`About Game Jolt`);
+	}
 }

@@ -15,6 +15,15 @@ export default class AppStickerLayerDrawerItem extends Vue {
 
 	declare $el: HTMLDivElement;
 
+	get currentStreak() {
+		const streak = this.drawerStore.streak;
+		if (streak?.sticker.id !== this.sticker.id) {
+			return 0;
+		}
+
+		return streak.count;
+	}
+
 	get itemStyling() {
 		return {
 			height: this.size + 'px',

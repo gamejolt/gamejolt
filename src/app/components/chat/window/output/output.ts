@@ -10,9 +10,10 @@ import AppScrollScroller, {
 	createScroller,
 } from '../../../../../_common/scroll/scroller/scroller.vue';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
-import { EventSubscription } from '../../../../../_common/system/event/event-topic';
+import { useEventSubscription } from '../../../../../_common/system/event/event-topic';
 import { illNoChat } from '../../../../img/ill/illustrations';
-import { ChatClient, ChatKey, loadOlderChatMessages, onNewChatMessage } from '../../client';
+import { ChatStore, ChatStoreKey } from '../../chat-store';
+import { loadOlderChatMessages, onNewChatMessage } from '../../client';
 import { ChatMessage, TIMEOUT_CONSIDER_QUEUED } from '../../message';
 import { ChatRoom } from '../../room';
 import AppChatWindowOutputItem from './item/item.vue';
@@ -33,8 +34,8 @@ export default class AppChatWindowOutput extends Vue {
 	@Prop(propRequired(Array)) messages!: ChatMessage[];
 	@Prop(propRequired(Array)) queuedMessages!: ChatMessage[];
 
-	@Inject({ from: ChatKey })
-	chat!: ChatClient;
+	@Inject({ from: ChatStoreKey })
+	chatStore!: ChatStore;
 
 	@AppState user!: AppStore['user'];
 
@@ -46,12 +47,15 @@ export default class AppChatWindowOutput extends Vue {
 
 	private checkQueuedTimeout?: NodeJS.Timer;
 	private _introEmoji?: string;
-	private newMessage$?: EventSubscription;
 	private isAutoscrolling = false;
 	private isOnScrollQueued = false;
 
 	readonly formatDate = formatDate;
 	readonly illNoChat = illNoChat;
+
+	get chat() {
+		return this.chatStore.chat!;
+	}
 
 	get allMessages() {
 		return this.messages.concat(this.queuedMessages);
@@ -87,11 +91,8 @@ export default class AppChatWindowOutput extends Vue {
 		return this.chat.notifications[this.room.id] > 0;
 	}
 
-	async mounted() {
-		// Check every 100ms for which queued messages we should show.
-		this.checkQueuedTimeout = setInterval(this.updateVisibleQueuedMessages, 100);
-
-		this.newMessage$ = onNewChatMessage.subscribe(async message => {
+	created() {
+		useEventSubscription(onNewChatMessage, async message => {
 			// When the user sent a message, we want the chat to scroll all
 			// the way down to show that message.
 			if (this.user && message.user.id === this.user.id) {
@@ -101,13 +102,16 @@ export default class AppChatWindowOutput extends Vue {
 		});
 	}
 
+	mounted() {
+		// Check every 100ms for which queued messages we should show.
+		this.checkQueuedTimeout = setInterval(this.updateVisibleQueuedMessages, 100);
+	}
+
 	unmounted() {
 		if (this.checkQueuedTimeout) {
 			clearTimeout(this.checkQueuedTimeout);
 			this.checkQueuedTimeout = undefined;
 		}
-
-		this.newMessage$?.close();
 	}
 
 	@Watch('queuedMessages', { deep: true })

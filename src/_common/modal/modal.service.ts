@@ -73,6 +73,10 @@ export function showModal<T>(options: ModalOptions) {
 	});
 }
 
+export function findModalById(modalId: string) {
+	return Modals.modals.filter(i => i.modalId === modalId);
+}
+
 function _removeModal(modal: Modal) {
 	arrayRemove(Modals.modals, i => i.id === modal.id);
 }

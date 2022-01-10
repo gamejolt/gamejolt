@@ -22,7 +22,7 @@ export const GrayDark = '#292929';
 export const Gray = '#363636';
 export const GraySubtle = '#444444';
 export const GrayLight = '#7e7e7e';
-export const GrayLighter = '#d1d1d1';
+export const GrayLighter = '#a8a8a8';
 export const GrayLightest = '#f0f0f0';
 export const BgBackdropLight = '#f8f8f8';
 export const BgBackdropDark = '#222222';
@@ -323,3 +323,8 @@ export class Theme extends Model {
 }
 
 Model.create(Theme);
+
+/**
+ * Default theme to be used by the whole app. Uses our main theme tint.
+ */
+export const DefaultTheme = new Theme({ tint: '4800ff' });

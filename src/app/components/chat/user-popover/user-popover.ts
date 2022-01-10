@@ -6,9 +6,8 @@ import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service'
 import { AppTheme } from '../../../../_common/theme/theme';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
+import { ChatStore, ChatStoreKey } from '../chat-store';
 import {
-	ChatClient,
-	ChatKey,
 	demoteModerator,
 	enterChatRoom,
 	isUserOnline,
@@ -33,11 +32,15 @@ export default class AppChatUserPopover extends Vue {
 	@Prop(propRequired(ChatUser)) user!: ChatUser;
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 
-	@Inject({ from: ChatKey })
-	chat!: ChatClient;
+	@Inject({ from: ChatStoreKey })
+	chatStore!: ChatStore;
+
+	get chat() {
+		return this.chatStore.chat!;
+	}
 
 	get isOnline() {
-		if (!this.chat) {
+		if (!this.chatStore.chat) {
 			return null;
 		}
 
@@ -79,8 +82,27 @@ export default class AppChatUserPopover extends Vue {
 			return false;
 		}
 
+		// In public rooms, staff members cannot lose their mod status.
+		if (!this.room.isPrivateRoom && this.user.permission_level > 0) {
+			return false;
+		}
+
 		// Only the owner of the room can promote/demote moderators.
 		return this.chat.currentUser.id === this.room.owner_id;
+	}
+
+	get canKick() {
+		// Cannot kick one of your mods, gotta demote first.
+		if (this.isModerator) {
+			return false;
+		}
+
+		// In public rooms, staff members can never get kicked.
+		if (!this.room.isPrivateRoom && this.user.permission_level > 0) {
+			return false;
+		}
+
+		return true;
 	}
 
 	onClickSendMessage() {

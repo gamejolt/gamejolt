@@ -14,6 +14,7 @@ export class ChatUserCollection {
 	private collection_: ChatUser[] = [];
 	private byId_: Record<number, ChatUser> = {};
 	private byRoomId_: Record<number, ChatUser> = {};
+	private doingWork_ = false;
 
 	get count() {
 		return this.onlineCount + this.offlineCount;
@@ -35,9 +36,9 @@ export class ChatUserCollection {
 				} else {
 					++this.offlineCount;
 				}
-
-				this.recollect();
 			}
+
+			this.recollect();
 		}
 
 		if (chatClient) {
@@ -153,11 +154,31 @@ export class ChatUserCollection {
 	 * reaction to changes to the users being tracked.
 	 */
 	recollect() {
+		if (this.doingWork_) {
+			return;
+		}
+
 		if (this.type === ChatUserCollection.TYPE_FRIEND) {
 			sortCollection(this.chat, this.collection_, 'lastMessage');
 		} else {
 			sortCollection(this.chat, this.collection_, 'title');
 		}
+	}
+
+	/**
+	 * Do many operations of work and then recollect afterwards to keep things
+	 * sorted.
+	 */
+	doBatchWork(fn: () => void) {
+		this.doingWork_ = true;
+
+		try {
+			fn();
+		} finally {
+			this.doingWork_ = false;
+		}
+
+		this.recollect();
 	}
 }
 

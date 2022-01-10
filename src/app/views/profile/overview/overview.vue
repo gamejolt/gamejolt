@@ -95,9 +95,9 @@
 
 							<h4 class="section-header">
 								<translate>Shouts</translate>
-								<small v-if="commentsCount"
-									>({{ formatNumber(commentsCount) }})</small
-								>
+								<small v-if="commentsCount">
+									({{ formatNumber(commentsCount) }})
+								</small>
 							</h4>
 
 							<app-comment-add-button
@@ -117,6 +117,8 @@
 					</template>
 
 					<template #right>
+						<app-share-card resource="user" :url="shareUrl" bleed-padding />
+
 						<app-user-known-followers
 							v-if="shouldShowKnownFollowers"
 							:users="knownFollowers"
@@ -286,15 +288,17 @@
 							</h4>
 
 							<div class="-trophies">
-								<app-trophy-thumbnail
-									v-for="trophy of previewTrophies"
-									:key="trophy.key"
-									class="-trophy"
-									:trophy="trophy.trophy"
-									no-difficulty
-									no-highlight
-									@click="onClickTrophy(trophy)"
-								/>
+								<template v-if="previewTrophies">
+									<app-trophy-thumbnail
+										v-for="trophy of previewTrophies"
+										:key="trophy.key"
+										class="-trophy"
+										:trophy="trophy.trophy"
+										no-difficulty
+										no-highlight
+										@click="onClickTrophy(trophy)"
+									/>
+								</template>
 
 								<router-link
 									v-if="shouldShowMoreTrophies"
@@ -377,7 +381,19 @@
 					</template>
 
 					<!-- Fireside -->
-					<app-fireside-badge v-if="shouldShowFireside" :fireside="fireside" />
+					<app-scroll-inview
+						v-if="shouldShowFireside"
+						:config="FiresideScrollInviewConfig"
+						@inview="onFiresideInview"
+						@outview="onFiresideOutview"
+					>
+						<app-fireside-badge
+							:key="fireside"
+							:fireside="fireside"
+							:show-preview="canShowFiresidePreview"
+							@changed="onFiresideBadgeChanged"
+						/>
+					</app-scroll-inview>
 
 					<router-view />
 				</app-page-container>

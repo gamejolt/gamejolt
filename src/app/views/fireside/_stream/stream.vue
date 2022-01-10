@@ -9,26 +9,23 @@
 		@click="onVideoClick"
 	>
 		<template v-if="hasVideo">
-			<template v-if="videoPaused">
-				<transition>
-					<div
-						v-if="!hasOverlayItems"
-						class="-paused-indicator -click-target anim-fade-leave-shrink"
-					>
-						<app-jolticon class="-paused-indicator-icon" icon="play" />
-					</div>
-				</transition>
-			</template>
-			<template v-else-if="isLoadingVideo">
+			<template v-if="isLoadingVideo">
 				<div class="-overlay -visible-center">
 					<app-loading centered stationary no-color hide-label />
 				</div>
 			</template>
 			<template v-else>
-				<div :key="rtcUser.userId">
-					<app-fireside-video class="-video-player -click-target" :rtc-user="rtcUser" />
+				<div :key="rtcUser.uid">
+					<app-fireside-video
+						v-if="shouldShowVideo"
+						class="-video-player -click-target"
+						:rtc-user="rtcUser"
+					/>
 					<app-fireside-desktop-audio v-if="shouldPlayDesktopAudio" :rtc-user="rtcUser" />
-					<app-fireside-video-stats v-if="rtc.shouldShowVideoStats" @click.capture.stop />
+					<app-fireside-video-stats
+						v-if="c.rtc && c.rtc.shouldShowVideoStats"
+						@click.capture.stop
+					/>
 				</div>
 			</template>
 		</template>
@@ -43,37 +40,76 @@
 		<div
 			v-if="hasOverlayItems"
 			class="-overlay"
-			:class="{ '-darken': shouldShowUI }"
+			:class="{ '-darken': shouldDarkenAll }"
 			@click.capture="onOverlayTap"
 		>
 			<template v-if="shouldShowUI">
-				<div class="-overlay-inner">
-					<div v-if="memberCount" class="-overlay-members">
-						<translate
-							:translate-n="memberCount"
-							:translate-params="{ count: formatNumber(memberCount) }"
-							translate-plural="%{ count } members"
-						>
-							%{ count } member
-						</translate>
-					</div>
-
-					<div class="-overlay-playback">
+				<template v-if="videoPaused">
+					<transition>
 						<div
-							v-if="shouldShowOverlayPlayback"
-							class="-overlay-playback-inner"
-							@click="togglePlayback"
+							ref="paused"
+							class="-paused-indicator -click-target anim-fade-leave-shrink"
 						>
-							<app-jolticon
-								class="-paused-indicator-icon"
-								:icon="videoPaused ? 'play' : 'pause'"
-							/>
+							<app-jolticon class="-paused-indicator-icon" icon="play" />
+						</div>
+					</transition>
+				</template>
+
+				<div class="-overlay-inner">
+					<div
+						v-if="hasHeader"
+						class="-overlay-top -control"
+						:class="{ '-fade-top': !shouldDarkenAll }"
+					>
+						<div style="flex: auto; overflow: hidden">
+							<app-fireside-header is-overlay />
+							<div class="-overlay-members">
+								<translate
+									:translate-n="memberCount"
+									:translate-params="{ count: formatNumber(memberCount) }"
+									translate-plural="%{ count } members"
+								>
+									%{ count } member
+								</translate>
+							</div>
 						</div>
 					</div>
 
-					<div v-if="showHosts" class="-overlay-hosts -control">
+					<div class="-flex-spacer" />
+
+					<div
+						:class="{
+							'-fade-bottom': !shouldDarkenAll,
+						}"
+					>
+						<div class="-overlay-bottom -control" @click.stop>
+							<div class="-video-controls">
+								<div v-if="hasVideo && !hasHosts">
+									<app-button
+										circle
+										trans
+										overlay
+										:icon="videoPaused ? 'play' : 'pause'"
+										@click.capture.stop="togglePlayback"
+									/>
+								</div>
+
+								<div v-if="hasVolumeControls" class="-volume">
+									<app-jolticon icon="audio" />
+									<app-slider
+										class="-volume-slider"
+										:percent="desktopVolume"
+										@scrub="onVolumeScrub"
+									/>
+								</div>
+							</div>
+						</div>
+
 						<app-fireside-host-list
+							v-if="hasHosts"
+							class="-hosts"
 							hide-thumb-options
+							:show-playback="hasVideo"
 							@show-popper="onHostOptionsShow"
 							@hide-popper="onHostOptionsHide"
 						/>
@@ -81,10 +117,46 @@
 				</div>
 			</template>
 		</div>
+
+		<div
+			v-if="stickerStreak && stickerStreak.count > 1"
+			class="-combo"
+			:class="{ '-fade': shouldShowUI }"
+		>
+			<div
+				class="badge"
+				:class="{
+					'-hot-streak': stickerStreak.count >= 5,
+					'-super-hot-streak': stickerStreak.count >= 10,
+				}"
+			>
+				<translate v-if="Screen.isDesktop">STREAK</translate>
+				x{{ streakCount }}
+			</div>
+
+			<img
+				class="-combo-sticker"
+				:class="{ '-keep-animating': shouldAnimateStreak }"
+				draggable="false"
+				onmousedown="return false"
+				style="user-drag: none"
+				:src="stickerStreak.sticker.img_url"
+			/>
+		</div>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
+$-text-shadow = 1px 1px 3px rgba($black, 0.5)
+$-overlay-bg = rgba($black, 0.5)
+$-base-padding = 8px
+$-z-overlay = 1
+$-z-control = 3
+$-z-combo = 2
+
+.jolticon
+	text-shadow: $-text-shadow
+
 .-stream
 .-video-player
 	&
@@ -95,16 +167,15 @@
 		bottom: 0
 		left: 0
 		color: var(--theme-fg)
-		text-shadow: 1px 1px 3px rgba($black, 0.5)
+		text-shadow: $-text-shadow
 
 	> .-overlay
-		z-index: 1
-		opacity: 0
-		transition: all 200ms $strong-ease-out
+		z-index: $-z-overlay
+		background-color: transparent
+		transition: background-color 200ms $strong-ease-out
 
 		&.-darken
-			opacity: 1
-			background-color: rgba($black, 0.5)
+			background-color: $-overlay-bg
 
 .-click-target
 	cursor: pointer
@@ -114,10 +185,10 @@
 	width: 100%
 	display: flex
 	flex-direction: column
-	padding: 8px 0
+	padding: $-base-padding
 
 	> *
-		flex: 1
+		z-index: $-z-control
 
 .-visible-center
 	opacity: 1 !important
@@ -138,26 +209,36 @@
 	left: 0
 
 .-overlay-members
-	padding: 0 8px
+	opacity: 0.75
 	font-weight: bold
 
-.-overlay-playback
-	flex: auto
+.-overlay-top
 	display: flex
-	align-items: center
-	justify-content: center
-	min-height: 0
+	align-items: flex-start
 
-	&-inner
-		padding: 16px
-		margin: -(@padding)
-
-.-overlay-hosts
+.-overlay-bottom
 	display: flex
 	align-items: flex-end
+	width: min-content
+
+.-fade-top
+.-fade-bottom
+	position: relative
+	margin: -($-base-padding)
+	padding: $-base-padding
+
+.-fade-top
+	background: linear-gradient(to bottom, rgba($black 0.8), rgba($black 0.35) 60%, rgba($black, 0))
+
+.-fade-bottom
+	background: linear-gradient(to top, rgba($black 0.8), rgba($black 0.35) 60%, rgba($black, 0))
 
 .-control
 	user-select: none
+
+.-flex-spacer
+	margin: auto
+	pointer-events: none
 
 .-paused-indicator
 	position: absolute
@@ -171,4 +252,147 @@
 
 	&-icon
 		font-size: 60px
+		pointer-events: none
+
+.-video-controls
+	display: flex
+	align-items: center
+	flex: 1
+	grid-gap: 12px
+
+	.-volume
+		display: inline-flex
+		align-items: center
+		flex: auto
+		grid-gap: 4px
+
+		&-slider
+			max-width: 200px
+
+.-hosts
+	margin-top: 8px
+
+.-combo
+	position: absolute
+	top: 16px
+	right: @top
+	display: inline-flex
+	grid-gap: 4px
+	font-weight: bold
+	color: white
+	align-items: center
+	z-index: $-z-combo
+	transition: opacity 200ms $strong-ease-out
+
+	&.-fade
+		opacity: 0.45
+
+	&
+	> *
+		font-size: $font-size-base
+		user-select: none
+		pointer-events: none
+
+	img
+		width: 56px
+		height: @width
+
+	@media $media-mobile
+		&
+		> *
+			font-size: $font-size-tiny
+
+		img
+			width: 24px
+			height: @width
+
+.-combo-sticker
+	animation-name: new-indicator
+	// Make sure this is the same, or lower, than the TS file.
+	animation-duration: 1s
+	animation-timing-function: $ease-in-out-back
+	animation-iteration-count: 1
+	animation-play-state: paused
+	transform: rotate(0), scale(1)
+
+.-keep-animating
+	animation-play-state: running
+	animation-iteration-count: infinite
+
+.-hot-streak
+	animation-name: hot-streak
+	animation-duration: 1s
+	animation-iteration-count: infinite
+
+.-super-hot-streak
+	animation-name: super-hot-streak-animation
+	animation-iteration-count: infinite
+	animation-duration: 4s
+	animation-direction: alternate
+
+@keyframes hot-streak
+	0%
+		transform: scale(1)
+
+	50%
+		transform: scale(1.1)
+
+@keyframes new-indicator
+	0%
+		transform: rotate(0) scale(1)
+
+	// Slide to the left
+	30%
+		transform: rotate(-25deg) scale(1.1)
+
+	33%
+		transform: rotate(-15deg) scale(1.1)
+
+	36%
+		transform: rotate(-20deg) scale(1.1)
+
+	// Slide to the right
+	63%
+		transform: rotate(25deg) scale(1.1)
+
+	66%
+		transform: rotate(15deg) scale(1.1)
+
+	69%
+		transform: rotate(20deg) scale(1.1)
+
+	// Criss cross
+	100%
+		transform: rotate(0deg) scale(1)
+
+@keyframes super-hot-streak-animation
+	0%
+		background: orange
+		color: black
+		transform: scale(1)
+
+	20%
+		background: violet
+		color: white
+		transform: scale(1.1)
+
+	40%
+		background: blue
+		color: white
+		transform: scale(1)
+
+	60%
+		background: cyan
+		color: black
+		transform: scale(1.1)
+
+	80%
+		background: green
+		color: white
+		transform: scale(1)
+
+	100%
+		background: yellow
+		color: black
+		transform: scale(1.1)
 </style>

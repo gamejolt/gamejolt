@@ -1,14 +1,12 @@
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { getAbsoluteLink } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
-import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
 import { Community } from '../../../../_common/community/community.model';
-import { Environment } from '../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppGameThumbnail from '../../../../_common/game/thumbnail/thumbnail.vue';
-import AppPopper from '../../../../_common/popper/popper.vue';
-import { AppSocialFacebookLike } from '../../../../_common/social/facebook/like/like';
-import { AppSocialTwitterShare } from '../../../../_common/social/twitter/share/share';
+import { ReportModal } from '../../../../_common/report/modal/modal.service';
+import AppShareCard from '../../../../_common/share/card/card.vue';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
 import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
@@ -26,11 +24,9 @@ const GAME_LIST_COLLAPSED_COUNT = 3;
 		AppUserAvatarList,
 		AppGameThumbnail,
 		AppUserCardHover,
-		AppPopper,
-		AppSocialTwitterShare,
-		AppSocialFacebookLike,
 		AppTimeAgo,
 		AppGameList,
+		AppShareCard,
 	},
 })
 export default class AppCommunitySidebar extends Vue {
@@ -78,7 +74,7 @@ export default class AppCommunitySidebar extends Vue {
 	}
 
 	get shareUrl() {
-		return Environment.baseUrl + this.$router.resolve(this.community.routeLocation).href;
+		return getAbsoluteLink(this.$router, this.community.routeLocation);
 	}
 
 	get shareContent() {
@@ -134,8 +130,8 @@ export default class AppCommunitySidebar extends Vue {
 		return this.filteredGames;
 	}
 
-	copyShareUrl() {
-		Clipboard.copy(this.shareUrl);
+	get shouldShowReport() {
+		return !this.community.hasPerms();
 	}
 
 	toggleCollaboratorList() {
@@ -171,5 +167,9 @@ export default class AppCommunitySidebar extends Vue {
 
 	toggleGamesList() {
 		this.gameListCollapsed = !this.gameListCollapsed;
+	}
+
+	onClickReport() {
+		ReportModal.show(this.community);
 	}
 }

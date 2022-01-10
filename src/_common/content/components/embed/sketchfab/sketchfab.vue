@@ -1,3 +1,5 @@
+<script lang="ts" src="./sketchfab"></script>
+
 <template>
 	<iframe
 		width="100%"
@@ -9,7 +11,5 @@
 		webkitallowfullscreen="true"
 		sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
 		:src="embedSrc"
-	></iframe>
+	/>
 </template>
-
-<script lang="ts" src="./sketchfab"></script>

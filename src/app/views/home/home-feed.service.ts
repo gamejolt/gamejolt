@@ -1,12 +1,11 @@
 import { RouteLocationNormalized } from 'vue-router';
-import { configFYPDefault } from '../../../_common/config/config.service';
 
 export const HOME_FEED_FYP = 'fyp';
 export const HOME_FEED_ACTIVITY = 'activity';
 
 export class HomeFeedService {
 	public static getDefault() {
-		return configFYPDefault.value ? HOME_FEED_FYP : HOME_FEED_ACTIVITY;
+		return HOME_FEED_ACTIVITY;
 	}
 
 	public static get fypTab() {

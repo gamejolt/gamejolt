@@ -26,8 +26,8 @@
 					@click.stop
 				/>
 				<app-button v-else trans @click.stop="toggleFull()">
-					<translate v-if="!isOpen">read article</translate>
-					<translate v-else>less</translate>
+					<translate v-if="!isOpen">Read article</translate>
+					<translate v-else>Less</translate>
 				</app-button>
 			</div>
 		</div>

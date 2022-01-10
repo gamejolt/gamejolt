@@ -16,7 +16,7 @@ import { EscapeStack, EscapeStackCallback } from '../../escape-stack/escape-stac
 import AppLoadingFade from '../../loading/AppLoadingFade.vue';
 import { onScreenResize, Screen } from '../../screen/screen-service';
 import AppScrollScroller from '../../scroll/scroller/scroller.vue';
-import { EventSubscription } from '../../system/event/event-topic';
+import { useEventSubscription } from '../../system/event/event-topic';
 import AppTouch, { AppTouchInput } from '../../touch/AppTouch.vue';
 import AppStickerCard from '../card/card.vue';
 import { Sticker } from '../sticker.model';
@@ -42,7 +42,6 @@ export default class AppStickerLayerDrawer extends Vue {
 	isSwiping = false;
 	private stickersPerRow = 5;
 	private touchedSticker: Sticker | null = null;
-	private resize$: EventSubscription | undefined;
 	private escapeCallback?: EscapeStackCallback;
 
 	private readonly drawerPadding = 8;
@@ -173,17 +172,18 @@ export default class AppStickerLayerDrawer extends Vue {
 		};
 	}
 
+	created() {
+		useEventSubscription(onScreenResize, () => this.calculateStickersPerRow());
+	}
+
 	mounted() {
 		this.calculateStickersPerRow();
-		this.resize$ = onScreenResize.subscribe(() => this.calculateStickersPerRow());
 
 		this.escapeCallback = () => setDrawerOpen(this.drawerStore, false);
 		EscapeStack.register(this.escapeCallback);
 	}
 
 	beforeUnmount() {
-		this.resize$?.close();
-
 		if (this.escapeCallback) {
 			EscapeStack.deregister(this.escapeCallback);
 			this.escapeCallback = undefined;

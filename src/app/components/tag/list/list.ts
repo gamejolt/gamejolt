@@ -10,6 +10,8 @@ const FeaturedTags = [
 	'adventure',
 	'fangame',
 	'fnaf',
+	'undertale',
+	'fnf',
 	'rpg',
 	'other',
 	'multiplayer',
@@ -26,7 +28,6 @@ const FeaturedTags = [
 	'puzzle',
 	'strategy',
 	'sports',
-	'adult',
 ];
 
 @Options({

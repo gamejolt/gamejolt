@@ -49,6 +49,7 @@ export abstract class BaseNodeView implements NodeView {
 	}
 
 	protected mountVue(vm: any) {
+		// TODO(vue3)
 		// Mount the Vue instance onto an inner div to not disturb the div managed by the prosemirror editor
 		const container = this.createVueMountDOM();
 		if (vm.$props !== undefined) {

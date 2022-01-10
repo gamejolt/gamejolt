@@ -13,17 +13,15 @@ import AppUserBar from '../_common/user/user-bar/user-bar.vue';
 import { User } from '../_common/user/user.model';
 import { Store } from './store/index';
 
-const components: any = {
-	AppCommonShell,
-	AppErrorPage,
-	AppUserBar,
-	AppCookieBanner,
-	AppContactLink,
-	AppClientBase,
-};
-
 @Options({
-	components,
+	components: {
+		AppCommonShell,
+		AppErrorPage,
+		AppUserBar,
+		AppCookieBanner,
+		AppContactLink,
+		AppClientBase,
+	},
 })
 export default class App extends Vue {
 	@State app!: Store['app'];

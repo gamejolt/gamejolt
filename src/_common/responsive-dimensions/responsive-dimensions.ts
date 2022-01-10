@@ -2,7 +2,7 @@ import { h } from 'vue';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Ruler } from '../ruler/ruler-service';
 import { onScreenResize } from '../screen/screen-service';
-import { EventSubscription } from '../system/event/event-topic';
+import { useEventSubscription } from '../system/event/event-topic';
 
 export class AppResponsiveDimensionsChangeEvent {
 	constructor(public containerWidth: number, public height: number, public isFilled: boolean) {}
@@ -19,20 +19,18 @@ export class AppResponsiveDimensions extends Vue {
 	@Prop(Number)
 	maxHeight?: number;
 
-	private resize$: EventSubscription | undefined;
 	private width: string | null = null;
 	private height = 'auto';
 
 	@Emit('change')
 	emitChange(_event: AppResponsiveDimensionsChangeEvent) {}
 
-	mounted() {
-		this.resize$ = onScreenResize.subscribe(() => this.updateDimensions());
-		this.updateDimensions();
+	created() {
+		useEventSubscription(onScreenResize, () => this.updateDimensions());
 	}
 
-	unmounted() {
-		this.resize$?.close();
+	mounted() {
+		this.updateDimensions();
 	}
 
 	render() {

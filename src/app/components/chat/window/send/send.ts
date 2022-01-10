@@ -1,15 +1,10 @@
-import { Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Emit, Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { ContentDocument } from '../../../../../_common/content/content-document';
 import { AppContentEditorLazy } from '../../../../../_common/content/content-editor/content-editor-lazy';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import {
-	ChatClient,
-	ChatKey,
-	editMessage,
-	queueChatMessage,
-	setMessageEditing,
-} from '../../client';
+import { ChatStore, ChatStoreKey } from '../../chat-store';
+import { editMessage, queueChatMessage, setMessageEditing } from '../../client';
 import { ChatMessage } from '../../message';
 import { ChatRoom } from '../../room';
 import AppChatWindowSendForm from './form/form.vue';
@@ -23,12 +18,19 @@ import AppChatWindowSendForm from './form/form.vue';
 export default class AppChatWindowSend extends Vue {
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 
-	@Inject({ from: ChatKey })
-	chat!: ChatClient;
+	@Inject({ from: ChatStoreKey })
+	chatStore!: ChatStore;
 
 	singleLineMode = true;
 
 	readonly Screen = Screen;
+
+	@Emit('focus-change')
+	emitFocusChange(_focused: boolean) {}
+
+	get chat() {
+		return this.chatStore.chat!;
+	}
 
 	get isSingleLineMode() {
 		// We always want to be in multiline mode for phones:

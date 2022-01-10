@@ -46,9 +46,9 @@ import { Timezone, TimezoneData } from '../../../../_common/timezone/timezone.se
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import AppVideoEmbed from '../../../../_common/video/embed/embed.vue';
-import AppFormPostCommunityPillAdd from './_community-pill/add/add.vue';
-import AppFormPostCommunityPill from './_community-pill/community-pill.vue';
-import AppFormPostCommunityPillIncomplete from './_community-pill/incomplete/incomplete.vue';
+import AppFormsCommunityPillAdd from '../community/_pill/add/add.vue';
+import AppFormsCommunityPill from '../community/_pill/community-pill.vue';
+import AppFormsCommunityPillIncomplete from '../community/_pill/incomplete/incomplete.vue';
 import AppFormPostMedia from './_media/media.vue';
 import { VideoStatus } from './_video/video';
 import AppFormPostVideo from './_video/video.vue';
@@ -91,9 +91,9 @@ class Wrapper extends BaseForm<FormPostModel> {}
 		AppUserAvatarImg,
 		AppProgressBar,
 		AppFormPostMedia,
-		AppFormPostCommunityPill,
-		AppFormPostCommunityPillAdd,
-		AppFormPostCommunityPillIncomplete,
+		AppFormsCommunityPill,
+		AppFormsCommunityPillAdd,
+		AppFormsCommunityPillIncomplete,
 		AppCommunityPill,
 		AppFormControlContent,
 		AppScrollScroller,
@@ -393,6 +393,8 @@ export default class FormPost
 
 		if (model.has_article) {
 			this.longEnabled = true;
+			// Initialize this so ContentEditor doesn't complain while loading in.
+			this.setField('article_content', '');
 		}
 
 		await this.fetchTimezones();

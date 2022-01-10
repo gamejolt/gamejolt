@@ -1,7 +1,7 @@
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
+import { getAbsoluteLink } from '../../../../../utils/router';
 import { propOptional } from '../../../../../utils/vue';
-import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
 import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/join-widget.vue';
 import AppCommunityVerifiedTick from '../../../../../_common/community/verified-tick/verified-tick.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
@@ -9,6 +9,7 @@ import { formatNumber } from '../../../../../_common/filters/number';
 import { Popper } from '../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
+import { copyShareLink } from '../../../../../_common/share/share.service';
 import { SidebarState, SidebarStore } from '../../../../../_common/sidebar/sidebar.store';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { AppTheme } from '../../../../../_common/theme/theme';
@@ -107,9 +108,8 @@ export default class AppMobileHeader extends Vue {
 	}
 
 	copyShareUrl() {
-		Clipboard.copy(
-			Environment.baseUrl + this.$router.resolve(this.community.routeLocation).href
-		);
+		const url = getAbsoluteLink(this.$router, this.community.routeLocation);
+		copyShareLink(url, 'community');
 
 		Popper.hideAll();
 	}

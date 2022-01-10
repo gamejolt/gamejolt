@@ -2,24 +2,44 @@ import { nextTick } from 'vue';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../utils/vue';
 import { StickerPlacement } from './placement/placement.model';
+import { removeStickerFromTarget, StickerTargetController } from './target/target-controller';
 
 @Options({})
 export default class AppSticker extends Vue {
 	@Prop(propRequired(StickerPlacement)) sticker!: StickerPlacement;
+	@Prop(propOptional(StickerTargetController, null)) controller!: StickerTargetController | null;
 	@Prop(propOptional(Boolean, true)) isClickable!: boolean;
 
 	declare $refs: {
 		outer: HTMLDivElement;
+		live: HTMLDivElement;
 		inner: HTMLImageElement;
 	};
 
 	@Emit('click')
 	emitClick() {}
 
-	mounted() {
-		this.onUpdateStickerPlacement();
+	get isLive() {
+		return this.controller?.isLive === true;
 	}
 
+	mounted() {
+		this.onUpdateStickerPlacement();
+		if (this.isLive) {
+			// Don't attach to the outer ref, since it may have an animation attached by its parent.
+			this.$refs.live.addEventListener(
+				'animationend',
+				_ => {
+					if (this.controller) {
+						removeStickerFromTarget(this.controller, this.sticker);
+					}
+				},
+				true
+			);
+		}
+	}
+
+	// TODO(vue3): does it work to watch multiple like this still?
 	@Watch('sticker.position_x')
 	@Watch('sticker.position_y')
 	@Watch('sticker.rotation')

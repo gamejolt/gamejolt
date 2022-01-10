@@ -203,3 +203,13 @@ export function enforceLocation(route: RouteLocationNormalized, params: any, que
 		}
 	}
 }
+
+/**
+ * Will generate a link from a route location.
+ */
+export function getAbsoluteLink(router: Router, location: RouteLocationRaw) {
+	let url = typeof location === 'string' ? location : router.resolve(location).href;
+	url = url.replace(/^#/, '');
+
+	return Environment.baseUrl + url;
+}

@@ -13,8 +13,6 @@ import {
 } from 'vue';
 import { useRouter } from 'vue-router';
 import { arrayRemove } from '../../../utils/array';
-import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
-import { configHasAutocomplete } from '../../../_common/config/config.service';
 import AppPopper from '../../../_common/popper/popper.vue';
 import AppShortkey from '../../../_common/shortkey/shortkey.vue';
 import AppSearchInput, { createSearchInput } from './input/input.vue';
@@ -40,9 +38,7 @@ function createSearchController(p: typeof props) {
 	const keydownSpies = ref([] as SearchKeydownSpy[]);
 	const searchInput = createSearchInput();
 
-	const shouldShowAutocomplete = computed(
-		() => !p.autocompleteDisabled && configHasAutocomplete.value
-	);
+	const shouldShowAutocomplete = computed(() => !p.autocompleteDisabled);
 
 	const isEmpty = computed(() => !query.value.trim());
 
@@ -150,8 +146,6 @@ function onKeydown(event: KeyboardEvent) {
 }
 
 function onFocus() {
-	trackExperimentEngagement(configHasAutocomplete);
-
 	c.isFocused = true;
 	if (c.shouldShowAutocomplete) {
 		c.isShowingAutocomplete = true;

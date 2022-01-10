@@ -114,19 +114,19 @@ export default class FormCommunityCompetitionVotingCast extends Vue {
 
 	onRatingMouseEnter(votingCategory: CommunityCompetitionVotingCategory | null, i: number) {
 		if (votingCategory === null) {
-			this.$set(this.hoveredRatings, 0, i);
+			this.hoveredRatings[0] = i;
 		} else {
 			const index = this.votingCategories.indexOf(votingCategory);
-			this.$set(this.hoveredRatings, index, i);
+			this.hoveredRatings[index] = i;
 		}
 	}
 
 	onRatingMouseLeave(votingCategory: CommunityCompetitionVotingCategory | null) {
 		if (votingCategory === null) {
-			this.$set(this.hoveredRatings, 0, 0);
+			this.hoveredRatings[0] = 0;
 		} else {
 			const index = this.votingCategories.indexOf(votingCategory);
-			this.$set(this.hoveredRatings, index, 0);
+			this.hoveredRatings[index] = 0;
 		}
 	}
 

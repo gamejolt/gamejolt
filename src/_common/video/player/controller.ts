@@ -7,11 +7,11 @@ import {
 	SettingVideoPlayerMuted,
 	SettingVideoPlayerVolume,
 } from '../../settings/settings.service';
+import { ScrubberStage } from '../../slider/slider';
 import { VideoSourceArray } from '../video';
 
 export type VideoPlayerControllerContext = 'feed' | 'page' | 'gif' | null;
 export type VideoPlayerState = 'paused' | 'playing';
-export type ScrubberStage = 'start' | 'scrub' | 'end';
 
 export function getVideoPlayerFromSources(
 	item: { mp4?: string; webm?: string },
@@ -179,11 +179,8 @@ export function scrubVideoVolume(
 }
 
 export function setVideoMuted(player: VideoPlayerController, mute: boolean) {
-	if (player.altControlsBehavior) {
-		player.muted = mute;
-	} else {
-		setVideoVolume(player, mute ? 0 : getVolumeSetting(player));
-	}
+	player.muted = mute;
+	setVideoVolume(player, mute ? 0 : getVolumeSetting(player));
 
 	if (player.context === 'feed') {
 		SettingVideoPlayerFeedMuted.set(mute);

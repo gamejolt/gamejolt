@@ -1,4 +1,4 @@
-import Vue, { Component, markRaw } from 'vue';
+import { Component, markRaw } from 'vue';
 import { namespace } from 'vuex-class';
 import { arrayRemove } from '../../utils/array';
 import { VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
@@ -13,7 +13,7 @@ export const {
 export type SidebarActions = Record<string, any>;
 
 export type SidebarMutations = {
-	'sidebar/addContextPane': typeof Vue;
+	'sidebar/addContextPane': Component;
 	'sidebar/removeContextPane': ContextPane | null;
 	'sidebar/showContextOnRouteChange': boolean;
 };

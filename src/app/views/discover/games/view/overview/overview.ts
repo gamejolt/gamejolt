@@ -1,5 +1,6 @@
 import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
+import { getAbsoluteLink } from '../../../../../../utils/router';
 import { useAdsController } from '../../../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../../../_common/ad/widget/widget.vue';
 import { Api } from '../../../../../../_common/api/api.service';
@@ -33,6 +34,7 @@ import { Meta } from '../../../../../../_common/meta/meta-service';
 import { PartnerReferral } from '../../../../../../_common/partner-referral/partner-referral-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
+import AppShareCard from '../../../../../../_common/share/card/card.vue';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
 import AppActivityFeedPlaceholder from '../../../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../../../components/activity/feed/view';
@@ -78,6 +80,7 @@ import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue
 		AppGamePerms,
 		AppContentViewer,
 		AppUserKnownFollowers,
+		AppShareCard,
 	},
 })
 @RouteResolver({
@@ -240,6 +243,10 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 	get shouldShowCommentAdd() {
 		return canCommentOnModel(this.game);
+	}
+
+	get shareLink() {
+		return getAbsoluteLink(this.$router, this.game.getUrl());
 	}
 
 	routeCreated() {

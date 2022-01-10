@@ -69,6 +69,7 @@
 
 							<app-form-group name="card_number" :label="$gettext('card number')">
 								<app-jolticon icon="credit-card" />
+								<!-- TODO(vue3): credit card validator -->
 								<app-form-control
 									type="text"
 									class="has-icon"

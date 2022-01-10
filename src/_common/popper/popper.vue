@@ -18,8 +18,8 @@
 			v-app-observe-dimensions="onDimensionsChanged"
 			class="popper-wrapper"
 			:class="{ '-hide': isHiding, '-ssr': GJ_IS_SSR }"
-			@mouseenter="onMouseEnter"
-			@mouseleave="onMouseLeave"
+			@mouseenter="onPopoverEnter"
+			@mouseleave="onPopoverLeave"
 		>
 			<div v-if="!sansArrow" class="popper-arrow" data-popper-arrow />
 			<div

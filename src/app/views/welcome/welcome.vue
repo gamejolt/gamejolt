@@ -10,7 +10,7 @@
 			:is-social-registration="isSocialRegistration"
 			@next="onNextStep"
 		>
-			<template v-slot:controls="{ shouldShowSkip, canContinue }">
+			<template #controls="{ shouldShowSkip, canContinue }">
 				<section class="-controls">
 					<template v-if="shouldShowSkip">
 						<app-form-button

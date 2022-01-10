@@ -1,15 +1,24 @@
-import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import { Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { DrawerStore, DrawerStoreKey } from '../../../../_common/drawer/drawer-store';
+import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import { formatNumber } from '../../../../_common/filters/number';
+import { setRTCDesktopVolume } from '../../../../_common/fireside/rtc/rtc';
+import { FiresideRTCUser } from '../../../../_common/fireside/rtc/user';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { ChatUserCollection } from '../../../components/chat/user-collection';
-import { FiresideRTC, FiresideRTCKey } from '../fireside-rtc';
-import { FiresideRTCUser } from '../fireside-rtc-user';
-import AppFiresideDesktopAudio from '../_desktop_audio/desktop-audio.vue';
+import { ScrubberCallback } from '../../../../_common/slider/slider';
+import AppSlider from '../../../../_common/slider/slider.vue';
+import AppSticker from '../../../../_common/sticker/sticker.vue';
+import {
+	FiresideController,
+	FiresideControllerKey,
+} from '../../../components/fireside/controller/controller';
+import AppFiresideDesktopAudio from '../../../components/fireside/stream/desktop-audio/desktop-audio.vue';
+import AppFiresideVideoStats from '../../../components/fireside/stream/video-stats/video-stats.vue';
+import AppFiresideVideo from '../../../components/fireside/stream/video/video.vue';
+import AppFiresideHeader from '../_header/header.vue';
 import AppFiresideHostList from '../_host-list/host-list.vue';
 import AppFiresideHostThumbIndicator from '../_host-thumb/host-thumb-indicator.vue';
-import AppFiresideVideoStats from '../_video-stats/video-stats.vue';
-import AppFiresideVideo from '../_video/video.vue';
 
 const UIHideTimeout = 2000;
 const UIHideTimeoutMovement = 2000;
@@ -17,58 +26,93 @@ const UITransitionTime = 200;
 
 @Options({
 	components: {
+		AppFiresideDesktopAudio,
+		AppFiresideHeader,
 		AppFiresideHostList,
 		AppFiresideHostThumbIndicator,
-		AppLoading,
 		AppFiresideVideo,
-		AppFiresideDesktopAudio,
 		AppFiresideVideoStats,
+		AppLoading,
+		AppSlider,
+		AppSticker,
 	},
 })
 export default class AppFiresideStream extends Vue {
 	@Prop({ type: FiresideRTCUser, required: true })
 	rtcUser!: FiresideRTCUser;
 
-	@Prop({ type: Boolean, required: false, default: false })
-	showHosts!: boolean;
+	@Prop({ type: Boolean })
+	hasHeader!: boolean;
 
-	@Prop({ type: ChatUserCollection, required: false, default: null })
-	members!: ChatUserCollection | null;
+	@Prop({ type: Boolean })
+	hasHosts!: boolean;
 
-	@Inject({ from: FiresideRTCKey })
-	rtc!: FiresideRTC;
+	@Inject({ from: FiresideControllerKey })
+	c!: FiresideController;
+
+	@Inject({ from: DrawerStoreKey })
+	drawerStore!: DrawerStore;
 
 	private isHovered = false;
 	private _hideUITimer?: NodeJS.Timer;
 	private _ignorePointerTimer?: NodeJS.Timer;
-	private isShowingOverlayPopper = false;
 
 	readonly Screen = Screen;
 	readonly formatNumber = formatNumber;
+
+	streakTimer: NodeJS.Timer | null = null;
+	hasQueuedStreakAnimation = false;
+	shouldAnimateStreak = false;
+
+	declare $refs: {
+		paused?: HTMLDivElement;
+	};
+
+	get stickerStreak() {
+		return this.drawerStore.streak;
+	}
+
+	get streakCount() {
+		return formatFuzzynumber(this.stickerStreak?.count ?? 0);
+	}
+
+	get desktopVolume() {
+		return this.c.rtc?.desktopVolume ?? 1;
+	}
+
+	get hasVolumeControls() {
+		return !!this.c.rtc?.shouldShowVolumeControls;
+	}
 
 	get shouldShowUI() {
 		if (import.meta.env.SSR) {
 			return false;
 		}
 
-		return (
+		return !!(
 			(this.hasVideo && this.videoPaused) ||
-			this.isShowingOverlayPopper ||
+			this.c.isShowingOverlayPopper ||
 			this.isHovered ||
 			this._hideUITimer
 		);
 	}
 
+	get shouldShowVideo() {
+		// We can only show local videos in one place at a time. This will
+		// re-grab the video feed when it gets rebuilt.
+		return !(this.c.isShowingStreamSetup && this.c.rtc?.isFocusingMe);
+	}
+
 	get hasOverlayItems() {
-		return this.showHosts || !!this.members;
+		return this.hasVideo || this.hasVolumeControls || this.hasHeader;
 	}
 
 	get memberCount() {
-		return this.members?.count;
+		return this.c.chatUsers?.count ?? 1;
 	}
 
 	get videoPaused() {
-		return this.rtc.videoPaused;
+		return this.c.rtc?.videoPaused === true;
 	}
 
 	get hasVideo() {
@@ -76,19 +120,31 @@ export default class AppFiresideStream extends Vue {
 	}
 
 	get isLoadingVideo() {
-		return this.hasVideo && this.rtc.videoClient?.connectionState !== 'CONNECTED';
+		return this.hasVideo && this.c.rtc?.videoChannel.isConnected !== true;
+	}
+
+	// When we want to darken the whole stream overlay instead of only sections.
+	get shouldDarkenAll() {
+		if (!this.shouldShowUI) {
+			return false;
+		}
+
+		// If we're displaying any of this large content, or we're paused,
+		// darken the whole overlay instead of individual rows.
+		return this.videoPaused || this.hasHeader || this.hasHosts;
 	}
 
 	get shouldPlayDesktopAudio() {
+		if (!this.c.rtc) {
+			return false;
+		}
+
 		return (
 			this.hasVideo &&
-			this.rtc.videoClient?.connectionState === 'CONNECTED' &&
-			this.rtcUser.hasDesktopAudio
+			this.c.rtc.videoChannel.isConnected &&
+			this.rtcUser.hasDesktopAudio &&
+			!this.c.rtc.videoPaused
 		);
-	}
-
-	get shouldShowOverlayPlayback() {
-		return this.hasVideo;
 	}
 
 	onMouseOut() {
@@ -99,16 +155,12 @@ export default class AppFiresideStream extends Vue {
 		this.scheduleUIHide(UIHideTimeoutMovement);
 	}
 
-	onVideoClick() {
+	onVideoClick(event: Event) {
 		this.scheduleUIHide(UIHideTimeout);
 
-		// Don't alter video playback here when we have overlays to use tap
-		// interactions with.
-		if (this.hasOverlayItems) {
-			return;
+		if (event.target === this.$refs.paused) {
+			this.togglePlayback();
 		}
-
-		this.togglePlayback();
 	}
 
 	onOverlayTap(event: Event) {
@@ -126,11 +178,46 @@ export default class AppFiresideStream extends Vue {
 	}
 
 	onHostOptionsShow() {
-		this.isShowingOverlayPopper = true;
+		this.c.isShowingOverlayPopper = true;
 	}
 
 	onHostOptionsHide() {
-		this.isShowingOverlayPopper = false;
+		this.c.isShowingOverlayPopper = false;
+	}
+
+	onVolumeScrub({ percent }: ScrubberCallback) {
+		setRTCDesktopVolume(this.c.rtc!, percent);
+	}
+
+	private animateStickerStreak() {
+		if (!this.streakCount) {
+			this.clearStreakTimer();
+			return;
+		}
+
+		if (this.streakTimer != null) {
+			this.hasQueuedStreakAnimation = true;
+			return;
+		}
+
+		this.shouldAnimateStreak = true;
+		this.streakTimer = setTimeout(() => {
+			this.clearStreakTimer();
+			if (this.hasQueuedStreakAnimation) {
+				this.hasQueuedStreakAnimation = false;
+				this.animateStickerStreak();
+				return;
+			}
+
+			this.shouldAnimateStreak = false;
+		}, 2_000);
+	}
+
+	private clearStreakTimer() {
+		if (this.streakTimer) {
+			clearTimeout(this.streakTimer);
+		}
+		this.streakTimer = null;
 	}
 
 	private scheduleUIHide(delay: number) {
@@ -172,10 +259,22 @@ export default class AppFiresideStream extends Vue {
 	}
 
 	private pauseVideo() {
-		this.rtc.videoPaused = false;
+		this.c.rtc!.videoPaused = false;
 	}
 
 	private unpauseVideo() {
-		this.rtc.videoPaused = true;
+		this.c.rtc!.videoPaused = true;
+	}
+
+	@Watch('shouldShowUI', { immediate: true })
+	onShouldShowUIChanged() {
+		this.c.isShowingStreamOverlay = this.shouldShowUI;
+	}
+
+	@Watch('stickerStreak')
+	onStreakCountChanged() {
+		if (this.stickerStreak) {
+			this.animateStickerStreak();
+		}
 	}
 }

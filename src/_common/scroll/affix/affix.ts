@@ -2,7 +2,7 @@ import { Options, Prop, Vue } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
 import { Ruler } from '../../ruler/ruler-service';
 import { onScreenResize } from '../../screen/screen-service';
-import { EventSubscription } from '../../system/event/event-topic';
+import { useEventSubscription } from '../../system/event/event-topic';
 import AppScrollInview, { ScrollInviewConfig } from '../inview/inview.vue';
 import { Scroll } from '../scroll.service';
 
@@ -27,8 +27,6 @@ export default class AppScrollAffix extends Vue {
 	width: number | null = null;
 	height = 0;
 	InviewConfig!: ScrollInviewConfig;
-
-	private resize$: EventSubscription | undefined;
 
 	declare $refs: {
 		container: HTMLElement;
@@ -56,11 +54,9 @@ export default class AppScrollAffix extends Vue {
 
 	created() {
 		this.createInviewConfig();
-	}
 
-	mounted() {
 		// If we resized, then the element dimensions most likely changed.
-		this.resize$ = onScreenResize.subscribe(() => {
+		useEventSubscription(onScreenResize, () => {
 			// Always save dimensions, even if disabled, since we need to make
 			// sure that if they enable at any point we're ready to affix it
 			// properly.
@@ -75,10 +71,6 @@ export default class AppScrollAffix extends Vue {
 				this.width = Ruler.outerWidth(placeholder);
 			}
 		});
-	}
-
-	unmounted() {
-		this.resize$?.close();
 	}
 
 	outview() {

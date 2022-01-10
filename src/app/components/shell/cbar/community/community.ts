@@ -86,7 +86,11 @@ export default class AppShellCbarCommunity extends Vue {
 
 	async onLeaveCommunityClick() {
 		Popper.hideAll();
-		await this.leaveCommunity({ community: this.community, location: 'cbar' });
+		await this.leaveCommunity({
+			community: this.community,
+			location: 'cbar',
+			shouldConfirm: true,
+		});
 	}
 
 	async onJoinCommunityClick() {

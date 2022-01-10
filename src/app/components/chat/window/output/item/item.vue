@@ -33,9 +33,11 @@
 				</router-link>
 				<span class="chat-window-message-username"> @{{ message.user.username }} </span>
 				<span class="chat-window-message-time">
-					<span v-if="!message._showAsQueued" v-app-tooltip="loggedOn.tooltip">
-						{{ loggedOn.template }}
-					</span>
+					<template v-if="!message._showAsQueued">
+						<span v-if="loggedOn !== null" v-app-tooltip="loggedOn.tooltip">
+							{{ loggedOn.template }}
+						</span>
+					</template>
 					<span
 						v-else-if="message._error"
 						v-app-tooltip="$gettext(`Failed to send. Press to retry`)"
@@ -95,13 +97,15 @@
 
 			<div class="chat-window-message-content-wrap">
 				<template v-if="message.combine">
-					<span
-						v-if="!message._showAsQueued"
-						v-app-tooltip="loggedOn.tooltip"
-						class="chat-window-message-small-time"
-					>
-						{{ loggedOn.template }}
-					</span>
+					<template v-if="!message._showAsQueued">
+						<span
+							v-if="loggedOn !== null"
+							v-app-tooltip="loggedOn.tooltip"
+							class="chat-window-message-small-time"
+						>
+							{{ loggedOn.template }}
+						</span>
+					</template>
 					<span
 						v-else-if="message._error"
 						v-app-tooltip="$gettext(`Failed to send. Press to retry`)"

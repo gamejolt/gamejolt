@@ -33,6 +33,8 @@ export default class FormForumTopic extends mixins(Wrapper) {
 
 		if (this.method === 'edit' && this.model) {
 			this.setField('text_content', this.model.main_post.text_content);
+		} else {
+			this.setField('text_content', '');
 		}
 	}
 

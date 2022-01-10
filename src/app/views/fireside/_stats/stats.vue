@@ -5,54 +5,54 @@
 		<app-scroll-scroller thin>
 			<app-illustration :src="illEndOfFeed" />
 
-			<template v-if="!isStreaming">
-				<div v-if="expiresProgressValue !== null" class="-burnout-bar">
-					<app-progress-bar :percent="expiresProgressValue" thin />
+			<template v-if="!c.isDraft">
+				<template v-if="!c.isStreaming">
+					<div v-if="c.expiresProgressValue !== null" class="-burnout-bar">
+						<app-progress-bar :percent="c.expiresProgressValue" thin />
+					</div>
+					<div v-else class="-burnout-bar-placeholder" />
+				</template>
+
+				<div v-if="c.totalDurationText" class="text-center">
+					<span><translate>Fireside active for:</translate></span>
+					<span>
+						<b>{{ c.totalDurationText }}</b>
+					</span>
 				</div>
-				<div v-else class="-burnout-bar-placeholder" />
+
+				<div
+					v-if="!c.isStreaming && c.expiresDurationText"
+					class="text-center -burnout-timer"
+				>
+					<span><translate>Fire burns out in:</translate></span>
+					<span>
+						<b>{{ c.expiresDurationText }}</b>
+					</span>
+				</div>
 			</template>
 
-			<div v-if="totalDurationText" class="text-center">
-				<span><translate>Fireside active for:</translate></span>
-				<span>
-					<b>{{ totalDurationText }}</b>
-				</span>
-			</div>
-
-			<div v-if="!isStreaming && expiresDurationText" class="text-center -burnout-timer">
-				<span><translate>Fire burns out in:</translate></span>
-				<span>
-					<b>{{ expiresDurationText }}</b>
-				</span>
-			</div>
-
-			<template v-if="canPublish">
+			<template v-if="c.canPublish">
 				<app-button
-					v-app-tooltip.bottom="$gettext(`Make your Fireside public`)"
+					v-app-tooltip.bottom="$gettext(`Make your fireside public`)"
 					block
 					primary
 					solid
-					icon="notifications"
 					class="-publish-btn"
 					@click="onClickPublish()"
 				>
 					<translate>Publish</translate>
 				</app-button>
 				<p class="help-block">
-					<translate v-if="!fireside.community">
-						Your Fireside is current in draft. Only you can view it. Publish it to let
+					<translate>
+						Your fireside is currently in draft. Only you can view it. Publish it to let
 						everyone join!
-					</translate>
-					<translate v-else>
-						Your Fireside is currently in draft. Only you and the community
-						collaborators can view it. Publish it to let everyone join!
 					</translate>
 				</p>
 			</template>
 
-			<template v-if="!isStreaming && canExtend">
+			<template v-if="!c.isDraft && !c.isStreaming && c.canExtend">
 				<app-button
-					v-app-tooltip.bottom="$gettext(`Extend the duration of your Fireside`)"
+					v-app-tooltip.bottom="$gettext(`Extend the duration of your fireside`)"
 					block
 					icon="fireside"
 					class="-extend-btn"
@@ -62,24 +62,15 @@
 				</app-button>
 				<p class="help-block">
 					<translate>
-						Firesides stay open for as long as you're around. Throw a log on the fire to
-						keep your fireside going.
+						Firesides stay open for as long as you're around. Stoke the flames to keep
+						your fireside going.
 					</translate>
 				</p>
 			</template>
 		</app-scroll-scroller>
-		<div>
-			<app-card class="-share-card">
-				<p>
-					<translate>Share this Fireside</translate>
-				</p>
-				<div class="-copy-controls">
-					<input class="form-control" :value="shareUrl" />
-					<app-button trans @click="copyShareUrl">
-						<translate>Copy</translate>
-					</app-button>
-				</div>
-			</app-card>
+
+		<div v-if="!c.isDraft">
+			<app-fireside-share />
 		</div>
 	</div>
 </template>
@@ -111,14 +102,4 @@
 	animation-duration: 2.5s
 	animation-iteration-count: 1
 	animation-fill-mode: forwards
-
-.-share-card
-	margin-bottom: 0px
-	margin-top: 20px
-
-.-copy-controls
-	display: flex
-
-	> input
-		margin-right: 8px
 </style>

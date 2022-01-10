@@ -23,7 +23,7 @@
 			</div>
 		</div>
 		<template v-else>
-			<template v-if="hasChunks && filteredCommunities.top.length > 0">
+			<template v-if="filteredCommunities.top.length > 0">
 				<div class="row">
 					<template v-for="community of filteredCommunities.top" :key="community.id">
 						<app-community-chunk class="-chunk" :community="community" />
@@ -42,7 +42,7 @@
 					<app-community-card
 						v-app-track-event="`home:communities:click`"
 						:community="community"
-						:track-goto="hasChunks"
+						track-goto
 						elevate
 					/>
 				</div>

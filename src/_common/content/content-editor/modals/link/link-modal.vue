@@ -1,3 +1,5 @@
+<script lang="ts" src="./link-modal"></script>
+
 <template>
 	<app-modal>
 		<div class="modal-controls">
@@ -11,5 +13,3 @@
 		</div>
 	</app-modal>
 </template>
-
-<script lang="ts" src="./link-modal"></script>

@@ -33,11 +33,11 @@
 			name="confirm_password"
 			:label="$gettext(`dash.change_pass.confirm_password_label`)"
 		>
+			<!-- TODO(vue3): confirmed -->
 			<app-form-control
 				type="password"
+				:validators="[validateMinLength(4), validateMaxLength(300)]"
 				:rules="{
-					min: 4,
-					max: 300,
 					confirmed: 'password',
 				}"
 				:validate-on="['blur']"
