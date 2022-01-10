@@ -35,9 +35,9 @@
 
 			<p class="help-block">
 				<translate>Profile URL</translate>
+				{{ ' ' }}
 				<code>
-					{{ Environment.baseUrl }}/@
-					<strong>{{ formModel.username || '_' }}</strong>
+					{{ Environment.baseUrl }}/@<strong>{{ formModel.username || '_' }}</strong>
 				</code>
 			</p>
 

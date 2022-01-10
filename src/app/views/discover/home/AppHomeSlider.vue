@@ -139,6 +139,7 @@ function onPostLoaded(post: FiresidePost) {
 
 					<div class="-trouble-text -text-shadow">
 						<AppTranslate>Already have an account?</AppTranslate>
+						{{ ' ' }}
 						<a :href="Environment.authBaseUrl + '/login'">
 							<AppTranslate>Log in!</AppTranslate>
 						</a>

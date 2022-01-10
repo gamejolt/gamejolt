@@ -57,10 +57,13 @@
 
 			<p v-if="post.modified_by_user && post.modified_on" class="text-muted small">
 				<translate>Last modified on</translate>
+				{{ ' ' }}
 				<span :title="formatDate(post.modified_on, 'medium')">
 					{{ formatDate(post.modified_on, 'longDate') }}
 				</span>
+				{{ ' ' }}
 				<translate>by</translate>
+				{{ ' ' }}
 				<router-link
 					class="link-unstyled"
 					:to="{
@@ -72,6 +75,7 @@
 						{{ post.modified_by_user.display_name }}
 					</strong>
 				</router-link>
+				{{ ' ' }}
 				<small>@{{ post.modified_by_user.username }}</small>
 			</p>
 		</app-scroll-inview>

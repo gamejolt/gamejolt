@@ -53,6 +53,7 @@
 						</h5>
 						<div class="forum-topic-list-item-author">
 							<translate>by</translate>
+							{{ ' ' }}
 							<router-link
 								class="link-muted"
 								:to="{
@@ -63,6 +64,7 @@
 								{{ topic.user.display_name }}
 								<app-user-verified-tick :user="topic.user" />
 							</router-link>
+							{{ ' ' }}
 							<span class="tiny">@{{ topic.user.username }}</span>
 						</div>
 					</div>

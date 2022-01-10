@@ -164,6 +164,7 @@
 										:href="twitchAccount.platformLink"
 									>
 										<app-jolticon :icon="twitchAccount.icon" />
+										{{ ' ' }}
 										{{ twitchAccount.name }}
 									</app-link-external>
 								</div>
@@ -173,6 +174,7 @@
 										:href="twitterAccount.platformLink"
 									>
 										<app-jolticon :icon="twitterAccount.icon" />
+										{{ ' ' }}
 										<span>@</span>
 										{{ twitterAccount.name }}
 									</app-link-external>
@@ -183,6 +185,7 @@
 										:href="tumblrAccount.tumblrSelectedBlog.url"
 									>
 										<app-jolticon :icon="tumblrAccount.icon" />
+										{{ ' ' }}
 										{{ tumblrAccount.tumblrSelectedBlog.title }}
 									</app-link-external>
 								</div>
@@ -190,6 +193,7 @@
 							<div v-if="user.web_site">
 								<app-link-external class="link-unstyled" :href="user.web_site">
 									<app-jolticon icon="link" />
+									{{ ' ' }}
 									<translate>Website</translate>
 								</app-link-external>
 							</div>
