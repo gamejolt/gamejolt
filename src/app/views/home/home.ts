@@ -17,7 +17,7 @@ import { HomeFeedService } from './home-feed.service';
 	components: {
 		RouteHomeFeed: defineAsyncComponent(() => asyncRouteLoader(router, import('./feed.vue'))),
 		RouteDiscoverHome: defineAsyncComponent(() =>
-			asyncRouteLoader(router, import('../discover/home/home.vue'))
+			asyncRouteLoader(router, import('../discover/home/RouteDiscoverHome.vue'))
 		),
 	},
 })

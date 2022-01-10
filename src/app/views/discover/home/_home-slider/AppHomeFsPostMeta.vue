@@ -1,14 +1,26 @@
-<script lang="ts" src="./fs-post-meta"></script>
+<script lang="ts" setup>
+import { PropType } from 'vue';
+import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import AppUserAvatarImg from '../../../../../_common/user/user-avatar/img/img.vue';
+import AppCommunityOverlayPill from './AppCommunityOverlayPill.vue';
+
+defineProps({
+	post: {
+		type: Object as PropType<FiresidePost>,
+		required: true,
+	},
+});
+</script>
 
 <template>
 	<div class="-meta">
 		<div class="-avatar">
-			<app-user-avatar-img :user="post.user" />
+			<AppUserAvatarImg :user="post.user" />
 		</div>
 		<div class="-info">
 			<div class="-username">@{{ post.user.username }}</div>
 			<div class="-communities">
-				<app-community-overlay-pill
+				<AppCommunityOverlayPill
 					v-for="postCommunity of post.communities"
 					:key="postCommunity.id"
 					:community="postCommunity.community"

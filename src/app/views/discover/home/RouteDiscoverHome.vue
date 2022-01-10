@@ -1,3 +1,4 @@
+<script lang="ts">
 import { Options } from 'vue-property-decorator';
 import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
@@ -12,8 +13,8 @@ import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
 import socialImage from '../../../img/social/social-share-header.png';
 import { Store } from '../../../store/index';
-import AppHomeDefault from './home-default.vue';
-import AppHomeSlider from './home-slider.vue';
+import AppHomeDefault from './AppHomeDefault.vue';
+import AppHomeSlider from './AppHomeSlider.vue';
 
 @Options({
 	name: 'RouteDiscoverHome',
@@ -112,3 +113,15 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		);
 	}
 }
+</script>
+
+<template>
+	<app-home-default
+		v-if="split === 'default'"
+		:is-bootstrapped="isRouteBootstrapped"
+		:featured-item="featuredItem"
+		:featured-communities="featuredCommunities"
+		:featured-fireside="featuredFireside"
+	/>
+	<app-home-slider v-else-if="split === 'hero'" :posts="heroPosts" />
+</template>

@@ -1,9 +1,20 @@
-<script lang="ts" src="./community-overlay-pill"></script>
+<script lang="ts" setup>
+import { PropType } from 'vue';
+import { Community } from '../../../../../_common/community/community.model';
+import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
+
+defineProps({
+	community: {
+		type: Object as PropType<Community>,
+		required: true,
+	},
+});
+</script>
 
 <template>
 	<div class="-pill">
 		<span class="-img">
-			<app-community-thumbnail-img :community="community" />
+			<AppCommunityThumbnailImg :community="community" />
 		</span>
 		<span class="-content">
 			{{ community.name }}
