@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 import draggable from 'vuedraggable';
-import { useCardList } from './list.vue';
+import { useCardList } from './AppCardList.vue';
 
 defineProps({
 	itemKey: {

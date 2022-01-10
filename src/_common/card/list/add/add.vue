@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import AppExpand from '../../../expand/expand.vue';
 import { Screen } from '../../../screen/screen-service';
-import { useCardList } from '../list.vue';
+import { useCardList } from '../AppCardList.vue';
 
 defineProps({
 	label: {

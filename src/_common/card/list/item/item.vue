@@ -3,7 +3,7 @@ import { computed, toRaw, useSlots } from 'vue';
 import AppExpand from '../../../expand/expand.vue';
 import { Screen } from '../../../screen/screen-service';
 import AppCard from '../../card.vue';
-import { useCardList } from '../list.vue';
+import { useCardList } from '../AppCardList.vue';
 
 const props = defineProps({
 	item: {
