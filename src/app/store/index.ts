@@ -1,3 +1,4 @@
+import { reactive } from 'vue';
 import { RouteLocationNormalized } from 'vue-router';
 import { sync } from 'vuex-router-sync';
 import { buildUseStore, VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
@@ -668,7 +669,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 }
 
-export const store = new Store();
+export const store = reactive(new Store()) as Store;
 export const useStore = buildUseStore<Store>();
 
 // Sync the routes into the store.

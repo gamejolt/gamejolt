@@ -88,7 +88,7 @@ export function hijackLinks(router: Router, host: string) {
 		// Now try to match it against our routes and see if we got anything. If
 		// we match a 404 it's obviously wrong.
 		// TODO(vue3): I don't know what to do here...
-		const matched = router.getMatchedComponents(href);
+		const matched = router.resolve(href).matched.flatMap(i => i.components);
 		if (matched.length > 0 && matched[0] !== RouteError404) {
 			// We matched a route! Let's go to it and stop the browser from doing
 			// anything with the link click.

@@ -1,3 +1,4 @@
+import { reactive } from 'vue';
 import { useStore } from 'vuex';
 import { Action, Mutation, namespace, State } from 'vuex-class';
 import { StoreKey, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
@@ -112,4 +113,4 @@ export class AppStore extends VuexStore<AppStore, Actions, Mutations> {
 	}
 }
 
-export const appStore = new AppStore();
+export const appStore = reactive(new AppStore()) as AppStore;

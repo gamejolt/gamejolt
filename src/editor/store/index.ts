@@ -1,3 +1,4 @@
+import { reactive } from 'vue';
 import { VuexModule, VuexStore } from '../../utils/vuex';
 import {
 	Actions as AppActions,
@@ -22,4 +23,4 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	app!: AppStore;
 }
 
-export const store = new Store();
+export const store = reactive(new Store()) as Store;

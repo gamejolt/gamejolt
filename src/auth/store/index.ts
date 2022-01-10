@@ -1,3 +1,4 @@
+import { reactive } from 'vue';
 import { buildUseStore, VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
 import { Api } from '../../_common/api/api.service';
 import { Game } from '../../_common/game/game.model';
@@ -59,5 +60,5 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 }
 
-export const store = new Store();
+export const store = reactive(new Store()) as Store;
 export const useStore = buildUseStore<Store>();
