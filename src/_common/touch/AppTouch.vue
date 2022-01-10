@@ -360,12 +360,17 @@ function getEmitData(event: FlexibleTouchEvent, data: MovementData) {
 		x = event.clientX;
 		y = event.clientY;
 	} else if (isTouchEvent(event)) {
-		for (const touch of [...event.touches, ...event.changedTouches]) {
+		// If this is a touchEnd event, we may only get data from
+		// [changedTouches]. Grab them all, just in case.
+		const touchEvents = [...event.touches, ...event.changedTouches];
+
+		for (const touch of touchEvents) {
 			x += touch.clientX;
 			y += touch.clientY;
 		}
-		x = Math.round(x);
-		y = Math.round(y);
+
+		x = Math.round(x / touchEvents.length);
+		y = Math.round(y / touchEvents.length);
 	}
 
 	return {
