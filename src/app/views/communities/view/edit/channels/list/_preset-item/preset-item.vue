@@ -1,7 +1,7 @@
 <script lang="ts" src="./preset-item"></script>
 
 <template>
-	<app-card-list-item :id="elementId" :item="presetType">
+	<app-card-list-item :id="elementId" :item="{ presetType }">
 		<div class="card-title">
 			<h5>
 				{{ label }}

@@ -11,6 +11,9 @@ const props = defineProps({
 	isAdding: {
 		type: Boolean,
 	},
+	isDraggable: {
+		type: Boolean,
+	},
 });
 
 const emit = defineEmits({
@@ -22,31 +25,29 @@ provide(Key, c);
 </script>
 
 <script lang="ts">
-import { inject, InjectionKey, provide, reactive, ref, toRefs } from 'vue';
+import { inject, InjectionKey, provide, toRefs } from 'vue';
 
 const Key: InjectionKey<CardListController> = Symbol('card-list');
 export type CardListController = ReturnType<typeof createCardListController>;
 
-function createCardListController(p: typeof props, e: typeof emit) {
-	const { items, activeItem, isAdding } = toRefs(p);
+export function useCardList() {
+	return inject(Key, null);
+}
 
-	const isDraggable = ref(false);
+function createCardListController(p: typeof props, e: typeof emit) {
+	const { items, activeItem, isAdding, isDraggable } = toRefs(p);
 
 	function activate(item: any | null) {
 		e('activate', item);
 	}
 
-	return reactive({
+	return {
 		items,
 		activeItem,
 		isAdding,
 		isDraggable,
 		activate,
-	});
-}
-
-export function useCardList() {
-	return inject(Key)!;
+	};
 }
 </script>
 

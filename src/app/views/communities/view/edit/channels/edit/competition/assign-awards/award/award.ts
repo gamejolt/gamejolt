@@ -1,5 +1,6 @@
 import { Emit, Options } from 'vue-property-decorator';
 import { RouteLocationNormalized } from 'vue-router';
+import draggable from 'vuedraggable';
 import { Api } from '../../../../../../../../../../_common/api/api.service';
 import { CommunityCompetitionAward } from '../../../../../../../../../../_common/community/competition/award/award.model';
 import { CommunityCompetitionEntryAward } from '../../../../../../../../../../_common/community/competition/entry/award/award.model';
@@ -40,15 +41,12 @@ function makeRequest(route: RouteLocationNormalized, page = 1, filterValue = '')
 	return Api.sendRequest(url);
 }
 
-// TODO(vue3)
-// const draggable = require('vuedraggable');
-
 @Options({
 	name: 'RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAward',
 	components: {
 		AppLoading,
 		AppLoadingFade,
-		// draggable,
+		draggable,
 		AppPagination,
 	},
 	directives: {

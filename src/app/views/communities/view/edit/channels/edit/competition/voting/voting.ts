@@ -2,20 +2,19 @@ import { Inject, Options } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../../../../../utils/array';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import AppCardListAdd from '../../../../../../../../../_common/card/list/add/add.vue';
-import AppCardListDraggable from '../../../../../../../../../_common/card/list/draggable/draggable.vue';
 import AppCardListItem from '../../../../../../../../../_common/card/list/item/item.vue';
 import AppCardList from '../../../../../../../../../_common/card/list/list.vue';
 import { CommunityCompetitionAward } from '../../../../../../../../../_common/community/competition/award/award.model';
 import {
-	CompetitionPeriodPostComp,
-	CompetitionPeriodVoting,
+CompetitionPeriodPostComp,
+CompetitionPeriodVoting
 } from '../../../../../../../../../_common/community/competition/competition.model';
 import { CommunityCompetitionVotingCategory } from '../../../../../../../../../_common/community/competition/voting-category/voting-category.model';
 import { showErrorGrowl } from '../../../../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	RouteResolver,
+BaseRouteComponent,
+RouteResolver
 } from '../../../../../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../../../../../_common/scroll/scroll.service';
 import { AppTimeAgo } from '../../../../../../../../../_common/time/ago/ago';
@@ -27,20 +26,18 @@ import FormCommunityCompetitionVotingEdit from '../../../../../../../../componen
 import FormCommunityCompetitionVotingToggleTS from '../../../../../../../../components/forms/community/competition/voting/toggle/toggle';
 import FormCommunityCompetitionVotingToggle from '../../../../../../../../components/forms/community/competition/voting/toggle/toggle.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view.store';
-
-@Options({
 	name: 'RouteCommunitiesViewEditChannelsCompetitionVoting',
 	components: {
 		FormCommunityCompetitionVotingToggle,
 		AppCommunityCompetitionDate,
 		AppTimeAgo,
 		AppCardList,
-		AppCardListDraggable,
 		AppCardListItem,
 		AppCardListAdd,
 		FormCommunityCompetitionVotingCategory,
 		FormCommunityCompetitionAward,
 		FormCommunityCompetitionVotingEdit,
+		AppCardListDraggable,
 	},
 	directives: {
 		AppTooltip,

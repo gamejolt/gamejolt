@@ -40,50 +40,56 @@
 
 						<draggable
 							v-model="draggableItems"
-							:options="{
+							v-bind="{
 								handle: '.-drag-handle',
 								delay: 100,
 								delayOnTouchOnly: true,
 							}"
 							tag="tbody"
+							item-key="id"
 						>
-							<tr v-for="entry of awardedEntries" :key="entry.id" :item="entry">
-								<td>
-									<div class="-drag-container">
-										<div v-if="draggableItems.length > 1" class="-drag-handle">
-											<app-jolticon icon="arrows-v" />
+							<template #item="{ element }">
+								<tr>
+									<td>
+										<div class="-drag-container">
+											<div
+												v-if="draggableItems.length > 1"
+												class="-drag-handle"
+											>
+												<app-jolticon icon="arrows-v" />
+											</div>
+											<app-button
+												v-app-tooltip="
+													$gettext(`Remove assigned award from entry`)
+												"
+												icon="remove"
+												sparse
+												primary
+												@click="onClickUnassign(element)"
+											/>
 										</div>
-										<app-button
-											v-app-tooltip="
-												$gettext(`Remove assigned award from entry`)
+									</td>
+									<th>
+										<a @click="onClickShowEntry(element)">
+											{{ element.resource.title }}
+										</a>
+										<app-jolticon
+											v-if="element.is_removed"
+											v-app-tooltip.touchable="
+												$gettext(`This entry was hidden from the jam`)
 											"
-											icon="remove"
-											sparse
-											primary
-											@click="onClickUnassign(entry)"
+											class="text-muted"
+											icon="inactive"
 										/>
-									</div>
-								</td>
-								<th>
-									<a @click="onClickShowEntry(entry)">
-										{{ entry.resource.title }}
-									</a>
-									<app-jolticon
-										v-if="entry.is_removed"
-										v-app-tooltip.touchable="
-											$gettext(`This entry was hidden from the jam`)
-										"
-										class="text-muted"
-										icon="inactive"
-									/>
-								</th>
-								<td>
-									{{ entry.resource.developer.display_name }}
-									<small class="text-muted">
-										(@{{ entry.resource.developer.username }})
-									</small>
-								</td>
-							</tr>
+									</th>
+									<td>
+										{{ element.resource.developer.display_name }}
+										<small class="text-muted">
+											(@{{ element.resource.developer.username }})
+										</small>
+									</td>
+								</tr>
+							</template>
 						</draggable>
 					</table>
 				</div>

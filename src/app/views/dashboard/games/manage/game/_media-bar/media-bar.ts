@@ -1,4 +1,5 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
+import draggable from 'vuedraggable';
 import AppEditableOverlay from '../../../../../../../_common/editable-overlay/editable-overlay.vue';
 import { Game } from '../../../../../../../_common/game/game.model';
 import { MediaBarItemMaxHeight } from '../../../../../../../_common/game/media-bar/item/item';
@@ -8,12 +9,9 @@ import { GameMediaItemAddModal } from '../../../../../../components/game/media-i
 import { GameMediaItemEditModal } from '../../../../../../components/game/media-item/edit-modal/edit-modal.service';
 import { Media, RouteStore, RouteStoreModule } from '../../manage.store';
 
-// TODO(vue3)
-// const draggable = require('vuedraggable');
-
 @Options({
 	components: {
-		// draggable,
+		draggable,
 		AppScrollScroller,
 		AppGameMediaBarItem,
 		AppEditableOverlay,

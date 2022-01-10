@@ -1,7 +1,7 @@
 import { Options } from 'vue-property-decorator';
 import { arrayIndexBy } from '../../../../../../../../utils/array';
 import { Api } from '../../../../../../../../_common/api/api.service';
-import AppCardListDraggable from '../../../../../../../../_common/card/list/draggable/draggable.vue';
+import AppCardListDraggable from '../../../../../../../../_common/card/list/AppCardListDraggable.vue';
 import AppCardListItem from '../../../../../../../../_common/card/list/item/item.vue';
 import AppCardList from '../../../../../../../../_common/card/list/list.vue';
 import { formatCurrency } from '../../../../../../../../_common/filters/currency';
@@ -23,10 +23,10 @@ import { RouteStore, RouteStoreModule } from '../../../manage.store';
 	name: 'RouteDashGamesManageGamePackagesList',
 	components: {
 		AppCardList,
-		AppCardListDraggable,
 		AppCardListItem,
 		AppDashGameWizardControls,
 		AppGamePerms,
+		AppCardListDraggable,
 	},
 	directives: {
 		AppTooltip,

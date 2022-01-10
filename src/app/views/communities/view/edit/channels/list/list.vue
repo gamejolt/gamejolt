@@ -15,7 +15,7 @@
 				<p>
 					<translate>
 						Channels make it easy for your community members to organize their posts
-						into indvidual sub-topics.
+						into individual sub-topics.
 					</translate>
 				</p>
 			</div>
@@ -25,7 +25,7 @@
 				:items="communityPresetChannels"
 				:active-item="activeItem"
 				:is-adding="isShowingChannelAdd"
-				@activate="activeItem = $event"
+				@activate="onActivate"
 			>
 				<app-card-list-add
 					:label="$gettext(`Add Channel`)"
@@ -48,17 +48,16 @@
 				/>
 			</app-card-list>
 
-			<app-card-list v-if="community.channels" :items="community.channels">
-				<component
-					:is="hasFullChannelsPermission ? 'app-card-list-draggable' : 'span'"
-					@change="saveChannelSort"
-				>
-					<app-communities-edit-channel-list-item
-						v-for="channel of community.channels"
-						:key="channel.id"
-						:channel="channel"
-					/>
-				</component>
+			<app-card-list
+				v-if="community.channels"
+				:items="community.channels"
+				:is-draggable="hasFullChannelsPermission"
+			>
+				<app-card-list-draggable item-key="id" @change="saveChannelSort">
+					<template #item="{ element: channel }">
+						<app-communities-edit-channel-list-item :channel="channel" />
+					</template>
+				</app-card-list-draggable>
 			</app-card-list>
 
 			<template v-if="community.has_archived_channels">
@@ -73,17 +72,18 @@
 
 				<template v-if="routeStore.expandedArchivedChannels">
 					<template v-if="routeStore.archivedChannels.length">
-						<app-card-list :items="routeStore.archivedChannels">
-							<component
-								:is="hasFullChannelsPermission ? 'app-card-list-draggable' : 'span'"
+						<app-card-list
+							:items="routeStore.archivedChannels"
+							:is-draggable="hasFullChannelsPermission"
+						>
+							<app-card-list-draggable
+								item-key="id"
 								@change="saveChannelSortArchived"
 							>
-								<app-communities-edit-channel-list-item
-									v-for="channel of routeStore.archivedChannels"
-									:key="channel.id"
-									:channel="channel"
-								/>
-							</component>
+								<template #item="{ element: channel }">
+									<app-communities-edit-channel-list-item :channel="channel" />
+								</template>
+							</app-card-list-draggable>
 						</app-card-list>
 					</template>
 

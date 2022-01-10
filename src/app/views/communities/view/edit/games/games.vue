@@ -41,51 +41,48 @@
 
 			<br />
 
-			<app-card-list v-if="hasLinkedGames" :items="community.games">
-				<app-card-list-draggable @change="saveSort">
-					<app-card-list-item
-						v-for="game in community.games || []"
-						:id="`game-container-${game.id}`"
-						:key="game.id"
-						:item="game"
-					>
-						<div class="row">
-							<div class="col-xs-6 col-xs-offset-3 col-sm-2 col-sm-offset-0">
-								<router-link
-									:to="{ name: game.getSref(), params: game.getSrefParams() }"
-								>
-									<app-game-thumbnail-img :game="game" />
-								</router-link>
-
-								<br class="visible-xs" />
-							</div>
-							<div class="col-xs-12 col-sm-10">
-								<a
-									v-app-tooltip="$gettext(`Unlink Game`)"
-									class="card-remove"
-									@click.stop="onClickUnlinkGame(game)"
-								>
-									<app-jolticon icon="remove" />
-								</a>
-
-								<div class="card-title">
-									<h5>{{ game.title }}</h5>
-								</div>
-
-								<div v-if="!game.isVisible" class="card-meta card-meta-sm">
-									<translate
-										v-app-tooltip.bottom="
-											$gettext(
-												`This game is unlisted and won't show in the community sidebar until you publish it.`
-											)
-										"
+			<app-card-list v-if="hasLinkedGames" :items="community.games" is-draggable>
+				<app-card-list-draggable item-key="id" @change="saveSort">
+					<template #item="{ element: game }">
+						<app-card-list-item :id="`game-container-${game.id}`" :item="game">
+							<div class="row">
+								<div class="col-xs-6 col-xs-offset-3 col-sm-2 col-sm-offset-0">
+									<router-link
+										:to="{ name: game.getSref(), params: game.getSrefParams() }"
 									>
-										(Unlisted)
-									</translate>
+										<app-game-thumbnail-img :game="game" />
+									</router-link>
+
+									<br class="visible-xs" />
+								</div>
+								<div class="col-xs-12 col-sm-10">
+									<a
+										v-app-tooltip="$gettext(`Unlink Game`)"
+										class="card-remove"
+										@click.stop="onClickUnlinkGame(game)"
+									>
+										<app-jolticon icon="remove" />
+									</a>
+
+									<div class="card-title">
+										<h5>{{ game.title }}</h5>
+									</div>
+
+									<div v-if="!game.isVisible" class="card-meta card-meta-sm">
+										<translate
+											v-app-tooltip.bottom="
+												$gettext(
+													`This game is unlisted and won't show in the community sidebar until you publish it.`
+												)
+											"
+										>
+											(Unlisted)
+										</translate>
+									</div>
 								</div>
 							</div>
-						</div>
-					</app-card-list-item>
+						</app-card-list-item>
+					</template>
 				</app-card-list-draggable>
 			</app-card-list>
 		</app-community-perms>

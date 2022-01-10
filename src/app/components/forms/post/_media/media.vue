@@ -44,11 +44,17 @@
 						<draggable
 							v-model="internalItems"
 							style="display: inline-flex"
-							:options="{ delay: 100, delayOnTouchOnly: true }"
+							v-bind="{ delay: 100, delayOnTouchOnly: true }"
+							item-key="id"
 						>
-							<div v-for="item of internalItems" :key="item.id" class="-item">
-								<app-form-post-media-item :item="item" @remove="emitRemove(item)" />
-							</div>
+							<template #item="{ element }">
+								<div class="-item">
+									<app-form-post-media-item
+										:item="element"
+										@remove="emitRemove(element)"
+									/>
+								</div>
+							</template>
 						</draggable>
 					</div>
 				</app-scroll-scroller>

@@ -2,7 +2,7 @@ import { Options } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../../../utils/array';
 import { Api } from '../../../../../../../_common/api/api.service';
 import AppCardListAdd from '../../../../../../../_common/card/list/add/add.vue';
-import AppCardListDraggable from '../../../../../../../_common/card/list/draggable/draggable.vue';
+import AppCardListDraggable from '../../../../../../../_common/card/list/AppCardListDraggable.vue';
 import AppCardListItem from '../../../../../../../_common/card/list/item/item.vue';
 import AppCardList from '../../../../../../../_common/card/list/list.vue';
 import { GameSong } from '../../../../../../../_common/game/song/song.model';
@@ -21,8 +21,8 @@ import { RouteStore, RouteStoreModule } from '../../manage.store';
 	components: {
 		FormGameSong,
 		AppCardList,
-		AppCardListItem,
 		AppCardListDraggable,
+		AppCardListItem,
 		AppCardListAdd,
 		AppDashGameWizardControls,
 		AppLoadingFade,

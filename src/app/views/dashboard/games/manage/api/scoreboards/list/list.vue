@@ -33,111 +33,118 @@
 					:items="scoreTables"
 					:active-item="activeItem"
 					:is-adding="isAdding"
+					is-draggable
 					@activate="activeItem = $event"
 				>
-					<app-card-list-draggable @change="saveSort">
-						<app-card-list-item
-							v-for="(scoreTable, i) of scoreTables"
-							:key="scoreTable.id"
-							:item="scoreTable"
-						>
-							<!-- Can only remove if there is more than one score table left. -->
-							<a
-								v-if="scoreTables.length > 1"
-								class="card-remove"
-								@click.stop="removeTable(scoreTable)"
-							>
-								<app-jolticon icon="remove" />
-							</a>
+					<app-card-list-draggable item-key="id" @change="saveSort">
+						<template #item="{ element: scoreTable, index }">
+							<app-card-list-item :item="scoreTable">
+								<!-- Can only remove if there is more than one score table left. -->
+								<a
+									v-if="scoreTables.length > 1"
+									class="card-remove"
+									@click.stop="removeTable(scoreTable)"
+								>
+									<app-jolticon icon="remove" />
+								</a>
 
-							<div class="card-stats">
-								<div class="stat-big">
-									<div class="stat-big-label">
-										<translate>dash.games.scoreboards.table_id_label</translate>
+								<div class="card-stats">
+									<div class="stat-big">
+										<div class="stat-big-label">
+											<translate>
+												dash.games.scoreboards.table_id_label
+											</translate>
+										</div>
+										<div class="stat-big-digit">{{ scoreTable.id }}</div>
 									</div>
-									<div class="stat-big-digit">{{ scoreTable.id }}</div>
 								</div>
-							</div>
 
-							<div class="card-title">
-								<h4>
-									{{ scoreTable.name }}
-								</h4>
-							</div>
+								<div class="card-title">
+									<h4>
+										{{ scoreTable.name }}
+									</h4>
+								</div>
 
-							<div class="card-meta">
-								<span
-									v-if="i === 0"
-									v-app-tooltip="
-										$gettext(`dash.games.scoreboards.primary_tooltip`)
-									"
-									class="tag tag-highlight"
-								>
-									<translate>dash.games.scoreboards.primary_tag</translate>
-								</span>
-								<span
-									v-if="scoreTable.allow_guest_scores"
-									v-app-tooltip="$gettext(`dash.games.scoreboards.guest_tooltip`)"
-									class="tag"
-								>
-									<translate>dash.games.scoreboards.guest_tag</translate>
-								</span>
-								<span
-									v-if="scoreTable.unique_scores"
-									v-app-tooltip="
-										$gettext(`dash.games.scoreboards.unique_tooltip`)
-									"
-									class="tag"
-								>
-									<translate>dash.games.scoreboards.unique_tag</translate>
-								</span>
-								<span
-									v-if="
-										scoreTable.scores_sorting_direction ===
-										GameScoreTable.SORTING_DIRECTION_ASC
-									"
-									v-app-tooltip="$gettext(`dash.games.scoreboards.asc_tooltip`)"
-									class="tag"
-								>
-									<translate>dash.games.scoreboards.asc_tag</translate>
-								</span>
-								<span
-									v-if="
-										scoreTable.scores_sorting_direction ===
-										GameScoreTable.SORTING_DIRECTION_DESC
-									"
-									v-app-tooltip="$gettext(`dash.games.scoreboards.desc_tooltip`)"
-									class="tag"
-								>
-									<translate>dash.games.scoreboards.desc_tag</translate>
-								</span>
-							</div>
+								<div class="card-meta">
+									<span
+										v-if="index === 0"
+										v-app-tooltip="
+											$gettext(`dash.games.scoreboards.primary_tooltip`)
+										"
+										class="tag tag-highlight"
+									>
+										<translate>dash.games.scoreboards.primary_tag</translate>
+									</span>
+									<span
+										v-if="scoreTable.allow_guest_scores"
+										v-app-tooltip="
+											$gettext(`dash.games.scoreboards.guest_tooltip`)
+										"
+										class="tag"
+									>
+										<translate>dash.games.scoreboards.guest_tag</translate>
+									</span>
+									<span
+										v-if="scoreTable.unique_scores"
+										v-app-tooltip="
+											$gettext(`dash.games.scoreboards.unique_tooltip`)
+										"
+										class="tag"
+									>
+										<translate>dash.games.scoreboards.unique_tag</translate>
+									</span>
+									<span
+										v-if="
+											scoreTable.scores_sorting_direction ===
+											GameScoreTable.SORTING_DIRECTION_ASC
+										"
+										v-app-tooltip="
+											$gettext(`dash.games.scoreboards.asc_tooltip`)
+										"
+										class="tag"
+									>
+										<translate>dash.games.scoreboards.asc_tag</translate>
+									</span>
+									<span
+										v-if="
+											scoreTable.scores_sorting_direction ===
+											GameScoreTable.SORTING_DIRECTION_DESC
+										"
+										v-app-tooltip="
+											$gettext(`dash.games.scoreboards.desc_tooltip`)
+										"
+										class="tag"
+									>
+										<translate>dash.games.scoreboards.desc_tag</translate>
+									</span>
+								</div>
 
-							<div class="card-content">
-								{{ scoreTable.description }}
-							</div>
+								<div class="card-content">
+									{{ scoreTable.description }}
+								</div>
 
-							<div class="card-controls">
-								<!-- Don't propagate the click so that it doesn't open the accordion item. -->
-								<app-button
-									:to="{
-										name: 'dash.games.manage.api.scoreboards.scores.list',
-										params: { table: scoreTable.id },
-									}"
-									@click.stop
-								>
-									<translate>dash.games.scoreboards.scores_button</translate>
-								</app-button>
-							</div>
+								<div class="card-controls">
+									<!-- Don't propagate the click so that it doesn't open the accordion item. -->
+									<app-button
+										:to="{
+											name: 'dash.games.manage.api.scoreboards.scores.list',
+											params: { table: scoreTable.id },
+										}"
+										@click.stop
+									>
+										<translate>dash.games.scoreboards.scores_button</translate>
+									</app-button>
+								</div>
 
-							<template #body>
-								<form-game-score-table
-									:game="game"
-									:model="scoreTable"
-									@submit="onTableEdited"
-								/>
-							</template>
-						</app-card-list-item>
+								<template #body>
+									<form-game-score-table
+										:game="game"
+										:model="scoreTable"
+										@submit="onTableEdited"
+									/>
+								</template>
+							</app-card-list-item>
+						</template>
 					</app-card-list-draggable>
 
 					<app-card-list-add

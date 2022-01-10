@@ -1,4 +1,5 @@
-import { markRaw } from 'vue';
+import { markRaw, ref } from 'vue';
+import { setup } from 'vue-class-component';
 import { Inject, Options, Provide, Watch } from 'vue-property-decorator';
 import { Action, Mutation, State } from 'vuex-class';
 import {
@@ -85,7 +86,9 @@ export const CommunityThemeKey = 'community';
 })
 export default class RouteCommunitiesView extends BaseRouteComponent {
 	@Provide({ to: CommunityRouteStoreKey })
-	routeStore = new CommunityRouteStore();
+	routeStore = setup(() => {
+		return ref(new CommunityRouteStore());
+	});
 
 	@Inject({ from: AppPromotionStoreKey })
 	appPromotion!: AppPromotionStore;

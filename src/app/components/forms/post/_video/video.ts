@@ -7,7 +7,6 @@ import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { FiresidePostVideo } from '../../../../../_common/fireside/post/video/video-model';
 import AppFormLegend from '../../../../../_common/form-vue/AppFormLegend.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
-import AppFormControlUploadTS from '../../../../../_common/form-vue/controls/upload/upload';
 import { AppFocusWhen } from '../../../../../_common/form-vue/focus-when.directive';
 import {
 	BaseForm,
@@ -61,7 +60,7 @@ export default class AppFormPostVideo
 	extends mixins(Wrapper)
 	implements FormOnSubmit, FormOnLoad, FormOnSubmitError, FormOnSubmitSuccess
 {
-	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
+	@Prop({ type: Object }) post!: FiresidePost;
 	@Prop(propRequired(Boolean)) wasPublished!: boolean;
 
 	// These fields are populated through the form load.
@@ -79,7 +78,7 @@ export default class AppFormPostVideo
 	readonly formatNumber = formatNumber;
 
 	declare $refs: {
-		upload: AppFormControlUploadTS;
+		upload: typeof AppFormControlUpload;
 	};
 
 	@Emit('delete')
@@ -98,6 +97,10 @@ export default class AppFormPostVideo
 		return `/web/posts/manage/add-video/${this.post.id}`;
 	}
 
+	get videos() {
+		return this.post.videos || [];
+	}
+
 	get uploadProgress() {
 		const progressEvent = this.formModel._progress as ProgressEvent | null;
 		if (!progressEvent) {
@@ -112,7 +115,7 @@ export default class AppFormPostVideo
 	}
 
 	get uploadedVideo() {
-		const video = this.post.videos[0];
+		const video = this.videos.length ? this.videos[0] : null;
 		return video && video.provider === FiresidePostVideo.PROVIDER_GAMEJOLT ? video : null;
 	}
 
@@ -153,8 +156,8 @@ export default class AppFormPostVideo
 	}
 
 	onInit() {
-		if (this.post.videos.length) {
-			const video = this.post.videos[0];
+		if (this.videos.length) {
+			const video = this.videos[0];
 			if (video.provider === FiresidePostVideo.PROVIDER_GAMEJOLT) {
 				this.setVideoProvider(FiresidePostVideo.PROVIDER_GAMEJOLT);
 			}

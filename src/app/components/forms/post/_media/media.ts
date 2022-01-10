@@ -1,8 +1,8 @@
 import { Emit, mixins, Options, Prop } from 'vue-property-decorator';
+import draggable from 'vuedraggable';
 import { Api } from '../../../../../_common/api/api.service';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
-import AppFormControlUploadTS from '../../../../../_common/form-vue/controls/upload/upload';
 import {
 	BaseForm,
 	FormOnSubmit,
@@ -15,9 +15,6 @@ import { MediaItem } from '../../../../../_common/media-item/media-item-model';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
 import AppFormPostMediaItem from './item/item.vue';
 
-// TODO(vue3)
-// const draggable = require('vuedraggable');
-
 interface FormModel {
 	image: File[] | null;
 	_progress: ProgressEvent | null;
@@ -27,7 +24,7 @@ class Wrapper extends BaseForm<FormModel> {}
 
 @Options({
 	components: {
-		// draggable,
+		draggable,
 		AppScrollScroller,
 		AppImgResponsive,
 		AppFormPostMediaItem,
@@ -39,7 +36,7 @@ export default class AppFormPostMedia
 	extends mixins(Wrapper)
 	implements FormOnSubmit, FormOnSubmitSuccess, FormOnSubmitError
 {
-	@Prop(FiresidePost)
+	@Prop({ type: Object })
 	post!: FiresidePost;
 
 	@Prop(Number)
@@ -60,7 +57,8 @@ export default class AppFormPostMedia
 	isDropActive = false;
 
 	declare $refs: {
-		upload: AppFormControlUploadTS;
+		// TODO(vue3): convert to a controller
+		upload: typeof AppFormControlUpload;
 	};
 
 	@Emit('upload')

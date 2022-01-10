@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { computed, toRefs, useSlots } from 'vue';
+import { computed, toRaw, useSlots } from 'vue';
+import AppExpand from '../../../expand/expand.vue';
 import { Screen } from '../../../screen/screen-service';
 import AppCard from '../../card.vue';
 import { useCardList } from '../list.vue';
@@ -21,10 +22,11 @@ const props = defineProps({
 });
 
 const slots = useSlots();
-const list = useCardList()!;
-const { isDraggable } = toRefs(list);
+const { isDraggable, activeItem, activate } = useCardList()!;
 
-const isActive = computed(() => props.forceActive || list.activeItem === props.item);
+const isActive = computed(() => {
+	return props.forceActive || toRaw(activeItem.value) === toRaw(props.item);
+});
 // TODO(vue3): check
 const isExpandable = computed(() => !!slots.body);
 
@@ -33,7 +35,7 @@ function onClick() {
 		return;
 	}
 
-	list.activate(isActive.value ? null : props.item);
+	activate(isActive.value ? null : props.item);
 }
 </script>
 
@@ -53,11 +55,11 @@ function onClick() {
 		</AppCard>
 
 		<div class="card-list-item-body full-bleed-xs">
-			<app-expand :when="isActive">
+			<AppExpand :when="isActive">
 				<div class="well fill-offset" :class="{ 'well-row': Screen.isXs }">
 					<slot name="body" />
 				</div>
-			</app-expand>
+			</AppExpand>
 		</div>
 	</div>
 </template>
