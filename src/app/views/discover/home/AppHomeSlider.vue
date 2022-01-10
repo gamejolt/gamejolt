@@ -91,8 +91,10 @@ function _next() {
 	setTimeout(() => (shouldTransitionPosts.value = true), 8_000);
 }
 
-function onNextPostLoaded() {
-	nextPostLoaded.value = true;
+function onPostLoaded(post: FiresidePost) {
+	if (post === secondPost.value) {
+		nextPostLoaded.value = true;
+	}
 }
 </script>
 
@@ -151,17 +153,12 @@ function onNextPostLoaded() {
 
 		<div v-if="firstPost && secondPost" class="-posts">
 			<AppHomeFsPost
-				:key="firstPost.id"
+				v-for="post of [firstPost, secondPost]"
+				:key="post.id"
 				class="-post"
 				:class="{ '-transition': transitioningPosts }"
-				:post="firstPost"
-			/>
-			<AppHomeFsPost
-				:key="secondPost.id"
-				class="-post"
-				:class="{ '-transition': transitioningPosts }"
-				:post="secondPost"
-				@loaded="onNextPostLoaded()"
+				:post="post"
+				@loaded="onPostLoaded(post)"
 			/>
 		</div>
 

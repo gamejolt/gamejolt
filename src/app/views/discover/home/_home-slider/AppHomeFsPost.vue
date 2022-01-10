@@ -23,7 +23,6 @@ const { post } = toRefs(props);
 
 const videoController = ref(null as VideoPlayerController | null);
 const imgLoaded = ref(false);
-console.log('created');
 
 const mediaItem = computed(() => {
 	if (post.value.hasVideo) {
@@ -42,7 +41,6 @@ const video = computed(() => {
 });
 
 onMounted(() => {
-	console.log('moutned');
 	if (video.value?.postCardVideo) {
 		videoController.value = new VideoPlayerController(video.value.postCardVideo, null);
 
@@ -60,7 +58,6 @@ onMounted(() => {
 });
 
 function onImageLoad(isLoaded: boolean) {
-	console.log('image loaded', isLoaded);
 	imgLoaded.value = isLoaded;
 
 	if (isLoaded) {
