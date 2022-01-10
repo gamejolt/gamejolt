@@ -1,7 +1,7 @@
 import { Inject, Options } from 'vue-property-decorator';
 import AppCardListAdd from '../../../../../../../_common/card/list/add/add.vue';
+import AppCardList from '../../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListDraggable from '../../../../../../../_common/card/list/AppCardListDraggable.vue';
-import AppCardList from '../../../../../../../_common/card/list/list.vue';
 import { CommunityChannel } from '../../../../../../../_common/community/channel/channel.model';
 import {
 	Community,
