@@ -73,8 +73,12 @@ class Resolver {
 	payloadPromise?: ReturnType<typeof getPayload>;
 	payload: any | PayloadError | RouteLocationRedirect;
 	fromCache?: boolean;
+	canceled = false;
 
 	constructor(public componentName: string, public route: RouteLocationNormalized) {
+		// If there's already a resolver resolving for this component, cancel it
+		// first. Only one resolver at a time is valid.
+		_activeRouteResolvers.get(componentName)?.cancel();
 		_activeRouteResolvers.set(componentName, this);
 	}
 
@@ -90,20 +94,23 @@ class Resolver {
 		_activeRouteResolvers.delete(this.componentName);
 	}
 
-	// TODO(vue3): the route doesn't seem like it can be compared anymore
-	// isValid(currentRoute: RouteLocationNormalized) {
-	// 	return Resolver.resolvers.indexOf(this) !== -1 && this.route === currentRoute;
-	// }
+	cancel() {
+		this.canceled = true;
+	}
 }
 
 /**
- * Stores a mapping of all resolvers that are currently resolving, mapped the
+ * Stores a mapping of all resolvers that are currently resolving, mapped to the
  * route component's name that created it. We use this in order to resolve it
  * into the correct component instance.
  */
 const _activeRouteResolvers = new Map<string, Resolver>();
 
 function _clearActiveResolvers() {
+	for (const [_, resolver] of _activeRouteResolvers) {
+		resolver.cancel();
+	}
+
 	_activeRouteResolvers.clear();
 }
 
@@ -446,11 +453,10 @@ export class BaseRouteComponent extends Vue {
 			fromCache = HistoryCache.has(route, name);
 		}
 
-		// TODO(vue3)
-		// // If we are no longer resolving this resolver, let's early out.
-		// if (!resolver.isValid(this.$route)) {
-		// 	return;
-		// }
+		// If we are no longer resolving this resolver, let's early out.
+		if (resolver.canceled) {
+			return;
+		}
 
 		// We want to resolve the resolver before we do any of the early returns
 		// below, or it may be stuck in the resolvers list forever.
