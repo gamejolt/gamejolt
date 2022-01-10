@@ -6,9 +6,7 @@ export class GameHeaderModal {
 	static async show(game: Game) {
 		return await showModal<Game>({
 			modalId: 'GameHeader',
-			component: defineAsyncComponent(
-				() => import(/* webpackChunkName: "GameHeaderModal" */ './header-modal.vue')
-			),
+			component: defineAsyncComponent(() => import('./header-modal.vue')),
 			props: {
 				game,
 			},

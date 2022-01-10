@@ -19,9 +19,7 @@ export class CommunityMovePostModal {
 	) {
 		return await showModal<CommunityMovePostModalResult>({
 			modalId: 'CommunityMovePost',
-			component: defineAsyncComponent(
-				() => import(/* webpackChunkName: "CommunityMovePostModal" */ './modal.vue')
-			),
+			component: defineAsyncComponent(() => import('./modal.vue')),
 			props: { firesidePostCommunity, channels, post },
 			size: 'sm',
 		});

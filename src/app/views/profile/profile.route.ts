@@ -9,7 +9,7 @@ import { routeProfileVideos } from './videos/videos.route';
 
 export const routeProfile: RouteRecordRaw = {
 	path: '/@:username',
-	component: () => import(/* webpackChunkName: "routeProfile" */ './profile.vue'),
+	component: () => import('./profile.vue'),
 	children: [
 		routeProfileOverview,
 		routeProfileLibrary,

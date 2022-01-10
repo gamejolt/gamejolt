@@ -19,9 +19,7 @@ export class CommentThreadModal {
 
 		return await showModal<void>({
 			modalId: 'CommentThread-' + [model.constructor.name, model.id, commentId].join('-'),
-			component: defineAsyncComponent(
-				() => import(/* webpackChunkName: "CommentThreadModal" */ './modal.vue')
-			),
+			component: defineAsyncComponent(() => import('./modal.vue')),
 			props: {
 				model,
 				commentId,

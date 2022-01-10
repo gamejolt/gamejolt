@@ -7,9 +7,7 @@ export class BlockModal {
 		return await showModal<boolean>({
 			modalId: 'Block',
 			size: 'sm',
-			component: defineAsyncComponent(
-				() => import(/* webpackChunkName: "BlockModal" */ './modal.vue')
-			),
+			component: defineAsyncComponent(() => import('./modal.vue')),
 			props: { user },
 		});
 	}

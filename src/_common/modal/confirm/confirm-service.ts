@@ -6,9 +6,7 @@ export class ModalConfirm {
 		return await showModal<boolean>({
 			modalId: 'Confirm',
 			size: 'sm',
-			component: defineAsyncComponent(
-				() => import(/* webpackChunkName: "ModalConfirm" */ './confirm.vue')
-			),
+			component: defineAsyncComponent(() => import('./confirm.vue')),
 			props: { message, title, buttonType },
 		});
 	}

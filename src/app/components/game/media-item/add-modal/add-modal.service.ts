@@ -9,9 +9,7 @@ export class GameMediaItemAddModal {
 	static async show(game: Game) {
 		return await showModal<(GameScreenshot | GameVideo | GameSketchfab)[]>({
 			modalId: 'GameMediaItemAdd',
-			component: defineAsyncComponent(
-				() => import(/* webpackChunkName: "GameMediaItemAddModal" */ './add-modal.vue')
-			),
+			component: defineAsyncComponent(() => import('./add-modal.vue')),
 			props: {
 				game,
 			},

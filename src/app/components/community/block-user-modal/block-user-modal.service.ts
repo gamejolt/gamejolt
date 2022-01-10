@@ -7,12 +7,7 @@ export class CommunityBlockUserModal {
 	static async show(user: User, community: Community) {
 		return await showModal<boolean>({
 			modalId: 'CommunityBlockUser',
-			component: defineAsyncComponent(
-				() =>
-					import(
-						/* webpackChunkName: "CommunityBlockUserModal" */ './block-user-modal.vue'
-					)
-			),
+			component: defineAsyncComponent(() => import('./block-user-modal.vue')),
 			props: { user, community },
 			size: 'lg',
 		});

@@ -9,9 +9,7 @@ export class GameMediaItemEditModal {
 	static async show(game: Game, item: Media, onRemove: GameMediaItemEditModalRemoveCallback) {
 		return await showModal<Media>({
 			modalId: 'GameMediaItemEdit',
-			component: defineAsyncComponent(
-				() => import(/* webpackChunkName: "GameMediaItemEditModal" */ './edit-modal.vue')
-			),
+			component: defineAsyncComponent(() => import('./edit-modal.vue')),
 			props: {
 				game,
 				item,

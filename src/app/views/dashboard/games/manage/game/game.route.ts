@@ -16,7 +16,7 @@ import { routeDashGamesManageGameWizardFinish } from './wizard-finish/wizard-fin
 
 export const routeDashGamesManageGame: RouteRecordRaw = {
 	path: '',
-	component: () => import(/* webpackChunkName: "routeDashGamesManageGame" */ './game.vue'),
+	component: () => import('./game.vue'),
 	children: [
 		routeDashGamesManageGameOverview,
 		routeDashGamesManageGameDetails,

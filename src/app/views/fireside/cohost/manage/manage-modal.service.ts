@@ -7,9 +7,7 @@ export class CohostManageModal {
 		return await showModal({
 			modalId: 'CohostManage',
 			size: 'sm',
-			component: defineAsyncComponent(
-				() => import(/* webpackChunkName: "CohostManageModal" */ './manage-modal.vue')
-			),
+			component: defineAsyncComponent(() => import('./manage-modal.vue')),
 			props: { controller },
 		});
 	}

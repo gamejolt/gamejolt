@@ -7,9 +7,7 @@ export class FiresideChatMembersModal {
 	static async show(chatUsers: ChatUserCollection, chatRoom: ChatRoom) {
 		return await showModal<void>({
 			modalId: 'firesideChatMembers',
-			component: defineAsyncComponent(
-				() => import(/* webpackChunkName: "FiresideChatMembersModal" */ './modal.vue')
-			),
+			component: defineAsyncComponent(() => import('./modal.vue')),
 			props: {
 				chatUsers,
 				chatRoom,

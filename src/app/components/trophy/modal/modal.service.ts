@@ -6,9 +6,7 @@ export class TrophyModal {
 	static async show(userTrophy: UserBaseTrophy) {
 		return await showModal<void>({
 			modalId: 'Trophy',
-			component: defineAsyncComponent(
-				() => import(/* webpackChunkName: "TrophyModal" */ './modal.vue')
-			),
+			component: defineAsyncComponent(() => import('./modal.vue')),
 			props: {
 				userTrophy,
 			},

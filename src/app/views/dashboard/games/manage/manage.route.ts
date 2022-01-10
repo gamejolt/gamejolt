@@ -9,7 +9,7 @@ import { routeDashGamesManageSite } from './site/site.route';
 
 export const routeDashGamesManage: RouteRecordRaw = {
 	path: '/dashboard/games/:id(\\d+)',
-	component: () => import(/* webpackChunkName: "routeDashGamesManage" */ './manage.vue'),
+	component: () => import('./manage.vue'),
 	children: [
 		routeDashGamesManageGame,
 		routeDashGamesManageApi,

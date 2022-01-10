@@ -6,9 +6,7 @@ export class GamePlaylistSaveModal {
 	static async show(collection?: GameCollection) {
 		return await showModal<GameCollection>({
 			modalId: 'GamePlaylistSave',
-			component: defineAsyncComponent(
-				() => import(/* webpackChunkName: "GamePlaylistSaveModal" */ './save-modal.vue')
-			),
+			component: defineAsyncComponent(() => import('./save-modal.vue')),
 			props: { collection },
 			size: 'sm',
 		});

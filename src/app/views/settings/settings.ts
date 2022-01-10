@@ -15,10 +15,7 @@ import AppPageHeader from '../../components/page-header/page-header.vue';
 		AppScrollAffix,
 		FormSettings,
 		FormSettingsDev: defineAsyncComponent(
-			() =>
-				import(
-					/* webpackChunkName: "FormSettingsDev" */ '../../components/forms/settings/dev.vue'
-				)
+			() => import('../../components/forms/settings/dev.vue')
 		),
 	},
 	directives: {

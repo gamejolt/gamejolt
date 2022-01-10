@@ -10,6 +10,6 @@ if (GJ_IS_DESKTOP_APP) {
 
 export const routeLibrary: RouteRecordRaw = {
 	path: '/library',
-	component: () => import(/* webpackChunkName: "routeLibrary" */ './library'),
+	component: () => import('./library'),
 	children,
 };

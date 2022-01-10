@@ -14,9 +14,7 @@ export class GameSupportersModal {
 		const { game, supporters, supporterCount } = options;
 		return await showModal<void>({
 			modalId: 'GameSupporters',
-			component: defineAsyncComponent(
-				() => import(/* webpackChunkName: "GameSupportersModal" */ './modal.vue')
-			),
+			component: defineAsyncComponent(() => import('./modal.vue')),
 			props: {
 				game,
 				supporters,

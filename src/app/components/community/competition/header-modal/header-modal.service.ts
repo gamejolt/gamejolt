@@ -6,12 +6,7 @@ export class CommunityCompetitionHeaderModal {
 	static async show(competition: CommunityCompetition) {
 		return await showModal<CommunityCompetition>({
 			modalId: 'CommunityCompetitionHeader',
-			component: defineAsyncComponent(
-				() =>
-					import(
-						/* webpackChunkName: "CommunityCompetitionHeaderModal" */ './header-modal.vue'
-					)
-			),
+			component: defineAsyncComponent(() => import('./header-modal.vue')),
 			props: {
 				competition,
 			},

@@ -3,5 +3,5 @@ import { RouteRecordRaw } from 'vue-router';
 export const routeLandingMarketplace: RouteRecordRaw = {
 	name: 'landing.marketplace',
 	path: '/marketplace',
-	component: () => import(/* webpackChunkName: "routeLandingMarketplace" */ './marketplace.vue'),
+	component: () => import('./marketplace.vue'),
 };

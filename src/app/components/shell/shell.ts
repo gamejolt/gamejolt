@@ -33,12 +33,8 @@ import AppShellTopNav from './top-nav/top-nav.vue';
 		AppShellHotBottom,
 		AppShellCbar,
 		AppMinbar,
-		AppShellBanner: defineAsyncComponent(
-			() => import(/* webpackChunkName: "shell" */ './banner/banner.vue')
-		),
-		AppChatWindows: defineAsyncComponent(
-			() => import(/* webpackChunkName: "chat" */ '../chat/windows/windows.vue')
-		),
+		AppShellBanner: defineAsyncComponent(() => import('./banner/banner.vue')),
+		AppChatWindows: defineAsyncComponent(() => import('../chat/windows/windows.vue')),
 		AppStickerLayer,
 		AppClientBase,
 		AppClientShell,

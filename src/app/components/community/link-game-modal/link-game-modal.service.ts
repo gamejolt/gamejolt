@@ -7,10 +7,7 @@ export class CommunityLinkGameModal {
 	static async show(community: Community) {
 		return await showModal<Game>({
 			modalId: 'CommunityLinkGame',
-			component: defineAsyncComponent(
-				() =>
-					import(/* webpackChunkName: "CommunityLinkGameModal" */ './link-game-modal.vue')
-			),
+			component: defineAsyncComponent(() => import('./link-game-modal.vue')),
 			props: { community },
 			size: 'sm',
 		});

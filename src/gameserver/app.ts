@@ -11,36 +11,13 @@ import { Store } from './store/index';
 @Options({
 	components: {
 		AppCommonShell,
-		AppEmbedHtml: defineAsyncComponent(
-			() =>
-				import(/* webpackChunkName: "gameserverHtml" */ './components/embed/html/html.vue')
-		),
-		AppEmbedFlash: defineAsyncComponent(
-			() =>
-				import(
-					/* webpackChunkName: "gameserverFlash" */ './components/embed/flash/flash.vue'
-				)
-		),
-		AppEmbedUnity: defineAsyncComponent(
-			() =>
-				import(
-					/* webpackChunkName: "gameserverUnity" */ './components/embed/unity/unity.vue'
-				)
-		),
-		AppEmbedApplet: defineAsyncComponent(
-			() =>
-				import(
-					/* webpackChunkName: "gameserverApplet" */ './components/embed/applet/applet.vue'
-				)
-		),
-		AppEmbedRom: defineAsyncComponent(
-			() => import(/* webpackChunkName: "gameserverRom" */ './components/embed/rom/rom.vue')
-		),
+		AppEmbedHtml: defineAsyncComponent(() => import('./components/embed/html/html.vue')),
+		AppEmbedFlash: defineAsyncComponent(() => import('./components/embed/flash/flash.vue')),
+		AppEmbedUnity: defineAsyncComponent(() => import('./components/embed/unity/unity.vue')),
+		AppEmbedApplet: defineAsyncComponent(() => import('./components/embed/applet/applet.vue')),
+		AppEmbedRom: defineAsyncComponent(() => import('./components/embed/rom/rom.vue')),
 		AppEmbedSilverlight: defineAsyncComponent(
-			() =>
-				import(
-					/* webpackChunkName: "gameserverSilverlight" */ './components/embed/silverlight/silverlight.vue'
-				)
+			() => import('./components/embed/silverlight/silverlight.vue')
 		),
 	},
 })

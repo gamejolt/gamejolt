@@ -6,9 +6,7 @@ export class CommunityHeaderModal {
 	static async show(community: Community) {
 		return await showModal<Community>({
 			modalId: 'CommunityHeader',
-			component: defineAsyncComponent(
-				() => import(/* webpackChunkName: "CommunityHeaderModal" */ './modal.vue')
-			),
+			component: defineAsyncComponent(() => import('./modal.vue')),
 			props: {
 				community,
 			},

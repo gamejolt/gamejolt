@@ -6,12 +6,7 @@ export class GameDevStageSelectorConfirmModal {
 	static async show(game: Game, stage: number) {
 		return await showModal<boolean>({
 			modalId: 'GameDevStageSelectorConfirm-' + game.id,
-			component: defineAsyncComponent(
-				() =>
-					import(
-						/* webpackChunkName: "GameDevStageSelectorConfirmModal" */ './confirm.vue'
-					)
-			),
+			component: defineAsyncComponent(() => import('./confirm.vue')),
 			props: { game, stage },
 			size: 'sm',
 		});

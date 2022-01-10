@@ -11,12 +11,7 @@ export class CommunityChannelChangeUrlModal {
 	) {
 		return await showModal<CommunityChannel>({
 			modalId: 'CommunityChannelChangeUrl',
-			component: defineAsyncComponent(
-				() =>
-					import(
-						/* webpackChunkName: "CommunityChannelChangeUrlModal" */ './change-url-modal.vue'
-					)
-			),
+			component: defineAsyncComponent(() => import('./change-url-modal.vue')),
 			props: { channel, community, channels },
 			size: 'sm',
 		});

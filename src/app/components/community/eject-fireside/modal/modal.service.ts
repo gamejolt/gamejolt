@@ -10,9 +10,7 @@ export class CommunityEjectFiresideModal {
 	static async show(firesideCommunity: FiresideCommunity, fireside: Fireside) {
 		return await showModal<CommunityEjectFiresideModalResult>({
 			modalId: 'CommunityEjectFireside',
-			component: defineAsyncComponent(
-				() => import(/* webpackChunkName: "CommunityEjectFiresideModal" */ './modal.vue')
-			),
+			component: defineAsyncComponent(() => import('./modal.vue')),
 			props: { firesideCommunity, fireside },
 			size: 'sm',
 		});

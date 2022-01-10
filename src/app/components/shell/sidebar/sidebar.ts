@@ -12,9 +12,7 @@ import AppShellSidebarLibrary from './library/library.vue';
 const components = {
 	AppScrollScroller,
 	AppShortkey,
-	AppShellSidebarChat: defineAsyncComponent(
-		() => import(/* webpackChunkName: "chat" */ './chat/chat.vue')
-	),
+	AppShellSidebarChat: defineAsyncComponent(() => import('./chat/chat.vue')),
 	AppShellSidebarLibrary,
 	AppShellSidebarContext,
 };

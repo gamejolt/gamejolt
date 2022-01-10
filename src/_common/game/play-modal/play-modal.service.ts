@@ -75,9 +75,7 @@ export class GamePlayModal {
 
 		await showModal({
 			modalId: 'GamePlay',
-			component: defineAsyncComponent(
-				() => import(/* webpackChunkName: "GamePlayModal" */ './play-modal.vue')
-			),
+			component: defineAsyncComponent(() => import('./play-modal.vue')),
 			props: { game, build, url, canMinimize },
 			noBackdrop: true,
 			noBackdropClose: true,

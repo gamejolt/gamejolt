@@ -12,9 +12,7 @@ export class StreamSetupModal {
 
 		return await showModal<void>({
 			modalId: ModalId,
-			component: defineAsyncComponent(
-				() => import(/* webpackChunkName: "FiresideStreamSetup" */ './setup-modal.vue')
-			),
+			component: defineAsyncComponent(() => import('./setup-modal.vue')),
 			props: {
 				c,
 			},
