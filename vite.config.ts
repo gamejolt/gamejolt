@@ -1,7 +1,13 @@
-import vue from '@vitejs/plugin-vue';
+import vue, { Options as VueOptions } from '@vitejs/plugin-vue';
 import * as path from 'path';
-import { defineConfig } from 'vite';
+import { defineConfig, UserConfig as ViteUserConfig } from 'vite';
+import { injectHtml } from 'vite-plugin-html';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
+
+const ssr = !!process.env.SSR;
+const onlyInSSR = <T extends object>(value: Partial<T>): Partial<T> | {} => (ssr ? value : {});
+
+const gjSection = process.env['GJSECTION'] || 'app';
 
 const noopDirectiveTransform = () => ({ props: [] });
 
@@ -20,24 +26,33 @@ const stylusOptions = {
 export default defineConfig({
 	plugins: [
 		vue({
-			// template: {
-			// 	compilerOptions: {
-			// 		// For all directives, we have to transform them when used
-			// 		// in SSR. We usually just want to not process during SSR
-			// 		// since directives are usually for dynamic work.
-			// 		directiveTransforms: {
-			// 			translate: noopDirectiveTransform,
-			// 		},
-			// 	},
-			// },
+			...onlyInSSR<VueOptions>({
+				template: {
+					compilerOptions: {
+						// For all directives, we have to transform them when used
+						// in SSR. We usually just want to not process during SSR
+						// since directives are usually for dynamic work.
+						directiveTransforms: {
+							translate: noopDirectiveTransform,
+						},
+					},
+				},
+			}),
 		}),
 		md({
 			mode: [MarkdownMode.HTML],
 		}),
+		injectHtml({ data: { GJ_SECTION: gjSection } }),
 	],
 	root: 'src',
 	server: {
 		port: 8080,
+	},
+	build: {
+		emptyOutDir: true,
+		...onlyInSSR<NonNullable<ViteUserConfig['build']>>({
+			ssr: path.join(gjSection, 'server.ts'),
+		}),
 	},
 	resolve: {
 		alias: {
@@ -54,7 +69,7 @@ export default defineConfig({
 		},
 	},
 	define: {
-		GJ_SECTION: JSON.stringify('auth'),
+		GJ_SECTION: JSON.stringify(gjSection),
 		GJ_IS_DESKTOP_APP: JSON.stringify(false),
 		GJ_IS_MOBILE_APP: JSON.stringify(false),
 		GJ_ENVIRONMENT: JSON.stringify('production'),
@@ -63,14 +78,16 @@ export default defineConfig({
 		GJ_WITH_UPDATER: JSON.stringify(false),
 	},
 
-	// I guess this is still experimental or something, so they don't include it
-	// in the config typing?
-	ssr: {
-		noExternal: [
-			// These modules for whatever reason don't work being
-			// required server-side directly and must be bundled into
-			// the build.
-			/^@popperjs/,
-		],
-	},
+	...onlyInSSR<ViteUserConfig>({
+		// I guess this is still experimental or something, so they don't include it
+		// in the config typing?
+		ssr: {
+			noExternal: [
+				// These modules for whatever reason don't work being
+				// required server-side directly and must be bundled into
+				// the build.
+				/^@popperjs/,
+			],
+		},
+	}),
 });

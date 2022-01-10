@@ -17,8 +17,8 @@
 		"analyze-bundle": "gulp --analyze-bundle",
 		"lint": "eslint --ext .js,.vue src",
 		"build:app": "gulp --production --app",
-		"build:web": "vite build --outDir build/web",
-		"build:server": "vite build --outDir build/server --ssr src/auth/server.ts"
+		"build:web": "vite build --outDir ../build/web --ssrManifest",
+		"build:server": "cross-env SSR=1 vite build --outDir ../build/server"
 	},
 	"devDependencies": {
 		"@popperjs/core": "2.4.0",
@@ -58,6 +58,7 @@
 		"codemirror": "5.53.2",
 		"core-js": "3.6.5",
 		"cropperjs": "1.5.5",
+		"cross-env": "^7.0.3",
 		"css-element-queries": "1.2.1",
 		"date-fns": "2.12.0",
 		"eslint": "7.32.0",
@@ -66,7 +67,6 @@
 		"firebase": "9.0.0-beta.6",
 		"first-input-delay": "0.1.3",
 		"follow-redirects": "1.4.1",
-		"readdirp": "3.6.0",
 		"gulp": "gulpjs/gulp#4.0",
 		"gulp-angular-gettext": "2.2.0",
 		"gulp-clean": "0.3.2",
@@ -91,6 +91,7 @@
 		"prosemirror-state": "1.3.3",
 		"prosemirror-view": "1.14.13",
 		"qs": "6.9.3",
+		"readdirp": "3.6.0",
 		"resize-observer-polyfill": "1.5.1",
 		"sanitize-html": "1.19.1",
 		"shaka-player": "3.0.5",
@@ -107,6 +108,7 @@
 		"ua-parser-js": "0.7.21",
 		"undertaker-forward-reference": "1.0.2",
 		"vite": "2.7.10",
+		"vite-plugin-html": "2.1.2",
 		"vite-plugin-markdown": "2.0.2",
 		"vue": "3.2.26",
 		"vue-class-component": "8.0.0-rc.1",
