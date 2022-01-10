@@ -1,7 +1,7 @@
 import { Vue } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
 import AppCard from '../../../../_common/card/card.vue';
-import AppIllustration from '../../../../_common/illustration/illustration.vue';
+import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import AppShareCard from '../../../../_common/share/card/card.vue';

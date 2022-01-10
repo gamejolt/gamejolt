@@ -18,7 +18,7 @@ import { AppAuthRequired as vAppAuthRequired } from '../../auth/auth-required-di
 import { Collaborator } from '../../collaborator/collaborator.model';
 import { Environment } from '../../environment/environment.service';
 import { formatNumber } from '../../filters/number';
-import AppIllustration from '../../illustration/illustration.vue';
+import AppIllustration from '../../illustration/AppIllustration.vue';
 import AppLoading from '../../loading/loading.vue';
 import AppMessageThreadAdd from '../../message-thread/add/add.vue';
 import AppMessageThread from '../../message-thread/message-thread.vue';

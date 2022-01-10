@@ -6,7 +6,7 @@ import { Connection } from '../../../_common/connection/connection-service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { BaseRouteComponent } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
-import { AppThemeSvg } from '../../../_common/theme/svg/svg';
+import AppThemeSvg from '../../../_common/theme/svg/AppThemeSvg.vue';
 import AppTranslateLangSelector from '../../../_common/translate/lang-selector/lang-selector.vue';
 import AppCoverImg from '../../components/AppCoverImg.vue';
 import AppGameCoverCredits from '../../components/game-cover-credits/game-cover-credits.vue';

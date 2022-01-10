@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { formatDate } from '../../../../../_common/filters/date';
-import AppIllustration from '../../../../../_common/illustration/illustration.vue';
+import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppScrollScroller, {

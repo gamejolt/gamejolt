@@ -6,7 +6,7 @@ import {
 	inviteFiresideHost,
 	removeFiresideHost,
 } from '../../../../../_common/fireside/fireside.model';
-import AppIllustration from '../../../../../_common/illustration/illustration.vue';
+import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import { BaseModal } from '../../../../../_common/modal/base';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import AppUserAvatarImg from '../../../../../_common/user/user-avatar/img/img.vue';

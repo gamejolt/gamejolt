@@ -8,7 +8,7 @@ import AppGameThumbnail from '../../../../_common/game/thumbnail/thumbnail.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
+import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { imageJolt } from '../../../img/images';
 import { Store } from '../../../store/index';

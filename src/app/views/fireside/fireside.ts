@@ -9,7 +9,7 @@ import AppExpand from '../../../_common/expand/expand.vue';
 import AppFadeCollapse from '../../../_common/fade-collapse/fade-collapse.vue';
 import { formatNumber } from '../../../_common/filters/number';
 import { Fireside } from '../../../_common/fireside/fireside.model';
-import AppIllustration from '../../../_common/illustration/illustration.vue';
+import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import AppLoading from '../../../_common/loading/loading.vue';
 import { Meta } from '../../../_common/meta/meta-service';
 import { Navigate } from '../../../_common/navigate/navigate.service';
@@ -31,10 +31,10 @@ import AppChatWindowOutput from '../../components/chat/window/output/output.vue'
 import AppChatWindowSend from '../../components/chat/window/send/send.vue';
 import { AppFiresideContainer } from '../../components/fireside/container/container';
 import {
-createFiresideController,
-FiresideController,
-getFiresideLink,
-toggleStreamVideoStats
+	createFiresideController,
+	FiresideController,
+	getFiresideLink,
+	toggleStreamVideoStats,
 } from '../../components/fireside/controller/controller';
 import { illEndOfFeed, illMaintenance, illNoCommentsSmall } from '../../img/ill/illustrations';
 import { store } from '../../store';
@@ -111,7 +111,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	readonly toggleStreamVideoStats = toggleStreamVideoStats;
 	readonly illNoCommentsSmall = illNoCommentsSmall;
 	readonly illMaintenance = illMaintenance;
-	readonly illEndOfFeed= illEndOfFeed;
+	readonly illEndOfFeed = illEndOfFeed;
 
 	videoWidth = 0;
 	videoHeight = 0;

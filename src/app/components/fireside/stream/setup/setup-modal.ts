@@ -1,5 +1,5 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import AppIllustration from '../../../../../_common/illustration/illustration.vue';
+import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import { BaseModal } from '../../../../../_common/modal/base';
 import { illNoCommentsSmall } from '../../../../img/ill/illustrations';
 import { FiresideController } from '../../controller/controller';

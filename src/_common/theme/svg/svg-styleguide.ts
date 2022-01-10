@@ -11,7 +11,7 @@ import { BaseForm } from '../../form-vue/form.service';
 import { AppTheme } from '../theme';
 import { Theme } from '../theme.model';
 import { ThemeState, ThemeStore } from '../theme.store';
-import { AppThemeSvg } from './svg';
+import AppThemeSvg from './svg';
 
 interface VueColor {
 	hex: string | null;

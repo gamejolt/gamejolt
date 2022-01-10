@@ -1,7 +1,7 @@
 import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
-import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
+import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { imageJolt } from '../../../img/images';

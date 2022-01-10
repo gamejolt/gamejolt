@@ -5,7 +5,7 @@ import { Api } from '../../../../../_common/api/api.service';
 import { CommunityCompetitionEntry } from '../../../../../_common/community/competition/entry/entry.model';
 import { CommunityCompetitionVotingCategory } from '../../../../../_common/community/competition/voting-category/voting-category.model';
 import { formatNumber } from '../../../../../_common/filters/number';
-import AppIllustration from '../../../../../_common/illustration/illustration.vue';
+import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import AppPagination from '../../../../../_common/pagination/pagination.vue';
 import AppPopper from '../../../../../_common/popper/popper.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';

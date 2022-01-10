@@ -1,4 +1,21 @@
-<script lang="ts" src="./illustration"></script>
+<script lang="ts" setup>
+import { computed, useSlots } from 'vue';
+import AppThemeSvg from '../theme/svg/AppThemeSvg.vue';
+
+defineProps({
+	src: {
+		type: String,
+		required: true,
+	},
+	sm: {
+		type: Boolean,
+	},
+});
+
+const slots = useSlots();
+
+const hasContent = computed(() => !!slots.default);
+</script>
 
 <template>
 	<div class="-container">

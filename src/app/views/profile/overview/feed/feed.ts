@@ -4,7 +4,7 @@ import { State } from 'vuex-class';
 import { Api } from '../../../../../_common/api/api.service';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
-import AppIllustration from '../../../../../_common/illustration/illustration.vue';
+import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';

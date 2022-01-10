@@ -12,7 +12,7 @@ import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.
 import { formatDate } from '../../../../../_common/filters/date';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
-import AppIllustration from '../../../../../_common/illustration/illustration.vue';
+import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import {
 	asyncRouteLoader,
 	BaseRouteComponent,

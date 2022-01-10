@@ -10,7 +10,7 @@ import { Environment } from '../../../../_common/environment/environment.service
 import { AppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
+import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { imageGameJoltLogo, imageJolt } from '../../../img/images';
 import { Store } from '../../../store/index';

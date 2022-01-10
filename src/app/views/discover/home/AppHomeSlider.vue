@@ -5,7 +5,7 @@ import AppAppButtons from '../../../../_common/app-buttons/app-buttons.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
+import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { imageGameJoltLogo } from '../../../img/images';

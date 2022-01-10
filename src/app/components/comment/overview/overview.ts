@@ -14,7 +14,7 @@ import { DisplayMode } from '../../../../_common/comment/modal/modal.service';
 import { CommentThreadModal } from '../../../../_common/comment/thread/modal.service';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
-import AppIllustration from '../../../../_common/illustration/illustration.vue';
+import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { Model } from '../../../../_common/model/model.service';
 import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';

@@ -7,7 +7,7 @@ import { Community } from '../../../../../_common/community/community.model';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
-import AppIllustration from '../../../../../_common/illustration/illustration.vue';
+import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import AppActivityFeedNewButton from '../../../../components/activity/feed/new-button/new-button.vue';
