@@ -17,8 +17,8 @@
 		"analyze-bundle": "gulp --analyze-bundle",
 		"lint": "eslint --ext .js,.vue src",
 		"build:app": "gulp --production --app",
-		"build:web": "vite build --outDir ../build/web --ssrManifest",
-		"build:server": "cross-env SSR=1 vite build --outDir ../build/server"
+		"build:web": "vite build --outDir ../build/web --ssrManifest --debug",
+		"build:server": "cross-env SSR=1 vite build --outDir ../build/server --debug"
 	},
 	"devDependencies": {
 		"@popperjs/core": "2.4.0",

@@ -112,6 +112,7 @@ export class Api {
 		postData?: any,
 		options: RequestOptions = {}
 	): Promise<any> {
+		console.log('sending request: ' + uri);
 		options = {
 			...(<RequestOptions>{
 				ignoreLoadingBar: false,
