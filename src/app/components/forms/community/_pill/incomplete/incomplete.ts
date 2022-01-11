@@ -19,7 +19,7 @@ export default class AppFormsCommunityPillIncomplete extends Vue {
 	@Prop(propRequired(Array))
 	communities!: Community[];
 
-	@Prop(propRequired(Community))
+	@Prop(propRequired(Object))
 	community!: Community;
 
 	@Emit('add') emitAdd(_community: Community, _channel: CommunityChannel) {}

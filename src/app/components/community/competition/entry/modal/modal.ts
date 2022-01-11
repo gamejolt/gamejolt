@@ -35,7 +35,7 @@ import AppCommunityCompetitionVotingWidget from '../../voting/widget.vue';
 	},
 })
 export default class AppCommunityCompetitionEntryModal extends mixins(BaseModal) {
-	@Prop(propOptional(CommunityCompetitionEntry)) entry?: CommunityCompetitionEntry;
+	@Prop(propOptional(Object)) entry?: CommunityCompetitionEntry;
 	@Prop(propOptional(Number)) entryId?: number;
 
 	@AppState

@@ -16,7 +16,7 @@ export default class AppModalFacebookPageSelector extends mixins(BaseModal) {
 	@Prop(String)
 	message!: string;
 
-	@Prop(LinkedAccount)
+	@Prop(Object)
 	account!: LinkedAccount;
 
 	@Prop(String)

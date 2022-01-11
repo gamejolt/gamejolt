@@ -13,6 +13,6 @@ import AppGameFollowWidget from '../follow-widget/follow-widget.vue';
 	},
 })
 export default class AppGameBadge extends Vue {
-	@Prop(propRequired(Game)) game!: Game;
+	@Prop(propRequired(Object)) game!: Game;
 	@Prop(propOptional(Boolean, false)) fullBleed!: boolean;
 }

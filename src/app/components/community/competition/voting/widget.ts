@@ -25,8 +25,8 @@ import FormCommunityCompetitionVotingCast from '../../../forms/community/competi
 	},
 })
 export default class AppCommunityCompetitionVotingWidget extends Vue {
-	@Prop(propRequired(CommunityCompetition)) competition!: CommunityCompetition;
-	@Prop(propRequired(CommunityCompetitionEntry)) entry!: CommunityCompetitionEntry;
+	@Prop(propRequired(Object)) competition!: CommunityCompetition;
+	@Prop(propRequired(Object)) entry!: CommunityCompetitionEntry;
 	@Prop(propRequired(Array)) votingCategories!: CommunityCompetitionVotingCategory[];
 	@Prop(propRequired(Array)) userVotes!: CommunityCompetitionEntryVote[];
 	@Prop(propRequired(Boolean)) isParticipant!: boolean;

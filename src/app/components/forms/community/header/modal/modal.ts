@@ -10,7 +10,7 @@ import FormCommunityHeader from '../header.vue';
 	},
 })
 export default class AppCommunityHeaderModal extends mixins(BaseModal) {
-	@Prop(propRequired(Community)) community!: Community;
+	@Prop(propRequired(Object)) community!: Community;
 
 	// We don't want to close the modal after they've uploaded a header since they can set a crop
 	// after. We want to auto-close it after they've saved the crop, though.

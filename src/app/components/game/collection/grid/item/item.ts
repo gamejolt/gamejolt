@@ -10,7 +10,7 @@ import AppGameCollectionThumbnail from '../../thumbnail/thumbnail.vue';
 	},
 })
 export default class AppGameCollectionGridItem extends Vue {
-	@Prop(GameCollection) collection!: GameCollection;
+	@Prop(Object) collection!: GameCollection;
 	@Prop(String) eventLabel?: string;
 
 	@State app!: Store['app'];

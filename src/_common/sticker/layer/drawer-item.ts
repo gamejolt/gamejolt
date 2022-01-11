@@ -5,7 +5,7 @@ import { Sticker } from '../sticker.model';
 
 @Options({})
 export default class AppStickerLayerDrawerItem extends Vue {
-	@Prop(propRequired(Sticker)) sticker!: Sticker;
+	@Prop(propRequired(Object)) sticker!: Sticker;
 	@Prop(propOptional(Number, 0)) count!: number;
 	@Prop(propOptional(Number, 64)) size!: number;
 	@Prop(propOptional(Boolean, false)) hideCount!: boolean;

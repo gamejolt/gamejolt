@@ -25,7 +25,7 @@ export default class AppContentMediaUpload extends Vue {
 	@Prop(String)
 	uploadId!: string;
 
-	@Prop({ type: EditorView })
+	@Prop({ type: Object })
 	editorView!: EditorView<ContentEditorSchema>;
 
 	@Inject({ from: ContentOwnerControllerKey })

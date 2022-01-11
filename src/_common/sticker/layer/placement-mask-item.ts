@@ -6,8 +6,8 @@ import { getStickerLayerTargetBoundingBox } from './placement-mask-target';
 
 @Options({})
 export default class AppStickerLayerPlacementMaskItem extends Vue {
-	@Prop(propRequired()) target!: AppStickerTarget;
-	@Prop(propRequired(StickerLayerController)) layer!: StickerLayerController;
+	@Prop(propRequired(Object)) target!: AppStickerTarget;
+	@Prop(propRequired(Object)) layer!: StickerLayerController;
 
 	x = 0;
 	y = 0;

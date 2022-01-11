@@ -9,7 +9,7 @@ import FormGameThumbnail from '../../forms/game/thumbnail/thumbnail.vue';
 	},
 })
 export default class AppGameThumbnailModal extends mixins(BaseModal) {
-	@Prop(Game) game!: Game;
+	@Prop(Object) game!: Game;
 
 	// We don't want to close the modal after they've uploaded a thumbnail since they can set a crop
 	// after. We want to auto-close it after they've saved the crop, though.

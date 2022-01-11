@@ -19,7 +19,7 @@ import { LibraryStore } from '../../../store/library';
 	},
 })
 export default class AppGamePlaylistAddToPopover extends Vue {
-	@Prop(Game)
+	@Prop(Object)
 	game!: Game;
 
 	@Action('library/addGameToPlaylist')

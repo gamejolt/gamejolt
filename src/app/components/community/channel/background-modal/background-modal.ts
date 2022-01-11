@@ -10,7 +10,7 @@ import FormCommunityChannelBackground from '../../../forms/community/channel/bac
 	},
 })
 export default class AppCommunityChannelBackgroundModal extends mixins(BaseModal) {
-	@Prop(propRequired(CommunityChannel)) channel!: CommunityChannel;
+	@Prop(propRequired(Object)) channel!: CommunityChannel;
 
 	previousBackgroundId: number | null = null;
 

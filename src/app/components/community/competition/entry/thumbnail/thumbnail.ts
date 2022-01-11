@@ -19,11 +19,11 @@ import { CommunityCompetitionEntryModal } from '../modal/modal.service';
 	},
 })
 export default class AppCommunityCompetitionEntryThumbnail extends Vue {
-	@Prop(propRequired(CommunityCompetitionEntry)) entry!: CommunityCompetitionEntry;
+	@Prop(propRequired(Object)) entry!: CommunityCompetitionEntry;
 	@Prop(propOptional(Boolean, false)) showRemove!: boolean;
 	@Prop(propOptional(Boolean, false)) showRank!: boolean;
 	/** Voting category the rank should be shown from. No voting category means Overall. */
-	@Prop(propOptional(CommunityCompetitionVotingCategory))
+	@Prop(propOptional(Object))
 	votingCategory?: CommunityCompetitionVotingCategory;
 	@Prop(propOptional(Boolean, false)) showAwards!: boolean;
 

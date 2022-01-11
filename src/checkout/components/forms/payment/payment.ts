@@ -28,7 +28,7 @@ export default class FormPayment extends mixins(Wrapper) implements FormOnSubmit
 	@State app!: AppStore;
 
 	@Prop(Array) cards!: any[];
-	@Prop(Order) order!: Order;
+	@Prop(Object) order!: Order;
 
 	stripeError: string | null = null;
 	countries = Geo.getCountries();

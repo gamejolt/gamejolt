@@ -9,7 +9,7 @@ import FormAddress from '../../../forms/address/address.vue';
 	},
 })
 export default class AppUserAddressEditModal extends mixins(BaseModal) {
-	@Prop(UserAddress) address!: UserAddress;
+	@Prop(Object) address!: UserAddress;
 
 	onSaved(address: UserAddress) {
 		this.modal.resolve(address);

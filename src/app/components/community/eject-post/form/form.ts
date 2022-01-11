@@ -19,7 +19,7 @@ class Wrapper extends BaseForm<FormModel> {}
 
 @Options({})
 export default class FormCommunityEjectPost extends mixins(Wrapper) {
-	@Prop(propRequired(Community)) community!: Community;
+	@Prop(propRequired(Object)) community!: Community;
 
 	@Emit('change') emitChange(_form: FormModel) {}
 

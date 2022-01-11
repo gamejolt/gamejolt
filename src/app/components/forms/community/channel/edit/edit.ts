@@ -31,7 +31,7 @@ export default class FormCommunityChannelEdit
 	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnSubmitSuccess
 {
-	@Prop(propRequired(Community)) community!: Community;
+	@Prop(propRequired(Object)) community!: Community;
 
 	maxFilesize = 0;
 	maxWidth = 0;

@@ -15,7 +15,7 @@ import { AppResponsiveDimensions } from '../../responsive-dimensions/responsive-
 	},
 })
 export default class AppVideoProcessingProgress extends Vue {
-	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
+	@Prop(propRequired(Object)) post!: FiresidePost;
 
 	hasData = false;
 	progress = 0;

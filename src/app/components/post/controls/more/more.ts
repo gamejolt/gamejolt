@@ -30,7 +30,7 @@ import { AppCommunityPerms } from '../../../community/perms/perms';
 	},
 })
 export default class AppPostControlsMore extends Vue {
-	@Prop({ type: FiresidePost, required: true })
+	@Prop({ type: Object, required: true })
 	post!: FiresidePost;
 
 	@AppState user!: AppStore['user'];

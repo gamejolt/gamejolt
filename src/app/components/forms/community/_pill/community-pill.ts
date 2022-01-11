@@ -16,10 +16,10 @@ import AppPill from '../../../../../_common/pill/pill.vue';
 	},
 })
 export default class AppFormsCommunityPill extends Vue {
-	@Prop(propRequired(Community))
+	@Prop(propRequired(Object))
 	community!: Community;
 
-	@Prop(propOptional(CommunityChannel))
+	@Prop(propOptional(Object))
 	channel?: CommunityChannel;
 
 	@Prop(propOptional(Boolean, true))

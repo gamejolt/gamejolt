@@ -14,7 +14,7 @@ class Wrapper extends BaseForm<FormModel> {}
 
 @Options({})
 export default class FormGameFeaturedBadge extends mixins(Wrapper) {
-	@Prop(propRequired(Game)) game!: Game;
+	@Prop(propRequired(Object)) game!: Game;
 
 	get colorOptions() {
 		return [

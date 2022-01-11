@@ -21,7 +21,7 @@ const InviewConfigHydration = new ScrollInviewConfig({ margin: `${Screen.height}
 	},
 })
 export default class AppActivityFeedItem extends Vue {
-	@Prop({ type: ActivityFeedItem, required: true })
+	@Prop({ type: Object, required: true })
 	item!: ActivityFeedItem;
 
 	@Inject({ from: ActivityFeedKey })

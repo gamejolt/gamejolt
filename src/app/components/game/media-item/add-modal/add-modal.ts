@@ -18,7 +18,7 @@ import FormGameVideo from '../../../forms/game/video/video.vue';
 	},
 })
 export default class AppGameMediaItemAddModal extends mixins(BaseModal) {
-	@Prop(Game) game!: Game;
+	@Prop(Object) game!: Game;
 
 	tab: 'image' | 'video' | 'sketchfab' = 'image';
 

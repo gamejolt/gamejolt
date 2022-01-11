@@ -15,7 +15,7 @@ export default class FormGameCollaborator extends mixins(Wrapper) {
 	modelClass = Collaborator;
 	saveMethod = '$invite' as const;
 
-	@Prop(Game)
+	@Prop(Object)
 	game!: Game;
 
 	readonly Collaborator = Collaborator;

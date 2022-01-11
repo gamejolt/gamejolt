@@ -29,7 +29,7 @@ const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` }
 	},
 })
 export default class AppChatUserListItem extends Vue {
-	@Prop(propRequired()) item!: ChatUser | ChatRoom;
+	@Prop(propRequired(Object)) item!: ChatUser | ChatRoom;
 
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;

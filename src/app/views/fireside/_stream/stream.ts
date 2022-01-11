@@ -38,7 +38,7 @@ const UITransitionTime = 200;
 	},
 })
 export default class AppFiresideStream extends Vue {
-	@Prop({ type: FiresideRTCUser, required: true })
+	@Prop({ type: Object, required: true })
 	rtcUser!: FiresideRTCUser;
 
 	@Prop({ type: Boolean })

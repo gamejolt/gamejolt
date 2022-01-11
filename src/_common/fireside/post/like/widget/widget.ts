@@ -23,7 +23,7 @@ import { FiresidePostLike, removeFiresidePostLike, saveFiresidePostLike } from '
 	},
 })
 export default class AppFiresidePostLikeWidget extends Vue {
-	@Prop({ type: FiresidePost, required: true })
+	@Prop({ type: Object, required: true })
 	post!: FiresidePost;
 
 	@Prop({ type: String, required: true })

@@ -8,7 +8,7 @@ import {
 
 @Options({})
 export default class AppVideoPlayerFullscreen extends Vue {
-	@Prop(propRequired(VideoPlayerController)) player!: VideoPlayerController;
+	@Prop(propRequired(Object)) player!: VideoPlayerController;
 
 	toggleFullscreen() {
 		trackVideoPlayerEvent(

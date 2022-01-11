@@ -22,7 +22,7 @@ import AppScoreboardSelector from '../scoreboard-selector/scoreboard-selector.vu
 	},
 })
 export default class AppScoreOverview extends Vue {
-	@Prop(Game)
+	@Prop(Object)
 	game!: Game;
 	@Prop(Object)
 	initialPayload?: any;

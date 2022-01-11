@@ -30,7 +30,7 @@ import AppChatWindowOutputItem from './item/item.vue';
 	},
 })
 export default class AppChatWindowOutput extends Vue {
-	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
+	@Prop(propRequired(Object)) room!: ChatRoom;
 	@Prop(propRequired(Array)) messages!: ChatMessage[];
 	@Prop(propRequired(Array)) queuedMessages!: ChatMessage[];
 

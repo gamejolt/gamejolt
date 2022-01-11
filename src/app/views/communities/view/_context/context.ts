@@ -16,7 +16,7 @@ import AppNavEdit from '../_nav/edit/edit.vue';
 	},
 })
 export default class AppCommunitiesViewContext extends Vue {
-	@Prop(propRequired(CommunityRouteStore))
+	@Prop(propRequired(Object))
 	@Provide({ to: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 

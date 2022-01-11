@@ -14,9 +14,9 @@ export default class AppCommunitySidebarModal extends mixins(BaseModal) {
 	@Prop(propRequired(Boolean))
 	isEditing!: boolean;
 
-	@Prop(propRequired(CommunitySidebarData))
+	@Prop(propRequired(Object))
 	sidebarData!: CommunitySidebarData;
 
-	@Prop(propRequired(Community))
+	@Prop(propRequired(Object))
 	community!: Community;
 }

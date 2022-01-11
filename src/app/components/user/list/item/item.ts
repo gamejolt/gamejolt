@@ -17,7 +17,7 @@ import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verif
 	},
 })
 export default class AppUserListItem extends Vue {
-	@Prop(User)
+	@Prop(Object)
 	user!: User;
 
 	@Prop({ type: String, required: false, default: 'global' })

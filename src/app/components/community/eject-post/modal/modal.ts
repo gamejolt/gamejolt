@@ -16,8 +16,8 @@ import { CommunityEjectPostModalResult } from './modal.service';
 	},
 })
 export default class AppCommunityEjectPostModal extends mixins(BaseModal) {
-	@Prop(propRequired(FiresidePostCommunity)) firesidePostCommunity!: FiresidePostCommunity;
-	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
+	@Prop(propRequired(Object)) firesidePostCommunity!: FiresidePostCommunity;
+	@Prop(propRequired(Object)) post!: FiresidePost;
 
 	@AppState
 	user!: AppStore['user'];

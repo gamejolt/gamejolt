@@ -19,7 +19,7 @@ import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 	},
 })
 export default class AppCommunityLinkGameModal extends mixins(BaseModal) {
-	@Prop(propRequired(Community)) community!: Community;
+	@Prop(propRequired(Object)) community!: Community;
 
 	page = 1;
 	isLoading = true;

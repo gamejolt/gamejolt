@@ -13,7 +13,7 @@ import AppGameCoverButtonsBuildButtons from './build-buttons.vue';
 
 @Options({})
 export default class AppGameCoverButtons extends Vue {
-	@Prop(Game)
+	@Prop(Object)
 	game!: Game;
 
 	@Prop(Array)
@@ -31,7 +31,7 @@ export default class AppGameCoverButtons extends Vue {
 	@Prop(String)
 	partnerKey?: string;
 
-	@Prop(User)
+	@Prop(Object)
 	partner?: User;
 
 	static hook = {

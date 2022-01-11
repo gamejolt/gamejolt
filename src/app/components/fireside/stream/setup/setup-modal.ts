@@ -12,7 +12,7 @@ import AppStreamSetup from './setup.vue';
 	},
 })
 export default class AppStreamSetupModal extends mixins(BaseModal) {
-	@Prop({ type: FiresideController, required: true })
+	@Prop({ type: Object, required: true })
 	c!: FiresideController;
 
 	readonly illNoCommentsSmall = illNoCommentsSmall;

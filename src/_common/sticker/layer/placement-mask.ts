@@ -25,7 +25,7 @@ import AppStickerLayerPlacementMaskTarget from './placement-mask-target.vue';
 	},
 })
 export default class AppStickerLayerPlacementMask extends Vue {
-	@Prop(propRequired(StickerLayerController)) layer!: StickerLayerController;
+	@Prop(propRequired(Object)) layer!: StickerLayerController;
 
 	@Inject({ from: DrawerStoreKey })
 	drawer!: DrawerStore;

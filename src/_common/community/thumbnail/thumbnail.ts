@@ -11,7 +11,7 @@ import AppCommunityThumbnailImg from './img/img.vue';
 	},
 })
 export default class AppCommunityThumbnail extends Vue {
-	@Prop({ type: Community, required: true })
+	@Prop({ type: Object, required: true })
 	community!: Community;
 
 	onGotoCommunity() {

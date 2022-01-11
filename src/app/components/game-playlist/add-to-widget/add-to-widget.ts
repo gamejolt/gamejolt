@@ -18,7 +18,7 @@ import AppGamePlaylistAddToPopover from '../add-to-popover/add-to-popover.vue';
 	},
 })
 export default class AppGamePlaylistAddToWidget extends Vue {
-	@Prop(Game)
+	@Prop(Object)
 	game!: Game;
 
 	@Prop({ type: String, required: false, default: 'global' })

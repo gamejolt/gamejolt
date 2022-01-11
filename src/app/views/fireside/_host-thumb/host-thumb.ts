@@ -24,7 +24,7 @@ import AppFiresideHostThumbIndicator from './host-thumb-indicator.vue';
 	},
 })
 export default class AppFiresideHostThumb extends Vue {
-	@Prop({ type: FiresideRTCUser, required: true })
+	@Prop({ type: Object, required: true })
 	host!: FiresideRTCUser;
 
 	@Prop({ type: Boolean, required: false, default: false })

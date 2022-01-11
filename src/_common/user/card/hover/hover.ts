@@ -12,7 +12,7 @@ import AppUserCard from '../card.vue';
 	},
 })
 export default class AppUserCardHover extends Vue {
-	@Prop(User)
+	@Prop(Object)
 	user?: User;
 
 	@Prop(Boolean)

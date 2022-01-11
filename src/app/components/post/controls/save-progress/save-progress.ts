@@ -10,7 +10,7 @@ import { AppProgressPoller } from '../../../../../_common/progress/poller/poller
 	},
 })
 export default class AppPostControlsSaveProgress extends Vue {
-	@Prop({ type: FiresidePost, required: true })
+	@Prop({ type: Object, required: true })
 	post!: FiresidePost;
 
 	// Before the first bit of progress arrives, show a full indeterminate bar.

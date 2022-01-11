@@ -26,7 +26,7 @@ export default class FormComment
 	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnSubmitSuccess
 {
-	@Prop(Model)
+	@Prop(Object)
 	commentModel!: Model;
 
 	@Prop(Number)

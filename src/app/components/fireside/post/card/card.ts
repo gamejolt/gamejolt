@@ -46,7 +46,7 @@ export const AppPostCardAspectRatio = 10 / 16;
 	},
 })
 export default class AppPostCard extends Vue {
-	@Prop({ type: FiresidePost, required: true })
+	@Prop({ type: Object, required: true })
 	post!: FiresidePost;
 
 	@Prop({ type: String, required: true })

@@ -72,7 +72,7 @@ import AppActivityFeedPostTime from './time/time.vue';
 	},
 })
 export default class AppActivityFeedPost extends Vue {
-	@Prop({ type: ActivityFeedItem, required: true })
+	@Prop({ type: Object, required: true })
 	item!: ActivityFeedItem;
 
 	@Inject({ from: ActivityFeedKey })

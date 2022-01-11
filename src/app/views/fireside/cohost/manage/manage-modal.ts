@@ -24,7 +24,7 @@ import { illNoCommentsSmall } from '../../../../img/ill/illustrations';
 	},
 })
 export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
-	@Prop({ type: FiresideController, required: true })
+	@Prop({ type: Object, required: true })
 	controller!: FiresideController;
 
 	@AppState user!: AppStore['user'];

@@ -85,7 +85,7 @@ import AppPostPageRecommendations from './recommendations/recommendations.vue';
 	},
 })
 export default class AppPostPage extends Vue {
-	@Prop({ type: FiresidePost, required: true })
+	@Prop({ type: Object, required: true })
 	post!: FiresidePost;
 
 	@Prop({ type: Array, required: false, default: () => [] })

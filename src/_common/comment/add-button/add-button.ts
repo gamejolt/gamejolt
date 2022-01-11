@@ -9,7 +9,7 @@ import { CommentModal, DisplayMode } from '../modal/modal.service';
 	},
 })
 export default class AppCommentAddButton extends Vue {
-	@Prop(Model)
+	@Prop(Object)
 	model!: Model;
 
 	@Prop(String)

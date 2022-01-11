@@ -14,7 +14,7 @@ class Wrapper extends BaseForm<GameScreenshot> {}
 export default class FormGameImage extends mixins(Wrapper) implements FormOnLoad {
 	modelClass = GameScreenshot;
 
-	@Prop(Game) game!: Game;
+	@Prop(Object) game!: Game;
 
 	maxFilesize = 0;
 	maxWidth = 0;

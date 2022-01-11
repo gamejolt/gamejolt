@@ -17,7 +17,7 @@ import { FiresideAddModal } from '../../add-modal/add-modal.service';
 export default class AppFiresideBadgeAdd extends Vue {
 	@AppState user!: AppStore['user'];
 
-	@Prop({ type: Community, default: undefined })
+	@Prop({ type: Object, default: undefined })
 	community!: Community | undefined;
 
 	get theme() {

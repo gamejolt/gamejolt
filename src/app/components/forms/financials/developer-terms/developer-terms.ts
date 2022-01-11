@@ -10,7 +10,7 @@ import { UserStripeManagedAccount } from '../../../../../_common/user/stripe-man
 	},
 })
 export default class AppDeveloperTerms extends Vue {
-	@Prop(UserStripeManagedAccount) account!: UserStripeManagedAccount;
+	@Prop(Object) account!: UserStripeManagedAccount;
 
 	checked = false;
 	showAgreement = false;

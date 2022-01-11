@@ -18,9 +18,9 @@ import { ChatUser } from '../user';
 	},
 })
 export default class AppChatInviteModal extends mixins(BaseModal) {
-	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
+	@Prop(propRequired(Object)) room!: ChatRoom;
 	@Prop(propRequired(Array)) friends!: ChatUser[];
-	@Prop(propOptional(ChatUser, null)) initialUser!: ChatUser | null;
+	@Prop(propOptional(Object, null)) initialUser!: ChatUser | null;
 
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;

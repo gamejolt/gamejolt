@@ -17,7 +17,7 @@ import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
 	},
 })
 export default class AppCommunityCardBase extends Vue {
-	@Prop(propRequired(Community)) community!: Community;
+	@Prop(propRequired(Object)) community!: Community;
 	@Prop(propOptional(Boolean, false)) overflow!: boolean;
 	@Prop(propOptional(Boolean, false)) elevate!: boolean;
 	@Prop(propOptional(Boolean, true)) allowEdit!: boolean;

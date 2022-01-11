@@ -15,7 +15,7 @@ import FormFiresideAdd from '../../forms/fireside/add/add.vue';
 	},
 })
 export default class AppFiresideAddModal extends mixins(BaseModal) {
-	@Prop({ type: Community, required: false })
+	@Prop({ type: Object, required: false })
 	community?: Community;
 
 	isLoading = true;

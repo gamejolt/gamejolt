@@ -21,7 +21,7 @@ import { Store } from '../../../../store/index';
 	},
 })
 export default class AppDiscoverHomeBanner extends Vue {
-	@Prop(propOptional(FeaturedItem)) item?: FeaturedItem;
+	@Prop(propOptional(Object)) item?: FeaturedItem;
 	@Prop(propOptional(Boolean, false)) isLoading!: boolean;
 
 	@State app!: Store['app'];

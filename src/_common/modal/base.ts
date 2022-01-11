@@ -8,7 +8,7 @@ import AppModal from './modal.vue';
 	},
 })
 export class BaseModal extends Vue {
-	@Prop({ type: Modal })
+	@Prop({ type: Object })
 	@Provide({ to: ModalKey })
 	modal!: Modal;
 }

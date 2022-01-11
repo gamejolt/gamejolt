@@ -17,7 +17,7 @@ class Wrapper extends BaseForm<FormModel> {}
 	},
 })
 export default class FormCommunityChannelChangeUrl extends mixins(Wrapper) {
-	@Prop(propRequired(Community)) community!: Community;
+	@Prop(propRequired(Object)) community!: Community;
 	@Prop(propRequired(Array)) channels!: CommunityChannel[];
 
 	modelClass = CommunityChannel;

@@ -9,7 +9,7 @@ import { User } from '../user.model';
 	},
 })
 export default class AppUserBar extends Vue {
-	@Prop(User) user!: User;
+	@Prop(Object) user!: User;
 	@Prop(String) site!: string;
 	@Prop(Boolean) hideSiteSelector?: boolean;
 

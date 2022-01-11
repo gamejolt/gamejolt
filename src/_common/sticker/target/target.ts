@@ -34,7 +34,7 @@ const InviewConfig = new ScrollInviewConfig();
 	},
 })
 export default class AppStickerTarget extends Vue {
-	@Prop(propRequired(StickerTargetController)) controller!: StickerTargetController;
+	@Prop(propRequired(Object)) controller!: StickerTargetController;
 	@Prop(propOptional(Boolean, false)) disabled!: boolean;
 
 	@Inject({ from: DrawerStoreKey })

@@ -18,8 +18,8 @@ import AppUserVerifiedTick from '../../user/verified-tick/verified-tick.vue';
 	},
 })
 export default class AppMessageThreadItem extends Vue {
-	@Prop(propRequired(User)) user!: User;
-	@Prop(propOptional(User)) repliedTo?: User;
+	@Prop(propRequired(Object)) user!: User;
+	@Prop(propOptional(Object)) repliedTo?: User;
 	@Prop(propRequired(Number)) date!: number;
 	@Prop(propOptional(String)) id?: string;
 	@Prop(propOptional(Boolean, false)) isActive!: boolean;

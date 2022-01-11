@@ -13,7 +13,7 @@ class Wrapper extends BaseForm<any> {}
 	},
 })
 export default class FormGameKeyGroupAddKeys extends mixins(Wrapper) implements FormOnSubmit {
-	@Prop(KeyGroup) keyGroup!: KeyGroup;
+	@Prop(Object) keyGroup!: KeyGroup;
 
 	readonly formatNumber = formatNumber;
 	readonly KeyGroup = KeyGroup;

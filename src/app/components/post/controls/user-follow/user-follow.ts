@@ -9,7 +9,7 @@ import AppUserFollowWidget from '../../../../../_common/user/follow/widget.vue';
 	},
 })
 export default class AppPostControlsUserFollow extends Vue {
-	@Prop({ type: FiresidePost, required: true })
+	@Prop({ type: Object, required: true })
 	post!: FiresidePost;
 
 	@Prop({ type: Boolean, required: false, default: false })

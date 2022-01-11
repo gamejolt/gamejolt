@@ -9,7 +9,7 @@ interface DurationPayload {
 
 @Options({})
 export class AppAudioPlayer extends Vue {
-	@Prop(GameSong)
+	@Prop(Object)
 	song!: GameSong;
 
 	declare $el: HTMLAudioElement;

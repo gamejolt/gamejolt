@@ -15,7 +15,7 @@ import FormDashSiteBuild from '../../forms/site/build/build.vue';
 	},
 })
 export default class AppSitesManagePageStatic extends Vue {
-	@Prop(Site) site?: Site;
+	@Prop(Object) site?: Site;
 	@Prop(Boolean) enabled?: boolean;
 	@Prop(Boolean) templateEnabled?: boolean;
 

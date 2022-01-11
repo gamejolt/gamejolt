@@ -10,10 +10,10 @@ import AppCommunityRemoveChannel from '../remove-channel.vue';
 	},
 })
 export default class AppCommunityRemoveChannelModal extends mixins(BaseModal) {
-	@Prop(Community)
+	@Prop(Object)
 	community!: Community;
 
-	@Prop(CommunityChannel)
+	@Prop(Object)
 	channel!: CommunityChannel;
 
 	onRemoved(postsMovedTo?: CommunityChannel) {

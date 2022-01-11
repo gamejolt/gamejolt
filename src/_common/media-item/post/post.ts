@@ -31,7 +31,7 @@ import { MediaItem } from '../media-item-model';
 	},
 })
 export default class AppMediaItemPost extends Vue {
-	@Prop(propRequired(MediaItem)) mediaItem!: MediaItem;
+	@Prop(propRequired(Object)) mediaItem!: MediaItem;
 	@Prop(propOptional(Boolean, true)) isPostHydrated!: boolean;
 	@Prop(propOptional(Boolean, false)) isActive!: boolean;
 	@Prop(propOptional(Boolean, false)) restrictDeviceMaxHeight!: boolean;

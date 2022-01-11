@@ -19,7 +19,7 @@ import { AppContentViewerBaseComponent } from './components/base-component';
 export default class AppContentViewer extends Vue {
 	@Prop(propRequired(String)) source!: string;
 	@Prop(propOptional(Boolean, false)) disableLightbox!: boolean;
-	@Prop(propOptional(ContentRules)) displayRules?: ContentRules;
+	@Prop(propOptional(Object)) displayRules?: ContentRules;
 
 	// Gets provided down during [created].
 	controller!: ContentOwnerController;

@@ -32,8 +32,8 @@ import { GameListingContainer } from './listing-container-service';
 	},
 })
 export default class AppGameListing extends Vue {
-	@Prop(propRequired(GameListingContainer)) listing!: GameListingContainer;
-	@Prop(propRequired(GameFilteringContainer)) filtering!: GameFilteringContainer;
+	@Prop(propRequired(Object)) listing!: GameListingContainer;
+	@Prop(propRequired(Object)) filtering!: GameFilteringContainer;
 	@Prop(propOptional(Boolean, false)) hideFilters!: boolean;
 	@Prop(propOptional(Boolean, false)) hideSectionNav!: boolean;
 	@Prop(propOptional(Boolean, false)) includeFeaturedSection!: boolean;

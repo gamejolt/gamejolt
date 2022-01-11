@@ -9,7 +9,7 @@ import { Sticker } from '../sticker.model';
 	},
 })
 export default class AppStickerCard extends Vue {
-	@Prop(propRequired(Sticker)) sticker!: Sticker;
+	@Prop(propRequired(Object)) sticker!: Sticker;
 	@Prop(propOptional(String)) label!: string;
 	@Prop(propOptional(Boolean, false)) isNew!: boolean;
 }

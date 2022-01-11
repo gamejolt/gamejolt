@@ -36,7 +36,7 @@ import AppChatWindowSend from './send/send.vue';
 	},
 })
 export default class AppChatWindow extends Vue {
-	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
+	@Prop(propRequired(Object)) room!: ChatRoom;
 	@Prop(propRequired(Array)) messages!: ChatMessage[];
 	@Prop(propRequired(Array)) queuedMessages!: ChatMessage[];
 

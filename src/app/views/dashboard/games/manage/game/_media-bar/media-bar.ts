@@ -18,7 +18,7 @@ import { Media, RouteStore, RouteStoreModule } from '../../manage.store';
 	},
 })
 export default class AppManageGameMediaBar extends Vue {
-	@Prop(Game)
+	@Prop(Object)
 	game!: Game;
 
 	@Prop(Array)

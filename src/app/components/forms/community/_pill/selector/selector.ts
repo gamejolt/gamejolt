@@ -24,7 +24,7 @@ export default class AppFormsCommunityPillSelector extends Vue {
 	@Prop(propRequired(Array))
 	communities!: Community[];
 
-	@Prop(propOptional(Community, null))
+	@Prop(propOptional(Object, null))
 	initialCommunity!: Community | null;
 
 	@Prop(propOptional(Boolean, true))

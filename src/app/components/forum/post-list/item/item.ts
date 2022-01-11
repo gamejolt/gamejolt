@@ -46,8 +46,8 @@ const InviewConfig = new ScrollInviewConfig();
 	},
 })
 export default class AppForumPostListItem extends Vue {
-	@Prop(ForumTopic) topic!: ForumTopic;
-	@Prop(ForumPost) post!: ForumPost;
+	@Prop(Object) topic!: ForumTopic;
+	@Prop(Object) post!: ForumPost;
 	@Prop(Boolean) isReply!: boolean;
 	@Prop(Boolean) showReplies!: boolean;
 	@Prop(Boolean) isLastInThread?: boolean;

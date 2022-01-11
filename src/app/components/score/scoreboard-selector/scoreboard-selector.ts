@@ -8,7 +8,7 @@ import AppListGroupSelector from '../../../../_common/list-group/selector/select
 	},
 })
 export default class AppScoreboardSelector extends Vue {
-	@Prop(GameScoreTable) currentTable!: GameScoreTable;
+	@Prop(Object) currentTable!: GameScoreTable;
 	@Prop(Array) tables!: GameScoreTable[];
 
 	@Emit('select')

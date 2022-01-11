@@ -17,7 +17,7 @@ import { CommunityChannelPresetBackgroundModal } from '../../../../../../../comp
 	},
 })
 export default class AppCommunitiesEditChannelListPresetItem extends Vue {
-	@Prop(propRequired(Community)) community!: Community;
+	@Prop(propRequired(Object)) community!: Community;
 	@Prop(propRequired(String)) presetType!: CommunityPresetChannelType;
 
 	@Emit('edit') emitEdit() {}

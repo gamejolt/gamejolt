@@ -8,7 +8,7 @@ let inc = 0;
 
 @Options({})
 export class AppTheme extends Vue {
-	@Prop(Theme)
+	@Prop(Object)
 	theme!: Theme | null;
 
 	@Prop(Boolean)

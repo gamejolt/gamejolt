@@ -26,7 +26,7 @@ import {
 	},
 })
 export default class AppPlayerVolume extends Vue {
-	@Prop(propRequired(VideoPlayerController)) player!: VideoPlayerController;
+	@Prop(propRequired(Object)) player!: VideoPlayerController;
 	@Prop(propOptional(Boolean, false)) hasSlider!: boolean;
 
 	readonly Screen = Screen;

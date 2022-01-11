@@ -23,9 +23,9 @@ export default class FormGameNewBuild extends mixins(Wrapper) implements FormOnL
 	modelClass = GameBuild as any;
 
 	@Prop(String) type!: 'downloadable' | 'browser';
-	@Prop(Game) game!: Game;
-	@Prop(GamePackage) package!: GamePackage;
-	@Prop(GameRelease) release!: GameRelease;
+	@Prop(Object) game!: Game;
+	@Prop(Object) package!: GamePackage;
+	@Prop(Object) release!: GameRelease;
 	@Prop(Array) builds!: GameBuild[];
 
 	maxFilesize = 0;

@@ -29,7 +29,7 @@ import AppShellCbarItem from '../item/item.vue';
 	},
 })
 export default class AppShellCbarCommunity extends Vue {
-	@Prop({ type: Community, required: true })
+	@Prop({ type: Object, required: true })
 	community!: Community;
 
 	@AppState user!: AppStore['user'];

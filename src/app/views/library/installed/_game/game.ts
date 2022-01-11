@@ -11,7 +11,7 @@ import { ClientLibraryState, ClientLibraryStore } from '../../../../store/client
 	},
 })
 export default class AppLibraryInstalledGame extends Vue {
-	@Prop(LocalDbGame)
+	@Prop(Object)
 	game!: LocalDbGame;
 
 	@ClientLibraryState

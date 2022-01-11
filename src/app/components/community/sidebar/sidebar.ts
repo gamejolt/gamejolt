@@ -33,10 +33,10 @@ export default class AppCommunitySidebar extends Vue {
 	@Prop(Boolean)
 	isEditing!: boolean;
 
-	@Prop(Community)
+	@Prop(Object)
 	community!: Community;
 
-	@Prop(CommunitySidebarData)
+	@Prop(Object)
 	sidebarData!: CommunitySidebarData;
 
 	@State

@@ -15,7 +15,7 @@ import AppStickerReactionsItem from './item.vue';
 	},
 })
 export default class AppStickerReactions extends Vue {
-	@Prop(propRequired(StickerTargetController)) controller!: StickerTargetController;
+	@Prop(propRequired(Object)) controller!: StickerTargetController;
 
 	@Inject({ from: DrawerStoreKey })
 	drawerStore!: DrawerStore;

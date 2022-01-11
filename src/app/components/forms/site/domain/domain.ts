@@ -20,8 +20,8 @@ class Wrapper extends BaseForm<FormModel> {}
 	},
 })
 export default class FormSiteDomain extends mixins(Wrapper) {
-	@Prop(User) user!: User;
-	@Prop(Game) game?: Game;
+	@Prop(Object) user!: User;
+	@Prop(Object) game?: Game;
 
 	modelClass = Site as any;
 	saveMethod = '$saveDomain' as const;

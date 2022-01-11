@@ -14,7 +14,7 @@ import FormCommunityChannelPresetBackground from '../../../forms/community/chann
 	},
 })
 export default class AppCommunityChannelPresetBackgroundModal extends mixins(BaseModal) {
-	@Prop(propRequired(Community)) community!: Community;
+	@Prop(propRequired(Object)) community!: Community;
 	@Prop(propRequired(String)) presetType!: CommunityPresetChannelType;
 
 	previousBackgroundId: number | null = null;

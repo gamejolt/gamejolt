@@ -6,8 +6,8 @@ import { removeStickerFromTarget, StickerTargetController } from './target/targe
 
 @Options({})
 export default class AppSticker extends Vue {
-	@Prop(propRequired(StickerPlacement)) sticker!: StickerPlacement;
-	@Prop(propOptional(StickerTargetController, null)) controller!: StickerTargetController | null;
+	@Prop(propRequired(Object)) sticker!: StickerPlacement;
+	@Prop(propOptional(Object, null)) controller!: StickerTargetController | null;
 	@Prop(propOptional(Boolean, true)) isClickable!: boolean;
 
 	declare $refs: {

@@ -13,7 +13,7 @@ import { GameCollection } from '../collection.model';
 	},
 })
 export default class AppGameCollectionFollowWidget extends Vue {
-	@Prop(GameCollection)
+	@Prop(Object)
 	collection!: GameCollection;
 
 	@Prop(Number)

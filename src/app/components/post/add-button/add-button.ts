@@ -18,13 +18,13 @@ import { PostEditModal } from '../edit-modal/edit-modal-service';
 	},
 })
 export default class AppPostAddButton extends Vue {
-	@Prop(Game)
+	@Prop(Object)
 	game?: Game;
 
-	@Prop(Community)
+	@Prop(Object)
 	community?: Community;
 
-	@Prop(CommunityChannel)
+	@Prop(Object)
 	channel?: CommunityChannel;
 
 	@Prop(String)

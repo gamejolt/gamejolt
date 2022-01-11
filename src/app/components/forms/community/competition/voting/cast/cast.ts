@@ -20,8 +20,8 @@ import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directi
 	},
 })
 export default class FormCommunityCompetitionVotingCast extends Vue {
-	@Prop(propRequired(CommunityCompetitionEntry)) entry!: CommunityCompetitionEntry;
-	@Prop(propRequired(CommunityCompetition)) competition!: CommunityCompetition;
+	@Prop(propRequired(Object)) entry!: CommunityCompetitionEntry;
+	@Prop(propRequired(Object)) competition!: CommunityCompetition;
 	@Prop(propOptional(Array, () => [])) votingCategories!: CommunityCompetitionVotingCategory[];
 	@Prop(propOptional(Array, () => [])) initialVotes!: CommunityCompetitionEntryVote[];
 

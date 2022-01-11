@@ -18,7 +18,7 @@ type ShakaTrack = {
 	},
 })
 export default class AppVideoPlayerShaka extends Vue {
-	@Prop(propRequired(VideoPlayerController)) player!: VideoPlayerController;
+	@Prop(propRequired(Object)) player!: VideoPlayerController;
 	@Prop(propOptional(Boolean, false)) autoplay!: boolean;
 
 	/**

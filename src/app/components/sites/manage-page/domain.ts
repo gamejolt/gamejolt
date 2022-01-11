@@ -12,8 +12,8 @@ import FormSiteDomain from '../../forms/site/domain/domain.vue';
 	},
 })
 export default class AppSitesManagePageDomain extends Vue {
-	@Prop(Site) site!: Site;
-	@Prop(Game) game?: Game;
+	@Prop(Object) site!: Site;
+	@Prop(Object) game?: Game;
 
 	@State app!: Store['app'];
 

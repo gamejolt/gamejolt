@@ -10,7 +10,7 @@ type BlockData = {
 
 @Options({})
 export default class AppCommunityCompetitionCountdown extends Vue {
-	@Prop(propRequired(CommunityCompetition)) competition!: CommunityCompetition;
+	@Prop(propRequired(Object)) competition!: CommunityCompetition;
 
 	updateTimer!: NodeJS.Timer | null;
 	blocksData: BlockData[] = [];

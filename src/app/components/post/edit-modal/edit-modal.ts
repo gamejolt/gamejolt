@@ -16,13 +16,13 @@ import AppPostAddPlaceholder from '../add-placeholder/add-placeholder.vue';
 	},
 })
 export default class AppPostEditModal extends mixins(BaseModal) {
-	@Prop([FiresidePost, Promise])
+	@Prop({ type: [Object, async () => Object] })
 	postProvider!: FiresidePost | Promise<FiresidePost>;
 
-	@Prop(Community)
+	@Prop(Object)
 	community?: Community;
 
-	@Prop(CommunityChannel)
+	@Prop(Object)
 	channel?: CommunityChannel;
 
 	post: FiresidePost | null = null;

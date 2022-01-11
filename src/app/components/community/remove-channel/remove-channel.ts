@@ -3,7 +3,7 @@ import { CommunityChannel } from '../../../../_common/community/channel/channel.
 import AppCommunityChannelSelect from '../../../../_common/community/channel/select/select.vue';
 import { Community } from '../../../../_common/community/community.model';
 import AppExpand from '../../../../_common/expand/expand.vue';
-import { Growls, showErrorGrowl } from '../../../../_common/growls/growls.service';
+import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppPill from '../../../../_common/pill/pill.vue';
 
 @Options({
@@ -14,10 +14,10 @@ import AppPill from '../../../../_common/pill/pill.vue';
 	},
 })
 export default class AppCommunityRemoveChannel extends Vue {
-	@Prop(Community)
+	@Prop(Object)
 	community!: Community;
 
-	@Prop(CommunityChannel)
+	@Prop(Object)
 	channel!: CommunityChannel;
 
 	selectedChannel: CommunityChannel | null = null;

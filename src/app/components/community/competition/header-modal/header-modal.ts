@@ -10,7 +10,7 @@ import FormCommunityCompetitionHeader from '../../../forms/community/competition
 	},
 })
 export default class AppCommunityCompetitionHeaderModal extends mixins(BaseModal) {
-	@Prop(propRequired(CommunityCompetition)) competition!: CommunityCompetition;
+	@Prop(propRequired(Object)) competition!: CommunityCompetition;
 
 	// We don't want to close the modal after they've uploaded a header since they can set a crop
 	// after. We want to auto-close it after they've saved the crop, though.

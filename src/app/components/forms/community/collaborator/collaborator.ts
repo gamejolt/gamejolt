@@ -16,7 +16,7 @@ export default class FormCommunityCollaborator extends mixins(Wrapper) {
 	modelClass = Collaborator;
 	saveMethod = '$invite' as const;
 
-	@Prop(propRequired(Community)) community!: Community;
+	@Prop(propRequired(Object)) community!: Community;
 
 	readonly Collaborator = Collaborator;
 

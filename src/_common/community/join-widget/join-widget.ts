@@ -17,7 +17,7 @@ import { Community } from '../community.model';
 	},
 })
 export default class AppCommunityJoinWidget extends Vue {
-	@Prop({ type: Community, required: true })
+	@Prop({ type: Object, required: true })
 	community!: Community;
 
 	@Prop({ type: String, required: true })

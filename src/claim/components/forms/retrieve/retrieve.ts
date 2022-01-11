@@ -9,8 +9,8 @@ class Wrapper extends BaseForm<any> {}
 @Options({})
 export default class FormRetrieve extends mixins(Wrapper) implements FormOnSubmit {
 	@Prop(String) keyId!: string;
-	@Prop(GameBundle) bundle!: GameBundle;
-	@Prop(Game) game!: Game;
+	@Prop(Object) bundle!: GameBundle;
+	@Prop(Object) game!: Game;
 
 	created() {
 		this.form.warnOnDiscard = false;

@@ -12,7 +12,7 @@ import AppChatMemberListItem from './item/item.vue';
 })
 export default class AppChatMemberList extends Vue {
 	@Prop(propRequired(Array)) users!: ChatUser[];
-	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
+	@Prop(propRequired(Object)) room!: ChatRoom;
 	@Prop(propOptional(Boolean, false)) hideFilter!: boolean;
 
 	filterQuery = '';

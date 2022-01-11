@@ -8,7 +8,7 @@ import { CommunityChannel } from '../channel.model';
 	},
 })
 export default class AppCommunityChannelSelect extends Vue {
-	@Prop(CommunityChannel)
+	@Prop(Object)
 	modelValue?: CommunityChannel;
 
 	@Prop(Array)

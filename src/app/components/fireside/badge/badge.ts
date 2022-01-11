@@ -23,7 +23,7 @@ import AppFiresideStreamPreview from '../stream/preview/preview.vue';
 	},
 })
 export default class AppFiresideBadge extends Vue {
-	@Prop({ type: Fireside, required: true })
+	@Prop({ type: Object, required: true })
 	fireside!: Fireside | null;
 
 	@Prop({ type: Boolean, required: false, default: null })

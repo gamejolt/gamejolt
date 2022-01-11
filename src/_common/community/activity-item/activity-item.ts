@@ -27,7 +27,7 @@ import { CommunityActivityItem } from './activity-item.model';
 	},
 })
 export default class AppCommunityActivityItem extends Vue {
-	@Prop(propRequired(CommunityActivityItem)) item!: CommunityActivityItem;
+	@Prop(propRequired(Object)) item!: CommunityActivityItem;
 	@Prop(propRequired(Boolean)) usersplit!: boolean;
 	@Prop(propRequired(Boolean)) showIcon!: boolean;
 

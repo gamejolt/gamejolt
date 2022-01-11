@@ -115,10 +115,10 @@ export default class FormPost
 	@AppState
 	user!: AppStore['user'];
 
-	@Prop(propOptional(Community, null))
+	@Prop(propOptional(Object, null))
 	defaultCommunity!: Community | null;
 
-	@Prop(propOptional(CommunityChannel, null))
+	@Prop(propOptional(Object, null))
 	defaultChannel!: CommunityChannel | null;
 
 	readonly MAX_POLL_ITEMS = 10;

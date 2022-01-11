@@ -26,7 +26,7 @@ import { Store } from '../../../store/index';
 	},
 })
 export default class AppGameFollowWidget extends Vue {
-	@Prop({ type: Game, required: true })
+	@Prop({ type: Object, required: true })
 	game!: Game;
 
 	@Prop({ type: String, required: true })

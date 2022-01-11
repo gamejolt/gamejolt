@@ -8,7 +8,7 @@ import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 	},
 })
 export default class AppGameOgrsTag extends Vue {
-	@Prop(Game) game!: Game;
+	@Prop(Object) game!: Game;
 	@Prop(Boolean) full?: boolean;
 
 	readonly assetPaths = import.meta.globEager('./*.svg');

@@ -96,7 +96,7 @@ export function createReadableTimestamp(time: number) {
 	},
 })
 export default class AppVideoPlayer extends Vue {
-	@Prop(propRequired(MediaItem)) mediaItem!: MediaItem;
+	@Prop(propRequired(Object)) mediaItem!: MediaItem;
 	@Prop(propRequired(Array)) manifests!: VideoSourceArray;
 	@Prop(propOptional(Boolean, false)) autoplay!: boolean;
 	@Prop(propOptional(Number, 0)) startTime!: number;

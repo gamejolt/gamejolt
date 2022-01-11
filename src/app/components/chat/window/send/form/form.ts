@@ -41,7 +41,7 @@ class Wrapper extends BaseForm<FormModel> {}
 })
 export default class AppChatWindowSendForm extends mixins(Wrapper) {
 	@Prop(propRequired(Boolean)) singleLineMode!: boolean;
-	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
+	@Prop(propRequired(Object)) room!: ChatRoom;
 
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;

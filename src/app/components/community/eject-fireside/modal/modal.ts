@@ -15,10 +15,10 @@ import { CommunityEjectFiresideModalResult } from './modal.service';
 	},
 })
 export default class AppCommunityEjectFiresideModal extends mixins(BaseModal) {
-	@Prop({ type: FiresideCommunity, required: true })
+	@Prop({ type: Object, required: true })
 	firesideCommunity!: FiresideCommunity;
 
-	@Prop({ type: Fireside, required: true })
+	@Prop({ type: Object, required: true })
 	fireside!: Fireside;
 
 	@AppState

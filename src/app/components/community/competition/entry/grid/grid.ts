@@ -17,12 +17,12 @@ import AppCommunityCompetitionEntryThumbnail from '../thumbnail/thumbnail.vue';
 	},
 })
 export default class AppCommunityCompetitionEntryGrid extends Vue {
-	@Prop(propRequired(CommunityCompetition)) competition!: CommunityCompetition;
+	@Prop(propRequired(Object)) competition!: CommunityCompetition;
 	@Prop(propRequired(Array)) entries!: CommunityCompetitionEntry[];
 	@Prop(propOptional(Number, 0)) currentPage!: number;
 	@Prop(propOptional(Number, 0)) pageCount!: number;
 	@Prop(propOptional(Number, 6)) numPlaceholders!: number;
-	@Prop(propOptional(CommunityCompetitionVotingCategory))
+	@Prop(propOptional(Object))
 	category?: CommunityCompetitionVotingCategory;
 	@Prop(propOptional(Boolean, false)) showRemove!: boolean;
 

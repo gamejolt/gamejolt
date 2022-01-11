@@ -21,7 +21,7 @@ import { ChatRoomDetailsModal } from '../../room-details-modal/room-details-moda
 	},
 })
 export default class AppChatWindowMenu extends Vue {
-	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
+	@Prop(propRequired(Object)) room!: ChatRoom;
 
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;

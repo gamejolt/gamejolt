@@ -16,7 +16,7 @@ class Wrapper extends BaseForm<FormModel> {}
 	},
 })
 export default class AppBlockForm extends mixins(Wrapper) implements FormOnSubmit {
-	@Prop(User)
+	@Prop(Object)
 	user!: User;
 
 	onSubmit() {

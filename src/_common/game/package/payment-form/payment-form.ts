@@ -50,12 +50,12 @@ export default class FormGamePackagePayment
 	extends mixins(Wrapper)
 	implements FormOnSubmit, FormOnSubmitSuccess, FormOnSubmitError
 {
-	@Prop(Game) game!: Game;
-	@Prop(GamePackage) package!: GamePackage;
-	@Prop(GameBuild) build?: GameBuild;
-	@Prop(Sellable) sellable!: Sellable;
+	@Prop(Object) game!: Game;
+	@Prop(Object) package!: GamePackage;
+	@Prop(Object) build?: GameBuild;
+	@Prop(Object) sellable!: Sellable;
 	@Prop(String) partnerKey?: string;
-	@Prop(User) partner?: User;
+	@Prop(Object) partner?: User;
 	@Prop(String) operation!: 'download' | 'play';
 
 	@State

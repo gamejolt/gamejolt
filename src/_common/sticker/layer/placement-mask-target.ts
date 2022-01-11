@@ -24,8 +24,8 @@ export function getStickerLayerTargetBoundingBox(rect: StickerLayerTargetRect) {
 
 @Options({})
 export default class AppStickerLayerPlacementMaskTarget extends Vue {
-	@Prop(propRequired()) target!: AppStickerTarget;
-	@Prop(propRequired(StickerLayerController)) layer!: StickerLayerController;
+	@Prop(propRequired(Object)) target!: AppStickerTarget;
+	@Prop(propRequired(Object)) layer!: StickerLayerController;
 
 	x = 0;
 	y = 0;

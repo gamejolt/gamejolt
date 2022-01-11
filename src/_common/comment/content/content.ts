@@ -20,7 +20,7 @@ import '../comment.styl';
 	},
 })
 export default class AppCommentContent extends Vue {
-	@Prop(propRequired(Comment)) comment!: Comment;
+	@Prop(propRequired(Object)) comment!: Comment;
 	@Prop(propOptional(String, '')) content!: string;
 	@Prop(propOptional(Boolean, false)) canPlaceStickers!: boolean;
 

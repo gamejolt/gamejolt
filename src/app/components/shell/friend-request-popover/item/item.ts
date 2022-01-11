@@ -25,7 +25,7 @@ const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` }
 	},
 })
 export default class AppShellFriendRequestPopoverItem extends Vue {
-	@Prop(propRequired(UserFriendship)) request!: UserFriendship;
+	@Prop(propRequired(Object)) request!: UserFriendship;
 
 	@AppState user!: AppStore['user'];
 

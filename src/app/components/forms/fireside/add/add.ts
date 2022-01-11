@@ -34,7 +34,7 @@ export default class FormFiresideAdd extends mixins(Wrapper) {
 	@Prop({ type: String, default: undefined })
 	defaultTitle?: string;
 
-	@Prop(propOptional(Community, null))
+	@Prop(propOptional(Object, null))
 	community!: Community | null;
 
 	get canSelectCommunity() {

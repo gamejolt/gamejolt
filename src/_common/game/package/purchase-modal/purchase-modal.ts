@@ -20,12 +20,12 @@ import FormGamePackagePayment from '../payment-form/payment-form.vue';
 	},
 })
 export default class AppGamePackagePurchaseModal extends mixins(BaseModal) {
-	@Prop(Game) game!: Game;
-	@Prop(GamePackage) package!: GamePackage;
-	@Prop(GameBuild) build!: GameBuild | null;
+	@Prop(Object) game!: Game;
+	@Prop(Object) package!: GamePackage;
+	@Prop(Object) build!: GameBuild | null;
 	@Prop(Boolean) fromExtraSection!: boolean;
 	@Prop(String) partnerKey?: string;
-	@Prop(User) partner?: User;
+	@Prop(Object) partner?: User;
 
 	static hook = {
 		downloadPackage: undefined as

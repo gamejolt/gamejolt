@@ -5,7 +5,7 @@ import { toggleVideoPlayback, trackVideoPlayerEvent, VideoPlayerController } fro
 
 @Options({})
 export default class AppVideoPlayerPlayback extends Vue {
-	@Prop(propRequired(VideoPlayerController)) player!: VideoPlayerController;
+	@Prop(propRequired(Object)) player!: VideoPlayerController;
 
 	get icon() {
 		switch (this.player.state) {

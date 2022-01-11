@@ -12,7 +12,7 @@ import { Store } from '../../../../../store';
 	},
 })
 export default class AppOnboardingFollowsCommunityItem extends Vue {
-	@Prop({ type: Community, required: true })
+	@Prop({ type: Object, required: true })
 	community!: Community;
 
 	@Action joinCommunity!: Store['joinCommunity'];

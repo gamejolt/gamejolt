@@ -37,13 +37,13 @@ import {
 	},
 })
 export default class AppClientPackageCardButtons extends Vue {
-	@Prop(Game)
+	@Prop(Object)
 	game!: Game;
 
-	@Prop(GamePackage)
+	@Prop(Object)
 	package!: GamePackage;
 
-	@Prop(GamePackageCardModel)
+	@Prop(Object)
 	card!: GamePackageCardModel;
 
 	@ClientLibraryState

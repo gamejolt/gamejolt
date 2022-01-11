@@ -11,7 +11,7 @@ import { AppTheme } from '../../../../_common/theme/theme';
 	},
 })
 export default class AppGameCommunityBadge extends Vue {
-	@Prop(Community)
+	@Prop(Object)
 	community!: Community;
 
 	readonly formatNumber = formatNumber;

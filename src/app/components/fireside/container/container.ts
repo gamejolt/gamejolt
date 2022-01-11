@@ -55,7 +55,7 @@ interface GridStickerPlacementPayload {
 
 @Options({})
 export class AppFiresideContainer extends Vue {
-	@Prop({ type: FiresideController, required: true })
+	@Prop({ type: Object, required: true })
 	@Provide({ to: FiresideControllerKey, reactive: true })
 	controller!: FiresideController;
 

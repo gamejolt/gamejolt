@@ -12,7 +12,7 @@ import { FiresidePublishModalResult } from './publish-modal.service';
 	},
 })
 export default class AppFiresidePublishModal extends mixins(BaseModal) {
-	@Prop(propRequired(Fireside)) fireside!: Fireside;
+	@Prop(propRequired(Object)) fireside!: Fireside;
 
 	onFormSubmit(formData: FormModel) {
 		this.modal.resolve({

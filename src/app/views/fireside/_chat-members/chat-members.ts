@@ -11,9 +11,9 @@ import { ChatUserCollection } from '../../../components/chat/user-collection';
 	},
 })
 export default class AppFiresideChatMembers extends Vue {
-	@Prop({ type: ChatUserCollection, required: true })
+	@Prop({ type: Object, required: true })
 	chatUsers!: ChatUserCollection;
 
-	@Prop({ type: ChatRoom, required: true })
+	@Prop({ type: Object, required: true })
 	chatRoom!: ChatRoom;
 }

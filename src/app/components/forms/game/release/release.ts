@@ -45,10 +45,10 @@ export default class FormGameRelease
 {
 	modelClass = GameRelease as any;
 
-	@Prop(Game)
+	@Prop(Object)
 	game!: Game;
 
-	@Prop(GamePackage)
+	@Prop(Object)
 	package!: GamePackage;
 
 	@Prop(Array)

@@ -11,7 +11,7 @@ import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.
 	},
 })
 export default class AppCommunityChannelDescription extends Vue {
-	@Prop(propRequired(CommunityChannel)) channel!: CommunityChannel;
+	@Prop(propRequired(Object)) channel!: CommunityChannel;
 
 	canToggleDescription = false;
 	isDescriptionOpen = false;

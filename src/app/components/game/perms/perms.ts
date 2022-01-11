@@ -6,7 +6,7 @@ import { RouteStore, RouteStoreName } from '../../../views/dashboard/games/manag
 
 @Options({})
 export class AppGamePerms extends Vue {
-	@Prop(Game) game?: Game;
+	@Prop(Object) game?: Game;
 	@Prop({ type: String, default: '' })
 	required!: string;
 	@Prop(Boolean) either?: boolean;

@@ -10,7 +10,7 @@ import { scrubVideo, VideoPlayerController } from '../controller';
 	},
 })
 export default class AppVideoPlayerScrubber extends Vue {
-	@Prop(propRequired(VideoPlayerController)) player!: VideoPlayerController;
+	@Prop(propRequired(Object)) player!: VideoPlayerController;
 
 	private timebarLeft = 0;
 	private timebarWidth = 0;

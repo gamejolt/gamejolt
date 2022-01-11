@@ -54,10 +54,10 @@ let CommentNum = 0;
 	},
 })
 export default class AppCommentWidgetComment extends Vue {
-	@Prop(propRequired(Model)) model!: Model;
-	@Prop(propRequired(Comment)) comment!: Comment;
+	@Prop(propRequired(Object)) model!: Model;
+	@Prop(propRequired(Object)) comment!: Comment;
 	@Prop(propOptional(Array, () => [])) children!: Comment[];
-	@Prop(propOptional(Comment)) parent?: Comment;
+	@Prop(propOptional(Object)) parent?: Comment;
 	@Prop(propOptional(Boolean, false)) isLastInThread!: boolean;
 	@Prop(propOptional(Boolean, false)) showChildren!: boolean;
 

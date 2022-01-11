@@ -35,7 +35,7 @@ export default class AppCommentOverview extends Vue {
 	@Prop(Array)
 	comments!: Comment[];
 
-	@Prop(Model)
+	@Prop(Object)
 	model!: Model;
 
 	@Prop(String)

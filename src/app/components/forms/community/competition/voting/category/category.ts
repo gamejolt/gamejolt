@@ -16,7 +16,7 @@ export default class FormCommunityCompetitionVotingCategory
 	extends mixins(Wrapper)
 	implements FormOnBeforeSubmit
 {
-	@Prop(propRequired(CommunityCompetition)) competition!: CommunityCompetition;
+	@Prop(propRequired(Object)) competition!: CommunityCompetition;
 
 	modelClass = CommunityCompetitionVotingCategory;
 

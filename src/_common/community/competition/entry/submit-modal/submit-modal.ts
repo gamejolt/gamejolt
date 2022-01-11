@@ -18,7 +18,7 @@ import { CommunityCompetitionEntry } from '../entry.model';
 	},
 })
 export default class AppCommunityCompetitionEntrySubmitModal extends mixins(BaseModal) {
-	@Prop(propRequired(CommunityCompetition)) competition!: CommunityCompetition;
+	@Prop(propRequired(Object)) competition!: CommunityCompetition;
 
 	games: Game[] = [];
 	isLoading = true;

@@ -10,7 +10,7 @@ import AppBlockForm from '../form/form.vue';
 	},
 })
 export default class AppReportModal extends mixins(BaseModal) {
-	@Prop(User)
+	@Prop(Object)
 	user!: User;
 
 	onSubmittedBlock() {

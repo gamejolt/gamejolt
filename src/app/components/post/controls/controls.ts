@@ -56,13 +56,13 @@ import AppPostControlsUserFollow from './user-follow/user-follow.vue';
 	},
 })
 export default class AppPostControls extends Vue {
-	@Prop({ type: FiresidePost, required: true })
+	@Prop({ type: Object, required: true })
 	post!: FiresidePost;
 
-	@Prop({ type: ActivityFeedView, required: false })
+	@Prop({ type: Object, required: false })
 	feed?: ActivityFeedView;
 
-	@Prop({ type: ActivityFeedItem, required: false })
+	@Prop({ type: Object, required: false })
 	item?: ActivityFeedItem;
 
 	@Prop({ type: String, required: true })

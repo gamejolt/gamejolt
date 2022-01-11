@@ -9,7 +9,7 @@ import { MediaItem } from '../../../../../../_common/media-item/media-item-model
 	},
 })
 export default class AppCommunityChannelCardEdit extends Vue {
-	@Prop(propOptional(MediaItem, null)) background!: MediaItem | null;
+	@Prop(propOptional(Object, null)) background!: MediaItem | null;
 
 	@Emit('click') emitClick() {}
 

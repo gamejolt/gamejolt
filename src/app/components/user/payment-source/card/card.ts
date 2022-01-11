@@ -12,7 +12,7 @@ import AppUserAddressDetails from '../../address/details/details.vue';
 	},
 })
 export default class AppUserPaymentSourceCard extends Vue {
-	@Prop(PaymentSource) paymentSource!: PaymentSource;
+	@Prop(Object) paymentSource!: PaymentSource;
 	@Prop(Boolean) showRemove?: boolean;
 
 	@Emit('remove')

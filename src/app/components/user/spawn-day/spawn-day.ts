@@ -18,7 +18,7 @@ import { PostEditModal } from '../../post/edit-modal/edit-modal-service';
 	},
 })
 export default class AppUserSpawnDay extends Vue {
-	@Prop(User)
+	@Prop(Object)
 	user!: User;
 
 	@State

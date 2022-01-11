@@ -38,7 +38,7 @@ import { ActivityFeedKey, ActivityFeedView } from '../view';
 	},
 })
 export default class AppActivityFeedNotification extends Vue {
-	@Prop({ type: ActivityFeedItem, required: true })
+	@Prop({ type: Object, required: true })
 	item!: ActivityFeedItem;
 
 	@Inject({ from: ActivityFeedKey })

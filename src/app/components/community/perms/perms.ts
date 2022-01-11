@@ -6,7 +6,7 @@ import { Community } from '../../../../_common/community/community.model';
 
 @Options({})
 export class AppCommunityPerms extends Vue {
-	@Prop(propRequired(Community)) community!: Community;
+	@Prop(propRequired(Object)) community!: Community;
 	@Prop(propOptional(String, '')) required!: string;
 	@Prop(propOptional(Boolean, false)) either!: boolean;
 	@Prop(propOptional(String, 'span')) tag!: string;

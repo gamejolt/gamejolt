@@ -18,7 +18,7 @@ import { ClientLibraryAction, ClientLibraryStore } from '../../../store/client-l
 	},
 })
 export default class AppClientInstallPackageModal extends mixins(BaseModal) {
-	@Prop(Game) game!: Game;
+	@Prop(Object) game!: Game;
 
 	@ClientLibraryAction packageInstall!: ClientLibraryStore['packageInstall'];
 

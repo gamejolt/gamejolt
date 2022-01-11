@@ -56,10 +56,10 @@ export default class FormGamePackage
 	@AppState
 	user!: AppStore['user'];
 
-	@Prop(Game)
+	@Prop(Object)
 	game!: Game;
 
-	@Prop(Sellable)
+	@Prop(Object)
 	sellable!: Sellable;
 
 	showDescriptionInput = false;

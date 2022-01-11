@@ -29,7 +29,7 @@ const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height * 0.5}px`
 	},
 })
 export default class AppFiresidePostEmbed extends Vue {
-	@Prop(propRequired(FiresidePostEmbed)) embed!: FiresidePostEmbed;
+	@Prop(propRequired(Object)) embed!: FiresidePostEmbed;
 	@Prop(propOptional(Boolean, true)) hideOutview!: boolean;
 
 	readonly InviewConfig = InviewConfig;

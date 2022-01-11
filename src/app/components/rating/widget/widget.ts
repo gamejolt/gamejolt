@@ -24,10 +24,10 @@ export const onRatingWidgetChange = new EventTopic<RatingWidgetOnChangePayload>(
 	},
 })
 export default class AppRatingWidget extends Vue {
-	@Prop(Game)
+	@Prop(Object)
 	game!: Game;
 
-	@Prop(GameRating)
+	@Prop(Object)
 	userRating?: GameRating;
 
 	@Prop(Boolean)

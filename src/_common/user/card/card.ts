@@ -25,7 +25,7 @@ import AppUserVerifiedTick from '../verified-tick/verified-tick.vue';
 	},
 })
 export default class AppUserCard extends Vue {
-	@Prop(propRequired(User)) user!: User;
+	@Prop(propRequired(Object)) user!: User;
 	@Prop(propOptional(Boolean, false)) isLoading!: boolean;
 	@Prop(propOptional(Boolean, false)) elevate!: boolean;
 

@@ -7,7 +7,7 @@ import {
 
 @Options({})
 export default class AppVolumeMeter extends Vue {
-	@Prop({ type: FiresideRTCProducer, required: true })
+	@Prop({ type: Object, required: true })
 	producer!: FiresideRTCProducer;
 
 	@Prop({ type: String, required: true })

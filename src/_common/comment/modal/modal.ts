@@ -15,7 +15,7 @@ export default class AppCommentModal extends mixins(BaseModal) {
 	@Prop(String)
 	displayMode!: DisplayMode;
 
-	@Prop(Model)
+	@Prop(Object)
 	model!: Model;
 
 	@Prop(propOptional(String))

@@ -13,7 +13,7 @@ import AppGameOgrs from '../ogrs/ogrs.vue';
 	},
 })
 export default class AppGameMaturityBlock extends Vue {
-	@Prop(Game) game!: Game;
+	@Prop(Object) game!: Game;
 
 	@State app!: Store['app'];
 

@@ -29,8 +29,8 @@ class Wrapper extends BaseForm<FormModel> {}
 	},
 })
 export default class FormCommunityBlock extends mixins(Wrapper) implements FormOnSubmit {
-	@Prop(propRequired(Community)) community!: Community;
-	@Prop(propOptional(User, null)) user?: User | null;
+	@Prop(propRequired(Object)) community!: Community;
+	@Prop(propOptional(Object, null)) user?: User | null;
 
 	usernameLocked = false;
 	otherOptions: string[] = [];

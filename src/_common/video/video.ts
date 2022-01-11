@@ -20,7 +20,7 @@ type VideoSourceObject = {
 	},
 })
 export default class AppVideo extends Vue {
-	@Prop(propRequired(VideoPlayerController))
+	@Prop(propRequired(Object))
 	player!: VideoPlayerController;
 	@Prop(propOptional(Boolean, false)) showLoading!: boolean;
 	@Prop(propOptional(Boolean, true)) shouldPlay!: boolean;

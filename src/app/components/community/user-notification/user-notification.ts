@@ -20,7 +20,7 @@ import {
 	},
 })
 export default class AppCommunityUserNotification extends Vue {
-	@Prop(propRequired(CommunityUserNotification)) notification!: CommunityUserNotification;
+	@Prop(propRequired(Object)) notification!: CommunityUserNotification;
 
 	@Emit('dismiss')
 	emitDismiss() {}

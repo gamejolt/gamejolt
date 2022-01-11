@@ -49,10 +49,10 @@ const LoadDelay = 300;
 	},
 })
 export default class AppActivityFeedVideoPlayer extends Vue {
-	@Prop({ type: ActivityFeedItem, required: true })
+	@Prop({ type: Object, required: true })
 	feedItem!: ActivityFeedItem;
 
-	@Prop({ type: MediaItem, required: true })
+	@Prop({ type: Object, required: true })
 	mediaItem!: MediaItem;
 
 	@Prop({ type: Array, required: true })

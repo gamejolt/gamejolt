@@ -48,7 +48,7 @@ class Wrapper extends BaseForm<FormModel> {}
 	},
 })
 export default class AppStreamSetup extends mixins(Wrapper) {
-	@Prop({ type: FiresideController, required: true })
+	@Prop({ type: Object, required: true })
 	c!: FiresideController;
 
 	isStarting = false;

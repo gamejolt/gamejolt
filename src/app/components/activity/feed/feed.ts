@@ -55,7 +55,7 @@ export function useActivityFeedInterface() {
 	},
 })
 export default class AppActivityFeed extends Vue {
-	@Prop(propRequired(ActivityFeedView))
+	@Prop(propRequired(Object))
 	@Provide({ to: ActivityFeedKey })
 	feed!: ActivityFeedView;
 

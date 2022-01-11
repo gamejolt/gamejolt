@@ -11,8 +11,8 @@ import FormCommunityChannelChangeUrl from '../../../forms/community/channel/chan
 	},
 })
 export default class AppCommunityChannelChangeUrlModal extends mixins(BaseModal) {
-	@Prop(propRequired(CommunityChannel)) channel!: CommunityChannel;
-	@Prop(propRequired(Community)) community!: Community;
+	@Prop(propRequired(Object)) channel!: CommunityChannel;
+	@Prop(propRequired(Object)) community!: Community;
 	@Prop(propRequired(Array)) channels!: CommunityChannel[];
 
 	onSubmit(channel: CommunityChannel) {

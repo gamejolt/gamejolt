@@ -16,7 +16,7 @@ import { followUser, unfollowUser, User } from '../user.model';
 	},
 })
 export default class AppUserFollowWidget extends Vue {
-	@Prop({ type: User, required: true })
+	@Prop({ type: Object, required: true })
 	user!: User;
 
 	@Prop({ type: String, required: true })

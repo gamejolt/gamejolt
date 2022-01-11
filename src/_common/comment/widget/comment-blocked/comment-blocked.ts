@@ -9,7 +9,7 @@ import { Comment, CommentBlockReason } from '../../comment-model';
 	},
 })
 export default class AppCommentWidgetCommentBlocked extends Vue {
-	@Prop(propRequired(Comment)) comment!: Comment;
+	@Prop(propRequired(Object)) comment!: Comment;
 	@Prop(propRequired(String)) reason!: CommentBlockReason;
 
 	@Emit('show') show() {}

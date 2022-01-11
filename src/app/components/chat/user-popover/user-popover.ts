@@ -29,8 +29,8 @@ import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vu
 	},
 })
 export default class AppChatUserPopover extends Vue {
-	@Prop(propRequired(ChatUser)) user!: ChatUser;
-	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
+	@Prop(propRequired(Object)) user!: ChatUser;
+	@Prop(propRequired(Object)) room!: ChatRoom;
 
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;

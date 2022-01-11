@@ -11,8 +11,8 @@ import FormCommunityBlock from '../../forms/community/ban/block.vue';
 	},
 })
 export default class AppCommunityBlocKUserModal extends mixins(BaseModal) {
-	@Prop(propRequired(Community)) community!: Community;
-	@Prop(propRequired(User)) user!: User;
+	@Prop(propRequired(Object)) community!: Community;
+	@Prop(propRequired(Object)) user!: User;
 
 	onFormSubmit() {
 		this.modal.resolve(true);

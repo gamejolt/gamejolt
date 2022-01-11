@@ -16,7 +16,7 @@ import AppChatWindowSendForm from './form/form.vue';
 	},
 })
 export default class AppChatWindowSend extends Vue {
-	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
+	@Prop(propRequired(Object)) room!: ChatRoom;
 
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;

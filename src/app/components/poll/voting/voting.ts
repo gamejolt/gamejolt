@@ -22,9 +22,9 @@ import { Store } from '../../../store';
 })
 export default class AppPollVoting extends Vue {
 	@State app!: Store['app'];
-	@Prop(propRequired(Poll)) poll!: Poll;
-	@Prop(propOptional(Game)) game?: Game;
-	@Prop(propOptional(User)) user?: User;
+	@Prop(propRequired(Object)) poll!: Poll;
+	@Prop(propOptional(Object)) game?: Game;
+	@Prop(propOptional(Object)) user?: User;
 
 	chosenItemId: number | null = null;
 	isProcessing = false;

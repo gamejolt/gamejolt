@@ -18,7 +18,7 @@ import AppFiresideAvatarBase from '../_base/base.vue';
 export default class AppFiresideAvatarAdd extends Vue {
 	@AppState user!: AppStore['user'];
 
-	@Prop({ type: Community, default: undefined })
+	@Prop({ type: Object, default: undefined })
 	community!: Community | undefined;
 
 	declare $refs: {

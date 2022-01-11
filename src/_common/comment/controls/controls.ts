@@ -19,9 +19,9 @@ import { CommentVote } from '../vote/vote-model';
 	},
 })
 export default class AppCommentControls extends Vue {
-	@Prop(propRequired(Model)) model!: Model;
-	@Prop(propRequired(Comment)) comment!: Comment;
-	@Prop(propOptional(Comment)) parent!: undefined | Comment;
+	@Prop(propRequired(Object)) model!: Model;
+	@Prop(propRequired(Object)) comment!: Comment;
+	@Prop(propOptional(Object)) parent!: undefined | Comment;
 	@Prop(propOptional(Array, () => [])) children!: Comment[];
 	@Prop(propOptional(Boolean, false)) showReply!: boolean;
 	@Prop(propOptional(Boolean, false)) canReply!: boolean;

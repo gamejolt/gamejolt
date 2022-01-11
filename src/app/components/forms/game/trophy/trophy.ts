@@ -17,7 +17,7 @@ class Wrapper extends BaseForm<GameTrophy> {}
 	},
 })
 export default class FormGameTrophy extends mixins(Wrapper) implements FormOnLoad {
-	@Prop(Game) game!: Game;
+	@Prop(Object) game!: Game;
 	@Prop(Number) difficulty!: number;
 
 	modelClass = GameTrophy;

@@ -27,7 +27,7 @@ export default class AppCommentThreadModal extends mixins(BaseModal) {
 	@Prop(Number)
 	commentId!: number;
 
-	@Prop(Model)
+	@Prop(Object)
 	model!: Model;
 
 	@Prop(String)

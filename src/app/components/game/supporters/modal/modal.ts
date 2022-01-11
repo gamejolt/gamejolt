@@ -16,7 +16,7 @@ const UsersPerPage = 20;
 	},
 })
 export default class AppSupportersModal extends mixins(BaseModal) {
-	@Prop(Game)
+	@Prop(Object)
 	game!: Game;
 
 	@Prop(Number)

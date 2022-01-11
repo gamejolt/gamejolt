@@ -12,7 +12,7 @@ import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 	},
 })
 export default class AppForumTopicUpvoteWidget extends Vue {
-	@Prop(ForumTopic) topic!: ForumTopic;
+	@Prop(Object) topic!: ForumTopic;
 
 	readonly formatNumber = formatNumber;
 	readonly formatFuzzynumber = formatFuzzynumber;

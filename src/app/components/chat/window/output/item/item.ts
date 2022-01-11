@@ -37,8 +37,8 @@ export interface ChatMessageEditEvent {
 	},
 })
 export default class AppChatWindowOutputItem extends Vue {
-	@Prop(ChatMessage) message!: ChatMessage;
-	@Prop(ChatRoom) room!: ChatRoom;
+	@Prop(Object) message!: ChatMessage;
+	@Prop(Object) room!: ChatRoom;
 	@Prop(propRequired(Boolean)) isNew!: boolean;
 
 	@Inject({ from: ChatStoreKey })

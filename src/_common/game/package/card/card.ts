@@ -36,13 +36,13 @@ import { GamePackageCardModel } from './card.model';
 	},
 })
 export default class AppGamePackageCard extends Vue {
-	@Prop(Game)
+	@Prop(Object)
 	game!: Game;
 
-	@Prop(GamePackage)
+	@Prop(Object)
 	package!: GamePackage;
 
-	@Prop(Sellable)
+	@Prop(Object)
 	sellable!: Sellable;
 
 	@Prop({ type: Array, default: () => [] })
@@ -60,7 +60,7 @@ export default class AppGamePackageCard extends Vue {
 	@Prop(String)
 	partnerKey?: string;
 
-	@Prop(User)
+	@Prop(Object)
 	partner?: User;
 
 	static hook = {

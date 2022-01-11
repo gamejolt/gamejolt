@@ -25,10 +25,10 @@ export default class AppHomeFireside extends Vue {
 	@Prop({ type: Boolean, required: true })
 	isLoading!: boolean;
 
-	@Prop({ type: Fireside, default: null })
+	@Prop({ type: Object, default: null })
 	featuredFireside!: Fireside | null;
 
-	@Prop({ type: Fireside, default: null })
+	@Prop({ type: Object, default: null })
 	userFireside!: Fireside | null;
 
 	@Prop({ type: Boolean })

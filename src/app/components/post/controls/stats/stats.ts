@@ -10,7 +10,7 @@ import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 	},
 })
 export default class AppPostControlsStats extends Vue {
-	@Prop({ type: FiresidePost, required: true })
+	@Prop({ type: Object, required: true })
 	post!: FiresidePost;
 
 	@AppState user!: AppStore['user'];

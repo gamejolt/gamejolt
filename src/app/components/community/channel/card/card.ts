@@ -23,10 +23,10 @@ const CARD_HEIGHT = 70;
 	},
 })
 export default class AppCommunityChannelCard extends Vue {
-	@Prop(propRequired(Community)) community!: Community;
+	@Prop(propRequired(Object)) community!: Community;
 	@Prop(propRequired(String)) path!: string;
 	@Prop(propRequired(String)) label!: string;
-	@Prop(propOptional(MediaItem)) backgroundItem?: MediaItem;
+	@Prop(propOptional(Object)) backgroundItem?: MediaItem;
 	@Prop(propOptional(Boolean, false)) isActive!: boolean;
 	@Prop(propOptional(Boolean, false)) isUnread!: boolean;
 	@Prop(propOptional(String)) sort!: string;

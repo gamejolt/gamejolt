@@ -17,10 +17,10 @@ export default class AppFiresideAvatarBase extends Vue {
 	@Prop({ type: Boolean })
 	isLive!: boolean;
 
-	@Prop({ type: MediaItem, default: null })
+	@Prop({ type: Object, default: null })
 	avatarMediaItem!: MediaItem | null;
 
-	@Prop({ type: Community, default: null })
+	@Prop({ type: Object, default: null })
 	community!: Community | null;
 
 	@Prop({ type: String, default: null })

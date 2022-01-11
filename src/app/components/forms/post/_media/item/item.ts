@@ -8,7 +8,7 @@ import { MediaItem } from '../../../../../../_common/media-item/media-item-model
 	},
 })
 export default class AppFormPostMediaItem extends Vue {
-	@Prop(MediaItem)
+	@Prop(Object)
 	item!: MediaItem;
 
 	width = 'auto';

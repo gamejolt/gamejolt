@@ -19,8 +19,8 @@ import { CommunityMovePostModalResult } from './modal.service';
 	},
 })
 export default class AppCommunityMovePostModal extends mixins(BaseModal) {
-	@Prop(propRequired(FiresidePostCommunity)) firesidePostCommunity!: FiresidePostCommunity;
-	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
+	@Prop(propRequired(Object)) firesidePostCommunity!: FiresidePostCommunity;
+	@Prop(propRequired(Object)) post!: FiresidePost;
 	@Prop(propRequired(Array)) channels!: CommunityChannel[];
 
 	@AppState
