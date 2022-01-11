@@ -62,10 +62,14 @@ function _show() {
 }
 
 function _scheduleDestroy() {
+	if (!popperInstance.value) {
+		return;
+	}
+
 	// Making sure the popper is positioned where it should be if the text
 	// content changes. We only want to do this if the tooltip is active though,
 	// otherwise we might update positioning to a non-existant reference element.
-	if (popperInstance.value && tooltip.value?.isActive) {
+	if (tooltip.value?.isActive) {
 		popperInstance.value.update();
 	}
 

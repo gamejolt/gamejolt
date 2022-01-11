@@ -35,7 +35,7 @@
 			<slot v-if="!isPlaceholder" name="title" />
 		</div>
 
-		<div v-if="hasLink" class="-link">
+		<div v-if="hasLink" class="-base-link">
 			<slot v-if="!isPlaceholder" name="link" />
 		</div>
 	</div>
@@ -56,8 +56,8 @@
 	border-style: dashed
 	border-color: var(--theme-fg-muted)
 
-.-link
-	> *
+.-base-link
+	::v-deep(> *)
 		@extend .-link
 
 .-placeholder

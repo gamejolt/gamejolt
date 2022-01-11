@@ -138,7 +138,7 @@ export default class AppPopper extends Vue {
 
 	declare $refs: {
 		trigger: HTMLElement;
-		popper: HTMLElement;
+		popper?: HTMLElement;
 	};
 
 	isHiding = false;
@@ -326,9 +326,11 @@ export default class AppPopper extends Vue {
 	}
 
 	private onClickAway(event: MouseEvent) {
+		const { popper, trigger } = this.$refs;
+
 		if (
 			event.target instanceof Node &&
-			(this.$refs.popper.contains(event.target) || this.$refs.trigger.contains(event.target))
+			((popper && popper.contains(event.target)) || trigger.contains(event.target))
 		) {
 			return;
 		}
@@ -352,9 +354,7 @@ export default class AppPopper extends Vue {
 			return;
 		}
 
-		this.popperInstance = createPopper(this.$el, this.$refs.popper, this.popperOptions);
-
-		document.body.appendChild(this.$refs.popper);
+		this.popperInstance = createPopper(this.$el, this.$refs.popper!, this.popperOptions);
 		document.addEventListener('click', this.onClickAway, true);
 	}
 
