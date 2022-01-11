@@ -7,7 +7,7 @@ import { AppTrackEvent } from './analytics/track-event.directive';
 import AppButton from './button/button.vue';
 import { ensureConfig } from './config/config.service';
 import { initConnectionService } from './connection/connection-service';
-import AppJolticon from './jolticon/jolticon.vue';
+import AppJolticon from './jolticon/AppJolticon.vue';
 import AppLinkExternal from './link/external.vue';
 import AppLinkHelp from './link/help/help.vue';
 import { initMetaService } from './meta/meta-service';

@@ -3,7 +3,7 @@ import { forEach } from '../../../../utils/collection';
 import { objectEquals } from '../../../../utils/object';
 import { RouteLocationDefinition } from '../../../../utils/router';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
-import { Translate } from '../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import { router } from '../../../views/index';
 
 const STORAGE_KEY = 'game-filtering:filters-v2';
@@ -47,64 +47,64 @@ export class GameFilteringContainer {
 	static get definitions(): { [k: string]: GameFilteringContainerDefinition } {
 		return {
 			price: {
-				label: Translate.$gettext('Price'),
+				label: $gettext('Price'),
 				type: 'radio',
 				options: {
-					free: Translate.$gettext('Free / Name Your Price'),
-					sale: Translate.$gettext('On Sale'),
-					paid: Translate.$gettext('Paid'),
-					'5-less': Translate.$gettext('$5 or less'),
-					'15-less': Translate.$gettext('$15 or less'),
-					'30-less': Translate.$gettext('$30 or less'),
+					free: $gettext('Free / Name Your Price'),
+					sale: $gettext('On Sale'),
+					paid: $gettext('Paid'),
+					'5-less': $gettext('$5 or less'),
+					'15-less': $gettext('$15 or less'),
+					'30-less': $gettext('$30 or less'),
 				},
 			},
 			os: {
-				label: Translate.$gettext('games.filtering.os'),
+				label: $gettext('games.filtering.os'),
 				type: 'array',
 				options: {
-					windows: Translate.$gettext('games.filtering.os_windows'),
-					mac: Translate.$gettext('games.filtering.os_mac'),
-					linux: Translate.$gettext('games.filtering.os_linux'),
-					other: Translate.$gettext('games.filtering.os_other'),
-					rom: Translate.$gettext('ROM'),
+					windows: $gettext('games.filtering.os_windows'),
+					mac: $gettext('games.filtering.os_mac'),
+					linux: $gettext('games.filtering.os_linux'),
+					other: $gettext('games.filtering.os_other'),
+					rom: $gettext('ROM'),
 				},
 			},
 			browser: {
-				label: Translate.$gettext('games.filtering.browser'),
+				label: $gettext('games.filtering.browser'),
 				type: 'array',
 				options: {
-					html: Translate.$gettext('games.filtering.browser_html'),
-					flash: Translate.$gettext('games.filtering.browser_flash'),
-					unity: Translate.$gettext('games.filtering.browser_unity'),
+					html: $gettext('games.filtering.browser_html'),
+					flash: $gettext('games.filtering.browser_flash'),
+					unity: $gettext('games.filtering.browser_unity'),
 				},
 			},
 			maturity: {
-				label: Translate.$gettext('games.filtering.maturity'),
+				label: $gettext('games.filtering.maturity'),
 				type: 'array',
 				options: {
-					everyone: Translate.$gettext('games.filtering.maturity_everyone'),
-					teen: Translate.$gettext('games.filtering.maturity_teen'),
-					adult: Translate.$gettext('Mature Content'),
+					everyone: $gettext('games.filtering.maturity_everyone'),
+					teen: $gettext('games.filtering.maturity_teen'),
+					adult: $gettext('Mature Content'),
 				},
 			},
 			status: {
-				label: Translate.$gettext('games.filtering.status'),
+				label: $gettext('games.filtering.status'),
 				type: 'array',
 				options: {
-					complete: Translate.$gettext('Complete/Stable'),
-					wip: Translate.$gettext('Early Access'),
-					devlog: Translate.$gettext('Devlog'),
+					complete: $gettext('Complete/Stable'),
+					wip: $gettext('Early Access'),
+					devlog: $gettext('Devlog'),
 				},
 			},
 			partners: {
-				label: Translate.$gettext('Partners'),
+				label: $gettext('Partners'),
 				type: 'array',
 				options: {
-					partners: Translate.$gettext('Show Partner Games'),
+					partners: $gettext('Show Partner Games'),
 				},
 			},
 			query: {
-				label: Translate.$gettext('Filter'),
+				label: $gettext('Filter'),
 				type: 'string',
 			},
 		};
