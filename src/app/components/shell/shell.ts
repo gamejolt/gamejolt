@@ -60,7 +60,6 @@ export default class AppShell extends Vue {
 
 	@BannerModule.State hasBanner!: BannerStore['hasBanner'];
 
-	@SidebarState activeContextPane!: SidebarStore['activeContextPane'];
 	@SidebarState hideOnRouteChange!: SidebarStore['hideOnRouteChange'];
 	@SidebarState showOnRouteChange!: SidebarStore['showOnRouteChange'];
 
@@ -68,6 +67,8 @@ export default class AppShell extends Vue {
 
 	@Action showContextPane!: Store['showContextPane'];
 	@Action clearPanes!: Store['clearPanes'];
+
+	@SidebarState activeContextPane!: SidebarStore['activeContextPane'];
 
 	readonly Connection = Connection;
 	readonly Screen = Screen;
@@ -81,7 +82,12 @@ export default class AppShell extends Vue {
 	}
 
 	get ssrShouldShowSidebar() {
-		return import.meta.env.SSR && this.$route.name?.indexOf('communities.view') === 0;
+		return import.meta.env.SSR && String(this.$route.name).indexOf('communities.view') === 0;
+	}
+
+	@Watch('activeContextPane', { deep: true })
+	yoyoyo() {
+		console.log('-------------------', this.activeContextPane);
 	}
 
 	mounted() {

@@ -26,7 +26,6 @@ import {
 	appStore,
 	Mutations as AppMutations,
 } from '../../_common/store/app-store';
-import { ThemeActions, ThemeMutations, ThemeStore } from '../../_common/theme/theme.store';
 import { Translate } from '../../_common/translate/translate.service';
 import { ActivityFeedState } from '../components/activity/feed/state';
 import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
@@ -42,7 +41,6 @@ import { Actions as LibraryActions, LibraryStore, Mutations as LibraryMutations 
 export { BannerModule, BannerStore } from './banner';
 
 export type Actions = AppActions &
-	ThemeActions &
 	LibraryActions &
 	BannerActions &
 	SidebarActions &
@@ -69,7 +67,6 @@ export type Actions = AppActions &
 	};
 
 export type Mutations = AppMutations &
-	ThemeMutations &
 	LibraryMutations &
 	BannerMutations &
 	SidebarMutations &
@@ -112,15 +109,14 @@ export function tillGridBootstrapped() {
 
 const modules: any = {
 	app: appStore,
-	theme: new ThemeStore(),
-	library: new LibraryStore(),
-	banner: new BannerStore(),
-	sidebar: new SidebarStore(),
+	library: reactive(new LibraryStore()),
+	banner: reactive(new BannerStore()),
+	sidebar: reactive(new SidebarStore()),
 };
 
 if (GJ_IS_DESKTOP_APP) {
 	const mod = await import('./client-library');
-	modules.clientLibrary = new mod.ClientLibraryStore();
+	modules.clientLibrary = reactive(new mod.ClientLibraryStore());
 }
 
 // the two types an event notification can assume, either "activity" for the post activity feed or "notifications"
@@ -132,15 +128,14 @@ type TogglableLeftPane = '' | 'chat' | 'context' | 'library';
 	modules,
 })
 export class Store extends VuexStore<Store, Actions, Mutations> {
-	app!: AppStore;
-	theme!: ThemeStore;
-	library!: LibraryStore;
-	banner!: BannerStore;
-	sidebar!: SidebarStore;
-	clientLibrary!: _ClientLibraryMod.ClientLibraryStore;
+	declare app: AppStore;
+	declare library: LibraryStore;
+	declare banner: BannerStore;
+	declare sidebar: SidebarStore;
+	declare clientLibrary: _ClientLibraryMod.ClientLibraryStore;
 
 	/** From the vuex-router-sync. */
-	route!: RouteLocationNormalized;
+	declare route: RouteLocationNormalized;
 
 	grid: GridClient | null = null;
 

@@ -1,11 +1,12 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
 } from '../../../../../../../_common/route/route-component';
+import { useThemeStore } from '../../../../../../../_common/theme/theme.store';
 import FormGameDesign from '../../../../../../components/forms/game/design/design.vue';
-import { store } from '../../../../../../store';
 import { ManageGameThemeKey } from '../../manage';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
@@ -20,6 +21,8 @@ import { RouteStore, RouteStoreModule } from '../../manage.store';
 	resolver: ({ route }) => Api.sendRequest('/web/dash/developer/games/media/' + route.params.id),
 })
 export default class RouteDashGamesManageGameDesign extends BaseRouteComponent {
+	themeStore = setup(() => useThemeStore());
+
 	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
@@ -43,7 +46,7 @@ export default class RouteDashGamesManageGameDesign extends BaseRouteComponent {
 	}
 
 	onSubmit() {
-		store.commit('theme/setPageTheme', {
+		this.themeStore.setPageTheme({
 			key: ManageGameThemeKey,
 			theme: this.game.theme ?? null,
 		});

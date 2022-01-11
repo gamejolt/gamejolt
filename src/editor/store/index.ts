@@ -6,17 +6,15 @@ import {
 	appStore,
 	Mutations as AppMutations,
 } from '../../_common/store/app-store';
-import { ThemeActions, ThemeMutations, ThemeStore } from '../../_common/theme/theme.store';
 
-export type Actions = AppActions & ThemeActions; // & {};
+export type Actions = AppActions; // & {};
 
-export type Mutations = AppMutations & ThemeMutations; // & {};
+export type Mutations = AppMutations; // & {};
 
 @VuexModule({
 	store: true,
 	modules: {
 		app: appStore,
-		theme: new ThemeStore(),
 	},
 })
 export class Store extends VuexStore<Store, Actions, Mutations> {

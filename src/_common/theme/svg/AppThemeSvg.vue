@@ -24,11 +24,11 @@ const props = defineProps({
 
 const { theme, src, strictColors } = toRefs(props);
 
-const themeStore = useThemeStore();
+const { theme: storeTheme, isDark } = useThemeStore();
 const rawSvg = ref('');
 let _request: Promise<any> | undefined;
 
-const actualTheme = computed(() => theme.value || themeStore.theme);
+const actualTheme = computed(() => theme.value || storeTheme.value);
 
 const processedSvg = computed(() => {
 	if (import.meta.env.SSR) {
@@ -45,9 +45,7 @@ const processedSvg = computed(() => {
 		if (actualTheme.value.custom) {
 			const highlight_ =
 				'#' +
-				(themeStore.isDark
-					? actualTheme.value.darkHighlight_
-					: actualTheme.value.highlight_);
+				(isDark.value ? actualTheme.value.darkHighlight_ : actualTheme.value.highlight_);
 			const hsl = parseToHsl(highlight_);
 			if (hsl.lightness < 0.4) {
 				highlight = lighten(0.3, highlight_);
@@ -76,9 +74,9 @@ const processedSvg = computed(() => {
 		svgData = String(svgData)
 			.replace(/#ccff00/gi, highlight)
 			.replace(/#cf0/gi, highlight)
-			.replace(/#2f7f6f/gi, !strictColors.value && themeStore.isDark ? highlight : backlight)
+			.replace(/#2f7f6f/gi, !strictColors.value && isDark.value ? highlight : backlight)
 			.replace(/#ff3fac/gi, notice)
-			.replace(/#31d6ff/gi, !strictColors.value && themeStore.isDark ? highlight : backlight);
+			.replace(/#31d6ff/gi, !strictColors.value && isDark.value ? highlight : backlight);
 	} else if (!strictColors.value) {
 		// If we have no theme from the prop or the ThemeStore, that means
 		// we're using the default theme colors and only need to replace our
@@ -86,8 +84,8 @@ const processedSvg = computed(() => {
 		const { highlight, backlight } = DefaultTheme;
 
 		svgData = String(svgData)
-			.replace(/#2f7f6f/gi, themeStore.isDark ? '#' + highlight : '#' + backlight)
-			.replace(/#31d6ff/gi, themeStore.isDark ? '#' + highlight : '#' + backlight);
+			.replace(/#2f7f6f/gi, isDark.value ? '#' + highlight : '#' + backlight)
+			.replace(/#31d6ff/gi, isDark.value ? '#' + highlight : '#' + backlight);
 	}
 
 	return 'data:image/svg+xml;utf8,' + encodeURIComponent(svgData);

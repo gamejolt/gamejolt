@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { mixins, Options, Watch } from 'vue-property-decorator';
 import { ClientAutoStart } from '../../../../_common/client/safe-exports';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
@@ -16,7 +17,7 @@ import {
 	SettingThemeDark,
 } from '../../../../_common/settings/settings.service';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
-import { ThemeMutation, ThemeState, ThemeStore } from '../../../../_common/theme/theme.store';
+import { useThemeStore } from '../../../../_common/theme/theme.store';
 
 type FormModel = {
 	chat_notify_friends_online: boolean;
@@ -45,10 +46,8 @@ class Wrapper extends BaseForm<FormModel> {}
 })
 export default class FormSettings extends mixins(Wrapper) {
 	@AppState user!: AppStore['user'];
-	@ThemeState isDark!: ThemeStore['isDark'];
-	@ThemeState alwaysOurs!: ThemeStore['alwaysOurs'];
-	@ThemeMutation setDark!: ThemeStore['setDark'];
-	@ThemeMutation setAlwaysOurs!: ThemeStore['setAlwaysOurs'];
+
+	themeStore = setup(() => useThemeStore());
 
 	get canClientAutostart() {
 		return ClientAutoStart?.canAutoStart;
@@ -124,8 +123,8 @@ export default class FormSettings extends mixins(Wrapper) {
 		SettingThemeDark.set(this.formModel.theme_dark);
 		SettingThemeAlwaysOurs.set(this.formModel.theme_always_ours);
 
-		this.setDark(this.formModel.theme_dark);
-		this.setAlwaysOurs(this.formModel.theme_always_ours);
+		this.themeStore.setDark(this.formModel.theme_dark);
+		this.themeStore.setAlwaysOurs(this.formModel.theme_always_ours);
 
 		if (GJ_IS_DESKTOP_APP) {
 			SettingGameInstallDir.set(this.formModel.game_install_dir);

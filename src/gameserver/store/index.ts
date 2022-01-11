@@ -13,28 +13,23 @@ import {
 	appStore,
 	Mutations as AppMutations,
 } from '../../_common/store/app-store';
-import { ThemeActions, ThemeMutations, ThemeStore } from '../../_common/theme/theme.store';
 
-export type Actions = AppActions &
-	ThemeActions & {
-		bootstrap: undefined;
-	};
+export type Actions = AppActions & {
+	bootstrap: undefined;
+};
 
-export type Mutations = AppMutations &
-	ThemeMutations & {
-		_bootstrap: any;
-	};
+export type Mutations = AppMutations & {
+	_bootstrap: any;
+};
 
 @VuexModule({
 	store: true,
 	modules: {
 		app: appStore,
-		theme: new ThemeStore(),
 	},
 })
 export class Store extends VuexStore<Store, Actions, Mutations> {
 	app!: AppStore;
-	theme!: ThemeStore;
 
 	game: Game | null = null;
 	package: GamePackage | null = null;

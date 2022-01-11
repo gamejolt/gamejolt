@@ -1,4 +1,5 @@
 import { transparentize } from 'polished';
+import { setup } from 'vue-class-component';
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { ContentRules } from '../../../../../../_common/content/content-editor/content-rules';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
@@ -8,7 +9,7 @@ import { Popper } from '../../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { DefaultTheme } from '../../../../../../_common/theme/theme.model';
-import { ThemeState, ThemeStore } from '../../../../../../_common/theme/theme.store';
+import { useThemeStore } from '../../../../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { ChatStore, ChatStoreKey } from '../../../chat-store';
 import {
@@ -43,8 +44,7 @@ export default class AppChatWindowOutputItem extends Vue {
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;
 
-	@ThemeState theme?: ThemeStore['theme'];
-	@ThemeState isDark?: ThemeStore['isDark'];
+	themeStore = setup(() => useThemeStore());
 
 	singleLineMode = true;
 	messageOptionsVisible = false;
@@ -60,7 +60,7 @@ export default class AppChatWindowOutputItem extends Vue {
 
 	get actualTheme() {
 		// Use the form/page/user theme, or the default theme if none exist.
-		return this.theme ?? DefaultTheme;
+		return this.themeStore.theme ?? DefaultTheme;
 	}
 
 	get isSingleLineMode() {
@@ -98,7 +98,7 @@ export default class AppChatWindowOutputItem extends Vue {
 		const highlight = '#' + this.actualTheme.highlight_;
 		const backlight = '#' + this.actualTheme.backlight_;
 
-		const tintColor = this.isDark ? highlight : backlight;
+		const tintColor = this.themeStore.isDark ? highlight : backlight;
 		return transparentize(0.85, tintColor);
 	}
 

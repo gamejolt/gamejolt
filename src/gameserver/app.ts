@@ -22,11 +22,6 @@ import { Store } from './store/index';
 	},
 })
 export default class App extends Vue {
-	// Not translatable just yet.
-	// mounted() {
-	// 	loadCurrentLanguage(this);
-	// }
-
 	@State game!: Game;
 	@State package!: GamePackage;
 	@State build!: GameBuild;

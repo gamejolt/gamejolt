@@ -14,26 +14,23 @@ import {
 	appStore,
 	Mutations as AppMutations,
 } from '../../_common/store/app-store';
-import { ThemeActions, ThemeMutations, ThemeStore } from '../../_common/theme/theme.store';
 import { User } from '../../_common/user/user.model';
 
-export type Actions = AppActions &
-	ThemeActions & {
-		bootstrap: undefined;
-		checkout: undefined;
-	};
+export type Actions = AppActions & {
+	bootstrap: undefined;
+	checkout: undefined;
+};
 
-export type Mutations = AppMutations &
-	ThemeMutations & {
-		setInvalidKey: undefined;
-		setFailure: undefined;
-		clearFailure: undefined;
-		setProcessing: undefined;
-		setNotProcessing: undefined;
-		_bootstrap: any;
-		setPayment: any;
-		setAddress: any;
-	};
+export type Mutations = AppMutations & {
+	setInvalidKey: undefined;
+	setFailure: undefined;
+	clearFailure: undefined;
+	setProcessing: undefined;
+	setNotProcessing: undefined;
+	_bootstrap: any;
+	setPayment: any;
+	setAddress: any;
+};
 
 export class PaymentData {
 	method: 'cc-stripe' | 'paypal' = 'cc-stripe';
@@ -52,12 +49,10 @@ export class AddressData {
 	store: true,
 	modules: {
 		app: appStore,
-		theme: new ThemeStore(),
 	},
 })
 export class Store extends VuexStore<Store, Actions, Mutations> {
 	app!: AppStore;
-	theme!: ThemeStore;
 
 	sellableKey = parse(window.location.search.substring(1)).key as string;
 	isLightTheme = parse(window.location.search.substring(1)).theme === 'light';

@@ -1,4 +1,5 @@
 import { formatDistanceToNow } from 'date-fns';
+import { setup } from 'vue-class-component';
 import { mixins, Options } from 'vue-property-decorator';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
@@ -14,7 +15,7 @@ import {
 } from '../../../../_common/form-vue/validators';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { DefaultTheme } from '../../../../_common/theme/theme.model';
-import { ThemeMutation, ThemeStore } from '../../../../_common/theme/theme.store';
+import { useThemeStore } from '../../../../_common/theme/theme.store';
 import { User } from '../../../../_common/user/user.model';
 
 class Wrapper extends BaseForm<User> {}
@@ -31,8 +32,7 @@ class Wrapper extends BaseForm<User> {}
 export default class FormProfile extends mixins(Wrapper) implements FormOnLoad, FormOnSubmitError {
 	modelClass = User;
 
-	@ThemeMutation
-	setFormTheme!: ThemeStore['setFormTheme'];
+	themeStore = setup(() => useThemeStore());
 
 	usernameChangedOn = 0;
 	usernameTimeLeft = 0;
@@ -72,7 +72,7 @@ export default class FormProfile extends mixins(Wrapper) implements FormOnLoad, 
 	}
 
 	unmounted() {
-		this.setFormTheme(null);
+		this.themeStore.setFormTheme(null);
 	}
 
 	onLoad(payload: any) {
@@ -95,6 +95,6 @@ export default class FormProfile extends mixins(Wrapper) implements FormOnLoad, 
 
 	onThemeChanged() {
 		// Default would be the default theme for site.
-		this.setFormTheme(this.formModel.theme ?? DefaultTheme);
+		this.themeStore.setFormTheme(this.formModel.theme ?? DefaultTheme);
 	}
 }

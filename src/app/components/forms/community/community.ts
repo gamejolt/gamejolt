@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { mixins, Options } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
 import { Community } from '../../../../_common/community/community.model';
@@ -6,7 +7,7 @@ import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormC
 import { BaseForm, FormOnSubmitSuccess } from '../../../../_common/form-vue/form.service';
 import { validateUrlPath } from '../../../../_common/form-vue/validators';
 import { DefaultTheme } from '../../../../_common/theme/theme.model';
-import { ThemeMutation, ThemeState, ThemeStore } from '../../../../_common/theme/theme.store';
+import { useThemeStore } from '../../../../_common/theme/theme.store';
 import { Store } from '../../../store';
 import AppPostAddButtonFormControl from '../../post/add-button/AppPostAddButtonFormControl.vue';
 
@@ -25,11 +26,7 @@ export default class FormCommunity extends mixins(Wrapper) implements FormOnSubm
 	@Action
 	joinCommunity!: Store['joinCommunity'];
 
-	@ThemeMutation
-	setFormTheme!: ThemeStore['setFormTheme'];
-
-	@ThemeState
-	userTheme!: ThemeStore['userTheme'];
+	themeStore = setup(() => useThemeStore());
 
 	readonly validateUrlPath = validateUrlPath;
 
@@ -57,12 +54,14 @@ export default class FormCommunity extends mixins(Wrapper) implements FormOnSubm
 	}
 
 	unmounted() {
-		this.setFormTheme(null);
+		this.themeStore.setFormTheme(null);
 	}
 
 	onThemeChanged() {
 		// Default theme would be the user theme. Don't want to fallback to page theme otherwise
 		// when clearing theme it'll show the page theme.
-		this.setFormTheme(this.formModel.theme ?? this.userTheme ?? DefaultTheme);
+		this.themeStore.setFormTheme(
+			this.formModel.theme ?? this.themeStore.userTheme ?? DefaultTheme
+		);
 	}
 }

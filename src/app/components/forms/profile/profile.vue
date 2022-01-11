@@ -52,7 +52,7 @@
 			</app-expand>
 		</app-form-group>
 
-		<div class="form-group" v-else>
+		<div v-else class="form-group">
 			<label class="control-label">
 				<translate>dash.profile.edit.username_label</translate>
 			</label>

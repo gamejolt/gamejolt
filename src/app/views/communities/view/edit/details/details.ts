@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
 import { enforceLocation } from '../../../../../../utils/router';
@@ -8,10 +9,11 @@ import { showInfoGrowl, showSuccessGrowl } from '../../../../../../_common/growl
 import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import { BaseRouteComponent } from '../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
+import { useThemeStore } from '../../../../../../_common/theme/theme.store';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 import FormCommunity from '../../../../../components/forms/community/community.vue';
 import FormCommunityDescription from '../../../../../components/forms/community/description/description.vue';
-import { store, Store } from '../../../../../store';
+import { Store } from '../../../../../store';
 import { CommunityThemeKey } from '../../view';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
@@ -31,6 +33,8 @@ import AppCommunitiesViewPageContainer from '../../_page-container/page-containe
 export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent {
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
+
+	themeStore = setup(() => useThemeStore());
 
 	@Action('leaveCommunity') leaveCommunityAction!: Store['leaveCommunity'];
 
@@ -60,7 +64,7 @@ export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent 
 			}
 		}
 
-		store.commit('theme/setPageTheme', {
+		this.themeStore.setPageTheme({
 			key: CommunityThemeKey,
 			theme: this.community.theme,
 		});

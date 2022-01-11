@@ -42,7 +42,7 @@ const props = defineProps({
 	},
 });
 
-const themeStore = useThemeStore();
+const { theme } = useThemeStore();
 
 // TODO(vue3): can we make this reactive so that it updates what is provided
 // down if the controller given changes somehow?
@@ -52,7 +52,7 @@ const isMounted = ref(import.meta.env.SSR);
 
 const actualTheme = computed(() => {
 	// Use the form/page/user theme, or the default theme if none exist.
-	return themeStore.theme ?? DefaultTheme;
+	return theme.value ?? DefaultTheme;
 });
 
 const hoverColors = computed<any>(() => ({

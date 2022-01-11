@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { mixins, Options, Watch } from 'vue-property-decorator';
 import * as illustrations from '../../../app/img/ill/illustrations';
 import { imageGameJoltClientLogo, imageGameJoltLogo, imageJolt } from '../../../app/img/images';
@@ -10,8 +11,8 @@ import AppFormControlToggle from '../../form-vue/controls/AppFormControlToggle.v
 import { BaseForm } from '../../form-vue/form.service';
 import { AppTheme } from '../theme';
 import { Theme } from '../theme.model';
-import { ThemeState, ThemeStore } from '../theme.store';
-import AppThemeSvg from './svg';
+import { useThemeStore } from '../theme.store';
+import AppThemeSvg from './AppThemeSvg.vue';
 
 interface VueColor {
 	hex: string | null;
@@ -40,8 +41,7 @@ class Wrapper extends BaseForm<FormModel> {}
 	},
 })
 export default class AppThemeSvgStyleguide extends mixins(Wrapper) {
-	@ThemeState('theme')
-	storeTheme!: ThemeStore['theme'];
+	themeStore = setup(() => useThemeStore());
 
 	customSvg = '';
 	customSelection: VueColor = { hex: null };
@@ -74,7 +74,7 @@ export default class AppThemeSvgStyleguide extends mixins(Wrapper) {
 	}
 
 	get theme() {
-		return this.formModel.theme || this.storeTheme;
+		return this.formModel.theme || this.themeStore.theme;
 	}
 
 	get customFile() {

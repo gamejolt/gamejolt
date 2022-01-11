@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../_common/api/api.service';
@@ -14,6 +15,7 @@ import {
 } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../_common/share/share.service';
+import { useThemeStore } from '../../../_common/theme/theme.store';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../_common/translate/translate.service';
@@ -86,6 +88,8 @@ const ProfileThemeKey = 'profile';
 	},
 })
 export default class RouteProfile extends BaseRouteComponent {
+	themeStore = setup(() => useThemeStore());
+
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;
 
@@ -174,12 +178,12 @@ export default class RouteProfile extends BaseRouteComponent {
 	}
 
 	routeDestroyed() {
-		store.commit('theme/clearPageTheme', ProfileThemeKey);
+		this.themeStore.clearPageTheme(ProfileThemeKey);
 	}
 
 	private setPageTheme() {
 		const theme = this.user?.theme ?? null;
-		store.commit('theme/setPageTheme', {
+		this.themeStore.setPageTheme({
 			key: ProfileThemeKey,
 			theme,
 		});

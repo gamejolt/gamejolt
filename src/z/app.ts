@@ -13,6 +13,5 @@ import { Store } from './store';
 	},
 })
 export default class App extends Vue {
-	@State
-	app!: Store['app'];
+	@State app!: Store['app'];
 }

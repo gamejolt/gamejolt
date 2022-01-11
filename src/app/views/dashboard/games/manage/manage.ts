@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import AppExpand from '../../../../../_common/expand/expand.vue';
@@ -8,6 +9,7 @@ import {
 	WithRouteStore,
 } from '../../../../../_common/route/route-component';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { useThemeStore } from '../../../../../_common/theme/theme.store';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { Translate } from '../../../../../_common/translate/translate.service';
@@ -54,6 +56,8 @@ export const ManageGameThemeKey = 'manage-game';
 	},
 })
 export default class RouteDashGamesManage extends BaseRouteComponent {
+	themeStore = setup(() => useThemeStore());
+
 	@AppState
 	user!: AppStore['user'];
 
@@ -75,12 +79,12 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 	}
 
 	routeDestroyed() {
-		store.commit('theme/clearPageTheme', ManageGameThemeKey);
+		this.themeStore.clearPageTheme(ManageGameThemeKey);
 	}
 
 	private setPageTheme() {
 		const theme = this.game?.theme ?? null;
-		store.commit('theme/setPageTheme', {
+		this.themeStore.setPageTheme({
 			key: ManageGameThemeKey,
 			theme,
 		});

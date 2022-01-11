@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { Inject, Options, Watch } from 'vue-property-decorator';
 import { Api } from '../../../_common/api/api.service';
 import { AppAuthRequired } from '../../../_common/auth/auth-required-directive';
@@ -23,6 +24,7 @@ import AppScrollScroller from '../../../_common/scroll/scroller/scroller.vue';
 import AppStickerReactions from '../../../_common/sticker/reactions/reactions.vue';
 import AppStickerTarget from '../../../_common/sticker/target/target.vue';
 import { AppState, AppStore } from '../../../_common/store/app-store';
+import { useThemeStore } from '../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../_common/user/user-avatar/img/img.vue';
@@ -37,7 +39,6 @@ import {
 	toggleStreamVideoStats,
 } from '../../components/fireside/controller/controller';
 import { illEndOfFeed, illMaintenance, illNoCommentsSmall } from '../../img/ill/illustrations';
-import { store } from '../../store';
 import AppFiresideBanner from './_banner/banner.vue';
 import AppFiresideChatMembers from './_chat-members/chat-members.vue';
 import AppFiresideHeader from './_header/header.vue';
@@ -100,6 +101,8 @@ export default class RouteFireside extends BaseRouteComponent {
 
 	@Inject({ from: DrawerStoreKey })
 	drawerStore!: DrawerStore;
+
+	themeStore = setup(() => useThemeStore());
 
 	c: FiresideController | null = null;
 
@@ -217,7 +220,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	routeDestroyed() {
-		store.commit('theme/clearPageTheme', FiresideThemeKey);
+		this.themeStore.clearPageTheme(FiresideThemeKey);
 
 		this.beforeEachDeregister?.();
 		this.beforeEachDeregister = null;
@@ -263,7 +266,7 @@ export default class RouteFireside extends BaseRouteComponent {
 
 	private setPageTheme() {
 		const theme = this.fireside?.user?.theme ?? null;
-		store.commit('theme/setPageTheme', { key: FiresideThemeKey, theme });
+		this.themeStore.setPageTheme({ key: FiresideThemeKey, theme });
 	}
 
 	get shouldShowTitleControls() {
