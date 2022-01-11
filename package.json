@@ -21,6 +21,7 @@
 		"build:server": "vite build --outDir build/server --ssr src/auth/server.ts"
 	},
 	"devDependencies": {
+		"@ckpack/vue-color": "1.1.5",
 		"@popperjs/core": "2.4.0",
 		"@types/autosize": "3.0.6",
 		"@types/chart.js": "2.9.19",
@@ -110,7 +111,6 @@
 		"vite-plugin-markdown": "2.0.2",
 		"vue": "3.2.26",
 		"vue-class-component": "8.0.0-rc.1",
-		"vue-color": "2.7.1",
 		"vue-property-decorator": "10.0.0-rc.3",
 		"vue-router": "4.0.12",
 		"vuedraggable": "4.1.0",

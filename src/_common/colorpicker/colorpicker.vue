@@ -13,7 +13,7 @@
 
 			<template #popover>
 				<div class="colorpicker-popover">
-					<picker :value="colors" @input="onChange" />
+					<Picker :model-value="colors" @update:modelValue="onChange" />
 
 					<div class="colorpicker-well">
 						<div class="col">

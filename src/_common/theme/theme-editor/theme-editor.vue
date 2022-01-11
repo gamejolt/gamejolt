@@ -52,8 +52,8 @@
 									<translate>clear</translate>
 								</a>
 								<app-colorpicker
-									v-model="theme[definitionField]"
-									@input="refresh()"
+									:model-value="theme[definitionField]"
+									@update:modelValue="refresh()"
 								/>
 							</div>
 

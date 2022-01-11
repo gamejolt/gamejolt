@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { Sketch as Picker } from '@ckpack/vue-color';
 import { computed, ref, toRef } from 'vue';
 import { Api } from '../../api/api.service';
 import AppLoading from '../../loading/loading.vue';
@@ -141,11 +142,11 @@ function clear() {
 							</template>
 						</div>
 						<div v-else-if="activeTab === 'custom'">
-							<picker
+							<Picker
 								disable-alpha
 								:preset-colors="[]"
-								:value="customSelection"
-								@input="onCustomChange"
+								:model-value="customSelection"
+								@update:modelValue="onCustomChange"
 							/>
 							<br />
 						</div>
