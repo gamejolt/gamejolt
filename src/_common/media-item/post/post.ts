@@ -1,5 +1,4 @@
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional } from '../../../utils/vue';
 import { ContentFocus } from '../../content-focus/content-focus.service';
 import { AppImgResponsive } from '../../img/responsive/responsive';
 import {
@@ -32,11 +31,11 @@ import { MediaItem } from '../media-item-model';
 })
 export default class AppMediaItemPost extends Vue {
 	@Prop({ type: Object, required: true }) mediaItem!: MediaItem;
-	@Prop(propOptional(Boolean, true)) isPostHydrated!: boolean;
-	@Prop(propOptional(Boolean, false)) isActive!: boolean;
-	@Prop(propOptional(Boolean, false)) restrictDeviceMaxHeight!: boolean;
-	@Prop(propOptional(Boolean, false)) inline!: boolean;
-	@Prop(propOptional(Boolean, false)) canPlaceSticker!: boolean;
+	@Prop({ type: Boolean, default: true }) isPostHydrated!: boolean;
+	@Prop({ type: Boolean, default: false }) isActive!: boolean;
+	@Prop({ type: Boolean, default: false }) restrictDeviceMaxHeight!: boolean;
+	@Prop({ type: Boolean, default: false }) inline!: boolean;
+	@Prop({ type: Boolean, default: false }) canPlaceSticker!: boolean;
 
 	@Inject({ from: StickerTargetParentControllerKey })
 	parentStickerTarget!: StickerTargetController;

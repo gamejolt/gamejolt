@@ -1,7 +1,6 @@
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
 import { getAbsoluteLink } from '../../../../../utils/router';
-import { propOptional } from '../../../../../utils/vue';
 import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/join-widget.vue';
 import AppCommunityVerifiedTick from '../../../../../_common/community/verified-tick/verified-tick.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
@@ -32,7 +31,7 @@ import AppEditableThumbnail from '../_editable-thumbnail/editable-thumbnail.vue'
 	},
 })
 export default class AppMobileHeader extends Vue {
-	@Prop(propOptional(Boolean, false)) hasUnread!: boolean;
+	@Prop({ type: Boolean, default: false }) hasUnread!: boolean;
 
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;

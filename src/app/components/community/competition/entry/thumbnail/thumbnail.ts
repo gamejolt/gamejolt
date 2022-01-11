@@ -1,5 +1,4 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional } from '../../../../../../utils/vue';
 import { CommunityCompetitionEntry } from '../../../../../../_common/community/competition/entry/entry.model';
 import { CommunityCompetitionVotingCategory } from '../../../../../../_common/community/competition/voting-category/voting-category.model';
 import { Game } from '../../../../../../_common/game/game.model';
@@ -20,12 +19,12 @@ import { CommunityCompetitionEntryModal } from '../modal/modal.service';
 })
 export default class AppCommunityCompetitionEntryThumbnail extends Vue {
 	@Prop({ type: Object, required: true }) entry!: CommunityCompetitionEntry;
-	@Prop(propOptional(Boolean, false)) showRemove!: boolean;
-	@Prop(propOptional(Boolean, false)) showRank!: boolean;
+	@Prop({ type: Boolean, default: false }) showRemove!: boolean;
+	@Prop({ type: Boolean, default: false }) showRank!: boolean;
 	/** Voting category the rank should be shown from. No voting category means Overall. */
-	@Prop(propOptional(Object))
+	@Prop(Object)
 	votingCategory?: CommunityCompetitionVotingCategory;
-	@Prop(propOptional(Boolean, false)) showAwards!: boolean;
+	@Prop({ type: Boolean, default: false }) showAwards!: boolean;
 
 	@AppState
 	user!: AppStore['user'];

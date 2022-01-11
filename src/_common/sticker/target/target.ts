@@ -1,7 +1,6 @@
 import { nextTick } from 'vue';
 import { Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { sleep } from '../../../utils/utils';
-import { propOptional } from '../../../utils/vue';
 import { Api } from '../../api/api.service';
 import {
 	assignDrawerStoreItem,
@@ -35,7 +34,7 @@ const InviewConfig = new ScrollInviewConfig();
 })
 export default class AppStickerTarget extends Vue {
 	@Prop({ type: Object, required: true }) controller!: StickerTargetController;
-	@Prop(propOptional(Boolean, false)) disabled!: boolean;
+	@Prop({ type: Boolean, default: false }) disabled!: boolean;
 
 	@Inject({ from: DrawerStoreKey })
 	drawerStore!: DrawerStore;

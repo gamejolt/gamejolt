@@ -1,5 +1,4 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional } from '../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
@@ -19,13 +18,13 @@ export default class AppFormsCommunityPill extends Vue {
 	@Prop({ type: Object, required: true })
 	community!: Community;
 
-	@Prop(propOptional(Object))
+	@Prop(Object)
 	channel?: CommunityChannel;
 
-	@Prop(propOptional(Boolean, true))
+	@Prop({ type: Boolean, default: true })
 	removable!: boolean;
 
-	@Prop(propOptional(Boolean, true))
+	@Prop({ type: Boolean, default: true })
 	withChannel!: boolean;
 
 	@Emit('remove') emitRemove() {}

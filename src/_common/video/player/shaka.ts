@@ -1,6 +1,5 @@
 import { Player as ShakaPlayer, polyfill } from 'shaka-player';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional } from '../../../utils/vue';
 import AppVideo from '../video.vue';
 import { trackVideoPlayerEvent, VideoPlayerController } from './controller';
 
@@ -19,7 +18,7 @@ type ShakaTrack = {
 })
 export default class AppVideoPlayerShaka extends Vue {
 	@Prop({ type: Object, required: true }) player!: VideoPlayerController;
-	@Prop(propOptional(Boolean, false)) autoplay!: boolean;
+	@Prop({ type: Boolean, default: false }) autoplay!: boolean;
 
 	/**
 	 * If their browser settings block autoplaying with audio, then the browser
@@ -27,7 +26,7 @@ export default class AppVideoPlayerShaka extends Vue {
 	 * autoplaying "muted" just to see if that works. We don't want to do that
 	 * everywhere, so it's an opt-in behavior through a prop.
 	 */
-	@Prop(propOptional(Boolean, false)) allowDegradedAutoplay!: boolean;
+	@Prop({ type: Boolean, default: false }) allowDegradedAutoplay!: boolean;
 
 	private shakaPlayer?: ShakaPlayer;
 	private isDestroyed = false;

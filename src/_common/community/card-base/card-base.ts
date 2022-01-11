@@ -1,5 +1,4 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional } from '../../../utils/vue';
 import { trackGotoCommunity } from '../../analytics/analytics.service';
 import { Environment } from '../../environment/environment.service';
 import { formatNumber } from '../../filters/number';
@@ -18,10 +17,10 @@ import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
 })
 export default class AppCommunityCardBase extends Vue {
 	@Prop({ type: Object, required: true }) community!: Community;
-	@Prop(propOptional(Boolean, false)) overflow!: boolean;
-	@Prop(propOptional(Boolean, false)) elevate!: boolean;
-	@Prop(propOptional(Boolean, true)) allowEdit!: boolean;
-	@Prop(propOptional(Boolean, false)) trackGoto!: boolean;
+	@Prop({ type: Boolean, default: false }) overflow!: boolean;
+	@Prop({ type: Boolean, default: false }) elevate!: boolean;
+	@Prop({ type: Boolean, default: true }) allowEdit!: boolean;
+	@Prop({ type: Boolean, default: false }) trackGoto!: boolean;
 
 	@AppState user!: AppStore['user'];
 

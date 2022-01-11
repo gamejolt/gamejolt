@@ -231,8 +231,8 @@ function recalcPositioning() {
 // 	@Prop(Array) validateOn!: string[];
 // 	@Prop(Number) validateDelay!: number;
 // 	@Prop(Array) mask!: (string | RegExp)[];
-// 	@Prop(propOptional(Boolean, false)) disabled!: boolean;
-// 	@Prop(propOptional(String, undefined)) htmlListId!: string;
+// 	@Prop({ type: Boolean, default: false }) disabled!: boolean;
+// 	@Prop({ type: String, default: undefined }) htmlListId!: string;
 
 // 	controlVal = '';
 // 	maskedInputElem: any = null;

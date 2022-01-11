@@ -1,5 +1,4 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { propOptional } from '../../../utils/vue';
 import { BaseModal } from '../../modal/base';
 import { Model } from '../../model/model.service';
 import { Screen } from '../../screen/screen-service';
@@ -18,7 +17,7 @@ export default class AppCommentModal extends mixins(BaseModal) {
 	@Prop(Object)
 	model!: Model;
 
-	@Prop(propOptional(String))
+	@Prop(String)
 	initialTab?: string;
 
 	get autofocusAdd() {

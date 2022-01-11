@@ -1,7 +1,6 @@
 import { defineAsyncComponent } from 'vue';
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional } from '../../../../utils/vue';
 import { AppAuthRequired } from '../../../auth/auth-required-directive';
 import { Clipboard } from '../../../clipboard/clipboard-service';
 import { Collaborator } from '../../../collaborator/collaborator.model';
@@ -56,10 +55,10 @@ let CommentNum = 0;
 export default class AppCommentWidgetComment extends Vue {
 	@Prop({ type: Object, required: true }) model!: Model;
 	@Prop({ type: Object, required: true }) comment!: Comment;
-	@Prop(propOptional(Array, () => [])) children!: Comment[];
-	@Prop(propOptional(Object)) parent?: Comment;
-	@Prop(propOptional(Boolean, false)) isLastInThread!: boolean;
-	@Prop(propOptional(Boolean, false)) showChildren!: boolean;
+	@Prop({ type: Array, default: () => [] }) children!: Comment[];
+	@Prop(Object) parent?: Comment;
+	@Prop({ type: Boolean, default: false }) isLastInThread!: boolean;
+	@Prop({ type: Boolean, default: false }) showChildren!: boolean;
 
 	@AppState user!: AppStore['user'];
 

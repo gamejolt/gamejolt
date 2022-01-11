@@ -1,5 +1,4 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional } from '../../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbnail/img/img.vue';
@@ -24,10 +23,10 @@ export default class AppFormsCommunityPillSelector extends Vue {
 	@Prop({ type: Array, required: true })
 	communities!: Community[];
 
-	@Prop(propOptional(Object, null))
+	@Prop({ type: Object, default: null })
 	initialCommunity!: Community | null;
 
-	@Prop(propOptional(Boolean, true))
+	@Prop({ type: Boolean, default: true })
 	withChannel!: boolean;
 
 	selectedCommunity: Community | null = null;

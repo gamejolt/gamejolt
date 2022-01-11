@@ -1,5 +1,4 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional } from '../../../../../utils/vue';
 import {
 	FiresidePostEmbed,
 	TYPE_SKETCHFAB,
@@ -30,7 +29,7 @@ const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height * 0.5}px`
 })
 export default class AppFiresidePostEmbed extends Vue {
 	@Prop({ type: Object, required: true }) embed!: FiresidePostEmbed;
-	@Prop(propOptional(Boolean, true)) hideOutview!: boolean;
+	@Prop({ type: Boolean, default: true }) hideOutview!: boolean;
 
 	readonly InviewConfig = InviewConfig;
 	readonly TYPE_YOUTUBE = TYPE_YOUTUBE;

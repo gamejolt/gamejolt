@@ -1,5 +1,4 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { propOptional } from '../../../../../utils/vue';
 import { Community } from '../../../../../_common/community/community.model';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { AppFocusWhen } from '../../../../../_common/form-vue/focus-when.directive';
@@ -34,7 +33,7 @@ export default class FormFiresideAdd extends mixins(Wrapper) {
 	@Prop({ type: String, default: undefined })
 	defaultTitle?: string;
 
-	@Prop(propOptional(Object, null))
+	@Prop({ type: Object, default: null })
 	community!: Community | null;
 
 	get canSelectCommunity() {

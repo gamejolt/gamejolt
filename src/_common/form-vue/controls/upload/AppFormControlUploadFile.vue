@@ -6,8 +6,8 @@ import { PropType, ref } from 'vue';
 // 	@Prop() id!: any;
 // 	@Prop() name!: any;
 // 	@Prop() value!: File | File[] | null;
-// 	@Prop(propOptional(Boolean)) multiple?: boolean;
-// 	@Prop(propOptional(String)) accept?: string;
+// 	@Prop(Boolean) multiple?: boolean;
+// 	@Prop(String) accept?: string;
 
 // 	declare $el: HTMLInputElement;
 

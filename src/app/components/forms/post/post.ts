@@ -3,7 +3,6 @@ import { determine } from 'jstimezonedetect';
 import { nextTick } from 'vue';
 import { Emit, mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../utils/array';
-import { propOptional } from '../../../../utils/vue';
 import { trackPostPublish } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
@@ -115,10 +114,10 @@ export default class FormPost
 	@AppState
 	user!: AppStore['user'];
 
-	@Prop(propOptional(Object, null))
+	@Prop({ type: Object, default: null })
 	defaultCommunity!: Community | null;
 
-	@Prop(propOptional(Object, null))
+	@Prop({ type: Object, default: null })
 	defaultChannel!: CommunityChannel | null;
 
 	readonly MAX_POLL_ITEMS = 10;

@@ -2,7 +2,6 @@ import { defineAsyncComponent } from '@vue/runtime-core';
 import { ref } from 'vue';
 import { setup } from 'vue-class-component';
 import { Inject, Options, Prop, Provide, Vue } from 'vue-property-decorator';
-import { propOptional } from '../../../utils/vue';
 import {
 	ContentFocus,
 	registerContentFocusWatcher,
@@ -23,7 +22,7 @@ import { StickerLayerController, StickerLayerKey } from './layer-controller';
 	},
 })
 export default class AppStickerLayer extends Vue {
-	@Prop(propOptional(Boolean, false)) hasFixedParent!: boolean;
+	@Prop({ type: Boolean, default: false }) hasFixedParent!: boolean;
 
 	@Inject({ from: DrawerStoreKey })
 	drawer!: DrawerStore;

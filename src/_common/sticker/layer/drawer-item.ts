@@ -1,14 +1,13 @@
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional } from '../../../utils/vue';
 import { DrawerStore, DrawerStoreKey } from '../../drawer/drawer-store';
 import { Sticker } from '../sticker.model';
 
 @Options({})
 export default class AppStickerLayerDrawerItem extends Vue {
 	@Prop({ type: Object, required: true }) sticker!: Sticker;
-	@Prop(propOptional(Number, 0)) count!: number;
-	@Prop(propOptional(Number, 64)) size!: number;
-	@Prop(propOptional(Boolean, false)) hideCount!: boolean;
+	@Prop({ type: Number, default: 0 }) count!: number;
+	@Prop({ type: Number, default: 64 }) size!: number;
+	@Prop({ type: Boolean, default: false }) hideCount!: boolean;
 
 	@Inject({ from: DrawerStoreKey })
 	drawerStore!: DrawerStore;

@@ -1,5 +1,4 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional } from '../../../../../utils/vue';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
 
 @Options({
@@ -16,6 +15,6 @@ export default class AppCommunitySliderPlaceholder extends Vue {
 	 * Adds a second non-community bubble
 	 * if we want the 'add' placeholder to show.
 	 */
-	@Prop(propOptional(Boolean, false))
+	@Prop({ type: Boolean, default: false })
 	withAddButton!: number;
 }

@@ -4,7 +4,6 @@ import AppGamePlaylistAddToWidget from '../../../app/components/game-playlist/ad
 import AppGameCompatIcons from '../../../app/components/game/compat-icons/compat-icons.vue';
 import AppGameFollowWidget from '../../../app/components/game/follow-widget/follow-widget.vue';
 import AppGameModLinks from '../../../app/components/game/mod-links/mod-links.vue';
-import { propOptional } from '../../../utils/vue';
 import { formatCurrency } from '../../filters/currency';
 import AppPopper from '../../popper/popper.vue';
 import { Screen } from '../../screen/screen-service';
@@ -35,9 +34,9 @@ const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height}px` });
 })
 export default class AppGameThumbnail extends Vue {
 	@Prop({ type: Object, required: true }) game!: Game;
-	@Prop(propOptional(String)) linkTo?: string;
-	@Prop(propOptional(Boolean, false)) hidePricing!: boolean;
-	@Prop(propOptional(Boolean, false)) hideControls!: boolean;
+	@Prop(String) linkTo?: string;
+	@Prop({ type: Boolean, default: false }) hidePricing!: boolean;
+	@Prop({ type: Boolean, default: false }) hideControls!: boolean;
 
 	@State app!: AppStore;
 

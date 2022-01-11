@@ -1,5 +1,4 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional } from '../../../utils/vue';
 import AppContentViewer from '../../content/content-viewer/content-viewer.vue';
 import AppFadeCollapse from '../../fade-collapse/fade-collapse.vue';
 import { formatDate } from '../../filters/date';
@@ -21,8 +20,8 @@ import '../comment.styl';
 })
 export default class AppCommentContent extends Vue {
 	@Prop({ type: Object, required: true }) comment!: Comment;
-	@Prop(propOptional(String, '')) content!: string;
-	@Prop(propOptional(Boolean, false)) canPlaceStickers!: boolean;
+	@Prop({ type: String, default: '' }) content!: string;
+	@Prop({ type: Boolean, default: false }) canPlaceStickers!: boolean;
 
 	canToggleContent = false;
 	showFullContent = false;

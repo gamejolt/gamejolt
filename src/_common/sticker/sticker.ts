@@ -1,14 +1,13 @@
 import { nextTick } from 'vue';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { propOptional } from '../../utils/vue';
 import { StickerPlacement } from './placement/placement.model';
 import { removeStickerFromTarget, StickerTargetController } from './target/target-controller';
 
 @Options({})
 export default class AppSticker extends Vue {
 	@Prop({ type: Object, required: true }) sticker!: StickerPlacement;
-	@Prop(propOptional(Object, null)) controller!: StickerTargetController | null;
-	@Prop(propOptional(Boolean, true)) isClickable!: boolean;
+	@Prop({ type: Object, default: null }) controller!: StickerTargetController | null;
+	@Prop({ type: Boolean, default: true }) isClickable!: boolean;
 
 	declare $refs: {
 		outer: HTMLDivElement;

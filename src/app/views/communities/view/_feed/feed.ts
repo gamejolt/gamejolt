@@ -1,6 +1,5 @@
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { propOptional } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
@@ -35,7 +34,7 @@ import AppBlockedNotice from '../_blocked-notice/blocked-notice.vue';
 export default class AppCommunitiesViewFeed extends Vue {
 	// It's optional since it may not have loaded into the page yet. In that
 	// case, we show a placeholder and wait.
-	@Prop(propOptional(Object)) feed?: ActivityFeedView;
+	@Prop(Object) feed?: ActivityFeedView;
 
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;

@@ -2,7 +2,6 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { RouteLocationDefinition } from '../../../../../utils/router';
-import { propOptional } from '../../../../../utils/vue';
 import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/join-widget.vue';
 import { Jam } from '../../../../../_common/jam/jam.model';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/backdrop.vue';
@@ -21,8 +20,8 @@ import { Store } from '../../../../store/index';
 	},
 })
 export default class AppDiscoverHomeBanner extends Vue {
-	@Prop(propOptional(Object)) item?: FeaturedItem;
-	@Prop(propOptional(Boolean, false)) isLoading!: boolean;
+	@Prop(Object) item?: FeaturedItem;
+	@Prop({ type: Boolean, default: false }) isLoading!: boolean;
 
 	@State app!: Store['app'];
 

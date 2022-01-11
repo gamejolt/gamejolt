@@ -1,5 +1,4 @@
-import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional } from '../../../../utils/vue';
+import { Emit, Prop, Vue } from 'vue-property-decorator';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
@@ -32,16 +31,16 @@ ponents: {
 export default class AppGameListing extends Vue {
 	@Prop({ type: Object, required: true }) listing!: GameListingContainer;
 	@Prop({ type: Object, required: true }) filtering!: GameFilteringContainer;
-	@Prop(propOptional(Boolean, false)) hideFilters!: boolean;
-	@Prop(propOptional(Boolean, false)) hideSectionNav!: boolean;
-	@Prop(propOptional(Boolean, false)) includeFeaturedSection!: boolean;
-	@Prop(propOptional(Boolean, false)) isLoading!: boolean;
+	@Prop({ type: Boolean, default: false }) hideFilters!: boolean;
+	@Prop({ type: Boolean, default: false }) hideSectionNav!: boolean;
+	@Prop({ type: Boolean, default: false }) includeFeaturedSection!: boolean;
+	@Prop({ type: Boolean, default: false }) isLoading!: boolean;
 
 	/**
 	 * If it's infinite, it won't show pagination controls and will instead emit
 	 * a `load` event when scrolling down.
 	 */
-	@Prop(propOptional(Boolean, false)) infinite!: boolean;
+	@Prop({ type: Boolean, default: false }) infinite!: boolean;
 
 	inviewConfig = new ScrollInviewConfig();
 

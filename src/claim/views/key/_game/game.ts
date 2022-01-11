@@ -1,6 +1,5 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { propOptional } from '../../../../utils/vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
@@ -29,7 +28,7 @@ export default class AppKeyGame extends Vue {
 	@Prop({ type: String, required: true })
 	loginUrl!: string;
 
-	@Prop(propOptional(String))
+	@Prop(String)
 	accessKey?: string;
 
 	@State

@@ -1,11 +1,10 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional } from '../../../../utils/vue';
 
 @Options({})
 export default class AppChatUserOnlineStatus extends Vue {
 	@Prop({ type: Boolean, required: true }) isOnline!: boolean;
-	@Prop(propOptional(Number, null)) size!: number | null;
-	@Prop(propOptional(Boolean, true)) absolute!: boolean;
+	@Prop({ type: Number, default: null }) size!: number | null;
+	@Prop({ type: Boolean, default: true }) absolute!: boolean;
 
 	get outerSize() {
 		if (!this.size || typeof this.size !== 'number') {

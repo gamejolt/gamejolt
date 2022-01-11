@@ -1,6 +1,5 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { numberSort } from '../../../../../../utils/array';
-import { propOptional } from '../../../../../../utils/vue';
 import { Api } from '../../../../../../_common/api/api.service';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
 import { CommunityCompetition } from '../../../../../../_common/community/competition/competition.model';
@@ -35,8 +34,8 @@ import AppCommunityCompetitionVotingWidget from '../../voting/widget.vue';
 	},
 })
 export default class AppCommunityCompetitionEntryModal extends mixins(BaseModal) {
-	@Prop(propOptional(Object)) entry?: CommunityCompetitionEntry;
-	@Prop(propOptional(Number)) entryId?: number;
+	@Prop(Object) entry?: CommunityCompetitionEntry;
+	@Prop(Number) entryId?: number;
 
 	@AppState
 	user!: AppStore['user'];

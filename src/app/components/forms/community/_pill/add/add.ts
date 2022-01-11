@@ -1,5 +1,4 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional } from '../../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
 import AppPill from '../../../../../../_common/pill/pill.vue';
@@ -15,7 +14,7 @@ export default class AppFormsCommunityPillAdd extends Vue {
 	@Prop({ type: Array, required: true })
 	communities!: Community[];
 
-	@Prop(propOptional(Boolean, true))
+	@Prop({ type: Boolean, default: true })
 	withChannel!: boolean;
 
 	@Emit('add') emitAdd(_community: Community, _channel: CommunityChannel) {}

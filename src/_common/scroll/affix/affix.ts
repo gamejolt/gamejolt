@@ -1,5 +1,4 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional } from '../../../utils/vue';
 import { Ruler } from '../../ruler/ruler-service';
 import { onScreenResize } from '../../screen/screen-service';
 import { useEventSubscription } from '../../system/event/event-topic';
@@ -12,9 +11,9 @@ import { Scroll } from '../scroll.service';
 	},
 })
 export default class AppScrollAffix extends Vue {
-	@Prop(propOptional(String, 'gj-scroll-affixed')) className!: string;
-	@Prop(propOptional(Boolean, false)) disabled!: boolean;
-	@Prop(propOptional(Number, 0)) scrollOffset!: number;
+	@Prop({ type: String, default: 'gj-scroll-affixed' }) className!: string;
+	@Prop({ type: Boolean, default: false }) disabled!: boolean;
+	@Prop({ type: Number, default: 0 }) scrollOffset!: number;
 
 	@Prop({
 		type: String,

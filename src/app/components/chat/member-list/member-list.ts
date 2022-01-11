@@ -1,6 +1,5 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { fuzzysearch } from '../../../../utils/string';
-import { propOptional } from '../../../../utils/vue';
 import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
 import AppChatMemberListItem from './item/item.vue';
@@ -13,7 +12,7 @@ import AppChatMemberListItem from './item/item.vue';
 export default class AppChatMemberList extends Vue {
 	@Prop({ type: Array, required: true }) users!: ChatUser[];
 	@Prop({ type: Object, required: true }) room!: ChatRoom;
-	@Prop(propOptional(Boolean, false)) hideFilter!: boolean;
+	@Prop({ type: Boolean, default: false }) hideFilter!: boolean;
 
 	filterQuery = '';
 

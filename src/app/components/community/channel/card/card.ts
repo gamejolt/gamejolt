@@ -1,5 +1,4 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional } from '../../../../../utils/vue';
 import {
 	Community,
 	CommunityPresetChannelType,
@@ -26,14 +25,14 @@ export default class AppCommunityChannelCard extends Vue {
 	@Prop({ type: Object, required: true }) community!: Community;
 	@Prop({ type: String, required: true }) path!: string;
 	@Prop({ type: String, required: true }) label!: string;
-	@Prop(propOptional(Object)) backgroundItem?: MediaItem;
-	@Prop(propOptional(Boolean, false)) isActive!: boolean;
-	@Prop(propOptional(Boolean, false)) isUnread!: boolean;
-	@Prop(propOptional(String)) sort!: string;
-	@Prop(propOptional(Boolean, false)) isLocked!: boolean;
-	@Prop(propOptional(Boolean, false)) isUnpublished!: boolean;
-	@Prop(propOptional(Boolean, false)) isArchived!: boolean;
-	@Prop(propOptional(String)) channelType?: string;
+	@Prop(Object) backgroundItem?: MediaItem;
+	@Prop({ type: Boolean, default: false }) isActive!: boolean;
+	@Prop({ type: Boolean, default: false }) isUnread!: boolean;
+	@Prop({ type: String, default: undefined }) sort?: string;
+	@Prop({ type: Boolean, default: false }) isLocked!: boolean;
+	@Prop({ type: Boolean, default: false }) isUnpublished!: boolean;
+	@Prop({ type: Boolean, default: false }) isArchived!: boolean;
+	@Prop(String) channelType?: string;
 
 	cardHeight = CARD_HEIGHT;
 
