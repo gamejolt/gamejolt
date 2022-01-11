@@ -1,4 +1,5 @@
-import { ComponentPublicInstance, Ref } from 'vue';
+import { ComponentPublicInstance, Ref, shallowRef } from 'vue';
+import { setup } from 'vue-class-component';
 
 export type MaybeRef<T> = Ref<T> | T;
 
@@ -37,4 +38,13 @@ export function findRequiredVueParent<T extends ComponentPublicInstance>(
 	}
 
 	return parent;
+}
+
+/**
+ * Runs [setup], wrapping the callback value in a [shallowRef].
+ */
+export function shallowSetup<T>(cb: () => T) {
+	return setup(() => {
+		return shallowRef<T>(cb());
+	});
 }
