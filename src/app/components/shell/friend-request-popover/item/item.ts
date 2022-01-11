@@ -1,5 +1,4 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
 import AppCard from '../../../../../_common/card/card.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollInview, {
@@ -25,7 +24,7 @@ const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` }
 	},
 })
 export default class AppShellFriendRequestPopoverItem extends Vue {
-	@Prop(propRequired(Object)) request!: UserFriendship;
+	@Prop({ type: Object, required: true }) request!: UserFriendship;
 
 	@AppState user!: AppStore['user'];
 

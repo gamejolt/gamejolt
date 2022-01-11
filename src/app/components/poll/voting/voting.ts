@@ -1,6 +1,6 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { propOptional, propRequired } from '../../../../utils/vue';
+import { propOptional } from '../../../../utils/vue';
 import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { formatNumber } from '../../../../_common/filters/number';
 import { Game } from '../../../../_common/game/game.model';
@@ -22,7 +22,7 @@ import { Store } from '../../../store';
 })
 export default class AppPollVoting extends Vue {
 	@State app!: Store['app'];
-	@Prop(propRequired(Object)) poll!: Poll;
+	@Prop({ type: Object, required: true }) poll!: Poll;
 	@Prop(propOptional(Object)) game?: Game;
 	@Prop(propOptional(Object)) user?: User;
 

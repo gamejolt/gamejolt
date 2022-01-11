@@ -1,5 +1,4 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { propRequired } from '../../../../utils/vue';
 import AppTimelineListItem from '../../../timeline-list/item/item.vue';
 import { Comment, CommentBlockReason } from '../../comment-model';
 
@@ -9,8 +8,8 @@ import { Comment, CommentBlockReason } from '../../comment-model';
 	},
 })
 export default class AppCommentWidgetCommentBlocked extends Vue {
-	@Prop(propRequired(Object)) comment!: Comment;
-	@Prop(propRequired(String)) reason!: CommentBlockReason;
+	@Prop({ type: Object, required: true }) comment!: Comment;
+	@Prop({ type: String, required: true }) reason!: CommentBlockReason;
 
 	@Emit('show') show() {}
 }

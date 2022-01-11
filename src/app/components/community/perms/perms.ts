@@ -1,12 +1,12 @@
 import { h } from 'vue';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../utils/vue';
+import { propOptional } from '../../../../utils/vue';
 import { Perm } from '../../../../_common/collaborator/collaboratable';
 import { Community } from '../../../../_common/community/community.model';
 
 @Options({})
 export class AppCommunityPerms extends Vue {
-	@Prop(propRequired(Object)) community!: Community;
+	@Prop({ type: Object, required: true }) community!: Community;
 	@Prop(propOptional(String, '')) required!: string;
 	@Prop(propOptional(Boolean, false)) either!: boolean;
 	@Prop(propOptional(String, 'span')) tag!: string;

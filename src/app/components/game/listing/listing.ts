@@ -1,5 +1,5 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../utils/vue';
+import { propOptional } from '../../../../utils/vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
@@ -15,9 +15,7 @@ import { GameFilteringContainer } from '../filtering/container';
 import AppGameFilteringWidget from '../filtering/widget.vue';
 import AppGameGridPlaceholder from '../grid/placeholder/placeholder.vue';
 import { GameListingContainer } from './listing-container-service';
-
-@Options({
-	components: {
+ponents: {
 		AppPagination,
 		AppLoadingFade,
 		AppGameFilteringWidget,
@@ -32,8 +30,8 @@ import { GameListingContainer } from './listing-container-service';
 	},
 })
 export default class AppGameListing extends Vue {
-	@Prop(propRequired(Object)) listing!: GameListingContainer;
-	@Prop(propRequired(Object)) filtering!: GameFilteringContainer;
+	@Prop({ type: Object, required: true }) listing!: GameListingContainer;
+	@Prop({ type: Object, required: true }) filtering!: GameFilteringContainer;
 	@Prop(propOptional(Boolean, false)) hideFilters!: boolean;
 	@Prop(propOptional(Boolean, false)) hideSectionNav!: boolean;
 	@Prop(propOptional(Boolean, false)) includeFeaturedSection!: boolean;

@@ -1,5 +1,5 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../../utils/vue';
+import { propOptional } from '../../../../../utils/vue';
 import {
 	Community,
 	CommunityPresetChannelType,
@@ -23,9 +23,9 @@ const CARD_HEIGHT = 70;
 	},
 })
 export default class AppCommunityChannelCard extends Vue {
-	@Prop(propRequired(Object)) community!: Community;
-	@Prop(propRequired(String)) path!: string;
-	@Prop(propRequired(String)) label!: string;
+	@Prop({ type: Object, required: true }) community!: Community;
+	@Prop({ type: String, required: true }) path!: string;
+	@Prop({ type: String, required: true }) label!: string;
 	@Prop(propOptional(Object)) backgroundItem?: MediaItem;
 	@Prop(propOptional(Boolean, false)) isActive!: boolean;
 	@Prop(propOptional(Boolean, false)) isUnread!: boolean;

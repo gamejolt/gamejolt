@@ -1,5 +1,4 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { BaseModal } from '../../../../../_common/modal/base';
 import FormCommunityChannelBackground from '../../../forms/community/channel/background/background.vue';
@@ -10,7 +9,7 @@ import FormCommunityChannelBackground from '../../../forms/community/channel/bac
 	},
 })
 export default class AppCommunityChannelBackgroundModal extends mixins(BaseModal) {
-	@Prop(propRequired(Object)) channel!: CommunityChannel;
+	@Prop({ type: Object, required: true }) channel!: CommunityChannel;
 
 	previousBackgroundId: number | null = null;
 

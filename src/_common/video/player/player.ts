@@ -1,6 +1,6 @@
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { AppVideoPlayerShakaLazy } from '../../../app/components/lazy';
-import { propOptional, propRequired } from '../../../utils/vue';
+import { propOptional } from '../../../utils/vue';
 import { formatNumber } from '../../filters/number';
 import { AppImgResponsive } from '../../img/responsive/responsive';
 import AppLoading from '../../loading/loading.vue';
@@ -96,8 +96,8 @@ export function createReadableTimestamp(time: number) {
 	},
 })
 export default class AppVideoPlayer extends Vue {
-	@Prop(propRequired(Object)) mediaItem!: MediaItem;
-	@Prop(propRequired(Array)) manifests!: VideoSourceArray;
+	@Prop({ type: Object, required: true }) mediaItem!: MediaItem;
+	@Prop({ type: Array, required: true }) manifests!: VideoSourceArray;
 	@Prop(propOptional(Boolean, false)) autoplay!: boolean;
 	@Prop(propOptional(Number, 0)) startTime!: number;
 	@Prop(propOptional(String, null)) context!: VideoPlayerControllerContext;

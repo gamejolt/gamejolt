@@ -1,5 +1,4 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
 import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { BaseModal } from '../../../../../_common/modal/base';
@@ -16,8 +15,8 @@ import { CommunityEjectPostModalResult } from './modal.service';
 	},
 })
 export default class AppCommunityEjectPostModal extends mixins(BaseModal) {
-	@Prop(propRequired(Object)) firesidePostCommunity!: FiresidePostCommunity;
-	@Prop(propRequired(Object)) post!: FiresidePost;
+	@Prop({ type: Object, required: true }) firesidePostCommunity!: FiresidePostCommunity;
+	@Prop({ type: Object, required: true }) post!: FiresidePost;
 
 	@AppState
 	user!: AppStore['user'];

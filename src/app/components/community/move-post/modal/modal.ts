@@ -1,5 +1,4 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import AppCommunityChannelSelect from '../../../../../_common/community/channel/select/select.vue';
 import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
@@ -19,9 +18,9 @@ import { CommunityMovePostModalResult } from './modal.service';
 	},
 })
 export default class AppCommunityMovePostModal extends mixins(BaseModal) {
-	@Prop(propRequired(Object)) firesidePostCommunity!: FiresidePostCommunity;
-	@Prop(propRequired(Object)) post!: FiresidePost;
-	@Prop(propRequired(Array)) channels!: CommunityChannel[];
+	@Prop({ type: Object, required: true }) firesidePostCommunity!: FiresidePostCommunity;
+	@Prop({ type: Object, required: true }) post!: FiresidePost;
+	@Prop({ type: Array, required: true }) channels!: CommunityChannel[];
 
 	@AppState
 	user!: AppStore['user'];

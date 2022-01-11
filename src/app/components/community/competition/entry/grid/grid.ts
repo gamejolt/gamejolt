@@ -1,5 +1,5 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../../../utils/vue';
+import { propOptional } from '../../../../../../utils/vue';
 import {
 	CommunityCompetition,
 	CompetitionPeriodVoting,
@@ -17,8 +17,8 @@ import AppCommunityCompetitionEntryThumbnail from '../thumbnail/thumbnail.vue';
 	},
 })
 export default class AppCommunityCompetitionEntryGrid extends Vue {
-	@Prop(propRequired(Object)) competition!: CommunityCompetition;
-	@Prop(propRequired(Array)) entries!: CommunityCompetitionEntry[];
+	@Prop({ type: Object, required: true }) competition!: CommunityCompetition;
+	@Prop({ type: Array, required: true }) entries!: CommunityCompetitionEntry[];
 	@Prop(propOptional(Number, 0)) currentPage!: number;
 	@Prop(propOptional(Number, 0)) pageCount!: number;
 	@Prop(propOptional(Number, 6)) numPlaceholders!: number;

@@ -1,6 +1,5 @@
 import { CancelTokenSource } from 'axios';
 import { Emit, mixins, Options, Prop, Watch } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
@@ -61,7 +60,7 @@ export default class AppFormPostVideo
 	implements FormOnSubmit, FormOnLoad, FormOnSubmitError, FormOnSubmitSuccess
 {
 	@Prop({ type: Object }) post!: FiresidePost;
-	@Prop(propRequired(Boolean)) wasPublished!: boolean;
+	@Prop({ type: Boolean, required: true }) wasPublished!: boolean;
 
 	// These fields are populated through the form load.
 	maxFilesize = 1000;

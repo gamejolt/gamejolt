@@ -1,5 +1,4 @@
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
-import { propRequired } from '../../../../utils/vue';
 import { ContentFocus } from '../../../content-focus/content-focus.service';
 import { AppResponsiveDimensions } from '../../../responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../../screen/screen-service';
@@ -20,13 +19,13 @@ const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height * 0.25}px
 	},
 })
 export default class AppContentGif extends Vue {
-	@Prop(propRequired(String)) gifId!: string;
-	@Prop(propRequired(Number)) width!: number;
-	@Prop(propRequired(Number)) height!: number;
-	@Prop(propRequired(String)) service!: string;
-	@Prop(propRequired(Object)) media!: any;
-	@Prop(propRequired(Boolean)) isEditing!: boolean;
-	@Prop(propRequired(Boolean)) isDisabled!: boolean;
+	@Prop({ type: String, required: true }) gifId!: string;
+	@Prop({ type: Number, required: true }) width!: number;
+	@Prop({ type: Number, required: true }) height!: number;
+	@Prop({ type: String, required: true }) service!: string;
+	@Prop({ type: Object, required: true }) media!: any;
+	@Prop({ type: Boolean, required: true }) isEditing!: boolean;
+	@Prop({ type: Boolean, required: true }) isDisabled!: boolean;
 
 	@Inject({ from: ContentOwnerControllerKey })
 	owner!: ContentOwnerController;

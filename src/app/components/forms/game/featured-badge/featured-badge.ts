@@ -1,5 +1,4 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
 import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
@@ -14,7 +13,7 @@ class Wrapper extends BaseForm<FormModel> {}
 
 @Options({})
 export default class FormGameFeaturedBadge extends mixins(Wrapper) {
-	@Prop(propRequired(Object)) game!: Game;
+	@Prop({ type: Object, required: true }) game!: Game;
 
 	get colorOptions() {
 		return [

@@ -1,5 +1,5 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../utils/vue';
+import { propOptional } from '../../../utils/vue';
 import { trackGotoCommunity } from '../../analytics/analytics.service';
 import { Environment } from '../../environment/environment.service';
 import { formatNumber } from '../../filters/number';
@@ -17,7 +17,7 @@ import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
 	},
 })
 export default class AppCommunityCardBase extends Vue {
-	@Prop(propRequired(Object)) community!: Community;
+	@Prop({ type: Object, required: true }) community!: Community;
 	@Prop(propOptional(Boolean, false)) overflow!: boolean;
 	@Prop(propOptional(Boolean, false)) elevate!: boolean;
 	@Prop(propOptional(Boolean, true)) allowEdit!: boolean;

@@ -1,5 +1,4 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { propRequired } from '../../../../utils/vue';
 import AppAlertDismissable from '../../../../_common/alert/dismissable/dismissable.vue';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
 import {
@@ -20,7 +19,7 @@ import {
 	},
 })
 export default class AppCommunityUserNotification extends Vue {
-	@Prop(propRequired(Object)) notification!: CommunityUserNotification;
+	@Prop({ type: Object, required: true }) notification!: CommunityUserNotification;
 
 	@Emit('dismiss')
 	emitDismiss() {}

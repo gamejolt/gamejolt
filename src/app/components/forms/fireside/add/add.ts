@@ -1,5 +1,5 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../../utils/vue';
+import { propOptional } from '../../../../../utils/vue';
 import { Community } from '../../../../../_common/community/community.model';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { AppFocusWhen } from '../../../../../_common/form-vue/focus-when.directive';
@@ -28,7 +28,7 @@ class Wrapper extends BaseForm<FormModel> {}
 	},
 })
 export default class FormFiresideAdd extends mixins(Wrapper) {
-	@Prop(propRequired(Array))
+	@Prop({ type: Array, required: true })
 	communities!: Community[];
 
 	@Prop({ type: String, default: undefined })

@@ -1,9 +1,8 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propRequired } from '../../../../utils/vue';
 
 @Options({})
 export default class AppTimeoutCountdown extends Vue {
-	@Prop(propRequired(Number)) expiresOn!: number;
+	@Prop({ type: Number, required: true }) expiresOn!: number;
 
 	updateTimer!: NodeJS.Timer | null;
 	displayText = '';

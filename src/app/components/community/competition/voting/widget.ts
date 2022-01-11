@@ -1,6 +1,5 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { numberSort } from '../../../../../utils/array';
-import { propRequired } from '../../../../../utils/vue';
 import {
 	CommunityCompetition,
 	CompetitionPeriodVoting,
@@ -25,13 +24,13 @@ import FormCommunityCompetitionVotingCast from '../../../forms/community/competi
 	},
 })
 export default class AppCommunityCompetitionVotingWidget extends Vue {
-	@Prop(propRequired(Object)) competition!: CommunityCompetition;
-	@Prop(propRequired(Object)) entry!: CommunityCompetitionEntry;
-	@Prop(propRequired(Array)) votingCategories!: CommunityCompetitionVotingCategory[];
-	@Prop(propRequired(Array)) userVotes!: CommunityCompetitionEntryVote[];
-	@Prop(propRequired(Boolean)) isParticipant!: boolean;
-	@Prop(propRequired(Boolean)) isArchived!: boolean;
-	@Prop(propRequired(Boolean)) isBlocked!: boolean;
+	@Prop({ type: Object, required: true }) competition!: CommunityCompetition;
+	@Prop({ type: Object, required: true }) entry!: CommunityCompetitionEntry;
+	@Prop({ type: Array, required: true }) votingCategories!: CommunityCompetitionVotingCategory[];
+	@Prop({ type: Array, required: true }) userVotes!: CommunityCompetitionEntryVote[];
+	@Prop({ type: Boolean, required: true }) isParticipant!: boolean;
+	@Prop({ type: Boolean, required: true }) isArchived!: boolean;
+	@Prop({ type: Boolean, required: true }) isBlocked!: boolean;
 
 	@AppState
 	user!: AppStore['user'];

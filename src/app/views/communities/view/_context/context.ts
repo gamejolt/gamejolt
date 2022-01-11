@@ -1,6 +1,5 @@
 import { Options, Prop, Provide, Vue } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
-import { propRequired } from '../../../../../utils/vue';
 import { isEditingCommunity } from '../../../../../_common/community/community.model';
 import { Store } from '../../../../store';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
@@ -16,7 +15,7 @@ import AppNavEdit from '../_nav/edit/edit.vue';
 	},
 })
 export default class AppCommunitiesViewContext extends Vue {
-	@Prop(propRequired(Object))
+	@Prop({ type: Object, required: true })
 	@Provide({ to: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 

@@ -1,6 +1,5 @@
 import { transparentize } from 'polished';
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
-import { propRequired } from '../../../../../../utils/vue';
 import { ContentRules } from '../../../../../../_common/content/content-editor/content-rules';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
 import { formatDate } from '../../../../../../_common/filters/date';
@@ -39,7 +38,7 @@ export interface ChatMessageEditEvent {
 export default class AppChatWindowOutputItem extends Vue {
 	@Prop(Object) message!: ChatMessage;
 	@Prop(Object) room!: ChatRoom;
-	@Prop(propRequired(Boolean)) isNew!: boolean;
+	@Prop({ type: Boolean, required: true }) isNew!: boolean;
 
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;

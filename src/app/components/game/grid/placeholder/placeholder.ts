@@ -1,5 +1,5 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../../utils/vue';
+import { propOptional } from '../../../../../utils/vue';
 import AppGameThumbnailPlaceholder from '../../../../../_common/game/thumbnail/placeholder/placeholder.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { GameGridRowSizeLg, GameGridRowSizeMd, GameGridRowSizeSm } from '../grid';
@@ -10,7 +10,7 @@ import { GameGridRowSizeLg, GameGridRowSizeMd, GameGridRowSizeSm } from '../grid
 	},
 })
 export default class AppGameGridPlaceholder extends Vue {
-	@Prop(propRequired(Number)) num!: number;
+	@Prop({ type: Number, required: true }) num!: number;
 	@Prop(propOptional(Boolean, false)) truncateToFit!: boolean;
 	@Prop(propOptional(Boolean, false)) scrollable!: boolean;
 	@Prop(propOptional(Boolean, false)) forceScrollable!: boolean;

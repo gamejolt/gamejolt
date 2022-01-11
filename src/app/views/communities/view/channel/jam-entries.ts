@@ -1,6 +1,5 @@
 import { Inject, Options, Prop, Watch } from 'vue-property-decorator';
 import { RouteLocationNormalized } from 'vue-router';
-import { propRequired } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
 import { CommunityCompetitionEntry } from '../../../../../_common/community/competition/entry/entry.model';
 import { CommunityCompetitionVotingCategory } from '../../../../../_common/community/competition/voting-category/voting-category.model';
@@ -150,7 +149,7 @@ function makeRequest(route: RouteLocationNormalized) {
 	resolver: ({ route }) => makeRequest(route),
 })
 export default class RouteCommunitiesViewChannelJamEntries extends BaseRouteComponent {
-	@Prop(propRequired(Array)) categories!: CommunityCompetitionVotingCategory[];
+	@Prop({ type: Array, required: true }) categories!: CommunityCompetitionVotingCategory[];
 
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;

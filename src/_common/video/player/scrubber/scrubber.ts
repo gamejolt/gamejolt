@@ -1,5 +1,4 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propRequired } from '../../../../utils/vue';
 import { Ruler } from '../../../ruler/ruler-service';
 import AppTouch, { AppTouchInput } from '../../../touch/AppTouch.vue';
 import { scrubVideo, VideoPlayerController } from '../controller';
@@ -10,7 +9,7 @@ import { scrubVideo, VideoPlayerController } from '../controller';
 	},
 })
 export default class AppVideoPlayerScrubber extends Vue {
-	@Prop(propRequired(Object)) player!: VideoPlayerController;
+	@Prop({ type: Object, required: true }) player!: VideoPlayerController;
 
 	private timebarLeft = 0;
 	private timebarWidth = 0;

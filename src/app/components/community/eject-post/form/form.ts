@@ -1,5 +1,4 @@
 import { Emit, mixins, Options, Prop, Watch } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
 import { Community } from '../../../../../_common/community/community.model';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
@@ -19,7 +18,7 @@ class Wrapper extends BaseForm<FormModel> {}
 
 @Options({})
 export default class FormCommunityEjectPost extends mixins(Wrapper) {
-	@Prop(propRequired(Object)) community!: Community;
+	@Prop({ type: Object, required: true }) community!: Community;
 
 	@Emit('change') emitChange(_form: FormModel) {}
 

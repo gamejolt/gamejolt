@@ -1,7 +1,6 @@
 import { nextTick } from 'vue';
 import { Emit, Inject, mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { isMac } from '../../../../../../utils/utils';
-import { propRequired } from '../../../../../../utils/vue';
 import { ContentDocument } from '../../../../../../_common/content/content-document';
 import { ContentRules } from '../../../../../../_common/content/content-editor/content-rules';
 import {
@@ -40,8 +39,8 @@ class Wrapper extends BaseForm<FormModel> {}
 	},
 })
 export default class AppChatWindowSendForm extends mixins(Wrapper) {
-	@Prop(propRequired(Boolean)) singleLineMode!: boolean;
-	@Prop(propRequired(Object)) room!: ChatRoom;
+	@Prop({ type: Boolean, required: true }) singleLineMode!: boolean;
+	@Prop({ type: Object, required: true }) room!: ChatRoom;
 
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;

@@ -1,7 +1,6 @@
 import { ref } from 'vue';
 import { setup } from 'vue-class-component';
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
-import { propRequired } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
 import { DrawerStore, DrawerStoreKey, setDrawerOpen } from '../../drawer/drawer-store';
 import { AppObserveDimensions } from '../../observe-dimensions/observe-dimensions.directive';
@@ -25,7 +24,7 @@ import AppStickerLayerPlacementMaskTarget from './placement-mask-target.vue';
 	},
 })
 export default class AppStickerLayerPlacementMask extends Vue {
-	@Prop(propRequired(Object)) layer!: StickerLayerController;
+	@Prop({ type: Object, required: true }) layer!: StickerLayerController;
 
 	@Inject({ from: DrawerStoreKey })
 	drawer!: DrawerStore;

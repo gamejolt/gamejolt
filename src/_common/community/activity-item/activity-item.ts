@@ -1,6 +1,5 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { RouteLocationRaw } from 'vue-router';
-import { propRequired } from '../../../utils/vue';
 import { formatDate } from '../../filters/date';
 import { Fireside } from '../../fireside/fireside.model';
 import { FiresidePost } from '../../fireside/post/post-model';
@@ -27,9 +26,9 @@ import { CommunityActivityItem } from './activity-item.model';
 	},
 })
 export default class AppCommunityActivityItem extends Vue {
-	@Prop(propRequired(Object)) item!: CommunityActivityItem;
-	@Prop(propRequired(Boolean)) usersplit!: boolean;
-	@Prop(propRequired(Boolean)) showIcon!: boolean;
+	@Prop({ type: Object, required: true }) item!: CommunityActivityItem;
+	@Prop({ type: Boolean, required: true }) usersplit!: boolean;
+	@Prop({ type: Boolean, required: true }) showIcon!: boolean;
 
 	readonly Screen = Screen;
 	readonly formatDate = formatDate;

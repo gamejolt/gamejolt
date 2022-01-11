@@ -1,6 +1,5 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { assertNever } from '../../../../../../../../utils/utils';
-import { propRequired } from '../../../../../../../../utils/vue';
 import AppCardListItem from '../../../../../../../../_common/card/list/item/item.vue';
 import {
 	Community,
@@ -17,8 +16,8 @@ import { CommunityChannelPresetBackgroundModal } from '../../../../../../../comp
 	},
 })
 export default class AppCommunitiesEditChannelListPresetItem extends Vue {
-	@Prop(propRequired(Object)) community!: Community;
-	@Prop(propRequired(String)) presetType!: CommunityPresetChannelType;
+	@Prop({ type: Object, required: true }) community!: Community;
+	@Prop({ type: String, required: true }) presetType!: CommunityPresetChannelType;
 
 	@Emit('edit') emitEdit() {}
 

@@ -1,5 +1,5 @@
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../utils/vue';
+import { propOptional } from '../../../utils/vue';
 import { ContentFocus } from '../../content-focus/content-focus.service';
 import { AppImgResponsive } from '../../img/responsive/responsive';
 import {
@@ -31,7 +31,7 @@ import { MediaItem } from '../media-item-model';
 	},
 })
 export default class AppMediaItemPost extends Vue {
-	@Prop(propRequired(Object)) mediaItem!: MediaItem;
+	@Prop({ type: Object, required: true }) mediaItem!: MediaItem;
 	@Prop(propOptional(Boolean, true)) isPostHydrated!: boolean;
 	@Prop(propOptional(Boolean, false)) isActive!: boolean;
 	@Prop(propOptional(Boolean, false)) restrictDeviceMaxHeight!: boolean;

@@ -1,6 +1,5 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { fuzzysearch } from '../../../../utils/string';
-import { propRequired } from '../../../../utils/vue';
 import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
 import AppChatUserListItem from './item/item.vue';
@@ -24,7 +23,7 @@ function searchEntries(entries: (ChatUser | ChatRoom)[], query: string): (ChatUs
 	},
 })
 export default class AppChatUserList extends Vue {
-	@Prop(propRequired(Array)) entries!: (ChatUser | ChatRoom)[];
+	@Prop({ type: Array, required: true }) entries!: (ChatUser | ChatRoom)[];
 
 	filterQuery = '';
 

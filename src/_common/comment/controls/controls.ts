@@ -1,5 +1,5 @@
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../utils/vue';
+import { propOptional } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { DrawerStore, DrawerStoreKey, setDrawerOpen } from '../../drawer/drawer-store';
@@ -19,8 +19,8 @@ import { CommentVote } from '../vote/vote-model';
 	},
 })
 export default class AppCommentControls extends Vue {
-	@Prop(propRequired(Object)) model!: Model;
-	@Prop(propRequired(Object)) comment!: Comment;
+	@Prop({ type: Object, required: true }) model!: Model;
+	@Prop({ type: Object, required: true }) comment!: Comment;
 	@Prop(propOptional(Object)) parent!: undefined | Comment;
 	@Prop(propOptional(Array, () => [])) children!: Comment[];
 	@Prop(propOptional(Boolean, false)) showReply!: boolean;

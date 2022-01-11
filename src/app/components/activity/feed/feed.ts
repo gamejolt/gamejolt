@@ -1,6 +1,5 @@
 import { inject, nextTick, provide, reactive } from 'vue';
 import { Emit, Options, Prop, Provide, Vue, Watch } from 'vue-property-decorator';
-import { propRequired } from '../../../../utils/vue';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
 import { EventItem } from '../../../../_common/event-item/event-item.model';
@@ -55,7 +54,7 @@ export function useActivityFeedInterface() {
 	},
 })
 export default class AppActivityFeed extends Vue {
-	@Prop(propRequired(Object))
+	@Prop({ type: Object, required: true })
 	@Provide({ to: ActivityFeedKey })
 	feed!: ActivityFeedView;
 

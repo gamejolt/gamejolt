@@ -1,5 +1,4 @@
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
-import { propRequired } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
 import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
@@ -29,8 +28,8 @@ import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vu
 	},
 })
 export default class AppChatUserPopover extends Vue {
-	@Prop(propRequired(Object)) user!: ChatUser;
-	@Prop(propRequired(Object)) room!: ChatRoom;
+	@Prop({ type: Object, required: true }) user!: ChatUser;
+	@Prop({ type: Object, required: true }) room!: ChatRoom;
 
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;

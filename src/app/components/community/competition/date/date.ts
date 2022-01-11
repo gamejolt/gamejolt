@@ -1,12 +1,12 @@
 import { determine } from 'jstimezonedetect';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../../utils/vue';
+import { propOptional } from '../../../../../utils/vue';
 import { formatDate } from '../../../../../_common/filters/date';
 import { Timezone, TimezoneData } from '../../../../../_common/timezone/timezone.service';
 
 @Options({})
 export default class AppCommunityCompetitionDate extends Vue {
-	@Prop(propRequired(Number)) date!: number;
+	@Prop({ type: Number, required: true }) date!: number;
 	@Prop(propOptional(String)) timezone?: string;
 
 	timezones: { [region: string]: (TimezoneData & { label?: string })[] } = null as any;

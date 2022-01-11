@@ -1,5 +1,4 @@
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
@@ -29,7 +28,7 @@ const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` }
 	},
 })
 export default class AppChatUserListItem extends Vue {
-	@Prop(propRequired(Object)) item!: ChatUser | ChatRoom;
+	@Prop({ type: Object, required: true }) item!: ChatUser | ChatRoom;
 
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;

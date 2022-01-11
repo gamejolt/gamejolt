@@ -1,5 +1,4 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { propRequired } from '../../../utils/vue';
 import { FiresidePost } from '../../fireside/post/post-model';
 import { AppImgResponsive } from '../../img/responsive/responsive';
 import AppProgressBar from '../../progress/bar/bar.vue';
@@ -15,7 +14,7 @@ import { AppResponsiveDimensions } from '../../responsive-dimensions/responsive-
 	},
 })
 export default class AppVideoProcessingProgress extends Vue {
-	@Prop(propRequired(Object)) post!: FiresidePost;
+	@Prop({ type: Object, required: true }) post!: FiresidePost;
 
 	hasData = false;
 	progress = 0;

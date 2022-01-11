@@ -1,5 +1,5 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../../../utils/vue';
+import { propOptional } from '../../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbnail/img/img.vue';
@@ -21,7 +21,7 @@ import { AppScrollHelper } from './scroll-helper/scroll-helper';
 	},
 })
 export default class AppFormsCommunityPillSelector extends Vue {
-	@Prop(propRequired(Array))
+	@Prop({ type: Array, required: true })
 	communities!: Community[];
 
 	@Prop(propOptional(Object, null))

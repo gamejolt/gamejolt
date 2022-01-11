@@ -3,7 +3,7 @@ import { Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Store } from '../../../../../client/store/index';
 import { numberSort } from '../../../../../utils/array';
-import { propOptional, propRequired } from '../../../../../utils/vue';
+import { propOptional } from '../../../../../utils/vue';
 import AppCommunityCardPlaceholder from '../../../../../_common/community/card-placeholder/card-placeholder.vue';
 import AppCommunityCard from '../../../../../_common/community/card/card.vue';
 import AppCommunityChunkPlaceholder from '../../../../../_common/community/chunk/chunk-placeholder.vue';
@@ -33,7 +33,7 @@ const EmphasizedCommunityIDs = [
 	},
 })
 export default class AppDiscoverHomeCommunities extends Vue {
-	@Prop(propRequired(Array)) communities!: Community[];
+	@Prop({ type: Array, required: true }) communities!: Community[];
 	@Prop(propOptional(Boolean, false)) isLoading!: boolean;
 
 	@State app!: Store['app'];

@@ -1,7 +1,6 @@
 import { nextTick } from 'vue';
 import { setup } from 'vue-class-component';
 import { Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
 import { formatDate } from '../../../../../_common/filters/date';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import AppLoading from '../../../../../_common/loading/loading.vue';
@@ -30,9 +29,9 @@ import AppChatWindowOutputItem from './item/item.vue';
 	},
 })
 export default class AppChatWindowOutput extends Vue {
-	@Prop(propRequired(Object)) room!: ChatRoom;
-	@Prop(propRequired(Array)) messages!: ChatMessage[];
-	@Prop(propRequired(Array)) queuedMessages!: ChatMessage[];
+	@Prop({ type: Object, required: true }) room!: ChatRoom;
+	@Prop({ type: Array, required: true }) messages!: ChatMessage[];
+	@Prop({ type: Array, required: true }) queuedMessages!: ChatMessage[];
 
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;

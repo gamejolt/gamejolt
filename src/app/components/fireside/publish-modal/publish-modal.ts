@@ -1,5 +1,4 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { propRequired } from '../../../../utils/vue';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { BaseModal } from '../../../../_common/modal/base';
 import { FormModel } from '../../forms/fireside/publish/publish';
@@ -12,7 +11,7 @@ import { FiresidePublishModalResult } from './publish-modal.service';
 	},
 })
 export default class AppFiresidePublishModal extends mixins(BaseModal) {
-	@Prop(propRequired(Object)) fireside!: Fireside;
+	@Prop({ type: Object, required: true }) fireside!: Fireside;
 
 	onFormSubmit(formData: FormModel) {
 		this.modal.resolve({

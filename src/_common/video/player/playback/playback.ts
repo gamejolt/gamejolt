@@ -1,11 +1,10 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { assertNever } from '../../../../utils/utils';
-import { propRequired } from '../../../../utils/vue';
 import { toggleVideoPlayback, trackVideoPlayerEvent, VideoPlayerController } from '../controller';
 
 @Options({})
 export default class AppVideoPlayerPlayback extends Vue {
-	@Prop(propRequired(Object)) player!: VideoPlayerController;
+	@Prop({ type: Object, required: true }) player!: VideoPlayerController;
 
 	get icon() {
 		switch (this.player.state) {

@@ -1,6 +1,6 @@
 import { computed, provide } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../utils/vue';
+import { propOptional } from '../../../utils/vue';
 import { ContentDocument } from '../content-document';
 import { ContentRules } from '../content-editor/content-rules';
 import { ContentHydrator } from '../content-hydrator';
@@ -17,7 +17,7 @@ import { AppContentViewerBaseComponent } from './components/base-component';
 	},
 })
 export default class AppContentViewer extends Vue {
-	@Prop(propRequired(String)) source!: string;
+	@Prop({ type: String, required: true }) source!: string;
 	@Prop(propOptional(Boolean, false)) disableLightbox!: boolean;
 	@Prop(propOptional(Object)) displayRules?: ContentRules;
 

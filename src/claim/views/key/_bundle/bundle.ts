@@ -1,6 +1,6 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { propOptional, propRequired } from '../../../../utils/vue';
+import { propOptional } from '../../../../utils/vue';
 import { GameBundle } from '../../../../_common/game-bundle/game-bundle.model';
 import { Game } from '../../../../_common/game/game.model';
 import AppGameThumbnail from '../../../../_common/game/thumbnail/thumbnail.vue';
@@ -12,10 +12,10 @@ import { Store } from '../../../store/index';
 	},
 })
 export default class AppKeyBundle extends Vue {
-	@Prop(propRequired(Object))
+	@Prop({ type: Object, required: true })
 	payload!: any;
 
-	@Prop(propRequired(String))
+	@Prop({ type: String, required: true })
 	loginUrl!: string;
 
 	@Prop(propOptional(String))

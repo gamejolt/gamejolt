@@ -1,7 +1,6 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import AppPostCardPlaceholder from '../../../app/components/fireside/post/card/card-placeholder.vue';
 import AppPostCard from '../../../app/components/fireside/post/card/card.vue';
-import { propRequired } from '../../../utils/vue';
 import { PostOpenSource, trackGotoCommunity } from '../../analytics/analytics.service';
 import { Api } from '../../api/api.service';
 import { EventItem } from '../../event-item/event-item.model';
@@ -26,7 +25,7 @@ import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
 	},
 })
 export default class AppCommunityChunk extends Vue {
-	@Prop(propRequired(Object)) community!: Community;
+	@Prop({ type: Object, required: true }) community!: Community;
 
 	items: EventItem[] = [];
 	isLoadingPosts = true;

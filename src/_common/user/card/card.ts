@@ -1,6 +1,6 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { propOptional, propRequired } from '../../../utils/vue';
+import { propOptional } from '../../../utils/vue';
 import { formatFuzzynumber } from '../../filters/fuzzynumber';
 import { formatNumber } from '../../filters/number';
 import AppLoading from '../../loading/loading.vue';
@@ -25,7 +25,7 @@ import AppUserVerifiedTick from '../verified-tick/verified-tick.vue';
 	},
 })
 export default class AppUserCard extends Vue {
-	@Prop(propRequired(Object)) user!: User;
+	@Prop({ type: Object, required: true }) user!: User;
 	@Prop(propOptional(Boolean, false)) isLoading!: boolean;
 	@Prop(propOptional(Boolean, false)) elevate!: boolean;
 

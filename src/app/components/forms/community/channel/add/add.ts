@@ -1,7 +1,6 @@
 import { determine } from 'jstimezonedetect';
 import { nextTick } from 'vue';
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { propRequired } from '../../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
 import { BaseForm } from '../../../../../../_common/form-vue/form.service';
@@ -21,9 +20,9 @@ class Wrapper extends BaseForm<FormModel> {}
 	},
 })
 export default class FormCommunityChannelAdd extends mixins(Wrapper) {
-	@Prop(propRequired(Object)) community!: Community;
-	@Prop(propRequired(Array)) channels!: CommunityChannel[];
-	@Prop(propRequired(Array)) archivedChannels!: CommunityChannel[];
+	@Prop({ type: Object, required: true }) community!: Community;
+	@Prop({ type: Array, required: true }) channels!: CommunityChannel[];
+	@Prop({ type: Array, required: true }) archivedChannels!: CommunityChannel[];
 
 	@AppState
 	user!: AppStore['user'];

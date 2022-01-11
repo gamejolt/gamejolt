@@ -1,6 +1,6 @@
 import { nextTick } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../utils/vue';
+import { propOptional } from '../../utils/vue';
 import AppLoading from '../loading/loading.vue';
 import { setVideoMuted, trackVideoPlayerEvent, VideoPlayerController } from './player/controller';
 
@@ -20,7 +20,7 @@ type VideoSourceObject = {
 	},
 })
 export default class AppVideo extends Vue {
-	@Prop(propRequired(Object))
+	@Prop({ type: Object, required: true })
 	player!: VideoPlayerController;
 	@Prop(propOptional(Boolean, false)) showLoading!: boolean;
 	@Prop(propOptional(Boolean, true)) shouldPlay!: boolean;

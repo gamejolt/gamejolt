@@ -1,9 +1,8 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
 
 @Options({})
 export default class AppShellNotificationPopoverNewSticker extends Vue {
-	@Prop(propRequired(String)) stickerImg!: string;
+	@Prop({ type: String, required: true }) stickerImg!: string;
 
 	declare $refs: {
 		newSticker: HTMLDivElement;

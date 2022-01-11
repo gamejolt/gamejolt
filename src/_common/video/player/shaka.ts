@@ -1,6 +1,6 @@
 import { Player as ShakaPlayer, polyfill } from 'shaka-player';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../utils/vue';
+import { propOptional } from '../../../utils/vue';
 import AppVideo from '../video.vue';
 import { trackVideoPlayerEvent, VideoPlayerController } from './controller';
 
@@ -18,7 +18,7 @@ type ShakaTrack = {
 	},
 })
 export default class AppVideoPlayerShaka extends Vue {
-	@Prop(propRequired(Object)) player!: VideoPlayerController;
+	@Prop({ type: Object, required: true }) player!: VideoPlayerController;
 	@Prop(propOptional(Boolean, false)) autoplay!: boolean;
 
 	/**

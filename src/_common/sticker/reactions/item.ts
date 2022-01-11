@@ -1,11 +1,11 @@
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../utils/vue';
+import { propOptional } from '../../../utils/vue';
 import { formatFuzzynumber } from '../../filters/fuzzynumber';
 
 @Options({})
 export default class AppStickerReactionsItem extends Vue {
-	@Prop(propRequired(Number)) count!: number;
-	@Prop(propRequired(String)) imgUrl!: string;
+	@Prop({ type: Number, required: true }) count!: number;
+	@Prop({ type: String, required: true }) imgUrl!: string;
 	@Prop(propOptional(Boolean, false)) animate!: boolean;
 
 	timer: NodeJS.Timer | null = null;

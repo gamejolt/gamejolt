@@ -1,7 +1,7 @@
 import { defineAsyncComponent } from 'vue';
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../utils/vue';
+import { propOptional } from '../../../../utils/vue';
 import { AppAuthRequired } from '../../../auth/auth-required-directive';
 import { Clipboard } from '../../../clipboard/clipboard-service';
 import { Collaborator } from '../../../collaborator/collaborator.model';
@@ -54,8 +54,8 @@ let CommentNum = 0;
 	},
 })
 export default class AppCommentWidgetComment extends Vue {
-	@Prop(propRequired(Object)) model!: Model;
-	@Prop(propRequired(Object)) comment!: Comment;
+	@Prop({ type: Object, required: true }) model!: Model;
+	@Prop({ type: Object, required: true }) comment!: Comment;
 	@Prop(propOptional(Array, () => [])) children!: Comment[];
 	@Prop(propOptional(Object)) parent?: Comment;
 	@Prop(propOptional(Boolean, false)) isLastInThread!: boolean;

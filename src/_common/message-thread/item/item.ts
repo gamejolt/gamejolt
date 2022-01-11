@@ -1,5 +1,5 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../utils/vue';
+import { propOptional } from '../../../utils/vue';
 import { formatDate } from '../../filters/date';
 import { AppTimeAgo } from '../../time/ago/ago';
 import AppTimelineListItem from '../../timeline-list/item/item.vue';
@@ -18,9 +18,9 @@ import AppUserVerifiedTick from '../../user/verified-tick/verified-tick.vue';
 	},
 })
 export default class AppMessageThreadItem extends Vue {
-	@Prop(propRequired(Object)) user!: User;
+	@Prop({ type: Object, required: true }) user!: User;
 	@Prop(propOptional(Object)) repliedTo?: User;
-	@Prop(propRequired(Number)) date!: number;
+	@Prop({ type: Number, required: true }) date!: number;
 	@Prop(propOptional(String)) id?: string;
 	@Prop(propOptional(Boolean, false)) isActive!: boolean;
 	@Prop(propOptional(Boolean, false)) isNew!: boolean;
