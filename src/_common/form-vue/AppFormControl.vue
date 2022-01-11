@@ -44,6 +44,15 @@ export function defineFormControlProps() {
 	};
 }
 
+/**
+ * Used to mix in common emits used in most form controls.
+ */
+export function defineFormControlEmits() {
+	return {
+		changed: (_value: any) => true,
+	};
+}
+
 export function provideFormControl(c: FormControlController) {
 	provide(Key, c);
 }
@@ -52,11 +61,17 @@ export function useFormControl<T>() {
 	return inject(Key, null) as FormControlController<T> | null;
 }
 
-export function createFormControl<T>(
-	initialValue: T,
-	inputValidators: Ref<FormValidator[]>,
-	{ multi = false }: { multi?: boolean } = {}
-) {
+export function createFormControl<T>({
+	initialValue,
+	validators: inputValidators,
+	onChange,
+	multi = false,
+}: {
+	initialValue: T;
+	validators: Ref<FormValidator[]>;
+	onChange: (value: T) => void;
+	multi?: boolean;
+}) {
 	const form = useForm()!;
 	const group = useFormGroup()!;
 
@@ -115,8 +130,7 @@ export function createFormControl<T>(
 		form.formModel[group.name] = value;
 		group.changed = true;
 
-		// TODO(vue3): oh boy
-		// this.emitChanged(value);
+		onChange?.(value);
 		form._onControlChanged();
 	}
 
@@ -171,12 +185,21 @@ const props = defineProps({
 	},
 });
 
+const emit = defineEmits({
+	...defineFormControlEmits(),
+});
+
 const { validators } = toRefs(props);
 
 // TODO(vue3): can we do the text masking in a way that tree shakes it away when not used?
 
 const group = useFormGroup()!;
-const c = createFormControl('', validators);
+const c = createFormControl({
+	initialValue: '',
+	validators,
+	// eslint-disable-next-line vue/require-explicit-emits
+	onChange: val => emit('changed', val),
+});
 
 const root = ref<HTMLInputElement>();
 const prefixElement = ref<HTMLSpanElement>();

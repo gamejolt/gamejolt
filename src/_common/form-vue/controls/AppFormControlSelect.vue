@@ -1,14 +1,27 @@
 <script lang="ts" setup>
 import { ref, toRef } from 'vue';
-import { createFormControl, defineFormControlProps } from '../AppFormControl.vue';
+import {
+	createFormControl,
+	defineFormControlEmits,
+	defineFormControlProps,
+} from '../AppFormControl.vue';
 import { useFormGroup } from '../AppFormGroup.vue';
 
 const props = defineProps({
 	...defineFormControlProps(),
 });
 
+const emit = defineEmits({
+	...defineFormControlEmits(),
+});
+
 const group = useFormGroup()!;
-const c = createFormControl('', toRef(props, 'validators'));
+const c = createFormControl({
+	initialValue: '',
+	validators: toRef(props, 'validators'),
+	// eslint-disable-next-line vue/require-explicit-emits
+	onChange: val => emit('changed', val),
+});
 
 const root = ref<HTMLSelectElement>();
 

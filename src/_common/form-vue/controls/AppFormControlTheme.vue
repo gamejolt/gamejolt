@@ -13,17 +13,30 @@ import {
 } from '../../theme/theme.model';
 import { AppTooltip as vAppTooltip } from '../../tooltip/tooltip-directive';
 import AppTranslate from '../../translate/AppTranslate.vue';
-import { createFormControl, defineFormControlProps } from '../AppFormControl.vue';
+import {
+	createFormControl,
+	defineFormControlEmits,
+	defineFormControlProps,
+} from '../AppFormControl.vue';
 
 const props = defineProps({
 	...defineFormControlProps(),
+});
+
+const emit = defineEmits({
+	...defineFormControlEmits(),
 });
 
 interface VueColor {
 	hex: string | null;
 }
 
-const c = createFormControl(null as Theme | null, toRef(props, 'validators'));
+const c = createFormControl({
+	initialValue: null as Theme | null,
+	validators: toRef(props, 'validators'),
+	// eslint-disable-next-line vue/require-explicit-emits
+	onChange: val => emit('changed', val),
+});
 
 const presets = ref([] as ThemePreset[]);
 const activeTab = ref('preset' as 'preset' | 'custom');

@@ -1,7 +1,11 @@
 <script lang="ts" setup>
 import { computed, toRef } from 'vue';
 import AppDatetimePicker from '../../datetime-picker/datetime-picker.vue';
-import { createFormControl, defineFormControlProps } from '../AppFormControl.vue';
+import {
+	createFormControl,
+	defineFormControlEmits,
+	defineFormControlProps,
+} from '../AppFormControl.vue';
 import { useFormGroup } from '../AppFormGroup.vue';
 
 const props = defineProps({
@@ -12,8 +16,17 @@ const props = defineProps({
 	},
 });
 
+const emit = defineEmits({
+	...defineFormControlEmits(),
+});
+
 const group = useFormGroup()!;
-const c = createFormControl(Date.now(), toRef(props, 'validators'));
+const c = createFormControl({
+	initialValue: Date.now(),
+	validators: toRef(props, 'validators'),
+	// eslint-disable-next-line vue/require-explicit-emits
+	onChange: val => emit('changed', val),
+});
 
 const minDate = computed(() => {
 	return undefined;

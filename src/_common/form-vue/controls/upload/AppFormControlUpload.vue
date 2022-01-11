@@ -4,7 +4,11 @@ import { formatNumber } from '../../../filters/number';
 import AppProgressBar from '../../../progress/bar/bar.vue';
 import AppTranslate from '../../../translate/AppTranslate.vue';
 import { useForm } from '../../AppForm.vue';
-import { createFormControl, defineFormControlProps } from '../../AppFormControl.vue';
+import {
+	createFormControl,
+	defineFormControlEmits,
+	defineFormControlProps,
+} from '../../AppFormControl.vue';
 import { useFormGroup } from '../../AppFormGroup.vue';
 import { FormValidator, validateFileAccept } from '../../validators';
 import AppFormControlUploadFile from './AppFormControlUploadFile.vue';
@@ -26,6 +30,10 @@ const props = defineProps({
 	// 	@Prop(Number) validateDelay!: number;
 });
 
+const emit = defineEmits({
+	...defineFormControlEmits(),
+});
+
 const validators = computed(() => {
 	let _validators: FormValidator[] = [];
 
@@ -41,7 +49,12 @@ const validators = computed(() => {
 
 const form = useForm()!;
 const group = useFormGroup()!;
-const c = createFormControl([] as File | File[] | null, validators);
+const c = createFormControl({
+	initialValue: [] as File | File[] | null,
+	validators,
+	// eslint-disable-next-line vue/require-explicit-emits
+	onChange: val => emit('changed', val),
+});
 
 const isDropActive = ref(false);
 
