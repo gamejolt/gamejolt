@@ -8,7 +8,7 @@ import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/
 import AppScrollScroller, {
 	createScroller,
 } from '../../../../../_common/scroll/scroller/scroller.vue';
-import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import { useEventSubscription } from '../../../../../_common/system/event/event-topic';
 import { illNoChat } from '../../../../img/ill/illustrations';
 import { ChatStore, ChatStoreKey } from '../../chat-store';
@@ -33,10 +33,14 @@ export default class AppChatWindowOutput extends Vue {
 	@Prop({ type: Array, required: true }) messages!: ChatMessage[];
 	@Prop({ type: Array, required: true }) queuedMessages!: ChatMessage[];
 
+	commonStore = setup(() => useCommonStore());
+
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;
 
-	@AppState user!: AppStore['user'];
+	get user() {
+		return this.commonStore.user;
+	}
 
 	/** Whether or not we reached the end of the historical messages. */
 	reachedEnd = false;

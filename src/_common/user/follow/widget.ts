@@ -1,11 +1,11 @@
+import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { trackUserFollow, UserFollowLocation } from '../../analytics/analytics.service';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { formatNumber } from '../../filters/number';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { ModalConfirm } from '../../modal/confirm/confirm-service';
-import { AppStore } from '../../store/app-store';
+import { useCommonStore } from '../../store/common-store';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 import { followUser, unfollowUser, User } from '../user.model';
 
@@ -37,7 +37,11 @@ export default class AppUserFollowWidget extends Vue {
 	@Prop({ type: Boolean, required: false, default: false })
 	hideCount!: boolean;
 
-	@State app!: AppStore;
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	@Emit('follow')
 	emitFollow() {}

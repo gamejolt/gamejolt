@@ -1,5 +1,5 @@
 import { Directive } from 'vue';
-import { appStore } from '../store/app-store';
+import { commonStore } from '../store/common-store';
 import { AuthModal } from './auth-modal.service';
 
 export const AppAuthRequired: Directive<HTMLElement, void> = {
@@ -7,7 +7,7 @@ export const AppAuthRequired: Directive<HTMLElement, void> = {
 		el.addEventListener(
 			'click',
 			e => {
-				if (appStore.state.user) {
+				if (commonStore.user.value) {
 					return;
 				}
 

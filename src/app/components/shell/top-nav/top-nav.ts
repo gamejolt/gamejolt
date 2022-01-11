@@ -1,4 +1,5 @@
 import { defineAsyncComponent } from '@vue/runtime-core';
+import { setup } from 'vue-class-component';
 import { Inject, Options, Vue } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { shouldShowAppPromotion } from '../../../../utils/mobile-app';
@@ -10,6 +11,7 @@ import { Environment } from '../../../../_common/environment/environment.service
 import { AppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { imageGameJoltLogo, imageJolt } from '../../../img/images';
@@ -40,10 +42,14 @@ import AppSearch from '../../search/search.vue';
 	},
 })
 export default class AppShellTopNav extends Vue {
+	commonStore = setup(() => useCommonStore());
+
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;
 
-	@State app!: Store['app'];
+	get app() {
+		return this.commonStore;
+	}
 
 	@State visibleLeftPane!: Store['visibleLeftPane'];
 	@State hasSidebar!: Store['hasSidebar'];

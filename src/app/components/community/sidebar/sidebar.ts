@@ -1,5 +1,5 @@
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { getAbsoluteLink } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
@@ -7,11 +7,11 @@ import { formatNumber } from '../../../../_common/filters/number';
 import AppGameThumbnail from '../../../../_common/game/thumbnail/thumbnail.vue';
 import { ReportModal } from '../../../../_common/report/modal/modal.service';
 import AppShareCard from '../../../../_common/share/card/card.vue';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
 import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../_common/user/user.model';
-import { Store } from '../../../store';
 import AppGameList from '../../game/list/list.vue';
 import AppCommunityDescription from '../description/description.vue';
 import { CommunitySidebarData } from './sidebar-data';
@@ -39,8 +39,11 @@ export default class AppCommunitySidebar extends Vue {
 	@Prop(Object)
 	sidebarData!: CommunitySidebarData;
 
-	@State
-	app!: Store['app'];
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	currentCollaborators: User[] = [];
 	currentCollaboratorCount = 0;

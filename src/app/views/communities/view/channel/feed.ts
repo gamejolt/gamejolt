@@ -1,10 +1,11 @@
+import { setup } from 'vue-class-component';
 import { Inject, Options, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { illNoComments } from '../../../../img/ill/illustrations';
@@ -39,10 +40,14 @@ import { CommunitiesViewChannelDeps } from './channel';
 	resolver: ({ route }) => doFeedChannelPayload(route),
 })
 export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent {
+	commonStore = setup(() => useCommonStore());
+
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 
-	@AppState user!: AppStore['user'];
+	get user() {
+		return this.commonStore.user;
+	}
 	@State communityStates!: Store['communityStates'];
 	@State grid!: Store['grid'];
 

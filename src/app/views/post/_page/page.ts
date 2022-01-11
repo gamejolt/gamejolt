@@ -30,7 +30,7 @@ import {
 	StickerTargetParentControllerKey,
 } from '../../../../_common/sticker/target/target-controller';
 import AppStickerTarget from '../../../../_common/sticker/target/target.vue';
-import { AppState, AppStore } from '../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
@@ -94,7 +94,11 @@ export default class AppPostPage extends Vue {
 	@Emit('post-updated')
 	emitPostUpdated(_post: FiresidePost) {}
 
-	@AppState user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	@Provide({ to: StickerTargetParentControllerKey, reactive: true })
 	stickerTargetController = new StickerTargetController(this.post);

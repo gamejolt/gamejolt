@@ -1,8 +1,9 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
 import { BaseRouteComponent } from '../../../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
-import { AppState, AppStore } from '../../../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../../../_common/store/common-store';
 import AppGameDevStageSelector from '../../../../../../components/forms/game/dev-stage-selector/dev-stage-selector.vue';
 import FormGame from '../../../../../../components/forms/game/game.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
@@ -15,8 +16,11 @@ import { RouteStore, RouteStoreModule } from '../../manage.store';
 	},
 })
 export default class RouteDashGamesManageGameDetails extends BaseRouteComponent {
-	@AppState
-	user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	@RouteStoreModule.State
 	game!: RouteStore['game'];

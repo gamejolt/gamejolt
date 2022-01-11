@@ -1,7 +1,9 @@
+import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
 import { Action, Mutation, State } from 'vuex-class';
 import { formatCurrency } from '../../../_common/filters/currency';
 import { formatUcwords } from '../../../_common/filters/ucwords';
+import { useCommonStore } from '../../../_common/store/common-store';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../_common/user/user-avatar/img/img.vue';
 import { PaymentData, Store } from '../../store/index';
@@ -19,10 +21,14 @@ import AppModal from '../modal/modal.vue';
 	},
 })
 export default class AppPayment extends Vue {
+	commonStore = setup(() => useCommonStore());
+
 	readonly formatUcwords = formatUcwords;
 	readonly formatCurrency = formatCurrency;
 
-	@State app!: Store['app'];
+	get app() {
+		return this.commonStore;
+	}
 	@State game!: Store['game'];
 	@State developer!: Store['developer'];
 	@State sellable!: Store['sellable'];

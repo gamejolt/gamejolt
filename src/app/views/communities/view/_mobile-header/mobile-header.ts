@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
 import { getAbsoluteLink } from '../../../../../utils/router';
@@ -10,7 +11,7 @@ import AppPopper from '../../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../../../_common/share/share.service';
 import { SidebarState, SidebarStore } from '../../../../../_common/sidebar/sidebar.store';
-import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import { AppTheme } from '../../../../../_common/theme/theme';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { CommunitySidebarModal } from '../../../../components/community/sidebar/modal/modal.service';
@@ -33,10 +34,14 @@ import AppEditableThumbnail from '../_editable-thumbnail/editable-thumbnail.vue'
 export default class AppMobileHeader extends Vue {
 	@Prop({ type: Boolean, default: false }) hasUnread!: boolean;
 
+	commonStore = setup(() => useCommonStore());
+
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 
-	@AppState user!: AppStore['user'];
+	get user() {
+		return this.commonStore.user;
+	}
 	@SidebarState activeContextPane!: SidebarStore['activeContextPane'];
 	@Action toggleLeftPane!: Store['toggleLeftPane'];
 

@@ -1,10 +1,11 @@
 import { determine } from 'jstimezonedetect';
 import { nextTick } from 'vue';
+import { setup } from 'vue-class-component';
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
 import { BaseForm } from '../../../../../../_common/form-vue/form.service';
-import { AppState, AppStore } from '../../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../../_common/store/common-store';
 import AppFormCommunityChannelPermissions from '../_permissions/permissions.vue';
 
 class FormModel extends CommunityChannel {
@@ -24,8 +25,11 @@ export default class FormCommunityChannelAdd extends mixins(Wrapper) {
 	@Prop({ type: Array, required: true }) channels!: CommunityChannel[];
 	@Prop({ type: Array, required: true }) archivedChannels!: CommunityChannel[];
 
-	@AppState
-	user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	modelClass = FormModel;
 	isTitleInitial = true;

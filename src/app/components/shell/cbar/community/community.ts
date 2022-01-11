@@ -10,7 +10,7 @@ import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import { Popper } from '../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
 import { SidebarMutation, SidebarStore } from '../../../../../_common/sidebar/sidebar.store';
-import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import { useThemeStore } from '../../../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../../store';
@@ -33,9 +33,12 @@ export default class AppShellCbarCommunity extends Vue {
 	@Prop({ type: Object, required: true })
 	community!: Community;
 
+	commonStore = setup(() => useCommonStore());
 	themeStore = setup(() => useThemeStore());
 
-	@AppState user!: AppStore['user'];
+	get user() {
+		return this.commonStore.user;
+	}
 	@State activeCommunity!: Store['activeCommunity'];
 	@State communityStates!: Store['communityStates'];
 	@Action leaveCommunity!: Store['leaveCommunity'];

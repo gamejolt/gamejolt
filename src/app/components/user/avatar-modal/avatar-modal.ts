@@ -1,7 +1,7 @@
+import { setup } from 'vue-class-component';
 import { mixins, Options } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { BaseModal } from '../../../../_common/modal/base';
-import { Store } from '../../../store/index';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import FormAvatar from '../../forms/avatar/avatar.vue';
 
 @Options({
@@ -10,5 +10,9 @@ import FormAvatar from '../../forms/avatar/avatar.vue';
 	},
 })
 export default class AppUserAvatarModal extends mixins(BaseModal) {
-	@State app!: Store['app'];
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 }

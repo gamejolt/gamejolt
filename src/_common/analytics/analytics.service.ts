@@ -5,6 +5,7 @@ import {
 	setCurrentScreen,
 	setUserId,
 } from 'firebase/analytics';
+import { unref, watch } from 'vue';
 import { Router } from 'vue-router';
 import { arrayRemove } from '../../utils/array';
 import { AppPromotionSource } from '../../utils/mobile-app';
@@ -15,7 +16,7 @@ import { DeviceArch, DeviceOs } from '../device/device.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
 import { onRouteChangeAfter } from '../route/route-component';
 import { ShareProvider, ShareResource } from '../share/share.service';
-import { WithAppStore } from '../store/app-store';
+import { CommonStore } from '../store/common-store';
 
 export const SOCIAL_NETWORK_FB = 'facebook';
 export const SOCIAL_NETWORK_TWITTER = 'twitter';
@@ -45,7 +46,7 @@ export type CommunityJoinLocation = 'onboarding' | 'card' | 'communityPage' | 'h
  */
 const EXP_ENGAGEMENT_EXPIRY = 5 * 60 * 1_000;
 
-let _store: WithAppStore;
+let _store: CommonStore;
 let _pageViewRecorded = false;
 
 let _analytics: FirebaseAnalytics;
@@ -55,7 +56,7 @@ function _getFirebaseAnalytics() {
 }
 
 function _getStoreUser() {
-	return _store.state.app.user;
+	return _store.user.value;
 }
 
 function _shouldTrack() {
@@ -72,15 +73,15 @@ function _shouldTrack() {
 /**
  * Initializes the analytics for use with the current app.
  */
-export function initAnalytics(store: WithAppStore) {
+export function initAnalytics({ commonStore }: { commonStore: CommonStore }) {
 	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
 		return;
 	}
 
-	_store = store;
+	_store = commonStore;
 
-	_store.watch(
-		state => state.app.user,
+	watch(
+		() => unref(commonStore.user),
 		user => {
 			if (user?.id) {
 				_trackUserId(user.id);

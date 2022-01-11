@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import AppCommunityChannelSelect from '../../../../../_common/community/channel/select/select.vue';
@@ -5,7 +6,7 @@ import { FiresidePostCommunity } from '../../../../../_common/fireside/post/comm
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { BaseModal } from '../../../../../_common/modal/base';
 import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
-import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import { REASON_OTHER } from '../../../../../_common/user/action-reasons';
 import { FormModel } from '../form/form';
 import FormCommunityMovePost from '../form/form.vue';
@@ -22,8 +23,11 @@ export default class AppCommunityMovePostModal extends mixins(BaseModal) {
 	@Prop({ type: Object, required: true }) post!: FiresidePost;
 	@Prop({ type: Array, required: true }) channels!: CommunityChannel[];
 
-	@AppState
-	user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	selectedChannel: CommunityChannel | null = null;
 	reasonFormModel: FormModel | null = null;

@@ -1,5 +1,5 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Api } from '../../../../../_common/api/api.service';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { ForumChannel } from '../../../../../_common/forum/channel/channel.model';
@@ -9,10 +9,10 @@ import AppPagination from '../../../../../_common/pagination/pagination.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppForumBreadcrumbs from '../../../../components/forum/breadcrumbs/breadcrumbs.vue';
 import AppForumTopicList from '../../../../components/forum/topic-list/topic-list.vue';
 import AppPageHeader from '../../../../components/page-header/page-header.vue';
-import { Store } from '../../../../store/index';
 
 @Options({
 	name: 'RouteForumsChannelsView',
@@ -35,8 +35,11 @@ import { Store } from '../../../../store/index';
 	},
 })
 export default class RouteForumsChannelsView extends BaseRouteComponent {
-	@State
-	app!: Store['app'];
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	channel: ForumChannel = null as any;
 	topics: ForumTopic[] = [];

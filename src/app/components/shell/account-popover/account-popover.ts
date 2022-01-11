@@ -1,6 +1,6 @@
 import { setup } from 'vue-class-component';
 import { Inject, Options, Vue } from 'vue-property-decorator';
-import { Action, State } from 'vuex-class';
+import { Action } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import { Client } from '../../../../_common/client/safe-exports';
 import { Connection } from '../../../../_common/connection/connection-service';
@@ -9,7 +9,7 @@ import { formatCurrency } from '../../../../_common/filters/currency';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { SettingThemeDark } from '../../../../_common/settings/settings.service';
-import { AppStore } from '../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { useThemeStore } from '../../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
@@ -28,10 +28,14 @@ import AppShellUserBox from '../user-box/user-box.vue';
 	},
 })
 export default class AppShellAccountPopover extends Vue {
+	commonStore = setup(() => useCommonStore());
+
 	@Inject({ from: DrawerStoreKey })
 	drawer!: DrawerStore;
 
-	@State app!: AppStore;
+	get app() {
+		return this.commonStore;
+	}
 
 	themeStore = setup(() => useThemeStore());
 

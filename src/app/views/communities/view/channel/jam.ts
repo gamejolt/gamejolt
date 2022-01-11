@@ -1,4 +1,5 @@
 import { defineAsyncComponent } from 'vue';
+import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
 import { router } from '../../..';
 import { arrayRemove } from '../../../../../utils/array';
@@ -19,7 +20,7 @@ import {
 	RouteResolver,
 } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppCommunityCompetitionCountdown from '../../../../components/community/competition/countdown/countdown.vue';
 import AppCommunityCompetitionEntryGrid from '../../../../components/community/competition/entry/grid/grid.vue';
 import { AppCommunityPerms } from '../../../../components/community/perms/perms';
@@ -56,11 +57,14 @@ import AppCommunitiesViewPageContainer from '../_page-container/page-container.v
 	},
 })
 export default class RouteCommunitiesViewChannelJam extends BaseRouteComponent {
+	commonStore = setup(() => useCommonStore());
+
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 
-	@AppState
-	user!: AppStore['user'];
+	get user() {
+		return this.commonStore.user;
+	}
 
 	readonly Screen = Screen;
 	readonly formatNumber = formatNumber;

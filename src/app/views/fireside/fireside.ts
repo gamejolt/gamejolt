@@ -23,7 +23,7 @@ import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../_common/scroll/scroller/scroller.vue';
 import AppStickerReactions from '../../../_common/sticker/reactions/reactions.vue';
 import AppStickerTarget from '../../../_common/sticker/target/target.vue';
-import { AppState, AppStore } from '../../../_common/store/app-store';
+import { useCommonStore } from '../../../_common/store/common-store';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../_common/translate/translate.service';
@@ -94,15 +94,18 @@ const FiresideThemeKey = 'fireside';
 	lazy: true,
 })
 export default class RouteFireside extends BaseRouteComponent {
-	@AppState user!: AppStore['user'];
-
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;
 
 	@Inject({ from: DrawerStoreKey })
 	drawerStore!: DrawerStore;
 
+	commonStore = setup(() => useCommonStore());
 	themeStore = setup(() => useThemeStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	c: FiresideController | null = null;
 

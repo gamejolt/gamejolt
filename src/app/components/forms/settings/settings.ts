@@ -16,7 +16,7 @@ import {
 	SettingThemeAlwaysOurs,
 	SettingThemeDark,
 } from '../../../../_common/settings/settings.service';
-import { AppState, AppStore } from '../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { useThemeStore } from '../../../../_common/theme/theme.store';
 
 type FormModel = {
@@ -45,9 +45,12 @@ class Wrapper extends BaseForm<FormModel> {}
 	},
 })
 export default class FormSettings extends mixins(Wrapper) {
-	@AppState user!: AppStore['user'];
-
+	commonStore = setup(() => useCommonStore());
 	themeStore = setup(() => useThemeStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	get canClientAutostart() {
 		return ClientAutoStart?.canAutoStart;

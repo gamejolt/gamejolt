@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
@@ -10,7 +11,7 @@ import {
 import AppLinkedAccount from '../../../../../_common/linked-account/linked-account.vue';
 import { LinkedAccounts } from '../../../../../_common/linked-account/linked-accounts.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
-import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import { Translate } from '../../../../../_common/translate/translate.service';
 import { UserSetPasswordModal } from '../../../../components/user/set-password-modal/set-password-modal.service';
 import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
@@ -29,8 +30,11 @@ import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 	},
 })
 export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
-	@AppState
-	user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	@RouteStoreModule.State
 	heading!: RouteStore['heading'];

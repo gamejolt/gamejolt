@@ -4,23 +4,17 @@ import { Api } from '../../_common/api/api.service';
 import { Site } from '../../_common/site/site-model';
 import { SiteTemplate } from '../../_common/site/template/template-model';
 import { SiteTheme } from '../../_common/site/theme/theme-model';
-import {
-	Actions as AppActions,
-	AppStore,
-	appStore,
-	Mutations as AppMutations,
-} from '../../_common/store/app-store';
 
 type Tab = 'theme' | 'content';
 
-export type Actions = AppActions & {
+export type Actions = {
 	bootstrapTab: {
 		tab: Tab;
 		siteId: number;
 	};
 };
 
-export type Mutations = AppMutations & {
+export type Mutations = {
 	_bootstrapTab: {
 		tab: Tab;
 		response: any;
@@ -33,13 +27,9 @@ export type Mutations = AppMutations & {
 
 @VuexModule({
 	store: true,
-	modules: {
-		app: appStore,
-	},
+	modules: {},
 })
 export class Store extends VuexStore<Store, Actions, Mutations> {
-	app!: AppStore;
-
 	isLoaded = false;
 	tab: Tab = 'theme';
 	site: Site = null as any;

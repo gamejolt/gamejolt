@@ -1,5 +1,5 @@
+import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import {
 	AppPromotionStore,
 	AppPromotionStoreKey,
@@ -14,7 +14,7 @@ import AppLoading from '../../../../_common/loading/loading.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '../../../../_common/scroll/inview/inview.vue';
-import { AppStore } from '../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 
 const endpoint = '/web/discover/communities';
 const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height}px` });
@@ -41,7 +41,11 @@ interface CacheData {
 	resolver: () => Api.sendRequest(endpoint),
 })
 export default class RouteDiscoverCommunities extends BaseRouteComponent {
-	@State app!: AppStore;
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	@Inject({ from: AppPromotionStoreKey })
 	appPromotion!: AppPromotionStore;

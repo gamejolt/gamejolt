@@ -1,7 +1,7 @@
 import { computed, inject, InjectionKey, ref } from 'vue';
 import { arrayRemove } from '../../utils/array';
 import { SettingThemeAlwaysOurs, SettingThemeDark } from '../settings/settings.service';
-import { AppStore } from '../store/app-store';
+import { CommonStore } from '../store/common-store';
 import { Theme } from './theme.model';
 
 export const ThemeStoreKey: InjectionKey<ThemeStore> = Symbol('theme-store');
@@ -17,7 +17,7 @@ interface PageTheme {
 	theme: Theme | null;
 }
 
-export function createThemeStore({ appStore }: { appStore: AppStore }) {
+export function createThemeStore({ commonStore: { user } }: { commonStore: CommonStore }) {
 	const isDark = ref(SettingThemeDark.get());
 	const _alwaysOurs = ref(SettingThemeAlwaysOurs.get());
 	const _formTheme = ref<Theme | null>(null);
@@ -28,7 +28,7 @@ export function createThemeStore({ appStore }: { appStore: AppStore }) {
 	 */
 	const _pageThemeStack = ref<PageTheme[]>([]);
 
-	const userTheme = computed(() => (appStore.state.user && appStore.state.user.theme) || null);
+	const userTheme = computed(() => (user.value && user.value.theme) || null);
 
 	const pageTheme = computed(() => {
 		return _pageThemeStack.value.length > 0

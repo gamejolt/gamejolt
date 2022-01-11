@@ -8,7 +8,7 @@ import {
 	RouteResolver,
 	WithRouteStore,
 } from '../../../../../_common/route/route-component';
-import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import { useThemeStore } from '../../../../../_common/theme/theme.store';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
@@ -56,10 +56,12 @@ export const ManageGameThemeKey = 'manage-game';
 	},
 })
 export default class RouteDashGamesManage extends BaseRouteComponent {
+	commonStore = setup(() => useCommonStore());
 	themeStore = setup(() => useThemeStore());
 
-	@AppState
-	user!: AppStore['user'];
+	get user() {
+		return this.commonStore.user;
+	}
 
 	@RouteStoreModule.State
 	game!: RouteStore['game'];

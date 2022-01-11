@@ -1,5 +1,5 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Api } from '../../../_common/api/api.service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { GameBundle } from '../../../_common/game-bundle/game-bundle.model';
@@ -8,8 +8,8 @@ import { showErrorGrowl } from '../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../_common/modal/confirm/confirm-service';
 import { Navigate } from '../../../_common/navigate/navigate.service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { useCommonStore } from '../../../_common/store/common-store';
 import AppInvalidKey from '../../components/invalid-key/invalid-key.vue';
-import { Store } from '../../store/index';
 import AppKeyBundle from './_bundle/bundle.vue';
 import AppKeyGame from './_game/game.vue';
 
@@ -32,8 +32,11 @@ import AppKeyGame from './_game/game.vue';
 	},
 })
 export default class RouteKey extends BaseRouteComponent {
-	@State
-	app!: Store['app'];
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	// Use payload here so that the children can be reactive to it.
 	payload = null as any;

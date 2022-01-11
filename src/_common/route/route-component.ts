@@ -1,5 +1,5 @@
 import { ComponentOptions } from 'vue';
-import { createDecorator } from 'vue-class-component';
+import { createDecorator, setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
 import { RouteLocationNormalized, Router } from 'vue-router';
 import { RouteLocationRedirect } from '../../utils/router';
@@ -9,6 +9,7 @@ import { HistoryCache } from '../history/cache/cache.service';
 import { setMetaTitle } from '../meta/meta-service';
 import { Navigate } from '../navigate/navigate.service';
 import { PayloadError } from '../payload/payload-service';
+import { useCommonStore } from '../store/common-store';
 import { EventTopic } from '../system/event/event-topic';
 
 // This is component state that the server may have returned to the browser. It
@@ -247,6 +248,8 @@ function _setupBeforeRouteEnter(options: ComponentOptions) {
 
 @Options({})
 export class BaseRouteComponent extends Vue {
+	private commonStore_ = setup(() => useCommonStore());
+
 	isRouteDestroyed = false;
 	isRouteLoading = false;
 	isRouteBootstrapped = false;
@@ -477,7 +480,7 @@ export class BaseRouteComponent extends Vue {
 					// refresh the page so that it gets the new code.
 					Navigate.reload();
 				} else if (payload.type === PayloadError.ERROR_HTTP_ERROR) {
-					this.$store.commit('app/setError', payload.status || 500);
+					this.commonStore_.setError(payload.status || 500);
 				}
 
 				return;
@@ -485,7 +488,7 @@ export class BaseRouteComponent extends Vue {
 				// We want to clear out all current resolvers before doing the
 				// redirect. They will re-resolve after the route changes.
 				if (import.meta.env.SSR) {
-					this.$store.commit('app/redirect', this.$router.resolve(payload.location).href);
+					this.commonStore_.redirect(this.$router.resolve(payload.location).href);
 				} else {
 					_clearActiveResolvers();
 					this.$router.replace(payload.location);

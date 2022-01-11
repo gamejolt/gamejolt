@@ -1,10 +1,10 @@
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Game } from '../../../../_common/game/game.model';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import { SettingRestrictedBrowsing } from '../../../../_common/settings/settings.service';
-import { Store } from '../../../store/index';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import AppGameOgrs from '../ogrs/ogrs.vue';
 
 @Options({
@@ -15,7 +15,11 @@ import AppGameOgrs from '../ogrs/ogrs.vue';
 export default class AppGameMaturityBlock extends Vue {
 	@Prop(Object) game!: Game;
 
-	@State app!: Store['app'];
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	private hasBypassed = false;
 

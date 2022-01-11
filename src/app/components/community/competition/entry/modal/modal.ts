@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { numberSort } from '../../../../../../utils/array';
 import { Api } from '../../../../../../_common/api/api.service';
@@ -10,7 +11,7 @@ import { formatDate } from '../../../../../../_common/filters/date';
 import AppLoading from '../../../../../../_common/loading/loading.vue';
 import { BaseModal } from '../../../../../../_common/modal/base';
 import { Screen } from '../../../../../../_common/screen/screen-service';
-import { AppState, AppStore } from '../../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../../_common/store/common-store';
 import { AppTimeAgo } from '../../../../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import AppUserCardHover from '../../../../../../_common/user/card/hover/hover.vue';
@@ -37,8 +38,11 @@ export default class AppCommunityCompetitionEntryModal extends mixins(BaseModal)
 	@Prop(Object) entry?: CommunityCompetitionEntry;
 	@Prop(Number) entryId?: number;
 
-	@AppState
-	user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	m_entry: CommunityCompetitionEntry | null = null;
 	competition: CommunityCompetition | null = null;

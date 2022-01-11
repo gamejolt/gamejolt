@@ -1,10 +1,11 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
 import { AppScrollTo } from '../../../../_common/scroll/to/to.directive';
 import { AppSocialFacebookLike } from '../../../../_common/social/facebook/like/like';
 import { AppSocialTwitterShare } from '../../../../_common/social/twitter/share/share';
-import { AppState, AppStore } from '../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import socialImage from './social.png';
 
@@ -20,8 +21,11 @@ import socialImage from './social.png';
 	},
 })
 export default class RouteLandingIndieaf extends BaseRouteComponent {
-	@AppState
-	user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	state: 'bogus' | 'indie' = 'bogus';
 

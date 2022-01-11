@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../../../_common/api/api.service';
@@ -8,7 +9,7 @@ import AppExpand from '../../../../../_common/expand/expand.vue';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
-import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppActivityFeedNewButton from '../../../../components/activity/feed/new-button/new-button.vue';
 import AppActivityFeedPlaceholder from '../../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
@@ -36,10 +37,14 @@ export default class AppCommunitiesViewFeed extends Vue {
 	// case, we show a placeholder and wait.
 	@Prop(Object) feed?: ActivityFeedView;
 
+	commonStore = setup(() => useCommonStore());
+
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 
-	@AppState user!: AppStore['user'];
+	get user() {
+		return this.commonStore.user;
+	}
 	@State communityStates!: Store['communityStates'];
 
 	@Emit('add-post') emitAddPost(_post: FiresidePost) {}

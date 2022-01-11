@@ -1,5 +1,5 @@
+import { setup } from 'vue-class-component';
 import { mixins, Options, Watch } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import AppFormControlCrop from '../../../../_common/form-vue/controls/AppFormControlCrop.vue';
 import AppFormControlUpload from '../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
@@ -8,8 +8,8 @@ import {
 	FormOnLoad,
 } from '../../../../_common/form-vue/form.service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { User } from '../../../../_common/user/user.model';
-import { Store } from '../../../store/index';
 
 type FormModel = User & {
 	header_crop: any;
@@ -27,8 +27,11 @@ export default class FormUserHeader
 	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnBeforeSubmit
 {
-	@State
-	app!: Store['app'];
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 	modelClass = User as any;
 	saveMethod = '$saveHeader' as const;
 

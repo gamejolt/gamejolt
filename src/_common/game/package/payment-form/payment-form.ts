@@ -1,5 +1,5 @@
+import { setup } from 'vue-class-component';
 import { Emit, mixins, Options, Prop, Watch } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { arrayIndexBy } from '../../../../utils/array';
 import { Api } from '../../../api/api.service';
 import { getDeviceArch, getDeviceOS } from '../../../device/device.service';
@@ -23,7 +23,7 @@ import { OrderPayment } from '../../../order/payment/payment.model';
 import AppPopper from '../../../popper/popper.vue';
 import { Screen } from '../../../screen/screen-service';
 import { Sellable } from '../../../sellable/sellable.model';
-import { AppStore } from '../../../store/app-store';
+import { useCommonStore } from '../../../store/common-store';
 import { AppTooltip } from '../../../tooltip/tooltip-directive';
 import { User } from '../../../user/user.model';
 import { GameBuild } from '../../build/build.model';
@@ -58,8 +58,11 @@ export default class FormGamePackagePayment
 	@Prop(Object) partner?: User;
 	@Prop(String) operation!: 'download' | 'play';
 
-	@State
-	app!: AppStore;
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	// TODO(vue3)
 	isLoaded = false;

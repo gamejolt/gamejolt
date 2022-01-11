@@ -1,6 +1,7 @@
+import { setup } from 'vue-class-component';
 import { Emit, Inject, Options, Vue } from 'vue-property-decorator';
 import { stopStreaming } from '../../../../_common/fireside/rtc/producer';
-import { AppState, AppStore } from '../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import {
 	FiresideController,
@@ -18,10 +19,14 @@ import AppFiresideSettingsPopper from '../_settings-popper/settings-popper.vue';
 	},
 })
 export default class AppFiresideStreamOptions extends Vue {
-	@AppState user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
 
 	@Inject({ from: FiresideControllerKey })
 	c!: FiresideController;
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	@Emit('show-popper') emitShowPopper() {}
 	@Emit('hide-popper') emitHidePopper() {}

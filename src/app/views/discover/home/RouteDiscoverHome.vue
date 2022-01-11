@@ -1,4 +1,5 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
@@ -9,10 +10,9 @@ import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
-import { AppState, AppStore } from '../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
 import socialImage from '../../../img/social/social-share-header.png';
-import { Store } from '../../../store/index';
 import AppHomeDefault from './AppHomeDefault.vue';
 import AppHomeSlider from './AppHomeSlider.vue';
 
@@ -30,11 +30,15 @@ import AppHomeSlider from './AppHomeSlider.vue';
 	resolver: () => Api.sendRequest('/web/discover'),
 })
 export default class RouteDiscoverHome extends BaseRouteComponent {
-	@AppState
-	user!: Store['app'];
+	commonStore = setup(() => useCommonStore());
 
-	@AppState
-	userBootstrapped!: AppStore['userBootstrapped'];
+	get user() {
+		return this.commonStore.user;
+	}
+
+	get userBootstrapped() {
+		return this.commonStore.userBootstrapped;
+	}
 
 	featuredItem: FeaturedItem | null = null;
 	featuredCommunities: Community[] = [];

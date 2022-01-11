@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import {
 	Analytics,
@@ -27,7 +28,7 @@ import AppFiresidePostLikeWidget from '../../../../_common/fireside/post/like/wi
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppStickerControlsOverlay from '../../../../_common/sticker/controls-overlay/controls-overlay.vue';
-import { AppState, AppStore } from '../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserFollowSuggestion } from '../../../../_common/user/follow/suggestion.service';
 import { User } from '../../../../_common/user/user.model';
@@ -77,13 +78,17 @@ export default class AppPostControls extends Vue {
 	@Prop({ type: String, required: false, default: '' })
 	eventLabel!: string;
 
+	commonStore = setup(() => useCommonStore());
+
 	@Inject({ from: CommentStoreManagerKey })
 	commentManager!: CommentStoreManager;
 
 	@Inject({ from: DrawerStoreKey })
 	drawerStore!: DrawerStore;
 
-	@AppState user!: AppStore['user'];
+	get user() {
+		return this.commonStore.user;
+	}
 
 	shouldShowFollowState = false;
 	private commentStore: null | CommentStoreModel = null;

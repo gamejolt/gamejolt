@@ -28,7 +28,7 @@ import {
 	SidebarState,
 	SidebarStore,
 } from '../../../../_common/sidebar/sidebar.store';
-import { AppState, AppStore } from '../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { useThemeStore } from '../../../../_common/theme/theme.store';
 import { AppCommunityPerms } from '../../../components/community/perms/perms';
 import { CommunitySidebarData } from '../../../components/community/sidebar/sidebar-data';
@@ -91,12 +91,15 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 		return ref(new CommunityRouteStore());
 	});
 
+	commonStore = setup(() => useCommonStore());
 	themeStore = setup(() => useThemeStore());
 
 	@Inject({ from: AppPromotionStoreKey })
 	appPromotion!: AppPromotionStore;
 
-	@AppState user!: AppStore['user'];
+	get user() {
+		return this.commonStore.user;
+	}
 	@Mutation setActiveCommunity!: Store['setActiveCommunity'];
 	@Mutation clearActiveCommunity!: Store['clearActiveCommunity'];
 	@Mutation viewCommunity!: Store['viewCommunity'];

@@ -1,5 +1,6 @@
 import { addWeeks, startOfDay, startOfTomorrow } from 'date-fns';
 import { determine } from 'jstimezonedetect';
+import { setup } from 'vue-class-component';
 import { Emit, mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { formatCurrency } from '../../../../../_common/filters/currency';
@@ -18,7 +19,7 @@ import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { SellablePricing } from '../../../../../_common/sellable/pricing/pricing.model';
 import { Sellable } from '../../../../../_common/sellable/sellable.model';
-import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import { Timezone, TimezoneData } from '../../../../../_common/timezone/timezone.service';
 import { AppGamePerms } from '../../../game/perms/perms';
@@ -51,16 +52,19 @@ export default class FormGamePackage
 	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnBeforeSubmit
 {
-	modelClass = GamePackage as any;
-
-	@AppState
-	user!: AppStore['user'];
-
 	@Prop(Object)
 	game!: Game;
 
 	@Prop(Object)
 	sellable!: Sellable;
+
+	modelClass = GamePackage as any;
+
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	showDescriptionInput = false;
 	isShowingSaleForm = false;

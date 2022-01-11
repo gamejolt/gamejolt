@@ -20,12 +20,7 @@ import {
 	SidebarMutations,
 	SidebarStore,
 } from '../../_common/sidebar/sidebar.store';
-import {
-	Actions as AppActions,
-	AppStore,
-	appStore,
-	Mutations as AppMutations,
-} from '../../_common/store/app-store';
+import { commonStore } from '../../_common/store/common-store';
 import { Translate } from '../../_common/translate/translate.service';
 import { ActivityFeedState } from '../components/activity/feed/state';
 import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
@@ -40,8 +35,7 @@ import { Actions as LibraryActions, LibraryStore, Mutations as LibraryMutations 
 // Re-export our sub-modules.
 export { BannerModule, BannerStore } from './banner';
 
-export type Actions = AppActions &
-	LibraryActions &
+export type Actions = LibraryActions &
 	BannerActions &
 	SidebarActions &
 	_ClientLibraryMod.Actions & {
@@ -66,8 +60,7 @@ export type Actions = AppActions &
 		};
 	};
 
-export type Mutations = AppMutations &
-	LibraryMutations &
+export type Mutations = LibraryMutations &
 	BannerMutations &
 	SidebarMutations &
 	_ClientLibraryMod.Mutations & {
@@ -108,7 +101,6 @@ export function tillGridBootstrapped() {
 }
 
 const modules: any = {
-	app: appStore,
 	library: reactive(new LibraryStore()),
 	banner: reactive(new BannerStore()),
 	sidebar: reactive(new SidebarStore()),
@@ -128,7 +120,6 @@ type TogglableLeftPane = '' | 'chat' | 'context' | 'library';
 	modules,
 })
 export class Store extends VuexStore<Store, Actions, Mutations> {
-	declare app: AppStore;
 	declare library: LibraryStore;
 	declare banner: BannerStore;
 	declare sidebar: SidebarStore;
@@ -173,13 +164,15 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	get hasCbar() {
-		if (this.isShellHidden || this.app.isUserTimedOut) {
+		// TODO(vue3): use provided commonStore
+		if (this.isShellHidden || commonStore.isUserTimedOut.value) {
 			return false;
 		}
 
 		// The cbar is pretty empty without a user and active context pane,
 		// so we want to hide it if those conditions are met.
-		if (!this.app.user && !this.sidebar.activeContextPane && !Screen.isXs) {
+		// TODO(vue3): use an injected commonStore instead
+		if (!commonStore.user.value && !this.sidebar.activeContextPane && !Screen.isXs) {
 			return false;
 		}
 

@@ -1,5 +1,6 @@
 import { RouteLocationRaw } from 'vue-router';
 import { Client } from '../../../../../_common/client/client.service';
+import { commonStore } from '../../../../../_common/store/common-store';
 import { Translate } from '../../../../../_common/translate/translate.service';
 import { store } from '../../../../store/index';
 import { router } from '../../../../views/index';
@@ -64,7 +65,7 @@ export function clientTrayMenuBuilder(this: undefined, menu: nw.Menu) {
 			click: () =>
 				go({
 					name: 'profile.overview',
-					params: { username: store.state.app.user!.username },
+					params: { username: commonStore.user.value!.username },
 				}),
 		})
 	);

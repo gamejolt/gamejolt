@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import AppExpand from '../../../../../../../_common/expand/expand.vue';
@@ -10,7 +11,7 @@ import {
 	BaseRouteComponent,
 	RouteResolver,
 } from '../../../../../../../_common/route/route-component';
-import { AppState, AppStore } from '../../../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
 import AppGameDevStageSelector from '../../../../../../components/forms/game/dev-stage-selector/dev-stage-selector.vue';
@@ -38,8 +39,11 @@ import { RouteStore, RouteStoreModule } from '../../manage.store';
 		Api.sendRequest('/web/dash/developer/games/overview/' + route.params.id),
 })
 export default class RouteDashGamesManageGameOverview extends BaseRouteComponent {
-	@AppState
-	user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	@RouteStoreModule.State
 	game!: RouteStore['game'];

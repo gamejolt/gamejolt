@@ -7,30 +7,20 @@ import { GameBuild } from '../../_common/game/build/build.model';
 import { Game } from '../../_common/game/game.model';
 import { GamePackage } from '../../_common/game/package/package.model';
 import { Meta } from '../../_common/meta/meta-service';
-import {
-	Actions as AppActions,
-	AppStore,
-	appStore,
-	Mutations as AppMutations,
-} from '../../_common/store/app-store';
 
-export type Actions = AppActions & {
+export type Actions = {
 	bootstrap: undefined;
 };
 
-export type Mutations = AppMutations & {
+export type Mutations = {
 	_bootstrap: any;
 };
 
 @VuexModule({
 	store: true,
-	modules: {
-		app: appStore,
-	},
+	modules: {},
 })
 export class Store extends VuexStore<Store, Actions, Mutations> {
-	app!: AppStore;
-
 	game: Game | null = null;
 	package: GamePackage | null = null;
 	build: GameBuild | null = null;

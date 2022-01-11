@@ -1,4 +1,5 @@
 import { h } from 'vue';
+import { setup } from 'vue-class-component';
 import { Inject, Options, Prop, Provide, Vue } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { arrayUnique } from '../../../../utils/array';
@@ -29,7 +30,7 @@ import {
 import { showInfoGrowl } from '../../../../_common/growls/growls.service';
 import { StickerPlacement } from '../../../../_common/sticker/placement/placement.model';
 import { addStickerToTarget } from '../../../../_common/sticker/target/target-controller';
-import { AppState, AppStore } from '../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { User } from '../../../../_common/user/user.model';
 import { Store } from '../../../store';
 import { ChatStore, ChatStoreKey, clearChat, loadChat } from '../../chat/chat-store';
@@ -59,7 +60,11 @@ export class AppFiresideContainer extends Vue {
 	@Provide({ to: FiresideControllerKey, reactive: true })
 	controller!: FiresideController;
 
-	@AppState user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 	@State grid!: Store['grid'];
 	@Action loadGrid!: Store['loadGrid'];
 

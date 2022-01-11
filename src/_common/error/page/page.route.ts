@@ -1,7 +1,8 @@
 import { h } from 'vue';
+import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
 import { RouteRecordRaw } from 'vue-router';
-import { AppMutation, AppStore } from '../../store/app-store';
+import { useCommonStore } from '../../store/common-store';
 
 // Just a placeholder that sets the 404 error state.
 @Options({
@@ -10,10 +11,10 @@ import { AppMutation, AppStore } from '../../store/app-store';
 	name: 'RouteError404',
 })
 export class RouteError404 extends Vue {
-	@AppMutation setError!: AppStore['setError'];
+	commonStore = setup(() => useCommonStore());
 
 	created() {
-		this.setError(404);
+		this.commonStore.setError(404);
 	}
 
 	render() {

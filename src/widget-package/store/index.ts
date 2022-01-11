@@ -8,20 +8,14 @@ import { GamePackagePayloadModel } from '../../_common/game/package/package-payl
 import { GamePackage } from '../../_common/game/package/package.model';
 import { SellablePricing } from '../../_common/sellable/pricing/pricing.model';
 import { Sellable } from '../../_common/sellable/sellable.model';
-import {
-	Actions as AppActions,
-	AppStore,
-	appStore,
-	Mutations as AppMutations,
-} from '../../_common/store/app-store';
 import { User } from '../../_common/user/user.model';
 
-export type Actions = AppActions & {
+export type Actions = {
 	bootstrap: undefined;
 	checkout: undefined;
 };
 
-export type Mutations = AppMutations & {
+export type Mutations = {
 	setInvalidKey: undefined;
 	setFailure: undefined;
 	clearFailure: undefined;
@@ -47,13 +41,9 @@ export class AddressData {
 
 @VuexModule({
 	store: true,
-	modules: {
-		app: appStore,
-	},
+	modules: {},
 })
 export class Store extends VuexStore<Store, Actions, Mutations> {
-	app!: AppStore;
-
 	sellableKey = parse(window.location.search.substring(1)).key as string;
 	isLightTheme = parse(window.location.search.substring(1)).theme === 'light';
 	isLoaded = false;

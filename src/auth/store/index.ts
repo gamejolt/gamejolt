@@ -3,18 +3,12 @@ import { buildUseStore, VuexAction, VuexModule, VuexMutation, VuexStore } from '
 import { Api } from '../../_common/api/api.service';
 import { Game } from '../../_common/game/game.model';
 import { MediaItem } from '../../_common/media-item/media-item-model';
-import {
-	Actions as AppActions,
-	AppStore,
-	appStore,
-	Mutations as AppMutations,
-} from '../../_common/store/app-store';
 
-export type Actions = AppActions & {
+export type Actions = {
 	bootstrap: undefined;
 };
 
-export type Mutations = AppMutations & {
+export type Mutations = {
 	showCoverImage: undefined;
 	hideCoverImage: undefined;
 	processPayload: any;
@@ -22,13 +16,9 @@ export type Mutations = AppMutations & {
 
 @VuexModule({
 	store: true,
-	modules: {
-		app: appStore,
-	},
+	modules: {},
 })
 export class Store extends VuexStore<Store, Actions, Mutations> {
-	app!: AppStore;
-
 	shouldShowCoverImage = true;
 	coverMediaItem?: MediaItem = undefined;
 	coverGame?: Game = undefined;

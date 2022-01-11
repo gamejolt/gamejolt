@@ -13,7 +13,7 @@ import AppLinkHelp from './link/help/help.vue';
 import { initMetaService } from './meta/meta-service';
 import { Payload } from './payload/payload-service';
 import { Referrer } from './referrer/referrer.service';
-import { appStore } from './store/app-store';
+import { commonStore, CommonStoreKey } from './store/common-store';
 import { createThemeStore, ThemeStoreKey } from './theme/theme.store';
 import { initTranslations } from './translate/translate.service';
 
@@ -25,14 +25,15 @@ export function bootstrapCommon(appComponent: Component, store: VuexStore, route
 	const app = import.meta.env.SSR ? createSSRApp(appComponent) : createApp(appComponent);
 
 	// Our global stores.
-	app.provide(ThemeStoreKey, createThemeStore({ appStore }));
+	app.provide(CommonStoreKey, commonStore);
+	app.provide(ThemeStoreKey, createThemeStore({ commonStore }));
 
 	// Try to start loading this as soon as possible.
 	ensureConfig();
 
-	initAnalytics(store);
-	Payload.init(store);
-	initConnectionService(store);
+	initAnalytics({ commonStore });
+	Payload.init({ commonStore });
+	initConnectionService({ commonStore });
 
 	if (router) {
 		initMetaService(router);

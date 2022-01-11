@@ -6,6 +6,7 @@ import { Connection } from '../../../_common/connection/connection-service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { BaseRouteComponent } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
+import { commonStore } from '../../../_common/store/common-store';
 import AppThemeSvg from '../../../_common/theme/svg/AppThemeSvg.vue';
 import AppTranslateLangSelector from '../../../_common/translate/lang-selector/lang-selector.vue';
 import AppCoverImg from '../../components/AppCoverImg.vue';
@@ -15,7 +16,7 @@ import './auth-content.styl';
 
 export function loggedUserBlock() {
 	// Redirect right away if they are logged in.
-	if (store.state.app.user) {
+	if (commonStore.user.value) {
 		redirectToDashboard();
 
 		// Never resolve.

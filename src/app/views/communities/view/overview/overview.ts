@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { Inject, Options, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { arrayRemove } from '../../../../../utils/array';
@@ -7,7 +8,7 @@ import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
-import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
@@ -49,10 +50,14 @@ import AppCommunitiesViewPageContainer from '../_page-container/page-container.v
 	resolver: ({ route }) => doFeedChannelPayload(route),
 })
 export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
+	commonStore = setup(() => useCommonStore());
+
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 
-	@AppState user!: AppStore['user'];
+	get user() {
+		return this.commonStore.user;
+	}
 	@State communities!: Store['communities'];
 	@State communityStates!: Store['communityStates'];
 	@Action joinCommunity!: Store['joinCommunity'];

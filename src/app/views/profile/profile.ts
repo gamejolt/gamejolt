@@ -1,6 +1,5 @@
 import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Api } from '../../../_common/api/api.service';
 import { BlockModal } from '../../../_common/block/modal/modal.service';
 import { CommentModal } from '../../../_common/comment/modal/modal.service';
@@ -15,6 +14,7 @@ import {
 } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../_common/share/share.service';
+import { useCommonStore } from '../../../_common/store/common-store';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
@@ -30,7 +30,7 @@ import AppPageHeaderControls from '../../components/page-header/controls/control
 import AppPageHeader from '../../components/page-header/page-header.vue';
 import AppUserBlockOverlay from '../../components/user/block-overlay/block-overlay.vue';
 import AppUserDogtag from '../../components/user/dogtag/dogtag.vue';
-import { Store, store } from '../../store';
+import { store } from '../../store';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './profile.store';
 
 const ProfileThemeKey = 'profile';
@@ -88,13 +88,15 @@ const ProfileThemeKey = 'profile';
 	},
 })
 export default class RouteProfile extends BaseRouteComponent {
+	commonStore = setup(() => useCommonStore());
 	themeStore = setup(() => useThemeStore());
 
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;
 
-	@State
-	app!: Store['app'];
+	get app() {
+		return this.commonStore;
+	}
 
 	@RouteStoreModule.State
 	user!: RouteStore['user'];

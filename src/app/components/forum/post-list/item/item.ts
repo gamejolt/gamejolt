@@ -1,6 +1,6 @@
 import { nextTick } from 'vue';
+import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Api } from '../../../../../_common/api/api.service';
 import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
@@ -21,8 +21,8 @@ import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../../_common/scroll/inview/inview.vue';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { Store } from '../../../../store/index';
 import FormForumPost from '../../../forms/forum/post/post.vue';
 
 const InviewConfig = new ScrollInviewConfig();
@@ -52,7 +52,11 @@ export default class AppForumPostListItem extends Vue {
 	@Prop(Boolean) showReplies!: boolean;
 	@Prop(Boolean) isLastInThread?: boolean;
 
-	@State app!: Store['app'];
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	isEditing = false;
 	isReplying = false;

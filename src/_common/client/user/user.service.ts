@@ -1,15 +1,16 @@
+import { unref, watch } from 'vue';
 import { Api } from '../../api/api.service';
 import { Environment } from '../../environment/environment.service';
 import { Navigate } from '../../navigate/navigate.service';
-import { WithAppStore } from '../../store/app-store';
+import { CommonStore } from '../../store/common-store';
 
 export class ClientUser {
-	static init(store: WithAppStore) {
+	static init({ commonStore: { user, setUser } }: { commonStore: CommonStore }) {
 		// We bootstrap the client with the previously stored user if there was any.
 		// This way they can access client offline with their previous user.
 		const localUser = localStorage.getItem('user');
 		if (localUser) {
-			store.commit('app/setUser', JSON.parse(localUser));
+			setUser(JSON.parse(localUser));
 		} else if (Navigate.currentClientSection !== 'auth') {
 			if (GJ_WITH_LOCALSTOAGE_AUTH_REDIRECT) {
 				// Must be logged in to use client.
@@ -25,10 +26,12 @@ export class ClientUser {
 			}
 		}
 
-		// When the app user changes in the store, freeze it into local storage so we can bootstrap
-		// from that next client launch (before any payload response).
-		store.watch(
-			state => state.app.user,
+		// When the app user changes in the store, freeze it into local storage
+		// so we can bootstrap from that next client launch (before any payload
+		// response).
+		// TODO(vue3): does watch work globally like this?
+		watch(
+			() => unref(user),
 			user => {
 				if (user) {
 					localStorage.setItem('user', JSON.stringify(user));

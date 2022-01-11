@@ -1,5 +1,5 @@
+import { setup } from 'vue-class-component';
 import { Emit, Inject, Options, Prop, Provide, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { RouteLocationDefinition } from '../../../../../utils/router';
 import { trackPostOpen } from '../../../../../_common/analytics/analytics.service';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
@@ -26,11 +26,11 @@ import {
 	StickerTargetParentControllerKey,
 } from '../../../../../_common/sticker/target/target-controller';
 import AppStickerTarget from '../../../../../_common/sticker/target/target.vue';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
 import AppUserFollowWidget from '../../../../../_common/user/follow/widget.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verified-tick.vue';
-import { Store } from '../../../../store';
 import AppFiresidePostEmbed from '../../../fireside/post/embed/embed.vue';
 import AppPollVoting from '../../../poll/voting/voting.vue';
 import AppPostControls from '../../../post/controls/controls.vue';
@@ -75,6 +75,8 @@ export default class AppActivityFeedPost extends Vue {
 	@Prop({ type: Object, required: true })
 	item!: ActivityFeedItem;
 
+	commonStore = setup(() => useCommonStore());
+
 	@Inject({ from: ActivityFeedKey })
 	feed!: ActivityFeedView;
 
@@ -84,7 +86,9 @@ export default class AppActivityFeedPost extends Vue {
 	@Provide({ to: StickerTargetParentControllerKey, reactive: true })
 	stickerTargetController = this.post ? new StickerTargetController(this.post) : null;
 
-	@State app!: Store['app'];
+	get app() {
+		return this.commonStore;
+	}
 
 	canToggleLead = false;
 	hasBypassedBlock = false;

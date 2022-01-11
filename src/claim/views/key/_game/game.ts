@@ -1,6 +1,5 @@
 import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
@@ -10,8 +9,8 @@ import AppGamePackageCard from '../../../../_common/game/package/card/card.vue';
 import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
 import { KeyGroup } from '../../../../_common/key-group/key-group.model';
 import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { useThemeStore } from '../../../../_common/theme/theme.store';
-import { Store } from '../../../store/index';
 
 const ClaimGameThemeKey = 'claim-game';
 
@@ -33,10 +32,12 @@ export default class AppKeyGame extends Vue {
 	@Prop(String)
 	accessKey?: string;
 
+	commonStore = setup(() => useCommonStore());
 	themeStore = setup(() => useThemeStore());
 
-	@State
-	app!: Store['app'];
+	get app() {
+		return this.commonStore;
+	}
 
 	showingThanks = false;
 	isClaimOnly = false;

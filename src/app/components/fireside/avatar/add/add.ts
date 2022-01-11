@@ -1,8 +1,9 @@
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { AuthModal } from '../../../../../_common/auth/auth-modal.service';
 import { Community } from '../../../../../_common/community/community.model';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
-import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { FiresideAddModal } from '../../add-modal/add-modal.service';
 import AppFiresideAvatarBase from '../_base/base.vue';
@@ -16,10 +17,14 @@ import AppFiresideAvatarBase from '../_base/base.vue';
 	},
 })
 export default class AppFiresideAvatarAdd extends Vue {
-	@AppState user!: AppStore['user'];
-
 	@Prop({ type: Object, default: undefined })
 	community!: Community | undefined;
+
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	declare $refs: {
 		header: HTMLDivElement;

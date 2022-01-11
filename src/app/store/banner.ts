@@ -40,6 +40,9 @@ class NotificationsBanner extends Banner {
 	}
 
 	get isActive() {
+		// TODO(vue3)
+		return false;
+
 		if (Screen.isXs || import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
 			return false;
 		}

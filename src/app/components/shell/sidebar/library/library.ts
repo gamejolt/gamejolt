@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { stringSort } from '../../../../../utils/array';
@@ -9,6 +10,7 @@ import { formatNumber } from '../../../../../_common/filters/number';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
 import AppShortkey from '../../../../../_common/shortkey/shortkey.vue';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../../store/index';
 import { LibraryModule, LibraryStore } from '../../../../store/library';
@@ -26,7 +28,11 @@ import AppShellSidebarCollectionList from './collection-list.vue';
 	},
 })
 export default class AppShellSidebarLibrary extends Vue {
-	@State app!: Store['app'];
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 	@State isLibraryBootstrapped!: Store['isLibraryBootstrapped'];
 	@LibraryModule.State bundleCollections!: LibraryStore['bundleCollections'];
 	@LibraryModule.State developerCollection!: LibraryStore['developerCollection'];

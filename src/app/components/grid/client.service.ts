@@ -21,6 +21,7 @@ import { Notification } from '../../../_common/notification/notification-model';
 import { NotificationText } from '../../../_common/notification/notification-text.service';
 import { SettingFeedNotifications } from '../../../_common/settings/settings.service';
 import { SiteTrophy } from '../../../_common/site/trophy/trophy.model';
+import { commonStore } from '../../../_common/store/common-store';
 import { EventTopic } from '../../../_common/system/event/event-topic';
 import { Translate } from '../../../_common/translate/translate.service';
 import { UserGameTrophy } from '../../../_common/user/trophy/game-trophy.model';
@@ -290,7 +291,7 @@ export class GridClient {
 	private async connect() {
 		const cancelToken = this.cancelToken;
 
-		const user = store.state.app.user;
+		const user = commonStore.user.value;
 		if ((!this.isGuest && !user) || (this.isGuest && !!user)) {
 			return;
 		}
@@ -301,7 +302,7 @@ export class GridClient {
 			return;
 		}
 
-		const timedOut = store.state.app.isUserTimedOut;
+		const timedOut = commonStore.isUserTimedOut.value;
 
 		if (!authToken || timedOut) {
 			// Not properly logged in.
@@ -678,7 +679,7 @@ export class GridClient {
 				if (notification.from_model instanceof User) {
 					// We send a notification to the author of the post.
 					// Do not show a notification in that case, the purpose is to increment the activity feed counter.
-					if (notification.from_model.id === store.state.app.user?.id) {
+					if (notification.from_model.id === commonStore.user.value?.id) {
 						return;
 					}
 
@@ -775,7 +776,7 @@ export class GridClient {
 		}
 
 		// TODO: should we make this available for guests too?
-		const user = store.state.app.user;
+		const user = commonStore.user.value;
 		if (this.socket && user && authToken) {
 			const userId = user.id.toString();
 
@@ -867,7 +868,7 @@ export class GridClient {
 			return;
 		}
 
-		if (store.state.app.user && fireside.user.id == store.state.app.user.id) {
+		if (commonStore.user.value && fireside.user.id === commonStore.user.value.id) {
 			console.log('Suppress featured fireside notification for fireside owner.');
 			return;
 		}

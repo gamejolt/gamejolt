@@ -1,4 +1,5 @@
 import { defineAsyncComponent, h, resolveComponent } from 'vue';
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { router } from '..';
 import { Api } from '../../../_common/api/api.service';
@@ -8,7 +9,7 @@ import {
 	BaseRouteComponent,
 	RouteResolver,
 } from '../../../_common/route/route-component';
-import { AppState, AppStore } from '../../../_common/store/app-store';
+import { useCommonStore } from '../../../_common/store/common-store';
 import { IntentService } from '../../components/intent/intent.service';
 import { HomeFeedService } from './home-feed.service';
 
@@ -34,11 +35,15 @@ import { HomeFeedService } from './home-feed.service';
 	},
 })
 export default class RouteHome extends BaseRouteComponent {
-	@AppState
-	user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
 
-	@AppState
-	userBootstrapped!: AppStore['userBootstrapped'];
+	get user() {
+		return this.commonStore.user;
+	}
+
+	get userBootstrapped() {
+		return this.commonStore.userBootstrapped;
+	}
 
 	routeCreated() {
 		Meta.title = null;

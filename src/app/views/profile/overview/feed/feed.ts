@@ -1,12 +1,13 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { RouteLocationNormalized } from 'vue-router';
-import { State } from 'vuex-class';
 import { Api } from '../../../../../_common/api/api.service';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import AppActivityFeedPlaceholder from '../../../../components/activity/feed/placeholder/placeholder.vue';
@@ -15,7 +16,6 @@ import { AppActivityFeedLazy } from '../../../../components/lazy';
 import AppPostAddButton from '../../../../components/post/add-button/add-button.vue';
 import AppUserSpawnDay from '../../../../components/user/spawn-day/spawn-day.vue';
 import { illNoComments } from '../../../../img/ill/illustrations';
-import { Store } from '../../../../store/index';
 import { RouteStore, RouteStoreModule } from '../../profile.store';
 
 function isLikeFeed(route: RouteLocationNormalized) {
@@ -54,7 +54,11 @@ function getFetchUrl(route: RouteLocationNormalized) {
 		}),
 })
 export default class RouteProfileOverviewFeed extends BaseRouteComponent {
-	@State app!: Store['app'];
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 	@RouteStoreModule.State user!: RouteStore['user'];
 
 	feed: ActivityFeedView | null = null;

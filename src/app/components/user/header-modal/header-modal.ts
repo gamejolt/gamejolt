@@ -1,8 +1,8 @@
+import { setup } from 'vue-class-component';
 import { mixins, Options } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { BaseModal } from '../../../../_common/modal/base';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { User } from '../../../../_common/user/user.model';
-import { Store } from '../../../store/index';
 import FormUserHeader from '../../forms/user-header/header.vue';
 
 @Options({
@@ -11,8 +11,11 @@ import FormUserHeader from '../../forms/user-header/header.vue';
 	},
 })
 export default class AppUserHeaderModal extends mixins(BaseModal) {
-	@State
-	app!: Store['app'];
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	// We don't want to close the modal after they've uploaded a header since they can set a crop
 	// after. We want to auto-close it after they've saved the crop, though.

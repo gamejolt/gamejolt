@@ -8,7 +8,7 @@ import AppCookieBanner from '../_common/cookie/banner/banner.vue';
 import { DrawerStore, DrawerStoreKey } from '../_common/drawer/drawer-store';
 import AppErrorPage from '../_common/error/page/page.vue';
 import AppCommonShell from '../_common/shell/shell.vue';
-import { AppState, AppStore } from '../_common/store/app-store';
+import { useCommonStore } from '../_common/store/common-store';
 import { getTranslationLang, loadCurrentLanguage } from '../_common/translate/translate.service';
 import { ChatStore, ChatStoreKey, clearChat, loadChat } from './components/chat/chat-store';
 import AppShell from './components/shell/shell.vue';
@@ -23,6 +23,7 @@ import { Store } from './store';
 	},
 })
 export default class App extends Vue {
+	commonStore = setup(() => useCommonStore());
 	adsController = setup(() => createAdsController());
 
 	@Provide({ to: ChatStoreKey, reactive: true })
@@ -37,7 +38,9 @@ export default class App extends Vue {
 	@Provide({ to: AppPromotionStoreKey })
 	appPromotionStore = new AppPromotionStore();
 
-	@AppState user!: AppStore['user'];
+	get user() {
+		return this.commonStore.user;
+	}
 
 	$store!: Store;
 

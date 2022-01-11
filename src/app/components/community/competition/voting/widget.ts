@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { numberSort } from '../../../../../utils/array';
 import {
@@ -9,7 +10,7 @@ import { CommunityCompetitionEntryVote } from '../../../../../_common/community/
 import { CommunityCompetitionVotingCategory } from '../../../../../_common/community/competition/voting-category/voting-category.model';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../../_common/filters/number';
-import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import FormCommunityCompetitionVotingCast from '../../../forms/community/competition/voting/cast/cast.vue';
@@ -32,8 +33,11 @@ export default class AppCommunityCompetitionVotingWidget extends Vue {
 	@Prop({ type: Boolean, required: true }) isArchived!: boolean;
 	@Prop({ type: Boolean, required: true }) isBlocked!: boolean;
 
-	@AppState
-	user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	moreVoteResultInfoVisible = false;
 

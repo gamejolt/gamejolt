@@ -3,7 +3,7 @@ import { RequestOptions } from '../api/api.service';
 import { Environment } from '../environment/environment.service';
 import { showErrorGrowl } from '../growls/growls.service';
 import { Seo } from '../seo/seo.service';
-import { WithAppStore } from '../store/app-store';
+import { CommonStore } from '../store/common-store';
 import { Translate } from '../translate/translate.service';
 
 export type PayloadFormErrors = { [errorId: string]: boolean };
@@ -61,11 +61,11 @@ export class Payload {
 	// These http errors are not redirects, so the noRedirect behavior should not apply to them.
 	static readonly httpNoRedirectOverrides = [429];
 
-	private static store: WithAppStore;
+	private static commonStore: CommonStore;
 	private static ver?: number = undefined;
 
-	static init(store: WithAppStore) {
-		this.store = store;
+	static init({ commonStore }: { commonStore: CommonStore }) {
+		this.commonStore = commonStore;
 	}
 
 	static async processResponse(
@@ -163,7 +163,7 @@ export class Payload {
 	}
 
 	private static checkPayloadUser(response: any, options: RequestOptions) {
-		if (options.ignorePayloadUser || !response || !response.data || !this.store) {
+		if (options.ignorePayloadUser || !response || !response.data || !this.commonStore) {
 			return;
 		}
 
@@ -172,9 +172,9 @@ export class Payload {
 		const data = response.data;
 		if (typeof data.user !== 'undefined') {
 			if (data.user === null) {
-				this.store.commit('app/clearUser');
+				this.commonStore.clearUser();
 			} else {
-				this.store.commit('app/setUser', data.user);
+				this.commonStore.setUser(data.user);
 			}
 		}
 	}
@@ -188,17 +188,17 @@ export class Payload {
 	}
 
 	private static checkPayloadConsents(response: any) {
-		if (!response || !response.data || !this.store) {
+		if (!response || !response.data || !this.commonStore) {
 			return;
 		}
 
 		const data = response.data;
 		if (typeof data.c === 'object') {
-			this.store.commit('app/setConsents', data.c);
+			this.commonStore.setConsents(data.c);
 			return;
 		}
 
-		this.store.commit('app/setConsents', {});
+		this.commonStore.setConsents({});
 	}
 
 	private static checkClientForceUpgrade(data: any) {
@@ -222,13 +222,13 @@ export class Payload {
 				import.meta.env.SSR ? Environment.ssrContext.url : window.location.href
 			);
 			const location = Environment.authBaseUrl + '/login?redirect=' + redirect;
-			this.store.commit('app/redirect', location);
+			this.commonStore.redirect(location);
 		} else if (error.type === PayloadError.ERROR_NEW_CLIENT_VERSION) {
-			this.store.commit('app/redirect', Environment.clientSectionUrl + '/upgrade');
+			this.commonStore.redirect(Environment.clientSectionUrl + '/upgrade');
 		} else if (error.type === PayloadError.ERROR_USER_TIMED_OUT) {
-			this.store.commit('app/redirect', Environment.wttfBaseUrl + '/timeout');
+			this.commonStore.redirect(Environment.wttfBaseUrl + '/timeout');
 		} else if (error.type === PayloadError.ERROR_INVALID) {
-			this.store.commit('app/setError', 500);
+			this.commonStore.setError(500);
 		} else if (error.type === PayloadError.ERROR_RATE_LIMIT) {
 			showErrorGrowl({
 				title: Translate.$gettext(`Whoa there, slow down!`),
@@ -240,9 +240,9 @@ export class Payload {
 			error.type === PayloadError.ERROR_HTTP_ERROR &&
 			(!error.status || this.httpErrors.indexOf(error.status) !== -1)
 		) {
-			this.store.commit('app/setError', error.status || 500);
+			this.commonStore.setError(error.status || 500);
 		} else {
-			this.store.commit('app/setError', 'offline');
+			this.commonStore.setError('offline');
 		}
 
 		return error;

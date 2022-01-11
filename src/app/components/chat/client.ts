@@ -5,6 +5,7 @@ import { CancelToken } from '../../../utils/cancel-token';
 import { sleep } from '../../../utils/utils';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
+import { commonStore } from '../../../_common/store/common-store';
 import { EventTopic } from '../../../_common/system/event/event-topic';
 import { store } from '../../store';
 import { ChatMessage, ChatMessageType } from './message';
@@ -197,7 +198,7 @@ function reconnect(chat: ChatClient) {
 async function connect(chat: ChatClient) {
 	const cancelToken = chat.cancelToken;
 
-	const user = store.state.app.user;
+	const user = commonStore.user.value;
 	if ((!chat.isGuest && !user) || (chat.isGuest && !!user)) {
 		return;
 	}
@@ -208,7 +209,7 @@ async function connect(chat: ChatClient) {
 		return;
 	}
 
-	const timedOut = store.state.app.isUserTimedOut;
+	const timedOut = commonStore.isUserTimedOut.value;
 
 	if (!authToken || timedOut) {
 		// Not properly logged in.

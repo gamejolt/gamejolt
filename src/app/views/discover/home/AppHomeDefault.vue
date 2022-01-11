@@ -2,15 +2,13 @@
 import { PropType } from 'vue';
 import { Community } from '../../../../_common/community/community.model';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
-import { useAppStore } from '../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
 import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import AppDiscoverHomeBanner from './_home-default/AppDiscoverHomeBanner.vue';
 import AppDiscoverHomeCommunities from './_home-default/AppDiscoverHomeCommunities.vue';
-
-const app = useAppStore();
 
 defineProps({
 	isBootstrapped: {
@@ -29,6 +27,8 @@ defineProps({
 		default: null,
 	},
 });
+
+const { user } = useCommonStore();
 </script>
 
 <template>
@@ -66,7 +66,7 @@ defineProps({
 			/>
 		</section>
 
-		<section v-if="!app.user" class="section fill-offset">
+		<section v-if="!user" class="section fill-offset">
 			<div class="container">
 				<h2 class="section-header text-center">
 					<AppTranslate>Join Game Jolt</AppTranslate>

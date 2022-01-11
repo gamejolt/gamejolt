@@ -1,5 +1,5 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { enforceLocation } from '../../../../../utils/router';
 import { Api } from '../../../../../_common/api/api.service';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
@@ -21,6 +21,7 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../_common/scroll/affix/affix.vue';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import { AppScrollTo } from '../../../../../_common/scroll/to/to.directive';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
@@ -33,7 +34,6 @@ import AppForumPostList from '../../../../components/forum/post-list/post-list.v
 import AppForumTopicUpvoteWidget from '../../../../components/forum/topic/upvote-widget/upvote-widget.vue';
 import AppPageHeaderControls from '../../../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../../../components/page-header/page-header.vue';
-import { Store } from '../../../../store/index';
 
 @Options({
 	name: 'RouteForumsTopicsView',
@@ -82,8 +82,11 @@ import { Store } from '../../../../store/index';
 	},
 })
 export default class RouteForumsTopicsView extends BaseRouteComponent {
-	@State
-	app!: Store['app'];
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	topic: ForumTopic = null as any;
 	channel: ForumChannel = null as any;

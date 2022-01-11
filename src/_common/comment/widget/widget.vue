@@ -24,7 +24,7 @@ import AppMessageThreadAdd from '../../message-thread/add/add.vue';
 import AppMessageThread from '../../message-thread/message-thread.vue';
 import { Model } from '../../model/model.service';
 import AppNavTabList from '../../nav/tab-list/tab-list.vue';
-import { useAppStore } from '../../store/app-store';
+import { useCommonStore } from '../../store/common-store';
 import { User } from '../../user/user.model';
 import FormComment from '../add/add.vue';
 import { canCommentOnModel, Comment, getCommentModelResourceName } from '../comment-model';
@@ -407,7 +407,7 @@ const emit = defineEmits({
 	remove: (_comment: Comment) => true,
 });
 
-const appStore = useAppStore();
+const { user } = useCommonStore();
 const c = createCommentWidget(props, emit);
 provide(Key, c);
 
@@ -479,7 +479,7 @@ const {
 		</div>
 		<div v-else-if="hasBootstrapped">
 			<template v-if="shouldShowAdd">
-				<app-message-thread-add v-if="appStore.user" hide-message-split>
+				<app-message-thread-add v-if="user" hide-message-split>
 					<form-comment
 						:comment-model="model"
 						:autofocus="autofocus"

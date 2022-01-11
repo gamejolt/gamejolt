@@ -4,18 +4,18 @@ import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { showModal } from '../../../_common/modal/modal.service';
 import { Screen } from '../../../_common/screen/screen-service';
 import { SettingBroadcastModal } from '../../../_common/settings/settings.service';
-import { appStore } from '../../../_common/store/app-store';
+import { commonStore } from '../../../_common/store/common-store';
 
 const STORAGE_KEY_PREFIX = 'broadcast-modal:date:';
 
 export class BroadcastModal {
 	private static _key() {
-		return STORAGE_KEY_PREFIX + appStore.state.user!.id;
+		return STORAGE_KEY_PREFIX + commonStore.user.value!.id;
 	}
 
 	static async check() {
-		const user = appStore.state.user;
-		if (!user || !SettingBroadcastModal.get() || import.meta.env.SSR || Screen.isXs) {
+		const { user } = commonStore;
+		if (!user.value || !SettingBroadcastModal.get() || import.meta.env.SSR || Screen.isXs) {
 			return;
 		}
 

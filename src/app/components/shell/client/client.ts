@@ -1,6 +1,7 @@
+import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
 import { getDeviceOS } from '../../../../_common/device/device.service';
-import { AppState, AppStore } from '../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import AppClientIntro from '../../client/intro/intro.vue';
 import { AppClientSystemProgress } from '../../client/system-progress/system-progress';
 
@@ -11,7 +12,11 @@ import { AppClientSystemProgress } from '../../client/system-progress/system-pro
 	},
 })
 export default class AppShellClient extends Vue {
-	@AppState userBootstrapped!: AppStore['userBootstrapped'];
+	commonStore = setup(() => useCommonStore());
+
+	get userBootstrapped() {
+		return this.commonStore.userBootstrapped;
+	}
 
 	isShowingIntro = true;
 

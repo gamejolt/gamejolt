@@ -16,7 +16,7 @@ import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service'
 import { Screen } from '../../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../../_common/share/share.service';
 import { StickerTargetController } from '../../../../_common/sticker/target/target-controller';
-import { appStore } from '../../../../_common/store/app-store';
+import { commonStore } from '../../../../_common/store/common-store';
 import { Translate } from '../../../../_common/translate/translate.service';
 import { ChatClient } from '../../chat/client';
 import { ChatRoomChannel } from '../../chat/room-channel';
@@ -78,7 +78,7 @@ export class FiresideController {
 	_isExtending = false;
 
 	get user() {
-		return appStore.state.user;
+		return commonStore.user.value;
 	}
 
 	get chatRoom() {

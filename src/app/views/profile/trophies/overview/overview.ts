@@ -1,10 +1,10 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { numberSort } from '../../../../../utils/array';
 import { Api } from '../../../../../_common/api/api.service';
 import { Game } from '../../../../../_common/game/game.model';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
-import { AppStore } from '../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import AppTimelineListItem from '../../../../../_common/timeline-list/item/item.vue';
 import AppTimelineList from '../../../../../_common/timeline-list/timeline-list.vue';
@@ -37,11 +37,14 @@ type TrophyEntry = {
 		Api.sendRequest('/web/profile/trophies/overview/@' + route.params.username),
 })
 export default class RouteProfileTrophiesOverview extends BaseRouteComponent {
+	commonStore = setup(() => useCommonStore());
+
 	@RouteStoreModule.State
 	user!: RouteStore['user'];
 
-	@State
-	app!: AppStore;
+	get app() {
+		return this.commonStore;
+	}
 
 	trophyEntries: TrophyEntry[] = [];
 

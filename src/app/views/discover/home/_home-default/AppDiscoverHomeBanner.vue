@@ -1,15 +1,15 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { RouteLocationDefinition } from '../../../../../utils/router';
 import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/join-widget.vue';
 import { Jam } from '../../../../../_common/jam/jam.model';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/backdrop.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import { AppTheme } from '../../../../../_common/theme/theme';
 import { FeaturedItem } from '../../../../components/featured-item/featured-item.model';
 import AppGameFollowWidget from '../../../../components/game/follow-widget/follow-widget.vue';
-import { Store } from '../../../../store/index';
 
 @Options({
 	components: {
@@ -23,7 +23,11 @@ export default class AppDiscoverHomeBanner extends Vue {
 	@Prop(Object) item?: FeaturedItem;
 	@Prop({ type: Boolean, default: false }) isLoading!: boolean;
 
-	@State app!: Store['app'];
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	readonly Screen = Screen;
 

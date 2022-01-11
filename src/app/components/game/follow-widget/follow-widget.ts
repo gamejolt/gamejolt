@@ -1,5 +1,5 @@
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import {
 	GameFollowLocation,
 	trackGameFollow,
@@ -10,10 +10,10 @@ import { followGame, Game, unfollowGame } from '../../../../_common/game/game.mo
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import AppPopper from '../../../../_common/popper/popper.vue';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserFollowSuggestion } from '../../../../_common/user/follow/suggestion.service';
 import AppUserFollowWidget from '../../../../_common/user/follow/widget.vue';
-import { Store } from '../../../store/index';
 
 @Options({
 	components: {
@@ -53,7 +53,11 @@ export default class AppGameFollowWidget extends Vue {
 	@Prop({ type: Boolean, required: false, default: false })
 	hideCount!: boolean;
 
-	@State app!: Store['app'];
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	isShowingFollowPopover = false;
 

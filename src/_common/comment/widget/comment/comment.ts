@@ -16,7 +16,7 @@ import { Popper } from '../../../popper/popper.service';
 import AppPopper from '../../../popper/popper.vue';
 import { ReportModal } from '../../../report/modal/modal.service';
 import { canPlaceStickerOnComment } from '../../../sticker/placement/placement.model';
-import { AppState, AppStore } from '../../../store/app-store';
+import { useCommonStore } from '../../../store/common-store';
 import AppTimelineListItem from '../../../timeline-list/item/item.vue';
 import { AppTooltip } from '../../../tooltip/tooltip-directive';
 import FormComment from '../../add/add.vue';
@@ -60,7 +60,11 @@ export default class AppCommentWidgetComment extends Vue {
 	@Prop({ type: Boolean, default: false }) isLastInThread!: boolean;
 	@Prop({ type: Boolean, default: false }) showChildren!: boolean;
 
-	@AppState user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	componentId = ++CommentNum;
 	isFollowPending = false;

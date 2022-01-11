@@ -1,7 +1,6 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import { Store } from '../../../../../client/store/index';
 import { numberSort } from '../../../../../utils/array';
 import AppCommunityCardPlaceholder from '../../../../../_common/community/card-placeholder/card-placeholder.vue';
 import AppCommunityCard from '../../../../../_common/community/card/card.vue';
@@ -9,6 +8,7 @@ import AppCommunityChunkPlaceholder from '../../../../../_common/community/chunk
 import AppCommunityChunk from '../../../../../_common/community/chunk/chunk.vue';
 import { Community } from '../../../../../_common/community/community.model';
 import { Screen } from '../../../../../_common/screen/screen-service';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 
 const EmphasizedCommunityIDs = [
 	// Minecraft
@@ -35,7 +35,11 @@ export default class AppDiscoverHomeCommunities extends Vue {
 	@Prop({ type: Array, required: true }) communities!: Community[];
 	@Prop({ type: Boolean, default: false }) isLoading!: boolean;
 
-	@State app!: Store['app'];
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	get filteredCommunities() {
 		const localCommunities = this.communities.map(i => i);

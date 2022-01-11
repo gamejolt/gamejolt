@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { GridClient } from '../../../app/components/grid/client.service';
@@ -6,7 +7,7 @@ import { CommunityJoinLocation } from '../../analytics/analytics.service';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { formatNumber } from '../../filters/number';
 import { showErrorGrowl } from '../../growls/growls.service';
-import { AppStore } from '../../store/app-store';
+import { useCommonStore } from '../../store/common-store';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 import { Community } from '../community.model';
 
@@ -32,7 +33,11 @@ export default class AppCommunityJoinWidget extends Vue {
 	@Prop({ type: Boolean, required: false, default: false })
 	solid?: boolean;
 
-	@State app!: AppStore;
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 	@State grid!: GridClient;
 	@Action joinCommunity!: Store['joinCommunity'];
 	@Action leaveCommunity!: Store['leaveCommunity'];

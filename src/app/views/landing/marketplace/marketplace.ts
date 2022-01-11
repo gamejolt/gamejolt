@@ -1,5 +1,5 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import AppContactLink from '../../../../_common/contact-link/contact-link.vue';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
@@ -8,10 +8,10 @@ import AppGameThumbnail from '../../../../_common/game/thumbnail/thumbnail.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { imageJolt } from '../../../img/images';
-import { Store } from '../../../store/index';
 import socialImage from './social.png';
 
 @Options({
@@ -28,8 +28,11 @@ import socialImage from './social.png';
 	resolver: () => Api.sendRequest('/web/marketplace'),
 })
 export default class RouteLandingMarketplace extends BaseRouteComponent {
-	@State
-	app!: Store['app'];
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	firesidePosts: FiresidePost[] = [];
 	games: Game[] = [];

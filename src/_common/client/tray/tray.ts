@@ -1,17 +1,20 @@
 import { h } from 'vue';
+import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Navigate } from '../../navigate/navigate.service';
 import { Screen } from '../../screen/screen-service';
-import { AppStore } from '../../store/app-store';
+import { useCommonStore } from '../../store/common-store';
 import { Client } from '../client.service';
 
 const trayIcons = import.meta.globEager('./icon*.png');
 
 @Options({})
 export class AppClientTray extends Vue {
-	@State
-	app!: AppStore;
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	isFocused = false;
 	isMinimized = false;
