@@ -119,10 +119,6 @@
 	},
 	"optionalDependencies": {
 		"appdmg": "argv-minus-one/node-appdmg#node-12-temporary-fix",
-		"imagemin-gifsicle": "7.0.0",
-		"imagemin-jpegtran": "7.0.0",
-		"imagemin-optipng": "8.0.0",
-		"imagemin-svgo": "8.0.0",
 		"rcedit": "3.0.1"
 	},
 	"dependencies": {
