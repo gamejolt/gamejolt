@@ -18,10 +18,12 @@ import {
 } from '../../../_common/sidebar/sidebar.store';
 import AppStickerLayer from '../../../_common/sticker/layer/layer.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
-import { BannerModule, BannerStore, Store } from '../../store/index';
+import { useBannerStore } from '../../store/banner';
+import { Store } from '../../store/index';
 import { ChatStore, ChatStoreKey } from '../chat/chat-store';
 import { setChatFocused } from '../chat/client';
 import { AppClientShell, AppClientStatusBar } from '../client/safe-exports';
+import AppShellBanner from './AppShellBanner.vue';
 import AppShellBody from './body/body.vue';
 import AppShellCbar from './cbar/cbar.vue';
 import AppShellHotBottom from './hot-bottom/hot-bottom.vue';
@@ -36,7 +38,7 @@ import AppShellTopNav from './top-nav/top-nav.vue';
 		AppShellHotBottom,
 		AppShellCbar,
 		AppMinbar,
-		AppShellBanner: defineAsyncComponent(() => import('./banner/banner.vue')),
+		AppShellBanner,
 		AppChatWindows: defineAsyncComponent(() => import('../chat/windows/windows.vue')),
 		AppStickerLayer,
 		AppClientBase,
@@ -46,6 +48,7 @@ import AppShellTopNav from './top-nav/top-nav.vue';
 })
 export default class AppShell extends Vue {
 	commonStore = setup(() => useCommonStore());
+	bannerStore = setup(() => useBannerStore());
 
 	drawerStore = shallowSetup(() => useDrawerStore());
 
@@ -55,6 +58,7 @@ export default class AppShell extends Vue {
 	get app() {
 		return this.commonStore;
 	}
+
 	@State isShellHidden!: Store['isShellHidden'];
 	@State hasTopBar!: Store['hasTopBar'];
 	@State hasSidebar!: Store['hasSidebar'];
@@ -64,7 +68,9 @@ export default class AppShell extends Vue {
 	@State unreadActivityCount!: Store['unreadActivityCount'];
 	@State unreadNotificationsCount!: Store['unreadNotificationsCount'];
 
-	@BannerModule.State hasBanner!: BannerStore['hasBanner'];
+	get hasBanner() {
+		return this.bannerStore.hasBanner;
+	}
 
 	@SidebarState hideOnRouteChange!: SidebarStore['hideOnRouteChange'];
 	@SidebarState showOnRouteChange!: SidebarStore['showOnRouteChange'];

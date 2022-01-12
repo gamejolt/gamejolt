@@ -27,16 +27,11 @@ import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.se
 import { GridClient } from '../components/grid/client.service';
 import { GridClientLazy } from '../components/lazy';
 import { router } from '../views';
-import { BannerActions, BannerMutations, BannerStore } from './banner';
 import * as _ClientLibraryMod from './client-library';
 import { CommunityStates } from './community-state';
 import { Actions as LibraryActions, LibraryStore, Mutations as LibraryMutations } from './library';
 
-// Re-export our sub-modules.
-export { BannerModule, BannerStore } from './banner';
-
 export type Actions = LibraryActions &
-	BannerActions &
 	SidebarActions &
 	_ClientLibraryMod.Actions & {
 		bootstrap: void;
@@ -61,7 +56,6 @@ export type Actions = LibraryActions &
 	};
 
 export type Mutations = LibraryMutations &
-	BannerMutations &
 	SidebarMutations &
 	_ClientLibraryMod.Mutations & {
 		showShell: void;
@@ -102,7 +96,6 @@ export function tillGridBootstrapped() {
 
 const modules: any = {
 	library: reactive(new LibraryStore()),
-	banner: reactive(new BannerStore()),
 	sidebar: reactive(new SidebarStore()),
 };
 
@@ -121,7 +114,6 @@ type TogglableLeftPane = '' | 'chat' | 'context' | 'library';
 })
 export class Store extends VuexStore<Store, Actions, Mutations> {
 	declare library: LibraryStore;
-	declare banner: BannerStore;
 	declare sidebar: SidebarStore;
 	declare clientLibrary: _ClientLibraryMod.ClientLibraryStore;
 

@@ -1,157 +1,142 @@
-import { namespace } from 'vuex-class';
-import { VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
+import { computed, inject, InjectionKey, ref, Ref, unref, watch } from 'vue';
+import { Router } from 'vue-router';
 import { Analytics } from '../../_common/analytics/analytics.service';
 import { Connection } from '../../_common/connection/connection-service';
 import { Screen } from '../../_common/screen/screen-service';
 import { SettingFeedNotifications } from '../../_common/settings/settings.service';
-import { Translate } from '../../_common/translate/translate.service';
-import { store } from './index';
+import { CommonStore } from '../../_common/store/common-store';
+import { $gettext } from '../../_common/translate/translate.service';
 
-export const BannerStoreNamespace = 'banner';
-export const BannerModule = namespace(BannerStoreNamespace);
+export const BannerStoreKey: InjectionKey<BannerStore> = Symbol('banner-store');
 
-export type BannerActions = {};
+export type BannerStore = ReturnType<typeof createBannerStore>;
 
-export type BannerMutations = {
-	'banner/clickBanner': void;
-	'banner/closeBanner': void;
-};
-
-abstract class Banner {
-	abstract message: string;
-	abstract isActive: boolean;
-
-	type = 'info';
-	isClosed = false;
-
-	onClick?(): void;
-	onClose?(): void;
-
-	get canClick() {
-		return !!this.onClick;
-	}
+export function useBannerStore() {
+	return inject(BannerStoreKey)!;
 }
 
-class NotificationsBanner extends Banner {
-	get message() {
-		return Translate.$gettext(
-			`Game Jolt needs your permission to <em>enable desktop notifications</em>.`
-		);
-	}
+export function createBannerStore({
+	commonStore,
+	router,
+}: {
+	commonStore: CommonStore;
+	router: Router;
+}) {
+	const banners = ref([
+		_createBanner({
+			message: computed(() =>
+				$gettext(
+					`Game Jolt needs your permission to <em>enable desktop notifications</em>.`
+				)
+			),
+			isActive: computed(() => {
+				if (import.meta.env.SSR || GJ_IS_DESKTOP_APP || Screen.isXs) {
+					return false;
+				}
 
-	get isActive() {
-		// TODO(vue3)
-		return false;
+				const route = router.currentRoute.value;
 
-		if (Screen.isXs || import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
-			return false;
-		}
+				return !!(
+					commonStore.user.value &&
+					(route.name === 'home' || route.name === 'notifications') &&
+					'Notification' in window &&
+					(Notification as any).permission === 'default' &&
+					SettingFeedNotifications.get()
+				);
+			}),
+			async onClick() {
+				Analytics.trackEvent('notifications', 'request');
 
-		// "store" is a circular dependency, so make sure it exists.
-		return !!(
-			store &&
-			store.state.app.user &&
-			store.state.route.name &&
-			(store.state.route.name === 'home' || store.state.route.name === 'notifications') &&
-			'Notification' in window &&
-			(Notification as any).permission === 'default' &&
-			SettingFeedNotifications.get()
-		);
-	}
+				const result = await Notification.requestPermission();
+				if (result === 'denied') {
+					Analytics.trackEvent('notifications', 'denied');
+					SettingFeedNotifications.set(false);
+				} else if (result === 'default') {
+					Analytics.trackEvent('notifications', 'accepted');
+					SettingFeedNotifications.set(true);
+					return;
+				}
+			},
+			onClose() {
+				SettingFeedNotifications.set(false);
+			},
+		}),
 
-	async onClick() {
-		Analytics.trackEvent('notifications', 'request');
+		_createBanner({
+			type: 'error',
+			message: computed(() => $gettext(`We're having trouble connecting to Game Jolt.`)),
+			isActive: computed(() => Connection.isOffline),
+		}),
+	]);
 
-		const result = await Notification.requestPermission();
-		if (result === 'denied') {
-			Analytics.trackEvent('notifications', 'denied');
-			SettingFeedNotifications.set(false);
-		} else if (result === 'default') {
-			Analytics.trackEvent('notifications', 'accepted');
-			SettingFeedNotifications.set(true);
-			return;
-		}
-	}
+	const currentBanner = computed(() => banners.value.find(i => i.isActive && !i.isClosed));
+	const hasBanner = computed(() => !!currentBanner.value);
 
-	onClose() {
-		SettingFeedNotifications.set(false);
-	}
-}
-
-class OfflineBanner extends Banner {
-	type = 'error';
-
-	get message() {
-		return Translate.$gettext(`We're having trouble connecting to Game Jolt.`);
-	}
-
-	get isActive() {
-		const isOffline = Connection.isOffline;
-
-		// Always reset the closed state when we switch back online. This way the banner will show
-		// again if they go offline again.
-		if (!isOffline) {
-			this.isClosed = false;
-		}
-
-		return isOffline;
-	}
-}
-
-// class TermsChangeBanner extends Banner {
-// 	readonly StorageKey = 'banner:terms-change-05232018';
-
-// 	get message() {
-// 		return Translate.$gettext(`Game Jolt has a new Privacy Policy. <em>Learn More</em>`);
-// 	}
-
-// 	get isActive() {
-// 		if (import.meta.env.SSR) {
-// 			return false;
-// 		}
-
-// 		return !window.localStorage.getItem(this.StorageKey);
-// 	}
-
-// 	async onClick() {
-// 		router.push({ name: 'legal.privacy' });
-// 		window.localStorage.setItem(this.StorageKey, Date.now() + '');
-// 	}
-
-// 	onClose() {
-// 		window.localStorage.setItem(this.StorageKey, Date.now() + '');
-// 	}
-// }
-
-@VuexModule()
-export class BannerStore extends VuexStore<BannerStore, BannerActions, BannerMutations> {
-	banners: Banner[] = [new NotificationsBanner(), new OfflineBanner()];
-
-	get hasBanner() {
-		return !!this.currentBanner;
-	}
-
-	get currentBanner() {
-		return this.banners.find(i => i.isActive && !i.isClosed);
-	}
-
-	@VuexMutation
-	clickBanner() {
-		const banner = this.currentBanner;
-		if (banner && banner.onClick) {
+	function clickBanner() {
+		const banner = currentBanner.value;
+		if (banner?.onClick) {
 			banner.isClosed = true;
 			banner.onClick();
 		}
 	}
 
-	@VuexMutation
-	closeBanner() {
-		const banner = this.currentBanner;
+	function closeBanner() {
+		const banner = currentBanner.value;
 		if (banner) {
 			banner.isClosed = true;
-			if (banner.onClose) {
-				banner.onClose();
-			}
+			banner.onClose?.();
 		}
 	}
+
+	return {
+		banners,
+		hasBanner,
+		currentBanner,
+		clickBanner,
+		closeBanner,
+	};
+}
+
+function _createBanner({
+	type = 'info',
+	message,
+	isActive,
+	onClick,
+	onClose,
+}: {
+	type?: string;
+	message: Ref<string>;
+	isActive: Ref<boolean>;
+
+	onClick?(): void;
+	onClose?(): void;
+}) {
+	const isClosed = ref(false);
+
+	// Not actually reactive to anything, but returning as a Ref keeps things
+	// simple.
+	const canClick = computed(() => !!onClick);
+
+	// When they close the banner, if it deactivates we want to reset the
+	// isClosed state. That will allow it to show again when it becomes active
+	// again. For example, showing that they're offline, they close, then if
+	// they go online and offline again, we want to show again.
+	watch(
+		() => unref(isActive),
+		isActive => {
+			if (!isActive) {
+				isClosed.value = false;
+			}
+		}
+	);
+
+	return {
+		type,
+		message,
+		isActive,
+		isClosed,
+		canClick,
+		onClick,
+		onClose,
+	};
 }
