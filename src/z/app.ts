@@ -1,7 +1,7 @@
 import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
 import AppErrorPage from '../_common/error/page/page.vue';
-import AppCommonShell from '../_common/shell/shell.vue';
+import AppCommonShell from '../_common/shell/AppCommonShell.vue';
 import { useCommonStore } from '../_common/store/common-store';
 import AppUserBar from '../_common/user/user-bar/user-bar.vue';
 

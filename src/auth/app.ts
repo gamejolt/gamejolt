@@ -4,7 +4,7 @@ import { AppClientBase } from '../_common/client/safe-exports';
 import { Connection } from '../_common/connection/connection-service';
 import AppCookieBanner from '../_common/cookie/banner/banner.vue';
 import AppErrorPage from '../_common/error/page/page.vue';
-import AppCommonShell from '../_common/shell/shell.vue';
+import AppCommonShell from '../_common/shell/AppCommonShell.vue';
 import { createCommonStore } from '../_common/store/common-store';
 import { loadCurrentLanguage } from '../_common/translate/translate.service';
 

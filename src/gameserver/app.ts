@@ -5,7 +5,7 @@ import { Environment } from '../_common/environment/environment.service';
 import { GameBuild } from '../_common/game/build/build.model';
 import { Game } from '../_common/game/game.model';
 import { GamePackage } from '../_common/game/package/package.model';
-import AppCommonShell from '../_common/shell/shell.vue';
+import AppCommonShell from '../_common/shell/AppCommonShell.vue';
 import { Store } from './store/index';
 
 @Options({

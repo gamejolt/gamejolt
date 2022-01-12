@@ -8,7 +8,7 @@ import { CommentStoreManager, CommentStoreManagerKey } from '../_common/comment/
 import AppCookieBanner from '../_common/cookie/banner/banner.vue';
 import { createDrawerStore } from '../_common/drawer/drawer-store';
 import AppErrorPage from '../_common/error/page/page.vue';
-import AppCommonShell from '../_common/shell/shell.vue';
+import AppCommonShell from '../_common/shell/AppCommonShell.vue';
 import { useCommonStore } from '../_common/store/common-store';
 import { getTranslationLang, loadCurrentLanguage } from '../_common/translate/translate.service';
 import { ChatStore, ChatStoreKey, clearChat, loadChat } from './components/chat/chat-store';

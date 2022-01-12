@@ -1,6 +1,6 @@
 import { Options, Vue } from 'vue-property-decorator';
 import AppErrorPage from '../_common/error/page/page.vue';
-import AppCommonShell from '../_common/shell/shell.vue';
+import AppCommonShell from '../_common/shell/AppCommonShell.vue';
 import { loadCurrentLanguage } from '../_common/translate/translate.service';
 import AppSiteEditor from './components/site-editor/site-editor.vue';
 
