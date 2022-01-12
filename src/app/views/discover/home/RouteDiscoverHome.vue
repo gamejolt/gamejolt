@@ -4,7 +4,7 @@ import { Options } from 'vue-property-decorator';
 import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
-import { configGuestHome } from '../../../../_common/config/config.service';
+import { configGuestHome, configSaveOverride } from '../../../../_common/config/config.service';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
@@ -68,6 +68,13 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 				// show this as a split test. If we're logged in, we always use
 				// the default, since it's used as the discover page.
 				if (!this.user) {
+					// If they came in through an ad, we want to force them into
+					// the "hero" split test and save it into their session so
+					// that it always shows when they go back.
+					if (this.$route.query['utm_campaign'] === 'pmf_communities') {
+						configSaveOverride(configGuestHome, 'hero');
+					}
+
 					trackExperimentEngagement(configGuestHome);
 					this.split = configGuestHome.value;
 				} else {
