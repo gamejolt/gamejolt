@@ -1,7 +1,7 @@
 import { defineAsyncComponent } from '@vue/runtime-core';
 import { ref } from 'vue';
 import { setup } from 'vue-class-component';
-import { Options, Prop, Provide, Vue } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { shallowSetup } from '../../../utils/vue';
 import {
 	ContentFocus,
@@ -13,7 +13,11 @@ import {
 	useDrawerStore,
 } from '../../drawer/drawer-store';
 import { useScroller } from '../../scroll/scroller/scroller.vue';
-import { StickerLayerController, StickerLayerKey } from './layer-controller';
+import {
+	createStickerLayerController,
+	provideStickerLayer,
+	StickerLayerController,
+} from './layer-controller';
 
 @Options({
 	components: {
@@ -26,7 +30,6 @@ export default class AppStickerLayer extends Vue {
 
 	drawer = shallowSetup(() => useDrawerStore());
 
-	@Provide({ to: StickerLayerKey, reactive: true })
 	layer!: StickerLayerController;
 
 	scroller = setup(() => ref(useScroller()));
@@ -38,16 +41,17 @@ export default class AppStickerLayer extends Vue {
 	}
 
 	get isShowingDrawer() {
-		return this.layer.isShowingDrawer;
+		return this.layer.isShowingDrawer.value;
 	}
 
 	created() {
-		this.layer = new StickerLayerController(this.drawer);
+		this.layer = createStickerLayerController(this.drawer);
+		provideStickerLayer(this.layer);
 		registerStickerLayer(this.drawer, this.layer);
 	}
 
 	mounted() {
-		this.layer.scroller = this.scroller ?? null;
+		this.layer.scroller.value = this.scroller;
 
 		// We tell the ContentFocus service that content is unfocused when the
 		// mask is active.

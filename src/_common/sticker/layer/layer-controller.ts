@@ -1,27 +1,61 @@
+import { InjectionKey } from '@vue/runtime-core';
+import { computed, ComputedRef, inject, provide, ref, Ref, toRaw } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { DrawerStore } from '../../drawer/drawer-store';
 import { ScrollController } from '../../scroll/scroller/scroller.vue';
 import { StickerTargetController } from '../target/target-controller';
 import AppStickerTarget from '../target/target.vue';
 
-export const StickerLayerKey = Symbol('sticker-layer');
+const StickerLayerKey: InjectionKey<StickerLayerController> = Symbol('sticker-layer');
 
-export class StickerLayerController {
-	relativeScrollTop = 0;
-	scroller: null | ScrollController = null;
-	targets: AppStickerTarget[] = [];
-	hoveredTarget: null | AppStickerTarget = null;
-	rects = new WeakMap<AppStickerTarget, StickerLayerTargetRect>();
+export type StickerLayerController = {
+	relativeScrollTop: Ref<number>;
+	scroller: Ref<ScrollController | null>;
 
-	constructor(public readonly drawer: DrawerStore) {}
+	targets: Ref<AppStickerTarget[]>;
+	hoveredTarget: Ref<AppStickerTarget | null>;
+	rects: Ref<WeakMap<AppStickerTarget, StickerLayerTargetRect>>;
 
-	get isActive(): boolean {
-		return this.drawer.activeLayer.value === this;
-	}
+	// isActive: ComputedRef<boolean>;
+	isShowingDrawer: ComputedRef<boolean>;
+	drawer: DrawerStore;
+};
 
-	get isShowingDrawer() {
-		return this.drawer.isDrawerOpen.value && !this.drawer.hideDrawer.value && this.isActive;
-	}
+export function createStickerLayerController(drawer: DrawerStore) {
+	const relativeScrollTop = ref(0);
+	const scroller = ref<ScrollController | null>(null);
+
+	const targets = ref<AppStickerTarget[]>([]);
+	const hoveredTarget = ref<AppStickerTarget | null>(null);
+	const rects = ref(new WeakMap<AppStickerTarget, StickerLayerTargetRect>());
+
+	const _isActive = computed<boolean>(() => {
+		return toRaw(drawer.activeLayer.value) === toRaw(c);
+	});
+
+	const isShowingDrawer = computed(() => {
+		return drawer.isDrawerOpen.value && !drawer.hideDrawer.value && _isActive.value;
+	});
+
+	const c: StickerLayerController = {
+		relativeScrollTop,
+		scroller,
+		targets,
+		hoveredTarget,
+		rects,
+		// isActive,
+		isShowingDrawer,
+		drawer,
+	};
+	return c;
+}
+
+export function provideStickerLayer(controller?: StickerLayerController | null) {
+	return provide(StickerLayerKey, controller);
+}
+
+export function useStickerLayer() {
+	return inject(StickerLayerKey) || null;
 }
 
 export class StickerLayerTargetRect {
@@ -39,7 +73,7 @@ export function registerStickerTarget(
 	targetController: StickerTargetController
 ) {
 	targetController.layer.value = controller;
-	controller.targets.push(target);
+	controller.targets.value.push(target);
 }
 
 export function unregisterStickerTarget(
@@ -48,11 +82,12 @@ export function unregisterStickerTarget(
 	targetController: StickerTargetController
 ) {
 	const { targets, hoveredTarget } = controller;
+	const rawTarget = toRaw(target);
 
 	targetController.layer.value = null;
-	arrayRemove(targets, i => i === target);
-	if (hoveredTarget === target) {
-		controller.hoveredTarget = null;
+	arrayRemove(targets.value, i => toRaw(i) === rawTarget);
+	if (toRaw(hoveredTarget.value) === rawTarget) {
+		controller.hoveredTarget.value = null;
 	}
 }
 
@@ -61,8 +96,8 @@ export function calculateStickerTargetRects(
 	scrollLeft: number,
 	scrollTop: number
 ) {
-	controller.rects = new WeakMap(
-		controller.targets.map(target => {
+	controller.rects.value = new WeakMap(
+		controller.targets.value.map(target => {
 			const { x, y, width, height } = target.$el.getBoundingClientRect();
 
 			// We need to add this scroll distance since getBoundingClientRect()
@@ -81,7 +116,7 @@ export function getRectForStickerTarget(
 	{ rects }: StickerLayerController,
 	target: AppStickerTarget
 ) {
-	return rects.get(target);
+	return rects.value.get(target);
 }
 
 export function getCollidingStickerTarget(
@@ -89,8 +124,8 @@ export function getCollidingStickerTarget(
 	pointerX: number,
 	pointerY: number
 ) {
-	return targets.find(i => {
-		const rect = rects.get(i);
+	return targets.value.find(i => {
+		const rect = rects.value.get(i);
 		if (!rect) {
 			return false;
 		}

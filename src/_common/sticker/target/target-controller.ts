@@ -69,7 +69,7 @@ export function createStickerTargetController(
 			}
 
 			return Boolean(
-				_shouldShow.value || _parent?.shouldShow.value || layer.value?.isShowingDrawer
+				_shouldShow.value || _parent?.shouldShow.value || layer.value?.isShowingDrawer.value
 			);
 		},
 		set: value => {

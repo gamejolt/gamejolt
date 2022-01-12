@@ -1,6 +1,6 @@
 <script lang="ts">
 import { nextTick, watch } from 'vue';
-import { Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { sleep } from '../../../utils/utils';
 import { shallowSetup } from '../../../utils/vue';
 import { Api } from '../../api/api.service';
@@ -9,9 +9,8 @@ import AppScrollInview, { ScrollInviewConfig } from '../../scroll/inview/inview.
 import {
 	getRectForStickerTarget,
 	registerStickerTarget,
-	StickerLayerController,
-	StickerLayerKey,
 	unregisterStickerTarget,
+	useStickerLayer,
 } from '../layer/layer-controller';
 import { StickerPlacement } from '../placement/placement.model';
 import AppStickerReactions from '../reactions/reactions.vue';
@@ -35,8 +34,7 @@ export default class AppStickerTarget extends Vue {
 
 	drawerStore = shallowSetup(() => useDrawerStore());
 
-	@Inject({ from: StickerLayerKey })
-	layer!: StickerLayerController;
+	layer = shallowSetup(() => useStickerLayer()!);
 
 	declare $el: HTMLDivElement;
 	readonly InviewConfig = InviewConfig;
