@@ -18,8 +18,8 @@ class Wrapper extends BaseForm<ForumPost> {}
 	},
 })
 export default class FormForumPost extends mixins(Wrapper) {
-	@Prop(ForumTopic) topic!: ForumTopic;
-	@Prop(ForumPost) replyTo?: ForumPost;
+	@Prop(Object) topic!: ForumTopic;
+	@Prop(Object) replyTo?: ForumPost;
 
 	modelClass = ForumPost;
 

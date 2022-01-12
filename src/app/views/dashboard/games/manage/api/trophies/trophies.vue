@@ -44,78 +44,89 @@
 					:items="groupedTrophies[difficulty]"
 					:active-item="activeItem[difficulty]"
 					:is-adding="isAdding[difficulty]"
+					is-draggable
 					@activate="activeItem[difficulty] = $event"
 				>
-					<app-card-list-draggable @change="saveTrophySort(difficulty, $event)">
-						<app-card-list-item
-							v-for="trophy of groupedTrophies[difficulty]"
-							:id="`trophy-container-${trophy.id}`"
-							:key="trophy.id"
-							:item="trophy"
-						>
-							<div class="row">
-								<div class="col-xs-6 col-xs-offset-3 col-sm-2 col-sm-offset-0">
-									<app-trophy-thumbnail :trophy="trophy" no-highlight />
+					<app-card-list-draggable
+						item-key="id"
+						@change="saveTrophySort(difficulty, $event)"
+					>
+						<template #item="{ element: trophy }">
+							<app-card-list-item
+								:id="`trophy-container-${trophy.id}`"
+								:item="trophy"
+							>
+								<div class="row">
+									<div class="col-xs-6 col-xs-offset-3 col-sm-2 col-sm-offset-0">
+										<app-trophy-thumbnail :trophy="trophy" no-highlight />
 
-									<br class="visible-xs" />
-								</div>
-								<div class="col-xs-12 col-sm-10">
-									<a class="card-remove" @click.stop="removeTrophy(trophy)">
-										<app-jolticon icon="remove" />
-									</a>
+										<br class="visible-xs" />
+									</div>
+									<div class="col-xs-12 col-sm-10">
+										<a class="card-remove" @click.stop="removeTrophy(trophy)">
+											<app-jolticon icon="remove" />
+										</a>
 
-									<div class="card-stats">
-										<div class="stat-big">
-											<div class="stat-big-label">
-												<translate>
-													dash.games.trophies.trophy_id_label
-												</translate>
-											</div>
-											<div class="stat-big-digit">
-												{{ trophy.id }}
+										<div class="card-stats">
+											<div class="stat-big">
+												<div class="stat-big-label">
+													<translate>
+														dash.games.trophies.trophy_id_label
+													</translate>
+												</div>
+												<div class="stat-big-digit">
+													{{ trophy.id }}
+												</div>
 											</div>
 										</div>
-									</div>
 
-									<div class="card-title">
-										<h5>{{ trophy.title }}</h5>
-									</div>
+										<div class="card-title">
+											<h5>{{ trophy.title }}</h5>
+										</div>
 
-									<div class="card-content">
-										{{ trophy.description }}
-									</div>
+										<div class="card-content">
+											{{ trophy.description }}
+										</div>
 
-									<div v-if="!trophy.visible || trophy.secret" class="card-meta">
-										<span
-											v-if="!trophy.visible"
-											v-app-tooltip="
-												$gettext(`dash.games.trophies.hidden_tooltip`)
-											"
-											class="tag tag-notice"
+										<div
+											v-if="!trophy.visible || trophy.secret"
+											class="card-meta"
 										>
-											<translate>dash.games.trophies.hidden_tag</translate>
-										</span>
-										<span
-											v-if="trophy.secret"
-											v-app-tooltip="
-												$gettext(`dash.games.trophies.secret_tooltip`)
-											"
-											class="tag"
-										>
-											<translate>dash.games.trophies.secret_tag</translate>
-										</span>
+											<span
+												v-if="!trophy.visible"
+												v-app-tooltip="
+													$gettext(`dash.games.trophies.hidden_tooltip`)
+												"
+												class="tag tag-notice"
+											>
+												<translate>
+													dash.games.trophies.hidden_tag
+												</translate>
+											</span>
+											<span
+												v-if="trophy.secret"
+												v-app-tooltip="
+													$gettext(`dash.games.trophies.secret_tooltip`)
+												"
+												class="tag"
+											>
+												<translate>
+													dash.games.trophies.secret_tag
+												</translate>
+											</span>
+										</div>
 									</div>
 								</div>
-							</div>
 
-							<template #body>
-								<form-game-trophy
-									:game="game"
-									:model="trophy"
-									@submit="onTrophyEdited"
-								/>
-							</template>
-						</app-card-list-item>
+								<template #body>
+									<form-game-trophy
+										:game="game"
+										:model="trophy"
+										@submit="onTrophyEdited"
+									/>
+								</template>
+							</app-card-list-item>
+						</template>
 					</app-card-list-draggable>
 
 					<app-card-list-add

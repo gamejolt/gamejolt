@@ -8,6 +8,6 @@ import { Community } from '../../community.model';
 	},
 })
 export default class AppCommunityThumbnailImg extends Vue {
-	@Prop(Community)
+	@Prop(Object)
 	community!: Community;
 }

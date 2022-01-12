@@ -13,7 +13,7 @@ import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verif
 	},
 })
 export default class AppGameListItem extends Vue {
-	@Prop(Game)
+	@Prop(Object)
 	game!: Game;
 
 	@Prop(String)

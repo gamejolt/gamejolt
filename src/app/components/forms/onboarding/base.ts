@@ -7,7 +7,7 @@ export default abstract class OnboardingComponent
 	extends mixins(BaseForm)
 	implements FormOnSubmitSuccess
 {
-	@Prop(User)
+	@Prop(Object)
 	user!: User;
 
 	@Prop(Boolean)

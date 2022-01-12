@@ -1,9 +1,10 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
 import { AppSocialFacebookLike } from '../../../../_common/social/facebook/like/like';
 import { AppSocialTwitterShare } from '../../../../_common/social/twitter/share/share';
-import { AppState, AppStore } from '../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import socialImage from './social.png';
 
@@ -22,8 +23,11 @@ function getRandomInt(min: number, max: number) {
 	},
 })
 export default class RouteLandingRedlight extends BaseRouteComponent {
-	@AppState
-	user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	readonly slogans = [
 		`Drive indie traffic to your AAA games`,

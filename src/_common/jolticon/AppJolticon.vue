@@ -1,4 +1,20 @@
-<script lang="ts" src="./jolticon"></script>
+<script lang="ts" setup>
+defineProps({
+	icon: {
+		type: String,
+		required: true,
+	},
+	big: {
+		type: Boolean,
+	},
+	highlight: {
+		type: Boolean,
+	},
+	notice: {
+		type: Boolean,
+	},
+});
+</script>
 
 <template>
 	<span

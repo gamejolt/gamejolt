@@ -1,4 +1,5 @@
 import { parse } from 'qs';
+import { reactive } from 'vue';
 import { buildUseStore, VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
 import { Api } from '../../_common/api/api.service';
 import { Environment } from '../../_common/environment/environment.service';
@@ -6,35 +7,20 @@ import { GameBuild } from '../../_common/game/build/build.model';
 import { Game } from '../../_common/game/game.model';
 import { GamePackage } from '../../_common/game/package/package.model';
 import { Meta } from '../../_common/meta/meta-service';
-import {
-	Actions as AppActions,
-	AppStore,
-	appStore,
-	Mutations as AppMutations,
-} from '../../_common/store/app-store';
-import { ThemeActions, ThemeMutations, ThemeStore } from '../../_common/theme/theme.store';
 
-export type Actions = AppActions &
-	ThemeActions & {
-		bootstrap: undefined;
-	};
+export type Actions = {
+	bootstrap: undefined;
+};
 
-export type Mutations = AppMutations &
-	ThemeMutations & {
-		_bootstrap: any;
-	};
+export type Mutations = {
+	_bootstrap: any;
+};
 
 @VuexModule({
 	store: true,
-	modules: {
-		app: appStore,
-		theme: new ThemeStore(),
-	},
+	modules: {},
 })
 export class Store extends VuexStore<Store, Actions, Mutations> {
-	app!: AppStore;
-	theme!: ThemeStore;
-
 	game: Game | null = null;
 	package: GamePackage | null = null;
 	build: GameBuild | null = null;
@@ -118,5 +104,5 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 }
 
-export const store = new Store();
+export const store = reactive(new Store()) as Store;
 export const useStore = buildUseStore<Store>();

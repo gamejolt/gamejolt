@@ -1,6 +1,5 @@
+import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import { propOptional, propRequired } from '../../../../utils/vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
@@ -10,7 +9,8 @@ import AppGamePackageCard from '../../../../_common/game/package/card/card.vue';
 import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
 import { KeyGroup } from '../../../../_common/key-group/key-group.model';
 import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
-import { store, Store } from '../../../store/index';
+import { useCommonStore } from '../../../../_common/store/common-store';
+import { useThemeStore } from '../../../../_common/theme/theme.store';
 
 const ClaimGameThemeKey = 'claim-game';
 
@@ -26,14 +26,18 @@ export default class AppKeyGame extends Vue {
 	@Prop({ required: true })
 	payload!: any;
 
-	@Prop(propRequired(String))
+	@Prop({ type: String, required: true })
 	loginUrl!: string;
 
-	@Prop(propOptional(String))
+	@Prop(String)
 	accessKey?: string;
 
-	@State
-	app!: Store['app'];
+	commonStore = setup(() => useCommonStore());
+	themeStore = setup(() => useThemeStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	showingThanks = false;
 	isClaimOnly = false;
@@ -80,12 +84,12 @@ export default class AppKeyGame extends Vue {
 	}
 
 	unmounted() {
-		store.commit('theme/clearPageTheme', ClaimGameThemeKey);
+		this.themeStore.clearPageTheme(ClaimGameThemeKey);
 	}
 
 	private setPageTheme() {
 		const theme = this.game.theme ?? null;
-		store.commit('theme/setPageTheme', {
+		this.themeStore.setPageTheme({
 			key: ClaimGameThemeKey,
 			theme,
 		});

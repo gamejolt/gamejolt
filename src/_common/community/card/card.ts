@@ -1,5 +1,4 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../utils/vue';
 import { trackGotoCommunity } from '../../analytics/analytics.service';
 import AppMediaItemBackdrop from '../../media-item/backdrop/backdrop.vue';
 import AppCommunityCardBase from '../card-base/card-base.vue';
@@ -14,10 +13,10 @@ import AppCommunityThumbnailImg from '../thumbnail/img/img.vue';
 	},
 })
 export default class AppCommunityCard extends Vue {
-	@Prop(propRequired(Community)) community!: Community;
-	@Prop(propOptional(Boolean, false)) elevate!: boolean;
-	@Prop(propOptional(Boolean, true)) allowEdit!: boolean;
-	@Prop(propOptional(Boolean, false)) trackGoto!: boolean;
+	@Prop({ type: Object, required: true }) community!: Community;
+	@Prop({ type: Boolean, default: false }) elevate!: boolean;
+	@Prop({ type: Boolean, default: true }) allowEdit!: boolean;
+	@Prop({ type: Boolean, default: false }) trackGoto!: boolean;
 
 	trackGotoCommunity() {
 		if (this.trackGoto) {

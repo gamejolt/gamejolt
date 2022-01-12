@@ -1,7 +1,7 @@
 import { showErrorGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { Payload } from '../../../../_common/payload/payload-service';
-import { appStore } from '../../../../_common/store/app-store';
+import { commonStore } from '../../../../_common/store/common-store';
 import { Translate } from '../../../../_common/translate/translate.service';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
 import { User } from '../../../../_common/user/user.model';
@@ -119,7 +119,7 @@ export class UserFriendshipHelper {
 	}
 
 	static async removeFriend(friendship: UserFriendship) {
-		const them = friendship.getThem(appStore.state.user!);
+		const them = friendship.getThem(commonStore.user.value!);
 
 		const confirmResult = await ModalConfirm.show(
 			Translate.$gettextInterpolate(`Remove @%{ username } as a friend?`, {

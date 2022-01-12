@@ -26,9 +26,9 @@ export default class AppCodemirror extends Vue {
 		this._options = Object.assign(defaultOptions, this.options);
 
 		if (this._options.mode === 'css') {
-			await import(/* webpackChunkName: "codemirror" */ 'codemirror/mode/css/css.js' as any);
+			await import('codemirror/mode/css/css.js' as any);
 		} else if (this._options.mode === 'gfm') {
-			await import(/* webpackChunkName: "codemirror" */ 'codemirror/mode/gfm/gfm.js' as any);
+			await import('codemirror/mode/gfm/gfm.js' as any);
 		}
 
 		// Codemirror doesn't work in SSR, so bootstrap it in mounted().

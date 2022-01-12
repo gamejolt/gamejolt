@@ -1,5 +1,5 @@
-import { reactive } from 'vue';
-import { WithAppStore } from '../store/app-store';
+import { reactive, unref, watch } from 'vue';
+import { CommonStore } from '../store/common-store';
 import { ConnectionReconnect } from './reconnect-service';
 
 class ConnectionService {
@@ -18,7 +18,7 @@ class ConnectionService {
 
 export const Connection = reactive(new ConnectionService()) as ConnectionService;
 
-export function initConnectionService(store: WithAppStore) {
+export function initConnectionService({ commonStore: { error } }: { commonStore: CommonStore }) {
 	if (import.meta.env.SSR) {
 		return;
 	}
@@ -31,8 +31,8 @@ export function initConnectionService(store: WithAppStore) {
 	Connection.isDeviceOffline = !window.navigator.onLine;
 
 	// The error state gets set on the store globally.
-	store.watch(
-		state => state.app.error,
+	watch(
+		() => unref(error),
 		error => {
 			_setRequestFailure(error === 'offline');
 		}

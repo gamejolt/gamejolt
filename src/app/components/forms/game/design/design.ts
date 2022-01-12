@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { mixins, Options, Watch } from 'vue-property-decorator';
 import AppEditableOverlay from '../../../../../_common/editable-overlay/editable-overlay.vue';
 import AppFormControlTheme from '../../../../../_common/form-vue/controls/AppFormControlTheme.vue';
@@ -5,7 +6,7 @@ import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
 import { DefaultTheme } from '../../../../../_common/theme/theme.model';
-import { ThemeMutation, ThemeState, ThemeStore } from '../../../../../_common/theme/theme.store';
+import { useThemeStore } from '../../../../../_common/theme/theme.store';
 import { GameThumbnailModal } from '../../../game/thumbnail-modal/thumbnail-modal.service';
 import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
 
@@ -23,15 +24,14 @@ export default class FormGameDesign extends mixins(Wrapper) {
 	modelClass = Game as any;
 	saveMethod = '$saveDesign' as const;
 
-	@ThemeState userTheme!: ThemeStore['userTheme'];
-	@ThemeMutation setFormTheme!: ThemeStore['setFormTheme'];
+	themeStore = setup(() => useThemeStore());
 
 	get hasThumbnailError() {
 		return this.hasCustomError('thumbnail');
 	}
 
 	unmounted() {
-		this.setFormTheme(null);
+		this.themeStore.setFormTheme(null);
 	}
 
 	showEditThumbnail() {
@@ -50,6 +50,8 @@ export default class FormGameDesign extends mixins(Wrapper) {
 	onThemeChanged() {
 		// Default theme would be the user theme. Don't want to fallback to page theme otherwise
 		// when clearing theme it'll show the page theme.
-		this.setFormTheme(this.formModel.theme ?? this.userTheme ?? DefaultTheme);
+		this.themeStore.setFormTheme(
+			this.formModel.theme ?? this.themeStore.userTheme ?? DefaultTheme
+		);
 	}
 }

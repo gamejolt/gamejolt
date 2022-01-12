@@ -1,9 +1,9 @@
 import { ref } from 'vue';
 import { setup } from 'vue-class-component';
-import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
-import { propRequired } from '../../../utils/vue';
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { shallowSetup } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
-import { DrawerStore, DrawerStoreKey, setDrawerOpen } from '../../drawer/drawer-store';
+import { setDrawerOpen, useDrawerStore } from '../../drawer/drawer-store';
 import { AppObserveDimensions } from '../../observe-dimensions/observe-dimensions.directive';
 import { Scroll } from '../../scroll/scroll.service';
 import { useScroller } from '../../scroll/scroller/scroller.vue';
@@ -25,10 +25,9 @@ import AppStickerLayerPlacementMaskTarget from './placement-mask-target.vue';
 	},
 })
 export default class AppStickerLayerPlacementMask extends Vue {
-	@Prop(propRequired(StickerLayerController)) layer!: StickerLayerController;
+	@Prop({ type: Object, required: true }) layer!: StickerLayerController;
 
-	@Inject({ from: DrawerStoreKey })
-	drawer!: DrawerStore;
+	drawer = shallowSetup(() => useDrawerStore());
 
 	hasCalculated = false;
 	width = 0;
@@ -37,6 +36,14 @@ export default class AppStickerLayerPlacementMask extends Vue {
 
 	get viewbox() {
 		return `0 0 ${this.width} ${this.height}`;
+	}
+
+	get isDragging() {
+		return this.drawer.isDragging.value;
+	}
+
+	get sticker() {
+		return this.drawer.sticker.value;
 	}
 
 	onDimensionsChange([

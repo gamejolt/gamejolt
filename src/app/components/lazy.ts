@@ -2,28 +2,28 @@ import { defineAsyncComponent } from '@vue/runtime-core';
 import AppActivityFeedPlaceholder from './activity/feed/placeholder/placeholder.vue';
 
 export async function GridClientLazy() {
-	return (await import(/* webpackChunkName: "grid" */ './grid/client.service')).GridClient;
+	return (await import('./grid/client.service')).GridClient;
 }
 
-export const ChatClientLazy = () => import(/* webpackChunkName: "chat" */ './chat/client');
+export const ChatClientLazy = () => import('./chat/client');
 
 export const AppAuthJoinLazy = defineAsyncComponent(
-	() => import(/* webpackChunkName: "authJoin" */ '../../_common/auth/join/join.vue')
+	() => import('../../_common/auth/join/join.vue')
 );
 
 export const AppCommentWidgetLazy = defineAsyncComponent(
-	() => import(/* webpackChunkName: "commentWidget" */ '../../_common/comment/widget/widget.vue')
+	() => import('../../_common/comment/widget/widget.vue')
 );
 
 export const FormCommentLazy = defineAsyncComponent(
-	() => import(/* webpackChunkName: "commentWidget" */ '../../_common/comment/add/add.vue')
+	() => import('../../_common/comment/add/add.vue')
 );
 
 export const AppActivityFeedLazy = defineAsyncComponent({
-	loader: () => import(/* webpackChunkName: "activityFeed" */ './activity/feed/feed.vue'),
+	loader: () => import('./activity/feed/feed.vue'),
 	loadingComponent: AppActivityFeedPlaceholder,
 });
 
 export const AppVideoPlayerShakaLazy = defineAsyncComponent(
-	() => import(/* webpackChunkName: "video" */ '../../_common/video/player/shaka.vue')
+	() => import('../../_common/video/player/shaka.vue')
 );

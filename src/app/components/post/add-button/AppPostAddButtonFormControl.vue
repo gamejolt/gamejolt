@@ -1,11 +1,10 @@
 <script lang="ts" setup>
-import { toRefs } from 'vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
 import { validateMaxLength } from '../../../../_common/form-vue/validators';
-import { useAppStore } from '../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 
-const { user } = toRefs(useAppStore());
+const { user } = useCommonStore();
 </script>
 
 <template>

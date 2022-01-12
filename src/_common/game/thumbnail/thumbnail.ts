@@ -1,16 +1,15 @@
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import AppGamePlaylistAddToWidget from '../../../app/components/game-playlist/add-to-widget/add-to-widget.vue';
 import AppGameCompatIcons from '../../../app/components/game/compat-icons/compat-icons.vue';
 import AppGameFollowWidget from '../../../app/components/game/follow-widget/follow-widget.vue';
 import AppGameModLinks from '../../../app/components/game/mod-links/mod-links.vue';
-import { propOptional, propRequired } from '../../../utils/vue';
 import { formatCurrency } from '../../filters/currency';
 import AppPopper from '../../popper/popper.vue';
 import { Screen } from '../../screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '../../scroll/inview/inview.vue';
 import { SettingAnimatedThumbnails } from '../../settings/settings.service';
-import { AppStore } from '../../store/app-store';
+import { useCommonStore } from '../../store/common-store';
 import AppUserCardHover from '../../user/card/hover/hover.vue';
 import AppUserAvatarImg from '../../user/user-avatar/img/img.vue';
 import AppUserVerifiedTick from '../../user/verified-tick/verified-tick.vue';
@@ -34,12 +33,16 @@ const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height}px` });
 	},
 })
 export default class AppGameThumbnail extends Vue {
-	@Prop(propRequired(Object)) game!: Game;
-	@Prop(propOptional(String)) linkTo?: string;
-	@Prop(propOptional(Boolean, false)) hidePricing!: boolean;
-	@Prop(propOptional(Boolean, false)) hideControls!: boolean;
+	@Prop({ type: Object, required: true }) game!: Game;
+	@Prop(String) linkTo?: string;
+	@Prop({ type: Boolean, default: false }) hidePricing!: boolean;
+	@Prop({ type: Boolean, default: false }) hideControls!: boolean;
 
-	@State app!: AppStore;
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	isBootstrapped = import.meta.env.SSR;
 	isHydrated = import.meta.env.SSR;

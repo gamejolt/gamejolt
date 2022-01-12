@@ -9,9 +9,9 @@ import { LocalDbPackage } from '../../local-db/package/package.model';
 export default class AppClientPackageCardMeta extends Vue {
 	@ClientLibraryState packagesById!: ClientLibraryStore['packagesById'];
 
-	@Prop(Game) game!: Game;
-	@Prop(GamePackage) package!: GamePackage;
-	@Prop(GamePackageCardModel) card!: GamePackageCardModel;
+	@Prop(Object) game!: Game;
+	@Prop(Object) package!: GamePackage;
+	@Prop(Object) card!: GamePackageCardModel;
 
 	get localPackage(): LocalDbPackage | undefined {
 		return this.packagesById[this.package.id];

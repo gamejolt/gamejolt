@@ -14,7 +14,7 @@ export default class AppFormGameDescriptionTags extends Vue {
 	@Prop(String)
 	text!: string;
 
-	@Prop(ContentDocument)
+	@Prop(Object)
 	content!: ContentDocument;
 
 	get documents() {

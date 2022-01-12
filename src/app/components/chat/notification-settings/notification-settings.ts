@@ -1,5 +1,4 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propRequired } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 
@@ -9,8 +8,8 @@ import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 	},
 })
 export default class AppChatNotificationSettings extends Vue {
-	@Prop(propRequired(Number)) roomId!: number;
-	@Prop(propRequired(Boolean)) isPmRoom!: boolean;
+	@Prop({ type: Number, required: true }) roomId!: number;
+	@Prop({ type: Boolean, required: true }) isPmRoom!: boolean;
 
 	isLoadingNotificationSettings = false;
 	notificationLevel = '';

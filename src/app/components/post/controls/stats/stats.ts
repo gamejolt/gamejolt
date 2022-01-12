@@ -1,7 +1,8 @@
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
-import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 
 @Options({
@@ -10,10 +11,14 @@ import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 	},
 })
 export default class AppPostControlsStats extends Vue {
-	@Prop({ type: FiresidePost, required: true })
+	@Prop({ type: Object, required: true })
 	post!: FiresidePost;
 
-	@AppState user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	readonly formatNumber = formatNumber;
 

@@ -11,6 +11,7 @@ import {
 	reactive,
 	ref,
 	Ref,
+	toRefs,
 } from 'vue';
 import { useRouter } from 'vue-router';
 import { arrayRemove, arrayUnique } from '../../utils/array';
@@ -53,7 +54,7 @@ export interface FormController<T = any> {
 	_groups: FormGroupController[];
 	_onControlChanged: () => void;
 	_validationToken: null | CancelToken;
-	_initLazy: (overrides: Partial<CreateFormOptions<T>>) => void;
+	_override: (overrides: Partial<CreateFormOptions<T>>) => void;
 }
 
 const Key: InjectionKey<FormController> = Symbol('form');
@@ -93,7 +94,7 @@ interface CreateFormOptions<T> {
 	onSubmit?: () => Promise<any>;
 	onSubmitSuccess?: (response: any) => void;
 	onSubmitError?: (response: any) => void;
-	onChange?: (formModel: any) => void;
+	onChange?: (formModel: Readonly<T>) => void;
 }
 
 export function createForm<T>({
@@ -144,7 +145,7 @@ export function createForm<T>({
 	 * have access to "this" inside the setup function. Don't ever call this in
 	 * your normal forms.
 	 */
-	function _initLazy(overrides: Partial<CreateFormOptions<T>>) {
+	function _override(overrides: Partial<CreateFormOptions<T>>) {
 		if (overrides.modelClass) {
 			modelClass = overrides.modelClass;
 		}
@@ -174,6 +175,14 @@ export function createForm<T>({
 		}
 		if (overrides.onSubmitSuccess) {
 			onSubmitSuccess = overrides.onSubmitSuccess;
+		}
+		if (overrides.onChange) {
+			// Preserve the original onChange and just add to it.
+			const _initialOnChange = onChange;
+			onChange = formModel => {
+				_initialOnChange?.(formModel);
+				overrides.onChange?.(formModel);
+			};
 		}
 	}
 
@@ -281,7 +290,7 @@ export function createForm<T>({
 
 	function _onControlChanged() {
 		changed.value = true;
-		onChange?.(formModel.value);
+		onChange?.(formModel.value as T);
 
 		// TODO(vue3): should we validate before calling the onChange or after?
 		validate();
@@ -385,7 +394,7 @@ export function createForm<T>({
 		_groups,
 		_onControlChanged,
 		_validationToken,
-		_initLazy,
+		_override,
 	}) as FormController<T>;
 
 	return c;
@@ -400,11 +409,22 @@ const props = defineProps({
 	},
 });
 
-provide(Key, props.controller);
+const emit = defineEmits({
+	/** @deprecated This is only here for old forms, use the controller's onChange callback instead */
+	changed: (_formModel: any) => true,
+});
+
+const { controller } = toRefs(props);
+
+controller.value._override({
+	onChange: formModel => emit('changed', formModel),
+});
+
+provide(Key, controller.value);
 
 // Check specifically false so that "null" is correctly shown as loaded.
-const isLoaded = computed(() => props.controller.isLoaded !== false);
-const isLoadedBootstrapped = computed(() => props.controller.isLoadedBootstrapped !== false);
+const isLoaded = computed(() => controller.value.isLoaded !== false);
+const isLoadedBootstrapped = computed(() => controller.value.isLoadedBootstrapped !== false);
 </script>
 
 <template>

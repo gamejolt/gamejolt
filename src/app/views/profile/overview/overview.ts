@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
@@ -34,6 +35,7 @@ import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/rou
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '../../../../_common/scroll/inview/inview.vue';
 import AppShareCard from '../../../../_common/share/card/card.vue';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
@@ -86,14 +88,17 @@ const FiresideScrollInviewConfig = new ScrollInviewConfig({
 	resolver: ({ route }) => Api.sendRequest('/web/profile/overview/@' + route.params.username),
 })
 export default class RouteProfileOverview extends BaseRouteComponent {
+	commonStore = setup(() => useCommonStore());
+
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;
 
 	@Inject({ from: CommentStoreManagerKey })
 	commentManager!: CommentStoreManager;
 
-	@State
-	app!: Store['app'];
+	get app() {
+		return this.commonStore;
+	}
 
 	@State
 	grid!: Store['grid'];

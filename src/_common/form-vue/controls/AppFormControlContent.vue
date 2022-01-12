@@ -3,7 +3,11 @@ import { PropType, toRef } from 'vue';
 import { ContentContext } from '../../content/content-context';
 import AppContentEditor from '../../content/content-editor/content-editor.vue';
 import { ContentRules } from '../../content/content-editor/content-rules';
-import { createFormControl, defineFormControlProps } from '../AppFormControl.vue';
+import {
+	createFormControl,
+	defineFormControlEmits,
+	defineFormControlProps,
+} from '../AppFormControl.vue';
 import { useFormGroup } from '../AppFormGroup.vue';
 
 const props = defineProps({
@@ -54,6 +58,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
+	...defineFormControlEmits(),
 	focus: () => true,
 	blur: () => true,
 	submit: () => true,
@@ -61,7 +66,12 @@ const emit = defineEmits({
 });
 
 const group = useFormGroup()!;
-const c = createFormControl('', toRef(props, 'validators'));
+const c = createFormControl({
+	initialValue: '',
+	validators: toRef(props, 'validators'),
+	// eslint-disable-next-line vue/require-explicit-emits
+	onChange: val => emit('changed', val),
+});
 
 function onChange(value: string) {
 	c.applyValue(value);

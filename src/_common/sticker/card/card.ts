@@ -1,5 +1,4 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../utils/vue';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 import { Sticker } from '../sticker.model';
 
@@ -9,7 +8,7 @@ import { Sticker } from '../sticker.model';
 	},
 })
 export default class AppStickerCard extends Vue {
-	@Prop(propRequired(Sticker)) sticker!: Sticker;
-	@Prop(propOptional(String)) label!: string;
-	@Prop(propOptional(Boolean, false)) isNew!: boolean;
+	@Prop({ type: Object, required: true }) sticker!: Sticker;
+	@Prop({ type: String, default: undefined }) label?: string;
+	@Prop({ type: Boolean, default: false }) isNew!: boolean;
 }

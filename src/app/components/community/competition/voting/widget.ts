@@ -1,6 +1,6 @@
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { numberSort } from '../../../../../utils/array';
-import { propRequired } from '../../../../../utils/vue';
 import {
 	CommunityCompetition,
 	CompetitionPeriodVoting,
@@ -10,7 +10,7 @@ import { CommunityCompetitionEntryVote } from '../../../../../_common/community/
 import { CommunityCompetitionVotingCategory } from '../../../../../_common/community/competition/voting-category/voting-category.model';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../../_common/filters/number';
-import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import FormCommunityCompetitionVotingCast from '../../../forms/community/competition/voting/cast/cast.vue';
@@ -25,16 +25,19 @@ import FormCommunityCompetitionVotingCast from '../../../forms/community/competi
 	},
 })
 export default class AppCommunityCompetitionVotingWidget extends Vue {
-	@Prop(propRequired(CommunityCompetition)) competition!: CommunityCompetition;
-	@Prop(propRequired(CommunityCompetitionEntry)) entry!: CommunityCompetitionEntry;
-	@Prop(propRequired(Array)) votingCategories!: CommunityCompetitionVotingCategory[];
-	@Prop(propRequired(Array)) userVotes!: CommunityCompetitionEntryVote[];
-	@Prop(propRequired(Boolean)) isParticipant!: boolean;
-	@Prop(propRequired(Boolean)) isArchived!: boolean;
-	@Prop(propRequired(Boolean)) isBlocked!: boolean;
+	@Prop({ type: Object, required: true }) competition!: CommunityCompetition;
+	@Prop({ type: Object, required: true }) entry!: CommunityCompetitionEntry;
+	@Prop({ type: Array, required: true }) votingCategories!: CommunityCompetitionVotingCategory[];
+	@Prop({ type: Array, required: true }) userVotes!: CommunityCompetitionEntryVote[];
+	@Prop({ type: Boolean, required: true }) isParticipant!: boolean;
+	@Prop({ type: Boolean, required: true }) isArchived!: boolean;
+	@Prop({ type: Boolean, required: true }) isBlocked!: boolean;
 
-	@AppState
-	user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	moreVoteResultInfoVisible = false;
 

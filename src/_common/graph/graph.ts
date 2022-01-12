@@ -1,7 +1,8 @@
 import * as Chart from 'chart.js';
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { formatDate } from '../filters/date';
-import { ThemeState, ThemeStore } from '../theme/theme.store';
+import { useThemeStore } from '../theme/theme.store';
 
 // Try to match site styling.
 const fontFamily = `Nunito, 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif`;
@@ -96,7 +97,7 @@ export default class AppGraph extends Vue {
 	@Prop(Boolean)
 	backgroundVariant?: boolean;
 
-	@ThemeState theme?: ThemeStore['theme'];
+	themeStore = setup(() => useThemeStore());
 
 	chart: Chart = null as any;
 	graphData: any = {};
@@ -105,11 +106,11 @@ export default class AppGraph extends Vue {
 
 	get globalColors() {
 		let colors = ['#ffffff', '#ccff00', '#31d6ff', '#ff3fac', '#2f7f6f'];
-		if (this.theme) {
-			if (this.theme.custom) {
+		if (this.themeStore.theme) {
+			if (this.themeStore.theme.custom) {
 				colors = [
 					'#ffffff',
-					'#' + this.theme.darkHighlight_,
+					'#' + this.themeStore.theme.darkHighlight_,
 					'#31d6ff',
 					'#ff3fac',
 					'#2f7f6f',
@@ -117,9 +118,9 @@ export default class AppGraph extends Vue {
 			} else {
 				colors = [
 					'#ffffff',
-					'#' + this.theme.darkHighlight_,
-					'#' + this.theme.darkNotice_,
-					'#' + this.theme.darkBacklight_,
+					'#' + this.themeStore.theme.darkHighlight_,
+					'#' + this.themeStore.theme.darkNotice_,
+					'#' + this.themeStore.theme.darkBacklight_,
 					'#31d6ff',
 				];
 			}

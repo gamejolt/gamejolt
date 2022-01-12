@@ -1,5 +1,4 @@
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
-import { propRequired } from '../../../../../../../../utils/vue';
 import AppCardListItem from '../../../../../../../../_common/card/list/item/item.vue';
 import { CommunityChannel } from '../../../../../../../../_common/community/channel/channel.model';
 import { AppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
@@ -15,7 +14,7 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../view.st
 	},
 })
 export default class AppCommunitiesEditChannelListItem extends Vue {
-	@Prop(propRequired(CommunityChannel)) channel!: CommunityChannel;
+	@Prop({ type: Object, required: true }) channel!: CommunityChannel;
 
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;

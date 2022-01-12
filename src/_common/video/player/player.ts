@@ -1,6 +1,5 @@
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { AppVideoPlayerShakaLazy } from '../../../app/components/lazy';
-import { propOptional, propRequired } from '../../../utils/vue';
 import { formatNumber } from '../../filters/number';
 import { AppImgResponsive } from '../../img/responsive/responsive';
 import AppLoading from '../../loading/loading.vue';
@@ -96,13 +95,13 @@ export function createReadableTimestamp(time: number) {
 	},
 })
 export default class AppVideoPlayer extends Vue {
-	@Prop(propRequired(MediaItem)) mediaItem!: MediaItem;
-	@Prop(propRequired(Array)) manifests!: VideoSourceArray;
-	@Prop(propOptional(Boolean, false)) autoplay!: boolean;
-	@Prop(propOptional(Number, 0)) startTime!: number;
-	@Prop(propOptional(String, null)) context!: VideoPlayerControllerContext;
-	@Prop(propOptional(Number, 0)) viewCount!: number;
-	@Prop(propOptional(Boolean, false)) showVideoStats!: boolean;
+	@Prop({ type: Object, required: true }) mediaItem!: MediaItem;
+	@Prop({ type: Array, required: true }) manifests!: VideoSourceArray;
+	@Prop({ type: Boolean, default: false }) autoplay!: boolean;
+	@Prop({ type: Number, default: 0 }) startTime!: number;
+	@Prop({ type: String, default: null }) context!: VideoPlayerControllerContext;
+	@Prop({ type: Number, default: 0 }) viewCount!: number;
+	@Prop({ type: Boolean, default: false }) showVideoStats!: boolean;
 
 	player = new VideoPlayerController(this.manifests, this.context);
 	isHoveringControls = false;

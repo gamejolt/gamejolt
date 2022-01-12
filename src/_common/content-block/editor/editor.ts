@@ -19,9 +19,9 @@ const PreviewDebounce = 3000;
 	},
 })
 export default class AppContentBlockEditor extends Vue {
-	@Prop(Site) site!: Site;
+	@Prop(Object) site!: Site;
 	@Prop(String) windowId!: string;
-	@Prop(SiteContentBlock) contentBlock!: SiteContentBlock;
+	@Prop(Object) contentBlock!: SiteContentBlock;
 
 	isPreviewLoading = false;
 	private previewIndex = 0;

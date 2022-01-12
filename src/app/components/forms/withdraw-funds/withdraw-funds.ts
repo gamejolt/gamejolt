@@ -13,7 +13,7 @@ class Wrapper extends BaseForm<WithdrawFundsFormModel> {}
 
 @Options({})
 export default class FormWithdrawFunds extends mixins(Wrapper) implements FormOnSubmit {
-	@Prop(User) user!: User;
+	@Prop(Object) user!: User;
 	@Prop(String) paypalEmail!: string;
 	@Prop(Number) minAmount!: number;
 	@Prop(Number) withdrawableAmount!: number;

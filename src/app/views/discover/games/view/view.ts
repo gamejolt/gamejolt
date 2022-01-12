@@ -27,6 +27,7 @@ import {
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import { EventSubscription } from '../../../../../_common/system/event/event-topic';
+import { useThemeStore } from '../../../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { getTranslation } from '../../../../../_common/translate/translate.service';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
@@ -110,6 +111,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	@Inject({ from: CommentStoreManagerKey })
 	commentManager!: CommentStoreManager;
 
+	themeStore = setup(() => useThemeStore());
 	ads = setup(() => useAdsController());
 
 	@RouteStoreModule.State
@@ -227,7 +229,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	}
 
 	routeDestroyed() {
-		store.commit('theme/clearPageTheme', GameThemeKey);
+		this.themeStore.clearPageTheme(GameThemeKey);
 		this._releaseAdSettings();
 
 		this.ratingChange$?.close();
@@ -255,7 +257,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 
 	private setPageTheme() {
 		const theme = this.game?.theme ?? null;
-		store.commit('theme/setPageTheme', {
+		this.themeStore.setPageTheme({
 			key: GameThemeKey,
 			theme,
 		});

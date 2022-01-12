@@ -20,7 +20,7 @@ class Wrapper extends BaseForm<KeyGroup> {}
 export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnSubmitSuccess {
 	modelClass = KeyGroup;
 
-	@Prop(Game) game!: Game;
+	@Prop(Object) game!: Game;
 	@Prop(Array) packages!: GamePackage[];
 
 	readonly formatNumber = formatNumber;

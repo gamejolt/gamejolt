@@ -1,13 +1,12 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propRequired } from '../../../utils/vue';
 import AppStickerTarget from '../target/target';
 import { getRectForStickerTarget, StickerLayerController } from './layer-controller';
 import { getStickerLayerTargetBoundingBox } from './placement-mask-target';
 
 @Options({})
 export default class AppStickerLayerPlacementMaskItem extends Vue {
-	@Prop(propRequired()) target!: AppStickerTarget;
-	@Prop(propRequired(StickerLayerController)) layer!: StickerLayerController;
+	@Prop({ type: Object, required: true }) target!: AppStickerTarget;
+	@Prop({ type: Object, required: true }) layer!: StickerLayerController;
 
 	x = 0;
 	y = 0;

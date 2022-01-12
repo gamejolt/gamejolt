@@ -4,7 +4,7 @@ import { BaseModal } from '../../../../../_common/modal/base';
 
 @Options({})
 export default class AppGameDevStageConfirmModal extends mixins(BaseModal) {
-	@Prop(Game) game!: Game;
+	@Prop(Object) game!: Game;
 	@Prop(Number) stage!: number;
 
 	from = '';

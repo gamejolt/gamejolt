@@ -1,14 +1,15 @@
 import { transparentize } from 'polished';
 import { h } from 'vue';
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { DefaultTheme, Theme } from './theme.model';
-import { ThemeState, ThemeStore } from './theme.store';
+import { useThemeStore } from './theme.store';
 
 let inc = 0;
 
 @Options({})
 export class AppTheme extends Vue {
-	@Prop(Theme)
+	@Prop(Object)
 	theme!: Theme | null;
 
 	@Prop(Boolean)
@@ -17,21 +18,16 @@ export class AppTheme extends Vue {
 	@Prop(Boolean)
 	forceLight!: boolean;
 
-	@ThemeState
-	isDark!: ThemeStore['isDark'];
-
-	@ThemeState('theme')
-	storeTheme!: ThemeStore['theme'];
+	themeStore = setup(() => useThemeStore());
 
 	scopeId = ++inc;
 
 	render() {
 		const id = 'theme-' + this.scopeId;
-		// TODO(vue3): check
 		const selector = this.$slots.default ? '#' + id : ':root';
 		let styles = '';
 
-		const theme = this.theme ?? this.storeTheme ?? DefaultTheme;
+		const theme = this.theme ?? this.themeStore.theme ?? DefaultTheme;
 
 		function genVar(varname: string, value: string) {
 			return `
@@ -115,7 +111,7 @@ export class AppTheme extends Vue {
 			`;
 		}
 
-		if ((this.isDark && !this.forceLight) || this.forceDark) {
+		if ((this.themeStore.isDark && !this.forceLight) || this.forceDark) {
 			// Sync with the theme-dark() stylus mixin.
 			styles += `
 				${selector} {

@@ -1,5 +1,4 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { propRequired } from '../../../../../../utils/vue';
 import { CommunityCompetitionAward } from '../../../../../../_common/community/competition/award/award.model';
 import { CommunityCompetition } from '../../../../../../_common/community/competition/competition.model';
 import AppFormControlTextarea from '../../../../../../_common/form-vue/controls/AppFormControlTextarea.vue';
@@ -16,7 +15,7 @@ export default class FormCommunityCompetitionAward
 	extends mixins(Wrapper)
 	implements FormOnBeforeSubmit
 {
-	@Prop(propRequired(CommunityCompetition)) competition!: CommunityCompetition;
+	@Prop({ type: Object, required: true }) competition!: CommunityCompetition;
 
 	modelClass = CommunityCompetitionAward;
 

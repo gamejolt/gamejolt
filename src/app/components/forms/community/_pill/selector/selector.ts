@@ -1,10 +1,8 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbnail/img/img.vue';
 import AppCommunityVerifiedTick from '../../../../../../_common/community/verified-tick/verified-tick.vue';
-import AppJolticon from '../../../../../../_common/jolticon/jolticon.vue';
 import { Popper } from '../../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../../_common/popper/popper.vue';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
@@ -15,7 +13,6 @@ import { AppScrollHelper } from './scroll-helper/scroll-helper';
 		AppPopper,
 		AppCommunityThumbnailImg,
 		AppCommunityVerifiedTick,
-		AppJolticon,
 		AppScrollHelper,
 	},
 	directives: {
@@ -23,13 +20,13 @@ import { AppScrollHelper } from './scroll-helper/scroll-helper';
 	},
 })
 export default class AppFormsCommunityPillSelector extends Vue {
-	@Prop(propRequired(Array))
+	@Prop({ type: Array, required: true })
 	communities!: Community[];
 
-	@Prop(propOptional(Community, null))
+	@Prop({ type: Object, default: null })
 	initialCommunity!: Community | null;
 
-	@Prop(propOptional(Boolean, true))
+	@Prop({ type: Boolean, default: true })
 	withChannel!: boolean;
 
 	selectedCommunity: Community | null = null;

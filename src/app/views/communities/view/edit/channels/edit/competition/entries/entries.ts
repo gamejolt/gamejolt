@@ -7,7 +7,7 @@ import {
 } from '../../../../../../../../../_common/community/competition/competition.model';
 import { CommunityCompetitionEntry } from '../../../../../../../../../_common/community/competition/entry/entry.model';
 import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
-import AppIllustration from '../../../../../../../../../_common/illustration/illustration.vue';
+import AppIllustration from '../../../../../../../../../_common/illustration/AppIllustration.vue';
 import AppLoading from '../../../../../../../../../_common/loading/loading.vue';
 import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import AppPagination from '../../../../../../../../../_common/pagination/pagination.vue';

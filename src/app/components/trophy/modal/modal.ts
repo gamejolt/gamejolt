@@ -1,10 +1,10 @@
+import { setup } from 'vue-class-component';
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import { BaseModal } from '../../../../_common/modal/base';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { SiteTrophy } from '../../../../_common/site/trophy/trophy.model';
-import { AppStore } from '../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
@@ -28,11 +28,14 @@ import AppTrophyThumbnail from '../thumbnail/thumbnail.vue';
 	},
 })
 export default class AppTrophyModal extends mixins(BaseModal) {
-	@State
-	app!: AppStore;
-
 	@Prop(Object)
 	userTrophy!: UserBaseTrophy;
+
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	completionPercentage: number | null = null;
 	friends: User[] | null = null;

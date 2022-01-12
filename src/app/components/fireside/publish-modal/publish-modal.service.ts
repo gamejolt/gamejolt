@@ -31,9 +31,7 @@ export class FiresidePublishModal {
 		// Show a more complex modal for community options before publishing.
 		return await showModal<FiresidePublishModalResult>({
 			modalId: 'FiresidePublish',
-			component: defineAsyncComponent(
-				() => import(/* webpackChunkName: "FiresidePublishModal" */ './publish-modal.vue')
-			),
+			component: defineAsyncComponent(() => import('./publish-modal.vue')),
 			props: {
 				fireside,
 			},

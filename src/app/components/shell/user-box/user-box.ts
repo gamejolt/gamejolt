@@ -1,9 +1,9 @@
+import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { Store } from '../../../store/index';
 
 @Options({
 	components: {
@@ -14,7 +14,11 @@ import { Store } from '../../../store/index';
 	},
 })
 export default class AppShellUserBox extends Vue {
-	@State app!: Store['app'];
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	readonly formatNumber = formatNumber;
 }

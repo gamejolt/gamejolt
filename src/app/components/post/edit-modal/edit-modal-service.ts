@@ -17,9 +17,7 @@ export class PostEditModal {
 		options = options || {};
 		return await showModal<FiresidePost>({
 			modalId: 'PostEdit',
-			component: defineAsyncComponent(
-				() => import(/* webpackChunkName: "PostEditModal" */ './edit-modal.vue')
-			),
+			component: defineAsyncComponent(() => import('./edit-modal.vue')),
 			noBackdropClose: true,
 			noEscClose: true,
 			size: 'sm',

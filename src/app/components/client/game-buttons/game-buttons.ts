@@ -54,7 +54,7 @@ export default class AppClientGameButtons extends Vue {
 	@ClientLibraryAction
 	private installerRetry!: ClientLibraryStore['installerRetry'];
 
-	@Prop(Game)
+	@Prop(Object)
 	game!: Game;
 
 	@Prop(Boolean)

@@ -16,7 +16,7 @@ class Wrapper extends BaseForm<GameSketchfab> {}
 	},
 })
 export default class FormGameSketchfab extends mixins(Wrapper) implements FormOnSubmit {
-	@Prop(Game) game!: Game;
+	@Prop(Object) game!: Game;
 
 	readonly SKETCHFAB_FIELD_REGEX = SKETCHFAB_FIELD_VALIDATION_REGEX;
 

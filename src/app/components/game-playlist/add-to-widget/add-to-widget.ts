@@ -1,10 +1,10 @@
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { Game } from '../../../../_common/game/game.model';
 import AppPopper from '../../../../_common/popper/popper.vue';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { Store } from '../../../store/index';
 import AppGamePlaylistAddToPopover from '../add-to-popover/add-to-popover.vue';
 
 @Options({
@@ -18,7 +18,7 @@ import AppGamePlaylistAddToPopover from '../add-to-popover/add-to-popover.vue';
 	},
 })
 export default class AppGamePlaylistAddToWidget extends Vue {
-	@Prop(Game)
+	@Prop(Object)
 	game!: Game;
 
 	@Prop({ type: String, required: false, default: 'global' })
@@ -30,8 +30,11 @@ export default class AppGamePlaylistAddToWidget extends Vue {
 	@Prop(Boolean)
 	circle?: boolean;
 
-	@State
-	app!: Store['app'];
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	isShown = false;
 

@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { enforceLocation } from '../../../utils/router';
 import { Api } from '../../../_common/api/api.service';
@@ -10,9 +11,9 @@ import { $viewPost, FiresidePost } from '../../../_common/fireside/post/post-mod
 import { Meta } from '../../../_common/meta/meta-service';
 import { Registry } from '../../../_common/registry/registry.service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { useThemeStore } from '../../../_common/theme/theme.store';
 import { Translate } from '../../../_common/translate/translate.service';
 import { IntentService } from '../../components/intent/intent.service';
-import { store } from '../../store';
 import AppPostPagePlaceholder from './_page-placeholder/page-placeholder.vue';
 import AppPostPage from './_page/page.vue';
 
@@ -52,6 +53,8 @@ const PostThemeKey = 'post';
 	},
 })
 export default class RoutePost extends BaseRouteComponent {
+	themeStore = setup(() => useThemeStore());
+
 	post: FiresidePost | null = null;
 	communityNotifications: CommunityUserNotification[] = [];
 
@@ -133,12 +136,11 @@ export default class RoutePost extends BaseRouteComponent {
 			this.permalinkWatchDeregister = undefined;
 		}
 
-		store.commit('theme/clearPageTheme', PostThemeKey);
+		this.themeStore.clearPageTheme(PostThemeKey);
 	}
 
 	private setPageTheme() {
-		const theme = this.post ? this.post.game?.theme ?? this.post.user.theme : null;
-		store.commit('theme/setPageTheme', { key: PostThemeKey, theme });
+		this.themeStore.setPageTheme({ key: PostThemeKey, theme: this.theme });
 	}
 
 	onPostUpdated(post: FiresidePost) {

@@ -1,8 +1,8 @@
-import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../utils/vue';
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { shallowSetup } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
-import { DrawerStore, DrawerStoreKey, setDrawerOpen } from '../../drawer/drawer-store';
+import { setDrawerOpen, useDrawerStore } from '../../drawer/drawer-store';
 import { formatFuzzynumber } from '../../filters/fuzzynumber';
 import { LikersModal } from '../../likers/modal.service';
 import { Model } from '../../model/model.service';
@@ -19,16 +19,15 @@ import { CommentVote } from '../vote/vote-model';
 	},
 })
 export default class AppCommentControls extends Vue {
-	@Prop(propRequired(Model)) model!: Model;
-	@Prop(propRequired(Comment)) comment!: Comment;
-	@Prop(propOptional(Comment)) parent!: undefined | Comment;
-	@Prop(propOptional(Array, () => [])) children!: Comment[];
-	@Prop(propOptional(Boolean, false)) showReply!: boolean;
-	@Prop(propOptional(Boolean, false)) canReply!: boolean;
-	@Prop(propOptional(Boolean, false)) canPlaceStickers!: boolean;
+	@Prop({ type: Object, required: true }) model!: Model;
+	@Prop({ type: Object, required: true }) comment!: Comment;
+	@Prop({ type: Object, default: undefined }) parent?: Comment;
+	@Prop({ type: Array, default: () => [] }) children!: Comment[];
+	@Prop({ type: Boolean, default: false }) showReply!: boolean;
+	@Prop({ type: Boolean, default: false }) canReply!: boolean;
+	@Prop({ type: Boolean, default: false }) canPlaceStickers!: boolean;
 
-	@Inject({ from: DrawerStoreKey })
-	drawer!: DrawerStore;
+	drawer = shallowSetup(() => useDrawerStore());
 
 	readonly Screen = Screen;
 	readonly formatFuzzynumber = formatFuzzynumber;

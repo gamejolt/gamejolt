@@ -1,5 +1,5 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { findRequiredVueParent, propRequired } from '../../../../../utils/vue';
+import { findRequiredVueParent } from '../../../../../utils/vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import AppFormControlUploadTS from '../../../../../_common/form-vue/controls/upload/upload';
 import { CommonFormComponents } from '../../../../../_common/form-vue/form-common';
@@ -14,10 +14,10 @@ import FormFinancialsManagedAccount from './managed-account.vue';
 	},
 })
 export default class AppFinancialsManagedAccountDocument extends Vue {
-	@Prop(propRequired(String))
+	@Prop({ type: String, required: true })
 	namePrefix!: string;
 
-	@Prop(propRequired(String))
+	@Prop({ type: String, required: true })
 	type!: 'id' | 'additional';
 
 	parent: FormFinancialsManagedAccountTS = null as any;

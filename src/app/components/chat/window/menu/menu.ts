@@ -1,5 +1,4 @@
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
@@ -21,7 +20,7 @@ import { ChatRoomDetailsModal } from '../../room-details-modal/room-details-moda
 	},
 })
 export default class AppChatWindowMenu extends Vue {
-	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
+	@Prop({ type: Object, required: true }) room!: ChatRoom;
 
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;

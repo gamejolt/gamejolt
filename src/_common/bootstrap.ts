@@ -7,13 +7,14 @@ import { AppTrackEvent } from './analytics/track-event.directive';
 import AppButton from './button/button.vue';
 import { ensureConfig } from './config/config.service';
 import { initConnectionService } from './connection/connection-service';
-import AppJolticon from './jolticon/jolticon.vue';
+import AppJolticon from './jolticon/AppJolticon.vue';
 import AppLinkExternal from './link/external.vue';
 import AppLinkHelp from './link/help/help.vue';
 import { initMetaService } from './meta/meta-service';
 import { Payload } from './payload/payload-service';
 import { Referrer } from './referrer/referrer.service';
-import { SettingThemeAlwaysOurs, SettingThemeDark } from './settings/settings.service';
+import { commonStore, CommonStoreKey } from './store/common-store';
+import { createThemeStore, ThemeStoreKey } from './theme/theme.store';
 import { initTranslations } from './translate/translate.service';
 
 /**
@@ -23,17 +24,16 @@ import { initTranslations } from './translate/translate.service';
 export function bootstrapCommon(appComponent: Component, store: VuexStore, router?: Router) {
 	const app = import.meta.env.SSR ? createSSRApp(appComponent) : createApp(appComponent);
 
+	// Our global stores.
+	app.provide(CommonStoreKey, commonStore);
+	app.provide(ThemeStoreKey, createThemeStore({ commonStore }));
+
 	// Try to start loading this as soon as possible.
 	ensureConfig();
 
-	if (store.state.theme) {
-		store.commit('theme/setDark', SettingThemeDark.get());
-		store.commit('theme/setAlwaysOurs', SettingThemeAlwaysOurs.get());
-	}
-
-	initAnalytics(store);
-	Payload.init(store);
-	initConnectionService(store);
+	initAnalytics({ commonStore });
+	Payload.init({ commonStore });
+	initConnectionService({ commonStore });
 
 	if (router) {
 		initMetaService(router);

@@ -1,4 +1,5 @@
 import { defineAsyncComponent } from 'vue';
+import { setup } from 'vue-class-component';
 import { Options, Provide } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { router } from '..';
@@ -18,7 +19,7 @@ import {
 } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
-import { AppState, AppStore } from '../../../_common/store/app-store';
+import { useCommonStore } from '../../../_common/store/common-store';
 import { EventSubscription } from '../../../_common/system/event/event-topic';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppUserCard from '../../../_common/user/card/card.vue';
@@ -74,7 +75,11 @@ export class RouteActivityFeedController {
 	resolver: () => Api.sendRequest('/web/dash/home'),
 })
 export default class RouteActivityFeed extends BaseRouteComponent {
-	@AppState user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 	@State communities!: Store['communities'];
 	@State unreadActivityCount!: Store['unreadActivityCount'];
 	@LibraryModule.State developerCollection!: LibraryStore['developerCollection'];

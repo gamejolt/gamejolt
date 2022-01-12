@@ -1,5 +1,4 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { propRequired } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
 import { Game } from '../../../../_common/game/game.model';
@@ -19,7 +18,7 @@ import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 	},
 })
 export default class AppCommunityLinkGameModal extends mixins(BaseModal) {
-	@Prop(propRequired(Community)) community!: Community;
+	@Prop({ type: Object, required: true }) community!: Community;
 
 	page = 1;
 	isLoading = true;

@@ -17,7 +17,7 @@ import { GameExternalPackage } from '../external-package.model';
 	},
 })
 export default class AppGameExternalPackageCard extends Vue {
-	@Prop(GameExternalPackage)
+	@Prop(Object)
 	package!: GameExternalPackage;
 
 	showFullDescription = false;

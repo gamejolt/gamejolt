@@ -5,51 +5,23 @@ import { Environment } from '../_common/environment/environment.service';
 import { GameBuild } from '../_common/game/build/build.model';
 import { Game } from '../_common/game/game.model';
 import { GamePackage } from '../_common/game/package/package.model';
-import AppCommonShell from '../_common/shell/shell.vue';
+import AppCommonShell from '../_common/shell/AppCommonShell.vue';
 import { Store } from './store/index';
 
 @Options({
 	components: {
 		AppCommonShell,
-		AppEmbedHtml: defineAsyncComponent(
-			() =>
-				import(/* webpackChunkName: "gameserverHtml" */ './components/embed/html/html.vue')
-		),
-		AppEmbedFlash: defineAsyncComponent(
-			() =>
-				import(
-					/* webpackChunkName: "gameserverFlash" */ './components/embed/flash/flash.vue'
-				)
-		),
-		AppEmbedUnity: defineAsyncComponent(
-			() =>
-				import(
-					/* webpackChunkName: "gameserverUnity" */ './components/embed/unity/unity.vue'
-				)
-		),
-		AppEmbedApplet: defineAsyncComponent(
-			() =>
-				import(
-					/* webpackChunkName: "gameserverApplet" */ './components/embed/applet/applet.vue'
-				)
-		),
-		AppEmbedRom: defineAsyncComponent(
-			() => import(/* webpackChunkName: "gameserverRom" */ './components/embed/rom/rom.vue')
-		),
+		AppEmbedHtml: defineAsyncComponent(() => import('./components/embed/html/html.vue')),
+		AppEmbedFlash: defineAsyncComponent(() => import('./components/embed/flash/flash.vue')),
+		AppEmbedUnity: defineAsyncComponent(() => import('./components/embed/unity/unity.vue')),
+		AppEmbedApplet: defineAsyncComponent(() => import('./components/embed/applet/applet.vue')),
+		AppEmbedRom: defineAsyncComponent(() => import('./components/embed/rom/rom.vue')),
 		AppEmbedSilverlight: defineAsyncComponent(
-			() =>
-				import(
-					/* webpackChunkName: "gameserverSilverlight" */ './components/embed/silverlight/silverlight.vue'
-				)
+			() => import('./components/embed/silverlight/silverlight.vue')
 		),
 	},
 })
 export default class App extends Vue {
-	// Not translatable just yet.
-	// mounted() {
-	// 	loadCurrentLanguage(this);
-	// }
-
 	@State game!: Game;
 	@State package!: GamePackage;
 	@State build!: GameBuild;

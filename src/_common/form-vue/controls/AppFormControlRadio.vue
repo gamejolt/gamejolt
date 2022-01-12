@@ -1,7 +1,11 @@
 <script lang="ts" setup>
 import { computed, toRef } from 'vue';
 import { useForm } from '../AppForm.vue';
-import { createFormControl, defineFormControlProps } from '../AppFormControl.vue';
+import {
+	createFormControl,
+	defineFormControlEmits,
+	defineFormControlProps,
+} from '../AppFormControl.vue';
 import { useFormGroup } from '../AppFormGroup.vue';
 
 const props = defineProps({
@@ -12,9 +16,19 @@ const props = defineProps({
 	},
 });
 
+const emit = defineEmits({
+	...defineFormControlEmits(),
+});
+
 const form = useForm()!;
 const group = useFormGroup()!;
-const c = createFormControl<any>(undefined, toRef(props, 'validators'), { multi: true });
+const c = createFormControl<any>({
+	initialValue: undefined,
+	validators: toRef(props, 'validators'),
+	// eslint-disable-next-line vue/require-explicit-emits
+	onChange: val => emit('changed', val),
+	multi: true,
+});
 
 const checked = computed(() => form.formModel[group.name] === props.value);
 

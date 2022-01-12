@@ -1,15 +1,14 @@
 import { nextTick } from 'vue';
 import { setup } from 'vue-class-component';
 import { Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
 import { formatDate } from '../../../../../_common/filters/date';
-import AppIllustration from '../../../../../_common/illustration/illustration.vue';
+import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppScrollScroller, {
 	createScroller,
 } from '../../../../../_common/scroll/scroller/scroller.vue';
-import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import { useEventSubscription } from '../../../../../_common/system/event/event-topic';
 import { illNoChat } from '../../../../img/ill/illustrations';
 import { ChatStore, ChatStoreKey } from '../../chat-store';
@@ -30,14 +29,18 @@ import AppChatWindowOutputItem from './item/item.vue';
 	},
 })
 export default class AppChatWindowOutput extends Vue {
-	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
-	@Prop(propRequired(Array)) messages!: ChatMessage[];
-	@Prop(propRequired(Array)) queuedMessages!: ChatMessage[];
+	@Prop({ type: Object, required: true }) room!: ChatRoom;
+	@Prop({ type: Array, required: true }) messages!: ChatMessage[];
+	@Prop({ type: Array, required: true }) queuedMessages!: ChatMessage[];
+
+	commonStore = setup(() => useCommonStore());
 
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;
 
-	@AppState user!: AppStore['user'];
+	get user() {
+		return this.commonStore.user;
+	}
 
 	/** Whether or not we reached the end of the historical messages. */
 	reachedEnd = false;

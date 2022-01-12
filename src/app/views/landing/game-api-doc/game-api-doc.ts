@@ -1,7 +1,7 @@
 import { Options } from 'vue-property-decorator';
 import nav from '../../../../lib/doc-game-api/v1.x/nav.json';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
-import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
+import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import { imageJolt } from '../../../img/images';
 
 @Options({

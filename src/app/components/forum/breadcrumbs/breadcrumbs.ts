@@ -3,7 +3,7 @@ import { ForumChannel } from '../../../../_common/forum/channel/channel.model';
 
 @Options({})
 export default class AppForumBreadcrumbs extends Vue {
-	@Prop(ForumChannel) channel?: ForumChannel;
+	@Prop(Object) channel?: ForumChannel;
 	@Prop(String) sort?: string;
 	@Prop(String) page?: string;
 }

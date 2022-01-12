@@ -1,7 +1,6 @@
 import { defineAsyncComponent } from 'vue';
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../utils/vue';
 import { AppAuthRequired } from '../../../auth/auth-required-directive';
 import { Clipboard } from '../../../clipboard/clipboard-service';
 import { Collaborator } from '../../../collaborator/collaborator.model';
@@ -17,7 +16,7 @@ import { Popper } from '../../../popper/popper.service';
 import AppPopper from '../../../popper/popper.vue';
 import { ReportModal } from '../../../report/modal/modal.service';
 import { canPlaceStickerOnComment } from '../../../sticker/placement/placement.model';
-import { AppState, AppStore } from '../../../store/app-store';
+import { useCommonStore } from '../../../store/common-store';
 import AppTimelineListItem from '../../../timeline-list/item/item.vue';
 import { AppTooltip } from '../../../tooltip/tooltip-directive';
 import FormComment from '../../add/add.vue';
@@ -54,14 +53,18 @@ let CommentNum = 0;
 	},
 })
 export default class AppCommentWidgetComment extends Vue {
-	@Prop(propRequired(Model)) model!: Model;
-	@Prop(propRequired(Comment)) comment!: Comment;
-	@Prop(propOptional(Array, () => [])) children!: Comment[];
-	@Prop(propOptional(Comment)) parent?: Comment;
-	@Prop(propOptional(Boolean, false)) isLastInThread!: boolean;
-	@Prop(propOptional(Boolean, false)) showChildren!: boolean;
+	@Prop({ type: Object, required: true }) model!: Model;
+	@Prop({ type: Object, required: true }) comment!: Comment;
+	@Prop({ type: Array, default: () => [] }) children!: Comment[];
+	@Prop(Object) parent?: Comment;
+	@Prop({ type: Boolean, default: false }) isLastInThread!: boolean;
+	@Prop({ type: Boolean, default: false }) showChildren!: boolean;
 
-	@AppState user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	componentId = ++CommentNum;
 	isFollowPending = false;

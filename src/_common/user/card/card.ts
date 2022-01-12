@@ -1,10 +1,9 @@
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import { propOptional, propRequired } from '../../../utils/vue';
 import { formatFuzzynumber } from '../../filters/fuzzynumber';
 import { formatNumber } from '../../filters/number';
 import AppLoading from '../../loading/loading.vue';
-import { AppStore } from '../../store/app-store';
+import { useCommonStore } from '../../store/common-store';
 import { AppTheme } from '../../theme/theme';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 import AppUserFollowWidget from '../follow/widget.vue';
@@ -25,14 +24,18 @@ import AppUserVerifiedTick from '../verified-tick/verified-tick.vue';
 	},
 })
 export default class AppUserCard extends Vue {
-	@Prop(propRequired(User)) user!: User;
-	@Prop(propOptional(Boolean, false)) isLoading!: boolean;
-	@Prop(propOptional(Boolean, false)) elevate!: boolean;
+	@Prop({ type: Object, required: true }) user!: User;
+	@Prop({ type: Boolean, default: false }) isLoading!: boolean;
+	@Prop({ type: Boolean, default: false }) elevate!: boolean;
 
 	@Prop({ type: Boolean })
 	noStats!: boolean;
 
-	@State app!: AppStore;
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	readonly formatNumber = formatNumber;
 	readonly formatFuzzynumber = formatFuzzynumber;

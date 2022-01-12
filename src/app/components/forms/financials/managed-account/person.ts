@@ -1,5 +1,5 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { findRequiredVueParent, propOptional, propRequired } from '../../../../../utils/vue';
+import { findRequiredVueParent } from '../../../../../utils/vue';
 import { CommonFormComponents } from '../../../../../_common/form-vue/form-common';
 import AppFinancialsManagedAccountAddress from './address.vue';
 import AppFinancialsManagedAccountContact from './contact.vue';
@@ -23,9 +23,9 @@ import AppFinancialsManagedAccountSsn from './ssn.vue';
 	},
 })
 export default class AppFinancialsManagedAccountPerson extends Vue {
-	@Prop(propRequired(String)) namePrefix!: string;
+	@Prop({ type: String, required: true }) namePrefix!: string;
 
-	@Prop(propOptional(String, null)) countryCode!: string | null;
+	@Prop({ type: String, default: null }) countryCode!: string | null;
 
 	parent: FormFinancialsManagedAccountTS = null as any;
 

@@ -35,9 +35,9 @@
 
 			<p class="help-block">
 				<translate>Profile URL</translate>
+				{{ ' ' }}
 				<code>
-					{{ Environment.baseUrl }}/@
-					<strong>{{ formModel.username || '_' }}</strong>
+					{{ Environment.baseUrl }}/@<strong>{{ formModel.username || '_' }}</strong>
 				</code>
 			</p>
 
@@ -52,7 +52,7 @@
 			</app-expand>
 		</app-form-group>
 
-		<div class="form-group" v-else>
+		<div v-else class="form-group">
 			<label class="control-label">
 				<translate>dash.profile.edit.username_label</translate>
 			</label>

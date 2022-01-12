@@ -1,9 +1,9 @@
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../utils/vue';
 import { trackGotoCommunity } from '../../analytics/analytics.service';
 import { Environment } from '../../environment/environment.service';
 import { formatNumber } from '../../filters/number';
-import { AppState, AppStore } from '../../store/app-store';
+import { useCommonStore } from '../../store/common-store';
 import { AppTheme } from '../../theme/theme';
 import { Community, isEditingCommunity } from '../community.model';
 import AppCommunityJoinWidget from '../join-widget/join-widget.vue';
@@ -17,13 +17,17 @@ import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
 	},
 })
 export default class AppCommunityCardBase extends Vue {
-	@Prop(propRequired(Community)) community!: Community;
-	@Prop(propOptional(Boolean, false)) overflow!: boolean;
-	@Prop(propOptional(Boolean, false)) elevate!: boolean;
-	@Prop(propOptional(Boolean, true)) allowEdit!: boolean;
-	@Prop(propOptional(Boolean, false)) trackGoto!: boolean;
+	@Prop({ type: Object, required: true }) community!: Community;
+	@Prop({ type: Boolean, default: false }) overflow!: boolean;
+	@Prop({ type: Boolean, default: false }) elevate!: boolean;
+	@Prop({ type: Boolean, default: true }) allowEdit!: boolean;
+	@Prop({ type: Boolean, default: false }) trackGoto!: boolean;
 
-	@AppState user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	readonly formatNumber = formatNumber;
 	readonly Environment = Environment;

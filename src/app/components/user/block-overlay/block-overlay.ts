@@ -4,7 +4,7 @@ import { User } from '../../../../_common/user/user.model';
 
 @Options({})
 export default class AppUserBlockOverlay extends Vue {
-	@Prop(User)
+	@Prop(Object)
 	user!: User;
 
 	private hasBypassed = false;

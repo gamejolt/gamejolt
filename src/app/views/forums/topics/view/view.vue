@@ -22,11 +22,13 @@
 
 			<div>
 				<translate>by</translate>
+				{{ ' ' }}
 				<router-link
 					:to="{ name: 'profile.overview', params: { username: topic.user.username } }"
 				>
 					{{ topic.user.display_name }}
 					<app-user-verified-tick :user="topic.user" />
+					{{ ' ' }}
 					<small>@{{ topic.user.username }}</small>
 				</router-link>
 

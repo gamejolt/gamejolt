@@ -17,7 +17,7 @@ class Wrapper extends BaseForm<ForumTopic> {}
 	},
 })
 export default class FormForumTopic extends mixins(Wrapper) {
-	@Prop(ForumChannel) channel!: ForumChannel;
+	@Prop(Object) channel!: ForumChannel;
 
 	modelClass = ForumTopic;
 

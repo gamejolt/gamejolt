@@ -13,19 +13,6 @@
 			""
 		]
 	},
-	"Vue Component": {
-		"prefix": "vue-component",
-		"body": [
-			"import Vue from 'vue';",
-			"import { Options } from 'vue-property-decorator';",
-			"",
-			"@Options({})",
-			"export default class App${2:Component} extends Vue {",
-			"\t$0",
-			"}",
-			""
-		]
-	},
 	"Vue Route Component": {
 		"prefix": "vue-route-component",
 		"body": [
@@ -49,7 +36,7 @@
 			"export const route${1:Home}: RouteRecordRaw = {",
 			"\tname: '${2:home}',",
 			"\tpath: '${3:home}',",
-			"\tcomponent: () => import(/* webpackChunkName: \"route${1:Home}\" */ './${4:home}'),",
+			"\tcomponent: () => import('./${4:home}'),",
 			"};",
 			"$0"
 		]
@@ -90,7 +77,7 @@
 			"\tstatic async show($2) {",
 			"\t\treturn await showModal<${3:boolean}>({",
 			"\t\tmodalId: '${1:Login}',",
-			"\t\t\tcomponent: defineAsyncComponent(() => import(/* webpackChunkName: \"${1:Login}Modal\" */ './$4')),",
+			"\t\t\tcomponent: defineAsyncComponent(() => import('./$4')),",
 			"\t\t\tprops: { $5 },",
 			"\t\t});",
 			"\t}",

@@ -1,7 +1,11 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
 import AppImgCrop from '../../img/crop/crop.vue';
-import { createFormControl, defineFormControlProps } from '../AppFormControl.vue';
+import {
+	createFormControl,
+	defineFormControlEmits,
+	defineFormControlProps,
+} from '../AppFormControl.vue';
 
 const props = defineProps({
 	...defineFormControlProps(),
@@ -42,7 +46,16 @@ const props = defineProps({
 	},
 });
 
-const c = createFormControl(null as any, toRef(props, 'validators'));
+const emit = defineEmits({
+	...defineFormControlEmits(),
+});
+
+const c = createFormControl({
+	initialValue: null as any,
+	validators: toRef(props, 'validators'),
+	// eslint-disable-next-line vue/require-explicit-emits
+	onChange: val => emit('changed', val),
+});
 
 function onChange(value: any) {
 	c.applyValue(value);

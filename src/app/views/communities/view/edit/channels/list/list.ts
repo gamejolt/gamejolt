@@ -1,7 +1,7 @@
 import { Inject, Options } from 'vue-property-decorator';
 import AppCardListAdd from '../../../../../../../_common/card/list/add/add.vue';
-import AppCardListDraggable from '../../../../../../../_common/card/list/draggable/draggable.vue';
-import AppCardList from '../../../../../../../_common/card/list/list.vue';
+import AppCardList from '../../../../../../../_common/card/list/AppCardList.vue';
+import AppCardListDraggable from '../../../../../../../_common/card/list/AppCardListDraggable.vue';
 import { CommunityChannel } from '../../../../../../../_common/community/channel/channel.model';
 import {
 	Community,
@@ -29,11 +29,11 @@ import AppCommunitiesEditChannelListPresetItem from './_preset-item/preset-item.
 		AppCommunitiesViewPageContainer,
 		AppCommunityPerms,
 		AppCardList,
-		AppCardListDraggable,
 		AppCardListAdd,
 		FormCommunityChannelAdd,
 		AppCommunitiesEditChannelListPresetItem,
 		AppCommunitiesEditChannelListItem,
+		AppCardListDraggable,
 		AppLoading,
 	},
 })
@@ -97,6 +97,10 @@ export default class RouteCommunitiesViewEditChannelsList extends BaseRouteCompo
 		// Since the preset channels are stored on the community, we have to let
 		// the routeStore know to update the community with the new information.
 		updateCommunity(this.routeStore, community);
+	}
+
+	onActivate(item: typeof this.activeItem) {
+		this.activeItem = item;
 	}
 
 	async onClickRemoveChannel(channel: CommunityChannel) {

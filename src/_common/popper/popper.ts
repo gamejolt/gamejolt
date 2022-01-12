@@ -7,7 +7,6 @@ import preventOverflow, {
 import { createPopper, Instance, Options as PopperOptions } from '@popperjs/core/lib/popper-lite';
 import { nextTick } from 'vue';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { propOptional } from '../../utils/vue';
 import { Backdrop, BackdropController } from '../backdrop/backdrop.service';
 import { AppObserveDimensions } from '../observe-dimensions/observe-dimensions.directive';
 import { Screen } from '../screen/screen-service';
@@ -69,10 +68,10 @@ const modifiers = [
 	},
 })
 export default class AppPopper extends Vue {
-	@Prop(propOptional(String, 'bottom'))
+	@Prop({ type: String, default: 'bottom' })
 	placement!: 'top' | 'right' | 'bottom' | 'left';
 
-	@Prop(propOptional(String, 'click'))
+	@Prop({ type: String, default: 'click' })
 	trigger!: ActualTrigger | 'right-click';
 
 	/**
@@ -88,7 +87,7 @@ export default class AppPopper extends Vue {
 	 * We want the popper to be 'display: fixed' if we use it on a fixed parent.
 	 * This should prevent stuttering on scroll if the popper is attached to the nav.
 	 */
-	@Prop(propOptional(Boolean, false))
+	@Prop({ type: Boolean, default: false })
 	fixed!: boolean;
 
 	/**
@@ -96,14 +95,14 @@ export default class AppPopper extends Vue {
 	 * of the popper. This tells the popper to close anytime the state changes.
 	 * Useful for poppers in the shell that link to other pages on the site.
 	 */
-	@Prop(propOptional(Boolean, false))
+	@Prop({ type: Boolean, default: false })
 	hideOnStateChange!: boolean;
 
 	/**
 	 * Whether or not the popper should size itself to the same width as the
 	 * trigger. Useful for poppers that work like "select" type controls.
 	 */
-	@Prop(propOptional(Boolean, false))
+	@Prop({ type: Boolean, default: false })
 	trackTriggerWidth!: boolean;
 
 	/**
@@ -111,35 +110,35 @@ export default class AppPopper extends Vue {
 	 * relying on its content to size itself. Useful for poppers that change the
 	 * content dynamically and you want it to stay one consistent size.
 	 */
-	@Prop(propOptional(Boolean, false))
+	@Prop({ type: Boolean, default: false })
 	forceMaxWidth!: boolean;
 
 	// We set a watch on this prop so we know when to display 'manual' triggers.
-	@Prop(propOptional(Boolean, false))
+	@Prop({ type: Boolean, default: false })
 	manualShow!: boolean;
 
 	// Sets 'display: block !important' on the trigger element.
-	@Prop(propOptional(Boolean, false))
+	@Prop({ type: Boolean, default: false })
 	block!: boolean;
 
 	// Allows removal of the popper arrow.
-	@Prop(propOptional(Boolean, false))
+	@Prop({ type: Boolean, default: false })
 	sansArrow!: boolean;
 
 	// Delay for showing a hover-based popper.
-	@Prop(propOptional(Number, 0))
+	@Prop({ type: Number, default: 0 })
 	showDelay!: number;
 
-	@Prop(propOptional(String, null))
+	@Prop({ type: String, default: null })
 	popoverClass!: null | string;
 
 	// For popovers that need a specific max-height, header and footer included.
-	@Prop(propOptional(String, null))
+	@Prop({ type: String, default: null })
 	height!: string;
 
 	declare $refs: {
 		trigger: HTMLElement;
-		popper: HTMLElement;
+		popper?: HTMLElement;
 	};
 
 	isHiding = false;
@@ -327,9 +326,11 @@ export default class AppPopper extends Vue {
 	}
 
 	private onClickAway(event: MouseEvent) {
+		const { popper, trigger } = this.$refs;
+
 		if (
 			event.target instanceof Node &&
-			(this.$refs.popper.contains(event.target) || this.$refs.trigger.contains(event.target))
+			((popper && popper.contains(event.target)) || trigger.contains(event.target))
 		) {
 			return;
 		}
@@ -353,9 +354,7 @@ export default class AppPopper extends Vue {
 			return;
 		}
 
-		this.popperInstance = createPopper(this.$el, this.$refs.popper, this.popperOptions);
-
-		document.body.appendChild(this.$refs.popper);
+		this.popperInstance = createPopper(this.$el, this.$refs.popper!, this.popperOptions);
 		document.addEventListener('click', this.onClickAway, true);
 	}
 

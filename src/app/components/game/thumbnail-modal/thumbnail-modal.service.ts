@@ -6,9 +6,7 @@ export class GameThumbnailModal {
 	static async show(game: Game) {
 		return await showModal<Game>({
 			modalId: 'GameThumbnail',
-			component: defineAsyncComponent(
-				() => import(/* webpackChunkName: "GameThumbnailModal" */ './thumbnail-modal.vue')
-			),
+			component: defineAsyncComponent(() => import('./thumbnail-modal.vue')),
 			props: {
 				game,
 			},

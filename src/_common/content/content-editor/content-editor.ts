@@ -102,7 +102,7 @@ export default class AppContentEditor extends Vue {
 	@Prop({ type: Number, default: 200 })
 	maxHeight!: number;
 
-	@Prop({ type: ContentRules, default: undefined })
+	@Prop({ type: Object, default: undefined })
 	displayRules?: ContentRules;
 
 	@Prop({ type: Boolean })

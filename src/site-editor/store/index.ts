@@ -1,49 +1,35 @@
+import { reactive } from 'vue';
 import { buildUseStore, VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
 import { Api } from '../../_common/api/api.service';
 import { Site } from '../../_common/site/site-model';
 import { SiteTemplate } from '../../_common/site/template/template-model';
 import { SiteTheme } from '../../_common/site/theme/theme-model';
-import {
-	Actions as AppActions,
-	AppStore,
-	appStore,
-	Mutations as AppMutations,
-} from '../../_common/store/app-store';
-import { ThemeActions, ThemeMutations, ThemeStore } from '../../_common/theme/theme.store';
 
 type Tab = 'theme' | 'content';
 
-export type Actions = AppActions &
-	ThemeActions & {
-		bootstrapTab: {
-			tab: Tab;
-			siteId: number;
-		};
+export type Actions = {
+	bootstrapTab: {
+		tab: Tab;
+		siteId: number;
 	};
+};
 
-export type Mutations = AppMutations &
-	ThemeMutations & {
-		_bootstrapTab: {
-			tab: Tab;
-			response: any;
-		};
-		setTemplateId: number;
-		setThemeData: any;
-		setContentEdited: void;
-		clearIsDirty: void;
+export type Mutations = {
+	_bootstrapTab: {
+		tab: Tab;
+		response: any;
 	};
+	setTemplateId: number;
+	setThemeData: any;
+	setContentEdited: void;
+	clearIsDirty: void;
+};
 
 @VuexModule({
 	store: true,
-	modules: {
-		app: appStore,
-		theme: new ThemeStore(),
-	},
+	modules: {},
 })
 export class Store extends VuexStore<Store, Actions, Mutations> {
-	app!: AppStore;
-	theme!: ThemeStore;
-
 	isLoaded = false;
 	tab: Tab = 'theme';
 	site: Site = null as any;
@@ -94,5 +80,5 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 }
 
-export const store = new Store();
+export const store = reactive(new Store()) as Store;
 export const useStore = buildUseStore<Store>();

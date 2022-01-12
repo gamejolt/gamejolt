@@ -1,6 +1,6 @@
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import { AppStore } from '../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../_common/user/user.model';
 
@@ -10,14 +10,17 @@ import { User } from '../../../../_common/user/user.model';
 	},
 })
 export default class AppUserKnownFollowers extends Vue {
-	@State
-	app!: AppStore;
-
 	@Prop(Array)
 	users!: User[];
 
 	@Prop(Number)
 	count!: number;
+
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	get text() {
 		// Not followed by anyone you follow

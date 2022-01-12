@@ -8,7 +8,7 @@ import { AppTimeAgo } from '../../../../../../_common/time/ago/ago';
 	},
 })
 export default class AppActivityFeedPostTime extends Vue {
-	@Prop({ type: FiresidePost, required: true })
+	@Prop({ type: Object, required: true })
 	post!: FiresidePost;
 
 	@Prop({ type: String, required: true })

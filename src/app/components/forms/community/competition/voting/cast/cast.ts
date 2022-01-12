@@ -1,6 +1,5 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { numberSort } from '../../../../../../../utils/array';
-import { propOptional, propRequired } from '../../../../../../../utils/vue';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { CommunityCompetition } from '../../../../../../../_common/community/competition/competition.model';
 import { CommunityCompetitionEntry } from '../../../../../../../_common/community/competition/entry/entry.model';
@@ -20,10 +19,14 @@ import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directi
 	},
 })
 export default class FormCommunityCompetitionVotingCast extends Vue {
-	@Prop(propRequired(CommunityCompetitionEntry)) entry!: CommunityCompetitionEntry;
-	@Prop(propRequired(CommunityCompetition)) competition!: CommunityCompetition;
-	@Prop(propOptional(Array, () => [])) votingCategories!: CommunityCompetitionVotingCategory[];
-	@Prop(propOptional(Array, () => [])) initialVotes!: CommunityCompetitionEntryVote[];
+	@Prop({ type: Object, required: true }) entry!: CommunityCompetitionEntry;
+	@Prop({ type: Object, required: true }) competition!: CommunityCompetition;
+
+	@Prop({ type: Array, default: () => [] })
+	votingCategories!: CommunityCompetitionVotingCategory[];
+
+	@Prop({ type: Array, default: () => [] })
+	initialVotes!: CommunityCompetitionEntryVote[];
 
 	votes: CommunityCompetitionEntryVote[] = [];
 	hoveredRatings: number[] = [];

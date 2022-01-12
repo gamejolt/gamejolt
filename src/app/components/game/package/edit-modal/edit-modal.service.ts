@@ -8,9 +8,7 @@ export class GamePackageEditModal {
 	static async show(game: Game, gamePackage?: GamePackage, sellable?: Sellable) {
 		return await showModal<GamePackage>({
 			modalId: 'GamePackageEdit',
-			component: defineAsyncComponent(
-				() => import(/* webpackChunkName: "GamePackageEditModal" */ './edit-modal.vue')
-			),
+			component: defineAsyncComponent(() => import('./edit-modal.vue')),
 			noBackdropClose: true,
 			noEscClose: true,
 			size: 'sm',

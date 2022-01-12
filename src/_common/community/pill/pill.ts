@@ -18,7 +18,7 @@ import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
 	},
 })
 export default class AppCommunityPill extends Vue {
-	@Prop({ type: FiresidePostCommunity, required: true })
+	@Prop({ type: Object, required: true })
 	communityLink!: FiresidePostCommunity;
 
 	@Prop({ type: Boolean, required: false, default: false })

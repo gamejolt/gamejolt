@@ -19,7 +19,7 @@ import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified
 	},
 })
 export default class AppForumChannelList extends Vue {
-	@Prop(ForumCategory) category!: ForumCategory;
+	@Prop(Object) category!: ForumCategory;
 	@Prop(Array) channels!: ForumChannel[];
 	@Prop({ type: Array, default: [] })
 	latestPosts!: ForumPost[];

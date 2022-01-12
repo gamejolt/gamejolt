@@ -1,6 +1,5 @@
 import { nextTick } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../utils/vue';
 import AppLoading from '../loading/loading.vue';
 import { setVideoMuted, trackVideoPlayerEvent, VideoPlayerController } from './player/controller';
 
@@ -20,12 +19,12 @@ type VideoSourceObject = {
 	},
 })
 export default class AppVideo extends Vue {
-	@Prop(propRequired(VideoPlayerController))
+	@Prop({ type: Object, required: true })
 	player!: VideoPlayerController;
-	@Prop(propOptional(Boolean, false)) showLoading!: boolean;
-	@Prop(propOptional(Boolean, true)) shouldPlay!: boolean;
+	@Prop({ type: Boolean, default: false }) showLoading!: boolean;
+	@Prop({ type: Boolean, default: true }) shouldPlay!: boolean;
 
-	@Prop(propOptional(Function)) initCallback?: (videoTag: HTMLVideoElement) => Promise<boolean>;
+	@Prop(Function) initCallback?: (videoTag: HTMLVideoElement) => Promise<boolean>;
 
 	/**
 	 * If their browser settings block autoplaying with audio, then the browser
@@ -33,7 +32,7 @@ export default class AppVideo extends Vue {
 	 * autoplaying "muted" just to see if that works. We don't want to do that
 	 * everywhere, so it's an opt-in behavior through a prop.
 	 */
-	@Prop(propOptional(Boolean, false)) allowDegradedAutoplay!: boolean;
+	@Prop({ type: Boolean, default: false }) allowDegradedAutoplay!: boolean;
 
 	isLoaded = false;
 

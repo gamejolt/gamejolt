@@ -1,6 +1,5 @@
 import { Inject, mixins, Options, Prop } from 'vue-property-decorator';
 import { fuzzysearch } from '../../../../utils/string';
-import { propOptional, propRequired } from '../../../../utils/vue';
 import { BaseModal } from '../../../../_common/modal/base';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
@@ -18,9 +17,9 @@ import { ChatUser } from '../user';
 	},
 })
 export default class AppChatInviteModal extends mixins(BaseModal) {
-	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
-	@Prop(propRequired(Array)) friends!: ChatUser[];
-	@Prop(propOptional(ChatUser, null)) initialUser!: ChatUser | null;
+	@Prop({ type: Object, required: true }) room!: ChatRoom;
+	@Prop({ type: Array, required: true }) friends!: ChatUser[];
+	@Prop({ type: Object, default: null }) initialUser!: ChatUser | null;
 
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;

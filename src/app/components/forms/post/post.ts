@@ -1,9 +1,9 @@
 import { addWeeks, startOfDay } from 'date-fns';
 import { determine } from 'jstimezonedetect';
 import { nextTick } from 'vue';
+import { setup } from 'vue-class-component';
 import { Emit, mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../utils/array';
-import { propOptional } from '../../../../utils/vue';
 import { trackPostPublish } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
@@ -41,7 +41,7 @@ import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppScrollWhen } from '../../../../_common/scroll/scroll-when.directive';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
-import { AppState, AppStore } from '../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { Timezone, TimezoneData } from '../../../../_common/timezone/timezone.service';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
@@ -110,16 +110,19 @@ export default class FormPost
 	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnSubmit, FormOnSubmitSuccess, FormOnSubmitError
 {
-	modelClass = FiresidePost as any;
-
-	@AppState
-	user!: AppStore['user'];
-
-	@Prop(propOptional(Community, null))
+	@Prop({ type: Object, default: null })
 	defaultCommunity!: Community | null;
 
-	@Prop(propOptional(CommunityChannel, null))
+	@Prop({ type: Object, default: null })
 	defaultChannel!: CommunityChannel | null;
+
+	modelClass = FiresidePost as any;
+
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	readonly MAX_POLL_ITEMS = 10;
 	readonly MIN_POLL_DURATION = 5;

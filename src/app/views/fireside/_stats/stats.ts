@@ -1,11 +1,11 @@
-import { Vue } from 'vue-class-component';
+import { setup, Vue } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
 import AppCard from '../../../../_common/card/card.vue';
-import AppIllustration from '../../../../_common/illustration/illustration.vue';
+import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import AppShareCard from '../../../../_common/share/card/card.vue';
-import { AppState, AppStore } from '../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import {
 	extendFireside,
@@ -29,10 +29,14 @@ import AppFiresideShare from '../_share/share.vue';
 	},
 })
 export default class AppFiresideStats extends Vue {
+	commonStore = setup(() => useCommonStore());
+
 	@Inject({ from: FiresideControllerKey })
 	c!: FiresideController;
 
-	@AppState user!: AppStore['user'];
+	get user() {
+		return this.commonStore.user;
+	}
 
 	get fireside() {
 		return this.c.fireside;

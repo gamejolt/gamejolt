@@ -1,4 +1,5 @@
 import { h } from 'vue';
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../../_common/api/api.service';
@@ -8,7 +9,7 @@ import {
 	LinkedAccount,
 } from '../../../../../../_common/linked-account/linked-account.model';
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
-import { AppState, AppStore } from '../../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../../_common/store/common-store';
 
 function constructUrl(baseUrl: string, route: RouteLocationNormalized) {
 	let url = baseUrl + route.params.provider;
@@ -38,8 +39,11 @@ function constructUrl(baseUrl: string, route: RouteLocationNormalized) {
 	},
 })
 export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRouteComponent {
-	@AppState
-	user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	routeResolved($payload: any) {
 		if (!this.user) {

@@ -53,138 +53,150 @@
 			</app-game-perms>
 			<br />
 
-			<app-card-list v-if="packages.length" :items="packages">
-				<app-card-list-draggable :disabled="!hasBuildsPerms" @change="saveSort">
-					<app-card-list-item v-for="pkg of packages" :key="pkg.id" :item="pkg">
-						<app-game-perms required="all">
-							<a
-								v-if="!pkg.has_sales"
-								class="card-remove"
-								@click="removePackage(pkg)"
-							>
-								<app-jolticon icon="remove" />
-							</a>
-						</app-game-perms>
+			<app-card-list v-if="packages.length" :items="packages" :is-draggable="hasBuildsPerms">
+				<app-card-list-draggable item-key="id" @change="saveSort">
+					<template #item="{ element: pkg }">
+						<app-card-list-item :item="pkg">
+							<app-game-perms required="all">
+								<a
+									v-if="!pkg.has_sales"
+									class="card-remove"
+									@click="removePackage(pkg)"
+								>
+									<app-jolticon icon="remove" />
+								</a>
+							</app-game-perms>
 
-						<div class="card-title">
-							<h4>
-								<template v-if="hasBuildsPerms">
-									<router-link
+							<div class="card-title">
+								<h4>
+									<template v-if="hasBuildsPerms">
+										<router-link
+											:to="{
+												name: 'dash.games.manage.game.packages.edit',
+												params: { packageId: pkg.id },
+											}"
+										>
+											{{ pkg.title || game.title }}
+										</router-link>
+									</template>
+									<template v-else>
+										{{ pkg.title || game.title }}
+									</template>
+								</h4>
+							</div>
+
+							<div class="card-meta">
+								<span
+									v-if="sellables[pkg.id] && sellables[pkg.id].primary"
+									v-app-tooltip="
+										$gettext(
+											`We use the primary package to determine the price to show on game listings.`
+										)
+									"
+									class="tag tag-highlight"
+								>
+									<translate>Primary Package</translate>
+								</span>
+
+								<span
+									v-if="pkg.visibility === GamePackage.VISIBILITY_PRIVATE"
+									v-app-tooltip="
+										$gettext(
+											`This package will only be available to you and any keys that have access.`
+										)
+									"
+									class="tag tag-notice"
+								>
+									<translate>Private</translate>
+								</span>
+
+								<template
+									v-if="sellables[pkg.id] && sellables[pkg.id].type === 'pwyw'"
+								>
+									<span class="tag">
+										<translate>Pay What You Want</translate>
+									</span>
+									<span class="dot-separator" />
+									<strong>
+										<translate>Suggested Price</translate>
+									</strong>
+									&mdash;
+									<template
+										v-if="
+											sellables[pkg.id] &&
+											sellables[pkg.id].pricings[0].amount
+										"
+									>
+										{{ formatCurrency(sellables[pkg.id].pricings[0].amount) }}
+									</template>
+									<template v-else>
+										<translate>None</translate>
+									</template>
+								</template>
+								<template
+									v-else-if="
+										sellables[pkg.id] && sellables[pkg.id].type === 'paid'
+									"
+								>
+									<span class="tag">
+										<translate>Paid</translate>
+									</span>
+									<span class="dot-separator" />
+									<strong>
+										<translate>Price</translate>
+									</strong>
+									&mdash;
+									{{ formatCurrency(sellables[pkg.id].pricings[0].amount) }}
+								</template>
+								<template v-else>
+									<span class="tag">
+										<translate>Free</translate>
+									</span>
+								</template>
+							</div>
+
+							<div v-if="pkg.description" class="card-content">
+								{{ pkg.description }}
+							</div>
+
+							<div class="card-controls">
+								<app-game-perms required="builds">
+									<app-button
+										primary
 										:to="{
 											name: 'dash.games.manage.game.packages.edit',
 											params: { packageId: pkg.id },
 										}"
 									>
-										{{ pkg.title || game.title }}
-									</router-link>
-								</template>
-								<template v-else>
-									{{ pkg.title || game.title }}
-								</template>
-							</h4>
-						</div>
-
-						<div class="card-meta">
-							<span
-								v-if="sellables[pkg.id] && sellables[pkg.id].primary"
-								v-app-tooltip="
-									$gettext(
-										`We use the primary package to determine the price to show on game listings.`
-									)
-								"
-								class="tag tag-highlight"
-							>
-								<translate>Primary Package</translate>
-							</span>
-
-							<span
-								v-if="pkg.visibility === GamePackage.VISIBILITY_PRIVATE"
-								v-app-tooltip="
-									$gettext(
-										`This package will only be available to you and any keys that have access.`
-									)
-								"
-								class="tag tag-notice"
-							>
-								<translate>Private</translate>
-							</span>
-
-							<template v-if="sellables[pkg.id] && sellables[pkg.id].type === 'pwyw'">
-								<span class="tag">
-									<translate>Pay What You Want</translate>
-								</span>
-								<span class="dot-separator" />
-								<strong>
-									<translate>Suggested Price</translate>
-								</strong>
-								&mdash;
-								<template
-									v-if="sellables[pkg.id] && sellables[pkg.id].pricings[0].amount"
-								>
-									{{ formatCurrency(sellables[pkg.id].pricings[0].amount) }}
-								</template>
-								<template v-else>
-									<translate>None</translate>
-								</template>
-							</template>
-							<template
-								v-else-if="sellables[pkg.id] && sellables[pkg.id].type === 'paid'"
-							>
-								<span class="tag">
-									<translate>Paid</translate>
-								</span>
-								<span class="dot-separator" />
-								<strong>
-									<translate>Price</translate>
-								</strong>
-								&mdash;
-								{{ formatCurrency(sellables[pkg.id].pricings[0].amount) }}
-							</template>
-							<template v-else>
-								<span class="tag">
-									<translate>Free</translate>
-								</span>
-							</template>
-						</div>
-
-						<div v-if="pkg.description" class="card-content">
-							{{ pkg.description }}
-						</div>
-
-						<div class="card-controls">
-							<app-game-perms required="builds">
-								<app-button
-									primary
-									:to="{
-										name: 'dash.games.manage.game.packages.edit',
-										params: { packageId: pkg.id },
-									}"
-								>
-									<translate>Manage</translate>
-								</app-button>
-							</app-game-perms>
-							<app-button
-								trans
-								:to="{
-									name: 'dash.games.manage.game.packages.edit.widget',
-									params: { packageId: pkg.id },
-								}"
-							>
-								<translate>Widget</translate>
-							</app-button>
-							<app-game-perms required="analytics">
+										<translate>Manage</translate>
+									</app-button>
+								</app-game-perms>
 								<app-button
 									trans
 									:to="{
-										name: 'dash.analytics',
-										params: { resource: 'Game_Package', resourceId: pkg.id },
+										name: 'dash.games.manage.game.packages.edit.widget',
+										params: { packageId: pkg.id },
 									}"
 								>
-									<translate>Analytics</translate>
+									<translate>Widget</translate>
 								</app-button>
-							</app-game-perms>
-						</div>
-					</app-card-list-item>
+								<app-game-perms required="analytics">
+									<app-button
+										trans
+										:to="{
+											name: 'dash.analytics',
+											params: {
+												resource: 'Game_Package',
+												resourceId: pkg.id,
+											},
+										}"
+									>
+										<translate>Analytics</translate>
+									</app-button>
+								</app-game-perms>
+							</div>
+						</app-card-list-item>
+					</template>
 				</app-card-list-draggable>
 			</app-card-list>
 

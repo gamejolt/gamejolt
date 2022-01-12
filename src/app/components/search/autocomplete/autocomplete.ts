@@ -1,11 +1,10 @@
 import { setup } from 'vue-class-component';
 import { Options, Vue, Watch } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { debounce } from '../../../../utils/utils';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Game } from '../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../_common/game/thumbnail-img/thumbnail-img.vue';
-import { AppStore } from '../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { EventTopic } from '../../../../_common/system/event/event-topic';
 import { User } from '../../../../_common/user/user.model';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
@@ -31,7 +30,11 @@ const KEYCODE_ENTER = 13;
 	},
 })
 export default class AppSearchAutocomplete extends Vue {
-	@State app!: AppStore;
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	selected = 0;
 	games: Game[] = [];

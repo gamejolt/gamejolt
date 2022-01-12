@@ -7,6 +7,7 @@
 				<router-link :to="user.url">
 					<span>
 						<slot />
+						{{ ' ' }}
 						<span class="avatar-container">
 							<img
 								:src="user.img_avatar"

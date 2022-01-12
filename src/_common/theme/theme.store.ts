@@ -1,98 +1,83 @@
-import { useStore } from 'vuex';
-import { namespace } from 'vuex-class';
+import { computed, inject, InjectionKey, ref } from 'vue';
 import { arrayRemove } from '../../utils/array';
-import { StoreKey, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
-import { appStore } from '../store/app-store';
+import { SettingThemeAlwaysOurs, SettingThemeDark } from '../settings/settings.service';
+import { CommonStore } from '../store/common-store';
 import { Theme } from './theme.model';
 
-export const ThemeStoreNamespace = 'theme';
-export const {
-	State: ThemeState,
-	Action: ThemeAction,
-	Mutation: ThemeMutation,
-} = namespace(ThemeStoreNamespace);
+export const ThemeStoreKey: InjectionKey<ThemeStore> = Symbol('theme-store');
 
-export type ThemeActions = {};
+export type ThemeStore = ReturnType<typeof createThemeStore>;
 
-export type ThemeMutations = {
-	'theme/sync': void;
-	'theme/setDark': boolean;
-	'theme/setAlwaysOurs': boolean;
-	'theme/setUserTheme': Theme | null;
-	'theme/setPageTheme': PageTheme;
-	'theme/clearPageTheme': string;
-	'theme/setFormTheme': Theme | null;
-};
-
-export const useThemeStore = () => useStore(StoreKey).state.theme as ThemeStore;
+export function useThemeStore() {
+	return inject(ThemeStoreKey)!;
+}
 
 interface PageTheme {
 	key: string;
 	theme: Theme | null;
 }
 
-@VuexModule()
-export class ThemeStore extends VuexStore<ThemeStore, ThemeActions, ThemeMutations> {
-	isDark = false;
-	alwaysOurs = false;
-	formTheme: Theme | null = null;
+export function createThemeStore({ commonStore: { user } }: { commonStore: CommonStore }) {
+	const isDark = ref(SettingThemeDark.get());
+	const _alwaysOurs = ref(SettingThemeAlwaysOurs.get());
+	const _formTheme = ref<Theme | null>(null);
 
-	// Page themes are a stack so that we can route between different pages and
-	// the clearing of one page's theme won't clear out the new page's theme.
-	pageThemeStack: PageTheme[] = [];
+	/**
+	 * Page themes are a stack so that we can route between different pages and
+	 * the clearing of one page's theme won't clear out the new page's theme.
+	 */
+	const _pageThemeStack = ref<PageTheme[]>([]);
 
-	get userTheme() {
-		return (appStore.state.user && appStore.state.user.theme) || null;
-	}
+	const userTheme = computed(() => (user.value && user.value.theme) || null);
 
-	get pageTheme() {
-		return this.pageThemeStack.length > 0
-			? this.pageThemeStack[this.pageThemeStack.length - 1].theme
+	const pageTheme = computed(() => {
+		return _pageThemeStack.value.length > 0
+			? _pageThemeStack.value[_pageThemeStack.value.length - 1].theme
 			: null;
+	});
+
+	const theme = computed(() => {
+		return _alwaysOurs.value
+			? _formTheme.value ?? userTheme.value
+			: _formTheme.value ?? pageTheme.value ?? userTheme.value;
+	});
+
+	function setDark(state: boolean) {
+		isDark.value = state;
 	}
 
-	get theme() {
-		return this.alwaysOurs
-			? this.formTheme ?? this.userTheme
-			: this.formTheme ?? this.pageTheme ?? this.userTheme;
+	function setAlwaysOurs(state: boolean) {
+		_alwaysOurs.value = state;
 	}
 
-	@VuexMutation
-	setDark(state: ThemeMutations['theme/setDark']) {
-		this.isDark = state;
-	}
-
-	@VuexMutation
-	setAlwaysOurs(state: ThemeMutations['theme/setAlwaysOurs']) {
-		this.alwaysOurs = state;
-	}
-
-	@VuexMutation
-	setUserTheme(theme: ThemeMutations['theme/setUserTheme']) {
-		if (appStore.state.user) {
-			appStore.state.user.theme = theme;
-		}
-	}
-
-	@VuexMutation
-	setPageTheme({ key, theme }: ThemeMutations['theme/setPageTheme']) {
-		const existingPageTheme = this.pageThemeStack.find(i => i.key === key);
+	function setPageTheme({ key, theme }: PageTheme) {
+		const existingPageTheme = _pageThemeStack.value.find(i => i.key === key);
 		if (existingPageTheme) {
 			// If we already have a page theme for this page's key, just update it.
 			existingPageTheme.theme = theme;
 		} else {
 			// Otherwise it's a new page theme we need to keep track of.
-			this.pageThemeStack.push({ key, theme });
+			_pageThemeStack.value.push({ key, theme });
 		}
 	}
 
-	@VuexMutation
-	clearPageTheme(key: ThemeMutations['theme/clearPageTheme']) {
-		arrayRemove(this.pageThemeStack, i => i.key === key);
+	function clearPageTheme(key: string) {
+		arrayRemove(_pageThemeStack.value, i => i.key === key);
 	}
 
-	@VuexMutation
-	setFormTheme(theme: ThemeMutations['theme/setFormTheme']) {
-		this.formTheme = theme;
+	function setFormTheme(theme: Theme | null) {
+		_formTheme.value = theme;
 	}
+
+	return {
+		isDark,
+		userTheme,
+		pageTheme,
+		theme,
+		setDark,
+		setAlwaysOurs,
+		setPageTheme,
+		clearPageTheme,
+		setFormTheme,
+	};
 }

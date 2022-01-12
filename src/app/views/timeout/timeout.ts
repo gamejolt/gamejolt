@@ -1,15 +1,16 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { RouteLocationRedirect } from '../../../utils/router';
 import { Api } from '../../../_common/api/api.service';
 import AppContactLink from '../../../_common/contact-link/contact-link.vue';
 import { showErrorGrowl, showInfoGrowl } from '../../../_common/growls/growls.service';
-import AppIllustration from '../../../_common/illustration/illustration.vue';
+import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import AppLinkHelp from '../../../_common/link/help/help.vue';
 import { Navigate } from '../../../_common/navigate/navigate.service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
-import { AppMutation, AppState, appStore, AppStore } from '../../../_common/store/app-store';
-import { AppThemeSvg } from '../../../_common/theme/svg/svg';
+import { commonStore, useCommonStore } from '../../../_common/store/common-store';
+import AppThemeSvg from '../../../_common/theme/svg/AppThemeSvg.vue';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import { UserTimeout } from '../../../_common/user/timeout/timeout.model';
 import AppTimeoutCountdown from '../../components/timeout/countdown/countdown.vue';
@@ -32,7 +33,7 @@ import { imageGameJoltLogo } from '../../img/images';
 		const payload = await Api.sendRequest('/web/touch');
 
 		// Redirect to home for guests or users without active timeouts.
-		if (!!appStore.user || !appStore.state.isUserTimedOut) {
+		if (!!commonStore.user.value || !commonStore.isUserTimedOut.value) {
 			return new RouteLocationRedirect({
 				name: 'home',
 			});
@@ -42,11 +43,11 @@ import { imageGameJoltLogo } from '../../img/images';
 	},
 })
 export default class RouteTimeout extends BaseRouteComponent {
-	@AppState
-	timeout!: AppStore['timeout'];
+	commonStore = setup(() => useCommonStore());
 
-	@AppMutation
-	setTimeout!: AppStore['setTimeout'];
+	get timeout() {
+		return this.commonStore.timeout;
+	}
 
 	isExpired = false;
 	updateTimer?: NodeJS.Timer;
@@ -108,7 +109,7 @@ export default class RouteTimeout extends BaseRouteComponent {
 		const payload = await Api.sendRequest('/web/dash/timeout/clear-resource', {});
 		if (payload && payload.success) {
 			const newTimeout = new UserTimeout(payload.timeout);
-			this.setTimeout(newTimeout);
+			this.commonStore.setTimeout(newTimeout);
 
 			this.updateExpired();
 			showInfoGrowl(this.$gettext(`The content has been removed.`));

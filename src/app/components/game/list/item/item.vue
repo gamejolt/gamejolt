@@ -1,34 +1,37 @@
+<script lang="ts" src="./item"></script>
+
 <template>
 	<div class="game-list-item">
 		<router-link
+			v-app-track-event="eventLabel ? 'game-list:click:' + eventLabel : undefined"
 			class="-thumb"
 			:to="url"
-			v-app-track-event="eventLabel ? 'game-list:click:' + eventLabel : undefined"
 		>
 			<app-game-thumbnail-img :game="game" />
 		</router-link>
 
 		<div class="-meta">
 			<router-link
+				v-app-track-event="eventLabel ? 'game-list:click:' + eventLabel : undefined"
 				class="-title -spacing link-unstyled"
 				:to="url"
 				:title="game.title"
-				v-app-track-event="eventLabel ? 'game-list:click:' + eventLabel : undefined"
 			>
 				{{ game.title }}
 			</router-link>
 
 			<app-user-card-hover class="-dev -spacing" :user="game.developer">
 				<router-link
+					v-app-track-event="eventLabel ? 'game-list:dev:' + eventLabel : undefined"
 					class="link-muted"
 					:to="{
 						name: 'profile.overview',
 						params: { username: game.developer.username },
 					}"
 					:title="`${game.developer.display_name} (@${game.developer.username})`"
-					v-app-track-event="eventLabel ? 'game-list:dev:' + eventLabel : undefined"
 				>
 					<translate>by</translate>
+					{{ ' ' }}
 					<strong>
 						{{ game.developer.display_name }}
 					</strong>
@@ -50,5 +53,3 @@
 </template>
 
 <style lang="stylus" src="../list-common.styl" scoped></style>
-
-<script lang="ts" src="./item"></script>

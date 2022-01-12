@@ -1,5 +1,4 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { propRequired } from '../../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbnail/img/img.vue';
@@ -16,10 +15,10 @@ import AppFormsCommunityPillSelector from '../selector/selector.vue';
 	},
 })
 export default class AppFormsCommunityPillIncomplete extends Vue {
-	@Prop(propRequired(Array))
+	@Prop({ type: Array, required: true })
 	communities!: Community[];
 
-	@Prop(propRequired(Community))
+	@Prop({ type: Object, required: true })
 	community!: Community;
 
 	@Emit('add') emitAdd(_community: Community, _channel: CommunityChannel) {}

@@ -3,8 +3,7 @@ import { RouteRecordRaw } from 'vue-router';
 export const routeDashAccountChangePassword: RouteRecordRaw = {
 	name: 'dash.account.change-password',
 	path: 'change-password',
-	component: () =>
-		import(/* webpackChunkName: "routeDashAccountChangePassword" */ './change-password.vue'),
+	component: () => import('./change-password.vue'),
 	children: [
 		{
 			path: '/dashboard/profile/change-password',

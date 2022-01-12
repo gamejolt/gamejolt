@@ -13,7 +13,7 @@ import { UserAddressEditModal } from '../edit-modal/edit-modal.service';
 	},
 })
 export default class AppUserAddressCard extends Vue {
-	@Prop(UserAddress) address!: UserAddress;
+	@Prop(Object) address!: UserAddress;
 	@Prop(Boolean) showRemove?: boolean;
 
 	@Emit('remove')

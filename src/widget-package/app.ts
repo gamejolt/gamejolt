@@ -1,13 +1,15 @@
+import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
 import { Action, Mutation, State } from 'vuex-class';
 import { AppTheme } from '../_common/theme/theme';
+import { useThemeStore } from '../_common/theme/theme.store';
 import AppDownload from './components/download/download.vue';
 import AppFooter from './components/footer/footer.vue';
 import AppGameHeader from './components/game-header/game-header.vue';
 import AppPayment from './components/payment/payment.vue';
 import AppProcessingOverlay from './components/processing-overlay/processing-overlay.vue';
 import AppToast from './components/toast/toast.vue';
-import { store, Store } from './store/index';
+import { Store } from './store/index';
 
 export const WidgetThemeKey = 'widget';
 
@@ -23,6 +25,8 @@ export const WidgetThemeKey = 'widget';
 	},
 })
 export default class App extends Vue {
+	themeStore = setup(() => useThemeStore());
+
 	@State isLightTheme!: Store['isLightTheme'];
 	@State isLoaded!: Store['isLoaded'];
 	@State isProcessing!: Store['isProcessing'];
@@ -44,7 +48,7 @@ export default class App extends Vue {
 
 		await this.bootstrap();
 		if (this.game) {
-			store.commit('theme/setPageTheme', {
+			this.themeStore.setPageTheme({
 				key: WidgetThemeKey,
 				theme: this.game.theme ?? null,
 			});

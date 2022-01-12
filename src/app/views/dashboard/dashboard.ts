@@ -1,12 +1,15 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { BaseRouteComponent } from '../../../_common/route/route-component';
-import { Store } from '../../store/index';
+import { useCommonStore } from '../../../_common/store/common-store';
 
 @Options({
 	name: 'RouteDash',
 })
 export default class RouteDash extends BaseRouteComponent {
-	@State
-	app!: Store['app'];
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 }

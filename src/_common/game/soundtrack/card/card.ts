@@ -18,7 +18,7 @@ import { GameSong } from '../../song/song.model';
 	},
 })
 export default class AppGameSoundtrackCard extends Vue {
-	@Prop(Game)
+	@Prop(Object)
 	game!: Game;
 
 	@Prop(Array)

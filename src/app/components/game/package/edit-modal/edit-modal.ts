@@ -11,9 +11,9 @@ import FormGamePackage from '../../../forms/game/package/package.vue';
 	},
 })
 export default class AppGamePackageEditModal extends mixins(BaseModal) {
-	@Prop(Game) game?: Game;
-	@Prop(GamePackage) gamePackage?: GamePackage;
-	@Prop(Sellable) sellable?: Sellable;
+	@Prop(Object) game?: Game;
+	@Prop(Object) gamePackage?: GamePackage;
+	@Prop(Object) sellable?: Sellable;
 
 	onSubmitted(gamePackage: GamePackage) {
 		this.modal.resolve(gamePackage);

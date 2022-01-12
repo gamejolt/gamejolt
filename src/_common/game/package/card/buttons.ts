@@ -14,8 +14,8 @@ import AppGamePackageCardMoreOptions from './more-options.vue';
 	},
 })
 export default class AppGamePackageCardButtons extends Vue {
-	@Prop(GamePackage) package!: GamePackage;
-	@Prop(GamePackageCardModel) card!: GamePackageCardModel;
+	@Prop(Object) package!: GamePackage;
+	@Prop(Object) card!: GamePackageCardModel;
 
 	readonly Screen = Screen;
 	readonly formatFilesize = formatFilesize;

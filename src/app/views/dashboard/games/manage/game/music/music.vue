@@ -29,22 +29,29 @@
 					:items="songs"
 					:active-item="activeItem"
 					:is-adding="isAdding"
+					is-draggable
 					@activate="activeItem = $event"
 				>
-					<app-card-list-draggable @change="saveSongSort">
-						<app-card-list-item v-for="song of songs" :key="song.id" :item="song">
-							<a class="card-remove" @click.stop="removeSong(song)">
-								<app-jolticon icon="remove" />
-							</a>
+					<app-card-list-draggable item-key="id" @change="saveSongSort">
+						<template #item="{ element: song }">
+							<app-card-list-item :item="song">
+								<a class="card-remove" @click.stop="removeSong(song)">
+									<app-jolticon icon="remove" />
+								</a>
 
-							<div class="card-title">
-								<h5>{{ song.title }}</h5>
-							</div>
+								<div class="card-title">
+									<h5>{{ song.title }}</h5>
+								</div>
 
-							<template #body>
-								<form-game-song :game="game" :model="song" @submit="onSongEdited" />
-							</template>
-						</app-card-list-item>
+								<template #body>
+									<form-game-song
+										:game="game"
+										:model="song"
+										@submit="onSongEdited"
+									/>
+								</template>
+							</app-card-list-item>
+						</template>
 					</app-card-list-draggable>
 
 					<app-card-list-add

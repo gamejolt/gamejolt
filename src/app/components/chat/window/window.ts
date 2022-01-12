@@ -1,6 +1,5 @@
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
-import { propRequired } from '../../../../utils/vue';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -36,9 +35,9 @@ import AppChatWindowSend from './send/send.vue';
 	},
 })
 export default class AppChatWindow extends Vue {
-	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
-	@Prop(propRequired(Array)) messages!: ChatMessage[];
-	@Prop(propRequired(Array)) queuedMessages!: ChatMessage[];
+	@Prop({ type: Object, required: true }) room!: ChatRoom;
+	@Prop({ type: Array, required: true }) messages!: ChatMessage[];
+	@Prop({ type: Array, required: true }) queuedMessages!: ChatMessage[];
 
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;

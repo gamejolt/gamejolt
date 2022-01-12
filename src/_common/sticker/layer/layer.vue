@@ -1,9 +1,9 @@
 <script lang="ts" src="./layer"></script>
 
 <template>
-	<div class="-layer" :class="{ '-dragging': drawer.isDragging }" @contextmenu="onContextMenu">
+	<div class="-layer" :class="{ '-dragging': isDragging }" @contextmenu="onContextMenu">
 		<app-sticker-layer-placement-mask
-			v-if="layer.isShowingDrawer"
+			v-if="isShowingDrawer"
 			class="-placement-mask"
 			:layer="layer"
 		/>

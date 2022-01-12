@@ -2,7 +2,7 @@ import { Options } from 'vue-property-decorator';
 import AppContactLink from '../../../../_common/contact-link/contact-link.vue';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
+import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { imageJolt } from '../../../img/images';
 import profileCros from './cros.jpg';

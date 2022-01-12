@@ -1,12 +1,12 @@
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import { formatNumber } from '../../../../_common/filters/number';
 import { Game } from '../../../../_common/game/game.model';
 import { GameScoreTable } from '../../../../_common/game/score-table/score-table.model';
 import { Popper } from '../../../../_common/popper/popper.service';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { AppStore } from '../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
 import { UserGameScore } from '../../../../_common/user/game-score/game-score.model';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
@@ -22,15 +22,18 @@ import AppScoreboardSelector from '../scoreboard-selector/scoreboard-selector.vu
 	},
 })
 export default class AppScoreOverview extends Vue {
-	@Prop(Game)
+	@Prop(Object)
 	game!: Game;
 	@Prop(Object)
 	initialPayload?: any;
 	@Prop({ type: String, default: 'full' })
 	size!: 'full' | 'small';
 
-	@State
-	app!: AppStore;
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	scoreTables: GameScoreTable[] = [];
 	scoreTable: GameScoreTable | null = null;

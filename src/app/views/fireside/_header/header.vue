@@ -17,14 +17,17 @@
 						>
 							@{{ fireside.user.username }}
 						</router-link>
+						{{ ' ' }}
 						<app-user-avatar-img class="-avatar" :user="fireside.user" />
 						<span>'s Fireside</span>
 
 						<template v-if="fireside.community">
+							{{ ' ' }}
 							<span>in </span>
 							<div class="-avatar -community-avatar">
 								<app-community-thumbnail-img :community="fireside.community" />
 							</div>
+							{{ ' ' }}
 							<router-link :to="fireside.community.routeLocation">
 								{{ fireside.community.name }}
 							</router-link>

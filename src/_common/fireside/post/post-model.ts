@@ -283,16 +283,16 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	}
 
 	getPinContextFor(route: RouteLocationNormalized) {
-		if (this.isInGamePinContext(route)) {
+		if (this._isInGamePinContext(route)) {
 			return this.game!;
 		}
 
-		const fpc = this.getCommunityPinContext(route);
+		const fpc = this._getCommunityPinContext(route);
 		if (fpc !== null) {
 			return fpc;
 		}
 
-		if (this.isInUserPinContext(route)) {
+		if (this._isInUserPinContext(route)) {
 			return this.user;
 		}
 
@@ -319,7 +319,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return lead;
 	}
 
-	private getCommunityPinContext(route: RouteLocationNormalized) {
+	_getCommunityPinContext(route: RouteLocationNormalized) {
 		// A post can be pinned to a community if:
 		// 1. viewing the community feed.
 		// 2. the post was published to the community.
@@ -342,7 +342,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return null;
 	}
 
-	private isInGamePinContext(route: RouteLocationNormalized) {
+	_isInGamePinContext(route: RouteLocationNormalized) {
 		// A post can be pinned to a game if:
 		// 1. viewing the game feed, or the game's dashboard feed.
 		// 2. the post is a game post (sanity check)
@@ -362,7 +362,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return route.params.id.toString() === this.game.id.toString();
 	}
 
-	private isInUserPinContext(route: RouteLocationNormalized) {
+	_isInUserPinContext(route: RouteLocationNormalized) {
 		// A post can be pinned to a user if:
 		// 1. viewing the user's profile
 		// 2. the post is shown to be written by the user we're viewing (sanity check)

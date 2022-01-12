@@ -1,5 +1,4 @@
-import { RouteLocationNormalized } from 'vue-router';
-import { sync } from 'vuex-router-sync';
+import { reactive } from 'vue';
 import { buildUseStore, VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
 import { CommunityJoinLocation } from '../../_common/analytics/analytics.service';
 import { Api } from '../../_common/api/api.service';
@@ -14,37 +13,19 @@ import { FiresidePost } from '../../_common/fireside/post/post-model';
 import { showSuccessGrowl } from '../../_common/growls/growls.service';
 import { ModalConfirm } from '../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../_common/screen/screen-service';
-import {
-	SidebarActions,
-	SidebarMutations,
-	SidebarStore,
-} from '../../_common/sidebar/sidebar.store';
-import {
-	Actions as AppActions,
-	AppStore,
-	appStore,
-	Mutations as AppMutations,
-} from '../../_common/store/app-store';
-import { ThemeActions, ThemeMutations, ThemeStore } from '../../_common/theme/theme.store';
+import { sidebarStore } from '../../_common/sidebar/sidebar.store';
+import { commonStore } from '../../_common/store/common-store';
 import { Translate } from '../../_common/translate/translate.service';
 import { ActivityFeedState } from '../components/activity/feed/state';
 import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
 import { GridClient } from '../components/grid/client.service';
 import { GridClientLazy } from '../components/lazy';
 import { router } from '../views';
-import { BannerActions, BannerMutations, BannerStore } from './banner';
 import * as _ClientLibraryMod from './client-library';
 import { CommunityStates } from './community-state';
 import { Actions as LibraryActions, LibraryStore, Mutations as LibraryMutations } from './library';
 
-// Re-export our sub-modules.
-export { BannerModule, BannerStore } from './banner';
-
-export type Actions = AppActions &
-	ThemeActions &
-	LibraryActions &
-	BannerActions &
-	SidebarActions &
+export type Actions = LibraryActions &
 	_ClientLibraryMod.Actions & {
 		bootstrap: void;
 		logout: void;
@@ -67,11 +48,7 @@ export type Actions = AppActions &
 		};
 	};
 
-export type Mutations = AppMutations &
-	ThemeMutations &
-	LibraryMutations &
-	BannerMutations &
-	SidebarMutations &
+export type Mutations = LibraryMutations &
 	_ClientLibraryMod.Mutations & {
 		showShell: void;
 		hideShell: void;
@@ -110,16 +87,12 @@ export function tillGridBootstrapped() {
 }
 
 const modules: any = {
-	app: appStore,
-	theme: new ThemeStore(),
-	library: new LibraryStore(),
-	banner: new BannerStore(),
-	sidebar: new SidebarStore(),
+	library: reactive(new LibraryStore()),
 };
 
 if (GJ_IS_DESKTOP_APP) {
 	const mod = await import('./client-library');
-	modules.clientLibrary = new mod.ClientLibraryStore();
+	modules.clientLibrary = reactive(new mod.ClientLibraryStore());
 }
 
 // the two types an event notification can assume, either "activity" for the post activity feed or "notifications"
@@ -131,15 +104,8 @@ type TogglableLeftPane = '' | 'chat' | 'context' | 'library';
 	modules,
 })
 export class Store extends VuexStore<Store, Actions, Mutations> {
-	app!: AppStore;
-	theme!: ThemeStore;
-	library!: LibraryStore;
-	banner!: BannerStore;
-	sidebar!: SidebarStore;
-	clientLibrary!: _ClientLibraryMod.ClientLibraryStore;
-
-	/** From the vuex-router-sync. */
-	route!: RouteLocationNormalized;
+	declare library: LibraryStore;
+	declare clientLibrary: _ClientLibraryMod.ClientLibraryStore;
 
 	grid: GridClient | null = null;
 
@@ -177,13 +143,15 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	get hasCbar() {
-		if (this.isShellHidden || this.app.isUserTimedOut) {
+		// TODO(vue3): use provided commonStore
+		if (this.isShellHidden || commonStore.isUserTimedOut.value) {
 			return false;
 		}
 
 		// The cbar is pretty empty without a user and active context pane,
 		// so we want to hide it if those conditions are met.
-		if (!this.app.user && !this.sidebar.activeContextPane && !Screen.isXs) {
+		// TODO(vue3): use an injected commonStore instead
+		if (!commonStore.user.value && !sidebarStore.activeContextPane.value && !Screen.isXs) {
 			return false;
 		}
 
@@ -202,7 +170,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	get visibleLeftPane(): TogglableLeftPane {
 		// If there's no other left-pane pane opened, Large breakpoint should
 		// always show the 'context' pane if there is a context component set.
-		if (Screen.isLg && this.sidebar.activeContextPane && !this.overlayedLeftPane) {
+		if (Screen.isLg && sidebarStore.activeContextPane.value && !this.overlayedLeftPane) {
 			return 'context';
 		}
 
@@ -342,9 +310,10 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 			// Close the left-pane if the cbar is also closing.
 			this._toggleLeftPane();
 		} else {
-			// Open the left-pane depending on the SidebarStore information when the cbar shows.
+			// Open the left-pane depending on the SidebarStore information when
+			// the cbar shows.
 			this._toggleLeftPane(
-				this.sidebar.activeContextPane ? 'context' : this.lastOpenLeftPane
+				sidebarStore.activeContextPane.value ? 'context' : this.lastOpenLeftPane
 			);
 		}
 
@@ -354,7 +323,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	/** Show the context pane if there's one available. */
 	@VuexAction
 	async showContextPane() {
-		if (this.visibleLeftPane !== 'context' && this.sidebar.activeContextPane) {
+		if (this.visibleLeftPane !== 'context' && sidebarStore.activeContextPane.value) {
 			this.toggleLeftPane('context');
 		}
 	}
@@ -362,8 +331,9 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	/** Passing no value will close any open left-panes. */
 	@VuexAction
 	async toggleLeftPane(type?: TogglableLeftPane) {
-		if (type === 'context' && !this.sidebar.activeContextPane) {
-			// Don't show the context pane if the SidebarStore has no context to show.
+		if (type === 'context' && !sidebarStore.activeContextPane.value) {
+			// Don't show the context pane if the SidebarStore has no context to
+			// show.
 			this._toggleLeftPane();
 			return;
 		}
@@ -668,11 +638,8 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 }
 
-export const store = new Store();
+export const store = reactive(new Store()) as Store;
 export const useStore = buildUseStore<Store>();
-
-// Sync the routes into the store.
-sync(store, router, { moduleName: 'route' });
 
 // Sync with the ContentFocus service.
 registerFocusWatcher(

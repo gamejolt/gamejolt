@@ -15,7 +15,7 @@ import { routeDashAccountWithdrawFunds } from './withdraw-funds/withdraw-funds.r
 
 export const routeDashAccount: RouteRecordRaw = {
 	path: '',
-	component: () => import(/* webpackChunkName: "routeDashAccount" */ './account.vue'),
+	component: () => import('./account.vue'),
 	children: [
 		routeDashAccountEdit,
 		routeDashAccountEmailPreferences,

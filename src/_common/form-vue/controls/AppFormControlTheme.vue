@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { Sketch as Picker } from '@ckpack/vue-color';
 import { computed, ref, toRef } from 'vue';
 import { Api } from '../../api/api.service';
 import AppLoading from '../../loading/loading.vue';
@@ -13,17 +14,30 @@ import {
 } from '../../theme/theme.model';
 import { AppTooltip as vAppTooltip } from '../../tooltip/tooltip-directive';
 import AppTranslate from '../../translate/AppTranslate.vue';
-import { createFormControl, defineFormControlProps } from '../AppFormControl.vue';
+import {
+	createFormControl,
+	defineFormControlEmits,
+	defineFormControlProps,
+} from '../AppFormControl.vue';
 
 const props = defineProps({
 	...defineFormControlProps(),
+});
+
+const emit = defineEmits({
+	...defineFormControlEmits(),
 });
 
 interface VueColor {
 	hex: string | null;
 }
 
-const c = createFormControl(null as Theme | null, toRef(props, 'validators'));
+const c = createFormControl({
+	initialValue: null as Theme | null,
+	validators: toRef(props, 'validators'),
+	// eslint-disable-next-line vue/require-explicit-emits
+	onChange: val => emit('changed', val),
+});
 
 const presets = ref([] as ThemePreset[]);
 const activeTab = ref('preset' as 'preset' | 'custom');
@@ -128,11 +142,11 @@ function clear() {
 							</template>
 						</div>
 						<div v-else-if="activeTab === 'custom'">
-							<picker
+							<Picker
 								disable-alpha
 								:preset-colors="[]"
-								:value="customSelection"
-								@input="onCustomChange"
+								:model-value="customSelection"
+								@update:modelValue="onCustomChange"
 							/>
 							<br />
 						</div>

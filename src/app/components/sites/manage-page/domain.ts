@@ -1,9 +1,9 @@
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Game } from '../../../../_common/game/game.model';
 import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { Site } from '../../../../_common/site/site-model';
-import { Store } from '../../../store/index';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import FormSiteDomain from '../../forms/site/domain/domain.vue';
 
 @Options({
@@ -12,10 +12,14 @@ import FormSiteDomain from '../../forms/site/domain/domain.vue';
 	},
 })
 export default class AppSitesManagePageDomain extends Vue {
-	@Prop(Site) site!: Site;
-	@Prop(Game) game?: Game;
+	@Prop(Object) site!: Site;
+	@Prop(Object) game?: Game;
 
-	@State app!: Store['app'];
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	onDomainSaved() {
 		showSuccessGrowl(

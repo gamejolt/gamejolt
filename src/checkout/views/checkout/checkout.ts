@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../_common/api/api.service';
 import { Environment } from '../../../_common/environment/environment.service';
@@ -8,8 +9,8 @@ import { Navigate } from '../../../_common/navigate/navigate.service';
 import { Order } from '../../../_common/order/order.model';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { Sellable } from '../../../_common/sellable/sellable.model';
+import { useThemeStore } from '../../../_common/theme/theme.store';
 import FormPayment from '../../components/forms/payment/payment.vue';
-import { store } from '../../store';
 
 const CheckoutThemeKey = 'checkout';
 
@@ -24,6 +25,8 @@ const CheckoutThemeKey = 'checkout';
 	resolver: ({ route }) => Api.sendRequest('/web/checkout/' + route.params.orderId),
 })
 export default class RouteCheckout extends BaseRouteComponent {
+	themeStore = setup(() => useThemeStore());
+
 	cards!: any[];
 	sellable!: Sellable;
 	order!: Order;
@@ -51,7 +54,7 @@ export default class RouteCheckout extends BaseRouteComponent {
 	}
 
 	routeDestroyed() {
-		store.commit('theme/clearPageTheme', CheckoutThemeKey);
+		this.themeStore.clearPageTheme(CheckoutThemeKey);
 	}
 
 	onSubmit(_formModel: any, response: any) {
@@ -76,7 +79,7 @@ export default class RouteCheckout extends BaseRouteComponent {
 
 	private setPageTheme() {
 		const theme = this.game.theme ?? null;
-		store.commit('theme/setPageTheme', {
+		this.themeStore.setPageTheme({
 			key: CheckoutThemeKey,
 			theme,
 		});

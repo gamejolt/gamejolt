@@ -12,7 +12,7 @@ import FormRoomDetails from './form/form.vue';
 	},
 })
 export default class AppChatRoomDetailsModal extends mixins(BaseModal) {
-	@Prop(ChatRoom) room!: ChatRoom;
+	@Prop(Object) room!: ChatRoom;
 
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;

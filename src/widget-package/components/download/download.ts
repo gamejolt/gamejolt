@@ -1,11 +1,14 @@
+import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { formatCurrency } from '../../../_common/filters/currency';
+import { formatFilesize } from '../../../_common/filters/filesize';
 import { GameBuild } from '../../../_common/game/build/build.model';
 import { HistoryTick } from '../../../_common/history-tick/history-tick-service';
 import { Sellable } from '../../../_common/sellable/sellable.model';
+import { useCommonStore } from '../../../_common/store/common-store';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppFadeCollapse from '../../components/fade-collapse/fade-collapse.vue';
 import AppModal from '../../components/modal/modal.vue';
@@ -23,7 +26,11 @@ import AppPayment from '../payment/payment.vue';
 	},
 })
 export default class AppDownload extends Vue {
-	@State app!: Store['app'];
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 	@State packageCard!: Store['packageCard'];
 	@State game!: Store['game'];
 	@State developer!: Store['developer'];
@@ -39,7 +46,8 @@ export default class AppDownload extends Vue {
 	clickedBuild?: GameBuild;
 
 	readonly GameBuild = GameBuild;
-	readonly filesize = filesiformatFilesizedonly formatCurrency = formatCurrency;
+	readonly formatFilesize = formatFilesize;
+	readonly formatCurrency = formatCurrency;
 
 	// "Convenience" I guess
 	get hasBrowserBuild() {

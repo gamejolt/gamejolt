@@ -11,7 +11,7 @@ import FormFiresideEdit from '../../../components/forms/fireside/edit/edit.vue';
 	},
 })
 export default class AppFiresideEditModal extends mixins(BaseModal) {
-	@Prop({ type: FiresideController, required: true })
+	@Prop({ type: Object, required: true })
 	controller!: FiresideController;
 
 	onFormSubmit() {

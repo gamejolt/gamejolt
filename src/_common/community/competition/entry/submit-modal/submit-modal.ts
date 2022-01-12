@@ -1,5 +1,4 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
 import { Api } from '../../../../api/api.service';
 import { Game } from '../../../../game/game.model';
 import AppGameThumbnailImg from '../../../../game/thumbnail-img/thumbnail-img.vue';
@@ -18,7 +17,7 @@ import { CommunityCompetitionEntry } from '../entry.model';
 	},
 })
 export default class AppCommunityCompetitionEntrySubmitModal extends mixins(BaseModal) {
-	@Prop(propRequired(CommunityCompetition)) competition!: CommunityCompetition;
+	@Prop({ type: Object, required: true }) competition!: CommunityCompetition;
 
 	games: Game[] = [];
 	isLoading = true;

@@ -14,7 +14,7 @@ import FormSiteSettings from '../../forms/site/settings/settings.vue';
 	},
 })
 export default class AppSitesManagePageTemplate extends Vue {
-	@Prop(Site) site?: Site;
+	@Prop(Object) site?: Site;
 	@Prop(Boolean) enabled?: boolean;
 	@Prop(Boolean) staticEnabled?: boolean;
 

@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { stringSort } from '../../../../../utils/array';
 import { fuzzysearch } from '../../../../../utils/string';
@@ -6,9 +7,9 @@ import {
 	inviteFiresideHost,
 	removeFiresideHost,
 } from '../../../../../_common/fireside/fireside.model';
-import AppIllustration from '../../../../../_common/illustration/illustration.vue';
+import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import { BaseModal } from '../../../../../_common/modal/base';
-import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppUserAvatarImg from '../../../../../_common/user/user-avatar/img/img.vue';
 import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../../_common/user/user.model';
@@ -24,10 +25,14 @@ import { illNoCommentsSmall } from '../../../../img/ill/illustrations';
 	},
 })
 export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
-	@Prop({ type: FiresideController, required: true })
+	@Prop({ type: Object, required: true })
 	controller!: FiresideController;
 
-	@AppState user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	filterQuery = '';
 	usersProcessing: (ChatUser | User)[] = [];

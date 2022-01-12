@@ -1,10 +1,9 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propRequired } from '../../utils/vue';
 import { Navigate } from '../navigate/navigate.service';
 
 @Options({})
 export default class AppContactLink extends Vue {
-	@Prop(propRequired(String)) email!: string;
+	@Prop({ type: String, required: true }) email!: string;
 
 	onClick() {
 		// Sometimes Vue router will break <a> tags that use mailto

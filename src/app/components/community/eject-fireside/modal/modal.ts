@@ -1,9 +1,10 @@
+import { setup } from 'vue-class-component';
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { FiresideCommunity } from '../../../../../_common/fireside/community/community.model';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import { BaseModal } from '../../../../../_common/modal/base';
 import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
-import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import { REASON_OTHER } from '../../../../../_common/user/action-reasons';
 import { FormModel } from '../form/form';
 import FormCommunityEjectFireside from '../form/form.vue';
@@ -15,14 +16,17 @@ import { CommunityEjectFiresideModalResult } from './modal.service';
 	},
 })
 export default class AppCommunityEjectFiresideModal extends mixins(BaseModal) {
-	@Prop({ type: FiresideCommunity, required: true })
+	@Prop({ type: Object, required: true })
 	firesideCommunity!: FiresideCommunity;
 
-	@Prop({ type: Fireside, required: true })
+	@Prop({ type: Object, required: true })
 	fireside!: Fireside;
 
-	@AppState
-	user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	reasonFormModel: FormModel | null = null;
 

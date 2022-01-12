@@ -1,5 +1,4 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional } from '../../../utils/vue';
 import AppButtonPlaceholder from '../../button/placeholder/placeholder.vue';
 import { Environment } from '../../environment/environment.service';
 
@@ -7,7 +6,7 @@ import { Environment } from '../../environment/environment.service';
 	components: { AppButtonPlaceholder },
 })
 export default class AppCommunityCardPlaceholder extends Vue {
-	@Prop(propOptional(Boolean, false)) elevate!: boolean;
+	@Prop({ type: Boolean, default: false }) elevate!: boolean;
 
 	readonly Environment = Environment;
 }

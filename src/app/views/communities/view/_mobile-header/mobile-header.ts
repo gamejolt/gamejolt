@@ -1,7 +1,7 @@
+import { setup } from 'vue-class-component';
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
 import { getAbsoluteLink } from '../../../../../utils/router';
-import { propOptional } from '../../../../../utils/vue';
 import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/join-widget.vue';
 import AppCommunityVerifiedTick from '../../../../../_common/community/verified-tick/verified-tick.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
@@ -10,8 +10,8 @@ import { Popper } from '../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../../../_common/share/share.service';
-import { SidebarState, SidebarStore } from '../../../../../_common/sidebar/sidebar.store';
-import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { useSidebarStore } from '../../../../../_common/sidebar/sidebar.store';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import { AppTheme } from '../../../../../_common/theme/theme';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { CommunitySidebarModal } from '../../../../components/community/sidebar/modal/modal.service';
@@ -32,13 +32,20 @@ import AppEditableThumbnail from '../_editable-thumbnail/editable-thumbnail.vue'
 	},
 })
 export default class AppMobileHeader extends Vue {
-	@Prop(propOptional(Boolean, false)) hasUnread!: boolean;
+	@Prop({ type: Boolean, default: false }) hasUnread!: boolean;
+
+	commonStore = setup(() => useCommonStore());
+	sidebarStore = setup(() => useSidebarStore());
 
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 
-	@AppState user!: AppStore['user'];
-	@SidebarState activeContextPane!: SidebarStore['activeContextPane'];
+	get user() {
+		return this.commonStore.user;
+	}
+	get activeContextPane() {
+		return this.sidebarStore.activeContextPane;
+	}
 	@Action toggleLeftPane!: Store['toggleLeftPane'];
 
 	readonly Environment = Environment;

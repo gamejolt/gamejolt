@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { Mutation } from 'vuex-class';
 import { arrayRemove } from '../../../../../utils/array';
@@ -14,7 +15,7 @@ import { getLinkedAccountPlatformIcon } from '../../../../../_common/linked-acco
 import AppPopper from '../../../../../_common/popper/popper.vue';
 import { ReportModal } from '../../../../../_common/report/modal/modal.service';
 import { copyShareLink } from '../../../../../_common/share/share.service';
-import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import { User } from '../../../../../_common/user/user.model';
 import { Store } from '../../../../store';
 import { CommunityBlockUserModal } from '../../../community/block-user-modal/block-user-modal.service';
@@ -30,10 +31,14 @@ import { AppCommunityPerms } from '../../../community/perms/perms';
 	},
 })
 export default class AppPostControlsMore extends Vue {
-	@Prop({ type: FiresidePost, required: true })
+	@Prop({ type: Object, required: true })
 	post!: FiresidePost;
 
-	@AppState user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 	@Mutation featuredPost!: Store['featuredPost'];
 
 	@Emit('remove') emitRemove() {}

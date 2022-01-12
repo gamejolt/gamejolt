@@ -8,7 +8,7 @@ import AppGameOgrsTag from './tag.vue';
 	},
 })
 export default class AppGameOgrs extends Vue {
-	@Prop(Game) game!: Game;
+	@Prop(Object) game!: Game;
 	@Prop(Boolean) hideDescriptors?: boolean;
 	@Prop(Boolean) hideTag?: boolean;
 

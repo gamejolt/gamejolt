@@ -1,5 +1,4 @@
 <script lang="ts">
-// import { now } from 'jquery';
 import { computed, onUnmounted } from 'vue';
 
 declare class MovementData {
@@ -25,7 +24,7 @@ declare class MovementDataExtras {
 	screenY: number;
 }
 
-export type AppTouchInput = MovementData & ReturnType<typeof getEmittableData>;
+export type AppTouchInput = MovementData & ReturnType<typeof getEmitData>;
 
 type VerticalOption = 'up' | 'down' | 'vertical' | 'all';
 type HorizontalOption = 'left' | 'right' | 'horizontal' | 'all';
@@ -61,7 +60,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
-	panstart: null,
+	panstart: (_event: AppTouchInput) => true,
 	panmove: (_event: AppTouchInput) => true,
 	panend: (_event: AppTouchInput) => true,
 });
@@ -163,8 +162,9 @@ const direction = computed<HorizontalOption | VerticalOption>(() => {
 });
 
 const threshold = computed<number>(() => {
-	if (props.panOptions.threshold) {
-		return props.panOptions.threshold;
+	const t = props.panOptions.threshold;
+	if (typeof t === 'number' && t >= 0) {
+		return t;
 	}
 	return 10;
 });
@@ -195,7 +195,8 @@ function onPanStart(event: FlexibleTouchEvent) {
 
 	if (threshold.value === 0) {
 		isDragging = true;
-		emitPanStart();
+		const data = getMovementData(event);
+		emitPanStart(getEmitData(event, data));
 	}
 }
 
@@ -250,11 +251,13 @@ function _handlePanMove(event: FlexibleTouchEvent) {
 		return;
 	}
 
+	const emitData = getEmitData(event, data);
+
 	if (!didEmitStart) {
-		emitPanStart();
+		emitPanStart(emitData);
 	}
 
-	emit('panmove', getEmittableData(event, data));
+	emit('panmove', emitData);
 }
 
 function onPanEnd(event: FlexibleTouchEvent, force = false) {
@@ -265,7 +268,7 @@ function onPanEnd(event: FlexibleTouchEvent, force = false) {
 
 	if (!didEmitEnd && (isDragging || force)) {
 		const data = getMovementData(event);
-		emitPanEnd(getEmittableData(event, data));
+		emitPanEnd(getEmitData(event, data));
 	}
 }
 
@@ -303,7 +306,7 @@ function getCoordinatesFromEvent(event: FlexibleTouchEvent): TimestampedCoordina
 		}
 	}
 
-	return { x: screenX, y: screenY, timestamp: 0 };
+	return { x: screenX, y: screenY, timestamp: Date.now() };
 }
 
 function getMovementData(event: FlexibleTouchEvent) {
@@ -348,7 +351,7 @@ function getMovementData(event: FlexibleTouchEvent) {
 	return lastMovementData;
 }
 
-function getEmittableData(event: FlexibleTouchEvent, data: MovementData) {
+function getEmitData(event: FlexibleTouchEvent, data: MovementData) {
 	let x = 0;
 	let y = 0;
 
@@ -356,29 +359,34 @@ function getEmittableData(event: FlexibleTouchEvent, data: MovementData) {
 		x = event.clientX;
 		y = event.clientY;
 	} else if (isTouchEvent(event)) {
-		for (const touch of [...event.touches, ...event.changedTouches]) {
+		// If this is a touchEnd event, we may only get data from
+		// [changedTouches]. Grab them all, just in case.
+		const touchEvents = [...event.touches, ...event.changedTouches];
+
+		for (const touch of touchEvents) {
 			x += touch.clientX;
 			y += touch.clientY;
 		}
-		x = Math.round(x);
-		y = Math.round(y);
+
+		x = Math.round(x / touchEvents.length);
+		y = Math.round(y / touchEvents.length);
 	}
 
 	return {
 		...data,
-		preventDefault: event.preventDefault,
+		preventDefault: () => event.preventDefault(),
 		target: event.target as HTMLElement,
 		center: { x, y },
 		pointer: event,
 	};
 }
 
-function emitPanStart() {
+function emitPanStart(event: AppTouchInput) {
 	if (didEmitStart) {
 		return;
 	}
 
-	emit('panstart');
+	emit('panstart', event);
 	didEmitStart = true;
 	didEmitEnd = false;
 }

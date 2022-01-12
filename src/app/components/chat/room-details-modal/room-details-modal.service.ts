@@ -7,12 +7,7 @@ export class ChatRoomDetailsModal {
 		return await showModal({
 			modalId: 'ChatRoomDetails',
 			size: 'sm',
-			component: defineAsyncComponent(
-				() =>
-					import(
-						/* webpackChunkName: "ChatRoomDetailsModal" */ './room-details-modal.vue'
-					)
-			),
+			component: defineAsyncComponent(() => import('./room-details-modal.vue')),
 			props: { room },
 		});
 	}

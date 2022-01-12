@@ -1,5 +1,4 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
 import { CommunityCompetition } from '../../../../../_common/community/competition/competition.model';
 
 type BlockData = {
@@ -10,7 +9,7 @@ type BlockData = {
 
 @Options({})
 export default class AppCommunityCompetitionCountdown extends Vue {
-	@Prop(propRequired(CommunityCompetition)) competition!: CommunityCompetition;
+	@Prop({ type: Object, required: true }) competition!: CommunityCompetition;
 
 	updateTimer!: NodeJS.Timer | null;
 	blocksData: BlockData[] = [];

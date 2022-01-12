@@ -1,15 +1,17 @@
+import { setup } from 'vue-class-component';
 import { Inject, Options, Watch } from 'vue-property-decorator';
+import { shallowSetup } from '../../../utils/vue';
 import { Api } from '../../../_common/api/api.service';
 import { AppAuthRequired } from '../../../_common/auth/auth-required-directive';
 import AppAuthJoin from '../../../_common/auth/join/join.vue';
 import AppCommunityThumbnailImg from '../../../_common/community/thumbnail/img/img.vue';
-import { DrawerStore, DrawerStoreKey } from '../../../_common/drawer/drawer-store';
+import { useDrawerStore } from '../../../_common/drawer/drawer-store';
 import { Environment } from '../../../_common/environment/environment.service';
 import AppExpand from '../../../_common/expand/expand.vue';
 import AppFadeCollapse from '../../../_common/fade-collapse/fade-collapse.vue';
 import { formatNumber } from '../../../_common/filters/number';
 import { Fireside } from '../../../_common/fireside/fireside.model';
-import AppIllustration from '../../../_common/illustration/illustration.vue';
+import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import AppLoading from '../../../_common/loading/loading.vue';
 import { Meta } from '../../../_common/meta/meta-service';
 import { Navigate } from '../../../_common/navigate/navigate.service';
@@ -22,7 +24,8 @@ import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../_common/scroll/scroller/scroller.vue';
 import AppStickerReactions from '../../../_common/sticker/reactions/reactions.vue';
 import AppStickerTarget from '../../../_common/sticker/target/target.vue';
-import { AppState, AppStore } from '../../../_common/store/app-store';
+import { useCommonStore } from '../../../_common/store/common-store';
+import { useThemeStore } from '../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../_common/user/user-avatar/img/img.vue';
@@ -31,13 +34,12 @@ import AppChatWindowOutput from '../../components/chat/window/output/output.vue'
 import AppChatWindowSend from '../../components/chat/window/send/send.vue';
 import { AppFiresideContainer } from '../../components/fireside/container/container';
 import {
-createFiresideController,
-FiresideController,
-getFiresideLink,
-toggleStreamVideoStats
+	createFiresideController,
+	FiresideController,
+	getFiresideLink,
+	toggleStreamVideoStats,
 } from '../../components/fireside/controller/controller';
 import { illEndOfFeed, illMaintenance, illNoCommentsSmall } from '../../img/ill/illustrations';
-import { store } from '../../store';
 import AppFiresideBanner from './_banner/banner.vue';
 import AppFiresideChatMembers from './_chat-members/chat-members.vue';
 import AppFiresideHeader from './_header/header.vue';
@@ -93,13 +95,17 @@ const FiresideThemeKey = 'fireside';
 	lazy: true,
 })
 export default class RouteFireside extends BaseRouteComponent {
-	@AppState user!: AppStore['user'];
-
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;
 
-	@Inject({ from: DrawerStoreKey })
-	drawerStore!: DrawerStore;
+	drawerStore = shallowSetup(() => useDrawerStore());
+
+	commonStore = setup(() => useCommonStore());
+	themeStore = setup(() => useThemeStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	c: FiresideController | null = null;
 
@@ -111,7 +117,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	readonly toggleStreamVideoStats = toggleStreamVideoStats;
 	readonly illNoCommentsSmall = illNoCommentsSmall;
 	readonly illMaintenance = illMaintenance;
-	readonly illEndOfFeed= illEndOfFeed;
+	readonly illEndOfFeed = illEndOfFeed;
 
 	videoWidth = 0;
 	videoHeight = 0;
@@ -217,7 +223,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	routeDestroyed() {
-		store.commit('theme/clearPageTheme', FiresideThemeKey);
+		this.themeStore.clearPageTheme(FiresideThemeKey);
 
 		this.beforeEachDeregister?.();
 		this.beforeEachDeregister = null;
@@ -263,7 +269,7 @@ export default class RouteFireside extends BaseRouteComponent {
 
 	private setPageTheme() {
 		const theme = this.fireside?.user?.theme ?? null;
-		store.commit('theme/setPageTheme', { key: FiresideThemeKey, theme });
+		this.themeStore.setPageTheme({ key: FiresideThemeKey, theme });
 	}
 
 	get shouldShowTitleControls() {

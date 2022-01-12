@@ -13,7 +13,7 @@ class Wrapper extends BaseForm<GameSong> {}
 	},
 })
 export default class FormGameSong extends mixins(Wrapper) implements FormOnLoad {
-	@Prop(Game) game!: Game;
+	@Prop(Object) game!: Game;
 
 	modelClass = GameSong;
 

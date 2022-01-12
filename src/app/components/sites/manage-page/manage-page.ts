@@ -19,8 +19,8 @@ import AppSitesManagePageTemplate from './template.vue';
 	},
 })
 export default class AppSitesManagePage extends Vue {
-	@Prop(Site) site!: Site;
-	@Prop(Game) game?: Game;
+	@Prop(Object) site!: Site;
+	@Prop(Object) game?: Game;
 
 	get tab() {
 		return this.$route.params.siteTab || 'template';

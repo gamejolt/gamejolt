@@ -12,7 +12,7 @@ import { ModalTumblrBlogSelector } from './tumblr-blog-selector-modal/tumblr-blo
 	components: { AppCard },
 })
 export default class AppLinkedAccount extends Vue {
-	@Prop(LinkedAccount)
+	@Prop(Object)
 	account!: LinkedAccount | null;
 
 	@Prop(String)

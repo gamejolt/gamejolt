@@ -8,7 +8,6 @@ import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.
 import { formatFuzzynumber } from '../../../../../_common/filters/fuzzynumber';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
-import AppJolticon from '../../../../../_common/jolticon/jolticon.vue';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/backdrop.vue';
 import { MediaItem } from '../../../../../_common/media-item/media-item-model';
@@ -16,13 +15,13 @@ import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/
 import { AppResponsiveDimensions } from '../../../../../_common/responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollInview, {
-ScrollInviewConfig
+	ScrollInviewConfig,
 } from '../../../../../_common/scroll/inview/inview.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
 import {
-getVideoPlayerFromSources,
-VideoPlayerController,
-VideoPlayerControllerContext
+	getVideoPlayerFromSources,
+	VideoPlayerController,
+	VideoPlayerControllerContext,
 } from '../../../../../_common/video/player/controller';
 import AppVideo from '../../../../../_common/video/video.vue';
 
@@ -34,7 +33,6 @@ export const AppPostCardAspectRatio = 10 / 16;
 	components: {
 		AppContentViewer,
 		AppImgResponsive,
-		AppJolticon,
 		AppLoading,
 		AppMediaItemBackdrop,
 		AppResponsiveDimensions,
@@ -48,7 +46,7 @@ export const AppPostCardAspectRatio = 10 / 16;
 	},
 })
 export default class AppPostCard extends Vue {
-	@Prop({ type: FiresidePost, required: true })
+	@Prop({ type: Object, required: true })
 	post!: FiresidePost;
 
 	@Prop({ type: String, required: true })

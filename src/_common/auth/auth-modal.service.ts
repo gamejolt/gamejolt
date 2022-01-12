@@ -5,9 +5,7 @@ export class AuthModal {
 	static async show() {
 		return await showModal<void>({
 			modalId: 'Auth',
-			component: defineAsyncComponent(
-				() => import(/* webpackChunkName: "AuthModal" */ './auth-modal.vue')
-			),
+			component: defineAsyncComponent(() => import('./auth-modal.vue')),
 			size: 'sm',
 			props: {},
 			noBackdropClose: true,

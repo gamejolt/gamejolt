@@ -6,9 +6,7 @@ export class UserAddressEditModal {
 	static async show(address: UserAddress) {
 		return await showModal<UserAddress>({
 			modalId: 'UserAddressEdit',
-			component: defineAsyncComponent(
-				() => import(/* webpackChunkName: "UserAddressEditModal" */ './edit-modal.vue')
-			),
+			component: defineAsyncComponent(() => import('./edit-modal.vue')),
 			size: 'sm',
 			props: { address },
 			noBackdropClose: true,

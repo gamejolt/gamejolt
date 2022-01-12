@@ -1,13 +1,12 @@
 import { inject, nextTick, provide, reactive } from 'vue';
 import { Emit, Options, Prop, Provide, Vue, Watch } from 'vue-property-decorator';
-import { propRequired } from '../../../../utils/vue';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
 import { EventItem } from '../../../../_common/event-item/event-item.model';
 import AppExpand from '../../../../_common/expand/expand.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
-import AppIllustration from '../../../../_common/illustration/illustration.vue';
+import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '../../../../_common/scroll/inview/inview.vue';
@@ -55,7 +54,7 @@ export function useActivityFeedInterface() {
 	},
 })
 export default class AppActivityFeed extends Vue {
-	@Prop(propRequired(ActivityFeedView))
+	@Prop({ type: Object, required: true })
 	@Provide({ to: ActivityFeedKey })
 	feed!: ActivityFeedView;
 

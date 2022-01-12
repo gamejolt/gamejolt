@@ -1,5 +1,4 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../utils/vue';
 import { formatDate } from '../../filters/date';
 import { AppTimeAgo } from '../../time/ago/ago';
 import AppTimelineListItem from '../../timeline-list/item/item.vue';
@@ -18,16 +17,16 @@ import AppUserVerifiedTick from '../../user/verified-tick/verified-tick.vue';
 	},
 })
 export default class AppMessageThreadItem extends Vue {
-	@Prop(propRequired(User)) user!: User;
-	@Prop(propOptional(User)) repliedTo?: User;
-	@Prop(propRequired(Number)) date!: number;
-	@Prop(propOptional(String)) id?: string;
-	@Prop(propOptional(Boolean, false)) isActive!: boolean;
-	@Prop(propOptional(Boolean, false)) isNew!: boolean;
-	@Prop(propOptional(Boolean, false)) isReply!: boolean;
-	@Prop(propOptional(Boolean, false)) isLast!: boolean;
-	@Prop(propOptional(Boolean, false)) isShowingReplies!: boolean;
-	@Prop(propOptional(Boolean, false)) isBlocked!: boolean;
+	@Prop({ type: Object, required: true }) user!: User;
+	@Prop(Object) repliedTo?: User;
+	@Prop({ type: Number, required: true }) date!: number;
+	@Prop(String) id?: string;
+	@Prop({ type: Boolean, default: false }) isActive!: boolean;
+	@Prop({ type: Boolean, default: false }) isNew!: boolean;
+	@Prop({ type: Boolean, default: false }) isReply!: boolean;
+	@Prop({ type: Boolean, default: false }) isLast!: boolean;
+	@Prop({ type: Boolean, default: false }) isShowingReplies!: boolean;
+	@Prop({ type: Boolean, default: false }) isBlocked!: boolean;
 
 	readonly formatDate = formatDate;
 }

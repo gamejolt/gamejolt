@@ -1,5 +1,5 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { enforceLocation } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
 import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
@@ -13,6 +13,8 @@ import { Meta } from '../../../../_common/meta/meta-service';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
+import { useCommonStore } from '../../../../_common/store/common-store';
+import { useThemeStore } from '../../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { User } from '../../../../_common/user/user.model';
 import { GameCollection } from '../../../components/game/collection/collection.model';
@@ -24,7 +26,7 @@ import { GameListingContainer } from '../../../components/game/listing/listing-c
 import AppGameListing from '../../../components/game/listing/listing.vue';
 import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
-import { store, Store, tillStoreBootstrapped } from '../../../store/index';
+import { tillStoreBootstrapped } from '../../../store/index';
 import { LibraryModule, LibraryStore } from '../../../store/library';
 
 const CollectionThemeKey = 'collection';
@@ -82,8 +84,12 @@ const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 	},
 })
 export default class RouteLibraryCollection extends BaseRouteComponent {
-	@State
-	app!: Store['app'];
+	commonStore = setup(() => useCommonStore());
+	themeStore = setup(() => useThemeStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	@LibraryModule.State
 	collections!: LibraryStore['collections'];
@@ -235,14 +241,14 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		// the whole route to use a store so that we can access user. It won't
 		// lose much if SSR doesn't see that the page theme isn't set.
 		const theme = this.user?.theme ?? null;
-		store.commit('theme/setPageTheme', { key: CollectionThemeKey, theme });
+		this.themeStore.setPageTheme({ key: CollectionThemeKey, theme });
 
 		this.processMeta($payload);
 		this.mixPlaylist();
 	}
 
 	routeDestroyed() {
-		store.commit('theme/clearPageTheme', CollectionThemeKey);
+		this.themeStore.clearPageTheme(CollectionThemeKey);
 	}
 
 	private processMeta($payload: any) {

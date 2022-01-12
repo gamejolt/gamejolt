@@ -45,6 +45,7 @@
 									</h1>
 									<h4>
 										<translate>by</translate>
+										{{ ' ' }}
 										<router-link
 											class="link-unstyled"
 											:to="{
@@ -54,6 +55,7 @@
 										>
 											{{ user.display_name }}
 										</router-link>
+										{{ ' ' }}
 										<small>@{{ user.username }}</small>
 									</h4>
 									<p class="text-muted small">
@@ -96,6 +98,7 @@
 									</h1>
 									<h4>
 										<translate>by</translate>
+										{{ ' ' }}
 										<router-link
 											class="link-unstyled"
 											:to="{
@@ -105,6 +108,7 @@
 										>
 											{{ user.display_name }}
 										</router-link>
+										{{ ' ' }}
 										<small>@{{ user.username }}</small>
 									</h4>
 									<p class="text-muted small">
@@ -133,6 +137,7 @@
 									</h1>
 									<h4>
 										<translate>by</translate>
+										{{ ' ' }}
 										<router-link
 											class="link-unstyled"
 											:to="{
@@ -142,6 +147,7 @@
 										>
 											{{ user.display_name }}
 										</router-link>
+										{{ ' ' }}
 										<small>@{{ user.username }}</small>
 									</h4>
 									<p class="text-muted small">
@@ -173,6 +179,7 @@
 									</h1>
 									<h4>
 										<translate>for</translate>
+										{{ ' ' }}
 										<router-link
 											class="link-unstyled"
 											:to="{
@@ -182,6 +189,7 @@
 										>
 											{{ user.display_name }}
 										</router-link>
+										{{ ' ' }}
 										<small>@{{ user.username }}</small>
 									</h4>
 								</template>
@@ -197,6 +205,7 @@
 
 								<h4 v-if="!collection.isOwner">
 									<translate>by</translate>
+									{{ ' ' }}
 									<router-link
 										class="link-unstyled"
 										:to="{
@@ -206,6 +215,7 @@
 									>
 										{{ playlist.user.display_name }}
 									</router-link>
+									{{ ' ' }}
 									<small>@{{ playlist.user.username }}</small>
 								</h4>
 							</template>

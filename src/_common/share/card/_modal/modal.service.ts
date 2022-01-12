@@ -13,9 +13,7 @@ export class ShareModal {
 
 		return await showModal<void>({
 			modalId: 'Share',
-			component: defineAsyncComponent(
-				() => import(/* webpackChunkName: "ShareModal" */ './modal.vue')
-			),
+			component: defineAsyncComponent(() => import('./modal.vue')),
 			props: {
 				resource,
 				url,

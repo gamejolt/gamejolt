@@ -5,7 +5,11 @@ import { Environment } from '../../../environment/environment.service';
 import { AppTooltip as vAppTooltip } from '../../../tooltip/tooltip-directive';
 import AppTranslate from '../../../translate/AppTranslate.vue';
 import { useForm } from '../../AppForm.vue';
-import { createFormControl, defineFormControlProps } from '../../AppFormControl.vue';
+import {
+	createFormControl,
+	defineFormControlEmits,
+	defineFormControlProps,
+} from '../../AppFormControl.vue';
 import { useFormGroup } from '../../AppFormGroup.vue';
 import { AppFormAutosize as vAppFormAutosize } from '../../autosize.directive';
 import { AppFocusWhen as vAppFocusWhen } from '../../focus-when.directive';
@@ -192,9 +196,18 @@ const props = defineProps({
 	},
 });
 
+const emit = defineEmits({
+	...defineFormControlEmits(),
+});
+
 const form = useForm()!;
 const group = useFormGroup()!;
-const c = createFormControl('', toRef(props, 'validators'));
+const c = createFormControl({
+	initialValue: '',
+	validators: toRef(props, 'validators'),
+	// eslint-disable-next-line vue/require-explicit-emits
+	onChange: val => emit('changed', val),
+});
 
 const controlVal = ref('');
 const editorMode = ref('textarea' as 'textarea' | 'code-editor');

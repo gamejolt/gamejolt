@@ -1,7 +1,8 @@
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Community } from '../../../../../_common/community/community.model';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
-import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import { AppTheme } from '../../../../../_common/theme/theme';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { FiresideAddModal } from '../../add-modal/add-modal.service';
@@ -15,10 +16,14 @@ import { FiresideAddModal } from '../../add-modal/add-modal.service';
 	},
 })
 export default class AppFiresideBadgeAdd extends Vue {
-	@AppState user!: AppStore['user'];
-
-	@Prop({ type: Community, default: undefined })
+	@Prop({ type: Object, default: undefined })
 	community!: Community | undefined;
+
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	get theme() {
 		return this.user?.theme;

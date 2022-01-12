@@ -15,7 +15,7 @@ class Wrapper extends BaseForm<SiteBuild> {}
 export default class FormDashSiteBuild extends mixins(Wrapper) implements FormOnLoad, FormOnSubmit {
 	modelClass = SiteBuild;
 
-	@Prop(Site) site!: Site;
+	@Prop(Object) site!: Site;
 
 	maxFilesize = 0;
 	progress = 0;

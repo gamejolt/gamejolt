@@ -1,4 +1,5 @@
-import { markRaw } from 'vue';
+import { markRaw, ref } from 'vue';
+import { setup } from 'vue-class-component';
 import { Inject, Options, Provide, Watch } from 'vue-property-decorator';
 import { Action, Mutation, State } from 'vuex-class';
 import {
@@ -21,20 +22,16 @@ import AppPopper from '../../../../_common/popper/popper.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../../_common/share/share.service';
-import {
-	ContextPane,
-	SidebarMutation,
-	SidebarState,
-	SidebarStore,
-} from '../../../../_common/sidebar/sidebar.store';
-import { AppState, AppStore } from '../../../../_common/store/app-store';
+import { ContextPane, useSidebarStore } from '../../../../_common/sidebar/sidebar.store';
+import { useCommonStore } from '../../../../_common/store/common-store';
+import { useThemeStore } from '../../../../_common/theme/theme.store';
 import { AppCommunityPerms } from '../../../components/community/perms/perms';
 import { CommunitySidebarData } from '../../../components/community/sidebar/sidebar-data';
 import { CommunityHeaderModal } from '../../../components/forms/community/header/modal/modal.service';
 import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import AppShellContentWithSidebar from '../../../components/shell/content-with-sidebar/content-with-sidebar.vue';
-import { store, Store, tillGridBootstrapped } from '../../../store/index';
+import { Store, tillGridBootstrapped } from '../../../store/index';
 import { routeCommunitiesViewEditDetails } from './edit/details/details.route';
 import {
 	CommunityRouteStore,
@@ -85,21 +82,29 @@ export const CommunityThemeKey = 'community';
 })
 export default class RouteCommunitiesView extends BaseRouteComponent {
 	@Provide({ to: CommunityRouteStoreKey })
-	routeStore = new CommunityRouteStore();
+	routeStore = setup(() => {
+		return ref(new CommunityRouteStore());
+	});
+
+	commonStore = setup(() => useCommonStore());
+	themeStore = setup(() => useThemeStore());
+	sidebarStore = setup(() => useSidebarStore());
 
 	@Inject({ from: AppPromotionStoreKey })
 	appPromotion!: AppPromotionStore;
 
-	@AppState user!: AppStore['user'];
+	get user() {
+		return this.commonStore.user;
+	}
 	@Mutation setActiveCommunity!: Store['setActiveCommunity'];
 	@Mutation clearActiveCommunity!: Store['clearActiveCommunity'];
 	@Mutation viewCommunity!: Store['viewCommunity'];
 	@State communityStates!: Store['communityStates'];
 	@State grid!: Store['grid'];
 
-	@SidebarState activeContextPane!: SidebarStore['activeContextPane'];
-	@SidebarMutation addContextPane!: SidebarStore['addContextPane'];
-	@SidebarMutation removeContextPane!: SidebarStore['removeContextPane'];
+	get activeContextPane() {
+		return this.sidebarStore.activeContextPane;
+	}
 	@Action showContextPane!: Store['showContextPane'];
 
 	readonly Environment = Environment;
@@ -172,7 +177,7 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	routeCreated() {
 		// Add a new context pane if we haven't already.
 		if (!this.contextPane) {
-			this.addContextPane(this.sidebarComponent);
+			this.sidebarStore.addContextPane(this.sidebarComponent);
 			this.contextPane = this.activeContextPane;
 		}
 
@@ -208,9 +213,9 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	}
 
 	routeDestroyed() {
-		this.removeContextPane(this.contextPane);
+		this.sidebarStore.removeContextPane(this.contextPane);
 		this.clearActiveCommunity();
-		store.commit('theme/clearPageTheme', CommunityThemeKey);
+		this.themeStore.clearPageTheme(CommunityThemeKey);
 		if (this.grid) {
 			this.grid.deregisterViewingCommunity(this.community.id);
 		}
@@ -218,7 +223,7 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 
 	private setPageTheme() {
 		const theme = this.community?.theme ?? null;
-		store.commit('theme/setPageTheme', { key: CommunityThemeKey, theme });
+		this.themeStore.setPageTheme({ key: CommunityThemeKey, theme });
 	}
 
 	showEditHeader() {

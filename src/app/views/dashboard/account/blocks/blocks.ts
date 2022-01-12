@@ -2,7 +2,7 @@ import { Options } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../utils/array';
 import { Api } from '../../../../../_common/api/api.service';
 import AppCardListAdd from '../../../../../_common/card/list/add/add.vue';
-import AppCardList from '../../../../../_common/card/list/list.vue';
+import AppCardList from '../../../../../_common/card/list/AppCardList.vue';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';

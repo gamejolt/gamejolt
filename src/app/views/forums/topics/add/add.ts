@@ -1,16 +1,16 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Api } from '../../../../../_common/api/api.service';
 import { ForumChannel } from '../../../../../_common/forum/channel/channel.model';
 import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
 import { showInfoGrowl } from '../../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
 import FormForumTopic from '../../../../components/forms/forum/topic/topic.vue';
 import AppForumBreadcrumbs from '../../../../components/forum/breadcrumbs/breadcrumbs.vue';
 import AppForumRules from '../../../../components/forum/rules/rules.vue';
 import AppPageHeader from '../../../../components/page-header/page-header.vue';
-import { Store } from '../../../../store/index';
 
 @Options({
 	name: 'RouteForumsTopicsAdd',
@@ -27,8 +27,11 @@ import { Store } from '../../../../store/index';
 	resolver: ({ route }) => Api.sendRequest('/web/forums/topics/create/' + route.params.channel),
 })
 export default class RouteForumsTopicsAdd extends BaseRouteComponent {
-	@State
-	app!: Store['app'];
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	channel: ForumChannel = null as any;
 

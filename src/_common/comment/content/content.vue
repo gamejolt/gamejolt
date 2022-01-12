@@ -1,4 +1,44 @@
-<script lang="ts" src="./content"></script>
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import AppContentViewer from '../../content/content-viewer/content-viewer.vue';
+import AppFadeCollapse from '../../fade-collapse/fade-collapse.vue';
+import { formatDate } from '../../filters/date';
+import AppStickerControlsOverlay from '../../sticker/controls-overlay/controls-overlay.vue';
+import AppStickerReactions from '../../sticker/reactions/reactions.vue';
+import {
+	createStickerTargetController,
+	StickerTargetController,
+} from '../../sticker/target/target-controller';
+import AppStickerTarget from '../../sticker/target/target.vue';
+import { Comment } from '../comment-model';
+import '../comment.styl';
+
+@Options({
+	components: {
+		AppFadeCollapse,
+		AppContentViewer,
+		AppStickerTarget,
+		AppStickerReactions,
+		AppStickerControlsOverlay,
+	},
+})
+export default class AppCommentContent extends Vue {
+	@Prop({ type: Object, required: true }) comment!: Comment;
+	@Prop({ type: String, default: '' }) content!: string;
+	@Prop({ type: Boolean, default: false }) canPlaceStickers!: boolean;
+
+	stickerTargetController!: StickerTargetController;
+
+	canToggleContent = false;
+	showFullContent = false;
+
+	readonly formatDate = formatDate;
+
+	created() {
+		this.stickerTargetController = createStickerTargetController(this.comment);
+	}
+}
+</script>
 
 <template>
 	<div>

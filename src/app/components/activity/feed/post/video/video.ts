@@ -13,10 +13,10 @@ import AppActivityFeedVideoPlayer from '../../_video-player/video-player.vue';
 	},
 })
 export default class AppActivityFeedPostVideo extends Vue {
-	@Prop({ type: ActivityFeedItem, required: true })
+	@Prop({ type: Object, required: true })
 	item!: ActivityFeedItem;
 
-	@Prop({ type: FiresidePost, required: true })
+	@Prop({ type: Object, required: true })
 	post!: FiresidePost;
 
 	@Inject({ from: ActivityFeedKey })

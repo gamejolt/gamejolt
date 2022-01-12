@@ -8,7 +8,7 @@ import { FiresideController, FiresideControllerKey } from '../../controller/cont
 
 @Options({})
 export default class AppFiresideDesktopAudio extends Vue {
-	@Prop({ type: FiresideRTCUser, required: true })
+	@Prop({ type: Object, required: true })
 	rtcUser!: FiresideRTCUser;
 
 	@Inject({ from: FiresideControllerKey })

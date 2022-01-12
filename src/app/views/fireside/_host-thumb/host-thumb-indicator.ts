@@ -12,7 +12,7 @@ import {
 	},
 })
 export default class AppFiresideHostThumbIndicator extends Vue {
-	@Prop({ type: FiresideRTCUser, required: true })
+	@Prop({ type: Object, required: true })
 	host!: FiresideRTCUser;
 
 	@Inject({ from: FiresideControllerKey })

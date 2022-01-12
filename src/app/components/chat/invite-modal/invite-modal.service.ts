@@ -8,9 +8,7 @@ export class ChatInviteModal {
 		return await showModal({
 			modalId: 'ChatInvite',
 			size: 'sm',
-			component: defineAsyncComponent(
-				() => import(/* webpackChunkName: "ChatInviteModal" */ './invite-modal.vue')
-			),
+			component: defineAsyncComponent(() => import('./invite-modal.vue')),
 			props: { room, friends, initialUser },
 		});
 	}

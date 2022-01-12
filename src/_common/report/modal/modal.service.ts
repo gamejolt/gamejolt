@@ -7,9 +7,7 @@ export class ReportModal {
 		await showModal({
 			modalId: 'Report',
 			size: 'sm',
-			component: defineAsyncComponent(
-				() => import(/* webpackChunkName: "ReportModal" */ './modal.vue')
-			),
+			component: defineAsyncComponent(() => import('./modal.vue')),
 			props: { resource },
 		});
 	}

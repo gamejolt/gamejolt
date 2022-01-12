@@ -1,7 +1,8 @@
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { showErrorGrowl } from '../../growls/growls.service';
-import { AppState, AppStore } from '../../store/app-store';
+import { useCommonStore } from '../../store/common-store';
 import { TooltipPlacement } from '../../tooltip/tooltip-controller';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 
@@ -12,11 +13,14 @@ import { AppTooltip } from '../../tooltip/tooltip-directive';
 	},
 })
 export default class AppCommunityAddWidget extends Vue {
-	@AppState
-	user!: AppStore['user'];
-
 	@Prop({ type: String, default: 'bottom' })
 	tooltipPlacement!: TooltipPlacement;
+
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	get canCreate() {
 		return this.user && !!this.user.can_create_communities;

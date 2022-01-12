@@ -1,5 +1,5 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
 import { formatCurrency } from '../../../../_common/filters/currency';
@@ -14,6 +14,7 @@ import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/rou
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../_common/scroll/affix/affix.vue';
 import { AppScrollTo } from '../../../../_common/scroll/to/to.directive';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { User } from '../../../../_common/user/user.model';
 import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
@@ -39,7 +40,6 @@ import {
 	ResourceName,
 	SiteAnalytics,
 } from '../../../components/site-analytics/site-analytics-service';
-import { Store } from '../../../store/index';
 import AppAnalyticsReportRatingBreakdown from './_report/rating-breakdown.vue';
 import AppAnalyticsReportSimpleStat from './_report/simple-stat.vue';
 import {
@@ -77,8 +77,11 @@ import {
 		),
 })
 export default class RouteDashAnalytics extends BaseRouteComponent {
-	@State
-	app!: Store['app'];
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	user: User | null = null;
 	game: Game | null = null;

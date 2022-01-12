@@ -14,7 +14,7 @@ import { Navigate } from '../../../../_common/navigate/navigate.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppScrollTo } from '../../../../_common/scroll/to/to.directive';
-import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
+import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import { imageJolt } from '../../../img/images';
 
 @Options({

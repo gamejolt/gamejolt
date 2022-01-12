@@ -10,9 +10,9 @@ import AppFiresideChatMembers from '../chat-members.vue';
 	},
 })
 export default class AppFiresideChatMembersModal extends mixins(BaseModal) {
-	@Prop({ type: ChatUserCollection, required: true })
+	@Prop({ type: Object, required: true })
 	chatUsers!: ChatUserCollection;
 
-	@Prop({ type: ChatRoom, required: true })
+	@Prop({ type: Object, required: true })
 	chatRoom!: ChatRoom;
 }

@@ -1,19 +1,20 @@
+<script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
-import { configGuestHome } from '../../../../_common/config/config.service';
+import { configGuestHome, configSaveOverride } from '../../../../_common/config/config.service';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
-import { AppState, AppStore } from '../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
 import socialImage from '../../../img/social/social-share-header.png';
-import { Store } from '../../../store/index';
-import AppHomeDefault from './home-default.vue';
-import AppHomeSlider from './home-slider.vue';
+import AppHomeDefault from './AppHomeDefault.vue';
+import AppHomeSlider from './AppHomeSlider.vue';
 
 @Options({
 	name: 'RouteDiscoverHome',
@@ -29,11 +30,15 @@ import AppHomeSlider from './home-slider.vue';
 	resolver: () => Api.sendRequest('/web/discover'),
 })
 export default class RouteDiscoverHome extends BaseRouteComponent {
-	@AppState
-	user!: Store['app'];
+	commonStore = setup(() => useCommonStore());
 
-	@AppState
-	userBootstrapped!: AppStore['userBootstrapped'];
+	get user() {
+		return this.commonStore.user;
+	}
+
+	get userBootstrapped() {
+		return this.commonStore.userBootstrapped;
+	}
 
 	featuredItem: FeaturedItem | null = null;
 	featuredCommunities: Community[] = [];
@@ -63,6 +68,13 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 				// show this as a split test. If we're logged in, we always use
 				// the default, since it's used as the discover page.
 				if (!this.user) {
+					// If they came in through an ad, we want to force them into
+					// the "hero" split test and save it into their session so
+					// that it always shows when they go back.
+					if (this.$route.query['utm_campaign'] === 'pmf_communities') {
+						configSaveOverride(configGuestHome, 'hero');
+					}
+
 					trackExperimentEngagement(configGuestHome);
 					this.split = configGuestHome.value;
 				} else {
@@ -112,3 +124,15 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		);
 	}
 }
+</script>
+
+<template>
+	<app-home-default
+		v-if="split === 'default'"
+		:is-bootstrapped="isRouteBootstrapped"
+		:featured-item="featuredItem"
+		:featured-communities="featuredCommunities"
+		:featured-fireside="featuredFireside"
+	/>
+	<app-home-slider v-else-if="split === 'hero'" :posts="heroPosts" />
+</template>

@@ -74,6 +74,7 @@
 								</div>
 								<div class="text-muted">
 									<translate>by</translate>
+									{{ ' ' }}
 									<strong>
 										<router-link
 											class="link-muted"
@@ -86,6 +87,7 @@
 											<app-user-verified-tick :user="latestPost.user" small />
 										</router-link>
 									</strong>
+									{{ ' ' }}
 									<span class="tiny">@{{ latestPost.user.username }}</span>
 								</div>
 								<div class="text-muted">

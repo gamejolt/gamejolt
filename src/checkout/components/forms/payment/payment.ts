@@ -1,5 +1,5 @@
+import { setup } from 'vue-class-component';
 import { mixins, Options, Prop, Watch } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
 import { formatCurrency } from '../../../../_common/filters/currency';
@@ -9,7 +9,7 @@ import { validateCreditCardExpiration } from '../../../../_common/form-vue/valid
 import { Geo, Region } from '../../../../_common/geo/geo.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Order } from '../../../../_common/order/order.model';
-import { AppStore } from '../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 
 class Wrapper extends BaseForm<any> {}
@@ -25,10 +25,14 @@ class Wrapper extends BaseForm<any> {}
 	},
 })
 export default class FormPayment extends mixins(Wrapper) implements FormOnSubmit {
-	@State app!: AppStore;
-
 	@Prop(Array) cards!: any[];
-	@Prop(Order) order!: Order;
+	@Prop(Object) order!: Order;
+
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	stripeError: string | null = null;
 	countries = Geo.getCountries();

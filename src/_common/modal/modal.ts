@@ -1,7 +1,8 @@
 import { setup } from 'vue-class-component';
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import { shallowSetup } from '../../utils/vue';
 import { Backdrop, BackdropController } from '../backdrop/backdrop.service';
-import { DrawerStore, DrawerStoreKey } from '../drawer/drawer-store';
+import { useDrawerStore } from '../drawer/drawer-store';
 import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
 import { Screen } from '../screen/screen-service';
 import AppScrollAffix from '../scroll/affix/affix.vue';
@@ -25,8 +26,7 @@ export default class AppModal extends Vue {
 	@Inject({ from: ModalKey })
 	modal!: Modal;
 
-	@Inject({ from: DrawerStoreKey, default: null })
-	drawer!: null | DrawerStore;
+	drawer = shallowSetup(() => useDrawerStore());
 
 	isHoveringContent = false;
 	scroller = setup(() => createScroller());
@@ -100,7 +100,7 @@ export default class AppModal extends Vue {
 			Screen.isMobile ||
 			this.modal.noBackdropClose ||
 			this.isHoveringContent ||
-			this.drawer?.isDrawerOpen
+			this.drawer.isDrawerOpen.value
 		) {
 			return;
 		}

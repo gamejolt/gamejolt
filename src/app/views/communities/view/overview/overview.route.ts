@@ -3,6 +3,5 @@ import { RouteRecordRaw } from 'vue-router';
 export const routeCommunitiesViewOverview: RouteRecordRaw = {
 	name: 'communities.view.overview',
 	path: '',
-	component: () =>
-		import(/* webpackChunkName: "routeCommunitiesViewOverview" */ './overview.vue'),
+	component: () => import('./overview.vue'),
 };

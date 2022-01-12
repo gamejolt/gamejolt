@@ -34,7 +34,7 @@ export interface FiresideAvatarEvent {
 	},
 })
 export default class AppFiresideAvatar extends Vue {
-	@Prop({ type: Fireside, required: true })
+	@Prop({ type: Object, required: true })
 	fireside!: Fireside;
 
 	@Prop({ type: Boolean, required: false, default: false })

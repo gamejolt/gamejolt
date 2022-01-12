@@ -7,10 +7,7 @@ import { routeCommunitiesViewEditChannelsCompetitionVoting } from './voting/voti
 
 export const routeCommunitiesViewEditChannelsCompetition: RouteRecordRaw = {
 	path: 'jam',
-	component: () =>
-		import(
-			/* webpackChunkName: "routeCommunitiesViewEditChannelCompetitions" */ './competition.vue'
-		),
+	component: () => import('./competition.vue'),
 	children: [
 		routeCommunitiesViewEditChannelsCompetitionSettings,
 		routeCommunitiesViewEditChannelsCompetitionOverview,

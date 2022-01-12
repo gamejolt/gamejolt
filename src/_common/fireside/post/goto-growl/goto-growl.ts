@@ -12,7 +12,7 @@ export type Action = 'add' | 'publish' | 'scheduled-publish';
 	},
 })
 export default class AppFiresidePostGotoGrowl extends Vue {
-	@Prop(FiresidePost)
+	@Prop(Object)
 	post!: FiresidePost;
 
 	@Prop(String)

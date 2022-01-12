@@ -3,5 +3,5 @@ import { RouteRecordRaw } from 'vue-router';
 export const routeDashAccountSite: RouteRecordRaw = {
 	name: 'dash.account.site',
 	path: 'site/:siteTab?',
-	component: () => import(/* webpackChunkName: "routeDashAccountSite" */ './site.vue'),
+	component: () => import('./site.vue'),
 };

@@ -1,9 +1,10 @@
 import { defineAsyncComponent } from '@vue/runtime-core';
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
 import { AppScrollTo } from '../../../_common/scroll/to/to.directive';
-import { AppState, AppStore } from '../../../_common/store/app-store';
+import { useCommonStore } from '../../../_common/store/common-store';
 import { User } from '../../../_common/user/user.model';
 import FormSettings from '../../components/forms/settings/settings.vue';
 import AppPageHeader from '../../components/page-header/page-header.vue';
@@ -15,10 +16,7 @@ import AppPageHeader from '../../components/page-header/page-header.vue';
 		AppScrollAffix,
 		FormSettings,
 		FormSettingsDev: defineAsyncComponent(
-			() =>
-				import(
-					/* webpackChunkName: "FormSettingsDev" */ '../../components/forms/settings/dev.vue'
-				)
+			() => import('../../components/forms/settings/dev.vue')
 		),
 	},
 	directives: {
@@ -30,7 +28,11 @@ import AppPageHeader from '../../components/page-header/page-header.vue';
 	resolver: () => User.touch(),
 })
 export default class RouteSettings extends BaseRouteComponent {
-	@AppState user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	get hasDev() {
 		return this.user?.isMod;

@@ -5,7 +5,7 @@ import AppAppButtons from '../../../../_common/app-buttons/app-buttons.vue';
 import AppContactLink from '../../../../_common/contact-link/contact-link.vue';
 import { formatDate } from '../../../../_common/filters/date';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
+import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import AppTranslateLangSelector from '../../../../_common/translate/lang-selector/lang-selector.vue';
 import { imageJolt } from '../../../img/images';
 

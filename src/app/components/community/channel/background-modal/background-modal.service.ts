@@ -6,12 +6,7 @@ export class CommunityChannelBackgroundModal {
 	static async show(channel: CommunityChannel) {
 		return await showModal<CommunityChannel>({
 			modalId: 'CommunityChannelBackground',
-			component: defineAsyncComponent(
-				() =>
-					import(
-						/* webpackChunkName: "CommunityChannelBackgroundModal" */ './background-modal.vue'
-					)
-			),
+			component: defineAsyncComponent(() => import('./background-modal.vue')),
 			props: {
 				channel,
 			},

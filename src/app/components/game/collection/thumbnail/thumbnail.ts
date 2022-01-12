@@ -8,6 +8,6 @@ import { GameCollection } from '../collection.model';
 	},
 })
 export default class AppGameCollectionThumbnail extends Vue {
-	@Prop(GameCollection) collection!: GameCollection;
+	@Prop(Object) collection!: GameCollection;
 	@Prop(Boolean) hideTag?: boolean;
 }

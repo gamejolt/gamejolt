@@ -7,7 +7,7 @@ import { routeCommunitiesViewOverview } from './overview/overview.route';
 
 export const routeCommunitiesView: RouteRecordRaw = {
 	path: '/c/:path',
-	component: () => import(/* webpackChunkName: "routeCommunitiesView" */ './view.vue'),
+	component: () => import('./view.vue'),
 	// The order matters here since channels will take any URL path.
 	children: [
 		routeCommunitiesViewMembers,

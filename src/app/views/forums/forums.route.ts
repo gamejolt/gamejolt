@@ -6,7 +6,7 @@ import { routeForumsTopicsView } from './topics/view/view.route';
 
 export const routeForums: RouteRecordRaw = {
 	path: '/forums',
-	component: () => import(/* webpackChunkName: "routeForums" */ './forums'),
+	component: () => import('./forums'),
 	children: [
 		routeForumsLanding,
 		routeForumsChannelsView,

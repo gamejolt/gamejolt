@@ -1,13 +1,12 @@
-import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import { Store } from '../../../../../auth/store/index';
+import { setup } from 'vue-class-component';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { PostControlsLocation, trackPostLike } from '../../../../analytics/analytics.service';
 import { AppAuthRequired } from '../../../../auth/auth-required-directive';
-import { DrawerStore, DrawerStoreKey } from '../../../../drawer/drawer-store';
 import { formatFuzzynumber } from '../../../../filters/fuzzynumber';
 import { showErrorGrowl } from '../../../../growls/growls.service';
 import { LikersModal } from '../../../../likers/modal.service';
 import { Screen } from '../../../../screen/screen-service';
+import { useCommonStore } from '../../../../store/common-store';
 import { AppTooltip } from '../../../../tooltip/tooltip-directive';
 import AppUserFollowWidget from '../../../../user/follow/widget.vue';
 import { FiresidePost } from '../../post-model';
@@ -23,7 +22,7 @@ import { FiresidePostLike, removeFiresidePostLike, saveFiresidePostLike } from '
 	},
 })
 export default class AppFiresidePostLikeWidget extends Vue {
-	@Prop({ type: FiresidePost, required: true })
+	@Prop({ type: Object, required: true })
 	post!: FiresidePost;
 
 	@Prop({ type: String, required: true })
@@ -38,10 +37,11 @@ export default class AppFiresidePostLikeWidget extends Vue {
 	@Prop({ type: Boolean, default: false, required: false })
 	block!: boolean;
 
-	@Inject({ from: DrawerStoreKey, default: null })
-	drawer!: null | DrawerStore;
+	commonStore = setup(() => useCommonStore());
 
-	@State app!: Store['app'];
+	get app() {
+		return this.commonStore;
+	}
 
 	showLikeAnim = false;
 	showDislikeAnim = false;

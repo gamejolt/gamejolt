@@ -1,33 +1,40 @@
-import { Inject, Options, Vue } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
+import { shallowSetup } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
 import {
 	assignDrawerStoreGhostCallback as assignDrawerStoreMoveCallback,
 	commitDrawerStoreItemPlacement,
-	DrawerStore,
-	DrawerStoreKey,
 	setDrawerStoreActiveItem,
+	useDrawerStore,
 } from '../../drawer/drawer-store';
 
 @Options({})
 export default class AppStickerLayerGhost extends Vue {
-	@Inject({ from: DrawerStoreKey })
-	drawer!: DrawerStore;
+	drawer = shallowSetup(() => useDrawerStore());
 
 	private isConfirmingPlacement = false;
 
 	declare $el: HTMLDivElement;
 
 	get sticker() {
-		return this.drawer.sticker!;
+		return this.drawer.sticker.value!;
+	}
+
+	get stickerSize() {
+		return this.drawer.stickerSize.value;
+	}
+
+	get placedItem() {
+		return this.drawer.placedItem.value;
 	}
 
 	get shouldShowStickerControls() {
-		return !!this.drawer.placedItem;
+		return !!this.placedItem;
 	}
 
 	private get itemRotation() {
-		if (this.drawer.placedItem) {
-			return `rotate(${this.drawer.placedItem.rotation * 90 - 45}deg)`;
+		if (this.placedItem) {
+			return `rotate(${this.placedItem.rotation * 90 - 45}deg)`;
 		} else {
 			return null;
 		}
@@ -36,15 +43,15 @@ export default class AppStickerLayerGhost extends Vue {
 	get itemStyling() {
 		return {
 			transform: this.itemRotation,
-			width: this.drawer.stickerSize + 'px',
-			height: this.drawer.stickerSize + 'px',
+			width: this.stickerSize + 'px',
+			height: this.stickerSize + 'px',
 		};
 	}
 
 	get controlsStyling() {
 		const controlSize = 32;
 		return {
-			left: this.drawer.stickerSize / 2 - controlSize / 2 + 'px',
+			left: this.stickerSize / 2 - controlSize / 2 + 'px',
 			width: controlSize + 'px',
 			height: controlSize + 'px',
 		};
@@ -52,12 +59,13 @@ export default class AppStickerLayerGhost extends Vue {
 
 	get itemClasses() {
 		const classes = [];
+		const { isDragging, targetController } = this.drawer;
 
-		if (this.drawer.isDragging) {
+		if (isDragging.value) {
 			classes.push('-dragging');
 		}
 
-		if (this.drawer.targetController) {
+		if (targetController.value) {
 			classes.push('-uncommitted');
 		}
 

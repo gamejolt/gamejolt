@@ -5,7 +5,7 @@ import { GamePackageCardModel } from './card.model';
 
 @Options({})
 export default class AppGamePackageCardMoreOptions extends Vue {
-	@Prop(GamePackageCardModel) card!: GamePackageCardModel;
+	@Prop(Object) card!: GamePackageCardModel;
 
 	readonly emulatorInfo = GameBuild.emulatorInfo;
 	readonly formatFilesize = formatFilesize;

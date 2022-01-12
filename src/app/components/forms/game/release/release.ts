@@ -2,7 +2,7 @@ import { addWeeks, startOfDay } from 'date-fns';
 import { determine } from 'jstimezonedetect';
 import { Emit, mixins, Options, Prop } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../utils/array';
-import AppCardList from '../../../../../_common/card/list/list.vue';
+import AppCardList from '../../../../../_common/card/list/AppCardList.vue';
 import AppFormLegend from '../../../../../_common/form-vue/AppFormLegend.vue';
 import AppFormControlDate from '../../../../../_common/form-vue/controls/AppFormControlDate.vue';
 import {
@@ -45,10 +45,10 @@ export default class FormGameRelease
 {
 	modelClass = GameRelease as any;
 
-	@Prop(Game)
+	@Prop(Object)
 	game!: Game;
 
-	@Prop(GamePackage)
+	@Prop(Object)
 	package!: GamePackage;
 
 	@Prop(Array)

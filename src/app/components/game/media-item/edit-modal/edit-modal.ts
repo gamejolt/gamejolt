@@ -22,7 +22,7 @@ import { GameMediaItemEditModalRemoveCallback } from './edit-modal.service';
 	},
 })
 export default class AppGameMediaItemEditModal extends mixins(BaseModal) {
-	@Prop(Game) game!: Game;
+	@Prop(Object) game!: Game;
 	@Prop(Object) item!: Media;
 	@Prop(Function) onRemove!: GameMediaItemEditModalRemoveCallback;
 

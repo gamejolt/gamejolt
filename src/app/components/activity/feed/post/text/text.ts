@@ -20,10 +20,10 @@ import { ActivityFeedKey, ActivityFeedView } from '../../view';
 	},
 })
 export default class AppActivityFeedPostText extends Vue {
-	@Prop({ type: ActivityFeedItem, required: true })
+	@Prop({ type: Object, required: true })
 	item!: ActivityFeedItem;
 
-	@Prop({ type: FiresidePost, required: true })
+	@Prop({ type: Object, required: true })
 	post!: FiresidePost;
 
 	@Inject({ from: ActivityFeedKey })

@@ -1,13 +1,16 @@
+import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
-import { AppMutation, AppState, AppStore } from '../../store/app-store';
-import { ErrorPages } from './page-components';
-
+import { useCommonStore } from '../../store/common-store';
 import errorImage from './ararat.png';
+import { ErrorPages } from './page-components';
 
 @Options({})
 export default class AppErrorPage extends Vue {
-	@AppState error!: AppStore['error'];
-	@AppMutation clearError!: AppStore['clearError'];
+	commonStore = setup(() => useCommonStore());
+
+	get error() {
+		return this.commonStore.error;
+	}
 
 	watcher?: Function;
 
@@ -23,7 +26,7 @@ export default class AppErrorPage extends Vue {
 		// We want to do it AFTER the route resolves for the next route we are going to.
 		this.watcher = this.$router.afterEach(() => {
 			if (this.error) {
-				this.clearError();
+				this.commonStore.clearError();
 			}
 		});
 	}

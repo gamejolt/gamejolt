@@ -1,7 +1,7 @@
 import { Inject, Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCardListAdd from '../../../../../../_common/card/list/add/add.vue';
-import AppCardList from '../../../../../../_common/card/list/list.vue';
+import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';
 import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import AppPagination from '../../../../../../_common/pagination/pagination.vue';

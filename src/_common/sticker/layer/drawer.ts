@@ -1,16 +1,16 @@
 import { nextTick } from 'vue';
-import { Inject, Options, Vue, Watch } from 'vue-property-decorator';
+import { Options, Vue, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import AppEventItemMediaIndicator from '../../../app/components/event-item/media-indicator/media-indicator.vue';
 import { Store } from '../../../app/store/index';
 import { StickerCount } from '../../../app/views/dashboard/stickers/stickers';
+import { shallowSetup } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
 import {
-	DrawerStore,
-	DrawerStoreKey,
 	setDrawerOpen,
 	setDrawerStoreActiveItem,
 	setDrawerStoreHeight,
+	useDrawerStore,
 } from '../../drawer/drawer-store';
 import { EscapeStack, EscapeStackCallback } from '../../escape-stack/escape-stack.service';
 import AppLoadingFade from '../../loading/AppLoadingFade.vue';
@@ -34,8 +34,8 @@ import AppStickerLayerDrawerItem from './drawer-item.vue';
 	},
 })
 export default class AppStickerLayerDrawer extends Vue {
-	@Inject({ from: DrawerStoreKey })
-	drawerStore!: DrawerStore;
+	drawerStore = shallowSetup(() => useDrawerStore());
+
 	@State hasCbar!: Store['hasCbar'];
 
 	sheetPage = 1;
@@ -46,7 +46,6 @@ export default class AppStickerLayerDrawer extends Vue {
 
 	private readonly drawerPadding = 8;
 	private readonly stickerSpacing = 8;
-	private readonly stickerSize = this.drawerStore.stickerSize + this.stickerSpacing;
 	readonly Screen = Screen;
 
 	declare $el: HTMLDivElement;
@@ -55,6 +54,18 @@ export default class AppStickerLayerDrawer extends Vue {
 		content: HTMLDivElement;
 		slider: HTMLDivElement;
 	};
+
+	get stickerSize() {
+		return this.drawerStickerSize + this.stickerSpacing;
+	}
+
+	get drawerStickerSize() {
+		return this.drawerStore.stickerSize.value;
+	}
+
+	get hasLoaded() {
+		return this.drawerStore.hasLoaded.value;
+	}
 
 	get drawerNavigationComponent() {
 		if (Screen.isPointerMouse) {
@@ -73,7 +84,7 @@ export default class AppStickerLayerDrawer extends Vue {
 	}
 
 	get stickerSheets() {
-		return this.chunkStickers(this.drawerStore.drawerItems);
+		return this.chunkStickers(this.items);
 	}
 
 	private chunkStickers(stickers: StickerCount[]) {
@@ -97,11 +108,11 @@ export default class AppStickerLayerDrawer extends Vue {
 	}
 
 	get isLoading() {
-		return this.drawerStore.isLoading;
+		return this.drawerStore.isLoading.value;
 	}
 
 	get items() {
-		return this.drawerStore.drawerItems;
+		return this.drawerStore.drawerItems.value;
 	}
 
 	get hasStickers() {
@@ -120,6 +131,8 @@ export default class AppStickerLayerDrawer extends Vue {
 
 	get styles() {
 		const numRowsShowing = Screen.isPointerMouse ? 2.3 : 2;
+		const { drawerHeight, sticker, stickerSize, isDragging, isHoveringDrawer } =
+			this.drawerStore;
 
 		return {
 			shell: [
@@ -133,16 +146,16 @@ export default class AppStickerLayerDrawer extends Vue {
 						: null,
 				},
 				// Shift the drawer down when there's an item being dragged and the drawer container is not being hovered.
-				this.drawerStore.sticker && !this.drawerStore.isHoveringDrawer
+				sticker.value && !isHoveringDrawer.value
 					? {
 							transform: `translateY(${
-								this.drawerStore.drawerHeight - this.drawerStore.stickerSize / 2
+								drawerHeight.value - stickerSize.value / 2
 							}px)`,
 					  }
 					: null,
 			],
 			outer: {
-				cursor: this.drawerStore.isDragging ? 'grabbing' : 'default',
+				cursor: isDragging.value ? 'grabbing' : 'default',
 				paddingTop: `${this.drawerPadding}px`,
 				// Max-width is unset when Xs (so it can bleed and span the whole width), with margins of 64px on other breakpoints.
 				maxWidth: Screen.isXs ? 'unset' : `calc(100% - 64px)`,
@@ -218,7 +231,11 @@ export default class AppStickerLayerDrawer extends Vue {
 	}
 
 	assignTouchedSticker(sticker: StickerCount) {
-		if (!this.drawerStore.isDrawerOpen || this.drawerStore.sticker || sticker.count <= 0) {
+		if (
+			!this.drawerStore.isDrawerOpen.value ||
+			this.drawerStore.sticker.value ||
+			sticker.count <= 0
+		) {
 			return;
 		}
 
@@ -250,7 +267,7 @@ export default class AppStickerLayerDrawer extends Vue {
 	}
 
 	pan(event: AppTouchInput) {
-		if (this.drawerStore.isDragging) {
+		if (this.drawerStore.isDragging.value) {
 			this.isSwiping = false;
 			return;
 		}
@@ -313,7 +330,7 @@ export default class AppStickerLayerDrawer extends Vue {
 	async onIsLoadingChange() {
 		await nextTick();
 
-		if (!this.drawerStore.isLoading) {
+		if (!this.drawerStore.isLoading.value) {
 			setDrawerStoreHeight(this.drawerStore, this.$el.offsetHeight);
 			this.calculateStickersPerRow();
 		}

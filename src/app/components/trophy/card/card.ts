@@ -1,8 +1,8 @@
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
 import { Game } from '../../../../_common/game/game.model';
-import { AppStore } from '../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { UserGameTrophy } from '../../../../_common/user/trophy/game-trophy.model';
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
 import { TrophyModal } from '../modal/modal.service';
@@ -15,11 +15,14 @@ import AppTrophyThumbnail from '../thumbnail/thumbnail.vue';
 	},
 })
 export default class AppTrophyCard extends Vue {
-	@State
-	app!: AppStore;
-
 	@Prop(Object)
 	userTrophy!: UserBaseTrophy;
+
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	get trophy() {
 		return this.userTrophy.trophy!;

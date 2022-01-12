@@ -1,5 +1,4 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../utils/vue';
 import AppPopper from '../../../popper/popper.vue';
 import { Screen } from '../../../screen/screen-service';
 import {
@@ -26,8 +25,8 @@ import {
 	},
 })
 export default class AppPlayerVolume extends Vue {
-	@Prop(propRequired(VideoPlayerController)) player!: VideoPlayerController;
-	@Prop(propOptional(Boolean, false)) hasSlider!: boolean;
+	@Prop({ type: Object, required: true }) player!: VideoPlayerController;
+	@Prop({ type: Boolean, default: false }) hasSlider!: boolean;
 
 	readonly Screen = Screen;
 

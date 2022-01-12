@@ -1,5 +1,4 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
 import {
 	Community,
 	CommunityPresetChannelType,
@@ -14,8 +13,8 @@ import FormCommunityChannelPresetBackground from '../../../forms/community/chann
 	},
 })
 export default class AppCommunityChannelPresetBackgroundModal extends mixins(BaseModal) {
-	@Prop(propRequired(Community)) community!: Community;
-	@Prop(propRequired(String)) presetType!: CommunityPresetChannelType;
+	@Prop({ type: Object, required: true }) community!: Community;
+	@Prop({ type: String, required: true }) presetType!: CommunityPresetChannelType;
 
 	previousBackgroundId: number | null = null;
 

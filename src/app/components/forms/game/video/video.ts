@@ -17,7 +17,7 @@ class Wrapper extends BaseForm<FormModel> {}
 	},
 })
 export default class FormGameVideo extends mixins(Wrapper) {
-	@Prop(Game) game!: Game;
+	@Prop(Object) game!: Game;
 
 	modelClass = GameVideo as any;
 

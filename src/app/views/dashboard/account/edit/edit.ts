@@ -1,11 +1,11 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import { Translate } from '../../../../../_common/translate/translate.service';
 import FormProfile from '../../../../components/forms/profile/profile.vue';
-import { Store } from '../../../../store/index';
 import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 
 @Options({
@@ -22,8 +22,11 @@ import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 	},
 })
 export default class RouteDashAccountEdit extends BaseRouteComponent {
-	@State
-	app!: Store['app'];
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	@RouteStoreModule.State
 	heading!: RouteStore['heading'];

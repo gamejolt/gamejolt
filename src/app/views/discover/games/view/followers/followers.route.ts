@@ -3,6 +3,5 @@ import { RouteRecordRaw } from 'vue-router';
 export const routeDiscoverGamesViewFollowers: RouteRecordRaw = {
 	name: 'discover.games.view.followers',
 	path: 'followers',
-	component: () =>
-		import(/* webpackChunkName: "routeDiscoverGamesViewFollowers" */ './followers.vue'),
+	component: () => import('./followers.vue'),
 };

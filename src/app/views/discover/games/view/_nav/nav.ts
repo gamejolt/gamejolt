@@ -1,5 +1,5 @@
+import { setup } from 'vue-class-component';
 import { Inject, Options, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { getAbsoluteLink } from '../../../../../../utils/router';
 import {
 	CommentStoreManager,
@@ -12,9 +12,9 @@ import AppPopper from '../../../../../../_common/popper/popper.vue';
 import { ReportModal } from '../../../../../../_common/report/modal/modal.service';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../../../../_common/share/share.service';
+import { useCommonStore } from '../../../../../../_common/store/common-store';
 import AppGameModLinks from '../../../../../components/game/mod-links/mod-links.vue';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
-import { Store } from '../../../../../store/index';
 import { RouteStore, RouteStoreModule } from '../view.store';
 
 @Options({
@@ -25,6 +25,8 @@ import { RouteStore, RouteStoreModule } from '../view.store';
 	},
 })
 export default class AppDiscoverGamesViewNav extends Vue {
+	commonStore = setup(() => useCommonStore());
+
 	@Inject({ from: CommentStoreManagerKey })
 	commentManager!: CommentStoreManager;
 
@@ -40,8 +42,9 @@ export default class AppDiscoverGamesViewNav extends Vue {
 	@RouteStoreModule.State
 	primaryScoreTable!: RouteStore['primaryScoreTable'];
 
-	@State
-	app!: Store['app'];
+	get app() {
+		return this.commonStore;
+	}
 
 	readonly Screen = Screen;
 	readonly formatNumber = formatNumber;

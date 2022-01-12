@@ -5,5 +5,5 @@ export const routeProfileOverviewFeed: RouteRecordRaw = {
 	name: 'profile.overview',
 	path: '/@:username/:feedSection(likes)?',
 	// Add this component into the same webpack chunk as the main "profile" chunk.
-	component: () => import(/* webpackChunkName: "routeProfile" */ './feed.vue'),
+	component: () => import('./feed.vue'),
 };

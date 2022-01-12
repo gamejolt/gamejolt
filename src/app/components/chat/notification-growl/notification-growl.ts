@@ -1,5 +1,4 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propRequired } from '../../../../utils/vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
@@ -14,6 +13,6 @@ import { ChatMessage } from '../message';
 	},
 })
 export default class AppChatNotificationGrowl extends Vue {
-	@Prop(propRequired(Object)) chat!: ChatClient;
-	@Prop(propRequired(Object)) message!: ChatMessage;
+	@Prop({ type: Object, required: true }) chat!: ChatClient;
+	@Prop({ type: Object, required: true }) message!: ChatMessage;
 }

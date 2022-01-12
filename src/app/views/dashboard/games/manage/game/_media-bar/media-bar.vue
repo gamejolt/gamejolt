@@ -24,19 +24,22 @@
 			<draggable
 				v-model="draggableItems"
 				style="display: inline-flex"
-				:options="{ delay: 100, delayOnTouchOnly: true }"
+				v-bind="{ delay: 100, delayOnTouchOnly: true }"
+				item-key="id"
 			>
-				<div v-for="item of draggableItems" :key="item.id">
-					<app-game-media-bar-item class="-item" :item="item" @click="open(item)">
-						<app-editable-overlay class="-item-hover hidden-xs" @click="open(item)">
-							<template #overlay>
-								<translate>click to edit</translate>
-								<br />
-								<translate>drag to sort</translate>
-							</template>
-						</app-editable-overlay>
-					</app-game-media-bar-item>
-				</div>
+				<template #item="{ element: item }">
+					<div>
+						<app-game-media-bar-item class="-item" :item="item" @click="open(item)">
+							<app-editable-overlay class="-item-hover hidden-xs" @click="open(item)">
+								<template #overlay>
+									<translate>click to edit</translate>
+									<br />
+									<translate>drag to sort</translate>
+								</template>
+							</app-editable-overlay>
+						</app-game-media-bar-item>
+					</div>
+				</template>
 			</draggable>
 		</div>
 	</app-scroll-scroller>

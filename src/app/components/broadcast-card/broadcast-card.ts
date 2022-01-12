@@ -8,6 +8,6 @@ import { FiresidePost } from '../../../_common/fireside/post/post-model';
 	},
 })
 export default class AppBroadcastCard extends Vue {
-	@Prop(FiresidePost)
+	@Prop(Object)
 	post!: FiresidePost;
 }

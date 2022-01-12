@@ -1,8 +1,30 @@
-<script lang="ts" src="./banner"></script>
+<script lang="ts" setup>
+import { onUnmounted, unref, watch } from 'vue';
+import { Scroll } from '../../../_common/scroll/scroll.service';
+import { useBannerStore } from '../../store/banner';
+
+const { hasBanner, currentBanner, clickBanner, closeBanner } = useBannerStore();
+
+watch(
+	() => unref(hasBanner),
+	isShowing => {
+		if (isShowing) {
+			Scroll.setOffsetTop(50 * 2);
+		} else {
+			Scroll.setOffsetTop(50);
+		}
+	},
+	{ immediate: true }
+);
+
+onUnmounted(() => {
+	Scroll.setOffsetTop(50);
+});
+</script>
 
 <template>
 	<div
-		v-if="hasBanner"
+		v-if="currentBanner"
 		id="shell-banner"
 		class="-banner"
 		:class="{

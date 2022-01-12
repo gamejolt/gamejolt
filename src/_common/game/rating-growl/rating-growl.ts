@@ -10,7 +10,7 @@ import { Game } from '../game.model';
 	},
 })
 export default class AppGameRatingGrowl extends Vue {
-	@Prop({ type: Game, required: true })
+	@Prop({ type: Object, required: true })
 	game!: Game;
 
 	@Emit('close')

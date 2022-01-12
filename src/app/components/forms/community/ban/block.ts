@@ -1,5 +1,4 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
 import { Community } from '../../../../../_common/community/community.model';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
@@ -29,8 +28,8 @@ class Wrapper extends BaseForm<FormModel> {}
 	},
 })
 export default class FormCommunityBlock extends mixins(Wrapper) implements FormOnSubmit {
-	@Prop(propRequired(Community)) community!: Community;
-	@Prop(propOptional(User, null)) user?: User | null;
+	@Prop({ type: Object, required: true }) community!: Community;
+	@Prop({ type: Object, default: null }) user!: User | null;
 
 	usernameLocked = false;
 	otherOptions: string[] = [];

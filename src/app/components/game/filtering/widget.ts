@@ -1,9 +1,9 @@
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppPopper from '../../../../_common/popper/popper.vue';
-import { Store } from '../../../store/index';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { GameFilteringContainer } from './container';
 
 @Options({
@@ -15,8 +15,11 @@ export default class AppGameFilteringWidget extends Vue {
 	@Prop(Object)
 	filtering!: GameFilteringContainer;
 
-	@State
-	app!: Store['app'];
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	hovered: any = {};
 

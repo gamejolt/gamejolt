@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { Emit, Options, Vue, Watch } from 'vue-property-decorator';
 import { sleep } from '../../../../utils/utils';
 import { Client } from '../../../../_common/client/client.service';
@@ -6,7 +7,7 @@ import AppExpand from '../../../../_common/expand/expand.vue';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import Onboarding from '../../../../_common/onboarding/onboarding.service';
 import { onRouteChangeAfter } from '../../../../_common/route/route-component';
-import { AppState, AppStore } from '../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { EventSubscription } from '../../../../_common/system/event/event-topic';
 import introGif from './intro.gif';
 import introOgg from './intro.ogg';
@@ -18,8 +19,11 @@ import introOgg from './intro.ogg';
 	},
 })
 export default class AppClientIntro extends Vue {
-	@AppState
-	user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	shouldShowLogo = false;
 	shouldShowLoading = false;

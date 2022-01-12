@@ -4,6 +4,6 @@ import { routeForumsLandingOverview } from './overview/overview.route';
 
 export const routeForumsLanding: RouteRecordRaw = {
 	path: '',
-	component: () => import(/* webpackChunkName: "routeForumsLanding" */ './landing.vue'),
+	component: () => import('./landing.vue'),
 	children: [routeForumsLandingOverview, routeForumsLandingActive],
 };

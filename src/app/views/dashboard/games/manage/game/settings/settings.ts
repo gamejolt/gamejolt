@@ -1,3 +1,4 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import AppExpand from '../../../../../../../_common/expand/expand.vue';
@@ -8,7 +9,7 @@ import {
 	RouteResolver,
 } from '../../../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
-import { AppState, AppStore } from '../../../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../../../_common/store/common-store';
 import FormGameSettings from '../../../../../../components/forms/game/settings/settings.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
@@ -25,8 +26,11 @@ import { RouteStore, RouteStoreModule } from '../../manage.store';
 		Api.sendRequest(`/web/dash/developer/games/settings/view/${route.params.id}`),
 })
 export default class RouteDashGamesManageGameSettings extends BaseRouteComponent {
-	@AppState
-	user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	@RouteStoreModule.State
 	game!: RouteStore['game'];

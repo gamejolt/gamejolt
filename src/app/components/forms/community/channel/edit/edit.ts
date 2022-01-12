@@ -1,5 +1,4 @@
 import { Emit, mixins, Options, Prop } from 'vue-property-decorator';
-import { propRequired } from '../../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
 import AppFormControlUpload from '../../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
@@ -31,7 +30,7 @@ export default class FormCommunityChannelEdit
 	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnSubmitSuccess
 {
-	@Prop(propRequired(Community)) community!: Community;
+	@Prop({ type: Object, required: true }) community!: Community;
 
 	maxFilesize = 0;
 	maxWidth = 0;

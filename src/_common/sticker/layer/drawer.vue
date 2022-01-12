@@ -35,28 +35,25 @@
 											:style="styles.stickers"
 											:sticker="item.sticker"
 											:count="item.count"
-											:size="drawerStore.stickerSize - 8"
+											:size="drawerStickerSize"
 											@mousedown="assignTouchedSticker(item)"
 											@touchstart="assignTouchedSticker(item)"
 										/>
 									</div>
 								</template>
 							</template>
-							<template v-else-if="drawerStore.hasLoaded">
+							<template v-else-if="hasLoaded">
 								<div class="-no-stckers text-center">
 									<p class="lead" style="padding: 0 16px">
 										<translate>
 											Oh no! Looks like you don't have any stickers.
 										</translate>
 									</p>
-									<template v-if="drawerStore.hasLoaded">
-										<p>
-											<translate>
-												Use Game Jolt, like some posts, and you might get
-												some.
-											</translate>
-										</p>
-									</template>
+									<p>
+										<translate>
+											Use Game Jolt, like some posts, and you might get some.
+										</translate>
+									</p>
 								</div>
 							</template>
 							<template v-else>

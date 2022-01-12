@@ -12,7 +12,7 @@ import { UserGameScore } from '../../../../../../../../_common/user/game-score/g
 	},
 })
 export default class AppManageGameListScores extends Vue {
-	@Prop(GameScoreTable) scoreTable!: GameScoreTable;
+	@Prop(Object) scoreTable!: GameScoreTable;
 	@Prop(Array) scores!: UserGameScore[];
 	@Prop(Boolean) isForUser?: boolean;
 

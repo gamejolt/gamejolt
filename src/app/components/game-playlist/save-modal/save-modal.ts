@@ -10,7 +10,7 @@ import { GameCollection } from '../../game/collection/collection.model';
 	},
 })
 export default class AppGamePlaylistSaveModal extends mixins(BaseModal) {
-	@Prop(GameCollection) collection?: GameCollection;
+	@Prop(Object) collection?: GameCollection;
 
 	onSaved(_formModel: GamePlaylist, response: any) {
 		if (this.collection) {

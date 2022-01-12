@@ -10,7 +10,7 @@ import { routeDashStickers } from './stickers/stickers.route';
 export const routeDash: RouteRecordRaw = {
 	name: 'dashboard',
 	path: '/dashboard',
-	component: () => import(/* webpackChunkName: "routeDash" */ './dashboard.vue'),
+	component: () => import('./dashboard.vue'),
 	children: [
 		routeDashAccount,
 		routeDashAccountMobileNav,

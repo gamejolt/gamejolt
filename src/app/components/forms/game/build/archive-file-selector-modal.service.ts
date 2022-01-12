@@ -12,12 +12,7 @@ export class ArchiveFileSelectorModal {
 	) {
 		return await showModal<string>({
 			modalId: 'ArchiveFileSelector',
-			component: defineAsyncComponent(
-				() =>
-					import(
-						/* webpackChunkName: "ArchiveFileSelectorModal" */ './archive-file-selector-modal.vue'
-					)
-			),
+			component: defineAsyncComponent(() => import('./archive-file-selector-modal.vue')),
 			props: { gameId, packageId, releaseId, buildId, primaryFileId, platform },
 		});
 	}

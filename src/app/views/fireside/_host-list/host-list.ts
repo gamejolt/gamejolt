@@ -1,10 +1,7 @@
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import { shallowSetup } from '../../../../utils/vue';
 import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
-import {
-	DrawerStore,
-	DrawerStoreKey,
-	setDrawerOpen,
-} from '../../../../_common/drawer/drawer-store';
+import { setDrawerOpen, useDrawerStore } from '../../../../_common/drawer/drawer-store';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import {
@@ -40,8 +37,7 @@ export default class AppFiresideHostList extends Vue {
 	@Inject({ from: FiresideControllerKey })
 	c!: FiresideController;
 
-	@Inject({ from: DrawerStoreKey })
-	drawerStore!: DrawerStore;
+	drawerStore = shallowSetup(() => useDrawerStore());
 
 	@Emit('show-popper') emitShowPopper() {}
 	@Emit('hide-popper') emitHidePopper() {}

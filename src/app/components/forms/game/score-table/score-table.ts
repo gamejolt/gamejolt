@@ -12,7 +12,7 @@ class Wrapper extends BaseForm<GameScoreTable> {}
 	},
 })
 export default class FormGameScoreTable extends mixins(Wrapper) {
-	@Prop(Game) game!: Game;
+	@Prop(Object) game!: Game;
 
 	modelClass = GameScoreTable;
 	GameScoreTable = GameScoreTable;

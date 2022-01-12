@@ -1,7 +1,7 @@
+import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Game } from '../../../../../../../_common/game/game.model';
-import { AppStore } from '../../../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../../../_common/store/common-store';
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 import AppManageGameNavRequired from './required.vue';
@@ -13,6 +13,8 @@ import AppManageGameNavRequired from './required.vue';
 	},
 })
 export default class AppManageGameNav extends Vue {
+	commonStore = setup(() => useCommonStore());
+
 	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
@@ -28,8 +30,9 @@ export default class AppManageGameNav extends Vue {
 	@RouteStoreModule.Action
 	publish!: RouteStore['publish'];
 
-	@State
-	app!: AppStore;
+	get app() {
+		return this.commonStore;
+	}
 
 	Game = Game;
 }

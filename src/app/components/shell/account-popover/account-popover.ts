@@ -1,15 +1,17 @@
-import { Inject, Options, Vue } from 'vue-property-decorator';
-import { Action, State } from 'vuex-class';
+import { setup } from 'vue-class-component';
+import { Options, Vue } from 'vue-property-decorator';
+import { Action } from 'vuex-class';
+import { shallowSetup } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
 import { Client } from '../../../../_common/client/safe-exports';
 import { Connection } from '../../../../_common/connection/connection-service';
-import { DrawerStore, DrawerStoreKey } from '../../../../_common/drawer/drawer-store';
+import { useDrawerStore } from '../../../../_common/drawer/drawer-store';
 import { formatCurrency } from '../../../../_common/filters/currency';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { SettingThemeDark } from '../../../../_common/settings/settings.service';
-import { AppStore } from '../../../../_common/store/app-store';
-import { ThemeMutation, ThemeState, ThemeStore } from '../../../../_common/theme/theme.store';
+import { useCommonStore } from '../../../../_common/store/common-store';
+import { useThemeStore } from '../../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import { Store } from '../../../store/index';
@@ -27,12 +29,19 @@ import AppShellUserBox from '../user-box/user-box.vue';
 	},
 })
 export default class AppShellAccountPopover extends Vue {
-	@Inject({ from: DrawerStoreKey })
-	drawer!: DrawerStore;
+	commonStore = setup(() => useCommonStore());
 
-	@State app!: AppStore;
-	@ThemeState isDark!: ThemeStore['isDark'];
-	@ThemeMutation setDark!: ThemeStore['setDark'];
+	get app() {
+		return this.commonStore;
+	}
+
+	drawer = shallowSetup(() => useDrawerStore());
+
+	themeStore = setup(() => useThemeStore());
+
+	get isDark() {
+		return this.themeStore.isDark;
+	}
 
 	isShowing = false;
 	walletAmount: number | false = false;
@@ -59,7 +68,7 @@ export default class AppShellAccountPopover extends Vue {
 
 	toggleDark() {
 		SettingThemeDark.set(!this.isDark);
-		this.setDark(!this.isDark);
+		this.themeStore.setDark(!this.isDark);
 	}
 
 	async getWallet() {

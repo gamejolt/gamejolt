@@ -1,5 +1,4 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
 import { Community } from '../../../../../_common/community/community.model';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import { getCommunityBlockReasons } from '../../../../../_common/user/action-reasons';
@@ -10,7 +9,7 @@ import { getCommunityBlockReasons } from '../../../../../_common/user/action-rea
 	},
 })
 export default class AppBlockedNotice extends Vue {
-	@Prop(propRequired(Community)) community!: Community;
+	@Prop({ type: Object, required: true }) community!: Community;
 
 	get communityBlockReason() {
 		if (!this.community.user_block) {

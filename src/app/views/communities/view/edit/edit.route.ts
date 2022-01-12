@@ -8,7 +8,7 @@ import { routeCommunitiesViewEditModerators } from './moderators/moderators.rout
 
 export const routeCommunitiesViewEdit: RouteRecordRaw = {
 	path: 'edit/:id(\\d+)',
-	component: () => import(/* webpackChunkName: "routeCommunitiesViewEdit" */ './edit.vue'),
+	component: () => import('./edit.vue'),
 	children: [
 		routeCommunitiesViewEditDetails,
 		routeCommunitiesViewEditChannels,

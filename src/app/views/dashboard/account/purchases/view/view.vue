@@ -165,6 +165,7 @@
 							<br />
 							<span class="small">
 								<translate>by</translate>
+								{{ ' ' }}
 								<router-link
 									:to="{
 										name: 'profile.overview',

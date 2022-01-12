@@ -7,12 +7,7 @@ export class ModalTumblrBlogSelector {
 		return await showModal<TumblrBlog | false>({
 			modalId: 'TumblrBlogSelector',
 			size: 'sm',
-			component: defineAsyncComponent(
-				() =>
-					import(
-						/* webpackChunkName: "ModalTumblrBlogSelector" */ './tumblr-blog-selector-modal.vue'
-					)
-			),
+			component: defineAsyncComponent(() => import('./tumblr-blog-selector-modal.vue')),
 			props: { account, title },
 		});
 	}

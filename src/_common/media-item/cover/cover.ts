@@ -1,11 +1,10 @@
+import ResizeSensor from 'css-element-queries/src/ResizeSensor';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { AppImgResponsive } from '../../img/responsive/responsive';
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
 import AppMediaItemBackdrop from '../backdrop/backdrop.vue';
 import { MediaItem } from '../media-item-model';
-
-import ResizeSensor from 'css-element-queries/src/ResizeSensor';
 
 @Options({
 	components: {
@@ -14,7 +13,7 @@ import ResizeSensor from 'css-element-queries/src/ResizeSensor';
 	},
 })
 export default class AppMediaItemCover extends Vue {
-	@Prop(MediaItem) mediaItem!: MediaItem;
+	@Prop(Object) mediaItem!: MediaItem;
 	@Prop(Number) maxHeight?: number;
 	@Prop(Boolean) blur?: boolean;
 

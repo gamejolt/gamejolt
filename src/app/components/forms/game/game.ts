@@ -1,12 +1,12 @@
+import { setup } from 'vue-class-component';
 import { mixins, Options } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import AppExpand from '../../../../_common/expand/expand.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm, FormOnLoad } from '../../../../_common/form-vue/form.service';
 import { validateUrlPath } from '../../../../_common/form-vue/validators';
 import { Game } from '../../../../_common/game/game.model';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { Store } from '../../../store/index';
 import AppGameDevStageSelector from './dev-stage-selector/dev-stage-selector.vue';
 import AppDashGameWizardControls from './wizard-controls/wizard-controls.vue';
 
@@ -24,8 +24,11 @@ class Wrapper extends BaseForm<Game> {}
 	},
 })
 export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
-	@State
-	app!: Store['app'];
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	// We need to reset all the "is published", "has builds" stuff.
 	modelClass = Game;

@@ -51,13 +51,13 @@ class Wrapper extends BaseForm<GameBuildFormModel> {}
 export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad {
 	modelClass = GameBuild as any;
 
-	@Prop(Game)
+	@Prop(Object)
 	game!: Game;
 
-	@Prop(GamePackage)
+	@Prop(Object)
 	package!: GamePackage;
 
-	@Prop(GameRelease)
+	@Prop(Object)
 	release!: GameRelease;
 
 	@Prop(Array)

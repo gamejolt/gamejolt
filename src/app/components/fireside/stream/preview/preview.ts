@@ -7,7 +7,7 @@ import { Fireside } from '../../../../../_common/fireside/fireside.model';
 	},
 })
 export default class AppFiresideStreamPreview extends Vue {
-	@Prop({ type: Fireside, required: true })
+	@Prop({ type: Object, required: true })
 	fireside!: Fireside;
 
 	@Prop({ type: Boolean, default: true })

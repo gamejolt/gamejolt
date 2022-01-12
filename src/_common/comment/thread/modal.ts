@@ -1,10 +1,11 @@
+import { setup } from 'vue-class-component';
 import { Emit, Inject, mixins, Options, Prop } from 'vue-property-decorator';
 import { Analytics } from '../../analytics/analytics.service';
 import AppMessageThreadAdd from '../../message-thread/add/add.vue';
 import { BaseModal } from '../../modal/base';
 import { Model } from '../../model/model.service';
 import { Screen } from '../../screen/screen-service';
-import { AppState, AppStore } from '../../store/app-store';
+import { useCommonStore } from '../../store/common-store';
 import FormComment from '../add/add.vue';
 import { canCommentOnModel, Comment, getCommentModelResourceName } from '../comment-model';
 import {
@@ -27,7 +28,7 @@ export default class AppCommentThreadModal extends mixins(BaseModal) {
 	@Prop(Number)
 	commentId!: number;
 
-	@Prop(Model)
+	@Prop(Object)
 	model!: Model;
 
 	@Prop(String)
@@ -36,11 +37,14 @@ export default class AppCommentThreadModal extends mixins(BaseModal) {
 	@Prop(Boolean)
 	autofocus?: boolean;
 
+	commonStore = setup(() => useCommonStore());
+
 	@Inject({ from: CommentStoreManagerKey })
 	commentManager!: CommentStoreManager;
 
-	@AppState
-	user!: AppStore['user'];
+	get user() {
+		return this.commonStore.user;
+	}
 
 	hasError = false;
 	isEditorFocused = false;

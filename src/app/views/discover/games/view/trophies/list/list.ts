@@ -1,5 +1,5 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { formatNumber } from '../../../../../../../_common/filters/number';
 import { GameTrophy } from '../../../../../../../_common/game/trophy/trophy.model';
@@ -8,10 +8,10 @@ import {
 	BaseRouteComponent,
 	RouteResolver,
 } from '../../../../../../../_common/route/route-component';
+import { useCommonStore } from '../../../../../../../_common/store/common-store';
 import { UserGameTrophy } from '../../../../../../../_common/user/trophy/game-trophy.model';
 import AppTrophyCompletion from '../../../../../../components/trophy/completion/completion.vue';
 import AppTrophyList from '../../../../../../components/trophy/list/list.vue';
-import { Store } from '../../../../../../store/index';
 import { RouteStore, RouteStoreModule } from '../../view.store';
 
 @Options({
@@ -28,11 +28,14 @@ import { RouteStore, RouteStoreModule } from '../../view.store';
 	resolver: ({ route }) => Api.sendRequest('/web/discover/games/trophies/' + route.params.id),
 })
 export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteComponent {
+	commonStore = setup(() => useCommonStore());
+
 	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
-	@State
-	app!: Store['app'];
+	get app() {
+		return this.commonStore;
+	}
 
 	trophies: GameTrophy[] = [];
 	achieved: UserGameTrophy[] = [];

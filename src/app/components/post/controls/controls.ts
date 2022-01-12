@@ -1,4 +1,6 @@
+import { setup } from 'vue-class-component';
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import { shallowSetup } from '../../../../utils/vue';
 import {
 	Analytics,
 	PostControlsLocation,
@@ -16,18 +18,14 @@ import {
 import { CommentModal } from '../../../../_common/comment/modal/modal.service';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
-import {
-	DrawerStore,
-	DrawerStoreKey,
-	setDrawerOpen,
-} from '../../../../_common/drawer/drawer-store';
+import { setDrawerOpen, useDrawerStore } from '../../../../_common/drawer/drawer-store';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppFiresidePostLikeWidget from '../../../../_common/fireside/post/like/widget/widget.vue';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppStickerControlsOverlay from '../../../../_common/sticker/controls-overlay/controls-overlay.vue';
-import { AppState, AppStore } from '../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserFollowSuggestion } from '../../../../_common/user/follow/suggestion.service';
 import { User } from '../../../../_common/user/user.model';
@@ -56,13 +54,13 @@ import AppPostControlsUserFollow from './user-follow/user-follow.vue';
 	},
 })
 export default class AppPostControls extends Vue {
-	@Prop({ type: FiresidePost, required: true })
+	@Prop({ type: Object, required: true })
 	post!: FiresidePost;
 
-	@Prop({ type: ActivityFeedView, required: false })
+	@Prop({ type: Object, required: false })
 	feed?: ActivityFeedView;
 
-	@Prop({ type: ActivityFeedItem, required: false })
+	@Prop({ type: Object, required: false })
 	item?: ActivityFeedItem;
 
 	@Prop({ type: String, required: true })
@@ -77,13 +75,16 @@ export default class AppPostControls extends Vue {
 	@Prop({ type: String, required: false, default: '' })
 	eventLabel!: string;
 
+	commonStore = setup(() => useCommonStore());
+
 	@Inject({ from: CommentStoreManagerKey })
 	commentManager!: CommentStoreManager;
 
-	@Inject({ from: DrawerStoreKey })
-	drawerStore!: DrawerStore;
+	drawerStore = shallowSetup(() => useDrawerStore());
 
-	@AppState user!: AppStore['user'];
+	get user() {
+		return this.commonStore.user;
+	}
 
 	shouldShowFollowState = false;
 	private commentStore: null | CommentStoreModel = null;

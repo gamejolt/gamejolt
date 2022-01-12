@@ -1,9 +1,10 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../_common/api/api.service';
 import AppFormButton from '../../../_common/form-vue/AppFormButton.vue';
 import Onboarding from '../../../_common/onboarding/onboarding.service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
-import { AppState, AppStore } from '../../../_common/store/app-store';
+import { useCommonStore } from '../../../_common/store/common-store';
 import OnboardingComponent from '../../components/forms/onboarding/base';
 import FormOnboardingFollows from '../../components/forms/onboarding/follows/follows.vue';
 import FormOnboardingProfile from '../../components/forms/onboarding/profile/profile.vue';
@@ -19,8 +20,11 @@ import FormOnboardingProfile from '../../components/forms/onboarding/profile/pro
 	resolver: () => Api.sendRequest('/web/onboarding'),
 })
 export default class RouteWelcome extends BaseRouteComponent {
-	@AppState
-	user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	isSocialRegistration = false;
 

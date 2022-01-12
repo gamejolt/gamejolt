@@ -12,7 +12,7 @@ import { Store } from '../../../../store/index';
 	},
 })
 export default class AppCommunitySliderItem extends Vue {
-	@Prop({ type: Community, required: true }) community!: Community;
+	@Prop({ type: Object, required: true }) community!: Community;
 	@Prop({ type: String, required: false, default: 'global' }) eventCat!: string;
 
 	@State

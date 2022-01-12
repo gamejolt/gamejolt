@@ -145,6 +145,7 @@
 						:items="votingCategories"
 						:active-item="activeVotingCategory"
 						:is-adding="isShowingVotingCategoryAdd"
+						is-draggable
 						@activate="activeVotingCategory = $event"
 					>
 						<app-card-list-add
@@ -157,35 +158,35 @@
 							/>
 						</app-card-list-add>
 
-						<app-card-list-draggable @change="saveCategorySort">
-							<app-card-list-item
-								v-for="category in votingCategories"
-								:id="`category-container-${category.id}`"
-								:key="category.id"
-								:item="category"
-							>
-								<a
-									v-app-tooltip="$gettext(`Remove Category`)"
-									class="card-remove"
-									@click.stop="onClickRemoveCategory(category)"
+						<app-card-list-draggable item-key="id" @change="saveCategorySort">
+							<template #item="{ element: category }">
+								<app-card-list-item
+									:id="`category-container-${category.id}`"
+									:item="category"
 								>
-									<app-jolticon icon="remove" />
-								</a>
+									<a
+										v-app-tooltip="$gettext(`Remove Category`)"
+										class="card-remove"
+										@click.stop="onClickRemoveCategory(category)"
+									>
+										<app-jolticon icon="remove" />
+									</a>
 
-								<div>
-									{{ category.name }}
-								</div>
-								<div v-if="category.description">
-									<small class="text-muted">{{ category.description }}</small>
-								</div>
+									<div>
+										{{ category.name }}
+									</div>
+									<div v-if="category.description">
+										<small class="text-muted">{{ category.description }}</small>
+									</div>
 
-								<template #body>
-									<form-community-competition-voting-category
-										:competition="competition"
-										:model="category"
-									/>
-								</template>
-							</app-card-list-item>
+									<template #body>
+										<form-community-competition-voting-category
+											:competition="competition"
+											:model="category"
+										/>
+									</template>
+								</app-card-list-item>
+							</template>
 						</app-card-list-draggable>
 					</app-card-list>
 				</template>
@@ -246,6 +247,7 @@
 					:items="awards"
 					:active-item="activeAward"
 					:is-adding="isShowingAwardAdd"
+					is-draggable
 					@activate="activeAward = $event"
 				>
 					<app-card-list-add
@@ -258,35 +260,32 @@
 						/>
 					</app-card-list-add>
 
-					<app-card-list-draggable @change="saveAwardSort">
-						<app-card-list-item
-							v-for="award in awards"
-							:id="`award-container-${award.id}`"
-							:key="award.id"
-							:item="award"
-						>
-							<a
-								v-app-tooltip="$gettext(`Remove Award`)"
-								class="card-remove"
-								@click.stop="onClickRemoveAward(award)"
-							>
-								<app-jolticon icon="remove" />
-							</a>
+					<app-card-list-draggable item-key="id" @change="saveAwardSort">
+						<template #item="{ element: award }">
+							<app-card-list-item :id="`award-container-${award.id}`" :item="award">
+								<a
+									v-app-tooltip="$gettext(`Remove Award`)"
+									class="card-remove"
+									@click.stop="onClickRemoveAward(award)"
+								>
+									<app-jolticon icon="remove" />
+								</a>
 
-							<div>
-								{{ award.name }}
-							</div>
-							<div v-if="award.description">
-								<small class="text-muted">{{ award.description }}</small>
-							</div>
+								<div>
+									{{ award.name }}
+								</div>
+								<div v-if="award.description">
+									<small class="text-muted">{{ award.description }}</small>
+								</div>
 
-							<template #body>
-								<form-community-competition-award
-									:competition="competition"
-									:model="award"
-								/>
-							</template>
-						</app-card-list-item>
+								<template #body>
+									<form-community-competition-award
+										:competition="competition"
+										:model="award"
+									/>
+								</template>
+							</app-card-list-item>
+						</template>
 					</app-card-list-draggable>
 				</app-card-list>
 			</template>

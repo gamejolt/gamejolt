@@ -1,4 +1,123 @@
-<script lang="ts" src="./banner"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { RouteLocationDefinition } from '../../../../../utils/router';
+import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/join-widget.vue';
+import { Jam } from '../../../../../_common/jam/jam.model';
+import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/backdrop.vue';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import { useCommonStore } from '../../../../../_common/store/common-store';
+import { AppTheme } from '../../../../../_common/theme/theme';
+import { FeaturedItem } from '../../../../components/featured-item/featured-item.model';
+import AppGameFollowWidget from '../../../../components/game/follow-widget/follow-widget.vue';
+
+@Options({
+	components: {
+		AppGameFollowWidget,
+		AppCommunityJoinWidget,
+		AppTheme,
+		AppMediaItemBackdrop,
+	},
+})
+export default class AppDiscoverHomeBanner extends Vue {
+	@Prop(Object) item?: FeaturedItem;
+	@Prop({ type: Boolean, default: false }) isLoading!: boolean;
+
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
+
+	readonly Screen = Screen;
+
+	get shouldShowViewGame() {
+		if (!this.item?.game) {
+			return false;
+		}
+
+		return !this.item.custom_url || !this.shouldShowFollowGame;
+	}
+
+	get shouldShowFollowGame() {
+		if (this.item?.game) {
+			return !this.app.user || !this.item.game.is_following;
+		}
+		return false;
+	}
+
+	get shouldShowViewCommunity() {
+		if (!this.item?.community) {
+			return false;
+		}
+
+		return !this.item.custom_url || !this.shouldShowJoinCommunity;
+	}
+
+	get shouldShowJoinCommunity() {
+		if (this.item?.community) {
+			return !this.app.user || !this.item.community.is_member;
+		}
+		return false;
+	}
+
+	get shouldShowJamViewGames() {
+		if (!this.item?.jam) {
+			return false;
+		}
+
+		return this.item.jam.getPeriod() >= Jam.PERIOD_RUNNING;
+	}
+
+	get location(): RouteLocationDefinition | null {
+		if (this.item?.game) {
+			return {
+				name: 'discover.games.view.overview',
+				params: {
+					id: this.item.game.id + '',
+					slug: this.item.game.slug,
+				},
+			};
+		} else if (this.item?.jam) {
+			return {
+				name: 'library.collection.jam',
+				params: {
+					id: this.item.jam.url,
+				},
+			};
+		} else if (this.item?.community) {
+			return {
+				name: 'communities.view.overview',
+				params: {
+					path: this.item.community.path,
+				},
+			};
+		}
+		return null;
+	}
+
+	get theme() {
+		if (this.item?.game) {
+			return this.item.game.theme;
+		} else if (this.item?.community) {
+			return this.item.community.theme;
+		}
+		return null;
+	}
+
+	get bannerMediaItem() {
+		if (this.item?.game) {
+			return this.item.game.header_media_item;
+		}
+
+		if (this.item?.community) {
+			return this.item.community.header;
+		}
+
+		return null;
+	}
+}
+</script>
 
 <template>
 	<div v-if="!item || isLoading" class="-placeholder" />

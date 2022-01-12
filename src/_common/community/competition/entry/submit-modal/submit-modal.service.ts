@@ -7,12 +7,7 @@ export class CommunityCompetitionEntrySubmitModal {
 	static async show(competition: CommunityCompetition) {
 		return await showModal<CommunityCompetitionEntry>({
 			modalId: 'CommunityCompetitionEntrySubmit',
-			component: defineAsyncComponent(
-				() =>
-					import(
-						/* webpackChunkName: "CommunityCompetitionEntrySubmitModal" */ './submit-modal.vue'
-					)
-			),
+			component: defineAsyncComponent(() => import('./submit-modal.vue')),
 			props: {
 				competition,
 			},

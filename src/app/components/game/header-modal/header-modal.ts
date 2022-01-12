@@ -9,7 +9,7 @@ import FormGameHeader from '../../forms/game/header/header.vue';
 	},
 })
 export default class AppGameHeaderEditModal extends mixins(BaseModal) {
-	@Prop(Game)
+	@Prop(Object)
 	game!: Game;
 
 	// We don't want to close the modal after they've uploaded a header since they can set a crop

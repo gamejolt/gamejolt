@@ -1,5 +1,4 @@
 import { mixins, Options, Prop, Watch } from 'vue-property-decorator';
-import { propRequired } from '../../../../../../utils/vue';
 import {
 	Community,
 	CommunityPresetChannelType,
@@ -31,7 +30,7 @@ export default class FormCommunityChannelPresetBackground
 	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnBeforeSubmit, FormOnSubmit
 {
-	@Prop(propRequired(String)) presetType!: CommunityPresetChannelType;
+	@Prop({ type: String, required: true }) presetType!: CommunityPresetChannelType;
 
 	modelClass = Community as any;
 

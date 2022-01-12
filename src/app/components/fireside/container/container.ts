@@ -1,4 +1,5 @@
 import { h } from 'vue';
+import { setup } from 'vue-class-component';
 import { Inject, Options, Prop, Provide, Vue } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { arrayUnique } from '../../../../utils/array';
@@ -6,13 +7,10 @@ import { objectPick } from '../../../../utils/object';
 import { updateServerTimeOffset } from '../../../../utils/server-time';
 import { sleep } from '../../../../utils/utils';
 import { uuidv4 } from '../../../../utils/uuid';
+import { shallowSetup } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
 import { getCookie } from '../../../../_common/cookie/cookie.service';
-import {
-	DrawerStore,
-	DrawerStoreKey,
-	setStickerStreak,
-} from '../../../../_common/drawer/drawer-store';
+import { setStickerStreak, useDrawerStore } from '../../../../_common/drawer/drawer-store';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresideRole } from '../../../../_common/fireside/role/role.model';
 import {
@@ -29,7 +27,7 @@ import {
 import { showInfoGrowl } from '../../../../_common/growls/growls.service';
 import { StickerPlacement } from '../../../../_common/sticker/placement/placement.model';
 import { addStickerToTarget } from '../../../../_common/sticker/target/target-controller';
-import { AppState, AppStore } from '../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { User } from '../../../../_common/user/user.model';
 import { Store } from '../../../store';
 import { ChatStore, ChatStoreKey, clearChat, loadChat } from '../../chat/chat-store';
@@ -55,19 +53,22 @@ interface GridStickerPlacementPayload {
 
 @Options({})
 export class AppFiresideContainer extends Vue {
-	@Prop({ type: FiresideController, required: true })
+	@Prop({ type: Object, required: true })
 	@Provide({ to: FiresideControllerKey, reactive: true })
 	controller!: FiresideController;
 
-	@AppState user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 	@State grid!: Store['grid'];
 	@Action loadGrid!: Store['loadGrid'];
 
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;
 
-	@Inject({ from: DrawerStoreKey })
-	drawerStore!: DrawerStore;
+	drawerStore = shallowSetup(() => useDrawerStore());
 
 	get chat() {
 		return this.chatStore.chat;
@@ -120,7 +121,7 @@ export class AppFiresideContainer extends Vue {
 
 	unmounted() {
 		this.controller.onRetry = null;
-		this.drawerStore.streak = null;
+		this.drawerStore.streak.value = null;
 
 		this.disconnect();
 		this.grid?.unsetGuestToken();

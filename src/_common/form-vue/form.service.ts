@@ -110,7 +110,7 @@ export class BaseForm<T> extends Vue {
 	}
 
 	created() {
-		this.form._initLazy({
+		this.form._override({
 			modelClass: this.modelClass,
 			saveMethod: computed(() => this.saveMethod),
 			loadUrl: computed(() => (this as Partial<FormOnLoad>).loadUrl),

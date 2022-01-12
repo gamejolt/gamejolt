@@ -16,7 +16,7 @@ import AppFiresideStreamVideo from '../video/video.vue';
 	},
 })
 export default class AppFiresideStreamPreviewVideo extends Vue {
-	@Prop({ type: Fireside, required: true })
+	@Prop({ type: Object, required: true })
 	fireside!: Fireside;
 
 	@Prop({ type: Boolean, default: true })

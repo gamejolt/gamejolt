@@ -11,7 +11,7 @@ import AppForumPostListItem from './item/item.vue';
 	},
 })
 export default class AppForumPostList extends Vue {
-	@Prop(ForumTopic) topic!: ForumTopic;
+	@Prop(Object) topic!: ForumTopic;
 	@Prop(Array) posts!: ForumPost[];
 	@Prop(String) sort!: string;
 

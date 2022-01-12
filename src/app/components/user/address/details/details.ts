@@ -4,7 +4,7 @@ import { UserAddress } from '../../../../../_common/user/address/address.model';
 
 @Options({})
 export default class AppUserAddressDetails extends Vue {
-	@Prop(UserAddress) address!: UserAddress;
+	@Prop(Object) address!: UserAddress;
 
 	get country() {
 		if (this.address) {

@@ -1,11 +1,11 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { RouteLocationRedirect } from '../../../../../utils/router';
 import { Api } from '../../../../../_common/api/api.service';
 import { Game } from '../../../../../_common/game/game.model';
 import AppGameThumbnail from '../../../../../_common/game/thumbnail/thumbnail.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
-import { AppStore } from '../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
 import AppTrophyCard from '../../../../components/trophy/card/card.vue';
@@ -48,11 +48,14 @@ type CompletionData = {
 	},
 })
 export default class RouteProfileTrophiesGame extends BaseRouteComponent {
+	commonStore = setup(() => useCommonStore());
+
 	@RouteStoreModule.State
 	user!: RouteStore['user'];
 
-	@State
-	app!: AppStore;
+	get app() {
+		return this.commonStore;
+	}
 
 	game: Game | null = null;
 	trophies: UserBaseTrophy[] = [];

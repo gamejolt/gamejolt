@@ -1,4 +1,5 @@
 import { parse } from 'querystring';
+import { reactive } from 'vue';
 import { buildUseStore, VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
 import { Api } from '../../_common/api/api.service';
 import { Game } from '../../_common/game/game.model';
@@ -7,32 +8,23 @@ import { GamePackagePayloadModel } from '../../_common/game/package/package-payl
 import { GamePackage } from '../../_common/game/package/package.model';
 import { SellablePricing } from '../../_common/sellable/pricing/pricing.model';
 import { Sellable } from '../../_common/sellable/sellable.model';
-import {
-	Actions as AppActions,
-	AppStore,
-	appStore,
-	Mutations as AppMutations,
-} from '../../_common/store/app-store';
-import { ThemeActions, ThemeMutations, ThemeStore } from '../../_common/theme/theme.store';
 import { User } from '../../_common/user/user.model';
 
-export type Actions = AppActions &
-	ThemeActions & {
-		bootstrap: undefined;
-		checkout: undefined;
-	};
+export type Actions = {
+	bootstrap: undefined;
+	checkout: undefined;
+};
 
-export type Mutations = AppMutations &
-	ThemeMutations & {
-		setInvalidKey: undefined;
-		setFailure: undefined;
-		clearFailure: undefined;
-		setProcessing: undefined;
-		setNotProcessing: undefined;
-		_bootstrap: any;
-		setPayment: any;
-		setAddress: any;
-	};
+export type Mutations = {
+	setInvalidKey: undefined;
+	setFailure: undefined;
+	clearFailure: undefined;
+	setProcessing: undefined;
+	setNotProcessing: undefined;
+	_bootstrap: any;
+	setPayment: any;
+	setAddress: any;
+};
 
 export class PaymentData {
 	method: 'cc-stripe' | 'paypal' = 'cc-stripe';
@@ -49,15 +41,9 @@ export class AddressData {
 
 @VuexModule({
 	store: true,
-	modules: {
-		app: appStore,
-		theme: new ThemeStore(),
-	},
+	modules: {},
 })
 export class Store extends VuexStore<Store, Actions, Mutations> {
-	app!: AppStore;
-	theme!: ThemeStore;
-
 	sellableKey = parse(window.location.search.substring(1)).key as string;
 	isLightTheme = parse(window.location.search.substring(1)).theme === 'light';
 	isLoaded = false;
@@ -201,5 +187,5 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 }
 
-export const store = new Store();
+export const store = reactive(new Store()) as Store;
 export const useStore = buildUseStore<Store>();

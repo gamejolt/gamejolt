@@ -1,5 +1,4 @@
 import { Emit, Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { propRequired } from '../../../../../utils/vue';
 import { ContentDocument } from '../../../../../_common/content/content-document';
 import { AppContentEditorLazy } from '../../../../../_common/content/content-editor/content-editor-lazy';
 import { Screen } from '../../../../../_common/screen/screen-service';
@@ -16,7 +15,7 @@ import AppChatWindowSendForm from './form/form.vue';
 	},
 })
 export default class AppChatWindowSend extends Vue {
-	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
+	@Prop({ type: Object, required: true }) room!: ChatRoom;
 
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;

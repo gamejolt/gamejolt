@@ -6,7 +6,7 @@ import { GameRatingGrowl } from '../rating-growl/rating-growl.service';
 
 @Options({})
 export default class AppGamePlayModal extends mixins(BaseModal) {
-	@Prop(Game)
+	@Prop(Object)
 	game!: Game;
 
 	@Prop(String)

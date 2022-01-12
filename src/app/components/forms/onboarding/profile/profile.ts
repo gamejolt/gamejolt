@@ -5,7 +5,7 @@ import AppFormControlContent from '../../../../../_common/form-vue/controls/AppF
 import { FormOnLoad, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
 import { validateUsername } from '../../../../../_common/form-vue/validators';
 import Onboarding, { OnboardingStep } from '../../../../../_common/onboarding/onboarding.service';
-import { AppThemeSvg } from '../../../../../_common/theme/svg/svg';
+import AppThemeSvg from '../../../../../_common/theme/svg/AppThemeSvg.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
 import { UserAvatarModal } from '../../../user/avatar-modal/avatar-modal.service';
 import OnboardingComponent from '../base';

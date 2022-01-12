@@ -10,7 +10,7 @@ import { GameDevStageSelectorConfirmModal } from './confirm-service';
 	},
 })
 export default class AppGameDevStageSelector extends Vue {
-	@Prop(Game) game?: Game;
+	@Prop(Object) game?: Game;
 
 	stages = [
 		Game.DEVELOPMENT_STATUS_DEVLOG,

@@ -1,7 +1,8 @@
+import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
 import { formatNumber } from '../../../../../_common/filters/number';
-import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { LibraryModule, LibraryStore } from '../../../../store/library';
 import { GameCollection } from '../collection.model';
@@ -13,7 +14,7 @@ import { GameCollection } from '../collection.model';
 	},
 })
 export default class AppGameCollectionFollowWidget extends Vue {
-	@Prop(GameCollection)
+	@Prop(Object)
 	collection!: GameCollection;
 
 	@Prop(Number)
@@ -28,8 +29,11 @@ export default class AppGameCollectionFollowWidget extends Vue {
 	@Prop(Boolean)
 	block?: boolean;
 
-	@AppState
-	user!: AppStore['user'];
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	@LibraryModule.State
 	collections!: LibraryStore['collections'];

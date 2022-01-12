@@ -88,7 +88,9 @@
 
 						<div class="-tooltip-row -tooltip-user">
 							<translate>by</translate>
+							{{ ' ' }}
 							<app-user-avatar-img class="-tooltip-img" :user="fireside.user" />
+							{{ ' ' }}
 							@{{ fireside.user.username }}
 						</div>
 

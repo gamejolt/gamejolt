@@ -1,15 +1,15 @@
+import { setup } from 'vue-class-component';
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { propOptional } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
-import AppIllustration from '../../../../../_common/illustration/illustration.vue';
+import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
-import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppActivityFeedNewButton from '../../../../components/activity/feed/new-button/new-button.vue';
 import AppActivityFeedPlaceholder from '../../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
@@ -35,12 +35,16 @@ import AppBlockedNotice from '../_blocked-notice/blocked-notice.vue';
 export default class AppCommunitiesViewFeed extends Vue {
 	// It's optional since it may not have loaded into the page yet. In that
 	// case, we show a placeholder and wait.
-	@Prop(propOptional(ActivityFeedView)) feed?: ActivityFeedView;
+	@Prop(Object) feed?: ActivityFeedView;
+
+	commonStore = setup(() => useCommonStore());
 
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 
-	@AppState user!: AppStore['user'];
+	get user() {
+		return this.commonStore.user;
+	}
 	@State communityStates!: Store['communityStates'];
 
 	@Emit('add-post') emitAddPost(_post: FiresidePost) {}
