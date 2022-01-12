@@ -227,3 +227,12 @@ function _configGetOverrides(): Overrides {
 
 	return (_overrides ??= JSON.parse(localStorage.getItem(OVERRIDES_STORAGE_KEY) ?? '{}'));
 }
+
+/**
+ * Save a single config's override value.
+ */
+export function configSaveOverride<T extends ValueType>(config: ConfigOption<T>, value: T) {
+	const overrides = _configGetOverrides();
+	overrides[config.name] = value;
+	configSaveOverrides(overrides);
+}
