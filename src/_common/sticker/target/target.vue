@@ -11,7 +11,7 @@
 			<div
 				v-if="isShowingStickers"
 				:class="{
-					'-faded': drawerStore.isDrawerOpen,
+					'-faded': shouldFade,
 				}"
 			>
 				<app-sticker

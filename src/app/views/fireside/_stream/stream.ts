@@ -1,5 +1,6 @@
 import { Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { DrawerStore, DrawerStoreKey } from '../../../../_common/drawer/drawer-store';
+import { shallowSetup } from '../../../../utils/vue';
+import { useDrawerStore } from '../../../../_common/drawer/drawer-store';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import { formatNumber } from '../../../../_common/filters/number';
 import { setRTCDesktopVolume } from '../../../../_common/fireside/rtc/rtc';
@@ -50,8 +51,7 @@ export default class AppFiresideStream extends Vue {
 	@Inject({ from: FiresideControllerKey })
 	c!: FiresideController;
 
-	@Inject({ from: DrawerStoreKey })
-	drawerStore!: DrawerStore;
+	drawerStore = shallowSetup(() => useDrawerStore());
 
 	private isHovered = false;
 	private _hideUITimer?: NodeJS.Timer;
@@ -69,7 +69,7 @@ export default class AppFiresideStream extends Vue {
 	};
 
 	get stickerStreak() {
-		return this.drawerStore.streak;
+		return this.drawerStore.streak.value;
 	}
 
 	get streakCount() {

@@ -3,10 +3,11 @@ import { defineAsyncComponent, nextTick } from 'vue';
 import { setup } from 'vue-class-component';
 import { Inject, Options, Vue, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
+import { shallowSetup } from '../../../utils/vue';
 import { AppClientBase } from '../../../_common/client/safe-exports';
 import { Connection } from '../../../_common/connection/connection-service';
 import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
-import { DrawerStore, DrawerStoreKey, setDrawerOpen } from '../../../_common/drawer/drawer-store';
+import { setDrawerOpen, useDrawerStore } from '../../../_common/drawer/drawer-store';
 import { Meta } from '../../../_common/meta/meta-service';
 import AppMinbar from '../../../_common/minbar/minbar.vue';
 import { Screen, triggerOnScreenResize } from '../../../_common/screen/screen-service';
@@ -46,11 +47,10 @@ import AppShellTopNav from './top-nav/top-nav.vue';
 export default class AppShell extends Vue {
 	commonStore = setup(() => useCommonStore());
 
+	drawerStore = shallowSetup(() => useDrawerStore());
+
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;
-
-	@Inject({ from: DrawerStoreKey })
-	drawerStore!: DrawerStore;
 
 	get app() {
 		return this.commonStore;

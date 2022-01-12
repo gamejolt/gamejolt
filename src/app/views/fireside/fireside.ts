@@ -1,10 +1,11 @@
 import { setup } from 'vue-class-component';
 import { Inject, Options, Watch } from 'vue-property-decorator';
+import { shallowSetup } from '../../../utils/vue';
 import { Api } from '../../../_common/api/api.service';
 import { AppAuthRequired } from '../../../_common/auth/auth-required-directive';
 import AppAuthJoin from '../../../_common/auth/join/join.vue';
 import AppCommunityThumbnailImg from '../../../_common/community/thumbnail/img/img.vue';
-import { DrawerStore, DrawerStoreKey } from '../../../_common/drawer/drawer-store';
+import { useDrawerStore } from '../../../_common/drawer/drawer-store';
 import { Environment } from '../../../_common/environment/environment.service';
 import AppExpand from '../../../_common/expand/expand.vue';
 import AppFadeCollapse from '../../../_common/fade-collapse/fade-collapse.vue';
@@ -97,8 +98,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;
 
-	@Inject({ from: DrawerStoreKey })
-	drawerStore!: DrawerStore;
+	drawerStore = shallowSetup(() => useDrawerStore());
 
 	commonStore = setup(() => useCommonStore());
 	themeStore = setup(() => useThemeStore());

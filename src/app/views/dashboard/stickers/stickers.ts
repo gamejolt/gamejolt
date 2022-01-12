@@ -1,8 +1,9 @@
-import { Inject, Options } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { numberSort } from '../../../../utils/array';
+import { shallowSetup } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
-import { DrawerStore, DrawerStoreKey } from '../../../../_common/drawer/drawer-store';
+import { useDrawerStore } from '../../../../_common/drawer/drawer-store';
 import { formatNumber } from '../../../../_common/filters/number';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
@@ -48,8 +49,7 @@ const FetchStickersEndpoint = '/web/stickers/dash';
 	resolver: () => Api.sendRequest(FetchStickersEndpoint),
 })
 export default class RouteDashStickers extends BaseRouteComponent {
-	@Inject({ from: DrawerStoreKey })
-	drawer!: DrawerStore;
+	drawer = shallowSetup(() => useDrawerStore());
 
 	@State grid!: Store['grid'];
 

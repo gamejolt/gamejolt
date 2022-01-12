@@ -1,7 +1,8 @@
-import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { shallowSetup } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
-import { DrawerStore, DrawerStoreKey, setDrawerOpen } from '../../drawer/drawer-store';
+import { setDrawerOpen, useDrawerStore } from '../../drawer/drawer-store';
 import { formatFuzzynumber } from '../../filters/fuzzynumber';
 import { LikersModal } from '../../likers/modal.service';
 import { Model } from '../../model/model.service';
@@ -26,8 +27,7 @@ export default class AppCommentControls extends Vue {
 	@Prop({ type: Boolean, default: false }) canReply!: boolean;
 	@Prop({ type: Boolean, default: false }) canPlaceStickers!: boolean;
 
-	@Inject({ from: DrawerStoreKey })
-	drawer!: DrawerStore;
+	drawer = shallowSetup(() => useDrawerStore());
 
 	readonly Screen = Screen;
 	readonly formatFuzzynumber = formatFuzzynumber;

@@ -1,16 +1,16 @@
 import { defineAsyncComponent } from '@vue/runtime-core';
 import { ref } from 'vue';
 import { setup } from 'vue-class-component';
-import { Inject, Options, Prop, Provide, Vue } from 'vue-property-decorator';
+import { Options, Prop, Provide, Vue } from 'vue-property-decorator';
+import { shallowSetup } from '../../../utils/vue';
 import {
 	ContentFocus,
 	registerContentFocusWatcher,
 } from '../../content-focus/content-focus.service';
 import {
-	DrawerStore,
-	DrawerStoreKey,
 	registerStickerLayer,
 	unregisterStickerLayer,
+	useDrawerStore,
 } from '../../drawer/drawer-store';
 import { useScroller } from '../../scroll/scroller/scroller.vue';
 import { StickerLayerController, StickerLayerKey } from './layer-controller';
@@ -24,8 +24,7 @@ import { StickerLayerController, StickerLayerKey } from './layer-controller';
 export default class AppStickerLayer extends Vue {
 	@Prop({ type: Boolean, default: false }) hasFixedParent!: boolean;
 
-	@Inject({ from: DrawerStoreKey })
-	drawer!: DrawerStore;
+	drawer = shallowSetup(() => useDrawerStore());
 
 	@Provide({ to: StickerLayerKey, reactive: true })
 	layer!: StickerLayerController;
@@ -33,6 +32,14 @@ export default class AppStickerLayer extends Vue {
 	scroller = setup(() => ref(useScroller()));
 
 	private focusWatcherDeregister!: () => void;
+
+	get isDragging() {
+		return this.drawer.isDragging.value;
+	}
+
+	get isShowingDrawer() {
+		return this.layer.isShowingDrawer;
+	}
 
 	created() {
 		this.layer = new StickerLayerController(this.drawer);
@@ -46,7 +53,7 @@ export default class AppStickerLayer extends Vue {
 		// mask is active.
 		this.focusWatcherDeregister = registerContentFocusWatcher(
 			ContentFocus,
-			() => !this.layer.isShowingDrawer
+			() => !this.isShowingDrawer
 		);
 	}
 
@@ -56,7 +63,7 @@ export default class AppStickerLayer extends Vue {
 	}
 
 	onContextMenu(e: MouseEvent) {
-		if (!this.layer.isShowingDrawer) {
+		if (!this.isShowingDrawer) {
 			return;
 		}
 		e.preventDefault();

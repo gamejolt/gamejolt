@@ -1,5 +1,6 @@
 import { setup } from 'vue-class-component';
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import { shallowSetup } from '../../../../utils/vue';
 import {
 	Analytics,
 	PostControlsLocation,
@@ -17,11 +18,7 @@ import {
 import { CommentModal } from '../../../../_common/comment/modal/modal.service';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
-import {
-	DrawerStore,
-	DrawerStoreKey,
-	setDrawerOpen,
-} from '../../../../_common/drawer/drawer-store';
+import { setDrawerOpen, useDrawerStore } from '../../../../_common/drawer/drawer-store';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppFiresidePostLikeWidget from '../../../../_common/fireside/post/like/widget/widget.vue';
@@ -83,8 +80,7 @@ export default class AppPostControls extends Vue {
 	@Inject({ from: CommentStoreManagerKey })
 	commentManager!: CommentStoreManager;
 
-	@Inject({ from: DrawerStoreKey })
-	drawerStore!: DrawerStore;
+	drawerStore = shallowSetup(() => useDrawerStore());
 
 	get user() {
 		return this.commonStore.user;

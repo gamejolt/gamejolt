@@ -1,10 +1,11 @@
 import { setup } from 'vue-class-component';
-import { Inject, Options, Vue } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
+import { shallowSetup } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
 import { Client } from '../../../../_common/client/safe-exports';
 import { Connection } from '../../../../_common/connection/connection-service';
-import { DrawerStore, DrawerStoreKey } from '../../../../_common/drawer/drawer-store';
+import { useDrawerStore } from '../../../../_common/drawer/drawer-store';
 import { formatCurrency } from '../../../../_common/filters/currency';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -30,12 +31,11 @@ import AppShellUserBox from '../user-box/user-box.vue';
 export default class AppShellAccountPopover extends Vue {
 	commonStore = setup(() => useCommonStore());
 
-	@Inject({ from: DrawerStoreKey })
-	drawer!: DrawerStore;
-
 	get app() {
 		return this.commonStore;
 	}
+
+	drawer = shallowSetup(() => useDrawerStore());
 
 	themeStore = setup(() => useThemeStore());
 

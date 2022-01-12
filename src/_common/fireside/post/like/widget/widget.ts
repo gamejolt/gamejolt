@@ -1,8 +1,7 @@
 import { setup } from 'vue-class-component';
-import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { PostControlsLocation, trackPostLike } from '../../../../analytics/analytics.service';
 import { AppAuthRequired } from '../../../../auth/auth-required-directive';
-import { DrawerStore, DrawerStoreKey } from '../../../../drawer/drawer-store';
 import { formatFuzzynumber } from '../../../../filters/fuzzynumber';
 import { showErrorGrowl } from '../../../../growls/growls.service';
 import { LikersModal } from '../../../../likers/modal.service';
@@ -39,9 +38,6 @@ export default class AppFiresidePostLikeWidget extends Vue {
 	block!: boolean;
 
 	commonStore = setup(() => useCommonStore());
-
-	@Inject({ from: DrawerStoreKey, default: null })
-	drawer!: null | DrawerStore;
 
 	get app() {
 		return this.commonStore;

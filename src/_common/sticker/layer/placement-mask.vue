@@ -9,7 +9,7 @@
 	<div
 		v-app-observe-dimensions="onDimensionsChange"
 		class="-container"
-		:class="{ '-dragging': drawer.isDragging }"
+		:class="{ '-dragging': isDragging }"
 	>
 		<div class="-overlay" @click.stop="onClickMask">
 			<svg v-if="width > 0" :viewBox="viewbox" xmlns="http://www.w3.org/2000/svg">
@@ -51,7 +51,7 @@
 		</div>
 
 		<app-sticker-layer-drawer class="-drawer" />
-		<app-sticker-layer-ghost v-if="drawer.sticker" class="-ghost" />
+		<app-sticker-layer-ghost v-if="sticker" class="-ghost" />
 	</div>
 </template>
 

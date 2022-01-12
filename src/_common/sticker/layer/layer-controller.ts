@@ -1,8 +1,8 @@
 import { arrayRemove } from '../../../utils/array';
 import { DrawerStore } from '../../drawer/drawer-store';
 import { ScrollController } from '../../scroll/scroller/scroller.vue';
-import AppStickerTarget from '../target/target';
 import { StickerTargetController } from '../target/target-controller';
+import AppStickerTarget from '../target/target.vue';
 
 export const StickerLayerKey = Symbol('sticker-layer');
 
@@ -15,12 +15,12 @@ export class StickerLayerController {
 
 	constructor(public readonly drawer: DrawerStore) {}
 
-	get isActive() {
-		return this.drawer.activeLayer === this;
+	get isActive(): boolean {
+		return this.drawer.activeLayer.value === this;
 	}
 
 	get isShowingDrawer() {
-		return this.drawer.isDrawerOpen && !this.drawer.hideDrawer && this.isActive;
+		return this.drawer.isDrawerOpen.value && !this.drawer.hideDrawer.value && this.isActive;
 	}
 }
 

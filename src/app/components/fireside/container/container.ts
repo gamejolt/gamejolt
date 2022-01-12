@@ -7,13 +7,10 @@ import { objectPick } from '../../../../utils/object';
 import { updateServerTimeOffset } from '../../../../utils/server-time';
 import { sleep } from '../../../../utils/utils';
 import { uuidv4 } from '../../../../utils/uuid';
+import { shallowSetup } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
 import { getCookie } from '../../../../_common/cookie/cookie.service';
-import {
-	DrawerStore,
-	DrawerStoreKey,
-	setStickerStreak,
-} from '../../../../_common/drawer/drawer-store';
+import { setStickerStreak, useDrawerStore } from '../../../../_common/drawer/drawer-store';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresideRole } from '../../../../_common/fireside/role/role.model';
 import {
@@ -71,8 +68,7 @@ export class AppFiresideContainer extends Vue {
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;
 
-	@Inject({ from: DrawerStoreKey })
-	drawerStore!: DrawerStore;
+	drawerStore = shallowSetup(() => useDrawerStore());
 
 	get chat() {
 		return this.chatStore.chat;
@@ -125,7 +121,7 @@ export class AppFiresideContainer extends Vue {
 
 	unmounted() {
 		this.controller.onRetry = null;
-		this.drawerStore.streak = null;
+		this.drawerStore.streak.value = null;
 
 		this.disconnect();
 		this.grid?.unsetGuestToken();

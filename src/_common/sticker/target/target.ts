@@ -1,13 +1,9 @@
 import { nextTick } from 'vue';
 import { Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { sleep } from '../../../utils/utils';
+import { shallowSetup } from '../../../utils/vue';
 import { Api } from '../../api/api.service';
-import {
-	assignDrawerStoreItem,
-	DrawerStore,
-	DrawerStoreKey,
-	PointerPosition,
-} from '../../drawer/drawer-store';
+import { assignDrawerStoreItem, PointerPosition, useDrawerStore } from '../../drawer/drawer-store';
 import AppScrollInview, { ScrollInviewConfig } from '../../scroll/inview/inview.vue';
 import {
 	getRectForStickerTarget,
@@ -36,8 +32,7 @@ export default class AppStickerTarget extends Vue {
 	@Prop({ type: Object, required: true }) controller!: StickerTargetController;
 	@Prop({ type: Boolean, default: false }) disabled!: boolean;
 
-	@Inject({ from: DrawerStoreKey })
-	drawerStore!: DrawerStore;
+	drawerStore = shallowSetup(() => useDrawerStore());
 
 	@Inject({ from: StickerLayerKey })
 	layer!: StickerLayerController;
@@ -53,6 +48,10 @@ export default class AppStickerTarget extends Vue {
 
 	get isShowingStickers() {
 		return this.controller.shouldShow && this.controller.isInview && this.stickers.length > 0;
+	}
+
+	get shouldFade() {
+		return this.drawerStore.isDrawerOpen.value;
 	}
 
 	created() {
@@ -126,7 +125,7 @@ export default class AppStickerTarget extends Vue {
 
 	onPlaceDrawerSticker(pointer: PointerPosition) {
 		const { isDragging, sticker } = this.drawerStore;
-		if (!isDragging || !sticker) {
+		if (!isDragging.value || !sticker.value) {
 			return;
 		}
 
@@ -140,7 +139,7 @@ export default class AppStickerTarget extends Vue {
 			position_x: (pointer.x - rect.x) / rect.width,
 			position_y: (pointer.y - rect.y) / rect.height,
 			rotation: Math.random(),
-			sticker,
+			sticker: sticker.value,
 		});
 
 		assignDrawerStoreItem(this.drawerStore, stickerPlacement, this.controller);

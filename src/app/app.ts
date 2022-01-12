@@ -1,11 +1,12 @@
 import { setup } from 'vue-class-component';
 import { Options, Provide, Vue, Watch } from 'vue-property-decorator';
 import { AppPromotionStore, AppPromotionStoreKey } from '../utils/mobile-app';
+import { shallowSetup } from '../utils/vue';
 import { createAdsController } from '../_common/ad/ad-store';
 import { Analytics } from '../_common/analytics/analytics.service';
 import { CommentStoreManager, CommentStoreManagerKey } from '../_common/comment/comment-store';
 import AppCookieBanner from '../_common/cookie/banner/banner.vue';
-import { DrawerStore, DrawerStoreKey } from '../_common/drawer/drawer-store';
+import { createDrawerStore } from '../_common/drawer/drawer-store';
 import AppErrorPage from '../_common/error/page/page.vue';
 import AppCommonShell from '../_common/shell/shell.vue';
 import { useCommonStore } from '../_common/store/common-store';
@@ -32,8 +33,7 @@ export default class App extends Vue {
 	@Provide({ to: CommentStoreManagerKey as symbol })
 	commentManager = new CommentStoreManager();
 
-	@Provide({ to: DrawerStoreKey })
-	drawerStore = new DrawerStore();
+	drawerStore = shallowSetup(() => createDrawerStore());
 
 	@Provide({ to: AppPromotionStoreKey })
 	appPromotionStore = new AppPromotionStore();

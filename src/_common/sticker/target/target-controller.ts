@@ -5,10 +5,11 @@ import { MediaItem } from '../../media-item/media-item-model';
 import { Model } from '../../model/model.service';
 import { StickerLayerController } from '../layer/layer-controller';
 import { StickerPlacement } from '../placement/placement.model';
-import { ValidStickerResource } from './target';
+import { ValidStickerResource } from './target.vue';
 
 export const StickerTargetParentControllerKey = Symbol('sticker-target-parent');
 
+// TODO(vue3): probably needs to be done differently so we maintain reactivity
 export class StickerTargetController {
 	isInview = false;
 	stickers: StickerPlacement[] = [];
@@ -25,7 +26,7 @@ export class StickerTargetController {
 	parent: null | StickerTargetController = null;
 	children: StickerTargetController[] = [];
 
-	private _shouldShow = false;
+	_shouldShow = false;
 
 	get shouldShow() {
 		// Stickers in a Live context will show, fade, then remove themselves
