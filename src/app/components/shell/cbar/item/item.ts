@@ -1,8 +1,9 @@
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import { SidebarState, SidebarStore } from '../../../../../_common/sidebar/sidebar.store';
+import { useSidebarStore } from '../../../../../_common/sidebar/sidebar.store';
 import { Store } from '../../../../store/index';
 
 @Options({})
@@ -13,7 +14,11 @@ export default class AppShellCbarItem extends Vue {
 	@Prop(String) highlight?: string;
 	@Prop({ type: Number, default: 0 }) notificationCount!: number;
 
-	@SidebarState activeContextPane!: SidebarStore['activeContextPane'];
+	sidebarStore = setup(() => useSidebarStore());
+
+	get activeContextPane() {
+		return this.sidebarStore.activeContextPane;
+	}
 	@State visibleLeftPane!: Store['visibleLeftPane'];
 
 	readonly Screen = Screen;

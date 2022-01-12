@@ -10,7 +10,7 @@ import { Popper } from '../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../../../_common/share/share.service';
-import { SidebarState, SidebarStore } from '../../../../../_common/sidebar/sidebar.store';
+import { useSidebarStore } from '../../../../../_common/sidebar/sidebar.store';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { AppTheme } from '../../../../../_common/theme/theme';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
@@ -35,6 +35,7 @@ export default class AppMobileHeader extends Vue {
 	@Prop({ type: Boolean, default: false }) hasUnread!: boolean;
 
 	commonStore = setup(() => useCommonStore());
+	sidebarStore = setup(() => useSidebarStore());
 
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
@@ -42,7 +43,9 @@ export default class AppMobileHeader extends Vue {
 	get user() {
 		return this.commonStore.user;
 	}
-	@SidebarState activeContextPane!: SidebarStore['activeContextPane'];
+	get activeContextPane() {
+		return this.sidebarStore.activeContextPane;
+	}
 	@Action toggleLeftPane!: Store['toggleLeftPane'];
 
 	readonly Environment = Environment;

@@ -9,7 +9,7 @@ import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/bac
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import { Popper } from '../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
-import { SidebarMutation, SidebarStore } from '../../../../../_common/sidebar/sidebar.store';
+import { useSidebarStore } from '../../../../../_common/sidebar/sidebar.store';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { useThemeStore } from '../../../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
@@ -35,6 +35,7 @@ export default class AppShellCbarCommunity extends Vue {
 
 	commonStore = setup(() => useCommonStore());
 	themeStore = setup(() => useThemeStore());
+	sidebarStore = setup(() => useSidebarStore());
 
 	get user() {
 		return this.commonStore.user;
@@ -44,7 +45,6 @@ export default class AppShellCbarCommunity extends Vue {
 	@Action leaveCommunity!: Store['leaveCommunity'];
 	@Action toggleLeftPane!: Store['toggleLeftPane'];
 	@Action joinCommunity!: Store['joinCommunity'];
-	@SidebarMutation showContextOnRouteChange!: SidebarStore['showContextOnRouteChange'];
 
 	popperVisible = false;
 
@@ -110,7 +110,7 @@ export default class AppShellCbarCommunity extends Vue {
 			// Prevent the click from triggering a route change.
 			event.preventDefault();
 		} else {
-			this.showContextOnRouteChange(true);
+			this.sidebarStore.showContextOnRouteChange(true);
 		}
 	}
 

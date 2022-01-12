@@ -22,12 +22,7 @@ import AppPopper from '../../../../_common/popper/popper.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../../_common/share/share.service';
-import {
-	ContextPane,
-	SidebarMutation,
-	SidebarState,
-	SidebarStore,
-} from '../../../../_common/sidebar/sidebar.store';
+import { ContextPane, useSidebarStore } from '../../../../_common/sidebar/sidebar.store';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { useThemeStore } from '../../../../_common/theme/theme.store';
 import { AppCommunityPerms } from '../../../components/community/perms/perms';
@@ -93,6 +88,7 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 
 	commonStore = setup(() => useCommonStore());
 	themeStore = setup(() => useThemeStore());
+	sidebarStore = setup(() => useSidebarStore());
 
 	@Inject({ from: AppPromotionStoreKey })
 	appPromotion!: AppPromotionStore;
@@ -106,9 +102,9 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	@State communityStates!: Store['communityStates'];
 	@State grid!: Store['grid'];
 
-	@SidebarState activeContextPane!: SidebarStore['activeContextPane'];
-	@SidebarMutation addContextPane!: SidebarStore['addContextPane'];
-	@SidebarMutation removeContextPane!: SidebarStore['removeContextPane'];
+	get activeContextPane() {
+		return this.sidebarStore.activeContextPane;
+	}
 	@Action showContextPane!: Store['showContextPane'];
 
 	readonly Environment = Environment;
@@ -181,7 +177,7 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	routeCreated() {
 		// Add a new context pane if we haven't already.
 		if (!this.contextPane) {
-			this.addContextPane(this.sidebarComponent);
+			this.sidebarStore.addContextPane(this.sidebarComponent);
 			this.contextPane = this.activeContextPane;
 		}
 
@@ -217,7 +213,7 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	}
 
 	routeDestroyed() {
-		this.removeContextPane(this.contextPane);
+		this.sidebarStore.removeContextPane(this.contextPane);
 		this.clearActiveCommunity();
 		this.themeStore.clearPageTheme(CommunityThemeKey);
 		if (this.grid) {

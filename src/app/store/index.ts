@@ -13,11 +13,7 @@ import { FiresidePost } from '../../_common/fireside/post/post-model';
 import { showSuccessGrowl } from '../../_common/growls/growls.service';
 import { ModalConfirm } from '../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../_common/screen/screen-service';
-import {
-	SidebarActions,
-	SidebarMutations,
-	SidebarStore,
-} from '../../_common/sidebar/sidebar.store';
+import { sidebarStore } from '../../_common/sidebar/sidebar.store';
 import { commonStore } from '../../_common/store/common-store';
 import { Translate } from '../../_common/translate/translate.service';
 import { ActivityFeedState } from '../components/activity/feed/state';
@@ -30,7 +26,6 @@ import { CommunityStates } from './community-state';
 import { Actions as LibraryActions, LibraryStore, Mutations as LibraryMutations } from './library';
 
 export type Actions = LibraryActions &
-	SidebarActions &
 	_ClientLibraryMod.Actions & {
 		bootstrap: void;
 		logout: void;
@@ -54,7 +49,6 @@ export type Actions = LibraryActions &
 	};
 
 export type Mutations = LibraryMutations &
-	SidebarMutations &
 	_ClientLibraryMod.Mutations & {
 		showShell: void;
 		hideShell: void;
@@ -94,7 +88,6 @@ export function tillGridBootstrapped() {
 
 const modules: any = {
 	library: reactive(new LibraryStore()),
-	sidebar: reactive(new SidebarStore()),
 };
 
 if (GJ_IS_DESKTOP_APP) {
@@ -112,7 +105,6 @@ type TogglableLeftPane = '' | 'chat' | 'context' | 'library';
 })
 export class Store extends VuexStore<Store, Actions, Mutations> {
 	declare library: LibraryStore;
-	declare sidebar: SidebarStore;
 	declare clientLibrary: _ClientLibraryMod.ClientLibraryStore;
 
 	grid: GridClient | null = null;
@@ -159,7 +151,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		// The cbar is pretty empty without a user and active context pane,
 		// so we want to hide it if those conditions are met.
 		// TODO(vue3): use an injected commonStore instead
-		if (!commonStore.user.value && !this.sidebar.activeContextPane && !Screen.isXs) {
+		if (!commonStore.user.value && !sidebarStore.activeContextPane.value && !Screen.isXs) {
 			return false;
 		}
 
@@ -178,7 +170,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	get visibleLeftPane(): TogglableLeftPane {
 		// If there's no other left-pane pane opened, Large breakpoint should
 		// always show the 'context' pane if there is a context component set.
-		if (Screen.isLg && this.sidebar.activeContextPane && !this.overlayedLeftPane) {
+		if (Screen.isLg && sidebarStore.activeContextPane.value && !this.overlayedLeftPane) {
 			return 'context';
 		}
 
@@ -318,9 +310,10 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 			// Close the left-pane if the cbar is also closing.
 			this._toggleLeftPane();
 		} else {
-			// Open the left-pane depending on the SidebarStore information when the cbar shows.
+			// Open the left-pane depending on the SidebarStore information when
+			// the cbar shows.
 			this._toggleLeftPane(
-				this.sidebar.activeContextPane ? 'context' : this.lastOpenLeftPane
+				sidebarStore.activeContextPane.value ? 'context' : this.lastOpenLeftPane
 			);
 		}
 
@@ -330,7 +323,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	/** Show the context pane if there's one available. */
 	@VuexAction
 	async showContextPane() {
-		if (this.visibleLeftPane !== 'context' && this.sidebar.activeContextPane) {
+		if (this.visibleLeftPane !== 'context' && sidebarStore.activeContextPane.value) {
 			this.toggleLeftPane('context');
 		}
 	}
@@ -338,8 +331,9 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	/** Passing no value will close any open left-panes. */
 	@VuexAction
 	async toggleLeftPane(type?: TogglableLeftPane) {
-		if (type === 'context' && !this.sidebar.activeContextPane) {
-			// Don't show the context pane if the SidebarStore has no context to show.
+		if (type === 'context' && !sidebarStore.activeContextPane.value) {
+			// Don't show the context pane if the SidebarStore has no context to
+			// show.
 			this._toggleLeftPane();
 			return;
 		}

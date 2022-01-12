@@ -2,6 +2,7 @@ import '../utils/polyfills';
 import { bootstrapCommon } from '../_common/bootstrap';
 import { GamePlayModal } from '../_common/game/play-modal/play-modal.service';
 import { Registry } from '../_common/registry/registry.service';
+import { sidebarStore, SidebarStoreKey } from '../_common/sidebar/sidebar.store';
 import { commonStore } from '../_common/store/common-store';
 import App from './app.vue';
 import './main.styl';
@@ -14,6 +15,7 @@ export function createApp() {
 
 	// Section stores.
 	app.provide(BannerStoreKey, createBannerStore({ commonStore, router }));
+	app.provide(SidebarStoreKey, sidebarStore);
 
 	if (GJ_IS_DESKTOP_APP) {
 		// TODO: we need to do this through a dynamic import, but then this

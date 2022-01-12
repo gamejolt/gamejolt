@@ -11,11 +11,7 @@ import { setDrawerOpen, useDrawerStore } from '../../../_common/drawer/drawer-st
 import { Meta } from '../../../_common/meta/meta-service';
 import AppMinbar from '../../../_common/minbar/minbar.vue';
 import { Screen, triggerOnScreenResize } from '../../../_common/screen/screen-service';
-import {
-	SidebarMutation,
-	SidebarState,
-	SidebarStore,
-} from '../../../_common/sidebar/sidebar.store';
+import { useSidebarStore } from '../../../_common/sidebar/sidebar.store';
 import AppStickerLayer from '../../../_common/sticker/layer/layer.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { useBannerStore } from '../../store/banner';
@@ -49,6 +45,7 @@ import AppShellTopNav from './top-nav/top-nav.vue';
 export default class AppShell extends Vue {
 	commonStore = setup(() => useCommonStore());
 	bannerStore = setup(() => useBannerStore());
+	sidebarStore = setup(() => useSidebarStore());
 
 	drawerStore = shallowSetup(() => useDrawerStore());
 
@@ -72,25 +69,18 @@ export default class AppShell extends Vue {
 		return this.bannerStore.hasBanner;
 	}
 
-	@SidebarState hideOnRouteChange!: SidebarStore['hideOnRouteChange'];
-	@SidebarState showOnRouteChange!: SidebarStore['showOnRouteChange'];
-
-	@SidebarMutation showContextOnRouteChange!: SidebarStore['showContextOnRouteChange'];
-
 	@Action showContextPane!: Store['showContextPane'];
 	@Action clearPanes!: Store['clearPanes'];
-
-	@SidebarState activeContextPane!: SidebarStore['activeContextPane'];
 
 	readonly Connection = Connection;
 	readonly Screen = Screen;
 
 	get chat() {
-		return this.chatStore.chat!;
+		return this.chatStore.chat;
 	}
 
 	get totalChatNotificationsCount() {
-		return this.chatStore.chat ? this.chat.roomNotificationsCount : 0;
+		return this.chat?.roomNotificationsCount ?? 0;
 	}
 
 	get ssrShouldShowSidebar() {
@@ -106,14 +96,14 @@ export default class AppShell extends Vue {
 			await nextTick();
 
 			// Show any context panes that are set to show on route change.
-			if (this.showOnRouteChange) {
+			if (this.sidebarStore.showOnRouteChange) {
 				this.showContextPane();
-				this.showContextOnRouteChange(false);
+				this.sidebarStore.showContextOnRouteChange(false);
 				return;
 			}
 
 			// Hide all panes if we aren't showing one on route change.
-			if (this.hideOnRouteChange) {
+			if (this.sidebarStore.hideOnRouteChange) {
 				this.clearPanes();
 			}
 
@@ -126,7 +116,7 @@ export default class AppShell extends Vue {
 		this.$watch(
 			() => ContentFocus.isWindowFocused,
 			(isFocused: boolean) => {
-				if (!this.chatStore.chat) {
+				if (!this.chat) {
 					return;
 				}
 
@@ -191,7 +181,7 @@ export default class AppShell extends Vue {
 		<app-shell-sidebar v-if="hasSidebar" />
 		<app-shell-banner v-if="!isShellHidden" />
 
-		<app-chat-windows v-if="chatStore.chat" />
+		<app-chat-windows v-if="chat" />
 
 		<div v-if="GJ_IS_DESKTOP_APP" key="shell-client">
 			<app-client-base />
