@@ -1,6 +1,4 @@
 import { reactive } from 'vue';
-import { RouteLocationNormalized } from 'vue-router';
-import { sync } from 'vuex-router-sync';
 import { buildUseStore, VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
 import { CommunityJoinLocation } from '../../_common/analytics/analytics.service';
 import { Api } from '../../_common/api/api.service';
@@ -116,9 +114,6 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	declare library: LibraryStore;
 	declare sidebar: SidebarStore;
 	declare clientLibrary: _ClientLibraryMod.ClientLibraryStore;
-
-	/** From the vuex-router-sync. */
-	declare route: RouteLocationNormalized;
 
 	grid: GridClient | null = null;
 
@@ -651,9 +646,6 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 export const store = reactive(new Store()) as Store;
 export const useStore = buildUseStore<Store>();
-
-// Sync the routes into the store.
-sync(store, router, { moduleName: 'route' });
 
 // Sync with the ContentFocus service.
 registerFocusWatcher(
