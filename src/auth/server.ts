@@ -9,7 +9,6 @@ export default async function (context: typeof Environment.ssrContext) {
 	const s = Date.now();
 
 	Environment.ssrContext = context;
-	console.log(Environment);
 	setDeviceUserAgent(context.ua);
 
 	// set the router to the desired URL before rendering

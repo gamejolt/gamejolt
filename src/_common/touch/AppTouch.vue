@@ -1,5 +1,5 @@
 <script lang="ts">
-import { now } from 'jquery';
+// import { now } from 'jquery';
 import { computed, onUnmounted } from 'vue';
 
 declare class MovementData {
@@ -303,7 +303,7 @@ function getCoordinatesFromEvent(event: FlexibleTouchEvent): TimestampedCoordina
 		}
 	}
 
-	return { x: screenX, y: screenY, timestamp: now() };
+	return { x: screenX, y: screenY, timestamp: 0 };
 }
 
 function getMovementData(event: FlexibleTouchEvent) {

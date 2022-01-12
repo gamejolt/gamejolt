@@ -95,6 +95,10 @@ export class AppThemeSvg extends Vue {
 
 	@Watch('src', { immediate: true })
 	onSrcChange() {
+		if (import.meta.env.SSR) {
+			return;
+		}
+
 		const request = Axios.get(this.src).then(response => {
 			// If we have multiple requests in process, only handle the latest one.
 			if (!this.request || this.request !== request) {

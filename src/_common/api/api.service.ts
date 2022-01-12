@@ -1,6 +1,15 @@
-import Axios, { CancelTokenSource } from 'axios';
+import AxiosStatic, { CancelTokenSource } from 'axios';
 import { Environment } from '../environment/environment.service';
 import { Payload } from '../payload/payload-service';
+
+// TODO(vue3-ssr): Refactor into a service through which we require Axios
+// so this will work from everywhere.
+
+// Force using node http adapter in SSR.
+// We need to do this because when in the server the code is rendered
+// from a vm that interfers with how axios detects which adapter it should use.
+const adapter = import.meta.env.SSR ? require('axios/lib/adapters/http') : undefined;
+const Axios = AxiosStatic.create({ adapter });
 
 // Memoized essentially, and lazily fetched when first needed.
 let _hasWebpSupport: null | Promise<boolean> = null;
@@ -112,7 +121,6 @@ export class Api {
 		postData?: any,
 		options: RequestOptions = {}
 	): Promise<any> {
-		console.log('sending request: ' + uri);
 		options = {
 			...(<RequestOptions>{
 				ignoreLoadingBar: false,
@@ -247,7 +255,7 @@ export class Api {
 	}
 
 	public static createCancelToken() {
-		const CancelToken = Axios.CancelToken;
+		const CancelToken = AxiosStatic.CancelToken;
 		return CancelToken.source();
 	}
 }
