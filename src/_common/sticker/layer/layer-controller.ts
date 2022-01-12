@@ -9,20 +9,17 @@ import AppStickerTarget from '../target/target.vue';
 const StickerLayerKey: InjectionKey<StickerLayerController> = Symbol('sticker-layer');
 
 export type StickerLayerController = {
-	relativeScrollTop: Ref<number>;
 	scroller: Ref<ScrollController | null>;
 
 	targets: Ref<AppStickerTarget[]>;
 	hoveredTarget: Ref<AppStickerTarget | null>;
 	rects: Ref<WeakMap<AppStickerTarget, StickerLayerTargetRect>>;
 
-	// isActive: ComputedRef<boolean>;
 	isShowingDrawer: ComputedRef<boolean>;
 	drawer: DrawerStore;
 };
 
 export function createStickerLayerController(drawer: DrawerStore) {
-	const relativeScrollTop = ref(0);
 	const scroller = ref<ScrollController | null>(null);
 
 	const targets = ref<AppStickerTarget[]>([]);
@@ -38,12 +35,10 @@ export function createStickerLayerController(drawer: DrawerStore) {
 	});
 
 	const c: StickerLayerController = {
-		relativeScrollTop,
 		scroller,
 		targets,
 		hoveredTarget,
 		rects,
-		// isActive,
 		isShowingDrawer,
 		drawer,
 	};
