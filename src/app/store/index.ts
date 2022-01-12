@@ -23,47 +23,45 @@ import { GridClientLazy } from '../components/lazy';
 import { router } from '../views';
 import * as _ClientLibraryMod from './client-library';
 import { CommunityStates } from './community-state';
-import { Actions as LibraryActions, LibraryStore, Mutations as LibraryMutations } from './library';
+import { libraryStore } from './library';
 
-export type Actions = LibraryActions &
-	_ClientLibraryMod.Actions & {
-		bootstrap: void;
-		logout: void;
-		clear: void;
-		loadGrid: void;
-		clearGrid: void;
-		loadNotificationState: void;
-		clearNotificationState: void;
-		markNotificationsAsRead: void;
-		toggleCbarMenu: void;
-		toggleLeftPane: void;
-		toggleRightPane: void;
-		toggleChatPane: void;
-		clearPanes: void;
-		joinCommunity: { community: Community; location?: CommunityJoinLocation };
-		leaveCommunity: {
-			community: Community;
-			location?: CommunityJoinLocation;
-			shouldConfirm: boolean;
-		};
+export type Actions = _ClientLibraryMod.Actions & {
+	bootstrap: void;
+	logout: void;
+	clear: void;
+	loadGrid: void;
+	clearGrid: void;
+	loadNotificationState: void;
+	clearNotificationState: void;
+	markNotificationsAsRead: void;
+	toggleCbarMenu: void;
+	toggleLeftPane: void;
+	toggleRightPane: void;
+	toggleChatPane: void;
+	clearPanes: void;
+	joinCommunity: { community: Community; location?: CommunityJoinLocation };
+	leaveCommunity: {
+		community: Community;
+		location?: CommunityJoinLocation;
+		shouldConfirm: boolean;
 	};
+};
 
-export type Mutations = LibraryMutations &
-	_ClientLibraryMod.Mutations & {
-		showShell: void;
-		hideShell: void;
-		showFooter: void;
-		hideFooter: void;
-		setHasContentSidebar: boolean;
-		setNotificationCount: { type: UnreadItemType; count: number };
-		incrementNotificationCount: { type: UnreadItemType; count: number };
-		setHasNewFriendRequests: boolean;
-		setHasNewUnlockedStickers: boolean;
-		setActiveCommunity: Community;
-		clearActiveCommunity: void;
-		viewCommunity: Community;
-		featuredPost: FiresidePost;
-	};
+export type Mutations = _ClientLibraryMod.Mutations & {
+	showShell: void;
+	hideShell: void;
+	showFooter: void;
+	hideFooter: void;
+	setHasContentSidebar: boolean;
+	setNotificationCount: { type: UnreadItemType; count: number };
+	incrementNotificationCount: { type: UnreadItemType; count: number };
+	setHasNewFriendRequests: boolean;
+	setHasNewUnlockedStickers: boolean;
+	setActiveCommunity: Community;
+	clearActiveCommunity: void;
+	viewCommunity: Community;
+	featuredPost: FiresidePost;
+};
 
 let bootstrapResolver: ((value?: any) => void) | null = null;
 let backdrop: BackdropController | null = null;
@@ -86,9 +84,7 @@ export function tillGridBootstrapped() {
 	});
 }
 
-const modules: any = {
-	library: reactive(new LibraryStore()),
-};
+const modules: any = {};
 
 if (GJ_IS_DESKTOP_APP) {
 	const mod = await import('./client-library');
@@ -104,7 +100,6 @@ type TogglableLeftPane = '' | 'chat' | 'context' | 'library';
 	modules,
 })
 export class Store extends VuexStore<Store, Actions, Mutations> {
-	declare library: LibraryStore;
 	declare clientLibrary: _ClientLibraryMod.ClientLibraryStore;
 
 	grid: GridClient | null = null;
@@ -205,7 +200,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 				return;
 			}
 
-			this.commit('library/bootstrap', libraryPayload);
+			libraryStore.bootstrap(libraryPayload);
 		} catch (e) {}
 
 		this._setBootstrapped();
@@ -242,7 +237,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	@VuexAction
 	async clear() {
 		tillStoreBootstrapped = new Promise(resolve => (bootstrapResolver = resolve));
-		this.commit('library/clear');
+		libraryStore.clear();
 	}
 
 	@VuexAction

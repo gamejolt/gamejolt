@@ -8,6 +8,7 @@ import App from './app.vue';
 import './main.styl';
 import { BannerStoreKey, createBannerStore } from './store/banner';
 import { store } from './store/index';
+import { libraryStore, LibraryStoreKey } from './store/library';
 import { router } from './views/index';
 
 export function createApp() {
@@ -16,6 +17,7 @@ export function createApp() {
 	// Section stores.
 	app.provide(BannerStoreKey, createBannerStore({ commonStore, router }));
 	app.provide(SidebarStoreKey, sidebarStore);
+	app.provide(LibraryStoreKey, libraryStore);
 
 	if (GJ_IS_DESKTOP_APP) {
 		// TODO: we need to do this through a dynamic import, but then this

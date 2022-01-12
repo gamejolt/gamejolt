@@ -5,6 +5,7 @@ import { State } from 'vuex-class';
 import { router } from '..';
 import { numberSort } from '../../../utils/array';
 import { fuzzysearch } from '../../../utils/string';
+import { shallowSetup } from '../../../utils/vue';
 import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
 import { configHomeNav } from '../../../_common/config/config.service';
@@ -31,7 +32,7 @@ import { onFiresideStart } from '../../components/grid/client.service';
 import AppPageContainer from '../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../components/post/add-button/add-button.vue';
 import { Store } from '../../store';
-import { LibraryModule, LibraryStore } from '../../store/library';
+import { useLibraryStore } from '../../store/library';
 import { HomeFeedService, HOME_FEED_ACTIVITY, HOME_FEED_FYP } from './home-feed.service';
 import AppHomeFireside from './_fireside/fireside.vue';
 
@@ -76,13 +77,16 @@ export class RouteActivityFeedController {
 })
 export default class RouteActivityFeed extends BaseRouteComponent {
 	commonStore = setup(() => useCommonStore());
+	libraryStore = shallowSetup(() => useLibraryStore());
 
 	get user() {
 		return this.commonStore.user;
 	}
 	@State communities!: Store['communities'];
 	@State unreadActivityCount!: Store['unreadActivityCount'];
-	@LibraryModule.State developerCollection!: LibraryStore['developerCollection'];
+	get developerCollection() {
+		return this.libraryStore.developerCollection.value;
+	}
 
 	games: DashGame[] = [];
 	gameFilterQuery = '';

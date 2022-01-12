@@ -1,5 +1,6 @@
 import { Options } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { shallowSetup } from '../../../../utils/vue';
 import { Connection } from '../../../../_common/connection/connection-service';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -8,7 +9,7 @@ import AppGameCollectionGrid from '../../../components/game/collection/grid/grid
 import AppGameCollectionList from '../../../components/game/collection/list/list.vue';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { Store } from '../../../store';
-import { LibraryModule, LibraryStore } from '../../../store/library';
+import { useLibraryStore } from '../../../store/library';
 
 @Options({
 	name: 'RouteLibraryOverview',
@@ -19,20 +20,26 @@ import { LibraryModule, LibraryStore } from '../../../store/library';
 	},
 })
 export default class RouteLibraryOverview extends BaseRouteComponent {
+	libraryStore = shallowSetup(() => useLibraryStore());
+
 	@State
 	isBootstrapped!: Store['isBootstrapped'];
 
-	@LibraryModule.State
-	followedCollection!: LibraryStore['followedCollection'];
+	get followedCollection() {
+		return this.libraryStore.followedCollection.value;
+	}
 
-	@LibraryModule.State
-	developerCollection!: LibraryStore['developerCollection'];
+	get developerCollection() {
+		return this.libraryStore.developerCollection.value;
+	}
 
-	@LibraryModule.State
-	ownedCollection!: LibraryStore['ownedCollection'];
+	get ownedCollection() {
+		return this.libraryStore.ownedCollection.value;
+	}
 
-	@LibraryModule.State
-	collections!: LibraryStore['collections'];
+	get collections() {
+		return this.libraryStore.collections.value;
+	}
 
 	readonly Connection = Connection;
 	readonly Screen = Screen;

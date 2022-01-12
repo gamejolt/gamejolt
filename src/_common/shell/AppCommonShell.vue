@@ -1,10 +1,11 @@
 <script lang="ts">
-export default {
+export default defineComponent({
 	inheritAttrs: false,
-};
+});
 </script>
 
 <script lang="ts" setup>
+import { defineComponent } from 'vue';
 import AppBackdropPortal from '../backdrop/backdrop-portal.vue';
 import AppGrowls from '../growls/growls.vue';
 import AppLightboxPortal from '../lightbox/lightbox-portal.vue';
