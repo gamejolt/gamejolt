@@ -15,7 +15,10 @@ import { showInfoGrowl, showSuccessGrowl } from '../../../../_common/growls/grow
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../../_common/share/share.service';
-import { StickerTargetController } from '../../../../_common/sticker/target/target-controller';
+import {
+	createStickerTargetController,
+	StickerTargetController,
+} from '../../../../_common/sticker/target/target-controller';
 import { commonStore } from '../../../../_common/store/common-store';
 import { Translate } from '../../../../_common/translate/translate.service';
 import { ChatClient } from '../../chat/client';
@@ -207,7 +210,7 @@ export class FiresideController {
 export function createFiresideController(fireside: Fireside, options: Options = {}) {
 	return new FiresideController(
 		fireside,
-		new StickerTargetController(fireside, undefined, true),
+		createStickerTargetController(fireside, undefined, true),
 		options
 	);
 }

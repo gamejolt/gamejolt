@@ -38,7 +38,7 @@ export function registerStickerTarget(
 	target: AppStickerTarget,
 	targetController: StickerTargetController
 ) {
-	targetController.layer = controller;
+	targetController.layer.value = controller;
 	controller.targets.push(target);
 }
 
@@ -49,7 +49,7 @@ export function unregisterStickerTarget(
 ) {
 	const { targets, hoveredTarget } = controller;
 
-	targetController.layer = null;
+	targetController.layer.value = null;
 	arrayRemove(targets, i => i === target);
 	if (hoveredTarget === target) {
 		controller.hoveredTarget = null;
