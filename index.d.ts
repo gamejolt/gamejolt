@@ -8,7 +8,6 @@ import './typings/markdown.d.ts';
 import './typings/router.d.ts';
 import './typings/shaka.d.ts';
 import './typings/translate.d.ts';
-import './typings/vuex.d.ts';
 
 declare global {
 	interface Window {

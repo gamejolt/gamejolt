@@ -113,9 +113,7 @@
 		"vue-class-component": "8.0.0-rc.1",
 		"vue-property-decorator": "10.0.0-rc.3",
 		"vue-router": "4.0.12",
-		"vuedraggable": "4.1.0",
-		"vuex": "4.0.2",
-		"vuex-class": "0.3.2"
+		"vuedraggable": "4.1.0"
 	},
 	"optionalDependencies": {
 		"appdmg": "argv-minus-one/node-appdmg#node-12-temporary-fix",
