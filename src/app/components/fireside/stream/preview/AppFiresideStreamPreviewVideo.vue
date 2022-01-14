@@ -23,15 +23,19 @@ const emit = defineEmits({
 	changed: (_hasVideo: boolean, _isStreaming: boolean) => true,
 });
 
-const c = createFiresideController(props.fireside, { isMuted: true });
+const c = createFiresideController(props.fireside, {
+	isMuted: true,
+});
+
+const { rtc, isShowingStreamSetup, isStreaming } = c;
 
 const rtcUsers = computed(() => {
-	if (!c.rtc.value) {
+	if (!rtc.value) {
 		return [];
 	}
 
 	const users: User[] = [];
-	c.rtc.value.users.forEach(i => {
+	rtc.value.users.forEach(i => {
 		if (!i.userModel || i.userModel === props.fireside.user) {
 			return;
 		}
@@ -41,7 +45,7 @@ const rtcUsers = computed(() => {
 });
 
 const focusedUser = computed(() => {
-	return c.rtc.value?.focusedUser;
+	return rtc.value?.focusedUser;
 });
 
 const hasVideo = computed(() => {
@@ -51,11 +55,11 @@ const hasVideo = computed(() => {
 const shouldShowVideo = computed(() => {
 	// We can only show local videos in one place at a time. This will
 	// re-grab the video feed when it gets rebuilt.
-	return hasVideo.value && !(c.isShowingStreamSetup.value && c.rtc.value?.isFocusingMe);
+	return hasVideo.value && !(isShowingStreamSetup.value && rtc.value?.isFocusingMe);
 });
 
-watch([c.isStreaming, hasVideo], () => {
-	emit('changed', hasVideo.value, c.isStreaming.value);
+watch([isStreaming, hasVideo], () => {
+	emit('changed', hasVideo.value, isStreaming.value);
 });
 </script>
 
