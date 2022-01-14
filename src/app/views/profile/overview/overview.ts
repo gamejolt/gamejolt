@@ -1,6 +1,5 @@
 import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
-import { Action, State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import AppCommentAddButton from '../../../../_common/comment/add-button/add-button.vue';
 import { Comment } from '../../../../_common/comment/comment-model';
@@ -50,7 +49,7 @@ import AppPageContainer from '../../../components/page-container/page-container.
 import { TrophyModal } from '../../../components/trophy/modal/modal.service';
 import AppTrophyThumbnail from '../../../components/trophy/thumbnail/thumbnail.vue';
 import AppUserKnownFollowers from '../../../components/user/known-followers/known-followers.vue';
-import { Store } from '../../../store/index';
+import { useAppStore } from '../../../store/index';
 import { RouteStore, RouteStoreModule } from '../profile.store';
 
 const FiresideScrollInviewConfig = new ScrollInviewConfig({
@@ -88,6 +87,7 @@ const FiresideScrollInviewConfig = new ScrollInviewConfig({
 	resolver: ({ route }) => Api.sendRequest('/web/profile/overview/@' + route.params.username),
 })
 export default class RouteProfileOverview extends BaseRouteComponent {
+	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
 
 	@Inject({ from: ChatStoreKey })
@@ -100,8 +100,9 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		return this.commonStore;
 	}
 
-	@State
-	grid!: Store['grid'];
+	get grid() {
+		return this.store.grid;
+	}
 
 	@RouteStoreModule.State
 	user!: RouteStore['user'];
@@ -144,9 +145,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 	@RouteStoreModule.State
 	trophyCount!: RouteStore['trophyCount'];
-
-	@Action
-	toggleLeftPane!: Store['toggleLeftPane'];
 
 	commentStore: CommentStoreModel | null = null;
 
@@ -428,7 +426,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 			const chatUser = this.chat.friendsList.collection.find(u => u.id === this.user!.id);
 			if (chatUser) {
 				if (Screen.isXs) {
-					this.toggleLeftPane('chat');
+					this.store.toggleLeftPane('chat');
 				}
 				enterChatRoom(this.chat, chatUser.room_id);
 			}

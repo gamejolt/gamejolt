@@ -1,5 +1,5 @@
+import { setup } from 'vue-class-component';
 import { Options, Vue, Watch } from 'vue-property-decorator';
-import { Action, State } from 'vuex-class';
 import { sleep } from '../../../../utils/utils';
 import { Api } from '../../../../_common/api/api.service';
 import { Connection } from '../../../../_common/connection/connection-service';
@@ -9,7 +9,7 @@ import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useEventSubscription } from '../../../../_common/system/event/event-topic';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { Store } from '../../../store';
+import { AppStore, useAppStore } from '../../../store';
 import { ActivityFeedView } from '../../activity/feed/view';
 import { onNewStickers } from '../../grid/client.service';
 import { AppActivityFeedLazy } from '../../lazy';
@@ -28,11 +28,27 @@ import AppShellNotificationPopoverStickerNavItem from './sticker-nav-item/sticke
 	},
 })
 export default class AppShellNotificationPopover extends Vue {
-	@State notificationState!: Store['notificationState'];
-	@State unreadNotificationsCount!: Store['unreadNotificationsCount'];
-	@Action markNotificationsAsRead!: Store['markNotificationsAsRead'];
-	@State hasNewUnlockedStickers!: Store['hasNewUnlockedStickers'];
-	@State grid!: Store['grid'];
+	store = setup(() => useAppStore());
+
+	get notificationState() {
+		return this.store.notificationState;
+	}
+
+	get unreadNotificationsCount() {
+		return this.store.unreadNotificationsCount;
+	}
+
+	get markNotificationsAsRead() {
+		return this.store.markNotificationsAsRead;
+	}
+
+	get hasNewUnlockedStickers() {
+		return this.store.hasNewUnlockedStickers;
+	}
+
+	get grid() {
+		return this.store.grid;
+	}
 
 	isShowing = false;
 	isLoading = true;
@@ -66,7 +82,7 @@ export default class AppShellNotificationPopover extends Vue {
 	 * the store and wrap it with a view.
 	 */
 	@Watch('notificationState', { immediate: true })
-	onNotificationStateChange(state: Store['notificationState']) {
+	onNotificationStateChange(state: AppStore['notificationState']['value']) {
 		if (state) {
 			this.feed = new ActivityFeedView(state, {
 				slice: 15,

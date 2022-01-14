@@ -1,7 +1,6 @@
 import { markRaw, ref } from 'vue';
 import { setup } from 'vue-class-component';
 import { Inject, Options, Provide, Watch } from 'vue-property-decorator';
-import { Action, Mutation, State } from 'vuex-class';
 import {
 	AppPromotionStore,
 	AppPromotionStoreKey,
@@ -31,7 +30,7 @@ import { CommunityHeaderModal } from '../../../components/forms/community/header
 import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import AppShellContentWithSidebar from '../../../components/shell/content-with-sidebar/content-with-sidebar.vue';
-import { Store, tillGridBootstrapped } from '../../../store/index';
+import { useAppStore } from '../../../store/index';
 import { routeCommunitiesViewEditDetails } from './edit/details/details.route';
 import {
 	CommunityRouteStore,
@@ -86,6 +85,7 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 		return ref(new CommunityRouteStore());
 	});
 
+	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
 	themeStore = setup(() => useThemeStore());
 	sidebarStore = setup(() => useSidebarStore());
@@ -96,16 +96,18 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	get user() {
 		return this.commonStore.user;
 	}
-	@Mutation setActiveCommunity!: Store['setActiveCommunity'];
-	@Mutation clearActiveCommunity!: Store['clearActiveCommunity'];
-	@Mutation viewCommunity!: Store['viewCommunity'];
-	@State communityStates!: Store['communityStates'];
-	@State grid!: Store['grid'];
+
+	get communityStates() {
+		return this.store.communityStates;
+	}
+
+	get grid() {
+		return this.store.grid;
+	}
 
 	get activeContextPane() {
 		return this.sidebarStore.activeContextPane;
 	}
-	@Action showContextPane!: Store['showContextPane'];
 
 	readonly Environment = Environment;
 	readonly Screen = Screen;
@@ -197,8 +199,8 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 		routeStore.sidebarData = new CommunitySidebarData($payload);
 		routeStore.collaborator = $payload.invite ? new Collaborator($payload.invite) : null;
 
-		this.setActiveCommunity(community);
-		this.viewCommunity(community);
+		this.store.setActiveCommunity(community);
+		this.store.viewCommunity(community);
 		this.setPageTheme();
 
 		if (this.user && community.is_member) {
@@ -208,13 +210,13 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 
 	private async getCommunityBootstrap() {
 		// When this is the first route the user enters, grid might not be bootstrapped yet.
-		const grid = await tillGridBootstrapped();
+		const grid = await this.store.tillGridBootstrapped();
 		grid.queueRequestCommunityBootstrap(this.community.id);
 	}
 
 	routeDestroyed() {
 		this.sidebarStore.removeContextPane(this.contextPane);
-		this.clearActiveCommunity();
+		this.store.clearActiveCommunity();
 		this.themeStore.clearPageTheme(CommunityThemeKey);
 		if (this.grid) {
 			this.grid.deregisterViewingCommunity(this.community.id);

@@ -1,6 +1,6 @@
+import { setup } from 'vue-class-component';
 import { Inject, Options, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import { Store } from '../../../store/index';
+import { useAppStore } from '../../../store';
 import { ChatStore, ChatStoreKey } from '../chat-store';
 import AppChatWindow from '../window/window.vue';
 
@@ -10,10 +10,14 @@ import AppChatWindow from '../window/window.vue';
 	},
 })
 export default class AppChatWindows extends Vue {
+	store = setup(() => useAppStore());
+
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;
 
-	@State visibleLeftPane!: Store['visibleLeftPane'];
+	get visibleLeftPane() {
+		return this.store.visibleLeftPane;
+	}
 
 	get chat() {
 		return this.chatStore.chat!;

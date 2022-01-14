@@ -2,7 +2,7 @@ import { RouteLocationRaw } from 'vue-router';
 import { Client } from '../../../../../_common/client/client.service';
 import { commonStore } from '../../../../../_common/store/common-store';
 import { Translate } from '../../../../../_common/translate/translate.service';
-import { store } from '../../../../store/index';
+import { appStore } from '../../../../store/index';
 import { router } from '../../../../views/index';
 import { UserTokenModal } from '../../../user/token-modal/token-modal.service';
 
@@ -93,7 +93,7 @@ export function clientTrayMenuBuilder(this: undefined, menu: nw.Menu) {
 		new nw.MenuItem({
 			label: Translate.$gettext('Logout'),
 			click: () => {
-				store.dispatch('logout');
+				appStore.logout();
 				Client.show();
 			},
 		})

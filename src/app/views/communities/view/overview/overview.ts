@@ -1,6 +1,5 @@
 import { setup } from 'vue-class-component';
 import { Inject, Options, Watch } from 'vue-property-decorator';
-import { Action, State } from 'vuex-class';
 import { arrayRemove } from '../../../../../utils/array';
 import { canCreateFiresides } from '../../../../../_common/community/community.model';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
@@ -16,7 +15,7 @@ import AppCommunitySidebar from '../../../../components/community/sidebar/sideba
 import AppFiresideAvatarAdd from '../../../../components/fireside/avatar/add/add.vue';
 import { FiresideAvatarEvent } from '../../../../components/fireside/avatar/avatar';
 import AppFiresideAvatar from '../../../../components/fireside/avatar/avatar.vue';
-import { Store } from '../../../../store/index';
+import { useAppStore } from '../../../../store/index';
 import { CommunitiesViewChannelDeps } from '../channel/channel';
 import {
 	acceptCollaboration,
@@ -50,6 +49,7 @@ import AppCommunitiesViewPageContainer from '../_page-container/page-container.v
 	resolver: ({ route }) => doFeedChannelPayload(route),
 })
 export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
+	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
 
 	@Inject({ from: CommunityRouteStoreKey })
@@ -58,10 +58,15 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	get user() {
 		return this.commonStore.user;
 	}
-	@State communities!: Store['communities'];
-	@State communityStates!: Store['communityStates'];
-	@Action joinCommunity!: Store['joinCommunity'];
-	@State grid!: Store['grid'];
+	get communities() {
+		return this.store.communities;
+	}
+	get communityStates() {
+		return this.store.communityStates;
+	}
+	get grid() {
+		return this.store.grid;
+	}
 
 	feed: ActivityFeedView | null = null;
 	finishedLoading = false;
@@ -186,7 +191,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		}
 
 		await acceptCollaboration(this.routeStore, this.user);
-		this.joinCommunity({ community: this.community });
+		this.store.joinCommunity(this.community);
 		showSuccessGrowl(this.$gettext(`You are now a collaborator on this community!`));
 	}
 

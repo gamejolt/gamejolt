@@ -26,7 +26,10 @@
 						</template>
 						<template v-else>
 							<p class="text-right">
-								<a class="link-muted small" @click="markNotificationsAsRead()">
+								<a
+									class="link-muted small"
+									@click="store.markNotificationsAsRead()"
+								>
 									<translate>Mark All as Read</translate>
 								</a>
 							</p>

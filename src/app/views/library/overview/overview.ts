@@ -1,5 +1,5 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { shallowSetup } from '../../../../utils/vue';
 import { Connection } from '../../../../_common/connection/connection-service';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
@@ -8,7 +8,7 @@ import { GameCollection } from '../../../components/game/collection/collection.m
 import AppGameCollectionGrid from '../../../components/game/collection/grid/grid.vue';
 import AppGameCollectionList from '../../../components/game/collection/list/list.vue';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
-import { Store } from '../../../store';
+import { useAppStore } from '../../../store';
 import { useLibraryStore } from '../../../store/library';
 
 @Options({
@@ -20,10 +20,12 @@ import { useLibraryStore } from '../../../store/library';
 	},
 })
 export default class RouteLibraryOverview extends BaseRouteComponent {
+	store = setup(() => useAppStore());
 	libraryStore = shallowSetup(() => useLibraryStore());
 
-	@State
-	isBootstrapped!: Store['isBootstrapped'];
+	get isBootstrapped() {
+		return this.store.isBootstrapped;
+	}
 
 	get followedCollection() {
 		return this.libraryStore.followedCollection.value;

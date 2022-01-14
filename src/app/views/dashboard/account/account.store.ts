@@ -1,6 +1,6 @@
 import { NamespaceVuexStore, VuexModule, VuexMutation, VuexStore } from '../../../../utils/vuex';
 import { namespace } from 'vuex-class';
-import { store } from '../../../store';
+import { appStore } from '../../../store';
 
 type RouteActions = {};
 
@@ -11,7 +11,7 @@ type RouteMutations = {
 export const RouteStoreName = 'accountRoute';
 export const RouteStoreModule = namespace(RouteStoreName);
 export const routeStore = NamespaceVuexStore<RouteStore, RouteActions, RouteMutations>(
-	store,
+	appStore,
 	RouteStoreName
 );
 

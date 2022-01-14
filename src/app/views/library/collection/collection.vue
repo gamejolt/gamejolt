@@ -28,13 +28,13 @@ import { GameListingContainer } from '../../../components/game/listing/listing-c
 import AppGameListing from '../../../components/game/listing/listing.vue';
 import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
-import { tillStoreBootstrapped } from '../../../store/index';
+import { useAppStore } from '../../../store/index';
 import {
-	libraryEditPlaylist,
-	libraryRemoveGameFromPlaylist,
-	libraryRemovePlaylist,
-	libraryUnfollowGame,
-	useLibraryStore,
+libraryEditPlaylist,
+libraryRemoveGameFromPlaylist,
+libraryRemovePlaylist,
+libraryUnfollowGame,
+useLibraryStore
 } from '../../../store/library';
 
 const CollectionThemeKey = 'collection';
@@ -92,6 +92,7 @@ const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 	},
 })
 export default class RouteLibraryCollection extends BaseRouteComponent {
+	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
 	themeStore = setup(() => useThemeStore());
 	libraryStore = shallowSetup(() => useLibraryStore());
@@ -193,9 +194,10 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 
 	async routeResolved($payload: any) {
 		// We await a user touch in the parent so this should be correct by the
-		// time we get here. We need to wait till they have their library loaded in.
+		// time we get here. We need to wait till they have their library loaded
+		// in.
 		if (this.app.user) {
-			await tillStoreBootstrapped;
+			await this.store.tillStoreBootstrapped;
 		}
 
 		if (!this.listing || !this.filtering) {

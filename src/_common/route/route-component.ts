@@ -3,7 +3,6 @@ import { createDecorator, setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
 import { RouteLocationNormalized, Router } from 'vue-router';
 import { RouteLocationRedirect } from '../../utils/router';
-import { VuexStore } from '../../utils/vuex';
 import { ensureConfig } from '../config/config.service';
 import { HistoryCache } from '../history/cache/cache.service';
 import { setMetaTitle } from '../meta/meta-service';
@@ -142,8 +141,6 @@ export async function asyncRouteLoader(router: Router, loader: Promise<any>) {
 }
 
 export interface RouteStoreOptions {
-	/** The global app store, needed so we can set the store module on it */
-	store: VuexStore;
 	routeStoreName: string;
 	routeStoreClass: any;
 	created?: (data: { route: RouteLocationNormalized }) => void;
@@ -192,8 +189,9 @@ function _setupBeforeRouteEnter(options: ComponentOptions) {
 		// We handle stores first, and then the resolver.
 		if (options.routeStoreOptions) {
 			// Set up the store they configured for this route.
-			const { store, routeStoreClass, routeStoreName, created } = options.routeStoreOptions;
-			store.registerModule(routeStoreName, new routeStoreClass());
+			// TODO(vue3)
+			const { routeStoreClass, routeStoreName, created } = options.routeStoreOptions;
+			// store.registerModule(routeStoreName, new routeStoreClass());
 
 			created?.({ route: to });
 

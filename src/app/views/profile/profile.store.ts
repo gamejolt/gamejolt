@@ -12,7 +12,7 @@ import { populateTrophies } from '../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophy } from '../../../_common/user/trophy/user-base-trophy.model';
 import { User } from '../../../_common/user/user.model';
 import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';
-import { store } from '../../store';
+import { appStore } from '../../store';
 
 type RouteActions = {
 	sendFriendRequest: void;
@@ -32,7 +32,7 @@ type RouteMutations = {
 export const RouteStoreName = 'profileRoute';
 export const RouteStoreModule = namespace(RouteStoreName);
 export const routeStore = NamespaceVuexStore<RouteStore, RouteActions, RouteMutations>(
-	store,
+	appStore,
 	RouteStoreName
 );
 

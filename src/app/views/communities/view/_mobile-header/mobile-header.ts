@@ -1,6 +1,5 @@
 import { setup } from 'vue-class-component';
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
-import { Action } from 'vuex-class';
 import { getAbsoluteLink } from '../../../../../utils/router';
 import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/join-widget.vue';
 import AppCommunityVerifiedTick from '../../../../../_common/community/verified-tick/verified-tick.vue';
@@ -15,7 +14,7 @@ import { useCommonStore } from '../../../../../_common/store/common-store';
 import { AppTheme } from '../../../../../_common/theme/theme';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { CommunitySidebarModal } from '../../../../components/community/sidebar/modal/modal.service';
-import { Store } from '../../../../store';
+import { useAppStore } from '../../../../store';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
 import AppEditableThumbnail from '../_editable-thumbnail/editable-thumbnail.vue';
 
@@ -34,6 +33,7 @@ import AppEditableThumbnail from '../_editable-thumbnail/editable-thumbnail.vue'
 export default class AppMobileHeader extends Vue {
 	@Prop({ type: Boolean, default: false }) hasUnread!: boolean;
 
+	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
 	sidebarStore = setup(() => useSidebarStore());
 
@@ -46,7 +46,6 @@ export default class AppMobileHeader extends Vue {
 	get activeContextPane() {
 		return this.sidebarStore.activeContextPane;
 	}
-	@Action toggleLeftPane!: Store['toggleLeftPane'];
 
 	readonly Environment = Environment;
 	readonly Screen = Screen;
@@ -95,7 +94,7 @@ export default class AppMobileHeader extends Vue {
 	}
 
 	onClickMenu() {
-		this.toggleLeftPane('context');
+		this.store.toggleLeftPane('context');
 	}
 
 	onClickAbout() {

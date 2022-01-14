@@ -1,6 +1,6 @@
 import { reactive } from '@vue/reactivity';
 import { Api } from '../../../_common/api/api.service';
-import { store } from '../../store/index';
+import { appStore } from '../../store/index';
 import { SearchPayload } from './payload-service';
 
 export interface SearchOptions {
@@ -63,5 +63,5 @@ async function _searchSite(query: string, options: SearchOptions = { type: 'all'
 }
 
 async function _searchInstalledGames(query: string) {
-	return store.state.clientLibrary.searchInstalledGames(query, 3);
+	return appStore.clientLibrary.searchInstalledGames(query, 3);
 }

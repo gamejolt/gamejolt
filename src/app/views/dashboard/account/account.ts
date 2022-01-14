@@ -15,7 +15,6 @@ import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue'
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { UserAvatarModal } from '../../../components/user/avatar-modal/avatar-modal.service';
 import { UserHeaderModal } from '../../../components/user/header-modal/header-modal.service';
-import { store } from '../../../store/index';
 import { RouteStore, RouteStoreModule, RouteStoreName } from './account.store';
 
 @Options({
@@ -29,7 +28,6 @@ import { RouteStore, RouteStoreModule, RouteStoreName } from './account.store';
 	},
 })
 @WithRouteStore({
-	store,
 	routeStoreName: RouteStoreName,
 	routeStoreClass: RouteStore,
 })

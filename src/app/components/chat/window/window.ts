@@ -1,5 +1,5 @@
+import { setup } from 'vue-class-component';
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
-import { Action } from 'vuex-class';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -7,7 +7,7 @@ import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue'
 import { SettingChatGroupShowMembers } from '../../../../_common/settings/settings.service';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
-import { Store } from '../../../store/index';
+import { useAppStore } from '../../../store/index';
 import { ChatStore, ChatStoreKey } from '../chat-store';
 import { leaveChatRoom } from '../client';
 import { ChatInviteModal } from '../invite-modal/invite-modal.service';
@@ -39,10 +39,10 @@ export default class AppChatWindow extends Vue {
 	@Prop({ type: Array, required: true }) messages!: ChatMessage[];
 	@Prop({ type: Array, required: true }) queuedMessages!: ChatMessage[];
 
+	store = setup(() => useAppStore());
+
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;
-
-	@Action toggleLeftPane!: Store['toggleLeftPane'];
 
 	isShowingUsers = Screen.isXs ? false : SettingChatGroupShowMembers.get();
 	isDescriptionCollapsed = false;
@@ -102,7 +102,7 @@ export default class AppChatWindow extends Vue {
 		if (Screen.isXs) {
 			leaveChatRoom(this.chat);
 		} else {
-			this.toggleLeftPane();
+			this.store.toggleLeftPane();
 		}
 	}
 

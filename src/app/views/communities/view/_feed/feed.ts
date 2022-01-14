@@ -1,6 +1,5 @@
 import { setup } from 'vue-class-component';
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Api } from '../../../../../_common/api/api.service';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
@@ -16,7 +15,7 @@ import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { AppActivityFeedLazy } from '../../../../components/lazy';
 import AppPostAddButton from '../../../../components/post/add-button/add-button.vue';
 import { illNoCommentsSmall } from '../../../../img/ill/illustrations';
-import { Store } from '../../../../store';
+import { useAppStore } from '../../../../store';
 import { CommunityRouteStore, CommunityRouteStoreKey, isVirtualChannel } from '../view.store';
 import AppBlockedNotice from '../_blocked-notice/blocked-notice.vue';
 
@@ -37,6 +36,7 @@ export default class AppCommunitiesViewFeed extends Vue {
 	// case, we show a placeholder and wait.
 	@Prop(Object) feed?: ActivityFeedView;
 
+	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
 
 	@Inject({ from: CommunityRouteStoreKey })
@@ -45,7 +45,9 @@ export default class AppCommunitiesViewFeed extends Vue {
 	get user() {
 		return this.commonStore.user;
 	}
-	@State communityStates!: Store['communityStates'];
+	get communityStates() {
+		return this.store.communityStates;
+	}
 
 	@Emit('add-post') emitAddPost(_post: FiresidePost) {}
 	@Emit('load-new') emitLoadNew() {}

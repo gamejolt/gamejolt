@@ -1,12 +1,12 @@
+import { setup } from 'vue-class-component';
 import { Inject, Options, Vue } from 'vue-property-decorator';
-import { Action, State } from 'vuex-class';
 import { EscapeStack } from '../../../../../_common/escape-stack/escape-stack.service';
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { illMaintenance } from '../../../../img/ill/illustrations';
-import { Store } from '../../../../store';
+import { useAppStore } from '../../../../store';
 import { ChatStore, ChatStoreKey } from '../../../chat/chat-store';
 import { enterChatRoom, leaveChatRoom } from '../../../chat/client';
 import { sortByLastMessageOn } from '../../../chat/user-collection';
@@ -22,11 +22,14 @@ import AppChatWindows from '../../../chat/windows/windows.vue';
 	},
 })
 export default class AppShellSidebarChat extends Vue {
+	store = setup(() => useAppStore());
+
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;
 
-	@State visibleLeftPane!: Store['visibleLeftPane'];
-	@Action toggleLeftPane!: Store['toggleLeftPane'];
+	get visibleLeftPane() {
+		return this.store.visibleLeftPane;
+	}
 
 	tab: 'chats' | 'friends' = 'chats';
 
@@ -84,7 +87,7 @@ export default class AppShellSidebarChat extends Vue {
 
 	hideChatPane() {
 		if (this.visibleLeftPane === 'chat') {
-			this.toggleLeftPane('chat');
+			this.store.toggleLeftPane('chat');
 		}
 	}
 }

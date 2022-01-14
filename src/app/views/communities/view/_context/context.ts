@@ -1,7 +1,7 @@
+import { setup } from 'vue-class-component';
 import { Options, Prop, Provide, Vue } from 'vue-property-decorator';
-import { Action } from 'vuex-class';
 import { isEditingCommunity } from '../../../../../_common/community/community.model';
-import { Store } from '../../../../store';
+import { useAppStore } from '../../../../store';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
 import AppCommunitiesViewCard from '../_card/card.vue';
 import AppNavChannels from '../_nav/channels/channels.vue';
@@ -19,7 +19,7 @@ export default class AppCommunitiesViewContext extends Vue {
 	@Provide({ to: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 
-	@Action toggleLeftPane!: Store['toggleLeftPane'];
+	store = setup(() => useAppStore());
 
 	get isEditing() {
 		return isEditingCommunity(this.$route);
@@ -28,7 +28,7 @@ export default class AppCommunitiesViewContext extends Vue {
 	onChangeSection(path: string) {
 		// If changing channels, hide the left pane/context sidebar.
 		if (this.$route.path !== path) {
-			this.toggleLeftPane();
+			this.store.toggleLeftPane();
 		}
 	}
 }

@@ -1,5 +1,5 @@
+import { setup } from 'vue-class-component';
 import { Options, Watch } from 'vue-property-decorator';
-import { Action, State } from 'vuex-class';
 import { Api } from '../../../_common/api/api.service';
 import { HistoryCache } from '../../../_common/history/cache/cache.service';
 import { Notification } from '../../../_common/notification/notification-model';
@@ -10,7 +10,7 @@ import { ActivityFeedView } from '../../components/activity/feed/view';
 import { AppActivityFeedLazy } from '../../components/lazy';
 import AppShellNotificationPopoverStickerNavItemPlaceholder from '../../components/shell/notification-popover/sticker-nav-item/placeholder/placeholder.vue';
 import AppShellNotificationPopoverStickerNavItem from '../../components/shell/notification-popover/sticker-nav-item/sticker-nav-item.vue';
-import { Store } from '../../store';
+import { Store, useAppStore } from '../../store';
 
 const HistoryCacheFeedTag = 'notifications-feed';
 
@@ -30,19 +30,23 @@ const HistoryCacheFeedTag = 'notifications-feed';
 		Api.sendRequest(ActivityFeedService.makeFeedUrl(route, '/web/dash/activity/notifications')),
 })
 export default class RouteNotifications extends BaseRouteComponent {
-	@State
-	notificationState!: Store['notificationState'];
+	store = setup(() => useAppStore());
 
-	@State
-	unreadNotificationsCount!: Store['unreadNotificationsCount'];
+	get notificationState() {
+		return this.store.notificationState;
+	}
 
-	@Action
-	markNotificationsAsRead!: Store['markNotificationsAsRead'];
+	get unreadNotificationsCount() {
+		return this.store.unreadNotificationsCount;
+	}
 
-	@State
-	grid!: Store['grid'];
+	get grid() {
+		return this.store.grid;
+	}
 
-	@State hasNewUnlockedStickers!: Store['hasNewUnlockedStickers'];
+	get hasNewUnlockedStickers() {
+		return this.store.hasNewUnlockedStickers;
+	}
 
 	feed: ActivityFeedView | null = null;
 	itemsPerPage = 15;

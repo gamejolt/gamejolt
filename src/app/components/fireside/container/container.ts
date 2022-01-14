@@ -1,7 +1,6 @@
 import { h } from 'vue';
 import { setup } from 'vue-class-component';
 import { Inject, Options, Prop, Provide, Vue } from 'vue-property-decorator';
-import { Action, State } from 'vuex-class';
 import { arrayUnique } from '../../../../utils/array';
 import { objectPick } from '../../../../utils/object';
 import { updateServerTimeOffset } from '../../../../utils/server-time';
@@ -29,7 +28,7 @@ import { StickerPlacement } from '../../../../_common/sticker/placement/placemen
 import { addStickerToTarget } from '../../../../_common/sticker/target/target-controller';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { User } from '../../../../_common/user/user.model';
-import { Store } from '../../../store';
+import { useAppStore } from '../../../store';
 import { ChatStore, ChatStoreKey, clearChat, loadChat } from '../../chat/chat-store';
 import { joinInstancedRoomChannel, leaveChatRoom, setGuestChatToken } from '../../chat/client';
 import {
@@ -57,18 +56,20 @@ export class AppFiresideContainer extends Vue {
 	@Provide({ to: FiresideControllerKey, reactive: true })
 	controller!: FiresideController;
 
+	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
-
-	get user() {
-		return this.commonStore.user;
-	}
-	@State grid!: Store['grid'];
-	@Action loadGrid!: Store['loadGrid'];
+	drawerStore = shallowSetup(() => useDrawerStore());
 
 	@Inject({ from: ChatStoreKey })
 	chatStore!: ChatStore;
 
-	drawerStore = shallowSetup(() => useDrawerStore());
+	get user() {
+		return this.commonStore.user;
+	}
+
+	get grid() {
+		return this.store.grid;
+	}
 
 	get chat() {
 		return this.chatStore.chat;
@@ -103,7 +104,7 @@ export class AppFiresideContainer extends Vue {
 		}
 
 		if (!this.grid) {
-			this.loadGrid();
+			this.store.loadGrid();
 		}
 
 		if (!this.chat) {

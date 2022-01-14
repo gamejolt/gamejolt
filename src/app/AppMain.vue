@@ -1,3 +1,4 @@
+<script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options, Provide, Vue, Watch } from 'vue-property-decorator';
 import { AppPromotionStore, AppPromotionStoreKey } from '../utils/mobile-app';
@@ -13,7 +14,7 @@ import { useCommonStore } from '../_common/store/common-store';
 import { getTranslationLang, loadCurrentLanguage } from '../_common/translate/translate.service';
 import { ChatStore, ChatStoreKey, clearChat, loadChat } from './components/chat/chat-store';
 import AppShell from './components/shell/shell.vue';
-import { Store } from './store';
+import { useAppStore } from './store';
 
 @Options({
 	components: {
@@ -23,7 +24,8 @@ import { Store } from './store';
 		AppCookieBanner,
 	},
 })
-export default class App extends Vue {
+export default class AppMain extends Vue {
+	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
 	adsController = setup(() => createAdsController());
 
@@ -41,8 +43,6 @@ export default class App extends Vue {
 	get user() {
 		return this.commonStore.user;
 	}
-
-	$store!: Store;
 
 	// On SSR we want to set mount point for the app to this component so that
 	// we can hydrate the component. On browser we want to set the "app" in the
@@ -79,21 +79,38 @@ export default class App extends Vue {
 		const isLoggedIn = !!userId;
 
 		if (isLoggedIn) {
-			this.$store.dispatch('bootstrap');
+			this.store.bootstrap();
 			if (!import.meta.env.SSR) {
 				loadChat(this.chatStore);
-				this.$store.dispatch('loadGrid');
-				this.$store.dispatch('loadNotificationState');
+				this.store.loadGrid();
+				this.store.loadNotificationState();
 			}
 
 			if (GJ_IS_DESKTOP_APP) {
-				this.$store.dispatch('clientLibrary/bootstrap');
+				// this.store.clientLibrary.bootstrap();
 			}
 		} else {
-			this.$store.dispatch('clear');
-			this.$store.dispatch('clearGrid');
-			this.$store.dispatch('clearNotificationState');
+			this.store.clear();
+			this.store.clearGrid();
+			this.store.clearNotificationState();
 			clearChat(this.chatStore);
 		}
 	}
 }
+</script>
+
+<template>
+	<div :id="id">
+		<app-common-shell>
+			<app-cookie-banner />
+
+			<app-shell>
+				<div id="content">
+					<app-error-page>
+						<router-view />
+					</app-error-page>
+				</div>
+			</app-shell>
+		</app-common-shell>
+	</div>
+</template>

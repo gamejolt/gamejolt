@@ -1,7 +1,6 @@
 import { defineAsyncComponent } from 'vue';
 import { setup } from 'vue-class-component';
 import { Options, Provide } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { router } from '..';
 import { numberSort } from '../../../utils/array';
 import { fuzzysearch } from '../../../utils/string';
@@ -31,7 +30,7 @@ import AppCommunitySlider from '../../components/community/slider/slider.vue';
 import { onFiresideStart } from '../../components/grid/client.service';
 import AppPageContainer from '../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../components/post/add-button/add-button.vue';
-import { Store } from '../../store';
+import { useAppStore } from '../../store';
 import { useLibraryStore } from '../../store/library';
 import { HomeFeedService, HOME_FEED_ACTIVITY, HOME_FEED_FYP } from './home-feed.service';
 import AppHomeFireside from './_fireside/fireside.vue';
@@ -76,14 +75,19 @@ export class RouteActivityFeedController {
 	resolver: () => Api.sendRequest('/web/dash/home'),
 })
 export default class RouteActivityFeed extends BaseRouteComponent {
+	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
 	libraryStore = shallowSetup(() => useLibraryStore());
 
 	get user() {
 		return this.commonStore.user;
 	}
-	@State communities!: Store['communities'];
-	@State unreadActivityCount!: Store['unreadActivityCount'];
+	get communities() {
+		return this.store.communities;
+	}
+	get unreadActivityCount() {
+		return this.store.unreadActivityCount;
+	}
 	get developerCollection() {
 		return this.libraryStore.developerCollection.value;
 	}

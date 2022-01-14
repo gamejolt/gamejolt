@@ -1,8 +1,8 @@
 import { nextTick } from 'vue';
+import { setup } from 'vue-class-component';
 import { Options, Vue, Watch } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import AppEventItemMediaIndicator from '../../../app/components/event-item/media-indicator/media-indicator.vue';
-import { Store } from '../../../app/store/index';
+import { useAppStore } from '../../../app/store';
 import { StickerCount } from '../../../app/views/dashboard/stickers/stickers';
 import { shallowSetup } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
@@ -34,9 +34,12 @@ import AppStickerLayerDrawerItem from './drawer-item.vue';
 	},
 })
 export default class AppStickerLayerDrawer extends Vue {
+	store = setup(() => useAppStore());
 	drawerStore = shallowSetup(() => useDrawerStore());
 
-	@State hasCbar!: Store['hasCbar'];
+	get hasCbar() {
+		return this.store.hasCbar;
+	}
 
 	sheetPage = 1;
 	isSwiping = false;

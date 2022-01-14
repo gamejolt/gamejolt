@@ -12,7 +12,7 @@ import { GamePlaylistSaveModal } from '../components/game-playlist/save-modal/sa
 import { GameCollection } from '../components/game/collection/collection.model';
 import { router } from '../views';
 
-export const LibraryStoreKey: InjectionKey<LibraryStore> = Symbol('banner-store');
+export const LibraryStoreKey: InjectionKey<LibraryStore> = Symbol('library-store');
 
 export type LibraryStore = ReturnType<typeof createLibraryStore>;
 
@@ -322,6 +322,3 @@ export async function libraryUnfollowGame(_store: LibraryStore, game: Game) {
 
 	return false;
 }
-
-// TODO(vue3): remove once we switch the app store over to non-vuex
-export const libraryStore = createLibraryStore({ router });

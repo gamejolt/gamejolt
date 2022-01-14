@@ -15,13 +15,13 @@ import { GameVideo } from '../../../../../_common/game/video/video.model';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { Translate } from '../../../../../_common/translate/translate.service';
-import { store } from '../../../../store';
+import { appStore } from '../../../../store';
 import { router } from '../../../index';
 
 export const RouteStoreName = 'manageRoute';
 export const RouteStoreModule = namespace(RouteStoreName);
 export const routeStore = NamespaceVuexStore<RouteStore, RouteActions, RouteMutations>(
-	store,
+	appStore,
 	RouteStoreName
 );
 

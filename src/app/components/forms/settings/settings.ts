@@ -145,8 +145,9 @@ export default class FormSettings extends mixins(Wrapper) {
 				}
 			}
 
+			// TODO(vue3)
 			// Tell's it to use the new settings.
-			this.$store.commit('clientLibrary/checkQueueSettings');
+			// this.$store.commit('clientLibrary/checkQueueSettings');
 		}
 	}
 }

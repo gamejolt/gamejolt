@@ -1,7 +1,6 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
-import { Action, State } from 'vuex-class';
 import { stringSort } from '../../../../../utils/array';
 import { shouldShowAppPromotion } from '../../../../../utils/mobile-app';
 import { shallowSetup } from '../../../../../utils/vue';
@@ -14,7 +13,7 @@ import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.v
 import AppShortkey from '../../../../../_common/shortkey/shortkey.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { Store } from '../../../../store/index';
+import { useAppStore } from '../../../../store/index';
 import { libraryNewPlaylist, useLibraryStore } from '../../../../store/library';
 import AppShellSidebarCollectionList from './AppShellSidebarCollectionList.vue';
 
@@ -30,14 +29,16 @@ import AppShellSidebarCollectionList from './AppShellSidebarCollectionList.vue';
 	},
 })
 export default class AppShellSidebarLibrary extends Vue {
+	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
 	libraryStore = shallowSetup(() => useLibraryStore());
 
 	get app() {
 		return this.commonStore;
 	}
-	@State isLibraryBootstrapped!: Store['isLibraryBootstrapped'];
-	@Action toggleLeftPane!: Store['toggleLeftPane'];
+	get isLibraryBootstrapped() {
+		return this.store.isLibraryBootstrapped;
+	}
 
 	playlistFilterQuery = '';
 	openFolders: string[] = [];

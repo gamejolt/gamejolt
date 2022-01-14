@@ -1,5 +1,5 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { numberSort } from '../../../../utils/array';
 import { shallowSetup } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
@@ -12,7 +12,7 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import AppStickerCard from '../../../../_common/sticker/card/card.vue';
 import { Sticker } from '../../../../_common/sticker/sticker.model';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
-import { Store } from '../../../store';
+import { useAppStore } from '../../../store';
 import backgroundImage from './background.png';
 
 export type InitPayload = {
@@ -49,9 +49,12 @@ const FetchStickersEndpoint = '/web/stickers/dash';
 	resolver: () => Api.sendRequest(FetchStickersEndpoint),
 })
 export default class RouteDashStickers extends BaseRouteComponent {
+	store = setup(() => useAppStore());
 	drawer = shallowSetup(() => useDrawerStore());
 
-	@State grid!: Store['grid'];
+	get grid() {
+		return this.store.grid;
+	}
 
 	readonly Screen = Screen;
 	readonly formatNumber = formatNumber;

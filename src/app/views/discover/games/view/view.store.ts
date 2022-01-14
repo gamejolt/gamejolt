@@ -16,7 +16,7 @@ import { GameVideo } from '../../../../../_common/game/video/video.model';
 import { LinkedAccount } from '../../../../../_common/linked-account/linked-account.model';
 import { Registry } from '../../../../../_common/registry/registry.service';
 import { User } from '../../../../../_common/user/user.model';
-import { store } from '../../../../store';
+import { appStore } from '../../../../store';
 import { router } from '../../../index';
 
 type RouteActions = {};
@@ -37,7 +37,7 @@ type RouteMutations = {
 export const RouteStoreName = 'gameRoute';
 export const RouteStoreModule = namespace(RouteStoreName);
 export const routeStore = NamespaceVuexStore<RouteStore, RouteActions, RouteMutations>(
-	store,
+	appStore,
 	RouteStoreName
 );
 

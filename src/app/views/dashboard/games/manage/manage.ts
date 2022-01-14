@@ -16,7 +16,6 @@ import { Translate } from '../../../../../_common/translate/translate.service';
 import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { IntentService } from '../../../../components/intent/intent.service';
 import AppPageHeader from '../../../../components/page-header/page-header.vue';
-import { store } from '../../../../store';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './manage.store';
 
 export const ManageGameThemeKey = 'manage-game';
@@ -34,7 +33,6 @@ export const ManageGameThemeKey = 'manage-game';
 	},
 })
 @WithRouteStore({
-	store,
 	routeStoreName: RouteStoreName,
 	routeStoreClass: RouteStore,
 })

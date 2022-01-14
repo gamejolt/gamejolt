@@ -39,7 +39,6 @@ import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { IntentService } from '../../../../components/intent/intent.service';
 import AppPageHeader from '../../../../components/page-header/page-header.vue';
 import { onRatingWidgetChange } from '../../../../components/rating/widget/widget';
-import { store } from '../../../../store';
 import './view-content.styl';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './view.store';
 import AppDiscoverGamesViewControls from './_controls/controls.vue';
@@ -65,7 +64,6 @@ const GameThemeKey = 'game';
 	},
 })
 @WithRouteStore({
-	store,
 	routeStoreName: RouteStoreName,
 	routeStoreClass: RouteStore,
 })

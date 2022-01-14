@@ -1,5 +1,5 @@
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { imageGameJoltLogo } from '../../../app/img/images';
 import { redirectToDashboard } from '../../../_common/auth/auth.service';
 import { Connection } from '../../../_common/connection/connection-service';
@@ -11,7 +11,7 @@ import AppThemeSvg from '../../../_common/theme/svg/AppThemeSvg.vue';
 import AppTranslateLangSelector from '../../../_common/translate/lang-selector/lang-selector.vue';
 import AppCoverImg from '../../components/AppCoverImg.vue';
 import AppGameCoverCredits from '../../components/game-cover-credits/game-cover-credits.vue';
-import { store, Store } from '../../store/index';
+import { authStore, useAuthStore } from '../../store/index';
 import './auth-content.styl';
 
 export function loggedUserBlock() {
@@ -32,15 +32,24 @@ export function loggedUserBlock() {
 		AppThemeSvg,
 		AppGameCoverCredits,
 	},
-	async beforeRouteEnter(_to, _from, next) {
-		await store.dispatch('bootstrap');
-		next();
+	async beforeRouteEnter(_to, _from) {
+		await authStore.bootstrap();
 	},
 })
 export default class RouteAuth extends BaseRouteComponent {
-	@State shouldShowCoverImage!: Store['shouldShowCoverImage'];
-	@State coverMediaItem: Store['coverMediaItem'];
-	@State coverGame: Store['coverGame'];
+	store = setup(() => useAuthStore());
+
+	get shouldShowCoverImage() {
+		return this.store.shouldShowCoverImage;
+	}
+
+	get coverMediaItem() {
+		return this.store.coverMediaItem;
+	}
+
+	get coverGame() {
+		return this.store.coverGame;
+	}
 
 	readonly Environment = Environment;
 	readonly Connection = Connection;

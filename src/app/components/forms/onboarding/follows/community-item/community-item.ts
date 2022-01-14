@@ -1,10 +1,10 @@
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { Action } from 'vuex-class';
 import { Analytics } from '../../../../../../_common/analytics/analytics.service';
 import { Community } from '../../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbnail/img/img.vue';
 import Onboarding from '../../../../../../_common/onboarding/onboarding.service';
-import { Store } from '../../../../../store';
+import { useAppStore } from '../../../../../store';
 
 @Options({
 	components: {
@@ -15,8 +15,7 @@ export default class AppOnboardingFollowsCommunityItem extends Vue {
 	@Prop({ type: Object, required: true })
 	community!: Community;
 
-	@Action joinCommunity!: Store['joinCommunity'];
-	@Action leaveCommunity!: Store['leaveCommunity'];
+	store = setup(() => useAppStore());
 
 	get highlight() {
 		const highlight = this.community.theme && this.community.theme.highlight_;
@@ -49,11 +48,9 @@ export default class AppOnboardingFollowsCommunityItem extends Vue {
 		);
 
 		if (!this.community.is_member) {
-			this.joinCommunity({ community: this.community, location: 'onboarding' });
+			this.store.joinCommunity(this.community, 'onboarding');
 		} else {
-			this.leaveCommunity({
-				community: this.community,
-				location: 'onboarding',
+			this.store.leaveCommunity(this.community, 'onboarding', {
 				shouldConfirm: false,
 			});
 		}

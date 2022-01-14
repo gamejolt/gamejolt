@@ -1,7 +1,6 @@
 import { defineAsyncComponent } from '@vue/runtime-core';
 import { setup } from 'vue-class-component';
 import { Inject, Options, Vue } from 'vue-property-decorator';
-import { Action, State } from 'vuex-class';
 import { shouldShowAppPromotion } from '../../../../utils/mobile-app';
 import { trackAppPromotionClick } from '../../../../_common/analytics/analytics.service';
 import { AppClientHistoryNavigator } from '../../../../_common/client/safe-exports';
@@ -15,7 +14,7 @@ import { useCommonStore } from '../../../../_common/store/common-store';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { imageGameJoltLogo, imageJolt } from '../../../img/images';
-import { Store } from '../../../store/index';
+import { useAppStore } from '../../../store/index';
 import { ChatStore, ChatStoreKey } from '../../chat/chat-store';
 import AppSearch from '../../search/search.vue';
 
@@ -42,6 +41,7 @@ import AppSearch from '../../search/search.vue';
 	},
 })
 export default class AppShellTopNav extends Vue {
+	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
 
 	@Inject({ from: ChatStoreKey })
@@ -51,13 +51,18 @@ export default class AppShellTopNav extends Vue {
 		return this.commonStore;
 	}
 
-	@State visibleLeftPane!: Store['visibleLeftPane'];
-	@State hasSidebar!: Store['hasSidebar'];
-	@State hasCbar!: Store['hasCbar'];
-	@State unreadActivityCount!: Store['unreadActivityCount'];
-
-	@Action toggleCbarMenu!: Store['toggleCbarMenu'];
-	@Action toggleLeftPane!: Store['toggleLeftPane'];
+	get visibleLeftPane() {
+		return this.store.visibleLeftPane;
+	}
+	get hasSidebar() {
+		return this.store.hasSidebar;
+	}
+	get hasCbar() {
+		return this.store.hasCbar;
+	}
+	get unreadActivityCount() {
+		return this.store.unreadActivityCount;
+	}
 
 	moreMenuShowing = false;
 	baseMinColWidth: number | null = null;

@@ -1,13 +1,12 @@
 import { setup } from 'vue-class-component';
 import { Inject, Options, Vue } from 'vue-property-decorator';
-import { Action, State } from 'vuex-class';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
 import AppLoading from '../../../../../../_common/loading/loading.vue';
 import { useCommonStore } from '../../../../../../_common/store/common-store';
 import AppCommunityChannelCard from '../../../../../components/community/channel/card/card.vue';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
-import { Store } from '../../../../../store';
+import { useAppStore } from '../../../../../store';
 import {
 	CommunityRouteStore,
 	CommunityRouteStoreKey,
@@ -22,17 +21,21 @@ import {
 	},
 })
 export default class AppNavChannels extends Vue {
+	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
 
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 
-	@State communities!: Store['communities'];
-	@State communityStates!: Store['communityStates'];
+	get communities() {
+		return this.store.communities;
+	}
+	get communityStates() {
+		return this.store.communityStates;
+	}
 	get user() {
 		return this.commonStore.user;
 	}
-	@Action toggleLeftPane!: Store['toggleLeftPane'];
 
 	isLoadingArchivedChannels = false;
 

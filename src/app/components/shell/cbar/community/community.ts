@@ -1,6 +1,5 @@
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { Action, State } from 'vuex-class';
 import { trackGotoCommunity } from '../../../../../_common/analytics/analytics.service';
 import { Community } from '../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
@@ -13,7 +12,7 @@ import { useSidebarStore } from '../../../../../_common/sidebar/sidebar.store';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { useThemeStore } from '../../../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { Store } from '../../../../store';
+import { useAppStore } from '../../../../store';
 import { AppCommunityPerms } from '../../../community/perms/perms';
 import AppShellCbarItem from '../item/item.vue';
 
@@ -33,6 +32,7 @@ export default class AppShellCbarCommunity extends Vue {
 	@Prop({ type: Object, required: true })
 	community!: Community;
 
+	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
 	themeStore = setup(() => useThemeStore());
 	sidebarStore = setup(() => useSidebarStore());
@@ -40,11 +40,12 @@ export default class AppShellCbarCommunity extends Vue {
 	get user() {
 		return this.commonStore.user;
 	}
-	@State activeCommunity!: Store['activeCommunity'];
-	@State communityStates!: Store['communityStates'];
-	@Action leaveCommunity!: Store['leaveCommunity'];
-	@Action toggleLeftPane!: Store['toggleLeftPane'];
-	@Action joinCommunity!: Store['joinCommunity'];
+	get activeCommunity() {
+		return this.store.activeCommunity;
+	}
+	get communityStates() {
+		return this.store.communityStates;
+	}
 
 	popperVisible = false;
 
@@ -91,21 +92,19 @@ export default class AppShellCbarCommunity extends Vue {
 
 	async onLeaveCommunityClick() {
 		Popper.hideAll();
-		await this.leaveCommunity({
-			community: this.community,
-			location: 'cbar',
+		await this.store.leaveCommunity(this.community, 'cbar', {
 			shouldConfirm: true,
 		});
 	}
 
 	async onJoinCommunityClick() {
 		Popper.hideAll();
-		await this.joinCommunity({ community: this.community, location: 'cbar' });
+		await this.store.joinCommunity(this.community, 'cbar');
 	}
 
 	onCommunityClick(event: Event) {
 		if (this.isActive) {
-			this.toggleLeftPane('context');
+			this.store.toggleLeftPane('context');
 
 			// Prevent the click from triggering a route change.
 			event.preventDefault();

@@ -1,4 +1,141 @@
-<script lang="ts" src="./search"></script>
+<script lang="ts">
+import { computed, inject, InjectionKey, provide, ref } from 'vue';
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
+import { RouteLocationNormalized, useRoute } from 'vue-router';
+import {
+	AdSettingsContainer,
+	releasePageAdsSettings,
+	setPageAdsSettings,
+	useAdsController,
+} from '../../../_common/ad/ad-store';
+import AppExpand from '../../../_common/expand/expand.vue';
+import { formatNumber } from '../../../_common/filters/number';
+import { Meta } from '../../../_common/meta/meta-service';
+import AppPagination from '../../../_common/pagination/pagination.vue';
+import { BaseRouteComponent } from '../../../_common/route/route-component';
+import { Screen } from '../../../_common/screen/screen-service';
+import { Scroll } from '../../../_common/scroll/scroll.service';
+import AppPageHeader from '../../components/page-header/page-header.vue';
+import { SearchPayload } from '../../components/search/payload-service';
+import { Search } from '../../components/search/search-service';
+import AppSearch from '../../components/search/search.vue';
+
+const Key: InjectionKey<Controller> = Symbol('search-route');
+
+type Controller = ReturnType<typeof createController>;
+
+export function useSearchRouteController() {
+	return inject(Key);
+}
+
+function createController({ route }: { route: RouteLocationNormalized }) {
+	// We store our own version of the search query and sync back to it on
+	// form submission.
+	const query = ref(`${route.query.q}`);
+	const searchPayload = ref(new SearchPayload('all', {}));
+
+	const hasSearch = computed(() => !!query.value);
+
+	function processPayload({
+		payload,
+		route,
+	}: {
+		payload: SearchPayload;
+		route: RouteLocationNormalized;
+	}) {
+		query.value = '';
+
+		if (!route.query.q) {
+			searchPayload.value = new SearchPayload('all', {});
+			return;
+		}
+
+		// Search results should always be deindexed.
+		Meta.seo.deindex();
+
+		query.value = route.query.q + '';
+		searchPayload.value = payload;
+
+		// We sync the query to the search service so that all places get
+		// updated with the new query.
+		Search.query = query.value;
+	}
+
+	return {
+		query,
+		searchPayload,
+		hasSearch,
+		processPayload,
+	};
+}
+
+@Options({
+	name: 'RouteSearch',
+	components: {
+		AppPageHeader,
+		AppExpand,
+		AppSearch,
+		AppPagination,
+	},
+})
+export default class RouteSearch extends BaseRouteComponent {
+	routeStore = setup(() => {
+		const c = createController({ route: useRoute() });
+		provide(Key, c);
+		return c;
+	});
+
+	ads = setup(() => useAdsController());
+
+	get hasSearch() {
+		return this.routeStore.hasSearch;
+	}
+
+	get query() {
+		return this.routeStore.query;
+	}
+
+	get searchPayload() {
+		return this.routeStore.searchPayload;
+	}
+
+	readonly Screen = Screen;
+	readonly Search = Search;
+	readonly Scroll = Scroll;
+	readonly formatNumber = formatNumber;
+
+	get routeTitle() {
+		if (this.$route.query.q) {
+			return this.$gettextInterpolate('Search results for %{ query }', {
+				query: this.$route.query.q,
+			});
+		}
+		return this.$gettext('search.page_title');
+	}
+
+	get noResults() {
+		return (
+			this.hasSearch &&
+			!this.searchPayload.gamesCount &&
+			!this.searchPayload.usersCount &&
+			!this.searchPayload.postsCount
+		);
+	}
+
+	routeCreated() {
+		// Always disable ads for now, until we get better controls of when
+		// adult content is shown in search.
+		const adSettings = new AdSettingsContainer();
+		adSettings.isPageDisabled = true;
+		setPageAdsSettings(this.ads, adSettings);
+	}
+
+	routeDestroyed() {
+		releasePageAdsSettings(this.ads);
+	}
+}
+</script>
 
 <template>
 	<div>

@@ -1,8 +1,6 @@
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { Action, State } from 'vuex-class';
-import { GridClient } from '../../../app/components/grid/client.service';
-import { Store } from '../../../app/store';
+import { useAppStore } from '../../../app/store';
 import { CommunityJoinLocation } from '../../analytics/analytics.service';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { formatNumber } from '../../filters/number';
@@ -33,14 +31,16 @@ export default class AppCommunityJoinWidget extends Vue {
 	@Prop({ type: Boolean, required: false, default: false })
 	solid?: boolean;
 
+	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
 
 	get app() {
 		return this.commonStore;
 	}
-	@State grid!: GridClient;
-	@Action joinCommunity!: Store['joinCommunity'];
-	@Action leaveCommunity!: Store['leaveCommunity'];
+
+	get grid() {
+		return this.store.grid;
+	}
 
 	isProcessing = false;
 
@@ -78,7 +78,7 @@ export default class AppCommunityJoinWidget extends Vue {
 
 		if (!this.community.is_member) {
 			try {
-				await this.joinCommunity({ community: this.community, location: this.location });
+				await this.store.joinCommunity(this.community, this.location);
 			} catch (e) {
 				console.log(e);
 				let message = this.$gettext(
@@ -92,9 +92,7 @@ export default class AppCommunityJoinWidget extends Vue {
 			}
 		} else {
 			try {
-				await this.leaveCommunity({
-					community: this.community,
-					location: this.location,
+				await this.store.leaveCommunity(this.community, this.location, {
 					shouldConfirm: true,
 				});
 			} catch (e) {

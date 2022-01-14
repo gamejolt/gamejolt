@@ -7,7 +7,7 @@ import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { commonStore } from '../../../_common/store/common-store';
 import { EventTopic } from '../../../_common/system/event/event-topic';
-import { store } from '../../store';
+import { appStore } from '../../store';
 import { ChatMessage, ChatMessageType } from './message';
 import { ChatRoom } from './room';
 import { ChatRoomChannel } from './room-channel';
@@ -506,9 +506,9 @@ export function enterChatRoom(chat: ChatClient, roomId: number) {
 
 	// If the chat isn't visible yet, set the session room to this new room and open it. That
 	// will in turn do the entry. Otherwise we want to just switch rooms.
-	if (store.state.visibleLeftPane !== 'chat') {
+	if (appStore.visibleLeftPane.value !== 'chat') {
 		chat.sessionRoomId = roomId;
-		store.dispatch('toggleChatPane');
+		appStore.toggleChatPane();
 	} else {
 		if (!chat.socket) {
 			return;

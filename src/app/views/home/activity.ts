@@ -1,11 +1,11 @@
+import { setup } from 'vue-class-component';
 import { Inject, Options, Watch } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Api } from '../../../_common/api/api.service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
 import { AppActivityFeedLazy } from '../../components/lazy';
-import { Store } from '../../store';
+import { useAppStore } from '../../store';
 import { RouteActivityFeedController } from './feed';
 
 @Options({
@@ -22,11 +22,17 @@ import { RouteActivityFeedController } from './feed';
 		Api.sendRequest(ActivityFeedService.makeFeedUrl(route, '/web/dash/activity/activity')),
 })
 export default class RouteHomeActivity extends BaseRouteComponent {
+	store = setup(() => useAppStore());
+
 	@Inject({ from: 'route-activity-feed' })
 	controller!: RouteActivityFeedController;
 
-	@State grid!: Store['grid'];
-	@State unreadActivityCount!: Store['unreadActivityCount'];
+	get grid() {
+		return this.store.grid;
+	}
+	get unreadActivityCount() {
+		return this.store.unreadActivityCount;
+	}
 
 	get feed() {
 		return this.controller.feed;

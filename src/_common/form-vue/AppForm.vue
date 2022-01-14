@@ -195,7 +195,7 @@ export function createForm<T>({
 		}
 
 		_routeChangeDeregister = router.beforeEach((_to, _from, next) => {
-			if (c.changed) {
+			if (changed.value) {
 				if (
 					!window.confirm(
 						Translate.$gettext(`Are you sure you want to discard your unsaved changes?`)
@@ -367,7 +367,7 @@ export function createForm<T>({
 		}
 	}
 
-	const c = reactive({
+	return reactive({
 		name,
 		formModel,
 		method,
@@ -396,8 +396,6 @@ export function createForm<T>({
 		_validationToken,
 		_override,
 	}) as FormController<T>;
-
-	return c;
 }
 </script>
 

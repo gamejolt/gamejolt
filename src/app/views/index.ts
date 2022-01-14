@@ -1,5 +1,5 @@
 import { initRouter } from '../../utils/router';
-import { store } from '../store/index';
+import { appStore } from '../store/index';
 import { routeBadgeFeatured } from './badge/featured/featured.route';
 import { routeCommunitiesView } from './communities/view/view.route';
 import { routeDash } from './dashboard/dashboard.route';
@@ -53,15 +53,15 @@ export const router = initRouter(routes);
 // 	isFullPage: boolean - wether to not display the shell and treat the route as a "full page"
 router.beforeEach((to, _from, next) => {
 	if (to.matched.some(record => record.meta.isFullPage)) {
-		store.commit('hideShell');
+		appStore.hideShell();
 	} else {
-		store.commit('showShell');
+		appStore.showShell();
 	}
 
 	if (to.matched.some(record => record.meta.noFooter)) {
-		store.commit('hideFooter');
+		appStore.hideFooter();
 	} else {
-		store.commit('showFooter');
+		appStore.showFooter();
 	}
 
 	next();

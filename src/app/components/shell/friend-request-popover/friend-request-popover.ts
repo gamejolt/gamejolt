@@ -1,6 +1,5 @@
 import { setup } from 'vue-class-component';
 import { Options, Vue, Watch } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import { Connection } from '../../../../_common/connection/connection-service';
 import AppLoading from '../../../../_common/loading/loading.vue';
@@ -8,7 +7,7 @@ import AppPopper from '../../../../_common/popper/popper.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
-import { Store } from '../../../store';
+import { useAppStore } from '../../../store';
 import { UserFriendshipHelper } from '../../user/friendships-helper/friendship-helper.service';
 import AppShellFriendRequestPopoverItem from './item/item.vue';
 
@@ -25,17 +24,20 @@ type Tab = 'requests' | 'pending';
 	},
 })
 export default class AppShellFriendRequestPopover extends Vue {
+	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
 
-	@State
-	hasNewFriendRequests!: Store['hasNewFriendRequests'];
+	get hasNewFriendRequests() {
+		return this.store.hasNewFriendRequests;
+	}
 
 	get user() {
 		return this.commonStore.user;
 	}
 
-	@State
-	grid!: Store['grid'];
+	get grid() {
+		return this.store.grid;
+	}
 
 	isShowing = false;
 	isLoading = false;

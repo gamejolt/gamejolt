@@ -1,6 +1,5 @@
 import { setup } from 'vue-class-component';
 import { mixins, Options } from 'vue-property-decorator';
-import { Action } from 'vuex-class';
 import { Community } from '../../../../_common/community/community.model';
 import AppFormControlTheme from '../../../../_common/form-vue/controls/AppFormControlTheme.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
@@ -8,7 +7,7 @@ import { BaseForm, FormOnSubmitSuccess } from '../../../../_common/form-vue/form
 import { validateUrlPath } from '../../../../_common/form-vue/validators';
 import { DefaultTheme } from '../../../../_common/theme/theme.model';
 import { useThemeStore } from '../../../../_common/theme/theme.store';
-import { Store } from '../../../store';
+import { useAppStore } from '../../../store';
 import AppPostAddButtonFormControl from '../../post/add-button/AppPostAddButtonFormControl.vue';
 
 class Wrapper extends BaseForm<Community> {}
@@ -23,9 +22,7 @@ class Wrapper extends BaseForm<Community> {}
 export default class FormCommunity extends mixins(Wrapper) implements FormOnSubmitSuccess {
 	modelClass = Community;
 
-	@Action
-	joinCommunity!: Store['joinCommunity'];
-
+	store = setup(() => useAppStore());
 	themeStore = setup(() => useThemeStore());
 
 	readonly validateUrlPath = validateUrlPath;
@@ -44,7 +41,7 @@ export default class FormCommunity extends mixins(Wrapper) implements FormOnSubm
 		// When creating a community you get auto joined to it,
 		// but aside from the actual join operation we also do other things
 		// in this store action so we gotta call it anyways.
-		this.joinCommunity({ community });
+		this.store.joinCommunity(community);
 
 		this.$router.push(community.routeEditLocation);
 	}

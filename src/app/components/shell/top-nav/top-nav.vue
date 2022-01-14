@@ -11,7 +11,7 @@
 					:class="{
 						active: !!visibleLeftPane,
 					}"
-					@click="toggleCbarMenu"
+					@click="store.toggleCbarMenu()"
 				>
 					<app-jolticon icon="menu" />
 					<div

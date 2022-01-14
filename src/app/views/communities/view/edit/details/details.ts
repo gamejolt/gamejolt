@@ -1,6 +1,5 @@
 import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
-import { Action } from 'vuex-class';
 import { enforceLocation } from '../../../../../../utils/router';
 import AppAlertDismissable from '../../../../../../_common/alert/dismissable/dismissable.vue';
 import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbnail/img/img.vue';
@@ -13,7 +12,7 @@ import { useThemeStore } from '../../../../../../_common/theme/theme.store';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 import FormCommunity from '../../../../../components/forms/community/community.vue';
 import FormCommunityDescription from '../../../../../components/forms/community/description/description.vue';
-import { Store } from '../../../../../store';
+import { useAppStore } from '../../../../../store';
 import { CommunityThemeKey } from '../../view';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
@@ -34,9 +33,8 @@ export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent 
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 
+	store = setup(() => useAppStore());
 	themeStore = setup(() => useThemeStore());
-
-	@Action('leaveCommunity') leaveCommunityAction!: Store['leaveCommunity'];
 
 	readonly Screen = Screen;
 
@@ -81,7 +79,7 @@ export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent 
 		}
 
 		await this.community.$remove();
-		await this.leaveCommunityAction({ community: this.community, shouldConfirm: false });
+		await this.store.leaveCommunity(this.community, undefined, { shouldConfirm: false });
 
 		showInfoGrowl(
 			this.$gettext(`Your community has been removed from the site.`),
@@ -105,7 +103,7 @@ export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent 
 		}
 
 		await this.collaborator.$remove();
-		await this.leaveCommunityAction({ community: this.community, shouldConfirm: false });
+		await this.store.leaveCommunity(this.community, undefined, { shouldConfirm: false });
 
 		showSuccessGrowl(
 			this.$gettext(`You left the community. You will be missed! ;A;`),

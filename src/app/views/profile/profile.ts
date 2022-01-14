@@ -30,7 +30,6 @@ import AppPageHeaderControls from '../../components/page-header/controls/control
 import AppPageHeader from '../../components/page-header/page-header.vue';
 import AppUserBlockOverlay from '../../components/user/block-overlay/block-overlay.vue';
 import AppUserDogtag from '../../components/user/dogtag/dogtag.vue';
-import { store } from '../../store';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './profile.store';
 
 const ProfileThemeKey = 'profile';
@@ -53,7 +52,6 @@ const ProfileThemeKey = 'profile';
 	},
 })
 @WithRouteStore({
-	store,
 	routeStoreName: RouteStoreName,
 	routeStoreClass: RouteStore,
 })
