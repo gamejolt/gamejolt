@@ -41,7 +41,7 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 	readonly illNoCommentsSmall = illNoCommentsSmall;
 
 	get rtc() {
-		return this.controller.rtc;
+		return this.controller.rtc.value;
 	}
 
 	get hostableChatUsers() {
@@ -51,7 +51,7 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 
 		const currentHosts = this.rtc.hosts;
 		return (
-			this.controller.chatUsers?.collection.filter(
+			this.controller.chatUsers.value?.collection.filter(
 				i => !currentHosts.some(host => host.user.id === i.id)
 			) ?? []
 		);

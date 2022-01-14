@@ -1,6 +1,6 @@
 import { h } from 'vue';
 import { setup } from 'vue-class-component';
-import { Inject, Options, Prop, Provide, Vue } from 'vue-property-decorator';
+import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { arrayUnique } from '../../../../utils/array';
 import { objectPick } from '../../../../utils/object';
 import { updateServerTimeOffset } from '../../../../utils/server-time';
@@ -39,7 +39,7 @@ import {
 } from '../../grid/fireside-channel';
 import {
 	FiresideController,
-	FiresideControllerKey,
+	provideFiresideController,
 	updateFiresideExpiryValues,
 } from '../controller/controller';
 import { StreamSetupModal } from '../stream/setup/setup-modal.service';
@@ -53,7 +53,6 @@ interface GridStickerPlacementPayload {
 @Options({})
 export class AppFiresideContainer extends Vue {
 	@Prop({ type: Object, required: true })
-	@Provide({ to: FiresideControllerKey, reactive: true })
 	controller!: FiresideController;
 
 	store = setup(() => useAppStore());
@@ -76,10 +75,12 @@ export class AppFiresideContainer extends Vue {
 	}
 
 	created() {
+		provideFiresideController(this.controller);
+
 		if (!this.$slots.default) {
 			throw Error('AppFiresideContainer requires a default slot.');
 		}
-		this.controller.onRetry = this.onRetry;
+		this.controller.onRetry.value = this.onRetry;
 	}
 
 	render() {
@@ -88,17 +89,17 @@ export class AppFiresideContainer extends Vue {
 
 	async mounted() {
 		const c = this.controller;
-		c.chat = this.chat;
+		c.chat.value = this.chat;
 
 		// TODO: Do we want to do this?
-		if (c.status === 'joined') {
+		if (c.status.value === 'joined') {
 			this.disconnect();
 		}
 
-		c.hasExpiryWarning = false;
+		c.hasExpiryWarning.value = false;
 
 		if (c.fireside.blocked) {
-			c.status = 'blocked';
+			c.status.value = 'blocked';
 			console.debug(`[Fireside] Blocked from joining blocked user's fireside.`);
 			return;
 		}
@@ -121,7 +122,7 @@ export class AppFiresideContainer extends Vue {
 	}
 
 	unmounted() {
-		this.controller.onRetry = null;
+		this.controller.onRetry.value = null;
 		this.drawerStore.streak.value = null;
 
 		this.disconnect();
@@ -140,12 +141,12 @@ export class AppFiresideContainer extends Vue {
 		// Only disconnect when not connected and it previous registered a different state.
 		// This watcher runs once initially when chat is not connected, and we don't want to call
 		// disconnect in that case.
-		else if (c.chatPreviousConnectedState !== null) {
+		else if (c.chatPreviousConnectedState.value !== null) {
 			this.disconnect();
 		}
 
-		c.chat = this.chat;
-		c.chatPreviousConnectedState = this.chat?.connected === true;
+		c.chat.value = this.chat;
+		c.chatPreviousConnectedState.value = this.chat?.connected === true;
 	}
 
 	watchGrid() {
@@ -156,19 +157,19 @@ export class AppFiresideContainer extends Vue {
 		// Only disconnect when not connected and it previous registered a different state.
 		// This watcher runs once initially when grid is not connected, and we don't want to call
 		// disconnect in that case.
-		else if (this.grid && c.gridPreviousConnectedState !== null) {
+		else if (this.grid && c.gridPreviousConnectedState.value !== null) {
 			this.disconnect();
 		}
 
-		c.gridPreviousConnectedState = this.grid?.connected ?? null;
+		c.gridPreviousConnectedState.value = this.grid?.connected ?? null;
 	}
 
 	private async tryJoin() {
 		const c = this.controller;
 
 		// Only try to join when disconnected (or for the first "initial" load).
-		if (c.status === 'disconnected' || c.status === 'initial') {
-			c.status = 'loading';
+		if (c.status.value === 'disconnected' || c.status.value === 'initial') {
+			c.status.value = 'loading';
 
 			// Make sure the services are connected.
 			while (!this.grid?.connected) {
@@ -220,14 +221,14 @@ export class AppFiresideContainer extends Vue {
 			!this.chat.connected
 		) {
 			console.debug(`[FIRESIDE] General connection error.`);
-			c.status = 'setup-failed';
+			c.status.value = 'setup-failed';
 			return;
 		}
 
 		const authToken = await this.getAuthToken();
 		if (!authToken) {
 			console.debug(`[FIRESIDE] Setup failure 1.`);
-			c.status = 'setup-failed';
+			c.status.value = 'setup-failed';
 			return;
 		}
 
@@ -240,7 +241,7 @@ export class AppFiresideContainer extends Vue {
 
 		// Maybe they are blocked now?
 		if (c.fireside.blocked) {
-			c.status = 'blocked';
+			c.status.value = 'blocked';
 			console.debug(`[Fireside] Blocked from joining blocked user's fireside.`);
 			return;
 		}
@@ -248,7 +249,7 @@ export class AppFiresideContainer extends Vue {
 		// Make sure it's still joinable.
 		if (!c.fireside.isOpen()) {
 			console.debug(`[FIRESIDE] Fireside is expired, and cannot be joined.`);
-			c.status = 'expired';
+			c.status.value = 'expired';
 			return;
 		}
 
@@ -258,7 +259,7 @@ export class AppFiresideContainer extends Vue {
 			const rolePayload = await Api.sendRequest(`/web/fireside/join/${c.fireside.hash}`);
 			if (!rolePayload || !rolePayload.success || !rolePayload.role) {
 				console.debug(`[FIRESIDE] Failed to acquire a role.`);
-				c.status = 'setup-failed';
+				c.status.value = 'setup-failed';
 				return;
 			}
 			c.fireside.role = new FiresideRole(rolePayload.role);
@@ -279,7 +280,7 @@ export class AppFiresideContainer extends Vue {
 					.join()
 					.receive('error', reject)
 					.receive('ok', () => {
-						c.gridChannel = channel;
+						c.gridChannel.value = channel;
 						this.grid!.channels.push(channel);
 						resolve();
 					});
@@ -287,9 +288,9 @@ export class AppFiresideContainer extends Vue {
 		} catch (error: any) {
 			console.debug(`[FIRESIDE] Setup failure 3.`, error);
 			if (error && error.reason === 'blocked') {
-				c.status = 'blocked';
+				c.status.value = 'blocked';
 			} else {
-				c.status = 'setup-failed';
+				c.status.value = 'setup-failed';
 			}
 			return;
 		}
@@ -300,30 +301,30 @@ export class AppFiresideContainer extends Vue {
 
 			if (!chatChannel) {
 				console.debug(`[FIRESIDE] Setup failure 4.`);
-				c.status = 'setup-failed';
+				c.status.value = 'setup-failed';
 				return;
 			}
 
-			c.chatChannel = chatChannel;
+			c.chatChannel.value = chatChannel;
 		} catch (error) {
 			console.debug(`[FIRESIDE] Setup failure 5.`, error);
-			c.status = 'setup-failed';
+			c.status.value = 'setup-failed';
 			return;
 		}
 
-		c.chatChannel.on('kick_member', (data: any) => {
+		c.chatChannel.value.on('kick_member', (data: any) => {
 			if (this.user && data.user_id === this.user.id) {
 				showInfoGrowl(this.$gettext(`You've been kicked from the fireside.`));
 				this.$router.push({ name: 'home' });
 			}
 		});
 
-		c.status = 'joined';
+		c.status.value = 'joined';
 		console.debug(`[FIRESIDE] Successfully joined fireside.`);
 
 		// Set up the expiry interval to check if the fireside is expired.
 		this.clearExpiryCheck();
-		c.expiryInterval = setInterval(this.expiryCheck.bind(this), 1000);
+		c.expiryInterval.value = setInterval(this.expiryCheck.bind(this), 1000);
 		this.expiryCheck();
 
 		this.setupExpiryInfoInterval();
@@ -342,7 +343,7 @@ export class AppFiresideContainer extends Vue {
 			if (!payload.fireside) {
 				console.debug(`[FIRESIDE] Trying to load fireside, but it was not found.`);
 				if (assignRouteStatus) {
-					c.status = 'setup-failed';
+					c.status.value = 'setup-failed';
 				}
 				return false;
 			}
@@ -360,7 +361,7 @@ export class AppFiresideContainer extends Vue {
 		} catch (error) {
 			console.debug(`[FIRESIDE] Setup failure 2.`, error);
 			if (assignRouteStatus) {
-				c.status = 'setup-failed';
+				c.status.value = 'setup-failed';
 			}
 			return false;
 		}
@@ -383,7 +384,7 @@ export class AppFiresideContainer extends Vue {
 
 	private disconnect() {
 		const c = this.controller;
-		if (!c || c.status === 'disconnected') {
+		if (!c || c.status.value === 'disconnected') {
 			return;
 		}
 
@@ -391,19 +392,19 @@ export class AppFiresideContainer extends Vue {
 		this.destroyExpiryInfoInterval();
 
 		console.debug(`[FIRESIDE] Disconnecting from fireside.`);
-		c.status = 'disconnected';
+		c.status.value = 'disconnected';
 
-		if (this.grid && this.grid.connected && c.gridChannel) {
-			c.gridChannel.leave();
+		if (this.grid && this.grid.connected && c.gridChannel.value) {
+			c.gridChannel.value.leave();
 		}
 
-		c.gridChannel = null;
+		c.gridChannel.value = null;
 
-		if (this.chat && this.chat.connected && c.chatChannel) {
-			leaveChatRoom(this.chat, c.chatChannel.room);
+		if (this.chat && this.chat.connected && c.chatChannel.value) {
+			leaveChatRoom(this.chat, c.chatChannel.value.room);
 		}
 
-		c.chatChannel = null;
+		c.chatChannel.value = null;
 		StreamSetupModal.close();
 		this.destroyRtc();
 
@@ -412,36 +413,36 @@ export class AppFiresideContainer extends Vue {
 
 	private clearExpiryCheck() {
 		const c = this.controller;
-		if (c.expiryInterval) {
-			clearInterval(c.expiryInterval);
-			c.expiryInterval = null;
+		if (c.expiryInterval.value) {
+			clearInterval(c.expiryInterval.value);
+			c.expiryInterval.value = null;
 		}
 	}
 
 	private expiryCheck() {
 		const c = this.controller;
-		if (!c || c.status !== 'joined' || !c.fireside) {
+		if (!c || c.status.value !== 'joined' || !c.fireside) {
 			return;
 		}
 
 		if (!c.fireside.isOpen()) {
 			this.disconnect();
-			c.status = 'expired';
+			c.status.value = 'expired';
 		}
 	}
 
 	private destroyExpiryInfoInterval() {
 		const c = this.controller;
-		if (c.updateInterval) {
-			clearInterval(c.updateInterval);
-			c.updateInterval = null;
+		if (c.updateInterval.value) {
+			clearInterval(c.updateInterval.value);
+			c.updateInterval.value = null;
 		}
 	}
 
 	private setupExpiryInfoInterval() {
 		const c = this.controller;
 		this.destroyExpiryInfoInterval();
-		c.updateInterval = setInterval(() => updateFiresideExpiryValues(c), 1000);
+		c.updateInterval.value = setInterval(() => updateFiresideExpiryValues(c), 1000);
 	}
 
 	private async upsertRtc(
@@ -455,7 +456,7 @@ export class AppFiresideContainer extends Vue {
 	) {
 		const { checkJoined = true, hosts } = options;
 		const c = this.controller;
-		if (!c || !c.fireside || (checkJoined && c.status !== 'joined')) {
+		if (!c || !c.fireside || (checkJoined && c.status.value !== 'joined')) {
 			return;
 		}
 
@@ -465,8 +466,8 @@ export class AppFiresideContainer extends Vue {
 			return;
 		}
 
-		if (c.rtc === null) {
-			c.rtc = createFiresideRTC(
+		if (c.rtc.value === null) {
+			c.rtc.value = createFiresideRTC(
 				c.fireside,
 				this.user?.id ?? null,
 				payload.streamingAppId,
@@ -478,8 +479,8 @@ export class AppFiresideContainer extends Vue {
 				hosts ?? this.getHostsFromStreamingInfo(payload) ?? [],
 				{ isMuted: c.isMuted }
 			);
-		} else if (!c.rtc.producer) {
-			renewRTCAudienceTokens(c.rtc, payload.videoToken, payload.chatToken);
+		} else if (!c.rtc.value.producer) {
+			renewRTCAudienceTokens(c.rtc.value, payload.videoToken, payload.chatToken);
 		}
 	}
 
@@ -500,12 +501,12 @@ export class AppFiresideContainer extends Vue {
 
 	private destroyRtc() {
 		const c = this.controller;
-		if (!c.rtc) {
+		if (!c.rtc.value) {
 			return;
 		}
 
-		destroyFiresideRTC(c.rtc);
-		c.rtc = null;
+		destroyFiresideRTC(c.rtc.value);
+		c.rtc.value = null;
 	}
 
 	private onRetry() {
@@ -549,7 +550,7 @@ export class AppFiresideContainer extends Vue {
 			])
 		);
 
-		const priorHosts = c.rtc?.hosts ?? [];
+		const priorHosts = c.rtc.value?.hosts ?? [];
 		const newHosts = this.getHostsFromStreamingInfo(payload.streaming_info)?.map(newHost => {
 			const priorHost = priorHosts.find(i => i.user.id === newHost.user.id);
 			if (priorHost) {
@@ -564,11 +565,11 @@ export class AppFiresideContainer extends Vue {
 			const wasHost = priorHosts.some(host => host.user.id === this.user?.id);
 			const isHost = newHosts.some(host => host.user.id === this.user?.id);
 
-			if (c.rtc && newHosts.length > 0) {
+			if (c.rtc.value && newHosts.length > 0) {
 				// If we have an RTC, replace our old hosts with the new ones we
 				// just got.
-				c.rtc.hosts.splice(0, c.rtc.hosts.length);
-				c.rtc.hosts.push(...newHosts);
+				c.rtc.value.hosts.splice(0, c.rtc.value.hosts.length);
+				c.rtc.value.hosts.push(...newHosts);
 			}
 
 			// If our host state changed, we need to update anything else
@@ -576,7 +577,7 @@ export class AppFiresideContainer extends Vue {
 			if (isHost !== wasHost) {
 				// If we don't actually have an RTC created yet, take us through
 				// the normal Host initialization.
-				if (!c.rtc) {
+				if (!c.rtc.value) {
 					await this._fetchForStreaming({ assignRouteStatus: false });
 					this.expiryCheck();
 					return;
@@ -587,7 +588,7 @@ export class AppFiresideContainer extends Vue {
 					// stream.
 					const response = await Api.sendRequest(
 						'/web/dash/fireside/generate-streaming-tokens/' + c.fireside.id,
-						{ streaming_uid: c.rtc.streamingUid },
+						{ streaming_uid: c.rtc.value.streamingUid },
 						{ detach: true }
 					);
 
@@ -613,19 +614,19 @@ export class AppFiresideContainer extends Vue {
 				if (c.fireside.role?.canStream === true) {
 					// Grab a producer if we don't have one and we're now able
 					// to stream.
-					c.rtc.producer ??= createFiresideRTCProducer(c.rtc);
+					c.rtc.value.producer ??= createFiresideRTCProducer(c.rtc.value);
 
 					showInfoGrowl(
 						this.$gettext(
 							`You've been added as a host to this fireside. Hop into the stream!`
 						)
 					);
-				} else if (c.rtc.producer) {
+				} else if (c.rtc.value.producer) {
 					// If our role doesn't allow us to stream and we have a
 					// producer, tear it down and clean it up.
-					await stopStreaming(c.rtc.producer);
-					destroyFiresideRTCProducer(c.rtc.producer);
-					c.rtc.producer = null;
+					await stopStreaming(c.rtc.value.producer);
+					destroyFiresideRTCProducer(c.rtc.value.producer);
+					c.rtc.value.producer = null;
 
 					// TODO: If this Fireside was a draft, we may need to
 					// re-initialize this component to see if they still have
@@ -657,19 +658,19 @@ export class AppFiresideContainer extends Vue {
 		console.debug('[FIRESIDE] Grid streaming uid added.', payload);
 
 		const c = this.controller;
-		if (!c.rtc || !payload.streaming_uid || !payload.user) {
+		if (!c.rtc.value || !payload.streaming_uid || !payload.user) {
 			return;
 		}
 
 		const user = new User(payload.user);
-		const host = c.rtc.hosts.find(host => host.user.id === user.id);
+		const host = c.rtc.value.hosts.find(host => host.user.id === user.id);
 		if (host) {
 			host.user = user;
 			if (host.uids.indexOf(payload.streaming_uid) === -1) {
 				host.uids.push(payload.streaming_uid);
 			}
 		} else {
-			c.rtc.hosts.push({
+			c.rtc.value.hosts.push({
 				user: user,
 				uids: [payload.streaming_uid],
 			});

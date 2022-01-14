@@ -1,4 +1,5 @@
 import AgoraRTC, { IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng';
+import { reactive, toRaw } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { CancelToken } from '../../../utils/cancel-token';
 import { debounce, sleep } from '../../../utils/utils';
@@ -145,18 +146,20 @@ export function createFiresideRTC(
 	hosts: FiresideRTCHost[],
 	options: Options = {}
 ) {
-	const rtc = new FiresideRTC(
-		fireside,
-		userId,
-		appId,
-		streamingUid,
-		videoChannelName,
-		videoToken,
-		chatChannelName,
-		chatToken,
-		hosts,
-		options
-	);
+	const rtc = reactive(
+		new FiresideRTC(
+			fireside,
+			userId,
+			appId,
+			streamingUid,
+			videoChannelName,
+			videoToken,
+			chatChannelName,
+			chatToken,
+			hosts,
+			options
+		)
+	) as FiresideRTC;
 
 	// Initialize based on their pref.
 	setRTCDesktopVolume(rtc, SettingStreamDesktopVolume.get());
@@ -297,7 +300,7 @@ function _finalizeSetup(rtc: FiresideRTC) {
 		// Run the debounced finalizeSetupFn again if the focusedUser doesn't
 		// exist or match any of our current hosts.
 		if (!rtc.focusedUser && rtc.finalizeSetupFn) {
-			rtc.finalizeSetupFn();
+			rtc.finalizeSetupFn?.();
 		}
 		return;
 	}
@@ -312,7 +315,7 @@ function _finalizeSetup(rtc: FiresideRTC) {
 	}, 500);
 
 	rtc.log(`Debouncing finalize setup.`);
-	rtc.finalizeSetupFn();
+	rtc.finalizeSetupFn?.();
 }
 
 function _createChannels(rtc: FiresideRTC) {
@@ -466,7 +469,7 @@ function _removeUserIfNeeded(rtc: FiresideRTC, user: FiresideRTCUser) {
 
 	arrayRemove(rtc._users, i => i === user);
 
-	if (rtc.focusedUser === user) {
+	if (toRaw(rtc.focusedUser) === toRaw(user)) {
 		rtc.focusedUser = null;
 		chooseFocusedRTCUser(rtc);
 	}

@@ -1,18 +1,18 @@
-import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { shallowSetup } from '../../../../../utils/vue';
 import {
 	FiresideRTCUser,
 	startDesktopAudioPlayback,
 	stopDesktopAudioPlayback,
 } from '../../../../../_common/fireside/rtc/user';
-import { FiresideController, FiresideControllerKey } from '../../controller/controller';
+import { useFiresideController } from '../../controller/controller';
 
 @Options({})
 export default class AppFiresideDesktopAudio extends Vue {
 	@Prop({ type: Object, required: true })
 	rtcUser!: FiresideRTCUser;
 
-	@Inject({ from: FiresideControllerKey })
-	c!: FiresideController;
+	c = shallowSetup(() => useFiresideController()!);
 
 	private _myRtcUser!: FiresideRTCUser;
 
@@ -22,7 +22,7 @@ export default class AppFiresideDesktopAudio extends Vue {
 
 	async mounted() {
 		// Don't play desktop audio for our own local user.
-		if (this.c.rtc?.isFocusingMe) {
+		if (!this.c.rtc.value || this.c.rtc.value.isFocusingMe) {
 			return;
 		}
 

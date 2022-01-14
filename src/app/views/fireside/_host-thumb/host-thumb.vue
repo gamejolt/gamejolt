@@ -1,4 +1,81 @@
-<script lang="ts" src="./host-thumb"></script>
+<script lang="ts">
+import { toRaw } from 'vue';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+import { shallowSetup } from '../../../../utils/vue';
+import { FiresideRTCUser, setAudioPlayback } from '../../../../_common/fireside/rtc/user';
+import AppPopper from '../../../../_common/popper/popper.vue';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
+import { useFiresideController } from '../../../components/fireside/controller/controller';
+import AppFiresideStreamVideo from '../../../components/fireside/stream/video/video.vue';
+import AppFiresideHostThumbIndicator from './host-thumb-indicator.vue';
+
+@Options({
+	components: {
+		AppUserAvatarImg,
+		AppFiresideHostThumbIndicator,
+		AppPopper,
+		AppFiresideStreamVideo,
+		AppUserCardHover,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppFiresideHostThumb extends Vue {
+	@Prop({ type: Object, required: true })
+	host!: FiresideRTCUser;
+
+	@Prop({ type: Boolean, required: false, default: false })
+	hideOptions!: boolean;
+
+	c = shallowSetup(() => useFiresideController()!);
+
+	@Emit('show-popper') emitShowPopper() {}
+	@Emit('hide-popper') emitHidePopper() {}
+
+	get isFocused() {
+		return toRaw(this.c.rtc.value?.focusedUser) === toRaw(this.host);
+	}
+
+	get isMe() {
+		return toRaw(this.c.rtc.value?.localUser) === toRaw(this.host);
+	}
+
+	get showingVideoThumb() {
+		return !this.isFocused && this.host.hasVideo;
+	}
+
+	get tooltip() {
+		return '@' + this.host.userModel?.username;
+	}
+
+	onClick() {
+		if (this.isFocused || !this.c.rtc.value) {
+			return;
+		}
+
+		this.c.rtc.value.focusedUser = this.host;
+	}
+
+	mute() {
+		setAudioPlayback(this.host, false);
+	}
+
+	unmute() {
+		setAudioPlayback(this.host, true);
+	}
+
+	onUserCardShow() {
+		this.c.isShowingOverlayPopper.value = true;
+	}
+
+	onUserCardHide() {
+		this.c.isShowingOverlayPopper.value = false;
+	}
+}
+</script>
 
 <template>
 	<div class="-thumb">
@@ -7,7 +84,7 @@
 				<div class="-display-thumb" :class="{ '-hidden': !showingVideoThumb }">
 					<template v-if="showingVideoThumb">
 						<app-fireside-stream-video
-							v-if="c.rtc && !c.rtc.videoPaused"
+							v-if="c.rtc.value && !c.rtc.value.videoPaused"
 							:rtc-user="host"
 							low-bitrate
 						/>

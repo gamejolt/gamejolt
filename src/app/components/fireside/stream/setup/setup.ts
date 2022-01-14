@@ -67,18 +67,18 @@ export default class AppStreamSetup extends mixins(Wrapper) {
 	};
 
 	get rtc() {
-		return this.c.rtc!;
+		return this.c.rtc.value!;
 	}
 
 	// This could potentially get cleared out if the user loses their hosting
 	// permissions in the middle of streaming.
 	get producer() {
-		return this.c.rtc!.producer!;
+		return this.c.rtc.value!.producer!;
 	}
 
 	onInit() {
 		this._producer = this.producer;
-		this.c.isShowingStreamSetup = true;
+		this.c.isShowingStreamSetup.value = true;
 
 		const webcamId = this.getDeviceFromId(
 			this.producer.selectedWebcamDeviceId,
@@ -124,7 +124,7 @@ export default class AppStreamSetup extends mixins(Wrapper) {
 			clearSelectedRecordingDevices(this._producer);
 		}
 
-		this.c.isShowingStreamSetup = false;
+		this.c.isShowingStreamSetup.value = false;
 	}
 
 	get isStreaming() {

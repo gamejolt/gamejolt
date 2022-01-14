@@ -6,7 +6,7 @@ const ModalId = 'firesideStreamSetup';
 
 export class StreamSetupModal {
 	static async show(c: FiresideController) {
-		if (!c.rtc?.producer) {
+		if (!c.rtc.value?.producer) {
 			return;
 		}
 

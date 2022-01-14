@@ -7,6 +7,7 @@ import AgoraRTC, {
 	ILocalVideoTrack,
 	NetworkQuality,
 } from 'agora-rtc-sdk-ng';
+import { reactive } from 'vue';
 import { FiresideRTC } from './rtc';
 
 type OnTrackPublish = (remoteUser: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video') => void;
@@ -41,7 +42,7 @@ export class FiresideRTCChannel {
 	}
 
 	get isPoorNetworkQuality() {
-		// Indeterminate doesnt mean poor network quality.
+		// Indeterminate doesn't mean poor network quality.
 		if (this._networkQuality === null) {
 			return false;
 		}
@@ -53,6 +54,7 @@ export class FiresideRTCChannel {
 	}
 }
 
+/// Wraps a [FiresideRTCChannel] in [reactive] after initializing it.
 export function createFiresideRTCChannel(
 	rtc: FiresideRTC,
 	channel: string,
@@ -67,7 +69,7 @@ export function createFiresideRTCChannel(
 ) {
 	const { generation } = rtc;
 
-	const c = new FiresideRTCChannel(rtc, channel);
+	const c = reactive(new FiresideRTCChannel(rtc, channel)) as FiresideRTCChannel;
 	c.token = token;
 	c.agoraClient = AgoraRTC.createClient({ mode: 'live', codec: 'h264' });
 
@@ -128,15 +130,13 @@ export async function setChannelVideoTrack(
 	channel: FiresideRTCChannel,
 	trackBuilder: () => Promise<ILocalVideoTrack | null>
 ) {
-	const {
-		agoraClient,
-		rtc,
-		rtc: { generation },
-	} = channel;
+	const { agoraClient, rtc } = channel;
+	const generation = channel.rtc.generation;
 
 	if (channel._localVideoTrack !== null) {
 		rtc.log(`Local video track already exists.`);
 
+		// TODO(vue3): check that this is reactive
 		const localTrack = channel._localVideoTrack;
 		channel._localVideoTrack = null;
 
@@ -176,11 +176,8 @@ export async function setChannelAudioTrack(
 	channel: FiresideRTCChannel,
 	trackBuilder: () => Promise<ILocalAudioTrack | null>
 ) {
-	const {
-		agoraClient,
-		rtc,
-		rtc: { generation },
-	} = channel;
+	const { agoraClient, rtc } = channel;
+	const generation = channel.rtc.generation;
 
 	if (channel._localAudioTrack !== null) {
 		rtc.log(`Local audio track already exists.`);
@@ -220,11 +217,8 @@ function _isTrackPublished(channel: FiresideRTCChannel, track: ILocalTrack) {
 }
 
 export async function startChannelStreaming(channel: FiresideRTCChannel) {
-	const {
-		agoraClient,
-		rtc,
-		rtc: { generation },
-	} = channel;
+	const { agoraClient, rtc } = channel;
+	const generation = channel.rtc.generation;
 
 	rtc.log(`Switching to host role.`);
 	await agoraClient.setClientRole('host');
@@ -267,11 +261,8 @@ export async function startChannelStreaming(channel: FiresideRTCChannel) {
 }
 
 export async function stopChannelStreaming(channel: FiresideRTCChannel) {
-	const {
-		agoraClient,
-		rtc,
-		rtc: { generation },
-	} = channel;
+	const { agoraClient, rtc } = channel;
+	const generation = channel.rtc.generation;
 
 	rtc.log(`Stopping stream.`);
 	channel._isPublished = false;

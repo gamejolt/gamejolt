@@ -1,4 +1,5 @@
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { shallowSetup } from '../../../../../utils/vue';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list.vue';
@@ -27,7 +28,7 @@ export default class AppFiresideStreamPreviewVideo extends Vue {
 
 	// Gets assigned with a real controller immediately, but needs this to not
 	// break reactivity.
-	c: FiresideController = null as any;
+	c: FiresideController = shallowSetup(() => null as any);
 
 	isStreaming = false;
 
@@ -38,11 +39,12 @@ export default class AppFiresideStreamPreviewVideo extends Vue {
 	}
 
 	get rtcUsers() {
-		if (!this.c || !this.c.rtc) {
+		if (!this.c || !this.c.rtc.value) {
 			return [];
 		}
+
 		const users: User[] = [];
-		this.c.rtc.users.forEach(i => {
+		this.c.rtc.value.users.forEach(i => {
 			if (!i.userModel || i.userModel === this.fireside.user) {
 				return;
 			}
@@ -52,7 +54,7 @@ export default class AppFiresideStreamPreviewVideo extends Vue {
 	}
 
 	get focusedUser() {
-		return this.c && this.c.rtc?.focusedUser;
+		return this.c && this.c.rtc.value?.focusedUser;
 	}
 
 	get hasVideo() {
@@ -62,12 +64,14 @@ export default class AppFiresideStreamPreviewVideo extends Vue {
 	get shouldShowVideo() {
 		// We can only show local videos in one place at a time. This will
 		// re-grab the video feed when it gets rebuilt.
-		return this.hasVideo && !(this.c.isShowingStreamSetup && this.c.rtc?.isFocusingMe);
+		return (
+			this.hasVideo && !(this.c.isShowingStreamSetup.value && this.c.rtc.value?.isFocusingMe)
+		);
 	}
 
 	@Watch('c.isStreaming')
 	@Watch('hasVideo')
 	onStateChanged() {
-		this.emitChanged(this.hasVideo, this.c.isStreaming);
+		this.emitChanged(this.hasVideo, this.c.isStreaming.value);
 	}
 }

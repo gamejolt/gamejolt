@@ -8,7 +8,7 @@
 			</app-button>
 		</div>
 
-		<template v-if="!c.canBrowserStream">
+		<template v-if="!c.canBrowserStream.value">
 			<div class="modal-body">
 				<app-illustration :src="illNoCommentsSmall">
 					<p>
@@ -25,7 +25,7 @@
 				</app-illustration>
 			</div>
 		</template>
-		<template v-else-if="c.isStreamingElsewhere">
+		<template v-else-if="c.isStreamingElsewhere.value">
 			<div class="modal-body">
 				<app-illustration :src="illNoCommentsSmall">
 					<p>

@@ -3,6 +3,7 @@ import AgoraRTC, {
 	ILocalAudioTrack,
 	IRemoteAudioTrack,
 } from 'agora-rtc-sdk-ng';
+import { reactive } from 'vue';
 import { MediaDeviceService } from '../../agora/media-device.service';
 import { Api } from '../../api/api.service';
 import { showErrorGrowl } from '../../growls/growls.service';
@@ -23,7 +24,7 @@ import {
 } from './channel';
 import { chooseFocusedRTCUser, FiresideRTC, renewRTCTokens } from './rtc';
 import {
-	FiresideRTCUser,
+	createFiresideRTCUser,
 	setUserHasDesktopAudio,
 	setUserHasMicAudio,
 	setUserHasVideo,
@@ -89,7 +90,7 @@ export class FiresideRTCProducer {
 }
 
 export function createFiresideRTCProducer(rtc: FiresideRTC) {
-	const producer = new FiresideRTCProducer(rtc);
+	const producer = reactive(new FiresideRTCProducer(rtc)) as FiresideRTCProducer;
 
 	MediaDeviceService.detectDevices({ prompt: false });
 
@@ -702,8 +703,9 @@ export async function startStreaming(producer: FiresideRTCProducer) {
 
 		const {
 			rtc,
-			rtc: { videoChannel, chatChannel, generation },
+			rtc: { videoChannel, chatChannel },
 		} = producer;
+		const generation = rtc.generation;
 
 		const response = await _updateSetIsStreaming(producer);
 
@@ -819,7 +821,7 @@ function _syncLocalUserToRTC(producer: FiresideRTCProducer) {
 	const hadDesktopAudio = user?.hasDesktopAudio === true;
 	const hadMicAudio = user?.hasMicAudio === true;
 
-	user ??= new FiresideRTCUser(rtc, streamingUid);
+	user ??= createFiresideRTCUser(rtc, streamingUid);
 	user._videoTrack = videoChannel._localVideoTrack;
 	user._desktopAudioTrack = videoChannel._localAudioTrack;
 	user._micAudioTrack = chatChannel._localAudioTrack;
