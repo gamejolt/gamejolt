@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, watch } from 'vue';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { User } from '../../../../../_common/user/user.model';
 import { createFiresideController } from '../../controller/controller';
 
@@ -60,23 +61,23 @@ watch([isStreaming, hasVideo], () => {
 </script>
 
 <template>
-	<app-fireside-container class="-stream theme-dark" :controller="c">
+	<AppFiresideContainer class="-stream theme-dark" :controller="c">
 		<div v-if="focusedUser && shouldShowVideo" :key="focusedUser.uid">
-			<app-fireside-stream-video class="-video-player" :rtc-user="focusedUser" />
+			<AppFiresideStreamVideo class="-video-player" :rtc-user="focusedUser" />
 
 			<div class="-overlay">
 				<div v-if="showLive" class="-center">
 					<div class="-live">
-						<translate>LIVE</translate>
+						<AppTranslate>LIVE</AppTranslate>
 					</div>
 				</div>
 				<div v-if="showLiveUsers" class="-live-users">
-					<app-user-avatar-list :users="rtcUsers" sm inline />
+					<AppUserAvatarList :users="rtcUsers" sm inline />
 				</div>
 			</div>
 		</div>
 		<div v-else />
-	</app-fireside-container>
+	</AppFiresideContainer>
 </template>
 
 <style lang="stylus" scoped>
