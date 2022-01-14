@@ -1,17 +1,9 @@
-<script lang="ts">
-import { Options, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import { Store } from '../../../store/index';
+<script lang="ts" setup>
+import AppLinkExternal from '../../_common/link/AppLinkExternal.vue';
+import AppTranslate from '../../_common/translate/AppTranslate.vue';
+import { useGameserverStore } from '../store';
 
-@Options({})
-export default class AppEmbedSilverlight extends Vue {
-	@State url!: Store['url'];
-	@State build!: Store['build'];
-	@State username!: Store['username'];
-	@State token!: Store['token'];
-	@State embedWidth!: Store['embedWidth'];
-	@State embedHeight!: Store['embedHeight'];
-}
+const { url, username, token, embedWidth, embedHeight } = useGameserverStore();
 </script>
 
 <template>
@@ -34,18 +26,20 @@ export default class AppEmbedSilverlight extends Vue {
 			/>
 
 			<p>
-				<translate>You need Microsoft Silverlight installed to play this game.</translate>
+				<AppTranslate>
+					You need Microsoft Silverlight installed to play this game.
+				</AppTranslate>
 				<br />
-				<translate>You may use the button below to get it.</translate>
+				<AppTranslate>You may use the button below to get it.</AppTranslate>
 			</p>
 
-			<app-link-external href="https://go.microsoft.com/fwlink/?LinkID=124807">
+			<AppLinkExternal href="https://go.microsoft.com/fwlink/?LinkID=124807">
 				<img
 					src="https://go.microsoft.com/fwlink/?LinkId=108181"
 					alt="Get Microsoft Silverlight"
 					style="border-style: none"
 				/>
-			</app-link-external>
+			</AppLinkExternal>
 		</object>
 	</div>
 </template>

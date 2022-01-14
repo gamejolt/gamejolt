@@ -1,13 +1,12 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
-import { Action, Mutation } from 'vuex-class';
 import { Country, Geo, Region } from '../../../_common/geo/geo.service';
-import { AddressData, Store } from '../../store/index';
+import { AddressData, useWidgetPackageStore } from '../../store/index';
 
 @Options({})
 export default class AppAddress extends Vue {
-	@Mutation setAddress!: Store['setAddress'];
-	@Action checkout!: Store['checkout'];
+	store = setup(() => useWidgetPackageStore());
 
 	address = {
 		country: 'us',
@@ -39,8 +38,8 @@ export default class AppAddress extends Vue {
 
 	submit() {
 		const addressData = Object.assign(new AddressData(), this.address);
-		this.setAddress(addressData);
-		this.checkout();
+		this.store.address = addressData;
+		this.store.checkout();
 	}
 }
 </script>

@@ -1,11 +1,11 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { formatFilesize } from '../../../_common/filters/filesize';
 import { formatUcwords } from '../../../_common/filters/ucwords';
 import { GameBuild } from '../../../_common/game/build/build.model';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
-import { Store } from '../../store/index';
+import { useWidgetPackageStore } from '../../store/index';
 
 @Options({
 	directives: {
@@ -13,12 +13,20 @@ import { Store } from '../../store/index';
 	},
 })
 export default class AppIncludedItems extends Vue {
+	store = setup(() => useWidgetPackageStore());
+
 	readonly formatUcwords = formatUcwords;
 	readonly formatFilesize = formatFilesize;
 
-	@State package!: Store['package'];
-	@State packagePayload!: Store['packagePayload'];
-	@State packageCard!: Store['packageCard'];
+	get package() {
+		return this.store.gamePackage!;
+	}
+	get packagePayload() {
+		return this.store.packagePayload!;
+	}
+	get packageCard() {
+		return this.store.packageCard!;
+	}
 
 	hasSupport(build: GameBuild, os: string) {
 		return this.checkBuildSupport(build, os) || this.checkBuildSupport(build, os + '_64');

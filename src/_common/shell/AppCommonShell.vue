@@ -17,16 +17,16 @@ import AppTooltipPortal from '../tooltip/tooltip-portal.vue';
 </script>
 
 <template>
-	<app-lightbox-portal />
-	<app-tooltip-portal />
-	<app-backdrop-portal />
+	<AppLightboxPortal />
+	<AppTooltipPortal />
+	<AppBackdropPortal />
 
-	<app-scroll-inview-parent v-bind="$attrs">
+	<AppScrollInviewParent v-bind="$attrs">
 		<slot />
 
-		<app-theme />
-		<app-loading-bar />
-		<app-growls />
-		<app-modals />
-	</app-scroll-inview-parent>
+		<AppTheme />
+		<AppLoadingBar />
+		<AppGrowls />
+		<AppModals />
+	</AppScrollInviewParent>
 </template>

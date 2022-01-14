@@ -1,6 +1,9 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { onMounted } from '@vue/runtime-core';
+import { RouterView } from 'vue-router';
+import AppButton from '../_common/button/button.vue';
+import { AppClientBase, ClientHistoryNavigator } from '../_common/client/safe-exports';
+import { Connection } from '../_common/connection/connection-service';
 import AppContactLink from '../_common/contact-link/contact-link.vue';
 import AppCookieBanner from '../_common/cookie/banner/banner.vue';
 import { Environment } from '../_common/environment/environment.service';
@@ -8,55 +11,47 @@ import AppErrorPage from '../_common/error/page/page.vue';
 import { formatDate } from '../_common/filters/date';
 import AppCommonShell from '../_common/shell/AppCommonShell.vue';
 import { useCommonStore } from '../_common/store/common-store';
+import AppTranslate from '../_common/translate/AppTranslate.vue';
 import { loadCurrentLanguage } from '../_common/translate/translate.service';
 import AppUserBar from '../_common/user/user-bar/user-bar.vue';
 import { User } from '../_common/user/user.model';
 
-@Options({
-	components: {
-		AppCommonShell,
-		AppErrorPage,
-		AppUserBar,
-		AppCookieBanner,
-		AppContactLink,
-	},
-})
-export default class App extends Vue {
-	commonStore = setup(() => useCommonStore());
+const { user } = useCommonStore();
+const curDate = new Date();
 
-	get app() {
-		return this.commonStore;
-	}
+onMounted(() => {
+	// Will load the user in asynchronously so that the user-bar in the
+	// shell will get loaded with a user.
+	User.touch();
 
-	curDate = new Date();
+	loadCurrentLanguage();
+});
 
-	readonly Environment = Environment;
-	readonly formatDate = formatDate;
-
-	mounted() {
-		// Will load the user in asynchronously so that the user-bar in the
-		// shell will get loaded with a user.
-		User.touch();
-
-		loadCurrentLanguage();
-	}
+function navigateBack() {
+	ClientHistoryNavigator?.back();
 }
 </script>
 
 <template>
-	<app-common-shell>
-		<app-cookie-banner />
+	<AppCommonShell :class="{ 'is-client-offline': Connection.isClientOffline }">
+		<AppCookieBanner />
 
 		<div id="shell">
-			<div id="header">
-				<app-user-bar :user="app.user" site="main" :hide-site-selector="true" />
+			<div id="header" class="theme-dark">
+				<AppUserBar :user="user" site="main" hide-site-selector>
+					<AppButton v-if="GJ_IS_DESKTOP_APP" icon="chevron-left" @click="navigateBack()">
+						<AppTranslate>Back to Game</AppTranslate>
+					</AppButton>
+				</AppUserBar>
 			</div>
 
 			<div id="content">
-				<app-error-page>
-					<router-view />
-				</app-error-page>
+				<AppErrorPage>
+					<RouterView />
+				</AppErrorPage>
 			</div>
+
+			<AppClientBase v-if="GJ_IS_DESKTOP_APP" />
 		</div>
 
 		<footer id="footer">
@@ -64,9 +59,9 @@ export default class App extends Vue {
 				<div class="row">
 					<div class="col-sm-6">
 						<p class="footer-links">
-							<app-contact-link email="contact@gamejolt.com">
+							<AppContactLink email="contact@gamejolt.com">
 								Contact Game Jolt
-							</app-contact-link>
+							</AppContactLink>
 							&nbsp; | &nbsp;
 							<a :href="Environment.baseUrl + '/terms'" target="_blank">Terms</a>
 							&nbsp; | &nbsp;
@@ -89,5 +84,5 @@ export default class App extends Vue {
 				</div>
 			</div>
 		</footer>
-	</app-common-shell>
+	</AppCommonShell>
 </template>

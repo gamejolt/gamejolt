@@ -1,13 +1,13 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
-import { Mutation, State } from 'vuex-class';
 import { Api } from '../../../_common/api/api.service';
 import AppContentBlockEditor from '../../../_common/content-block/editor/editor.vue';
 import { showSuccessGrowl } from '../../../_common/growls/growls.service';
 import AppLoading from '../../../_common/loading/loading.vue';
 import AppThemeSelector from '../../../_common/theme/selector/selector.vue';
 import AppThemeEditor from '../../../_common/theme/theme-editor/theme-editor.vue';
-import { Store } from '../../store/index';
+import { useSiteEditorStore } from '../../store/index';
 
 @Options({
 	components: {
@@ -18,21 +18,38 @@ import { Store } from '../../store/index';
 	},
 })
 export default class AppSiteEditor extends Vue {
-	@State tab!: Store['tab'];
-	@State site!: Store['site'];
-	@State('siteTemplates') templates!: Store['siteTemplates'];
-	@State currentTemplateId!: Store['currentTemplateId'];
-	@State('siteTheme') theme!: Store['siteTheme'];
-	@State isLoaded!: Store['isLoaded'];
-	@State isDirty!: Store['isDirty'];
+	store = setup(() => useSiteEditorStore());
 
-	@Mutation setTemplateId!: Store['setTemplateId'];
-	@Mutation setThemeData!: Store['setThemeData'];
-	@Mutation setContentEdited!: Store['setContentEdited'];
-	@Mutation clearIsDirty!: Store['clearIsDirty'];
+	get tab() {
+		return this.store.tab;
+	}
+
+	get site() {
+		return this.store.site;
+	}
+
+	get templates() {
+		return this.store.siteTemplates;
+	}
+
+	get currentTemplateId() {
+		return this.store.currentTemplateId;
+	}
+
+	get theme() {
+		return this.store.siteTheme;
+	}
+
+	get isLoaded() {
+		return this.store.isLoaded;
+	}
+
+	get isDirty() {
+		return this.store.isDirty;
+	}
 
 	get siteUrl() {
-		return this.site.url;
+		return this.site?.url;
 	}
 
 	get confirmMessage() {
@@ -44,7 +61,7 @@ export default class AppSiteEditor extends Vue {
 			if (!this.canLeave()) {
 				return next(false);
 			}
-			this.clearIsDirty();
+			this.store.clearIsDirty();
 			next();
 		});
 
@@ -56,11 +73,11 @@ export default class AppSiteEditor extends Vue {
 	}
 
 	themeEdited(themeData: any) {
-		this.setThemeData(themeData);
+		this.store.setThemeData(themeData);
 	}
 
 	contentEdited() {
-		this.setContentEdited();
+		this.store.setContentEdited();
 	}
 
 	canLeave() {
@@ -70,12 +87,12 @@ export default class AppSiteEditor extends Vue {
 	async save() {
 		const data = {
 			template_id: this.currentTemplateId,
-			theme: this.theme.data,
-			content_blocks: this.site.content_blocks,
+			theme: this.theme!.data,
+			content_blocks: this.site!.content_blocks,
 		};
 
-		this.clearIsDirty();
-		await Api.sendRequest(`/web/dash/sites/editor-save/${this.site.id}`, data, {
+		this.store.clearIsDirty();
+		await Api.sendRequest(`/web/dash/sites/editor-save/${this.site!.id}`, data, {
 			sanitizeComplexData: false,
 		});
 
@@ -157,16 +174,16 @@ export default class AppSiteEditor extends Vue {
 						<app-theme-selector
 							:templates="templates"
 							:current-template="currentTemplateId"
-							@change="setTemplateId($event)"
+							@change="store.setTemplateId($event)"
 						/>
 
 						<template v-if="!!currentTemplateId">
 							<div v-for="templateId of [currentTemplateId]" :key="templateId">
 								<app-theme-editor
 									window-id="site-editor-iframe"
-									:resource-id="site.id"
+									:resource-id="site?.id"
 									:template="templateId"
-									:theme="theme.data"
+									:theme="theme?.data"
 									@change="themeEdited"
 								/>
 							</div>
@@ -186,7 +203,7 @@ export default class AppSiteEditor extends Vue {
 						<app-content-block-editor
 							window-id="site-editor-iframe"
 							:site="site"
-							:content-block="site.content_blocks[0]"
+							:content-block="site?.content_blocks?.[0]"
 							@change="contentEdited"
 						/>
 					</div>

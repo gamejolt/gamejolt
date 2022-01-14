@@ -1,6 +1,6 @@
 import '../utils/polyfills';
 import { bootstrapCommon } from '../_common/bootstrap';
-import App from './app.vue';
+import App from './AppMain.vue';
 import './main.styl';
 
 export function createApp() {

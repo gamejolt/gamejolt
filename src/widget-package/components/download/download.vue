@@ -1,7 +1,6 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { formatCurrency } from '../../../_common/filters/currency';
@@ -13,7 +12,7 @@ import { useCommonStore } from '../../../_common/store/common-store';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppFadeCollapse from '../../components/fade-collapse/fade-collapse.vue';
 import AppModal from '../../components/modal/modal.vue';
-import { Store } from '../../store/index';
+import { useWidgetPackageStore } from '../../store/index';
 import AppPayment from '../payment/payment.vue';
 
 @Options({
@@ -27,18 +26,33 @@ import AppPayment from '../payment/payment.vue';
 	},
 })
 export default class AppDownload extends Vue {
+	store = setup(() => useWidgetPackageStore());
 	commonStore = setup(() => useCommonStore());
 
 	get app() {
 		return this.commonStore;
 	}
-	@State packageCard!: Store['packageCard'];
-	@State game!: Store['game'];
-	@State developer!: Store['developer'];
-	@State package!: Store['package'];
-	@State sellable!: Store['sellable'];
-	@State pricing!: NonNullable<Store['pricing']>;
-	@State price!: NonNullable<Store['price']>;
+	get packageCard() {
+		return this.store.packageCard!;
+	}
+	get game() {
+		return this.store.game!;
+	}
+	get developer() {
+		return this.store.developer!;
+	}
+	get package() {
+		return this.store.gamePackage!;
+	}
+	get sellable() {
+		return this.store.sellable!;
+	}
+	get pricing() {
+		return this.store.pricing!;
+	}
+	get price() {
+		return this.store.price!;
+	}
 
 	isShowingMoreOptions = false;
 	isDescriptionCollapsed = false;

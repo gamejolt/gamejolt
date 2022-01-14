@@ -1,13 +1,12 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
-import { Action, Mutation, State } from 'vuex-class';
 import { formatCurrency } from '../../../_common/filters/currency';
 import { formatUcwords } from '../../../_common/filters/ucwords';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../_common/user/user-avatar/img/img.vue';
-import { PaymentData, Store } from '../../store/index';
+import { PaymentData, useWidgetPackageStore } from '../../store/index';
 import AppAddress from '../address/address.vue';
 import AppModal from '../modal/modal.vue';
 
@@ -22,6 +21,7 @@ import AppModal from '../modal/modal.vue';
 	},
 })
 export default class AppPayment extends Vue {
+	store = setup(() => useWidgetPackageStore());
 	commonStore = setup(() => useCommonStore());
 
 	readonly formatUcwords = formatUcwords;
@@ -30,16 +30,24 @@ export default class AppPayment extends Vue {
 	get app() {
 		return this.commonStore;
 	}
-	@State game!: Store['game'];
-	@State developer!: Store['developer'];
-	@State sellable!: Store['sellable'];
-	@State pricing!: NonNullable<Store['pricing']>;
-	@State price!: NonNullable<Store['price']>;
-	@State minOrderAmount!: number;
-	@State isShowingIncluded!: boolean;
-
-	@Mutation setPayment!: Store['setPayment'];
-	@Action checkout!: Store['checkout'];
+	get game() {
+		return this.store.game!;
+	}
+	get developer() {
+		return this.store.developer!;
+	}
+	get sellable() {
+		return this.store.sellable!;
+	}
+	get pricing() {
+		return this.store.pricing!;
+	}
+	get price() {
+		return this.store.price!;
+	}
+	get minOrderAmount() {
+		return this.store.minOrderAmount!;
+	}
 
 	isShowingAddress = false;
 
@@ -71,10 +79,10 @@ export default class AppPayment extends Vue {
 		paymentData.amount = parseFloat(this.payment.amount);
 		paymentData.email = this.payment.email;
 
-		this.setPayment(paymentData);
+		this.store.payment = paymentData;
 
 		if (paymentData.method === 'cc-stripe') {
-			this.checkout();
+			this.store.checkout();
 		} else if (paymentData.method === 'paypal') {
 			this.isShowingAddress = true;
 		}

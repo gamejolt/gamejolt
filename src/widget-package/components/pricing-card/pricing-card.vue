@@ -1,16 +1,26 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { formatCurrency } from '../../../_common/filters/currency';
-import { Store } from '../../store/index';
+import { useWidgetPackageStore } from '../../store/index';
 
 @Options({})
 export default class AppPricingCard extends Vue {
-	@State sellable!: Store['sellable'];
-	@State price!: NonNullable<Store['price']>;
-	@State originalPrice!: NonNullable<Store['originalPrice']>;
+	store = setup(() => useWidgetPackageStore());
 
 	readonly formatCurrency = formatCurrency;
+
+	get sellable() {
+		return this.store.sellable!;
+	}
+
+	get price() {
+		return this.store.price!;
+	}
+
+	get originalPrice() {
+		return this.store.originalPrice!;
+	}
 
 	get discount() {
 		const price = this.price;
