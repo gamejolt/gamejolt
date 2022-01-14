@@ -1,22 +1,31 @@
 <script lang="ts">
+import { inject, InjectionKey, ref } from '@vue/runtime-core';
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import AppEditableOverlay from '../../../../_common/editable-overlay/editable-overlay.vue';
 import AppExpand from '../../../../_common/expand/expand.vue';
 import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-	WithRouteStore,
-} from '../../../../_common/route/route-component';
+import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { commonStore, useCommonStore } from '../../../../_common/store/common-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { UserAvatarModal } from '../../../components/user/avatar-modal/avatar-modal.service';
 import { UserHeaderModal } from '../../../components/user/header-modal/header-modal.service';
-import { RouteStore, RouteStoreModule, RouteStoreName } from './account.store';
+
+const Key: InjectionKey<Controller> = Symbol('account-route');
+
+type Controller = ReturnType<typeof createController>;
+
+export function useAccountRouteController() {
+	return inject(Key);
+}
+
+function createController() {
+	const heading = ref('');
+	return { heading };
+}
 
 @Options({
 	name: 'RouteDashAccount',
@@ -28,30 +37,28 @@ import { RouteStore, RouteStoreModule, RouteStoreName } from './account.store';
 		AppEditableOverlay,
 	},
 })
-@WithRouteStore({
-	routeStoreName: RouteStoreName,
-	routeStoreClass: RouteStore,
-})
 @RouteResolver({
 	deps: {},
 	// We want to reload this data every time we come into this section.
 	resolver: () => Api.sendRequest('/web/dash/account'),
-	// This will set our user with more fields required for managing it.
-	resolveStore({ payload }) {
-		commonStore.setUser(payload.user);
-	},
 })
 export default class RouteDashAccount extends BaseRouteComponent {
+	routeStore = setup(() => useAccountRouteController()!);
 	commonStore = setup(() => useCommonStore());
 
-	get app() {
-		return this.commonStore;
+	readonly Screen = Screen;
+
+	get user() {
+		return this.commonStore.user!;
 	}
 
-	@RouteStoreModule.State
-	heading!: RouteStore['heading'];
+	get heading() {
+		return this.routeStore.heading;
+	}
 
-	readonly Screen = Screen;
+	routeResolved(payload: any) {
+		this.commonStore.setUser(payload.user);
+	}
 
 	showEditHeader() {
 		UserHeaderModal.show();
@@ -75,7 +82,7 @@ export default class RouteDashAccount extends BaseRouteComponent {
 			<h1>{{ heading }}</h1>
 
 			<p>
-				<small>@{{ app.user.username }}</small>
+				<small>@{{ user.username }}</small>
 			</p>
 
 			<template v-if="!Screen.isXs" #spotlight>
@@ -87,7 +94,7 @@ export default class RouteDashAccount extends BaseRouteComponent {
 					<template #overlay>
 						<translate>Change</translate>
 					</template>
-					<app-user-avatar :user="app.user" />
+					<app-user-avatar :user="user" />
 				</app-editable-overlay>
 			</template>
 		</app-page-header>
@@ -104,12 +111,12 @@ export default class RouteDashAccount extends BaseRouteComponent {
 				<div
 					class="fill-highlight"
 					:style="{
-						'min-height': !app.user.header_media_item ? '200px' : '',
+						'min-height': !user.header_media_item ? '200px' : '',
 					}"
 				>
 					<app-media-item-cover
-						v-if="app.user.header_media_item"
-						:media-item="app.user.header_media_item"
+						v-if="user.header_media_item"
+						:media-item="user.header_media_item"
 						:max-height="400"
 					/>
 				</div>
@@ -229,7 +236,7 @@ export default class RouteDashAccount extends BaseRouteComponent {
 								<template #overlay>
 									<translate>Change</translate>
 								</template>
-								<app-user-avatar :user="app.user" />
+								<app-user-avatar :user="user" />
 							</app-editable-overlay>
 
 							<hr />

@@ -1,4 +1,5 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../utils/array';
 import { Api } from '../../../../../_common/api/api.service';
@@ -9,12 +10,12 @@ import AppLoading from '../../../../../_common/loading/loading.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
-import { Translate } from '../../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import { UserBlock } from '../../../../../_common/user/block/block.model';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verified-tick.vue';
 import FormUserBlock from '../../../../components/forms/user/block/block.vue';
-import { routeStore, RouteStore, RouteStoreModule } from '../account.store';
+import { useAccountRouteController } from '../account.vue';
 
 @Options({
 	name: 'RouteDashAccountBlocks',
@@ -33,13 +34,9 @@ import { routeStore, RouteStore, RouteStoreModule } from '../account.store';
 	deps: {},
 	lazy: false,
 	resolver: () => Api.sendRequest('/web/dash/blocks'),
-	resolveStore({}) {
-		routeStore.commit('setHeading', Translate.$gettext(`Blocked Users`));
-	},
 })
 export default class RouteDashAccountBlocks extends BaseRouteComponent {
-	@RouteStoreModule.State
-	heading!: RouteStore['heading'];
+	routeStore = setup(() => useAccountRouteController()!);
 
 	isBlocking = false;
 	blocks: UserBlock[] = [];
@@ -47,11 +44,15 @@ export default class RouteDashAccountBlocks extends BaseRouteComponent {
 	isLoadingMore = false;
 
 	get routeTitle() {
-		return this.heading;
+		return this.routeStore.heading;
 	}
 
 	get shouldShowLoadMore() {
 		return this.blocks.length < this.totalCount && !this.isLoadingMore;
+	}
+
+	routeCreated() {
+		this.routeStore.heading = $gettext(`Blocked Users`);
 	}
 
 	routeResolved($payload: any) {

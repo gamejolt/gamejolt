@@ -1,9 +1,10 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
-import { Translate } from '../../../../../_common/translate/translate.service';
+import { BaseRouteComponent } from '../../../../../_common/route/route-component';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import FormFinancials from '../../../../components/forms/financials/financials.vue';
-import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
+import { useAccountRouteController } from '../account.vue';
 
 @Options({
 	name: 'RouteDashAccountFinancials',
@@ -11,18 +12,15 @@ import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 		FormFinancials,
 	},
 })
-@RouteResolver({
-	resolver: () => Promise.resolve(),
-	resolveStore() {
-		routeStore.commit('setHeading', Translate.$gettext(`Marketplace Account Setup`));
-	},
-})
 export default class RouteDashAccountFinancials extends BaseRouteComponent {
-	@RouteStoreModule.State
-	heading!: RouteStore['heading'];
+	routeStore = setup(() => useAccountRouteController()!);
 
 	get routeTitle() {
-		return this.heading;
+		return this.routeStore.heading;
+	}
+
+	routeCreated() {
+		this.routeStore.heading = $gettext(`Marketplace Account Setup`);
 	}
 }
 </script>

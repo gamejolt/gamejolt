@@ -1,12 +1,13 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../utils/array';
 import { Api } from '../../../../../_common/api/api.service';
 import { PaymentSource } from '../../../../../_common/payment-source/payment-source.model';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
-import { Translate } from '../../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppUserPaymentSourceCard from '../../../../components/user/payment-source/card/card.vue';
-import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
+import { useAccountRouteController } from '../account.vue';
 
 @Options({
 	name: 'RouteDashAccountPaymentMethods',
@@ -17,22 +18,22 @@ import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 @RouteResolver({
 	deps: {},
 	resolver: () => Api.sendRequest('/web/dash/payment-methods'),
-	resolveStore({}) {
-		routeStore.commit('setHeading', Translate.$gettext(`Payment Methods`));
-	},
 })
 export default class RouteDashAccountPaymentMethods extends BaseRouteComponent {
-	@RouteStoreModule.State
-	heading!: RouteStore['heading'];
+	routeStore = setup(() => useAccountRouteController()!);
 
 	paymentSources: PaymentSource[] = [];
 
 	get routeTitle() {
-		return this.heading;
+		return this.routeStore.heading;
 	}
 
 	get hasPaymentSources() {
 		return this.paymentSources.length > 0;
+	}
+
+	routeCreated() {
+		this.routeStore.heading = $gettext(`Payment Methods`);
 	}
 
 	routeResolved($payload: any) {

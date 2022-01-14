@@ -1,4 +1,5 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import AppExpand from '../../../../../_common/expand/expand.vue';
@@ -8,10 +9,10 @@ import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { Translate } from '../../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import { User } from '../../../../../_common/user/user.model';
 import FormWithdrawFunds from '../../../../components/forms/withdraw-funds/withdraw-funds.vue';
-import { routeStore, RouteStore, RouteStoreModule } from '../account.store';
+import { useAccountRouteController } from '../account.vue';
 
 @Options({
 	name: 'RouteDashAccountWithdrawFunds',
@@ -26,13 +27,9 @@ import { routeStore, RouteStore, RouteStoreModule } from '../account.store';
 @RouteResolver({
 	deps: {},
 	resolver: () => Api.sendRequest('/web/dash/funds'),
-	resolveStore() {
-		routeStore.commit('setHeading', Translate.$gettext(`dash.funds.withdraw.page_title`));
-	},
 })
 export default class RouteDashAccountWithdrawFunds extends BaseRouteComponent {
-	@RouteStoreModule.State
-	heading!: RouteStore['heading'];
+	routeStore = setup(() => useAccountRouteController()!);
 
 	user: User = null as any;
 	minAmount = 0;
@@ -52,7 +49,11 @@ export default class RouteDashAccountWithdrawFunds extends BaseRouteComponent {
 	readonly formatNumber = formatNumber;
 
 	get routeTitle() {
-		return this.heading;
+		return this.routeStore.heading;
+	}
+
+	routeCreated() {
+		this.routeStore.heading = $gettext(`dash.funds.withdraw.page_title`);
 	}
 
 	routeResolved($payload: any) {
@@ -80,7 +81,7 @@ export default class RouteDashAccountWithdrawFunds extends BaseRouteComponent {
 </script>
 
 <template>
-	<div class="row" v-if="isRouteBootstrapped">
+	<div v-if="isRouteBootstrapped" class="row">
 		<div v-if="revenueTotal > 0" class="col-md-9 col-lg-8">
 			<div class="row">
 				<div class="col-xs-6 col-sm-4">
@@ -103,13 +104,13 @@ export default class RouteDashAccountWithdrawFunds extends BaseRouteComponent {
 						<div class="stat-big-digit">
 							{{ formatCurrency(revenuePendingActivation) }}
 							<app-jolticon
-								class="text-muted"
-								icon="help-circle"
 								v-app-tooltip.touchable="
 									$gettext(
 										`To account for refunds, chargebacks, and fraud, we hold on to sales revenue for 7 days.`
 									)
 								"
+								class="text-muted"
+								icon="help-circle"
 							/>
 						</div>
 					</div>
@@ -203,7 +204,7 @@ export default class RouteDashAccountWithdrawFunds extends BaseRouteComponent {
 				@submit="onSubmit()"
 			/>
 		</div>
-		<div class="col-md-6 col-centered" v-else>
+		<div v-else class="col-md-6 col-centered">
 			<p class="lead text-center">
 				<translate>
 					Once you make money on Game Jolt, you will be able to withdraw it here.

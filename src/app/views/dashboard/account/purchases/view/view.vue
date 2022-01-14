@@ -1,4 +1,5 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { arrayGroupBy, arrayIndexBy } from '../../../../../../utils/array';
 import { Api } from '../../../../../../_common/api/api.service';
@@ -12,8 +13,8 @@ import { Order } from '../../../../../../_common/order/order.model';
 import { OrderPayment } from '../../../../../../_common/order/payment/payment.model';
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
-import { Translate } from '../../../../../../_common/translate/translate.service';
-import { routeStore, RouteStore, RouteStoreModule } from '../../account.store';
+import { $gettext } from '../../../../../../_common/translate/translate.service';
+import { useAccountRouteController } from '../../account.vue';
 
 @Options({
 	name: 'RouteDashAccountPurchasesView',
@@ -24,13 +25,9 @@ import { routeStore, RouteStore, RouteStoreModule } from '../../account.store';
 @RouteResolver({
 	deps: { params: ['id'] },
 	resolver: ({ route }) => Api.sendRequest('/web/dash/purchases/' + route.params.id),
-	resolveStore() {
-		routeStore.commit('setHeading', Translate.$gettext(`Order Details`));
-	},
 })
 export default class RouteDashAccountPurchasesView extends BaseRouteComponent {
-	@RouteStoreModule.State
-	heading!: RouteStore['heading'];
+	routeStore = setup(() => useAccountRouteController()!);
 
 	order: Order = null as any;
 	packages: GamePackage[] = [];
@@ -43,7 +40,7 @@ export default class RouteDashAccountPurchasesView extends BaseRouteComponent {
 	readonly Screen = Screen;
 
 	get routeTitle() {
-		return this.heading;
+		return this.routeStore.heading;
 	}
 
 	get gamesById() {
@@ -64,6 +61,14 @@ export default class RouteDashAccountPurchasesView extends BaseRouteComponent {
 			return this.order.payments[0].refunds[0];
 		}
 		return null;
+	}
+
+	get billingAddress() {
+		return this.order.billing_address!;
+	}
+
+	routeCreated() {
+		this.routeStore.heading = $gettext(`Order Details`);
 	}
 
 	routeResolved($payload: any) {
@@ -108,36 +113,35 @@ export default class RouteDashAccountPurchasesView extends BaseRouteComponent {
 					<translate>Billing</translate>
 				</h4>
 
-				<div v-for="(address, i) of [order.billing_address]" :key="i">
-					<div v-if="address.fullname">
-						<strong>{{ address.fullname }}</strong>
-					</div>
+				<div v-if="billingAddress.fullname">
+					<strong>{{ billingAddress.fullname }}</strong>
+				</div>
 
-					<div v-if="address.street1">
-						{{ address.street1 }}
-					</div>
+				<div v-if="billingAddress.street1">
+					{{ billingAddress.street1 }}
+				</div>
 
-					<div v-if="address.street2">
-						{{ address.street2 }}
-					</div>
+				<div v-if="billingAddress.street2">
+					{{ billingAddress.street2 }}
+				</div>
 
-					<div>
-						<template v-if="address.city">
-							{{ address.city }}
-						</template>
-						<template v-if="address.region">
-							{{
-								Geo.getRegionName(address.country, address.region) || address.region
-							}}
-						</template>
-						<template v-if="address.postcode">
-							{{ address.postcode }}
-						</template>
-					</div>
+				<div>
+					<template v-if="billingAddress.city">
+						{{ billingAddress.city }}
+					</template>
+					<template v-if="billingAddress.region && billingAddress.country">
+						{{
+							Geo.getRegionName(billingAddress.country, billingAddress.region) ||
+							billingAddress.region
+						}}
+					</template>
+					<template v-if="billingAddress.postcode">
+						{{ billingAddress.postcode }}
+					</template>
+				</div>
 
-					<div v-if="address.country">
-						{{ Geo.getCountryName(address.country) }}
-					</div>
+				<div v-if="billingAddress.country">
+					{{ Geo.getCountryName(billingAddress.country) }}
 				</div>
 				<br />
 			</div>

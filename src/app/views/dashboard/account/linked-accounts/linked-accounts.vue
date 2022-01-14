@@ -13,9 +13,9 @@ import AppLinkedAccount from '../../../../../_common/linked-account/linked-accou
 import { LinkedAccounts } from '../../../../../_common/linked-account/linked-accounts.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import { Translate } from '../../../../../_common/translate/translate.service';
+import { $gettext, Translate } from '../../../../../_common/translate/translate.service';
 import { UserSetPasswordModal } from '../../../../components/user/set-password-modal/set-password-modal.service';
-import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
+import { useAccountRouteController } from '../account.vue';
 
 @Options({
 	name: 'RouteDashAccountLinkedAccounts',
@@ -26,19 +26,14 @@ import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 @RouteResolver({
 	deps: {},
 	resolver: () => Api.sendRequest('/web/dash/linked-accounts?resource=User'),
-	resolveStore({}) {
-		routeStore.commit('setHeading', Translate.$gettext(`Linked Accounts`));
-	},
 })
 export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
+	routeStore = setup(() => useAccountRouteController()!);
 	commonStore = setup(() => useCommonStore());
 
 	get user() {
 		return this.commonStore.user;
 	}
-
-	@RouteStoreModule.State
-	heading!: RouteStore['heading'];
 
 	accounts: LinkedAccount[] = [];
 	loading = false;
@@ -75,7 +70,11 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 	}
 
 	get routeTitle() {
-		return this.heading;
+		return this.routeStore.heading;
+	}
+
+	routeCreated() {
+		this.routeStore.heading = $gettext(`Linked Accounts`);
 	}
 
 	routeResolved($payload: any) {

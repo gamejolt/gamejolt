@@ -1,12 +1,13 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
-import { Translate } from '../../../../../_common/translate/translate.service';
+import { $gettext, Translate } from '../../../../../_common/translate/translate.service';
 import { User } from '../../../../../_common/user/user.model';
 import FormEmailPreferences from '../../../../components/forms/email-preferences/email-preferences.vue';
 import { IntentService } from '../../../../components/intent/intent.service';
-import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
+import { useAccountRouteController } from '../account.vue';
 
 @Options({
 	name: 'RouteDashAccountEmailPreferences',
@@ -27,18 +28,18 @@ import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 
 		return Api.sendRequest('/web/dash/email-preferences');
 	},
-	resolveStore() {
-		routeStore.commit('setHeading', Translate.$gettext(`dash.email_prefs.page_title`));
-	},
 })
 export default class RouteDashAccountEmailPreferences extends BaseRouteComponent {
-	@RouteStoreModule.State
-	heading!: RouteStore['heading'];
+	routeStore = setup(() => useAccountRouteController()!);
 
 	user: User = null as any;
 
 	get routeTitle() {
-		return this.heading;
+		return this.routeStore.heading;
+	}
+
+	routeCreated() {
+		this.routeStore.heading = $gettext(`dash.email_prefs.page_title`);
 	}
 
 	routeResolved($payload: any) {
@@ -48,7 +49,7 @@ export default class RouteDashAccountEmailPreferences extends BaseRouteComponent
 </script>
 
 <template>
-	<div class="row" v-if="isRouteBootstrapped">
+	<div v-if="isRouteBootstrapped" class="row">
 		<div class="col-md-9 col-lg-8">
 			<form-email-preferences :model="user" />
 		</div>

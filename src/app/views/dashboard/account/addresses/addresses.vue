@@ -1,12 +1,13 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../utils/array';
 import { Api } from '../../../../../_common/api/api.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
-import { Translate } from '../../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import { UserAddress } from '../../../../../_common/user/address/address.model';
 import AppUserAddressCard from '../../../../components/user/address/card/card.vue';
-import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
+import { useAccountRouteController } from '../account.vue';
 
 @Options({
 	name: 'RouteDashAccountAddresses',
@@ -17,18 +18,18 @@ import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 @RouteResolver({
 	deps: {},
 	resolver: () => Api.sendRequest('/web/dash/addresses'),
-	resolveStore() {
-		routeStore.commit('setHeading', Translate.$gettext('Saved Addresses'));
-	},
 })
 export default class RouteDashAccountAddresses extends BaseRouteComponent {
-	@RouteStoreModule.State
-	heading!: RouteStore['heading'];
+	routeStore = setup(() => useAccountRouteController()!);
 
 	billingAddresses: UserAddress[] = [];
 
 	get routeTitle() {
-		return this.heading;
+		return this.routeStore.heading;
+	}
+
+	routeCreated() {
+		this.routeStore.heading = $gettext('Saved Addresses');
 	}
 
 	routeResolved($payload: any) {
