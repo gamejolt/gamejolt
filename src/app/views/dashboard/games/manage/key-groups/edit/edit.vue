@@ -1,4 +1,5 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../../../utils/array';
 import { Api } from '../../../../../../../_common/api/api.service';
@@ -23,7 +24,7 @@ import { AppTimeAgo } from '../../../../../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import FormGameKeyGroupAddKeys from '../../../../../../components/forms/game/key-group/add-keys/add-keys.vue';
 import FormGameKeyGroup from '../../../../../../components/forms/game/key-group/key-group.vue';
-import { RouteStore, RouteStoreModule } from '../../manage.store';
+import { useGameDashRouteController } from '../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageKeyGroupsEdit',
@@ -46,8 +47,11 @@ import { RouteStore, RouteStoreModule } from '../../manage.store';
 		),
 })
 export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponent {
-	@RouteStoreModule.State
-	game!: RouteStore['game'];
+	routeStore = setup(() => useGameDashRouteController()!);
+
+	get game() {
+		return this.routeStore.game!;
+	}
 
 	keyGroup: KeyGroup = null as any;
 	packages: GamePackage[] = [];

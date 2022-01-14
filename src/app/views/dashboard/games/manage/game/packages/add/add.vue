@@ -1,9 +1,10 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { GamePackage } from '../../../../../../../../_common/game/package/package.model';
 import { BaseRouteComponent } from '../../../../../../../../_common/route/route-component';
 import FormGamePackage from '../../../../../../../components/forms/game/package/package.vue';
-import { RouteStore, RouteStoreModule } from '../../../manage.store';
+import { useGameDashRouteController } from '../../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageGamePackagesAdd',
@@ -12,8 +13,11 @@ import { RouteStore, RouteStoreModule } from '../../../manage.store';
 	},
 })
 export default class RouteDashGamesManageGamePackagesAdd extends BaseRouteComponent {
-	@RouteStoreModule.State
-	game!: RouteStore['game'];
+	routeStore = setup(() => useGameDashRouteController()!);
+
+	get game() {
+		return this.routeStore.game!;
+	}
 
 	get routeTitle() {
 		if (this.game) {
@@ -56,18 +60,24 @@ export default class RouteDashGamesManageGamePackagesAdd extends BaseRouteCompon
 		<hr />
 
 		<div class="row">
-			<div class="hidden-xs col-sm-4 col-sm-push-8 col-md-4 col-md-push-8 col-lg-4 col-lg-push-8">
+			<div
+				class="
+					hidden-xs
+					col-sm-4 col-sm-push-8 col-md-4 col-md-push-8 col-lg-4 col-lg-push-8
+				"
+			>
 				<div class="page-help">
 					<p>
 						<translate>
-							Packages are how you organize and distribute your game's builds and other files.
+							Packages are how you organize and distribute your game's builds and
+							other files.
 						</translate>
 					</p>
 					<p>
 						<translate>
-							Your primary package should contain the builds you want people to play. You can create
-							new packages to contain additional files, such as level editors, art packs,
-							expansions, and other DLC.
+							Your primary package should contain the builds you want people to play.
+							You can create new packages to contain additional files, such as level
+							editors, art packs, expansions, and other DLC.
 						</translate>
 					</p>
 					<p>

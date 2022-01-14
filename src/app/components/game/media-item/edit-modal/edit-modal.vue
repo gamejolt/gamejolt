@@ -41,6 +41,8 @@ export default class AppGameMediaItemEditModal extends mixins(BaseModal) {
 				`Copy the direct link to view this sketchfab model on your game page.`
 			);
 		}
+
+		return undefined;
 	}
 
 	get removeText() {
@@ -55,6 +57,8 @@ export default class AppGameMediaItemEditModal extends mixins(BaseModal) {
 		if (this.item.media_type === 'sketchfab') {
 			return this.$gettext(`Remove Sketchfab`);
 		}
+
+		return undefined;
 	}
 
 	async remove() {
@@ -155,7 +159,7 @@ export default class AppGameMediaItemEditModal extends mixins(BaseModal) {
 			<hr />
 
 			<p class="text-right">
-				<app-button trans @click.stop="copyLink()" v-app-tooltip="copyLinkTooltip">
+				<app-button v-app-tooltip="copyLinkTooltip" trans @click.stop="copyLink()">
 					<translate>Copy Link</translate>
 				</app-button>
 			</p>

@@ -1,4 +1,5 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../_common/api/api.service';
 import AppCard from '../../../../../../../../_common/card/card.vue';
@@ -27,7 +28,7 @@ import FormGamePackage from '../../../../../../../components/forms/game/package/
 import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/wizard-controls.vue';
 import { GamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
 import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
-import { RouteStore, RouteStoreModule } from '../../../manage.store';
+import { useGameDashRouteController } from '../../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageGamePackagesEdit',
@@ -55,8 +56,11 @@ import { RouteStore, RouteStoreModule } from '../../../manage.store';
 		),
 })
 export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteComponent {
-	@RouteStoreModule.State
-	game!: RouteStore['game'];
+	routeStore = setup(() => useGameDashRouteController()!);
+
+	get game() {
+		return this.routeStore.game!;
+	}
 
 	package: GamePackage = null as any;
 	sellable: Sellable = null as any;
@@ -253,9 +257,9 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 					>
 						<app-jolticon icon="notice" />
 						<span v-translate>
-							<strong
-								>This package won't show up on your devlog-only game page.</strong
-							>
+							<strong>
+								This package won't show up on your devlog-only game page.
+							</strong>
 							Switch your game page to early access or complete from the
 							Overview/Setup page for it to show.
 						</span>
@@ -334,9 +338,9 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 						</p>
 						<p>
 							<app-link-help page="dev-packages" class="link-help">
-								<translate
-									>dash.games.packages.manage.releases.page_help_link</translate
-								>
+								<translate>
+									dash.games.packages.manage.releases.page_help_link
+								</translate>
 							</app-link-help>
 						</p>
 					</div>
@@ -432,17 +436,17 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 									class="tag tag-highlight"
 								>
 									<app-jolticon icon="active" />
-									<translate
-										>dash.games.packages.manage.releases.published_tag</translate
-									>
+									<translate>
+										dash.games.packages.manage.releases.published_tag
+									</translate>
 								</span>
 
 								<span class="dot-separator" />
 
 								<template v-if="!release.build_count">
-									<translate
-										>dash.games.packages.manage.releases.builds_count_none</translate
-									>
+									<translate>
+										dash.games.packages.manage.releases.builds_count_none
+									</translate>
 								</template>
 								<template v-else>
 									<translate

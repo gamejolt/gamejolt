@@ -3,7 +3,7 @@ import { Options } from 'vue-property-decorator';
 import AppNavTabList from '../../../../../../_common/nav/tab-list/tab-list.vue';
 import { BaseRouteComponent } from '../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
-import AppManageGameApiNav from './_nav/nav.vue';
+import AppManageGameApiNav from './AppManageGameApiNav.vue';
 
 @Options({
 	name: 'RouteDashGamesManageApi',

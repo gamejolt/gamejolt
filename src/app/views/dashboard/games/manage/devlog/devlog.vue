@@ -1,4 +1,5 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../../_common/api/api.service';
@@ -12,7 +13,7 @@ import { ActivityFeedView } from '../../../../../components/activity/feed/view';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import { AppActivityFeedLazy } from '../../../../../components/lazy';
 import AppPostAddButton from '../../../../../components/post/add-button/add-button.vue';
-import { RouteStore, RouteStoreModule } from '../manage.store';
+import { useGameDashRouteController } from '../manage.store';
 
 function getFetchUrl(route: RouteLocationNormalized) {
 	const tab = route.query.tab || 'active';
@@ -37,8 +38,11 @@ function getFetchUrl(route: RouteLocationNormalized) {
 		Api.sendRequest(ActivityFeedService.makeFeedUrl(route, getFetchUrl(route))),
 })
 export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
-	@RouteStoreModule.State
-	game!: RouteStore['game'];
+	routeStore = setup(() => useGameDashRouteController()!);
+
+	get game() {
+		return this.routeStore.game!;
+	}
 
 	feed: ActivityFeedView | null = null;
 

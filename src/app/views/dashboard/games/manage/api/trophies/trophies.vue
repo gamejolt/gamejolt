@@ -1,5 +1,6 @@
 <script lang="ts">
 import { nextTick } from 'vue';
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import AppCardListAdd from '../../../../../../../_common/card/list/add/add.vue';
@@ -17,7 +18,7 @@ import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directi
 import { TrophyDifficulty } from '../../../../../../../_common/trophy/base-trophy.model';
 import FormGameTrophy from '../../../../../../components/forms/game/trophy/trophy.vue';
 import AppTrophyThumbnail from '../../../../../../components/trophy/thumbnail/thumbnail.vue';
-import { RouteStore, RouteStoreModule } from '../../manage.store';
+import { useGameDashRouteController } from '../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageApiTrophies',
@@ -39,8 +40,11 @@ import { RouteStore, RouteStoreModule } from '../../manage.store';
 		Api.sendRequest('/web/dash/developer/games/api/trophies/' + route.params.id),
 })
 export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent {
-	@RouteStoreModule.State
-	game!: RouteStore['game'];
+	routeStore = setup(() => useGameDashRouteController()!);
+
+	get game() {
+		return this.routeStore.game!;
+	}
 
 	trophies: GameTrophy[] = [];
 	isAdding: { [x: number]: boolean } = {};

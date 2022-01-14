@@ -1,4 +1,5 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../_common/api/api.service';
 import AppCardListAdd from '../../../../../../../../_common/card/list/add/add.vue';
@@ -13,7 +14,7 @@ import {
 } from '../../../../../../../../_common/route/route-component';
 import { AppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
 import FormGameScoreTable from '../../../../../../../components/forms/game/score-table/score-table.vue';
-import { RouteStore, RouteStoreModule } from '../../../manage.store';
+import { useGameDashRouteController } from '../../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageApiScoreboardsList',
@@ -34,8 +35,11 @@ import { RouteStore, RouteStoreModule } from '../../../manage.store';
 		Api.sendRequest('/web/dash/developer/games/api/scores/' + route.params.id),
 })
 export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteComponent {
-	@RouteStoreModule.State
-	game!: RouteStore['game'];
+	routeStore = setup(() => useGameDashRouteController()!);
+
+	get game() {
+		return this.routeStore.game!;
+	}
 
 	GameScoreTable = GameScoreTable;
 

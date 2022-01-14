@@ -1,4 +1,5 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { formatDate } from '../../../../../../../../../_common/filters/date';
@@ -8,7 +9,7 @@ import {
 	BaseRouteComponent,
 	RouteResolver,
 } from '../../../../../../../../../_common/route/route-component';
-import { RouteStore, RouteStoreModule } from '../../../../manage.store';
+import { useGameDashRouteController } from '../../../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageApiDataStorageItemsView',
@@ -24,8 +25,11 @@ import { RouteStore, RouteStoreModule } from '../../../../manage.store';
 		),
 })
 export default class RouteDashGamesManageApiDataStorageItemsView extends BaseRouteComponent {
-	@RouteStoreModule.State
-	game!: RouteStore['game'];
+	routeStore = setup(() => useGameDashRouteController()!);
+
+	get game() {
+		return this.routeStore.game!;
+	}
 
 	item: GameDataStoreItem = null as any;
 

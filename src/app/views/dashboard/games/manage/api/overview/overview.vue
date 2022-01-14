@@ -1,4 +1,5 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { formatDuration } from '../../../../../../../_common/filters/duration';
@@ -8,7 +9,7 @@ import {
 	RouteResolver,
 } from '../../../../../../../_common/route/route-component';
 import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
-import { RouteStore, RouteStoreModule } from '../../manage.store';
+import { useGameDashRouteController } from '../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageApiOverview',
@@ -21,8 +22,11 @@ import { RouteStore, RouteStoreModule } from '../../manage.store';
 	resolver: ({ route }) => Api.sendRequest('/web/dash/developer/games/api/' + route.params.id),
 })
 export default class RouteDashGamesManageApiOverview extends BaseRouteComponent {
-	@RouteStoreModule.State
-	game!: RouteStore['game'];
+	routeStore = setup(() => useGameDashRouteController()!);
+
+	get game() {
+		return this.routeStore.game!;
+	}
 
 	numActiveSessions = 0;
 	numActiveTrophies = 0;
@@ -187,10 +191,10 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 						<div class="stat-big-label">
 							<translate>dash.games.api.overview.trophies_exp_label</translate>
 							<app-jolticon
-								icon="help-circle"
 								v-app-tooltip.touchable="
 									$gettext(`dash.games.api.overview.trophies_exp_tooltip`)
 								"
+								icon="help-circle"
 							/>
 						</div>
 						<div class="stat-big-digit">
@@ -243,10 +247,10 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 						<div class="stat-big-label">
 							<translate>dash.games.api.overview.scores_label</translate>
 							<app-jolticon
-								icon="help-circle"
 								v-app-tooltip.touchable="
 									$gettext(`dash.games.api.overview.scores_tooltip`)
 								"
+								icon="help-circle"
 							/>
 						</div>
 						<div class="stat-big-digit">
@@ -259,10 +263,10 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 						<div class="stat-big-label">
 							<translate>dash.games.api.overview.scores_users_label</translate>
 							<app-jolticon
-								icon="help-circle"
 								v-app-tooltip.touchable="
 									$gettext(`dash.games.api.overview.scores_users_tooltip`)
 								"
+								icon="help-circle"
 							/>
 						</div>
 						<div class="stat-big-digit">
@@ -289,10 +293,10 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 						<div class="stat-big-label">
 							<translate>dash.games.api.overview.data_items_label</translate>
 							<app-jolticon
-								icon="help-circle"
 								v-app-tooltip.touchable="
 									$gettext(`dash.games.api.overview.data_items_tooltip`)
 								"
+								icon="help-circle"
 							/>
 						</div>
 						<div class="stat-big-digit">

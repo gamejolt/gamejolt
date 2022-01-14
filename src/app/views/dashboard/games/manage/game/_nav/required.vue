@@ -13,7 +13,7 @@ export default class AppManageGameNavRequired extends Vue {
 </script>
 
 <template>
-	<span class="manage-game-nav-required" v-if="!isComplete">
+	<span v-if="!isComplete" class="manage-game-nav-required">
 		<span v-app-tooltip="$gettext(`Required Step`)">
 			<app-jolticon notice icon="notice" />
 		</span>

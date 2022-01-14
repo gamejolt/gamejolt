@@ -1,4 +1,5 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
@@ -8,7 +9,7 @@ import {
 } from '../../../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import FormGameDescription from '../../../../../../components/forms/game/description/description.vue';
-import { RouteStore, RouteStoreModule } from '../../manage.store';
+import { useGameDashRouteController } from '../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageGameDescription',
@@ -21,8 +22,11 @@ import { RouteStore, RouteStoreModule } from '../../manage.store';
 	resolver: () => Api.sendRequest('/web/dash/developer/games/description'),
 })
 export default class RouteDashGamesManageGameDescription extends BaseRouteComponent {
-	@RouteStoreModule.State
-	game!: RouteStore['game'];
+	routeStore = setup(() => useGameDashRouteController()!);
+
+	get game() {
+		return this.routeStore.game!;
+	}
 
 	tags: string[] = [];
 
@@ -56,15 +60,15 @@ export default class RouteDashGamesManageGameDescription extends BaseRouteCompon
 				<h4>Writing a Good Description</h4>
 				<p>
 					<translate>
-						A good description generally contains things like a gameplay summary, control overview,
-						story, credits, etc. You can edit your description whenever you want and add to it over
-						time.
+						A good description generally contains things like a gameplay summary,
+						control overview, story, credits, etc. You can edit your description
+						whenever you want and add to it over time.
 					</translate>
 				</p>
 				<p>
 					<translate>
-						You can also upload images to use as in-context shots for your game or for stylized
-						headings.
+						You can also upload images to use as in-context shots for your game or for
+						stylized headings.
 					</translate>
 				</p>
 			</div>

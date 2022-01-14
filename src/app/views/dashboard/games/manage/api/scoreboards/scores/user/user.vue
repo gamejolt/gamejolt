@@ -1,4 +1,5 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { GameScoreTable } from '../../../../../../../../../_common/game/score-table/score-table.model';
@@ -11,7 +12,7 @@ import {
 import { AppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
 import { UserGameScore } from '../../../../../../../../../_common/user/game-score/game-score.model';
 import { User } from '../../../../../../../../../_common/user/user.model';
-import { RouteStore, RouteStoreModule } from '../../../../manage.store';
+import { useGameDashRouteController } from '../../../../manage.store';
 import AppManageGameListScores from '../../_list-scores/list-scores.vue';
 
 @Options({
@@ -36,8 +37,11 @@ import AppManageGameListScores from '../../_list-scores/list-scores.vue';
 		),
 })
 export default class RouteDashGamesManageApiScoreboardsScoresUser extends BaseRouteComponent {
-	@RouteStoreModule.State
-	game!: RouteStore['game'];
+	routeStore = setup(() => useGameDashRouteController()!);
+
+	get game() {
+		return this.routeStore.game!;
+	}
 
 	user: User = null as any;
 	scoreTable: GameScoreTable = null as any;
@@ -98,10 +102,10 @@ export default class RouteDashGamesManageApiScoreboardsScoresUser extends BaseRo
 		<h2 class="section-header">
 			<div class="section-header-controls">
 				<app-button
+					v-app-tooltip="$gettext(`Remove All Scores`)"
 					sparse
 					icon="remove"
 					@click="removeAll"
-					v-app-tooltip="$gettext(`Remove All Scores`)"
 				/>
 			</div>
 
@@ -124,7 +128,7 @@ export default class RouteDashGamesManageApiScoreboardsScoresUser extends BaseRo
 			</small>
 		</h2>
 
-		<div class="alert alert-notice anim-fade-in" v-if="!scores.length">
+		<div v-if="!scores.length" class="alert alert-notice anim-fade-in">
 			<p>
 				<translate>The user has no scores on this scoreboard.</translate>
 			</p>

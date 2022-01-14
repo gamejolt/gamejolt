@@ -1,14 +1,16 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import draggable from 'vuedraggable';
 import AppEditableOverlay from '../../../../../../../_common/editable-overlay/editable-overlay.vue';
 import { Game } from '../../../../../../../_common/game/game.model';
-import { MediaBarItemMaxHeight } from '../../../../../../../_common/game/media-bar/item/item';
-import AppGameMediaBarItem from '../../../../../../../_common/game/media-bar/item/item.vue';
+import AppGameMediaBarItem, {
+	MediaBarItemMaxHeight,
+} from '../../../../../../../_common/game/media-bar/item/item.vue';
 import AppScrollScroller from '../../../../../../../_common/scroll/scroller/scroller.vue';
 import { GameMediaItemAddModal } from '../../../../../../components/game/media-item/add-modal/add-modal.service';
 import { GameMediaItemEditModal } from '../../../../../../components/game/media-item/edit-modal/edit-modal.service';
-import { Media, RouteStore, RouteStoreModule } from '../../manage.store';
+import { Media, useGameDashRouteController } from '../../manage.store';
 
 @Options({
 	components: {
@@ -25,14 +27,7 @@ export default class AppManageGameMediaBar extends Vue {
 	@Prop(Array)
 	mediaItems!: Media[];
 
-	@RouteStoreModule.Mutation
-	addMedia!: RouteStore['addMedia'];
-
-	@RouteStoreModule.Mutation
-	removeMedia!: RouteStore['removeMedia'];
-
-	@RouteStoreModule.Action
-	saveMediaSort!: RouteStore['saveMediaSort'];
+	routeStore = setup(() => useGameDashRouteController()!);
 
 	mediaBarHeight = MediaBarItemMaxHeight + 40;
 	addButtonSize = MediaBarItemMaxHeight;
@@ -42,19 +37,19 @@ export default class AppManageGameMediaBar extends Vue {
 	}
 
 	set draggableItems(items: Media[]) {
-		this.saveMediaSort(items);
+		this.routeStore.saveMediaSort(items);
 	}
 
 	async add() {
 		const newItems = await GameMediaItemAddModal.show(this.game);
 		if (newItems) {
-			this.addMedia(newItems);
+			this.routeStore.addMedia(newItems);
 		}
 	}
 
 	async open(item: Media) {
 		const newItem = await GameMediaItemEditModal.show(this.game, item, () => {
-			this.removeMedia(item);
+			this.routeStore.removeMedia(item);
 		});
 
 		// Copy properties of new item into old item to update it.

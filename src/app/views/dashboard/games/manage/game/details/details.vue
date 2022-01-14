@@ -7,7 +7,7 @@ import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
 import AppGameDevStageSelector from '../../../../../../components/forms/game/dev-stage-selector/dev-stage-selector.vue';
 import FormGame from '../../../../../../components/forms/game/game.vue';
-import { RouteStore, RouteStoreModule } from '../../manage.store';
+import { useGameDashRouteController } from '../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageGameDetails',
@@ -17,17 +17,20 @@ import { RouteStore, RouteStoreModule } from '../../manage.store';
 	},
 })
 export default class RouteDashGamesManageGameDetails extends BaseRouteComponent {
+	routeStore = setup(() => useGameDashRouteController()!);
 	commonStore = setup(() => useCommonStore());
 
 	get user() {
 		return this.commonStore.user;
 	}
 
-	@RouteStoreModule.State
-	game!: RouteStore['game'];
+	get game() {
+		return this.routeStore.game!;
+	}
 
-	@RouteStoreModule.State
-	isWizard!: RouteStore['isWizard'];
+	get isWizard() {
+		return this.routeStore.isWizard;
+	}
 
 	get routeTitle() {
 		if (this.game) {

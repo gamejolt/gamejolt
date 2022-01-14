@@ -12,7 +12,7 @@ import {
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
 import FormGameSettings from '../../../../../../components/forms/game/settings/settings.vue';
-import { RouteStore, RouteStoreModule } from '../../manage.store';
+import { useGameDashRouteController } from '../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageGameSettings',
@@ -27,29 +27,20 @@ import { RouteStore, RouteStoreModule } from '../../manage.store';
 		Api.sendRequest(`/web/dash/developer/games/settings/view/${route.params.id}`),
 })
 export default class RouteDashGamesManageGameSettings extends BaseRouteComponent {
+	routeStore = setup(() => useGameDashRouteController()!);
 	commonStore = setup(() => useCommonStore());
 
 	get user() {
 		return this.commonStore.user;
 	}
 
-	@RouteStoreModule.State
-	game!: RouteStore['game'];
+	get game() {
+		return this.routeStore.game!;
+	}
 
-	@RouteStoreModule.State
-	isWizard!: RouteStore['isWizard'];
-
-	@RouteStoreModule.Action
-	cancel!: RouteStore['cancel'];
-
-	@RouteStoreModule.Action
-	hide!: RouteStore['hide'];
-
-	@RouteStoreModule.Action
-	removeGame!: RouteStore['removeGame'];
-
-	@RouteStoreModule.Action
-	leaveProject!: RouteStore['leaveProject'];
+	get isWizard() {
+		return this.routeStore.isWizard;
+	}
 
 	hasCompetitionEntries = false;
 
@@ -113,7 +104,7 @@ export default class RouteDashGamesManageGameSettings extends BaseRouteComponent
 						</p>
 					</div>
 
-					<app-button @click="leaveProject()">
+					<app-button @click="routeStore.leaveProject()">
 						<translate>Leave Project</translate>
 					</app-button>
 				</template>
@@ -137,7 +128,7 @@ export default class RouteDashGamesManageGameSettings extends BaseRouteComponent
 							</p>
 						</div>
 
-						<app-button @click="hide()">
+						<app-button @click="routeStore.hide()">
 							<translate>Unlist Game</translate>
 						</app-button>
 					</template>
@@ -164,7 +155,7 @@ export default class RouteDashGamesManageGameSettings extends BaseRouteComponent
 							</p>
 						</div>
 
-						<app-button @click="cancel()">
+						<app-button @click="routeStore.cancel()">
 							<translate>Cancel Game</translate>
 						</app-button>
 					</template>
@@ -190,7 +181,7 @@ export default class RouteDashGamesManageGameSettings extends BaseRouteComponent
 						</translate>
 					</div>
 
-					<app-button :disabled="game.has_sales" @click="removeGame()">
+					<app-button :disabled="game.has_sales" @click="routeStore.removeGame()">
 						<translate>Remove Game</translate>
 					</app-button>
 				</template>

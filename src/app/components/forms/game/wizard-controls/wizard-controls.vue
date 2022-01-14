@@ -1,10 +1,10 @@
 <script lang="ts">
+import { ref } from '@vue/reactivity';
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { useForm } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
-import { RouteStore, RouteStoreName } from '../../../../views/dashboard/games/manage/manage.store';
+import { useGameDashRouteController } from '../../../../views/dashboard/games/manage/manage.store';
 
 @Options({
 	components: {
@@ -14,15 +14,12 @@ import { RouteStore, RouteStoreName } from '../../../../views/dashboard/games/ma
 export default class AppDashGameWizardControls extends Vue {
 	@Prop(Boolean) disabled?: boolean;
 
-	// The manage route store may not be loaded in if we're in the "add" form.
-	// We have to do all this a bit custom so that we don't expect the module to
-	// exist.
-	@State(RouteStoreName) manageRoute?: RouteStore;
-
-	form = setup(() => useForm());
+	// Might not be available if we're in the add game route.
+	gameDashStore = setup(() => ref(useGameDashRouteController()));
+	form = setup(() => ref(useForm()));
 
 	get isWizard() {
-		return !this.manageRoute || this.manageRoute.isWizard;
+		return !this.gameDashStore || this.gameDashStore.isWizard;
 	}
 
 	get inForm() {
@@ -38,11 +35,7 @@ export default class AppDashGameWizardControls extends Vue {
 			return;
 		}
 
-		if (this.manageRoute) {
-			// Sadly we can't attach directly to this since manageRoute may not
-			// exist.
-			this.$store.dispatch(`${RouteStoreName}/wizardNext`);
-		}
+		this.gameDashStore?.wizardNext();
 	}
 }
 </script>

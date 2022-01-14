@@ -17,7 +17,7 @@ import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directi
 import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
 import AppGameDevStageSelector from '../../../../../../components/forms/game/dev-stage-selector/dev-stage-selector.vue';
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
-import { RouteStore, RouteStoreModule } from '../../manage.store';
+import { useGameDashRouteController } from '../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageGameOverview',
@@ -40,23 +40,20 @@ import { RouteStore, RouteStoreModule } from '../../manage.store';
 		Api.sendRequest('/web/dash/developer/games/overview/' + route.params.id),
 })
 export default class RouteDashGamesManageGameOverview extends BaseRouteComponent {
+	routeStore = setup(() => useGameDashRouteController()!);
 	commonStore = setup(() => useCommonStore());
 
 	get user() {
 		return this.commonStore.user;
 	}
 
-	@RouteStoreModule.State
-	game!: RouteStore['game'];
+	get game() {
+		return this.routeStore.game!;
+	}
 
-	@RouteStoreModule.State
-	canPublish!: RouteStore['canPublish'];
-
-	@RouteStoreModule.Action
-	publish!: RouteStore['publish'];
-
-	@RouteStoreModule.Action
-	uncancel!: RouteStore['uncancel'];
+	get canPublish() {
+		return this.routeStore.canPublish;
+	}
 
 	viewCount = 0;
 	downloadCount = 0;
@@ -155,7 +152,7 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 								"
 								primary
 								block
-								@click="publish"
+								@click="routeStore.publish()"
 							>
 								<translate>dash.games.overview.todo_info_publish_button</translate>
 							</app-button>
@@ -177,7 +174,7 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 								v-app-tooltip="$gettext(`This will make your game active again.`)"
 								primary
 								block
-								@click="uncancel"
+								@click="routeStore.uncancel()"
 							>
 								<translate>Uncancel Game</translate>
 							</app-button>

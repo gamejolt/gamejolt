@@ -1,4 +1,5 @@
 import { h } from 'vue';
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../../../../_common/api/api.service';
@@ -14,7 +15,7 @@ import {
 	BaseRouteComponent,
 	RouteResolver,
 } from '../../../../../../../../_common/route/route-component';
-import { RouteStore, RouteStoreModule } from '../../../manage.store';
+import { useGameDashRouteController } from '../../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageGameLinkedAccountsLinkCallback',
@@ -31,8 +32,11 @@ import { RouteStore, RouteStoreModule } from '../../../manage.store';
 	},
 })
 export default class RouteDashGamesManageGameLinkedAccountsLinkCallback extends BaseRouteComponent {
-	@RouteStoreModule.State
-	game!: RouteStore['game'];
+	routeStore = setup(() => useGameDashRouteController()!);
+
+	get game() {
+		return this.routeStore.game!;
+	}
 
 	private static constructUrl(baseUrl: string, gameId: number, route: RouteLocationNormalized) {
 		let url = baseUrl + route.params.provider;

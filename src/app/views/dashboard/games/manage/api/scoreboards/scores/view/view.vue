@@ -1,4 +1,5 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { formatDate } from '../../../../../../../../../_common/filters/date';
@@ -10,7 +11,7 @@ import {
 	RouteResolver,
 } from '../../../../../../../../../_common/route/route-component';
 import { UserGameScore } from '../../../../../../../../../_common/user/game-score/game-score.model';
-import { RouteStore, RouteStoreModule } from '../../../../manage.store';
+import { useGameDashRouteController } from '../../../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageApiScoreboardsScoresView',
@@ -23,8 +24,11 @@ import { RouteStore, RouteStoreModule } from '../../../../manage.store';
 		),
 })
 export default class RouteDashGamesManageApiScoreboardsScoresView extends BaseRouteComponent {
-	@RouteStoreModule.State
-	game!: RouteStore['game'];
+	routeStore = setup(() => useGameDashRouteController()!);
+
+	get game() {
+		return this.routeStore.game!;
+	}
 
 	score: UserGameScore = null as any;
 	scoreTable: GameScoreTable = null as any;

@@ -8,8 +8,7 @@ import {
 } from '../../../../../../../_common/route/route-component';
 import { useThemeStore } from '../../../../../../../_common/theme/theme.store';
 import FormGameDesign from '../../../../../../components/forms/game/design/design.vue';
-import { ManageGameThemeKey } from '../../manage';
-import { RouteStore, RouteStoreModule } from '../../manage.store';
+import { ManageGameThemeKey, useGameDashRouteController } from '../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageGameDesign',
@@ -22,16 +21,16 @@ import { RouteStore, RouteStoreModule } from '../../manage.store';
 	resolver: ({ route }) => Api.sendRequest('/web/dash/developer/games/media/' + route.params.id),
 })
 export default class RouteDashGamesManageGameDesign extends BaseRouteComponent {
+	routeStore = setup(() => useGameDashRouteController()!);
 	themeStore = setup(() => useThemeStore());
 
-	@RouteStoreModule.State
-	game!: RouteStore['game'];
+	get game() {
+		return this.routeStore.game!;
+	}
 
-	@RouteStoreModule.State
-	media!: RouteStore['media'];
-
-	@RouteStoreModule.Mutation
-	populateMedia!: RouteStore['populateMedia'];
+	get media() {
+		return this.routeStore.media;
+	}
 
 	get routeTitle() {
 		if (this.game) {
@@ -43,7 +42,7 @@ export default class RouteDashGamesManageGameDesign extends BaseRouteComponent {
 	}
 
 	routeResolved($payload: any) {
-		this.populateMedia($payload.mediaItems || []);
+		this.routeStore.populateMedia($payload.mediaItems || []);
 	}
 
 	onSubmit() {

@@ -1,4 +1,5 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { arrayIndexBy } from '../../../../../../../../utils/array';
 import { Api } from '../../../../../../../../_common/api/api.service';
@@ -18,7 +19,7 @@ import { AppTooltip } from '../../../../../../../../_common/tooltip/tooltip-dire
 import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/wizard-controls.vue';
 import { GamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
 import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
-import { RouteStore, RouteStoreModule } from '../../../manage.store';
+import { useGameDashRouteController } from '../../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageGamePackagesList',
@@ -39,8 +40,11 @@ import { RouteStore, RouteStoreModule } from '../../../manage.store';
 		Api.sendRequest('/web/dash/developer/games/packages/' + route.params.id),
 })
 export default class RouteDashGamesManageGamePackagesList extends BaseRouteComponent {
-	@RouteStoreModule.State
-	game!: RouteStore['game'];
+	routeStore = setup(() => useGameDashRouteController()!);
+
+	get game() {
+		return this.routeStore.game!;
+	}
 
 	packages: GamePackage[] = [];
 	sellables: { [x: number]: Sellable } = {};

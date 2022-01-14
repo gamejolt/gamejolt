@@ -1,9 +1,4 @@
-<script lang="ts">
-import { Options, Vue } from 'vue-property-decorator';
-
-@Options({})
-export default class AppManageGameApiNav extends Vue {}
-</script>
+<script lang="ts" setup></script>
 
 <template>
 	<ul class="sans-margin">

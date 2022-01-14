@@ -1,4 +1,5 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import AppCardListAdd from '../../../../../../../_common/card/list/add/add.vue';
@@ -13,7 +14,7 @@ import {
 	RouteResolver,
 } from '../../../../../../../_common/route/route-component';
 import FormGameKeyGroup from '../../../../../../components/forms/game/key-group/key-group.vue';
-import { RouteStore, RouteStoreModule } from '../../manage.store';
+import { useGameDashRouteController } from '../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageKeyGroupsList',
@@ -31,8 +32,11 @@ import { RouteStore, RouteStoreModule } from '../../manage.store';
 		Api.sendRequest('/web/dash/developer/games/key-groups/' + route.params.id),
 })
 export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponent {
-	@RouteStoreModule.State
-	game!: RouteStore['game'];
+	routeStore = setup(() => useGameDashRouteController()!);
+
+	get game() {
+		return this.routeStore.game!;
+	}
 
 	keyGroups: KeyGroup[] = [];
 	packages: GamePackage[] = [];
@@ -62,6 +66,14 @@ export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponen
 				keyGroupId: keyGroup.id + '',
 			},
 		});
+	}
+
+	divide(left: number | undefined | null, right: number | undefined | null) {
+		if (!right) {
+			return 0;
+		}
+
+		return (left || 0) / right;
 	}
 }
 </script>
@@ -148,7 +160,7 @@ export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponen
 												{{ formatNumber(group.key_count || 0) }}
 												({{
 													formatNumber(
-														group.viewed_count / group.key_count,
+														divide(group.viewed_count, group.key_count),
 														{
 															style: 'percent',
 															maximumFractionDigits: 2,
@@ -159,7 +171,9 @@ export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponen
 											<app-progress-bar
 												thin
 												:percent="
-													(group.viewed_count / group.key_count) * 100
+													((group.viewed_count || 0) /
+														(group.key_count || 0)) *
+													100
 												"
 											/>
 											<br />
@@ -170,7 +184,10 @@ export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponen
 												{{ formatNumber(group.key_count || 0) }}
 												({{
 													formatNumber(
-														group.claimed_count / group.key_count,
+														divide(
+															group.claimed_count,
+															group.key_count
+														),
 														{
 															style: 'percent',
 															maximumFractionDigits: 2,
@@ -181,7 +198,8 @@ export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponen
 											<app-progress-bar
 												thin
 												:percent="
-													(group.claimed_count / group.key_count) * 100
+													divide(group.claimed_count, group.key_count) *
+													100
 												"
 											/>
 										</div>

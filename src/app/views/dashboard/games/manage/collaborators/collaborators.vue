@@ -1,4 +1,5 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../../utils/array';
 import { Api } from '../../../../../../_common/api/api.service';
@@ -11,7 +12,7 @@ import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-se
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import { AppTimeAgo } from '../../../../../../_common/time/ago/ago';
 import FormGameCollaborator from '../../../../../components/forms/game/collaborator/collaborator.vue';
-import { RouteStore, RouteStoreModule } from '../manage.store';
+import { useGameDashRouteController } from '../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageCollaborators',
@@ -29,8 +30,11 @@ import { RouteStore, RouteStoreModule } from '../manage.store';
 		Api.sendRequest('/web/dash/developer/games/collaborators/' + route.params.id),
 })
 export default class RouteDashGamesManageCollaborators extends BaseRouteComponent {
-	@RouteStoreModule.State
-	game!: RouteStore['game'];
+	routeStore = setup(() => useGameDashRouteController()!);
+
+	get game() {
+		return this.routeStore.game!;
+	}
 
 	collaborators: Collaborator[] = [];
 	activeCollaborator: Collaborator | null = null;
@@ -127,7 +131,7 @@ export default class RouteDashGamesManageCollaborators extends BaseRouteComponen
 							</a>
 
 							<div class="card-title">
-								<h5>{{ collaborator.user.username }}</h5>
+								<h5>{{ collaborator.user?.username }}</h5>
 							</div>
 
 							<div class="card-meta">

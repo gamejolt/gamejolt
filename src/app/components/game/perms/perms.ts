@@ -1,9 +1,9 @@
-import { h } from 'vue';
+import { h, ref } from 'vue';
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Perm } from '../../../../_common/collaborator/collaboratable';
 import { Game } from '../../../../_common/game/game.model';
-import { useGameRouteController } from '../../../views/discover/games/view/view.vue';
+import { useGameDashRouteController } from '../../../views/dashboard/games/manage/manage.store';
 
 @Options({})
 export class AppGamePerms extends Vue {
@@ -22,7 +22,7 @@ export class AppGamePerms extends Vue {
 	@Prop(Boolean)
 	debug?: boolean;
 
-	gameRouteStore = setup(() => useGameRouteController());
+	gameRouteStore = setup(() => ref(useGameDashRouteController()));
 
 	get targetGame() {
 		if (this.game) {

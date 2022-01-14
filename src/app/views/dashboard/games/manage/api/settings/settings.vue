@@ -1,4 +1,5 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
@@ -7,7 +8,7 @@ import {
 	BaseRouteComponent,
 	RouteResolver,
 } from '../../../../../../../_common/route/route-component';
-import { RouteStore, RouteStoreModule } from '../../manage.store';
+import { useGameDashRouteController } from '../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageApiSettings',
@@ -18,8 +19,11 @@ import { RouteStore, RouteStoreModule } from '../../manage.store';
 		Api.sendRequest('/web/dash/developer/games/api/settings/' + route.params.id),
 })
 export default class RouteDashGamesManageApiSettings extends BaseRouteComponent {
-	@RouteStoreModule.State
-	game!: RouteStore['game'];
+	routeStore = setup(() => useGameDashRouteController()!);
+
+	get game() {
+		return this.routeStore.game!;
+	}
 
 	privateKey = '';
 	shouldShowKey = false;
@@ -76,9 +80,9 @@ export default class RouteDashGamesManageApiSettings extends BaseRouteComponent 
 				<p>
 					<strong><translate>Never give your private key to anyone!</translate></strong>
 					<translate>
-						Your game's key is used to validate that API requests are coming from your game. If
-						villains or knaves get ahold of it, they can send in fake requests pretending to be your
-						game. Not good!
+						Your game's key is used to validate that API requests are coming from your
+						game. If villains or knaves get ahold of it, they can send in fake requests
+						pretending to be your game. Not good!
 					</translate>
 				</p>
 			</div>
@@ -111,7 +115,9 @@ export default class RouteDashGamesManageApiSettings extends BaseRouteComponent 
 								</p>
 
 								<app-button @click="generateNewKey">
-									<translate>dash.games.api.settings.key_generate_button</translate>
+									<translate>
+										dash.games.api.settings.key_generate_button
+									</translate>
 								</app-button>
 							</td>
 						</tr>

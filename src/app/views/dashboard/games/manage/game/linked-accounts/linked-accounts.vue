@@ -1,4 +1,5 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import {
@@ -19,7 +20,7 @@ import {
 	BaseRouteComponent,
 	RouteResolver,
 } from '../../../../../../../_common/route/route-component';
-import { RouteStore, RouteStoreModule } from '../../manage.store';
+import { useGameDashRouteController } from '../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageGameLinkedAccounts',
@@ -33,8 +34,11 @@ import { RouteStore, RouteStoreModule } from '../../manage.store';
 		Api.sendRequest('/web/dash/linked-accounts?resource=Game&resourceId=' + route.params.id),
 })
 export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteComponent {
-	@RouteStoreModule.State
-	game!: RouteStore['game'];
+	routeStore = setup(() => useGameDashRouteController()!);
+
+	get game() {
+		return this.routeStore.game!;
+	}
 
 	accounts: LinkedAccount[] = [];
 	loading = false;
@@ -406,13 +410,13 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 					provider="tumblr"
 					:account="tumblrAccount"
 					:disabled="loading"
+					show-tumblr-blog
 					@sync="onLink"
 					@link="onLink"
 					@unlink="onUnlink"
 					@link-tumblr-blog="onLinkTumblrBlog"
 					@unlink-tumblr-blog="onUnlinkTumblrBlog"
-					show-tumblr-blog
-				></app-linked-account>
+				/>
 			</div>
 		</div>
 	</div>

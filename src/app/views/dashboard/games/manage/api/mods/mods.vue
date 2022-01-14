@@ -1,15 +1,20 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 // This page is driven by this help page content.
 import { html } from '../../../../../../../lib/doc-game-api/v1.x/mods/index.md';
 import { BaseRouteComponent } from '../../../../../../../_common/route/route-component';
-import { RouteStore, RouteStoreModule } from '../../manage.store';
+import { useGameDashRouteController } from '../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageApiMods',
 })
 export default class RouteDashGamesManageApiMods extends BaseRouteComponent {
-	@RouteStoreModule.State game!: RouteStore['game'];
+	routeStore = setup(() => useGameDashRouteController()!);
+
+	get game() {
+		return this.routeStore.game!;
+	}
 
 	readonly content = html;
 

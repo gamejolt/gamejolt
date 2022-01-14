@@ -1,4 +1,5 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import AppEditableOverlay from '../../../../../../_common/editable-overlay/editable-overlay.vue';
 import AppExpand from '../../../../../../_common/expand/expand.vue';
@@ -8,7 +9,7 @@ import AppNavTabList from '../../../../../../_common/nav/tab-list/tab-list.vue';
 import { BaseRouteComponent } from '../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { GameHeaderModal } from '../../../../../components/game/header-modal/header-modal.service';
-import { RouteStore, RouteStoreModule } from '../manage.store';
+import { useGameDashRouteController } from '../manage.store';
 import AppManageGameMediaBar from './_media-bar/media-bar.vue';
 import AppManageGameNav from './_nav/nav.vue';
 
@@ -24,10 +25,17 @@ import AppManageGameNav from './_nav/nav.vue';
 	},
 })
 export default class RouteDashGamesManageGame extends BaseRouteComponent {
-	@RouteStoreModule.State game!: RouteStore['game'];
-	@RouteStoreModule.State media!: RouteStore['media'];
-	@RouteStoreModule.State canPublish!: RouteStore['canPublish'];
-	@RouteStoreModule.Action saveDraft!: RouteStore['saveDraft'];
+	routeStore = setup(() => useGameDashRouteController()!);
+
+	get game() {
+		return this.routeStore.game!;
+	}
+	get media() {
+		return this.routeStore.media;
+	}
+	get canPublish() {
+		return this.routeStore.canPublish;
+	}
 
 	readonly Game = Game;
 	readonly Screen = Screen;

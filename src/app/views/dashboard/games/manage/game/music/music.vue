@@ -1,4 +1,5 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../../../utils/array';
 import { Api } from '../../../../../../../_common/api/api.service';
@@ -15,7 +16,7 @@ import {
 } from '../../../../../../../_common/route/route-component';
 import FormGameSong from '../../../../../../components/forms/game/song/song.vue';
 import AppDashGameWizardControls from '../../../../../../components/forms/game/wizard-controls/wizard-controls.vue';
-import { RouteStore, RouteStoreModule } from '../../manage.store';
+import { useGameDashRouteController } from '../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageGameMusic',
@@ -34,8 +35,11 @@ import { RouteStore, RouteStoreModule } from '../../manage.store';
 	resolver: ({ route }) => Api.sendRequest('/web/dash/developer/games/music/' + route.params.id),
 })
 export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
-	@RouteStoreModule.State
-	game!: RouteStore['game'];
+	routeStore = setup(() => useGameDashRouteController()!);
+
+	get game() {
+		return this.routeStore.game!;
+	}
 
 	songs: GameSong[] = [];
 	isAdding = false;

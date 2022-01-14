@@ -1,4 +1,5 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { GameScoreTable } from '../../../../../../../../../_common/game/score-table/score-table.model';
@@ -8,7 +9,7 @@ import {
 } from '../../../../../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../../../../../_common/scroll/scroll.service';
 import { UserGameScore } from '../../../../../../../../../_common/user/game-score/game-score.model';
-import { RouteStore, RouteStoreModule } from '../../../../manage.store';
+import { useGameDashRouteController } from '../../../../manage.store';
 import AppManageGameListScores from '../../_list-scores/list-scores.vue';
 
 @Options({
@@ -28,8 +29,11 @@ import AppManageGameListScores from '../../_list-scores/list-scores.vue';
 		),
 })
 export default class RouteDashGamesManageApiScoreboardsScoresList extends BaseRouteComponent {
-	@RouteStoreModule.State
-	game!: RouteStore['game'];
+	routeStore = setup(() => useGameDashRouteController()!);
+
+	get game() {
+		return this.routeStore.game!;
+	}
 
 	scoreTables: GameScoreTable[] = [];
 	scoreTable: GameScoreTable = null as any;
@@ -57,7 +61,7 @@ export default class RouteDashGamesManageApiScoreboardsScoresList extends BaseRo
 	changeTable() {
 		Scroll.shouldAutoScroll = false;
 		this.$router.push({
-			name: this.$route.name,
+			name: this.$route.name ?? undefined,
 			params: Object.assign({}, this.$route.params, {
 				table: this.selectedTable,
 			}),
