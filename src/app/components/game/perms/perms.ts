@@ -1,30 +1,39 @@
 import { h } from 'vue';
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Perm } from '../../../../_common/collaborator/collaboratable';
 import { Game } from '../../../../_common/game/game.model';
-import { RouteStore, RouteStoreName } from '../../../views/dashboard/games/manage/manage.store';
+import { useGameRouteController } from '../../../views/discover/games/view/view.vue';
 
 @Options({})
 export class AppGamePerms extends Vue {
-	@Prop(Object) game?: Game;
+	@Prop(Object)
+	game?: Game;
+
 	@Prop({ type: String, default: '' })
 	required!: string;
-	@Prop(Boolean) either?: boolean;
+
+	@Prop(Boolean)
+	either?: boolean;
+
 	@Prop({ type: String, default: 'span' })
 	tag!: string;
-	@Prop(Boolean) debug?: boolean;
+
+	@Prop(Boolean)
+	debug?: boolean;
+
+	gameRouteStore = setup(() => useGameRouteController());
 
 	get targetGame() {
 		if (this.game) {
 			return this.game;
 		}
 
-		const store: RouteStore | null = this.$store.state[RouteStoreName];
-		if (store) {
-			return store.game;
+		if (this.gameRouteStore) {
+			return this.gameRouteStore.game;
 		}
 
-		return null;
+		return undefined;
 	}
 
 	get hasPerms() {

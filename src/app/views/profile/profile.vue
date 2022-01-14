@@ -56,7 +56,8 @@ function createController() {
 	const previewTrophies = ref<UserBaseTrophy[]>([]);
 
 	function _updateUser(newUser?: User) {
-		// If we already have a user, just assign new data into it to keep it fresh.
+		// If we already have a user, just assign new data into it to keep it
+		// fresh.
 		if (user.value && newUser && user.value.id === newUser.id) {
 			user.value.assign(newUser);
 		} else {
@@ -140,8 +141,8 @@ function createController() {
 	}
 
 	function profilePayload(payload: any) {
-		const user = new User(payload.user);
-		_updateUser(user);
+		const newUser = new User(payload.user);
+		_updateUser(newUser);
 
 		gamesCount.value = payload.gamesCount || 0;
 		communitiesCount.value = payload.communitiesCount || 0;
