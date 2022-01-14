@@ -1,3 +1,17 @@
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+import AppProgressBar from './bar.vue';
+
+@Options({
+	components: {
+		AppProgressBar,
+	},
+})
+export default class AppProgressBarStyleguide extends Vue {
+	progress = 0;
+}
+</script>
+
 <template>
 	<section class="section" id="styleguide-progress-bars">
 		<h1 class="section-header">Progress Bars</h1>
@@ -38,5 +52,3 @@
 		<app-progress-bar :percent="100" :indeterminate="true" :active="true" :thin="true" />
 	</section>
 </template>
-
-<script lang="ts" src="./bar-styleguide"></script>

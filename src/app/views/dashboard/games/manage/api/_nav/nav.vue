@@ -1,3 +1,10 @@
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+
+@Options({})
+export default class AppManageGameApiNav extends Vue {}
+</script>
+
 <template>
 	<ul class="sans-margin">
 		<li>
@@ -44,5 +51,3 @@
 		</li>
 	</ul>
 </template>
-
-<script lang="ts" src="./nav"></script>

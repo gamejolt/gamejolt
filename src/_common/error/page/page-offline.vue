@@ -1,3 +1,14 @@
+<script lang="ts">
+import { Vue } from 'vue-property-decorator';
+import { Navigate } from '../../navigate/navigate.service';
+
+export default class AppErrorPageOffline extends Vue {
+	retry() {
+		Navigate.reload();
+	}
+}
+</script>
+
 <template>
 	<div>
 		<h1><translate>Can't Connect</translate></h1>
@@ -14,5 +25,3 @@
 		</p>
 	</div>
 </template>
-
-<script lang="ts" src="./page-offline"></script>

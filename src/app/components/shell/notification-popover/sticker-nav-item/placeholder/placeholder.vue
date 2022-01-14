@@ -1,4 +1,9 @@
-<script lang="ts" src="./placeholder"></script>
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+
+@Options({})
+export default class AppShellNotificationPopoverStickerNavItemPlaceholder extends Vue {}
+</script>
 
 <template>
 	<div>

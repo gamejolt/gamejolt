@@ -1,3 +1,10 @@
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+
+@Options({})
+export default class AppButtonStyleguide extends Vue {}
+</script>
+
 <template>
 	<section class="section" id="styleguide-buttons">
 		<h1 class="section-header">Buttons</h1>
@@ -75,5 +82,3 @@
 		</div>
 	</section>
 </template>
-
-<script lang="ts" src="./button-styleguide"></script>

@@ -29,7 +29,7 @@ import { UserSiteTrophy } from '../../../_common/user/trophy/site-trophy.model';
 import { User } from '../../../_common/user/user.model';
 import { appStore } from '../../store/index';
 import { router } from '../../views';
-import { getTrophyImg } from '../trophy/thumbnail/thumbnail';
+import { getTrophyImg } from '../trophy/thumbnail/thumbnail.vue';
 import { CommunityChannel } from './community-channel';
 
 export const onFiresideStart = new EventTopic<Model>();

@@ -1,3 +1,15 @@
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+import AppPageHeader from '../../../components/page-header/page-header.vue';
+
+@Options({
+	components: {
+		AppPageHeader,
+	},
+})
+export default class RouteDashAccountMobileNav extends Vue {}
+</script>
+
 <template>
 	<div>
 		<app-page-header>
@@ -89,5 +101,3 @@
 		</nav>
 	</div>
 </template>
-
-<script lang="ts" src="./mobile-nav"></script>

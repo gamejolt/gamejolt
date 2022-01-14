@@ -1,3 +1,39 @@
+<script lang="ts">
+import { Options } from 'vue-property-decorator';
+import { Api } from '../../../../../../_common/api/api.service';
+import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
+import { Site } from '../../../../../../_common/site/site-model';
+import AppSitesLinkCard from '../../../../../components/sites/link-card/link-card.vue';
+import AppSitesManagePage from '../../../../../components/sites/manage-page/manage-page.vue';
+import { RouteStore, RouteStoreModule } from '../manage.store';
+
+@Options({
+	name: 'RouteDashGamesManageSite',
+	components: {
+		AppSitesLinkCard,
+		AppSitesManagePage,
+	},
+})
+@RouteResolver({
+	deps: {},
+	resolver: ({ route }) => Api.sendRequest('/web/dash/sites/' + route.params.id),
+})
+export default class RouteDashGamesManageSite extends BaseRouteComponent {
+	@RouteStoreModule.State
+	game!: RouteStore['game'];
+
+	site: Site = null as any;
+
+	get routeTitle() {
+		return this.$gettext('Manage Site');
+	}
+
+	routeResolved($payload: any) {
+		this.site = new Site($payload.site);
+	}
+}
+</script>
+
 <template>
 	<section class="section" v-if="isRouteBootstrapped">
 		<div class="container">
@@ -73,5 +109,3 @@
 	pointer-events: none
 	user-select: none
 </style>
-
-<script lang="ts" src="./site"></script>

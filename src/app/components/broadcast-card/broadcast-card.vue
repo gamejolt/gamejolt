@@ -1,3 +1,19 @@
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import AppCard from '../../../_common/card/card.vue';
+import { FiresidePost } from '../../../_common/fireside/post/post-model';
+
+@Options({
+	components: {
+		AppCard,
+	},
+})
+export default class AppBroadcastCard extends Vue {
+	@Prop(Object)
+	post!: FiresidePost;
+}
+</script>
+
 <template>
 	<div>
 		<router-link :to="post.routeLocation" v-app-track-event="`dash:overview:broadcast-view`">
@@ -26,5 +42,3 @@
 .-content
 	margin-left: 50px
 </style>
-
-<script lang="ts" src="./broadcast-card"></script>

@@ -1,3 +1,17 @@
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
+
+@Options({
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppManageGameNavRequired extends Vue {
+	@Prop(Boolean) isComplete?: boolean;
+}
+</script>
+
 <template>
 	<span class="manage-game-nav-required" v-if="!isComplete">
 		<span v-app-tooltip="$gettext(`Required Step`)">
@@ -16,5 +30,3 @@
 		position: absolute
 		right: 0
 </style>
-
-<script lang="ts" src="./required"></script>

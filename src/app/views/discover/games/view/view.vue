@@ -52,7 +52,7 @@ import AppGameMaturityBlock from '../../../../components/game/maturity-block/mat
 import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { IntentService } from '../../../../components/intent/intent.service';
 import AppPageHeader from '../../../../components/page-header/page-header.vue';
-import { onRatingWidgetChange } from '../../../../components/rating/widget/widget';
+import { onRatingWidgetChange } from '../../../../components/rating/widget/widget.vue';
 import AppDiscoverGamesViewControls from './AppDiscoverGamesViewControls.vue';
 import AppDiscoverGamesViewNav from './AppDiscoverGamesViewNav.vue';
 import './view-content.styl';

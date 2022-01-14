@@ -1,4 +1,14 @@
-<script lang="ts" src="./placeholder"></script>
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+import AppButtonPlaceholder from '../../../button/placeholder/placeholder.vue';
+
+@Options({
+	components: {
+		AppButtonPlaceholder,
+	},
+})
+export default class AppUserCardPlaceholder extends Vue {}
+</script>
 
 <template>
 	<div class="user-card sheet sheet-full">

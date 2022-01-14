@@ -1,4 +1,12 @@
-<script lang="ts" src="./hidden"></script>
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+
+@Options({})
+export default class AppStickerCardHidden extends Vue {
+	@Prop({ type: Number, default: 0 }) count!: number;
+	@Prop({ type: Boolean, default: false }) disabled!: boolean;
+}
+</script>
 
 <template>
 	<div class="-card" :class="{ '-redeemable': !disabled, '-disabled': disabled }">

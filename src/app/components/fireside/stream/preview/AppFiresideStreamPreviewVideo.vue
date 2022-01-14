@@ -2,7 +2,7 @@
 import { computed, PropType, watch } from 'vue';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list';
+import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../../_common/user/user.model';
 import { AppFiresideContainer } from '../../container/container';
 import { createFiresideController } from '../../controller/controller';

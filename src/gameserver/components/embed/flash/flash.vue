@@ -1,4 +1,25 @@
-<script lang="ts" src="./flash"></script>
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+import { State } from 'vuex-class';
+import { Store } from '../../../store/index';
+
+@Options({})
+export default class AppEmbedFlash extends Vue {
+	@State url!: Store['url'];
+	@State build!: Store['build'];
+	@State username!: Store['username'];
+	@State token!: Store['token'];
+	@State embedWidth!: Store['embedWidth'];
+	@State embedHeight!: Store['embedHeight'];
+
+	get query() {
+		if (this.username && this.token) {
+			return `?gjapi_username=${this.username}&gjapi_token=${this.token}`;
+		}
+		return '';
+	}
+}
+</script>
 
 <template>
 	<div style="margin: 0 auto; text-align: center">

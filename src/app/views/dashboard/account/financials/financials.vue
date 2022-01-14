@@ -1,3 +1,32 @@
+<script lang="ts">
+import { Options } from 'vue-property-decorator';
+import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { Translate } from '../../../../../_common/translate/translate.service';
+import FormFinancials from '../../../../components/forms/financials/financials.vue';
+import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
+
+@Options({
+	name: 'RouteDashAccountFinancials',
+	components: {
+		FormFinancials,
+	},
+})
+@RouteResolver({
+	resolver: () => Promise.resolve(),
+	resolveStore() {
+		routeStore.commit('setHeading', Translate.$gettext(`Marketplace Account Setup`));
+	},
+})
+export default class RouteDashAccountFinancials extends BaseRouteComponent {
+	@RouteStoreModule.State
+	heading!: RouteStore['heading'];
+
+	get routeTitle() {
+		return this.heading;
+	}
+}
+</script>
+
 <template>
 	<div class="row">
 		<div class="col-md-9 col-lg-8">
@@ -5,5 +34,3 @@
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./financials"></script>

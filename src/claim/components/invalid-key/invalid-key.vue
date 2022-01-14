@@ -1,3 +1,10 @@
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+
+@Options({})
+export default class AppInvalidKey extends Vue {}
+</script>
+
 <template>
 	<section class="container">
 		<h1 class="section-header">
@@ -18,5 +25,3 @@
 		</p>
 	</section>
 </template>
-
-<script lang="ts" src="./invalid-key"></script>

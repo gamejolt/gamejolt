@@ -1,4 +1,9 @@
-<script lang="ts" src="./add-placeholder"></script>
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+
+@Options({})
+export default class AppPostAddPlaceholder extends Vue {}
+</script>
 
 <template>
 	<div>

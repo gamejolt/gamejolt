@@ -1,3 +1,10 @@
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+
+@Options({})
+export default class AppPageHeaderControls extends Vue {}
+</script>
+
 <template>
 	<div class="-controls">
 		<div class="-start">
@@ -35,5 +42,3 @@
 		@media $media-md
 			flex: none
 </style>
-
-<script lang="ts" src="./controls"></script>

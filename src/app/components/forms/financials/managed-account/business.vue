@@ -1,3 +1,27 @@
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+import { findRequiredVueParent } from '../../../../../utils/vue';
+import { CommonFormComponents } from '../../../../../_common/form-vue/form-common';
+import FormFinancialsManagedAccountTS from './managed-account';
+import FormFinancialsManagedAccount from './managed-account.vue';
+
+@Options({
+	components: {
+		...CommonFormComponents,
+	},
+})
+export default class AppFinancialsManagedAccountBusiness extends Vue {
+	parent: FormFinancialsManagedAccountTS = null as any;
+
+	created() {
+		this.parent = findRequiredVueParent(
+			this,
+			FormFinancialsManagedAccount
+		) as FormFinancialsManagedAccountTS;
+	}
+}
+</script>
+
 <template>
 	<div>
 		<div v-if="!parent.getStripeField('company.name')">
@@ -37,5 +61,3 @@
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./business"></script>
