@@ -44,13 +44,9 @@ const rtcUsers = computed(() => {
 	return users;
 });
 
-const focusedUser = computed(() => {
-	return rtc.value?.focusedUser;
-});
+const focusedUser = computed(() => rtc.value?.focusedUser);
 
-const hasVideo = computed(() => {
-	return focusedUser.value?.hasVideo === true;
-});
+const hasVideo = computed(() => focusedUser.value?.hasVideo === true);
 
 const shouldShowVideo = computed(() => {
 	// We can only show local videos in one place at a time. This will
