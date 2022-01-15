@@ -50,7 +50,10 @@ export default class AppCommunityChannelCard extends Vue {
 
 	get linkTo() {
 		if (this.path === CommunityPresetChannelType.FEATURED) {
-			return { name: 'communities.view.overview' };
+			return {
+				name: 'communities.view.overview',
+				params: { path: this.community.path },
+			};
 		}
 
 		const link = {

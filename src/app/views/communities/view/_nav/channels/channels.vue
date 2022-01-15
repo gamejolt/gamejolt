@@ -28,17 +28,19 @@ export default class AppNavChannels extends Vue {
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 
+	isLoadingArchivedChannels = false;
+
 	get communities() {
 		return this.store.communities;
 	}
+
 	get communityStates() {
 		return this.store.communityStates;
 	}
+
 	get user() {
 		return this.commonStore.user;
 	}
-
-	isLoadingArchivedChannels = false;
 
 	get community() {
 		return this.routeStore.community;

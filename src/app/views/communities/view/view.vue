@@ -1,5 +1,5 @@
 <script lang="ts">
-import { markRaw, ref } from 'vue';
+import { ref } from 'vue';
 import { setup } from 'vue-class-component';
 import { Inject, Options, Provide, Watch } from 'vue-property-decorator';
 import {
@@ -112,7 +112,6 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 
 	readonly Environment = Environment;
 	readonly Screen = Screen;
-	readonly sidebarComponent = markRaw(AppCommunitiesViewContext);
 
 	contextPane: ContextPane | null = null;
 
@@ -180,7 +179,7 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	routeCreated() {
 		// Add a new context pane if we haven't already.
 		if (!this.contextPane) {
-			this.sidebarStore.addContextPane(this.sidebarComponent);
+			this.sidebarStore.addContextPane(AppCommunitiesViewContext);
 			this.contextPane = this.activeContextPane;
 		}
 
