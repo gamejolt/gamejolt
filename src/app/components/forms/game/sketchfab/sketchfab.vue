@@ -3,11 +3,10 @@ import { mixins, Options, Prop } from 'vue-property-decorator';
 import { BaseForm, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
 import { GameSketchfab } from '../../../../../_common/game/sketchfab/sketchfab.model';
-import {
+import AppSketchfabEmbed, {
 	getSketchfabIdFromInput,
 	SKETCHFAB_FIELD_VALIDATION_REGEX,
-} from '../../../../../_common/sketchfab/embed/embed';
-import AppSketchfabEmbed from '../../../../../_common/sketchfab/embed/embed.vue';
+} from '../../../../../_common/sketchfab/embed/embed.vue';
 
 class Wrapper extends BaseForm<GameSketchfab> {}
 

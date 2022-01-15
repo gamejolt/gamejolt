@@ -51,8 +51,7 @@ import AppFormsCommunityPillAdd from '../community/_pill/add/add.vue';
 import AppFormsCommunityPill from '../community/_pill/community-pill.vue';
 import AppFormsCommunityPillIncomplete from '../community/_pill/incomplete/incomplete.vue';
 import AppFormPostMedia from './_media/media.vue';
-import { VideoStatus } from './_video/video';
-import AppFormPostVideo from './_video/video.vue';
+import AppFormPostVideo, { VideoStatus } from './_video/video.vue';
 
 type FormPostModel = FiresidePost & {
 	mediaItemIds: number[];

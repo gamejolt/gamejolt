@@ -6,7 +6,7 @@ import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import { BaseModal } from '../../../../_common/modal/base';
 import FormPost from '../../forms/post/post.vue';
-import { VideoStatus } from '../../forms/post/_video/video';
+import { VideoStatus } from '../../forms/post/_video/video.vue';
 import AppPostAddPlaceholder from '../add-placeholder/add-placeholder.vue';
 
 @Options({

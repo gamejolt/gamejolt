@@ -29,7 +29,7 @@ const props = defineProps({
 const slots = useSlots();
 
 // We are trying to pull the text from the default slot element.
-const slotContent = slots.default?.()?.[0].children?.toString();
+const slotContent = slots.default?.()?.[0].children?.toString().trim();
 const msgid = ref(slotContent ?? '');
 
 const isPlural = computed(

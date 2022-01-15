@@ -1,7 +1,8 @@
 <script lang="ts">
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { onRatingWidgetChange } from '../../../app/components/rating/widget/widget';
-import AppRatingWidget from '../../../app/components/rating/widget/widget.vue';
+import AppRatingWidget, {
+	onRatingWidgetChange,
+} from '../../../app/components/rating/widget/widget.vue';
 import { useEventSubscription } from '../../system/event/event-topic';
 import { Game } from '../game.model';
 

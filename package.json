@@ -17,8 +17,8 @@
 		"analyze-bundle": "gulp --analyze-bundle",
 		"lint": "eslint --ext .js,.vue src",
 		"build:app": "gulp --production --app",
-		"build:web": "vite build --outDir build/web",
-		"build:server": "vite build --outDir build/server --ssr src/auth/server.ts"
+		"build:web": "vite build --outDir ../build/web",
+		"build:server": "vite build --outDir ../build/server --ssr src/auth/server.ts"
 	},
 	"devDependencies": {
 		"@ckpack/vue-color": "1.1.5",

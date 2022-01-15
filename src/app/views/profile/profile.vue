@@ -391,6 +391,7 @@ export default class RouteProfile extends BaseRouteComponent {
 
 				<div class="text-muted small">
 					<translate>profile.joined</translate>
+					{{ ' ' }}
 					<app-time-ago :date="user.created_on" />
 				</div>
 			</app-page-header>
@@ -420,6 +421,7 @@ export default class RouteProfile extends BaseRouteComponent {
 					<div class="small text-muted">
 						<!-- Joined on -->
 						<translate>profile.joined</translate>
+						{{ ' ' }}
 						<app-time-ago :date="user.created_on" />
 
 						<template v-if="isRouteBootstrapped">

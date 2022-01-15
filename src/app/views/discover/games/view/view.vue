@@ -42,7 +42,7 @@ import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import { EventSubscription } from '../../../../../_common/system/event/event-topic';
 import { useThemeStore } from '../../../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { getTranslation } from '../../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
 import { User } from '../../../../../_common/user/user.model';
@@ -388,11 +388,11 @@ const GameThemeKey = 'game';
 			route,
 			{
 				intent: 'follow-game',
-				message: getTranslation(`You're now following this game.`),
+				message: $gettext(`You're now following this game.`),
 			},
 			{
 				intent: 'decline-game-collaboration',
-				message: getTranslation(`You've declined the invitation to collaborate.`),
+				message: $gettext(`You've declined the invitation to collaborate.`),
 			}
 		);
 		if (intentRedirect) {
@@ -431,9 +431,9 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	private ratingChange$?: EventSubscription;
 
 	private roleNames: { [k: string]: string } = {
-		[Collaborator.ROLE_EQUAL_COLLABORATOR]: getTranslation('an equal collaborator'),
-		[Collaborator.ROLE_COMMUNITY_MANAGER]: getTranslation('a community manager'),
-		[Collaborator.ROLE_DEVELOPER]: getTranslation('a developer'),
+		[Collaborator.ROLE_EQUAL_COLLABORATOR]: $gettext('an equal collaborator'),
+		[Collaborator.ROLE_COMMUNITY_MANAGER]: $gettext('a community manager'),
+		[Collaborator.ROLE_DEVELOPER]: $gettext('a developer'),
 	};
 
 	get game() {
