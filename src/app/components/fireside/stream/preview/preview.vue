@@ -4,7 +4,7 @@ import { Fireside } from '../../../../../_common/fireside/fireside.model';
 
 @Options({
 	components: {
-		AppFiresideStreamPreviewVideo: () => import('./video.vue'),
+		AppFiresideStreamPreviewVideo: () => import('./AppFiresideStreamPreviewVideo.vue'),
 	},
 })
 export default class AppFiresideStreamPreview extends Vue {
