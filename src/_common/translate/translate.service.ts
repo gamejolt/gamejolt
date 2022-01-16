@@ -3,12 +3,13 @@ import { arrayIndexBy } from '../../utils/array';
 import AppTranslate from './AppTranslate.vue';
 import { TranslateDirective } from './translate-directive';
 
-const _translationImports = import.meta.glob('../../translations/*/main.json');
+type LazyLanguageImport = () => Promise<{
+	[key: string]: any;
+}>;
 
-let defaultTranslations: any = {};
-if (import.meta.env.SSR) {
-	defaultTranslations = await import('../../translations/en_US/main.json');
-}
+const _translationImports: Record<string, LazyLanguageImport> = import.meta.env.SSR
+	? { '../../translations/en_US/main.json': () => import('../../translations/en_US/main.json') }
+	: import.meta.glob('../../translations/*/main.json');
 
 const LangStorageKey = 'lang';
 const InterpolationRegex = /%\{((?:.|\n)+?)\}/g;
@@ -49,11 +50,14 @@ const _currentTranslations = computed(
 	() => _translations.value[_language.value] ?? _translations.value[_language.value.split('_')[0]]
 );
 
+let _translationsReady: Promise<void> = new Promise(() => {});
+
 export function initTranslations(app: App) {
 	// Initialize our starting values. [loadCurrentLanguage] should be called
 	// once the app is mounted to switch to their real language.
 	_language.value = (!import.meta.env.SSR && localStorage.getItem(LangStorageKey)) || 'en_US';
-	_translations.value = defaultTranslations;
+	_translations.value = {};
+	loadCurrentLanguage();
 
 	// Convenience to make it easier to translate in templates.
 	app.config.globalProperties.$gettext = $gettext;
@@ -70,14 +74,22 @@ export function initTranslations(app: App) {
  * have to wait for the translations to load before showing anything.
  */
 export async function loadCurrentLanguage() {
-	const { default: translationData } = await _translationImports[
-		'../../translations/' + _language.value + '/main.json'
-	]();
+	_translationsReady = new Promise(async resolve => {
+		const { default: translationData } = await _translationImports[
+			`../../translations/${_language.value}/main.json`
+		]();
 
-	const newTranslations = translationData[_language.value];
-	if (newTranslations) {
-		_translations.value[_language.value] = newTranslations;
-	}
+		const newTranslations = translationData[_language.value];
+		if (newTranslations) {
+			_translations.value[_language.value] = newTranslations;
+		}
+
+		resolve();
+	});
+}
+
+export async function translationsReady() {
+	return _translationsReady;
 }
 
 export function getTranslationLang() {

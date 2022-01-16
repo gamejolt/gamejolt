@@ -1,6 +1,7 @@
 import { setDeviceUserAgent } from '../_common/device/device.service';
 import { Environment } from '../_common/environment/environment.service';
 import { renderMeta } from '../_common/meta/meta-service';
+import { translationsReady } from '../_common/translate/translate.service';
 import { createApp } from './bootstrap';
 
 export default async (context: any) => {
@@ -24,6 +25,9 @@ export default async (context: any) => {
 		console.log('no matched routes');
 		throw { code: 404 };
 	}
+
+	// Wait for translations to load.
+	await translationsReady();
 
 	try {
 		// const componentState: { [k: string]: any } = {};
