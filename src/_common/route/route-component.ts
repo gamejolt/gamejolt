@@ -71,7 +71,9 @@ function getChangedProperties(base: { [k: string]: any }, compare: { [k: string]
 }
 
 class Resolver {
-	payloadPromise?: ReturnType<typeof getPayload>;
+	_payloadPromise?: ReturnType<typeof getPayload>;
+	_isResolved = false;
+
 	payload: any | PayloadError | RouteLocationRedirect;
 	fromCache?: boolean;
 	canceled = false;
@@ -83,9 +85,43 @@ class Resolver {
 		_activeRouteResolvers.set(componentName, this);
 	}
 
+	get payloadPromise(): typeof Resolver.prototype._payloadPromise {
+		return this._payloadPromise;
+	}
+
+	set payloadPromise(newPromise: typeof Resolver.prototype._payloadPromise) {
+		this._payloadPromise = newPromise;
+
+		// If explicitly setting to undefined, treat it as if it was resolved.
+		if (newPromise === undefined) {
+			this._isResolved = true;
+			return;
+		}
+
+		// TODO(vue3-ssr): we want _isResolved to be set to true before any other
+		// .then resolvers run. Consider returning a new promise?
+
+		this._isResolved = false;
+		newPromise.then(() => {
+			// If the payload promise has changed, noop.
+			if (this._payloadPromise !== newPromise) {
+				return;
+			}
+
+			this._isResolved = true;
+		});
+	}
+
+	get isResolved() {
+		return this._isResolved;
+	}
+
 	async resolvePayload() {
 		if (this.payloadPromise) {
 			const { payload, fromCache } = await this.payloadPromise;
+
+			// TODO(vue3-ssr): shouldn't we check if canceled or if payload promise changed here?
+
 			this.payload = payload;
 			this.fromCache = fromCache;
 		}
@@ -297,7 +333,16 @@ export class BaseRouteComponent extends Vue {
 
 		const activeResolver = _activeRouteResolvers.get(name);
 		if (activeResolver) {
-			if (activeResolver.payloadPromise) {
+			// Avoid async when possible, so only await if we know the resolved has not resolved.
+			if (activeResolver.payloadPromise && !activeResolver.isResolved) {
+				// In SSR the resolver should be fully resolved by now.
+				// Async created() hooks are not supported.
+				if (import.meta.env.SSR) {
+					throw new Error(
+						'Encountered an unresolved route resolver during created() for SSR. This is likely a bug with route-component.'
+					);
+				}
+
 				this.isRouteLoading = true;
 				await activeResolver.resolvePayload();
 			}
@@ -490,6 +535,7 @@ export class BaseRouteComponent extends Vue {
 			} else if (payload instanceof RouteLocationRedirect) {
 				// We want to clear out all current resolvers before doing the
 				// redirect. They will re-resolve after the route changes.
+				// TODO(vue3-ssr): Why do we do things differently here for SSR?
 				if (import.meta.env.SSR) {
 					this.commonStore_.redirect(this.$router.resolve(payload.location).href);
 				} else {
