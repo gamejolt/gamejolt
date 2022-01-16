@@ -94,7 +94,7 @@ export default class AppMediaItemPost extends Vue {
 
 	get deviceMaxHeight() {
 		if (import.meta.env.SSR || !this.restrictDeviceMaxHeight) {
-			return;
+			return undefined;
 		}
 
 		// If the screen size is considered mobile, we want to treat

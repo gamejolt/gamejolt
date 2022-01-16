@@ -1,4 +1,83 @@
-<script lang="ts" src="./view"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
+import { arrayGroupBy, arrayIndexBy } from '../../../../../../utils/array';
+import { Api } from '../../../../../../_common/api/api.service';
+import { formatCurrency } from '../../../../../../_common/filters/currency';
+import { formatDate } from '../../../../../../_common/filters/date';
+import { Game } from '../../../../../../_common/game/game.model';
+import { GamePackage } from '../../../../../../_common/game/package/package.model';
+import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
+import { Geo } from '../../../../../../_common/geo/geo.service';
+import { Order } from '../../../../../../_common/order/order.model';
+import { OrderPayment } from '../../../../../../_common/order/payment/payment.model';
+import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
+import { Screen } from '../../../../../../_common/screen/screen-service';
+import { $gettext } from '../../../../../../_common/translate/translate.service';
+import { useAccountRouteController } from '../../account.vue';
+
+@Options({
+	name: 'RouteDashAccountPurchasesView',
+	components: {
+		AppGameThumbnailImg,
+	},
+})
+@RouteResolver({
+	deps: { params: ['id'] },
+	resolver: ({ route }) => Api.sendRequest('/web/dash/purchases/' + route.params.id),
+})
+export default class RouteDashAccountPurchasesView extends BaseRouteComponent {
+	routeStore = setup(() => useAccountRouteController()!);
+
+	order: Order = null as any;
+	packages: GamePackage[] = [];
+	games: Game[] = [];
+
+	readonly Geo = Geo;
+	readonly OrderPayment = OrderPayment;
+	readonly formatDate = formatDate;
+	readonly formatCurrency = formatCurrency;
+	readonly Screen = Screen;
+
+	get routeTitle() {
+		return this.routeStore.heading;
+	}
+
+	get gamesById() {
+		return arrayIndexBy(this.games, 'id');
+	}
+
+	get packagesBySellable() {
+		return arrayGroupBy(this.packages, 'sellable_id');
+	}
+
+	get firstRefund() {
+		if (
+			this.order._is_refunded &&
+			this.order.payments &&
+			this.order.payments[0] &&
+			this.order.payments[0].refunds
+		) {
+			return this.order.payments[0].refunds[0];
+		}
+		return null;
+	}
+
+	get billingAddress() {
+		return this.order.billing_address!;
+	}
+
+	routeCreated() {
+		this.routeStore.heading = $gettext(`Order Details`);
+	}
+
+	routeResolved($payload: any) {
+		this.order = new Order($payload.order);
+		this.games = Game.populate($payload.games);
+		this.packages = GamePackage.populate($payload.packages);
+	}
+}
+</script>
 
 <template>
 	<div v-if="isRouteBootstrapped">
@@ -34,36 +113,35 @@
 					<translate>Billing</translate>
 				</h4>
 
-				<div v-for="(address, i) of [order.billing_address]" :key="i">
-					<div v-if="address.fullname">
-						<strong>{{ address.fullname }}</strong>
-					</div>
+				<div v-if="billingAddress.fullname">
+					<strong>{{ billingAddress.fullname }}</strong>
+				</div>
 
-					<div v-if="address.street1">
-						{{ address.street1 }}
-					</div>
+				<div v-if="billingAddress.street1">
+					{{ billingAddress.street1 }}
+				</div>
 
-					<div v-if="address.street2">
-						{{ address.street2 }}
-					</div>
+				<div v-if="billingAddress.street2">
+					{{ billingAddress.street2 }}
+				</div>
 
-					<div>
-						<template v-if="address.city">
-							{{ address.city }}
-						</template>
-						<template v-if="address.region">
-							{{
-								Geo.getRegionName(address.country, address.region) || address.region
-							}}
-						</template>
-						<template v-if="address.postcode">
-							{{ address.postcode }}
-						</template>
-					</div>
+				<div>
+					<template v-if="billingAddress.city">
+						{{ billingAddress.city }}
+					</template>
+					<template v-if="billingAddress.region && billingAddress.country">
+						{{
+							Geo.getRegionName(billingAddress.country, billingAddress.region) ||
+							billingAddress.region
+						}}
+					</template>
+					<template v-if="billingAddress.postcode">
+						{{ billingAddress.postcode }}
+					</template>
+				</div>
 
-					<div v-if="address.country">
-						{{ Geo.getCountryName(address.country) }}
-					</div>
+				<div v-if="billingAddress.country">
+					{{ Geo.getCountryName(billingAddress.country) }}
 				</div>
 				<br />
 			</div>

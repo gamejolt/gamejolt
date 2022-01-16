@@ -1,3 +1,24 @@
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Community } from '../../../../_common/community/community.model';
+import { formatNumber } from '../../../../_common/filters/number';
+import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/backdrop.vue';
+import { AppTheme } from '../../../../_common/theme/theme';
+
+@Options({
+	components: {
+		AppTheme,
+		AppMediaItemBackdrop,
+	},
+})
+export default class AppGameCommunityBadge extends Vue {
+	@Prop(Object)
+	community!: Community;
+
+	readonly formatNumber = formatNumber;
+}
+</script>
+
 <template>
 	<app-theme :theme="community.theme">
 		<router-link
@@ -53,5 +74,3 @@
 </template>
 
 <style lang="stylus" scoped src="./community-badge.styl"></style>
-
-<script lang="ts" src="./community-badge"></script>

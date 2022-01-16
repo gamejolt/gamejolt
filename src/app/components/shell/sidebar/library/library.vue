@@ -1,4 +1,116 @@
-<script lang="ts" src="./library"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options, Vue } from 'vue-property-decorator';
+import { stringSort } from '../../../../../utils/array';
+import { shouldShowAppPromotion } from '../../../../../utils/mobile-app';
+import { shallowSetup } from '../../../../../utils/vue';
+import { trackAppPromotionClick } from '../../../../../_common/analytics/analytics.service';
+import { Environment } from '../../../../../_common/environment/environment.service';
+import AppExpand from '../../../../../_common/expand/expand.vue';
+import { formatNumber } from '../../../../../_common/filters/number';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
+import AppShortkey from '../../../../../_common/shortkey/shortkey.vue';
+import { useCommonStore } from '../../../../../_common/store/common-store';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { useAppStore } from '../../../../store/index';
+import { libraryNewPlaylist, useLibraryStore } from '../../../../store/library';
+import AppShellSidebarCollectionList from './AppShellSidebarCollectionList.vue';
+
+@Options({
+	components: {
+		AppShellSidebarCollectionList,
+		AppExpand,
+		AppScrollScroller,
+		AppShortkey,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppShellSidebarLibrary extends Vue {
+	store = setup(() => useAppStore());
+	commonStore = setup(() => useCommonStore());
+	libraryStore = shallowSetup(() => useLibraryStore());
+
+	get app() {
+		return this.commonStore;
+	}
+	get isLibraryBootstrapped() {
+		return this.store.isLibraryBootstrapped;
+	}
+
+	playlistFilterQuery = '';
+	openFolders: string[] = [];
+
+	readonly Environment = Environment;
+	readonly Screen = Screen;
+	readonly trackAppPromotionClick = trackAppPromotionClick;
+
+	get bundleCollections() {
+		return this.libraryStore.bundleCollections.value;
+	}
+
+	get developerCollection() {
+		return this.libraryStore.developerCollection.value;
+	}
+	get followedCollection() {
+		return this.libraryStore.followedCollection.value;
+	}
+
+	get ownedCollection() {
+		return this.libraryStore.ownedCollection.value;
+	}
+
+	get collections() {
+		return this.libraryStore.collections.value;
+	}
+
+	get playlistFolders() {
+		return this.libraryStore.playlistFolders.value;
+	}
+
+	get collectionsLength() {
+		return formatNumber(this.collections.length);
+	}
+
+	get bundleCollectionsLength() {
+		return formatNumber(this.bundleCollections.length);
+	}
+
+	get filteredBundleCollections() {
+		return this.bundleCollections.sort((a, b) => stringSort(a.name, b.name));
+	}
+
+	get playlistFoldersToDisplay() {
+		return Object.keys(this.playlistFolders).filter(folder => folder !== 'main');
+	}
+
+	get shouldShowAppPromotion() {
+		return shouldShowAppPromotion(this.$route);
+	}
+
+	get mainPlaylists() {
+		return this.playlistFolders.main.collections.value;
+	}
+
+	toggleFolder(key: string) {
+		const index = this.openFolders.indexOf(key);
+		if (index === -1) {
+			this.openFolders.push(key);
+		} else {
+			this.openFolders.splice(index, 1);
+		}
+	}
+
+	async showAddPlaylistModal() {
+		const collection = await libraryNewPlaylist(this.libraryStore);
+		if (collection) {
+			this.$router.push(collection.routeLocation);
+		}
+	}
+}
+</script>
 
 <template>
 	<div id="shell-sidebar-library">
@@ -238,7 +350,7 @@
 							</a>
 							<app-expand :when="openFolders.indexOf(key) !== -1">
 								<app-shell-sidebar-collection-list
-									:collections="playlistFolders[key].collections"
+									:collections="playlistFolders[key].collections.value"
 									:filter="playlistFilterQuery"
 									:should-sort="key === 'developers'"
 								/>
@@ -249,7 +361,7 @@
 
 				<!-- Main Playlists (not in folders) -->
 				<app-shell-sidebar-collection-list
-					:collections="playlistFolders.main.collections"
+					:collections="mainPlaylists"
 					:filter="playlistFilterQuery"
 				/>
 			</template>

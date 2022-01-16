@@ -1,4 +1,48 @@
-<script lang="ts" src="./address"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options, Vue } from 'vue-property-decorator';
+import { Country, Geo, Region } from '../../../_common/geo/geo.service';
+import { AddressData, useWidgetPackageStore } from '../../store/index';
+
+@Options({})
+export default class AppAddress extends Vue {
+	store = setup(() => useWidgetPackageStore());
+
+	address = {
+		country: 'us',
+		region: '',
+		street1: '',
+		postcode: '',
+	};
+
+	countries: Country[] = [];
+	regions: Region[] | null = [];
+
+	// From the form library.
+	errors: any;
+
+	created() {
+		this.countries = Geo.getCountries();
+		this.countryChanged();
+	}
+
+	countryChanged() {
+		this.regions = Geo.getRegions(this.address.country) || null;
+
+		if (this.regions) {
+			this.address.region = this.regions[0].code;
+		} else {
+			this.address.region = '';
+		}
+	}
+
+	submit() {
+		const addressData = Object.assign(new AddressData(), this.address);
+		this.store.address = addressData;
+		this.store.checkout();
+	}
+}
+</script>
 
 <template>
 	<div>

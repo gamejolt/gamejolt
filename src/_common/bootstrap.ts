@@ -1,14 +1,13 @@
 import { Component, createApp, createSSRApp } from 'vue';
 import { Router } from 'vue-router';
 import { hijackLinks } from '../utils/router';
-import { StoreKey, VuexStore } from '../utils/vuex';
 import { initAnalytics, initAnalyticsRouter } from './analytics/analytics.service';
 import { AppTrackEvent } from './analytics/track-event.directive';
 import AppButton from './button/button.vue';
 import { ensureConfig } from './config/config.service';
 import { initConnectionService } from './connection/connection-service';
 import AppJolticon from './jolticon/AppJolticon.vue';
-import AppLinkExternal from './link/external.vue';
+import AppLinkExternal from './link/AppLinkExternal.vue';
 import AppLinkHelp from './link/help/help.vue';
 import { initMetaService } from './meta/meta-service';
 import { Payload } from './payload/payload-service';
@@ -21,7 +20,7 @@ import { initTranslations } from './translate/translate.service';
  * Bootstraps common services and returns a "createApp" function that our entry
  * point can call to get what it needs.
  */
-export function bootstrapCommon(appComponent: Component, store: VuexStore, router?: Router) {
+export function bootstrapCommon(appComponent: Component, router?: Router) {
 	const app = import.meta.env.SSR ? createSSRApp(appComponent) : createApp(appComponent);
 
 	// Our global stores.
@@ -61,23 +60,9 @@ export function bootstrapCommon(appComponent: Component, store: VuexStore, route
 
 	initTranslations(app);
 
-	app.use(store, StoreKey);
 	if (router) {
 		app.use(router);
 	}
 
-	return app;
-
-	// return () => {
-
-	// 	// return new VueGlobal({
-	// 	// 	// TODO(vue3)
-	// 	// 	// Needed for our vue plugins to know when it's the root vue
-	// 	// 	// instance.
-	// 	// 	gjIsRoot: true,
-	// 	// 	store,
-	// 	// 	router,
-	// 	// 	render: h => h(appComponent),
-	// 	// });
-	// };
+	return { app, commonStore };
 }

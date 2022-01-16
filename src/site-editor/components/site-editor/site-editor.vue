@@ -1,4 +1,105 @@
-<script lang="ts" src="./site-editor"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options, Vue } from 'vue-property-decorator';
+import { Api } from '../../../_common/api/api.service';
+import AppContentBlockEditor from '../../../_common/content-block/editor/editor.vue';
+import { showSuccessGrowl } from '../../../_common/growls/growls.service';
+import AppLoading from '../../../_common/loading/loading.vue';
+import AppThemeSelector from '../../../_common/theme/selector/selector.vue';
+import AppThemeEditor from '../../../_common/theme/theme-editor/theme-editor.vue';
+import { useSiteEditorStore } from '../../store/index';
+
+@Options({
+	components: {
+		AppLoading,
+		AppThemeSelector,
+		AppThemeEditor,
+		AppContentBlockEditor,
+	},
+})
+export default class AppSiteEditor extends Vue {
+	store = setup(() => useSiteEditorStore());
+
+	get tab() {
+		return this.store.tab;
+	}
+
+	get site() {
+		return this.store.site;
+	}
+
+	get templates() {
+		return this.store.siteTemplates;
+	}
+
+	get currentTemplateId() {
+		return this.store.currentTemplateId;
+	}
+
+	get theme() {
+		return this.store.siteTheme;
+	}
+
+	get isLoaded() {
+		return this.store.isLoaded;
+	}
+
+	get isDirty() {
+		return this.store.isDirty;
+	}
+
+	get siteUrl() {
+		return this.site?.url;
+	}
+
+	get confirmMessage() {
+		return this.$gettext('You have unsaved changes. Are you sure you want to discard them?');
+	}
+
+	mounted() {
+		this.$router.beforeEach((_to, _from, next) => {
+			if (!this.canLeave()) {
+				return next(false);
+			}
+			this.store.clearIsDirty();
+			next();
+		});
+
+		window.onbeforeunload = () => {
+			if (this.isDirty) {
+				return this.confirmMessage;
+			}
+		};
+	}
+
+	themeEdited(themeData: any) {
+		this.store.setThemeData(themeData);
+	}
+
+	contentEdited() {
+		this.store.setContentEdited();
+	}
+
+	canLeave() {
+		return !this.isDirty || confirm(this.confirmMessage);
+	}
+
+	async save() {
+		const data = {
+			template_id: this.currentTemplateId,
+			theme: this.theme!.data,
+			content_blocks: this.site!.content_blocks,
+		};
+
+		this.store.clearIsDirty();
+		await Api.sendRequest(`/web/dash/sites/editor-save/${this.site!.id}`, data, {
+			sanitizeComplexData: false,
+		});
+
+		showSuccessGrowl(this.$gettext('Your site has been saved.'), this.$gettext('Site Saved'));
+	}
+}
+</script>
 
 <template>
 	<div class="site-editor fill-darkest" :class="'site-editor-tab-' + tab">
@@ -73,16 +174,16 @@
 						<app-theme-selector
 							:templates="templates"
 							:current-template="currentTemplateId"
-							@change="setTemplateId($event)"
+							@change="store.setTemplateId($event)"
 						/>
 
 						<template v-if="!!currentTemplateId">
 							<div v-for="templateId of [currentTemplateId]" :key="templateId">
 								<app-theme-editor
 									window-id="site-editor-iframe"
-									:resource-id="site.id"
+									:resource-id="site?.id"
 									:template="templateId"
-									:theme="theme.data"
+									:theme="theme?.data"
 									@change="themeEdited"
 								/>
 							</div>
@@ -102,7 +203,7 @@
 						<app-content-block-editor
 							window-id="site-editor-iframe"
 							:site="site"
-							:content-block="site.content_blocks[0]"
+							:content-block="site?.content_blocks?.[0]"
 							@change="contentEdited"
 						/>
 					</div>

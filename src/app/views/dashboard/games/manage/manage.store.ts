@@ -1,11 +1,6 @@
-import { namespace } from 'vuex-class';
-import {
-	NamespaceVuexStore,
-	VuexAction,
-	VuexModule,
-	VuexMutation,
-	VuexStore,
-} from '../../../../../utils/vuex';
+import { computed, inject, InjectionKey, provide, ref, unref } from 'vue';
+import { Router } from 'vue-router';
+import { arrayRemove } from '../../../../../utils/array';
 import { Api } from '../../../../../_common/api/api.service';
 import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
 import { Game } from '../../../../../_common/game/game.model';
@@ -14,44 +9,15 @@ import { GameSketchfab } from '../../../../../_common/game/sketchfab/sketchfab.m
 import { GameVideo } from '../../../../../_common/game/video/video.model';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
-import { Translate } from '../../../../../_common/translate/translate.service';
-import { store } from '../../../../store';
-import { router } from '../../../index';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 
-export const RouteStoreName = 'manageRoute';
-export const RouteStoreModule = namespace(RouteStoreName);
-export const routeStore = NamespaceVuexStore<RouteStore, RouteActions, RouteMutations>(
-	store,
-	RouteStoreName
-);
-
+const Key: InjectionKey<Controller> = Symbol('game-dash-route');
 const WizardKey = 'manage-game-wizard';
+export const ManageGameThemeKey = 'game-dash';
 
-export type Media = GameScreenshot | GameVideo | GameSketchfab;
+const StatePrefix = 'dash.games.manage.game';
 
-type RouteActions = {
-	wizardNext: undefined;
-	publish: undefined;
-	saveDraft: undefined;
-	hide: undefined;
-	cancel: undefined;
-	uncancel: undefined;
-	removeGame: undefined;
-	saveMediaSort: Media[];
-};
-
-type RouteMutations = {
-	populate: any;
-	populateMedia: any[];
-	addMedia: (GameScreenshot | GameVideo | GameSketchfab)[];
-	removeMedia: Media;
-	updateMedia: Media[];
-	finishWizard: undefined;
-};
-
-const STATE_PREFIX = 'dash.games.manage.game';
-
-const TRANSITION_MAP: any = {
+const TransitionMap: any = {
 	details: 'description',
 	description: 'design',
 	design: 'packages.list',
@@ -59,60 +25,55 @@ const TRANSITION_MAP: any = {
 	maturity: 'wizard-finish',
 };
 
-const TRANSITION_MAP_DEVLOG: any = {
+const TransitionMapDevlog: any = {
 	details: 'description',
 	description: 'design',
 	design: 'maturity',
 	maturity: 'wizard-finish',
 };
 
-function instantiateMediaItem(item: any) {
-	if (item.media_type === 'image') {
-		return new GameScreenshot(item);
-	} else if (item.media_type === 'video') {
-		return new GameVideo(item);
-	} else if (item.media_type === 'sketchfab') {
-		return new GameSketchfab(item);
-	} else {
-		throw new Error(`Invalid media item type.`);
-	}
+type Controller = ReturnType<typeof createGameDashRouteController>;
+export type Media = GameScreenshot | GameVideo | GameSketchfab;
+
+export function useGameDashRouteController() {
+	return inject(Key, null);
 }
 
 export function startWizard() {
 	window.sessionStorage.setItem(WizardKey, 'active');
 }
 
-@VuexModule()
-export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutations> {
-	game: Game = null as any;
-	collaboration: Collaborator | null = null;
-	media: Media[] = [];
-	isWizard = false;
+export function createGameDashRouteController({ router }: { router: Router }) {
+	const game = ref<Game>();
+	const collaboration = ref<Collaborator>();
+	const media = ref<Media[]>([]);
+	const isWizard = ref(false);
 
-	get canPublish() {
-		if (!this.game) {
+	const canPublish = computed(() => {
+		const _game = unref(game);
+		if (!_game) {
 			return false;
 		}
 
-		if (!this.game.hasDescription) {
+		if (!_game.hasDescription) {
 			return false;
-		} else if (!this.game.thumbnail_media_item) {
+		} else if (!_game.thumbnail_media_item) {
 			return false;
-		} else if (!this.game.tigrs_age) {
+		} else if (!_game.tigrs_age) {
 			return false;
-		} else if (!this.game._is_devlog && !this.game.has_active_builds) {
+		} else if (!_game._is_devlog && !_game.has_active_builds) {
 			return false;
 		}
 
 		return true;
-	}
+	});
 
-	get currentMediaSort() {
-		if (!this.media) {
+	const currentMediaSort = computed(() => {
+		if (!media.value) {
 			return [];
 		}
 
-		return this.media.map((item: any) => {
+		return media.value.map((item: any) => {
 			if (item.media_type === 'image') {
 				return 'screenshot-' + item.id;
 			} else if (item.media_type === 'video') {
@@ -123,94 +84,97 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 				throw new Error(`Invalid type.`);
 			}
 		});
+	});
+
+	function _instantiateMediaItem(item: any) {
+		if (item.media_type === 'image') {
+			return new GameScreenshot(item);
+		} else if (item.media_type === 'video') {
+			return new GameVideo(item);
+		} else if (item.media_type === 'sketchfab') {
+			return new GameSketchfab(item);
+		} else {
+			throw new Error(`Invalid media item type.`);
+		}
 	}
 
-	@VuexMutation
-	populate(payload: RouteMutations['populate']) {
-		this.game = new Game(payload.game);
-		this.collaboration = payload.collaboration ? new Collaborator(payload.collaboration) : null;
-		this.isWizard = !!window.sessionStorage.getItem(WizardKey);
+	function populate(payload: any) {
+		game.value = new Game(payload.game);
+		collaboration.value = payload.collaboration
+			? new Collaborator(payload.collaboration)
+			: undefined;
+		isWizard.value = !!window.sessionStorage.getItem(WizardKey);
 	}
 
-	@VuexMutation
-	populateMedia(mediaItems: RouteMutations['populateMedia']) {
-		this.media.splice(0, this.media.length);
+	function populateMedia(mediaItems: any[]) {
+		media.value.splice(0, media.value.length);
 		if (mediaItems && mediaItems.length) {
 			for (const item of mediaItems) {
-				this.media.push(instantiateMediaItem(item));
+				media.value.push(_instantiateMediaItem(item));
 			}
 		}
 	}
 
-	@VuexMutation
-	addMedia(media: RouteMutations['addMedia']) {
-		for (const item of media) {
-			this.media.unshift(item);
+	function addMedia(newMedia: Media[]) {
+		for (const item of newMedia) {
+			media.value.unshift(item);
 		}
 	}
 
-	@VuexMutation
-	removeMedia(item: RouteMutations['removeMedia']) {
-		const index = this.media.findIndex(i => i.id === item.id);
-		if (index !== -1) {
-			this.media.splice(index, 1);
-		}
+	function removeMedia(item: Media) {
+		arrayRemove(media.value, i => i.id === item.id);
 	}
 
-	@VuexMutation
-	updateMedia(items: RouteMutations['updateMedia']) {
-		this.media = items;
+	function updateMedia(items: Media[]) {
+		media.value = items;
 	}
 
-	@VuexMutation
-	finishWizard() {
-		this.isWizard = false;
+	function finishWizard() {
+		isWizard.value = false;
 		window.sessionStorage.removeItem(WizardKey);
 	}
 
-	@VuexAction
-	async wizardNext() {
-		if (!this.game) {
+	async function wizardNext() {
+		if (!game.value) {
 			return;
 		}
 
-		let transitionMap = TRANSITION_MAP;
-		if (this.game._is_devlog) {
-			transitionMap = TRANSITION_MAP_DEVLOG;
+		let transitionMap = TransitionMap;
+		if (game.value._is_devlog) {
+			transitionMap = TransitionMapDevlog;
 		}
 
 		const routeName = router.currentRoute.value.name!;
 		for (const current in transitionMap) {
 			if (
 				typeof routeName === 'string' &&
-				routeName.indexOf(`${STATE_PREFIX}.${current}`) !== -1
+				routeName.indexOf(`${StatePrefix}.${current}`) !== -1
 			) {
 				const next = transitionMap[current];
 				router.push({
-					name: `${STATE_PREFIX}.${next}`,
+					name: `${StatePrefix}.${next}`,
 				});
 				return;
 			}
 		}
 	}
 
-	@VuexAction
-	async publish() {
+	async function publish() {
 		const result = await ModalConfirm.show(
-			Translate.$gettext('dash.games.overview.publish_confirmation')
+			$gettext('dash.games.overview.publish_confirmation')
 		);
 		if (!result) {
 			return;
 		}
 
-		await this.game.$setStatus(Game.STATUS_VISIBLE);
+		await game.value!.$setStatus(Game.STATUS_VISIBLE);
 
 		showSuccessGrowl(
-			Translate.$gettext('dash.games.overview.published_growl'),
-			Translate.$gettext('dash.games.overview.published_growl_title')
+			$gettext('dash.games.overview.published_growl'),
+			$gettext('dash.games.overview.published_growl_title')
 		);
 
-		this.finishWizard();
+		finishWizard();
 
 		router.push({
 			name: 'dash.games.manage.game.overview',
@@ -218,9 +182,8 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 		});
 	}
 
-	@VuexAction
-	async saveDraft() {
-		this.finishWizard();
+	async function saveDraft() {
+		finishWizard();
 
 		// Simply go to the overview and pull out of the wizard!
 		router.push({
@@ -229,109 +192,119 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 		});
 	}
 
-	@VuexAction
-	async hide() {
+	async function hide() {
 		const result = await ModalConfirm.show(
-			Translate.$gettext('Are you sure you want to unlist your game page?')
+			$gettext('Are you sure you want to unlist your game page?')
 		);
 		if (!result) {
 			return;
 		}
 
-		await this.game.$setStatus(Game.STATUS_HIDDEN);
+		await game.value!.$setStatus(Game.STATUS_HIDDEN);
 
-		showInfoGrowl(
-			Translate.$gettext('Your game page is now unlisted.'),
-			Translate.$gettext('Game Unlisted')
-		);
+		showInfoGrowl($gettext('Your game page is now unlisted.'), $gettext('Game Unlisted'));
 	}
 
-	@VuexAction
-	async cancel() {
+	async function cancel() {
 		const result = await ModalConfirm.show(
-			Translate.$gettext('Are you sure you want to cancel your game?')
+			$gettext('Are you sure you want to cancel your game?')
 		);
 		if (!result) {
 			return;
 		}
 
-		await this.game.$setCanceled(true);
+		await game.value!.$setCanceled(true);
 
-		showInfoGrowl(
-			Translate.$gettext('Your game is now canceled.'),
-			Translate.$gettext('Game Canceled')
-		);
+		showInfoGrowl($gettext('Your game is now canceled.'), $gettext('Game Canceled'));
 	}
 
-	@VuexAction
-	async uncancel() {
+	async function uncancel() {
 		const result = await ModalConfirm.show(
-			Translate.$gettext('Are you sure you want to uncancel your game?')
+			$gettext('Are you sure you want to uncancel your game?')
 		);
 		if (!result) {
 			return;
 		}
 
-		await this.game.$setCanceled(false);
+		await game.value!.$setCanceled(false);
 
-		showInfoGrowl(
-			Translate.$gettext('Your game is no longer canceled.'),
-			Translate.$gettext('Game Uncanceled')
-		);
+		showInfoGrowl($gettext('Your game is no longer canceled.'), $gettext('Game Uncanceled'));
 	}
 
-	@VuexAction
-	async removeGame() {
-		const result = await ModalConfirm.show(
-			Translate.$gettext('dash.games.remove_confirmation')
-		);
+	async function removeGame() {
+		const result = await ModalConfirm.show($gettext('dash.games.remove_confirmation'));
 
 		if (!result) {
 			return;
 		}
 
-		await this.game.$remove();
+		await game.value!.$remove();
 
 		showInfoGrowl(
-			Translate.$gettext('dash.games.removed_growl'),
-			Translate.$gettext('dash.games.removed_growl_title')
+			$gettext('dash.games.removed_growl'),
+			$gettext('dash.games.removed_growl_title')
 		);
 
 		router.push({ name: 'home' });
 	}
 
-	@VuexAction
-	async leaveProject() {
-		if (!this.collaboration) {
+	async function leaveProject() {
+		if (!collaboration.value) {
 			return;
 		}
 
 		const result = await ModalConfirm.show(
-			Translate.$gettext(`Are you sure you want to leave this project?`),
-			Translate.$gettext('Leave project?')
+			$gettext(`Are you sure you want to leave this project?`),
+			$gettext('Leave project?')
 		);
 
 		if (!result) {
 			return;
 		}
 
-		await this.collaboration.$remove();
+		await collaboration.value.$remove();
 
 		showSuccessGrowl(
-			Translate.$gettext('You left the project. You will be missed! ;A;'),
-			Translate.$gettext('Left Project')
+			$gettext('You left the project. You will be missed! ;A;'),
+			$gettext('Left Project')
 		);
 
 		router.push({ name: 'home' });
 	}
 
-	@VuexAction
-	async saveMediaSort(items: RouteActions['saveMediaSort']) {
-		this.updateMedia(items);
+	async function saveMediaSort(items: Media[]) {
+		updateMedia(items);
 
 		await Api.sendRequest(
-			'/web/dash/developer/games/media/save-sort/' + this.game.id,
-			this.currentMediaSort
+			'/web/dash/developer/games/media/save-sort/' + game.value!.id,
+			currentMediaSort.value
 		);
 	}
+
+	const c = {
+		game,
+		collaboration,
+		media,
+		isWizard,
+		canPublish,
+		currentMediaSort,
+		populate,
+		populateMedia,
+		addMedia,
+		removeMedia,
+		updateMedia,
+		finishWizard,
+		wizardNext,
+		publish,
+		saveDraft,
+		hide,
+		cancel,
+		uncancel,
+		removeGame,
+		leaveProject,
+		saveMediaSort,
+	};
+
+	provide(Key, c);
+	return c;
 }

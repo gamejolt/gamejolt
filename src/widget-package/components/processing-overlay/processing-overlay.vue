@@ -1,4 +1,16 @@
-<script lang="ts" src="./processing-overlay"></script>
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+import AppLoading from '../../../_common/loading/loading.vue';
+import AppModal from '../modal/modal.vue';
+
+@Options({
+	components: {
+		AppModal,
+		AppLoading,
+	},
+})
+export default class AppProcessingOverlay extends Vue {}
+</script>
 
 <template>
 	<app-modal class="text-center" hide-close style="z-index: 20">

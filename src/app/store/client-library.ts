@@ -14,11 +14,9 @@ import {
 } from 'client-voodoo';
 import * as fs from 'fs';
 import * as path from 'path';
-import { Action, Mutation, namespace, State } from 'vuex-class';
 import { arrayGroupBy, arrayIndexBy, arrayRemove } from '../../utils/array';
 import { fuzzysearch } from '../../utils/string';
 import { isErrnoException } from '../../utils/utils.client';
-import { VuexAction, VuexGetter, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
 import { Analytics } from '../../_common/analytics/analytics.service';
 import { Api } from '../../_common/api/api.service';
 import { ClientUpdater } from '../../_common/client/client-updater.service';

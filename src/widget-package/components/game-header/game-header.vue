@@ -1,4 +1,56 @@
-<script lang="ts" src="./game-header"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options, Vue } from 'vue-property-decorator';
+import { Environment } from '../../../_common/environment/environment.service';
+import { Sellable } from '../../../_common/sellable/sellable.model';
+import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
+import { useWidgetPackageStore } from '../../store/index';
+import AppIncludedItems from '../included-items/included-items.vue';
+import AppModal from '../modal/modal.vue';
+import AppPricingCard from '../pricing-card/pricing-card.vue';
+
+@Options({
+	components: {
+		AppPricingCard,
+		AppModal,
+		AppIncludedItems,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppGameHeader extends Vue {
+	store = setup(() => useWidgetPackageStore());
+
+	isShowingIncluded = false;
+
+	get game() {
+		return this.store.game!;
+	}
+	get developer() {
+		return this.store.developer!;
+	}
+	get sellable() {
+		return this.store.sellable!;
+	}
+	get packageCard() {
+		return this.store.packageCard!;
+	}
+
+	get gameUrl() {
+		// `https://gamejolt.com/games/${game.slug}/${game.id}`
+		return Environment.baseUrl + this.game.getUrl();
+	}
+
+	get developerUrl() {
+		return this.developer.web_site || Environment.baseUrl + this.developer.url;
+	}
+
+	get shouldShowIncluded() {
+		return this.sellable.type !== Sellable.TYPE_FREE;
+	}
+}
+</script>
 
 <template>
 	<div class="-game-header">

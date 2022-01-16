@@ -1,4 +1,14 @@
-<script lang="ts" src="./card-create-placeholder"></script>
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+import AppCommunityAddWidget from '../add-widget/add-widget.vue';
+
+@Options({
+	components: {
+		AppCommunityAddWidget,
+	},
+})
+export default class AppCommunityCardCreatePlaceholder extends Vue {}
+</script>
 
 <template>
 	<div class="community-card-create-placeholder sheet">

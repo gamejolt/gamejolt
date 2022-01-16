@@ -1,4 +1,9 @@
-<script lang="ts" src="./footer"></script>
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+
+@Options({})
+export default class AppFooter extends Vue {}
+</script>
 
 <template>
 	<div class="footer">

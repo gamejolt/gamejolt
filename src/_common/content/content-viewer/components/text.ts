@@ -1,6 +1,6 @@
 import { h } from 'vue';
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
-import AppLinkExternal from '../../../link/external.vue';
+import AppLinkExternal from '../../../link/AppLinkExternal.vue';
 import { ContentObject } from '../../content-object';
 import { ContentOwnerController, ContentOwnerControllerKey } from '../../content-owner';
 import AppContentViewerMention from './mention/mention.vue';

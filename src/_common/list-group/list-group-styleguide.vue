@@ -1,3 +1,12 @@
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+
+@Options({})
+export default class AppListGroupStyleguide extends Vue {
+	lgSelector = 0;
+}
+</script>
+
 <template>
 	<section class="section" id="styleguide-list-groups">
 		<h1 class="section-header">List Groups</h1>
@@ -252,5 +261,3 @@
 		</div>
 	</section>
 </template>
-
-<script lang="ts" src="./list-group-styleguide"></script>

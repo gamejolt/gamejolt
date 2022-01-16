@@ -1,3 +1,80 @@
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
+import { Api } from '../../../../../../../_common/api/api.service';
+import { formatDuration } from '../../../../../../../_common/filters/duration';
+import { formatNumber } from '../../../../../../../_common/filters/number';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from '../../../../../../../_common/route/route-component';
+import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
+import { useGameDashRouteController } from '../../manage.store';
+
+@Options({
+	name: 'RouteDashGamesManageApiOverview',
+	directives: {
+		AppTooltip,
+	},
+})
+@RouteResolver({
+	deps: {},
+	resolver: ({ route }) => Api.sendRequest('/web/dash/developer/games/api/' + route.params.id),
+})
+export default class RouteDashGamesManageApiOverview extends BaseRouteComponent {
+	routeStore = setup(() => useGameDashRouteController()!);
+
+	get game() {
+		return this.routeStore.game!;
+	}
+
+	numActiveSessions = 0;
+	numActiveTrophies = 0;
+	numGlobalItems = 0;
+	totalAchievedTrophies = 0;
+	totalScores = 0;
+	totalTrophyExp = 0;
+	totalUsersWithScores = 0;
+	totalUsersWithTrophies = 0;
+	sessionStats: {
+		avg: number;
+		time: number;
+		'user-count': number;
+	} = {} as any;
+
+	readonly formatNumber = formatNumber;
+	readonly formatDuration = formatDuration;
+
+	get routeTitle() {
+		if (this.game) {
+			return this.$gettextInterpolate('Game API for %{ game }', {
+				game: this.game.title,
+			});
+		}
+		return null;
+	}
+
+	routeResolved($payload: any) {
+		this.sessionStats = $payload.sessionStats;
+
+		const fields = [
+			'numActiveTrophies',
+			'totalTrophyExp',
+			'totalAchievedTrophies',
+			'totalUsersWithTrophies',
+			'totalScores',
+			'totalUsersWithScores',
+			'numActiveSessions',
+			'numGlobalItems',
+		];
+
+		fields.forEach(field => {
+			(this as any)[field] = $payload[field] || 0;
+		});
+	}
+}
+</script>
+
 <template>
 	<div>
 		<h2 class="section-header">
@@ -114,10 +191,10 @@
 						<div class="stat-big-label">
 							<translate>dash.games.api.overview.trophies_exp_label</translate>
 							<app-jolticon
-								icon="help-circle"
 								v-app-tooltip.touchable="
 									$gettext(`dash.games.api.overview.trophies_exp_tooltip`)
 								"
+								icon="help-circle"
 							/>
 						</div>
 						<div class="stat-big-digit">
@@ -170,10 +247,10 @@
 						<div class="stat-big-label">
 							<translate>dash.games.api.overview.scores_label</translate>
 							<app-jolticon
-								icon="help-circle"
 								v-app-tooltip.touchable="
 									$gettext(`dash.games.api.overview.scores_tooltip`)
 								"
+								icon="help-circle"
 							/>
 						</div>
 						<div class="stat-big-digit">
@@ -186,10 +263,10 @@
 						<div class="stat-big-label">
 							<translate>dash.games.api.overview.scores_users_label</translate>
 							<app-jolticon
-								icon="help-circle"
 								v-app-tooltip.touchable="
 									$gettext(`dash.games.api.overview.scores_users_tooltip`)
 								"
+								icon="help-circle"
 							/>
 						</div>
 						<div class="stat-big-digit">
@@ -216,10 +293,10 @@
 						<div class="stat-big-label">
 							<translate>dash.games.api.overview.data_items_label</translate>
 							<app-jolticon
-								icon="help-circle"
 								v-app-tooltip.touchable="
 									$gettext(`dash.games.api.overview.data_items_tooltip`)
 								"
+								icon="help-circle"
 							/>
 						</div>
 						<div class="stat-big-digit">
@@ -231,5 +308,3 @@
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./overview"></script>

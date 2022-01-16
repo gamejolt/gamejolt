@@ -1,4 +1,46 @@
-<script lang="ts" src="./addresses"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
+import { arrayRemove } from '../../../../../utils/array';
+import { Api } from '../../../../../_common/api/api.service';
+import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { $gettext } from '../../../../../_common/translate/translate.service';
+import { UserAddress } from '../../../../../_common/user/address/address.model';
+import AppUserAddressCard from '../../../../components/user/address/card/card.vue';
+import { useAccountRouteController } from '../account.vue';
+
+@Options({
+	name: 'RouteDashAccountAddresses',
+	components: {
+		AppUserAddressCard,
+	},
+})
+@RouteResolver({
+	deps: {},
+	resolver: () => Api.sendRequest('/web/dash/addresses'),
+})
+export default class RouteDashAccountAddresses extends BaseRouteComponent {
+	routeStore = setup(() => useAccountRouteController()!);
+
+	billingAddresses: UserAddress[] = [];
+
+	get routeTitle() {
+		return this.routeStore.heading;
+	}
+
+	routeCreated() {
+		this.routeStore.heading = $gettext('Saved Addresses');
+	}
+
+	routeResolved($payload: any) {
+		this.billingAddresses = UserAddress.populate($payload.billingAddresses);
+	}
+
+	onRemove(address: UserAddress) {
+		arrayRemove(this.billingAddresses, i => i.id === address.id);
+	}
+}
+</script>
 
 <template>
 	<div v-if="isRouteBootstrapped">

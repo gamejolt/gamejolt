@@ -1,4 +1,72 @@
-<script lang="ts" src="./details"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options, Vue } from 'vue-property-decorator';
+import { formatDate } from '../../../../../../../_common/filters/date';
+import { Game } from '../../../../../../../_common/game/game.model';
+import { AppLazyPlaceholder } from '../../../../../../../_common/lazy/placeholder/placeholder';
+import { LinkedAccount } from '../../../../../../../_common/linked-account/linked-account.model';
+import { useGameRouteController } from '../../view.vue';
+
+@Options({
+	components: {
+		AppLazyPlaceholder,
+	},
+})
+export default class AppDiscoverGamesViewOverviewDetails extends Vue {
+	routeStore = setup(() => useGameRouteController()!);
+
+	readonly formatDate = formatDate;
+
+	get game() {
+		return this.routeStore.game!;
+	}
+
+	get linkedAccounts() {
+		return this.routeStore.linkedAccounts;
+	}
+
+	get creationTool() {
+		if (
+			this.game.creation_tool_human === Game.CREATION_TOOL_OTHER &&
+			this.game.creation_tool_other
+		) {
+			return this.game.creation_tool_other;
+		}
+		return this.game.creation_tool_human;
+	}
+
+	get hasLinksSection() {
+		return (
+			this.game.web_site || this.facebookAccount || this.twitterAccount || this.tumblrAccount
+		);
+	}
+
+	get facebookAccount() {
+		if (this.linkedAccounts) {
+			return this.linkedAccounts.find(
+				i => i.provider === LinkedAccount.PROVIDER_FACEBOOK && !!i.facebookSelectedPage
+			);
+		}
+		return undefined;
+	}
+
+	get twitterAccount() {
+		if (this.linkedAccounts) {
+			return this.linkedAccounts.find(i => i.provider === LinkedAccount.PROVIDER_TWITTER);
+		}
+		return undefined;
+	}
+
+	get tumblrAccount() {
+		if (this.linkedAccounts) {
+			return this.linkedAccounts.find(
+				i => i.provider === LinkedAccount.PROVIDER_TUMBLR && !!i.tumblrSelectedBlog
+			);
+		}
+		return undefined;
+	}
+}
+</script>
 
 <template>
 	<div>

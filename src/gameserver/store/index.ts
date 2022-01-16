@@ -1,6 +1,5 @@
 import { parse } from 'qs';
-import { reactive } from 'vue';
-import { buildUseStore, VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
+import { computed, inject, InjectionKey, ref } from 'vue';
 import { Api } from '../../_common/api/api.service';
 import { Environment } from '../../_common/environment/environment.service';
 import { GameBuild } from '../../_common/game/build/build.model';
@@ -8,65 +7,60 @@ import { Game } from '../../_common/game/game.model';
 import { GamePackage } from '../../_common/game/package/package.model';
 import { Meta } from '../../_common/meta/meta-service';
 
-export type Actions = {
-	bootstrap: undefined;
-};
+export const GameserverStoreKey: InjectionKey<GameserverStore> = Symbol('gameserver-store');
 
-export type Mutations = {
-	_bootstrap: any;
-};
+export type GameserverStore = ReturnType<typeof createGameserverStore>;
 
-@VuexModule({
-	store: true,
-	modules: {},
-})
-export class Store extends VuexStore<Store, Actions, Mutations> {
-	game: Game | null = null;
-	package: GamePackage | null = null;
-	build: GameBuild | null = null;
-	url = '';
+export function useGameserverStore() {
+	return inject(GameserverStoreKey)!;
+}
 
-	javaArchive = '';
-	javaCodebase = '';
+export function createGameserverStore() {
+	const game = ref<Game>();
+	const gamePackage = ref<GamePackage>();
+	const build = ref<GameBuild>();
+	const url = ref('');
 
-	username = '';
-	token = '';
+	const javaArchive = ref('');
+	const javaCodebase = ref('');
 
-	get embedWidth() {
-		if (!this.build) {
+	const username = ref('');
+	const token = ref('');
+
+	const embedWidth = computed(() => {
+		if (!build.value) {
 			return undefined;
 		}
 
-		return this.build.embed_fit_to_screen ? '100%' : this.build.embed_width;
-	}
+		return build.value.embed_fit_to_screen ? '100%' : build.value.embed_width;
+	});
 
-	get embedHeight() {
-		if (!this.build) {
+	const embedHeight = computed(() => {
+		if (!build.value) {
 			return undefined;
 		}
 
-		return this.build.embed_fit_to_screen ? '100%' : this.build.embed_height;
-	}
+		return build.value.embed_fit_to_screen ? '100%' : build.value.embed_height;
+	});
 
 	// The "style" ones are for use in stylesheets (requires the 'px' unit).
-	get embedWidthStyle() {
-		if (!this.build) {
+	const embedWidthStyle = computed(() => {
+		if (!build.value) {
 			return undefined;
 		}
 
-		return this.build.embed_fit_to_screen ? '100%' : this.build.embed_width + 'px';
-	}
+		return build.value.embed_fit_to_screen ? '100%' : build.value.embed_width + 'px';
+	});
 
-	get embedHeightStyle() {
-		if (!this.build) {
+	const embedHeightStyle = computed(() => {
+		if (!build.value) {
 			return undefined;
 		}
 
-		return this.build.embed_fit_to_screen ? '100%' : this.build.embed_height + 'px';
-	}
+		return build.value.embed_fit_to_screen ? '100%' : build.value.embed_height + 'px';
+	});
 
-	@VuexAction
-	async bootstrap() {
+	async function bootstrap() {
 		Api.apiHost = Environment.gameserverApiHost;
 
 		const query = parse(window.location.search.substring(1));
@@ -75,34 +69,44 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		}
 
 		const tokenId = query['token'];
-		let url = `/gameserver/${tokenId}`;
+		let requestUrl = `/gameserver/${tokenId}`;
 
 		if (!Environment.isSecure) {
-			url += '?insecure';
+			requestUrl += '?insecure';
 		}
 
-		const response = await Api.sendRequest(url);
-		this._bootstrap(response);
-	}
+		const response = await Api.sendRequest(requestUrl);
 
-	@VuexMutation
-	private _bootstrap(response: any) {
-		this.game = new Game(response.game);
-		this.package = new GamePackage(response.package);
-		this.build = new GameBuild(response.build);
-		this.url = response.url;
+		game.value = new Game(response.game);
+		gamePackage.value = new GamePackage(response.package);
+		build.value = new GameBuild(response.build);
+		url.value = response.url;
 
-		this.javaArchive = response.javaArchive;
-		this.javaCodebase = response.javaCodebase;
+		javaArchive.value = response.javaArchive;
+		javaCodebase.value = response.javaCodebase;
 
 		if (response.username && response.token) {
-			this.username = response.username;
-			this.token = response.token;
+			username.value = response.username;
+			token.value = response.token;
 		}
 
-		Meta.title = this.package.title || this.game.title;
+		Meta.title = gamePackage.value.title || game.value.title;
 	}
-}
 
-export const store = reactive(new Store()) as Store;
-export const useStore = buildUseStore<Store>();
+	return {
+		game,
+		gamePackage,
+		build,
+		url,
+		javaArchive,
+		javaCodebase,
+		username,
+		token,
+		embedWidth,
+		embedHeight,
+		embedWidthStyle,
+		embedHeightStyle,
+
+		bootstrap,
+	};
+}

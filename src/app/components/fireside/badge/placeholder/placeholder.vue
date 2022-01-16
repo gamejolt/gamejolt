@@ -1,4 +1,9 @@
-<script lang="ts" src="./placeholder"></script>
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+
+@Options({})
+export default class AppFiresideBadgePlaceholder extends Vue {}
+</script>
 
 <template>
 	<div class="fireside-badge-placeholder fill-dark" />

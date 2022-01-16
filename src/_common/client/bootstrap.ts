@@ -1,12 +1,12 @@
-import { VuexStore } from '../../utils/vuex';
+import { CommonStore } from '../store/common-store';
 import { initClientApiInterceptors } from './api/api.service';
 import { ClientUpdater } from './client-updater.service';
 import { Client } from './client.service';
 import { ClientUser } from './user/user.service';
 
-export function bootstrapCommonClient(sectionStore: VuexStore) {
+export function bootstrapCommonClient({ commonStore }: { commonStore: CommonStore }) {
 	initClientApiInterceptors();
 	Client.init();
-	ClientUser.init(sectionStore);
+	ClientUser.init({ commonStore });
 	ClientUpdater.init();
 }

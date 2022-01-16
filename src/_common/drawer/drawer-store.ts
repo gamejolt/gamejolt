@@ -169,7 +169,7 @@ function _resetDrawerStore(store: DrawerStore) {
 	store._waitingForFrame.value = false;
 	store._updateGhostPosition.value = null;
 
-	store.activeLayer.value.hoveredTarget = null;
+	store.activeLayer.value.hoveredTarget.value = null;
 }
 
 export function registerStickerLayer(store: DrawerStore, layer: StickerLayerController) {
@@ -344,9 +344,9 @@ function _onDragItem(store: DrawerStore, event: MouseEvent | TouchEvent) {
 	const layer = store.activeLayer.value;
 	const target = getCollidingStickerTarget(layer, pointer.x, pointer.y);
 	if (target && !store.isHoveringDrawer.value) {
-		layer.hoveredTarget = target;
-	} else if (layer.hoveredTarget) {
-		layer.hoveredTarget = null;
+		layer.hoveredTarget.value = target;
+	} else if (layer.hoveredTarget.value) {
+		layer.hoveredTarget.value = null;
 	}
 }
 
@@ -463,12 +463,12 @@ export function getPointerPosition(
 	const layer = store.activeLayer.value;
 	let scrollTop = 0;
 	let scrollLeft = 0;
-	if (layer.scroller) {
+	if (layer.scroller.value) {
 		scrollTop = document.documentElement.scrollTop;
-		scrollTop -= layer.scroller.element?.scrollTop ?? 0;
+		scrollTop -= layer.scroller.value.element?.scrollTop ?? 0;
 
 		scrollLeft = document.documentElement.scrollLeft;
-		scrollLeft -= layer.scroller.element?.scrollLeft ?? 0;
+		scrollLeft -= layer.scroller.value.element?.scrollLeft ?? 0;
 	}
 
 	const pointerEvent = getPointerEvent(event);

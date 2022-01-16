@@ -1,4 +1,43 @@
-<script lang="ts" src="./list"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
+import { Api } from '../../../../../../_common/api/api.service';
+import { formatCurrency } from '../../../../../../_common/filters/currency';
+import { formatDate } from '../../../../../../_common/filters/date';
+import { Order } from '../../../../../../_common/order/order.model';
+import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
+import { $gettext } from '../../../../../../_common/translate/translate.service';
+import { useAccountRouteController } from '../../account.vue';
+
+@Options({
+	name: 'RouteDashAccountPurchasesList',
+})
+@RouteResolver({
+	cache: true,
+	deps: {},
+	resolver: () => Api.sendRequest('/web/dash/purchases'),
+})
+export default class RouteDashAccountPurchasesList extends BaseRouteComponent {
+	routeStore = setup(() => useAccountRouteController()!);
+
+	orders: Order[] = [];
+
+	readonly formatDate = formatDate;
+	readonly formatCurrency = formatCurrency;
+
+	get routeTitle() {
+		return this.routeStore.heading;
+	}
+
+	routeCreated() {
+		this.routeStore.heading = $gettext(`Order History`);
+	}
+
+	routeResolved($payload: any) {
+		this.orders = Order.populate($payload.orders);
+	}
+}
+</script>
 
 <template>
 	<div v-if="isRouteBootstrapped">

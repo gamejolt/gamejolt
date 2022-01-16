@@ -1,6 +1,5 @@
 import { parse } from 'querystring';
-import { reactive } from 'vue';
-import { buildUseStore, VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
+import { computed, inject, InjectionKey, ref } from 'vue';
 import { Api } from '../../_common/api/api.service';
 import { Game } from '../../_common/game/game.model';
 import { GamePackageCardModel } from '../../_common/game/package/card/card.model';
@@ -9,22 +8,6 @@ import { GamePackage } from '../../_common/game/package/package.model';
 import { SellablePricing } from '../../_common/sellable/pricing/pricing.model';
 import { Sellable } from '../../_common/sellable/sellable.model';
 import { User } from '../../_common/user/user.model';
-
-export type Actions = {
-	bootstrap: undefined;
-	checkout: undefined;
-};
-
-export type Mutations = {
-	setInvalidKey: undefined;
-	setFailure: undefined;
-	clearFailure: undefined;
-	setProcessing: undefined;
-	setNotProcessing: undefined;
-	_bootstrap: any;
-	setPayment: any;
-	setAddress: any;
-};
 
 export class PaymentData {
 	method: 'cc-stripe' | 'paypal' = 'cc-stripe';
@@ -39,137 +22,96 @@ export class AddressData {
 	postcode = '';
 }
 
-@VuexModule({
-	store: true,
-	modules: {},
-})
-export class Store extends VuexStore<Store, Actions, Mutations> {
-	sellableKey = parse(window.location.search.substring(1)).key as string;
-	isLightTheme = parse(window.location.search.substring(1)).theme === 'light';
-	isLoaded = false;
-	isProcessing = false;
-	view: 'AppDownload' | 'AppPayment' = 'AppDownload';
+export const WidgetPackageStoreKey: InjectionKey<WidgetPackageStore> =
+	Symbol('widget-package-store');
 
-	hasInvalidKey = false;
-	hasFailure?: string = undefined;
+export type WidgetPackageStore = ReturnType<typeof createWidgetPackageStore>;
 
-	game: Game = null as any;
-	developer: User = null as any;
-	sellable: Sellable = null as any;
-	package: GamePackage = null as any;
-	packagePayload: GamePackagePayloadModel = null as any;
-	packageCard: GamePackageCardModel = null as any;
-	addresses: any[] = [];
-	minOrderAmount = 50;
-	pricing: SellablePricing | null = null;
-	originalPricing: SellablePricing | null = null;
+export function useWidgetPackageStore() {
+	return inject(WidgetPackageStoreKey)!;
+}
 
-	payment = new PaymentData();
-	address = new AddressData();
+export function createWidgetPackageStore() {
+	const sellableKey = ref(parse(window.location.search.substring(1)).key as string);
+	const isLightTheme = ref(parse(window.location.search.substring(1)).theme === 'light');
+	const isLoaded = ref(false);
+	const isProcessing = ref(false);
+	const view = ref<'AppDownload' | 'AppPayment'>('AppDownload');
 
-	get price() {
-		return this.pricing && (this.pricing.amount || this.minOrderAmount);
-	}
+	const hasInvalidKey = ref(false);
+	const hasFailure = ref<string>();
 
-	get originalPrice() {
-		return this.originalPricing && this.originalPricing.amount;
-	}
+	const game = ref<Game>();
+	const developer = ref<User>();
+	const sellable = ref<Sellable>();
+	const gamePackage = ref<GamePackage>();
+	const packagePayload = ref<GamePackagePayloadModel>();
+	const packageCard = ref<GamePackageCardModel>();
+	const addresses = ref<any[]>([]);
+	const minOrderAmount = ref(50);
+	const pricing = ref<SellablePricing>();
+	const originalPricing = ref<SellablePricing>();
 
-	@VuexMutation
-	setInvalidKey() {
-		this.hasInvalidKey = true;
-	}
+	const payment = ref(new PaymentData());
+	const address = ref(new AddressData());
 
-	@VuexMutation
-	setFailure(failure?: string) {
-		this.hasFailure = failure;
-	}
+	const price = computed(() => pricing.value && (pricing.value.amount || minOrderAmount.value));
+	const originalPrice = computed(() => originalPricing.value && originalPricing.value.amount);
 
-	@VuexMutation
-	clearFailure() {
-		this.hasFailure = undefined;
-	}
-
-	@VuexMutation
-	setProcessing() {
-		this.isProcessing = true;
-	}
-
-	@VuexMutation
-	setNotProcessing() {
-		this.isProcessing = false;
-	}
-
-	@VuexMutation
-	_bootstrap(response: any) {
-		this.game = new Game(response.game);
-		this.developer = new User(this.game.developer);
-		this.sellable = new Sellable(response.sellable);
-		this.packagePayload = new GamePackagePayloadModel(response);
-		this.packageCard = new GamePackageCardModel(
-			this.sellable,
-			this.packagePayload.releases,
-			this.packagePayload.builds
-		);
-		this.package = this.packagePayload.packages[0];
-
-		this.addresses = response.billingAddresses || [];
-		this.minOrderAmount = response.minOrderAmount || 50;
-
-		if (this.sellable.pricings.length) {
-			this.pricing = this.sellable.pricings[0];
-			if (this.pricing.promotional) {
-				this.originalPricing = this.sellable.pricings[1];
-			}
-		}
-
-		if (this.sellable.type === Sellable.TYPE_PAID && !this.sellable.is_owned) {
-			this.view = 'AppPayment';
-		}
-
-		this.isLoaded = true;
-	}
-
-	@VuexMutation
-	setPayment(payment: any) {
-		this.payment = payment;
-	}
-
-	@VuexMutation
-	setAddress(address: any) {
-		this.address = address;
-	}
-
-	@VuexAction
-	async bootstrap() {
+	async function bootstrap() {
 		try {
-			const response = await Api.sendRequest(`/widgets/package/${this.sellableKey}`);
-			this._bootstrap(response);
+			const payload = await Api.sendRequest(`/widgets/package/${sellableKey.value}`);
+
+			game.value = new Game(payload.game);
+			developer.value = new User(game.value.developer);
+			sellable.value = new Sellable(payload.sellable);
+			packagePayload.value = new GamePackagePayloadModel(payload);
+			packageCard.value = new GamePackageCardModel(
+				sellable.value,
+				packagePayload.value.releases,
+				packagePayload.value.builds
+			);
+			gamePackage.value = packagePayload.value.packages[0];
+
+			addresses.value = payload.billingAddresses || [];
+			minOrderAmount.value = payload.minOrderAmount || 50;
+
+			if (sellable.value.pricings.length) {
+				pricing.value = sellable.value.pricings[0];
+				if (pricing.value.promotional) {
+					originalPricing.value = sellable.value.pricings[1];
+				}
+			}
+
+			if (sellable.value.type === Sellable.TYPE_PAID && !sellable.value.is_owned) {
+				view.value = 'AppPayment';
+			}
+
+			isLoaded.value = true;
 		} catch (_e) {
 			console.error(_e);
-			this.setInvalidKey();
+			hasInvalidKey.value = true;
 		}
 	}
 
-	@VuexAction
-	async checkout() {
-		if (this.isProcessing) {
+	async function checkout() {
+		if (isProcessing.value) {
 			return;
 		}
 
-		this.setProcessing();
+		isProcessing.value = true;
 
 		const data: any = {
-			payment_method: this.payment.method,
-			pricing_id: this.pricing!.id,
-			sellable_id: this.sellable.id,
-			email_address: this.payment.email,
-			amount: this.payment.amount * 100,
+			payment_method: payment.value.method,
+			pricing_id: pricing.value!.id,
+			sellable_id: sellable.value!.id,
+			email_address: payment.value.email,
+			amount: payment.value.amount * 100,
 			source: document.referrer,
 		};
 
-		if (this.addresses.length) {
-			data.address_id = this.addresses[0].id;
+		if (addresses.value.length) {
+			data.address_id = addresses.value[0].id;
 		}
 
 		try {
@@ -181,11 +123,35 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 			window.parent.location.href = response.redirectUrl;
 		} catch (_e) {
-			this.setFailure('setup-order');
-			this.setNotProcessing();
+			hasFailure.value = 'setup-order';
+			isProcessing.value = false;
 		}
 	}
-}
 
-export const store = reactive(new Store()) as Store;
-export const useStore = buildUseStore<Store>();
+	return {
+		sellableKey,
+		isLightTheme,
+		isLoaded,
+		isProcessing,
+		view,
+		hasInvalidKey,
+		hasFailure,
+		game,
+		developer,
+		sellable,
+		gamePackage,
+		packagePayload,
+		packageCard,
+		addresses,
+		minOrderAmount,
+		pricing,
+		originalPricing,
+		payment,
+		address,
+		price,
+		originalPrice,
+
+		bootstrap,
+		checkout,
+	};
+}

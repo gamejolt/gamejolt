@@ -72,6 +72,3 @@ export function createSidebarStore() {
 		showContextOnRouteChange,
 	};
 }
-
-// TODO(vue3): remove once we switch the app store over to non-vuex
-export const sidebarStore = createSidebarStore();

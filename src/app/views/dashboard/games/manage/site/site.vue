@@ -1,12 +1,52 @@
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
+import { Api } from '../../../../../../_common/api/api.service';
+import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
+import { Site } from '../../../../../../_common/site/site-model';
+import AppSitesLinkCard from '../../../../../components/sites/link-card/link-card.vue';
+import AppSitesManagePage from '../../../../../components/sites/manage-page/manage-page.vue';
+import { useGameDashRouteController } from '../manage.store';
+
+@Options({
+	name: 'RouteDashGamesManageSite',
+	components: {
+		AppSitesLinkCard,
+		AppSitesManagePage,
+	},
+})
+@RouteResolver({
+	deps: {},
+	resolver: ({ route }) => Api.sendRequest('/web/dash/sites/' + route.params.id),
+})
+export default class RouteDashGamesManageSite extends BaseRouteComponent {
+	routeStore = setup(() => useGameDashRouteController()!);
+
+	get game() {
+		return this.routeStore.game!;
+	}
+
+	site: Site = null as any;
+
+	get routeTitle() {
+		return this.$gettext('Manage Site');
+	}
+
+	routeResolved($payload: any) {
+		this.site = new Site($payload.site);
+	}
+}
+</script>
+
 <template>
-	<section class="section" v-if="isRouteBootstrapped">
+	<section v-if="isRouteBootstrapped" class="section">
 		<div class="container">
 			<template v-if="!game.path">
 				<div class="alert">
 					<p>
 						<translate>
-							In order to set up a custom site for your game, you first have to set a URL path in
-							your game details page.
+							In order to set up a custom site for your game, you first have to set a
+							URL path in your game details page.
 						</translate>
 					</p>
 					<div class="alert-actions">
@@ -37,18 +77,20 @@
 					<p class="page-help">
 						<strong>
 							<translate>
-								Game Jolt Sites are customizable external sites for your portfolio and games!
+								Game Jolt Sites are customizable external sites for your portfolio
+								and games!
 							</translate>
 						</strong>
 						<translate>
-							You can use a customizable template, or simply upload your own static site.
+							You can use a customizable template, or simply upload your own static
+							site.
 						</translate>
 					</p>
 
 					<p class="page-help">
 						<translate>
-							Sites don't replace your Game Jolt game page. You can use your Site URL to share your
-							site with others.
+							Sites don't replace your Game Jolt game page. You can use your Site URL
+							to share your site with others.
 						</translate>
 					</p>
 
@@ -73,5 +115,3 @@
 	pointer-events: none
 	user-select: none
 </style>
-
-<script lang="ts" src="./site"></script>

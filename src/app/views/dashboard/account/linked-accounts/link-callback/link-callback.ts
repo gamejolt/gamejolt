@@ -5,8 +5,8 @@ import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../../_common/api/api.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
 import {
-	getLinkedAccountProviderDisplayName,
-	LinkedAccount,
+getLinkedAccountProviderDisplayName,
+LinkedAccount
 } from '../../../../../../_common/linked-account/linked-account.model';
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../../_common/store/common-store';
@@ -50,7 +50,7 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 			return;
 		}
 
-		const provider = this.$route.params.provider;
+		const provider = this.$route.params.provider as string;
 		const providerName = getLinkedAccountProviderDisplayName(provider);
 		if (!$payload.success) {
 			switch ($payload.reason) {

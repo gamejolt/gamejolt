@@ -1,5 +1,46 @@
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
+import { Api } from '../../../../../_common/api/api.service';
+import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { Site } from '../../../../../_common/site/site-model';
+import { $gettext } from '../../../../../_common/translate/translate.service';
+import AppSitesLinkCard from '../../../../components/sites/link-card/link-card.vue';
+import AppSitesManagePage from '../../../../components/sites/manage-page/manage-page.vue';
+import { useAccountRouteController } from '../account.vue';
+
+@Options({
+	name: 'RouteDashAccountSite',
+	components: {
+		AppSitesManagePage,
+		AppSitesLinkCard,
+	},
+})
+@RouteResolver({
+	deps: {},
+	resolver: () => Api.sendRequest('/web/dash/sites'),
+})
+export default class RouteDashAccountSite extends BaseRouteComponent {
+	routeStore = setup(() => useAccountRouteController()!);
+
+	site?: Site = null as any;
+
+	get routeTitle() {
+		return this.routeStore.heading;
+	}
+
+	routeCreated() {
+		this.routeStore.heading = $gettext(`Manage Portfolio Site`);
+	}
+
+	routeResolved($payload: any) {
+		this.site = new Site($payload.site);
+	}
+}
+</script>
+
 <template>
-	<div class="row" v-if="isRouteBootstrapped">
+	<div v-if="isRouteBootstrapped" class="row">
 		<div class="col-md-9 col-lg-8">
 			<app-sites-manage-page :site="site" />
 		</div>
@@ -9,7 +50,8 @@
 			<p class="page-help">
 				<strong>
 					<translate>
-						Game Jolt Sites are customizable external sites for your portfolio and games!
+						Game Jolt Sites are customizable external sites for your portfolio and
+						games!
 					</translate>
 				</strong>
 				<translate>
@@ -19,8 +61,8 @@
 
 			<p class="page-help">
 				<translate>
-					Sites don't replace your Game Jolt user profile page. You can use your Site URL to share
-					your site with others.
+					Sites don't replace your Game Jolt user profile page. You can use your Site URL
+					to share your site with others.
 				</translate>
 			</p>
 
@@ -34,5 +76,3 @@
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./site"></script>

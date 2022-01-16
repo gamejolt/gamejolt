@@ -1,4 +1,35 @@
-<script lang="ts" src="./pricing-card"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options, Vue } from 'vue-property-decorator';
+import { formatCurrency } from '../../../_common/filters/currency';
+import { useWidgetPackageStore } from '../../store/index';
+
+@Options({})
+export default class AppPricingCard extends Vue {
+	store = setup(() => useWidgetPackageStore());
+
+	readonly formatCurrency = formatCurrency;
+
+	get sellable() {
+		return this.store.sellable!;
+	}
+
+	get price() {
+		return this.store.price!;
+	}
+
+	get originalPrice() {
+		return this.store.originalPrice!;
+	}
+
+	get discount() {
+		const price = this.price;
+		const originalPrice = this.originalPrice;
+
+		return (((originalPrice - price) / originalPrice) * 100).toFixed(0);
+	}
+}
+</script>
 
 <template>
 	<div class="-card" :class="sellable.is_owned ? 'fill-highlight' : 'fill-gray'">

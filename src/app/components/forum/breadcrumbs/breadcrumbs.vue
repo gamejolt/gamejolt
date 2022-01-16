@@ -1,3 +1,15 @@
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { ForumChannel } from '../../../../_common/forum/channel/channel.model';
+
+@Options({})
+export default class AppForumBreadcrumbs extends Vue {
+	@Prop(Object) channel?: ForumChannel;
+	@Prop(String) sort?: string;
+	@Prop(String) page?: string;
+}
+</script>
+
 <template>
 	<nav class="breadcrumb dark-variant">
 		<ul>
@@ -41,5 +53,3 @@
 		</ul>
 	</nav>
 </template>
-
-<script lang="ts" src="./breadcrumbs"></script>

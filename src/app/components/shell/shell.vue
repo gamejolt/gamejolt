@@ -2,7 +2,6 @@
 import { defineAsyncComponent, nextTick } from 'vue';
 import { setup } from 'vue-class-component';
 import { Inject, Options, Vue, Watch } from 'vue-property-decorator';
-import { Action, State } from 'vuex-class';
 import { shallowSetup } from '../../../utils/vue';
 import { AppClientBase } from '../../../_common/client/safe-exports';
 import { Connection } from '../../../_common/connection/connection-service';
@@ -15,7 +14,7 @@ import { useSidebarStore } from '../../../_common/sidebar/sidebar.store';
 import AppStickerLayer from '../../../_common/sticker/layer/layer.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { useBannerStore } from '../../store/banner';
-import { Store } from '../../store/index';
+import { useAppStore } from '../../store/index';
 import { ChatStore, ChatStoreKey } from '../chat/chat-store';
 import { setChatFocused } from '../chat/client';
 import { AppClientShell, AppClientStatusBar } from '../client/safe-exports';
@@ -43,6 +42,7 @@ import AppShellTopNav from './top-nav/top-nav.vue';
 	},
 })
 export default class AppShell extends Vue {
+	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
 	bannerStore = setup(() => useBannerStore());
 	sidebarStore = setup(() => useSidebarStore());
@@ -56,21 +56,34 @@ export default class AppShell extends Vue {
 		return this.commonStore;
 	}
 
-	@State isShellHidden!: Store['isShellHidden'];
-	@State hasTopBar!: Store['hasTopBar'];
-	@State hasSidebar!: Store['hasSidebar'];
-	@State hasCbar!: Store['hasCbar'];
-	@State visibleLeftPane!: Store['visibleLeftPane'];
-	@State visibleRightPane!: Store['visibleRightPane'];
-	@State unreadActivityCount!: Store['unreadActivityCount'];
-	@State unreadNotificationsCount!: Store['unreadNotificationsCount'];
+	get isShellHidden() {
+		return this.store.isShellHidden;
+	}
+	get hasTopBar() {
+		return this.store.hasTopBar;
+	}
+	get hasSidebar() {
+		return this.store.hasSidebar;
+	}
+	get hasCbar() {
+		return this.store.hasCbar;
+	}
+	get visibleLeftPane() {
+		return this.store.visibleLeftPane;
+	}
+	get visibleRightPane() {
+		return this.store.visibleRightPane;
+	}
+	get unreadActivityCount() {
+		return this.store.unreadActivityCount;
+	}
+	get unreadNotificationsCount() {
+		return this.store.unreadNotificationsCount;
+	}
 
 	get hasBanner() {
 		return this.bannerStore.hasBanner;
 	}
-
-	@Action showContextPane!: Store['showContextPane'];
-	@Action clearPanes!: Store['clearPanes'];
 
 	readonly Connection = Connection;
 	readonly Screen = Screen;
@@ -97,14 +110,14 @@ export default class AppShell extends Vue {
 
 			// Show any context panes that are set to show on route change.
 			if (this.sidebarStore.showOnRouteChange) {
-				this.showContextPane();
+				this.store.showContextPane();
 				this.sidebarStore.showContextOnRouteChange(false);
 				return;
 			}
 
 			// Hide all panes if we aren't showing one on route change.
 			if (this.sidebarStore.hideOnRouteChange) {
-				this.clearPanes();
+				this.store.clearPanes();
 			}
 
 			/*

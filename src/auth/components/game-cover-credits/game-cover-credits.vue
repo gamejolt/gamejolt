@@ -1,3 +1,26 @@
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options, Vue } from 'vue-property-decorator';
+import { formatNumber } from '../../../_common/filters/number';
+import AppGameThumbnailImg from '../../../_common/game/thumbnail-img/thumbnail-img.vue';
+import { useAuthStore } from '../../store/index';
+
+@Options({
+	components: {
+		AppGameThumbnailImg,
+	},
+})
+export default class AppGameCoverCredits extends Vue {
+	store = setup(() => useAuthStore());
+
+	get coverGame() {
+		return this.store.coverGame;
+	}
+
+	readonly formatNumber = formatNumber;
+}
+</script>
+
 <template>
 	<router-link
 		v-if="coverGame"
@@ -81,5 +104,3 @@ a:hover
 		text-overflow()
 		max-width: $-width - ($-image-width + $-spacing)
 </style>
-
-<script lang="ts" src="./game-cover-credits"></script>

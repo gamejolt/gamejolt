@@ -1,3 +1,17 @@
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+
+@Options({})
+export default class AppButtonPlaceholder extends Vue {
+	@Prop(Boolean)
+	sparse?: boolean;
+	@Prop(Boolean)
+	circle?: boolean;
+	@Prop(Boolean)
+	block?: boolean;
+}
+</script>
+
 <template>
 	<div class="button-placeholder" :class="{ sparse, circle, block }"></div>
 </template>
@@ -21,5 +35,3 @@
 		display: block
 		width: 100%
 </style>
-
-<script lang="ts" src="./placeholder"></script>

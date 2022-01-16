@@ -1,11 +1,14 @@
-import Axios from 'axios';
 import { App, computed, ref } from 'vue';
-import defaultTranslations from '../../translations/en_US/main.json';
 import { arrayIndexBy } from '../../utils/array';
 import AppTranslate from './AppTranslate.vue';
 import { TranslateDirective } from './translate-directive';
 
-const _translationUrls = import.meta.globEager('../../translations/*/main.json?url');
+const _translationImports = import.meta.glob('../../translations/*/main.json');
+
+let defaultTranslations: any = {};
+if (import.meta.env.SSR) {
+	defaultTranslations = await import('../../translations/en_US/main.json');
+}
 
 const LangStorageKey = 'lang';
 const InterpolationRegex = /%\{((?:.|\n)+?)\}/g;
@@ -31,7 +34,7 @@ type LanguageTranslations = Record<string, Translation>;
  *
  * { en_US: {key1: 'translated1', key2: ['translated single', 'translated plural'] } }
  */
-const _translations = ref({} as Record<string, LanguageTranslations>);
+const _translations = ref<Record<string, LanguageTranslations>>({});
 
 // easygettext's gettext-compile generates a JSON version of a .po file based on
 // its Language field. But in this field, 'll_CC' combinations denoting a
@@ -67,20 +70,11 @@ export function initTranslations(app: App) {
  * have to wait for the translations to load before showing anything.
  */
 export async function loadCurrentLanguage() {
-	// This is always loaded.
-	if (_language.value === 'en_US') {
-		return;
-	}
+	const { default: translationData } = await _translationImports[
+		'../../translations/' + _language.value + '/main.json'
+	]();
 
-	// Don't use webpack to require directly. If we did it would generate
-	// new files for each section that we built for.
-	const response = await Axios({
-		// TODO(vue3): eh?
-		url: _translationUrls.default['../../translations/' + _language.value + '/main.json?url'],
-		ignoreLoadingBar: true,
-	});
-
-	const newTranslations = response.data[_language.value];
+	const newTranslations = translationData[_language.value];
 	if (newTranslations) {
 		_translations.value[_language.value] = newTranslations;
 	}

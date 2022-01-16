@@ -1,4 +1,82 @@
-<script lang="ts" src="./list"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
+import { Api } from '../../../../../../../_common/api/api.service';
+import AppCardListAdd from '../../../../../../../_common/card/list/add/add.vue';
+import AppCardList from '../../../../../../../_common/card/list/AppCardList.vue';
+import AppCardListItem from '../../../../../../../_common/card/list/item/item.vue';
+import { formatNumber } from '../../../../../../../_common/filters/number';
+import { GamePackage } from '../../../../../../../_common/game/package/package.model';
+import { KeyGroup } from '../../../../../../../_common/key-group/key-group.model';
+import AppProgressBar from '../../../../../../../_common/progress/bar/bar.vue';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from '../../../../../../../_common/route/route-component';
+import FormGameKeyGroup from '../../../../../../components/forms/game/key-group/key-group.vue';
+import { useGameDashRouteController } from '../../manage.store';
+
+@Options({
+	name: 'RouteDashGamesManageKeyGroupsList',
+	components: {
+		AppCardList,
+		AppCardListItem,
+		AppCardListAdd,
+		AppProgressBar,
+		FormGameKeyGroup,
+	},
+})
+@RouteResolver({
+	deps: {},
+	resolver: ({ route }) =>
+		Api.sendRequest('/web/dash/developer/games/key-groups/' + route.params.id),
+})
+export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponent {
+	routeStore = setup(() => useGameDashRouteController()!);
+
+	get game() {
+		return this.routeStore.game!;
+	}
+
+	keyGroups: KeyGroup[] = [];
+	packages: GamePackage[] = [];
+	isAdding = false;
+
+	readonly KeyGroup = KeyGroup;
+	readonly formatNumber = formatNumber;
+
+	get routeTitle() {
+		if (this.game) {
+			return this.$gettextInterpolate('Manage Key Groups for %{ game }', {
+				game: this.game.title,
+			});
+		}
+		return null;
+	}
+
+	routeResolved($payload: any) {
+		this.keyGroups = KeyGroup.populate($payload.keyGroups);
+		this.packages = GamePackage.populate($payload.packages);
+	}
+
+	onKeyGroupAdded(keyGroup: KeyGroup) {
+		this.$router.push({
+			name: 'dash.games.manage.key-groups.edit',
+			params: {
+				keyGroupId: keyGroup.id + '',
+			},
+		});
+	}
+
+	divide(left: number | undefined | null, right: number | undefined | null) {
+		if (!right) {
+			return 0;
+		}
+
+		return (left || 0) / right;
+	}
+}
+</script>
 
 <template>
 	<div class="route-manage-key-groups">
@@ -82,7 +160,7 @@
 												{{ formatNumber(group.key_count || 0) }}
 												({{
 													formatNumber(
-														group.viewed_count / group.key_count,
+														divide(group.viewed_count, group.key_count),
 														{
 															style: 'percent',
 															maximumFractionDigits: 2,
@@ -93,7 +171,9 @@
 											<app-progress-bar
 												thin
 												:percent="
-													(group.viewed_count / group.key_count) * 100
+													((group.viewed_count || 0) /
+														(group.key_count || 0)) *
+													100
 												"
 											/>
 											<br />
@@ -104,7 +184,10 @@
 												{{ formatNumber(group.key_count || 0) }}
 												({{
 													formatNumber(
-														group.claimed_count / group.key_count,
+														divide(
+															group.claimed_count,
+															group.key_count
+														),
 														{
 															style: 'percent',
 															maximumFractionDigits: 2,
@@ -115,7 +198,8 @@
 											<app-progress-bar
 												thin
 												:percent="
-													(group.claimed_count / group.key_count) * 100
+													divide(group.claimed_count, group.key_count) *
+													100
 												"
 											/>
 										</div>

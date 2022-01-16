@@ -1,3 +1,35 @@
+<script lang="ts">
+import { Options } from 'vue-property-decorator';
+import AppCard from '../../../_common/card/card.vue';
+import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { Screen } from '../../../_common/screen/screen-service';
+import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
+import { User } from '../../../_common/user/user.model';
+import AppWeplayLogo from '../../components/weplay/logo/AppWeplayLogo.vue';
+
+@Options({
+	name: 'RouteWeplay',
+	components: {
+		AppCard,
+		AppWeplayLogo,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+@RouteResolver({
+	deps: {},
+	resolver: () => User.touch(),
+})
+export default class RouteWeplay extends BaseRouteComponent {
+	readonly Screen = Screen;
+
+	get routeTitle() {
+		return 'Stajoltia';
+	}
+}
+</script>
+
 <template>
 	<div class="fill-dark">
 		<section class="section">
@@ -378,5 +410,3 @@
 	text-align: center
 	max-width: 650px
 </style>
-
-<script lang="ts" src="./weplay"></script>

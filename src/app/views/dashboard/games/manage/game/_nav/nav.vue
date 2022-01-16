@@ -1,4 +1,41 @@
-<script lang="ts" src="./nav"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options, Vue } from 'vue-property-decorator';
+import { Game } from '../../../../../../../_common/game/game.model';
+import { useCommonStore } from '../../../../../../../_common/store/common-store';
+import { AppGamePerms } from '../../../../../../components/game/perms/perms';
+import { useGameDashRouteController } from '../../manage.store';
+import AppManageGameNavRequired from './required.vue';
+
+@Options({
+	components: {
+		AppManageGameNavRequired,
+		AppGamePerms,
+	},
+})
+export default class AppManageGameNav extends Vue {
+	routeStore = setup(() => useGameDashRouteController()!);
+	commonStore = setup(() => useCommonStore());
+
+	get game() {
+		return this.routeStore.game!;
+	}
+
+	get isWizard() {
+		return this.routeStore.isWizard;
+	}
+
+	get canPublish() {
+		return this.routeStore.canPublish;
+	}
+
+	get app() {
+		return this.commonStore;
+	}
+
+	Game = Game;
+}
+</script>
 
 <template>
 	<div>
@@ -136,12 +173,12 @@
 				primary
 				block
 				:disabled="!canPublish"
-				@click="publish"
+				@click="routeStore.publish()"
 			>
 				<translate>Publish</translate>
 			</app-button>
 
-			<app-button v-if="isWizard" primary block @click="saveDraft">
+			<app-button v-if="isWizard" primary block @click="routeStore.saveDraft()">
 				<translate class="visible-lg">Save Draft</translate>
 				<translate class="visible-md">Save</translate>
 			</app-button>

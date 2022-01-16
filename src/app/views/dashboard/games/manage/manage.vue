@@ -1,7 +1,89 @@
-<script lang="ts" src="./manage"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
+import { useRouter } from 'vue-router';
+import { Api } from '../../../../../_common/api/api.service';
+import AppExpand from '../../../../../_common/expand/expand.vue';
+import { Game } from '../../../../../_common/game/game.model';
+import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { useCommonStore } from '../../../../../_common/store/common-store';
+import { useThemeStore } from '../../../../../_common/theme/theme.store';
+import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { $gettext } from '../../../../../_common/translate/translate.service';
+import { AppGamePerms } from '../../../../components/game/perms/perms';
+import { IntentService } from '../../../../components/intent/intent.service';
+import AppPageHeader from '../../../../components/page-header/page-header.vue';
+import { createGameDashRouteController, ManageGameThemeKey } from './manage.store';
+
+@Options({
+	name: 'RouteDashGamesManage',
+	components: {
+		AppPageHeader,
+		AppExpand,
+		AppTimeAgo,
+		AppGamePerms,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+@RouteResolver({
+	deps: { params: ['id'], query: ['intent'] },
+	async resolver({ route }) {
+		const intentRedirect = IntentService.checkRoute(route, {
+			intent: 'accept-game-collaboration',
+			message: $gettext(`You're now a collaborator for this project!`),
+		});
+		if (intentRedirect) {
+			return intentRedirect;
+		}
+
+		return Api.sendRequest('/web/dash/developer/games/' + route.params.id);
+	},
+})
+export default class RouteDashGamesManage extends BaseRouteComponent {
+	routeStore = setup(() => createGameDashRouteController({ router: useRouter() }));
+	commonStore = setup(() => useCommonStore());
+	themeStore = setup(() => useThemeStore());
+
+	readonly Game = Game;
+	readonly GAME_LOCKED_STATUS_DMCA = Game.LOCKED_STATUS_DMCA;
+	readonly GAME_LOCKED_STATUS_ADULT = Game.LOCKED_STATUS_ADULT;
+
+	get user() {
+		return this.commonStore.user!;
+	}
+
+	get game() {
+		return this.routeStore.game;
+	}
+
+	get isWizard() {
+		return this.routeStore.isWizard;
+	}
+
+	routeResolved(payload: any) {
+		this.routeStore.populate(payload);
+		this.setPageTheme();
+	}
+
+	routeDestroyed() {
+		this.themeStore.clearPageTheme(ManageGameThemeKey);
+	}
+
+	private setPageTheme() {
+		const theme = this.game?.theme ?? null;
+		this.themeStore.setPageTheme({
+			key: ManageGameThemeKey,
+			theme,
+		});
+	}
+}
+</script>
 
 <template>
-	<div v-if="isRouteBootstrapped">
+	<div v-if="isRouteBootstrapped && game">
 		<section v-if="game.is_locked" class="section section-thin fill-notice">
 			<div class="container">
 				<div class="col-sm-10 col-md-8 col-lg-6 col-centered text-center">

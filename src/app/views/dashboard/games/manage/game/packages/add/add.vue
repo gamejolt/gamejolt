@@ -1,3 +1,42 @@
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
+import { GamePackage } from '../../../../../../../../_common/game/package/package.model';
+import { BaseRouteComponent } from '../../../../../../../../_common/route/route-component';
+import FormGamePackage from '../../../../../../../components/forms/game/package/package.vue';
+import { useGameDashRouteController } from '../../../manage.store';
+
+@Options({
+	name: 'RouteDashGamesManageGamePackagesAdd',
+	components: {
+		FormGamePackage,
+	},
+})
+export default class RouteDashGamesManageGamePackagesAdd extends BaseRouteComponent {
+	routeStore = setup(() => useGameDashRouteController()!);
+
+	get game() {
+		return this.routeStore.game!;
+	}
+
+	get routeTitle() {
+		if (this.game) {
+			return this.$gettextInterpolate('Add Package for %{ game }', {
+				game: this.game.title,
+			});
+		}
+		return null;
+	}
+
+	onPackageAdded(newPackage: GamePackage) {
+		this.$router.push({
+			name: 'dash.games.manage.game.packages.edit',
+			params: { packageId: newPackage.id + '' },
+		});
+	}
+}
+</script>
+
 <template>
 	<div>
 		<nav class="breadcrumb">
@@ -21,18 +60,24 @@
 		<hr />
 
 		<div class="row">
-			<div class="hidden-xs col-sm-4 col-sm-push-8 col-md-4 col-md-push-8 col-lg-4 col-lg-push-8">
+			<div
+				class="
+					hidden-xs
+					col-sm-4 col-sm-push-8 col-md-4 col-md-push-8 col-lg-4 col-lg-push-8
+				"
+			>
 				<div class="page-help">
 					<p>
 						<translate>
-							Packages are how you organize and distribute your game's builds and other files.
+							Packages are how you organize and distribute your game's builds and
+							other files.
 						</translate>
 					</p>
 					<p>
 						<translate>
-							Your primary package should contain the builds you want people to play. You can create
-							new packages to contain additional files, such as level editors, art packs,
-							expansions, and other DLC.
+							Your primary package should contain the builds you want people to play.
+							You can create new packages to contain additional files, such as level
+							editors, art packs, expansions, and other DLC.
 						</translate>
 					</p>
 					<p>
@@ -48,5 +93,3 @@
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./add"></script>

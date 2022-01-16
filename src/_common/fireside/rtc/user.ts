@@ -1,10 +1,11 @@
-import type {
+import {
 	IAgoraRTCRemoteUser,
 	ILocalAudioTrack,
 	ILocalVideoTrack,
 	IRemoteAudioTrack,
 	IRemoteVideoTrack,
 } from 'agora-rtc-sdk-ng';
+import { reactive, toRaw } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { sleep } from '../../../utils/utils';
 import { updateTrackPlaybackDevice } from './producer';
@@ -21,7 +22,10 @@ export class FiresideVideoPlayStateStopped {
 
 export type FiresideVideoPlayState = FiresideVideoPlayStatePlaying | FiresideVideoPlayStateStopped;
 
-function _comparePlayState(a: FiresideVideoPlayState, b: FiresideVideoPlayState) {
+function _comparePlayState(a_: FiresideVideoPlayState, b_: FiresideVideoPlayState) {
+	const a = toRaw(a_);
+	const b = toRaw(b_);
+
 	if (a === b) {
 		return true;
 	}
@@ -67,6 +71,10 @@ export class FiresideRTCUser {
 	get userModel() {
 		return this.rtc.hosts.find(host => host.uids.indexOf(this.uid) !== -1)?.user ?? null;
 	}
+}
+
+export function createFiresideRTCUser(rtc: FiresideRTC, uid: number) {
+	return reactive(new FiresideRTCUser(rtc, uid)) as FiresideRTCUser;
 }
 
 function _userIdForLog(user: FiresideRTCUser) {

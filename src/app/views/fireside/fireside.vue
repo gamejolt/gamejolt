@@ -1,4 +1,337 @@
-<script lang="ts" src="./fireside"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Inject, Options, Watch } from 'vue-property-decorator';
+import { shallowSetup } from '../../../utils/vue';
+import { Api } from '../../../_common/api/api.service';
+import { AppAuthRequired } from '../../../_common/auth/auth-required-directive';
+import AppAuthJoin from '../../../_common/auth/join/join.vue';
+import AppCommunityThumbnailImg from '../../../_common/community/thumbnail/img/img.vue';
+import { useDrawerStore } from '../../../_common/drawer/drawer-store';
+import { Environment } from '../../../_common/environment/environment.service';
+import AppExpand from '../../../_common/expand/expand.vue';
+import AppFadeCollapse from '../../../_common/fade-collapse/fade-collapse.vue';
+import { formatNumber } from '../../../_common/filters/number';
+import { Fireside } from '../../../_common/fireside/fireside.model';
+import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
+import AppLoading from '../../../_common/loading/loading.vue';
+import { Meta } from '../../../_common/meta/meta-service';
+import { Navigate } from '../../../_common/navigate/navigate.service';
+import { AppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
+import { Popper } from '../../../_common/popper/popper.service';
+import AppPopper from '../../../_common/popper/popper.vue';
+import { AppResponsiveDimensions } from '../../../_common/responsive-dimensions/responsive-dimensions';
+import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { Screen } from '../../../_common/screen/screen-service';
+import AppScrollScroller from '../../../_common/scroll/scroller/scroller.vue';
+import AppStickerReactions from '../../../_common/sticker/reactions/reactions.vue';
+import AppStickerTarget from '../../../_common/sticker/target/target.vue';
+import { useCommonStore } from '../../../_common/store/common-store';
+import { useThemeStore } from '../../../_common/theme/theme.store';
+import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
+import { $gettext } from '../../../_common/translate/translate.service';
+import AppUserAvatarImg from '../../../_common/user/user-avatar/img/img.vue';
+import { ChatStore, ChatStoreKey } from '../../components/chat/chat-store';
+import AppChatWindowOutput from '../../components/chat/window/output/output.vue';
+import AppChatWindowSend from '../../components/chat/window/send/send.vue';
+import { AppFiresideContainer } from '../../components/fireside/container/container';
+import {
+	createFiresideController,
+	FiresideController,
+	getFiresideLink,
+	toggleStreamVideoStats,
+} from '../../components/fireside/controller/controller';
+import { illEndOfFeed, illMaintenance, illNoCommentsSmall } from '../../img/ill/illustrations';
+import AppFiresideBanner from './_banner/banner.vue';
+import AppFiresideChatMembers from './_chat-members/chat-members.vue';
+import AppFiresideHeader from './_header/header.vue';
+import AppFiresideHostList from './_host-list/host-list.vue';
+import AppFiresideShare from './_share/share.vue';
+import AppFiresideStats from './_stats/stats.vue';
+import AppFiresideStream from './_stream/stream.vue';
+
+type RoutePayload = {
+	fireside: any;
+	metaDescription: string;
+	fb: any;
+	twitter: any;
+};
+
+const FiresideThemeKey = 'fireside';
+
+@Options({
+	name: 'RouteFireside',
+	components: {
+		AppUserAvatarImg,
+		AppLoading,
+		AppChatWindowOutput,
+		AppChatWindowSend,
+		AppIllustration,
+		AppAuthJoin,
+		AppFiresideChatMembers,
+		AppFiresideStats,
+		AppCommunityThumbnailImg,
+		AppResponsiveDimensions,
+		AppFiresideStream,
+		AppScrollScroller,
+		AppFiresideHostList,
+		AppPopper,
+		AppFiresideShare,
+		AppExpand,
+		AppFiresideHeader,
+		AppFiresideContainer,
+		AppFiresideBanner,
+		AppStickerTarget,
+		AppStickerReactions,
+		AppFadeCollapse,
+	},
+	directives: {
+		AppTooltip,
+		AppObserveDimensions,
+		AppAuthRequired,
+	},
+})
+@RouteResolver({
+	deps: { params: ['hash'] },
+	resolver: ({ route }) => Api.sendRequest(`/web/fireside/fetch/${route.params.hash}?meta=1`),
+	lazy: true,
+})
+export default class RouteFireside extends BaseRouteComponent {
+	@Inject({ from: ChatStoreKey })
+	chatStore!: ChatStore;
+
+	drawerStore = shallowSetup(() => useDrawerStore());
+
+	commonStore = setup(() => useCommonStore());
+	themeStore = setup(() => useThemeStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
+
+	c: FiresideController | null = shallowSetup(() => null);
+
+	private beforeEachDeregister: Function | null = null;
+	private canShowMobileHosts = true;
+
+	readonly Screen = Screen;
+	readonly formatNumber = formatNumber;
+	readonly toggleStreamVideoStats = toggleStreamVideoStats;
+	readonly illNoCommentsSmall = illNoCommentsSmall;
+	readonly illMaintenance = illMaintenance;
+	readonly illEndOfFeed = illEndOfFeed;
+
+	videoWidth = 0;
+	videoHeight = 0;
+	isVertical = false;
+
+	declare $refs: {
+		videoWrapper: HTMLDivElement;
+	};
+
+	get loginUrl() {
+		return (
+			Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath)
+		);
+	}
+
+	get chat() {
+		return this.chatStore.chat;
+	}
+
+	get fireside() {
+		return this.c?.fireside;
+	}
+
+	get routeTitle() {
+		if (!this.fireside) {
+			return $gettext(`Loading Fireside...`);
+		}
+
+		return this.fireside.title + ' - Fireside';
+	}
+
+	get chatMessages() {
+		if (!this.chat || !this.c?.chatRoom.value) {
+			return [];
+		}
+
+		return this.chat.messages[this.c.chatRoom.value.id];
+	}
+
+	get chatQueuedMessages() {
+		if (!this.chat || !this.c?.chatRoom.value) {
+			return [];
+		}
+
+		return this.chat.messageQueue.filter(i => i.room_id === this.c?.chatRoom.value?.id);
+	}
+
+	get shouldFullscreenStream() {
+		if (!this.c?.isStreaming.value) {
+			return false;
+		}
+		return Screen.isXs && !this.shouldShowChat && !this.isVertical;
+	}
+
+	get shouldShowHeaderInBody() {
+		return this.isVertical && !!this.c?.isStreaming.value;
+	}
+
+	get shouldShowChat() {
+		const mobileCondition =
+			Screen.isMobile && this.c?.isStreaming.value ? this.isVertical : true;
+		return !!this.chat && this.chat.connected && !!this.c?.chatRoom.value && mobileCondition;
+	}
+
+	get shouldShowChatMembers() {
+		return !this.c?.isStreaming.value && this.shouldShowChat && Screen.isLg;
+	}
+
+	get shouldShowChatMemberStats() {
+		return this.shouldShowDesktopHosts && !!this.c?.isStreaming.value;
+	}
+
+	get shouldShowDesktopHosts() {
+		return !this.isVertical && !Screen.isMobile;
+	}
+
+	get shouldShowMobileHosts() {
+		return this.canShowMobileHosts && !!this.c?.isStreaming.value;
+	}
+
+	get shouldShowReactions() {
+		return !Screen.isMobile;
+	}
+
+	get shouldShowFiresideStats() {
+		return !this.c?.isStreaming.value && this.c?.status.value === 'joined' && !Screen.isMobile;
+	}
+
+	get shortestSide() {
+		return Math.min(Screen.width, Screen.height);
+	}
+
+	async routeResolved($payload: RoutePayload) {
+		Meta.description = $payload.metaDescription;
+		Meta.fb = $payload.fb || {};
+		Meta.fb.title = this.routeTitle;
+		Meta.twitter = $payload.twitter || {};
+		Meta.twitter.title = this.routeTitle;
+
+		const fireside = new Fireside($payload.fireside);
+		this.c ??= createFiresideController(fireside);
+
+		this.setPageTheme();
+	}
+
+	routeDestroyed() {
+		this.themeStore.clearPageTheme(FiresideThemeKey);
+
+		this.beforeEachDeregister?.();
+		this.beforeEachDeregister = null;
+	}
+
+	calcIsVertical() {
+		if (Screen.isMobile && !import.meta.env.SSR) {
+			this.isVertical = window.screen.height > window.screen.width;
+		} else {
+			this.isVertical = Screen.height > Screen.width;
+		}
+	}
+
+	onDimensionsChange() {
+		this.calcIsVertical();
+
+		const videoWrapper = this.$refs.videoWrapper;
+		if (!videoWrapper) {
+			return;
+		}
+
+		const wrapperWidth = videoWrapper.offsetWidth;
+		const wrapperHeight = videoWrapper.offsetHeight;
+		const wrapperRatio = wrapperWidth / wrapperHeight;
+
+		const videoStats = this.c?.rtc.value?.videoChannel.agoraClient.getRemoteVideoStats();
+		const receiveWidth = videoStats?.receiveResolutionWidth?.receiveResolutionWidth ?? 16;
+		const receiveHeight = videoStats?.receiveResolutionHeight?.receiveResolutionHeight ?? 9;
+		const receiveRatio = receiveWidth / receiveHeight;
+
+		// If the video is wider than the containing element...
+		if (receiveRatio > wrapperRatio) {
+			this.videoWidth = wrapperWidth;
+			this.videoHeight = wrapperWidth / receiveRatio;
+		} else if (receiveRatio < wrapperRatio) {
+			this.videoHeight = wrapperHeight;
+			this.videoWidth = wrapperHeight * receiveRatio;
+		} else {
+			this.videoWidth = wrapperWidth;
+			this.videoHeight = wrapperHeight;
+		}
+	}
+
+	private setPageTheme() {
+		const theme = this.fireside?.user?.theme ?? null;
+		this.themeStore.setPageTheme({ key: FiresideThemeKey, theme });
+	}
+
+	get shouldShowTitleControls() {
+		return this.c?.status.value === 'joined';
+	}
+
+	toggleVideoStats() {
+		if (this.c) {
+			toggleStreamVideoStats(this.c);
+			Popper.hideAll();
+		}
+	}
+
+	onClickRetry() {
+		if (this.c?.onRetry.value) {
+			this.c.onRetry.value();
+		}
+	}
+
+	onClickOpenBrowser() {
+		if (!this.c) {
+			return;
+		}
+
+		const url = getFiresideLink(this.c, this.$router);
+		if (url) {
+			Navigate.newWindow(url);
+		}
+	}
+
+	onChatEditorFocusChange(isFocused: boolean) {
+		this.canShowMobileHosts = !isFocused;
+	}
+
+	@Watch('c.isPersonallyStreaming')
+	onIsPersonallyStreamingChanged() {
+		if (import.meta.env.SSR) {
+			return;
+		}
+
+		if (!this.c || this.c.isPersonallyStreaming.value) {
+			this.beforeEachDeregister ??= this.$router.beforeEach((_to, _from, next) => {
+				if (
+					!window.confirm(
+						$gettext(
+							`You are currently streaming to a fireside. If you leave this page, you will stop streaming. Are you sure you want to leave?`
+						)
+					)
+				) {
+					return next(false);
+				}
+				next();
+			});
+		} else {
+			this.beforeEachDeregister?.();
+			this.beforeEachDeregister = null;
+		}
+	}
+}
+</script>
 
 <template>
 	<app-fireside-container v-if="c" :controller="c" class="-fireside">
@@ -15,14 +348,17 @@
 		</template>
 		<div
 			class="-body"
-			:class="{ '-body-column': isVertical && c.isStreaming, '-is-streaming': c.isStreaming }"
+			:class="{
+				'-body-column': isVertical && c.isStreaming.value,
+				'-is-streaming': c.isStreaming.value,
+			}"
 		>
 			<div v-if="shouldShowFiresideStats" class="-leading">
 				<app-fireside-stats />
 			</div>
 
 			<div
-				v-if="c.isStreaming && c.chatRoom"
+				v-if="c.isStreaming.value && c.chatRoom.value"
 				class="-video-wrapper"
 				:class="{
 					'-vertical': isVertical,
@@ -53,10 +389,10 @@
 									left: 0,
 								}"
 							>
-								<template v-if="c.rtc && c.rtc.focusedUser">
+								<template v-if="c.rtc.value && c.rtc.value.focusedUser">
 									<app-popper trigger="right-click">
 										<app-fireside-stream
-											:rtc-user="c.rtc.focusedUser"
+											:rtc-user="c.rtc.value.focusedUser"
 											:has-header="
 												shouldShowHeaderInBody || shouldFullscreenStream
 											"
@@ -80,16 +416,16 @@
 					</div>
 				</div>
 
-				<div v-if="c.rtc && shouldShowDesktopHosts" class="-hosts-padding">
+				<div v-if="c.rtc.value && shouldShowDesktopHosts" class="-hosts-padding">
 					<div class="-hosts">
 						<app-fireside-host-list />
 					</div>
 
-					<app-fireside-share v-if="!c.isDraft" class="-share" hide-heading />
+					<app-fireside-share v-if="!c.isDraft.value" class="-share" hide-heading />
 				</div>
 			</div>
 
-			<template v-if="c.status === 'loading' || c.status === 'initial'">
+			<template v-if="c.status.value === 'loading' || c.status.value === 'initial'">
 				<div key="loading" class="-message-wrapper">
 					<div class="-message">
 						<app-illustration :src="illEndOfFeed">
@@ -102,7 +438,7 @@
 				</div>
 			</template>
 
-			<template v-else-if="c.status === 'unauthorized'">
+			<template v-else-if="c.status.value === 'unauthorized'">
 				<div key="unauthorized" class="-message-wrapper">
 					<div class="-message">
 						<h2 class="section-header text-center">
@@ -123,7 +459,7 @@
 				</div>
 			</template>
 
-			<template v-else-if="c.status === 'expired'">
+			<template v-else-if="c.status.value === 'expired'">
 				<div key="expired" class="-message-wrapper">
 					<div class="-message">
 						<app-illustration :src="illNoCommentsSmall">
@@ -140,7 +476,7 @@
 				</div>
 			</template>
 
-			<template v-else-if="c.status === 'setup-failed'">
+			<template v-else-if="c.status.value === 'setup-failed'">
 				<div key="setup-failed" class="-message-wrapper">
 					<div class="-message">
 						<app-illustration :src="illMaintenance">
@@ -159,7 +495,7 @@
 				</div>
 			</template>
 
-			<template v-else-if="c.status === 'disconnected'">
+			<template v-else-if="c.status.value === 'disconnected'">
 				<div key="disconnected" class="-message-wrapper">
 					<div class="-message">
 						<app-illustration :src="illNoCommentsSmall">
@@ -180,7 +516,7 @@
 				</div>
 			</template>
 
-			<template v-else-if="c.status === 'blocked'">
+			<template v-else-if="c.status.value === 'blocked'">
 				<div key="blocked" class="-message-wrapper">
 					<div class="-message">
 						<div class="text-center">
@@ -203,7 +539,7 @@
 				v-else-if="shouldShowChat"
 				key="chat"
 				class="-chat"
-				:class="{ '-trailing': c.isStreaming }"
+				:class="{ '-trailing': c.isStreaming.value }"
 			>
 				<app-fade-collapse
 					v-if="shouldShowReactions"
@@ -219,13 +555,13 @@
 					</div>
 				</app-expand>
 
-				<div v-if="c.status === 'joined'" class="-chat-wrapper">
+				<div v-if="c.status.value === 'joined'" class="-chat-wrapper">
 					<div class="-chat-window">
 						<app-chat-window-output
-							v-if="c.chatRoom"
+							v-if="c.chatRoom.value"
 							ref="output"
 							class="-chat-window-output fill-backdrop"
-							:room="c.chatRoom"
+							:room="c.chatRoom.value"
 							:messages="chatMessages"
 							:queued-messages="chatQueuedMessages"
 						/>
@@ -242,7 +578,7 @@
 						<app-chat-window-send
 							v-else-if="chat && chat.currentUser"
 							class="-chat-window-input"
-							:room="c.chatRoom"
+							:room="c.chatRoom.value"
 							@focus-change="onChatEditorFocusChange"
 						/>
 					</div>
@@ -250,7 +586,10 @@
 			</div>
 			<div v-if="shouldShowChatMembers" class="-trailing">
 				<div class="-chat-members">
-					<app-fireside-chat-members :chat-users="c.chatUsers" :chat-room="c.chatRoom" />
+					<app-fireside-chat-members
+						:chat-users="c.chatUsers.value"
+						:chat-room="c.chatRoom.value"
+					/>
 				</div>
 			</div>
 		</div>

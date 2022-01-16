@@ -1,4 +1,14 @@
-<script lang="ts" src="./rating-breakdown"></script>
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { formatNumber } from '../../../../../_common/filters/number';
+
+@Options({})
+export default class AppAnalyticsReportRatingBreakdown extends Vue {
+	@Prop(Object) reportData!: any;
+
+	readonly formatNumber = formatNumber;
+}
+</script>
 
 <template>
 	<div class="col-sm-8">

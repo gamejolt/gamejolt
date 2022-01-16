@@ -1,3 +1,17 @@
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+import AppExpand from '../../../../_common/expand/expand.vue';
+
+@Options({
+	components: {
+		AppExpand,
+	},
+})
+export default class AppForumRules extends Vue {
+	isShowingRules = false;
+}
+</script>
+
 <template>
 	<div class="alert full-bleed-xs">
 		<p>
@@ -69,5 +83,3 @@
 		</app-expand>
 	</div>
 </template>
-
-<script lang="ts" src="./rules"></script>

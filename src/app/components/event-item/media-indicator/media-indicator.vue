@@ -1,4 +1,15 @@
-<script lang="ts" src="./media-indicator"></script>
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+
+@Options({})
+export default class AppEventItemMediaIndicator extends Vue {
+	@Prop(Number)
+	count!: number;
+
+	@Prop(Number)
+	current!: number;
+}
+</script>
 
 <template>
 	<div class="event-item-media-indicator">

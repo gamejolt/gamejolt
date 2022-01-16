@@ -1,9 +1,342 @@
-<script lang="ts" src="./overview"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Inject, Options } from 'vue-property-decorator';
+import { getAbsoluteLink } from '../../../../../../utils/router';
+import { useAdsController } from '../../../../../../_common/ad/ad-store';
+import AppAdWidget from '../../../../../../_common/ad/widget/widget.vue';
+import { Api } from '../../../../../../_common/api/api.service';
+import AppCard from '../../../../../../_common/card/card.vue';
+import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
+import AppCommentAddButton from '../../../../../../_common/comment/add-button/add-button.vue';
+import { canCommentOnModel, Comment } from '../../../../../../_common/comment/comment-model';
+import {
+	CommentStoreManager,
+	CommentStoreManagerKey,
+	getCommentStore,
+} from '../../../../../../_common/comment/comment-store';
+import { CommentModal } from '../../../../../../_common/comment/modal/modal.service';
+import {
+	CommentThreadModal,
+	CommentThreadModalPermalinkDeregister,
+} from '../../../../../../_common/comment/thread/modal.service';
+import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
+import { Environment } from '../../../../../../_common/environment/environment.service';
+import AppFadeCollapse from '../../../../../../_common/fade-collapse/fade-collapse.vue';
+import { formatNumber } from '../../../../../../_common/filters/number';
+import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
+import AppGameExternalPackageCard from '../../../../../../_common/game/external-package/card/card.vue';
+import { Game } from '../../../../../../_common/game/game.model';
+import AppGameMediaBar from '../../../../../../_common/game/media-bar/media-bar.vue';
+import AppGamePackageCard from '../../../../../../_common/game/package/card/card.vue';
+import AppGameSoundtrackCard from '../../../../../../_common/game/soundtrack/card/card.vue';
+import { HistoryTick } from '../../../../../../_common/history-tick/history-tick-service';
+import { AppLazyPlaceholder } from '../../../../../../_common/lazy/placeholder/placeholder';
+import { Meta } from '../../../../../../_common/meta/meta-service';
+import { PartnerReferral } from '../../../../../../_common/partner-referral/partner-referral-service';
+import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
+import { Screen } from '../../../../../../_common/screen/screen-service';
+import AppShareCard from '../../../../../../_common/share/card/card.vue';
+import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
+import AppActivityFeedPlaceholder from '../../../../../components/activity/feed/placeholder/placeholder.vue';
+import { ActivityFeedView } from '../../../../../components/activity/feed/view';
+import AppCommentOverview from '../../../../../components/comment/overview/overview.vue';
+import AppGameCommunityBadge from '../../../../../components/game/community-badge/community-badge.vue';
+import AppGameOgrs from '../../../../../components/game/ogrs/ogrs.vue';
+import { AppGamePerms } from '../../../../../components/game/perms/perms';
+import { AppActivityFeedLazy } from '../../../../../components/lazy';
+import AppPageContainer from '../../../../../components/page-container/page-container.vue';
+import AppPostAddButton from '../../../../../components/post/add-button/add-button.vue';
+import AppRatingWidget from '../../../../../components/rating/widget/widget.vue';
+import AppUserKnownFollowers from '../../../../../components/user/known-followers/known-followers.vue';
+import { useGameRouteController } from '../view.vue';
+import AppDiscoverGamesViewOverviewDetails from './_details/details.vue';
+import AppDiscoverGamesViewOverviewRecommended from './_recommended/recommended.vue';
+import AppDiscoverGamesViewOverviewStatbar from './_statbar/statbar.vue';
+import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue';
+
+@Options({
+	name: 'RouteDiscoverGamesViewOverview',
+	components: {
+		AppPageContainer,
+		AppDiscoverGamesViewOverviewDetails,
+		AppDiscoverGamesViewOverviewRecommended,
+		AppDiscoverGamesViewOverviewSupporters,
+		AppDiscoverGamesViewOverviewStatbar,
+		AppGameCommunityBadge,
+		AppAdWidget,
+		AppRatingWidget,
+		AppCard,
+		AppFadeCollapse,
+		AppLazyPlaceholder,
+		AppGameOgrs,
+		AppGameExternalPackageCard,
+		AppGamePackageCard,
+		AppGameSoundtrackCard,
+		AppGameMediaBar,
+		AppCommentAddButton,
+		AppCommentOverview,
+		AppActivityFeed: AppActivityFeedLazy,
+		AppActivityFeedPlaceholder,
+		AppPostAddButton,
+		AppGamePerms,
+		AppContentViewer,
+		AppUserKnownFollowers,
+		AppShareCard,
+	},
+})
+@RouteResolver({
+	lazy: true,
+	cache: true,
+	deps: { query: ['feed_last_id'] },
+	resolver({ route }) {
+		const gameId = parseInt(route.params.id as string);
+		HistoryTick.sendBeacon('game-view', gameId, {
+			sourceResource: 'Game',
+			sourceResourceId: gameId,
+		});
+
+		// If we have a tracked partner "ref" in the URL, we want to pass that along
+		// when gathering the payload.
+		let apiOverviewUrl = '/web/discover/games/overview/' + route.params.id;
+
+		const ref = PartnerReferral.getReferrer('Game', parseInt(route.params.id as string));
+		if (ref) {
+			apiOverviewUrl += '?ref=' + ref;
+		}
+
+		return Api.sendRequest(ActivityFeedService.makeFeedUrl(route, apiOverviewUrl));
+	},
+})
+export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
+	routeStore = setup(() => useGameRouteController()!);
+	ads = setup(() => useAdsController());
+
+	@Inject({ from: CommentStoreManagerKey })
+	commentManager!: CommentStoreManager;
+
+	feed: ActivityFeedView | null = null;
+
+	permalinkWatchDeregister?: CommentThreadModalPermalinkDeregister;
+
+	readonly Screen = Screen;
+	readonly Environment = Environment;
+	readonly formatNumber = formatNumber;
+
+	get routeTitle() {
+		if (this.game) {
+			let title = this.$gettextInterpolate('%{ gameTitle } by %{ user }', {
+				gameTitle: this.game.title,
+				user: this.game.developer.display_name,
+			});
+
+			if (this.browserBuilds.length) {
+				title += ' - ' + this.$gettext('Play Online');
+			}
+
+			return title;
+		}
+		return null;
+	}
+
+	get isOverviewLoaded() {
+		return this.routeStore.isOverviewLoaded;
+	}
+
+	get game() {
+		return this.routeStore.game;
+	}
+
+	get mediaItems() {
+		return this.routeStore.mediaItems;
+	}
+
+	get overviewComments() {
+		return this.routeStore.overviewComments;
+	}
+
+	get userRating() {
+		return this.routeStore.userRating;
+	}
+
+	get songs() {
+		return this.routeStore.songs;
+	}
+
+	get userPartnerKey() {
+		return this.routeStore.userPartnerKey;
+	}
+
+	get partnerLink() {
+		return this.routeStore.partnerLink;
+	}
+
+	get partner() {
+		return this.routeStore.partner;
+	}
+
+	get partnerKey() {
+		return this.routeStore.partnerKey;
+	}
+
+	get supporters() {
+		return this.routeStore.supporters;
+	}
+
+	get supporterCount() {
+		return this.routeStore.supporterCount;
+	}
+
+	get shouldShowMultiplePackagesMessage() {
+		return this.routeStore.shouldShowMultiplePackagesMessage;
+	}
+
+	get postsCount() {
+		return this.routeStore.postsCount;
+	}
+
+	get packages() {
+		return this.routeStore.packages;
+	}
+
+	get externalPackages() {
+		return this.routeStore.externalPackages;
+	}
+
+	get hasReleasesSection() {
+		return this.routeStore.hasReleasesSection;
+	}
+
+	get customGameMessages() {
+		return this.routeStore.customGameMessages;
+	}
+
+	get showDetails() {
+		return this.routeStore.showDetails;
+	}
+
+	get browserBuilds() {
+		return this.routeStore.browserBuilds;
+	}
+
+	get knownFollowers() {
+		return this.routeStore.knownFollowers;
+	}
+
+	get knownFollowerCount() {
+		return this.routeStore.knownFollowerCount;
+	}
+
+	get hasAnyPerms() {
+		return Boolean(this.game?.hasPerms());
+	}
+
+	get hasDevlogPerms() {
+		return Boolean(this.game?.hasPerms('devlogs'));
+	}
+
+	get hasPartnerControls() {
+		return Boolean(this.game?.referrals_enabled && this.userPartnerKey && this.packages.length);
+	}
+
+	get commentsCount() {
+		if (this.game) {
+			const store = getCommentStore(this.commentManager, 'Game', this.game.id);
+			return store ? store.totalCount : 0;
+		}
+		return 0;
+	}
+
+	get shouldShowAds() {
+		return this.ads.shouldShow;
+	}
+
+	get shouldShowCommentAdd() {
+		return Boolean(this.game && canCommentOnModel(this.game));
+	}
+
+	get shareLink() {
+		if (!this.game) {
+			return undefined;
+		}
+
+		return getAbsoluteLink(this.$router, this.game.getUrl());
+	}
+
+	routeCreated() {
+		this.feed = ActivityFeedService.routeInit(this);
+	}
+
+	routeResolved(payload: any, fromCache: boolean) {
+		this.routeStore.processOverviewPayload(payload);
+
+		Meta.description = payload.metaDescription;
+		Meta.fb = payload.fb;
+		Meta.twitter = payload.twitter;
+
+		if (payload.microdata) {
+			Meta.microdata = payload.microdata;
+		}
+
+		if (this.game) {
+			CommentThreadModal.showFromPermalink(this.$router, this.game, 'comments');
+			this.permalinkWatchDeregister = CommentThreadModal.watchForPermalink(
+				this.$router,
+				this.game,
+				'comments'
+			);
+		}
+
+		this.feed = ActivityFeedService.routed(
+			this.feed,
+			{
+				type: 'EventItem',
+				name: 'game-devlog',
+				url: `/web/posts/fetch/game/${this.game!.id}`,
+				hideGameInfo: true,
+				itemsPerPage: payload.perPage,
+			},
+			payload.posts,
+			fromCache
+		);
+	}
+
+	unmounted() {
+		if (this.permalinkWatchDeregister) {
+			this.permalinkWatchDeregister();
+			this.permalinkWatchDeregister = undefined;
+		}
+	}
+
+	copyPartnerLink() {
+		if (this.partnerLink) {
+			Clipboard.copy(this.partnerLink);
+		}
+	}
+
+	showComments() {
+		CommentModal.show({ model: this.game!, displayMode: 'comments' });
+	}
+
+	onPostAdded(post: FiresidePost) {
+		ActivityFeedService.onPostAdded(this.feed!, post, this);
+	}
+
+	async reloadPreviewComments() {
+		if (this.game instanceof Game) {
+			const $payload = await Api.sendRequest(
+				'/web/discover/games/comment-overview/' + this.game.id
+			);
+
+			this.routeStore.setOverviewComments(Comment.populate($payload.comments));
+		}
+	}
+}
+</script>
 
 <template>
 	<div class="route-game-overview">
 		<!-- Media Bar -->
-		<app-game-media-bar v-if="game.media_count" :media-items="mediaItems" />
+		<app-game-media-bar v-if="game?.media_count" :media-items="mediaItems" />
 
 		<section class="section section-thin fill-backdrop">
 			<app-ad-widget
@@ -30,10 +363,10 @@
 						:count="knownFollowerCount"
 					/>
 
-					<app-game-community-badge v-if="game.community" :community="game.community" />
+					<app-game-community-badge v-if="game?.community" :community="game.community" />
 				</template>
 
-				<template v-if="!Screen.isMobile && game.comments_enabled" #left-bottom>
+				<template v-if="!Screen.isMobile && game?.comments_enabled" #left-bottom>
 					<div class="pull-right">
 						<app-button trans @click="showComments()">
 							<translate>View All</translate>
@@ -82,7 +415,7 @@
 					patched vnode not existing.
 				-->
 				<div v-if="customGameMessages.length">
-					<div v-if="game.canceled" v-translate class="alert alert-notice full-bleed-xs">
+					<div v-if="game?.canceled" v-translate class="alert alert-notice full-bleed-xs">
 						This game was canceled, so the current version might be buggy or incomplete.
 						You can still follow it if you'd like to be notified in the case that
 						development continues.
@@ -112,7 +445,7 @@
 					show while we're loading the section. After it's loaded in, we decide if it should show
 					through the "hasReleasesSection" variable which has the correct data.
 				-->
-				<template v-if="(game._has_packages && !isOverviewLoaded) || hasReleasesSection">
+				<template v-if="(game?._has_packages && !isOverviewLoaded) || hasReleasesSection">
 					<div id="game-releases">
 						<!--
 							Partner Controls
@@ -134,6 +467,7 @@
 									<translate>Copy Partner Link</translate>
 								</app-button>
 								<app-button
+									v-if="game"
 									trans
 									:to="{
 										name: 'dash.analytics',
@@ -187,7 +521,7 @@
 								resets completely when the page changes.
 							-->
 							<app-game-soundtrack-card
-								v-if="songs.length"
+								v-if="game && songs.length"
 								:key="game.id"
 								:game="game"
 								:songs="songs"
@@ -209,7 +543,7 @@
 						<span class="lazy-placeholder" />
 						<span class="lazy-placeholder" style="width: 40%" />
 					</div>
-					<div v-else>
+					<div v-else-if="game">
 						<!--
 							Set a :key to let vue know that it should update
 							this when the game changes.
@@ -219,8 +553,8 @@
 							:collapse-height="600"
 							:is-open="showDetails || !postsCount"
 							:animate="false"
-							@require-change="setCanToggleDescription"
-							@expand="toggleDetails()"
+							@require-change="routeStore.setCanToggleDescription"
+							@expand="routeStore.toggleDetails()"
 						>
 							<app-content-viewer :source="game.description_content" />
 						</app-fade-collapse>
@@ -244,7 +578,7 @@
 							<app-button
 								v-app-track-event="`game-profile:show-full-description`"
 								trans
-								@click="toggleDetails()"
+								@click="routeStore.toggleDetails()"
 							>
 								<translate v-if="!showDetails">Show More</translate>
 								<translate v-else>Less</translate>

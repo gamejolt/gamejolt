@@ -1,4 +1,46 @@
-<script lang="ts" src="./included-items"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options, Vue } from 'vue-property-decorator';
+import { formatFilesize } from '../../../_common/filters/filesize';
+import { formatUcwords } from '../../../_common/filters/ucwords';
+import { GameBuild } from '../../../_common/game/build/build.model';
+import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
+import { useWidgetPackageStore } from '../../store/index';
+
+@Options({
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppIncludedItems extends Vue {
+	store = setup(() => useWidgetPackageStore());
+
+	readonly formatUcwords = formatUcwords;
+	readonly formatFilesize = formatFilesize;
+
+	get package() {
+		return this.store.gamePackage!;
+	}
+	get packagePayload() {
+		return this.store.packagePayload!;
+	}
+	get packageCard() {
+		return this.store.packageCard!;
+	}
+
+	hasSupport(build: GameBuild, os: string) {
+		return this.checkBuildSupport(build, os) || this.checkBuildSupport(build, os + '_64');
+	}
+
+	is64BitOnly(build: GameBuild, os: string) {
+		return !this.checkBuildSupport(build, os) && this.checkBuildSupport(build, os + '_64');
+	}
+
+	private checkBuildSupport(build: GameBuild, os: string) {
+		return (build as any)['os_' + os] ?? false;
+	}
+}
+</script>
 
 <template>
 	<div class="-included-items">

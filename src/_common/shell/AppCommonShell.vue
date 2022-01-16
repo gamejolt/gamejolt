@@ -1,10 +1,11 @@
 <script lang="ts">
-export default {
+export default defineComponent({
 	inheritAttrs: false,
-};
+});
 </script>
 
 <script lang="ts" setup>
+import { defineComponent } from 'vue';
 import AppBackdropPortal from '../backdrop/backdrop-portal.vue';
 import AppGrowls from '../growls/growls.vue';
 import AppLightboxPortal from '../lightbox/lightbox-portal.vue';
@@ -16,16 +17,16 @@ import AppTooltipPortal from '../tooltip/tooltip-portal.vue';
 </script>
 
 <template>
-	<app-lightbox-portal />
-	<app-tooltip-portal />
-	<app-backdrop-portal />
+	<AppLightboxPortal />
+	<AppTooltipPortal />
+	<AppBackdropPortal />
 
-	<app-scroll-inview-parent v-bind="$attrs">
+	<AppScrollInviewParent v-bind="$attrs">
 		<slot />
 
-		<app-theme />
-		<app-loading-bar />
-		<app-growls />
-		<app-modals />
-	</app-scroll-inview-parent>
+		<AppTheme />
+		<AppLoadingBar />
+		<AppGrowls />
+		<AppModals />
+	</AppScrollInviewParent>
 </template>

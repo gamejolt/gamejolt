@@ -1,3 +1,32 @@
+<script lang="ts">
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+import { ContentDocument } from '../../../../../../_common/content/content-document';
+import AppTagSuggestion from '../../../../../../_common/tag/suggestion/suggestion.vue';
+
+@Options({
+	components: {
+		AppTagSuggestion,
+	},
+})
+export default class AppFormGameDescriptionTags extends Vue {
+	@Prop(Array)
+	tags!: string[];
+
+	@Prop(String)
+	text!: string;
+
+	@Prop(Object)
+	content!: ContentDocument;
+
+	get documents() {
+		return [this.content];
+	}
+
+	@Emit('tag')
+	emitTag(_tag: string) {}
+}
+</script>
+
 <template>
 	<app-tag-suggestion :tags="tags" :text="text" :content="documents" @tag="emitTag($event)">
 		<app-jolticon icon="tags" class="middle" />
@@ -13,5 +42,3 @@
 		</p>
 	</app-tag-suggestion>
 </template>
-
-<script lang="ts" src="./tags"></script>

@@ -1,4 +1,68 @@
-<script lang="ts" src="./notification-settings"></script>
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Api } from '../../../../_common/api/api.service';
+import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
+
+@Options({
+	components: {
+		AppLoadingFade,
+	},
+})
+export default class AppChatNotificationSettings extends Vue {
+	@Prop({ type: Number, required: true }) roomId!: number;
+	@Prop({ type: Boolean, required: true }) isPmRoom!: boolean;
+
+	isLoadingNotificationSettings = false;
+	notificationLevel = '';
+
+	get notificationSettings() {
+		const settings = [] as any[];
+
+		settings.push({
+			text: this.$gettext(`All Messages`),
+			level: 'all',
+		});
+		if (!this.isPmRoom) {
+			settings.push({
+				text: this.$gettext(`Only @mentions`),
+				level: 'mentions',
+			});
+		}
+		settings.push({
+			text: this.$gettext(`Nothing`),
+			level: 'off',
+		});
+
+		return settings;
+	}
+
+	async mounted() {
+		this.isLoadingNotificationSettings = true;
+
+		const payload = await Api.sendRequest(
+			`/web/chat/rooms/get-notification-settings/${this.roomId}`,
+			undefined,
+			{ detach: true }
+		);
+		this.notificationLevel = payload.level;
+
+		this.isLoadingNotificationSettings = false;
+	}
+
+	async onClickSetNotificationLevel(level: string) {
+		// Set it right away for immediate feedback.
+		this.notificationLevel = level;
+
+		const payload = await Api.sendRequest(
+			`/web/chat/rooms/set-notification-settings/${this.roomId}`,
+			{ level },
+			{ detach: true }
+		);
+		// Just make sure we assign the level that was actually returned.
+		this.notificationLevel = payload.level;
+	}
+}
+</script>
 
 <template>
 	<app-loading-fade

@@ -1,3 +1,15 @@
+<script lang="ts">
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+
+@Options({})
+export default class AppEditableOverlay extends Vue {
+	@Prop(Boolean) disabled?: boolean;
+
+	@Emit()
+	click() {}
+}
+</script>
+
 <template>
 	<div class="editable-overlay">
 		<div v-if="!disabled" class="-overlay-container theme-dark" @click.capture.stop="click">
@@ -57,5 +69,3 @@
 	text-align: center
 	z-index: 2
 </style>
-
-<script lang="ts" src="./editable-overlay"></script>

@@ -1,3 +1,45 @@
+<script lang="ts">
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+
+@Options({})
+export default class AppPill extends Vue {
+	@Prop({ type: Object, required: false })
+	to?: any;
+
+	@Emit('click')
+	emitClick(_e: MouseEvent) {}
+
+	get component() {
+		if (this.to) {
+			return 'router-link';
+		}
+
+		if (this.hasClickListener) {
+			return 'a';
+		}
+
+		return 'div';
+	}
+
+	get hasImg() {
+		// TODO(vue3): check
+		return !!this.$slots.img;
+	}
+
+	get hasClickListener() {
+		return !!this.$attrs.onClick;
+	}
+
+	onClick(e: MouseEvent) {
+		if (this.component === 'div') {
+			return;
+		}
+
+		this.emitClick(e);
+	}
+}
+</script>
+
 <template>
 	<component :is="component" class="pill" :to="to" @click="onClick">
 		<span class="-img" v-if="hasImg">
@@ -41,5 +83,3 @@
 	width: 18px
 	height: 18px
 </style>
-
-<script lang="ts" src="./pill"></script>

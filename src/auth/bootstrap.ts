@@ -1,16 +1,21 @@
 import '../utils/polyfills';
 import { bootstrapCommon } from '../_common/bootstrap';
-import App from './app.vue';
+import AppMain from './AppMain.vue';
 import './main.styl';
-import { store } from './store/index';
+import { authStore, AuthStoreKey } from './store';
 import { router } from './views/index';
 
 export function createApp() {
-	const app = bootstrapCommon(App, store, router);
+	const { app } = bootstrapCommon(AppMain, router);
 
-	return { app, store, router };
-}
+	app.provide(AuthStoreKey, authStore);
 
-if (GJ_IS_DESKTOP_APP) {
-	await import('./bootstrap-client');
+	// TODO(vue3): gotta make createApp async to support this
+	if (GJ_IS_DESKTOP_APP) {
+		// import('../_common/client/bootstrap').then(({ bootstrapCommonClient }) => {
+		// 	bootstrapCommonClient({ commonStore });
+		// });
+	}
+
+	return { app, router };
 }

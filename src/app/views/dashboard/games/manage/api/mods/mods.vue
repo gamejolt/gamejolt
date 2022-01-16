@@ -1,4 +1,33 @@
-<script lang="ts" src="./mods"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
+// This page is driven by this help page content.
+import { html } from '../../../../../../../lib/doc-game-api/v1.x/mods/index.md';
+import { BaseRouteComponent } from '../../../../../../../_common/route/route-component';
+import { useGameDashRouteController } from '../../manage.store';
+
+@Options({
+	name: 'RouteDashGamesManageApiMods',
+})
+export default class RouteDashGamesManageApiMods extends BaseRouteComponent {
+	routeStore = setup(() => useGameDashRouteController()!);
+
+	get game() {
+		return this.routeStore.game!;
+	}
+
+	readonly content = html;
+
+	get routeTitle() {
+		return this.game
+			? this.$gettextInterpolate('Mod Support for %{ game }', {
+					game: this.game.title,
+					// eslint-disable-next-line no-mixed-spaces-and-tabs
+			  })
+			: null;
+	}
+}
+</script>
 
 <template>
 	<div class="row">
