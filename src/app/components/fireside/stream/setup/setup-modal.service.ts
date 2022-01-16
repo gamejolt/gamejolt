@@ -1,4 +1,5 @@
 import { defineAsyncComponent } from 'vue';
+import { lazyImportNoSSR } from '../../../../../_common/code-splitting';
 import { findModalById, showModal } from '../../../../../_common/modal/modal.service';
 import { FiresideController } from '../../controller/controller';
 
@@ -12,7 +13,7 @@ export class StreamSetupModal {
 
 		return await showModal<void>({
 			modalId: ModalId,
-			component: defineAsyncComponent(() => import('./setup-modal.vue')),
+			component: defineAsyncComponent(lazyImportNoSSR(() => import('./setup-modal.vue'))),
 			props: {
 				c,
 			},

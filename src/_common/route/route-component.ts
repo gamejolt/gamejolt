@@ -130,13 +130,16 @@ export async function asyncRouteLoader(router: Router, loader: Promise<any>) {
 	}
 
 	const component = (await loader).default;
+	console.log(`Async loading ${component.name!} for SSR`);
 
 	// Basically copy the flow of the beforeRouteEnter for SSR.
-	const options = component.options as ComponentOptions;
 	const to = router.currentRoute.value;
-	const resolver = new Resolver(options.name!, to);
-	resolver.payloadPromise = getPayload(options, to, false);
+	const resolver = new Resolver(component.name!, to);
+	console.log(`Getting payload for route`, to);
+	resolver.payloadPromise = getPayload(component, to, false);
 	await resolver.resolvePayload();
+	console.log('Got payload: ', resolver.payload);
+	console.log('Got payload end');
 
 	return loader;
 }

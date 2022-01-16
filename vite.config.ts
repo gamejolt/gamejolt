@@ -5,7 +5,24 @@ import { injectHtml } from 'vite-plugin-html';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
 
 const ssr = !!process.env.SSR;
-const onlyInSSR = <T extends object>(value: Partial<T>): Partial<T> | {} => (ssr ? value : {});
+
+type EmptyObject = { [k in any]: never };
+
+const onlyInSSR = <T>(value: T): T | EmptyObject => {
+	if (ssr) {
+		return value;
+	}
+
+	return {};
+};
+
+const onlyInSSRArray = <T>(value: T[]): T[] => {
+	if (ssr) {
+		return value;
+	}
+
+	return [];
+};
 
 const gjSection = process.env['GJSECTION'] || 'app';
 
@@ -26,15 +43,26 @@ const stylusOptions = {
 export default defineConfig({
 	plugins: [
 		vue({
-			...onlyInSSR<VueOptions>({
+			...onlyInSSR<Partial<VueOptions>>({
 				template: {
 					compilerOptions: {
 						// For all directives, we have to transform them when used
 						// in SSR. We usually just want to not process during SSR
 						// since directives are usually for dynamic work.
-						directiveTransforms: {
-							translate: noopDirectiveTransform,
-						},
+						directiveTransforms: Object.fromEntries(
+							[
+								'translate',
+								'app-tooltip',
+								'app-track-event',
+								'app-auth-required',
+								'app-form-autosize',
+								'app-focus-when',
+								'app-observe-dimensions',
+								'app-no-autoscroll',
+								'app-scroll-to',
+								'app-tooltip',
+							].map(k => [k, noopDirectiveTransform])
+						),
 					},
 				},
 			}),
@@ -50,7 +78,7 @@ export default defineConfig({
 	},
 	build: {
 		emptyOutDir: true,
-		...onlyInSSR<NonNullable<ViteUserConfig['build']>>({
+		...onlyInSSR<Partial<ViteUserConfig['build']>>({
 			ssr: path.join(gjSection, 'server.ts'),
 		}),
 	},
@@ -82,11 +110,21 @@ export default defineConfig({
 		// I guess this is still experimental or something, so they don't include it
 		// in the config typing?
 		ssr: {
+			// external: ['agora-rtc-sdk-ng'],
 			noExternal: [
+				// /^firebase/,
+
 				// These modules for whatever reason don't work being
 				// required server-side directly and must be bundled into
 				// the build.
 				/^@popperjs/,
+				'@ckpack/vue-color',
+				'prosemirror-keymap',
+
+				// TODO: this is not a real solution, we shouldn't be requiring this.
+				// Need to rethink how we do async code loading so we can split things
+				// better for ssr.
+				'client-voodoo',
 			],
 		},
 	}),

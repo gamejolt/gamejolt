@@ -1,5 +1,7 @@
-import AgoraRTC from 'agora-rtc-sdk-ng';
 import { reactive } from 'vue';
+import { importNoSSR } from '../code-splitting';
+
+const AgoraRTCLazy = importNoSSR(async () => (await import('agora-rtc-sdk-ng')).default);
 
 export type MediaDeviceType = 'webcam' | 'mic' | 'speaker';
 
@@ -102,6 +104,7 @@ class _MediaDeviceService {
 		}
 
 		try {
+			const AgoraRTC = await AgoraRTCLazy;
 			const cameras = await AgoraRTC.getCameras(!effectiveOptions.prompt);
 			this.p_webcams = Object.freeze(
 				cameras
@@ -136,6 +139,7 @@ class _MediaDeviceService {
 		}
 
 		try {
+			const AgoraRTC = await AgoraRTCLazy;
 			const mics = await AgoraRTC.getMicrophones(!effectiveOptions.prompt);
 			this.p_mics = Object.freeze(
 				mics
@@ -170,6 +174,7 @@ class _MediaDeviceService {
 		}
 
 		try {
+			const AgoraRTC = await AgoraRTCLazy;
 			const speakers = await AgoraRTC.getPlaybackDevices(!effectiveOptions.prompt);
 			this.p_speakers = Object.freeze(
 				speakers
@@ -207,14 +212,16 @@ class _MediaDeviceService {
 
 export const MediaDeviceService = reactive(new _MediaDeviceService()) as _MediaDeviceService;
 
-AgoraRTC.onCameraChanged = async () => {
-	await MediaDeviceService.detectWebcams({ prompt: false, skipIfPrompted: false });
-};
+AgoraRTCLazy.then(AgoraRTC => {
+	AgoraRTC.onCameraChanged = async () => {
+		await MediaDeviceService.detectWebcams({ prompt: false, skipIfPrompted: false });
+	};
 
-AgoraRTC.onMicrophoneChanged = async () => {
-	await MediaDeviceService.detectMics({ prompt: false, skipIfPrompted: false });
-};
+	AgoraRTC.onMicrophoneChanged = async () => {
+		await MediaDeviceService.detectMics({ prompt: false, skipIfPrompted: false });
+	};
 
-AgoraRTC.onPlaybackDeviceChanged = async () => {
-	await MediaDeviceService.detectSpeakers({ prompt: false, skipIfPrompted: false });
-};
+	AgoraRTC.onPlaybackDeviceChanged = async () => {
+		await MediaDeviceService.detectSpeakers({ prompt: false, skipIfPrompted: false });
+	};
+});

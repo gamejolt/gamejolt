@@ -1,10 +1,7 @@
-import AgoraRTC, {
-	IAgoraRTCRemoteUser,
-	ILocalAudioTrack,
-	IRemoteAudioTrack,
-} from 'agora-rtc-sdk-ng';
+import type { IAgoraRTCRemoteUser, ILocalAudioTrack, IRemoteAudioTrack } from 'agora-rtc-sdk-ng';
 import { MediaDeviceService } from '../../agora/media-device.service';
 import { Api } from '../../api/api.service';
+import { importNoSSR } from '../../code-splitting';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { Navigate } from '../../navigate/navigate.service';
 import {
@@ -28,6 +25,8 @@ import {
 	setUserHasMicAudio,
 	setUserHasVideo,
 } from './user';
+
+const AgoraRTCLazy = importNoSSR(async () => (await import('agora-rtc-sdk-ng')).default);
 
 const RENEW_TOKEN_INTERVAL = 60_000;
 
@@ -421,6 +420,7 @@ function _updateWebcamDevice(producer: FiresideRTCProducer) {
 				}
 			}
 
+			const AgoraRTC = await AgoraRTCLazy;
 			const track = await AgoraRTC.createCameraVideoTrack({
 				cameraId: deviceId,
 				optimizationMode: mode,
@@ -505,6 +505,7 @@ function _updateDesktopAudioDevice(producer: FiresideRTCProducer) {
 				return null;
 			}
 
+			const AgoraRTC = await AgoraRTCLazy;
 			const track = await AgoraRTC.createMicrophoneAudioTrack({
 				microphoneId: deviceId,
 				// We disable all this so that it doesn't affect the desktop audio in any way.
@@ -551,6 +552,7 @@ function _updateMicDevice(producer: FiresideRTCProducer) {
 				return null;
 			}
 
+			const AgoraRTC = await AgoraRTCLazy;
 			const track = await AgoraRTC.createMicrophoneAudioTrack({
 				microphoneId: deviceId,
 			});

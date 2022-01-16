@@ -40,6 +40,10 @@ server.use(
 	})
 );
 
+server.use('/favicon.ico', (req, res) => {
+	res.status(404).end();
+});
+
 // TODO: refactor this into somewhere else.
 
 server.use(async (req, res) => {
