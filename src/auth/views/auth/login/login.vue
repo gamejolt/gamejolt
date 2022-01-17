@@ -5,7 +5,7 @@ import AppAuthLogin from '../../../../_common/auth/login/login.vue';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { loggedUserBlock } from '../auth';
+import { loggedUserBlock } from '../auth.vue';
 
 @Options({
 	name: 'RouteAuthLogin',

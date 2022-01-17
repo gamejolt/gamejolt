@@ -20,6 +20,8 @@ export default async (context: any) => {
 		Object.values(record.components)
 	);
 	console.log(`got ${matchedComponents.length} matched route components`);
+	console.log(matchedComponents.map(component => component.name).join('\n'));
+	console.log(router.currentRoute);
 
 	if (!matchedComponents.length) {
 		console.log('no matched routes');
