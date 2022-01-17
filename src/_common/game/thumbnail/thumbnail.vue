@@ -8,7 +8,7 @@ import AppGameModLinks from '../../../app/components/game/mod-links/mod-links.vu
 import { formatCurrency } from '../../filters/currency';
 import AppPopper from '../../popper/popper.vue';
 import { Screen } from '../../screen/screen-service';
-import AppScrollInview, { ScrollInviewConfig } from '../../scroll/inview/inview.vue';
+import AppScrollInview, { ScrollInviewConfig } from '../../scroll/inview/AppScrollInview.vue';
 import { SettingAnimatedThumbnails } from '../../settings/settings.service';
 import { useCommonStore } from '../../store/common-store';
 import AppUserCardHover from '../../user/card/hover/hover.vue';
@@ -83,12 +83,14 @@ export default class AppGameThumbnail extends Vue {
 		if (this.game.sellable && Array.isArray(this.game.sellable.pricings)) {
 			return this.game.sellable.pricings[0];
 		}
+		return undefined;
 	}
 
 	get saleOldPricing() {
 		if (this.game.sellable && Array.isArray(this.game.sellable.pricings)) {
 			return this.game.sellable.pricings[1];
 		}
+		return undefined;
 	}
 
 	get sale() {

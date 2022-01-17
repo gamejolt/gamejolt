@@ -17,7 +17,7 @@ import { AppResponsiveDimensions } from '../../../../../_common/responsive-dimen
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
-} from '../../../../../_common/scroll/inview/inview.vue';
+} from '../../../../../_common/scroll/inview/AppScrollInview.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
 import {
 	getVideoPlayerFromSources,
@@ -95,11 +95,12 @@ export default class AppPostCard extends Vue {
 		} else if (this.post?.hasVideo) {
 			return this.post.videos[0].posterMediaItem;
 		}
+		return undefined;
 	}
 
 	get video() {
 		if (!this.post?.hasVideo) {
-			return;
+			return undefined;
 		}
 
 		return this.post?.videos[0].media.find(i => i.type == MediaItem.TYPE_TRANSCODED_VIDEO_CARD);

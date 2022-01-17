@@ -4,7 +4,7 @@ import { setup } from 'vue-class-component';
 import { Options, Vue, Watch } from 'vue-property-decorator';
 import AppEventItemMediaIndicator from '../../../app/components/event-item/media-indicator/media-indicator.vue';
 import { useAppStore } from '../../../app/store';
-import { StickerCount } from '../../../app/views/dashboard/stickers/stickers';
+import { StickerCount } from '../../../app/views/dashboard/stickers/stickers.vue';
 import { shallowSetup } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
 import {
@@ -16,7 +16,7 @@ import {
 import { EscapeStack, EscapeStackCallback } from '../../escape-stack/escape-stack.service';
 import AppLoadingFade from '../../loading/AppLoadingFade.vue';
 import { onScreenResize, Screen } from '../../screen/screen-service';
-import AppScrollScroller from '../../scroll/scroller/scroller.vue';
+import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
 import { useEventSubscription } from '../../system/event/event-topic';
 import AppTouch, { AppTouchInput } from '../../touch/AppTouch.vue';
 import AppStickerCard from '../card/card.vue';
@@ -85,6 +85,7 @@ export default class AppStickerLayerDrawer extends Vue {
 				'pan-options': { threshold: 16 },
 			};
 		}
+		return {};
 	}
 
 	get stickerSheets() {

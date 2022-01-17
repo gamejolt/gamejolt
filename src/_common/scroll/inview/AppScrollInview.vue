@@ -1,6 +1,6 @@
 <script lang="ts">
 import { onMounted, onUnmounted, PropType, reactive, ref, watch } from 'vue';
-import { useScrollInviewParent } from './parent.vue';
+import { useScrollInviewParent } from './AppScrollInviewParent.vue';
 
 export type ScrollInviewEmitsOn = 'full-overlap' | 'partial-overlap';
 

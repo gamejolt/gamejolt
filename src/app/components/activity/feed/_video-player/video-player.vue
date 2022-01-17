@@ -13,7 +13,7 @@ import {
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	createScrollInview,
-} from '../../../../../_common/scroll/inview/inview.vue';
+} from '../../../../../_common/scroll/inview/AppScrollInview.vue';
 import {
 	SettingVideoPlayerFeedAutoplay,
 	SettingVideoPlayerVolume,
@@ -94,7 +94,7 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 
 	get maxPlayerHeight() {
 		if (import.meta.env.SSR) {
-			return;
+			return undefined;
 		}
 
 		if (Screen.isMobile) {

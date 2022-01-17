@@ -8,7 +8,7 @@ import ResizeObserver from 'resize-observer-polyfill';
 import { computed, nextTick, triggerRef } from 'vue';
 import { Emit, Options, Prop, Provide, Vue, Watch } from 'vue-property-decorator';
 import { AppObserveDimensions } from '../../observe-dimensions/observe-dimensions.directive';
-import AppScrollScroller from '../../scroll/scroller/scroller.vue';
+import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
 import { ContentContext, ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
 import { ContentFormatAdapter, ProsemirrorEditorFormat } from '../content-format-adapter';

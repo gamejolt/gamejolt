@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, provide, watch } from '@vue/runtime-core';
+import { onMounted, provide, reactive, watch } from '@vue/runtime-core';
 import { RouterView } from 'vue-router';
 import { AppPromotionStore, AppPromotionStoreKey } from '../utils/mobile-app';
 import { createAdsController } from '../_common/ad/ad-store';
@@ -20,10 +20,10 @@ const { user } = useCommonStore();
 
 createAdsController();
 createDrawerStore();
-provide(CommentStoreManagerKey, new CommentStoreManager());
-provide(AppPromotionStoreKey, new AppPromotionStore());
+provide(CommentStoreManagerKey, reactive(new CommentStoreManager()));
+provide(AppPromotionStoreKey, reactive(new AppPromotionStore()));
 
-const chatStore = new ChatStore();
+const chatStore = reactive(new ChatStore()) as ChatStore;
 provide(ChatStoreKey, chatStore);
 
 if (!import.meta.env.SSR) {

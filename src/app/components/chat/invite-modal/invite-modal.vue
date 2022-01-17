@@ -2,7 +2,7 @@
 import { Inject, mixins, Options, Prop } from 'vue-property-decorator';
 import { fuzzysearch } from '../../../../utils/string';
 import { BaseModal } from '../../../../_common/modal/base';
-import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
+import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
 import { ChatStore, ChatStoreKey } from '../chat-store';

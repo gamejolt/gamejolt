@@ -7,7 +7,7 @@ import { showErrorGrowl } from '../../growls/growls.service';
 import AppLightboxItem from '../../lightbox/item/item.vue';
 import { createLightbox } from '../../lightbox/lightbox-helpers';
 import AppLoading from '../../loading/loading.vue';
-import AppScrollScroller from '../../scroll/scroller/scroller.vue';
+import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
 import AppGameMediaBarItem, { MediaBarItemMaxHeight } from './item/item.vue';
 
 @Options({

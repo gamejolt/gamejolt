@@ -13,7 +13,7 @@ import {
 import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import { MediaItem } from '../../../../../_common/media-item/media-item-model';
-import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
+import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.vue';
 import AppFormPostMediaItem from './item/item.vue';
 
 interface FormModel {

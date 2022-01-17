@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
+import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppChatMemberList from '../../../components/chat/member-list/member-list.vue';
 import { ChatRoom } from '../../../components/chat/room';
 import { ChatUserCollection } from '../../../components/chat/user-collection';

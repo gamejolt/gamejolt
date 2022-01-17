@@ -1,5 +1,5 @@
 import { computed, inject, InjectionKey, provide, ref, shallowRef, toRaw } from 'vue';
-import { StickerCount } from '../../app/views/dashboard/stickers/stickers';
+import { StickerCount } from '../../app/views/dashboard/stickers/stickers.vue';
 import { arrayRemove, numberSort } from '../../utils/array';
 import { Analytics } from '../analytics/analytics.service';
 import { Api } from '../api/api.service';
@@ -461,14 +461,16 @@ export function getPointerPosition(
 	// document scroll offset from the pointer position as well as the current
 	// scroller's offset. That'll convert it from page X/Y into the layer's X/Y.
 	const layer = store.activeLayer.value;
+	const scroller = layer.scroller.value;
+
 	let scrollTop = 0;
 	let scrollLeft = 0;
-	if (layer.scroller.value) {
+	if (scroller) {
 		scrollTop = document.documentElement.scrollTop;
-		scrollTop -= layer.scroller.value.element?.scrollTop ?? 0;
+		scrollTop -= scroller.element.value?.scrollTop ?? 0;
 
 		scrollLeft = document.documentElement.scrollLeft;
-		scrollLeft -= layer.scroller.value.element?.scrollLeft ?? 0;
+		scrollLeft -= scroller.element.value?.scrollLeft ?? 0;
 	}
 
 	const pointerEvent = getPointerEvent(event);

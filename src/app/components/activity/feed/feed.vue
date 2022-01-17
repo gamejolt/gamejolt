@@ -10,7 +10,9 @@ import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollInview, { ScrollInviewConfig } from '../../../../_common/scroll/inview/inview.vue';
+import AppScrollInview, {
+	ScrollInviewConfig,
+} from '../../../../_common/scroll/inview/AppScrollInview.vue';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import { illEndOfFeed } from '../../../img/ill/illustrations';
 import AppActivityFeedItem from './item/item.vue';

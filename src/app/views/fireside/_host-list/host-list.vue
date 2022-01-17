@@ -4,7 +4,7 @@ import { shallowSetup } from '../../../../utils/vue';
 import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { setDrawerOpen, useDrawerStore } from '../../../../_common/drawer/drawer-store';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
+import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import AppFiresideCohostManage from '../cohost/manage/manage.vue';
 import AppFiresideHostThumb from '../_host-thumb/host-thumb.vue';

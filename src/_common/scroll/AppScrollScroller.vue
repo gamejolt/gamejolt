@@ -1,27 +1,29 @@
 <script lang="ts">
 import { darken, lighten } from 'polished';
-import { computed, inject, InjectionKey, onMounted, PropType, provide, reactive, ref } from 'vue';
-import { DefaultTheme, GrayLight, GraySubtle } from '../../theme/theme.model';
-import { useThemeStore } from '../../theme/theme.store';
-import AppScrollInviewParent from '../inview/parent.vue';
+import { computed, inject, InjectionKey, onMounted, PropType, provide, ref, toRefs } from 'vue';
+import { DefaultTheme, GrayLight, GraySubtle } from '../theme/theme.model';
+import { useThemeStore } from '../theme/theme.store';
+import AppScrollInviewParent from './inview/AppScrollInviewParent.vue';
 
 export type ScrollController = ReturnType<typeof createScroller>;
 
 const Key: InjectionKey<ScrollController> = Symbol('scroller');
 
+export function useScroller() {
+	return inject(Key, null);
+}
+
 export function createScroller() {
 	const element = ref<HTMLElement>();
 
-	return reactive({
-		element,
-		scrollTo(offsetY: number) {
-			element.value?.scrollTo({ top: offsetY });
-		},
-	});
-}
+	function scrollTo(offsetY: number) {
+		element.value?.scrollTo({ top: offsetY });
+	}
 
-export function useScroller() {
-	return inject(Key, null);
+	return {
+		element,
+		scrollTo,
+	};
 }
 </script>
 
@@ -42,12 +44,12 @@ const props = defineProps({
 	},
 });
 
+const { controller } = toRefs(props);
+
+provide(Key, controller.value);
+
+const { element } = controller.value;
 const { theme } = useThemeStore();
-
-// TODO(vue3): can we make this reactive so that it updates what is provided
-// down if the controller given changes somehow?
-provide(Key, props.controller);
-
 const isMounted = ref(import.meta.env.SSR);
 
 const actualTheme = computed(() => {
@@ -67,7 +69,7 @@ onMounted(() => {
 
 <template>
 	<div
-		ref="controller.element"
+		ref="element"
 		class="scroll-scroller"
 		:class="{
 			'-thin': thin,
@@ -76,7 +78,7 @@ onMounted(() => {
 		}"
 		:style="hoverColors"
 	>
-		<AppScrollInviewParent v-if="isMounted" :scroller="controller.element">
+		<AppScrollInviewParent v-if="isMounted" :scroll-element="element">
 			<slot />
 		</AppScrollInviewParent>
 	</div>

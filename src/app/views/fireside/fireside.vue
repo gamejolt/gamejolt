@@ -22,7 +22,7 @@ import AppPopper from '../../../_common/popper/popper.vue';
 import { AppResponsiveDimensions } from '../../../_common/responsive-dimensions/responsive-dimensions';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../_common/scroll/scroller/scroller.vue';
+import AppScrollScroller from '../../../_common/scroll/AppScrollScroller.vue';
 import AppStickerReactions from '../../../_common/sticker/reactions/reactions.vue';
 import AppStickerTarget from '../../../_common/sticker/target/target.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
@@ -110,7 +110,7 @@ export default class RouteFireside extends BaseRouteComponent {
 
 	c: FiresideController | null = shallowSetup(() => null);
 
-	private beforeEachDeregister: Function | null = null;
+	private beforeEachDeregister: (() => void) | null = null;
 	private canShowMobileHosts = true;
 
 	readonly Screen = Screen;

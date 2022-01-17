@@ -3,7 +3,7 @@ import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
+import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppFiresideAvatarAdd from '../../../components/fireside/avatar/add/add.vue';
 import AppFiresideAvatar from '../../../components/fireside/avatar/avatar.vue';
 import AppFiresideAvatarBase from '../../../components/fireside/avatar/_base/base.vue';

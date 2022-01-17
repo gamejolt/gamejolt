@@ -1,14 +1,14 @@
 <script lang="ts">
 import { nextTick } from 'vue';
-import { setup } from 'vue-class-component';
 import { mixins, Options } from 'vue-property-decorator';
+import { shallowSetup } from '../../../../../utils/vue';
 import { Api } from '../../../../api/api.service';
 import AppLoading from '../../../../loading/loading.vue';
 import { BaseModal } from '../../../../modal/base';
 import AppModalTS from '../../../../modal/modal';
 import { Ruler } from '../../../../ruler/ruler-service';
 import { Screen } from '../../../../screen/screen-service';
-import AppScrollScroller, { createScroller } from '../../../../scroll/scroller/scroller.vue';
+import AppScrollScroller, { createScroller } from '../../../../scroll/AppScrollScroller.vue';
 import { Category, ContentEditorGifModal, SearchResult } from './gif-modal.service';
 import mascotImage from './mascot-complete.png';
 
@@ -31,7 +31,7 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 	currentSearchPage = 0;
 	isLastPage = false;
 	hasError = false;
-	contentScroller = setup(() => createScroller());
+	contentScroller = shallowSetup(() => createScroller());
 
 	readonly Screen = Screen;
 	readonly mascotImage = mascotImage;
@@ -193,7 +193,7 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 
 	onContainerScroll() {
 		if (!this.isLoading && this.searchValue.length > 0 && !this.reachedLastPage) {
-			const container = this.contentScroller.element;
+			const container = this.contentScroller.element.value;
 			if (container) {
 				const height = Ruler.height(container);
 				if (container.scrollHeight < container.scrollTop + height + 100) {

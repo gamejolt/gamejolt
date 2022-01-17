@@ -40,8 +40,8 @@ import AppLoading from '../../../../_common/loading/loading.vue';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
+import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { AppScrollWhen } from '../../../../_common/scroll/scroll-when.directive';
-import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { Timezone, TimezoneData } from '../../../../_common/timezone/timezone.service';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
@@ -243,6 +243,7 @@ export default class FormPost
 		if (this.user) {
 			return this.formModel.user.id === this.user.id;
 		}
+		return undefined;
 	}
 
 	get hasPublishedToPlatforms() {

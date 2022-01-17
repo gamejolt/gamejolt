@@ -33,7 +33,9 @@ import { Meta } from '../../../../_common/meta/meta-service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollInview, { ScrollInviewConfig } from '../../../../_common/scroll/inview/inview.vue';
+import AppScrollInview, {
+	ScrollInviewConfig,
+} from '../../../../_common/scroll/inview/AppScrollInview.vue';
 import AppShareCard from '../../../../_common/share/card/card.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';

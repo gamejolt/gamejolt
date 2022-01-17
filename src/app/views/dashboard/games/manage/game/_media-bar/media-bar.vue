@@ -7,7 +7,7 @@ import { Game } from '../../../../../../../_common/game/game.model';
 import AppGameMediaBarItem, {
 	MediaBarItemMaxHeight,
 } from '../../../../../../../_common/game/media-bar/item/item.vue';
-import AppScrollScroller from '../../../../../../../_common/scroll/scroller/scroller.vue';
+import AppScrollScroller from '../../../../../../../_common/scroll/AppScrollScroller.vue';
 import { GameMediaItemAddModal } from '../../../../../../components/game/media-item/add-modal/add-modal.service';
 import { GameMediaItemEditModal } from '../../../../../../components/game/media-item/edit-modal/edit-modal.service';
 import { Media, useGameDashRouteController } from '../../manage.store';

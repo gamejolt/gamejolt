@@ -1,5 +1,4 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { shallowSetup } from '../../utils/vue';
 import { Backdrop, BackdropController } from '../backdrop/backdrop.service';
@@ -7,7 +6,7 @@ import { useDrawerStore } from '../drawer/drawer-store';
 import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
 import { Screen } from '../screen/screen-service';
 import AppScrollAffix from '../scroll/affix/affix.vue';
-import AppScrollScroller, { createScroller } from '../scroll/scroller/scroller.vue';
+import AppScrollScroller, { createScroller } from '../scroll/AppScrollScroller.vue';
 import AppStickerLayer from '../sticker/layer/layer.vue';
 import { AppTheme } from '../theme/theme';
 import { Modal, ModalKey } from './modal.service';
@@ -30,10 +29,10 @@ export default class AppModal extends Vue {
 	drawer = shallowSetup(() => useDrawerStore());
 
 	isHoveringContent = false;
-	scroller = setup(() => createScroller());
+	scroller = shallowSetup(() => createScroller());
 
 	private backdrop?: BackdropController;
-	private beforeEachDeregister?: Function;
+	private beforeEachDeregister?: () => void;
 	private escapeCallback?: EscapeStackCallback;
 
 	declare $el: HTMLDivElement;

@@ -2,7 +2,7 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Community } from '../../../../_common/community/community.model';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
+import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppCommunitySliderAddItem from './add-item/add-item.vue';
 import AppCommunitySliderDiscoverItem from './discover-item/discover-item.vue';

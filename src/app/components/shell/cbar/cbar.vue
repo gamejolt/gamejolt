@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
 import AppCommunityAddWidget from '../../../../_common/community/add-widget/add-widget.vue';
 import AppCommunityDiscoverWidget from '../../../../_common/community/discover-widget/discover-widget.vue';
-import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
+import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { useAppStore } from '../../../store';
 import AppShellCbarCommunity from './community/community.vue';

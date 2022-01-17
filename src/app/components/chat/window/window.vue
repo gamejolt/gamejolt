@@ -4,7 +4,7 @@ import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
+import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { SettingChatGroupShowMembers } from '../../../../_common/settings/settings.service';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';

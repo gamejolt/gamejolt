@@ -3,7 +3,7 @@ import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { ContentFocus } from '../../../content-focus/content-focus.service';
 import { AppResponsiveDimensions } from '../../../responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../../screen/screen-service';
-import AppScrollInview, { ScrollInviewConfig } from '../../../scroll/inview/inview.vue';
+import AppScrollInview, { ScrollInviewConfig } from '../../../scroll/inview/AppScrollInview.vue';
 import { getVideoPlayerFromSources } from '../../../video/player/controller';
 import AppVideo from '../../../video/video.vue';
 import { ContentOwnerController, ContentOwnerControllerKey } from '../../content-owner';
@@ -47,7 +47,7 @@ export default class AppContentGif extends Vue {
 
 	get videoController() {
 		if (!this.media || !this.media.mp4.url || !this.media.webm.url) {
-			return;
+			return undefined;
 		}
 
 		const sourcesPayload = {

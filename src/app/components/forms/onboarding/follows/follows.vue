@@ -3,7 +3,7 @@ import { mixins, Options } from 'vue-property-decorator';
 import { Community } from '../../../../../_common/community/community.model';
 import { FormOnBeforeSubmit, FormOnLoad } from '../../../../../_common/form-vue/form.service';
 import Onboarding, { OnboardingStep } from '../../../../../_common/onboarding/onboarding.service';
-import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
+import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.vue';
 import OnboardingComponent from '../base';
 import AppOnboardingFollowsCommunityItem from './community-item/community-item.vue';
 

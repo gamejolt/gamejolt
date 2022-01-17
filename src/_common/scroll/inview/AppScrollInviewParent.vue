@@ -1,41 +1,46 @@
 <script lang="ts">
-import { inject, InjectionKey, PropType, provide, reactive } from 'vue';
-import { ScrollInviewConfig, ScrollInviewController } from './inview.vue';
+import { inject, InjectionKey, PropType, provide, ref } from 'vue';
+import { ScrollInviewConfig, ScrollInviewController } from './AppScrollInview.vue';
 
 const Key: InjectionKey<ScrollInviewParentController> = Symbol('scroll-inview-parent');
 
 export type ScrollInviewParentController = ReturnType<typeof createScrollInviewParent>;
 
-export function createScrollInviewParent(scroller: HTMLElement | null) {
-	return reactive({
-		/**
-		 * We need to create a new container for each unique configuration that
-		 * our AppScrollInview children need.
-		 */
-		containers: new Map<ScrollInviewConfig, ScrollInviewContainer>(),
-
-		/**
-		 * We need a different container for each unique "margin" that we need
-		 * to watch for. This function will return a container for the specific
-		 * margin passed in. If it doesn't have one yet for the specific margin,
-		 * it will dynamically create one.
-		 */
-		getContainer(config: ScrollInviewConfig) {
-			const container = this.containers.get(config);
-			if (!container) {
-				const root = scroller;
-				const newContainer = new ScrollInviewContainer(config, root);
-				this.containers.set(config, newContainer);
-				return newContainer;
-			}
-
-			return container;
-		},
-	});
-}
-
 export function useScrollInviewParent() {
 	return inject(Key, null);
+}
+
+function createScrollInviewParent(scroller: HTMLElement | null) {
+	/**
+	 * We need to create a new container for each unique configuration that
+	 * our AppScrollInview children need.
+	 */
+	const containers = ref(new Map<ScrollInviewConfig, ScrollInviewContainer>());
+
+	/**
+	 * We need a different container for each unique "margin" that we need
+	 * to watch for. This function will return a container for the specific
+	 * margin passed in. If it doesn't have one yet for the specific margin,
+	 * it will dynamically create one.
+	 */
+	function getContainer(config: ScrollInviewConfig) {
+		const container = containers.value.get(config);
+		if (!container) {
+			const root = scroller;
+			const newContainer = new ScrollInviewContainer(config, root);
+			containers.value.set(config, newContainer);
+			return newContainer;
+		}
+
+		return container;
+	}
+
+	const c = {
+		containers,
+		getContainer,
+	};
+	provide(Key, c);
+	return c;
 }
 
 export class ScrollInviewContainer {
@@ -159,19 +164,15 @@ export class ScrollInviewContainer {
 const props = defineProps({
 	// If this is a child of AppScrollScroller, we need to get it as a prop so
 	// we can use that scroll element as the root context.
-	scroller: {
+	scrollElement: {
 		type: Object as PropType<HTMLElement>,
 		default: null,
 	},
 });
 
-const c = createScrollInviewParent(props.scroller);
-provide(Key, c);
+createScrollInviewParent(props.scrollElement);
 </script>
 
 <template>
-	<!-- TODO(vue3): do we need the div? -->
-	<div>
-		<slot />
-	</div>
+	<slot />
 </template>
