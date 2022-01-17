@@ -2,6 +2,7 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Connection } from '../../connection/connection-service';
 import { Navigate } from '../../navigate/navigate.service';
+import { WithSSRContextFilepath } from '../../route/route-component';
 import { authOnLogin, getRedirectUrl, redirectToDashboard } from '../auth.service';
 import AppAuthLoginForm from './login-form.vue';
 
@@ -10,6 +11,7 @@ import AppAuthLoginForm from './login-form.vue';
 		AppAuthLoginForm,
 	},
 })
+@WithSSRContextFilepath('_common/auth/login/login.vue')
 export default class AppAuthLogin extends Vue {
 	@Prop(Boolean)
 	overlay?: boolean;

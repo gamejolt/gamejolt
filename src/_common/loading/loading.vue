@@ -1,9 +1,11 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
+import { WithSSRContextFilepath } from '../route/route-component';
 
 const images = import.meta.globEager('./*.gif');
 
 @Options({})
+@WithSSRContextFilepath('_common/loading/loading.vue')
 export default class AppLoading extends Vue {
 	@Prop({ type: String, default: 'Loading...' })
 	label!: string;
