@@ -1,5 +1,5 @@
 <script lang="ts">
-import { PropType, reactive, ref } from 'vue';
+import { PropType, ref } from 'vue';
 
 export default { name: 'AppSearchInput' };
 
@@ -16,16 +16,16 @@ export function createSearchInput() {
 		_root.value?.blur();
 	}
 
-	return reactive({
+	return {
 		_root,
 		focus,
 		blur,
-	});
+	};
 }
 </script>
 
 <script lang="ts" setup>
-defineProps({
+const props = defineProps({
 	modelValue: {
 		type: String,
 		required: true,
@@ -35,6 +35,9 @@ defineProps({
 		default: () => createSearchInput(),
 	},
 });
+
+// eslint-disable-next-line vue/no-setup-props-destructure
+const { _root: root } = props.controller;
 
 const emit = defineEmits({
 	'update:modelValue': (_modelValue: string) => true,
@@ -48,7 +51,7 @@ function onChange(event: InputEvent) {
 
 <template>
 	<input
-		ref="controller._root"
+		ref="root"
 		type="search"
 		class="search-input form-control"
 		name="q"

@@ -7,7 +7,6 @@ import {
 	nextTick,
 	onMounted,
 	provide,
-	reactive,
 	ref,
 	watch,
 } from 'vue';
@@ -15,8 +14,11 @@ import { useRouter } from 'vue-router';
 import { arrayRemove } from '../../../utils/array';
 import AppPopper from '../../../_common/popper/popper.vue';
 import AppShortkey from '../../../_common/shortkey/shortkey.vue';
-import AppSearchInput, { createSearchInput } from './input/input.vue';
+import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import AppSearchInput, { createSearchInput } from './AppSearchInput.vue';
 import { Search } from './search-service';
+
+const AppSearchAutocomplete = defineAsyncComponent(() => import('./autocomplete/autocomplete.vue'));
 
 const KEYCODE_UP = 38;
 const KEYCODE_DOWN = 40;
@@ -29,6 +31,10 @@ export type SearchKeydownSpy = (event: KeyboardEvent) => void;
 let searchIterator = 0;
 
 const Key: InjectionKey<Controller> = Symbol('search');
+
+export function useSearchController() {
+	return inject(Key, null);
+}
 
 function createSearchController(p: typeof props) {
 	const id = ref(++searchIterator);
@@ -76,7 +82,7 @@ function createSearchController(p: typeof props) {
 		arrayRemove(keydownSpies.value, i => i === fn);
 	}
 
-	return reactive({
+	const c = {
 		id,
 		query,
 		isFocused,
@@ -89,17 +95,13 @@ function createSearchController(p: typeof props) {
 		setKeydownSpy,
 		removeKeydownSpy,
 		isEmpty,
-	});
-}
-
-export function useSearchController() {
-	return inject(Key, null);
+	};
+	provide(Key, c);
+	return c;
 }
 </script>
 
 <script lang="ts" setup>
-const AppSearchAutocomplete = defineAsyncComponent(() => import('./autocomplete/autocomplete.vue'));
-
 const props = defineProps({
 	autocompleteDisabled: {
 		type: Boolean,
@@ -109,8 +111,17 @@ const props = defineProps({
 	},
 });
 
-const c = createSearchController(props);
-provide(Key, c);
+const {
+	id: inputId,
+	searchInput,
+	keydownSpies,
+	isFocused,
+	shouldShowAutocomplete,
+	isShowingAutocomplete,
+	query,
+	focus,
+	blur,
+} = createSearchController(props);
 
 const router = useRouter();
 
@@ -129,40 +140,40 @@ function onKeydown(event: KeyboardEvent) {
 	// If autocomplete is disabled, then we want to submit the form on enter.
 	// Normally the autocomplete will take control of the submission since they
 	// technically highlight what they want in autocomplete and go to it.
-	if (!c.shouldShowAutocomplete && event.keyCode === KEYCODE_ENTER) {
-		c.blur();
-		router.push({ name: 'search.results', query: { q: c.query } });
+	if (!shouldShowAutocomplete.value && event.keyCode === KEYCODE_ENTER) {
+		blur();
+		router.push({ name: 'search.results', query: { q: query.value } });
 	}
 
 	// We want to blur the input on escape.
 	if (event.keyCode === KEYCODE_ESC) {
-		c.blur();
+		blur();
 		event.stopPropagation();
 	}
 
-	for (const spy of c.keydownSpies) {
+	for (const spy of keydownSpies.value) {
 		spy(event);
 	}
 }
 
 function onFocus() {
-	c.isFocused = true;
-	if (c.shouldShowAutocomplete) {
-		c.isShowingAutocomplete = true;
+	isFocused.value = true;
+	if (shouldShowAutocomplete.value) {
+		isShowingAutocomplete.value = true;
 	}
 }
 
 function onBlur() {
-	c.isFocused = false;
-	if (c.shouldShowAutocomplete) {
-		c.isShowingAutocomplete = false;
+	isFocused.value = false;
+	if (shouldShowAutocomplete.value) {
+		isShowingAutocomplete.value = false;
 	}
 }
 </script>
 
 <template>
 	<div class="app-search">
-		<AppShortkey shortkey="s" @press="c.focus()" />
+		<AppShortkey shortkey="s" @press="focus()" />
 
 		<!--
 			Put the action/method stuff so that crawlers can see how to submit the form.
@@ -175,15 +186,10 @@ function onBlur() {
 			onsubmit="return false"
 		>
 			<div class="-input">
-				<label :for="`search-input-${c.id}`" class="sr-only">
-					<translate>search.input.placeholder</translate>
+				<label :for="`search-input-${inputId}`" class="sr-only">
+					<AppTranslate>search.input.placeholder</AppTranslate>
 				</label>
 
-				<!--
-					We use the 'click-show' trigger event.
-					This will make sure that the autocomplete popover doesn't disappear when
-					clicking the search input again.'
-				-->
 				<AppPopper
 					popover-class="fill-darkest"
 					trigger="manual"
@@ -191,12 +197,12 @@ function onBlur() {
 					fixed
 					hide-on-state-change
 					track-trigger-width
-					:manual-show="c.isShowingAutocomplete"
+					:manual-show="isShowingAutocomplete"
 				>
 					<AppSearchInput
-						:id="`search-input-${c.id}`"
-						v-model="c.query"
-						:controller="c.searchInput"
+						:id="`search-input-${inputId}`"
+						v-model="query"
+						:controller="searchInput"
 						@focus="onFocus"
 						@blur="onBlur"
 						@keydown="onKeydown"
