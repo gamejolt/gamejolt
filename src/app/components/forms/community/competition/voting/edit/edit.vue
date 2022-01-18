@@ -101,7 +101,7 @@ export default class FormCommunityCompetitionVotingEdit extends mixins(Wrapper) 
 			this.form.changed = false;
 		}
 
-		this.timezoneService = new FormTimezoneService(this);
+		this.timezoneService = new FormTimezoneService(this.form);
 		await this.timezoneService.load(true);
 	}
 

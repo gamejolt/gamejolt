@@ -1,7 +1,7 @@
 import { determine } from 'jstimezonedetect';
 import { nextTick } from 'vue';
 import { Timezone, TimezoneData } from '../timezone/timezone.service';
-import { BaseForm } from './form.service';
+import { FormController } from './AppForm.vue';
 
 type Model = {
 	timezone?: string | null;
@@ -13,8 +13,6 @@ type Model = {
 export class FormTimezoneService<T extends Model> {
 	timezones: { [region: string]: (TimezoneData & { label?: string })[] } = null as any;
 	private hasLoadedTimezones = false;
-	// TODO(vue3): need to get a form controller now?
-	private form: BaseForm<T>;
 	// Stores the "now" when this class gets constructed to be used by Date/Time controls as min value.
 	private initNow: number;
 
@@ -44,11 +42,11 @@ export class FormTimezoneService<T extends Model> {
 	}
 
 	get activeTimezone() {
-		return this.form.formModel.timezone;
+		return this.controller.formModel.timezone;
 	}
 
 	set activeTimezone(timezone: string | null | undefined) {
-		this.form.setField('timezone', timezone);
+		this.controller.formModel['timezone'] = timezone;
 	}
 
 	/**
@@ -61,8 +59,7 @@ export class FormTimezoneService<T extends Model> {
 		return this._timezoneByName(this.activeTimezone!)?.label;
 	}
 
-	constructor(form: BaseForm<T>) {
-		this.form = form;
+	constructor(private controller: FormController<T>) {
 		this.initNow = Date.now();
 	}
 
@@ -108,16 +105,16 @@ export class FormTimezoneService<T extends Model> {
 
 		// Determine active timezone and set.
 		if (setToForm && !this.activeTimezone) {
-			const resetFormChanged = !this.form.changed;
+			const resetFormChanged = !this.controller.changed;
 
 			this.activeTimezone = this._determineCurrentTimezone();
 
 			// Only reset "changed" when it wasn't set before and is now.
-			if (resetFormChanged && this.form.changed) {
+			if (resetFormChanged && this.controller.changed) {
 				// Wait for form to update, then set changed back to initial, to prevent
 				// confirm modal from showing up without any changes by the user.
 				await nextTick();
-				this.form.changed = false;
+				this.controller.changed = false;
 			}
 		}
 
