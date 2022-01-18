@@ -1,8 +1,18 @@
 import vue, { Options as VueOptions } from '@vitejs/plugin-vue';
 import * as path from 'path';
-import { defineConfig, UserConfig as ViteUserConfig } from 'vite';
+import { defineConfig, UserConfig as ViteUserConfigActual } from 'vite';
 import { injectHtml } from 'vite-plugin-html';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
+
+type ViteUserConfig = ViteUserConfigActual & {
+	// This is an experimental feature, and as of time of writing
+	// does not exists with the type definition the package exports.
+	// They do work tho: https://vitejs.dev/guide/ssr.html#ssr-externals
+	ssr?: {
+		external?: (string | RegExp)[];
+		noExternal?: (string | RegExp)[];
+	};
+};
 
 const ssr = !!process.env.SSR;
 
@@ -14,14 +24,6 @@ const onlyInSSR = <T>(value: T): T | EmptyObject => {
 	}
 
 	return {};
-};
-
-const onlyInSSRArray = <T>(value: T[]): T[] => {
-	if (ssr) {
-		return value;
-	}
-
-	return [];
 };
 
 const gjSection = process.env['GJSECTION'] || 'app';
@@ -70,6 +72,7 @@ export default defineConfig({
 		md({
 			mode: [MarkdownMode.HTML],
 		}),
+		// Lets us use <%- %> syntax to interpolate data statically into the output HTML.
 		injectHtml({ data: { GJ_SECTION: gjSection } }),
 	],
 	root: 'src',
@@ -77,13 +80,35 @@ export default defineConfig({
 		port: 8080,
 	},
 	build: {
+		// Since we're building outside of the root dir,
+		// we need to explicitly allow vite to clear the build directory.
+		// This is needed to avoid accidentally referencing old assets
+		// while developing
 		emptyOutDir: true,
+
+		// Write to build/web normally and to build/server for ssr.
+		outDir: path.resolve(
+			__dirname,
+			ssr ? path.join('build', 'server') : path.join('build', 'web')
+		),
+
+		// The SSR manifest is used to keep track of which static assets are
+		// needed by which component. This lets us choose an optimal set of
+		// assets that we should preload/prefetch when serving requests by looking
+		// at which components ended up being rendered in said request.
+		ssrManifest: !ssr,
+
+		// This is the entry point of the ssr bundle.
 		...onlyInSSR<Partial<ViteUserConfig['build']>>({
 			ssr: path.join(gjSection, 'server.ts'),
 		}),
 	},
 	resolve: {
 		alias: {
+			// Lets us use ~img in our css imports so we don't
+			// have to meme around with relative paths.
+			// e.g. we can use import(`~img/favicon.png`) to get the favicon
+			// asset no matter where we call it from.
 			'~img': path.resolve(__dirname, 'src/app/img'),
 		},
 	},
@@ -97,6 +122,13 @@ export default defineConfig({
 		},
 	},
 	define: {
+		// These are statically replaced in the source code at build/watch time.
+		// Since this is a straightforward string replacement these need to be quoted.
+		// For example, if we didn't quote, the following expression:
+		//   if (GJ_ENVIRONMENT === 'development')
+		// would be rewritten to:
+		//   if (development === 'development')
+
 		GJ_SECTION: JSON.stringify(gjSection),
 		GJ_IS_DESKTOP_APP: JSON.stringify(false),
 		GJ_IS_MOBILE_APP: JSON.stringify(false),
@@ -107,13 +139,18 @@ export default defineConfig({
 	},
 
 	...onlyInSSR<ViteUserConfig>({
-		// I guess this is still experimental or something, so they don't include it
-		// in the config typing?
+		// Vite tries figuring out which package is CommonJS.
+		// These packages may be left as simple "require" to speed up building,
+		// while other types need to be transformed/transpiled into the server
+		// bundle.
+		//
+		// Sometimes Vite can't properly detect the type of a package.
+		// Putting it in `external` tells Vite to leave it as a simple require,
+		// and putting it in `noExternal` tells Vite to pull it into the bundle.
+		//
+		// More info: https://vitejs.dev/guide/ssr.html#ssr-externals
 		ssr: {
-			// external: ['agora-rtc-sdk-ng'],
 			noExternal: [
-				// /^firebase/,
-
 				// These modules for whatever reason don't work being
 				// required server-side directly and must be bundled into
 				// the build.
