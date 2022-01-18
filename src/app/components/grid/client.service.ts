@@ -1,4 +1,3 @@
-import Axios from 'axios';
 import { Channel, Socket } from 'phoenix';
 import { arrayRemove } from '../../../utils/array';
 import { CancelToken } from '../../../utils/cancel-token';
@@ -6,6 +5,7 @@ import { TabLeader } from '../../../utils/tab-leader';
 import { sleep } from '../../../utils/utils';
 import { uuidv4 } from '../../../utils/uuid';
 import { Analytics } from '../../../_common/analytics/analytics.service';
+import { Api } from '../../../_common/api/api.service';
 import { Community } from '../../../_common/community/community.model';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
@@ -315,9 +315,12 @@ export class GridClient {
 		console.log('[Grid] Connecting...');
 
 		// get hostname from loadbalancer first
-		const hostResult = await pollRequest('Select server', cancelToken, () =>
-			Axios.get(Environment.gridHost, { ignoreLoadingBar: true, timeout: 3_000 })
-		);
+		const hostResult = await pollRequest('Select server', cancelToken, () => {
+			return Api.sendRawRequest(Environment.gridHost, {
+				timeout: 3_000,
+			});
+		});
+
 		if (cancelToken.isCanceled) {
 			console.log('[Grid] Aborted connection (2)');
 			return;
@@ -329,6 +332,10 @@ export class GridClient {
 		// heartbeat is 30 seconds, backend disconnects after 40 seconds
 		this.socket = new Socket(host, {
 			heartbeatIntervalMs: 30_000,
+			params: {
+				gj_platform: GJ_IS_DESKTOP_APP ? 'client' : 'web',
+				gj_platform_version: GJ_VERSION,
+			},
 		});
 
 		// TODO: niiiiils, any reason not to do this?
@@ -359,10 +366,7 @@ export class GridClient {
 
 					// TODO: shouldn't we be throwing an error if the socket is null here?
 					if (this.socket !== null) {
-						this.socket.connect({
-							gj_platform: GJ_IS_DESKTOP_APP ? 'client' : 'web',
-							gj_platform_version: GJ_VERSION,
-						});
+						this.socket.connect();
 					}
 					resolve();
 				})

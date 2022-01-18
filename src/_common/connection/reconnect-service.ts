@@ -1,5 +1,4 @@
-import Axios from 'axios';
-
+import { Api } from '../api/api.service';
 const TIMEOUT_INITIAL = 2000;
 const TIMEOUT_GROW = 1.5;
 const TIMEOUT_MAX = 30000;
@@ -16,7 +15,7 @@ export class ConnectionReconnect {
 	async check() {
 		try {
 			// Make sure we don't cache the call.
-			await Axios.get(this.checkUrl + '?cb=' + Date.now());
+			await Api.sendRawRequest(this.checkUrl + '?cb=' + Date.now());
 			this.finish();
 		} catch (e) {
 			this.failFn();

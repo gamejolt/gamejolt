@@ -1,4 +1,5 @@
-import Axios, { CancelTokenSource } from 'axios';
+import Axios, { AxiosRequestConfig } from 'axios';
+import { ref } from 'vue';
 import { Environment } from '../environment/environment.service';
 import { Payload } from '../payload/payload-service';
 
@@ -99,10 +100,12 @@ export interface RequestOptions {
 	 * CancelToken function given to the Axios request when uploading a file.
 	 * Invoking the returned executor cancels the file upload.
 	 */
-	fileCancelToken?: CancelTokenSource;
+	fileCancelToken?: AbortSignal;
 }
 
 export class Api {
+	static loadingBarRequests = ref(0);
+
 	static apiHost: string = Environment.apiHost;
 	static uploadHost: string = Environment.uploadHost;
 	static apiPath = '/site-api';
@@ -188,14 +191,16 @@ export class Api {
 			headers.cookie = 'frontend=ssr;';
 		}
 
-		if (GJ_IS_DESKTOP_APP) {
-			// Modify all HTTP requests to include the client version.
-			headers['x-gj-client-version'] = GJ_VERSION;
-		}
-
 		if (await hasWebpSupport()) {
 			headers['accept'] = 'image/webp,*/*';
 		}
+
+		const showLoading = !options.ignoreLoadingBar;
+		if (showLoading) {
+			++this.loadingBarRequests.value;
+		}
+
+		let promise: Promise<any>;
 
 		if (options.file) {
 			// An upload request.
@@ -212,41 +217,47 @@ export class Api {
 				}
 			}
 
-			return Axios({
+			promise = this.sendRawRequest(url, {
 				method,
-				url,
 				data: formData,
 				headers,
 				withCredentials: options.withCredentials,
-				ignoreLoadingBar: options.ignoreLoadingBar,
-				onUploadProgress: (e: ProgressEvent) => {
-					if (options.progress && e.lengthComputable) {
-						options.progress(e);
-					}
-				},
-				cancelToken: options.fileCancelToken?.token,
-			}).then((response: any) => {
-				// When the request is done, send one last progress event of
-				// nothing to indicate that the transfer is complete.
-				if (options.progress) {
-					options.progress(null);
-				}
-				return response;
+				signal: options.fileCancelToken,
+			});
+		} else {
+			promise = this.sendRawRequest(url, {
+				method,
+				data,
+				headers,
+				withCredentials: options.withCredentials,
 			});
 		}
 
-		return Axios({
-			method,
-			url,
-			data,
-			headers,
-			withCredentials: options.withCredentials,
-			ignoreLoadingBar: options.ignoreLoadingBar,
+		promise.then(() => {
+			if (showLoading) {
+				--this.loadingBarRequests.value;
+			}
 		});
+
+		return promise;
 	}
 
 	public static createCancelToken() {
-		const CancelToken = Axios.CancelToken;
-		return CancelToken.source();
+		return new AbortController();
+	}
+
+	public static async sendRawRequest(url: string, config: AxiosRequestConfig = {}) {
+		const requestInfo = config;
+		requestInfo.url = url;
+
+		if (GJ_IS_DESKTOP_APP) {
+			requestInfo.headers = { ...requestInfo.headers, 'x-gj-client-version': GJ_VERSION };
+		}
+
+		if (!requestInfo.method) {
+			requestInfo.method = requestInfo.data ? 'POST' : 'GET';
+		}
+
+		return Axios(requestInfo);
 	}
 }

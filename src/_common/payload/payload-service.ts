@@ -1,4 +1,4 @@
-import { AxiosError } from 'axios';
+import { AxiosPromise, AxiosResponse } from 'axios';
 import { RequestOptions } from '../api/api.service';
 import { Environment } from '../environment/environment.service';
 import { showErrorGrowl } from '../growls/growls.service';
@@ -23,30 +23,28 @@ export class PayloadError {
 
 	constructor(public type: string, public response?: any, public status?: number) {}
 
-	static fromAxiosError(e: AxiosError) {
-		const response = e.response;
-
+	static async fromAxiosError(response: AxiosResponse) {
 		// If the response indicated a failed connection.
 		if (response === undefined || response.status === -1) {
 			return new PayloadError(PayloadError.ERROR_OFFLINE);
-		} else if (response.status === 401) {
+		}
+
+		const data = response.data;
+
+		if (response.status === 401) {
 			// If it was a 401 error, then they need to be logged in.
 			// Let's redirect them to the login page on the main site.
-			return new PayloadError(PayloadError.ERROR_NOT_LOGGED, response.data || undefined, 401);
-		} else if (response.status === 403 && response.data.user?.timeout) {
-			return new PayloadError(
-				PayloadError.ERROR_USER_TIMED_OUT,
-				response.data || undefined,
-				403
-			);
+			return new PayloadError(PayloadError.ERROR_NOT_LOGGED, data || undefined, 401);
+		} else if (response.status === 403 && data.user?.timeout) {
+			return new PayloadError(PayloadError.ERROR_USER_TIMED_OUT, data || undefined, 403);
 		} else if (response.status === 429) {
-			return new PayloadError(PayloadError.ERROR_RATE_LIMIT, response.data || undefined, 429);
+			return new PayloadError(PayloadError.ERROR_RATE_LIMIT, data || undefined, 429);
 		}
 
 		// Otherwise, show an error page.
 		return new PayloadError(
 			PayloadError.ERROR_HTTP_ERROR,
-			response.data || undefined,
+			data || undefined,
 			response.status || undefined
 		);
 	}
@@ -69,7 +67,7 @@ export class Payload {
 	}
 
 	static async processResponse(
-		requestPromise: Promise<any>,
+		requestPromise: AxiosPromise<any>,
 		options: RequestOptions = {}
 	): Promise<any> {
 		options = {
@@ -82,30 +80,33 @@ export class Payload {
 			...options,
 		};
 
-		try {
-			const response = await requestPromise;
+		let response: AxiosResponse | undefined;
+		let responseData: any;
 
-			if (!response || !response.data) {
+		try {
+			response = await requestPromise;
+			responseData = response.data;
+			console.warn(responseData);
+
+			if (!response || !responseData || response.statusText === 'error') {
 				if (!options.noErrorRedirect) {
 					throw new PayloadError(
 						PayloadError.ERROR_INVALID,
-						response ? response.data || undefined : undefined
+						response ? responseData || undefined : undefined
 					);
 				} else {
-					throw response.data || undefined;
+					throw responseData || undefined;
 				}
 			}
 
-			const data = response.data;
+			this.checkClientForceUpgrade(responseData);
+			this.checkPayloadUser(responseData, options);
+			this.checkPayloadConsents(responseData);
+			this.checkPayloadVersion(responseData, options);
+			this.checkPayloadSeo(responseData, options);
 
-			this.checkClientForceUpgrade(data);
-			this.checkPayloadUser(response, options);
-			this.checkPayloadConsents(response);
-			this.checkPayloadVersion(data, options);
-			this.checkPayloadSeo(data, options);
-
-			return data.payload;
-		} catch (error) {
+			return responseData.payload;
+		} catch (error: any) {
 			if (!import.meta.env.SSR) {
 				console.error('Payload error', error);
 			}
@@ -114,12 +115,7 @@ export class Payload {
 				throw this.handlePayloadError(error);
 			}
 
-			let response: any = undefined;
-			if (error && error.response) {
-				response = error.response;
-			}
-
-			this.checkPayloadUser(response, options);
+			this.checkPayloadUser(responseData, options);
 
 			// Do not do error redirects when the user cancelled the upload file request.
 			if (this.isCancelledUpload(error)) {
@@ -127,10 +123,10 @@ export class Payload {
 			}
 
 			if (
-				!options.noErrorRedirect ||
-				this.httpNoRedirectOverrides.includes(response.status)
+				response &&
+				(!options.noErrorRedirect || this.httpNoRedirectOverrides.includes(response.status))
 			) {
-				throw this.handlePayloadError(PayloadError.fromAxiosError(error));
+				throw this.handlePayloadError(await PayloadError.fromAxiosError(response));
 			} else {
 				throw error;
 			}
@@ -162,14 +158,13 @@ export class Payload {
 		}
 	}
 
-	private static checkPayloadUser(response: any, options: RequestOptions) {
-		if (options.ignorePayloadUser || !response || !response.data || !this.commonStore) {
+	private static checkPayloadUser(data: any, options: RequestOptions) {
+		if (options.ignorePayloadUser || !data || !this.commonStore) {
 			return;
 		}
 
 		// Only process if this payload response had a user attached to it.
 		// It couid be null (for logged out) or an object (if logged in).
-		const data = response.data;
 		if (typeof data.user !== 'undefined') {
 			if (data.user === null) {
 				this.commonStore.clearUser();
@@ -187,12 +182,11 @@ export class Payload {
 		Seo.processPayloadDirectives(data.meta.seo);
 	}
 
-	private static checkPayloadConsents(response: any) {
-		if (!response || !response.data || !this.commonStore) {
+	private static checkPayloadConsents(data: any) {
+		if (!data || !this.commonStore) {
 			return;
 		}
 
-		const data = response.data;
 		if (typeof data.c === 'object') {
 			this.commonStore.setConsents(data.c);
 			return;

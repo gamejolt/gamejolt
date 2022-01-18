@@ -1,8 +1,8 @@
-import Axios from 'axios';
 import { Channel, Socket } from 'phoenix';
 import { arrayRemove, numberSort } from '../../../utils/array';
 import { CancelToken } from '../../../utils/cancel-token';
 import { sleep } from '../../../utils/utils';
+import { Api } from '../../../_common/api/api.service';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { commonStore } from '../../../_common/store/common-store';
@@ -222,9 +222,8 @@ async function connect(chat: ChatClient) {
 		// Do the host check first. This request will get rate limited and only
 		// let a certain number through, which will cause the second one to not
 		// get processed.
-		const hostResult = await Axios.get(`${Environment.chat}/host`, {
-			ignoreLoadingBar: true,
-			timeout: 3000,
+		const hostResult = await Api.sendRawRequest(`${Environment.chat}/host`, {
+			timeout: 3_000,
 		});
 
 		if (cancelToken.isCanceled) {
@@ -236,10 +235,14 @@ async function connect(chat: ChatClient) {
 				? { auth_token: authToken, user_id: user.id }
 				: { auth_token: authToken };
 
-		const tokenResult = await Axios.post(`${Environment.chat}/token`, params, {
-			ignoreLoadingBar: true,
-			timeout: 3000,
+		const tokenResult = await Api.sendRawRequest(`${Environment.chat}/token`, {
+			data: params,
+			timeout: 3_000,
 		});
+
+		if (cancelToken.isCanceled) {
+			return null;
+		}
 
 		return { host: hostResult, token: tokenResult };
 	});

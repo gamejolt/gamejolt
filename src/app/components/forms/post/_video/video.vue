@@ -1,5 +1,4 @@
 <script lang="ts">
-import { CancelTokenSource } from 'axios';
 import { Emit, mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { formatNumber } from '../../../../../_common/filters/number';
@@ -72,7 +71,7 @@ export default class AppFormPostVideo
 
 	videoProvider = FiresidePostVideo.PROVIDER_GAMEJOLT;
 	isDropActive = false;
-	uploadCancelToken: CancelTokenSource | null = null;
+	uploadCancelToken: AbortController | null = null;
 
 	readonly FiresidePostVideo = FiresidePostVideo;
 	readonly formatNumber = formatNumber;
@@ -182,7 +181,7 @@ export default class AppFormPostVideo
 			{
 				file: this.formModel.video,
 				progress: e => this.onProgressUpdate(e),
-				fileCancelToken: this.uploadCancelToken,
+				fileCancelToken: this.uploadCancelToken.signal,
 			}
 		);
 	}
@@ -303,7 +302,7 @@ export default class AppFormPostVideo
 	cancelUpload() {
 		// Cancel the file upload now.
 		if (this.uploadCancelToken) {
-			this.uploadCancelToken.cancel();
+			this.uploadCancelToken.abort();
 			this.uploadCancelToken = null;
 		}
 

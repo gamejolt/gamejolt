@@ -1,6 +1,6 @@
 <script lang="ts">
-import Axios from 'axios';
-import { Options, Vue } from 'vue-property-decorator';
+import { Options, Vue, Watch } from 'vue-property-decorator';
+import { Api } from '../../api/api.service';
 
 /**
  * How long to wait after a request has started before showing the loading bar.
@@ -31,6 +31,10 @@ export default class AppLoadingBar extends Vue {
 		return (this.completedCount / this.requestCount) * 100;
 	}
 
+	get apiRequestCount() {
+		return Api.loadingBarRequests.value;
+	}
+
 	mounted() {
 		// NOTICE: Router may not be available on all sections (like gameserver).
 
@@ -54,35 +58,9 @@ export default class AppLoadingBar extends Vue {
 			this.addComplete();
 			next();
 		});
-
-		Axios.interceptors.request.use(
-			config => {
-				this.addRequest(config);
-				return config;
-			},
-			error => {
-				this.addComplete(error.config);
-				return Promise.reject(error);
-			}
-		);
-
-		Axios.interceptors.response.use(
-			response => {
-				this.addComplete(response.config);
-				return response;
-			},
-			error => {
-				this.addComplete(error.config);
-				return Promise.reject(error);
-			}
-		);
 	}
 
-	private addRequest(config?: any) {
-		if (config && config.ignoreLoadingBar) {
-			return;
-		}
-
+	private addRequest() {
 		// If we had a clear set, then let's cancel that out.
 		if (this.clearTimeout) {
 			clearTimeout(this.clearTimeout);
@@ -96,11 +74,7 @@ export default class AppLoadingBar extends Vue {
 		++this.requestCount;
 	}
 
-	private addComplete(config?: any) {
-		if (config && config.ignoreLoadingBar) {
-			return;
-		}
-
+	private addComplete() {
 		++this.completedCount;
 		if (this.completedCount >= this.requestCount) {
 			this.clear();
@@ -125,6 +99,16 @@ export default class AppLoadingBar extends Vue {
 			this.completedCount = 0;
 			this.shouldShow = false;
 		}, HideDelay);
+	}
+
+	@Watch('apiRequestCount')
+	onApiLoadCountChanged() {
+		if (this.apiRequestCount > this.requestCount) {
+			this.addRequest();
+		} else if (this.apiRequestCount < this.requestCount) {
+			this.addComplete();
+		}
+		this.requestCount = this.apiRequestCount;
 	}
 }
 </script>
