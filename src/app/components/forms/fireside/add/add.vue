@@ -54,6 +54,7 @@ export default class FormFiresideAdd extends mixins(Wrapper) {
 
 	onInit() {
 		this.setField('is_draft', false);
+		this.setField('title', '');
 
 		if (this.community) {
 			this.setCommunity(this.community);

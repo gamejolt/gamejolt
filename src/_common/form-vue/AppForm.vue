@@ -262,7 +262,6 @@ export function createForm<T>({
 	}
 
 	function clearErrors() {
-		// TODO(vue3): test to make sure this works
 		for (const group of _groups.value) {
 			group.clearError();
 		}

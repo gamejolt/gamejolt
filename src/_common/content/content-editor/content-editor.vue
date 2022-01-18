@@ -29,7 +29,6 @@ import {
 import { ContentRules } from './content-rules';
 import { ContentTempResource } from './content-temp-resource.service';
 import AppContentEditorBlockControls from './controls/block-controls.vue';
-import AppContentEditorControlsEmojiTS from './controls/emoji/emoji';
 import AppContentEditorControlsEmoji from './controls/emoji/emoji.vue';
 import AppContentEditorControlsGif from './controls/gif/gif.vue';
 import AppContentEditorInsetControls from './controls/inset-controls.vue';
@@ -157,7 +156,7 @@ export default class AppContentEditor extends Vue {
 	declare $refs: {
 		editor: HTMLElement;
 		doc: HTMLElement;
-		emojiPanel: AppContentEditorControlsEmojiTS;
+		emojiPanel: AppContentEditorControlsEmoji;
 	};
 
 	@Emit('submit')
@@ -295,9 +294,7 @@ export default class AppContentEditor extends Vue {
 
 		// TODO(vue3): make sure this works once we can test content editor
 		const modelId = computed(() => {
-			const props = this.$props as this;
-
-			if (props.modelId === null) {
+			if (this.modelId === null) {
 				if (!this.tempModelId_) {
 					new Promise<number>(() =>
 						ContentTempResource.getTempModelId(
@@ -488,9 +485,7 @@ export default class AppContentEditor extends Vue {
 	}
 
 	showEmojiPanel() {
-		if (this.$refs.emojiPanel instanceof AppContentEditorControlsEmoji) {
-			this.$refs.emojiPanel.show();
-		}
+		this.$refs.emojiPanel.show();
 	}
 
 	updateIsEmpty(state: EditorState) {

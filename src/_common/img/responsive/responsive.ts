@@ -19,6 +19,8 @@ export class AppImgResponsive extends Vue {
 	@Emit('imgloadchange')
 	emitChange(_isLoaded: boolean) {}
 
+	declare $el: HTMLElement;
+
 	created() {
 		if (import.meta.env.SSR) {
 			this.processedSrc = this.src;
@@ -49,8 +51,13 @@ export class AppImgResponsive extends Vue {
 		// Try waiting for any resizes and breakpoint changes to happen before getting the container information.
 		await sleep(0);
 
-		const containerWidth = Ruler.width(this.$el.parentNode as HTMLElement);
-		const containerHeight = Ruler.height(this.$el.parentNode as HTMLElement);
+		const parent = this.$el.parentElement;
+		if (!parent) {
+			return;
+		}
+
+		const containerWidth = Ruler.width(parent);
+		const containerHeight = Ruler.height(parent);
 
 		// Make sure we never do a 0 width, just in case.
 		// Seems to happen in some situations.

@@ -3,7 +3,6 @@ import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { useAdsController } from '../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
-import { AppCondenseWhitespace } from '../../../../_common/condense-whitespace';
 import { formatNumber } from '../../../../_common/filters/number';
 import { Game } from '../../../../_common/game/game.model';
 import AppGameThumbnail from '../../../../_common/game/thumbnail/thumbnail.vue';
@@ -19,7 +18,6 @@ let idCounter = 0;
 	components: {
 		AppGameThumbnail,
 		AppAdWidget,
-		AppCondenseWhitespace,
 	},
 })
 export default class AppGameGrid extends Vue {
@@ -138,7 +136,7 @@ export default class AppGameGrid extends Vue {
 		</p>
 
 		<div :class="{ 'scrollable-grid': isScrollable }">
-			<app-condense-whitespace class="game-grid-items">
+			<div class="game-grid-items">
 				<div v-if="Screen.isDesktop && shouldShowAds" class="game-grid-ad">
 					<div class="game-grid-ad-inner">
 						<app-ad-widget
@@ -175,7 +173,7 @@ export default class AppGameGrid extends Vue {
 						</app-game-thumbnail>
 					</div>
 				</template>
-			</app-condense-whitespace>
+			</div>
 		</div>
 	</div>
 </template>
