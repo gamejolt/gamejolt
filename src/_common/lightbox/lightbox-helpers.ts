@@ -52,8 +52,6 @@ export function createLightbox(items: Ref<LightboxMediaModel[]>) {
 		items: readonly(items),
 		length,
 		activeItem,
-		// TODO(vue3): This doesn't seem to actually get marked as readonly.
-		// Typing is strange with this.
 		isShowing: readonly(isShowing),
 		gotoPage,
 		goNext() {

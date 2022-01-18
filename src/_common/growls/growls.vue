@@ -18,7 +18,6 @@ export default class AppGrowls extends Vue {
 <template>
 	<div class="growl-container">
 		<transition-group>
-			<!-- TODO(vue3): check to make sure this didn't break -->
 			<app-growl
 				v-for="(growl, index) of Growls.growls"
 				:key="index"

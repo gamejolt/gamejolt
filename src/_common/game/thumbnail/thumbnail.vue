@@ -52,7 +52,6 @@ export default class AppGameThumbnail extends Vue {
 	readonly Game = Game;
 
 	get shouldShowControls() {
-		// TODO(vue3): check this to see if the default check still works
 		// Only show controls if they didn't override with their own.
 		return !this.$slots.default && !this.hideControls;
 	}

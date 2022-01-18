@@ -9,10 +9,10 @@ import AppExpand from '../../../expand/expand.vue';
 import { formatCurrency } from '../../../filters/currency';
 import { AppFocusWhen } from '../../../form-vue/focus-when.directive';
 import {
-	BaseForm,
-	FormOnSubmit,
-	FormOnSubmitError,
-	FormOnSubmitSuccess,
+BaseForm,
+FormOnSubmit,
+FormOnSubmitError,
+FormOnSubmitSuccess
 } from '../../../form-vue/form.service';
 import { Geo, Region } from '../../../geo/geo.service';
 import { showErrorGrowl } from '../../../growls/growls.service';
@@ -65,15 +65,14 @@ export default class FormGamePackagePayment
 		return this.commonStore;
 	}
 
-	// TODO(vue3)
-	isLoaded = false;
+	isBootstrapped = false;
 	isLoadingMethods = true;
 	isProcessing = false;
 	checkoutType: CheckoutType = 'cc-stripe';
 	checkoutStep = 'primary';
 
 	cards: any[] = [];
-	cardsTax = {};
+	cardsTax: { [k: string]: any } = {};
 	addresses: any[] = [];
 	calculatedAddressTax = false;
 	addressTaxAmount = 0;
@@ -198,7 +197,7 @@ export default class FormGamePackagePayment
 		);
 
 		this.isLoadingMethods = false;
-		this.isLoaded = true;
+		this.isBootstrapped = true;
 		this.minOrderAmount = response.minOrderAmount || 50;
 
 		if (response && response.cards && response.cards.length) {
@@ -456,7 +455,7 @@ export default class FormGamePackagePayment
 			<hr />
 		</template>
 
-		<app-loading v-if="!isLoaded" />
+		<app-loading v-if="!isBootstrapped" />
 		<template v-else>
 			<app-loading-fade :is-loading="isProcessing">
 				<div

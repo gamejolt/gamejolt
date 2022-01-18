@@ -22,7 +22,6 @@ export default class AppPill extends Vue {
 	}
 
 	get hasImg() {
-		// TODO(vue3): check
 		return !!this.$slots.img;
 	}
 
@@ -42,7 +41,7 @@ export default class AppPill extends Vue {
 
 <template>
 	<component :is="component" class="pill" :to="to" @click="onClick">
-		<span class="-img" v-if="hasImg">
+		<span v-if="hasImg" class="-img">
 			<slot name="img" />
 		</span>
 		<span class="-content">

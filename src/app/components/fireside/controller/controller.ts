@@ -306,7 +306,6 @@ export async function extendFireside(c: FiresideController, growlOnFail = true) 
 		}
 	);
 	if (payload.success && payload.extended) {
-		// TODO(vue3): check this
 		c.fireside.expires_on = payload.expiresOn;
 		updateFiresideExpiryValues(c);
 	} else if (growlOnFail) {
