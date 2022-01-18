@@ -86,7 +86,6 @@ export class Payload {
 		try {
 			response = await requestPromise;
 			responseData = response.data;
-			console.warn(responseData);
 
 			if (!response || !responseData || response.statusText === 'error') {
 				if (!options.noErrorRedirect) {
