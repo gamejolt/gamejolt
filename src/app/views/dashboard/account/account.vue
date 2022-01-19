@@ -1,5 +1,5 @@
 <script lang="ts">
-import { inject, InjectionKey, ref } from '@vue/runtime-core';
+import { inject, InjectionKey, provide, ref } from 'vue';
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
@@ -43,7 +43,11 @@ function createController() {
 	resolver: () => Api.sendRequest('/web/dash/account'),
 })
 export default class RouteDashAccount extends BaseRouteComponent {
-	routeStore = setup(() => useAccountRouteController()!);
+	routeStore = setup(() => {
+		const c = createController();
+		provide(Key, c);
+		return c;
+	});
 	commonStore = setup(() => useCommonStore());
 
 	readonly Screen = Screen;
