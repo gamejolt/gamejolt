@@ -30,11 +30,11 @@ import AppPageHeaderControls from '../../../components/page-header/controls/cont
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { useAppStore } from '../../../store/index';
 import {
-libraryEditPlaylist,
-libraryRemoveGameFromPlaylist,
-libraryRemovePlaylist,
-libraryUnfollowGame,
-useLibraryStore
+	libraryEditPlaylist,
+	libraryRemoveGameFromPlaylist,
+	libraryRemovePlaylist,
+	libraryUnfollowGame,
+	useLibraryStore,
 } from '../../../store/library';
 
 const CollectionThemeKey = 'collection';
@@ -370,7 +370,6 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		>
 			<div class="row collection-copy">
 				<div v-if="!Screen.isXs" class="col-sm-4 col-md-3">
-					<!-- TODO(vue3): check animation -->
 					<app-game-collection-thumbnail
 						:key="collection._id"
 						class="anim-fade-in-enlarge"
@@ -378,7 +377,6 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 					/>
 				</div>
 				<div class="col-sm-8 col-md-9">
-					<!-- TODO(vue3): make sure this works to animate -->
 					<transition mode="out-in" appear>
 						<div :key="collection._id" class="anim-fade-enter-right anim-fade-leave-up">
 							<!--

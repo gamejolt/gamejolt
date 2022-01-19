@@ -176,7 +176,6 @@ export default class AppChatWindow extends Vue {
 						</div>
 
 						<!-- Animation scope. -->
-						<!-- TODO(vue3): check animation works -->
 						<div :key="room.id" class="chat-window-header-content">
 							<span
 								v-if="!room.isPmRoom"
@@ -227,7 +226,6 @@ export default class AppChatWindow extends Vue {
 					</div>
 				</div>
 
-				<!-- TODO(vue3): check animation works -->
 				<div class="chat-window-output fill-backdrop">
 					<app-chat-window-output
 						:key="room.id"

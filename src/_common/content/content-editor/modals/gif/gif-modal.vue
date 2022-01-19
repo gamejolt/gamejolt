@@ -5,7 +5,7 @@ import { shallowSetup } from '../../../../../utils/vue';
 import { Api } from '../../../../api/api.service';
 import AppLoading from '../../../../loading/loading.vue';
 import { BaseModal } from '../../../../modal/base';
-import AppModalTS from '../../../../modal/modal';
+import AppModal from '../../../../modal/modal.vue';
 import { Ruler } from '../../../../ruler/ruler-service';
 import { Screen } from '../../../../screen/screen-service';
 import AppScrollScroller, { createScroller } from '../../../../scroll/AppScrollScroller.vue';
@@ -37,7 +37,8 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 	readonly mascotImage = mascotImage;
 
 	declare $refs: {
-		modal: AppModalTS;
+		// TODO(vue3)
+		modal: AppModal;
 		search: HTMLInputElement;
 	};
 

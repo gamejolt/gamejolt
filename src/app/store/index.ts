@@ -93,14 +93,12 @@ export function createAppStore({
 	const hasFooter = computed(() => !isFooterHidden.value);
 
 	const hasCbar = computed(() => {
-		// TODO(vue3): use provided commonStore
 		if (isShellHidden.value || commonStore.isUserTimedOut.value) {
 			return false;
 		}
 
 		// The cbar is pretty empty without a user and active context pane,
 		// so we want to hide it if those conditions are met.
-		// TODO(vue3): use an injected commonStore instead
 		if (!commonStore.user.value && !sidebarStore.activeContextPane.value && !Screen.isXs) {
 			return false;
 		}
