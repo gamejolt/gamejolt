@@ -130,6 +130,7 @@ export default class AppKeyGame extends Vue {
 			<h1>{{ game.title }}</h1>
 			<h4>
 				<translate>by</translate>
+				{{ ' ' }}
 				<a class="link-unstyled" :href="Environment.baseUrl + game.developer.url">
 					{{ game.developer.display_name }}
 				</a>

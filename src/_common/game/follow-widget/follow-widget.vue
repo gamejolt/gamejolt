@@ -1,20 +1,17 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import {
-	GameFollowLocation,
-	trackGameFollow,
-} from '../../../../_common/analytics/analytics.service';
-import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
-import { formatNumber } from '../../../../_common/filters/number';
-import { followGame, Game, unfollowGame } from '../../../../_common/game/game.model';
-import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
-import AppPopper from '../../../../_common/popper/popper.vue';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { UserFollowSuggestion } from '../../../../_common/user/follow/suggestion.service';
-import AppUserFollowWidget from '../../../../_common/user/follow/widget.vue';
+import { GameFollowLocation, trackGameFollow } from '../../analytics/analytics.service';
+import { AppAuthRequired } from '../../auth/auth-required-directive';
+import { formatNumber } from '../../filters/number';
+import { showErrorGrowl } from '../../growls/growls.service';
+import { ModalConfirm } from '../../modal/confirm/confirm-service';
+import AppPopper from '../../popper/popper.vue';
+import { useCommonStore } from '../../store/common-store';
+import { AppTooltip } from '../../tooltip/tooltip-directive';
+import { UserFollowSuggestion } from '../../user/follow/suggestion.service';
+import AppUserFollowWidget from '../../user/follow/widget.vue';
+import { followGame, Game, unfollowGame } from '../game.model';
 
 @Options({
 	components: {

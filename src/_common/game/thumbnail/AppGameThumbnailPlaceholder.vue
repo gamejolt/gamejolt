@@ -1,9 +1,4 @@
-<script lang="ts">
-import { Options, Vue } from 'vue-property-decorator';
-
-@Options({})
-export default class AppGameThumbnailPlaceholder extends Vue {}
-</script>
+<script lang="ts" setup></script>
 
 <template>
 	<div class="game-thumbnail-placeholder">
@@ -21,7 +16,7 @@ export default class AppGameThumbnailPlaceholder extends Vue {}
 </template>
 
 <style lang="stylus" scoped>
-@import '../variables'
+@import './variables'
 
 .game-thumbnail-placeholder
 	margin-bottom: $grid-gutter-width-xs

@@ -4,7 +4,7 @@ import { Options } from 'vue-property-decorator';
 import { RouteLocationRedirect } from '../../../../../utils/router';
 import { Api } from '../../../../../_common/api/api.service';
 import { Game } from '../../../../../_common/game/game.model';
-import AppGameThumbnail from '../../../../../_common/game/thumbnail/thumbnail.vue';
+import AppGameThumbnail from '../../../../../_common/game/thumbnail/AppGameThumbnail.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';

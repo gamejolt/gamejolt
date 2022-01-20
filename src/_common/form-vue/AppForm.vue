@@ -80,7 +80,7 @@ export function useForm<T = any>() {
 }
 
 interface CreateFormOptions<T> {
-	model: Ref<T | undefined>;
+	model?: Ref<T | undefined>;
 	modelClass?: ModelClassType<T>;
 	saveMethod?: MaybeRef<keyof T | undefined>;
 	loadUrl?: MaybeRef<string | undefined>;
@@ -124,7 +124,7 @@ export function createForm<T>({
 	let loadUrl = ref(options.loadUrl);
 	let loadData = ref(options.loadData);
 
-	const method = ref(model.value ? 'edit' : 'add');
+	const method = ref(model?.value ? 'edit' : 'add');
 	const changed = ref(false);
 	const attemptedSubmit = ref(false);
 	const isLoaded = ref(null as null | boolean);
@@ -219,7 +219,7 @@ export function createForm<T>({
 	function _makeFormModel() {
 		// If a model class was assigned to this form, then create a copy of it
 		// on the instance. Otherwise just copy the object.
-		if (model.value) {
+		if (model?.value) {
 			if (modelClass) {
 				return new modelClass(model.value);
 			} else {
@@ -333,7 +333,7 @@ export function createForm<T>({
 				response = await (formModel.value as any)[saveMethod.value || '$save']();
 
 				// Copy it back to the base model.
-				if (model.value) {
+				if (model?.value) {
 					Object.assign(model.value, formModel.value);
 				}
 			}

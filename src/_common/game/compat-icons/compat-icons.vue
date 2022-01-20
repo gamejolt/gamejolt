@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { Game } from '../../../../_common/game/game.model';
+import { Game } from '../game.model';
 
 const compatMapping: any = {
 	os_windows: 'windows',

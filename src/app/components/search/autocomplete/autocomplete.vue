@@ -3,6 +3,7 @@ import { setup } from 'vue-class-component';
 import { Options, Vue, Watch } from 'vue-property-decorator';
 import { debounce } from '../../../../utils/utils';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
+import AppGameCompatIcons from '../../../../_common/game/compat-icons/compat-icons.vue';
 import { Game } from '../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../_common/game/thumbnail-img/thumbnail-img.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
@@ -10,7 +11,6 @@ import { EventSubscription, EventTopic } from '../../../../_common/system/event/
 import { User } from '../../../../_common/user/user.model';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
 import type * as LocalDbGameModType from '../../client/local-db/game/game.model';
-import AppGameCompatIcons from '../../game/compat-icons/compat-icons.vue';
 import { SearchKeydownSpy, useSearchController } from '../AppSearch.vue';
 import { sendSearch } from '../search-service';
 

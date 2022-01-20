@@ -265,10 +265,10 @@ export default class AppGamePackageCard extends Vue {
 				:icon="card.platformSupportInfo[supportKey].icon"
 			/>
 
-			<span v-if="card.platformSupport.length" class="dot-separator" />
-
 			<template v-if="card.showcasedRelease">
+				{{ ' ' }}
 				<translate>Version:</translate>
+				{{ ' ' }}
 				<strong>{{ card.showcasedRelease.version_number }}</strong>
 
 				<span class="dot-separator" />
@@ -385,12 +385,14 @@ export default class AppGamePackageCard extends Vue {
 			<div class="package-card-well">
 				<div v-for="build of builds" :key="build.id">
 					{{ build.primary_file.filename }}
-					<small class="text-muted"
-						>({{ formatFilesize(build.primary_file.filesize) }})</small
-					>
+					{{ ' ' }}
+					<small class="text-muted">
+						({{ formatFilesize(build.primary_file.filesize) }})
+					</small>
 
 					<span
 						v-for="os of ['windows', 'mac', 'linux', 'other']"
+						:key="os"
 						class="package-card-well-os"
 					>
 						<template v-if="build['os_' + os] || build['os_' + os + '_64']">

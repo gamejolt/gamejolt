@@ -5,8 +5,8 @@ import { GameBundle } from '../../../_common/game-bundle/game-bundle.model';
 import { Game } from '../../../_common/game/game.model';
 import { Meta } from '../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
-import FormRetrieve from '../../components/forms/retrieve/retrieve.vue';
-import AppInvalidKey from '../../components/invalid-key/invalid-key.vue';
+import AppInvalidKey from '../../components/AppInvalidKey.vue';
+import FormRetrieve from '../../components/forms/FormRetrieve.vue';
 
 interface SuccessPayload {
 	error: false;
@@ -38,7 +38,7 @@ type Payload = SuccessPayload | ErrorPayload | undefined;
 			return undefined;
 		}
 
-		const matches = route.params.input.match(/(g|b)\-([0-9a-zA-Z]+)/);
+		const matches = route.params.input.match(/(g|b)-([0-9a-zA-Z]+)/);
 		if (matches) {
 			if (matches[1] === 'g') {
 				type = 'game';
@@ -118,11 +118,9 @@ export default class RouteRetrieve extends BaseRouteComponent {
 	<div>
 		<app-invalid-key v-if="invalidKey" />
 
-		<section class="container" v-else>
+		<section v-else class="container">
 			<h1 class="section-header">
-				<translate v-if="!resourceTitle">
-					Retrieve Your Keys
-				</translate>
+				<translate v-if="!resourceTitle"> Retrieve Your Keys </translate>
 				<translate v-else :translate-params="{ resource: resourceTitle }">
 					Retrieve Your Keys for %{ resource }
 				</translate>

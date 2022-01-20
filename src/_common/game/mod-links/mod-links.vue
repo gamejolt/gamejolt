@@ -1,9 +1,9 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { Api } from '../../../../_common/api/api.service';
-import { Environment } from '../../../../_common/environment/environment.service';
-import { Game } from '../../../../_common/game/game.model';
-import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
+import { Api } from '../../api/api.service';
+import { Environment } from '../../environment/environment.service';
+import { showSuccessGrowl } from '../../growls/growls.service';
+import { Game } from '../game.model';
 
 @Options({})
 export default class AppGameModLinks extends Vue {
@@ -39,27 +39,27 @@ export default class AppGameModLinks extends Vue {
 
 <template>
 	<div class="list-group list-group-dark">
-		<a class="list-group-item has-icon" @click="tag('fnaf')" target="_blank">
+		<a class="list-group-item has-icon" target="_blank" @click="tag('fnaf')">
 			<app-jolticon icon="tag" />
 			<span>Tag: #fnaf</span>
 		</a>
-		<a class="list-group-item has-icon" @click="tag('fangame')" target="_blank">
+		<a class="list-group-item has-icon" target="_blank" @click="tag('fangame')">
 			<app-jolticon icon="tag" />
 			<span>Tag: #fangame</span>
 		</a>
-		<a class="list-group-item has-icon" @click="tag('gjhot')" target="_blank">
+		<a class="list-group-item has-icon" target="_blank" @click="tag('gjhot')">
 			<app-jolticon icon="tag" />
 			<span>Tag: #gjhot</span>
 		</a>
-		<a class="list-group-item has-icon" @click="untag('gjhot')" target="_blank">
+		<a class="list-group-item has-icon" target="_blank" @click="untag('gjhot')">
 			<app-jolticon icon="tag" />
 			<span>Untag: #gjhot</span>
 		</a>
-		<a class="list-group-item has-icon" @click="tag('gjboost')" target="_blank">
+		<a class="list-group-item has-icon" target="_blank" @click="tag('gjboost')">
 			<app-jolticon icon="tag" />
 			<span>Tag: #gjboost</span>
 		</a>
-		<a class="list-group-item has-icon" @click="tag('gjhome')" target="_blank">
+		<a class="list-group-item has-icon" target="_blank" @click="tag('gjhome')">
 			<app-jolticon icon="tag" />
 			<span>Tag: #gjhome</span>
 		</a>

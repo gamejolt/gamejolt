@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { GameBundle } from '../../../../_common/game-bundle/game-bundle.model';
 import { Game } from '../../../../_common/game/game.model';
-import AppGameThumbnail from '../../../../_common/game/thumbnail/thumbnail.vue';
+import AppGameThumbnail from '../../../../_common/game/thumbnail/AppGameThumbnail.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 
 @Options({
@@ -80,7 +80,7 @@ export default class AppKeyBundle extends Vue {
 							query: { bundleGameId: game.id },
 						}).href
 					"
-					:hide-pricing="true"
+					hide-pricing
 				/>
 			</div>
 		</div>

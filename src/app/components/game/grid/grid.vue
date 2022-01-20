@@ -5,8 +5,9 @@ import { useAdsController } from '../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { Game } from '../../../../_common/game/game.model';
-import AppGameThumbnail from '../../../../_common/game/thumbnail/thumbnail.vue';
+import AppGameThumbnail from '../../../../_common/game/thumbnail/AppGameThumbnail.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
+import AppGameThumbnailControls from '../thumbnail/AppGameThumbnailControls.vue';
 
 export const GameGridRowSizeSm = 2;
 export const GameGridRowSizeMd = 3;
@@ -17,6 +18,7 @@ let idCounter = 0;
 @Options({
 	components: {
 		AppGameThumbnail,
+		AppGameThumbnailControls,
 		AppAdWidget,
 	},
 })
@@ -77,10 +79,6 @@ export default class AppGameGrid extends Vue {
 		}
 
 		return this.games.length;
-	}
-
-	get hasThumbnailControls() {
-		return this.$slots['thumbnail-controls'];
 	}
 
 	shouldShowAd(index: number) {
@@ -172,9 +170,10 @@ export default class AppGameGrid extends Vue {
 								eventLabel ? 'game-grid:click:' + eventLabel : undefined
 							"
 							:game="game"
-							:hide-controls="hasThumbnailControls"
 						>
-							<slot name="thumbnail-controls" :game="game" />
+							<slot name="thumbnail-controls" :game="game">
+								<app-game-thumbnail-controls :game="game" />
+							</slot>
 						</app-game-thumbnail>
 					</div>
 				</template>

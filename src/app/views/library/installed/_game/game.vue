@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import AppGameThumbnail from '../../../../../_common/game/thumbnail/thumbnail.vue';
+import AppGameThumbnail from '../../../../../_common/game/thumbnail/AppGameThumbnail.vue';
 import AppClientGameButtons from '../../../../components/client/game-buttons/game-buttons.vue';
 import { LocalDbGame } from '../../../../components/client/local-db/game/game.model';
 import { ClientLibraryState, ClientLibraryStore } from '../../../../store/client-library';
@@ -67,12 +67,9 @@ export default class AppLibraryInstalledGame extends Vue {
 		@mouseenter="isHovering = true"
 		@mouseleave="isHovering = false"
 	>
-		<app-game-thumbnail class="-thumb" :game="game._game" hide-pricing hide-controls />
+		<app-game-thumbnail class="-thumb" :game="game._game" hide-pricing />
 
-		<!--
-		Try to reduce the # of watchers on page.
-	-->
-		<div class="-meta-outer" v-if="shouldShowControls">
+		<div v-if="shouldShowControls" class="-meta-outer">
 			<div class="-meta">
 				<app-client-game-buttons
 					:game="game._game"

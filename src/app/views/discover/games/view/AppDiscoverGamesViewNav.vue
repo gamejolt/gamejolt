@@ -8,13 +8,13 @@ import {
 } from '../../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../../_common/comment/modal/modal.service';
 import { formatNumber } from '../../../../../_common/filters/number';
+import AppGameModLinks from '../../../../../_common/game/mod-links/mod-links.vue';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../../../_common/popper/popper.vue';
 import { ReportModal } from '../../../../../_common/report/modal/modal.service';
 import { copyShareLink } from '../../../../../_common/share/share.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import AppGameModLinks from '../../../../components/game/mod-links/mod-links.vue';
 import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { useGameRouteController } from './view.vue';
 
