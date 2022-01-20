@@ -16,6 +16,7 @@ import { useResizeObserver } from '../../utils/hooks/useResizeObserver';
 import { Ruler } from '../ruler/ruler-service';
 import { useForm } from './AppForm.vue';
 import { useFormGroup } from './AppFormGroup.vue';
+import { AppFocusWhen as vAppFocusWhen } from './focus-when.directive';
 import { FormValidator, validateRequired } from './validators';
 
 export interface FormControlController<T = any> {
@@ -110,8 +111,12 @@ export function createFormControl<T>({
 	});
 
 	if (!multi) {
-		// Copy over the initial form model value.
-		controlVal.value = form.formModel[group.name];
+		// Copy over the initial form model value. If the formModel contains
+		// specifically an undefined value, we want to keep it as the initial
+		// value.
+		if (form.formModel[group.name] !== undefined) {
+			controlVal.value = form.formModel[group.name];
+		}
 
 		// Watch the form model for changes and sync to our control.
 		watch(
@@ -159,6 +164,9 @@ const props = defineProps({
 	type: {
 		type: String,
 		default: 'text',
+	},
+	focus: {
+		type: Boolean,
 	},
 	validateOn: {
 		type: Array as PropType<string[]>,
@@ -395,6 +403,7 @@ function recalcPositioning() {
 		<input
 			:id="c.id"
 			ref="root"
+			v-app-focus-when="focus"
 			:name="group.name"
 			class="form-control"
 			:type="controlType"

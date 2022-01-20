@@ -1,16 +1,11 @@
 <script lang="ts">
 import { mixins, Options } from 'vue-property-decorator';
-import { AppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';
 import { BaseForm } from '../../../../_common/form-vue/form.service';
 import { GamePlaylist } from '../../../../_common/game-playlist/game-playlist.model';
 
 class Wrapper extends BaseForm<GamePlaylist> {}
 
-@Options({
-	directives: {
-		AppFocusWhen,
-	},
-})
+@Options({})
 export default class FormPlaylist extends mixins(Wrapper) {
 	modelClass = GamePlaylist;
 }
@@ -19,7 +14,7 @@ export default class FormPlaylist extends mixins(Wrapper) {
 <template>
 	<app-form :controller="form">
 		<app-form-group name="name" :label="$gettext('library.playlists.form.name_label')">
-			<app-form-control type="text" :validators="[validateMaxLength(100)]" v-app-focus-when />
+			<app-form-control type="text" :validators="[validateMaxLength(100)]" focus />
 			<app-form-control-errors />
 		</app-form-group>
 

@@ -191,7 +191,7 @@ const props = defineProps({
 	disabled: {
 		type: Boolean,
 	},
-	autofocus: {
+	focus: {
 		type: Boolean,
 	},
 });
@@ -272,7 +272,7 @@ function onChange(event: Event) {
 			v-if="editorMode === 'textarea'"
 			:id="c.id"
 			v-app-form-autosize
-			v-app-focus-when="autofocus"
+			v-app-focus-when="focus"
 			class="form-control"
 			rows="1"
 			:name="group.name"

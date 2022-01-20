@@ -675,12 +675,13 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 			:is-loading="isRouteLoading"
 		>
 			<app-game-grid v-if="listing" :games="listing.games" event-label="collection-games">
-				<template #thumbnail-controls="props">
+				<template
+					v-if="type === 'playlist' || type === 'followed'"
+					#thumbnail-controls="props"
+				>
 					<app-button
 						v-if="type === 'playlist' && collection.isOwner"
-						v-app-tooltip="
-							$gettext(`library.collection.thumbnail_control_playlist_tooltip`)
-						"
+						v-app-tooltip="$gettext(`Remove from playlist`)"
 						icon="remove"
 						circle
 						overlay
@@ -689,9 +690,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 
 					<app-button
 						v-if="type === 'followed' && collection.isOwner"
-						v-app-tooltip="
-							$gettext(`library.collection.thumbnail_control_unfollow_tooltip`)
-						"
+						v-app-tooltip="$gettext(`Stop following`)"
 						icon="remove"
 						circle
 						overlay

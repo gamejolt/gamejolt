@@ -267,10 +267,10 @@ export default class FormPayment extends mixins(Wrapper) implements FormOnSubmit
 							<app-form-group name="fullname" :label="$gettext('name on card')">
 								<app-jolticon icon="user" />
 								<app-form-control
-									v-app-focus-when
 									type="text"
 									class="has-icon"
 									:placeholder="$gettext('name on card')"
+									focus
 								/>
 								<app-form-control-errors />
 							</app-form-group>

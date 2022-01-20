@@ -51,11 +51,6 @@ export default class AppGameThumbnail extends Vue {
 	readonly Screen = Screen;
 	readonly Game = Game;
 
-	get shouldShowControls() {
-		// Only show controls if they didn't override with their own.
-		return !this.$slots.default && !this.hideControls;
-	}
-
 	get shouldAnimate() {
 		return SettingAnimatedThumbnails.get() && this.isHydrated;
 	}
@@ -139,9 +134,9 @@ export default class AppGameThumbnail extends Vue {
 			>
 				<slot />
 
-				<template v-if="shouldShowControls">
+				<template v-if="!hideControls">
 					<app-game-follow-widget :game="game" overlay circle location="thumbnail" />
-
+					{{ ' ' }}
 					<app-game-playlist-add-to-widget
 						:game="game"
 						overlay
@@ -151,6 +146,7 @@ export default class AppGameThumbnail extends Vue {
 				</template>
 
 				<template v-if="showModTools">
+					{{ ' ' }}
 					<app-popper popover-class="fill-darkest">
 						<app-button overlay circle icon="cog" />
 

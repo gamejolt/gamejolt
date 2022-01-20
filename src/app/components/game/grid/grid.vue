@@ -79,6 +79,10 @@ export default class AppGameGrid extends Vue {
 		return this.games.length;
 	}
 
+	get hasThumbnailControls() {
+		return this.$slots['thumbnail-controls'];
+	}
+
 	shouldShowAd(index: number) {
 		if (!this.shouldShowAds || this.isScrollable) {
 			return false;
@@ -168,6 +172,7 @@ export default class AppGameGrid extends Vue {
 								eventLabel ? 'game-grid:click:' + eventLabel : undefined
 							"
 							:game="game"
+							:hide-controls="hasThumbnailControls"
 						>
 							<slot name="thumbnail-controls" :game="game" />
 						</app-game-thumbnail>

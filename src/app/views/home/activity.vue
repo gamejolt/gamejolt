@@ -7,7 +7,7 @@ import { ActivityFeedService } from '../../components/activity/feed/feed-service
 import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
 import { AppActivityFeedLazy } from '../../components/lazy';
 import { useAppStore } from '../../store';
-import { RouteActivityFeedController } from './feed';
+import { RouteActivityFeedController } from './feed.vue';
 
 @Options({
 	name: 'RouteHomeActivity',

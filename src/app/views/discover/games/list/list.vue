@@ -71,18 +71,21 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		if (this.tag) {
 			return TagsInfo.tags.find(i => i.id === this.tag)?.image;
 		}
+		return undefined;
 	}
 
 	get spotlightSocial() {
 		if (this.tag) {
 			return TagsInfo.tags.find(i => i.id === this.tag)?.imageSocial;
 		}
+		return undefined;
 	}
 
 	get date() {
 		if (this.section === 'by-date') {
 			return formatDate(new Date(this.$route.params.date), 'mediumDate');
 		}
+		return undefined;
 	}
 
 	get routeTitle() {
@@ -331,7 +334,7 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 				</translate>
 			</div>
 
-			<app-game-grid :games="listing.games" :show-ads="true" event-label="browse-games" />
+			<app-game-grid :games="listing.games" show-ads event-label="browse-games" />
 		</app-game-listing>
 	</div>
 </template>

@@ -57,7 +57,7 @@ export default class AppKeyBundle extends Vue {
 		</div>
 
 		<p v-if="app.user">
-			<app-button primary block @click="claim(bundle)">
+			<app-button primary block @click="claim()">
 				<translate>Claim Bundle into Library</translate>
 			</app-button>
 		</p>

@@ -116,11 +116,10 @@ export class BaseForm<T> extends Vue {
 			loadUrl: computed(() => (this as Partial<FormOnLoad>).loadUrl),
 			loadData: computed(() => (this as Partial<FormOnLoad>).loadData),
 			onInit: () => this.onInit(),
-			onBeforeSubmit: () => (this as Partial<FormOnBeforeSubmit>).onBeforeSubmit?.(),
-			onSubmit: async () => await (this as Partial<FormOnSubmit>).onSubmit?.(),
-			onSubmitError: response =>
-				(this as Partial<FormOnSubmitError>).onSubmitError?.(response),
-			onLoad: response => (this as Partial<FormOnLoad>).onLoad?.(response),
+			onBeforeSubmit: (this as Partial<FormOnBeforeSubmit>).onBeforeSubmit?.bind(this),
+			onSubmit: (this as Partial<FormOnSubmit>).onSubmit?.bind(this),
+			onSubmitError: (this as Partial<FormOnSubmitError>).onSubmitError?.bind(this),
+			onLoad: (this as Partial<FormOnLoad>).onLoad?.bind(this),
 			onSubmitSuccess: response => {
 				// We used to set up a submit handler on every form component
 				// automatically. This is to reproduce that effect.
