@@ -113,7 +113,7 @@ export function createForm<T>({
 
 	const name = uuidv4();
 
-	const formModel = ref(_makeFormModel() as T);
+	const formModel = ref(_makeFormModel()) as Ref<T>;
 	const resetOnSubmit = ref(options.resetOnSubmit || false);
 	const warnOnDiscard = ref(options.warnOnDiscard || true);
 	const reloadOnSubmit = ref(options.reloadOnSubmit || false);
@@ -184,6 +184,9 @@ export function createForm<T>({
 				overrides.onChange?.(formModel);
 			};
 		}
+
+		// Since the modelClass probably changed.
+		formModel.value = _makeFormModel() as T;
 	}
 
 	let _routeChangeDeregister: () => void | undefined;
