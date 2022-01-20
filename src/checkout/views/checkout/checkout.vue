@@ -51,7 +51,10 @@ export default class RouteCheckout extends BaseRouteComponent {
 		this.game = new Game($payload.game);
 		this.setPageTheme();
 
-		window.Stripe.setPublishableKey($payload.stripePublishableKey);
+		// TODO(vue3): remove once we can include the stripe JS file in index.html?
+		if (typeof window.Stripe !== 'undefined') {
+			(window.Stripe as any).setPublishableKey($payload.stripePublishableKey);
+		}
 	}
 
 	routeDestroyed() {
@@ -89,7 +92,7 @@ export default class RouteCheckout extends BaseRouteComponent {
 </script>
 
 <template>
-	<section class="container" v-if="isRouteBootstrapped">
+	<section v-if="isRouteBootstrapped" class="container">
 		<div class="game-cover">
 			<app-media-item-cover
 				v-if="game.header_media_item"
@@ -99,24 +102,12 @@ export default class RouteCheckout extends BaseRouteComponent {
 
 		<div class="text-center">
 			<h1>
-				<a
-					class="link-unstyled"
-					:href="Environment.baseUrl + `/games/${game.slug}/${game.id}`"
-					target="_blank"
-				>
-					{{ game.title }}
-				</a>
+				{{ game.title }}
 			</h1>
 			<h4>
 				<translate>by</translate>
-				<a
-					class="link-unstyled"
-					:href="
-						Environment.baseUrl + `/profile/${game.developer.slug}/${game.developer.id}`
-					"
-				>
-					{{ game.developer.display_name }}
-				</a>
+				{{ ' ' }}
+				{{ game.developer.display_name }}
 			</h4>
 		</div>
 		<br />
