@@ -61,7 +61,7 @@ export default class AppFiresideBadge extends Vue {
 
 	get avatarTooltip() {
 		if (!this.fireside) {
-			return;
+			return undefined;
 		}
 
 		return this.fireside.user.display_name + ' (@' + this.fireside.user.username + ')';
