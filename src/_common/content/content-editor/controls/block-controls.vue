@@ -1,11 +1,10 @@
 <script lang="ts">
-import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options, Vue } from 'vue-property-decorator';
 import { showErrorGrowl } from '../../../growls/growls.service';
 import { Screen } from '../../../screen/screen-service';
 import { AppTooltip } from '../../../tooltip/tooltip-directive';
 import {
-	ContentEditorController,
-	ContentEditorControllerKey,
 	editorInsertBlockquote,
 	editorInsertBulletList,
 	editorInsertCodeBlock,
@@ -14,6 +13,7 @@ import {
 	editorInsertNumberedList,
 	editorInsertSpoiler,
 	editorUploadImageFile,
+	useContentEditorController,
 } from '../content-editor-controller';
 
 @Options({
@@ -23,18 +23,11 @@ import {
 	},
 })
 export default class AppContentEditorBlockControls extends Vue {
-	@Prop({ type: Boolean, required: true })
-	collapsed!: boolean;
-
-	@Inject({ from: ContentEditorControllerKey })
-	controller!: ContentEditorController;
+	controller = setup(() => useContentEditorController()!);
 
 	private oldTop = 0;
 
 	readonly Screen = Screen;
-
-	@Emit('collapsed-change')
-	emitCollapsedChange(_isCollapsed: boolean) {}
 
 	declare $refs: {
 		container: HTMLElement;
@@ -54,6 +47,10 @@ export default class AppContentEditorBlockControls extends Vue {
 
 	get isOverflowingBottom() {
 		return this.controller.window.height - this.top < 24;
+	}
+
+	get collapsed() {
+		return this.controller.controlsCollapsed;
 	}
 
 	get visible() {
@@ -84,7 +81,7 @@ export default class AppContentEditorBlockControls extends Vue {
 	}
 
 	onClickExpand() {
-		this.emitCollapsedChange(!this.collapsed);
+		this.controller.controlsCollapsed = !this.controller.controlsCollapsed;
 	}
 
 	onClickMedia() {
@@ -118,37 +115,37 @@ export default class AppContentEditorBlockControls extends Vue {
 	}
 
 	onClickEmbed() {
-		this.emitCollapsedChange(true);
+		this.controller.controlsCollapsed = true;
 		editorInsertEmbed(this.controller);
 	}
 
 	onClickCodeBlock() {
-		this.emitCollapsedChange(true);
+		this.controller.controlsCollapsed = true;
 		editorInsertCodeBlock(this.controller);
 	}
 
 	onClickBlockquote() {
-		this.emitCollapsedChange(true);
+		this.controller.controlsCollapsed = true;
 		editorInsertBlockquote(this.controller);
 	}
 
 	onClickHr() {
-		this.emitCollapsedChange(true);
+		this.controller.controlsCollapsed = true;
 		editorInsertHr(this.controller);
 	}
 
 	onClickSpoiler() {
-		this.emitCollapsedChange(true);
+		this.controller.controlsCollapsed = true;
 		editorInsertSpoiler(this.controller);
 	}
 
 	onClickBulletList() {
-		this.emitCollapsedChange(true);
+		this.controller.controlsCollapsed = true;
 		editorInsertBulletList(this.controller);
 	}
 
 	onClickOrderedList() {
-		this.emitCollapsedChange(true);
+		this.controller.controlsCollapsed = true;
 		editorInsertNumberedList(this.controller);
 	}
 }
@@ -163,8 +160,8 @@ export default class AppContentEditorBlockControls extends Vue {
 			left: '-32px',
 		}"
 		:class="{
-			'controls-desktop': !Screen.isXs,
-			'controls-mobile': Screen.isXs,
+			'-controls-desktop': !Screen.isXs,
+			'-controls-mobile': Screen.isXs,
 		}"
 		tabindex="0"
 	>
@@ -177,7 +174,7 @@ export default class AppContentEditorBlockControls extends Vue {
 						v-if="contextCapabilities.media"
 						v-app-tooltip="$gettext('Add an image or GIF')"
 						type="button"
-						class="control-button"
+						class="-mobile-control"
 						@click="onClickMedia"
 					>
 						<app-jolticon icon="screenshot" />
@@ -186,7 +183,7 @@ export default class AppContentEditorBlockControls extends Vue {
 						v-if="contextCapabilities.hasAnyEmbed"
 						v-app-tooltip="$gettext('Add an embed')"
 						type="button"
-						class="control-button"
+						class="-mobile-control"
 						@click="onClickEmbed"
 					>
 						<app-jolticon icon="embed" />
@@ -195,7 +192,7 @@ export default class AppContentEditorBlockControls extends Vue {
 						v-if="contextCapabilities.codeBlock"
 						v-app-tooltip="$gettext('Add a code block')"
 						type="button"
-						class="control-button"
+						class="-mobile-control"
 						@click="onClickCodeBlock"
 					>
 						<app-jolticon icon="brackets" />
@@ -204,7 +201,7 @@ export default class AppContentEditorBlockControls extends Vue {
 						v-if="contextCapabilities.blockquote"
 						v-app-tooltip="$gettext('Add a quote')"
 						type="button"
-						class="control-button"
+						class="-mobile-control"
 						@click="onClickBlockquote"
 					>
 						<app-jolticon icon="blockquote" />
@@ -213,7 +210,7 @@ export default class AppContentEditorBlockControls extends Vue {
 						v-if="contextCapabilities.spoiler"
 						v-app-tooltip="$gettext('Add a spoiler')"
 						type="button"
-						class="control-button"
+						class="-mobile-control"
 						@click="onClickSpoiler"
 					>
 						<app-jolticon icon="inactive" />
@@ -222,7 +219,7 @@ export default class AppContentEditorBlockControls extends Vue {
 						v-if="contextCapabilities.hr"
 						v-app-tooltip="$gettext('Add a separator')"
 						type="button"
-						class="control-button"
+						class="-mobile-control"
 						@click="onClickHr"
 					>
 						<app-jolticon icon="hr" />
@@ -231,7 +228,7 @@ export default class AppContentEditorBlockControls extends Vue {
 						v-if="contextCapabilities.list"
 						v-app-tooltip="$gettext('Add a bulleted list')"
 						type="button"
-						class="control-button"
+						class="-mobile-control"
 						@click="onClickBulletList"
 					>
 						<app-jolticon icon="bullet-list" />
@@ -240,7 +237,7 @@ export default class AppContentEditorBlockControls extends Vue {
 						v-if="contextCapabilities.list"
 						v-app-tooltip="$gettext('Add a numbered list')"
 						type="button"
-						class="control-button"
+						class="-mobile-control"
 						@click="onClickOrderedList"
 					>
 						<app-jolticon icon="numbered-list" />
@@ -263,7 +260,7 @@ export default class AppContentEditorBlockControls extends Vue {
 							<app-button
 								v-if="contextCapabilities.media"
 								v-app-tooltip="$gettext('Add an image or GIF')"
-								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
+								class="-control anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
 								solid
 								icon="screenshot"
@@ -272,7 +269,7 @@ export default class AppContentEditorBlockControls extends Vue {
 							<app-button
 								v-if="contextCapabilities.hasAnyEmbed"
 								v-app-tooltip="$gettext('Add an embed')"
-								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
+								class="-control anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
 								solid
 								icon="embed"
@@ -281,7 +278,7 @@ export default class AppContentEditorBlockControls extends Vue {
 							<app-button
 								v-if="contextCapabilities.codeBlock"
 								v-app-tooltip="$gettext('Add a code block')"
-								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
+								class="-control anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
 								solid
 								icon="brackets"
@@ -290,7 +287,7 @@ export default class AppContentEditorBlockControls extends Vue {
 							<app-button
 								v-if="contextCapabilities.blockquote"
 								v-app-tooltip="$gettext('Add a quote')"
-								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
+								class="-control anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
 								solid
 								icon="blockquote"
@@ -299,7 +296,7 @@ export default class AppContentEditorBlockControls extends Vue {
 							<app-button
 								v-if="contextCapabilities.spoiler"
 								v-app-tooltip="$gettext('Add a spoiler')"
-								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
+								class="-control anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
 								solid
 								icon="inactive"
@@ -308,7 +305,7 @@ export default class AppContentEditorBlockControls extends Vue {
 							<app-button
 								v-if="contextCapabilities.hr"
 								v-app-tooltip="$gettext('Add a separator')"
-								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
+								class="-control anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
 								solid
 								icon="hr"
@@ -317,7 +314,7 @@ export default class AppContentEditorBlockControls extends Vue {
 							<app-button
 								v-if="contextCapabilities.list"
 								v-app-tooltip="$gettext('Add a bulleted list')"
-								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
+								class="-control anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
 								solid
 								icon="bullet-list"
@@ -326,7 +323,7 @@ export default class AppContentEditorBlockControls extends Vue {
 							<app-button
 								v-if="contextCapabilities.list"
 								v-app-tooltip="$gettext('Add a numbered list')"
-								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
+								class="-control anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
 								solid
 								icon="numbered-list"
@@ -364,7 +361,11 @@ export default class AppContentEditorBlockControls extends Vue {
 .fade-leave-to
 	opacity: 0
 
-.controls-mobile
+.-control
+.-mobile-control
+	margin: 0 4px
+
+.-controls-mobile
 	position: fixed
 	top: auto !important
 	bottom: 0 !important
@@ -380,15 +381,15 @@ export default class AppContentEditorBlockControls extends Vue {
 		padding-left: 4px
 		padding-right: 4px
 
-		& > .control-button
+		& > .-mobile-control
 			padding-top: 0
 			padding-bottom: 0
 
-		& > .control-button > span
+		& > .-mobile-control > span
 			margin: $controls-margin-vertical $controls-margin-horizontal
 			font-size: $controls-font-size !important
 
-.control-button
+.-mobile-control
 	cursor: pointer
 	display: inline-block
 	pressy()

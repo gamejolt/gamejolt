@@ -1,6 +1,6 @@
 import { h } from 'vue';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import AppContentEmbed from '../../components/embed/embed.vue';
+import AppContentEmbed from '../../components/embed/AppContentEmbed.vue';
 import { ContentObject } from '../../content-object';
 
 @Options({})

@@ -71,75 +71,75 @@ export class ContextCapabilities {
 		return this.embedMusic || this.embedVideo || this.embedModel;
 	}
 	get textBold() {
-		return this.hasCapability(ContextCapabilityType.TextBold);
+		return this._hasCapability(ContextCapabilityType.TextBold);
 	}
 	get textItalic() {
-		return this.hasCapability(ContextCapabilityType.TextItalic);
+		return this._hasCapability(ContextCapabilityType.TextItalic);
 	}
 	get textLink() {
-		return this.hasCapability(ContextCapabilityType.TextLink);
+		return this._hasCapability(ContextCapabilityType.TextLink);
 	}
 	get textCode() {
-		return this.hasCapability(ContextCapabilityType.TextCode);
+		return this._hasCapability(ContextCapabilityType.TextCode);
 	}
 	get textStrike() {
-		return this.hasCapability(ContextCapabilityType.TextStrike);
+		return this._hasCapability(ContextCapabilityType.TextStrike);
 	}
 	get customLink() {
-		return this.hasCapability(ContextCapabilityType.CustomLink);
+		return this._hasCapability(ContextCapabilityType.CustomLink);
 	}
 	get media() {
 		// for media items, also allows uploading through the media upload component
-		return this.hasCapability(ContextCapabilityType.Media);
+		return this._hasCapability(ContextCapabilityType.Media);
 	}
 	get embedVideo() {
-		return this.hasCapability(ContextCapabilityType.EmbedVideo);
+		return this._hasCapability(ContextCapabilityType.EmbedVideo);
 	}
 	get embedMusic() {
-		return this.hasCapability(ContextCapabilityType.EmbedMusic);
+		return this._hasCapability(ContextCapabilityType.EmbedMusic);
 	}
 	get embedModel() {
-		return this.hasCapability(ContextCapabilityType.EmbedModel);
+		return this._hasCapability(ContextCapabilityType.EmbedModel);
 	}
 	get codeBlock() {
-		return this.hasCapability(ContextCapabilityType.CodeBlock);
+		return this._hasCapability(ContextCapabilityType.CodeBlock);
 	}
 	get blockquote() {
-		return this.hasCapability(ContextCapabilityType.Blockquote);
+		return this._hasCapability(ContextCapabilityType.Blockquote);
 	}
 	get emoji() {
-		return this.hasCapability(ContextCapabilityType.Emoji);
+		return this._hasCapability(ContextCapabilityType.Emoji);
 	}
 	get list() {
-		return this.hasCapability(ContextCapabilityType.List);
+		return this._hasCapability(ContextCapabilityType.List);
 	}
 	get hr() {
-		return this.hasCapability(ContextCapabilityType.HorizontalRule);
+		return this._hasCapability(ContextCapabilityType.HorizontalRule);
 	}
 	get spoiler() {
-		return this.hasCapability(ContextCapabilityType.Spoiler);
+		return this._hasCapability(ContextCapabilityType.Spoiler);
 	}
 	get tag() {
-		return this.hasCapability(ContextCapabilityType.Tag);
+		return this._hasCapability(ContextCapabilityType.Tag);
 	}
 	get heading() {
-		return this.hasCapability(ContextCapabilityType.Heading);
+		return this._hasCapability(ContextCapabilityType.Heading);
 	}
 	get mention() {
-		return this.hasCapability(ContextCapabilityType.Mention);
+		return this._hasCapability(ContextCapabilityType.Mention);
 	}
 	get gif() {
-		return this.hasCapability(ContextCapabilityType.Gif);
+		return this._hasCapability(ContextCapabilityType.Gif);
 	}
 	get sticker() {
-		return this.hasCapability(ContextCapabilityType.Sticker);
+		return this._hasCapability(ContextCapabilityType.Sticker);
 	}
 
 	private constructor(capabilities: ContextCapabilityType[]) {
 		this.capabilities = capabilities;
 	}
 
-	private hasCapability(capability: ContextCapabilityType) {
+	_hasCapability(capability: ContextCapabilityType) {
 		return this.capabilities.includes(capability);
 	}
 

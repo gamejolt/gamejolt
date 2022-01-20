@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, provide } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
 import { ContentRules } from '../content-editor/content-rules';
 import { ContentHydrator } from '../content-hydrator';
@@ -23,32 +24,36 @@ export default class AppContentViewer extends Vue {
 
 	// Gets provided down during [created].
 	controller!: ContentOwnerController;
+	doc?: ContentDocument;
 
 	get viewerStyleClass() {
-		if (!this.controller.doc) {
+		if (!this.doc) {
 			return '';
 		}
 		return this.controller.context + '-content';
 	}
 
+	get content() {
+		return this.doc?.content ?? [];
+	}
+
 	created() {
+		const context = computed(() => this.doc!.context);
+
 		this.controller = createContentOwnerController({
-			contentRules: computed(() => {
-				return (this.$props as this).displayRules ?? null;
-			}),
-			disableLightbox: computed(() => {
-				return (this.$props as this).disableLightbox === true;
-			}),
+			context,
+			capabilities: computed(() =>
+				this.doc
+					? ContextCapabilities.getForContext(context.value)
+					: ContextCapabilities.getEmpty()
+			),
+			contentRules: computed(() => this.displayRules),
+			disableLightbox: computed(() => this.disableLightbox === true),
 		});
 
 		provide(ContentOwnerControllerKey, this.controller);
 
 		this.updatedSource();
-	}
-
-	setContent(content: ContentDocument) {
-		this.controller.doc = content;
-		this.controller.hydrator = new ContentHydrator(content.hydration);
 	}
 
 	@Watch('source')
@@ -57,8 +62,13 @@ export default class AppContentViewer extends Vue {
 			const sourceDoc = ContentDocument.fromJson(this.source);
 			this.setContent(sourceDoc);
 		} else {
-			this.controller.doc = null;
+			this.doc = undefined;
 		}
+	}
+
+	setContent(content: ContentDocument) {
+		this.doc = content;
+		this.controller.hydrator = new ContentHydrator(content.hydration);
 	}
 
 	onClickCopy() {
@@ -69,7 +79,7 @@ export default class AppContentViewer extends Vue {
 
 <template>
 	<div class="content-viewer" :class="viewerStyleClass">
-		<app-content-viewer-base-component v-if="controller.doc" :content="controller.content" />
+		<app-content-viewer-base-component v-if="doc" :content="content" />
 	</div>
 </template>
 

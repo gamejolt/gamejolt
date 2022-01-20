@@ -1,22 +1,17 @@
-import AppContentMediaItem from '../../components/media-item/media-item.vue';
+import AppContentMediaItem from '../../components/AppContentMediaItem.vue';
 import { ContentEditorService } from '../content-editor.service';
-import { HydratableNodeView } from './hydratable';
+import { BaseNodeView } from './base';
 
-export class MediaItemNodeView extends HydratableNodeView {
+export class MediaItemNodeView extends BaseNodeView {
 	mounted() {
-		// TODO(vue3)
-		const vm = new AppContentMediaItem({
-			propsData: {
-				mediaItemId: this.node.attrs.id,
-				mediaItemWidth: this.node.attrs.width,
-				mediaItemHeight: this.node.attrs.height,
-				caption: this.node.attrs.caption,
-				align: this.node.attrs.align,
-				href: this.node.attrs.href,
-				owner: this.owner,
-				isDisabled: ContentEditorService.isDisabled(this.view),
-			},
+		this.mountVue(AppContentMediaItem, {
+			mediaItemId: this.node.attrs.id,
+			mediaItemWidth: this.node.attrs.width,
+			mediaItemHeight: this.node.attrs.height,
+			caption: this.node.attrs.caption,
+			align: this.node.attrs.align,
+			href: this.node.attrs.href,
+			isDisabled: ContentEditorService.isDisabled(this.view),
 		});
-		this.mountVue(vm);
 	}
 }

@@ -1,35 +1,30 @@
-import { EditorState } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
-import AppContentEditor from '../content-editor';
-import { ContentEditorSchema } from '../schemas/content-editor-schema';
+import type { EditorState } from 'prosemirror-state';
+import type { EditorView } from 'prosemirror-view';
+import { ContentEditorController, editorUpdateContent } from '../content-editor-controller';
+import type { ContentEditorSchema } from '../schemas/content-editor-schema';
 
 export class UpdateIncrementerPlugin {
-	view: EditorView<ContentEditorSchema>;
-	appEditor: AppContentEditor;
-
-	constructor(view: EditorView<ContentEditorSchema>, appEditor: AppContentEditor) {
-		this.view = view;
-		this.appEditor = appEditor;
-	}
+	constructor(private readonly c: ContentEditorController) {}
 
 	update(
-		view: EditorView<ContentEditorSchema>,
+		{ state }: EditorView<ContentEditorSchema>,
 		lastState: EditorState<ContentEditorSchema> | null
 	) {
-		const state = view.state;
 		if (lastState && lastState.doc.eq(state.doc) && lastState.selection.eq(state.selection)) {
 			return;
 		}
-		// If anything in the editor changes (content or selection), make sure we increment, so we can for example reposition controls.
-		this.appEditor.stateCounter++;
+		// If anything in the editor changes (content or selection), make sure
+		// we increment, so we can for example reposition controls.
+		++this.c.stateCounter;
 
-		// Hide the control after an input was performed. Check detect-mention-suggestion plugin for more info.
-		if (this.appEditor.canShowMentionSuggestions > 0) {
-			this.appEditor.canShowMentionSuggestions--;
+		// Hide the control after an input was performed. Check
+		// detect-mention-suggestion plugin for more info.
+		if (this.c.canShowMentionSuggestions > 0) {
+			this.c.canShowMentionSuggestions--;
 		}
 
 		if (!lastState || !lastState.doc.eq(state.doc)) {
-			this.appEditor.onUpdate(state);
+			editorUpdateContent(this.c, state);
 		}
 	}
 }

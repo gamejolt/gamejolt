@@ -1,6 +1,6 @@
 import { h } from 'vue';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import AppContentSticker from '../../components/sticker/sticker.vue';
+import AppContentSticker from '../../components/AppContentSticker.vue';
 import { ContentObject } from '../../content-object';
 
 @Options({})

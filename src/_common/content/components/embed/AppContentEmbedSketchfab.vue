@@ -1,15 +1,14 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed } from 'vue';
 
-@Options({})
-export default class AppContentEmbedSketchfab extends Vue {
-	@Prop(String)
-	modelId!: string;
+const props = defineProps({
+	modelId: {
+		type: String,
+		required: true,
+	},
+});
 
-	get embedSrc() {
-		return `https://sketchfab.com/models/${this.modelId}/embed?camera=0`;
-	}
-}
+const embedSrc = computed(() => `https://sketchfab.com/models/${props.modelId}/embed?camera=0`);
 </script>
 
 <template>

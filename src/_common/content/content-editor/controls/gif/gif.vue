@@ -1,11 +1,8 @@
 <script lang="ts">
-import { Inject, Options, Vue } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options, Vue } from 'vue-property-decorator';
 import { AppTooltip } from '../../../../tooltip/tooltip-directive';
-import {
-	ContentEditorController,
-	ContentEditorControllerKey,
-	editorInsertGif,
-} from '../../content-editor-controller';
+import { editorInsertGif, useContentEditorController } from '../../content-editor-controller';
 import { ContentEditorGifModal } from '../../modals/gif/gif-modal.service';
 
 @Options({
@@ -14,8 +11,7 @@ import { ContentEditorGifModal } from '../../modals/gif/gif-modal.service';
 	},
 })
 export default class AppContentEditorControlsGif extends Vue {
-	@Inject({ from: ContentEditorControllerKey })
-	controller!: ContentEditorController;
+	controller = setup(() => useContentEditorController()!);
 
 	get view() {
 		return this.controller.view!;

@@ -1,16 +1,16 @@
 <script lang="ts">
 import { nextTick } from 'vue';
-import { Inject, Options, Vue, Watch } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options, Vue, Watch } from 'vue-property-decorator';
 import { Screen } from '../../../screen/screen-service';
 import { AppTooltip } from '../../../tooltip/tooltip-directive';
 import {
-	ContentEditorController,
-	ContentEditorControllerKey,
 	editorGetSelectedText,
 	editorLink,
 	editorToggleHeading,
 	editorToggleMark,
 	editorUnlink,
+	useContentEditorController,
 } from '../content-editor-controller';
 import { ContentEditorLinkModal } from '../modals/link/link-modal.service';
 
@@ -20,8 +20,7 @@ import { ContentEditorLinkModal } from '../modals/link/link-modal.service';
 	},
 })
 export default class AppContentEditorTextControls extends Vue {
-	@Inject({ from: ContentEditorControllerKey })
-	controller!: ContentEditorController;
+	controller = setup(() => useContentEditorController()!);
 
 	private containerWidth = 100;
 	private oldLeft = '0px';
@@ -115,7 +114,7 @@ export default class AppContentEditorTextControls extends Vue {
 		}
 	}
 
-	private hasMark(markType: keyof typeof this.controller.scope) {
+	hasMark(markType: keyof typeof this.controller.scope) {
 		return !!this.controller.scope[markType];
 	}
 
