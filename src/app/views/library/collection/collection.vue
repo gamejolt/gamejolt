@@ -620,7 +620,9 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 						<div class="stat-big-label">
 							<translate>library.collection.games_label</translate>
 						</div>
-						<div class="stat-big-digit">{{ formatNumber(listing.gamesCount) }}</div>
+						<div class="stat-big-digit">
+							{{ formatNumber(listing?.gamesCount || 0) }}
+						</div>
 					</li>
 				</ul>
 			</template>
