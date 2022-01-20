@@ -307,7 +307,7 @@ export default class RouteFireside extends BaseRouteComponent {
 		this.canShowMobileHosts = !isFocused;
 	}
 
-	@Watch('c.isPersonallyStreaming')
+	@Watch('c.isPersonallyStreaming.value')
 	onIsPersonallyStreamingChanged() {
 		if (import.meta.env.SSR) {
 			return;
