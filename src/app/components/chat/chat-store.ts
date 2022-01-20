@@ -17,7 +17,7 @@ export async function loadChat(store: ChatStore) {
 }
 
 async function _doLoadChat(store: ChatStore) {
-	const { ChatClient, destroy } = await ChatClientLazy();
+	const { ChatClient, initChatClient, destroy } = await ChatClientLazy();
 
 	// Abort if by the time we lazy loaded the chat component we requested to
 	// clear it.
@@ -30,6 +30,7 @@ async function _doLoadChat(store: ChatStore) {
 	}
 
 	store.chat = new ChatClient();
+	initChatClient(store.chat);
 	store._loadPromise = null;
 }
 

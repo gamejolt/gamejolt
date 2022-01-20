@@ -21,8 +21,8 @@ export default class AppFiresideStreamVideo extends Vue {
 
 	c = shallowSetup(() => useFiresideController()!);
 
-	private _myRtcUser!: FiresideRTCUser;
-	private _videoLock: FiresideVideoLock | null = null;
+	private myRtcUser!: FiresideRTCUser;
+	private videoLock: FiresideVideoLock | null = null;
 
 	declare $refs: {
 		video: HTMLDivElement;
@@ -30,14 +30,14 @@ export default class AppFiresideStreamVideo extends Vue {
 	};
 
 	get hasVideo() {
-		return this._myRtcUser.hasVideo;
+		return this.myRtcUser.hasVideo;
 	}
 
 	get pausedFrameData() {
 		if (this.shouldPlayVideo) {
 			return null;
 		}
-		return this._myRtcUser.pausedFrameData;
+		return this.myRtcUser.pausedFrameData;
 	}
 
 	get isLoadingVideo() {
@@ -49,7 +49,7 @@ export default class AppFiresideStreamVideo extends Vue {
 	}
 
 	created() {
-		this._myRtcUser = this.rtcUser;
+		this.myRtcUser = this.rtcUser;
 	}
 
 	mounted() {
@@ -62,9 +62,9 @@ export default class AppFiresideStreamVideo extends Vue {
 	}
 
 	private getLocks() {
-		this._videoLock = getVideoLock(this._myRtcUser);
+		this.videoLock = getVideoLock(this.myRtcUser);
 		setVideoPlayback(
-			this._myRtcUser,
+			this.myRtcUser,
 			new FiresideVideoPlayStatePlaying(this.$refs.video, this.lowBitrate)
 		);
 	}
@@ -73,8 +73,8 @@ export default class AppFiresideStreamVideo extends Vue {
 		// We want to give a new lock some time to get acquired before shutting
 		// the stream down.
 		setTimeout(() => {
-			if (this._videoLock) {
-				releaseVideoLock(this._myRtcUser, this._videoLock);
+			if (this.videoLock) {
+				releaseVideoLock(this.myRtcUser, this.videoLock);
 			}
 		}, 0);
 	}

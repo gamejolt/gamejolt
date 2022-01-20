@@ -1,39 +1,37 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType } from 'vue';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import AppChatMemberList from '../../../components/chat/member-list/member-list.vue';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import AppChatMemberList from '../../../components/chat/member-list/AppChatMemberList.vue';
 import { ChatRoom } from '../../../components/chat/room';
 import { ChatUserCollection } from '../../../components/chat/user-collection';
 
-@Options({
-	components: {
-		AppScrollScroller,
-		AppChatMemberList,
+defineProps({
+	chatUsers: {
+		type: Object as PropType<ChatUserCollection>,
+		required: true,
 	},
-})
-export default class AppFiresideChatMembers extends Vue {
-	@Prop({ type: Object, required: true })
-	chatUsers!: ChatUserCollection;
-
-	@Prop({ type: Object, required: true })
-	chatRoom!: ChatRoom;
-}
+	chatRoom: {
+		type: Object as PropType<ChatRoom>,
+		required: true,
+	},
+});
 </script>
 
 <template>
 	<div class="-chat-members">
 		<h3 class="sans-margin-top">
-			<translate>Members</translate>
+			<AppTranslate>Members</AppTranslate>
 			<span class="badge">{{ chatUsers.count }}</span>
 		</h3>
-		<app-scroll-scroller class="-chat-members-scroller">
-			<app-chat-member-list
+		<AppScrollScroller class="-chat-members-scroller">
+			<AppChatMemberList
 				v-if="chatUsers"
 				:users="chatUsers.collection"
 				:room="chatRoom"
 				hide-filter
 			/>
-		</app-scroll-scroller>
+		</AppScrollScroller>
 	</div>
 </template>
 

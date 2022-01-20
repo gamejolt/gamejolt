@@ -3,7 +3,7 @@ import { mixins, Options, Prop } from 'vue-property-decorator';
 import { BaseModal } from '../../../../../_common/modal/base';
 import { ChatRoom } from '../../../../components/chat/room';
 import { ChatUserCollection } from '../../../../components/chat/user-collection';
-import AppFiresideChatMembers from '../chat-members.vue';
+import AppFiresideChatMembers from '../AppFiresideChatMembers.vue';
 
 @Options({
 	components: {

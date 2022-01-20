@@ -12,7 +12,7 @@ import { useAppStore } from '../../../store/index';
 import { ChatStore, ChatStoreKey } from '../chat-store';
 import { leaveChatRoom } from '../client';
 import { ChatInviteModal } from '../invite-modal/invite-modal.service';
-import AppChatMemberList from '../member-list/member-list.vue';
+import AppChatMemberList from '../member-list/AppChatMemberList.vue';
 import { ChatMessage } from '../message';
 import { ChatRoom, getChatRoomTitle } from '../room';
 import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vue';

@@ -148,6 +148,8 @@ export default class AppFiresideHeader extends Vue {
 						/>
 					</div>
 
+					{{ ' ' }}
+
 					<app-fireside-settings-popper @show="onShowPopper" @hide="onHidePopper">
 						<div class="-stats-btn">
 							<app-button icon="ellipsis-v" circle sparse solid />

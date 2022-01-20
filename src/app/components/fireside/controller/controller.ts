@@ -1,5 +1,5 @@
 import { InjectionKey, provide } from '@vue/runtime-core';
-import { computed, inject, ref, Ref, shallowReactive, shallowRef } from 'vue';
+import { computed, inject, ref, shallowReactive, shallowRef } from 'vue';
 import { Router } from 'vue-router';
 import { getAbsoluteLink } from '../../../../utils/router';
 import { getCurrentServerTime } from '../../../../utils/server-time';
@@ -45,17 +45,17 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 	const stickerTargetController = createStickerTargetController(fireside, undefined, true);
 	const isMuted = options.isMuted ?? false;
 
-	const rtc = shallowRef(null) as Ref<FiresideRTC | null>;
-	const status = ref('initial') as Ref<RouteStatus>;
-	const onRetry = ref(null) as Ref<(() => void) | null>;
+	const rtc = shallowRef<FiresideRTC>();
+	const status = ref<RouteStatus>('initial');
+	const onRetry = ref<() => void>();
 
-	const chat = ref(null) as Ref<ChatClient | null>;
+	const chat = ref<ChatClient>();
 
-	const gridChannel = ref(null) as Ref<FiresideChannel | null>;
-	const chatChannel = ref(null) as Ref<ChatRoomChannel | null>;
-	const expiryInterval = ref(null) as Ref<NodeJS.Timer | null>;
-	const chatPreviousConnectedState = ref(null) as Ref<boolean | null>;
-	const gridPreviousConnectedState = ref(null) as Ref<boolean | null>;
+	const gridChannel = ref<FiresideChannel>();
+	const chatChannel = ref<ChatRoomChannel>();
+	const expiryInterval = ref<NodeJS.Timer>();
+	const chatPreviousConnectedState = ref<boolean>();
+	const gridPreviousConnectedState = ref<boolean>();
 
 	/**
 	 * Visually shows a warning to the owner when the fireside's time is running
@@ -67,20 +67,15 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 	const isShowingOverlayPopper = ref(false);
 	const isShowingStreamSetup = ref(false);
 
-	const updateInterval = ref(null) as Ref<NodeJS.Timer | null>;
-	const totalDurationText = ref(null) as Ref<string | null>;
-	const expiresDurationText = ref(null) as Ref<string | null>;
-	const expiresProgressValue = ref(null) as Ref<number | null>;
+	const updateInterval = ref<NodeJS.Timer>();
+	const totalDurationText = ref<string>();
+	const expiresDurationText = ref<string>();
+	const expiresProgressValue = ref<number>();
 
 	const isExtending = ref(false);
 
-	const user = computed(() => {
-		return commonStore.user.value;
-	});
-
-	const chatRoom = computed(() => {
-		return chatChannel.value?.room;
-	});
+	const user = computed(() => commonStore.user.value);
+	const chatRoom = computed(() => chatChannel.value?.room);
 
 	const chatUsers = computed(() => {
 		if (!chatRoom.value) {
@@ -89,20 +84,14 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 		return chat.value?.roomMembers[chatRoom.value.id] as ChatUserCollection;
 	});
 
-	const isDraft = computed(() => {
-		return fireside?.is_draft ?? true;
-	});
-
-	const isStreaming = computed(() => {
-		return !!(fireside?.is_streaming && rtc.value && rtc.value.users.length > 0);
-	});
-
-	const isPersonallyStreaming = computed(() => {
-		return rtc.value?.isStreaming ?? false;
-	});
+	const isDraft = computed(() => fireside?.is_draft ?? true);
+	const isStreaming = computed(
+		() => !!(fireside?.is_streaming && rtc.value && rtc.value.users.length > 0)
+	);
+	const isPersonallyStreaming = computed(() => rtc.value?.isStreaming ?? false);
 
 	const isStreamingElsewhere = computed(() => {
-		if (!rtc.value || !rtc.value.userId) {
+		if (!rtc.value?.userId) {
 			return false;
 		}
 
@@ -115,9 +104,9 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 		return !isPersonallyStreaming.value;
 	});
 
-	const shouldShowStreamingOptions = computed(() => {
-		return canStream.value || isPersonallyStreaming.value;
-	});
+	const shouldShowStreamingOptions = computed(
+		() => canStream.value || isPersonallyStreaming.value
+	);
 
 	const canStream = computed(() => {
 		return (
@@ -126,25 +115,17 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 		);
 	});
 
-	const isOwner = computed(() => {
-		return !!user.value && user.value.id === fireside.user.id;
-	});
-
-	const canManageCohosts = computed(() => {
-		return isOwner.value || fireside.hasPerms('fireside-collaborators');
-	});
-
-	const canCommunityFeature = computed(() => {
-		return !!fireside.community && canCommunityFeatureFireside(fireside.community);
-	});
-
-	const canCommunityEject = computed(() => {
-		return !!fireside.community && canCommunityEjectFireside(fireside.community);
-	});
-
-	const canEdit = computed(() => {
-		return isOwner.value || fireside.hasPerms('fireside-edit');
-	});
+	const isOwner = computed(() => !!user.value && user.value.id === fireside.user.id);
+	const canManageCohosts = computed(
+		() => isOwner.value || fireside.hasPerms('fireside-collaborators')
+	);
+	const canCommunityFeature = computed(
+		() => !!fireside.community && canCommunityFeatureFireside(fireside.community)
+	);
+	const canCommunityEject = computed(
+		() => !!fireside.community && canCommunityEjectFireside(fireside.community)
+	);
+	const canEdit = computed(() => isOwner.value || fireside.hasPerms('fireside-edit'));
 
 	const canPublish = computed(() => {
 		const role = fireside.role?.role;
@@ -158,19 +139,16 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 	const canExtend = computed(() => {
 		return (
 			status.value === 'joined' &&
-			expiresProgressValue.value !== null &&
+			expiresProgressValue.value !== undefined &&
 			expiresProgressValue.value <= 95 &&
 			fireside.hasPerms('fireside-extend')
 		);
 	});
 
-	const canExtinguish = computed(() => {
-		return isOwner.value || fireside.hasPerms('fireside-extinguish');
-	});
-
-	const canReport = computed(() => {
-		return !(fireside.hasPerms() || fireside.community?.hasPerms() === true);
-	});
+	const canExtinguish = computed(() => isOwner.value || fireside.hasPerms('fireside-extinguish'));
+	const canReport = computed(
+		() => !(fireside.hasPerms() || fireside.community?.hasPerms() === true)
+	);
 
 	/**
 	 * Contains a block-list of browsers/clients that can't broadcast.
@@ -186,21 +164,15 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 		return !(_isFirefox.value || _isSafari.value);
 	});
 
-	const _browser = computed(() => {
-		return getDeviceBrowser().toLowerCase();
-	});
+	const _browser = computed(() => getDeviceBrowser().toLowerCase());
 
 	// Can't broadcast properly - incapable of selecting an output device
-	const _isFirefox = computed(() => {
-		return _browser.value.indexOf('firefox') !== -1;
-	});
+	const _isFirefox = computed(() => _browser.value.indexOf('firefox') !== -1);
 
 	// Can't broadcast - incapable of dual streams
-	const _isSafari = computed(() => {
-		return _browser.value.indexOf('safari') !== -1;
-	});
+	const _isSafari = computed(() => _browser.value.indexOf('safari') !== -1);
 
-	const c = shallowReactive({
+	return shallowReactive({
 		fireside,
 		stickerTargetController,
 		isMuted,
@@ -241,12 +213,7 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 		canExtinguish,
 		canReport,
 		canBrowserStream,
-		// _browser,
-		// _isFirefox,
-		// _isSafari,
 	});
-
-	return c;
 }
 
 export function useFiresideController() {
@@ -365,17 +332,17 @@ export function updateFiresideExpiryValues(c: FiresideController) {
 		}
 
 		if (expiresInS > FIRESIDE_EXPIRY_THRESHOLD) {
-			c.expiresDurationText.value = null;
+			c.expiresDurationText.value = undefined;
 		} else {
 			c.expiresDurationText.value = formatDuration(expiresInS);
 		}
 
 		if (expiresInS > 300) {
-			c.expiresProgressValue.value = null;
+			c.expiresProgressValue.value = undefined;
 		} else {
 			c.expiresProgressValue.value = (expiresInS / 300) * 100;
 		}
 	} else {
-		c.expiresDurationText.value = null;
+		c.expiresDurationText.value = undefined;
 	}
 }

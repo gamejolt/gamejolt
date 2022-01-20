@@ -42,7 +42,7 @@ import {
 } from '../../components/fireside/controller/controller';
 import { illEndOfFeed, illMaintenance, illNoCommentsSmall } from '../../img/ill/illustrations';
 import AppFiresideBanner from './_banner/banner.vue';
-import AppFiresideChatMembers from './_chat-members/chat-members.vue';
+import AppFiresideChatMembers from './_chat-members/AppFiresideChatMembers.vue';
 import AppFiresideHeader from './_header/header.vue';
 import AppFiresideHostList from './_host-list/host-list.vue';
 import AppFiresideShare from './_share/share.vue';
@@ -180,7 +180,8 @@ export default class RouteFireside extends BaseRouteComponent {
 	get shouldShowChat() {
 		const mobileCondition =
 			Screen.isMobile && this.c?.isStreaming.value ? this.isVertical : true;
-		return !!this.chat && this.chat.connected && !!this.c?.chatRoom.value && mobileCondition;
+
+		return Boolean(this.chat?.connected && this.c?.chatRoom.value && mobileCondition);
 	}
 
 	get shouldShowChatMembers() {

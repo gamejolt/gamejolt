@@ -1,6 +1,6 @@
 import { Channel, Presence, Socket } from 'phoenix';
+import { markRaw } from 'vue';
 import { arrayRemove } from '../../../utils/array';
-import { Analytics } from '../../../_common/analytics/analytics.service';
 import { ContentDocument } from '../../../_common/content/content-document';
 import { ContentObject } from '../../../_common/content/content-object';
 import { MarkObject } from '../../../_common/content/mark-object';
@@ -41,54 +41,59 @@ interface UpdateTitlePayload {
 	title: string;
 }
 
-export class ChatRoomChannel extends Channel {
+export class ChatRoomChannel {
+	constructor(
+		public readonly roomId: number,
+		public readonly client: ChatClient,
+		params?: Record<string, any>
+	) {
+		this.socket = client.socket!;
+
+		this.socketChannel = markRaw(new Channel('room:' + roomId, params, this.socket));
+		(this.socket as any).channels.push(this.socketChannel);
+		this.instanced = false;
+	}
+
+	readonly socket: Socket;
+	readonly socketChannel: Channel;
+
 	room!: ChatRoom;
-	roomId: number;
+
 	/**
-	 * An instanced room channel is for a room that can be opened anywhere on the site,
-	 * outside of and in addition to the active chat in the chat sidebar.
+	 * An instanced room channel is for a room that can be opened anywhere on
+	 * the site, outside of and in addition to the active chat in the chat
+	 * sidebar.
 	 */
 	instanced: boolean;
-	readonly client: ChatClient;
-	readonly socket: Socket;
 
-	constructor(roomId: number, client: ChatClient, params?: Record<string, any>) {
-		const socket = client.socket!;
-
-		super('room:' + roomId, params, socket);
-		this.client = client;
-		this.roomId = roomId;
-		this.socket = socket;
-		this.instanced = false;
-		(this.socket as any).channels.push(this);
-
+	init() {
 		this.setupPresence();
 
-		this.on('message', this.onMsg.bind(this));
-		this.on('user_updated', this.onUserUpdated.bind(this));
-		this.on('message_update', this.onUpdateMsg.bind(this));
-		this.on('message_remove', this.onRemoveMsg.bind(this));
-		this.on('member_leave', this.onMemberLeave.bind(this));
-		this.on('owner_sync', this.onOwnerSync.bind(this));
-		this.on('member_add', this.onMemberAdd.bind(this));
-		this.on('update_title', this.onUpdateTitle.bind(this));
-		this.on('kick_member', this.onMemberKicked.bind(this));
+		this.socketChannel.on('message', this.onMsg.bind(this));
+		this.socketChannel.on('user_updated', this.onUserUpdated.bind(this));
+		this.socketChannel.on('message_update', this.onUpdateMsg.bind(this));
+		this.socketChannel.on('message_remove', this.onRemoveMsg.bind(this));
+		this.socketChannel.on('member_leave', this.onMemberLeave.bind(this));
+		this.socketChannel.on('owner_sync', this.onOwnerSync.bind(this));
+		this.socketChannel.on('member_add', this.onMemberAdd.bind(this));
+		this.socketChannel.on('update_title', this.onUpdateTitle.bind(this));
+		this.socketChannel.on('kick_member', this.onMemberKicked.bind(this));
 
-		this.onClose(() => {
-			if (isInChatRoom(this.client, roomId)) {
+		this.socketChannel.onClose(() => {
+			if (isInChatRoom(this.client, this.roomId)) {
 				if (!this.instanced) {
 					setChatRoom(this.client, undefined);
 				}
 
 				// Reset the room we were in
-				delete this.client.roomMembers[roomId];
-				delete this.client.messages[roomId];
+				delete this.client.roomMembers[this.roomId];
+				delete this.client.messages[this.roomId];
 			}
 		});
 	}
 
 	private setupPresence() {
-		const presence = new Presence(this);
+		const presence = markRaw(new Presence(this.socketChannel));
 
 		presence.onJoin(this.onUserJoin.bind(this));
 		presence.onLeave(this.onUserLeave.bind(this));
@@ -125,7 +130,6 @@ export class ChatRoomChannel extends Channel {
 			i => i.id === message.id
 		);
 		if (alreadyReceivedMessage) {
-			Analytics.trackEvent('chat', 'duplicate-message');
 			return;
 		}
 
