@@ -223,6 +223,11 @@ export class Api {
 				headers,
 				withCredentials: options.withCredentials,
 				signal: options.fileCancelToken,
+				onUploadProgress: (e: ProgressEvent) => {
+					if (options.progress && e.lengthComputable) {
+						options.progress(e);
+					}
+				},
 			});
 		} else {
 			promise = this.sendRawRequest(url, {
