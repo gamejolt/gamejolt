@@ -28,7 +28,7 @@ import { $gettext, $gettextInterpolate } from '../../../_common/translate/transl
 import { UserGameTrophy } from '../../../_common/user/trophy/game-trophy.model';
 import { UserSiteTrophy } from '../../../_common/user/trophy/site-trophy.model';
 import { User } from '../../../_common/user/user.model';
-import { appStore } from '../../store/index';
+import { AppStore } from '../../store/index';
 import { router } from '../../views';
 import { getTrophyImg } from '../trophy/thumbnail/thumbnail.vue';
 import { CommunityChannel } from './community-channel';
@@ -123,7 +123,11 @@ export interface ClearNotificationsEventData extends ClearNotificationsPayload {
 	currentCount: number;
 }
 
-function clearNotifications(type: ClearNotificationsType, data: ClearNotificationsData = {}) {
+function clearNotifications(
+	appStore: AppStore,
+	type: ClearNotificationsType,
+	data: ClearNotificationsData = {}
+) {
 	switch (type) {
 		case 'activity':
 			appStore.setNotificationCount({
@@ -231,7 +235,14 @@ async function pollRequest(
 	return result;
 }
 
+export function createGridClient({ appStore }: { appStore: AppStore }) {
+	// We need to be able to get the raw app store without unwrapping its refs.
+	return reactive(new GridClient(() => appStore)) as GridClient;
+}
+
 export class GridClient {
+	constructor(public readonly _getAppStore: () => AppStore) {}
+
 	// Stores a unique id that identifies this session when it pushes data to Grid.
 	readonly clientId = uuidv4();
 
@@ -518,7 +529,7 @@ export class GridClient {
 					switch (notification.type) {
 						case Notification.TYPE_FRIENDSHIP_REQUEST:
 							// For an incoming friend request, set that they have a new friend request.
-							appStore.setHasNewFriendRequests(true);
+							this._getAppStore().setHasNewFriendRequests(true);
 							this.spawnNotification(notification);
 							break;
 
@@ -540,6 +551,8 @@ export class GridClient {
 	handleBootstrap(channel: Channel, payload: BootstrapPayload) {
 		if (payload.status === 'ok') {
 			console.log('[Grid] Received bootstrap.');
+
+			const appStore = this._getAppStore();
 
 			channel.onError(reason => {
 				console.log(`[Grid] Connection error encountered (Reason: ${reason}).`);
@@ -610,7 +623,8 @@ export class GridClient {
 
 	handleCommunityBootstrap({ community_id, body }: CommunityBootstrapPayload) {
 		const communityId = parseInt(community_id, 10);
-		const communityState = appStore.communityStates.value.getCommunityState(communityId);
+		const communityState =
+			this._getAppStore().communityStates.value.getCommunityState(communityId);
 
 		// This flag was set to true in the main bootstrap and we need to unset it
 		// now that we have the actual unread channels in this community.
@@ -630,10 +644,12 @@ export class GridClient {
 			return;
 		}
 
-		clearNotifications(type, data);
+		clearNotifications(this._getAppStore(), type, data);
 	}
 
 	handleStickerUnlock({ sticker_img_urls }: StickerUnlockPayload) {
+		const appStore = this._getAppStore();
+
 		if (!appStore.hasNewUnlockedStickers.value) {
 			appStore.setHasNewUnlockedStickers(true);
 		}
@@ -653,7 +669,7 @@ export class GridClient {
 	spawnNotification(notification: Notification) {
 		const feedType = notification.feedType;
 		if (feedType !== '') {
-			appStore.incrementNotificationCount({ count: 1, type: feedType });
+			this._getAppStore().incrementNotificationCount({ count: 1, type: feedType });
 		}
 
 		// In Client when the feed notifications setting is disabled, don't show them notifications.
@@ -768,7 +784,7 @@ export class GridClient {
 		console.log('[Grid] Subscribing to community channels...');
 
 		const promises = [];
-		for (const community of appStore.communities.value) {
+		for (const community of this._getAppStore().communities.value) {
 			promises.push(this._joinCommunity(cancelToken, community));
 		}
 		return Promise.all(promises);
@@ -878,6 +894,7 @@ export class GridClient {
 			}
 		}
 
+		const appStore = this._getAppStore();
 		const communityState = appStore.communityStates.value.getCommunityState(communityId);
 		communityState.hasUnreadFeaturedPosts = true;
 
@@ -921,7 +938,8 @@ export class GridClient {
 
 	handleCommunityNewPost(communityId: number, payload: CommunityNewPostPayload) {
 		const channelId = parseInt(payload.channel_id, 10);
-		const communityState = appStore.communityStates.value.getCommunityState(communityId);
+		const communityState =
+			this._getAppStore().communityStates.value.getCommunityState(communityId);
 		communityState.markChannelUnread(channelId);
 	}
 
@@ -989,7 +1007,7 @@ export class GridClient {
 
 		if (doClearNotifications) {
 			// Clear notifications on this client.
-			clearNotifications(type, data);
+			clearNotifications(this._getAppStore(), type, data);
 		}
 
 		if (this.notificationChannel) {

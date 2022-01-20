@@ -8,7 +8,7 @@ import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { commonStore } from '../../../_common/store/common-store';
 import { EventTopic } from '../../../_common/system/event/event-topic';
-import { appStore } from '../../store';
+import { AppStore } from '../../store';
 import { ChatMessage, ChatMessageType } from './message';
 import { ChatRoom } from './room';
 import { ChatRoomChannel } from './room-channel';
@@ -67,7 +67,14 @@ async function pollRequest<T>(
 	return result;
 }
 
+export function createChatClient({ appStore }: { appStore: AppStore }) {
+	// We need to be able to get the raw app store without unwrapping its refs.
+	return reactive(new ChatClient(() => appStore)) as ChatClient;
+}
+
 export class ChatClient {
+	constructor(public readonly _getAppStore: () => AppStore) {}
+
 	connected = false;
 	isGuest = false;
 	socket: Socket | null = null;
@@ -509,6 +516,8 @@ export function enterChatRoom(chat: ChatClient, roomId: number) {
 	if (isInChatRoom(chat, roomId)) {
 		return;
 	}
+
+	const appStore = chat._getAppStore();
 
 	// If the chat isn't visible yet, set the session room to this new room and open it. That
 	// will in turn do the entry. Otherwise we want to just switch rooms.

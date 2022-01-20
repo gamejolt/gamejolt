@@ -1,5 +1,6 @@
+import { AppStore } from '../../store';
 import { ChatClientLazy } from '../lazy';
-import type { ChatClient as ChatClientType } from './client';
+import { ChatClient as ChatClientType } from './client';
 
 export const ChatStoreKey = Symbol('chat-store');
 export class ChatStore {
@@ -9,15 +10,15 @@ export class ChatStore {
 	_loadPromise: Promise<void> | null = null;
 }
 
-export async function loadChat(store: ChatStore) {
+export async function loadChat(store: ChatStore, appStore: AppStore) {
 	store._wantsChat = true;
 
-	store._loadPromise ??= _doLoadChat(store);
+	store._loadPromise ??= _doLoadChat(store, appStore);
 	await store._loadPromise;
 }
 
-async function _doLoadChat(store: ChatStore) {
-	const { ChatClient, initChatClient, destroy } = await ChatClientLazy();
+async function _doLoadChat(store: ChatStore, appStore: AppStore) {
+	const { createChatClient, initChatClient, destroy } = await ChatClientLazy();
 
 	// Abort if by the time we lazy loaded the chat component we requested to
 	// clear it.
@@ -29,7 +30,7 @@ async function _doLoadChat(store: ChatStore) {
 		destroy(store.chat);
 	}
 
-	store.chat = new ChatClient();
+	store.chat = createChatClient({ appStore });
 	initChatClient(store.chat);
 	store._loadPromise = null;
 }

@@ -2,16 +2,21 @@ import '../utils/polyfills';
 import { bootstrapCommon } from '../_common/bootstrap';
 import { GamePlayModal } from '../_common/game/play-modal/play-modal.service';
 import { Registry } from '../_common/registry/registry.service';
-import { SidebarStoreKey } from '../_common/sidebar/sidebar.store';
+import { createSidebarStore, SidebarStoreKey } from '../_common/sidebar/sidebar.store';
 import AppMain from './AppMain.vue';
 import './main.styl';
-import { BannerStoreKey } from './store/banner';
-import { appStore, AppStoreKey, bannerStore, libraryStore, sidebarStore } from './store/index';
-import { LibraryStoreKey } from './store/library';
+import { BannerStoreKey, createBannerStore } from './store/banner';
+import { AppStoreKey, createAppStore } from './store/index';
+import { createLibraryStore, LibraryStoreKey } from './store/library';
 import { router } from './views/index';
 
 export function createApp() {
-	const { app } = bootstrapCommon(AppMain, router);
+	const { app, commonStore } = bootstrapCommon(AppMain, router);
+
+	const sidebarStore = createSidebarStore();
+	const libraryStore = createLibraryStore({ router });
+	const bannerStore = createBannerStore({ commonStore, router });
+	const appStore = createAppStore({ router, commonStore, sidebarStore, libraryStore });
 
 	// Section stores.
 	app.provide(BannerStoreKey, bannerStore);

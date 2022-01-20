@@ -13,17 +13,15 @@ import { FiresidePost } from '../../_common/fireside/post/post-model';
 import { showSuccessGrowl } from '../../_common/growls/growls.service';
 import { ModalConfirm } from '../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../_common/screen/screen-service';
-import { createSidebarStore, SidebarStore } from '../../_common/sidebar/sidebar.store';
-import { CommonStore, commonStore } from '../../_common/store/common-store';
+import { SidebarStore } from '../../_common/sidebar/sidebar.store';
+import { CommonStore } from '../../_common/store/common-store';
 import { $gettext } from '../../_common/translate/translate.service';
 import { ActivityFeedState } from '../components/activity/feed/state';
 import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
-import { GridClient } from '../components/grid/client.service';
+import type { GridClient } from '../components/grid/client.service';
 import { GridClientLazy } from '../components/lazy';
-import { router } from '../views';
-import { createBannerStore } from './banner';
 import { CommunityStates } from './community-state';
-import { createLibraryStore, LibraryStore } from './library';
+import { LibraryStore } from './library';
 
 // TODO(vue3)
 // if (GJ_IS_DESKTOP_APP) {
@@ -56,7 +54,7 @@ export function createAppStore({
 }) {
 	const grid = ref<GridClient>();
 	let _wantsGrid = false;
-	let _gridLoadPromise: Promise<typeof GridClient> | null = null;
+	let _gridLoadPromise: Promise<typeof import('../components/grid/client.service')> | null = null;
 	let _gridBootstrapResolvers: ((client: GridClient) => void)[] = [];
 
 	const isBootstrapped = ref(false);
@@ -212,14 +210,14 @@ export function createAppStore({
 		_wantsGrid = true;
 		_gridLoadPromise ??= GridClientLazy();
 
-		const GridClient_ = await _gridLoadPromise;
+		const { createGridClient } = await _gridLoadPromise;
 
 		// If they disconnected before we loaded it in.
 		if (!_wantsGrid) {
 			return;
 		}
 
-		_setGrid(new GridClient_());
+		_setGrid(createGridClient({ appStore: c }));
 		grid.value?.init();
 	}
 
@@ -559,15 +557,35 @@ export function createAppStore({
 	 */
 	function tillGridBootstrapped() {
 		return new Promise<GridClient>(resolve => {
-			if (appStore.grid.value) {
-				resolve(appStore.grid.value);
+			if (grid.value) {
+				resolve(grid.value);
 			} else {
 				_gridBootstrapResolvers.push(resolve);
 			}
 		});
 	}
 
-	return {
+	// Handles route meta changes during redirects.
+	// Routes in the app section can define the following meta:
+	// 	isFullPage: boolean - wether to not display the shell and treat the route as a "full page"
+	router.beforeEach((to, _from, next) => {
+		if (to.matched.some(record => record.meta.isFullPage)) {
+			hideShell();
+		} else {
+			showShell();
+		}
+
+		if (to.matched.some(record => record.meta.noFooter)) {
+			hideFooter();
+		} else {
+			showFooter();
+		}
+
+		next();
+	});
+
+	// We need to reference ourself when creating grid at the moment.
+	const c = {
 		grid,
 		isBootstrapped,
 		tillStoreBootstrapped,
@@ -627,9 +645,6 @@ export function createAppStore({
 		featuredPost,
 		tillGridBootstrapped,
 	};
-}
 
-export const sidebarStore = createSidebarStore();
-export const libraryStore = createLibraryStore({ router });
-export const bannerStore = createBannerStore({ commonStore, router });
-export const appStore = createAppStore({ router, commonStore, sidebarStore, libraryStore });
+	return c;
+}

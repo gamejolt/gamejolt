@@ -14,8 +14,9 @@ import { ChatStore, ChatStoreKey, clearChat, loadChat } from './components/chat/
 import AppShell from './components/shell/shell.vue';
 import { useAppStore } from './store';
 
+const appStore = useAppStore();
 const { bootstrap, loadGrid, loadNotificationState, clear, clearGrid, clearNotificationState } =
-	useAppStore();
+	appStore;
 const { user } = useCommonStore();
 
 createAdsController();
@@ -50,7 +51,7 @@ watch(
 			bootstrap();
 
 			if (!import.meta.env.SSR) {
-				loadChat(chatStore);
+				loadChat(chatStore, appStore);
 				loadGrid();
 				loadNotificationState();
 			}

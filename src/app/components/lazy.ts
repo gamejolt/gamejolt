@@ -1,10 +1,7 @@
 import { defineAsyncComponent } from '@vue/runtime-core';
 import AppActivityFeedPlaceholder from './activity/feed/placeholder/placeholder.vue';
 
-export async function GridClientLazy() {
-	return (await import('./grid/client.service')).GridClient;
-}
-
+export const GridClientLazy = () => import('./grid/client.service');
 export const ChatClientLazy = () => import('./chat/client');
 
 export const AppAuthJoinLazy = defineAsyncComponent(

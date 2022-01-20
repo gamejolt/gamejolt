@@ -1,5 +1,4 @@
 import { initRouter } from '../../utils/router';
-import { appStore } from '../store/index';
 import { routeBadgeFeatured } from './badge/featured/featured.route';
 import { routeCommunitiesView } from './communities/view/view.route';
 import { routeDash } from './dashboard/dashboard.route';
@@ -47,22 +46,3 @@ const routes = [
 ];
 
 export const router = initRouter(routes);
-
-// Handles route meta changes during redirects.
-// Routes in the app section can define the following meta:
-// 	isFullPage: boolean - wether to not display the shell and treat the route as a "full page"
-router.beforeEach((to, _from, next) => {
-	if (to.matched.some(record => record.meta.isFullPage)) {
-		appStore.hideShell();
-	} else {
-		appStore.showShell();
-	}
-
-	if (to.matched.some(record => record.meta.noFooter)) {
-		appStore.hideFooter();
-	} else {
-		appStore.showFooter();
-	}
-
-	next();
-});

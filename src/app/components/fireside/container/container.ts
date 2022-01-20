@@ -56,6 +56,7 @@ export class AppFiresideContainer extends Vue {
 	controller!: FiresideController;
 
 	store = setup(() => useAppStore());
+	storeRaw = shallowSetup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
 	drawerStore = shallowSetup(() => useDrawerStore());
 
@@ -109,7 +110,7 @@ export class AppFiresideContainer extends Vue {
 		}
 
 		if (!this.chat) {
-			loadChat(this.chatStore);
+			loadChat(this.chatStore, this.storeRaw);
 		}
 
 		// Set up watchers to initiate connection once one of them boots up.
