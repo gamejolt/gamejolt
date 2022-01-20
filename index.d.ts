@@ -1,6 +1,5 @@
 /// <reference types="vite/client" />
 
-import './typings/api.d.ts';
 import './typings/environment-vue.d.ts';
 import './typings/environment.d.ts';
 import './typings/html.d.ts';
