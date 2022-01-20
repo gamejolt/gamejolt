@@ -98,6 +98,9 @@ make-button-size(size)
 		font-size: $font-size-tiny
 		vertical-align: baseline
 
+.button:not(.-block) + .button:not(.-block)
+	margin-left: 4px
+
 .-icon
 	position: relative
 	top: -1px
