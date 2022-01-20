@@ -56,6 +56,7 @@ server.use(async (req, res) => {
 
 		console.log(context);
 
+		const s = Date.now();
 		const vm = bundleRunner.getNewContext();
 		// const createApp = vm.run(serverVMScript).default;
 
@@ -104,8 +105,19 @@ server.use(async (req, res) => {
 		res.status(200)
 			.set({ 'Content-Type': 'text/html' })
 			.end(html, () => {
-				console.log('response ended');
+				const total = Date.now() - s;
+				console.log(
+					'response ended',
+					'total time:',
+					total + 'ms',
+					'render time:',
+					total - context.prefetchTime + 'ms',
+					req.url,
+					req.headers['host'],
+					req.headers['user-agent']
+				);
 			});
+
 		console.log('request ending');
 	} catch (e) {
 		console.log(e.stack);
