@@ -3,6 +3,7 @@ import { computed, onMounted, PropType, ref, toRefs } from 'vue';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
 import {
+	createVideoPlayerController,
 	getVideoPlayerFromSources,
 	VideoPlayerController,
 } from '../../../../../_common/video/player/controller';
@@ -42,7 +43,7 @@ const video = computed(() => {
 
 onMounted(() => {
 	if (video.value?.postCardVideo) {
-		videoController.value = new VideoPlayerController(video.value.postCardVideo, null);
+		videoController.value = createVideoPlayerController(video.value.postCardVideo, null);
 
 		videoController.value.volume = 0;
 		videoController.value.muted = true;

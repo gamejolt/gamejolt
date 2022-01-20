@@ -280,10 +280,10 @@ export default class AppVideo extends Vue {
 				playsinline
 			>
 				<source
-					v-for="manifest of player.manifests"
-					:key="manifest"
-					:type="getManifestType(manifest)"
-					:src="manifest"
+					v-for="{ src, type } in player.sources"
+					:key="src"
+					:type="type"
+					:src="src"
 				/>
 			</video>
 		</template>

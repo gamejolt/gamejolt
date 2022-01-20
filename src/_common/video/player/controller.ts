@@ -1,3 +1,5 @@
+import { reactive, ref } from '@vue/runtime-core';
+import { computed, Ref } from 'vue';
 import { assertNever } from '../../../utils/utils';
 import { Analytics } from '../../analytics/analytics.service';
 import {
@@ -7,8 +9,8 @@ import {
 	SettingVideoPlayerMuted,
 	SettingVideoPlayerVolume,
 } from '../../settings/settings.service';
-import { ScrubberStage } from '../../slider/slider';
-import { VideoSourceArray } from '../video';
+import { ScrubberStage } from '../../slider/slider.vue';
+import { VideoSourceArray } from '../video.vue';
 
 export type VideoPlayerControllerContext = 'feed' | 'page' | 'gif' | null;
 export type VideoPlayerState = 'paused' | 'playing';
@@ -26,27 +28,30 @@ export function getVideoPlayerFromSources(
 		sources.push({ src: item.webm, type: 'video/webm' });
 	}
 
-	return new VideoPlayerController(sources, context, poster);
+	return createVideoPlayerController(sources, context, poster);
 }
 
-export class VideoPlayerController {
-	muted: boolean;
-	volume: number;
-	duration = 0;
-	state: VideoPlayerState = 'paused';
+export type VideoPlayerController = ReturnType<typeof createVideoPlayerController>;
 
-	isScrubbing = false;
-	stateBeforeScrubbing: null | VideoPlayerController['state'] = null;
-	isLoading = true;
+export function createVideoPlayerController(
+	sources: VideoSourceArray,
+	context: VideoPlayerControllerContext,
+	poster?: string
+) {
+	const sources_ = ref(sources) as Ref<VideoSourceArray>;
+	const duration = ref(0);
 
-	currentTime = 0;
-	queuedTimeChange: null | number = null;
+	const isScrubbing = ref(false);
+	const stateBeforeScrubbing = ref<null | VideoPlayerState>(null);
+	const isLoading = ref(true);
 
-	bufferedTo = 0;
+	const currentTime = ref(0);
+	const queuedTimeChange = ref<null | number>(null);
 
-	isFullscreen = false;
-	queuedFullScreenChange: null | boolean = null;
-	queuedPlaybackChange: null | VideoPlayerState = null;
+	const bufferedTo = ref(0);
+
+	const isFullscreen = ref(false);
+	const queuedFullScreenChange = ref<null | boolean>(null);
 
 	/**
 	 * iOS Safari doesn't allow us to:
@@ -57,46 +62,68 @@ export class VideoPlayerController {
 	 * changing the way our controls work slightly to support both muting
 	 * through external methods and going fullscreen with their controls.
 	 */
-	get altControlsBehavior() {
+	const altControlsBehavior = computed(() => {
 		if (import.meta.env.SSR) {
 			return false;
 		}
 
 		return !document.fullscreenEnabled;
+	});
+
+	let rawVolume = 0;
+	let rawQueued: VideoPlayerState = 'paused';
+
+	// Assign volume level from the proper local storage context.
+	switch (context) {
+		case 'feed':
+			rawVolume = SettingVideoPlayerFeedMuted.get()
+				? 0
+				: // Use the page player volume because the feed player has no volume control.
+				  SettingVideoPlayerVolume.get();
+
+			rawQueued = SettingVideoPlayerFeedAutoplay.get() ? 'playing' : 'paused';
+			break;
+
+		case 'page':
+			rawVolume = SettingVideoPlayerMuted.get() ? 0 : SettingVideoPlayerVolume.get();
+			rawQueued = 'playing';
+			break;
+
+		case 'gif':
+			rawVolume = 0;
+			rawQueued = 'playing';
+			break;
+
+		default:
+			rawVolume = 1;
+			rawQueued = 'paused';
+			break;
 	}
 
-	constructor(
-		public sources: VideoSourceArray,
-		public context: VideoPlayerControllerContext,
-		public poster?: string
-	) {
-		// Assign volume level from the proper local storage context.
-		switch (context) {
-			case 'feed':
-				this.volume = SettingVideoPlayerFeedMuted.get()
-					? 0
-					: // Use the page player volume because the feed player has no volume control.
-					  SettingVideoPlayerVolume.get();
-				this.queuedPlaybackChange = SettingVideoPlayerFeedAutoplay.get()
-					? 'playing'
-					: 'paused';
-				break;
-			case 'page':
-				this.volume = SettingVideoPlayerMuted.get() ? 0 : SettingVideoPlayerVolume.get();
-				this.queuedPlaybackChange = 'playing';
-				break;
-			case 'gif':
-				this.volume = 0;
-				this.queuedPlaybackChange = 'playing';
-				break;
-			default:
-				this.volume = 1;
-				this.queuedPlaybackChange = 'paused';
-				break;
-		}
-		this.muted = this.volume === 0;
-		this.state = this.queuedPlaybackChange;
-	}
+	const volume = ref(rawVolume);
+	const muted = ref(rawVolume === 0);
+	const state = ref<VideoPlayerState>(rawQueued);
+	const queuedPlaybackChange = ref<null | VideoPlayerState>(rawQueued);
+
+	return reactive({
+		sources: sources_,
+		context,
+		poster,
+		muted,
+		volume,
+		duration,
+		state,
+		isScrubbing,
+		stateBeforeScrubbing,
+		isLoading,
+		currentTime,
+		queuedTimeChange,
+		bufferedTo,
+		isFullscreen,
+		queuedFullScreenChange,
+		queuedPlaybackChange,
+		altControlsBehavior,
+	});
 }
 
 export function toggleVideoPlayback(

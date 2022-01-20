@@ -27,7 +27,7 @@ function createScrollInviewParent(scroller: HTMLElement | null) {
 		const container = containers.value.get(config);
 		if (!container) {
 			const root = scroller;
-			const newContainer = new ScrollInviewContainer(config, root);
+			const newContainer = createScrollInviewContainer(config, root);
 			containers.value.set(config, newContainer);
 			return newContainer;
 		}
@@ -43,51 +43,22 @@ function createScrollInviewParent(scroller: HTMLElement | null) {
 	return c;
 }
 
-export class ScrollInviewContainer {
-	private items = new WeakMap<Element, ScrollInviewController>();
-	private controllers = new Set<ScrollInviewController>();
-	private observer: IntersectionObserver = null as any;
-	private queuedChanges: (() => void)[] = [];
+type ScrollInviewContainer = ReturnType<typeof createScrollInviewContainer>;
 
-	constructor(private readonly config: ScrollInviewConfig, root: Element | null) {
-		this.observer = new IntersectionObserver(this.processUpdatedEntries, {
-			root,
-			rootMargin: config.margin,
-			// Some components need to react on when an element is fully in view
-			// vs just partially (see 'emits-on' prop in AppScrollInview). For
-			// this reason we need to set both 1 and 0 thresholds. A threshold
-			// of 1 triggers when an element becomes fully in view or goes
-			// partially out of view. A threshold of 0 triggers when an element
-			// becomes partially in view or goes completely out of view.
-			threshold: [1, 0.75, 0.5, 0.25, 0],
-		});
-	}
+function createScrollInviewContainer(config: ScrollInviewConfig, root: Element | null) {
+	const _items = new WeakMap<Element, ScrollInviewController>();
+	const _controllers = new Set<ScrollInviewController>();
 
-	observeItem(item: ScrollInviewController) {
-		this.items.set(item.element!, item);
-		this.controllers.add(item);
-		this.observer.observe(item.element!);
-	}
-
-	unobserveItem(item: ScrollInviewController) {
-		const { element } = item;
-		if (element) {
-			this.items.delete(element);
-			this.observer.unobserve(element);
-		}
-
-		this.controllers.delete(item);
-		this.trackFocused();
-	}
+	let _queuedChanges: (() => void)[] = [];
 
 	/**
 	 * Gets called by the IntersectionObserver any time at least some entries
 	 * are updated.
 	 */
-	private processUpdatedEntries: IntersectionObserverCallback = entries => {
+	const _processUpdatedEntries: IntersectionObserverCallback = entries => {
 		for (const entry of entries) {
 			const { intersectionRatio, isIntersecting, target } = entry;
-			const item = this.items.get(target);
+			const item = _items.get(target);
 			if (!item) {
 				continue;
 			}
@@ -98,9 +69,9 @@ export class ScrollInviewContainer {
 			// isIntersecting variable which will be true if any of the element
 			// is visible.
 			const isInView =
-				this.config.emitsOn === 'full-overlap' ? intersectionRatio === 1 : isIntersecting;
+				config.emitsOn === 'full-overlap' ? intersectionRatio === 1 : isIntersecting;
 
-			this.queueChange(() => {
+			_queueChange(() => {
 				item.latestThreshold = intersectionRatio;
 				if (isInView !== item.isInview) {
 					item.isInview = isInView;
@@ -113,32 +84,44 @@ export class ScrollInviewContainer {
 			});
 		}
 
-		if (this.config.trackFocused) {
-			this.queueChange(() => this.trackFocused());
+		if (config.trackFocused) {
+			_queueChange(() => _trackFocused());
 		}
 	};
 
-	private queueChange(cb: () => void) {
+	const _observer = new IntersectionObserver(_processUpdatedEntries, {
+		root,
+		rootMargin: config.margin,
+		// Some components need to react on when an element is fully in view
+		// vs just partially (see 'emits-on' prop in AppScrollInview). For
+		// this reason we need to set both 1 and 0 thresholds. A threshold
+		// of 1 triggers when an element becomes fully in view or goes
+		// partially out of view. A threshold of 0 triggers when an element
+		// becomes partially in view or goes completely out of view.
+		threshold: [1, 0.75, 0.5, 0.25, 0],
+	});
+
+	function _queueChange(cb: () => void) {
 		// Queue up the changes to be processed next animation frame. We will
 		// process them all at once.
-		this.queuedChanges.push(cb);
-		if (this.queuedChanges.length === 1) {
-			window.requestAnimationFrame(this.processQueue);
+		_queuedChanges.push(cb);
+		if (_queuedChanges.length === 1) {
+			window.requestAnimationFrame(_processQueue);
 		}
 	}
 
-	private processQueue = () => {
-		for (const cb of this.queuedChanges) {
+	const _processQueue = () => {
+		for (const cb of _queuedChanges) {
 			cb();
 		}
-		this.queuedChanges = [];
+		_queuedChanges = [];
 	};
 
-	private trackFocused() {
+	function _trackFocused() {
 		let focusedItem: ScrollInviewController | null = null;
 
 		// Loop over trying to find the new active.
-		for (const i of this.controllers) {
+		for (const i of _controllers) {
 			focusedItem =
 				i.latestThreshold >= 0.5 &&
 				(!focusedItem || i.latestThreshold > focusedItem.latestThreshold)
@@ -157,6 +140,23 @@ export class ScrollInviewContainer {
 			focusedItem.isFocused = true;
 		}
 	}
+
+	return {
+		observeItem(item: ScrollInviewController) {
+			_items.set(item.element!, item);
+			_controllers.add(item);
+			_observer.observe(item.element!);
+		},
+		unobserveItem(item: ScrollInviewController) {
+			const { element } = item;
+			if (element) {
+				_items.delete(element);
+				_observer.unobserve(element);
+			}
+			_controllers.delete(item);
+			_trackFocused();
+		},
+	};
 }
 </script>
 

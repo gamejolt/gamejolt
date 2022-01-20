@@ -19,6 +19,7 @@ import {
 	SettingVideoPlayerVolume,
 } from '../../../../../_common/settings/settings.service';
 import {
+	createVideoPlayerController,
 	scrubVideoVolume,
 	toggleVideoPlayback,
 	trackVideoPlayerEvent,
@@ -254,7 +255,7 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	@Watch('shouldLoadVideo')
 	onShouldLoadVideoChange() {
 		if (this.shouldLoadVideo) {
-			this.player = new VideoPlayerController(this.manifests, 'feed');
+			this.player = createVideoPlayerController(this.manifests, 'feed');
 			this.autoplay = SettingVideoPlayerFeedAutoplay.get();
 		} else {
 			this.player = null;

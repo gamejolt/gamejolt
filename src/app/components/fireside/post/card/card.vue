@@ -20,6 +20,7 @@ import AppScrollInview, {
 } from '../../../../../_common/scroll/inview/AppScrollInview.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
 import {
+	createVideoPlayerController,
 	getVideoPlayerFromSources,
 	VideoPlayerController,
 	VideoPlayerControllerContext,
@@ -212,7 +213,7 @@ export default class AppPostCard extends Vue {
 		}
 
 		if (this.post?.hasVideo && this.post.videos[0].postCardVideo) {
-			this.videoController = new VideoPlayerController(
+			this.videoController = createVideoPlayerController(
 				this.post.videos[0].postCardVideo,
 				this.videoContext
 			);

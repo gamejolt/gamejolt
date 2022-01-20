@@ -14,6 +14,7 @@ import { Screen } from '../../screen/screen-service';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 import { VideoSourceArray } from '../video.vue';
 import {
+	createVideoPlayerController,
 	queueVideoTimeChange,
 	scrubVideoVolume,
 	toggleVideoPlayback,
@@ -104,7 +105,7 @@ export default class AppVideoPlayer extends Vue {
 	@Prop({ type: Number, default: 0 }) viewCount!: number;
 	@Prop({ type: Boolean, default: false }) showVideoStats!: boolean;
 
-	player = new VideoPlayerController(this.manifests, this.context);
+	player!: VideoPlayerController;
 	isHoveringControls = false;
 	private isHovered = false;
 	private _hideUITimer?: NodeJS.Timer;
@@ -169,7 +170,7 @@ export default class AppVideoPlayer extends Vue {
 
 	get deviceMaxHeight() {
 		if (import.meta.env.SSR) {
-			return;
+			return undefined;
 		}
 
 		if (this.player.isFullscreen) {
@@ -184,6 +185,10 @@ export default class AppVideoPlayer extends Vue {
 
 	get shouldShowVideoStats() {
 		return this.showVideoStats && !this.player.isFullscreen;
+	}
+
+	created() {
+		this.player = createVideoPlayerController(this.manifests, this.context);
 	}
 
 	mounted() {
