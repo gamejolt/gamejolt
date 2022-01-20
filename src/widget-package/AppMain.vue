@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { onMounted } from '@vue/runtime-core';
 import AppJolticon from '../_common/jolticon/AppJolticon.vue';
-import { AppTheme } from '../_common/theme/theme';
+import AppTheme from '../_common/theme/AppTheme.vue';
 import { useThemeStore } from '../_common/theme/theme.store';
 import AppFooter from './components/footer/footer.vue';
 import AppGameHeader from './components/game-header/game-header.vue';

@@ -5,7 +5,7 @@ import { formatNumber } from '../../../../_common/filters/number';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/backdrop.vue';
 import { AppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
-import { AppTheme } from '../../../../_common/theme/theme';
+import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import AppFiresideStreamPreview from '../stream/preview/preview.vue';

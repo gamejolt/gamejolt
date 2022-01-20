@@ -5,7 +5,7 @@ import { trackGotoCommunity } from '../../analytics/analytics.service';
 import { Environment } from '../../environment/environment.service';
 import { formatNumber } from '../../filters/number';
 import { useCommonStore } from '../../store/common-store';
-import { AppTheme } from '../../theme/theme';
+import AppTheme from '../../theme/AppTheme.vue';
 import { Community, isEditingCommunity } from '../community.model';
 import AppCommunityJoinWidget from '../join-widget/join-widget.vue';
 import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';

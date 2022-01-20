@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { ContentEditorAppAdapter } from '../_common/content/content-editor/app-adapter';
 import AppContentEditorTS from '../_common/content/content-editor/content-editor';
 import AppContentEditor from '../_common/content/content-editor/content-editor.vue';
-import { AppTheme } from '../_common/theme/theme';
+import AppTheme from '../_common/theme/AppTheme.vue';
 import { useThemeStore } from '../_common/theme/theme.store';
 
 const themeStore = useThemeStore();

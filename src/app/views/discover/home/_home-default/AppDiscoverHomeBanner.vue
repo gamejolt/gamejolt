@@ -7,7 +7,7 @@ import { Jam } from '../../../../../_common/jam/jam.model';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/backdrop.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import { AppTheme } from '../../../../../_common/theme/theme';
+import AppTheme from '../../../../../_common/theme/AppTheme.vue';
 import { FeaturedItem } from '../../../../components/featured-item/featured-item.model';
 import AppGameFollowWidget from '../../../../components/game/follow-widget/follow-widget.vue';
 

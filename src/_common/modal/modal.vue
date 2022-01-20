@@ -8,7 +8,7 @@ import { Screen } from '../screen/screen-service';
 import AppScrollAffix from '../scroll/affix/affix.vue';
 import AppScrollScroller, { createScroller } from '../scroll/AppScrollScroller.vue';
 import AppStickerLayer from '../sticker/layer/layer.vue';
-import { AppTheme } from '../theme/theme';
+import AppTheme from '../theme/AppTheme.vue';
 import { Modal, ModalKey } from './modal.service';
 
 @Options({

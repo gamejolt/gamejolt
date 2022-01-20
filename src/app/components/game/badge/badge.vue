@@ -2,7 +2,7 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Game } from '../../../../_common/game/game.model';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/backdrop.vue';
-import { AppTheme } from '../../../../_common/theme/theme';
+import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import AppGameFollowWidget from '../follow-widget/follow-widget.vue';
 
 @Options({
