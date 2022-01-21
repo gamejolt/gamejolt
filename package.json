@@ -3,8 +3,6 @@
 	"version": "1.1.1",
 	"scripts": {
 		"start": "gulp watch",
-		"dev": "gulp watch",
-		"devd": "gulp watch --development",
 		"translations": "gulp translations:compile",
 		"client": "nw use 0.55.0-sdk && nw build/dev-client",
 		"client-build": "gulp --production --client",
@@ -16,6 +14,10 @@
 		"check": "tsc --noEmit",
 		"analyze-bundle": "gulp --analyze-bundle",
 		"lint": "eslint --ext .js,.vue src",
+		"dev": "vite",
+		"devd": "cross-env GJ_ENVIRONMENT=development yarn run dev",
+		"dev:client": "cross-env GJ_IS_DESKTOP_APP=1 yarn run dev",
+		"devd:client": "cross-env GJ_IS_DESKTOP_APP=1 yarn run devd",
 		"build:app": "gulp --production --app",
 		"build:web": "vite build --outDir ../build/web --ssrManifest --debug",
 		"build:server": "cross-env SSR=1 vite build --outDir ../build/server --debug"
@@ -43,6 +45,7 @@
 		"@types/prosemirror-state": "1.2.4",
 		"@types/prosemirror-view": "1.11.4",
 		"@types/qs": "6.9.1",
+		"@types/rollup-plugin-node-builtins": "^2.1.2",
 		"@types/stripe": "7.13.22",
 		"@types/stripe-v3": "3.1.17",
 		"@types/twitter-text": "2.0.0",
@@ -59,7 +62,6 @@
 		"codemirror": "5.53.2",
 		"core-js": "3.6.5",
 		"cropperjs": "1.5.5",
-		"cross-env": "^7.0.3",
 		"css-element-queries": "1.2.1",
 		"date-fns": "2.12.0",
 		"eslint": "8.6.0",
@@ -94,6 +96,7 @@
 		"qs": "6.9.3",
 		"readdirp": "3.6.0",
 		"resize-observer-polyfill": "1.5.1",
+		"rollup-plugin-node-builtins": "^2.1.2",
 		"sanitize-html": "1.19.1",
 		"shaka-player": "3.0.5",
 		"simple-plist": "1.3.0",
@@ -109,7 +112,6 @@
 		"ua-parser-js": "0.7.21",
 		"undertaker-forward-reference": "1.0.2",
 		"vite": "2.7.10",
-		"vite-plugin-html": "2.1.2",
 		"vite-plugin-markdown": "2.0.2",
 		"vm2": "3.9.5",
 		"vue": "3.2.26",
@@ -128,10 +130,14 @@
 		"fs-extra": "7.0.0",
 		"write-file-atomic": "2.3.0"
 	},
-	"main": "chrome-extension://game-jolt-client/index.html#/",
+	"resolutions": {
+		"colors": "1.2.1"
+	},
+	"main": "https://development.gamejolt.com/",
+	"node-remote": "https://development.gamejolt.com",
 	"domain": "game-jolt-client",
 	"window": {
-		"show": false,
+		"show": true,
 		"width": 1250,
 		"height": 700,
 		"min_height": 400,
@@ -144,6 +150,6 @@
 		"plugin": true
 	},
 	"joltronVersion": "v2.2.8-beta.1.loader",
-	"chromium-args": "--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments",
+	"chromium-args": "--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments --auto-open-devtools-for-tabs",
 	"user-agent": "GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36"
 }

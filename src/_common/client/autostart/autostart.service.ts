@@ -1,8 +1,8 @@
-import { Autostarter } from 'client-voodoo';
 import * as path from 'path';
 import { getDeviceOS } from '../../device/device.service';
 import { SettingAutostartClient } from '../../settings/settings.service';
 import { Client } from '../client.service';
+import { Autostarter } from '../client-voodoo-imports';
 
 export class ClientAutoStart {
 	static init() {

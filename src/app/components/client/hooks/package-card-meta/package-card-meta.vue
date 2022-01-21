@@ -3,12 +3,13 @@ import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Game } from '../../../../../_common/game/game.model';
 import { GamePackageCardModel } from '../../../../../_common/game/package/card/card.model';
 import { GamePackage } from '../../../../../_common/game/package/package.model';
-import { ClientLibraryState, ClientLibraryStore } from '../../../../store/client-library';
+// import { ClientLibraryState, ClientLibraryStore } from '../../../../store/client-library';
 import { LocalDbPackage } from '../../local-db/package/package.model';
 
 @Options({})
 export default class AppClientPackageCardMeta extends Vue {
-	@ClientLibraryState packagesById!: ClientLibraryStore['packagesById'];
+	// @ClientLibraryState packagesById!: ClientLibraryStore['packagesById'];
+	packagesById!: any;
 
 	@Prop(Object) game!: Game;
 	@Prop(Object) package!: GamePackage;
@@ -27,7 +28,10 @@ export default class AppClientPackageCardMeta extends Vue {
 				<translate class="tag tag-highlight text-upper" v-if="localPackage.isInstalling">
 					Installing
 				</translate>
-				<translate class="tag tag-notice text-upper" v-else-if="localPackage.didInstallFail">
+				<translate
+					class="tag tag-notice text-upper"
+					v-else-if="localPackage.didInstallFail"
+				>
 					Install Failed
 				</translate>
 			</template>

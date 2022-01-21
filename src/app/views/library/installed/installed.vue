@@ -4,7 +4,7 @@ import AppAlertDismissable from '../../../../_common/alert/dismissable/dismissab
 import { Meta } from '../../../../_common/meta/meta-service';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
-import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
+// import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
 import AppLibraryInstalledGame from './_game/game.vue';
 
 @Options({
@@ -16,8 +16,9 @@ import AppLibraryInstalledGame from './_game/game.vue';
 	},
 })
 export default class RouteLibraryInstalled extends BaseRouteComponent {
-	@ClientLibraryState
-	games!: ClientLibraryStore['games'];
+	// @ClientLibraryState
+	// games!: ClientLibraryStore['games'];
+	games!: any;
 
 	get gamesByTitle() {
 		return this.games.sort((a, b) => {

@@ -4,7 +4,7 @@ import { ClientUpdater } from '../../../../_common/client/client-updater.service
 import { Client } from '../../../../_common/client/client.service';
 import { formatNumber } from '../../../../_common/filters/number';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
+// import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
 import AppClientStatusBarPatchItem from './patch-item/patch-item.vue';
 
 @Options({
@@ -16,20 +16,25 @@ import AppClientStatusBarPatchItem from './patch-item/patch-item.vue';
 	},
 })
 export default class AppClientStatusBar extends Vue {
-	@ClientLibraryState
-	gamesById!: ClientLibraryStore['gamesById'];
+	// @ClientLibraryState
+	// gamesById!: ClientLibraryStore['gamesById'];
+	gamesById!: any;
 
-	@ClientLibraryState
-	numPlaying!: ClientLibraryStore['numPlaying'];
+	// @ClientLibraryState
+	// numPlaying!: ClientLibraryStore['numPlaying'];
+	numPlaying!: any;
 
-	@ClientLibraryState
-	numPatching!: ClientLibraryStore['numPatching'];
+	// @ClientLibraryState
+	// numPatching!: ClientLibraryStore['numPatching'];
+	numPatching!: any;
 
-	@ClientLibraryState
-	currentlyPlaying!: ClientLibraryStore['currentlyPlaying'];
+	// @ClientLibraryState
+	// currentlyPlaying!: ClientLibraryStore['currentlyPlaying'];
+	currentlyPlaying!: any;
 
-	@ClientLibraryState
-	currentlyPatching!: ClientLibraryStore['currentlyPatching'];
+	// @ClientLibraryState
+	// currentlyPatching!: ClientLibraryStore['currentlyPatching'];
+	currentlyPatching!: any;
 
 	updaterWarningDismissed = false;
 

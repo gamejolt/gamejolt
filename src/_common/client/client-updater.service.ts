@@ -1,10 +1,11 @@
 import { reactive } from '@vue/reactivity';
-import { Logger, MsgProgress, PatcherState, SelfUpdater, SelfUpdaterInstance } from 'client-voodoo';
+import type { MsgProgress, SelfUpdaterInstance } from 'client-voodoo';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import { LocalDb } from '../../app/components/client/local-db/local-db.service';
 import { Environment } from '../environment/environment.service';
 import { Navigate } from '../navigate/navigate.service';
+import { Logger, PatcherState, SelfUpdater } from './client-voodoo-imports';
 import { Client } from './client.service';
 
 export type ClientUpdateStatus = 'checking' | 'none' | 'fetching' | 'ready' | 'error';

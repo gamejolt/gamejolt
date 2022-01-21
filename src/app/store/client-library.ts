@@ -1,12 +1,12 @@
+import type { OldLaunchInstance, PatchEvents, PatchInstance } from 'client-voodoo';
 import {
 	Config,
 	getExecutable,
 	Launcher,
 	LaunchInstance,
-	OldLaunchInstance,
+	// OldLaunchInstance,
 	Patcher,
-	PatchEvents,
-	PatchInstance,
+	// PatchInstance,
 	Queue,
 	Rollbacker,
 	State as PatcherState,

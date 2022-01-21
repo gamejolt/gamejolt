@@ -12,11 +12,11 @@ import { GamePackagePurchaseModal } from '../../../../_common/game/package/purch
 import { Popper } from '../../../../_common/popper/popper.service';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import {
-	ClientLibraryAction,
-	ClientLibraryState,
-	ClientLibraryStore,
-} from '../../../store/client-library';
+// import {
+// 	ClientLibraryAction,
+// 	ClientLibraryState,
+// 	ClientLibraryStore,
+// } from '../../../store/client-library';
 import { ClientInstallPackageModal } from '../install-package-modal/install-package-modal.service';
 import AppClientInstallProgress from '../install-progress/install-progress.vue';
 import { LocalDbPackage } from '../local-db/package/package.model';
@@ -31,29 +31,37 @@ import { LocalDbPackage } from '../local-db/package/package.model';
 	},
 })
 export default class AppClientGameButtons extends Vue {
-	@ClientLibraryState
-	packagesByGameId!: ClientLibraryStore['packagesByGameId'];
+	// @ClientLibraryState
+	// packagesByGameId!: ClientLibraryStore['packagesByGameId'];
+	packagesByGameId!: any;
 
-	@ClientLibraryState
-	findActiveForGame!: ClientLibraryStore['findActiveForGame'];
+	// @ClientLibraryState
+	// findActiveForGame!: ClientLibraryStore['findActiveForGame'];
+	findActiveForGame!: any;
 
-	@ClientLibraryAction
-	private packageInstall!: ClientLibraryStore['packageInstall'];
+	// @ClientLibraryAction
+	// private packageInstall!: ClientLibraryStore['packageInstall'];
+	private packageInstall!: any;
 
-	@ClientLibraryAction
-	private packageUninstall!: ClientLibraryStore['packageUninstall'];
+	// @ClientLibraryAction
+	// private packageUninstall!: ClientLibraryStore['packageUninstall'];
+	private packageUninstall!: any;
 
-	@ClientLibraryAction
-	private launcherLaunch!: ClientLibraryStore['launcherLaunch'];
+	// @ClientLibraryAction
+	// private launcherLaunch!: ClientLibraryStore['launcherLaunch'];
+	private launcherLaunch!: any;
 
-	@ClientLibraryAction
-	private installerPause!: ClientLibraryStore['installerPause'];
+	// @ClientLibraryAction
+	// private installerPause!: ClientLibraryStore['installerPause'];
+	private installerPause!: any;
 
-	@ClientLibraryAction
-	private installerResume!: ClientLibraryStore['installerResume'];
+	// @ClientLibraryAction
+	// private installerResume!: ClientLibraryStore['installerResume'];
+	private installerResume!: any;
 
-	@ClientLibraryAction
-	private installerRetry!: ClientLibraryStore['installerRetry'];
+	// @ClientLibraryAction
+	// private installerRetry!: ClientLibraryStore['installerRetry'];
+	private installerRetry!: any;
 
 	@Prop(Object)
 	game!: Game;
