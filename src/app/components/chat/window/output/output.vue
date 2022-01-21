@@ -2,13 +2,14 @@
 import { nextTick } from 'vue';
 import { setup } from 'vue-class-component';
 import { Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { shallowSetup } from '../../../../../utils/vue';
 import { formatDate } from '../../../../../_common/filters/date';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppScrollScroller, {
 	createScroller,
-} from '../../../../../_common/scroll/scroller/scroller.vue';
+} from '../../../../../_common/scroll/AppScrollScroller.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { useEventSubscription } from '../../../../../_common/system/event/event-topic';
 import { illNoChat } from '../../../../img/ill/illustrations';
@@ -47,7 +48,7 @@ export default class AppChatWindowOutput extends Vue {
 	reachedEnd = false;
 	isLoadingOlder = false;
 	shouldScroll = true;
-	scroller = setup(() => createScroller());
+	scroller = shallowSetup(() => createScroller());
 
 	private checkQueuedTimeout?: NodeJS.Timer;
 	private _introEmoji?: string;
@@ -107,8 +108,7 @@ export default class AppChatWindowOutput extends Vue {
 	}
 
 	mounted() {
-		// Check every 100ms for which queued messages we should show.
-		this.checkQueuedTimeout = setInterval(this.updateVisibleQueuedMessages, 100);
+		this.checkQueuedTimeout = setInterval(this.updateVisibleQueuedMessages, 1000);
 	}
 
 	unmounted() {
@@ -131,9 +131,11 @@ export default class AppChatWindowOutput extends Vue {
 		this.isLoadingOlder = true;
 		await nextTick();
 
+		const el = this.scroller.element.value!;
+
 		// Pulling the height after showing the loading allows us to scroll back
 		// without it looking like it jumps.
-		const startHeight = this.$el.scrollHeight;
+		const startHeight = el.scrollHeight ?? 0;
 		const firstMessage = this.messages[0];
 
 		try {
@@ -154,8 +156,8 @@ export default class AppChatWindowOutput extends Vue {
 
 		// After loading new messages we have to shift the scroll back down to
 		// where we weren in the previous view of message history.
-		const diff = this.$el.scrollHeight - startHeight;
-		this.$el.scrollTop = diff;
+		const diff = el.scrollHeight - startHeight;
+		el.scrollTop = diff;
 	}
 
 	/**
@@ -180,6 +182,8 @@ export default class AppChatWindowOutput extends Vue {
 	}
 
 	private onScroll() {
+		const el = this.scroller.element.value!;
+
 		// If the scroll triggered because of us autoscrolling, we wanna discard it.
 		if (this.isAutoscrolling) {
 			// Now that we caught it, we assume the autoscroll was finalized.
@@ -187,7 +191,7 @@ export default class AppChatWindowOutput extends Vue {
 			return;
 		}
 
-		if (this.canLoadOlder && this.$el.scrollTop === 0) {
+		if (this.canLoadOlder && el.scrollTop === 0) {
 			this.loadOlder();
 			return;
 		}
@@ -195,14 +199,11 @@ export default class AppChatWindowOutput extends Vue {
 		// We skip checking the scroll if the element isn't scrollable yet.
 		// This'll be the case if the height of the element is less than its
 		// scroll height.
-		if (this.$el.scrollHeight < (this.$el as HTMLElement).offsetHeight) {
+		if (el.scrollHeight < el.offsetHeight) {
 			return;
 		}
 
-		if (
-			this.$el.scrollHeight - (this.$el.scrollTop + (this.$el as HTMLElement).offsetHeight) >
-			10
-		) {
+		if (el.scrollHeight - (el.scrollTop + el.offsetHeight) > 10) {
 			this.shouldScroll = false;
 		} else {
 			this.shouldScroll = true;
@@ -220,7 +221,7 @@ export default class AppChatWindowOutput extends Vue {
 		// the "scroll handler" and ignore the scroll event since it was
 		// triggered by us.
 		this.isAutoscrolling = true;
-		this.scroller.scrollTo(this.$el.scrollHeight + 10000);
+		this.scroller.scrollTo(this.scroller.element.value!.scrollHeight + 10000);
 	}
 
 	isNewMessage(message: ChatMessage) {

@@ -22,7 +22,7 @@ import AppPopper from '../../../_common/popper/popper.vue';
 import { AppResponsiveDimensions } from '../../../_common/responsive-dimensions/responsive-dimensions';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../_common/scroll/scroller/scroller.vue';
+import AppScrollScroller from '../../../_common/scroll/AppScrollScroller.vue';
 import AppStickerReactions from '../../../_common/sticker/reactions/reactions.vue';
 import AppStickerTarget from '../../../_common/sticker/target/target.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
@@ -42,7 +42,7 @@ import {
 } from '../../components/fireside/controller/controller';
 import { illEndOfFeed, illMaintenance, illNoCommentsSmall } from '../../img/ill/illustrations';
 import AppFiresideBanner from './_banner/banner.vue';
-import AppFiresideChatMembers from './_chat-members/chat-members.vue';
+import AppFiresideChatMembers from './_chat-members/AppFiresideChatMembers.vue';
 import AppFiresideHeader from './_header/header.vue';
 import AppFiresideHostList from './_host-list/host-list.vue';
 import AppFiresideShare from './_share/share.vue';
@@ -110,7 +110,7 @@ export default class RouteFireside extends BaseRouteComponent {
 
 	c: FiresideController | null = shallowSetup(() => null);
 
-	private beforeEachDeregister: Function | null = null;
+	private beforeEachDeregister: (() => void) | null = null;
 	private canShowMobileHosts = true;
 
 	readonly Screen = Screen;
@@ -180,7 +180,8 @@ export default class RouteFireside extends BaseRouteComponent {
 	get shouldShowChat() {
 		const mobileCondition =
 			Screen.isMobile && this.c?.isStreaming.value ? this.isVertical : true;
-		return !!this.chat && this.chat.connected && !!this.c?.chatRoom.value && mobileCondition;
+
+		return Boolean(this.chat?.connected && this.c?.chatRoom.value && mobileCondition);
 	}
 
 	get shouldShowChatMembers() {
@@ -306,7 +307,7 @@ export default class RouteFireside extends BaseRouteComponent {
 		this.canShowMobileHosts = !isFocused;
 	}
 
-	@Watch('c.isPersonallyStreaming')
+	@Watch('c.isPersonallyStreaming.value')
 	onIsPersonallyStreamingChanged() {
 		if (import.meta.env.SSR) {
 			return;

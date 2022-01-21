@@ -3,7 +3,7 @@ import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Ruler } from '../../ruler/ruler-service';
 import { onScreenResize } from '../../screen/screen-service';
 import { useEventSubscription } from '../../system/event/event-topic';
-import AppScrollInview, { ScrollInviewConfig } from '../inview/inview.vue';
+import AppScrollInview, { ScrollInviewConfig } from '../inview/AppScrollInview.vue';
 import { Scroll } from '../scroll.service';
 
 @Options({

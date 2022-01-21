@@ -5,7 +5,7 @@ import { formatFuzzynumber } from '../../filters/fuzzynumber';
 import { formatNumber } from '../../filters/number';
 import AppLoading from '../../loading/loading.vue';
 import { useCommonStore } from '../../store/common-store';
-import { AppTheme } from '../../theme/theme';
+import AppTheme from '../../theme/AppTheme.vue';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 import AppUserFollowWidget from '../follow/widget.vue';
 import AppUserAvatarImg from '../user-avatar/img/img.vue';

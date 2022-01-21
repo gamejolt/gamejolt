@@ -1,4 +1,5 @@
 import { BroadcastChannel, createLeaderElection, LeaderElector } from 'broadcast-channel';
+import { markRaw } from 'vue';
 
 /**
  * Determines a leader between tabs.
@@ -15,13 +16,13 @@ export class TabLeader {
 	}
 
 	constructor(name: string) {
-		this.channel = new BroadcastChannel(name);
-		this.elector = createLeaderElection(this.channel);
+		this.channel = markRaw(new BroadcastChannel(name));
+		this.elector = markRaw(createLeaderElection(this.channel));
 	}
 
 	/**
-	 * This function begins the process of attemping to become the leader.
-	 * All tabs need this process to be active.
+	 * This function begins the process of attemping to become the leader. All
+	 * tabs need this process to be active.
 	 */
 	public init() {
 		// Can only be used when not dead yet.

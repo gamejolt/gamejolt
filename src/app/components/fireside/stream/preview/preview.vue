@@ -1,10 +1,13 @@
 <script lang="ts">
+import { defineAsyncComponent } from '@vue/runtime-core';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 
 @Options({
 	components: {
-		AppFiresideStreamPreviewVideo: () => import('./AppFiresideStreamPreviewVideo.vue'),
+		AppFiresideStreamPreviewVideo: defineAsyncComponent(
+			() => import('./AppFiresideStreamPreviewVideo.vue')
+		),
 	},
 })
 export default class AppFiresideStreamPreview extends Vue {
@@ -32,7 +35,7 @@ export default class AppFiresideStreamPreview extends Vue {
 <template>
 	<div class="-preview-container sheet sheet-full sheet-elevate">
 		<router-link class="-link" :to="location">
-			<div ref="videoWrapper" class="-video-wrapper">
+			<div class="-video-wrapper">
 				<div class="-video-inner">
 					<app-fireside-stream-preview-video
 						:fireside="fireside"

@@ -14,8 +14,12 @@ import { AppStore, useAppStore } from '../../../store';
 import { ActivityFeedView } from '../../activity/feed/view';
 import { onNewStickers } from '../../grid/client.service';
 import { AppActivityFeedLazy } from '../../lazy';
-import AppShellAccountPopoverNewSticker from './new-sticker/new-sticker.vue';
 import AppShellNotificationPopoverStickerNavItem from './sticker-nav-item/sticker-nav-item.vue';
+
+interface StickerAnimationData {
+	key: string;
+	stickerImg: string;
+}
 
 @Options({
 	components: {
@@ -55,6 +59,8 @@ export default class AppShellNotificationPopover extends Vue {
 	isLoading = true;
 	feed: ActivityFeedView | null = null;
 	totalStickersCount = 0;
+
+	animatingStickers: StickerAnimationData[] = [];
 
 	readonly Connection = Connection;
 
@@ -154,23 +160,27 @@ export default class AppShellNotificationPopover extends Vue {
 	 * Handles the Grid event of new sticker unlocks to show animations.
 	 */
 	private async onNewStickers(stickerImgUrls: string[]) {
-		// TODO(vue3)
 		for (const stickerImgUrl of stickerImgUrls) {
-			// Create new sticker animation component.
-			const stickerEl = new AppShellAccountPopoverNewSticker({
-				propsData: {
-					key: Date.now().toString(),
-					stickerImg: stickerImgUrl,
-				},
+			const key = Date.now().toString();
+
+			this.animatingStickers.push({
+				key,
+				stickerImg: stickerImgUrl,
 			});
-			// Mount and add to DOM.
-			stickerEl.$mount();
-			this.$refs.newStickerAnimContainer.appendChild(stickerEl.$el);
+
+			setTimeout(() => this.removeStickerAnimation(key), 1500);
 
 			// Sleep for slightly less than animation duration (~1.5s).
 			// This slightly overlays the animations which results in a smoother
 			// and faster unlock experience.
 			await sleep(1300);
+		}
+	}
+
+	removeStickerAnimation(key: string) {
+		const index = this.animatingStickers.findIndex(i => i.key === key);
+		if (index !== -1) {
+			this.animatingStickers.splice(index, 1);
 		}
 	}
 }
@@ -200,7 +210,15 @@ export default class AppShellNotificationPopover extends Vue {
 			</span>
 			<div v-if="hasNewUnlockedStickers" class="-new-tag anim-fade-enter anim-fade-leave" />
 			<app-jolticon icon="bell-filled" />
-			<div ref="newStickerAnimContainer" class="-new-sticker-anim-container" />
+			<div ref="newStickerAnimContainer" class="-new-sticker-anim-container">
+				<div
+					v-for="{ key, stickerImg } in animatingStickers"
+					:key="key"
+					class="-new-sticker"
+				>
+					<img class="-new-sticker-img" :src="stickerImg" />
+				</div>
+			</div>
 		</a>
 
 		<template v-if="feed && isShowing" #header>
@@ -223,7 +241,7 @@ export default class AppShellNotificationPopover extends Vue {
 						:sticker-count="totalStickersCount"
 						:has-new="hasNewUnlockedStickers"
 					/>
-					<template v-if="!feed.hasItems">
+					<template v-if="!feed || !feed.hasItems">
 						<div class="alert">
 							<translate>You don't have any notifications yet.</translate>
 						</div>
@@ -246,6 +264,8 @@ export default class AppShellNotificationPopover extends Vue {
 </template>
 
 <style lang="stylus" scoped>
+$-new-sticker-size = 32px
+
 ::v-deep(.timeline-list-item-split)
 	full-bleed()
 
@@ -278,4 +298,49 @@ export default class AppShellNotificationPopover extends Vue {
 	border-color: var(--theme-darkest)
 	border-width: 2px
 	border-style: solid
+
+
+.-new-sticker
+	position: fixed
+	width: $-new-sticker-size
+	height: $-new-sticker-size
+	animation-name: anim
+	animation-duration: 1.5s
+	animation-iteration-count: 1
+	animation-fill-mode: forwards
+	animation-timing-function: ease-out
+	z-index: 4
+	user-select: none
+	pointer-events: none
+
+	&-img
+		display: block
+		width: $-new-sticker-size
+		height: $-new-sticker-size
+
+@keyframes anim
+	0%
+		transform: none
+		opacity: 0.5
+
+	50%
+		transform: translateY(100px) scale(1.5)
+		opacity: 1
+
+	55%
+		transform: translateY(100px) scale(1.7) rotateZ(-20deg)
+
+	60%
+		transform: translateY(100px) scale(1.9) rotateZ(20deg)
+
+	65%
+		transform: translateY(100px) scale(2.1) rotateZ(-20deg)
+
+	70%
+		transform: translateY(100px) scale(2.3) rotateZ(20deg)
+		opacity: 1
+
+	100%
+		transform: translateY(0) scale(0)
+		opacity: 0
 </style>

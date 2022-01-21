@@ -114,16 +114,16 @@ export default class AppScoreOverview extends Vue {
 							params: {
 								slug: game.slug,
 								id: game.id,
-								tableId: scoreTable.id,
+								tableId: scoreTable?.id,
 								type: 'best',
 							},
 						}"
 					>
 						<translate>scores.overview.heading</translate>
 					</router-link>
-					<small v-if="scoreTables.length > 1"
-						>({{ formatNumber(scoreTables.length) }})</small
-					>
+					<small v-if="scoreTables.length > 1">
+						({{ formatNumber(scoreTables.length) }})
+					</small>
 				</h2>
 
 				<hr class="underbar" />
@@ -155,9 +155,8 @@ export default class AppScoreOverview extends Vue {
 							<app-user-avatar :user="app.user" />
 						</div>
 
-						<!-- TODO(vue3): check animation works -->
 						<div
-							:key="scoreTable.id"
+							:key="scoreTable?.id"
 							class="
 								col-xs-12 col-sm-9
 								anim-fade-in-right
@@ -249,7 +248,7 @@ export default class AppScoreOverview extends Vue {
 								params: {
 									slug: game.slug,
 									id: game.id,
-									tableId: scoreTable.id,
+									tableId: scoreTable?.id,
 									type: 'best',
 								},
 							}"

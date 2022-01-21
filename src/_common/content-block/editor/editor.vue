@@ -1,4 +1,5 @@
 <script lang="ts">
+import { toRaw } from 'vue';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Api } from '../../api/api.service';
 import { Environment } from '../../environment/environment.service';
@@ -82,7 +83,7 @@ export default class AppContentBlockEditor extends Vue {
 		if (iframe && iframe.contentWindow) {
 			const msg = {
 				type: 'content-update',
-				block: this.contentBlock,
+				block: toRaw(this.contentBlock),
 			};
 			iframe.contentWindow.postMessage(msg, '*');
 		}
@@ -146,6 +147,7 @@ export default class AppContentBlockEditor extends Vue {
 						<strong>
 							<translate>Insert Widgets</translate>
 						</strong>
+						{{ ' ' }}
 						<span class="text-muted small">
 							<translate>embed dynamic content</translate>
 						</span>
@@ -174,7 +176,9 @@ export default class AppContentBlockEditor extends Vue {
 					</template>
 					<template v-else>
 						<app-button
-							v-app-tooltip="$gettext('Will show your game\'s media (screenshots, videos, etc).')"
+							v-app-tooltip="
+								$gettext(`Will show your game's media (screenshots, videos, etc).`)
+							"
 							@click="insertAtCaret('{% game-media num=6 %}')"
 						>
 							<translate>Game Media</translate>
@@ -214,7 +218,10 @@ export default class AppContentBlockEditor extends Vue {
 			The ng-repeat will refresh the DOM any time the current block changes.
 			This will create a new editor instance and refresh the block content.
 		-->
-			<form-content-block-editor :mode="site.game_id ? 'game' : 'user'" :model="contentBlock" />
+			<form-content-block-editor
+				:mode="site.game_id ? 'game' : 'user'"
+				:model="contentBlock"
+			/>
 		</div>
 	</div>
 </template>

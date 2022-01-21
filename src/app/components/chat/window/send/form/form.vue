@@ -9,7 +9,6 @@ import {
 	EscapeStackCallback,
 } from '../../../../../../_common/escape-stack/escape-stack.service';
 import AppFormControlContent from '../../../../../../_common/form-vue/controls/AppFormControlContent.vue';
-import AppFormControlContentTS from '../../../../../../_common/form-vue/controls/content/content';
 import { BaseForm } from '../../../../../../_common/form-vue/form.service';
 import { validateContentMaxLength } from '../../../../../../_common/form-vue/validators';
 import { FormValidatorContentNoMediaUpload } from '../../../../../../_common/form-vue/validators/content_no_media_upload';
@@ -58,7 +57,8 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 	private typingTimeout!: NodeJS.Timer;
 
 	declare $refs: {
-		editor: AppFormControlContentTS;
+		// TODO(vue3): ref typing
+		editor: typeof AppFormControlContent;
 	};
 
 	readonly validateContentMaxLength = validateContentMaxLength;
@@ -76,6 +76,7 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 		if (this.chat && this.room) {
 			return { roomId: this.room.id };
 		}
+		return undefined;
 	}
 
 	get placeholder() {

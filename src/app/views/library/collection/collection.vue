@@ -30,11 +30,11 @@ import AppPageHeaderControls from '../../../components/page-header/controls/cont
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { useAppStore } from '../../../store/index';
 import {
-libraryEditPlaylist,
-libraryRemoveGameFromPlaylist,
-libraryRemovePlaylist,
-libraryUnfollowGame,
-useLibraryStore
+	libraryEditPlaylist,
+	libraryRemoveGameFromPlaylist,
+	libraryRemovePlaylist,
+	libraryUnfollowGame,
+	useLibraryStore,
 } from '../../../store/library';
 
 const CollectionThemeKey = 'collection';
@@ -370,7 +370,6 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		>
 			<div class="row collection-copy">
 				<div v-if="!Screen.isXs" class="col-sm-4 col-md-3">
-					<!-- TODO(vue3): check animation -->
 					<app-game-collection-thumbnail
 						:key="collection._id"
 						class="anim-fade-in-enlarge"
@@ -378,7 +377,6 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 					/>
 				</div>
 				<div class="col-sm-8 col-md-9">
-					<!-- TODO(vue3): make sure this works to animate -->
 					<transition mode="out-in" appear>
 						<div :key="collection._id" class="anim-fade-enter-right anim-fade-leave-up">
 							<!--
@@ -622,7 +620,9 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 						<div class="stat-big-label">
 							<translate>library.collection.games_label</translate>
 						</div>
-						<div class="stat-big-digit">{{ formatNumber(listing.gamesCount) }}</div>
+						<div class="stat-big-digit">
+							{{ formatNumber(listing?.gamesCount || 0) }}
+						</div>
 					</li>
 				</ul>
 			</template>
@@ -677,12 +677,13 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 			:is-loading="isRouteLoading"
 		>
 			<app-game-grid v-if="listing" :games="listing.games" event-label="collection-games">
-				<template #thumbnail-controls="props">
+				<template
+					v-if="type === 'playlist' || type === 'followed'"
+					#thumbnail-controls="props"
+				>
 					<app-button
 						v-if="type === 'playlist' && collection.isOwner"
-						v-app-tooltip="
-							$gettext(`library.collection.thumbnail_control_playlist_tooltip`)
-						"
+						v-app-tooltip="$gettext(`Remove from playlist`)"
 						icon="remove"
 						circle
 						overlay
@@ -691,9 +692,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 
 					<app-button
 						v-if="type === 'followed' && collection.isOwner"
-						v-app-tooltip="
-							$gettext(`library.collection.thumbnail_control_unfollow_tooltip`)
-						"
+						v-app-tooltip="$gettext(`Stop following`)"
 						icon="remove"
 						circle
 						overlay

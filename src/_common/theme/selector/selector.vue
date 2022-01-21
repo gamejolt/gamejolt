@@ -52,6 +52,7 @@ export default class AppThemeSelector extends Vue {
 						<div class="list-group-item-heading">
 							<app-jolticon icon="chevron-down" class="list-group-item-icon" />
 							<strong>{{ current.name }}</strong>
+							{{ ' ' }}
 							<small class="text-muted">by @{{ current.user.username }}</small>
 						</div>
 						<p class="list-group-item-text">
@@ -70,6 +71,7 @@ export default class AppThemeSelector extends Vue {
 						>
 							<div class="list-group-item-heading">
 								<strong>{{ template.name }}</strong>
+								{{ ' ' }}
 								<small class="text-muted">by @{{ template.user.username }}</small>
 							</div>
 							<p class="list-group-item-text">

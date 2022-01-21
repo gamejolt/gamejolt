@@ -5,7 +5,6 @@ import { Api } from '../../../../_common/api/api.service';
 import AppContactLink from '../../../../_common/contact-link/contact-link.vue';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Game } from '../../../../_common/game/game.model';
-import AppGameThumbnail from '../../../../_common/game/thumbnail/thumbnail.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -18,7 +17,6 @@ import socialImage from './social.png';
 @Options({
 	name: 'RouteLandingMarketplace',
 	components: {
-		AppGameThumbnail,
 		AppAuthJoin: AppAuthJoinLazy,
 		AppThemeSvg,
 		AppContactLink,
@@ -103,7 +101,10 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 					<div class="row">
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg :src="assetPaths['./revenue-share.svg'].default" alt="" />
+								<app-theme-svg
+									:src="assetPaths['./revenue-share.svg'].default"
+									alt=""
+								/>
 							</div>
 
 							<h4 class="text-center">Revenue Split</h4>
@@ -169,7 +170,10 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 					<div class="row">
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg :src="assetPaths['./selling-options.svg'].default" alt="" />
+								<app-theme-svg
+									:src="assetPaths['./selling-options.svg'].default"
+									alt=""
+								/>
 							</div>
 
 							<h4 class="text-center">Selling Options</h4>
@@ -203,7 +207,10 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg :src="assetPaths['./early-access.svg'].default" alt="" />
+								<app-theme-svg
+									:src="assetPaths['./early-access.svg'].default"
+									alt=""
+								/>
 							</div>
 
 							<h4 class="text-center">Early Access</h4>
@@ -220,7 +227,10 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-md-4 col-md-offset-2">
 							<div class="landing-graphic">
-								<app-theme-svg :src="assetPaths['./analytics.svg'].default" alt="" />
+								<app-theme-svg
+									:src="assetPaths['./analytics.svg'].default"
+									alt=""
+								/>
 							</div>
 
 							<h4 class="text-center">Powerful Analytics</h4>
@@ -238,7 +248,10 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg :src="assetPaths['./supporter-focused.svg'].default" alt="" />
+								<app-theme-svg
+									:src="assetPaths['./supporter-focused.svg'].default"
+									alt=""
+								/>
 							</div>
 
 							<h4 class="text-center">Supporter Focused</h4>

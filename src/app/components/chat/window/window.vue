@@ -4,7 +4,7 @@ import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
+import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { SettingChatGroupShowMembers } from '../../../../_common/settings/settings.service';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
@@ -12,7 +12,7 @@ import { useAppStore } from '../../../store/index';
 import { ChatStore, ChatStoreKey } from '../chat-store';
 import { leaveChatRoom } from '../client';
 import { ChatInviteModal } from '../invite-modal/invite-modal.service';
-import AppChatMemberList from '../member-list/member-list.vue';
+import AppChatMemberList from '../member-list/AppChatMemberList.vue';
 import { ChatMessage } from '../message';
 import { ChatRoom, getChatRoomTitle } from '../room';
 import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vue';
@@ -176,7 +176,6 @@ export default class AppChatWindow extends Vue {
 						</div>
 
 						<!-- Animation scope. -->
-						<!-- TODO(vue3): check animation works -->
 						<div :key="room.id" class="chat-window-header-content">
 							<span
 								v-if="!room.isPmRoom"
@@ -227,7 +226,6 @@ export default class AppChatWindow extends Vue {
 					</div>
 				</div>
 
-				<!-- TODO(vue3): check animation works -->
 				<div class="chat-window-output fill-backdrop">
 					<app-chat-window-output
 						:key="room.id"

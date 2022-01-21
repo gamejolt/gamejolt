@@ -1,6 +1,6 @@
 import { h } from 'vue';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import AppContentGif from '../../components/gif/gif.vue';
+import AppContentGif from '../../components/AppContentGif.vue';
 import { ContentObject } from '../../content-object';
 
 @Options({})

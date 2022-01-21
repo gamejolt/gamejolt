@@ -1,7 +1,5 @@
 <script lang="ts">
 import { defineAsyncComponent } from '@vue/runtime-core';
-import { ref } from 'vue';
-import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { shallowSetup } from '../../../utils/vue';
 import {
@@ -13,7 +11,7 @@ import {
 	unregisterStickerLayer,
 	useDrawerStore,
 } from '../../drawer/drawer-store';
-import { useScroller } from '../../scroll/scroller/scroller.vue';
+import { useScroller } from '../../scroll/AppScrollScroller.vue';
 import {
 	createStickerLayerController,
 	provideStickerLayer,
@@ -33,7 +31,7 @@ export default class AppStickerLayer extends Vue {
 
 	layer!: StickerLayerController;
 
-	scroller = setup(() => ref(useScroller()));
+	scroller = shallowSetup(() => useScroller());
 
 	private focusWatcherDeregister!: () => void;
 

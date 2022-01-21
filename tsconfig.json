@@ -10,7 +10,6 @@
 		"noUnusedParameters": true,
 		"noUnusedLocals": true,
 		"allowJs": true,
-		"skipLibCheck": true,
 		"sourceMap": true,
 		"importHelpers": true,
 		"downlevelIteration": true,

@@ -1,8 +1,8 @@
-import { InjectionKey } from '@vue/runtime-core';
+import { InjectionKey, shallowRef } from '@vue/runtime-core';
 import { computed, ComputedRef, inject, provide, ref, Ref, toRaw } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { DrawerStore } from '../../drawer/drawer-store';
-import { ScrollController } from '../../scroll/scroller/scroller.vue';
+import { ScrollController } from '../../scroll/AppScrollScroller.vue';
 import { StickerTargetController } from '../target/target-controller';
 import AppStickerTarget from '../target/target.vue';
 
@@ -20,7 +20,7 @@ export type StickerLayerController = {
 };
 
 export function createStickerLayerController(drawer: DrawerStore) {
-	const scroller = ref<ScrollController | null>(null);
+	const scroller = shallowRef<ScrollController | null>(null);
 
 	const targets = ref<AppStickerTarget[]>([]);
 	const hoveredTarget = ref<AppStickerTarget | null>(null);

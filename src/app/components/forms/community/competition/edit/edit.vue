@@ -44,7 +44,7 @@ export default class FormCommunityCompetitionEdit extends mixins(Wrapper) {
 	}
 
 	async onInit() {
-		this.timezoneService = new FormTimezoneService(this);
+		this.timezoneService = new FormTimezoneService(this.form);
 		await this.timezoneService.load(true);
 	}
 }

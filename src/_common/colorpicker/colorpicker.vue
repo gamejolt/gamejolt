@@ -15,8 +15,8 @@ type VueTouch = {
 	},
 })
 export default class AppColorpicker extends Vue {
-	@Prop({ type: String, required: true })
-	modelValue!: string;
+	@Prop({ type: String })
+	modelValue?: string;
 
 	colors: VueTouch = {
 		hex: null,
@@ -28,7 +28,7 @@ export default class AppColorpicker extends Vue {
 	@Watch('modelValue', { immediate: true })
 	onValueChanged() {
 		this.colors = {
-			hex: this.modelValue,
+			hex: this.modelValue ?? '',
 		};
 	}
 
@@ -43,7 +43,7 @@ export default class AppColorpicker extends Vue {
 
 	cancel() {
 		this.colors = {
-			hex: this.modelValue,
+			hex: this.modelValue ?? '',
 		};
 		Popper.hideAll();
 	}
@@ -63,6 +63,7 @@ export default class AppColorpicker extends Vue {
 
 			<template #popover>
 				<div class="colorpicker-popover">
+					<!-- eslint-disable-next-line vue/v-on-event-hyphenation -->
 					<Picker :model-value="colors" @update:modelValue="onChange" />
 
 					<div class="colorpicker-well">

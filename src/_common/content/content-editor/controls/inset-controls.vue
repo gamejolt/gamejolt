@@ -1,12 +1,10 @@
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
-import { Inject } from 'vue-property-decorator';
-import { ContentEditorController, ContentEditorControllerKey } from '../content-editor-controller';
+import { Options, setup, Vue } from 'vue-class-component';
+import { useContentEditorController } from '../content-editor-controller';
 
 @Options({})
 export default class AppContentEditorInsetControls extends Vue {
-	@Inject({ from: ContentEditorControllerKey })
-	controller!: ContentEditorController;
+	controller = setup(() => useContentEditorController()!);
 
 	private oldTop = 0;
 

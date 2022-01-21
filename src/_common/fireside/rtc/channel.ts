@@ -141,7 +141,6 @@ export async function setChannelVideoTrack(
 	if (channel._localVideoTrack !== null) {
 		rtc.log(`Local video track already exists.`);
 
-		// TODO(vue3): check that this is reactive
 		const localTrack = channel._localVideoTrack;
 		channel._localVideoTrack = null;
 

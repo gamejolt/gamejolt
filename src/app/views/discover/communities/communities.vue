@@ -14,7 +14,9 @@ import { HistoryCache } from '../../../../_common/history/cache/cache.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollInview, { ScrollInviewConfig } from '../../../../_common/scroll/inview/inview.vue';
+import AppScrollInview, {
+	ScrollInviewConfig,
+} from '../../../../_common/scroll/inview/AppScrollInview.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 
 const endpoint = '/web/discover/communities';

@@ -29,28 +29,35 @@ bootstrap();
 </script>
 
 <template>
-	<AppCommonShell
-		v-if="build"
-		class="-build-embed fill-darker -shell-padding"
-		:style="{
-			width: embedWidthStyle,
-			height: embedHeightStyle,
-		}"
-	>
-		<AppEmbedFlash v-if="build.type === GameBuild.TYPE_FLASH" />
-		<AppEmbedHtml v-if="build.type === GameBuild.TYPE_HTML" />
-		<AppEmbedUnity v-if="build.type === GameBuild.TYPE_UNITY" />
-		<AppEmbedSilverlight v-if="build.type === GameBuild.TYPE_SILVERLIGHT" />
-		<AppEmbedApplet v-if="build.type === GameBuild.TYPE_APPLET" />
-		<AppEmbedRom v-if="build.type === GameBuild.TYPE_ROM" />
+	<AppCommonShell v-if="build">
+		<div
+			class="-build-embed fill-darker"
+			:style="{
+				width: embedWidthStyle,
+				height: embedHeightStyle,
+			}"
+		>
+			<AppEmbedFlash v-if="build.type === GameBuild.TYPE_FLASH" />
+			<AppEmbedHtml v-if="build.type === GameBuild.TYPE_HTML" />
+			<AppEmbedUnity v-if="build.type === GameBuild.TYPE_UNITY" />
+			<AppEmbedSilverlight v-if="build.type === GameBuild.TYPE_SILVERLIGHT" />
+			<AppEmbedApplet v-if="build.type === GameBuild.TYPE_APPLET" />
+			<AppEmbedRom v-if="build.type === GameBuild.TYPE_ROM" />
+		</div>
 	</AppCommonShell>
 </template>
 
 <style lang="stylus" scoped>
 .-build-embed
-	margin: 0
-	padding: 0
+	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
 	display: flex
+	align-items: center
+	justify-content: center
+	overflow: auto
 
 	// This fixes issues where they don't set a body bg color.
 	// https://github.com/gamejolt/next-issue-tracker/issues/241

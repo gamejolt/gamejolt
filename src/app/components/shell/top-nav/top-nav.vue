@@ -17,7 +17,7 @@ import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { imageGameJoltLogo, imageJolt } from '../../../img/images';
 import { useAppStore } from '../../../store/index';
 import { ChatStore, ChatStoreKey } from '../../chat/chat-store';
-import AppSearch from '../../search/search.vue';
+import AppSearch from '../../search/AppSearch.vue';
 
 @Options({
 	components: {

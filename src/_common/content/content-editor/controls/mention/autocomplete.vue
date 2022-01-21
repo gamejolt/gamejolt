@@ -1,17 +1,14 @@
 <script lang="ts">
 import { nextTick } from 'vue';
-import { Emit, Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../api/api.service';
 import AppLoading from '../../../../loading/loading.vue';
 import { Screen } from '../../../../screen/screen-service';
 import AppUserAvatarImg from '../../../../user/user-avatar/img/img.vue';
 import { User } from '../../../../user/user.model';
 import AppUserVerifiedTick from '../../../../user/verified-tick/verified-tick.vue';
-import {
-	ContentEditorController,
-	ContentEditorControllerKey,
-	editorInsertMention,
-} from '../../content-editor-controller';
+import { editorInsertMention, useContentEditorController } from '../../content-editor-controller';
 import ContentEditorMentionCache from './cache.service';
 
 @Options({
@@ -25,8 +22,7 @@ export default class AppContentEditorControlsMentionAutocomplete extends Vue {
 	@Prop({ type: Boolean, required: true })
 	canShow!: boolean;
 
-	@Inject({ from: ContentEditorControllerKey })
-	controller!: ContentEditorController;
+	controller = setup(() => useContentEditorController()!);
 
 	query = ''; // Currently active suggestion query
 	selectedIndex = 0;

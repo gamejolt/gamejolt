@@ -36,9 +36,6 @@ selecting an option. The click event triggers as being outside the modal.
 There doesn't seem to be a harm in just not propagating the event always
 since nothing ever needs to hook into it so far.
 -->
-<!-- v-validate="{ rules: validationRules }"
-	:data-vv-validate-on="validateOn"
-	:data-vv-delay="validateDelay" -->
 <template>
 	<select
 		:id="c.id"

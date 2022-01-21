@@ -5,7 +5,7 @@ import AppCard from '../../../../../_common/card/card.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
-} from '../../../../../_common/scroll/inview/inview.vue';
+} from '../../../../../_common/scroll/inview/AppScrollInview.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { UserFriendship } from '../../../../../_common/user/friendship/friendship.model';

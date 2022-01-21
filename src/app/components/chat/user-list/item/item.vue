@@ -6,7 +6,7 @@ import AppPopper from '../../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
-} from '../../../../../_common/scroll/inview/inview.vue';
+} from '../../../../../_common/scroll/inview/AppScrollInview.vue';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { ChatStore, ChatStoreKey } from '../../chat-store';
 import { enterChatRoom, isUserOnline, leaveGroupRoom } from '../../client';

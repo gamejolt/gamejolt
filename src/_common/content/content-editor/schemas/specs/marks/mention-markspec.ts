@@ -6,7 +6,7 @@ export const mention = {
 	},
 	inclusive: false,
 	toDOM(mark: Mark, _inline: boolean) {
-		let { username } = mark.attrs;
+		const { username } = mark.attrs;
 		return [
 			'span',
 			{

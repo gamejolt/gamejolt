@@ -9,7 +9,7 @@ import { Environment } from '../../../../../_common/environment/environment.serv
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
+import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.vue';
 import AppShortkey from '../../../../../_common/shortkey/shortkey.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';

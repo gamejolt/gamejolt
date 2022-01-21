@@ -1,4 +1,4 @@
-import { computed, inject, InjectionKey, ref, watch } from 'vue';
+import { computed, inject, InjectionKey, ref, Ref, shallowRef, ShallowRef, watch } from 'vue';
 import { Router } from 'vue-router';
 import { CommunityJoinLocation } from '../../_common/analytics/analytics.service';
 import { Api } from '../../_common/api/api.service';
@@ -13,17 +13,15 @@ import { FiresidePost } from '../../_common/fireside/post/post-model';
 import { showSuccessGrowl } from '../../_common/growls/growls.service';
 import { ModalConfirm } from '../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../_common/screen/screen-service';
-import { createSidebarStore, SidebarStore } from '../../_common/sidebar/sidebar.store';
-import { CommonStore, commonStore } from '../../_common/store/common-store';
+import { SidebarStore } from '../../_common/sidebar/sidebar.store';
+import { CommonStore } from '../../_common/store/common-store';
 import { $gettext } from '../../_common/translate/translate.service';
 import { ActivityFeedState } from '../components/activity/feed/state';
 import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
-import { GridClient } from '../components/grid/client.service';
+import type { GridClient } from '../components/grid/client.service';
 import { GridClientLazy } from '../components/lazy';
-import { router } from '../views';
-import { createBannerStore } from './banner';
 import { CommunityStates } from './community-state';
-import { createLibraryStore, LibraryStore } from './library';
+import { LibraryStore } from './library';
 
 // TODO(vue3)
 // if (GJ_IS_DESKTOP_APP) {
@@ -56,12 +54,12 @@ export function createAppStore({
 }) {
 	const grid = ref<GridClient>();
 	let _wantsGrid = false;
-	let _gridLoadPromise: Promise<typeof GridClient> | null = null;
+	let _gridLoadPromise: Promise<typeof import('../components/grid/client.service')> | null = null;
 	let _gridBootstrapResolvers: ((client: GridClient) => void)[] = [];
 
 	const isBootstrapped = ref(false);
-	let bootstrapResolver: ((value?: any) => void) | null = null;
-	let tillStoreBootstrapped = new Promise(resolve => (bootstrapResolver = resolve));
+	const _bootstrapResolver = ref(null) as Ref<((value?: any) => void) | null>;
+	const tillStoreBootstrapped = ref(new Promise(resolve => (_bootstrapResolver.value = resolve)));
 	const isLibraryBootstrapped = ref(false);
 	const isShellBootstrapped = ref(false);
 	const isShellHidden = ref(false);
@@ -86,21 +84,19 @@ export function createAppStore({
 	const communities = ref<Community[]>([]);
 	const communityStates = ref(new CommunityStates());
 
-	let backdrop: BackdropController | null = null;
+	const _backdrop = shallowRef(null) as ShallowRef<BackdropController | null>;
 
 	const hasTopBar = computed(() => !isShellHidden.value);
 	const hasSidebar = computed(() => !isShellHidden.value);
 	const hasFooter = computed(() => !isFooterHidden.value);
 
 	const hasCbar = computed(() => {
-		// TODO(vue3): use provided commonStore
 		if (isShellHidden.value || commonStore.isUserTimedOut.value) {
 			return false;
 		}
 
 		// The cbar is pretty empty without a user and active context pane,
 		// so we want to hide it if those conditions are met.
-		// TODO(vue3): use an injected commonStore instead
 		if (!commonStore.user.value && !sidebarStore.activeContextPane.value && !Screen.isXs) {
 			return false;
 		}
@@ -153,7 +149,7 @@ export function createAppStore({
 	}
 
 	async function bootstrap() {
-		const prevResolver = bootstrapResolver;
+		const prevResolver = _bootstrapResolver;
 
 		// Detach so that errors in it doesn't cause the not found page to show. This is considered
 		// a sort of "async" load.
@@ -167,7 +163,7 @@ export function createAppStore({
 			_shellPayload(shellPayload);
 
 			// If we failed to finish before we unbootstrapped, then stop.
-			if (bootstrapResolver !== prevResolver) {
+			if (_bootstrapResolver !== prevResolver) {
 				return;
 			}
 
@@ -202,7 +198,7 @@ export function createAppStore({
 	}
 
 	async function clear() {
-		tillStoreBootstrapped = new Promise(resolve => (bootstrapResolver = resolve));
+		tillStoreBootstrapped.value = new Promise(resolve => (_bootstrapResolver.value = resolve));
 		libraryStore.clear();
 	}
 
@@ -214,14 +210,15 @@ export function createAppStore({
 		_wantsGrid = true;
 		_gridLoadPromise ??= GridClientLazy();
 
-		const GridClient_ = await _gridLoadPromise;
+		const { createGridClient } = await _gridLoadPromise;
 
 		// If they disconnected before we loaded it in.
 		if (!_wantsGrid) {
 			return;
 		}
 
-		_setGrid(new GridClient_());
+		_setGrid(createGridClient({ appStore: c }));
+		grid.value?.init();
 	}
 
 	async function clearGrid() {
@@ -314,16 +311,16 @@ export function createAppStore({
 			// We only want backdrops on the Lg breakpoint if the pane isn't context.
 			!(Screen.isLg && overlayedLeftPane.value === 'context')
 		) {
-			if (backdrop) {
+			if (_backdrop.value) {
 				return;
 			}
 
 			_addBackdrop();
-			backdrop!.onClicked = () => {
+			_backdrop.value!.onClicked = () => {
 				_clearPanes();
 				checkBackdrop();
 			};
-		} else if (backdrop) {
+		} else if (_backdrop) {
 			_removeBackdrop();
 		}
 	}
@@ -381,7 +378,7 @@ export function createAppStore({
 
 	function _setBootstrapped() {
 		isBootstrapped.value = true;
-		bootstrapResolver?.();
+		_bootstrapResolver.value?.();
 	}
 
 	function _setLibraryBootstrapped() {
@@ -539,20 +536,20 @@ export function createAppStore({
 	}
 
 	function _addBackdrop() {
-		if (backdrop) {
+		if (_backdrop.value) {
 			return;
 		}
 
-		backdrop = Backdrop.push({ context: document.body });
+		_backdrop.value = Backdrop.push({ context: document.body });
 	}
 
 	function _removeBackdrop() {
-		if (!backdrop) {
+		if (!_backdrop.value) {
 			return;
 		}
 
-		backdrop.remove();
-		backdrop = null;
+		_backdrop.value.remove();
+		_backdrop.value = null;
 	}
 
 	/**
@@ -560,15 +557,35 @@ export function createAppStore({
 	 */
 	function tillGridBootstrapped() {
 		return new Promise<GridClient>(resolve => {
-			if (appStore.grid.value) {
-				resolve(appStore.grid.value);
+			if (grid.value) {
+				resolve(grid.value);
 			} else {
 				_gridBootstrapResolvers.push(resolve);
 			}
 		});
 	}
 
-	return {
+	// Handles route meta changes during redirects.
+	// Routes in the app section can define the following meta:
+	// 	isFullPage: boolean - wether to not display the shell and treat the route as a "full page"
+	router.beforeEach((to, _from, next) => {
+		if (to.matched.some(record => record.meta.isFullPage)) {
+			hideShell();
+		} else {
+			showShell();
+		}
+
+		if (to.matched.some(record => record.meta.noFooter)) {
+			hideFooter();
+		} else {
+			showFooter();
+		}
+
+		next();
+	});
+
+	// We need to reference ourself when creating grid at the moment.
+	const c = {
 		grid,
 		isBootstrapped,
 		tillStoreBootstrapped,
@@ -628,9 +645,6 @@ export function createAppStore({
 		featuredPost,
 		tillGridBootstrapped,
 	};
-}
 
-export const sidebarStore = createSidebarStore();
-export const libraryStore = createLibraryStore({ router });
-export const bannerStore = createBannerStore({ commonStore, router });
-export const appStore = createAppStore({ router, commonStore, sidebarStore, libraryStore });
+	return c;
+}

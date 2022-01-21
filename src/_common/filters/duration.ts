@@ -1,4 +1,3 @@
-// TODO(vue3): this may need to be `* as` import
 import humanizeDuration from 'humanize-duration';
 
 const humanizer = humanizeDuration.humanizer({

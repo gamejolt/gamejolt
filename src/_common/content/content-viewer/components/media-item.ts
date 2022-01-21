@@ -1,6 +1,6 @@
 import { h } from 'vue';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import AppContentMediaItem from '../../components/media-item/media-item.vue';
+import AppContentMediaItem from '../../components/AppContentMediaItem.vue';
 import { ContentObject } from '../../content-object';
 
 @Options({})

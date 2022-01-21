@@ -1,13 +1,10 @@
 <script lang="ts">
 import { nextTick } from 'vue';
-import { Emit, Inject, Options, Vue } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Emit, Options, Vue } from 'vue-property-decorator';
 import AppEmoji, { GJ_EMOJIS } from '../../../../emoji/AppEmoji.vue';
 import { AppTooltip } from '../../../../tooltip/tooltip-directive';
-import {
-	ContentEditorController,
-	ContentEditorControllerKey,
-	editorInsertEmoji,
-} from '../../content-editor-controller';
+import { editorInsertEmoji, useContentEditorController } from '../../content-editor-controller';
 
 @Options({
 	components: {
@@ -18,8 +15,7 @@ import {
 	},
 })
 export default class AppContentEditorControlsEmoji extends Vue {
-	@Inject({ from: ContentEditorControllerKey })
-	controller!: ContentEditorController;
+	controller = setup(() => useContentEditorController()!);
 
 	emoji = 'huh'; // gets set to a random one at mounted
 	panelVisible = false;
@@ -57,6 +53,15 @@ export default class AppContentEditorControlsEmoji extends Vue {
 
 	mounted() {
 		this.setRandomEmoji();
+
+		// Register the panel interface with the controller.
+		this.controller._emojiPanel = {
+			show: () => this.show(),
+		};
+	}
+
+	unmounted() {
+		this.controller._emojiPanel = undefined;
 	}
 
 	onMouseEnter() {

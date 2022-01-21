@@ -11,7 +11,7 @@ import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Backdrop, BackdropController } from '../backdrop/backdrop.service';
 import { AppObserveDimensions } from '../observe-dimensions/observe-dimensions.directive';
 import { Screen } from '../screen/screen-service';
-import AppScrollScroller from '../scroll/scroller/scroller.vue';
+import AppScrollScroller from '../scroll/AppScrollScroller.vue';
 import { Popper } from './popper.service';
 import './popper.styl';
 
@@ -198,7 +198,6 @@ export default class AppPopper extends Vue {
 	}
 
 	mounted() {
-		// TODO(vue3): check
 		if (!this.$slots.default) {
 			throw Error('AppPopper is a wrapper - put popper reference in the default slot.');
 		}

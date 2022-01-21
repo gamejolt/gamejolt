@@ -3,7 +3,7 @@ import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
-import { AppTheme } from '../../../../_common/theme/theme';
+import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
 import { ChatStore, ChatStoreKey } from '../chat-store';

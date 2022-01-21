@@ -22,7 +22,6 @@ watch(
 );
 </script>
 
-<!-- TODO(vue3): do we need this or can it be templateless? -->
 <template>
-	<span />
+	<slot />
 </template>

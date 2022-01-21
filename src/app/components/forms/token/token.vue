@@ -1,7 +1,6 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
-import { AppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';
 import {
 	BaseForm,
 	FormOnSubmit,
@@ -10,11 +9,7 @@ import {
 
 class Wrapper extends BaseForm<any> {}
 
-@Options({
-	directives: {
-		AppFocusWhen,
-	},
-})
+@Options({})
 export default class FormToken
 	extends mixins(Wrapper)
 	implements FormOnSubmit, FormOnSubmitSuccess
@@ -42,7 +37,7 @@ export default class FormToken
 				type="text"
 				:validators="[validateMinLength(4), validateMaxLength(30)]"
 				autocomplete="off"
-				v-app-focus-when
+				focus
 			/>
 
 			<app-form-control-errors />

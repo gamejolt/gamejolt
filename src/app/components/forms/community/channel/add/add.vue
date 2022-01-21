@@ -188,7 +188,7 @@ export default class FormCommunityChannelAdd extends mixins(Wrapper) {
 						url: `/web/dash/communities/channels/check-field-availability/${community.id}`,
 					}),
 				]"
-				data-vv-delay="500"
+				:validate-delay="500"
 				:validate-on="['blur']"
 				@changed="onChangedTitle"
 			/>

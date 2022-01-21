@@ -16,7 +16,12 @@ import { useResizeObserver } from '../../utils/hooks/useResizeObserver';
 import { Ruler } from '../ruler/ruler-service';
 import { useForm } from './AppForm.vue';
 import { useFormGroup } from './AppFormGroup.vue';
+import { AppFocusWhen as vAppFocusWhen } from './focus-when.directive';
 import { FormValidator, validateRequired } from './validators';
+
+interface ValidationOptions {
+	validateDelay?: number;
+}
 
 export interface FormControlController<T = any> {
 	readonly id: string | undefined;
@@ -26,7 +31,8 @@ export interface FormControlController<T = any> {
 	 */
 	readonly multi: boolean;
 	controlVal: T;
-	applyValue: (value: T) => void;
+	applyValue: (value: T, options?: ValidationOptions) => void;
+	applyBlur: (options?: ValidationOptions) => void;
 	readonly validators: FormValidator[];
 }
 
@@ -40,6 +46,19 @@ export function defineFormControlProps() {
 		validators: {
 			type: Array as PropType<FormValidator[]>,
 			default: () => [],
+		},
+	};
+}
+
+export function defineFormControlValidateProps() {
+	return {
+		validateOnBlur: {
+			type: Boolean,
+			default: false,
+		},
+		validateDelay: {
+			type: Number,
+			default: 0,
 		},
 	};
 }
@@ -110,8 +129,12 @@ export function createFormControl<T>({
 	});
 
 	if (!multi) {
-		// Copy over the initial form model value.
-		controlVal.value = form.formModel[group.name];
+		// Copy over the initial form model value. If the formModel contains
+		// specifically an undefined value, we want to keep it as the initial
+		// value.
+		if (form.formModel[group.name] !== undefined) {
+			controlVal.value = form.formModel[group.name];
+		}
 
 		// Watch the form model for changes and sync to our control.
 		watch(
@@ -120,7 +143,7 @@ export function createFormControl<T>({
 		);
 	}
 
-	function applyValue(value: T) {
+	function applyValue(value: T, options: ValidationOptions = {}) {
 		// When the DOM value changes we bind it back to our own value and set
 		// it on the form model as well.
 		if (!multi) {
@@ -132,6 +155,37 @@ export function createFormControl<T>({
 
 		onChange?.(value);
 		form._onControlChanged();
+
+		_validate(options);
+	}
+
+	function applyBlur(options: ValidationOptions = {}) {
+		_validate(options);
+	}
+
+	function _validate({ validateDelay: validationDelay }: ValidationOptions) {
+		if (_debounce) {
+			clearTimeout(_debounce);
+		}
+
+		if (validationDelay) {
+			_validateDebounce(validationDelay);
+		} else {
+			form.validate();
+		}
+	}
+
+	let _debounce: NodeJS.Timer | undefined;
+
+	function _validateDebounce(timeout: number) {
+		const token = form._validationToken;
+		_debounce = setTimeout(() => {
+			if (token.isCanceled) {
+				return;
+			}
+
+			form.validate();
+		}, timeout);
 	}
 
 	const c = reactive({
@@ -140,6 +194,7 @@ export function createFormControl<T>({
 		controlVal,
 		applyValue,
 		validators,
+		applyBlur,
 	}) as FormControlController<T>;
 
 	group.control = c;
@@ -156,17 +211,13 @@ export default {
 <script lang="ts" setup>
 const props = defineProps({
 	...defineFormControlProps(),
+	...defineFormControlValidateProps(),
 	type: {
 		type: String,
 		default: 'text',
 	},
-	validateOn: {
-		type: Array as PropType<string[]>,
-		default: () => [],
-	},
-	validateDelay: {
-		type: Number,
-		default: 0,
+	focus: {
+		type: Boolean,
 	},
 	prefix: {
 		type: String,
@@ -222,7 +273,9 @@ const controlType = computed(() => {
 });
 
 function onChange() {
-	c.applyValue(root.value?.value ?? '');
+	c.applyValue(root.value?.value ?? '', {
+		validateDelay: props.validateDelay,
+	});
 }
 
 useResizeObserver({ target: prefixElement, callback: recalcPositioning });
@@ -246,155 +299,21 @@ function recalcPositioning() {
 	}
 }
 
-// @Options({})
-// export default class AppFormControl extends BaseFormControl {
-// 	@Prop({ type: String, default: 'text' })
-// 	type!: string;
-
-// 	@Prop(Array) validateOn!: string[];
-// 	@Prop(Number) validateDelay!: number;
-// 	@Prop(Array) mask!: (string | RegExp)[];
-// 	@Prop({ type: Boolean, default: false }) disabled!: boolean;
-// 	@Prop({ type: String, default: undefined }) htmlListId!: string;
-
-// 	controlVal = '';
-// 	maskedInputElem: any = null;
-
-// 	declare $el: HTMLInputElement;
-
-// 	get controlType() {
-// 		if (this.type === 'currency') {
-// 			return 'number';
-// 		}
-// 		return this.type;
-// 	}
-
-// 	get validationRules() {
-// 		const rules = {
-// 			...this.baseRules,
-// 		};
-
-// 		if (this.type === 'currency') {
-// 			rules.decimal = 2;
-// 		}
-
-// 		if (this.type === 'email') {
-// 			rules.email = true;
-// 		}
-
-// 		return rules;
-// 	}
-
-// 	mounted() {
-// 		const mask = this.mask;
-// 		if (mask) {
-// 			this.maskedInputElem = createTextMaskInputElement({
-// 				inputElement: this.$el,
-// 				mask,
-// 			});
-// 			this.maskedInputElem.update(this.controlVal);
-// 		}
-// 	}
-
-// 	onChange() {
-// 		if (this.maskedInputElem) {
-// 			this.maskedInputElem.update(this.$el.value);
-// 		}
-
-// 		this.applyValue(this.$el.value);
-// 	}
-// }
-
-// @Options({})
-// export default class BaseFormControl extends Vue {
-// 	@Prop()
-// 	rules!: any;
-
-// 	controlVal: any;
-// 	changed = false;
-
-// 	/**
-// 	 * Whether or not the form control has multiple controls for the group. This
-// 	 * is for radio and checkboxes mostly.
-// 	 */
-// 	multi = false;
-
-// 	form!: AppFormTS;
-// 	group!: AppFormGroupTS;
-
-// 	@Emit('changed')
-// 	emitChanged(_value: any) {}
-
-// 	get id() {
-// 		const id = this.form.name + '-' + this.group.name;
-// 		return !this.multi ? id : undefined;
-// 	}
-
-// 	protected get baseRules() {
-// 		return {
-// 			required: !this.group.optional,
-// 			...this.rules,
-// 		};
-// 	}
-
-// 	get validationRules() {
-// 		return this.baseRules;
-// 	}
-
-// 	created() {
-// 		this.form = findRequiredVueParent(this, require('../form.vue').default) as AppFormTS;
-// 		this.form.controls.push(this);
-
-// 		this.group = findRequiredVueParent(
-// 			this,
-// 			require('../group/group.vue').default
-// 		) as AppFormGroupTS;
-// 		this.group.inputErrors = this.$validator.errorBag;
-// 		this.group.control = this;
-
-// 		if (!this.multi) {
-// 			// Copy over the initial form model value.
-// 			this.controlVal = this.form.base.formModel[this.group.name];
-
-// 			// Watch the form model for changes and sync to our control.
-// 			this.$watch(
-// 				() => this.form.base.formModel[this.group.name],
-// 				newVal => (this.controlVal = newVal)
-// 			);
-// 		}
-// 	}
-
-// 	unmounted() {
-// 		if (this.form) {
-// 			const index = this.form.controls.findIndex(control => control === this);
-// 			this.form.controls.splice(index, 1);
-// 		}
-// 	}
-
-// 	applyValue(value: any) {
-// 		// When the DOM value changes we bind it back to our own value and set
-// 		// it on the form model as well.
-// 		if (!this.multi) {
-// 			this.controlVal = value;
-// 		}
-
-// 		this.form.base.setField(this.group.name, value);
-// 		this.group.changed = true;
-
-// 		this.emitChanged(value);
-// 		this.form.onChange();
-// 	}
-// }
+function onBlur() {
+	if (props.validateOnBlur) {
+		c.applyBlur({
+			validateDelay: props.validateDelay,
+		});
+	}
+}
 </script>
 
-<!-- v-validate="{ rules: validationRules }"
-	:data-vv-validate-on="validateOn"
-	:data-vv-delay="validateDelay" -->
 <template>
 	<div class="-container">
 		<input
 			:id="c.id"
 			ref="root"
+			v-app-focus-when="focus"
 			:name="group.name"
 			class="form-control"
 			:type="controlType"
@@ -404,6 +323,7 @@ function recalcPositioning() {
 			v-bind="$attrs"
 			:style="{ 'padding-left': paddingLeft }"
 			@input="onChange"
+			@blur="onBlur"
 		/>
 		<span
 			v-if="prefix"

@@ -17,9 +17,9 @@ import { BaseRouteComponent } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import { Scroll } from '../../../_common/scroll/scroll.service';
 import AppPageHeader from '../../components/page-header/page-header.vue';
+import AppSearch from '../../components/search/AppSearch.vue';
 import { SearchPayload } from '../../components/search/payload-service';
 import { Search } from '../../components/search/search-service';
-import AppSearch from '../../components/search/search.vue';
 
 const Key: InjectionKey<Controller> = Symbol('search-route');
 

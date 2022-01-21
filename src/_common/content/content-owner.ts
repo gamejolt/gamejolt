@@ -1,74 +1,46 @@
 import { reactive } from '@vue/reactivity';
-import { computed, readonly, ref, Ref } from 'vue';
-import { ContextCapabilities } from './content-context';
-import { ContentDocument } from './content-document';
+import { computed, inject, InjectionKey, ref } from 'vue';
+import { MaybeRef } from '../../utils/vue';
+import { ContentContext, ContextCapabilities } from './content-context';
 import { ContentRules } from './content-editor/content-rules';
 import { ContentHydrator } from './content-hydrator';
 
-export const ContentOwnerControllerKey = Symbol('content-owner-controller');
+export const ContentOwnerControllerKey: InjectionKey<ContentOwnerController> = Symbol(
+	'content-owner-controller'
+);
 
 export type ContentOwnerController = ReturnType<typeof createContentOwnerController>;
 
+export function useContentOwnerController() {
+	return inject(ContentOwnerControllerKey, null);
+}
+
 interface ContentOwnerControllerOptions {
-	contentRules: Ref<ContentRules | null>;
-	disableLightbox?: Ref<boolean>;
-	modelId?: Ref<number | null>;
+	context: MaybeRef<ContentContext>;
+	capabilities: MaybeRef<ContextCapabilities>;
+	contentRules?: MaybeRef<ContentRules | undefined>;
+	disableLightbox?: MaybeRef<boolean | undefined>;
+	getModelId?: () => Promise<number>;
 }
 
 export function createContentOwnerController(options: ContentOwnerControllerOptions) {
-	const doc = ref<ContentDocument | null>(null);
+	const { getModelId } = options;
+
 	const hydrator = ref<ContentHydrator>(new ContentHydrator());
 
-	const capabilities = computed(() => {
-		if (doc.value) {
-			return ContextCapabilities.getForContext(context.value);
-		}
-		return ContextCapabilities.getEmpty();
-	});
+	const disableLightbox = ref(options.disableLightbox);
+	const context = ref(options.context);
+	const capabilities = ref(options.capabilities);
 
-	const contentRules = computed(() => {
-		if (options.contentRules.value) {
-			return options.contentRules.value;
-		}
-		return new ContentRules();
-	});
-
-	const content = computed(() => {
-		if (doc.value) {
-			return doc.value.content;
-		}
-		return [];
-	});
-
-	const context = computed(() => {
-		if (doc.value) {
-			return doc.value.context;
-		}
-		throw new Error('No context assigned to viewer');
-	});
-
-	const disableLightbox = computed(() => {
-		if (options.disableLightbox) {
-			return options.disableLightbox.value;
-		}
-		return false;
-	});
-
-	const modelId = computed(() => {
-		if (options.modelId) {
-			return options.modelId.value;
-		}
-		return null;
-	});
+	const _contentRules = ref(options.contentRules);
+	const contentRules = computed(() => _contentRules.value ?? new ContentRules());
 
 	return reactive({
-		doc,
-		hydrator,
-		capabilities,
-		contentRules,
 		context,
+		capabilities,
+		hydrator,
+		contentRules,
 		disableLightbox,
-		modelId,
-		content: readonly(content),
+		getModelId,
 	});
 }

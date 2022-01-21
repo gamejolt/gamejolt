@@ -97,7 +97,7 @@ export default class FormCommunity extends mixins(Wrapper) implements FormOnSubm
 						url: '/web/dash/communities/check-field-availability/path',
 					}),
 				]"
-				data-vv-delay="500"
+				:validate-delay="500"
 			/>
 			<div class="help-block">
 				<p>

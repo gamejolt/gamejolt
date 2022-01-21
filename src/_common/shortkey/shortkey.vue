@@ -26,5 +26,5 @@ export default class AppShortkey extends Vue {
 </script>
 
 <template>
-	<span></span>
+	<span />
 </template>

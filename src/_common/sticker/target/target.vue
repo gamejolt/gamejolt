@@ -5,7 +5,7 @@ import { sleep } from '../../../utils/utils';
 import { shallowSetup } from '../../../utils/vue';
 import { Api } from '../../api/api.service';
 import { assignDrawerStoreItem, PointerPosition, useDrawerStore } from '../../drawer/drawer-store';
-import AppScrollInview, { ScrollInviewConfig } from '../../scroll/inview/inview.vue';
+import AppScrollInview, { ScrollInviewConfig } from '../../scroll/inview/AppScrollInview.vue';
 import {
 	getRectForStickerTarget,
 	registerStickerTarget,

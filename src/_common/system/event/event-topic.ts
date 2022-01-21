@@ -32,14 +32,14 @@ export class EventTopic<T> {
 export function useEventSubscription<T>(topic: EventTopic<T>, listener: EventListener<T>) {
 	let _subscription: EventSubscription | undefined;
 
-	onMounted(() => {
-		_subscription = topic.subscribe(listener);
-	});
-
 	function close() {
 		_subscription?.close();
 		_subscription = undefined;
 	}
+
+	onMounted(() => {
+		_subscription = topic.subscribe(listener);
+	});
 
 	onUnmounted(() => {
 		close();

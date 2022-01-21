@@ -27,7 +27,7 @@ const { isDraggable, activeItem, activate } = useCardList()!;
 const isActive = computed(() => {
 	return props.forceActive || toRaw(activeItem.value) === toRaw(props.item);
 });
-// TODO(vue3): check
+
 const isExpandable = computed(() => !!slots.body);
 
 function onClick() {

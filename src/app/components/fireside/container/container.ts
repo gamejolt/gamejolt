@@ -1,4 +1,4 @@
-import { h } from 'vue';
+import { h, reactive } from 'vue';
 import { setup } from 'vue-class-component';
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { arrayUnique } from '../../../../utils/array';
@@ -56,6 +56,7 @@ export class AppFiresideContainer extends Vue {
 	controller!: FiresideController;
 
 	store = setup(() => useAppStore());
+	storeRaw = shallowSetup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
 	drawerStore = shallowSetup(() => useDrawerStore());
 
@@ -71,7 +72,7 @@ export class AppFiresideContainer extends Vue {
 	}
 
 	get chat() {
-		return this.chatStore.chat;
+		return this.chatStore.chat ?? undefined;
 	}
 
 	created() {
@@ -109,7 +110,7 @@ export class AppFiresideContainer extends Vue {
 		}
 
 		if (!this.chat) {
-			loadChat(this.chatStore);
+			loadChat(this.chatStore, this.storeRaw);
 		}
 
 		// Set up watchers to initiate connection once one of them boots up.
@@ -122,7 +123,7 @@ export class AppFiresideContainer extends Vue {
 	}
 
 	unmounted() {
-		this.controller.onRetry.value = null;
+		this.controller.onRetry.value = undefined;
 		this.drawerStore.streak.value = null;
 
 		this.disconnect();
@@ -141,7 +142,7 @@ export class AppFiresideContainer extends Vue {
 		// Only disconnect when not connected and it previous registered a different state.
 		// This watcher runs once initially when chat is not connected, and we don't want to call
 		// disconnect in that case.
-		else if (c.chatPreviousConnectedState.value !== null) {
+		else if (c.chatPreviousConnectedState.value !== undefined) {
 			this.disconnect();
 		}
 
@@ -157,11 +158,11 @@ export class AppFiresideContainer extends Vue {
 		// Only disconnect when not connected and it previous registered a different state.
 		// This watcher runs once initially when grid is not connected, and we don't want to call
 		// disconnect in that case.
-		else if (this.grid && c.gridPreviousConnectedState.value !== null) {
+		else if (this.grid && c.gridPreviousConnectedState.value !== undefined) {
 			this.disconnect();
 		}
 
-		c.gridPreviousConnectedState.value = this.grid?.connected ?? null;
+		c.gridPreviousConnectedState.value = this.grid?.connected ?? undefined;
 	}
 
 	private async tryJoin() {
@@ -267,21 +268,24 @@ export class AppFiresideContainer extends Vue {
 
 		// --- Join Grid channel.
 
-		const channel = new FiresideChannel(c.fireside, this.grid.socket, this.user, authToken);
+		const channel = reactive(
+			new FiresideChannel(c.fireside, this.grid.socket, this.user, authToken)
+		) as FiresideChannel;
+		channel.init();
 
 		// Subscribe to the update event.
-		channel.on(EVENT_UPDATE, this.onGridUpdateFireside.bind(this));
-		channel.on(EVENT_STREAMING_UID, this.onGridStreamingUidAdded.bind(this));
-		channel.on(EVENT_STICKER_PLACEMENT, this.onGridStickerPlacement.bind(this));
+		channel.socketChannel.on(EVENT_UPDATE, this.onGridUpdateFireside.bind(this));
+		channel.socketChannel.on(EVENT_STREAMING_UID, this.onGridStreamingUidAdded.bind(this));
+		channel.socketChannel.on(EVENT_STICKER_PLACEMENT, this.onGridStickerPlacement.bind(this));
 
 		try {
 			await new Promise<void>((resolve, reject) => {
-				channel
+				channel.socketChannel
 					.join()
 					.receive('error', reject)
 					.receive('ok', () => {
 						c.gridChannel.value = channel;
-						this.grid!.channels.push(channel);
+						this.grid!.firesideChannels.push(channel);
 						resolve();
 					});
 			});
@@ -312,7 +316,7 @@ export class AppFiresideContainer extends Vue {
 			return;
 		}
 
-		c.chatChannel.value.on('kick_member', (data: any) => {
+		c.chatChannel.value.socketChannel.on('kick_member', (data: any) => {
 			if (this.user && data.user_id === this.user.id) {
 				showInfoGrowl(this.$gettext(`You've been kicked from the fireside.`));
 				this.$router.push({ name: 'home' });
@@ -394,17 +398,16 @@ export class AppFiresideContainer extends Vue {
 		console.debug(`[FIRESIDE] Disconnecting from fireside.`);
 		c.status.value = 'disconnected';
 
-		if (this.grid && this.grid.connected && c.gridChannel.value) {
-			c.gridChannel.value.leave();
+		if (this.grid?.connected && c.gridChannel.value) {
+			this.grid.leaveFireside(c.fireside);
 		}
+		c.gridChannel.value = undefined;
 
-		c.gridChannel.value = null;
-
-		if (this.chat && this.chat.connected && c.chatChannel.value) {
+		if (this.chat?.connected && c.chatChannel.value) {
 			leaveChatRoom(this.chat, c.chatChannel.value.room);
 		}
+		c.chatChannel.value = undefined;
 
-		c.chatChannel.value = null;
 		StreamSetupModal.close();
 		this.destroyRtc();
 
@@ -415,7 +418,7 @@ export class AppFiresideContainer extends Vue {
 		const c = this.controller;
 		if (c.expiryInterval.value) {
 			clearInterval(c.expiryInterval.value);
-			c.expiryInterval.value = null;
+			c.expiryInterval.value = undefined;
 		}
 	}
 
@@ -435,7 +438,7 @@ export class AppFiresideContainer extends Vue {
 		const c = this.controller;
 		if (c.updateInterval.value) {
 			clearInterval(c.updateInterval.value);
-			c.updateInterval.value = null;
+			c.updateInterval.value = undefined;
 		}
 	}
 
@@ -466,7 +469,7 @@ export class AppFiresideContainer extends Vue {
 			return;
 		}
 
-		if (c.rtc.value === null) {
+		if (!c.rtc.value) {
 			c.rtc.value = createFiresideRTC(
 				c.fireside,
 				this.user?.id ?? null,
@@ -506,7 +509,7 @@ export class AppFiresideContainer extends Vue {
 		}
 
 		destroyFiresideRTC(c.rtc.value);
-		c.rtc.value = null;
+		c.rtc.value = undefined;
 	}
 
 	private onRetry() {

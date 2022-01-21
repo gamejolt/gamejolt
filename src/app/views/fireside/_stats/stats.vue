@@ -5,7 +5,7 @@ import { shallowSetup } from '../../../../utils/vue';
 import AppCard from '../../../../_common/card/card.vue';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
-import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
+import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppShareCard from '../../../../_common/share/card/card.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
@@ -14,6 +14,7 @@ import {
 	publishFireside,
 	useFiresideController,
 } from '../../../components/fireside/controller/controller';
+import { illEndOfFeed } from '../../../img/ill/illustrations';
 import AppFiresideShare from '../_share/share.vue';
 
 @Options({
@@ -33,6 +34,8 @@ export default class AppFiresideStats extends Vue {
 	commonStore = setup(() => useCommonStore());
 
 	c = shallowSetup(() => useFiresideController()!);
+
+	readonly illEndOfFeed = illEndOfFeed;
 
 	get user() {
 		return this.commonStore.user;

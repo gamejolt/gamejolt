@@ -1,45 +1,36 @@
 <script lang="ts">
-import { provide } from '@vue/runtime-core';
-import { DOMParser, Node } from 'prosemirror-model';
-import { EditorState, Plugin, Selection, Transaction } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
 import 'prosemirror-view/style/prosemirror.css';
 import ResizeObserver from 'resize-observer-polyfill';
-import { computed, nextTick, triggerRef } from 'vue';
-import { Emit, Options, Prop, Provide, Vue, Watch } from 'vue-property-decorator';
+import { computed, nextTick, provide } from 'vue';
+import { setup } from 'vue-class-component';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { AppObserveDimensions } from '../../observe-dimensions/observe-dimensions.directive';
-import AppScrollScroller from '../../scroll/scroller/scroller.vue';
-import { ContentContext, ContextCapabilities } from '../content-context';
+import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
+import { ContentContext } from '../content-context';
 import { ContentDocument } from '../content-document';
 import { ContentFormatAdapter, ProsemirrorEditorFormat } from '../content-format-adapter';
-import { ContentHydrator } from '../content-hydrator';
 import {
 	ContentOwnerController,
 	ContentOwnerControllerKey,
 	createContentOwnerController,
 } from '../content-owner';
+import AppContentEditorNodeRenderer from './AppContentEditorNodeRenderer.vue';
 import {
 	ContentEditorController,
 	ContentEditorControllerKey,
-	editorEnsureEndNode,
+	createContentEditor,
+	editorCreateView,
 	editorFocus,
-	editorSyncScope,
-	editorSyncWindow,
 } from './content-editor-controller';
 import { ContentRules } from './content-rules';
 import { ContentTempResource } from './content-temp-resource.service';
 import AppContentEditorBlockControls from './controls/block-controls.vue';
-import AppContentEditorControlsEmojiTS from './controls/emoji/emoji';
 import AppContentEditorControlsEmoji from './controls/emoji/emoji.vue';
 import AppContentEditorControlsGif from './controls/gif/gif.vue';
 import AppContentEditorInsetControls from './controls/inset-controls.vue';
 import AppContentEditorControlsMentionAutocomplete from './controls/mention/autocomplete.vue';
 import AppContentEditorTextControls from './controls/text-controls.vue';
-import buildEvents from './events/build-events';
 import { FocusWatcher } from './focus-watcher';
-import { buildNodeViews } from './node-views/node-view-builder';
-import { createPlugins } from './plugins/plugins';
-import { ContentEditorSchema, generateSchema } from './schemas/content-editor-schema';
 
 @Options({
 	components: {
@@ -49,6 +40,7 @@ import { ContentEditorSchema, generateSchema } from './schemas/content-editor-sc
 		AppContentEditorControlsGif,
 		AppContentEditorInsetControls,
 		AppContentEditorControlsMentionAutocomplete,
+		AppContentEditorNodeRenderer,
 		AppScrollScroller,
 	},
 	directives: {
@@ -56,6 +48,9 @@ import { ContentEditorSchema, generateSchema } from './schemas/content-editor-sc
 	},
 })
 export default class AppContentEditor extends Vue {
+	@Prop({ type: Object, default: undefined })
+	controller?: ContentEditorController;
+
 	@Prop({ type: String, required: true })
 	contentContext!: ContentContext;
 
@@ -109,8 +104,20 @@ export default class AppContentEditor extends Vue {
 	@Prop({ type: Boolean })
 	focusEnd!: boolean;
 
-	@Provide({ to: ContentEditorControllerKey, reactive: true })
-	controller: ContentEditorController = null as any;
+	controller_ = setup(() => {
+		const props = this.$props as this;
+
+		const c =
+			this.controller ||
+			createContentEditor({
+				contentContext: props.contentContext,
+				disabled: computed(() => props.disabled),
+				singleLineMode: computed(() => props.singleLineMode),
+				focusEnd: computed(() => props.focusEnd),
+			});
+		provide(ContentEditorControllerKey, c);
+		return c;
+	});
 
 	// Gets provided all the way down during [created].
 	ownerController!: ContentOwnerController;
@@ -121,49 +128,21 @@ export default class AppContentEditor extends Vue {
 	// 	name: () => 'app-content-editor',
 	// };
 
-	schema: ContentEditorSchema | null = null;
-	plugins: Plugin<ContentEditorSchema>[] | null = null;
-
 	focusWatcher: FocusWatcher | null = null;
 	resizeObserver: ResizeObserver | null = null;
-
-	stateCounter = 0;
-	isFocused = false;
-	emojiPanelVisible = false;
-	controlsCollapsed = true;
-
-	/**
-	 * Gets updated through the update-is-empty-plugin.
-	 */
-	isEmpty = true;
-
-	/**
-	 * Indicates whether we want to currently show the mention suggestion panel.
-	 * Values > 0 indicate true.
-	 *
-	 * This and [mentionUserCount] are both checked elsewhere to prevent certain
-	 * mouse/keyboard events from triggering.
-	 */
-	canShowMentionSuggestions = 0;
-	mentionUserCount = 0;
 
 	/**
 	 * If no model id if gets passed in, we store a temp model's id here.
 	 */
 	tempModelId_: number | null = null;
-	// Keep a copy of the json version of the doc, to only set the content if the external source changed.
-	sourceControlVal_: string | null = null;
 
 	declare $refs: {
 		editor: HTMLElement;
 		doc: HTMLElement;
-		emojiPanel: AppContentEditorControlsEmojiTS;
 	};
 
 	@Emit('submit')
-	emitSubmit() {
-		++this.stateCounter;
-	}
+	emitSubmit() {}
 
 	@Emit('insert-block-node')
 	emitInsertBlockNode(_nodeType: string) {}
@@ -178,33 +157,40 @@ export default class AppContentEditor extends Vue {
 	emitEditorBlur() {}
 
 	get canShowMention() {
-		return this.canShowMentionSuggestions > 0;
+		return this.controller_.canShowMentionSuggestions > 0;
 	}
 
 	get view() {
-		return this.controller.view ?? null;
+		return this.controller_.view ?? null;
 	}
 
 	get contextCapabilities() {
-		return this.controller.contextCapabilities;
+		return this.controller_.contextCapabilities;
 	}
 
 	get shouldShowControls() {
-		return !this.disabled && this.isFocused && this.contextCapabilities.hasAnyBlock;
+		return (
+			!this.controller_.disabled &&
+			this.controller_.isFocused &&
+			this.contextCapabilities.hasAnyBlock
+		);
 	}
 
 	get shouldShowTextControls() {
 		return (
-			!this.disabled &&
-			this.isFocused &&
+			!this.controller_.disabled &&
+			this.controller_.isFocused &&
 			this.contextCapabilities.hasAnyText &&
-			!this.emojiPanelVisible
+			!this.controller_.emojiPanelVisible
 		);
 	}
 
 	get shouldShowEmojiPanel() {
 		return (
-			!GJ_IS_MOBILE_APP && !this.disabled && this.contextCapabilities.emoji && this.isFocused
+			!GJ_IS_MOBILE_APP &&
+			!this.controller_.disabled &&
+			this.contextCapabilities.emoji &&
+			this.controller_.isFocused
 		);
 	}
 
@@ -223,13 +209,13 @@ export default class AppContentEditor extends Vue {
 	get shouldShowPlaceholder() {
 		return (
 			this.placeholder.length > 0 &&
-			this.isEmpty &&
-			(!this.shouldShowControls || this.controlsCollapsed)
+			this.controller_.isEmpty &&
+			(!this.shouldShowControls || this.controller_.controlsCollapsed)
 		);
 	}
 
 	get editorStyleClass() {
-		return this.contentContext + '-content';
+		return this.controller_.contentContext + '-content';
 	}
 
 	get containerMinHeight() {
@@ -240,28 +226,25 @@ export default class AppContentEditor extends Vue {
 	}
 
 	get shouldShowGifButton() {
-		return !this.disabled && this.contextCapabilities.gif && this.isFocused;
-	}
-
-	@Watch('stateCounter')
-	onStateCounterChange() {
-		editorSyncScope(this.controller, this.disabled, this.isFocused);
+		return (
+			!this.controller_.disabled && this.contextCapabilities.gif && this.controller_.isFocused
+		);
 	}
 
 	@Watch('value')
 	onSourceUpdated() {
-		if (this.sourceControlVal_ === this.value) {
+		if (this.controller_.sourceContent === this.value) {
 			return;
 		}
 
-		this.sourceControlVal_ = this.value;
+		this.controller_.sourceContent = this.value;
 
 		// When we receive an empty string as the document json, the caller
 		// probably wants to clear the document.
-		if (this.value === '') {
+		if (!this.value) {
 			this.reset();
 		} else {
-			const wasFocused = this.isFocused;
+			const wasFocused = this.controller_.isFocused;
 			const doc = ContentDocument.fromJson(this.value);
 
 			// Don't await this since we want to make sure we focus within the
@@ -269,143 +252,82 @@ export default class AppContentEditor extends Vue {
 			this.setContent(doc);
 
 			if (wasFocused) {
-				editorFocus(this.controller);
+				editorFocus(this.controller_);
 			}
 		}
-	}
-
-	onUpdate(state: EditorState<ContentEditorSchema>) {
-		const source = ContentFormatAdapter.adaptOut(
-			state.doc.toJSON() as ProsemirrorEditorFormat,
-			this.contentContext
-		).toJson();
-		this.sourceControlVal_ = source;
-		this.emitInput(source);
-	}
-
-	private reset() {
-		this.tempModelId_ = null;
-		const doc = new ContentDocument(this.contentContext, []);
-		this.setContent(doc);
-		this.isEmpty = true;
 	}
 
 	created() {
-		this.controller = new ContentEditorController(this.syncWindow.bind(this));
-
-		// TODO(vue3): make sure this works once we can test content editor
-		const modelId = computed(() => {
-			const props = this.$props as this;
-
-			if (props.modelId === null) {
-				if (!this.tempModelId_) {
-					new Promise<number>(() =>
-						ContentTempResource.getTempModelId(
+		this.ownerController = createContentOwnerController({
+			context: this.controller_.contentContext,
+			capabilities: this.controller_.contextCapabilities,
+			contentRules: computed(() => this.displayRules),
+			getModelId: async () => {
+				if (this.modelId === null) {
+					if (!this.tempModelId_) {
+						this.tempModelId_ = await ContentTempResource.getTempModelId(
 							this.contentContext,
 							this.tempResourceContextData
-						)
-					).then(id => {
-						// Get the temp ID, assign it, then trigger this to update again.
-						this.tempModelId_ = id;
-						triggerRef(modelId);
-					});
+						);
+					}
+					return this.tempModelId_;
 				}
-				return this.tempModelId_;
-			} else {
+
 				return this.modelId;
-			}
+			},
 		});
-
-		this.ownerController = createContentOwnerController({
-			contentRules: computed(() => {
-				return (this.$props as this).displayRules ?? null;
-			}),
-			modelId,
-		});
-
 		provide(ContentOwnerControllerKey, this.ownerController);
+
+		// Attach our editor hooks into the controller so that we can be
+		// controlled through the controller. So much control.
+		this.controller_._editor = {
+			getWindowRect: () => this.$refs.editor.getBoundingClientRect(),
+			emitSubmit: () => this.emitSubmit(),
+			emitInput: newSource => this.emitInput(newSource),
+		};
 	}
 
 	async mounted() {
-		this.controller.contextCapabilities = ContextCapabilities.getForContext(
-			this.contentContext
-		);
-
-		this.schema = generateSchema(this.contextCapabilities);
-		this.plugins = createPlugins(this, this.schema);
-
-		// We have to wait a frame here before we can start using the $refs.doc variable.
-		// Due to the scroller around it also initializing on mounted, we have to wait for it to finish.
-		// The scroller v-ifs the slot element away until it's fully mounted.
-		// The next frame after that we have our doc ref available.
+		// We have to wait a frame here before we can start using the $refs.doc
+		// variable. Due to the scroller around it also initializing on mounted,
+		// we have to wait for it to finish. The scroller v-ifs the slot element
+		// away until it's fully mounted. The next frame after that we have our
+		// doc ref available.
 		await nextTick();
 
 		if (this.value) {
-			const doc = ContentDocument.fromJson(this.value);
-			await this.setContent(doc);
+			await this.setContent(ContentDocument.fromJson(this.value));
 		} else {
-			const state = EditorState.create({
-				doc: DOMParser.fromSchema(this.schema).parse(this.$refs.doc),
-				plugins: this.plugins,
-			});
-
-			this.createView(state);
+			await this.reset();
 		}
 
-		++this.stateCounter;
+		++this.controller_.stateCounter;
 
 		this.focusWatcher = new FocusWatcher(this.$refs.editor, this.onFocusIn, this.onFocusOut);
 		this.focusWatcher.start();
 
-		if (this.view instanceof EditorView && this.autofocus) {
+		if (this.view && this.autofocus) {
 			this.focus();
 		}
 	}
 
 	beforeUnmount() {
-		if (this.focusWatcher instanceof FocusWatcher) {
-			this.focusWatcher.destroy();
-		}
-		if (this.resizeObserver instanceof ResizeObserver) {
-			this.resizeObserver.disconnect();
-		}
+		this.focusWatcher?.destroy();
+		this.resizeObserver?.disconnect();
 	}
 
-	/**
-	 * Creates a new prosemirror view instance based on an editor state.
-	 */
-	private createView(state: EditorState<ContentEditorSchema>) {
-		this.controller.view?.destroy();
-
-		const nodeViews = buildNodeViews(this.ownerController);
-		const eventHandlers = buildEvents(this);
-		const view = (this.controller.view = new EditorView<ContentEditorSchema>(this.$refs.doc, {
-			state,
-			nodeViews,
-			handleDOMEvents: eventHandlers,
-			editable: () => !this.disabled,
-			attributes: {
-				'data-prevent-shortkey': '',
-			},
-		}));
-		this.updateIsEmpty(state);
-
-		// Make sure we have a paragraph when loading in a new state
-		if (!this.disabled || view.state.doc.childCount === 0) {
-			const tr = editorEnsureEndNode(view.state.tr, view.state.schema.nodes.paragraph);
-			if (tr instanceof Transaction) {
-				view.dispatch(tr);
-			}
-		}
-
-		return view!;
+	private async reset() {
+		this.tempModelId_ = null;
+		const doc = new ContentDocument(this.controller_.contentContext);
+		await this.setContent(doc);
+		this.controller_.isEmpty = true;
 	}
 
 	getContent() {
-		if (this.view instanceof EditorView) {
+		if (this.view) {
 			const data = ContentFormatAdapter.adaptOut(
 				this.view.state.doc.toJSON() as ProsemirrorEditorFormat,
-				this.contentContext
+				this.controller_.contentContext
 			);
 			return data;
 		}
@@ -413,51 +335,11 @@ export default class AppContentEditor extends Vue {
 	}
 
 	async setContent(doc: ContentDocument) {
-		if (doc.context !== this.contentContext) {
-			throw new Error(
-				`The passed in content context is invalid. ${doc.context} != ${this.contentContext}`
-			);
-		}
-		if (this.schema instanceof ContentEditorSchema) {
-			// Do this here so we don't fire an update directly after populating.
-			doc.ensureEndParagraph();
-
-			this.controller.hydrator = new ContentHydrator(doc.hydration);
-			const jsonObj = ContentFormatAdapter.adaptIn(doc);
-			const state = EditorState.create({
-				doc: Node.fromJSON(this.schema, jsonObj),
-				plugins: this.plugins,
-			});
-
-			const view = this.createView(state);
-
-			if (this.focusEnd) {
-				// Wait here so images and other content can render in and scale properly.
-				// Otherwise the scroll at the end of the transaction below would not cover the entire doc.
-				await nextTick();
-
-				// Set selection at the end of the document.
-				const tr = view.state.tr;
-				const selection = Selection.atEnd(view.state.doc);
-				tr.setSelection(selection);
-				tr.scrollIntoView();
-				view.dispatch(tr);
-			}
-
-			++this.stateCounter;
-		}
+		await editorCreateView(this.controller_, this.$refs.doc, doc);
 	}
 
 	onDimensionsChange() {
-		++this.stateCounter;
-	}
-
-	// Gets called by the ContentEditorController while updating scope. We
-	// increment the stateCounter on dimension change, which updates scope,
-	// which calls this.
-	syncWindow() {
-		const rect = this.$refs.editor.getBoundingClientRect();
-		editorSyncWindow(this.controller, rect);
+		++this.controller_.stateCounter;
 	}
 
 	onFocusOuter() {
@@ -469,64 +351,47 @@ export default class AppContentEditor extends Vue {
 	}
 
 	private onFocusIn() {
-		if (this.isFocused) {
+		if (this.controller_.isFocused) {
 			return;
 		}
 		this.emitEditorFocus();
-		this.isFocused = true;
-		++this.stateCounter;
+		this.controller_.isFocused = true;
+		++this.controller_.stateCounter;
 	}
 
 	private onFocusOut() {
-		if (!this.isFocused) {
+		if (!this.controller_.isFocused) {
 			return;
 		}
-		this.canShowMentionSuggestions = 0; // When the editor goes out of focus, hide the mention suggestions panel.
+		this.controller_.canShowMentionSuggestions = 0; // When the editor goes out of focus, hide the mention suggestions panel.
 		this.emitEditorBlur();
-		this.isFocused = false;
-		++this.stateCounter;
-	}
-
-	showEmojiPanel() {
-		if (this.$refs.emojiPanel instanceof AppContentEditorControlsEmoji) {
-			this.$refs.emojiPanel.show();
-		}
-	}
-
-	updateIsEmpty(state: EditorState) {
-		// The "empty" prosemirror document takes up a length of 4.
-		this.isEmpty = state.doc.nodeSize <= 4;
+		this.controller_.isFocused = false;
+		++this.controller_.stateCounter;
 	}
 
 	onEmojiPanelVisibilityChanged(visible: boolean) {
-		this.emojiPanelVisible = visible;
-	}
-
-	onControlsCollapsedChanged(collapsed: boolean) {
-		this.controlsCollapsed = collapsed;
+		this.controller_.emojiPanelVisible = visible;
 	}
 
 	onInsertMention() {
-		this.canShowMentionSuggestions = 0; // Hide control
+		this.controller_.canShowMentionSuggestions = 0; // Hide control
 	}
 
 	onMentionUsersChange(num: number) {
-		this.mentionUserCount = num;
+		this.controller_.mentionUserCount = num;
 	}
 
 	onScroll() {
 		// When the doc scroller gets scrolled, we want to make sure we position
 		// the controls appropriately.
-		++this.stateCounter;
+		++this.controller_.stateCounter;
 	}
 
 	focus() {
 		this.$refs.editor.focus();
-		if (this.view) {
-			this.view.focus();
-		}
+		this.view?.focus();
 
-		++this.stateCounter;
+		++this.controller_.stateCounter;
 	}
 }
 </script>
@@ -580,7 +445,6 @@ export default class AppContentEditor extends Vue {
 					<transition name="fade">
 						<app-content-editor-controls-emoji
 							v-if="shouldShowEmojiPanel"
-							ref="emojiPanel"
 							@visibility-change="onEmojiPanelVisibilityChanged"
 						/>
 					</transition>
@@ -590,11 +454,7 @@ export default class AppContentEditor extends Vue {
 
 		<template v-if="!GJ_IS_MOBILE_APP">
 			<transition name="fade">
-				<app-content-editor-block-controls
-					v-if="shouldShowControls"
-					:collapsed="controlsCollapsed"
-					@collapsed-change="onControlsCollapsedChanged"
-				/>
+				<app-content-editor-block-controls v-if="shouldShowControls" />
 			</transition>
 			<transition name="fade">
 				<app-content-editor-text-controls v-if="shouldShowTextControls" />
@@ -607,6 +467,8 @@ export default class AppContentEditor extends Vue {
 				/>
 			</transition>
 		</template>
+
+		<app-content-editor-node-renderer />
 	</div>
 </template>
 

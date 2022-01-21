@@ -93,7 +93,6 @@ export default class RouteLandingGameApiDoc extends BaseRouteComponent {
 </template>
 
 <style lang="stylus" scoped>
-// TODO(vue3): check the path
 @import '../../../../_styles/common/tables'
 
 .-content

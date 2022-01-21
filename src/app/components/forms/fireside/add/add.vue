@@ -2,7 +2,6 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Community } from '../../../../../_common/community/community.model';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import { AppFocusWhen } from '../../../../../_common/form-vue/focus-when.directive';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import AppFormsCommunityPillAdd from '../../community/_pill/add/add.vue';
 import AppFormsCommunityPill from '../../community/_pill/community-pill.vue';
@@ -22,9 +21,6 @@ class Wrapper extends BaseForm<FormModel> {}
 		AppFormsCommunityPillAdd,
 		AppFormsCommunityPill,
 		AppFormControlToggle,
-	},
-	directives: {
-		AppFocusWhen,
 	},
 })
 export default class FormFiresideAdd extends mixins(Wrapper) {
@@ -54,6 +50,7 @@ export default class FormFiresideAdd extends mixins(Wrapper) {
 
 	onInit() {
 		this.setField('is_draft', false);
+		this.setField('title', '');
 
 		if (this.community) {
 			this.setCommunity(this.community);
@@ -88,10 +85,10 @@ export default class FormFiresideAdd extends mixins(Wrapper) {
 	<app-form :controller="form">
 		<app-form-group name="title" :label="$gettext(`Title`)">
 			<app-form-control
-				v-app-focus-when
 				type="text"
 				:validators="[validateMinLength(4), validateMaxLength(100)]"
 				:placeholder="defaultTitle"
+				focus
 				@blur="onBlurTitle"
 			/>
 			<app-form-control-errors />

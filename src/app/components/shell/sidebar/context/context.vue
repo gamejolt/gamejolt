@@ -1,7 +1,7 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options, Vue, Watch } from 'vue-property-decorator';
-import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
+import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.vue';
 import { useSidebarStore } from '../../../../../_common/sidebar/sidebar.store';
 import { useAppStore } from '../../../../store/index';
 

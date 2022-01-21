@@ -303,7 +303,7 @@ export default class FormGamePackage
 							initVal: method === 'edit' ? model.title || game.title : undefined,
 						}),
 					]"
-					data-vv-delay="500"
+					:validate-delay="500"
 					:disabled="!hasBuildsPerms"
 				/>
 

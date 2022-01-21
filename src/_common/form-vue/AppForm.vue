@@ -53,7 +53,7 @@ export interface FormController<T = any> {
 	// Internal.
 	_groups: FormGroupController[];
 	_onControlChanged: () => void;
-	_validationToken: null | CancelToken;
+	_validationToken: CancelToken;
 	_override: (overrides: Partial<CreateFormOptions<T>>) => void;
 }
 
@@ -80,7 +80,7 @@ export function useForm<T = any>() {
 }
 
 interface CreateFormOptions<T> {
-	model: Ref<T | undefined>;
+	model?: Ref<T | undefined>;
 	modelClass?: ModelClassType<T>;
 	saveMethod?: MaybeRef<keyof T | undefined>;
 	loadUrl?: MaybeRef<string | undefined>;
@@ -113,7 +113,7 @@ export function createForm<T>({
 
 	const name = uuidv4();
 
-	const formModel = ref(_makeFormModel() as T);
+	const formModel = ref(_makeFormModel()) as Ref<T>;
 	const resetOnSubmit = ref(options.resetOnSubmit || false);
 	const warnOnDiscard = ref(options.warnOnDiscard || true);
 	const reloadOnSubmit = ref(options.reloadOnSubmit || false);
@@ -124,7 +124,7 @@ export function createForm<T>({
 	let loadUrl = ref(options.loadUrl);
 	let loadData = ref(options.loadData);
 
-	const method = ref(model.value ? 'edit' : 'add');
+	const method = ref(model?.value ? 'edit' : 'add');
 	const changed = ref(false);
 	const attemptedSubmit = ref(false);
 	const isLoaded = ref(null as null | boolean);
@@ -134,7 +134,7 @@ export function createForm<T>({
 	const serverErrors = ref({} as PayloadFormErrors);
 	const customErrors = ref([] as string[]);
 	const _groups = ref([] as FormGroupController[]);
-	let _validationToken: null | CancelToken = null;
+	const _validationToken = ref(new CancelToken()) as Ref<CancelToken>;
 
 	const valid = computed(
 		() => _groups.value.every(i => i.valid) && customErrors.value.length === 0
@@ -184,6 +184,9 @@ export function createForm<T>({
 				overrides.onChange?.(formModel);
 			};
 		}
+
+		// Since the modelClass probably changed.
+		formModel.value = _makeFormModel() as T;
 	}
 
 	let _routeChangeDeregister: () => void | undefined;
@@ -216,7 +219,7 @@ export function createForm<T>({
 	function _makeFormModel() {
 		// If a model class was assigned to this form, then create a copy of it
 		// on the instance. Otherwise just copy the object.
-		if (model.value) {
+		if (model?.value) {
 			if (modelClass) {
 				return new modelClass(model.value);
 			} else {
@@ -262,7 +265,6 @@ export function createForm<T>({
 	}
 
 	function clearErrors() {
-		// TODO(vue3): test to make sure this works
 		for (const group of _groups.value) {
 			group.clearError();
 		}
@@ -281,19 +283,17 @@ export function createForm<T>({
 	}
 
 	async function validate() {
-		_validationToken?.cancel();
-		_validationToken = new CancelToken();
+		_validationToken.value.cancel();
+		_validationToken.value = new CancelToken();
 
 		// Simply validate all the controls.
-		await Promise.all(_groups.value.map(i => i.validate()));
+		const promises = _groups.value.map(i => i.validate(_validationToken.value));
+		await Promise.all(promises);
 	}
 
 	function _onControlChanged() {
 		changed.value = true;
 		onChange?.(formModel.value as T);
-
-		// TODO(vue3): should we validate before calling the onChange or after?
-		validate();
 	}
 
 	async function submit() {
@@ -331,7 +331,7 @@ export function createForm<T>({
 				response = await (formModel.value as any)[saveMethod.value || '$save']();
 
 				// Copy it back to the base model.
-				if (model.value) {
+				if (model?.value) {
 					Object.assign(model.value, formModel.value);
 				}
 			}

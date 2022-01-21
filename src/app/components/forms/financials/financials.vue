@@ -398,7 +398,6 @@ export default class FormFinancials
 		border-width: $border-width-base
 		border-style: solid
 
-		// TODO(vue3): will these nested selectors work under the deep?
 		h1
 		h2
 		h3

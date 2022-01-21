@@ -43,6 +43,7 @@ export default class AppGamePackageCardButtons extends Vue {
 			@click="click(card.downloadableBuild)"
 		>
 			<translate>Download</translate>
+			{{ ' ' }}
 			<small v-if="card.platformSupportInfo[card.showcasedOs].arch == '64'">
 				<translate>64-bit</translate>
 			</small>
@@ -56,7 +57,7 @@ export default class AppGamePackageCardButtons extends Vue {
 		If this package only has "Other" builds, then we make it look like a download button with a
 		[...] after. If the package has normal builds too, then we just show it as a more options
 		sparse button.
-	-->
+		-->
 		<app-popper v-if="card.extraBuilds.length" popover-class="fill-darkest">
 			<app-button
 				v-app-track-event="`game-package-card:more-options`"

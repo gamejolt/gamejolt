@@ -3,16 +3,16 @@ import { setup } from 'vue-class-component';
 import { Options, Vue, Watch } from 'vue-property-decorator';
 import { debounce } from '../../../../utils/utils';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
+import AppGameCompatIcons from '../../../../_common/game/compat-icons/compat-icons.vue';
 import { Game } from '../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../_common/game/thumbnail-img/thumbnail-img.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import { EventTopic } from '../../../../_common/system/event/event-topic';
+import { EventSubscription, EventTopic } from '../../../../_common/system/event/event-topic';
 import { User } from '../../../../_common/user/user.model';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
 import type * as LocalDbGameModType from '../../client/local-db/game/game.model';
-import AppGameCompatIcons from '../../game/compat-icons/compat-icons.vue';
+import { SearchKeydownSpy, useSearchController } from '../AppSearch.vue';
 import { sendSearch } from '../search-service';
-import { SearchKeydownSpy, useSearchController } from '../search.vue';
 
 let LocalDbGameMod: typeof LocalDbGameModType | undefined;
 if (GJ_IS_DESKTOP_APP) {
@@ -46,14 +46,18 @@ export default class AppSearchAutocomplete extends Vue {
 	search = setup(() => useSearchController()!);
 
 	searchChanges = new EventTopic<string>();
-	searched$ = this.searchChanges.subscribe(
-		debounce((query: string) => this.sendSearch(query), 500)
-	);
+	declare searched$: EventSubscription;
 
 	_keydownSpy?: SearchKeydownSpy;
 
 	get isHidden() {
 		return this.search.isEmpty;
+	}
+
+	created() {
+		this.searched$ = this.searchChanges.subscribe(
+			debounce(query => this.sendSearch(query), 500)
+		);
 	}
 
 	mounted() {
@@ -71,6 +75,9 @@ export default class AppSearchAutocomplete extends Vue {
 		};
 
 		this.search.setKeydownSpy(this._keydownSpy);
+
+		// Trigger the initial onChange so any query will show again.
+		this.onChange(this.search.query);
 	}
 
 	unmounted() {
@@ -80,6 +87,18 @@ export default class AppSearchAutocomplete extends Vue {
 			this.search.removeKeydownSpy(this._keydownSpy);
 			this._keydownSpy = undefined;
 		}
+	}
+
+	@Watch('search.query')
+	onChange(query: string) {
+		// Reset the selected index.
+		this.selected = 0;
+
+		if (this.search.isEmpty || !this.app) {
+			return;
+		}
+
+		this.searchChanges.next(query);
 	}
 
 	private async sendSearch(query: string) {
@@ -93,18 +112,17 @@ export default class AppSearchAutocomplete extends Vue {
 		// We only update the payload if the query is still the same as when we sent.
 		// This makes sure we don't step on ourselves while typing fast.
 		// Payloads may not come back sequentially.
-		if (this.search.query === query) {
-			this.games = payload.games;
-			this.users = payload.users;
-			this.libraryGames = payload.libraryGames;
-
-			// All items so we can calculate global selection indexes easily.
-			// This needs to be in the order that they will show in the results list.
-			this.items = ([] as any[])
-				.concat(this.libraryGames)
-				.concat(this.games)
-				.concat(this.users);
+		if (this.search.query !== query) {
+			return;
 		}
+
+		this.games = payload.games;
+		this.users = payload.users;
+		this.libraryGames = payload.libraryGames;
+
+		// All items so we can calculate global selection indexes easily.
+		// This needs to be in the order that they will show in the results list.
+		this.items = ([] as any[]).concat(this.libraryGames).concat(this.games).concat(this.users);
 	}
 
 	selectActive() {
@@ -164,18 +182,6 @@ export default class AppSearchAutocomplete extends Vue {
 			params: { slug: localGame.slug, id: localGame.id + '' },
 		});
 		Analytics.trackEvent('search', 'autocomplete', 'go-library-game');
-	}
-
-	@Watch('search.query')
-	onChange(query: string) {
-		// Reset the selected index.
-		this.selected = 0;
-
-		if (this.search.isEmpty || !this.app) {
-			return;
-		}
-
-		this.searchChanges.next(query);
 	}
 }
 </script>

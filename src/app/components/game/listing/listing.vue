@@ -8,7 +8,9 @@ import AppNavTabList from '../../../../_common/nav/tab-list/tab-list.vue';
 import AppPagination from '../../../../_common/pagination/pagination.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppNoAutoscroll } from '../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
-import AppScrollInview, { ScrollInviewConfig } from '../../../../_common/scroll/inview/inview.vue';
+import AppScrollInview, {
+	ScrollInviewConfig,
+} from '../../../../_common/scroll/inview/AppScrollInview.vue';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppGameFilteringTags from '../filtering/AppGameFilteringTags.vue';
 import { GameFilteringContainer } from '../filtering/container';

@@ -1,13 +1,11 @@
 <script lang="ts">
-import { ref } from 'vue';
-import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { shallowSetup } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
 import { setDrawerOpen, useDrawerStore } from '../../drawer/drawer-store';
 import { AppObserveDimensions } from '../../observe-dimensions/observe-dimensions.directive';
+import { useScroller } from '../../scroll/AppScrollScroller.vue';
 import { Scroll } from '../../scroll/scroll.service';
-import { useScroller } from '../../scroll/scroller/scroller.vue';
 import AppStickerLayerDrawer from './drawer.vue';
 import AppStickerLayerGhost from './ghost.vue';
 import { calculateStickerTargetRects, StickerLayerController } from './layer-controller';
@@ -33,7 +31,7 @@ export default class AppStickerLayerPlacementMask extends Vue {
 	hasCalculated = false;
 	width = 0;
 	height = 0;
-	private parentScroller = setup(() => ref(useScroller()));
+	private parentScroller = shallowSetup(() => useScroller());
 
 	get viewbox() {
 		return `0 0 ${this.width} ${this.height}`;
@@ -58,7 +56,7 @@ export default class AppStickerLayerPlacementMask extends Vue {
 
 		// We want to pull scroll information from the scroller if this layer
 		// sits within one.
-		const scrollElement = this.parentScroller?.element ?? undefined;
+		const scrollElement = this.parentScroller?.element.value ?? undefined;
 
 		// The scroll functions will either work on the scroller, or if
 		// undefined is passed in it will pull from the main document.

@@ -3,7 +3,7 @@ import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../api/api.service';
 import { Game } from '../../../../game/game.model';
 import AppGameThumbnailImg from '../../../../game/thumbnail-img/thumbnail-img.vue';
-import AppGameThumbnail from '../../../../game/thumbnail/thumbnail.vue';
+import AppGameThumbnail from '../../../../game/thumbnail/AppGameThumbnail.vue';
 import { showErrorGrowl } from '../../../../growls/growls.service';
 import AppLoading from '../../../../loading/loading.vue';
 import { BaseModal } from '../../../../modal/base';
@@ -109,7 +109,6 @@ export default class AppCommunityCompetitionEntrySubmitModal extends mixins(Base
 					:game="selectedGame"
 					class="-game-thumb-selected"
 					hide-pricing
-					hide-controls
 				/>
 				<p class="help-block">
 					<translate>

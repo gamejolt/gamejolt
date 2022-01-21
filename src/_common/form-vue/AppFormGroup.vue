@@ -11,6 +11,7 @@ import {
 	unref,
 } from 'vue';
 import { arrayRemove } from '../../utils/array';
+import { CancelToken } from '../../utils/cancel-token';
 import { titleCase } from '../../utils/string';
 import { useForm } from './AppForm.vue';
 import { FormControlController } from './AppFormControl.vue';
@@ -50,7 +51,7 @@ export function createFormGroup($props: typeof props) {
 	 * Validate this single control. Calling {@link FormController.validate}
 	 * will call this for every field in the form.
 	 */
-	async function validate() {
+	async function validate(cancelToken: CancelToken) {
 		// Only validate if a control has attached to this already.
 		if (!control.value) {
 			return;
@@ -63,7 +64,7 @@ export function createFormGroup($props: typeof props) {
 
 			// If this validation run is no longer active, ignore the result of
 			// this validation and early-out.
-			if (form._validationToken?.isCanceled) {
+			if (cancelToken.isCanceled) {
 				return;
 			}
 

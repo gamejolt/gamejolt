@@ -39,7 +39,6 @@ export default class AppSticker extends Vue {
 		}
 	}
 
-	// TODO(vue3): does it work to watch multiple like this still?
 	@Watch('sticker.position_x')
 	@Watch('sticker.position_y')
 	@Watch('sticker.rotation')

@@ -9,15 +9,13 @@ const linkAttrs = {
 	autolink: { default: false },
 };
 
-const getAttrsContentEditorLink = function(domNode: Element) {
-	return {
-		href: domNode.getAttribute('data-href'),
-		title: domNode.getAttribute('data-title'),
-		autolink: domNode.getAttribute('data-autolink'),
-	};
-};
+const getAttrsContentEditorLink = (domNode: Element) => ({
+	href: domNode.getAttribute('data-href'),
+	title: domNode.getAttribute('data-title'),
+	autolink: domNode.getAttribute('data-autolink'),
+});
 
-const toDOM = function(mark: Mark, _inline: boolean): DOMOutputSpec {
+const toDOM = (mark: Mark, _inline: boolean): DOMOutputSpec => {
 	const { href, title, autolink } = mark.attrs;
 	return [
 		'span',

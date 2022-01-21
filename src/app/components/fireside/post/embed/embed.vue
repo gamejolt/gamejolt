@@ -10,7 +10,7 @@ import { AppResponsiveDimensions } from '../../../../../_common/responsive-dimen
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
-} from '../../../../../_common/scroll/inview/inview.vue';
+} from '../../../../../_common/scroll/inview/AppScrollInview.vue';
 import AppSketchfabEmbed from '../../../../../_common/sketchfab/embed/embed.vue';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
@@ -69,6 +69,8 @@ export default class AppFiresidePostEmbed extends Vue {
 				return this.$gettext(`YouTube`);
 			case TYPE_SKETCHFAB:
 				return this.$gettext(`Sketchfab`);
+			default:
+				return undefined;
 		}
 	}
 
@@ -95,6 +97,8 @@ export default class AppFiresidePostEmbed extends Vue {
 				return 'youtube.com';
 			case TYPE_SKETCHFAB:
 				return 'sketchfab.com';
+			default:
+				return undefined;
 		}
 	}
 
@@ -119,9 +123,7 @@ export default class AppFiresidePostEmbed extends Vue {
 	}
 
 	get imageAlt() {
-		if (this.embed.metadata && this.embed.metadata.image_alt) {
-			return this.embed.metadata.image_alt;
-		}
+		return this.embed.metadata?.image_alt;
 	}
 
 	get playIcon() {

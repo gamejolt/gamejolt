@@ -13,12 +13,13 @@ import {
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	createScrollInview,
-} from '../../../../../_common/scroll/inview/inview.vue';
+} from '../../../../../_common/scroll/inview/AppScrollInview.vue';
 import {
 	SettingVideoPlayerFeedAutoplay,
 	SettingVideoPlayerVolume,
 } from '../../../../../_common/settings/settings.service';
 import {
+	createVideoPlayerController,
 	scrubVideoVolume,
 	toggleVideoPlayback,
 	trackVideoPlayerEvent,
@@ -94,7 +95,7 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 
 	get maxPlayerHeight() {
 		if (import.meta.env.SSR) {
-			return;
+			return undefined;
 		}
 
 		if (Screen.isMobile) {
@@ -254,7 +255,7 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 	@Watch('shouldLoadVideo')
 	onShouldLoadVideoChange() {
 		if (this.shouldLoadVideo) {
-			this.player = new VideoPlayerController(this.manifests, 'feed');
+			this.player = createVideoPlayerController(this.manifests, 'feed');
 			this.autoplay = SettingVideoPlayerFeedAutoplay.get();
 		} else {
 			this.player = null;

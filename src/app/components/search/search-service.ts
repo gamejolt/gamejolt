@@ -1,6 +1,5 @@
 import { reactive } from '@vue/reactivity';
 import { Api } from '../../../_common/api/api.service';
-import { appStore } from '../../store/index';
 import { SearchPayload } from './payload-service';
 
 export interface SearchOptions {
@@ -63,5 +62,6 @@ async function _searchSite(query: string, options: SearchOptions = { type: 'all'
 }
 
 async function _searchInstalledGames(query: string) {
-	return appStore.clientLibrary.searchInstalledGames(query, 3);
+	// TODO(vue3): Yariv, this should get the client library injected somehow, yeah?
+	// return appStore.clientLibrary.searchInstalledGames(query, 3);
 }

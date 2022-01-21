@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import Axios from 'axios';
 import { darken, lighten, parseToHsl } from 'polished';
 import { computed, PropType, ref, toRefs, unref, watch } from 'vue';
 import { arrayUnique } from '../../../utils/array';
+import { Api } from '../../api/api.service';
 import { DefaultTheme, Theme } from '../theme.model';
 import { useThemeStore } from '../theme.store';
 
@@ -95,7 +95,7 @@ if (!import.meta.env.SSR) {
 	watch(
 		() => unref(src),
 		src => {
-			const request = Axios.get(src).then(response => {
+			const request = Api.sendRawRequest(src).then(response => {
 				// If we have multiple requests in process, only handle the latest one.
 				if (!_request || _request !== request) {
 					return;

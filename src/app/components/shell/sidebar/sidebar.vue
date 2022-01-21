@@ -3,7 +3,7 @@ import { defineAsyncComponent } from '@vue/runtime-core';
 import { setup } from 'vue-class-component';
 import { Options, Vue, Watch } from 'vue-property-decorator';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
+import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppShortkey from '../../../../_common/shortkey/shortkey.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { useAppStore } from '../../../store';

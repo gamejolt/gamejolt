@@ -5,7 +5,6 @@ import { getAbsoluteLink } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
 import { formatNumber } from '../../../../_common/filters/number';
-import AppGameThumbnail from '../../../../_common/game/thumbnail/thumbnail.vue';
 import { ReportModal } from '../../../../_common/report/modal/modal.service';
 import AppShareCard from '../../../../_common/share/card/card.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
@@ -23,7 +22,6 @@ const GAME_LIST_COLLAPSED_COUNT = 3;
 	components: {
 		AppCommunityDescription,
 		AppUserAvatarList,
-		AppGameThumbnail,
 		AppUserCardHover,
 		AppTimeAgo,
 		AppGameList,

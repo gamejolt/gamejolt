@@ -3,7 +3,7 @@ import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
-} from '../../../../../_common/scroll/inview/inview.vue';
+} from '../../../../../_common/scroll/inview/AppScrollInview.vue';
 import { ActivityFeedItem } from '../item-service';
 import AppActivityFeedNotification from '../notification/notification.vue';
 import AppActivityFeedPost from '../post/post.vue';

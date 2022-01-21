@@ -59,22 +59,18 @@ export default class AppPageHeader extends Vue {
 	emitEditCover() {}
 
 	get hasSpotlight() {
-		// TODO(vue3): check
 		return !!this.$slots.spotlight && !Screen.isXs;
 	}
 
 	get hasNav() {
-		// TODO(vue3): check
 		return !!this.$slots.nav;
 	}
 
 	get hasControls() {
-		// TODO(vue3): check
 		return !!this.$slots.controls;
 	}
 
 	get hasContent() {
-		// TODO(vue3): check
 		return !!this.$slots.default;
 	}
 }

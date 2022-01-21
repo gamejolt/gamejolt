@@ -1,4 +1,5 @@
 import { Channel, Presence, Socket } from 'phoenix';
+import { markRaw } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import type { TabLeader } from '../../../utils/tab-leader';
 import { importNoSSR } from '../../../_common/code-splitting';
@@ -41,18 +42,21 @@ interface UpdateGroupTitlePayload {
 	room_id: number;
 }
 
-export class ChatUserChannel extends Channel {
-	readonly client: ChatClient;
-	readonly socket: Socket;
+export class ChatUserChannel {
+	constructor(public readonly userId: number, public readonly client: ChatClient, params?: any) {
+		this.socket = client.socket!;
 
+		this.socketChannel = markRaw(new Channel('user:' + userId, params, this.socket));
+		(this.socket as any).channels.push(this.socketChannel);
+
+		this._tabLeader = null;
+	}
+
+	readonly socket: Socket;
+	readonly socketChannel: Channel;
 	private _tabLeader: TabLeader | null;
 
-	constructor(userId: number, client: ChatClient, params?: any) {
-		super('user:' + userId, params, client.socket as Socket);
-		this.client = client;
-		this.socket = client.socket as Socket;
-		(this.socket as any).channels.push(this);
-
+	init() {
 		this._tabLeader = null;
 		TabLeaderLazy.then(TabLeader => {
 			this._tabLeader = new TabLeader('chat_notification_channel');
@@ -61,16 +65,16 @@ export class ChatUserChannel extends Channel {
 
 		this.setupPresence();
 
-		this.on('friend_updated', this.onFriendUpdated.bind(this));
-		this.on('friend_add', this.onFriendAdd.bind(this));
-		this.on('friend_remove', this.onFriendRemove.bind(this));
-		this.on('notification', this.onNotification.bind(this));
-		this.on('you_updated', this.onYouUpdated.bind(this));
-		this.on('clear_notifications', this.onClearNotifications.bind(this));
-		this.on('group_add', this.onGroupAdd.bind(this));
-		this.on('group_leave', this.onRoomLeave.bind(this));
-		this.on('update_title', this.onUpdateTitle.bind(this));
-		this.onClose(() => {
+		this.socketChannel.on('friend_updated', this.onFriendUpdated.bind(this));
+		this.socketChannel.on('friend_add', this.onFriendAdd.bind(this));
+		this.socketChannel.on('friend_remove', this.onFriendRemove.bind(this));
+		this.socketChannel.on('notification', this.onNotification.bind(this));
+		this.socketChannel.on('you_updated', this.onYouUpdated.bind(this));
+		this.socketChannel.on('clear_notifications', this.onClearNotifications.bind(this));
+		this.socketChannel.on('group_add', this.onGroupAdd.bind(this));
+		this.socketChannel.on('group_leave', this.onRoomLeave.bind(this));
+		this.socketChannel.on('update_title', this.onUpdateTitle.bind(this));
+		this.socketChannel.onClose(() => {
 			if (!this._tabLeader) {
 				return;
 			}
@@ -86,7 +90,7 @@ export class ChatUserChannel extends Channel {
 	}
 
 	private setupPresence() {
-		const presence = new Presence(this);
+		const presence = markRaw(new Presence(this.socketChannel));
 
 		presence.onJoin(this.onFriendJoin.bind(this));
 		presence.onLeave(this.onFriendLeave.bind(this));

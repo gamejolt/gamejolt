@@ -4,8 +4,8 @@ import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
 import { EventItem } from '../../../../_common/event-item/event-item.model';
 import { Notification } from '../../../../_common/notification/notification-model';
-import { ScrollInviewConfig } from '../../../../_common/scroll/inview/inview.vue';
-import { ActivityFeedInterface } from './feed';
+import { ScrollInviewConfig } from '../../../../_common/scroll/inview/AppScrollInview.vue';
+import { ActivityFeedInterface } from './feed.vue';
 import { ActivityFeedInput, ActivityFeedItem } from './item-service';
 import { ActivityFeedState } from './state';
 

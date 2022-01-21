@@ -1,8 +1,9 @@
 import { Node } from 'prosemirror-model';
 import { Decoration, EditorView, NodeView } from 'prosemirror-view';
-import { ContentOwnerController } from '../../content-owner';
+import { ContentEditorController } from '../content-editor-controller';
 import { ContentEditorSchema } from '../schemas/content-editor-schema';
 import { EmbedNodeView } from './embed';
+import { EmojiNodeView } from './emoji';
 import { GifNodeView } from './gif';
 import { MediaItemNodeView } from './media-item';
 import { MediaUploadNodeView } from './media-upload';
@@ -16,27 +17,32 @@ type NodeViewList = {
 	) => NodeView<ContentEditorSchema>;
 };
 
-export function buildNodeViews(controller: ContentOwnerController): NodeViewList {
+export function buildEditorNodeViews(c: ContentEditorController): NodeViewList {
 	// Construct node views based on capabilities
 	const nodeViews = {} as NodeViewList;
-	const capabilities = controller.capabilities;
+	const capabilities = c.contextCapabilities;
 
 	if (capabilities.hasAnyEmbed) {
 		nodeViews.embed = function (node, view, getPos) {
-			return new EmbedNodeView(node, view, getPos, controller);
+			return new EmbedNodeView(c, node, view, getPos);
 		};
 	}
 	if (capabilities.media) {
 		nodeViews.mediaItem = function (node, view, getPos) {
-			return new MediaItemNodeView(node, view, getPos, controller);
+			return new MediaItemNodeView(c, node, view, getPos);
 		};
 		nodeViews.mediaUpload = function (node, view, getPos) {
-			return new MediaUploadNodeView(node, view, getPos, controller);
+			return new MediaUploadNodeView(c, node, view, getPos);
 		};
 	}
 	if (capabilities.gif) {
 		nodeViews.gif = function (node, view, getPos) {
-			return new GifNodeView(node, view, getPos, controller);
+			return new GifNodeView(c, node, view, getPos);
+		};
+	}
+	if (capabilities.emoji) {
+		nodeViews.gjEmoji = function (node, view, getPos) {
+			return new EmojiNodeView(c, node, view, getPos);
 		};
 	}
 

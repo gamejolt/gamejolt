@@ -1,17 +1,9 @@
 import { defineAsyncComponent } from '@vue/runtime-core';
-import { importNoSSR, lazyImportNoSSR } from '../../_common/code-splitting';
+import { lazyImportNoSSR } from '../../_common/code-splitting';
 import AppActivityFeedPlaceholder from './activity/feed/placeholder/placeholder.vue';
 
-export async function GridClientLazy() {
-	return await importNoSSR(async () => {
-		const { GridClient } = await import(/* webpackChunkName: "grid" */ './grid/client.service');
-		return GridClient;
-	});
-}
-
-export const ChatClientLazy = lazyImportNoSSR(
-	() => import(/* webpackChunkName: "chat" */ './chat/client')
-);
+export const GridClientLazy = lazyImportNoSSR(() => import('./grid/client.service'));
+export const ChatClientLazy = lazyImportNoSSR(() => import('./chat/client'));
 
 export const AppAuthJoinLazy = defineAsyncComponent(
 	() => import('../../_common/auth/join/join.vue')

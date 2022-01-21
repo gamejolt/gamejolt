@@ -20,7 +20,7 @@ import AppPopper from '../../../../../_common/popper/popper.vue';
 import { ReportModal } from '../../../../../_common/report/modal/modal.service';
 import AppScrollInview, {
 	ScrollInviewConfig,
-} from '../../../../../_common/scroll/inview/inview.vue';
+} from '../../../../../_common/scroll/inview/AppScrollInview.vue';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';

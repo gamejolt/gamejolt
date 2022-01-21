@@ -6,14 +6,12 @@ import {
 } from '../../../../../../_common/community/competition/competition.model';
 import { CommunityCompetitionEntry } from '../../../../../../_common/community/competition/entry/entry.model';
 import { CommunityCompetitionVotingCategory } from '../../../../../../_common/community/competition/voting-category/voting-category.model';
-import { AppCondenseWhitespace } from '../../../../../../_common/condense-whitespace';
 import { formatNumber } from '../../../../../../_common/filters/number';
 import AppCommunityCompetitionEntryThumbnail from '../thumbnail/thumbnail.vue';
 
 @Options({
 	components: {
 		AppCommunityCompetitionEntryThumbnail,
-		AppCondenseWhitespace,
 	},
 })
 export default class AppCommunityCompetitionEntryGrid extends Vue {
@@ -70,7 +68,7 @@ export default class AppCommunityCompetitionEntryGrid extends Vue {
 			</translate>
 		</p>
 
-		<app-condense-whitespace class="-grid-items">
+		<div class="-grid-items">
 			<template v-if="entries.length > 0">
 				<div v-for="entry of entries" :key="entry.id" class="-grid-item">
 					<app-community-competition-entry-thumbnail
@@ -99,7 +97,7 @@ export default class AppCommunityCompetitionEntryGrid extends Vue {
 					<div class="-grid-item-placeholder-part -grid-item-placeholder-user" />
 				</div>
 			</template>
-		</app-condense-whitespace>
+		</div>
 	</div>
 </template>
 
