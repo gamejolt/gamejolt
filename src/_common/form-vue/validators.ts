@@ -37,6 +37,9 @@ const _semverRegex =
 const _domainRegex = /^((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}$/;
 const _gaTrackingIdRegex = /^UA-[0-9]+-[0-9]+$/;
 
+const _emailRegex =
+	/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
 ///////////////
 // Note: All validator functions should be builder functions that return a
 // validator function that will be called. This allows you to curry parameters
@@ -611,3 +614,14 @@ export const validateAvailability =
 
 		return null;
 	};
+
+export const validateEmail = (): FormValidator<string> => async value => {
+	if (value && !_emailRegex.test(value)) {
+		return {
+			type: 'email',
+			message: `Please enter a valid email address.`,
+		};
+	}
+
+	return null;
+};

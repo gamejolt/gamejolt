@@ -6,7 +6,7 @@ import { formatCurrency } from '../../../_common/filters/currency';
 import AppForm, { createForm, FormController } from '../../../_common/form-vue/AppForm.vue';
 import AppFormControl from '../../../_common/form-vue/AppFormControl.vue';
 import AppFormGroup from '../../../_common/form-vue/AppFormGroup.vue';
-import { validateDecimal, validateMinValue } from '../../../_common/form-vue/validators';
+import { validateMinValue } from '../../../_common/form-vue/validators';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { AppTooltip as vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
@@ -85,8 +85,7 @@ function submit(method: PaymentData['method']) {
 <template>
 	<AppForm :controller="form" class="payment-form">
 		<AppFormGroup v-if="!user" class="-group" name="email" label="Send key to">
-			<!-- TODO: email validator -->
-			<AppFormControl :validators="[]" placeholder="Enter your email address..." />
+			<AppFormControl type="email" placeholder="Enter your email address..." />
 		</AppFormGroup>
 		<div v-else class="form-group -group">
 			<label class="control-label"> Logged in as </label>
@@ -107,10 +106,10 @@ function submit(method: PaymentData['method']) {
 
 		<AppFormGroup class="-group -group-amount" name="amount" label="Name your price">
 			<AppFormControl
-				type="number"
+				type="currency"
 				step="1"
 				prefix="$"
-				:validators="[validateMinValue(minAmount), validateDecimal(2)]"
+				:validators="[validateMinValue(minAmount)]"
 			/>
 
 			<span v-if="sellable.type === 'paid'" class="text-muted">

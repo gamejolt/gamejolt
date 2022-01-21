@@ -1,23 +1,23 @@
 <script lang="ts">
 import {
-	computed,
-	inject,
-	InjectionKey,
-	onMounted,
-	PropType,
-	provide,
-	reactive,
-	Ref,
-	ref,
-	toRefs,
-	watch,
+computed,
+inject,
+InjectionKey,
+onMounted,
+PropType,
+provide,
+reactive,
+Ref,
+ref,
+toRefs,
+watch
 } from 'vue';
 import { useResizeObserver } from '../../utils/hooks/useResizeObserver';
 import { Ruler } from '../ruler/ruler-service';
 import { useForm } from './AppForm.vue';
 import { useFormGroup } from './AppFormGroup.vue';
 import { AppFocusWhen as vAppFocusWhen } from './focus-when.directive';
-import { FormValidator, validateRequired } from './validators';
+import { FormValidator, validateDecimal, validateEmail, validateRequired } from './validators';
 
 interface ValidationOptions {
 	validateDelay?: number;
@@ -94,23 +94,6 @@ export function createFormControl<T>({
 		if (!group.optional) {
 			validators.push(validateRequired());
 		}
-
-		// TODO(vue3): somehow sync up with the control type?
-		// 	get validationRules() {
-		// 		const rules = {
-		// 			...this.baseRules,
-		// 		};
-
-		// 		if (this.type === 'currency') {
-		// 			rules.decimal = 2;
-		// 		}
-
-		// 		if (this.type === 'email') {
-		// 			rules.email = true;
-		// 		}
-
-		// 		return rules;
-		// 	}
 
 		return validators;
 	});
@@ -240,14 +223,27 @@ const emit = defineEmits({
 	...defineFormControlEmits(),
 });
 
-const { validators } = toRefs(props);
+const { validators, type } = toRefs(props);
 
 // TODO(vue3): can we do the text masking in a way that tree shakes it away when not used?
+
+// We add some extra validators in depending on the form control type.
+const ourValidators = computed(() => {
+	const ourValidators: FormValidator[] = [];
+
+	if (type.value === 'currency') {
+		ourValidators.push(validateDecimal(2));
+	} else if (type.value === 'email') {
+		ourValidators.push(validateEmail());
+	}
+
+	return [...ourValidators, ...validators.value];
+});
 
 const group = useFormGroup()!;
 const c = createFormControl({
 	initialValue: '',
-	validators,
+	validators: ourValidators,
 	// eslint-disable-next-line vue/require-explicit-emits
 	onChange: val => emit('changed', val),
 });
@@ -268,7 +264,7 @@ const originalOffsetLeft = computed(
 	() => originalInputPaddingLeft.value + originalInputMarginLeft.value
 );
 
-const controlType = computed(() => (props.type === 'currency' ? 'number' : props.type));
+const controlType = computed(() => (type.value === 'currency' ? 'number' : type.value));
 
 function onChange() {
 	c.applyValue(root.value?.value ?? '', {
