@@ -517,7 +517,7 @@ export const validateCreditCardExpiration = (): FormValidator<string> => async v
 		// Months are 0-based. This means it will correctly push into the next
 		// month with their input so that it invalidates at the beginning of the
 		// next month.
-		if (Date.now() < new Date(parsed.y, parsed.m).getTime()) {
+		if (Date.now() >= new Date(parsed.y, parsed.m).getTime()) {
 			return {
 				type: 'cc_expired',
 				message: `This card has expired.`,
