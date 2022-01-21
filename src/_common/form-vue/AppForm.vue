@@ -23,39 +23,8 @@ import AppLoadingFade from '../loading/AppLoadingFade.vue';
 import AppLoading from '../loading/loading.vue';
 import { ModelClassType } from '../model/model.service';
 import { PayloadFormErrors } from '../payload/payload-service';
-import { Translate } from '../translate/translate.service';
+import { $gettext } from '../translate/translate.service';
 import { FormGroupController } from './AppFormGroup.vue';
-
-export interface FormController<T = any> {
-	name: string;
-	formModel: T;
-	method: 'add' | 'edit';
-	saveMethod: keyof T;
-	warnOnDiscard: boolean;
-	resetOnSubmit: boolean;
-	reloadOnSubmit: boolean;
-	changed: boolean;
-	attemptedSubmit: boolean;
-	isLoaded: boolean | null;
-	isLoadedBootstrapped: boolean | null;
-	isProcessing: boolean;
-	submitted: boolean;
-	serverErrors: PayloadFormErrors;
-	customErrors: string[];
-	validate: () => Promise<void>;
-	readonly valid: boolean;
-	submit: () => Promise<boolean>;
-	clearErrors: () => void;
-	setCustomError: (error: string) => void;
-	clearCustomError: (error: string) => void;
-	hasCustomError: (error: string) => boolean;
-
-	// Internal.
-	_groups: FormGroupController[];
-	_onControlChanged: () => void;
-	_validationToken: CancelToken;
-	_override: (overrides: Partial<CreateFormOptions<T>>) => void;
-}
 
 const Key: InjectionKey<FormController> = Symbol('form');
 
@@ -109,8 +78,6 @@ export function createForm<T>({
 	onChange,
 	...options
 }: CreateFormOptions<T>) {
-	const router = useRouter();
-
 	const name = uuidv4();
 
 	const formModel = ref(_makeFormModel()) as Ref<T>;
@@ -139,6 +106,7 @@ export function createForm<T>({
 	const valid = computed(
 		() => _groups.value.every(i => i.valid) && customErrors.value.length === 0
 	);
+	const invalid = computed(() => !valid.value);
 
 	/**
 	 * This is purely for {@link BaseForm} to initialize lazily since it doesn't
@@ -189,32 +157,35 @@ export function createForm<T>({
 		formModel.value = _makeFormModel() as T;
 	}
 
-	let _routeChangeDeregister: () => void | undefined;
 	onMounted(() => {
 		_init();
+	});
 
-		if (!warnOnDiscard.value) {
-			return;
-		}
+	// Set up the "discard warning" only if this section has a router.
+	if (GJ_HAS_ROUTER) {
+		const router = useRouter();
+		let _routeChangeDeregister: () => void | undefined;
 
-		_routeChangeDeregister = router.beforeEach((_to, _from, next) => {
-			if (changed.value) {
-				if (
-					!window.confirm(
-						Translate.$gettext(`Are you sure you want to discard your unsaved changes?`)
-					)
-				) {
-					return next(false);
+		onMounted(() => {
+			_routeChangeDeregister = router.beforeEach((_to, _from, next) => {
+				if (warnOnDiscard.value && changed.value) {
+					if (
+						!window.confirm(
+							$gettext(`Are you sure you want to discard your unsaved changes?`)
+						)
+					) {
+						return next(false);
+					}
 				}
-			}
 
-			next();
+				next();
+			});
 		});
-	});
 
-	onUnmounted(() => {
-		_routeChangeDeregister?.();
-	});
+		onUnmounted(() => {
+			_routeChangeDeregister?.();
+		});
+	}
 
 	function _makeFormModel() {
 		// If a model class was assigned to this form, then create a copy of it
@@ -322,7 +293,7 @@ export function createForm<T>({
 
 			if (onSubmit) {
 				const _response = await onSubmit();
-				if (_response.success === false) {
+				if (_response?.success === false) {
 					throw _response;
 				}
 
@@ -385,6 +356,7 @@ export function createForm<T>({
 		customErrors,
 		validate,
 		valid,
+		invalid,
 		submit,
 		clearErrors,
 		setCustomError,
@@ -396,6 +368,38 @@ export function createForm<T>({
 		_validationToken,
 		_override,
 	}) as FormController<T>;
+}
+
+export interface FormController<T = any> {
+	name: string;
+	formModel: T;
+	method: 'add' | 'edit';
+	saveMethod: keyof T;
+	warnOnDiscard: boolean;
+	resetOnSubmit: boolean;
+	reloadOnSubmit: boolean;
+	changed: boolean;
+	attemptedSubmit: boolean;
+	isLoaded: boolean | null;
+	isLoadedBootstrapped: boolean | null;
+	isProcessing: boolean;
+	submitted: boolean;
+	serverErrors: PayloadFormErrors;
+	customErrors: string[];
+	validate: () => Promise<void>;
+	readonly valid: boolean;
+	readonly invalid: boolean;
+	submit: () => Promise<boolean>;
+	clearErrors: () => void;
+	setCustomError: (error: string) => void;
+	clearCustomError: (error: string) => void;
+	hasCustomError: (error: string) => boolean;
+
+	// Internal.
+	_groups: FormGroupController[];
+	_onControlChanged: () => void;
+	_validationToken: CancelToken;
+	_override: (overrides: Partial<CreateFormOptions<T>>) => void;
 }
 </script>
 
@@ -414,6 +418,7 @@ const emit = defineEmits({
 
 const { controller } = toRefs(props);
 
+// To support old forms.
 controller.value._override({
 	onChange: formModel => emit('changed', formModel),
 });

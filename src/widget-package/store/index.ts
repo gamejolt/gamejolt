@@ -1,4 +1,4 @@
-import { parse } from 'querystring';
+import { parse } from 'qs';
 import { computed, inject, InjectionKey, ref } from 'vue';
 import { Api } from '../../_common/api/api.service';
 import { Game } from '../../_common/game/game.model';
@@ -32,11 +32,12 @@ export function useWidgetPackageStore() {
 }
 
 export function createWidgetPackageStore() {
-	const sellableKey = ref(parse(window.location.search.substring(1)).key as string);
-	const isLightTheme = ref(parse(window.location.search.substring(1)).theme === 'light');
+	const query = parse(window.location.search.substring(1));
+
+	const sellableKey = ref(query.key as string);
+	const isLightTheme = ref(query.theme === 'light');
 	const isLoaded = ref(false);
 	const isProcessing = ref(false);
-	const view = ref<'AppDownload' | 'AppPayment'>('AppDownload');
 
 	const hasInvalidKey = ref(false);
 	const hasFailure = ref<string>();
@@ -56,7 +57,7 @@ export function createWidgetPackageStore() {
 	const address = ref(new AddressData());
 
 	const price = computed(() => pricing.value && (pricing.value.amount || minOrderAmount.value));
-	const originalPrice = computed(() => originalPricing.value && originalPricing.value.amount);
+	const originalPrice = computed(() => originalPricing.value?.amount);
 
 	async function bootstrap() {
 		try {
@@ -81,10 +82,6 @@ export function createWidgetPackageStore() {
 				if (pricing.value.promotional) {
 					originalPricing.value = sellable.value.pricings[1];
 				}
-			}
-
-			if (sellable.value.type === Sellable.TYPE_PAID && !sellable.value.is_owned) {
-				view.value = 'AppPayment';
 			}
 
 			isLoaded.value = true;
@@ -133,7 +130,6 @@ export function createWidgetPackageStore() {
 		isLightTheme,
 		isLoaded,
 		isProcessing,
-		view,
 		hasInvalidKey,
 		hasFailure,
 		game,

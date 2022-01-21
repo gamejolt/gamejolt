@@ -13,6 +13,9 @@ defineProps({
 	notice: {
 		type: Boolean,
 	},
+	middle: {
+		type: Boolean,
+	},
 });
 </script>
 
@@ -24,6 +27,7 @@ defineProps({
 			big ? 'big' : undefined,
 			highlight ? 'highlight' : undefined,
 			notice ? 'notice' : undefined,
+			middle ? 'middle' : undefined,
 		]"
 	/>
 </template>

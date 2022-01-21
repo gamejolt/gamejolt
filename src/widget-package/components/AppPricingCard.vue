@@ -1,44 +1,27 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options, Vue } from 'vue-property-decorator';
-import { formatCurrency } from '../../../_common/filters/currency';
-import { useWidgetPackageStore } from '../../store/index';
+<script lang="ts" setup>
+import { computed } from 'vue';
+import { formatCurrency } from '../../_common/filters/currency';
+import { useWidgetPackageStore } from '../store/index';
 
-@Options({})
-export default class AppPricingCard extends Vue {
-	store = setup(() => useWidgetPackageStore());
+const store = useWidgetPackageStore();
 
-	readonly formatCurrency = formatCurrency;
+const sellable = computed(() => store.sellable.value!);
+const price = computed(() => store.price.value!);
+const originalPrice = computed(() => store.originalPrice.value!);
 
-	get sellable() {
-		return this.store.sellable!;
-	}
-
-	get price() {
-		return this.store.price!;
-	}
-
-	get originalPrice() {
-		return this.store.originalPrice!;
-	}
-
-	get discount() {
-		const price = this.price;
-		const originalPrice = this.originalPrice;
-
-		return (((originalPrice - price) / originalPrice) * 100).toFixed(0);
-	}
-}
+const discount = computed(() =>
+	(((originalPrice.value - price.value) / originalPrice.value) * 100).toFixed(0)
+);
 </script>
 
 <template>
 	<div class="-card" :class="sellable.is_owned ? 'fill-highlight' : 'fill-gray'">
 		<template v-if="sellable.is_owned">
-			<strong> OWNED </strong>
+			<strong>OWNED</strong>
 		</template>
 		<template v-else>
 			<template v-if="sellable.type === 'paid'">
-				<span v-if="originalPrice" class="-discount"> -{{ discount }}% </span>
+				<span v-if="originalPrice" class="-discount">-{{ discount }}%</span>
 				<strong class="-amount">
 					{{ formatCurrency(price) }}
 				</strong>
@@ -46,13 +29,13 @@ export default class AppPricingCard extends Vue {
 					{{ formatCurrency(originalPrice) }}
 				</span>
 				<br />
-				<span class="-tag -muted"> or more </span>
+				<span class="-tag -muted">or more</span>
 			</template>
 			<template v-else-if="sellable.type === 'pwyw'">
-				<span class="-tag"> name your price </span>
+				<span class="-tag">name your price</span>
 			</template>
 			<template v-else-if="sellable.type === 'free'">
-				<strong class="-amount"> FREE </strong>
+				<strong class="-amount">FREE</strong>
 			</template>
 		</template>
 	</div>

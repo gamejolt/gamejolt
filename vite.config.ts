@@ -8,7 +8,7 @@ const noopDirectiveTransform = () => ({ props: [] });
 const stylusOptions = {
 	imports: [
 		// Import the section variables.
-		path.resolve(__dirname, 'src/app/styles/variables.styl'),
+		path.resolve(__dirname, 'src/widget-package/styles/variables.styl'),
 		// Import common mixins.
 		path.resolve(__dirname, 'src/_styles/mixins.styl'),
 	],
@@ -61,6 +61,7 @@ export default defineConfig({
 		GJ_BUILD_TYPE: JSON.stringify('development'),
 		GJ_VERSION: JSON.stringify('0.1.0'),
 		GJ_WITH_UPDATER: JSON.stringify(false),
+		GJ_HAS_ROUTER: JSON.stringify(true),
 	},
 
 	// I guess this is still experimental or something, so they don't include it

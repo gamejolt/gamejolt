@@ -71,7 +71,7 @@ export const validateDecimal =
 			regex = /^[0-9]*$/;
 		} else {
 			const regexPart = '{1,' + decimals + '}';
-			regex = new RegExp('^[0-9]*(?:\\.[0-9]{' + regexPart + '})?$');
+			regex = new RegExp('^[0-9]*(?:\\.[0-9]' + regexPart + ')?$');
 		}
 
 		if (!regex.test(value)) {
@@ -187,13 +187,31 @@ export const validateSemver = (): FormValidator<string> => async value => {
 	return null;
 };
 
+function _stringToNumber(value: string | number | null | undefined) {
+	if (!value) {
+		return null;
+	}
+
+	const number = Number(value);
+	if (isNaN(number)) {
+		return null;
+	}
+
+	return number;
+}
+
 /**
  * Validates that the number is greater than or equal to a given min value.
  */
 export const validateMinValue =
-	(min: number): FormValidator<number> =>
+	(min: number): FormValidator<string> =>
 	async value => {
-		if (value && value < min) {
+		const number = _stringToNumber(value);
+		if (number === null) {
+			return null;
+		}
+
+		if (number < min) {
 			return {
 				type: 'min_value',
 				message: `The {} entered is too low.`,
@@ -209,7 +227,12 @@ export const validateMinValue =
 export const validateMaxValue =
 	(max: number): FormValidator<number> =>
 	async value => {
-		if (value && value > max) {
+		const number = _stringToNumber(value);
+		if (number === null) {
+			return null;
+		}
+
+		if (number > max) {
 			return {
 				type: 'max_value',
 				message: `The {} entered is too high.`,

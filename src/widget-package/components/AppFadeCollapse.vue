@@ -1,33 +1,27 @@
-<script lang="ts">
-import { nextTick } from 'vue';
-import { Emit, Options, Vue } from 'vue-property-decorator';
-import { Ruler } from '../../../_common/ruler/ruler-service';
+<script lang="ts" setup>
+import { nextTick, onMounted, ref } from 'vue';
+import { Ruler } from '../../_common/ruler/ruler-service';
 
-@Options({})
-export default class AppFadeCollapse extends Vue {
-	height = 0;
-	innerHeight = 0;
-	isCollapsed = false;
+const emit = defineEmits({
+	required: () => true,
+});
 
-	declare $el: HTMLElement;
-	declare $refs: {
-		inner: HTMLElement;
-	};
+const root = ref<HTMLElement>();
+const inner = ref<HTMLElement>();
+const height = ref(0);
+const innerHeight = ref(0);
+const isCollapsed = ref(false);
 
-	@Emit('required')
-	emitRequired() {}
+onMounted(async () => {
+	await nextTick();
+	height.value = Ruler.height(root.value!);
+	innerHeight.value = Ruler.height(inner.value!);
 
-	async mounted() {
-		await nextTick();
-		this.height = Ruler.height(this.$el);
-		this.innerHeight = Ruler.height(this.$refs.inner);
-
-		if (this.innerHeight > this.height) {
-			this.isCollapsed = true;
-			this.emitRequired();
-		}
+	if (innerHeight.value > height.value) {
+		isCollapsed.value = true;
+		emit('required');
 	}
-}
+});
 </script>
 
 <template>

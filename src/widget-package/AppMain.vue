@@ -1,12 +1,16 @@
 <script lang="ts" setup>
 import { onMounted } from '@vue/runtime-core';
 import AppJolticon from '../_common/jolticon/AppJolticon.vue';
+import { Sellable } from '../_common/sellable/sellable.model';
 import AppTheme from '../_common/theme/AppTheme.vue';
 import { useThemeStore } from '../_common/theme/theme.store';
-import AppFooter from './components/footer/footer.vue';
-import AppGameHeader from './components/game-header/game-header.vue';
-import AppProcessingOverlay from './components/processing-overlay/processing-overlay.vue';
-import AppToast from './components/toast/toast.vue';
+import AppTooltipPortal from '../_common/tooltip/AppTooltipPortal.vue';
+import AppDownload from './components/AppDownload.vue';
+import AppFooter from './components/AppFooter.vue';
+import AppGameHeader from './components/AppGameHeader.vue';
+import AppProcessingOverlay from './components/AppProcessingOverlay.vue';
+import AppToast from './components/AppToast.vue';
+import FormPayment from './components/forms/FormPayment.vue';
 import { useWidgetPackageStore } from './store/index';
 
 const WidgetThemeKey = 'widget';
@@ -18,7 +22,7 @@ const {
 	isProcessing,
 	hasInvalidKey,
 	hasFailure,
-	view,
+	sellable,
 	sellableKey,
 	game,
 } = useWidgetPackageStore();
@@ -46,22 +50,20 @@ function dismissError() {
 
 <template>
 	<div
-		class="shell"
+		class="shell fill-offset"
 		:class="{
-			'theme-dark fill-darker': !isLightTheme,
-			'theme-light': isLightTheme,
 			'is-loaded': isLoaded,
 			'has-invalid-key-error': hasInvalidKey,
 		}"
 	>
-		<AppTheme />
+		<AppTheme :force-dark="!isLightTheme" :force-light="isLightTheme" />
+		<AppTooltipPortal />
 
 		<div v-if="hasInvalidKey" class="alert alert-notice text-center">
 			<AppJolticon icon="notice" />
 			Invalid widget key.
 		</div>
 
-		<!-- TODO(vue3): will this transition flow through all the levels of components to trigger the animation? -->
 		<transition>
 			<AppProcessingOverlay v-if="isProcessing" />
 		</transition>
@@ -74,7 +76,10 @@ function dismissError() {
 
 		<div v-if="isLoaded">
 			<AppGameHeader />
-			<component :is="view" />
+			<FormPayment
+				v-if="sellable && sellable.type === Sellable.TYPE_PAID && !sellable.is_owned"
+			/>
+			<AppDownload v-else />
 		</div>
 
 		<AppFooter />

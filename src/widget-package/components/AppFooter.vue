@@ -1,8 +1,5 @@
-<script lang="ts">
-import { Options, Vue } from 'vue-property-decorator';
-
-@Options({})
-export default class AppFooter extends Vue {}
+<script lang="ts" setup>
+import AppJolticon from '../../_common/jolticon/AppJolticon.vue';
 </script>
 
 <template>
@@ -15,7 +12,9 @@ export default class AppFooter extends Vue {}
 		<div class="bolt">
 			<a href="https://gamejolt.com" target="_blank">
 				<span class="text">Powered by</span>
-				<app-jolticon icon="gamejolt" />
+				{{ ' ' }}
+				<AppJolticon icon="gamejolt" />
+				{{ ' ' }}
 				<span class="text right">Game Jolt</span>
 			</a>
 		</div>

@@ -23,19 +23,6 @@ interface ValidationOptions {
 	validateDelay?: number;
 }
 
-export interface FormControlController<T = any> {
-	readonly id: string | undefined;
-	/**
-	 * Whether or not the form control has multiple controls for the group. This
-	 * is for radio and checkboxes mostly.
-	 */
-	readonly multi: boolean;
-	controlVal: T;
-	applyValue: (value: T, options?: ValidationOptions) => void;
-	applyBlur: (options?: ValidationOptions) => void;
-	readonly validators: FormValidator[];
-}
-
 const Key: InjectionKey<FormControlController> = Symbol('form-control');
 
 /**
@@ -201,6 +188,19 @@ export function createFormControl<T>({
 	return c;
 }
 
+export interface FormControlController<T = any> {
+	readonly id: string | undefined;
+	/**
+	 * Whether or not the form control has multiple controls for the group. This
+	 * is for radio and checkboxes mostly.
+	 */
+	readonly multi: boolean;
+	controlVal: T;
+	applyValue: (value: T, options?: ValidationOptions) => void;
+	applyBlur: (options?: ValidationOptions) => void;
+	readonly validators: FormValidator[];
+}
+
 export default {
 	// Since we may show a prefix, we need to put the fallthrough attributes
 	// manually.
@@ -268,9 +268,7 @@ const originalOffsetLeft = computed(
 	() => originalInputPaddingLeft.value + originalInputMarginLeft.value
 );
 
-const controlType = computed(() => {
-	return props.type === 'currency' ? 'number' : props.type;
-});
+const controlType = computed(() => (props.type === 'currency' ? 'number' : props.type));
 
 function onChange() {
 	c.applyValue(root.value?.value ?? '', {
@@ -309,7 +307,7 @@ function onBlur() {
 </script>
 
 <template>
-	<div class="-container">
+	<div class="form-control-container">
 		<input
 			:id="c.id"
 			ref="root"
@@ -337,7 +335,7 @@ function onBlur() {
 </template>
 
 <style lang="stylus" scoped>
-.-container
+.form-control-container
 	position: relative
 
 .-prefix
