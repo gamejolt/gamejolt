@@ -71,11 +71,18 @@ export function createFormControl<T>({
 	validators: inputValidators,
 	onChange,
 	multi = false,
+	alwaysOptional = false,
 }: {
 	initialValue: T;
 	validators: Ref<FormValidator[]>;
 	onChange: (value: T) => void;
 	multi?: boolean;
+
+	/**
+	 * Whether or not we should add a required validator for this form control.
+	 * Some form control types don't make sense to mark as required.
+	 */
+	alwaysOptional?: boolean;
 }) {
 	const hooks = useFormControlHooks();
 	const form = useForm()!;
@@ -91,7 +98,7 @@ export function createFormControl<T>({
 	const validators = computed(() => {
 		const validators: FormValidator[] = [...inputValidators.value];
 
-		if (!group.optional) {
+		if (!group.optional && !alwaysOptional) {
 			validators.push(validateRequired());
 		}
 

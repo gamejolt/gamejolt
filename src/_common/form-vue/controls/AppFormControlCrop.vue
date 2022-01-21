@@ -55,6 +55,7 @@ const c = createFormControl({
 	validators: toRef(props, 'validators'),
 	// eslint-disable-next-line vue/require-explicit-emits
 	onChange: val => emit('changed', val),
+	alwaysOptional: true,
 });
 
 function onChange(value: any) {

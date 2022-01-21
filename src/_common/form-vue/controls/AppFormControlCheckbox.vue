@@ -34,6 +34,7 @@ const c = createFormControl<any>({
 	// eslint-disable-next-line vue/require-explicit-emits
 	onChange: val => emit('changed', val),
 	multi: true,
+	alwaysOptional: true,
 });
 
 const root = ref<HTMLInputElement>();
