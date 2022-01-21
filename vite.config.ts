@@ -8,7 +8,7 @@ const noopDirectiveTransform = () => ({ props: [] });
 const stylusOptions = {
 	imports: [
 		// Import the section variables.
-		path.resolve(__dirname, 'src/widget-package/styles/variables.styl'),
+		path.resolve(__dirname, 'src/app/styles/variables.styl'),
 		// Import common mixins.
 		path.resolve(__dirname, 'src/_styles/mixins.styl'),
 	],
