@@ -16,6 +16,7 @@ import {
 } from '../content-owner';
 import AppContentEditorNodeRenderer from './AppContentEditorNodeRenderer.vue';
 import {
+	ContentEditorController,
 	ContentEditorControllerKey,
 	createContentEditor,
 	editorCreateView,
@@ -47,6 +48,9 @@ import { FocusWatcher } from './focus-watcher';
 	},
 })
 export default class AppContentEditor extends Vue {
+	@Prop({ type: Object, default: undefined })
+	controller?: ContentEditorController;
+
 	@Prop({ type: String, required: true })
 	contentContext!: ContentContext;
 
@@ -100,15 +104,17 @@ export default class AppContentEditor extends Vue {
 	@Prop({ type: Boolean })
 	focusEnd!: boolean;
 
-	controller = setup(() => {
+	controller_ = setup(() => {
 		const props = this.$props as this;
 
-		const c = createContentEditor({
-			contentContext: props.contentContext,
-			disabled: computed(() => props.disabled),
-			singleLineMode: computed(() => props.singleLineMode),
-			focusEnd: computed(() => props.focusEnd),
-		});
+		const c =
+			this.controller ||
+			createContentEditor({
+				contentContext: props.contentContext,
+				disabled: computed(() => props.disabled),
+				singleLineMode: computed(() => props.singleLineMode),
+				focusEnd: computed(() => props.focusEnd),
+			});
 		provide(ContentEditorControllerKey, c);
 		return c;
 	});
@@ -151,40 +157,40 @@ export default class AppContentEditor extends Vue {
 	emitEditorBlur() {}
 
 	get canShowMention() {
-		return this.controller.canShowMentionSuggestions > 0;
+		return this.controller_.canShowMentionSuggestions > 0;
 	}
 
 	get view() {
-		return this.controller.view ?? null;
+		return this.controller_.view ?? null;
 	}
 
 	get contextCapabilities() {
-		return this.controller.contextCapabilities;
+		return this.controller_.contextCapabilities;
 	}
 
 	get shouldShowControls() {
 		return (
-			!this.controller.disabled &&
-			this.controller.isFocused &&
+			!this.controller_.disabled &&
+			this.controller_.isFocused &&
 			this.contextCapabilities.hasAnyBlock
 		);
 	}
 
 	get shouldShowTextControls() {
 		return (
-			!this.controller.disabled &&
-			this.controller.isFocused &&
+			!this.controller_.disabled &&
+			this.controller_.isFocused &&
 			this.contextCapabilities.hasAnyText &&
-			!this.controller.emojiPanelVisible
+			!this.controller_.emojiPanelVisible
 		);
 	}
 
 	get shouldShowEmojiPanel() {
 		return (
 			!GJ_IS_MOBILE_APP &&
-			!this.controller.disabled &&
+			!this.controller_.disabled &&
 			this.contextCapabilities.emoji &&
-			this.controller.isFocused
+			this.controller_.isFocused
 		);
 	}
 
@@ -203,13 +209,13 @@ export default class AppContentEditor extends Vue {
 	get shouldShowPlaceholder() {
 		return (
 			this.placeholder.length > 0 &&
-			this.controller.isEmpty &&
-			(!this.shouldShowControls || this.controller.controlsCollapsed)
+			this.controller_.isEmpty &&
+			(!this.shouldShowControls || this.controller_.controlsCollapsed)
 		);
 	}
 
 	get editorStyleClass() {
-		return this.controller.contentContext + '-content';
+		return this.controller_.contentContext + '-content';
 	}
 
 	get containerMinHeight() {
@@ -221,24 +227,24 @@ export default class AppContentEditor extends Vue {
 
 	get shouldShowGifButton() {
 		return (
-			!this.controller.disabled && this.contextCapabilities.gif && this.controller.isFocused
+			!this.controller_.disabled && this.contextCapabilities.gif && this.controller_.isFocused
 		);
 	}
 
 	@Watch('value')
 	onSourceUpdated() {
-		if (this.controller.sourceContent === this.value) {
+		if (this.controller_.sourceContent === this.value) {
 			return;
 		}
 
-		this.controller.sourceContent = this.value;
+		this.controller_.sourceContent = this.value;
 
 		// When we receive an empty string as the document json, the caller
 		// probably wants to clear the document.
 		if (!this.value) {
 			this.reset();
 		} else {
-			const wasFocused = this.controller.isFocused;
+			const wasFocused = this.controller_.isFocused;
 			const doc = ContentDocument.fromJson(this.value);
 
 			// Don't await this since we want to make sure we focus within the
@@ -246,15 +252,15 @@ export default class AppContentEditor extends Vue {
 			this.setContent(doc);
 
 			if (wasFocused) {
-				editorFocus(this.controller);
+				editorFocus(this.controller_);
 			}
 		}
 	}
 
 	created() {
 		this.ownerController = createContentOwnerController({
-			context: this.controller.contentContext,
-			capabilities: this.controller.contextCapabilities,
+			context: this.controller_.contentContext,
+			capabilities: this.controller_.contextCapabilities,
 			contentRules: computed(() => this.displayRules),
 			getModelId: async () => {
 				if (this.modelId === null) {
@@ -274,7 +280,7 @@ export default class AppContentEditor extends Vue {
 
 		// Attach our editor hooks into the controller so that we can be
 		// controlled through the controller. So much control.
-		this.controller._editor = {
+		this.controller_._editor = {
 			getWindowRect: () => this.$refs.editor.getBoundingClientRect(),
 			emitSubmit: () => this.emitSubmit(),
 			emitInput: newSource => this.emitInput(newSource),
@@ -295,7 +301,7 @@ export default class AppContentEditor extends Vue {
 			await this.reset();
 		}
 
-		++this.controller.stateCounter;
+		++this.controller_.stateCounter;
 
 		this.focusWatcher = new FocusWatcher(this.$refs.editor, this.onFocusIn, this.onFocusOut);
 		this.focusWatcher.start();
@@ -312,16 +318,16 @@ export default class AppContentEditor extends Vue {
 
 	private async reset() {
 		this.tempModelId_ = null;
-		const doc = new ContentDocument(this.controller.contentContext);
+		const doc = new ContentDocument(this.controller_.contentContext);
 		await this.setContent(doc);
-		this.controller.isEmpty = true;
+		this.controller_.isEmpty = true;
 	}
 
 	getContent() {
 		if (this.view) {
 			const data = ContentFormatAdapter.adaptOut(
 				this.view.state.doc.toJSON() as ProsemirrorEditorFormat,
-				this.controller.contentContext
+				this.controller_.contentContext
 			);
 			return data;
 		}
@@ -329,11 +335,11 @@ export default class AppContentEditor extends Vue {
 	}
 
 	async setContent(doc: ContentDocument) {
-		await editorCreateView(this.controller, this.$refs.doc, doc);
+		await editorCreateView(this.controller_, this.$refs.doc, doc);
 	}
 
 	onDimensionsChange() {
-		++this.controller.stateCounter;
+		++this.controller_.stateCounter;
 	}
 
 	onFocusOuter() {
@@ -345,47 +351,47 @@ export default class AppContentEditor extends Vue {
 	}
 
 	private onFocusIn() {
-		if (this.controller.isFocused) {
+		if (this.controller_.isFocused) {
 			return;
 		}
 		this.emitEditorFocus();
-		this.controller.isFocused = true;
-		++this.controller.stateCounter;
+		this.controller_.isFocused = true;
+		++this.controller_.stateCounter;
 	}
 
 	private onFocusOut() {
-		if (!this.controller.isFocused) {
+		if (!this.controller_.isFocused) {
 			return;
 		}
-		this.controller.canShowMentionSuggestions = 0; // When the editor goes out of focus, hide the mention suggestions panel.
+		this.controller_.canShowMentionSuggestions = 0; // When the editor goes out of focus, hide the mention suggestions panel.
 		this.emitEditorBlur();
-		this.controller.isFocused = false;
-		++this.controller.stateCounter;
+		this.controller_.isFocused = false;
+		++this.controller_.stateCounter;
 	}
 
 	onEmojiPanelVisibilityChanged(visible: boolean) {
-		this.controller.emojiPanelVisible = visible;
+		this.controller_.emojiPanelVisible = visible;
 	}
 
 	onInsertMention() {
-		this.controller.canShowMentionSuggestions = 0; // Hide control
+		this.controller_.canShowMentionSuggestions = 0; // Hide control
 	}
 
 	onMentionUsersChange(num: number) {
-		this.controller.mentionUserCount = num;
+		this.controller_.mentionUserCount = num;
 	}
 
 	onScroll() {
 		// When the doc scroller gets scrolled, we want to make sure we position
 		// the controls appropriately.
-		++this.controller.stateCounter;
+		++this.controller_.stateCounter;
 	}
 
 	focus() {
 		this.$refs.editor.focus();
 		this.view?.focus();
 
-		++this.controller.stateCounter;
+		++this.controller_.stateCounter;
 	}
 }
 </script>

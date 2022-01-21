@@ -127,7 +127,6 @@ async function _doUpload(file: File) {
 }
 
 function _handleProgressEvent(e: ProgressEvent | null) {
-	console.log('progress event', e);
 	if (e !== null) {
 		task.updateProgress(e.loaded / e.total);
 	} else {
