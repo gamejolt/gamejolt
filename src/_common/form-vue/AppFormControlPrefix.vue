@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { computed, Ref, ref, watch } from 'vue';
 import { useResizeObserver } from '../../utils/hooks/useResizeObserver';
-import { sleep } from '../../utils/utils';
 import { Ruler } from '../ruler/ruler-service';
 import { provideFormControlHooks } from './form-control-hooks';
 
@@ -37,10 +36,8 @@ function recalcPositioning() {
 useResizeObserver({ target: prefixElement, callback: recalcPositioning });
 
 provideFormControlHooks({
-	async afterMount(_controller, mountedInputElem) {
+	afterMount(_controller, mountedInputElem) {
 		inputElem = mountedInputElem;
-
-		await sleep(500);
 
 		// If there's a prefix.
 		if (inputElem.value && prefixElement.value) {
