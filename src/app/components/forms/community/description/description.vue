@@ -49,7 +49,6 @@ export default class FormCommunityDescription extends mixins(Wrapper) implements
 					validateContentMaxLength(lengthLimit),
 				]"
 				:max-height="0"
-				:validate-on="['blur']"
 			/>
 
 			<app-form-control-errors />

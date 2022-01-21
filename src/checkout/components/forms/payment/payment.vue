@@ -288,7 +288,7 @@ export default class FormPayment extends mixins(Wrapper) implements FormOnSubmit
 										:rules="{
 											credit_card: true,
 										}"
-										:validate-on="['blur']"
+										validate-on-blur
 									/>
 								</app-form-control-mask>
 								<app-form-control-errors>
@@ -309,7 +309,7 @@ export default class FormPayment extends mixins(Wrapper) implements FormOnSubmit
 											placeholder="mm/yy"
 											:validators="[validateCreditCardExpiration()]"
 											:mask="expMask"
-											:validate-on="['blur']"
+											validate-on-blur
 										/>
 										<app-form-control-errors />
 									</app-form-group>
@@ -325,7 +325,7 @@ export default class FormPayment extends mixins(Wrapper) implements FormOnSubmit
 												validateMaxLength(4),
 												validatePattern(/^[0-9]*$/),
 											]"
-											:validate-on="['blur']"
+											validate-on-blur
 										/>
 										<app-form-control-errors>
 											<app-form-control-error

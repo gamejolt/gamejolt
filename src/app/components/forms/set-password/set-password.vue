@@ -29,7 +29,7 @@ export default class FormSetPassword extends mixins(Wrapper) implements FormOnSu
 			<app-form-control
 				type="password"
 				:validators="[validateMinLength(4), validateMaxLength(30)]"
-				:validate-on="['blur']"
+				validate-on-blur
 			/>
 			<app-form-control-errors />
 		</app-form-group>

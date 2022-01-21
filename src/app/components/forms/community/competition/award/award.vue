@@ -55,7 +55,7 @@ export default class FormCommunityCompetitionAward
 						url: nameAvailabilityUrl,
 					}),
 				]"
-				:validate-on="['blur']"
+				validate-on-blur
 				:placeholder="$gettext(`1st Place, Best Graphics, etc...`)"
 			/>
 			<app-form-control-errors />

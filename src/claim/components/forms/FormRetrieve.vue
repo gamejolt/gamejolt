@@ -53,7 +53,7 @@ const form: FormController<FormModel> = createForm({
 <template>
 	<AppForm :controller="form">
 		<AppFormGroup name="email" :label="$gettext('Email Address')">
-			<AppFormControl type="email" :validate-on="['blur']" />
+			<AppFormControl type="email" validate-on-blur />
 
 			<AppFormControlErrors>
 				<AppFormControlError

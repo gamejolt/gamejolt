@@ -132,7 +132,6 @@ export default class FormGameDescription
 					validateContentMaxLength(lengthLimit),
 				]"
 				:max-height="0"
-				:validate-on="['blur']"
 			/>
 
 			<app-form-control-errors />

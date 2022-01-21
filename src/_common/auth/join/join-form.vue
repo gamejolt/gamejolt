@@ -100,7 +100,7 @@ export default class AppAuthJoinForm
 									url: '/web/auth/check-field-availability/email',
 								}),
 							]"
-							:validate-on="['blur']"
+							validate-on-blur
 							:placeholder="$gettext('Email')"
 						/>
 
@@ -123,7 +123,7 @@ export default class AppAuthJoinForm
 									url: '/web/auth/check-field-availability/username',
 								}),
 							]"
-							:validate-on="['blur']"
+							validate-on-blur
 							:placeholder="$gettext('Username')"
 						/>
 
@@ -139,7 +139,7 @@ export default class AppAuthJoinForm
 							type="password"
 							:disabled="blocked"
 							:validators="[validateMinLength(4), validateMaxLength(300)]"
-							:validate-on="['blur']"
+							validate-on-blur
 							:placeholder="$gettext('Password')"
 						/>
 

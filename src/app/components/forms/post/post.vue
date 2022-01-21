@@ -967,7 +967,6 @@ export default class FormPost
 				:model-id="model.id"
 				:min-height="72"
 				:validators="[validateContentRequired(), validateContentMaxLength(leadLengthLimit)]"
-				:validate-on="['blur']"
 				@paste="onPaste"
 			/>
 

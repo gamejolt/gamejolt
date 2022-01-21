@@ -168,7 +168,7 @@ export default class FormOnboardingProfile
 										initVal: user.username,
 									}),
 								]"
-								:validate-on="['blur']"
+								validate-on-blur
 							/>
 						</div>
 					</div>

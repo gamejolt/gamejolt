@@ -143,7 +143,7 @@ export default class FormCommunityBlock extends mixins(Wrapper) implements FormO
 							url: `/web/dash/communities/blocks/check-field-availability/${community.id}`,
 						}),
 					]"
-					:validate-on="['blur']"
+					validate-on-blur
 					:disabled="usernameLocked"
 				/>
 			</app-form-control-prefix>

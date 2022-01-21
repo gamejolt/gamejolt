@@ -57,7 +57,6 @@ export default class FormForumTopic extends mixins(Wrapper) {
 			<app-form-control-content
 				content-context="forum-post"
 				:validators="[validateContentRequired(), validateContentNoActiveUploads()]"
-				:validate-on="['blur']"
 			/>
 
 			<app-form-control-errors />

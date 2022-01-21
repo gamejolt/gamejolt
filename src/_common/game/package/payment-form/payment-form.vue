@@ -9,10 +9,10 @@ import AppExpand from '../../../expand/expand.vue';
 import { formatCurrency } from '../../../filters/currency';
 import { AppFocusWhen } from '../../../form-vue/focus-when.directive';
 import {
-BaseForm,
-FormOnSubmit,
-FormOnSubmitError,
-FormOnSubmitSuccess
+	BaseForm,
+	FormOnSubmit,
+	FormOnSubmitError,
+	FormOnSubmitSuccess,
 } from '../../../form-vue/form.service';
 import { Geo, Region } from '../../../geo/geo.service';
 import { showErrorGrowl } from '../../../growls/growls.service';
@@ -768,11 +768,7 @@ export default class FormGamePackagePayment
 								name="region"
 								:label="$gettext('State/Province/County')"
 							>
-								<app-form-control
-									v-if="!regions"
-									type="text"
-									:validate-on="['blur']"
-								/>
+								<app-form-control v-if="!regions" type="text" validate-on-blur />
 
 								<app-form-control-select v-else>
 									<option

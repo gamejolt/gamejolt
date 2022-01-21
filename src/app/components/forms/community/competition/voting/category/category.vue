@@ -55,7 +55,7 @@ export default class FormCommunityCompetitionVotingCategory
 						url: nameAvailabilityUrl,
 					}),
 				]"
-				:validate-on="['blur']"
+				validate-on-blur
 				:placeholder="$gettext(`Graphics, Sound, etc...`)"
 			/>
 			<app-form-control-errors />

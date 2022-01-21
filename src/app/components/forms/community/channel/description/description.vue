@@ -49,7 +49,6 @@ export default class FormCommunityChannelDescription extends mixins(Wrapper) imp
 					validateContentMaxLength(lengthLimit),
 				]"
 				:max-height="0"
-				:validate-on="['blur']"
 			/>
 
 			<app-form-control-errors />

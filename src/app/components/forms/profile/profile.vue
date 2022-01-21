@@ -129,7 +129,7 @@ export default class FormProfile extends mixins(Wrapper) implements FormOnLoad, 
 						initVal: model.username,
 					}),
 				]"
-				:validate-on="['blur']"
+				validate-on-blur
 			/>
 
 			<app-form-control-errors />
@@ -181,7 +181,7 @@ export default class FormProfile extends mixins(Wrapper) implements FormOnLoad, 
 						initVal: model.name,
 					}),
 				]"
-				:validate-on="['blur']"
+				validate-on-blur
 			/>
 
 			<app-form-control-errors />
