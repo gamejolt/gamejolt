@@ -1,9 +1,9 @@
 import { computed, inject, InjectionKey, ref } from 'vue';
 import { Environment } from '../environment/environment.service';
-// import { UserTimeout } from '../user/timeout/timeout.model';
-// import { User } from '../user/user.model';
 import '../model/model.service';
 import { Navigate } from '../navigate/navigate.service';
+import { UserTimeout } from '../user/timeout/timeout.model';
+import { User } from '../user/user.model';
 
 interface UserConsents {
 	ads?: boolean;
