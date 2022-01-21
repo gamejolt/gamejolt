@@ -2,6 +2,7 @@
 import { setup } from 'vue-class-component';
 import { mixins, Options } from 'vue-property-decorator';
 import { Community } from '../../../../_common/community/community.model';
+import AppFormControlPrefix from '../../../../_common/form-vue/AppFormControlPrefix.vue';
 import AppFormControlTheme from '../../../../_common/form-vue/controls/AppFormControlTheme.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm, FormOnSubmitSuccess } from '../../../../_common/form-vue/form.service';
@@ -18,6 +19,7 @@ class Wrapper extends BaseForm<Community> {}
 		AppPostAddButtonFormControl,
 		AppFormControlTheme,
 		AppFormControlToggle,
+		AppFormControlPrefix,
 	},
 })
 export default class FormCommunity extends mixins(Wrapper) implements FormOnSubmitSuccess {
@@ -88,17 +90,19 @@ export default class FormCommunity extends mixins(Wrapper) implements FormOnSubm
 					</translate>
 				</p>
 			</div>
-			<app-form-control
-				prefix="gamejolt.com/c/"
-				:validators="[
-					validateUrlPath(),
-					validateMaxLength(50),
-					validateAvailability({
-						url: '/web/dash/communities/check-field-availability/path',
-					}),
-				]"
-				:validate-delay="500"
-			/>
+			<app-form-control-prefix prefix="gamejolt.com/c/">
+				<app-form-control
+					:validators="[
+						validateUrlPath(),
+						validateMaxLength(50),
+						validateAvailability({
+							url: '/web/dash/communities/check-field-availability/path',
+						}),
+					]"
+					:validate-delay="500"
+				/>
+			</app-form-control-prefix>
+
 			<div class="help-block">
 				<p>
 					<strong>

@@ -1,12 +1,17 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
+import AppFormControlPrefix from '../../../../../_common/form-vue/AppFormControlPrefix.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
 
 class Wrapper extends BaseForm<Collaborator> {}
 
-@Options({})
+@Options({
+	components: {
+		AppFormControlPrefix,
+	},
+})
 export default class FormGameCollaborator extends mixins(Wrapper) {
 	modelClass = Collaborator;
 	saveMethod = '$invite' as const;
@@ -34,18 +39,19 @@ export default class FormGameCollaborator extends mixins(Wrapper) {
 <template>
 	<app-form :controller="form">
 		<app-form-group v-if="method === 'add'" name="username" :label="$gettext(`Username`)">
-			<app-form-control
-				prefix="@"
-				:validators="[
-					validateMaxLength(100),
-					validateAvailability({
-						url: `/web/dash/developer/games/collaborators/check-field-availability`,
-						initVal: undefined,
-					}),
-				]"
-				:validate-on="['blur']"
-				focus
-			/>
+			<app-form-control-prefix prefix="@">
+				<app-form-control
+					:validators="[
+						validateMaxLength(100),
+						validateAvailability({
+							url: `/web/dash/developer/games/collaborators/check-field-availability`,
+							initVal: undefined,
+						}),
+					]"
+					:validate-on="['blur']"
+					focus
+				/>
+			</app-form-control-prefix>
 
 			<app-form-control-errors :label="$gettext('username')">
 				<app-form-control-error

@@ -1,6 +1,7 @@
 <script lang="ts">
 import { mixins, Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
+import AppFormControlPrefix from '../../../../../_common/form-vue/AppFormControlPrefix.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import {
 	BaseForm,
@@ -19,6 +20,7 @@ class Wrapper extends BaseForm<FormModel> {}
 @Options({
 	components: {
 		AppFormControlToggle,
+		AppFormControlPrefix,
 	},
 })
 export default class FormUserBlock
@@ -59,16 +61,17 @@ export default class FormUserBlock
 <template>
 	<app-form :controller="form">
 		<app-form-group name="username">
-			<app-form-control
-				prefix="@"
-				:validators="[
-					validateMaxLength(100),
-					validateAvailability({
-						url: `/web/dash/blocks/check-field-availability`,
-					}),
-				]"
-				:validate-on="['blur']"
-			/>
+			<app-form-control-prefix prefix="@">
+				<app-form-control
+					:validators="[
+						validateMaxLength(100),
+						validateAvailability({
+							url: `/web/dash/blocks/check-field-availability`,
+						}),
+					]"
+					:validate-on="['blur']"
+				/>
+			</app-form-control-prefix>
 
 			<app-form-control-errors :label="$gettext('username')">
 				<app-form-control-error

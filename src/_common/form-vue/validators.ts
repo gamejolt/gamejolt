@@ -470,7 +470,7 @@ export const validateMaxDate =
 		return null;
 	};
 
-function _parseCreditCard(val: string) {
+function _parseCreditCardExp(val: string) {
 	const sanitized = val.replace(/[^\d]+/, '');
 	const m = parseInt(sanitized.substring(0, 2), 10);
 
@@ -480,8 +480,8 @@ function _parseCreditCard(val: string) {
 	return { m: m, y: y };
 }
 
-function _isValidCreditCard(val: string) {
-	const parsed = _parseCreditCard(val);
+function _isValidCreditCardExp(val: string) {
+	const parsed = _parseCreditCardExp(val);
 	return !!parsed.y && parsed.m < 13 && parsed.m > 0;
 }
 
@@ -490,14 +490,14 @@ function _isValidCreditCard(val: string) {
  */
 export const validateCreditCardExpiration = (): FormValidator<string> => async value => {
 	if (value) {
-		if (!_isValidCreditCard(value)) {
+		if (!_isValidCreditCardExp(value)) {
 			return {
 				type: 'cc_exp_date',
 				message: `Please enter a valid expiration date.`,
 			};
 		}
 
-		const parsed = _parseCreditCard(value);
+		const parsed = _parseCreditCardExp(value);
 
 		// Months are 0-based. This means it will correctly push into the next
 		// month with their input so that it invalidates at the beginning of the
@@ -615,6 +615,9 @@ export const validateAvailability =
 		return null;
 	};
 
+/**
+ * Validates the value is a valid email address (regex based).
+ */
 export const validateEmail = (): FormValidator<string> => async value => {
 	if (value && !_emailRegex.test(value)) {
 		return {

@@ -5,6 +5,7 @@ import AppButton from '../../../_common/button/button.vue';
 import { formatCurrency } from '../../../_common/filters/currency';
 import AppForm, { createForm, FormController } from '../../../_common/form-vue/AppForm.vue';
 import AppFormControl from '../../../_common/form-vue/AppFormControl.vue';
+import AppFormControlPrefix from '../../../_common/form-vue/AppFormControlPrefix.vue';
 import AppFormGroup from '../../../_common/form-vue/AppFormGroup.vue';
 import { validateMinValue } from '../../../_common/form-vue/validators';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
@@ -91,7 +92,7 @@ function submit(method: PaymentData['method']) {
 			<label class="control-label"> Logged in as </label>
 
 			<div class="form-control">
-				<app-user-avatar-img :user="user" />
+				<AppUserAvatarImg :user="user" />
 				<div class="user-display-name">
 					<a
 						class="link-unstyled"
@@ -105,12 +106,13 @@ function submit(method: PaymentData['method']) {
 		</div>
 
 		<AppFormGroup class="-group -group-amount" name="amount" label="Name your price">
-			<AppFormControl
-				type="currency"
-				step="1"
-				prefix="$"
-				:validators="[validateMinValue(minAmount)]"
-			/>
+			<AppFormControlPrefix prefix="$">
+				<AppFormControl
+					type="currency"
+					step="1"
+					:validators="[validateMinValue(minAmount)]"
+				/>
+			</AppFormControlPrefix>
 
 			<span v-if="sellable.type === 'paid'" class="text-muted">
 				({{ formatCurrency(price) }} or more)
@@ -168,11 +170,11 @@ function submit(method: PaymentData['method']) {
 		flex-direction: row
 		margin-bottom: 0
 
-	::v-deep(.form-control-container)
+	::v-deep(.form-control)
 		flex: auto
 
 	::v-deep(.control-label)
-		float: left
+		flex: none
 		text-align: right
 		line-height: $input-height-base
 		width: 100px
@@ -186,7 +188,7 @@ function submit(method: PaymentData['method']) {
 		line-height: $input-height-base
 
 	.-group-amount
-		::v-deep(.form-control-container)
+		::v-deep(.form-control-prefix)
 			flex: none
 			width: 80px
 			margin-right: 10px

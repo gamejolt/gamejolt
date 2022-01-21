@@ -2,6 +2,7 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { Community } from '../../../../../_common/community/community.model';
+import AppFormControlPrefix from '../../../../../_common/form-vue/AppFormControlPrefix.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
@@ -22,10 +23,10 @@ interface FormModel {
 }
 
 class Wrapper extends BaseForm<FormModel> {}
-
 @Options({
 	components: {
 		AppFormControlToggle,
+		AppFormControlPrefix,
 	},
 })
 export default class FormCommunityBlock extends mixins(Wrapper) implements FormOnSubmit {
@@ -134,17 +135,18 @@ export default class FormCommunityBlock extends mixins(Wrapper) implements FormO
 <template>
 	<app-form :controller="form">
 		<app-form-group name="username">
-			<app-form-control
-				prefix="@"
-				:validators="[
-					validateMaxLength(100),
-					validateAvailability({
-						url: `/web/dash/communities/blocks/check-field-availability/${community.id}`,
-					}),
-				]"
-				:validate-on="['blur']"
-				:disabled="usernameLocked"
-			/>
+			<app-form-control-prefix prefix="@">
+				<app-form-control
+					:validators="[
+						validateMaxLength(100),
+						validateAvailability({
+							url: `/web/dash/communities/blocks/check-field-availability/${community.id}`,
+						}),
+					]"
+					:validate-on="['blur']"
+					:disabled="usernameLocked"
+				/>
+			</app-form-control-prefix>
 
 			<app-form-control-errors :label="$gettext('username')">
 				<app-form-control-error
