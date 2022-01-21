@@ -33,12 +33,12 @@ const _hashtagRegex = /^[\w_]+$/;
  */
 const _semverRegex =
 	/^v?(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)(?:-[\da-z-]+(?:\.[\da-z-]+)*)?(?:\+[\da-z-]+(?:\.[\da-z-]+)*)?$/i;
-
 const _domainRegex = /^((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}$/;
 const _gaTrackingIdRegex = /^UA-[0-9]+-[0-9]+$/;
-
 const _emailRegex =
 	/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const _ccRegex =
+	/^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|(222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11}|62[0-9]{14})$/;
 
 ///////////////
 // Note: All validator functions should be builder functions that return a
@@ -485,6 +485,21 @@ function _isValidCreditCardExp(val: string) {
 	return !!parsed.y && parsed.m < 13 && parsed.m > 0;
 }
 
+function _checkLuhn(val: string) {
+	let s = 0;
+	let doubleDigit = false;
+	for (let i = val.length - 1; i >= 0; i--) {
+		let digit = +val[i];
+		if (doubleDigit) {
+			digit *= 2;
+			if (digit > 9) digit -= 9;
+		}
+		s += digit;
+		doubleDigit = !doubleDigit;
+	}
+	return s % 10 == 0;
+}
+
 /**
  * Validates that the expiration date is a valid date and not expired.
  */
@@ -506,6 +521,25 @@ export const validateCreditCardExpiration = (): FormValidator<string> => async v
 			return {
 				type: 'cc_expired',
 				message: `This card has expired.`,
+			};
+		}
+	}
+
+	return null;
+};
+
+/**
+ * Validates the credit cards passed in. Basically just checks that the format
+ * matches common CC formats, doesn't go too crazy and will probably not match
+ * all CCs.
+ */
+export const validateCreditCard = (): FormValidator<string> => async value => {
+	if (value) {
+		const sanitized = value.replace(/[- ]+/g, '');
+		if (!_ccRegex.test(sanitized) || !_checkLuhn(sanitized)) {
+			return {
+				type: 'credit_card',
+				message: `Please enter a valid credit card.`,
 			};
 		}
 	}
