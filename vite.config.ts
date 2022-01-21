@@ -204,6 +204,9 @@ export default defineConfig(async configEnv => {
 			GJ_BUILD_TYPE: JSON.stringify(gjOpts.buildType),
 			GJ_VERSION: JSON.stringify(gjOpts.version),
 			GJ_WITH_UPDATER: JSON.stringify(gjOpts.withUpdater),
+
+			// TODO: engooden this.
+			GJ_HAS_ROUTER: JSON.stringify(true),
 		},
 
 		...onlyInSSR<ViteUserConfig>({

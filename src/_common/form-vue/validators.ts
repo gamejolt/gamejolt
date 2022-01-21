@@ -37,6 +37,9 @@ const _semverRegex =
 const _domainRegex = /^((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}$/;
 const _gaTrackingIdRegex = /^UA-[0-9]+-[0-9]+$/;
 
+const _emailRegex =
+	/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
 ///////////////
 // Note: All validator functions should be builder functions that return a
 // validator function that will be called. This allows you to curry parameters
@@ -71,7 +74,7 @@ export const validateDecimal =
 			regex = /^[0-9]*$/;
 		} else {
 			const regexPart = '{1,' + decimals + '}';
-			regex = new RegExp('^[0-9]*(?:\\.[0-9]{' + regexPart + '})?$');
+			regex = new RegExp('^[0-9]*(?:\\.[0-9]' + regexPart + ')?$');
 		}
 
 		if (!regex.test(value)) {
@@ -187,13 +190,31 @@ export const validateSemver = (): FormValidator<string> => async value => {
 	return null;
 };
 
+function _stringToNumber(value: string | number | null | undefined) {
+	if (!value) {
+		return null;
+	}
+
+	const number = Number(value);
+	if (isNaN(number)) {
+		return null;
+	}
+
+	return number;
+}
+
 /**
  * Validates that the number is greater than or equal to a given min value.
  */
 export const validateMinValue =
-	(min: number): FormValidator<number> =>
+	(min: number): FormValidator<string> =>
 	async value => {
-		if (value && value < min) {
+		const number = _stringToNumber(value);
+		if (number === null) {
+			return null;
+		}
+
+		if (number < min) {
 			return {
 				type: 'min_value',
 				message: `The {} entered is too low.`,
@@ -209,7 +230,12 @@ export const validateMinValue =
 export const validateMaxValue =
 	(max: number): FormValidator<number> =>
 	async value => {
-		if (value && value > max) {
+		const number = _stringToNumber(value);
+		if (number === null) {
+			return null;
+		}
+
+		if (number > max) {
 			return {
 				type: 'max_value',
 				message: `The {} entered is too high.`,
@@ -444,7 +470,7 @@ export const validateMaxDate =
 		return null;
 	};
 
-function _parseCreditCard(val: string) {
+function _parseCreditCardExp(val: string) {
 	const sanitized = val.replace(/[^\d]+/, '');
 	const m = parseInt(sanitized.substring(0, 2), 10);
 
@@ -454,8 +480,8 @@ function _parseCreditCard(val: string) {
 	return { m: m, y: y };
 }
 
-function _isValidCreditCard(val: string) {
-	const parsed = _parseCreditCard(val);
+function _isValidCreditCardExp(val: string) {
+	const parsed = _parseCreditCardExp(val);
 	return !!parsed.y && parsed.m < 13 && parsed.m > 0;
 }
 
@@ -464,14 +490,14 @@ function _isValidCreditCard(val: string) {
  */
 export const validateCreditCardExpiration = (): FormValidator<string> => async value => {
 	if (value) {
-		if (!_isValidCreditCard(value)) {
+		if (!_isValidCreditCardExp(value)) {
 			return {
 				type: 'cc_exp_date',
 				message: `Please enter a valid expiration date.`,
 			};
 		}
 
-		const parsed = _parseCreditCard(value);
+		const parsed = _parseCreditCardExp(value);
 
 		// Months are 0-based. This means it will correctly push into the next
 		// month with their input so that it invalidates at the beginning of the
@@ -588,3 +614,17 @@ export const validateAvailability =
 
 		return null;
 	};
+
+/**
+ * Validates the value is a valid email address (regex based).
+ */
+export const validateEmail = (): FormValidator<string> => async value => {
+	if (value && !_emailRegex.test(value)) {
+		return {
+			type: 'email',
+			message: `Please enter a valid email address.`,
+		};
+	}
+
+	return null;
+};

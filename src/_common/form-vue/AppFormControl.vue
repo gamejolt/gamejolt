@@ -12,28 +12,14 @@ import {
 	toRefs,
 	watch,
 } from 'vue';
-import { useResizeObserver } from '../../utils/hooks/useResizeObserver';
-import { Ruler } from '../ruler/ruler-service';
 import { useForm } from './AppForm.vue';
 import { useFormGroup } from './AppFormGroup.vue';
 import { AppFocusWhen as vAppFocusWhen } from './focus-when.directive';
-import { FormValidator, validateRequired } from './validators';
+import { useFormControlHooks } from './form-control-hooks';
+import { FormValidator, validateDecimal, validateEmail, validateRequired } from './validators';
 
 interface ValidationOptions {
 	validateDelay?: number;
-}
-
-export interface FormControlController<T = any> {
-	readonly id: string | undefined;
-	/**
-	 * Whether or not the form control has multiple controls for the group. This
-	 * is for radio and checkboxes mostly.
-	 */
-	readonly multi: boolean;
-	controlVal: T;
-	applyValue: (value: T, options?: ValidationOptions) => void;
-	applyBlur: (options?: ValidationOptions) => void;
-	readonly validators: FormValidator[];
 }
 
 const Key: InjectionKey<FormControlController> = Symbol('form-control');
@@ -91,6 +77,7 @@ export function createFormControl<T>({
 	onChange: (value: T) => void;
 	multi?: boolean;
 }) {
+	const hooks = useFormControlHooks();
 	const form = useForm()!;
 	const group = useFormGroup()!;
 
@@ -107,23 +94,6 @@ export function createFormControl<T>({
 		if (!group.optional) {
 			validators.push(validateRequired());
 		}
-
-		// TODO(vue3): somehow sync up with the control type?
-		// 	get validationRules() {
-		// 		const rules = {
-		// 			...this.baseRules,
-		// 		};
-
-		// 		if (this.type === 'currency') {
-		// 			rules.decimal = 2;
-		// 		}
-
-		// 		if (this.type === 'email') {
-		// 			rules.email = true;
-		// 		}
-
-		// 		return rules;
-		// 	}
 
 		return validators;
 	});
@@ -144,6 +114,10 @@ export function createFormControl<T>({
 	}
 
 	function applyValue(value: T, options: ValidationOptions = {}) {
+		if (hooks?.beforeApplyValue) {
+			value = hooks.beforeApplyValue(c, value);
+		}
+
 		// When the DOM value changes we bind it back to our own value and set
 		// it on the form model as well.
 		if (!multi) {
@@ -201,11 +175,18 @@ export function createFormControl<T>({
 	return c;
 }
 
-export default {
-	// Since we may show a prefix, we need to put the fallthrough attributes
-	// manually.
-	inheritAttrs: false,
-};
+export interface FormControlController<T = any> {
+	readonly id: string | undefined;
+	/**
+	 * Whether or not the form control has multiple controls for the group. This
+	 * is for radio and checkboxes mostly.
+	 */
+	readonly multi: boolean;
+	controlVal: T;
+	applyValue: (value: T, options?: ValidationOptions) => void;
+	applyBlur: (options?: ValidationOptions) => void;
+	readonly validators: FormValidator[];
+}
 </script>
 
 <script lang="ts" setup>
@@ -218,14 +199,6 @@ const props = defineProps({
 	},
 	focus: {
 		type: Boolean,
-	},
-	prefix: {
-		type: String,
-		default: null,
-	},
-	mask: {
-		type: Array as PropType<(string | RegExp)[]>,
-		default: () => [],
 	},
 	disabled: {
 		type: Boolean,
@@ -240,37 +213,33 @@ const emit = defineEmits({
 	...defineFormControlEmits(),
 });
 
-const { validators } = toRefs(props);
+const { validators, type } = toRefs(props);
 
-// TODO(vue3): can we do the text masking in a way that tree shakes it away when not used?
+// We add some extra validators in depending on the form control type.
+const ourValidators = computed(() => {
+	const ourValidators: FormValidator[] = [];
 
+	if (type.value === 'currency') {
+		ourValidators.push(validateDecimal(2));
+	} else if (type.value === 'email') {
+		ourValidators.push(validateEmail());
+	}
+
+	return [...ourValidators, ...validators.value];
+});
+
+const hooks = useFormControlHooks();
 const group = useFormGroup()!;
 const c = createFormControl({
 	initialValue: '',
-	validators,
+	validators: ourValidators,
 	// eslint-disable-next-line vue/require-explicit-emits
 	onChange: val => emit('changed', val),
 });
 
 const root = ref<HTMLInputElement>();
-const prefixElement = ref<HTMLSpanElement>();
 
-const originalInputPaddingTop = ref(0);
-const originalInputPaddingLeft = ref(0);
-const originalInputMarginTop = ref(0);
-const originalInputMarginLeft = ref(0);
-const paddingLeft = ref('');
-
-const originalOffsetTop = computed(
-	() => originalInputPaddingTop.value + originalInputMarginTop.value
-);
-const originalOffsetLeft = computed(
-	() => originalInputPaddingLeft.value + originalInputMarginLeft.value
-);
-
-const controlType = computed(() => {
-	return props.type === 'currency' ? 'number' : props.type;
-});
+const controlType = computed(() => (type.value === 'currency' ? 'number' : type.value));
 
 function onChange() {
 	c.applyValue(root.value?.value ?? '', {
@@ -278,26 +247,11 @@ function onChange() {
 	});
 }
 
-useResizeObserver({ target: prefixElement, callback: recalcPositioning });
-
 onMounted(() => {
-	// If there's a prefix.
-	if (root.value && prefixElement.value) {
-		const styles = window.getComputedStyle(root.value);
-		originalInputPaddingTop.value = parseFloat(styles.paddingTop || '0');
-		originalInputPaddingLeft.value = parseFloat(styles.paddingLeft || '0');
-		originalInputMarginTop.value = parseFloat(styles.marginTop || '0');
-		originalInputMarginLeft.value = parseFloat(styles.marginLeft || '0');
-
-		recalcPositioning();
+	if (hooks?.afterMount) {
+		hooks.afterMount(c, root);
 	}
 });
-
-function recalcPositioning() {
-	if (prefixElement.value) {
-		paddingLeft.value = Ruler.outerWidth(prefixElement.value) + originalOffsetLeft.value + 'px';
-	}
-}
 
 function onBlur() {
 	if (props.validateOnBlur) {
@@ -309,38 +263,18 @@ function onBlur() {
 </script>
 
 <template>
-	<div class="-container">
-		<input
-			:id="c.id"
-			ref="root"
-			v-app-focus-when="focus"
-			:name="group.name"
-			class="form-control"
-			:type="controlType"
-			:value="c.controlVal"
-			:disabled="disabled"
-			:list="htmlListId"
-			v-bind="$attrs"
-			:style="{ 'padding-left': paddingLeft }"
-			@input="onChange"
-			@blur="onBlur"
-		/>
-		<span
-			v-if="prefix"
-			ref="prefixElement"
-			class="-prefix text-muted"
-			:style="{ top: `${originalOffsetTop}px`, left: `${originalOffsetLeft}px` }"
-		>
-			<em>{{ prefix }}</em>
-		</span>
-	</div>
+	<input
+		:id="c.id"
+		ref="root"
+		v-app-focus-when="focus"
+		:name="group.name"
+		class="form-control"
+		:type="controlType"
+		:value="c.controlVal"
+		:disabled="disabled"
+		:list="htmlListId"
+		v-bind="$attrs"
+		@input="onChange"
+		@blur="onBlur"
+	/>
 </template>
-
-<style lang="stylus" scoped>
-.-container
-	position: relative
-
-.-prefix
-	position: absolute
-	pointer-events: none
-</style>

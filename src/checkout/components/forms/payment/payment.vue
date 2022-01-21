@@ -4,6 +4,7 @@ import { mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
 import { formatCurrency } from '../../../../_common/filters/currency';
+import AppFormControlMask from '../../../../_common/form-vue/AppFormControlMask.vue';
 import { AppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';
 import { BaseForm, FormOnSubmit } from '../../../../_common/form-vue/form.service';
 import { validateCreditCardExpiration } from '../../../../_common/form-vue/validators';
@@ -19,6 +20,7 @@ class Wrapper extends BaseForm<any> {}
 	components: {
 		AppExpand,
 		AppLoading,
+		AppFormControlMask,
 	},
 	directives: {
 		AppTooltip,
@@ -278,16 +280,17 @@ export default class FormPayment extends mixins(Wrapper) implements FormOnSubmit
 							<app-form-group name="card_number" :label="$gettext('card number')">
 								<app-jolticon icon="credit-card" />
 								<!-- TODO(vue3): credit card validator -->
-								<app-form-control
-									type="text"
-									class="has-icon"
-									:placeholder="$gettext('card number')"
-									:rules="{
-										credit_card: true,
-									}"
-									:mask="ccMask"
-									:validate-on="['blur']"
-								/>
+								<app-form-control-mask :mask="ccMask">
+									<app-form-control
+										type="text"
+										class="has-icon"
+										:placeholder="$gettext('card number')"
+										:rules="{
+											credit_card: true,
+										}"
+										:validate-on="['blur']"
+									/>
+								</app-form-control-mask>
 								<app-form-control-errors>
 									<app-form-control-error
 										when="credit_card"
