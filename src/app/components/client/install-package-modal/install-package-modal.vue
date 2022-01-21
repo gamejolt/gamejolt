@@ -10,7 +10,7 @@ import AppGamePackageCard from '../../../../_common/game/package/card/card.vue';
 import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { BaseModal } from '../../../../_common/modal/base';
-import { ClientLibraryAction, ClientLibraryStore } from '../../../store/client-library';
+// import { ClientLibraryAction, ClientLibraryStore } from '../../../store/client-library';
 
 @Options({
 	components: {
@@ -21,7 +21,8 @@ import { ClientLibraryAction, ClientLibraryStore } from '../../../store/client-l
 export default class AppClientInstallPackageModal extends mixins(BaseModal) {
 	@Prop(Object) game!: Game;
 
-	@ClientLibraryAction packageInstall!: ClientLibraryStore['packageInstall'];
+	// @ClientLibraryAction packageInstall!: ClientLibraryStore['packageInstall'];
+	packageInstall!: any;
 
 	isLoading = true;
 	packageData: GamePackagePayloadModel = null as any;

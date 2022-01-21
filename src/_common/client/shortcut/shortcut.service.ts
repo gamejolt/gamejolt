@@ -1,7 +1,7 @@
-import { Shortcut } from 'client-voodoo';
 import * as path from 'path';
 import iconPath from '../../../static-assets/client/icon-256x256.png';
 import { getDeviceOS } from '../../device/device.service';
+import { Shortcut } from '../client-voodoo-imports';
 import { Client } from '../client.service';
 
 export class ClientShortcut {

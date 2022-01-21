@@ -14,11 +14,11 @@ import { GamePackage } from '../../../../../_common/game/package/package.model';
 import { Popper } from '../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import {
-	ClientLibraryAction,
-	ClientLibraryState,
-	ClientLibraryStore,
-} from '../../../../store/client-library';
+// import {
+// 	ClientLibraryAction,
+// 	ClientLibraryState,
+// 	ClientLibraryStore,
+// } from '../../../../store/client-library';
 import AppClientInstallProgress from '../../install-progress/install-progress.vue';
 import {
 	LocalDbPackage,
@@ -47,26 +47,33 @@ export default class AppClientPackageCardButtons extends Vue {
 	@Prop(Object)
 	card!: GamePackageCardModel;
 
-	@ClientLibraryState
-	packagesById!: ClientLibraryStore['packagesById'];
+	// @ClientLibraryState
+	// packagesById!: ClientLibraryStore['packagesById'];
+	packagesById!: any;
 
-	@ClientLibraryAction
-	private packageInstall!: ClientLibraryStore['packageInstall'];
+	// @ClientLibraryAction
+	// private packageInstall!: ClientLibraryStore['packageInstall'];
+	packageInstall!: any;
 
-	@ClientLibraryAction
-	private packageUninstall!: ClientLibraryStore['packageUninstall'];
+	// @ClientLibraryAction
+	// private packageUninstall!: ClientLibraryStore['packageUninstall'];
+	packageUninstall!: any;
 
-	@ClientLibraryAction
-	private installerPause!: ClientLibraryStore['installerPause'];
+	// @ClientLibraryAction
+	// private installerPause!: ClientLibraryStore['installerPause'];
+	installerPause!: any;
 
-	@ClientLibraryAction
-	private installerResume!: ClientLibraryStore['installerResume'];
+	// @ClientLibraryAction
+	// private installerResume!: ClientLibraryStore['installerResume'];
+	installerResume!: any;
 
-	@ClientLibraryAction
-	private installerRetry!: ClientLibraryStore['installerRetry'];
+	// @ClientLibraryAction
+	// private installerRetry!: ClientLibraryStore['installerRetry'];
+	installerRetry!: any;
 
-	@ClientLibraryAction
-	private launcherLaunch!: ClientLibraryStore['launcherLaunch'];
+	// @ClientLibraryAction
+	// private launcherLaunch!: ClientLibraryStore['launcherLaunch'];
+	launcherLaunch!: any;
 
 	build: GameBuild | null = null;
 	downloadableUnsupported = false;

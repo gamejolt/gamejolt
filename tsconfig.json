@@ -15,7 +15,7 @@
 		"downlevelIteration": true,
 		"resolveJsonModule": true,
 		"useDefineForClassFields": false,
-		"esModuleInterop": true,
+		"esModuleInterop": false,
 		"lib": ["esnext", "dom", "dom.iterable", "scripthost"]
 	},
 	"exclude": ["build", "node_modules", ".cache"]

@@ -1,10 +1,5 @@
-import {
-	Analytics as FirebaseAnalytics,
-	initializeAnalytics,
-	logEvent,
-	setCurrentScreen,
-	setUserId,
-} from 'firebase/analytics';
+import type { Analytics as FirebaseAnalytics } from 'firebase/analytics';
+import { initializeAnalytics, logEvent, setCurrentScreen, setUserId } from 'firebase/analytics';
 import { unref, watch } from 'vue';
 import { Router } from 'vue-router';
 import { arrayRemove } from '../../utils/array';

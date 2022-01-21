@@ -2,7 +2,7 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { GameBuild } from '../../../../../_common/game/build/build.model';
 import { Game } from '../../../../../_common/game/game.model';
-import { ClientLibraryState, ClientLibraryStore } from '../../../../store/client-library';
+// import { ClientLibraryState, ClientLibraryStore } from '../../../../store/client-library';
 import AppClientGameButtons from '../../game-buttons/game-buttons.vue';
 
 @Options({
@@ -16,7 +16,8 @@ export default class AppClientGameCoverButtons extends Vue {
 	@Prop(Array) browserBuilds!: GameBuild[];
 	@Prop(Array) installableBuilds!: GameBuild[];
 
-	@ClientLibraryState findActiveForGame!: ClientLibraryStore['findActiveForGame'];
+	// @ClientLibraryState findActiveForGame!: ClientLibraryStore['findActiveForGame'];
+	findActiveForGame!: any;
 
 	@Emit('play')
 	emitPlay() {}

@@ -1,11 +1,12 @@
 import { h } from 'vue';
 import { Options, Vue } from 'vue-property-decorator';
 import { Client } from '../../../../_common/client/client.service';
-import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
+// import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
 
 @Options({})
 export class AppClientSystemProgress extends Vue {
-	@ClientLibraryState totalPatchProgress!: ClientLibraryStore['totalPatchProgress'];
+	// @ClientLibraryState totalPatchProgress!: ClientLibraryStore['totalPatchProgress'];
+	totalPatchProgress!: any;
 
 	render() {
 		const progress = this.totalPatchProgress;

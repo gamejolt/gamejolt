@@ -3,9 +3,13 @@ import { Options } from 'vue-property-decorator';
 import { RouteLocationRedirect } from '../../../../utils/router';
 import AppAuthLogin from '../../../../_common/auth/login/login.vue';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+	WithSSRContextFilepath,
+} from '../../../../_common/route/route-component';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { loggedUserBlock } from '../auth';
+import { loggedUserBlock } from '../auth.vue';
 
 @Options({
 	name: 'RouteAuthLogin',
@@ -13,6 +17,7 @@ import { loggedUserBlock } from '../auth';
 		AppAuthLogin,
 	},
 })
+@WithSSRContextFilepath('auth/views/auth/login/login.vue')
 @RouteResolver({
 	deps: { query: ['intent'] },
 	async resolver({ route }) {

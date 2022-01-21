@@ -1,8 +1,9 @@
 import { defineAsyncComponent } from '@vue/runtime-core';
+import { lazyImportNoSSR } from '../../_common/code-splitting';
 import AppActivityFeedPlaceholder from './activity/feed/placeholder/placeholder.vue';
 
-export const GridClientLazy = () => import('./grid/client.service');
-export const ChatClientLazy = () => import('./chat/client');
+export const GridClientLazy = lazyImportNoSSR(() => import('./grid/client.service'));
+export const ChatClientLazy = lazyImportNoSSR(() => import('./chat/client'));
 
 export const AppAuthJoinLazy = defineAsyncComponent(
 	() => import('../../_common/auth/join/join.vue')
@@ -22,5 +23,5 @@ export const AppActivityFeedLazy = defineAsyncComponent({
 });
 
 export const AppVideoPlayerShakaLazy = defineAsyncComponent(
-	() => import('../../_common/video/player/shaka.vue')
+	lazyImportNoSSR(() => import('../../_common/video/player/shaka.vue'))
 );

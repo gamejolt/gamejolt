@@ -55,6 +55,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	}
 
 	routeCreated() {
+		console.log('route home created');
 		Meta.title = null;
 
 		this.$watch(
@@ -86,6 +87,9 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	}
 
 	routeResolved($payload: any) {
+		console.log('route home resolved: ', $payload);
+		console.log('route home resolved end');
+
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb;
 		Meta.twitter = $payload.twitter;

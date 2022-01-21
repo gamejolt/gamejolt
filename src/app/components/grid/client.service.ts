@@ -2,11 +2,12 @@ import { Channel, Socket } from 'phoenix';
 import { markRaw, reactive } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { CancelToken } from '../../../utils/cancel-token';
-import { TabLeader } from '../../../utils/tab-leader';
+import type { TabLeader } from '../../../utils/tab-leader';
 import { sleep } from '../../../utils/utils';
 import { uuidv4 } from '../../../utils/uuid';
 import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
+import { importNoSSR } from '../../../_common/code-splitting';
 import { Community } from '../../../_common/community/community.model';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
@@ -33,6 +34,10 @@ import { router } from '../../views';
 import { getTrophyImg } from '../trophy/thumbnail/thumbnail.vue';
 import { CommunityChannel } from './community-channel';
 import { FiresideChannel } from './fireside-channel';
+
+const TabLeaderLazy = importNoSSR(
+	async () => (await import('../../../utils/tab-leader')).TabLeader
+);
 
 export const onFiresideStart = new EventTopic<Model>();
 export const onNewStickers = new EventTopic<string[]>();
@@ -438,7 +443,8 @@ export class GridClient {
 				}
 			}
 
-			this.tabLeader = new TabLeader('grid_notification_channel_' + user.id);
+			const TabLeaderActual = await TabLeaderLazy;
+			this.tabLeader = new TabLeaderActual('grid_notification_channel_' + user.id);
 			this.tabLeader.init();
 
 			channel.on('new-notification', (payload: NewNotificationPayload) => {

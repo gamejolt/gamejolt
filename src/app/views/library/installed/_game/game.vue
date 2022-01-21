@@ -3,7 +3,7 @@ import { Options, Prop, Vue } from 'vue-property-decorator';
 import AppGameThumbnail from '../../../../../_common/game/thumbnail/AppGameThumbnail.vue';
 import AppClientGameButtons from '../../../../components/client/game-buttons/game-buttons.vue';
 import { LocalDbGame } from '../../../../components/client/local-db/game/game.model';
-import { ClientLibraryState, ClientLibraryStore } from '../../../../store/client-library';
+// import { ClientLibraryState, ClientLibraryStore } from '../../../../store/client-library';
 
 @Options({
 	components: {
@@ -15,11 +15,13 @@ export default class AppLibraryInstalledGame extends Vue {
 	@Prop(Object)
 	game!: LocalDbGame;
 
-	@ClientLibraryState
-	packagesByGameId!: ClientLibraryStore['packagesByGameId'];
+	// @ClientLibraryState
+	// packagesByGameId!: ClientLibraryStore['packagesByGameId'];
+	packagesByGameId!: any;
 
-	@ClientLibraryState
-	packages!: ClientLibraryStore['packages'];
+	// @ClientLibraryState
+	// packages!: ClientLibraryStore['packages'];
+	packages!: any;
 
 	isHovering = false;
 	isShowingOptions = false;

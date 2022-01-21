@@ -1,4 +1,4 @@
-import { ComponentOptions } from 'vue';
+import { ComponentOptions, useSSRContext } from 'vue';
 import { createDecorator, setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
 import { RouteLocationNormalized, Router } from 'vue-router';
@@ -34,6 +34,37 @@ export function RouteResolver(options: RouteResolverOptions = {}) {
 		};
 
 		_setupBeforeRouteEnter(componentOptions);
+	});
+}
+
+/**
+ * HACK: @vitejs/plugin-vue normally injects some code in our component's setup
+ * function to make them register themselves while they are being rendered. This lets
+ * our SSR server keep track of which components were rendered during a request,
+ * which in turn lets us use ssr-manifest to map them to the JS/CSS chunks that are
+ * required to render/hydrate them on the client side.
+ *
+ * For some reason it looks like some of our components don't seem to register
+ * themselves to ssr render context. At the time of writing I don't know why that
+ * is, so as a temporary solution this interface is introduced to allow us
+ * to call the bit of code to register the components manually.
+ */
+export function WithSSRContextFilepath(filepath: string) {
+	return createDecorator(componentOptions => {
+		if (!import.meta.env.SSR) {
+			return;
+		}
+
+		const originalSetup = componentOptions.setup;
+		componentOptions.setup = (props, ctx) => {
+			console.log(`In WithSSRContextFilepath('${filepath}')`);
+
+			const ssrCtx = useSSRContext()!;
+			(ssrCtx.modules || (ssrCtx.modules = new Set())).add(filepath);
+
+			// Call the original setup if one was provided.
+			return !!originalSetup ? originalSetup(props, ctx) : undefined;
+		};
 	});
 }
 
@@ -249,6 +280,7 @@ export class BaseRouteComponent extends Vue {
 			} else if (payload instanceof RouteLocationRedirect) {
 				// We want to clear out all current resolvers before doing the
 				// redirect. They will re-resolve after the route changes.
+				// TODO(vue3-ssr): Why do we do things differently here for SSR?
 				if (import.meta.env.SSR) {
 					this.commonStore_.redirect(this.$router.resolve(payload.location).href);
 				} else {

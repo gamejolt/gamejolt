@@ -1,10 +1,12 @@
 import { createApp } from './bootstrap';
 
-const { app, router } = createApp();
-
-router.isReady().then(() => {
+async function start() {
+	const { app, router } = createApp();
+	await router.isReady();
 	app.mount('#app');
-});
+}
+
+start();
 
 // TODO(vue3): make sure this won't break out build when we push to prod since we're removing the service worker
 // if (GJ_BUILD_TYPE === 'production' && navigator.serviceWorker) {

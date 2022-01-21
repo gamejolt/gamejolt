@@ -10,6 +10,7 @@ import { validateUsername } from '../../form-vue/validators';
 import { Provider } from '../../linked-account/linked-account.model';
 import { LinkedAccounts } from '../../linked-account/linked-accounts.service';
 import AppLoading from '../../loading/loading.vue';
+import { WithSSRContextFilepath } from '../../route/route-component';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 import googleImage from '../google-icon.svg';
 
@@ -24,6 +25,7 @@ class Wrapper extends BaseForm<any> {}
 		AppTooltip,
 	},
 })
+@WithSSRContextFilepath('_common/auth/login/login-form.vue')
 export default class AppAuthLoginForm
 	extends mixins(Wrapper)
 	implements FormOnSubmit, FormOnSubmitError, FormOnLoad
