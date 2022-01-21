@@ -1,12 +1,15 @@
 <script lang="ts" setup>
 import { computed, ref, toRef } from 'vue';
 import { Api } from '../../../api/api.service';
+import AppButton from '../../../button/button.vue';
 import { Clipboard } from '../../../clipboard/clipboard-service';
 import { MediaItem } from '../../../media-item/media-item-model';
 import { AppTooltip as vAppTooltip } from '../../../tooltip/tooltip-directive';
 import AppTranslate from '../../../translate/AppTranslate.vue';
 import { $gettext } from '../../../translate/translate.service';
-import { createForm, defineFormProps, FormController } from '../../AppForm.vue';
+import AppForm, { createForm, defineFormProps, FormController } from '../../AppForm.vue';
+import AppFormControlErrors from '../../AppFormControlErrors.vue';
+import AppFormGroup from '../../AppFormGroup.vue';
 import { validateFilesize, validateImageMaxDimensions } from '../../validators';
 import AppFormControlUpload from '../upload/AppFormControlUpload.vue';
 
@@ -97,7 +100,7 @@ function copyLink(mediaItem: MediaItem) {
 					<div class="media-item-list-item">
 						<div class="media-item-list-item-inner">
 							<div class="media-item-list-item-controls theme-dark">
-								<app-button
+								<AppButton
 									v-app-tooltip="$gettext(`Copy Markdown Embed`)"
 									icon="link"
 									overlay
@@ -118,9 +121,9 @@ function copyLink(mediaItem: MediaItem) {
 
 		<template v-if="!disabled">
 			<br />
-			<app-form :controller="form">
-				<app-form-group name="image" hide-label optional>
-					<app-form-control-upload
+			<AppForm :controller="form">
+				<AppFormGroup name="image" hide-label optional>
+					<AppFormControlUpload
 						:validators="[
 							validateFilesize(maxFilesize),
 							validateImageMaxDimensions({ width: maxWidth, height: maxHeight }),
@@ -133,9 +136,9 @@ function copyLink(mediaItem: MediaItem) {
 						@changed="imageSelected()"
 					/>
 
-					<app-form-control-errors />
-				</app-form-group>
-			</app-form>
+					<AppFormControlErrors />
+				</AppFormGroup>
+			</AppForm>
 		</template>
 	</div>
 </template>

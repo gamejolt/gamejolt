@@ -1,5 +1,5 @@
 <script lang="ts">
-import { nextTick } from 'vue';
+import { nextTick, toRaw, watch } from 'vue';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { Api } from '../../api/api.service';
 import AppCodemirror from '../../codemirror/codemirror.vue';
@@ -58,6 +58,12 @@ export default class AppThemeEditor extends Vue {
 
 		// Make sure we update the page with the current theme.
 		this.refresh(true);
+
+		watch(
+			() => this.theme,
+			() => this.refresh(),
+			{ deep: true }
+		);
 	}
 
 	async refresh(initial = false) {
@@ -68,9 +74,9 @@ export default class AppThemeEditor extends Vue {
 		if (iframe && iframe.contentWindow) {
 			const msg = {
 				type: 'theme-update',
-				template: this.templateObj,
-				definition: this.definition,
-				theme: this.theme,
+				template: toRaw(this.templateObj),
+				definition: toRaw(this.definition),
+				theme: toRaw(this.theme),
 			};
 
 			iframe.contentWindow.postMessage(msg, '*');
@@ -139,10 +145,7 @@ export default class AppThemeEditor extends Vue {
 								>
 									<translate>clear</translate>
 								</a>
-								<app-colorpicker
-									:model-value="theme[definitionField]"
-									@update:modelValue="refresh()"
-								/>
+								<app-colorpicker v-model="theme[definitionField]" />
 							</div>
 
 							<!-- Image -->
@@ -151,7 +154,6 @@ export default class AppThemeEditor extends Vue {
 								v-model="theme[definitionField]"
 								type="sites-theme-image"
 								:parent-id="resourceId"
-								@input="refresh()"
 							/>
 
 							<!-- Font Family -->
@@ -161,7 +163,6 @@ export default class AppThemeEditor extends Vue {
 								"
 								v-model="theme[definitionField]"
 								class="theme-editor-font-family"
-								@input="refresh()"
 							/>
 
 							<!-- Dropdown -->
@@ -171,11 +172,7 @@ export default class AppThemeEditor extends Vue {
 								"
 								class="theme-editor-dropdown"
 							>
-								<select
-									v-model="theme[definitionField]"
-									class="form-control"
-									@input="refresh()"
-								>
+								<select v-model="theme[definitionField]" class="form-control">
 									<option
 										v-for="option of definition.definitions[definitionField]
 											.options"
@@ -195,11 +192,7 @@ export default class AppThemeEditor extends Vue {
 								"
 								class="theme-editor-dropdown"
 							>
-								<select
-									v-model="theme[definitionField]"
-									class="form-control"
-									@input="refresh()"
-								>
+								<select v-model="theme[definitionField]" class="form-control">
 									<option :value="undefined">
 										<translate>Repeat</translate>
 									</option>
@@ -223,11 +216,7 @@ export default class AppThemeEditor extends Vue {
 								"
 								class="theme-editor-dropdown"
 							>
-								<select
-									v-model="theme[definitionField]"
-									class="form-control"
-									@input="refresh()"
-								>
+								<select v-model="theme[definitionField]" class="form-control">
 									<option :value="undefined">
 										<translate>Auto (Default)</translate>
 									</option>
@@ -244,11 +233,7 @@ export default class AppThemeEditor extends Vue {
 								"
 								class="theme-editor-dropdown"
 							>
-								<select
-									v-model="theme[definitionField]"
-									class="form-control"
-									@input="refresh()"
-								>
+								<select v-model="theme[definitionField]" class="form-control">
 									<option :value="undefined"><translate>Top</translate></option>
 									<option value="topLeft"><translate>Top Left</translate></option>
 									<option value="right"><translate>Right</translate></option>
@@ -272,14 +257,10 @@ export default class AppThemeEditor extends Vue {
 								v-else-if="definition.definitions[definitionField].type === 'css'"
 								class="theme-editor-code"
 							>
-								<app-codemirror
-									:value="theme[definitionField]"
-									:options="{
-										mode: 'css',
-										lineNumbers: false,
-										tabSize: 2,
-									}"
-									@change="updateField(definitionField, $event)"
+								<textarea
+									v-model="theme[definitionField]"
+									class="form-control"
+									rows="15"
 								/>
 							</div>
 						</div>
