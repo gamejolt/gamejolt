@@ -10,7 +10,7 @@ import AppFormControlTextarea from '../../form-vue/controls/AppFormControlTextar
 import AppFormControlTheme from '../../form-vue/controls/AppFormControlTheme.vue';
 import AppFormControlToggle from '../../form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm } from '../../form-vue/form.service';
-import { AppTheme } from '../theme';
+import AppTheme from '../AppTheme.vue';
 import { Theme } from '../theme.model';
 import { useThemeStore } from '../theme.store';
 import AppThemeSvg from './AppThemeSvg.vue';
