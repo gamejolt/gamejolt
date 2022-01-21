@@ -4,11 +4,13 @@ import {
 	createFormControl,
 	defineFormControlEmits,
 	defineFormControlProps,
+	defineFormControlValidateProps,
 } from '../AppFormControl.vue';
 import { useFormGroup } from '../AppFormGroup.vue';
 
 const props = defineProps({
 	...defineFormControlProps(),
+	...defineFormControlValidateProps(),
 });
 
 const emit = defineEmits({
@@ -27,13 +29,20 @@ const c = createFormControl({
 const root = ref<HTMLTextAreaElement>();
 
 function onChange() {
-	c.applyValue(root.value?.value || '');
+	c.applyValue(root.value?.value || '', {
+		validateDelay: props.validateDelay,
+	});
+}
+
+function onBlur() {
+	if (props.validateOnBlur) {
+		c.applyBlur({
+			validateDelay: props.validateDelay,
+		});
+	}
 }
 </script>
 
-<!-- v-validate="{ rules: validationRules }" -->
-<!-- :data-vv-validate-on="validateOn"
-		:data-vv-delay="validateDelay" -->
 <template>
 	<textarea
 		:id="c.id"
@@ -42,6 +51,7 @@ function onChange() {
 		class="form-control"
 		:value="c.controlVal"
 		@input="onChange"
+		@blur="onBlur"
 		@paste="emit('paste', $event)"
 	/>
 </template>

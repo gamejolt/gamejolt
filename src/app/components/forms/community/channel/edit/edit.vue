@@ -108,7 +108,7 @@ export default class FormCommunityChannelEdit
 						url: titleAvailabilityUrl,
 					}),
 				]"
-				data-vv-delay="500"
+				:validate-delay="500"
 			/>
 			<app-form-control-errors>
 				<app-form-control-error

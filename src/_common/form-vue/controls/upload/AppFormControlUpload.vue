@@ -263,9 +263,6 @@ async function getFiles(e: DragEvent) {
 				</a>
 			</div>
 
-			<!-- v-validate="{ rules: validationRules }"
-				:data-vv-validate-on="validateOn"
-				:data-vv-delay="validateDelay" -->
 			<AppFormControlUploadFile
 				v-show="!uploadLinkLabel"
 				:id="c.id!"

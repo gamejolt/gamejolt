@@ -53,7 +53,7 @@ export interface FormController<T = any> {
 	// Internal.
 	_groups: FormGroupController[];
 	_onControlChanged: () => void;
-	_validationToken: null | CancelToken;
+	_validationToken: CancelToken;
 	_override: (overrides: Partial<CreateFormOptions<T>>) => void;
 }
 
@@ -134,7 +134,7 @@ export function createForm<T>({
 	const serverErrors = ref({} as PayloadFormErrors);
 	const customErrors = ref([] as string[]);
 	const _groups = ref([] as FormGroupController[]);
-	let _validationToken: null | CancelToken = null;
+	const _validationToken = ref(new CancelToken()) as Ref<CancelToken>;
 
 	const valid = computed(
 		() => _groups.value.every(i => i.valid) && customErrors.value.length === 0
@@ -283,19 +283,17 @@ export function createForm<T>({
 	}
 
 	async function validate() {
-		_validationToken?.cancel();
-		_validationToken = new CancelToken();
+		_validationToken.value.cancel();
+		_validationToken.value = new CancelToken();
 
 		// Simply validate all the controls.
-		await Promise.all(_groups.value.map(i => i.validate()));
+		const promises = _groups.value.map(i => i.validate(_validationToken.value));
+		await Promise.all(promises);
 	}
 
 	function _onControlChanged() {
 		changed.value = true;
 		onChange?.(formModel.value as T);
-
-		// TODO(vue3): should we validate before calling the onChange or after?
-		validate();
 	}
 
 	async function submit() {

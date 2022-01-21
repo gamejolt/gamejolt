@@ -290,7 +290,7 @@ export default class FormGameRelease
 						initVal: model.version_number,
 					}),
 				]"
-				data-vv-delay="500"
+				:validate-delay="500"
 			/>
 			<app-form-control-errors />
 		</app-form-group>

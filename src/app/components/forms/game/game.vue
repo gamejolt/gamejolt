@@ -161,7 +161,7 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 								initVal: method === 'edit' ? model.path : undefined,
 							}),
 						]"
-						data-vv-delay="500"
+						:validate-delay="500"
 						:disabled="!hasAllPerms"
 					/>
 
