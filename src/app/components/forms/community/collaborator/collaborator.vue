@@ -50,7 +50,7 @@ export default class FormCommunityCollaborator extends mixins(Wrapper) {
 							url: `/web/dash/communities/collaborators/check-field-availability/${community.id}`,
 						}),
 					]"
-					:validate-on="['blur']"
+					validate-on-blur
 				/>
 			</app-form-control-prefix>
 

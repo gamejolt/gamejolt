@@ -47,7 +47,7 @@ export default class FormRetrieveLogin extends mixins(Wrapper) implements FormOn
 
 				<app-form-control
 					type="text"
-					:validate-on="['blur']"
+					validate-on-blur
 					:placeholder="$gettext('Email or Username')"
 					@changed="onChanged"
 				/>

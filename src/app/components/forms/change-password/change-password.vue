@@ -46,7 +46,7 @@ export default class FormChangePassword extends mixins(Wrapper) implements FormO
 			<app-form-control
 				type="password"
 				:validators="[validateMinLength(4), validateMaxLength(300)]"
-				:validate-on="['blur']"
+				validate-on-blur
 			/>
 
 			<app-form-control-errors label="password">
@@ -61,7 +61,7 @@ export default class FormChangePassword extends mixins(Wrapper) implements FormO
 			<app-form-control
 				type="password"
 				:validators="[validateMinLength(4), validateMaxLength(300)]"
-				:validate-on="['blur']"
+				validate-on-blur
 			/>
 
 			<app-form-control-errors label="new password" />
@@ -78,7 +78,7 @@ export default class FormChangePassword extends mixins(Wrapper) implements FormO
 				:rules="{
 					confirmed: 'password',
 				}"
-				:validate-on="['blur']"
+				validate-on-blur
 			/>
 
 			<app-form-control-errors label="new password">

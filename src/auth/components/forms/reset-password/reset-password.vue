@@ -48,7 +48,7 @@ export default class FormResetPassword extends mixins(Wrapper) implements FormOn
 				<app-form-control
 					type="password"
 					:validators="[validateMinLength(4), validateMaxLength(300)]"
-					:validate-on="['blur']"
+					validate-on-blur
 					:placeholder="$gettext('auth.reset_password.password_label')"
 				/>
 

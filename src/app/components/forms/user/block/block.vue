@@ -69,7 +69,7 @@ export default class FormUserBlock
 							url: `/web/dash/blocks/check-field-availability`,
 						}),
 					]"
-					:validate-on="['blur']"
+					validate-on-blur
 				/>
 			</app-form-control-prefix>
 

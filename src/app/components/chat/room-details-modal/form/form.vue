@@ -47,7 +47,7 @@ export default class FormRoomDetails extends mixins(Wrapper) implements FormOnLo
 						validateMinLength(titleMinLength),
 						validateMaxLength(titleMaxLength),
 					]"
-					:validate-on="['blur']"
+					validate-on-blur
 					:placeholder="$gettext(`Empty group title`)"
 				/>
 

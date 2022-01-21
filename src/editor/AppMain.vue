@@ -13,8 +13,9 @@ const adapter = createContentEditorAppAdapter({ themeStore });
 	<div id="editor">
 		<AppTheme :theme="adapter.theme" />
 		<AppContentEditor
-			v-if="adapter.isInitialized"
+			v-if="adapter.isInitialized && adapter.controller"
 			ref="editor"
+			:controller="adapter.controller"
 			:content-context="adapter.context"
 			:value="adapter.initialContent"
 			:placeholder="adapter.placeholder"

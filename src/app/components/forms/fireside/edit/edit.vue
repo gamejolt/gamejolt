@@ -17,7 +17,7 @@ export default class FormFiresideEdit extends mixins(Wrapper) {
 			<app-form-control
 				type="text"
 				:validators="[validateMinLength(4), validateMaxLength(100)]"
-				:validate-on="['blur']"
+				validate-on-blur
 				focus
 			/>
 			<app-form-control-errors />

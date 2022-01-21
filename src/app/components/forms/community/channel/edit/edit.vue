@@ -90,7 +90,7 @@ export default class FormCommunityChannelEdit
 
 			<app-form-control
 				:validators="[validateMinLength(3), validateMaxLength(30)]"
-				:validate-on="['blur']"
+				validate-on-blur
 				:placeholder="formModel.title"
 			/>
 

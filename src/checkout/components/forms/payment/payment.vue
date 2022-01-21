@@ -7,7 +7,10 @@ import { formatCurrency } from '../../../../_common/filters/currency';
 import AppFormControlMask from '../../../../_common/form-vue/AppFormControlMask.vue';
 import { AppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';
 import { BaseForm, FormOnSubmit } from '../../../../_common/form-vue/form.service';
-import { validateCreditCardExpiration } from '../../../../_common/form-vue/validators';
+import {
+	validateCreditCard,
+	validateCreditCardExpiration,
+} from '../../../../_common/form-vue/validators';
 import { Geo, Region } from '../../../../_common/geo/geo.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Order } from '../../../../_common/order/order.model';
@@ -67,6 +70,7 @@ export default class FormPayment extends mixins(Wrapper) implements FormOnSubmit
 	readonly expMask = [/\d/, /\d/, '/', /\d/, /\d/];
 	readonly formatCurrency = formatCurrency;
 	readonly validateCreditCardExpiration = validateCreditCardExpiration;
+	readonly validateCreditCard = validateCreditCard;
 
 	created() {
 		this.form.warnOnDiscard = false;
@@ -279,16 +283,13 @@ export default class FormPayment extends mixins(Wrapper) implements FormOnSubmit
 
 							<app-form-group name="card_number" :label="$gettext('card number')">
 								<app-jolticon icon="credit-card" />
-								<!-- TODO(vue3): credit card validator -->
 								<app-form-control-mask :mask="ccMask">
 									<app-form-control
 										type="text"
 										class="has-icon"
 										:placeholder="$gettext('card number')"
-										:rules="{
-											credit_card: true,
-										}"
-										:validate-on="['blur']"
+										:validators="[validateCreditCard()]"
+										validate-on-blur
 									/>
 								</app-form-control-mask>
 								<app-form-control-errors>
@@ -309,7 +310,7 @@ export default class FormPayment extends mixins(Wrapper) implements FormOnSubmit
 											placeholder="mm/yy"
 											:validators="[validateCreditCardExpiration()]"
 											:mask="expMask"
-											:validate-on="['blur']"
+											validate-on-blur
 										/>
 										<app-form-control-errors />
 									</app-form-group>
@@ -325,7 +326,7 @@ export default class FormPayment extends mixins(Wrapper) implements FormOnSubmit
 												validateMaxLength(4),
 												validatePattern(/^[0-9]*$/),
 											]"
-											:validate-on="['blur']"
+											validate-on-blur
 										/>
 										<app-form-control-errors>
 											<app-form-control-error

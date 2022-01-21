@@ -48,7 +48,7 @@ export default class FormGameCollaborator extends mixins(Wrapper) {
 							initVal: undefined,
 						}),
 					]"
-					:validate-on="['blur']"
+					validate-on-blur
 					focus
 				/>
 			</app-form-control-prefix>

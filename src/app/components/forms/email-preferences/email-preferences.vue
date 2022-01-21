@@ -117,7 +117,7 @@ export default class FormEmailPreferences extends mixins(Wrapper) implements For
 						initVal: model.email_address,
 					}),
 				]"
-				:validate-on="['blur']"
+				validate-on-blur
 			/>
 			<app-form-control-errors />
 		</app-form-group>

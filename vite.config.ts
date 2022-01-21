@@ -19,15 +19,6 @@ type EmptyObject = { [k in any]: never };
 
 const noopDirectiveTransform = () => ({ props: [] });
 
-const stylusOptions = {
-	imports: [
-		// Import the section variables.
-		path.resolve(__dirname, 'src/app/styles/variables.styl'),
-		// Import common mixins.
-		path.resolve(__dirname, 'src/_styles/mixins.styl'),
-	],
-};
-
 // TODO(vue3): we need a way to remove client-related code completely
 
 // https://vitejs.dev/config/
@@ -48,6 +39,15 @@ export default defineConfig(async configEnv => {
 	const isInDocker = !!process.env['GAMEJOLT_IN_DOCKER'];
 	const onlyInDocker = emptyUnless(() => isInDocker);
 	const onlyInClient = emptyUnless(() => gjOpts.platform === 'desktop');
+
+	const stylusOptions = {
+		imports: [
+			// Import the section variables.
+			path.resolve(__dirname, `src/${gjOpts.section}/styles/variables.styl`),
+			// Import common mixins.
+			path.resolve(__dirname, 'src/_styles/mixins.styl'),
+		],
+	};
 
 	return {
 		plugins: [

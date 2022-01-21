@@ -169,7 +169,7 @@ export default class FormCommunityChannelAdd extends mixins(Wrapper) {
 
 			<app-form-control
 				:validators="[validateMinLength(3), validateMaxLength(30)]"
-				:validate-on="['blur']"
+				validate-on-blur
 				:placeholder="formModel.title"
 				@changed="onChangedDisplayTitle"
 			/>
@@ -189,7 +189,7 @@ export default class FormCommunityChannelAdd extends mixins(Wrapper) {
 					}),
 				]"
 				:validate-delay="500"
-				:validate-on="['blur']"
+				validate-on-blur
 				@changed="onChangedTitle"
 			/>
 			<app-form-control-errors>

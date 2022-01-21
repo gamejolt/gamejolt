@@ -64,7 +64,6 @@ export default class FormForumPost extends mixins(Wrapper) {
 				content-context="forum-post"
 				:validators="[validateContentRequired(), validateContentNoActiveUploads()]"
 				:max-height="0"
-				:validate-on="['blur']"
 			/>
 
 			<app-form-control-errors />

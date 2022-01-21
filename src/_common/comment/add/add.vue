@@ -142,7 +142,6 @@ export default class FormComment
 					validateContentNoActiveUploads(),
 					validateContentMaxLength(lengthLimit),
 				]"
-				:validate-on="['blur']"
 				:max-height="maxHeight"
 				:display-rules="displayRules"
 				:model-id="contentModelId"
