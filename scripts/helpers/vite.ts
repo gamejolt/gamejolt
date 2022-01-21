@@ -82,7 +82,7 @@ export async function parseOptionsFromEnv() {
 		process.env['GJ_BUILD_TYPE'],
 		'Build type',
 		['production', 'development'] as const,
-		'production'
+		'development'
 	);
 
 	// The version we report to the backend.

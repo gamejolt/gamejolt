@@ -1,6 +1,6 @@
 import vue, { Options as VueOptions } from '@vitejs/plugin-vue';
 import * as path from 'path';
-import nodeBuiltins from 'rollup-plugin-node-builtins';
+// import nodeBuiltins from 'rollup-plugin-node-builtins';
 import { defineConfig, UserConfig as ViteUserConfigActual } from 'vite';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
 import { parseOptionsFromEnv } from './scripts/helpers/vite';
@@ -138,7 +138,7 @@ export default defineConfig(async configEnv => {
 				target: 'esnext',
 
 				rollupOptions: {
-					plugins: [nodeBuiltins()],
+					// plugins: [nodeBuiltins()],
 					external: ['client-voodoo', 'axios'],
 				},
 			}),
