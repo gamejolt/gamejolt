@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import AppButton from '../../_common/button/button.vue';
+import AppButton from '../../_common/button/AppButton.vue';
 import AppScrollScroller from '../../_common/scroll/AppScrollScroller.vue';
 
 defineProps({

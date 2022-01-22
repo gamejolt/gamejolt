@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import AppButton from '../../button/button.vue';
+import AppButton from '../../button/AppButton.vue';
 
 const props = defineProps({
 	isEditing: {

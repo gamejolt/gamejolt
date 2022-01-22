@@ -3,7 +3,7 @@ import { Router } from 'vue-router';
 import { hijackLinks } from '../utils/router';
 import { initAnalytics, initAnalyticsRouter } from './analytics/analytics.service';
 import { AppTrackEvent } from './analytics/track-event.directive';
-import AppButton from './button/button.vue';
+import AppButton from './button/AppButton.vue';
 import { ensureConfig } from './config/config.service';
 import { initConnectionService } from './connection/connection-service';
 import AppJolticon from './jolticon/AppJolticon.vue';

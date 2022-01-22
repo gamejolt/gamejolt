@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { onMounted } from '@vue/runtime-core';
 import { RouterView } from 'vue-router';
-import AppButton from '../_common/button/button.vue';
+import AppButton from '../_common/button/AppButton.vue';
 import { AppClientBase, ClientHistoryNavigator } from '../_common/client/safe-exports';
 import { Connection } from '../_common/connection/connection-service';
 import AppContactLink from '../_common/contact-link/contact-link.vue';

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref, toRef } from 'vue';
 import { Api } from '../../../api/api.service';
-import AppButton from '../../../button/button.vue';
+import AppButton from '../../../button/AppButton.vue';
 import { Clipboard } from '../../../clipboard/clipboard-service';
 import { MediaItem } from '../../../media-item/media-item-model';
 import { AppTooltip as vAppTooltip } from '../../../tooltip/tooltip-directive';
