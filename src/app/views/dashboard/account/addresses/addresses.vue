@@ -6,7 +6,7 @@ import { Api } from '../../../../../_common/api/api.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { UserAddress } from '../../../../../_common/user/address/address.model';
-import AppUserAddressCard from '../../../../components/user/address/card/card.vue';
+import AppUserAddressCard from '../../../../components/user/address/AppUserAddressCard.vue';
 import { useAccountRouteController } from '../account.vue';
 
 @Options({

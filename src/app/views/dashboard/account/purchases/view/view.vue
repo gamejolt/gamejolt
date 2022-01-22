@@ -127,16 +127,16 @@ export default class RouteDashAccountPurchasesView extends BaseRouteComponent {
 
 				<div>
 					<template v-if="billingAddress.city">
-						{{ billingAddress.city }}
+						{{ billingAddress.city + ' ' }}
 					</template>
 					<template v-if="billingAddress.region && billingAddress.country">
 						{{
-							Geo.getRegionName(billingAddress.country, billingAddress.region) ||
-							billingAddress.region
+							(Geo.getRegionName(billingAddress.country, billingAddress.region) ||
+								billingAddress.region) + ' '
 						}}
 					</template>
 					<template v-if="billingAddress.postcode">
-						{{ billingAddress.postcode }}
+						{{ billingAddress.postcode + ' ' }}
 					</template>
 				</div>
 
