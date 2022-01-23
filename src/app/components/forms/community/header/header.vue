@@ -27,6 +27,7 @@ export default class FormCommunityHeader
 	implements FormOnLoad, FormOnBeforeSubmit
 {
 	modelClass = Community as any;
+	saveMethod = '$saveHeader' as '$saveHeader' | '$clearHeader';
 
 	maxFilesize = 0;
 	minAspectRatio = 0;
@@ -49,10 +50,6 @@ export default class FormCommunityHeader
 		this.setField('header_crop', this.crop);
 	}
 
-	created() {
-		this.form.saveMethod = '$saveHeader';
-	}
-
 	onLoad(payload: any) {
 		this.maxFilesize = payload.maxFilesize;
 		this.minAspectRatio = payload.minAspectRatio;
@@ -64,7 +61,7 @@ export default class FormCommunityHeader
 	}
 
 	onBeforeSubmit() {
-		if (this.form.saveMethod === '$saveHeader') {
+		if (this.saveMethod === '$saveHeader') {
 			// Backend expects this field.
 			this.setField('crop' as any, this.formModel.header_crop);
 		}
@@ -76,14 +73,14 @@ export default class FormCommunityHeader
 		);
 
 		if (result) {
-			this.form.saveMethod = '$clearHeader';
+			this.saveMethod = '$clearHeader';
 			this.form.submit();
 		}
 	}
 
 	headerSelected() {
 		if (this.formModel.file) {
-			this.form.saveMethod = '$saveHeader';
+			this.saveMethod = '$saveHeader';
 			this.form.submit();
 		}
 	}

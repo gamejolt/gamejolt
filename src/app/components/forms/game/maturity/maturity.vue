@@ -21,6 +21,7 @@ class Wrapper extends BaseForm<Game> {}
 })
 export default class FormGameMaturity extends mixins(Wrapper) {
 	modelClass = Game;
+	saveMethod = '$saveMaturity' as const;
 
 	age: MaturityField[] = [
 		{
@@ -246,10 +247,6 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 
 	@Emit('changed')
 	emitChanged(_game: Game) {}
-
-	created() {
-		this.form.saveMethod = '$saveMaturity';
-	}
 
 	onInit() {
 		const fields: (keyof Game)[] = [
