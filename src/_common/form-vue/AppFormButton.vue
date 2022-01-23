@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
+import AppButton from '../button/AppButton.vue';
+import AppJolticon from '../jolticon/AppJolticon.vue';
 import { useForm } from './AppForm.vue';
 
 const props = defineProps({
@@ -104,7 +106,7 @@ async function onClick(e: Event) {
 </script>
 
 <template>
-	<app-button
+	<AppButton
 		v-if="shouldShow"
 		:primary="primary"
 		:trans="trans"
@@ -116,9 +118,9 @@ async function onClick(e: Event) {
 	>
 		<slot />
 		<transition>
-			<app-jolticon v-if="isShowingSuccess" class="form-success-icon" icon="check" />
+			<AppJolticon v-if="isShowingSuccess" class="form-success-icon" icon="check" middle />
 		</transition>
-	</app-button>
+	</AppButton>
 </template>
 
 <style lang="stylus" scoped>

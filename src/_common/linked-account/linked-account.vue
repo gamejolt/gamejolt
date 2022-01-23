@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import AppCard from '../card/card.vue';
+import AppCard from '../card/AppCard.vue';
 import {
 	getLinkedAccountPlatformIcon,
 	getLinkedAccountProviderDisplayName,
@@ -45,6 +45,7 @@ export default class AppLinkedAccount extends Vue {
 		if (this.account) {
 			return this.account.platformLink;
 		}
+		return undefined;
 	}
 
 	get isAccountSet() {
@@ -129,7 +130,13 @@ export default class AppLinkedAccount extends Vue {
 					</small>
 				</p>
 
-				<app-button v-if="!preview" primary :disabled="disabled" icon="link" @click="onLink()">
+				<app-button
+					v-if="!preview"
+					primary
+					:disabled="disabled"
+					icon="link"
+					@click="onLink()"
+				>
 					<translate>Link Now</translate>
 				</app-button>
 			</template>
@@ -168,10 +175,10 @@ export default class AppLinkedAccount extends Vue {
 							<translate>Change Blog</translate>
 						</app-button>
 						<app-button
-							:disabled="disabled"
 							v-if="account.tumblrSelectedBlog"
-							@click="onUnlinkTumblrBlog"
+							:disabled="disabled"
 							trans
+							@click="onUnlinkTumblrBlog"
 						>
 							<translate>Unlink Blog</translate>
 						</app-button>
@@ -179,8 +186,8 @@ export default class AppLinkedAccount extends Vue {
 					<template v-else>
 						<div class="alert alert-notice">
 							<translate>
-								Before you can publish to Tumblr, you have to select a blog within your Tumblr
-								account that you'd like to use.
+								Before you can publish to Tumblr, you have to select a blog within
+								your Tumblr account that you'd like to use.
 							</translate>
 						</div>
 						<app-button :disabled="disabled" @click="onSelectTumblrBlog">

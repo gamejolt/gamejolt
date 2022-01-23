@@ -1,10 +1,10 @@
 <script lang="ts">
 import { Inject, Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../_common/api/api.service';
-import AppCardListAdd from '../../../../../../_common/card/list/add/add.vue';
 import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';
+import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListDraggable from '../../../../../../_common/card/list/AppCardListDraggable.vue';
-import AppCardListItem from '../../../../../../_common/card/list/item/item.vue';
+import AppCardListItem from '../../../../../../_common/card/list/AppCardListItem.vue';
 import { Game } from '../../../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
 import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';

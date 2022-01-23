@@ -4,7 +4,7 @@ import { arrayShuffle } from '../../../../../utils/array';
 import { RouteLocationRedirect } from '../../../../../utils/router';
 import { titleCase } from '../../../../../utils/string';
 import { Api } from '../../../../../_common/api/api.service';
-import AppExpand from '../../../../../_common/expand/expand.vue';
+import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatDate } from '../../../../../_common/filters/date';
 import { formatFuzzynumber } from '../../../../../_common/filters/fuzzynumber';
 import AppGameAddBanner from '../../../../../_common/game/add-banner/add-banner.vue';

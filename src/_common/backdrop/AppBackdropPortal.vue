@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 import { Backdrop, BackdropController } from './backdrop.service';
-import AppBackdrop from './backdrop.vue';
+import AppBackdrop from './AppBackdrop.vue';
 
 const backdrops = computed(() => Backdrop.backdrops);
 

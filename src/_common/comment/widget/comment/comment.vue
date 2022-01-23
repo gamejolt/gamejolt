@@ -6,7 +6,7 @@ import { AppAuthRequired } from '../../../auth/auth-required-directive';
 import { Clipboard } from '../../../clipboard/clipboard-service';
 import { Collaborator } from '../../../collaborator/collaborator.model';
 import { Environment } from '../../../environment/environment.service';
-import AppExpand from '../../../expand/expand.vue';
+import AppExpand from '../../../expand/AppExpand.vue';
 import AppFadeCollapse from '../../../fade-collapse/fade-collapse.vue';
 import AppMessageThreadAdd from '../../../message-thread/add/add.vue';
 import AppMessageThreadItem from '../../../message-thread/item/item.vue';
@@ -336,12 +336,8 @@ export default class AppCommentWidgetComment extends Vue {
 							@click="onFollowClick"
 						>
 							<app-jolticon icon="subscribe" />
-							<translate v-if="comment.subscription">
-								Following
-							</translate>
-							<translate v-else>
-								Follow Thread
-							</translate>
+							<translate v-if="comment.subscription">Following</translate>
+							<translate v-else>Follow Thread</translate>
 						</a>
 						<a v-if="canRemove" class="list-group-item has-icon" @click="removeComment">
 							<app-jolticon icon="remove" notice />

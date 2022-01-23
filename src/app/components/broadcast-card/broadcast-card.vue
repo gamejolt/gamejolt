@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import AppCard from '../../../_common/card/card.vue';
+import AppCard from '../../../_common/card/AppCard.vue';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 
 @Options({
@@ -16,7 +16,7 @@ export default class AppBroadcastCard extends Vue {
 
 <template>
 	<div>
-		<router-link :to="post.routeLocation" v-app-track-event="`dash:overview:broadcast-view`">
+		<router-link v-app-track-event="`dash:overview:broadcast-view`" :to="post.routeLocation">
 			<app-card>
 				<div class="clearfix">
 					<app-jolticon class="-icon" icon="broadcast" big />

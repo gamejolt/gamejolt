@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { computed, toRaw, useSlots } from 'vue';
-import AppExpand from '../../../expand/expand.vue';
-import { Screen } from '../../../screen/screen-service';
-import AppCard from '../../card.vue';
-import { useCardList } from '../AppCardList.vue';
+import AppExpand from '../../expand/AppExpand.vue';
+import { Screen } from '../../screen/screen-service';
+import AppCard from '../AppCard.vue';
+import { useCardList } from './AppCardList.vue';
 
 const props = defineProps({
 	item: {
@@ -64,4 +64,4 @@ function onClick() {
 	</div>
 </template>
 
-<style lang="stylus" src="../list-common.styl" scoped></style>
+<style lang="stylus" src="./list-common.styl" scoped></style>

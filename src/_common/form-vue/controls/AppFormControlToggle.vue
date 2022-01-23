@@ -35,7 +35,7 @@ function toggle() {
 </script>
 
 <template>
-	<span
+	<div
 		:id="c.id"
 		role="checkbox"
 		class="toggle"
@@ -48,21 +48,23 @@ function toggle() {
 		@keypress.space.prevent="toggle"
 		@keypress.enter.prevent="toggle"
 	>
-		<span class="-knob" />
-	</span>
+		<div class="-knob" />
+	</div>
 </template>
 
 <style lang="stylus" scoped>
-$-toggle-width = $input-height-base * 2 // + $toggle-padding * 2
-$-knob-border-width = 2px
+$-toggle-height = 24px
+$-toggle-width = $-toggle-height * 2
+$-knob-padding = 3px
+$-knob-size = $-toggle-height - ($-knob-padding * 2) - ($border-width-base * 2)
 
 .toggle
-	change-bg('bg-subtle')
-	display: block
+	change-bg('fg-muted')
 	width: $-toggle-width
-	height: $input-height-base
+	height: $-toggle-height
 	line-height: $input-height-base
 	border-radius: $input-height-base
+	border: $border-width-base solid var(--theme-bg-subtle)
 	vertical-align: top
 	transition: all ease-in-out 300ms
 	text-align: left
@@ -77,26 +79,19 @@ $-knob-border-width = 2px
 	.form-horizontal &
 		margin-top: ($padding-base-vertical + 1px)
 
-.-checked
-	change-bg('link')
-
 .-knob
 	change-bg('bg')
-	theme-prop('border-color', 'bg-subtle')
-	display: block
-	width: $input-height-base
-	height: @width
-	border-radius: @width
-	border-width: $-knob-border-width
-	border-style: solid
-	// This will allow the border to overflow outside the toggle.
-	box-sizing: content-box
+	width: $-knob-size
+	height: $-knob-size
+	border-radius: 50%
 	position: relative
-	top: -($-knob-border-width)
-	left: -($-knob-border-width)
+	left: $-knob-padding
+	top: $-knob-padding
 	transition: transform $strong-ease-out 300ms
 
-	.-checked &
-		theme-prop('border-color', 'link')
-		transform: translateX($input-height-base)
+.-checked
+	change-bg('bi-bg')
+
+	.-knob
+		transform: translateX($-toggle-width / 2)
 </style>

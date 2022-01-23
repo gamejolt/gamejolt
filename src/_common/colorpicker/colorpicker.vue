@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Sketch as Picker } from '@ckpack/vue-color';
+import { Sketch as VuePicker } from '@ckpack/vue-color';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Popper } from '../popper/popper.service';
 import AppPopper from '../popper/popper.vue';
@@ -10,7 +10,7 @@ type VueTouch = {
 
 @Options({
 	components: {
-		Picker,
+		VuePicker,
 		AppPopper,
 	},
 })
@@ -64,7 +64,7 @@ export default class AppColorpicker extends Vue {
 			<template #popover>
 				<div class="colorpicker-popover">
 					<!-- eslint-disable-next-line vue/v-on-event-hyphenation -->
-					<Picker :model-value="colors" @update:modelValue="onChange" />
+					<VuePicker :model-value="colors" @update:modelValue="onChange" />
 
 					<div class="colorpicker-well">
 						<div class="col">

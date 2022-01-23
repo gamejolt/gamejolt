@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Sketch as Picker } from '@ckpack/vue-color';
+import { Sketch as VuePicker } from '@ckpack/vue-color';
 import { computed, ref, toRef } from 'vue';
 import { Api } from '../../api/api.service';
 import AppLoading from '../../loading/loading.vue';
@@ -19,6 +19,7 @@ import {
 	defineFormControlEmits,
 	defineFormControlProps,
 } from '../AppFormControl.vue';
+import AppButton from '../../button/AppButton.vue';
 
 const props = defineProps({
 	...defineFormControlProps(),
@@ -95,9 +96,9 @@ function clear() {
 
 <template>
 	<div class="form-control-theme">
-		<app-popper @show="onPopover()">
+		<AppPopper @show="onPopover()">
 			<a class="-current">
-				<app-theme-bubble :highlight="highlight" :backlight="backlight" active />
+				<AppThemeBubble :highlight="highlight" :backlight="backlight" active />
 			</a>
 
 			<template #popover>
@@ -125,7 +126,7 @@ function clear() {
 						</nav>
 
 						<div v-if="activeTab === 'preset'" class="-presets">
-							<app-loading v-if="presets.length === 0" />
+							<AppLoading v-if="presets.length === 0" />
 							<template v-else>
 								<a
 									v-for="preset of presets"
@@ -134,7 +135,7 @@ function clear() {
 									class="-preset"
 									@click="selectPreset(preset)"
 								>
-									<app-theme-bubble
+									<AppThemeBubble
 										:highlight="preset.highlight"
 										:backlight="preset.backlight"
 										:active="isPresetActive(preset)"
@@ -143,7 +144,7 @@ function clear() {
 							</template>
 						</div>
 						<div v-else-if="activeTab === 'custom'">
-							<Picker
+							<VuePicker
 								disable-alpha
 								:preset-colors="[]"
 								:model-value="customSelection"
@@ -152,13 +153,13 @@ function clear() {
 							<br />
 						</div>
 
-						<app-button v-if="!!c.controlVal" block trans @click="clear()">
+						<AppButton v-if="!!c.controlVal" block trans @click="clear()">
 							<AppTranslate>Clear Theme</AppTranslate>
-						</app-button>
+						</AppButton>
 					</div>
 				</div>
 			</template>
-		</app-popper>
+		</AppPopper>
 	</div>
 </template>
 

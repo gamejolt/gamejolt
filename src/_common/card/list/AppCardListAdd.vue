@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import AppExpand from '../../../expand/expand.vue';
-import { Screen } from '../../../screen/screen-service';
-import { useCardList } from '../AppCardList.vue';
+import AppButton from '../../button/AppButton.vue';
+import AppExpand from '../../expand/AppExpand.vue';
+import { Screen } from '../../screen/screen-service';
+import { useCardList } from './AppCardList.vue';
 
 defineProps({
 	label: {
@@ -19,13 +20,11 @@ const emit = defineEmits({
 });
 
 const { isAdding } = useCardList()!;
-
-const toggle = () => emit('toggle');
 </script>
 
 <template>
 	<div class="card-list-item card-list-add" :class="{ active: isAdding }">
-		<AppButton primary block :solid="isAdding" :icon="icon" @click="toggle">
+		<AppButton primary block :solid="isAdding" :icon="icon" @click="emit('toggle')">
 			{{ label }}
 		</AppButton>
 
@@ -39,4 +38,4 @@ const toggle = () => emit('toggle');
 	</div>
 </template>
 
-<style lang="stylus" src="../list-common.styl" scoped></style>
+<style lang="stylus" src="./list-common.styl" scoped></style>

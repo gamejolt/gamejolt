@@ -8,7 +8,7 @@ import AppAuthJoin from '../../../_common/auth/join/join.vue';
 import AppCommunityThumbnailImg from '../../../_common/community/thumbnail/img/img.vue';
 import { useDrawerStore } from '../../../_common/drawer/drawer-store';
 import { Environment } from '../../../_common/environment/environment.service';
-import AppExpand from '../../../_common/expand/expand.vue';
+import AppExpand from '../../../_common/expand/AppExpand.vue';
 import AppFadeCollapse from '../../../_common/fade-collapse/fade-collapse.vue';
 import { formatNumber } from '../../../_common/filters/number';
 import { Fireside } from '../../../_common/fireside/fireside.model';
@@ -504,7 +504,8 @@ export default class RouteFireside extends BaseRouteComponent {
 								<translate>
 									You have been disconnected from fireside services.
 								</translate>
-								<br /><br />
+								<br />
+								<br />
 								<small>
 									<translate>
 										We are actively trying to reconnect you, but you can also

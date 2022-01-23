@@ -6,7 +6,7 @@ import { Api } from '../../../_common/api/api.service';
 import AppContactLink from '../../../_common/contact-link/contact-link.vue';
 import { showErrorGrowl, showInfoGrowl } from '../../../_common/growls/growls.service';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
-import AppLinkHelp from '../../../_common/link/help/help.vue';
+import AppLinkHelp from '../../../_common/link/AppLinkHelp.vue';
 import { Navigate } from '../../../_common/navigate/navigate.service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
@@ -175,9 +175,9 @@ export default class RouteTimeout extends BaseRouteComponent {
 
 					<p>
 						Please read the
-						<app-link-help page="guidelines">Site Guidelines</app-link-help> for more
-						information on what sort of content is allowed on Game Jolt as well as how
-						to behave as a good Game Jolt Citizen.
+						<app-link-help page="guidelines">Site Guidelines</app-link-help>
+						for more information on what sort of content is allowed on Game Jolt as well
+						as how to behave as a good Game Jolt Citizen.
 					</p>
 					<br />
 

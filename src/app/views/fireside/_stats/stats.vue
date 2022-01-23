@@ -2,7 +2,7 @@
 import { setup, Vue } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { shallowSetup } from '../../../../utils/vue';
-import AppCard from '../../../../_common/card/card.vue';
+import AppCard from '../../../../_common/card/AppCard.vue';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';

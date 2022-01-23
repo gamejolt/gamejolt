@@ -3,7 +3,7 @@ import { nextTick } from 'vue';
 import { Emit, mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { debounce, sleep } from '../../../../../utils/utils';
 import { MediaDeviceService } from '../../../../../_common/agora/media-device.service';
-import AppExpand from '../../../../../_common/expand/expand.vue';
+import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import {
 	assignPreferredProducerDevices,
 	clearSelectedRecordingDevices,
@@ -664,7 +664,7 @@ export default class AppStreamSetup extends mixins(Wrapper) {
 							<br />
 
 							<a href="https://gamejolt.com/p/qewgmbtc" @click="openHelpLink">
-								<translate> Learn how to stream your gameplay or screen </translate>
+								<translate>Learn how to stream your gameplay or screen</translate>
 							</a>
 						</p>
 

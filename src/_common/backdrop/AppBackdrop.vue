@@ -1,24 +1,18 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, PropType } from 'vue';
 import { BackdropController } from './backdrop.service';
 
-@Options({})
-export default class AppBackdrop extends Vue {
-	@Prop({ type: Object }) controller!: BackdropController;
+const props = defineProps({
+	controller: {
+		type: Object as PropType<BackdropController>,
+		required: true,
+	},
+});
 
-	get className() {
-		return this.controller.className;
-	}
+const className = computed(() => props.controller.className);
 
-	onClicked() {
-		if (this.controller.onClicked) {
-			this.controller.onClicked();
-		}
-	}
-
-	remove() {
-		this.controller.remove();
-	}
+function onClicked() {
+	props.controller.onClicked?.();
 }
 </script>
 

@@ -1,6 +1,6 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import AppExpand from '../../../../../_common/expand/expand.vue';
+import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { validateDomain } from '../../../../../_common/form-vue/validators';

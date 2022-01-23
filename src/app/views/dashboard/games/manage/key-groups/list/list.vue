@@ -2,9 +2,9 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
-import AppCardListAdd from '../../../../../../../_common/card/list/add/add.vue';
 import AppCardList from '../../../../../../../_common/card/list/AppCardList.vue';
-import AppCardListItem from '../../../../../../../_common/card/list/item/item.vue';
+import AppCardListAdd from '../../../../../../../_common/card/list/AppCardListAdd.vue';
+import AppCardListItem from '../../../../../../../_common/card/list/AppCardListItem.vue';
 import { formatNumber } from '../../../../../../../_common/filters/number';
 import { GamePackage } from '../../../../../../../_common/game/package/package.model';
 import { KeyGroup } from '../../../../../../../_common/key-group/key-group.model';

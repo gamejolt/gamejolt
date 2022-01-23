@@ -4,7 +4,7 @@ import { Emit, Options, Prop, Provide, Vue, Watch } from 'vue-property-decorator
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
 import { EventItem } from '../../../../_common/event-item/event-item.model';
-import AppExpand from '../../../../_common/expand/expand.vue';
+import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';

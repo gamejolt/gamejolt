@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import AppCard from '../../../../_common/card/card.vue';
+import AppCard from '../../../../_common/card/AppCard.vue';
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
 import { Site } from '../../../../_common/site/site-model';
 

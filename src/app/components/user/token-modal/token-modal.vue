@@ -1,7 +1,7 @@
 <script lang="ts">
 import { mixins, Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
-import AppExpand from '../../../../_common/expand/expand.vue';
+import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { BaseModal } from '../../../../_common/modal/base';
@@ -58,8 +58,8 @@ export default class AppUserTokenModal extends mixins(BaseModal) {
 		<div class="modal-body">
 			<p class="text-muted small">
 				<translate>
-					Your game token is like a special password you use to log into games that support high
-					scores and achievements.
+					Your game token is like a special password you use to log into games that
+					support high scores and achievements.
 				</translate>
 				[
 				<app-link-help page="tokens" target="_blank">
@@ -70,8 +70,8 @@ export default class AppUserTokenModal extends mixins(BaseModal) {
 
 			<p class="text-muted small">
 				<translate>
-					Never share your account password. In fact, if a game asks for your password instead of
-					your game token, please report it!
+					Never share your account password. In fact, if a game asks for your password
+					instead of your game token, please report it!
 				</translate>
 			</p>
 

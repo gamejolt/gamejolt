@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Emit, mixins, Options } from 'vue-property-decorator';
-import AppExpand from '../../../../../_common/expand/expand.vue';
+import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
 import { $gettext } from '../../../../../_common/translate/translate.service';

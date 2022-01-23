@@ -3,7 +3,7 @@ import * as StripeData from 'stripe';
 import { mixins, Options } from 'vue-property-decorator';
 import { loadScript } from '../../../../../utils/utils';
 import { Api } from '../../../../../_common/api/api.service';
-import AppExpand from '../../../../../_common/expand/expand.vue';
+import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatCurrency } from '../../../../../_common/filters/currency';
 import { BaseForm, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
 import { Geo } from '../../../../../_common/geo/geo.service';

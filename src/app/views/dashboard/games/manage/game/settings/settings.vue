@@ -2,7 +2,7 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
-import AppExpand from '../../../../../../../_common/expand/expand.vue';
+import AppExpand from '../../../../../../../_common/expand/AppExpand.vue';
 import { Game } from '../../../../../../../_common/game/game.model';
 import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
 import {
@@ -123,8 +123,9 @@ export default class RouteDashGamesManageGameSettings extends BaseRouteComponent
 								</translate>
 							</p>
 							<p v-if="hasCompetitionEntries" v-translate>
-								<b>Warning:</b> This will remove your game from any jams that you
-								have entered it into.
+								<b>Warning:</b>
+								This will remove your game from any jams that you have entered it
+								into.
 							</p>
 						</div>
 
@@ -170,8 +171,9 @@ export default class RouteDashGamesManageGameSettings extends BaseRouteComponent
 							<b>This is permanent!</b>
 						</p>
 						<p v-if="hasCompetitionEntries" v-translate>
-							<b>Warning:</b> This will also remove your game from any jams that you
-							have entered it into.
+							<b>Warning:</b>
+							This will also remove your game from any jams that you have entered it
+							into.
 						</p>
 					</div>
 

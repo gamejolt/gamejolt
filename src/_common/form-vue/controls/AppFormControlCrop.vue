@@ -64,7 +64,7 @@ function onChange(value: any) {
 </script>
 
 <template>
-	<app-img-crop
+	<AppImgCrop
 		:id="c.id"
 		:src="src"
 		:aspect-ratio="aspectRatio"

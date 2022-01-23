@@ -1,7 +1,7 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { mixins, Options } from 'vue-property-decorator';
-import AppExpand from '../../../../_common/expand/expand.vue';
+import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm, FormOnLoad } from '../../../../_common/form-vue/form.service';
 import { validateUrlPath } from '../../../../_common/form-vue/validators';
@@ -82,28 +82,6 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 		return 'details';
 	}
 
-	get gameUrl() {
-		return (
-			'gamejolt.com/games' +
-			'/<b>' +
-			(this.formModel.path ? this.formModel.path.toLowerCase() : '_') +
-			'</b>' +
-			'/' +
-			(this.model ? this.model.id : 'id')
-		);
-	}
-
-	get siteUrl() {
-		const user = this.method === 'add' || !this.model ? this.app.user! : this.model.developer;
-		return (
-			user.username.toLowerCase() +
-			'.gamejolt.io' +
-			'/<b>' +
-			(this.formModel.path ? this.formModel.path.toLowerCase() : '_') +
-			'</b>'
-		);
-	}
-
 	onInit() {
 		this.form.resetOnSubmit = true;
 
@@ -158,7 +136,7 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 							validateMaxLength(50),
 							validateAvailability({
 								url: '/web/dash/developer/games/check-field-availability/path',
-								initVal: method === 'edit' ? model.path : undefined,
+								initVal: model?.path,
 							}),
 						]"
 						:validate-delay="500"
@@ -175,11 +153,11 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 						</div>
 						<div>
 							<translate>Game Page URL</translate>
-							<code v-html="gameUrl" />
-						</div>
-						<div>
-							<translate>Sites URL</translate>
-							<code v-html="siteUrl" />
+							<code>
+								<span>gamejolt.com/</span>
+								<b>{{ formModel.path?.toLowerCase() || '_' }}</b>
+								<span>/{{ model?.id || 'id' }}</span>
+							</code>
 						</div>
 					</div>
 				</app-form-group>
@@ -229,6 +207,7 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 
 						<p class="help-block">
 							<translate>dash.games.form.engine_other_help</translate>
+							{{ ' ' }}
 							<span
 								v-app-tooltip.touchable="
 									$gettext(`dash.games.form.engine_other_why_tooltip`)
@@ -255,6 +234,7 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 									game for free, and give them a 10% cut of sales they refer to
 									your game.
 								</translate>
+								{{ ' ' }}
 								<router-link
 									:to="{ name: 'landing.partners' }"
 									class="link-help"
@@ -266,10 +246,11 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 							<br />
 
 							<div>
-								<em v-translate>
-									<b>Note</b>
-									: This will only be enabled for "paid" or "name your price"
-									games.
+								<em>
+									<translate>
+										Note: This will only be enabled for "paid" or "name your
+										price" games.
+									</translate>
 								</em>
 							</div>
 
@@ -286,6 +267,7 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 										the terms for the Partner Program before your games will
 										become available in the Partner Program.
 									</translate>
+									{{ ' ' }}
 									<router-link :to="{ name: 'dash.account.financials' }">
 										<translate>
 											Click here to view the new Distribution Agreement

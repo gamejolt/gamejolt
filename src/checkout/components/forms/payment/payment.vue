@@ -2,7 +2,7 @@
 import { setup } from 'vue-class-component';
 import { mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
-import AppExpand from '../../../../_common/expand/expand.vue';
+import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { formatCurrency } from '../../../../_common/filters/currency';
 import AppFormControlMask from '../../../../_common/form-vue/AppFormControlMask.vue';
 import { AppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';

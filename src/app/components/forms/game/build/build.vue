@@ -3,8 +3,8 @@ import { Emit, mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../utils/array';
 import { findRequiredVueParent } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
-import AppCardListItem from '../../../../../_common/card/list/item/item.vue';
-import AppExpand from '../../../../../_common/expand/expand.vue';
+import AppCardListItem from '../../../../../_common/card/list/AppCardListItem.vue';
+import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatFilesize } from '../../../../../_common/filters/filesize';
 import { formatFuzzynumber } from '../../../../../_common/filters/fuzzynumber';
 import { formatNumber } from '../../../../../_common/filters/number';
@@ -471,9 +471,9 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 		<div class="card-title">
 			<h5>
 				{{ model.primary_file.filename }}
-				<small class="text-muted"
-					>({{ formatFilesize(model.primary_file.filesize) }})</small
-				>
+				<small class="text-muted">
+					({{ formatFilesize(model.primary_file.filesize) }})
+				</small>
 			</h5>
 		</div>
 
@@ -710,9 +710,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 									<div class="col-sm-9">
 										<div class="input-group input-group-sm">
 											<app-form-control
-												:validators="[
-													validateMaxLength(500)
-												]"
+												:validators="[validateMaxLength(500)]"
 												@changed="onBuildFieldChanged"
 											/>
 											<!--  TODO: this doesn't register when the file is selected to clear the error -->

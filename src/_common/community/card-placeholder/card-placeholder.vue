@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import AppButtonPlaceholder from '../../button/placeholder/placeholder.vue';
+import AppButtonPlaceholder from '../../button/AppButtonPlaceholder.vue';
 import { Environment } from '../../environment/environment.service';
 
 @Options({

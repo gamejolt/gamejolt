@@ -4,7 +4,7 @@ import { Emit, Options, Vue, Watch } from 'vue-property-decorator';
 import { sleep } from '../../../../utils/utils';
 import { Client } from '../../../../_common/client/client.service';
 import { Connection } from '../../../../_common/connection/connection-service';
-import AppExpand from '../../../../_common/expand/expand.vue';
+import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import Onboarding from '../../../../_common/onboarding/onboarding.service';
 import { onRouteChangeAfter } from '../../../../_common/route/route-component';

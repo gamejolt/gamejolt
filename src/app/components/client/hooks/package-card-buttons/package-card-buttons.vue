@@ -4,7 +4,7 @@ import * as path from 'path';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { getDeviceArch, getDeviceOS } from '../../../../../_common/device/device.service';
-import AppExpand from '../../../../../_common/expand/expand.vue';
+import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatFilesize } from '../../../../../_common/filters/filesize';
 import { GameBuild } from '../../../../../_common/game/build/build.model';
 import { Game } from '../../../../../_common/game/game.model';

@@ -3,7 +3,7 @@
 	"singleQuote": true,
 	"trailingComma": "es5",
 	"printWidth": 100,
-	"htmlWhitespaceSensitivity": "css",
+	"htmlWhitespaceSensitivity": "ignore",
 	"jsxBracketSameLine": true,
 	"arrowParens": "avoid"
 }

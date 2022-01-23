@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
-import draggable from 'vuedraggable';
+import VueDraggable from 'vuedraggable';
 import { useCardList } from './AppCardList.vue';
 
 defineProps({
@@ -32,7 +32,7 @@ watch(
 </script>
 
 <template>
-	<draggable
+	<VueDraggable
 		v-model="modifiableItems"
 		:item-key="itemKey"
 		v-bind="{ handle: '.card-drag-handle', delay: 100, delayOnTouchOnly: true }"
@@ -42,5 +42,5 @@ watch(
 				<slot name="item" :element="element" :index="index" />
 			</div>
 		</template>
-	</draggable>
+	</VueDraggable>
 </template>

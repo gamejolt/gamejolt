@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import AppExpand from '../../expand/expand.vue';
+import AppExpand from '../../expand/AppExpand.vue';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 
 const STORAGE_KEY_PREFIX = 'dismiss-alert:';

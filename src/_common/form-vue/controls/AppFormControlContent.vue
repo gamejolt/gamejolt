@@ -90,7 +90,7 @@ function focus() {
 			and it'll reset back to the BG background color/theming.
 		-->
 		<!-- v-validate="{ rules: validationRules }" -->
-		<app-content-editor
+		<AppContentEditor
 			:id="c.id"
 			ref="editor"
 			class="fill-bg form-control content-editor-form-control"

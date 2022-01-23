@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { useRouter } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
-import AppExpand from '../../../../../_common/expand/expand.vue';
+import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { Game } from '../../../../../_common/game/game.model';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
@@ -190,6 +190,7 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 								<translate>View Analytics</translate>
 							</app-button>
 						</app-game-perms>
+						{{ ' ' }}
 						<app-button icon="arrow-forward" :to="game.getUrl()">
 							<translate>dash.games.view_page_button</translate>
 						</app-button>

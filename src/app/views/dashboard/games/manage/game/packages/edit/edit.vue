@@ -2,8 +2,8 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../_common/api/api.service';
-import AppCard from '../../../../../../../../_common/card/card.vue';
-import AppExpand from '../../../../../../../../_common/expand/expand.vue';
+import AppCard from '../../../../../../../../_common/card/AppCard.vue';
+import AppExpand from '../../../../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../../../../_common/filters/number';
 import AppGamePackageCard from '../../../../../../../../_common/game/package/card/card.vue';
 import { GamePackagePayloadModel } from '../../../../../../../../_common/game/package/package-payload.model';

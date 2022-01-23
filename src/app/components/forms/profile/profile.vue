@@ -3,7 +3,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { setup } from 'vue-class-component';
 import { mixins, Options } from 'vue-property-decorator';
 import { Environment } from '../../../../_common/environment/environment.service';
-import AppExpand from '../../../../_common/expand/expand.vue';
+import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import AppFormControlContent from '../../../../_common/form-vue/controls/AppFormControlContent.vue';
 import AppFormControlTheme from '../../../../_common/form-vue/controls/AppFormControlTheme.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
@@ -138,7 +138,8 @@ export default class FormProfile extends mixins(Wrapper) implements FormOnLoad, 
 				<translate>Profile URL</translate>
 				{{ ' ' }}
 				<code>
-					{{ Environment.baseUrl }}/@<strong>{{ formModel.username || '_' }}</strong>
+					{{ Environment.baseUrl }}/@
+					<strong>{{ formModel.username || '_' }}</strong>
 				</code>
 			</p>
 

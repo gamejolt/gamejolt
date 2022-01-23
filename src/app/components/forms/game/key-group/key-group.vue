@@ -1,6 +1,6 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import AppExpand from '../../../../../_common/expand/expand.vue';
+import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { BaseForm, FormOnSubmitSuccess } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';

@@ -10,7 +10,7 @@ import { Api } from '../../../../_common/api/api.service';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
-import AppExpand from '../../../../_common/expand/expand.vue';
+import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { FiresidePostCommunity } from '../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { FiresidePostVideo } from '../../../../_common/fireside/post/video/video-model';
@@ -1365,7 +1365,7 @@ export default class FormPost
 			<div class="-caret" :class="{ '-hide': !hasChannelError }" />
 			<app-expand :when="hasChannelError">
 				<div class="-error -earmark alert alert-notice">
-					<translate> Choose a channel to post to. </translate>
+					<translate>Choose a channel to post to.</translate>
 				</div>
 			</app-expand>
 		</div>

@@ -5,7 +5,7 @@ import { arrayIndexBy } from '../../../../utils/array';
 import { Api } from '../../../api/api.service';
 import { getDeviceArch, getDeviceOS } from '../../../device/device.service';
 import { Environment } from '../../../environment/environment.service';
-import AppExpand from '../../../expand/expand.vue';
+import AppExpand from '../../../expand/AppExpand.vue';
 import { formatCurrency } from '../../../filters/currency';
 import { AppFocusWhen } from '../../../form-vue/focus-when.directive';
 import {
@@ -520,15 +520,9 @@ export default class FormGamePackagePayment
 								</p>
 
 								<p>
-									<app-button primary sparse @click="addMoney(1)">
-										+$1
-									</app-button>
-									<app-button primary sparse @click="addMoney(2)">
-										+$2
-									</app-button>
-									<app-button primary sparse @click="addMoney(5)">
-										+$5
-									</app-button>
+									<app-button primary sparse @click="addMoney(1)">+$1</app-button>
+									<app-button primary sparse @click="addMoney(2)">+$2</app-button>
+									<app-button primary sparse @click="addMoney(5)">+$5</app-button>
 									<app-button primary sparse @click="addMoney(10)">
 										+$10
 									</app-button>

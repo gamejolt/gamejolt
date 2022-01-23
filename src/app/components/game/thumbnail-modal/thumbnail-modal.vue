@@ -2,7 +2,7 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Game } from '../../../../_common/game/game.model';
 import { BaseModal } from '../../../../_common/modal/base';
-import FormGameThumbnail from '../../forms/game/thumbnail/thumbnail.vue';
+import FormGameThumbnail from '../../forms/game/thumbnail/FormGameThumbnail.vue';
 
 @Options({
 	components: {
@@ -41,7 +41,7 @@ export default class AppGameThumbnailModal extends mixins(BaseModal) {
 		</div>
 
 		<div class="modal-body">
-			<form-game-thumbnail :model="game" @submit="onSubmit" />
+			<form-game-thumbnail :game="game" @submit="onSubmit" />
 		</div>
 	</app-modal>
 </template>

@@ -9,7 +9,7 @@ import {
 	setPageAdsSettings,
 	useAdsController,
 } from '../../../_common/ad/ad-store';
-import AppExpand from '../../../_common/expand/expand.vue';
+import AppExpand from '../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../_common/filters/number';
 import { Meta } from '../../../_common/meta/meta-service';
 import AppPagination from '../../../_common/pagination/pagination.vue';
@@ -190,9 +190,9 @@ export default class RouteSearch extends BaseRouteComponent {
 								exact-active-class="active"
 							>
 								<translate>Communities</translate>
-								<span class="badge">{{
-									formatNumber(searchPayload.communitiesCount)
-								}}</span>
+								<span class="badge">
+									{{ formatNumber(searchPayload.communitiesCount) }}
+								</span>
 							</router-link>
 						</li>
 						<li v-if="searchPayload.usersCount">
@@ -201,9 +201,9 @@ export default class RouteSearch extends BaseRouteComponent {
 								exact-active-class="active"
 							>
 								<translate>search.results.users_tab</translate>
-								<span class="badge">{{
-									formatNumber(searchPayload.usersCount)
-								}}</span>
+								<span class="badge">
+									{{ formatNumber(searchPayload.usersCount) }}
+								</span>
 							</router-link>
 						</li>
 						<li v-if="searchPayload.gamesCount">
@@ -212,9 +212,9 @@ export default class RouteSearch extends BaseRouteComponent {
 								exact-active-class="active"
 							>
 								<translate>search.results.games_tab</translate>
-								<span class="badge">{{
-									formatNumber(searchPayload.gamesCount)
-								}}</span>
+								<span class="badge">
+									{{ formatNumber(searchPayload.gamesCount) }}
+								</span>
 							</router-link>
 						</li>
 					</ul>

@@ -47,7 +47,7 @@ function onChange(value: number) {
 
 <template>
 	<div>
-		<app-datetime-picker
+		<AppDatetimePicker
 			:id="c.id"
 			:value="c.controlVal"
 			:timezone-offset="timezoneOffset"

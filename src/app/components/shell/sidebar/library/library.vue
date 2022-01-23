@@ -6,7 +6,7 @@ import { shouldShowAppPromotion } from '../../../../../utils/mobile-app';
 import { shallowSetup } from '../../../../../utils/vue';
 import { trackAppPromotionClick } from '../../../../../_common/analytics/analytics.service';
 import { Environment } from '../../../../../_common/environment/environment.service';
-import AppExpand from '../../../../../_common/expand/expand.vue';
+import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.vue';

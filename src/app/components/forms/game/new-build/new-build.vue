@@ -1,6 +1,6 @@
 <script lang="ts">
 import { mixins, Options, Prop, Watch } from 'vue-property-decorator';
-import AppExpand from '../../../../../_common/expand/expand.vue';
+import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
 import { GameBuild } from '../../../../../_common/game/build/build.model';

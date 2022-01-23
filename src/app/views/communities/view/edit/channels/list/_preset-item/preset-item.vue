@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { assertNever } from '../../../../../../../../utils/utils';
-import AppCardListItem from '../../../../../../../../_common/card/list/item/item.vue';
+import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
 import {
 	Community,
 	CommunityPresetChannelType,
@@ -26,6 +26,7 @@ export default class AppCommunitiesEditChannelListPresetItem extends Vue {
 		return `channel-container-${this.presetType}`;
 	}
 
+	// eslint-disable-next-line getter-return
 	get label() {
 		switch (this.presetType) {
 			case CommunityPresetChannelType.ALL:

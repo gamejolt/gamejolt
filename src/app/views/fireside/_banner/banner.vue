@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options, Vue } from 'vue-property-decorator';
 import { shallowSetup } from '../../../../utils/vue';
-import AppExpand from '../../../../_common/expand/expand.vue';
+import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import {
 	extendFireside,

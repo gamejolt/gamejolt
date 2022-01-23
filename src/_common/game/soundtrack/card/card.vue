@@ -2,7 +2,7 @@
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import AppAudioPlaylistTS from '../../../audio/playlist/playlist';
 import AppAudioPlaylist from '../../../audio/playlist/playlist.vue';
-import AppCard from '../../../card/card.vue';
+import AppCard from '../../../card/AppCard.vue';
 import { Environment } from '../../../environment/environment.service';
 import AppFadeCollapse from '../../../fade-collapse/fade-collapse.vue';
 import { formatNumber } from '../../../filters/number';
@@ -107,17 +107,17 @@ export default class AppGameSoundtrackCard extends Vue {
 		</div>
 
 		<a
-			class="hidden-text-expander"
 			v-if="canToggleSoundtrack"
-			@click="isShowingSoundtrack = !isShowingSoundtrack"
 			v-app-track-event="`game-soundtrack-card:show-all-songs`"
+			class="hidden-text-expander"
+			@click="isShowingSoundtrack = !isShowingSoundtrack"
 		/>
 
 		<div class="card-controls">
 			<app-button
+				v-app-track-event="`game-soundtrack-card:download`"
 				primary
 				@click="download"
-				v-app-track-event="`game-soundtrack-card:download`"
 			>
 				<translate>Download</translate>
 				<app-jolticon icon="musical-note-double" class="jolticon-addon" />

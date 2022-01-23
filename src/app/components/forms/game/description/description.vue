@@ -2,7 +2,7 @@
 import { mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { ContentDocument } from '../../../../../_common/content/content-document';
 import { ContentWriter } from '../../../../../_common/content/content-writer';
-import AppExpand from '../../../../../_common/expand/expand.vue';
+import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import AppFormControlContent from '../../../../../_common/form-vue/controls/AppFormControlContent.vue';
 import {
 	BaseForm,

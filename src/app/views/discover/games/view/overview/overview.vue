@@ -5,7 +5,7 @@ import { getAbsoluteLink } from '../../../../../../utils/router';
 import { useAdsController } from '../../../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../../../_common/ad/widget/widget.vue';
 import { Api } from '../../../../../../_common/api/api.service';
-import AppCard from '../../../../../../_common/card/card.vue';
+import AppCard from '../../../../../../_common/card/AppCard.vue';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
 import AppCommentAddButton from '../../../../../../_common/comment/add-button/add-button.vue';
 import { canCommentOnModel, Comment } from '../../../../../../_common/comment/comment-model';

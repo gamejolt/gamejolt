@@ -5,7 +5,7 @@ import { arrayIndexBy } from '../../../../../../../../utils/array';
 import { Api } from '../../../../../../../../_common/api/api.service';
 import AppCardList from '../../../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListDraggable from '../../../../../../../../_common/card/list/AppCardListDraggable.vue';
-import AppCardListItem from '../../../../../../../../_common/card/list/item/item.vue';
+import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
 import { formatCurrency } from '../../../../../../../../_common/filters/currency';
 import { GamePackage } from '../../../../../../../../_common/game/package/package.model';
 import { showSuccessGrowl } from '../../../../../../../../_common/growls/growls.service';

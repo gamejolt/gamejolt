@@ -2,7 +2,7 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
-import AppExpand from '../../../../../../../_common/expand/expand.vue';
+import AppExpand from '../../../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../../../_common/filters/number';
 import { Game } from '../../../../../../../_common/game/game.model';
 import AppGraphWidget from '../../../../../../../_common/graph/widget/widget.vue';
@@ -188,7 +188,7 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 			<app-community-perms :community="game.community" tag="div">
 				<div class="col-lg-8">
 					<router-link :to="game.community.routeEditLocation">
-						<app-button icon="users"> Edit Community </app-button>
+						<app-button icon="users">Edit Community</app-button>
 					</router-link>
 				</div>
 			</app-community-perms>

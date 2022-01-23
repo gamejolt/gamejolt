@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
-import AppCardListItem from '../../../../../../../../_common/card/list/item/item.vue';
+import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
 import { CommunityChannel } from '../../../../../../../../_common/community/channel/channel.model';
 import { AppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
 import { CommunityRemoveChannelModal } from '../../../../../../../components/community/remove-channel/modal/modal.service';

@@ -22,7 +22,7 @@ import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/im
 import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/verified-tick.vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
-import AppExpand from '../../../../_common/expand/expand.vue';
+import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
@@ -544,7 +544,10 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 				<app-expand :when="user.is_following">
 					<!-- Create some padding -->
-					<template v-if="isFriend"><br /><br /></template>
+					<template v-if="isFriend">
+						<br />
+						<br />
+					</template>
 
 					<p>
 						<strong><translate>You were following this user.</translate></strong>

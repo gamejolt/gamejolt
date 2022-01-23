@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
-import AppCard from '../../../_common/card/card.vue';
+import AppCard from '../../../_common/card/AppCard.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
@@ -42,7 +42,7 @@ export default class RouteWeplay extends BaseRouteComponent {
 						<h1>STAJOLTIA</h1>
 						<p class="lead">
 							<strong>
-								<em> The future of gaming is we. </em>
+								<em>The future of gaming is we.</em>
 							</strong>
 						</p>
 						<p class="lead">
@@ -80,9 +80,9 @@ export default class RouteWeplay extends BaseRouteComponent {
 					<div class="player-info">
 						<span class="text-muted">
 							Currently playing:
-							<a href="https://gamejolt.com/games/eggnogg/42742" target="_blank"
-								>EGGNOGG+</a
-							>
+							<a href="https://gamejolt.com/games/eggnogg/42742" target="_blank">
+								EGGNOGG+
+							</a>
 						</span>
 						<div class="controller-wire" />
 						<div />
@@ -93,11 +93,11 @@ export default class RouteWeplay extends BaseRouteComponent {
 							<tr>
 								<td>
 									<app-button
+										v-app-tooltip="$gettext('Jump Left')"
 										class="control-up-left"
 										circle
 										icon="chevron-up"
 										disabled
-										v-app-tooltip="$gettext('Jump Left')"
 									/>
 								</td>
 								<td>
@@ -105,11 +105,11 @@ export default class RouteWeplay extends BaseRouteComponent {
 								</td>
 								<td>
 									<app-button
+										v-app-tooltip="$gettext('Jump Right')"
 										class="control-up-right"
 										circle
 										icon="chevron-up"
 										disabled
-										v-app-tooltip="$gettext('Jump Right')"
 									/>
 								</td>
 							</tr>
@@ -119,11 +119,11 @@ export default class RouteWeplay extends BaseRouteComponent {
 								</td>
 								<td>
 									<app-button
+										v-app-tooltip.bottom="$gettext('Pickup')"
 										circle
 										solid
 										icon="chevron-down"
 										disabled
-										v-app-tooltip.bottom="$gettext('Pickup')"
 									/>
 								</td>
 								<td>
@@ -143,14 +143,14 @@ export default class RouteWeplay extends BaseRouteComponent {
 							<tr>
 								<td />
 								<td>
-									<app-button solid disabled v-app-tooltip="$gettext('Jump')">
+									<app-button v-app-tooltip="$gettext('Jump')" solid disabled>
 										A
 									</app-button>
 								</td>
 							</tr>
 							<tr>
 								<td>
-									<app-button solid disabled v-app-tooltip="$gettext('Attack')">
+									<app-button v-app-tooltip="$gettext('Attack')" solid disabled>
 										B
 									</app-button>
 								</td>

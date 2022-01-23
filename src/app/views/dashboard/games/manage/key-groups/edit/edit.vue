@@ -5,7 +5,7 @@ import { arrayRemove } from '../../../../../../../utils/array';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { Clipboard } from '../../../../../../../_common/clipboard/clipboard-service';
 import { Environment } from '../../../../../../../_common/environment/environment.service';
-import AppExpand from '../../../../../../../_common/expand/expand.vue';
+import AppExpand from '../../../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../../../_common/filters/number';
 import { GamePackage } from '../../../../../../../_common/game/package/package.model';
 import {
@@ -331,17 +331,17 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 								<template v-if="!!key.user_id">
 									{{ key.username }}
 								</template>
-								<template v-else> - </template>
+								<template v-else>-</template>
 							</td>
 
 							<td>
 								<app-time-ago v-if="!!key.claimed_on" :date="key.claimed_on" />
-								<template v-else> - </template>
+								<template v-else>-</template>
 							</td>
 
 							<td>
 								<app-time-ago v-if="!!key.viewed_on" :date="key.viewed_on" />
-								<template v-else> - </template>
+								<template v-else>-</template>
 							</td>
 
 							<td style="text-align: right">

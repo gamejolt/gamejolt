@@ -2,10 +2,10 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../_common/api/api.service';
-import AppCardListAdd from '../../../../../../../../_common/card/list/add/add.vue';
 import AppCardList from '../../../../../../../../_common/card/list/AppCardList.vue';
+import AppCardListAdd from '../../../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListDraggable from '../../../../../../../../_common/card/list/AppCardListDraggable.vue';
-import AppCardListItem from '../../../../../../../../_common/card/list/item/item.vue';
+import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
 import { GameScoreTable } from '../../../../../../../../_common/game/score-table/score-table.model';
 import { ModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import {

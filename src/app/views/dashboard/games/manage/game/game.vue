@@ -2,7 +2,7 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import AppEditableOverlay from '../../../../../../_common/editable-overlay/editable-overlay.vue';
-import AppExpand from '../../../../../../_common/expand/expand.vue';
+import AppExpand from '../../../../../../_common/expand/AppExpand.vue';
 import { Game } from '../../../../../../_common/game/game.model';
 import AppMediaItemCover from '../../../../../../_common/media-item/cover/cover.vue';
 import AppNavTabList from '../../../../../../_common/nav/tab-list/tab-list.vue';

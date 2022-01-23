@@ -6,7 +6,7 @@ import { Api } from '../../../../../_common/api/api.service';
 import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
-import AppExpand from '../../../../../_common/expand/expand.vue';
+import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatDate } from '../../../../../_common/filters/date';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { ForumPost } from '../../../../../_common/forum/post/post.model';

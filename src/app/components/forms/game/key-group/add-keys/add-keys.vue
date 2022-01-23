@@ -1,7 +1,7 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../../../_common/api/api.service';
-import AppExpand from '../../../../../../_common/expand/expand.vue';
+import AppExpand from '../../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../../_common/filters/number';
 import { BaseForm, FormOnSubmit } from '../../../../../../_common/form-vue/form.service';
 import { KeyGroup } from '../../../../../../_common/key-group/key-group.model';

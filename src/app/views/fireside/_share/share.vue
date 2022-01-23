@@ -2,7 +2,7 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { getAbsoluteLink } from '../../../../utils/router';
 import { shallowSetup } from '../../../../utils/vue';
-import AppCard from '../../../../_common/card/card.vue';
+import AppCard from '../../../../_common/card/AppCard.vue';
 import AppShareCard from '../../../../_common/share/card/card.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 
