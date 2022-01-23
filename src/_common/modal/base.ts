@@ -1,6 +1,8 @@
-import { Options, Prop, Provide, Vue } from 'vue-property-decorator';
+import { inject } from 'vue';
+import { Options, Vue } from 'vue-property-decorator';
+import { shallowSetup } from '../../utils/vue';
+import AppModal from './AppModal.vue';
 import { Modal, ModalKey } from './modal.service';
-import AppModal from './modal.vue';
 
 @Options({
 	components: {
@@ -8,7 +10,5 @@ import AppModal from './modal.vue';
 	},
 })
 export class BaseModal extends Vue {
-	@Prop({ type: Object })
-	@Provide({ to: ModalKey })
-	modal!: Modal;
+	modal = shallowSetup(() => inject(ModalKey) as Modal);
 }

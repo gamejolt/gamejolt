@@ -1,8 +1,12 @@
-import { Component, markRaw, reactive } from 'vue';
+import { Component, inject, markRaw, reactive } from 'vue';
 import { arrayRemove } from '../../utils/array';
 import { Popper } from '../popper/popper.service';
 
 export const ModalKey = Symbol('modal-key');
+
+export function useModal<T>() {
+	return inject(ModalKey, null) as Modal<T> | null;
+}
 
 export interface ModalOptions {
 	component: Component;

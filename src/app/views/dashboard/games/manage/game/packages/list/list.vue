@@ -1,7 +1,7 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { arrayIndexBy } from '../../../../../../../../utils/array';
+import { shallowSetup } from '../../../../../../../../utils/vue';
 import { Api } from '../../../../../../../../_common/api/api.service';
 import AppCardList from '../../../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListDraggable from '../../../../../../../../_common/card/list/AppCardListDraggable.vue';
@@ -40,10 +40,10 @@ import { useGameDashRouteController } from '../../../manage.store';
 		Api.sendRequest('/web/dash/developer/games/packages/' + route.params.id),
 })
 export default class RouteDashGamesManageGamePackagesList extends BaseRouteComponent {
-	routeStore = setup(() => useGameDashRouteController()!);
+	routeStore = shallowSetup(() => useGameDashRouteController()!);
 
 	get game() {
-		return this.routeStore.game!;
+		return this.routeStore.game.value!;
 	}
 
 	packages: GamePackage[] = [];
@@ -101,7 +101,7 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 	}
 
 	async addPackage() {
-		const newPackage = await GamePackageEditModal.show(this.game);
+		const newPackage = await GamePackageEditModal.show(this.routeStore);
 		if (newPackage instanceof GamePackage) {
 			this.packages.push(newPackage);
 		}

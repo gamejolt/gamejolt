@@ -1,6 +1,6 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
+import { shallowSetup } from '../../../../../../../../utils/vue';
 import { Api } from '../../../../../../../../_common/api/api.service';
 import AppCard from '../../../../../../../../_common/card/AppCard.vue';
 import AppExpand from '../../../../../../../../_common/expand/AppExpand.vue';
@@ -56,10 +56,10 @@ import { useGameDashRouteController } from '../../../manage.store';
 		),
 })
 export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteComponent {
-	routeStore = setup(() => useGameDashRouteController()!);
+	routeStore = shallowSetup(() => useGameDashRouteController()!);
 
 	get game() {
-		return this.routeStore.game!;
+		return this.routeStore.game.value!;
 	}
 
 	package: GamePackage = null as any;
@@ -141,7 +141,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 
 	async editPackage() {
 		// Keep our preview in sync.
-		await GamePackageEditModal.show(this.game, this.package, this.sellable);
+		await GamePackageEditModal.show(this.routeStore, this.package, this.sellable);
 		this.loadPreview();
 	}
 

@@ -7,7 +7,6 @@ import { $viewPostVideo } from '../../../_common/fireside/post/video/video-model
 import { AppImgResponsive } from '../../../_common/img/responsive/responsive';
 import { MediaItem } from '../../../_common/media-item/media-item-model';
 import { BaseModal } from '../../../_common/modal/base';
-import AppModalTS from '../../../_common/modal/modal';
 import { AppResponsiveDimensions } from '../../../_common/responsive-dimensions/responsive-dimensions';
 import {
 	createStickerTargetController,
@@ -50,10 +49,6 @@ export default class AppBroadcastModal extends mixins(BaseModal) {
 	get video() {
 		return this.post.videos[0];
 	}
-
-	declare $refs: {
-		modal: AppModalTS;
-	};
 
 	created() {
 		this.stickerTargetController = createStickerTargetController(this.post);

@@ -11,7 +11,7 @@ import { showInfoGrowl, showSuccessGrowl } from '../../../../../_common/growls/g
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 
-const Key: InjectionKey<Controller> = Symbol('game-dash-route');
+const Key: InjectionKey<GameDashRouteController> = Symbol('game-dash-route');
 const WizardKey = 'manage-game-wizard';
 export const ManageGameThemeKey = 'game-dash';
 
@@ -32,11 +32,15 @@ const TransitionMapDevlog: any = {
 	maturity: 'wizard-finish',
 };
 
-type Controller = ReturnType<typeof createGameDashRouteController>;
+export type GameDashRouteController = ReturnType<typeof createGameDashRouteController>;
 export type Media = GameScreenshot | GameVideo | GameSketchfab;
 
 export function useGameDashRouteController() {
 	return inject(Key, null);
+}
+
+export function provideGameDashRouteController(c: GameDashRouteController) {
+	provide(Key, c);
 }
 
 export function startWizard() {
@@ -305,6 +309,6 @@ export function createGameDashRouteController({ router }: { router: Router }) {
 		saveMediaSort,
 	};
 
-	provide(Key, c);
+	provideGameDashRouteController(c);
 	return c;
 }

@@ -388,6 +388,7 @@ export default class FormGamePackage
 						Enabling this will allow partners to access this package even if it's marked
 						as Private or your game is a Devlog-only project.
 					</translate>
+					{{ ' ' }}
 					<router-link
 						:to="{ name: 'landing.partners' }"
 						class="link-help"
@@ -414,11 +415,13 @@ export default class FormGamePackage
 								You must set up your financial information before you can start
 								accepting money.
 							</translate>
+							{{ ' ' }}
 							<router-link :to="{ name: 'dash.account.financials' }">
 								<translate>Go to financial set up.</translate>
 							</router-link>
 						</template>
 						<span
+							v-else
 							v-translate="{
 								username: game.developer.username,
 							}"
@@ -782,7 +785,7 @@ export default class FormGamePackage
 				<translate v-if="method === 'add'">
 					dash.games.packages.form.add_package_button
 				</translate>
-				<translate v-else-if="method === 'edit'"> Save Package </translate>
+				<translate v-else-if="method === 'edit'">Save Package</translate>
 			</app-form-button>
 		</app-loading-fade>
 	</app-form>

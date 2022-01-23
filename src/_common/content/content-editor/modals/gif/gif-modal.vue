@@ -5,7 +5,7 @@ import { shallowSetup } from '../../../../../utils/vue';
 import { Api } from '../../../../api/api.service';
 import AppLoading from '../../../../loading/loading.vue';
 import { BaseModal } from '../../../../modal/base';
-import AppModal from '../../../../modal/modal.vue';
+import { AppModalInterface } from '../../../../modal/modal.vue';
 import { Ruler } from '../../../../ruler/ruler-service';
 import { Screen } from '../../../../screen/screen-service';
 import AppScrollScroller, { createScroller } from '../../../../scroll/AppScrollScroller.vue';
@@ -37,8 +37,7 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 	readonly mascotImage = mascotImage;
 
 	declare $refs: {
-		// TODO(vue3)
-		modal: AppModal;
+		modal: AppModalInterface;
 		search: HTMLInputElement;
 	};
 
@@ -59,8 +58,6 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 	}
 
 	async mounted() {
-		this.$refs.modal.$el.focus();
-
 		await this.populateCategories();
 
 		// Wait for the categories to be loaded. The input is disabled until they are.

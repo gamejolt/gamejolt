@@ -14,5 +14,5 @@ provide(ModalKey, props.modal);
 </script>
 
 <template>
-	<Component :is="modal.component" v-bind="{ modal, ...modal.props }" />
+	<Component :is="modal.component" v-bind="modal.props" />
 </template>
