@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, toRef } from 'vue';
-import AppDatetimePicker from '../../datetime-picker/datetime-picker.vue';
+import AppDatetimePicker from '../../datetime-picker/AppDatetimePicker.vue';
 import {
 	createFormControl,
 	defineFormControlEmits,

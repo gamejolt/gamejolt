@@ -1485,7 +1485,7 @@ export default class FormPost
 						<translate>Save Draft</translate>
 					</app-form-button>
 				</div>
-
+				{{ ' ' }}
 				<div class="-controls-submit-button">
 					<app-form-button
 						:disabled="!submitButtonsEnabled"
