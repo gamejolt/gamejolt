@@ -48,8 +48,9 @@ const validators = computed(() => {
 });
 
 const form = useForm()!;
-const group = useFormGroup()!;
-const c = createFormControl({
+const { name } = useFormGroup()!;
+
+const { id, controlVal, applyValue } = createFormControl({
 	initialValue: [] as File | File[] | null,
 	validators,
 	// eslint-disable-next-line vue/require-explicit-emits
@@ -62,11 +63,11 @@ const isDropActive = ref(false);
  * Will be an array even if not a `multiple` upload type.
  */
 const files = computed(() => {
-	if (c.controlVal === null) {
+	if (controlVal.value === null) {
 		return [];
 	}
 
-	return Array.isArray(c.controlVal) ? c.controlVal : [c.controlVal];
+	return Array.isArray(controlVal.value) ? controlVal.value : [controlVal.value];
 });
 
 const progress = computed(() => {
@@ -127,31 +128,31 @@ function onChange(files: File[]) {
 }
 
 function clearFile(file: File) {
-	if (Array.isArray(c.controlVal)) {
+	if (Array.isArray(controlVal.value)) {
 		const index = files.value.indexOf(file);
 		if (index !== -1) {
 			files.value.splice(index, 1);
 
 			if (!files.value.length) {
-				c.applyValue(null);
+				applyValue(null);
 			} else {
-				c.applyValue(c.controlVal);
+				applyValue(controlVal.value);
 			}
 		}
 	} else {
-		if (c.controlVal === file) {
-			c.applyValue(null);
+		if (controlVal.value === file) {
+			applyValue(null);
 		}
 	}
 }
 
 function setFiles(files: File[] | null) {
 	if (!files) {
-		c.applyValue(null);
+		applyValue(null);
 	} else if (props.multiple) {
-		c.applyValue(files);
+		applyValue(files);
 	} else {
-		c.applyValue(files[0]);
+		applyValue(files[0]);
 	}
 }
 
@@ -252,7 +253,7 @@ async function getFiles(e: DragEvent) {
 		@dragleave="dragLeave"
 		@drop="drop"
 	>
-		<div v-show="!c.controlVal">
+		<div v-show="!controlVal">
 			<!--
 			If we have a label, then we show the upload "button" as a link instead.
 			We hide the button and use it to simulate a click on it.
@@ -265,17 +266,17 @@ async function getFiles(e: DragEvent) {
 
 			<AppFormControlUploadFile
 				v-show="!uploadLinkLabel"
-				:id="c.id!"
+				:id="id!"
 				ref="input"
-				:name="group.name"
+				:name="name"
 				:multiple="multiple"
 				:accept="accept"
-				:value="c.controlVal"
+				:value="controlVal"
 				@input="onChange"
 			/>
 		</div>
 
-		<template v-if="!!c.controlVal">
+		<template v-if="!!controlVal">
 			<div v-if="progress === undefined" class="form-upload-control-files">
 				<p>
 					<strong><AppTranslate>Selected files:</AppTranslate></strong>

@@ -1,16 +1,15 @@
 <script lang="ts">
 import {
-	computed,
-	inject,
-	InjectionKey,
-	onUnmounted,
-	PropType,
-	provide,
-	reactive,
-	Ref,
-	ref,
-	toRefs,
-	watch,
+computed,
+inject,
+InjectionKey,
+onUnmounted,
+PropType,
+provide,
+reactive,
+ref,
+toRefs,
+watch
 } from 'vue';
 import { useRoute } from 'vue-router';
 import { illNoComments } from '../../../app/img/ill/illustrations';
@@ -29,22 +28,22 @@ import { User } from '../../user/user.model';
 import FormComment from '../add/add.vue';
 import { canCommentOnModel, Comment, getCommentModelResourceName } from '../comment-model';
 import {
-	CommentStoreManagerKey,
-	CommentStoreModel,
-	fetchCommentThread,
-	fetchStoreComments,
-	lockCommentStore,
-	onCommentAdd as onCommentStoreAdd,
-	onCommentEdit as onCommentStoreEdit,
-	onCommentRemove as onCommentStoreRemove,
-	pinComment as pinStoreComment,
-	releaseCommentStore,
-	setCommentSort,
+CommentStoreManagerKey,
+CommentStoreModel,
+fetchCommentThread,
+fetchStoreComments,
+lockCommentStore,
+onCommentAdd as onCommentStoreAdd,
+onCommentEdit as onCommentStoreEdit,
+onCommentRemove as onCommentStoreRemove,
+pinComment as pinStoreComment,
+releaseCommentStore,
+setCommentSort
 } from '../comment-store';
 import {
-	CommentStoreSliceView,
-	CommentStoreThreadView,
-	CommentStoreView,
+CommentStoreSliceView,
+CommentStoreThreadView,
+CommentStoreView
 } from '../comment-store-view';
 import { DisplayMode } from '../modal/modal.service';
 import AppCommentWidgetComment from './comment/comment.vue';
@@ -55,23 +54,21 @@ export type CommentWidgetController = ReturnType<typeof createCommentWidget>;
 
 const Key: InjectionKey<CommentWidgetController> = Symbol('comment-widget');
 
-export function createCommentWidget(_props: typeof props, _emit: typeof emit) {
-	const { model, threadCommentId, showAdd, showTabs, initialTab } = toRefs(_props);
+export function createCommentWidget($props: typeof props, $emit: typeof emit) {
+	const { model, threadCommentId, showAdd, showTabs, initialTab } = toRefs($props);
 
-	const store = ref(null) as Ref<CommentStoreModel | null>;
-	const storeView = ref(null) as Ref<CommentStoreView | null>;
+	const store = ref<CommentStoreModel | null>(null);
+	const storeView = ref<CommentStoreView | null>(null);
 	const id = ref(++incrementer);
 	const hasBootstrapped = ref(false);
 	const hasError = ref(false);
 	const isLoading = ref(false);
-	const resourceOwner = ref(null as User | null);
+	const resourceOwner = ref<User | null>(null);
 	const perPage = ref(10);
 	const currentPage = ref(1);
-	const collaborators = ref([] as Collaborator[]);
+	const collaborators = ref<Collaborator[]>([]);
 
 	const route = useRoute();
-	// @Inject({ from: CommentStoreManagerKey })
-	// commentManager!: CommentStoreManager;
 	const commentManager = inject(CommentStoreManagerKey)!;
 
 	const loginUrl = computed(() => {
@@ -93,49 +90,18 @@ export function createCommentWidget(_props: typeof props, _emit: typeof emit) {
 		return [];
 	});
 
-	const childComments = computed(() => {
-		return store.value?.childComments ?? {};
-	});
-
-	const totalCommentsCount = computed(() => {
-		return store.value?.totalCount ?? 0;
-	});
-
-	const totalParentCount = computed(() => {
-		return store.value?.parentCount ?? 0;
-	});
-
-	const currentParentCount = computed(() => {
-		return comments.value.length;
-	});
-
-	const currentSort = computed(() => {
-		return store.value?.sort ?? Comment.SORT_HOT;
-	});
-
-	const isSortHot = computed(() => {
-		return currentSort.value === Comment.SORT_HOT;
-	});
-
-	const isSortTop = computed(() => {
-		return currentSort.value === Comment.SORT_TOP;
-	});
-
-	const isSortNew = computed(() => {
-		return currentSort.value === Comment.SORT_NEW;
-	});
-
-	const isSortYou = computed(() => {
-		return currentSort.value === Comment.SORT_YOU;
-	});
-
-	const showTopSorting = computed(() => {
-		return getCommentModelResourceName(model.value) === 'Game';
-	});
-
-	const isThreadView = computed(() => {
-		return !!threadCommentId.value;
-	});
+	const childComments = computed(() => store.value?.childComments ?? {});
+	const totalCommentsCount = computed(() => store.value?.totalCount ?? 0);
+	const totalParentCount = computed(() => store.value?.parentCount ?? 0);
+	const currentParentCount = computed(() => comments.value.length);
+	const currentSort = computed(() => store.value?.sort ?? Comment.SORT_HOT);
+	const isSortHot = computed(() => currentSort.value === Comment.SORT_HOT);
+	const isSortTop = computed(() => currentSort.value === Comment.SORT_TOP);
+	const isSortNew = computed(() => currentSort.value === Comment.SORT_NEW);
+	const isSortYou = computed(() => currentSort.value === Comment.SORT_YOU);
+	const showTopSorting = computed(() => getCommentModelResourceName(model.value) === 'Game');
+	const isThreadView = computed(() => !!threadCommentId.value);
+	const shouldShowEmptyMessage = computed(() => !comments.value.length);
 
 	const shouldShowAdd = computed(() => {
 		if (!canCommentOnModel(model.value)) {
@@ -144,9 +110,6 @@ export function createCommentWidget(_props: typeof props, _emit: typeof emit) {
 		return showAdd.value;
 	});
 
-	const shouldShowEmptyMessage = computed(() => {
-		return !comments.value.length;
-	});
 
 	const shouldShowTabs = computed(() => {
 		if (!showTabs.value) {
@@ -259,7 +222,7 @@ export function createCommentWidget(_props: typeof props, _emit: typeof emit) {
 		} catch (e) {
 			console.error(e);
 			hasError.value = true;
-			_emit('error', e);
+			$emit('error', e);
 		}
 	}
 
@@ -280,7 +243,7 @@ export function createCommentWidget(_props: typeof props, _emit: typeof emit) {
 
 	function onCommentAdd(comment: Comment) {
 		onCommentStoreAdd(commentManager, comment);
-		_emit('add', comment);
+		$emit('add', comment);
 
 		if (store.value) {
 			if (store.value.sort !== Comment.SORT_YOU) {
@@ -295,12 +258,12 @@ export function createCommentWidget(_props: typeof props, _emit: typeof emit) {
 
 	function onCommentEdit(comment: Comment) {
 		onCommentStoreEdit(commentManager, comment);
-		_emit('edit', comment);
+		$emit('edit', comment);
 	}
 
 	function onCommentRemove(comment: Comment) {
 		onCommentStoreRemove(commentManager, comment);
-		_emit('remove', comment);
+		$emit('remove', comment);
 	}
 
 	function pinComment(comment: Comment) {
@@ -563,7 +526,7 @@ const {
 							Everyone else seems to be in sleep mode, why don't you start the
 							conversation?
 						</translate>
-						<translate v-else> Everyone seems to be in sleep mode. </translate>
+						<translate v-else>Everyone seems to be in sleep mode.</translate>
 					</p>
 				</app-illustration>
 			</div>

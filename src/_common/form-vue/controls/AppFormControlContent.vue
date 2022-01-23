@@ -65,8 +65,9 @@ const emit = defineEmits({
 	'insert-block-node': (_nodeType: string) => true,
 });
 
-const group = useFormGroup()!;
-const c = createFormControl({
+const { name } = useFormGroup()!;
+
+const { id, controlVal, applyValue } = createFormControl({
 	initialValue: '',
 	validators: toRef(props, 'validators'),
 	// eslint-disable-next-line vue/require-explicit-emits
@@ -74,7 +75,7 @@ const c = createFormControl({
 });
 
 function onChange(value: string) {
-	c.applyValue(value);
+	applyValue(value);
 }
 
 // TODO(vue3)
@@ -91,17 +92,17 @@ function focus() {
 		-->
 		<!-- v-validate="{ rules: validationRules }" -->
 		<AppContentEditor
-			:id="c.id"
+			:id="id"
 			ref="editor"
 			class="fill-bg form-control content-editor-form-control"
 			:class="{ '-compact': compact }"
-			:name="group.name"
+			:name="name"
 			:content-context="contentContext"
 			:placeholder="placeholder"
 			:disabled="disabled"
 			:autofocus="autofocus"
 			:model-id="modelId"
-			:value="c.controlVal"
+			:value="controlVal"
 			:min-height="minHeight"
 			:temp-resource-context-data="tempResourceContextData"
 			:single-line-mode="singleLineMode"

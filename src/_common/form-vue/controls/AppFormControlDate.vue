@@ -20,8 +20,9 @@ const emit = defineEmits({
 	...defineFormControlEmits(),
 });
 
-const group = useFormGroup()!;
-const c = createFormControl({
+const { name } = useFormGroup()!;
+
+const { id, controlVal, applyValue } = createFormControl({
 	initialValue: Date.now(),
 	validators: toRef(props, 'validators'),
 	// eslint-disable-next-line vue/require-explicit-emits
@@ -41,15 +42,15 @@ const maxDate = computed(() => {
 });
 
 function onChange(value: number) {
-	c.applyValue(value);
+	applyValue(value);
 }
 </script>
 
 <template>
 	<div>
 		<AppDatetimePicker
-			:id="c.id"
-			:value="c.controlVal"
+			:id="id"
+			:value="controlVal"
 			:timezone-offset="timezoneOffset"
 			:min-date="minDate"
 			:max-date="maxDate"
@@ -57,6 +58,6 @@ function onChange(value: number) {
 		/>
 
 		<!-- v-validate="{ rules: validationRules }" -->
-		<input v-model="c.controlVal" class="hidden" type="number" :name="group.name" />
+		<input v-model="controlVal" class="hidden" type="number" :name="name" />
 	</div>
 </template>

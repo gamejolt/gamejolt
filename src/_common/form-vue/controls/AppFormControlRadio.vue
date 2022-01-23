@@ -21,8 +21,9 @@ const emit = defineEmits({
 });
 
 const form = useForm()!;
-const group = useFormGroup()!;
-const c = createFormControl<any>({
+const { name } = useFormGroup()!;
+
+const { applyValue } = createFormControl<any>({
 	initialValue: undefined,
 	validators: toRef(props, 'validators'),
 	// eslint-disable-next-line vue/require-explicit-emits
@@ -31,13 +32,13 @@ const c = createFormControl<any>({
 	alwaysOptional: true,
 });
 
-const checked = computed(() => form.formModel[group.name] === props.value);
+const checked = computed(() => form.formModel[name.value] === props.value);
 
 function onChange() {
-	c.applyValue(props.value);
+	applyValue(props.value);
 }
 </script>
 
 <template>
-	<input type="radio" :name="group.name" :checked="checked" @change="onChange" />
+	<input type="radio" :name="name" :checked="checked" @change="onChange" />
 </template>

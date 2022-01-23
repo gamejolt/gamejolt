@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { watch } from 'vue';
-import { setControlErrorsOverride, useFormControlErrors } from './AppFormControlErrors.vue';
+import { useFormControlErrors } from './AppFormControlErrors.vue';
 
 const props = defineProps({
 	when: {
@@ -13,11 +13,11 @@ const props = defineProps({
 	},
 });
 
-const errors = useFormControlErrors()!;
+const { setOverride } = useFormControlErrors()!;
 
 watch(
 	() => props.message,
-	() => setControlErrorsOverride(errors, props.when, props.message),
+	() => setOverride(props.when, props.message),
 	{ immediate: true }
 );
 </script>

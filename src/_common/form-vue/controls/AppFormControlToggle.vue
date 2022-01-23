@@ -17,7 +17,7 @@ const emit = defineEmits({
 	...defineFormControlEmits(),
 });
 
-const c = createFormControl({
+const { id, controlVal, applyValue } = createFormControl({
 	initialValue: false,
 	validators: toRef(props, 'validators'),
 	// eslint-disable-next-line vue/require-explicit-emits
@@ -30,17 +30,17 @@ function toggle() {
 		return;
 	}
 
-	c.applyValue(!c.controlVal);
+	applyValue(!controlVal.value);
 }
 </script>
 
 <template>
 	<div
-		:id="c.id"
+		:id="id"
 		role="checkbox"
 		class="toggle"
 		:class="{
-			'-checked': !!c.controlVal,
+			'-checked': !!controlVal,
 			'-disabled': disabled,
 		}"
 		:tabindex="disabled ? -1 : 0"

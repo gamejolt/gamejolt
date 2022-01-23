@@ -1,17 +1,5 @@
 <script lang="ts">
-import {
-	computed,
-	inject,
-	InjectionKey,
-	onMounted,
-	PropType,
-	provide,
-	reactive,
-	Ref,
-	ref,
-	toRefs,
-	watch,
-} from 'vue';
+import { computed, ComputedRef, onMounted, PropType, Ref, ref, toRefs, watch } from 'vue';
 import { useForm } from './AppForm.vue';
 import { useFormGroup } from './AppFormGroup.vue';
 import { AppFocusWhen as vAppFocusWhen } from './focus-when.directive';
@@ -21,8 +9,6 @@ import { FormValidator, validateDecimal, validateEmail, validateRequired } from 
 interface ValidationOptions {
 	validateDelay?: number;
 }
-
-const Key: InjectionKey<FormControlController> = Symbol('form-control');
 
 /**
  * Used to mix in common props used in most form controls.
@@ -58,14 +44,6 @@ export function defineFormControlEmits() {
 	};
 }
 
-export function provideFormControl(c: FormControlController) {
-	provide(Key, c);
-}
-
-export function useFormControl<T>() {
-	return inject(Key, null) as FormControlController<T> | null;
-}
-
 export function createFormControl<T>({
 	initialValue,
 	validators: inputValidators,
@@ -86,19 +64,19 @@ export function createFormControl<T>({
 }) {
 	const hooks = useFormControlHooks();
 	const form = useForm()!;
-	const group = useFormGroup()!;
+	const { name: groupName, control: groupControl, optional, changed } = useFormGroup()!;
 
 	const controlVal = ref(initialValue) as Ref<T>;
 
 	const id = computed(() => {
-		const id = `${form.name}-${group.name}`;
+		const id = `${form.name}-${groupName.value}`;
 		return !multi ? id : undefined;
 	});
 
 	const validators = computed(() => {
 		const validators: FormValidator[] = [...inputValidators.value];
 
-		if (!group.optional && !alwaysOptional) {
+		if (!optional.value && !alwaysOptional) {
 			validators.push(validateRequired());
 		}
 
@@ -109,13 +87,13 @@ export function createFormControl<T>({
 		// Copy over the initial form model value. If the formModel contains
 		// specifically an undefined value, we want to keep it as the initial
 		// value.
-		if (form.formModel[group.name] !== undefined) {
-			controlVal.value = form.formModel[group.name];
+		if (form.formModel[groupName.value] !== undefined) {
+			controlVal.value = form.formModel[groupName.value];
 		}
 
 		// Watch the form model for changes and sync to our control.
 		watch(
-			() => form.formModel[group.name],
+			() => form.formModel[groupName.value],
 			newVal => (controlVal.value = newVal)
 		);
 	}
@@ -131,8 +109,8 @@ export function createFormControl<T>({
 			controlVal.value = value;
 		}
 
-		form.formModel[group.name] = value;
-		group.changed = true;
+		form.formModel[groupName.value] = value;
+		changed.value = true;
 
 		onChange?.(value);
 		form._onControlChanged();
@@ -169,30 +147,30 @@ export function createFormControl<T>({
 		}, timeout);
 	}
 
-	const c = reactive({
+	const c = {
 		id,
 		multi,
 		controlVal,
 		applyValue,
 		validators,
 		applyBlur,
-	}) as FormControlController<T>;
+	} as FormControlController<T>;
 
-	group.control = c;
+	groupControl.value = c;
 	return c;
 }
 
 export interface FormControlController<T = any> {
-	readonly id: string | undefined;
+	id: ComputedRef<string | undefined>;
 	/**
 	 * Whether or not the form control has multiple controls for the group. This
 	 * is for radio and checkboxes mostly.
 	 */
-	readonly multi: boolean;
-	controlVal: T;
+	multi: boolean;
+	controlVal: Ref<T>;
 	applyValue: (value: T, options?: ValidationOptions) => void;
 	applyBlur: (options?: ValidationOptions) => void;
-	readonly validators: FormValidator[];
+	validators: ComputedRef<FormValidator[]>;
 }
 </script>
 
@@ -236,7 +214,8 @@ const ourValidators = computed(() => {
 });
 
 const hooks = useFormControlHooks();
-const group = useFormGroup()!;
+const { name } = useFormGroup()!;
+
 const c = createFormControl({
 	initialValue: '',
 	validators: ourValidators,
@@ -244,15 +223,9 @@ const c = createFormControl({
 	onChange: val => emit('changed', val),
 });
 
-const root = ref<HTMLInputElement>();
-
+const { id, applyValue, applyBlur, controlVal } = c;
 const controlType = computed(() => (type.value === 'currency' ? 'number' : type.value));
-
-function onChange() {
-	c.applyValue(root.value?.value ?? '', {
-		validateDelay: props.validateDelay,
-	});
-}
+const root = ref<HTMLInputElement>();
 
 onMounted(() => {
 	if (hooks?.afterMount) {
@@ -260,9 +233,15 @@ onMounted(() => {
 	}
 });
 
+function onChange() {
+	applyValue(root.value?.value ?? '', {
+		validateDelay: props.validateDelay,
+	});
+}
+
 function onBlur() {
 	if (props.validateOnBlur) {
-		c.applyBlur({
+		applyBlur({
 			validateDelay: props.validateDelay,
 		});
 	}
@@ -271,13 +250,13 @@ function onBlur() {
 
 <template>
 	<input
-		:id="c.id"
+		:id="id"
 		ref="root"
 		v-app-focus-when="focus"
-		:name="group.name"
+		:name="name"
 		class="form-control"
 		:type="controlType"
-		:value="c.controlVal"
+		:value="controlVal"
 		:disabled="disabled"
 		:list="htmlListId"
 		v-bind="$attrs"

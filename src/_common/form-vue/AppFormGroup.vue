@@ -1,15 +1,5 @@
 <script lang="ts">
-import {
-	computed,
-	inject,
-	InjectionKey,
-	onUnmounted,
-	provide,
-	reactive,
-	ref,
-	toRefs,
-	unref,
-} from 'vue';
+import { computed, inject, InjectionKey, onUnmounted, provide, ref, shallowRef, toRefs } from 'vue';
 import { arrayRemove } from '../../utils/array';
 import { CancelToken } from '../../utils/cancel-token';
 import { titleCase } from '../../utils/string';
@@ -21,13 +11,17 @@ export type FormGroupController = ReturnType<typeof createFormGroup>;
 
 const Key: InjectionKey<FormGroupController> = Symbol('form-control-group');
 
-export function createFormGroup($props: typeof props) {
+export function useFormGroup() {
+	return inject(Key, null);
+}
+
+function createFormGroup($props: typeof props) {
 	const { name, label, optional } = toRefs($props);
 
 	const form = useForm()!;
 
 	const changed = ref(false);
-	const control = ref(undefined as FormControlController | undefined);
+	const control = shallowRef<FormControlController>();
 	const error = ref(null as FormValidatorError | null);
 
 	const invalid = computed(() => error.value !== null);
@@ -57,10 +51,10 @@ export function createFormGroup($props: typeof props) {
 			return;
 		}
 
-		const { controlVal, validators } = unref(control)!;
+		const { controlVal, validators } = control.value!;
 
-		for (const validator of validators) {
-			const result = await validator(controlVal);
+		for (const validator of validators.value) {
+			const result = await validator(controlVal.value);
 
 			// If this validation run is no longer active, ignore the result of
 			// this validation and early-out.
@@ -82,7 +76,7 @@ export function createFormGroup($props: typeof props) {
 		error.value = null;
 	}
 
-	const c = reactive({
+	const c = {
 		changed,
 		invalid,
 		valid,
@@ -96,16 +90,12 @@ export function createFormGroup($props: typeof props) {
 		optional,
 		validate,
 		clearError,
-	});
+	};
 
 	form._groups.push(c);
 	onUnmounted(() => arrayRemove(form._groups, i => i === c));
 
 	return c;
-}
-
-export function useFormGroup() {
-	return inject(Key, null);
 }
 </script>
 
@@ -136,6 +126,7 @@ const form = useForm()!;
 const c = createFormGroup(props);
 provide(Key, c);
 
+const { humanLabel } = c;
 const labelClasses = computed(() => [props.labelClass, { 'sr-only': props.hideLabel }]);
 </script>
 
@@ -147,7 +138,7 @@ const labelClasses = computed(() => [props.labelClass, { 'sr-only': props.hideLa
 		}"
 	>
 		<label class="control-label" :class="labelClasses" :for="`${form.name}-${name}`">
-			<slot name="label">{{ c.humanLabel }}</slot>
+			<slot name="label">{{ humanLabel }}</slot>
 		</label>
 
 		<slot />

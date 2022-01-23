@@ -26,9 +26,9 @@ const emit = defineEmits({
 });
 
 const form = useForm()!;
-const group = useFormGroup()!;
+const { name } = useFormGroup()!;
 
-const c = createFormControl<any>({
+const { controlVal, applyValue } = createFormControl<any>({
 	initialValue: null,
 	validators: toRef(props, 'validators'),
 	// eslint-disable-next-line vue/require-explicit-emits
@@ -40,14 +40,14 @@ const c = createFormControl<any>({
 const root = ref<HTMLInputElement>();
 
 const currentOptions = computed(() => {
-	return form.formModel[group.name] || [];
+	return form.formModel[name.value] || [];
 });
 
 const checked = computed(() => {
 	// This is when there's only one checkbox without a value field. That means
 	// we want to check for just a boolean check.
 	if (!props.value) {
-		return !!form.formModel[group.name];
+		return !!form.formModel[name.value];
 	}
 
 	// Multiple checkboxes, so we want to check to see if it's within the form
@@ -62,7 +62,7 @@ function onChange() {
 
 	// Boolean based single checkbox.
 	if (!props.value) {
-		c.applyValue(root.value.checked);
+		applyValue(root.value.checked);
 	} else {
 		// Multiple checkboxes with values.
 		const options = currentOptions.value as string[];
@@ -76,7 +76,7 @@ function onChange() {
 			}
 		}
 
-		c.applyValue(currentOptions);
+		applyValue(currentOptions);
 	}
 }
 </script>
@@ -85,8 +85,8 @@ function onChange() {
 	<input
 		ref="root"
 		type="checkbox"
-		:name="group.name"
-		:value="c.controlVal"
+		:name="name"
+		:value="controlVal"
 		:checked="checked"
 		@change="onChange"
 	/>

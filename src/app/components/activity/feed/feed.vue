@@ -61,7 +61,6 @@ export default class AppActivityFeed extends Vue {
 	@Provide({ to: ActivityFeedKey })
 	feed!: ActivityFeedView;
 
-	feedInterface!: ActivityFeedInterface;
 	isNewButtonInview = false;
 
 	/**
@@ -107,19 +106,20 @@ export default class AppActivityFeed extends Vue {
 	emitLoadMore() {}
 
 	created() {
-		this.feedInterface = createActivityFeedInterface({
-			onPostEdited: this.onPostEdited,
-			onPostPublished: this.onPostPublished,
-			onPostRemoved: this.onPostRemoved,
-			onPostFeatured: this.onPostFeatured,
-			onPostUnfeatured: this.onPostUnfeatured,
-			onPostMovedChannel: this.onPostMovedChannel,
-			onPostRejected: this.onPostRejected,
-			onPostPinned: this.onPostPinned,
-			onPostUnpinned: this.onPostUnpinned,
-		});
-
-		provide(ActivityFeedInterfaceKey, this.feedInterface);
+		provide(
+			ActivityFeedInterfaceKey,
+			createActivityFeedInterface({
+				onPostEdited: this.onPostEdited,
+				onPostPublished: this.onPostPublished,
+				onPostRemoved: this.onPostRemoved,
+				onPostFeatured: this.onPostFeatured,
+				onPostUnfeatured: this.onPostUnfeatured,
+				onPostMovedChannel: this.onPostMovedChannel,
+				onPostRejected: this.onPostRejected,
+				onPostPinned: this.onPostPinned,
+				onPostUnpinned: this.onPostUnpinned,
+			})
+		);
 	}
 
 	mounted() {

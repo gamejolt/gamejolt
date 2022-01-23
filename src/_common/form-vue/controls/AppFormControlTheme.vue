@@ -2,6 +2,7 @@
 import { Sketch as VuePicker } from '@ckpack/vue-color';
 import { computed, ref, toRef } from 'vue';
 import { Api } from '../../api/api.service';
+import AppButton from '../../button/AppButton.vue';
 import AppLoading from '../../loading/loading.vue';
 import AppPopper from '../../popper/popper.vue';
 import AppThemeBubble from '../../theme/bubble/bubble.vue';
@@ -19,7 +20,6 @@ import {
 	defineFormControlEmits,
 	defineFormControlProps,
 } from '../AppFormControl.vue';
-import AppButton from '../../button/AppButton.vue';
 
 const props = defineProps({
 	...defineFormControlProps(),
@@ -33,7 +33,7 @@ interface VueColor {
 	hex: string | null;
 }
 
-const c = createFormControl({
+const { controlVal, applyValue } = createFormControl({
 	initialValue: null as Theme | null,
 	validators: toRef(props, 'validators'),
 	// eslint-disable-next-line vue/require-explicit-emits
@@ -46,17 +46,17 @@ const activeTab = ref('preset' as 'preset' | 'custom');
 const customSelection = ref({ hex: null } as VueColor);
 
 const currentTheme = computed(() => {
-	return c.controlVal || DefaultTheme;
+	return controlVal.value || DefaultTheme;
 });
 
 const highlight = computed(() => {
-	return c.controlVal && (c.controlVal.custom || c.controlVal.highlight);
+	return controlVal.value && (controlVal.value.custom || controlVal.value.highlight);
 });
 
 const backlight = computed(() => {
-	if (c.controlVal) {
+	if (controlVal.value) {
 		// Don't show backlight when a custom color is chosen.
-		return c.controlVal.custom ? null : c.controlVal.backlight;
+		return controlVal.value.custom ? null : controlVal.value.backlight;
 	}
 	return null;
 });
@@ -74,7 +74,7 @@ async function onPopover() {
 }
 
 function selectPreset(preset: ThemePreset) {
-	c.applyValue(makeThemeFromPreset(preset));
+	applyValue(makeThemeFromPreset(preset));
 }
 
 function isPresetActive(preset: ThemePreset) {
@@ -86,11 +86,11 @@ function isPresetActive(preset: ThemePreset) {
 }
 
 function onCustomChange(colors: VueColor) {
-	c.applyValue(makeThemeFromColor((colors.hex || '').substr(1)));
+	applyValue(makeThemeFromColor((colors.hex || '').substr(1)));
 }
 
 function clear() {
-	c.applyValue(null);
+	applyValue(null);
 }
 </script>
 
@@ -153,7 +153,7 @@ function clear() {
 							<br />
 						</div>
 
-						<AppButton v-if="!!c.controlVal" block trans @click="clear()">
+						<AppButton v-if="!!controlVal" block trans @click="clear()">
 							<AppTranslate>Clear Theme</AppTranslate>
 						</AppButton>
 					</div>

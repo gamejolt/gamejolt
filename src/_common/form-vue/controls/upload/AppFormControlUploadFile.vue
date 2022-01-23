@@ -46,9 +46,6 @@ const emit = defineEmits({
 	input: (_files: null | File[]) => true,
 });
 
-// const group = useFormGroup()!;
-// const control = useFormControl()!;
-
 const root = ref<HTMLInputElement>();
 
 function onChange() {

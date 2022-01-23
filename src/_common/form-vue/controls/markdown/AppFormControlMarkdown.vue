@@ -36,8 +36,9 @@ const emit = defineEmits({
 });
 
 const form = useForm()!;
-const group = useFormGroup()!;
-const c = createFormControl({
+const { name } = useFormGroup()!;
+
+const { id, controlVal, applyValue } = createFormControl({
 	initialValue: '',
 	validators: toRef(props, 'validators'),
 	// eslint-disable-next-line vue/require-explicit-emits
@@ -52,7 +53,7 @@ if (form.formModel.id) {
 
 function onChange(event: Event) {
 	const value = (event.target as HTMLTextAreaElement).value;
-	c.applyValue(value);
+	applyValue(value);
 }
 </script>
 
@@ -83,14 +84,14 @@ function onChange(event: Event) {
 		</nav>
 
 		<textarea
-			:id="c.id"
+			:id="id"
 			v-app-form-autosize
 			v-app-focus-when="focus"
 			class="form-control"
 			rows="1"
-			:name="group.name"
+			:name="name"
 			:disabled="disabled"
-			:value="c.controlVal"
+			:value="controlVal"
 			@input="onChange($event)"
 		/>
 		<AppFormControlMarkdownMediaItems

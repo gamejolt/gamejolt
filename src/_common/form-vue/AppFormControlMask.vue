@@ -14,7 +14,7 @@ let inputMask: any;
 let el: Ref<HTMLInputElement | undefined>;
 
 provideFormControlHooks({
-	afterMount(controller, inputElem) {
+	afterMount({ controlVal }, inputElem) {
 		el = ref(inputElem);
 
 		if (el.value) {
@@ -22,7 +22,7 @@ provideFormControlHooks({
 				inputElement: el.value,
 				mask: props.mask,
 			});
-			inputMask.update(controller.controlVal);
+			inputMask.update(controlVal.value);
 		}
 	},
 	beforeApplyValue(_controller, value) {

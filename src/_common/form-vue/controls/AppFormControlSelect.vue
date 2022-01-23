@@ -15,8 +15,9 @@ const emit = defineEmits({
 	...defineFormControlEmits(),
 });
 
-const group = useFormGroup()!;
-const c = createFormControl({
+const { name } = useFormGroup()!;
+
+const { id, controlVal, applyValue } = createFormControl({
 	initialValue: '',
 	validators: toRef(props, 'validators'),
 	// eslint-disable-next-line vue/require-explicit-emits
@@ -26,7 +27,7 @@ const c = createFormControl({
 const root = ref<HTMLSelectElement>();
 
 function onChange() {
-	c.applyValue(root.value?.value || '');
+	applyValue(root.value?.value || '');
 }
 </script>
 
@@ -38,11 +39,11 @@ since nothing ever needs to hook into it so far.
 -->
 <template>
 	<select
-		:id="c.id"
+		:id="id"
 		ref="root"
-		:name="group.name"
+		:name="name"
 		class="form-control"
-		:value="c.controlVal"
+		:value="controlVal"
 		@click.stop
 		@change="onChange"
 	>

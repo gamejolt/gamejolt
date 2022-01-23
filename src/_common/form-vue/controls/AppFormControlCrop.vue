@@ -50,7 +50,7 @@ const emit = defineEmits({
 	...defineFormControlEmits(),
 });
 
-const c = createFormControl({
+const { id, controlVal, applyValue } = createFormControl({
 	initialValue: null as any,
 	validators: toRef(props, 'validators'),
 	// eslint-disable-next-line vue/require-explicit-emits
@@ -59,13 +59,13 @@ const c = createFormControl({
 });
 
 function onChange(value: any) {
-	c.applyValue(value);
+	applyValue(value);
 }
 </script>
 
 <template>
 	<AppImgCrop
-		:id="c.id"
+		:id="id"
 		:src="src"
 		:aspect-ratio="aspectRatio"
 		:min-aspect-ratio="minAspectRatio"
@@ -75,7 +75,7 @@ function onChange(value: any) {
 		:max-width="maxWidth"
 		:max-height="maxHeight"
 		:disabled="disabled"
-		:value="c.controlVal"
+		:value="controlVal"
 		@input="onChange"
 	/>
 </template>
