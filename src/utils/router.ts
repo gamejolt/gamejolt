@@ -150,9 +150,18 @@ function guardHijackEvent(e: any): 'passthrough' | 'window' | 'handle' {
 		return 'passthrough';
 	}
 
+	let elem = e.target;
+	while (elem && !(elem instanceof HTMLAnchorElement)) {
+		elem = elem?.parentNode;
+	}
+
+	if (!elem) {
+		return 'passthrough';
+	}
+
 	// don't redirect if `target="_blank"`
-	if (e.currentTarget && e.currentTarget.getAttribute) {
-		const target = e.currentTarget.getAttribute('target');
+	if (elem.getAttribute) {
+		const target = elem.getAttribute('target');
 		if (/\b_blank\b/i.test(target)) {
 			// Client handles target="_blank" correctly.
 			return 'passthrough';
