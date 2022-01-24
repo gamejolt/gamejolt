@@ -23,9 +23,9 @@ import AppStickerControlsOverlay from '../../../../../_common/sticker/controls-o
 import { canPlaceStickerOnFiresidePost } from '../../../../../_common/sticker/placement/placement.model';
 import AppStickerReactions from '../../../../../_common/sticker/reactions/reactions.vue';
 import {
-	createStickerTargetController,
-	provideStickerTargerController,
-	StickerTargetController,
+createStickerTargetController,
+provideStickerTargerController,
+StickerTargetController
 } from '../../../../../_common/sticker/target/target-controller';
 import AppStickerTarget from '../../../../../_common/sticker/target/target.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
@@ -85,7 +85,7 @@ export default class AppActivityFeedPost extends Vue {
 	@Inject({ from: ActivityFeedInterfaceKey })
 	feedInterface!: ActivityFeedInterface;
 
-	stickerTargetController: StickerTargetController | null = null;
+	stickerTargetController?: StickerTargetController;
 
 	get app() {
 		return this.commonStore;
