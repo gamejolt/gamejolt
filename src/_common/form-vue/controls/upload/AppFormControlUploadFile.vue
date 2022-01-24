@@ -1,24 +1,9 @@
 <script lang="ts" setup>
 import { PropType, ref } from 'vue';
 
-// @Options({})
-// export default class AppFormControlUploadFile extends Vue {
-// 	@Prop() id!: any;
-// 	@Prop() name!: any;
-// 	@Prop() value!: File | File[] | null;
-// 	@Prop(Boolean) multiple?: boolean;
-// 	@Prop(String) accept?: string;
-
-// 	declare $el: HTMLInputElement;
-
-// 	@Emit('input')
-// 	emitInput(_files: null | File[]) {}
-
-// 	showFileSelect() {
-// 		this.$el.click();
-// 	}
-
-// }
+export interface AppFormControlUploadFileInterface {
+	showFileSelect: () => void;
+}
 
 defineProps({
 	id: {
@@ -68,6 +53,14 @@ function onChange() {
 
 	emit('input', files);
 }
+
+function showFileSelect() {
+	root.value?.click();
+}
+
+defineExpose<AppFormControlUploadFileInterface>({
+	showFileSelect,
+});
 </script>
 
 <template>

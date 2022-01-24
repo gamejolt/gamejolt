@@ -1,41 +1,33 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
-import { findRequiredVueParent } from '../../../../../utils/vue';
-import { CommonFormComponents } from '../../../../../_common/form-vue/form-common';
+<script lang="ts" setup>
 import { validatePattern } from '../../../../../_common/form-vue/validators';
-import FormFinancialsManagedAccountTS from './managed-account';
-import FormFinancialsManagedAccount from './managed-account.vue';
+import { useFormManagedAccount } from './managed-account.vue';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
 
-@Options({
-	components: {
-		...CommonFormComponents,
+defineProps({
+	namePrefix: {
+		type: String,
+		required: true,
 	},
-})
-export default class AppFinancialsManagedAccountSsn extends Vue {
-	@Prop(Boolean) isForceRequired!: boolean;
+	countryCode: {
+		type: String,
+		required: true,
+	},
+	isForceRequired: {
+		type: Boolean,
+	},
+});
 
-	@Prop(String) namePrefix!: string;
-
-	@Prop(String) countryCode!: string;
-
-	parent: FormFinancialsManagedAccountTS = null as any;
-
-	readonly validatePattern = validatePattern;
-
-	created() {
-		this.parent = findRequiredVueParent(
-			this,
-			FormFinancialsManagedAccount
-		) as FormFinancialsManagedAccountTS;
-	}
-}
+const { requiresField, getStripeField } = useFormManagedAccount()!;
 </script>
 
 <template>
 	<div>
-		<template v-if="parent.requiresField(namePrefix + '.id_number')">
-			<app-form-group
-				v-if="!parent.getStripeField(namePrefix + '.id_number_provided')"
+		<template v-if="requiresField(namePrefix + '.id_number')">
+			<AppFormGroup
+				v-if="!getStripeField(namePrefix + '.id_number_provided')"
 				:name="`${namePrefix}.id_number`"
 				:label="
 					countryCode === 'us'
@@ -44,49 +36,46 @@ export default class AppFinancialsManagedAccountSsn extends Vue {
 				"
 			>
 				<p v-if="countryCode === 'us'" class="help-block">
-					<translate>
+					<AppTranslate>
 						We are required by the IRS to collect your Social Security Number (SSN) or
 						Individual Taxpayer Identification Number (ITIN) for tax purposes. For
 						security reasons, we use Stripe to store this information, it will not be
 						stored on Game Jolt's servers.
-					</translate>
+					</AppTranslate>
 				</p>
 
 				<p v-if="countryCode !== 'us'" class="help-block">
-					<translate>
+					<AppTranslate>
 						We are required by the IRS to collect your Tax Identification Number (TIN)
 						for tax purposes. For security reasons, we use Stripe to store this
 						information, it will not be stored on Game Jolt's servers.
-					</translate>
+					</AppTranslate>
 				</p>
 
-				<app-form-control />
-				<app-form-control-errors />
-			</app-form-group>
+				<AppFormControl />
+				<AppFormControlErrors />
+			</AppFormGroup>
 
-			<div
-				v-if="parent.getStripeField(namePrefix + '.id_number_provided')"
-				class="form-horizontal"
-			>
+			<div v-if="getStripeField(namePrefix + '.id_number_provided')" class="form-horizontal">
 				<div class="form-group">
 					<label class="control-label col-sm-4">
 						<template v-if="countryCode === 'us'">
-							<translate>SSN/ITIN</translate>
+							<AppTranslate>SSN/ITIN</AppTranslate>
 						</template>
 						<template v-if="countryCode !== 'us'">
-							<translate>Foreign Tax Identification Number</translate>
+							<AppTranslate>Foreign Tax Identification Number</AppTranslate>
 						</template>
 					</label>
 					<div class="form-static col-sm-8">
-						<translate>Provided</translate>
+						<AppTranslate>Provided</AppTranslate>
 					</div>
 				</div>
 			</div>
 		</template>
 
-		<template v-else-if="parent.requiresField(namePrefix + '.ssn_last_4')">
-			<app-form-group
-				v-if="!parent.getStripeField(namePrefix + '.ssn_last_4_provided')"
+		<template v-else-if="requiresField(namePrefix + '.ssn_last_4')">
+			<AppFormGroup
+				v-if="!getStripeField(namePrefix + '.ssn_last_4_provided')"
 				:name="`${namePrefix}.ssn_last_4`"
 				:label="
 					countryCode === 'us'
@@ -95,28 +84,28 @@ export default class AppFinancialsManagedAccountSsn extends Vue {
 				"
 			>
 				<p v-if="countryCode === 'us'" class="help-block">
-					<translate>
+					<AppTranslate>
 						We are required by the IRS to collect a Social Security Number (SSN) or
 						Individual Taxpayer Identification Number (ITIN) for tax purposes. For
 						security reasons, we use Stripe to store this information, it will not be
 						stored on Game Jolt's servers.
-					</translate>
+					</AppTranslate>
 				</p>
 
 				<p v-if="countryCode !== 'us'" class="help-block">
-					<translate>
+					<AppTranslate>
 						We are required by the IRS to collect a Tax Identification Number (TIN) for
 						tax purposes. For security reasons, we use Stripe to store this information,
 						it will not be stored on Game Jolt's servers.
-					</translate>
+					</AppTranslate>
 				</p>
 
-				<app-form-control
+				<AppFormControl
 					type="text"
 					placeholder="1234"
 					:validators="[validatePattern(/^\d{4}/)]"
 				/>
-				<app-form-control-errors
+				<AppFormControlErrors
 					:label="
 						$gettext(
 							countryCode === 'us'
@@ -125,23 +114,20 @@ export default class AppFinancialsManagedAccountSsn extends Vue {
 						)
 					"
 				/>
-			</app-form-group>
+			</AppFormGroup>
 
-			<div
-				v-if="parent.getStripeField(namePrefix + '.ssn_last_4_provided')"
-				class="form-horizontal"
-			>
+			<div v-if="getStripeField(namePrefix + '.ssn_last_4_provided')" class="form-horizontal">
 				<div class="form-group">
 					<label class="control-label col-sm-4">
 						<template v-if="countryCode === 'us'">
-							<translate>SSN/ITIN - Last 4</translate>
+							<AppTranslate>SSN/ITIN - Last 4</AppTranslate>
 						</template>
 						<template v-if="countryCode !== 'us'">
-							<translate>Foreign Tax Identification Number - Last 4</translate>
+							<AppTranslate>Foreign Tax Identification Number - Last 4</AppTranslate>
 						</template>
 					</label>
 					<div class="form-static col-sm-8">
-						<translate>Provided</translate>
+						<AppTranslate>Provided</AppTranslate>
 					</div>
 				</div>
 			</div>

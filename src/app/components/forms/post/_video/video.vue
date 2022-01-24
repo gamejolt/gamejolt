@@ -5,7 +5,9 @@ import { formatNumber } from '../../../../../_common/filters/number';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { FiresidePostVideo } from '../../../../../_common/fireside/post/video/video-model';
 import AppFormLegend from '../../../../../_common/form-vue/AppFormLegend.vue';
-import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import AppFormControlUpload, {
+	AppFormControlUploadInterface,
+} from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import { AppFocusWhen } from '../../../../../_common/form-vue/focus-when.directive';
 import {
 	BaseForm,
@@ -77,7 +79,7 @@ export default class AppFormPostVideo
 	readonly formatNumber = formatNumber;
 
 	declare $refs: {
-		upload: typeof AppFormControlUpload;
+		upload: AppFormControlUploadInterface;
 	};
 
 	@Emit('delete')
@@ -252,11 +254,11 @@ export default class AppFormPostVideo
 
 		e.preventDefault();
 		this.isDropActive = false;
-		this.$refs.upload.drop(e);
+		this.$refs.upload?.drop(e);
 	}
 
 	showSelectVideo() {
-		this.$refs.upload.showFileSelect();
+		this.$refs.upload?.showFileSelect();
 	}
 
 	onProcessingComplete({ video }: any) {
@@ -369,8 +371,8 @@ export default class AppFormPostVideo
 								Your video must be between 1 second and 30 minutes long.
 							</translate>
 							<br />
-							<translate> Videos must be bigger than 200x200. </translate>
-							<translate> Video filetypes currently supported: </translate>
+							<translate>Videos must be bigger than 200x200.</translate>
+							<translate>Video filetypes currently supported:</translate>
 							<span
 								v-for="filetype of allowedFiletypes"
 								:key="filetype"

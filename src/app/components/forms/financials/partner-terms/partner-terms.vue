@@ -64,7 +64,7 @@ export default class AppPartnerTerms extends Vue {
 				<div class="small">
 					<div>
 						<translate>
-							If you would to be a Game Jolt partner, you must accept the Partner
+							If you would like to be a Game Jolt partner, you must accept the Partner
 							Agreement.
 						</translate>
 					</div>

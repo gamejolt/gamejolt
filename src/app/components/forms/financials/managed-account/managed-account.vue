@@ -1,7 +1,9 @@
 <script lang="ts">
 import * as StripeData from 'stripe';
+import { inject, InjectionKey, provide, Ref, ref } from 'vue';
 import { mixins, Options } from 'vue-property-decorator';
 import { loadScript } from '../../../../../utils/utils';
+import { shallowSetup } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatCurrency } from '../../../../../_common/filters/currency';
@@ -10,11 +12,14 @@ import { Geo } from '../../../../../_common/geo/geo.service';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import { UserStripeManagedAccount } from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
 import { User } from '../../../../../_common/user/user.model';
-import AppFinancialsManagedAccountCompanyDetails from './company-details.vue';
-import AppFinancialsManagedAccountPersonTS from './person';
-import AppFinancialsManagedAccountPerson from './person.vue';
+import AppFinancialsManagedAccountCompanyDetails from './AppFinancialsManagedAccountCompanyDetails.vue';
+import AppFinancialsManagedAccountPerson, {
+	AppFinancialsManagedAccountPersonInterface,
+} from './AppFinancialsManagedAccountPerson.vue';
 
-interface FormModel {
+export const StripeFileUploadUrl = 'https://uploads.stripe.com/v1/files';
+
+export interface ManagedAccountFormModel {
 	// Step 1 params.
 	type: 'individual' | 'country';
 	country_code: string;
@@ -42,85 +47,39 @@ type PersonRelationship = keyof NonNullable<StripeData.accounts.IPerson['relatio
 // Person requirement fields start with the person id, which looks like "person_ID"
 const PERSON_REQUIREMENT_FIELD = new RegExp(`^(person_.*?)\\.`);
 
-class Wrapper extends BaseForm<FormModel> {}
+type Controller = ReturnType<typeof createFormManagedAccount>;
+const Key: InjectionKey<Controller> = Symbol('form-game-release');
 
-@Options({
-	components: {
-		AppLoading,
-		AppExpand,
-		AppFinancialsManagedAccountPerson,
-		AppFinancialsManagedAccountCompanyDetails,
-	},
-})
-export default class FormFinancialsManagedAccount extends mixins(Wrapper) implements FormOnSubmit {
-	scriptLoaded = false;
-	isLoaded = false;
+export function useFormManagedAccount() {
+	return inject(Key, null);
+}
 
-	stripePublishableKey = '';
-	stripeMeta: StripeMeta = null as any;
-	additionalOwnerIndex = 0;
-	genericError = false;
-	currencies: any[] = [];
+function createFormManagedAccount() {
+	const user = ref() as Ref<User>;
+	const account = ref() as Ref<UserStripeManagedAccount>;
+	const stripeMeta = ref() as Ref<StripeMeta>;
+	const stripe = ref() as Ref<PayloadStripeData>;
 
-	user: User = null as any;
-	account: UserStripeManagedAccount = null as any;
-	stripe: PayloadStripeData = null as any;
-	stripeInst: stripe.Stripe = null as any;
-
-	readonly StripeFileUploadUrl = 'https://uploads.stripe.com/v1/files';
-	readonly Geo = Geo;
-	readonly formatCurrency = formatCurrency;
-
-	declare $refs: {
-		individual: AppFinancialsManagedAccountPersonTS;
-		representative: AppFinancialsManagedAccountPersonTS;
-	};
-
-	created() {
-		this.form.resetOnSubmit = true;
-	}
-
-	async onInit() {
-		if (!this.scriptLoaded) {
-			await loadScript('https://js.stripe.com/v3/');
-			this.scriptLoaded = true;
-		}
-
-		this.isLoaded = false;
-		const payload = await Api.sendRequest('/web/dash/financials/account');
-
-		const stripePayload = payload.stripe as PayloadStripeData;
-		this.stripePublishableKey = stripePayload.publishableKey;
-		this.stripeInst = Stripe(stripePayload.publishableKey);
-
-		this.user = new User(payload.user);
-		this.account = new UserStripeManagedAccount(payload.account);
-		this.stripe = stripePayload;
-		this.stripeMeta = stripePayload.required;
-
-		this.isLoaded = true;
-	}
-
-	requiresField(field: string) {
-		if (!this.stripeMeta) {
+	function requiresField(field: string) {
+		if (!stripeMeta.value) {
 			return false;
 		}
 
 		// We special case id_number.
 		// We need it for taxes, so we collect it even if it's just in "additional".
 		const isTaxIdField = field === `individual.id_number` || field === `company.tax_id`;
-		if (isTaxIdField && this.stripeMeta.additional.indexOf(field) !== -1) {
+		if (isTaxIdField && stripeMeta.value.additional.indexOf(field) !== -1) {
 			return true;
 		}
 
-		let requirements: string[] = this.stripe.current?.requirements?.past_due!;
+		let requirements = stripe.value.current.requirements!.past_due!;
 
 		// If the field is a person field, we need to look it up in the person object's
 		// requirement fields instead of the account's requirement fields.
 		// Note: the country spec minimum requirements do not list these directly,
 		// they only specify which relationships they need the people attached to the
 		// account to be satisfied, e.g. relationship.representative and relationship.owner
-		const person = this.getPersonFromField(field);
+		const person = _getPersonFromField(field);
 		if (person) {
 			// The requirements listed on the person object don't have the person id
 			// as the start of the field, so we need to trim our provided field to match
@@ -138,7 +97,7 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 		const fieldParts = field.split('.');
 		do {
 			field = fieldParts.join('.');
-			if (this.stripeMeta.minimum.indexOf(field) !== -1) {
+			if (stripeMeta.value.minimum.indexOf(field) !== -1) {
 				return true;
 			}
 
@@ -151,16 +110,16 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 		return false;
 	}
 
-	getStripeField(fieldPath: string) {
-		if (!this.stripe.current) {
+	function getStripeField(fieldPath: string) {
+		if (!stripe.value.current) {
 			return undefined;
 		}
 
-		let obj = this.stripe.current as any;
+		let obj = stripe.value.current as any;
 
 		// Same as this.requiresField, if the field is a person field,
 		// we need to check if its set on the person object.
-		const person = this.getPersonFromField(fieldPath);
+		const person = _getPersonFromField(fieldPath);
 		if (person) {
 			fieldPath = fieldPath.substr(person.id.length + 1);
 			obj = person as any;
@@ -183,6 +142,108 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 		}
 
 		return obj[field];
+	}
+
+	function _getPersonFromField(field: string) {
+		if (!stripe.value.persons) {
+			return null;
+		}
+
+		const match = PERSON_REQUIREMENT_FIELD.exec(field);
+		if (!match) {
+			return null;
+		}
+
+		return stripe.value.persons[match[1]] || null;
+	}
+
+	return {
+		user,
+		account,
+		stripe,
+		stripeMeta,
+
+		requiresField,
+		getStripeField,
+	};
+}
+
+class Wrapper extends BaseForm<ManagedAccountFormModel> {}
+
+@Options({
+	components: {
+		AppLoading,
+		AppExpand,
+		AppFinancialsManagedAccountPerson,
+		AppFinancialsManagedAccountCompanyDetails,
+	},
+})
+export default class FormFinancialsManagedAccount extends mixins(Wrapper) implements FormOnSubmit {
+	scriptLoaded = false;
+	isDataLoaded = false;
+
+	controller = shallowSetup(() => {
+		const c = createFormManagedAccount();
+		provide(Key, c);
+		return c;
+	});
+
+	get account() {
+		return this.controller.account.value;
+	}
+
+	get stripe() {
+		return this.controller.stripe.value;
+	}
+
+	get stripeMeta() {
+		return this.controller.stripeMeta.value;
+	}
+
+	stripePublishableKey = '';
+	// stripeMeta: StripeMeta = null as any;
+	additionalOwnerIndex = 0;
+	genericError = false;
+	currencies: any[] = [];
+
+	// user: User = null as any;
+	// account: UserStripeManagedAccount = null as any;
+	// stripe: PayloadStripeData = null as any;
+	stripeInst: stripe.Stripe = null as any;
+
+	readonly Geo = Geo;
+	readonly formatCurrency = formatCurrency;
+
+	declare $refs: {
+		individual: AppFinancialsManagedAccountPersonInterface;
+		representative: AppFinancialsManagedAccountPersonInterface;
+	};
+
+	created() {
+		this.form.resetOnSubmit = true;
+	}
+
+	async onInit() {
+		if (!this.scriptLoaded) {
+			await loadScript('https://js.stripe.com/v3/');
+			this.scriptLoaded = true;
+		}
+
+		const { user, account, stripe, stripeMeta } = this.controller;
+
+		this.isDataLoaded = false;
+		const payload = await Api.sendRequest('/web/dash/financials/account');
+
+		const stripePayload = payload.stripe as PayloadStripeData;
+		this.stripePublishableKey = stripePayload.publishableKey;
+		this.stripeInst = Stripe(stripePayload.publishableKey);
+
+		user.value = new User(payload.user);
+		account.value = new UserStripeManagedAccount(payload.account);
+		stripe.value = stripePayload;
+		stripeMeta.value = stripePayload.required;
+
+		this.isDataLoaded = true;
 	}
 
 	get representative() {
@@ -208,19 +269,6 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 		return null;
 	}
 
-	getPersonFromField(field: string) {
-		if (!this.stripe.persons) {
-			return null;
-		}
-
-		const match = PERSON_REQUIREMENT_FIELD.exec(field);
-		if (!match) {
-			return null;
-		}
-
-		return this.stripe.persons[match[1]] || null;
-	}
-
 	// This is only needed after the initial submission in some instances.
 	get requiresVerificationDocument() {
 		const personIds = ['individual'];
@@ -228,8 +276,8 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 
 		for (let personId of personIds) {
 			if (
-				this.requiresField(`${personId}.verification.document`) ||
-				this.requiresField(`${personId}.verification.additional_document`)
+				this.controller.requiresField(`${personId}.verification.document`) ||
+				this.controller.requiresField(`${personId}.verification.additional_document`)
 			) {
 				return true;
 			}
@@ -284,24 +332,26 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 		try {
 			const uploadPromises = [];
 			const documentUploadElements = [this.$refs.individual, this.$refs.representative];
-			for (let ref of documentUploadElements) {
+			for (const ref of documentUploadElements) {
 				if (!ref) {
 					continue;
 				}
 
-				const uploadPromise = ref
-					.uploadDocuments(this.stripePublishableKey)
-					.then(([idDocumentUploadId, additionalDocumentUploadId]) => {
+				const { uploadDocuments, namePrefix } = ref;
+
+				const uploadPromise = uploadDocuments(this.stripePublishableKey).then(
+					([idDocumentUploadId, additionalDocumentUploadId]) => {
 						if (idDocumentUploadId) {
-							data[`${ref.namePrefix}.verification.document.front`] =
+							data[`${namePrefix.value}.verification.document.front`] =
 								idDocumentUploadId;
 						}
 
 						if (additionalDocumentUploadId) {
-							data[`${ref.namePrefix}.verification.additional_document.front`] =
+							data[`${namePrefix.value}.verification.additional_document.front`] =
 								additionalDocumentUploadId;
 						}
-					});
+					}
+				);
 
 				uploadPromises.push(uploadPromise);
 			}
@@ -313,7 +363,7 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 			this.genericError = false;
 
 			id = await this.createPiiToken(data);
-		} catch (err) {
+		} catch (err: any) {
 			// Error from Stripe.
 			console.error(err);
 			this.genericError = err.message;
@@ -340,9 +390,9 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 
 <template>
 	<app-form :controller="form" class="form-dashboard-managed-account">
-		<app-loading v-if="!isLoaded" />
+		<app-loading v-if="!isDataLoaded" />
 
-		<div v-if="isLoaded">
+		<div v-if="isDataLoaded">
 			<!--
 				Account initialization.
 				We need this information first.
@@ -392,7 +442,7 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 							<translate>Please select your country...</translate>
 						</option>
 						<option
-							v-for="(country, code) of stripe.countries"
+							v-for="(_country, code) of stripe.countries"
 							:key="code"
 							:value="code"
 						>
@@ -427,6 +477,7 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 							This information is needed for tax purposes as well as account
 							verification. We use Stripe to store and verify this data.
 						</translate>
+						{{ ' ' }}
 						<app-link-help page="why-tax-forms" class="link-help">
 							<translate>Learn more</translate>
 						</app-link-help>
@@ -440,6 +491,7 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 								Stripe is in the process of verifying your details.
 							</translate>
 						</strong>
+						{{ ' ' }}
 						<translate>
 							This can take anywhere from a few minutes to a few days. We'll contact
 							you when the verification process is complete and if Stripe requires
@@ -457,6 +509,7 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 								your account.
 							</translate>
 						</strong>
+						{{ ' ' }}
 						<translate>Please enter them below.</translate>
 					</p>
 				</div>

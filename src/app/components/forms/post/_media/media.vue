@@ -3,7 +3,9 @@ import { Emit, mixins, Options, Prop } from 'vue-property-decorator';
 import draggable from 'vuedraggable';
 import { Api } from '../../../../../_common/api/api.service';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
-import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import AppFormControlUpload, {
+	AppFormControlUploadInterface,
+} from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
 	BaseForm,
 	FormOnSubmit,
@@ -58,8 +60,7 @@ export default class AppFormPostMedia
 	isDropActive = false;
 
 	declare $refs: {
-		// TODO(vue3): convert to a controller
-		upload: typeof AppFormControlUpload;
+		upload: AppFormControlUploadInterface;
 	};
 
 	@Emit('upload')
@@ -101,7 +102,7 @@ export default class AppFormPostMedia
 	}
 
 	showSelectMedia() {
-		this.$refs.upload.showFileSelect();
+		this.$refs.upload?.showFileSelect();
 	}
 
 	onDragOver(e: DragEvent) {
@@ -135,7 +136,7 @@ export default class AppFormPostMedia
 
 		e.preventDefault();
 		this.isDropActive = false;
-		this.$refs.upload.drop(e);
+		this.$refs.upload?.drop(e);
 	}
 
 	async onSubmit() {

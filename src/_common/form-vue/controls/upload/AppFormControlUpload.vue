@@ -11,7 +11,15 @@ import {
 } from '../../AppFormControl.vue';
 import { useFormGroup } from '../../AppFormGroup.vue';
 import { FormValidator, validateFileAccept } from '../../validators';
-import AppFormControlUploadFile from './AppFormControlUploadFile.vue';
+import AppFormControlUploadFile, {
+	AppFormControlUploadFileInterface,
+} from './AppFormControlUploadFile.vue';
+import AppJolticon from '../../../jolticon/AppJolticon.vue';
+
+export interface AppFormControlUploadInterface {
+	showFileSelect: () => void;
+	drop: (e: DragEvent) => Promise<void>;
+}
 
 const props = defineProps({
 	...defineFormControlProps(),
@@ -26,8 +34,6 @@ const props = defineProps({
 		type: String,
 		default: null,
 	},
-	// 	@Prop(Array) validateOn!: string[];
-	// 	@Prop(Number) validateDelay!: number;
 });
 
 const emit = defineEmits({
@@ -57,6 +63,7 @@ const { id, controlVal, applyValue } = createFormControl({
 	onChange: val => emit('changed', val),
 });
 
+const input = ref<AppFormControlUploadFileInterface>();
 const isDropActive = ref(false);
 
 /**
@@ -69,6 +76,8 @@ const files = computed(() => {
 
 	return Array.isArray(controlVal.value) ? controlVal.value : [controlVal.value];
 });
+
+const isEmpty = computed(() => files.value.length === 0);
 
 const progress = computed(() => {
 	const progressEvent = form.formModel._progress as ProgressEvent | null;
@@ -118,8 +127,7 @@ async function drop(e: DragEvent) {
 }
 
 function showFileSelect() {
-	// TODO(vue3)
-	// this.$refs.input.showFileSelect();
+	input.value?.showFileSelect();
 }
 
 // Normal file select.
@@ -241,6 +249,11 @@ async function getFiles(e: DragEvent) {
 	await Promise.all(promises);
 	return files;
 }
+
+defineExpose<AppFormControlUploadInterface>({
+	showFileSelect,
+	drop,
+});
 </script>
 
 <template>
@@ -253,7 +266,7 @@ async function getFiles(e: DragEvent) {
 		@dragleave="dragLeave"
 		@drop="drop"
 	>
-		<div v-show="!controlVal">
+		<div v-show="isEmpty">
 			<!--
 			If we have a label, then we show the upload "button" as a link instead.
 			We hide the button and use it to simulate a click on it.
@@ -276,7 +289,7 @@ async function getFiles(e: DragEvent) {
 			/>
 		</div>
 
-		<template v-if="!!controlVal">
+		<template v-if="!isEmpty">
 			<div v-if="progress === undefined" class="form-upload-control-files">
 				<p>
 					<strong><AppTranslate>Selected files:</AppTranslate></strong>
@@ -284,21 +297,21 @@ async function getFiles(e: DragEvent) {
 				<div class="list-group list-group-dark">
 					<div v-for="(file, i) of files" :key="i" class="list-group-item">
 						<a class="card-remove" @click="clearFile(file)">
-							<app-jolticon icon="remove" notice />
+							<AppJolticon icon="remove" notice />
 						</a>
 						{{ file.name }}
 					</div>
 				</div>
 			</div>
 			<template v-else>
-				<app-progress-bar :percent="progress * 100">
+				<AppProgressBar :percent="progress * 100">
 					<template v-if="progress < 0.99">
 						{{ formatNumber(progress, { style: 'percent' }) }}
 					</template>
 					<template v-else>
 						<AppTranslate>Processing...</AppTranslate>
 					</template>
-				</app-progress-bar>
+				</AppProgressBar>
 
 				<div v-if="progress >= 0.99" class="alert">
 					<p>

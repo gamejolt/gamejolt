@@ -12,6 +12,7 @@ import { useFormGroup } from '../../AppFormGroup.vue';
 import { AppFormAutosize as vAppFormAutosize } from '../../autosize.directive';
 import { AppFocusWhen as vAppFocusWhen } from '../../focus-when.directive';
 import AppFormControlMarkdownMediaItems from './AppFormControlMarkdownMediaItems.vue';
+import AppJolticon from '../../../jolticon/AppJolticon.vue';
 
 const props = defineProps({
 	...defineFormControlProps(),
@@ -63,21 +64,21 @@ function onChange(event: Event) {
 			<div class="form-control-markdown-helptext">
 				<span class="form-control-markdown-helplink">
 					<a :href="Environment.helpBaseUrl + '/markdown'" target="_blank">
-						<app-jolticon icon="markdown" class="hidden-xs" />
-						<app-jolticon icon="markdown" big class="hidden-sm hidden-md hidden-lg" />
+						<AppJolticon icon="markdown" class="hidden-xs" />
+						<AppJolticon icon="markdown" big class="hidden-sm hidden-md hidden-lg" />
 						<AppTranslate class="hidden-xs">Use Markdown to Edit</AppTranslate>
 					</a>
 				</span>
 				<span class="form-control-markdown-helplink">
 					<a :href="Environment.helpBaseUrl + '/widgets-' + markdownMode" target="_blank">
-						<app-jolticon icon="plug" class="hidden-xs" />
-						<app-jolticon icon="plug" big class="hidden-sm hidden-md hidden-lg" />
+						<AppJolticon icon="plug" class="hidden-xs" />
+						<AppJolticon icon="plug" big class="hidden-sm hidden-md hidden-lg" />
 						<AppTranslate class="hidden-xs">Available Widgets</AppTranslate>
 					</a>
 				</span>
 				<span class="form-control-markdown-helplink">
-					<app-jolticon icon="html5" class="hidden-xs" />
-					<app-jolticon icon="html5" big class="hidden-sm hidden-md hidden-lg" />
+					<AppJolticon icon="html5" class="hidden-xs" />
+					<AppJolticon icon="html5" big class="hidden-sm hidden-md hidden-lg" />
 					<AppTranslate class="hidden-xs">HTML Supported</AppTranslate>
 				</span>
 			</div>
