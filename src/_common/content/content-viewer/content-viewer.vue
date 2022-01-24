@@ -24,7 +24,7 @@ export default class AppContentViewer extends Vue {
 
 	// Gets provided down during [created].
 	controller!: ContentOwnerController;
-	doc?: ContentDocument;
+	doc: ContentDocument | null = null;
 
 	get viewerStyleClass() {
 		if (!this.doc) {
@@ -62,13 +62,13 @@ export default class AppContentViewer extends Vue {
 			const sourceDoc = ContentDocument.fromJson(this.source);
 			this.setContent(sourceDoc);
 		} else {
-			this.doc = undefined;
+			this.doc = null;
 		}
 	}
 
 	setContent(content: ContentDocument) {
 		this.doc = content;
-		this.controller.hydrator = new ContentHydrator(content.hydration);
+		this.controller.hydrator = new ContentHydrator(this.doc.hydration);
 	}
 
 	onClickCopy() {
