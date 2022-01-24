@@ -815,7 +815,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 							</h4>
 
 							<div class="-trophies">
-								<template v-if="previewTrophies">
+								<template v-if="previewTrophies.length">
 									<app-trophy-thumbnail
 										v-for="trophy of previewTrophies"
 										:key="trophy.key"

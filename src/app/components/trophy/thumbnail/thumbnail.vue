@@ -114,13 +114,13 @@ export default class AppTrophyThumbnail extends Vue {
 
 <template>
 	<div
+		v-app-tooltip="tooltip"
 		class="trophy-thumbnail"
 		:class="{
-			'trophy-thumbnail-achieved': this.trophy.is_achieved && !this.noHighlight,
+			'trophy-thumbnail-achieved': trophy.is_achieved && !noHighlight,
 		}"
-		v-app-tooltip="tooltip"
 	>
-		<div class="trophy-thumbnail-img" ref="thumb">
+		<div ref="thumb" class="trophy-thumbnail-img">
 			<div class="trophy-thumbnail-img-inner">
 				<app-img-responsive v-if="hasThumbnailImg" :src="imgSrc" />
 				<img
