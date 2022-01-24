@@ -1,5 +1,6 @@
 <script lang="ts">
 import { Player as ShakaPlayer, polyfill } from 'shaka-player';
+import { markRaw } from 'vue';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import AppVideo from '../video.vue';
 import { trackVideoPlayerEvent, VideoPlayerController } from './controller';
@@ -50,7 +51,7 @@ export default class AppVideoPlayerShaka extends Vue {
 
 	// Returns a boolean Promise, indicating success or failure of initialization.
 	async initShakaWithVideo(video: HTMLVideoElement) {
-		this.video = video;
+		this.video = markRaw(video);
 		polyfill.installAll();
 		if (!ShakaPlayer.isBrowserSupported()) {
 			trackVideoPlayerEvent(this.player, 'browser-unsupported');
@@ -58,7 +59,7 @@ export default class AppVideoPlayerShaka extends Vue {
 			return false;
 		}
 
-		this.shakaPlayer = new ShakaPlayer(this.video);
+		this.shakaPlayer = markRaw(new ShakaPlayer(this.video));
 
 		this.shakaPlayer.configure({
 			abr: {
