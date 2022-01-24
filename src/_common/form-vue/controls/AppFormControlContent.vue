@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType, toRef } from 'vue';
+import { FocusToken } from '../../../utils/focus-token';
 import { ContentContext } from '../../content/content-context';
 import AppContentEditor from '../../content/content-editor/content-editor.vue';
 import { ContentRules } from '../../content/content-editor/content-rules';
@@ -55,6 +56,10 @@ const props = defineProps({
 	focusEnd: {
 		type: Boolean,
 	},
+	focusToken: {
+		type: Object as PropType<FocusToken>,
+		default: undefined,
+	},
 });
 
 const emit = defineEmits({
@@ -77,11 +82,6 @@ const { id, controlVal, applyValue } = createFormControl({
 function onChange(value: string) {
 	applyValue(value);
 }
-
-// TODO(vue3)
-function focus() {
-	// this.$refs.editor.focus();
-}
 </script>
 
 <template>
@@ -90,7 +90,6 @@ function focus() {
 			Use fill-bg so that this control can be placed within any other fill
 			and it'll reset back to the BG background color/theming.
 		-->
-		<!-- v-validate="{ rules: validationRules }" -->
 		<AppContentEditor
 			:id="id"
 			ref="editor"

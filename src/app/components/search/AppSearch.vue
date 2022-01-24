@@ -4,18 +4,20 @@ import {
 	defineAsyncComponent,
 	inject,
 	InjectionKey,
-	nextTick,
 	onMounted,
 	provide,
+	Ref,
 	ref,
+	toRefs,
 	watch,
 } from 'vue';
 import { useRouter } from 'vue-router';
 import { arrayRemove } from '../../../utils/array';
+import { createFocusToken } from '../../../utils/focus-token';
 import AppPopper from '../../../_common/popper/popper.vue';
 import AppShortkey from '../../../_common/shortkey/shortkey.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import AppSearchInput, { createSearchInput } from './AppSearchInput.vue';
+import AppSearchInput from './AppSearchInput.vue';
 import { Search } from './search-service';
 
 const AppSearchAutocomplete = defineAsyncComponent(() => import('./autocomplete/autocomplete.vue'));
@@ -36,33 +38,28 @@ export function useSearchController() {
 	return inject(Key, null);
 }
 
-function createSearchController(p: typeof props) {
+function createSearchController({
+	autocompleteDisabled,
+	autofocus,
+}: {
+	autocompleteDisabled: Ref<boolean>;
+	autofocus: Ref<boolean>;
+}) {
 	const id = ref(++searchIterator);
 	const query = ref(Search.query);
 	const isFocused = ref(false);
 	const isShowingAutocomplete = ref(false);
 	const keydownSpies = ref([] as SearchKeydownSpy[]);
-	const searchInput = createSearchInput();
+	const focusToken = createFocusToken();
 
-	const shouldShowAutocomplete = computed(() => !p.autocompleteDisabled);
-
+	const shouldShowAutocomplete = computed(() => !autocompleteDisabled.value);
 	const isEmpty = computed(() => !query.value.trim());
 
 	onMounted(() => {
-		if (p.autofocus) {
-			focus();
+		if (autofocus.value) {
+			focusToken.focus();
 		}
 	});
-
-	async function focus() {
-		await nextTick();
-		searchInput.focus();
-	}
-
-	async function blur() {
-		await nextTick();
-		searchInput.blur();
-	}
 
 	watch(
 		() => Search.query,
@@ -86,12 +83,10 @@ function createSearchController(p: typeof props) {
 		id,
 		query,
 		isFocused,
+		focusToken,
 		isShowingAutocomplete,
 		keydownSpies,
-		searchInput,
 		shouldShowAutocomplete,
-		focus,
-		blur,
 		setKeydownSpy,
 		removeKeydownSpy,
 		isEmpty,
@@ -113,15 +108,13 @@ const props = defineProps({
 
 const {
 	id: inputId,
-	searchInput,
 	keydownSpies,
 	isFocused,
+	focusToken,
 	shouldShowAutocomplete,
 	isShowingAutocomplete,
 	query,
-	focus,
-	blur,
-} = createSearchController(props);
+} = createSearchController(toRefs(props));
 
 const router = useRouter();
 
@@ -141,13 +134,13 @@ function onKeydown(event: KeyboardEvent) {
 	// Normally the autocomplete will take control of the submission since they
 	// technically highlight what they want in autocomplete and go to it.
 	if (!shouldShowAutocomplete.value && event.keyCode === KEYCODE_ENTER) {
-		blur();
+		focusToken.blur();
 		router.push({ name: 'search.results', query: { q: query.value } });
 	}
 
 	// We want to blur the input on escape.
 	if (event.keyCode === KEYCODE_ESC) {
-		blur();
+		focusToken.blur();
 		event.stopPropagation();
 	}
 
@@ -173,7 +166,7 @@ function onBlur() {
 
 <template>
 	<div class="app-search">
-		<AppShortkey shortkey="s" @press="focus()" />
+		<AppShortkey shortkey="s" @press="focusToken.focus()" />
 
 		<!--
 			Put the action/method stuff so that crawlers can see how to submit the form.
@@ -202,7 +195,7 @@ function onBlur() {
 					<AppSearchInput
 						:id="`search-input-${inputId}`"
 						v-model="query"
-						:controller="searchInput"
+						:focus-token="focusToken"
 						@focus="onFocus"
 						@blur="onBlur"
 						@keydown="onKeydown"

@@ -1,43 +1,30 @@
-<script lang="ts">
-import { PropType, ref } from 'vue';
-
-export default { name: 'AppSearchInput' };
-
-export type SearchInputController = ReturnType<typeof createSearchInput>;
-
-export function createSearchInput() {
-	const _root = ref<HTMLInputElement>();
-
-	function focus() {
-		_root.value?.focus();
-	}
-
-	function blur() {
-		_root.value?.blur();
-	}
-
-	return {
-		_root,
-		focus,
-		blur,
-	};
-}
-</script>
-
 <script lang="ts" setup>
+import { nextTick, PropType, ref } from 'vue';
+import { FocusToken } from '../../../utils/focus-token';
+
 const props = defineProps({
 	modelValue: {
 		type: String,
 		required: true,
 	},
-	controller: {
-		type: Object as PropType<SearchInputController>,
-		default: () => createSearchInput(),
+	focusToken: {
+		type: Object as PropType<FocusToken>,
+		required: true,
 	},
 });
 
-// eslint-disable-next-line vue/no-setup-props-destructure
-const { _root: root } = props.controller;
+const root = ref<HTMLInputElement>();
+
+props.focusToken?.register({
+	focus: async () => {
+		await nextTick();
+		root.value?.focus();
+	},
+	blur: async () => {
+		await nextTick();
+		root.value?.blur();
+	},
+});
 
 const emit = defineEmits({
 	'update:modelValue': (_modelValue: string) => true,

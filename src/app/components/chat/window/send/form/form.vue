@@ -1,7 +1,9 @@
 <script lang="ts">
 import { nextTick } from 'vue';
 import { Emit, Inject, mixins, Options, Prop, Watch } from 'vue-property-decorator';
+import { createFocusToken } from '../../../../../../utils/focus-token';
 import { isMac } from '../../../../../../utils/utils';
+import { shallowSetup } from '../../../../../../utils/vue';
 import { ContentDocument } from '../../../../../../_common/content/content-document';
 import { ContentRules } from '../../../../../../_common/content/content-editor/content-rules';
 import {
@@ -51,15 +53,11 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 
 	isEditorFocused = false;
 	typing = false;
+	focusToken = shallowSetup(() => createFocusToken());
 
 	private nextMessageTimeout: NodeJS.Timer | null = null;
 	private escapeCallback?: EscapeStackCallback;
 	private typingTimeout!: NodeJS.Timer;
-
-	declare $refs: {
-		// TODO(vue3): ref typing
-		editor: typeof AppFormControlContent;
-	};
 
 	readonly validateContentMaxLength = validateContentMaxLength;
 
@@ -179,7 +177,7 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 			// Wait in case the editor loses focus
 			await nextTick();
 			// Regain focus on the editor
-			this.$refs.editor.focus();
+			this.focusToken.focus();
 
 			this.escapeCallback = () => this.cancelEditing();
 			EscapeStack.register(this.escapeCallback);
@@ -199,7 +197,7 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 		}
 
 		// Then focus it.
-		this.$refs.editor.focus();
+		this.focusToken.focus();
 	}
 
 	created() {
@@ -253,7 +251,7 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 		this.disableTypingTimeout();
 
 		// Refocus editor after submitting message with enter.
-		this.$refs.editor.focus();
+		this.focusToken.focus();
 
 		this.applyNextMessageTimeout();
 	}
@@ -309,7 +307,7 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 
 	onTabKeyPressed() {
 		if (!this.isEditorFocused) {
-			this.$refs.editor.focus();
+			this.focusToken.focus();
 		}
 	}
 
@@ -342,7 +340,7 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 		// Wait in case the editor loses focus
 		await nextTick();
 		// Regain focus on the editor
-		this.$refs.editor.focus();
+		this.focusToken.focus();
 	}
 
 	private async clearMsg() {
@@ -401,6 +399,7 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 					:compact="Screen.isXs"
 					:autofocus="!Screen.isMobile"
 					:model-id="editorModelId"
+					:focus-token="focusToken"
 					focus-end
 					@submit="onSubmit"
 					@insert-block-node="onEditorInsertBlockNode"

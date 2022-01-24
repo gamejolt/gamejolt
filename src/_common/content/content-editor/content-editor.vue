@@ -4,6 +4,7 @@ import ResizeObserver from 'resize-observer-polyfill';
 import { computed, nextTick, provide } from 'vue';
 import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { FocusToken } from '../../../utils/focus-token';
 import { AppObserveDimensions } from '../../observe-dimensions/observe-dimensions.directive';
 import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
 import { ContentContext } from '../content-context';
@@ -31,6 +32,10 @@ import AppContentEditorInsetControls from './controls/inset-controls.vue';
 import AppContentEditorControlsMentionAutocomplete from './controls/mention/autocomplete.vue';
 import AppContentEditorTextControls from './controls/text-controls.vue';
 import { FocusWatcher } from './focus-watcher';
+
+export interface AppContentEditorInterface {
+	focus: () => void;
+}
 
 @Options({
 	components: {
@@ -104,6 +109,9 @@ export default class AppContentEditor extends Vue {
 	@Prop({ type: Boolean })
 	focusEnd!: boolean;
 
+	@Prop({ type: Object, default: undefined })
+	focusToken?: FocusToken;
+
 	controller_ = setup(() => {
 		const props = this.$props as this;
 
@@ -121,12 +129,6 @@ export default class AppContentEditor extends Vue {
 
 	// Gets provided all the way down during [created].
 	ownerController!: ContentOwnerController;
-
-	// TODO(vue3)
-	// $_veeValidate = {
-	// 	value: () => this.value,
-	// 	name: () => 'app-content-editor',
-	// };
 
 	focusWatcher: FocusWatcher | null = null;
 	resizeObserver: ResizeObserver | null = null;
@@ -285,6 +287,11 @@ export default class AppContentEditor extends Vue {
 			emitSubmit: () => this.emitSubmit(),
 			emitInput: newSource => this.emitInput(newSource),
 		};
+
+		// Set us up to be able to be focused with any token passed in.
+		this.focusToken?.register({
+			focus: () => this.focus(),
+		});
 	}
 
 	async mounted() {

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, Ref, ref, watch } from 'vue';
-import { useResizeObserver } from '../../utils/hooks/useResizeObserver';
+import { useResizeObserver } from '../../utils/resize-observer';
 import { Ruler } from '../ruler/ruler-service';
 import { provideFormControlHooks } from './form-control-hooks';
 
