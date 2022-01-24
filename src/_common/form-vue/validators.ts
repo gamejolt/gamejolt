@@ -662,3 +662,16 @@ export const validateEmail = (): FormValidator<string> => async value => {
 
 	return null;
 };
+
+export const validateMatch =
+	(toMatch: unknown): FormValidator<string> =>
+	async value => {
+		if (value && toMatch !== value) {
+			return {
+				type: 'match',
+				message: `Does not match.`,
+			};
+		}
+
+		return null;
+	};

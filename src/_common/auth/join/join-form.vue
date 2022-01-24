@@ -91,7 +91,7 @@ export default class AppAuthJoinForm
 
 			<app-form class="auth-form" :controller="form">
 				<fieldset :disabled="Connection.isClientOffline">
-					<app-form-group name="email" :label="$gettext('Email')" :hide-label="true">
+					<app-form-group name="email" :label="$gettext('Email')" hide-label>
 						<app-form-control
 							type="email"
 							:disabled="blocked"
@@ -107,11 +107,7 @@ export default class AppAuthJoinForm
 						<app-form-control-errors />
 					</app-form-group>
 
-					<app-form-group
-						name="username"
-						:label="$gettext('Username')"
-						:hide-label="true"
-					>
+					<app-form-group name="username" :label="$gettext('Username')" hide-label>
 						<app-form-control
 							type="text"
 							:disabled="blocked"
@@ -130,11 +126,7 @@ export default class AppAuthJoinForm
 						<app-form-control-errors />
 					</app-form-group>
 
-					<app-form-group
-						name="password"
-						:label="$gettext('Password')"
-						:hide-label="true"
-					>
+					<app-form-group name="password" :label="$gettext('Password')" hide-label>
 						<app-form-control
 							type="password"
 							:disabled="blocked"
@@ -160,9 +152,12 @@ export default class AppAuthJoinForm
 
 			<div class="-terms">
 				By signing up, you agree to the
-				<a :href="Environment.baseUrl + '/terms'">Terms of Use</a> and
-				<a :href="Environment.baseUrl + '/privacy'">Privacy Policy</a>, including the
-				<a :href="Environment.baseUrl + '/cookies'">Cookie Policy</a>.
+				<a :href="Environment.baseUrl + '/terms'">Terms of Use</a>
+				and
+				<a :href="Environment.baseUrl + '/privacy'">Privacy Policy</a>
+				, including the
+				<a :href="Environment.baseUrl + '/cookies'">Cookie Policy</a>
+				.
 			</div>
 		</div>
 	</div>

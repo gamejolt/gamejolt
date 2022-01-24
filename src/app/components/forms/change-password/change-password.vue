@@ -2,6 +2,7 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { BaseForm, FormOnSubmit } from '../../../../_common/form-vue/form.service';
+import { validateMatch } from '../../../../_common/form-vue/validators';
 
 type FormModel = {
 	old_password: string;
@@ -15,6 +16,8 @@ class Wrapper extends BaseForm<FormModel> {}
 export default class FormChangePassword extends mixins(Wrapper) implements FormOnSubmit {
 	@Prop({ type: Boolean, default: true })
 	requiresOld!: boolean;
+
+	readonly validateMatch = validateMatch;
 
 	created() {
 		this.form.warnOnDiscard = false;
@@ -71,19 +74,19 @@ export default class FormChangePassword extends mixins(Wrapper) implements FormO
 			name="confirm_password"
 			:label="$gettext(`dash.change_pass.confirm_password_label`)"
 		>
-			<!-- TODO(vue3): confirmed -->
 			<app-form-control
 				type="password"
-				:validators="[validateMinLength(4), validateMaxLength(300)]"
-				:rules="{
-					confirmed: 'password',
-				}"
+				:validators="[
+					validateMinLength(4),
+					validateMaxLength(300),
+					validateMatch(formModel.password),
+				]"
 				validate-on-blur
 			/>
 
 			<app-form-control-errors label="new password">
 				<app-form-control-error
-					when="confirmed"
+					when="match"
 					:message="$gettext(`dash.change_pass.no_match_error`)"
 				/>
 			</app-form-control-errors>
