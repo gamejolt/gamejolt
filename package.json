@@ -9,6 +9,7 @@
 		"analyze-bundle": "gulp --analyze-bundle",
 		"lint": "eslint --ext .js,.vue src",
 		"dev": "vite",
+		"devd": "cross-env GJ_ENVIRONMENT=development yarn run dev",
 		"build": "vite build",
 		"app:build": "gulp --production --app",
 		"client:dev": "cross-env GJ_PLATFORM=desktop yarn run dev",
