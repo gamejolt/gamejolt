@@ -205,6 +205,12 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 		this.setField('content', '');
 	}
 
+	unmounted() {
+		if (this.typingTimeout) {
+			clearTimeout(this.typingTimeout);
+		}
+	}
+
 	async submitMessage() {
 		let doc;
 
