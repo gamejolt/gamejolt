@@ -630,7 +630,7 @@ export default class FormGamePackage
 							>
 								<app-form-control-date
 									:timezone-offset="saleTimezoneOffset"
-									:validators="[validateMinDate(now)]"
+									:min-date="now"
 								/>
 								<app-form-control-errors :label="$gettext(`start time`)" />
 							</app-form-group>
@@ -639,7 +639,7 @@ export default class FormGamePackage
 						<app-form-group name="sale_end" :label="$gettext(`End`)">
 							<app-form-control-date
 								:timezone-offset="saleTimezoneOffset"
-								:validators="[validateMinDate(formModel.sale_start)]"
+								:min-date="formModel.sale_start"
 							/>
 							<app-form-control-errors :label="$gettext(`end time`)" />
 						</app-form-group>

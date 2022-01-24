@@ -9,7 +9,6 @@ import AppFormLegend from '../../../../../../_common/form-vue/AppFormLegend.vue'
 import AppFormControlDate from '../../../../../../_common/form-vue/controls/AppFormControlDate.vue';
 import { FormTimezoneService } from '../../../../../../_common/form-vue/form-timezone.service';
 import { BaseForm } from '../../../../../../_common/form-vue/form.service';
-import { validateMaxDate, validateMinDate } from '../../../../../../_common/form-vue/validators';
 import AppLoading from '../../../../../../_common/loading/loading.vue';
 import AppCommunityCompetitionDate from '../../../../community/competition/date/date.vue';
 
@@ -28,15 +27,6 @@ export default class FormCommunityCompetitionEdit extends mixins(Wrapper) {
 	timezoneService: FormTimezoneService<CommunityCompetition> | null = null;
 
 	readonly formatDate = formatDate;
-
-	get endsOnControlValidators() {
-		const validators = [validateMinDate(this.formModel.starts_on)];
-		if (this.formModel.is_voting_enabled) {
-			validators.push(validateMaxDate(this.formModel.voting_ends_on));
-		}
-
-		return validators;
-	}
 
 	get shouldShowSaveButton() {
 		// Before and during the competition, start/end dates can be edited.
@@ -100,9 +90,7 @@ export default class FormCommunityCompetitionEdit extends mixins(Wrapper) {
 				<template v-else>
 					<app-form-group name="timezone" :label="$gettext(`Selected Timezone`)">
 						<p class="help-block">
-							<translate>
-								All time selection below are using this timezone.
-							</translate>
+							<translate>All time selection below are using this timezone.</translate>
 						</p>
 						{{ timezoneService.activeTimezoneName }}
 					</app-form-group>
@@ -119,10 +107,8 @@ export default class FormCommunityCompetitionEdit extends mixins(Wrapper) {
 
 						<app-form-control-date
 							:timezone-offset="timezoneService.activeTimezoneOffset"
-							:validators="[
-								validateMinDate(timezoneService.now),
-								validateMaxDate(formModel.ends_on),
-							]"
+							:min-date="timezoneService.now"
+							:max-date="formModel.ends_on"
 						/>
 						<app-form-control-errors />
 					</template>
@@ -150,7 +136,10 @@ export default class FormCommunityCompetitionEdit extends mixins(Wrapper) {
 
 						<app-form-control-date
 							:timezone-offset="timezoneService.activeTimezoneOffset"
-							:validators="endsOnControlValidators"
+							:min-date="formModel.starts_on"
+							:max-date="
+								formModel.is_voting_enabled ? formModel.voting_ends_on : undefined
+							"
 						/>
 						<app-form-control-errors />
 					</template>

@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import { computed, toRef } from 'vue';
+import { computed } from 'vue';
 import AppDatetimePicker from '../../datetime-picker/AppDatetimePicker.vue';
 import {
 	createFormControl,
 	defineFormControlEmits,
 	defineFormControlProps,
 } from '../AppFormControl.vue';
-import { useFormGroup } from '../AppFormGroup.vue';
+import { validateMaxDate, validateMinDate } from '../validators';
 
 const props = defineProps({
 	...defineFormControlProps(),
@@ -14,31 +14,37 @@ const props = defineProps({
 		type: Number,
 		required: true,
 	},
+	minDate: {
+		type: Number,
+		default: undefined,
+	},
+	maxDate: {
+		type: Number,
+		default: undefined,
+	},
 });
 
 const emit = defineEmits({
 	...defineFormControlEmits(),
 });
 
-const { name } = useFormGroup()!;
-
 const { id, controlVal, applyValue } = createFormControl({
 	initialValue: Date.now(),
-	validators: toRef(props, 'validators'),
+	validators: computed(() => {
+		const validators = [...props.validators];
+
+		if (props.minDate) {
+			validators.push(validateMinDate(props.minDate));
+		}
+
+		if (props.maxDate) {
+			validators.push(validateMaxDate(props.maxDate));
+		}
+
+		return validators;
+	}),
 	// eslint-disable-next-line vue/require-explicit-emits
 	onChange: val => emit('changed', val),
-});
-
-const minDate = computed(() => {
-	return undefined;
-	// TODO(vue3)
-	// return this.validationRules.min_date;
-});
-
-const maxDate = computed(() => {
-	return undefined;
-	// TODO(vue3)
-	// return this.validationRules.max_date;
 });
 
 function onChange(value: number) {
@@ -56,8 +62,5 @@ function onChange(value: number) {
 			:max-date="maxDate"
 			@change="onChange"
 		/>
-
-		<!-- v-validate="{ rules: validationRules }" -->
-		<input v-model="controlVal" class="hidden" type="number" :name="name" />
 	</div>
 </template>

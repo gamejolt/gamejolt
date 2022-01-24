@@ -416,9 +416,10 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 											class="tag tag-notice"
 										>
 											<app-jolticon icon="calendar-grid" />
+											{{ ' ' }}
 											<translate>Scheduled</translate>
 										</span>
-
+										{{ ' ' }}
 										<app-time-ago
 											:date="release.scheduled_for"
 											without-suffix

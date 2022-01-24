@@ -427,7 +427,7 @@ export default class FormGameRelease
 				<app-form-group name="scheduled_for" :label="$gettext(`Date and time`)">
 					<app-form-control-date
 						:timezone-offset="scheduledTimezoneOffset"
-						:validators="[validateMinDate(now)]"
+						:min-date="now"
 					/>
 					<app-form-control-errors :label="$gettext(`scheduled for`)" />
 				</app-form-group>

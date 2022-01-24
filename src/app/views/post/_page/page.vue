@@ -292,7 +292,7 @@ export default class AppPostPage extends Vue {
 									<strong>{{ displayUser.display_name }}</strong>
 									<app-user-verified-tick :user="displayUser" />
 								</span>
-								<span class="tiny text-muted"> @{{ displayUser.username }} </span>
+								<span class="tiny text-muted">@{{ displayUser.username }}</span>
 							</router-link>
 
 							<div class="-controls">
@@ -330,8 +330,10 @@ export default class AppPostPage extends Vue {
 						<template v-else-if="post.isScheduled">
 							<span class="tag" style="vertical-align: middle">
 								<app-jolticon icon="calendar-grid" />
+								{{ ' ' }}
 								<translate>Scheduled</translate>
 							</span>
+							{{ ' ' }}
 							<app-time-ago :date="post.scheduled_for" strict without-suffix />
 						</template>
 						<span v-else-if="post.isDraft" class="tag" style="vertical-align: middle">

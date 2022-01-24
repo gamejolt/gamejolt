@@ -132,7 +132,7 @@ export default class FormCommunityCompetitionVotingEdit extends mixins(Wrapper) 
 
 					<app-form-control-date
 						:timezone-offset="timezoneService.activeTimezoneOffset"
-						:validators="[validateMinDate(formModel.ends_on)]"
+						:min-date="formModel.ends_on"
 					/>
 					<app-form-control-errors />
 				</app-form-group>
