@@ -1,4 +1,3 @@
-import '../utils/polyfills';
 import { bootstrapCommon } from '../_common/bootstrap';
 import { GamePlayModal } from '../_common/game/play-modal/play-modal.service';
 import { Registry } from '../_common/registry/registry.service';
