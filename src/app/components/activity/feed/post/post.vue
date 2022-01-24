@@ -85,7 +85,7 @@ export default class AppActivityFeedPost extends Vue {
 	@Inject({ from: ActivityFeedInterfaceKey })
 	feedInterface!: ActivityFeedInterface;
 
-	stickerTargetController?: StickerTargetController;
+	stickerTargetController: StickerTargetController | null = null;
 
 	get app() {
 		return this.commonStore;

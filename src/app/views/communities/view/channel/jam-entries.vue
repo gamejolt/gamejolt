@@ -163,7 +163,7 @@ export default class RouteCommunitiesViewChannelJamEntries extends BaseRouteComp
 	page = 1;
 	sort = 'random';
 	category: string | null = null;
-	ignoreAwards?: boolean = undefined;
+	ignoreAwards: boolean | null = null;
 	hashWatchDeregister?: CommunityCompetitionEntryModalHashDeregister;
 
 	get competition() {
@@ -263,7 +263,7 @@ export default class RouteCommunitiesViewChannelJamEntries extends BaseRouteComp
 
 		if (this.category) {
 			this.sort = 'best';
-			this.ignoreAwards = undefined;
+			this.ignoreAwards = null;
 		} else {
 			const sort = getValidSortQueryParam(this.$route);
 			if (sort) {
@@ -277,7 +277,7 @@ export default class RouteCommunitiesViewChannelJamEntries extends BaseRouteComp
 			}
 
 			const ignoreAwards = getValidIgnoreAwardsQueryParam(this.$route);
-			this.ignoreAwards = ignoreAwards || undefined;
+			this.ignoreAwards = ignoreAwards || null;
 		}
 	}
 
