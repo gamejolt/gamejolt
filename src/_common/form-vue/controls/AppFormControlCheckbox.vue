@@ -8,7 +8,7 @@ import {
 } from '../AppFormControl.vue';
 import { useFormGroup } from '../AppFormGroup.vue';
 
-// TODO(vue3): better typing
+// TODO: better typing
 const props = defineProps({
 	...defineFormControlProps(),
 	/**

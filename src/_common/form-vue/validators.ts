@@ -253,8 +253,7 @@ export const validateMinLength =
 	async value => {
 		if (value && value.length < length) {
 			return {
-				// TODO(vue3): change this naming?
-				type: 'min',
+				type: 'min_length',
 				message: `Please enter a {} longer than or equal to ${formatNumber(
 					length
 				)} characters.`,
@@ -272,8 +271,7 @@ export const validateMaxLength =
 	async value => {
 		if (value && value.length > length) {
 			return {
-				// TODO(vue3): change this naming?
-				type: 'max',
+				type: 'max_length',
 				message: `Please enter a {} shorter than or equal to ${formatNumber(
 					length
 				)} characters.`,

@@ -1,6 +1,5 @@
 import { Directive, VNode } from '@vue/runtime-core';
 import { DirectiveBinding } from 'vue';
-import { uuidv4 } from '../../utils/uuid';
 import { $gettextInterpolate, getTranslation, getTranslationLang } from './translate.service';
 
 // TODO(vue3): I think we should get rid of this since there's no way the
@@ -8,9 +7,12 @@ import { $gettextInterpolate, getTranslation, getTranslationLang } from './trans
 
 export const TranslateDirective: Directive<HTMLElement, Record<string, string | number>> = {
 	beforeMount(el, binding, vnode) {
-		// TODO(vue3): do we still need this with the better diffing?
+		// Make sure that vue knows not to reuse this node when v-ifing or
+		// anything, since we store the inner HTML into the msgid property and
+		// don't watch that for changes. We always use the initial value that
+		// was set.
 		if (!vnode.key) {
-			vnode.key = uuidv4();
+			vnode.key = Symbol();
 		}
 
 		// We use the raw HTML and don't trim so that it can be picked up as-is

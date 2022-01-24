@@ -2,12 +2,6 @@ import { Ruler } from '../ruler/ruler-service';
 import { Screen } from '../screen/screen-service';
 import { AppAutoscrollAnchor } from './auto-scroll/anchor';
 
-// TODO(vue3)
-// // Polyfill smooth scrolling.
-// if (!import.meta.env.SSR) {
-// 	require('smoothscroll-polyfill').polyfill();
-// }
-
 export type ScrollContext = HTMLElement | HTMLDocument;
 
 interface ScrollToOptions {

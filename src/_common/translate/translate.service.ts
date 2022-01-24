@@ -294,7 +294,7 @@ export function getTranslation(msgid: string, n = 1, defaultPlural: string | nul
 
 	let translated = _currentTranslations.value[msgid];
 
-	// TODO(vue3): there has to be a more efficient way than this.
+	// TODO: there has to be a more efficient way than this.
 	if (!translated && /\s{2,}/g.test(msgid)) {
 		Object.keys(_currentTranslations.value).some(key => {
 			if (key.replace(/\s{2,}/g, ' ') === msgid.trim().replace(/\s{2,}/g, ' ')) {
