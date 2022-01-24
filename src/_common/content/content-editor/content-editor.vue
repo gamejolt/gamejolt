@@ -121,7 +121,6 @@ export default class AppContentEditor extends Vue {
 				contentContext: props.contentContext,
 				disabled: computed(() => props.disabled),
 				singleLineMode: computed(() => props.singleLineMode),
-				focusEnd: computed(() => props.focusEnd),
 			});
 		provide(ContentEditorControllerKey, c);
 		return c;
@@ -302,10 +301,12 @@ export default class AppContentEditor extends Vue {
 		// doc ref available.
 		await nextTick();
 
+		// Since we're mounting for the first time, set us not to scroll after
+		// setting up the content.
 		if (this.value) {
-			await this.setContent(ContentDocument.fromJson(this.value));
+			await this.setContent(ContentDocument.fromJson(this.value), false);
 		} else {
-			await this.reset();
+			await this.reset(false);
 		}
 
 		++this.controller_.stateCounter;
@@ -323,10 +324,10 @@ export default class AppContentEditor extends Vue {
 		this.resizeObserver?.disconnect();
 	}
 
-	private async reset() {
+	private async reset(shouldFocus = this.focusEnd) {
 		this.tempModelId_ = null;
 		const doc = new ContentDocument(this.controller_.contentContext);
-		await this.setContent(doc);
+		await this.setContent(doc, shouldFocus);
 		this.controller_.isEmpty = true;
 	}
 
@@ -341,8 +342,10 @@ export default class AppContentEditor extends Vue {
 		return null;
 	}
 
-	async setContent(doc: ContentDocument) {
-		await editorCreateView(this.controller_, this.$refs.doc, doc);
+	async setContent(doc: ContentDocument, shouldFocus = this.focusEnd) {
+		await editorCreateView(this.controller_, this.$refs.doc, doc, {
+			shouldFocus,
+		});
 	}
 
 	onDimensionsChange() {

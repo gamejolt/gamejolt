@@ -41,12 +41,10 @@ export function createContentEditor({
 	contentContext,
 	singleLineMode,
 	disabled,
-	focusEnd,
 }: {
 	contentContext: ContentContext;
 	singleLineMode?: MaybeRef<boolean>;
 	disabled?: MaybeRef<boolean>;
-	focusEnd?: MaybeRef<boolean>;
 }): ContentEditorController {
 	const c = reactive(new ContentEditorController(contentContext)) as ContentEditorController;
 
@@ -65,12 +63,6 @@ export function createContentEditor({
 	watch(
 		() => unref(disabled),
 		newVal => (c.disabled = newVal ?? false),
-		{ immediate: true }
-	);
-
-	watch(
-		() => unref(focusEnd),
-		newVal => (c.focusEnd = newVal ?? false),
 		{ immediate: true }
 	);
 
@@ -110,7 +102,6 @@ export class ContentEditorController {
 
 	disabled = false;
 	singleLineMode = false;
-	focusEnd = false;
 
 	stateCounter = 0;
 	isFocused = false;
@@ -307,7 +298,8 @@ class ContentEditorScopeCapabilities {
 export async function editorCreateView(
 	c: ContentEditorController,
 	viewElement: HTMLElement,
-	doc: ContentDocument
+	doc: ContentDocument,
+	{ shouldFocus }: { shouldFocus?: boolean } = {}
 ) {
 	if (doc.context !== c.contentContext) {
 		throw new Error(
@@ -354,7 +346,7 @@ export async function editorCreateView(
 		}
 	}
 
-	if (c.focusEnd) {
+	if (shouldFocus) {
 		// Wait here so images and other content can render in and scale
 		// properly. Otherwise the scroll at the end of the transaction
 		// below would not cover the entire doc.
@@ -366,6 +358,7 @@ export async function editorCreateView(
 		tr.setSelection(selection);
 		tr.scrollIntoView();
 		view.dispatch(tr);
+		view.focus();
 	}
 
 	++c.stateCounter;
