@@ -105,7 +105,7 @@ export function createForm<T>({
 	const _validationToken = ref(new CancelToken()) as Ref<CancelToken>;
 
 	const valid = computed(
-		() => _groups.value.every(i => i.valid) && customErrors.value.length === 0
+		() => _groups.value.every(i => i.valid.value) && customErrors.value.length === 0
 	);
 	const invalid = computed(() => !valid.value);
 

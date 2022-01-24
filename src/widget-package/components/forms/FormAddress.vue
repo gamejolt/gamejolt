@@ -44,9 +44,9 @@ function countryChanged() {
 }
 
 const formError = computed(() => {
-	for (const group of form._groups) {
-		if (group.error) {
-			return group.error.message.replace(/\{\}/g, group.humanLabel.toLocaleLowerCase());
+	for (const { error, humanLabel } of form._groups) {
+		if (error.value) {
+			return error.value.message.replace(/\{\}/g, humanLabel.value.toLocaleLowerCase());
 		}
 	}
 	return undefined;

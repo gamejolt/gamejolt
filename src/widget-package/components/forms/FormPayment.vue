@@ -37,19 +37,19 @@ const minAmount = computed(() =>
 );
 
 const formError = computed(() => {
-	for (const group of form._groups) {
-		if (group.error) {
-			if (group.name === 'email') {
+	for (const { error, name } of form._groups) {
+		if (error.value) {
+			if (name.value === 'email') {
 				return `Please enter a valid email address.`;
 			}
-			if (group.name === 'amount') {
-				switch (group.error.type) {
+			if (name.value === 'amount') {
+				switch (error.value.type) {
 					case 'required':
 						return `Please enter an amount.`;
 					case 'min_value':
 						return `The amount you entered is too low.`;
 					default:
-						return `${group.error.type} Please enter a correct amount.`;
+						return `${error.value.type} Please enter a correct amount.`;
 				}
 			}
 		}
