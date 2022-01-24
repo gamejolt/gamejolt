@@ -160,7 +160,9 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 		<div class="col-sm-8 col-sm-pull-4">
 			<div v-if="game._is_devlog" class="alert">
 				<app-jolticon icon="notice" notice />
+				{{ ' ' }}
 				<b><translate>Public packages do not show on devlog-only game pages.</translate></b>
+				{{ ' ' }}
 				<translate>
 					You are only able to create private packages for testers while your game page is
 					only a devlog. Once you publish your game page into early access or as a
@@ -303,6 +305,7 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 										<translate>Manage</translate>
 									</app-button>
 								</app-game-perms>
+								{{ ' ' }}
 								<app-button
 									trans
 									:to="{
@@ -312,6 +315,7 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 								>
 									<translate>Widget</translate>
 								</app-button>
+								{{ ' ' }}
 								<app-game-perms required="analytics">
 									<app-button
 										trans

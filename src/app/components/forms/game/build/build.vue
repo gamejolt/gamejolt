@@ -1,7 +1,8 @@
 <script lang="ts">
+import { computed, Ref } from 'vue';
 import { Emit, mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../utils/array';
-import { findRequiredVueParent } from '../../../../../utils/vue';
+import { shallowSetup } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
 import AppCardListItem from '../../../../../_common/card/list/AppCardListItem.vue';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
@@ -20,9 +21,14 @@ import AppLoading from '../../../../../_common/loading/loading.vue';
 import AppProgressBar from '../../../../../_common/progress/bar/bar.vue';
 import { AppProgressPoller } from '../../../../../_common/progress/poller/poller';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import FormGameReleaseTS from '../release/release';
-import FormGameRelease from '../release/release.vue';
+import { useFormGameRelease } from '../release/release.vue';
 import { ArchiveFileSelectorModal } from './archive-file-selector-modal.service';
+
+export interface FormGameBuildInterface {
+	buildId: number;
+	isDeprecated: Ref<boolean>;
+	save: () => Promise<boolean>;
+}
 
 type GameBuildFormModel = GameBuild & {
 	launch_windows: string;
@@ -72,7 +78,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 	@Prop(Array)
 	builds!: GameBuild[];
 
-	private releaseForm!: FormGameReleaseTS;
+	releaseForm = shallowSetup(() => useFormGameRelease()!);
 
 	maxFilesize = 0;
 	restrictedPlatforms: string[] = [];
@@ -147,10 +153,10 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 	}
 
 	get isDeprecated() {
-		return (
+		return Boolean(
 			this.model &&
-			(this.model.type === GameBuild.TYPE_APPLET ||
-				this.model.type === GameBuild.TYPE_SILVERLIGHT)
+				(this.model.type === GameBuild.TYPE_APPLET ||
+					this.model.type === GameBuild.TYPE_SILVERLIGHT)
 		);
 	}
 
@@ -245,13 +251,15 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 
 	created() {
 		this.form.reloadOnSubmit = true;
-
-		this.releaseForm = findRequiredVueParent(this, FormGameRelease) as FormGameReleaseTS;
-		this.releaseForm.buildForms.push(this);
+		this.releaseForm.buildForms.value.push({
+			buildId: this.model!.id,
+			isDeprecated: computed(() => this.isDeprecated),
+			save: () => this.save(),
+		});
 	}
 
 	beforeUnmount() {
-		arrayRemove(this.releaseForm.buildForms, buildForm => buildForm === this);
+		arrayRemove(this.releaseForm.buildForms.value, i => i.buildId === this.model!.id);
 	}
 
 	onInit() {
@@ -449,7 +457,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 </script>
 
 <template>
-	<app-card-list-item class="game-build-form" :force-active="true">
+	<app-card-list-item class="game-build-form" force-active :item="model">
 		<a class="card-remove" @click="remove()">
 			<app-jolticon icon="remove" />
 		</a>
@@ -914,4 +922,74 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 	</app-card-list-item>
 </template>
 
-<style lang="stylus" src="./build.styl" scoped></style>
+<style lang="stylus" scoped>
+
+.game-build-form
+	form
+		display: block
+		position: relative
+		font-size: $font-size-small
+		margin-top: 0 !important
+
+	legend
+		font-size: $font-size-h4
+
+	&-spinner
+		position: absolute
+		top: 0
+		right: 0
+		bottom: 0
+		left: 0
+		content: ''
+		background-color: rgba($white, 0.5)
+		z-index: 2
+		display: flex
+		align-items: center
+		justify-content: center
+		animation-name: fade-in
+		animation-duration: 500ms
+		animation-delay: 200ms
+		opacity: 0
+
+	.build-options
+		float: right
+		margin-left: 20px
+
+	.stat-big.stat-big-smaller
+		margin-bottom: 0
+
+	::v-deep(.help-block)
+	.alert
+		margin-bottom: ($line-height-computed / 2)
+
+	::v-deep(.form-group)
+		margin-bottom: $line-height-computed
+
+	// Need to do this because the rule above overrides it.
+	.-archive-error
+		::v-deep(.sans-margin-bottom)
+			margin-bottom: 0
+
+	&-submit-button
+		margin-top: ($line-height-computed / 2)
+
+	::v-deep(.downloadable-platforms)
+		&.form-group
+		.form-group
+			margin-left: 0
+			margin-right: 0
+
+		.form-group
+			float: left
+			margin-bottom: 0
+			margin-right: 20px
+
+		.checkbox
+			margin-top: 0
+
+	.-rummaging
+		margin-bottom: 0
+
+	.card-meta .tag
+		margin-right: 4px
+</style>

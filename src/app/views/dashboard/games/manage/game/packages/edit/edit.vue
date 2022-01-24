@@ -404,6 +404,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 										class="tag"
 									>
 										<app-jolticon icon="inactive" />
+										{{ ' ' }}
 										<translate>Draft</translate>
 									</span>
 									<template v-else>
@@ -437,6 +438,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 									class="tag tag-highlight"
 								>
 									<app-jolticon icon="active" />
+									{{ ' ' }}
 									<translate>
 										dash.games.packages.manage.releases.published_tag
 									</translate>
@@ -477,7 +479,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 										<translate>Edit Release</translate>
 									</app-button>
 								</app-game-perms>
-
+								{{ ' ' }}
 								<app-game-perms required="analytics">
 									<app-button
 										trans

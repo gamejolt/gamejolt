@@ -1,8 +1,10 @@
 <script lang="ts">
 import { addWeeks, startOfDay } from 'date-fns';
 import { determine } from 'jstimezonedetect';
+import { inject, InjectionKey, provide, shallowRef } from 'vue';
 import { Emit, mixins, Options, Prop } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../utils/array';
+import { shallowSetup } from '../../../../../utils/vue';
 import AppCardList from '../../../../../_common/card/list/AppCardList.vue';
 import AppFormLegend from '../../../../../_common/form-vue/AppFormLegend.vue';
 import AppFormControlDate from '../../../../../_common/form-vue/controls/AppFormControlDate.vue';
@@ -21,13 +23,32 @@ import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Timezone, TimezoneData } from '../../../../../_common/timezone/timezone.service';
-import FormGameBuildTS from '../build/build';
-import FormGameBuild from '../build/build.vue';
+import FormGameBuild, { FormGameBuildInterface } from '../build/build.vue';
 import FormGameNewBuild from '../new-build/new-build.vue';
 
 type GameReleaseFormModel = GameRelease & {
 	should_publish: boolean;
 };
+
+type Controller = ReturnType<typeof createFormGameRelease>;
+const Key: InjectionKey<Controller> = Symbol('form-game-release');
+
+export function useFormGameRelease() {
+	return inject(Key, null);
+}
+
+function createFormGameRelease() {
+	const buildForms = shallowRef<FormGameBuildInterface[]>([]);
+
+	async function saveBuildForms() {
+		await Promise.all(buildForms.value.filter(i => i && !i.isDeprecated).map(i => i.save()));
+	}
+
+	return {
+		buildForms,
+		saveBuildForms,
+	};
+}
 
 class Wrapper extends BaseForm<GameReleaseFormModel> {}
 
@@ -67,7 +88,12 @@ export default class FormGameRelease
 	@Prop(Boolean)
 	areWebBuildsLockedBySellable!: boolean;
 
-	buildForms: FormGameBuildTS[] = [];
+	controller = shallowSetup(() => {
+		const c = createFormGameRelease();
+		provide(Key, c);
+		return c;
+	});
+
 	timezones: { [region: string]: (TimezoneData & { label?: string })[] } = null as any;
 	now = 0;
 
@@ -152,8 +178,6 @@ export default class FormGameRelease
 	}
 
 	onBuildEdited(build: GameBuild, response: any) {
-		console.log('Build edited:');
-		console.log(response);
 		this.updateBuildLaunchOptions(build, response.launchOptions);
 	}
 
@@ -176,8 +200,9 @@ export default class FormGameRelease
 	}
 
 	async save() {
-		// Save all the managed build forms before saving the release.
-		await Promise.all(this.buildForms.filter(i => !i.isDeprecated).map(i => i.save()));
+		// Save all the managed build forms before saving the release. Filter
+		// out invalid forms that may have been removed from the tree.
+		await this.controller.saveBuildForms();
 		this.form.submit();
 	}
 
