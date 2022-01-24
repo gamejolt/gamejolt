@@ -7,7 +7,7 @@ import type {
 	ILocalVideoTrack,
 	NetworkQuality,
 } from 'agora-rtc-sdk-ng';
-import { reactive } from 'vue';
+import { markRaw, reactive } from 'vue';
 import { importNoSSR } from '../../code-splitting';
 import { FiresideRTC } from './rtc';
 
@@ -76,7 +76,7 @@ export async function createFiresideRTCChannel(
 	c.token = token;
 
 	const AgoraRTC = await AgoraRTCLazy;
-	c.agoraClient = AgoraRTC.createClient({ mode: 'live', codec: 'h264' });
+	c.agoraClient = markRaw(AgoraRTC.createClient({ mode: 'live', codec: 'h264' }));
 
 	c.agoraClient.on('user-published', (...args) => {
 		generation.assert();
@@ -89,7 +89,7 @@ export async function createFiresideRTCChannel(
 	});
 
 	c.agoraClient.on('network-quality', stats => {
-		c._networkQuality = stats;
+		c._networkQuality = markRaw(stats);
 	});
 
 	return c;
@@ -156,7 +156,8 @@ export async function setChannelVideoTrack(
 	}
 
 	rtc.log(`Getting new video track.`);
-	channel._localVideoTrack = await trackBuilder();
+	const track = await trackBuilder();
+	channel._localVideoTrack = track ? markRaw(track) : null;
 	generation.assert();
 
 	// Only publish if we are streaming.
@@ -201,7 +202,8 @@ export async function setChannelAudioTrack(
 	}
 
 	rtc.log(`Getting new audio track.`);
-	channel._localAudioTrack = await trackBuilder();
+	const track = await trackBuilder();
+	channel._localAudioTrack = track ? markRaw(track) : null;
 	generation.assert();
 
 	// Only publish if we are streaming.

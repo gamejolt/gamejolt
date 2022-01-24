@@ -1,5 +1,5 @@
 import type { IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng';
-import { reactive, toRaw } from 'vue';
+import { markRaw, reactive, toRaw } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { CancelToken } from '../../../utils/cancel-token';
 import { debounce, sleep } from '../../../utils/utils';
@@ -338,7 +338,7 @@ async function _createChannels(rtc: FiresideRTC) {
 				return;
 			}
 
-			user.remoteVideoUser = remoteUser;
+			user.remoteVideoUser = markRaw(remoteUser);
 
 			if (mediaType === 'video') {
 				setUserHasVideo(user, true);
@@ -382,7 +382,7 @@ async function _createChannels(rtc: FiresideRTC) {
 				return;
 			}
 
-			user.remoteChatUser = remoteUser;
+			user.remoteChatUser = markRaw(remoteUser);
 			setUserHasMicAudio(user, true);
 
 			_finalizeSetup(rtc);

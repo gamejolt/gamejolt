@@ -1,5 +1,5 @@
 import type { IAgoraRTCRemoteUser, ILocalAudioTrack, IRemoteAudioTrack } from 'agora-rtc-sdk-ng';
-import { reactive } from 'vue';
+import { markRaw, reactive } from 'vue';
 import { MediaDeviceService } from '../../agora/media-device.service';
 import { Api } from '../../api/api.service';
 import { importNoSSR } from '../../code-splitting';
@@ -672,7 +672,7 @@ export function setVideoPreviewElement(
 		_videoPreviewElement.innerHTML = '';
 	}
 
-	producer._videoPreviewElement = element;
+	producer._videoPreviewElement = element ? markRaw(element) : null;
 	if (element) {
 		previewChannelVideo(videoChannel, element);
 	}
@@ -824,9 +824,15 @@ function _syncLocalUserToRTC(producer: FiresideRTCProducer) {
 	const hadMicAudio = user?.hasMicAudio === true;
 
 	user ??= createFiresideRTCUser(rtc, streamingUid);
-	user._videoTrack = videoChannel._localVideoTrack;
-	user._desktopAudioTrack = videoChannel._localAudioTrack;
-	user._micAudioTrack = chatChannel._localAudioTrack;
+	user._videoTrack = videoChannel._localVideoTrack
+		? markRaw(videoChannel._localVideoTrack)
+		: null;
+	user._desktopAudioTrack = videoChannel._localAudioTrack
+		? markRaw(videoChannel._localAudioTrack)
+		: null;
+	user._micAudioTrack = chatChannel._localAudioTrack
+		? markRaw(chatChannel._localAudioTrack)
+		: null;
 
 	const hasVideo = !!user._videoTrack;
 	const hasDesktopAudio = !!user._desktopAudioTrack;

@@ -1,4 +1,4 @@
-import { h, reactive } from 'vue';
+import { h } from 'vue';
 import { setup } from 'vue-class-component';
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { arrayUnique } from '../../../../utils/array';
@@ -32,10 +32,10 @@ import { useAppStore } from '../../../store';
 import { ChatStore, ChatStoreKey, clearChat, loadChat } from '../../chat/chat-store';
 import { joinInstancedRoomChannel, leaveChatRoom, setGuestChatToken } from '../../chat/client';
 import {
+	createFiresideChannel,
 	EVENT_STICKER_PLACEMENT,
 	EVENT_STREAMING_UID,
 	EVENT_UPDATE,
-	FiresideChannel,
 } from '../../grid/fireside-channel';
 import {
 	FiresideController,
@@ -268,10 +268,12 @@ export class AppFiresideContainer extends Vue {
 
 		// --- Join Grid channel.
 
-		const channel = reactive(
-			new FiresideChannel(c.fireside, this.grid.socket, this.user, authToken)
-		) as FiresideChannel;
-		channel.init();
+		const channel = createFiresideChannel({
+			fireside: c.fireside,
+			socket: this.grid.socket,
+			user: this.user,
+			authToken,
+		});
 
 		// Subscribe to the update event.
 		channel.socketChannel.on(EVENT_UPDATE, this.onGridUpdateFireside.bind(this));
