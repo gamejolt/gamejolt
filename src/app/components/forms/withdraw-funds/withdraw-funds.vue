@@ -46,7 +46,7 @@ export default class FormWithdrawFunds extends mixins(Wrapper) implements FormOn
 			:label="$gettext(`dash.funds.withdraw.email_label`)"
 		>
 			<p class="help-block above"><translate>dash.funds.withdraw.email_help</translate></p>
-			<app-form-control :type="email" />
+			<app-form-control type="email" />
 			<app-form-control-errors />
 		</app-form-group>
 
@@ -57,6 +57,7 @@ export default class FormWithdrawFunds extends mixins(Wrapper) implements FormOn
 				<translate>
 					You can link a different PayPal account in your payment setup.
 				</translate>
+				{{ ' ' }}
 				<router-link :to="{ name: 'dash.account.financials' }">
 					<translate>Go to your financials page.</translate>
 				</router-link>

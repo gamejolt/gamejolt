@@ -11,6 +11,7 @@ import {
 	reactive,
 	ref,
 	Ref,
+	shallowRef,
 	toRefs,
 } from 'vue';
 import { useRouter } from 'vue-router';
@@ -101,7 +102,7 @@ export function createForm<T>({
 	const serverErrors = ref<PayloadFormErrors>({});
 	const customErrors = ref<string[]>([]);
 	const _validationToken = ref(new CancelToken()) as Ref<CancelToken>;
-	const _groups = ref([]) as Ref<FormGroupController[]>;
+	const _groups = shallowRef<FormGroupController[]>([]);
 
 	const valid = computed(
 		() => _groups.value.every(i => i.valid.value) && customErrors.value.length === 0
