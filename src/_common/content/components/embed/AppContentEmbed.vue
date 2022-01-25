@@ -148,7 +148,7 @@ async function onKeydown(e: KeyboardEvent) {
 			class="-input"
 			type="text"
 			:value="source"
-			:disabled="loading || isDisabled"
+			:disabled="loading || isDisabled ? 'true' : undefined"
 			:placeholder="$gettext(`Paste a link to what you want to embed`)"
 			@input="onInput"
 			@keydown="onKeydown"

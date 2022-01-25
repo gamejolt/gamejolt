@@ -130,7 +130,7 @@ export default class AppPollVoting extends Vue {
 							v-model="chosenItemId"
 							type="radio"
 							:value="item.id"
-							:disabled="isProcessing"
+							:disabled="isProcessing ? 'true' : undefined"
 						/>
 						{{ item.text }}
 					</label>
@@ -169,7 +169,7 @@ export default class AppPollVoting extends Vue {
 				<span v-app-auth-required>
 					<app-button
 						:disabled="!chosenItemId || isProcessing"
-						@click="vote(chosenItemId)"
+						@click="vote(chosenItemId!)"
 					>
 						<translate>Vote</translate>
 					</app-button>

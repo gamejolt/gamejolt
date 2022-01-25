@@ -90,7 +90,7 @@ export default class AppAuthJoinForm
 			</div>
 
 			<app-form class="auth-form" :controller="form">
-				<fieldset :disabled="Connection.isClientOffline">
+				<fieldset :disabled="Connection.isClientOffline ? 'true' : undefined">
 					<app-form-group name="email" :label="$gettext('Email')" hide-label>
 						<app-form-control
 							type="email"

@@ -169,7 +169,7 @@ export default class AppAuthLoginForm
 	>
 		<div v-show="showForm" class="auth-form-container">
 			<app-form class="auth-form" :controller="form">
-				<fieldset :disabled="Connection.isClientOffline">
+				<fieldset :disabled="Connection.isClientOffline ? 'true' : undefined">
 					<app-form-group
 						name="username"
 						:label="$gettext('Username')"

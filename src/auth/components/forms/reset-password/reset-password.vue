@@ -35,7 +35,7 @@ export default class FormResetPassword extends mixins(Wrapper) implements FormOn
 
 <template>
 	<app-form :controller="form">
-		<fieldset :disabled="Connection.isClientOffline">
+		<fieldset :disabled="Connection.isClientOffline ? 'true' : undefined">
 			<app-form-group
 				name="password"
 				:label="$gettext('auth.reset_password.password_label')"

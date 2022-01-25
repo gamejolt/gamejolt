@@ -146,7 +146,7 @@ export default class FormEmailPreferences extends mixins(Wrapper) implements For
 		<br />
 
 		<app-loading-fade :is-loading="isTogglingEmails">
-			<fieldset :disabled="emailsDisabled">
+			<fieldset :disabled="emailsDisabled ? 'true' : undefined">
 				<legend>
 					<translate>Activity</translate>
 				</legend>
@@ -172,7 +172,7 @@ export default class FormEmailPreferences extends mixins(Wrapper) implements For
 				</app-form-group>
 			</fieldset>
 
-			<fieldset :disabled="emailsDisabled">
+			<fieldset :disabled="emailsDisabled ? 'true' : undefined">
 				<legend>
 					<translate>Updates from Game Jolt</translate>
 				</legend>

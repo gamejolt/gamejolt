@@ -509,7 +509,11 @@ export default class AppStreamSetup extends mixins(Wrapper) {
 						>
 							<option
 								:value="PRODUCER_UNSET_DEVICE"
-								:disabled="wouldInvalidateIfRemoved('selectedMicDeviceId')"
+								:disabled="
+									wouldInvalidateIfRemoved('selectedMicDeviceId')
+										? 'true'
+										: undefined
+								"
 							>
 								<translate>Not Set</translate>
 							</option>
@@ -521,7 +525,9 @@ export default class AppStreamSetup extends mixins(Wrapper) {
 								:disabled="
 									mic.groupId === selectedDesktopAudioGroupId
 										? !canSwapAudioInputs
-										: false
+											? 'true'
+											: undefined
+										: undefined
 								"
 							>
 								{{
@@ -641,7 +647,11 @@ export default class AppStreamSetup extends mixins(Wrapper) {
 						<app-form-control-select :disabled="producer.isBusy">
 							<option
 								:value="PRODUCER_UNSET_DEVICE"
-								:disabled="wouldInvalidateIfRemoved('selectedWebcamDeviceId')"
+								:disabled="
+									wouldInvalidateIfRemoved('selectedWebcamDeviceId')
+										? 'true'
+										: undefined
+								"
 							>
 								<translate>Not Set</translate>
 							</option>
@@ -723,6 +733,8 @@ export default class AppStreamSetup extends mixins(Wrapper) {
 									:value="PRODUCER_UNSET_DEVICE"
 									:disabled="
 										wouldInvalidateIfRemoved('selectedDesktopAudioDeviceId')
+											? 'true'
+											: undefined
 									"
 								>
 									<translate>Not Set</translate>
@@ -735,7 +747,9 @@ export default class AppStreamSetup extends mixins(Wrapper) {
 									:disabled="
 										mic.groupId === selectedMicGroupId
 											? !canSwapAudioInputs
-											: false
+												? 'true'
+												: undefined
+											: undefined
 									"
 								>
 									{{

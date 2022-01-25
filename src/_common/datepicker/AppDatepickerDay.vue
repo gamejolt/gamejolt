@@ -137,7 +137,7 @@ function select(date: Date) {
 							'datepicker-btn-info': dt.isSelected,
 							active: dt.isToday,
 						}"
-						:disabled="dt.isDisabled"
+						:disabled="dt.isDisabled ? 'true' : undefined"
 						@click="select(dt.date)"
 					>
 						<span

@@ -36,7 +36,7 @@ export default class FormRetrieveLogin extends mixins(Wrapper) implements FormOn
 
 <template>
 	<app-form :controller="form">
-		<fieldset :disabled="Connection.isClientOffline">
+		<fieldset :disabled="Connection.isClientOffline ? 'true' : undefined">
 			<app-form-group name="email" :label="$gettext('Email or Username')" hide-label>
 				<p class="help-block">
 					<translate>

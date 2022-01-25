@@ -47,7 +47,7 @@ export default class FormCommunityCompetitionEdit extends mixins(Wrapper) {
 				<translate>Date and Time</translate>
 			</app-form-legend>
 
-			<template v-if="timezoneService && timezoneService.loaded">
+			<template v-if="model && timezoneService && timezoneService.loaded">
 				<template v-if="!model.hasStarted">
 					<app-form-group name="timezone" :label="$gettext(`Select a Timezone`)">
 						<p class="help-block">
@@ -165,7 +165,7 @@ export default class FormCommunityCompetitionEdit extends mixins(Wrapper) {
 		<app-form-button
 			v-if="shouldShowSaveButton"
 			show-when-valid
-			:disabled="!timezoneService.loaded"
+			:disabled="!timezoneService || !timezoneService.loaded"
 		>
 			<translate>Save</translate>
 		</app-form-button>

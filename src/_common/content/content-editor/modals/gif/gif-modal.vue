@@ -282,7 +282,7 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 							ref="searchInput"
 							class="search form-control"
 							:placeholder="$gettext('Search Tenor...')"
-							:disabled="loadingCategories"
+							:disabled="loadingCategories ? 'true' : undefined"
 							:value="searchValue"
 							@input="onSearchInput"
 							@keydown="onSearchKeyDown"

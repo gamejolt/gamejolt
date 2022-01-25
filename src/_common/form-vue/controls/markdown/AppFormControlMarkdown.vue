@@ -91,7 +91,7 @@ function onChange(event: Event) {
 			class="form-control"
 			rows="1"
 			:name="name"
-			:disabled="disabled"
+			:disabled="disabled ? 'true' : undefined"
 			:value="controlVal"
 			@input="onChange($event)"
 		/>
