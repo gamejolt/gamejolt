@@ -73,11 +73,7 @@ export default class FormCommunity extends mixins(Wrapper) implements FormOnSubm
 			<div class="help-block">
 				<translate>Choose a short and descriptive name for your community.</translate>
 			</div>
-			<app-form-control
-				type="text"
-				:validators="[validateMaxLength(100)]"
-				:disabled="method === 'edit' && !formModel.games.length"
-			/>
+			<app-form-control type="text" :validators="[validateMaxLength(100)]" />
 			<app-form-control-errors />
 		</app-form-group>
 
