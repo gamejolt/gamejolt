@@ -4,8 +4,8 @@ import { mixins, Options } from 'vue-property-decorator';
 import { shallowSetup } from '../../../../../utils/vue';
 import { Api } from '../../../../api/api.service';
 import AppLoading from '../../../../loading/loading.vue';
+import { AppModalInterface } from '../../../../modal/AppModal.vue';
 import { BaseModal } from '../../../../modal/base';
-import { AppModalInterface } from '../../../../modal/modal.vue';
 import { Ruler } from '../../../../ruler/ruler-service';
 import { Screen } from '../../../../screen/screen-service';
 import AppScrollScroller, { createScroller } from '../../../../scroll/AppScrollScroller.vue';
@@ -37,8 +37,8 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 	readonly mascotImage = mascotImage;
 
 	declare $refs: {
-		modal: AppModalInterface;
-		search: HTMLInputElement;
+		modalComponent: AppModalInterface;
+		searchInput: HTMLInputElement;
 	};
 
 	get shouldShowResetButton() {
@@ -66,7 +66,7 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 		await nextTick();
 
 		// Focus now.
-		this.$refs.search.focus();
+		this.$refs.searchInput.focus();
 	}
 
 	private async populateCategories() {
@@ -186,7 +186,7 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 	scrollToTop() {
 		// This has a v-if around it when loading, so it may not be in the DOM.
 		this.contentScroller.scrollTo(0);
-		this.$refs.modal.scrollTo(0);
+		this.$refs.modalComponent.scrollTo(0);
 	}
 
 	onContainerScroll() {
@@ -247,7 +247,7 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal ref="modal" tabindex="0">
+	<app-modal ref="modalComponent" tabindex="0">
 		<div class="modal-controls">
 			<app-button @click="modal.dismiss()">
 				<translate>Close</translate>
@@ -279,7 +279,7 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 							<app-jolticon class="-icon" icon="remove" />
 						</div>
 						<input
-							ref="search"
+							ref="searchInput"
 							class="search form-control"
 							:placeholder="$gettext('Search Tenor...')"
 							:disabled="loadingCategories"

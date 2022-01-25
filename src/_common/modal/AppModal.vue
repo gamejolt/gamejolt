@@ -13,7 +13,7 @@ import { Theme } from '../theme/theme.model';
 import { useModal } from './modal.service';
 
 export interface AppModalInterface {
-	scrollTo: typeof scrollTo;
+	scrollTo: (offsetY: number) => void;
 }
 
 defineProps({
