@@ -476,8 +476,8 @@ export default class AppCommunityActivityItem extends Vue {
 					<template v-if="hasReason">
 						<br />
 						<span class="-reason-row">
-							<translate>Reason: </translate>
-							<i>{{ reasonText }}</i>
+							<translate>Reason:</translate>
+							<i>{{ ' ' + reasonText }}</i>
 						</span>
 					</template>
 
