@@ -21,9 +21,6 @@ const props = defineProps({
 		type: String,
 		default: '',
 	},
-	disabled: {
-		type: Boolean,
-	},
 	autofocus: {
 		type: Boolean,
 	},

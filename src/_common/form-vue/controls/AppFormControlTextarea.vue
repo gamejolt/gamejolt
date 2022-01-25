@@ -52,6 +52,7 @@ function onBlur() {
 		:name="name"
 		class="form-control"
 		:value="controlVal"
+		:disabled="disabled ? 'true' : undefined"
 		@input="onChange"
 		@blur="onBlur"
 		@paste="emit('paste', $event)"

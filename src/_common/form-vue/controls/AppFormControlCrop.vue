@@ -41,9 +41,6 @@ const props = defineProps({
 		type: Number,
 		default: undefined,
 	},
-	disabled: {
-		type: Boolean,
-	},
 });
 
 const emit = defineEmits({

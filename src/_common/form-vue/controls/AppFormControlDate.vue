@@ -53,14 +53,12 @@ function onChange(value: number) {
 </script>
 
 <template>
-	<div>
-		<AppDatetimePicker
-			:id="id"
-			:value="controlVal"
-			:timezone-offset="timezoneOffset"
-			:min-date="minDate"
-			:max-date="maxDate"
-			@change="onChange"
-		/>
-	</div>
+	<AppDatetimePicker
+		:id="id"
+		:value="controlVal"
+		:timezone-offset="timezoneOffset"
+		:min-date="minDate"
+		:max-date="maxDate"
+		@change="onChange"
+	/>
 </template>

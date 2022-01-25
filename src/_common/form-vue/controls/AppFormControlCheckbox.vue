@@ -39,9 +39,7 @@ const { controlVal, applyValue } = createFormControl<any>({
 
 const root = ref<HTMLInputElement>();
 
-const currentOptions = computed(() => {
-	return form.formModel[name.value] || [];
-});
+const currentOptions = computed(() => form.formModel[name.value] || []);
 
 const checked = computed(() => {
 	// This is when there's only one checkbox without a value field. That means
@@ -87,7 +85,8 @@ function onChange() {
 		type="checkbox"
 		:name="name"
 		:value="controlVal"
-		:checked="checked"
+		:checked="checked ? 'true' : undefined"
+		:disabled="disabled ? 'true' : undefined"
 		@change="onChange"
 	/>
 </template>
