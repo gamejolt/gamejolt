@@ -5,7 +5,7 @@ import { translationsReady } from '../_common/translate/translate.service';
 import { createApp } from './bootstrap';
 
 export default async (context: any) => {
-	const { app, router } = createApp();
+	const { app, router } = await createApp();
 
 	const s = Date.now();
 

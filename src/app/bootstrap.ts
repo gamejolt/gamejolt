@@ -9,7 +9,7 @@ import { AppStoreKey, createAppStore } from './store/index';
 import { createLibraryStore, LibraryStoreKey } from './store/library';
 import { router } from './views/index';
 
-export function createApp() {
+export async function createApp() {
 	const { app, commonStore } = bootstrapCommon(AppMain, router);
 
 	const sidebarStore = createSidebarStore();
@@ -24,9 +24,8 @@ export function createApp() {
 	app.provide(AppStoreKey, appStore);
 
 	if (GJ_IS_DESKTOP_APP) {
-		// TODO(vue3): we need to do this through a dynamic import, but then this
-		// function would need to be async
-		// require('./bootstrap-client');
+		const { bootstrapCommonClient } = await import('../_common/client/bootstrap');
+		bootstrapCommonClient({ commonStore });
 	}
 
 	GamePlayModal.init({ canMinimize: true });

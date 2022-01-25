@@ -18,23 +18,23 @@ import AppClientStatusBarPatchItem from './patch-item/patch-item.vue';
 export default class AppClientStatusBar extends Vue {
 	// @ClientLibraryState
 	// gamesById!: ClientLibraryStore['gamesById'];
-	gamesById!: any;
+	gamesById: any = {};
 
 	// @ClientLibraryState
 	// numPlaying!: ClientLibraryStore['numPlaying'];
-	numPlaying!: any;
+	numPlaying: any = 0;
 
 	// @ClientLibraryState
 	// numPatching!: ClientLibraryStore['numPatching'];
-	numPatching!: any;
+	numPatching: any = 0;
 
 	// @ClientLibraryState
 	// currentlyPlaying!: ClientLibraryStore['currentlyPlaying'];
-	currentlyPlaying!: any;
+	currentlyPlaying: any = [];
 
 	// @ClientLibraryState
 	// currentlyPatching!: ClientLibraryStore['currentlyPatching'];
-	currentlyPatching!: any;
+	currentlyPatching: any = {};
 
 	updaterWarningDismissed = false;
 

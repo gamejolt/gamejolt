@@ -2,7 +2,7 @@ import { Channel, Socket } from 'phoenix';
 import { markRaw, reactive } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { CancelToken } from '../../../utils/cancel-token';
-import type { TabLeader } from '../../../utils/tab-leader';
+import type { TabLeaderInterface } from '../../../utils/tab-leader';
 import { sleep } from '../../../utils/utils';
 import { uuidv4 } from '../../../utils/uuid';
 import { Analytics } from '../../../_common/analytics/analytics.service';
@@ -262,7 +262,7 @@ export class GridClient {
 	communityChannels: CommunityChannel[] = [];
 	firesideChannels: FiresideChannel[] = [];
 	notificationChannel: Channel | null = null;
-	tabLeader: TabLeader | null = null;
+	tabLeader: TabLeaderInterface | null = null;
 	/**
 	 * @see `deregisterViewingCommunity` doc-block for explanation.
 	 */

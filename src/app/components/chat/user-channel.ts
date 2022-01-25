@@ -1,7 +1,7 @@
 import { Channel, Presence, Socket } from 'phoenix';
 import { markRaw } from 'vue';
 import { arrayRemove } from '../../../utils/array';
-import type { TabLeader } from '../../../utils/tab-leader';
+import type { TabLeaderInterface } from '../../../utils/tab-leader';
 import { importNoSSR } from '../../../_common/code-splitting';
 import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
 import {
@@ -54,7 +54,7 @@ export class ChatUserChannel {
 
 	readonly socket: Socket;
 	readonly socketChannel: Channel;
-	private _tabLeader: TabLeader | null;
+	private _tabLeader: TabLeaderInterface | null;
 
 	init() {
 		this._tabLeader = null;

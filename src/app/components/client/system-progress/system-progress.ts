@@ -6,7 +6,7 @@ import { Client } from '../../../../_common/client/client.service';
 @Options({})
 export class AppClientSystemProgress extends Vue {
 	// @ClientLibraryState totalPatchProgress!: ClientLibraryStore['totalPatchProgress'];
-	totalPatchProgress!: any;
+	totalPatchProgress: any = 0;
 
 	render() {
 		const progress = this.totalPatchProgress;
