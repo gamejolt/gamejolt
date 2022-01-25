@@ -1,8 +1,12 @@
 <script lang="ts">
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+import { shallowSetup } from '../../../../../utils/vue';
 import { GameBuild } from '../../../../../_common/game/build/build.model';
 import { Game } from '../../../../../_common/game/game.model';
-// import { ClientLibraryState, ClientLibraryStore } from '../../../../store/client-library';
+import {
+	findPackageToRepresentGameStatus,
+	useClientLibraryStore,
+} from '../../../../store/client-library';
 import AppClientGameButtons from '../../game-buttons/game-buttons.vue';
 
 @Options({
@@ -16,14 +20,13 @@ export default class AppClientGameCoverButtons extends Vue {
 	@Prop(Array) browserBuilds!: GameBuild[];
 	@Prop(Array) installableBuilds!: GameBuild[];
 
-	// @ClientLibraryState findActiveForGame!: ClientLibraryStore['findActiveForGame'];
-	findActiveForGame!: any;
+	readonly clientStore = shallowSetup(() => useClientLibraryStore());
 
 	@Emit('play')
 	emitPlay() {}
 
 	get localPackage() {
-		return this.findActiveForGame(this.game.id);
+		return findPackageToRepresentGameStatus(this.clientStore, this.game.id);
 	}
 }
 </script>

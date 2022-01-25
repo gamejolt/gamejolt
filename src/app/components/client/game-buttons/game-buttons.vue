@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { arrayGroupBy } from '../../../../utils/array';
+import { shallowSetup } from '../../../../utils/vue';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { getDeviceArch, getDeviceOS } from '../../../../_common/device/device.service';
@@ -12,6 +13,10 @@ import { GamePackagePurchaseModal } from '../../../../_common/game/package/purch
 import { Popper } from '../../../../_common/popper/popper.service';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import {
+findPackageToRepresentGameStatus,
+useClientLibraryStore
+} from '../../../store/client-library';
 // import {
 // 	ClientLibraryAction,
 // 	ClientLibraryState,
@@ -31,13 +36,7 @@ import { LocalDbPackage } from '../local-db/package/package.model';
 	},
 })
 export default class AppClientGameButtons extends Vue {
-	// @ClientLibraryState
-	// packagesByGameId!: ClientLibraryStore['packagesByGameId'];
-	packagesByGameId!: any;
-
-	// @ClientLibraryState
-	// findActiveForGame!: ClientLibraryStore['findActiveForGame'];
-	findActiveForGame!: any;
+	readonly clientLibrary = shallowSetup(() => useClientLibraryStore());
 
 	// @ClientLibraryAction
 	// private packageInstall!: ClientLibraryStore['packageInstall'];
@@ -115,11 +114,12 @@ export default class AppClientGameButtons extends Vue {
 	// We try to pull a package with some action on it.
 	// For example, if a package is installing, we want to pull that one to show.
 	get localPackage() {
-		return this.findActiveForGame(this.game.id);
+		// return this.clientLibrary.findPackageToRepresentGameStatus(this.game.id);
+		return findPackageToRepresentGameStatus(this.clientLibrary, this.game.id);
 	}
 
 	get gamePackages() {
-		return this.packagesByGameId[this.game.id] || [];
+		return this.clientLibrary.packagesByGameId.value[this.game.id] || [];
 	}
 
 	get settledGamePackages() {

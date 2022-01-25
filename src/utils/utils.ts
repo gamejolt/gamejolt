@@ -53,8 +53,7 @@ export function assertNever(x: never): never {
 	throw new Error('Unexpected object: ' + x);
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export type Primitives = Number | String | Boolean;
+export type Primitives = number | string | boolean;
 export type Properties<T, U> = { [K in keyof T]: T[K] extends U ? K : never }[keyof T];
 
 export type MaybePromise<T> = T | Promise<T> | PromiseLike<T>;
@@ -70,3 +69,19 @@ export function isPromise(obj: any) {
 export function isMac() {
 	return typeof navigator != 'undefined' ? /Mac/.test(navigator.platform) : false;
 }
+
+// Prefixes T with a prefix TPrefix.
+// Example: Prefixed<'world', 'hello '> = 'hello world'
+type Prefixed<T, TPrefix> = T extends string
+	? TPrefix extends string
+		? `${TPrefix}${T}`
+		: never
+	: never;
+
+// Gets a union of private looking keys from a given object.
+// Example: PrivateKeys<{a: 1, _b: 2, _c: 3}> = '_b' | '_c'
+type PrivateKeys<T> = {
+	[TKey in keyof T]: TKey extends Prefixed<any, '_'> ? TKey : never;
+}[keyof T];
+
+export type HidePrivateKeys<T> = Omit<T, PrivateKeys<T>>;

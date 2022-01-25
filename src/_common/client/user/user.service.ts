@@ -12,7 +12,7 @@ export class ClientUser {
 		if (localUser) {
 			setUser(JSON.parse(localUser));
 		} else if (Navigate.currentClientSection !== 'auth') {
-			if (GJ_DISABLE_SECTION_REDIRECTS) {
+			if (!GJ_DISABLE_SECTION_REDIRECTS) {
 				// Must be logged in to use client.
 				this.authRedirect();
 			} else {
@@ -45,6 +45,8 @@ export class ClientUser {
 	}
 
 	private static authRedirect() {
+		console.log('redirecting to auth');
+
 		// TODO: This is a hack to fix redirect loop between the client sections and the auth section.
 		// Since redirecting with window.location.href isnt really synchronous theres a race condition
 		// between the time user service figures out it has no user and redirects to auth

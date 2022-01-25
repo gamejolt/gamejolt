@@ -19,7 +19,7 @@ export async function sendSearch(query: string, options: SearchOptions = { type:
 
 	// If we're in client, let's try to search their installed games.
 	if (GJ_IS_DESKTOP_APP && options.type && options.type === 'typeahead') {
-		searchPromises.push(_searchInstalledGames(query));
+		searchPromises.push(_findInstalledGamesByTitle(query));
 	}
 
 	const payloads = await Promise.all(searchPromises);
@@ -61,7 +61,7 @@ async function _searchSite(query: string, options: SearchOptions = { type: 'all'
 	}
 }
 
-async function _searchInstalledGames(query: string) {
+async function _findInstalledGamesByTitle(query: string) {
 	// TODO(vue3): Yariv, this should get the client library injected somehow, yeah?
-	// return appStore.clientLibrary.searchInstalledGames(query, 3);
+	// return appStore.clientLibrary.findInstalledGamesByTitle(query, 3);
 }

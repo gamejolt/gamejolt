@@ -2,9 +2,9 @@ import type { IParsedWrapper } from 'client-voodoo';
 import { Api } from '../../../../../_common/api/api.service';
 import { getDeviceArch, getDeviceOS } from '../../../../../_common/device/device.service';
 import { GameBuild } from '../../../../../_common/game/build/build.model';
-import { GameBuildLaunchOption } from '../../../../../_common/game/build/launch-option/launch-option.model';
-import { GamePackage } from '../../../../../_common/game/package/package.model';
-import { GameRelease } from '../../../../../_common/game/release/release.model';
+import type { GameBuildLaunchOption } from '../../../../../_common/game/build/launch-option/launch-option.model';
+import type { GamePackage } from '../../../../../_common/game/package/package.model';
+import type { GameRelease } from '../../../../../_common/game/release/release.model';
 import { LocalDbModel } from '../model.service';
 
 export type LocalDbPackagePid = string | IParsedWrapper;
@@ -100,14 +100,7 @@ export class LocalDbPackage extends LocalDbModel<LocalDbPackage> {
 	}
 
 	get isPatching() {
-		return (
-			this.install_state === LocalDbPackagePatchState.PATCH_PENDING ||
-			this.install_state === LocalDbPackagePatchState.DOWNLOADING ||
-			this.install_state === LocalDbPackagePatchState.UNPACKING ||
-			this.update_state === LocalDbPackagePatchState.PATCH_PENDING ||
-			this.update_state === LocalDbPackagePatchState.DOWNLOADING ||
-			this.update_state === LocalDbPackagePatchState.UNPACKING
-		);
+		return this.isInstalling || this.isUpdating;
 	}
 
 	get isInstalling() {
@@ -202,7 +195,7 @@ export class LocalDbPackage extends LocalDbModel<LocalDbPackage> {
 		release: GameRelease,
 		build: GameBuild,
 		launchOptions: GameBuildLaunchOption[]
-	) {
+	): Partial<LocalDbPackage> {
 		// All launch options are passed in. Let's just pull the ones for our build.
 		launchOptions = launchOptions.filter(i => i.game_build_id === build.id);
 
