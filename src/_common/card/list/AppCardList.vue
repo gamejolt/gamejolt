@@ -1,31 +1,54 @@
 <script lang="ts" setup>
 const props = defineProps({
-	items: {
-		type: Array,
-		default: () => [],
-	},
-	activeItem: {
-		type: Object,
-		default: null,
-	},
-	isAdding: {
-		type: Boolean,
-	},
-	isDraggable: {
-		type: Boolean,
-	},
+	...defineCardListItems(),
+	...defineCardListProps(),
 });
 
 const emit = defineEmits({
 	activate: (_item: any) => true,
 });
 
-const c = createCardListController(props, emit);
+const items = ref(props.items);
+
+watch(
+	() => props.items,
+	() => {
+		c.items.value = props.items;
+	},
+	{
+		deep: true,
+	}
+);
+
+const c = createCardListController(props, item => emit('activate', item), items);
 provide(Key, c);
 </script>
 
 <script lang="ts">
-import { inject, InjectionKey, provide, toRefs } from 'vue';
+import { ExtractPropTypes, inject, InjectionKey, provide, Ref, ref, toRefs, watch } from 'vue';
+
+function defineCardListItems() {
+	return {
+		items: {
+			type: Array,
+			default: () => [],
+		},
+	};
+}
+function defineCardListProps() {
+	return {
+		activeItem: {
+			type: Object,
+			default: null,
+		},
+		isAdding: {
+			type: Boolean,
+		},
+		isDraggable: {
+			type: Boolean,
+		},
+	};
+}
 
 const Key: InjectionKey<CardListController> = Symbol('card-list');
 export type CardListController = ReturnType<typeof createCardListController>;
@@ -34,11 +57,15 @@ export function useCardList() {
 	return inject(Key, null);
 }
 
-function createCardListController(p: typeof props, e: typeof emit) {
-	const { items, activeItem, isAdding, isDraggable } = toRefs(p);
+function createCardListController(
+	props: ExtractPropTypes<ReturnType<typeof defineCardListProps>>,
+	emit: (item: any) => void,
+	items: Ref<any[]>
+) {
+	const { activeItem, isAdding, isDraggable } = toRefs(props);
 
 	function activate(item: any | null) {
-		e('activate', item);
+		emit(item);
 	}
 
 	return {
