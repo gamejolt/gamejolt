@@ -8,6 +8,7 @@ import { FormValidator, validateDecimal, validateEmail, validateRequired } from 
 
 interface ValidationOptions {
 	validateDelay?: number;
+	validateOnBlur?: boolean;
 }
 
 /**
@@ -115,7 +116,9 @@ export function createFormControl<T>({
 		onChange?.(value);
 		form._onControlChanged();
 
-		_validate(options);
+		if (!options.validateOnBlur) {
+			_validate(options);
+		}
 	}
 
 	function applyBlur(options: ValidationOptions = {}) {
@@ -236,6 +239,7 @@ onMounted(() => {
 function onChange() {
 	applyValue(root.value?.value ?? '', {
 		validateDelay: props.validateDelay,
+		validateOnBlur: props.validateOnBlur,
 	});
 }
 
