@@ -30,8 +30,6 @@ export default class AppCommunityChannelPresetBackgroundModal extends mixins(Bas
 		const background = getCommunityChannelBackground(community, this.presetType);
 		const newBackgroundId = (background && background.id) || null;
 
-		console.log('previous', this.previousBackgroundId, 'new', newBackgroundId);
-
 		if (this.previousBackgroundId === newBackgroundId) {
 			this.modal.resolve(this.community);
 		}

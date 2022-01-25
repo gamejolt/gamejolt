@@ -32,6 +32,7 @@ const root = ref<HTMLTextAreaElement>();
 function onChange() {
 	applyValue(root.value?.value || '', {
 		validateDelay: props.validateDelay,
+		validateOnBlur: props.validateOnBlur,
 	});
 }
 

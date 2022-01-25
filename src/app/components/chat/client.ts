@@ -553,6 +553,7 @@ export function leaveChatRoom(chat: ChatClient, room: ChatRoom | null = null) {
 
 	const channel = chat.roomChannels[room.id];
 	if (channel) {
+		stopTyping(chat, room);
 		delete chat.roomChannels[room.id];
 		leaveSocketChannel(chat, channel.socketChannel);
 		chat.pollingRoomId = -1;

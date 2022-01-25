@@ -1,5 +1,15 @@
 <script lang="ts">
-import { computed, inject, InjectionKey, onUnmounted, provide, ref, shallowRef, toRefs } from 'vue';
+import {
+	computed,
+	inject,
+	InjectionKey,
+	markRaw,
+	onUnmounted,
+	provide,
+	ref,
+	shallowRef,
+	toRefs,
+} from 'vue';
 import { arrayRemove } from '../../utils/array';
 import { CancelToken } from '../../utils/cancel-token';
 import { titleCase } from '../../utils/string';
@@ -92,7 +102,7 @@ function createFormGroup($props: typeof props) {
 		clearError,
 	};
 
-	form._groups.push(c);
+	form._groups.push(markRaw(c));
 	onUnmounted(() => arrayRemove(form._groups, i => i === c));
 
 	return c;

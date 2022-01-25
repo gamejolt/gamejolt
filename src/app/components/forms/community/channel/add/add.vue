@@ -223,11 +223,13 @@ export default class FormCommunityChannelAdd extends mixins(Wrapper) {
 		<app-form-community-channel-permissions />
 
 		<app-form-group v-if="shouldShowType" name="type" :label="$gettext(`Channel Type`)">
-			<div v-for="type of types" :key="type.radioValue" class="radio">
+			<div v-for="channelType of types" :key="channelType.radioValue" class="radio">
 				<label>
-					<app-form-control-radio type="radio" :value="type.radioValue" />
-					{{ type.text }}
-					<span v-if="type.helpText" class="help-inline">- {{ type.helpText }}</span>
+					<app-form-control-radio type="radio" :value="channelType.radioValue" />
+					{{ channelType.text }}
+					<span v-if="channelType.helpText" class="help-inline">
+						- {{ channelType.helpText }}
+					</span>
 				</label>
 			</div>
 		</app-form-group>

@@ -16,13 +16,12 @@ const emit = defineEmits({
 
 const { items } = useCardList()!;
 
-// Create a separate list of modifiable items so that [draggable] properly
-// updates the order of the children.
-const modifiableItems = ref([...items.value]);
-
 watch(
-	modifiableItems,
-	newSort => {
+	items,
+	(newSort, oldValue) => {
+		if (newSort === oldValue) {
+			return;
+		}
 		emit('change', newSort);
 	},
 	{
@@ -33,7 +32,7 @@ watch(
 
 <template>
 	<VueDraggable
-		v-model="modifiableItems"
+		v-model="items"
 		:item-key="itemKey"
 		v-bind="{ handle: '.card-drag-handle', delay: 100, delayOnTouchOnly: true }"
 	>
