@@ -157,6 +157,7 @@ export default class RouteDashAccountBlocks extends BaseRouteComponent {
 
 							<small>
 								<translate>Blocked:</translate>
+								{{ ' ' }}
 								<app-time-ago :date="block.blocked_on" />
 							</small>
 						</div>
