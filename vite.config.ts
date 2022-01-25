@@ -23,6 +23,7 @@ const noopDirectiveTransform = () => ({ props: [] });
 
 // https://vitejs.dev/config/
 export default defineConfig(async configEnv => {
+	const { command } = configEnv;
 	const gjOpts = await parseOptionsFromEnv();
 
 	type GetValueOrEmpty = <T>(value: T) => T | EmptyObject;
@@ -207,6 +208,12 @@ export default defineConfig(async configEnv => {
 
 			// TODO: engooden this.
 			GJ_HAS_ROUTER: JSON.stringify(true),
+
+			// Disable redirecting between section during serve.
+			// This is because as of time of writing we only support watching
+			// one section at a time. This makes it easier to test auth section
+			// when you're already logged in.
+			GJ_DISABLE_SECTION_REDIRECTS: JSON.stringify(command === 'serve'),
 		},
 
 		...onlyInSSR<ViteUserConfig>({

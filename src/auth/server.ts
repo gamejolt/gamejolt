@@ -4,7 +4,7 @@ import { Meta } from '../_common/meta/meta-service';
 import { createApp as bootstrapCreateApp } from './bootstrap';
 
 export default async function (context: typeof Environment.ssrContext) {
-	const { app, router } = bootstrapCreateApp();
+	const { app, router } = await bootstrapCreateApp();
 
 	const s = Date.now();
 

@@ -2,7 +2,7 @@ import { unref, watch } from 'vue';
 import { Api } from '../../api/api.service';
 import { Environment } from '../../environment/environment.service';
 import { Navigate } from '../../navigate/navigate.service';
-import { CommonStore } from '../../store/common-store';
+import type { CommonStore } from '../../store/common-store';
 
 export class ClientUser {
 	static init({ commonStore: { user, setUser } }: { commonStore: CommonStore }) {
@@ -12,7 +12,7 @@ export class ClientUser {
 		if (localUser) {
 			setUser(JSON.parse(localUser));
 		} else if (Navigate.currentClientSection !== 'auth') {
-			if (GJ_WITH_LOCALSTOAGE_AUTH_REDIRECT) {
+			if (GJ_DISABLE_SECTION_REDIRECTS) {
 				// Must be logged in to use client.
 				this.authRedirect();
 			} else {

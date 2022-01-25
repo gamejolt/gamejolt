@@ -139,10 +139,10 @@
 		"@types/prosemirror-state": "1.2.4",
 		"@types/prosemirror-view": "1.11.4"
 	},
-	"main": "https://development.gamejolt.com/",
+	"main": "https://development.gamejolt.com/login",
 	"node-remote": "https://development.gamejolt.com",
 	"window": {
-		"show": true,
+		"show": false,
 		"width": 1250,
 		"height": 700,
 		"min_height": 400,
@@ -155,6 +155,6 @@
 		"plugin": true
 	},
 	"joltronVersion": "v2.2.8-beta.1.loader",
-	"chromium-args": "--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments --auto-open-devtools-for-tabs",
+	"chromium-args": "--ignore-gpu-blocklist --auto-open-devtools-for-tabs",
 	"user-agent": "GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36"
 }

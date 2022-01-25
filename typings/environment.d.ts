@@ -10,3 +10,4 @@ declare const GJ_TUNNELS: {
 	frontend?: string;
 };
 declare const GJ_HAS_ROUTER: boolean;
+declare const GJ_DISABLE_SECTION_REDIRECTS: boolean;
