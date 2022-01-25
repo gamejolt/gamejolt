@@ -109,7 +109,7 @@
 		"vite-plugin-markdown": "2.0.2",
 		"vm2": "3.9.5",
 		"vue": "3.2.29",
-		"vue-class-component": "8.0.0-rc.1",
+		"vue-class-component": "gamejolt/vue-class-component#fix-ssr",
 		"vue-property-decorator": "10.0.0-rc.3",
 		"vue-router": "4.0.12",
 		"vuedraggable": "4.1.0"
