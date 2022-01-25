@@ -3,14 +3,13 @@ import {
 	computed,
 	inject,
 	InjectionKey,
-	markRaw,
 	onUnmounted,
 	provide,
+	Ref,
 	ref,
 	shallowRef,
 	toRefs,
 } from 'vue';
-import { arrayRemove } from '../../utils/array';
 import { CancelToken } from '../../utils/cancel-token';
 import { titleCase } from '../../utils/string';
 import { useForm } from './AppForm.vue';
@@ -25,9 +24,15 @@ export function useFormGroup() {
 	return inject(Key, null);
 }
 
-function createFormGroup($props: typeof props) {
-	const { name, label, optional } = toRefs($props);
-
+function createFormGroup({
+	name,
+	label,
+	optional,
+}: {
+	name: Ref<string>;
+	optional: Ref<boolean>;
+	label?: Ref<string | undefined>;
+}) {
 	const form = useForm()!;
 
 	const changed = ref(false);
@@ -102,8 +107,12 @@ function createFormGroup($props: typeof props) {
 		clearError,
 	};
 
-	form._groups.push(markRaw(c));
-	onUnmounted(() => arrayRemove(form._groups, i => i === c));
+	// Since it's defined as a shallowRef, we need to make sure to modify the
+	// instance itself to make sure all the getters rerun.
+	form._groups = [...form._groups, c];
+	onUnmounted(() => {
+		form._groups = form._groups.filter(i => i !== c);
+	});
 
 	return c;
 }
@@ -133,7 +142,7 @@ const props = defineProps({
 
 const form = useForm()!;
 
-const c = createFormGroup(props);
+const c = createFormGroup(toRefs(props));
 provide(Key, c);
 
 const { humanLabel } = c;
