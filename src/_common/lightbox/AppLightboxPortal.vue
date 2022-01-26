@@ -189,7 +189,7 @@ function panEnd(event: AppTouchInput) {
 
 			<div class="-inner">
 				<div class="-controls">
-					<a v-if="activeIndex > 0" class="-prev" @mousedown="goPrev">
+					<a v-if="activeIndex > 0" class="-prev" @click="goPrev">
 						<app-jolticon icon="chevron-left" />
 					</a>
 					<div v-else class="-prev -hideable" />
@@ -209,7 +209,7 @@ function panEnd(event: AppTouchInput) {
 						</app-button>
 					</div>
 
-					<a v-if="hasNext" class="-next" @mousedown="goNext">
+					<a v-if="hasNext" class="-next" @click="goNext">
 						<app-jolticon icon="chevron-right" />
 					</a>
 					<div v-else class="-next -hideable" />
