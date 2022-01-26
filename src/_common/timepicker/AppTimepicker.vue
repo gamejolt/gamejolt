@@ -50,7 +50,7 @@ function getValidMinutes(minutes: number) {
 }
 
 function updateHours() {
-	let newHours = Math.round(Math.min(Math.max(parseInt(hours.value, 10), 0, 23)));
+	let newHours = Math.round(Math.min(Math.max(parseInt(hours.value, 10), 0), 23));
 	if (isNaN(newHours)) {
 		newHours = 12;
 		hours.value = _pad(newHours);
@@ -83,7 +83,7 @@ function updateHours() {
 }
 
 function updateMinutes() {
-	let newMinutes = Math.round(Math.min(Math.max(parseInt(minutes.value, 10), 0, 59)));
+	let newMinutes = Math.round(Math.min(Math.max(parseInt(minutes.value, 10), 0), 59));
 	if (isNaN(newMinutes)) {
 		newMinutes = 0;
 		minutes.value = _pad(newMinutes);
@@ -138,9 +138,9 @@ function _pad(value: any) {
 			<tr>
 				<td style="width: 50px" class="form-group">
 					<input
+						v-model="hours"
 						type="text"
 						class="form-control text-center"
-						:value="hours"
 						:maxlength="2"
 						@blur="updateHours()"
 					/>
@@ -148,9 +148,9 @@ function _pad(value: any) {
 				<td>:</td>
 				<td style="width: 50px" class="form-group">
 					<input
+						v-model="minutes"
 						type="text"
 						class="form-control text-center"
-						:value="minutes"
 						:maxlength="2"
 						@blur="updateMinutes()"
 					/>

@@ -109,10 +109,12 @@ export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends
 			<span>
 				<template v-if="competition.periodNum === 0">
 					<translate>Your jam will start in about</translate>
+					{{ ' ' }}
 					<app-time-ago without-suffix is-future :date="competition.starts_on" />
 				</template>
 				<template v-else>
 					<translate>Your jam started about</translate>
+					{{ ' ' }}
 					<app-time-ago :date="competition.starts_on" />
 				</template>
 			</span>
