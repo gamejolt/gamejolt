@@ -237,6 +237,13 @@ export class Api {
 						options.progress(e);
 					}
 				},
+			}).then((response: any) => {
+				// When the request is done, send one last progress event of
+				// nothing to indicate that the transfer is complete.
+				if (options.progress) {
+					options.progress(null);
+				}
+				return response;
 			});
 		} else {
 			promise = this.sendRawRequest(url, {

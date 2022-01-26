@@ -1,4 +1,4 @@
-import { AxiosPromise, AxiosResponse } from 'axios';
+import { AxiosError, AxiosPromise } from 'axios';
 import { RequestOptions } from '../api/api.service';
 import { Environment } from '../environment/environment.service';
 import { showErrorGrowl } from '../growls/growls.service';
@@ -23,7 +23,7 @@ export class PayloadError {
 
 	constructor(public type: string, public response?: any, public status?: number) {}
 
-	static async fromAxiosError(response: AxiosResponse) {
+	static fromAxiosError({ response }: AxiosError) {
 		// If the response indicated a failed connection.
 		if (response === undefined || response.status === -1) {
 			return new PayloadError(PayloadError.ERROR_OFFLINE);
@@ -80,23 +80,21 @@ export class Payload {
 			...options,
 		};
 
-		let response: AxiosResponse | undefined;
-		let responseData: any;
-
 		try {
-			response = await requestPromise;
-			responseData = response.data;
+			const response = await requestPromise;
 
-			if (!response || !responseData || response.statusText === 'error') {
+			if (!response || !response.data) {
 				if (!options.noErrorRedirect) {
 					throw new PayloadError(
 						PayloadError.ERROR_INVALID,
-						response ? responseData || undefined : undefined
+						response ? response.data || undefined : undefined
 					);
 				} else {
-					throw responseData || undefined;
+					throw response.data || undefined;
 				}
 			}
+
+			const responseData = response.data;
 
 			this.checkClientForceUpgrade(responseData);
 			this.checkPayloadUser(responseData, options);
@@ -114,7 +112,12 @@ export class Payload {
 				throw this.handlePayloadError(error);
 			}
 
-			this.checkPayloadUser(responseData, options);
+			let response: any = undefined;
+			if (error && error.response) {
+				response = error.response;
+			}
+
+			this.checkPayloadUser(response.data, options);
 
 			// Do not do error redirects when the user cancelled the upload file request.
 			if (this.isCancelledUpload(error)) {
@@ -122,10 +125,10 @@ export class Payload {
 			}
 
 			if (
-				response &&
-				(!options.noErrorRedirect || this.httpNoRedirectOverrides.includes(response.status))
+				!options.noErrorRedirect ||
+				this.httpNoRedirectOverrides.includes(response.status)
 			) {
-				throw this.handlePayloadError(await PayloadError.fromAxiosError(response));
+				throw this.handlePayloadError(PayloadError.fromAxiosError(error));
 			} else {
 				throw error;
 			}
