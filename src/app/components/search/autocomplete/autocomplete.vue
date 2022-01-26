@@ -146,7 +146,7 @@ export default class AppSearchAutocomplete extends Vue {
 			}
 		}
 
-		this.search.blur();
+		this.search.focusToken.blur();
 	}
 
 	viewAll() {
